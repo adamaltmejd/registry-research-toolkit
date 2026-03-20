@@ -7,7 +7,7 @@ import json
 from pathlib import Path
 
 from mock_data_wizard.enrich import enrich
-from mock_data_wizard.generate import generate
+from mock_data_wizard.generate import _remove_stale_files, generate
 from mock_data_wizard.stats import parse_stats
 
 
@@ -164,3 +164,39 @@ def test_multi_file_output_order(multi_file_stats_path: Path, tmp_path: Path):
     # Files should be in lexical order
     file_names = [f.file_name for f in manifest.files]
     assert file_names == sorted(file_names)
+
+
+def test_stale_files_removed_on_regenerate(stats_path: Path, tmp_path: Path):
+    """Re-running generate removes files from a previous run that are no longer produced."""
+    out_dir = tmp_path / "output"
+    out_dir.mkdir()
+
+    # Simulate leftover from a previous run
+    (out_dir / "old_file.csv").write_text("stale")
+    (out_dir / "another_old.csv").write_text("stale")
+
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    remaining = {p.name for p in out_dir.iterdir()}
+    assert "old_file.csv" not in remaining
+    assert "another_old.csv" not in remaining
+    assert "persons.csv" in remaining
+    assert "manifest.json" in remaining
+
+
+def test_remove_stale_preserves_manifest(tmp_path: Path):
+    (tmp_path / "manifest.json").write_text("{}")
+    (tmp_path / "stale.csv").write_text("x")
+    removed = _remove_stale_files(tmp_path, written_files=set())
+    assert removed == ["stale.csv"]
+    assert (tmp_path / "manifest.json").exists()
+
+
+def test_remove_stale_keeps_current_files(tmp_path: Path):
+    (tmp_path / "keep.csv").write_text("x")
+    (tmp_path / "drop.csv").write_text("x")
+    removed = _remove_stale_files(tmp_path, written_files={"keep.csv"})
+    assert removed == ["drop.csv"]
+    assert (tmp_path / "keep.csv").exists()

@@ -185,6 +185,18 @@ def _apply_nulls(
     return result
 
 
+def _remove_stale_files(output_dir: Path, written_files: set[str]) -> list[str]:
+    """Remove files from a previous run that are not in the current generation."""
+    removed = []
+    for path in sorted(output_dir.iterdir()):
+        if path.name == "manifest.json":
+            continue
+        if path.is_file() and path.name not in written_files:
+            path.unlink()
+            removed.append(path.name)
+    return removed
+
+
 def generate(
     stats: ProjectStats,
     enriched: list[EnrichedFile],
@@ -248,9 +260,7 @@ def generate(
     )
 
     total_files = len(file_pairs)
-    total_rows = sum(
-        max(1, int(fs.row_count * sample_pct)) for fs, _ in file_pairs
-    )
+    total_rows = sum(max(1, int(fs.row_count * sample_pct)) for fs, _ in file_pairs)
     t0 = time.monotonic()
 
     for file_idx, (file_stats, efile) in enumerate(file_pairs, 1):
@@ -286,9 +296,7 @@ def generate(
             elif ecol.inferred_type == "id":
                 pool = shared_pools.get(ecol.column_name)
                 subtype = ecol.stats["id_subtype"]
-                raw = _generate_id(
-                    col_rng, n_rows, ecol.n_distinct, subtype, pool=pool
-                )
+                raw = _generate_id(col_rng, n_rows, ecol.n_distinct, subtype, pool=pool)
             else:
                 raise ValueError(
                     f"Unknown inferred_type {ecol.inferred_type!r} "
@@ -331,8 +339,16 @@ def generate(
             )
         )
 
+    # Clean stale files from previous runs
+    written_names = {f.file_name for f in output_files}
+    removed = _remove_stale_files(output_dir, written_names)
+    if removed:
+        progress(f"Removed {len(removed)} stale file(s): {', '.join(removed)}")
+
     elapsed = time.monotonic() - t0
-    progress(f"Generated {total_rows:,} rows across {total_files} files in {elapsed:.1f}s")
+    progress(
+        f"Generated {total_rows:,} rows across {total_files} files in {elapsed:.1f}s"
+    )
 
     # Write manifest
     manifest = Manifest(

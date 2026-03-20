@@ -145,11 +145,36 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     output_dir = Path(args.output_dir) if args.output_dir else Path("mock_data")
     n_files = len(stats.files)
-    sample_label = (
-        f" at {args.sample_pct:.0%}" if args.sample_pct < 1.0 else ""
-    )
+    sample_label = f" at {args.sample_pct:.0%}" if args.sample_pct < 1.0 else ""
 
-    if not args.yes:
+    # Check for existing output directory with files
+    existing_files = (
+        sorted(p.name for p in output_dir.iterdir() if p.is_file())
+        if output_dir.is_dir()
+        else []
+    )
+    if existing_files:
+        if args.yes and not args.force:
+            print(
+                f"Error: output directory {output_dir}/ already contains "
+                f"{len(existing_files)} file(s).\n"
+                f"Use --force to overwrite (stale files will be removed).",
+                file=sys.stderr,
+            )
+            return 1
+        if not args.force:
+            print(
+                f"WARNING: {output_dir}/ already contains {len(existing_files)} "
+                f"file(s) from a previous run.\n"
+                f"Continuing will overwrite matching files and remove stale ones.\n"
+                f"Press Y to continue or any other key to abort.",
+                flush=True,
+            )
+            if not _confirm():
+                print("Aborted.", file=sys.stderr)
+                return 1
+
+    if not (args.yes or existing_files):
         print(
             f"Will generate {n_files} mock CSV files{sample_label} "
             f"from {stats_path} into {output_dir}/\n"
@@ -278,7 +303,12 @@ def build_parser() -> argparse.ArgumentParser:
         "-y",
         "--yes",
         action="store_true",
-        help="Skip confirmation prompt",
+        help="Skip confirmation prompt (does NOT override --force for existing output)",
+    )
+    gen.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing output directory (stale files are removed)",
     )
     gen.add_argument(
         "-v",
