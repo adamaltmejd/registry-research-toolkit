@@ -472,22 +472,32 @@ def get_varinfo(
     if register:
         reg_ids = require_register_ids(conn, register)
 
+    # Match variable by var_id first, fall back to name
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
-            f"SELECT * FROM variable WHERE var_id = ? AND register_id IN ({ph})",
+            f"SELECT v.*, r.registernamn FROM variable v "
+            f"JOIN register r ON v.register_id = r.register_id "
+            f"WHERE v.var_id = ? AND v.register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
-            f"SELECT * FROM variable WHERE LOWER(variabelnamn) = LOWER(?) AND register_id IN ({ph})",
+            f"SELECT v.*, r.registernamn FROM variable v "
+            f"JOIN register r ON v.register_id = r.register_id "
+            f"WHERE LOWER(v.variabelnamn) = LOWER(?) AND v.register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         vars_by_id = conn.execute(
-            "SELECT * FROM variable WHERE var_id = ?", (variable,)
+            "SELECT v.*, r.registernamn FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE v.var_id = ?",
+            (variable,),
         ).fetchall()
         vars_by_name = conn.execute(
-            "SELECT * FROM variable WHERE LOWER(variabelnamn) = LOWER(?)",
+            "SELECT v.*, r.registernamn FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE LOWER(v.variabelnamn) = LOWER(?)",
             (variable,),
         ).fetchall()
 
@@ -508,10 +518,6 @@ def get_varinfo(
     for var in matched_vars:
         rid, vid = var["register_id"], var["var_id"]
 
-        reg = conn.execute(
-            "SELECT registernamn FROM register WHERE register_id = ?", (rid,)
-        ).fetchone()
-
         instances = conn.execute(
             "SELECT vi.cvid, vi.regvar_id, vi.regver_id, vi.datatyp, vi.datalangd, "
             "rv.registervariantnamn, rver.registerversionnamn "
@@ -523,20 +529,32 @@ def get_varinfo(
             (rid, vid),
         ).fetchall()
 
+        cvids = [inst["cvid"] for inst in instances]
+
+        # Batch-fetch aliases and value counts for all instances
+        aliases_map: dict[str, list[str]] = {c: [] for c in cvids}
+        value_counts: dict[str, int] = {c: 0 for c in cvids}
+        if cvids:
+            cvid_ph = _in_placeholders(cvids)
+            for row in conn.execute(
+                f"SELECT cvid, kolumnnamn FROM variable_alias "
+                f"WHERE cvid IN ({cvid_ph}) ORDER BY cvid, kolumnnamn",
+                cvids,
+            ):
+                aliases_map[row["cvid"]].append(row["kolumnnamn"])
+            for row in conn.execute(
+                f"SELECT cvid, COUNT(*) as cnt FROM value_item "
+                f"WHERE cvid IN ({cvid_ph}) GROUP BY cvid",
+                cvids,
+            ):
+                value_counts[row["cvid"]] = row["cnt"]
+
         instances_out: list[dict[str, Any]] = []
         for inst in instances:
-            aliases = conn.execute(
-                "SELECT kolumnnamn FROM variable_alias WHERE cvid = ? ORDER BY kolumnnamn",
-                (inst["cvid"],),
-            ).fetchall()
-            value_count = conn.execute(
-                "SELECT COUNT(*) FROM value_item WHERE cvid = ?",
-                (inst["cvid"],),
-            ).fetchone()[0]
-
+            cvid = inst["cvid"]
             instances_out.append(
                 {
-                    "cvid": inst["cvid"],
+                    "cvid": cvid,
                     "regvar_id": inst["regvar_id"],
                     "variant_name": inst["registervariantnamn"],
                     "regver_id": inst["regver_id"],
@@ -544,15 +562,15 @@ def get_varinfo(
                     "year": extract_year(inst["registerversionnamn"] or ""),
                     "datatyp": inst["datatyp"],
                     "datalangd": inst["datalangd"],
-                    "aliases": [a["kolumnnamn"] for a in aliases],
-                    "value_set_count": value_count,
+                    "aliases": aliases_map[cvid],
+                    "value_set_count": value_counts[cvid],
                 }
             )
 
         variables_out.append(
             {
                 "register_id": rid,
-                "register_name": reg["registernamn"] if reg else None,
+                "register_name": var["registernamn"],
                 "var_id": vid,
                 "variabelnamn": var["variabelnamn"],
                 "variabeldefinition": var["variabeldefinition"],

@@ -1,9 +1,9 @@
 # SPEC: regmeta (Product PRD)
 
-Status: Draft for sign-off (freeze after approval)
-Version: 2.0.0
+Status: Frozen
+Version: 2.1.0
 Created: 2026-03-01
-Last updated: 2026-03-14
+Last updated: 2026-03-20
 Owner: Research engineering
 Product type: Python CLI package distributed for `uv`/`uvx`
 
@@ -38,9 +38,11 @@ V1 is local-only. No live network calls to SCB services.
 4. Schema retrieval by register or variant, filterable by year range.
 5. Variable deep dive by name or ID, filterable by register.
 6. Resolve column names to variables via exact alias lookup (batch).
-7. Value-set retrieval by CVID.
-8. Deterministic JSON output with stable exit codes.
-9. Optional table output for terminal usage.
+7. Value-set retrieval by CVID, with optional temporal validity filtering.
+8. Column alias listing across registers (`get datacolumns`).
+9. Discovery of coded variables with value sets (`get coded-variables`).
+10. Deterministic JSON output with stable exit codes.
+11. Optional table output for terminal usage.
 
 ### 2.2 Out Of Scope (v1)
 1. Row-level microdata processing.
@@ -96,6 +98,7 @@ Note: column names (`kolumnnamn`) live exclusively in `variable_alias`, not on `
 | Table | Source file | Role |
 |---|---|---|
 | `value_item` | `Vardemangder.csv` | Coded value-set members keyed by CVID |
+| `value_item_validity` | `VardemangderValidDates.csv` | Temporal validity date ranges per ItemId |
 | `unika_summary` | `UnikaRegisterOchVariabler.csv` | Lifecycle and sensitivity flags |
 | `identifier_semantics` | `Identifierare.csv` | Identifier variable definitions |
 | `timeseries_event` | `Timeseries.csv` | Structural/semantic change log |
@@ -212,9 +215,18 @@ Future: `rebuild-index`, `check-integrity`, `compact`.
 - Multiple matches: returns `{"variables": [...]}`.
 - Each instance: `cvid`, `regvar_id`, `variant_name`, `regver_id`, `version_name`, `year`, `datatyp`, `datalangd`, `aliases`, `value_set_count`.
 
-`get values <cvid>`:
+`get values <cvid> [--valid-at <YYYY-MM-DD>]`:
 - Returns coded value-set members for a variable instance.
+- `--valid-at` filters to values valid at the given date (items with no validity record are always valid).
 - Array of `{vardekod, vardebenamning, vardemangdsversion, vardemangdsniva}`.
+
+`get datacolumns <name_or_var_id> [--register <name_or_id>]`:
+- All column aliases a variable appears under across registers and versions.
+- Array of `{kolumnnamn, register_id, register_name, regvar_id, regver_id, version_name}`.
+
+`get coded-variables [--min-codes <INT>] [--min-registers <INT>] [--limit <INT>]`:
+- Variables with value sets, ranked by usage.
+- Array of `{variable_name, n_distinct_codes, n_registers, n_instances}`.
 
 ### 5.8 Resolve Flags
 - `--columns <TEXT>` — comma-separated column names
@@ -236,6 +248,7 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 - `Identifierare.csv` — enrichment (identifier semantics)
 - `Timeseries.csv` — enrichment (change log)
 - `Vardemangder.csv` — enrichment (value-set members; ~102M rows)
+- `VardemangderValidDates.csv` — enrichment (temporal validity per value item)
 - `Tabelldefinitioner.sql` — reference (SQL types and constraints for export columns)
 - `ID-kolumner.xlsx` — reference (join-key documentation between export files)
 
@@ -271,7 +284,9 @@ Returns the requested entity as a JSON object. Shape depends on subcommand:
 - `get register`: register fields + array of variants (single match), or `{"registers": [...]}` (multiple matches)
 - `get schema`: `{"variants": [{"regvar_id", "versions": [{"columns": [...]}]}]}`
 - `get varinfo`: variable fields + instances array (single match), or `{"variables": [...]}` (multiple matches)
-- `get values`: array of `{vardekod, vardebenamning, vardemangdsversion, vardemangdsniva}`
+- `get values`: array of `{vardekod, vardebenamning, vardemangdsversion, vardemangdsniva}` (filtered by `--valid-at` when provided)
+- `get datacolumns`: array of `{kolumnnamn, register_id, register_name, regvar_id, regver_id, version_name}`
+- `get coded-variables`: array of `{variable_name, n_distinct_codes, n_registers, n_instances}`
 
 ### 7.4 Resolve Result
 1. `columns` — array, one entry per input column:
@@ -323,10 +338,12 @@ Error JSON: `error.code`, `error.class`, `error.message`, `error.remediation`.
 3. `get register` returns register info by name or ID with fuzzy matching.
 4. `get schema` returns version-level column listings, filterable by year range.
 5. `get varinfo` returns variable deep dive with instance history.
-6. `get values` returns value-set members by CVID.
-7. `resolve` returns exact alias matches in batch, filterable by register.
-8. No network calls required.
-9. Re-running `build-db` cleanly replaces the database.
+6. `get values` returns value-set members by CVID, with optional temporal filtering via `--valid-at`.
+7. `get datacolumns` returns all column aliases for a variable across registers.
+8. `get coded-variables` returns variables with value sets ranked by usage.
+9. `resolve` returns exact alias matches in batch, filterable by register.
+10. No network calls required.
+11. Re-running `build-db` cleanly replaces the database.
 
 ## 14. V2 Placeholder
 1. Query database for caching and user adaptation.

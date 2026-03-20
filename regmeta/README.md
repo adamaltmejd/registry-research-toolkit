@@ -16,6 +16,7 @@ uv run regmeta search --query "0180" --value             # find value codes
 uv run regmeta get register LISA
 uv run regmeta get schema --register LISA --years 2020-2023
 uv run regmeta get varinfo "Kön" --register LISA
+uv run regmeta get values 12345 --valid-at 2020-01-01     # temporally filtered values
 uv run regmeta get datacolumns "Kommun"                  # all column aliases
 uv run regmeta get coded-variables --min-registers 5     # variables with value sets
 uv run regmeta resolve --columns "Kon,FodelseAr" --register LISA
@@ -29,7 +30,7 @@ uv run regmeta resolve --columns "Kon,FodelseAr" --register LISA
 | `get register` | Register overview with variants (by name or ID) |
 | `get schema` | Column listing per version (by variant ID or `--register`, filterable by `--years`) |
 | `get varinfo` | Variable details with instance history (by name or var_id) |
-| `get values` | Value-set members (code + label) for a CVID |
+| `get values` | Value-set members (code + label) for a CVID, with optional `--valid-at` date filter |
 | `get datacolumns` | All column aliases a variable appears under across registers |
 | `get coded-variables` | Variables with value sets, ranked by usage (`--min-codes`, `--min-registers`) |
 | `resolve` | Exact alias lookup for column names (batch, via `--columns` or stdin) |
@@ -40,7 +41,7 @@ All commands support `--format json` (default) and `--format table`. Register ar
 
 ## Known Limitations
 
-1. **Value sets are not version-specific.** Värdemängder attaches a historical union of all code definitions to every CVID regardless of year. Temporal code validity requires external documentation (Bakgrundsfakta PDFs). See SPEC §6.4.
+1. **Value sets are not version-specific.** Värdemängder attaches a historical union of all code definitions to every CVID regardless of year. Use `get values --valid-at <date>` to filter by temporal validity (requires `VardemangderValidDates.csv` in the build). See SPEC §6.4.
 2. **Timeseries data is sparse.** Only 155 events across all 238 registers. Not a reliable source for change history.
 3. **Database size.** ~13 GB with full value-set import (~96M rows). Build takes ~17 minutes.
 4. **No network calls.** V1 is local-only. User must manually export CSVs from mikrometadata.scb.se.
