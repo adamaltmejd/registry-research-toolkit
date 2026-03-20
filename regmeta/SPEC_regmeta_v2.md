@@ -1,6 +1,6 @@
 # SPEC: regmeta V2 Features
 
-Status: Draft
+Status: Approved
 Version: 3.0.0
 Created: 2026-03-20
 Owner: Research engineering
@@ -28,13 +28,15 @@ Answer: "What changed in register X between year A and year B?" Users working wi
 ```
 regmeta get diff --register <name_or_id> --from <year> --to <year>
                  [--variant <regvar_id>]
-                 [--variable <name_or_var_id>]
-                 [--format {json,table}] [--output <path>] [--db <path>]
+                 [--variable <name_or_var_id_or_alias> ...]
+                 [--format {table,list,json}] [--output <path>] [--db <path>]
 ```
 
 **Required:** `--register`, `--from`, `--to`.
 
 `--from` and `--to` are 4-digit years. `--to` must be greater than `--from`.
+
+`--variable` accepts one or more space-separated values (`nargs="+"`). Each value is resolved by var_id, variabelnamn (case-insensitive), or column alias.
 
 ### 2.3 Semantics
 
@@ -66,6 +68,9 @@ A year matches a version if the version's extracted year (first 4-digit number i
   "register_name": "LISA",
   "from_year": 2015,
   "to_year": 2020,
+  "resolved_variables": [
+    {"input": "KON_NY", "variabelnamn": "Kon", "var_id": "44"}
+  ],
   "variants": [
     {
       "regvar_id": "...",
@@ -90,25 +95,30 @@ A year matches a version if the version's extracted year (first 4-digit number i
         }
       ]
     }
-  ]
+  ],
+  "unchanged": ["VarA", "VarB"]
 }
 ```
 
-Variants with no changes are omitted from the output unless `--variable` is specified (in which case the variant appears with empty change lists to confirm the variable was checked).
+**`resolved_variables`** (present only when `--variable` used): list of `{input, variabelnamn, var_id}` showing input→canonical mapping for each resolved variable.
+
+**`unchanged`** (present only when `--variable` used and some variables had zero changes): simple list of canonical variabelnamn for variables that were unchanged in ALL variants. Variables that changed in at least one variant are excluded.
+
+Variants with no changes are omitted from the output.
 
 ### 2.6 Table Output
 
+When `--variable` is used with alias-to-canonical mappings, a "Resolved variables:" header is printed first. Then the diff table with columns: variant, change (+/-/~), var_id, variabelnamn, detail. Then an "Unchanged: ..." footer if applicable.
+
 ```
-Register: LISA (34)
-Diff: 2015 → 2020
+Resolved variables:
+  KON_NY → Kon (var_id 44)
 
-Variant: Individer, 15 år och äldre
-  From: ver_123 (2015)  To: ver_456 (2020)
-  Summary: +3 added, -1 removed, ~2 changed, 45 unchanged
+variant                          change  var_id  variabelnamn  detail
+-------------------------------  ------  ------  ------------  -----------------------
+Individer, 15 år och äldre      ~       44      Kon           datatyp: int → varchar
 
-  + NyVariabel          int       [NyKol]
-  - GammalVar           varchar   [GammalKol]
-  ~ Kon                 datatyp: int → varchar
+Unchanged: VarA, VarB
 ```
 
 ### 2.7 Error Cases
@@ -118,7 +128,7 @@ Variant: Individer, 15 år och äldre
 | Register not found | 16 | Standard not-found error |
 | No versions in range for any variant | 16 | "No versions found for register X between years A and B" |
 | `--from` ≥ `--to` | 2 | Usage error |
-| `--variable` not found in either version | 16 | "Variable X not found in register Y for years A or B" |
+| `--variable` not found in register | 16 | "No variables matching ... in register ..." |
 
 ## 3. Feature 2: Cross-Register Lineage
 
@@ -140,7 +150,7 @@ These fields are populated by SCB but are free-text, not foreign keys. They may 
 ```
 regmeta get lineage <name_or_var_id>
         [--register <name_or_id>]
-        [--format {json,table}] [--output <path>] [--db <path>]
+        [--format {table,list,json}] [--output <path>] [--db <path>]
 ```
 
 ### 3.4 Semantics
@@ -200,20 +210,15 @@ regmeta get lineage <name_or_var_id>
 
 ### 3.6 Table Output
 
+A register table with columns: register, var_id, role, instances, years, source. Followed by a "Provenance: X/Y (Z%)" footer.
+
 ```
-Variable: Kon (97 occurrences across registers)
+register    var_id  role      instances  years      source
+----------  ------  --------  ---------  ---------  ------
+RTB (1)     44      source    12         1990-2023
+LISA (34)   44      consumer  26         1998-2023  ← RTB
 
-Sources (no upstream dependency):
-  RTB (1)             var_id=44   12 instances   1990-2023
-
-Consumers (fetched from another register):
-  LISA (34)           var_id=44   26 instances   1998-2023   ← RTB
-  STATIV (42)         var_id=44   15 instances   2001-2023   ← RTB
-
-Unknown provenance:
-  TESTREGISTER (99)   var_id=44    3 instances   2020-2022
-
-Provenance coverage: 85/97 (88%)
+Provenance: 85/97 (88%)
 ```
 
 ### 3.7 Edge Cases
@@ -229,22 +234,34 @@ Provenance coverage: 85/97 (88%)
 | Variable not found | 16 |
 | Register filter matches nothing | 16 |
 
-## 4. Contract Version
+## 4. Output Formats
+
+Three output formats, shared across all commands:
+
+- **`--format table`** (default): Columnar table. Auto-switches to list format if the table is wider than the terminal. Truncates at 100 rows with a note to use `--format json` for full output.
+- **`--format list`**: Block/record style (key-value pairs per row).
+- **`--format json`**: Machine-readable JSON. Plain data object by default; `--verbose`/`-v` wraps in an envelope with contract version, timing, and database info.
+
+## 5. Repeated Flags
+
+All repeated optional flags error at parse time via `_NoRepeatParser` subclass (not just `--variable`).
+
+## 6. Contract Version
 
 Bumped to `3.0.0` (new commands = new major version per existing convention).
 
-## 5. Non-Functional
+## 7. Non-Functional
 
 - Same performance target as v1 queries: < 500ms.
 - No new dependencies.
 - No new CSV imports or schema changes. Both features query existing tables.
-- Library-importable: `diff()` and `get_lineage()` available as Python functions.
+- Library-importable: `get_diff()` and `get_lineage()` available as Python functions.
 
-## 6. Acceptance Criteria
+## 8. Acceptance Criteria
 
-1. `regmeta diff --register LISA --from 2015 --to 2020` returns added/removed/changed variables.
-2. `regmeta diff --register LISA --from 2015 --to 2020 --variable Kon` returns changes for Kon only.
+1. `regmeta get diff --register LISA --from 2015 --to 2020` returns added/removed/changed variables.
+2. `regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon KON_NY` resolves inputs and returns changes for matched variables.
 3. `regmeta get lineage Kon` returns cross-register occurrence with provenance classification.
 4. `regmeta get lineage Kon --register LISA` returns LISA-scoped lineage with source info.
-5. Both commands produce valid JSON envelopes and table output.
+5. All commands produce valid JSON and table/list output in all three formats.
 6. Both commands are importable as library functions.

@@ -809,6 +809,54 @@ class TestOutputFormats:
         assert "run" not in data
         assert "total_count" in data
 
+    def test_repeated_flag_errors(self, db_path: str):
+        """Repeated optional flags should error, not silently overwrite."""
+        _, code = _run_json(
+            ["--db", db_path, "--db", db_path, "search", "--query", "test"]
+        )
+        assert code == 2
+
+    def test_table_auto_switches_to_list_when_wide(self, db_path: str):
+        """When terminal is very narrow, table should auto-switch to list (no separator)."""
+        import io
+        import unittest.mock
+
+        # Patch terminal width to something very small
+        with unittest.mock.patch("regmeta.cli._terminal_width", return_value=30):
+            old_stdout = __import__("sys").stdout
+            __import__("sys").stdout = buf = io.StringIO()
+            try:
+                code = run(["--db", db_path, "get", "register", "TESTREG"])
+            finally:
+                __import__("sys").stdout = old_stdout
+        output = buf.getvalue()
+        assert code == 0
+        # List format: no separator line, has key-value pairs
+        assert "---" not in output
+        assert "register_id" in output
+
+    def test_row_truncation(self, db_path: str):
+        """Results exceeding _MAX_DISPLAY_ROWS should be truncated with a footer."""
+        import regmeta.cli
+
+        old_max = regmeta.cli._MAX_DISPLAY_ROWS
+        try:
+            regmeta.cli._MAX_DISPLAY_ROWS = 1
+            import io
+
+            old_stdout = __import__("sys").stdout
+            __import__("sys").stdout = buf = io.StringIO()
+            try:
+                code = run(["--db", db_path, "get", "schema", "--register", "TESTREG"])
+            finally:
+                __import__("sys").stdout = old_stdout
+            output = buf.getvalue()
+            assert code == 0
+            assert "--format json" in output
+            assert "more rows" in output
+        finally:
+            regmeta.cli._MAX_DISPLAY_ROWS = old_max
+
     def test_no_command(self):
         _, code = _run_json([])
         assert code == 2
