@@ -14,6 +14,11 @@ import regmeta
 from ._util import progress
 from .stats import ColumnStats, ProjectStats
 
+# Birth-invariant regmeta var_ids eligible for population spine.
+# These attributes are fixed at birth and must be consistent per individual.
+SPINE_VAR_IDS = frozenset({"44", "1378", "256", "257"})
+# 44 = Kön, 1378 = Födelseår, 256 = Födelselän, 257 = Födelseland
+
 
 @dataclass
 class EnrichedColumn:
@@ -275,8 +280,10 @@ def _bulk_fetch_value_codes(
 # SCB metadata type hints — these describe the column's data type,
 # not valid categorical values. Filtering them prevents generating
 # nonsense like all-"Tal" for numeric columns.
-_SCB_TYPE_HINTS = frozenset({
-    "Tal",
-    "Beskrivande text",
-    "Continuous value code",
-})
+_SCB_TYPE_HINTS = frozenset(
+    {
+        "Tal",
+        "Beskrivande text",
+        "Continuous value code",
+    }
+)

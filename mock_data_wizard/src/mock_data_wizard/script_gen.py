@@ -48,9 +48,7 @@ CATEGORICAL_PATTERNS: list[CategoricalPattern] = [
     CategoricalPattern(
         "(fodelse|fodelses?)land", max_distinct=300
     ),  # country of birth ~230
-    CategoricalPattern(
-        "medb(orgarskap)?", max_distinct=300
-    ),  # citizenship ~230
+    CategoricalPattern("medb(orgarskap)?", max_distinct=300),  # citizenship ~230
 ]
 
 # ── Data-driven classification thresholds ─────────────────────────────────

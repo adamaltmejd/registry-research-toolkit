@@ -113,6 +113,85 @@ MINIMAL_STATS = {
     "shared_columns": [],
 }
 
+SPINE_STATS = {
+    "contract_version": "1.0.0",
+    "generated_at": "2026-03-15T10:00:00Z",
+    "project_paths": ["\\\\micro.intra\\projekt\\P1405$\\P1405_Data"],
+    "files": [
+        {
+            "file_name": "pop.csv",
+            "relative_path": "pop.csv",
+            "row_count": 500,
+            "columns": [
+                {
+                    "column_name": "LopNr",
+                    "inferred_type": "id",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 500,
+                    "stats": {"id_subtype": "integer"},
+                },
+                {
+                    "column_name": "Kon",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 2,
+                    "stats": {"frequencies": {"1": 250, "2": 250}},
+                },
+            ],
+        },
+        {
+            "file_name": "edu.csv",
+            "relative_path": "edu.csv",
+            "row_count": 300,
+            "columns": [
+                {
+                    "column_name": "LopNr",
+                    "inferred_type": "id",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 300,
+                    "stats": {"id_subtype": "integer"},
+                },
+                {
+                    "column_name": "Kon",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 2,
+                    "stats": {"frequencies": {"1": 150, "2": 150}},
+                },
+                {
+                    "column_name": "Grade",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 3,
+                    "stats": {"frequencies": {"7": 100, "8": 100, "9": 100}},
+                },
+            ],
+        },
+    ],
+    "shared_columns": [
+        {
+            "column_name": "LopNr",
+            "files": ["pop.csv", "edu.csv"],
+            "max_n_distinct": 500,
+        },
+        {
+            "column_name": "Kon",
+            "files": ["pop.csv", "edu.csv"],
+            "max_n_distinct": 2,
+        },
+    ],
+}
+
 MULTI_FILE_STATS = {
     "contract_version": "1.0.0",
     "generated_at": "2026-03-15T10:00:00Z",
@@ -183,6 +262,13 @@ MULTI_FILE_STATS = {
 def stats_path(tmp_path: Path) -> Path:
     p = tmp_path / "stats.json"
     p.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")
+    return p
+
+
+@pytest.fixture
+def spine_stats_path(tmp_path: Path) -> Path:
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(SPINE_STATS), encoding="utf-8")
     return p
 
 
