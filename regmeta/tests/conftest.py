@@ -379,6 +379,7 @@ REGISTERINFORMATION_ROWS = [
         "200",
     ),
     # Reg 2 (OTHERREG), variant 20, version 2021, Kön (same var_id 44, cross-register)
+    # Provenance: fetched from Testregistret / TESTREG → consumer of TESTREG's Kön
     _ri_row(
         "OTHERREG",
         "Annat register",
@@ -404,8 +405,8 @@ REGISTERINFORMATION_ROWS = [
         "Kön på ägare",
         "",
         "",
-        "",
-        "",
+        "Testregistret",
+        "TESTREG",
         "",
         "",
         "KON",

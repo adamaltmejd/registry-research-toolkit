@@ -140,9 +140,9 @@ class TestBuildDb:
         """Validity date ranges should be imported."""
         conn = open_db(fixture_db)
         try:
-            count = conn.execute(
-                "SELECT COUNT(*) FROM value_item_validity"
-            ).fetchone()[0]
+            count = conn.execute("SELECT COUNT(*) FROM value_item_validity").fetchone()[
+                0
+            ]
             assert count == 1  # Only item 5001 has a validity record
             row = conn.execute(
                 "SELECT * FROM value_item_validity WHERE item_id = '5001'"

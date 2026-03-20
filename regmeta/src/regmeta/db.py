@@ -780,11 +780,13 @@ def _import_vardemangder_valid_dates(conn: sqlite3.Connection, path: Path) -> in
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
-            batch.append((
-                row["ItemID"],
-                row["ValidFrom"] or None,
-                row["ValidTo"] or None,
-            ))
+            batch.append(
+                (
+                    row["ItemID"],
+                    row["ValidFrom"] or None,
+                    row["ValidTo"] or None,
+                )
+            )
 
             if len(batch) >= batch_size:
                 conn.executemany(

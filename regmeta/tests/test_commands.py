@@ -8,10 +8,18 @@ import json
 from regmeta.cli import run
 
 
-def _run_json(argv: list[str]) -> tuple[dict, int]:
-    """Run a CLI command and parse the JSON output."""
+def _run_json(argv: list[str], *, verbose: bool = True) -> tuple[dict, int]:
+    """Run a CLI command and parse the JSON output.
+
+    Forces --format json. Default verbose=True so tests get the full envelope.
+    """
     import io
     import sys
+
+    if "--format" not in argv:
+        argv = ["--format", "json", *argv]
+    if verbose and "--verbose" not in argv and "-v" not in argv:
+        argv = ["--verbose", *argv]
 
     old_stdout = sys.stdout
     sys.stdout = buf = io.StringIO()
@@ -464,21 +472,312 @@ class TestResolve:
 # ---------------------------------------------------------------------------
 
 
-class TestEnvelope:
-    def test_contract_version(self, db_path: str):
-        data, _ = _run_json(["--db", db_path, "search", "--query", "test"])
-        assert data["contract_version"] == "2.0.0"
+# ---------------------------------------------------------------------------
+# Get diff
+# ---------------------------------------------------------------------------
 
-    def test_envelope_fields(self, db_path: str):
+
+class TestGetDiff:
+    def test_basic_diff(self, db_path: str):
+        """Diff between 2020 and 2022: ÅÄÖVar added in 2022, TestVar removed after 2020."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+            ]
+        )
+        assert code == 0
+        assert data["data"]["register_name"] == "TESTREG"
+        assert data["data"]["from_year"] == 2020
+        assert data["data"]["to_year"] == 2022
+        variants = data["data"]["variants"]
+        assert len(variants) >= 1
+        v = variants[0]
+        added_names = {a["variabelnamn"] for a in v["added"]}
+        removed_names = {r["variabelnamn"] for r in v["removed"]}
+        assert "ÅÄÖVar" in added_names
+        assert "TestVar" in removed_names
+
+    def test_variable_filter_unchanged(self, db_path: str):
+        """Kön is unchanged 2020→2022; should appear in unchanged list."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+                "--variable",
+                "Kön",
+            ]
+        )
+        assert code == 0
+        assert data["data"]["variants"] == []
+        assert "Kön" in data["data"]["unchanged"]
+        # resolved_variables shows the mapping
+        resolved = data["data"]["resolved_variables"]
+        assert any(r["variabelnamn"] == "Kön" and r["input"] == "Kön" for r in resolved)
+
+    def test_variable_filter_by_alias(self, db_path: str):
+        """Kon is a column alias for Kön — resolved_variables shows the mapping."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+                "--variable",
+                "Kon",
+            ]
+        )
+        assert code == 0
+        assert data["data"]["variants"] == []
+        assert "Kön" in data["data"]["unchanged"]
+        resolved = data["data"]["resolved_variables"]
+        assert any(r["input"] == "Kon" and r["variabelnamn"] == "Kön" for r in resolved)
+
+    def test_multiple_variables(self, db_path: str):
+        """Multiple --variable values filter for all specified variables."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+                "--variable",
+                "Kön",
+                "TestVar",
+            ]
+        )
+        assert code == 0
+        # TestVar removed in 2022 → should appear in variants
+        v = data["data"]["variants"][0]
+        removed_names = {r["variabelnamn"] for r in v["removed"]}
+        assert "TestVar" in removed_names
+        # Kön unchanged everywhere
+        assert "Kön" in data["data"]["unchanged"]
+        # Both inputs resolved
+        inputs = {r["input"] for r in data["data"]["resolved_variables"]}
+        assert inputs == {"Kön", "TestVar"}
+
+    def test_variant_filter(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+                "--variant",
+                "10",
+            ]
+        )
+        assert code == 0
+        assert len(data["data"]["variants"]) >= 1
+        assert data["data"]["variants"][0]["regvar_id"] == "10"
+
+    def test_fallback_to_closest_year(self, db_path: str):
+        """Year 2019 has no version; should fall back to nothing. Year 2023 falls back to 2022."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2023",
+            ]
+        )
+        assert code == 0
+        # to_version should be the 2022 version (closest ≤ 2023)
+        v = data["data"]["variants"][0]
+        assert v["to_version"]["year"] == 2022
+
+    def test_from_gte_to_error(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2022",
+                "--to",
+                "2020",
+            ]
+        )
+        assert code == 2
+        assert data["error"]["code"] == "usage_error"
+
+    def test_register_not_found(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "NONEXIST",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+            ]
+        )
+        assert code == 16
+
+    def test_no_versions_in_range(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "1990",
+                "--to",
+                "1995",
+            ]
+        )
+        assert code == 16
+
+
+# ---------------------------------------------------------------------------
+# Get lineage
+# ---------------------------------------------------------------------------
+
+
+class TestGetLineage:
+    def test_basic_lineage(self, db_path: str):
+        """Kön appears in TESTREG (source) and OTHERREG (consumer)."""
+        data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
+        assert code == 0
+        assert data["data"]["variable_name"] == "Kön"
+        regs = data["data"]["registers"]
+        assert len(regs) == 2
+        roles = {r["register_name"]: r["role"] for r in regs}
+        # TESTREG has no provenance → unknown (no source fields set)
+        # OTHERREG has variabelregister_kalla=TESTREG → consumer
+        assert roles["OTHERREG"] == "consumer"
+
+    def test_source_resolution(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
+        assert code == 0
+        otherreg = [
+            r for r in data["data"]["registers"] if r["register_name"] == "OTHERREG"
+        ][0]
+        # TESTREG should resolve to register_id "1"
+        assert otherreg["source_register_id"] == "1"
+        assert otherreg["variabelregister_kalla"] == "TESTREG"
+
+    def test_no_provenance_is_unknown(self, db_path: str):
+        """UniqueVar has no provenance fields → role = unknown."""
+        data, code = _run_json(["--db", db_path, "get", "lineage", "UniqueVar"])
+        assert code == 0
+        regs = data["data"]["registers"]
+        assert len(regs) == 1
+        assert regs[0]["role"] == "unknown"
+
+    def test_register_filter(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "lineage", "Kön", "--register", "OTHERREG"]
+        )
+        assert code == 0
+        regs = data["data"]["registers"]
+        assert len(regs) == 1
+        assert regs[0]["register_name"] == "OTHERREG"
+
+    def test_not_found(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "lineage", "NONEXISTENT"])
+        assert code == 16
+
+    def test_provenance_coverage(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
+        assert code == 0
+        cov = data["data"]["provenance_coverage"]
+        assert cov["total"] == cov["with_source"] + cov["without_source"]
+        assert cov["total"] > 0
+
+    def test_year_range(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "lineage", "Kön"])
+        assert code == 0
+        testreg = [
+            r for r in data["data"]["registers"] if r["register_name"] == "TESTREG"
+        ][0]
+        assert testreg["year_range"] == [2020, 2022]
+        assert testreg["instance_count"] == 3
+
+
+# ---------------------------------------------------------------------------
+# Envelope and error model
+# ---------------------------------------------------------------------------
+
+
+class TestOutputFormats:
+    def test_json_envelope(self, db_path: str):
         data, _ = _run_json(["--db", db_path, "search", "--query", "test"])
+        assert data["contract_version"] == "3.0.0"
         assert "generated_at" in data
         assert "request" in data
         assert "database" in data
         assert "data" in data
-        assert "run" in data
         assert "duration_ms" in data["run"]
 
-    def test_table_format_works(self, db_path: str):
+    def test_default_format_is_table(self, db_path: str):
+        """Default output (no --format) should be table, not JSON."""
+        import io
+        import sys
+
+        old_stdout = sys.stdout
+        sys.stdout = buf = io.StringIO()
+        try:
+            code = run(["--db", db_path, "search", "--query", "testvariabel"])
+        finally:
+            sys.stdout = old_stdout
+        output = buf.getvalue()
+        assert code == 0
+        assert "TestVar" in output
+        assert "---" in output  # table separator
+
+    def test_list_format(self, db_path: str):
         import io
         import sys
 
@@ -486,22 +785,29 @@ class TestEnvelope:
         sys.stdout = buf = io.StringIO()
         try:
             code = run(
-                [
-                    "--db",
-                    db_path,
-                    "--format",
-                    "table",
-                    "search",
-                    "--query",
-                    "testvariabel",
-                ]
+                ["--db", db_path, "--format", "list", "get", "register", "TESTREG"]
             )
         finally:
             sys.stdout = old_stdout
         output = buf.getvalue()
         assert code == 0
-        assert "TestVar" in output
-        assert "---" in output
+        assert "register_id" in output
+        assert "TESTREG" in output
+        assert "---" not in output  # no table separator
+
+    def test_json_verbose_has_envelope(self, db_path: str):
+        data, _ = _run_json(["--db", db_path, "search", "--query", "Kön"])
+        assert data["contract_version"] == "3.0.0"
+        assert "run" in data
+
+    def test_json_no_verbose_is_data_only(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "search", "--query", "Kön"], verbose=False
+        )
+        assert code == 0
+        assert "contract_version" not in data
+        assert "run" not in data
+        assert "total_count" in data
 
     def test_no_command(self):
         _, code = _run_json([])

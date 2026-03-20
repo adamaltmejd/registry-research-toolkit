@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -22,6 +23,8 @@ from .errors import EXIT_INTERNAL, EXIT_USAGE, RegmetaError
 from .queries import (
     get_coded_variables,
     get_datacolumns,
+    get_diff,
+    get_lineage,
     get_register,
     get_schema,
     get_values,
@@ -30,7 +33,7 @@ from .queries import (
     search,
 )
 
-CONTRACT_VERSION = "2.0.0"
+CONTRACT_VERSION = "3.0.0"
 
 
 # ---------------------------------------------------------------------------
@@ -58,45 +61,94 @@ def _success_envelope(
     return envelope
 
 
-def _write_json(payload: dict[str, Any], output_path: str | None) -> None:
-    content = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    if output_path:
-        target = Path(output_path).expanduser().resolve()
-        target.parent.mkdir(parents=True, exist_ok=True)
-        tmp = target.with_suffix(target.suffix + ".tmp")
-        tmp.write_text(content, encoding="utf-8")
-        tmp.replace(target)
-    else:
-        sys.stdout.write(content)
+_MAX_DISPLAY_ROWS = 100
 
 
-def _write_table(
-    rows: list[dict[str, Any]], columns: list[str], output_path: str | None
-) -> None:
-    if not rows:
-        content = "(no results)\n"
-    else:
-        widths = {c: len(c) for c in columns}
-        str_rows = []
-        for row in rows:
-            str_row = {c: str(row.get(c, "")) for c in columns}
-            for c in columns:
-                widths[c] = max(widths[c], len(str_row[c]))
-            str_rows.append(str_row)
-
-        header = "  ".join(c.ljust(widths[c]) for c in columns)
-        sep = "  ".join("-" * widths[c] for c in columns)
-        lines = [header, sep]
-        for sr in str_rows:
-            lines.append("  ".join(sr[c].ljust(widths[c]) for c in columns))
-        content = "\n".join(lines) + "\n"
-
+def _write_to(content: str, output_path: str | None) -> None:
     if output_path:
         target = Path(output_path).expanduser().resolve()
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
     else:
         sys.stdout.write(content)
+
+
+def _write_json(payload: dict[str, Any], output_path: str | None) -> None:
+    content = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    if output_path:
+        tmp = Path(output_path).expanduser().resolve()
+        tmp_file = tmp.with_suffix(tmp.suffix + ".tmp")
+        tmp.parent.mkdir(parents=True, exist_ok=True)
+        tmp_file.write_text(content, encoding="utf-8")
+        tmp_file.replace(tmp)
+    else:
+        sys.stdout.write(content)
+
+
+def _terminal_width(output_path: str | None) -> int:
+    if output_path:
+        return 10_000
+    return shutil.get_terminal_size().columns
+
+
+def _render_table(rows: list[dict[str, Any]], columns: list[str]) -> tuple[str, int]:
+    widths = {c: len(c) for c in columns}
+    str_rows = []
+    for row in rows:
+        str_row = {c: str(row.get(c, "")) for c in columns}
+        for c in columns:
+            widths[c] = max(widths[c], len(str_row[c]))
+        str_rows.append(str_row)
+
+    table_width = sum(widths.values()) + 2 * (len(columns) - 1)
+    header = "  ".join(c.ljust(widths[c]) for c in columns)
+    sep = "  ".join("-" * widths[c] for c in columns)
+    lines = [header, sep]
+    for sr in str_rows:
+        lines.append("  ".join(sr[c].ljust(widths[c]) for c in columns))
+    return "\n".join(lines) + "\n", table_width
+
+
+def _render_list(rows: list[dict[str, Any]], columns: list[str]) -> str:
+    key_width = max(len(c) for c in columns)
+    lines: list[str] = []
+    for i, row in enumerate(rows):
+        if i > 0:
+            lines.append("")
+        for c in columns:
+            lines.append(f"  {c.ljust(key_width)}  {row.get(c, '')}")
+    return "\n".join(lines) + "\n"
+
+
+def _write_formatted(
+    rows: list[dict[str, Any]],
+    columns: list[str],
+    output_path: str | None,
+    *,
+    fmt: str = "table",
+) -> None:
+    if not rows:
+        _write_to("(no results)\n", output_path)
+        return
+
+    truncated = 0
+    if len(rows) > _MAX_DISPLAY_ROWS:
+        truncated = len(rows) - _MAX_DISPLAY_ROWS
+        rows = rows[:_MAX_DISPLAY_ROWS]
+
+    if fmt == "list":
+        content = _render_list(rows, columns)
+    else:
+        table_content, table_width = _render_table(rows, columns)
+        if table_width > _terminal_width(output_path):
+            content = _render_list(rows, columns)
+        else:
+            content = table_content
+
+    if truncated:
+        content += f"\n({truncated} more rows — use --format json for full output)\n"
+
+    _write_to(content, output_path)
 
 
 def _db_info(conn):
@@ -112,8 +164,23 @@ def _db_info(conn):
 # ---------------------------------------------------------------------------
 
 
+class _NoRepeatParser(argparse.ArgumentParser):
+    """ArgumentParser that rejects repeated optional flags."""
+
+    def parse_known_args(self, args=None, namespace=None):
+        if args is None:
+            args = sys.argv[1:]
+        seen: dict[str, str] = {}
+        for token in args:
+            if token.startswith("-") and "=" not in token:
+                if token in seen:
+                    self.error(f"{token} may only be specified once")
+                seen[token] = token
+        return super().parse_known_args(args, namespace)
+
+
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
+    parser = _NoRepeatParser(
         prog="regmeta",
         description=(
             "Search and query SCB registry metadata.\n\n"
@@ -128,10 +195,20 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Database directory (default: ~/.local/share/regmeta/)",
     )
     parser.add_argument(
-        "--format", default="json", choices=["json", "table"], help="Output format."
+        "--format",
+        default="table",
+        choices=["table", "list", "json"],
+        help="Output format: table (default, auto-switches to list if too wide), list (record blocks), json (machine-readable).",
     )
     parser.add_argument(
         "--output", default=None, help="Write output to file instead of stdout."
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        default=False,
+        help="Include envelope metadata (contract version, timing, db info).",
     )
 
     sub = parser.add_subparsers(dest="command")
@@ -297,6 +374,56 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     get_coded_p.add_argument(
         "--limit", type=int, default=100, help="Max results (default: 100)."
+    )
+
+    get_diff_p = get_sub.add_parser(
+        "diff",
+        help="Compare a register's schema between two years.",
+        description=(
+            "Show added, removed, and changed variables between two years.\n\n"
+            "Examples:\n"
+            "  regmeta get diff --register LISA --from 2015 --to 2020\n"
+            "  regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    get_diff_p.add_argument(
+        "--register", required=True, help="Register name or numeric ID."
+    )
+    get_diff_p.add_argument(
+        "--from",
+        dest="from_year",
+        type=int,
+        required=True,
+        help="Start year (4-digit).",
+    )
+    get_diff_p.add_argument(
+        "--to", dest="to_year", type=int, required=True, help="End year (4-digit)."
+    )
+    get_diff_p.add_argument(
+        "--variant", default=None, help="Filter by register variant ID (regvar_id)."
+    )
+    get_diff_p.add_argument(
+        "--variable",
+        nargs="+",
+        default=None,
+        help="Filter to one or more variables (name, var_id, or alias).",
+    )
+
+    get_lineage_p = get_sub.add_parser(
+        "lineage",
+        help="Show cross-register variable provenance.",
+        description=(
+            "Show where a variable originates and which registers consume it.\n\n"
+            "Examples:\n"
+            "  regmeta get lineage Kon\n"
+            "  regmeta get lineage Kon --register LISA"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    get_lineage_p.add_argument("variable", help="Variable name or var_id.")
+    get_lineage_p.add_argument(
+        "--register", default=None, help="Filter by register (name or ID)."
     )
 
     resolve_p = sub.add_parser(
@@ -571,6 +698,71 @@ def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], 
     ), 0
 
 
+def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.from_year >= args.to_year:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message=f"--from ({args.from_year}) must be less than --to ({args.to_year}).",
+            remediation="Swap the year values.",
+        )
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = _db_info(conn)
+        data = get_diff(
+            conn,
+            register=args.register,
+            from_year=args.from_year,
+            to_year=args.to_year,
+            variant=args.variant,
+            variables=args.variable,
+        )
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    args_payload: dict[str, Any] = {
+        "register": args.register,
+        "from_year": args.from_year,
+        "to_year": args.to_year,
+    }
+    if args.variant:
+        args_payload["variant"] = args.variant
+    if args.variable:
+        args_payload["variable"] = args.variable
+    return _success_envelope(
+        command="get diff",
+        args_payload=args_payload,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = _db_info(conn)
+        data = get_lineage(conn, args.variable, register=args.register)
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    args_payload: dict[str, Any] = {"variable": args.variable}
+    if args.register:
+        args_payload["register"] = args.register
+    return _success_envelope(
+        command="get lineage",
+        args_payload=args_payload,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .errors import EXIT_NO_MATCH
 
@@ -627,14 +819,17 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 # ---------------------------------------------------------------------------
 
 
-def _write_table_from_payload(
-    key: tuple[str, str | None], payload: dict[str, Any], output_path: str | None
+def _write_payload(
+    key: tuple[str, str | None],
+    payload: dict[str, Any],
+    output_path: str | None,
+    *,
+    fmt: str = "table",
 ) -> None:
     data = payload.get("data", {})
 
     if key == ("search", None):
         results = data.get("results", [])
-        # Pick columns based on what types are in the results
         types = {r.get("type") for r in results}
         if types == {"datacolumn"}:
             cols = [
@@ -656,7 +851,7 @@ def _write_table_from_payload(
             cols = ["variable_name", "register_id", "register_name", "var_id"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
-        _write_table(results, cols, output_path)
+        _write_formatted(results, cols, output_path, fmt=fmt)
     elif key == ("get", "register"):
         regs = data.get("registers", [data]) if "registers" in data else [data]
         rows = []
@@ -670,10 +865,11 @@ def _write_table_from_payload(
                         "variant_name": v.get("registervariantnamn", ""),
                     }
                 )
-        _write_table(
+        _write_formatted(
             rows,
             ["register_id", "register_name", "regvar_id", "variant_name"],
             output_path,
+            fmt=fmt,
         )
     elif key == ("get", "schema"):
         rows = []
@@ -690,10 +886,11 @@ def _write_table_from_payload(
                             "cvid": col.get("cvid", ""),
                         }
                     )
-        _write_table(
+        _write_formatted(
             rows,
             ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
             output_path,
+            fmt=fmt,
         )
     elif key == ("get", "varinfo"):
         variables = data.get("variables", [data]) if "variables" in data else [data]
@@ -712,7 +909,7 @@ def _write_table_from_payload(
                         "values": inst.get("value_set_count", 0),
                     }
                 )
-        _write_table(
+        _write_formatted(
             rows,
             [
                 "register_id",
@@ -725,25 +922,116 @@ def _write_table_from_payload(
                 "values",
             ],
             output_path,
+            fmt=fmt,
         )
     elif key == ("get", "values"):
-        _write_table(
+        _write_formatted(
             data if isinstance(data, list) else [],
             ["vardekod", "vardebenamning"],
             output_path,
+            fmt=fmt,
         )
     elif key == ("get", "datacolumns"):
-        _write_table(
+        _write_formatted(
             data if isinstance(data, list) else [],
             ["kolumnnamn", "register_id", "register_name", "version_name"],
             output_path,
+            fmt=fmt,
         )
     elif key == ("get", "coded-variables"):
-        _write_table(
+        _write_formatted(
             data if isinstance(data, list) else [],
             ["variable_name", "n_distinct_codes", "n_registers", "n_instances"],
             output_path,
+            fmt=fmt,
         )
+    elif key == ("get", "diff"):
+        rows = []
+        for v in data.get("variants", []):
+            for item in v.get("added", []):
+                rows.append(
+                    {
+                        "variant": v.get("variant_name", ""),
+                        "change": "+",
+                        "var_id": item["var_id"],
+                        "variabelnamn": item["variabelnamn"],
+                        "detail": f"{item['datatyp']}  {item.get('aliases', [])}",
+                    }
+                )
+            for item in v.get("removed", []):
+                rows.append(
+                    {
+                        "variant": v.get("variant_name", ""),
+                        "change": "-",
+                        "var_id": item["var_id"],
+                        "variabelnamn": item["variabelnamn"],
+                        "detail": f"{item['datatyp']}  {item.get('aliases', [])}",
+                    }
+                )
+            for item in v.get("changed", []):
+                details = "; ".join(
+                    f"{c['field']}: {c['from']} → {c['to']}" for c in item["changes"]
+                )
+                rows.append(
+                    {
+                        "variant": v.get("variant_name", ""),
+                        "change": "~",
+                        "var_id": item["var_id"],
+                        "variabelnamn": item["variabelnamn"],
+                        "detail": details,
+                    }
+                )
+        resolved = data.get("resolved_variables", [])
+        if resolved:
+            lines = ["Resolved variables:"]
+            for rv in resolved:
+                if rv["input"].lower() != rv["variabelnamn"].lower():
+                    lines.append(
+                        f"  {rv['input']} → {rv['variabelnamn']} (var_id {rv['var_id']})"
+                    )
+                else:
+                    lines.append(f"  {rv['variabelnamn']} (var_id {rv['var_id']})")
+            _write_to("\n".join(lines) + "\n\n", output_path)
+        _write_formatted(
+            rows,
+            ["variant", "change", "var_id", "variabelnamn", "detail"],
+            output_path,
+            fmt=fmt,
+        )
+        unchanged = data.get("unchanged", [])
+        if unchanged:
+            _write_to(f"\nUnchanged: {', '.join(unchanged)}\n", output_path)
+    elif key == ("get", "lineage"):
+        rows = []
+        for r in data.get("registers", []):
+            source_info = ""
+            if r["role"] == "consumer" and r.get("variabelregister_kalla"):
+                source_info = f"← {r['variabelregister_kalla']}"
+            yr = r.get("year_range", [])
+            year_str = f"{yr[0]}-{yr[1]}" if len(yr) == 2 else ""
+            rows.append(
+                {
+                    "register": f"{r['register_name']} ({r['register_id']})",
+                    "var_id": r["var_id"],
+                    "role": r["role"],
+                    "instances": str(r["instance_count"]),
+                    "years": year_str,
+                    "source": source_info,
+                }
+            )
+        _write_formatted(
+            rows,
+            ["register", "var_id", "role", "instances", "years", "source"],
+            output_path,
+            fmt=fmt,
+        )
+        cov = data.get("provenance_coverage", {})
+        if cov.get("total"):
+            pct = round(100 * cov["with_source"] / cov["total"])
+            _write_to(
+                f"\nProvenance: {cov['with_source']}/{cov['total']} ({pct}%)\n",
+                output_path,
+            )
     elif key == ("resolve", None):
         rows = []
         for col in data.get("columns", []):
@@ -768,10 +1056,11 @@ def _write_table_from_payload(
                         "variable_name": "",
                     }
                 )
-        _write_table(
+        _write_formatted(
             rows,
             ["column", "status", "register_id", "var_id", "variable_name"],
             output_path,
+            fmt=fmt,
         )
     else:
         _write_json(payload, output_path)
@@ -792,6 +1081,8 @@ COMMAND_DISPATCH = {
     ("get", "values"): _cmd_get_values,
     ("get", "datacolumns"): _cmd_get_datacolumns,
     ("get", "coded-variables"): _cmd_get_coded_variables,
+    ("get", "diff"): _cmd_get_diff,
+    ("get", "lineage"): _cmd_get_lineage,
     ("resolve", None): _cmd_resolve,
 }
 
@@ -825,14 +1116,19 @@ def run(argv: list[str] | None = None) -> int:
         sys.stderr.write(f"Unknown command: {args.command} {sub_command or ''}\n")
         return EXIT_USAGE
 
-    use_table = getattr(args, "format", "json") == "table"
+    fmt = getattr(args, "format", "table")
+    verbose = getattr(args, "verbose", False)
+    output_path = getattr(args, "output", None)
 
     try:
         payload, exit_code = handler(args)
-        if use_table:
-            _write_table_from_payload(key, payload, getattr(args, "output", None))
+        if fmt == "json":
+            if verbose:
+                _write_json(payload, output_path)
+            else:
+                _write_json(payload.get("data", payload), output_path)
         else:
-            _write_json(payload, getattr(args, "output", None))
+            _write_payload(key, payload, output_path, fmt=fmt)
         return exit_code
     except RegmetaError as exc:
         _write_json({"error": exc.to_dict()}, getattr(args, "output", None))
