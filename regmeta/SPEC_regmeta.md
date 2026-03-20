@@ -244,7 +244,9 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 
 ### 6.4 Known Data Limitations
 
-**Value sets are not version-specific.** The Värdemängder export attaches a flat historical union of all code definitions to every CVID, regardless of which year that CVID represents. When a code's meaning changes between years, both definitions appear on all CVIDs with no temporal binding. See `reports/arbsoknov_report.md` for a detailed case study. Temporal code validity can only be determined from external documentation (Bakgrundsfakta PDFs). Pending clarification from SCB on whether this is intentional or whether temporal data exists in MetaPlus but is not exported (see `reports/draft_email_vardemangder_temporal.md`).
+**Value sets are not version-specific.** The Värdemängder export attaches a flat historical union of all code definitions to every CVID, regardless of which year that CVID represents. When a code's meaning changes between years, both definitions appear on all CVIDs with no temporal binding. See `reports/arbsoknov_report.md` for a detailed case study.
+
+**Temporal validity is available via VardemangderValidDates.csv.** SCB confirmed (2026-03) that MetaPlus stores validity date ranges per ItemId. The supplementary export `VardemangderValidDates.csv` maps `ItemID → (ValidFrom, ValidTo)`. Items absent from this file have no temporal restriction (always valid). Items with bounded validity may have multiple non-overlapping date ranges. The `value_item_validity` table stores these ranges, and `get values --valid-at <date>` filters accordingly.
 
 ## 7. Data Contract
 
@@ -332,11 +334,11 @@ Error JSON: `error.code`, `error.class`, `error.message`, `error.remediation`.
 3. **Pre-built DB distribution.** The regmeta DB is built from publicly available SCB metadata (no PII). Publish pre-built `regmeta.db` as a GitHub release asset (or LFS). Add `regmeta maintain download-db` command that fetches the latest release to `~/.local/share/regmeta/`. Optionally auto-download on first `open_db` if the DB is missing. This removes the requirement for users to have access to raw SCB CSV exports and run `build-db` themselves.
 
 ## 15. V3 Placeholder: Semantic Docs Layer
-The SCB metadata export is a structural catalog — it records what exists but not what it means in context. Key information is only available in external documentation (e.g. Bakgrundsfakta PDFs): temporal code validity, sub-category composition, code migration history, and domain-specific interpretation guidance. See `reports/arbsoknov_report.md` for a detailed case study.
+The SCB metadata export is a structural catalog — it records what exists but not what it means in context. Key information is only available in external documentation (e.g. Bakgrundsfakta PDFs): sub-category composition, code migration history, and domain-specific interpretation guidance. See `reports/arbsoknov_report.md` for a detailed case study. (Temporal code validity is now covered by the VardemangderValidDates import.)
 
 A future version may add a curated docs layer: parsed markdown files keyed to `register_id` / `(register_id, var_id)`, searchable alongside the metadata DB. This would support questions like "what is the best registry for X?" or "what's the difference between variable X and Y?".
 
 Design constraints:
 1. **Separate lifecycle.** Curated docs must not be destroyed by `build-db` rebuilds. Either a separate DB or separate import step (`maintain build-docs`).
 2. **Keyed to existing IDs.** Docs join against `register_id` and `(register_id, var_id)` — no new ID schemes.
-3. **Pending SCB response.** If SCB confirms that temporal code validity exists in MetaPlus but is not exported, the right fix may be a better export rather than PDF parsing. Defer design until the export question is resolved.
+3. **Resolved.** SCB confirmed (2026-03) that temporal code validity exists in MetaPlus. The supplementary `VardemangderValidDates.csv` export is now integrated into `build-db`.

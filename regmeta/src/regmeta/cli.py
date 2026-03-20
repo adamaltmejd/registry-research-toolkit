@@ -249,6 +249,11 @@ def _build_parser() -> argparse.ArgumentParser:
     get_values_p.add_argument(
         "cvid", help="CVID (find via: regmeta get varinfo <variable>)."
     )
+    get_values_p.add_argument(
+        "--valid-at",
+        default=None,
+        help="ISO date (YYYY-MM-DD). Only return values valid at this date.",
+    )
 
     get_datacols_p = get_sub.add_parser(
         "datacolumns",
@@ -491,13 +496,16 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     conn = open_db(db)
     try:
         info = _db_info(conn)
-        data = get_values(conn, args.cvid)
+        data = get_values(conn, args.cvid, valid_at=args.valid_at)
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
+    args_payload: dict[str, Any] = {"cvid": args.cvid}
+    if args.valid_at:
+        args_payload["valid_at"] = args.valid_at
     return _success_envelope(
         command="get values",
-        args_payload={"cvid": args.cvid},
+        args_payload=args_payload,
         db_info=info,
         data=data,
         duration_ms=duration_ms,

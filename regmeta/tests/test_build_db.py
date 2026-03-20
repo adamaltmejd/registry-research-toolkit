@@ -58,7 +58,7 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         try:
             manifest = get_manifest(conn)
-            assert manifest["schema_version"] == "1.0.0"
+            assert manifest["schema_version"] == "1.1.0"
             assert "import_date" in manifest
         finally:
             conn.close()
@@ -133,6 +133,22 @@ class TestBuildDb:
         try:
             count = conn.execute("SELECT COUNT(*) FROM value_item").fetchone()[0]
             assert count == 6  # 2 for 1001, 2 for 1003, 2 for 2001
+        finally:
+            conn.close()
+
+    def test_validity_dates_imported(self, fixture_db: Path):
+        """Validity date ranges should be imported."""
+        conn = open_db(fixture_db)
+        try:
+            count = conn.execute(
+                "SELECT COUNT(*) FROM value_item_validity"
+            ).fetchone()[0]
+            assert count == 1  # Only item 5001 has a validity record
+            row = conn.execute(
+                "SELECT * FROM value_item_validity WHERE item_id = '5001'"
+            ).fetchone()
+            assert row["valid_from"] == "2000-01-01"
+            assert row["valid_to"] == "2010-12-31"
         finally:
             conn.close()
 

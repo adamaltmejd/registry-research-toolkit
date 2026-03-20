@@ -17,7 +17,7 @@ from typing import Any, Iterator
 
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "1.0.0"
+SCHEMA_VERSION = "1.1.0"
 DB_FILENAME = "regmeta.db"
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
@@ -94,6 +94,7 @@ EXPECTED_HEADERS: dict[str, list[str]] = {
         "CVID",
         "ItemId",
     ],
+    "VardemangderValidDates.csv": ["ItemID", "ValidFrom", "ValidTo"],
 }
 
 # Files that must be present for build-db
@@ -103,6 +104,7 @@ ENRICHMENT_FILES = [
     "Identifierare.csv",
     "Timeseries.csv",
     "Vardemangder.csv",
+    "VardemangderValidDates.csv",
 ]
 
 DDL = """\
@@ -199,6 +201,13 @@ CREATE TABLE value_item (
     vardebenamning TEXT,
     item_id TEXT
 );
+
+CREATE TABLE value_item_validity (
+    item_id TEXT NOT NULL,
+    valid_from TEXT,
+    valid_to TEXT
+);
+CREATE INDEX idx_value_item_validity_item ON value_item_validity(item_id);
 
 CREATE TABLE unika_summary (
     register_id TEXT,
@@ -758,6 +767,40 @@ def _import_vardemangder(
     return row_count
 
 
+def _import_vardemangder_valid_dates(conn: sqlite3.Connection, path: Path) -> int:
+    """Import value-item validity date ranges from VardemangderValidDates.csv.
+
+    Items absent from this file have no temporal restriction (always valid).
+    """
+    _progress("Importing VardemangderValidDates.csv...")
+    row_count = 0
+    batch: list[tuple[str, str, str]] = []
+    batch_size = 50_000
+
+    with _open_scb_csv(path) as (_, rows):
+        for _, row in rows:
+            row_count += 1
+            batch.append((row["ItemID"], row["ValidFrom"], row["ValidTo"]))
+
+            if len(batch) >= batch_size:
+                conn.executemany(
+                    "INSERT INTO value_item_validity (item_id, valid_from, valid_to) "
+                    "VALUES (?, ?, ?)",
+                    batch,
+                )
+                batch.clear()
+
+    if batch:
+        conn.executemany(
+            "INSERT INTO value_item_validity (item_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?)",
+            batch,
+        )
+
+    _progress(f"  {row_count:,} rows")
+    return row_count
+
+
 def _populate_fts(conn: sqlite3.Connection) -> None:
     """Populate FTS5 search indexes."""
     _progress("Building search indexes...")
@@ -933,6 +976,8 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
                 row_counts[filename] = _import_timeseries(conn, path)
             elif filename == "Vardemangder.csv":
                 row_counts[filename] = _import_vardemangder(conn, path, known_cvids)
+            elif filename == "VardemangderValidDates.csv":
+                row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
 
         # Reference files (optional)
         sql_path = csv_dir / "Tabelldefinitioner.sql"

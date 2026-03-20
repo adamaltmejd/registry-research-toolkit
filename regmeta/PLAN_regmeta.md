@@ -65,6 +65,7 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
 - [x] Normalization from Registerinformation.csv → core tables (register, variant, version, population, object_type, variable, instance, alias, context). → `db.py:_import_registerinformation`
 - [x] Enrichment from UnikaRegisterOchVariabler, Identifierare, Timeseries. → `db.py:_import_unika`, `_import_identifierare`, `_import_timeseries`
 - [x] Value-item import from Vardemangder.csv (102M rows — batch inserts, WAL mode, progress to stderr). → `db.py:_import_vardemangder`
+- [x] Value-item validity dates from VardemangderValidDates.csv (898K rows). → `db.py:_import_vardemangder_valid_dates`
 - [ ] Reference import: parse Tabelldefinitioner.sql for column types/constraints → `source_column_type` table.
 - [ ] Reference import: parse ID-kolumner.xlsx for join-key semantics (openpyxl) → `source_join_key` table.
 - [x] FTS5 index population. → `db.py:_populate_fts`
@@ -141,4 +142,4 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 | cp1252 dirty bytes | DOS cp850 remnants (0x8F, 0x90, 0x9D) mapped to Å/É/Ø during import. ~2700 occurrences in Vardemangder. |
 | CVID alias/context anomalies | Handled by alias + context tables by design |
 | Scope creep into live API | Hard v1 boundary in spec |
-| Value sets not version-specific | SCB limitation, not a bug. Documented in SPEC §6.4. Pending SCB clarification. |
+| Value sets not version-specific | Resolved. SCB provided `VardemangderValidDates.csv` (2026-03). Integrated into `build-db` as `value_item_validity` table. `get values --valid-at` filters by date. |

@@ -566,6 +566,13 @@ VARDEMANGDER_ROWS = [
     PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
 ]
 
+VALID_DATES_HEADER = PIPE.join(["ItemID", "ValidFrom", "ValidTo"])
+VALID_DATES_ROWS = [
+    # 5001 ("Man") valid 2000-2010
+    PIPE.join(["5001", "2000-01-01", "2010-12-31"]),
+    # 5002 ("Kvinna") has no validity record → always valid
+]
+
 
 def _write_csv(
     path: Path, header: str, rows: list[str], encoding: str = "cp1252"
@@ -589,6 +596,9 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     _write_csv(csv_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
     _write_csv(csv_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
     _write_csv(csv_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+    _write_csv(
+        csv_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+    )
 
     build_db(csv_dir=csv_dir, db_dir=db_dir)
 

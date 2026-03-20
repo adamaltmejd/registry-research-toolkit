@@ -576,8 +576,15 @@ def get_varinfo(
 # ---------------------------------------------------------------------------
 
 
-def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
-    """Get value-set members for a CVID."""
+def get_values(
+    conn: sqlite3.Connection, cvid: str, *, valid_at: str | None = None
+) -> list[dict[str, Any]]:
+    """Get value-set members for a CVID.
+
+    If valid_at is an ISO date (YYYY-MM-DD), only return values whose
+    validity period includes that date.  Items with no validity record
+    are treated as always valid.
+    """
     inst = conn.execute(
         "SELECT * FROM variable_instance WHERE cvid = ?", (cvid,)
     ).fetchone()
@@ -590,11 +597,25 @@ def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
             remediation="Use `regmeta get schema` to find valid CVIDs.",
         )
 
-    values = conn.execute(
-        "SELECT vardekod, vardebenamning, vardemangdsversion, vardemangdsniva "
-        "FROM value_item WHERE cvid = ? ORDER BY vardekod",
-        (cvid,),
-    ).fetchall()
+    if valid_at is None:
+        values = conn.execute(
+            "SELECT vardekod, vardebenamning, vardemangdsversion, vardemangdsniva "
+            "FROM value_item WHERE cvid = ? ORDER BY vardekod",
+            (cvid,),
+        ).fetchall()
+    else:
+        values = conn.execute(
+            "SELECT DISTINCT vi.vardekod, vi.vardebenamning, "
+            "vi.vardemangdsversion, vi.vardemangdsniva "
+            "FROM value_item vi "
+            "LEFT JOIN value_item_validity viv ON vi.item_id = viv.item_id "
+            "WHERE vi.cvid = ? AND ("
+            "  viv.item_id IS NULL"
+            "  OR ((viv.valid_from = '' OR viv.valid_from <= ?)"
+            "      AND (viv.valid_to = '' OR viv.valid_to >= ?))"
+            ") ORDER BY vi.vardekod",
+            (cvid, valid_at, valid_at),
+        ).fetchall()
     return [dict(v) for v in values]
 
 

@@ -261,6 +261,24 @@ class TestGetValues:
         codes = {v["vardekod"] for v in data["data"]}
         assert codes == {"1", "2"}
 
+    def test_valid_at_within_range(self, db_path: str):
+        """Item 5001 is valid 2000-2010, 5002 always valid → both returned."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "1001", "--valid-at", "2005-06-15"]
+        )
+        assert code == 0
+        codes = {v["vardekod"] for v in data["data"]}
+        assert codes == {"1", "2"}
+
+    def test_valid_at_outside_range(self, db_path: str):
+        """Item 5001 expired after 2010 → only 5002 (always valid) returned."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "1001", "--valid-at", "2020-01-01"]
+        )
+        assert code == 0
+        codes = {v["vardekod"] for v in data["data"]}
+        assert codes == {"2"}
+
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16
