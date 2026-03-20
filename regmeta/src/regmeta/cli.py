@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import time
 from pathlib import Path
@@ -490,7 +491,18 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+_ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+
+
 def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.valid_at and not _ISO_DATE_RE.match(args.valid_at):
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="bad_date",
+            error_class="usage",
+            message=f"Invalid date format: {args.valid_at!r}",
+            remediation="Use ISO format: YYYY-MM-DD (e.g. 2020-01-15).",
+        )
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     conn = open_db(db)

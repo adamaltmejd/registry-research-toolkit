@@ -17,6 +17,7 @@ from ._util import progress
 from .enrich import EnrichedFile
 from .stats import ProjectStats
 
+_MANIFEST_FILENAME = "manifest.json"
 
 @dataclass
 class OutputFile:
@@ -39,13 +40,6 @@ def _sub_seed(master_seed: int, file_name: str, column_name: str) -> int:
     h = hashlib.sha256(f"{master_seed}:{file_name}:{column_name}".encode())
     return int.from_bytes(h.digest()[:4], "big")
 
-
-def _sha256_file(path: Path) -> str:
-    h = hashlib.sha256()
-    with path.open("rb") as f:
-        for chunk in iter(lambda: f.read(1 << 16), b""):
-            h.update(chunk)
-    return h.hexdigest()
 
 
 def _generate_numeric(
@@ -189,7 +183,7 @@ def _remove_stale_files(output_dir: Path, written_files: set[str]) -> list[str]:
     """Remove files from a previous run that are not in the current generation."""
     removed = []
     for path in sorted(output_dir.iterdir()):
-        if path.name == "manifest.json":
+        if path.name == _MANIFEST_FILENAME:
             continue
         if path.is_file() and path.name not in written_files:
             path.unlink()
@@ -321,7 +315,8 @@ def generate(
         writer = csv.writer(buf)
         writer.writerow(col_names)
         writer.writerows(zip(*(columns_data[c] for c in col_names)))
-        out_path.write_text(buf.getvalue(), encoding="utf-8", newline="")
+        content_bytes = buf.getvalue().encode("utf-8")
+        out_path.write_bytes(content_bytes)
         t_write = time.monotonic() - t_write
 
         if verbose:
@@ -335,7 +330,7 @@ def generate(
                 file_name=file_stats.file_name,
                 relative_path=file_stats.relative_path,
                 row_count=n_rows,
-                sha256=_sha256_file(out_path),
+                sha256=hashlib.sha256(content_bytes).hexdigest(),
             )
         )
 
@@ -357,7 +352,7 @@ def generate(
         output_dir=str(output_dir),
         files=output_files,
     )
-    manifest_path = output_dir / "manifest.json"
+    manifest_path = output_dir / _MANIFEST_FILENAME
     manifest_path.write_text(
         json.dumps(
             {

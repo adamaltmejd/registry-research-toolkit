@@ -611,8 +611,8 @@ def get_values(
             "LEFT JOIN value_item_validity viv ON vi.item_id = viv.item_id "
             "WHERE vi.cvid = ? AND ("
             "  viv.item_id IS NULL"
-            "  OR ((viv.valid_from = '' OR viv.valid_from <= ?)"
-            "      AND (viv.valid_to = '' OR viv.valid_to >= ?))"
+            "  OR ((viv.valid_from IS NULL OR viv.valid_from <= ?)"
+            "      AND (viv.valid_to IS NULL OR viv.valid_to >= ?))"
             ") ORDER BY vi.vardekod",
             (cvid, valid_at, valid_at),
         ).fetchall()
