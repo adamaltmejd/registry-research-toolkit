@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mock-data-wizard"
+version = "0.1.0"
+description = "SCB MONA mock-data generation workflows"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=1.26",
+  "regmeta",
+]
+
+[project.scripts]
+mock-data-wizard = "mock_data_wizard.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mock_data_wizard"]
