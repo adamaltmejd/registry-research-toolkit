@@ -155,6 +155,36 @@ def test_shared_id_pool(multi_file_stats_path: Path, tmp_path: Path):
     assert len(ids_a | ids_b) <= 500
 
 
+def test_id_uniqueness_when_pool_sufficient(multi_file_stats_path: Path, tmp_path: Path):
+    """IDs must not repeat within a file when the pool is >= row count."""
+    stats = parse_stats(multi_file_stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    # file_a: 500 rows from pool of 500 — every ID must be unique
+    with (out_dir / "file_a.csv").open() as f:
+        ids_a = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids_a) == len(set(ids_a)), "file_a has duplicate IDs"
+
+    # file_b: 300 rows from pool of 500 — every ID must be unique
+    with (out_dir / "file_b.csv").open() as f:
+        ids_b = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids_b) == len(set(ids_b)), "file_b has duplicate IDs"
+
+
+def test_id_uniqueness_single_file(stats_path: Path, tmp_path: Path):
+    """Single-file register with n_distinct == row_count must have unique IDs."""
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "persons.csv").open() as f:
+        ids = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids) == len(set(ids)), "persons.csv has duplicate IDs"
+
+
 def test_multi_file_output_order(multi_file_stats_path: Path, tmp_path: Path):
     stats = parse_stats(multi_file_stats_path)
     enriched = enrich(stats)

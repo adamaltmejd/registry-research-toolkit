@@ -158,9 +158,12 @@ def _generate_id(
     id_subtype: str,
     pool: np.ndarray | None = None,
 ) -> np.ndarray:
-    if pool is not None:
-        return rng.choice(pool, size=n)
-    return rng.choice(_make_id_pool(n_distinct, id_subtype), size=n)
+    if pool is None:
+        pool = _make_id_pool(n_distinct, id_subtype)
+    # Sample without replacement when the pool is large enough —
+    # registers with one row per person must not get duplicate IDs.
+    replace = n > len(pool)
+    return rng.choice(pool, size=n, replace=replace)
 
 
 def _apply_nulls(
