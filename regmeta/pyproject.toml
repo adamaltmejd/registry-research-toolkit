@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "regmeta"
+version = "0.2.0"
+description = "Search and query SCB registry metadata"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+regmeta = "regmeta.cli:main"
+
+[project.optional-dependencies]
+xlsx = ["openpyxl>=3.1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/regmeta"]
