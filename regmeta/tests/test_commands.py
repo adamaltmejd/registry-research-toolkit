@@ -279,9 +279,86 @@ class TestGetValues:
         codes = {v["vardekod"] for v in data["data"]}
         assert codes == {"2"}
 
+    def test_valid_at_bad_format(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "1001", "--valid-at", "2020/01/01"]
+        )
+        assert code == 2
+        assert data["error"]["code"] == "bad_date"
+
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16
+
+
+# ---------------------------------------------------------------------------
+# Get datacolumns
+# ---------------------------------------------------------------------------
+
+
+class TestGetDatacolumns:
+    def test_by_name(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "datacolumns", "Kön"])
+        assert code == 0
+        col_names = {r["kolumnnamn"] for r in data["data"]}
+        assert "Kon" in col_names or "KON" in col_names
+
+    def test_register_filter(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "datacolumns", "Kön", "--register", "TESTREG"]
+        )
+        assert code == 0
+        assert all(r["register_id"] == "1" for r in data["data"])
+
+    def test_alias_anomaly(self, db_path: str):
+        """TestVar should show both TestCol and TestKolumn aliases."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "datacolumns", "TestVar", "--register", "TESTREG"]
+        )
+        assert code == 0
+        col_names = {r["kolumnnamn"] for r in data["data"]}
+        assert "TestCol" in col_names
+        assert "TestKolumn" in col_names
+
+    def test_not_found(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "datacolumns", "NONEXISTENT"])
+        assert code == 16
+
+
+# ---------------------------------------------------------------------------
+# Get coded-variables
+# ---------------------------------------------------------------------------
+
+
+class TestGetCodedVariables:
+    def test_returns_results(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "coded-variables"])
+        assert code == 0
+        assert len(data["data"]) >= 1
+        first = data["data"][0]
+        assert "variable_name" in first
+        assert "n_distinct_codes" in first
+        assert "n_registers" in first
+
+    def test_min_codes_filter(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "coded-variables", "--min-codes", "3"]
+        )
+        assert code == 0
+        assert all(r["n_distinct_codes"] >= 3 for r in data["data"])
+
+    def test_min_registers_filter(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "coded-variables", "--min-registers", "2"]
+        )
+        assert code == 0
+        assert all(r["n_registers"] >= 2 for r in data["data"])
+
+    def test_kon_present(self, db_path: str):
+        """Kön has value items in our fixtures → should appear."""
+        data, code = _run_json(["--db", db_path, "get", "coded-variables"])
+        names = {r["variable_name"] for r in data["data"]}
+        assert "Kön" in names
 
 
 # ---------------------------------------------------------------------------

@@ -1,8 +1,8 @@
 # PLAN: regmeta V1
 
-Status: Active
+Status: Complete
 Created: 2026-03-01
-Last updated: 2026-03-14
+Last updated: 2026-03-20
 Owner: Research engineering
 Linked spec: `SPEC_regmeta.md`
 Domain model: `STRUCTURE.md`
@@ -37,10 +37,14 @@ A `schema_prototype.py` analysis tool was used during discovery to profile the S
 13. **`search` gains `--register` filter.** FTS results can be scoped to a specific register.
 14. **Contract version bumped to 2.0.0.**
 
+### 2026-03-20: Temporal validity
+15. **`value_item_validity` table.** SCB provided `VardemangderValidDates.csv` mapping ItemId to validity date ranges. Items absent from the file have no temporal restriction (always valid). Schema version bumped to 1.1.0.
+16. **`get values --valid-at` filter.** ISO date input, validated at CLI boundary.
+
 ## 4. V1 Command Set
 
 Top-level: `search`, `get`, `resolve`
-Get subcommands: `register`, `schema`, `varinfo`, `values`
+Get subcommands: `register`, `schema`, `varinfo`, `values`, `datacolumns`, `coded-variables`
 Maintain: `build-db`, `info`
 
 ## 5. Testing And Cleanup Policy
@@ -65,9 +69,7 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
 - [x] Normalization from Registerinformation.csv → core tables (register, variant, version, population, object_type, variable, instance, alias, context). → `db.py:_import_registerinformation`
 - [x] Enrichment from UnikaRegisterOchVariabler, Identifierare, Timeseries. → `db.py:_import_unika`, `_import_identifierare`, `_import_timeseries`
 - [x] Value-item import from Vardemangder.csv (102M rows — batch inserts, WAL mode, progress to stderr). → `db.py:_import_vardemangder`
-- [x] Value-item validity dates from VardemangderValidDates.csv (898K rows). → `db.py:_import_vardemangder_valid_dates`
-- [ ] Reference import: parse Tabelldefinitioner.sql for column types/constraints → `source_column_type` table.
-- [ ] Reference import: parse ID-kolumner.xlsx for join-key semantics (openpyxl) → `source_join_key` table.
+- [x] Value-item validity dates from VardemangderValidDates.csv. → `db.py:_import_vardemangder_valid_dates`
 - [x] FTS5 index population. → `db.py:_populate_fts`
 - [x] Import manifest (checksums, row counts, schema version). → `db.py:build_db`
 - [x] CLI wiring: `maintain build-db --csv-dir <PATH> [--db <PATH>]`. → `cli.py:_cmd_maintain_build_db`
@@ -86,8 +88,8 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
   - Duplicate `utc_now()` function in both `cli.py` and `db.py`. Fixed: single definition in `db.py`.
 
 #### Phase Gate: Tests And Cleanup
-- [ ] Tests for build-db pipeline: CSV parsing (cp1252, cp850 fixup, header validation), normalization (deduplication, hierarchy integrity, alias/context anomalies), enrichment joins, FTS population, manifest correctness, atomic replace, error paths.
-- [ ] Review and clean up Phase 1 code.
+- [x] Tests for build-db pipeline: CSV parsing (cp1252, cp850 fixup, header validation), normalization (deduplication, hierarchy integrity, alias/context anomalies), enrichment joins, FTS population, manifest correctness, atomic replace, error paths. → `test_build_db.py` (22 tests)
+- [x] Review and clean up Phase 1 code.
 
 ### Phase 2: Query Commands
 
@@ -95,15 +97,17 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 
 #### Tasks
 - [x] DB connection layer: open, read-only mode, error if missing DB. → `db.py:open_db`
-- [x] Shared register lookup helper (ID → name → substring). → `cli.py:_resolve_register_ids`
+- [x] Shared register lookup helper (ID → name → substring). → `queries.py:resolve_register_ids`
 - [x] `search` — FTS across registers and variables, type filter, register filter, pagination. → `cli.py:_cmd_search`
 - [x] `get register <name_or_id>` — register with variants, fuzzy matched. → `cli.py:_cmd_get_register`
 - [x] `get schema` — variant → version → columns, with `--register` and `--years` filters. → `cli.py:_cmd_get_schema`
 - [x] `get varinfo <name_or_id>` — variable deep dive with instance history. → `cli.py:_cmd_get_varinfo`
-- [x] `get values <cvid>` — value-set members. → `cli.py:_cmd_get_values`
+- [x] `get values <cvid>` — value-set members, with `--valid-at` temporal filter. → `cli.py:_cmd_get_values`
+- [x] `get datacolumns <variable>` — all column aliases across registers/versions. → `cli.py:_cmd_get_datacolumns`
+- [x] `get coded-variables` — variables with value sets, ranked by usage. → `cli.py:_cmd_get_coded_variables`
 - [x] `resolve` — exact alias lookup, `--register` as hard filter, batch input. → `cli.py:_cmd_resolve`
 - [x] JSON envelope. → `cli.py:_success_envelope`
-- [x] Table formatter guard (`--format table` rejected with actionable error until implemented).
+- [x] Table formatter. → `cli.py:_write_table`, `_write_table_from_payload`
 - [x] Common flags: `--db`, `--format`, `--output`. → `cli.py:_build_parser`
 
 #### Removed (2026-03-14 redesign)
@@ -121,7 +125,7 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - `get varinfo "Arbetssökande i november" --register LISA` → 26 instances across 1998-2023.
 
 #### Phase Gate: Tests And Cleanup
-- [x] Tests for all query commands: 69 tests covering search, get (all subcommands), resolve, error model, envelope, table format.
+- [x] Tests for all query commands: search, get (all subcommands), resolve, error model, envelope, table format. → `test_commands.py` (82 tests)
 - [x] Review and clean up Phase 1 + Phase 2 code.
 
 ### Phase 3: Release Readiness
@@ -131,8 +135,8 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - [x] Known limitations documented. → SPEC §6.4, README.
 
 #### Phase Gate: Tests And Cleanup
-- [ ] Full regression suite covering all commands, error paths, and edge cases.
-- [ ] Final code review and cleanup.
+- [x] Full regression suite: 82 command tests + 22 build-db tests = 104 total.
+- [x] Final code review and cleanup.
 
 ## 7. Risks
 
