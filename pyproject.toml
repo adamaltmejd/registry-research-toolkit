@@ -1,0 +1,32 @@
+[project]
+name = "registry-research-toolkit"
+version = "0.1.0"
+description = "Workspace coordinator for mock_data_wizard and regmeta"
+requires-python = ">=3.11"
+dependencies = [
+  "mock-data-wizard",
+  "regmeta",
+]
+
+[dependency-groups]
+dev = [
+  "playwright>=1.58.0",
+  "pytest>=8.4.2",
+  "ruff>=0.15.5",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["mock_data_wizard", "regmeta"]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+mock-data-wizard = { workspace = true }
+regmeta = { workspace = true }
+
+[tool.uv.workspace]
+members = [
+  "mock_data_wizard",
+  "regmeta",
+]

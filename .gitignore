@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Environments
+.venv/
+.env
+
+# Tools
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project
+.tmp/
+SCB-data/
+
+# mock-data-wizard generated output
+mock_data/
+mock_output/
+stats.json
+extract_stats*.R
+
+# regmeta database (built from SCB exports, not committed)
+*.db
+
+# Archive (concluded investigations, ad-hoc scripts, internal notes)
+archive/
+*.har
