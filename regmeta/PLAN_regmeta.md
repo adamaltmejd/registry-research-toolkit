@@ -1,4 +1,4 @@
-# PLAN: regmeta V1
+# PLAN: regmeta
 
 Status: Complete
 Created: 2026-03-01
@@ -137,6 +137,22 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 #### Phase Gate: Tests And Cleanup
 - [x] Full regression suite: 82 command tests + 22 build-db tests = 104 total.
 - [x] Final code review and cleanup.
+
+### Phase 4: V2 Features — Temporal Diff + Cross-Register Lineage
+
+Objective: Two new query commands (`get diff`, `get lineage`) per `SPEC_regmeta_v2.md`.
+
+#### Tasks
+- [x] `get diff` — temporal schema comparison between two years. → `queries.py:get_diff`, `cli.py:_cmd_get_diff`
+- [x] `get lineage` — cross-register variable provenance. → `queries.py:get_lineage`, `cli.py:_cmd_get_lineage`
+- [x] Variable resolution by var_id, name, or alias for both commands.
+- [x] Output formats: table, list, JSON (shared with v1 commands).
+- [x] Contract version bumped to 3.0.0.
+
+#### Phase Gate: Tests And Cleanup
+- [x] Tests for `get diff` (9 tests) and `get lineage` (9 tests). → `test_commands.py`
+- [x] Output format tests (table, list, JSON). → `test_commands.py`
+- [x] Full regression suite: 102 tests total.
 
 ## 7. Risks
 

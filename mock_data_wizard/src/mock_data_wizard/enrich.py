@@ -157,8 +157,28 @@ def enrich(
             f"Enriched {total} files ({matched_total}/{total_cols} columns matched) "
             f"in {elapsed:.1f}s"
         )
+        for w in _check_value_code_drift(enriched_files):
+            progress(f"  Warning: {w}")
 
     return enriched_files
+
+
+def _check_value_code_drift(enriched_files: list[EnrichedFile]) -> list[str]:
+    """Warn when stats contain frequency codes absent from regmeta value codes."""
+    warnings: list[str] = []
+    for ef in enriched_files:
+        for ec in ef.columns:
+            if ec.inferred_type != "categorical" or not ec.value_codes:
+                continue
+            freq_keys = set(ec.stats.get("frequencies", {})) - {"_other"}
+            unknown = sorted(freq_keys - set(ec.value_codes))
+            if unknown:
+                codes = ", ".join(unknown)
+                warnings.append(
+                    f"{ef.file_name}/{ec.column_name}: "
+                    f"codes [{codes}] not in regmeta value set"
+                )
+    return warnings
 
 
 # ---------------------------------------------------------------------------
