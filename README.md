@@ -11,9 +11,18 @@ Tools for working with Swedish registry microdata on [SCB MONA](https://www.scb.
 
 ## Install
 
+### For AI agents
+
+Point your agent at the [registry-metadata-search skill](https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/main/.claude/skills/registry-metadata-search/SKILL.md) and ask it to install regmeta and use it. The skill contains install instructions, the full command reference, and common query workflows.
+
+### Manual
+
 ```bash
 # regmeta (metadata queries)
 uv add "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
+
+# Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
+regmeta maintain download
 
 # mock-data-wizard (mock data generation, depends on regmeta)
 uv add "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"

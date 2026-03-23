@@ -1,5 +1,5 @@
 ---
-name: regmeta-query
+name: registry-metadata-search
 description: Query SCB registry metadata using the regmeta CLI. Use when answering questions about Swedish register data — variable definitions, value codes, register schemas, column names, or how data is structured across registers and years.
 ---
 
@@ -17,12 +17,6 @@ uv add "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#s
 
 # Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
 uv run regmeta maintain download --yes
-```
-
-If you also need mock data generation for MONA projects:
-
-```bash
-uv add "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
 ```
 
 Verify the install works:
