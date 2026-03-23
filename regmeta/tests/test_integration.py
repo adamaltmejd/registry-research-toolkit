@@ -110,17 +110,15 @@ def test_version_importable(docker: str, image: str):
 def test_download_and_query(docker: str, image: str):
     """Full pipeline: download DB from GitHub Releases and run a query."""
     cmd = (
-        "regmeta maintain download --yes --format json"
-        " && regmeta search --query kommun --datacolumn --format json"
+        "regmeta maintain download --yes > /dev/null"
+        " && regmeta --format json search --query kommun --datacolumn"
     )
     result = _docker_run(docker, image, cmd, timeout=600)
     assert result.returncode == 0, (
         f"Pipeline failed (exit {result.returncode}):\n{result.stderr}"
     )
 
-    # The last line of stdout should be valid JSON from the search command
-    lines = result.stdout.strip().splitlines()
-    payload = json.loads(lines[-1])
+    payload = json.loads(result.stdout)
     results = payload.get("results", payload.get("data", {}).get("results", []))
     assert len(results) > 0, "Expected search results for 'kommun'"
 

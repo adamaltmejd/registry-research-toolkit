@@ -16,20 +16,30 @@ from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
 DB_ASSET_NAME = "regmeta.db.zst"
-LATEST_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases/latest"
+RELEASES_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
 DOWNLOAD_URL = (
     f"https://github.com/{GITHUB_REPO}/releases/download/{{tag}}/{DB_ASSET_NAME}"
 )
 
 
 def _resolve_latest_tag() -> str:
+    """Find the most recent release tag (includes pre-releases)."""
     req = urllib.request.Request(
-        LATEST_API_URL, headers={"Accept": "application/vnd.github+json"}
+        RELEASES_API_URL + "?per_page=1",
+        headers={"Accept": "application/vnd.github+json"},
     )
     try:
         with urllib.request.urlopen(req, timeout=15) as resp:
-            data = json.loads(resp.read())
-            return data["tag_name"]
+            releases = json.loads(resp.read())
+            if not releases:
+                raise RegmetaError(
+                    exit_code=EXIT_NETWORK,
+                    code="no_releases",
+                    error_class="network",
+                    message="No releases found.",
+                    remediation=f"Check https://github.com/{GITHUB_REPO}/releases",
+                )
+            return releases[0]["tag_name"]
     except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
         raise RegmetaError(
             exit_code=EXIT_NETWORK,
