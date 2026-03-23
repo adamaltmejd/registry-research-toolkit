@@ -74,7 +74,7 @@ The fastest way to identify what columns in a data file mean:
 regmeta resolve --columns "Kon,FodelseAr,Kommun" --register LISA
 ```
 
-Each column gets status `matched`, `ambiguous`, or `no_match` with matching `var_id` and `variable_name`.
+Each column gets status `matched` or `no_match`. Matches include `var_id`, `variable_name`, `matched_column`, and `register_id`.
 
 Can also read a JSON array from stdin:
 ```bash
@@ -157,6 +157,22 @@ regmeta get lineage "Kön"
 ```
 
 Shows which register is the source (producer) and which registers consume the variable, with year ranges and instance counts.
+
+### maintain — Setup and maintenance
+
+```bash
+# Download pre-built database from GitHub Releases
+regmeta maintain download                  # interactive confirmation
+regmeta maintain download --yes            # skip confirmation
+regmeta maintain download --tag v0.1.0     # specific release
+regmeta maintain download --force --yes    # overwrite existing DB
+
+# Build database from raw SCB CSV exports (alternative to download)
+regmeta maintain build-db --csv-dir path/to/SCB-data/
+
+# Database stats and import metadata
+regmeta maintain info
+```
 
 ## Typical workflows
 

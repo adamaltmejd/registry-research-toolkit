@@ -527,7 +527,7 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         ]
         table_counts = {}
         for t in tables:
-            count = conn.execute(f'SELECT MAX(rowid) FROM "{t}"').fetchone()[0]  # noqa: S608
+            count = conn.execute(f'SELECT COUNT(*) FROM "{t}"').fetchone()[0]  # noqa: S608
             table_counts[t] = count or 0
     finally:
         conn.close()
