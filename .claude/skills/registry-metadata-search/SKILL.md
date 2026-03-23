@@ -22,7 +22,16 @@ uv run regmeta maintain download --yes
 Verify the install works:
 
 ```bash
-uv run regmeta --format json search --query "kommun" --datacolumn --limit 1
+regmeta search --query "kommun" --datacolumn --limit 1
+```
+
+## Output formats
+
+The default output is `table` (compact, auto-switches to `list` when too wide). Use `--format json` when you need structured data for further processing. Format flags are global — place them **before** the subcommand:
+
+```bash
+regmeta --format json search --query "kommun"
+regmeta --format list get varinfo "Kön"
 ```
 
 ## When to use regmeta
@@ -34,73 +43,63 @@ uv run regmeta --format json search --query "kommun" --datacolumn --limit 1
 - User asks "which registers have a variable called Kön?" → `get lineage` or `search`
 - User has a CSV with column headers and needs to understand them → `resolve`
 
-## Always use `--format json`
-
-Put `--format json` **before** the subcommand (it's a global flag):
-
-```bash
-regmeta --format json search --query "kommun"
-```
-
 ## Commands
 
 ### search — Find variables, columns, registers, or value codes
 
 ```bash
 # Broad search across all fields
-regmeta --format json search --query "inkomst"
+regmeta search --query "inkomst"
 
 # Search column headers only (what appears in data files)
-regmeta --format json search --query "kommun" --datacolumn
+regmeta search --query "kommun" --datacolumn
 
 # Search canonical variable names
-regmeta --format json search --query "Kön" --varname
+regmeta search --query "Kön" --varname
 
 # Search value codes and labels
-regmeta --format json search --query "0180" --value
+regmeta search --query "0180" --value
 
 # Narrow to a specific register
-regmeta --format json search --query "kommun" --datacolumn --register LISA
+regmeta search --query "kommun" --datacolumn --register LISA
 ```
 
-Returns `{ "results": [...], "total_count": N }`. Each result has `type`, `register_id`, `register_name`, `var_id`, `variable_name`.
+Results include `type`, `register_id`, `register_name`, `var_id`, `variable_name`.
 
 ### resolve — Map column names to variables (batch, exact match)
 
 The fastest way to identify what columns in a data file mean:
 
 ```bash
-regmeta --format json resolve --columns "Kon,FodelseAr,Kommun" --register LISA
+regmeta resolve --columns "Kon,FodelseAr,Kommun" --register LISA
 ```
 
-Returns `{ "columns": [{ "column_name": "Kon", "status": "matched", "matches": [{ "var_id": 44, "variable_name": "Kön", "register_id": 34 }] }, ...] }`.
-
-Status is `matched` (1 match), `ambiguous` (multiple), or `no_match`.
+Each column gets status `matched`, `ambiguous`, or `no_match` with matching `var_id` and `variable_name`.
 
 Can also read a JSON array from stdin:
 ```bash
-echo '["Kon","FodelseAr"]' | regmeta --format json resolve --register LISA
+echo '["Kon","FodelseAr"]' | regmeta resolve --register LISA
 ```
 
 ### get register — Register overview
 
 ```bash
-regmeta --format json get register LISA
+regmeta get register LISA
 ```
 
-Returns register metadata including `register_id`, `registernamn`, `registersyfte`, and `variants` (each with `regvar_id`, name, description, secrecy level).
+Returns register metadata including variants (each with `regvar_id`, name, description, secrecy level).
 
 ### get schema — Column listing for a register
 
 ```bash
 # All variants and years
-regmeta --format json get schema --register LISA
+regmeta get schema --register LISA
 
 # Specific years
-regmeta --format json get schema --register LISA --years 2020-2023
+regmeta get schema --register LISA --years 2020-2023
 
 # Specific variant (by regvar_id from get register)
-regmeta --format json get schema 153 --years 2022
+regmeta get schema 153 --years 2022
 ```
 
 Returns variants → versions → columns. Each column has `var_id`, `variabelnamn`, `datatyp`, `aliases` (column header names in data files), and `cvid` (link to value set).
@@ -108,36 +107,36 @@ Returns variants → versions → columns. Each column has `var_id`, `variabelna
 ### get varinfo — Variable details and history
 
 ```bash
-regmeta --format json get varinfo "Kön"
-regmeta --format json get varinfo 44              # by var_id
-regmeta --format json get varinfo "Kön" --register LISA
+regmeta get varinfo "Kön"
+regmeta get varinfo 44              # by var_id
+regmeta get varinfo "Kön" --register LISA
 ```
 
-Returns variable definition, description, and `instances` — every register version where this variable appears, with `cvid`, data type, aliases, and value set count.
+Returns variable definition, description, and instances — every register version where this variable appears, with `cvid`, data type, aliases, and value set count.
 
 ### get values — Value code lookup
 
 Requires a CVID (get it from `get varinfo` or `get schema`):
 
 ```bash
-regmeta --format json get values 1001
-regmeta --format json get values 1001 --valid-at 2020-01-01
+regmeta get values 1001
+regmeta get values 1001 --valid-at 2020-01-01
 ```
 
-Returns `[{ "vardekod": "1", "vardebenamning": "Man" }, ...]`. Use `--valid-at` for codes valid at a specific date.
+Returns code/label pairs. Use `--valid-at` for codes valid at a specific date.
 
 ### get datacolumns — All aliases for a variable
 
 ```bash
-regmeta --format json get datacolumns "Kommun"
+regmeta get datacolumns "Kommun"
 ```
 
-Shows every column header this variable appears under across all registers and versions. Useful for understanding naming inconsistencies.
+Shows every column header this variable appears under across all registers and versions.
 
 ### get coded-variables — Find categorical variables
 
 ```bash
-regmeta --format json get coded-variables --min-registers 5 --min-codes 10
+regmeta get coded-variables --min-registers 5 --min-codes 10
 ```
 
 Lists variables that have coded value sets, ranked by usage.
@@ -145,8 +144,8 @@ Lists variables that have coded value sets, ranked by usage.
 ### get diff — Schema changes between years
 
 ```bash
-regmeta --format json get diff --register LISA --from 2015 --to 2020
-regmeta --format json get diff --register LISA --from 2015 --to 2020 --variable Kon
+regmeta get diff --register LISA --from 2015 --to 2020
+regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon
 ```
 
 Returns added, removed, and changed variables between two versions.
@@ -154,41 +153,41 @@ Returns added, removed, and changed variables between two versions.
 ### get lineage — Variable provenance
 
 ```bash
-regmeta --format json get lineage "Kön"
+regmeta get lineage "Kön"
 ```
 
-Shows which register is the **source** (producer) and which registers **consume** the variable, with year ranges and instance counts.
+Shows which register is the source (producer) and which registers consume the variable, with year ranges and instance counts.
 
 ## Typical workflows
 
 ### "What's in this register?"
 ```bash
-regmeta --format json get register LISA          # overview + variants
-regmeta --format json get schema --register LISA --years 2022  # columns
+regmeta get register LISA          # overview + variants
+regmeta get schema --register LISA --years 2022  # columns
 ```
 
 ### "What does this column mean?"
 ```bash
-regmeta --format json resolve --columns "Kon,AstKommun" --register LISA
+regmeta resolve --columns "Kon,AstKommun" --register LISA
 # Then for value codes:
-regmeta --format json get varinfo 44 --register LISA  # get CVIDs
-regmeta --format json get values 1001                  # get code labels
+regmeta get varinfo 44 --register LISA  # get CVIDs
+regmeta get values 1001                  # get code labels
 ```
 
 ### "What are the valid values for variable X?"
 ```bash
-regmeta --format json get varinfo "Kommun" --register LISA  # find CVID
-regmeta --format json get values <cvid> --valid-at 2022-01-01
+regmeta get varinfo "Kommun" --register LISA  # find CVID
+regmeta get values <cvid> --valid-at 2022-01-01
 ```
 
 ### "How has this register changed over time?"
 ```bash
-regmeta --format json get diff --register LISA --from 2010 --to 2022
+regmeta get diff --register LISA --from 2010 --to 2022
 ```
 
 ### "Which registers contain income data?"
 ```bash
-regmeta --format json search --query "inkomst" --varname
+regmeta search --query "inkomst" --varname
 ```
 
 ## Key concepts
@@ -197,7 +196,7 @@ regmeta --format json search --query "inkomst" --varname
 - **variant** — A sub-table within a register (e.g. LISA/Individer, LISA/Företag). Has `regvar_id`.
 - **version** — A year-specific release of a variant. Named by year (e.g. "2022").
 - **variable** — A logical concept (e.g. "Kön"). Has `var_id`. Appears across registers.
-- **alias / kolumnnamn** — The column header in the actual data file. A variable may have different aliases in different registers or versions.
+- **alias / kolumnnamn** — The column header in the actual data file. May differ across registers/versions.
 - **CVID** — Links a variable instance to its value set. Use with `get values`.
 - **value set** — The valid coded values for a categorical variable (e.g. 1=Man, 2=Kvinna).
 
