@@ -58,7 +58,7 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         try:
             manifest = get_manifest(conn)
-            assert manifest["schema_version"] == "1.1.0"
+            assert manifest["schema_version"] == "2.0.0"
             assert "import_date" in manifest
         finally:
             conn.close()
@@ -110,7 +110,7 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         try:
             aliases = conn.execute(
-                "SELECT kolumnnamn FROM variable_alias WHERE cvid = '1002' ORDER BY kolumnnamn"
+                "SELECT kolumnnamn FROM variable_alias WHERE cvid = 1002 ORDER BY kolumnnamn"
             ).fetchall()
             assert [a[0] for a in aliases] == ["TestCol", "TestKolumn"]
         finally:
@@ -121,34 +121,90 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         try:
             count = conn.execute(
-                "SELECT COUNT(*) FROM value_item WHERE cvid = '9999'"
+                "SELECT COUNT(*) FROM cvid_value_code WHERE cvid = 9999"
             ).fetchone()[0]
             assert count == 0
         finally:
             conn.close()
 
     def test_value_items_present(self, fixture_db: Path):
-        """Value items for known CVIDs should be imported."""
+        """Deduplicated junction rows for known CVIDs should be imported."""
         conn = open_db(fixture_db)
         try:
-            count = conn.execute("SELECT COUNT(*) FROM value_item").fetchone()[0]
-            assert count == 6  # 2 for 1001, 2 for 1003, 2 for 2001
+            count = conn.execute("SELECT COUNT(*) FROM cvid_value_code").fetchone()[0]
+            # 2 codes (Man, Kvinna) × 3 CVIDs (1001, 1003, 2001) = 6 distinct pairs
+            assert count == 6
+        finally:
+            conn.close()
+
+    def test_value_code_deduplicated(self, fixture_db: Path):
+        """Value codes should be deduplicated across CVIDs."""
+        conn = open_db(fixture_db)
+        try:
+            count = conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0]
+            # Codes: (1, Man), (2, Kvinna) = 2 unique (9999 CVID filtered out)
+            assert count == 2
+        finally:
+            conn.close()
+
+    def test_value_set_info_on_instance(self, fixture_db: Path):
+        """Variable instances with values should have vardemangdsversion/niva set."""
+        conn = open_db(fixture_db)
+        try:
+            row = conn.execute(
+                "SELECT vardemangdsversion, vardemangdsniva FROM variable_instance "
+                "WHERE cvid = 1001"
+            ).fetchone()
+            assert row["vardemangdsversion"] == "Kön"
+            assert row["vardemangdsniva"] == "1"
         finally:
             conn.close()
 
     def test_validity_dates_imported(self, fixture_db: Path):
-        """Validity date ranges should be imported."""
+        """Validity date ranges should be imported per item_id."""
         conn = open_db(fixture_db)
         try:
-            count = conn.execute(
-                "SELECT COUNT(*) FROM value_item_validity"
-            ).fetchone()[0]
-            assert count == 1  # Only item 5001 has a validity record
+            count = conn.execute("SELECT COUNT(*) FROM value_item_validity").fetchone()[
+                0
+            ]
+            assert count == 2  # Items 5001 and 5003
             row = conn.execute(
-                "SELECT * FROM value_item_validity WHERE item_id = '5001'"
+                "SELECT * FROM value_item_validity WHERE item_id = 5001"
             ).fetchone()
             assert row["valid_from"] == "2000-01-01"
             assert row["valid_to"] == "2010-12-31"
+            row2 = conn.execute(
+                "SELECT * FROM value_item_validity WHERE item_id = 5003"
+            ).fetchone()
+            assert row2["valid_from"] == "2015-01-01"
+            assert row2["valid_to"] == "2025-12-31"
+        finally:
+            conn.close()
+
+    def test_value_item_populated(self, fixture_db: Path):
+        """value_item should contain only items with validity records."""
+        conn = open_db(fixture_db)
+        try:
+            rows = conn.execute(
+                "SELECT item_id, cvid, code_id FROM value_item ORDER BY item_id, cvid"
+            ).fetchall()
+            # 5001 appears for CVIDs 1001, 1003, 2001; 5003 only for CVID 1001
+            item_cvids = [(r["item_id"], r["cvid"]) for r in rows]
+            assert (5001, 1001) in item_cvids
+            assert (5001, 1003) in item_cvids
+            assert (5001, 2001) in item_cvids
+            assert (5003, 1001) in item_cvids
+            assert len(rows) == 4
+        finally:
+            conn.close()
+
+    def test_code_variable_map_populated(self, fixture_db: Path):
+        """code_variable_map should have distinct (code, register, variable) combos."""
+        conn = open_db(fixture_db)
+        try:
+            count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
+            # 2 codes × 2 registers (reg 1 and reg 2 both have var_id 44) = 4
+            assert count == 4
         finally:
             conn.close()
 
@@ -164,7 +220,7 @@ class TestBuildDb:
         conn = open_db(fixture_db)
         try:
             row = conn.execute(
-                "SELECT variabelnamn FROM identifier_semantics WHERE var_id = '44'"
+                "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 44"
             ).fetchone()
             assert row["variabelnamn"] == "Kön"
         finally:
@@ -185,7 +241,7 @@ class TestBuildDb:
                 "SELECT register_id FROM register_fts WHERE register_fts MATCH 'Testning'"
             ).fetchall()
             assert len(rows) == 1
-            assert rows[0]["register_id"] == "1"
+            assert rows[0]["register_id"] == 1
         finally:
             conn.close()
 
@@ -196,7 +252,7 @@ class TestBuildDb:
                 "SELECT var_id FROM variable_fts WHERE variable_fts MATCH 'testvariabel'"
             ).fetchall()
             assert len(rows) == 1
-            assert rows[0]["var_id"] == "100"
+            assert rows[0]["var_id"] == 100
         finally:
             conn.close()
 

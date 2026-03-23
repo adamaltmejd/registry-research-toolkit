@@ -17,7 +17,7 @@ from typing import Any, Iterator
 
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "1.1.0"
+SCHEMA_VERSION = "2.0.0"
 DB_FILENAME = "regmeta.db"
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
@@ -108,17 +108,17 @@ ENRICHMENT_FILES = [
 ]
 
 DDL = """\
--- Core tables
+-- Core tables (all IDs stored as INTEGER for compact storage)
 CREATE TABLE register (
-    register_id TEXT PRIMARY KEY,
+    register_id INTEGER PRIMARY KEY,
     registernamn TEXT NOT NULL,
     registerrubrik TEXT,
     registersyfte TEXT
 );
 
 CREATE TABLE register_variant (
-    regvar_id TEXT PRIMARY KEY,
-    register_id TEXT NOT NULL REFERENCES register(register_id),
+    regvar_id INTEGER PRIMARY KEY,
+    register_id INTEGER NOT NULL REFERENCES register(register_id),
     registervariantnamn TEXT,
     registervariantrubrik TEXT,
     registervariantbeskrivning TEXT,
@@ -126,8 +126,8 @@ CREATE TABLE register_variant (
 );
 
 CREATE TABLE register_version (
-    regver_id TEXT PRIMARY KEY,
-    regvar_id TEXT NOT NULL REFERENCES register_variant(regvar_id),
+    regver_id INTEGER PRIMARY KEY,
+    regvar_id INTEGER NOT NULL REFERENCES register_variant(regvar_id),
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,
     registerversionmatinformation TEXT,
@@ -137,7 +137,7 @@ CREATE TABLE register_version (
 );
 
 CREATE TABLE population (
-    regver_id TEXT NOT NULL REFERENCES register_version(regver_id),
+    regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
     populationnamn TEXT NOT NULL,
     populationdefinition TEXT,
     populationkommentar TEXT,
@@ -146,15 +146,15 @@ CREATE TABLE population (
 );
 
 CREATE TABLE object_type (
-    regver_id TEXT NOT NULL REFERENCES register_version(regver_id),
+    regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
     objekttypnamn TEXT NOT NULL,
     objekttypdefinition TEXT,
     PRIMARY KEY (regver_id, objekttypnamn)
 );
 
 CREATE TABLE variable (
-    register_id TEXT NOT NULL REFERENCES register(register_id),
-    var_id TEXT NOT NULL,
+    register_id INTEGER NOT NULL REFERENCES register(register_id),
+    var_id INTEGER NOT NULL,
     variabelnamn TEXT,
     variabeldefinition TEXT,
     variabelbeskrivning TEXT,
@@ -168,50 +168,63 @@ CREATE TABLE variable (
 );
 
 CREATE TABLE variable_instance (
-    cvid TEXT PRIMARY KEY,
-    register_id TEXT NOT NULL,
-    regvar_id TEXT NOT NULL,
-    regver_id TEXT NOT NULL,
-    var_id TEXT NOT NULL,
+    cvid INTEGER PRIMARY KEY,
+    register_id INTEGER NOT NULL,
+    regvar_id INTEGER NOT NULL,
+    regver_id INTEGER NOT NULL,
+    var_id INTEGER NOT NULL,
     datatyp TEXT,
     datalangd TEXT,
+    vardemangdsversion TEXT,
+    vardemangdsniva TEXT,
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
 CREATE TABLE variable_alias (
-    cvid TEXT NOT NULL REFERENCES variable_instance(cvid),
+    cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
     kolumnnamn TEXT NOT NULL,
     PRIMARY KEY (cvid, kolumnnamn)
 );
 
 CREATE TABLE variable_context (
-    cvid TEXT NOT NULL REFERENCES variable_instance(cvid),
+    cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
     populationnamn TEXT NOT NULL,
     objekttypnamn TEXT NOT NULL,
     PRIMARY KEY (cvid, populationnamn, objekttypnamn)
 );
 
 -- Enrichment tables
-CREATE TABLE value_item (
-    value_item_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    cvid TEXT NOT NULL,
-    vardemangdsversion TEXT,
-    vardemangdsniva TEXT,
-    vardekod TEXT,
-    vardebenamning TEXT,
-    item_id TEXT
+CREATE TABLE value_code (
+    code_id INTEGER PRIMARY KEY,
+    vardekod TEXT NOT NULL,
+    vardebenamning TEXT NOT NULL
 );
 
+CREATE TABLE cvid_value_code (
+    cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
+    code_id INTEGER NOT NULL REFERENCES value_code(code_id),
+    PRIMARY KEY (cvid, code_id)
+) WITHOUT ROWID;
+
+-- item→(cvid, code) mapping only for items that have validity date records.
+-- PK order (cvid, code_id, item_id) supports temporal query lookups by (cvid, code_id).
+CREATE TABLE value_item (
+    cvid INTEGER NOT NULL,
+    code_id INTEGER NOT NULL,
+    item_id INTEGER NOT NULL,
+    PRIMARY KEY (cvid, code_id, item_id)
+) WITHOUT ROWID;
+
 CREATE TABLE value_item_validity (
-    item_id TEXT NOT NULL,
+    item_id INTEGER NOT NULL,
     valid_from TEXT,
     valid_to TEXT
 );
 CREATE INDEX idx_value_item_validity_item ON value_item_validity(item_id);
 
 CREATE TABLE unika_summary (
-    register_id TEXT,
-    regvar_id TEXT,
+    register_id INTEGER,
+    regvar_id INTEGER,
     kolumnnamn TEXT,
     variabelnamn TEXT,
     version_forsta TEXT,
@@ -223,7 +236,7 @@ CREATE TABLE unika_summary (
 );
 
 CREATE TABLE identifier_semantics (
-    var_id TEXT PRIMARY KEY,
+    var_id INTEGER PRIMARY KEY,
     variabelnamn TEXT,
     variabeldefinition TEXT
 );
@@ -239,7 +252,7 @@ CREATE TABLE timeseries_event (
     fil_id TEXT
 );
 
--- Search indexes
+-- Search indexes (both content-synced to avoid storing text twice)
 CREATE VIRTUAL TABLE register_fts USING fts5(
     register_id,
     registernamn,
@@ -255,6 +268,8 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     variabelnamn,
     variabeldefinition,
     variabelbeskrivning,
+    content='variable',
+    content_rowid='rowid',
     tokenize='unicode61'
 );
 
@@ -266,7 +281,16 @@ CREATE INDEX idx_variable_instance_var ON variable_instance(register_id, var_id)
 CREATE INDEX idx_variable_instance_regvar ON variable_instance(regvar_id);
 CREATE INDEX idx_variable_instance_regver ON variable_instance(regver_id);
 CREATE INDEX idx_variable_alias_kolumnnamn ON variable_alias(kolumnnamn);
-CREATE INDEX idx_value_item_cvid ON value_item(cvid);
+CREATE INDEX idx_value_code_vardekod ON value_code(vardekod);
+
+-- Pre-aggregated code→variable mapping for search --value (replaces
+-- a 662MB secondary index on cvid_value_code with a 90MB summary table).
+CREATE TABLE code_variable_map (
+    code_id INTEGER NOT NULL REFERENCES value_code(code_id),
+    register_id INTEGER NOT NULL,
+    var_id INTEGER NOT NULL,
+    PRIMARY KEY (code_id, register_id, var_id)
+) WITHOUT ROWID;
 
 -- Reference tables
 CREATE TABLE source_column_type (
@@ -420,23 +444,23 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
 
 def _import_registerinformation(
     conn: sqlite3.Connection, path: Path
-) -> tuple[int, dict[tuple[str, str, str, str], tuple[str, str]], set[str]]:
+) -> tuple[int, dict[tuple[str, str, str, str], tuple[int, int]], set[int]]:
     """Import Registerinformation.csv into all core normalized tables.
 
-    Returns (row_count, regname_to_ids, varname_to_key_set) for cross-file joining.
+    Returns (row_count, unika_join, known_cvids) for cross-file joining.
     """
-    registers: dict[str, dict[str, Any]] = {}
-    variants: dict[str, dict[str, Any]] = {}
-    versions: dict[str, dict[str, Any]] = {}
-    variables: dict[tuple[str, str], dict[str, Any]] = {}
-    instances: dict[str, dict[str, Any]] = {}
-    aliases: set[tuple[str, str]] = set()
-    populations: set[tuple[str, str, str, str, str]] = set()
-    object_types: set[tuple[str, str, str]] = set()
-    contexts: set[tuple[str, str, str]] = set()
+    registers: dict[int, dict[str, Any]] = {}
+    variants: dict[int, dict[str, Any]] = {}
+    versions: dict[int, dict[str, Any]] = {}
+    variables: dict[tuple[int, int], dict[str, Any]] = {}
+    instances: dict[int, dict[str, Any]] = {}
+    aliases: set[tuple[int, str]] = set()
+    populations: set[tuple[int, str, str, str, str]] = set()
+    object_types: set[tuple[int, str, str]] = set()
+    contexts: set[tuple[int, str, str]] = set()
 
     # For joining UnikaRegisterOchVariabler later
-    unika_join: dict[tuple[str, str, str, str], tuple[str, str]] = {}
+    unika_join: dict[tuple[str, str, str, str], tuple[int, int]] = {}
 
     row_count = 0
     _progress("Importing Registerinformation.csv...")
@@ -447,11 +471,11 @@ def _import_registerinformation(
             if row_count % 500_000 == 0:
                 _progress(f"  ...{row_count:,} rows")
 
-            rid = row["RegisterId"]
-            rvid = row["RegVarID"]
-            rveid = row["RegVerID"]
-            vid = row["VarId"]
-            cvid = row["CVID"]
+            rid = int(row["RegisterId"])
+            rvid = int(row["RegVarID"])
+            rveid = int(row["RegVerID"])
+            vid = int(row["VarId"])
+            cvid = int(row["CVID"])
 
             registers.setdefault(
                 rid,
@@ -590,7 +614,7 @@ def _import_registerinformation(
     )
     conn.executemany(
         "INSERT INTO variable_instance VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :datatyp, :datalangd)",
+        ":var_id, :datatyp, :datalangd, NULL, NULL)",
         list(instances.values()),
     )
     conn.executemany(
@@ -673,12 +697,14 @@ def _import_unika(
 def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
     _progress("Importing Identifierare.csv...")
     row_count = 0
-    batch: list[tuple[str, ...]] = []
+    batch: list[tuple[int | str, ...]] = []
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
-            batch.append((row["VarID"], row["Variabelnamn"], row["Variabeldefinition"]))
+            batch.append(
+                (int(row["VarID"]), row["Variabelnamn"], row["Variabeldefinition"])
+            )
 
     conn.executemany(
         "INSERT OR IGNORE INTO identifier_semantics VALUES (?, ?, ?)",
@@ -717,110 +743,167 @@ def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
+def _load_validity_item_ids(path: Path) -> set[int]:
+    """Pre-scan VardemangderValidDates.csv for the set of item_ids with validity."""
+    _progress("Pre-scanning VardemangderValidDates.csv for item_ids...")
+    ids: set[int] = set()
+    with _open_scb_csv(path) as (_, rows):
+        for _, row in rows:
+            ids.add(int(row["ItemID"]))
+    _progress(f"  {len(ids):,} item_ids with validity records")
+    return ids
+
+
+def _import_vardemangder_valid_dates(conn: sqlite3.Connection, path: Path) -> int:
+    """Import VardemangderValidDates.csv directly into value_item_validity."""
+    _progress("Importing VardemangderValidDates.csv...")
+    row_count = 0
+    batch: list[tuple[int, str | None, str | None]] = []
+
+    with _open_scb_csv(path) as (_, rows):
+        for _, row in rows:
+            row_count += 1
+            batch.append(
+                (
+                    int(row["ItemID"]),
+                    row["ValidFrom"] or None,
+                    row["ValidTo"] or None,
+                )
+            )
+
+    conn.executemany(
+        "INSERT INTO value_item_validity (item_id, valid_from, valid_to) VALUES (?, ?, ?)",
+        batch,
+    )
+    _progress(f"  {row_count:,} validity ranges")
+    return row_count
+
+
 def _import_vardemangder(
-    conn: sqlite3.Connection, path: Path, known_cvids: set[str]
-) -> int:
+    conn: sqlite3.Connection,
+    path: Path,
+    known_cvids: set[int],
+    validity_item_ids: set[int] | None,
+) -> tuple[int, dict[int, tuple[str, str]]]:
+    """Import Vardemangder.csv into normalized value_code + cvid_value_code tables.
+
+    Deduplicates (cvid, code_id) pairs for the junction table.
+    Collects (item_id, cvid, code_id) only for items with validity records
+    and writes them to value_item for temporal query support.
+
+    Returns (row_count, cvid_value_set_info) where cvid_value_set_info maps
+    cvid → (vardemangdsversion, vardemangdsniva) for updating variable_instance.
+    """
     _progress("Importing Vardemangder.csv (this may take a while)...")
     row_count = 0
-    inserted = 0
-    batch: list[tuple[str, ...]] = []
     batch_size = 50_000
+
+    # Build value_code lookup: (vardekod, vardebenamning) → code_id
+    code_lookup: dict[tuple[str, str], int] = {}
+    next_code_id = 0
+
+    # Track per-CVID value set identity
+    cvid_value_set_info: dict[int, tuple[str, str]] = {}
+
+    # Junction dedup via INSERT OR IGNORE against PK(cvid, code_id)
+    junction_batch: list[tuple[int, int]] = []
+
+    # item→(cvid, code) mapping for items with validity records
+    validity_set = validity_item_ids or set()
+    value_item_batch: list[tuple[int, int, int]] = []  # (cvid, code_id, item_id)
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
             if row_count % 5_000_000 == 0:
-                _progress(f"  ...{row_count:,} rows read, {inserted:,} inserted")
+                _progress(f"  ...{row_count:,} rows read")
 
-            if row["CVID"] not in known_cvids:
+            cvid = int(row["CVID"])
+            if cvid not in known_cvids:
                 continue
 
-            batch.append(
-                (
-                    row["CVID"],
+            vardekod = row["Värdekod"]
+            vardebenamning = row["Värdebenämning"]
+            code_key = (vardekod, vardebenamning)
+
+            if code_key not in code_lookup:
+                code_lookup[code_key] = next_code_id
+                next_code_id += 1
+
+            code_id = code_lookup[code_key]
+
+            if cvid not in cvid_value_set_info:
+                cvid_value_set_info[cvid] = (
                     row["Värdemängdsversion"],
                     row["Värdemängdsnivå"],
-                    row["Värdekod"],
-                    row["Värdebenämning"],
-                    row["ItemId"],
                 )
-            )
 
-            if len(batch) >= batch_size:
+            junction_batch.append((cvid, code_id))
+
+            raw_item = row["ItemId"]
+            if raw_item:
+                item_id = int(raw_item)
+                if item_id in validity_set:
+                    value_item_batch.append((cvid, code_id, item_id))
+
+            if len(junction_batch) >= batch_size:
                 conn.executemany(
-                    "INSERT INTO value_item (cvid, vardemangdsversion, vardemangdsniva, vardekod, vardebenamning, item_id) "
-                    "VALUES (?, ?, ?, ?, ?, ?)",
-                    batch,
+                    "INSERT OR IGNORE INTO cvid_value_code (cvid, code_id) "
+                    "VALUES (?, ?)",
+                    junction_batch,
                 )
-                inserted += len(batch)
-                batch.clear()
+                junction_batch.clear()
 
-    if batch:
-        conn.executemany(
-            "INSERT INTO value_item (cvid, vardemangdsversion, vardemangdsniva, vardekod, vardebenamning, item_id) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
-            batch,
-        )
-        inserted += len(batch)
-
-    _progress(f"  {row_count:,} rows read, {inserted:,} inserted")
-    return row_count
-
-
-def _import_vardemangder_valid_dates(conn: sqlite3.Connection, path: Path) -> int:
-    """Import value-item validity date ranges from VardemangderValidDates.csv.
-
-    Items absent from this file have no temporal restriction (always valid).
-    """
-    _progress("Importing VardemangderValidDates.csv...")
-    row_count = 0
-    batch: list[tuple[str, str, str]] = []
-    batch_size = 50_000
-
-    with _open_scb_csv(path) as (_, rows):
-        for _, row in rows:
-            row_count += 1
-            batch.append((
-                row["ItemID"],
-                row["ValidFrom"] or None,
-                row["ValidTo"] or None,
-            ))
-
-            if len(batch) >= batch_size:
+            if len(value_item_batch) >= batch_size:
                 conn.executemany(
-                    "INSERT INTO value_item_validity (item_id, valid_from, valid_to) "
-                    "VALUES (?, ?, ?)",
-                    batch,
+                    "INSERT OR IGNORE INTO value_item (cvid, code_id, item_id) VALUES (?, ?, ?)",
+                    value_item_batch,
                 )
-                batch.clear()
+                value_item_batch.clear()
 
-    if batch:
+    if junction_batch:
         conn.executemany(
-            "INSERT INTO value_item_validity (item_id, valid_from, valid_to) "
-            "VALUES (?, ?, ?)",
-            batch,
+            "INSERT OR IGNORE INTO cvid_value_code (cvid, code_id) VALUES (?, ?)",
+            junction_batch,
         )
 
-    _progress(f"  {row_count:,} rows")
-    return row_count
+    if value_item_batch:
+        conn.executemany(
+            "INSERT OR IGNORE INTO value_item (cvid, code_id, item_id) VALUES (?, ?, ?)",
+            value_item_batch,
+        )
+
+    # Write value_code lookup table
+    _progress(f"  Writing {len(code_lookup):,} value codes...")
+    conn.executemany(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (?, ?, ?)",
+        [(cid, k[0], k[1]) for k, cid in code_lookup.items()],
+    )
+
+    _progress(
+        f"  {row_count:,} rows read, {len(code_lookup):,} unique codes, "
+        f"{len(cvid_value_set_info):,} CVIDs with values"
+    )
+    return row_count, cvid_value_set_info
 
 
 def _populate_fts(conn: sqlite3.Connection) -> None:
     """Populate FTS5 search indexes."""
     _progress("Building search indexes...")
 
-    # register_fts: content-synced with register table
+    # register_fts: content-synced — rowid must match register.rowid
+    # (register_id is INTEGER PRIMARY KEY, so rowid = register_id)
     conn.execute(
-        "INSERT INTO register_fts(register_id, registernamn, registerrubrik, registersyfte) "
-        "SELECT register_id, registernamn, registerrubrik, registersyfte FROM register"
+        "INSERT INTO register_fts(rowid, register_id, registernamn, registerrubrik, registersyfte) "
+        "SELECT rowid, register_id, registernamn, registerrubrik, registersyfte FROM register"
     )
 
-    # variable_fts: semantic content only (name, definition, description).
-    # Column names are excluded — they contain technical suffixes like _LISA
-    # that pollute search results. Column name matching is handled by `resolve`.
+    # variable_fts: content-synced with variable table. Column names excluded
+    # (they contain technical suffixes like _LISA that pollute search results).
     conn.execute("""
-        INSERT INTO variable_fts(register_id, var_id, variabelnamn, variabeldefinition, variabelbeskrivning)
+        INSERT INTO variable_fts(rowid, register_id, var_id, variabelnamn, variabeldefinition, variabelbeskrivning)
         SELECT
+            v.rowid,
             v.register_id,
             v.var_id,
             v.variabelnamn,
@@ -964,6 +1047,12 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
 
+        # Pre-scan validity item_ids (needed during Vardemangder import)
+        validity_item_ids: set[int] | None = None
+        vvd_path = csv_dir / "VardemangderValidDates.csv"
+        if vvd_path.exists():
+            validity_item_ids = _load_validity_item_ids(vvd_path)
+
         # Enrichment files (optional)
         for filename in ENRICHMENT_FILES:
             path = csv_dir / filename
@@ -979,9 +1068,36 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
             elif filename == "Timeseries.csv":
                 row_counts[filename] = _import_timeseries(conn, path)
             elif filename == "Vardemangder.csv":
-                row_counts[filename] = _import_vardemangder(conn, path, known_cvids)
+                vm_count, cvid_vs_info = _import_vardemangder(
+                    conn, path, known_cvids, validity_item_ids
+                )
+                row_counts[filename] = vm_count
+                if cvid_vs_info:
+                    _progress(
+                        f"  Updating {len(cvid_vs_info):,} variable instances with value set info..."
+                    )
+                    conn.executemany(
+                        "UPDATE variable_instance "
+                        "SET vardemangdsversion = ?, vardemangdsniva = ? "
+                        "WHERE cvid = ?",
+                        [
+                            (ver, niva, cvid)
+                            for cvid, (ver, niva) in cvid_vs_info.items()
+                        ],
+                    )
             elif filename == "VardemangderValidDates.csv":
                 row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
+
+        # Populate code_variable_map from junction + variable_instance
+        _progress("Building code_variable_map...")
+        conn.execute(
+            "INSERT INTO code_variable_map (code_id, register_id, var_id) "
+            "SELECT DISTINCT cvc.code_id, vi.register_id, vi.var_id "
+            "FROM cvid_value_code cvc "
+            "JOIN variable_instance vi ON cvc.cvid = vi.cvid"
+        )
+        cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
+        _progress(f"  {cvm_count:,} code×variable mappings")
 
         # Reference files (optional)
         sql_path = csv_dir / "Tabelldefinitioner.sql"

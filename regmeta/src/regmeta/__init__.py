@@ -2,6 +2,8 @@ from .db import open_db, db_path_from_args, build_db
 from .queries import (
     get_coded_variables,
     get_datacolumns,
+    get_diff,
+    get_lineage,
     get_register,
     get_schema,
     get_values,
@@ -16,6 +18,8 @@ __all__ = [
     "db_path_from_args",
     "get_coded_variables",
     "get_datacolumns",
+    "get_diff",
+    "get_lineage",
     "get_register",
     "get_schema",
     "get_values",

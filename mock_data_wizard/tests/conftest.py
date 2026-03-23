@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
+
+from regmeta.db import DDL
 
 
 MINIMAL_STATS = {
@@ -113,6 +116,85 @@ MINIMAL_STATS = {
     "shared_columns": [],
 }
 
+SPINE_STATS = {
+    "contract_version": "1.0.0",
+    "generated_at": "2026-03-15T10:00:00Z",
+    "project_paths": ["\\\\micro.intra\\projekt\\P1405$\\P1405_Data"],
+    "files": [
+        {
+            "file_name": "pop.csv",
+            "relative_path": "pop.csv",
+            "row_count": 500,
+            "columns": [
+                {
+                    "column_name": "LopNr",
+                    "inferred_type": "id",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 500,
+                    "stats": {"id_subtype": "integer"},
+                },
+                {
+                    "column_name": "Kon",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 2,
+                    "stats": {"frequencies": {"1": 250, "2": 250}},
+                },
+            ],
+        },
+        {
+            "file_name": "edu.csv",
+            "relative_path": "edu.csv",
+            "row_count": 300,
+            "columns": [
+                {
+                    "column_name": "LopNr",
+                    "inferred_type": "id",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 300,
+                    "stats": {"id_subtype": "integer"},
+                },
+                {
+                    "column_name": "Kon",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 2,
+                    "stats": {"frequencies": {"1": 150, "2": 150}},
+                },
+                {
+                    "column_name": "Grade",
+                    "inferred_type": "categorical",
+                    "nullable": False,
+                    "null_count": 0,
+                    "null_rate": 0.0,
+                    "n_distinct": 3,
+                    "stats": {"frequencies": {"7": 100, "8": 100, "9": 100}},
+                },
+            ],
+        },
+    ],
+    "shared_columns": [
+        {
+            "column_name": "LopNr",
+            "files": ["pop.csv", "edu.csv"],
+            "max_n_distinct": 500,
+        },
+        {
+            "column_name": "Kon",
+            "files": ["pop.csv", "edu.csv"],
+            "max_n_distinct": 2,
+        },
+    ],
+}
+
 MULTI_FILE_STATS = {
     "contract_version": "1.0.0",
     "generated_at": "2026-03-15T10:00:00Z",
@@ -187,7 +269,57 @@ def stats_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
+def spine_stats_path(tmp_path: Path) -> Path:
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(SPINE_STATS), encoding="utf-8")
+    return p
+
+
+@pytest.fixture
 def multi_file_stats_path(tmp_path: Path) -> Path:
     p = tmp_path / "stats.json"
     p.write_text(json.dumps(MULTI_FILE_STATS), encoding="utf-8")
     return p
+
+
+@pytest.fixture
+def regmeta_db(tmp_path: Path) -> Path:
+    """Build a minimal regmeta DB with one register, one variable, and value codes."""
+    db_path = tmp_path / "regmeta.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(DDL)
+    conn.execute(
+        "INSERT INTO register (register_id, registernamn, registerrubrik, registersyfte) "
+        "VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn, registervariantsekretess) "
+        "VALUES (10, 1, 'Individer', 'Nej')"
+    )
+    conn.execute(
+        "INSERT INTO register_version (regver_id, regvar_id, registerversionnamn) "
+        "VALUES (100, 10, '2020')"
+    )
+    conn.execute(
+        "INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition) "
+        "VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring')"
+    )
+    conn.execute(
+        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva) "
+        "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
+    )
+    conn.execute(
+        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')"
+    )
+    # Two value codes: 1=Man, 2=Kvinna
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (1, '1', 'Man')"
+    )
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (2, '2', 'Kvinna')"
+    )
+    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 1)")
+    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 2)")
+    conn.commit()
+    conn.close()
+    return db_path

@@ -35,7 +35,11 @@
   - `variable_alias` — all known column names per instance (one instance can have multiple aliases)
   - `variable_context` — population/object-type scope per instance
 - Enrichment entities (from other CSVs):
-  - `value_item` (from `Vardemangder.csv`) — coded value-set members for a variable instance
+  - `value_code` — deduplicated (vardekod, vardebenamning) pairs (from `Vardemangder.csv`)
+  - `cvid_value_code` — junction mapping CVIDs to value codes, deduplicated to PK(cvid, code_id)
+  - `value_item` — item-level (cvid, code_id, item_id) triples, only for items with temporal validity records
+  - `value_item_validity` — date ranges per ItemId (from `VardemangderValidDates.csv`)
+  - `code_variable_map` — pre-aggregated code→(register, variable) mapping for efficient value search
   - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
   - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions
   - `timeseries_event` (from `Timeseries.csv`) — structural/semantic change annotations

@@ -14,10 +14,11 @@ from pathlib import Path
 import numpy as np
 
 from ._util import progress
-from .enrich import EnrichedFile
+from .enrich import SPINE_VAR_IDS, EnrichedFile
 from .stats import ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
+
 
 @dataclass
 class OutputFile:
@@ -39,7 +40,6 @@ def _sub_seed(master_seed: int, file_name: str, column_name: str) -> int:
     """Derive a deterministic sub-seed from master seed, file, and column."""
     h = hashlib.sha256(f"{master_seed}:{file_name}:{column_name}".encode())
     return int.from_bytes(h.digest()[:4], "big")
-
 
 
 def _generate_numeric(
@@ -158,9 +158,12 @@ def _generate_id(
     id_subtype: str,
     pool: np.ndarray | None = None,
 ) -> np.ndarray:
-    if pool is not None:
-        return rng.choice(pool, size=n)
-    return rng.choice(_make_id_pool(n_distinct, id_subtype), size=n)
+    if pool is None:
+        pool = _make_id_pool(n_distinct, id_subtype)
+    # Sample without replacement when the pool is large enough —
+    # registers with one row per person must not get duplicate IDs.
+    replace = n > len(pool)
+    return rng.choice(pool, size=n, replace=replace)
 
 
 def _apply_nulls(
@@ -245,6 +248,70 @@ def generate(
         else:
             shared_pools[sc.column_name] = _make_id_pool(pool_size, subtype)
 
+    # --- Population spine for birth-invariant attributes ---
+    # Ensures shared columns like Kön/Födelseår have consistent values
+    # for the same individual across files.
+    spine: dict[str, dict] = {}
+    spine_id_cols: dict[str, str] = {}
+
+    col_var_ids: dict[str, int] = {}
+    for ef in enriched:
+        for ec in ef.columns:
+            if ec.var_id and ec.column_name not in col_var_ids:
+                col_var_ids[ec.column_name] = ec.var_id
+
+    for sc in stats.shared_columns:
+        if sc.column_name in id_subtypes:
+            continue
+        if col_var_ids.get(sc.column_name) not in SPINE_VAR_IDS:
+            continue
+
+        # Find shared ID column connecting files with this column
+        id_col_name = None
+        for id_sc in stats.shared_columns:
+            if id_sc.column_name in id_subtypes and set(id_sc.files) & set(sc.files):
+                id_col_name = id_sc.column_name
+                break
+        if id_col_name is None or id_col_name not in shared_pools:
+            continue
+
+        # Authority file: largest population for the ID column
+        best_file, best_nd = None, -1
+        for fs in stats.files:
+            if fs.file_name not in sc.files:
+                continue
+            for col in fs.columns:
+                if col.column_name == id_col_name and col.n_distinct > best_nd:
+                    best_nd = col.n_distinct
+                    best_file = fs.file_name
+
+        authority_ecol = None
+        if best_file:
+            for ef in enriched:
+                if ef.file_name == best_file:
+                    for ec in ef.columns:
+                        if ec.column_name == sc.column_name:
+                            authority_ecol = ec
+                            break
+                    break
+        if authority_ecol is None:
+            continue
+
+        pool = shared_pools[id_col_name]
+        spine_rng = np.random.default_rng(_sub_seed(seed, "__spine__", sc.column_name))
+        n_pool = len(pool)
+        if authority_ecol.inferred_type == "categorical":
+            raw = _generate_categorical(
+                spine_rng, n_pool, authority_ecol.stats, authority_ecol.value_codes
+            )
+        elif authority_ecol.inferred_type == "numeric":
+            raw = _generate_numeric(spine_rng, n_pool, authority_ecol.stats)
+        else:
+            continue
+
+        spine[sc.column_name] = dict(zip(pool.tolist(), raw.tolist()))
+        spine_id_cols[sc.column_name] = id_col_name
+
     output_files: list[OutputFile] = []
 
     # Process files in lexical order for determinism
@@ -269,33 +336,44 @@ def generate(
         t_gen = 0.0
         columns_data: dict[str, list] = {}
 
-        for ecol in efile.columns:
+        # Process ID columns first so spine lookups can reference them
+        for ecol in sorted(efile.columns, key=lambda c: c.inferred_type != "id"):
             t_col = time.monotonic()
-            col_rng = np.random.default_rng(
-                _sub_seed(seed, file_stats.file_name, ecol.column_name)
-            )
 
-            if ecol.inferred_type == "numeric":
-                raw = _generate_numeric(col_rng, n_rows, ecol.stats)
-            elif ecol.inferred_type == "categorical":
-                raw = _generate_categorical(
-                    col_rng, n_rows, ecol.stats, ecol.value_codes
-                )
-            elif ecol.inferred_type == "high_cardinality":
-                raw = _generate_high_cardinality(
-                    col_rng, n_rows, ecol.stats, ecol.n_distinct
-                )
-            elif ecol.inferred_type == "date":
-                raw = _generate_date(col_rng, n_rows, ecol.stats)
-            elif ecol.inferred_type == "id":
-                pool = shared_pools.get(ecol.column_name)
-                subtype = ecol.stats["id_subtype"]
-                raw = _generate_id(col_rng, n_rows, ecol.n_distinct, subtype, pool=pool)
+            if (
+                ecol.column_name in spine
+                and spine_id_cols[ecol.column_name] in columns_data
+            ):
+                id_col = spine_id_cols[ecol.column_name]
+                mapping = spine[ecol.column_name]
+                raw = np.array([mapping[v] for v in columns_data[id_col]])
             else:
-                raise ValueError(
-                    f"Unknown inferred_type {ecol.inferred_type!r} "
-                    f"for column {ecol.column_name!r}"
+                col_rng = np.random.default_rng(
+                    _sub_seed(seed, file_stats.file_name, ecol.column_name)
                 )
+                if ecol.inferred_type == "numeric":
+                    raw = _generate_numeric(col_rng, n_rows, ecol.stats)
+                elif ecol.inferred_type == "categorical":
+                    raw = _generate_categorical(
+                        col_rng, n_rows, ecol.stats, ecol.value_codes
+                    )
+                elif ecol.inferred_type == "high_cardinality":
+                    raw = _generate_high_cardinality(
+                        col_rng, n_rows, ecol.stats, ecol.n_distinct
+                    )
+                elif ecol.inferred_type == "date":
+                    raw = _generate_date(col_rng, n_rows, ecol.stats)
+                elif ecol.inferred_type == "id":
+                    pool = shared_pools.get(ecol.column_name)
+                    subtype = ecol.stats["id_subtype"]
+                    raw = _generate_id(
+                        col_rng, n_rows, ecol.n_distinct, subtype, pool=pool
+                    )
+                else:
+                    raise ValueError(
+                        f"Unknown inferred_type {ecol.inferred_type!r} "
+                        f"for column {ecol.column_name!r}"
+                    )
 
             null_rng = np.random.default_rng(
                 _sub_seed(seed, file_stats.file_name, f"{ecol.column_name}:nulls")

@@ -155,6 +155,38 @@ def test_shared_id_pool(multi_file_stats_path: Path, tmp_path: Path):
     assert len(ids_a | ids_b) <= 500
 
 
+def test_id_uniqueness_when_pool_sufficient(
+    multi_file_stats_path: Path, tmp_path: Path
+):
+    """IDs must not repeat within a file when the pool is >= row count."""
+    stats = parse_stats(multi_file_stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    # file_a: 500 rows from pool of 500 — every ID must be unique
+    with (out_dir / "file_a.csv").open() as f:
+        ids_a = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids_a) == len(set(ids_a)), "file_a has duplicate IDs"
+
+    # file_b: 300 rows from pool of 500 — every ID must be unique
+    with (out_dir / "file_b.csv").open() as f:
+        ids_b = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids_b) == len(set(ids_b)), "file_b has duplicate IDs"
+
+
+def test_id_uniqueness_single_file(stats_path: Path, tmp_path: Path):
+    """Single-file register with n_distinct == row_count must have unique IDs."""
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "persons.csv").open() as f:
+        ids = [row["LopNr"] for row in csv.DictReader(f)]
+    assert len(ids) == len(set(ids)), "persons.csv has duplicate IDs"
+
+
 def test_multi_file_output_order(multi_file_stats_path: Path, tmp_path: Path):
     stats = parse_stats(multi_file_stats_path)
     enriched = enrich(stats)
@@ -200,3 +232,96 @@ def test_remove_stale_keeps_current_files(tmp_path: Path):
     removed = _remove_stale_files(tmp_path, written_files={"keep.csv"})
     assert removed == ["drop.csv"]
     assert (tmp_path / "keep.csv").exists()
+
+
+# ---------------------------------------------------------------------------
+# Population spine tests
+# ---------------------------------------------------------------------------
+
+
+def _enrich_with_spine(stats, var_id_map: dict[str, int] | None = None):
+    """Enrich stats and optionally set var_ids for spine columns."""
+    enriched = enrich(stats)
+    if var_id_map:
+        for ef in enriched:
+            for ec in ef.columns:
+                if ec.column_name in var_id_map:
+                    ec.var_id = var_id_map[ec.column_name]
+    return enriched
+
+
+def test_spine_consistency(spine_stats_path: Path, tmp_path: Path):
+    """Shared birth-invariant column has identical values per individual across files."""
+    stats = parse_stats(spine_stats_path)
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "pop.csv").open() as f:
+        pop = {row["LopNr"]: row["Kon"] for row in csv.DictReader(f)}
+    with (out_dir / "edu.csv").open() as f:
+        edu = {row["LopNr"]: row["Kon"] for row in csv.DictReader(f)}
+
+    common = set(pop) & set(edu)
+    assert len(common) > 0
+    for id_val in common:
+        assert pop[id_val] == edu[id_val], f"Kon mismatch for LopNr={id_val}"
+
+
+def test_non_spine_column_independent(spine_stats_path: Path, tmp_path: Path):
+    """Columns without a spine var_id are generated normally."""
+    stats = parse_stats(spine_stats_path)
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "edu.csv").open() as f:
+        grades = {row["Grade"] for row in csv.DictReader(f)}
+    assert grades <= {"7", "8", "9"}
+
+
+def test_spine_deterministic(spine_stats_path: Path, tmp_path: Path):
+    """Same seed produces identical spine output."""
+    stats = parse_stats(spine_stats_path)
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
+
+    m1 = generate(stats, enriched, seed=42, output_dir=tmp_path / "r1")
+    m2 = generate(stats, enriched, seed=42, output_dir=tmp_path / "r2")
+
+    for f1, f2 in zip(m1.files, m2.files):
+        assert f1.sha256 == f2.sha256, f"SHA mismatch for {f1.file_name}"
+
+
+def test_no_enrichment_no_spine(spine_stats_path: Path, tmp_path: Path):
+    """Without var_ids, Kon is generated independently — mismatches expected."""
+    stats = parse_stats(spine_stats_path)
+    enriched = enrich(stats)  # no var_ids
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "pop.csv").open() as f:
+        pop = {row["LopNr"]: row["Kon"] for row in csv.DictReader(f)}
+    with (out_dir / "edu.csv").open() as f:
+        edu = {row["LopNr"]: row["Kon"] for row in csv.DictReader(f)}
+
+    common = set(pop) & set(edu)
+    mismatches = sum(1 for v in common if pop[v] != edu[v])
+    assert mismatches > 0, "Expected independent generation to produce some mismatches"
+
+
+def test_spine_authority_uses_largest_population(
+    spine_stats_path: Path, tmp_path: Path
+):
+    """Spine uses the authority file's distribution (pop.csv has more individuals)."""
+    stats = parse_stats(spine_stats_path)
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    # All 500 IDs in the spine should have Kon values from the authority (pop.csv)
+    with (out_dir / "pop.csv").open() as f:
+        pop = {row["LopNr"]: row["Kon"] for row in csv.DictReader(f)}
+
+    # Every individual in pop should have a valid Kon value from the spine
+    assert all(v in {"1", "2"} for v in pop.values())
+    assert len(pop) == 500

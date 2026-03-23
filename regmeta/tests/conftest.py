@@ -379,6 +379,7 @@ REGISTERINFORMATION_ROWS = [
         "200",
     ),
     # Reg 2 (OTHERREG), variant 20, version 2021, Kön (same var_id 44, cross-register)
+    # Provenance: fetched from Testregistret / TESTREG → consumer of TESTREG's Kön
     _ri_row(
         "OTHERREG",
         "Annat register",
@@ -404,8 +405,8 @@ REGISTERINFORMATION_ROWS = [
         "Kön på ägare",
         "",
         "",
-        "",
-        "",
+        "Testregistret",
+        "TESTREG",
         "",
         "",
         "KON",
@@ -558,10 +559,14 @@ VARDEMANGDER_HEADER = PIPE.join(
 VARDEMANGDER_ROWS = [
     PIPE.join(["Kön", "1", "1", "Man", "1001", "5001"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "1001", "5002"]),
+    # Second item_id for same (cvid=1001, code="1"/Man) — different validity range
+    PIPE.join(["Kön", "1", "1", "Man", "1001", "5003"]),
     PIPE.join(["Kön", "1", "1", "Man", "1003", "5001"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "1003", "5002"]),
     PIPE.join(["Kön", "1", "1", "Man", "2001", "5001"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", "5002"]),
+    # Row with empty ItemId (occurs in real SCB data)
+    PIPE.join(["Kön", "1", "2", "Kvinna", "2001", ""]),
     # Value items for an unknown CVID (should be filtered out)
     PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
 ]
@@ -570,6 +575,8 @@ VALID_DATES_HEADER = PIPE.join(["ItemID", "ValidFrom", "ValidTo"])
 VALID_DATES_ROWS = [
     # 5001 ("Man") valid 2000-2010
     PIPE.join(["5001", "2000-01-01", "2010-12-31"]),
+    # 5003 ("Man") valid 2015-2025 — second range for same code, gap at 2011-2014
+    PIPE.join(["5003", "2015-01-01", "2025-12-31"]),
     # 5002 ("Kvinna") has no validity record → always valid
 ]
 

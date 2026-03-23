@@ -1,9 +1,9 @@
 # SPEC: regmeta (Product PRD)
 
 Status: Frozen
-Version: 2.1.0
+Version: 2.2.0
 Created: 2026-03-01
-Last updated: 2026-03-20
+Last updated: 2026-03-22
 Owner: Research engineering
 Product type: Python CLI package distributed for `uv`/`uvx`
 
@@ -75,7 +75,7 @@ The following were investigated during discovery (see `regmeta/docs/discovery/`)
 
 ### 3.3 Main Database Schema
 
-The database normalizes the hierarchy described in `STRUCTURE.md`.
+The database normalizes the hierarchy described in `STRUCTURE.md`. All ID columns (`register_id`, `regvar_id`, `regver_id`, `var_id`, `cvid`, `code_id`, `item_id`) are stored as `INTEGER` for compact storage and fast comparison. Tables with composite integer-only PKs use `WITHOUT ROWID` to eliminate hidden rowid overhead.
 
 **Core tables** (from `Registerinformation.csv`):
 
@@ -87,7 +87,7 @@ The database normalizes the hierarchy described in `STRUCTURE.md`.
 | `population` | `(regver_id, populationnamn)` | Population scope at a version |
 | `object_type` | `(regver_id, objekttypnamn)` | Object type at a version |
 | `variable` | `(register_id, var_id)` | Variable meaning and definition |
-| `variable_instance` | `cvid` | Concrete occurrence in a version (register_id, regvar_id, regver_id, var_id, datatyp, datalangd) |
+| `variable_instance` | `cvid` | Concrete occurrence in a version (register_id, regvar_id, regver_id, var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva) |
 | `variable_alias` | `(cvid, kolumnnamn)` | All known column names for an instance |
 | `variable_context` | `(cvid, populationnamn, objekttypnamn)` | Population/object-type scope |
 
@@ -95,13 +95,16 @@ Note: column names (`kolumnnamn`) live exclusively in `variable_alias`, not on `
 
 **Enrichment tables:**
 
-| Table | Source file | Role |
-|---|---|---|
-| `value_item` | `Vardemangder.csv` | Coded value-set members keyed by CVID |
-| `value_item_validity` | `VardemangderValidDates.csv` | Temporal validity date ranges per ItemId |
-| `unika_summary` | `UnikaRegisterOchVariabler.csv` | Lifecycle and sensitivity flags |
-| `identifier_semantics` | `Identifierare.csv` | Identifier variable definitions |
-| `timeseries_event` | `Timeseries.csv` | Structural/semantic change log |
+| Table | Source file | PK / storage | Role |
+|---|---|---|---|
+| `value_code` | `Vardemangder.csv` | `code_id` | Deduplicated coded value definitions (vardekod, vardebenamning) |
+| `cvid_value_code` | `Vardemangder.csv` | `(cvid, code_id) WITHOUT ROWID` | Deduplicated junction mapping CVIDs to value codes |
+| `value_item` | `Vardemangder.csv` | `(cvid, code_id, item_id) WITHOUT ROWID` | Item-level mapping, only for items with validity date records. PK order supports temporal query lookups by (cvid, code_id). |
+| `value_item_validity` | `VardemangderValidDates.csv` | — (indexed on item_id) | Temporal validity date ranges per ItemId |
+| `code_variable_map` | Derived at build time | `(code_id, register_id, var_id) WITHOUT ROWID` | Pre-aggregated code→variable mapping for `search --value` queries. Built from `cvid_value_code JOIN variable_instance`. Replaces a large secondary index on the junction table. |
+| `unika_summary` | `UnikaRegisterOchVariabler.csv` | composite | Lifecycle and sensitivity flags |
+| `identifier_semantics` | `Identifierare.csv` | `var_id` | Identifier variable definitions |
+| `timeseries_event` | `Timeseries.csv` | autoincrement | Structural/semantic change log |
 
 **Reference tables:**
 
@@ -120,9 +123,9 @@ Note: column names (`kolumnnamn`) live exclusively in `variable_alias`, not on `
 
 ### 3.4 FTS5 Configuration
 
-**`register_fts`:** content-synced with `register` table. Indexes `register_id`, `registernamn`, `registerrubrik`, `registersyfte`. Uses default FTS5 ranking (BM25).
+**`register_fts`:** content-synced with `register` table (`content='register'`, `content_rowid='rowid'`). Indexes `register_id`, `registernamn`, `registerrubrik`, `registersyfte`. Uses default FTS5 ranking (BM25). Because `register_id` is `INTEGER PRIMARY KEY`, `rowid = register_id` — the FTS INSERT must explicitly provide `rowid`.
 
-**`variable_fts`:** tokenizer `unicode61`. Indexes `register_id`, `var_id`, `variabelnamn`, `variabeldefinition`, `variabelbeskrivning`. Column names (`kolumnnamn`) are excluded from the FTS index — they contain technical suffixes (e.g. `_LISA`) that pollute search results. Column name matching is handled by `resolve`. Uses default FTS5 ranking (BM25). Stores content internally (not contentless) so column values are available in search results and JOINs.
+**`variable_fts`:** content-synced with `variable` table, tokenizer `unicode61`. Indexes `register_id`, `var_id`, `variabelnamn`, `variabeldefinition`, `variabelbeskrivning`. Column names (`kolumnnamn`) are excluded — they contain technical suffixes (e.g. `_LISA`) that pollute search results. Column name matching is handled by `resolve`. Uses default FTS5 ranking (BM25).
 
 The `unicode61` tokenizer handles Swedish characters (å, ä, ö) correctly via Unicode case folding and diacritic removal.
 
@@ -259,12 +262,12 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 
 **Value sets are not version-specific.** The Värdemängder export attaches a flat historical union of all code definitions to every CVID, regardless of which year that CVID represents. When a code's meaning changes between years, both definitions appear on all CVIDs with no temporal binding. See `reports/arbsoknov_report.md` for a detailed case study.
 
-**Temporal validity is available via VardemangderValidDates.csv.** SCB confirmed (2026-03) that MetaPlus stores validity date ranges per ItemId. The supplementary export `VardemangderValidDates.csv` maps `ItemID → (ValidFrom, ValidTo)`. Items absent from this file have no temporal restriction (always valid). Items with bounded validity may have multiple non-overlapping date ranges. The `value_item_validity` table stores these ranges, and `get values --valid-at <date>` filters accordingly.
+**Temporal validity is available via VardemangderValidDates.csv.** SCB confirmed (2026-03) that MetaPlus stores validity date ranges per ItemId. The supplementary export `VardemangderValidDates.csv` maps `ItemID → (ValidFrom, ValidTo)`. Items absent from this file have no temporal restriction (always valid). Items with bounded validity may have multiple non-overlapping date ranges. The `value_item_validity` table stores these ranges. The `value_item` table maps only those items with validity records to their `(cvid, code_id)` pairs — this enables `get values --valid-at <date>` to efficiently determine which codes have temporal tracking and check their validity. Codes with no `value_item` entry are treated as always valid.
 
 ## 7. Data Contract
 
 ### 7.1 Success Envelope (JSON)
-1. `contract_version` (currently `"2.0.0"`)
+1. `contract_version` (currently `"2.0.0"` — tracks output envelope format, not DB schema)
 2. `generated_at` (UTC RFC3339)
 3. `request` (command + effective args)
 4. `database` (import date, schema version)
@@ -274,9 +277,11 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 ### 7.2 Search Result
 1. `total_count` — total matches before pagination
 2. `results` — array of records, each with:
-   - `type`: `register` | `variable`
-   - `register_id`, `register_name`, `register_rubrik` (always present)
-   - `var_id`, `variable_name`, `variable_definition` (when type=variable)
+   - `type`: `register` | `variable` | `varname` | `datacolumn` | `value`
+   - `register_id`, `register_name` (always present)
+   - For `register`: `register_rubrik`
+   - For `variable`/`varname`/`datacolumn`: `var_id`, `variable_name`, `variable_definition`
+   - For `value`: `vardekod`, `vardebenamning`, `var_id`, `variable_name` (via `code_variable_map`)
    - `fts_rank` — relevance score
 
 ### 7.3 Get Result

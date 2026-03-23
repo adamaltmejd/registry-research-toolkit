@@ -1,8 +1,8 @@
-# PLAN: regmeta V1
+# PLAN: regmeta
 
 Status: Complete
 Created: 2026-03-01
-Last updated: 2026-03-20
+Last updated: 2026-03-22
 Owner: Research engineering
 Linked spec: `SPEC_regmeta.md`
 Domain model: `STRUCTURE.md`
@@ -40,6 +40,13 @@ A `schema_prototype.py` analysis tool was used during discovery to profile the S
 ### 2026-03-20: Temporal validity
 15. **`value_item_validity` table.** SCB provided `VardemangderValidDates.csv` mapping ItemId to validity date ranges. Items absent from the file have no temporal restriction (always valid). Schema version bumped to 1.1.0.
 16. **`get values --valid-at` filter.** ISO date input, validated at CLI boundary.
+
+### 2026-03-22: Storage optimization (schema 2.0.0)
+17. **INTEGER IDs.** All ID columns (`register_id`, `regvar_id`, `regver_id`, `var_id`, `cvid`, `code_id`, `item_id`) stored as `INTEGER` instead of `TEXT`. Reduces storage and enables faster comparison.
+18. **Content-synced FTS5.** Both `register_fts` and `variable_fts` use `content=` and `content_rowid=` to avoid storing text twice. Requires explicit `rowid` in FTS INSERT statements since the content tables use `INTEGER PRIMARY KEY` (rowid alias).
+19. **Value code deduplication.** `value_code` table deduplicates (vardekod, vardebenamning) pairs across all CVIDs. `cvid_value_code` is a `WITHOUT ROWID` junction with PK(cvid, code_id).
+20. **Sparse validity tracking.** `value_item` stores (cvid, code_id, item_id) only for items that have validity date records in `VardemangderValidDates.csv`. `WITHOUT ROWID` with PK(cvid, code_id, item_id) — PK order supports temporal query lookups. Codes with no `value_item` entry are treated as always valid.
+21. **`code_variable_map` summary table.** Pre-aggregated (code_id, register_id, var_id) for `search --value` queries. Replaces a 662MB secondary index on the 51.7M-row junction with a 90MB `WITHOUT ROWID` table of 3.8M rows.
 
 ## 4. V1 Command Set
 
@@ -138,6 +145,40 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - [x] Full regression suite: 82 command tests + 22 build-db tests = 104 total.
 - [x] Final code review and cleanup.
 
+### Phase 4: V2 Features — Temporal Diff + Cross-Register Lineage
+
+Objective: Two new query commands (`get diff`, `get lineage`) per `SPEC_regmeta_v2.md`.
+
+#### Tasks
+- [x] `get diff` — temporal schema comparison between two years. → `queries.py:get_diff`, `cli.py:_cmd_get_diff`
+- [x] `get lineage` — cross-register variable provenance. → `queries.py:get_lineage`, `cli.py:_cmd_get_lineage`
+- [x] Variable resolution by var_id, name, or alias for both commands.
+- [x] Output formats: table, list, JSON (shared with v1 commands).
+- [x] Contract version bumped to 3.0.0.
+
+#### Phase Gate: Tests And Cleanup
+- [x] Tests for `get diff` (9 tests) and `get lineage` (9 tests). → `test_commands.py`
+- [x] Output format tests (table, list, JSON). → `test_commands.py`
+- [x] Full regression suite: 102 tests total.
+
+### Phase 5: Storage Optimization
+
+Objective: Reduce database size from ~13GB to ~1.6GB without losing functionality or query speed.
+
+#### Tasks
+- [x] TEXT→INTEGER for all ID columns. → `db.py:DDL`, `_import_registerinformation`, `_import_identifierare`
+- [x] Content-synced FTS5 with explicit rowid. → `db.py:_populate_fts`, DDL
+- [x] `_try_int()` helper for CLI string→INTEGER coercion. → `queries.py`
+- [x] Value code deduplication via `value_code` + `cvid_value_code` WITHOUT ROWID junction. → `db.py:_import_vardemangder`
+- [x] Sparse `value_item` WITHOUT ROWID PK(cvid, code_id, item_id). → `db.py:DDL`, `_import_vardemangder`
+- [x] `code_variable_map` summary table, drop `idx_cvid_value_code_code`. → `db.py:DDL`, `build_db`, `queries.py:_search_values`
+- [x] Drop unused `idx_value_item_item` index.
+
+#### Phase Gate: Tests And Cleanup
+- [x] Tests for `value_item` population, `code_variable_map` population, multi-item temporal gaps, empty ItemId handling, search --value via summary table. → `test_build_db.py`, `test_commands.py`
+- [x] Full regression suite: 108 tests total.
+- [x] SPEC and STRUCTURE docs updated to reflect new schema.
+
 ## 7. Risks
 
 | Risk | Mitigation |
@@ -147,3 +188,4 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 | CVID alias/context anomalies | Handled by alias + context tables by design |
 | Scope creep into live API | Hard v1 boundary in spec |
 | Value sets not version-specific | Resolved. SCB provided `VardemangderValidDates.csv` (2026-03). Integrated into `build-db` as `value_item_validity` table. `get values --valid-at` filters by date. |
+| Database size (13GB raw CSV → SQLite) | Resolved. INTEGER IDs, value code dedup, WITHOUT ROWID tables, content-synced FTS, summary tables. Final DB ~1.6GB (compresses to ~30MB). |

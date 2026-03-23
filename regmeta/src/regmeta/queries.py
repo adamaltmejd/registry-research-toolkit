@@ -16,19 +16,28 @@ from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 _YEAR_RE = re.compile(r"\d{4}")
 
 
+def _try_int(value: str) -> int | str:
+    """Convert to int if the string is numeric, otherwise return as-is."""
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return value
+
+
 # ---------------------------------------------------------------------------
 # Register lookup
 # ---------------------------------------------------------------------------
 
 
-def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[str]:
+def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
     """Resolve a register name or ID to a list of register_ids.
 
     Tries: exact ID → case-insensitive name → substring match.
     Returns empty list if nothing found.
     """
+    # IDs are INTEGER — convert for exact match
     row = conn.execute(
-        "SELECT register_id FROM register WHERE register_id = ?", (value,)
+        "SELECT register_id FROM register WHERE register_id = ?", (_try_int(value),)
     ).fetchone()
     if row:
         return [row["register_id"]]
@@ -280,14 +289,14 @@ def _search_values(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[str] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT DISTINCT val.vardekod, val.vardebenamning, "
-        "vi.register_id, vi.var_id, v.variabelnamn, r.registernamn "
-        "FROM value_item val "
-        "JOIN variable_instance vi ON val.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-        "JOIN register r ON vi.register_id = r.register_id "
-        "WHERE val.vardekod LIKE ? OR val.vardebenamning LIKE ? "
-        "ORDER BY val.vardekod "
+        "SELECT DISTINCT vc.vardekod, vc.vardebenamning, "
+        "cvm.register_id, cvm.var_id, v.variabelnamn, r.registernamn "
+        "FROM value_code vc "
+        "JOIN code_variable_map cvm ON vc.code_id = cvm.code_id "
+        "JOIN variable v ON cvm.register_id = v.register_id AND cvm.var_id = v.var_id "
+        "JOIN register r ON cvm.register_id = r.register_id "
+        "WHERE vc.vardekod LIKE ? OR vc.vardebenamning LIKE ? "
+        "ORDER BY vc.vardekod "
         "LIMIT 500",
         (like_pattern, like_pattern),
     ).fetchall()
@@ -363,7 +372,7 @@ def get_schema(
     if regvar_id:
         rv = conn.execute(
             "SELECT * FROM register_variant WHERE regvar_id = ?",
-            (regvar_id,),
+            (_try_int(regvar_id),),
         ).fetchone()
         if not rv:
             raise RegmetaError(
@@ -468,18 +477,19 @@ def get_varinfo(
 
     Returns a list of variable dicts, each with an "instances" key.
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
     # Match variable by var_id first, fall back to name
+    int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
             f"SELECT v.*, r.registernamn FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE v.var_id = ? AND v.register_id IN ({ph})",
-            [variable, *reg_ids],
+            [int_variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
             f"SELECT v.*, r.registernamn FROM variable v "
@@ -492,7 +502,7 @@ def get_varinfo(
             "SELECT v.*, r.registernamn FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.var_id = ?",
-            (variable,),
+            (int_variable,),
         ).fetchall()
         vars_by_name = conn.execute(
             "SELECT v.*, r.registernamn FROM variable v "
@@ -543,7 +553,7 @@ def get_varinfo(
             ):
                 aliases_map[row["cvid"]].append(row["kolumnnamn"])
             for row in conn.execute(
-                f"SELECT cvid, COUNT(*) as cnt FROM value_item "
+                f"SELECT cvid, COUNT(*) as cnt FROM cvid_value_code "
                 f"WHERE cvid IN ({cvid_ph}) GROUP BY cvid",
                 cvids,
             ):
@@ -600,11 +610,12 @@ def get_values(
     """Get value-set members for a CVID.
 
     If valid_at is an ISO date (YYYY-MM-DD), only return values whose
-    validity period includes that date.  Items with no validity record
-    are treated as always valid.
+    validity period includes that date.  Codes with no value_item
+    entries (no temporal tracking) are treated as always valid.
     """
+    int_cvid = _try_int(cvid)
     inst = conn.execute(
-        "SELECT * FROM variable_instance WHERE cvid = ?", (cvid,)
+        "SELECT * FROM variable_instance WHERE cvid = ?", (int_cvid,)
     ).fetchone()
     if not inst:
         raise RegmetaError(
@@ -617,22 +628,38 @@ def get_values(
 
     if valid_at is None:
         values = conn.execute(
-            "SELECT vardekod, vardebenamning, vardemangdsversion, vardemangdsniva "
-            "FROM value_item WHERE cvid = ? ORDER BY vardekod",
-            (cvid,),
+            "SELECT vc.vardekod, vc.vardebenamning, "
+            "vi.vardemangdsversion, vi.vardemangdsniva "
+            "FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
+            "WHERE cvc.cvid = ? ORDER BY vc.vardekod",
+            (int_cvid,),
         ).fetchall()
     else:
+        # A code is valid at a date if it has no value_item entries (no
+        # temporal tracking), or at least one of its items has a validity
+        # range covering the date.
         values = conn.execute(
-            "SELECT DISTINCT vi.vardekod, vi.vardebenamning, "
+            "SELECT vc.vardekod, vc.vardebenamning, "
             "vi.vardemangdsversion, vi.vardemangdsniva "
-            "FROM value_item vi "
-            "LEFT JOIN value_item_validity viv ON vi.item_id = viv.item_id "
-            "WHERE vi.cvid = ? AND ("
-            "  viv.item_id IS NULL"
-            "  OR ((viv.valid_from IS NULL OR viv.valid_from <= ?)"
-            "      AND (viv.valid_to IS NULL OR viv.valid_to >= ?))"
-            ") ORDER BY vi.vardekod",
-            (cvid, valid_at, valid_at),
+            "FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
+            "WHERE cvc.cvid = ? AND ("
+            "  NOT EXISTS ("
+            "    SELECT 1 FROM value_item vit"
+            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
+            "  )"
+            "  OR EXISTS ("
+            "    SELECT 1 FROM value_item vit"
+            "    JOIN value_item_validity viv ON vit.item_id = viv.item_id"
+            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
+            "    AND (viv.valid_from IS NULL OR viv.valid_from <= ?)"
+            "    AND (viv.valid_to IS NULL OR viv.valid_to >= ?)"
+            "  )"
+            ") ORDER BY vc.vardekod",
+            (int_cvid, valid_at, valid_at),
         ).fetchall()
     return [dict(v) for v in values]
 
@@ -653,24 +680,25 @@ def get_datacolumns(
     Returns a list of dicts with "kolumnnamn", "register_id", "register_name",
     "regvar_id", "regver_id", "version_name".
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
     # Match by var_id or variabelnamn
+    int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
             f"SELECT register_id, var_id FROM variable "
             f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
             f"AND register_id IN ({ph})",
-            [variable, variable, *reg_ids],
+            [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
             "SELECT register_id, var_id FROM variable "
             "WHERE var_id = ? OR LOWER(variabelnamn) = LOWER(?)",
-            (variable, variable),
+            (int_variable, variable),
         ).fetchall()
 
     if not var_rows:
@@ -717,6 +745,375 @@ def get_datacolumns(
     return results
 
 
+# ---------------------------------------------------------------------------
+# Get diff
+# ---------------------------------------------------------------------------
+
+
+def _find_version_for_year(
+    conn: sqlite3.Connection, regvar_id: int, year: int
+) -> dict[str, Any] | None:
+    """Find the version matching a year: exact first, then latest ≤ year."""
+    versions = conn.execute(
+        "SELECT regver_id, registerversionnamn FROM register_version "
+        "WHERE regvar_id = ? ORDER BY regver_id",
+        (regvar_id,),
+    ).fetchall()
+
+    best: dict[str, Any] | None = None
+    best_year: int | None = None
+    for v in versions:
+        vy = extract_year(v["registerversionnamn"] or "")
+        if vy is None:
+            continue
+        if vy == year:
+            return {
+                "regver_id": v["regver_id"],
+                "version_name": v["registerversionnamn"],
+                "year": vy,
+            }
+        if vy <= year and (best_year is None or vy > best_year):
+            best = {
+                "regver_id": v["regver_id"],
+                "version_name": v["registerversionnamn"],
+                "year": vy,
+            }
+            best_year = vy
+    return best
+
+
+def _fetch_columns_for_version(
+    conn: sqlite3.Connection, regver_id: int
+) -> dict[int, dict[str, Any]]:
+    """Fetch columns for a version, keyed by var_id."""
+    rows = conn.execute(
+        "SELECT vi.var_id, vi.datatyp, vi.datalangd, v.variabelnamn, "
+        "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
+        "FROM variable_instance vi "
+        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
+        "WHERE vi.regver_id = ? "
+        "GROUP BY vi.var_id ORDER BY vi.var_id",
+        (regver_id,),
+    ).fetchall()
+    result: dict[int, dict[str, Any]] = {}
+    for r in rows:
+        aliases = sorted(r["aliases"].split(", ")) if r["aliases"] else []
+        result[r["var_id"]] = {
+            "var_id": r["var_id"],
+            "variabelnamn": r["variabelnamn"],
+            "datatyp": r["datatyp"],
+            "datalangd": r["datalangd"],
+            "aliases": aliases,
+        }
+    return result
+
+
+def get_diff(
+    conn: sqlite3.Connection,
+    *,
+    register: str,
+    from_year: int,
+    to_year: int,
+    variant: str | None = None,
+    variables: list[str] | None = None,
+) -> dict[str, Any]:
+    """Compare a register's schema between two years."""
+    reg_ids = require_register_ids(conn, register)
+
+    reg = conn.execute(
+        "SELECT register_id, registernamn FROM register WHERE register_id = ?",
+        (reg_ids[0],),
+    ).fetchone()
+
+    if variant:
+        variant_rows = conn.execute(
+            f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
+            "AND regvar_id = ?",
+            [*reg_ids, _try_int(variant)],
+        ).fetchall()
+    else:
+        variant_rows = conn.execute(
+            f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
+            "ORDER BY regvar_id",
+            reg_ids,
+        ).fetchall()
+
+    # Resolve each variable input to var_ids, tracking name mapping
+    filter_var_ids: set[int] | None = None
+    var_id_to_name: dict[int, str] = {}
+    var_id_to_input: dict[int, str] = {}
+    if variables:
+        filter_var_ids = set()
+        ph = _in_placeholders(reg_ids)
+        for v in variables:
+            rows = conn.execute(
+                f"SELECT var_id, variabelnamn FROM variable "
+                f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
+                f"AND register_id IN ({ph})",
+                [_try_int(v), v, *reg_ids],
+            ).fetchall()
+            if not rows:
+                rows = conn.execute(
+                    f"SELECT DISTINCT vi.var_id, var.variabelnamn "
+                    f"FROM variable_alias va "
+                    f"JOIN variable_instance vi ON va.cvid = vi.cvid "
+                    f"JOIN variable var ON vi.register_id = var.register_id AND vi.var_id = var.var_id "
+                    f"WHERE LOWER(va.kolumnnamn) = LOWER(?) AND vi.register_id IN ({ph})",
+                    [v, *reg_ids],
+                ).fetchall()
+            for r in rows:
+                filter_var_ids.add(r["var_id"])
+                var_id_to_name[r["var_id"]] = r["variabelnamn"]
+                var_id_to_input[r["var_id"]] = v
+
+        if not filter_var_ids:
+            names = ", ".join(f"'{v}'" for v in variables)
+            raise RegmetaError(
+                exit_code=EXIT_NOT_FOUND,
+                code="not_found",
+                error_class="query",
+                message=f"No variables matching {names} in register '{register}'.",
+                remediation="Use `regmeta search --query <term>` to find variables.",
+            )
+
+    variants_out: list[dict[str, Any]] = []
+    unchanged_by_var: dict[str, list[str]] = {}
+    changed_any_variant: set[str] = set()
+    any_versions_found = False
+
+    for rv in variant_rows:
+        rvid = rv["regvar_id"]
+        from_ver = _find_version_for_year(conn, rvid, from_year)
+        to_ver = _find_version_for_year(conn, rvid, to_year)
+        if not from_ver or not to_ver:
+            continue
+        any_versions_found = True
+
+        from_cols = _fetch_columns_for_version(conn, from_ver["regver_id"])
+        to_cols = _fetch_columns_for_version(conn, to_ver["regver_id"])
+
+        from_ids = set(from_cols)
+        to_ids = set(to_cols)
+
+        added_ids = to_ids - from_ids
+        removed_ids = from_ids - to_ids
+        common_ids = from_ids & to_ids
+
+        added = [to_cols[vid] for vid in sorted(added_ids)]
+        removed = [from_cols[vid] for vid in sorted(removed_ids)]
+        changed: list[dict[str, Any]] = []
+        unchanged_count = 0
+
+        for vid in sorted(common_ids):
+            fc, tc = from_cols[vid], to_cols[vid]
+            changes: list[dict[str, Any]] = []
+            for field in ("datatyp", "datalangd", "aliases"):
+                if fc[field] != tc[field]:
+                    changes.append({"field": field, "from": fc[field], "to": tc[field]})
+            if changes:
+                changed.append(
+                    {
+                        "var_id": vid,
+                        "variabelnamn": tc["variabelnamn"],
+                        "changes": changes,
+                    }
+                )
+            else:
+                unchanged_count += 1
+
+        if filter_var_ids is not None:
+            changed_var_ids = (
+                {a["var_id"] for a in added}
+                | {r["var_id"] for r in removed}
+                | {c["var_id"] for c in changed}
+            ) & filter_var_ids
+            changed_any_variant.update(changed_var_ids)
+            for vid in filter_var_ids - changed_var_ids:
+                if vid in from_ids or vid in to_ids:
+                    unchanged_by_var.setdefault(vid, []).append(
+                        rv["registervariantnamn"]
+                    )
+
+            added = [a for a in added if a["var_id"] in filter_var_ids]
+            removed = [r for r in removed if r["var_id"] in filter_var_ids]
+            changed = [c for c in changed if c["var_id"] in filter_var_ids]
+
+        if not added and not removed and not changed:
+            continue
+
+        variants_out.append(
+            {
+                "regvar_id": rvid,
+                "variant_name": rv["registervariantnamn"],
+                "from_version": from_ver,
+                "to_version": to_ver,
+                "summary": {
+                    "added": len(added),
+                    "removed": len(removed),
+                    "changed": len(changed),
+                    "unchanged": unchanged_count,
+                },
+                "added": added,
+                "removed": removed,
+                "changed": changed,
+            }
+        )
+
+    if not any_versions_found:
+        raise RegmetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="not_found",
+            error_class="query",
+            message=f"No versions found for register '{register}' between years {from_year} and {to_year}.",
+            remediation="Use `regmeta get schema --register <name>` to see available versions.",
+        )
+
+    result: dict[str, Any] = {
+        "register_id": reg["register_id"],
+        "register_name": reg["registernamn"],
+        "from_year": from_year,
+        "to_year": to_year,
+        "variants": variants_out,
+    }
+    if var_id_to_input:
+        result["resolved_variables"] = [
+            {
+                "input": var_id_to_input[vid],
+                "variabelnamn": var_id_to_name[vid],
+                "var_id": vid,
+            }
+            for vid in sorted(var_id_to_name)
+        ]
+    fully_unchanged = [
+        var_id_to_name[vid]
+        for vid in sorted(unchanged_by_var)
+        if vid not in changed_any_variant
+    ]
+    if fully_unchanged:
+        result["unchanged"] = fully_unchanged
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Get lineage
+# ---------------------------------------------------------------------------
+
+
+def get_lineage(
+    conn: sqlite3.Connection,
+    variable: str,
+    *,
+    register: str | None = None,
+) -> dict[str, Any]:
+    """Show cross-register variable provenance."""
+    reg_ids: list[int] | None = None
+    if register:
+        reg_ids = require_register_ids(conn, register)
+
+    int_variable = _try_int(variable)
+    if reg_ids:
+        ph = _in_placeholders(reg_ids)
+        matched = conn.execute(
+            f"SELECT v.*, r.registernamn FROM variable v "
+            f"JOIN register r ON v.register_id = r.register_id "
+            f"WHERE (v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)) "
+            f"AND v.register_id IN ({ph})",
+            [int_variable, variable, *reg_ids],
+        ).fetchall()
+    else:
+        matched = conn.execute(
+            "SELECT v.*, r.registernamn FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)",
+            (int_variable, variable),
+        ).fetchall()
+
+    if not matched:
+        raise RegmetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="not_found",
+            error_class="query",
+            message=f"No variable matching '{variable}'"
+            + (f" in register '{register}'" if register else "")
+            + ".",
+            remediation="Use `regmeta search --query <term>` to find variables.",
+        )
+
+    registers_out: list[dict[str, Any]] = []
+    total_instances = 0
+    with_source = 0
+
+    for var in matched:
+        rid, vid = var["register_id"], var["var_id"]
+        hamtad = (var["variabelhamtadfran"] or "").strip()
+        kalla = (var["variabelregister_kalla"] or "").strip()
+
+        # Resolve source register
+        source_register_id: str | None = None
+        if kalla:
+            resolved = resolve_register_ids(conn, kalla)
+            source_register_id = resolved[0] if resolved else None
+
+        # Classify role
+        if not kalla and not hamtad:
+            role = "unknown"
+        elif not kalla or source_register_id == rid:
+            role = "source"
+        else:
+            role = "consumer"
+
+        # Instance count and year range
+        instances = conn.execute(
+            "SELECT vi.cvid, rver.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "WHERE vi.register_id = ? AND vi.var_id = ?",
+            (rid, vid),
+        ).fetchall()
+
+        instance_count = len(instances)
+        years = [extract_year(i["registerversionnamn"] or "") for i in instances]
+        years = [y for y in years if y is not None]
+        year_range = [min(years), max(years)] if years else []
+
+        total_instances += instance_count
+        if kalla or hamtad:
+            with_source += instance_count
+
+        registers_out.append(
+            {
+                "register_id": rid,
+                "register_name": var["registernamn"],
+                "var_id": vid,
+                "role": role,
+                "variabelhamtadfran": hamtad,
+                "variabelregister_kalla": kalla,
+                "source_register_id": source_register_id,
+                "instance_count": instance_count,
+                "year_range": year_range,
+            }
+        )
+
+    var_name = matched[0]["variabelnamn"]
+
+    return {
+        "variable_name": var_name,
+        "occurrences": total_instances,
+        "registers": registers_out,
+        "provenance_coverage": {
+            "total": total_instances,
+            "with_source": with_source,
+            "without_source": total_instances - with_source,
+        },
+    }
+
+
+# ---------------------------------------------------------------------------
+# Resolve
+# ---------------------------------------------------------------------------
+
+
 def get_coded_variables(
     conn: sqlite3.Connection,
     *,
@@ -731,12 +1128,13 @@ def get_coded_variables(
     """
     rows = conn.execute(
         "SELECT v.variabelnamn, "
-        "COUNT(DISTINCT val.vardekod) as n_distinct_codes, "
+        "COUNT(DISTINCT vc.vardekod) as n_distinct_codes, "
         "COUNT(DISTINCT v.register_id) as n_registers, "
         "COUNT(DISTINCT vi.cvid) as n_instances "
         "FROM variable v "
         "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
-        "JOIN value_item val ON vi.cvid = val.cvid "
+        "JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid "
+        "JOIN value_code vc ON cvc.code_id = vc.code_id "
         "GROUP BY v.variabelnamn "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "
         "ORDER BY n_registers DESC, n_distinct_codes DESC "
@@ -765,7 +1163,7 @@ def resolve(
     Returns a list of dicts, one per input column, each with
     "column_name", "status", and "matches" keys.
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
