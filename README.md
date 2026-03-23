@@ -9,6 +9,11 @@ Tools for working with Swedish registry microdata on [SCB MONA](https://www.scb.
 | [`regmeta`](regmeta/) | Search and query SCB registry metadata |
 | [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
 
+## Prerequisites
+
+- **Python 3.11+** — [python.org](https://www.python.org/downloads/) or `brew install python`
+- **uv** — fast Python package manager: `curl -LsSf https://astral.sh/uv/install.sh | sh` ([docs](https://docs.astral.sh/uv/getting-started/installation/))
+
 ## Install
 
 ### For AI agents
