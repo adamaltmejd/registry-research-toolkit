@@ -9,10 +9,10 @@ import pytest
 from regmeta.db import build_db, open_db, get_manifest, _decode_cp1252
 from regmeta.errors import RegmetaError
 
-from conftest import (
+from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
-    _write_csv,
+    write_csv,
 )
 
 
@@ -260,7 +260,7 @@ class TestBuildDb:
         """Rebuilding should replace the DB atomically."""
         csv_dir = fixture_db.parent.parent / "csv_rebuild"
         csv_dir.mkdir(exist_ok=True)
-        _write_csv(
+        write_csv(
             csv_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
             REGISTERINFORMATION_ROWS[:1],
