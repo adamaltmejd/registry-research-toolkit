@@ -477,7 +477,7 @@ def get_varinfo(
 
     Returns a list of variable dicts, each with an "instances" key.
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
@@ -680,7 +680,7 @@ def get_datacolumns(
     Returns a list of dicts with "kolumnnamn", "register_id", "register_name",
     "regvar_id", "regver_id", "version_name".
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
@@ -751,7 +751,7 @@ def get_datacolumns(
 
 
 def _find_version_for_year(
-    conn: sqlite3.Connection, regvar_id: str, year: int
+    conn: sqlite3.Connection, regvar_id: int, year: int
 ) -> dict[str, Any] | None:
     """Find the version matching a year: exact first, then latest ≤ year."""
     versions = conn.execute(
@@ -783,8 +783,8 @@ def _find_version_for_year(
 
 
 def _fetch_columns_for_version(
-    conn: sqlite3.Connection, regver_id: str
-) -> dict[str, dict[str, Any]]:
+    conn: sqlite3.Connection, regver_id: int
+) -> dict[int, dict[str, Any]]:
     """Fetch columns for a version, keyed by var_id."""
     rows = conn.execute(
         "SELECT vi.var_id, vi.datatyp, vi.datalangd, v.variabelnamn, "
@@ -796,7 +796,7 @@ def _fetch_columns_for_version(
         "GROUP BY vi.var_id ORDER BY vi.var_id",
         (regver_id,),
     ).fetchall()
-    result: dict[str, dict[str, Any]] = {}
+    result: dict[int, dict[str, Any]] = {}
     for r in rows:
         aliases = sorted(r["aliases"].split(", ")) if r["aliases"] else []
         result[r["var_id"]] = {
@@ -840,9 +840,9 @@ def get_diff(
         ).fetchall()
 
     # Resolve each variable input to var_ids, tracking name mapping
-    filter_var_ids: set[str] | None = None
-    var_id_to_name: dict[str, str] = {}
-    var_id_to_input: dict[str, str] = {}
+    filter_var_ids: set[int] | None = None
+    var_id_to_name: dict[int, str] = {}
+    var_id_to_input: dict[int, str] = {}
     if variables:
         filter_var_ids = set()
         ph = _in_placeholders(reg_ids)
@@ -1007,7 +1007,7 @@ def get_lineage(
     register: str | None = None,
 ) -> dict[str, Any]:
     """Show cross-register variable provenance."""
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
@@ -1163,7 +1163,7 @@ def resolve(
     Returns a list of dicts, one per input column, each with
     "column_name", "status", and "matches" keys.
     """
-    reg_ids: list[str] | None = None
+    reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 

@@ -68,7 +68,7 @@ def enrich(
     """
     conn: sqlite3.Connection | None = None
     _cancelled = False
-    prev_handler = signal.getsignal(signal.SIGINT)
+    prev_handler = None
     if db_path is not None:
         conn = regmeta.open_db(db_path)
 

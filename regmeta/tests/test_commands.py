@@ -875,6 +875,23 @@ class TestOutputFormats:
         finally:
             regmeta.cli._MAX_DISPLAY_ROWS = old_max
 
+    def test_diff_output_file_has_all_sections(self, db_path: str, tmp_path):
+        """--output with get diff must include all sections, not just the last."""
+        out = tmp_path / "diff.txt"
+        code = run(
+            [
+                "--db", db_path, "--output", str(out),
+                "get", "diff", "--register", "TESTREG",
+                "--from", "2020", "--to", "2022", "--variable", "Kön", "TestVar",
+            ]
+        )
+        assert code == 0
+        content = out.read_text(encoding="utf-8")
+        # Multi-section: resolved variables header + diff table + unchanged footer
+        assert "Kön" in content
+        assert "TestVar" in content
+        assert "Unchanged" in content
+
     def test_no_command(self):
         _, code = _run_json([])
         assert code == 2

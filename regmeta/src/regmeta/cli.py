@@ -64,11 +64,12 @@ def _success_envelope(
 _MAX_DISPLAY_ROWS = 100
 
 
-def _write_to(content: str, output_path: str | None) -> None:
+def _write_to(content: str, output_path: str | None, *, truncate: bool = False) -> None:
     if output_path:
         target = Path(output_path).expanduser().resolve()
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(content, encoding="utf-8")
+        with target.open("w" if truncate else "a", encoding="utf-8") as f:
+            f.write(content)
     else:
         sys.stdout.write(content)
 
@@ -826,8 +827,14 @@ def _write_payload(
     *,
     fmt: str = "table",
 ) -> None:
+    # Truncate output file so multi-section commands (diff, lineage) append correctly
+    if output_path:
+        target = Path(output_path).expanduser().resolve()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("", encoding="utf-8")
     data = payload.get("data", {})
 
+    # Pick columns based on what result types are in the payload
     if key == ("search", None):
         results = data.get("results", [])
         types = {r.get("type") for r in results}
