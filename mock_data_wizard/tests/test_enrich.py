@@ -102,3 +102,16 @@ def test_drift_ignores_other_bucket():
 def test_drift_skipped_without_value_codes():
     ef = _make_enriched("f.csv", "Status", {"A": 50, "B": 50}, None)
     assert _check_value_code_drift([ef]) == []
+
+
+def test_enrich_resolves_from_db(stats_path: Path, regmeta_db: Path):
+    """Enrichment against a real regmeta DB resolves columns and fetches value codes."""
+    stats = parse_stats(stats_path)
+    result = enrich(stats, register="TESTREG", db_path=regmeta_db)
+    cols = {c.column_name: c for c in result[0].columns}
+
+    kon = cols["Kon"]
+    assert kon.register_id == 1
+    assert kon.var_id == 44
+    assert kon.variable_name == "Kön"
+    assert kon.value_codes == {"1": "Man", "2": "Kvinna"}

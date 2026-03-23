@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
+
+from regmeta.db import DDL
 
 
 MINIMAL_STATS = {
@@ -277,3 +280,35 @@ def multi_file_stats_path(tmp_path: Path) -> Path:
     p = tmp_path / "stats.json"
     p.write_text(json.dumps(MULTI_FILE_STATS), encoding="utf-8")
     return p
+
+
+@pytest.fixture
+def regmeta_db(tmp_path: Path) -> Path:
+    """Build a minimal regmeta DB with one register, one variable, and value codes."""
+    db_path = tmp_path / "regmeta.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.executescript(DDL)
+    conn.execute(
+        "INSERT INTO register VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant VALUES (10, 1, 'Individer', NULL, NULL, 'Nej')"
+    )
+    conn.execute(
+        "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+    )
+    conn.execute(
+        "INSERT INTO variable VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring', NULL, NULL, NULL, NULL, NULL, NULL, NULL)"
+    )
+    conn.execute(
+        "INSERT INTO variable_instance VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
+    )
+    conn.execute("INSERT INTO variable_alias VALUES (1001, 'Kon')")
+    # Two value codes: 1=Man, 2=Kvinna
+    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
+    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+    conn.execute("INSERT INTO cvid_value_code VALUES (1001, 1)")
+    conn.execute("INSERT INTO cvid_value_code VALUES (1001, 2)")
+    conn.commit()
+    conn.close()
+    return db_path
