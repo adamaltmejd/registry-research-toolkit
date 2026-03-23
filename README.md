@@ -52,23 +52,6 @@ See per-package READMEs for full documentation:
 - [regmeta/README.md](regmeta/README.md)
 - [mock_data_wizard/README.md](mock_data_wizard/README.md)
 
-## Development
-
-```bash
-git clone https://github.com/adamaltmejd/registry-research-toolkit.git
-cd registry-research-toolkit
-uv sync --group dev
-```
-
-### Testing
-
-```bash
-uv run python -m pytest                            # unit tests only
-uv run python -m pytest --run-integration           # include Docker integration tests
-```
-
-Expensive test suites are gated behind `--run-<name>` flags. To add a new category, add an entry to `OPTIONAL_MARKERS` in `conftest.py` and decorate tests with `@pytest.mark.<name>`.
-
 ## License
 
 [MIT](LICENSE)
