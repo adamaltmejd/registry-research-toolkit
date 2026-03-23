@@ -19,13 +19,11 @@ Point your agent at the [registry-metadata-search skill](https://github.com/adam
 
 ```bash
 # regmeta (metadata queries)
-uv add "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
-
-# Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
+uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
 regmeta maintain download
 
 # mock-data-wizard (mock data generation, depends on regmeta)
-uv add "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
 ```
 
 ## Quick start

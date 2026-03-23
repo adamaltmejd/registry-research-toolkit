@@ -12,11 +12,11 @@ You have access to `regmeta`, a CLI tool for querying SCB (Statistics Sweden) re
 If `regmeta` is not yet installed, run these commands:
 
 ```bash
-# Install regmeta
-uv add "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
+# Install regmeta as a global CLI tool
+uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
 
 # Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
-uv run regmeta maintain download --yes
+regmeta maintain download --yes
 ```
 
 Verify the install works:
