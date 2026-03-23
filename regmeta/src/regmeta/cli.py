@@ -828,10 +828,7 @@ def _write_payload(
     fmt: str = "table",
 ) -> None:
     # Truncate output file so multi-section commands (diff, lineage) append correctly
-    if output_path:
-        target = Path(output_path).expanduser().resolve()
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text("", encoding="utf-8")
+    _write_to("", output_path, truncate=True)
     data = payload.get("data", {})
 
     # Pick columns based on what result types are in the payload

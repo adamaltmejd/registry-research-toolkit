@@ -289,26 +289,37 @@ def regmeta_db(tmp_path: Path) -> Path:
     conn = sqlite3.connect(str(db_path))
     conn.executescript(DDL)
     conn.execute(
-        "INSERT INTO register VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"
+        "INSERT INTO register (register_id, registernamn, registerrubrik, registersyfte) "
+        "VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"
     )
     conn.execute(
-        "INSERT INTO register_variant VALUES (10, 1, 'Individer', NULL, NULL, 'Nej')"
+        "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn, registervariantsekretess) "
+        "VALUES (10, 1, 'Individer', 'Nej')"
     )
     conn.execute(
-        "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+        "INSERT INTO register_version (regver_id, regvar_id, registerversionnamn) "
+        "VALUES (100, 10, '2020')"
     )
     conn.execute(
-        "INSERT INTO variable VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring', NULL, NULL, NULL, NULL, NULL, NULL, NULL)"
+        "INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition) "
+        "VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring')"
     )
     conn.execute(
-        "INSERT INTO variable_instance VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
+        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva) "
+        "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
     )
-    conn.execute("INSERT INTO variable_alias VALUES (1001, 'Kon')")
+    conn.execute(
+        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')"
+    )
     # Two value codes: 1=Man, 2=Kvinna
-    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
-    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
-    conn.execute("INSERT INTO cvid_value_code VALUES (1001, 1)")
-    conn.execute("INSERT INTO cvid_value_code VALUES (1001, 2)")
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (1, '1', 'Man')"
+    )
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (2, '2', 'Kvinna')"
+    )
+    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 1)")
+    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 2)")
     conn.commit()
     conn.close()
     return db_path
