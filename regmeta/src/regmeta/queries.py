@@ -16,19 +16,28 @@ from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 _YEAR_RE = re.compile(r"\d{4}")
 
 
+def _try_int(value: str) -> int | str:
+    """Convert to int if the string is numeric, otherwise return as-is."""
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return value
+
+
 # ---------------------------------------------------------------------------
 # Register lookup
 # ---------------------------------------------------------------------------
 
 
-def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[str]:
+def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
     """Resolve a register name or ID to a list of register_ids.
 
     Tries: exact ID → case-insensitive name → substring match.
     Returns empty list if nothing found.
     """
+    # IDs are INTEGER — convert for exact match
     row = conn.execute(
-        "SELECT register_id FROM register WHERE register_id = ?", (value,)
+        "SELECT register_id FROM register WHERE register_id = ?", (_try_int(value),)
     ).fetchone()
     if row:
         return [row["register_id"]]
@@ -280,14 +289,14 @@ def _search_values(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[str] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT DISTINCT val.vardekod, val.vardebenamning, "
-        "vi.register_id, vi.var_id, v.variabelnamn, r.registernamn "
-        "FROM value_item val "
-        "JOIN variable_instance vi ON val.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-        "JOIN register r ON vi.register_id = r.register_id "
-        "WHERE val.vardekod LIKE ? OR val.vardebenamning LIKE ? "
-        "ORDER BY val.vardekod "
+        "SELECT DISTINCT vc.vardekod, vc.vardebenamning, "
+        "cvm.register_id, cvm.var_id, v.variabelnamn, r.registernamn "
+        "FROM value_code vc "
+        "JOIN code_variable_map cvm ON vc.code_id = cvm.code_id "
+        "JOIN variable v ON cvm.register_id = v.register_id AND cvm.var_id = v.var_id "
+        "JOIN register r ON cvm.register_id = r.register_id "
+        "WHERE vc.vardekod LIKE ? OR vc.vardebenamning LIKE ? "
+        "ORDER BY vc.vardekod "
         "LIMIT 500",
         (like_pattern, like_pattern),
     ).fetchall()
@@ -363,7 +372,7 @@ def get_schema(
     if regvar_id:
         rv = conn.execute(
             "SELECT * FROM register_variant WHERE regvar_id = ?",
-            (regvar_id,),
+            (_try_int(regvar_id),),
         ).fetchone()
         if not rv:
             raise RegmetaError(
@@ -473,13 +482,14 @@ def get_varinfo(
         reg_ids = require_register_ids(conn, register)
 
     # Match variable by var_id first, fall back to name
+    int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
             f"SELECT v.*, r.registernamn FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE v.var_id = ? AND v.register_id IN ({ph})",
-            [variable, *reg_ids],
+            [int_variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
             f"SELECT v.*, r.registernamn FROM variable v "
@@ -492,7 +502,7 @@ def get_varinfo(
             "SELECT v.*, r.registernamn FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.var_id = ?",
-            (variable,),
+            (int_variable,),
         ).fetchall()
         vars_by_name = conn.execute(
             "SELECT v.*, r.registernamn FROM variable v "
@@ -543,7 +553,7 @@ def get_varinfo(
             ):
                 aliases_map[row["cvid"]].append(row["kolumnnamn"])
             for row in conn.execute(
-                f"SELECT cvid, COUNT(*) as cnt FROM value_item "
+                f"SELECT cvid, COUNT(*) as cnt FROM cvid_value_code "
                 f"WHERE cvid IN ({cvid_ph}) GROUP BY cvid",
                 cvids,
             ):
@@ -600,11 +610,12 @@ def get_values(
     """Get value-set members for a CVID.
 
     If valid_at is an ISO date (YYYY-MM-DD), only return values whose
-    validity period includes that date.  Items with no validity record
-    are treated as always valid.
+    validity period includes that date.  Codes with no value_item
+    entries (no temporal tracking) are treated as always valid.
     """
+    int_cvid = _try_int(cvid)
     inst = conn.execute(
-        "SELECT * FROM variable_instance WHERE cvid = ?", (cvid,)
+        "SELECT * FROM variable_instance WHERE cvid = ?", (int_cvid,)
     ).fetchone()
     if not inst:
         raise RegmetaError(
@@ -617,22 +628,38 @@ def get_values(
 
     if valid_at is None:
         values = conn.execute(
-            "SELECT vardekod, vardebenamning, vardemangdsversion, vardemangdsniva "
-            "FROM value_item WHERE cvid = ? ORDER BY vardekod",
-            (cvid,),
+            "SELECT vc.vardekod, vc.vardebenamning, "
+            "vi.vardemangdsversion, vi.vardemangdsniva "
+            "FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
+            "WHERE cvc.cvid = ? ORDER BY vc.vardekod",
+            (int_cvid,),
         ).fetchall()
     else:
+        # A code is valid at a date if it has no value_item entries (no
+        # temporal tracking), or at least one of its items has a validity
+        # range covering the date.
         values = conn.execute(
-            "SELECT DISTINCT vi.vardekod, vi.vardebenamning, "
+            "SELECT vc.vardekod, vc.vardebenamning, "
             "vi.vardemangdsversion, vi.vardemangdsniva "
-            "FROM value_item vi "
-            "LEFT JOIN value_item_validity viv ON vi.item_id = viv.item_id "
-            "WHERE vi.cvid = ? AND ("
-            "  viv.item_id IS NULL"
-            "  OR ((viv.valid_from IS NULL OR viv.valid_from <= ?)"
-            "      AND (viv.valid_to IS NULL OR viv.valid_to >= ?))"
-            ") ORDER BY vi.vardekod",
-            (cvid, valid_at, valid_at),
+            "FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
+            "WHERE cvc.cvid = ? AND ("
+            "  NOT EXISTS ("
+            "    SELECT 1 FROM value_item vit"
+            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
+            "  )"
+            "  OR EXISTS ("
+            "    SELECT 1 FROM value_item vit"
+            "    JOIN value_item_validity viv ON vit.item_id = viv.item_id"
+            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
+            "    AND (viv.valid_from IS NULL OR viv.valid_from <= ?)"
+            "    AND (viv.valid_to IS NULL OR viv.valid_to >= ?)"
+            "  )"
+            ") ORDER BY vc.vardekod",
+            (int_cvid, valid_at, valid_at),
         ).fetchall()
     return [dict(v) for v in values]
 
@@ -658,19 +685,20 @@ def get_datacolumns(
         reg_ids = require_register_ids(conn, register)
 
     # Match by var_id or variabelnamn
+    int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
             f"SELECT register_id, var_id FROM variable "
             f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
             f"AND register_id IN ({ph})",
-            [variable, variable, *reg_ids],
+            [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
             "SELECT register_id, var_id FROM variable "
             "WHERE var_id = ? OR LOWER(variabelnamn) = LOWER(?)",
-            (variable, variable),
+            (int_variable, variable),
         ).fetchall()
 
     if not var_rows:
@@ -802,7 +830,7 @@ def get_diff(
         variant_rows = conn.execute(
             f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
             "AND regvar_id = ?",
-            [*reg_ids, variant],
+            [*reg_ids, _try_int(variant)],
         ).fetchall()
     else:
         variant_rows = conn.execute(
@@ -823,7 +851,7 @@ def get_diff(
                 f"SELECT var_id, variabelnamn FROM variable "
                 f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
-                [v, v, *reg_ids],
+                [_try_int(v), v, *reg_ids],
             ).fetchall()
             if not rows:
                 rows = conn.execute(
@@ -983,6 +1011,7 @@ def get_lineage(
     if register:
         reg_ids = require_register_ids(conn, register)
 
+    int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         matched = conn.execute(
@@ -990,14 +1019,14 @@ def get_lineage(
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE (v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)) "
             f"AND v.register_id IN ({ph})",
-            [variable, variable, *reg_ids],
+            [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         matched = conn.execute(
             "SELECT v.*, r.registernamn FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)",
-            (variable, variable),
+            (int_variable, variable),
         ).fetchall()
 
     if not matched:
@@ -1099,12 +1128,13 @@ def get_coded_variables(
     """
     rows = conn.execute(
         "SELECT v.variabelnamn, "
-        "COUNT(DISTINCT val.vardekod) as n_distinct_codes, "
+        "COUNT(DISTINCT vc.vardekod) as n_distinct_codes, "
         "COUNT(DISTINCT v.register_id) as n_registers, "
         "COUNT(DISTINCT vi.cvid) as n_instances "
         "FROM variable v "
         "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
-        "JOIN value_item val ON vi.cvid = val.cvid "
+        "JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid "
+        "JOIN value_code vc ON cvc.code_id = vc.code_id "
         "GROUP BY v.variabelnamn "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "
         "ORDER BY n_registers DESC, n_distinct_codes DESC "

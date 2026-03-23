@@ -45,7 +45,7 @@ class TestSearch:
         assert data["data"]["total_count"] >= 1
         result = data["data"]["results"][0]
         assert result["type"] == "variable"
-        assert result["var_id"] == "100"
+        assert result["var_id"] == 100
 
     def test_search_register(self, db_path: str):
         data, code = _run_json(
@@ -53,7 +53,7 @@ class TestSearch:
         )
         assert code == 0
         assert data["data"]["total_count"] >= 1
-        assert data["data"]["results"][0]["register_id"] == "1"
+        assert data["data"]["results"][0]["register_id"] == 1
 
     def test_search_type_filter(self, db_path: str):
         data, _ = _run_json(
@@ -69,7 +69,7 @@ class TestSearch:
         )
         assert code == 0
         for r in data["data"]["results"]:
-            assert r["register_id"] == "1"
+            assert r["register_id"] == 1
 
     def test_search_register_filter_no_match(self, db_path: str):
         data, code = _run_json(
@@ -100,6 +100,15 @@ class TestSearch:
         data, _ = _run_json(["--db", db_path, "search", "--query", "svenska"])
         assert data["data"]["total_count"] >= 1
 
+    def test_search_value_code(self, db_path: str):
+        """Search for a value code name should return value-type results via code_variable_map."""
+        data, code = _run_json(["--db", db_path, "search", "--query", "Man"])
+        assert code == 0
+        value_results = [r for r in data["data"]["results"] if r["type"] == "value"]
+        assert len(value_results) >= 1
+        assert value_results[0]["vardebenamning"] == "Man"
+        assert value_results[0]["vardekod"] == "1"
+
 
 # ---------------------------------------------------------------------------
 # Get register
@@ -116,7 +125,7 @@ class TestGetRegister:
     def test_by_name(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "TESTREG"])
         assert code == 0
-        assert data["data"]["register_id"] == "1"
+        assert data["data"]["register_id"] == 1
 
     def test_fuzzy_match(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "TEST"])
@@ -124,9 +133,9 @@ class TestGetRegister:
         # "TEST" matches "TESTREG" by substring
         if "registers" in data["data"]:
             ids = [r["register_id"] for r in data["data"]["registers"]]
-            assert "1" in ids
+            assert 1 in ids
         else:
-            assert data["data"]["register_id"] == "1"
+            assert data["data"]["register_id"] == 1
 
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "ZZZNONEXIST"])
@@ -145,7 +154,7 @@ class TestGetSchema:
         assert code == 0
         variants = data["data"]["variants"]
         assert len(variants) == 1
-        assert variants[0]["regvar_id"] == "10"
+        assert variants[0]["regvar_id"] == 10
         assert len(variants[0]["versions"]) == 3  # 2020, 2021, 2022
 
     def test_by_register(self, db_path: str):
@@ -187,7 +196,7 @@ class TestGetSchema:
         )
         columns = data["data"]["variants"][0]["versions"][0]["columns"]
         # Find the TestVar column — it should show aliases
-        testvar_cols = [c for c in columns if c["var_id"] == "100"]
+        testvar_cols = [c for c in columns if c["var_id"] == 100]
         assert len(testvar_cols) == 1
         assert (
             "TestCol" in testvar_cols[0]["aliases"]
@@ -215,7 +224,7 @@ class TestGetVarinfo:
         )
         assert code == 0
         assert data["data"]["variabelnamn"] == "Kön"
-        assert data["data"]["register_id"] == "1"
+        assert data["data"]["register_id"] == 1
         assert len(data["data"]["instances"]) == 3  # CVIDs 1001, 1003, 1004
 
     def test_by_var_id(self, db_path: str):
@@ -247,7 +256,7 @@ class TestGetVarinfo:
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         # CVID 1001 has 2 value items (Man, Kvinna)
-        cvid_1001 = [i for i in data["data"]["instances"] if i["cvid"] == "1001"]
+        cvid_1001 = [i for i in data["data"]["instances"] if i["cvid"] == 1001]
         assert len(cvid_1001) == 1
         assert cvid_1001[0]["value_set_count"] == 2
 
@@ -269,8 +278,8 @@ class TestGetValues:
         codes = {v["vardekod"] for v in data["data"]}
         assert codes == {"1", "2"}
 
-    def test_valid_at_within_range(self, db_path: str):
-        """Item 5001 is valid 2000-2010, 5002 always valid → both returned."""
+    def test_valid_at_within_first_range(self, db_path: str):
+        """Item 5001 valid 2000-2010 → Man included; Kvinna always valid."""
         data, code = _run_json(
             ["--db", db_path, "get", "values", "1001", "--valid-at", "2005-06-15"]
         )
@@ -278,10 +287,19 @@ class TestGetValues:
         codes = {v["vardekod"] for v in data["data"]}
         assert codes == {"1", "2"}
 
-    def test_valid_at_outside_range(self, db_path: str):
-        """Item 5001 expired after 2010 → only 5002 (always valid) returned."""
+    def test_valid_at_within_second_range(self, db_path: str):
+        """Item 5003 valid 2015-2025 → Man included via second item."""
         data, code = _run_json(
             ["--db", db_path, "get", "values", "1001", "--valid-at", "2020-01-01"]
+        )
+        assert code == 0
+        codes = {v["vardekod"] for v in data["data"]}
+        assert codes == {"1", "2"}
+
+    def test_valid_at_in_gap(self, db_path: str):
+        """Between ranges (5001 expired, 5003 not yet valid) → Man excluded."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "1001", "--valid-at", "2012-06-15"]
         )
         assert code == 0
         codes = {v["vardekod"] for v in data["data"]}
@@ -316,7 +334,7 @@ class TestGetDatacolumns:
             ["--db", db_path, "get", "datacolumns", "Kön", "--register", "TESTREG"]
         )
         assert code == 0
-        assert all(r["register_id"] == "1" for r in data["data"])
+        assert all(r["register_id"] == 1 for r in data["data"])
 
     def test_alias_anomaly(self, db_path: str):
         """TestVar should show both TestCol and TestKolumn aliases."""
@@ -389,14 +407,14 @@ class TestResolve:
         assert code == 0
         col = data["data"]["columns"][0]
         assert col["status"] == "matched"
-        assert all(m["register_id"] == "1" for m in col["matches"])
+        assert all(m["register_id"] == 1 for m in col["matches"])
 
     def test_cross_register(self, db_path: str):
         data, code = _run_json(["--db", db_path, "resolve", "--columns", "Kon"])
         col = data["data"]["columns"][0]
         reg_ids = {m["register_id"] for m in col["matches"]}
         # "Kon" is in reg 1, "KON" is in reg 2 — case-insensitive should match both
-        assert "1" in reg_ids
+        assert 1 in reg_ids
 
     def test_case_insensitive(self, db_path: str):
         data, _ = _run_json(["--db", db_path, "resolve", "--columns", "kon"])
@@ -451,8 +469,8 @@ class TestResolve:
                 "TESTREG",
             ]
         )
-        assert data1["data"]["columns"][0]["matches"][0]["var_id"] == "100"
-        assert data2["data"]["columns"][0]["matches"][0]["var_id"] == "100"
+        assert data1["data"]["columns"][0]["matches"][0]["var_id"] == 100
+        assert data2["data"]["columns"][0]["matches"][0]["var_id"] == 100
 
     def test_no_confidence_or_reasons(self, db_path: str):
         """Resolve v2 should not include confidence or match_reasons."""
@@ -604,7 +622,7 @@ class TestGetDiff:
         )
         assert code == 0
         assert len(data["data"]["variants"]) >= 1
-        assert data["data"]["variants"][0]["regvar_id"] == "10"
+        assert data["data"]["variants"][0]["regvar_id"] == 10
 
     def test_fallback_to_closest_year(self, db_path: str):
         """Year 2019 has no version; should fall back to nothing. Year 2023 falls back to 2022."""
@@ -705,7 +723,7 @@ class TestGetLineage:
             r for r in data["data"]["registers"] if r["register_name"] == "OTHERREG"
         ][0]
         # TESTREG should resolve to register_id "1"
-        assert otherreg["source_register_id"] == "1"
+        assert otherreg["source_register_id"] == 1
         assert otherreg["variabelregister_kalla"] == "TESTREG"
 
     def test_no_provenance_is_unknown(self, db_path: str):
