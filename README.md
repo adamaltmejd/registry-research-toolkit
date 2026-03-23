@@ -11,8 +11,14 @@ Tools for working with Swedish registry microdata on [SCB MONA](https://www.scb.
 
 ## Prerequisites
 
-- **Python 3.11+** — [python.org](https://www.python.org/downloads/) or `brew install python`
-- **uv** — fast Python package manager: `curl -LsSf https://astral.sh/uv/install.sh | sh` ([docs](https://docs.astral.sh/uv/getting-started/installation/))
+**Python 3.11+** and **uv** (Python package manager).
+
+| | macOS | Windows |
+|---|---|---|
+| Python | `brew install python` or [python.org](https://www.python.org/downloads/) | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.12` |
+| uv | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `powershell -c "irm https://astral.sh/uv/install.ps1 \| iex"` |
+
+See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/) for other methods.
 
 ## Install
 
