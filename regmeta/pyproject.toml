@@ -7,7 +7,14 @@ name = "regmeta"
 version = "0.2.0"
 description = "Search and query SCB registry metadata"
 requires-python = ">=3.11"
-dependencies = []
+authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
+license = { text = "MIT" }
+dependencies = ["zstandard>=0.23"]
+
+[project.urls]
+Homepage = "https://github.com/adamaltmejd/registry-research-toolkit"
+Repository = "https://github.com/adamaltmejd/registry-research-toolkit"
+Issues = "https://github.com/adamaltmejd/registry-research-toolkit/issues"
 
 [project.scripts]
 regmeta = "regmeta.cli:main"

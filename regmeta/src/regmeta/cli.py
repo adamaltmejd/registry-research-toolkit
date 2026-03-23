@@ -13,6 +13,7 @@ from typing import Any
 
 from .db import (
     SCHEMA_VERSION,
+    default_db_dir,
     utc_now,
     build_db,
     db_path_from_args,
@@ -185,15 +186,15 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="regmeta",
         description=(
             "Search and query SCB registry metadata.\n\n"
-            "Requires a database built with: regmeta maintain build-db --csv-dir <path>\n"
-            "Default database: ~/.local/share/regmeta/ (override with --db)"
+            "Requires a database: run `regmeta maintain download` or `regmeta maintain build-db`.\n"
+            f"Default database: {default_db_dir()} (override with --db or $REGMETA_DB)"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--db",
         default=None,
-        help="Database directory (default: ~/.local/share/regmeta/)",
+        help=f"Database directory (default: {default_db_dir()}).",
     )
     parser.add_argument(
         "--format",
@@ -454,6 +455,19 @@ def _build_parser() -> argparse.ArgumentParser:
         "--csv-dir", required=True, help="Directory containing SCB CSV exports."
     )
 
+    download_p = maintain_sub.add_parser(
+        "download", help="Download pre-built database from GitHub Releases."
+    )
+    download_p.add_argument(
+        "--tag", default="latest", help="GitHub release tag (default: latest)."
+    )
+    download_p.add_argument(
+        "--force", action="store_true", help="Overwrite existing database."
+    )
+    download_p.add_argument(
+        "-y", "--yes", action="store_true", help="Skip confirmation prompt."
+    )
+
     maintain_sub.add_parser("info", help="Database stats and import metadata.")
 
     return parser
@@ -466,7 +480,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
 def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else Path("~/.local/share/regmeta")
+    db_dir = Path(args.db) if args.db else default_db_dir()
     result = build_db(csv_dir=Path(args.csv_dir), db_dir=db_dir)
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
@@ -476,6 +490,22 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "schema_version": SCHEMA_VERSION,
             "import_date": result["import_date"],
         },
+        data=result,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_maintain_download(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .download import download_db
+
+    start = time.perf_counter()
+    db_dir = Path(args.db) if args.db else default_db_dir()
+    result = download_db(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain download",
+        args_payload={"tag": args.tag, "force": args.force},
+        db_info=None,
         data=result,
         duration_ms=duration_ms,
     ), 0
@@ -1077,6 +1107,7 @@ def _write_payload(
 
 COMMAND_DISPATCH = {
     ("maintain", "build-db"): _cmd_maintain_build_db,
+    ("maintain", "download"): _cmd_maintain_download,
     ("maintain", "info"): _cmd_maintain_info,
     ("search", None): _cmd_search,
     ("get", "register"): _cmd_get_register,

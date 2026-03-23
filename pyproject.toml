@@ -17,6 +17,7 @@ dev = [
 
 [tool.pytest.ini_options]
 testpaths = ["mock_data_wizard", "regmeta"]
+markers = ["integration: full pipeline tests requiring Docker"]
 
 [tool.uv]
 package = false

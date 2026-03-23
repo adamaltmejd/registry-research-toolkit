@@ -880,9 +880,21 @@ class TestOutputFormats:
         out = tmp_path / "diff.txt"
         code = run(
             [
-                "--db", db_path, "--output", str(out),
-                "get", "diff", "--register", "TESTREG",
-                "--from", "2020", "--to", "2022", "--variable", "Kön", "TestVar",
+                "--db",
+                db_path,
+                "--output",
+                str(out),
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+                "--variable",
+                "Kön",
+                "TestVar",
             ]
         )
         assert code == 0

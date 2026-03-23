@@ -288,7 +288,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gen.add_argument(
         "--db",
-        help="Path to regmeta database directory (default: ~/.local/share/regmeta or $REGMETA_DB)",
+        help="Path to regmeta database directory (override $REGMETA_DB or $XDG_DATA_HOME).",
     )
     gen.add_argument(
         "--no-regmeta",

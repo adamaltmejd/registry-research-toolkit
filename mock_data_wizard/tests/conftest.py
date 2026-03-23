@@ -308,9 +308,7 @@ def regmeta_db(tmp_path: Path) -> Path:
         "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva) "
         "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
     )
-    conn.execute(
-        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')"
-    )
+    conn.execute("INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')")
     # Two value codes: 1=Man, 2=Kvinna
     conn.execute(
         "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (1, '1', 'Man')"

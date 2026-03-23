@@ -353,7 +353,7 @@ Error JSON: `error.code`, `error.class`, `error.message`, `error.remediation`.
 ## 14. V2 Placeholder
 1. Query database for caching and user adaptation.
 2. Sensitivity/identifier flag queries.
-3. **Pre-built DB distribution.** The regmeta DB is built from publicly available SCB metadata (no PII). Publish pre-built `regmeta.db` as a GitHub release asset (or LFS). Add `regmeta maintain download-db` command that fetches the latest release to `~/.local/share/regmeta/`. Optionally auto-download on first `open_db` if the DB is missing. This removes the requirement for users to have access to raw SCB CSV exports and run `build-db` themselves.
+3. **Pre-built DB distribution.** Implemented as `regmeta maintain download`. Downloads compressed DB from GitHub Releases, decompresses with zstd. See `download.py`.
 
 ## 15. V3 Placeholder: Semantic Docs Layer
 The SCB metadata export is a structural catalog — it records what exists but not what it means in context. Key information is only available in external documentation (e.g. Bakgrundsfakta PDFs): sub-category composition, code migration history, and domain-specific interpretation guidance. See `reports/arbsoknov_report.md` for a detailed case study. (Temporal code validity is now covered by the VardemangderValidDates import.)

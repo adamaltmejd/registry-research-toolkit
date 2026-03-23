@@ -1,4 +1,5 @@
-from .db import open_db, db_path_from_args, build_db
+from .db import open_db, db_path_from_args, build_db, default_db_dir
+from .download import download_db
 from .queries import (
     get_coded_variables,
     get_datacolumns,
@@ -16,6 +17,8 @@ from .queries import (
 __all__ = [
     "build_db",
     "db_path_from_args",
+    "default_db_dir",
+    "download_db",
     "get_coded_variables",
     "get_datacolumns",
     "get_diff",

@@ -7,10 +7,17 @@ name = "mock-data-wizard"
 version = "0.1.0"
 description = "SCB MONA mock-data generation workflows"
 requires-python = ">=3.11"
+authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
+license = { text = "MIT" }
 dependencies = [
   "numpy>=1.26",
   "regmeta",
 ]
+
+[project.urls]
+Homepage = "https://github.com/adamaltmejd/registry-research-toolkit"
+Repository = "https://github.com/adamaltmejd/registry-research-toolkit"
+Issues = "https://github.com/adamaltmejd/registry-research-toolkit/issues"
 
 [project.scripts]
 mock-data-wizard = "mock_data_wizard.cli:main"
