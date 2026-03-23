@@ -99,6 +99,106 @@ def extract_year(version_name: str) -> int | None:
 SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "all"})
 
 
+def _version_years_for_register(
+    conn: sqlite3.Connection, register_id: int
+) -> list[int]:
+    """Return all version years for a register."""
+    rows = conn.execute(
+        "SELECT rv.registerversionnamn "
+        "FROM register_version rv "
+        "JOIN register_variant rvar ON rv.regvar_id = rvar.regvar_id "
+        "WHERE rvar.register_id = ?",
+        (register_id,),
+    ).fetchall()
+    years = []
+    for row in rows:
+        y = extract_year(row["registerversionnamn"] or "")
+        if y is not None:
+            years.append(y)
+    return years
+
+
+def _year_in_range(year: int, lo: int | None, hi: int | None) -> bool:
+    if lo is not None and year < lo:
+        return False
+    if hi is not None and year > hi:
+        return False
+    return True
+
+
+def _filter_search_by_years(
+    conn: sqlite3.Connection,
+    results: list[dict[str, Any]],
+    years: str,
+) -> list[dict[str, Any]]:
+    """Filter search results to those with versions in the given year range."""
+    year_lo, year_hi = parse_year_range(years)
+    if not results:
+        return results
+
+    # Collect unique register_ids and (register_id, var_id) pairs to check
+    var_pairs: set[tuple[int, int]] = set()
+    reg_only_ids: set[int] = set()
+    for r in results:
+        rid = r.get("register_id")
+        vid = r.get("var_id")
+        if rid is not None and vid is not None:
+            var_pairs.add((rid, vid))
+        elif rid is not None:
+            reg_only_ids.add(rid)
+
+    # For variable-type results: check which (register_id, var_id) pairs
+    # have a variable_instance in a version within the year range
+    valid_var_pairs: set[tuple[int, int]] = set()
+    if var_pairs:
+        all_reg_ids = {p[0] for p in var_pairs}
+        placeholders = ",".join("?" * len(all_reg_ids))
+        rows = conn.execute(
+            "SELECT DISTINCT vi.register_id, vi.var_id, rv.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+            f"WHERE vi.register_id IN ({placeholders})",
+            list(all_reg_ids),
+        ).fetchall()
+        for row in rows:
+            pair = (row["register_id"], row["var_id"])
+            if pair not in var_pairs:
+                continue
+            year = extract_year(row["registerversionnamn"] or "")
+            if year is not None and _year_in_range(year, year_lo, year_hi):
+                valid_var_pairs.add(pair)
+
+    # For register-type results: check if register has any version in range
+    valid_reg_ids: set[int] = set()
+    if reg_only_ids:
+        placeholders = ",".join("?" * len(reg_only_ids))
+        rows = conn.execute(
+            "SELECT DISTINCT rvar.register_id, rv.registerversionnamn "
+            "FROM register_version rv "
+            "JOIN register_variant rvar ON rv.regvar_id = rvar.regvar_id "
+            f"WHERE rvar.register_id IN ({placeholders})",
+            list(reg_only_ids),
+        ).fetchall()
+        for row in rows:
+            year = extract_year(row["registerversionnamn"] or "")
+            if year is not None and _year_in_range(year, year_lo, year_hi):
+                valid_reg_ids.add(row["register_id"])
+
+    filtered = []
+    for r in results:
+        rid = r.get("register_id")
+        vid = r.get("var_id")
+        if rid is not None and vid is not None:
+            if (rid, vid) in valid_var_pairs:
+                filtered.append(r)
+        elif rid is not None:
+            if rid in valid_reg_ids:
+                filtered.append(r)
+        else:
+            filtered.append(r)
+    return filtered
+
+
 def search(
     conn: sqlite3.Connection,
     query: str,
@@ -106,6 +206,7 @@ def search(
     field: str = "all",
     type: str = "all",
     register: str | None = None,
+    years: str | None = None,
     limit: int = 50,
     offset: int = 0,
 ) -> dict[str, Any]:
@@ -162,6 +263,9 @@ def search(
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
     elif type == "variable":
         all_results = [r for r in all_results if r["type"] in _VARIABLE_TYPES]
+
+    if years:
+        all_results = _filter_search_by_years(conn, all_results, years)
 
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
@@ -364,6 +468,7 @@ def get_schema(
     regvar_id: str | None = None,
     register: str | None = None,
     years: str | None = None,
+    columns_like: str | None = None,
 ) -> dict[str, Any]:
     """Get column listing organized by variant → version → columns.
 
@@ -439,12 +544,22 @@ def get_schema(
                 (ver["regver_id"],),
             ).fetchall()
 
+            col_dicts = [dict(c) for c in columns]
+            if columns_like:
+                pattern = re.compile(columns_like, re.IGNORECASE)
+                col_dicts = [
+                    c
+                    for c in col_dicts
+                    if pattern.search(c.get("aliases") or "")
+                    or pattern.search(c.get("variabelnamn") or "")
+                ]
+
             versions_out.append(
                 {
                     "regver_id": ver["regver_id"],
                     "version_name": ver["registerversionnamn"],
                     "year": year,
-                    "columns": [dict(c) for c in columns],
+                    "columns": col_dicts,
                 }
             )
 
@@ -597,6 +712,210 @@ def get_varinfo(
         )
 
     return variables_out
+
+
+# ---------------------------------------------------------------------------
+# Get availability
+# ---------------------------------------------------------------------------
+
+
+def get_availability(
+    conn: sqlite3.Connection,
+    target: str,
+    *,
+    register: str | None = None,
+) -> dict[str, Any]:
+    """Return temporal availability summary for a variable or register.
+
+    Auto-detects target type: tries variable first, falls back to register.
+    """
+    result = _get_availability_variable(conn, target, register=register)
+    if result is not None:
+        return result
+
+    result = _get_availability_register(conn, target)
+    if result is not None:
+        return result
+
+    raise RegmetaError(
+        exit_code=EXIT_NOT_FOUND,
+        code="not_found",
+        error_class="query",
+        message=f"No variable or register matching '{target}'.",
+        remediation="Use `regmeta search` to find valid names or IDs.",
+    )
+
+
+def _get_availability_variable(
+    conn: sqlite3.Connection,
+    variable: str,
+    *,
+    register: str | None = None,
+) -> dict[str, Any] | None:
+    """Availability for a variable across registers and years."""
+    int_variable = _try_int(variable)
+
+    reg_filter = ""
+    params: list = [int_variable, variable]
+    if register:
+        ids = resolve_register_ids(conn, register)
+        if not ids:
+            return None
+        ph = _in_placeholders(ids)
+        reg_filter = f" AND v.register_id IN ({ph})"
+        params.extend(ids)
+
+    var_rows = conn.execute(
+        "SELECT v.register_id, v.var_id, v.variabelnamn, r.registernamn "
+        "FROM variable v "
+        "JOIN register r ON v.register_id = r.register_id "
+        f"WHERE (v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)){reg_filter}",
+        params,
+    ).fetchall()
+
+    if not var_rows:
+        return None
+
+    # Gather all version years and aliases per (register, year)
+    all_years: set[int] = set()
+    registers_out: list[dict[str, Any]] = []
+
+    for var in var_rows:
+        rid = var["register_id"]
+        vid = var["var_id"]
+
+        rows = conn.execute(
+            "SELECT rv.registerversionnamn, "
+            "GROUP_CONCAT(DISTINCT va.kolumnnamn) as aliases "
+            "FROM variable_instance vi "
+            "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+            "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
+            "WHERE vi.register_id = ? AND vi.var_id = ? "
+            "GROUP BY rv.regver_id "
+            "ORDER BY rv.registerversionnamn",
+            (rid, vid),
+        ).fetchall()
+
+        reg_years: list[int] = []
+        aliases_by_year: dict[str, list[str]] = {}
+        for row in rows:
+            year = extract_year(row["registerversionnamn"] or "")
+            if year is None:
+                continue
+            reg_years.append(year)
+            all_years.add(year)
+            aliases = (row["aliases"] or "").split(",")
+            aliases = [a.strip() for a in aliases if a.strip()]
+            aliases_by_year[str(year)] = aliases
+
+        if not reg_years:
+            continue
+
+        reg_years_sorted = sorted(set(reg_years))
+        min_y, max_y = reg_years_sorted[0], reg_years_sorted[-1]
+        expected = set(range(min_y, max_y + 1))
+        gaps = sorted(expected - set(reg_years_sorted))
+
+        registers_out.append(
+            {
+                "register_id": rid,
+                "register_name": var["registernamn"],
+                "var_id": vid,
+                "min_year": min_y,
+                "max_year": max_y,
+                "years": reg_years_sorted,
+                "gaps": gaps,
+                "aliases_by_year": aliases_by_year,
+            }
+        )
+
+    if not registers_out:
+        return None
+
+    all_years_sorted = sorted(all_years)
+    min_y = all_years_sorted[0]
+    max_y = all_years_sorted[-1]
+    expected = set(range(min_y, max_y + 1))
+    gaps = sorted(expected - all_years)
+
+    return {
+        "target": variable,
+        "target_type": "variable",
+        "variable_name": var_rows[0]["variabelnamn"],
+        "min_year": min_y,
+        "max_year": max_y,
+        "years": all_years_sorted,
+        "gaps": gaps,
+        "register_count": len(registers_out),
+        "registers": registers_out,
+    }
+
+
+def _get_availability_register(
+    conn: sqlite3.Connection,
+    register: str,
+) -> dict[str, Any] | None:
+    """Availability for a register across years."""
+    ids = resolve_register_ids(conn, register)
+    if not ids:
+        return None
+
+    # Use first match
+    reg_id = ids[0]
+    reg = conn.execute(
+        "SELECT registernamn FROM register WHERE register_id = ?", (reg_id,)
+    ).fetchone()
+
+    rows = conn.execute(
+        "SELECT rvar.regvar_id, rvar.registervariantnamn, "
+        "rv.registerversionnamn "
+        "FROM register_variant rvar "
+        "JOIN register_version rv ON rvar.regvar_id = rv.regvar_id "
+        "WHERE rvar.register_id = ? "
+        "ORDER BY rv.registerversionnamn",
+        (reg_id,),
+    ).fetchall()
+
+    all_years: set[int] = set()
+    variants: dict[int, dict[str, Any]] = {}
+
+    for row in rows:
+        year = extract_year(row["registerversionnamn"] or "")
+        if year is None:
+            continue
+        all_years.add(year)
+        rvid = row["regvar_id"]
+        if rvid not in variants:
+            variants[rvid] = {
+                "regvar_id": rvid,
+                "variant_name": row["registervariantnamn"],
+                "years": [],
+            }
+        variants[rvid]["years"].append(year)
+
+    for v in variants.values():
+        v["years"] = sorted(set(v["years"]))
+
+    if not all_years:
+        return None
+
+    all_years_sorted = sorted(all_years)
+    min_y, max_y = all_years_sorted[0], all_years_sorted[-1]
+    expected = set(range(min_y, max_y + 1))
+    gaps = sorted(expected - all_years)
+
+    return {
+        "target": register,
+        "target_type": "register",
+        "register_id": reg_id,
+        "register_name": reg["registernamn"],
+        "min_year": min_y,
+        "max_year": max_y,
+        "years": all_years_sorted,
+        "gaps": gaps,
+        "variant_count": len(variants),
+        "variants": list(variants.values()),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -1215,3 +1534,182 @@ def resolve(
         )
 
     return results
+
+
+# ---------------------------------------------------------------------------
+# Compare
+# ---------------------------------------------------------------------------
+
+
+def compare(
+    conn: sqlite3.Connection,
+    *,
+    columns_by_file: dict[str, list[str]],
+    register_hints: dict[str, int | None] | None = None,
+    year_hints: dict[str, int | None] | None = None,
+) -> dict[str, Any]:
+    """Compare local file columns against registry metadata.
+
+    For each file (keyed by label), resolves the register (from hint or
+    explicit), retrieves the registry schema, and classifies columns as
+    matched, extra_local, or missing_from_registry.
+    """
+    register_hints = register_hints or {}
+    year_hints = year_hints or {}
+
+    files_out: list[dict[str, Any]] = []
+
+    for file_label, local_columns in columns_by_file.items():
+        reg_hint = register_hints.get(file_label)
+        year_hint = year_hints.get(file_label)
+
+        if reg_hint is None:
+            files_out.append(
+                {
+                    "file": file_label,
+                    "register_id": None,
+                    "register_name": None,
+                    "register_status": "no_hint",
+                    "year_hint": year_hint,
+                    "matched": [],
+                    "extra_local": local_columns,
+                    "missing_from_registry": [],
+                    "summary": {
+                        "matched": 0,
+                        "extra_local": len(local_columns),
+                        "missing_from_registry": 0,
+                    },
+                }
+            )
+            continue
+
+        # Resolve register_id to register name
+        reg_row = conn.execute(
+            "SELECT registernamn FROM register WHERE register_id = ?", (reg_hint,)
+        ).fetchone()
+        if not reg_row:
+            files_out.append(
+                {
+                    "file": file_label,
+                    "register_id": reg_hint,
+                    "register_name": None,
+                    "register_status": "not_found",
+                    "year_hint": year_hint,
+                    "matched": [],
+                    "extra_local": local_columns,
+                    "missing_from_registry": [],
+                    "summary": {
+                        "matched": 0,
+                        "extra_local": len(local_columns),
+                        "missing_from_registry": 0,
+                    },
+                }
+            )
+            continue
+
+        register_name = reg_row["registernamn"]
+
+        # Get schema for this register, optionally filtered by year
+        years_arg = str(year_hint) if year_hint else None
+        try:
+            schema = get_schema(conn, register=str(reg_hint), years=years_arg)
+        except RegmetaError:
+            files_out.append(
+                {
+                    "file": file_label,
+                    "register_id": reg_hint,
+                    "register_name": register_name,
+                    "register_status": "no_schema",
+                    "year_hint": year_hint,
+                    "matched": [],
+                    "extra_local": local_columns,
+                    "missing_from_registry": [],
+                    "summary": {
+                        "matched": 0,
+                        "extra_local": len(local_columns),
+                        "missing_from_registry": 0,
+                    },
+                }
+            )
+            continue
+
+        # Flatten schema: build alias→variable mapping
+        alias_to_var: dict[str, dict[str, Any]] = {}
+        all_registry_vars: dict[int, dict[str, Any]] = {}
+        for variant in schema.get("variants", []):
+            for version in variant.get("versions", []):
+                for col in version.get("columns", []):
+                    vid = col["var_id"]
+                    vname = col["variabelnamn"]
+                    aliases_str = col.get("aliases") or ""
+                    aliases = [a.strip() for a in aliases_str.split(",") if a.strip()]
+
+                    var_info = {
+                        "var_id": vid,
+                        "variable_name": vname,
+                        "aliases": aliases,
+                    }
+                    all_registry_vars[vid] = var_info
+
+                    for alias in aliases:
+                        alias_to_var[alias.lower()] = var_info
+                    alias_to_var[vname.lower()] = var_info
+
+        # Classify local columns
+        matched = []
+        extra_local = []
+        matched_var_ids: set[int] = set()
+        local_lower = set()
+
+        for col in local_columns:
+            col_lower = col.lower()
+            local_lower.add(col_lower)
+            var_info = alias_to_var.get(col_lower)
+            if var_info:
+                matched.append(
+                    {
+                        "column": col,
+                        "var_id": var_info["var_id"],
+                        "variable_name": var_info["variable_name"],
+                    }
+                )
+                matched_var_ids.add(var_info["var_id"])
+            else:
+                extra_local.append(col)
+
+        # Registry variables not in local columns
+        missing_from_registry = []
+        for vid, var_info in sorted(all_registry_vars.items()):
+            if vid in matched_var_ids:
+                continue
+            if any(a.lower() in local_lower for a in var_info["aliases"]):
+                continue
+            if var_info["variable_name"].lower() in local_lower:
+                continue
+            missing_from_registry.append(
+                {
+                    "var_id": var_info["var_id"],
+                    "variable_name": var_info["variable_name"],
+                    "aliases": var_info["aliases"],
+                }
+            )
+
+        files_out.append(
+            {
+                "file": file_label,
+                "register_id": reg_hint,
+                "register_name": register_name,
+                "register_status": "resolved",
+                "year_hint": year_hint,
+                "matched": matched,
+                "extra_local": extra_local,
+                "missing_from_registry": missing_from_registry,
+                "summary": {
+                    "matched": len(matched),
+                    "extra_local": len(extra_local),
+                    "missing_from_registry": len(missing_from_registry),
+                },
+            }
+        )
+
+    return {"files": files_out}

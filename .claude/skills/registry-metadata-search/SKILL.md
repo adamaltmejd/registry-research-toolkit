@@ -41,7 +41,24 @@ regmeta --format list get varinfo "Kön"
 - User asks "what are the valid values for kommun?" → `get values`
 - User asks "what changed in LISA between 2015 and 2020?" → `get diff`
 - User asks "which registers have a variable called Kön?" → `get lineage` or `search`
+- User asks "is variable X available in 2015-2024?" → `get availability` or `search --years`
+- User asks "what SCB data is missing from my local files?" → `compare`
 - User has a CSV with column headers and needs to understand them → `resolve`
+
+## Important: `--type register` vs `--register`
+
+These two flags on `search` do different things:
+
+- **`--type register`** — filters search **results** to only show registers (not variables). Use when searching for a register by name or description.
+- **`--register LISA`** — restricts the search **scope** to a specific register. Use when you know the register and want to find variables within it.
+
+```bash
+# Find registers related to education
+regmeta search --query "utbildning" --type register
+
+# Find variables within LISA that mention kommun
+regmeta search --query "kommun" --register LISA
+```
 
 ## Commands
 
@@ -62,6 +79,13 @@ regmeta search --query "0180" --value
 
 # Narrow to a specific register
 regmeta search --query "kommun" --datacolumn --register LISA
+
+# Filter by year availability
+regmeta search --query "inkomst" --years 2015-2024
+regmeta search --query "utbildning" --type register --years 2020
+
+# Find registers by name/description
+regmeta search --query "Grundskola" --type register
 ```
 
 Results include `type`, `register_id`, `register_name`, `var_id`, `variable_name`.
@@ -80,6 +104,23 @@ Can also read a JSON array from stdin:
 ```bash
 echo '["Kon","FodelseAr"]' | regmeta resolve --register LISA
 ```
+
+### compare — Compare local files against registry metadata
+
+Compare columns in local data files against what SCB registry metadata says should be there. Three input modes:
+
+```bash
+# From a mock-data-wizard manifest (richest — includes register hints and year)
+regmeta compare mock_data/manifest.json
+
+# From CSV file headers (requires --register)
+regmeta compare --files mock_data/*.csv --register LISA
+
+# From explicit column list (requires --register)
+regmeta compare --columns "Kon,FodelseAr,MERITVARDE" --register 189
+```
+
+Output classifies each column as `matched`, `extra_local` (not in registry), or `missing_from_registry` (in registry but not in local file). Use `--format json` for structured output.
 
 ### get register — Register overview
 
@@ -100,9 +141,20 @@ regmeta get schema --register LISA --years 2020-2023
 
 # Specific variant (by regvar_id from get register)
 regmeta get schema 153 --years 2022
+
+# Filter columns by name pattern
+regmeta get schema --register 340 --columns-like "Merit|Betyg|Prov"
+
+# Condensed overview (one row per variant)
+regmeta get schema --register LISA --summary
+
+# Flat output (one row per year/alias — grep-friendly)
+regmeta get schema --register LISA --flat
 ```
 
 Returns variants → versions → columns. Each column has `var_id`, `variabelnamn`, `datatyp`, `aliases` (column header names in data files), and `cvid` (link to value set).
+
+**Note:** For large registers, `get schema` without filters can produce very verbose output. Use `--years`, `--columns-like`, `--summary`, or `--flat` to narrow results. When scripting, prefer `--format json`.
 
 ### get varinfo — Variable details and history
 
@@ -158,6 +210,19 @@ regmeta get lineage "Kön"
 
 Shows which register is the source (producer) and which registers consume the variable, with year ranges and instance counts.
 
+### get availability — Temporal availability summary
+
+```bash
+# When is a variable available?
+regmeta get availability "Kön"
+regmeta get availability "Kön" --register LISA
+
+# When is a register available?
+regmeta get availability LISA
+```
+
+Returns min year, max year, year list, gaps, and per-register aliases (for variables) or per-variant year coverage (for registers). Auto-detects whether the target is a variable or register.
+
 ### maintain — Setup and maintenance
 
 ```bash
@@ -206,6 +271,25 @@ regmeta get diff --register LISA --from 2010 --to 2022
 regmeta search --query "inkomst" --varname
 ```
 
+### "Is this variable available for 2015-2024?"
+```bash
+regmeta get availability "Kön" --register LISA
+# or filter search results by year
+regmeta search --query "inkomst" --years 2015-2024
+```
+
+### "What SCB data exists but isn't in my local files?"
+```bash
+# If using mock-data-wizard (best — manifest has register/year hints):
+regmeta compare mock_data/manifest.json
+
+# If comparing raw CSVs:
+regmeta compare --files mock_data/*.csv --register LISA
+
+# Quick check for specific columns:
+regmeta compare --columns "Kon,FodelseAr,MERITVARDE" --register 189
+```
+
 ## Key concepts
 
 - **register** — A statistical register (e.g. LISA, RTB). Has an integer `register_id`.
@@ -223,3 +307,4 @@ regmeta search --query "inkomst" --varname
 - Variable arguments accept `var_id` (integer) or variable name (string).
 - Search uses substring matching for most fields; `--description` uses full-text search.
 - Value sets are a historical union — use `--valid-at` for temporal filtering.
+- `get schema` output can be very large for big registers. Use `--summary` for an overview, `--flat` for grep-friendly output, or `--years` and `--columns-like` to filter.

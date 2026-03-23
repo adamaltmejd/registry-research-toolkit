@@ -109,6 +109,66 @@ class TestSearch:
         assert value_results[0]["vardebenamning"] == "Man"
         assert value_results[0]["vardekod"] == "1"
 
+    def test_search_years_filter(self, db_path: str):
+        """--years filters to results with versions in the given range."""
+        # Kön exists at 2020-2022; filtering to 2020 should still find it
+        data, code = _run_json(
+            ["--db", db_path, "search", "--query", "Kön", "--years", "2020"]
+        )
+        assert code == 0
+        assert data["data"]["total_count"] >= 1
+
+    def test_search_years_excludes_outside_range(self, db_path: str):
+        """--years filters out results with no versions in range."""
+        data, code = _run_json(
+            ["--db", db_path, "search", "--query", "Kön", "--years", "2050"]
+        )
+        assert code == 0
+        assert data["data"]["total_count"] == 0
+
+    def test_search_years_range(self, db_path: str):
+        """--years accepts a range like 2020-2021."""
+        data, code = _run_json(
+            ["--db", db_path, "search", "--query", "Kön", "--years", "2020-2021"]
+        )
+        assert code == 0
+        assert data["data"]["total_count"] >= 1
+
+    def test_search_years_register_type(self, db_path: str):
+        """--years works with --type register."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "search",
+                "--query",
+                "Testning",
+                "--type",
+                "register",
+                "--years",
+                "2020",
+            ]
+        )
+        assert code == 0
+        assert data["data"]["total_count"] >= 1
+
+    def test_search_years_register_type_no_match(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "search",
+                "--query",
+                "Testning",
+                "--type",
+                "register",
+                "--years",
+                "1900",
+            ]
+        )
+        assert code == 0
+        assert data["data"]["total_count"] == 0
+
 
 # ---------------------------------------------------------------------------
 # Get register
@@ -210,6 +270,47 @@ class TestGetSchema:
     def test_no_args(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "schema"])
         assert code == 2
+
+    def test_columns_like_filter(self, db_path: str):
+        """--columns-like filters columns by alias/variable name regex."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "schema", "10", "--columns-like", "Kön|Test"]
+        )
+        assert code == 0
+        for ver in data["data"]["variants"][0]["versions"]:
+            for col in ver["columns"]:
+                name = col.get("variabelnamn", "")
+                aliases = col.get("aliases", "")
+                assert (
+                    "Kön" in name
+                    or "Test" in name
+                    or "Kön" in aliases
+                    or "Test" in aliases
+                )
+
+    def test_columns_like_no_match(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "schema", "10", "--columns-like", "ZZZZZ"]
+        )
+        assert code == 0
+        for ver in data["data"]["variants"][0]["versions"]:
+            assert ver["columns"] == []
+
+    def test_summary_mode(self, db_path: str):
+        """--summary returns condensed variant-level info (via JSON data)."""
+        data, code = _run_json(["--db", db_path, "get", "schema", "10", "--summary"])
+        assert code == 0
+        # JSON output still has full data; summary only affects table display
+        variants = data["data"]["variants"]
+        assert len(variants) >= 1
+        assert len(variants[0]["versions"]) >= 1
+
+    def test_flat_mode(self, db_path: str):
+        """--flat is a display mode; JSON data is unchanged."""
+        data, code = _run_json(["--db", db_path, "get", "schema", "10", "--flat"])
+        assert code == 0
+        variants = data["data"]["variants"]
+        assert len(variants) >= 1
 
 
 # ---------------------------------------------------------------------------
@@ -762,6 +863,151 @@ class TestGetLineage:
         ][0]
         assert testreg["year_range"] == [2020, 2022]
         assert testreg["instance_count"] == 3
+
+
+# ---------------------------------------------------------------------------
+# Get availability
+# ---------------------------------------------------------------------------
+
+
+class TestGetAvailability:
+    def test_variable_availability(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "availability", "Kön"])
+        assert code == 0
+        d = data["data"]
+        assert d["target_type"] == "variable"
+        assert d["variable_name"] == "Kön"
+        assert d["min_year"] <= d["max_year"]
+        assert len(d["years"]) >= 1
+        assert len(d["registers"]) >= 1
+
+    def test_variable_availability_with_register(self, db_path: str):
+        data, code = _run_json(
+            ["--db", db_path, "get", "availability", "Kön", "--register", "TESTREG"]
+        )
+        assert code == 0
+        d = data["data"]
+        assert d["target_type"] == "variable"
+        # Should only have TESTREG
+        assert all(r["register_id"] == 1 for r in d["registers"])
+
+    def test_register_availability(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "availability", "TESTREG"])
+        assert code == 0
+        d = data["data"]
+        assert d["target_type"] == "register"
+        assert d["register_name"] == "TESTREG"
+        assert d["min_year"] <= d["max_year"]
+        assert len(d["variants"]) >= 1
+
+    def test_not_found(self, db_path: str):
+        _, code = _run_json(["--db", db_path, "get", "availability", "NONEXISTENT"])
+        assert code == 16
+
+
+# ---------------------------------------------------------------------------
+# Compare
+# ---------------------------------------------------------------------------
+
+
+class TestCompare:
+    def test_compare_columns(self, db_path: str):
+        """Compare explicit columns against a known register."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "compare",
+                "--columns",
+                "Kon,TestCol,FakeColumn",
+                "--register",
+                "TESTREG",
+            ]
+        )
+        assert code == 0
+        files = data["data"]["files"]
+        assert len(files) == 1
+        f = files[0]
+        assert f["register_status"] == "resolved"
+        assert f["summary"]["matched"] >= 1
+        matched_cols = {m["column"] for m in f["matched"]}
+        assert "Kon" in matched_cols or "TestCol" in matched_cols
+        assert "FakeColumn" in f["extra_local"]
+
+    def test_compare_columns_requires_register(self, db_path: str):
+        _, code = _run_json(["--db", db_path, "compare", "--columns", "Kon"])
+        assert code == 2  # usage error
+
+    def test_compare_manifest(self, db_path: str, tmp_path):
+        """Compare using a manifest v2 file."""
+        import json as json_mod
+
+        manifest = {
+            "schema_version": "2",
+            "generated_at": "2026-03-23T00:00:00Z",
+            "seed": 42,
+            "sample_pct": 1.0,
+            "output_dir": str(tmp_path),
+            "files": [
+                {
+                    "file_name": "test.csv",
+                    "relative_path": "test.csv",
+                    "row_count": 100,
+                    "sha256": "abc",
+                    "columns": ["Kon", "TestCol", "UnknownCol"],
+                    "column_count": 3,
+                    "delimiter": ",",
+                    "encoding": "utf-8",
+                    "header_hash": "abc",
+                    "register_hint": 1,  # TESTREG
+                    "year_hint": 2020,
+                }
+            ],
+        }
+        manifest_path = tmp_path / "manifest.json"
+        manifest_path.write_text(json_mod.dumps(manifest))
+
+        data, code = _run_json(["--db", db_path, "compare", str(manifest_path)])
+        assert code == 0
+        files = data["data"]["files"]
+        assert len(files) == 1
+        f = files[0]
+        assert f["register_status"] == "resolved"
+        assert f["register_name"] == "TESTREG"
+        assert f["year_hint"] == 2020
+        assert f["summary"]["matched"] >= 1
+        assert "UnknownCol" in f["extra_local"]
+
+    def test_compare_files(self, db_path: str, tmp_path):
+        """Compare CSV file headers."""
+        csv_path = tmp_path / "data.csv"
+        csv_path.write_text("Kon,TestCol,Extra\n1,x,y\n")
+
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "compare",
+                "--files",
+                str(csv_path),
+                "--register",
+                "TESTREG",
+            ]
+        )
+        assert code == 0
+        f = data["data"]["files"][0]
+        assert f["register_status"] == "resolved"
+        assert "Extra" in f["extra_local"]
+
+    def test_compare_bad_manifest_version(self, db_path: str, tmp_path):
+        import json as json_mod
+
+        manifest = {"schema_version": "1", "files": []}
+        manifest_path = tmp_path / "manifest.json"
+        manifest_path.write_text(json_mod.dumps(manifest))
+
+        _, code = _run_json(["--db", db_path, "compare", str(manifest_path)])
+        assert code == 2
 
 
 # ---------------------------------------------------------------------------

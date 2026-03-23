@@ -20,8 +20,10 @@ from .db import (
     get_manifest,
     open_db,
 )
-from .errors import EXIT_INTERNAL, EXIT_USAGE, RegmetaError
+from .errors import EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 from .queries import (
+    compare,
+    get_availability,
     get_coded_variables,
     get_datacolumns,
     get_diff,
@@ -31,6 +33,7 @@ from .queries import (
     get_values,
     get_varinfo,
     resolve,
+    resolve_register_ids,
     search,
 )
 
@@ -280,6 +283,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--register", default=None, help="Filter by register (name or ID)."
     )
     search_p.add_argument(
+        "--years",
+        default=None,
+        help="Filter to entries with versions in year range (e.g. 2015, 2015-2024, 2015-, -2024).",
+    )
+    search_p.add_argument(
         "--limit", type=int, default=50, help="Max results (default: 50)."
     )
     search_p.add_argument(
@@ -313,6 +321,22 @@ def _build_parser() -> argparse.ArgumentParser:
         "--years",
         default=None,
         help="Year range filter (e.g. 2010, 2010-2015, 2010-, -2015).",
+    )
+    get_schema_p.add_argument(
+        "--columns-like",
+        default=None,
+        help="Regex filter on column aliases or variable names (case-insensitive).",
+    )
+    schema_mode = get_schema_p.add_mutually_exclusive_group()
+    schema_mode.add_argument(
+        "--summary",
+        action="store_true",
+        help="Condensed output: one row per variant with year range and column count.",
+    )
+    schema_mode.add_argument(
+        "--flat",
+        action="store_true",
+        help="Flat output: one row per (year, alias, variable_name, regvar_id).",
     )
 
     get_varinfo_p = get_sub.add_parser(
@@ -426,6 +450,61 @@ def _build_parser() -> argparse.ArgumentParser:
     get_lineage_p.add_argument("variable", help="Variable name or var_id.")
     get_lineage_p.add_argument(
         "--register", default=None, help="Filter by register (name or ID)."
+    )
+
+    get_avail_p = get_sub.add_parser(
+        "availability",
+        help="Show temporal availability (years, gaps, aliases) for a variable or register.",
+        description=(
+            "Show when a variable or register is available across years.\n\n"
+            "Auto-detects whether the target is a variable or register.\n\n"
+            "Examples:\n"
+            '  regmeta get availability "Kön"\n'
+            "  regmeta get availability LISA\n"
+            '  regmeta get availability "Kön" --register LISA'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    get_avail_p.add_argument("target", help="Variable name/var_id or register name/ID.")
+    get_avail_p.add_argument(
+        "--register", default=None, help="Scope to a specific register (for variables)."
+    )
+
+    compare_p = sub.add_parser(
+        "compare",
+        help="Compare local file columns against registry metadata.",
+        description=(
+            "Compare columns in local data files against SCB registry schemas.\n\n"
+            "Input modes (mutually exclusive):\n"
+            "  regmeta compare manifest.json                              # wizard manifest v2\n"
+            "  regmeta compare --files mock_data/*.csv                    # read CSV headers\n"
+            '  regmeta compare --columns "Kon,FodelseAr" --register 189  # explicit\n\n'
+            "CSV and --columns modes require --register."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    compare_input = compare_p.add_mutually_exclusive_group()
+    compare_p.add_argument(
+        "manifest",
+        nargs="?",
+        default=None,
+        help="Path to wizard manifest.json (schema_version 2).",
+    )
+    compare_input.add_argument(
+        "--files",
+        nargs="+",
+        default=None,
+        help="CSV file paths to compare (reads first row as headers).",
+    )
+    compare_input.add_argument(
+        "--columns",
+        default=None,
+        help="Comma-separated column names to compare.",
+    )
+    compare_p.add_argument(
+        "--register",
+        default=None,
+        help="Register name or ID (required for --files and --columns modes).",
     )
 
     resolve_p = sub.add_parser(
@@ -556,6 +635,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             field=args.field,
             type=args.type,
             register=args.register,
+            years=args.years,
             limit=args.limit,
             offset=args.offset,
         )
@@ -569,6 +649,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "field": args.field,
             "type": args.type,
             "register": args.register,
+            "years": args.years,
             "limit": args.limit,
             "offset": args.offset,
         },
@@ -609,6 +690,7 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             regvar_id=args.regvar_id,
             register=args.register,
             years=args.years,
+            columns_like=args.columns_like,
         )
     finally:
         conn.close()
@@ -620,6 +702,8 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args_out["register"] = args.register
     if args.years:
         args_out["years"] = args.years
+    if args.columns_like:
+        args_out["columns_like"] = args.columns_like
     return _success_envelope(
         command="get schema",
         args_payload=args_out,
@@ -794,6 +878,161 @@ def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = _db_info(conn)
+        data = get_availability(conn, args.target, register=args.register)
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    args_payload: dict[str, Any] = {"target": args.target}
+    if args.register:
+        args_payload["register"] = args.register
+    return _success_envelope(
+        command="get availability",
+        args_payload=args_payload,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_compare(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    import csv as csv_mod
+    from pathlib import Path
+
+    start = time.perf_counter()
+
+    columns_by_file: dict[str, list[str]] = {}
+    register_hints: dict[str, int | None] = {}
+    year_hints: dict[str, int | None] = {}
+
+    if args.manifest:
+        # Read wizard manifest v2
+        manifest_path = Path(args.manifest)
+        if not manifest_path.exists():
+            raise RegmetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message=f"Manifest file not found: {args.manifest}",
+                remediation="Check the file path.",
+            )
+        manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        sv = manifest_data.get("schema_version")
+        if sv != "2":
+            raise RegmetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message=f"Unsupported manifest schema_version '{sv}'. Expected '2'.",
+                remediation="Regenerate with mock-data-wizard >= v0.2.0.",
+            )
+        for f in manifest_data.get("files", []):
+            label = f["file_name"]
+            columns_by_file[label] = f.get("columns", [])
+            register_hints[label] = f.get("register_hint")
+            year_hints[label] = f.get("year_hint")
+
+    elif args.files:
+        # Read CSV headers
+        if not args.register:
+            raise RegmetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message="--register is required when using --files.",
+                remediation="Specify --register <name_or_id>.",
+            )
+        for fpath_str in args.files:
+            fpath = Path(fpath_str)
+            if not fpath.exists():
+                raise RegmetaError(
+                    exit_code=EXIT_USAGE,
+                    code="usage_error",
+                    error_class="usage",
+                    message=f"File not found: {fpath_str}",
+                    remediation="Check the file path.",
+                )
+            with fpath.open(encoding="utf-8") as fh:
+                reader = csv_mod.reader(fh)
+                headers = next(reader, [])
+            columns_by_file[fpath.name] = headers
+
+    elif args.columns:
+        # Explicit column list
+        if not args.register:
+            raise RegmetaError(
+                exit_code=EXIT_USAGE,
+                code="usage_error",
+                error_class="usage",
+                message="--register is required when using --columns.",
+                remediation="Specify --register <name_or_id>.",
+            )
+        cols = [c.strip() for c in args.columns.split(",") if c.strip()]
+        columns_by_file["(columns)"] = cols
+
+    else:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="No input provided.",
+            remediation="Provide a manifest path, --files, or --columns.",
+        )
+
+    # If --register given, resolve it and apply as hint to all files that lack one
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = _db_info(conn)
+
+        if args.register:
+            reg_ids = resolve_register_ids(conn, args.register)
+            if not reg_ids:
+                raise RegmetaError(
+                    exit_code=EXIT_NOT_FOUND,
+                    code="not_found",
+                    error_class="query",
+                    message=f"Register '{args.register}' not found.",
+                    remediation="Use `regmeta search --type register` to find register names.",
+                )
+            reg_id = reg_ids[0]
+            for label in columns_by_file:
+                if register_hints.get(label) is None:
+                    register_hints[label] = reg_id
+
+        data = compare(
+            conn,
+            columns_by_file=columns_by_file,
+            register_hints=register_hints,
+            year_hints=year_hints,
+        )
+    finally:
+        conn.close()
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    args_payload: dict[str, Any] = {}
+    if args.manifest:
+        args_payload["manifest"] = args.manifest
+    if args.files:
+        args_payload["files"] = args.files
+    if args.columns:
+        args_payload["columns"] = args.columns
+    if args.register:
+        args_payload["register"] = args.register
+    return _success_envelope(
+        command="compare",
+        args_payload=args_payload,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .errors import EXIT_NO_MATCH
 
@@ -856,6 +1095,7 @@ def _write_payload(
     output_path: str | None,
     *,
     fmt: str = "table",
+    args: argparse.Namespace | None = None,
 ) -> None:
     # Truncate output file so multi-section commands (diff, lineage) append correctly
     _write_to("", output_path, truncate=True)
@@ -906,26 +1146,82 @@ def _write_payload(
             fmt=fmt,
         )
     elif key == ("get", "schema"):
-        rows = []
-        for v in data.get("variants", []):
-            for ver in v.get("versions", []):
-                for col in ver.get("columns", []):
-                    rows.append(
-                        {
-                            "version": ver.get("version_name", ""),
-                            "var_id": col.get("var_id", ""),
-                            "variabelnamn": col.get("variabelnamn", ""),
-                            "datatyp": col.get("datatyp", ""),
-                            "aliases": col.get("aliases", ""),
-                            "cvid": col.get("cvid", ""),
-                        }
-                    )
-        _write_formatted(
-            rows,
-            ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
-            output_path,
-            fmt=fmt,
-        )
+        schema_summary = getattr(args, "summary", False) if args else False
+        schema_flat = getattr(args, "flat", False) if args else False
+
+        if schema_summary:
+            rows = []
+            for v in data.get("variants", []):
+                ver_years = [
+                    ver.get("year")
+                    for ver in v.get("versions", [])
+                    if ver.get("year") is not None
+                ]
+                year_range = f"{min(ver_years)}-{max(ver_years)}" if ver_years else "-"
+                total_cols = max(
+                    (len(ver.get("columns", [])) for ver in v.get("versions", [])),
+                    default=0,
+                )
+                rows.append(
+                    {
+                        "regvar_id": v.get("regvar_id", ""),
+                        "variant": v.get("registervariantnamn", ""),
+                        "years": year_range,
+                        "versions": len(v.get("versions", [])),
+                        "columns": total_cols,
+                    }
+                )
+            _write_formatted(
+                rows,
+                ["regvar_id", "variant", "years", "versions", "columns"],
+                output_path,
+                fmt=fmt,
+            )
+        elif schema_flat:
+            rows = []
+            for v in data.get("variants", []):
+                for ver in v.get("versions", []):
+                    for col in ver.get("columns", []):
+                        aliases = (col.get("aliases") or "").split(", ")
+                        for alias in aliases:
+                            if not alias:
+                                continue
+                            rows.append(
+                                {
+                                    "regvar_id": v.get("regvar_id", ""),
+                                    "year": ver.get("year", ""),
+                                    "alias": alias,
+                                    "variabelnamn": col.get("variabelnamn", ""),
+                                    "var_id": col.get("var_id", ""),
+                                }
+                            )
+            _write_formatted(
+                rows,
+                ["regvar_id", "year", "alias", "variabelnamn", "var_id"],
+                output_path,
+                fmt=fmt,
+            )
+        else:
+            rows = []
+            for v in data.get("variants", []):
+                for ver in v.get("versions", []):
+                    for col in ver.get("columns", []):
+                        rows.append(
+                            {
+                                "version": ver.get("version_name", ""),
+                                "var_id": col.get("var_id", ""),
+                                "variabelnamn": col.get("variabelnamn", ""),
+                                "datatyp": col.get("datatyp", ""),
+                                "aliases": col.get("aliases", ""),
+                                "cvid": col.get("cvid", ""),
+                            }
+                        )
+            _write_formatted(
+                rows,
+                ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
+                output_path,
+                fmt=fmt,
+            )
     elif key == ("get", "varinfo"):
         variables = data.get("variables", [data]) if "variables" in data else [data]
         rows = []
@@ -1066,6 +1362,114 @@ def _write_payload(
                 f"\nProvenance: {cov['with_source']}/{cov['total']} ({pct}%)\n",
                 output_path,
             )
+    elif key == ("get", "availability"):
+        target_type = data.get("target_type", "")
+        if target_type == "variable":
+            rows = []
+            for r in data.get("registers", []):
+                yr = r.get("years", [])
+                year_str = f"{yr[0]}-{yr[-1]}" if yr else ""
+                gaps_str = ", ".join(str(g) for g in r.get("gaps", []))
+                rows.append(
+                    {
+                        "register": f"{r['register_name']} ({r['register_id']})",
+                        "var_id": r["var_id"],
+                        "years": year_str,
+                        "gaps": gaps_str or "-",
+                    }
+                )
+            _write_formatted(
+                rows, ["register", "var_id", "years", "gaps"], output_path, fmt=fmt
+            )
+        else:
+            rows = []
+            for v in data.get("variants", []):
+                yr = v.get("years", [])
+                year_str = f"{yr[0]}-{yr[-1]}" if yr else ""
+                rows.append(
+                    {
+                        "regvar_id": v["regvar_id"],
+                        "variant_name": v["variant_name"],
+                        "years": year_str,
+                        "version_count": len(yr),
+                    }
+                )
+            _write_formatted(
+                rows,
+                ["regvar_id", "variant_name", "years", "version_count"],
+                output_path,
+                fmt=fmt,
+            )
+        all_gaps = data.get("gaps", [])
+        if all_gaps:
+            _write_to(f"\nGaps: {', '.join(str(g) for g in all_gaps)}\n", output_path)
+    elif key == ("compare", None):
+        for f in data.get("files", []):
+            status = f.get("register_status", "")
+            reg_name = f.get("register_name") or "?"
+            reg_id = f.get("register_id") or "?"
+            header = f"── {f['file']}  [{reg_name} ({reg_id})] {status}"
+            if f.get("year_hint"):
+                header += f"  year={f['year_hint']}"
+            _write_to(header + "\n", output_path)
+
+            if status != "resolved":
+                _write_to(f"  (skipped: {status})\n\n", output_path)
+                continue
+
+            s = f.get("summary", {})
+            _write_to(
+                f"  matched: {s.get('matched', 0)}  "
+                f"extra_local: {s.get('extra_local', 0)}  "
+                f"missing_from_registry: {s.get('missing_from_registry', 0)}\n",
+                output_path,
+            )
+
+            rows = []
+            for m in f.get("matched", []):
+                rows.append(
+                    {
+                        "column": m["column"],
+                        "status": "matched",
+                        "var_id": m.get("var_id", ""),
+                        "variable_name": m.get("variable_name", ""),
+                    }
+                )
+            for col in f.get("extra_local", []):
+                rows.append(
+                    {
+                        "column": col,
+                        "status": "extra_local",
+                        "var_id": "",
+                        "variable_name": "",
+                    }
+                )
+            if rows:
+                _write_formatted(
+                    rows,
+                    ["column", "status", "var_id", "variable_name"],
+                    output_path,
+                    fmt=fmt,
+                )
+
+            missing = f.get("missing_from_registry", [])
+            if missing:
+                _write_to("\n  Missing from local:\n", output_path)
+                miss_rows = [
+                    {
+                        "var_id": m["var_id"],
+                        "variable_name": m["variable_name"],
+                        "aliases": ", ".join(m.get("aliases", [])),
+                    }
+                    for m in missing
+                ]
+                _write_formatted(
+                    miss_rows,
+                    ["var_id", "variable_name", "aliases"],
+                    output_path,
+                    fmt=fmt,
+                )
+            _write_to("\n", output_path)
     elif key == ("resolve", None):
         rows = []
         for col in data.get("columns", []):
@@ -1118,6 +1522,8 @@ COMMAND_DISPATCH = {
     ("get", "coded-variables"): _cmd_get_coded_variables,
     ("get", "diff"): _cmd_get_diff,
     ("get", "lineage"): _cmd_get_lineage,
+    ("get", "availability"): _cmd_get_availability,
+    ("compare", None): _cmd_compare,
     ("resolve", None): _cmd_resolve,
 }
 
@@ -1163,7 +1569,7 @@ def run(argv: list[str] | None = None) -> int:
             else:
                 _write_json(payload.get("data", payload), output_path)
         else:
-            _write_payload(key, payload, output_path, fmt=fmt)
+            _write_payload(key, payload, output_path, fmt=fmt, args=args)
         return exit_code
     except RegmetaError as exc:
         _write_json({"error": exc.to_dict()}, getattr(args, "output", None))

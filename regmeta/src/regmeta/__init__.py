@@ -1,6 +1,8 @@
 from .db import open_db, db_path_from_args, build_db, default_db_dir
 from .download import download_db
 from .queries import (
+    compare,
+    get_availability,
     get_coded_variables,
     get_datacolumns,
     get_diff,
@@ -16,9 +18,11 @@ from .queries import (
 
 __all__ = [
     "build_db",
+    "compare",
     "db_path_from_args",
     "default_db_dir",
     "download_db",
+    "get_availability",
     "get_coded_variables",
     "get_datacolumns",
     "get_diff",
@@ -33,4 +37,4 @@ __all__ = [
     "search",
 ]
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"

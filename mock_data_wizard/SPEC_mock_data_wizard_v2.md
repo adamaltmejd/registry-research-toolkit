@@ -3,6 +3,7 @@
 Status: Approved
 Version: 2.0.0
 Created: 2026-03-20
+Updated: 2026-03-23
 Owner: Research engineering
 Parent spec: `SPEC_mock_data_wizard.md` (v1, frozen)
 
@@ -10,10 +11,11 @@ Parent spec: `SPEC_mock_data_wizard.md` (v1, frozen)
 
 ## 1. Overview
 
-Two features on top of mock_data_wizard v1:
+Three features on top of mock_data_wizard v1:
 
 1. **Population spine** — birth-invariant attributes are generated once per individual and reused across files, ensuring cross-file join consistency.
 2. **Value code drift warnings** — enrichment warns when stats contain frequency codes absent from regmeta's value set.
+3. **Manifest v2** — richer manifest with per-file column lists and metadata, enabling `regmeta compare` to read it natively.
 
 ## 2. Feature 1: Population Spine
 
@@ -76,3 +78,33 @@ Warnings are printed to stderr during enrichment. They do not block generation.
 
 - **Unseen regmeta codes** (codes in regmeta but absent from stats): too noisy — registers legitimately contain rare codes never seen in a given dataset.
 - **Column completeness** (regmeta says register should have column X): doesn't work because researchers typically order only a subset of a register's columns.
+
+## 4. Feature 3: Manifest V2
+
+### 4.1 Purpose
+
+The v1 manifest only stores file-level metadata (file_name, relative_path, row_count, sha256). This is insufficient for `regmeta compare`, which needs to know what columns each file contains and which register it came from. Rather than requiring users to author a separate comparison spec, the wizard emits a richer manifest that `regmeta compare` reads natively.
+
+### 4.2 Schema
+
+`schema_version` is `"2"`. New top-level fields: `schema_version`, `generated_at` (ISO 8601).
+
+New per-file fields:
+
+| Field | Type | Source |
+|---|---|---|
+| `columns` | `list[str]` | Ordered column headers from enrichment |
+| `column_count` | `int` | `len(columns)` |
+| `delimiter` | `str` | Always `","` (csv.writer) |
+| `encoding` | `str` | Always `"utf-8"` |
+| `header_hash` | `str` | SHA-256 of sorted, comma-joined column names |
+| `register_hint` | `int \| null` | `register_id` if all enriched columns agree; else `null` |
+| `year_hint` | `int \| null` | First 4-digit number in `file_name`; else `null` |
+
+All fields are derived from data already available at generation time — no new IO.
+
+### 4.3 Deliberate Exclusions
+
+- **`dataset` field**: would require fragile filename parsing. `register_hint` from enrichment is more reliable.
+- **Type information per column**: fake/misleading for mock data.
+- **regmeta match results**: belong in `regmeta compare` output, not the manifest.

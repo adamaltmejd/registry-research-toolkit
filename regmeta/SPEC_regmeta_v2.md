@@ -3,6 +3,7 @@
 Status: Approved
 Version: 3.0.0
 Created: 2026-03-20
+Updated: 2026-03-23
 Owner: Research engineering
 Parent spec: `SPEC_regmeta.md` (v1, frozen)
 
@@ -10,12 +11,16 @@ Parent spec: `SPEC_regmeta.md` (v1, frozen)
 
 ## 1. Overview
 
-Two new features on top of regmeta v1:
+Six features on top of regmeta v1:
 
 1. **Temporal diff** — "what changed between year X and Y" for a register, with optional variable filter.
 2. **Cross-register lineage** — where a variable originates and which registers consume it.
+3. **Compare** — compare local file columns against registry metadata.
+4. **Availability** — temporal availability summary for a variable or register.
+5. **Search year filter** — `search --years` to filter results by version year range.
+6. **Schema ergonomics** — `--summary`, `--flat`, `--columns-like` for `get schema`.
 
-Both are query-layer features. No new CSV imports, no schema migration. The underlying data already exists.
+All are query-layer features. No new CSV imports, no schema migration. The underlying data already exists.
 
 ## 2. Feature 1: Temporal Diff
 
@@ -234,7 +239,137 @@ Provenance: 85/97 (88%)
 | Variable not found | 16 |
 | Register filter matches nothing | 16 |
 
-## 4. Output Formats
+## 4. Feature 3: Compare
+
+### 4.1 Purpose
+
+Answer: "What SCB data exists but isn't in my local files?" and "What columns do I have locally that aren't in SCB metadata?" Users working with MONA projects need to verify their local data files against the registry schema without manually stitching together multiple commands.
+
+### 4.2 Command
+
+```
+regmeta compare <manifest_path>
+regmeta compare --files <csv_path> ... --register <name_or_id>
+regmeta compare --columns <col1,col2,...> --register <name_or_id>
+        [--format {table,list,json}] [--output <path>] [--db <path>]
+```
+
+Three mutually exclusive input modes. `--files` and `--columns` require `--register`.
+
+### 4.3 Semantics
+
+For each file/column set:
+
+1. Determine register: from `register_hint` in manifest, or `--register` from CLI.
+2. Get registry schema for that register (optionally filtered to `year_hint`).
+3. Flatten schema aliases into a lookup set.
+4. Classify each local column as `matched`, `extra_local`, or identify `missing_from_registry`.
+
+### 4.4 Manifest Input
+
+Reads mock-data-wizard manifest v2 (`schema_version: "2"`). Extracts per-file `columns`, `register_hint`, and `year_hint`. Files without `register_hint` are reported as `register_status: "no_hint"`.
+
+### 4.5 Output (JSON)
+
+```json
+{
+  "files": [
+    {
+      "file": "LISA_2022.csv",
+      "register_id": 34,
+      "register_name": "LISA",
+      "register_status": "resolved",
+      "year_hint": 2022,
+      "matched": [{"column": "Kon", "var_id": 44, "variable_name": "Kön"}],
+      "extra_local": ["MyCustomCol"],
+      "missing_from_registry": [{"var_id": 99, "variable_name": "NyVar", "aliases": ["NyKol"]}],
+      "summary": {"matched": 5, "extra_local": 1, "missing_from_registry": 12}
+    }
+  ]
+}
+```
+
+`register_status` values: `resolved`, `no_hint`, `not_found`, `no_schema`.
+
+### 4.6 Error Cases
+
+| Condition | Exit code |
+|---|---|
+| Manifest file not found | 2 |
+| Unsupported schema_version | 2 |
+| `--files`/`--columns` without `--register` | 2 |
+| Register not found | 16 |
+
+## 5. Feature 4: Availability
+
+### 5.1 Purpose
+
+Answer: "Is variable X available for years 2015-2024?" without chaining `search` → `get varinfo` → inspect instance years.
+
+### 5.2 Command
+
+```
+regmeta get availability <target> [--register <name_or_id>]
+        [--format {table,list,json}] [--output <path>] [--db <path>]
+```
+
+Auto-detects whether target is a variable or register (tries variable first).
+
+### 5.3 Output (JSON)
+
+For variables:
+```json
+{
+  "target": "Kön",
+  "target_type": "variable",
+  "variable_name": "Kön",
+  "min_year": 2010,
+  "max_year": 2022,
+  "years": [2010, 2011, 2012, ...],
+  "gaps": [2013],
+  "register_count": 5,
+  "registers": [
+    {
+      "register_id": 34,
+      "register_name": "LISA",
+      "var_id": 44,
+      "min_year": 2010,
+      "max_year": 2022,
+      "years": [2010, 2011, ...],
+      "gaps": [],
+      "aliases_by_year": {"2010": ["Kon"], "2015": ["KON"]}
+    }
+  ]
+}
+```
+
+For registers: similar structure with `variants` instead of `registers`, each with year coverage.
+
+## 6. Feature 5: Search Year Filter
+
+### 6.1 Command
+
+```
+regmeta search --query <term> --years <range> [other search flags]
+```
+
+`--years` accepts the same format as `get schema --years` (e.g. `2015`, `2015-2024`, `2015-`, `-2024`).
+
+### 6.2 Semantics
+
+Post-filters search results: for variable-type results, checks if any `variable_instance` exists in a `register_version` within the year range. For register-type results, checks if the register has any version in range. `total_count` reflects the filtered count.
+
+## 7. Feature 6: Schema Ergonomics
+
+### 7.1 New Flags
+
+- `--columns-like PATTERN` — regex filter (case-insensitive) on column aliases and variable names. Applied at the query level before building results.
+- `--summary` — display mode: one row per variant with year range and column count. Mutually exclusive with `--flat`.
+- `--flat` — display mode: one row per (regvar_id, year, alias, variable_name, var_id). Mutually exclusive with `--summary`.
+
+`--summary` and `--flat` are display concerns only — JSON output structure is unchanged.
+
+## 8. Output Formats
 
 Three output formats, shared across all commands:
 
@@ -242,26 +377,31 @@ Three output formats, shared across all commands:
 - **`--format list`**: Block/record style (key-value pairs per row).
 - **`--format json`**: Machine-readable JSON. Plain data object by default; `--verbose`/`-v` wraps in an envelope with contract version, timing, and database info.
 
-## 5. Repeated Flags
+## 9. Repeated Flags
 
 All repeated optional flags error at parse time via `_NoRepeatParser` subclass (not just `--variable`).
 
-## 6. Contract Version
+## 10. Contract Version
 
-Bumped to `3.0.0` (new commands = new major version per existing convention).
+Unchanged at `3.0.0`. Pre-release with zero users — no contract to break.
 
-## 7. Non-Functional
+## 11. Non-Functional
 
 - Same performance target as v1 queries: < 500ms.
 - No new dependencies.
-- No new CSV imports or schema changes. Both features query existing tables.
-- Library-importable: `get_diff()` and `get_lineage()` available as Python functions.
+- No new CSV imports or schema changes. All features query existing tables.
+- Library-importable: `get_diff()`, `get_lineage()`, `get_availability()`, and `compare()` available as Python functions.
 
-## 8. Acceptance Criteria
+## 12. Acceptance Criteria
 
 1. `regmeta get diff --register LISA --from 2015 --to 2020` returns added/removed/changed variables.
 2. `regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon KON_NY` resolves inputs and returns changes for matched variables.
 3. `regmeta get lineage Kon` returns cross-register occurrence with provenance classification.
 4. `regmeta get lineage Kon --register LISA` returns LISA-scoped lineage with source info.
-5. All commands produce valid JSON and table/list output in all three formats.
-6. Both commands are importable as library functions.
+5. `regmeta compare manifest.json` reads v2 manifest and classifies columns.
+6. `regmeta compare --columns "Kon" --register LISA` works with explicit input.
+7. `regmeta get availability "Kön"` returns year coverage across registers.
+8. `regmeta search --query "Kön" --years 2020` filters results by year.
+9. `regmeta get schema --register LISA --columns-like "Kon" --flat` filters and flattens.
+10. All commands produce valid JSON and table/list output in all three formats.
+11. All new query functions are library-importable.

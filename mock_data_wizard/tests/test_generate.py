@@ -87,10 +87,61 @@ def test_manifest_json(stats_path: Path, tmp_path: Path):
     manifest_path = out_dir / "manifest.json"
     assert manifest_path.exists()
     data = json.loads(manifest_path.read_text())
+
+    # Top-level v2 fields
+    assert data["schema_version"] == "2"
+    assert "generated_at" in data
     assert data["seed"] == 42
+
+    # Per-file v2 fields
     assert len(data["files"]) == 1
-    assert data["files"][0]["file_name"] == "persons.csv"
-    assert "sha256" in data["files"][0]
+    f = data["files"][0]
+    assert f["file_name"] == "persons.csv"
+    assert "sha256" in f
+    assert set(f["columns"]) == {"LopNr", "Kon", "FodelseAr", "Kommun", "Datum", "Namn"}
+    assert f["column_count"] == 6
+    assert f["delimiter"] == ","
+    assert f["encoding"] == "utf-8"
+    assert isinstance(f["header_hash"], str) and len(f["header_hash"]) == 64
+    # No enrichment → register_hint is None, file has no year in name
+    assert f["register_hint"] is None
+    assert f["year_hint"] is None
+
+
+def test_manifest_register_hint(stats_path: Path, tmp_path: Path):
+    """When all enriched columns share a register_id, register_hint is set."""
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    # Simulate enrichment: set all columns to register_id=34
+    for ef in enriched:
+        for ec in ef.columns:
+            ec.register_id = 34
+    out_dir = tmp_path / "output"
+    manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
+    assert manifest.files[0].register_hint == 34
+
+
+def test_manifest_register_hint_mixed(stats_path: Path, tmp_path: Path):
+    """When enriched columns have mixed register_ids, register_hint is None."""
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    for ef in enriched:
+        for i, ec in enumerate(ef.columns):
+            ec.register_id = 34 if i % 2 == 0 else 99
+    out_dir = tmp_path / "output"
+    manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
+    assert manifest.files[0].register_hint is None
+
+
+def test_manifest_year_hint(tmp_path: Path, stats_path: Path):
+    """Year hint is extracted from filename containing a 4-digit year."""
+    stats = parse_stats(stats_path)
+    # Rename the file to include a year
+    stats.files[0].file_name = "LISA_2022.csv"
+    enriched = enrich(stats)
+    out_dir = tmp_path / "output"
+    manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
+    assert manifest.files[0].year_hint == 2022
 
 
 def test_categorical_values(stats_path: Path, tmp_path: Path):

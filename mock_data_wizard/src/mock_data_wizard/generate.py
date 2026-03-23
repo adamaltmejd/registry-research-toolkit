@@ -6,9 +6,10 @@ import csv
 import hashlib
 import io
 import json
+import re
 import time
 from dataclasses import dataclass
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
 import numpy as np
@@ -18,6 +19,8 @@ from .enrich import SPINE_VAR_IDS, EnrichedFile
 from .stats import ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
+_MANIFEST_SCHEMA_VERSION = "2"
+_YEAR_RE = re.compile(r"\d{4}")
 
 
 @dataclass
@@ -26,10 +29,19 @@ class OutputFile:
     relative_path: str
     row_count: int
     sha256: str
+    columns: list[str]
+    column_count: int
+    delimiter: str
+    encoding: str
+    header_hash: str
+    register_hint: int | None
+    year_hint: int | None
 
 
 @dataclass
 class Manifest:
+    schema_version: str
+    generated_at: str
     seed: int
     sample_pct: float
     output_dir: str
@@ -403,12 +415,29 @@ def generate(
                 f"  {t_total_file:.2f}s (generate {t_gen:.2f}s, write {t_write:.2f}s)"
             )
 
+        # Derive register_hint: use register_id if all enriched columns agree
+        reg_ids = {ec.register_id for ec in efile.columns if ec.register_id is not None}
+        register_hint = reg_ids.pop() if len(reg_ids) == 1 else None
+
+        # Derive year_hint from file name
+        year_match = _YEAR_RE.search(file_stats.file_name)
+        year_hint = int(year_match.group()) if year_match else None
+
+        header_hash = hashlib.sha256(",".join(sorted(col_names)).encode()).hexdigest()
+
         output_files.append(
             OutputFile(
                 file_name=file_stats.file_name,
                 relative_path=file_stats.relative_path,
                 row_count=n_rows,
                 sha256=hashlib.sha256(content_bytes).hexdigest(),
+                columns=col_names,
+                column_count=len(col_names),
+                delimiter=",",
+                encoding="utf-8",
+                header_hash=header_hash,
+                register_hint=register_hint,
+                year_hint=year_hint,
             )
         )
 
@@ -425,6 +454,8 @@ def generate(
 
     # Write manifest
     manifest = Manifest(
+        schema_version=_MANIFEST_SCHEMA_VERSION,
+        generated_at=datetime.now(timezone.utc).isoformat(),
         seed=seed,
         sample_pct=sample_pct,
         output_dir=str(output_dir),
@@ -434,6 +465,8 @@ def generate(
     manifest_path.write_text(
         json.dumps(
             {
+                "schema_version": manifest.schema_version,
+                "generated_at": manifest.generated_at,
                 "seed": manifest.seed,
                 "sample_pct": manifest.sample_pct,
                 "output_dir": manifest.output_dir,
@@ -443,6 +476,13 @@ def generate(
                         "relative_path": f.relative_path,
                         "row_count": f.row_count,
                         "sha256": f.sha256,
+                        "columns": f.columns,
+                        "column_count": f.column_count,
+                        "delimiter": f.delimiter,
+                        "encoding": f.encoding,
+                        "header_hash": f.header_hash,
+                        "register_hint": f.register_hint,
+                        "year_hint": f.year_hint,
                     }
                     for f in manifest.files
                 ],
