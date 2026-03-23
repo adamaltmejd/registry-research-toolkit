@@ -239,7 +239,7 @@ def test_remove_stale_keeps_current_files(tmp_path: Path):
 # ---------------------------------------------------------------------------
 
 
-def _enrich_with_spine(stats, var_id_map: dict[str, str] | None = None):
+def _enrich_with_spine(stats, var_id_map: dict[str, int] | None = None):
     """Enrich stats and optionally set var_ids for spine columns."""
     enriched = enrich(stats)
     if var_id_map:
@@ -253,7 +253,7 @@ def _enrich_with_spine(stats, var_id_map: dict[str, str] | None = None):
 def test_spine_consistency(spine_stats_path: Path, tmp_path: Path):
     """Shared birth-invariant column has identical values per individual across files."""
     stats = parse_stats(spine_stats_path)
-    enriched = _enrich_with_spine(stats, {"Kon": "44"})
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
     out_dir = tmp_path / "output"
     generate(stats, enriched, seed=42, output_dir=out_dir)
 
@@ -271,7 +271,7 @@ def test_spine_consistency(spine_stats_path: Path, tmp_path: Path):
 def test_non_spine_column_independent(spine_stats_path: Path, tmp_path: Path):
     """Columns without a spine var_id are generated normally."""
     stats = parse_stats(spine_stats_path)
-    enriched = _enrich_with_spine(stats, {"Kon": "44"})
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
     out_dir = tmp_path / "output"
     generate(stats, enriched, seed=42, output_dir=out_dir)
 
@@ -283,7 +283,7 @@ def test_non_spine_column_independent(spine_stats_path: Path, tmp_path: Path):
 def test_spine_deterministic(spine_stats_path: Path, tmp_path: Path):
     """Same seed produces identical spine output."""
     stats = parse_stats(spine_stats_path)
-    enriched = _enrich_with_spine(stats, {"Kon": "44"})
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
 
     m1 = generate(stats, enriched, seed=42, output_dir=tmp_path / "r1")
     m2 = generate(stats, enriched, seed=42, output_dir=tmp_path / "r2")
@@ -314,7 +314,7 @@ def test_spine_authority_uses_largest_population(
 ):
     """Spine uses the authority file's distribution (pop.csv has more individuals)."""
     stats = parse_stats(spine_stats_path)
-    enriched = _enrich_with_spine(stats, {"Kon": "44"})
+    enriched = _enrich_with_spine(stats, {"Kon": 44})
     out_dir = tmp_path / "output"
     generate(stats, enriched, seed=42, output_dir=out_dir)
 

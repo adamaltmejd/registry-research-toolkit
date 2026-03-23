@@ -254,7 +254,7 @@ def generate(
     spine: dict[str, dict] = {}
     spine_id_cols: dict[str, str] = {}
 
-    col_var_ids: dict[str, str] = {}
+    col_var_ids: dict[str, int] = {}
     for ef in enriched:
         for ec in ef.columns:
             if ec.var_id and ec.column_name not in col_var_ids:

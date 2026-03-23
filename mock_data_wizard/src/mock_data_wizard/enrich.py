@@ -16,7 +16,7 @@ from .stats import ColumnStats, ProjectStats
 
 # Birth-invariant regmeta var_ids eligible for population spine.
 # These attributes are fixed at birth and must be consistent per individual.
-SPINE_VAR_IDS = frozenset({"44", "1378", "256", "257"})
+SPINE_VAR_IDS = frozenset({44, 1378, 256, 257})
 # 44 = Kön, 1378 = Födelseår, 256 = Födelselän, 257 = Födelseland
 
 
@@ -29,8 +29,8 @@ class EnrichedColumn:
     n_distinct: int
     stats: dict[str, Any]
     # Enrichment from regmeta
-    register_id: str | None = None
-    var_id: str | None = None
+    register_id: int | None = None
+    var_id: int | None = None
     variable_name: str | None = None
     value_codes: dict[str, str] | None = None  # code -> label
 
@@ -107,7 +107,7 @@ def enrich(
         value_codes: dict[str, dict[str, str]] = {}
         if conn is not None:
             resolved = _bulk_resolve(conn, all_col_names, register)
-            cat_var_ids: set[str] = set()
+            cat_var_ids: set[int] = set()
             for file_stats in stats.files:
                 for col in file_stats.columns:
                     rv = resolved.get(col.column_name.lower())
@@ -188,8 +188,8 @@ def _check_value_code_drift(enriched_files: list[EnrichedFile]) -> list[str]:
 
 @dataclass
 class _ResolvedVar:
-    register_id: str
-    var_id: str
+    register_id: int
+    var_id: int
     variable_name: str
 
 
@@ -239,22 +239,22 @@ def _bulk_resolve(
 
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
-    var_ids: set[str],
-) -> dict[str, dict[str, str]]:
+    var_ids: set[int],
+) -> dict[int, dict[str, str]]:
     """Fetch value codes for a set of var_ids. Returns var_id -> {code: label}.
 
-    For each var_id, picks the CVID with the most value items.
+    For each var_id, picks the CVID with the most value codes.
     """
     if not var_ids:
         return {}
 
-    # Find best CVID per var_id (the one with the most value items)
+    # Find best CVID per var_id (the one with the most value codes)
     var_list = sorted(var_ids)
     placeholders = ",".join("?" for _ in var_list)
     best_cvids = conn.execute(
-        "SELECT vi.var_id, vi.cvid, COUNT(val.value_item_id) as cnt "
+        "SELECT vi.var_id, vi.cvid, COUNT(*) as cnt "
         "FROM variable_instance vi "
-        "JOIN value_item val ON vi.cvid = val.cvid "
+        "JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid "
         f"WHERE vi.var_id IN ({placeholders}) "
         "GROUP BY vi.var_id, vi.cvid "
         "ORDER BY vi.var_id, cnt DESC",
@@ -262,7 +262,7 @@ def _bulk_fetch_value_codes(
     ).fetchall()
 
     # Pick best CVID per var_id
-    var_to_cvid: dict[str, str] = {}
+    var_to_cvid: dict[int, int] = {}
     for r in best_cvids:
         if r["var_id"] not in var_to_cvid:
             var_to_cvid[r["var_id"]] = r["cvid"]
@@ -270,25 +270,27 @@ def _bulk_fetch_value_codes(
     if not var_to_cvid:
         return {}
 
-    # Fetch all value items for the selected CVIDs in one query
+    # Fetch all value codes for the selected CVIDs in one query
     cvid_list = sorted(set(var_to_cvid.values()))
     placeholders = ",".join("?" for _ in cvid_list)
     value_rows = conn.execute(
-        "SELECT cvid, vardekod, vardebenamning "
-        f"FROM value_item WHERE cvid IN ({placeholders}) "
-        "ORDER BY cvid, vardekod",
+        "SELECT cvc.cvid, vc.vardekod, vc.vardebenamning "
+        "FROM cvid_value_code cvc "
+        "JOIN value_code vc ON cvc.code_id = vc.code_id "
+        f"WHERE cvc.cvid IN ({placeholders}) "
+        "ORDER BY cvc.cvid, vc.vardekod",
         cvid_list,
     ).fetchall()
 
     # Group by CVID, filtering out SCB type-hint codes
-    cvid_to_codes: dict[str, dict[str, str]] = {}
+    cvid_to_codes: dict[int, dict[str, str]] = {}
     for r in value_rows:
         if r["vardekod"] not in _SCB_TYPE_HINTS:
             cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
 
     # Map back to var_id (skip empty or single-code sets — a lone code
     # is never a useful categorical universe)
-    result: dict[str, dict[str, str]] = {}
+    result: dict[int, dict[str, str]] = {}
     for var_id, cvid in var_to_cvid.items():
         codes = cvid_to_codes.get(cvid)
         if codes and len(codes) > 1:
