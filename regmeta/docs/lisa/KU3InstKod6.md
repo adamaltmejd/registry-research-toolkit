@@ -2,11 +2,10 @@
 variable: KU3InstKod6
 display_name: "Institutionell sektorkod (företag, tredje största förvärvskälla)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Institutionell sektorkod (företag, tredje största förvärvskälla) KU3InstKod6**
 

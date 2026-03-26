@@ -2,12 +2,11 @@
 variable: BostBidrU
 display_name: "Bostadsbidrag (uppdelat på huvudsökande och medsökande)"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bostadsbidrag (uppdelat på huvudsökande och medsökande) BostBidrU**
 
@@ -32,7 +31,7 @@ Bostadstillägg betalas ut till de med sjuk- eller aktivitetsersättning och är
 Fram till och med 1994 är det den egna kommunen som bestämmer högsta möjliga kommunala bostadstillägg och tilläggets storlek varierar mellan kommunerna. Beräkningen av hur inkomsten påverkar det
 
 
-153 För information om familjebegreppet se objektet Familj [[FamId]].
+153 För information om familjebegreppet se objektet Familj ([[FamId]]).
 
 kommunala bostadstillägg sker däremot enligt samma regler över hela landet.
 

@@ -2,11 +2,10 @@
 variable: SEI
 display_name: "Socioekonomisk indelning"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Socioekonomisk indelning SEI**
 
@@ -14,7 +13,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 *Socioekonomisk kod enligt Socioekonomisk indelning 1982:4.*
 
-*Se "Yrkesklassificeringar i FoB 85 enligt Nordisk yrkesklassificering (NYK) och Socioekonomisk indelning [[SEI]]" (MIS 1989:5).*
+*Se "Yrkesklassificeringar i FoB 85 enligt Nordisk yrkesklassificering (NYK) och Socioekonomisk indelning (SEI)" (MIS 1989:5).*
 
 SEI-kodningen är huvudsakligen baserad på den förvärvsarbetande befolkningens yrkesuppgift till Folk- och Bostadsräkningen 1990 (FoB 90) och avser i princip november månad 1990.
 

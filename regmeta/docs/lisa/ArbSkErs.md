@@ -2,12 +2,11 @@
 variable: ArbSkErs
 display_name: "Arbetsskadesjukpenning, skattepliktig"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsskadesjukpenning, skattepliktig ArbSkErs**
 
@@ -35,7 +34,7 @@ Från och med *1/7 1993* är Arbetsskadesjukpenning helt samordnad med sjukförs
 
 Enligt särskilda övergångsregler bedöms skador som inträffat före 1/1 1993 och som anmälts före 1/7 1993 enligt de tidigare bestämmelserna.
 
-Om skadan är förorsakad av olycksfall i arbetet ges fr.o.m. *1/7 1993*, oavsett vem som vållat skadan, 10 procent ersättning utöver sjukpenningen från Trygghetsförsäkring för arbetsskada, TFA, dock tidigast fr.o.m. 91:a dagen efter olyckan. Om skadan klassas som arbetsskada och det kan bevisas att arbetsgivaren vållat skadan (av Vållandenämnd) ges full ersättning från TFA för inkomstförlusten inklusive karensdagen. Bevisbördan ligger helt och hållet på arbetstagaren. Ersättningen från TFA redovisas i variabeln *Ersättning från AGS och TFA* [[AGSTFA]].
+Om skadan är förorsakad av olycksfall i arbetet ges fr.o.m. *1/7 1993*, oavsett vem som vållat skadan, 10 procent ersättning utöver sjukpenningen från Trygghetsförsäkring för arbetsskada, TFA, dock tidigast fr.o.m. 91:a dagen efter olyckan. Om skadan klassas som arbetsskada och det kan bevisas att arbetsgivaren vållat skadan (av Vållandenämnd) ges full ersättning från TFA för inkomstförlusten inklusive karensdagen. Bevisbördan ligger helt och hållet på arbetstagaren. Ersättningen från TFA redovisas i variabeln *Ersättning från AGS och TFA* ([[AGSTFA]]).
 
 Den *1/7 2002* ändras bevisregeln i Lagen om arbetsskadeförsäkringen. Till skillnad från tidigare bevisregel med uppdelning av bedömningen i två led görs nu en sammanfattande bedömning.
 
@@ -43,4 +42,4 @@ Den *1/1 2003* införs en särskild arbetsskadesjukpenning som syftar till att v
 
 Den *1/7 2008* införs nya regler i lagen om allmän försäkring vad gäller rätten till sjukpenning. Där fastslås att sjukpenning på grund av godkänd arbetsskada inte har någon tidsbegränsning.
 
-*För förändringar av ersättningsnivå efter 30/6 1993 se under Sjukpenning*  [[SjukPP]].
+*För förändringar av ersättningsnivå efter 30/6 1993 se under Sjukpenning*  ([[SjukPP]]).

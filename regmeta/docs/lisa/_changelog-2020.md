@@ -2,9 +2,8 @@
 display_name: "Förändringar i LISA 2020"
 tags:
   - type/changelog
-source: lisa_2020-forandringar.md
+source: "lisa_2020-forandringar.md"
 ---
-
 
 # 2022-02-28
 # **Förändringar i LISA 2020 och kompletteringar i tidigare årgångar föranlett av dessa**
@@ -50,7 +49,7 @@ Smittbärarpenning är inte en tillfällig ersättning med anledning av coronavi
 | Ersättning till riskgrupp, antal bruttodagar                                                                          | Riskgrupp_Bdag        | FK    |
 | Ersättning till riskgrupp, antal nettodagar                                                                           | Riskgrupp_Ndag        | FK    |
 ## **Sammansatta variabler**
-Variabeln *SocInk* - innehåller inkomster som avser annan sysselsättning än aktivt arbetslivsdeltagande, inkomster som dessutom i princip utesluter möjligheten att arbeta heltid samtidigt som inkomsten erhålls. 2020 ingår även ersättning för karens och ersättning för riskgruppen.
+Variabeln *[[SocInk]]* - innehåller inkomster som avser annan sysselsättning än aktivt arbetslivsdeltagande, inkomster som dessutom i princip utesluter möjligheten att arbeta heltid samtidigt som inkomsten erhålls. 2020 ingår även ersättning för karens och ersättning för riskgruppen.
 ## **Inkomster intjänade i annat nordiskt land**
 Inkomst- och taxeringsregistret (IoT) och den officiella inkomststatistiken omfattar i huvudsak inkomster från arbete och olika transfereringar i Sverige. Inkomst som svenskar får från utlandet saknas därför i stor utsträckning i statistiken. Denna täckningsbrist påverkar inkomststatistiken i stort, men i synnerhet statistiken för kommuner som ligger nära grannländerna, där en förhållandevis stor andel av befolkningen pendlar till arbete över en riksgräns – det vill säga bor i Sverige men arbetar i grannlandet.
 IoT har nu kompletterats med nordiska inkomster som inhämtats från Skatteverket.
@@ -63,25 +62,25 @@ Detta dokument beskriver kvaliteten på indata samt uppdateringen av IoT med des
 |    | Klartext                                                                                                   | Variabel           | År        |
 |----|------------------------------------------------------------------------------------------------------------|--------------------|-----------|
 | NY | Deklarerad lön – inkl. lön intjänat i annat nordiskt land                                                  | DekLon_INKLGP      | 2011–2019 |
-|    | Deklarerad lön – från 2020 ingår lön intjänat i annat nordiskt land                                        | DekLon             | 1991–2020 |
+|    | Deklarerad lön – från 2020 ingår lön intjänat i annat nordiskt land                                        | [[DekLon]]             | 1991–2020 |
 | NY | Lön, utländsk beskattning (annat nordiskt land)                                                            | TTJLONU            | 2011–2020 |
 | NY | Sammanräknad deklarerad förvärvsinkomst – inkl. lön intjänas i<br>annat nordiskt land                      | CSFVI_INKLGP       | 2011–2019 |
 | NY | Sammanräknad deklarerad förvärvsinkomst –från 2020 ingår lön<br>intjänas i annat nordiskt land             | CSFVI              | 1990–2020 |
 | NY | Pensioner, utländsk beskattning (annat nordiskt land)                                                      | TPENSAU            | 2011–2020 |
 | NY | Summa inkomst av pensioner – inkl. pension från annat nordiskt<br>land                                     | AldPens_INKLGP     | 2011–2019 |
-|    | Summa inkomst av pensioner - från 2020 ingår pension från annat<br>nordiskt land                           | AldPens            | 1990–2020 |
+|    | Summa inkomst av pensioner - från 2020 ingår pension från annat<br>nordiskt land                           | [[AldPens]]            | 1990–2020 |
 | NY | Disponibel inkomst per konsumtionsenhet för familj - inkl. lön<br>intjänat i annat nordiskt land           | DispInkKE_INKLGP   | 2011–2019 |
-|    | Disponibel inkomst per konsumtionsenhet för familj - från 2020<br>ingår lön intjänat i annat nordiskt land | DispInkKE          | 1998–2020 |
+|    | Disponibel inkomst per konsumtionsenhet för familj - från 2020<br>ingår lön intjänat i annat nordiskt land | [[DispInkKE]]          | 1998–2020 |
 | NY | Disponibel inkomst per konsumtionsenhet för familj - inkl. lön<br>intjänat i annat nordiskt land           | DispInkKE04_INKLGP | 2011–2019 |
-|    | Disponibel inkomst per konsumtionsenhet för familj - från 2020<br>ingår lön intjänat i annat nordiskt land | DispInkKE04        | 2005–2020 |
+|    | Disponibel inkomst per konsumtionsenhet för familj - från 2020<br>ingår lön intjänat i annat nordiskt land | [[DispInkKE04]]        | 2005–2020 |
 |    | Klartext                                                                                                      | Variabel             | År        |
 |----|---------------------------------------------------------------------------------------------------------------|----------------------|-----------|
 | NY | Disponibel inkomst per konsumtionsenhet för hushållet – inkl. lön<br>intjänat i annat nordiskt land           | DispInkKEHB04_INKLGP | 2011–2019 |
 |    | Disponibel inkomst per konsumtionsenhet för hushållet - från 2020<br>ingår lön intjänat i annat nordiskt land | DispInkKEHB04        | 2011–2020 |
 | NY | Disponibel inkomst (individens delkomponent) - inkl. lön intjänat i<br>annat nordiskt land                    | DispInk04_INKLGP     | 2011–2019 |
-|    | Disponibel inkomst (individens delkomponent) - från 2020 ingår lön<br>intjänat i annat nordiskt land          | DispInk04            | 2004–2020 |
+|    | Disponibel inkomst (individens delkomponent) - från 2020 ingår lön<br>intjänat i annat nordiskt land          | [[DispInk04]]            | 2004–2020 |
 | NY | Disponibel inkomst för familj - inkl. lön intjänat i annat nordiskt<br>land                                   | DispInkFam04_INKLGP  | 2011–2019 |
-|    | Disponibel inkomst för familj - från 2020 ingår lön intjänat i annat<br>nordiskt land                         | DispInkFam04         | 2004–2020 |
+|    | Disponibel inkomst för familj - från 2020 ingår lön intjänat i annat<br>nordiskt land                         | [[DispInkFam04]]         | 2004–2020 |
 | NY | Disponibel inkomst för hushållet- inkl. lön intjänat i annat nordiskt<br>land                                 | DispInkHB04_INKLGP   | 2011–2019 |
 |    | Disponibel inkomst för hushållet - från 2020 ingår lön intjänat i<br>annat nordiskt land                      | DispInkHB04          | 2011–2020 |
 # **Övrigt**

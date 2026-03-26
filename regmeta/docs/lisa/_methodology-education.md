@@ -1,9 +1,9 @@
 ---
 display_name: "Utbildningsvariabler — Metodik och källor"
 tags:
-  - type/methodology
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/methodology
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
 ### **Utbildningsvariabler**
@@ -15,6 +15,7 @@ När alla utbildningar kodats enligt SUN 2000 läggs uppgifterna in i en fil som
 För att ta fram UREG:s population matchas de valda posterna mot registret över den folkbokförda befolkningen vid årsskiftet. Fr.o.m. version 2008 av UREG innehåller registret även uppgift om högsta utbildning för personer äldre än 74 år.
 
 Uppgifterna om utbildning från källregistren kodas enligt Svensk utbildningsnomenklatur (SUN 2000). Därefter läggs alla utbildningar i utbildningsregistrets s.k. bruttofil. Med hjälp av ett prioriteringsprogram väljs därefter högsta utbildning för varje folkbokförd person aktuellt år. Fr.o.m. version 2008 av UREG innehåller registret även uppgift om högsta utbildning för personer äldre än 74 år. Har en person flera utbildningar på samma nivå, väljs den senaste.
+
 
 #### **Källor som används eller har använts vid uppdateringen av UREG:**
 
@@ -78,7 +79,7 @@ Uppgifterna om utbildning från källregistren kodas enligt Svensk utbildningsno
   - *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
 - Migrationsverkets register över personer som fått uppehållstillstånd *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
 - Registret över sökande till Komvux *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
-- SFI, grundutbildning för vuxna *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
+- [[SFI]], grundutbildning för vuxna *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
 
 Då variabelvärdena i statistiken över befolkningens utbildning baseras på en mängd olika statistikkällor är den totala kvaliteten en funktion av dessa statistikkällors kvalitet, se nedan om evalveringar av UREG.
 
@@ -89,6 +90,7 @@ De uppgifter som främst saknas är uppgift om utrikes föddas utbildning utanf�
 För utrikes födda invandrare har utbildningsdata till UREG hämtats från Folk- och bostadsräkningen 1970 och Folk- och bostadsräkningen 1990. År 1995 riktades en enkät till dem som invandrat 1990-1994. Fr.o.m. 1999 hämtas uppgifterna in med hjälp av en årlig enkät till nyinvandrade utrikes födda som saknar uppgift om utbildning i UREG.
 
 För personer som invandrat efter den 1 november 1990 och fram till och med 1993 finns således uppgift om den utbildning de skaffat sig innan de invandrade, först från och med årgång 1994. För dem som invandrat efter 1994 finns information om den utbildning de skaffat sig innan de kom hit, först från och med 1999.
+
 
 #### **1990:**
 
@@ -103,6 +105,7 @@ I evalveringsstudien har jämförelser mellan UREG och det s.k. sanna registret 
 - När det gäller utbildningsnivå var andelen rätt klassificerade 83 procent (motsvarande andel i FoB-90 var 80 procent). När det gäller utbildningens inriktning var andelen rätt klassificerade 86 procent (motsvarande andel i FoB-90 var 84 procent).
 - Andelen uppgift saknad var låg (1,9 procent) jämfört med FoB-90 (5 procent) i åldersgruppen 16–64 år.
 
+
 #### **2002:**
 
 Med anledning av de stora förändringarna av UREG till version 2000 genomfördes en evalvering av uppgifterna om högsta genomförda utbildning för individerna i UREG version 2002 (2003-01-01). En mer detaljerad beskrivning av resultaten från evalveringen finns i publikationen, *"Bakgrundsfakta inom området befolkning och välfärd 2006:4"*.
@@ -113,6 +116,7 @@ Med anledning av de stora förändringarna av UREG till version 2000 genomförde
 - Den vanligaste orsaken till fel i UREG enligt evalveringsstudien var att den "riktiga" högsta utbildningen inte fanns med bland UREG:s källor. Detta fel omfattade tre fjärdedelar av de felaktigt
 
 klassificerade i UREG. En femtedel av de felaktigt klassificerade utgjordes av att informationen om de avklarade utbildningarna var ofullständig.
+
 
 #### **2014**
 
@@ -127,6 +131,7 @@ Några viktiga resultat från studien var:
   - Eftergymnasial nivå 53 procent
 - En relativt stor andel av bortfallet bestod av personer som hade invandrat för att arbeta eller studera, vilka generellt sett har en hög utbildningsnivå. Detta bidrog till att ungefär hälften av bortfallet fick en eftergymnasial utbildningsnivå vid imputeringarna.
 
+
 #### **Förändringar i UREG i kronologisk ordning 1990-1999**
 
 *SCB strävar hela tiden efter att öka UREG:s kvalitet, t.ex. genom att nya källor kan användas. Detta gör att stor försiktighet måste iakttas vid studier av tidsserier. Nedan beskrivs förändringar i Utbildningsregistret i kronologisk ordning.*
@@ -138,7 +143,7 @@ Några viktiga resultat från studien var:
 - Uppgifter om avklarade motsvarande minst 30 "nya" högskolepoäng (tidigare minst 20), insamlade via LADOK, har sedan årgång 1992 använts som källa i UREG. Täckningen i denna insamling har alltsedan 1993 blivit bättre och bättre, så effekterna av denna nya källa har successivt blivit större. (Ca hälften av den ökning som skett för 'Kort eftergymnasial utbildning' under perioden 1993–98 kan förklaras av avklarade högskolepoäng utan examen.) Fr.o.m. årgång 2000 ingår summerade högskolepoäng i registret (se nedan)
 - Våren 1995 genomfördes en enkät till drygt 100 000 personer födda utomlands vilka saknade uppgift i UREG. Årgångarna fr.o.m. 1994 har uppdaterats med dessa uppgifter, vilket höjt registrets kvalitet ytterligare.
 - Vid uppdateringen av årgång 1995 lades avgångna från grundskolans årskurs 9 från åren 1988–1995 in i UREG bruttofil
-- Fr.o.m. årgång 1995 används administrativa uppgifter om utrikes föddas utbildningsbakgrund från Svenska för invandrare [[SFI]]. Källan används p.g.a. kvalitetsbrister endast om uppgift om annan utbildning saknas, men är en av källorna för utrikes föddas utbildningsbakgrund
+- Fr.o.m. årgång 1995 används administrativa uppgifter om utrikes föddas utbildningsbakgrund från Svenska för invandrare ([[SFI]]). Källan används p.g.a. kvalitetsbrister endast om uppgift om annan utbildning saknas, men är en av källorna för utrikes föddas utbildningsbakgrund
 - I årgång 1997 ingår utbildningsdata för arbetssökande från Arbetsförmedlingens s.k. Datalager åren 1994 och 1995 samt november 1996. Uppgiften inkluderas i UREG endast om annan utbildningsuppgift för personen saknas
 - I årgång 1997 ingår ett fåtal utbildningsdata från Statens Invandrarverk (SIV), STAMM-SYSTEMET åren 1995–1997 (uppgifter om personer som fått uppehållstillstånd). Uppgiften finns med endast om annan utbildningsuppgift för personen saknas. Uppgifter om utbildning och utbildningslängd är inte obligatoriska i SIV:s STAMM-system. Detta medför att endast ett fåtal personer har uppgifter om sin utbildning
 - Fr.o.m. årgång 1997 finns utbildningsgrupper (SUNGrupper) inlagda i UREG
@@ -171,6 +176,8 @@ För en fördjupad studie av tidsseriebrottet med kvantitativa mått på förän
 
 [https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf) [/metodstudieureg.pdf](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf)
 
+
+
 #### **Förändringar i källorna 2002-2017**
 
 - Vid uppdateringen av årgång 2002 inhämtades uppgifter om militär utbildning från Försvarsmaktens personaladministrativa register (all militär personal anställd i april 2003)
@@ -195,7 +202,7 @@ För en fördjupad studie av tidsseriebrottet med kvantitativa mått på förän
 - Inför version 2006 upprättades den ackumulerade bruttofilens personnummer med hjälp av RTB-data. En analys visade att c:a 1 900 personer kommer att via sitt uppdaterade personnummer erhålla en utbildningsuppgift i version 2006. De flesta av dessa personers högsta utbildning är ospecificerade utbildningar på grundskole- och gymnasienivå
 - Under våren 2007 skickades den årliga enkäten "Utbildning i annat land än Sverige" till de utrikes födda i åldern 20–24 år och 45–59 år som inte fick enkäten under hösten 2006. Enkäten skickades till knappt 17 000 personer. Andelen svar uppgick till 56 procent
 - Hösten 2007 skickades den ordinarie enkäten "Utbildning i annat land än Sverige" till 56 991 nyinvandrade utrikes födda i åldern 20-59 år. Andelen svar uppgick till 54 procent
-- Till version 2007 av UREG har Arbetsförmedlingen skickat uppgifter om inskrivna vid Arbetsförmedlingen och deras utbildningsbakgrund som avser helåret 2007. Tidigare år har Arbetsförmedlingen skickat uppgifter om inskrivna vid Arbetsförmedlingen under november månad. Registret över registrerade i svenska för invandrare [[SFI]] har levererat två läsår (2005/06 och 2006/07) till uppdateringen av UREG:s version 2007. Dessa två förändringar i källregistren har medfört att antalet personer med uppgift saknas som högsta utbildning inte ökat i årets version av UREG
+- Till version 2007 av UREG har Arbetsförmedlingen skickat uppgifter om inskrivna vid Arbetsförmedlingen och deras utbildningsbakgrund som avser helåret 2007. Tidigare år har Arbetsförmedlingen skickat uppgifter om inskrivna vid Arbetsförmedlingen under november månad. Registret över registrerade i svenska för invandrare ([[SFI]]) har levererat två läsår (2005/06 och 2006/07) till uppdateringen av UREG:s version 2007. Dessa två förändringar i källregistren har medfört att antalet personer med uppgift saknas som högsta utbildning inte ökat i årets version av UREG
 - Till version av 2008 av UREG tillkom en ny källa, Försvarsmaktens Utbildningsenhet, som har rapporterat in uppgifter om examinerade från specialistofficersutbildningen (ny utbildning fr.o.m. läsåret 2007/08) och den taktiska utbildningen (avser avslutade utbildningar för de två senaste läsåren, 2006/07 och 2007/08). Antalet examinerade från specialistofficersutbildningen uppgick till 280 och från den taktiska utbildningen till 350
 - Under hösten 2008 genomfördes en ordinarie invandrarenkät, "Utbildning i annat land än Sverige". Enkäten skickades ut till 59 583 nyinvandrade utrikes födda i åldern 20–59 år. Andelen svar efter reduktion för postreturer, avlidna, emigrerade och vägrare uppgick till 53,2 procent
 - Till version 2008 av UREG har det skett en omkodning av behörighetskoder i infilen från Socialstyrelsen, vilket inneburit att 1 928 personer gått från behörighetskoden 65000 till 66308 och 694 personer har gått från behörighetskoden 65030 till 66308. Denna förändring innebär att personerna höjer utbildningsnivån från 527
@@ -268,6 +275,8 @@ till 537. Det är företrädesvis äldre sjuksköterskor med utländsk utbildnin
 - Kompletterande utbildningar (KU) har inte levererat några uppgifter till UREG 2017 då utbildningsformen upphört och övergått till KKVoch YH-utbildning
 - Försvarsmakten har inte rapporterat några examinerade från specialistofficersutbildningen från höstterminen 2016 till version 2017 av UREG. Omkring 250 personer har tidigare år examineras från denna utbildning
 
+
+
 #### **Validering**
 
 Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetenser och ge ett formellt erkännande som är gångbart på arbetsmarknaden eller inför vidare studier och kompletterande insatser.
@@ -322,3 +331,8 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 | 2017 | 298 626 |
 
 *Det är under inledningsfasen – när nya åtgärdsprogram införs – som problemen med felregistrering är som störst. Betydelsen av dessa felregistreringar torde dock minska när olika åtgärdstyper aggregeras till grupper såsom exempelvis Åtgärdsstuderande.*
+
+
+#### **2002-09-19**
+
+Ändringar av kommunnamn. I kommunnamnet Upplands Väsby har bindestrecket tagits bort from 2002-09-19.

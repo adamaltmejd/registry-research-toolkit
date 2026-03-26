@@ -2,12 +2,11 @@
 variable: RehabTyp
 display_name: "Förekomst av rehabiliteringsersättning"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Förekomst av rehabiliteringsersättning RehabTyp**
 
@@ -19,4 +18,4 @@ Trots sänkt ersättning 1993 ligger den fortfarande högre än ersättningen fr
 
 Från och med 1996 är ersättningsnivån densamma som nivån i sjukpenningen. Detta kan ha ökat risken för att rehabiliteringspenning inte registreras istället för sjukpenning trots att arbetslivsinriktad rehabiliteringsåtgärd pågår. Rehabiliteringspenning blir därmed ett svagare mått på arbetslivsriktade rehabiliteringsåtgärder.
 
-Rehabiliteringsersättningen kan helt eller delvis döljas av andra ersättningar, se under *Rehabiliteringsersättning* [[RehabErs]].
+Rehabiliteringsersättningen kan helt eller delvis döljas av andra ersättningar, se under *Rehabiliteringsersättning* ([[RehabErs]]).

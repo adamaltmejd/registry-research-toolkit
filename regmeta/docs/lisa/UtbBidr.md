@@ -1,13 +1,12 @@
 ---
 variable: UtbBidr
-display_name: Aktivitetsstöd/Utbildningsbidrag
+display_name: "Aktivitetsstöd/Utbildningsbidrag"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Aktivitetsstöd/Utbildningsbidrag UtbBidr**
 
@@ -15,7 +14,7 @@ UthBidr
 
 Beloppet anges i hundratals kronor.
 
-Under variabeln Aktivitetsstöd/utbildningsbidrag redovisas, med några undantag, de ersättningar som ges i samband med de arbetsmarknadspolitiska program som i LISA finns redovisade under begreppet *Åtgärdsstudier*. Undantaget är Arbetslivsutveckling som ersätts med Arbetsutvecklingsbidrag, Kommunalt ungdomsprogram för ungdomar under 20 år (KUP) som ersätts av kommunen, samt Offentligt tillfälligt arbete [[OTA]] och Aktivare användning av arbetslöshetsersättning (PROJEKT) som ersätts av arbetslöshetsförsäkringen. Personer under 25 år som deltar i ett arbetsmarknadspolitiskt program och inte har rätt till ersättning från en A-kassa får utvecklingsersättning istället för aktivitetsstöd.
+Under variabeln Aktivitetsstöd/utbildningsbidrag redovisas, med några undantag, de ersättningar som ges i samband med de arbetsmarknadspolitiska program som i LISA finns redovisade under begreppet *Åtgärdsstudier*. Undantaget är Arbetslivsutveckling som ersätts med Arbetsutvecklingsbidrag, Kommunalt ungdomsprogram för ungdomar under 20 år (KUP) som ersätts av kommunen, samt Offentligt tillfälligt arbete ([[OTA]]) och Aktivare användning av arbetslöshetsersättning (PROJEKT) som ersätts av arbetslöshetsförsäkringen. Personer under 25 år som deltar i ett arbetsmarknadspolitiskt program och inte har rätt till ersättning från en A-kassa får utvecklingsersättning istället för aktivitetsstöd.
 
 Även stöd för start av näringsverksamhet (tidigare starta-eget-bidrag) redovisas sedan 1992 under Aktivitetsstöd/utbildningsbidrag.
 
@@ -47,7 +46,7 @@ Från och med den *5/7 1993* är dagpenningen 239 kr – 564 kr. Utbildningsbidr
 
 *1994–1995* är dagpenningen 245 kr – 564 kr.
 
-Under *andra halvåret 1994* kan den som inte tillhör en arbetslöshetskassa få högre dagpenning. Detta under förutsättning att hen uppfyller villkoren för rätt till inkomstrelaterad dagpenning i KAS. Detsamma gäller den som har starta-eget-bidrag.
+Under *andra halvåret 1994* kan den som inte tillhör en arbetslöshetskassa få högre dagpenning. Detta under förutsättning att hen uppfyller villkoren för rätt till inkomstrelaterad dagpenning i [[KAS]]. Detsamma gäller den som har starta-eget-bidrag.
 
 Den *1/1 1996* sänks ersättningsnivån till 75 procent av inkomst före arbetslöshet. Dagpenningen är nu 230 kr – 564 kr.
 

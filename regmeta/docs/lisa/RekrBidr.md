@@ -1,13 +1,12 @@
 ---
 variable: RekrBidr
-display_name: Rekryteringsbidrag
+display_name: "Rekryteringsbidrag"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Rekryteringsbidrag RekrBidr**
 
@@ -27,6 +26,6 @@ I slutet av juni 2004 startade satsningen med utökat rekryteringsbidrag för ko
 
 År 2006 upphör rekryteringsbidraget. Ett begränsat antal studerande fick under 2007 och 2008 rekryteringsbidrag med stöd av särskilda övergångsregler.
 
-Rekryteringsbidraget ingår även i variabeln Stud och SocInk för åren 2003-2008.
+Rekryteringsbidraget ingår även i variabeln [[Stud]] och [[SocInk]] för åren 2003-2008.
 
 59 Det högre bidragsbeloppet erhåller den som under de senaste tolv månaderna haft en inkomst som överstiger ett visst belopp.

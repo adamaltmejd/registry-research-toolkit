@@ -2,11 +2,10 @@
 variable: KU2Faman
 display_name: "Fåmansaktiebolagsdelägare, näst största förvärvskälla"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Fåmansaktiebolagsdelägare, näst största förvärvskälla KU2Faman**
 

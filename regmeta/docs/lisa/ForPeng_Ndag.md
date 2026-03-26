@@ -2,12 +2,11 @@
 variable: ForPeng_Ndag
 display_name: "Föräldrapenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Föräldrapenning, antal nettodagar ForPeng_Ndag**
 

@@ -2,11 +2,10 @@
 variable: JobbByte
 display_name: "Bytt arbetsgivare"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bytt arbetsgivare JobbByte**
 

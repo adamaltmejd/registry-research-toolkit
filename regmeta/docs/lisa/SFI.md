@@ -2,11 +2,10 @@
 variable: SFI
 display_name: "Svenska för invandrare"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 - *Uppgiften tas med endast om ingen med bättre kvalitet finns.*
 - Migrationsverkets register över personer som fått uppehållstillstånd *Uppgiften tas med endast om ingen med bättre kvalitet finns.*

@@ -2,11 +2,10 @@
 variable: Sun2000Inr
 display_name: "Utbildningsinriktning, högsta"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utbildningsinriktning, högsta SUN2000Inr**
 

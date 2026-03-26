@@ -2,11 +2,10 @@
 variable: ForvErsNetto
 display_name: "Förvärvsinkomst och arbetsrelaterade ersättningar, inklusive underskott av näringsverksamhet"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Förvärvsinkomst och arbetsrelaterade ersättningar, inklusive underskott av näringsverksamhet ForvErsNetto**
 

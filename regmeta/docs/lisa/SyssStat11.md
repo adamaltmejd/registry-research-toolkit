@@ -2,11 +2,10 @@
 variable: SyssStat11
 display_name: "Sysselsättningsstatus (november månad), enligt justerad metod 2011"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Sysselsättningsstatus (november månad), enligt justerad metod 2011 SyssStat11**
 

@@ -2,11 +2,10 @@
 variable: CfarNr_LISA
 display_name: "Arbetsställe (november)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsställe (november) CFARNr_LISA**
 

@@ -2,11 +2,10 @@
 variable: AstNr_LISA
 display_name: "Arbetsställenummer (november)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsställenummer (november) AstNr_LISA**
 

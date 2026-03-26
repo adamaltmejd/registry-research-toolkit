@@ -2,11 +2,10 @@
 variable: Raks_EtablGrad
 display_name: "Individens huvudanknytning till arbetsmarknad"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Individens huvudanknytning till arbetsmarknad RAKS_EtablGrad**
 

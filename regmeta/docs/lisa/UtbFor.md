@@ -2,12 +2,11 @@
 variable: UtbFor
 display_name: "Utbildningsbidrag för forskare"
 tags:
-  - type/variable
-  - topic/income
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utbildningsbidrag för forskare UtbFor**
 

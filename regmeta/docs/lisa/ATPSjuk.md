@@ -2,11 +2,10 @@
 variable: ATPSjuk
 display_name: "Sjukbidrag från folkpension, egenförmån"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Sjukbidrag från folkpension, egenförmån ATPSjuk**
 

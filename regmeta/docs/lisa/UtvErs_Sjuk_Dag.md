@@ -2,15 +2,14 @@
 variable: UtvErs_Sjuk_Dag
 display_name: "Utvecklingsersättning med sjukpenning, antal dagar"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Utvecklingsersättning med sjukpenning, antal dagar UtvErs_Sjuk_Dag**
 
-UtvErs*Sjuk*Dag
+[[UtvErs]]*Sjuk*Dag
 
 (2008–)
 

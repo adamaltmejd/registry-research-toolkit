@@ -2,11 +2,10 @@
 variable: ATPegen
 display_name: "ATP-kod för egenförmån"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **ATP-kod för egenförmån ATPEgen**
 

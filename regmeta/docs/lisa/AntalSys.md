@@ -2,11 +2,10 @@
 variable: AntalSys
 display_name: "Antal förvärvsarbetande på arbetsstället"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Antal förvärvsarbetande på arbetsstället AntalSys**
 

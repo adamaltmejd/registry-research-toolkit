@@ -2,15 +2,14 @@
 variable: ForTidTyp
 display_name: "Förekomst av förtidspension/sjukbidrag/sjukersättning/ aktivitetsersättning"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Förekomst av förtidspension/sjukbidrag/sjukersättning/ aktivitetsersättning ForTidTyp**
 
-Markering för om individ under aktuellt år erhållit förtidspension, sjukbidrag, sjuk- eller aktivitetsersättning enligt *ForTid*.
+Markering för om individ under aktuellt år erhållit förtidspension, sjukbidrag, sjuk- eller aktivitetsersättning enligt *[[ForTid]]*.
 
 Markeringen avser utbetalningsåret oavsett ersättningsperiod.
 
@@ -22,7 +21,7 @@ Från och med 1993 bedöms rätten till folkpension enligt nya kriterier, samma 
 
 1997 skärps kraven ytterligare vad avser rätt till förtidspension/sjukbidrag. Det ställs nu högre krav på att det finns ett samband mellan de medicinska orsakerna och nedsättningen av arbetsförmågan för rätt till förtidspension/sjukbidrag. Detta starkare krav på medicinska orsaker bör innebära att färre personer från denna tidpunkt erhåller förtidspension/sjukbidrag.
 
-Tillfällig avgångsersättning [[TAE]] erbjuds under sista halvåret 1997 till långtidsarbetslösa personer mellan 60–65 år. Tillfällig avgångsersättning, som kan ses som ett slags förtidspensionering av arbetsmarknadsskäl, redovisas inte under förtidspension. De som blivit beviljade TAE behåller ersättningen fram till ålderspension om de inte dessförinnan återgått till arbetsmarknaden.
+Tillfällig avgångsersättning ([[TAE]]) erbjuds under sista halvåret 1997 till långtidsarbetslösa personer mellan 60–65 år. Tillfällig avgångsersättning, som kan ses som ett slags förtidspensionering av arbetsmarknadsskäl, redovisas inte under förtidspension. De som blivit beviljade [[TAE]] behåller ersättningen fram till ålderspension om de inte dessförinnan återgått till arbetsmarknaden.
 
 År 2000 införs nya regler om vilande förtidspension och samma år sker ett förtydligande i reglerna om minskning och indragning av förtidspension/sjukbidrag. De förändrade reglerna innebär bl.a. att om arbetsförmågan väsentligt förbättras är den försäkrade skyldig att anmäla detta även om hen inte börjat förvärvsarbeta. Om arbetsförmågan väsentligt förbättras för en försäkrad som uppbär förtidspension/sjukbidrag skall pensionen dras in eller minskas.
 

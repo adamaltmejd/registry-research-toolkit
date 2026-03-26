@@ -2,11 +2,10 @@
 variable: YrkStalln
 display_name: "Yrkesställning (november månad)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Yrkesställning (november månad) YrkStalln**
 

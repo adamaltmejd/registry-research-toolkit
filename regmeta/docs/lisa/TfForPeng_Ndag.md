@@ -2,12 +2,11 @@
 variable: TfForPeng_Ndag
 display_name: "Tillfällig föräldrapenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Tillfällig föräldrapenning, antal nettodagar TfForPeng_Ndag**
 
@@ -25,4 +24,4 @@ Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärd
 - 10 \* en kvarts omfattning = 2,5 nettodagar,
 - 10 \* en åttondels omfattning = 1,25 dagar
 
-*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn* [[ForVAB]].
+*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn* ([[ForVAB]]).

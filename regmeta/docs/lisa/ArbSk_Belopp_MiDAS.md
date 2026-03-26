@@ -2,12 +2,11 @@
 variable: ArbSk_Belopp_MiDAS
 display_name: "Arbetsskadesjukpenning, ersättningsbelopp"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Arbetsskadesjukpenning, ersättningsbelopp ArbSk_Belopp_MiDAS**
 

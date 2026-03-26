@@ -2,11 +2,10 @@
 variable: PeOrgNrSregJ
 display_name: "Företag enligt justerad metod"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Företag enligt justerad metod PeOrgNrSregJ**
 

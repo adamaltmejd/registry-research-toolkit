@@ -2,11 +2,10 @@
 variable: SektorKod
 display_name: "Sektorstillhörighet (företag)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Sektorstillhörighet (företag) SektorKod**
 
@@ -14,7 +13,7 @@ SektorKod
 
 Företagets sektorstillhörighet enligt en gruppering för redovisningsändamål som ursprungligen skapades i Folk- och bostadsräkningarna. Koden bildas utifrån företagets institutionella sektorkod som hämtas från Företagsregistret (FDB).
 
-Sektorkod finns redovisat för de som enligt RAMS är förvärvsarbetande. För sektorstillhörighet för alla som haft ett jobb, se SektorKodSreg.
+Sektorkod finns redovisat för de som enligt RAMS är förvärvsarbetande. För sektorstillhörighet för alla som haft ett jobb, se [[SektorKodSreg]].
 
 Kod 1990–1992:
 
@@ -88,7 +87,7 @@ Delning av flygplatser och flygtrafiktjänster medförde att antalet personer so
 | 50                | 15, 23, 24, 25 beroende av ägare |
 | 60                | 25                               |
 
-| Sektorstillhörighet (företag) | SektorKodSreg |
+| Sektorstillhörighet (företag) | [[SektorKodSreg]] |
 |-------------------------------|---------------|
 |-------------------------------|---------------|
 
@@ -96,4 +95,4 @@ Företagets sektorstillhörighet enligt en gruppering för redovisningsändamål
 
 SektorkodSreg finns redovisat för samtliga som under aktuellt år har haft ett jobb.
 
-*För kodförteckning och ytterligare information se under Sektorstillhörighet (företag)* [[SektorKod]].
+*För kodförteckning och ytterligare information se under Sektorstillhörighet (företag)* (SektorKod).

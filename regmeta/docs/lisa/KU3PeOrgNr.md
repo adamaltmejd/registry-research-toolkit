@@ -2,11 +2,10 @@
 variable: KU3PeOrgNr
 display_name: "Företag (tredje största förvärvskälla)"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Företag (tredje största förvärvskälla) KU3PeOrgNr**
 
@@ -16,7 +15,7 @@ Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret5
 
 KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 
-*För ytterligare information, se beskrivning under Företag [[PeOrgNr_LISA]].*
+*För ytterligare information, se beskrivning under Företag ([[PeOrgNr_LISA]]).*
 
 *Vid utlämnade av data från LISA ersätts organisationsnumret av ett löpnummer.*
 

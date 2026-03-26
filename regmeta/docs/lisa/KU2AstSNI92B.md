@@ -2,11 +2,10 @@
 variable: KU2AstSNI92B
 display_name: "Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, näst största förvärvskälla), begränsad nivå"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, näst största förvärvskälla), begränsad nivå KU2AstSNI92B**
 

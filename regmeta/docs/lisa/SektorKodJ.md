@@ -2,11 +2,10 @@
 variable: SektorKodJ
 display_name: "Sektorstillhörighet (företag) enligt justerad metod"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Sektorstillhörighet (företag) enligt justerad metod SektorKodJ**
 
@@ -24,7 +23,7 @@ Skatteverket åsätter varje företag en näringsgrenskod vid alla företagsstar
 
 I FDB kan flera näringsgrenskoder förekomma för ett och samma arbetsställe. Till RAMS, varifrån denna uppgift om näringsgren hämtas, inhämtas bara en kod, som motsvarar den verksamhet som är mest omfattande30. I vissa fall kan ett arbetsställes olika verksamheter (näringsgrenar) vara av nästan samma omfattning. Detta medför att ett år kan den ena koden väljas som huvudsaklig verksamhet, medan det nästa år är den andra koden som blir huvudsaklig verksamhet. För personer som inte kan hänföras till något arbetsställe används företagets näringsgrenskod. Ovan nämnda orsaker gör att koden kan avvika från vad varje enskild person i verkligheten arbetar med.
 
-Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppgift finns om vilken kategori anställda denne tillhör (se variabeln AstNr_LISA), erhåller företagets näringsgrenskod:
+Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppgift finns om vilken kategori anställda denne tillhör (se variabeln [[AstNr_LISA]]), erhåller företagets näringsgrenskod:
 
 - Anställda i arbetsmarknadspolitiska åtgärder, i de fall dessa personer inte naturligt kan redovisas under ett av arbetsgivarens fasta arbetsställen31
 - Arbetstagare utan normalt anställningsförhållande (t.ex. artister och styrelseledamöter)
@@ -75,7 +74,7 @@ De ovan nämnda gruppernas andel av det totala antalet förvärvsarbetande (nove
 
 Dessa andelar inkluderar även de som erhåller SNI-kod = 00000 inom dessa kategorier.
 
-Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppgift finns om vilken kategori anställda denne tillhör (se variabeln AstNr_LISA), erhåller näringsgrenskod utifrån den verksamhet kategorin omfattar:
+Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppgift finns om vilken kategori anställda denne tillhör (se variabeln [[AstNr_LISA]]), erhåller näringsgrenskod utifrån den verksamhet kategorin omfattar:
 
 - Anställda inom kommunal gatuförvaltning (SNI92 = 45230, SNI2002 = 45230, SNI2007 = 42110)
 - Anställda i kommunal hemtjänst (SNI92 = 85323, SNI2002 = 85327, SNI2007 = 88101)

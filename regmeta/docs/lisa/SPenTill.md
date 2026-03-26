@@ -2,12 +2,11 @@
 variable: SPenTill
 display_name: "Särskilt pensionstillägg"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Särskilt pensionstillägg SPenTill**
 

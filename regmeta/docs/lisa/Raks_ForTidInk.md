@@ -2,11 +2,10 @@
 variable: Raks_ForTidInk
 display_name: "Inkomst från sjuk- eller aktivietsersättning"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Inkomst från sjuk- eller aktivietsersättning RAKS_ForTidInk**
 
@@ -16,7 +15,7 @@ RAKS_ForTidInk
 
 Ersättning från förtidspension/sjukbidrag sjukersättning/aktivitetsersättning anges i hundratal kronor.
 
-*För ytterligare information se Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning* [[ForTid]].
+*För ytterligare information se Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning* ([[ForTid]]).
 
 
 ---

@@ -2,9 +2,8 @@
 display_name: "Förändringar i LISA 2023"
 tags:
   - type/changelog
-source: lisa_2023-forandringar.md
+source: "lisa_2023-forandringar.md"
 ---
-
 
 # **Förändringar i LISA 2023**
 2025-03-24
@@ -31,7 +30,7 @@ Variabler i LISA: Riskgrupp_Bdag Riskgrupp_Ndag Riskgrupp_Belopp RiskgruppErs Ka
 Under pandemin delades krisstipendier ut i syfte att stötta konstnärer för viss förlorad inkomst. Det ordinarie stipendiet och krisstipendiet redovisades separat. 2023 finns endast det ordinarie stipendiet kvar och heter ISTIP. Variablerna ISTIPO och ISTIPK försvinner.
 # **Övrigt**
 #### **Pensionsålder**
-Från 2023 höjdes pensionsåldern från 65 till 66 år. I LISA påverkar det framförallt gruppen som är arbetssökande i november [[ArbSokNov]].
+Från 2023 höjdes pensionsåldern från 65 till 66 år. I LISA påverkar det framförallt gruppen som är arbetssökande i november ([[ArbSokNov]]).
 #### **Imputerade yrkesuppgifter**
 Uppgifter om yrke i LISA hämtas från Yrkesregistret. För ca 6% av personerna i yrkesregistrets målpopulation saknas insamlad yrkesuppgift. För dessa personer härleds från 2023 yrkesuppgift med hjälp av en modell för imputering som bland annat använder personens utbildning och bransch som förklarande variabler. Modellen syftar till att uppnå en hög överrensstämmelse på en aggregerad nivå för de olika yrkesgrupperna, medan de imputerade yrkesuppgifternas överensstämmelse med enskilda individers faktiska yrke är lägre. De
 | finns inte i LISA. |

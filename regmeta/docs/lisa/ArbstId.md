@@ -2,11 +2,10 @@
 variable: ArbstId
 display_name: "Arbetsställets identitetsnummer"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Arbetsställets identitetsnummer ArbstId**
 

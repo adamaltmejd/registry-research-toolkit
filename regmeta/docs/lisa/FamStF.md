@@ -1,12 +1,11 @@
 ---
 variable: FamStF
-display_name: Familjeställning
+display_name: "Familjeställning"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Familjeställning FamStF**
 
@@ -14,7 +13,7 @@ Kod för familjeställning.
 
 Familjeställning är en härledd variabel som anger varje persons ställning i familjen d.v.s. personer som har samma familjeidentitet.
 
-*Se under Familj* [[FamId]].
+*Se under Familj* ([[FamId]]).
 
 #### **Familjeställning i populationen 15 år och äldre, t.o.m. 2009 16 år och äldre**
 
@@ -56,4 +55,4 @@ Familjeställning är en härledd variabel som anger varje persons ställning i 
 
 Observera att kod 110–160, kod 210–240 samt kod 400 var tvåställig fram till och med 1998 (kod 11–16, 21–24 respektive 40).
 
-*För ytterligare information samt skillnader i avgränsningen mellan 1990– 1997 och 1998– se under Familj,* [[FamId]].
+*För ytterligare information samt skillnader i avgränsningen mellan 1990– 1997 och 1998– se under Familj,* ([[FamId]]).

@@ -1,13 +1,12 @@
 ---
 variable: FolkHust
-display_name: Hustrutillägg
+display_name: "Hustrutillägg"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Hustrutillägg FolkHust**
 
@@ -15,7 +14,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Beloppet anges i hundratals kronor.
 
-Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år143 (för beskrivning av folkpensionskod se under *Folkpensionskod för egenförmån* [[FolkEgen]]). Hustrutillägget är skattepliktigt.
+Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år143 (för beskrivning av folkpensionskod se under *Folkpensionskod för egenförmån* ([[FolkEgen]])). Hustrutillägget är skattepliktigt.
 
 Hustrutillägget beviljas kvinnor vars make är pensionär och som själva fyllt 60 år144 och inte själva har pension. För att få hustrutillägg krävs att man varit gift i minst 5 år. Hustrutillägget lämnas längst t.o.m. månaden före månad då man fyller 65 år.
 

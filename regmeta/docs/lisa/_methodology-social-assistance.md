@@ -1,9 +1,9 @@
 ---
 display_name: "Ekonomiskt bistånd — Metodik och riksnorm"
 tags:
-  - type/methodology
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/methodology
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
 #### **Ekonomiskt bistånd**
@@ -47,6 +47,8 @@ Den *1 januari 1998* införs en av regeringen bestämd riksnorm. Ekonomiskt bist
 I schablonbidraget ingår kostnader för mat, kläder och skor, lek och fritid, förbrukningsvaror, hälsa och hygien samt dagstidning, telefon och TV-avgift. Från och med *1:a januari 2005* ingår även kostnaden för mobiltelefon och mobiltelefonsamtal. Om särskilda skäl finns kan ett högre eller lägre belopp utbetalas.
 
 Bidrag för skäliga kostnader omfattar kostnader för bostad, hushållsel, arbetsresor, hemförsäkring, läkarvård, akut tandvård, glasögon, medlemskap i fackförening och arbetslöshetskassa. Bidragets storlek varierar efter behov och efter vad man i kommunen anser vara "skäliga kostnader".
+
+
 
 #### **Riksnorm för ensamstående vuxen**
 

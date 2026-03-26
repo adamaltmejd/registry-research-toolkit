@@ -1,11 +1,10 @@
 ---
-display_name: "Bilaga 2 — Bearbetning av data från Arbetsförmedlingens Datalager"
+display_name: "Bilaga 2 — Bearbetning av data från AF Datalager"
 tags:
-  - type/appendix
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/appendix
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 ### **Bearbetning av data från Arbetsförmedlingens Datalager**
 
@@ -29,7 +28,7 @@ Dataregistreringen fungerar på så sätt att arbetsförmedlaren skriver in star
 
 När en arbetssökande avaktualiseras från Arbetsförmedlingen sätts slutdatumet för den sista sökandekategoriperioden i inskrivningsperioden automatiskt till samma datum som avaktualiseringsdatumet. Tidigare inmatade sökandekategoriperioder
 
-170 I LISA finns även uppgifter hämtade från Arbetsförmedlingens månadsfiler (PRESO) för november månad 1998–2002. Se vidare under *Arbetssökande (november),* [[ArbSokNov]].
+170 I LISA finns även uppgifter hämtade från Arbetsförmedlingens månadsfiler (PRESO) för november månad 1998–2002. Se vidare under *Arbetssökande (november),* ([[ArbSokNov]]).
 
 kan inte tas bort eller ändras. Man går således aldrig in och korrigerar redan inmatade uppgifter.
 

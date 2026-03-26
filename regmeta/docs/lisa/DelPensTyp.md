@@ -2,11 +2,10 @@
 variable: DelPensTyp
 display_name: "Förekomst av delpension"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förekomst av delpension DelPensTyp**
 
@@ -16,6 +15,6 @@ DelPensTyp
 
 Markering för om individ under aktuellt år erhållit delpension.
 
-*För ytterligare information, se under Delpension* [[DelPens]].
+*För ytterligare information, se under Delpension* ([[DelPens]]).
 
 #### **Övrig arbetstidsrelaterad social inkomst**

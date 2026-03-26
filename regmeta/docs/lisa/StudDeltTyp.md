@@ -2,11 +2,10 @@
 variable: StudDeltTyp
 display_name: "Markering för studiedeltagande under höstterminen"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Markering för studiedeltagande under höstterminen StudDeltTyp**
 
@@ -18,4 +17,4 @@ Anger om personen är registrererad i någon skolform under höstterminen aktuel
 
 0 = ej studerande höstterminen
 
-*För ytterligare information, se under Studiedeltagande, HT* [[StudDelt]].
+*För ytterligare information, se under Studiedeltagande, HT* ([[StudDelt]]).

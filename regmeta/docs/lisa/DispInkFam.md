@@ -2,11 +2,10 @@
 variable: DispInkFam
 display_name: "Disponibel inkomst (familj)"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Disponibel inkomst (familj) DispInkFam**
 

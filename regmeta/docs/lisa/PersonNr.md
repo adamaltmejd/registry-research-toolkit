@@ -1,12 +1,11 @@
 ---
 variable: PersonNr
-display_name: Individ
+display_name: "Individ"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Individ PersonNr**
 

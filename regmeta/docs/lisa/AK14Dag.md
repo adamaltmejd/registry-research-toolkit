@@ -2,12 +2,11 @@
 variable: AK14Dag
 display_name: "Antal dagar som arbetssökande med förhinder"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Antal dagar som arbetssökande med förhinder AK14Dag**
 

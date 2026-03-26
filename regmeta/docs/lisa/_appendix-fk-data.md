@@ -1,11 +1,10 @@
 ---
 display_name: "Bilaga 5 — Hur FK-data tolkas"
 tags:
-  - type/appendix
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/appendix
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Hur FK-data tolkas**
 
@@ -13,17 +12,17 @@ Om antal personer med ett visst ersättningsslag ska beräknas ska den variabel 
 
 **Sjukfall – antal fall/gånger som en person har haft sjukpenningförmåner under året (sjukpenning, arbetsskadesjukpenning, rehabiliteringspenning).**
 
-*SjukFall_Startade_MiDAS* – antal startade fall med sjukförmåner under året
+*[[SjukFall_Startade_MiDAS]]* – antal startade fall med sjukförmåner under året
 
-*SjukFall_Avslutade_MiDAS* – antal avslutade fall med sjukförmåner under året
+*[[SjukFall_Avslutade_MiDAS]]* – antal avslutade fall med sjukförmåner under året
 
-*SjukFall_Antal_MiDAS* – summerar antal sjukfall under året med sjukförmåner under året
+*[[SjukFall_Antal_MiDAS]]* – summerar antal sjukfall under året med sjukförmåner under året
 
-*SjukFall_Antal_MiDAS = SjukFall_Startade_MiDAS* = "Nya sjukfall för året"
+*[[SjukFall_Antal_MiDAS]] = [[SjukFall_Startade_MiDAS]]* = "Nya sjukfall för året"
 
-*SjukFall_Antal_MiDAS > SjukFall_Startade_MiDAS* = "Det första sjukfallet för året är pågående sedan föregående år"
+*[[SjukFall_Antal_MiDAS]] > [[SjukFall_Startade_MiDAS]]* = "Det första sjukfallet för året är pågående sedan föregående år"
 
-*SjukFall_Antal_MiDAS > SjukFall_Avslutade_MiDAS* = "Det sista sjukfallet för året följer med till året efter"
+*[[SjukFall_Antal_MiDAS]] > [[SjukFall_Avslutade_MiDAS]]* = "Det sista sjukfallet för året följer med till året efter"
 
 Nedan finns exempel på verkliga fall och hur de ska tolkas.
 
@@ -50,4 +49,4 @@ I *exempel 5* kan man se att det skulle kunna vara 0 i både startade och avslut
 
 Det är viktigt att notera att antal fall inte på ett enkelt sätt kan summeras över år, men naturligtvis kan summationer ske inom år.
 
-Det finns ett antal fall där det finns belopp registrerade men där SjukSum_Bdag_MiDAS=0. Anledningen till detta är att där belopp per nettodag < 101 kronor så anses det vara en tilläggsutbetalning vilket inte ska generera några nya dagar.
+Det finns ett antal fall där det finns belopp registrerade men där [[SjukSum_Bdag_MiDAS]]=0. Anledningen till detta är att där belopp per nettodag < 101 kronor så anses det vara en tilläggsutbetalning vilket inte ska generera några nya dagar.

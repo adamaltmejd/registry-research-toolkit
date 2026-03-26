@@ -2,11 +2,10 @@
 variable: YrkArbTyp
 display_name: "Förekomst av yrkes-/arbetsskadelivränta"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förekomst av yrkes-/arbetsskadelivränta YrkArbTyp**
 

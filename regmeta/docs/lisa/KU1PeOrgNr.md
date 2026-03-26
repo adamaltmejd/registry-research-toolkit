@@ -2,11 +2,10 @@
 variable: KU1PeOrgNr
 display_name: "Företag (största förvärvskälla)"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Företag (största förvärvskälla) KU1PeOrgNr**
 
@@ -18,7 +17,7 @@ I de fall flera förvärvskällor gett individen lika stor inkomst väljs den f�
 
 KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 
-*För ytterligare information, se beskrivning under Företag [[PeOrgNr_LISA]].*
+*För ytterligare information, se beskrivning under Företag ([[PeOrgNr_LISA]]).*
 
 *Vid utlämnade av data från LISA ersätts organisationsnumret av ett löpnummer.*
 

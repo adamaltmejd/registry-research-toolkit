@@ -2,12 +2,11 @@
 variable: UtbBArb
 display_name: "Särskild dagpenning vid arbetsmarknadsutbildning"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Särskild dagpenning vid arbetsmarknadsutbildning UtbBArb**
 

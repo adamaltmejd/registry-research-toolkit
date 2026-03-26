@@ -1,13 +1,12 @@
 ---
 variable: LarlErs
-display_name: Lärlingsersättning
+display_name: "Lärlingsersättning"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Lärlingsersättning LarlErs**
 

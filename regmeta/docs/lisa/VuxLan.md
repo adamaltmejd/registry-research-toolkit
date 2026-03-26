@@ -2,12 +2,11 @@
 variable: VuxLan
 display_name: "Vuxenstudiestöd, lånedel (övriga)"
 tags:
-  - type/variable
-  - topic/income
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Vuxenstudiestöd, lånedel (övriga) VuxLan**
 
@@ -17,7 +16,7 @@ VuxLan
 
 Beloppet anges i hundratals kronor.
 
-1990–1996 redovisas Vuxenstudiestöd, lånedel, arbetslösa [[SVuxALan]] och Vuxenstudiestöd, lånedel, övriga [[SVuxLan]] i samma variabel (Vux-Lan).
+1990–1996 redovisas Vuxenstudiestöd, lånedel, arbetslösa ([[SVuxALan]]) och Vuxenstudiestöd, lånedel, övriga ([[SVuxLan]]) i samma variabel (Vux-[[Lan]]).
 
 Studielån, återbetalningspliktiga studiemedel inom det särskilda vuxenstudiestödet.
 

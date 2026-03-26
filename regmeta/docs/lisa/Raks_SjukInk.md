@@ -2,11 +2,10 @@
 variable: Raks_SjukInk
 display_name: "Inkomst från sjukdom, arbetsskada eller rehabilitering"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomst från sjukdom, arbetsskada eller rehabilitering RAKS_SjukInk**
 
@@ -16,7 +15,7 @@ RAKS_SjukInk
 
 Ersättning från sjukdom/arbetsskada/rehabilitering anges i hundratal kronor.
 
-*För ytterligare information se Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering* [[SjukRe]].
+*För ytterligare information se Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering* ([[SjukRe]]).
 
 
 ---

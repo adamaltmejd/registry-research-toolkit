@@ -1,13 +1,12 @@
 ---
 variable: KortStu
-display_name: Korttidsstudiestöd
+display_name: "Korttidsstudiestöd"
 tags:
-  - type/variable
-  - topic/income
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Korttidsstudiestöd KortStu**
 
@@ -62,7 +61,7 @@ Den *30/6 2001* upphör korttidsstudiestödet. Bidraget ersätts av Bidrag till 
 
 Det genomsnittliga studiestödet har varierat med mellan 2 000 kr och 6 000 kr.
 
-| Timersättning vid läs- och skrivsvårigheter | SarVux |
+| Timersättning vid läs- och skrivsvårigheter | [[SarVux]] |
 |---------------------------------------------|--------|
 |---------------------------------------------|--------|
 
@@ -82,21 +81,21 @@ Grundvux upphör *fr.o.m. läsåret 1991/92*, de som påbörjat studierna innan 
 
 Psykiskt utvecklingsstörda som deltar i vuxenutbildning har rätt till timersättning om de på grund av studierna förlorar arbetsinkomst eller arbetslöshetsersättning.
 
-Från och med 1/7 2001 administreras bidraget av Statens institut för särskilt utbildningsstöd (Sisus). Bidraget från Sisus redovisas inte i denna variabel. År 2001 var det 176 personer som erhöll detta bidrag. **Svenska för invandrare SFI**
+Från och med 1/7 2001 administreras bidraget av Statens institut för särskilt utbildningsstöd (Sisus). Bidraget från Sisus redovisas inte i denna variabel. År 2001 var det 176 personer som erhöll detta bidrag. **Svenska för invandrare [[SFI]]**
 
 (1990–1998)
 
 Beloppet anges i hundratals kronor.
 
-För deltagare i grundläggande svenskundervisning för vuxna invandrare [[SFI]] utgår också timersättning.
+För deltagare i grundläggande svenskundervisning för vuxna invandrare ([[SFI]]) utgår också timersättning.
 
 Timersättning utgår om man förlorar sin arbetsinkomst på grund av utbildningen.
 
 Timersättningen är densamma som vid korttidsstudiestöd.
 
-*Från och med 1998* ersätts SFI-studerande med andra studiestöd än timersättning när den studerande även bedriver andra studier i tillräcklig omfattning.
+*Från och med 1998* ersätts [[SFI]]-studerande med andra studiestöd än timersättning när den studerande även bedriver andra studier i tillräcklig omfattning.
 
-1999 har ingen av dem som deltagit i svenskundervisning för invandrare [[SFI]] fått timersättning enligt ovan.
+1999 har ingen av dem som deltagit i svenskundervisning för invandrare ([[SFI]]) fått timersättning enligt ovan.
 
 #### **Antal studerande med timersättning (Grundvux, Särvux och SFI) enligt CSN**
 

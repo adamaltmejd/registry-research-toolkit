@@ -2,11 +2,10 @@
 variable: DispInk04
 display_name: "Disponibel inkomst (individens delkomponent, enligt 2004 års definition)"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Disponibel inkomst (individens delkomponent, enligt 2004 års definition) DispInk04**
 
@@ -14,7 +13,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Beloppet anges i hundratals kronor.
 
-En ny disponibel inkomst (individens delkomponent) där Kapitalvinst minus kapitalförlust numera kan ge ett minus (förut gav en kapitalförlust som var större än en kapitalvinst resultatet noll). Ytterligare någon mindre förändring avser innehållet i DispInk.
+En ny disponibel inkomst (individens delkomponent) där Kapitalvinst minus kapitalförlust numera kan ge ett minus (förut gav en kapitalförlust som var större än en kapitalvinst resultatet noll). Ytterligare någon mindre förändring avser innehållet i [[DispInk]].
 
 Från och med år 2004 anger variabeln summan av:
 

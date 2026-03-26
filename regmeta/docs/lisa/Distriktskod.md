@@ -1,12 +1,11 @@
 ---
 variable: Distriktskod
-display_name: Bostadsdistrikt
+display_name: "Bostadsdistrikt"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bostadsdistrikt Distriktskod**
 
@@ -18,6 +17,6 @@ Med bostadsdistrikt avses det distrikt där personen var folkbokförd vid refere
 
 Distriktsindelningen ska vara stabil såtillvida att den inte kommer att ändras i framtiden. Distriktsgränserna behöver inte följa vare sig fastighets- eller kommungränser.
 
-*I övrigt se Fastighetsbeteckning* [[FastBet]].
+*I övrigt se Fastighetsbeteckning* ([[FastBet]]).
 
 Den 1/7 1991, införs regeln att studerande på eftergymnasial utbildning ska vara folkbokförda på studieorten.

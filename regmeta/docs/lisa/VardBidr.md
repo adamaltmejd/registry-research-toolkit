@@ -1,13 +1,12 @@
 ---
 variable: VardBidr
-display_name: Vårdbidrag
+display_name: "Vårdbidrag"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Vårdbidrag VardBidr**
 

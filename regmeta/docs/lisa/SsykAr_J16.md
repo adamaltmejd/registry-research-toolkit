@@ -2,11 +2,10 @@
 variable: SsykAr_J16
 display_name: "Årtal för yrkesuppgift, inkl. härledda yrken för företagare"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Årtal för yrkesuppgift, inkl. härledda yrken för företagare SsykAr_J16**
 

@@ -1,13 +1,12 @@
 ---
 variable: PremPens
-display_name: Premiepension
+display_name: "Premiepension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Premiepension PremPens**
 

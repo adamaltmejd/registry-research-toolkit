@@ -2,12 +2,11 @@
 variable: BostTillFam
 display_name: "Bostadstillägg (familj)"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Bostadstillägg (familj) BostTillFam**
 

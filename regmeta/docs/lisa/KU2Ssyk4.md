@@ -2,11 +2,10 @@
 variable: KU2Ssyk4
 display_name: "Yrke enligt SSYK 96, 4-siffernivå, näst största förvärvskälla"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Yrke enligt SSYK 96, 4-siffernivå, näst största förvärvskälla KU2Ssyk4**
 
@@ -20,4 +19,4 @@ Om en person har fler än en förvärvsinkomst så fastställs yrke för näst s
 
 *Se "SSYK 96. Standard för svensk yrkesklassificering 1996." (MIS 1998:3).* 
 
-*För ytterligare information se Yrke enligt SSYK, 4 siffernivå* [[Ssyk4]].
+*För ytterligare information se Yrke enligt SSYK, 4 siffernivå* ([[Ssyk4]]).

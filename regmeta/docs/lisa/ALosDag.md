@@ -2,12 +2,11 @@
 variable: ALosDag
 display_name: "Antal dagar i arbetslöshet"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Antal dagar i arbetslöshet ALosDag**
 

@@ -2,11 +2,10 @@
 variable: KU1AstSNI2002
 display_name: "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe, största förvärvskälla)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI2002 (arbetsställe, största förvärvskälla) KU1AstSNI2002**
 
@@ -18,4 +17,4 @@ Arbetsställets (avseende största förvärvskälla) näringsgrenskod enligt sta
 
 *Se "SNI 2002. Standard för svensk näringsgrensindelning, 2002." (MIS 2003:2) för kodförteckning.*
 
-*För ytterligare information se Näringsgren enligt SNI2002* [[AstSNI2002]].
+*För ytterligare information se Näringsgren enligt SNI2002* ([[AstSNI2002]]).

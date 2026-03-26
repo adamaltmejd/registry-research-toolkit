@@ -1,12 +1,11 @@
 ---
 variable: Lan
-display_name: Bostadslän
+display_name: "Bostadslän"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bostadslän Lan**
 
@@ -18,6 +17,6 @@ Förändringar på länsnivå under tidsperioden från och med 1990 beskrivs på
 
 *För regionala indelningar se [www.scb.se.](http://www.scb.se/)* 
 
-*I övrigt se Fastighetsbeteckning* [[FastBet]] *samt bilaga 8 Regionala koder – Ändringar i läns- och kommunindelningen från och med 1990*.
+*I övrigt se Fastighetsbeteckning* ([[FastBet]]) *samt bilaga 8 Regionala koder – Ändringar i läns- och kommunindelningen från och med 1990*.
 
 Den 1/7 1991, infördes regeln att studerande på eftergymnasial utbildning ska vara folkbokförda på studieorten.

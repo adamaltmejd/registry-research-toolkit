@@ -1,12 +1,11 @@
 ---
 variable: FastBet
-display_name: Fastighetsbeteckning
+display_name: "Fastighetsbeteckning"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Fastighetsbeteckning FastBet**
 
@@ -57,4 +56,4 @@ Före 1998 redovisades skattekontorets registreringsår och -vecka som flyttning
 
 Av sekretesskäl kan varken fastighetens löpnummer eller fastighetsbeteckning lämnas ut, men uppgifterna kan användas för härledningar, t.ex. för att skapa områden.
 
-*I övrigt se Individ* [[PersonNr]].
+*I övrigt se Individ* ([[PersonNr]]).

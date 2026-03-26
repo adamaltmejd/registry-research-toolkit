@@ -2,12 +2,11 @@
 variable: AmPolTyp
 display_name: "Förekomst av ersättning i samband med arbetsmarknadspolitisk åtgärd"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Förekomst av ersättning i samband med arbetsmarknadspolitisk åtgärd AmPolTyp**
 
@@ -41,4 +40,4 @@ Från och med 2012 är *Etableringsersättning till nyanlända invandrare* en de
 
 *För mer detaljerad information, se under respektive inkomstslag, samt under Antal dagar i åtgärdsstudier.*
 
-De arbetsmarknadspolitiska åtgärder som kan redovisas som arbetsmarknadspolitisk åtgärd utifrån inkomstuppgift omfattar inte *Beredskapsarbete, Utbildningsvikariat, Rekryteringsstöd, Lönebidrag, Offentligt skyddat arbete (OSA)*, *Internutbildning i företag* som arbetsmarknadspolitisk åtgärd, *Resursarbete, Individuellt Anställningsstöd* (ersätter från och med 1998 Beredskapsarbete, Rekryteringsstöd och Utbildningsvikariat), *Allmänt anställningsstöd, Förstärkt anställningsstöd* (ersätter Individuellt anställningsstöd), *Särskilt anställningsstöd, Förstärkt särskilt anställningsstöd, Utvecklingsanställning, Trygghetsanställning, Instegsjobb och Kulturarvslyftet*. Ersättningen går i dessa fall till företaget, från vilket personen erhåller lön. Dessa åtgärder kan dock, undantaget *Internutbildning i företag*, redovisas utifrån Arbetsförmedlingens Datalager (se under *Antal dagar i Åtgärdssysselsättning*). Under Antal dagar i åtgärdssysselsättning redovisas även inskrivna i kategorin Stöd till start av näringsverksamhet (tidigare starta-eget-bidrag), vilkas ersättning sedan 1992 redovisas tillsammans med Aktivitetsersättning/ Utbildningsbidrag och därmed ingår i variablerna AmPol och AmPolTyp. Ungdomar som deltog i vissa arbetsmarknadspolitiska åtgärder före 2008 och inte var berättigade till arbetslöshetsersättning hamnade utanför redovisningen i denna variabel. Från och med 2008 har dessa ungdomar möjligheterna att få Utvecklingsersättning som ingår i underlaget till denna variabel.
+De arbetsmarknadspolitiska åtgärder som kan redovisas som arbetsmarknadspolitisk åtgärd utifrån inkomstuppgift omfattar inte *Beredskapsarbete, Utbildningsvikariat, Rekryteringsstöd, Lönebidrag, Offentligt skyddat arbete (OSA)*, *Internutbildning i företag* som arbetsmarknadspolitisk åtgärd, *Resursarbete, Individuellt Anställningsstöd* (ersätter från och med 1998 Beredskapsarbete, Rekryteringsstöd och Utbildningsvikariat), *Allmänt anställningsstöd, Förstärkt anställningsstöd* (ersätter Individuellt anställningsstöd), *Särskilt anställningsstöd, Förstärkt särskilt anställningsstöd, Utvecklingsanställning, Trygghetsanställning, Instegsjobb och Kulturarvslyftet*. Ersättningen går i dessa fall till företaget, från vilket personen erhåller lön. Dessa åtgärder kan dock, undantaget *Internutbildning i företag*, redovisas utifrån Arbetsförmedlingens Datalager (se under *Antal dagar i Åtgärdssysselsättning*). Under Antal dagar i åtgärdssysselsättning redovisas även inskrivna i kategorin Stöd till start av näringsverksamhet (tidigare starta-eget-bidrag), vilkas ersättning sedan 1992 redovisas tillsammans med Aktivitetsersättning/ Utbildningsbidrag och därmed ingår i variablerna [[AmPol]] och AmPolTyp. Ungdomar som deltog i vissa arbetsmarknadspolitiska åtgärder före 2008 och inte var berättigade till arbetslöshetsersättning hamnade utanför redovisningen i denna variabel. Från och med 2008 har dessa ungdomar möjligheterna att få Utvecklingsersättning som ingår i underlaget till denna variabel.

@@ -1,13 +1,12 @@
 ---
 variable: HKapErs
-display_name: Handikappersättning
+display_name: "Handikappersättning"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Handikappersättning HKapErs**
 

@@ -2,11 +2,10 @@
 variable: ForTid
 display_name: "Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning ForTid**
 
@@ -14,7 +13,7 @@ ForTid
 
 Beloppet anges i hundratal kronor.
 
-Den under året summerade inkomsten av *FolkFort* (1990–1992), *FolkSjuk* (1990–1992), *ATPFort* (1990–1992), *ATPSjuk* (1990–1992), *FolkFortSjuk* (1993–2002), *ATPFortSjuk* (1993–2002), *SjukErs* (2003–), *AktErs* (2003–) och *FortidAGS* (1996–).
+Den under året summerade inkomsten av *[[FolkFort]]* (1990–1992), *[[FolkSjuk]]* (1990–1992), *[[ATPFort]]* (1990–1992), *[[ATPSjuk]]* (1990–1992), *[[FolkFortSjuk]]* (1993–2002), *[[ATPFortSjuk]]* (1993–2002), *[[SjukErs]]* (2003–), *[[AktErs]]* (2003–) och *FortidAGS* (1996–).
 
 Beloppet avser utbetalningsåret oavsett ersättningsperiod.
 

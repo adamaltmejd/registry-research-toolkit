@@ -2,11 +2,10 @@
 variable: Raks_StudInk
 display_name: "Inkomst från studier"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomst från studier RAKS_StudInk**
 
@@ -16,7 +15,7 @@ RAKS StudInk
 
 Ersättning från studier anges i hundratal kronor. Fr.o.m. 2014 ingår även lärlingsersättning i variabeln.
 
-*För ytterligare information se Summa inkomst föranledd av studier* [[Stud]].
+*För ytterligare information se Summa inkomst föranledd av studier* ([[Stud]]).
 
 
 ---

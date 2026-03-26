@@ -2,12 +2,11 @@
 variable: BostBidrVplU
 display_name: "Värnplikt, bostadsbidrag"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Värnplikt, bostadsbidrag BostBidrVplU**
 
@@ -19,6 +18,6 @@ Bidrag som är till för rekryter som genomgår militär grundutbildning eller o
 
 Variabeln är uppdelad enligt RTB-familj. Familjebegreppet hämtas från Registret över totalbefolkningen och avser 31/12. Alla personer i familjen har samma belopp i variabeln.
 
-*För ytterligare information se under Familj,* [[FamId]].
+*För ytterligare information se under Familj,* ([[FamId]]).
 
 #### **Föräldraförsäkring**

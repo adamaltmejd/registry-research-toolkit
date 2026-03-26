@@ -2,12 +2,11 @@
 variable: KASEES
 display_name: "Kontant arbetsmarknadsstöd enligt EES-avtal"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Kontant arbetsmarknadsstöd enligt EES-avtal KASEES**
 

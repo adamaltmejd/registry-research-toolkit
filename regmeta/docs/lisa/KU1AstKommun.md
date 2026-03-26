@@ -2,15 +2,14 @@
 variable: KU1AstKommun
 display_name: "Arbetsställekommun (största förvärvskälla)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsställekommun (största förvärvskälla) KU1AstKommun**
 
-Kommun där arbetsstället (avseende största förvärvskälla) är beläget, anges med kommunkod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
+[[Kommun]] där arbetsstället (avseende största förvärvskälla) är beläget, anges med kommunkod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
 
 *För regionala indelningar se [www.scb.se.](http://www.scb.se/SNI2007)* 
 

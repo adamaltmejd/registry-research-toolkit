@@ -1,13 +1,12 @@
 ---
 variable: ALKod
-display_name: Arbetslöshetskod
+display_name: "Arbetslöshetskod"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetslöshetskod ALKod**
 
@@ -15,10 +14,10 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Koden bygger dels på händelseuppgift från Arbetsförmedlingens sökanderegister och dels på inkomststatistikens uppgift om arbetslöshetsersättning.
 
-- 1 = Arbetslöshetshändelse (dagar i arbetslöshet *ALosDag*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98) och Arbetslöshetsersättning (*AKassa)*
-- 2 = Arbetslöshetshändelse (dagar i arbetslöshet *ALosDag*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98) men inte Arbetslöshetsersättning (*AKassa*)
-- 3 = Arbetslöshetsersättning (*AKassa*) men inte Arbetslöshetshändelse (dagar i arbetslöshet *ALosDag*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98)
-- 4 = Arbetslöshetshändelse (dagar som arbetssökande med förhinder (*AK14Dag*, sökandekategori 14) och Arbetslöshetsersättning (*AKassa*)
+- 1 = Arbetslöshetshändelse (dagar i arbetslöshet *[[ALosDag]]*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98) och Arbetslöshetsersättning (*AKassa)*
+- 2 = Arbetslöshetshändelse (dagar i arbetslöshet *[[ALosDag]]*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98) men inte Arbetslöshetsersättning (*AKassa*)
+- 3 = Arbetslöshetsersättning (*AKassa*) men inte Arbetslöshetshändelse (dagar i arbetslöshet *[[ALosDag]]*, sökandekategori 11, 12, 13, 34, 95, 96, 97, 98)
+- 4 = Arbetslöshetshändelse (dagar som arbetssökande med förhinder (*[[AK14Dag]]*, sökandekategori 14) och Arbetslöshetsersättning (*AKassa*)
 
 Arbetslöshetshändelse innebär att personer under aktuellt år varit inskrivna i Arbetsförmedlingens sökanderegister i:
 
@@ -58,7 +57,7 @@ Sökandekategori 98: Arbetslös, slutförd beslutsperiod
 
 Arbetslöshetsersättning innebär att person under aktuellt år erhållit ersättning i form av:
 
-Ersättning från arbetslöshetskassa/arbetsmarknadsförsäkring, Kontant arbetsmarknadsstöd [[KAS]] (1992–1998), Ersättning från statlig arbetsmarknadskassa (1994–1997) eller Kontant arbetsmarknadsstöd enligt EES-avtal (1994–1997).
+Ersättning från arbetslöshetskassa/arbetsmarknadsförsäkring, Kontant arbetsmarknadsstöd ([[KAS]]) (1992–1998), Ersättning från statlig arbetsmarknadskassa (1994–1997) eller Kontant arbetsmarknadsstöd enligt EES-avtal (1994–1997).
 
 I den första kategorin fångas således personer som någon gång under året varit arbetslösa enligt den Arbetsförmedlingsdefinition som var giltig vid utgången av 199893 och som haft en arbetslöshetsersättning under detta år.
 

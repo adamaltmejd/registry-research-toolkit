@@ -2,11 +2,10 @@
 variable: FInk
 display_name: "Inkomstöverskott av aktiv näringsverksamhet"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomstöverskott av aktiv näringsverksamhet FInk**
 
@@ -32,4 +31,4 @@ En verksamhet är aktiv om man i inte oväsentlig omfattning (minst 600 timmar) 
 
 43 Någon motsvarighet till Inkomst av aktiv näringsverksamhet finns inte för åren innan 1991. Approximativt omfattar variabeln de tidigare variablerna Inkomst av rörelse och Inkomst av jordbruksfastighet (brukad) plus den del av Inkomst av annan fastighet än jordbruksfastighet som kan hänföras till aktiv näringsverksamhet. Denna del av Inkomst av annan fastighet än jordbruksfastighet kan dock inte specificeras i inkomststatistiken före 1991.
 
-För att få en tidsserie för inkomst av aktiv näringsverksamhet används variabeln **Fink** 1991-2003 och positivt resultat i variabeln **InkFNettoA** 2004-.
+För att få en tidsserie för inkomst av aktiv näringsverksamhet används variabeln **Fink** 1991-2003 och positivt resultat i variabeln **[[InkFNettoA]]** 2004-.

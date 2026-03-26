@@ -2,11 +2,10 @@
 variable: DispInkKE04
 display_name: "Disponibel inkomst per konsumtionsenhet (familj, enl. 2004 års definition)"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Disponibel inkomst per konsumtionsenhet (familj, enl. 2004 års definition) DispInkKE04**
 
@@ -14,7 +13,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Beloppet anges i hundratals kronor.
 
-Från 2004 finns nya *konsumtionsvikter* [[KonsViktF04]]. Den disponibla inkomsten per konsumtionsenhet fås genom att summan av samtliga i familjen173 ingående medlemmars disponibla inkomst divideras med familjens totala konsumtionsvikt174. Negativa värden kan förekomma.
+Från 2004 finns nya *konsumtionsvikter* ([[KonsViktF04]]). Den disponibla inkomsten per konsumtionsenhet fås genom att summan av samtliga i familjen173 ingående medlemmars disponibla inkomst divideras med familjens totala konsumtionsvikt174. Negativa värden kan förekomma.
 
 För att göra jämförelser av t.ex. disponibel inkomst och ekonomisk köpkraft mellan olika typer av hushåll används viktsystemet där konsumtionen är relaterad till hushållets sammansättning.
 

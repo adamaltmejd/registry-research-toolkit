@@ -1,12 +1,11 @@
 ---
 variable: Alder
-display_name: Ålder
+display_name: "Ålder"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Ålder Alder**
 

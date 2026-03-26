@@ -1,11 +1,10 @@
 ---
 variable: MedbLandNamn
-display_name: Medborgarskap
+display_name: "Medborgarskap"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Medborgarskap MedbLandNamn**

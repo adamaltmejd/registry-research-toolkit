@@ -2,11 +2,10 @@
 variable: InkFNettoA
 display_name: "Nettoinkomst av aktiv näringsverksamhet"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Nettoinkomst av aktiv näringsverksamhet InkFNettoA**
 
@@ -38,4 +37,4 @@ Endast resultatet som företagaren redovisat på Inkomstdeklarationen ingår, ö
 
 2007 togs uppgiften om aktiv/passiv näringsverksamhet bort från det material som tidigare användes som källa och denna uppgift hämtas nu från en annan blankett. I samband med denna förändring togs det justerade resultatet bort och endast det resultat som den egna företagaren redovisat i Inkomstdeklarationen redovisas. Den studie som gjordes inför denna förändring konstaterade att värdet i variablerna inte påverkas nämnvärt. Det går således att göra jämförelser utan att ta hänsyn till denna förändring.
 
-För att få en tidsserie för *Inkomst av aktiv näringsverksamhet* används variabeln FInk 1991-2003 och positivt resultat i variabeln InkFNettoA 2004-.
+För att få en tidsserie för *Inkomst av aktiv näringsverksamhet* används variabeln [[FInk]] 1991-2003 och positivt resultat i variabeln InkFNettoA 2004-.

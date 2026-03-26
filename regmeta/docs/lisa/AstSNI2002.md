@@ -2,11 +2,10 @@
 variable: AstSNI2002
 display_name: "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) AstSNI2002**
 

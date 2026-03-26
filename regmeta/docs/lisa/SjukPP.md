@@ -2,12 +2,11 @@
 variable: SjukPP
 display_name: "Sjukpenning, skattepliktig (ej arbetsgivarinträde)"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Sjukpenning, skattepliktig (ej arbetsgivarinträde) SjukPP**
 
@@ -27,7 +26,7 @@ Sjukpenning betalas ut vid sjukdom, som orsakar nedsättning av arbetsförmågan
 
 Smittbärarpenning och graviditetspenning76 är lika stor som sjukpenningen och ingår i denna (dock utan karensdag). Graviditetspenningen77 betalas ut i högst 50 dagar (fr.o.m. 60:e t.o.m. 11:e dagen före beräknad förlossningstidpunkt) till personer med ett fysiskt ansträngande arbete eller med risker i sin arbetsmiljö. Smittbärarpenningen betalas ut när individen inte får arbeta efter ingripande av myndighet eller efter ingripande i samband med läkarundersökning/hälsokontroll.
 
-*1990* och *1991* ingår sjukpenning vid arbetsskada (arbetsskadesjukpenning) i variabeln, vilket innebär att för dem som efter samordningstiden (90 dagar) får ersättning p.g.a. arbetsskada behålls ersättning till 100 procent även efter den 1/3 1991. Fr.o.m. 1992 återfinns *Arbetsskadesjukpenning* [[ArbSkErs]] som egen variabel i LISA.
+*1990* och *1991* ingår sjukpenning vid arbetsskada (arbetsskadesjukpenning) i variabeln, vilket innebär att för dem som efter samordningstiden (90 dagar) får ersättning p.g.a. arbetsskada behålls ersättning till 100 procent även efter den 1/3 1991. Fr.o.m. 1992 återfinns *Arbetsskadesjukpenning* ([[ArbSkErs]]) som egen variabel i LISA.
 
 *1990* utbetalas sjukpenning från första dagen med motsvarande 90 procent (ett avtalspåslag höjer nivån till 100 procent) av den sjukpenninggrundande inkomsten. Maximalt uppgår den sjukpenninggrundande inkomsten till 7,5 basbelopp.
 
@@ -61,7 +60,7 @@ Samtidigt med sjuklönens införande sänks ersättningen fr.o.m. den 91:a sjukd
 
 Sjuklönen är dagberäknad (vid månadslön) eller timberäknad (vid timlön).
 
-För *1992* fångar variabeln *Sjukpenning med arbetsgivarinträde* [[SjukPA]] upp sjukpenning för sjukperiod som påbörjats före den 1/1. Variabeln anger det belopp som betalats från Försäkringskassan till arbetsgivare p.g.a. arbetstagares erhållna sjuklön. Arbetsgivarinträdet är giltigt för statsanställda och vissa andra. Sjukpenning med arbetsgivarinträde upphör från och med den 1/7 1992.
+För *1992* fångar variabeln *Sjukpenning med arbetsgivarinträde* ([[SjukPA]]) upp sjukpenning för sjukperiod som påbörjats före den 1/1. Variabeln anger det belopp som betalats från Försäkringskassan till arbetsgivare p.g.a. arbetstagares erhållna sjuklön. Arbetsgivarinträdet är giltigt för statsanställda och vissa andra. Sjukpenning med arbetsgivarinträde upphör från och med den 1/7 1992.
 
 Den *1/7 1992* ändras reglerna för utbyte av föräldrapenning mot sjukpenning så att utbyte av föräldrapenning mot sjukpenning endast kan ske om föräldern p.g.a. sjukdom inte kan vårda barnet.
 

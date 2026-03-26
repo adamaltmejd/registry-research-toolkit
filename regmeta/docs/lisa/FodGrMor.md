@@ -2,17 +2,16 @@
 variable: FodGrMor
 display_name: "Moderns födelseland, gruppering EU15"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Moderns födelseland, gruppering EU15 FodGrMor**
 
 FodGrMor
 
-Grupperas som födelseland, se *Eget födelseland* [[FodGrEg]].
+Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg]]).
 
 Moderns födelseland finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga personer i LISA-populationen.
 

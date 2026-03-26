@@ -2,18 +2,17 @@
 variable: StudTyp
 display_name: "Förekomst av studerandeinkomst"
 tags:
-  - type/variable
-  - topic/income
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förekomst av studerandeinkomst StudTyp**
 
 StudTyp
 
-Markering för om individ under aktuellt år erhållit någon studerandeinkomst enligt Summa inkomst föranledd av studier *(Stud*). *Förändringar från och med 1990 som kan påverka förekomst av studerandeinkomst:*
+Markering för om individ under aktuellt år erhållit någon studerandeinkomst enligt Summa inkomst föranledd av studier *([[Stud]]*). *Förändringar från och med 1990 som kan påverka förekomst av studerandeinkomst:*
 
 I databasen finns idag endast uppgift om studerande vars studier är offentligt finansierade. Totala antalet studerande underskattas således något och i den mån studier i större eller mindre grad över årens lopp finansierats offentligt påverkar även Förekomst av studerandeinkomst.
 

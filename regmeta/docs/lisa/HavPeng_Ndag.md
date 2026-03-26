@@ -2,12 +2,11 @@
 variable: HavPeng_Ndag
 display_name: "Graviditetspenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Graviditetspenning, antal nettodagar HavPeng_Ndag**
 
@@ -31,4 +30,4 @@ Graviditetspenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 p
 
 73 När ersättningen infördes 1980 hette den Havandeskapspenning. Ersättningen ändrade namn 2011 till Graviditetspenning.
 
-*För ytterligare information, se under Graviditetspenning, antal bruttodagar* [[HavPeng_Bdag]].
+*För ytterligare information, se under Graviditetspenning, antal bruttodagar* ([[HavPeng_Bdag]]).

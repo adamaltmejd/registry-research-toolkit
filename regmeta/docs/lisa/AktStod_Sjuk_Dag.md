@@ -2,12 +2,11 @@
 variable: AktStod_Sjuk_Dag
 display_name: "Aktivitetsstöd med sjukpenning, antal dagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Aktivitetsstöd med sjukpenning, antal dagar AktStod_Sjuk_Dag**
 

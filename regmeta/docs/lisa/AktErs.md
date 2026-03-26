@@ -1,13 +1,12 @@
 ---
 variable: AktErs
-display_name: Aktivitetsersättning
+display_name: "Aktivitetsersättning"
 tags:
-  - type/variable
   - topic/employment
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Aktivitetsersättning AktErs**
 
@@ -17,4 +16,4 @@ Beloppet anges i hundratal kronor.
 
 Aktivitetsersättningen avser utbetalningsåret oavsett ersättningsperiod.
 
-*För ytterligare information, se under Sjukersättning* [[SjukErs]].
+*För ytterligare information, se under Sjukersättning* ([[SjukErs]]).

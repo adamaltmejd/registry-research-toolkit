@@ -2,11 +2,10 @@
 variable: FodGrEg2
 display_name: "Eget födelseland, gruppering EU25"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Eget födelseland, gruppering EU25 FodGrEg2**
 
@@ -30,7 +29,7 @@ I denna gruppering omfattar Kod 02 EU25 (utom Danmark, Finland och Sverige). I d
 
 *I övrigt se under Eget födelseland* (FodelseLandNamn).
 
-| Eget födelseland, gruppering EU27       | FodGrEg3                                 |
+| Eget födelseland, gruppering EU27       | [[FodGrEg3]]                                 |
 |-----------------------------------------|------------------------------------------|
 | <b>Grupperat eget födelseland, EU27</b> |                                          |
 | Kod                                     | Gruppering                               |

@@ -2,11 +2,10 @@
 variable: Barn20plus
 display_name: "Antal hemmavarande barn 20 år och äldre"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Antal hemmavarande barn 20 år och äldre Barn20plus**
 
@@ -14,4 +13,4 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Antal barn (biologiska/adoptiv/övriga) i aktuell ålder som är kopplade till en familjeidentitet.
 
-*I övrigt se Familj,* [[FamId]].
+*I övrigt se Familj,* ([[FamId]]).

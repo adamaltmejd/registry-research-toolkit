@@ -1,12 +1,11 @@
 ---
 variable: Kon
-display_name: Kön
+display_name: "Kön"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Kön Kon**
 

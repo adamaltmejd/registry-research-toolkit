@@ -2,11 +2,10 @@
 variable: Ssyk3
 display_name: "Yrke enligt SSYK 96, 3-siffernivå"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Yrke enligt SSYK 96, 3-siffernivå Ssyk3**
 
@@ -46,7 +45,7 @@ Följande tablå visar hur kvalifikationsnivåerna hänger ihop med yrkesområde
 
 Det bör observeras att det faktum att en utbildningsnomenklatur används som riktmärke för att bestämma kvalifikationsnivån inte innebär att de kunskaper och färdigheter som erfordras för ett visst arbete behöver inhämtas genom formell utbildning. De kan lika gärna inhämtas genom arbetserfarenhet.
 
-Yrket kopplas i första hand ihop med det jobb som valts som huvudsaklig verksamhet under november (se SsykStatus). Yrke samlas in på tresiffrig SSYK-kod i ett uppbyggnadsskede och finns heltäckande från 2001. Ett visst bortfall finns, ca 4 procent i 2013 års uppgifter för de förvärvsarbetande anställda. Utöver det naturliga bortfall bestående av de företag som helt enkelt inte svarar finns ytterligare förklaringar: i lönestatistikens lönepopulation ingår inte arvodesanställda, 16–17 åringar, betingsanställda, ombordanställda, förtroendevalda och projektanställda. Yrke har imputeras för egenföretagare utan anställda sen 2012, vilket gjort att bortfallet för denna grupp minskat från 18 till 10 procent 2013. I den officiella statistiken redovisas därför nu även egna företagare utan anställda 16+ år utöver anställda 16–64 år.
+Yrket kopplas i första hand ihop med det jobb som valts som huvudsaklig verksamhet under november (se [[SsykStatus]]). Yrke samlas in på tresiffrig SSYK-kod i ett uppbyggnadsskede och finns heltäckande från 2001. Ett visst bortfall finns, ca 4 procent i 2013 års uppgifter för de förvärvsarbetande anställda. Utöver det naturliga bortfall bestående av de företag som helt enkelt inte svarar finns ytterligare förklaringar: i lönestatistikens lönepopulation ingår inte arvodesanställda, 16–17 åringar, betingsanställda, ombordanställda, förtroendevalda och projektanställda. Yrke har imputeras för egenföretagare utan anställda sen 2012, vilket gjort att bortfallet för denna grupp minskat från 18 till 10 procent 2013. I den officiella statistiken redovisas därför nu även egna företagare utan anställda 16+ år utöver anställda 16–64 år.
 
 I anställda ingår även företagare i eget AB.
 
@@ -56,9 +55,9 @@ Yrkeskod på fyrsiffernivå enligt Standard för svensk yrkesklassificering 1996
 
 För kommunal och landstingskommunal sektor har heltäckande uppgifter på fyrsiffrig SSYK-kod funnits sedan första årgången 2001. Insamlingsåret 2004 gick hela privat sektor över till att koda på enbart fyrsiffrig SSYK-kod. Även statlig sektor bytte nomenklatur insamlingsåret 2004, som även den skulle gå att översätta till fyrsiffrig kod heltäckande. Tyvärr nåddes inte målet med ett heltäckande register på fyrsiffernivå fullt ut för 2005. Men inom den officiella statistiken började man att till viss del att redovisa på fyrsiffrig SSYK. Fram t.o.m. 2007 redovisades civilingenjörer (SSYK 214) och ingenjörer (SSYK 311) endast på tresiffernivå. Från och med 2008 års register redovisas civilingenjörer och ingenjörer för första gången på fyrsiffernivå. För registret 2013 var täckningen på fyrsiffrig SSYK 95 procent för de förvärvsarbetande anställda. Före år 2005 har täckningen legat runt 55– 60 procent.
 
-*För ytterligare information se Yrke enligt SSYK, 3-siffernivå* [[Ssyk3]].
+*För ytterligare information se Yrke enligt SSYK, 3-siffernivå* (Ssyk3).
 
-| Yrke enligt SSYK 2012, 3-siffernivå | Ssyk3_2012 |
+| Yrke enligt SSYK 2012, 3-siffernivå | [[Ssyk3_2012]] |
 |-------------------------------------|------------|
 |-------------------------------------|------------|
 

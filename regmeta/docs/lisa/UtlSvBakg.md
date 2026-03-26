@@ -2,11 +2,10 @@
 variable: UtlSvBakg
 display_name: "Utländsk/Svensk bakgrund"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utländsk/Svensk bakgrund UtlSvBakg**
 

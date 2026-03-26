@@ -2,11 +2,10 @@
 variable: SjukErsVilAnd
 display_name: "Andel/grad för vilande sjukersättning"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Andel/grad för vilande sjukersättning SjukErsVilAnd**
 

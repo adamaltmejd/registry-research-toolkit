@@ -2,12 +2,11 @@
 variable: SjukP_08_Bdag
 display_name: "Sjukpenning, antal bruttodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Sjukpenning, antal bruttodagar SjukP_08_Bdag**
 
@@ -23,4 +22,4 @@ Den *1/7 2008* införs nya regler i lagen om allmän försäkring vad gäller r�
 
 Den 1 januari 2011 byts en del begrepp ut och förlängd och fortsatt sjukpenning försvinner.
 
-Dessa dagar ingår i variabeln *Sjukpenning, antal bruttodagar* [[SjukP_Bdag_MiDAS]]. *Sjukpenning, förlängd sjukpenning* och *fortsatt sjukpenning* summeras till antal bruttodagar för sjukpenning när källan är Försäkringskassans STORE-databas. I LISA redovisas dock totalt antal bruttodagar för sjukpenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
+Dessa dagar ingår i variabeln *Sjukpenning, antal bruttodagar* ([[SjukP_Bdag_MiDAS]]). *Sjukpenning, förlängd sjukpenning* och *fortsatt sjukpenning* summeras till antal bruttodagar för sjukpenning när källan är Försäkringskassans STORE-databas. I LISA redovisas dock totalt antal bruttodagar för sjukpenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*

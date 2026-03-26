@@ -2,11 +2,10 @@
 variable: AstSNI2007U
 display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), utökad nivå"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), utökad nivå AstSNI2007U**
 
@@ -71,7 +70,7 @@ Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för red
 | U51 | Annan serviceverksamhet och personliga<br>tjänster                                                | 94–99                               | S+T+U             |
 | U99 | Okänd verksamhet                                                                                  | 0                                   |                   |
 
-| Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), grov nivå | AstSNI2007G |
+| Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), grov nivå | [[AstSNI2007G]] |
 |-------------------------------------------------------------------|-------------|
 |-------------------------------------------------------------------|-------------|
 

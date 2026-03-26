@@ -2,11 +2,10 @@
 variable: Raks_AldPensInk
 display_name: "Inkomst från pension"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Inkomst från pension RAKS_AldPensInk**
 
@@ -16,7 +15,7 @@ RAKS_AldPensInk
 
 Ersättning från pensioner anges i hundratal kronor.
 
-*För ytterligare information se Summa inkomst av pensioner* [[AldPens]].
+*För ytterligare information se Summa inkomst av pensioner* ([[AldPens]]).
 
 
 ---

@@ -2,12 +2,11 @@
 variable: Smitt_Belopp
 display_name: "Smittbärarpenning, ersättningsbelopp"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Smittbärarpenning, ersättningsbelopp Smitt_Belopp**
 
@@ -19,4 +18,4 @@ Beloppet anges i hundratals kronor.
 
 Utbetalt belopp under året för smittbärarpenning, står i relation till utbetalda dagar med smittbärarpenning. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information se under Smittbärarpenning, antal bruttodagar*  [[Smitt_Bdag]].
+*För ytterligare information se under Smittbärarpenning, antal bruttodagar*  ([[Smitt_Bdag]]).

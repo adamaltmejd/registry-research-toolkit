@@ -2,12 +2,11 @@
 variable: VPLTyp
 display_name: "Förekomst av värnpliktsersättning"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förekomst av värnpliktsersättning VPLTyp**
 

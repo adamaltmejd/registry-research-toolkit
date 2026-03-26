@@ -2,11 +2,10 @@
 variable: KU3AstNr
 display_name: "Arbetsställenummer (tredje största förvärvskälla)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Arbetsställenummer (tredje största förvärvskälla) KU3AstNr**
 
@@ -16,4 +15,4 @@ Alla arbetsgivare med verksamhet på fler än en adress är enligt lag skyldiga 
 
 På kontrolluppgifter för personer som inte kan hänföras till ett faktiskt arbetsställe (rörlig personal) anges istället ett s.k. särskilt arbetsställenummer för olika kategorier av anställda *(kod 99980 – 99999)*.
 
-*För ytterligare information se Arbetsställenummer (november)* [[AstNr_LISA]].
+*För ytterligare information se Arbetsställenummer (november)* ([[AstNr_LISA]]).

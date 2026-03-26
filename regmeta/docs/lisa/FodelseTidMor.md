@@ -2,11 +2,10 @@
 variable: FodelseTidMor
 display_name: "Moderns födelsetid"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Moderns födelsetid FodelseTidMor**
 

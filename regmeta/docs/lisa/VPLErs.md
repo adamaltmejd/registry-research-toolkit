@@ -1,13 +1,12 @@
 ---
 variable: VPLErs
-display_name: Värnpliktsersättning
+display_name: "Värnpliktsersättning"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Värnpliktsersättning VPLErs**
 

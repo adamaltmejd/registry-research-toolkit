@@ -1,13 +1,12 @@
 ---
 variable: IAKod
-display_name: Åtgärdskod
+display_name: "Åtgärdskod"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Åtgärdskod IAKod**
 
@@ -27,7 +26,7 @@ Koden bygger dels på händelseuppgift från Arbetsförmedlingens sökanderegist
 - Arbetspraktik, *fr.o.m. 1999-01, redovisas under Åtgärdssysselsättning 2010-2015, ingår i Åtgärdsstudier igen från 2016.*
 - Arbetsplatsintroduktion, API, *fr.o.m. 1995-07, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30.*
 - Lyft, *fr.o.m. 2010-01, t.o.m. 2010-12.*
-- Offentligt tillfälligt arbete, OTA, *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31 .*
+- Offentligt tillfälligt arbete, [[OTA]], *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31 .*
 - Aktivare användning av arbetslöshetsersättning, PROJEKT, *fr.o.m. 1997-07, upphör 1999-09-30, beslut tagna före 1999-10-01 får fullföljas*
 - Prova på-plats, *fr.o.m. 2005-05-23*
 - Internpraktik, *fr.o.m. 2005-05-23, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
@@ -65,7 +64,7 @@ Koden bygger dels på händelseuppgift från Arbetsförmedlingens sökanderegist
 - Arbetslivsutvecklingsbidrag (1993–1999)
 - Särskild dagpenning/studielån vid arbetsmarknadsutbildning (1993– 1995)
 - Aktivare användning av arbetslöshetsersättning (PROJEKT) (1997– 1999)
-- Ersättning i samband med OTA (1996–2001)
+- Ersättning i samband med [[OTA]] (1996–2001)
 - Utvecklingsersättning (2008–)
 - Etableringsersättning (2012-)
 
@@ -94,7 +93,7 @@ Den tredje kategorin – Åtgärdsersättning men ej Åtgärdshändelse – kan 
 | 2013 | 246 617 | 143 667 | 16 105 |
 | 2017 | 179 321 | 119 305 | 39 342 |
 
-| Antal dagar i åtgärdssysselsättning | ASysDag |
+| Antal dagar i åtgärdssysselsättning | [[ASysDag]] |
 |-------------------------------------|---------|
 |-------------------------------------|---------|
 

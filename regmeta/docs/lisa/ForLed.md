@@ -2,12 +2,11 @@
 variable: ForLed
 display_name: "Summa inkomst föranledd av ersättningar i föräldraförsäkringen"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Summa inkomst föranledd av ersättningar i föräldraförsäkringen ForLed**
 
@@ -17,7 +16,7 @@ Beloppet anges i hundratals kronor.
 
 Ersättningarna i föräldraförsäkringen avser utbetalningsåret oavsett ersättningsperiod.
 
-Den summerade inkomsten av *ForPeng, ForVAB, VardBidr* och *KomVard-Bidr* (2011-2016) under året.
+Den summerade inkomsten av *[[ForPeng]], [[ForVAB]], [[VardBidr]]* och *KomVard-Bidr* (2011-2016) under året.
 
 *Förändringar från och med 1990 som kan påverka utfallet:* En konsekvens av att antalet dagar med föräldrapenning stegvis utökas borde vara att det under året summerade beloppet blir högre.
 

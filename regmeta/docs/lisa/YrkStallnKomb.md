@@ -2,11 +2,10 @@
 variable: YrkStallnKomb
 display_name: "Kod för kombinatörer"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Kod för kombinatörer YrkStallnKomb**
 

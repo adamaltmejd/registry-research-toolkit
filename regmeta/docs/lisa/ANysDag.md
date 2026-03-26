@@ -2,11 +2,10 @@
 variable: ANysDag
 display_name: "Antal dagar i Nystartsjobb"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Antal dagar i Nystartsjobb ANysDag**
 
@@ -107,4 +106,4 @@ Arbetsförmåga som en försäkrad uppvisat under det första året med vilande 
 
 Från och med *1/1 2003* upphör förtidspension och sjukbidrag som ersättningssystem. I stället införs ersättningsslagen sjukersättning och aktivitetsersättning.
 
-*Se vidare under Sjukersättning [[SjukErs]] och Aktivitetsersättning* [[AktErs]].
+*Se vidare under Sjukersättning ([[SjukErs]]) och Aktivitetsersättning* ([[AktErs]]).

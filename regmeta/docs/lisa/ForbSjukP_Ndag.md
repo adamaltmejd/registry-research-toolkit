@@ -2,12 +2,11 @@
 variable: ForbSjukP_Ndag
 display_name: "Förebyggande sjukpenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förebyggande sjukpenning, antal nettodagar ForbSjukP_Ndag**
 
@@ -24,6 +23,6 @@ Antal nettodagar är bruttodagar \*omfattningen under ett år.
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, antal nettodagar* [[ForbSjukP_08_Ndag]] och *Förebyggande sjukpenning, förlängd, antal nettodagar* [[ForbSjukP_Forlangd_Ndag]].
+2008-2011 finns variabeln också uppdelad på *Förebyggande sjukpenning, antal nettodagar* ([[ForbSjukP_08_Ndag]]) och *Förebyggande sjukpenning, förlängd, antal nettodagar* ([[ForbSjukP_Forlangd_Ndag]]).
 
-*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar* [[ForbSjukP_Bdag]].
+*Läs mer om förebyggande sjukpenning under Förebyggande sjukpenning, antal bruttodagar* ([[ForbSjukP_Bdag]]).

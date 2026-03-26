@@ -2,12 +2,11 @@
 variable: AldPens
 display_name: "Privat pensionsförsäkring"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Privat pensionsförsäkring AldPens**
 
@@ -15,7 +14,7 @@ AldPens
 
 Beloppet anges i hundratals kronor.
 
-Den under året summerade inkomsten av *FolkAld* (1990–2002), *ATPAld* (1990–2004), *SPenTill* (1991–), *InkPens* (2003–), *TillPens* (2003–), *PremPens* (2003–), *GarPens* (2003–), *ITP*, *KTjP*, *StjP*, *SBTjP* (1994–), *KUPens* (1991–), *STP*, *OvrTjP* (1994–), *DelPens* (1990–2004) samt *PrivPens* (1991–).
+Den under året summerade inkomsten av *[[FolkAld]]* (1990–2002), *[[ATPAld]]* (1990–2004), *[[SPenTill]]* (1991–), *[[InkPens]]* (2003–), *[[TillPens]]* (2003–), *[[PremPens]]* (2003–), *[[GarPens]]* (2003–), *[[ITP]]*, *KTjP*, *StjP*, *[[SBTjP]]* (1994–), *[[KUPens]]* (1991–), *[[STP]]*, *OvrTjP* (1994–), *[[DelPens]]* (1990–2004) samt *[[PrivPens]]* (1991–).
 
 Ersättning från tjänste- och tilläggspension är inte i samtliga fall åldersrelaterad, utan kan även, för vissa grupper på arbetsmarknaden, betalas ut tillsammans med sjukpenning, sjukpension, efterlevandepension och livränta. Även den privata pensionsförsäkringen kan betalas ut till efterlevande. År 2017 är det cirka 175 600 personer under 55 år som erhåller AldPens.
 

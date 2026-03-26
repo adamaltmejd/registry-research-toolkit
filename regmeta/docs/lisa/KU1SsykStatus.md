@@ -2,11 +2,10 @@
 variable: KU1SsykStatus
 display_name: "Yrkets överensstämmelse med största förvärvskälla"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 ---
 
@@ -18,7 +17,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Variabeln SsykStatus är en så kallad kvalitetsvariabel som anger om yrkesuppgiften hör samman med det företag som personen fått sin största förvärvsinkomst från.
 
-*För ytterligare information se Status för yrkesuppgift* [[SsykStatus]].
+*För ytterligare information se Status för yrkesuppgift* (SsykStatus).
 
 #### **KU2 – För näst största förvärvskälla aktuellt år**
 
@@ -26,4 +25,4 @@ Näst största förvärvskälla definieras efter inkomstens storlek. Den förvä
 
 Inkomsten ska överstiga 1 000 kr.
 
-*I övrigt se under Arbetsställe (största förvärvskälla)* [[KU2CfarNr]] *och Företag (största förvärvskälla)* [[KU2PeOrgNr]].
+*I övrigt se under Arbetsställe (största förvärvskälla)* (KU2CfarNr) *och Företag (största förvärvskälla)* (KU2PeOrgNr).

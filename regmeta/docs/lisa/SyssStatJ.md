@@ -2,11 +2,10 @@
 variable: SyssStatJ
 display_name: "Sysselsättningsstatus (november månad), enligt justerad metod 2004"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Sysselsättningsstatus (november månad), enligt justerad metod 2004 SyssStatJ**
 
@@ -19,7 +18,7 @@ SyssStatJ
 - 6 = Ej förvärvsarbetande, utan kontrolluppgift från arbetsgivare eller företagarinkomst under året
 - 7 = Förvärvsarbetande, 15 år (2010-2011)
 
-Sysselsättningsstatus enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. I övrigt se definition för SyssStat.
+Sysselsättningsstatus enligt de förutsättningar som gäller enligt den justerade metod för framställningen av RAMS som infördes fr.o.m. årgång 2004. I övrigt se definition för [[SyssStat]].
 
 Se *bilaga 3 "Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004"*.
 
@@ -41,4 +40,4 @@ Se *bilaga 3 "Justerad metod för framställning av den Registerbaserade arbetsm
 
 Metoden att avgränsa förvärvsarbetande ändrades 2011. Sysselsättningsstatus enligt den avgränsningsmetod som användes 2003-2011 finns i variabeln SyssStatJ. För 2011 finns Sysselsättningsstatus både enligt den gamla och enligt den nya
 
-metoden. För avgränsningen av förvärvsarbetande enligt samtliga definitioner, se Sysselsättningsstatus [[SyssStat]].
+metoden. För avgränsningen av förvärvsarbetande enligt samtliga definitioner, se Sysselsättningsstatus ([[SyssStat]]).

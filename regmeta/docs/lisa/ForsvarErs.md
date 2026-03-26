@@ -2,12 +2,11 @@
 variable: ForsvarErs
 display_name: "Ersättning för tjänstgöring i hemvärnet"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Ersättning för tjänstgöring i hemvärnet ForsvarErs**
 

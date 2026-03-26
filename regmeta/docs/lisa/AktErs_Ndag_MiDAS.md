@@ -2,15 +2,15 @@
 variable: AktErs_Ndag_MiDAS
 display_name: "Aktivitetsersättning, antal nettodagar"
 tags:
-  - type/variable
+  - topic/employment
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Aktivitetsersättning, antal nettodagar AktErs_Ndag_MiDAS**
 
-AktErs*Ndaq*MiDAS
+[[AktErs]]*Ndaq*MiDAS
 
 (2003–)
 
@@ -23,4 +23,4 @@ Aktivitetsersättning kan betalas ut som hel (100 procent), tre fjärdedels (75 
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar
 
-*För ytterligare information om aktivitetsersättning se under Sjukersättning* [[SjukErs]].
+*För ytterligare information om aktivitetsersättning se under Sjukersättning* ([[SjukErs]]).

@@ -2,11 +2,10 @@
 variable: AntAns
 display_name: "Antal förvärvskällor under året"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Antal förvärvskällor under året AntAns**
 
@@ -20,4 +19,4 @@ Största förvärvskälla definieras efter inkomstens storlek. Den förvärvskä
 
 Inkomsten ska överstiga 1 000 kr.
 
-*I övrigt se under Arbetsställe (största förvärvskälla)* [[KU1CfarNr]] och *Företag (största förvärvskälla)* [[KU1PeOrgNr]].
+*I övrigt se under Arbetsställe (största förvärvskälla)* ([[KU1CfarNr]]) och *Företag (största förvärvskälla)* ([[KU1PeOrgNr]]).

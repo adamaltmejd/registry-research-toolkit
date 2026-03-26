@@ -2,12 +2,11 @@
 variable: STP
 display_name: "Tjänste- och tilläggspension för privatanställda arbetare"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Tjänste- och tilläggspension för privatanställda arbetare STP**
 

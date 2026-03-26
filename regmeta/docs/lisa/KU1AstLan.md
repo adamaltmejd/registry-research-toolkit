@@ -2,11 +2,10 @@
 variable: KU1AstLan
 display_name: "Arbetsställelän (största förvärvskälla)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Arbetsställelän (största förvärvskälla) KU1AstLan**
 

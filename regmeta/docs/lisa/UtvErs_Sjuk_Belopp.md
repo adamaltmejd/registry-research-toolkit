@@ -2,15 +2,14 @@
 variable: UtvErs_Sjuk_Belopp
 display_name: "Utvecklingsersättning med sjukpenning, belopp"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Utvecklingsersättning med sjukpenning, belopp UtvErs_Sjuk_Belopp**
 
-UtvErs Sjuk Belopp
+[[UtvErs]] Sjuk Belopp
 
 (2008–)
 
@@ -18,7 +17,7 @@ Beloppet anges i hundratals kronor.
 
 Utbetalt belopp under året för utvecklingsersättning med sjukpenning, står i relation till utbetalda dagar med utvecklingsersättning med sjukpenning. Utbetalt belopp avser ersättningsperioden.
 
-Läs mer under *Utvecklingsersättning, antal dagar* [[UtvErs_Dag]] och *Utvecklingsersättning med sjukpenning, antal dagar* [[UtvErs_Sjuk_Dag]].
+Läs mer under *Utvecklingsersättning, antal dagar* ([[UtvErs_Dag]]) och *Utvecklingsersättning med sjukpenning, antal dagar* ([[UtvErs_Sjuk_Dag]]).
 
 #### **Arbetslöshet**
 

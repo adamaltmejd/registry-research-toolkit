@@ -2,12 +2,11 @@
 variable: ITP
 display_name: "TP – Industrins och handelns tjänste- och tilläggspension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **TP – Industrins och handelns tjänste- och tilläggspension ITP**
 
@@ -34,7 +33,7 @@ Från och med *1998* har kommunal- och landstingsanställda fått ett nytt pensi
 
 En viss del förvaltas av kommun/landsting och en viss del av det försäkringsbolag man själv väljer. Val av förvaltare sker första gången år 2000.
 
-Från och med 2005 slutar Statens pensionsverk att betala ut kommunal tjänstepension för de arbetstagare som har bytt från kommunal till statlig arbetsgivare. Den del som är kommunal tjänstepension betalas ut av SPP från och med 2005. Beloppet hamnar under variabeln Övrig tjänste- och tilläggspension OvrTjp från och med 2005
+Från och med 2005 slutar Statens pensionsverk att betala ut kommunal tjänstepension för de arbetstagare som har bytt från kommunal till statlig arbetsgivare. Den del som är kommunal tjänstepension betalas ut av SPP från och med 2005. Beloppet hamnar under variabeln Övrig tjänste- och tilläggspension [[OvrTjp]] från och med 2005
 
 Avgår man med pension före år 2000 beräknas pensionen enligt det gamla pensionsavtalet PA-KL 85.
 

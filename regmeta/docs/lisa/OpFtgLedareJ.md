@@ -2,11 +2,10 @@
 variable: OpFtgLedareJ
 display_name: "Operativ företagsledare"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Operativ företagsledare OpFtgLedareJ**
 
@@ -39,7 +38,7 @@ Poängsystemet är följande:
 | Högst inkomst i företaget | 10        |
 | Höst ålder i företaget    | 1         |
 
-| Aktiv eller passiv egenföretagare | StatusF |
+| Aktiv eller passiv egenföretagare | [[StatusF]] |
 |-----------------------------------|---------|
 |-----------------------------------|---------|
 

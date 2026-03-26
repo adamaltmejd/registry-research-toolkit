@@ -2,11 +2,10 @@
 variable: InvUtvManad
 display_name: "År och månad för in-/utvandring"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **År och månad för in-/utvandring InvUtvManad**
 
@@ -34,4 +33,4 @@ Före 1998 redovisades registreringsår och vecka på lokala skattekontor som fl
 
 År och månad för in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISA-populationen.
 
-*I övrigt se under objektet Individ* [[PersonNr]].
+*I övrigt se under objektet Individ* ([[PersonNr]]).

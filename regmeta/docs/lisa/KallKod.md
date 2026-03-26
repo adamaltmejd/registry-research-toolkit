@@ -2,11 +2,10 @@
 variable: KallKod
 display_name: "Källa för uppgift om högsta utbildning"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Källa för uppgift om högsta utbildning Kallkod**
 
@@ -21,7 +20,7 @@ Uppgifter om högsta avklarade utbildning hämtas i första hand från källor/r
 | Källkod | Källkod i klartext                                                                   |
 |---------|--------------------------------------------------------------------------------------|
 | ***     | Uppgift saknas                                                                       |
-| 240     | SFI, grundutbildning för vuxna                                                       |
+| 240     | [[SFI]], grundutbildning för vuxna                                                       |
 | 260     | Register över sökande till Kom Vux                                                   |
 | 265     | Migrationsverket. Registret för Migrations- och asylstatistik (MOA), startår<br>2014 |
 | 270     | Arbetsförmedlingen. Etableringsersättning från STATIV, startår 2014                  |
@@ -87,11 +86,11 @@ Uppgifter om högsta avklarade utbildning hämtas i första hand från källor/r
 | 828     | HREG Basår (start år 2003)                                                           |
 | 830     | HREG Poängproduktion (start år 2000)                                                 |
 
-| Studiedeltagande HT (registrering/närvaro) | StudDelt |
+| Studiedeltagande HT (registrering/närvaro) | [[StudDelt]] |
 |--------------------------------------------|----------|
 |--------------------------------------------|----------|
 
-StudDelt
+[[StudDelt]]
 
 (1997–)
 
@@ -117,7 +116,7 @@ Uppgiften avser registrering/närvaro i olika skolformer under höstterminen akt
 | A   | Arbetsmarknadsutbildning18                                | Fr.o.m. 2001                                |
 | G   | Grundskola                                                | Fr.o.m. 2002                                |
 | U   | Uppdragsutbildning vid universitet/högskola               | Redovisas under<br><i>Övriga studerande</i> |
-| S   | SFI, svenska för invandrare                               | Fr.o.m. 2012                                |
+| S   | [[SFI]], svenska för invandrare                               | Fr.o.m. 2012                                |
 | K   | Kompletterande utbildning / Konst- och kulturutbildning19 | Fr.o.m. 2012 / 2016                         |
 
 14 Tekniskt basår i Komvux ingår i redovisningen för Komvux.
@@ -151,5 +150,5 @@ Uppgiften avser registrering/närvaro i olika skolformer under höstterminen akt
 - Grundskola
 - Övriga studerande
 - Arbetsmarknadsutbildning från Arbetsförmedlingen (AUB)
-- SFI, Svenska för invandrare
+- [[SFI]], Svenska för invandrare
 - Förberedande utbildning vid Arbetsförmedlingen (FUB)

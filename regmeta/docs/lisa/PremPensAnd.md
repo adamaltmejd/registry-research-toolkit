@@ -2,12 +2,11 @@
 variable: PremPensAnd
 display_name: "Andel/grad för premiepension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Andel/grad för premiepension PremPensAnd**
 
@@ -27,7 +26,7 @@ Ger information om vilken grad av premiepension som tagits ut.
 
 04 = 1/4, 25 % utbetalt
 
-| Garantipension | GarPens |
+| Garantipension | [[GarPens]] |
 |----------------|---------|
 |----------------|---------|
 

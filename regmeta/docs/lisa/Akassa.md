@@ -2,12 +2,11 @@
 variable: Akassa
 display_name: "Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring AKassa**
 
@@ -83,7 +82,7 @@ Den *5/3 2007* införs en successiv avtrappning av kompensationsnivån i arbetsl
 
 Den *7/9 2015* höjs högsta dagpenningen från 680 kronor per dag till 910 kronor per dag under de första 100 dagarna, vilket motsvarar 80 procent av en inkomst på cirka 25 000 kronor i månaden. Efter de första 100 dagarna sänks ersättningen till 760 kronor per dag, vilket även detta är en höjning från tidigare 680 kronor per dag.
 
-Den *1 november 1996* införs den arbetsmarknadspolitiska åtgärden Offentligt tillfälligt arbete [[OTA]]. Personer som har OTA erhåller arbetslöshetsersättning under den tid åtgärden varar. Denna ersättning redovisas under inkomst föranledd av arbetsmarknadspolitisk åtgärd enbart för dem som 1997 erhåller ersättningen via Försäkringskassan (kontant arbetsmarknadsstöd eller motsvarande), för övriga redovisas beloppet under arbetslöshetsersättning.
+Den *1 november 1996* införs den arbetsmarknadspolitiska åtgärden Offentligt tillfälligt arbete ([[OTA]]). Personer som har [[OTA]] erhåller arbetslöshetsersättning under den tid åtgärden varar. Denna ersättning redovisas under inkomst föranledd av arbetsmarknadspolitisk åtgärd enbart för dem som 1997 erhåller ersättningen via Försäkringskassan (kontant arbetsmarknadsstöd eller motsvarande), för övriga redovisas beloppet under arbetslöshetsersättning.
 
 Den *1 juli 1997* införs *Projektarbete (Aktivare användning av arbetslöshetsersättning)*. De som är inskrivna i denna kategori erhåller arbetslöshetsersättning under projekttiden, vilket innebär att ersättningen för denna åtgärd redovisas under arbetslöshetsersättning. Åtgärden upphör den 30/9 1999.
 
@@ -91,7 +90,7 @@ Under *sista halvåret 1997* erbjuds långtidsarbetslösa *Tillfällig avgångse
 
 Den *1/1 1998* införs en ny allmän och sammanhållen arbetslöshetsförsäkring. Den del i den nya arbetslöshetsförsäkringen som motsvarar dagpenning från erkänd arbetslöshetskassa är en *frivillig inkomstrelaterad försäkring*.
 
-Den *grundförsäkring* som ingår i denna nya arbetslöshetsförsäkring ersätter nu KAS och redovisas även den under *Ersättning från arbetslöshetskassa/ arbetslöshetsförsäkring*.
+Den *grundförsäkring* som ingår i denna nya arbetslöshetsförsäkring ersätter nu [[KAS]] och redovisas även den under *Ersättning från arbetslöshetskassa/ arbetslöshetsförsäkring*.
 
 För ersättning enligt grundförsäkringen behöver inget medlemsvillkor vara uppfyllt däremot måste grundvillkoren och arbetsvillkoret vara uppfyllda. Ersättningen från grundförsäkringen betalas ut tidigast den dag man fyller 20 år.
 

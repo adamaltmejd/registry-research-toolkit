@@ -2,9 +2,8 @@
 display_name: "Förändringar i LISA 2011"
 tags:
   - type/changelog
-source: hushallsinformation-i-lisa-2011-.md
+source: "hushallsinformation-i-lisa-2011-.md"
 ---
-
 
 2021-06-18
 ## För att koppla personer till varandra i en familj tittar man på vilka som har en relation till varandra. Personerna ska vara folkbokförda på

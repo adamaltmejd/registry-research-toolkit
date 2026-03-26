@@ -2,11 +2,10 @@
 variable: KU1Ink
 display_name: "Inkomst av största förvärvskälla"
 tags:
+  - topic/employment
   - type/variable
-  - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomst av största förvärvskälla KU1Ink**
 
@@ -20,4 +19,4 @@ Observera att 1990 års *Inkomst av största förvärvskälla* bygger på lönei
 
 1990 är företagarinkomst lika med Inkomst av rörelse och Inkomst av jordbruksfastighet (brukad). Mellan åren 1991–2003 är företagarinkomst lika med Inkomst av aktiv näringsverksamhet. Från och med år 2004 är företagarinkomst lika med Inkomst av näringsverksamhet.
 
-*Avseende jämförelsen mellan Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) och Inkomst av aktiv näringsverksamhet samt hur sjuklönens införande och arbetsgivarinträdets avskaffande har påverkat variabeln Inkomst av största förvärvskälla, se under "Summa inkomst av förvärvskälla, ForvInk".*
+*Avseende jämförelsen mellan Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) och Inkomst av aktiv näringsverksamhet samt hur sjuklönens införande och arbetsgivarinträdets avskaffande har påverkat variabeln Inkomst av största förvärvskälla, se under "Summa inkomst av förvärvskälla, [[ForvInk]]".*

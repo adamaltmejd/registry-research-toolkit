@@ -2,11 +2,10 @@
 variable: KU2SsykAr
 display_name: "Årtal för yrkesuppgift, näst största förvärvskälla"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Årtal för yrkesuppgift, näst största förvärvskälla KU2SsykAr**
 
@@ -16,7 +15,7 @@ KU2SsykAn
 
 Uppgiften visar yrkeskodens aktualitet.
 
-*För ytterligare information se Årtal för yrkesuppgift* [[SsykAr]].
+*För ytterligare information se Årtal för yrkesuppgift* ([[SsykAr]]).
 
 #### **KU3 – För tredje största förvärvskälla aktuellt år**
 
@@ -24,4 +23,4 @@ Tredje största förvärvskälla definieras efter inkomstens storlek. Den förv�
 
 Inkomsten ska överstiga 1 000 kr.
 
-*I övrigt se under Arbetsställe (största förvärvskälla)* [[KU3CfarNr]] *och Företag (största förvärvskälla)* [[KU3PeOrgNr]].
+*I övrigt se under Arbetsställe (största förvärvskälla)* ([[KU3CfarNr]]) *och Företag (största förvärvskälla)* ([[KU3PeOrgNr]]).

@@ -2,11 +2,10 @@
 variable: FoDelt
 display_name: "Registrering på högskolans forskarutbildning"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Registrering på högskolans forskarutbildning FoDelt**
 

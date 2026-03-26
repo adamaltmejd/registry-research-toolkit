@@ -2,11 +2,10 @@
 variable: KU2AstSNI2007G
 display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, näst största förvärvskälla), grov nivå"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, näst största förvärvskälla), grov nivå KU2AstSNI2007G**
 

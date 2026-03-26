@@ -2,11 +2,10 @@
 variable: ExamAr
 display_name: "Utbildningsår, avslutningsår högsta utbildning"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utbildningsår, avslutningsår högsta utbildning ExamAr**
 

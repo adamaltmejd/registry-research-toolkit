@@ -2,18 +2,17 @@
 variable: AldTjPTyp
 display_name: "Förekomst av ålders-/tjänstepension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Förekomst av ålders-/tjänstepension AldTjPTyp**
 
 AldTjPTyp
 
-Markering för om individ under aktuellt år erhållit FolkAld (1990–2002), ATPAld (1990–2004), InkPens (2003–), TillPens (2003–), PremPens (2003–), GarPens (2003–) ITP, KTjP, StjP, SBTjP (1994–), KUPens (1991–), STP samt OvrTjP (1994–).
+Markering för om individ under aktuellt år erhållit [[FolkAld]] (1990–2002), [[ATPAld]] (1990–2004), [[InkPens]] (2003–), [[TillPens]] (2003–), [[PremPens]] (2003–), [[GarPens]] (2003–) [[ITP]], KTjP, StjP, [[SBTjP]] (1994–), [[KUPens]] (1991–), [[STP]] samt OvrTjP (1994–).
 
 *Förändringar från och med 1990 som kan påverka förekomst av ålders/tjänstepension:*
 

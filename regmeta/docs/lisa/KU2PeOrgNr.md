@@ -2,11 +2,10 @@
 variable: KU2PeOrgNr
 display_name: "Företag (näst största förvärvskälla)"
 tags:
-  - type/variable
   - topic/identifier
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Företag (näst största förvärvskälla) KU2PeOrgNr**
 
@@ -22,7 +21,7 @@ löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under
 
 KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 
-*För ytterligare information, se beskrivning under Företag [[PeOrgNr_LISA]].*
+*För ytterligare information, se beskrivning under Företag ([[PeOrgNr_LISA]]).*
 
 *Vid utlämnade av data från LISA ersätts organisationsnumret av ett löpnummer.*
 

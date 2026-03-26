@@ -2,11 +2,10 @@
 variable: AstSNI2007
 display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI2007 (arbetsställe) AstSNI2007**
 

@@ -2,12 +2,11 @@
 variable: SumAld
 display_name: "Summa ålderspension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Summa ålderspension SumAld**
 
@@ -15,6 +14,6 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Beloppet anges i hundratal kronor.
 
-Den under året summerade inkomsten av *Ålderspension från folkpension (egenförmån)* [[FolkAld]], *Ålderspension från ATP (egenförmån)* [[ATPAld]] och *Särskilt pensionstillägg (1991–)* [[SPenTill]].
+Den under året summerade inkomsten av *Ålderspension från folkpension (egenförmån)* ([[FolkAld]]), *Ålderspension från ATP (egenförmån)* ([[ATPAld]]) och *Särskilt pensionstillägg (1991–)* ([[SPenTill]]).
 
 *För mer information, se under respektive inkomstslag.*

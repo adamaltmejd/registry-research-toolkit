@@ -2,11 +2,10 @@
 variable: Sun2000Niva
 display_name: "Utbildningsnivå, högsta"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utbildningsnivå, högsta SUN2000Niva**
 

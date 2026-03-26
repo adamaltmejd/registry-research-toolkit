@@ -1,11 +1,10 @@
 ---
 display_name: "Bilaga 6 — Ursprunglig variabelkälla"
 tags:
-  - type/appendix
   - topic/lisa
-source: lisa-bakgrundsfakta-1990-2017
+  - type/appendix
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Ursprunglig variabelkälla**
 
@@ -19,7 +18,7 @@ Uppgift om ursprunglig variabelkälla anges för flertalet av de variabler som e
 | Bostadslän                                                            | Folkbokföringsuppgift,<br>härleds utifrån<br>personnummer                                                                                                                               |
 | Bostadskommun                                                         | Folkbokföringsuppgift,<br>härleds utifrån<br>personnummer                                                                                                                               |
 | Bostadsförsamling                                                     | Folkbokföringsuppgift,<br>härleds utifrån<br>personnummer                                                                                                                               |
-| Distriktskod                                                          | Folkbokföringsuppgift,<br>härleds utifrån<br>personnummer                                                                                                                               |
+| [[Distriktskod]]                                                          | Folkbokföringsuppgift,<br>härleds utifrån<br>personnummer                                                                                                                               |
 | Fastighetens löpnummer                                                | SCB-löpnummer utifrån<br>folkbokföringsuppgift, ändras<br>efter egen flyttningsanmälan                                                                                                  |
 | Fastighetsbeteckning                                                  | Folkbokföringsuppgift,<br>ändras efter egen<br>flyttningsanmälan                                                                                                                        |
 | Antal flyttningar                                                     | Folkbokföringsuppgift,<br>ändras efter egen<br>flyttningsanmälan                                                                                                                        |
@@ -129,9 +128,9 @@ Uppgift om ursprunglig variabelkälla anges för flertalet av de variabler som e
 | <i>Arbetsmarknadspolitisk åtgärd</i>                                  |                                                                                                                                                                                         |
 | Aktivitetsstöd / Utbildningsbidrag                                    | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
 | ALU (från A-kassa)                                                    | KU från arbetslöshetskassa                                                                                                                                                              |
-| ALU (från FK, [[KAS]])                                                  | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
-| ALU (från AMK)                                                        | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
-| Offentlig tillfälligt arbete [[OTA]]                                    | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
+| ALU (från FK, ([[KAS]]))                                                  | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
+| ALU (från [[AMK]])                                                        | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
+| Offentlig tillfälligt arbete ([[OTA]])                                    | Uppgift från<br>Försäkringskassan                                                                                                                                                       |
 | Ersättning från arbetslöshetskassa vid<br>arbetsmarknadsåtgärd        | KU från arbetslöshetskassa                                                                                                                                                              |
 | Åtgärdskod                                                            | Härledd utifrån registrering<br>som<br>arbetssökande på<br>Arbetsförmedlingen och<br>uppgift från<br>Försäkringskassan                                                                  |
 | Etableringsersättning                                                 | Uppgift från<br>Försäkringskassan                                                                                                                                                       |

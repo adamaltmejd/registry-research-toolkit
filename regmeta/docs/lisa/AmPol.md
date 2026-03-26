@@ -2,12 +2,11 @@
 variable: AmPol
 display_name: "Summa inkomst föranledd av arbetsmarknadspolitisk åtgärd"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Summa inkomst föranledd av arbetsmarknadspolitisk åtgärd AmPol**
 
@@ -15,9 +14,9 @@ AmPol
 
 Beloppet anges i hundratals kronor.
 
-Den under året summerade inkomsten av UtbBidr, ALUBidr (1993), ALUKU (1994–1999), ALUKAS (1994–1998), ALUAMK (1994–1996), ALUEES (1994–1997), UtbBArb (1993–1995), UtbBLan (1993–1995), OTA (1997), AKassaAmPol (2000–2006), UtvErs (2008–) och EtablErs (2014–).
+Den under året summerade inkomsten av [[UtbBidr]], [[ALUBidr]] (1993), [[ALUKU]] (1994–1999), [[ALUKAS]] (1994–1998), [[ALUAMK]] (1994–1996), [[ALUEES]] (1994–1997), [[UtbBArb]] (1993–1995), [[UtbBLan]] (1993–1995), [[OTA]] (1997), [[AKassaAmPol]] (2000–2006), [[UtvErs]] (2008–) och [[EtablErs]] (2014–).
 
-#### **Etableringsersättning [[EtablErs]], finns som separat variabel 2011-2013.**
+#### **Etableringsersättning (EtablErs), finns som separat variabel 2011-2013.**
 
 *Observera att här endast ingår arbetsmarknadspolitiska åtgärder där ersättningen går till individen.*
 

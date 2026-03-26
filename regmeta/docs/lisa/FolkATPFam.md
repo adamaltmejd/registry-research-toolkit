@@ -2,11 +2,10 @@
 variable: FolkATPFam
 display_name: "Efterlevandeförmån av folkpension och ATP"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Efterlevandeförmån av folkpension och ATP FolkATPFam**
 
@@ -38,4 +37,4 @@ Ovan beskrivna regler kring efterlevandepension börjar gälla den 1 januari 199
 
 Rätten till änkepension i form av folkpension upphör vid 65 års ålder eller om man dessförinnan får ålderspension, sjukbidrag eller förtidspension från folkpensioneringen. Vidare upphör rätten till änkepension från folkpensioneringen och från ATP om man gifter om sig. Detsamma gäller om man börjar sammanbo med en man som man tidigare varit gift med eller som man har barn tillsammans med.
 
-Från och med 2003 redovisas dessa efterlevandeförmåner under *Efterlevandeförmån* [[SumEftPens]].
+Från och med 2003 redovisas dessa efterlevandeförmåner under *Efterlevandeförmån* ([[SumEftPens]]).

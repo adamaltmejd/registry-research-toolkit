@@ -2,11 +2,10 @@
 variable: FInk90
 display_name: "Inkomst av rörelse / Inkomst av jordbruksfastighet (brukad) FInk89 /"
 tags:
-  - type/variable
   - topic/income
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomst av rörelse / Inkomst av jordbruksfastighet (brukad) FInk89 / FInk90**
 

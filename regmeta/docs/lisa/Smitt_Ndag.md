@@ -2,12 +2,11 @@
 variable: Smitt_Ndag
 display_name: "Smittbärarpenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Smittbärarpenning, antal nettodagar Smitt_Ndag**
 
@@ -24,4 +23,4 @@ Antalet nettodagar är bruttodagar \* omfattning under ett år för förmånen s
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar.
 
-*För ytterligare information se under Smittbärarpenning, antal bruttodagar (*Smitt_Bdag).
+*För ytterligare information se under Smittbärarpenning, antal bruttodagar (*[[Smitt_Bdag]]).

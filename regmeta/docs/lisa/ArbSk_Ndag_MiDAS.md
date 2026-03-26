@@ -2,12 +2,11 @@
 variable: ArbSk_Ndag_MiDAS
 display_name: "Arbetsskadesjukpenning, antal nettodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsskadesjukpenning, antal nettodagar ArbSk_Ndag_MiDAS**
 

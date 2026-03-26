@@ -1,12 +1,11 @@
 ---
 variable: Forsamling
-display_name: Bostadsförsamling
+display_name: "Bostadsförsamling"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bostadsförsamling Forsamling**
 
@@ -18,8 +17,8 @@ Med bostadsförsamling avses den församling där personen var folkbokförd vid 
 
 Förändringar på församlingsnivå under tidsperioden från och med 1990 beskrivs på SCB:s webbplats.
 
-*I övrigt se Fastighetsbeteckning* [[FastBet]] *samt bilaga 8 Regionala koder – Ändringar i läns- och kommunindelningen från och med 1990.*
+*I övrigt se Fastighetsbeteckning* ([[FastBet]]) *samt bilaga 8 Regionala koder – Ändringar i läns- och kommunindelningen från och med 1990.*
 
-*I övrigt se Fastighetsbeteckning* [[FastBet]].
+*I övrigt se Fastighetsbeteckning* ([[FastBet]]).
 
 Den 1/7 1991, införs regeln att studerande på eftergymnasial utbildning ska vara folkbokförda på studieorten.

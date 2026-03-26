@@ -2,12 +2,11 @@
 variable: KUPens
 display_name: "Tjänstepension enligt ett individuellt tecknat tjänstepensionsavtal mellan arbetsgivare och arbetstagare"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Tjänstepension enligt ett individuellt tecknat tjänstepensionsavtal mellan arbetsgivare och arbetstagare KUPens**
 

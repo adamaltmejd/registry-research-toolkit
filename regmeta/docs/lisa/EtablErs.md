@@ -2,12 +2,11 @@
 variable: EtablErs
 display_name: "Etableringsersättning för nyanlända invandrare"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Etableringsersättning för nyanlända invandrare EtablErs**
 

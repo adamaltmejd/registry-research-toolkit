@@ -2,11 +2,10 @@
 variable: AstSNI92B
 display_name: "Näringsgrenstillhörighet enligt SNI92 (arbetsställe), begränsad nivå"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Näringsgrenstillhörighet enligt SNI92 (arbetsställe), begränsad nivå AstSNI92B**
 
@@ -16,4 +15,4 @@ AstSNI92B
 
 Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 92, 42 grupper.
 
-*För kodförteckning se under Näringsgren enligt SNI2002, begränsad nivå* [[AstSNI2002B]].
+*För kodförteckning se under Näringsgren enligt SNI2002, begränsad nivå* ([[AstSNI2002B]]).

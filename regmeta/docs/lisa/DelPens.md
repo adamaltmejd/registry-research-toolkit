@@ -1,12 +1,11 @@
 ---
 variable: DelPens
-display_name: Delpension
+display_name: "Delpension"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Delpension DelPens**
 
@@ -22,7 +21,7 @@ Från och med den *1/7 1994* ändras reglerna för delpension i flera viktiga av
 
 *Övergångsbestämmelser:* Om ansökan om delpension har lämnats in före 1/7 1994 och delpension beviljas för tid med början före den 1/1 1995 skall äldre bestämmelser om delpension tillämpas. Den som redan har delpension ska före 1/1 1995 ha möjlighet att trappa ned ytterligare enligt de gamla bestämmelserna.
 
-Från och med **februari 1995** måste arbetsvillkoret i lagen om arbetslöshetsförsäkring vara uppfyllt för att man skall ha rätt till delpension, vilket innebär att rätten till delpension framledes varierar med förändringar i detta arbetsvillkor. *För ytterligare information, se under Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring* [[Akassa]].
+Från och med **februari 1995** måste arbetsvillkoret i lagen om arbetslöshetsförsäkring vara uppfyllt för att man skall ha rätt till delpension, vilket innebär att rätten till delpension framledes varierar med förändringar i detta arbetsvillkor. *För ytterligare information, se under Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring* ([[Akassa]]).
 
 Möjligheten att nybeviljas delpension upphör den 1/1 2001. Det främsta motivet för detta är att det reformerade ålderspensionssystemet som nu träder i kraft anses ge större flexibilitet vid övergången från arbete till ålderspension. Den som uppbär delpension vid utgången av år 2000 har rätt till fortsatt delpension fram till dess att man fyller 65 år.
 

@@ -1,11 +1,10 @@
 ---
 display_name: "Bilaga 4 — STORE MiDAS"
 tags:
-  - type/appendix
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/appendix
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **STORE - MiDAS**
 

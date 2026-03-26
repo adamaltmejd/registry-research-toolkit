@@ -2,12 +2,11 @@
 variable: ForPeng_Tdag_MiDAS
 display_name: "Föräldrapenning, totalt antal dagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Föräldrapenning, totalt antal dagar ForPeng_Tdag_MiDAS**
 
@@ -21,4 +20,4 @@ Tills dess att barnet är 18 månader ha föräldern rätt till ledighet med ell
 
 De obetalda dagarna är skattade dagar och göras av Försäkringskassan.
 
-*För ytterligare information om föräldrapenning, se under Föräldrapenning, antal bruttodagar* [[ForPeng_Bdag]].
+*För ytterligare information om föräldrapenning, se under Föräldrapenning, antal bruttodagar* ([[ForPeng_Bdag]]).

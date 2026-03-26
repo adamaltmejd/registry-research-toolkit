@@ -2,11 +2,10 @@
 variable: FolkFortSjuk
 display_name: "Förtidspension/Sjukbidrag från folkpension, egenförmån"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Förtidspension/Sjukbidrag från folkpension, egenförmån FolkFortSjuk**
 
@@ -14,7 +13,7 @@ FolkFortSiuk
 
 (1993–2002)
 
-*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år120 (för beskrivning av folkpensionskod och för redovisning av fördelning mellan hel- och deltidsersättningar, se under Folkpensionskod för egenförmån [[FolkEgen]].* 
+*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år120 (för beskrivning av folkpensionskod och för redovisning av fördelning mellan hel- och deltidsersättningar, se under Folkpensionskod för egenförmån ([[FolkEgen]]).* 
 
 Beloppet anges i hundratal kronor.
 

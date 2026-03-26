@@ -1,10 +1,36 @@
 ---
 display_name: "Sysselsättningsvariabler — Metodik och avgränsning"
 tags:
-  - type/methodology
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/methodology
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
+
+#### **Nivåförändringar vid tidsseriebrottet år 2000**
+
+Utbildningsnivån i riket enligt UREG har ökat kraftigt i version 2001-01-01 (avseende år 2000). Ökningarna, som delvis är en effekt av ovan beskrivna förändringar, ligger främst på nivåerna 'Treårig gymnasieutbildning' och 'Eftergymnasial utbildning 3 år eller längre'. För mer detaljerad se publikationen "Tidsseriebrott i Utbildningsregistret"
+
+[https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf) [/metodstudieureg.pdf](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf)
+
+Andelen av befolkningen med 'Treårig gymnasieutbildning' som högsta utbildning har ökat med 1,3 procentenheter. Året innan var ökningen 0,5 procentenheter.
+
+Ökningen beror till stor del på att många personers samlade komvuxpoäng (1988–1999) bedömts ge motsvarande 3-årig gymnasieutbildning, utan att någon examen tagits ut.
+
+Andelen med 'Eftergymnasial utbildning 3 år eller längre' har ökat med 2,3 procentenheter. Året innan var ökningen 0,4 procentenheter.
+
+Detta är till största delen en effekt av att personer med mer än motsvarande 180 "nya" högskolepoäng (tidigare mer än 120) efter 1993, men utan examen, förts till denna nivå. Även de andra nya källorna och också nomenklaturbytet ger effekter på denna nivå.
+
+
+#### **Inriktningsförändringar vid tidsseriebrottet år 2000**
+
+Nomenklaturbytet till SUN 2000 ger vissa effekter på uppgifterna om utbildningsinriktning i UREG årgång 2000. SUN 2000 består liksom gamla SUN av tio huvudinriktningar (varav en är 'Okänd utbildning'). Dock finns två viktiga skillnader:
+
+Huvudinriktningen 5 i gamla SUN, 'Utbildning för transport och kommunikation', har upphört som egen grupp. Transportutbildningar ligger nu huvudsakligen under Tjänster' (SUN 2000-inriktning 8).
+
+Huvudinriktningen 4 i gamla SUN, 'Utbildning för industri och hantverk samt teknisk och naturvetenskaplig utbildning', har i SUN 2000 delats upp i två nya grupper: 'Naturvetenskap, matematik och data' respektive 'Teknik och tillverkning' (SUN 2000-inriktning 4 respektive 5).
+
+**För mer information** om SCB:s Utbildningsregister, se länken Beskrivning av Utbildningsregistret [https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf) [uf0506\_kd\_2017\_tw\_180411.pdf](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf)
+
 
 #### **Förvärvsarbetande**
 
@@ -13,6 +39,7 @@ Den officiella avgränsningen av förvärvsarbetande i RAMS21 redovisas som vari
 I den registerbaserade arbetsmarknadsstatistiken finns inte möjlighet att fråga personer om de arbetat en viss tid en viss vecka. Man är här hänvisad till operationella metoder och regler för att genomföra individuella avgränsningar huruvida personen förvärvsarbetat minst en timme per vecka eller inte.
 
 I RAMS är november den månad för vilken man vill ha uppgift om hur många och vilka som varit förvärvsarbetande. Man arbetar med två kategorier förvärvsarbetande, egna företagare och anställda. Ytterligare en kategori, "medhjälpande familjemedlemmar" ingår i ILO:s definition men ingår inte i RAMS eftersom registerdata helt saknas för denna kategori.
+
 
 #### **Val av novemberanställning aktuellt år**
 
@@ -24,7 +51,13 @@ För personer med flera kontrolluppgifter från arbetsgivare och/eller företaga
 
 22 Arbetsställe-/företagsvariabler redovisas även för personer som inte klassats som förvärvsarbetande under november men som ändå fått kontrolluppgift från arbetsgivare under året.
 
-*I övrigt se under Arbetsställe (november)* [[CfarNr_LISA]] *och Företag (november)* [[PeOrgNr_LISA]].
+*I övrigt se under Arbetsställe (november)* ([[CfarNr_LISA]]) *och Företag (november)* ([[PeOrgNr_LISA]]).
+
+
+#### **Bortfall i anställningstid på kontrolluppgiften**
+
+I Kontrolluppgiftsregistret saknas tidsmarkering (anställningstid) på flera poster. Avsaknaden av tidsmarkering samt det faktum att markeringarna kan vara behäftade med felaktigheter samt vid riktig markering inte tillåter annat än markering för årets första och sista arbetade månad påverkar kvaliteten vid framräkning av sysselsättningsstatus.
+
 
 #### **Täckningsproblem på kontrolluppgifterna**
 
@@ -33,6 +66,11 @@ I registret över kontrolluppgifter från arbetsgivare (KU-registret) finns två
 Ytterligare ett exempel på undertäckning utgör den grupp av personer som bor i Sverige men har sitt arbete i utlandet. Någon kontrolluppgift för det arbete dessa personer utför i utlandet finns inte i KU-registret, vilket leder till att dessa blir klassade som "ej förvärvsarbetande".
 
 Avseende klassificeringen som förvärvsarbetande/ej förvärvsarbetande i november har evalveringsundersökningar som gjorts visat att störst risk att bli felaktigt klassificerade löper grupper med lös anknytning till arbetsmarknaden.
+
+
+#### **Sysselsättningsavgränsningen i RAMS**
+
+
 
 #### **Avgränsningen av förvärvsarbetande 1985-199223**
 
@@ -72,7 +110,7 @@ novemberlönesumman om sådan ersättning erhållits förutom ersättningen som 
 
 *Uppgifter om egna företagare från föregående år* 
 
-När avgränsningen av förvärvsarbetande [[SyssStatG]] gjordes för åren 1985-1990 hämtades deklarationsuppgifterna för egna företagare från året innan. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år. För de första sex åren av Sysselsättningsregistret innebär detta att ett täckningsfel kan uppstå. En rörelseidkare eller jordbrukare som startar en verksamhet 1990 kan bli klassificerad som ej förvärvsarbetande detta år. På motsvarande sätt kan en egen företagare som slutar med sin verksamhet 1989 fortsätta att klassificeras som förvärvsarbetande nästa år p.g.a. att uppgiften hämtas från föregående år. Även andra variabler än sysselsättningsstatus som är beroende av förekomst av förvärvsinkomst eller ej, av storleken på förvärvsinkomst eller av varifrån denna förvärvsinkomst härrör påverkas av att en ett år gammal uppgifts användes 1990 och tidigare.
+När avgränsningen av förvärvsarbetande ([[SyssStatG]]) gjordes för åren 1985-1990 hämtades deklarationsuppgifterna för egna företagare från året innan. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år. För de första sex åren av Sysselsättningsregistret innebär detta att ett täckningsfel kan uppstå. En rörelseidkare eller jordbrukare som startar en verksamhet 1990 kan bli klassificerad som ej förvärvsarbetande detta år. På motsvarande sätt kan en egen företagare som slutar med sin verksamhet 1989 fortsätta att klassificeras som förvärvsarbetande nästa år p.g.a. att uppgiften hämtas från föregående år. Även andra variabler än sysselsättningsstatus som är beroende av förekomst av förvärvsinkomst eller ej, av storleken på förvärvsinkomst eller av varifrån denna förvärvsinkomst härrör påverkas av att en ett år gammal uppgifts användes 1990 och tidigare.
 
 *Sjuklön och sjukpenning med arbetsgivarinträde* 
 
@@ -86,19 +124,51 @@ Tillfällig föräldrapenning för vård av barn, Närståendepenning och Dagpen
 
 klassificerats som "förvärvsarbetande" (sjukpenning med arbetsgivarinträde, d.v.s. kontrolluppgift från arbetsgivare under året).
 
+
+### **Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004**
+
+Med syfte att minska framställningstiden och att bättre redovisa egenföretagarna har vissa justeringar genomförts i framställningen av den registerbaserade arbetsmarknadsstatistiken (RAMS) fr.o.m. årgång 2004. Förändringarna består dels i att en ny källa används för att identifiera företagare, dels i att metoden för att klassificera anställda setts över.
+
+### **Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2011**
+
+I framställningen av den Registerbaserade arbetsmarknadsstatistiken (RAMS) avseende årgång 2011 har SCB gjort en del förändringar jämfört med tidigare årgångar. Förändringen påverkar:
+
+• personer som är 65 år eller äldre
+
+Förändringarna görs för att få en enhetligare behandling av gruppen egna företagare (de som deklarerar för aktiv näringsverksamhet) samt för att få en populationsavgränsning beträffande ålder som överensstämmer med Arbetskraftsundersökningen (AKU). Förändringen innebär ett tidsseriebrott jämfört med tidigare årgångar av RAMS.
+
+
 #### **Företagarpopulationen**
 
 Tidigare hämtades uppgifter avseende företagare från SCB:s taxeringsstatistik som var tillgänglig drygt ett år efter inkomståret. Fr.o.m. årgång 2004 används Skatteverkets insamlade "Standardiserade räkenskapsutdrag" (SRU) som SCB får ta del av redan tre månader innan den slutliga taxeringen är färdig. Från detta material kan SCB identifiera företagarna och beräkna deras inkomster.
 
 Personliga företagare och delägare i bolag klassificerades tidigare som företagare enbart när man redovisade överskott i sin näringsverksamhet. I samband med övergången till att inhämta uppgifter om företagare från SRU inkluderas även verksamheter med underskott vid klassificering av sysselsatta företagare.
 
-#### **Förändrad övre åldersgräns för förvärvsarbete**
 
-I årgång RAMS 2011 har den övre åldergränsen för att bli klassificerad som förvärvsarbetande i RAMS ändrats från 84 till 74 år.
+#### **Anställda**
 
-Förändringen genomförs för att bättre motsvara åldersintervallet i Arbetskraftsundersökningen (AKU). Uppgifter från AKU används som underlag för att sätta lönegränser för att avgöra om personer i RAMS ska klassificeras som förvärvsarbetande.
+I samband med den förändrade bearbetningen för företagarpopulationen har, efter en metodöversyn, även vissa mindre justeringar gjorts avseende klassificering av sysselsatta anställda. Den största förändringen gäller den äldsta åldersgruppen (65–84 år) där betydligt fler än tidigare klassificeras som förvärvsarbetande.
 
-Uppgifter i AKU omfattar personer i åldern 15–74 år. I tidigare årgångar av RAMS har man för personer som är mellan 75–84 år använt uppgifter från AKU om personer i åldern 66-74.
+
+#### **Resultat**
+
+De förändringar som beskrivits ovan medför att ytterligare c:a 75 000 personer redovisas som sysselsatta, vilket motsvarar en ökning med 1,8 procent. För åldersgruppen 20–64 år blir ökningen av antalet sysselsatta knappt 47 000 eller 1,2 procent, vilket kan ses som en relativt liten förändring för gruppen som helhet.
+
+Skillnaderna blir dock mer markanta i vissa redovisningsgrupper. Det gäller t.ex. redovisning efter näringsgren och åldersgrupper.
+
+• Antalet personliga företagare ökar med cirka 30 000. För redovisning på näringsgrenar medför detta framförallt att i de näringsgrenar som domineras av personliga företagare, som t.ex. jordbruk och fiske ökar antalet sysselsatta företagare.
+
+• Antalet sysselsatta i åldersgruppen 65–84 år ökar med drygt 26 000 personer. Knappt tre fjärdedelar av denna ökning (ca. 19 000 individer eller 0,46 procent av samtliga sysselsatta) beror på justeringen av metoden för att klassificera sysselsatta och resterande del hänför sig till förändringen i företagarpopulationen.
+
+
+#### **Variabler enligt justerad metod**
+
+För att underlätta bedömning av effekten av förändringarna redovisas även vissa uppgifter avseende årgång 2003 enligt den nya metoden.
+
+Dessa variabler är: Sysselsättningsstatus ([[SyssStatJ]]) Yrkesställning ([[YrkStallnJ]]) Arbetsställekommun ([[AstKommunJ]]) Arbetsställelän ([[AstLanJ]]) Institutionell sektorkod ([[InstKod7J]]) Sektortillhörighet ([[SektorKodJ]]) Näringsgrenstillhörighet ([[AstSNI2002J]], [[AstSNI2002BJ]], [[AstSNI2002GJ]]) Organisationsnummer (PeOrgNrJ) Arbetsställenummer (CFARNrJ)
+
+Mer information som berör metodförändringen finns att tillgå på SCB:s hemsida; [www.scb.se/rams](http://www.scb.se/rams) under *Läs mer - Se Även: "Ny källa för egenföretagare och justerad skattningsmetod i RAMS fr.o.m. årgång 2004"*
+
 
 #### **Förändring i avgränsningen av företagare**
 
@@ -120,21 +190,22 @@ Image /page/451/Figure/0 description: This is a line graph featuring an orange l
 
 **Diagram 2 Egna företagare i ettårsklasser 2011**
 
+
+#### **Förändrad övre åldersgräns för förvärvsarbete**
+
+I årgång RAMS 2011 har den övre åldergränsen för att bli klassificerad som förvärvsarbetande i RAMS ändrats från 84 till 74 år.
+
+Förändringen genomförs för att bättre motsvara åldersintervallet i Arbetskraftsundersökningen (AKU). Uppgifter från AKU används som underlag för att sätta lönegränser för att avgöra om personer i RAMS ska klassificeras som förvärvsarbetande.
+
+Uppgifter i AKU omfattar personer i åldern 15–74 år. I tidigare årgångar av RAMS har man för personer som är mellan 75–84 år använt uppgifter från AKU om personer i åldern 66-74.
+
+
 #### **Förändring i modellgrupper för skattning av förvärvsarbetande**
 
 I RAMS avseende 2011 görs även en förändring i åldersgrupperna som används i modellskattningen av förvärvsarbetande. I tidigare årgångar av RAMS låg 65-åringar i en egen åldersgrupp och personer som var mellan 66 och 84 år låg i annan modellgrupp.
 
 I bearbetningen av RAMS 2011 ligger personer som är 65-67 år i en modellgrupp och personer som är 68-74 år ligger i en annan modellgrupp. Denna förändring påverkar främst personer med kontrolluppgifter (anställda, sjömän och företagare i eget AB). Denna förändring görs för att modellgrupperna bättre ska passa till gällande pensionsregler.
 
-#### **Resultat**
-
-De förändringar som beskrivits ovan medför att ytterligare c:a 75 000 personer redovisas som sysselsatta, vilket motsvarar en ökning med 1,8 procent. För åldersgruppen 20–64 år blir ökningen av antalet sysselsatta knappt 47 000 eller 1,2 procent, vilket kan ses som en relativt liten förändring för gruppen som helhet.
-
-Skillnaderna blir dock mer markanta i vissa redovisningsgrupper. Det gäller t.ex. redovisning efter näringsgren och åldersgrupper.
-
-• Antalet personliga företagare ökar med cirka 30 000. För redovisning på näringsgrenar medför detta framförallt att i de näringsgrenar som domineras av personliga företagare, som t.ex. jordbruk och fiske ökar antalet sysselsatta företagare.
-
-• Antalet sysselsatta i åldersgruppen 65–84 år ökar med drygt 26 000 personer. Knappt tre fjärdedelar av denna ökning (ca. 19 000 individer eller 0,46 procent av samtliga sysselsatta) beror på justeringen av metoden för att klassificera sysselsatta och resterande del hänför sig till förändringen i företagarpopulationen.
 
 #### **Resultat av förändringarna**
 
@@ -151,42 +222,16 @@ Ovanstående jämförelser avser uppgifter för årgång 2011.
 
 Uppgifter på regional nivå finns i tabeller under Tabeller & diagram på [www.scb.se/rams.](http://www.scb.se/rams)
 
-#### **Variabler enligt justerad metod**
 
-För att underlätta bedömning av effekten av förändringarna redovisas även vissa uppgifter avseende årgång 2003 enligt den nya metoden.
+#### **Arbetsställen**
 
-Dessa variabler är: Sysselsättningsstatus [[SyssStatJ]] Yrkesställning [[YrkStallnJ]] Arbetsställekommun [[AstKommunJ]] Arbetsställelän [[AstLanJ]] Institutionell sektorkod [[InstKod7J]] Sektortillhörighet [[SektorKodJ]] Näringsgrenstillhörighet (AstSNI2002J, AstSNI2002BJ, AstSNI2002GJ) Organisationsnummer (PeOrgNrJ) Arbetsställenummer (CFARNrJ)
+Innehåller alla fasta arbetsställen med minst 1 förvärvsarbetande enligt RAMS. Individer som har klassats som rörlig arbetskraft har ingen koppling till Arbetsställetabellen. *[[ArbstId]]* används som koppling till Individtabellen, *[[PeOrgNr_LISA]]* används som koppling till Företagstabellen.
 
-Mer information som berör metodförändringen finns att tillgå på SCB:s hemsida; [www.scb.se/rams](http://www.scb.se/rams) under *Läs mer - Se Även: "Ny källa för egenföretagare och justerad skattningsmetod i RAMS fr.o.m. årgång 2004"*
-
-#### **Nivåförändringar vid tidsseriebrottet år 2000**
-
-Utbildningsnivån i riket enligt UREG har ökat kraftigt i version 2001-01-01 (avseende år 2000). Ökningarna, som delvis är en effekt av ovan beskrivna förändringar, ligger främst på nivåerna 'Treårig gymnasieutbildning' och 'Eftergymnasial utbildning 3 år eller längre'. För mer detaljerad se publikationen "Tidsseriebrott i Utbildningsregistret"
-
-[https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf) [/metodstudieureg.pdf](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf)
-
-Andelen av befolkningen med 'Treårig gymnasieutbildning' som högsta utbildning har ökat med 1,3 procentenheter. Året innan var ökningen 0,5 procentenheter.
-
-Ökningen beror till stor del på att många personers samlade komvuxpoäng (1988–1999) bedömts ge motsvarande 3-årig gymnasieutbildning, utan att någon examen tagits ut.
-
-Andelen med 'Eftergymnasial utbildning 3 år eller längre' har ökat med 2,3 procentenheter. Året innan var ökningen 0,4 procentenheter.
-
-Detta är till största delen en effekt av att personer med mer än motsvarande 180 "nya" högskolepoäng (tidigare mer än 120) efter 1993, men utan examen, förts till denna nivå. Även de andra nya källorna och också nomenklaturbytet ger effekter på denna nivå.
-
-#### **Inriktningsförändringar vid tidsseriebrottet år 2000**
-
-Nomenklaturbytet till SUN 2000 ger vissa effekter på uppgifterna om utbildningsinriktning i UREG årgång 2000. SUN 2000 består liksom gamla SUN av tio huvudinriktningar (varav en är 'Okänd utbildning'). Dock finns två viktiga skillnader:
-
-Huvudinriktningen 5 i gamla SUN, 'Utbildning för transport och kommunikation', har upphört som egen grupp. Transportutbildningar ligger nu huvudsakligen under Tjänster' (SUN 2000-inriktning 8).
-
-Huvudinriktningen 4 i gamla SUN, 'Utbildning för industri och hantverk samt teknisk och naturvetenskaplig utbildning', har i SUN 2000 delats upp i två nya grupper: 'Naturvetenskap, matematik och data' respektive 'Teknik och tillverkning' (SUN 2000-inriktning 4 respektive 5).
-
-**För mer information** om SCB:s Utbildningsregister, se länken Beskrivning av Utbildningsregistret [https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf) [uf0506\_kd\_2017\_tw\_180411.pdf](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf)
 
 #### **Företag**
 
-Innehåller alla företag med minst 1 förvärvsarbetande enligt RAMS. *PeOrgNr_LISA* används för koppling med Individtabellen och Arbetsställetabellen. Raderna i Företagstabellen är unika på *PeOrgNr_LISA*.
+Innehåller alla företag med minst 1 förvärvsarbetande enligt RAMS. *[[PeOrgNr_LISA]]* används för koppling med Individtabellen och Arbetsställetabellen. Raderna i Företagstabellen är unika på *[[PeOrgNr_LISA]]*.
 
 **Endast dessa kopplingar ska användas, övriga identitetsvariabler är egenskaper.**
 
-Image /page/466/Figure/9 description: This diagram illustrates the relationships between three types of entities—Individ (Individual), Arbetsställe (Workplace), and Företag (Company)—across two time periods, year t and year t-1. In the top section for year t, the 'Individ, år t' box contains 'ArbetsId', 'PeOrgNr_LISA', and 'PersonNr'. It is connected by solid lines to 'Arbetsställe, år t' (containing 'ArbetsId' and 'PeOrgNr_LISA') and 'Företag, år t' (containing 'PeOrgNr_LISA'). A solid line also connects 'Arbetsställe, år t' and 'Företag, år t'. In the bottom section for year t-1, there are boxes for 'Individ, år t-1' (containing 'PersonNr'), 'Arbetsställe, år t-1' (containing 'PeOrgNr_LISA' and 'ArbetsId'), and 'Företag, år t-1' (containing 'PeOrgNr_LISA'). Dashed lines represent longitudinal links between the same entity types across the two years: 'Individ, år t' to 'Individ, år t-1', 'Arbetsställe, år t' to 'Arbetsställe, år t-1', and 'Företag, år t' to 'Företag, år t-1'.
+Image /page/466/Figure/9 description: This diagram illustrates the relationships between three types of entities—Individ (Individual), Arbetsställe (Workplace), and Företag (Company)—across two time periods, year t and year t-1. In the top section for year t, the 'Individ, år t' box contains 'ArbetsId', '[[PeOrgNr_LISA]]', and '[[PersonNr]]'. It is connected by solid lines to 'Arbetsställe, år t' (containing 'ArbetsId' and '[[PeOrgNr_LISA]]') and 'Företag, år t' (containing '[[PeOrgNr_LISA]]'). A solid line also connects 'Arbetsställe, år t' and 'Företag, år t'. In the bottom section for year t-1, there are boxes for 'Individ, år t-1' (containing '[[PersonNr]]'), 'Arbetsställe, år t-1' (containing '[[PeOrgNr_LISA]]' and 'ArbetsId'), and 'Företag, år t-1' (containing '[[PeOrgNr_LISA]]'). Dashed lines represent longitudinal links between the same entity types across the two years: 'Individ, år t' to 'Individ, år t-1', 'Arbetsställe, år t' to 'Arbetsställe, år t-1', and 'Företag, år t' to 'Företag, år t-1'.

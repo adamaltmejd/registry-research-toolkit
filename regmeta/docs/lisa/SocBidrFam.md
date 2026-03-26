@@ -2,12 +2,11 @@
 variable: SocBidrFam
 display_name: "Ekonomiskt bidrag (familj)"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Ekonomiskt bidrag (familj) SocBidrFam**
 
@@ -20,7 +19,7 @@ Variabeln är summerad till familjenivå. Det familjebegrepp148 som här använd
 Enligt Socialstyrelsens socialbidragsstatistik för 2003 var 63 procent av bidragshushållen149 ensamstående utan barn150, 19 procent var
 
 
-148 För information om familjebegreppet se objektet Familj [[FamId]]
+148 För information om familjebegreppet se objektet Familj ([[FamId]])
 
 149 Avser den hushållssammansättning som gällde vid senaste bidragstillfälle under året.
 

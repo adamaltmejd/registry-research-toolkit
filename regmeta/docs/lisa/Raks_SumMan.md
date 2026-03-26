@@ -2,11 +2,10 @@
 variable: Raks_SumMan
 display_name: "Antal månader en individ arbetat under året"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Antal månader en individ arbetat under året RAKS_SumMan**
 

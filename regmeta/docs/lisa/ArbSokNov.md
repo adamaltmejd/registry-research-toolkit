@@ -2,12 +2,11 @@
 variable: ArbSokNov
 display_name: "Arbetssökande (november)"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Arbetssökande (november) ArbSokNov**
 
@@ -69,7 +68,7 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Arbetslivsutveckling, ALU (52), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30.*
 - Arbetspraktik (54), *fr.o.m. 1999-01, redovisas under Åtgärdssysselsättning 2010-2015, ingår i Åtgärdsstudier igen från 2016.*
 - Arbetsplatsintroduktion, API (55), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30,*
-- Offentligt tillfälligt arbete, OTA (56), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-3190* .
+- Offentligt tillfälligt arbete, [[OTA]] (56), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-3190* .
 - Aktivare användning av arbetslöshetsersättning, PROJEKT (57), *upphör 1999-09-30, beslut tagna före 1999-10-01 får fullföljas.*
 - Prova på-plats (59), *fr.o.m. 2005-05-23*
 

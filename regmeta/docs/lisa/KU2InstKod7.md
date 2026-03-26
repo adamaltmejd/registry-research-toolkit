@@ -2,11 +2,10 @@
 variable: KU2InstKod7
 display_name: "Institutionell sektorkod (företag, näst största förvärvskälla)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Institutionell sektorkod (företag, näst största förvärvskälla) KU2InstKod7**
 

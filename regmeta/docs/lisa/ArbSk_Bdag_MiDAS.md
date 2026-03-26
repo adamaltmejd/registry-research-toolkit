@@ -2,12 +2,11 @@
 variable: ArbSk_Bdag_MiDAS
 display_name: "Arbetsskadesjukpenning, antal bruttodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsskadesjukpenning, antal bruttodagar ArbSk_Bdag_MiDAS**
 

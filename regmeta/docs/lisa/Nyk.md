@@ -2,11 +2,10 @@
 variable: Nyk
 display_name: "Yrke enligt Folk- och bostadsräkningen"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Yrke enligt Folk- och bostadsräkningen NYK**
 

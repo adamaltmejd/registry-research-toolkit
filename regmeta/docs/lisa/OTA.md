@@ -2,13 +2,13 @@
 variable: OTA
 display_name: "Offentligt Tillfälligt Arbete (OTA)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-
-**Offentligt Tillfälligt Arbete [[OTA]] OTA**
+**Offentligt Tillfälligt Arbete (OTA) OTA**
 
 
 
@@ -22,7 +22,7 @@ Den arbetslöshetsersättning som en deltagare i OTA har ökas med 45 kronor per
 
 Åtgärden upphör i december 1998. Beslut tagna före den 1/1 1999 får dock fullföljas till och med den 31/12 2000. För den som fyllt 62 år före den 1/1 1999 får anvisningen gälla till pensionsåldern.
 
-Endast det fåtal som fått sin ersättning i samband med OTA utbetald från Försäkringskassan (kontant arbetsmarknadsstöd eller motsvarande) redovisas under denna variabel. De som, vid OTA, ersätts av arbetslöshetskassa redovisas under variabeln *Arbetslivsutvecklingsbidrag (från A-kassa)* [[ALUKU]] till och med 1999 och från och med år 2000 under variabel*n Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* (AKassa-AmPol).
+Endast det fåtal som fått sin ersättning i samband med OTA utbetald från Försäkringskassan (kontant arbetsmarknadsstöd eller motsvarande) redovisas under denna variabel. De som, vid OTA, ersätts av arbetslöshetskassa redovisas under variabeln *Arbetslivsutvecklingsbidrag (från A-kassa)* ([[ALUKU]]) till och med 1999 och från och med år 2000 under variabel*n Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* (AKassa-[[AmPol]]).
 
 
 ---

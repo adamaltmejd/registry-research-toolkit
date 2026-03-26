@@ -2,11 +2,10 @@
 variable: KonsViktF04
 display_name: "Konsumtionsvikt, nytt begrepp"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Konsumtionsvikt, nytt begrepp KonsViktF04**
 
@@ -36,14 +35,14 @@ Samtliga barn som kopplas till viss familjeidentitet är skrivna på samma fasti
 
 
 
-| Antal hemmavarande barn 0–3 år          | Barn0_3    |
+| Antal hemmavarande barn 0–3 år          | [[Barn0_3]]    |
 |-----------------------------------------|------------|
-| Antal hemmavarande barn 4–6 år          | Barn4_6    |
-| Antal hemmavarande barn 7–10 år         | Barn7_10   |
-| Antal hemmavarande barn 11–15 år        | Barn11_15  |
-| Antal hemmavarande barn 16–17 år        | Barn16_17  |
-| Antal hemmavarande barn 18 år och äldre | Barn18plus |
+| Antal hemmavarande barn 4–6 år          | [[Barn4_6]]    |
+| Antal hemmavarande barn 7–10 år         | [[Barn7_10]]   |
+| Antal hemmavarande barn 11–15 år        | [[Barn11_15]]  |
+| Antal hemmavarande barn 16–17 år        | [[Barn16_17]]  |
+| Antal hemmavarande barn 18 år och äldre | [[Barn18plus]] |
 | (1990–2004)                             |            |
-| Antal hemmavarande barn 18 –19 år       | Barn18_19  |
+| Antal hemmavarande barn 18 –19 år       | [[Barn18_19]]  |
 
 (2004–)

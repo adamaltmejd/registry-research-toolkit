@@ -2,11 +2,10 @@
 variable: Raks_EtablGrans
 display_name: "Gräns för individens etablering till arbetsmarknad"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Gräns för individens etablering till arbetsmarknad RAKS_EtablGrans**
 

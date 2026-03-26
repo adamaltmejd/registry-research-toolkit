@@ -95,49 +95,186 @@ BOLD_DISPLAY_RE = re.compile(r"^\*\*([^*]+)\*\*\s*$")
 # Section headings that mark topic boundaries (## or ####)
 SECTION_HEADING_RE = re.compile(r"^#{2,4}\s*\*\*(.+?)\*\*\s*$")
 
-# Tag mapping: section heading keywords → tag paths
-SECTION_TAGS: dict[str, str] = {
-    "Demografiska variabler": "variable/demographic",
-    "Demografiska variabler – För familj": "variable/demographic/family",
-    "Utbildningsvariabler": "variable/education",
-    "Sysselsättningsvariabler": "variable/employment",
-    "Förvärvsarbetande": "variable/employment/gainful-employment",
-    "Yrke": "variable/employment/occupation",
-    "Näringsgren": "variable/employment/industry",
-    "Inkomstvariabler": "variable/income",
-    "Förvärvsinkomst": "variable/income/earned",
-    "Kapitalinkomst": "variable/income/capital",
-    "Annan inkomst": "variable/income/other",
-    "Ålderspension": "variable/income/pension",
-    "Tjänstepension": "variable/income/pension/occupational",
-    "Disponibel inkomst": "variable/income/disposable",
-    "Familjerelaterade inkomster": "variable/income/family",
-    "Ekonomiskt bistånd": "variable/income/social-assistance",
-    "Bostadsbidrag": "variable/income/housing-benefit",
-    "Bostadstillägg": "variable/income/housing-supplement",
-    "Sjukförsäkring": "variable/social-insurance/sickness",
-    "Arbetsmarknadsåtgärder": "variable/social-insurance/labour-market",
-    "Kopplingsidentiteter": "variable/identifier",
-    "Individ": "variable/identifier/individual",
-    "Företag": "variable/identifier/firm",
-    "Arbetsställeidentitet": "variable/identifier/establishment",
-    "Registerbaserad aktivitetsstatistik": "variable/activity-status",
-    "Övriga inkomster": "variable/income/other-benefits",
+# Section heading → primary topic tag for variables in that section
+SECTION_TOPIC: dict[str, str] = {
+    "Demografiska variabler": "topic/demographic",
+    "Demografiska variabler – För familj": "topic/demographic",
+    "Utbildningsvariabler": "topic/education",
+    "Sysselsättningsvariabler": "topic/employment",
+    "Förvärvsarbetande": "topic/employment",
+    "Yrke": "topic/employment",
+    "Näringsgren": "topic/employment",
+    "Inkomstvariabler": "topic/income",
+    "Förvärvsinkomst": "topic/income",
+    "Kapitalinkomst": "topic/income",
+    "Annan inkomst": "topic/income",
+    "Ålderspension": "topic/income",
+    "Tjänstepension": "topic/income",
+    "Disponibel inkomst": "topic/income",
+    "Familjerelaterade inkomster": "topic/income",
+    "Ekonomiskt bistånd": "topic/income",
+    "Bostadsbidrag": "topic/income",
+    "Bostadstillägg": "topic/income",
+    "Sjukförsäkring": "topic/income",
+    "Arbetsmarknadsåtgärder": "topic/income",
+    "Kopplingsidentiteter": "topic/identifier",
+    "Individ": "topic/identifier",
+    "Företag": "topic/identifier",
+    "Arbetsställeidentitet": "topic/identifier",
+    "Registerbaserad aktivitetsstatistik": "topic/activity-status",
+    "Övriga inkomster": "topic/income",
 }
 
-# General sections that become topic files (not variable-specific)
-TOPIC_SECTIONS = {
-    "Förord",
-    "Bakgrund till LISA-databasen",
-    "Syfte",
-    "Omfattning och innehåll",
-    "Omfattning",
-    "Användning",
-    "Tillgång till data",
-    "Databasens uppbyggnad",
-    "Referensperiod",
-    "Variabelförteckning",
-}
+# Secondary topic tags based on variable name patterns.
+# These are ADDED alongside the section-derived primary tag.
+SECONDARY_TAGS: list[tuple[str, str]] = [
+    # Social insurance: sickness, disability, parental, rehab, injury, pension
+    (r"^(SjukP|SjukSum|SjukFall|SjukTyp|SjukRe|SjukErs|SjukBidr|SjukPA|SjukPP)", "topic/social-insurance"),
+    (r"^ForbSjukP", "topic/social-insurance"),
+    (r"^Smitt", "topic/social-insurance"),
+    (r"^ArbSk", "topic/social-insurance"),
+    (r"^AGSTFA$", "topic/social-insurance"),
+    (r"^(Rehab|RehabErs|RehabTyp)", "topic/social-insurance"),
+    (r"^(ForPeng|ForVAB|TfForPeng|ForLed|HavPeng)", "topic/social-insurance"),
+    (r"^(VardBidr|KomVardBidr|NarPeng)$", "topic/social-insurance"),
+    (r"^(AktErs|AktStod)", "topic/social-insurance"),
+    (r"^(ForTid|FortPens|DelPens)", "topic/social-insurance"),
+    (r"^Folk(Egen|Fort|FortSjuk|Sjuk|Ald|Hust|Bel|ATPFam|Fam)", "topic/social-insurance"),
+    (r"^ATP(egen|Fort|FortSjuk|Sjuk|Ald|Bel|Fam)", "topic/social-insurance"),
+    (r"^Liv(Arb|ArbF|Yrke|Annan|Rta)", "topic/social-insurance"),
+    (r"^(GenErs|TAE|BoTill|Karens_Foretagare)$", "topic/social-insurance"),
+    (r"^(GarPens|InkPens|PremPens|TillPens|SumAld|SPenTill)", "topic/social-insurance"),
+    (r"^(ITP|KTjP|STjP|STP|SBTjP|KUPens|OvrTjp|PrivPens|SumTjP|SumEftPens|AldTjPTyp)$", "topic/social-insurance"),
+    (r"^AldPens$", "topic/social-insurance"),
+    (r"^(VPLErs|VPLTyp|GMUErs|GMUTyp|ForsvarErs)$", "topic/social-insurance"),
+    (r"^HKapErs$", "topic/social-insurance"),
+    (r"^(BostBidr|BostTill)", "topic/social-insurance"),
+    (r"^(SocBidr|BidrFor|UnderHBidr|EtablErs)", "topic/social-insurance"),
+    # Labour market programs / unemployment
+    (r"^(ADelDag|AK14Dag|ALosDag|AStuDag|ASysDag|ANysDag)$", "topic/employment"),
+    (r"^(ALKod|ArbLos|ArbLosTyp|ArbSokNov|IAKod|TillfTimDag)$", "topic/employment"),
+    (r"^(AmPol|Akassa|KAS$|KASEES)", "topic/employment"),
+    (r"^(ALU|OTA|AMK|RekrBidr|LarlErs)", "topic/employment"),
+    (r"^(UtbBArb|UtbBLan|UtbBidr)$", "topic/employment"),
+    # Study grants/loans
+    (r"^(Stud$|StudMed|StudTyp)", "topic/education"),
+    (r"^(SUtKun|Svux|SVux|VuxLan|KortStu)", "topic/education"),
+    (r"^(UtbDok|UtbFor|SFI)$", "topic/education"),
+]
+
+# Variables that should NOT keep topic/employment when they also have
+# topic/social-insurance (pension/disability, not employment)
+REMOVE_EMPLOYMENT: list[str] = [
+    r"^ATP(egen|Fort|FortSjuk|Sjuk|Ald|Bel|Fam)$",
+    r"^Folk(Egen|Fort|FortSjuk|Sjuk|Ald|Hust|Bel|ATPFam|Fam)$",
+    r"^(ForTid$|ForTidAGS|ForTidTyp)",
+    r"^FortPens_",
+    r"^(DelPens|DelPensTyp)$",
+    r"^(SjukErs$|SjukErsGarAnd|SjukErsInkAnd|SjukErsVilAnd|SjukErs_)",
+    r"^SjukBidr_",
+    r"^(GenErs|TAE|NarPeng)$",
+    r"^Liv(Arb|ArbF|Yrke|Annan|Rta)$",
+    r"^(SumEftPens|SocInk)$",
+]
+
+# Topic file consolidation: section heading slug → (target_slug, display_name, tags)
+# Sections whose slugs match a key get merged into the target file.
+TOPIC_CONSOLIDATION: dict[str, tuple[str, str, list[str]]] = {}
+
+# Build consolidation map from target definitions
+_CONSOLIDATION_TARGETS: list[tuple[str, str, list[str], list[str]]] = [
+    # (target_slug, display_name, tags, source_slug_patterns)
+    ("_overview", "LISA — Översikt", ["type/overview", "topic/lisa"], [
+        "oversikt", "lisa-longitudin", "bakgrund-till-lisa",
+        "syfte", "omfattning", "anvandning", "tillgang-till-data",
+        "referensperiod", "i-databasen-ingaende", "innehall",
+        "markering-for-de-ar", "endast-dessa-kopplingar",
+        "lisa-longitudinal-integrated",
+    ]),
+    ("_methodology-education", "Utbildningsvariabler — Metodik och källor",
+     ["type/methodology", "topic/education"], [
+        "utbildningsvariabler", "kallor-som-anvands", "1990", "2002", "2014",
+        "forandringar-i-ureg", "forandringar-i-kallorna", "validering",
+        "utbildningsvariabler",
+    ]),
+    ("_methodology-employment", "Sysselsättningsvariabler — Metodik och avgränsning",
+     ["type/methodology", "topic/employment"], [
+        "forvarvsarbetande", "val-av-november", "tackningsproblem",
+        "avgransningen-av-forvarvsarbetande", "foretagarpopulationen",
+        "forandrad-ovre-aldersgrans", "forandring-i-avgransningen",
+        "forandring-i-modellgrupper", "resultat-av-forandringarna",
+        "resultat", "variabler-enligt-justerad", "nivaforandringar",
+        "inriktningsforandringar", "foretag", "justerad-metod-for",
+        "diagram", "bortfall-i-anstallningstid", "anstallda", "arbetsstallen",
+        "sysselsattningsavgransningen",
+    ]),
+    ("_methodology-labour-market-programs",
+     "Arbetsmarknadspolitiska åtgärder — Program och ersättningar",
+     ["type/methodology", "topic/employment"], [
+        "antal-personer-som-nagon", "utbildningsvikariat", "resursarbete",
+        "individuellt-anstallningsstod", "allmant-anstallningsstod",
+        "forstarkt-anstallningsstod", "sarskilt-anstallningsstod",
+        "trygghetsanstallning", "arbetspraktik", "modernt-beredskapsjobb",
+        "forberedande-insatser", "extratjanster", "stod-till-start",
+        "antal-personer-som-deltagit", "akademikerjobb", "instegsjobb",
+        "plusjobb", "trainee", "yrkesintroduktion", "utbildningskontrakt",
+        "utvecklingsanstallning", "anstallningsstod-for-lang",
+    ]),
+    ("_methodology-social-assistance", "Ekonomiskt bistånd — Metodik och riksnorm",
+     ["type/methodology", "topic/income"], [
+        "ekonomiskt-bistand", "riksnorm",
+    ]),
+    ("_methodology-raks", "Registerbaserad aktivitetsstatistik (RAKS)",
+     ["type/methodology", "topic/activity-status"], [
+        "registerbaserad-aktivitets",
+    ]),
+    ("_appendix-basbelopp", "Bilaga 1 — Basbelopp",
+     ["type/appendix", "topic/income"], [
+        "basbelopp", "det-minskade-basbeloppet", "det-forhojda-basbeloppet",
+        "inkomstbasbeloppet",
+    ]),
+    ("_appendix-af-datalager",
+     "Bilaga 2 — Bearbetning av data från AF Datalager",
+     ["type/appendix", "topic/employment"], [
+        "bearbetning-av-data",
+    ]),
+    ("_appendix-midas", "Bilaga 4 — STORE MiDAS",
+     ["type/appendix", "topic/social-insurance"], [
+        "store-midas",
+    ]),
+    ("_appendix-fk-data", "Bilaga 5 — Hur FK-data tolkas",
+     ["type/appendix", "topic/social-insurance"], [
+        "sjukfall-antal-fall", "hur-fk-data-tolkas",
+    ]),
+    ("_appendix-variabelkalla", "Bilaga 6 — Ursprunglig variabelkälla",
+     ["type/appendix", "topic/lisa"], [
+        "ursprunglig-variabelkalla",
+    ]),
+    ("_appendix-year-coverage", "Bilaga 8–9 — Regionala koder och variabeltäckning per år",
+     ["type/appendix", "topic/lisa"], [
+        "2011-01-01",  # regional codes + year coverage
+    ]),
+]
+
+# Slugs to drop entirely (reference tables or bare section headings)
+DROP_SLUGS: list[str] = [
+    "alfabetisk-ordning-efter-variabelnamn",
+    "alfabetisk-ordning-efter-variabelns",
+    "variabler-efter-amnesinnehall",
+    "variabelforteckning",
+    # Bare section headings (no content beyond the heading itself)
+    "demografiska-variabler", "inkomstvariabler", "sysselsattningsvariabler",
+    "kopplingsidentiteter", "kopplingar-mellan", "familjerelaterade-inkomster",
+    "inkomst-av-forvarvskalla", "individ",
+    # Bilaga headings (content is in the appendix files)
+    "bilaga-",
+    # Year-only fragments (date headings with no content)
+    "1992-01-01", "1995-01-01", "1997-01-01", "1998-01-01", "1999-01-01",
+    "2003-01-01", "2007-01-01", "2008-01-01",
+    # Section header stubs
+    "forord", "databasens-uppbyggnad", "evalveringar-och-analyser",
+    "regionala-koder",
+]
 
 
 # ---------------------------------------------------------------------------
@@ -180,12 +317,12 @@ def strip_noise(lines: list[str]) -> list[str]:
     return cleaned
 
 
-def resolve_tag(heading: str, current_section_tag: str) -> str:
-    """Find the best matching tag for a heading."""
-    for key, tag in SECTION_TAGS.items():
+def resolve_topic(heading: str, current_topic: str) -> str:
+    """Find the best matching topic tag for a section heading."""
+    for key, tag in SECTION_TOPIC.items():
         if key.lower() in heading.lower():
             return tag
-    return current_section_tag
+    return current_topic
 
 
 def make_frontmatter(
@@ -199,7 +336,7 @@ def make_frontmatter(
     fm_lines.append(f"display_name: \"{entry.display_name}\"")
     if entry.tags:
         fm_lines.append("tags:")
-        for tag in entry.tags:
+        for tag in sorted(set(entry.tags)):
             fm_lines.append(f"  - {tag}")
     source = entry.source_file or default_source
     fm_lines.append(f"source: \"{source}\"")
@@ -207,26 +344,68 @@ def make_frontmatter(
     return "\n".join(fm_lines)
 
 
-def extract_wiki_links(text: str, known_cols: set[str]) -> str:
-    """Convert references to known column names into wiki-links.
+def extract_wiki_links(text: str, known_cols: set[str], own_col: str | None = None) -> str:
+    """Convert references to known column names into [[wiki-links]].
 
-    Looks for patterns like:
-    - (ColumnName) — parenthesized reference
-    - se ColumnName — Swedish cross-reference
+    Matches column names at word boundaries, skipping:
+    - The variable's own name (to avoid self-links)
+    - Names inside frontmatter, headings, or table headers
+    - Names already inside wiki-links
+    - Names inside markdown link syntax [text](url)
     """
-    def replace_ref(m: re.Match) -> str:
-        col = m.group(1)
-        if col in known_cols:
-            return f"[[{col}]]"
-        return m.group(0)
-
-    # (ColumnName) pattern — common in "I övrigt se X (ColName)"
-    text = re.sub(
-        r"\((" + "|".join(re.escape(c) for c in sorted(known_cols, key=len, reverse=True)) + r")\)",
-        replace_ref,
-        text,
+    # Build a regex matching any known column name at word boundaries.
+    # Sort longest-first so e.g. SyssStat11 matches before SyssStat.
+    cols_pattern = "|".join(
+        re.escape(c) for c in sorted(known_cols, key=len, reverse=True)
     )
-    return text
+    col_re = re.compile(r"(?<!\[\[)\b(" + cols_pattern + r")\b(?!\]\])")
+
+    lines = text.split("\n")
+    result = []
+    in_frontmatter = False
+
+    for line in lines:
+        stripped = line.strip()
+
+        # Skip frontmatter
+        if stripped == "---":
+            in_frontmatter = not in_frontmatter
+            result.append(line)
+            continue
+        if in_frontmatter:
+            result.append(line)
+            continue
+
+        # Skip lines that are headings (variable header contains the name)
+        if stripped.startswith("#") or stripped.startswith("**"):
+            result.append(line)
+            continue
+
+        # Skip table header rows (| **Bold** | **Bold** |)
+        if stripped.startswith("|") and "**" in stripped:
+            result.append(line)
+            continue
+
+        # Skip separator rows
+        if stripped.startswith("|--"):
+            result.append(line)
+            continue
+
+        def replace_col(m: re.Match) -> str:
+            col = m.group(1)
+            if col == own_col:
+                return col
+            # Don't link inside markdown URLs: check if we're between ( and )
+            # that looks like a markdown link
+            before = line[:m.start()]
+            if before.rstrip().endswith("]("):
+                return col
+            return f"[[{col}]]"
+
+        line = col_re.sub(replace_col, line)
+        result.append(line)
+
+    return "\n".join(result)
 
 
 # ---------------------------------------------------------------------------
@@ -331,16 +510,37 @@ def find_section_boundaries(lines: list[str]) -> list[tuple[int, str]]:
     return sections
 
 
-def get_section_tag(line_num: int, sections: list[tuple[int, str]]) -> str:
-    """Find the innermost section tag for a given line number."""
-    tag = "variable"
+def get_section_topic(line_num: int, sections: list[tuple[int, str]]) -> str:
+    """Find the topic tag for a variable based on its position in the document."""
+    topic = ""
     for sec_line, sec_name in sections:
         if sec_line > line_num:
             break
-        resolved = resolve_tag(sec_name, tag)
-        if resolved != tag:
-            tag = resolved
-    return tag
+        resolved = resolve_topic(sec_name, topic)
+        if resolved != topic:
+            topic = resolved
+    return topic
+
+
+def compute_variable_tags(col: str, section_topic: str) -> list[str]:
+    """Compute the full tag set for a variable."""
+    tags = ["type/variable"]
+    if section_topic:
+        tags.append(section_topic)
+
+    # Add secondary topic tags based on variable name
+    for pattern, tag in SECONDARY_TAGS:
+        if re.match(pattern, col) and tag not in tags:
+            tags.append(tag)
+
+    # Remove incorrect employment from pension/disability variables
+    if "topic/employment" in tags and "topic/social-insurance" in tags:
+        for pattern in REMOVE_EMPLOYMENT:
+            if re.match(pattern, col):
+                tags.remove("topic/employment")
+                break
+
+    return tags
 
 
 def parse_bakgrundsfakta(
@@ -388,8 +588,9 @@ def parse_bakgrundsfakta(
                 end = hb
                 break
 
-        # Find the section tag for this variable
-        tag = get_section_tag(start, sections)
+        # Compute tags from section position + variable name patterns
+        section_topic = get_section_topic(start, sections)
+        tags = compute_variable_tags(col, section_topic)
 
         content_lines = lines[start:end]
 
@@ -407,7 +608,7 @@ def parse_bakgrundsfakta(
             slug=col,
             display_name=display,
             column_name=col,
-            tags=[tag],
+            tags=tags,
             lines=content_lines,
             start_line=start,
         )
@@ -484,7 +685,8 @@ def fill_missing_variables(
                 best_start = i
                 break
 
-        tag = get_section_tag(best_start or desc_start, sections)
+        section_topic = get_section_topic(best_start or desc_start, sections)
+        tags = compute_variable_tags(col, section_topic)
 
         if best_start is not None:
             content_lines = []
@@ -500,7 +702,7 @@ def fill_missing_variables(
             slug=col,
             display_name=display,
             column_name=col,
-            tags=[tag],
+            tags=tags,
             lines=content_lines,
             start_line=best_start or 0,
         ))
@@ -513,10 +715,16 @@ def collect_topic_entries(
     covered: set[int],
     sections: list[tuple[int, str]],
 ) -> list[DocEntry]:
-    """Collect uncovered text as topic entries, split by section heading."""
-    topics: list[DocEntry] = []
-    uncovered_ranges: list[tuple[int, int]] = []
+    """Collect uncovered text into consolidated topic files.
 
+    Instead of creating one file per section heading, groups text into
+    deliberate target files defined in _CONSOLIDATION_TARGETS. Fragments
+    whose slug matches a target's source patterns get merged into that
+    target. Unmatched fragments and fragments matching DROP_SLUGS are
+    discarded.
+    """
+    # First, collect all uncovered text fragments keyed by section slug
+    uncovered_ranges: list[tuple[int, int]] = []
     start = None
     for i in range(len(lines)):
         if i not in covered:
@@ -529,36 +737,24 @@ def collect_topic_entries(
     if start is not None:
         uncovered_ranges.append((start, len(lines)))
 
-    # Build a mapping: for each uncovered range, find the nearest section heading
-    # that either falls within the range or immediately precedes it
-    section_buckets: dict[str, list[str]] = {}  # slug -> accumulated lines
-    section_meta: dict[str, tuple[str, str, int]] = {}  # slug -> (name, tag, start)
-    seen_slugs: set[str] = set()
-
+    # Group fragments by section slug
+    slug_content: dict[str, list[str]] = {}
     for range_start, range_end in uncovered_ranges:
         content = lines[range_start:range_end]
         non_empty = [l for l in content if l.strip()]
         if len(non_empty) < 2:
             continue
 
-        # Find the active section heading for this range
         section_name = "Översikt"
         for sec_line, sec_name in sections:
             if sec_line <= range_start:
                 section_name = sec_name
             elif sec_line < range_end:
-                # A section heading falls within this uncovered range —
-                # it starts a new topic. Split at this boundary.
-                # Emit text before the heading under the previous section
+                # Split at section boundary
                 pre = lines[range_start:sec_line]
-                pre_non_empty = [l for l in pre if l.strip()]
-                if len(pre_non_empty) >= 2:
+                if any(l.strip() for l in pre):
                     slug = _slugify(section_name)
-                    _append_to_bucket(
-                        section_buckets, section_meta, seen_slugs,
-                        slug, section_name, pre, range_start, sections,
-                    )
-                # Continue with the new section
+                    slug_content.setdefault(slug, []).extend(pre)
                 section_name = sec_name
                 range_start = sec_line
             else:
@@ -566,60 +762,52 @@ def collect_topic_entries(
 
         slug = _slugify(section_name)
         remaining = lines[range_start:range_end]
-        remaining_non_empty = [l for l in remaining if l.strip()]
-        if len(remaining_non_empty) >= 2:
-            _append_to_bucket(
-                section_buckets, section_meta, seen_slugs,
-                slug, section_name, remaining, range_start, sections,
-            )
+        if any(l.strip() for l in remaining):
+            slug_content.setdefault(slug, []).extend([""])
+            slug_content[slug].extend(remaining)
 
-    # Convert buckets to DocEntry objects
-    for slug, content_lines in section_buckets.items():
-        name, tag, start_line = section_meta[slug]
+    # Now consolidate fragments into target files
+    target_content: dict[str, list[str]] = {}  # target_slug -> content
+    claimed_slugs: set[str] = set()
+
+    for target_slug, display, tags, patterns in _CONSOLIDATION_TARGETS:
+        for frag_slug, frag_lines in slug_content.items():
+            if any(p in frag_slug for p in patterns):
+                target_content.setdefault(target_slug, [])
+                if target_content[target_slug]:
+                    target_content[target_slug].append("")
+                target_content[target_slug].extend(frag_lines)
+                claimed_slugs.add(frag_slug)
+
+    # Drop explicitly excluded slugs
+    for frag_slug in list(slug_content.keys()):
+        if any(p in frag_slug for p in DROP_SLUGS):
+            claimed_slugs.add(frag_slug)
+
+    # Build DocEntry objects for consolidated targets
+    entries: list[DocEntry] = []
+    for target_slug, display, tags, _patterns in _CONSOLIDATION_TARGETS:
+        content_lines = target_content.get(target_slug, [])
         non_empty = [l for l in content_lines if l.strip()]
         if len(non_empty) < 3:
             continue
-        topics.append(DocEntry(
-            slug=f"_topic-{slug}",
-            display_name=name,
+        entries.append(DocEntry(
+            slug=target_slug,
+            display_name=display,
             column_name=None,
-            tags=[tag],
+            tags=list(tags),
             lines=content_lines,
-            start_line=start_line,
         ))
 
-    return topics
+    # Report unclaimed fragments (may indicate missing consolidation rules)
+    unclaimed = set(slug_content.keys()) - claimed_slugs
+    if unclaimed:
+        print(f"  Unclaimed topic fragments ({len(unclaimed)}):", file=sys.stderr)
+        for slug in sorted(unclaimed):
+            n = len([l for l in slug_content[slug] if l.strip()])
+            print(f"    {slug} ({n} lines)", file=sys.stderr)
 
-
-def _append_to_bucket(
-    buckets: dict[str, list[str]],
-    meta: dict[str, tuple[str, str, int]],
-    seen: set[str],
-    slug: str,
-    name: str,
-    content: list[str],
-    start_line: int,
-    sections: list[tuple[int, str]],
-) -> None:
-    """Append content lines to a topic bucket, deduplicating slugs."""
-    # Make slug unique if needed
-    base_slug = slug
-    counter = 2
-    while slug in seen and slug not in buckets:
-        slug = f"{base_slug}-{counter}"
-        counter += 1
-
-    tag = resolve_tag(name, "topic")
-    if not tag.startswith("topic"):
-        tag = f"topic/{tag.split('/')[-1]}" if "/" in tag else f"topic/{tag}"
-
-    if slug in buckets:
-        buckets[slug].extend([""])
-        buckets[slug].extend(content)
-    else:
-        seen.add(slug)
-        buckets[slug] = list(content)
-        meta[slug] = (name, tag, start_line)
+    return entries
 
 
 def _slugify(name: str) -> str:
@@ -655,7 +843,7 @@ def write_entries(
             continue
 
         # Add wiki-links to cross-references
-        content = extract_wiki_links(content, known_cols)
+        content = extract_wiki_links(content, known_cols, entry.column_name)
 
         fm = make_frontmatter(entry)
         full = f"{fm}\n\n{content}\n"
@@ -692,10 +880,10 @@ def parse_forandringar(md_text: str, year: str, source_file: str) -> DocEntry:
             continue
         cleaned.append(line)
     return DocEntry(
-        slug=f"_forandringar-{year}",
+        slug=f"_changelog-{year}",
         display_name=f"Förändringar i LISA {year}",
         column_name=None,
-        tags=["topic/changelog", f"topic/changelog/{year}"],
+        tags=["type/changelog"],
         lines=cleaned,
         source_file=source_file,
     )

@@ -2,12 +2,11 @@
 variable: Rehab_08_Bdag
 display_name: "Rehabiliteringspenning, antal bruttodagar"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Rehabiliteringspenning, antal bruttodagar Rehab_08_Bdag**
 
@@ -23,4 +22,4 @@ Den 1/7 2008 införs nya regler i lagen om allmän försäkring vad gäller rät
 
 Den 1 januari 2011 byts en del begrepp ut och förlängd rehabiliteringspenning försvinner.
 
-Dessa dagar ingår i variabeln *Rehabiliteringspenning, antal bruttodagar*  [[Rehab_Bdag_MiDAS]]. *Rehabiliteringspenning* och *förlängd rehabiliteringspenning* summeras till antal bruttodagar för rehabiliteringspenning när källan är Försäkringskassans STOREdatabas. I LISA redovisas dock totalt antal bruttodagar för rehabiliteringspenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*
+Dessa dagar ingår i variabeln *Rehabiliteringspenning, antal bruttodagar*  ([[Rehab_Bdag_MiDAS]]). *Rehabiliteringspenning* och *förlängd rehabiliteringspenning* summeras till antal bruttodagar för rehabiliteringspenning när källan är Försäkringskassans STOREdatabas. I LISA redovisas dock totalt antal bruttodagar för rehabiliteringspenning från MiDAS, Försäkringskassans analysdatabas så denna summering stämmer inte alltid. *För ytterligare information, se Bilaga 4 STORE – MiDAS.*

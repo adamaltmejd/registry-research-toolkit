@@ -2,11 +2,10 @@
 variable: UtlSvBakgAlt
 display_name: "Utländsk/Svensk bakgrund (alternativ indelning)"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utländsk/Svensk bakgrund (alternativ indelning) UtlSvBakgAlt**
 
@@ -36,7 +35,7 @@ Då uppgift om förälders födelseland saknas gäller följande:
 
 
 
-| Medborgarskap | MedbLandNamn |
+| Medborgarskap | [[MedbLandNamn]] |
 |---------------|--------------|
 |---------------|--------------|
 

@@ -2,11 +2,10 @@
 variable: KU2CfarNr
 display_name: "Arbetsställe (näst största förvärvskälla)"
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Arbetsställe (näst största förvärvskälla) KU2CFARNr**
 

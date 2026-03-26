@@ -2,14 +2,13 @@
 variable: KAS
 display_name: "Kontant arbetsmarknadsstöd (KAS)"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-
-**Kontant arbetsmarknadsstöd [[KAS]] KAS**
+**Kontant arbetsmarknadsstöd (KAS) KAS**
 
 KAS
 

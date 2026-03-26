@@ -2,11 +2,10 @@
 variable: Raks_UtbBidrInk
 display_name: "Inkomst från arbetsmarknadspolitiska åtgärder"
 tags:
-  - type/variable
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Inkomst från arbetsmarknadspolitiska åtgärder RAKS_UtbBidrInk**
 
@@ -14,7 +13,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Ersättning från arbetsmarknadspolitiska åtgärder i form av Utbildningsbidrag, Aktivitetsstöd och Utvecklingsersättning som utbetalas till individen. Anges i hundratal kronor.
 
-*För ytterligare information se Aktivitetsstöd/Utbildningsbidrag* [[UtbBidr]] samt *Utvecklingsersättning* [[UtvErs]].
+*För ytterligare information se Aktivitetsstöd/Utbildningsbidrag* ([[UtbBidr]]) samt *Utvecklingsersättning* ([[UtvErs]]).
 
 
 ---

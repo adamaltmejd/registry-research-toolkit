@@ -2,11 +2,10 @@
 variable: SjukBidr_Bdag_MiDAS
 display_name: "Sjukbidrag, antal bruttodagar"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Sjukbidrag, antal bruttodagar SjukBidr_Bdag_MiDAS**
 

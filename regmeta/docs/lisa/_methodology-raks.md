@@ -1,11 +1,10 @@
 ---
 display_name: "Registerbaserad aktivitetsstatistik (RAKS)"
 tags:
-  - type/methodology
   - topic/activity-status
-source: lisa-bakgrundsfakta-1990-2017
+  - type/methodology
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 ### **Registerbaserad aktivitetsstatistik (RAKS)**
 

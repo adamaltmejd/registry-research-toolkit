@@ -2,9 +2,8 @@
 display_name: "Förändringar i LISA 2019"
 tags:
   - type/changelog
-source: lisa-2019---forandringar.md
+source: "lisa-2019---forandringar.md"
 ---
-
 
 2021-04-22
 # **Förändringar i LISA 2019**
@@ -78,21 +77,21 @@ För personer som har haft flera jobb och/eller näringsverksamheter under året
 Från och med 2019 försvinner uppgifterna från Statens pensionsverk och variabler försvinner från kontrolluppgifterna i samband med övergången till AGI. Uppdelningen av olika typer av tjänstepension har försvunnit, från 2019 finns den en variabel för tjänstepension från utbetalare av tjänstepension.
 | Klartext                                                                                          | 2018   | 2019    |
 |---------------------------------------------------------------------------------------------------|--------|---------|
-| ITP – industrins och handelns tjänste- och<br>tilläggspension                                     | ITP    |         |
+| [[ITP]] – industrins och handelns tjänste- och<br>tilläggspension                                     | [[ITP]]    |         |
 | Kommunal- och landstingsanställdas<br>tjänstepension                                              | KTjP   |         |
-| Statlig tjänstepension                                                                            | STjP   |         |
-| Tjänstepension från statligt bolag                                                                | SBTjP  |         |
-| Särskild tjänste- och tilläggspension för<br>privatanställda LO-medlemmar                         | STP    |         |
-| Övrig tjänste- och tilläggspension                                                                | OvrTjp |         |
+| Statlig tjänstepension                                                                            | [[STjP]]   |         |
+| Tjänstepension från statligt bolag                                                                | [[SBTjP]]  |         |
+| Särskild tjänste- och tilläggspension för<br>privatanställda LO-medlemmar                         | [[STP]]    |         |
+| Övrig tjänste- och tilläggspension                                                                | [[OvrTjp]] |         |
 | Tjänstepension, från utbetalaren av tjänstepension                                                |        | PTjP    |
-| Tjänstepension enligt individuellt tjänstepensions-<br>avtal mellan arbetsgivare och arbetstagare | KUPens | AGIPens |
+| Tjänstepension enligt individuellt tjänstepensions-<br>avtal mellan arbetsgivare och arbetstagare | [[KUPens]] | AGIPens |
 | Summa tjänstepension                                                                              | SumTjp | SumTjp  |
 #### **Vårdbidrag**
 Vårdbidrag är ett stöd för föräldrar som vårdar ett barn med funktionsnedsättning eller långvarig sjukdom.
 Det går inte längre att ansöka om vårdbidrag. Från 2019 ansöker man om omvårdnadsbidrag och merkostnadsersättning för barnet. Vårdbidraget betalas fortfarande ut till de som har ett tidigare beslut.
 | Klartext                                 | 2018     | 2019       |
 |------------------------------------------|----------|------------|
-| Vårdbidrag                               | VardBidr | VardBidr   |
+| Vårdbidrag                               | [[VardBidr]] | [[VardBidr]]   |
 | Omvårdnadsbidrag + ferieomvårdnadsbidrag |          | OmVardBidr |
 | Merkostnadsersättning barn               |          | MerkErsB   |
 ### **Handikappersättning**
@@ -100,5 +99,5 @@ Handikappersättning är en ersättning som betalas ut till personer som har en 
 Det går inte längre att ansöka om handikappersättning. Från 2019 ansöker man om merkostnadsersättning. Handikappersättning betalas fortfarande ut till de som har ett tidigare beslut.
 | Klartext                    | 2018    | 2019     |
 |-----------------------------|---------|----------|
-| Handikappersättning         | HKapErs | HKapErs  |
+| Handikappersättning         | [[HKapErs]] | [[HKapErs]]  |
 | Merkostnadsersättning vuxen |         | MerkErsV |

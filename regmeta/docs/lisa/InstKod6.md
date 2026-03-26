@@ -2,11 +2,10 @@
 variable: InstKod6
 display_name: "Institutionell sektorkod (företag)"
 tags:
+  - topic/identifier
   - type/variable
-  - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Institutionell sektorkod (företag) InstKod6**
 
@@ -16,7 +15,7 @@ InstKod6
 
 Koden bildas utifrån företagets *samhällssektor, ägare och juridiska form*. De tre första positionerna anger samhällssektor, den fjärde positionen anger ägarkategori medan den juridiska formen anges i variabelns femte och sjätte position.
 
-*För kodförteckning se under Institutionell sektorkod (företag)* [[InstKod7]].
+*För kodförteckning se under Institutionell sektorkod (företag)* ([[InstKod7]]).
 
 Koden är en skapad variabel som grundar sig på bland annat organisationsnummer och ägare. Koden fastställs för alla företag som förekommer i Företagsregistret (FDB), varifrån uppgiften hämtas.
 

@@ -2,12 +2,11 @@
 variable: Stud
 display_name: "Summa inkomst föranledd av studier"
 tags:
-  - type/variable
-  - topic/income
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Summa inkomst föranledd av studier Stud**
 
@@ -15,7 +14,7 @@ source: lisa-bakgrundsfakta-1990-2017
 
 Beloppet anges i hundratals kronor.
 
-Den under året summerade inkomsten av *Studmed, UtbDok, LarlErs* (2014-), *UtbFor* (2017-), *SVuxSVuxA* (1990–1996) *SVux* (1997–2003), *SVuxA* (1997–2003), *VuxLan* (1990–1996), *SVuxLan* (1997–2003), *SVux*-*ALan* (1997–2003), *SUtKun* (1997–2003), *KortStu* (1990–2001), SFI (1990–1998), *SarVux* (1990–2001) samt *RekrBidr* (2003–2008).
+Den under året summerade inkomsten av *Studmed, [[UtbDok]], [[LarlErs]]* (2014-), *[[UtbFor]]* (2017-), *[[SVuxSVuxA]]* (1990–1996) *SVux* (1997–2003), *[[SVuxA]]* (1997–2003), *[[VuxLan]]* (1990–1996), *[[SVuxLan]]* (1997–2003), *SVux*-*ALan* (1997–2003), *[[SUtKun]]* (1997–2003), *[[KortStu]]* (1990–2001), [[SFI]] (1990–1998), *[[SarVux]]* (1990–2001) samt *[[RekrBidr]]* (2003–2008).
 
 *Förändringar 1990–2017 som kan påverka utfallet:*
 

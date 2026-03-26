@@ -2,11 +2,10 @@
 variable: SjukErs_Tidsbegr
 display_name: "Tidsbegränsad sjukersättning"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Tidsbegränsad sjukersättning SjukErs_Tidsbegr**
 
@@ -22,4 +21,4 @@ Informationen i variabeln:
 
 "Saknas/Okänd".
 
-*För ytterligare information om sjukersättning se under Sjukersättning* [[SjukErs]].
+*För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).

@@ -1,11 +1,11 @@
 ---
 variable: ASysDag
-display_name: "Antal dagar i "åtgärdssysselsättning"
+display_name: "Antal dagar i "åtgärdssysselsättning""
 tags:
-  - type/variable
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/identifier
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Antal dagar i "åtgärdssysselsättning" ASysDag**

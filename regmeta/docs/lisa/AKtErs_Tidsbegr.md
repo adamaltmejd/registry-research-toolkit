@@ -2,11 +2,10 @@
 variable: AKtErs_Tidsbegr
 display_name: "Tidbegränsad aktivitetsersättning"
 tags:
+  - topic/employment
   - type/variable
-  - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Tidbegränsad aktivitetsersättning AktErs_Tidsbegr**
 
@@ -24,4 +23,4 @@ Informationen i variabeln:
 
 "Saknas/Okänd".
 
-*För ytterligare information om sjukersättning se under Sjukersättning* [[SjukErs]].
+*För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).

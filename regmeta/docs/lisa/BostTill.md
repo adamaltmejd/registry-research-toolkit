@@ -1,13 +1,12 @@
 ---
 variable: BostTill
-display_name: Bostadstillägg
+display_name: "Bostadstillägg"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Bostadstillägg BostTill**
 
@@ -20,6 +19,6 @@ Bostadstillägg betalas ut till de med aktivitets- eller sjukersättning och är
 *För ytterligare information om bostadstillägg se grundläggarende texten under Bostadstillägg.* 
 
 
-158 För information om familjebegreppet se objektet Familj [[FamId]].
+158 För information om familjebegreppet se objektet Familj ([[FamId]]).
 
 #### **Övriga inkomster/ersättningar**

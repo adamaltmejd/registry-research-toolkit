@@ -2,12 +2,11 @@
 variable: AStuDag
 display_name: "Antal dagar i åtgärdsstudier"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Antal dagar i åtgärdsstudier AStuDag**
 
@@ -23,7 +22,7 @@ Antal dagar i sökandekategori105:
 - Arbetspraktik (54), *fr.o.m. 1999-01, redovisas under Åtgärdssysselsättning 2010-2015, ingår i Åtgärdsstudier igen från 2016.*
 - Arbetsplatsintroduktion, *API (55), fr.o.m. 1995-07, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30*
 - Lyft (55), *fr.o.m. 2010-01, t.o.m. 2010-12.*
-- Offentligt tillfälligt arbete, OTA (56), *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31106*
+- Offentligt tillfälligt arbete, [[OTA]] (56), *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31106*
 - Aktivare användning av arbetslöshetsersättning, PROJEKT (57), *fr.o.m. 1997-07, upphör 1999-09-30, beslut tagna före 1999-10-01 får fullföljas*
 - Prova på-plats (59), *fr.o.m. 2005-05-23*
 - Internpraktik (60), *fr.o.m. 2005-05-23, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
@@ -91,7 +90,7 @@ Den 1/6 2002 startar en försöksverksamhet för arbetslösa som anställs inom 
 
 Från och med 1/1 2001 delas arbetsmarknadsutbildningen in i två sökandekategorier. De som finns kvar under arbetsmarknadsutbildning går en yrkesinriktad utbildning medan de som hamnar i den nya sökandekategorin går en förberedande utbildning. Förberedande utbildningar är i huvudsak utbildningar som förbereder för ett annat arbetsmarknadspolitiskt program, till exempel för arbetsmarknadsutbildning. Tidsperioden för insatsen är som längst sex månader. De förberedande utbildningarna ska vara av vägledande, rehabiliterande eller orienterande karaktär.
 
-Från och med 1/7 2002 finns möjlighet att använda SFI (svenska för invandrare) som förberedande insats/utbildning med aktivitetsstöd under högst sex månader. Den sökande skall använda kommunens SFIutbildning.
+Från och med 1/7 2002 finns möjlighet att använda [[SFI]] (svenska för invandrare) som förberedande insats/utbildning med aktivitetsstöd under högst sex månader. Den sökande skall använda kommunens SFIutbildning.
 
 #### **Arbetslivsinriktad rehabilitering (tidigare AMI-program)**
 
@@ -117,7 +116,7 @@ Ungdomspraktiken ersätter de tidigare *särskilda inskolningsplatserna* för un
 
 Den 1/1 1993 introduceras ALU som en ny arbetsmarknadspolitisk åtgärd. Syftet med ALU är att tillvarata de arbetslösas vilja till aktivitet och utveckling samt göra det lättare för dem att återvända till den reguljära arbetsmarknaden.
 
-ALU övertar uppgiften som utförsäkringsskydd (från beredskapsarbetet). Vidare har kommunernas ansträngda ekonomi medfört att många arbetsuppgifter som tidigare utfördes som beredskapsarbeten nu utförs som ALU-projekt. Medlen till ALU tas ur arbetsmarknadsfonden och motsvarar A-kassa/KAS-ersättning och erbjuds arbetslösa som får dessa ersättningar. Beträffande finansieringen av ALU finns inte, till skillnad mot andra arbetsmarknadspolitiska åtgärder, de sedvanliga budgetrestriktionerna. ALU får inte användas för att ersätta annan arbetskraft och inte heller i övrigt användas för att utföra ordinarie arbetsuppgifter.
+ALU övertar uppgiften som utförsäkringsskydd (från beredskapsarbetet). Vidare har kommunernas ansträngda ekonomi medfört att många arbetsuppgifter som tidigare utfördes som beredskapsarbeten nu utförs som ALU-projekt. Medlen till ALU tas ur arbetsmarknadsfonden och motsvarar A-kassa/[[KAS]]-ersättning och erbjuds arbetslösa som får dessa ersättningar. Beträffande finansieringen av ALU finns inte, till skillnad mot andra arbetsmarknadspolitiska åtgärder, de sedvanliga budgetrestriktionerna. ALU får inte användas för att ersätta annan arbetskraft och inte heller i övrigt användas för att utföra ordinarie arbetsuppgifter.
 
 Villkor: 20 år och inte kunnat få arbete eller annan arbetsmarknadspolitisk åtgärd. En ALU-period varar högst sex månader. Om det finns särskilda skäl kan den förlängas med ytterligare högst sex månader, under ALU-perioden står man till arbetsmarknadens förfogande. Under ALU-tiden skall tid avsättas för att söka arbete. Om man tackar nej till erbjudande om ALU kan man stängas av från arbetslöshetsförsäkringen. Från och med den 1/1 1999 ersätts ALU med arbetspraktik, beslut tagna före 1/1 1999 får fullföljas längst t.o.m. 30/6 1999.
 

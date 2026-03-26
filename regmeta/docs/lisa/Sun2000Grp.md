@@ -2,11 +2,10 @@
 variable: Sun2000Grp
 display_name: "Utbildningsgrupp högsta utbildning(SUN2000)"
 tags:
-  - type/variable
   - topic/education
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Utbildningsgrupp högsta utbildning(SUN2000) SUN2000Grp**
 

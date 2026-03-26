@@ -2,15 +2,14 @@
 variable: SjukErs_Ndag_MiDAS
 display_name: "Sjukersättning, antal nettodagar"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Sjukersättning, antal nettodagar SjukErs_Ndag_MiDAS**
 
-SjukErs*Ndaq*MiDAS
+[[SjukErs]]*Ndaq*MiDAS
 
 (2003–)
 
@@ -23,4 +22,4 @@ Sjukersättning kan betalas ut som hel (100 procent), tre fjärdedels (75 procen
 - 10 \* halv omfattning = 5 nettodagar,
 - 10 \* en kvarts omfattning = 2,5 nettodagar
 
-*För ytterligare information om sjukersättning se under Sjukersättning* [[SjukErs]].
+*För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).

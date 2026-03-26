@@ -2,12 +2,11 @@
 variable: ForPeng_Belopp_MiDAS
 display_name: "Föräldrapenning, ersättningsbelopp"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Föräldrapenning, ersättningsbelopp ForPeng_Belopp_MiDAS**
 

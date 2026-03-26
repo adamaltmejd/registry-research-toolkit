@@ -2,11 +2,10 @@
 variable: FastLopNr
 display_name: "Fastighetens löpnummer"
 tags:
-  - type/variable
   - topic/demographic
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Fastighetens löpnummer FastLopNr**
 
@@ -18,4 +17,4 @@ Fastighetens löpnummer är ett SCB-internt femsiffrigt nummer som löper inom f
 
 1981 skapade SCB, som ersättning för detta, ett eget nummer som infördes i flera av SCB:s register. Vid behov kan löpnumret översättas till den officiella fastighetsbeteckningen. 1998 ersätts fastighetens löpnummer med den officiella fastighetsbeteckningen.
 
-*I övrigt se Fastighetsbeteckning* [[FastBet]].
+*I övrigt se Fastighetsbeteckning* ([[FastBet]]).

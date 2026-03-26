@@ -2,12 +2,11 @@
 variable: SumAldP03
 display_name: "Summa ålderspension"
 tags:
-  - type/variable
   - topic/income
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Summa ålderspension SumAldP03**
 
@@ -17,9 +16,9 @@ SumAldP03
 
 Beloppet anges i hundratals kronor
 
-Den under året summerade inkomsten från *Inkomstpension* [[InkPens]], *Tilläggspension* [[TillPens]], *Premiepension* [[PremPens]], *Garantipension* [[GarPens]], *Särskilt pensionstillägg* [[SPenTill]] och *Ålderpension från ATP* [[ATPAld]], (egenförmån samt restutbetalningar under år 2003).
+Den under året summerade inkomsten från *Inkomstpension* ([[InkPens]]), *Tilläggspension* ([[TillPens]]), *Premiepension* ([[PremPens]]), *Garantipension* ([[GarPens]]), *Särskilt pensionstillägg* ([[SPenTill]]) och *Ålderpension från ATP* ([[ATPAld]]), (egenförmån samt restutbetalningar under år 2003).
 
-Ålderspensionen ingår även i AldPens, AnnInkF och AldTjPTyp.
+Ålderspensionen ingår även i [[AldPens]], [[AnnInkF]] och [[AldTjPTyp]].
 
 #### **Ålderspension**
 

@@ -1,12 +1,11 @@
 ---
 variable: SjukErs
-display_name: Sjukersättning
+display_name: "Sjukersättning"
 tags:
-  - type/variable
   - topic/social-insurance
-source: lisa-bakgrundsfakta-1990-2017
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 **Sjukersättning SjukErs**
 
@@ -18,7 +17,7 @@ Sjukersättningen avser utbetalningsåret oavsett ersättningsperiod.
 
 Från och med 1/1 2003 införs regler om sjuk- och aktivitetsersättning för personer med en varaktig eller långvarig medicinsk nedsättning av arbetsförmågan. Vid samma tidpunkt upphör bestämmelserna om förtidspension och sjukbidrag. Förtidspension blir sjukersättning. Sjukbidrag blir tidsbegränsad sjukersättning eller aktivitetsersättning. Medan förtidspensionen och sjukbidraget var en del av det allmänna pensionssystemet är sjuk- och aktivitetsersättningen en del av sjukförsäkringssystemet.
 
-Personer i åldrarna 30–64 år kan få sjukersättning eller tidsbegränsad sjukersättning126 beroende på för hur lång tid arbetsförmågan bedöms vara nedsatt. I variabeln Sjukersättning *[[SjukErs]]* redovisas ersättning som avser såväl sjukersättning som tidsbegränsad sjukersättning. Personer i åldrarna 19–29 år kan få aktivitetsersättning. Gränsen höjs för att få ersättning vid långvarig nedsättning av arbetsförmågan på grund av sjukdom från 16 år till tidigast halvårsskiftet det år då personen fyller 19 år. Aktivitetsersättningen är alltid tidsbegränsad.
+Personer i åldrarna 30–64 år kan få sjukersättning eller tidsbegränsad sjukersättning126 beroende på för hur lång tid arbetsförmågan bedöms vara nedsatt. I variabeln Sjukersättning *(SjukErs)* redovisas ersättning som avser såväl sjukersättning som tidsbegränsad sjukersättning. Personer i åldrarna 19–29 år kan få aktivitetsersättning. Gränsen höjs för att få ersättning vid långvarig nedsättning av arbetsförmågan på grund av sjukdom från 16 år till tidigast halvårsskiftet det år då personen fyller 19 år. Aktivitetsersättningen är alltid tidsbegränsad.
 
 Bedömningen av arbetsförmågan för rätt till sjuk- och aktivitetsersättning är oförändrad. Det innebär att en person som fått
 
@@ -42,7 +41,7 @@ Det bruttobelopp som betalas ut i sjuk- och aktivitetsersättning kan inte direk
 
 Om en person har haft sjuk- eller aktivitetsersättning under 12 månader och vill pröva ett arbete kan hen ansöka om vilande sjuk- eller aktivitetsersättning. I upp till tre kalendermånader kan personen pröva att arbeta och samtidigt få behålla sjuk- eller aktivitetsersättningen. Därefter kan personen under en begränsad tid arbeta och ha ersättningen vilande utan att rätten till ersättning påverkas.
 
-I samband med att ersättningssystemet byts ut och sjuk- och aktivitetsersättning inte är en del av det allmänna pensionssystemet såsom förtidspension och sjukbidrag var skiljer sig från tidigare även möjligheterna att redovisa de belopp som betalats ut. Före år 2003 redovisades det aktuella årets hela folkpensionsbelopp och ATP-belopp som förtidspension/sjukbidrag *(FolkFortSjuk/ATPFortSjuk)* när folkpensions-/ATP-koden angav förtidspension/sjukbidrag vid sista utbetalning under året. Angav folkpensions-/ATP-koden däremot ålderspension vid årets sista utbetalning fördes hela beloppet till ålderspension. Från och med 2003 finns inte detta samband mellan de två utbetalningssystemen längre.
+I samband med att ersättningssystemet byts ut och sjuk- och aktivitetsersättning inte är en del av det allmänna pensionssystemet såsom förtidspension och sjukbidrag var skiljer sig från tidigare även möjligheterna att redovisa de belopp som betalats ut. Före år 2003 redovisades det aktuella årets hela folkpensionsbelopp och ATP-belopp som förtidspension/sjukbidrag *([[FolkFortSjuk]]/[[ATPFortSjuk]])* när folkpensions-/ATP-koden angav förtidspension/sjukbidrag vid sista utbetalning under året. Angav folkpensions-/ATP-koden däremot ålderspension vid årets sista utbetalning fördes hela beloppet till ålderspension. Från och med 2003 finns inte detta samband mellan de två utbetalningssystemen längre.
 
 Den 1/7 2003 införs bestämmelsen att Försäkringskassan senast ett år efter sjukanmälningsdagen skall ha utrett om det finns förutsättningar för att tillerkänna den försäkrade sjuk- eller aktivitetsersättning istället för sjukpenning, trots att den försäkrade inte ansökt om ersättningen. Bestämmelsen tillämpas på sjukfall som har sjukanmälningsdag den 1 november 2002 eller senare.
 

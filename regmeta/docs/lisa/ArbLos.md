@@ -2,12 +2,11 @@
 variable: ArbLos
 display_name: "Summa inkomst föranledd av arbetslöshet"
 tags:
-  - type/variable
-  - topic/income
   - topic/employment
-source: lisa-bakgrundsfakta-1990-2017
+  - topic/income
+  - type/variable
+source: "lisa-bakgrundsfakta-1990-2017"
 ---
-
 
 #### **Summa inkomst föranledd av arbetslöshet ArbLos**
 
@@ -15,7 +14,7 @@ ArbLos
 
 Beloppet anges i hundratals kronor.
 
-Den under året summerade inkomsten av *AKassa, KAS* (1990–1998), *KASEES* (1994–1997) och AMK (1994–1997).
+Den under året summerade inkomsten av *AKassa, [[KAS]]* (1990–1998), *[[KASEES]]* (1994–1997) och [[AMK]] (1994–1997).
 
 Från och med 1999 är beloppet i ArbLos detsamma som beloppet i AKassa.
 
