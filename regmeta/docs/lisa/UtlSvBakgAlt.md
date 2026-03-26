@@ -2,9 +2,11 @@
 variable: UtlSvBakgAlt
 display_name: "Utländsk/Svensk bakgrund (alternativ indelning)"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Utländsk/Svensk bakgrund (alternativ indelning) UtlSvBakgAlt**
 

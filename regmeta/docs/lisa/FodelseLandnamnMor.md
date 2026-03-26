@@ -2,9 +2,11 @@
 variable: FodelseLandnamnMor
 display_name: "Moderns födelseland"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Moderns födelseland FodelseLandNamnMor**
 

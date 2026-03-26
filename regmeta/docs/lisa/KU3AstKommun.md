@@ -2,9 +2,11 @@
 variable: KU3AstKommun
 display_name: "Arbetsställekommun (tredje största förvärvskälla)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetsställekommun (tredje största förvärvskälla) KU3AstKommun**
 

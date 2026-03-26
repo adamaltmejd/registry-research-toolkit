@@ -1,10 +1,12 @@
 ---
 variable: SjukErs
-display_name: "Sjukersättning"
+display_name: Sjukersättning
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Sjukersättning SjukErs**
 

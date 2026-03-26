@@ -1,10 +1,12 @@
 ---
 variable: RehabErs
-display_name: "Rehabiliteringsersättning"
+display_name: Rehabiliteringsersättning
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Rehabiliteringsersättning RehabErs**
 

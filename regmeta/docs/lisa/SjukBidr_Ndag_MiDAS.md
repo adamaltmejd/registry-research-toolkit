@@ -2,9 +2,11 @@
 variable: SjukBidr_Ndag_MiDAS
 display_name: "Sjukbidrag, antal nettodagar"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Sjukbidrag, antal nettodagar SjukBidr_Ndag_MiDAS**
 

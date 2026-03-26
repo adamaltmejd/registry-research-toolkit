@@ -2,9 +2,11 @@
 variable: AstSNI2002J
 display_name: "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod AstSNI2002J**
 

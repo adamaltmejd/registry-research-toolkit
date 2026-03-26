@@ -2,9 +2,11 @@
 variable: AktStod_Sjuk_Belopp
 display_name: "Aktivitetsstöd med sjukpenning, ersättning"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Aktivitetsstöd med sjukpenning, ersättning AktStod_Sjuk_Belopp**
 

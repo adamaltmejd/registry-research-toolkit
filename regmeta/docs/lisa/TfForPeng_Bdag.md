@@ -2,9 +2,11 @@
 variable: TfForPeng_Bdag
 display_name: "Tillfällig föräldrapenning, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Tillfällig föräldrapenning, antal bruttodagar TfForPeng_Bdag**
 

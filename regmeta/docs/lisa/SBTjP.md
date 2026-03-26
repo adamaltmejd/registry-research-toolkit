@@ -2,9 +2,11 @@
 variable: SBTjP
 display_name: "Tjänstepension från statligt bolag"
 tags:
-  - variable/income/pension/occupational
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Tjänstepension från statligt bolag SBTjP**
 

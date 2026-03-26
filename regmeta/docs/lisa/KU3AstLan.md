@@ -2,9 +2,11 @@
 variable: KU3AstLan
 display_name: "Arbetsställelän (tredje största förvärvskälla)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Arbetsställelän (tredje största förvärvskälla) KU3AstLan**
 

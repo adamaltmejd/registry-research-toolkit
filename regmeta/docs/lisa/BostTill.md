@@ -1,10 +1,12 @@
 ---
 variable: BostTill
-display_name: "Bostadstillägg"
+display_name: Bostadstillägg
 tags:
-  - variable/income/housing-supplement
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Bostadstillägg BostTill**
 

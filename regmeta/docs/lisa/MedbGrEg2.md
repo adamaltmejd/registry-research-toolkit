@@ -2,9 +2,11 @@
 variable: MedbGrEg2
 display_name: "Medborgarskap, gruppering EU25"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Medborgarskap, gruppering EU25 MedbGrEg2**
 

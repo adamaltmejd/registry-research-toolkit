@@ -2,9 +2,11 @@
 variable: AktErsGarAnd
 display_name: "Andel/grad för aktivitetsersättning (garantiersättning)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Andel/grad för aktivitetsersättning (garantiersättning) AktErsGarAnd**
 

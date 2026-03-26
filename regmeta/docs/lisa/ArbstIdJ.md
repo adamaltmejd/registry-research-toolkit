@@ -2,9 +2,11 @@
 variable: ArbstIdJ
 display_name: "Arbetsställets identitetsnummer enligt justerad metod"
 tags:
-  - variable/identifier/establishment
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetsställets identitetsnummer enligt justerad metod ArbstIdJ**
 

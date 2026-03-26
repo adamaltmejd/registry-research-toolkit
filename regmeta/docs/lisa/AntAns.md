@@ -2,9 +2,11 @@
 variable: AntAns
 display_name: "Antal förvärvskällor under året"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Antal förvärvskällor under året AntAns**
 

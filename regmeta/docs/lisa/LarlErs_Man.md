@@ -2,9 +2,11 @@
 variable: LarlErs_Man
 display_name: "Lärlingsersättning, antal ersatta månader"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Lärlingsersättning, antal ersatta månader LarlErs_Man**
 

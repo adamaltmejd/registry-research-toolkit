@@ -2,9 +2,11 @@
 variable: ATPBel
 display_name: "Summa ATP"
 tags:
-  - variable/income/other
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa ATP ATPBel**
 

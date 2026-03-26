@@ -2,9 +2,11 @@
 variable: BostBidrFam
 display_name: "Bostadsbidrag (familj)"
 tags:
-  - variable/income/housing-benefit
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Bostadsbidrag (familj) BostBidrFam**
 

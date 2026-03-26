@@ -2,9 +2,11 @@
 variable: SjukErs_Belopp_MiDAS
 display_name: "Sjukersättning, ersättningsbelopp"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Sjukersättning, ersättningsbelopp SjukErs_Belopp_MiDAS**
 

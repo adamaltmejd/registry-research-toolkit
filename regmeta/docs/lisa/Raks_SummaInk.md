@@ -2,9 +2,11 @@
 variable: Raks_SummaInk
 display_name: "Total inkomst"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Total inkomst RAKS_SummaInk**
 

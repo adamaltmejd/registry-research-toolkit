@@ -2,9 +2,11 @@
 variable: AmPolTyp
 display_name: "Förekomst av ersättning i samband med arbetsmarknadspolitisk åtgärd"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förekomst av ersättning i samband med arbetsmarknadspolitisk åtgärd AmPolTyp**
 

@@ -1,10 +1,12 @@
 ---
 variable: InkPens
-display_name: "Inkomstpension"
+display_name: Inkomstpension
 tags:
-  - variable/income/pension
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Inkomstpension InkPens**
 

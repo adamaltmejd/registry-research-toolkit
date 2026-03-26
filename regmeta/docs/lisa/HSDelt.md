@@ -2,9 +2,11 @@
 variable: HSDelt
 display_name: "Registrering på högskolans grundutbildning"
 tags:
-  - variable/education
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/education
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Registrering på högskolans grundutbildning HSDelt**
 

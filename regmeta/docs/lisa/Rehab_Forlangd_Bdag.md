@@ -2,9 +2,11 @@
 variable: Rehab_Forlangd_Bdag
 display_name: "Förlängd rehabiliteringspenning, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förlängd rehabiliteringspenning, antal bruttodagar Rehab_Forlangd_Bdag**
 

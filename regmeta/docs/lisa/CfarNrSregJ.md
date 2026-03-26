@@ -2,9 +2,11 @@
 variable: CfarNrSregJ
 display_name: "Arbetsställe (november) enligt justerad metod"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetsställe (november) enligt justerad metod CFARNrSregJ**
 

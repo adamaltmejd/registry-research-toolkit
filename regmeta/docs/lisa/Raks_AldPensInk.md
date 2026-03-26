@@ -2,9 +2,11 @@
 variable: Raks_AldPensInk
 display_name: "Inkomst från pension"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Inkomst från pension RAKS_AldPensInk**
 

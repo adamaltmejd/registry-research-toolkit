@@ -2,9 +2,11 @@
 variable: AstSNI2002GJ
 display_name: "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod Grov nivå"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Näringsgrenstillhörighet enligt SNI2002 (arbetsställe) enligt justerad metod Grov nivå AstSNI2002GJ**
 

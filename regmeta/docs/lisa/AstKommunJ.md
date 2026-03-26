@@ -2,9 +2,11 @@
 variable: AstKommunJ
 display_name: "Arbetsställekommun enligt justerad metod"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Arbetsställekommun enligt justerad metod AstKommunJ**
 

@@ -2,9 +2,11 @@
 variable: KU1AstKommun
 display_name: "Arbetsställekommun (största förvärvskälla)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetsställekommun (största förvärvskälla) KU1AstKommun**
 

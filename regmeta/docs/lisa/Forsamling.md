@@ -1,10 +1,12 @@
 ---
 variable: Forsamling
-display_name: "Bostadsförsamling"
+display_name: Bostadsförsamling
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Bostadsförsamling Forsamling**
 

@@ -2,9 +2,11 @@
 variable: KU2Ssyk3
 display_name: "Yrke enligt SSYK 96, 3-siffernivå, näst största förvärvskälla"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Yrke enligt SSYK 96, 3-siffernivå, näst största förvärvskälla KU2Ssyk3**
 

@@ -2,9 +2,11 @@
 variable: LoneInk
 display_name: "Kontant bruttolön"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Kontant bruttolön LoneInk**
 

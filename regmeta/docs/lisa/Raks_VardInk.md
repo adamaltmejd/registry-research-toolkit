@@ -2,9 +2,11 @@
 variable: Raks_VardInk
 display_name: "Inkomst från föräldraledighet eller vård av närstående"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Inkomst från föräldraledighet eller vård av närstående RAKS_VardInk**
 

@@ -2,9 +2,11 @@
 variable: SjukP_Forlangd_Bdag
 display_name: "Sjukpenning förlängd, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Sjukpenning förlängd, antal bruttodagar SjukP_Forlangd_Bdag**
 

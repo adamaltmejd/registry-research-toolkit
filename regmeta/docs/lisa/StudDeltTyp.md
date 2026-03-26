@@ -2,9 +2,11 @@
 variable: StudDeltTyp
 display_name: "Markering för studiedeltagande under höstterminen"
 tags:
-  - variable/education
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/education
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Markering för studiedeltagande under höstterminen StudDeltTyp**
 

@@ -1,10 +1,12 @@
 ---
 variable: FastBet
-display_name: "Fastighetsbeteckning"
+display_name: Fastighetsbeteckning
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Fastighetsbeteckning FastBet**
 

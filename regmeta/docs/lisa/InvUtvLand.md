@@ -2,9 +2,11 @@
 variable: InvUtvLand
 display_name: "Land vid in-/utvandring"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Land vid in-/utvandring InvUtvLand**
 

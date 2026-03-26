@@ -2,9 +2,11 @@
 variable: ATPAld
 display_name: "Ålderspension från ATP, egenförmån"
 tags:
-  - variable/income/pension
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Ålderspension från ATP, egenförmån ATPAld**
 

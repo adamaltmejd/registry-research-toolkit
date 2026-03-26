@@ -2,9 +2,11 @@
 variable: ArbTid
 display_name: "Arbetad tid"
 tags:
-  - variable/employment/gainful-employment
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetad tid ArbTid**
 

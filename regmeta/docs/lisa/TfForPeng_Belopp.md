@@ -2,9 +2,11 @@
 variable: TfForPeng_Belopp
 display_name: "Tillfällig föräldrapenning, ersättningsbelopp"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Tillfällig föräldrapenning, ersättningsbelopp TfForPeng_Belopp**
 

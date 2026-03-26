@@ -2,9 +2,11 @@
 variable: MedbMan
 display_name: "Månad för medborgarskap"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Månad för medborgarskap MedbMan**
 

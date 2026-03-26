@@ -2,9 +2,11 @@
 variable: Raks_EkBisInk
 display_name: "Individualiserad inkomst från ekonomiskt bistånd"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Individualiserad inkomst från ekonomiskt bistånd RAKS_EkBisInk**
 

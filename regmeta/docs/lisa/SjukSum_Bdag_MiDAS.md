@@ -2,9 +2,11 @@
 variable: SjukSum_Bdag_MiDAS
 display_name: "Summa bruttodagar för sjukpenning, arbetsskada och/eller rehabilitering"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa bruttodagar för sjukpenning, arbetsskada och/eller rehabilitering SjukSum_Bdag_MiDAS**
 

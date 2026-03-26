@@ -2,9 +2,11 @@
 variable: SjukErs_Tidsbegr
 display_name: "Tidsbegränsad sjukersättning"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Tidsbegränsad sjukersättning SjukErs_Tidsbegr**
 

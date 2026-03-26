@@ -2,9 +2,11 @@
 variable: Rehab_08_Bdag
 display_name: "Rehabiliteringspenning, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Rehabiliteringspenning, antal bruttodagar Rehab_08_Bdag**
 

@@ -2,9 +2,11 @@
 variable: ALUKAS
 display_name: "Arbetslivsutvecklingsbidrag (från RFV, KAS)"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Arbetslivsutvecklingsbidrag (från RFV, KAS) ALUKAS**
 

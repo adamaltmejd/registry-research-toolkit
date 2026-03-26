@@ -2,9 +2,11 @@
 variable: ForvInk
 display_name: "Summa inkomst av förvärvskälla, exkl. underskott"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa inkomst av förvärvskälla, exkl. underskott ForvInk**
 

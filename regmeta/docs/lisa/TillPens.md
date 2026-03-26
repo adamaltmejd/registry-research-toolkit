@@ -1,10 +1,12 @@
 ---
 variable: TillPens
-display_name: "Tilläggspension"
+display_name: Tilläggspension
 tags:
-  - variable/income/pension
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Tilläggspension TillPens**
 

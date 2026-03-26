@@ -2,9 +2,11 @@
 variable: FodGrMor
 display_name: "Moderns födelseland, gruppering EU15"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Moderns födelseland, gruppering EU15 FodGrMor**
 

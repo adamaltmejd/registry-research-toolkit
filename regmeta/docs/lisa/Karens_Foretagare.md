@@ -2,9 +2,11 @@
 variable: Karens_Foretagare
 display_name: "Antal karensdagar för företagare"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 ---
 

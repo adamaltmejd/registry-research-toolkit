@@ -2,9 +2,11 @@
 variable: BostBidrVplU
 display_name: "Värnplikt, bostadsbidrag"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Värnplikt, bostadsbidrag BostBidrVplU**
 

@@ -2,9 +2,11 @@
 variable: SyssStatJ
 display_name: "Sysselsättningsstatus (november månad), enligt justerad metod 2004"
 tags:
-  - variable/employment/gainful-employment
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Sysselsättningsstatus (november månad), enligt justerad metod 2004 SyssStatJ**
 

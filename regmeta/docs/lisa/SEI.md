@@ -2,9 +2,11 @@
 variable: SEI
 display_name: "Socioekonomisk indelning"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Socioekonomisk indelning SEI**
 

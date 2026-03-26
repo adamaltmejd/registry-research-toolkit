@@ -2,9 +2,11 @@
 variable: AktStod_Dag
 display_name: "Aktivitetsstöd, antal dagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Aktivitetsstöd, antal dagar AktStod_Dag**
 

@@ -2,9 +2,11 @@
 variable: AKtErs_Tidsbegr
 display_name: "Tidbegränsad aktivitetsersättning"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Tidbegränsad aktivitetsersättning AktErs_Tidsbegr**
 

@@ -2,9 +2,11 @@
 variable: GarPensAnd
 display_name: "Andel/grad för garantipension"
 tags:
-  - variable/income/pension
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Andel/grad för garantipension GarPensAnd**
 

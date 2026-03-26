@@ -2,9 +2,11 @@
 variable: SjukSum_Belopp_MiDAS
 display_name: "Summa inkomst föranledd av sjukpenning, arbetsskada och/eller rehabilitering"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa inkomst föranledd av sjukpenning, arbetsskada och/eller rehabilitering SjukSum_Belopp_MiDAS**
 

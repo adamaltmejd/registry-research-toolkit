@@ -1,10 +1,12 @@
 ---
 variable: ForPeng
-display_name: "Föräldrapenning"
+display_name: Föräldrapenning
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Föräldrapenning ForPeng**
 

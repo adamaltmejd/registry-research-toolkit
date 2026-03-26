@@ -2,9 +2,11 @@
 variable: KU3Faman
 display_name: "Fåmansaktiebolagsdelägare, tredje största förvärvskälla"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Fåmansaktiebolagsdelägare, tredje största förvärvskälla KU3Faman**
 

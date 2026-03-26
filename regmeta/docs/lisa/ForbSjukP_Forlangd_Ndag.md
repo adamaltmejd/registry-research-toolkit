@@ -2,9 +2,11 @@
 variable: ForbSjukP_Forlangd_Ndag
 display_name: "Förebyggande sjukpenning, förlängd antal nettodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förebyggande sjukpenning, förlängd antal nettodagar ForbSjukP_Forlangd_Ndag**
 

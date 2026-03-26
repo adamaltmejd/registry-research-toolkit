@@ -2,9 +2,11 @@
 variable: DispInk04
 display_name: "Disponibel inkomst (individens delkomponent, enligt 2004 års definition)"
 tags:
-  - variable/income/disposable
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Disponibel inkomst (individens delkomponent, enligt 2004 års definition) DispInk04**
 

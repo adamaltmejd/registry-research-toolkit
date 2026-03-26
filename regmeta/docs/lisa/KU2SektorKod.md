@@ -2,9 +2,11 @@
 variable: KU2SektorKod
 display_name: "Sektortillhörighet (företag, näst största förvärvskälla)"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Sektortillhörighet (företag, näst största förvärvskälla) KU2SektorKod**
 

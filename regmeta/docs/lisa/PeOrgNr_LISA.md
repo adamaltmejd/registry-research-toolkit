@@ -1,10 +1,12 @@
 ---
 variable: PeOrgNr_LISA
-display_name: "Företag"
+display_name: Företag
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Företag PeOrgNr_LISA**
 

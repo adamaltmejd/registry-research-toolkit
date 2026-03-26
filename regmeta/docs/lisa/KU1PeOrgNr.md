@@ -2,9 +2,11 @@
 variable: KU1PeOrgNr
 display_name: "Företag (största förvärvskälla)"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Företag (största förvärvskälla) KU1PeOrgNr**
 

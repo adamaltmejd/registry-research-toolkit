@@ -2,9 +2,11 @@
 variable: LivYrke
 display_name: "Yrkesskadelivränta, skattepliktig del (egenförmån/efterlevandeförmån)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Yrkesskadelivränta, skattepliktig del (egenförmån/efterlevandeförmån) LivYrke**
 

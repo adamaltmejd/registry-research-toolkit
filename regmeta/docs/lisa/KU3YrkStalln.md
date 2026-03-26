@@ -2,9 +2,11 @@
 variable: KU3YrkStalln
 display_name: "Yrkesställning (tredje största förvärvskälla)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Yrkesställning (tredje största förvärvskälla) KU3YrkStalln**
 

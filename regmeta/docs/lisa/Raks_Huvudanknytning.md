@@ -2,9 +2,11 @@
 variable: Raks_Huvudanknytning
 display_name: "Individens huvudanknytning till arbetsmarknad"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 ---
 

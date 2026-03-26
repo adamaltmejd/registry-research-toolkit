@@ -2,9 +2,11 @@
 variable: GMUErs
 display_name: "Ersättning för grundläggande militärutbildning"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Ersättning för grundläggande militärutbildning GMUErs**
 

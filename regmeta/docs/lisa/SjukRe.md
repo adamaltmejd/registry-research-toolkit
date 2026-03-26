@@ -2,9 +2,11 @@
 variable: SjukRe
 display_name: "Summa inkomst föranledd av sjukdom, arbetsskada och/eller rehabilitering"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa inkomst föranledd av sjukdom, arbetsskada och/eller rehabilitering SjukRe**
 

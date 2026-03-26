@@ -2,9 +2,11 @@
 variable: UnderHBidrMot
 display_name: "Mottaget underhållsbidrag, simulerat belopp"
 tags:
-  - variable/income/other
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Mottaget underhållsbidrag, simulerat belopp UnderHBidrMot**
 

@@ -2,9 +2,11 @@
 variable: KallKod
 display_name: "Källa för uppgift om högsta utbildning"
 tags:
-  - variable/education
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/education
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Källa för uppgift om högsta utbildning Kallkod**
 

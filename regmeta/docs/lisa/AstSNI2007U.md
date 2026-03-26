@@ -2,9 +2,11 @@
 variable: AstSNI2007U
 display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), utökad nivå"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), utökad nivå AstSNI2007U**
 

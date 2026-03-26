@@ -2,9 +2,11 @@
 variable: FodGrEg2
 display_name: "Eget födelseland, gruppering EU25"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Eget födelseland, gruppering EU25 FodGrEg2**
 

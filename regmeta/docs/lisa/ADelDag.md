@@ -2,9 +2,11 @@
 variable: ADelDag
 display_name: "Antal dagar i deltidsarbetslöshet"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Antal dagar i deltidsarbetslöshet ADelDag**
 

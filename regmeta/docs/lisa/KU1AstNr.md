@@ -2,9 +2,11 @@
 variable: KU1AstNr
 display_name: "Arbetsställenummer (största förvärvskälla)"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Arbetsställenummer (största förvärvskälla) KU1AstNr**
 

@@ -2,9 +2,11 @@
 variable: FodGrMor3
 display_name: "Moderns födelseland, gruppering EU27"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Moderns födelseland, gruppering EU27 FodGrMor3**
 

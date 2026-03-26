@@ -2,9 +2,11 @@
 variable: Raks_ForTidInk
 display_name: "Inkomst från sjuk- eller aktivietsersättning"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Inkomst från sjuk- eller aktivietsersättning RAKS_ForTidInk**
 

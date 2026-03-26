@@ -1,10 +1,12 @@
 ---
 variable: GenErs
-display_name: "Generationsväxlingsersättning"
+display_name: Generationsväxlingsersättning
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Generationsväxlingsersättning GenErs**
 

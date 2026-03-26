@@ -2,9 +2,11 @@
 variable: YrkStallnJ
 display_name: "Yrkesställning (november månad), enligt justerad metod"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Yrkesställning (november månad), enligt justerad metod YrkStallnJ**
 

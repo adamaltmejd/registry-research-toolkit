@@ -2,9 +2,11 @@
 variable: ForvInkNettoA
 display_name: "Summa inkomst av aktiv förvärvskälla inkl. underskott av näringsverksamhet"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Summa inkomst av aktiv förvärvskälla inkl. underskott av näringsverksamhet ForvInkNettoA**
 

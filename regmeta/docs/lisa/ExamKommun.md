@@ -2,9 +2,11 @@
 variable: ExamKommun
 display_name: "Utbildningskommun, avslutningsår högsta utbildning"
 tags:
-  - variable/education
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/education
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Utbildningskommun, avslutningsår högsta utbildning ExamKommun**
 

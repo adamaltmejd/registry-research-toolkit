@@ -1,10 +1,12 @@
 ---
 variable: DelPens
-display_name: "Delpension"
+display_name: Delpension
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Delpension DelPens**
 

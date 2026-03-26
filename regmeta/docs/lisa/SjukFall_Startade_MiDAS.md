@@ -2,9 +2,11 @@
 variable: SjukFall_Startade_MiDAS
 display_name: "Antalet startade sjukfall under året"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Antalet startade sjukfall under året SjukFall_Startade_MiDAS**
 

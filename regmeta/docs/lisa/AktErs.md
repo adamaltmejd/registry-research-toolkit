@@ -1,10 +1,12 @@
 ---
 variable: AktErs
-display_name: "Aktivitetsersättning"
+display_name: Aktivitetsersättning
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Aktivitetsersättning AktErs**
 

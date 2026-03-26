@@ -2,9 +2,11 @@
 variable: SektorKod
 display_name: "Sektorstillhörighet (företag)"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Sektorstillhörighet (företag) SektorKod**
 

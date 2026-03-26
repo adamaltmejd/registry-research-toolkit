@@ -2,9 +2,11 @@
 variable: SyssStatG
 display_name: "Sysselsättningsstatus (november månad) gammal definition"
 tags:
-  - variable/employment/gainful-employment
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Sysselsättningsstatus (november månad) gammal definition SyssStatG**
 

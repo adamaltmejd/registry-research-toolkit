@@ -2,9 +2,11 @@
 variable: StudMed
 display_name: "Studiemedel och studiehjälp (lån/bidrag)"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Studiemedel och studiehjälp (lån/bidrag) StudMed**
 

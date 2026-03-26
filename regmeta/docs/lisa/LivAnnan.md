@@ -2,9 +2,11 @@
 variable: LivAnnan
 display_name: "Annan livränta, helt eller delvis skattepliktig"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Annan livränta, helt eller delvis skattepliktig LivAnnan**
 

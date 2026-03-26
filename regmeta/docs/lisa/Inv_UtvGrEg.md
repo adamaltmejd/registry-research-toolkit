@@ -2,9 +2,11 @@
 variable: Inv_UtvGrEg
 display_name: "Land vid in- och utvandring, gruppering EU15"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Land vid in- och utvandring, gruppering EU15 Inv_UtvGrEg**
 

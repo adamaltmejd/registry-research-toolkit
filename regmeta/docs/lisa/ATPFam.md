@@ -2,9 +2,11 @@
 variable: ATPFam
 display_name: "ATP-kod för efterlevandeförmån"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **ATP-kod för efterlevandeförmån ATPFam**
 

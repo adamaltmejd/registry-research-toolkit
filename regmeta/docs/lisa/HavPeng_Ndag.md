@@ -2,9 +2,11 @@
 variable: HavPeng_Ndag
 display_name: "Graviditetspenning, antal nettodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Graviditetspenning, antal nettodagar HavPeng_Ndag**
 

@@ -2,9 +2,11 @@
 variable: AKassaAmPol
 display_name: "Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd AKassaAmPol**
 

@@ -2,9 +2,11 @@
 variable: HavPeng_Bdag
 display_name: "Graviditetspenning, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Graviditetspenning, antal bruttodagar HavPeng_Bdag**
 

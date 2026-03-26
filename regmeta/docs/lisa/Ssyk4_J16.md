@@ -2,9 +2,11 @@
 variable: Ssyk4_J16
 display_name: "Yrke enligt SSYK 96, 4-siffernivå, inkl. härledda yrken för företagare"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 ---
 

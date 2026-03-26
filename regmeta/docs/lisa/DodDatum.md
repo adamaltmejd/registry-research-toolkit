@@ -1,10 +1,12 @@
 ---
 variable: DodDatum
-display_name: "Dödsdatum"
+display_name: Dödsdatum
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Dödsdatum DodDatum**
 

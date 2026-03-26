@@ -2,9 +2,11 @@
 variable: ATPFort
 display_name: "Förtidspension från ATP, egenförmån"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förtidspension från ATP, egenförmån ATPFort**
 

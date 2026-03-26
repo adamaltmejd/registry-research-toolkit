@@ -2,9 +2,11 @@
 variable: KU2YrkStalln
 display_name: "Yrkesställning (näst största förvärvskälla)"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Yrkesställning (näst största förvärvskälla) KU2YrkStalln**
 

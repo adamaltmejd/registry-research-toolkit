@@ -2,9 +2,11 @@
 variable: ForPeng_Ndag_MiDAS
 display_name: "Föräldrapenning, antal nettodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Föräldrapenning, antal nettodagar ForPeng_Ndag_MiDAS**
 

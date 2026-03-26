@@ -2,9 +2,11 @@
 variable: SsykStatus
 display_name: "Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under november"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Yrkets överensstämmelse med det jobb som valts som huvudsaklig verksamhet under november SsykStatus**
 

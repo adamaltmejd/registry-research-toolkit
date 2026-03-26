@@ -2,9 +2,11 @@
 variable: AktErs_Belopp_MiDAS
 display_name: "Aktivitetsersättning, ersättningsbelopp"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Aktivitetsersättning, ersättningsbelopp AktErs_Belopp_MiDAS**
 

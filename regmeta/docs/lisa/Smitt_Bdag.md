@@ -2,9 +2,11 @@
 variable: Smitt_Bdag
 display_name: "Smittbärarpenning, antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Smittbärarpenning, antal bruttodagar Smitt_Bdag**
 

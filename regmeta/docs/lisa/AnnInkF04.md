@@ -2,9 +2,11 @@
 variable: AnnInkF04
 display_name: "Summa annan inkomst (familjerelaterad)"
 tags:
-  - variable/income/other
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Summa annan inkomst (familjerelaterad) AnnInkF04**
 

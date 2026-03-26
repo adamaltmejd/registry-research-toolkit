@@ -2,9 +2,11 @@
 variable: ForbSjukP_Forlangd_Bdag
 display_name: "Förebyggande sjukpenning, förlängd antal bruttodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förebyggande sjukpenning, förlängd antal bruttodagar ForbSjukP_Forlangd_Bdag**
 

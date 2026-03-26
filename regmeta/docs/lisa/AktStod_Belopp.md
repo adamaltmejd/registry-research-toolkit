@@ -2,9 +2,11 @@
 variable: AktStod_Belopp
 display_name: "Aktivitetsstöd, ersättning"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Aktivitetsstöd, ersättning AktStod_Belopp**
 

@@ -2,9 +2,11 @@
 variable: FolkAld
 display_name: "Ålderspension från folkpension, egenförmån"
 tags:
-  - variable/income/pension
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Ålderspension från folkpension, egenförmån FolkAld**
 

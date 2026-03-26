@@ -2,9 +2,11 @@
 variable: SocBidrTypF
 display_name: "Förekomst av ekonomiskt bidrag (familj)"
 tags:
-  - variable/income/social-assistance
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Förekomst av ekonomiskt bidrag (familj) SocBidrTypF**
 

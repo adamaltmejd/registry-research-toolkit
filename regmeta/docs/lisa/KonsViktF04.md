@@ -2,9 +2,11 @@
 variable: KonsViktF04
 display_name: "Konsumtionsvikt, nytt begrepp"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Konsumtionsvikt, nytt begrepp KonsViktF04**
 

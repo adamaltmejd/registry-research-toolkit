@@ -2,9 +2,11 @@
 variable: FastLopNr
 display_name: "Fastighetens löpnummer"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Fastighetens löpnummer FastLopNr**
 

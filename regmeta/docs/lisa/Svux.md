@@ -2,9 +2,11 @@
 variable: Svux
 display_name: "Särskilt vuxenstudiestöd, bidragsdel (övriga) (SVUX)"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Särskilt vuxenstudiestöd, bidragsdel (övriga) (SVUX) SVux**
 

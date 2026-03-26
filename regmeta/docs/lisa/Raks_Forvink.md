@@ -2,9 +2,11 @@
 variable: Raks_Forvink
 display_name: "Inkomst från anställning eller egen näringsverksamhet"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Inkomst från anställning eller egen näringsverksamhet RAKS_ForvInk**
 

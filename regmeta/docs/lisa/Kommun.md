@@ -1,10 +1,12 @@
 ---
 variable: Kommun
-display_name: "Bostadskommun"
+display_name: Bostadskommun
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Bostadskommun Kommun**
 

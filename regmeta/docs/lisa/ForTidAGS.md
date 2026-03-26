@@ -2,9 +2,11 @@
 variable: ForTidAGS
 display_name: "AGS i samband med förtidspension/sjukbidrag/sjukersättning/ aktivitetsersättning"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **AGS i samband med förtidspension/sjukbidrag/sjukersättning/ aktivitetsersättning FortidAGS**
 

@@ -2,9 +2,11 @@
 variable: SUtKun
 display_name: "Särskilt utbildningsbidrag – Kunskapslyftet (UBS)"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Särskilt utbildningsbidrag – Kunskapslyftet (UBS) SUtKun**
 

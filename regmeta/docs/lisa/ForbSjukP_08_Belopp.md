@@ -2,9 +2,11 @@
 variable: ForbSjukP_08_Belopp
 display_name: "Förebyggande sjukpenning, ersättningsbelopp"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Förebyggande sjukpenning, ersättningsbelopp ForbSjukP_08_Belopp**
 

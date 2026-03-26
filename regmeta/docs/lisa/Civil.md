@@ -1,10 +1,12 @@
 ---
 variable: Civil
-display_name: "Civilstånd"
+display_name: Civilstånd
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Civilstånd Civil**
 

@@ -2,9 +2,11 @@
 variable: ESeG
 display_name: "Europeisk socioekonomisk gruppering"
 tags:
-  - variable/employment/occupation
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Europeisk socioekonomisk gruppering ESeG**
 

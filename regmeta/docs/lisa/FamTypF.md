@@ -1,10 +1,12 @@
 ---
 variable: FamTypF
-display_name: "Familjetyp9"
+display_name: Familjetyp9
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Familjetyp9 FamTypF**
 

@@ -2,9 +2,11 @@
 variable: KU3AstSNI2002B
 display_name: "Näringsgrenstillhörighet enligt SNI2002 (arbetsställe, tredje största förvärvskälla), begränsad nivå"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Näringsgrenstillhörighet enligt SNI2002 (arbetsställe, tredje största förvärvskälla), begränsad nivå KU3AstSNI2002B**
 

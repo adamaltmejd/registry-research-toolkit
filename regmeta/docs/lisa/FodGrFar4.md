@@ -2,9 +2,11 @@
 variable: FodGrFar4
 display_name: "Faderns födelseland, gruppering EU28"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Faderns födelseland, gruppering EU28 FodGrFar4**
 

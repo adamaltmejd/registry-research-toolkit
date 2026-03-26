@@ -2,9 +2,11 @@
 variable: KU3AstNr
 display_name: "Arbetsställenummer (tredje största förvärvskälla)"
 tags:
-  - variable/identifier/firm
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/identifier
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Arbetsställenummer (tredje största förvärvskälla) KU3AstNr**
 

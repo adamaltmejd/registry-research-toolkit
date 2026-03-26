@@ -2,9 +2,11 @@
 variable: InkFNettoA
 display_name: "Nettoinkomst av aktiv näringsverksamhet"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Nettoinkomst av aktiv näringsverksamhet InkFNettoA**
 

@@ -2,9 +2,11 @@
 variable: Rehab_08_Ndag
 display_name: "Rehabiliteringspenning, antal nettodagar"
 tags:
-  - variable/income
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Rehabiliteringspenning, antal nettodagar Rehab_08_Ndag**
 

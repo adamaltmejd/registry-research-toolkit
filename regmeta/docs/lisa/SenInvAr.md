@@ -2,9 +2,11 @@
 variable: SenInvAr
 display_name: "Senaste invandringsår"
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 #### **Senaste invandringsår SenInvAr**
 

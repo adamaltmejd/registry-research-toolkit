@@ -1,10 +1,12 @@
 ---
 variable: FolkHust
-display_name: "Hustrutillägg"
+display_name: Hustrutillägg
 tags:
-  - variable/income/pension/occupational
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/income
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Hustrutillägg FolkHust**
 

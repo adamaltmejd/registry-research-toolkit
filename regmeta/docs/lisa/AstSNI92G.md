@@ -2,9 +2,11 @@
 variable: AstSNI92G
 display_name: "Näringsgrenstillhörighet enligt SNI92 (arbetsställe), grov nivå"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Näringsgrenstillhörighet enligt SNI92 (arbetsställe), grov nivå AstSNI92G**
 

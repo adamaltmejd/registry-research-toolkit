@@ -1,10 +1,12 @@
 ---
 variable: Lan
-display_name: "Bostadslän"
+display_name: Bostadslän
 tags:
-  - variable/demographic
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/demographic
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Bostadslän Lan**
 

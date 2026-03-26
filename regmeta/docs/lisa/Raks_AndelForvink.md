@@ -2,9 +2,11 @@
 variable: Raks_AndelForvink
 display_name: "RAKS_AndelForTidInk RAKS_AndelAldPensInk RAKS_AndelStudInk RAKS_AndelUtbBidrInk RAKS_AndelVardInk RAKS_AndelSjukInk RAKS_AndelEkBisInk"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **RAKS_AndelForTidInk RAKS_AndelAldPensInk RAKS_AndelStudInk RAKS_AndelUtbBidrInk RAKS_AndelVardInk RAKS_AndelSjukInk RAKS_AndelEkBisInk RAKS_AndelForvInk**
 

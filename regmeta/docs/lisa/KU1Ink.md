@@ -2,9 +2,11 @@
 variable: KU1Ink
 display_name: "Inkomst av största förvärvskälla"
 tags:
-  - variable/employment/industry
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/employment
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Inkomst av största förvärvskälla KU1Ink**
 

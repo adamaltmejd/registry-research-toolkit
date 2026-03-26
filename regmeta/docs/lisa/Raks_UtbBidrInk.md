@@ -2,9 +2,11 @@
 variable: Raks_UtbBidrInk
 display_name: "Inkomst från arbetsmarknadspolitiska åtgärder"
 tags:
-  - variable/activity-status
-source: "lisa-bakgrundsfakta-1990-2017"
+  - type/variable
+  - topic/activity-status
+source: lisa-bakgrundsfakta-1990-2017
 ---
+
 
 **Inkomst från arbetsmarknadspolitiska åtgärder RAKS_UtbBidrInk**
 
