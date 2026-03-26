@@ -4,6 +4,7 @@ display_name: "Summa inkomst föranledd av studier"
 tags:
   - type/variable
   - topic/income
+  - topic/education
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

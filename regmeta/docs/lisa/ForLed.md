@@ -4,6 +4,7 @@ display_name: "Summa inkomst föranledd av ersättningar i föräldraförsäkrin
 tags:
   - type/variable
   - topic/income
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -4,6 +4,7 @@ display_name: "Ersättning från avtalsgruppsjukförsäkring (AGS) och trygghets
 tags:
   - type/variable
   - topic/income
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

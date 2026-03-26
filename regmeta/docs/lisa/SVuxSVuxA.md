@@ -4,6 +4,7 @@ display_name: "Särskilt vuxenstudiestöd"
 tags:
   - type/variable
   - topic/income
+  - topic/education
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

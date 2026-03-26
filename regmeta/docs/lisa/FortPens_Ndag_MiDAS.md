@@ -3,7 +3,7 @@ variable: FortPens_Ndag_MiDAS
 display_name: "Förtidspension, antal nettodagar"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

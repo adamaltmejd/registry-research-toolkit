@@ -4,6 +4,7 @@ display_name: "Förekomst av ersättning i samband med arbetsmarknadspolitisk å
 tags:
   - type/variable
   - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -4,6 +4,7 @@ display_name: "Antal dagar som arbetssökande tillfälligt timanställd"
 tags:
   - type/variable
   - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

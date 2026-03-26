@@ -3,7 +3,7 @@ variable: FolkFortSjuk
 display_name: "Förtidspension/Sjukbidrag från folkpension, egenförmån"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -4,6 +4,7 @@ display_name: "Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd"
 tags:
   - type/variable
   - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

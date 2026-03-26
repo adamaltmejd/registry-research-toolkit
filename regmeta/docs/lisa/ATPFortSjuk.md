@@ -3,7 +3,7 @@ variable: ATPFortSjuk
 display_name: "Förtidspension/Sjukbidrag från ATP, egenförmån"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -3,7 +3,7 @@ variable: ForTid
 display_name: "Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

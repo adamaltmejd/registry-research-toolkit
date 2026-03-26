@@ -4,6 +4,7 @@ display_name: "Förekomst av studerandeinkomst"
 tags:
   - type/variable
   - topic/income
+  - topic/education
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

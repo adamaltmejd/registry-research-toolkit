@@ -3,7 +3,7 @@ variable: SjukErsInkAnd
 display_name: "Andel/grad för sjukersättning (inkomstrelaterad)"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

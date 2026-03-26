@@ -4,6 +4,7 @@ display_name: "Särskilt utbildningsbidrag – Kunskapslyftet (UBS)"
 tags:
   - type/variable
   - topic/income
+  - topic/education
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

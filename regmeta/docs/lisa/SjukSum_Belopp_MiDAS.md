@@ -4,6 +4,7 @@ display_name: "Summa inkomst föranledd av sjukpenning, arbetsskada och/eller re
 tags:
   - type/variable
   - topic/income
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -4,6 +4,7 @@ display_name: "Antalet avslutade sjukfall under året"
 tags:
   - type/variable
   - topic/income
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

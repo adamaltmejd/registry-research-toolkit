@@ -4,6 +4,7 @@ display_name: "Antal dagar i åtgärdsstudier"
 tags:
   - type/variable
   - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

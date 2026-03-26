@@ -3,7 +3,7 @@ variable: FolkATPFam
 display_name: "Efterlevandeförmån av folkpension och ATP"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

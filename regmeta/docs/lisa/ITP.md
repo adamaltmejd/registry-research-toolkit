@@ -4,6 +4,7 @@ display_name: "TP – Industrins och handelns tjänste- och tilläggspension"
 tags:
   - type/variable
   - topic/income
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

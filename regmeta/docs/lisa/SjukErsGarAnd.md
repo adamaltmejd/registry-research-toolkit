@@ -3,7 +3,7 @@ variable: SjukErsGarAnd
 display_name: "Andel/grad för sjukersättning (garantiersättning)"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 
