@@ -1,0 +1,19 @@
+---
+variable: ForbSjukP_Forlangd_Bdag
+display_name: "Förebyggande sjukpenning, förlängd antal bruttodagar"
+tags:
+  - variable/income
+source: "lisa-bakgrundsfakta-1990-2017"
+---
+
+**Förebyggande sjukpenning, förlängd antal bruttodagar ForbSjukP_Forlangd_Bdag**
+
+**ForbSjukP*Forlangd*Bdag**
+
+(2008–2011)
+
+Antal utbetalda bruttodagar under året med förlängd förbyggande sjukpenning.
+
+Antal bruttodagar visar antal dagar under ett år oavsett omfattning.
+
+2008-2011 finns förebyggande sjukpenning uppdelad på *Förebyggande sjukpenning, antal bruttodagar* [[ForbSjukP_08_Bdag]] och *Förebyggande sjukpenning, förlängd, antal bruttodagar* [[ForbSjukP_Forlangd_Bdag]]. Dessa dagar ingår i *Sjukpenning, förebyggande, antal bruttodagar*  (Forb-SjukP_Bdag).

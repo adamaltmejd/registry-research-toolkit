@@ -1,0 +1,19 @@
+---
+variable: KU1AstLan
+display_name: "Arbetsställelän (största förvärvskälla)"
+tags:
+  - variable/employment/occupation
+source: "lisa-bakgrundsfakta-1990-2017"
+---
+
+#### **Arbetsställelän (största förvärvskälla) KU1AstLan**
+
+KU1AstLan
+
+Län där arbetsstället (avseende största förvärvskällan) är beläget, anges med länskod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
+
+*För regionala indelningar se [www.scb.se.](http://www.scb.se/SNI2007)* 
+
+Se även *bilaga 8, Regionala koder*.
+
+När uppgift om arbetsställe saknas sätts arbetsställelän till 00. När arbetsstället är beläget i utlandet sätts arbetsställelän till 99.

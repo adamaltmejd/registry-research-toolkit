@@ -8,6 +8,7 @@ build/
 # Environments
 .venv/
 .env
+.envrc
 
 # Tools
 .ruff_cache/
@@ -35,6 +36,12 @@ extract_stats*.R
 
 # regmeta database (built from SCB exports, not committed)
 *.db
+
+# SCB source PDFs (binary, copyrighted, not committed)
+*.pdf
+
+# Marker raw output (regenerable from PDFs + parser)
+regmeta/docs/_raw/
 
 # Archive (concluded investigations, ad-hoc scripts, internal notes)
 archive/

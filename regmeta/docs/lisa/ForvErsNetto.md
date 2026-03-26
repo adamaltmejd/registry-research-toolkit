@@ -1,0 +1,27 @@
+---
+variable: ForvErsNetto
+display_name: "Förvärvsinkomst och arbetsrelaterade ersättningar, inklusive underskott av näringsverksamhet"
+tags:
+  - variable/income
+source: "lisa-bakgrundsfakta-1990-2017"
+---
+
+**Förvärvsinkomst och arbetsrelaterade ersättningar, inklusive underskott av näringsverksamhet ForvErsNetto**
+
+ForvErsNetto
+
+(2003–)
+
+Beloppet anges i hundratals kronor.
+
+Summa Kontant bruttolön, Inkomst av näringsverksamhet45 , Sjukpenning, Graviditetspenning, Smittbärarpenning, Sjuklönegaranti, Skattepliktig arbetsskadeersättning, Föräldrapenning vid barn födelse eller adoption, Tillfällig föräldrapenning för vård av barn, Närståendepenning och Rehabiliteringsersättning.
+
+Även negativa värden förekommer.
+
+Förvärvsinkomsten som redovisas i variabeln ForvErsNetto omfattar under- och överskott av både aktiv och passiv näringsverksamet.
+
+ForvErsNetto redovisas endast när *Kontant bruttolön* eller *Inkomst av näringsverksamhet* är skilt från noll.
+
+44 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad). Inkomst av aktiv näringsverksamhet inkluderas i summan endast när Inkomst av aktiv näringsverksamhet (motsvarande) är större än noll.
+
+45 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad).
