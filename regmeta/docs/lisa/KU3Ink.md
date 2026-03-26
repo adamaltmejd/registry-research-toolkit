@@ -3,7 +3,7 @@ variable: KU3Ink
 display_name: "Inkomst av tredje största förvärvskälla"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/income
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

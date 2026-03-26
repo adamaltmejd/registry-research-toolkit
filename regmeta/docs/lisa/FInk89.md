@@ -3,7 +3,7 @@ variable: FInk89
 display_name: "Inkomst av rörelse/Inkomst av Jordbruksfastighet(brukad) 1989"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/income
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

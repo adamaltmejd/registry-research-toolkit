@@ -3,7 +3,7 @@ variable: SektorKodJ
 display_name: "Sektorstillhörighet (företag) enligt justerad metod"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

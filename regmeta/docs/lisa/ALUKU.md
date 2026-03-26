@@ -3,7 +3,7 @@ variable: ALUKU
 display_name: "Arbetslivsutvecklingsbidrag (från A-kassa)"
 tags:
   - type/variable
-  - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

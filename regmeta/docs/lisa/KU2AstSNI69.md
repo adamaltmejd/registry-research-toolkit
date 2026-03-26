@@ -3,7 +3,7 @@ variable: KU2AstSNI69
 display_name: "Näringsgrenstillhörighet enligt SNI 69 (arbetsställe, näst största förvärvskälla)"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

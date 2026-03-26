@@ -3,7 +3,7 @@ variable: MedbLandNamn
 display_name: Medborgarskap
 tags:
   - type/variable
-  - topic/identifier
+  - topic/demographic
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

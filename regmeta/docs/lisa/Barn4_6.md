@@ -3,7 +3,7 @@ variable: Barn4_6
 display_name: "Antal hemmavarande barn 4-6 år"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/demographic
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

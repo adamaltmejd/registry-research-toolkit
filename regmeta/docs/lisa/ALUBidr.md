@@ -3,7 +3,7 @@ variable: ALUBidr
 display_name: "Arbetslivsutvecklingsbidrag (ALU)"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

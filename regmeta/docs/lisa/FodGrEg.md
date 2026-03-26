@@ -3,7 +3,7 @@ variable: FodGrEg
 display_name: "Eget födelseland (grupperad, EU15)"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/demographic
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

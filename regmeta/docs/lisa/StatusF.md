@@ -3,7 +3,7 @@ variable: StatusF
 display_name: "Aktiv eller passiv egenföretagare(novembersysselsättning)"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

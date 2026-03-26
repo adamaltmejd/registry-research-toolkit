@@ -3,7 +3,7 @@ variable: OTA
 display_name: "Offentligt Tillfälligt Arbete (OTA)"
 tags:
   - type/variable
-  - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

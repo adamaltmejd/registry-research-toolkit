@@ -3,7 +3,7 @@ variable: SjukErs_Bdag_MiDAS
 display_name: "Antal bruttodagar med icke tidsbegränsadoch/eller tidsbegränsad sjukersättning"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

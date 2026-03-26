@@ -3,7 +3,7 @@ variable: AktErs_Bdag_MiDAS
 display_name: "Aktivitetsersättning, antal bruttodagar"
 tags:
   - type/variable
-  - topic/employment
+  - topic/social-insurance
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

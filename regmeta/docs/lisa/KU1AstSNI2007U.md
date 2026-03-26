@@ -3,7 +3,7 @@ variable: KU1AstSNI2007U
 display_name: "Näringsgrenstillhörighet enligt SNI2007 (arbetsställe, största förvärvskälla), utökad nivå"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

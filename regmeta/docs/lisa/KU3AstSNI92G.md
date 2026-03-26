@@ -3,7 +3,7 @@ variable: KU3AstSNI92G
 display_name: "Näringsgrenstillhörighet enligt SNI 92 (arbetsställe, tredje största förvärvskälla), grov nivå"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

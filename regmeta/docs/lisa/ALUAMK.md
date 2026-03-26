@@ -3,7 +3,7 @@ variable: ALUAMK
 display_name: "Arbetslivsutvecklingsbidrag (från AMK)"
 tags:
   - type/variable
-  - topic/income
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

@@ -3,7 +3,7 @@ variable: KU1Ssyk4
 display_name: "Yrke enligt SSYK, största förvärvskälla, 4-siffernivå"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 

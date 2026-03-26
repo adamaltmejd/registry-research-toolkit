@@ -3,7 +3,7 @@ variable: InstKod10
 display_name: "Institutionell sektorkod (företag)"
 tags:
   - type/variable
-  - topic/identifier
+  - topic/employment
 source: lisa-bakgrundsfakta-1990-2017
 ---
 
