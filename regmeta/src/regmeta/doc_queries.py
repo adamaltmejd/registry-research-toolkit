@@ -91,15 +91,17 @@ def doc_get(
 
     Returns the full doc record or None.
     """
-    # Try variable match first
+    # Try variable match first (case-insensitive)
     row = conn.execute(
-        "SELECT * FROM doc WHERE variable = ? LIMIT 1", (identifier,)
+        "SELECT * FROM doc WHERE variable = ? COLLATE NOCASE LIMIT 1",
+        (identifier,),
     ).fetchone()
 
-    # Try filename (with and without .md)
+    # Try filename (with and without .md, case-insensitive)
     if row is None:
         row = conn.execute(
-            "SELECT * FROM doc WHERE filename = ? OR filename = ? LIMIT 1",
+            "SELECT * FROM doc WHERE filename = ? COLLATE NOCASE "
+            "OR filename = ? COLLATE NOCASE LIMIT 1",
             (identifier, f"{identifier}.md"),
         ).fetchone()
 
@@ -202,7 +204,8 @@ def _doc_list_summary(conn: sqlite3.Connection, docs_dir: str | None) -> dict:
 def doc_exists(conn: sqlite3.Connection, variable: str) -> bool:
     """Check whether documentation exists for a variable."""
     row = conn.execute(
-        "SELECT 1 FROM doc WHERE variable = ? LIMIT 1", (variable,)
+        "SELECT 1 FROM doc WHERE variable = ? COLLATE NOCASE LIMIT 1",
+        (variable,),
     ).fetchone()
     return row is not None
 
