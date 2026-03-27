@@ -21,11 +21,12 @@ CREATE TABLE IF NOT EXISTS doc (
     display_name TEXT NOT NULL,
     tags         TEXT NOT NULL,
     source       TEXT,
-    body         TEXT NOT NULL
+    body         TEXT NOT NULL,
+    body_clean   TEXT NOT NULL
 );
 
 CREATE VIRTUAL TABLE IF NOT EXISTS doc_fts USING fts5(
-    display_name, variable, body,
+    display_name, variable, body_clean,
     content='doc', content_rowid='doc_id',
     tokenize='unicode61'
 );
@@ -164,6 +165,40 @@ def ensure_doc_db(db_arg: str | None) -> sqlite3.Connection:
 # ---------------------------------------------------------------------------
 
 
+def _clean_body_for_search(body: str) -> str:
+    """Strip markdown formatting from body text for cleaner FTS snippets.
+
+    Removes tables, wiki-links, bold/italic markers, URLs, and other
+    formatting noise while preserving the prose content.
+    """
+    lines = []
+    for line in body.split("\n"):
+        stripped = line.strip()
+        # Skip table rows and separator lines
+        if stripped.startswith("|") or stripped.startswith("---"):
+            continue
+        # Skip image references
+        if stripped.startswith("![]") or stripped.startswith("Image "):
+            continue
+        # Skip empty bold-only lines (variable headers)
+        if re.match(r"^\*\*[^*]+\*\*\s*$", stripped):
+            continue
+        lines.append(line)
+
+    text = "\n".join(lines)
+    # Strip wiki-links: [[Name]] → Name
+    text = re.sub(r"\[\[([^\]]+)\]\]", r"\1", text)
+    # Strip markdown links: [text](url) → text
+    text = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", text)
+    # Strip bold/italic markers
+    text = re.sub(r"\*{1,3}([^*]+)\*{1,3}", r"\1", text)
+    # Strip heading markers
+    text = re.sub(r"^#{1,4}\s+", "", text, flags=re.MULTILINE)
+    # Collapse whitespace
+    text = re.sub(r"\n{3,}", "\n\n", text)
+    return text.strip()
+
+
 def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
     """Build the doc search index from markdown files.
 
@@ -198,9 +233,10 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
             if isinstance(tags, str):
                 tags = [tags]
 
+            body_clean = _clean_body_for_search(body)
             conn.execute(
-                "INSERT INTO doc (register, filename, variable, display_name, tags, source, body) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO doc (register, filename, variable, display_name, tags, source, body, body_clean) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     register,
                     md_file.name,
@@ -209,6 +245,7 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
                     json.dumps(tags, ensure_ascii=False),
                     meta.get("source"),
                     body,
+                    body_clean,
                 ),
             )
             total += 1
