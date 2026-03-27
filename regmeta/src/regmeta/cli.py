@@ -1659,9 +1659,17 @@ def _write_payload(
         ]
         _write_formatted(rows, ["variable", "display_name", "file", "snippet"], output_path, fmt=fmt)
     elif key == ("docs", "get"):
-        file_path = data.get("file_path")
-        if file_path:
-            _write_to(f"  file: {file_path}\n", output_path)
+        header = []
+        if data.get("variable"):
+            header.append(f"  variable:     {data['variable']}")
+        header.append(f"  display_name: {data['display_name']}")
+        if data.get("tags"):
+            header.append(f"  tags:         {', '.join(data['tags'])}")
+        if data.get("source"):
+            header.append(f"  source:       {data['source']}")
+        if data.get("file_path"):
+            header.append(f"  file:         {data['file_path']}")
+        _write_to("\n".join(header) + "\n\n", output_path)
         _write_to(data.get("body", "") + "\n", output_path)
     elif key == ("docs", "list"):
         if data.get("results") is not None:
