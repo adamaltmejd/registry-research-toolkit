@@ -19,14 +19,14 @@ Den institutionella sektorkoden 2014- är tio positioner:
 
 *Institutionell sektorsindelning (samhällssektor) (position 1–6)*
 
-| 111000 | Icke-finansiella bolag, utom statliga affärsverk, filialer i Sverige till icke-<br>finansiella bolag i utlandet och icke-vinstdrivande organisationer som<br>betjänar icke-finansiella bolag |
+| 111000 | Icke-finansiella bolag, utom statliga affärsverk, filialer i [[Sverige]] till icke-<br>finansiella bolag i utlandet och icke-vinstdrivande organisationer som<br>betjänar icke-finansiella bolag |
 |--------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 112000 | Statliga affärsverk                                                                                                                                                                          |
-| 113000 | Filialer i Sverige till icke-finansiella bolag i utlandet                                                                                                                                    |
+| 113000 | Filialer i [[Sverige]] till icke-finansiella bolag i utlandet                                                                                                                                    |
 | 114000 | Icke-vinstdrivande organisationer som betjänar icke-finansiella bolag                                                                                                                        |
 | 121000 | Centralbanken                                                                                                                                                                                |
-| 122100 | Banker, utom bankfilialer i Sverige till banker i utlandet                                                                                                                                   |
-| 122200 | Bankfilialer i Sverige till banker i utlandet                                                                                                                                                |
+| 122100 | Banker, utom bankfilialer i [[Sverige]] till banker i utlandet                                                                                                                                   |
+| 122200 | Bankfilialer i [[Sverige]] till banker i utlandet                                                                                                                                                |
 | 122300 | Bostadsinstitut                                                                                                                                                                              |
 | 122400 | Andra monetära kreditmarknadsföretag                                                                                                                                                         |
 | 122500 | Monetära värdepappersbolag och fondkommissionärer                                                                                                                                            |
@@ -41,11 +41,11 @@ Den institutionella sektorkoden 2014- är tio positioner:
 | 126100 | Finansiella servicebolag, utom icke-vinstdrivande organisation-er som<br>betjänar finansiella bolag                                                                                          |
 | 126200 | Icke-vinstdrivande organisationer som betjänar finansiella bolag                                                                                                                             |
 | 127000 | Koncerninterna finansinstitut och utlåningsföretag                                                                                                                                           |
-| 128100 | Försäkringsbolag, utom filialer i Sverige till försäkringsbolag i utlandet och<br>försäkrings- och understödsföreningar                                                                      |
-| 128200 | Filialer i Sverige till försäkringsbolag i utlandet                                                                                                                                          |
+| 128100 | Försäkringsbolag, utom filialer i [[Sverige]] till försäkringsbolag i utlandet och<br>försäkrings- och understödsföreningar                                                                      |
+| 128200 | Filialer i [[Sverige]] till försäkringsbolag i utlandet                                                                                                                                          |
 | 128300 | Försäkrings- och understödsföreningar, ej pension                                                                                                                                            |
-| 129100 | Pensionsinstitut, utom filialer i Sverige till pensionsinstitut i ut-landet,<br>försäkrings- och understödsföreningar samt pensionsstif-telser                                               |
-| 129200 | Filialer i Sverige till pensionsinstitut i utlandet                                                                                                                                          |
+| 129100 | Pensionsinstitut, utom filialer i [[Sverige]] till pensionsinstitut i ut-landet,<br>försäkrings- och understödsföreningar samt pensionsstif-telser                                               |
+| 129200 | Filialer i [[Sverige]] till pensionsinstitut i utlandet                                                                                                                                          |
 | 129300 | Försäkrings- och understödsföreningar, pension                                                                                                                                               |
 | 129400 | Pensionsstiftelser                                                                                                                                                                           |
 

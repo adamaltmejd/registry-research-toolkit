@@ -18,4 +18,4 @@ Från och med 1996 finns ett nytt pensionsavtal (SAF-LO). Enligt den nya avtalsp
 
 Hur stor den nya avtalspensionen blir bestäms av premiens storlek, hur många år den betalas in samt av hur pengarna förvaltas. Från och med 1998 kan privatanställda arbetare välja förvaltare av sin avtalspension. Premien som betalas till avtalspension är 3,5 procent av lönen från och med år 2000. Pensionsrätten räknas från den månad man fyller 25 år.
 
-Pensionen är avtalad mellan Svenska Arbetsgivarföreningen SAF och Landsorganisationen i Sverige LO.
+Pensionen är avtalad mellan Svenska Arbetsgivarföreningen SAF och Landsorganisationen i [[Sverige]] LO.

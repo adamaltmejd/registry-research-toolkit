@@ -898,13 +898,16 @@ def extract_variabelforteckning(lines: list[str]) -> dict[str, tuple[str, int]]:
     """Extract column names from the Variabelförteckning table in the document.
 
     Returns {column_name: (display_name, page_number)}.
-    The table appears in the first ~2000 lines with rows like:
+    The table appears in the first ~2500 lines with rows like:
     | Display name | ColumnName | PageNum |
+    Some rows have merged columns: | Display ColumnName | PageNum |
     """
     var_list: dict[str, tuple[str, int]] = {}
     for i, line in enumerate(lines):
         if i > 2500:
             break
+
+        # Standard 3-column: | Display | ColumnName | PageNum |
         m = re.match(
             r"^\|\s*(.+?)\s*\|\s*([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\s*\|\s*(\d+)\s*\|",
             line,
@@ -915,6 +918,34 @@ def extract_variabelforteckning(lines: list[str]) -> dict[str, tuple[str, int]]:
             page = int(m.group(3))
             if page > 50 and col not in var_list:
                 var_list[col] = (display, page)
+            continue
+
+        # Merged: column name in display cell. Handles:
+        #   | Display ColumnName | PageNum |
+        #   | Display ColumnName |         | PageNum |
+        m2 = re.match(
+            r"^\|\s*(.+?)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{2,40})\s*\|[\s|]*(\d+)\s*\|",
+            line,
+        )
+        if m2:
+            col = m2.group(2).strip()
+            display = re.sub(r"<[^>]+>", "", m2.group(1)).strip()
+            page = int(m2.group(3))
+            if page > 50 and col not in var_list:
+                var_list[col] = (display, page)
+            continue
+
+        # Single-column with no page: | Display ColumnName |
+        m3 = re.match(
+            r"^\|\s*(.+?)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{2,40})\s*\|\s*$",
+            line.rstrip(),
+        )
+        if m3:
+            col = m3.group(2).strip()
+            display = re.sub(r"<[^>]+>", "", m3.group(1)).strip()
+            if col not in var_list:
+                var_list[col] = (display, 0)  # page 0 = unknown
+
     return var_list
 
 

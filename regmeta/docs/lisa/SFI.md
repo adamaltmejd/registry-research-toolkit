@@ -16,7 +16,7 @@ Då variabelvärdena i statistiken över befolkningens utbildning baseras på en
 
 År 2017 saknade drygt 111 000 personer eller 2,1 procent av personerna i åldern 25–64 år uppgift om utbildning i registret.
 
-De uppgifter som främst saknas är uppgift om utrikes föddas utbildning utanför Sverige. Exempelvis personalutbildning och kurser av hobbykaraktär ingår inte i UREG.
+De uppgifter som främst saknas är uppgift om utrikes föddas utbildning utanför [[Sverige]]. Exempelvis personalutbildning och kurser av hobbykaraktär ingår inte i UREG.
 
 För utrikes födda invandrare har utbildningsdata till UREG hämtats från Folk- och bostadsräkningen 1970 och Folk- och bostadsräkningen 1990. År 1995 riktades en enkät till dem som invandrat 1990-1994. Fr.o.m. 1999 hämtas uppgifterna in med hjälp av en årlig enkät till nyinvandrade utrikes födda som saknar uppgift om utbildning i UREG.
 

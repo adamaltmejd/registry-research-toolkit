@@ -104,6 +104,6 @@ Från och med *1/1 2012* kan föräldrar ta ut föräldrapenning samtidigt i 30 
 
 *2017* Inkomsttaket vid beräkning av SGI ligger på 448 000 kronor. Flerbarnstillägget för det tredje barnet höjs till 580 kr per månad.
 
-Från och med *1 juli 2017* begränsas antalet berättigade föräldrapenningdagar som föräldrar kan ta ut för barn vid invandring. Om barnet bosätter sig i Sverige innan ettårsdagen får det de vanligt 480 dagarna (vid enbarnsfödelse). Om barnet är äldre än ett år blir föräldrarna berättigade till 200 föräldrapenningdagar, Om barnet är äldre än två år är det 200 dagar.
+Från och med *1 juli 2017* begränsas antalet berättigade föräldrapenningdagar som föräldrar kan ta ut för barn vid invandring. Om barnet bosätter sig i [[Sverige]] innan ettårsdagen får det de vanligt 480 dagarna (vid enbarnsfödelse). Om barnet är äldre än ett år blir föräldrarna berättigade till 200 föräldrapenningdagar, Om barnet är äldre än två år är det 200 dagar.
 
 *2017* Adoptionsbidraget höjs från 40 000 kronor till 75 000 kronor. Gäller för barn som föräldrarna får i sin vård den 1 januari 2017 eller senare.

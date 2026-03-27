@@ -24,11 +24,11 @@ studier på grundskole- och gymnasienivå och tolv terminer för studier på eft
 
 Studiemedlet består av *studiebidrag* och *återbetalningspliktiga studiemedel*. Utöver dessa grundbelopp kan studiemedel, under vissa omständigheter, även utgå till den studerande i form av *merkostnadslån, tilläggsbidrag* och *tilläggslån*. Tilläggsbidrag lämnas till studerande med barn, medan tillläggslån kan lämnas till studerande som har haft en inkomst över en viss nivå kalenderåret närmast före studiestarten. Merkostnadslån kan lämnas för merkostnader som den studerande har i samband med sina studier, exempelvis för utlandsstudier, resor och undervisningsavgifter.
 
-Även utländska medborgare som varit bosatta och arbetat i Sverige i minst två år kan få studiemedel. Flyktingar kan få studiemedel utan att ha bott i Sverige i två år liksom utländska medborgare som uppfyller villkoren enligt EU-rätten.
+Även utländska medborgare som varit bosatta och arbetat i [[Sverige]] i minst två år kan få studiemedel. Flyktingar kan få studiemedel utan att ha bott i [[Sverige]] i två år liksom utländska medborgare som uppfyller villkoren enligt EU-rätten.
 
 Om inkomsten är högre än för terminen aktuellt fribelopp minskas studiemedlen.
 
-Det finns även möjlighet att söka studiemedel för studier utomlands, utgångspunkten är att du ska vara svensk medborgare48 och ha bott i Sverige två sammanhängande år de senaste fem åren. För utländska utbildningar beror kraven på vilken nivå utbildningen är på. Studiemedel kan ges för en utbildning utomlands om motsvarande utbildning ger rätt till studiemedel i Sverige
+Det finns även möjlighet att söka studiemedel för studier utomlands, utgångspunkten är att du ska vara svensk medborgare48 och ha bott i [[Sverige]] två sammanhängande år de senaste fem åren. För utländska utbildningar beror kraven på vilken nivå utbildningen är på. Studiemedel kan ges för en utbildning utomlands om motsvarande utbildning ger rätt till studiemedel i [[Sverige]]
 
 *1990:* Studiemedelsbeloppet är högst 175 procent av prisbasbeloppet. Extra studiemedel kan erhållas under övergångsperiod som kompensation för avskaffat barntillägg för dem som börjat studera under dessa förutsättningar49 .
 
@@ -140,7 +140,7 @@ I och med den nya studiestödsreformen 2001 slås *studiemedel, särskilt vuxens
 | 2017: | 50 080 kr, varav 14 240 kr/35 840 kr i studiebidrag |
 |       | (lägre/högre bidragsnivån)                          |
 
-2017 erhöll 469 800 personer studiemedel för studier i Sverige. 341 000 personer erhöll studiemedel för studier på eftergymnasial nivå, 107 700 för studier på gymnasial nivå, 21 100 för studier på grundskolenivå. 30 600 personer erhöll studiemedel för utlandsstudier53 .
+2017 erhöll 469 800 personer studiemedel för studier i [[Sverige]]. 341 000 personer erhöll studiemedel för studier på eftergymnasial nivå, 107 700 för studier på gymnasial nivå, 21 100 för studier på grundskolenivå. 30 600 personer erhöll studiemedel för utlandsstudier53 .
 
 Det bör uppmärksammas att det år som en utbetalning har verkställts inte alltid är det samma som det år som studierna har bedrivits.
 

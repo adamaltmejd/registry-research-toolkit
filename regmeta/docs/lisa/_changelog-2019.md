@@ -78,7 +78,7 @@ Från och med 2019 försvinner uppgifterna från Statens pensionsverk och variab
 | Klartext                                                                                          | 2018   | 2019    |
 |---------------------------------------------------------------------------------------------------|--------|---------|
 | [[ITP]] – industrins och handelns tjänste- och<br>tilläggspension                                     | [[ITP]]    |         |
-| Kommunal- och landstingsanställdas<br>tjänstepension                                              | KTjP   |         |
+| Kommunal- och landstingsanställdas<br>tjänstepension                                              | [[KTjP]]   |         |
 | Statlig tjänstepension                                                                            | [[STjP]]   |         |
 | Tjänstepension från statligt bolag                                                                | [[SBTjP]]  |         |
 | Särskild tjänste- och tilläggspension för<br>privatanställda LO-medlemmar                         | [[STP]]    |         |

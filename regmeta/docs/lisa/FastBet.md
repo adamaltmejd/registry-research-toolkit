@@ -21,22 +21,22 @@ I registret redovisas personerna där de är folkbokförda. Man är folkbokförd
 
 Från huvudregeln finns vissa undantag som kan delas in i tre grupper:
 
-- 1. Personer som är folkbokförda men som inte bor i Sverige
-- 2. Personer som bor i Sverige men som inte är folkbokförda
+- 1. Personer som är folkbokförda men som inte bor i [[Sverige]]
+- 2. Personer som bor i [[Sverige]] men som inte är folkbokförda
 - 3. Personer folkbokförda på en annan fastighet än den de bor på
-- *1. Personer som är folkbokförda men som inte bor i Sverige*
+- *1. Personer som är folkbokförda men som inte bor i [[Sverige]]*
 
-Personer som flyttar utomlands och där vistelsen är avsedd att vara mindre än ett år är fortsatt folkbokförda i Sverige.
+Personer som flyttar utomlands och där vistelsen är avsedd att vara mindre än ett år är fortsatt folkbokförda i [[Sverige]].
 
-Personer som är anställda utomlands i svenska statens tjänst, t.ex. UDoch SIDA-anställda, fortsätter vara folkbokförda i Sverige. Detta gäller även familjemedlemmar och betjäning. Man är folkbokförd på den fastighet där man senast var folkbokförd eller endast i kommunen.
+Personer som är anställda utomlands i svenska statens tjänst, t.ex. UDoch SIDA-anställda, fortsätter vara folkbokförda i [[Sverige]]. Detta gäller även familjemedlemmar och betjäning. Man är folkbokförd på den fastighet där man senast var folkbokförd eller endast i kommunen.
 
 EU-parlamentariker fortsätter vara folkbokförd om denne disponerar en bostad här i landet.
 
 #### *2. Personer som bor i Sverige men som inte är folkbokförda*
 
-Personer som vid inflyttningen till Sverige har för avsikt att vistas här kortare tid än ett år folkbokförs inte.
+Personer som vid inflyttningen till [[Sverige]] har för avsikt att vistas här kortare tid än ett år folkbokförs inte.
 
-Utländska medborgare som tillhör utländsk beskickning eller konsulat och dess betjäning folkbokförs inte i Sverige.
+Utländska medborgare som tillhör utländsk beskickning eller konsulat och dess betjäning folkbokförs inte i [[Sverige]].
 
 *3. Personer folkbokförda på en annan fastighet än den där de bor* 
 

@@ -11,6 +11,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Posttyp
 
-Anger invandring till Sverige och utvandring från Sverige.
+Anger invandring till [[Sverige]] och utvandring från [[Sverige]].
 
 Posttyp för in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.

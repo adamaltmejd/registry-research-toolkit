@@ -19,4 +19,4 @@ Uppgift om medborgarskapsdatum finns i LISA fr.o.m. 1998. Ett förvärv av svens
 
 registrering i folkbokföringen. Härav följer att en registrering i folkbokföringen om medborgarskap för en person inte bör användas för att styrka datum för förvärv av medborgarskap. Uppgiften visar endast att medborgarskapet registrerats enligt uppvisade eller inkomna handlingar.
 
-Person som är född i Sverige och som i samband med födelsen förvärvar svenskt medborgarskap får normalt födelsedatum som medborgarskapsdatum.
+Person som är född i [[Sverige]] och som i samband med födelsen förvärvar svenskt medborgarskap får normalt födelsedatum som medborgarskapsdatum.
