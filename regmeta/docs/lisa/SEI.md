@@ -34,6 +34,6 @@ SEI-kodningen är huvudsakligen baserad på den förvärvsarbetande befolkningen
 | 91      | Oklassificerbara anställda                              |
 | 99      | Uppgift saknas                                          |
 
-I Folk och Bostadsräkningen 1990 kan 8–9 procent av samtliga förvärvsarbetande inte kodas enligt SEI då uppgift om yrke saknas (kod=99) alternativt inte går att klassificera (kod=91), t.ex. personer som klassats som förvärvsarbetande i det registerbaserade sysselsättningsregistret, men som själva klassar sig som studerande. "Ej förvärvsarbetande" och personer som inte ingick i den aktuella FoBpopulationen (folkbokförda i [[Sverige]] den 1/11 1990) saknar kod (=blank).
+I Folk och Bostadsräkningen 1990 kan 8–9 procent av samtliga förvärvsarbetande inte kodas enligt SEI då uppgift om yrke saknas (kod=99) alternativt inte går att klassificera (kod=91), t.ex. personer som klassats som förvärvsarbetande i det registerbaserade sysselsättningsregistret, men som själva klassar sig som studerande. "Ej förvärvsarbetande" och personer som inte ingick i den aktuella FoBpopulationen (folkbokförda i Sverige den 1/11 1990) saknar kod (=blank).
 
 Uppgift om Yrke, Socioekonomisk indelning och Arbetad tid har hämtats från Folk och Bostadsräkningen 1990.

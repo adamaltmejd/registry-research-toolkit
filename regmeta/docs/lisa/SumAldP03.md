@@ -39,7 +39,7 @@ Särskilt pensionstillägg finns i egen variabel även för år 2003
 
 För personer som är födda 1937 eller tidigare består den allmänna pensionen av tilläggspension och garantipension. Tilläggspensionen är en inkomstgrundad pension som baseras på de pensionspoäng som har tillgodoräknats för de år man förvärvsarbetat. Tilläggspensionen motsvarar tidigare ATP och folkpension som avskaffades år 2003. För de allra flesta i denna åldersgrupp är tilläggspensionen den stora och grundläggande delen av den allmänna ålderpensionen.
 
-Personer som har låg eller ingen tilläggspension kan ha rätt till garantipension. Syftet med garantipensionen är att ge en grundtrygghet och den baseras på hur lång bosättningstid man har i [[Sverige]]. Genom garantipensionen ersätts också de som före 2003 hade så kallat särskilt grundavdrag för pensionärer vid den dåvarande skatteberäkningen.
+Personer som har låg eller ingen tilläggspension kan ha rätt till garantipension. Syftet med garantipensionen är att ge en grundtrygghet och den baseras på hur lång bosättningstid man har i Sverige. Genom garantipensionen ersätts också de som före 2003 hade så kallat särskilt grundavdrag för pensionärer vid den dåvarande skatteberäkningen.
 
 #### **För personer födda 1938 eller senare**
 
@@ -47,7 +47,7 @@ För personer som är född 1938 eller senare består den allmänna pensionen av
 
 Inkomstpensionen och tilläggspensionen är de största delarna av pensionen. Premiepensionen är den del som man själv får placera i fonder. Pensionsrätter för premiepension har bara kunnat tjänas in från och med år 1995. Detta gör att premiepensionen, för de allra flesta, kommer att utgöra en liten del av den sammanlagda pensionen.
 
-De som har låg eller ingen inkomstgrundad pension (dvs. tilläggspension, inkomstpension och premiepension) kan ha rätt till garantipension. Garantipensionen är ett grundskydd för den som haft liten eller ingen inkomst. Den är baserad på hur många år man varit bosatt i [[Sverige]], och kan inte beviljas före 65 års ålder.
+De som har låg eller ingen inkomstgrundad pension (dvs. tilläggspension, inkomstpension och premiepension) kan ha rätt till garantipension. Garantipensionen är ett grundskydd för den som haft liten eller ingen inkomst. Den är baserad på hur många år man varit bosatt i Sverige, och kan inte beviljas före 65 års ålder.
 
 #### **Tidsseriebrott**
 

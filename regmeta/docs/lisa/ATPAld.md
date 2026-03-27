@@ -30,4 +30,4 @@ Under 2003 och 2004 erhåller ett mindre antal (ca 15 000 personer år 2003) *Å
 
 140 Före 1995 beräknades PGI efter basbeloppet. Från och med 1999 kallas det förhöjda basbeloppet för förhöjt prisbasbelopp.
 
-141 Även om man inte i [[Sverige]] tjänat in ATP-poäng för tre år, kan man ha rätt till ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.
+141 Även om man inte i Sverige tjänat in ATP-poäng för tre år, kan man ha rätt till ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.

@@ -8,7 +8,7 @@ source: "lisa-2022-forandringar.md"
 # **Förändringar i LISA 2022**
 2024-06-28
 ## **Ny källa för arbetsmarknadsvariabler**
-Registerbaserad arbetsmarknadsstatistik, RAMS, har mellan 1985 och 2021 redovisat årlig statistik över arbetsmarknaden. Statistiken beskriver huvudsakligen antalet förvärvsarbetande och ej förvärvsarbetande personer för den folkbokförda befolkningen. Befolkningens arbetsmarknadsstatus, BAS, är ny registerbaserad statistik som ersätter RAMS och har som syfte att med hjälp av administrativa data beskriva utbudet av arbetskraft i [[Sverige]].
+Registerbaserad arbetsmarknadsstatistik, RAMS, har mellan 1985 och 2021 redovisat årlig statistik över arbetsmarknaden. Statistiken beskriver huvudsakligen antalet förvärvsarbetande och ej förvärvsarbetande personer för den folkbokförda befolkningen. Befolkningens arbetsmarknadsstatus, BAS, är ny registerbaserad statistik som ersätter RAMS och har som syfte att med hjälp av administrativa data beskriva utbudet av arbetskraft i Sverige.
 [Befolkningens arbetsmarknadsstatus \(BAS\) \(scb.se\)](https://www.scb.se/hitta-statistik/statistik-efter-amne/arbetsmarknad/sysselsattning-forvarvsarbete-och-arbetstider/befolkningens-arbetsmarknadsstatus/)
 [Skillnader mellan RAMS och BAS årsregister \(scb.se\)](https://www.scb.se/contentassets/592dcafe2a3b4e65b8e5434796bab0af/skillnader_mellan_rams_och_bas_arsregister.pdf)
 # **Huvudsaklig inkomstkälla och Arbetsrelaterad inkomstnivå i BAS ersätter RAKS**

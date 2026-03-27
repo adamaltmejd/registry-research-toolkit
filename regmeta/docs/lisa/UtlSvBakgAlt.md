@@ -45,9 +45,9 @@ För den som utöver svenskt medborgarskap har ett eller flera utländska medbor
 
 prioriteringsregler som används har utformats av dåvarande Riksförsäkringsverket. I korthet sker prioriteringen i följande ordning:
 
-- 1. [[Sverige]]
+- 1. Sverige
 - 2. EES-land
-- 3. Land utanför EES vilket [[Sverige]] har socialförsäkringskonvention med eller sjukvårdsförmåner i.
+- 3. Land utanför EES vilket Sverige har socialförsäkringskonvention med eller sjukvårdsförmåner i.
 - 4. Övriga
 
 Vid samma prioritet väljs det medborgarskap som erhölls först.

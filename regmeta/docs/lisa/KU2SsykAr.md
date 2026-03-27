@@ -15,7 +15,7 @@ KU2SsykAn
 
 Uppgiften visar yrkeskodens aktualitet.
 
-*För ytterligare information se [[Årtal]] för yrkesuppgift* ([[SsykAr]]).
+*För ytterligare information se Årtal för yrkesuppgift* ([[SsykAr]]).
 
 #### **KU3 – För tredje största förvärvskälla aktuellt år**
 

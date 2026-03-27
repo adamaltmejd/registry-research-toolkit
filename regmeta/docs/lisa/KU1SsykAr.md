@@ -15,4 +15,4 @@ KU1SsykAr
 
 Uppgiften visar yrkeskodens aktualitet.
 
-*För ytterligare information se [[Årtal]] för yrkesuppgift* ([[SsykAr]]).
+*För ytterligare information se Årtal för yrkesuppgift* ([[SsykAr]]).

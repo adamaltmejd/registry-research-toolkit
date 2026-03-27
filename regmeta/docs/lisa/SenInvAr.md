@@ -13,7 +13,7 @@ SenInvAr
 
 Täckningsgraden avseende invandringsår ökar väsentligt 1998. Från och med denna tidpunkt finns i långt större utsträckning än tidigare tillgång till information om vilket år invandring skett för dem som invandrat före 1968.
 
-De som saknar uppgift om invandringsår har värde 0000, majoriteten är födda i [[Sverige]].
+De som saknar uppgift om invandringsår har värde 0000, majoriteten är födda i Sverige.
 
 *I övrigt se Datum för in-/utvandring* ([[InvUtvManad]]) *och under objektet Individ* ([[PersonNr]]).
 

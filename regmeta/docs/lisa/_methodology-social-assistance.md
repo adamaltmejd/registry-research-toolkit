@@ -26,7 +26,7 @@ Exempel på vanliga situationer när ekonomiskt bistånd ges:
 
 Lagen om ett särskilt stöd till flyktingar – *introduktionsersättning till flyktingar* – införs 1992. När en asylsökande person blivit kommunplacerad, efter sin asyltid, kallas de flyktingar under
 
-ankomståret och under ytterligare tre år. Under denna tid skall flyktingen lära sig svenska och förbereda sig för ett yrkesliv i [[Sverige]].
+ankomståret och under ytterligare tre år. Under denna tid skall flyktingen lära sig svenska och förbereda sig för ett yrkesliv i Sverige.
 
 Ersättningen är inte inkomstprövad utan utgår med ett fast belopp till alla. Staten kompenserar kommunerna för dessa utgifter. Efter de första fyra åren betraktas flyktingen som vanlig kommuninvånare.
 

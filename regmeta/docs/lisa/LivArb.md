@@ -17,7 +17,7 @@ Beloppet anges i hundratals kronor.
 
 Arbetsskador som inträffat efter den 30 juni 1977 ersätts enligt lagen om arbetsskadeförsäkring. Lagen ersattes 2011 av socialförsäkringsbalken.
 
-Alla som arbetar i [[Sverige]] omfattas från första arbetsdagen av arbetsskadeförsäkringen. Som arbetsskada räknas skada eller sjukdom som har uppkommit på grund av olycksfall eller på annat sätt orsakats av arbetet. Det gäller även olycksfall på väg till och från arbetet. Om skadan har godkänts som en arbetsskada och arbetsförmågan fortfarande är nedsatt efter sjukskrivningens slut kan man få livränta. Livräntan ger ersättning för den inkomstförlust som blivit följden av skadan.
+Alla som arbetar i Sverige omfattas från första arbetsdagen av arbetsskadeförsäkringen. Som arbetsskada räknas skada eller sjukdom som har uppkommit på grund av olycksfall eller på annat sätt orsakats av arbetet. Det gäller även olycksfall på väg till och från arbetet. Om skadan har godkänts som en arbetsskada och arbetsförmågan fortfarande är nedsatt efter sjukskrivningens slut kan man få livränta. Livräntan ger ersättning för den inkomstförlust som blivit följden av skadan.
 
 Arbetsskadelivräntans storlek = Livränteunderlaget (SGI plus andra skattepliktiga ersättningar än pengar) minus beräknad "ny" årsinkomst.
 

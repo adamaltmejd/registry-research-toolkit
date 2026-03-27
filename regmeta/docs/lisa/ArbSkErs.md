@@ -20,7 +20,7 @@ Beloppet anges i hundratals kronor.
 
 Arbetsskadesjukpenning avser utbetalningsåret oavsett ersättningsperiod.
 
-Alla som arbetar i [[Sverige]] omfattas från första arbetsdagen av arbetsskadeförsäkringen. Som arbetsskada räknas skada till följd av olycksfall i arbetet, annan skadlig inverkan i arbetet, arbetssjukdomar, smitta (enligt särskild förteckning) samt olycksfall på väg till och från arbetet.
+Alla som arbetar i Sverige omfattas från första arbetsdagen av arbetsskadeförsäkringen. Som arbetsskada räknas skada till följd av olycksfall i arbetet, annan skadlig inverkan i arbetet, arbetssjukdomar, smitta (enligt särskild förteckning) samt olycksfall på väg till och från arbetet.
 
 Den *1/1 1993* skärps kraven för att få arbetsskador godkända enligt lagen om arbetsskadeförsäkring. Dels höjs kraven på skadlighet hos en arbetsmiljöfaktor från sannolikhet till hög grad av sannolikhet (att den kan orsaka skada), dels skärps kravet på orsakssambandet mellan skadlig inverkan i arbetet och den försäkrades skada, så att samband anses föreligga endast om övervägande skäl talar för detta (bedöms av Försäkringskassan).
 

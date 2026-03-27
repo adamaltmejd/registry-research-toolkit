@@ -34,7 +34,7 @@ Ger information om vilken grad av premiepension som tagits ut.
 
 Beloppet anges i hundratals kronor.
 
-Garantipension är ett grundlagsskydd för den som har haft låg eller ingen inkomst under livet, garantipensionen fyller ut pensionen upp till ett visst belopp, detta belopp ändras årligen. För att få rätt till garantipension måste man ha bott i [[Sverige]] i minst tre år. För att få full garantipension krävs att man har bott minst 40 år i [[Sverige]] från och med det år man fyllde 16 år till och med det år man fyller 64 år.
+Garantipension är ett grundlagsskydd för den som har haft låg eller ingen inkomst under livet, garantipensionen fyller ut pensionen upp till ett visst belopp, detta belopp ändras årligen. För att få rätt till garantipension måste man ha bott i Sverige i minst tre år. För att få full garantipension krävs att man har bott minst 40 år i Sverige från och med det år man fyllde 16 år till och med det år man fyller 64 år.
 
 | födda 1937 eller tidigare | högst 2,1814 prisbasbelopp, ogifta |
 |---------------------------|------------------------------------|

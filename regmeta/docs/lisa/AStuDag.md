@@ -64,7 +64,7 @@ Vid ingången av 1992 finns åtgärdskategorierna Arbetsmarknadsutbildning, AMI-
 
 Arbetsmarknadsutbildning är utbildning som person går igenom av arbetsmarknadsskäl och under vilken aktivitetsstöd (tidigare utbildningsbidrag) lämnas. Huvudvillkor för att få arbetsmarknadsutbildning är att man är eller riskerar att bli arbetslös, är arbetssökande och har svårt att hitta lämpligt arbete.
 
-Man kan få arbetsmarknadsutbildning tidigast från den 1 juli det år man fyller 20 år (undantaget arbetshandikappade). Flyktingar som nyligen anlänt till [[Sverige]] kan få arbetsmarknadsutbildning utan att vara eller riskera att bli arbetslösa. Blir man beviljad arbetsmarknadsutbildning har man rätt till aktivitetsstöd.
+Man kan få arbetsmarknadsutbildning tidigast från den 1 juli det år man fyller 20 år (undantaget arbetshandikappade). Flyktingar som nyligen anlänt till Sverige kan få arbetsmarknadsutbildning utan att vara eller riskera att bli arbetslösa. Blir man beviljad arbetsmarknadsutbildning har man rätt till aktivitetsstöd.
 
 Utbildningen måste planeras tillsammans med Arbetsförmedlingen, som i första hand skall undersöka om man kan få stadigt arbete utan utbildning.
 
@@ -130,7 +130,7 @@ Akademikerpraktik ersätts av Arbetsplatsintroduktion (API) fr.o.m. 1995-07-01.
 
 #### **Invandrarpraktik**
 
-Invandrarpraktik som införs den 1/7 1994 är en arbetsplatsförlagd praktik under högst sex månader för utländska medborgare som varit bosatta i [[Sverige]] högst fem år. Praktiken räknas som praktiskt inriktad arbetsmarknadsutbildning.
+Invandrarpraktik som införs den 1/7 1994 är en arbetsplatsförlagd praktik under högst sex månader för utländska medborgare som varit bosatta i Sverige högst fem år. Praktiken räknas som praktiskt inriktad arbetsmarknadsutbildning.
 
 Invandrarpraktik ersätts av Arbetsplatsintroduktion (API) fr.o.m. 1995-07-01.
 

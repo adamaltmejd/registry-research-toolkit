@@ -936,12 +936,21 @@ def extract_variabelforteckning(lines: list[str]) -> dict[str, tuple[str, int]]:
             continue
 
         # Single-column with no page: | Display ColumnName |
+        # Skip common table headers that look like variable names
+        _TABLE_HEADERS = {
+            "Afrika", "Asien", "Europa", "Nordamerika", "Oceanien",
+            "Sydamerika", "Sverige", "Norden", "Sovjetunionen",
+            "Gruppering", "Sida", "Variabel", "Klartext", "Beskrivning",
+            "Årtal", "Familjeställning", "Okänt",
+        }
         m3 = re.match(
             r"^\|\s*(.+?)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{2,40})\s*\|\s*$",
             line.rstrip(),
         )
         if m3:
             col = m3.group(2).strip()
+            if col in _TABLE_HEADERS:
+                continue
             display = re.sub(r"<[^>]+>", "", m3.group(1)).strip()
             if col not in var_list:
                 var_list[col] = (display, 0)  # page 0 = unknown

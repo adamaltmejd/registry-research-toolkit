@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Individ PersonNr**
 
-Samtliga individer som den 31/12 aktuellt år uppnått 15 års ålder (t.o.m. årgång 2009 16 år) och är folkbokförda i [[Sverige]] ingår i LISApopulationen det aktuella året. Det finns uppgift om dödsdatum för person3 som avlidit under aktuellt år. För person som utvandrat finns uppgift om utvandringsdatum.
+Samtliga individer som den 31/12 aktuellt år uppnått 15 års ålder (t.o.m. årgång 2009 16 år) och är folkbokförda i Sverige ingår i LISApopulationen det aktuella året. Det finns uppgift om dödsdatum för person3 som avlidit under aktuellt år. För person som utvandrat finns uppgift om utvandringsdatum.
 
 Kvaliteten i befolkningsregistret är beroende av över- och undertäckning i den totala populationen och det är brister i rapporteringen av födslar, dödsfall, invandring och utvandring som resulterar i dessa täckningsfel.
 
@@ -17,16 +17,16 @@ Födslar och dödsfall ger upphov till mindre problem med underrespektive övert
 
 Personer som utvandrat utan att meddela folkbokföringen ger upphov till övertäckning och flera försök att skatta denna har gjorts på både SCB och Skatteverket. I en SCB-studie från 2004 skattas övertäckningen till minst 35 000 personer. Den senaste studien från 2015 visar på en relativt kraftig ökning av övertäckningen under senare år, där den allt större invandringen är en förklaring.
 
-Personer blir registrerade som invandrade vid den tidpunkt då de folkbokförs. I vissa fall kan det gå en relativt lång tid mellan ankomsten till [[Sverige]] och folkbokföringstidpunkten. Vid inflyttning till [[Sverige]]
+Personer blir registrerade som invandrade vid den tidpunkt då de folkbokförs. I vissa fall kan det gå en relativt lång tid mellan ankomsten till Sverige och folkbokföringstidpunkten. Vid inflyttning till Sverige
 
 
-3 Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i [[Sverige]] 31/12 året före aktuellt år.
+3 Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i Sverige 31/12 året före aktuellt år.
 
 genomgår personer med medborgarskap i annat land än EU/EES-land i vissa fall en omfattande administrativ process innan beslut om uppehållstillstånd kan fattas. Under perioder med stor invandring kan handläggningstiderna öka vilket gör att undertäckningen ökar i befolkningsregistret. Detta gäller även personer som fått avslag på sin ansökan om uppehållstillstånd och därför överklagar beslutet till högre instans.
 
-I november 2005 beslutade riksdagen att en tillfällig lagstiftning för uppehållstillstånd skulle gälla i [[Sverige]]. Lagen riktade sig främst till barnfamiljer med lång vistelsetid i [[Sverige]]. Den 15 november 2005 trädde den tillfälliga asyllagen i kraft. Den 30 september 2006 avslutade Migrationsverket prövningen enligt den tillfälliga lagen. Totalt registrerades ca 30 000 ärenden för prövning, ca 13 000 permanenta uppehållstillstånd och 4 000 tillfälliga beviljades.
+I november 2005 beslutade riksdagen att en tillfällig lagstiftning för uppehållstillstånd skulle gälla i Sverige. Lagen riktade sig främst till barnfamiljer med lång vistelsetid i Sverige. Den 15 november 2005 trädde den tillfälliga asyllagen i kraft. Den 30 september 2006 avslutade Migrationsverket prövningen enligt den tillfälliga lagen. Totalt registrerades ca 30 000 ärenden för prövning, ca 13 000 permanenta uppehållstillstånd och 4 000 tillfälliga beviljades.
 
-I juli 2016 infördes en tillfällig lag för att minska asylinvandringen till [[Sverige]]. Förändringen innebar bl.a. att Migrationsverket som huvudregel ger tillfälliga uppehållstillstånd i stället för permanenta. Efter att lagen infördes har antalet asylsökande som kommer till [[Sverige]] minskat kraftigt. Under 2017 kom cirka 26 000 asylsökande till [[Sverige]], jämfört med 2015 då cirka 163 000 personer sökte asyl.
+I juli 2016 infördes en tillfällig lag för att minska asylinvandringen till Sverige. Förändringen innebar bl.a. att Migrationsverket som huvudregel ger tillfälliga uppehållstillstånd i stället för permanenta. Efter att lagen infördes har antalet asylsökande som kommer till Sverige minskat kraftigt. Under 2017 kom cirka 26 000 asylsökande till Sverige, jämfört med 2015 då cirka 163 000 personer sökte asyl.
 
 Kvaliteten i befolkningsregistret påverkas också av andra fel i folkbokföringen. T.ex. flyttningar inom landet som inte anmäls ger upphov till fel i den regionala fördelningen.
 

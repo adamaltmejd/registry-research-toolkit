@@ -11,13 +11,13 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Kod för familjeställning.
 
-[[Familjeställning]] är en härledd variabel som anger varje persons ställning i familjen d.v.s. personer som har samma familjeidentitet.
+Familjeställning är en härledd variabel som anger varje persons ställning i familjen d.v.s. personer som har samma familjeidentitet.
 
 *Se under Familj* ([[FamId]]).
 
 #### **Familjeställning i populationen 15 år och äldre, t.o.m. 2009 16 år och äldre**
 
-| Kod | [[Familjeställning]]                          |
+| Kod | Familjeställning                          |
 |-----|-------------------------------------------|
 | 110 | Man i gift par                            |
 | 120 | Hustru i gift par                         |
@@ -32,7 +32,7 @@ Kod för familjeställning.
 
 6 Här ingår sambor utan gemensamma barn.
 
-| Kod | [[Familjeställning]]                                                       |
+| Kod | Familjeställning                                                       |
 |-----|------------------------------------------------------------------------|
 | 311 | Biologiskt eller adopterat barn (<18 år) till båda partners            |
 | 312 | Biologiskt eller adopterat barn (<18 år) till enbart manlig partner    |
