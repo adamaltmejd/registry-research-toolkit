@@ -322,3 +322,80 @@ class TestBuildDocs:
         )
         assert code == 0
         assert (db_dir / "regmeta_docs.db").exists()
+
+
+# ---------------------------------------------------------------------------
+# Search integration (doc results in regmeta search)
+# ---------------------------------------------------------------------------
+
+
+@pytest.fixture(scope="session")
+def combined_db_dir(
+    tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path
+) -> str:
+    """Create a DB dir with both regmeta.db and regmeta_docs.db."""
+    import shutil
+
+    from regmeta.db import build_db
+
+    combined = tmp_path_factory.mktemp("combined")
+
+    # Build a minimal metadata DB
+    csv_dir = tmp_path_factory.mktemp("csv_combined")
+    from _csv_fixtures import (
+        REGISTERINFORMATION_HEADER,
+        REGISTERINFORMATION_ROWS,
+        write_csv,
+    )
+
+    write_csv(
+        csv_dir / "Registerinformation.csv",
+        REGISTERINFORMATION_HEADER,
+        REGISTERINFORMATION_ROWS,
+    )
+    build_db(csv_dir=csv_dir, db_dir=combined)
+
+    # Copy the doc DB alongside it
+    shutil.copy(doc_db_dir / "regmeta_docs.db", combined / "regmeta_docs.db")
+
+    return str(combined)
+
+
+class TestSearchIntegration:
+    def test_search_includes_doc_results(self, combined_db_dir: str):
+        """Doc results must appear in default search."""
+        data, code = _run_json(
+            ["--db", combined_db_dir, "search", "--query", "kommun", "--field", "all"],
+            verbose=True,
+        )
+        assert code == 0
+        types = {r["type"] for r in data["data"]["results"]}
+        assert "doc" in types, "Doc results should appear in default search"
+
+    def test_search_field_docs_only(self, combined_db_dir: str):
+        """--field docs should return only doc results."""
+        data, code = _run_json(
+            ["--db", combined_db_dir, "search", "--query", "kommun", "--field", "docs"],
+            verbose=True,
+        )
+        assert code == 0
+        for r in data["data"]["results"]:
+            assert r["type"] == "doc"
+
+    def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
+        """Exact variable name match in docs should rank near the top."""
+        data, code = _run_json(
+            ["--db", combined_db_dir, "search", "--query", "Kommun", "--field", "all"],
+            verbose=True,
+        )
+        assert code == 0
+        results = data["data"]["results"]
+        doc_results = [r for r in results if r["type"] == "doc"]
+        assert len(doc_results) >= 1
+
+        # The exact match on variable name "Kommun" should be in the first 5 results
+        top5_types = [r["type"] for r in results[:5]]
+        assert "doc" in top5_types, (
+            f"Doc result for exact variable name match should be in top 5, "
+            f"got types: {top5_types}"
+        )

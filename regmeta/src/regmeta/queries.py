@@ -433,6 +433,9 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
     Returns lightweight hint results (no full body). Uses a separate DB
     connection that is opened and closed within this function. Fails
     silently if the doc DB is not available.
+
+    Exact variable name matches get a boosted rank so they surface near
+    the top of mixed search results.
     """
     try:
         from .doc_db import doc_db_path, open_doc_db
@@ -445,18 +448,23 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
 
     try:
         data = doc_search(conn, query, limit=10)
-        return [
-            {
+        results = []
+        for r in data.get("results", []):
+            rank = r.get("fts_rank", 0)
+            var = r.get("variable") or ""
+            # Boost exact variable name matches to surface near the top
+            if var.lower() == query.lower():
+                rank = -100.0
+            results.append({
                 "type": "doc",
                 "register_id": "",
                 "register_name": r.get("register", ""),
                 "var_id": "",
-                "variable_name": r.get("variable") or r["filename"],
+                "variable_name": var or r["filename"],
                 "display_name": r["display_name"],
-                "fts_rank": r.get("fts_rank", 0),
-            }
-            for r in data.get("results", [])
-        ]
+                "fts_rank": rank,
+            })
+        return results
     finally:
         conn.close()
 

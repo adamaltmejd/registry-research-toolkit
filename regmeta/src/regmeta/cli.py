@@ -222,12 +222,13 @@ def _build_parser() -> argparse.ArgumentParser:
         "search",
         help="Search registers, variables, columns, and values.",
         description=(
-            "Search across metadata fields. By default searches all fields.\n"
-            "Use a field flag to narrow: --datacolumn, --varname, --description, --value.\n\n"
+            "Search across metadata and documentation. By default searches all fields.\n"
+            "Use --field to narrow.\n\n"
             "Examples:\n"
-            "  regmeta search --query kommun                  # all fields\n"
-            "  regmeta search --query kommun --datacolumn     # column headers only\n"
-            "  regmeta search --query 0180 --value            # value codes/labels only"
+            "  regmeta search --query kommun                        # all fields\n"
+            "  regmeta search --query kommun --field datacolumn     # column headers only\n"
+            "  regmeta search --query 0180 --field value            # value codes/labels\n"
+            "  regmeta search --query sjukpenning --field docs      # documentation only"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -236,50 +237,12 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Search term (substring match; FTS for --description).",
     )
-    search_field = search_p.add_mutually_exclusive_group()
-    search_field.add_argument(
-        "--datacolumn",
-        dest="field",
-        action="store_const",
-        const="datacolumn",
-        help="Search column headers/aliases in data files only.",
+    search_p.add_argument(
+        "--field",
+        default="all",
+        choices=["datacolumn", "varname", "description", "value", "docs", "all"],
+        help="Which fields to search (default: all).",
     )
-    search_field.add_argument(
-        "--varname",
-        dest="field",
-        action="store_const",
-        const="varname",
-        help="Search canonical SCB variable names only.",
-    )
-    search_field.add_argument(
-        "--description",
-        dest="field",
-        action="store_const",
-        const="description",
-        help="Search variable/register descriptions only (full-text).",
-    )
-    search_field.add_argument(
-        "--value",
-        dest="field",
-        action="store_const",
-        const="value",
-        help="Search value codes and labels only.",
-    )
-    search_field.add_argument(
-        "--docs",
-        dest="field",
-        action="store_const",
-        const="docs",
-        help="Search curated documentation only.",
-    )
-    search_field.add_argument(
-        "--all-fields",
-        dest="field",
-        action="store_const",
-        const="all",
-        help="Search all fields including docs (default when no field flag given).",
-    )
-    search_p.set_defaults(field="all")
     search_p.add_argument(
         "--type",
         default="all",
