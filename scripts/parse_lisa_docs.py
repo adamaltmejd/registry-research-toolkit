@@ -309,8 +309,10 @@ def strip_noise(lines: list[str]) -> list[str]:
             continue
         if PAGE_NUM_RE.match(stripped):
             continue
-        # Strip HTML span/sup tags (marker page anchors and footnotes)
-        line = HTML_TAG_RE.sub("", line)
+        # Convert <sup>N</sup> footnotes to markdown [^N] before stripping tags
+        line = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", line)
+        # Strip remaining HTML tags (span anchors, etc.)
+        line = re.sub(r"</?span[^>]*>", "", line)
         # Unescape markdown-escaped underscores in bold text (marker does this)
         line = line.replace("\\_", "_")
         cleaned.append(line)
@@ -965,7 +967,8 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     Fallback: regmeta database.
     """
     if md_text:
-        cleaned = HTML_TAG_RE.sub("", md_text).replace("\\_", "_")
+        cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", md_text)
+        cleaned = re.sub(r"</?span[^>]*>", "", cleaned).replace("\\_", "_")
         vf = extract_variabelforteckning(cleaned.split("\n"))
         if vf:
             print(f"Extracted {len(vf)} columns from Variabelförteckning")

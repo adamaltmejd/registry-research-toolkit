@@ -11,7 +11,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 Basbeloppet följer förändringar i prisläget (på grundval av konsumentprisindex, KPI) och fastställs av regeringen för varje år. Med hjälp av basbeloppet anpassas på så vis storleken på ersättningar inom socialförsäkringen till penningutvecklingen. Statsmakterna har emellertid gjort vissa ingrepp i beräkningen av basbeloppet. Dessa ingrepp har inneburit att den fulla värdesäkringen som tidigare gällde, inte längre gäller. För åren 1991 till 1997 minskade basbeloppet med 12 procentenheter i förhållande till konsumentprisökningen.
 
 
-#### **Basbelopp/prisbasbelopp168**
+#### **Basbelopp/prisbasbelopp[^168]**
 
 | År   | Kronor |
 |------|--------|
@@ -68,7 +68,7 @@ Från och med *1999* betalas pensionerna åter ut efter fulla prisbasbeloppet.
 Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för tilläggspension.
 
 
-#### **Det förhöjda basbeloppet/prisbasbeloppet169**
+#### **Det förhöjda basbeloppet/prisbasbeloppet[^169]**
 
 | År   | Kronor |
 |------|--------|
@@ -83,7 +83,7 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2003 | 39 400 |
 | 2004 | 40 100 |
 
-169 Från och med 1999 kallas basbeloppet för prisbasbelopp och det förhöjda basbeloppet för förhöjt prisbasbelopp.
+[^169] Från och med 1999 kallas basbeloppet för prisbasbelopp och det förhöjda basbeloppet för förhöjt prisbasbelopp.
 
 | År   | Kronor |
 |------|--------|

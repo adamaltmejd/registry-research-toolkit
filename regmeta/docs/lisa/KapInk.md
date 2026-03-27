@@ -53,16 +53,16 @@ Om man saknar eller har låg ATP utgår pensionstillskott.
 
 *Till och med 30/6 1993* kan ålderspension tas ut som hel eller halv förmån. Därefter kan ålderspensionen även beviljas som fjärdedels eller tre fjärdedels förmån.
 
-Det finns möjlighet att få ålderspension som förtida alternativt uppskjutet uttag. Som *förtida uttag* kan ålderspensionen tas ut från det man fyllt 61 år133, som *uppskjutet uttag* kan man vänta med att ta ut ålderspensionen tills det man fyllt 70 år. Förtida och uppskjutet uttag måste omfatta såväl folkpension som ATP. Om man tar ut hel, tre fjärdedels, halv eller en fjärdedels ålderspension före 65 års ålder görs ett avdrag på pensionen med 0,5 procent för varje månad \* del av pension som tas ut.
+Det finns möjlighet att få ålderspension som förtida alternativt uppskjutet uttag. Som *förtida uttag* kan ålderspensionen tas ut från det man fyllt 61 år[^133], som *uppskjutet uttag* kan man vänta med att ta ut ålderspensionen tills det man fyllt 70 år. Förtida och uppskjutet uttag måste omfatta såväl folkpension som ATP. Om man tar ut hel, tre fjärdedels, halv eller en fjärdedels ålderspension före 65 års ålder görs ett avdrag på pensionen med 0,5 procent för varje månad \* del av pension som tas ut.
 
 *Ex. 61–64 år halvtid förtida uttag: 0,5 (procentavdrag) \* 12 (månader) \* 4 (år) \* 0,5 (halvtid) = 12 procent (reducerad pension).*
 
 Förtida uttag kan återkallas. Om man får förtidspension sedan man återkallat ålderspension minskas förtidspensionen med 0,5 procent för antalet månader man haft ålderspension.
 
 
-133 Åldersgränsen för förtida uttag höjdes den 1 januari 1998 från 60 till 61 år.
+[^133] Åldersgränsen för förtida uttag höjdes den 1 januari 1998 från 60 till 61 år.
 
-Uppskjuts uttaget ökas pensionen med 0,7 procent134 för varje månad som förflutit mellan 65-årsdagen och dagen för första uttag.
+Uppskjuts uttaget ökas pensionen med 0,7 procent[^134] för varje månad som förflutit mellan 65-årsdagen och dagen för första uttag.
 
 Ålderspension från folkpension och ATP (förtida uttag), som under året ersatts av förtidspension/sjukbidrag, redovisas som förtidspension/sjukbidrag.
 
@@ -84,7 +84,7 @@ Det pensionssystem som finns idag är konstruerat för att bättre än det gamla
 
 För att pensionssystemet ska garanteras stabilitet oavsett ekonomisk eller demografisk utveckling har det kompletterats med en automatisk
 
-134 Innan 1/7 1990 med 0,6 procent för varje månad.
+[^134] Innan 1/7 1990 med 0,6 procent för varje månad.
 
 balansering. Den tar bort risken för eventuella underskott och garanterar en långsiktig finansiell stabilitet för pensionssystemet.
 

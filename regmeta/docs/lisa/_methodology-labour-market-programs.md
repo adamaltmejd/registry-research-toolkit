@@ -24,7 +24,7 @@ Utbildningsvikariat behöver inte ersätta en viss person, utan kan placeras dä
 
 #### **Stöd till start av näringsverksamhet (tidigare Starta-eget-bidrag)**
 
-Från och med den 1/7 1993 gavs åtgärden samma prioritet som övriga åtgärder (har dock funnits sedan 1984). När Arbetsförmedlingen ska bedöma ansökan om stöd till start av näringsverksamhet bedömer man personens förutsättningar att driva en egen verksamhet och om verksamheten kan tänkas få en tillfredställande lönsamhet som ger varaktig sysselsättning. Deltagarna får aktivitetsstöd i längst sex månader (i vissa fall kan denna tid förlängas). Stödet ges till personer som fyllt 20 år, är arbetslösa eller uppsagda115 samt arbetssökande. Åtgärden byter namn till Stöd till start av näringsverksamhet 2000-04.
+Från och med den 1/7 1993 gavs åtgärden samma prioritet som övriga åtgärder (har dock funnits sedan 1984). När Arbetsförmedlingen ska bedöma ansökan om stöd till start av näringsverksamhet bedömer man personens förutsättningar att driva en egen verksamhet och om verksamheten kan tänkas få en tillfredställande lönsamhet som ger varaktig sysselsättning. Deltagarna får aktivitetsstöd i längst sex månader (i vissa fall kan denna tid förlängas). Stödet ges till personer som fyllt 20 år, är arbetslösa eller uppsagda[^115] samt arbetssökande. Åtgärden byter namn till Stöd till start av näringsverksamhet 2000-04.
 
 Efter den 15/12 2003 får stöd inte längre lämnas till verksamhet inom jordbruks- och transportsektor med undantag av taxirörelse. *Observera att inskrivningsperioder med starta-eget-bidrag som avslutats innan 95-05 inte redovisas i Datalagret.*
 
@@ -38,7 +38,7 @@ Under den tid man deltar i resursarbete står man till arbetsmarknadens förfoga
 Åtgärden upphör 30/9 1999, beslut tagna före den 1/10 1999 får fullföljas till och med den 31/3 2000.
 
 
-115 Är man bosatt inom stödområde A och B kan man från och med 1998 få Starta eget-bidrag även om man inte är eller riskerar att bli arbetslös.
+[^115] Är man bosatt inom stödområde A och B kan man från och med 1998 få Starta eget-bidrag även om man inte är eller riskerar att bli arbetslös.
 
 
 #### **Individuellt anställningsstöd**
@@ -202,7 +202,7 @@ Extratjänster infördes 2 november 2015. Det är en insats med syfte att erbjud
 Insatsen riktar sig till yrken inom vissa delar av välfärden och offentlig sektor. Individen skall utföra välbehövliga uppgifter och förstärka de verksamheter som de får arbete inom.
 
 
-#### **Antal personer som deltagit i respektive program någon gång under 2017116**
+#### **Antal personer som deltagit i respektive program någon gång under 2017[^116]**
 
 |                                      | Antal  |
 |--------------------------------------|--------|
@@ -246,7 +246,7 @@ Insatsen riktar sig till yrken inom vissa delar av välfärden och offentlig sek
 | 2014 | 131 496 |
 | 2015 | 130 149 |
 
-116 Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
+[^116] Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
 
 | År   | Antal   |
 |------|---------|

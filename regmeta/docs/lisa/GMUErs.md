@@ -18,7 +18,7 @@ Beloppet anges i hundratals kronor.
 
 Den tidigare värnpliktsutbildningen har från och med 2011 ersatts av en ny frivillig militär grundutbildning (GMU). GMU är tre månader lång och
 
-60 Den 1/7 2002 höjs lägsta belopp i dagpenningen till 120 kr/dag. Sedan år 2008 är lägsta belopp i dagpenningen 130 kr/dag.
+[^60] Den 1/7 2002 höjs lägsta belopp i dagpenningen till 120 kr/dag. Sedan år 2008 är lägsta belopp i dagpenningen 130 kr/dag.
 
 ger formell behörighet för anställning som soldat eller tjänstgöring i Hemvärnet eller de nationella skyddsstyrkorna. Efter genomgången grundläggande militärutbildning har man också behörighet för fortsatt kompletterande utbildning samt till aspirant- och officersutbildning. Under GMU har man rätt till skattefri kostnadsersättning på 4 380 kronor per månad. Man kan även erhålla ett behovsprövat familjebidrag i samband med utbildningen, detta bidrag ingår dock inte i denna ersättning.
 

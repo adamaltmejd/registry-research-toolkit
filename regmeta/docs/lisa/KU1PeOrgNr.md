@@ -11,7 +11,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 KU1PeOrgN
 
-Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret4 gett individen störst inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år5 .
+Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret[^4] gett individen störst inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år[^5] .
 
 I de fall flera förvärvskällor gett individen lika stor inkomst väljs den förvärvskälla där individen arbetat störst del av året.
 

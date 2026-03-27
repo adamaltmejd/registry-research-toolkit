@@ -22,14 +22,14 @@ Bostadsbidrag betalas ut till barnfamiljer och till ungdomar mellan 18– 28 år
 
 #### **Bostadsbidraget till barnfamiljer**
 
-Bostadsbidraget till barnfamiljer består av två delar. Den ena delen är ett *särskilt bidrag för hemmavarande barn* och varierar med antalet barn i familjen (antal barn under 18 år eller som fortfarande har studiebidrag eller förlängt barnbidrag)151. Den andra delen är ett *bidrag för bostadskostnader*. Den som har barn boende hemma har rätt till bostadsbidragets båda delar medan den som tidvis har barn som bor hemma har rätt till bidrag för bostadskostnaden. Vid gemensam vårdnad får den förälder hos vilken barnet är folkbokfört det särskilda bidraget för hemmavarande barn.
+Bostadsbidraget till barnfamiljer består av två delar. Den ena delen är ett *särskilt bidrag för hemmavarande barn* och varierar med antalet barn i familjen (antal barn under 18 år eller som fortfarande har studiebidrag eller förlängt barnbidrag)[^151]. Den andra delen är ett *bidrag för bostadskostnader*. Den som har barn boende hemma har rätt till bostadsbidragets båda delar medan den som tidvis har barn som bor hemma har rätt till bidrag för bostadskostnaden. Vid gemensam vårdnad får den förälder hos vilken barnet är folkbokfört det särskilda bidraget för hemmavarande barn.
 
 Hur stort bostadsbidraget blir beror främst på inkomstens storlek, boendekostnad, bostadsyta och hur stor familj man har. Rätten till
 
 
-151 Det särskilda bidraget till hushåll med mer än tre barn slopas från och med 1998 i och med att flerbarnstillägget (i barnbidraget) återinförs.
+[^151] Det särskilda bidraget till hushåll med mer än tre barn slopas från och med 1998 i och med att flerbarnstillägget (i barnbidraget) återinförs.
 
-bostadsbidrag bedöms utifrån den bidragsgrundande inkomsten152 . Förmögenhet kan också påverka bostadsbidraget.
+bostadsbidrag bedöms utifrån den bidragsgrundande inkomsten[^152] . Förmögenhet kan också påverka bostadsbidraget.
 
 För att få bostadsbidrag till boendekostnaderna krävs vidare att man bor i egen bostad och att man är folkbokförd där. För det särskilda bidraget för barn finns inget krav på egen bostad. Bostadsbidraget räknas inte alltid på hela bostadsytan. Den bidragsgrundande bostadsytan beror på antalet barn. För barnfamiljer finns dessutom garantinivåer för bostadskostnaden. Hushållen får räkna med bostadskostnader upp till garantinivån dock högst den faktiska kostnaden.
 

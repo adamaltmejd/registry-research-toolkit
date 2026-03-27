@@ -19,6 +19,6 @@ Bostadstillägg betalas ut till de med aktivitets- eller sjukersättning och är
 *För ytterligare information om bostadstillägg se grundläggarende texten under Bostadstillägg.* 
 
 
-158 För information om familjebegreppet se objektet Familj ([[FamId]]).
+[^158] För information om familjebegreppet se objektet Familj ([[FamId]]).
 
 #### **Övriga inkomster/ersättningar**

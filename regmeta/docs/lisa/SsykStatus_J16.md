@@ -45,4 +45,4 @@ Kod 11-15 gäller endast företagare där yrkeskoden har blivit härledd.
 | 14*            | 1,6                  | 0,4                 | 0,4                            |
 | 15*            | 0,8                  | 0,0                 | 0,0                            |
 
-\*) Avser endast företagare med ett härlett yrke
+<sup>\*)</sup> Avser endast företagare med ett härlett yrke

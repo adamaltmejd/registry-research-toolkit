@@ -19,7 +19,7 @@ En kompletterande ersättning som betalas ut via avtalsförsäkringarna i samban
 
 Ersättningens storlek varierar med den inkomst man hade när man blev sjuk. 1995 var månadsersättningen som lägst 75 kronor och som högst 2 500 kronor. År 2007 var månadsersättningen fortfarande 75 kronor som lägst, som högst var den 3 459 kronor. För sjukfall som påbörjats 1/5
 
-125 Alternativt: Anger typ av ATP-pension vid sista utbetalning under året.
+[^125] Alternativt: Anger typ av ATP-pension vid sista utbetalning under året.
 
 2001 eller senare har inkomsttaket höjts till 7,5 basbelopp. För sjukfall som påbörjats tidigare ligger inkomsttaket på mellan 5,5 och 6 basbelopp. I AGS-KL lämnas ersättning även för inkomster över den allmänna sjukförsäkringens inkomsttak på 7,5 prisbasbelopp.
 

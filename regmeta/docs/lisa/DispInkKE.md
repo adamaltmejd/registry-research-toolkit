@@ -15,7 +15,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratals kronor.
 
-Den disponibla inkomsten per konsumtionsenhet fås genom att summan av samtliga i familjen165 ingående medlemmars disponibla inkomst divideras med familjens totala konsumtionsvikt166. Negativa värden kan förekomma.
+Den disponibla inkomsten per konsumtionsenhet fås genom att summan av samtliga i familjen[^165] ingående medlemmars disponibla inkomst divideras med familjens totala konsumtionsvikt[^166]. Negativa värden kan förekomma.
 
 För att göra jämförelser av t.ex. disponibel inkomst och ekonomisk köpkraft mellan olika typer av hushåll används viktsystemet där konsumtionen är relaterad till hushållets sammansättning.
 
@@ -33,6 +33,6 @@ Delkomponenterna är definierade och namnsatta av Inkomststatistiken och kan til
 
 För eventuella förändringar som skett i den disponibla inkomstens delkomponenter hänvisas till inkomststatistikens dokumentation. Det är dock värt att påminna om den skattereform som trädde i kraft 1991 och de effekter denna fått på den disponibla inkomsten.
 
-165 För information om familjebegreppet se objektet Familj.
+[^165] För information om familjebegreppet se objektet Familj.
 
-166 Konsumtionsvikt: Av socialstyrelsen beräknat konsumtionsutrymme för varje hushållsmedlem.
+[^166] Konsumtionsvikt: Av socialstyrelsen beräknat konsumtionsutrymme för varje hushållsmedlem.

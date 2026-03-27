@@ -16,19 +16,19 @@ KAS
 
 Beloppet anges i hundratals kronor.
 
-KAS utbetalas som ett fast grundbelopp till den som inte erhåller ersättning från arbetslöshetskassa tidigast den 1 juli det år man fyller 2083. Rätt till KAS kan även medlem som inte uppfyller medlemsvillkoret eller arbetsvillkoret för rätt till A-kassaersättning ha.
+KAS utbetalas som ett fast grundbelopp till den som inte erhåller ersättning från arbetslöshetskassa tidigast den 1 juli det år man fyller 20[^83]. Rätt till KAS kan även medlem som inte uppfyller medlemsvillkoret eller arbetsvillkoret för rätt till A-kassaersättning ha.
 
 Ersättningen kan inte erhållas längre än till och med månaden före den månad som 65-årsdagen infaller.
 
-För att erhålla kontant arbetsmarknadsstöd krävs att man under de tolv månaderna närmast före arbetslösheten arbetat fem månader84 med minst 75 timmar per månad (arbetsvillkoret)85. Den som avslutat en utbildning på heltid, som omfattar minst ett läsår och som ger rätt till statligt studiestöd och därefter varit arbetslös (anmäld som arbetssökande) under minst 90 dagar86 behöver inte ha förvärvsarbetat före arbetslösheten för att få rätt till ersättning (utbildningsvillkoret).
+För att erhålla kontant arbetsmarknadsstöd krävs att man under de tolv månaderna närmast före arbetslösheten arbetat fem månader[^84] med minst 75 timmar per månad (arbetsvillkoret)[^85]. Den som avslutat en utbildning på heltid, som omfattar minst ett läsår och som ger rätt till statligt studiestöd och därefter varit arbetslös (anmäld som arbetssökande) under minst 90 dagar[^86] behöver inte ha förvärvsarbetat före arbetslösheten för att få rätt till ersättning (utbildningsvillkoret).
 
-83 Innan den 1 oktober 1995 kunde KAS utgå till en arbetslös när denne fyllt 20 år.
+[^83] Innan den 1 oktober 1995 kunde KAS utgå till en arbetslös när denne fyllt 20 år.
 
-84 1991 sänks Arbetsvillkoret till minst 4 månader. 1994 är arbetsvillkoret åter minst 5 månader
+[^84] 1991 sänks Arbetsvillkoret till minst 4 månader. 1994 är arbetsvillkoret åter minst 5 månader
 
-85 1997 är arbetsvillkoret detsamma som i arbetslöshetsförsäkringen.
+[^85] 1997 är arbetsvillkoret detsamma som i arbetslöshetsförsäkringen.
 
-86 Inom en ramtid på 10 månader.
+[^86] Inom en ramtid på 10 månader.
 
 Om man har efterlevandepension, tjänstepension från arbetsgivare, delpension, halv ålderspension, arbetsskadelivränta eller två tredjedels förtidspension minskas stödet med pensionsbeloppet.
 

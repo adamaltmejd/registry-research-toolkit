@@ -59,11 +59,11 @@ Arbetslöshetsersättning innebär att person under aktuellt år erhållit ersä
 
 Ersättning från arbetslöshetskassa/arbetsmarknadsförsäkring, Kontant arbetsmarknadsstöd ([[KAS]]) (1992–1998), Ersättning från statlig arbetsmarknadskassa (1994–1997) eller Kontant arbetsmarknadsstöd enligt EES-avtal (1994–1997).
 
-I den första kategorin fångas således personer som någon gång under året varit arbetslösa enligt den Arbetsförmedlingsdefinition som var giltig vid utgången av 199893 och som haft en arbetslöshetsersättning under detta år.
+I den första kategorin fångas således personer som någon gång under året varit arbetslösa enligt den Arbetsförmedlingsdefinition som var giltig vid utgången av 1998[^93] och som haft en arbetslöshetsersättning under detta år.
 
 I den andra kategorin fångas de som varit arbetslösa enligt samma Arbetsförmedlingsdefinition men som inte haft någon arbetslöshetsersättning under det aktuella året. Således arbetslösa som inte går att ringa in med enbart inkomstuppgifter. Ytterligare en grupp
 
-93 1999 ändras definitionen avseende de som tidigare tillhört sökandekategori 14.
+[^93] 1999 ändras definitionen avseende de som tidigare tillhört sökandekategori 14.
 
 som kan hamna i denna kategori är personer vars arbetslöshet upphört men där avaktualiseringen av någon anledning är försenad.
 
@@ -71,7 +71,7 @@ Den tredje kategorin omfattar personer som är deltidsarbetslösa/arbetssökande
 
 Den fjärde kategorin omfattar personer som är arbetssökande och utan arbete men inte anses stå till arbetsmarknadens förfogande. Gruppen är mycket heterogen och omfattar studerande, föräldralediga och värnpliktiga som söker arbete. Även personer utan arbete som väntar på pension, långtidssjukskrivna och personer med sjukbidrag (som i vissa fall av tekniska skäl måste vara registrerade som arbetssökande för att upprätthålla nivån i sjukbidraget). Den omfattar vidare invandrare som inte slutfört sin svenskundervisning men även t.ex. missbrukare som, för att erhålla socialbidrag, måste vara arbetssökande på en förmedling.
 
-Från och med 199994 ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i sökandekategori 14, utan registreras i gruppen arbetslösa (sökandekategori 11-13).
+Från och med 1999[^94] ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i sökandekategori 14, utan registreras i gruppen arbetslösa (sökandekategori 11-13).
 
 *Ca 20 000–25 000 sökande förs härmed över till gruppen arbetslösa. Nivån kommer att stiga successivt under 1999 allt eftersom den manuella överföringen genomförs på förmedlingarna.*
 
@@ -79,7 +79,7 @@ I LISA kan information om arbetslöshetsersättning utnyttjas redan fr.o.m. 1992
 
 Från och med *2001-05-21* sker sökandekategoribyten automatiskt mellan *systemet för programbeslut och statistiksystemet för dem som börjar eller slutar ett arbetsmarknadspolitiskt program*. Syftet med automatiska sökande-kategoribyten är dels att underlätta administrationen, dels att få en bättre registerkvalitet.
 
-94 I realiteten påbörjades överföringen redan i oktober–november 1998.
+[^94] I realiteten påbörjades överföringen redan i oktober–november 1998.
 
 Den sökande får någon av koderna 96, 97 eller 98. Det är därefter handläggarens ansvar att ange aktuell status för den sökande. Personer som har någon av koderna 96–98 ska redovisas som arbetslösa. Detsamma gäller fr.o.m. september 2015 den nya sökandekategorin 95.
 
@@ -134,7 +134,7 @@ Kod = 3: 41 139 personer
 Kod = 4: 2 407 personer
 
 
-95 När personer som erhåller tillfällig avgångsersättning står kvar som arbetssökande räknas de som arbetslösa.
+[^95] När personer som erhåller tillfällig avgångsersättning står kvar som arbetssökande räknas de som arbetslösa.
 
 *Fördelning efter arbetslöshetskod i LISA 2017:*
 

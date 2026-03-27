@@ -32,7 +32,7 @@ Endast det fåtal som fått sin ersättning i samband med OTA utbetald från Fö
 Den 1/11 1996 införs OTA (Offentligt Tillfälligt Arbete). Man kan anvisas OTA om man är arbetslös, har fyllt 55 år och har varit anmäld som arbetssökande på Arbetsförmedlingen under minst 24 månader. Det är staten, kommunerna, landstingen och de allmänna försäkringskassorna som anordnar sådana arbeten. Hur lång tid som ett
 
 
-109 Funktionshindrade arbetslösa kan få arbetsplatsintroduktion även före 20 år ålder och under längre tid än sex månader. 1998 kan invandrare få arbetsplatsintroduktion under längre tid än sex månader.
+[^109] Funktionshindrade arbetslösa kan få arbetsplatsintroduktion även före 20 år ålder och under längre tid än sex månader. 1998 kan invandrare få arbetsplatsintroduktion under längre tid än sex månader.
 
 tillfälligt offentligt arbete pågår avgörs av Arbetsförmedlingen. OTA får inte användas till att ersätta annan arbetskraft på en arbetsplats och inte heller i övrigt användas för att utföra ordinarie arbetsuppgifter. Den som deltar i OTA står till arbetsmarknadens förfogande, vilket innebär att en OTA-period kan avbrytas om Arbetsförmedlingen kan erbjuda ett annat arbete eller en annan åtgärd. Den arbetslöshetsersättning som en deltagare i OTA har ökas med 45 kronor per ersättningsdag för verksamhet på heltid. Anordnaren betalar ingen lön till OTA-deltagaren.
 
@@ -54,9 +54,9 @@ Upphör november 2007, ersätts av Jobbgaranti för ungdomar.
 
 #### **IT-satsning**
 
-IT-satsningen startar 1/1 1998 och är en arbetsmarknadsutbildning i form av en IT-utbildning. Syftet med utbildningen är att den skall ge yrkeskompetens för bristyrken inom IT-näringen. Utbildningen riktar sig till den som är arbetslös eller riskerar att bli arbetslös och är arbetssökande. Även när man har en anställning kan man beviljas en IT-utbildning110 om man behöver förnya eller byta arbetsuppgifter.
+IT-satsningen startar 1/1 1998 och är en arbetsmarknadsutbildning i form av en IT-utbildning. Syftet med utbildningen är att den skall ge yrkeskompetens för bristyrken inom IT-näringen. Utbildningen riktar sig till den som är arbetslös eller riskerar att bli arbetslös och är arbetssökande. Även när man har en anställning kan man beviljas en IT-utbildning[^110] om man behöver förnya eller byta arbetsuppgifter.
 
-110 Dessa var inte inskrivna vid Arbetsförmedlingen.
+[^110] Dessa var inte inskrivna vid Arbetsförmedlingen.
 
 Arbetsgivaren måste då godkänna att man får vara med i utbildningen med bibehållna anställningsförmåner. En utbildningssatsning där uttagning till åtgärd sker med hjälp av ett urvalstest. Nämnden kan bevilja ansökan först från och med den 1 juli det år man fyller 20 år (med vissa undantag) och skall ta särskild hänsyn till om den sökande är kvinna, invandrare eller handikappad. Om man beviljats IT-utbildning har man rätt till utbildningsbidrag.
 

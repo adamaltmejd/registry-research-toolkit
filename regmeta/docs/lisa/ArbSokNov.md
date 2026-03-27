@@ -52,7 +52,7 @@ Arbetssökande hos Arbetsförmedlingen vid utgången av november månad aktuellt
 
 Följande sökandekategorier ingår i de kategorier som skapats:
 
-#### *Arbetslös (heltid)*89
+#### *Arbetslös (heltid)*[^89]
 
 - Arbetslösa (11). *Före 2003-11-24: Arbetslösa, platsförmedlingsservice*
 - Arbetslösa, vägledningsservice (12). *Upphör 2003-11-24, inskrivna konverteras till sökandekategori 11*
@@ -62,22 +62,22 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Arbetslösa, avbrott/återkallande av beslut (97), *fr.o.m. 2001-05*
 - Arbetslösa, slutförd beslutsperiod (98), *fr.o.m. 2001-05*
 
-#### *Arbetsmarknadspolitisk åtgärd (Åtgärdsstudier)*99
+#### *Arbetsmarknadspolitisk åtgärd (Åtgärdsstudier)*[^99]
 
 - Stöd till start av näringsverksamhet (46), *(tidigare Starta-eget-bidrag, namnbyte 2000-04*). Redovisas under *Åtgärdssysselsättning fr.o.m. 2016*.
 - Arbetslivsutveckling, ALU (52), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30.*
 - Arbetspraktik (54), *fr.o.m. 1999-01, redovisas under Åtgärdssysselsättning 2010-2015, ingår i Åtgärdsstudier igen från 2016.*
 - Arbetsplatsintroduktion, API (55), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30,*
-- Offentligt tillfälligt arbete, [[OTA]] (56), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-3190* .
+- Offentligt tillfälligt arbete, [[OTA]] (56), *upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31[^90]* .
 - Aktivare användning av arbetslöshetsersättning, PROJEKT (57), *upphör 1999-09-30, beslut tagna före 1999-10-01 får fullföljas.*
 - Prova på-plats (59), *fr.o.m. 2005-05-23*
 
 - Internpraktik (60), *fr.o.m. 2005-05-23, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Datortek (64), *fr.o.m. 1995-07, upphör 2007-01-01, beslut tagna före detta datum får fullföljas.*
 
-89 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^89] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-90 De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
+[^90] De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
 
 - Kommunala ungdomsprogram, ungdomar under 20 år, KUP (65), *upphör 2007-11*.
 - Ungdomsgaranti, för ungdomar 20–24 år (66), *(tidigare Utvecklingsgaranti, namnbyte 2000-04), upphör 2007-11.*
@@ -99,13 +99,13 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Lärlingsplatser (85), *fr.o.m. 2006-01, t.o.m. 2009-05.*
 - Validering (86), *fr.o.m. 2017-05.*
 
-#### *Arbetsmarknadspolitisk åtgärd (Åtgärdssysselsättning)91*
+#### *Arbetsmarknadspolitisk åtgärd (Åtgärdssysselsättning)[^91]*
 
 - Rekryteringsstöd (44), *upphör 1997-12-31, beslut tagna före 1998-01-01 får fullföljas*.
 - Akademikerjobb (44), *fr.o.m. 2006-03, upphör 2006-12-31. Beslut tagna före detta datum får fullföljas.*
 
 
-91 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^91] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
 - Individuellt anställningsstöd (45), *upphör 1999-09-30. Beslut tagna före 1999-10-01 får fullföljas.*
 - Förstärkt särskilt anställningsstöd (45), *fr.o.m. 2012-04.*
@@ -129,7 +129,7 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Arbetsträning med handledare (87), *fr.o.m. 2014-03.*
 - Arbetsträning inom praktiskt basår (88), *fr.o.m. 2014-03.*
 
-#### *Arbetsmarknadspolitisk åtgärd (Särskilda insatser för funktionshindrade)92*
+#### *Arbetsmarknadspolitisk åtgärd (Särskilda insatser för funktionshindrade)[^92]*
 
 - Utvecklingsanställning (38), *fr.o.m. 2006-01.*
 - Trygghetsanställning (39), *fr.o.m. 2006-01.*
@@ -138,7 +138,7 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Utvecklingsanställning inom Kulturarvslyftet (56), *fr.o.m. 2012-05, upphör 2014-12.*
 - Utvecklingsanställning hos Samhall AB (58), *fr.o.m. 2012-02*.
 
-#### *Arbetsmarknadspolitisk åtgärd (Nystartsjobb)102*
+#### *Arbetsmarknadspolitisk åtgärd (Nystartsjobb)[^102]*
 
 - Nystartsjobb (33), *fr.o.m. 2007-01.*
 - Särskilt nystartsjobb (36), *fr.o.m. 2008-01.*
@@ -156,7 +156,7 @@ Observera också att Arbetspraktik (54) redovisas under *Arbetsmarknadspolitisk 
 
 Observera vidare att Stöd till start av näringsverksamhet (46), (tidigare Starta-eget-bidrag, namnbyte 2000-04) redovisas under *Åtgärdssysselsättning* fr.o.m. 2016, åren innan redovisas den under *Årgärdsstudier*.
 
-92 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^92] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
 *Antal dagar i åtgärdsstudier* och *Antal dagar i Åtgärdssysselsättning*.
 

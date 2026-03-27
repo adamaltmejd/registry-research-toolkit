@@ -27,7 +27,7 @@ För att få rätt till arbetslöshetsersättning krävs (grundvillkor) att man
 - är arbetsför och oförhindrad att ta arbete minst 3 timmar varje arbetsdag och i genomsnitt minst 17 timmar i veckan
 - är anmäld som arbetslös och arbetssökande hos den offentliga Arbetsförmedlingen
 - är beredd att ta erbjudet lämpligt arbete eller arbetsmarknadspolitiskt erbjudande, det är Arbetsförmedlingen som ytterst bedömer vilka arbeten som ska sökas och vilka program som anses lämpliga
-- aktivt söker ett lämpligt arbete men inte kan få ett sådant79
+- aktivt söker ett lämpligt arbete men inte kan få ett sådant[^79]
 
 Den *5/2 2001* införs nya regler för arbetslöshetsersättningen:
 
@@ -39,7 +39,7 @@ Den *5/2 2001* införs nya regler för arbetslöshetsersättningen:
 
 *2010-07:* Nya regler gällande företagares ersättningsrätt; företagarbegreppet inom arbetslöshetsförsäkringen blir kopplat till inkomstskattelagen (1999:1229), vilket innebär att den verksamhet som bedrivs ska vara varaktig, självständig och drivas med vinstsyfte. Utökade möjligheter till tillfälligt uppehåll i näringsverksamhet. Dagsförtjänsten för företagare kommer att baseras på den inkomst från
 
-79 I augusti 2000 infördes förändringar inom arbetsmarknadspolitiken som förstärkte kravet på att den arbetssökande aktivt måste söka arbete.
+[^79] I augusti 2000 infördes förändringar inom arbetsmarknadspolitiken som förstärkte kravet på att den arbetssökande aktivt måste söka arbete.
 
 verksamheten som framgår av den senaste taxeringen. Om det är mer förmånligt för företagaren baseras istället dagsförtjänsten på den genomsnittliga inkomsten från verksamheten under de två år som föregår inkomståret i den senaste taxeringen. Företagare som lägger ner verksamheten inom 24 månader efter start kan få sin ersättning baserad på inkomster av tidigare anställning.
 

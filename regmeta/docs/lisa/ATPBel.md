@@ -19,6 +19,6 @@ Under året utbetalt ATP-belopp i form av *Förtidspension, Sjukbidrag, Åldersp
 Utgår i och med att det reformerade pensionssystemet fullt ut träder i kraft.
 
 
-164 Annan inkomst: Andra inkomster än Inkomst av förvärvskälla, Arbetstidsrelaterad social inkomst och Kapitalinkomst. För de familjerelaterade inkomsterna används det individualiserade beloppet.
+[^164] Annan inkomst: Andra inkomster än Inkomst av förvärvskälla, Arbetstidsrelaterad social inkomst och Kapitalinkomst. För de familjerelaterade inkomsterna används det individualiserade beloppet.
 
 *För ytterligare information se under respektive variabel.*

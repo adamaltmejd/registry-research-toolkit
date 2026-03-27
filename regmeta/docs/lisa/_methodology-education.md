@@ -283,7 +283,7 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 
 **.**
 
-**Antal personer som deltog i repektive program någon gång under 2017111**
+**Antal personer som deltog i repektive program någon gång under 2017[^111]**
 
 |                                              | Antal   |
 |----------------------------------------------|---------|
@@ -297,7 +297,7 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 | Projekt med arbetmarknadspolitisk inriktning | 5 100   |
 | Kartläggning, vägledning och rehabilitering  | 94 500  |
 
-111 Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
+[^111] Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
 
 **Antal personer som någon gång under året tillhört sökandekategorier som i LISA faller under åtgärdsstudier**
 

@@ -21,13 +21,13 @@ Omställningspension, förlängd omställningspension och särskild efterlevande
 
 Barn som inte har fyllt 18 år har rätt till *barnpension* från folkpensioneringen och ATP om en eller båda föräldrarna avlidit. I vissa fall betalas förlängd barnpension ut till och med juni månad det år då barnen fyller 20 år. Reglerna för barnpension är beroende av om föräldern avlidit före eller efter årsskiftet 1989/90.
 
-För att få *omställningspension* måste den efterlevande vara under 65 år och stadigvarande ha bott tillsammans med den avlidne när dödsfallet inträffar. Dessutom måste den efterlevande vid dödsfallet stadigvarande ha bott tillsammans med barn under 12 år eller bott tillsammans med den avlidne under en tid av minst fem år före dödsfallet. Omställningspensionen betalas ut under sex månader147 efter dödsfallet.
+För att få *omställningspension* måste den efterlevande vara under 65 år och stadigvarande ha bott tillsammans med den avlidne när dödsfallet inträffar. Dessutom måste den efterlevande vid dödsfallet stadigvarande ha bott tillsammans med barn under 12 år eller bott tillsammans med den avlidne under en tid av minst fem år före dödsfallet. Omställningspensionen betalas ut under sex månader[^147] efter dödsfallet.
 
 Om den efterlevande har vårdnaden om och stadigvarande sammanbor med barn under 12 år utbetalas *förlängd omställningspension*. Förlängd omställningspension betalas ut längst till och med den månad då det yngsta barnet fyller tolv år.
 
 Om den efterlevande har svårigheter att försörja sig efter omställningsperioden kan *särskild efterlevandepension* betalas ut. Den
 
-147 Till och med 1996 betalas omställningspensionen ut under tolv månader efter dödsfallet.
+[^147] Till och med 1996 betalas omställningspensionen ut under tolv månader efter dödsfallet.
 
 särskilda efterlevandepensionen betalas ut så länge man har svårt att försörja sig och prövas vart tredje år.
 

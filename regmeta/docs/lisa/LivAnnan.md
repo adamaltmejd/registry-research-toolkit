@@ -13,7 +13,7 @@ LivAnnan
 
 Beloppet anges i hundratals kronor.
 
-Variabeln omfattar annan145 helt eller delvis skattepliktig livränta.
+Variabeln omfattar annan[^145] helt eller delvis skattepliktig livränta.
 
 Den dominerande typen av livränta torde vara relaterad till trafikskador och trafikskadeförsäkringar. Andra typer av livränta kan exempelvis vara relaterade till sjuk- och olycksfallsförsäkringar.
 

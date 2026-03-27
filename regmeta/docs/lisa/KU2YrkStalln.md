@@ -15,6 +15,6 @@ Yrkesställning på det företag som avser näst största förvärvskällan.
 
 *För ytterligare information se under Yrkesställning* ([[YrkStalln]]).
 
-35 1990-2003 ingår endast inkomst av aktiv näringsverksamhet.
+[^35] 1990-2003 ingår endast inkomst av aktiv näringsverksamhet.
 
-36 1990 utgjordes underlaget till företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
+[^36] 1990 utgjordes underlaget till företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.

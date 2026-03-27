@@ -16,11 +16,11 @@ Beloppet anges i hundratals kronor.
 
 För att få dagpenning från erkänd arbetslöshetskassa krävs, utöver de grundvillkor som angivits ovan, att man är medlem i arbetslöshetskassa sedan minst tolv månader *(medlemsvillkoret)* och att man under den senaste tolvmånadersperioden (den s.k. ramtiden) har förvärvsarbetat i minst sex månader och minst 80 timmar per kalendermånad alternativt
 
-att man arbetat 480 timmar under en sammanhängande period av sex månader med minst 50 timmars arbete i varje månad *(arbetsvillkoret)80* .
+att man arbetat 480 timmar under en sammanhängande period av sex månader med minst 50 timmars arbete i varje månad *(arbetsvillkoret)[^80]* .
 
 Rätt till inträde i en arbetslöshetskassa har alla som inte fyllt 64 år och som arbetar minst 17 timmar i veckan inom kassans verksamhetsområde. Från och med *1 januari 1998* finns en ny arbetslöshetskassa, den så kallade Alfa-kassan, som inte ställer krav på yrkestillhörighet.
 
-Ramtiden (avseende arbetsvillkoret) förlängs med den tid då man inte kunnat förvärvsarbeta till exempel på grund av sjukdom, studier, vård av eget barn/adoptivbarn, tid med etableringsersättning för nyanlända invandrare. Den överhoppningsbara tiden är högst fem år81 .
+Ramtiden (avseende arbetsvillkoret) förlängs med den tid då man inte kunnat förvärvsarbeta till exempel på grund av sjukdom, studier, vård av eget barn/adoptivbarn, tid med etableringsersättning för nyanlända invandrare. Den överhoppningsbara tiden är högst fem år[^81] .
 
 Om man fått ersättning tidigare och söker igen kvalificerar, utöver förvärvsarbete även bl.a. arbetsmarknadsutbildning, yrkesinriktad rehabilitering (AMI), utbildningsvikariat, beredskapsarbete, tid med starta eget-bidrag, fullföljd utbildning med särskilt utbildningsbidrag och högst två månader som värnpliktig eller med föräldrapenning, för uppfyllandet av arbetsvillkoret.
 
@@ -28,13 +28,13 @@ Från och med den *5/2 2001* är det endast förvärvsarbete som kvalificerar f�
 
 Personer som är eller riskerar att bli långtidsarbetslösa (inskriven som arbetssökande hos Arbetsförmedlingen i minst 24 månader) kan komma ifråga för aktivitetsgarantin. En individuell jobbsökarplan utarbetas tillsammans med en handledare. I och med inträdet i aktivitetsgarantin upphör rätten att återgå till en påbörjad ersättningsperiod. För att få en ersättningsperiod måste den sökande på nytt uppfylla arbetsvillkoret.
 
-80 Före den 1/7 1994 innebar arbetsvillkoret att man skulle ha arbetat minst 75 dagar fördelade på minst fyra månader med minst tre timmars arbete per dag under en tolvmånadersperiod före arbetslösheten. Fr.o.m. den 1/7 1994 skulle de 75 dagarna vara fördelade på minst fem månader. Fr.o.m. den 1/1 1995 skulle man ha arbetat minst 80 dagar fördelade på fem månader. Fr.o.m. den 1/7 1997 t.o.m. den 31/12 2006 innebar arbetsvillkoret att man skulle ha arbetat i minst sex månader och minst 70 timmar per kalendermånad. Alternativt att man arbetat 450 timmar under en sammanhängande period av sex månader med minst 45 timmars arbete i varje månad
+[^80] Före den 1/7 1994 innebar arbetsvillkoret att man skulle ha arbetat minst 75 dagar fördelade på minst fyra månader med minst tre timmars arbete per dag under en tolvmånadersperiod före arbetslösheten. Fr.o.m. den 1/7 1994 skulle de 75 dagarna vara fördelade på minst fem månader. Fr.o.m. den 1/1 1995 skulle man ha arbetat minst 80 dagar fördelade på fem månader. Fr.o.m. den 1/7 1997 t.o.m. den 31/12 2006 innebar arbetsvillkoret att man skulle ha arbetat i minst sex månader och minst 70 timmar per kalendermånad. Alternativt att man arbetat 450 timmar under en sammanhängande period av sex månader med minst 45 timmars arbete i varje månad
 
-81 Före den 1/1 2007 var den överhoppningsbara tiden högst sju år. Ett tillfälligt undantag i överhoppningsbar tid gäller under perioden 1 januari 2010 till och med 31 januari 2013. Personer som från och med årsskiftet 2010 lämnar sjukförsäkringen efter att ha erhållit maximalt antal dagar med sjukpenning eller sjukersättning får räkna upp till 10 år med överhoppningsbar tid för att uppfylla ett arbetsvillkor.
+[^81] Före den 1/1 2007 var den överhoppningsbara tiden högst sju år. Ett tillfälligt undantag i överhoppningsbar tid gäller under perioden 1 januari 2010 till och med 31 januari 2013. Personer som från och med årsskiftet 2010 lämnar sjukförsäkringen efter att ha erhållit maximalt antal dagar med sjukpenning eller sjukersättning får räkna upp till 10 år med överhoppningsbar tid för att uppfylla ett arbetsvillkor.
 
 Förändringen gäller sökande som skrivits in i aktivitetsgarantin från och med 2003-09-01.
 
-Ersättningsperioden är som längst 300 dagar för den som är under 55 år och 450 dagar för den som fyllt 55 år82 innan ersättningsperiodens slut.
+Ersättningsperioden är som längst 300 dagar för den som är under 55 år och 450 dagar för den som fyllt 55 år[^82] innan ersättningsperiodens slut.
 
 Från och med *5/2 2001* är ersättningsperioden som längst 300 dagar för alla oavsett ålder. I vissa fall kan en ersättningsperiod bli förlängd med högst 300 dagar även om man inte har uppfyllt ett nytt arbetsvillkor. Det är Arbetsförmedlingen som föreslår detta och sedan arbetslöshetskassan som fattar beslut.
 
@@ -52,7 +52,7 @@ Från och med *oktober 2007* sker en sammanräkning av dagar med arbetslöshetse
 
 Från och med den *7/7 2008* utökas karenstiden från 5 till 7 dagar.
 
-82 Från och med 1998 går gränsen vid 57 år.
+[^82] Från och med 1998 går gränsen vid 57 år.
 
 *Dagpenning:*
 

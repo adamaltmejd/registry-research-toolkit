@@ -23,6 +23,6 @@ De härledda yrkena identifieras via variabeln SSYKStatus_J16.
 
 *I övrigt se Yrke enligt SSYK 96, 4-siffernivå* (SSyk4).
 
-&quot;middle class" (3+4)
+<sup>&</sup>quot;middle class" (3+4)
 
-&quot;working class" (5+6+7)
+<sup>&</sup>quot;working class" (5+6+7)

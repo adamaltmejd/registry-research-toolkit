@@ -15,7 +15,7 @@ Variabelns källa är SCB:s Utbildningsregister (UREG), se *Utbildningsvariabler
 
 Nivåmodulen består av tre positioner, där den första siffran anger utbildningens nivå i ISCED 97. Den andra anger utbildningens teoretiska längd i antal år (undantaget nivå 0-2 där utbildningens längd inte anges). Den tredje siffran anger typ av utbildning. Den skiljer i första hand på yrkesinriktade utbildningar och mer generella
 
-utbildningar samt på utbildningar avslutade med avgångsbetyg/examen och utbildningar avslutade utan avgångsbetyg/examen13 .
+utbildningar samt på utbildningar avslutade med avgångsbetyg/examen och utbildningar avslutade utan avgångsbetyg/examen[^13] .
 
 *Första siffran i nivåmodulen:*
 

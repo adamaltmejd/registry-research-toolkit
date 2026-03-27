@@ -18,4 +18,4 @@ Variabeln är summerad till familjenivå och omfattar *Kommunalt bostadstillägg
 
 *För ytterligare information om bostadstillägg se grundläggarende texten under Bostadstillägg.* 
 
-Det familjebegrepp158 som här används skiljer sig från det faktiska hushållet. Största skillnaden avser sammanboende utan gemensamma barn.
+Det familjebegrepp[^158] som här används skiljer sig från det faktiska hushållet. Största skillnaden avser sammanboende utan gemensamma barn.

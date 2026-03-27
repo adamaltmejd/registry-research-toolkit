@@ -15,7 +15,7 @@ LoneInkJ
 
 (2003)
 
-i sjukperioden42
+i sjukperioden[^42]
 
 Beloppet anges i hundratals kronor.
 

@@ -34,7 +34,7 @@ Huvudinriktningen 4 i gamla SUN, 'Utbildning för industri och hantverk samt tek
 
 #### **Förvärvsarbetande**
 
-Den officiella avgränsningen av förvärvsarbetande i RAMS21 redovisas som variabeln Sysselsättningsstatus i Sysselsättningsregistret. De metoder som tillämpas bygger på att man försöker få en avgränsning som i så stor utsträckning som möjligt efterliknar ILO:s definition. ILO:s definition innebär att alla som utfört ett inkomstbringande arbete minst en timme under en mätvecka ska betraktas som förvärvsarbetande.
+Den officiella avgränsningen av förvärvsarbetande i RAMS[^21] redovisas som variabeln Sysselsättningsstatus i Sysselsättningsregistret. De metoder som tillämpas bygger på att man försöker få en avgränsning som i så stor utsträckning som möjligt efterliknar ILO:s definition. ILO:s definition innebär att alla som utfört ett inkomstbringande arbete minst en timme under en mätvecka ska betraktas som förvärvsarbetande.
 
 I den registerbaserade arbetsmarknadsstatistiken finns inte möjlighet att fråga personer om de arbetat en viss tid en viss vecka. Man är här hänvisad till operationella metoder och regler för att genomföra individuella avgränsningar huruvida personen förvärvsarbetat minst en timme per vecka eller inte.
 
@@ -43,13 +43,13 @@ I RAMS är november den månad för vilken man vill ha uppgift om hur många och
 
 #### **Val av novemberanställning aktuellt år**
 
-I RAMS bestäms ett huvudsakligt arbetsställe för varje person som fått kontrolluppgift eller haft inkomst av näringsverksamhet. Detta för att kunna koppla arbetsställe- och företagsinformation så som bransch och sektor till personen.22
+I RAMS bestäms ett huvudsakligt arbetsställe för varje person som fått kontrolluppgift eller haft inkomst av näringsverksamhet. Detta för att kunna koppla arbetsställe- och företagsinformation så som bransch och sektor till personen.[^22]
 
 För personer med flera kontrolluppgifter från arbetsgivare och/eller företagarinkomster görs en jämförelse mellan de olika inkomstkällorna. Den inkomstkälla som har gett den högsta skattade novemberinkomsten anses utgöra huvudarbetsställe under november. När novemberinkomsten skall skattas väger delårsmarkerade kontrolluppgifter och företagarinkomster något tyngre än helårsmarkerade kontrolluppgifter. För personer som inte varit verksamma under november väljs det arbetsställe som gett den högsta inkomsten.
 
-21 Registerbaserad arbetsmarknadsstatistik
+[^21] Registerbaserad arbetsmarknadsstatistik
 
-22 Arbetsställe-/företagsvariabler redovisas även för personer som inte klassats som förvärvsarbetande under november men som ändå fått kontrolluppgift från arbetsgivare under året.
+[^22] Arbetsställe-/företagsvariabler redovisas även för personer som inte klassats som förvärvsarbetande under november men som ändå fått kontrolluppgift från arbetsgivare under året.
 
 *I övrigt se under Arbetsställe (november)* ([[CfarNr_LISA]]) *och Företag (november)* ([[PeOrgNr_LISA]]).
 
@@ -72,24 +72,24 @@ Avseende klassificeringen som förvärvsarbetande/ej förvärvsarbetande i novem
 
 
 
-#### **Avgränsningen av förvärvsarbetande 1985-199223**
+#### **Avgränsningen av förvärvsarbetande 1985-1992[^23]**
 
 De första åtta åren som Sysselsättningsregistret existerade (1985-1992) användes en avgränsningsmetod, som helt bygger på information från kontrolluppgifter och inkomstuppgifter från självdeklarationen.
 
-Kontrolluppgifter från arbetsgivare (KU)24 bidrar med lönebelopp och de "sociala" kontrolluppgifterna (KU-S) med information om sjukpenning och föräldrapenning. Från självdeklarationernas taxeringsband hämtas
+Kontrolluppgifter från arbetsgivare (KU)[^24] bidrar med lönebelopp och de "sociala" kontrolluppgifterna (KU-S) med information om sjukpenning och föräldrapenning. Från självdeklarationernas taxeringsband hämtas
 
-23 I LISA finns denna avgränsning för åren 1990-1993
+[^23] I LISA finns denna avgränsning för åren 1990-1993
 
-24 Skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare
+[^24] Skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare
 
-inkomstuppgifter för egna företagare, närmare bestämt inkomster av rörelse och jordbruksfastighet (brukad)25 .
+inkomstuppgifter för egna företagare, närmare bestämt inkomster av rörelse och jordbruksfastighet (brukad)[^25] .
 
 #### *Avgränsningsförfarande*
 
 För att avgöra om en person är förvärvsarbetande eller inte under november månad kan avgränsningen beskrivas på följande sätt:
 
 - 1. Populationen avgränsas först till personer som är folkbokförda vid referensårets slut och som finns registrerade i Registret över totalbefolkningen (RTB). För varje person i denna population bestäms sysselsättningsstatus. Personer som vid inkomstårets slut ännu inte fyllt 16 år betraktas som barn och ingår inte i arbetskraften och kan därför inte vara förvärvsarbetande.
-- 2. Personer som haft inkomst av rörelse eller jordbruksfastighet (brukad) räknas samtliga som förvärvsarbetande i november26 . Villkoret är att dessa inkomster ska ha varit en positiv s.k. A-inkomst.
+- 2. Personer som haft inkomst av rörelse eller jordbruksfastighet (brukad) räknas samtliga som förvärvsarbetande i november[^26] . Villkoret är att dessa inkomster ska ha varit en positiv s.k. A-inkomst.
 - 3. För personer som haft en eller flera kontrolluppgifter beräknas den fiktiva lönesumma som skall jämföras med årets lönegräns (motsvarande 4 timlöner i november). Timlönen bestäms utifrån genomsnittlig industriarbetarlön.
 
 Den fiktiva novemberlönesumman beräknas på följande sätt:
@@ -98,13 +98,13 @@ Den fiktiva novemberlönesumman beräknas på följande sätt:
 - b) Delårsmarkerade kontrolluppgifter från arbetsgivare (KU) som inte omfattar november månad: Novemberlönesumma = 0
 - c) Helårsmarkerade kontrolluppgifter från arbetsgivare (KU), kontrolluppgifter från arbetsgivare (KU) som saknar tidsmarkering, belopp enligt "social" kontrolluppgift (KU-S) samt sjömansinkomster: Novemberlönesumma = (Lönesumma (KU + KU-S) \* 0,11) / 12 (ger ett jämförbart månadsbelopp).
 
-För personer med flera KU summeras den fiktiva novemberlönesumman från varje KU till en total novemberlönesumma. Dessutom inräknas även vissa ersättningar från Försäkringskassan27 (KU-S) i den totala
+För personer med flera KU summeras den fiktiva novemberlönesumman från varje KU till en total novemberlönesumma. Dessutom inräknas även vissa ersättningar från Försäkringskassan[^27] (KU-S) i den totala
 
-25 Från och med 1991 ersätts Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) av begreppet Inkomst av aktiv näringsverksamhet (avseende skillnader, se under denna variabel).
+[^25] Från och med 1991 ersätts Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) av begreppet Inkomst av aktiv näringsverksamhet (avseende skillnader, se under denna variabel).
 
-26 Uppgiften från 1990 och tidigare avseende Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) bygger på uppgifter från året före referensåret, d.v.s. uppgifterna är ett år för gamla.
+[^26] Uppgiften från 1990 och tidigare avseende Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) bygger på uppgifter från året före referensåret, d.v.s. uppgifterna är ett år för gamla.
 
-27 Dessa ersättningar från Försäkringskassan är: Sjukpenning, Graviditetspenning, Smittbärarpenning, Sjuklönegaranti, Skattepliktig arbetsskadeersättning, Föräldrapenning vid barn födelse eller adoption,
+[^27] Dessa ersättningar från Försäkringskassan är: Sjukpenning, Graviditetspenning, Smittbärarpenning, Sjuklönegaranti, Skattepliktig arbetsskadeersättning, Föräldrapenning vid barn födelse eller adoption,
 
 novemberlönesumman om sådan ersättning erhållits förutom ersättningen som redovisats på KU. Denna ersättning behandlas på samma sätt som KU som inte är delårsmarkerad dvs. enligt alternativ C. Ett villkor för att kunna klassas som förvärvsarbetande är att personen haft en kontrolluppgift från arbetsgivare eller sjömansinkomst under året (enbart KU-S-ersättning är inte tillräckligt). Lönesumman för KU som inte är delårsmarkerad vägs alltså ned med konstanten 0,11. Detta beror på att novembersysselsättningen inte anses lika säkert bestämd för dessa kontrolluppgifter jämfört med de KU som är delårsmarkerade.
 

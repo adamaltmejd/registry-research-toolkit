@@ -22,7 +22,7 @@ Vuxna som förvärvsarbetat/haft egen rörelse/gjort värnplikt/vårdat eget bar
 
 Detta stöd är i första hand avsett för dem som har kort utbildning och som tar ledigt från sitt arbete för att studera.
 
-Alla som söker kan inte få särskilt vuxenstudiestöd, utan den som bedöms ha störst behov av utbildning och stöd har företräde framför andra58. Tillgängliga resurser styr således hur många studerande som kan beviljas stöd.
+Alla som söker kan inte få särskilt vuxenstudiestöd, utan den som bedöms ha störst behov av utbildning och stöd har företräde framför andra[^58]. Tillgängliga resurser styr således hur många studerande som kan beviljas stöd.
 
 Bidragsbeloppet varierar beroende på om man tillhör A-kassa eller inte, bidraget är skattepliktigt och ATP-grundande.
 
@@ -35,7 +35,7 @@ Stödet beräknas per närvarodag. Man har dock rätt till stöd även vid viss 
 *Fr.o.m. läsåret 1993/94* får den som går viss specialpedagogisk utbildning särskilt vuxenstudiestöd (Lärar-SVUX).
 
 
-58 Hänsyn tas främst till tidigare utbildning, antalet yrkesverksamma år och behovet av tidigare stöd.
+[^58] Hänsyn tas främst till tidigare utbildning, antalet yrkesverksamma år och behovet av tidigare stöd.
 
 *Fr.o.m. läsåret 1995/96* kan även de som genomgår vissa naturvetenskapliga och tekniska högskoleutbildningar söka särskilt vuxenstudiestöd (NT-SVUX).
 

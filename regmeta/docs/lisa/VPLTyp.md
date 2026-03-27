@@ -22,7 +22,7 @@ Antalet uttagna till plikttjänstgöring minskar succesivt från mitten av 1990-
 
 *Dagpenning vid repetitionsutbildning*
 
-Under repetitionsutbildning får den försvarspliktige en dagpenning. Den motsvarar 90 procent av den sjukpenninggrundande inkomsten, dock lägst 55 kr/dag (1996)60 .
+Under repetitionsutbildning får den försvarspliktige en dagpenning. Den motsvarar 90 procent av den sjukpenninggrundande inkomsten, dock lägst 55 kr/dag (1996)[^60] .
 
 Dagpenningen är skattepliktig och ATP-grundande och betalas ut av försäkringskassan. Under repetitionsutbildningen kan familjebidrag bara erhållas i form av näringsbidrag.
 

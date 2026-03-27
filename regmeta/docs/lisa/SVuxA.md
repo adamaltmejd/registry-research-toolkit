@@ -18,17 +18,17 @@ Beloppet anges i hundratals kronor.
 
 Från och med 1997 redovisas Särskilt vuxenstudiestöd, bidragsdel (arbetslösa) (SVUXA) och Särskilt vuxenstudiestöd, bidragsdel (övriga) (SVUX) i två separata variabler.
 
-För att få SVUXA krävs att man arbetat minst tre år, är anmäld som arbetssökande hos Arbetsförmedlingen, inte kunnat få lämpligt arbete (arbetslös) samt att man under det kalenderår då studierna påbörjas fyller minst 21 år56 .
+För att få SVUXA krävs att man arbetat minst tre år, är anmäld som arbetssökande hos Arbetsförmedlingen, inte kunnat få lämpligt arbete (arbetslös) samt att man under det kalenderår då studierna påbörjas fyller minst 21 år[^56] .
 
 Ersättningen är 65 procent av A-kassaersättning eller enligt fastställt minimibelopp om man inte uppfyller villkoren för ersättning från A-kassa. Minimibeloppet är något högre för SVUXA än SVUX.
 
-Även medlen för SVUXA är begränsade. Reglerna för denna stödform innebär dock att det inte görs ett urval bland de som söker utan att stöd beviljas i den ordning ansökningarna kommer in tills pengarna tar slut. Studierna skall bedrivas på grundskole- eller gymnasienivå, för gymnasiala studier beviljas SVUXA dock för max två terminer57 .
+Även medlen för SVUXA är begränsade. Reglerna för denna stödform innebär dock att det inte görs ett urval bland de som söker utan att stöd beviljas i den ordning ansökningarna kommer in tills pengarna tar slut. Studierna skall bedrivas på grundskole- eller gymnasienivå, för gymnasiala studier beviljas SVUXA dock för max två terminer[^57] .
 
 För att få särskilt vuxenstudiestöd måste studierna omfatta minst 15 dagar per termin för heltidsstuderande och minst 30 dagar per termin för deltidsstuderande. Vuxenstudiebidraget är skattepliktigt.
 
-56 T.o.m. läsåret 1992/93 gällde minst fyra års arbete och fyllda 25 år.
+[^56] T.o.m. läsåret 1992/93 gällde minst fyra års arbete och fyllda 25 år.
 
-57 Fr.o.m. vårterminen 1999 kan stödet beviljas för upp till fyra terminers studier på gymnasienivå
+[^57] Fr.o.m. vårterminen 1999 kan stödet beviljas för upp till fyra terminers studier på gymnasienivå
 
 Beslutande och utbetalande myndighet för denna åtgärd är CSN.
 

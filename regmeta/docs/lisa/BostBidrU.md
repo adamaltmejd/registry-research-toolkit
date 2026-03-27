@@ -31,7 +31,7 @@ Bostadstillägg betalas ut till de med sjuk- eller aktivitetsersättning och är
 Fram till och med 1994 är det den egna kommunen som bestämmer högsta möjliga kommunala bostadstillägg och tilläggets storlek varierar mellan kommunerna. Beräkningen av hur inkomsten påverkar det
 
 
-153 För information om familjebegreppet se objektet Familj ([[FamId]]).
+[^153] För information om familjebegreppet se objektet Familj ([[FamId]]).
 
 kommunala bostadstillägg sker däremot enligt samma regler över hela landet.
 
@@ -47,19 +47,19 @@ Särskilt kommunalt bostadstillägg kan lämnas till den som har kommunalt bosta
 
 Från och med 1995 är det staten som svarar för bostadstillägg till pensionärer och reglerna är därför från och med 1995 lika över hela landet.
 
-Försäkringskassan räknar ut om man har rätt till bostadstillägg för pensionärer. Mot bakgrund av bostadskostnaderna fastställer kassan först vad som är högsta möjliga tillägg. Därifrån dras en viss del154 av inkomsten155. Vad som då blir över är det tillägget som betalas ut. Enligt reglerna för bostadstillägg för pensionärer lämnas tillägget med 93 procent156 av bostadskostnaden upp till 5 000 kronor per månad. Detta gäller före inkomstprövningen.
+Försäkringskassan räknar ut om man har rätt till bostadstillägg för pensionärer. Mot bakgrund av bostadskostnaderna fastställer kassan först vad som är högsta möjliga tillägg. Därifrån dras en viss del[^154] av inkomsten[^155]. Vad som då blir över är det tillägget som betalas ut. Enligt reglerna för bostadstillägg för pensionärer lämnas tillägget med 93 procent[^156] av bostadskostnaden upp till 5 000 kronor per månad. Detta gäller före inkomstprövningen.
 
 Bostadstillägg för pensionärer kan lämnas till den som har ålderspension, förtidspension, sjukbidrag, efterlevandepension eller
 
-154 35 procent av den inkomst som minskar BTP. Om den inkomsten är högre än ett och ett halvt basbelopp så minskas BTP med 40 procent av den delen av inkomsten.
+[^154] 35 procent av den inkomst som minskar BTP. Om den inkomsten är högre än ett och ett halvt basbelopp så minskas BTP med 40 procent av den delen av inkomsten.
 
-155 Alla tjänstepensioner, delpension, yrkes- och arbetsskadelivränta, privat pension, utländsk pension samt del av ATP som överstiger pensionstillskottet räknas som inkomst. Särskilda regler gäller om man har tre fjärdedels, halv och en fjärdedels förtidspension eller sjukbidrag. Arbetsinkomst, efter avdrag för bland annat arbetsresor, räknas som inkomst om man har annan pension än ålderspension. För ålderspensionärer tas inte arbetsinkomsten med som inkomst. Sjukpenning, arbetslöshetsersättning liksom inkomster från t ex AMF räknas också med i inkomsten. Därutöver räknas viss andel av tillgångar i vissa fall som inkomst.
+[^155] Alla tjänstepensioner, delpension, yrkes- och arbetsskadelivränta, privat pension, utländsk pension samt del av ATP som överstiger pensionstillskottet räknas som inkomst. Särskilda regler gäller om man har tre fjärdedels, halv och en fjärdedels förtidspension eller sjukbidrag. Arbetsinkomst, efter avdrag för bland annat arbetsresor, räknas som inkomst om man har annan pension än ålderspension. För ålderspensionärer tas inte arbetsinkomsten med som inkomst. Sjukpenning, arbetslöshetsersättning liksom inkomster från t ex AMF räknas också med i inkomsten. Därutöver räknas viss andel av tillgångar i vissa fall som inkomst.
 
 Folkpension, pensionstillskott eller motsvarande del av ATP, barnbidrag m.m. räknas inte med som inkomst och minskar inte BTP.
 
 För makar räknas den sammanlagda inkomsten även om bara den ena har folkpension.
 
-156 1995, 1996 och 1998 lämnades BTP med 85 procent av bostadskostnaden mellan 100 kronor och 4 000 kronor, 1997 med 83 procent och 1999–2000 med 90 procent av bostadskostnaden. 2001 lämnas BTP med 90 procent av bostadskostnaden upp till 4 500 kr/mån. 2002–31/6 2005 lämnas BTP med 91 procent av bostadskostnaden upp till 4 500 kr. Från och med 1/7 2006 lämnas BTP med 93 procent av bostadskostnaden upp till 5 000 kronor för personer som fyllt 65 år.
+[^156] 1995, 1996 och 1998 lämnades BTP med 85 procent av bostadskostnaden mellan 100 kronor och 4 000 kronor, 1997 med 83 procent och 1999–2000 med 90 procent av bostadskostnaden. 2001 lämnas BTP med 90 procent av bostadskostnaden upp till 4 500 kr/mån. 2002–31/6 2005 lämnas BTP med 91 procent av bostadskostnaden upp till 4 500 kr. Från och med 1/7 2006 lämnas BTP med 93 procent av bostadskostnaden upp till 5 000 kronor för personer som fyllt 65 år.
 
 pension från annat EU/EES-land. Tillägget betalas ut tillsammans med pensionen och är skattefri.
 
@@ -69,7 +69,7 @@ Bostadstillägg kan beviljas till den som har sjuk- eller aktivitetsersättning.
 
 #### **Kommunalt kompletteringsbelopp, 1995–2002**
 
-Kommunerna kan fram till och med år 2002 lämna ett kompletterande belopp till bostadstillägget om de så önskar. Det kompletterande beloppet kan innebära att över 93 procent av bostadskostnaderna täcks och/eller att även del av bostadskostnad över 5 000 kronor per månad ersätts157 .
+Kommunerna kan fram till och med år 2002 lämna ett kompletterande belopp till bostadstillägget om de så önskar. Det kompletterande beloppet kan innebära att över 93 procent av bostadskostnaderna täcks och/eller att även del av bostadskostnad över 5 000 kronor per månad ersätts[^157] .
 
 #### **Särskilt bostadstillägg till pensionärer, 1995–**
 
@@ -81,6 +81,6 @@ Bostadstillägg kan beviljas till den som har sjuk- eller aktivitetsersättning.
 
 Som inkomst vid inkomstprövning för Särskilt bostadstillägg till pensionärer räknas folkpension, pensionstillskott eller så stor del av ATP som motsvarar pensionstillskottet. Som inkomst räknas också det Bostadstillägg man får och hälften av den årsinkomst som Försäkringskassan har fastställt vid inkomstprövningen för bostadstillägg. Från dessa inkomster dras bostadskostnaden. Det belopp som blir kvar ska uppgå till ett fastställt minimibelopp. Om inkomsten efter avdrag för bostadskostnaden är lägre, betalas mellanskillnaden ut som Särskilt bostadstillägg till pensionärer.
 
-157 Eller motsvarande ersättningsnivå/takbelopp för åren innan 2006.
+[^157] Eller motsvarande ersättningsnivå/takbelopp för åren innan 2006.
 
 Som bostadskostnad räknas den faktiska bostadskostnad som man har. Den begränsas till ett belopp som anses vara skäligt. Särskilt bostadstillägg till pensionärer är skattefritt.

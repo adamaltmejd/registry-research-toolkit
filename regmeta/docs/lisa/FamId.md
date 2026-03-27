@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Familj FamId**
 
-Familj identifieras med hjälp av familjeidentitet. Familjeidentitet (RTBfamilj) utgörs av personnumret för den äldste personen av maximalt två generationer som har relationer med varandra12, som är folkbokförda på samma fastighet. Då fler än två generationer bor tillsammans bildas RTB-familjen med utgångspunkt från den yngsta generationen, om den är ogift. En person kan endast ingå i en RTB-familj.
+Familj identifieras med hjälp av familjeidentitet. Familjeidentitet (RTBfamilj) utgörs av personnumret för den äldste personen av maximalt två generationer som har relationer med varandra[^12], som är folkbokförda på samma fastighet. Då fler än två generationer bor tillsammans bildas RTB-familjen med utgångspunkt från den yngsta generationen, om den är ogift. En person kan endast ingå i en RTB-familj.
 
 Ej gifta vuxna som är folkbokförda på samma fastighet och har gemensamt barn ingår i samma familj oberoende av barnets folkbokföring.
 
@@ -17,7 +17,7 @@ Uppgifterna för perioden 1990–1997 skapades år 2000 med hjälp av register. 
 
 Under perioden 1990–1997 har samtliga ensamstående som bott på samma fastighet som föräldrarna sammankopplats med dem, oberoende av ålder. Efter 1997 har endast ensamstående som är ogifta sammankopplats med föräldrarna.
 
-12 Relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt
+[^12] Relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt
 
 annan förälder än vårdnadshavare (fosterförälder).
 

@@ -14,7 +14,7 @@ ALosDag
 
 (1992–)
 
-Antal dagar i sökandekategori96:
+Antal dagar i sökandekategori[^96]:
 
 - Arbetslösa (11). Före 2003-11-24: Arbetslösa, platsförmedlingsservice
 - Arbetslösa, vägledningsservice (12). Upphör 2003-11-24, inskrivna konverteras till sökandekategori 11.
@@ -25,7 +25,7 @@ Antal dagar i sökandekategori96:
 - Arbetslösa, avbrott/återkallande av beslut (97), fr.o.m. 2001-05
 - Arbetslösa, slutförd beslutsperiod (98), fr.o.m. 2001-05
 
-*Antal dagar för varje individ och år räknas fram med hjälp av inskrivningsoch avaktualiseringsdatum för aktuella sökandekategorier97 .*
+*Antal dagar för varje individ och år räknas fram med hjälp av inskrivningsoch avaktualiseringsdatum för aktuella sökandekategorier[^97] .*
 
 Fram *till och med 1994* definieras dessa sökandekategorier enligt följande:
 
@@ -41,9 +41,9 @@ Skat 1, servicekod 3: Utan arbete, övriga
 
 Skat 11: Arbetslösa
 
-96 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^96] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-97 Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^97] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 Skat 12: Utan arbete, vägledning
 
@@ -72,9 +72,9 @@ Från och med *1998-01* ändras betydelsen av sökandekategori 13:
 
 *Antalet i sökandekategori 13 minskar med 650 personer mellan 97-12 och 98-01. I vilken utsträckning minskningen bromsas p.g.a. ändrad definition är svår att värdera, troligtvis är dock påverkan av arbetslöshetsmåttet marginell.*
 
-Från och med *1999-0198* ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i sökandekategori 14, utan registreras i gruppen arbetslösa (se vidare under "Antal dagar som övrig inskriven vid Arbetsförmedlingen"). *I och med förändringen beräknas 20 000–25* 
+Från och med *1999-01[^98]* ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i sökandekategori 14, utan registreras i gruppen arbetslösa (se vidare under "Antal dagar som övrig inskriven vid Arbetsförmedlingen"). *I och med förändringen beräknas 20 000–25* 
 
-98 I realiteten påbörjades överföringen redan i oktober–november 1998.
+[^98] I realiteten påbörjades överföringen redan i oktober–november 1998.
 
 *000 sökande successivt föras över till gruppen arbetslösa från och med 1998-10*.
 

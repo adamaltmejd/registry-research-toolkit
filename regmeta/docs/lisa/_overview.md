@@ -68,19 +68,19 @@ Denna publikation finns enbart i elektronisk form på www.scb.se This publicatio
 
 #### **Bakgrund till LISA-databasen**
 
-I början av tjugohundratalet kom forskning kring ohälsotalen att efterfrågas i allt större omfattning då sjukskrivningstalen nådde sina högsta nivåer under 2001. Efter ett slutbetänkande från Utredning om Analys av Hälsa i Arbete1 togs hösten 2003 ett beslut om att SCB skall upprätta en "sjukdatabas". På SCB startades ett uppbyggnadsarbete av en databas där syftet var att möjliggöra analyser och utvärderingar inom ohälsoområdet. Den nya databasen kallades LISA (Longitudinell Integrerad databas för Sjukförsäkrings- och Arbetsmarknadsstudier) och byggdes upp tillsammans med Riksförsäkringsverket (RFV) och Verket för innovationssystem (VINNOVA).
+I början av tjugohundratalet kom forskning kring ohälsotalen att efterfrågas i allt större omfattning då sjukskrivningstalen nådde sina högsta nivåer under 2001. Efter ett slutbetänkande från Utredning om Analys av Hälsa i Arbete[^1] togs hösten 2003 ett beslut om att SCB skall upprätta en "sjukdatabas". På SCB startades ett uppbyggnadsarbete av en databas där syftet var att möjliggöra analyser och utvärderingar inom ohälsoområdet. Den nya databasen kallades LISA (Longitudinell Integrerad databas för Sjukförsäkrings- och Arbetsmarknadsstudier) och byggdes upp tillsammans med Riksförsäkringsverket (RFV) och Verket för innovationssystem (VINNOVA).
 
 Med hjälp av LISA är det möjligt att framställa statistik om utbildning, arbetsmarknad och om personer som befinner sig utanför arbetsmarknaden. LISA är skräddarsydd för att redovisa statistik för gränssnitten "Utbildning-Arbetsmarknad", "Arbetsmarknaden-Utanför arbetsmarknaden" och "Arbetsmarknad-Inkomstfördelning".
 
-Denna publikation är en uppdatering av det förra Bakgrundsfakta2 för åren 1990–2013.
+Denna publikation är en uppdatering av det förra Bakgrundsfakta[^2] för åren 1990–2013.
 
 SCB i december 2019
 
 Magnus Sjöström Tf Avdelningschef Henrik von Hofsten Enhetschef
 
-1 AHA utredningsinstitut och mötesplats SOU 2003:13 s. 117
+[^1] AHA utredningsinstitut och mötesplats SOU 2003:13 s. 117
 
-2 Bakgrundsfakta 2016:1 för LISA-årgångarna 1990-2013
+[^2] Bakgrundsfakta 2016:1 för LISA-årgångarna 1990-2013
 
 ## Innehåll
 

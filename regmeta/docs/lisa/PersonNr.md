@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Individ PersonNr**
 
-Samtliga individer som den 31/12 aktuellt år uppnått 15 års ålder (t.o.m. årgång 2009 16 år) och är folkbokförda i Sverige ingår i LISApopulationen det aktuella året. Det finns uppgift om dödsdatum för person3 som avlidit under aktuellt år. För person som utvandrat finns uppgift om utvandringsdatum.
+Samtliga individer som den 31/12 aktuellt år uppnått 15 års ålder (t.o.m. årgång 2009 16 år) och är folkbokförda i Sverige ingår i LISApopulationen det aktuella året. Det finns uppgift om dödsdatum för person[^3] som avlidit under aktuellt år. För person som utvandrat finns uppgift om utvandringsdatum.
 
 Kvaliteten i befolkningsregistret är beroende av över- och undertäckning i den totala populationen och det är brister i rapporteringen av födslar, dödsfall, invandring och utvandring som resulterar i dessa täckningsfel.
 
@@ -20,7 +20,7 @@ Personer som utvandrat utan att meddela folkbokföringen ger upphov till övert�
 Personer blir registrerade som invandrade vid den tidpunkt då de folkbokförs. I vissa fall kan det gå en relativt lång tid mellan ankomsten till Sverige och folkbokföringstidpunkten. Vid inflyttning till Sverige
 
 
-3 Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i Sverige 31/12 året före aktuellt år.
+[^3] Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i Sverige 31/12 året före aktuellt år.
 
 genomgår personer med medborgarskap i annat land än EU/EES-land i vissa fall en omfattande administrativ process innan beslut om uppehållstillstånd kan fattas. Under perioder med stor invandring kan handläggningstiderna öka vilket gör att undertäckningen ökar i befolkningsregistret. Detta gäller även personer som fått avslag på sin ansökan om uppehållstillstånd och därför överklagar beslutet till högre instans.
 

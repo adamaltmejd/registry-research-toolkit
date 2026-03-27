@@ -14,7 +14,7 @@ AStuDag
 
 (1992–)
 
-Antal dagar i sökandekategori105:
+Antal dagar i sökandekategori[^105]:
 
 - Utbildningskontrakt (32), *fr.o.m. 2015-08*
 - Arbetslivsutveckling, ALU (52), *fr.o.m. 1993-01, upphör 1998-12-31, besluttagna före 1999-0 1-01 får fullföljas längst t.o.m. 1999-06-30*
@@ -22,7 +22,7 @@ Antal dagar i sökandekategori105:
 - Arbetspraktik (54), *fr.o.m. 1999-01, redovisas under Åtgärdssysselsättning 2010-2015, ingår i Åtgärdsstudier igen från 2016.*
 - Arbetsplatsintroduktion, *API (55), fr.o.m. 1995-07, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30*
 - Lyft (55), *fr.o.m. 2010-01, t.o.m. 2010-12.*
-- Offentligt tillfälligt arbete, [[OTA]] (56), *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31106*
+- Offentligt tillfälligt arbete, [[OTA]] (56), *fr.o.m. 1996-11, upphör 1998-12-31, beslut tagna före 1999-01-01 får fullföljas längst t.o.m. 2000-12-31[^106]*
 - Aktivare användning av arbetslöshetsersättning, PROJEKT (57), *fr.o.m. 1997-07, upphör 1999-09-30, beslut tagna före 1999-10-01 får fullföljas*
 - Prova på-plats (59), *fr.o.m. 2005-05-23*
 - Internpraktik (60), *fr.o.m. 2005-05-23, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
@@ -30,9 +30,9 @@ Antal dagar i sökandekategori105:
 - •Akademikerpraktik (62), *fr.o.m. 1993-09, upphör 1995-06-30*
 - Ungdomsintroduktion med utbildningsbidrag (63), *fr.o.m. 1995-01, upphör 1995-06-30*
 
-105 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^105] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-106 De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
+[^106] De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
 
 - Datortek (64), *fr.o.m. 1995-07, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Kommunala ungdomsprogram, ungdomar under 20 år, KUP (65), *fr.o.m. 1995-10, upphör 2007-11*
@@ -56,7 +56,7 @@ Antal dagar i sökandekategori105:
 - Arbetsträning med handledare (87), *fr.o.m. 2014-03*
 - Arbetsträning inom praktiskt basår (88), *fr.o.m. 2014-03*
 
-*Antal dagar för varje individ och år räknas fram med hjälp av inskrivningsoch avaktualiseringsdatum för aktuella sökandekategorier107 .*
+*Antal dagar för varje individ och år räknas fram med hjälp av inskrivningsoch avaktualiseringsdatum för aktuella sökandekategorier[^107] .*
 
 Vid ingången av 1992 finns åtgärdskategorierna Arbetsmarknadsutbildning, AMI-program och Särskilda inskolningsplatser för ungdomar. Dessa kategorier klassificeras i LISA som åtgärdsstudier.
 
@@ -68,11 +68,11 @@ Man kan få arbetsmarknadsutbildning tidigast från den 1 juli det år man fylle
 
 Utbildningen måste planeras tillsammans med Arbetsförmedlingen, som i första hand skall undersöka om man kan få stadigt arbete utan utbildning.
 
-Arbetsmarknadsutbildningen ska ha en klar yrkesinriktning. Länsarbetsnämnden/Arbetsförmedlingen upphandlar de utbildningar man behöver av Amu-gruppen, utbildningsföretag, den kommunala uppdragsverksamheten eller högskolan. Det finns kurser inom alla yrkesområden och nivåer, från grundutbildningar till mycket kvalificerade påbyggnadskurser på högskolenivå. Vid sidan av renodlat yrkesinriktade kurser kan arbetsmarknadsutbildning utgöras av allmänteoretiska kurser, som i sin tur kan vara en nödvändig förberedelse för yrkesutbildning. Reguljär utbildning på grundskoleoch gymnasienivå får dock enbart beviljas till personer med funktionshinder och långtidsinskrivna invandrare108. Tidsperioden för arbetsmarknadsutbildning är längst sex månader, endast om särskilda skäl föreligger kan längre tid medges.
+Arbetsmarknadsutbildningen ska ha en klar yrkesinriktning. Länsarbetsnämnden/Arbetsförmedlingen upphandlar de utbildningar man behöver av Amu-gruppen, utbildningsföretag, den kommunala uppdragsverksamheten eller högskolan. Det finns kurser inom alla yrkesområden och nivåer, från grundutbildningar till mycket kvalificerade påbyggnadskurser på högskolenivå. Vid sidan av renodlat yrkesinriktade kurser kan arbetsmarknadsutbildning utgöras av allmänteoretiska kurser, som i sin tur kan vara en nödvändig förberedelse för yrkesutbildning. Reguljär utbildning på grundskoleoch gymnasienivå får dock enbart beviljas till personer med funktionshinder och långtidsinskrivna invandrare[^108]. Tidsperioden för arbetsmarknadsutbildning är längst sex månader, endast om särskilda skäl föreligger kan längre tid medges.
 
-107 Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^107] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
-108 Begränsning till dessa målgrupper fanns inte i början av 90-talet.
+[^108] Begränsning till dessa målgrupper fanns inte i början av 90-talet.
 
 Aktivitetsstödet vid arbetsmarknadsutbildning kan betalas ut för från en dag upp till fyra år och kan erhållas vare sig man är ersättningsberättigad enligt A-kassa eller inte.
 
@@ -152,7 +152,7 @@ Från och med 1/1 2000 kan personer anvisas datortek i sex månader i stället f
 
 #### **Arbetsplatsintroduktion (API)**
 
-Den 1/7 1995 införs Arbetsplatsintroduktion (API). För ungdomar under 25 år gäller anställningskrav på minst 6 månader efter praktiktiden (anställningskravet tas bort fr.o.m. 1996-10). Arbetsplatsintroduktion riktar sig till den som är arbetslös och som behöver praktisera på en arbetsplats för att få yrkesorientering, yrkespraktik eller arbetslivserfarenhet som kan öka möjligheterna att få arbete. Man kan få en anvisning till arbetsplatsintroduktion fr.o.m. den 1 juli det år man fyller 20 år och under längst sex månader109. Under arbetsplatsintroduktionen erhåller man utbildningsbidrag. Arbetsplatsintroduktion ersätter ungdomsintroduktion, akademikerpraktik, invandrarpraktik och vidgad arbetsprövning.
+Den 1/7 1995 införs Arbetsplatsintroduktion (API). För ungdomar under 25 år gäller anställningskrav på minst 6 månader efter praktiktiden (anställningskravet tas bort fr.o.m. 1996-10). Arbetsplatsintroduktion riktar sig till den som är arbetslös och som behöver praktisera på en arbetsplats för att få yrkesorientering, yrkespraktik eller arbetslivserfarenhet som kan öka möjligheterna att få arbete. Man kan få en anvisning till arbetsplatsintroduktion fr.o.m. den 1 juli det år man fyller 20 år och under längst sex månader[^109]. Under arbetsplatsintroduktionen erhåller man utbildningsbidrag. Arbetsplatsintroduktion ersätter ungdomsintroduktion, akademikerpraktik, invandrarpraktik och vidgad arbetsprövning.
 
 Från och med 1/1 1999 ersätts arbetsplatsintroduktion av arbetspraktik, beslut tagna före 1/1 1999 får fullföljas längst t.o.m. 30/6 1999.
 

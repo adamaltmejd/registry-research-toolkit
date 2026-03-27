@@ -16,15 +16,15 @@ Beloppet anges i hundratals kronor.
 
 Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod.
 
-För rätt till sjukpenning skall man vara försäkrad för arbetsbaserade förmåner och ha en arbetsinkomst på minst 24 procent av prisbasbeloppet (10 700 kronor år 2017)74. Sjukpenningens storlek beror
+För rätt till sjukpenning skall man vara försäkrad för arbetsbaserade förmåner och ha en arbetsinkomst på minst 24 procent av prisbasbeloppet (10 700 kronor år 2017)[^74]. Sjukpenningens storlek beror
 
-74 En ny socialförsäkringslag (SFS 1999:799) trädde i kraft 2001. Socialförsäkringen delas nu upp i två delar – en bosättningsbaserad och en arbetsbaserad försäkring. Den del som är baserad på att man är
+[^74] En ny socialförsäkringslag (SFS 1999:799) trädde i kraft 2001. Socialförsäkringen delas nu upp i två delar – en bosättningsbaserad och en arbetsbaserad försäkring. Den del som är baserad på att man är
 
-på den sjukpenninggrundande inkomst (SGI) som har fastställts för den försäkrade (max 7,5 prisbasbelopp75).
+på den sjukpenninggrundande inkomst (SGI) som har fastställts för den försäkrade (max 7,5 prisbasbelopp[^75]).
 
 Sjukpenning betalas ut vid sjukdom, som orsakar nedsättning av arbetsförmågan med minst en fjärdedel (hindrad från att arbeta minst en fjärdedel av ordinarie arbetstid).
 
-Smittbärarpenning och graviditetspenning76 är lika stor som sjukpenningen och ingår i denna (dock utan karensdag). Graviditetspenningen77 betalas ut i högst 50 dagar (fr.o.m. 60:e t.o.m. 11:e dagen före beräknad förlossningstidpunkt) till personer med ett fysiskt ansträngande arbete eller med risker i sin arbetsmiljö. Smittbärarpenningen betalas ut när individen inte får arbeta efter ingripande av myndighet eller efter ingripande i samband med läkarundersökning/hälsokontroll.
+Smittbärarpenning och graviditetspenning[^76] är lika stor som sjukpenningen och ingår i denna (dock utan karensdag). Graviditetspenningen77 betalas ut i högst 50 dagar (fr.o.m. 60:e t.o.m. 11:e dagen före beräknad förlossningstidpunkt) till personer med ett fysiskt ansträngande arbete eller med risker i sin arbetsmiljö. Smittbärarpenningen betalas ut när individen inte får arbeta efter ingripande av myndighet eller efter ingripande i samband med läkarundersökning/hälsokontroll.
 
 *1990* och *1991* ingår sjukpenning vid arbetsskada (arbetsskadesjukpenning) i variabeln, vilket innebär att för dem som efter samordningstiden (90 dagar) får ersättning p.g.a. arbetsskada behålls ersättning till 100 procent även efter den 1/3 1991. Fr.o.m. 1992 återfinns *Arbetsskadesjukpenning* ([[ArbSkErs]]) som egen variabel i LISA.
 
@@ -38,9 +38,9 @@ bosatt i landet avser garantibelopp och bidrag. Den andra delen som baseras på 
 
 Innan denna socialförsäkringslag trädde i kraft gällde för rätt till sjukpenning att man var bosatt i Sverige, fyllda 16 år och att man beräknades tjäna minst 8 800 kronor (sjukpenninggrundande inkomst) per år genom förvärvsarbete. Innan 1998 var beloppsgränsen 6 000 kronor.
 
-75 Mellan den 1/7 2006 och den 31/12 2006 gick inkomsttaket vid 10 prisbasbelopp.
+[^75] Mellan den 1/7 2006 och den 31/12 2006 gick inkomsttaket vid 10 prisbasbelopp.
 
-76 När ersättningen infördes 1980 hette den Havandeskapspenning. Ersättningen ändrade namn 2011 till Graviditetspenning.
+[^76] När ersättningen infördes 1980 hette den Havandeskapspenning. Ersättningen ändrade namn 2011 till Graviditetspenning.
 
 Den *1/3 1991* sänks kompensationsnivån i sjukpenningen, som dittills varit 90 procent (+10 procent från avtal) i hela sjukfallet, till 65 procent (+10 procent från avtal) för de tre första dagarna i sjukfallet och till 80 procent (+10 procent från avtal) från dag 4 till och med dag 90. Från och med dag 91 i sjukfallet minskas sjukpenningen med det belopp som motsvarar sjuklönen/avtalsersättningen. För inkomstdelar som ligger över det s.k. SGI-taket (7,5 basbelopp) får sjuklön/avtalsersättning utges för de första tre dagarna med sjukpenning med 75 % av den del av lönen som överstiger taket och för tid därefter med 90 % utan att sjukpenningen minskas.
 
@@ -180,7 +180,7 @@ Totalt fick 606 000 personer sjukpenning någon gång under 2017, varav 64 proce
 | 91–365     | 90+10   | 90      |            | 90      |            | 80      |      | 80         |             | 75      |
 | 366–       | 90+10   | 90      |            | 90      |            | 80      |      | 70 (80)*   |             | 75      |
 
-\* Den som genomgår medicinsk behandling/rehabilitering kan få 80 % även efter 365 dagars sjukskrivning.
+<sup>\*</sup> Den som genomgår medicinsk behandling/rehabilitering kan få 80 % även efter 365 dagars sjukskrivning.
 
 |                     | 1/3 – 31/12<br>1997 |                   | 1/3 – 31/12<br>1998 |                   | 1/4 1998 –<br>30/6 2003 |                   |             | 1/7 2003 –<br>31/12 2004 | 1/1 2005 –<br>31/12 2006 |                   |
 |---------------------|---------------------|-------------------|---------------------|-------------------|-------------------------|-------------------|-------------|--------------------------|--------------------------|-------------------|

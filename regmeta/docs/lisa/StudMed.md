@@ -16,11 +16,11 @@ Beloppet anges i hundratals kronor.
 
 #### **Studiemedel**
 
-Studiemedel erhålls för studier vid universitet, högskolor eller annan eftergymnasial utbildning. Från och med det andra kalenderhalvåret det år man fyller 20 år46 kan studiemedel erhållas också för studier i gymnasieskola, i kommunal och statlig vuxenutbildning, på folkhögskola eller annan godkänd utbildning på grundskole- och gymnasienivå. För studier på eftergymnasial nivå finns dock ingen nedre åldersgräns. Den övre åldersgränsen för rätt till studiemedel är 56 år. I regel kan man inte få studiemedel under mer än sex terminer för
+Studiemedel erhålls för studier vid universitet, högskolor eller annan eftergymnasial utbildning. Från och med det andra kalenderhalvåret det år man fyller 20 år[^46] kan studiemedel erhållas också för studier i gymnasieskola, i kommunal och statlig vuxenutbildning, på folkhögskola eller annan godkänd utbildning på grundskole- och gymnasienivå. För studier på eftergymnasial nivå finns dock ingen nedre åldersgräns. Den övre åldersgränsen för rätt till studiemedel är 56 år. I regel kan man inte få studiemedel under mer än sex terminer för
 
-46 Undantag finns för vissa konst- och kulturutbildningar samt behörighetsgivande för-utbildningar vid statliga universitet och högskolor.
+[^46] Undantag finns för vissa konst- och kulturutbildningar samt behörighetsgivande för-utbildningar vid statliga universitet och högskolor.
 
-studier på grundskole- och gymnasienivå och tolv terminer för studier på eftergymnasial nivå47 .
+studier på grundskole- och gymnasienivå och tolv terminer för studier på eftergymnasial nivå[^47] .
 
 Studiemedlet består av *studiebidrag* och *återbetalningspliktiga studiemedel*. Utöver dessa grundbelopp kan studiemedel, under vissa omständigheter, även utgå till den studerande i form av *merkostnadslån, tilläggsbidrag* och *tilläggslån*. Tilläggsbidrag lämnas till studerande med barn, medan tillläggslån kan lämnas till studerande som har haft en inkomst över en viss nivå kalenderåret närmast före studiestarten. Merkostnadslån kan lämnas för merkostnader som den studerande har i samband med sina studier, exempelvis för utlandsstudier, resor och undervisningsavgifter.
 
@@ -28,23 +28,23 @@ Studiemedlet består av *studiebidrag* och *återbetalningspliktiga studiemedel*
 
 Om inkomsten är högre än för terminen aktuellt fribelopp minskas studiemedlen.
 
-Det finns även möjlighet att söka studiemedel för studier utomlands, utgångspunkten är att du ska vara svensk medborgare48 och ha bott i Sverige två sammanhängande år de senaste fem åren. För utländska utbildningar beror kraven på vilken nivå utbildningen är på. Studiemedel kan ges för en utbildning utomlands om motsvarande utbildning ger rätt till studiemedel i Sverige
+Det finns även möjlighet att söka studiemedel för studier utomlands, utgångspunkten är att du ska vara svensk medborgare[^48] och ha bott i Sverige två sammanhängande år de senaste fem åren. För utländska utbildningar beror kraven på vilken nivå utbildningen är på. Studiemedel kan ges för en utbildning utomlands om motsvarande utbildning ger rätt till studiemedel i Sverige
 
-*1990:* Studiemedelsbeloppet är högst 175 procent av prisbasbeloppet. Extra studiemedel kan erhållas under övergångsperiod som kompensation för avskaffat barntillägg för dem som börjat studera under dessa förutsättningar49 .
+*1990:* Studiemedelsbeloppet är högst 175 procent av prisbasbeloppet. Extra studiemedel kan erhållas under övergångsperiod som kompensation för avskaffat barntillägg för dem som börjat studera under dessa förutsättningar[^49] .
 
 *1991–1992:* Studiemedelsbeloppet är högst 180 procent av prisbasbeloppet.
 
 *1993:* Studiemedelsbeloppet motsvarar åter ca 175 procent av prisbasbeloppet.
 
-47 Fr.o.m. 1/7 2001 beräknas studiemedlet per vecka och inte som tidigare per månad. Studiemedel kan nu ges för studier på eftergymnasial nivå i 240 veckor (6 år), för studier på gymnasial nivå i 120 veckor (3 år) och för studier på grundskolenivå 80 veckor (2 år).
+[^47] Fr.o.m. 1/7 2001 beräknas studiemedlet per vecka och inte som tidigare per månad. Studiemedel kan nu ges för studier på eftergymnasial nivå i 240 veckor (6 år), för studier på gymnasial nivå i 120 veckor (3 år) och för studier på grundskolenivå 80 veckor (2 år).
 
-48 Utländska medborgare kan i vissa fall få studiemedel för utlandsstudier.
+[^48] Utländska medborgare kan i vissa fall få studiemedel för utlandsstudier.
 
-49 Fr.o.m. läsåret 1996/97 fanns inte längre några studerande som skulle ha kunnat få extra studiemedel i stället för det gamla barntillägget.
+[^49] Fr.o.m. läsåret 1996/97 fanns inte längre några studerande som skulle ha kunnat få extra studiemedel i stället för det gamla barntillägget.
 
-Från och med 1993 kan man även få ett extra studielån50 för t.ex. dubbel bosättning, terminsavgifter eller särskilt höga materialkostnader (ges restriktivt).
+Från och med 1993 kan man även få ett extra studielån[^50] för t.ex. dubbel bosättning, terminsavgifter eller särskilt höga materialkostnader (ges restriktivt).
 
-Från och med den 1/7 2001 förändras studiemedlet till att omfatta två bidragsnivåer. På den lägre bidragsnivån höjs bidragets andel av totalbeloppet från 27,8 till 34,5 procent. För det högre bidraget utgör bidragets andel 82 procent av totalbeloppet. Det högre bidraget kan fås för studier vid kommunal vuxenutbildning som inte är påbyggnadsutbildning och vid folkhögskolans allmänna linjer. Det högre bidraget kan även fås om man saknar slutbetyg från treårig gymnasieutbildning, om man repeterar eller kompletterar på grundskole- eller gymnasienivå51, studerar på högskolenivå på utbildningsprogram som leder fram till specialpedagogexamen eller på specialpedagogisk påbyggnadsutbildning. Det högre bidraget är enbart avsett för personer som är 25 år eller äldre.
+Från och med den 1/7 2001 förändras studiemedlet till att omfatta två bidragsnivåer. På den lägre bidragsnivån höjs bidragets andel av totalbeloppet från 27,8 till 34,5 procent. För det högre bidraget utgör bidragets andel 82 procent av totalbeloppet. Det högre bidraget kan fås för studier vid kommunal vuxenutbildning som inte är påbyggnadsutbildning och vid folkhögskolans allmänna linjer. Det högre bidraget kan även fås om man saknar slutbetyg från treårig gymnasieutbildning, om man repeterar eller kompletterar på grundskole- eller gymnasienivå[^51], studerar på högskolenivå på utbildningsprogram som leder fram till specialpedagogexamen eller på specialpedagogisk påbyggnadsutbildning. Det högre bidraget är enbart avsett för personer som är 25 år eller äldre.
 
 Studielånet är nu ett annuitetslån, en låneform där låntagaren periodiskt erlägger ett fast belopp för ränta och amortering tillsammans.
 
@@ -59,9 +59,9 @@ Från och med den *1 januari 2006* kan studenter som har barn beviljas ett *till
 Från och med den *1 juli 2006* höjs den övre åldersgränsen för studiemedel från 50 till 54 år. På den högre bidragsnivån sänks
 
 
-50 Fr.o.m. 1/7 2001 kallas detta extra studielån för merkostnadslån.
+[^50] Fr.o.m. 1/7 2001 kallas detta extra studielån för merkostnadslån.
 
-51 Möjligheten för repetitions- och kompletteringsstuderande på gymnasienivå att få det högre bidraget avskaffades fr.o.m. 2004, övergångsregler fanns under det första halvåret 2004.
+[^51] Möjligheten för repetitions- och kompletteringsstuderande på gymnasienivå att få det högre bidraget avskaffades fr.o.m. 2004, övergångsregler fanns under det första halvåret 2004.
 
 bidragets andel av totalbeloppet till 80,1 procent. Dessutom höjs åldersgränsen för att kunna få studiemedel från 50 till 54 år.
 
@@ -92,7 +92,7 @@ Det högre bidraget är begränsat till den summa som varje år avsätts för ä
 
 I och med den nya studiestödsreformen 2001 slås *studiemedel, särskilt vuxenstudiestöd* (SVUX) och *särskilt vuxenstudiestöd för arbetslösa* (SVUXA) samman till ett nytt sammanhållet studiemedel som i LISA redovisas under variabeln *Studiemedel och studiehjälp*. Genom särskilda övergångsbestämmelser kan vuxenstudiestöd beviljas till den som påbörjat studier med SVUX/SVUXA före den 1/6 2001, övergångsperioden sträcker sig till den 30/6 2003.
 
-*Maximalt studiemedelsbelopp för termin om 4,5 månader, heltidsstudier52:*
+*Maximalt studiemedelsbelopp för termin om 4,5 månader, heltidsstudier[^52]:*
 
 | 1990:           | 25 912 kr, varav 7 631 kr i studiebidrag                                          |
 |-----------------|-----------------------------------------------------------------------------------|
@@ -122,7 +122,7 @@ I och med den nya studiestödsreformen 2001 slås *studiemedel, särskilt vuxens
 (lägre/högre bidragsnivån)
 
 
-52 Fr.o.m. 1/7 2001: Studiemedelsbelopp för termin omfattande 20 veckors heltidsstudier.
+[^52] Fr.o.m. 1/7 2001: Studiemedelsbelopp för termin omfattande 20 veckors heltidsstudier.
 
 | 2011: | 41 080 kr, varav 13 600 kr/31 660 kr i studiebidrag |
 |-------|-----------------------------------------------------|
@@ -140,7 +140,7 @@ I och med den nya studiestödsreformen 2001 slås *studiemedel, särskilt vuxens
 | 2017: | 50 080 kr, varav 14 240 kr/35 840 kr i studiebidrag |
 |       | (lägre/högre bidragsnivån)                          |
 
-2017 erhöll 469 800 personer studiemedel för studier i Sverige. 341 000 personer erhöll studiemedel för studier på eftergymnasial nivå, 107 700 för studier på gymnasial nivå, 21 100 för studier på grundskolenivå. 30 600 personer erhöll studiemedel för utlandsstudier53 .
+2017 erhöll 469 800 personer studiemedel för studier i Sverige. 341 000 personer erhöll studiemedel för studier på eftergymnasial nivå, 107 700 för studier på gymnasial nivå, 21 100 för studier på grundskolenivå. 30 600 personer erhöll studiemedel för utlandsstudier[^53] .
 
 Det bör uppmärksammas att det år som en utbetalning har verkställts inte alltid är det samma som det år som studierna har bedrivits.
 
@@ -148,16 +148,16 @@ Det bör uppmärksammas att det år som en utbetalning har verkställts inte all
 
 Studerande under 20 år som går på gymnasial utbildning på gymnasieskola, kommunal och statlig vuxenutbildning, folkhögskola eller annan godkänd gymnasial utbildning kan få studiehjälp. Studiehjälpen lämnas tidigast från och med kvartalet efter 16-årsdagen och längst till och med vårterminen det år man fyller 20 år. Man måste läsa på heltid för att få stöd (undantaget reducerat program eller sjukdom/funktionsnedsättning).
 
-Studiehjälpen består av *studiebidrag, extra tillägg* (låga familjeinkomster) och inackorderingstillägg54. Studiehjälpen som är skattefri betalas ut månadsvis och i efterskott.
+Studiehjälpen består av *studiebidrag, extra tillägg* (låga familjeinkomster) och inackorderingstillägg[^54]. Studiehjälpen som är skattefri betalas ut månadsvis och i efterskott.
 
-Studiebidrag och extra tillägg betalas normalt ut för tio månader55 om man studerar ett helt läsår. Inackorderingstillägg betalas ut för nio månader.
+Studiebidrag och extra tillägg betalas normalt ut för tio månader[^55] om man studerar ett helt läsår. Inackorderingstillägg betalas ut för nio månader.
 
 
-53 En person kan under samma år förekomma på flera studienivåer och under utlandsstudier.
+[^53] En person kan under samma år förekomma på flera studienivåer och under utlandsstudier.
 
-54 Fram till den 1/7 1992 fanns även möjlighet att få studielån.
+[^54] Fram till den 1/7 1992 fanns även möjlighet att få studielån.
 
-55 Innan 2003 beviljades studiebidrag och extra tillägg för nio månader.
+[^55] Innan 2003 beviljades studiebidrag och extra tillägg för nio månader.
 
 #### *Studiebidrag:*
 

@@ -21,23 +21,23 @@ Se bilaga 3 *"Justerad metod för framställning av den Registerbaserade arbetma
 
 Skatteverket åsätter varje företag en näringsgrenskod vid alla företagsstarter. När ett företag startar så lämnas en s.k. Skatte- och avgiftsanmälan till Skatteverket. Information i denna blankett utgör grunden för den första näringsgrenskodningen. SCB vårdar och uppdaterar företagens och arbetsställenas näringsgrenskoder med hjälp av Skatteverket, egna enkäter till företagen, SCB-interna källor samt egna utredningar. Koden fastställs för alla arbetsställen som förekommer i Företagsdatabasen (FDB).
 
-I FDB kan flera näringsgrenskoder förekomma för ett och samma arbetsställe. Till RAMS, varifrån denna uppgift om näringsgren hämtas, inhämtas bara en kod, som motsvarar den verksamhet som är mest omfattande30. I vissa fall kan ett arbetsställes olika verksamheter (näringsgrenar) vara av nästan samma omfattning. Detta medför att ett år kan den ena koden väljas som huvudsaklig verksamhet, medan det nästa år är den andra koden som blir huvudsaklig verksamhet. För personer som inte kan hänföras till något arbetsställe används företagets näringsgrenskod. Ovan nämnda orsaker gör att koden kan avvika från vad varje enskild person i verkligheten arbetar med.
+I FDB kan flera näringsgrenskoder förekomma för ett och samma arbetsställe. Till RAMS, varifrån denna uppgift om näringsgren hämtas, inhämtas bara en kod, som motsvarar den verksamhet som är mest omfattande[^30]. I vissa fall kan ett arbetsställes olika verksamheter (näringsgrenar) vara av nästan samma omfattning. Detta medför att ett år kan den ena koden väljas som huvudsaklig verksamhet, medan det nästa år är den andra koden som blir huvudsaklig verksamhet. För personer som inte kan hänföras till något arbetsställe används företagets näringsgrenskod. Ovan nämnda orsaker gör att koden kan avvika från vad varje enskild person i verkligheten arbetar med.
 
 Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppgift finns om vilken kategori anställda denne tillhör (se variabeln [[AstNr_LISA]]), erhåller företagets näringsgrenskod:
 
-- Anställda i arbetsmarknadspolitiska åtgärder, i de fall dessa personer inte naturligt kan redovisas under ett av arbetsgivarens fasta arbetsställen31
+- Anställda i arbetsmarknadspolitiska åtgärder, i de fall dessa personer inte naturligt kan redovisas under ett av arbetsgivarens fasta arbetsställen[^31]
 - Arbetstagare utan normalt anställningsförhållande (t.ex. artister och styrelseledamöter)
 - Anställda utanför de egna arbetsställena eller med växlande arbetsställen (t.ex. anställda vid byggarbetsplatser, försäljare och bevakningspersonal)
 - Sjömän och utlandsstationerade
 - Anställda som har den egna bostaden som arbetsplats
-- Övriga anställda som inte kan hänföras till ett bestämt arbetsställe32
+- Övriga anställda som inte kan hänföras till ett bestämt arbetsställe[^32]
 
 
-30 För de flesta arbetsställen innebär *mest omfattande,* flest antal förvärvsarbetande. För industriarbetsställen med fler än 19 förvärvsarbetande sorteras näringsgrenarna efter förädlingsvärde från den årliga Industristatistiken
+[^30] För de flesta arbetsställen innebär *mest omfattande,* flest antal förvärvsarbetande. För industriarbetsställen med fler än 19 förvärvsarbetande sorteras näringsgrenarna efter förädlingsvärde från den årliga Industristatistiken
 
-31 Från och med 1995 får de kommunalt anställda i denna kategori SNIkod = 00000
+[^31] Från och med 1995 får de kommunalt anställda i denna kategori SNIkod = 00000
 
-32 Företagare i denna kategori får SNIkod = 00000. Från och med 1995 gäller detsamma för kommunalt anställda i denna kategori.
+[^32] Företagare i denna kategori får SNIkod = 00000. Från och med 1995 gäller detsamma för kommunalt anställda i denna kategori.
 
 De ovan nämnda gruppernas andel av det totala antalet förvärvsarbetande (november) är:
 

@@ -13,7 +13,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratal kronor.
 
-*Variabeln härleds utifrån det ATP-belopp som betalats ut under aktuellt år och den ATP-kod för egenförmån som anger typ av ATP-pension den 31/12 aktuellt år125 (för beskrivning av ATP-kod se under ATP-kod för egenförmån sid. 231).* 
+*Variabeln härleds utifrån det ATP-belopp som betalats ut under aktuellt år och den ATP-kod för egenförmån som anger typ av ATP-pension den 31/12 aktuellt år[^125] (för beskrivning av ATP-kod se under ATP-kod för egenförmån sid. 231).* 
 
 Förtidspension/Sjukbidrag från ATP avser inkomståret oavsett år för händelse.
 

@@ -13,4 +13,4 @@ ASysTyp
 
 (1992–)
 
-Förekomst av Åtgärdssysselsättning markeras för personer som under aktuellt år varit inskrivna i Arbetsförmedlingens sökanderegister117 i de sökandekategorier som listas under Dagar i åtgärdssysselsättning (ASys-Dag).
+Förekomst av Åtgärdssysselsättning markeras för personer som under aktuellt år varit inskrivna i Arbetsförmedlingens sökanderegister[^117] i de sökandekategorier som listas under Dagar i åtgärdssysselsättning (ASys-Dag).

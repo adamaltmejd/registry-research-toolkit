@@ -20,7 +20,7 @@ Det kommunala vårdnadsbidraget avser utbetalningsåret oavsett ersättningsperi
 
 Vårdnadsbidraget erbjuder föräldrar med barn i åldern ett till tre år en möjlighet att stanna hemma längre - med sin anställning skyddad samt sin sjukpenninggrundande inkomst (SGI) skyddad. Vårdnadsbidraget är ett skattefritt kommunalt bidrag på maximalt 3 000 kronor per månad. En kommun får lämna vårdnadsbidrag för ett barn som har fyllt ett men
 
-72 Från och med 1999 Prisbasbeloppet.
+[^72] Från och med 1999 Prisbasbeloppet.
 
 inte tre år under förutsättning att barnet är folkbokfört i kommunen och inte har en plats i förskola som avser heltid.
 

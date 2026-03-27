@@ -20,4 +20,4 @@ Variabeln är en summering av inkomsterna Premiepension till efterlevande, Tidsb
 Efterlevandeförmånen ingår även i Summa annan inkomst för familj (*[[AnnInkF]]*).
 
 
-146 Finns det barn med rätt till barnlivränta blir omställningsräntan 20 procent av den avlidnes arbetsinkomst.
+[^146] Finns det barn med rätt till barnlivränta blir omställningsräntan 20 procent av den avlidnes arbetsinkomst.

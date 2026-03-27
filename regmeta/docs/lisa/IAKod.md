@@ -99,7 +99,7 @@ Den tredje kategorin – Åtgärdsersättning men ej Åtgärdshändelse – kan 
 
 (1992–)
 
-Antal dagar i sökandekategori112:
+Antal dagar i sökandekategori[^112]:
 
 - Utvecklingsanställning (38), *fr.o.m. 2006-01*
 - Trygghetsanställning (39), *fr.o.m. 2006-01*
@@ -112,7 +112,7 @@ Antal dagar i sökandekategori112:
 - Förstärkt särskilt anställningsstöd (45), *fr.o.m. 2012-03*
 - Stöd till start av näringsverksamhet (46), *(tidigare Starta-eget-bidrag, namnbyte 2000-04), fr.o.m. 1995-05-01 i Datalagret*.
 
-112 Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^112] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
 - Allmänt anställningsstöd (47), *fr.o.m. 1999-10-01, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Trainee brist (47), *fr.o.m. 2015-08*
@@ -133,16 +133,16 @@ Antal dagar i sökandekategori112:
 - Instegsjobb (78), *fr.o.m. 2007-07*
 - Förberedande insatser (80), *fr.o.m. 2016-05*
 
-Antal dagar för varje individ och år räknas fram med hjälp av inskrivnings- och avaktualiseringsdatum för aktuella sökandekategorier113 .
+Antal dagar för varje individ och år räknas fram med hjälp av inskrivnings- och avaktualiseringsdatum för aktuella sökandekategorier[^113] .
 
 1992 finns åtgärdskategorierna *Lönebidrag, Offentligt skyddat arbete (OSA), Rekryteringsstöd, Beredskapsarbete, Utbildningsvikariat* och *Starta*
 
 
-113 Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^113] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 *eget-bidrag*. Dessa kategorier klassificeras i LISA som åtgärdssysselsättning.
 
-Vad avser Lönebidrag, OSA, Rekryteringsstöd och Starta-eget-bidrag så finns dessa händelser registrerade först från och med 1995, vilket innebär att de som avslutats innan 1995-01-01 inte ingår i databasen (för Starta-eget-bidrag gäller detta de händelser som avslutats innan 1995-05-01)114 .
+Vad avser Lönebidrag, OSA, Rekryteringsstöd och Starta-eget-bidrag så finns dessa händelser registrerade först från och med 1995, vilket innebär att de som avslutats innan 1995-01-01 inte ingår i databasen (för Starta-eget-bidrag gäller detta de händelser som avslutats innan 1995-05-01)[^114] .
 
 #### **Lönebidrag**
 
@@ -160,7 +160,7 @@ För att erhålla ett skyddat arbete skall arbetsförmågan vara så nedsatt att
 
 Syftet med rekryteringsstöd är att det ska underlätta för långtidsarbetslösa personer att få en anställning inom främst näringslivet. Rekryteringsstödet innebär att arbetsgivare som anställer
 
-114 De händelser som avslutats innan 1995-01-01 respektive 1995-05-01, men där perioden registrerats först tidigast från och med dessa datum, redovisas dock.
+[^114] De händelser som avslutats innan 1995-01-01 respektive 1995-05-01, men där perioden registrerats först tidigast från och med dessa datum, redovisas dock.
 
 en arbetslös får ett ekonomiskt bidrag. Arbetsgivare inom det privata näringslivet, kommun och landsting kan få rekryteringsstöd.
 

@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Eget födelselän FodelseLan**
 
-För personer födda i Sverige 1948 eller senare anges det län där modern var folkbokförd eller, om modern inte var folkbokförd, det län där fadern var folkbokförd vid tidpunkten för födelsen8 . För personer födda i Sverige före 1948 anges det län där personen föddes.
+För personer födda i Sverige 1948 eller senare anges det län där modern var folkbokförd eller, om modern inte var folkbokförd, det län där fadern var folkbokförd vid tidpunkten för födelsen[^8] . För personer födda i Sverige före 1948 anges det län där personen föddes.
 
 Före 2001 redovisas födelselän enligt länsindelningen vid respektive individs födelse. Från 2001 ändras födelselän enligt aktuell länsindelning.
 
@@ -38,4 +38,4 @@ Det finns skäl att anta att personen har svenskfödda föräldrar om personen h
 
 11 Okänt
 
-8 Kod 26 betyder dock "Född i Sverige, län okänt".
+[^8] Kod 26 betyder dock "Född i Sverige, län okänt".

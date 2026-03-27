@@ -8,7 +8,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 ### **Bearbetning av data från Arbetsförmedlingens Datalager**
 
-De variabler i LISA-databasen som helt eller delvis har sin källa i Arbetsförmedlingens Datalager är170:
+De variabler i LISA-databasen som helt eller delvis har sin källa i Arbetsförmedlingens Datalager är[^170]:
 
 - Antal dagar i arbetslöshet
 - Antal dagar som "Övrig inskriven vid arbetsförmedling"
@@ -28,7 +28,7 @@ Dataregistreringen fungerar på så sätt att arbetsförmedlaren skriver in star
 
 När en arbetssökande avaktualiseras från Arbetsförmedlingen sätts slutdatumet för den sista sökandekategoriperioden i inskrivningsperioden automatiskt till samma datum som avaktualiseringsdatumet. Tidigare inmatade sökandekategoriperioder
 
-170 I LISA finns även uppgifter hämtade från Arbetsförmedlingens månadsfiler (PRESO) för november månad 1998–2002. Se vidare under *Arbetssökande (november),* ([[ArbSokNov]]).
+[^170] I LISA finns även uppgifter hämtade från Arbetsförmedlingens månadsfiler (PRESO) för november månad 1998–2002. Se vidare under *Arbetssökande (november),* ([[ArbSokNov]]).
 
 kan inte tas bort eller ändras. Man går således aldrig in och korrigerar redan inmatade uppgifter.
 

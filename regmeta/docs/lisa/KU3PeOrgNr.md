@@ -11,7 +11,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 KU3PeOrgNr
 
-Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret5gett individen tredje största inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år6 .
+Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret[^5]gett individen tredje största inkomstbelopp i form av löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år[^6] .
 
 KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 

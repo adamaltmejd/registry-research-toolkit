@@ -119,21 +119,21 @@ Uppgiften avser registrering/närvaro i olika skolformer under höstterminen akt
 | S   | [[SFI]], svenska för invandrare                               | Fr.o.m. 2012                                |
 | K   | Kompletterande utbildning / Konst- och kulturutbildning19 | Fr.o.m. 2012 / 2016                         |
 
-14 Tekniskt basår i Komvux ingår i redovisningen för Komvux.
+[^14] Tekniskt basår i Komvux ingår i redovisningen för Komvux.
 
-15 Endast forskarstuderande med minst 10 procents studieaktivitetsgrad ingår i kategorin Forskarutbildning för åren 2000–2004. Fr.o.m. år 2005 ingår forskarstuderande med minst 1 procents studieaktivitet.
+[^15] Endast forskarstuderande med minst 10 procents studieaktivitetsgrad ingår i kategorin Forskarutbildning för åren 2000–2004. Fr.o.m. år 2005 ingår forskarstuderande med minst 1 procents studieaktivitet.
 
-16 Fr.o.m. år 2009 ingår yrkeshögskoleutbildning.
+[^16] Fr.o.m. år 2009 ingår yrkeshögskoleutbildning.
 
-17 Uppgifter för folkhögskolan avser elever på långa kurser. För åren 1997–1999 ingår endast studerande i det s.k. "kunskapslyftet".
+[^17] Uppgifter för folkhögskolan avser elever på långa kurser. För åren 1997–1999 ingår endast studerande i det s.k. "kunskapslyftet".
 
-18 Arbetsmarknadsutbildning avser sökandekategori 81 i Arbetsförmedlingens sökanderegister för åren 2001-2012. Från och med 2013 ingår förberedande utbildning.
+[^18] Arbetsmarknadsutbildning avser sökandekategori 81 i Arbetsförmedlingens sökanderegister för åren 2001-2012. Från och med 2013 ingår förberedande utbildning.
 
-19 Fr.o.m. 2016 fasas kompletterande utbildning ut och ersätts av Konst- och kulturutbildningar.
+[^19] Fr.o.m. 2016 fasas kompletterande utbildning ut och ersätts av Konst- och kulturutbildningar.
 
 **Kod Skolforum**
 
-9 Övriga studerande20
+9 Övriga studerande[^20]
 
 *Följande prioritetsordning för studiedeltagande under höstterminen används då en person förekommer i flera skolformer under samma termin:*
 

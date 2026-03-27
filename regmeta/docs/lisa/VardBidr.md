@@ -14,7 +14,7 @@ Beloppet anges i hundratals kronor.
 
 Vårdbidraget avser utbetalningsåret oavsett ersättningsperiod.
 
-Förälder70 har rätt till vårdbidrag för barn under 19 år som vårdar att barn med funktionsnedsättning eler långvarig sjukdom under minst sex månader. Vårdbidrag kan erhållas till och med juni månad det år då barnet fyller 19 år71 .
+Förälder[^70] har rätt till vårdbidrag för barn under 19 år som vårdar att barn med funktionsnedsättning eler långvarig sjukdom under minst sex månader. Vårdbidrag kan erhållas till och med juni månad det år då barnet fyller 19 år[^71] .
 
 Förälder kan få vårdbidrag även om föräldrarna tillfälligtvis överlämnat vården till någon annan.
 
@@ -23,9 +23,9 @@ Vårdbidraget ges tills vidare och omprövas vartannat år. Förälder måste va
 Vårdbidraget är skattepliktigt och pensionsgrundande, men vårdbidraget kan även innehålla en icke skattepliktig merkostnadsdel. Under vissa förutsättningar kan merkostnadsdelen betalas utöver det
 
 
-70 Föräldrarbegreppet utvidgas så att vårdnadshavare som har vård om barnet likställs med förälder (2002–07).
+[^70] Föräldrarbegreppet utvidgas så att vårdnadshavare som har vård om barnet likställs med förälder (2002–07).
 
-71 Före år 2003 kunde vårdbidraget betalas ut till och med månaden före den då barnet fyllde 16 år.
+[^71] Före år 2003 kunde vårdbidraget betalas ut till och med månaden före den då barnet fyllde 16 år.
 
 normala beloppet för hel förmån. Denna del av vårdbidraget ingår inte i denna variabel.
 
@@ -33,7 +33,7 @@ normala beloppet för hel förmån. Denna del av vårdbidraget ingår inte i den
 
 Då pensionstillskottet den *1/1 1991* höjs från 100 procent till 104 procent av basbeloppet höjs även vårdbidraget.
 
-Den *1/7 1992* höjs vårdbidraget så att helt vårdbidrag motsvarar 250 procent av basbeloppet72. Vårdbidraget kan nu även betalas ut som tre fjärdedels förmån.
+Den *1/7 1992* höjs vårdbidraget så att helt vårdbidrag motsvarar 250 procent av basbeloppet[^72]. Vårdbidraget kan nu även betalas ut som tre fjärdedels förmån.
 
 Om ett barn med hel, tre fjärdedels eller halv förmån avlider betalas ett reducerat belopp ut under maximalt åtta månader efter dödsfallet.
 

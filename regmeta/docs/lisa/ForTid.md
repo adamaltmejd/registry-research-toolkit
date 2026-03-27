@@ -23,7 +23,7 @@ Den kompletterande ersättning som betalas ut via avtalsförsäkringarna vid fö
 
 Från och med 1996 påverkas folkpensionsbeloppet inte längre av om maken har pension eller inte.
 
-Från och med 1996 redovisas AGS i samband med förtidspension/sjukbidrag i denna variabel (gäller privatanställda arbetare, kooperativt anställda arbetare samt kommun- och landstingsanställda)129 .
+Från och med 1996 redovisas AGS i samband med förtidspension/sjukbidrag i denna variabel (gäller privatanställda arbetare, kooperativt anställda arbetare samt kommun- och landstingsanställda)[^129] .
 
 1999 mildras kravet för att få hel förtidspension/sjukbidrag från helt nedsatt arbetsförmåga till i det närmaste helt nedsatt arbetsförmåga.
 
@@ -35,4 +35,4 @@ I samband med genomförandet av det nya pensionssystemet ändrades även skatter
 
 *För ytterligare information, se under respektive inkomstslag.*
 
-129 1996 erhöll 64 835 personer denna ersättning från AGS, i genomsnitt fick de 17 845 kronor i ersättning.
+[^129] 1996 erhöll 64 835 personer denna ersättning från AGS, i genomsnitt fick de 17 845 kronor i ersättning.

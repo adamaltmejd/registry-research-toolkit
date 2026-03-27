@@ -215,4 +215,4 @@ Uppgift om ursprunglig variabelkälla anges för flertalet av de variabler som e
 | Inkomst från ekonomiskt bistånd                                       | Härledd utifrån uppgift från<br>kommunerna, familjebegrepp<br>och konsumtionsvikt och<br>uppgift från<br>Försäkringskassan                                                              |
 | Inkomst från anställning eller egen näringsverksamhet                 | Härledd utifrån uppgifter från<br>Skatteverket och<br>självdeklaration                                                                                                                  |
 
-172 För sjömän, uppgift från Sjömansskattekontor t.o.m. 1997.
+[^172] För sjömän, uppgift från Sjömansskattekontor t.o.m. 1997.

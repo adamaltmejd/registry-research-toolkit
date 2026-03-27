@@ -17,4 +17,4 @@ De som saknar uppgift om invandringsår har värde 0000, majoriteten är födda 
 
 *I övrigt se Datum för in-/utvandring* ([[InvUtvManad]]) *och under objektet Individ* ([[PersonNr]]).
 
-7 Här ingår sambor utan gemensamma barn samt barn utan relation till någon annan person på fastigheten.
+[^7] Här ingår sambor utan gemensamma barn samt barn utan relation till någon annan person på fastigheten.

@@ -30,7 +30,7 @@ Familjeställning är en härledd variabel som anger varje persons ställning i 
 | 230 | Ensamstående mor med barn under 18 år     |
 | 240 | Ensamstående mor med endast barn >= 18 år |
 
-6 Här ingår sambor utan gemensamma barn.
+[^6] Här ingår sambor utan gemensamma barn.
 
 | Kod | Familjeställning                                                       |
 |-----|------------------------------------------------------------------------|

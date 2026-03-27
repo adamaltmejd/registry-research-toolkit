@@ -36,6 +36,6 @@ YrkStallr
 
 Uppgiften bygger dels på den kontrolluppgift som skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare dels på uppgift om deklarerad inkomst av aktiv näringsverksamhet. Bestämning av yrkesställningen baseras på den yrkesställning som personen har på det arbetsställe som valts som huvudsaklig verksamhet under november (löneinkomst eller inkomst av aktiv näringsverksamhet). Valet av arbetsställe är i sin tur beroende på vilket av de två inkomstslagen som gett den högsta novemberinkomsten. Dock har företagarinkomsten vägts upp med faktorn 1,6. Detta för att den deklarerade näringsinkomsten i genomsnitt är lägre än löneinkomsten i förhållande till den tid som läggs ner i arbetet (faktorn är beräknad utifrån uppgifter i SCB:s inkomststatistik).
 
-För 1990 hämtas deklarationsuppgifterna för egen företagare från 198928. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år.
+För 1990 hämtas deklarationsuppgifterna för egen företagare från 1989[^28]. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år.
 
-28 Det är uppgift om "Inkomst av rörelse" och om "Inkomst av jordbruksfastighet (brukad)" som används för detta år. Inkomst av aktiv näringsverksamhet finns som begrepp först från och med 1991
+[^28] Det är uppgift om "Inkomst av rörelse" och om "Inkomst av jordbruksfastighet (brukad)" som används för detta år. Inkomst av aktiv näringsverksamhet finns som begrepp först från och med 1991
