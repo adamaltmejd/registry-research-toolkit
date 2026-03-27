@@ -274,7 +274,19 @@ def search(
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
     results = all_results[offset : offset + limit]
-    return {"total_count": total_count, "results": results}
+
+    # Count doc results that exist but were truncated by the limit
+    doc_total = sum(1 for r in all_results if r.get("type") == "doc")
+    doc_shown = sum(1 for r in results if r.get("type") == "doc")
+    doc_hidden = doc_total - doc_shown
+
+    out: dict[str, Any] = {"total_count": total_count, "results": results}
+    if doc_hidden > 0:
+        out["doc_hint"] = (
+            f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
+            f"not shown (use --field docs or regmeta doc search)"
+        )
+    return out
 
 
 def _search_datacolumns(

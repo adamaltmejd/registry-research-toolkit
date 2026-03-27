@@ -1269,6 +1269,8 @@ def _write_payload(
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
         _write_formatted(results, cols, output_path, fmt=fmt)
+        if data.get("doc_hint"):
+            _write_to(f"\n  {data['doc_hint']}\n", output_path)
     elif key == ("get", "register"):
         regs = data.get("registers", [data]) if "registers" in data else [data]
         rows = []

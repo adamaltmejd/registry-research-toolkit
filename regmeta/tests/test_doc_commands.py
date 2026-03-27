@@ -382,6 +382,29 @@ class TestSearchIntegration:
         for r in data["data"]["results"]:
             assert r["type"] == "doc"
 
+    def test_search_doc_hint_when_truncated(self, combined_db_dir: str):
+        """When doc results exist but are cut off by limit, a hint should appear."""
+        # First verify docs exist for this query
+        docs_data, _ = _run_json(
+            ["--db", combined_db_dir, "search", "--query", "kommun", "--field", "docs"],
+            verbose=True,
+        )
+        doc_count = docs_data["data"]["total_count"]
+        if doc_count == 0:
+            pytest.skip("No doc results for test query")
+
+        # Now search with limit=0 so all doc results are truncated
+        data, code = _run_json(
+            ["--db", combined_db_dir, "search", "--query", "kommun",
+             "--field", "all", "--limit", "0"],
+            verbose=True,
+        )
+        assert code == 0
+        assert "doc_hint" in data["data"], (
+            f"Expected doc_hint when {doc_count} doc results are truncated"
+        )
+        assert "not shown" in data["data"]["doc_hint"]
+
     def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
         """Exact variable name match in docs should rank near the top."""
         data, code = _run_json(
