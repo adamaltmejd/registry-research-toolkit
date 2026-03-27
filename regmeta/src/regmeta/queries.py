@@ -96,7 +96,7 @@ def extract_year(version_name: str) -> int | None:
 # ---------------------------------------------------------------------------
 
 
-SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "docs", "all"})
+SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "all"})
 
 
 def _version_years_for_register(
@@ -260,8 +260,8 @@ def search(
     if field in ("value", "all"):
         all_results.extend(_search_values(conn, like_pattern, reg_ids))
 
-    if field in ("docs", "all"):
-        all_results.extend(_search_docs(query, db_arg=db_arg))
+    # Always include doc results (shown as hints if truncated by limit)
+    all_results.extend(_search_docs(query, db_arg=db_arg))
 
     if type == "register":
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
@@ -284,7 +284,7 @@ def search(
     if doc_hidden > 0:
         out["doc_hint"] = (
             f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
-            f"not shown (use --field docs or regmeta doc search)"
+            f"not shown (try: regmeta docs search <query>)"
         )
     return out
 

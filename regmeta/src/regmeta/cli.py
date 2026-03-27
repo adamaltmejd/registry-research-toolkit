@@ -222,13 +222,13 @@ def _build_parser() -> argparse.ArgumentParser:
         "search",
         help="Search registers, variables, columns, and values.",
         description=(
-            "Search across metadata and documentation. By default searches all fields.\n"
-            "Use --field to narrow.\n\n"
+            "Search across metadata. By default searches all fields.\n"
+            "Use --field to narrow. Doc results are included and hinted at the bottom.\n"
+            "For full documentation search, use: regmeta docs search <query>\n\n"
             "Examples:\n"
             "  regmeta search --query kommun                        # all fields\n"
             "  regmeta search --query kommun --field datacolumn     # column headers only\n"
-            "  regmeta search --query 0180 --field value            # value codes/labels\n"
-            "  regmeta search --query sjukpenning --field docs      # documentation only"
+            "  regmeta search --query 0180 --field value            # value codes/labels"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -240,7 +240,7 @@ def _build_parser() -> argparse.ArgumentParser:
     search_p.add_argument(
         "--field",
         default="all",
-        choices=["datacolumn", "varname", "description", "value", "docs", "all"],
+        choices=["datacolumn", "varname", "description", "value", "all"],
         help="Which fields to search (default: all).",
     )
     search_p.add_argument(
@@ -530,7 +530,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # --- doc command family ---
     doc_p = sub.add_parser(
-        "doc",
+        "docs",
         help="Search and browse curated register documentation.",
     )
     doc_sub = doc_p.add_subparsers(dest="doc_command")
@@ -713,7 +713,7 @@ def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             code="doc_not_found",
             error_class="not_found",
             message=f"No documentation found for: {args.identifier!r}",
-            remediation="Use `regmeta doc list` to see available docs, or `regmeta doc search <query>` to search.",
+            remediation="Use `regmeta docs list` to see available docs, or `regmeta docs search <query>` to search.",
         )
     return {"data": data}, 0
 
@@ -855,7 +855,7 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             if has_doc:
                 if isinstance(data, dict) and "variables" not in data:
                     data["doc_available"] = True
-                    data["doc_hint"] = f"regmeta doc get {var_name}"
+                    data["doc_hint"] = f"regmeta docs get {var_name}"
                 elif isinstance(data, dict) and "variables" in data:
                     for v in data["variables"]:
                         v["doc_available"] = doc_exists(doc_conn, args.variable)
@@ -1645,7 +1645,7 @@ def _write_payload(
             output_path,
             fmt=fmt,
         )
-    elif key == ("doc", "search"):
+    elif key == ("docs", "search"):
         results = data.get("results", [])
         rows = [
             {
@@ -1658,12 +1658,12 @@ def _write_payload(
         if data.get("docs_dir"):
             _write_to(f"  docs: {data['docs_dir']}\n", output_path)
         _write_formatted(rows, ["variable", "display_name", "snippet"], output_path, fmt=fmt)
-    elif key == ("doc", "get"):
+    elif key == ("docs", "get"):
         file_path = data.get("file_path")
         if file_path:
             _write_to(f"  file: {file_path}\n", output_path)
         _write_to(data.get("body", "") + "\n", output_path)
-    elif key == ("doc", "list"):
+    elif key == ("docs", "list"):
         if data.get("results") is not None:
             rows = [
                 {
@@ -1720,9 +1720,9 @@ COMMAND_DISPATCH = {
     ("compare", None): _cmd_compare,
     ("resolve", None): _cmd_resolve,
     ("maintain", "build-docs"): _cmd_maintain_build_docs,
-    ("doc", "search"): _cmd_doc_search,
-    ("doc", "get"): _cmd_doc_get,
-    ("doc", "list"): _cmd_doc_list,
+    ("docs", "search"): _cmd_doc_search,
+    ("docs", "get"): _cmd_doc_get,
+    ("docs", "list"): _cmd_doc_list,
 }
 
 
@@ -1748,10 +1748,10 @@ def run(argv: list[str] | None = None) -> int:
         if not sub_command:
             parser.parse_args(["get", "--help"])
             return EXIT_USAGE
-    elif args.command == "doc":
+    elif args.command == "docs":
         sub_command = getattr(args, "doc_command", None)
         if not sub_command:
-            parser.parse_args(["doc", "--help"])
+            parser.parse_args(["docs", "--help"])
             return EXIT_USAGE
 
     key = (args.command, sub_command)
