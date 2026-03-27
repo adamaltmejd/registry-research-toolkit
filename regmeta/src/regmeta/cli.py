@@ -266,11 +266,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Search value codes and labels only.",
     )
     search_field.add_argument(
+        "--docs",
+        dest="field",
+        action="store_const",
+        const="docs",
+        help="Search curated documentation only.",
+    )
+    search_field.add_argument(
         "--all-fields",
         dest="field",
         action="store_const",
         const="all",
-        help="Search all fields (default when no field flag given).",
+        help="Search all fields including docs (default when no field flag given).",
     )
     search_p.set_defaults(field="all")
     search_p.add_argument(
@@ -785,6 +792,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             years=args.years,
             limit=args.limit,
             offset=args.offset,
+            db_arg=args.db,
         )
     finally:
         conn.close()
@@ -1293,6 +1301,8 @@ def _write_payload(
             ]
         elif types == {"varname"}:
             cols = ["variable_name", "register_id", "register_name", "var_id"]
+        elif types == {"doc"}:
+            cols = ["variable_name", "display_name"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
         _write_formatted(results, cols, output_path, fmt=fmt)

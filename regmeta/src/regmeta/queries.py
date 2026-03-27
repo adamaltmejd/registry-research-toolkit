@@ -96,7 +96,7 @@ def extract_year(version_name: str) -> int | None:
 # ---------------------------------------------------------------------------
 
 
-SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "all"})
+SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "docs", "all"})
 
 
 def _version_years_for_register(
@@ -209,6 +209,7 @@ def search(
     years: str | None = None,
     limit: int = 50,
     offset: int = 0,
+    db_arg: str | None = None,
 ) -> dict[str, Any]:
     """Search across registers and variables.
 
@@ -258,6 +259,9 @@ def search(
 
     if field in ("value", "all"):
         all_results.extend(_search_values(conn, like_pattern, reg_ids))
+
+    if field in ("docs", "all"):
+        all_results.extend(_search_docs(query, db_arg=db_arg))
 
     if type == "register":
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
@@ -421,6 +425,40 @@ def _search_values(
             }
         )
     return results
+
+
+def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
+    """Search the doc index for matching documentation.
+
+    Returns lightweight hint results (no full body). Uses a separate DB
+    connection that is opened and closed within this function. Fails
+    silently if the doc DB is not available.
+    """
+    try:
+        from .doc_db import doc_db_path, open_doc_db
+        from .doc_queries import doc_search
+
+        path = doc_db_path(db_arg)
+        conn = open_doc_db(path)
+    except Exception:
+        return []
+
+    try:
+        data = doc_search(conn, query, limit=10)
+        return [
+            {
+                "type": "doc",
+                "register_id": "",
+                "register_name": r.get("register", ""),
+                "var_id": "",
+                "variable_name": r.get("variable") or r["filename"],
+                "display_name": r["display_name"],
+                "fts_rank": r.get("fts_rank", 0),
+            }
+            for r in data.get("results", [])
+        ]
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------------------
