@@ -24,9 +24,7 @@ Personer med en fast eller tidsbegränsad anställning som har en kortare tjäns
 
 Deltidsarbetslösa som påbörjar ett program parallellt med deltidsarbetet ska registreras med programmets kod.
 
-[^103] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^104] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 **Antal personer som någon gång under respektive år tillhört sökandekategori deltidsarbetslös med förhinder (sökandekategori 21)**
 
@@ -66,3 +64,7 @@ En kortare period under 2001 registrerades yrkesfiskare som hindrades i sin yrke
 *I övrigt se under Arbetslöshet, stycket Deltidsarbetslöshet.*
 
 #### **Arbetsmarknadspolitisk åtgärd**
+
+
+[^103]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^104]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.

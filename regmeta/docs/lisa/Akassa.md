@@ -28,9 +28,7 @@ Från och med den *5/2 2001* är det endast förvärvsarbete som kvalificerar f�
 
 Personer som är eller riskerar att bli långtidsarbetslösa (inskriven som arbetssökande hos Arbetsförmedlingen i minst 24 månader) kan komma ifråga för aktivitetsgarantin. En individuell jobbsökarplan utarbetas tillsammans med en handledare. I och med inträdet i aktivitetsgarantin upphör rätten att återgå till en påbörjad ersättningsperiod. För att få en ersättningsperiod måste den sökande på nytt uppfylla arbetsvillkoret.
 
-[^80] Före den 1/7 1994 innebar arbetsvillkoret att man skulle ha arbetat minst 75 dagar fördelade på minst fyra månader med minst tre timmars arbete per dag under en tolvmånadersperiod före arbetslösheten. Fr.o.m. den 1/7 1994 skulle de 75 dagarna vara fördelade på minst fem månader. Fr.o.m. den 1/1 1995 skulle man ha arbetat minst 80 dagar fördelade på fem månader. Fr.o.m. den 1/7 1997 t.o.m. den 31/12 2006 innebar arbetsvillkoret att man skulle ha arbetat i minst sex månader och minst 70 timmar per kalendermånad. Alternativt att man arbetat 450 timmar under en sammanhängande period av sex månader med minst 45 timmars arbete i varje månad
 
-[^81] Före den 1/1 2007 var den överhoppningsbara tiden högst sju år. Ett tillfälligt undantag i överhoppningsbar tid gäller under perioden 1 januari 2010 till och med 31 januari 2013. Personer som från och med årsskiftet 2010 lämnar sjukförsäkringen efter att ha erhållit maximalt antal dagar med sjukpenning eller sjukersättning får räkna upp till 10 år med överhoppningsbar tid för att uppfylla ett arbetsvillkor.
 
 Förändringen gäller sökande som skrivits in i aktivitetsgarantin från och med 2003-09-01.
 
@@ -52,7 +50,6 @@ Från och med *oktober 2007* sker en sammanräkning av dagar med arbetslöshetse
 
 Från och med den *7/7 2008* utökas karenstiden från 5 till 7 dagar.
 
-[^82] Från och med 1998 går gränsen vid 57 år.
 
 *Dagpenning:*
 
@@ -125,3 +122,8 @@ Om man före arbetslösheten arbetade heltid och får ett deltidsarbete anses ma
 Den *7/4 2008* införs en ny begränsningsregel i samband med deltidsarbetslöshet. Deltidsarbetslösa har nu endast rätt till 75 ersättningsdagar per ersättningsperiod. De 75 ersättningsdagarna börjar räknas den 7/4 2008. Begränsningsregeln gäller alla anställningsformer. Begränsningsregeln gäller enbart dagar med arbetslöshetsersättning, inte dagar med aktivitetsstöd. Karensdagar räknas inte in i de 75 dagarna. Arbetar man deltid blandat med hela veckor av arbetslöshet kan man få ersättning för helt arbetslösa veckor utöver deltidsbegränsningen på 75 ersättningsdagar.
 
 Den *15/5 2017* ersätts den regeln som kallas 75-dagarsregeln med 60 veckorsregeln. Deltidsarbetslösa kan nu få en ersättning upp till 60 veckor i kombination med arbete. Det innebär att de veckor där man kombinerar arbete och ersättning från A-kassa max får uppgå till 60 veckor. Det gäller även om man har dagar kvar till den ersättningslängd som gäller för heltid, det vill säga 300/450 ersättningsdagar.
+
+
+[^80]: Före den 1/7 1994 innebar arbetsvillkoret att man skulle ha arbetat minst 75 dagar fördelade på minst fyra månader med minst tre timmars arbete per dag under en tolvmånadersperiod före arbetslösheten. Fr.o.m. den 1/7 1994 skulle de 75 dagarna vara fördelade på minst fem månader. Fr.o.m. den 1/1 1995 skulle man ha arbetat minst 80 dagar fördelade på fem månader. Fr.o.m. den 1/7 1997 t.o.m. den 31/12 2006 innebar arbetsvillkoret att man skulle ha arbetat i minst sex månader och minst 70 timmar per kalendermånad. Alternativt att man arbetat 450 timmar under en sammanhängande period av sex månader med minst 45 timmars arbete i varje månad
+[^81]: Före den 1/1 2007 var den överhoppningsbara tiden högst sju år. Ett tillfälligt undantag i överhoppningsbar tid gäller under perioden 1 januari 2010 till och med 31 januari 2013. Personer som från och med årsskiftet 2010 lämnar sjukförsäkringen efter att ha erhållit maximalt antal dagar med sjukpenning eller sjukersättning får räkna upp till 10 år med överhoppningsbar tid för att uppfylla ett arbetsvillkor.
+[^82]: Från och med 1998 går gränsen vid 57 år.

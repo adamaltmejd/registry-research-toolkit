@@ -78,9 +78,7 @@ SCB i december 2019
 
 Magnus Sjöström Tf Avdelningschef Henrik von Hofsten Enhetschef
 
-[^1] AHA utredningsinstitut och mötesplats SOU 2003:13 s. 117
 
-[^2] Bakgrundsfakta 2016:1 för LISA-årgångarna 1990-2013
 
 ## Innehåll
 
@@ -868,3 +866,7 @@ Förutsättningar avseende lagar, regler, ersättningsnivåer, kriterier, admini
 *Uppgifterna avser, där inte annat anges, samtliga individer 15 år och äldre (t.o.m. årgång 2009 16 år och äldre), folkbokförda i Sverige 31/12 aktuellt år.*
 
 *Inkomstvariablernas belopp redovisas, där inte annat anges, i hundratals kronor.*
+
+
+[^1]: AHA utredningsinstitut och mötesplats SOU 2003:13 s. 117
+[^2]: Bakgrundsfakta 2016:1 för LISA-årgångarna 1990-2013

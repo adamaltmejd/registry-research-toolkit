@@ -23,6 +23,7 @@ Förvärvsinkomsten som redovisas i variabeln ForvErsNetto omfattar under- och �
 
 ForvErsNetto redovisas endast när *Kontant bruttolön* eller *Inkomst av näringsverksamhet* är skilt från noll.
 
-[^44] 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad). Inkomst av aktiv näringsverksamhet inkluderas i summan endast när Inkomst av aktiv näringsverksamhet (motsvarande) är större än noll.
 
-[^45] 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad).
+
+
+[^45]: 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad).

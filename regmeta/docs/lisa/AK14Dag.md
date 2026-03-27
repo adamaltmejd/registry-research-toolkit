@@ -26,11 +26,8 @@ Gruppen i sökandekategori 14 är mycket heterogen och omfattar studerande, för
 
 Från och med 1999[^101] ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna vid Arbetsförmedlingen). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i
 
-[^99] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^100] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
-[^101] I realiteten påbörjades överföringen redan i oktober–november 1998.
 
 sökandekategori 14, utan registreras i gruppen arbetslösa (sökandekategori 11–13).
 
@@ -60,7 +57,6 @@ Vid inskrivning i sökandekategori (14) skickas automatiskt en avanmälan till b
 | 1997 | 247 811 |
 | 1998 | 276 476 |
 
-[^102] Med Vilande förtidspension avses möjligheten för förtidspensionärer att arbeta utan att förlora rätten till sin pension. Försäkringskassan kan bevilja en prövotid på högst tre månader. Under prövotiden utbetalas både lön och pension. Efter tre månader sker inga pensionsutbetalningar så länge lön från arbetsgivare utgår.
 
 | År   | Antal   |
 |------|---------|
@@ -83,3 +79,9 @@ Vid inskrivning i sökandekategori (14) skickas automatiskt en avanmälan till b
 | 2015 | 161 462 |
 | 2016 | 146 819 |
 | 2017 | 136 483 |
+
+
+[^99]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^100]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^101]: I realiteten påbörjades överföringen redan i oktober–november 1998.
+[^102]: Med Vilande förtidspension avses möjligheten för förtidspensionärer att arbeta utan att förlora rätten till sin pension. Försäkringskassan kan bevilja en prövotid på högst tre månader. Under prövotiden utbetalas både lön och pension. Efter tre månader sker inga pensionsutbetalningar så länge lön från arbetsgivare utgår.

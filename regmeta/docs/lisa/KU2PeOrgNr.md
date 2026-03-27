@@ -15,7 +15,6 @@ Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret[
 
 Jobbregistret omfattar alla kontrolluppgifter.
 
-[^5] 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
 
 löneinkomst eller företagarinkomst (inkomst av aktiv näringsverksamhet) under aktuellt år[^6] .
 
@@ -33,3 +32,7 @@ KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 KU2PeOrqNr
 
 *Se under Kopplingsidentiteter – Företag.*
+
+
+[^5]: 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
+[^6]: Här ingår sambor utan gemensamma barn.

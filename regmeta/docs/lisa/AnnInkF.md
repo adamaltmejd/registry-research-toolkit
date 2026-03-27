@@ -22,3 +22,6 @@ Variabeln summerar för aktuellt år de inkomster/ersättningar som listas ovan,
 *"Annan inkomst" omfattar inkomster som inte står i relation till grad av aktivt arbetslivsdeltagande. Individer med dessa inkomster kan samtidigt mycket väl vara heltidsarbetande. Inkomsten bidrar dock med en förklaring till hur individer får sin försörjning.* 
 
 I och med att beräkningarna av konsumtionsvikt förändras mellan 2004 och 2005 ersätts variabeln *AnnInkF* med variabeln *[[AnnInkF04]]* från och med år 2005.
+
+
+[^163]: Annan inkomst: Andra inkomster än Inkomst av förvärvskälla, Arbetstidsrelaterad social inkomst och Kapitalinkomst. För de familjerelaterade inkomsterna används det individualiserade beloppet.

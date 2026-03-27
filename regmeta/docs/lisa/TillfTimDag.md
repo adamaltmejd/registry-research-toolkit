@@ -41,9 +41,7 @@ Personer med tillfällig timanställning som påbörjar ett program parallellt m
 | 2006 | 258 928 |
 | 2007 | 225 949 |
 
-[^87] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^88] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 | År   | Antal   |
 |------|---------|
@@ -58,4 +56,8 @@ Personer med tillfällig timanställning som påbörjar ett program parallellt m
 | 2016 | 110 048 |
 | 2017 | 101 636 |
 
-*Antal dagar i tillfällig timanställning är för vissa personer överskattad. Förmodligen är detta problem större vad gäller de tillfälligt timanställda än vad gäller exempelvis arbetslösa på heltid.*
+*Antal dagar i tillfällig timanställning är för vissa personer överskattad. Förmodligen är detta problem större vad gäller de tillfälligt timanställda än vad gäller exempelvis arbetslösa på heltid.* 
+
+
+[^87]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^88]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.

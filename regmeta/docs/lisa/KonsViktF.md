@@ -28,7 +28,3 @@ Familjens totala konsumtionsvikt byggs upp enligt:
 0,96 = Ytterligare en vuxen (18 år–)
 
 Familjens konsumtionsvikt används i LISA för att fördela familjeinkomster på familjens medlemmar.
-
-[^10] Här ingår sambor utan gemensamma barn.
-
-[^11] Här ingår sambor utan gemensamma barn samt barn utan relation till någon annan person på fastigheten.

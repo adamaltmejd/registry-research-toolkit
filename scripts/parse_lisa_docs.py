@@ -300,8 +300,14 @@ class DocEntry:
 # ---------------------------------------------------------------------------
 
 
-def strip_noise(lines: list[str]) -> list[str]:
-    """Remove SCB footer lines, orphan page numbers, and HTML tags."""
+def strip_noise(lines: list[str]) -> tuple[list[str], dict[str, str]]:
+    """Remove noise and extract footnotes.
+
+    Returns (cleaned_lines, footnotes) where footnotes is {number: text}.
+    Footnote definitions are removed from the content and returned separately
+    so they can be placed in the correct variable file later.
+    """
+    footnotes: dict[str, str] = {}
     cleaned = []
     for line in lines:
         stripped = line.strip()
@@ -309,14 +315,22 @@ def strip_noise(lines: list[str]) -> list[str]:
             continue
         if PAGE_NUM_RE.match(stripped):
             continue
-        # Convert <sup>N</sup> footnotes to markdown [^N] before stripping tags
+
+        # Extract footnote definitions BEFORE converting refs.
+        # Definitions start with <sup>N</sup> at the beginning of the line.
+        fn_def = re.match(r"^\s*<sup>(\d+)</sup>\s+(.+)$", stripped)
+        if fn_def:
+            footnotes[fn_def.group(1)] = fn_def.group(2)
+            continue
+
+        # Convert inline footnote references: "word<sup>N</sup>" → "word[^N]"
         line = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", line)
         # Strip remaining HTML tags (span anchors, etc.)
         line = re.sub(r"</?span[^>]*>", "", line)
         # Unescape markdown-escaped underscores in bold text (marker does this)
         line = line.replace("\\_", "_")
         cleaned.append(line)
-    return cleaned
+    return cleaned, footnotes
 
 
 def resolve_topic(heading: str, current_topic: str) -> str:
@@ -550,7 +564,7 @@ def parse_bakgrundsfakta(
 ) -> list[DocEntry]:
     """Parse the full bakgrundsfakta markdown into DocEntry objects."""
     lines = md_text.split("\n")
-    lines = strip_noise(lines)
+    lines, footnotes = strip_noise(lines)
 
     var_boundaries = find_variable_boundaries(lines, known_cols)
     sections = find_section_boundaries(lines)
@@ -646,7 +660,28 @@ def parse_bakgrundsfakta(
         stub_entries = fill_missing_variables(lines, missing, sections, covered)
         entries.extend(stub_entries)
 
+    # Attach footnote definitions to entries that reference them
+    if footnotes:
+        _attach_footnotes(entries, footnotes)
+
     return entries
+
+
+def _attach_footnotes(
+    entries: list[DocEntry], footnotes: dict[str, str]
+) -> None:
+    """Append footnote definitions to entries that contain references."""
+    for entry in entries:
+        content = "\n".join(entry.lines)
+        refs = set(re.findall(r"\[\^(\d+)\]", content))
+        if not refs:
+            continue
+        fn_lines = []
+        for num in sorted(refs, key=int):
+            if num in footnotes:
+                fn_lines.append(f"[^{num}]: {footnotes[num]}")
+        if fn_lines:
+            entry.lines.extend(["", *fn_lines])
 
 
 def fill_missing_variables(
@@ -869,7 +904,7 @@ def write_entries(
 def parse_forandringar(md_text: str, year: str, source_file: str) -> DocEntry:
     """Parse a förändringar PDF as a single topic entry."""
     lines = md_text.split("\n")
-    lines = strip_noise(lines)
+    lines, _footnotes = strip_noise(lines)
     # Also strip SCB header/footer lines specific to förändringar docs
     cleaned = []
     for line in lines:
@@ -967,7 +1002,8 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     Fallback: regmeta database.
     """
     if md_text:
-        cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", md_text)
+        cleaned = re.sub(r"^(\s*)<sup>(\d+)</sup>\s*", r"\1[^\2]: ", md_text, flags=re.MULTILINE)
+        cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", cleaned)
         cleaned = re.sub(r"</?span[^>]*>", "", cleaned).replace("\\_", "_")
         vf = extract_variabelforteckning(cleaned.split("\n"))
         if vf:

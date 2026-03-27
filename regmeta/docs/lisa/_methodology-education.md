@@ -297,7 +297,6 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 | Projekt med arbetmarknadspolitisk inriktning | 5 100   |
 | Kartläggning, vägledning och rehabilitering  | 94 500  |
 
-[^111] Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
 
 **Antal personer som någon gång under året tillhört sökandekategorier som i LISA faller under åtgärdsstudier**
 
@@ -336,3 +335,6 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 #### **2002-09-19**
 
 Ändringar av kommunnamn. I kommunnamnet Upplands Väsby har bindestrecket tagits bort from 2002-09-19.
+
+
+[^111]: Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.

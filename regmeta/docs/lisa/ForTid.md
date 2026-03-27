@@ -35,4 +35,6 @@ I samband med genomförandet av det nya pensionssystemet ändrades även skatter
 
 *För ytterligare information, se under respektive inkomstslag.*
 
-[^129] 1996 erhöll 64 835 personer denna ersättning från AGS, i genomsnitt fick de 17 845 kronor i ersättning.
+
+
+[^129]: 1996 erhöll 64 835 personer denna ersättning från AGS, i genomsnitt fick de 17 845 kronor i ersättning.

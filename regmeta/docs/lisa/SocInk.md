@@ -23,9 +23,7 @@ Ersättning för tjänstgöring i hemvärnet *([[ForsvarErs]])* och Boendetillä
 
 Förtidspension/sjukbidrag som under året ersatts av ålderspension redovisas som ålderspension för aktuellt år, medan ålderspension som under året ersatts av förtidspension/sjukbidrag redovisas som förtidspension/sjukbidrag.
 
-[^131] Ersättning vid [[OTA]] och Tillfällig avgångsersättning betalas ut även efter 1997 men redovisas då, för samtliga, under *Arbetslivsutvecklingsbidrag/Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* ([[OTA]]) och *Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring* (Tillfällig avgångsersättning).
 
-[^132] Stöd för start av näringsverksamhet (tidigare Starta-eget-bidrag) borde inte ingå som en del av den arbetstidsrelaterade sociala inkomsten då personer som erhåller detta bidrag klassificeras som sysselsatta. Bidraget kan dock inte särskiljas från aktivitetsstödet/utbildningsbidraget i den redovisning som inkomststatistiken erhåller från Försäkringskassan.
 
 För person med förtidspension/sjukbidrag som även uppbär efterlevandeförmån från folkpension eller ATP redovisas belopp från efterlevandeförmån som del av egenförmån. Dessa beroenden mellan förtidspension/sjukbidrag och ålderspension och efterlevandeförmån upphör från och med år 2003 när sjukersättning/ aktivitetsersättning, som är en del av sjukförsäkringssystemet, ersätter förtidspension/sjukbidrag.
 
@@ -40,3 +38,7 @@ För åren 1990–1995 redovisas inte variabeln FortidAGS i LISA.
 ## **Övrig inkomst**
 
 #### **Kapitalinkomst**
+
+
+[^131]: Ersättning vid [[OTA]] och Tillfällig avgångsersättning betalas ut även efter 1997 men redovisas då, för samtliga, under *Arbetslivsutvecklingsbidrag/Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* ([[OTA]]) och *Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring* (Tillfällig avgångsersättning).
+[^132]: Stöd för start av näringsverksamhet (tidigare Starta-eget-bidrag) borde inte ingå som en del av den arbetstidsrelaterade sociala inkomsten då personer som erhåller detta bidrag klassificeras som sysselsatta. Bidraget kan dock inte särskiljas från aktivitetsstödet/utbildningsbidraget i den redovisning som inkomststatistiken erhåller från Försäkringskassan.

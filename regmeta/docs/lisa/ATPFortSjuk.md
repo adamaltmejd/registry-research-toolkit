@@ -22,3 +22,6 @@ För att få förtidspension från ATP måste man dels uppfylla villkoren för r
 Förtidspension och sjukbidrag skall i princip motsvara den ålderspension som man skulle ha fått om man inte blivit invalidiserad före 65 års ålder.
 
 Från och med år *2003* upphör förtidspension och sjukbidrag som ersättningssystem. I stället införs ersättningsslagen sjukersättning och aktivitetsersättning.
+
+
+[^125]: Alternativt: Anger typ av ATP-pension vid sista utbetalning under året.

@@ -38,4 +38,6 @@ Det finns skäl att anta att personen har svenskfödda föräldrar om personen h
 
 11 Okänt
 
-[^8] Kod 26 betyder dock "Född i Sverige, län okänt".
+
+
+[^8]: Kod 26 betyder dock "Född i Sverige, län okänt".

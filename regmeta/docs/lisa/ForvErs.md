@@ -14,3 +14,6 @@ Summa Kontant bruttolön, Inkomst av aktiv näringsverksamhet[^44] , Sjukpenning
 Observera att 1990 års Förvärvsinkomst utgörs av företagarinkomst från 1989 och övriga inkomster från 1990.
 
 Förvärvsinkomst och arbetsrelaterade ersättningar redovisas endast när *Kontant bruttolön* eller *Inkomst av aktiv näringsverksamhet*  (motsvarande) är större än noll.
+
+
+[^44]: 1990 är företagarinkomsten lika med Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad). Inkomst av aktiv näringsverksamhet inkluderas i summan endast när Inkomst av aktiv näringsverksamhet (motsvarande) är större än noll.

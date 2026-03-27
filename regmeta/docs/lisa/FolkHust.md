@@ -24,6 +24,8 @@ Hustrutillägg som under året ersatts av förtidspension eller ålderspension r
 
 Har man under året även erhållit efterlevandeförmån av folkpension, redovisas även denna efterlevandeförmån under hustrutillägg.
 
-[^143] Alternativt: Anger typ av folkpension vid senast utbetalning under året
 
-[^144] Om det finns särskilda skäl kan hustrutillägg betalas ut till hustru som är yngre än 60 år. Dessa särskilda skäl kan vara: barn under tolv år, make i behov av vård, arbetsmarknadsskäl.
+
+
+[^143]: Alternativt: Anger typ av folkpension vid senast utbetalning under året
+[^144]: Om det finns särskilda skäl kan hustrutillägg betalas ut till hustru som är yngre än 60 år. Dessa särskilda skäl kan vara: barn under tolv år, make i behov av vård, arbetsmarknadsskäl.

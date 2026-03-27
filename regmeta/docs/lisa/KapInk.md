@@ -60,7 +60,6 @@ Det finns möjlighet att få ålderspension som förtida alternativt uppskjutet 
 Förtida uttag kan återkallas. Om man får förtidspension sedan man återkallat ålderspension minskas förtidspensionen med 0,5 procent för antalet månader man haft ålderspension.
 
 
-[^133] Åldersgränsen för förtida uttag höjdes den 1 januari 1998 från 60 till 61 år.
 
 Uppskjuts uttaget ökas pensionen med 0,7 procent[^134] för varje månad som förflutit mellan 65-årsdagen och dagen för första uttag.
 
@@ -84,7 +83,6 @@ Det pensionssystem som finns idag är konstruerat för att bättre än det gamla
 
 För att pensionssystemet ska garanteras stabilitet oavsett ekonomisk eller demografisk utveckling har det kompletterats med en automatisk
 
-[^134] Innan 1/7 1990 med 0,6 procent för varje månad.
 
 balansering. Den tar bort risken för eventuella underskott och garanterar en långsiktig finansiell stabilitet för pensionssystemet.
 
@@ -97,3 +95,7 @@ När medellivslängden ökade kraftigt och den ekonomiska tillväxten saktade in
 Det första steget i pensionsreformen var den så kallade Pensionsberedningen. Det var en parlamentarisk kommitté som påbörjade sitt arbete 1984 och lämnade sin rapport 1990. Rapporten innehöll en genomgripande analys av problemen och pekade på olika lösningsalternativ men kommittén lyckades inte enas om ett slutligt förslag. Därför tillsattes Pensionsarbetsgruppen 1991, en mindre grupp politiker och experter, för att slutföra arbetet. Gruppen presenterade 1994 ett principförslag till ett reformerat ålderspensionssystem som antogs av riksdagen samma år. Under åren 1994-1998 arbetades den detaljerade lagstiftningen fram och den allmänna pensionen trädde i kraft 1999.
 
 Reformeringen av ålderspensionen medförde också ett behov av att reformera efterlevandepensionen och den dåvarande förtidspensionen. Detta arbete genomfördes under åren därpå och 2003 var samtliga delar av pensionsreformen på plats.
+
+
+[^133]: Åldersgränsen för förtida uttag höjdes den 1 januari 1998 från 60 till 61 år.
+[^134]: Innan 1/7 1990 med 0,6 procent för varje månad.

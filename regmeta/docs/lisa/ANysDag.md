@@ -19,7 +19,6 @@ Antal dagar i sökandekategori:
 - Särskilt nystartsjobb (36), *fr.o.m. 2008-01*
 - Nystartsjobb för deltidsarbetslösa (37), *fr.o.m. 2008-01, t.o.m. 2009-01.*
 
-[^117] Bearbetad version av Arbetsförmedlingens Datalager (se vidare bilaga 2).
 
 *Antal dagar för varje individ och år räknas fram med hjälp av inskrivningsoch avaktualiseringsdatum för aktuella sökandekategorier[^118] .*
 
@@ -44,7 +43,6 @@ Hos Arbetsförmedlingen särredovisas kategorin Nystartsjobb och ingår således
 
 Införs 2008-01. En särskild form av Nystartsjobb där målgruppen är långtidssjukskrivna och personer med sjuk- eller aktivitetsersättning.
 
-[^118] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 #### **Nystartsjobb för deltidsarbetslösa**
 
@@ -70,7 +68,6 @@ Till och med den *30/6 1993* avser förtidspension heltid, två tredjedels tid e
 
 Från den *1/7 1993* krävs för rätt till hel förtidspension/sjukbidrag att arbetsförmågan skall vara helt nedsatt. Det finns dock övergångsregler
 
-[^119] 1998 får man ha en förvärvsinkomst på 8 800 kr/år utan att hel förmån reduceras. När nya regler om vilande förtidspension införs år 2000 ändras dessa förutsättningar, se vidare nästa sida.
 
 som ger personer med restarbetsförmåga rätt att behålla hel förtidspension tills det av något annat skäl är aktuellt med omprövning av förmånen. Övergångsregler ger också personer som uppbär två tredjedels förtidspension motsvarande rätt att behålla denna förmån.
 
@@ -107,3 +104,7 @@ Arbetsförmåga som en försäkrad uppvisat under det första året med vilande 
 Från och med *1/1 2003* upphör förtidspension och sjukbidrag som ersättningssystem. I stället införs ersättningsslagen sjukersättning och aktivitetsersättning.
 
 *Se vidare under Sjukersättning ([[SjukErs]]) och Aktivitetsersättning* ([[AktErs]]).
+
+
+[^118]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^119]: 1998 får man ha en förvärvsinkomst på 8 800 kr/år utan att hel förmån reduceras. När nya regler om vilande förtidspension införs år 2000 ändras dessa förutsättningar, se vidare nästa sida.

@@ -47,9 +47,7 @@ I RAMS bestäms ett huvudsakligt arbetsställe för varje person som fått kontr
 
 För personer med flera kontrolluppgifter från arbetsgivare och/eller företagarinkomster görs en jämförelse mellan de olika inkomstkällorna. Den inkomstkälla som har gett den högsta skattade novemberinkomsten anses utgöra huvudarbetsställe under november. När novemberinkomsten skall skattas väger delårsmarkerade kontrolluppgifter och företagarinkomster något tyngre än helårsmarkerade kontrolluppgifter. För personer som inte varit verksamma under november väljs det arbetsställe som gett den högsta inkomsten.
 
-[^21] Registerbaserad arbetsmarknadsstatistik
 
-[^22] Arbetsställe-/företagsvariabler redovisas även för personer som inte klassats som förvärvsarbetande under november men som ändå fått kontrolluppgift från arbetsgivare under året.
 
 *I övrigt se under Arbetsställe (november)* ([[CfarNr_LISA]]) *och Företag (november)* ([[PeOrgNr_LISA]]).
 
@@ -78,9 +76,7 @@ De första åtta åren som Sysselsättningsregistret existerade (1985-1992) anv�
 
 Kontrolluppgifter från arbetsgivare (KU)[^24] bidrar med lönebelopp och de "sociala" kontrolluppgifterna (KU-S) med information om sjukpenning och föräldrapenning. Från självdeklarationernas taxeringsband hämtas
 
-[^23] I LISA finns denna avgränsning för åren 1990-1993
 
-[^24] Skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare
 
 inkomstuppgifter för egna företagare, närmare bestämt inkomster av rörelse och jordbruksfastighet (brukad)[^25] .
 
@@ -100,11 +96,8 @@ Den fiktiva novemberlönesumman beräknas på följande sätt:
 
 För personer med flera KU summeras den fiktiva novemberlönesumman från varje KU till en total novemberlönesumma. Dessutom inräknas även vissa ersättningar från Försäkringskassan[^27] (KU-S) i den totala
 
-[^25] Från och med 1991 ersätts Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) av begreppet Inkomst av aktiv näringsverksamhet (avseende skillnader, se under denna variabel).
 
-[^26] Uppgiften från 1990 och tidigare avseende Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) bygger på uppgifter från året före referensåret, d.v.s. uppgifterna är ett år för gamla.
 
-[^27] Dessa ersättningar från Försäkringskassan är: Sjukpenning, Graviditetspenning, Smittbärarpenning, Sjuklönegaranti, Skattepliktig arbetsskadeersättning, Föräldrapenning vid barn födelse eller adoption,
 
 novemberlönesumman om sådan ersättning erhållits förutom ersättningen som redovisats på KU. Denna ersättning behandlas på samma sätt som KU som inte är delårsmarkerad dvs. enligt alternativ C. Ett villkor för att kunna klassas som förvärvsarbetande är att personen haft en kontrolluppgift från arbetsgivare eller sjömansinkomst under året (enbart KU-S-ersättning är inte tillräckligt). Lönesumman för KU som inte är delårsmarkerad vägs alltså ned med konstanten 0,11. Detta beror på att novembersysselsättningen inte anses lika säkert bestämd för dessa kontrolluppgifter jämfört med de KU som är delårsmarkerade.
 
@@ -235,3 +228,12 @@ Innehåller alla företag med minst 1 förvärvsarbetande enligt RAMS. *[[PeOrgN
 **Endast dessa kopplingar ska användas, övriga identitetsvariabler är egenskaper.**
 
 Image /page/466/Figure/9 description: This diagram illustrates the relationships between three types of entities—Individ (Individual), Arbetsställe (Workplace), and Företag (Company)—across two time periods, year t and year t-1. In the top section for year t, the 'Individ, år t' box contains 'ArbetsId', '[[PeOrgNr_LISA]]', and '[[PersonNr]]'. It is connected by solid lines to 'Arbetsställe, år t' (containing 'ArbetsId' and '[[PeOrgNr_LISA]]') and 'Företag, år t' (containing '[[PeOrgNr_LISA]]'). A solid line also connects 'Arbetsställe, år t' and 'Företag, år t'. In the bottom section for year t-1, there are boxes for 'Individ, år t-1' (containing '[[PersonNr]]'), 'Arbetsställe, år t-1' (containing '[[PeOrgNr_LISA]]' and 'ArbetsId'), and 'Företag, år t-1' (containing '[[PeOrgNr_LISA]]'). Dashed lines represent longitudinal links between the same entity types across the two years: 'Individ, år t' to 'Individ, år t-1', 'Arbetsställe, år t' to 'Arbetsställe, år t-1', and 'Företag, år t' to 'Företag, år t-1'.
+
+
+[^21]: Registerbaserad arbetsmarknadsstatistik
+[^22]: Arbetsställe-/företagsvariabler redovisas även för personer som inte klassats som förvärvsarbetande under november men som ändå fått kontrolluppgift från arbetsgivare under året.
+[^23]: I LISA finns denna avgränsning för åren 1990-1993
+[^24]: Skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare
+[^25]: Från och med 1991 ersätts Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) av begreppet Inkomst av aktiv näringsverksamhet (avseende skillnader, se under denna variabel).
+[^26]: Uppgiften från 1990 och tidigare avseende Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) bygger på uppgifter från året före referensåret, d.v.s. uppgifterna är ett år för gamla.
+[^27]: Dessa ersättningar från Försäkringskassan är: Sjukpenning, Graviditetspenning, Smittbärarpenning, Sjuklönegaranti, Skattepliktig arbetsskadeersättning, Föräldrapenning vid barn födelse eller adoption,

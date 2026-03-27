@@ -28,4 +28,6 @@ I slutet av juni 2004 startade satsningen med utökat rekryteringsbidrag för ko
 
 Rekryteringsbidraget ingår även i variabeln [[Stud]] och [[SocInk]] för åren 2003-2008.
 
-[^59] Det högre bidragsbeloppet erhåller den som under de senaste tolv månaderna haft en inkomst som överstiger ett visst belopp.
+
+
+[^59]: Det högre bidragsbeloppet erhåller den som under de senaste tolv månaderna haft en inkomst som överstiger ett visst belopp.

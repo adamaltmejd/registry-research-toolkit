@@ -26,10 +26,12 @@ Dagersättning från AGS betalas ut längst till och med den 360:e sjukdagen.
 
 Alla anställda är försäkrade för skador i arbetet genom arbetsskadeförsäkringen. Flertalet arbetare och tjänstemän inom privata företag, kooperationen, kommun och landsting får dessutom
 
-[^77] [[Kommun]]- och landstingsanställda som inte har rätt till sjuklön kan i stället ha rätt till dagersättning från AGS för dagarna 15 till 90.
 
-[^78] AGS-KL (kommun- och landstingsanställdas avtalsgruppförsäkring) kompenserar även för det faktum att den sjukpenninggrundande inkomsten 2008 multipliceras med faktorn 0,97. Privatanställda tjänstemän och tjänstemän anställda inom kooperationen kan få ersättning från [[ITP]] (industrins och handelns tilläggspension) respektive KTP (kooperationens tilläggspension för tjänstemän) när sjukperioden överstiger 90 dagar. För statligt anställda kompletteras sjukpenningen för lönedelar över 7,5 prisbasbelopp med sjukpension.
 
 ersättning genom TFA/TFA-KL (Trygghetsförsäkring vid arbetsskada). Försäkringen ersätter den inkomstförlust och de kostnader som man inte får ersättning för från annat håll. Dessutom kan ersättning lämnas för sveda och värk och vid invaliditet kan ersättning lämnas för lyte och men samt olägenheter i övrigt. Variabeln omfattar dock endast skattepliktiga ersättningar i samband med arbetsskada.
 
 Variabeln härrör från kontrolluppgift.
+
+
+[^77]: [[Kommun]]- och landstingsanställda som inte har rätt till sjuklön kan i stället ha rätt till dagersättning från AGS för dagarna 15 till 90.
+[^78]: AGS-KL (kommun- och landstingsanställdas avtalsgruppförsäkring) kompenserar även för det faktum att den sjukpenninggrundande inkomsten 2008 multipliceras med faktorn 0,97. Privatanställda tjänstemän och tjänstemän anställda inom kooperationen kan få ersättning från [[ITP]] (industrins och handelns tilläggspension) respektive KTP (kooperationens tilläggspension för tjänstemän) när sjukperioden överstiger 90 dagar. För statligt anställda kompletteras sjukpenningen för lönedelar över 7,5 prisbasbelopp med sjukpension.

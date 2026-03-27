@@ -30,9 +30,7 @@ Antal dagar i sökandekategori[^105]:
 - •Akademikerpraktik (62), *fr.o.m. 1993-09, upphör 1995-06-30*
 - Ungdomsintroduktion med utbildningsbidrag (63), *fr.o.m. 1995-01, upphör 1995-06-30*
 
-[^105] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^106] De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
 
 - Datortek (64), *fr.o.m. 1995-07, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Kommunala ungdomsprogram, ungdomar under 20 år, KUP (65), *fr.o.m. 1995-10, upphör 2007-11*
@@ -70,9 +68,7 @@ Utbildningen måste planeras tillsammans med Arbetsförmedlingen, som i första 
 
 Arbetsmarknadsutbildningen ska ha en klar yrkesinriktning. Länsarbetsnämnden/Arbetsförmedlingen upphandlar de utbildningar man behöver av Amu-gruppen, utbildningsföretag, den kommunala uppdragsverksamheten eller högskolan. Det finns kurser inom alla yrkesområden och nivåer, från grundutbildningar till mycket kvalificerade påbyggnadskurser på högskolenivå. Vid sidan av renodlat yrkesinriktade kurser kan arbetsmarknadsutbildning utgöras av allmänteoretiska kurser, som i sin tur kan vara en nödvändig förberedelse för yrkesutbildning. Reguljär utbildning på grundskoleoch gymnasienivå får dock enbart beviljas till personer med funktionshinder och långtidsinskrivna invandrare[^108]. Tidsperioden för arbetsmarknadsutbildning är längst sex månader, endast om särskilda skäl föreligger kan längre tid medges.
 
-[^107] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
-[^108] Begränsning till dessa målgrupper fanns inte i början av 90-talet.
 
 Aktivitetsstödet vid arbetsmarknadsutbildning kan betalas ut för från en dag upp till fyra år och kan erhållas vare sig man är ersättningsberättigad enligt A-kassa eller inte.
 
@@ -161,3 +157,10 @@ Från och med 1/1 1999 ersätts arbetsplatsintroduktion av arbetspraktik, beslut
 Den 1/10 1995 införs kommunala uppföljningsansvaret. Ett kommunalt program för arbetslösa ungdomar till och med den 30 juni det år de fyller 20 år. Programmen skall innehålla individinriktade insatser med möjlighet till arbetsplatspraktik kombinerat med utbildningsinslag. Kommunen beslutar om storleken på ersättningen och betalar ut denna.
 
 Upphör november 2007, ersätts av Jobbgaranti för ungdomar.
+
+
+[^105]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^106]: De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
+[^107]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^108]: Begränsning till dessa målgrupper fanns inte i början av 90-talet.
+[^109]: Funktionshindrade arbetslösa kan få arbetsplatsintroduktion även före 20 år ålder och under längre tid än sex månader. 1998 kan invandrare få arbetsplatsintroduktion under längre tid än sex månader.

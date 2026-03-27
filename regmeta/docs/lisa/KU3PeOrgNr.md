@@ -27,3 +27,7 @@ KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 **Företag (tredje största förvärvskälla) KU3PeOrgNr**
 
 *Se under Kopplingsidentiteter – Företag.*
+
+
+[^5]: 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
+[^6]: Här ingår sambor utan gemensamma barn.

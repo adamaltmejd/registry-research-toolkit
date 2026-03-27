@@ -38,7 +38,6 @@ Under den tid man deltar i resursarbete står man till arbetsmarknadens förfoga
 Åtgärden upphör 30/9 1999, beslut tagna före den 1/10 1999 får fullföljas till och med den 31/3 2000.
 
 
-[^115] Är man bosatt inom stödområde A och B kan man från och med 1998 få Starta eget-bidrag även om man inte är eller riskerar att bli arbetslös.
 
 
 #### **Individuellt anställningsstöd**
@@ -246,7 +245,6 @@ Insatsen riktar sig till yrken inom vissa delar av välfärden och offentlig sek
 | 2014 | 131 496 |
 | 2015 | 130 149 |
 
-[^116] Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.
 
 | År   | Antal   |
 |------|---------|
@@ -258,3 +256,7 @@ För åren 1992–1994 ingår inte inskrivningsperioder (med lönebidrag/OSA/ re
 Av inskrivningsperioder, i ovan kategorier, som påbörjats innan 1995 fångar Arbetsförmedlingens händelsystem 48 225 händelser med lönebidrag, 5 032 händelser med OSA, 1 335 händelser med rekryteringsstöd och 207 händelser med starta-eget-bidrag. Merparten av dem som varit åtgärdssysselsatta med lönebidrag och OSA (1992– 1994) torde fångas av systemet, medan detta är fallet enbart för en bråkdel av dem som fått rekryteringsstöd eller starta-eget-bidrag.
 
 Jämförelser avseende åtgärdssysselsatta kan inte göras mellan åren före och efter årsskiftet 1994/95.
+
+
+[^115]: Är man bosatt inom stödområde A och B kan man från och med 1998 få Starta eget-bidrag även om man inte är eller riskerar att bli arbetslös.
+[^116]: Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.

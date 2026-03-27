@@ -27,7 +27,6 @@ Om den efterlevande har vårdnaden om och stadigvarande sammanbor med barn under
 
 Om den efterlevande har svårigheter att försörja sig efter omställningsperioden kan *särskild efterlevandepension* betalas ut. Den
 
-[^147] Till och med 1996 betalas omställningspensionen ut under tolv månader efter dödsfallet.
 
 särskilda efterlevandepensionen betalas ut så länge man har svårt att försörja sig och prövas vart tredje år.
 
@@ -38,3 +37,6 @@ Ovan beskrivna regler kring efterlevandepension börjar gälla den 1 januari 199
 Rätten till änkepension i form av folkpension upphör vid 65 års ålder eller om man dessförinnan får ålderspension, sjukbidrag eller förtidspension från folkpensioneringen. Vidare upphör rätten till änkepension från folkpensioneringen och från ATP om man gifter om sig. Detsamma gäller om man börjar sammanbo med en man som man tidigare varit gift med eller som man har barn tillsammans med.
 
 Från och med 2003 redovisas dessa efterlevandeförmåner under *Efterlevandeförmån* ([[SumEftPens]]).
+
+
+[^147]: Till och med 1996 betalas omställningspensionen ut under tolv månader efter dödsfallet.

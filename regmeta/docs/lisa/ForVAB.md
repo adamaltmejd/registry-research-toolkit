@@ -27,9 +27,7 @@ En förälder kan få tillfällig föräldrapenning för vård av barn som är �
 Familjer kan få tillfällig föräldrapenning för vård av barn i max 120 dagar per barn och år. Se sista 60 dagar kan bara erhållas om barnet är sjukt och inte om barnets ordinarie vårdare är sjuk eller smittad[^68] .
 
 
-[^67] I särskilda fall kan tillfällig föräldrapenning för vård av barn ges även till barn som är yngre än 8 månader och barn som har fyllt 12 men inte 16 år. För barn som omfattas av LSS (Lagen om stöd och service till vissa funktionshindrade) kan tillfällig föräldrapenning för vård av barn betalas till dess att barnet fyller 21 år och i särskilda fall till barnet fyller 23 år Från och med 2005 utvidgas rätten till tillfällig föräldrapenning till att omfatta föräldrar till ett allvarligt sjukt barn som inte fyllt 18 år.
 
-[^68] Den 1/7 1990 byggdes den tillfälliga föräldrapenningen ut med 30 dagar till totalt 120 (60+60).
 
 Tillfällig föräldrapenningen, som är skattepliktig och pensionsgrundande, kan tas ut som hel, tre fjärdedels, halv, fjärdedels eller åttondels ersättning[^69] .
 
@@ -55,7 +53,6 @@ Den *1/7 2006* höjs inkomsttaket vid beräkning av den sjukpenninggrundande ink
 
 Den *1/1 2007* sänks inkomsttaket vid beräkning av den sjukpenninggrundande inkomsten (SGI) från tio till sju och en halv
 
-[^69] Från och med den 1 januari 1997 kan den tillfälliga föräldrapenningen även tas ut som tre fjärdedels ersättning och fr.o.m. den 1/1 2002 även som en åttondels ersättning.
 
 gånger prisbasbeloppet. Vid beräkning av dagersättning som grundas på SGI, ska SGI multipliceras med faktorn 0,989.
 
@@ -66,3 +63,8 @@ Från *2010* kan någon annan få tillfällig föräldrapenning för att vårda 
 Från och med *1 januari 2013* tas kravet på intyg om barns frånvaro bort. Först från och med den åttonde sjukdomsdagen ska ett intyg från en läkare eller sjuksköterska skickas in till Försäkringskassan.
 
 *2016* införs en fast utbetalningsdag för tillfällig föräldrapenning vid vård av barn och pengarna betalas ut den 25:e varje månad.
+
+
+[^67]: I särskilda fall kan tillfällig föräldrapenning för vård av barn ges även till barn som är yngre än 8 månader och barn som har fyllt 12 men inte 16 år. För barn som omfattas av LSS (Lagen om stöd och service till vissa funktionshindrade) kan tillfällig föräldrapenning för vård av barn betalas till dess att barnet fyller 21 år och i särskilda fall till barnet fyller 23 år Från och med 2005 utvidgas rätten till tillfällig föräldrapenning till att omfatta föräldrar till ett allvarligt sjukt barn som inte fyllt 18 år.
+[^68]: Den 1/7 1990 byggdes den tillfälliga föräldrapenningen ut med 30 dagar till totalt 120 (60+60).
+[^69]: Från och med den 1 januari 1997 kan den tillfälliga föräldrapenningen även tas ut som tre fjärdedels ersättning och fr.o.m. den 1/1 2002 även som en åttondels ersättning.

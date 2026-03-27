@@ -26,8 +26,10 @@ Under 2003 och 2004 erhåller ett mindre antal (ca 15 000 personer år 2003) *Å
 
 *För ytterligare information om det nya pensionssystemet se grundläggarende texten under Ålderspension samt under Summa ålderspension* (SumAld03).
 
-[^139] Alternativt: Anger typ av ATP-pension vid senast utbetalning under året.
 
-[^140] Före 1995 beräknades PGI efter basbeloppet. Från och med 1999 kallas det förhöjda basbeloppet för förhöjt prisbasbelopp.
 
-[^141] Även om man inte i Sverige tjänat in ATP-poäng för tre år, kan man ha rätt till ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.
+
+
+[^139]: Alternativt: Anger typ av ATP-pension vid senast utbetalning under året.
+[^140]: Före 1995 beräknades PGI efter basbeloppet. Från och med 1999 kallas det förhöjda basbeloppet för förhöjt prisbasbelopp.
+[^141]: Även om man inte i Sverige tjänat in ATP-poäng för tre år, kan man ha rätt till ATP-pension genom sammanläggningsprincipen enligt EU:s förordningar.

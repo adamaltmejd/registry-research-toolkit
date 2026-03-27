@@ -83,7 +83,6 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2003 | 39 400 |
 | 2004 | 40 100 |
 
-[^169] Från och med 1999 kallas basbeloppet för prisbasbelopp och det förhöjda basbeloppet för förhöjt prisbasbelopp.
 
 | År   | Kronor |
 |------|--------|
@@ -125,3 +124,6 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2015 | 58 100 |
 | 2016 | 59 300 |
 | 2017 | 61 500 |
+
+
+[^169]: Från och med 1999 kallas basbeloppet för prisbasbelopp och det förhöjda basbeloppet för förhöjt prisbasbelopp.

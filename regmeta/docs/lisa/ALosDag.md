@@ -41,9 +41,7 @@ Skat 1, servicekod 3: Utan arbete, övriga
 
 Skat 11: Arbetslösa
 
-[^96] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^97] Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
 
 Skat 12: Utan arbete, vägledning
 
@@ -74,7 +72,6 @@ Från och med *1998-01* ändras betydelsen av sökandekategori 13:
 
 Från och med *1999-01[^98]* ändras instruktionen för inskrivning i sökandekategori 14 (Övriga inskrivna). Personer som har ersättning från arbetslöshetsförsäkringen står till arbetsmarknadens förfogande och skall inte längre vara inskrivna i sökandekategori 14, utan registreras i gruppen arbetslösa (se vidare under "Antal dagar som övrig inskriven vid Arbetsförmedlingen"). *I och med förändringen beräknas 20 000–25* 
 
-[^98] I realiteten påbörjades överföringen redan i oktober–november 1998.
 
 *000 sökande successivt föras över till gruppen arbetslösa från och med 1998-10*.
 
@@ -134,3 +131,8 @@ heltidsarbetslösheten sjunker med cirka 20 000 personer redan från 1996-04 (de
 | 2015 | 611 609   |
 | 2016 | 603 106   |
 | 2017 | 592 038   |
+
+
+[^96]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^97]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.
+[^98]: I realiteten påbörjades överföringen redan i oktober–november 1998.

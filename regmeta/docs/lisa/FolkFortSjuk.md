@@ -26,7 +26,6 @@ Från och med *1/1 1993* bedöms rätten till folkpension och folkpensionens sto
 - I förhållande till bosättningstiden i Sverige (bosättningsregeln)
 - I förhållande till antalet intjänade ATP-poängår (ATP-poängsregeln)
 
-[^120] Alternativt: Anger typ av folkpension vid sista utbetalning under året.
 
 Samma regler gäller nu för både svenska och utländska medborgare. Den regel som ger förmånligast resultat tillämpas.
 
@@ -47,11 +46,8 @@ Från och med *1/7 1995* är hel folkpension i form av förtidspension/sjukbidra
 Från och med *1/1 1999* används det så kallade prisbasbeloppet[^123] som underlag till pensionsbeloppen.
 
 
-[^121] Basbelopp, se bilaga 1.
 
-[^122] Som make/maka räknas även den som stadigvarande bor tillsammans med pensionären, om de antingen tidigare varit gifta med varandra eller om de har eller har haft barn tillsammans.
 
-[^123] Från och med 1999 beräknas pensionen på det fulla basbeloppet som från och med nu benämns prisbasbeloppet.
 
 Från och med år *2003* upphör förtidspension och sjukbidrag som ersättningssystem. I stället införs ersättningsslagen sjukersättning och aktivitetsersättning.
 
@@ -60,3 +56,10 @@ Från och med år *2003* upphör förtidspension och sjukbidrag som ersättnings
 Om man saknar eller har låg ATP utgår pensionstillskott. Pensionstillskottet får inte, tillsammans med ATP-pensionen, vid hel pension överstiga 112,9 procent av prisbasbeloppet[^124] . Pensionstillskottet är lika för ensamstående och gifta pensionärer. Pensionstillskottsbeloppet kan i variabeln inte särskiljas från folkpensionsbeloppet.
 
 Förtidspensionen/sjukbidrag från folkpension kan kompletteras med tilläggsförmånerna: *Pensionstillskott* (ingår här i folkpensionsbeloppet, se ovan), *Handikappersättning*, *Bostadstillägg* och från och med 1991 *Särskilt pensionstillägg* (se beskrivning under respektive variabel).
+
+
+[^120]: Alternativt: Anger typ av folkpension vid sista utbetalning under året.
+[^121]: Basbelopp, se bilaga 1.
+[^122]: Som make/maka räknas även den som stadigvarande bor tillsammans med pensionären, om de antingen tidigare varit gifta med varandra eller om de har eller har haft barn tillsammans.
+[^123]: Från och med 1999 beräknas pensionen på det fulla basbeloppet som från och med nu benämns prisbasbeloppet.
+[^124]: 1990 fick pensionstillskottet tillsammans med ATP-pensionen inte överstiga 100 procent av basbeloppet, 1991 höjdes nivån till 104 procent av basbeloppet, 1993 ändras den till 105,5 procent av det minskade basbeloppet för att i juli 1995 höjas till 111,5 procent av det minskade basbeloppet. Den 1/6 1999 höjs nivån till 112,9 procent av prisbasbeloppet.

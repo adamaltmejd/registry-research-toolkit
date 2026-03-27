@@ -45,9 +45,7 @@ Med bruttolön avses lönen före avdrag för skatt, intresseavdrag, avdrag för
 
 SCB erhåller en kopia av alla kontrolluppgifter från Skatteverket.
 
-[^39] Från och med inkomståret 2008. För inkomståren 2006–2007 gick gränsen vid 18 kr/mil, för inkomståret 2005 gick gränsen vid 17 kr/mil. För inkomståren 2001–2004 gick gränsen vid 16 kr/mil, för inkomståret 2000 vid 15 kr/mil och dessförinnan vid 13 kr/mil.
 
-[^40] Från och med inkomståret 2008. För inkomståren 2002–2007 gick gränsen vid 6 kr/mil repektive 9 kr/mil. Från och med inkomståret 2001, dessförinnan gick gränserna vid 5kr/mil respektive 8 kr/mil.
 
 #### Kontant bruttolön redovisas
 
@@ -56,3 +54,9 @@ SCB erhåller en kopia av alla kontrolluppgifter från Skatteverket.
 Privatanställda tjänstemän, tjänstemän anställda inom kooperationen, statligt anställda samt kommun- och landstingsanställda erhåller kompletterande ersättning i form av sjuklön till och med den 90:e dagen
 
 *2005–:* Inklusive sjuklön (första 14 dagarna/sjukperiod)
+
+
+[^39]: Från och med inkomståret 2008. För inkomståren 2006–2007 gick gränsen vid 18 kr/mil, för inkomståret 2005 gick gränsen vid 17 kr/mil. För inkomståren 2001–2004 gick gränsen vid 16 kr/mil, för inkomståret 2000 vid 15 kr/mil och dessförinnan vid 13 kr/mil.
+[^40]: Från och med inkomståret 2008. För inkomståren 2002–2007 gick gränsen vid 6 kr/mil repektive 9 kr/mil. Från och med inkomståret 2001, dessförinnan gick gränserna vid 5kr/mil respektive 8 kr/mil.
+[^41]: För statstjänstemän och vissa andra gäller s.k. "arbetsgivarinträde" i den allmänna försäkringen. Det betyder att arbetsgivaren lämnar sjuklön och att arbetsgivaren sedan, från Försäkringskassan, får den sjukpenning/arbetsskadeersättning som den anställde har rätt till. Den 1/7 1992 upphörde arbetsgivarinträdet.
+[^42]: Gäller anställda med rätt till sjuklön.

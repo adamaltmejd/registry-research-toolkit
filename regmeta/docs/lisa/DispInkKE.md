@@ -33,6 +33,8 @@ Delkomponenterna är definierade och namnsatta av Inkomststatistiken och kan til
 
 För eventuella förändringar som skett i den disponibla inkomstens delkomponenter hänvisas till inkomststatistikens dokumentation. Det är dock värt att påminna om den skattereform som trädde i kraft 1991 och de effekter denna fått på den disponibla inkomsten.
 
-[^165] För information om familjebegreppet se objektet Familj.
 
-[^166] Konsumtionsvikt: Av socialstyrelsen beräknat konsumtionsutrymme för varje hushållsmedlem.
+
+
+[^165]: För information om familjebegreppet se objektet Familj.
+[^166]: Konsumtionsvikt: Av socialstyrelsen beräknat konsumtionsutrymme för varje hushållsmedlem.

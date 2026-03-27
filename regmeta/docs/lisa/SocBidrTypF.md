@@ -27,7 +27,6 @@ Bostadsbidraget till barnfamiljer består av två delar. Den ena delen är ett *
 Hur stort bostadsbidraget blir beror främst på inkomstens storlek, boendekostnad, bostadsyta och hur stor familj man har. Rätten till
 
 
-[^151] Det särskilda bidraget till hushåll med mer än tre barn slopas från och med 1998 i och med att flerbarnstillägget (i barnbidraget) återinförs.
 
 bostadsbidrag bedöms utifrån den bidragsgrundande inkomsten[^152] . Förmögenhet kan också påverka bostadsbidraget.
 
@@ -42,3 +41,7 @@ Bostadsbidraget till ungdomar mellan 18–28 år kan fås av den ungdom som bor 
 Ytterligare regelförändringar är bl.a. att reavinst och del av förmögenhet över 100 000 kronor nu ingår i den bidragsgrundande inkomsten och att en individuell inkomstgräns införs även för sammanboende.
 
 *På grund av de regelförändringar som genomfördes 1997 sjönk antalet hushåll med bostadsbidrag kraftigt detta år. Månadsgenomsnitt (antal hushåll med bostadsbidrag) var enligt RFV 458 700 hushåll 1996 för att 1997 ha sjunkit till 352 300 hushåll.*
+
+
+[^151]: Det särskilda bidraget till hushåll med mer än tre barn slopas från och med 1998 i och med att flerbarnstillägget (i barnbidraget) återinförs.
+[^152]: Bidragsgrundande inkomst är summan av inkomst av tjänst, inkomst av näringsverksamhet och inkomst av kapital. Vissa tillägg görs till den bidragsgrundande inkomsten, som exempelvis 80 procent av bidragsdelen av studiemedel.

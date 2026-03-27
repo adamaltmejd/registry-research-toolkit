@@ -17,6 +17,8 @@ Vill man dock använda utbetalningarna för att istället studera individen och 
 Syftet med MiDAS är att tillgängliggöra administrativa data för analys av socialförsäkringen och på så sätt minska avståndet mellan data och
 
 
-[^171] Förkortning av STatistik Och REsultat.
 
 användare. För att uppnå detta handlar det dels om att minska informationsmängden i de administrativa data och dels att strukturera data i en enhetlig och lättanvänd form och för olika typer av frågeställningar och användare. Därför har det skapats ett antal så kallade produkter för varje förmån och område. Att strukturera data på många olika sätt för olika ändamål innebär en dubbellagring av data. Med denna dubbellagring av data kan data anpassas till användare och inte tvärtom.
+
+
+[^171]: Förkortning av STatistik Och REsultat.

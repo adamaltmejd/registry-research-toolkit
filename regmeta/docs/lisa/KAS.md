@@ -22,13 +22,9 @@ Ersättningen kan inte erhållas längre än till och med månaden före den må
 
 För att erhålla kontant arbetsmarknadsstöd krävs att man under de tolv månaderna närmast före arbetslösheten arbetat fem månader[^84] med minst 75 timmar per månad (arbetsvillkoret)[^85]. Den som avslutat en utbildning på heltid, som omfattar minst ett läsår och som ger rätt till statligt studiestöd och därefter varit arbetslös (anmäld som arbetssökande) under minst 90 dagar[^86] behöver inte ha förvärvsarbetat före arbetslösheten för att få rätt till ersättning (utbildningsvillkoret).
 
-[^83] Innan den 1 oktober 1995 kunde KAS utgå till en arbetslös när denne fyllt 20 år.
 
-[^84] 1991 sänks Arbetsvillkoret till minst 4 månader. 1994 är arbetsvillkoret åter minst 5 månader
 
-[^85] 1997 är arbetsvillkoret detsamma som i arbetslöshetsförsäkringen.
 
-[^86] Inom en ramtid på 10 månader.
 
 Om man har efterlevandepension, tjänstepension från arbetsgivare, delpension, halv ålderspension, arbetsskadelivränta eller två tredjedels förtidspension minskas stödet med pensionsbeloppet.
 
@@ -69,3 +65,9 @@ Den *1/1 1996* sänks KAS till 230kr/dag.
 Den *1/1 1998* införs en ny arbetslöshetsförsäkring. Den grundförsäkring som ingår i denna arbetslöshetsförsäkring ersätter nu KAS och redovisas under *Ersättning från arbetslöshetskassa* (A-kassa).
 
 Viss eftersläpande ersättning, som avser perioder innan KAS upphörde, har betalats ut under 1998.
+
+
+[^83]: Innan den 1 oktober 1995 kunde KAS utgå till en arbetslös när denne fyllt 20 år.
+[^84]: 1991 sänks Arbetsvillkoret till minst 4 månader. 1994 är arbetsvillkoret åter minst 5 månader
+[^85]: 1997 är arbetsvillkoret detsamma som i arbetslöshetsförsäkringen.
+[^86]: Inom en ramtid på 10 månader.

@@ -18,9 +18,7 @@ Föräldrapenning betalas i sammanlagt 480 dagar[^61] per barn och kan tas ut ti
 
 Från och med 60:e dagen före den beräknade förlossningen har moderna rätt till föräldrapenning. Båda föräldrarna har rätt till föräldrapenning för att delta i föräldrautbildning när de väntar barn. Från det att barnet fötts ges föräldrapenningen till den förälder som är hemma med barnet.
 
-[^61] För barn födda före aug. 1988: 360 dagar, för barn födda under aug. 1988: 390 dagar, för barn födda i september 1988: 420 dagar, för barn födda fr.o.m. oktober 1988: 450 dagar. För barn födda fr.o.m. den 1 januari 2002 gäller att föräldrapenningen förlängs med 30 dagar till totalt 480 dagar
 
-[^62] För barn födda före 1/7 1985: Till dess barnet fyller fyra år. För barn födda före 1/1 2014: Till dess barnet fyller åtta år eller avslutat första året i grundskola. För adoptivbarn adopterade före 2014: Inom åtta år från och med det att man fått barnet i sin vård, dock längst till dess att barnet fyller tio år.
 
 I 390 dagar baseras ersättningen på inkomsten (sjukpenningnivå eller grundnivå), de resterade 90 dagarna är ersättningen 180 kr per dag (lägstanivå). Under de 180 första hela dagarna som tas ut för ett barn ersätts den endast med sjukpenning- eller grundnivå. En förutsättning för att få föräldrapenning enligt sjukpenningnivån under de första 180 dagarna är att man varit försäkrad för en sjukpenning som är högre än grundnivå i minst 240 dagar i följd närmast före barnets födelse (eller för födelse beräknad tidpunkt). I annat fall blir föräldrapenningen för de första 180 dagarna på grundnivån[^63], 250 kronor per dag. För övriga 210 dagar[^64] som ersätts enligt sjukpenningnivån finns inget krav på att man måste ha varit sjukpenningförsäkrad över grundnivån under viss tid. En inkomst som ger lägre ersättning än 250 kronor per dag ersätts dock alltid på grundnivå, även om inkomsten är noll. Därutöver har man rätt till föräldrapenning i 90 dagar med 180 kronor per dag[^65] (lägstanivå).
 
@@ -36,13 +34,9 @@ Den *1/7 1992* ändras reglerna för utbyte av föräldrapenning mot sjukpenning
 
 Under *andra halvåret 1994* ersattes de 90 garantidagarna av ett vårdnadsbidrag (barn mellan ett och tre år). Vårdnadsbidraget redovisas inte i denna variabel.
 
-[^63] Har fr.o.m. 2002 höjts successivt från 60 till 250 kronor/dag. Kallades före 1/1 2002 för garantinivå.
 
-[^64] Före 1/1 2002: 180 dagar.
 
-[^65] För barn födda före 1/7 2006 är ersättningen på lägstanivå 60 kr/dag.
 
-[^66] Fr.o.m. 1/1 1997 kan föräldrapenningen även tas ut som tre fjärdedels ersättning och fr.o.m. den 1/1 2002 även som en åttondels ersättning.
 
 Från och med den *1 januari 1995* sänks ersättningen till 80 procent av den sjukpenninggrundande inkomsten. Vid samma tidpunkt återinförs garantidagarna samtidigt som rätten till vårdnadsbidrag tas bort.
 
@@ -107,3 +101,11 @@ Från och med *1/1 2012* kan föräldrar ta ut föräldrapenning samtidigt i 30 
 Från och med *1 juli 2017* begränsas antalet berättigade föräldrapenningdagar som föräldrar kan ta ut för barn vid invandring. Om barnet bosätter sig i Sverige innan ettårsdagen får det de vanligt 480 dagarna (vid enbarnsfödelse). Om barnet är äldre än ett år blir föräldrarna berättigade till 200 föräldrapenningdagar, Om barnet är äldre än två år är det 200 dagar.
 
 *2017* Adoptionsbidraget höjs från 40 000 kronor till 75 000 kronor. Gäller för barn som föräldrarna får i sin vård den 1 januari 2017 eller senare.
+
+
+[^61]: För barn födda före aug. 1988: 360 dagar, för barn födda under aug. 1988: 390 dagar, för barn födda i september 1988: 420 dagar, för barn födda fr.o.m. oktober 1988: 450 dagar. För barn födda fr.o.m. den 1 januari 2002 gäller att föräldrapenningen förlängs med 30 dagar till totalt 480 dagar
+[^62]: För barn födda före 1/7 1985: Till dess barnet fyller fyra år. För barn födda före 1/1 2014: Till dess barnet fyller åtta år eller avslutat första året i grundskola. För adoptivbarn adopterade före 2014: Inom åtta år från och med det att man fått barnet i sin vård, dock längst till dess att barnet fyller tio år.
+[^63]: Har fr.o.m. 2002 höjts successivt från 60 till 250 kronor/dag. Kallades före 1/1 2002 för garantinivå.
+[^64]: Före 1/1 2002: 180 dagar.
+[^65]: För barn födda före 1/7 2006 är ersättningen på lägstanivå 60 kr/dag.
+[^66]: Fr.o.m. 1/1 1997 kan föräldrapenningen även tas ut som tre fjärdedels ersättning och fr.o.m. den 1/1 2002 även som en åttondels ersättning.

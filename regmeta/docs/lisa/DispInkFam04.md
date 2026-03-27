@@ -22,3 +22,6 @@ För innehållet i denna variabel se under *Ny disponibel inkomst 2004 (individe
 Delkomponenterna är definierade och namnsatta av Inkomststatistiken och kan till vissa delar skilja sig från hur de är definierade och namnsatta i den övriga LISA-dokumentationen.
 
 De förändringar som skett i flertalet av den disponibla inkomstens delkomponenter 1990–2005 behandlas på annan plats i denna dokumentation. För eventuella förändringar i övriga delkomponenter hänvisas till inkomststatistikens dokumentation.
+
+
+[^172]: För sjömän, uppgift från Sjömansskattekontor t.o.m. 1997.

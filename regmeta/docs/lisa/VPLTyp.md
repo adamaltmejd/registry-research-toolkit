@@ -27,3 +27,6 @@ Under repetitionsutbildning får den försvarspliktige en dagpenning. Den motsva
 Dagpenningen är skattepliktig och ATP-grundande och betalas ut av försäkringskassan. Under repetitionsutbildningen kan familjebidrag bara erhållas i form av näringsbidrag.
 
 *Variabeln Dagpenning vid repetitionsutbildning redovisas inte i LISA.*
+
+
+[^60]: Den 1/7 2002 höjs lägsta belopp i dagpenningen till 120 kr/dag. Sedan år 2008 är lägsta belopp i dagpenningen 130 kr/dag.

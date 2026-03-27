@@ -75,9 +75,7 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Internpraktik (60), *fr.o.m. 2005-05-23, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Datortek (64), *fr.o.m. 1995-07, upphör 2007-01-01, beslut tagna före detta datum får fullföljas.*
 
-[^89] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
-[^90] De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
 
 - Kommunala ungdomsprogram, ungdomar under 20 år, KUP (65), *upphör 2007-11*.
 - Ungdomsgaranti, för ungdomar 20–24 år (66), *(tidigare Utvecklingsgaranti, namnbyte 2000-04), upphör 2007-11.*
@@ -105,7 +103,6 @@ Följande sökandekategorier ingår i de kategorier som skapats:
 - Akademikerjobb (44), *fr.o.m. 2006-03, upphör 2006-12-31. Beslut tagna före detta datum får fullföljas.*
 
 
-[^91] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
 - Individuellt anställningsstöd (45), *upphör 1999-09-30. Beslut tagna före 1999-10-01 får fullföljas.*
 - Förstärkt särskilt anställningsstöd (45), *fr.o.m. 2012-04.*
@@ -156,8 +153,15 @@ Observera också att Arbetspraktik (54) redovisas under *Arbetsmarknadspolitisk 
 
 Observera vidare att Stöd till start av näringsverksamhet (46), (tidigare Starta-eget-bidrag, namnbyte 2000-04) redovisas under *Åtgärdssysselsättning* fr.o.m. 2016, åren innan redovisas den under *Årgärdsstudier*.
 
-[^92] Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 
 *Antal dagar i åtgärdsstudier* och *Antal dagar i Åtgärdssysselsättning*.
 
 För ytterligare information se under *Antal dagar i arbetslöshet* och under
+
+
+[^89]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^90]: De som fyller 65 år under 2001 får fortsätta programmet till dess att de fyller 65 år.
+[^91]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^92]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^99]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
+[^102]: Med Vilande förtidspension avses möjligheten för förtidspensionärer att arbeta utan att förlora rätten till sin pension. Försäkringskassan kan bevilja en prövotid på högst tre månader. Under prövotiden utbetalas både lön och pension. Efter tre månader sker inga pensionsutbetalningar så länge lön från arbetsgivare utgår.

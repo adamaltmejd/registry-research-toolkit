@@ -17,7 +17,6 @@ Uppgifterna för perioden 1990–1997 skapades år 2000 med hjälp av register. 
 
 Under perioden 1990–1997 har samtliga ensamstående som bott på samma fastighet som föräldrarna sammankopplats med dem, oberoende av ålder. Efter 1997 har endast ensamstående som är ogifta sammankopplats med föräldrarna.
 
-[^12] Relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt
 
 annan förälder än vårdnadshavare (fosterförälder).
 
@@ -26,3 +25,6 @@ annan förälder än vårdnadshavare (fosterförälder).
 *Sambofamiljer kan vara felklassificerade p.g.a. att en fastighet kan innehålla flera lägenheter. De som klassificerats som sambos med gemensamma barn kan eventuellt bo i olika lägenheter i samma fastighet. Risken ökar om fastigheten är stor. Över 75 procent av befolkningen bor emellertid i fastigheter där det bor under 100 personer.*
 
 *Ungefär 50 procent av befolkningen bor i fastigheter med mindre än 10 personer*
+
+
+[^12]: Relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt

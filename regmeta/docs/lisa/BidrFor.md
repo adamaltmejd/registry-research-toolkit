@@ -28,4 +28,6 @@ Fram till och med *1994* var bidragsförskottet 40 procent av basbeloppet.
 
 *2017* ligger underhållsstödet för barn under 11 år på 1 573 kr.
 
-[^162] Från och med 2003 kan barn, som tidigare inte kunde få barnpension, ha rätt till efterlevandestöd. Möjligheten att få underhållsstöd upphör samtidigt för dessa barn.
+
+
+[^162]: Från och med 2003 kan barn, som tidigare inte kunde få barnpension, ha rätt till efterlevandestöd. Möjligheten att få underhållsstöd upphör samtidigt för dessa barn.

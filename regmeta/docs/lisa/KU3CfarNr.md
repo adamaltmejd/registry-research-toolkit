@@ -16,3 +16,7 @@ Det arbetsställe som kan kopplas till den förvärvskälla som enligt Jobbregis
 Se även beskrivning under *Arbetsställe (november)* (CFARNr_LISA).
 
 *Vid utlämnade av data från LISA ersätts KU3CFARNr av ett nytt löpnummer.*
+
+
+[^37]: 1990-2003 ingår endast inkomst av aktiv näringsverksamhet.
+[^38]: 1990 utgjordes underlaget till företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.

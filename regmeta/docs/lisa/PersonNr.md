@@ -20,7 +20,6 @@ Personer som utvandrat utan att meddela folkbokföringen ger upphov till övert�
 Personer blir registrerade som invandrade vid den tidpunkt då de folkbokförs. I vissa fall kan det gå en relativt lång tid mellan ankomsten till Sverige och folkbokföringstidpunkten. Vid inflyttning till Sverige
 
 
-[^3] Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i Sverige 31/12 året före aktuellt år.
 
 genomgår personer med medborgarskap i annat land än EU/EES-land i vissa fall en omfattande administrativ process innan beslut om uppehållstillstånd kan fattas. Under perioder med stor invandring kan handläggningstiderna öka vilket gör att undertäckningen ökar i befolkningsregistret. Detta gäller även personer som fått avslag på sin ansökan om uppehållstillstånd och därför överklagar beslutet till högre instans.
 
@@ -39,3 +38,6 @@ Den 1 juli 1991 övertog de lokala skattekontoren (numera skattekontoren) ansvar
 Från den 1 maj 2009 ändrades lagen så att två personer av samma kön ingår äktenskap och inte som tidigare registrerat partnerskap. Makarna får då civilstånd gift och inte registrerad partner. Personer som sedan tidigare är registrerad partner kan omvandla sitt registrerade partnerskap till ett äktenskap genom att antingen lämna in en anmälan till Skatteverket eller genom en vigsel.
 
 #### **Företag**
+
+
+[^3]: Om person uppnått 15 års ålder (t.o.m. 2009 16 år) och varit folkbokförd i Sverige 31/12 året före aktuellt år.

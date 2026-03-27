@@ -38,4 +38,6 @@ Uppgiften bygger dels på den kontrolluppgift som skall lämnas till Skatteverke
 
 För 1990 hämtas deklarationsuppgifterna för egen företagare från 1989[^28]. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år.
 
-[^28] Det är uppgift om "Inkomst av rörelse" och om "Inkomst av jordbruksfastighet (brukad)" som används för detta år. Inkomst av aktiv näringsverksamhet finns som begrepp först från och med 1991
+
+
+[^28]: Det är uppgift om "Inkomst av rörelse" och om "Inkomst av jordbruksfastighet (brukad)" som används för detta år. Inkomst av aktiv näringsverksamhet finns som begrepp först från och med 1991

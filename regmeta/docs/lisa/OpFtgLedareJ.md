@@ -55,4 +55,6 @@ En förutsättning för att bli klassad som aktiv egen företagare i RAMS är at
 En passiv företagare kan aldrig bli förvärvsarbetande. Passiva företagare kan endast anta värdet 5 (ej förvärvsarbetande men med kontrolluppgift eller företagarinkomst) i sysselsättningsstatus. Är personen yngre än 15 år blir sysselsättningsstatus = 4 (barn), är personen 15 år blir sysselsättningsstatus = 7.
 
 
-[^29] Standardiserade räkenskapsutdrag
+
+
+[^29]: Standardiserade räkenskapsutdrag

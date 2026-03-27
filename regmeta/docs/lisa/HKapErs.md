@@ -29,8 +29,10 @@ Ersättningen som betalas ut motsvarar 69, 53 eller 36 procent[^161] av prisbasb
 
 Storleken på ersättningen beror på hjälpbehovets omfattning och merkostnadernas storlek.
 
-[^159] Innan 2003 kunde person som fyllt 16 år erhålla handikappersättning.
 
-[^160] Innan 2002 var handikappersättningen dels en tilläggsförmån till folkpensionen, dels en självständig förmån. I vissa fall kan ersättningen, enligt övergångsregler, även fortsättningsvis utges som en tilläggsförmån till pension.
 
-[^161] Från och med 1991. 1990 motsvarade ersättningen 65, 50 eller 34 procent av basbeloppet.
+
+
+[^159]: Innan 2003 kunde person som fyllt 16 år erhålla handikappersättning.
+[^160]: Innan 2002 var handikappersättningen dels en tilläggsförmån till folkpensionen, dels en självständig förmån. I vissa fall kan ersättningen, enligt övergångsregler, även fortsättningsvis utges som en tilläggsförmån till pension.
+[^161]: Från och med 1991. 1990 motsvarade ersättningen 65, 50 eller 34 procent av basbeloppet.

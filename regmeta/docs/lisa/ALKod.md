@@ -63,7 +63,6 @@ I den första kategorin fångas således personer som någon gång under året v
 
 I den andra kategorin fångas de som varit arbetslösa enligt samma Arbetsförmedlingsdefinition men som inte haft någon arbetslöshetsersättning under det aktuella året. Således arbetslösa som inte går att ringa in med enbart inkomstuppgifter. Ytterligare en grupp
 
-[^93] 1999 ändras definitionen avseende de som tidigare tillhört sökandekategori 14.
 
 som kan hamna i denna kategori är personer vars arbetslöshet upphört men där avaktualiseringen av någon anledning är försenad.
 
@@ -79,7 +78,6 @@ I LISA kan information om arbetslöshetsersättning utnyttjas redan fr.o.m. 1992
 
 Från och med *2001-05-21* sker sökandekategoribyten automatiskt mellan *systemet för programbeslut och statistiksystemet för dem som börjar eller slutar ett arbetsmarknadspolitiskt program*. Syftet med automatiska sökande-kategoribyten är dels att underlätta administrationen, dels att få en bättre registerkvalitet.
 
-[^94] I realiteten påbörjades överföringen redan i oktober–november 1998.
 
 Den sökande får någon av koderna 96, 97 eller 98. Det är därefter handläggarens ansvar att ange aktuell status för den sökande. Personer som har någon av koderna 96–98 ska redovisas som arbetslösa. Detsamma gäller fr.o.m. september 2015 den nya sökandekategorin 95.
 
@@ -134,8 +132,11 @@ Kod = 3: 41 139 personer
 Kod = 4: 2 407 personer
 
 
-[^95] När personer som erhåller tillfällig avgångsersättning står kvar som arbetssökande räknas de som arbetslösa.
 
 *Fördelning efter arbetslöshetskod i LISA 2017:*
 
 Kod = 1: 190 860 personer Kod = 2: 401 178 personer Kod = 3: 29 759 personer Kod = 4: 1 756 personer
+
+
+[^93]: 1999 ändras definitionen avseende de som tidigare tillhört sökandekategori 14.
+[^94]: I realiteten påbörjades överföringen redan i oktober–november 1998.

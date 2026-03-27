@@ -19,7 +19,6 @@ Efterlevandelivräntan är avsedd att ersätta en del av det inkomstbortfall som
 
 För att få *omställningslivränta* måste den efterlevande vara under 65 år och stadigvarande ha bott tillsammans med den avlidne när dödsfallet inträffar. Dessutom måste den efterlevande stadigvarande ha bott tillsammans med barn under 18 år eller bott tillsammans med den
 
-[^145] Annan livränta än yrkes-/arbetsskadelivränta.
 
 avlidne under de senaste 5 åren. Omställningslivräntan betalas ut under en tid av 12 månader.
 
@@ -28,3 +27,6 @@ Om den efterlevande har vårdnaden om barn under 18 år utbetalas *förlängd om
 Om dödsfallet orsakats av en arbetsskada som inträffat före den 1 januari 1990 betalas *änkelivränta* ut efter särskilda regler. För kvinnor gäller de särskilda reglerna även för dödsfall efter 1989.
 
 *Omställningslivränta*[^146] betalas ut med upp till 45 procent av den avlidnes arbetsinkomst. Livränta till barn betalas ut med 40 procent av den avlidnes arbetsinkomst. Om det finns fler barn är livräntan 20 procent för varje barn. Högsta sammanlagda belopp som betalas ut motsvarar den avlidnes arbetsinkomst.
+
+
+[^146]: Finns det barn med rätt till barnlivränta blir omställningsräntan 20 procent av den avlidnes arbetsinkomst.

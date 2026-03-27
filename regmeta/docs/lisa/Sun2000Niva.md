@@ -34,3 +34,6 @@ För fullständig information av SUN2000, se länken *"MIS 2000:1: SUN2000. Sven
 För mer information om SCB:s Utbildningsregister, se under Utbildningsinriktning, högsta eller mer utförligt under länken [\(https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf) [/uf0506\_kd\_2017\_tw\_180411.pdf](https://www.scb.se/contentassets/776fd7a4ac2f4574ae86e4a3b5b7595e/uf0506_kd_2017_tw_180411.pdf) på SCB:s webbplats.
 
 Högsta avslutade utbildning, Utbildningsgrupp och Avslutningsår för högsta utbildning hämtas från UREG, som från och med årgång 1992 avser avklarade utbildningar till och med vårterminen aktuellt år.
+
+
+[^13]: Gamla SUN omfattar i princip inte utbildningar utan avgångsbetyg/examen.

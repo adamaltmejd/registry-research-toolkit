@@ -15,9 +15,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Beloppet anges i hundratals kronor.
 
-[^41] För statstjänstemän och vissa andra gäller s.k. "arbetsgivarinträde" i den allmänna försäkringen. Det betyder att arbetsgivaren lämnar sjuklön och att arbetsgivaren sedan, från Försäkringskassan, får den sjukpenning/arbetsskadeersättning som den anställde har rätt till. Den 1/7 1992 upphörde arbetsgivarinträdet.
 
-[^42] Gäller anställda med rätt till sjuklön.
 
 Summa deklarerad inkomst från aktiv näringsverksamhet under året[^43] .
 
@@ -29,6 +27,8 @@ En verksamhet är aktiv om man i inte oväsentlig omfattning (minst 600 timmar) 
 
 1994–2003: Begreppet förvärvskälla har ändrats. Fysisk person och dödsbo behöver inte dela upp sin enskilda näringsverksamhet i förvärvskällor. Varje handelsbolags näringsverksamhet utgör hos delägaren en förvärvskälla. Den som är delägare i två handelsbolag har alltså två förvärvskällor. Även den som vid sidan av egen näringsverksamhet är delägare i ett handelsbolag har två förvärvskällor. Självständig näringsverksamhet i utlandet utgör alltid en särskild förvärvskälla. Uppdelningen på förvärvskällor får främst betydelse i de fall förvärvskällan ger underskott. Om inkomstberäkningen i viss förvärvskälla resulterar i underskott, får detta inte utan vidare avräknas från överskott i andra förvärvskällor.
 
-[^43] Någon motsvarighet till Inkomst av aktiv näringsverksamhet finns inte för åren innan 1991. Approximativt omfattar variabeln de tidigare variablerna Inkomst av rörelse och Inkomst av jordbruksfastighet (brukad) plus den del av Inkomst av annan fastighet än jordbruksfastighet som kan hänföras till aktiv näringsverksamhet. Denna del av Inkomst av annan fastighet än jordbruksfastighet kan dock inte specificeras i inkomststatistiken före 1991.
 
 För att få en tidsserie för inkomst av aktiv näringsverksamhet används variabeln **Fink** 1991-2003 och positivt resultat i variabeln **[[InkFNettoA]]** 2004-.
+
+
+[^43]: Någon motsvarighet till Inkomst av aktiv näringsverksamhet finns inte för åren innan 1991. Approximativt omfattar variabeln de tidigare variablerna Inkomst av rörelse och Inkomst av jordbruksfastighet (brukad) plus den del av Inkomst av annan fastighet än jordbruksfastighet som kan hänföras till aktiv näringsverksamhet. Denna del av Inkomst av annan fastighet än jordbruksfastighet kan dock inte specificeras i inkomststatistiken före 1991.
