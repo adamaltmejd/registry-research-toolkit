@@ -1647,17 +1647,17 @@ def _write_payload(
         )
     elif key == ("docs", "search"):
         results = data.get("results", [])
+        docs_dir = data.get("docs_dir", "")
         rows = [
             {
                 "variable": r.get("variable") or r["filename"],
                 "display_name": r["display_name"],
+                "file": f"{docs_dir}/{r.get('register', '')}/{r['filename']}" if docs_dir else r["filename"],
                 "snippet": (r.get("snippet") or "")[:80],
             }
             for r in results
         ]
-        if data.get("docs_dir"):
-            _write_to(f"  docs: {data['docs_dir']}\n", output_path)
-        _write_formatted(rows, ["variable", "display_name", "snippet"], output_path, fmt=fmt)
+        _write_formatted(rows, ["variable", "display_name", "file", "snippet"], output_path, fmt=fmt)
     elif key == ("docs", "get"):
         file_path = data.get("file_path")
         if file_path:
@@ -1673,8 +1673,6 @@ def _write_payload(
                 }
                 for r in data["results"]
             ]
-            if data.get("docs_dir"):
-                _write_to(f"  docs: {data['docs_dir']}\n", output_path)
             _write_formatted(rows, ["filename", "display_name", "variable"], output_path, fmt=fmt)
         else:
             lines = [f"  docs: {data.get('docs_dir', 'unknown')}"]
