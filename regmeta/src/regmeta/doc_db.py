@@ -106,11 +106,9 @@ def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
 
 def doc_db_path(db_arg: str | None) -> Path:
     """Resolve path to the doc index DB."""
-    from .db import default_db_dir
+    from .db import db_path_from_args
 
-    if db_arg:
-        return Path(db_arg).expanduser().resolve() / DOC_DB_FILENAME
-    return default_db_dir().resolve() / DOC_DB_FILENAME
+    return db_path_from_args(db_arg, filename=DOC_DB_FILENAME)
 
 
 def bundled_docs_dir() -> Path | None:
@@ -129,17 +127,13 @@ def bundled_docs_dir() -> Path | None:
 
 def open_doc_db(db_path: Path) -> sqlite3.Connection:
     """Open the doc index DB read-only."""
-    if not db_path.exists():
-        raise RegmetaError(
-            exit_code=EXIT_CONFIG,
-            code="doc_db_not_found",
-            error_class="configuration",
-            message=f"Doc index not found: {db_path}",
-            remediation="Run `regmeta maintain build-docs` to build the doc search index.",
-        )
-    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    return conn
+    from .db import open_db
+
+    return open_db(
+        db_path,
+        error_code="doc_db_not_found",
+        remediation="Run `regmeta maintain build-docs` to build the doc search index.",
+    )
 
 
 def ensure_doc_db(db_arg: str | None) -> sqlite3.Connection:

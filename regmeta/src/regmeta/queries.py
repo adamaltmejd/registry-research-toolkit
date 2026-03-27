@@ -209,7 +209,6 @@ def search(
     years: str | None = None,
     limit: int = 50,
     offset: int = 0,
-    db_arg: str | None = None,
 ) -> dict[str, Any]:
     """Search across registers and variables.
 
@@ -221,6 +220,7 @@ def search(
       - "all": all of the above (default)
 
     Returns {"total_count": int, "results": [...]}.
+    Doc results are NOT included here — the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegmetaError(
@@ -238,7 +238,6 @@ def search(
             return {"total_count": 0, "results": []}
         reg_ids = set(ids)
 
-    # type filter: "register" types vs "variable" types
     _REGISTER_TYPES = {"register"}
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn", "value"}
 
@@ -260,9 +259,6 @@ def search(
     if field in ("value", "all"):
         all_results.extend(_search_values(conn, like_pattern, reg_ids))
 
-    # Always include doc results (shown as hints if truncated by limit)
-    all_results.extend(_search_docs(query, db_arg=db_arg))
-
     if type == "register":
         all_results = [r for r in all_results if r["type"] in _REGISTER_TYPES]
     elif type == "variable":
@@ -275,18 +271,7 @@ def search(
     total_count = len(all_results)
     results = all_results[offset : offset + limit]
 
-    # Count doc results that exist but were truncated by the limit
-    doc_total = sum(1 for r in all_results if r.get("type") == "doc")
-    doc_shown = sum(1 for r in results if r.get("type") == "doc")
-    doc_hidden = doc_total - doc_shown
-
-    out: dict[str, Any] = {"total_count": total_count, "results": results}
-    if doc_hidden > 0:
-        out["doc_hint"] = (
-            f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
-            f"not shown (try: regmeta docs search <query>)"
-        )
-    return out
+    return {"total_count": total_count, "results": results}
 
 
 def _search_datacolumns(
@@ -437,48 +422,6 @@ def _search_values(
             }
         )
     return results
-
-
-def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
-    """Search the doc index for matching documentation.
-
-    Returns lightweight hint results (no full body). Uses a separate DB
-    connection that is opened and closed within this function. Fails
-    silently if the doc DB is not available.
-
-    Exact variable name matches get a boosted rank so they surface near
-    the top of mixed search results.
-    """
-    try:
-        from .doc_db import doc_db_path, open_doc_db
-        from .doc_queries import doc_search
-
-        path = doc_db_path(db_arg)
-        conn = open_doc_db(path)
-    except Exception:
-        return []
-
-    try:
-        data = doc_search(conn, query, limit=10)
-        results = []
-        for r in data.get("results", []):
-            rank = r.get("fts_rank", 0)
-            var = r.get("variable") or ""
-            # Boost exact variable name matches to surface near the top
-            if var.lower() == query.lower():
-                rank = -100.0
-            results.append({
-                "type": "doc",
-                "register_id": "",
-                "register_name": r.get("register", ""),
-                "var_id": "",
-                "variable_name": var or r["filename"],
-                "display_name": r["display_name"],
-                "fts_rank": rank,
-            })
-        return results
-    finally:
-        conn.close()
 
 
 # ---------------------------------------------------------------------------

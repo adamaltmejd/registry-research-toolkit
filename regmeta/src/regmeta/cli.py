@@ -6,6 +6,7 @@ import argparse
 import json
 import re
 import shutil
+import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -20,7 +21,7 @@ from .db import (
     get_manifest,
     open_db,
 )
-from .errors import EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 from .queries import (
     compare,
     get_availability,
@@ -661,7 +662,7 @@ def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], 
         docs_dir = bundled_docs_dir()
         if docs_dir is None:
             raise RegmetaError(
-                exit_code=10,
+                exit_code=EXIT_CONFIG,
                 code="no_docs_dir",
                 error_class="configuration",
                 message="No docs directory specified and bundled docs not found.",
@@ -740,6 +741,44 @@ def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 # ---------------------------------------------------------------------------
 
 
+def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
+    """Search the doc index for matching documentation.
+
+    Returns lightweight hint results (no full body). Fails silently if
+    the doc DB is not available. Exact variable name matches get a
+    boosted rank so they surface near the top of mixed search results.
+    """
+    try:
+        from .doc_db import doc_db_path, open_doc_db
+        from .doc_queries import doc_search
+
+        path = doc_db_path(db_arg)
+        conn = open_doc_db(path)
+    except (RegmetaError, sqlite3.Error, OSError):
+        return []
+
+    try:
+        data = doc_search(conn, query, limit=10)
+        results = []
+        for r in data.get("results", []):
+            rank = r.get("fts_rank", 0)
+            var = r.get("variable") or ""
+            if var.lower() == query.lower():
+                rank = -100.0
+            results.append({
+                "type": "doc",
+                "register_id": "",
+                "register_name": r.get("register", ""),
+                "var_id": "",
+                "variable_name": var or r["filename"],
+                "display_name": r["display_name"],
+                "fts_rank": rank,
+            })
+        return results
+    finally:
+        conn.close()
+
+
 def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
@@ -755,10 +794,28 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             years=args.years,
             limit=args.limit,
             offset=args.offset,
-            db_arg=args.db,
         )
     finally:
         conn.close()
+
+    # Merge doc results (always included regardless of --type filter)
+    doc_results = _search_docs(args.query, db_arg=args.db)
+    all_results = data["results"] + doc_results
+    all_results.sort(key=lambda x: x.get("fts_rank", 0))
+    total_count = data["total_count"] + len(doc_results)
+    results = all_results[: args.limit]
+
+    doc_total = sum(1 for r in all_results if r.get("type") == "doc")
+    doc_shown = sum(1 for r in results if r.get("type") == "doc")
+    doc_hidden = doc_total - doc_shown
+
+    out: dict[str, Any] = {"total_count": total_count, "results": results}
+    if doc_hidden > 0:
+        out["doc_hint"] = (
+            f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
+            f"not shown (try: regmeta docs search <query>)"
+        )
+
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="search",
@@ -772,7 +829,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "offset": args.offset,
         },
         db_info=info,
-        data=data,
+        data=out,
         duration_ms=duration_ms,
     ), 0
 
@@ -842,27 +899,25 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
 
-    # Check if documentation exists for any alias of this variable
+    # Annotate results with doc availability hint
     try:
         from .doc_db import ensure_doc_db
         from .doc_queries import doc_exists
 
         doc_conn = ensure_doc_db(args.db)
         try:
-            # Check the variable name itself and all known aliases
-            var_name = args.variable
-            has_doc = doc_exists(doc_conn, var_name)
+            has_doc = doc_exists(doc_conn, args.variable)
             if has_doc:
                 if isinstance(data, dict) and "variables" not in data:
                     data["doc_available"] = True
-                    data["doc_hint"] = f"regmeta docs get {var_name}"
+                    data["doc_hint"] = f"regmeta docs get {args.variable}"
                 elif isinstance(data, dict) and "variables" in data:
                     for v in data["variables"]:
-                        v["doc_available"] = doc_exists(doc_conn, args.variable)
+                        v["doc_available"] = True
         finally:
             doc_conn.close()
-    except Exception:
-        pass  # Doc DB not available — skip hint silently
+    except (RegmetaError, sqlite3.Error):
+        pass
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(

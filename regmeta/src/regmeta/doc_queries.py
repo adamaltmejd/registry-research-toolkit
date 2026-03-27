@@ -6,6 +6,17 @@ import json
 import sqlite3
 
 
+def _add_tag_filter(
+    where_parts: list[str], params: list[object], prefix: str, value: str
+) -> None:
+    """Append a tag filter clause for the given prefix (e.g. 'type', 'topic')."""
+    tag = value if value.startswith(f"{prefix}/") else f"{prefix}/{value}"
+    where_parts.append(
+        "d.doc_id IN (SELECT d2.doc_id FROM doc d2, json_each(d2.tags) je WHERE je.value = ?)"
+    )
+    params.append(tag)
+
+
 def doc_search(
     conn: sqlite3.Connection,
     query: str,
@@ -20,48 +31,40 @@ def doc_search(
 
     Returns {"total_count": int, "results": [...], "docs_dir": str}.
     """
-    # Build the WHERE clause
     where_parts = ["doc_fts MATCH ?"]
     params: list[object] = [query]
 
     if register:
         where_parts.append("d.register = ?")
         params.append(register)
-
     if type_tag:
-        tag = type_tag if type_tag.startswith("type/") else f"type/{type_tag}"
-        where_parts.append(
-            "d.doc_id IN (SELECT d2.doc_id FROM doc d2, json_each(d2.tags) je WHERE je.value = ?)"
-        )
-        params.append(tag)
-
+        _add_tag_filter(where_parts, params, "type", type_tag)
     if topic_tag:
-        tag = topic_tag if topic_tag.startswith("topic/") else f"topic/{topic_tag}"
-        where_parts.append(
-            "d.doc_id IN (SELECT d2.doc_id FROM doc d2, json_each(d2.tags) je WHERE je.value = ?)"
-        )
-        params.append(tag)
+        _add_tag_filter(where_parts, params, "topic", topic_tag)
 
     where = " AND ".join(where_parts)
 
-    # Count
-    count_sql = f"SELECT count(*) FROM doc_fts JOIN doc d ON d.doc_id = doc_fts.rowid WHERE {where}"
-    total = conn.execute(count_sql, params).fetchone()[0]
-
-    # Results with snippets
-    result_sql = f"""
+    # Use a subquery for total_count since snippet() and window functions
+    # cannot coexist in SQLite FTS5 queries.
+    sql = f"""
         SELECT d.filename, d.register, d.variable, d.display_name, d.tags,
                rank,
-               snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet
+               snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet,
+               (SELECT count(*) FROM doc_fts JOIN doc d2 ON d2.doc_id = doc_fts.rowid
+                WHERE {where}) AS total_count
         FROM doc_fts
         JOIN doc d ON d.doc_id = doc_fts.rowid
         WHERE {where}
         ORDER BY rank
         LIMIT ? OFFSET ?
     """
+    # Parameters appear twice: once for the count subquery, once for the outer WHERE
+    count_params = list(params)
+    params.extend(count_params)
     params.extend([limit, offset])
-    rows = conn.execute(result_sql, params).fetchall()
+    rows = conn.execute(sql, params).fetchall()
 
+    total = rows[0]["total_count"] if rows else 0
     docs_dir = _get_docs_dir(conn)
 
     return {
@@ -146,17 +149,9 @@ def doc_list(
         where_parts.append("d.register = ?")
         params.append(register)
     if type_tag:
-        tag = type_tag if type_tag.startswith("type/") else f"type/{type_tag}"
-        where_parts.append(
-            "d.doc_id IN (SELECT d2.doc_id FROM doc d2, json_each(d2.tags) je WHERE je.value = ?)"
-        )
-        params.append(tag)
+        _add_tag_filter(where_parts, params, "type", type_tag)
     if topic_tag:
-        tag = topic_tag if topic_tag.startswith("topic/") else f"topic/{topic_tag}"
-        where_parts.append(
-            "d.doc_id IN (SELECT d2.doc_id FROM doc d2, json_each(d2.tags) je WHERE je.value = ?)"
-        )
-        params.append(tag)
+        _add_tag_filter(where_parts, params, "topic", topic_tag)
 
     where = " AND ".join(where_parts)
     rows = conn.execute(
