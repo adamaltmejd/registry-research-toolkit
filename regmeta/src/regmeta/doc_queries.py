@@ -44,27 +44,25 @@ def doc_search(
 
     where = " AND ".join(where_parts)
 
-    # Use a subquery for total_count since snippet() and window functions
-    # cannot coexist in SQLite FTS5 queries.
+    count_sql = f"""
+        SELECT count(*) AS total_count
+        FROM doc_fts
+        JOIN doc d ON d.doc_id = doc_fts.rowid
+        WHERE {where}
+    """
+    total = conn.execute(count_sql, params).fetchone()["total_count"]
+
     sql = f"""
         SELECT d.filename, d.register, d.variable, d.display_name, d.tags,
                rank,
-               snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet,
-               (SELECT count(*) FROM doc_fts JOIN doc d2 ON d2.doc_id = doc_fts.rowid
-                WHERE {where}) AS total_count
+               snippet(doc_fts, 2, '**', '**', '…', 24) AS snippet
         FROM doc_fts
         JOIN doc d ON d.doc_id = doc_fts.rowid
         WHERE {where}
         ORDER BY rank
         LIMIT ? OFFSET ?
     """
-    # Parameters appear twice: once for the count subquery, once for the outer WHERE
-    count_params = list(params)
-    params.extend(count_params)
-    params.extend([limit, offset])
-    rows = conn.execute(sql, params).fetchall()
-
-    total = rows[0]["total_count"] if rows else 0
+    rows = conn.execute(sql, [*params, limit, offset]).fetchall()
     docs_dir = _get_docs_dir(conn)
 
     return {

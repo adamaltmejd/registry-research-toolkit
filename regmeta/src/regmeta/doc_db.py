@@ -3,12 +3,17 @@
 from __future__ import annotations
 
 import json
+import logging
 import re
 import sqlite3
-import sys
 from pathlib import Path
 
 from .errors import EXIT_CONFIG, RegmetaError
+
+# No logging.basicConfig here -- messages surface only when the caller
+# (e.g. CLI --verbose) configures a handler.  This is intentional for
+# CLI feedback that should not appear in quiet/programmatic usage.
+log = logging.getLogger(__name__)
 
 DOC_DB_FILENAME = "regmeta_docs.db"
 
@@ -30,6 +35,9 @@ CREATE VIRTUAL TABLE IF NOT EXISTS doc_fts USING fts5(
     content='doc', content_rowid='doc_id',
     tokenize='unicode61'
 );
+
+CREATE INDEX IF NOT EXISTS idx_doc_variable ON doc(variable);
+CREATE INDEX IF NOT EXISTS idx_doc_filename ON doc(filename);
 
 CREATE TABLE IF NOT EXISTS doc_meta (
     key   TEXT PRIMARY KEY,
@@ -116,8 +124,8 @@ def bundled_docs_dir() -> Path | None:
     # Walk up from this file to find regmeta/docs/
     pkg_dir = Path(__file__).resolve().parent
     candidates = [
-        pkg_dir / "docs",  # if docs are inside the package
-        pkg_dir.parent.parent / "docs",  # src/regmeta/../../docs = regmeta/docs
+        pkg_dir / "docs",  # installed package: docs bundled inside the package dir
+        pkg_dir.parent.parent / "docs",  # development layout: src/regmeta/../../docs → regmeta/docs/
     ]
     for candidate in candidates:
         if candidate.is_dir() and any(candidate.iterdir()):
@@ -149,7 +157,7 @@ def ensure_doc_db(db_arg: str | None) -> sqlite3.Connection:
                 message=f"Doc index not found: {path}",
                 remediation="Run `regmeta maintain build-docs --docs-dir <path>` to build the index.",
             )
-        print(f"Building doc index from {docs_dir} ...", file=sys.stderr)
+        log.info("Building doc index from %s ...", docs_dir)
         build_doc_db(docs_dir, path.parent)
     return open_doc_db(path)
 
@@ -259,5 +267,5 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
 
     conn.commit()
     conn.close()
-    print(f"Indexed {total} docs from {docs_dir} → {db_path}", file=sys.stderr)
+    log.info("Indexed %d docs from %s → %s", total, docs_dir, db_path)
     return db_path

@@ -11,7 +11,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 [[Kommun]] där arbetsstället (avseende näst största förvärvskälla) är beläget, anges med kommunkod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
 
-*För regionala indelningar s[ewww.scb.se.](http://www.scb.se/SNI2007)* 
+*För regionala indelningar se [www.scb.se](http://www.scb.se).*
 
 Se även *bilaga 8, Regionala koder*.
 

@@ -21,4 +21,4 @@ Fram till och med 1990 är företagarinkomst lika med Inkomst av rörelse och In
 
 Avseende jämförelsen mellan Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) och Inkomst av aktiv näringsverksamhet samt hur sjuklönens införande och arbetsgivarinträdets avskaffande har påverkat variabeln Inkomst av tredje största förvärvskälla, se under *"Summa inkomst av förvärvskälla"*.
 
-*Avseende jämförelsen mellan Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) och Inkomst av aktiv näringsverksamhet samt hur sjuklönens införande och arbetsgivarinträdets avskaffande har påverkat variabeln Inkomst av största förvärvskälla, se under "Summa inkomst av förvärvskälla*, [[ForvInk]]".
+*Avseende jämförelsen mellan Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) och Inkomst av aktiv näringsverksamhet samt hur sjuklönens införande och arbetsgivarinträdets avskaffande har påverkat variabeln Inkomst av största förvärvskälla, se under "Summa inkomst av förvärvskälla"* ([[ForvInk]]).

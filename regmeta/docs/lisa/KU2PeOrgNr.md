@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Företag (näst största förvärvskälla) KU2PeOrgNr**
 
-KU2PeOrgNm
+KU2PeOrgNr
 
 Det företag som kan kopplas till den förvärvskälla som enligt Jobbregistret[^5] gett individen näst störst inkomstbelopp i form av
 

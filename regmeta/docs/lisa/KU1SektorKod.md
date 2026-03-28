@@ -9,6 +9,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Sektortillhörighet (företag, största förvärvskälla) KU1SektorKod**
 
-Sektorkod för det företag som avser näst största förvärvskällan.
+Sektorkod för det företag som avser största förvärvskällan.
 
 *För ytterligare information, se under variabeln Sektortillhörighet (företag),* ([[SektorKod]]).

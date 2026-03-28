@@ -19,7 +19,7 @@ Summa Kontant bruttolön, Inkomst av näringsverksamhet[^45] , Sjukpenning, Grav
 
 Även negativa värden förekommer.
 
-Förvärvsinkomsten som redovisas i variabeln ForvErsNetto omfattar under- och överskott av både aktiv och passiv näringsverksamet.
+Förvärvsinkomsten som redovisas i variabeln ForvErsNetto omfattar under- och överskott av både aktiv och passiv näringsverksamhet.
 
 ForvErsNetto redovisas endast när *Kontant bruttolön* eller *Inkomst av näringsverksamhet* är skilt från noll.
 

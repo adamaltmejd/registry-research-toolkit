@@ -909,7 +909,7 @@ def parse_forandringar(md_text: str, year: str, source_file: str) -> DocEntry:
     cleaned = []
     for line in lines:
         s = line.strip()
-        if s in ("", ) or any([
+        if any([
             s.startswith("www.scb.se"),
             re.match(r"^Datum\s+Version", s),
             re.match(r"^\d+\s+av\s+\d+\s*$", s),

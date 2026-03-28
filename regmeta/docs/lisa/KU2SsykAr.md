@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Årtal för yrkesuppgift, näst största förvärvskälla KU2SsykAr**
 
-KU2SsykAn
+KU2SsykAr
 
 (2001–)
 

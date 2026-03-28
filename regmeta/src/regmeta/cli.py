@@ -683,6 +683,7 @@ def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .doc_db import ensure_doc_db
     from .doc_queries import doc_search
 
+    start = time.perf_counter()
     conn = ensure_doc_db(args.db)
     try:
         data = doc_search(
@@ -696,13 +697,28 @@ def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
     finally:
         conn.close()
-    return {"data": data}, 0
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc search",
+        args_payload={
+            "query": args.query,
+            "type": args.doc_type,
+            "topic": args.topic,
+            "register": args.register,
+            "limit": args.limit,
+            "offset": args.offset,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
 
 
 def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .doc_db import ensure_doc_db
     from .doc_queries import doc_get
 
+    start = time.perf_counter()
     conn = ensure_doc_db(args.db)
     try:
         data = doc_get(conn, args.identifier)
@@ -716,13 +732,21 @@ def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             message=f"No documentation found for: {args.identifier!r}",
             remediation="Use `regmeta docs list` to see available docs, or `regmeta docs search <query>` to search.",
         )
-    return {"data": data}, 0
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc get",
+        args_payload={"identifier": args.identifier},
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
 
 
 def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .doc_db import ensure_doc_db
     from .doc_queries import doc_list
 
+    start = time.perf_counter()
     conn = ensure_doc_db(args.db)
     try:
         data = doc_list(
@@ -733,7 +757,18 @@ def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
     finally:
         conn.close()
-    return {"data": data}, 0
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc list",
+        args_payload={
+            "type": args.doc_type,
+            "topic": args.topic,
+            "register": args.register,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
 
 
 # ---------------------------------------------------------------------------
