@@ -220,6 +220,7 @@ def search(
       - "all": all of the above (default)
 
     Returns {"total_count": int, "results": [...]}.
+    Doc results are NOT included here — the CLI layer merges them separately.
     """
     if field not in SEARCH_FIELDS:
         raise RegmetaError(
@@ -237,7 +238,6 @@ def search(
             return {"total_count": 0, "results": []}
         reg_ids = set(ids)
 
-    # type filter: "register" types vs "variable" types
     _REGISTER_TYPES = {"register"}
     _VARIABLE_TYPES = {"variable", "varname", "datacolumn", "value"}
 
@@ -270,6 +270,7 @@ def search(
     all_results.sort(key=lambda x: x.get("fts_rank", 0))
     total_count = len(all_results)
     results = all_results[offset : offset + limit]
+
     return {"total_count": total_count, "results": results}
 
 

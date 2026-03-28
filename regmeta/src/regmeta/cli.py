@@ -6,6 +6,7 @@ import argparse
 import json
 import re
 import shutil
+import sqlite3
 import sys
 import time
 from pathlib import Path
@@ -20,7 +21,7 @@ from .db import (
     get_manifest,
     open_db,
 )
-from .errors import EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 from .queries import (
     compare,
     get_availability,
@@ -222,12 +223,13 @@ def _build_parser() -> argparse.ArgumentParser:
         "search",
         help="Search registers, variables, columns, and values.",
         description=(
-            "Search across metadata fields. By default searches all fields.\n"
-            "Use a field flag to narrow: --datacolumn, --varname, --description, --value.\n\n"
+            "Search across metadata. By default searches all fields.\n"
+            "Use --field to narrow. Doc results are included and hinted at the bottom.\n"
+            "For full documentation search, use: regmeta docs search <query>\n\n"
             "Examples:\n"
-            "  regmeta search --query kommun                  # all fields\n"
-            "  regmeta search --query kommun --datacolumn     # column headers only\n"
-            "  regmeta search --query 0180 --value            # value codes/labels only"
+            "  regmeta search --query kommun                        # all fields\n"
+            "  regmeta search --query kommun --field datacolumn     # column headers only\n"
+            "  regmeta search --query 0180 --field value            # value codes/labels"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -236,43 +238,12 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Search term (substring match; FTS for --description).",
     )
-    search_field = search_p.add_mutually_exclusive_group()
-    search_field.add_argument(
-        "--datacolumn",
-        dest="field",
-        action="store_const",
-        const="datacolumn",
-        help="Search column headers/aliases in data files only.",
+    search_p.add_argument(
+        "--field",
+        default="all",
+        choices=["datacolumn", "varname", "description", "value", "all"],
+        help="Which fields to search (default: all).",
     )
-    search_field.add_argument(
-        "--varname",
-        dest="field",
-        action="store_const",
-        const="varname",
-        help="Search canonical SCB variable names only.",
-    )
-    search_field.add_argument(
-        "--description",
-        dest="field",
-        action="store_const",
-        const="description",
-        help="Search variable/register descriptions only (full-text).",
-    )
-    search_field.add_argument(
-        "--value",
-        dest="field",
-        action="store_const",
-        const="value",
-        help="Search value codes and labels only.",
-    )
-    search_field.add_argument(
-        "--all-fields",
-        dest="field",
-        action="store_const",
-        const="all",
-        help="Search all fields (default when no field flag given).",
-    )
-    search_p.set_defaults(field="all")
     search_p.add_argument(
         "--type",
         default="all",
@@ -549,6 +520,61 @@ def _build_parser() -> argparse.ArgumentParser:
 
     maintain_sub.add_parser("info", help="Database stats and import metadata.")
 
+    build_docs_p = maintain_sub.add_parser(
+        "build-docs", help="Build documentation search index from markdown files."
+    )
+    build_docs_p.add_argument(
+        "--docs-dir",
+        default=None,
+        help="Directory containing register doc subdirectories (default: bundled docs).",
+    )
+
+    # --- doc command family ---
+    doc_p = sub.add_parser(
+        "docs",
+        help="Search and browse curated register documentation.",
+    )
+    doc_sub = doc_p.add_subparsers(dest="doc_command")
+
+    doc_search_p = doc_sub.add_parser(
+        "search", help="Full-text search over documentation."
+    )
+    doc_search_p.add_argument("query", help="Search query.")
+    doc_search_p.add_argument(
+        "--type", default=None, dest="doc_type",
+        help="Filter by type tag (variable, methodology, appendix, changelog, overview).",
+    )
+    doc_search_p.add_argument(
+        "--topic", default=None,
+        help="Filter by topic tag (income, employment, demographic, etc.).",
+    )
+    doc_search_p.add_argument(
+        "--register", default=None, help="Filter by register (e.g. lisa)."
+    )
+    doc_search_p.add_argument(
+        "--limit", type=int, default=20, help="Max results (default: 20)."
+    )
+    doc_search_p.add_argument(
+        "--offset", type=int, default=0, help="Skip first N results."
+    )
+
+    doc_get_p = doc_sub.add_parser(
+        "get", help="Retrieve full documentation for a variable or topic."
+    )
+    doc_get_p.add_argument(
+        "identifier", help="Variable name or doc filename (e.g. SyssStat, _overview)."
+    )
+
+    doc_list_p = doc_sub.add_parser(
+        "list", help="Browse available documentation."
+    )
+    doc_list_p.add_argument(
+        "--type", default=None, dest="doc_type",
+        help="Filter by type tag.",
+    )
+    doc_list_p.add_argument("--topic", default=None, help="Filter by topic tag.")
+    doc_list_p.add_argument("--register", default=None, help="Filter by register.")
+
     return parser
 
 
@@ -623,6 +649,171 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+# ---------------------------------------------------------------------------
+# Doc command handlers
+# ---------------------------------------------------------------------------
+
+
+def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .doc_db import build_doc_db, bundled_docs_dir
+    if args.docs_dir:
+        docs_dir = Path(args.docs_dir).resolve()
+    else:
+        docs_dir = bundled_docs_dir()
+        if docs_dir is None:
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="no_docs_dir",
+                error_class="configuration",
+                message="No docs directory specified and bundled docs not found.",
+                remediation="Supply --docs-dir pointing to a directory with register doc subdirectories.",
+            )
+    db_dir = Path(args.db).resolve() if args.db else None
+    if db_dir is None:
+        from .db import default_db_dir
+
+        db_dir = default_db_dir().resolve()
+    db_path = build_doc_db(docs_dir, db_dir)
+    return {
+        "data": {"db_path": str(db_path), "docs_dir": str(docs_dir)},
+    }, 0
+
+
+def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .doc_db import ensure_doc_db
+    from .doc_queries import doc_search
+
+    start = time.perf_counter()
+    conn = ensure_doc_db(args.db)
+    try:
+        data = doc_search(
+            conn,
+            args.query,
+            type_tag=args.doc_type,
+            topic_tag=args.topic,
+            register=args.register,
+            limit=args.limit,
+            offset=args.offset,
+        )
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc search",
+        args_payload={
+            "query": args.query,
+            "type": args.doc_type,
+            "topic": args.topic,
+            "register": args.register,
+            "limit": args.limit,
+            "offset": args.offset,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .doc_db import ensure_doc_db
+    from .doc_queries import doc_get
+
+    start = time.perf_counter()
+    conn = ensure_doc_db(args.db)
+    try:
+        data = doc_get(conn, args.identifier)
+    finally:
+        conn.close()
+    if data is None:
+        raise RegmetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="doc_not_found",
+            error_class="not_found",
+            message=f"No documentation found for: {args.identifier!r}",
+            remediation="Use `regmeta docs list` to see available docs, or `regmeta docs search <query>` to search.",
+        )
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc get",
+        args_payload={"identifier": args.identifier},
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .doc_db import ensure_doc_db
+    from .doc_queries import doc_list
+
+    start = time.perf_counter()
+    conn = ensure_doc_db(args.db)
+    try:
+        data = doc_list(
+            conn,
+            type_tag=args.doc_type,
+            topic_tag=args.topic,
+            register=args.register,
+        )
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="doc list",
+        args_payload={
+            "type": args.doc_type,
+            "topic": args.topic,
+            "register": args.register,
+        },
+        db_info=None,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
+# ---------------------------------------------------------------------------
+# Search and get handlers
+# ---------------------------------------------------------------------------
+
+
+def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
+    """Search the doc index for matching documentation.
+
+    Returns lightweight hint results (no full body). Fails silently if
+    the doc DB is not available. Exact variable name matches get a
+    boosted rank so they surface near the top of mixed search results.
+    """
+    try:
+        from .doc_db import doc_db_path, open_doc_db
+        from .doc_queries import doc_search
+
+        path = doc_db_path(db_arg)
+        conn = open_doc_db(path)
+    except (RegmetaError, sqlite3.Error, OSError):
+        return []
+
+    try:
+        data = doc_search(conn, query, limit=10)
+        results = []
+        for r in data.get("results", []):
+            rank = r.get("fts_rank", 0)
+            var = r.get("variable") or ""
+            if var.lower() == query.lower():
+                rank = -100.0
+            results.append({
+                "type": "doc",
+                "register_id": "",
+                "register_name": r.get("register", ""),
+                "var_id": "",
+                "variable_name": var or r["filename"],
+                "display_name": r["display_name"],
+                "fts_rank": rank,
+            })
+        return results
+    finally:
+        conn.close()
+
+
 def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
@@ -641,6 +832,25 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
     finally:
         conn.close()
+
+    # Merge doc results (always included regardless of --type filter)
+    doc_results = _search_docs(args.query, db_arg=args.db)
+    all_results = data["results"] + doc_results
+    all_results.sort(key=lambda x: x.get("fts_rank", 0))
+    total_count = data["total_count"] + len(doc_results)
+    results = all_results[: args.limit]
+
+    doc_total = sum(1 for r in all_results if r.get("type") == "doc")
+    doc_shown = sum(1 for r in results if r.get("type") == "doc")
+    doc_hidden = doc_total - doc_shown
+
+    out: dict[str, Any] = {"total_count": total_count, "results": results}
+    if doc_hidden > 0:
+        out["doc_hint"] = (
+            f"{doc_hidden} documentation match{'es' if doc_hidden != 1 else ''} "
+            f"not shown (try: regmeta docs search <query>)"
+        )
+
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="search",
@@ -654,7 +864,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "offset": args.offset,
         },
         db_info=info,
-        data=data,
+        data=out,
         duration_ms=duration_ms,
     ), 0
 
@@ -723,6 +933,27 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         data = variables[0] if len(variables) == 1 else {"variables": variables}
     finally:
         conn.close()
+
+    # Annotate results with doc availability hint
+    try:
+        from .doc_db import ensure_doc_db
+        from .doc_queries import doc_exists
+
+        doc_conn = ensure_doc_db(args.db)
+        try:
+            has_doc = doc_exists(doc_conn, args.variable)
+            if has_doc:
+                if isinstance(data, dict) and "variables" not in data:
+                    data["doc_available"] = True
+                    data["doc_hint"] = f"regmeta docs get {args.variable}"
+                elif isinstance(data, dict) and "variables" in data:
+                    for v in data["variables"]:
+                        v["doc_available"] = True
+        finally:
+            doc_conn.close()
+    except (RegmetaError, sqlite3.Error):
+        pass
+
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="get varinfo",
@@ -1123,9 +1354,13 @@ def _write_payload(
             ]
         elif types == {"varname"}:
             cols = ["variable_name", "register_id", "register_name", "var_id"]
+        elif types == {"doc"}:
+            cols = ["variable_name", "display_name"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
         _write_formatted(results, cols, output_path, fmt=fmt)
+        if data.get("doc_hint"):
+            _write_to(f"\n  {data['doc_hint']}\n", output_path)
     elif key == ("get", "register"):
         regs = data.get("registers", [data]) if "registers" in data else [data]
         rows = []
@@ -1500,6 +1735,61 @@ def _write_payload(
             output_path,
             fmt=fmt,
         )
+    elif key == ("docs", "search"):
+        results = data.get("results", [])
+        docs_dir = data.get("docs_dir", "")
+        rows = [
+            {
+                "variable": r.get("variable") or r["filename"],
+                "display_name": r["display_name"],
+                "file": f"{docs_dir}/{r.get('register', '')}/{r['filename']}" if docs_dir else r["filename"],
+                "snippet": (r.get("snippet") or "")[:80],
+            }
+            for r in results
+        ]
+        _write_formatted(rows, ["variable", "display_name", "file", "snippet"], output_path, fmt=fmt)
+    elif key == ("docs", "get"):
+        header = []
+        if data.get("variable"):
+            header.append(f"  variable:     {data['variable']}")
+        header.append(f"  display_name: {data['display_name']}")
+        if data.get("tags"):
+            header.append(f"  tags:         {', '.join(data['tags'])}")
+        if data.get("source"):
+            header.append(f"  source:       {data['source']}")
+        if data.get("file_path"):
+            header.append(f"  file:         {data['file_path']}")
+        _write_to("\n".join(header) + "\n\n", output_path)
+        _write_to(data.get("body", "") + "\n", output_path)
+    elif key == ("docs", "list"):
+        if data.get("results") is not None:
+            rows = [
+                {
+                    "filename": r["filename"],
+                    "display_name": r["display_name"],
+                    "variable": r.get("variable") or "",
+                }
+                for r in data["results"]
+            ]
+            _write_formatted(rows, ["filename", "display_name", "variable"], output_path, fmt=fmt)
+        else:
+            lines = [f"  docs: {data.get('docs_dir', 'unknown')}"]
+            lines.append(f"  total: {data.get('total_count', 0)}")
+            lines.append("")
+            lines.append("  registers:")
+            for reg, n in data.get("registers", {}).items():
+                lines.append(f"    {reg}: {n}")
+            lines.append("")
+            lines.append("  types:")
+            for tag, n in data.get("types", {}).items():
+                lines.append(f"    {tag}: {n}")
+            lines.append("")
+            lines.append("  topics:")
+            for tag, n in data.get("topics", {}).items():
+                lines.append(f"    {tag}: {n}")
+            _write_to("\n".join(lines) + "\n", output_path)
+    elif key == ("maintain", "build-docs"):
+        _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
     else:
         _write_json(payload, output_path)
 
@@ -1525,6 +1815,10 @@ COMMAND_DISPATCH = {
     ("get", "availability"): _cmd_get_availability,
     ("compare", None): _cmd_compare,
     ("resolve", None): _cmd_resolve,
+    ("maintain", "build-docs"): _cmd_maintain_build_docs,
+    ("docs", "search"): _cmd_doc_search,
+    ("docs", "get"): _cmd_doc_get,
+    ("docs", "list"): _cmd_doc_list,
 }
 
 
@@ -1549,6 +1843,11 @@ def run(argv: list[str] | None = None) -> int:
         sub_command = getattr(args, "get_command", None)
         if not sub_command:
             parser.parse_args(["get", "--help"])
+            return EXIT_USAGE
+    elif args.command == "docs":
+        sub_command = getattr(args, "doc_command", None)
+        if not sub_command:
+            parser.parse_args(["docs", "--help"])
             return EXIT_USAGE
 
     key = (args.command, sub_command)

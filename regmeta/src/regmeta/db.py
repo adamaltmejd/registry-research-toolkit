@@ -330,20 +330,28 @@ def default_db_dir() -> Path:
     return Path.home() / ".local" / "share" / "regmeta"
 
 
-def db_path_from_args(db_arg: str | None) -> Path:
+def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
     if db_arg:
-        return Path(db_arg).expanduser().resolve() / DB_FILENAME
-    return default_db_dir().resolve() / DB_FILENAME
+        return Path(db_arg).expanduser().resolve() / filename
+    return default_db_dir().resolve() / filename
 
 
-def open_db(db_path: Path) -> sqlite3.Connection:
+def open_db(
+    db_path: Path,
+    *,
+    error_code: str = "db_not_found",
+    remediation: str = (
+        "Run `regmeta maintain download` to fetch the pre-built DB, "
+        "or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports."
+    ),
+) -> sqlite3.Connection:
     if not db_path.exists():
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
-            code="db_not_found",
+            code=error_code,
             error_class="configuration",
             message=f"Database not found: {db_path}",
-            remediation="Run `regmeta maintain download` to fetch the pre-built DB, or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports.",
+            remediation=remediation,
         )
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
