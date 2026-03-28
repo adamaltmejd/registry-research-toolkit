@@ -1,6 +1,6 @@
 ---
 variable: Sun2000niva_old
-display_name: "Utbildningsnivå, högsta, aggregerat till "svenska" nivåer"
+display_name: 'Utbildningsnivå, högsta, aggregerat till "svenska" nivåer'
 tags:
   - topic/education
   - type/variable

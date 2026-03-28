@@ -6,27 +6,43 @@ source: "hushallsinformation-i-lisa-2011-.md"
 ---
 
 2021-06-18
+
+
 ## För att koppla personer till varandra i en familj tittar man på vilka som har en relation till varandra. Personerna ska vara folkbokförda på
+
 samma fastighet och relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/ adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt annan förälder än vårdnadshavare (fosterförälder).
+
 Tidigare var en person folkbokförd på en fastighet, vilket innebar att sambos utan gemensamma barn som var folkbokförda på en fastighet med flera lägenheter inte kunde kopplas ihop.
+
 Sedan 2010 folkbokför Skatteverket personer boende i flerbostadshus på lägenhet. Denna komplettering av folkbokföringen medför att alla personer kan klassificeras in i hushåll, även sambos utan gemensamma barn.
+
 Variabeln som visar hushållsidentitet är unik för varje hushåll och avser det bostadshushåll som individen tillhör. Hushållet får ett nytt löpnummer varje år.
+
 För att bilda sambopar av personer utan gemensamma barn används en
+
 - modell utifrån nedanstående kriterier:
   - Personerna är folkbokförda på samma fastighet och lägenhet
   - Personerna är minst 18 år
   - Personerna är av olika kön • Åldersskillnaden mellan personerna är mindre än 15 år
   - Personerna är inte nära släkt
+
 Endast ett möjligt sambopar kan bildas inom hushållet.
+
 Av " [Hushållsdokumentation \(scb.se\)"](https://www.scb.se/contentassets/0168b57e7f1d4220983e5deed2f3f915/registerbaserad-hushallsstatistik.pdf) framgår mer information om hushåll.
+
 ## **Hushållsinformation i LISA**
+
 Sedan juni 2021 finns hushållsinformation inlagt i LISA. Nedan variabler har lagts till för år 2011-.
+
 ## **Hushållsinformation i LISA**
+
 | Klartext                     | Variabel       | År        |
 |------------------------------|----------------|-----------|
 | Hushålls-ID                  | HushallsID     | 2011-2019 |
 | Hushållsställning enligt RTB | HushallsSt_RTB | 2011-2019 |
+
 Image /page/0/Picture/18 description: This image features a stylized logo consisting of the letters 'SCB' in a bold, black, sans-serif font against a white background. The letters are arranged in a compact, vertically elongated manner, with the central letter 'C' being taller than the flanking 'S' and 'B'. The characters are closely spaced, creating a unified graphic mark.
+
 | Klartext                                                 | Variabel        | År        |
 |----------------------------------------------------------|-----------------|-----------|
 | Hushållstyp enligt RTB                                   | Hushallstyp_RTB | 2011-2019 |
@@ -38,8 +54,11 @@ Image /page/0/Picture/18 description: This image features a stylized logo consis
 | Bostadstillägg för hushållet                             | BostTillHB      | 2011-2019 |
 | Disponibel inkomst per konsumtionsenhet för<br>hushållet | DispInkKEHB04   | 2011-2019 |
 | Disponibel inkomst för hushållet                         | DispInkHB04     | 2011-2019 |
+
 Indelningarna i hushållsställning och hushållstyp skiljer sig åt mellan Inkomst- och taxeringsregistret (IoT) och Registret över totalbefolkningen (RTB), detta beror på att IoT är anpassad till den redovisning som används i den officiella inkomststatistiken. I LISA har båda indelningarna lagts till.
+
 **Hushållsställning – skillnad mellan IoT och RTB**
+
 | Hushållsställning IoT                     | Hushållsställning RTB                     |
 |-------------------------------------------|-------------------------------------------|
 | A1 - Person i gift par                    | 11 - Person i gift par                    |
@@ -57,10 +76,13 @@ Indelningarna i hushållsställning och hushållstyp skiljer sig åt mellan Inko
 |                                           | 51 - Övrig person 0-17 år                 |
 |                                           | 52 - Övrig person 18-24 år                |
 |                                           | 53 - Övrig person över 24 år              |
+
 | Hushållsställning IoT | Hushållsställning RTB                                                    |
 |-----------------------|--------------------------------------------------------------------------|
 |                       | 99 - Uppgift saknas (inkl. På kommunen<br>skriven och Utan känt hemvist) |
+
 ## **Hushållstyp – skillnad mellan IoT och RTB**
+
 | Hushållstyp IoT                                 | Hushållstyp RTB                              |
 |-------------------------------------------------|----------------------------------------------|
 | A1 - Ensamstående utan barn                     | 1.1 - Ensamstående utan barn                 |

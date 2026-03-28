@@ -349,7 +349,11 @@ def make_frontmatter(
     fm_lines = ["---"]
     if entry.column_name:
         fm_lines.append(f"variable: {entry.column_name}")
-    fm_lines.append(f"display_name: \"{entry.display_name}\"")
+    display = entry.display_name
+    if '"' in display:
+        fm_lines.append(f"display_name: '{display}'")
+    else:
+        fm_lines.append(f"display_name: \"{display}\"")
     if entry.tags:
         fm_lines.append("tags:")
         for tag in sorted(set(entry.tags)):
@@ -864,6 +868,16 @@ def _slugify(name: str) -> str:
     return slug[:60]
 
 
+# Known OCR errors from marker output. Applied during write_entries so
+# corrections survive parser re-runs without editing generated files.
+OCR_CORRECTIONS: dict[str, str] = {
+    "KU2SsykAn": "KU2SsykAr",
+    "KU2PeOrgNm": "KU2PeOrgNr",
+    "Inv UtvGrEq2": "Inv_UtvGrEg2",
+    "näringsverksamet": "näringsverksamhet",
+}
+
+
 def write_entries(
     entries: list[DocEntry],
     known_cols: set[str],
@@ -878,6 +892,10 @@ def write_entries(
         content = "\n".join(entry.lines).strip()
         if not content:
             continue
+
+        # Fix known OCR errors
+        for wrong, right in OCR_CORRECTIONS.items():
+            content = content.replace(wrong, right)
 
         # Add wiki-links to cross-references
         content = extract_wiki_links(content, known_cols, entry.column_name)

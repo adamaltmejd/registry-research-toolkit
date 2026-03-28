@@ -13,7 +13,7 @@ KU2AstLan
 
 Län där arbetsstället (avseende näst största förvärvskällan) är beläget, anges med länskod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
 
-*För regionala indelningar se [www.scb.se](http://www.scb.se).*
+*För regionala indelninga[r www.scb.se.](http://www.scb.se/SNI2007)* 
 
 Se även *bilaga 8, Regionala koder*.
 
