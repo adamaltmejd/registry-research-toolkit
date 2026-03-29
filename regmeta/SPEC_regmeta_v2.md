@@ -15,7 +15,7 @@ Six features on top of regmeta v1:
 
 1. **Temporal diff** — "what changed between year X and Y" for a register, with optional variable filter.
 2. **Cross-register lineage** — where a variable originates and which registers consume it.
-3. **Compare** — compare local file columns against registry metadata.
+3. **Compare** — library function to compare local file columns against registry metadata. CLI command lives in `mock-data-wizard`.
 4. **Availability** — temporal availability summary for a variable or register.
 5. **Search year filter** — `search --years` to filter results by version year range.
 6. **Schema ergonomics** — `--summary`, `--flat`, `--columns-like` for `get schema`.
@@ -247,14 +247,18 @@ Answer: "What SCB data exists but isn't in my local files?" and "What columns do
 
 ### 4.2 Command
 
-```
-regmeta compare <manifest_path>
-regmeta compare --files <csv_path> ... --register <name_or_id>
-regmeta compare --columns <col1,col2,...> --register <name_or_id>
-        [--format {table,list,json}] [--output <path>] [--db <path>]
+The CLI command has moved to `mock-data-wizard compare`. regmeta exposes the `compare()` library function:
+
+```python
+regmeta.compare(
+    conn,
+    columns_by_file={"file.csv": ["Kon", "FodelseAr"]},
+    register_hints={"file.csv": 34},
+    year_hints={"file.csv": 2022},
+)
 ```
 
-Three mutually exclusive input modes. `--files` and `--columns` require `--register`.
+The caller (mock-data-wizard) is responsible for parsing manifests/CSVs and resolving register names to IDs via `regmeta.resolve_register_ids()`.
 
 ### 4.3 Semantics
 
@@ -398,8 +402,8 @@ Unchanged at `3.0.0`. Pre-release with zero users — no contract to break.
 2. `regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon KON_NY` resolves inputs and returns changes for matched variables.
 3. `regmeta get lineage Kon` returns cross-register occurrence with provenance classification.
 4. `regmeta get lineage Kon --register LISA` returns LISA-scoped lineage with source info.
-5. `regmeta compare manifest.json` reads v2 manifest and classifies columns.
-6. `regmeta compare --columns "Kon" --register LISA` works with explicit input.
+5. `mock-data-wizard compare manifest.json` reads v2 manifest and classifies columns (calls `regmeta.compare()`).
+6. `mock-data-wizard compare --columns "Kon" --register LISA` works with explicit input.
 7. `regmeta get availability "Kön"` returns year coverage across registers.
 8. `regmeta search --query "Kön" --years 2020` filters results by year.
 9. `regmeta get schema --register LISA --columns-like "Kon" --flat` filters and flattens.

@@ -2,16 +2,18 @@
 
 from __future__ import annotations
 
+import math
 import signal
 import sqlite3
 import time
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import regmeta
 
-from ._util import progress
+from ._util import progress, strip_project_prefix
 from .stats import ColumnStats, ProjectStats
 
 # Birth-invariant regmeta var_ids eligible for population spine.
@@ -41,6 +43,7 @@ class EnrichedFile:
     relative_path: str
     row_count: int
     columns: list[EnrichedColumn]
+    register_hint: int | None = None
 
 
 def _column_from_stats(col: ColumnStats) -> EnrichedColumn:
@@ -102,15 +105,46 @@ def enrich(
             for col in file_stats.columns:
                 all_col_names.add(col.column_name)
 
-        # Bulk resolve + bulk value code fetch
-        resolved: dict[str, _ResolvedVar] = {}
-        value_codes: dict[str, dict[str, str]] = {}
+        # Per-file resolved vars and the register each file votes for
+        file_resolved: dict[str, dict[str, _ResolvedVar]] = {}
+        file_register: dict[str, int | None] = {}
+        value_codes: dict[int, dict[str, str]] = {}
+
         if conn is not None:
-            resolved = _bulk_resolve(conn, all_col_names, register)
+            if register:
+                # Explicit register: single pass, all files use it
+                reg_ids = regmeta.resolve_register_ids(conn, register)
+                global_resolved = _bulk_resolve(conn, all_col_names, reg_ids or None)
+                for file_stats in stats.files:
+                    file_resolved[file_stats.file_name] = global_resolved
+                    file_register[file_stats.file_name] = reg_ids[0] if reg_ids else None
+            else:
+                # Two-pass: vote on register per file, then resolve within it
+                col_to_registers = _bulk_resolve_all_registers(conn, all_col_names)
+
+                # Group files by their voted register so we batch DB queries
+                register_to_files: dict[int | None, list[str]] = {}
+                for file_stats in stats.files:
+                    col_names = [c.column_name for c in file_stats.columns]
+                    voted = _vote_register(col_names, col_to_registers, file_stats.file_name)
+                    file_register[file_stats.file_name] = voted
+                    register_to_files.setdefault(voted, []).append(file_stats.file_name)
+
+                # One _bulk_resolve per distinct voted register
+                for reg_id, _fnames in register_to_files.items():
+                    reg_ids = [reg_id] if reg_id is not None else None
+                    resolved = _bulk_resolve(conn, all_col_names, reg_ids)
+                    for fname in _fnames:
+                        file_resolved[fname] = resolved
+
+            # Collect categorical var_ids for value code fetch
             cat_var_ids: set[int] = set()
             for file_stats in stats.files:
+                resolved = file_resolved.get(file_stats.file_name, {})
                 for col in file_stats.columns:
-                    rv = resolved.get(col.column_name.lower())
+                    rv = resolved.get(col.column_name.lower()) or resolved.get(
+                        strip_project_prefix(col.column_name).lower()
+                    )
                     if col.inferred_type == "categorical" and rv is not None:
                         cat_var_ids.add(rv.var_id)
             if cat_var_ids:
@@ -119,10 +153,13 @@ def enrich(
         matched_total = 0
         enriched_files: list[EnrichedFile] = []
         for file_stats in stats.files:
+            resolved = file_resolved.get(file_stats.file_name, {})
             enriched_cols = []
             for col in file_stats.columns:
                 ecol = _column_from_stats(col)
-                rv = resolved.get(ecol.column_name.lower())
+                rv = resolved.get(ecol.column_name.lower()) or resolved.get(
+                    strip_project_prefix(ecol.column_name).lower()
+                )
                 if rv is not None:
                     ecol.register_id = rv.register_id
                     ecol.var_id = rv.var_id
@@ -138,6 +175,7 @@ def enrich(
                     relative_path=file_stats.relative_path,
                     row_count=file_stats.row_count,
                     columns=enriched_cols,
+                    register_hint=file_register.get(file_stats.file_name),
                 )
             )
     except sqlite3.OperationalError as exc:
@@ -193,24 +231,112 @@ class _ResolvedVar:
     variable_name: str
 
 
+def _bulk_resolve_all_registers(
+    conn: sqlite3.Connection,
+    col_names: set[str],
+) -> dict[str, list[int]]:
+    """Resolve each column to ALL matching register_ids.
+
+    Returns {lowercase_col_name: [register_id, ...]}. Used for majority-vote
+    register detection before the targeted per-register resolve.
+    """
+    lookup_names = set(col_names)
+    for c in col_names:
+        stripped = strip_project_prefix(c)
+        if stripped != c:
+            lookup_names.add(stripped)
+
+    col_list = sorted(lookup_names)
+    placeholders = ",".join("?" for _ in col_list)
+    sql = (
+        "SELECT LOWER(va.kolumnnamn) AS col, vi.register_id "
+        "FROM variable_alias va "
+        "JOIN variable_instance vi ON va.cvid = vi.cvid "
+        f"WHERE LOWER(va.kolumnnamn) IN ({placeholders}) "
+        "GROUP BY LOWER(va.kolumnnamn), vi.register_id"
+    )
+    rows = conn.execute(sql, [c.lower() for c in col_list]).fetchall()
+
+    result: dict[str, list[int]] = {}
+    for r in rows:
+        result.setdefault(r["col"], []).append(r["register_id"])
+    return result
+
+
+# Standard SCB delivery tables whose filenames reliably indicate the register.
+# Used as fallback when the column-based vote is inconclusive.
+_SCB_TABLE_REGISTER: dict[str, int] = {
+    "fodelseuppg": 2,       # RTB
+    "immigranter": 2,       # RTB
+    "population": 2,        # RTB (Population_PersonNr_*)
+    "flergen": 349,         # Flergenerationsregistret
+}
+
+
+def _filename_register_fallback(file_name: str) -> int | None:
+    """Match known SCB delivery table names to register IDs."""
+    stem = file_name.rsplit(".", 1)[0].lower()
+    for prefix, reg_id in _SCB_TABLE_REGISTER.items():
+        if stem.startswith(prefix):
+            return reg_id
+    return None
+
+
+def _vote_register(
+    file_col_names: list[str],
+    col_to_registers: dict[str, list[int]],
+    file_name: str = "",
+) -> int | None:
+    """Pick the best-fit register for a file via weighted majority vote.
+
+    Generic columns (appearing in many registers) are downweighted to avoid
+    noise from Kommun/Kön/Ar which exist in 70-120 registers.
+    Falls back to known SCB delivery table names if the vote is inconclusive.
+    """
+    votes: Counter[int] = Counter()
+    for raw_col in file_col_names:
+        col = strip_project_prefix(raw_col).lower()
+        regs = col_to_registers.get(col)
+        if not regs:
+            continue
+        weight = 1.0 / math.log2(max(len(regs), 2))
+        for reg_id in regs:
+            votes[reg_id] += weight
+
+    if not votes:
+        return _filename_register_fallback(file_name)
+
+    top = votes.most_common(2)
+    winner_id, winner_score = top[0]
+    if len(top) > 1:
+        _, runner_up_score = top[1]
+        # Require either a clear lead or at least 3 weighted votes
+        if winner_score < runner_up_score * 1.2 and winner_score < 3:
+            return _filename_register_fallback(file_name)
+    return winner_id
+
+
 def _bulk_resolve(
     conn: sqlite3.Connection,
     col_names: set[str],
-    register: str | None,
+    register_ids: list[int] | None = None,
 ) -> dict[str, _ResolvedVar]:
-    """Resolve all column names in one query. Returns first match per column."""
+    """Resolve column names. When register_ids is given, constrain to those registers."""
     reg_filter = ""
-    params: list[str] = []
-    if register:
-        reg_ids = regmeta.resolve_register_ids(conn, register)
-        if not reg_ids:
-            return {}
-        placeholders = ",".join("?" for _ in reg_ids)
+    params: list[Any] = []
+    if register_ids:
+        placeholders = ",".join("?" for _ in register_ids)
         reg_filter = f" AND vi.register_id IN ({placeholders})"
-        params.extend(reg_ids)
+        params.extend(register_ids)
 
-    # Single query: resolve all column names at once
-    col_list = sorted(col_names)
+    # Include stripped versions so P1105_LopNr → LopNr matches
+    lookup_names = set(col_names)
+    for c in col_names:
+        stripped = strip_project_prefix(c)
+        if stripped != c:
+            lookup_names.add(stripped)
+
+    col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
     sql = (
         "SELECT va.kolumnnamn, vi.register_id, vi.var_id, v.variabelnamn "

@@ -42,7 +42,7 @@ regmeta --format list get varinfo "Kön"
 - User asks "what changed in LISA between 2015 and 2020?" → `get diff`
 - User asks "which registers have a variable called Kön?" → `get lineage` or `search`
 - User asks "is variable X available in 2015-2024?" → `get availability` or `search --years`
-- User asks "what SCB data is missing from my local files?" → `compare`
+- User asks "what SCB data is missing from my local files?" → `mock-data-wizard compare`
 - User has a CSV with column headers and needs to understand them → `resolve`
 
 ## Important: `--type register` vs `--register`
@@ -104,23 +104,6 @@ Can also read a JSON array from stdin:
 ```bash
 echo '["Kon","FodelseAr"]' | regmeta resolve --register LISA
 ```
-
-### compare — Compare local files against registry metadata
-
-Compare columns in local data files against what SCB registry metadata says should be there. Three input modes:
-
-```bash
-# From a mock-data-wizard manifest (richest — includes register hints and year)
-regmeta compare mock_data/manifest.json
-
-# From CSV file headers (requires --register)
-regmeta compare --files mock_data/*.csv --register LISA
-
-# From explicit column list (requires --register)
-regmeta compare --columns "Kon,FodelseAr,MERITVARDE" --register 189
-```
-
-Output classifies each column as `matched`, `extra_local` (not in registry), or `missing_from_registry` (in registry but not in local file). Use `--format json` for structured output.
 
 ### get register — Register overview
 
@@ -280,14 +263,10 @@ regmeta search --query "inkomst" --years 2015-2024
 
 ### "What SCB data exists but isn't in my local files?"
 ```bash
-# If using mock-data-wizard (best — manifest has register/year hints):
-regmeta compare mock_data/manifest.json
-
-# If comparing raw CSVs:
-regmeta compare --files mock_data/*.csv --register LISA
-
-# Quick check for specific columns:
-regmeta compare --columns "Kon,FodelseAr,MERITVARDE" --register 189
+# Use mock-data-wizard compare (calls regmeta.compare() internally):
+mock-data-wizard compare mock_data/manifest.json
+mock-data-wizard compare --files mock_data/*.csv --register LISA
+mock-data-wizard compare --columns "Kon,FodelseAr" --register 189
 ```
 
 ## Key concepts

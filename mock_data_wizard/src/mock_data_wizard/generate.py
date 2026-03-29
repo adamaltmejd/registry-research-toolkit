@@ -415,9 +415,7 @@ def generate(
                 f"  {t_total_file:.2f}s (generate {t_gen:.2f}s, write {t_write:.2f}s)"
             )
 
-        # Derive register_hint: use register_id if all enriched columns agree
-        reg_ids = {ec.register_id for ec in efile.columns if ec.register_id is not None}
-        register_hint = reg_ids.pop() if len(reg_ids) == 1 else None
+        register_hint = efile.register_hint
 
         # Derive year_hint from file name
         year_match = _YEAR_RE.search(file_stats.file_name)

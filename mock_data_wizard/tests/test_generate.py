@@ -109,25 +109,20 @@ def test_manifest_json(stats_path: Path, tmp_path: Path):
 
 
 def test_manifest_register_hint(stats_path: Path, tmp_path: Path):
-    """When all enriched columns share a register_id, register_hint is set."""
+    """register_hint from enrichment is propagated to manifest."""
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
-    # Simulate enrichment: set all columns to register_id=34
-    for ef in enriched:
-        for ec in ef.columns:
-            ec.register_id = 34
+    enriched[0].register_hint = 34
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
     assert manifest.files[0].register_hint == 34
 
 
-def test_manifest_register_hint_mixed(stats_path: Path, tmp_path: Path):
-    """When enriched columns have mixed register_ids, register_hint is None."""
+def test_manifest_register_hint_none(stats_path: Path, tmp_path: Path):
+    """register_hint=None from enrichment is propagated as None."""
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
-    for ef in enriched:
-        for i, ec in enumerate(ef.columns):
-            ec.register_id = 34 if i % 2 == 0 else 99
+    enriched[0].register_hint = None
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
     assert manifest.files[0].register_hint is None

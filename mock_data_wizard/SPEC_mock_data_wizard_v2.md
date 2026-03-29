@@ -15,7 +15,7 @@ Three features on top of mock_data_wizard v1:
 
 1. **Population spine** — birth-invariant attributes are generated once per individual and reused across files, ensuring cross-file join consistency.
 2. **Value code drift warnings** — enrichment warns when stats contain frequency codes absent from regmeta's value set.
-3. **Manifest v2** — richer manifest with per-file column lists and metadata, enabling `regmeta compare` to read it natively.
+3. **Manifest v2** — richer manifest with per-file column lists and metadata, enabling `mock-data-wizard compare` to read it natively.
 
 ## 2. Feature 1: Population Spine
 
@@ -83,7 +83,7 @@ Warnings are printed to stderr during enrichment. They do not block generation.
 
 ### 4.1 Purpose
 
-The v1 manifest only stores file-level metadata (file_name, relative_path, row_count, sha256). This is insufficient for `regmeta compare`, which needs to know what columns each file contains and which register it came from. Rather than requiring users to author a separate comparison spec, the wizard emits a richer manifest that `regmeta compare` reads natively.
+The v1 manifest only stores file-level metadata (file_name, relative_path, row_count, sha256). This is insufficient for `mock-data-wizard compare`, which needs to know what columns each file contains and which register it came from. Rather than requiring users to author a separate comparison spec, the wizard emits a richer manifest that `mock-data-wizard compare` reads natively.
 
 ### 4.2 Schema
 
@@ -107,4 +107,4 @@ All fields are derived from data already available at generation time — no new
 
 - **`dataset` field**: would require fragile filename parsing. `register_hint` from enrichment is more reliable.
 - **Type information per column**: fake/misleading for mock data.
-- **regmeta match results**: belong in `regmeta compare` output, not the manifest.
+- **regmeta match results**: belong in `mock-data-wizard compare` output, not the manifest.

@@ -47,6 +47,17 @@ The R script only exports aggregate statistics — no individual-level data
 leaves MONA.
 """
 
+COMPARE_HELP = """\
+Compare columns in local data files against SCB registry metadata.
+
+Input modes (mutually exclusive):
+  mock-data-wizard compare manifest.json                              # wizard manifest v2
+  mock-data-wizard compare --files mock_data/*.csv --register LISA    # read CSV headers
+  mock-data-wizard compare --columns "Kon,FodelseAr" --register 189  # explicit
+
+CSV and --columns modes require --register.
+"""
+
 GENERATE_HELP = """\
 Generate mock CSV files from a stats.json produced by the R script.
 
@@ -125,6 +136,138 @@ def _cmd_generate_script(args: argparse.Namespace) -> int:
     result = generate_script(paths, output)
     print(f"R script written to: {result}")
     return 0
+
+
+def _cmd_compare(args: argparse.Namespace) -> int:
+    import csv as csv_mod
+    import json
+
+    from regmeta import compare, open_db, resolve_register_ids
+    from regmeta.db import db_path_from_args
+
+    from ._util import strip_project_prefix
+
+    columns_by_file: dict[str, list[str]] = {}
+    register_hints: dict[str, int | None] = {}
+    year_hints: dict[str, int | None] = {}
+
+    if args.manifest:
+        manifest_path = Path(args.manifest)
+        if not manifest_path.exists():
+            print(f"Error: manifest file not found: {args.manifest}", file=sys.stderr)
+            return 1
+        manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        sv = manifest_data.get("schema_version")
+        if sv != "2":
+            print(
+                f"Error: unsupported manifest schema_version '{sv}'. Expected '2'.\n"
+                "Regenerate with mock-data-wizard >= v0.2.0.",
+                file=sys.stderr,
+            )
+            return 1
+        for f in manifest_data.get("files", []):
+            label = f["file_name"]
+            columns_by_file[label] = f.get("columns", [])
+            register_hints[label] = f.get("register_hint")
+            year_hints[label] = f.get("year_hint")
+
+    elif args.files:
+        if not args.register:
+            print("Error: --register is required when using --files.", file=sys.stderr)
+            return 1
+        for fpath_str in args.files:
+            fpath = Path(fpath_str)
+            if not fpath.exists():
+                print(f"Error: file not found: {fpath_str}", file=sys.stderr)
+                return 1
+            with fpath.open(encoding="utf-8") as fh:
+                reader = csv_mod.reader(fh)
+                headers = next(reader, [])
+            columns_by_file[fpath.name] = headers
+
+    elif args.columns:
+        if not args.register:
+            print("Error: --register is required when using --columns.", file=sys.stderr)
+            return 1
+        cols = [c.strip() for c in args.columns.split(",") if c.strip()]
+        columns_by_file["(columns)"] = cols
+
+    else:
+        print(
+            "Error: no input provided.\n"
+            "Provide a manifest path, --files, or --columns.",
+            file=sys.stderr,
+        )
+        return 1
+
+    db = db_path_from_args(args.db if hasattr(args, "db") else None)
+    conn = open_db(db)
+    try:
+        if args.register:
+            reg_ids = resolve_register_ids(conn, args.register)
+            if not reg_ids:
+                print(f"Error: register '{args.register}' not found.", file=sys.stderr)
+                return 1
+            reg_id = reg_ids[0]
+            for label in columns_by_file:
+                if register_hints.get(label) is None:
+                    register_hints[label] = reg_id
+
+        # Strip MONA project prefixes (P1105_LopNr → LopNr) before matching
+        stripped_by_file = {
+            label: [strip_project_prefix(c) for c in cols]
+            for label, cols in columns_by_file.items()
+        }
+
+        data = compare(
+            conn,
+            columns_by_file=stripped_by_file,
+            register_hints=register_hints,
+            year_hints=year_hints,
+        )
+    finally:
+        conn.close()
+
+    if args.format == "json":
+        print(json.dumps(data, indent=2, ensure_ascii=False))
+    else:
+        _print_compare_table(data)
+    return 0
+
+
+def _print_compare_table(data: dict) -> None:
+    for f in data.get("files", []):
+        status = f.get("register_status", "")
+        reg_name = f.get("register_name") or "?"
+        reg_id = f.get("register_id") or "?"
+        header = f"── {f['file']}  [{reg_name} ({reg_id})] {status}"
+        if f.get("year_hint"):
+            header += f"  year={f['year_hint']}"
+        print(header)
+
+        if status != "resolved":
+            print(f"  (skipped: {status})\n")
+            continue
+
+        s = f.get("summary", {})
+        print(
+            f"  matched: {s.get('matched', 0)}  "
+            f"extra_local: {s.get('extra_local', 0)}  "
+            f"missing_from_registry: {s.get('missing_from_registry', 0)}"
+        )
+
+        for m in f.get("matched", []):
+            print(f"    {m['column']:30s}  matched    var_id={m.get('var_id', '')}  {m.get('variable_name', '')}")
+        for col in f.get("extra_local", []):
+            print(f"    {col:30s}  extra_local")
+
+        missing = f.get("missing_from_registry", [])
+        if missing:
+            print("\n  Missing from local:")
+            for m in missing:
+                aliases = ", ".join(m.get("aliases", []))
+                print(f"    var_id={m['var_id']}  {m['variable_name']}  ({aliases})")
+        print()
 
 
 def _cmd_generate(args: argparse.Namespace) -> int:
@@ -258,6 +401,48 @@ def build_parser() -> argparse.ArgumentParser:
         help="Output path for the R script (default: extract_stats_P<num>.R)",
     )
 
+    # compare
+    cmp = sub.add_parser(
+        "compare",
+        help="Compare local file columns against registry metadata",
+        description=COMPARE_HELP,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    cmp_input = cmp.add_mutually_exclusive_group()
+    cmp.add_argument(
+        "manifest",
+        nargs="?",
+        default=None,
+        help="Path to wizard manifest.json (schema_version 2).",
+    )
+    cmp_input.add_argument(
+        "--files",
+        nargs="+",
+        default=None,
+        help="CSV file paths to compare (reads first row as headers).",
+    )
+    cmp_input.add_argument(
+        "--columns",
+        default=None,
+        help="Comma-separated column names to compare.",
+    )
+    cmp.add_argument(
+        "--register",
+        default=None,
+        help="Register name or ID (required for --files and --columns modes).",
+    )
+    cmp.add_argument(
+        "--db",
+        default=None,
+        help="Path to regmeta database directory.",
+    )
+    cmp.add_argument(
+        "--format",
+        choices=["table", "json"],
+        default="table",
+        help="Output format (default: table).",
+    )
+
     # generate
     gen = sub.add_parser(
         "generate",
@@ -330,6 +515,8 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "generate-script":
         return _cmd_generate_script(args)
+    if args.command == "compare":
+        return _cmd_compare(args)
     if args.command == "generate":
         return _cmd_generate(args)
 

@@ -23,7 +23,6 @@ from .db import (
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 from .queries import (
-    compare,
     get_availability,
     get_coded_variables,
     get_datacolumns,
@@ -34,7 +33,6 @@ from .queries import (
     get_values,
     get_varinfo,
     resolve,
-    resolve_register_ids,
     search,
 )
 
@@ -439,43 +437,6 @@ def _build_parser() -> argparse.ArgumentParser:
     get_avail_p.add_argument("target", help="Variable name/var_id or register name/ID.")
     get_avail_p.add_argument(
         "--register", default=None, help="Scope to a specific register (for variables)."
-    )
-
-    compare_p = sub.add_parser(
-        "compare",
-        help="Compare local file columns against registry metadata.",
-        description=(
-            "Compare columns in local data files against SCB registry schemas.\n\n"
-            "Input modes (mutually exclusive):\n"
-            "  regmeta compare manifest.json                              # wizard manifest v2\n"
-            "  regmeta compare --files mock_data/*.csv                    # read CSV headers\n"
-            '  regmeta compare --columns "Kon,FodelseAr" --register 189  # explicit\n\n'
-            "CSV and --columns modes require --register."
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    compare_input = compare_p.add_mutually_exclusive_group()
-    compare_p.add_argument(
-        "manifest",
-        nargs="?",
-        default=None,
-        help="Path to wizard manifest.json (schema_version 2).",
-    )
-    compare_input.add_argument(
-        "--files",
-        nargs="+",
-        default=None,
-        help="CSV file paths to compare (reads first row as headers).",
-    )
-    compare_input.add_argument(
-        "--columns",
-        default=None,
-        help="Comma-separated column names to compare.",
-    )
-    compare_p.add_argument(
-        "--register",
-        default=None,
-        help="Register name or ID (required for --files and --columns modes).",
     )
 
     resolve_p = sub.add_parser(
@@ -1131,139 +1092,6 @@ def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int
     ), 0
 
 
-def _cmd_compare(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    import csv as csv_mod
-    from pathlib import Path
-
-    start = time.perf_counter()
-
-    columns_by_file: dict[str, list[str]] = {}
-    register_hints: dict[str, int | None] = {}
-    year_hints: dict[str, int | None] = {}
-
-    if args.manifest:
-        # Read wizard manifest v2
-        manifest_path = Path(args.manifest)
-        if not manifest_path.exists():
-            raise RegmetaError(
-                exit_code=EXIT_USAGE,
-                code="usage_error",
-                error_class="usage",
-                message=f"Manifest file not found: {args.manifest}",
-                remediation="Check the file path.",
-            )
-        manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
-        sv = manifest_data.get("schema_version")
-        if sv != "2":
-            raise RegmetaError(
-                exit_code=EXIT_USAGE,
-                code="usage_error",
-                error_class="usage",
-                message=f"Unsupported manifest schema_version '{sv}'. Expected '2'.",
-                remediation="Regenerate with mock-data-wizard >= v0.2.0.",
-            )
-        for f in manifest_data.get("files", []):
-            label = f["file_name"]
-            columns_by_file[label] = f.get("columns", [])
-            register_hints[label] = f.get("register_hint")
-            year_hints[label] = f.get("year_hint")
-
-    elif args.files:
-        # Read CSV headers
-        if not args.register:
-            raise RegmetaError(
-                exit_code=EXIT_USAGE,
-                code="usage_error",
-                error_class="usage",
-                message="--register is required when using --files.",
-                remediation="Specify --register <name_or_id>.",
-            )
-        for fpath_str in args.files:
-            fpath = Path(fpath_str)
-            if not fpath.exists():
-                raise RegmetaError(
-                    exit_code=EXIT_USAGE,
-                    code="usage_error",
-                    error_class="usage",
-                    message=f"File not found: {fpath_str}",
-                    remediation="Check the file path.",
-                )
-            with fpath.open(encoding="utf-8") as fh:
-                reader = csv_mod.reader(fh)
-                headers = next(reader, [])
-            columns_by_file[fpath.name] = headers
-
-    elif args.columns:
-        # Explicit column list
-        if not args.register:
-            raise RegmetaError(
-                exit_code=EXIT_USAGE,
-                code="usage_error",
-                error_class="usage",
-                message="--register is required when using --columns.",
-                remediation="Specify --register <name_or_id>.",
-            )
-        cols = [c.strip() for c in args.columns.split(",") if c.strip()]
-        columns_by_file["(columns)"] = cols
-
-    else:
-        raise RegmetaError(
-            exit_code=EXIT_USAGE,
-            code="usage_error",
-            error_class="usage",
-            message="No input provided.",
-            remediation="Provide a manifest path, --files, or --columns.",
-        )
-
-    # If --register given, resolve it and apply as hint to all files that lack one
-    db = db_path_from_args(args.db)
-    conn = open_db(db)
-    try:
-        info = _db_info(conn)
-
-        if args.register:
-            reg_ids = resolve_register_ids(conn, args.register)
-            if not reg_ids:
-                raise RegmetaError(
-                    exit_code=EXIT_NOT_FOUND,
-                    code="not_found",
-                    error_class="query",
-                    message=f"Register '{args.register}' not found.",
-                    remediation="Use `regmeta search --type register` to find register names.",
-                )
-            reg_id = reg_ids[0]
-            for label in columns_by_file:
-                if register_hints.get(label) is None:
-                    register_hints[label] = reg_id
-
-        data = compare(
-            conn,
-            columns_by_file=columns_by_file,
-            register_hints=register_hints,
-            year_hints=year_hints,
-        )
-    finally:
-        conn.close()
-
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    args_payload: dict[str, Any] = {}
-    if args.manifest:
-        args_payload["manifest"] = args.manifest
-    if args.files:
-        args_payload["files"] = args.files
-    if args.columns:
-        args_payload["columns"] = args.columns
-    if args.register:
-        args_payload["register"] = args.register
-    return _success_envelope(
-        command="compare",
-        args_payload=args_payload,
-        db_info=info,
-        data=data,
-        duration_ms=duration_ms,
-    ), 0
-
-
 def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .errors import EXIT_NO_MATCH
 
@@ -1638,73 +1466,6 @@ def _write_payload(
         all_gaps = data.get("gaps", [])
         if all_gaps:
             _write_to(f"\nGaps: {', '.join(str(g) for g in all_gaps)}\n", output_path)
-    elif key == ("compare", None):
-        for f in data.get("files", []):
-            status = f.get("register_status", "")
-            reg_name = f.get("register_name") or "?"
-            reg_id = f.get("register_id") or "?"
-            header = f"── {f['file']}  [{reg_name} ({reg_id})] {status}"
-            if f.get("year_hint"):
-                header += f"  year={f['year_hint']}"
-            _write_to(header + "\n", output_path)
-
-            if status != "resolved":
-                _write_to(f"  (skipped: {status})\n\n", output_path)
-                continue
-
-            s = f.get("summary", {})
-            _write_to(
-                f"  matched: {s.get('matched', 0)}  "
-                f"extra_local: {s.get('extra_local', 0)}  "
-                f"missing_from_registry: {s.get('missing_from_registry', 0)}\n",
-                output_path,
-            )
-
-            rows = []
-            for m in f.get("matched", []):
-                rows.append(
-                    {
-                        "column": m["column"],
-                        "status": "matched",
-                        "var_id": m.get("var_id", ""),
-                        "variable_name": m.get("variable_name", ""),
-                    }
-                )
-            for col in f.get("extra_local", []):
-                rows.append(
-                    {
-                        "column": col,
-                        "status": "extra_local",
-                        "var_id": "",
-                        "variable_name": "",
-                    }
-                )
-            if rows:
-                _write_formatted(
-                    rows,
-                    ["column", "status", "var_id", "variable_name"],
-                    output_path,
-                    fmt=fmt,
-                )
-
-            missing = f.get("missing_from_registry", [])
-            if missing:
-                _write_to("\n  Missing from local:\n", output_path)
-                miss_rows = [
-                    {
-                        "var_id": m["var_id"],
-                        "variable_name": m["variable_name"],
-                        "aliases": ", ".join(m.get("aliases", [])),
-                    }
-                    for m in missing
-                ]
-                _write_formatted(
-                    miss_rows,
-                    ["var_id", "variable_name", "aliases"],
-                    output_path,
-                    fmt=fmt,
-                )
-            _write_to("\n", output_path)
     elif key == ("resolve", None):
         rows = []
         for col in data.get("columns", []):
@@ -1813,7 +1574,6 @@ COMMAND_DISPATCH = {
     ("get", "diff"): _cmd_get_diff,
     ("get", "lineage"): _cmd_get_lineage,
     ("get", "availability"): _cmd_get_availability,
-    ("compare", None): _cmd_compare,
     ("resolve", None): _cmd_resolve,
     ("maintain", "build-docs"): _cmd_maintain_build_docs,
     ("docs", "search"): _cmd_doc_search,
