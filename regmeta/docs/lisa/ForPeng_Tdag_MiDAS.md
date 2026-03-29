@@ -21,3 +21,11 @@ Tills dess att barnet är 18 månader ha föräldern rätt till ledighet med ell
 De obetalda dagarna är skattade dagar och göras av Försäkringskassan.
 
 *För ytterligare information om föräldrapenning, se under Föräldrapenning, antal bruttodagar* ([[ForPeng_Bdag]]).
+
+(1994–)
+
+Antal utbetalda bruttodagar under året med tillfällig föräldrapenning.
+
+Tillfällig föräldrapenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), halv (50 procent), en fjärdedels (25 procent) eller en åttondels ersättning (12,5 procent). Antal bruttodagar visar antal dagar under ett år oavsett ovan omfattning.
+
+*För ytterligare information, se under Tillfällig föräldrapenning för vård av barn* ([[ForVAB]]).

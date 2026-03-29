@@ -34,8 +34,6 @@ Stödet beräknas per närvarodag. Man har dock rätt till stöd även vid viss 
 
 *Fr.o.m. läsåret 1993/94* får den som går viss specialpedagogisk utbildning särskilt vuxenstudiestöd (Lärar-SVUX).
 
-
-
 *Fr.o.m. läsåret 1995/96* kan även de som genomgår vissa naturvetenskapliga och tekniska högskoleutbildningar söka särskilt vuxenstudiestöd (NT-SVUX).
 
 Detta är en tillfällig satsning och sista antagningen sker höstterminen 1998.
@@ -114,5 +112,10 @@ Rätt till barntillägg upphör från och med hösten 1995 men övergångsregler
 | 2002    | 1 391 |
 | 2003    | 355   |
 
+(1990–1996)
+
+Beloppet anges i hundratals kronor.
+
+1990–1996 redovisas Särskilt vuxenstudiestöd, bidragsdel, för arbetslösa ([[SVuxA]]) och för övriga (SVux), i samma variabel ([[SVuxSVuxA]]).
 
 [^58]: Hänsyn tas främst till tidigare utbildning, antalet yrkesverksamma år och behovet av tidigare stöd.

@@ -15,7 +15,6 @@ Variabelns källa är SCB:s Utbildningsregister (UREG), se *Utbildningsvariabler
 
 Inriktningsmodulen består av fyra positioner, där de tre första är siffror och den fjärde en bokstav. Den första siffran anger utbildningens innehåll på den grövsta nivån. De två första siffrorna anger utbildningens huvudinriktning och motsvarar inriktning i ISCED 97. Tredje siffran anger ämnesinriktning. Den fjärde positionen, bokstaven, kan användas för att ytterligare specificera utbildningen (detaljerad ämnesindelning).
 
-
 #### *Första siffran i inriktningsmodulen:*
 
 - 0 = Allmän utbildning

@@ -22,9 +22,6 @@ Vårdbidraget ges tills vidare och omprövas vartannat år. Förälder måste va
 
 Vårdbidraget är skattepliktigt och pensionsgrundande, men vårdbidraget kan även innehålla en icke skattepliktig merkostnadsdel. Under vissa förutsättningar kan merkostnadsdelen betalas utöver det
 
-
-
-
 normala beloppet för hel förmån. Denna del av vårdbidraget ingår inte i denna variabel.
 
 *1990 – 30/6 1992:* Vårdbidraget utges, beroende på tillsyns- och vårdbehovets omfattning samt merkostnadernas storlek, med samma årsbelopp som hel, halv eller en fjärdedels förtidspension till ensamstående inklusive pensionstillskott.
@@ -40,7 +37,6 @@ Om ett barn med hel, tre fjärdedels eller halv förmån avlider betalas ett red
 Föräldrabegreppet utvidgas *2002* avseende vårdbidrag så att med förälder likställs vårdnadshavare som inte är förälder men som har vård av barnet.
 
 År *2017* är ersättningen för de som har ett helt vårdnadsbidrag 9 333 kronor per månad.
-
 
 [^70]: Föräldrarbegreppet utvidgas så att vårdnadshavare som har vård om barnet likställs med förälder (2002–07).
 [^71]: Före år 2003 kunde vårdbidraget betalas ut till och med månaden före den då barnet fyllde 16 år.

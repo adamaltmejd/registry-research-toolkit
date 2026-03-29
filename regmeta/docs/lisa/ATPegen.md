@@ -36,7 +36,7 @@ Status är 1990–1992 kodat:
 - 22= Förtidspension/Sjukbidrag (3/4)
 - 23= Förtidspension/Sjukbidrag (2/3)
 
-```
+```text
 24= Förtidspension/Sjukbidrag (1/2)
 25= Förtidspension/Sjukbidrag (1/4)
 29= Förtidspension/Sjukbidrag (omfattning okänd)
@@ -47,6 +47,6 @@ Status är 1990–1992 kodat:
 45= Ålderspension (1/4) – Förtidspension/Sjukbidrag (2/3)
 46= Ålderspension (1/4) – Förtidspension/Sjukbidrag (1/2)
 47= Ålderspension (1/4) – Förtidspension/Sjukbidrag (1/4)
-```
+```text
 
 Utgår i och med att det reformerade pensionssystemet fullt ut träder i kraft.

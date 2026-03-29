@@ -15,7 +15,6 @@ FoDelt
 - 2 = Registrerad på högskolans forskarutbildning under höstterminen
 - 3 = Registrerad på högskolans forskarutbildning under både vår- och höstterminen
 
-
 Den forskarstuderande skall vara antagen till utbildning på forskarnivå vid ett universitet eller vid en högskola med fasta forskningsresurser eller vetenskapsområden. Sedan 2010 gäller att universitet eller högskolan beviljats examenstillstånd för generella eller konstnärliga examina på forskarnivå inom ett område.
 
 Uppgifterna hämtas huvudsakligen från universitetens/högskolornas studieadministrativa system (LADOK) via internet. För högskolor som inte är anslutna till LADOK används insamling via SCB:s insamlingsverktyg SIV. Tidigare använder blanketter och excelfiler. Uppgifterna granskas och kompletteras vid SCB. Ofullständiga personnummer, främst för utländska studerande, ger bortfall vid sambearbetningar med andra register.

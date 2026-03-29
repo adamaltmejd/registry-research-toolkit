@@ -10,7 +10,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 Basbeloppet följer förändringar i prisläget (på grundval av konsumentprisindex, KPI) och fastställs av regeringen för varje år. Med hjälp av basbeloppet anpassas på så vis storleken på ersättningar inom socialförsäkringen till penningutvecklingen. Statsmakterna har emellertid gjort vissa ingrepp i beräkningen av basbeloppet. Dessa ingrepp har inneburit att den fulla värdesäkringen som tidigare gällde, inte längre gäller. För åren 1991 till 1997 minskade basbeloppet med 12 procentenheter i förhållande till konsumentprisökningen.
 
-
 #### **Basbelopp/prisbasbelopp[^168]**
 
 | År   | Kronor |
@@ -51,7 +50,6 @@ Basbeloppet följer förändringar i prisläget (på grundval av konsumentprisin
 
 Den *1/1 1993* införs ett minskat basbelopp. Detta utgörs av basbeloppet minskat med två procent. Det minskade basbeloppet används vid beräkningar av folkpension i form av ålderspension, förtidspension och efterlevandepension samt änkepension, barnpension och barntillägg. Vidare skall det minskade basbeloppet användas vid beräkning av ATP i form av ålderspension, förtidspension och efterlevandepension samt änkepension och barnpension. Även studiemedel beräknas efter det minskade basbeloppet.
 
-
 #### **Det minskade basbeloppet**
 
 | År   | Kronor |
@@ -67,7 +65,6 @@ Från och med *1999* betalas pensionerna åter ut efter fulla prisbasbeloppet.
 
 Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för tilläggspension.
 
-
 #### **Det förhöjda basbeloppet/prisbasbeloppet[^169]**
 
 | År   | Kronor |
@@ -82,7 +79,6 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2002 | 38 700 |
 | 2003 | 39 400 |
 | 2004 | 40 100 |
-
 
 | År   | Kronor |
 |------|--------|
@@ -101,7 +97,6 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2017 | 45 700 |
 
 År 2001 införs ett inkomstbasbelopp. Inkomstbasbeloppet räknas upp med förändringen i ett inkomstindex. Inkomstbasbeloppet används vid beräkning av högsta pensionsgrundande inkomst och av taket för pensionsgrundande inkomst.
-
 
 #### **Inkomstbasbeloppet**
 
@@ -124,6 +119,5 @@ Det förhöjda prisbasbeloppet används vid beräkning av pensionspoäng för ti
 | 2015 | 58 100 |
 | 2016 | 59 300 |
 | 2017 | 61 500 |
-
 
 [^169]: Från och med 1999 kallas basbeloppet för prisbasbelopp och det förhöjda basbeloppet för förhöjt prisbasbelopp.

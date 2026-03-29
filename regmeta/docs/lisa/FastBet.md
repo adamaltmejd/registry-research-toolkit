@@ -38,7 +38,7 @@ Personer som vid inflyttningen till Sverige har för avsikt att vistas här kort
 
 Utländska medborgare som tillhör utländsk beskickning eller konsulat och dess betjäning folkbokförs inte i Sverige.
 
-*3. Personer folkbokförda på en annan fastighet än den där de bor* 
+*3. Personer folkbokförda på en annan fastighet än den där de bor*
 
 Intagning på sjukhus, vårdinrättning eller kriminalvårdsanstalt ska inte medföra ändring av folkbokföringen.
 

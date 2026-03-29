@@ -61,3 +61,13 @@ Den *1 januari 2012* inför en ny form av sjukpenning, sjukpenning i särskilda 
 Den *1/7 2012* återinförs det nygamla arbetsmarknadsbegreppet i sjukförsäkringen. Sjukskrivnas arbetsförmåga ska efter 180 dagar prövas mot sådant förvärvsarbete som normalt förekommer på arbetsmarknaden i stället för mot förvärvsarbete på den reguljära arbetsmarknaden.
 
 Den *1 januari 2013* införs sjukpenning i särskilda fall och boendetillägg för de som lämnat aktivitetsersättning vid 30 års ålder, saknar eller har låg SGI.
+
+Markering för om individ under aktuellt år erhållit rehabiliteringsersättning. Markering avser utbetalningsåret oavsett ersättningsperiod.
+
+Då ersättningen är ny 1992 kan det antas att den under åtminstone detta första år inte får den utbredning den borde ha p.g.a. att den ännu inte är etablerad bland berörda arbetstagare, arbetsgivare och försäkringskassor.
+
+Trots sänkt ersättning 1993 ligger den fortfarande högre än ersättningen från sjukpenningen och från och med 91:a sjukdagen ökar avståndet till sjukpenningen än mer, då den senare samtidigt sänks med 10 procentenheter.
+
+Från och med 1996 är ersättningsnivån densamma som nivån i sjukpenningen. Detta kan ha ökat risken för att rehabiliteringspenning inte registreras istället för sjukpenning trots att arbetslivsinriktad rehabiliteringsåtgärd pågår. Rehabiliteringspenning blir därmed ett svagare mått på arbetslivsriktade rehabiliteringsåtgärder.
+
+Rehabiliteringsersättningen kan helt eller delvis döljas av andra ersättningar, se under *Rehabiliteringsersättning* (RehabErs).

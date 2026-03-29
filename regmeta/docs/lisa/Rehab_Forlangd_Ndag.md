@@ -10,7 +10,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Förlängd rehabiliteringspenning, antal nettodagar Rehab_Forlangd_Ndag**
 
-**Rehab*Forlangd*Ndag**
+Rehab*Forlangd*Ndag
 
 (2008–2011)
 

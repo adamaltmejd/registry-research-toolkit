@@ -48,8 +48,6 @@ I schablonbidraget ingår kostnader för mat, kläder och skor, lek och fritid, 
 
 Bidrag för skäliga kostnader omfattar kostnader för bostad, hushållsel, arbetsresor, hemförsäkring, läkarvård, akut tandvård, glasögon, medlemskap i fackförening och arbetslöshetskassa. Bidragets storlek varierar efter behov och efter vad man i kommunen anser vara "skäliga kostnader".
 
-
-
 #### **Riksnorm för ensamstående vuxen**
 
 | År   | Belopp       |

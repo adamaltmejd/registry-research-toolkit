@@ -20,6 +20,7 @@ A `schema_prototype.py` analysis tool was used during discovery to profile the S
 ## 3. Key Decisions
 
 ### 2026-03-12
+
 1. **SQLite backend.** No CSV parsing at query time.
 2. **`maintain` namespace.** Setup/maintenance commands under `regmeta maintain`, shown only in `regmeta maintain --help`.
 3. **Full import.** `build-db` imports all registers and rows. No slicing or filtering.
@@ -30,6 +31,7 @@ A `schema_prototype.py` analysis tool was used during discovery to profile the S
 8. **Agent-first design.** Primary consumers are LLM agents and other tools. JSON is the primary output. Structured errors for programmatic branching. Core functions importable as Python library. See SPEC §8.
 
 ### 2026-03-14: CLI Redesign
+
 9. **Fuzzy register lookup everywhere.** All commands accepting a register accept name or ID. Resolution: exact ID → exact name → substring match. Shared helper `_resolve_register_ids`.
 10. **`get schema` restructured.** Accepts `regvar_id` or `--register`, with `--years` filter. Output organized by variant → version → columns. Primary command for `mock_data_wizard`.
 11. **`get varinfo` replaces `get variable`.** Accepts variable name or var_id with optional `--register` filter. Returns full variable deep dive with instance history.
@@ -38,10 +40,12 @@ A `schema_prototype.py` analysis tool was used during discovery to profile the S
 14. **Contract version bumped to 2.0.0.**
 
 ### 2026-03-20: Temporal validity
+
 15. **`value_item_validity` table.** SCB provided `VardemangderValidDates.csv` mapping ItemId to validity date ranges. Items absent from the file have no temporal restriction (always valid). Schema version bumped to 1.1.0.
 16. **`get values --valid-at` filter.** ISO date input, validated at CLI boundary.
 
 ### 2026-03-22: Storage optimization (schema 2.0.0)
+
 17. **INTEGER IDs.** All ID columns (`register_id`, `regvar_id`, `regver_id`, `var_id`, `cvid`, `code_id`, `item_id`) stored as `INTEGER` instead of `TEXT`. Reduces storage and enables faster comparison.
 18. **Content-synced FTS5.** Both `register_fts` and `variable_fts` use `content=` and `content_rowid=` to avoid storing text twice. Requires explicit `rowid` in FTS INSERT statements since the content tables use `INTEGER PRIMARY KEY` (rowid alias).
 19. **Value code deduplication.** `value_code` table deduplicates (vardekod, vardebenamning) pairs across all CVIDs. `cvid_value_code` is a `WITHOUT ROWID` junction with PK(cvid, code_id).
@@ -71,6 +75,7 @@ Objective: `regmeta maintain build-db --csv-dir SCB-data/` produces a normalized
 The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. Column mappings from CSV headers to DB columns are implemented in `db.py` (`_import_registerinformation` and the per-file import functions).
 
 #### Tasks
+
 - [x] Define DDL (CREATE TABLE + FTS5 + indexes) as embedded SQL. → `db.py:DDL`
 - [x] CSV reader for SCB format: pipe-delimited, cp1252, encoding validation. → `db.py:_open_scb_csv`, `_decode_cp1252`
 - [x] Normalization from Registerinformation.csv → core tables (register, variant, version, population, object_type, variable, instance, alias, context). → `db.py:_import_registerinformation`
@@ -84,10 +89,12 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
 - [x] Atomic replace: build to temp file, rename on success. → `db.py:build_db`
 
 #### Exit Criteria
+
 - [x] Full database builds from real `SCB-data/`.
 - [x] Row counts match source files.
 
 #### Smoke Test Results (2026-03-14)
+
 - Build completed in ~17 min (996K backbone rows, 102M value-item rows).
 - Three bugs found and fixed:
   - cp1252 bytes 0x8F/0x90/0x9D (DOS cp850 remnants) rejected the Vardemangder import. Fixed: mapped to Å/É/Ø.
@@ -95,6 +102,7 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
   - Duplicate `utc_now()` function in both `cli.py` and `db.py`. Fixed: single definition in `db.py`.
 
 #### Phase Gate: Tests And Cleanup
+
 - [x] Tests for build-db pipeline: CSV parsing (cp1252, cp850 fixup, header validation), normalization (deduplication, hierarchy integrity, alias/context anomalies), enrichment joins, FTS population, manifest correctness, atomic replace, error paths. → `test_build_db.py` (22 tests)
 - [x] Review and clean up Phase 1 code.
 
@@ -103,6 +111,7 @@ The schema follows `STRUCTURE.md` and is specified in `SPEC_regmeta.md` §3.3. C
 Objective: Expose `search`, `get`, and `resolve` against the built database.
 
 #### Tasks
+
 - [x] DB connection layer: open, read-only mode, error if missing DB. → `db.py:open_db`
 - [x] Shared register lookup helper (ID → name → substring). → `queries.py:resolve_register_ids`
 - [x] `search` — FTS across registers and variables, type filter, register filter, pagination. → `cli.py:_cmd_search`
@@ -118,13 +127,16 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - [x] Common flags: `--db`, `--format`, `--output`. → `cli.py:_build_parser`
 
 #### Removed (2026-03-14 redesign)
+
 - `get variable <register_id> <var_id>` — replaced by `get varinfo`.
 - Resolve FTS fallback, confidence scoring, ambiguity classification, `--register-hint`, `--top-k`, `--min-confidence`, `--file-name`.
 
 #### Exit Criteria
+
 - [x] All queries work against real DB and return deterministic results.
 
 #### Smoke Test Results (2026-03-14)
+
 - All commands verified against production DB (238 registers, 42K variables, 515K instances, 96M value items).
 - Resolve dedup bug found and fixed: same `(register_id, var_id)` appeared multiple times per CVID. Added `GROUP BY`.
 - `resolve --columns Kon --register LISA` → 1 match (correct). `resolve --columns Kon` → 97 matches (correct).
@@ -132,6 +144,7 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - `get varinfo "Arbetssökande i november" --register LISA` → 26 instances across 1998-2023.
 
 #### Phase Gate: Tests And Cleanup
+
 - [x] Tests for all query commands: search, get (all subcommands), resolve, error model, envelope, table format. → `test_commands.py` (82 tests)
 - [x] Review and clean up Phase 1 + Phase 2 code.
 
@@ -142,6 +155,7 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 - [x] Known limitations documented. → SPEC §6.4, README.
 
 #### Phase Gate: Tests And Cleanup
+
 - [x] Full regression suite: 82 command tests + 22 build-db tests = 104 total.
 - [x] Final code review and cleanup.
 
@@ -150,6 +164,7 @@ Objective: Expose `search`, `get`, and `resolve` against the built database.
 Objective: Two new query commands (`get diff`, `get lineage`) per `SPEC_regmeta_v2.md`.
 
 #### Tasks
+
 - [x] `get diff` — temporal schema comparison between two years. → `queries.py:get_diff`, `cli.py:_cmd_get_diff`
 - [x] `get lineage` — cross-register variable provenance. → `queries.py:get_lineage`, `cli.py:_cmd_get_lineage`
 - [x] Variable resolution by var_id, name, or alias for both commands.
@@ -157,6 +172,7 @@ Objective: Two new query commands (`get diff`, `get lineage`) per `SPEC_regmeta_
 - [x] Contract version bumped to 3.0.0.
 
 #### Phase Gate: Tests And Cleanup
+
 - [x] Tests for `get diff` (9 tests) and `get lineage` (9 tests). → `test_commands.py`
 - [x] Output format tests (table, list, JSON). → `test_commands.py`
 - [x] Full regression suite: 102 tests total.
@@ -166,6 +182,7 @@ Objective: Two new query commands (`get diff`, `get lineage`) per `SPEC_regmeta_
 Objective: Reduce database size from ~13GB to ~1.6GB without losing functionality or query speed.
 
 #### Tasks
+
 - [x] TEXT→INTEGER for all ID columns. → `db.py:DDL`, `_import_registerinformation`, `_import_identifierare`
 - [x] Content-synced FTS5 with explicit rowid. → `db.py:_populate_fts`, DDL
 - [x] `_try_int()` helper for CLI string→INTEGER coercion. → `queries.py`
@@ -175,6 +192,7 @@ Objective: Reduce database size from ~13GB to ~1.6GB without losing functionalit
 - [x] Drop unused `idx_value_item_item` index.
 
 #### Phase Gate: Tests And Cleanup
+
 - [x] Tests for `value_item` population, `code_variable_map` population, multi-item temporal gaps, empty ItemId handling, search --value via summary table. → `test_build_db.py`, `test_commands.py`
 - [x] Full regression suite: 108 tests total.
 - [x] SPEC and STRUCTURE docs updated to reflect new schema.

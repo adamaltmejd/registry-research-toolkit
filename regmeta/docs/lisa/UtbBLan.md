@@ -18,9 +18,7 @@ Beloppet anges i hundratal kronor.
 
 Lånet är kopplat till ovan beskrivna reducerade utbildningsbidrag (särskild dagpenning).
 
-Beslut om deltagande i arbetsmarknadsutbildning fattas av Arbetsförmedlingen, beslut om särskilt studielån fattas av CSN. **Arbetslivsutvecklingsbidrag (ALU) [[ALUBidr]]**
-
-(1993)
+Beslut om deltagande i arbetsmarknadsutbildning fattas av Arbetsförmedlingen, beslut om särskilt studielån fattas av CSN. (1993)
 
 Beloppet anges i hundratal kronor.
 
@@ -41,3 +39,7 @@ De som, vid Offentligt Tillfälligt arbete ([[OTA]]) och vid Aktivare användnin
 Från och med 2000 redovisas dessa, tillsammans med dem som erhållit restutbetalningar i samband med ALU, under variabeln *Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* ([[AKassaAmPol]]).
 
 Från och med 1994 är ALU uppdelat på Arbetslivsutvecklingsbidrag från A-kassa *([[ALUKU]])*, Arbetslivsutvecklingsbidrag från RFV och [[KAS]] *([[ALUKAS]])*, Arbetslivsutvecklingsbidrag från [[AMK]] *([[ALUAMK]])* samt Arbetslivsutvecklingsbidrag enligt EES-avtal *([[ALUEES]])*.
+
+(1994–1999)
+
+Beloppet anges i hundratal kronor.

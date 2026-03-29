@@ -21,12 +21,4 @@ KU1-3 finns där inkomsten av förvärvskällan > 999 kr.
 
 *Vid utlämnade av data från LISA ersätts organisationsnumret av ett löpnummer.*
 
-
----
-
-**Företag (största förvärvskälla) KU1PeOrgNr**
-
-*Se under Kopplingsidentiteter – Företag.*
-
-
 [^5]: 1990 utgjordes underlaget för företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.

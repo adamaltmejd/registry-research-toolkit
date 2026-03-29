@@ -25,8 +25,6 @@ Sambo-familj (med gemensamt barn)
 - 22 = Med minst ett hemmaboende barn under 18 år
 - 23 = Yngsta hemmaboende son/dotter 18 år eller äldre
 
-
-
 #### Ensamstående far[^10]
 
 - 31 = Med minst ett hemmaboende barn under 18 år
@@ -44,7 +42,6 @@ Sambo-familj (med gemensamt barn)
 - 00 = Personer med ofullständiga och/eller motstridiga uppgifter i folkbokföringen.
 
 *För ytterligare information samt skillnader i avgränsningen mellan 1990– 1997 och 1998– se under Familj ([[FamId]]).*
-
 
 [^9]: Familjeenheter enligt MIS 1999:1.
 [^10]: Här ingår sambor utan gemensamma barn.

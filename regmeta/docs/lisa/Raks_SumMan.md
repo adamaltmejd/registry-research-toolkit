@@ -14,3 +14,9 @@ RAKS_SumMan
 (2003–)
 
 Antal månader en individ arbetat enligt månadsmarkeringen på KU-uppgiften. Uppgiften skall tolkas med största försiktighet då kvaliteten är osäker. En månad räknas endast en gång vilket betyder att om en individ arbetat från januari till oktober hos en arbetsgivare och samtidigt arbetat från januari till april hos en annan arbetsgivare registreras 10 månader. Max antal månader är 12.
+
+(1993–)
+
+Ersättning från arbetslöshetskassa/arbetslöshetsförsäkring anges i hundratal kronor.
+
+*För ytterligare information se Summa inkomst föranledd av arbetslöshet* ([[ArbLos]]).

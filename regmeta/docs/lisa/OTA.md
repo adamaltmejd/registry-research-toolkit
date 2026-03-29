@@ -10,7 +10,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Offentligt Tillfälligt Arbete (OTA) OTA**
 
-
+OTA
 
 (1997)
 
@@ -24,14 +24,11 @@ Den arbetslöshetsersättning som en deltagare i OTA har ökas med 45 kronor per
 
 Endast det fåtal som fått sin ersättning i samband med OTA utbetald från Försäkringskassan (kontant arbetsmarknadsstöd eller motsvarande) redovisas under denna variabel. De som, vid OTA, ersätts av arbetslöshetskassa redovisas under variabeln *Arbetslivsutvecklingsbidrag (från A-kassa)* ([[ALUKU]]) till och med 1999 och från och med år 2000 under variabel*n Ersättning från arbetslöshetskassa vid arbetsmarknadsåtgärd* (AKassa-[[AmPol]]).
 
-
 ---
 
 #### **Offentligt Tillfälligt Arbete, OTA**
 
 Den 1/11 1996 införs OTA (Offentligt Tillfälligt Arbete). Man kan anvisas OTA om man är arbetslös, har fyllt 55 år och har varit anmäld som arbetssökande på Arbetsförmedlingen under minst 24 månader. Det är staten, kommunerna, landstingen och de allmänna försäkringskassorna som anordnar sådana arbeten. Hur lång tid som ett
-
-
 
 tillfälligt offentligt arbete pågår avgörs av Arbetsförmedlingen. OTA får inte användas till att ersätta annan arbetskraft på en arbetsplats och inte heller i övrigt användas för att utföra ordinarie arbetsuppgifter. Den som deltar i OTA står till arbetsmarknadens förfogande, vilket innebär att en OTA-period kan avbrytas om Arbetsförmedlingen kan erbjuda ett annat arbete eller en annan åtgärd. Den arbetslöshetsersättning som en deltagare i OTA har ökas med 45 kronor per ersättningsdag för verksamhet på heltid. Anordnaren betalar ingen lön till OTA-deltagaren.
 
@@ -54,7 +51,6 @@ Upphör november 2007, ersätts av Jobbgaranti för ungdomar.
 #### **IT-satsning**
 
 IT-satsningen startar 1/1 1998 och är en arbetsmarknadsutbildning i form av en IT-utbildning. Syftet med utbildningen är att den skall ge yrkeskompetens för bristyrken inom IT-näringen. Utbildningen riktar sig till den som är arbetslös eller riskerar att bli arbetslös och är arbetssökande. Även när man har en anställning kan man beviljas en IT-utbildning[^110] om man behöver förnya eller byta arbetsuppgifter.
-
 
 Arbetsgivaren måste då godkänna att man får vara med i utbildningen med bibehållna anställningsförmåner. En utbildningssatsning där uttagning till åtgärd sker med hjälp av ett urvalstest. Nämnden kan bevilja ansökan först från och med den 1 juli det år man fyller 20 år (med vissa undantag) och skall ta särskild hänsyn till om den sökande är kvinna, invandrare eller handikappad. Om man beviljats IT-utbildning har man rätt till utbildningsbidrag.
 
@@ -149,6 +145,5 @@ Införs 2010-01-01. Program inom ramen för arbetslivsinriktad rehabilitering me
 #### **Arbetsträning inom praktiskt basår**
 
 Åtgärden införs i mars 2014. Åtgärden riktar sig till arbetssökande inom ramen för etableringsuppdraget. Syftet med praktiskt basår är introduktion till ett nytt arbete med fokus på praktisk träning. Huvudaktiviteten är därför arbetsträning på arbetsplatsen. En teoretisk utbildning som tillgodoser utbildningsbehovet som finns för att klara arbetsuppgifterna på arbetsplatsen skall alltid ingå.
-
 
 [^110]: Dessa var inte inskrivna vid Arbetsförmedlingen.

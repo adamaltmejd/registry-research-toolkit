@@ -22,11 +22,13 @@ uv run mock-data-wizard generate --stats stats.json --seed 42
 | `generate` | Produce mock CSV files from stats.json output |
 
 ### generate-script flags
+
 - `--project`, `-p` — SCB project number (e.g. P1405)
 - `--project-dir` — Custom data path(s) to scan
 - `--output`, `-o` — Output path for the R script
 
 ### generate flags
+
 - `--stats` — Path to stats.json (default: `stats.json`)
 - `--seed` — Random seed for reproducible output (default: 42)
 - `--sample-pct` — Fraction of rows to generate (default: 1.0)

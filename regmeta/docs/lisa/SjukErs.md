@@ -21,7 +21,6 @@ Personer i åldrarna 30–64 år kan få sjukersättning eller tidsbegränsad sj
 
 Bedömningen av arbetsförmågan för rätt till sjuk- och aktivitetsersättning är oförändrad. Det innebär att en person som fått
 
-
 sin arbetsförmåga nedsatt med minst en fjärdedel på grund av sjukdom eller annan nedsättning av den fysiska eller psykiska prestationsförmågan har rätt till sjuk- eller aktivitetsersättning. För rätt till sjukersättning måste nedsättningen av arbetsförmågan vara stadigvarande. Med stadigvarande nedsatt menas att nedsättningen ska bedömas vara bestående för överskådlig framtid och att medicinsk behandling och rehabilitering inte bedöms kunna leda till att arbetsförmågan återfås. Nedsättningen ska gälla alla förvärvsarbeten på hela arbetsmarknaden, inklusive sådana arbeten som anordnas för personer med funktionsnedsättning, till exempel lönebidragsanställningar. Med stadigvarande nedsatt menas dock inte med nödvändighet livslångt nedsatt[^127]. För rätt till aktivitetsersättning måste nedsättningen antas bestå under minst ett år. Man kan få hel, tre fjärdedels, halv eller en fjärdedels ersättning. Vilken grad man får beror på i vilken omfattning arbetsförmågan bedöms vara nedsatt.
 
 Ungdomar som på grund av funktionshinder ännu inte har avslutat sin utbildning på grundskole- och gymnasienivå har rätt till hel aktivitetsersättning under den tid det tar att avsluta studierna. Ingen prövning av arbetsförmågan görs i dessa ärenden.
@@ -31,7 +30,6 @@ Sjuk- och aktivitetsersättning kan betalas ut dels i form av en inkomstrelatera
 Garantiersättning får de som inte har haft eller har haft låga förvärvsinkomster innan arbetsförmågan blev nedsatt av medicinska skäl. Det gäller under förutsättning att vissa villkor ifråga om arbete eller bosättning uppfylls. Garantiersättningen är avsedd att ge ett ekonomiskt grundskydd oberoende av tidigare arbetsinkomster. Garantinivån vid sjukersättning är 2,40 prisbasbelopp (8 960 kronor/månad år 2017). Garantinivån vid aktivitetsersättning varierar med ålder från 2,10 till 2,35 prisbasbelopp. Garantiersättningen är dessutom beroende av försäkringstid.
 
 Inkomstrelaterad sjuk- eller aktivitetsersättning är däremot knuten till arbetsinkomsten. Den inkomstrelaterade sjuk- och aktivitetsersättningen beräknas på basis av en antagandeinkomst. Antagandeinkomsten beräknas enligt huvudregeln som genomsnittet av de tre högsta omräknade bruttoårsinkomsterna som intjänats under en given period, s.k. ramtid. Ramtiden är mellan fem och åtta år beroende på den enskildes ålder. Det högsta belopp som bruttoårsinkomsten kan beräknas till uppgår till 7,5 prisbasbelopp. Ersättningsnivån är 64,7 procent av den antagandeinkomst som räknats fram. År 2017 var
-
 
 maxbeloppet för den inkomstbaserade sjuk- och aktivitetsersättningen 18 803 kronor/månad. Personer som har en inkomstrelaterad sjuk- eller aktivitetsersättning som är lägre än garantinivån får garantiersättning med ett belopp som motsvarar skillnaden mellan garantinivån och den inkomstrelaterade ersättningen.
 
@@ -56,7 +54,23 @@ Från och med den 1/1 2009 finns två olika möjligheter för personer som har s
 - Arbete parallellt med särskiljda regler om sjukersättning. Gäller den som hade sjukersättning före den 1/7 2008. Det finns ingen tidsgräns för hur länge man kan arbeta med bibehållen rätt att ha kvar sjukersättningen. Arbetsinkomster upp till ett fribelopp påverkar inte sjukersättningens storlek. Fribeloppet varierar med graden av sjukersättning. För hel sjukersättning är fribeloppet 44 800 kronor 2017. Har man högre inkomster än fribeloppet minskar sjukersättningen med hälften av den del av den sammanlagda inkomst som överstiger fribeloppet. Sjukersättning tillsammans med arbetsinkomst får dock inte överstiga 8 prisbasbelopp.
 - Arbete med vilande sjuk- eller aktivitetsersättning. Gäller den som fått sin sjukersättning beviljad från och med den 1/7 2008 eller har tidsbegränsad sjuk- eller aktivitetsersättning. När man haft sjukeller aktivitetsersättning under ett år kan man anmäla att man vill pröva att arbeta på hel- eller deltid. Under de tre första månaderna med arbete kan sjuk- eller aktivitetsersättning lämnas utan att ersättningen minskar, samtidigt som man får lön från arbetet. Fortsätter man arbeta längre än tre månader kan ersättningen göras vilande i upp till två år med arbete, utan att rätten omprövas. För aktivitetsersättning gäller att denna rätt finns för hela den beslutade perioden[^128] .
 
+(2003–)
 
+Ger information om vilken grad av sjukersättningen som erhållits vid sista utbetalning under året.
+
+#### Kodförteckning:
+
+00 = 0/0, 0 % utbetalt
+
+01 = 1/1, 100 % utbetalt
+
+02 = 1/2, 50 % utbetalt
+
+03 = 3/4, 75 % utbetalt
+
+04 = 1/4, 25 % utbetalt
+
+05 = 2/3, 67 % utbetalt
 
 [^126]: Den 1/7 2008 avskaffas möjligheten att få tidsbegränsad sjukersättning, befintliga ersättningar av denna typ ska upphöra senast vid utgången av år 2012.
 [^127]: När möjligheten att få tidsbegränsad sjukersättning fanns var tidsgränsen för nedsättningen av arbetsförmågan minst ett år.

@@ -15,7 +15,7 @@ Med bostadslän avses det län där personen var folkbokförd vid referenstidpun
 
 Förändringar på länsnivå under tidsperioden från och med 1990 beskrivs på SCB:s webbplats.
 
-*För regionala indelningar se [www.scb.se.](http://www.scb.se/)* 
+*För regionala indelningar se [www.scb.se.](http://www.scb.se/)*
 
 *I övrigt se Fastighetsbeteckning* ([[FastBet]]) *samt bilaga 8 Regionala koder – Ändringar i läns- och kommunindelningen från och med 1990*.
 

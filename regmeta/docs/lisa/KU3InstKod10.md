@@ -20,3 +20,7 @@ Kod för institutionell sektor för det företag som avser tredje största förv
 Den institutionella sektorkoden är från och med 2014 tioställig. Koden bildas utifrån *företagets samhällssektor, ägare* och *juridiska form*. De sex första positionerna anger samhällssektor, den sjunde och åttonde positionen anger ägarkontroll medan den juridiska formen anges i variabelns nionde och tionde position.
 
 *För ytterligare information se under Institutionell sektorkod (företag),* (Inst-Kod10).
+
+Företagets (avseende största förvärvskällan) sektortillhörighet.
+
+*För ytterligare information, se under variabeln Sektortillhörighet (företag),* (SektorKod).

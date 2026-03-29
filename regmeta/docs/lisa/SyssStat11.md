@@ -9,8 +9,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Sysselsättningsstatus (november månad), enligt justerad metod 2011 SyssStat11**
 
-SyssStat11
-
 (2011-)
 
 - 1 = Förvärvsarbetande enligt avgränsning, 16-74 år

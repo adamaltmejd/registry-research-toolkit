@@ -21,7 +21,6 @@ Beloppet anges i hundratals kronor.
 
 Kontant bruttolön utifrån de förutsättningar som gäller enligt den justerade metod för framställningen av den Registerbaserade arbetsmarknadsstatistiken som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid.
 
-*Se bilaga 3 "Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004".* 
-
+*Se bilaga 3 "Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004".*
 
 [^42]: Gäller anställda med rätt till sjuklön.

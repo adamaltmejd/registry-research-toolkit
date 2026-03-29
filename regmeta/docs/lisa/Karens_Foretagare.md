@@ -53,3 +53,11 @@ Noll dagars karens
 60 dagars karens
 
 90 dagars karens
+
+(1994–)
+
+Antal utbetalda bruttodagar under året med sjukpenning, arbetsskadesjukpenning och rehabiliteringspenning. Variabeln summerar antal bruttodagar med dessa ersättningar.
+
+Antal bruttodagar visar antal dagar under ett år oavsett ovan omfattning.
+
+*För ytterligare information se mer under respektive ersättningsslag* (SjukPP, ArbSkErs, RehabErs).

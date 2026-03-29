@@ -7,9 +7,9 @@ source: "lisa_2020-forandringar.md"
 
 # 2022-02-28
 
-# **Förändringar i LISA 2020 och kompletteringar i tidigare årgångar föranlett av dessa**
+## **Förändringar i LISA 2020 och kompletteringar i tidigare årgångar föranlett av dessa**
 
-# **Coronaersättningar**
+## **Coronaersättningar**
 
 Under 2020 införde regeringen åtgärder på socialförsäkringsområdet till följd av coronapandemin. Åtgärderna syftar till att minska smittspridningen, minska belastningen på sjukvården, stärka den ekonomiska tryggheten samt lindra konsekvenserna för arbetsgivare.
 
@@ -23,7 +23,7 @@ Egenföretagare med karensdagar i sjukperiodens början ansöker om ersättning 
 
 Karensersättningen till anställd ges en dag per sjuktillfälle, ersättningarna går att söka retroaktivt.
 
-#### **Ersättning till riskgrupper**
+### **Ersättning till riskgrupper**
 
 De personer som tillhör en definierad riskgrupp och som inte har möjlighet att arbeta hemifrån eller måste avstå från arbete för att undvika att smittas av covid-19, har rätt till ersättning med högst 810 kronor per dag. Ersättning ges för arbetstid på 25 procent, 50 procent, 75 procent eller 100 procent där 100 procent motsvarar ett heltidsarbete
 
@@ -45,7 +45,7 @@ Föräldrar till barn som nyligen har varit allvarligt sjuka och som behöver sk
 
 Ersättningen ingår i ordinarie tillfällig föräldrapenning.
 
-#### **Graviditetspenning till gravida vid risker i arbetsmiljön**
+### **Graviditetspenning till gravida vid risker i arbetsmiljön**
 
 Gravida kan ha rätt till graviditetspenning om det finns risker i arbetsmiljön. Socialstyrelsen har den 26 februari 2021 informerat om en särskild risk för gravida i vecka 20–36 med anledning av covid-19. Denna riskfaktor ingår därmed vid bedömning av rätt till graviditetspenning. Det är arbetsgivaren som ansvarar för arbetsmiljön och som bedömer om en gravid ska stängas av från arbetet.
 
@@ -127,9 +127,9 @@ Detta dokument beskriver kvaliteten på indata samt uppdateringen av IoT med des
 | NY | Disponibel inkomst för hushållet- inkl. lön intjänat i annat nordiskt<br>land                                 | DispInkHB04_INKLGP   | 2011–2019 |
 |    | Disponibel inkomst för hushållet - från 2020 ingår lön intjänat i<br>annat nordiskt land                      | DispInkHB04          | 2011–2020 |
 
-# **Övrigt**
+## **Övrigt**
 
-#### **Landindelning**
+### **Landindelning**
 
 Den 31 januari 2020 genomfördes brexit, som innebar att Storbritannien lämnade EU-samarbetet. Antal EU-länder är nu 27 och därmed finns en ny grupperad landsvariabel.
 

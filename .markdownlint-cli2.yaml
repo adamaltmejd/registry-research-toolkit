@@ -1,0 +1,34 @@
+config:
+  # Prose from PDF conversion — line length not practical to enforce
+  MD013: false
+  # Bold text used as pseudo-headings in SCB variable docs (intentional)
+  MD036: false
+  # Table alignment from PDF parsing — too noisy to normalize
+  MD060: false
+  # Variable docs start with bold title after frontmatter, not a heading
+  MD041: false
+  # "+" is arithmetic in income formula lists, not a bullet marker
+  MD004: false
+  # Numbered lists span section breaks in plan docs and PDF content
+  MD029: false
+  # Source PDFs and plan docs legitimately reuse headings
+  MD024: false
+  # Allow ":" in headings (Swedish convention), flag other punctuation
+  MD026:
+    punctuation: ".,;!。，；！"
+  # Allow <br> in table cells (needed for line breaks); flag other HTML
+  MD033:
+    allowed_elements:
+      - br
+
+globs:
+  - "**/*.md"
+  - "!.venv"
+  - "!node_modules"
+  - "!archive"
+  - "!.tmp"
+  # Raw marker output (build artifacts)
+  - "!regmeta/docs/_raw"
+  # Agent config files, not rendered docs
+  - "!CLAUDE.md"
+  - "!AGENTS.md"

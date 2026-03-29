@@ -67,21 +67,26 @@ FOOTER_RE = re.compile(
 )
 PAGE_NUM_RE = re.compile(r"^\d{1,3}\s*$")
 
-# HTML tags injected by marker (span anchors, sup footnotes)
+# HTML tags injected by marker (span anchors, sup footnotes, bold/italic)
 HTML_TAG_RE = re.compile(r"</?(?:span|sup)[^>]*>")
+# Bare URLs/emails (MD034) — wrap in angle brackets
+BARE_EMAIL_RE = re.compile(
+    r"(?<![<\[(/])(\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b)(?![>\]])"
+)
+BARE_URL_RE = re.compile(
+    r"(?<![<\[(/])((?:www\.)[A-Za-z0-9.-]+\.[A-Za-z]{2,})(?![>\])])"
+)
+# Broken image refs left by marker when --disable_image_extraction is used
+BROKEN_IMG_RE = re.compile(r"!\[\]\([^)]*\)\s*")
 
 # Bold text patterns for variable headers
 # Pattern 1: **Display Name ColumnName**  (single line)
 # Uses greedy .+ so it grabs the LAST CamelCase word as column name
-SINGLE_LINE_RE = re.compile(
-    r"^\*\*(.+)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\s*$"
-)
+SINGLE_LINE_RE = re.compile(r"^\*\*(.+)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\s*$")
 # Pattern 2: **ColumnName** alone on a line (split header)
 BOLD_ONLY_RE = re.compile(r"^\*\*([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\s*$")
 # Pattern 3: ## **ColumnName** (heading-style, any heading level)
-HEADING_COL_RE = re.compile(
-    r"^#{2,4}\s*\*\*([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\s*$"
-)
+HEADING_COL_RE = re.compile(r"^#{2,4}\s*\*\*([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\s*$")
 # Pattern 4: table header |**Display**|**ColName**| or | Display | ... | ColName |
 TABLE_HEADER_RE = re.compile(
     r"^\|\*\*(.+?)\*\*\|\*\*([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{1,40})\*\*\|"
@@ -129,7 +134,10 @@ SECTION_TOPIC: dict[str, str] = {
 # These are ADDED alongside the section-derived primary tag.
 SECONDARY_TAGS: list[tuple[str, str]] = [
     # Social insurance: sickness, disability, parental, rehab, injury, pension
-    (r"^(SjukP|SjukSum|SjukFall|SjukTyp|SjukRe|SjukErs|SjukBidr|SjukPA|SjukPP)", "topic/social-insurance"),
+    (
+        r"^(SjukP|SjukSum|SjukFall|SjukTyp|SjukRe|SjukErs|SjukBidr|SjukPA|SjukPP)",
+        "topic/social-insurance",
+    ),
     (r"^ForbSjukP", "topic/social-insurance"),
     (r"^Smitt", "topic/social-insurance"),
     (r"^ArbSk", "topic/social-insurance"),
@@ -139,12 +147,18 @@ SECONDARY_TAGS: list[tuple[str, str]] = [
     (r"^(VardBidr|KomVardBidr|NarPeng)$", "topic/social-insurance"),
     (r"^(AktErs|AktStod)", "topic/social-insurance"),
     (r"^(ForTid|FortPens|DelPens)", "topic/social-insurance"),
-    (r"^Folk(Egen|Fort|FortSjuk|Sjuk|Ald|Hust|Bel|ATPFam|Fam)", "topic/social-insurance"),
+    (
+        r"^Folk(Egen|Fort|FortSjuk|Sjuk|Ald|Hust|Bel|ATPFam|Fam)",
+        "topic/social-insurance",
+    ),
     (r"^ATP(egen|Fort|FortSjuk|Sjuk|Ald|Bel|Fam)", "topic/social-insurance"),
     (r"^Liv(Arb|ArbF|Yrke|Annan|Rta)", "topic/social-insurance"),
     (r"^(GenErs|TAE|BoTill|Karens_Foretagare)$", "topic/social-insurance"),
     (r"^(GarPens|InkPens|PremPens|TillPens|SumAld|SPenTill)", "topic/social-insurance"),
-    (r"^(ITP|KTjP|STjP|STP|SBTjP|KUPens|OvrTjp|PrivPens|SumTjP|SumEftPens|AldTjPTyp)$", "topic/social-insurance"),
+    (
+        r"^(ITP|KTjP|STjP|STP|SBTjP|KUPens|OvrTjp|PrivPens|SumTjP|SumEftPens|AldTjPTyp)$",
+        "topic/social-insurance",
+    ),
     (r"^AldPens$", "topic/social-insurance"),
     (r"^(VPLErs|VPLTyp|GMUErs|GMUTyp|ForsvarErs)$", "topic/social-insurance"),
     (r"^HKapErs$", "topic/social-insurance"),
@@ -184,76 +198,167 @@ TOPIC_CONSOLIDATION: dict[str, tuple[str, str, list[str]]] = {}
 # Build consolidation map from target definitions
 _CONSOLIDATION_TARGETS: list[tuple[str, str, list[str], list[str]]] = [
     # (target_slug, display_name, tags, source_slug_patterns)
-    ("_overview", "LISA — Översikt", ["type/overview", "topic/lisa"], [
-        "oversikt", "lisa-longitudin", "bakgrund-till-lisa",
-        "syfte", "omfattning", "anvandning", "tillgang-till-data",
-        "referensperiod", "i-databasen-ingaende", "innehall",
-        "markering-for-de-ar", "endast-dessa-kopplingar",
-        "lisa-longitudinal-integrated",
-    ]),
-    ("_methodology-education", "Utbildningsvariabler — Metodik och källor",
-     ["type/methodology", "topic/education"], [
-        "utbildningsvariabler", "kallor-som-anvands", "1990", "2002", "2014",
-        "forandringar-i-ureg", "forandringar-i-kallorna", "validering",
-        "utbildningsvariabler",
-    ]),
-    ("_methodology-employment", "Sysselsättningsvariabler — Metodik och avgränsning",
-     ["type/methodology", "topic/employment"], [
-        "forvarvsarbetande", "val-av-november", "tackningsproblem",
-        "avgransningen-av-forvarvsarbetande", "foretagarpopulationen",
-        "forandrad-ovre-aldersgrans", "forandring-i-avgransningen",
-        "forandring-i-modellgrupper", "resultat-av-forandringarna",
-        "resultat", "variabler-enligt-justerad", "nivaforandringar",
-        "inriktningsforandringar", "foretag", "justerad-metod-for",
-        "diagram", "bortfall-i-anstallningstid", "anstallda", "arbetsstallen",
-        "sysselsattningsavgransningen",
-    ]),
-    ("_methodology-labour-market-programs",
-     "Arbetsmarknadspolitiska åtgärder — Program och ersättningar",
-     ["type/methodology", "topic/employment"], [
-        "antal-personer-som-nagon", "utbildningsvikariat", "resursarbete",
-        "individuellt-anstallningsstod", "allmant-anstallningsstod",
-        "forstarkt-anstallningsstod", "sarskilt-anstallningsstod",
-        "trygghetsanstallning", "arbetspraktik", "modernt-beredskapsjobb",
-        "forberedande-insatser", "extratjanster", "stod-till-start",
-        "antal-personer-som-deltagit", "akademikerjobb", "instegsjobb",
-        "plusjobb", "trainee", "yrkesintroduktion", "utbildningskontrakt",
-        "utvecklingsanstallning", "anstallningsstod-for-lang",
-    ]),
-    ("_methodology-social-assistance", "Ekonomiskt bistånd — Metodik och riksnorm",
-     ["type/methodology", "topic/income"], [
-        "ekonomiskt-bistand", "riksnorm",
-    ]),
-    ("_methodology-raks", "Registerbaserad aktivitetsstatistik (RAKS)",
-     ["type/methodology", "topic/activity-status"], [
-        "registerbaserad-aktivitets",
-    ]),
-    ("_appendix-basbelopp", "Bilaga 1 — Basbelopp",
-     ["type/appendix", "topic/income"], [
-        "basbelopp", "det-minskade-basbeloppet", "det-forhojda-basbeloppet",
-        "inkomstbasbeloppet",
-    ]),
-    ("_appendix-af-datalager",
-     "Bilaga 2 — Bearbetning av data från AF Datalager",
-     ["type/appendix", "topic/employment"], [
-        "bearbetning-av-data",
-    ]),
-    ("_appendix-midas", "Bilaga 4 — STORE MiDAS",
-     ["type/appendix", "topic/social-insurance"], [
-        "store-midas",
-    ]),
-    ("_appendix-fk-data", "Bilaga 5 — Hur FK-data tolkas",
-     ["type/appendix", "topic/social-insurance"], [
-        "sjukfall-antal-fall", "hur-fk-data-tolkas",
-    ]),
-    ("_appendix-variabelkalla", "Bilaga 6 — Ursprunglig variabelkälla",
-     ["type/appendix", "topic/lisa"], [
-        "ursprunglig-variabelkalla",
-    ]),
-    ("_appendix-year-coverage", "Bilaga 8–9 — Regionala koder och variabeltäckning per år",
-     ["type/appendix", "topic/lisa"], [
-        "2011-01-01",  # regional codes + year coverage
-    ]),
+    (
+        "_overview",
+        "LISA — Översikt",
+        ["type/overview", "topic/lisa"],
+        [
+            "oversikt",
+            "lisa-longitudin",
+            "bakgrund-till-lisa",
+            "syfte",
+            "omfattning",
+            "anvandning",
+            "tillgang-till-data",
+            "referensperiod",
+            "i-databasen-ingaende",
+            "innehall",
+            "markering-for-de-ar",
+            "endast-dessa-kopplingar",
+            "lisa-longitudinal-integrated",
+        ],
+    ),
+    (
+        "_methodology-education",
+        "Utbildningsvariabler — Metodik och källor",
+        ["type/methodology", "topic/education"],
+        [
+            "utbildningsvariabler",
+            "kallor-som-anvands",
+            "1990",
+            "2002",
+            "2014",
+            "forandringar-i-ureg",
+            "forandringar-i-kallorna",
+            "validering",
+            "utbildningsvariabler",
+        ],
+    ),
+    (
+        "_methodology-employment",
+        "Sysselsättningsvariabler — Metodik och avgränsning",
+        ["type/methodology", "topic/employment"],
+        [
+            "forvarvsarbetande",
+            "val-av-november",
+            "tackningsproblem",
+            "avgransningen-av-forvarvsarbetande",
+            "foretagarpopulationen",
+            "forandrad-ovre-aldersgrans",
+            "forandring-i-avgransningen",
+            "forandring-i-modellgrupper",
+            "resultat-av-forandringarna",
+            "resultat",
+            "variabler-enligt-justerad",
+            "nivaforandringar",
+            "inriktningsforandringar",
+            "foretag",
+            "justerad-metod-for",
+            "diagram",
+            "bortfall-i-anstallningstid",
+            "anstallda",
+            "arbetsstallen",
+            "sysselsattningsavgransningen",
+        ],
+    ),
+    (
+        "_methodology-labour-market-programs",
+        "Arbetsmarknadspolitiska åtgärder — Program och ersättningar",
+        ["type/methodology", "topic/employment"],
+        [
+            "antal-personer-som-nagon",
+            "utbildningsvikariat",
+            "resursarbete",
+            "individuellt-anstallningsstod",
+            "allmant-anstallningsstod",
+            "forstarkt-anstallningsstod",
+            "sarskilt-anstallningsstod",
+            "trygghetsanstallning",
+            "arbetspraktik",
+            "modernt-beredskapsjobb",
+            "forberedande-insatser",
+            "extratjanster",
+            "stod-till-start",
+            "antal-personer-som-deltagit",
+            "akademikerjobb",
+            "instegsjobb",
+            "plusjobb",
+            "trainee",
+            "yrkesintroduktion",
+            "utbildningskontrakt",
+            "utvecklingsanstallning",
+            "anstallningsstod-for-lang",
+        ],
+    ),
+    (
+        "_methodology-social-assistance",
+        "Ekonomiskt bistånd — Metodik och riksnorm",
+        ["type/methodology", "topic/income"],
+        [
+            "ekonomiskt-bistand",
+            "riksnorm",
+        ],
+    ),
+    (
+        "_methodology-raks",
+        "Registerbaserad aktivitetsstatistik (RAKS)",
+        ["type/methodology", "topic/activity-status"],
+        [
+            "registerbaserad-aktivitets",
+        ],
+    ),
+    (
+        "_appendix-basbelopp",
+        "Bilaga 1 — Basbelopp",
+        ["type/appendix", "topic/income"],
+        [
+            "basbelopp",
+            "det-minskade-basbeloppet",
+            "det-forhojda-basbeloppet",
+            "inkomstbasbeloppet",
+        ],
+    ),
+    (
+        "_appendix-af-datalager",
+        "Bilaga 2 — Bearbetning av data från AF Datalager",
+        ["type/appendix", "topic/employment"],
+        [
+            "bearbetning-av-data",
+        ],
+    ),
+    (
+        "_appendix-midas",
+        "Bilaga 4 — STORE MiDAS",
+        ["type/appendix", "topic/social-insurance"],
+        [
+            "store-midas",
+        ],
+    ),
+    (
+        "_appendix-fk-data",
+        "Bilaga 5 — Hur FK-data tolkas",
+        ["type/appendix", "topic/social-insurance"],
+        [
+            "sjukfall-antal-fall",
+            "hur-fk-data-tolkas",
+        ],
+    ),
+    (
+        "_appendix-variabelkalla",
+        "Bilaga 6 — Ursprunglig variabelkälla",
+        ["type/appendix", "topic/lisa"],
+        [
+            "ursprunglig-variabelkalla",
+        ],
+    ),
+    (
+        "_appendix-year-coverage",
+        "Bilaga 8–9 — Regionala koder och variabeltäckning per år",
+        ["type/appendix", "topic/lisa"],
+        [
+            "2011-01-01",  # regional codes + year coverage
+        ],
+    ),
 ]
 
 # Slugs to drop entirely (reference tables or bare section headings)
@@ -263,16 +368,29 @@ DROP_SLUGS: list[str] = [
     "variabler-efter-amnesinnehall",
     "variabelforteckning",
     # Bare section headings (no content beyond the heading itself)
-    "demografiska-variabler", "inkomstvariabler", "sysselsattningsvariabler",
-    "kopplingsidentiteter", "kopplingar-mellan", "familjerelaterade-inkomster",
-    "inkomst-av-forvarvskalla", "individ",
+    "demografiska-variabler",
+    "inkomstvariabler",
+    "sysselsattningsvariabler",
+    "kopplingsidentiteter",
+    "kopplingar-mellan",
+    "familjerelaterade-inkomster",
+    "inkomst-av-forvarvskalla",
+    "individ",
     # Bilaga headings (content is in the appendix files)
     "bilaga-",
     # Year-only fragments (date headings with no content)
-    "1992-01-01", "1995-01-01", "1997-01-01", "1998-01-01", "1999-01-01",
-    "2003-01-01", "2007-01-01", "2008-01-01",
+    "1992-01-01",
+    "1995-01-01",
+    "1997-01-01",
+    "1998-01-01",
+    "1999-01-01",
+    "2003-01-01",
+    "2007-01-01",
+    "2008-01-01",
     # Section header stubs
-    "forord", "databasens-uppbyggnad", "evalveringar-och-analyser",
+    "forord",
+    "databasens-uppbyggnad",
+    "evalveringar-och-analyser",
     "regionala-koder",
 ]
 
@@ -325,6 +443,12 @@ def strip_noise(lines: list[str]) -> tuple[list[str], dict[str, str]]:
 
         # Convert inline footnote references: "word<sup>N</sup>" → "word[^N]"
         line = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", line)
+        # Convert remaining <sup> (non-numeric) to plain text
+        line = re.sub(r"<sup>(.*?)</sup>", r"\1", line)
+        # Convert HTML bold/italic/underline to markdown equivalents
+        line = re.sub(r"<b>(.*?)</b>", r"**\1**", line)
+        line = re.sub(r"<i>(.*?)</i>", r"*\1*", line)
+        line = re.sub(r"</?u>", "", line)
         # Strip remaining HTML tags (span anchors, etc.)
         line = re.sub(r"</?span[^>]*>", "", line)
         # Unescape markdown-escaped underscores in bold text (marker does this)
@@ -353,18 +477,20 @@ def make_frontmatter(
     if '"' in display:
         fm_lines.append(f"display_name: '{display}'")
     else:
-        fm_lines.append(f"display_name: \"{display}\"")
+        fm_lines.append(f'display_name: "{display}"')
     if entry.tags:
         fm_lines.append("tags:")
         for tag in sorted(set(entry.tags)):
             fm_lines.append(f"  - {tag}")
     source = entry.source_file or default_source
-    fm_lines.append(f"source: \"{source}\"")
+    fm_lines.append(f'source: "{source}"')
     fm_lines.append("---")
     return "\n".join(fm_lines)
 
 
-def extract_wiki_links(text: str, known_cols: set[str], own_col: str | None = None) -> str:
+def extract_wiki_links(
+    text: str, known_cols: set[str], own_col: str | None = None
+) -> str:
     """Convert references to known column names into [[wiki-links]].
 
     Matches column names at word boundaries, skipping:
@@ -417,7 +543,7 @@ def extract_wiki_links(text: str, known_cols: set[str], own_col: str | None = No
                 return col
             # Don't link inside markdown URLs: check if we're between ( and )
             # that looks like a markdown link
-            before = line[:m.start()]
+            before = line[: m.start()]
             if before.rstrip().endswith("]("):
                 return col
             return f"[[{col}]]"
@@ -563,9 +689,7 @@ def compute_variable_tags(col: str, section_topic: str) -> list[str]:
     return tags
 
 
-def parse_bakgrundsfakta(
-    md_text: str, known_cols: set[str]
-) -> list[DocEntry]:
+def parse_bakgrundsfakta(md_text: str, known_cols: set[str]) -> list[DocEntry]:
     """Parse the full bakgrundsfakta markdown into DocEntry objects."""
     lines = md_text.split("\n")
     lines, footnotes = strip_noise(lines)
@@ -671,9 +795,7 @@ def parse_bakgrundsfakta(
     return entries
 
 
-def _attach_footnotes(
-    entries: list[DocEntry], footnotes: dict[str, str]
-) -> None:
+def _attach_footnotes(entries: list[DocEntry], footnotes: dict[str, str]) -> None:
     """Append footnote definitions to entries that contain references."""
     for entry in entries:
         content = "\n".join(entry.lines)
@@ -731,7 +853,9 @@ def fill_missing_variables(
 
         if best_start is not None:
             content_lines = []
-            for j in range(max(desc_start, best_start - 3), min(len(lines), best_start + 30)):
+            for j in range(
+                max(desc_start, best_start - 3), min(len(lines), best_start + 30)
+            ):
                 if j not in covered:
                     content_lines.append(lines[j])
                 elif content_lines:
@@ -739,14 +863,16 @@ def fill_missing_variables(
         else:
             content_lines = [f"**{display} {col}**"]
 
-        entries.append(DocEntry(
-            slug=col,
-            display_name=display,
-            column_name=col,
-            tags=tags,
-            lines=content_lines,
-            start_line=best_start or 0,
-        ))
+        entries.append(
+            DocEntry(
+                slug=col,
+                display_name=display,
+                column_name=col,
+                tags=tags,
+                lines=content_lines,
+                start_line=best_start or 0,
+            )
+        )
 
     return entries
 
@@ -832,13 +958,15 @@ def collect_topic_entries(
         non_empty = [l for l in content_lines if l.strip()]
         if len(non_empty) < 3:
             continue
-        entries.append(DocEntry(
-            slug=target_slug,
-            display_name=display,
-            column_name=None,
-            tags=list(tags),
-            lines=content_lines,
-        ))
+        entries.append(
+            DocEntry(
+                slug=target_slug,
+                display_name=display,
+                column_name=None,
+                tags=list(tags),
+                lines=content_lines,
+            )
+        )
 
     # Report unclaimed fragments (may indicate missing consolidation rules)
     unclaimed = set(slug_content.keys()) - claimed_slugs
@@ -889,6 +1017,7 @@ def write_entries(
     topic_count = 0
 
     for entry in entries:
+        entry.lines = _normalize_heading_levels(entry.lines)
         content = "\n".join(entry.lines).strip()
         if not content:
             continue
@@ -899,6 +1028,16 @@ def write_entries(
 
         # Add wiki-links to cross-references
         content = extract_wiki_links(content, known_cols, entry.column_name)
+
+        # Markdownlint compliance
+        content = re.sub(r"\n{3,}", "\n\n", content)  # MD012: no multiple blanks
+        content = re.sub(
+            r"[^\S\n]+$", "", content, flags=re.MULTILINE
+        )  # MD009: trailing spaces
+        content = BARE_EMAIL_RE.sub(r"<\1>", content)  # MD034: wrap bare emails
+        content = BARE_URL_RE.sub(r"<\1>", content)  # MD034: wrap bare URLs
+        content = BROKEN_IMG_RE.sub("", content)  # MD045: remove broken image refs
+        content = content.replace("\n```\n", "\n```text\n")  # MD040: add language tag
 
         fm = make_frontmatter(entry)
         full = f"{fm}\n\n{content}\n"
@@ -919,6 +1058,33 @@ def write_entries(
 # ---------------------------------------------------------------------------
 
 
+def _normalize_heading_levels(lines: list[str]) -> list[str]:
+    """Ensure single H1 and no heading-level jumps (MD001/MD025)."""
+    out = []
+    seen_h1 = False
+    prev_level = 0
+    for line in lines:
+        m = re.match(r"^(#{1,6})\s", line)
+        if not m:
+            out.append(line)
+            continue
+        level = len(m.group(1))
+        # Demote all H1 after the first to H2
+        if level == 1:
+            if seen_h1:
+                line = "#" + line
+                level = 2
+            seen_h1 = True
+        # Fix heading-level jumps: at most prev_level + 1
+        if prev_level and level > prev_level + 1:
+            target = prev_level + 1
+            line = "#" * target + line[level:]
+            level = target
+        prev_level = level
+        out.append(line)
+    return out
+
+
 def parse_forandringar(md_text: str, year: str, source_file: str) -> DocEntry:
     """Parse a förändringar PDF as a single topic entry."""
     lines = md_text.split("\n")
@@ -927,13 +1093,16 @@ def parse_forandringar(md_text: str, year: str, source_file: str) -> DocEntry:
     cleaned = []
     for line in lines:
         s = line.strip()
-        if any([
-            s.startswith("www.scb.se"),
-            re.match(r"^Datum\s+Version", s),
-            re.match(r"^\d+\s+av\s+\d+\s*$", s),
-        ]):
+        if any(
+            [
+                s.startswith("www.scb.se"),
+                re.match(r"^Datum\s+Version", s),
+                re.match(r"^\d+\s+av\s+\d+\s*$", s),
+            ]
+        ):
             continue
         cleaned.append(line)
+    cleaned = _normalize_heading_levels(cleaned)
     return DocEntry(
         slug=f"_changelog-{year}",
         display_name=f"Förändringar i LISA {year}",
@@ -993,10 +1162,23 @@ def extract_variabelforteckning(lines: list[str]) -> dict[str, tuple[str, int]]:
         # Single-column with no page: | Display ColumnName |
         # Skip common table headers that look like variable names
         _TABLE_HEADERS = {
-            "Afrika", "Asien", "Europa", "Nordamerika", "Oceanien",
-            "Sydamerika", "Sverige", "Norden", "Sovjetunionen",
-            "Gruppering", "Sida", "Variabel", "Klartext", "Beskrivning",
-            "Årtal", "Familjeställning", "Okänt",
+            "Afrika",
+            "Asien",
+            "Europa",
+            "Nordamerika",
+            "Oceanien",
+            "Sydamerika",
+            "Sverige",
+            "Norden",
+            "Sovjetunionen",
+            "Gruppering",
+            "Sida",
+            "Variabel",
+            "Klartext",
+            "Beskrivning",
+            "Årtal",
+            "Familjeställning",
+            "Okänt",
         }
         m3 = re.match(
             r"^\|\s*(.+?)\s+([A-ZÅÄÖ][A-Za-zÅÄÖåäö0-9_]{2,40})\s*\|\s*$",
@@ -1020,7 +1202,9 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     Fallback: regmeta database.
     """
     if md_text:
-        cleaned = re.sub(r"^(\s*)<sup>(\d+)</sup>\s*", r"\1[^\2]: ", md_text, flags=re.MULTILINE)
+        cleaned = re.sub(
+            r"^(\s*)<sup>(\d+)</sup>\s*", r"\1[^\2]: ", md_text, flags=re.MULTILINE
+        )
         cleaned = re.sub(r"<sup>(\d+)</sup>", r"[^\1]", cleaned)
         cleaned = re.sub(r"</?span[^>]*>", "", cleaned).replace("\\_", "_")
         vf = extract_variabelforteckning(cleaned.split("\n"))
@@ -1123,12 +1307,16 @@ def main() -> None:
         extra = found - known_cols
         print(f"\nCoverage: {len(found)}/{len(known_cols)} LISA columns documented")
         if missing:
-            print(f"  Missing from doc ({len(missing)}): {', '.join(sorted(missing)[:20])}...")
+            print(
+                f"  Missing from doc ({len(missing)}): {', '.join(sorted(missing)[:20])}..."
+            )
         if extra:
             print(f"  Extra (not in regmeta): {', '.join(sorted(extra)[:20])}")
     else:
         var_count, topic_count = write_entries(entries, known_cols, args.out)
-        print(f"Wrote {var_count} variable files, {topic_count} topic files to {args.out}")
+        print(
+            f"Wrote {var_count} variable files, {topic_count} topic files to {args.out}"
+        )
 
         # Coverage check
         found = {e.column_name for e in var_entries}
@@ -1148,6 +1336,7 @@ def main() -> None:
         else:
             print(f"Converting förändringar PDF: {path.name} (year: {year})")
             import pymupdf4llm
+
             md = pymupdf4llm.to_markdown(str(path))
         entry = parse_forandringar(md, year, path.name)
         if not args.dry_run:

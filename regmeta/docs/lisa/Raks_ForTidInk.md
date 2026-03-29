@@ -17,7 +17,6 @@ Ersättning från förtidspension/sjukbidrag sjukersättning/aktivitetsersättni
 
 *För ytterligare information se Summa inkomst föranledd av förtidspension/sjukbidrag/sjukersättning/aktivitetsersättning* ([[ForTid]]).
 
-
 ---
 
 | 6                        | Förtidspension                | Raks_ForTidInk   |

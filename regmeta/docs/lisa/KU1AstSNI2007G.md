@@ -16,3 +16,7 @@ KU1AstSNI2007G
 Arbetsställets (avseende största förvärvskälla) näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2007, 16 grupper.
 
 *För kodförteckning se under Näringsgren enligt SNI2007, grov nivå* (AstSni2007G).
+
+(2007–)
+
+Markering för om individen, för sin största förvärvskälla under aktuellt år, redovisat som delägare i ett mindre aktiebolag, ett så kallat fåmansföretag, och äger kvalificerade andelar.

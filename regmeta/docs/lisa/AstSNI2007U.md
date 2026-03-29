@@ -53,7 +53,7 @@ Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för red
 | U35 | Fastighetsverksamhet                                                                              | 68                                  | L                 |
 | U36 | Juridisk och ekonomisk konsultverksamhet                                                          | 69                                  | M                 |
 | U37 | Verksamheter som utövas av huvudkontor;<br>konsulttjänster till företag                           | 70                                  | M                 |
-| Kod | Text                                                                                              | Ingående koder<br>SNI2007, 2-siffer | Bokstavs<br>nivå  |
+| Kod | Text                                                                                              | Ingående koder<br>SNI2007, 2-siffer | Bokstavs-<br>nivå |
 | U38 | Arkitekt- och teknisk konsultverksamhet; teknisk<br>provning och analys                           | 71                                  | M                 |
 | U39 | Vetenskaplig forskning och utveckling                                                             | 72                                  | M                 |
 | U40 | Reklam och marknadsundersökning                                                                   | 73                                  | M                 |
@@ -69,30 +69,3 @@ Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för red
 | U50 | Kultur, nöje och fritid                                                                           | 90–93                               | R                 |
 | U51 | Annan serviceverksamhet och personliga<br>tjänster                                                | 94–99                               | S+T+U             |
 | U99 | Okänd verksamhet                                                                                  | 0                                   |                   |
-
-| Näringsgrenstillhörighet enligt SNI2007 (arbetsställe), grov nivå | [[AstSNI2007G]] |
-|-------------------------------------------------------------------|-------------|
-|-------------------------------------------------------------------|-------------|
-
-#### (2007–)
-
-Arbetsställets näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2007, 16 grupper.
-
-| Kod | Text                                    | Ingående koder<br>SNI2007, 2-siffer | Bokstavs<br>nivå |
-|-----|-----------------------------------------|-------------------------------------|------------------|
-| G01 | Jordbruk, skogsbruk och fiske           | 01–03                               | A                |
-| G02 | Tillverkning och utvinning              | 05–33                               | B+C              |
-| G03 | Energiförsörjning; miljöverksamhet      | 35–39                               | D+E              |
-| G04 | Byggverksamhet                          | 41–43                               | F                |
-| G05 | Handel                                  | 45–47                               | G                |
-| G06 | Transport och magasinering              | 49–53                               | H                |
-| G07 | Hotell- och restaurangverksamhet        | 55–56                               | I                |
-| G08 | Information och kommunikation           | 58–63                               | J                |
-| G09 | Finans- och försäkringsverksamhet       | 64–66                               | K                |
-| G10 | Fastighetsverksamhet                    | 68                                  | L                |
-| G11 | Företagstjänster                        | 69–82                               | M+N              |
-| G12 | Offentlig förvaltning och försvar       | 84                                  | O                |
-| G13 | Utbildning                              | 85                                  | P                |
-| G14 | Vård och omsorg; sociala tjänster       | 86–88                               | Q                |
-| G15 | Kulturella och personliga tjänster m.m. | 90–99                               | R+S+T+U          |
-| G99 | Okänd verksamhet                        | 00                                  |                  |

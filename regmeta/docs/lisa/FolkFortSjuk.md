@@ -13,7 +13,7 @@ FolkFortSiuk
 
 (1993–2002)
 
-*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år[^120] (för beskrivning av folkpensionskod och för redovisning av fördelning mellan hel- och deltidsersättningar, se under Folkpensionskod för egenförmån ([[FolkEgen]]).* 
+*Variabeln härleds utifrån det folkpensionsbelopp som betalats ut under aktuellt år och den folkpensionskod för egenförmån som anger typ av folkpension den 31/12 aktuellt år[^120] (för beskrivning av folkpensionskod och för redovisning av fördelning mellan hel- och deltidsersättningar, se under Folkpensionskod för egenförmån ([[FolkEgen]]).*
 
 Beloppet anges i hundratal kronor.
 
@@ -25,7 +25,6 @@ Från och med *1/1 1993* bedöms rätten till folkpension och folkpensionens sto
 
 - I förhållande till bosättningstiden i Sverige (bosättningsregeln)
 - I förhållande till antalet intjänade ATP-poängår (ATP-poängsregeln)
-
 
 Samma regler gäller nu för både svenska och utländska medborgare. Den regel som ger förmånligast resultat tillämpas.
 
@@ -45,10 +44,6 @@ Från och med *1/7 1995* är hel folkpension i form av förtidspension/sjukbidra
 
 Från och med *1/1 1999* används det så kallade prisbasbeloppet[^123] som underlag till pensionsbeloppen.
 
-
-
-
-
 Från och med år *2003* upphör förtidspension och sjukbidrag som ersättningssystem. I stället införs ersättningsslagen sjukersättning och aktivitetsersättning.
 
 #### **Pensionstillskott**
@@ -56,7 +51,6 @@ Från och med år *2003* upphör förtidspension och sjukbidrag som ersättnings
 Om man saknar eller har låg ATP utgår pensionstillskott. Pensionstillskottet får inte, tillsammans med ATP-pensionen, vid hel pension överstiga 112,9 procent av prisbasbeloppet[^124] . Pensionstillskottet är lika för ensamstående och gifta pensionärer. Pensionstillskottsbeloppet kan i variabeln inte särskiljas från folkpensionsbeloppet.
 
 Förtidspensionen/sjukbidrag från folkpension kan kompletteras med tilläggsförmånerna: *Pensionstillskott* (ingår här i folkpensionsbeloppet, se ovan), *Handikappersättning*, *Bostadstillägg* och från och med 1991 *Särskilt pensionstillägg* (se beskrivning under respektive variabel).
-
 
 [^120]: Alternativt: Anger typ av folkpension vid sista utbetalning under året.
 [^121]: Basbelopp, se bilaga 1.

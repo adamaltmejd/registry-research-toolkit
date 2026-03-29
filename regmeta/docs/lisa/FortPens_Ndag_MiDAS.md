@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Förtidspension, antal nettodagar FortPens_Ndag_MiDAS**
 
-FortPens*Ndag*MiDAS
+**FortPens*Ndag*MiDAS**
 
 (1994–2002)
 

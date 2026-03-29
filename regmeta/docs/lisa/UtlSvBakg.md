@@ -22,6 +22,7 @@ Riktlinjerna finns beskrivna i *Meddelanden i samordningsfrågor för Sveriges o
 | Person med utländsk bakgrund |                                                          |
 | 11                           | Utrikes född                                             |
 | 12                           | Inrikes född med två utrikes födda föräldrar             |
+|                              |                                                          |
 | Person med svensk bakgrund   |                                                          |
 | 21                           | Inrikes född med en inrikes och en utrikes född förälder |
 | 22                           | Inrikes född med två inrikes födda föräldrar             |

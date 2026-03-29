@@ -35,5 +35,4 @@ För mer information om SCB:s Utbildningsregister, se under Utbildningsinriktnin
 
 Högsta avslutade utbildning, Utbildningsgrupp och Avslutningsår för högsta utbildning hämtas från UREG, som från och med årgång 1992 avser avklarade utbildningar till och med vårterminen aktuellt år.
 
-
 [^13]: Gamla SUN omfattar i princip inte utbildningar utan avgångsbetyg/examen.

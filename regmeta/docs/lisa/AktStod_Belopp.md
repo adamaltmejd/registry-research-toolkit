@@ -1,19 +1,11 @@
 ---
 variable: AktStod_Belopp
-display_name: "Aktivitetsstöd, ersättning"
+display_name: "Aktivitetsstöd, ersättningsbelopp"
 tags:
-  - topic/income
+  - topic/identifier
   - topic/social-insurance
   - type/variable
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Aktivitetsstöd, ersättning AktStod_Belopp**
-
-(2008–)
-
-Beloppet anges i hundratals kronor.
-
-Utbetalt belopp under året för aktivitetsstöd, står i relation till utbetalda dagar med aktivitetsstöd. Utbetalt belopp avser ersättningsperioden.
-
-*Läs mer under Aktivitetsstöd, antal dagar* ([[AktStod_Dag]]).
+**Aktivitetsstöd, ersättningsbelopp AktStod_Belopp**

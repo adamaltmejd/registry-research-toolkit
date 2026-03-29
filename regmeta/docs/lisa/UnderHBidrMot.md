@@ -22,15 +22,23 @@ Om den underhållsskyldiga föräldern inte betalar underhållsbidraget eller be
 
 Uppgifter om underhållsbidrag finns inte i några administrativa register utan en modell har tagits fram för att beräkna underhållsbidraget.
 
-```
+```text
 ℎå =  ℎ ∗
             öä ö
            å öä ö
                    ∗
   ä  ∗
          å
-```
+```text
 
 Barnets behov har beräknats med hjälp av Konsumentverkets årliga sammanställning *Koll på pengarna* tillsammans med uppgifter om barnbidrag, flerbarnstillägg från Försäkringskassan, uppgifter om barnomsorgskostnader utifrån föräldrarnas inkomster samt uppgifter om studiestöd från CSN.
 
 Föräldrarnas överskott har beräknats med hjälp av uppgifter om inkomster och skatter från Skatteverket samt uppgifter om boende- och levnadskostnader från *Koll på pengarna*.
+
+(2013-)
+
+Beloppet anges i hundratals kronor.
+
+Se *Mottaget underhållsbidrag, simulerat belopp* (UnderHBidrMot)
+
+### **Disponibel inkomst**

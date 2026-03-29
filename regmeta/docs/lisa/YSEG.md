@@ -17,7 +17,7 @@ YSEG är en härledd socioekonomisk variabel som bygger på den modell som togs 
 
 YSEG uppgifter finns endast för de som är förvärvsarbetande enligt RAMS.
 
-*YSEG är indelat i 10 grupper.* 
+*YSEG är indelat i 10 grupper.*
 
 - \*\* = Uppgift saknas
 - 01 = Höga tjänstemän och ledande befattningar

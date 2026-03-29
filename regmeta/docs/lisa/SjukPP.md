@@ -18,7 +18,6 @@ Sjukpenningen avser utbetalningsåret oavsett ersättningsperiod.
 
 För rätt till sjukpenning skall man vara försäkrad för arbetsbaserade förmåner och ha en arbetsinkomst på minst 24 procent av prisbasbeloppet (10 700 kronor år 2017)[^74]. Sjukpenningens storlek beror
 
-
 på den sjukpenninggrundande inkomst (SGI) som har fastställts för den försäkrade (max 7,5 prisbasbelopp[^75]).
 
 Sjukpenning betalas ut vid sjukdom, som orsakar nedsättning av arbetsförmågan med minst en fjärdedel (hindrad från att arbeta minst en fjärdedel av ordinarie arbetstid).
@@ -36,8 +35,6 @@ Den *1/7 1990* kommer regeln om en fjärdedels och tre fjärdedels sjukpenning t
 bosatt i landet avser garantibelopp och bidrag. Den andra delen som baseras på arbete gäller ersättning för inkomstförlust. Om man är bosatt i Sverige (har sin egentliga hemvist enligt dygnsviloprincipen i landet) omfattas man av den bosättningsbaserade försäkringen. Den som kommer till Sverige och kan antas vistas här under en längre tid än ett år ska anses vara bosatt i landet. Omvänt gäller att vistelse utomlands som kan antas vara längre tid än ett år innebär att man inte längre anses vara bosatt här. Om man arbetar i Sverige omfattas man av den arbetsbaserade försäkringen oberoende av om man är bosatt i landet eller inte. Den arbetsbaserade försäkringen gäller för anställda från och med den första dagen av anställningstiden. För egenföretagare och uppdragstagare från den dag då arbetet påbörjas.
 
 Innan denna socialförsäkringslag trädde i kraft gällde för rätt till sjukpenning att man var bosatt i Sverige, fyllda 16 år och att man beräknades tjäna minst 8 800 kronor (sjukpenninggrundande inkomst) per år genom förvärvsarbete. Innan 1998 var beloppsgränsen 6 000 kronor.
-
-
 
 Den *1/3 1991* sänks kompensationsnivån i sjukpenningen, som dittills varit 90 procent (+10 procent från avtal) i hela sjukfallet, till 65 procent (+10 procent från avtal) för de tre första dagarna i sjukfallet och till 80 procent (+10 procent från avtal) från dag 4 till och med dag 90. Från och med dag 91 i sjukfallet minskas sjukpenningen med det belopp som motsvarar sjuklönen/avtalsersättningen. För inkomstdelar som ligger över det s.k. SGI-taket (7,5 basbelopp) får sjuklön/avtalsersättning utges för de första tre dagarna med sjukpenning med 75 % av den del av lönen som överstiger taket och för tid därefter med 90 % utan att sjukpenningen minskas.
 
@@ -79,7 +76,7 @@ Den *1/1 1997* skärps kriterierna för rätt till sjukpenning. Rätten till sju
 
 skall rehabilitering och andra åtgärder vidtas. Man skall till exempel pröva om arbetsgivaren har andra arbetsuppgifter som man kan utföra. Finns inget sådant arbete skall prövning ske mot annat normalt förekommande arbete på arbetsmarknaden. Om det bedöms att man kan utföra sådant arbete på heltid har man inte rätt till sjukpenning. Detta gäller även om sådant arbete inte finns tillgängligt.
 
-*Av dem som fick avslag på sin begäran om sjukpenning under tredje kvartalet 1997 fick var fjärde person det på grund av de nya kriterierna (enligt uppföljning av RFV).* 
+*Av dem som fick avslag på sin begäran om sjukpenning under tredje kvartalet 1997 fick var fjärde person det på grund av de nya kriterierna (enligt uppföljning av RFV).*
 
 Den *1/1 1997* förlängs sjuklöneperioden till 28 dagar.
 
@@ -177,7 +174,7 @@ Totalt fick 606 000 personer sjukpenning någon gång under 2017, varav 64 proce
 | 91–365     | 90+10   | 90      |            | 90      |            | 80      |      | 80         |             | 75      |
 | 366–       | 90+10   | 90      |            | 90      |            | 80      |      | 70 (80)*   |             | 75      |
 
-<sup>\*</sup> Den som genomgår medicinsk behandling/rehabilitering kan få 80 % även efter 365 dagars sjukskrivning.
+\* Den som genomgår medicinsk behandling/rehabilitering kan få 80 % även efter 365 dagars sjukskrivning.
 
 |                     | 1/3 – 31/12<br>1997 |                   | 1/3 – 31/12<br>1998 |                   | 1/4 1998 –<br>30/6 2003 |                   |             | 1/7 2003 –<br>31/12 2004 | 1/1 2005 –<br>31/12 2006 |                   |
 |---------------------|---------------------|-------------------|---------------------|-------------------|-------------------------|-------------------|-------------|--------------------------|--------------------------|-------------------|
@@ -191,18 +188,17 @@ Totalt fick 606 000 personer sjukpenning någon gång under 2017, varav 64 proce
 | 91–365              |                     | 75                |                     | 80+10             |                         | 80+10             |             | 77,6+10                  |                          | 80+10             |
 | 366–                |                     | 75                |                     | 80+10             |                         | 80+10             |             | 77,6                     |                          | 80                |
 
-|                     | 1/3 – 31/12<br>2007 |                   | 2008        | 1/1 – 31/6        | 1/7 2008 –  |                   |  |
-|---------------------|---------------------|-------------------|-------------|-------------------|-------------|-------------------|--|
-| Dag i<br>sjukfallet | Sjuk<br>lön         | Sjukp. +<br>avtal | Sjuk<br>lön | Sjukp.<br>+ avtal | Sjuk<br>lön | Sjukp.<br>+ avtal |  |
-| 1                   | 0                   | 0                 | 0           | 0                 | 0           | 0                 |  |
-| 2–3                 | 80                  | 80                | 80          | 80                | 80          | 80                |  |
-| 4–14                | 80                  | 80                | 80          | 80                | 80          | 80                |  |
-| 15–21               |                     | 79,12+10          |             | 77,6+10           | 77,6+10     |                   |  |
-| 22–28               |                     | 79,12+10          |             | 77,6+10           |             | 77,6+10           |  |
-| 29–90               |                     | 79,12+10          | 77,6+10     |                   | 77,6+10     |                   |  |
-| 91–365              |                     | 79,12+10          |             | 77,6+10           |             | 77,6+10           |  |
-| 366–                |                     | 79,12             |             | 77,6              |             | 72,75             |  |
-
+|                     | 1/3 – 31/12<br>2007 |                   | 1/1 – 31/6<br>2008 |                   | 1/7 2008 –   |                   |
+|---------------------|---------------------|-------------------|--------------------|-------------------|--------------|-------------------|
+| Dag i<br>sjukfallet | Sjuk-<br>lön        | Sjukp. +<br>avtal | Sjuk-<br>lön       | Sjukp.<br>+ avtal | Sjuk-<br>lön | Sjukp.<br>+ avtal |
+| 1                   | 0                   | 0                 | 0                  | 0                 | 0            | 0                 |
+| 2–3                 | 80                  | 80                | 80                 | 80                | 80           | 80                |
+| 4–14                | 80                  | 80                | 80                 | 80                | 80           | 80                |
+| 15–21               |                     | 79,12+10          |                    | 77,6+10           |              | 77,6+10           |
+| 22–28               |                     | 79,12+10          |                    | 77,6+10           |              | 77,6+10           |
+| 29–90               | ..                  | 79,12+10          | ..                 | 77,6+10           | ..           | 77,6+10           |
+| 91–365              | ..                  | 79,12+10          | ..                 | 77,6+10           | ..           | 77,6+10           |
+| 366–                | ..                  | 79,12             | ..                 | 77,6              | ..           | 72,75             |
 
 [^74]: En ny socialförsäkringslag (SFS 1999:799) trädde i kraft 2001. Socialförsäkringen delas nu upp i två delar – en bosättningsbaserad och en arbetsbaserad försäkring. Den del som är baserad på att man är
 [^75]: Mellan den 1/7 2006 och den 31/12 2006 gick inkomsttaket vid 10 prisbasbelopp.

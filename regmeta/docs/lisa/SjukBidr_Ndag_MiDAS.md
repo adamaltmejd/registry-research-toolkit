@@ -26,3 +26,11 @@ Sjukbidrag kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), h
 10 \* en kvarts omfattning = 2,5 nettodagar
 
 *För ytterligare information om sjukbidrag se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*
+
+(1994–2002)
+
+Beloppet anges i hundratal kronor.
+
+Utbetalt belopp under året för sjukbidrag, står i relation till utbetalda dagar med sjukbidrag. Utbetalt belopp avser ersättningsperioden.
+
+*För ytterligare information om sjukbidrag se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.*

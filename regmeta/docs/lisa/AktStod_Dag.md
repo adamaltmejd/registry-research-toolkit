@@ -27,3 +27,11 @@ För personer som är mellan 18 och 24 år och uppfyller villkoren för A-kassa 
 - 65 % av din dagsförtjänst efter det
 
 Aktivitetsstöd betalas ut för fem dagar i veckan.
+
+(2008–)
+
+Beloppet anges i hundratals kronor.
+
+Utbetalt belopp under året för aktivitetsstöd, står i relation till utbetalda dagar med aktivitetsstöd. Utbetalt belopp avser ersättningsperioden.
+
+*Läs mer under Aktivitetsstöd, antal dagar* (AktStod_Dag).

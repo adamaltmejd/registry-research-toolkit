@@ -115,19 +115,9 @@ Uppgiften avser registrering/närvaro i olika skolformer under höstterminen akt
 | 8   | Studiemedel för utlandsstudier                            |                                             |
 | A   | Arbetsmarknadsutbildning18                                | Fr.o.m. 2001                                |
 | G   | Grundskola                                                | Fr.o.m. 2002                                |
-| U   | Uppdragsutbildning vid universitet/högskola               | Redovisas under<br><i>Övriga studerande</i> |
+| U   | Uppdragsutbildning vid universitet/högskola               | Redovisas under<br>*Övriga studerande* |
 | S   | [[SFI]], svenska för invandrare                               | Fr.o.m. 2012                                |
 | K   | Kompletterande utbildning / Konst- och kulturutbildning19 | Fr.o.m. 2012 / 2016                         |
-
-
-
-
-
-
-
-**Kod Skolforum**
-
-9 Övriga studerande[^20]
 
 *Följande prioritetsordning för studiedeltagande under höstterminen används då en person förekommer i flera skolformer under samma termin:*
 
@@ -146,6 +136,3 @@ Uppgiften avser registrering/närvaro i olika skolformer under höstterminen akt
 - Arbetsmarknadsutbildning från Arbetsförmedlingen (AUB)
 - [[SFI]], Svenska för invandrare
 - Förberedande utbildning vid Arbetsförmedlingen (FUB)
-
-
-[^20]: Övriga studerande omfattar personer med studiemedel för studier i Sverige, SVUX/SVUXA eller UBS (Kunskapslyftet) i den mån de inte ingår i andra studerandegrupper. Vid jämförelser mellan åren bör beaktas att grupper som särredovisas senare år, helt eller delvis ingår här för tidigare år. Exempelvis förklaras nedgången i antalet "Övriga studerande" 1999–2000 till stor del av att de studerande i folkhögskolors långa kurser som utnyttjat studiemedel ingick här t o m år 1999.

@@ -1,22 +1,40 @@
 ---
 variable: CfarNr_LISA
-display_name: "Arbetsställe (november)"
+display_name: "Arbetsställets CFAR-nummer"
 tags:
   - topic/employment
   - type/variable
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Arbetsställe (november) CFARNr_LISA**
+*I övrigt se under Arbetsställe (november)* (CfarNr_LISA) *och Företag (november)* ([[PeOrgNr_LISA]]).
 
-Objektet identifieras med hjälp av en arbetsställeidentitet (CFAR-nummer). Ett arbetsställe är varje adress, fastighet eller grupp av närliggande fastigheter där ett företag bedriver verksamhet. Definitionen på vad som är ett arbetsställe är inte exakt. Ett nytt arbetsställe uppstår när två av de tre kriterierna lokal (adress), verksamhet och ägare ändras.
+#### **Bortfall i anställningstid på kontrolluppgiften**
 
-I SCB:s Företagsdatabas (FDB) fastställs ett åttasiffrigt, unikt, löpnummer – det s.k. CFAR-numret – för företagets alla arbetsställen.
+I Kontrolluppgiftsregistret saknas tidsmarkering (anställningstid) på flera poster. Avsaknaden av tidsmarkering samt det faktum att markeringarna kan vara behäftade med felaktigheter samt vid riktig markering inte tillåter annat än markering för årets första och sista arbetade månad påverkar kvaliteten vid framräkning av sysselsättningsstatus.
 
-För samtliga personer som fått en kontrolluppgift från arbetsgivare avseende utbetald kontant bruttolön och/eller deklarerat för näringsverksamhet bestäms ett huvudsakligt arbetsställe, så att arbetsställe/företagsinformation kan anges för individen.
+#### **Täckningsproblem på kontrolluppgifterna**
 
-Då sysselsättningsuppgifter från RAMS ska avse november månad väljs huvudsakligt arbetsställe i november i möjligaste mån. För personer med flera kontrolluppgifter och/eller företagaruppgifter görs en jämförelse mellan de olika inkomstkällorna. Den inkomstkälla som har gett den högsta novemberinkomsten anses utgöra huvudarbetsställe under november. Novemberinkomsten för egna företagare skattas genom att företagarinkomsten räknas upp något för att jämställas med löneinkomster.
+I registret över kontrolluppgifter från arbetsgivare (KU-registret) finns två huvudtyper av täckningsproblem. Den första typen består av undertäckning i form av att arbete utförs mot "svart betalning", dvs. att arbetsgivaren inte utfärdar någon kontrolluppgift. Den andra typen består av täckningsfel som uppstår när löneutbetalning och arbete inte sker under samma år. Detta täckningsfel bedöms främst påverka personer med låg anknytning till arbetsmarknaden som t.ex. feriearbetande ungdomar.
 
-Anställda som inte kan placeras på ett faktiskt arbetsställe erhåller inget CFAR-nummer.
+Ytterligare ett exempel på undertäckning utgör den grupp av personer som bor i Sverige men har sitt arbete i utlandet. Någon kontrolluppgift för det arbete dessa personer utför i utlandet finns inte i KU-registret, vilket leder till att dessa blir klassade som "ej förvärvsarbetande".
 
-*Vid utlämnade av data från LISA ersätts CFAR-numret av ett nytt löpnummer.*
+Avseende klassificeringen som förvärvsarbetande/ej förvärvsarbetande i november har evalveringsundersökningar som gjorts visat att störst risk att bli felaktigt klassificerade löper grupper med lös anknytning till arbetsmarknaden.
+
+#### **Sysselsättningsavgränsningen i RAMS**
+
+#### **Avgränsningen av förvärvsarbetande 1985-1992[^23]**
+
+De första åtta åren som Sysselsättningsregistret existerade (1985-1992) användes en avgränsningsmetod, som helt bygger på information från kontrolluppgifter och inkomstuppgifter från självdeklarationen.
+
+Kontrolluppgifter från arbetsgivare (KU)[^24] bidrar med lönebelopp och de "sociala" kontrolluppgifterna (KU-S) med information om sjukpenning och föräldrapenning. Från självdeklarationernas taxeringsband hämtas
+
+inkomstuppgifter för egna företagare, närmare bestämt inkomster av rörelse och jordbruksfastighet (brukad)[^25] .
+
+#### *Avgränsningsförfarande*
+
+För att avgöra om en person är förvärvsarbetande eller inte under november månad kan avgränsningen beskrivas på följande sätt:
+
+[^23]: I LISA finns denna avgränsning för åren 1990-1993
+[^24]: Skall lämnas till Skatteverket för alla personer som fått lön eller andra ersättningar från arbetsgivare
+[^25]: Från och med 1991 ersätts Inkomst av rörelse och inkomst av jordbruksfastighet (brukad) av begreppet Inkomst av aktiv näringsverksamhet (avseende skillnader, se under denna variabel).

@@ -19,7 +19,6 @@ Summerar Nettoinkomst av näringsverksamhet och Kontant bruttolön. Är Nettoink
 
 **Total inkomst**
 
-
 ---
 
 | 1                        | Förvärvsarbete                | Raks_ForvInk     |

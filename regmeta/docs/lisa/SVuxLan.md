@@ -15,3 +15,7 @@ SVuxLan
 (1997–2003)
 
 Beloppet anges i hundratals kronor.
+
+(1997–2003)
+
+Beloppet anges i hundratals kronor.

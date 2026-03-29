@@ -9,8 +9,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Registrering på högskolans grundutbildning HSDelt**
 
-HSDelt
-
 #### 1990-vårtermin 2007
 
 - 1 = Registrerad på högskolans grundutbildning under vårterminen

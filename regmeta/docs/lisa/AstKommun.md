@@ -13,7 +13,7 @@ AstKommun
 
 [[Kommun]] där arbetsstället är beläget, anges med kommunkod. Kod enligt indelningen den 1/1 påföljande år. Uppgift hämtas från Företagsregistret (FDB).
 
-*För regionala indelningar se [www.scb.se.](http://www.scb.se/)* 
+*För regionala indelningar se [www.scb.se.](http://www.scb.se/)*
 
 Se även *bilaga 8, Regionala koder*.
 

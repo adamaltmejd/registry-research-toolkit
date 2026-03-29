@@ -67,6 +67,7 @@ mock-data-wizard generate --stats stats.json --seed 42
 ```
 
 See per-package READMEs for full documentation:
+
 - [regmeta/README.md](regmeta/README.md)
 - [mock_data_wizard/README.md](mock_data_wizard/README.md)
 

@@ -16,7 +16,6 @@ För att ta fram UREG:s population matchas de valda posterna mot registret över
 
 Uppgifterna om utbildning från källregistren kodas enligt Svensk utbildningsnomenklatur (SUN 2000). Därefter läggs alla utbildningar i utbildningsregistrets s.k. bruttofil. Med hjälp av ett prioriteringsprogram väljs därefter högsta utbildning för varje folkbokförd person aktuellt år. Fr.o.m. version 2008 av UREG innehåller registret även uppgift om högsta utbildning för personer äldre än 74 år. Har en person flera utbildningar på samma nivå, väljs den senaste.
 
-
 #### **Källor som används eller har använts vid uppdateringen av UREG:**
 
 - Folk- och bostadsräkningen 1990, FOB90
@@ -91,7 +90,6 @@ För utrikes födda invandrare har utbildningsdata till UREG hämtats från Folk
 
 För personer som invandrat efter den 1 november 1990 och fram till och med 1993 finns således uppgift om den utbildning de skaffat sig innan de invandrade, först från och med årgång 1994. För dem som invandrat efter 1994 finns information om den utbildning de skaffat sig innan de kom hit, först från och med 1999.
 
-
 #### **1990:**
 
 En kvalitetsstudie av UREG version 1991-01-01 (årgång 1990) har genomförts. Som kontrollmaterial utnyttjades ett evalveringsregister (det s.k. sanna registret), baserat på ett AKU-urval och skapat i samband med FoB-90. Observera att alla uppgifter i detta sanna register inte nödvändigtvis är korrekta.
@@ -105,7 +103,6 @@ I evalveringsstudien har jämförelser mellan UREG och det s.k. sanna registret 
 - När det gäller utbildningsnivå var andelen rätt klassificerade 83 procent (motsvarande andel i FoB-90 var 80 procent). När det gäller utbildningens inriktning var andelen rätt klassificerade 86 procent (motsvarande andel i FoB-90 var 84 procent).
 - Andelen uppgift saknad var låg (1,9 procent) jämfört med FoB-90 (5 procent) i åldersgruppen 16–64 år.
 
-
 #### **2002:**
 
 Med anledning av de stora förändringarna av UREG till version 2000 genomfördes en evalvering av uppgifterna om högsta genomförda utbildning för individerna i UREG version 2002 (2003-01-01). En mer detaljerad beskrivning av resultaten från evalveringen finns i publikationen, *"Bakgrundsfakta inom området befolkning och välfärd 2006:4"*.
@@ -116,7 +113,6 @@ Med anledning av de stora förändringarna av UREG till version 2000 genomförde
 - Den vanligaste orsaken till fel i UREG enligt evalveringsstudien var att den "riktiga" högsta utbildningen inte fanns med bland UREG:s källor. Detta fel omfattade tre fjärdedelar av de felaktigt
 
 klassificerade i UREG. En femtedel av de felaktigt klassificerade utgjordes av att informationen om de avklarade utbildningarna var ofullständig.
-
 
 #### **2014**
 
@@ -130,7 +126,6 @@ Några viktiga resultat från studien var:
   - Gymnasial nivå 30 procent
   - Eftergymnasial nivå 53 procent
 - En relativt stor andel av bortfallet bestod av personer som hade invandrat för att arbeta eller studera, vilka generellt sett har en hög utbildningsnivå. Detta bidrog till att ungefär hälften av bortfallet fick en eftergymnasial utbildningsnivå vid imputeringarna.
-
 
 #### **Förändringar i UREG i kronologisk ordning 1990-1999**
 
@@ -175,8 +170,6 @@ Mer information om kvalitetshöjningen finns på [https://www.scb.se/hitta-stati
 För en fördjupad studie av tidsseriebrottet med kvantitativa mått på förändringar hänvisas den intresserade läsaren till en särskild analys som genomförts
 
 [https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf) [/metodstudieureg.pdf](https://www.scb.se/contentassets/758c162300754eb28ba15236f63ca0a0/metodstudieureg.pdf)
-
-
 
 #### **Förändringar i källorna 2002-2017**
 
@@ -275,7 +268,28 @@ till 537. Det är företrädesvis äldre sjuksköterskor med utländsk utbildnin
 - Kompletterande utbildningar (KU) har inte levererat några uppgifter till UREG 2017 då utbildningsformen upphört och övergått till KKVoch YH-utbildning
 - Försvarsmakten har inte rapporterat några examinerade från specialistofficersutbildningen från höstterminen 2016 till version 2017 av UREG. Omkring 250 personer har tidigare år examineras från denna utbildning
 
+Variabelns källa är SCB:s Utbildningsregister (UREG), se *Utbildningsvariabler*.
 
+Aggregerad nivåvariabel anpassad till svenska utbildningsförhållanden och som kan användas både före och efter nomenklaturbytet år 2000. Rekommenderas!
+
+Variabeln SUN2000Niva_Old har, utifrån variabeln SUN2000Niva, aggregerats till 7 nivåer motsvarande den gamla SUN-kodens 2:a position (1990-1999).
+
+| 2:a siffran i gamla SUN-koden, utbildningsnivå | Nivå enligt SUN 2000 |
+|------------------------------------------------|----------------------|
+| 1, Förgymnasial utbildning kortare än 9 år     | 1                    |
+| 2, Förgymnasial utbildning 9 år (motsvarande)  | 2                    |
+| 3, Gymnasial utbildning högst 2-årig           | 31, 32               |
+| 4, Gymnasial utbildning 3 år                   | 33                   |
+| 5, Eftergymnasial utbildning kortare än 3 år   | 41, 52               |
+| 6, Eftergymnasial utbildning 3 år eller längre | 53, 54, 55           |
+| 7, Forskarutbildning                           | 6                    |
+| *, Uppgift saknas                              | 9                    |
+
+Notera: UREG genomgick till årgång 2000 större kvalitetshöjande förändringar, ny nomenklatur och att antal nya källor, vilka ledde till ett tidsseriebrott.
+
+Detta gör att jämförelser med tidigare årgångar måste göras med stor försiktighet. För mer information, se länken tidsseriebrott år 2000 [\(https://www.scb.se/hitta-statistik/statistik-efter-amne/utbildning-och](https://www.scb.se/hitta-statistik/statistik-efter-amne/utbildning-och-forskning/befolkningens-utbildning/befolkningens-utbildning/produktrelaterat/Fordjupad-information/kvalitetshojningen-i-utbildningsregistret-ar-2000/)[forskning/befolkningens-utbildning/befolkningens](https://www.scb.se/hitta-statistik/statistik-efter-amne/utbildning-och-forskning/befolkningens-utbildning/befolkningens-utbildning/produktrelaterat/Fordjupad-information/kvalitetshojningen-i-utbildningsregistret-ar-2000/)[utbildning/produktrelaterat/Fordjupad-information/kvalitetshojningen](https://www.scb.se/hitta-statistik/statistik-efter-amne/utbildning-och-forskning/befolkningens-utbildning/befolkningens-utbildning/produktrelaterat/Fordjupad-information/kvalitetshojningen-i-utbildningsregistret-ar-2000/)[i-utbildningsregistret-ar-2000/\)](https://www.scb.se/hitta-statistik/statistik-efter-amne/utbildning-och-forskning/befolkningens-utbildning/befolkningens-utbildning/produktrelaterat/Fordjupad-information/kvalitetshojningen-i-utbildningsregistret-ar-2000/) på SCB:s webbplats.
+
+Högsta avslutade utbildning, Utbildningsgrupp och Avslutningsår för högsta utbildning hämtas från UREG, som från och med årgång 1992 avser avklarade utbildningar till och med vårterminen aktuellt år.
 
 #### **Validering**
 
@@ -288,7 +302,7 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 |                                              | Antal   |
 |----------------------------------------------|---------|
 | Jobb- och utvecklingsgarantin                | 180 000 |
-| därav i sysselsättningsfasen                 | 11 600  |
+| *därav i sysselsättningsfasen*          | 11 600  |
 | Jobbgaranti för ungdomar                     | 46 000  |
 | Arbetspraktik                                | 63 600  |
 | Arbetsmarknadsutbildning                     | 26 300  |
@@ -296,7 +310,6 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 | Start av näringsverksamhet                   | 5 800   |
 | Projekt med arbetmarknadspolitisk inriktning | 5 100   |
 | Kartläggning, vägledning och rehabilitering  | 94 500  |
-
 
 **Antal personer som någon gång under året tillhört sökandekategorier som i LISA faller under åtgärdsstudier**
 
@@ -331,10 +344,8 @@ Syftar till att bekräfta individens tidigare anskaffade kunskaper och kompetens
 
 *Det är under inledningsfasen – när nya åtgärdsprogram införs – som problemen med felregistrering är som störst. Betydelsen av dessa felregistreringar torde dock minska när olika åtgärdstyper aggregeras till grupper såsom exempelvis Åtgärdsstuderande.*
 
-
 #### **2002-09-19**
 
 Ändringar av kommunnamn. I kommunnamnet Upplands Väsby har bindestrecket tagits bort from 2002-09-19.
-
 
 [^111]: Uppgifterna är hämtade från Arbetsförmedlingens rapport Återrapportering 2018, Arbetsmarknadspolitiska program, Årsrapport 2018.

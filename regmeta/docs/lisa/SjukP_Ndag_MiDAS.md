@@ -26,3 +26,13 @@ Sjukpenning kan betalas ut som hel (100 procent), tre fjärdedels (75 procent), 
 2008-2011 finns variabeln också uppdelad på *Sjukpenning, antal nettodagar* ([[SjukP_08_Ndag]]), *Sjukpenning, förlängd, antal nettodagar*  ([[SjukP_Forlangd_Ndag]]) och *Sjukpenning, fortsatt, antal nettodagar*  ([[SjukP_Fortsatt_Ndag]]).
 
 *För ytterligare information se under Sjukpenning* ([[SjukPP]]).
+
+(1994–)
+
+Beloppet anges i hundratals kronor.
+
+Utbetalt belopp under året för sjukpenning, står i relation till utbetalda dagar med sjukpenning. Utbetalt belopp avser ersättningsperioden.
+
+2008-2011 finns variabeln också uppdelad på *Sjukpenning, ersättningsbelopp* (SjukP_08_ Belopp), *Sjukpenning, förlängd, ersättningsbelopp* (SjukP_Forlangd_ Belopp) och *Sjukpenning, fortsatt, ersättningsbelopp* ([[SjukP_Fortsatt_Belopp]]).
+
+*För ytterligare information se under Sjukpenning* ([[SjukPP]]).

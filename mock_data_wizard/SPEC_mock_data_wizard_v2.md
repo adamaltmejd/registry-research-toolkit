@@ -35,6 +35,7 @@ Hardcoded set of regmeta var_ids known to be birth-invariant:
 | 257 | Födelseland |
 
 A shared column qualifies for the spine when:
+
 - It appears in `shared_columns` (same column name across files)
 - It is NOT an ID column
 - Its enriched `var_id` is in the spine-eligible set

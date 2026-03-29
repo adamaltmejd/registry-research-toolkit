@@ -33,8 +33,6 @@ Då uppgift om förälders födelseland saknas gäller följande:
 - För person som är inrikes född antas förälder vara inrikes född
 - För person som är utrikes född antas förälder vara utrikes född
 
-
-
 | Medborgarskap | [[MedbLandNamn]] |
 |---------------|--------------|
 |---------------|--------------|

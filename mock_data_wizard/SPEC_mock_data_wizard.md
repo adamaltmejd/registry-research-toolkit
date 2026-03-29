@@ -72,7 +72,7 @@ Determinism: sub-seeds derived via `sha256(f"{master_seed}:{file}:{column}")`.
 
 ## 5. CLI
 
-```
+```bash
 mock-data-wizard generate-script --project-dir PATH [PATH...] [-o OUTPUT]
 mock-data-wizard generate --stats PATH [--seed N] [--sample-pct F] [--output-dir DIR] [--db DIR] [--register NAME]
 ```

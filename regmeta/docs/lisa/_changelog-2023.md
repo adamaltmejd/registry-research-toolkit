@@ -9,19 +9,19 @@ source: "lisa_2023-forandringar.md"
 
 2025-03-24
 
-# **Nya variabler 2023**
+## **Nya variabler 2023**
 
 ### **Imputeringsmarkering, anger om hushållet har skapats genom imputering (Imp_Hushall)**
 
 För personer som har uppgift om lägenhetsnyckel består hushållet av de personer som har samma lägenhetsnyckel. Om uppgift om lägenhetsnyckel saknas imputeras hushållet genom att man skapar hushåll med de personer som är folkbokförda på samma fastighet och har relationer till varandra.
 
-# **Omställningsstudiestöd (OmstStud)**
+## **Omställningsstudiestöd (OmstStud)**
 
 Ett studiestöd för vuxna mitt i arbetslivet som vill studera och bredda sin kompetens för att bli mer attraktiv på arbetsmarknaden. Uppgiften summera både lån- och bidragsdelen.
 
 Omställningsstudiestödet hanteras av CSN. CSN får varje år en budget för omställningsstudiestödet. När den är slut kan inte fler få omställningsstudiestöd.
 
-# **Stipendium utbetalat av konstnärsnämnden och Sveriges författarfond**
+## **Stipendium utbetalat av konstnärsnämnden och Sveriges författarfond**
 
 **(ISTIP)** Författarfonden har till huvudsaklig uppgift att fördela den statliga biblioteksersättningen. Ersättningen fördelas dels i form av individuella ersättningar, dels i form av olika typer av bidrag och stipendier till upphovsmän till litterära verk: författare, översättare, tecknare och fotografer.
 
@@ -37,9 +37,9 @@ Image /page/0/Picture/14 description: This image shows a black logo on a white b
 
 Statistik om OVL: [Befolkningens arbetsmarknadsstatus \(BAS\)](https://www.scb.se/hitta-statistik/statistik-efter-amne/arbetsmarknad/utbud-av-arbetskraft/befolkningens-arbetsmarknadsstatus/)
 
-# **Variabler som försvinner 2023**
+## **Variabler som försvinner 2023**
 
-#### **Coronaersättningar**
+### **Coronaersättningar**
 
 Under 2020 införde regeringen åtgärder på socialförsäkringsområdet till följd av coronapandemin. Åtgärderna syftar till att minska smittspridningen, minska belastningen på sjukvården, stärka den ekonomiska tryggheten samt lindra konsekvenserna för arbetsgivare.
 
@@ -51,9 +51,9 @@ Variabler i LISA: Riskgrupp_Bdag Riskgrupp_Ndag Riskgrupp_Belopp RiskgruppErs Ka
 
 Under pandemin delades krisstipendier ut i syfte att stötta konstnärer för viss förlorad inkomst. Det ordinarie stipendiet och krisstipendiet redovisades separat. 2023 finns endast det ordinarie stipendiet kvar och heter ISTIP. Variablerna ISTIPO och ISTIPK försvinner.
 
-# **Övrigt**
+## **Övrigt**
 
-#### **Pensionsålder**
+### **Pensionsålder**
 
 Från 2023 höjdes pensionsåldern från 65 till 66 år. I LISA påverkar det framförallt gruppen som är arbetssökande i november ([[ArbSokNov]]).
 

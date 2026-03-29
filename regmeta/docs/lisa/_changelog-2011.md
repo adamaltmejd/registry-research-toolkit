@@ -7,7 +7,6 @@ source: "hushallsinformation-i-lisa-2011-.md"
 
 2021-06-18
 
-
 ## För att koppla personer till varandra i en familj tittar man på vilka som har en relation till varandra. Personerna ska vara folkbokförda på
 
 samma fastighet och relationerna omfattar make/maka, registrerad partner, sambo som har/har haft gemensamma barn (biologiskt/ adoptiv), biologisk förälder, adoptivförälder, vårdnadshavare (för barn under 18 år) samt annan förälder än vårdnadshavare (fosterförälder).

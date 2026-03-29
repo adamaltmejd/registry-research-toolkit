@@ -30,7 +30,7 @@ Answer: "What changed in register X between year A and year B?" Users working wi
 
 ### 2.2 Command
 
-```
+```bash
 regmeta get diff --register <name_or_id> --from <year> --to <year>
                  [--variant <regvar_id>]
                  [--variable <name_or_var_id_or_alias> ...]
@@ -115,7 +115,7 @@ Variants with no changes are omitted from the output.
 
 When `--variable` is used with alias-to-canonical mappings, a "Resolved variables:" header is printed first. Then the diff table with columns: variant, change (+/-/~), var_id, variabelnamn, detail. Then an "Unchanged: ..." footer if applicable.
 
-```
+```text
 Resolved variables:
   KON_NY → Kon (var_id 44)
 
@@ -152,7 +152,7 @@ These fields are populated by SCB but are free-text, not foreign keys. They may 
 
 ### 3.3 Command
 
-```
+```bash
 regmeta get lineage <name_or_var_id>
         [--register <name_or_id>]
         [--format {table,list,json}] [--output <path>] [--db <path>]
@@ -217,7 +217,7 @@ regmeta get lineage <name_or_var_id>
 
 A register table with columns: register, var_id, role, instances, years, source. Followed by a "Provenance: X/Y (Z%)" footer.
 
-```
+```text
 register    var_id  role      instances  years      source
 ----------  ------  --------  ---------  ---------  ------
 RTB (1)     44      source    12         1990-2023
@@ -312,7 +312,7 @@ Answer: "Is variable X available for years 2015-2024?" without chaining `search`
 
 ### 5.2 Command
 
-```
+```bash
 regmeta get availability <target> [--register <name_or_id>]
         [--format {table,list,json}] [--output <path>] [--db <path>]
 ```
@@ -322,6 +322,7 @@ Auto-detects whether target is a variable or register (tries variable first).
 ### 5.3 Output (JSON)
 
 For variables:
+
 ```json
 {
   "target": "Kön",
@@ -353,7 +354,7 @@ For registers: similar structure with `variants` instead of `registers`, each wi
 
 ### 6.1 Command
 
-```
+```bash
 regmeta search --query <term> --years <range> [other search flags]
 ```
 

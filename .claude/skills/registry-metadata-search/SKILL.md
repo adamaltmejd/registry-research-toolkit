@@ -101,6 +101,7 @@ regmeta resolve --columns "Kon,FodelseAr,Kommun" --register LISA
 Each column gets status `matched` or `no_match`. Matches include `var_id`, `variable_name`, `matched_column`, and `register_id`.
 
 Can also read a JSON array from stdin:
+
 ```bash
 echo '["Kon","FodelseAr"]' | regmeta resolve --register LISA
 ```
@@ -225,12 +226,14 @@ regmeta maintain info
 ## Typical workflows
 
 ### "What's in this register?"
+
 ```bash
 regmeta get register LISA          # overview + variants
 regmeta get schema --register LISA --years 2022  # columns
 ```
 
 ### "What does this column mean?"
+
 ```bash
 regmeta resolve --columns "Kon,AstKommun" --register LISA
 # Then for value codes:
@@ -239,22 +242,26 @@ regmeta get values 1001                  # get code labels
 ```
 
 ### "What are the valid values for variable X?"
+
 ```bash
 regmeta get varinfo "Kommun" --register LISA  # find CVID
 regmeta get values <cvid> --valid-at 2022-01-01
 ```
 
 ### "How has this register changed over time?"
+
 ```bash
 regmeta get diff --register LISA --from 2010 --to 2022
 ```
 
 ### "Which registers contain income data?"
+
 ```bash
 regmeta search --query "inkomst" --varname
 ```
 
 ### "Is this variable available for 2015-2024?"
+
 ```bash
 regmeta get availability "Kön" --register LISA
 # or filter search results by year
@@ -262,6 +269,7 @@ regmeta search --query "inkomst" --years 2015-2024
 ```
 
 ### "What SCB data exists but isn't in my local files?"
+
 ```bash
 # Use mock-data-wizard compare (calls regmeta.compare() internally):
 mock-data-wizard compare mock_data/manifest.json

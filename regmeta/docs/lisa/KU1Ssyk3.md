@@ -15,6 +15,6 @@ KU1Ssyk3
 
 Yrkeskod, för största förvärvskälla, på tresiffernivå enligt Standard för svensk yrkesklassificering 1996.
 
-*Se "SSYK 96. Standard för svensk yrkesklassificering 1996" (MIS 1998:3).* 
+*Se "SSYK 96. Standard för svensk yrkesklassificering 1996" (MIS 1998:3).*
 
 *För ytterligare information se Yrke enligt SSYK 96, 3-siffernivå ([[Ssyk3]]).*

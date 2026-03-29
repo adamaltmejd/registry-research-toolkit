@@ -10,8 +10,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Förebyggande sjukpenning, förlängd antal nettodagar ForbSjukP_Forlangd_Ndag**
 
-
-
 (2008–2011)
 
 Antal utbetalda nettodagar under året med förlängd förbyggande sjukpenning.

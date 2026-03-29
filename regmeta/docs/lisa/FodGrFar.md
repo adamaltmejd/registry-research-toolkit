@@ -16,3 +16,9 @@ Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg]]).
 Faderns födelseland finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga personer i LISA-populationen.
 
 *I övrigt se under Faderns födelseland* (FodelseLandNamnFar).
+
+Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg2]]).
+
+Faderns födelseland finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga personer i LISA-populationen.
+
+*I övrigt se under Faderns födelseland* (FodelseLandNamnFar).

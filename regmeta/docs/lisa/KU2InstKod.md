@@ -16,3 +16,11 @@ KU2InstKod
 Kod för institutionell sektor för det företag som avser näst största förvärvskällan. Koden bildas utifrån *företagets samhällssektor, ägare* och *juridiska form*. De två första positionerna anger samhällssektor, den tredje positionen anger ägarkategori medan den juridiska formen anges i variabelns fjärde och femte position.
 
 *För kodförteckning och ytterligare information se under Institutionell sektorkod (företag)* ([[InstKod]]).
+
+(1999–2000)
+
+Kod för institutionell sektor för det företag som avser näst största förvärvskällan.
+
+Den institutionella sektorkoden är från och med 1999 sexställig. Koden bildas utifrån *företagets samhällssektor, ägare* och *juridiska form*. De tre första positionerna anger samhällssektor, den fjärde positionen anger ägarkategori medan den juridiska formen anges i variabelns femte och sjätte position.
+
+*För ytterligare information se under Institutionell sektorkod (företag),* (Inst-Kod6).

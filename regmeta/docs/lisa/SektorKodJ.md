@@ -32,10 +32,6 @@ Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppg
 - Anställda som har den egna bostaden som arbetsplats
 - Övriga anställda som inte kan hänföras till ett bestämt arbetsställe[^32]
 
-
-
-
-
 De ovan nämnda gruppernas andel av det totala antalet förvärvsarbetande (november) är:
 
 | År   | Andel |
@@ -86,7 +82,6 @@ Personer som inte kan hänföras till ett specifikt arbetsställe, men där uppg
 - Fr.o.m. 2004. Anställda inom räddningstjänsten (deltidsbrandmän) (SNI2002 = 75250, SNI2007 = 84250)
 
 För samtliga år är kvaliteten i uppgiften dessutom avhängig sysselsättningsavgränsningen samt bestämning av huvudsakligt arbetsställe och bestämmande av huvudsaklig verksamhet på arbetsstället.
-
 
 [^30]: För de flesta arbetsställen innebär *mest omfattande,* flest antal förvärvsarbetande. För industriarbetsställen med fler än 19 förvärvsarbetande sorteras näringsgrenarna efter förädlingsvärde från den årliga Industristatistiken
 [^31]: Från och med 1995 får de kommunalt anställda i denna kategori SNIkod = 00000

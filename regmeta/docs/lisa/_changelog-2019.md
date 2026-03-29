@@ -9,11 +9,11 @@ source: "lisa-2019---forandringar.md"
 
 # **Förändringar i LISA 2019**
 
-# **Utbildningsvariabler**
+## **Utbildningsvariabler**
 
 Våren 2019 fastställde SCB den nya versionen av SUN, benämnd SUN 2020. I Utbildningsregistret implementeras SUN 2020 för läsåret 2018/19 med publicering våren 2020. Utöver en uppdaterad struktur för inriktningar har innehållsbeskrivningar för såväl nivåer som inriktningar förbättrats och förtydligats med fler exempel på utbildningar som ingår eller inte ingår i respektive kod. Utbildningsinriktning och utbildningsgrupp redovisas för både SUN 2000 och SUN 2020 då inriktningsstrukturen har uppdaterats. Utbildningsnivå dubbelredovisas dock inte då nivåstrukturen är oförändrad.
 
-# [SUN 2020 \(scb.se\)](https://scb.se/contentassets/aeeedec0e28c465aa524429407dcd5ba/sun_2020_version_1.1.pdf)
+## [SUN 2020 \(scb.se\)](https://scb.se/contentassets/aeeedec0e28c465aa524429407dcd5ba/sun_2020_version_1.1.pdf)
 
 | Klartext                                                                | 2018            | 2019            |
 |-------------------------------------------------------------------------|-----------------|-----------------|
@@ -26,7 +26,7 @@ Våren 2019 fastställde SCB den nya versionen av SUN, benämnd SUN 2020. I Utbi
 | Utbildningsinriktning, högsta avslutade,<br>SUN2000                     | SUN2000Inr      | SUN2000Inr      |
 | Utbildningsgrupp, högsta avslutade,<br>SUN2000                          | SUN2000Grp      | SUN2000Grp      |
 
-# **Sysselsättningsvariabler**
+## **Sysselsättningsvariabler**
 
 ## **Förvärvsarbetande**
 
@@ -36,7 +36,7 @@ Image /page/0/Picture/10 description: This image features a stylized logo consis
 
 kontrolluppgifterna (KU) och förvärvsarbetande klassificeras numera efter utbetald lön i november.
 
-#### **Tillfälligt frånvarande**
+### **Tillfälligt frånvarande**
 
 Även vissa personer som tillfälligt inte är i arbete klassificeras som förvärvsarbetande. Det gäller personer som fått sjuk- eller föräldrapenning under november och som fått en löneutbetalning enligt AGI i anslutning till frånvaron.
 
@@ -96,7 +96,7 @@ För personer som har haft flera jobb och/eller näringsverksamheter under året
 | Kontant bruttolön för anställning eller inkomst av<br>näringsverksamhet - november  | AGI1LonFInkNov<br>AGI2LonFInkNov<br>AGI3LonFInkNov |
 | Kontant bruttolön för anställning eller inkomst av<br>näringsverksamhet - december  | AGI1LonFInkDec<br>AGI2LonFInkDec<br>AGI3LonFInkDec |
 
-# **Tjänstepension**
+## **Tjänstepension**
 
 Från och med 2019 försvinner uppgifterna från Statens pensionsverk och variabler försvinner från kontrolluppgifterna i samband med övergången till AGI. Uppdelningen av olika typer av tjänstepension har försvunnit, från 2019 finns den en variabel för tjänstepension från utbetalare av tjänstepension.
 
@@ -112,7 +112,7 @@ Från och med 2019 försvinner uppgifterna från Statens pensionsverk och variab
 | Tjänstepension enligt individuellt tjänstepensions-<br>avtal mellan arbetsgivare och arbetstagare | [[KUPens]] | AGIPens |
 | Summa tjänstepension                                                                              | SumTjp | SumTjp  |
 
-#### **Vårdbidrag**
+### **Vårdbidrag**
 
 Vårdbidrag är ett stöd för föräldrar som vårdar ett barn med funktionsnedsättning eller långvarig sjukdom.
 

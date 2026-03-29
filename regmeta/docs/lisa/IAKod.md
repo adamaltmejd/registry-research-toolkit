@@ -18,7 +18,7 @@ Koden bygger dels på händelseuppgift från Arbetsförmedlingens sökanderegist
 - 2 = Åtgärdshändelse men ej Åtgärdsersättning
 - 3 = Åtgärdsersättning men ej Åtgärdshändelse
 
-*Åtgärdshändelse innebär att personen under aktuellt år varit inskriven hos Arbetsförmedlingens i någon av nedan sökandekategorier:* 
+*Åtgärdshändelse innebär att personen under aktuellt år varit inskriven hos Arbetsförmedlingens i någon av nedan sökandekategorier:*
 
 - Utbildningskontrakt, *fr.o.m. 2015-08*
 - Arbetslivsutveckling, ALU, *fr.o.m. 1993-01, upphör 1998-12-31, besluttagna före 1999-01-01 får fullföljas längst t.o.m. 1999-06-30*
@@ -112,7 +112,6 @@ Antal dagar i sökandekategori[^112]:
 - Förstärkt särskilt anställningsstöd (45), *fr.o.m. 2012-03*
 - Stöd till start av näringsverksamhet (46), *(tidigare Starta-eget-bidrag, namnbyte 2000-04), fr.o.m. 1995-05-01 i Datalagret*.
 
-
 - Allmänt anställningsstöd (47), *fr.o.m. 1999-10-01, upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
 - Trainee brist (47), *fr.o.m. 2015-08*
 - Förstärkt anställningsstöd (för 2-årsinskrivna) (48), *fr.o.m. 1999-10-01, ändrade villkor fr.o.m. 2000-01-01. Upphör 2007-01-01, beslut tagna före detta datum får fullföljas*
@@ -136,8 +135,6 @@ Antal dagar för varje individ och år räknas fram med hjälp av inskrivnings- 
 
 1992 finns åtgärdskategorierna *Lönebidrag, Offentligt skyddat arbete (OSA), Rekryteringsstöd, Beredskapsarbete, Utbildningsvikariat* och *Starta*
 
-
-
 *eget-bidrag*. Dessa kategorier klassificeras i LISA som åtgärdssysselsättning.
 
 Vad avser Lönebidrag, OSA, Rekryteringsstöd och Starta-eget-bidrag så finns dessa händelser registrerade först från och med 1995, vilket innebär att de som avslutats innan 1995-01-01 inte ingår i databasen (för Starta-eget-bidrag gäller detta de händelser som avslutats innan 1995-05-01)[^114] .
@@ -158,7 +155,6 @@ För att erhålla ett skyddat arbete skall arbetsförmågan vara så nedsatt att
 
 Syftet med rekryteringsstöd är att det ska underlätta för långtidsarbetslösa personer att få en anställning inom främst näringslivet. Rekryteringsstödet innebär att arbetsgivare som anställer
 
-
 en arbetslös får ett ekonomiskt bidrag. Arbetsgivare inom det privata näringslivet, kommun och landsting kan få rekryteringsstöd.
 
 Rekryteringsstöd lämnas med högst 50 procent av lönekostnaden (med ett maxbelopp). Bidraget lämnas under högst sex månader. För äldre arbetslösa (och under vissa omständigheter arbetslösa akademiker) kan bidragstiden förlängas till tolv månader. Anställningsformen kan vara tillsvidareanställning, provanställning eller visstidsanställning. Den anställde uppbär lön under anställningstiden.
@@ -172,7 +168,6 @@ Beredskapsarbete är ett tillfälligt arbete som är avsett att ge sysselsättni
 För att få ett beredskapsarbete krävs, förutom att man är arbetslös och arbetssökande på förmedlingen, att man har fyllt 25 år och att man inte kan få arbete genom andra åtgärder. Den som har ett beredskapsarbete skall fortsatt söka arbete och måste snarast lämna beredskapsarbetet om man får ett annat arbete. Reglerna för beredskapsarbete liknar reglerna för rekryteringsstöd. Bidrag till arbetsgivaren lämnas med högst 50 procent av lönekostnaden. Den beredskapsanställde får lön under anställningstiden.
 
 Beredskapsarbete ersätts från och med 1/1 1998 av Anställningsstöd. Beslut tagna före 1/1 1998 får fullföljas i denna kategori.
-
 
 [^112]: Inom parentes anges sökandekategorinummer i Arbetsförmedlingens sökanderegister.
 [^113]: Dessa data har härletts från Arbetsförmedlingens Datalager som omfattar samtliga händelser (=arbetssökandeperioder) från och med 1991-08. För information avseende bearbetningen av data från Datalagret, se bilaga 2.

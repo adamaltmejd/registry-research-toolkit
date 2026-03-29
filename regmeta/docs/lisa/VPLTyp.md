@@ -28,5 +28,4 @@ Dagpenningen är skattepliktig och ATP-grundande och betalas ut av försäkrings
 
 *Variabeln Dagpenning vid repetitionsutbildning redovisas inte i LISA.*
 
-
 [^60]: Den 1/7 2002 höjs lägsta belopp i dagpenningen till 120 kr/dag. Sedan år 2008 är lägsta belopp i dagpenningen 130 kr/dag.

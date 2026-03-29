@@ -17,9 +17,7 @@ Beloppet anges i hundratal kronor.
 
 Utbetalt belopp under året för förtidspension, står i relation till utbetalda dagar med förtidspension. Utbetalt belopp avser ersättningsperioden.
 
-*För ytterligare information om förtidspension se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.* **Sjukersättning, antal bruttodagar [[SjukErs_Bdag_MiDAS]]**
-
-(2003–)
+*För ytterligare information om förtidspension se grundläggarende texten under Förtidspension/sjukersättning samt sjukbidrag/aktivitetsersättning.* (2003–)
 
 Antal utbetalda bruttodagar under året med sjukersättning.
 

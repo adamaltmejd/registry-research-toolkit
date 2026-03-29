@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Arbetsställenummer (näst största förvärvskälla) KU2AstNr**
 
-KU2AstNr
+KU2AstNm
 
 Alla arbetsgivare med verksamhet på fler än en adress är enligt lag skyldiga att ange ett högst femsiffrigt arbetsställenummer på samtliga kontrolluppgifter som utges. Detta arbetsställenummer, som bestäms av SCB i samråd med företaget, kan tillsammans med organisationsnumret (KU2PeorgNr) kopplas till rätt arbetsställeidentitet (KU2CFARNr).
 

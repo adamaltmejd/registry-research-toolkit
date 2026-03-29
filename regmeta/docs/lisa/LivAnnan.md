@@ -19,5 +19,4 @@ Den dominerande typen av livränta torde vara relaterad till trafikskador och tr
 
 #### **Efterlevandeförmån**
 
-
 [^145]: Annan livränta än yrkes-/arbetsskadelivränta.

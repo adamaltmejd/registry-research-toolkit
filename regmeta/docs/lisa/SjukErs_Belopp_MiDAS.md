@@ -18,3 +18,17 @@ Beloppet anges i hundratal kronor.
 Utbetalt belopp under året för sjukersättning, står i relation till utbetalda dagar med sjukersättning. Utbetalt belopp avser ersättningsperioden.
 
 *För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).
+
+(2008–2014)
+
+Markering om sjukersättningen är tidsbegränsad.
+
+Informationen i variabeln:
+
+"Tidsbegränsad"
+
+"Ej tidsbegränsad"
+
+"Saknas/Okänd".
+
+*För ytterligare information om sjukersättning se under Sjukersättning* ([[SjukErs]]).

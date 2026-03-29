@@ -1,14 +1,10 @@
 ---
 variable: KU3SektorKod
-display_name: "Sektortillhörighet (företag, tredje största förvärvskälla)"
+display_name: "Sektortillhörighet (företag) (tredje störstaförvärvskälla)"
 tags:
   - topic/identifier
   - type/variable
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Sektortillhörighet (företag, tredje största förvärvskälla) KU3SektorKod**
-
-Företagets (avseende största förvärvskällan) sektortillhörighet.
-
-*För ytterligare information, se under variabeln Sektortillhörighet (företag),* ([[SektorKod]]).
+**Sektortillhörighet (företag) (tredje störstaförvärvskälla) KU3SektorKod**

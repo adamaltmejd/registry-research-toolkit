@@ -29,3 +29,9 @@ Den inkomstrelaterade ersättningen kan fås under 300 dagar, den som fyllt 55 �
 Ersättningsnivån fastställs till 80 procent av tidigare inkomst. Högsta dagpenning är 564 kr, lägsta ersättning är 245 kr.
 
 Ersättningen administreras av arbetsmarknadskassorna och betalas ut av de allmänna försäkringskassorna.
+
+(1994–1997)
+
+Beloppet anges i hundratals kronor.
+
+Arbetslösa kan resa till annat ES/EES-land för att söka arbete. De som beviljats intyg har rätt till bibehållen svensk arbetslöshetsersättning under högst tre månader.

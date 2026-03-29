@@ -12,12 +12,15 @@ Product type: Python CLI package distributed for `uv`/`uvx`
 ## 1. Product Summary
 
 ### 1.1 Product Name
+
 `regmeta` (module), CLI executable `regmeta`.
 
 ### 1.2 Purpose
+
 Deterministic CLI for searching and resolving SCB registry metadata from a local SQLite database. Designed primarily for programmatic consumption by LLM agent skills and other tools; direct human use is secondary.
 
 ### 1.3 V1 Decision
+
 V1 is local-only. No live network calls to SCB services.
 
 1. User exports CSV files from `https://mikrometadata.scb.se/`.
@@ -25,6 +28,7 @@ V1 is local-only. No live network calls to SCB services.
 3. All query commands run against the database.
 
 ### 1.4 Integration Model
+
 1. Primary consumers are LLM agent skills, `mock_data_wizard`, and other tools in the research toolkit.
 2. Direct human CLI use is supported but not the primary interface.
 3. Output contracts are stable, versioned, and machine-parseable.
@@ -32,6 +36,7 @@ V1 is local-only. No live network calls to SCB services.
 ## 2. Scope
 
 ### 2.1 In Scope (v1)
+
 1. Import SCB metadata CSV exports into a normalized SQLite database.
 2. Full-text search over registers and variables, filterable by register.
 3. Lookup registers by name or ID (fuzzy matched).
@@ -45,14 +50,17 @@ V1 is local-only. No live network calls to SCB services.
 11. Optional table output for terminal usage.
 
 ### 2.2 Out Of Scope (v1)
+
 1. Row-level microdata processing.
 2. Query database for caching/adaptation (deferred to v2).
 
 ### 2.3 Deferred To V2
+
 1. Query database for caching and user adaptation.
 2. Sensitivity/identifier flag queries.
 
 ### 2.4 Explored And Ruled Out
+
 The following were investigated during discovery (see `regmeta/docs/discovery/`) and will not be pursued:
 
 1. **Direct API integration against `mikrometadata.scb.se`.** The service has no stable public API. Transport analysis showed session-bound WebSocket communication with no documented contract. Not viable for automated access.
@@ -64,12 +72,14 @@ The following were investigated during discovery (see `regmeta/docs/discovery/`)
 ### 3.1 Database
 
 **Main database** (`regmeta.db`): normalized metadata store.
+
 - Written exclusively by `maintain` commands.
 - Read-only from the perspective of query commands.
 - Rebuilt from source CSVs via `maintain build-db`.
 - Schema follows the domain model in `STRUCTURE.md`.
 
 ### 3.2 Default Paths
+
 - Default directory: `~/.local/share/regmeta/`
 - Override: `--db <PATH>` or `REGMETA_DB` env var.
 
@@ -159,10 +169,12 @@ Results are deduplicated by `(register_id, var_id)` and sorted by `register_id`,
 ## 5. CLI Model
 
 ### 5.1 Invocation
+
 `uvx regmeta ...` or `uv run regmeta ...`
 
 ### 5.2 Top-Level Help (`regmeta --help`)
-```
+
+```text
 search      Free-text search across registers and variables
 get         Retrieve records by entity type and ID
 resolve     Resolve column names to variables (exact alias lookup)
@@ -170,13 +182,16 @@ maintain    Setup and maintenance (see: regmeta maintain --help)
 ```
 
 ### 5.3 Maintain Help (`regmeta maintain --help`)
-```
+
+```text
 build-db    Build database from SCB CSV exports
 info        Database stats and import metadata
 ```
+
 Future: `rebuild-index`, `check-integrity`, `compact`.
 
 ### 5.4 Common Query Flags
+
 - `--db <PATH>` — database directory (default: `~/.local/share/regmeta/`, env: `REGMETA_DB`)
 - `--format {json,table}` — default `json`
 - `--output <PATH>` — write to file instead of stdout
@@ -184,13 +199,16 @@ Future: `rebuild-index`, `check-integrity`, `compact`.
 ### 5.5 Maintain Flags
 
 `build-db`:
+
 - `--csv-dir <PATH>` — directory containing SCB CSV exports (required)
 - `--db <PATH>` — output directory (same default as query commands)
 
 `info`:
+
 - `--db <PATH>` — database directory
 
 ### 5.6 Search Flags
+
 - `--query <TEXT>` (required) — free-text search term
 - `--type {register,variable,all}` — default `all`
 - `--register <NAME_OR_ID>` — filter results to matching register(s)
@@ -200,11 +218,13 @@ Future: `rebuild-index`, `check-integrity`, `compact`.
 ### 5.7 Get Subcommands And Flags
 
 `get register <name_or_id>`:
+
 - Accepts register name or ID (fuzzy matched, see §3.5).
 - Single match: returns register fields + array of variants.
 - Multiple matches: returns `{"registers": [...]}`.
 
 `get schema [<regvar_id>] [--register <name_or_id>] [--years <range>]`:
+
 - Requires either `regvar_id` or `--register`.
 - `--years` filters versions by year (e.g. `2015`, `2010-2015`, `2010-`, `-2015`). Year is extracted from `registerversionnamn` via first 4-digit number.
 - Returns `{"variants": [{"regvar_id", "versions": [{"regver_id", "version_name", "year", "columns": [...]}]}]}`.
@@ -212,6 +232,7 @@ Future: `rebuild-index`, `check-integrity`, `compact`.
 - This is the primary command for `mock_data_wizard` — provides exact CVIDs and types per version.
 
 `get varinfo <name_or_var_id> [--register <name_or_id>]`:
+
 - Accepts variable name or var_id. Variable name matched case-insensitively against `variabelnamn`.
 - `--register` filters to matching register(s).
 - Single match: returns variable fields + `register_name` + `instances` array.
@@ -219,19 +240,23 @@ Future: `rebuild-index`, `check-integrity`, `compact`.
 - Each instance: `cvid`, `regvar_id`, `variant_name`, `regver_id`, `version_name`, `year`, `datatyp`, `datalangd`, `aliases`, `value_set_count`.
 
 `get values <cvid> [--valid-at <YYYY-MM-DD>]`:
+
 - Returns coded value-set members for a variable instance.
 - `--valid-at` filters to values valid at the given date (items with no validity record are always valid).
 - Array of `{vardekod, vardebenamning, vardemangdsversion, vardemangdsniva}`.
 
 `get datacolumns <name_or_var_id> [--register <name_or_id>]`:
+
 - All column aliases a variable appears under across registers and versions.
 - Array of `{kolumnnamn, register_id, register_name, regvar_id, regver_id, version_name}`.
 
 `get coded-variables [--min-codes <INT>] [--min-registers <INT>] [--limit <INT>]`:
+
 - Variables with value sets, ranked by usage.
 - Array of `{variable_name, n_distinct_codes, n_registers, n_instances}`.
 
 ### 5.8 Resolve Flags
+
 - `--columns <TEXT>` — comma-separated column names
 - `--register <NAME_OR_ID>` — filter to matching register(s). Acts as a hard filter, not a hint.
 - `--require-match` — fail with exit 17 when any column has no matches
@@ -241,11 +266,13 @@ Input: `--columns` or JSON array of strings on stdin.
 ## 6. CSV Import
 
 ### 6.1 Input Format
+
 SCB exports: pipe-delimited (`|`), cp1252 encoding, quote char `"`.
 
 Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0x8D, 0x8F, 0x90, 0x9D) are mapped to their cp850 equivalents (ü, ì, Å, É, Ø) during import.
 
 ### 6.2 Input Files
+
 - `Registerinformation.csv` — required (backbone; ~1M rows)
 - `UnikaRegisterOchVariabler.csv` — enrichment (lifecycle, sensitivity flags)
 - `Identifierare.csv` — enrichment (identifier semantics)
@@ -256,6 +283,7 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 - `ID-kolumner.xlsx` — reference (join-key documentation between export files)
 
 ### 6.3 Rebuild Semantics
+
 `build-db` replaces the main database entirely. Not incremental.
 
 ### 6.4 Known Data Limitations
@@ -267,6 +295,7 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 ## 7. Data Contract
 
 ### 7.1 Success Envelope (JSON)
+
 1. `contract_version` (currently `"2.0.0"` — tracks output envelope format, not DB schema)
 2. `generated_at` (UTC RFC3339)
 3. `request` (command + effective args)
@@ -275,6 +304,7 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
 6. `run` (`duration_ms`)
 
 ### 7.2 Search Result
+
 1. `total_count` — total matches before pagination
 2. `results` — array of records, each with:
    - `type`: `register` | `variable` | `varname` | `datacolumn` | `value`
@@ -285,7 +315,9 @@ Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants (0x81, 0
    - `fts_rank` — relevance score
 
 ### 7.3 Get Result
+
 Returns the requested entity as a JSON object. Shape depends on subcommand:
+
 - `get register`: register fields + array of variants (single match), or `{"registers": [...]}` (multiple matches)
 - `get schema`: `{"variants": [{"regvar_id", "versions": [{"columns": [...]}]}]}`
 - `get varinfo`: variable fields + instances array (single match), or `{"variables": [...]}` (multiple matches)
@@ -294,12 +326,14 @@ Returns the requested entity as a JSON object. Shape depends on subcommand:
 - `get coded-variables`: array of `{variable_name, n_distinct_codes, n_registers, n_instances}`
 
 ### 7.4 Resolve Result
+
 1. `columns` — array, one entry per input column:
    - `column_name`
    - `status`: `matched` | `no_match`
    - `matches`: array of `{var_id, variable_name, matched_column, register_id}`
 
 ## 8. Integration Design Rules
+
 1. **Stdout is data, stderr is diagnostics.** JSON output and progress/warnings must never mix on the same stream.
 2. **JSON is the primary output path.** Table format is a convenience for human inspection only.
 3. **Errors are structured.** Callers branch on `error.code` and exit codes, not message text.
@@ -307,6 +341,7 @@ Returns the requested entity as a JSON object. Shape depends on subcommand:
 5. **Importable as library.** Core query functions are usable as Python imports, not only through CLI subprocess calls.
 
 ## 9. Determinism Rules
+
 1. Stable ordering for repeated runs against the same database.
 2. Stable JSON key ordering.
 3. Deterministic paging (`offset`, `limit`).
@@ -327,17 +362,20 @@ Returns the requested entity as a JSON object. Shape depends on subcommand:
 Error JSON: `error.code`, `error.class`, `error.message`, `error.remediation`.
 
 ## 11. Security And Compliance
+
 1. Metadata only — no microdata.
 2. No credentials/tokens read or stored.
 3. No outbound network requests.
 
 ## 12. Non-Functional Requirements
+
 1. Python ≥ 3.11.
 2. Third-party dependencies are fine when they solve real problems (e.g. `openpyxl` for xlsx). Prefer well-maintained libraries over reinventing.
 3. Query commands: < 500ms against built database.
 4. `build-db`: minutes acceptable for full import; progress to stderr.
 
 ## 13. Acceptance Criteria (v1)
+
 1. `maintain build-db` produces a complete normalized SQLite database from all SCB exports.
 2. `search` returns FTS-backed deterministic results, filterable by register.
 3. `get register` returns register info by name or ID with fuzzy matching.
@@ -351,16 +389,19 @@ Error JSON: `error.code`, `error.class`, `error.message`, `error.remediation`.
 11. Re-running `build-db` cleanly replaces the database.
 
 ## 14. V2 Placeholder
+
 1. Query database for caching and user adaptation.
 2. Sensitivity/identifier flag queries.
 3. **Pre-built DB distribution.** Implemented as `regmeta maintain download`. Downloads compressed DB from GitHub Releases, decompresses with zstd. See `download.py`.
 
 ## 15. V3 Placeholder: Semantic Docs Layer
+
 The SCB metadata export is a structural catalog — it records what exists but not what it means in context. Key information is only available in external documentation (e.g. Bakgrundsfakta PDFs): sub-category composition, code migration history, and domain-specific interpretation guidance. See `reports/arbsoknov_report.md` for a detailed case study. (Temporal code validity is now covered by the VardemangderValidDates import.)
 
 A future version may add a curated docs layer: parsed markdown files keyed to `register_id` / `(register_id, var_id)`, searchable alongside the metadata DB. This would support questions like "what is the best registry for X?" or "what's the difference between variable X and Y?".
 
 Design constraints:
+
 1. **Separate lifecycle.** Curated docs must not be destroyed by `build-db` rebuilds. Either a separate DB or separate import step (`maintain build-docs`).
 2. **Keyed to existing IDs.** Docs join against `register_id` and `(register_id, var_id)` — no new ID schemes.
 3. **Resolved.** SCB confirmed (2026-03) that temporal code validity exists in MetaPlus. The supplementary `VardemangderValidDates.csv` export is now integrated into `build-db`.

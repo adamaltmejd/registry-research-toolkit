@@ -1,20 +1,10 @@
 ---
 variable: KU2CfarNr
-display_name: "Arbetsställe (näst största förvärvskälla)"
+display_name: "Arbetsstället (näst största förvärvskälla)"
 tags:
-  - topic/employment
+  - topic/identifier
   - type/variable
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Arbetsställe (näst största förvärvskälla) KU2CFARNr**
-
-Det arbetsställe som kan kopplas till den förvärvskälla som enligt Jobbregistret gett individen näst störst inkomstbeloppet i form av löneinkomst eller inkomst av näringsverksamhet[^35] under aktuellt år[^36] . Arbetsstället identifieras med hjälp av en arbetsställeidentitet (CFAR-nummer).
-
-*Se även beskrivning under Arbetsställe (november)* (CFARNr_LISA).
-
-*Vid utlämnade av data från LISA ersätts KU2CFARNr av ett nytt löpnummer.*
-
-
-[^35]: 1990-2003 ingår endast inkomst av aktiv näringsverksamhet.
-[^36]: 1990 utgjordes underlaget till företagarinkomsten av Inkomst av rörelse/Inkomst av Jordbruksfastighet (brukad) för 1989.
+**Arbetsstället (näst största förvärvskälla) KU2CfarNr**

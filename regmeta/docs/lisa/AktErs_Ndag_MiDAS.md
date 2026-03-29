@@ -24,3 +24,11 @@ Aktivitetsersättning kan betalas ut som hel (100 procent), tre fjärdedels (75 
 - 10 \* en kvarts omfattning = 2,5 nettodagar
 
 *För ytterligare information om aktivitetsersättning se under Sjukersättning* ([[SjukErs]]).
+
+(2003–)
+
+Beloppet anges i hundratal kronor.
+
+Utbetalt belopp under året för aktivitetsersättning, står i relation till utbetalda dagar med aktivitetsersättning. Utbetalt belopp avser ersättningsperioden.
+
+*För ytterligare information om aktivitetsersättning se under Sjukersättning* ([[SjukErs]]).

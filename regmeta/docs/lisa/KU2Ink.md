@@ -9,8 +9,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Inkomst av näst största förvärvskälla KU2Ink**
 
-
-
 Beloppet anges i hundratals kronor.
 
 Inkomst av förvärvskälla som enligt Jobbregistret gett individen det näst största inkomstbeloppet i form av kontant bruttolön eller företagarinkomst under aktuellt år. Inkomsten ska överstiga 1 000 kr.

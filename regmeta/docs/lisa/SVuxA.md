@@ -26,8 +26,6 @@ Ersättningen är 65 procent av A-kassaersättning eller enligt fastställt mini
 
 För att få särskilt vuxenstudiestöd måste studierna omfatta minst 15 dagar per termin för heltidsstuderande och minst 30 dagar per termin för deltidsstuderande. Vuxenstudiebidraget är skattepliktigt.
 
-
-
 Beslutande och utbetalande myndighet för denna åtgärd är CSN.
 
 *Särskilt vuxenstudiestöd (de som inte har rätt till ersättning från A-kassa ersätts med lägsta beloppet):*
@@ -64,7 +62,6 @@ Den *1/7 2001* avskaffas särskilt vuxenstudiestöd för arbetslösa (SVUXA) och
 | 2003    | 1 072  |
 
 SVUXA skall inte förväxlas med den utbildning AMS köper in från reguljära utbildningsväsendet (där ersättningen är i form av utbildningsbidrag).
-
 
 [^56]: T.o.m. läsåret 1992/93 gällde minst fyra års arbete och fyllda 25 år.
 [^57]: Fr.o.m. vårterminen 1999 kan stödet beviljas för upp till fyra terminers studier på gymnasienivå

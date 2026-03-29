@@ -51,7 +51,7 @@ Sökandekategori 98: Arbetslös, slutförd beslutsperiod
 
 (fr.o.m. 2001-05)
 
-*För att få en uppfattning om hur många arbetslösa som finns i timanställning införs 1996-04 även en sökandekategori 15 (= Arbetslösa, timanställda). Till den nya sökandekategorin kommer huvuddelen från sökandekategori 11.* 
+*För att få en uppfattning om hur många arbetslösa som finns i timanställning införs 1996-04 även en sökandekategori 15 (= Arbetslösa, timanställda). Till den nya sökandekategorin kommer huvuddelen från sökandekategori 11.*
 
 *1997-07 konverteras sökandekategori 15 till sökandekategori 22 (= Tillfällig timanställning). I de Arbetsförmedlingsdata som lagts in i LISA är denna konvertering genomförd vilket innebär att antalet arbetslösa av detta skäl minskar från och med 1996-04.*
 
@@ -62,7 +62,6 @@ Ersättning från arbetslöshetskassa/arbetsmarknadsförsäkring, Kontant arbets
 I den första kategorin fångas således personer som någon gång under året varit arbetslösa enligt den Arbetsförmedlingsdefinition som var giltig vid utgången av 1998[^93] och som haft en arbetslöshetsersättning under detta år.
 
 I den andra kategorin fångas de som varit arbetslösa enligt samma Arbetsförmedlingsdefinition men som inte haft någon arbetslöshetsersättning under det aktuella året. Således arbetslösa som inte går att ringa in med enbart inkomstuppgifter. Ytterligare en grupp
-
 
 som kan hamna i denna kategori är personer vars arbetslöshet upphört men där avaktualiseringen av någon anledning är försenad.
 
@@ -78,18 +77,17 @@ I LISA kan information om arbetslöshetsersättning utnyttjas redan fr.o.m. 1992
 
 Från och med *2001-05-21* sker sökandekategoribyten automatiskt mellan *systemet för programbeslut och statistiksystemet för dem som börjar eller slutar ett arbetsmarknadspolitiskt program*. Syftet med automatiska sökande-kategoribyten är dels att underlätta administrationen, dels att få en bättre registerkvalitet.
 
-
 Den sökande får någon av koderna 96, 97 eller 98. Det är därefter handläggarens ansvar att ange aktuell status för den sökande. Personer som har någon av koderna 96–98 ska redovisas som arbetslösa. Detsamma gäller fr.o.m. september 2015 den nya sökandekategorin 95.
 
-*Förändringen kan innebära en viss ökning av antalet arbetslösa och en viss minskning av antalet som deltar i ett arbetsmarknadspolitiskt program.* 
+*Förändringen kan innebära en viss ökning av antalet arbetslösa och en viss minskning av antalet som deltar i ett arbetsmarknadspolitiskt program.*
 
 #### **Skillnad i arbetslöshetsdefintion utifrån arbetslöshetshändelse och arbetslöshetsersättning**
 
 |                                                | Händelse             | Ersättning                  |
 |------------------------------------------------|----------------------|-----------------------------|
-| Deltidsarbetslöshet                            | <i>Ej arbetslös</i>  | <i>Arbetslös</i>            |
-| Heltidsarbetslösa utan arbetslöshetsersättning | <i>Arbetslös</i>     | <i>Ej arbetslös</i>         |
-| "Tillfällig avgångsersättning"                 | <i>(Arbetslös)95</i> | <i>Flertalet arbetslösa</i> |
+| Deltidsarbetslöshet                            | *Ej arbetslös*  | *Arbetslös*            |
+| Heltidsarbetslösa utan arbetslöshetsersättning | *Arbetslös*     | *Ej arbetslös*         |
+| "Tillfällig avgångsersättning"                 | *(Arbetslös)95* | *Flertalet arbetslösa* |
 
 *Fördelning efter arbetslöshetskod i LISA 1994:*
 
@@ -131,12 +129,9 @@ Kod = 3: 41 139 personer
 
 Kod = 4: 2 407 personer
 
-
-
 *Fördelning efter arbetslöshetskod i LISA 2017:*
 
 Kod = 1: 190 860 personer Kod = 2: 401 178 personer Kod = 3: 29 759 personer Kod = 4: 1 756 personer
-
 
 [^93]: 1999 ändras definitionen avseende de som tidigare tillhört sökandekategori 14.
 [^94]: I realiteten påbörjades överföringen redan i oktober–november 1998.

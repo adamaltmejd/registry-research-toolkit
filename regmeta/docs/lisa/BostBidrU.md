@@ -30,8 +30,6 @@ Bostadstillägg betalas ut till de med sjuk- eller aktivitetsersättning och är
 
 Fram till och med 1994 är det den egna kommunen som bestämmer högsta möjliga kommunala bostadstillägg och tilläggets storlek varierar mellan kommunerna. Beräkningen av hur inkomsten påverkar det
 
-
-
 kommunala bostadstillägg sker däremot enligt samma regler över hela landet.
 
 Från den 1 mars 1993 måste alla kommuner lämna tillägget med minst 85 procent av bostadskostnaden mellan 150 och 3 000 kr/mån.
@@ -50,12 +48,9 @@ Försäkringskassan räknar ut om man har rätt till bostadstillägg för pensio
 
 Bostadstillägg för pensionärer kan lämnas till den som har ålderspension, förtidspension, sjukbidrag, efterlevandepension eller
 
-
-
 Folkpension, pensionstillskott eller motsvarande del av ATP, barnbidrag m.m. räknas inte med som inkomst och minskar inte BTP.
 
 För makar räknas den sammanlagda inkomsten även om bara den ena har folkpension.
-
 
 pension från annat EU/EES-land. Tillägget betalas ut tillsammans med pensionen och är skattefri.
 
@@ -77,9 +72,7 @@ Bostadstillägg kan beviljas till den som har sjuk- eller aktivitetsersättning.
 
 Som inkomst vid inkomstprövning för Särskilt bostadstillägg till pensionärer räknas folkpension, pensionstillskott eller så stor del av ATP som motsvarar pensionstillskottet. Som inkomst räknas också det Bostadstillägg man får och hälften av den årsinkomst som Försäkringskassan har fastställt vid inkomstprövningen för bostadstillägg. Från dessa inkomster dras bostadskostnaden. Det belopp som blir kvar ska uppgå till ett fastställt minimibelopp. Om inkomsten efter avdrag för bostadskostnaden är lägre, betalas mellanskillnaden ut som Särskilt bostadstillägg till pensionärer.
 
-
 Som bostadskostnad räknas den faktiska bostadskostnad som man har. Den begränsas till ett belopp som anses vara skäligt. Särskilt bostadstillägg till pensionärer är skattefritt.
-
 
 [^154]: 35 procent av den inkomst som minskar BTP. Om den inkomsten är högre än ett och ett halvt basbelopp så minskas BTP med 40 procent av den delen av inkomsten.
 [^155]: Alla tjänstepensioner, delpension, yrkes- och arbetsskadelivränta, privat pension, utländsk pension samt del av ATP som överstiger pensionstillskottet räknas som inkomst. Särskilda regler gäller om man har tre fjärdedels, halv och en fjärdedels förtidspension eller sjukbidrag. Arbetsinkomst, efter avdrag för bland annat arbetsresor, räknas som inkomst om man har annan pension än ålderspension. För ålderspensionärer tas inte arbetsinkomsten med som inkomst. Sjukpenning, arbetslöshetsersättning liksom inkomster från t ex AMF räknas också med i inkomsten. Därutöver räknas viss andel av tillgångar i vissa fall som inkomst.

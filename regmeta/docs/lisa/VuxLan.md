@@ -10,7 +10,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Vuxenstudiestöd, lånedel (övriga) VuxLan**
 
-VuxLan
+**VuxLan**
 
 (1990–1996)
 

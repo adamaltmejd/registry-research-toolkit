@@ -10,14 +10,9 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Longitudinell integrationsdatabas för Sjukförsäkrings- och Arbetsmarknadsstudier**
 
-Image /page/0/Picture/2 description: This image is a logo featuring the letters "SCB" in a bold, white, sans-serif font against a solid green background. The letters are tall and narrow, with the central letter "C" appearing slightly taller than the flanking "S" and "B".
+Image /page/0/Picture/2 description: This image features the letters "SCB" in a stylized, white, sans-serif font. The letters are tall and narrow, and they are set against a solid light green background. The letters are arranged horizontally, with the 'C' and 'B' overlapping slightly.
 
-2019
-
-Bakgrundsfakta Arbetsmarknads- och utbildningsstatistiken 2019:1 Background facts Labour and Education statistics 2019:1
-
-
-### **LISA, Longitudinell integrationsdatabas för Sjukförsäkrings- och Arbetsmarknadsstudier**
+## **LISA, Longitudinell integrationsdatabas för Sjukförsäkrings- och Arbetsmarknadsstudier**
 
 Producent SCB, Statistiska centralbyrån
 
@@ -29,13 +24,13 @@ välfärd
 
 Förfrågningar Freja Werke
 
-010-479 64 55 freja.werke@scb.se
+010-479 64 55 <freja.werke@scb.se>
 
 Marie Kåberg 010-479 65 79
 
-marie.kaberg@scb.se
+<marie.kaberg@scb.se>
 
-Sara Ekmark 010-479 64 34 sara.ekmark@scb.se
+Sara Ekmark 010-479 64 34 <sara.ekmark@scb.se>
 
 Det är tillåtet att kopiera och på annat sätt mångfaldiga innehållet. Om du citerar, var god uppge källan på följande sätt:
 
@@ -51,11 +46,11 @@ Welfare Department SE-701 89 Örebro, Sweden
 
 Enquiries Freja Werke
 
-+46 10-479 64 55 freja.werke@scb.se
++46 10-479 64 55 <freja.werke@scb.se>
 
-Marie Kåberg +46 10-479 65 79 marie.kaberg@scb.se
+Marie Kåberg +46 10-479 65 79 <marie.kaberg@scb.se>
 
-Sara Ekmark +46 10-479 64 34 sara.ekmark@scb.se
+Sara Ekmark +46 10-479 64 34 <sara.ekmark@scb.se>
 
 It is permitted to copy and reproduce the contents in this publication. When quoting, please state the source as follows:
 
@@ -63,10 +58,9 @@ Source: Statistics Sweden, LISA, Longitudinal integrated database for health ins
 
 ISSN: 1654-465X (Online) URN:NBN:SE:SCB-2019-AM76BR1901_pdf
 
-Denna publikation finns enbart i elektronisk form på www.scb.se This publication is only available in electronic form on www.scb.se
+Denna publikation finns enbart i elektronisk form på <www.scb.se> This publication is only available in electronic form on <www.scb.se>
 
-
-#### **Bakgrund till LISA-databasen**
+### **Bakgrund till LISA-databasen**
 
 I början av tjugohundratalet kom forskning kring ohälsotalen att efterfrågas i allt större omfattning då sjukskrivningstalen nådde sina högsta nivåer under 2001. Efter ett slutbetänkande från Utredning om Analys av Hälsa i Arbete[^1] togs hösten 2003 ett beslut om att SCB skall upprätta en "sjukdatabas". På SCB startades ett uppbyggnadsarbete av en databas där syftet var att möjliggöra analyser och utvärderingar inom ohälsoområdet. Den nya databasen kallades LISA (Longitudinell Integrerad databas för Sjukförsäkrings- och Arbetsmarknadsstudier) och byggdes upp tillsammans med Riksförsäkringsverket (RFV) och Verket för innovationssystem (VINNOVA).
 
@@ -78,84 +72,81 @@ SCB i december 2019
 
 Magnus Sjöström Tf Avdelningschef Henrik von Hofsten Enhetschef
 
-
-
 ## Innehåll
 
-| Förord                                                                                           | 3   |
-|--------------------------------------------------------------------------------------------------|-----|
-| Syfte                                                                                            | 7   |
-| Omfattning och innehåll                                                                          | 8   |
-| Omfattning                                                                                       | 8   |
-| Användning                                                                                       | 9   |
-| Tillgång till data                                                                               | 10  |
-| Databasens uppbyggnad                                                                            | 10  |
-| Referensperiod                                                                                   | 10  |
-| Variabelförteckning                                                                              | 12  |
-| Alfabetisk ordning efter variabelns namn i databasen                                             | 12  |
-| Alfabetisk ordning efter variabelnamn i klartext                                                 | 25  |
-| Variabler efter ämnesinnehåll och objektstyp                                                     | 38  |
-| Kopplingsidentiteter                                                                             | 53  |
-| Individ                                                                                          | 53  |
-| Företag                                                                                          | 55  |
-| Arbetsställeidentitet (november)                                                                 | 57  |
-| I databasen ingående variabler                                                                   | 59  |
-| Demografiska variabler                                                                           | 59  |
-| Demografiska variabler – För familj                                                              | 79  |
-| Utbildningsvariabler                                                                             | 84  |
-| Sysselsättningsvariabler                                                                         | 116 |
-| Förvärvsarbetande                                                                                | 116 |
-| Yrke                                                                                             | 131 |
-| Näringsgrensindelning 157                                                                        |     |
-| KU1 – För största förvärvskälla aktuellt år 168                                                  |     |
-| KU2 – För näst största förvärvskälla aktuellt år 177                                             |     |
-| KU3 – För tredje största förvärvskälla aktuellt år 186                                           |     |
-| Inkomstvariabler194                                                                              |     |
-| Inkomst av förvärvskälla 194                                                                     |     |
-| Arbetstidsrelaterad social inkomst 205                                                           |     |
-| Studier 205                                                                                      |     |
-| Värnplikt 227                                                                                    |     |
-| Föräldraförsäkring 230                                                                           |     |
-| Sjukdom, arbetsskada och rehabilitering 245                                                      |     |
-| Arbetslöshet 283                                                                                 |     |
-| Arbetsmarknadspolitisk åtgärd 312                                                                |     |
-| Förtidspension/sjukersättning samt sjukbidrag/<br>aktivitetsersättning 353                       |     |
-| Delpension 375                                                                                   |     |
-| Övrig arbetstidsrelaterad social inkomst 376                                                     |     |
-| Övrig inkomst381                                                                                 |     |
-| Kapitalinkomst 381                                                                               |     |
-| Annan inkomst 382                                                                                |     |
-| Ålderspension 382                                                                                |     |
-| Tjänstepension 393                                                                               |     |
-| Övrig pension 398                                                                                |     |
-| Summa inkomst av pensioner 399                                                                   |     |
-| Yrkes-/arbetsskadelivränta 401                                                                   |     |
-| Annan livränta 404                                                                               |     |
-| Efterlevandeförmån 404                                                                           |     |
-| Familjerelaterade inkomster 408                                                                  |     |
-| Övriga inkomster/ersättningar 420                                                                |     |
-| Disponibel inkomst426                                                                            |     |
-| Registerbaserad aktivitetsstatistik (RAKS)436                                                    |     |
-| Bilaga 1443                                                                                      |     |
-| Basbelopp 443                                                                                    |     |
-| Bilaga 2446                                                                                      |     |
-| Bearbetning av data från Arbetsförmedlingens Datalager 446                                       |     |
-| Bilaga 3448                                                                                      |     |
-| Justerad metod för framställning av den Registerbaserade<br>arbetsmarknadsstatistiken - 2004 448 |     |
-| Justerad metod för framställning av den Registerbaserade<br>arbetsmarknadsstatistiken - 2011 449 |     |
-| Bilaga 4453                                                                                      |     |
-| STORE - MiDAS 453                                                                                |     |
-| Bilaga 5455                                                                                      |     |
-| Hur FK-data tolkas 455                                                                           |     |
-| Bilaga 6457                                                                                      |     |
-| Ursprunglig variabelkälla 457                                                                    |     |
-| Bilaga 7466                                                                                      |     |
-| Kopplingar mellan tabeller i LISA 466                                                            |     |
-| Bilaga 8467                                                                                      |     |
-| Regionala koder – Ändringar i läns- och kommunindelningen från<br>och med år 1990 467            |     |
-| Bilaga 9469                                                                                      |     |
-| Markering för de år variablerna förekommer i databasen 469                                       |     |
-
+| Förord                                                                                                                                                               | 3          |
+|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------|
+| Syfte                                                                                                                                                                | 7          |
+| Omfattning och innehåll                                                                                                                                              | 8          |
+| Omfattning                                                                                                                                                           | 8          |
+| Användning                                                                                                                                                           | 9          |
+| Tillgång till data                                                                                                                                                   | 10         |
+| Databasens uppbyggnad                                                                                                                                                | 10         |
+| Referensperiod                                                                                                                                                       | 10         |
+| Variabelförteckning                                                                                                                                                  | 12         |
+| Alfabetisk ordning efter variabelns namn i databasen                                                                                                                 | 12         |
+| Alfabetisk ordning efter variabelnamn i klartext                                                                                                                     | 25         |
+| Variabler efter ämnesinnehåll och objektstyp                                                                                                                         | 38         |
+| Kopplingsidentiteter                                                                                                                                                 | 53         |
+| Individ                                                                                                                                                              | 53         |
+| Företag                                                                                                                                                              | 55         |
+| Arbetsställeidentitet (november)                                                                                                                                     | 57         |
+| I databasen ingående variabler                                                                                                                                       | 59         |
+| Demografiska variabler                                                                                                                                               | 59         |
+| Demografiska variabler – För familj                                                                                                                                  | 79         |
+| Utbildningsvariabler                                                                                                                                                 | 84         |
+| Sysselsättningsvariabler                                                                                                                                             | 116        |
+| Förvärvsarbetande                                                                                                                                                    | 116        |
+| Yrke                                                                                                                                                                 | 131        |
+| Näringsgrensindelning ...................................................................................................                                            | 157        |
+| KU1 – För största förvärvskälla aktuellt år ...................................................................                                                      | 168        |
+| KU2 – För näst största förvärvskälla aktuellt år ...........................................................                                                         | 177        |
+| KU3 – För tredje största förvärvskälla aktuellt år ..........................................................                                                        | 186        |
+| **Inkomstvariabler ..........................................................................................................**                                   | **194** |
+| Inkomst av förvärvskälla ..........................................................................................                                                  | 194        |
+| Arbetstidsrelaterad social inkomst ..........................................................................                                                        | 205        |
+| Studier ...................................................................................................................                                          | 205        |
+| Värnplikt ...............................................................................................................                                            | 227        |
+| Föräldraförsäkring ...............................................................................................                                                   | 230        |
+| Sjukdom, arbetsskada och rehabilitering...........................................................                                                                   | 245        |
+| Arbetslöshet ..........................................................................................................                                              | 283        |
+| Arbetsmarknadspolitisk åtgärd...........................................................................                                                             | 312        |
+| Förtidspension/sjukersättning samt sjukbidrag/<br>aktivitetsersättning.............................................................................................. | 353        |
+| Delpension ............................................................................................................                                              | 375        |
+| Övrig arbetstidsrelaterad social inkomst ..........................................................                                                                  | 376        |
+| **Övrig inkomst .................................................................................................................**                               | **381** |
+| Kapitalinkomst..........................................................................................................                                             | 381        |
+| Annan inkomst..........................................................................................................                                              | 382        |
+| Ålderspension ..........................................................................................................                                             | 382        |
+| Tjänstepension..........................................................................................................                                             | 393        |
+| Övrig pension............................................................................................................                                            | 398        |
+| Summa inkomst av pensioner .................................................................................                                                         | 399        |
+| Yrkes-/arbetsskadelivränta .....................................................................................                                                     | 401        |
+| Annan livränta ..........................................................................................................                                            | 404        |
+| Efterlevandeförmån 404                                                                                                                                               |            |
+| Familjerelaterade inkomster 408                                                                                                                                      |            |
+| Övriga inkomster/ersättningar 420                                                                                                                                    |            |
+| Disponibel inkomst426                                                                                                                                                |            |
+| Registerbaserad aktivitetsstatistik (RAKS)436                                                                                                                        |            |
+| Bilaga 1443                                                                                                                                                          |            |
+| Basbelopp 443                                                                                                                                                        |            |
+| Bilaga 2446                                                                                                                                                          |            |
+| Bearbetning av data från Arbetsförmedlingens Datalager 446                                                                                                           |            |
+| Bilaga 3448                                                                                                                                                          |            |
+| Justerad metod för framställning av den Registerbaserade<br>arbetsmarknadsstatistiken - 2004 448                                                                     |            |
+| Justerad metod för framställning av den Registerbaserade<br>arbetsmarknadsstatistiken - 2011 449                                                                     |            |
+| Bilaga 4453                                                                                                                                                          |            |
+| STORE - MiDAS 453                                                                                                                                                    |            |
+| Bilaga 5455                                                                                                                                                          |            |
+| Hur FK-data tolkas 455                                                                                                                                               |            |
+| Bilaga 6457                                                                                                                                                          |            |
+| Ursprunglig variabelkälla 457                                                                                                                                        |            |
+| Bilaga 7466                                                                                                                                                          |            |
+| Kopplingar mellan tabeller i LISA 466                                                                                                                                |            |
+| Bilaga 8467                                                                                                                                                          |            |
+| Regionala koder – Ändringar i läns- och kommunindelningen från<br>och med år 1990 467                                                                                |            |
+| Bilaga 9469                                                                                                                                                          |            |
+| Markering för de år variablerna förekommer i databasen 469                                                                                                           |            |
 
 ### **Syfte**
 
@@ -177,9 +168,7 @@ Förhoppningen är att databasen skall kunna ge svar på frågeställningar som 
 - Innehållet i LISA anpassas till användarnas primära behov av lättillgängliga data. I viss mån kan härledda variabler konstrueras efter användarnas behov för att underlätta analysen.
 - Uttag från LISA kan enkelt kompletteras med information från andra datakällor.
 
-
 ### **Omfattning och innehåll**
-
 
 #### **Omfattning**
 
@@ -222,7 +211,6 @@ Variablerna ser ut på samma sätt i LISA som i det källmaterial varifrån de h
 
 LISA har, för tidigare årgångar, i vissa fall uppdaterats när bättre information funnits tillgänglig i senare källor.
 
-
 #### **Användning**
 
 Syftet med databasen är att förbättra förutsättningarna för forskning, statistik, utredning och utvärdering inom sjukförsäkrings- och arbetsmarknadsområdet som ställer krav på data som följer individer över tiden. Databasen kopplar samman data för flera år och från olika sektoriella register, vilket är en förutsättning för att studera samband och konsekvenser av förändringar.
@@ -235,7 +223,6 @@ Databasen används främst för utlämnande av mikrodata för forskningeller sta
 
 användare som inte har stöd för att hantera mikrodata kan SCB istället skapa tabeller som skräddarsys tillsammans med användaren för att kunna besvara olika frågeställningar.
 
-
 #### **Tillgång till data**
 
 MONA (Microdata Online Access) är SCB:s standardverktyg för tillgängliggörande av mikrodata. Användare som fått data levererat via MONA kan göra bearbetningar via internet utan att mikrodata lämnar SCB.
@@ -245,7 +232,6 @@ Efter skadeprövning enligt Offentlighets- och sekretesslagen kan SCB lämna ut 
 MONA-användare arbetar i Windowsmiljö via fjärruppkoppling. Mikrodata blir synliga på dataskärmen och bearbetningar kan göras med de programvaror som finns i MONA. Resultat kan tas ut via e-post, men bearbetade mikrodata sparas i MONA.
 
 Huvudmålet för tjänsten är att erbjuda ett säkert system för SCB och användaren, där inga mikrodata tas ur systemet och där tillgängligheten är hög. Det är också en fördel för SCB och användaren att det snabbt går att uppdatera underliggande data vid förändringar.
-
 
 #### **Referensperiod**
 
@@ -271,7 +257,6 @@ Yrkesuppgifter för anställda utanför den officiella lönestatistiken inhämta
 - Högsta avslutade utbildning, Utbildningsgrupp och Avslutningsår för högsta utbildning hämtas från Utbildningsregistret, som från och med årgång 1992 avser avklarade utbildningar till och med vårterminen aktuellt år. Studiedeltagande HT avser höstterminen medan Registrering på högskolans grund-/forskarutbildning innehåller information om både vår- och hösttermin det aktuella året.
 - För 1990 bygger Inkomst av största förvärvskälla på uppgift om Inkomst av rörelse/Inkomst av jordbruksfastighet (brukad) för 1989.
 - Vissa variabler i databasen är inte knutna till en specifik årgång. Dessa variabler är Födelseland (eget, moderns och faderns samt olika grupperingar baserade på uppgift om födelseland), Land vid in-/utvandring, Datum för in-/utvandring och Dödsdatum.
-
 
 #### **Variabler efter ämnesinnehåll och objektstyp**
 
@@ -421,7 +406,7 @@ Variablerna redovisas med variabelnamn och vilka år de förekommer i databasen 
 | Institutionell sektorkod (företag)                                                                                              | [[InstKod7]]                                                                                                                                                                                                                                                                                                                                           | 2001-2013 |
 | Institutionell sektorkod (företag) enligt justerad<br>metod                                                                     | [[InstKod7J]]                                                                                                                                                                                                                                                                                                                                          | 2003      |
 | Institutionell sektorkod (företag)                                                                                              | [[InstKod10]]                                                                                                                                                                                                                                                                                                                                          | 2014-     |
-| Sektortillhörighet (företag), för förvärvsarbetande                                                                             | [[SektorKod]]                                                                                                                                                                                                                                                                                                                                          |           |
+| Sektortillhörighet (företag), för förvärvsarbetande [[SektorKod]]                                                                   |                                                                                                                                                                                                                                                                                                                                                    |           |
 | Sektortillhörighet (företag)                                                                                                    | [[SektorKodSreg]]                                                                                                                                                                                                                                                                                                                                      |           |
 | Sektortillhörighet (företag) enligt justerad metod                                                                              | [[SektorKodJ]]                                                                                                                                                                                                                                                                                                                                         | 2003      |
 | Arbetsställets näringsgren, SNI69                                                                                               | [[AstSNI69]]                                                                                                                                                                                                                                                                                                                                           | 1990-1993 |
@@ -446,7 +431,7 @@ Variablerna redovisas med variabelnamn och vilka år de förekommer i databasen 
 | Yrkesställning (största förvärvskälla)                                                                                          | [[KU1YrkStalln]]                                                                                                                                                                                                                                                                                                                                       |           |
 | Arbetsställekommun (största förvärvskälla)                                                                                      | [[KU1AstKommun]]                                                                                                                                                                                                                                                                                                                                       |           |
 | Arbetsställelän (största förvärvskälla)                                                                                         | [[KU1AstLan]]                                                                                                                                                                                                                                                                                                                                          |           |
-| Institutionell sektorkod (företag) (största<br>förvärvskälla)                                                                   | [[KU1InstKod]]                                                                                                                                                                                                                                                                                                                                         |           |
+| Institutionell sektorkod (företag) (största<br>förvärvskälla)                                                                   | [[KU1InstKod]]                                                                                                                                                                                                                                                                                                                                         | 1990-1998 |
 |                                                                                                                                 | Variabel                                                                                                                                                                                                                                                                                                                                           | Årtal     |
 | Institutionell sektorkod (företag) (största<br>förvärvskälla)                                                                   | [[KU1InstKod6]]                                                                                                                                                                                                                                                                                                                                        | 1999-2000 |
 | Institutionell sektorkod (företag) (största<br>förvärvskälla)                                                                   | [[KU1InstKod7]]                                                                                                                                                                                                                                                                                                                                        | 2001-2013 |
@@ -858,7 +843,6 @@ Variablerna redovisas med variabelnamn och vilka år de förekommer i databasen 
 | Andel av den totala inkomsten som utgörs av<br>inkomst från ekonomiskt bistånd                                                  | [[Raks_AndelEkBisInk]]                                                                                                                                                                                                                                                                                                                                 | 1993-     |
 | Huvudsaklig inkomstkälla                                                                                                        | [[Raks_HuvInkKalla]]                                                                                                                                                                                                                                                                                                                                   | 1993-     |
 
-
 ## **I databasen ingående variabler**
 
 Förutsättningar avseende lagar, regler, ersättningsnivåer, kriterier, administrativa rutiner, variabelåtkomst, täckning etc. och hur dessa förutsättningar förändrats sedan 1990 beskrivs. I förekommande fall redovisas de komponenter varje aggregat består av och de härledningarna som gjorts beskrivs. Dessutom ges, där så anses vara motiverat, kommentarer kring jämförbarhet mellan årgångarna.
@@ -866,7 +850,6 @@ Förutsättningar avseende lagar, regler, ersättningsnivåer, kriterier, admini
 *Uppgifterna avser, där inte annat anges, samtliga individer 15 år och äldre (t.o.m. årgång 2009 16 år och äldre), folkbokförda i Sverige 31/12 aktuellt år.*
 
 *Inkomstvariablernas belopp redovisas, där inte annat anges, i hundratals kronor.*
-
 
 [^1]: AHA utredningsinstitut och mötesplats SOU 2003:13 s. 117
 [^2]: Bakgrundsfakta 2016:1 för LISA-årgångarna 1990-2013

@@ -28,5 +28,4 @@ Graviditetspenningen kan betalas ut som hel (100 procent), tre fjärdedels (75 p
 
 10 \* en åttondels omfattning = 1,25 dagar
 
-
 *För ytterligare information, se under Graviditetspenning, antal bruttodagar* ([[HavPeng_Bdag]]).

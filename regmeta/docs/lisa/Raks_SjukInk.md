@@ -17,7 +17,6 @@ Ersättning från sjukdom/arbetsskada/rehabilitering anges i hundratal kronor.
 
 *För ytterligare information se Summa inkomst föranledd av sjukdom/arbetsskada/rehabilitering* ([[SjukRe]]).
 
-
 ---
 
 | 4                        | Sjuk                          | Raks_SjukInk     |

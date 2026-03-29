@@ -1,15 +1,11 @@
 ---
 variable: SVuxALan
-display_name: "Vuxenstudiestöd, lånedel (arbetslösa)"
+display_name: "Vuxenstudiestöd, lån (arbetslösa)"
 tags:
   - topic/education
-  - topic/income
+  - topic/identifier
   - type/variable
 source: "lisa-bakgrundsfakta-1990-2017"
 ---
 
-**Vuxenstudiestöd, lånedel (arbetslösa) SVuxALan**
-
-(1997–2003)
-
-Beloppet anges i hundratals kronor.
+**Vuxenstudiestöd, lån (arbetslösa) SVuxALan**

@@ -14,3 +14,7 @@ Inv_UtvGrEg2
 Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg2]]).
 
 Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.
+
+Grupperas som födelseland, se *Eget födelseland* ([[FodGrEg3]]).
+
+Land vid in-/utvandring finns i en icke årgångsbunden databastabell. Tabellen omfattar samtliga in- och utvandringstillfällen för LISApopulationen.

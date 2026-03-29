@@ -28,6 +28,14 @@
 - Validate JSON contracts at read/write boundaries.
 - Avoid leaking sensitive row-level content.
 
+# Lint and test
+- `uv run ruff check` — python lint
+- `uv run ruff format --check` — python format check
+- `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
+- `uv run python -m pytest regmeta/` — regmeta tests
+- `uv run python -m pytest mock_data_wizard/` — mock_data_wizard tests
+- `regmeta/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
+
 # Target structure
 - `mock_data_wizard/SPEC_mock_data_wizard.md`
 - `mock_data_wizard/PLAN_mock_data_wizard.md`

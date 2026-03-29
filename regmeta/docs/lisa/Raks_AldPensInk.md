@@ -17,7 +17,6 @@ Ersättning från pensioner anges i hundratal kronor.
 
 *För ytterligare information se Summa inkomst av pensioner* ([[AldPens]]).
 
-
 ---
 
 | 9                        | Ålderspension                 | Raks_AldPensInk  |

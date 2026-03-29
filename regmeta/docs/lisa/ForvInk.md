@@ -9,8 +9,6 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Summa inkomst av förvärvskälla, exkl. underskott ForvInk**
 
-
-
 (1990–)
 
 Beloppet anges i hundratals kronor.

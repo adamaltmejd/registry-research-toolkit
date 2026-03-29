@@ -9,9 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Månad för medborgarskap MedbMan**
 
-
-
-# MedbMan
+MedbMan
 
 (1998–) År, månad
 

@@ -25,6 +25,6 @@ Uppgift om ESeG finns för förvärvsarbetande enligt RAMS vilket innebär att h
 
 För en mer aggregerad indelning av de i arbetskraften, så föreslås följande indelning av huvudgrupperna 1-7:
 
-```
+```text
 "high class" (1+2)
 ```

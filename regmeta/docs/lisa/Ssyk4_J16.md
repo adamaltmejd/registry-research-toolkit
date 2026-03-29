@@ -23,6 +23,16 @@ De härledda yrkena identifieras via variabeln SSYKStatus_J16.
 
 *I övrigt se Yrke enligt SSYK 96, 4-siffernivå* (SSyk4).
 
-<sup>&</sup>quot;middle class" (3+4)
+&quot;middle class" (3+4)
 
-<sup>&</sup>quot;working class" (5+6+7)
+&quot;working class" (5+6+7)
+
+(2014-)
+
+Från år 2016 ingår även härledda yrken för företagare. Denna metod har tillämpats bakåt i tiden och finns för Yrke enligt SSYK 2012 sedan 2014.
+
+För att undvika att företagare (oavsett om de är enskilda näringsidkare eller ägare av egna AB) får en gammal yrkeskod från en tidigare anställning eller att de helt saknar yrkeskod har man med hjälp av utbildning, licens, bransch och företagsnamn härlett ett yrke. Detta är en kvalitetsförbättring som ger fler företagare uppgift om yrke.
+
+De härledda yrkena identifieras via variabeln SSYKStatus_J16.
+
+*I övrigt se Yrke enligt SSYK 2012, 3-siffernivå* (SSyk3_2012).

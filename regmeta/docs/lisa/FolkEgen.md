@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Folkpensionskod för egenförmån FolkEgen**
 
-FolkEgen
+**FolkEgen**
 
 (1990–2002)
 

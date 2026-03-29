@@ -10,7 +10,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Rehabiliteringspenning, antal bruttodagar Rehab_Bdag_MiDAS**
 
-
+**Rehab*Bdag*MiDAS**
 
 (1994–)
 

@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 **Utvecklingsersättning med sjukpenning, antal dagar UtvErs_Sjuk_Dag**
 
-[[UtvErs]]*Sjuk*Dag
+**UtvErs*Sjuk*Dag**
 
 (2008–)
 

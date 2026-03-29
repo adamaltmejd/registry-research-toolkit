@@ -16,3 +16,9 @@ KU3AstSNI92B
 Arbetsställets (avseende tredje största förvärvskälla) näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002. 42 grupper.
 
 *För kodförteckning se under Näringsgren enligt SNI2002, begränsad nivå* (AstSni2002B).
+
+(1993-2001)
+
+Arbetsställets (avseende tredje största förvärvskälla) näringsgren enligt en gruppering av näringsgrenskoder för redovisningsändamål utifrån SNI 2002. 10 grupper.
+
+*För kodförteckning se under Näringsgren enligt SNI2002, grov nivå* (AstSni2002G).

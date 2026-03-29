@@ -17,6 +17,11 @@ Ersättning från studier anges i hundratal kronor. Fr.o.m. 2014 ingår även l�
 
 *För ytterligare information se Summa inkomst föranledd av studier* ([[Stud]]).
 
+(1993–)
+
+Ersättning från arbetsmarknadspolitiska åtgärder i form av Utbildningsbidrag, Aktivitetsstöd och Utvecklingsersättning som utbetalas till individen. Anges i hundratal kronor.
+
+*För ytterligare information se Aktivitetsstöd/Utbildningsbidrag* ([[UtbBidr]]) samt *Utvecklingsersättning* ([[UtvErs]]).
 
 ---
 

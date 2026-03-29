@@ -38,6 +38,10 @@ Uppgiften bygger dels på den kontrolluppgift som skall lämnas till Skatteverke
 
 För 1990 hämtas deklarationsuppgifterna för egen företagare från 1989[^28]. Från och med 1991 hämtas deklarationsuppgifterna från aktuellt år.
 
+(2003)
 
+Yrkesställning enligt de förutsättningar som gäller enligt den justerade metod för framställningen av den Registerbaserade arbetsmarknadsstatistiken som infördes fr.o.m. årgång 2004. Uppgiften har tagits fram avseende årgång 2003 för att underlätta jämförelser över tid.
+
+Se *bilaga 3 "Justerad metod för framställning av den Registerbaserade arbetsmarknadsstatistiken - 2004"*.
 
 [^28]: Det är uppgift om "Inkomst av rörelse" och om "Inkomst av jordbruksfastighet (brukad)" som används för detta år. Inkomst av aktiv näringsverksamhet finns som begrepp först från och med 1991

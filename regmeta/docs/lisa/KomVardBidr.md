@@ -20,7 +20,6 @@ Det kommunala vårdnadsbidraget avser utbetalningsåret oavsett ersättningsperi
 
 Vårdnadsbidraget erbjuder föräldrar med barn i åldern ett till tre år en möjlighet att stanna hemma längre - med sin anställning skyddad samt sin sjukpenninggrundande inkomst (SGI) skyddad. Vårdnadsbidraget är ett skattefritt kommunalt bidrag på maximalt 3 000 kronor per månad. En kommun får lämna vårdnadsbidrag för ett barn som har fyllt ett men
 
-
 inte tre år under förutsättning att barnet är folkbokfört i kommunen och inte har en plats i förskola som avser heltid.
 
 Vårdnadsbidraget kan bara lämnas till föräldrar som förvärvsarbetar eller studerar med studiemedel. Man kan inte få vårdnadsbidrag om man samtidigt har exempelvis sjukpenning, sjukersättning, aktivitetsersättning, arbetslöshetsersättning, aktivitetsstöd eller introduktionsersättning. Man får inte heller vara ålderspensionär eller få föräldrapenning. De kommuner som önskar göra det möjligt att kombinera ett reducerat vårdnadsbidrag med en deltidsplacering i förskoleverksamhet får själva välja modell för avtrappning av vårdnadsbidraget utifrån lokala behov och förutsättningar.

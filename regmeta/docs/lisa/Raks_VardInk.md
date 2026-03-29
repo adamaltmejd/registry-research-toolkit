@@ -17,7 +17,6 @@ Ersättning från föräldraledighet och vård av närstående anges i hundratal
 
 *För ytterligare information se Summa inkomst föranledd av föräldraledighet* ([[ForLed]]) samt *Närståendepenning* ([[NarPeng]]).
 
-
 ---
 
 | 3                        | Vård av barn/anhörig          | Raks_VardInk     |

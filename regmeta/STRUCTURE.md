@@ -1,6 +1,7 @@
 # SCB Metadata Structure
 
 ## Core Hierarchy
+
 - `Data provider`: the organization that publishes the metadata. For now this is only `SCB`.
 - `Data source / collector`: upstream operational systems or lower-level registries that feed a registry. These are real domain concepts, but they are only partially explicit in the delivery. They mostly appear in descriptive text such as `VariabelHämtadFrån` and `VariabelRegister_Källa`.
 - `Registry`: a conceptual collection of data organized for a use case or domain. Examples: `Utbildningsregistret (UREG)` and `LISA`.
@@ -11,6 +12,7 @@
 - `Change event`: a note about structural or semantic change over time. This is what `Timeseries` contributes.
 
 ## What The Input Files Represent
+
 | File | Role | Practical reading |
 | --- | --- | --- |
 | `Registerinformation.csv` | Backbone metadata fact table | The main source of truth. One row is roughly a variable occurrence inside a registry/variant/version/context. This file carries most IDs and is the basis for normalization. |
@@ -22,6 +24,7 @@
 | `ID-kolumner.xlsx` | Join-key documentation | Documents which columns are ID/join columns between export files and what they reference (12 rows). |
 
 ## Working Interpretation For `regmeta`
+
 - `Registerinformation.csv` drives the core normalized model.
 - A client-facing "table" is a derived concept, not something copied directly from one SCB ID.
 - The domain is a hierarchy/graph, not a flat relational schema. The storage backend (SQLite) is an implementation detail — the entities and relationships are what matter.
@@ -50,6 +53,7 @@
   - `source_join_key` (from `ID-kolumner.xlsx` — join-key semantics between export files, 12 rows)
 
 ## Why `Table` Needs Care
+
 - A registry is not the same thing as a table.
 - One registry can expose several table-like units.
 - One table-like unit can recur across years, months, or event streams.
@@ -57,6 +61,7 @@
 - The same `CVID` can show alias and context anomalies, so it should not be treated as a guaranteed one-column-per-table key without verification.
 
 ## LISA As Example
+
 - `LISA` is a high-level longitudinal integrated registry rather than a single flat table.
 - Conceptually, it combines information about population, education, employment, income, unemployment, and sickness/parental insurance so transitions over time can be studied.
 - It also shows that registries can be built from lower-level registries and administrative sources. In your examples, `LISA` can depend on registries such as `UREG` and `RTB`, and `UREG` can in turn use sources such as `HREG`.

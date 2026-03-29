@@ -9,7 +9,7 @@ source: "lisa-bakgrundsfakta-1990-2017"
 
 #### **Årtal för yrkesuppgift SsykAr**
 
-6sykAr
+SsykAr
 
 (2001–2016)
 
@@ -36,14 +36,14 @@ Uppgiften visar yrkeskodens aktualitet. Yrkesregistret skapas med hjälp av yrke
 | 2008           | 1,6                  | 1,4                 | 1,2                   |
 | 2009           | 2,7                  | 2,4                 | 2,3                   |
 
-|        | Anställda 16 år och  |      |                                |
-|--------|----------------------|------|--------------------------------|
-| SsykAr | Förvärvsarbetande, % |      | äldre, % Anställda 16-64 år, % |
-| 2010   | 4,4                  | 4,1  | 4,0                            |
-| 2011   | 4,8                  | 4,7  | 4,6                            |
-| 2012   | 8,4                  | 8,6  | 8,4                            |
-| 2013   | 65,0                 | 68,6 | 69,9                           |
-| 2014   | 1,9                  | 2,1  | 2,1                            |
+|        |                      | Anställda 16 år och |                       |
+|--------|----------------------|---------------------|-----------------------|
+| SsykAr | Förvärvsarbetande, % | äldre, %            | Anställda 16-64 år, % |
+| 2010   | 4,4                  | 4,1                 | 4,0                   |
+| 2011   | 4,8                  | 4,7                 | 4,6                   |
+| 2012   | 8,4                  | 8,6                 | 8,4                   |
+| 2013   | 65,0                 | 68,6                | 69,9                  |
+| 2014   | 1,9                  | 2,1                 | 2,1                   |
 
 #### **Aktualitet på yrkesuppgift 2016, SSYK 2012**
 

@@ -17,7 +17,7 @@ Registerbaserad arbetsmarknadsstatistik, RAMS, har mellan 1985 och 2021 redovisa
 
 [Skillnader mellan RAMS och BAS årsregister \(scb.se\)](https://www.scb.se/contentassets/592dcafe2a3b4e65b8e5434796bab0af/skillnader_mellan_rams_och_bas_arsregister.pdf)
 
-# **Huvudsaklig inkomstkälla och Arbetsrelaterad inkomstnivå i BAS ersätter RAKS**
+## **Huvudsaklig inkomstkälla och Arbetsrelaterad inkomstnivå i BAS ersätter RAKS**
 
 BAS beskriver befolkningen utifrån sex arbetsmarkandsstatusar (Sysselsatt, Arbetslös, Studerande, Pensionär, Sjuk och Övrig).
 
@@ -28,8 +28,6 @@ För att ytterligare nyansera beskrivningen av utbudet av arbetskraft redovisas 
 [Huvudsaklig inkomstkälla och Arbetsrelaterad inkomstnivå \(scb.se\)](https://www.scb.se/contentassets/592dcafe2a3b4e65b8e5434796bab0af/huvudsaklig-inkomstkalla-och-arbetsrelaterad-inkomstniva_x.pdf)
 
 Inkomstkälla, Huvudsaklig inkomstkälla samt Arbetsrelaterad inkomstnivå från BAS ersätter RAKS, Registerbaserad aktivitetsstatistik.
-
-![](_page_0_Picture_12.jpeg)
 
 | RAKS                 | Inkomstkälla BAS              |
 |----------------------|-------------------------------|
@@ -60,7 +58,7 @@ Inkomstkälla, Huvudsaklig inkomstkälla samt Arbetsrelaterad inkomstnivå från
 
 AndelInkKalla1 – 8 samt HuvInkKalla räknas fram med hänsyn tagen till skatt.
 
-#### **Huvudinkomstkälla RAKS (1993 – 2021)**
+### **Huvudinkomstkälla RAKS (1993 – 2021)**
 
 | RAKS_HuvInkKalla | Beskrivning                                        | Ingående uppgifter                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 |------------------|----------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
@@ -111,7 +109,7 @@ De uppgifter som ingår i Arbetsrelaterad inkomstnivå är markerade med asteris
 | 0              | Etablerad                                                                  | 4          | 3 IBB eller mer                    |
 | NULL           | 15--åringar,<br>Kombinatörer,<br>Företagare och<br>Personer utan<br>arbete |            |                                    |
 
-# **Sysselsättningsstatus och Befolkningens arbetsmarknadsstatus**
+## **Sysselsättningsstatus och Befolkningens arbetsmarknadsstatus**
 
 | SyssStat19 | Sysselsättningsstatus                                                                            |
 |------------|--------------------------------------------------------------------------------------------------|
@@ -132,7 +130,7 @@ De uppgifter som ingår i Arbetsrelaterad inkomstnivå är markerade med asteris
 | 8   | 8      | Barn 0 - 14 år                      |
 | 9   |        | Övrigt                              |
 
-#### **BTFranv**
+### **BTFranv**
 
 Anger om en individ räknas som **tillfälligt frånvarande** och därmed är sysselsatt med hjälp av pengar från Försäkringskassan, hjälpinformation till BAS/BASAlt.
 
@@ -144,7 +142,7 @@ Personen har fått status som sysselsatt efter hänsyn tagits till **utländsk b
 
 Ledamot i styrelse, har yrkesställning som företagare i eget AB men saknar löneinkomst. Personen kan ha fått status som sysselsatt efter hänsyn till styrelse.
 
-# **Yrkesställning**
+## **Yrkesställning**
 
 [[YrkStalln]] från RAMS finns för åren 1990 – 2021 och JobbYrk från BAS finns från år 2022.
 
@@ -162,7 +160,7 @@ Ledamot i styrelse, har yrkesställning som företagare i eget AB men saknar lö
 | 4       | Verksam egenföretagare                 |
 | 5       | Företagare i eget aktiebolag           |
 
-# **Yrkesställning, kombinationer**
+## **Yrkesställning, kombinationer**
 
 [[YrkStallnKomb]] från RAMS finns för åren 2003 – 2021 och BYrkStalln från BAS finns från år 2022.
 
@@ -198,13 +196,13 @@ Ledamot i styrelse, har yrkesställning som företagare i eget AB men saknar lö
 | 531        | Företagare i AB - kombinatör (egenföretagare och företagare<br>i AB)           |
 | 541        | Företagare i AB - kombinatör (anställd, egenföretagare och<br>företagare i AB) |
 
-# **Sektorstillhörighet**
+## **Sektorstillhörighet**
 
 [[SektorKod]] från RAMS finns för åren 2003 – 2021 och SektorGrp från BAS finns från år 2022.
 
 [[SektorKod]] härleds utifrån kombinationen av institutionell sektor, juridisk form och ägarform. SektorGrp är en aggregerad institutionell sektor.
 
-#### [Indelning av institutionella enheter \(scb.se\)](https://www.scb.se/dokumentation/klassifikationer-och-standarder/indelning-av-institutionella-standarder/)
+### [Indelning av institutionella enheter \(scb.se\)](https://www.scb.se/dokumentation/klassifikationer-och-standarder/indelning-av-institutionella-standarder/)
 
 | [[SektorKod]] | Företagets sektorstillhörighet            |
 |-----------|-------------------------------------------|
@@ -231,7 +229,7 @@ Ledamot i styrelse, har yrkesställning som företagare i eget AB men saknar lö
 
 ## **Inkomst av förvärvskälla**
 
-#### **Utländsk beskattad lön**
+### **Utländsk beskattad lön**
 
 Lön intjänat i annat nordiskt land finns i BAS. Från 2022 av LISA ingår den i flera inkomstvariabler som avser förvärvsarbete, se LISA:s variabellista.
 

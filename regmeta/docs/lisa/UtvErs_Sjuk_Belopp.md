@@ -39,7 +39,6 @@ Den *5/2 2001* införs nya regler för arbetslöshetsersättningen:
 
 *2010-07:* Nya regler gällande företagares ersättningsrätt; företagarbegreppet inom arbetslöshetsförsäkringen blir kopplat till inkomstskattelagen (1999:1229), vilket innebär att den verksamhet som bedrivs ska vara varaktig, självständig och drivas med vinstsyfte. Utökade möjligheter till tillfälligt uppehåll i näringsverksamhet. Dagsförtjänsten för företagare kommer att baseras på den inkomst från
 
-
 verksamheten som framgår av den senaste taxeringen. Om det är mer förmånligt för företagaren baseras istället dagsförtjänsten på den genomsnittliga inkomsten från verksamheten under de två år som föregår inkomståret i den senaste taxeringen. Företagare som lägger ner verksamheten inom 24 månader efter start kan få sin ersättning baserad på inkomster av tidigare anställning.
 
 *2010-12:* Den 1 december 2010 trädde lagen om etableringsinsatser för vissa nyanlända invandrare i kraft. Syftet med lagen är att staten genom Arbetsförmedlingen tar ett tydligare ansvar för vissa nyanlända invandrares arbetsmarknadsetablering. Lagen ska påskynda och underlätta etableringen i samhälls- och arbetslivet.
@@ -51,6 +50,5 @@ verksamheten som framgår av den senaste taxeringen. Om det är mer förmånligt
 Från och med månad då man fyller 65 år har man inte längre rätt till ersättning.
 
 Om man har ålders-/tjänstepension görs avdrag från arbetslöshetsersättningen.
-
 
 [^79]: I augusti 2000 infördes förändringar inom arbetsmarknadspolitiken som förstärkte kravet på att den arbetssökande aktivt måste söka arbete.

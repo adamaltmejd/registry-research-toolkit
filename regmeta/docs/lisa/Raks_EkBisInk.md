@@ -23,7 +23,6 @@ Det individualiserade ersättningen fås genom att summan av familjens (enligt R
 
 *Individernas (vuxen 1) individualiserade socialbidrag = 300 000 \* 1,00 / 2,45 = 122 449 kr Individernas (vuxen 2) individualiserade socialbidrag = 300 000 \* 0,51 / 2,45 = 62 449 kr*
 
-
 ---
 
 | 7                        | Ekonomiskt bistånd            | Raks_EkBisInk    |

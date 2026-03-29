@@ -61,9 +61,9 @@ Den *30/6 2001* upphör korttidsstudiestödet. Bidraget ersätts av Bidrag till 
 
 Det genomsnittliga studiestödet har varierat med mellan 2 000 kr och 6 000 kr.
 
-| Timersättning vid läs- och skrivsvårigheter | [[SarVux]] |
-|---------------------------------------------|--------|
-|---------------------------------------------|--------|
+| **Timersättning vid läs- och skrivsvårigheter** | **SarVux** |
+|----------------------------------------------------|---------------|
+|----------------------------------------------------|---------------|
 
 (1990–2001)
 
