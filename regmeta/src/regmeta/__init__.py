@@ -37,4 +37,4 @@ __all__ = [
     "search",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0a1"
