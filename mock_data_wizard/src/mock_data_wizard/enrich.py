@@ -146,9 +146,7 @@ def enrich(
             for file_stats in stats.files:
                 resolved = file_resolved.get(file_stats.file_name, {})
                 for col in file_stats.columns:
-                    rv = resolved.get(col.column_name.lower()) or resolved.get(
-                        strip_project_prefix(col.column_name).lower()
-                    )
+                    rv = _lookup_resolved(resolved, col.column_name)
                     if col.inferred_type == "categorical" and rv is not None:
                         cat_var_ids.add(rv.var_id)
             if cat_var_ids:
@@ -161,9 +159,7 @@ def enrich(
             enriched_cols = []
             for col in file_stats.columns:
                 ecol = _column_from_stats(col)
-                rv = resolved.get(ecol.column_name.lower()) or resolved.get(
-                    strip_project_prefix(ecol.column_name).lower()
-                )
+                rv = _lookup_resolved(resolved, ecol.column_name)
                 if rv is not None:
                     ecol.register_id = rv.register_id
                     ecol.var_id = rv.var_id
@@ -233,6 +229,15 @@ class _ResolvedVar:
     register_id: int
     var_id: int
     variable_name: str
+
+
+def _lookup_resolved(
+    resolved: dict[str, _ResolvedVar], col_name: str
+) -> _ResolvedVar | None:
+    """Look up a column by name, falling back to the prefix-stripped form."""
+    return resolved.get(col_name.lower()) or resolved.get(
+        strip_project_prefix(col_name).lower()
+    )
 
 
 def _bulk_resolve_all_registers(
