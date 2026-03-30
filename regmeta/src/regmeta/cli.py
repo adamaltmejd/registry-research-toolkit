@@ -143,6 +143,7 @@ def _write_formatted(
     output_path: str | None,
     *,
     fmt: str = "table",
+    fmt_explicit: bool = False,
     hints: list[str] | None = None,
 ) -> None:
     if not rows:
@@ -158,7 +159,7 @@ def _write_formatted(
         content = _render_list(rows, columns)
     else:
         table_content, table_width = _render_table(rows, columns)
-        if table_width > _terminal_width(output_path):
+        if not fmt_explicit and table_width > _terminal_width(output_path):
             _hint_add(
                 hints, "Table too wide, using list layout (--format table to force)"
             )
@@ -1207,6 +1208,7 @@ def _write_payload(
     output_path: str | None,
     *,
     fmt: str = "table",
+    fmt_explicit: bool = False,
     args: argparse.Namespace | None = None,
     hints: list[str] | None = None,
 ) -> None:
@@ -1240,7 +1242,9 @@ def _write_payload(
             cols = ["variable_name", "display_name"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
-        _write_formatted(results, cols, output_path, fmt=fmt, hints=hints)
+        _write_formatted(
+            results, cols, output_path, fmt=fmt, fmt_explicit=fmt_explicit, hints=hints
+        )
     elif key == ("get", "register"):
         regs = data.get("registers", [data]) if "registers" in data else [data]
         rows = []
@@ -1259,6 +1263,7 @@ def _write_payload(
             ["register_id", "register_name", "regvar_id", "variant_name"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("get", "schema"):
@@ -1292,6 +1297,7 @@ def _write_payload(
                 ["regvar_id", "variant", "years", "versions", "columns"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
         elif schema_flat:
@@ -1317,6 +1323,7 @@ def _write_payload(
                 ["regvar_id", "year", "alias", "variabelnamn", "var_id"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
         else:
@@ -1339,6 +1346,7 @@ def _write_payload(
                 ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
     elif key == ("get", "varinfo"):
@@ -1372,6 +1380,7 @@ def _write_payload(
             ],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("get", "values"):
@@ -1380,6 +1389,7 @@ def _write_payload(
             ["vardekod", "vardebenamning"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("get", "datacolumns"):
@@ -1388,6 +1398,7 @@ def _write_payload(
             ["kolumnnamn", "register_id", "register_name", "version_name"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("get", "coded-variables"):
@@ -1396,6 +1407,7 @@ def _write_payload(
             ["variable_name", "n_distinct_codes", "n_registers", "n_instances"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("get", "diff"):
@@ -1450,6 +1462,7 @@ def _write_payload(
             ["variant", "change", "var_id", "variabelnamn", "detail"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
         unchanged = data.get("unchanged", [])
@@ -1478,6 +1491,7 @@ def _write_payload(
             ["register", "var_id", "role", "instances", "years", "source"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
         cov = data.get("provenance_coverage", {})
@@ -1508,6 +1522,7 @@ def _write_payload(
                 ["register", "var_id", "years", "gaps"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
         else:
@@ -1528,6 +1543,7 @@ def _write_payload(
                 ["regvar_id", "variant_name", "years", "version_count"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
         all_gaps = data.get("gaps", [])
@@ -1562,6 +1578,7 @@ def _write_payload(
             ["column", "status", "register_id", "var_id", "variable_name"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("docs", "search"):
@@ -1583,6 +1600,7 @@ def _write_payload(
             ["variable", "display_name", "file", "snippet"],
             output_path,
             fmt=fmt,
+            fmt_explicit=fmt_explicit,
             hints=hints,
         )
     elif key == ("docs", "get"):
@@ -1613,6 +1631,7 @@ def _write_payload(
                 ["filename", "display_name", "variable"],
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 hints=hints,
             )
         else:
@@ -1761,6 +1780,7 @@ def run(argv: list[str] | None = None) -> int:
         return EXIT_USAGE
 
     fmt = getattr(args, "format", "table")
+    fmt_explicit = "--format" in effective
     verbose = getattr(args, "verbose", False)
     output_path = getattr(args, "output", None)
     quiet = getattr(args, "quiet", False) or os.environ.get("REGMETA_QUIET") == "1"
@@ -1781,6 +1801,7 @@ def run(argv: list[str] | None = None) -> int:
                 payload,
                 output_path,
                 fmt=fmt,
+                fmt_explicit=fmt_explicit,
                 args=args,
                 hints=hints if not quiet else None,
             )
