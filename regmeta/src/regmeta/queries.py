@@ -56,7 +56,7 @@ def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
     return [r["register_id"] for r in rows]
 
 
-def require_register_ids(conn: sqlite3.Connection, value: str) -> list[str]:
+def require_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
     """Like resolve_register_ids but raises NOT_FOUND if empty."""
     ids = resolve_register_ids(conn, value)
     if not ids:
