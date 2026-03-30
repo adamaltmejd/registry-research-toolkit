@@ -8,7 +8,7 @@ For the domain model, see [STRUCTURE.md](STRUCTURE.md).
 The primary consumers are LLM agent skills and `mock_data_wizard`.
 Human terminal use is supported but secondary. This drives several choices:
 
-- JSON is the default output format (with table/list for terminal convenience)
+- Three output formats: table (default), list, and JSON for machine consumption
 - All output follows a stable envelope contract (version, timing, request echo)
 - Errors are structured with codes, not just messages
 - Exit codes are meaningful (see below)
