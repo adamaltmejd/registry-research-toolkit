@@ -91,7 +91,7 @@ database from ~13 GB to ~1.6 GB.
 
 Register documentation (parsed from SCB PDFs) is stored as Obsidian-compatible
 markdown files with YAML frontmatter, indexed into a separate FTS5 database
-(`docs.db`). This has a separate lifecycle from the metadata DB — `build-db`
+(`regmeta_docs.db`). This has a separate lifecycle from the metadata DB — `build-db`
 does not touch it, `maintain build-docs` rebuilds it independently. Docs are
 keyed to register and variable names, not database IDs, to allow independent
 updates.
@@ -107,7 +107,7 @@ See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 | 10   | Configuration error (missing DB, bad encoding) |
 | 16   | Not found |
 | 17   | No match with `--require-match` |
-| 20   | Output write/serialization error |
+| 25   | Network error (`maintain download`) |
 | 30   | Unexpected internal error |
 
 ## Determinism
