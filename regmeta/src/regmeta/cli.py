@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -65,6 +66,18 @@ def _success_envelope(
 
 
 _MAX_DISPLAY_ROWS = 100
+_MAX_HINTS = 3
+
+
+def _hint_add(hints: list[str] | None, msg: str) -> None:
+    if hints is not None and len(hints) < _MAX_HINTS:
+        hints.append(msg)
+
+
+def _emit_hints(hints: list[str]) -> None:
+    sys.stderr.write("\n")
+    for h in hints:
+        sys.stderr.write(f"  hint: {h}\n")
 
 
 def _write_to(content: str, output_path: str | None, *, truncate: bool = False) -> None:
@@ -130,6 +143,7 @@ def _write_formatted(
     output_path: str | None,
     *,
     fmt: str = "table",
+    hints: list[str] | None = None,
 ) -> None:
     if not rows:
         _write_to("(no results)\n", output_path)
@@ -145,12 +159,18 @@ def _write_formatted(
     else:
         table_content, table_width = _render_table(rows, columns)
         if table_width > _terminal_width(output_path):
+            _hint_add(
+                hints, "Table too wide, using list layout (--format table to force)"
+            )
             content = _render_list(rows, columns)
         else:
             content = table_content
 
     if truncated:
-        content += f"\n({truncated} more rows — use --format json for full output)\n"
+        _hint_add(
+            hints,
+            f"Table view truncated {truncated} rows (--format json for full output)",
+        )
 
     _write_to(content, output_path)
 
@@ -213,6 +233,13 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False,
         help="Include envelope metadata (contract version, timing, db info).",
+    )
+    parser.add_argument(
+        "-q",
+        "--quiet",
+        action="store_true",
+        default=False,
+        help="Suppress contextual hints on stderr.",
     )
 
     sub = parser.add_subparsers(dest="command")
@@ -502,11 +529,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     doc_search_p.add_argument("query", help="Search query.")
     doc_search_p.add_argument(
-        "--type", default=None, dest="doc_type",
+        "--type",
+        default=None,
+        dest="doc_type",
         help="Filter by type tag (variable, methodology, appendix, changelog, overview).",
     )
     doc_search_p.add_argument(
-        "--topic", default=None,
+        "--topic",
+        default=None,
         help="Filter by topic tag (income, employment, demographic, etc.).",
     )
     doc_search_p.add_argument(
@@ -526,11 +556,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "identifier", help="Variable name or doc filename (e.g. SyssStat, _overview)."
     )
 
-    doc_list_p = doc_sub.add_parser(
-        "list", help="Browse available documentation."
-    )
+    doc_list_p = doc_sub.add_parser("list", help="Browse available documentation.")
     doc_list_p.add_argument(
-        "--type", default=None, dest="doc_type",
+        "--type",
+        default=None,
+        dest="doc_type",
         help="Filter by type tag.",
     )
     doc_list_p.add_argument("--topic", default=None, help="Filter by topic tag.")
@@ -617,6 +647,7 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .doc_db import build_doc_db, bundled_docs_dir
+
     if args.docs_dir:
         docs_dir = Path(args.docs_dir).resolve()
     else:
@@ -761,15 +792,17 @@ def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
             var = r.get("variable") or ""
             if var.lower() == query.lower():
                 rank = -100.0
-            results.append({
-                "type": "doc",
-                "register_id": "",
-                "register_name": r.get("register", ""),
-                "var_id": "",
-                "variable_name": var or r["filename"],
-                "display_name": r["display_name"],
-                "fts_rank": rank,
-            })
+            results.append(
+                {
+                    "type": "doc",
+                    "register_id": "",
+                    "register_name": r.get("register", ""),
+                    "var_id": "",
+                    "variable_name": var or r["filename"],
+                    "display_name": r["display_name"],
+                    "fts_rank": rank,
+                }
+            )
         return results
     finally:
         conn.close()
@@ -906,7 +939,6 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             if has_doc:
                 if isinstance(data, dict) and "variables" not in data:
                     data["doc_available"] = True
-                    data["doc_hint"] = f"regmeta docs get {args.variable}"
                 elif isinstance(data, dict) and "variables" in data:
                     for v in data["variables"]:
                         v["doc_available"] = True
@@ -1155,6 +1187,7 @@ def _write_payload(
     *,
     fmt: str = "table",
     args: argparse.Namespace | None = None,
+    hints: list[str] | None = None,
 ) -> None:
     # Truncate output file so multi-section commands (diff, lineage) append correctly
     _write_to("", output_path, truncate=True)
@@ -1186,9 +1219,7 @@ def _write_payload(
             cols = ["variable_name", "display_name"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
-        _write_formatted(results, cols, output_path, fmt=fmt)
-        if data.get("doc_hint"):
-            _write_to(f"\n  {data['doc_hint']}\n", output_path)
+        _write_formatted(results, cols, output_path, fmt=fmt, hints=hints)
     elif key == ("get", "register"):
         regs = data.get("registers", [data]) if "registers" in data else [data]
         rows = []
@@ -1207,6 +1238,7 @@ def _write_payload(
             ["register_id", "register_name", "regvar_id", "variant_name"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("get", "schema"):
         schema_summary = getattr(args, "summary", False) if args else False
@@ -1239,6 +1271,7 @@ def _write_payload(
                 ["regvar_id", "variant", "years", "versions", "columns"],
                 output_path,
                 fmt=fmt,
+                hints=hints,
             )
         elif schema_flat:
             rows = []
@@ -1263,6 +1296,7 @@ def _write_payload(
                 ["regvar_id", "year", "alias", "variabelnamn", "var_id"],
                 output_path,
                 fmt=fmt,
+                hints=hints,
             )
         else:
             rows = []
@@ -1284,6 +1318,7 @@ def _write_payload(
                 ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
                 output_path,
                 fmt=fmt,
+                hints=hints,
             )
     elif key == ("get", "varinfo"):
         variables = data.get("variables", [data]) if "variables" in data else [data]
@@ -1316,6 +1351,7 @@ def _write_payload(
             ],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("get", "values"):
         _write_formatted(
@@ -1323,6 +1359,7 @@ def _write_payload(
             ["vardekod", "vardebenamning"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("get", "datacolumns"):
         _write_formatted(
@@ -1330,6 +1367,7 @@ def _write_payload(
             ["kolumnnamn", "register_id", "register_name", "version_name"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("get", "coded-variables"):
         _write_formatted(
@@ -1337,6 +1375,7 @@ def _write_payload(
             ["variable_name", "n_distinct_codes", "n_registers", "n_instances"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("get", "diff"):
         rows = []
@@ -1390,6 +1429,7 @@ def _write_payload(
             ["variant", "change", "var_id", "variabelnamn", "detail"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
         unchanged = data.get("unchanged", [])
         if unchanged:
@@ -1417,6 +1457,7 @@ def _write_payload(
             ["register", "var_id", "role", "instances", "years", "source"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
         cov = data.get("provenance_coverage", {})
         if cov.get("total"):
@@ -1442,7 +1483,11 @@ def _write_payload(
                     }
                 )
             _write_formatted(
-                rows, ["register", "var_id", "years", "gaps"], output_path, fmt=fmt
+                rows,
+                ["register", "var_id", "years", "gaps"],
+                output_path,
+                fmt=fmt,
+                hints=hints,
             )
         else:
             rows = []
@@ -1462,6 +1507,7 @@ def _write_payload(
                 ["regvar_id", "variant_name", "years", "version_count"],
                 output_path,
                 fmt=fmt,
+                hints=hints,
             )
         all_gaps = data.get("gaps", [])
         if all_gaps:
@@ -1495,6 +1541,7 @@ def _write_payload(
             ["column", "status", "register_id", "var_id", "variable_name"],
             output_path,
             fmt=fmt,
+            hints=hints,
         )
     elif key == ("docs", "search"):
         results = data.get("results", [])
@@ -1503,12 +1550,20 @@ def _write_payload(
             {
                 "variable": r.get("variable") or r["filename"],
                 "display_name": r["display_name"],
-                "file": f"{docs_dir}/{r.get('register', '')}/{r['filename']}" if docs_dir else r["filename"],
+                "file": f"{docs_dir}/{r.get('register', '')}/{r['filename']}"
+                if docs_dir
+                else r["filename"],
                 "snippet": (r.get("snippet") or "")[:80],
             }
             for r in results
         ]
-        _write_formatted(rows, ["variable", "display_name", "file", "snippet"], output_path, fmt=fmt)
+        _write_formatted(
+            rows,
+            ["variable", "display_name", "file", "snippet"],
+            output_path,
+            fmt=fmt,
+            hints=hints,
+        )
     elif key == ("docs", "get"):
         header = []
         if data.get("variable"):
@@ -1532,7 +1587,13 @@ def _write_payload(
                 }
                 for r in data["results"]
             ]
-            _write_formatted(rows, ["filename", "display_name", "variable"], output_path, fmt=fmt)
+            _write_formatted(
+                rows,
+                ["filename", "display_name", "variable"],
+                output_path,
+                fmt=fmt,
+                hints=hints,
+            )
         else:
             lines = [f"  docs: {data.get('docs_dir', 'unknown')}"]
             lines.append(f"  total: {data.get('total_count', 0)}")
@@ -1553,6 +1614,62 @@ def _write_payload(
         _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
     else:
         _write_json(payload, output_path)
+
+
+# ---------------------------------------------------------------------------
+# Hints
+# ---------------------------------------------------------------------------
+
+
+def _collect_hints(
+    key: tuple[str, str | None],
+    data: dict[str, Any],
+    args: argparse.Namespace,
+    hints: list[str],
+) -> None:
+    """Populate command-specific contextual hints."""
+    if key == ("search", None):
+        if getattr(args, "field", "all") == "all":
+            _hint_add(hints, "Searching all fields (--field to narrow)")
+        total = data.get("total_count", 0)
+        results = data.get("results", [])
+        if total > len(results):
+            _hint_add(
+                hints,
+                f"Showing {len(results)} of {total} matches (--limit/--offset to page)",
+            )
+        doc_hint = data.pop("doc_hint", None)
+        if doc_hint:
+            _hint_add(hints, doc_hint)
+        if total == 0 and not results:
+            _hint_add(hints, "No results (try broader --field or regmeta docs search)")
+
+    elif key == ("get", "schema"):
+        if not getattr(args, "summary", False) and not getattr(args, "flat", False):
+            _hint_add(
+                hints, "Full schema view (--summary for overview, --flat for export)"
+            )
+
+    elif key == ("get", "varinfo"):
+        variables = data.get("variables", [data]) if "variables" in data else [data]
+        if len(variables) > 1:
+            _hint_add(
+                hints, f"Found in {len(variables)} registers (--register to narrow)"
+            )
+        if any(v.get("doc_available") for v in variables):
+            _hint_add(
+                hints,
+                f"Docs available (run: regmeta docs get {getattr(args, 'variable', '')})",
+            )
+
+    elif key == ("get", "values"):
+        if not getattr(args, "valid_at", None) and data:
+            values = data if isinstance(data, list) else []
+            if values:
+                _hint_add(
+                    hints,
+                    "Some values have date ranges (--valid-at YYYY-MM-DD to filter)",
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -1619,16 +1736,30 @@ def run(argv: list[str] | None = None) -> int:
     fmt = getattr(args, "format", "table")
     verbose = getattr(args, "verbose", False)
     output_path = getattr(args, "output", None)
+    quiet = getattr(args, "quiet", False) or os.environ.get("REGMETA_QUIET") == "1"
+    hints: list[str] = []
 
     try:
         payload, exit_code = handler(args)
+        if not quiet:
+            _collect_hints(key, payload.get("data", {}), args, hints)
         if fmt == "json":
             if verbose:
                 _write_json(payload, output_path)
             else:
                 _write_json(payload.get("data", payload), output_path)
         else:
-            _write_payload(key, payload, output_path, fmt=fmt, args=args)
+            _write_payload(
+                key,
+                payload,
+                output_path,
+                fmt=fmt,
+                args=args,
+                hints=hints if not quiet else None,
+            )
+        if hints and not quiet:
+            sys.stdout.flush()
+            _emit_hints(hints)
         return exit_code
     except RegmetaError as exc:
         _write_json({"error": exc.to_dict()}, getattr(args, "output", None))

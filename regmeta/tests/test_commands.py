@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import sys
 
 
 from regmeta.cli import run
@@ -995,24 +996,22 @@ class TestOutputFormats:
         assert "register_id" in output
 
     def test_row_truncation(self, db_path: str):
-        """Results exceeding _MAX_DISPLAY_ROWS should be truncated with a footer."""
+        """Results exceeding _MAX_DISPLAY_ROWS should emit truncation hint on stderr."""
+        import io
         import regmeta.cli
 
         old_max = regmeta.cli._MAX_DISPLAY_ROWS
         try:
             regmeta.cli._MAX_DISPLAY_ROWS = 1
-            import io
-
-            old_stdout = __import__("sys").stdout
-            __import__("sys").stdout = buf = io.StringIO()
+            old_stdout, old_stderr = sys.stdout, sys.stderr
+            sys.stdout = io.StringIO()
+            sys.stderr = err_buf = io.StringIO()
             try:
                 code = run(["--db", db_path, "get", "schema", "--register", "TESTREG"])
             finally:
-                __import__("sys").stdout = old_stdout
-            output = buf.getvalue()
+                sys.stdout, sys.stderr = old_stdout, old_stderr
             assert code == 0
-            assert "--format json" in output
-            assert "more rows" in output
+            assert "truncated" in err_buf.getvalue()
         finally:
             regmeta.cli._MAX_DISPLAY_ROWS = old_max
 

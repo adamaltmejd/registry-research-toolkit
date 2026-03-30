@@ -172,7 +172,15 @@ class TestDocSearch:
 
     def test_search_filter_by_type(self, doc_db_path: str):
         data, code = _run_json(
-            ["--db", doc_db_path, "docs", "search", "testregister", "--type", "overview"]
+            [
+                "--db",
+                doc_db_path,
+                "docs",
+                "search",
+                "testregister",
+                "--type",
+                "overview",
+            ]
         )
         assert code == 0
         for r in data["results"]:
@@ -180,7 +188,15 @@ class TestDocSearch:
 
     def test_search_filter_by_topic(self, doc_db_path: str):
         data, code = _run_json(
-            ["--db", doc_db_path, "docs", "search", "sjukpenning", "--topic", "social-insurance"]
+            [
+                "--db",
+                doc_db_path,
+                "docs",
+                "search",
+                "sjukpenning",
+                "--topic",
+                "social-insurance",
+            ]
         )
         assert code == 0
         for r in data["results"]:
@@ -318,7 +334,14 @@ class TestBuildDocs:
         db_dir.mkdir()
 
         text, code = _run_text(
-            ["--db", str(db_dir), "maintain", "build-docs", "--docs-dir", str(tmp_path / "docs")]
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "build-docs",
+                "--docs-dir",
+                str(tmp_path / "docs"),
+            ]
         )
         assert code == 0
         assert (db_dir / "regmeta_docs.db").exists()
@@ -330,9 +353,7 @@ class TestBuildDocs:
 
 
 @pytest.fixture(scope="session")
-def combined_db_dir(
-    tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path
-) -> str:
+def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) -> str:
     """Create a DB dir with both regmeta.db and regmeta_docs.db."""
     import shutil
 
@@ -373,7 +394,9 @@ class TestSearchIntegration:
         assert "doc" in types, "Doc results should appear in default search"
 
     def test_search_doc_hint_when_truncated(self, combined_db_dir: str):
-        """When doc results exist but are cut off by limit, a hint should appear."""
+        """When doc results exist but are cut off by limit, a hint should appear on stderr."""
+        import io
+
         # First verify docs exist for this query
         docs_data, _ = _run_json(
             ["--db", combined_db_dir, "docs", "search", "kommun"],
@@ -383,15 +406,28 @@ class TestSearchIntegration:
             pytest.skip("No doc results for test query")
 
         # Search with limit=0 so all doc results are truncated
-        data, code = _run_json(
-            ["--db", combined_db_dir, "search", "--query", "kommun", "--limit", "0"],
-            verbose=True,
-        )
+        old_stdout, old_stderr = sys.stdout, sys.stderr
+        sys.stdout = io.StringIO()
+        sys.stderr = err_buf = io.StringIO()
+        try:
+            code = run(
+                [
+                    "--format",
+                    "json",
+                    "--verbose",
+                    "--db",
+                    combined_db_dir,
+                    "search",
+                    "--query",
+                    "kommun",
+                    "--limit",
+                    "0",
+                ],
+            )
+        finally:
+            sys.stdout, sys.stderr = old_stdout, old_stderr
         assert code == 0
-        assert "doc_hint" in data["data"], (
-            f"Expected doc_hint when {doc_count} doc results are truncated"
-        )
-        assert "not shown" in data["data"]["doc_hint"]
+        assert "not shown" in err_buf.getvalue()
 
     def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
         """Exact variable name match in docs should rank near the top."""
