@@ -203,6 +203,27 @@ class _NoRepeatParser(argparse.ArgumentParser):
         return super().parse_known_args(args, namespace)
 
 
+_GLOBAL_FLAGS = {"--db", "--format", "--output", "-v", "--verbose", "-q", "--quiet"}
+_GLOBAL_FLAGS_WITH_VALUE = {"--db", "--format", "--output"}
+
+
+def _reorder_global_flags(argv: list[str]) -> list[str]:
+    """Move global flags before the subcommand so argparse handles them."""
+    front: list[str] = []
+    rest: list[str] = []
+    i = 0
+    while i < len(argv):
+        if argv[i] in _GLOBAL_FLAGS:
+            front.append(argv[i])
+            if argv[i] in _GLOBAL_FLAGS_WITH_VALUE and i + 1 < len(argv):
+                i += 1
+                front.append(argv[i])
+        else:
+            rest.append(argv[i])
+        i += 1
+    return front + rest
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = _NoRepeatParser(
         prog="regmeta",
@@ -1652,10 +1673,15 @@ def _collect_hints(
 
     elif key == ("get", "varinfo"):
         variables = data.get("variables", [data]) if "variables" in data else [data]
-        if len(variables) > 1:
+        n_regs = len({v.get("register_id") for v in variables})
+        n_vars = len({v.get("var_id") for v in variables})
+        if n_vars > 1:
             _hint_add(
-                hints, f"Found in {len(variables)} registers (--register to narrow)"
+                hints,
+                f"Alias maps to {n_vars} variable definitions across {n_regs} register(s) (--register to narrow)",
             )
+        elif n_regs > 1:
+            _hint_add(hints, f"Found in {n_regs} registers (--register to narrow)")
         if any(v.get("doc_available") for v in variables):
             _hint_add(
                 hints,
@@ -1702,7 +1728,8 @@ COMMAND_DISPATCH = {
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     try:
-        args = parser.parse_args(argv)
+        effective = argv if argv is not None else sys.argv[1:]
+        args = parser.parse_args(_reorder_global_flags(effective))
     except SystemExit as exc:
         return exc.code if isinstance(exc.code, int) else EXIT_USAGE
 

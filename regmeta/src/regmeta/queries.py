@@ -629,6 +629,29 @@ def get_varinfo(
 
     matched_vars = vars_by_id if vars_by_id else vars_by_name
 
+    # Fall back to alias (column name) lookup
+    if not matched_vars:
+        if reg_ids:
+            ph = _in_placeholders(reg_ids)
+            alias_vars = conn.execute(
+                f"SELECT DISTINCT v.*, r.registernamn FROM variable_alias a "
+                f"JOIN variable_instance vi ON a.cvid = vi.cvid "
+                f"JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+                f"JOIN register r ON v.register_id = r.register_id "
+                f"WHERE LOWER(a.kolumnnamn) = LOWER(?) AND v.register_id IN ({ph})",
+                [variable, *reg_ids],
+            ).fetchall()
+        else:
+            alias_vars = conn.execute(
+                "SELECT DISTINCT v.*, r.registernamn FROM variable_alias a "
+                "JOIN variable_instance vi ON a.cvid = vi.cvid "
+                "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+                "JOIN register r ON v.register_id = r.register_id "
+                "WHERE LOWER(a.kolumnnamn) = LOWER(?)",
+                (variable,),
+            ).fetchall()
+        matched_vars = alias_vars
+
     if not matched_vars:
         raise RegmetaError(
             exit_code=EXIT_NOT_FOUND,
