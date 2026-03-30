@@ -117,7 +117,9 @@ def enrich(
                 global_resolved = _bulk_resolve(conn, all_col_names, reg_ids or None)
                 for file_stats in stats.files:
                     file_resolved[file_stats.file_name] = global_resolved
-                    file_register[file_stats.file_name] = reg_ids[0] if reg_ids else None
+                    file_register[file_stats.file_name] = (
+                        reg_ids[0] if reg_ids else None
+                    )
             else:
                 # Two-pass: vote on register per file, then resolve within it
                 col_to_registers = _bulk_resolve_all_registers(conn, all_col_names)
@@ -126,7 +128,9 @@ def enrich(
                 register_to_files: dict[int | None, list[str]] = {}
                 for file_stats in stats.files:
                     col_names = [c.column_name for c in file_stats.columns]
-                    voted = _vote_register(col_names, col_to_registers, file_stats.file_name)
+                    voted = _vote_register(
+                        col_names, col_to_registers, file_stats.file_name
+                    )
                     file_register[file_stats.file_name] = voted
                     register_to_files.setdefault(voted, []).append(file_stats.file_name)
 
@@ -265,11 +269,12 @@ def _bulk_resolve_all_registers(
 
 # Standard SCB delivery tables whose filenames reliably indicate the register.
 # Used as fallback when the column-based vote is inconclusive.
+# Extend this when new delivery tables with predictable naming are encountered.
 _SCB_TABLE_REGISTER: dict[str, int] = {
-    "fodelseuppg": 2,       # RTB
-    "immigranter": 2,       # RTB
-    "population": 2,        # RTB (Population_PersonNr_*)
-    "flergen": 349,         # Flergenerationsregistret
+    "fodelseuppg": 2,  # RTB
+    "immigranter": 2,  # RTB
+    "population": 2,  # RTB (Population_PersonNr_*)
+    "flergen": 349,  # Flergenerationsregistret
 }
 
 
@@ -310,7 +315,9 @@ def _vote_register(
     winner_id, winner_score = top[0]
     if len(top) > 1:
         _, runner_up_score = top[1]
-        # Require either a clear lead or at least 3 weighted votes
+        # Accept the winner only if it has a 20% lead OR enough evidence (≥3
+        # weighted votes, roughly 3+ register-specific columns).  Without this,
+        # files with only generic columns (Kommun, Kön) produce near-ties.
         if winner_score < runner_up_score * 1.2 and winner_score < 3:
             return _filename_register_fallback(file_name)
     return winner_id

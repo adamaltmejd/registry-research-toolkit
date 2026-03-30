@@ -162,6 +162,27 @@ def _render_list(rows: list[dict[str, Any]], columns: list[str]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def format_rows(
+    rows: list[dict[str, Any]],
+    columns: list[str],
+    *,
+    max_width: int | None = None,
+) -> str:
+    """Render rows as a table or list string.
+
+    Auto-selects list format for ≤5 rows. Truncates wide columns to fit
+    max_width when given. Importable by other packages (e.g. mock-data-wizard).
+    """
+    if not rows:
+        return "(no results)\n"
+    if len(rows) <= 5:
+        return _render_list(rows, columns)
+    content, width = _render_table(rows, columns)
+    if max_width and width > max_width:
+        content, _ = _render_table(rows, columns, max_width=max_width)
+    return content
+
+
 def _write_formatted(
     rows: list[dict[str, Any]],
     columns: list[str],
@@ -237,18 +258,26 @@ _GLOBAL_FLAGS_WITH_VALUE = {"--db", "--format", "--output"}
 
 
 def _reorder_global_flags(argv: list[str]) -> list[str]:
-    """Move global flags before the subcommand so argparse handles them."""
+    """Move global flags before the subcommand so argparse handles them.
+
+    Handles both ``--flag value`` and ``--flag=value`` syntax.
+    """
     front: list[str] = []
     rest: list[str] = []
     i = 0
     while i < len(argv):
-        if argv[i] in _GLOBAL_FLAGS:
-            front.append(argv[i])
-            if argv[i] in _GLOBAL_FLAGS_WITH_VALUE and i + 1 < len(argv):
+        token = argv[i]
+        # Handle --flag=value for global flags
+        eq_name = token.split("=", 1)[0] if "=" in token else None
+        if token in _GLOBAL_FLAGS:
+            front.append(token)
+            if token in _GLOBAL_FLAGS_WITH_VALUE and i + 1 < len(argv):
                 i += 1
                 front.append(argv[i])
+        elif eq_name in _GLOBAL_FLAGS_WITH_VALUE:
+            front.append(token)
         else:
-            rest.append(argv[i])
+            rest.append(token)
         i += 1
     return front + rest
 
@@ -1808,7 +1837,7 @@ def run(argv: list[str] | None = None) -> int:
         return EXIT_USAGE
 
     fmt = getattr(args, "format", "table")
-    fmt_explicit = "--format" in effective
+    fmt_explicit = any(a == "--format" or a.startswith("--format=") for a in effective)
     verbose = getattr(args, "verbose", False)
     output_path = getattr(args, "output", None)
     quiet = getattr(args, "quiet", False) or os.environ.get("REGMETA_QUIET") == "1"

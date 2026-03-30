@@ -187,7 +187,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
 
     elif args.columns:
         if not args.register:
-            print("Error: --register is required when using --columns.", file=sys.stderr)
+            print(
+                "Error: --register is required when using --columns.", file=sys.stderr
+            )
             return 1
         cols = [c.strip() for c in args.columns.split(",") if c.strip()]
         columns_by_file["(columns)"] = cols
@@ -200,7 +202,7 @@ def _cmd_compare(args: argparse.Namespace) -> int:
         )
         return 1
 
-    db = db_path_from_args(args.db if hasattr(args, "db") else None)
+    db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
         if args.register:
@@ -236,6 +238,12 @@ def _cmd_compare(args: argparse.Namespace) -> int:
 
 
 def _print_compare_table(data: dict) -> None:
+    import shutil
+
+    from regmeta.cli import format_rows
+
+    term_w = shutil.get_terminal_size().columns
+
     for f in data.get("files", []):
         status = f.get("register_status", "")
         reg_name = f.get("register_name") or "?"
@@ -256,17 +264,46 @@ def _print_compare_table(data: dict) -> None:
             f"missing_from_registry: {s.get('missing_from_registry', 0)}"
         )
 
+        rows = []
         for m in f.get("matched", []):
-            print(f"    {m['column']:30s}  matched    var_id={m.get('var_id', '')}  {m.get('variable_name', '')}")
+            rows.append(
+                {
+                    "column": m["column"],
+                    "status": "matched",
+                    "var_id": str(m.get("var_id", "")),
+                    "variable_name": m.get("variable_name", ""),
+                }
+            )
         for col in f.get("extra_local", []):
-            print(f"    {col:30s}  extra_local")
+            rows.append(
+                {
+                    "column": col,
+                    "status": "extra_local",
+                    "var_id": "",
+                    "variable_name": "",
+                }
+            )
+        if rows:
+            cols = ["column", "status", "var_id", "variable_name"]
+            print(format_rows(rows, cols, max_width=term_w), end="")
 
         missing = f.get("missing_from_registry", [])
         if missing:
             print("\n  Missing from local:")
-            for m in missing:
-                aliases = ", ".join(m.get("aliases", []))
-                print(f"    var_id={m['var_id']}  {m['variable_name']}  ({aliases})")
+            miss_rows = [
+                {
+                    "var_id": str(m["var_id"]),
+                    "variable_name": m["variable_name"],
+                    "aliases": ", ".join(m.get("aliases", [])),
+                }
+                for m in missing
+            ]
+            print(
+                format_rows(
+                    miss_rows, ["var_id", "variable_name", "aliases"], max_width=term_w
+                ),
+                end="",
+            )
         print()
 
 
