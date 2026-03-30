@@ -108,7 +108,12 @@ def _terminal_width(output_path: str | None) -> int:
     return shutil.get_terminal_size().columns
 
 
-def _render_table(rows: list[dict[str, Any]], columns: list[str]) -> tuple[str, int]:
+def _render_table(
+    rows: list[dict[str, Any]],
+    columns: list[str],
+    *,
+    max_width: int | None = None,
+) -> tuple[str, int]:
     widths = {c: len(c) for c in columns}
     str_rows = []
     for row in rows:
@@ -117,7 +122,27 @@ def _render_table(rows: list[dict[str, Any]], columns: list[str]) -> tuple[str, 
             widths[c] = max(widths[c], len(str_row[c]))
         str_rows.append(str_row)
 
-    table_width = sum(widths.values()) + 2 * (len(columns) - 1)
+    separators = 2 * (len(columns) - 1)
+    table_width = sum(widths.values()) + separators
+
+    # Shrink widest columns to fit terminal when max_width is set
+    if max_width and table_width > max_width:
+        budget = max_width - separators
+        min_col = max(8, max(len(c) for c in columns))
+        while sum(widths.values()) > budget:
+            widest = max(columns, key=lambda c: widths[c])
+            if widths[widest] <= min_col:
+                break
+            widths[widest] = max(
+                min_col, budget - sum(w for c, w in widths.items() if c != widest)
+            )
+        table_width = sum(widths.values()) + separators
+        # Truncate cell values that exceed their column width
+        for sr in str_rows:
+            for c in columns:
+                if len(sr[c]) > widths[c]:
+                    sr[c] = sr[c][: widths[c] - 1] + "…"
+
     header = "  ".join(c.ljust(widths[c]) for c in columns)
     sep = "  ".join("-" * widths[c] for c in columns)
     lines = [header, sep]
@@ -157,13 +182,16 @@ def _write_formatted(
 
     if fmt == "list":
         content = _render_list(rows, columns)
+    elif not fmt_explicit and len(rows) <= 5:
+        # Few results — list is more readable
+        content = _render_list(rows, columns)
     else:
+        term_w = _terminal_width(output_path)
         table_content, table_width = _render_table(rows, columns)
-        if not fmt_explicit and table_width > _terminal_width(output_path):
-            _hint_add(
-                hints, "Table too wide, using list layout (--format table to force)"
-            )
-            content = _render_list(rows, columns)
+        if table_width > term_w:
+            table_content, _ = _render_table(rows, columns, max_width=term_w)
+            _hint_add(hints, "Long values truncated (--format list for full text)")
+            content = table_content
         else:
             content = table_content
 

@@ -921,8 +921,8 @@ class TestOutputFormats:
         assert "data" in data
         assert "duration_ms" in data["run"]
 
-    def test_default_format_is_table(self, db_path: str):
-        """Default output (no --format) should be table, not JSON."""
+    def test_default_format_is_human_readable(self, db_path: str):
+        """Default output (no --format) should be human-readable, not JSON."""
         import io
         import sys
 
@@ -935,7 +935,7 @@ class TestOutputFormats:
         output = buf.getvalue()
         assert code == 0
         assert "TestVar" in output
-        assert "---" in output  # table separator
+        assert not output.lstrip().startswith("{")
 
     def test_list_format(self, db_path: str):
         import io
