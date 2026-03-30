@@ -1,8 +1,7 @@
 # Registry Research Toolkit
 
-Tools for working with Swedish registry microdata on [SCB MONA](https://www.scb.se/mona).
-
-## Packages
+Tools for working with Swedish registry microdata on
+[SCB MONA](https://www.scb.se/mona).
 
 | Package | Description |
 |---|---|
@@ -18,13 +17,17 @@ Tools for working with Swedish registry microdata on [SCB MONA](https://www.scb.
 | Python | `brew install python` or [python.org](https://www.python.org/downloads/) | [python.org](https://www.python.org/downloads/) or `winget install Python.Python.3.12` |
 | uv | `curl -LsSf https://astral.sh/uv/install.sh \| sh` | `powershell -c "irm https://astral.sh/uv/install.ps1 \| iex"` |
 
-See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/) for other methods.
+See [uv installation docs](https://docs.astral.sh/uv/getting-started/installation/)
+for other methods.
 
 ## Install
 
 ### For AI agents
 
-Point your agent at the [registry-metadata-search skill](https://github.com/adamaltmejd/registry-research-toolkit/tree/main/.claude/skills/registry-metadata-search) and ask it to install regmeta and use it. The skill contains install instructions, the full command reference, and common query workflows.
+Point your agent at the
+[registry-metadata-search skill](https://github.com/adamaltmejd/registry-research-toolkit/tree/main/.claude/skills/registry-metadata-search)
+and ask it to install regmeta and use it. The skill contains install
+instructions, the full command reference, and common query workflows.
 
 ### Manual
 
@@ -42,34 +45,24 @@ uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-
 ### regmeta
 
 ```bash
-# Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
-regmeta maintain download
-
-# Search for variables
-regmeta search --query "kommun" --datacolumn
-
-# Get register overview
-regmeta get register LISA
-
-# Get schema for specific years
-regmeta get schema --register LISA --years 2020-2023
+regmeta maintain download                            # download metadata DB
+regmeta search --query "kommun"                      # search variables
+regmeta get register LISA                            # register overview
+regmeta get schema --register LISA --years 2020      # columns for a year
+regmeta docs search "disponibel inkomst"             # search documentation
 ```
 
 ### mock-data-wizard
 
 ```bash
-# Generate an R script to extract aggregate statistics on MONA
-mock-data-wizard generate-script -p P1405
-
-# Upload and run the script on MONA, then download stats.json
-# Generate mock CSV files locally
-mock-data-wizard generate --stats stats.json --seed 42
+mock-data-wizard generate-script -p P1405            # R script for MONA
+# Run on MONA, download stats.json
+mock-data-wizard generate --stats stats.json --seed 42   # mock CSVs
 ```
 
-See per-package READMEs for full documentation:
-
-- [regmeta/README.md](regmeta/README.md)
-- [mock_data_wizard/README.md](mock_data_wizard/README.md)
+See per-package READMEs for details:
+[regmeta](regmeta/README.md) |
+[mock_data_wizard](mock_data_wizard/README.md)
 
 ## License
 

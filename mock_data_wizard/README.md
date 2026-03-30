@@ -1,52 +1,56 @@
 # mock_data_wizard
 
-Generate mock CSV data from MONA project metadata without exporting personal data. Designed for LLM agent consumption; terminal use is secondary.
+Generate mock CSV data from MONA project metadata without exporting
+personal data. Designed for LLM agent consumption; terminal use is
+secondary.
 
-## Setup
+## Install
+
+```bash
+uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+```
+
+Requires `regmeta` for metadata enrichment (population spine, value
+code validation, compare). Install regmeta first — see
+[regmeta/README.md](../regmeta/README.md).
+
+## Quick start
 
 ```bash
 # Step 1: Generate an R script to run on MONA
-uv run mock-data-wizard generate-script -p P1405
-# Upload the script to MONA. Run it: Rscript extract_stats_P1405.R
-# Download the resulting stats.json. Verify it contains no PII.
+mock-data-wizard generate-script -p P1405
 
-# Step 2: Generate mock CSV files from the stats
-uv run mock-data-wizard generate --stats stats.json --seed 42
+# Upload and run on MONA, download stats.json
+# IMPORTANT: verify stats.json contains no PII
+
+# Step 2: Generate mock CSV files locally
+mock-data-wizard generate --stats stats.json --seed 42
+
+# Optional: compare mock data against registry schema
+mock-data-wizard compare manifest.json
 ```
+
+Use `--help` on any command for full flag documentation.
 
 ## Commands
 
 | Command | Purpose |
 |---|---|
 | `generate-script` | Create an R script that extracts aggregate statistics on MONA |
-| `generate` | Produce mock CSV files from stats.json output |
+| `generate` | Produce mock CSV files from stats.json |
+| `compare` | Compare local file columns against registry metadata |
 
-### generate-script flags
+## PII safety
 
-- `--project`, `-p` — SCB project number (e.g. P1405)
-- `--project-dir` — Custom data path(s) to scan
-- `--output`, `-o` — Output path for the R script
-
-### generate flags
-
-- `--stats` — Path to stats.json (default: `stats.json`)
-- `--seed` — Random seed for reproducible output (default: 42)
-- `--sample-pct` — Fraction of rows to generate (default: 1.0)
-- `--output-dir` — Directory for generated CSV files (default: `mock_data`)
-- `--db` — Path to regmeta database directory
-- `--register` — Filter regmeta matches to a specific register
-- `--no-regmeta` — Skip regmeta enrichment
-- `--force` — Overwrite existing output directory (stale files are removed)
-- `-y`, `--yes` — Skip confirmation prompt
-- `-v`, `--verbose` — Show per-file timing breakdown
-
-## PII Safety
-
-The R script exports **only** aggregate statistics (counts, means, frequencies). Cells with 5 or fewer individuals are censored. No individual-level data leaves MONA.
+The R script exports **only** aggregate statistics (counts, means,
+frequencies). Cells with 5 or fewer individuals are censored. No
+individual-level data leaves MONA. See [DESIGN.md](DESIGN.md) for
+the full safety specification.
 
 ## Files
 
-- [SPEC_mock_data_wizard.md](SPEC_mock_data_wizard.md) — Product specification
-- [PLAN_mock_data_wizard.md](PLAN_mock_data_wizard.md) — Implementation tracker
-- `src/mock_data_wizard/` — Package source
-- `tests/` — Test suite (40 tests)
+| Path | Purpose |
+|---|---|
+| [DESIGN.md](DESIGN.md) | Design rationale, PII safety rules, generation strategy |
+| `src/mock_data_wizard/` | Package source |
+| `tests/` | Test suite |

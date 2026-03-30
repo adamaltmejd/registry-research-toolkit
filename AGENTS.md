@@ -13,8 +13,8 @@
 - Tools are proper python project packages called with `uv`.
 
 # Governance
-- `SPEC_*.md` is the frozen product PRD once approved.
-- `PLAN_*.md` is the living implementation tracker.
+- `DESIGN.md` per package documents design rationale and constraints.
+- No frozen specs or implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
 
 # Maturity and compatibility
 - All tools in this repo are **pre-release with zero users**. There is no deployed version, no backwards compatibility obligation, and no migration path to maintain.
@@ -37,11 +37,9 @@
 - `regmeta/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
 
 # Target structure
-- `mock_data_wizard/SPEC_mock_data_wizard.md`
-- `mock_data_wizard/PLAN_mock_data_wizard.md`
-- `regmeta/SPEC_regmeta.md`
-- `regmeta/PLAN_regmeta.md`
-- `regmeta/STRUCTURE.md`
-- `regmeta/docs/`
-- `mock_data_wizard/`
-- `regmeta/`
+- `regmeta/DESIGN.md` — design rationale
+- `regmeta/STRUCTURE.md` — domain model
+- `regmeta/docs/` — curated register documentation (build artifacts + schema)
+- `regmeta/src/regmeta/` — package source
+- `mock_data_wizard/DESIGN.md` — design rationale, PII safety rules
+- `mock_data_wizard/src/mock_data_wizard/` — package source
