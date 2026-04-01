@@ -1,6 +1,6 @@
 [project]
 name = "registry-research-toolkit"
-version = "0.4.0a1"
+version = "0.4.0"
 description = "Workspace coordinator for mock_data_wizard and regmeta"
 requires-python = ">=3.11"
 dependencies = [
