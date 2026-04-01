@@ -104,5 +104,20 @@ class TestJsonClean:
         assert code == 0
         data = json.loads(out)
         assert "doc_hint" not in data
-        # Hints still go to stderr
-        assert "hint:" in err or err == ""
+
+    def test_json_suppresses_hints(self, db_path: str):
+        """JSON output should never produce hints, even on stderr."""
+        _, err, code = _run_capture(
+            [
+                "--format",
+                "json",
+                "--db",
+                db_path,
+                "get",
+                "schema",
+                "--register",
+                "TESTREG",
+            ],
+        )
+        assert code == 0
+        assert "hint:" not in err

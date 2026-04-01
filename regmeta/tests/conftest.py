@@ -7,6 +7,8 @@ cross-register var_id reuse, cp1252 encoding, and value sets.
 
 from __future__ import annotations
 
+import sqlite3
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
@@ -52,6 +54,16 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     build_db(csv_dir=csv_dir, db_dir=db_dir)
 
     return db_dir / "regmeta.db"
+
+
+@pytest.fixture()
+def db_conn(fixture_db: Path) -> Iterator[sqlite3.Connection]:
+    """Open a read-only connection to the fixture database."""
+    from regmeta.db import open_db
+
+    conn = open_db(fixture_db)
+    yield conn
+    conn.close()
 
 
 @pytest.fixture()

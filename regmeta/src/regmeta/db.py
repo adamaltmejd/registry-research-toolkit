@@ -17,7 +17,7 @@ from typing import Any, Iterator
 
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "2.0.0"
+SCHEMA_VERSION = "2.1.0"
 DB_FILENAME = "regmeta.db"
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
@@ -164,6 +164,10 @@ CREATE TABLE variable (
     variabelregister_kalla TEXT,
     variabelextern_kommentar TEXT,
     mattenhet TEXT,
+    source_register_id INTEGER REFERENCES register(register_id),
+    source_label TEXT,
+    -- PK doubles as the join index for get_schema's JOIN on (register_id, var_id).
+    -- Do not add a redundant explicit index.
     PRIMARY KEY (register_id, var_id)
 );
 
@@ -460,6 +464,77 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
     return candidate or current
 
 
+_PAREN_ABBREV_RE = re.compile(r"\(([^)]+)\)")
+
+
+def _extract_abbrev(registernamn: str) -> str | None:
+    """Extract parenthesized abbreviation from a register name, e.g. '(RTB)' → 'RTB'."""
+    m = _PAREN_ABBREV_RE.search(registernamn)
+    return m.group(1).strip() if m else None
+
+
+def _build_register_lookup(
+    registers: dict[int, dict[str, Any]],
+) -> tuple[dict[str, tuple[int, str]], dict[str, tuple[int, str]]]:
+    """Build lookup tables for source register resolution.
+
+    Returns (name_lookup, abbrev_lookup):
+    - name_lookup: lowercase full name → (register_id, display abbreviation)
+    - abbrev_lookup: lowercase "(ABBREV)" → (register_id, display abbreviation)
+    """
+    name_lookup: dict[str, tuple[int, str]] = {}
+    abbrev_lookup: dict[str, tuple[int, str]] = {}
+    for rid, rinfo in registers.items():
+        rname = rinfo["registernamn"] or ""
+        paren = _extract_abbrev(rname)
+        entry = (rid, paren or rname)
+        name_lookup[rname.lower()] = entry
+        if paren:
+            abbrev_lookup[paren.lower()] = entry
+    return name_lookup, abbrev_lookup
+
+
+def _resolve_source_register(
+    kalla: str,
+    name_lookup: dict[str, tuple[int, str]],
+    abbrev_lookup: dict[str, tuple[int, str]],
+) -> tuple[int | None, str | None]:
+    """Resolve variabelregister_kalla to (source_register_id, source_label).
+
+    Deterministic matching only. On match, returns (FK, display_abbrev).
+    On no match, returns (None, raw_kalla). On empty input, returns (None, None).
+    """
+    kalla = (kalla or "").strip()
+    if not kalla:
+        return None, None
+
+    # Strategy 1: parenthesized abbreviation in kalla
+    # e.g. "Befolkningsregistret (RTB) : Folkbokförda personer" → "RTB"
+    m = _PAREN_ABBREV_RE.search(kalla)
+    if m:
+        abbrev = m.group(1).strip().lower()
+        # Match against known register abbreviations
+        if abbrev in abbrev_lookup:
+            return abbrev_lookup[abbrev]
+        # Exact match of abbreviation against full register name
+        if abbrev in name_lookup:
+            return name_lookup[abbrev]
+
+    # Strategy 2: text before " : " as exact register name
+    if " : " in kalla:
+        before = kalla.split(" : ", 1)[0].strip().lower()
+        if before in name_lookup:
+            return name_lookup[before]
+
+    # Strategy 3: whole kalla as exact register name
+    kalla_lower = kalla.lower()
+    if kalla_lower in name_lookup:
+        return name_lookup[kalla_lower]
+
+    # No deterministic match — store raw text
+    return None, kalla
+
+
 def _import_registerinformation(
     conn: sqlite3.Connection, path: Path
 ) -> tuple[int, dict[tuple[str, str, str, str], tuple[int, int]], set[int]]:
@@ -607,6 +682,16 @@ def _import_registerinformation(
 
     _progress(f"  {row_count:,} rows read")
 
+    # Resolve source register for composite variables
+    _progress("Resolving source registers...")
+    name_lookup, abbrev_lookup = _build_register_lookup(registers)
+    for var in variables.values():
+        src_id, src_label = _resolve_source_register(
+            var["variabelregister_kalla"], name_lookup, abbrev_lookup
+        )
+        var["source_register_id"] = src_id
+        var["source_label"] = src_label
+
     # Bulk insert all normalized tables
     _progress("Writing core tables...")
     conn.executemany(
@@ -627,7 +712,8 @@ def _import_registerinformation(
     conn.executemany(
         "INSERT INTO variable VALUES (:register_id, :var_id, :variabelnamn, :variabeldefinition, "
         ":variabelbeskrivning, :variabeloperationell_definition, :variabelreferenstid, "
-        ":variabelhamtadfran, :variabelregister_kalla, :variabelextern_kommentar, :mattenhet)",
+        ":variabelhamtadfran, :variabelregister_kalla, :variabelextern_kommentar, :mattenhet, "
+        ":source_register_id, :source_label)",
         list(variables.values()),
     )
     conn.executemany(

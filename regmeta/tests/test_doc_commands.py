@@ -394,9 +394,7 @@ class TestSearchIntegration:
         assert "doc" in types, "Doc results should appear in default search"
 
     def test_search_doc_hint_when_truncated(self, combined_db_dir: str):
-        """When doc results exist but are cut off by limit, a hint should appear on stderr."""
-        import io
-
+        """When doc results are cut off by limit, doc_hint should be in JSON data."""
         # First verify docs exist for this query
         docs_data, _ = _run_json(
             ["--db", combined_db_dir, "docs", "search", "kommun"],
@@ -406,28 +404,19 @@ class TestSearchIntegration:
             pytest.skip("No doc results for test query")
 
         # Search with limit=0 so all doc results are truncated
-        old_stdout, old_stderr = sys.stdout, sys.stderr
-        sys.stdout = io.StringIO()
-        sys.stderr = err_buf = io.StringIO()
-        try:
-            code = run(
-                [
-                    "--format",
-                    "json",
-                    "--verbose",
-                    "--db",
-                    combined_db_dir,
-                    "search",
-                    "--query",
-                    "kommun",
-                    "--limit",
-                    "0",
-                ],
-            )
-        finally:
-            sys.stdout, sys.stderr = old_stdout, old_stderr
+        data, code = _run_json(
+            [
+                "--db",
+                combined_db_dir,
+                "search",
+                "--query",
+                "kommun",
+                "--limit",
+                "0",
+            ],
+        )
         assert code == 0
-        assert "not shown" in err_buf.getvalue()
+        assert "not shown" in data.get("doc_hint", "")
 
     def test_search_exact_variable_name_ranked_high(self, combined_db_dir: str):
         """Exact variable name match in docs should rank near the top."""

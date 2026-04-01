@@ -1372,12 +1372,13 @@ def _write_payload(
                                     "year": ver.get("year", ""),
                                     "alias": alias,
                                     "variabelnamn": col.get("variabelnamn", ""),
+                                    "source": col.get("source", ""),
                                     "var_id": col.get("var_id", ""),
                                 }
                             )
             _write_formatted(
                 rows,
-                ["regvar_id", "year", "alias", "variabelnamn", "var_id"],
+                ["regvar_id", "year", "alias", "variabelnamn", "source", "var_id"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1395,12 +1396,21 @@ def _write_payload(
                                 "variabelnamn": col.get("variabelnamn", ""),
                                 "datatyp": col.get("datatyp", ""),
                                 "aliases": col.get("aliases", ""),
+                                "source": col.get("source", ""),
                                 "cvid": col.get("cvid", ""),
                             }
                         )
             _write_formatted(
                 rows,
-                ["version", "var_id", "variabelnamn", "datatyp", "aliases", "cvid"],
+                [
+                    "version",
+                    "var_id",
+                    "variabelnamn",
+                    "datatyp",
+                    "aliases",
+                    "source",
+                    "cvid",
+                ],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1845,7 +1855,7 @@ def run(argv: list[str] | None = None) -> int:
 
     try:
         payload, exit_code = handler(args)
-        if not quiet:
+        if not quiet and fmt != "json":
             _collect_hints(key, payload.get("data", {}), args, hints)
         if fmt == "json":
             if verbose:

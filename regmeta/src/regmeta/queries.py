@@ -536,6 +536,7 @@ def get_schema(
             columns = conn.execute(
                 "SELECT vi.cvid, vi.var_id, vi.datatyp, vi.datalangd, "
                 "v.variabelnamn, "
+                "COALESCE(v.source_label, '') as source, "
                 "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
@@ -1384,20 +1385,15 @@ def get_lineage(
         rid, vid = var["register_id"], var["var_id"]
         hamtad = (var["variabelhamtadfran"] or "").strip()
         kalla = (var["variabelregister_kalla"] or "").strip()
-
-        # Resolve source register
-        source_register_id: str | None = None
-        if kalla:
-            resolved = resolve_register_ids(conn, kalla)
-            source_register_id = resolved[0] if resolved else None
+        source_register_id = var["source_register_id"]
 
         # Classify role
         if not kalla and not hamtad:
             role = "unknown"
-        elif not kalla or source_register_id == rid:
-            role = "source"
-        else:
+        elif kalla and source_register_id != rid:
             role = "consumer"
+        else:
+            role = "source"
 
         # Instance count and year range
         instances = conn.execute(

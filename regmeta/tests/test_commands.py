@@ -313,6 +313,37 @@ class TestGetSchema:
         variants = data["data"]["variants"]
         assert len(variants) >= 1
 
+    def test_source_present_for_imported_variable(self, db_path: str):
+        """OTHERREG's Kön is imported from TESTREG — source column should show it."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "schema", "--register", "OTHERREG"]
+        )
+        assert code == 0
+        columns = data["data"]["variants"][0]["versions"][0]["columns"]
+        kon = [c for c in columns if c["var_id"] == 44]
+        assert len(kon) == 1
+        assert kon[0]["source"] == "TESTREG"
+
+    def test_source_empty_for_own_variable(self, db_path: str):
+        """TESTREG's own variables have no source."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "schema",
+                "--register",
+                "TESTREG",
+                "--years",
+                "2020",
+            ]
+        )
+        assert code == 0
+        columns = data["data"]["variants"][0]["versions"][0]["columns"]
+        kon = [c for c in columns if c["var_id"] == 44]
+        assert len(kon) == 1
+        assert kon[0]["source"] == ""
+
 
 # ---------------------------------------------------------------------------
 # Get varinfo
