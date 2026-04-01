@@ -119,7 +119,9 @@ def doc_get(
         "tags": json.loads(row["tags"]),
         "source": row["source"],
         "body": row["body"],
-        "file_path": f"{docs_dir}/{row['register']}/{row['filename']}" if docs_dir else None,
+        "file_path": f"{docs_dir}/{row['register']}/{row['filename']}"
+        if docs_dir
+        else None,
     }
 
 
@@ -205,7 +207,5 @@ def doc_exists(conn: sqlite3.Connection, variable: str) -> bool:
 
 def _get_docs_dir(conn: sqlite3.Connection) -> str | None:
     """Get the source docs directory from the doc DB metadata."""
-    row = conn.execute(
-        "SELECT value FROM doc_meta WHERE key = 'docs_dir'"
-    ).fetchone()
+    row = conn.execute("SELECT value FROM doc_meta WHERE key = 'docs_dir'").fetchone()
     return row["value"] if row else None

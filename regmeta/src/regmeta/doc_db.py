@@ -125,7 +125,8 @@ def bundled_docs_dir() -> Path | None:
     pkg_dir = Path(__file__).resolve().parent
     candidates = [
         pkg_dir / "docs",  # installed package: docs bundled inside the package dir
-        pkg_dir.parent.parent / "docs",  # development layout: src/regmeta/../../docs → regmeta/docs/
+        pkg_dir.parent.parent
+        / "docs",  # development layout: src/regmeta/../../docs → regmeta/docs/
     ]
     for candidate in candidates:
         if candidate.is_dir() and any(candidate.iterdir()):
