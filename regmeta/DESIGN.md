@@ -98,6 +98,38 @@ updates.
 
 See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 
+## Versioning and compatibility
+
+Three independent version numbers:
+
+| Version | Location | Purpose |
+|---------|----------|---------|
+| Package version (`__version__`) | `__init__.py`, `pyproject.toml` | Python package / CLI release |
+| Schema version (`SCHEMA_VERSION`) | `db.py` | Database schema compatibility |
+| Contract version (`CONTRACT_VERSION`) | `cli.py` | CLI output envelope format |
+
+**Schema version** uses semver. The **major** component gates compatibility:
+`open_db` compares the major version in the database's `import_manifest`
+against the code's `SCHEMA_VERSION`. A mismatch raises `schema_incompatible`
+(exit 10) and directs the user to re-download the database.
+
+When making a **breaking schema change** (renamed/removed tables or columns,
+changed semantics), bump the `SCHEMA_VERSION` major version in `db.py`. The
+`TestSchemaCompat` tests in `test_build_db.py` verify this guard works.
+
+Minor/patch bumps (new tables, new optional columns) are backwards-compatible
+and do not trigger rejection.
+
+**Update command**: `maintain update` is the single command that brings
+everything current — it runs `uv tool upgrade regmeta` for the package and
+downloads a new database if the release includes one. A background version
+checker runs once per week (cached in `~/.local/share/regmeta/.update_check`)
+and prints a hint on interactive runs when a newer release exists.
+
+**Auto-download on first use**: query commands (`search`, `get`, `resolve`)
+prompt to download the database interactively when none is found, so users
+don't need to know about `maintain update` on first install.
+
 ## Exit codes
 
 | Code | Meaning |
@@ -107,7 +139,7 @@ See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 | 10   | Configuration error (missing DB, bad encoding) |
 | 16   | Not found |
 | 17   | No match with `--require-match` |
-| 25   | Network error (`maintain download`) |
+| 25   | Network error (`maintain update`) |
 | 30   | Unexpected internal error |
 
 ## Determinism
@@ -120,7 +152,7 @@ See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 
 - Metadata only — no microdata
 - No credentials read or stored
-- No outbound network requests (except `maintain download`)
+- No outbound network requests (except `maintain update` and the weekly version check)
 
 ## Explored and ruled out
 

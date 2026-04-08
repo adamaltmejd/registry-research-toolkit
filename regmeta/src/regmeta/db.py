@@ -340,12 +340,36 @@ def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
     return default_db_dir().resolve() / filename
 
 
+def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
+    """Raise if the database schema major version is incompatible with the code."""
+    try:
+        manifest = get_manifest(conn)
+        db_ver = manifest.get("schema_version", "")
+        db_major = int(db_ver.split(".")[0])
+        code_major = int(SCHEMA_VERSION.split(".")[0])
+    except (ValueError, IndexError):
+        return  # unparseable — skip check
+    if db_major != code_major:
+        conn.close()
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema v{db_ver} ({db_path}) is incompatible "
+                f"with this version of regmeta (expects schema v{SCHEMA_VERSION})."
+            ),
+            remediation="Run `regmeta maintain update` to get a compatible database.",
+        )
+
+
 def open_db(
     db_path: Path,
     *,
+    check_schema: bool = True,
     error_code: str = "db_not_found",
     remediation: str = (
-        "Run `regmeta maintain download` to fetch the pre-built DB, "
+        "Run `regmeta maintain update` to fetch the pre-built DB, "
         "or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports."
     ),
 ) -> sqlite3.Connection:
@@ -359,6 +383,8 @@ def open_db(
         )
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    if check_schema:
+        _check_schema_compat(conn, db_path)
     return conn
 
 

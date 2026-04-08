@@ -107,10 +107,10 @@ def test_version_importable(docker: str, image: str):
     assert result.stdout.strip()
 
 
-def test_download_and_query(docker: str, image: str):
-    """Full pipeline: download DB from GitHub Releases and run a query."""
+def test_update_and_query(docker: str, image: str):
+    """Full pipeline: update (downloads DB) from GitHub Releases and run a query."""
     cmd = (
-        "regmeta maintain download --yes > /dev/null"
+        "regmeta maintain update --yes > /dev/null"
         " && regmeta --format json search --query kommun --datacolumn"
     )
     result = _docker_run(docker, image, cmd, timeout=600)
@@ -121,13 +121,3 @@ def test_download_and_query(docker: str, image: str):
     payload = json.loads(result.stdout)
     results = payload.get("results", payload.get("data", {}).get("results", []))
     assert len(results) > 0, "Expected search results for 'kommun'"
-
-
-def test_download_refuses_overwrite(docker: str, image: str):
-    """Second download without --force should fail."""
-    cmd = (
-        "regmeta maintain download --yes"
-        " && regmeta maintain download --yes 2>&1; echo EXIT:$?"
-    )
-    result = _docker_run(docker, image, cmd, timeout=600)
-    assert "EXIT:10" in result.stdout or "db_exists" in result.stdout

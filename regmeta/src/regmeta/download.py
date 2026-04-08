@@ -178,6 +178,12 @@ def download_db(
 
         size = final_path.stat().st_size
         sys.stderr.write(f"Database ready: {final_path} ({_fmt_size(size)})\n")
+
+        # Record which release tag the db came from so the update checker
+        # can detect when a newer database is available.
+        source_file = db_dir / ".db_source"
+        source_file.write_text(json.dumps({"tag": resolved_tag}))
+
         return {
             "db_path": str(final_path),
             "tag": resolved_tag,
