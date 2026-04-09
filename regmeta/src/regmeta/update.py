@@ -225,7 +225,7 @@ def run_update(
         )
         result["database"] = db_result
     elif not db_tag:
-        result["database"] = "no_db_in_releases"
+        result["database"] = "no_db_in_release"
     else:
         result["database"] = "up_to_date"
 
