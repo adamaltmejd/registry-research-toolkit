@@ -19,6 +19,12 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - run: bunx markdownlint-cli2
 
+  check-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash scripts/check_versions.sh
+
   test:
     runs-on: ubuntu-latest
     steps:
