@@ -23,7 +23,7 @@ DOWNLOAD_URL = (
 )
 
 
-def _resolve_latest_release(
+def resolve_latest_release(
     *,
     timeout: float = 15,
 ) -> tuple[str, str, bool]:
@@ -158,7 +158,7 @@ def download_db(
 
     # Resolve tag
     if tag == "latest":
-        resolved_tag, _, _ = _resolve_latest_release()
+        resolved_tag, _, _ = resolve_latest_release()
     else:
         resolved_tag = tag
     url = DOWNLOAD_URL.format(tag=resolved_tag)

@@ -347,6 +347,8 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
     ``check_schema=False`` escape hatch exists for legitimate bypasses
     (e.g. ``maintain info``, doc DB).
     """
+    fix = "Run `regmeta maintain update` to get a compatible database."
+
     try:
         manifest = get_manifest(conn)
     except sqlite3.OperationalError as exc:
@@ -358,7 +360,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
                 f"Database manifest is missing or unreadable in {db_path}. "
                 f"Expected schema v{SCHEMA_VERSION} metadata."
             ),
-            remediation="Run `regmeta maintain update` to get a compatible database.",
+            remediation=fix,
         ) from exc
 
     db_ver = manifest.get("schema_version")
@@ -376,7 +378,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
                 f"Database schema version is missing or invalid in {db_path}: "
                 f"{db_ver!r}. This version of regmeta expects schema v{SCHEMA_VERSION}."
             ),
-            remediation="Run `regmeta maintain update` to get a compatible database.",
+            remediation=fix,
         ) from exc
 
     if db_major != code_major:
@@ -388,7 +390,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
                 f"Database schema v{db_ver} ({db_path}) is incompatible "
                 f"with this version of regmeta (expects schema v{SCHEMA_VERSION})."
             ),
-            remediation="Run `regmeta maintain update` to get a compatible database.",
+            remediation=fix,
         )
 
 

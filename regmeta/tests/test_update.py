@@ -21,7 +21,7 @@ class TestParseVersion:
         assert _parse_version("v1.2.3") == (1, 2, 3, 0, 0)
 
     def test_unparseable_returns_lowest(self):
-        assert _parse_version("garbage") == (0,)
+        assert _parse_version("garbage") == (0, 0, 0, -99, 0)
 
     @pytest.mark.parametrize(
         "older, newer",

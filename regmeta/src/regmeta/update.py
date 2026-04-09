@@ -13,7 +13,7 @@ from typing import Any
 
 from . import __version__
 from .db import DB_FILENAME, default_db_dir
-from .download import DB_SOURCE_FILE, _resolve_latest_release, download_db
+from .download import DB_SOURCE_FILE, resolve_latest_release, download_db
 from .errors import EXIT_CONFIG, RegmetaError
 
 _UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
@@ -25,7 +25,7 @@ def _parse_version(v: str) -> tuple[int, ...]:
 
     Supports ``X.Y.Z``, ``X.Y.ZaN`` (alpha), and ``X.Y.Z.devN`` (dev).
     Ordering: ``0.4.0.dev1 < 0.4.0a1 < 0.4.0 < 0.5.0``.
-    Unparseable strings sort lowest ``(0,)`` so they always trigger an update.
+    Unparseable strings sort lowest so they always trigger an update.
     """
     v = v.lstrip("v")
     m = re.match(
@@ -34,7 +34,7 @@ def _parse_version(v: str) -> tuple[int, ...]:
         v,
     )
     if not m:
-        return (0,)
+        return (0, 0, 0, -99, 0)
     major, minor, patch = int(m.group(1)), int(m.group(2)), int(m.group(3))
     if m.group(4):  # .devN
         return (major, minor, patch, -2, int(m.group(5)))
@@ -91,7 +91,7 @@ class UpdateChecker:
 
         # Stale or missing cache — hit the network
         try:
-            _tag, version, _has_db = _resolve_latest_release(
+            _tag, version, _has_db = resolve_latest_release(
                 timeout=_UPDATE_CHECK_TIMEOUT
             )
             self._result = (
@@ -165,7 +165,7 @@ def run_update(
 
     # Resolve the target release
     if tag == "latest":
-        release_tag, latest_ver, has_db = _resolve_latest_release(timeout=10)
+        release_tag, latest_ver, has_db = resolve_latest_release(timeout=10)
     else:
         release_tag = tag
         latest_ver = tag.lstrip("v")
