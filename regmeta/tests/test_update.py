@@ -2,7 +2,7 @@
 
 import pytest
 
-from regmeta.download import _is_regmeta_release, _pick_release, _version_from_tag
+from regmeta.download import _is_regmeta_release, _pick_release, version_from_tag
 from regmeta.errors import RegmetaError
 from regmeta.update import _parse_version
 
@@ -43,13 +43,13 @@ class TestParseVersion:
 
 class TestVersionFromTag:
     def test_prefixed_tag(self):
-        assert _version_from_tag("regmeta/v0.5.0") == "0.5.0"
+        assert version_from_tag("regmeta/v0.5.0") == "0.5.0"
 
     def test_legacy_bare_tag(self):
-        assert _version_from_tag("v0.4.0") == "0.4.0"
+        assert version_from_tag("v0.4.0") == "0.4.0"
 
     def test_no_v_prefix(self):
-        assert _version_from_tag("regmeta/0.5.0") == "0.5.0"
+        assert version_from_tag("regmeta/0.5.0") == "0.5.0"
 
 
 class TestIsRegmetaRelease:

@@ -15,7 +15,7 @@ from . import __version__
 from .db import DB_FILENAME, default_db_dir
 from .download import (
     DB_SOURCE_FILE,
-    _version_from_tag,
+    version_from_tag,
     download_db,
     resolve_latest_release,
 )
@@ -170,7 +170,7 @@ def run_update(
     if tag == "latest":
         _release_tag, latest_ver, db_tag = resolve_latest_release(timeout=10)
     else:
-        latest_ver = _version_from_tag(tag)
+        latest_ver = version_from_tag(tag)
         db_tag = tag  # assume explicit tag has a db
 
     result: dict[str, Any] = {}

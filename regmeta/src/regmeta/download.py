@@ -24,7 +24,7 @@ DOWNLOAD_URL = (
 )
 
 
-def _version_from_tag(tag: str) -> str:
+def version_from_tag(tag: str) -> str:
     """Extract version string from a release tag.
 
     Handles both ``regmeta/v0.5.0`` and legacy ``v0.5.0`` formats.
@@ -55,6 +55,8 @@ def _pick_release(
     latest version, and walks backwards to find the most recent release
     that includes a database asset.
 
+    Assumes *all_releases* is sorted newest-first (GitHub API default).
+
     Returns ``(release_tag, version, db_tag)``.
     """
     releases = [r for r in all_releases if _is_regmeta_release(r)]
@@ -69,7 +71,7 @@ def _pick_release(
 
     latest = releases[0]
     tag = latest["tag_name"]
-    version = _version_from_tag(tag)
+    version = version_from_tag(tag)
 
     # Walk backwards to find the most recent release with a DB asset
     db_tag = None
