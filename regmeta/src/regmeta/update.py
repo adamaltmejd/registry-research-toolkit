@@ -22,7 +22,8 @@ from .download import (
 from .errors import EXIT_CONFIG, RegmetaError
 
 _UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
-_UPDATE_CHECK_TIMEOUT = 3  # max seconds to wait for the background thread
+_BG_JOIN_TIMEOUT = 3  # max seconds to wait when collecting background check
+_HTTP_TIMEOUT = 10  # per-socket timeout for the GitHub API call
 
 
 def _parse_version(v: str) -> tuple[int, ...]:
@@ -52,6 +53,31 @@ def _check_cache_path() -> Path:
     return default_db_dir() / ".update_check"
 
 
+def _update_available_path() -> Path:
+    return default_db_dir() / ".update_available"
+
+
+def read_pending_update() -> str | None:
+    """Read the persistent update-available flag. Returns version or None."""
+    try:
+        return _update_available_path().read_text().strip() or None
+    except OSError:
+        return None
+
+
+def _set_pending_update(version: str) -> None:
+    path = _update_available_path()
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(version)
+    except OSError:
+        pass
+
+
+def _clear_pending_update() -> None:
+    _update_available_path().unlink(missing_ok=True)
+
+
 # ---------------------------------------------------------------------------
 # Background update checker (launched at CLI startup, collected at exit)
 # ---------------------------------------------------------------------------
@@ -65,10 +91,11 @@ class UpdateChecker:
     the cache and will be retried on the next invocation.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, http_timeout: float = _HTTP_TIMEOUT) -> None:
         self._result: str | None = None
         self._checked = False
         self._from_cache = False
+        self._http_timeout = http_timeout
         self._thread = threading.Thread(target=self._run, daemon=True)
         self._thread.start()
 
@@ -96,9 +123,7 @@ class UpdateChecker:
 
         # Stale or missing cache — hit the network
         try:
-            _tag, version, _db_tag = resolve_latest_release(
-                timeout=_UPDATE_CHECK_TIMEOUT
-            )
+            _tag, version, _db_tag = resolve_latest_release(timeout=self._http_timeout)
             self._result = (
                 version
                 if _parse_version(version) > _parse_version(__version__)
@@ -108,9 +133,14 @@ class UpdateChecker:
         except Exception:
             pass
 
-    def get_newer_version(self) -> str | None:
+    @property
+    def completed(self) -> bool:
+        """Whether the check completed (vs timed out or errored)."""
+        return self._checked
+
+    def get_newer_version(self, *, timeout: float = _BG_JOIN_TIMEOUT) -> str | None:
         """Wait briefly for the check to finish; return newer version or None."""
-        self._thread.join(timeout=_UPDATE_CHECK_TIMEOUT)
+        self._thread.join(timeout=timeout)
         if not self._checked:
             return None  # timed out or errored — retry next time
         # Persist cache only when consuming a fresh (non-cached) result
@@ -128,6 +158,12 @@ class UpdateChecker:
                 )
             except OSError:
                 pass
+        # Persist/clear the update-available flag so subsequent runs can
+        # remind the user even if the background check times out.
+        if self._result:
+            _set_pending_update(self._result)
+        else:
+            _clear_pending_update()
         return self._result
 
 
@@ -233,4 +269,5 @@ def run_update(
         sys.stderr.write(f"Already up to date (v{current}).\n")
 
     _clear_check_cache()
+    _clear_pending_update()
     return result

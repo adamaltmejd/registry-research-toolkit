@@ -4,7 +4,12 @@ import pytest
 
 from regmeta.download import _is_regmeta_release, _pick_release, version_from_tag
 from regmeta.errors import RegmetaError
-from regmeta.update import _parse_version
+from regmeta.update import (
+    _clear_pending_update,
+    _parse_version,
+    _set_pending_update,
+    read_pending_update,
+)
 
 
 class TestParseVersion:
@@ -126,3 +131,26 @@ class TestPickRelease:
         with pytest.raises(RegmetaError) as exc_info:
             _pick_release([])
         assert exc_info.value.code == "no_releases"
+
+
+class TestPendingUpdate:
+    """Persistent update-available flag read/write/clear."""
+
+    @pytest.fixture(autouse=True)
+    def _isolate_flag(self, monkeypatch, tmp_path):
+        flag = tmp_path / ".update_available"
+        monkeypatch.setattr("regmeta.update._update_available_path", lambda: flag)
+        self.flag_path = flag
+
+    def test_roundtrip(self):
+        assert read_pending_update() is None
+        _set_pending_update("0.7.0")
+        assert read_pending_update() == "0.7.0"
+
+    def test_clear(self):
+        _set_pending_update("0.7.0")
+        _clear_pending_update()
+        assert read_pending_update() is None
+
+    def test_clear_when_missing(self):
+        _clear_pending_update()  # should not raise

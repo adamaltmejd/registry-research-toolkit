@@ -2523,15 +2523,17 @@ def _print_version(db_arg: str | None = None) -> None:
     sys.stderr.write(f"{_version_line(db_arg)}\n")
     sys.stderr.write("Checking for updates...\n")
     try:
-        checker = UpdateChecker()
-        newer = checker.get_newer_version()
+        checker = UpdateChecker(http_timeout=10)
+        newer = checker.get_newer_version(timeout=10)
         if newer:
             sys.stderr.write(
                 f"Update available: v{__version__} → v{newer}"
                 "  —  run `regmeta maintain update`\n"
             )
-        else:
+        elif checker.completed:
             sys.stderr.write("Up to date.\n")
+        else:
+            sys.stderr.write("Could not check for updates.\n")
     except Exception:
         sys.stderr.write("Could not check for updates.\n")
 
@@ -2654,6 +2656,16 @@ def run(argv: list[str] | None = None) -> int:
         if update_checker is not None and sys.stderr.isatty():
             try:
                 new_ver = update_checker.get_newer_version()
+                if not new_ver and not update_checker.completed:
+                    # Background check timed out — fall back to persistent flag
+                    from . import __version__
+                    from .update import _parse_version, read_pending_update
+
+                    flagged = read_pending_update()
+                    if flagged and _parse_version(flagged) > _parse_version(
+                        __version__
+                    ):
+                        new_ver = flagged
                 if new_ver:
                     from . import __version__
 
