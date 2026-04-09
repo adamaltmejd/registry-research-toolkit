@@ -120,9 +120,29 @@ changed semantics), bump the `SCHEMA_VERSION` major version in `db.py`. The
 Minor/patch bumps (new tables, new optional columns) are backwards-compatible
 and do not trigger rejection.
 
+### Release tags and distribution
+
+The monorepo uses **per-package release tags**: `regmeta/v0.5.0`,
+`mock-data-wizard/v0.4.0`, etc.  Each tag corresponds to a GitHub release
+scoped to that package.
+
+| Channel | Trigger | What it distributes |
+|---------|---------|---------------------|
+| PyPI | `publish_regmeta.yml` on `regmeta/v*` release | Python package (wheel + sdist) |
+| GitHub Release asset | Manual upload to the same release | Pre-built database (`regmeta.db.zst`) |
+
+The database asset is **optional** per release.  Not every package release
+requires a new database — only schema changes do.  `resolve_latest_release()`
+walks recent releases backwards to find the most recent one that includes a
+DB asset, so users always get a database even when the latest release omits
+one.
+
+Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition
+but new releases must use the `regmeta/v*` prefix.
+
 **Update command**: `maintain update` is the single command that brings
 everything current — it runs `uv tool upgrade regmeta` for the package and
-downloads a new database if the release includes one. A background version
+walks releases to find the latest database asset. A background version
 checker runs once per week (cached in `~/.local/share/regmeta/.update_check`)
 and prints a hint on interactive runs when a newer release exists.
 

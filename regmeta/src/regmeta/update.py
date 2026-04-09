@@ -13,7 +13,12 @@ from typing import Any
 
 from . import __version__
 from .db import DB_FILENAME, default_db_dir
-from .download import DB_SOURCE_FILE, resolve_latest_release, download_db
+from .download import (
+    DB_SOURCE_FILE,
+    version_from_tag,
+    download_db,
+    resolve_latest_release,
+)
 from .errors import EXIT_CONFIG, RegmetaError
 
 _UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
@@ -91,7 +96,7 @@ class UpdateChecker:
 
         # Stale or missing cache — hit the network
         try:
-            _tag, version, _has_db = resolve_latest_release(
+            _tag, version, _db_tag = resolve_latest_release(
                 timeout=_UPDATE_CHECK_TIMEOUT
             )
             self._result = (
@@ -154,19 +159,19 @@ def run_update(
     """Update regmeta package and database to the latest release.
 
     Skips the package upgrade if already on the latest version.
-    Skips the database download if already on the latest release tag
-    (unless *force* is True or the database does not exist).
+    Walks recent releases to find the most recent one with a DB asset
+    and skips the download if already on that tag (unless *force* is
+    True or the database does not exist).
     """
     if db_dir is None:
         db_dir = default_db_dir()
 
     # Resolve the target release
     if tag == "latest":
-        release_tag, latest_ver, has_db = resolve_latest_release(timeout=10)
+        _release_tag, latest_ver, db_tag = resolve_latest_release(timeout=10)
     else:
-        release_tag = tag
-        latest_ver = tag.lstrip("v")
-        has_db = True  # assume explicit tag has a db
+        latest_ver = version_from_tag(tag)
+        db_tag = tag  # assume explicit tag has a db
 
     result: dict[str, Any] = {}
 
@@ -212,14 +217,14 @@ def run_update(
     # --- Database download ---
     db_path = db_dir / DB_FILENAME
     local_tag = _read_db_source_tag(db_dir)
-    need_db = not db_path.exists() or force or (has_db and local_tag != release_tag)
-    if need_db and has_db:
+    need_db = not db_path.exists() or force or (db_tag and local_tag != db_tag)
+    if need_db and db_tag:
         sys.stderr.write("Updating database...\n")
         db_result = download_db(
-            db_dir=db_dir, tag=release_tag, force=db_path.exists(), yes=yes
+            db_dir=db_dir, tag=db_tag, force=db_path.exists(), yes=yes
         )
         result["database"] = db_result
-    elif not has_db:
+    elif not db_tag:
         result["database"] = "no_db_in_release"
     else:
         result["database"] = "up_to_date"
