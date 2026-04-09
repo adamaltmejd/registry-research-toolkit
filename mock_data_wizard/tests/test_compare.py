@@ -9,13 +9,19 @@ from mock_data_wizard.cli import main
 
 
 def test_compare_columns(regmeta_db: Path, capsys):
-    rc = main([
-        "compare",
-        "--columns", "Kon,FakeColumn",
-        "--register", "TESTREG",
-        "--db", str(regmeta_db.parent),
-        "--format", "json",
-    ])
+    rc = main(
+        [
+            "compare",
+            "--columns",
+            "Kon,FakeColumn",
+            "--register",
+            "TESTREG",
+            "--db",
+            str(regmeta_db.parent),
+            "--format",
+            "json",
+        ]
+    )
     assert rc == 0
     data = json.loads(capsys.readouterr().out)
     files = data["files"]
@@ -29,11 +35,15 @@ def test_compare_columns(regmeta_db: Path, capsys):
 
 
 def test_compare_columns_requires_register(regmeta_db: Path):
-    rc = main([
-        "compare",
-        "--columns", "Kon",
-        "--db", str(regmeta_db.parent),
-    ])
+    rc = main(
+        [
+            "compare",
+            "--columns",
+            "Kon",
+            "--db",
+            str(regmeta_db.parent),
+        ]
+    )
     assert rc == 1
 
 
@@ -63,12 +73,16 @@ def test_compare_manifest(regmeta_db: Path, tmp_path: Path, capsys):
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps(manifest))
 
-    rc = main([
-        "compare",
-        str(manifest_path),
-        "--db", str(regmeta_db.parent),
-        "--format", "json",
-    ])
+    rc = main(
+        [
+            "compare",
+            str(manifest_path),
+            "--db",
+            str(regmeta_db.parent),
+            "--format",
+            "json",
+        ]
+    )
     assert rc == 0
     data = json.loads(capsys.readouterr().out)
     f = data["files"][0]
@@ -83,13 +97,19 @@ def test_compare_files(regmeta_db: Path, tmp_path: Path, capsys):
     csv_path = tmp_path / "data.csv"
     csv_path.write_text("Kon,Extra\n1,y\n")
 
-    rc = main([
-        "compare",
-        "--files", str(csv_path),
-        "--register", "TESTREG",
-        "--db", str(regmeta_db.parent),
-        "--format", "json",
-    ])
+    rc = main(
+        [
+            "compare",
+            "--files",
+            str(csv_path),
+            "--register",
+            "TESTREG",
+            "--db",
+            str(regmeta_db.parent),
+            "--format",
+            "json",
+        ]
+    )
     assert rc == 0
     f = json.loads(capsys.readouterr().out)["files"][0]
     assert f["register_status"] == "resolved"
@@ -100,23 +120,32 @@ def test_compare_bad_manifest_version(regmeta_db: Path, tmp_path: Path):
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({"schema_version": "1", "files": []}))
 
-    rc = main([
-        "compare",
-        str(manifest_path),
-        "--db", str(regmeta_db.parent),
-    ])
+    rc = main(
+        [
+            "compare",
+            str(manifest_path),
+            "--db",
+            str(regmeta_db.parent),
+        ]
+    )
     assert rc == 1
 
 
 def test_compare_strips_project_prefix(regmeta_db: Path, capsys):
     """P1105_Kon should match Kon after prefix stripping."""
-    rc = main([
-        "compare",
-        "--columns", "P1105_Kon,P1105_FakeCol",
-        "--register", "TESTREG",
-        "--db", str(regmeta_db.parent),
-        "--format", "json",
-    ])
+    rc = main(
+        [
+            "compare",
+            "--columns",
+            "P1105_Kon,P1105_FakeCol",
+            "--register",
+            "TESTREG",
+            "--db",
+            str(regmeta_db.parent),
+            "--format",
+            "json",
+        ]
+    )
     assert rc == 0
     data = json.loads(capsys.readouterr().out)
     f = data["files"][0]
@@ -127,12 +156,17 @@ def test_compare_strips_project_prefix(regmeta_db: Path, capsys):
 
 
 def test_compare_table_output(regmeta_db: Path, capsys):
-    rc = main([
-        "compare",
-        "--columns", "Kon,FakeColumn",
-        "--register", "TESTREG",
-        "--db", str(regmeta_db.parent),
-    ])
+    rc = main(
+        [
+            "compare",
+            "--columns",
+            "Kon,FakeColumn",
+            "--register",
+            "TESTREG",
+            "--db",
+            str(regmeta_db.parent),
+        ]
+    )
     assert rc == 0
     out = capsys.readouterr().out
     assert "matched" in out

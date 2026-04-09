@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import DDL
+from regmeta.db import DDL, SCHEMA_VERSION
 
 
 MINIMAL_STATS = {
@@ -288,6 +288,10 @@ def regmeta_db(tmp_path: Path) -> Path:
     db_path = tmp_path / "regmeta.db"
     conn = sqlite3.connect(str(db_path))
     conn.executescript(DDL)
+    conn.execute(
+        "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
+        ("schema_version", SCHEMA_VERSION),
+    )
     conn.execute(
         "INSERT INTO register (register_id, registernamn, registerrubrik, registersyfte) "
         "VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"

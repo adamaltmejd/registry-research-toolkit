@@ -7,7 +7,7 @@ from pathlib import Path
 
 from mock_data_wizard.cli import main
 
-from conftest import MINIMAL_STATS
+from .conftest import MINIMAL_STATS
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:

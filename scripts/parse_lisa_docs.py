@@ -908,7 +908,7 @@ def collect_topic_entries(
     slug_content: dict[str, list[str]] = {}
     for range_start, range_end in uncovered_ranges:
         content = lines[range_start:range_end]
-        non_empty = [l for l in content if l.strip()]
+        non_empty = [line for line in content if line.strip()]
         if len(non_empty) < 2:
             continue
 
@@ -919,7 +919,7 @@ def collect_topic_entries(
             elif sec_line < range_end:
                 # Split at section boundary
                 pre = lines[range_start:sec_line]
-                if any(l.strip() for l in pre):
+                if any(line.strip() for line in pre):
                     slug = _slugify(section_name)
                     slug_content.setdefault(slug, []).extend(pre)
                 section_name = sec_name
@@ -929,7 +929,7 @@ def collect_topic_entries(
 
         slug = _slugify(section_name)
         remaining = lines[range_start:range_end]
-        if any(l.strip() for l in remaining):
+        if any(line.strip() for line in remaining):
             slug_content.setdefault(slug, []).extend([""])
             slug_content[slug].extend(remaining)
 
@@ -955,7 +955,7 @@ def collect_topic_entries(
     entries: list[DocEntry] = []
     for target_slug, display, tags, _patterns in _CONSOLIDATION_TARGETS:
         content_lines = target_content.get(target_slug, [])
-        non_empty = [l for l in content_lines if l.strip()]
+        non_empty = [line for line in content_lines if line.strip()]
         if len(non_empty) < 3:
             continue
         entries.append(
@@ -973,7 +973,7 @@ def collect_topic_entries(
     if unclaimed:
         print(f"  Unclaimed topic fragments ({len(unclaimed)}):", file=sys.stderr)
         for slug in sorted(unclaimed):
-            n = len([l for l in slug_content[slug] if l.strip()])
+            n = len([line for line in slug_content[slug] if line.strip()])
             print(f"    {slug} ({n} lines)", file=sys.stderr)
 
     return entries
