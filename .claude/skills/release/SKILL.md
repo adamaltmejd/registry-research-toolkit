@@ -13,7 +13,7 @@ All raw arguments: `$ARGUMENTS`
 
 ## Packages
 
-| Package | pyproject.toml | __init__.py | Publishes to PyPI |
+| Package | pyproject.toml | `__init__.py` | Publishes to PyPI |
 |---|---|---|---|
 | regmeta | `regmeta/pyproject.toml` | `regmeta/src/regmeta/__init__.py` | Yes (via `publish_regmeta.yml`, needs environment approval) |
 | mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | No |
@@ -25,6 +25,7 @@ Before doing anything, validate the inputs:
 1. `$0` must be one of: `regmeta`, `mock_data_wizard`
 2. `$1` must be one of: `patch`, `minor`, `major`
 3. If either is missing or invalid, stop and ask the user.
+4. **Major version bumps require explicit confirmation.** If `$1` is `major`, stop and warn the user that this is a major release (breaking API changes). Show the current version and the planned new version, and ask them to confirm before proceeding. Do not continue unless the user explicitly approves.
 
 ## Steps
 
@@ -38,7 +39,8 @@ Before doing anything, validate the inputs:
 
 - Run `git log --oneline <package>/v<current>..HEAD` to get commits since the last release tag for this package.
 - If no previous tag exists, use all commits.
-- Write a brief bullet list summarizing the changes (group related commits, skip merge commits).
+- Write a brief bullet list summarizing the changes (group related commits, skip merge commits). For each item, link any associated PRs or issues inline (e.g. `Fix widget crash (#42)`).
+- Credit contributors: use `gh pr list --search "is:merged" --json number,author,title` and `gh issue list --state closed --json number,author,title` to find PRs and issues closed since the last release. For each bullet that came from an external contributor (not the repo owner), append `(HT @username)`.
 - If `--notes` was provided in `$ARGUMENTS`, append that text under a separate section.
 - Show the draft notes to the user before proceeding.
 
@@ -82,7 +84,7 @@ uv run ruff format --check
 
 Commit the version bump files (`pyproject.toml`, `__init__.py`, `uv.lock`):
 
-```
+```text
 Bump <package> version to X.Y.Z
 ```
 
@@ -99,10 +101,9 @@ Use `--verify-tag` if the tag already exists. The tag must point at the commit t
 ### 10. Monitor deployment
 
 - If the package publishes to PyPI (see table above):
-  - Watch for the publish workflow: `gh run list --workflow=publish_regmeta.yml --limit 1`
-  - Poll the run status every 15 seconds until CI passes and the publish job starts.
-  - When the publish job is `waiting`, tell the user: **"Deployment is waiting for approval — approve at <run URL>"**
-  - After approval, poll until publish completes and report success/failure.
+  - Find the triggered publish run: `gh run list --workflow=publish_regmeta.yml --limit 1 --json databaseId,url`
+  - Tell the user: **"Publish workflow started — approve the deployment at `<run URL>`"**
+  - Watch the run to completion: `gh run watch <run-id> --exit-status`
   - Verify the new version is on PyPI: `curl -s https://pypi.org/pypi/<package>/json | python3 -c "import sys,json; print(json.load(sys.stdin)['info']['version'])"`
 - If the package does NOT publish to PyPI, report the release is done after the tag is created.
 
