@@ -13,7 +13,7 @@ If `regmeta` is not yet installed, run these commands:
 
 ```bash
 # Install regmeta as a global CLI tool
-uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
+uv tool install regmeta
 
 # Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
 regmeta maintain update --yes

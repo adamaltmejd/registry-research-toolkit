@@ -33,7 +33,7 @@ instructions, the full command reference, and common query workflows.
 
 ```bash
 # regmeta (metadata queries)
-uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
+uv tool install regmeta
 regmeta maintain update
 
 # mock-data-wizard (mock data generation, depends on regmeta)

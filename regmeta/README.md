@@ -7,7 +7,7 @@ is secondary.
 ## Install
 
 ```bash
-uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
+uv tool install regmeta
 regmeta maintain update      # downloads package + database (~400 MB compressed)
 ```
 

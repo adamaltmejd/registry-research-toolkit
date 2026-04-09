@@ -1,0 +1,23 @@
+name: Publish regmeta to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  ci:
+    if: startsWith(github.event.release.tag_name, 'v')
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build regmeta/ --out-dir dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1
