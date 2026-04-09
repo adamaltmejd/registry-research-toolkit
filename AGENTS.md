@@ -17,7 +17,7 @@
 - No frozen specs or implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
 
 # Maturity and compatibility
-- All tools in this repo are **pre-release with zero users**. There is no deployed version, no backwards compatibility obligation, and no migration path to maintain.
+- All tools in this repo are **early-stage** with a small group of testers. Breaking changes are acceptable but should be deliberate — prefer clean breaks over silent behavior changes.
 - Do not write migration code, shims, deprecation wrappers, or backwards-compatibility layers. If something needs to change, change it directly.
 - Do not preserve old code "just in case." Dead code gets deleted.
 

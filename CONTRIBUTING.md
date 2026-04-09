@@ -24,15 +24,16 @@ uv run ruff check regmeta/ mock_data_wizard/
 uv run ruff format regmeta/ mock_data_wizard/
 ```
 
-## Releasing a new database version
+## Releasing
+
+Use the `/release` skill in Claude Code, which handles version bumps, tagging,
+and publishing. For manual database releases:
 
 ```bash
 # Build DB from SCB CSV exports
 regmeta maintain build-db --csv-dir path/to/SCB-data/
 
-# Compress
+# Compress and attach to an existing release
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
-
-# Create release (semver pre-release tag)
-gh release create v0.X.0-alpha.N regmeta.db.zst --prerelease --title "v0.X.0-alpha.N"
+gh release upload regmeta/vX.Y.Z regmeta.db.zst
 ```
