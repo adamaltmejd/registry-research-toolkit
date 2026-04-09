@@ -32,6 +32,10 @@ Before doing anything, validate and resolve the inputs:
 3. If any required input is still ambiguous, stop and ask the user.
 4. **Major version bumps require explicit confirmation.** If the bump level is `major`, stop and warn the user that this is a major release (breaking API changes). Show the current version and the planned new version, and ask them to confirm before proceeding. Do not continue unless the user explicitly approves.
 
+## Implementation notes
+
+- **No command substitution in Bash calls.** Never use `$(...)` or backticks inside a single Bash command. Instead, run each command separately and use the returned value in the next call. For example, first run `git tag --list '<package>/v*' --sort=-version:refname` to get the latest tag, then use that literal tag value in `git log --oneline <tag>..HEAD -- <package>/`.
+
 ## Steps
 
 Run the following steps for each resolved package.
