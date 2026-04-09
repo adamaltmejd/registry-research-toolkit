@@ -34,7 +34,7 @@ instructions, the full command reference, and common query workflows.
 ```bash
 # regmeta (metadata queries)
 uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
-regmeta maintain download
+regmeta maintain update
 
 # mock-data-wizard (mock data generation, depends on regmeta)
 uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
@@ -45,7 +45,7 @@ uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-
 ### regmeta
 
 ```bash
-regmeta maintain download                            # download metadata DB
+regmeta maintain update                              # download metadata DB
 regmeta search --query "kommun"                      # search variables
 regmeta get register LISA                            # register overview
 regmeta get schema --register LISA --years 2020      # columns for a year

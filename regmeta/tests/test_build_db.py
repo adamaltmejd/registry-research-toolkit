@@ -336,3 +336,33 @@ class TestSchemaCompat:
         db = self._make_db(tmp_path, f"{major + 1}.0.0")
         conn = open_db(db, check_schema=False)
         conn.close()
+
+    def test_missing_manifest_table(self, tmp_path: Path):
+        """A database without import_manifest is rejected."""
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.execute("CREATE TABLE dummy (x TEXT)")
+        conn.commit()
+        conn.close()
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db_path)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_missing_schema_version_key(self, tmp_path: Path):
+        """A manifest without schema_version is rejected."""
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute("INSERT INTO import_manifest VALUES ('import_date', '2024-01-01')")
+        conn.commit()
+        conn.close()
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db_path)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_unparseable_schema_version(self, tmp_path: Path):
+        """A manifest with garbage schema_version is rejected."""
+        db = self._make_db(tmp_path, "not-a-version")
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db)
+        assert exc_info.value.code == "schema_incompatible"

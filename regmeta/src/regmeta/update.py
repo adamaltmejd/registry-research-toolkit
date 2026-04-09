@@ -3,68 +3,48 @@
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 import threading
 import time
-import urllib.error
-import urllib.request
 from pathlib import Path
 from typing import Any
 
 from . import __version__
 from .db import DB_FILENAME, default_db_dir
-from .download import DB_ASSET_NAME, GITHUB_REPO, RELEASES_API_URL, download_db
-from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
+from .download import DB_SOURCE_FILE, _resolve_latest_release, download_db
+from .errors import EXIT_CONFIG, RegmetaError
 
-UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
+_UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
 _UPDATE_CHECK_TIMEOUT = 3  # max seconds to wait for the background thread
 
-# Written by `download_db` so `maintain update` can tell which release the
-# local database came from.
-DB_SOURCE_FILE = ".db_source"
+
+def _parse_version(v: str) -> tuple[int, ...]:
+    """Parse a PEP 440-ish version into a comparable tuple.
+
+    Supports ``X.Y.Z``, ``X.Y.ZaN`` (alpha), and ``X.Y.Z.devN`` (dev).
+    Ordering: ``0.4.0.dev1 < 0.4.0a1 < 0.4.0 < 0.5.0``.
+    Unparseable strings sort lowest ``(0,)`` so they always trigger an update.
+    """
+    v = v.lstrip("v")
+    m = re.match(
+        r"^(\d+)\.(\d+)\.(\d+)"
+        r"(?:\.(dev)(\d+)|(a)(\d+))?$",
+        v,
+    )
+    if not m:
+        return (0,)
+    major, minor, patch = int(m.group(1)), int(m.group(2)), int(m.group(3))
+    if m.group(4):  # .devN
+        return (major, minor, patch, -2, int(m.group(5)))
+    if m.group(6):  # aN
+        return (major, minor, patch, -1, int(m.group(7)))
+    return (major, minor, patch, 0, 0)  # final
 
 
 def _check_cache_path() -> Path:
     return default_db_dir() / ".update_check"
-
-
-def _resolve_latest_release(
-    *, timeout: float = _UPDATE_CHECK_TIMEOUT
-) -> tuple[str, str, bool]:
-    """Return (raw_tag, version, has_db_asset) from the latest GitHub release.
-
-    *raw_tag* is the literal tag string (e.g. ``"v0.5.0"``).
-    *version* strips a leading ``v`` for comparison with ``__version__``.
-    *has_db_asset* is True when the release includes ``regmeta.db.zst``.
-    """
-    req = urllib.request.Request(
-        RELEASES_API_URL + "?per_page=1",
-        headers={"Accept": "application/vnd.github+json"},
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            releases = json.loads(resp.read())
-            if not releases:
-                raise RegmetaError(
-                    exit_code=EXIT_NETWORK,
-                    code="no_releases",
-                    error_class="network",
-                    message="No releases found.",
-                    remediation=f"Check https://github.com/{GITHUB_REPO}/releases",
-                )
-            release = releases[0]
-            tag = release["tag_name"]
-            has_db = any(a["name"] == DB_ASSET_NAME for a in release.get("assets", []))
-            return tag, tag.lstrip("v"), has_db
-    except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
-        raise RegmetaError(
-            exit_code=EXIT_NETWORK,
-            code="release_lookup_failed",
-            error_class="network",
-            message=f"Failed to check for updates: {exc}",
-            remediation="Check your internet connection.",
-        ) from exc
 
 
 # ---------------------------------------------------------------------------
@@ -95,10 +75,13 @@ class UpdateChecker:
         if cache_path.exists():
             try:
                 cache = json.loads(cache_path.read_text())
-                if now - cache.get("timestamp", 0) < UPDATE_CHECK_INTERVAL:
+                if now - cache.get("timestamp", 0) < _UPDATE_CHECK_INTERVAL:
                     cached_ver = cache.get("latest_version")
                     self._result = (
-                        cached_ver if cached_ver and cached_ver != __version__ else None
+                        cached_ver
+                        if cached_ver
+                        and _parse_version(cached_ver) > _parse_version(__version__)
+                        else None
                     )
                     self._checked = True
                     self._from_cache = True
@@ -108,8 +91,14 @@ class UpdateChecker:
 
         # Stale or missing cache — hit the network
         try:
-            _tag, version, _has_db = _resolve_latest_release()
-            self._result = version if version != __version__ else None
+            _tag, version, _has_db = _resolve_latest_release(
+                timeout=_UPDATE_CHECK_TIMEOUT
+            )
+            self._result = (
+                version
+                if _parse_version(version) > _parse_version(__version__)
+                else None
+            )
             self._checked = True
         except Exception:
             pass
@@ -186,7 +175,13 @@ def run_update(
 
     # --- Package upgrade ---
     current = __version__
-    if latest_ver == current:
+    current_parsed = _parse_version(current)
+    latest_parsed = _parse_version(latest_ver)
+    if current_parsed >= latest_parsed:
+        if current_parsed > latest_parsed:
+            sys.stderr.write(
+                f"Package v{current} is ahead of latest release v{latest_ver}.\n"
+            )
         result["package"] = "up_to_date"
     else:
         sys.stderr.write(f"Upgrading package: v{current} → v{latest_ver}\n")

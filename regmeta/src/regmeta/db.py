@@ -341,16 +341,45 @@ def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
 
 
 def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
-    """Raise if the database schema major version is incompatible with the code."""
+    """Raise if the database schema major version is incompatible with the code.
+
+    Treats missing or unparseable schema_version as incompatible — the
+    ``check_schema=False`` escape hatch exists for legitimate bypasses
+    (e.g. ``maintain info``, doc DB).
+    """
     try:
         manifest = get_manifest(conn)
-        db_ver = manifest.get("schema_version", "")
+    except sqlite3.OperationalError as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database manifest is missing or unreadable in {db_path}. "
+                f"Expected schema v{SCHEMA_VERSION} metadata."
+            ),
+            remediation="Run `regmeta maintain update` to get a compatible database.",
+        ) from exc
+
+    db_ver = manifest.get("schema_version")
+    try:
+        if not db_ver:
+            raise ValueError("missing schema_version")
         db_major = int(db_ver.split(".")[0])
         code_major = int(SCHEMA_VERSION.split(".")[0])
-    except (ValueError, IndexError):
-        return  # unparseable — skip check
+    except (ValueError, IndexError) as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema version is missing or invalid in {db_path}: "
+                f"{db_ver!r}. This version of regmeta expects schema v{SCHEMA_VERSION}."
+            ),
+            remediation="Run `regmeta maintain update` to get a compatible database.",
+        ) from exc
+
     if db_major != code_major:
-        conn.close()
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="schema_incompatible",
@@ -384,7 +413,11 @@ def open_db(
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     if check_schema:
-        _check_schema_compat(conn, db_path)
+        try:
+            _check_schema_compat(conn, db_path)
+        except RegmetaError:
+            conn.close()
+            raise
     return conn
 
 

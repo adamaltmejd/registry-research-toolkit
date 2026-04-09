@@ -130,6 +130,17 @@ and prints a hint on interactive runs when a newer release exists.
 prompt to download the database interactively when none is found, so users
 don't need to know about `maintain update` on first install.
 
+### Package version format
+
+Package versions follow `X.Y.Z` with two optional pre-release suffixes:
+
+- `X.Y.Z` — final release
+- `X.Y.ZaN` — alpha (e.g. `0.5.0a1`)
+- `X.Y.Z.devN` — development build (e.g. `0.5.0.dev3`)
+
+No other suffixes (beta, rc, post, epoch) are used. The update checker
+relies on this format for version comparison.
+
 ## Exit codes
 
 | Code | Meaning |

@@ -1866,23 +1866,22 @@ def run(argv: list[str] | None = None) -> int:
         except Exception:
             pass
 
-    # Auto-download database on first use (interactive only).
-    # Commands that need the main metadata db: search, get/*, resolve.
-    if args.command in ("search", "get", "resolve"):
-        db = db_path_from_args(args.db)
-        if not db.exists() and fmt != "json" and sys.stdin.isatty():
-            sys.stderr.write(
-                "No database found. Download now?"
-                " (~400 MB compressed, ~1.6 GB on disk)\n[y/N] "
-            )
-            sys.stderr.flush()
-            if input().strip().lower() in ("y", "yes"):
-                from .download import download_db
-
-                download_db(db_dir=db.parent, yes=True)
-                sys.stderr.write("\n")
-
     try:
+        # Auto-download database on first use (interactive only).
+        # Commands that need the main metadata db: search, get/*, resolve.
+        if args.command in ("search", "get", "resolve"):
+            db = db_path_from_args(args.db)
+            if not db.exists() and fmt != "json" and sys.stdin.isatty():
+                sys.stderr.write(
+                    "No database found. Download now?"
+                    " (~400 MB compressed, ~1.6 GB on disk)\n[y/N] "
+                )
+                sys.stderr.flush()
+                if input().strip().lower() in ("y", "yes"):
+                    from .download import download_db
+
+                    download_db(db_dir=db.parent, yes=True)
+                    sys.stderr.write("\n")
         payload, exit_code = handler(args)
         if not quiet and fmt != "json":
             _collect_hints(key, payload.get("data", {}), args, hints)
@@ -1904,7 +1903,7 @@ def run(argv: list[str] | None = None) -> int:
         if hints and not quiet:
             sys.stdout.flush()
             _emit_hints(hints)
-        if update_checker is not None:
+        if update_checker is not None and sys.stderr.isatty():
             try:
                 new_ver = update_checker.get_newer_version()
                 if new_ver:
