@@ -652,15 +652,6 @@ def _build_parser() -> argparse.ArgumentParser:
     maintain_p = sub.add_parser("maintain", help="Setup and maintenance commands.")
     maintain_sub = maintain_p.add_subparsers(dest="maintain_command")
 
-    build_p = maintain_sub.add_parser(
-        "build-db", help="Build database from SCB CSV exports."
-    )
-    build_p.add_argument(
-        "--csv-dir", required=True, help="Directory containing SCB CSV exports."
-    )
-
-    maintain_sub.add_parser("info", help="Database stats and import metadata.")
-
     update_p = maintain_sub.add_parser(
         "update",
         help="Update regmeta package and database to the latest version.",
@@ -684,8 +675,45 @@ def _build_parser() -> argparse.ArgumentParser:
         "-y", "--yes", action="store_true", help="Skip confirmation prompt."
     )
 
+    maintain_sub.add_parser(
+        "info",
+        help="Database stats and import metadata.",
+        description=(
+            "Show database path, schema version, import timestamp, and row\n"
+            "counts per table.\n\n"
+            "Examples:\n"
+            "  regmeta maintain info"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
+    build_p = maintain_sub.add_parser(
+        "build-db",
+        help="Build database from SCB CSV exports.",
+        description=(
+            "Build the metadata database from raw SCB CSV exports. This\n"
+            "replaces the database entirely (not incremental). Most users\n"
+            "should use `maintain update` instead.\n\n"
+            "Examples:\n"
+            "  regmeta maintain build-db --csv-dir /path/to/SCB-data/"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    build_p.add_argument(
+        "--csv-dir", required=True, help="Directory containing SCB CSV exports."
+    )
+
     build_docs_p = maintain_sub.add_parser(
-        "build-docs", help="Build documentation search index from markdown files."
+        "build-docs",
+        help="Build documentation search index from markdown files.",
+        description=(
+            "Rebuild the documentation FTS index from markdown files.\n"
+            "Uses bundled docs by default; override with --docs-dir.\n\n"
+            "Examples:\n"
+            "  regmeta maintain build-docs\n"
+            "  regmeta maintain build-docs --docs-dir /path/to/docs/"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_docs_p.add_argument(
         "--docs-dir",
@@ -2020,13 +2048,13 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
         "Categorical variables ranked by usage.",
     ),
     (
-        "get diff --register R --from YEAR --to YEAR [--variable V...]",
+        "get diff --register R --from YEAR --to YEAR [--variant ID] [--variable V...]",
         "Schema changes between two years.",
     ),
     ("get lineage VARIABLE [--register R]", "Cross-register variable provenance."),
     (
         "get availability TARGET [--register R]",
-        "Temporal availability (years, gaps) for a variable or register.",
+        "Temporal availability (years, gaps, aliases) for a variable or register.",
     ),
     None,
     (
@@ -2387,6 +2415,26 @@ maintain info — What database am I using?
   "Show database version, schema, and import stats"
     regmeta maintain info
 """,
+    ("maintain", "build-db"): """\
+maintain build-db — Build database from raw CSVs
+─────────────────────────────────────────────────
+
+  "Build the database from SCB CSV exports"
+    regmeta maintain build-db --csv-dir /path/to/SCB-data/
+
+  Most users should use `maintain update` to download a pre-built
+  database instead.
+""",
+    ("maintain", "build-docs"): """\
+maintain build-docs — Rebuild documentation index
+──────────────────────────────────────────────────
+
+  "Rebuild the docs search index from markdown files"
+    regmeta maintain build-docs
+
+  "Use custom documentation directory"
+    regmeta maintain build-docs --docs-dir /path/to/docs/
+""",
 }
 
 _WORKFLOW_EXAMPLES = """\
@@ -2402,11 +2450,15 @@ Common workflows
     (for no_match columns, try search:)
     regmeta search --query AstKommun --field datacolumn
 
+  "Get structured output for programmatic use"
+    regmeta --format json get schema --register LISA --years 2022
+
   "How has my register changed since I last looked?"
     regmeta get diff --register LISA --from 2018 --to 2023
 
   "What SCB data exists but isn't in my local mock data?"
     mock-data-wizard compare mock_data/manifest.json
+    (requires the mock-data-wizard package)
 """
 
 # Display order for --examples (all)
@@ -2427,6 +2479,8 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("docs", "list"),
     ("maintain", "update"),
     ("maintain", "info"),
+    ("maintain", "build-db"),
+    ("maintain", "build-docs"),
 ]
 
 
