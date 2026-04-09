@@ -287,7 +287,7 @@ def _build_parser() -> argparse.ArgumentParser:
         prog="regmeta",
         description=(
             "Search and query SCB registry metadata.\n\n"
-            "Requires a database: run `regmeta maintain download` or `regmeta maintain build-db`.\n"
+            "Requires a database: run `regmeta maintain update` or `regmeta maintain build-db`.\n"
             f"Default database: {default_db_dir()} (override with --db or $REGMETA_DB)"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -572,20 +572,21 @@ def _build_parser() -> argparse.ArgumentParser:
         "--csv-dir", required=True, help="Directory containing SCB CSV exports."
     )
 
-    download_p = maintain_sub.add_parser(
-        "download", help="Download pre-built database from GitHub Releases."
+    maintain_sub.add_parser("info", help="Database stats and import metadata.")
+
+    update_p = maintain_sub.add_parser(
+        "update",
+        help="Update regmeta package and database to the latest version.",
     )
-    download_p.add_argument(
-        "--tag", default="latest", help="GitHub release tag (default: latest)."
+    update_p.add_argument(
+        "--tag", default="latest", help="Target release tag (default: latest)."
     )
-    download_p.add_argument(
-        "--force", action="store_true", help="Overwrite existing database."
+    update_p.add_argument(
+        "--force", action="store_true", help="Re-download database even if up to date."
     )
-    download_p.add_argument(
+    update_p.add_argument(
         "-y", "--yes", action="store_true", help="Skip confirmation prompt."
     )
-
-    maintain_sub.add_parser("info", help="Database stats and import metadata.")
 
     build_docs_p = maintain_sub.add_parser(
         "build-docs", help="Build documentation search index from markdown files."
@@ -670,26 +671,10 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
     ), 0
 
 
-def _cmd_maintain_download(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .download import download_db
-
-    start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else default_db_dir()
-    result = download_db(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
-        command="maintain download",
-        args_payload={"tag": args.tag, "force": args.force},
-        db_info=None,
-        data=result,
-        duration_ms=duration_ms,
-    ), 0
-
-
 def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
-    conn = open_db(db)
+    conn = open_db(db, check_schema=False)
     try:
         manifest = get_manifest(conn)
         tables = [
@@ -715,6 +700,22 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             "import_date": manifest.get("import_date", "unknown"),
         },
         data={"manifest": manifest, "table_counts": table_counts, "db_path": str(db)},
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .update import run_update
+
+    start = time.perf_counter()
+    db_dir = Path(args.db) if args.db else None
+    result = run_update(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain update",
+        args_payload={"tag": args.tag, "force": args.force},
+        db_info=None,
+        data=result,
         duration_ms=duration_ms,
     ), 0
 
@@ -1791,8 +1792,8 @@ def _collect_hints(
 
 COMMAND_DISPATCH = {
     ("maintain", "build-db"): _cmd_maintain_build_db,
-    ("maintain", "download"): _cmd_maintain_download,
     ("maintain", "info"): _cmd_maintain_info,
+    ("maintain", "update"): _cmd_maintain_update,
     ("search", None): _cmd_search,
     ("get", "register"): _cmd_get_register,
     ("get", "schema"): _cmd_get_schema,
@@ -1853,7 +1854,34 @@ def run(argv: list[str] | None = None) -> int:
     quiet = getattr(args, "quiet", False) or os.environ.get("REGMETA_QUIET") == "1"
     hints: list[str] = []
 
+    # Kick off background update check early so it runs in parallel with the
+    # actual command.  We collect the result (with a short timeout) just before
+    # returning so the user never waits for it.
+    update_checker = None
+    if not quiet and fmt != "json" and key != ("maintain", "update"):
+        try:
+            from .update import UpdateChecker
+
+            update_checker = UpdateChecker()
+        except Exception:
+            pass
+
     try:
+        # Auto-download database on first use (interactive only).
+        # Commands that need the main metadata db: search, get/*, resolve.
+        if args.command in ("search", "get", "resolve"):
+            db = db_path_from_args(args.db)
+            if not db.exists() and fmt != "json" and sys.stdin.isatty():
+                sys.stderr.write(
+                    "No database found. Download now?"
+                    " (~400 MB compressed, ~1.6 GB on disk)\n[y/N] "
+                )
+                sys.stderr.flush()
+                if input().strip().lower() in ("y", "yes"):
+                    from .download import download_db
+
+                    download_db(db_dir=db.parent, yes=True)
+                    sys.stderr.write("\n")
         payload, exit_code = handler(args)
         if not quiet and fmt != "json":
             _collect_hints(key, payload.get("data", {}), args, hints)
@@ -1875,6 +1903,18 @@ def run(argv: list[str] | None = None) -> int:
         if hints and not quiet:
             sys.stdout.flush()
             _emit_hints(hints)
+        if update_checker is not None and sys.stderr.isatty():
+            try:
+                new_ver = update_checker.get_newer_version()
+                if new_ver:
+                    from . import __version__
+
+                    sys.stderr.write(
+                        f"\n  Update available: v{__version__} → v{new_ver}"
+                        "  —  run `regmeta maintain update`\n"
+                    )
+            except Exception:
+                pass
         return exit_code
     except RegmetaError as exc:
         _write_json({"error": exc.to_dict()}, getattr(args, "output", None))

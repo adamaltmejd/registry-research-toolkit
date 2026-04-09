@@ -16,20 +16,29 @@ from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
 DB_ASSET_NAME = "regmeta.db.zst"
+DB_SOURCE_FILE = ".db_source"
 RELEASES_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
 DOWNLOAD_URL = (
     f"https://github.com/{GITHUB_REPO}/releases/download/{{tag}}/{DB_ASSET_NAME}"
 )
 
 
-def _resolve_latest_tag() -> str:
-    """Find the most recent release tag (includes pre-releases)."""
+def resolve_latest_release(
+    *,
+    timeout: float = 15,
+) -> tuple[str, str, bool]:
+    """Return (raw_tag, version, has_db_asset) from the latest GitHub release.
+
+    *raw_tag* is the literal tag string (e.g. ``"v0.5.0"``).
+    *version* strips a leading ``v`` for comparison with ``__version__``.
+    *has_db_asset* is True when the release includes ``regmeta.db.zst``.
+    """
     req = urllib.request.Request(
         RELEASES_API_URL + "?per_page=1",
         headers={"Accept": "application/vnd.github+json"},
     )
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
             releases = json.loads(resp.read())
             if not releases:
                 raise RegmetaError(
@@ -39,7 +48,10 @@ def _resolve_latest_tag() -> str:
                     message="No releases found.",
                     remediation=f"Check https://github.com/{GITHUB_REPO}/releases",
                 )
-            return releases[0]["tag_name"]
+            release = releases[0]
+            tag = release["tag_name"]
+            has_db = any(a["name"] == DB_ASSET_NAME for a in release.get("assets", []))
+            return tag, tag.lstrip("v"), has_db
     except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
         raise RegmetaError(
             exit_code=EXIT_NETWORK,
@@ -145,7 +157,10 @@ def download_db(
         )
 
     # Resolve tag
-    resolved_tag = _resolve_latest_tag() if tag == "latest" else tag
+    if tag == "latest":
+        resolved_tag, _, _ = resolve_latest_release()
+    else:
+        resolved_tag = tag
     url = DOWNLOAD_URL.format(tag=resolved_tag)
 
     # Confirmation
@@ -178,6 +193,18 @@ def download_db(
 
         size = final_path.stat().st_size
         sys.stderr.write(f"Database ready: {final_path} ({_fmt_size(size)})\n")
+
+        # Record which release tag the db came from so the update checker
+        # can detect when a newer database is available.
+        try:
+            source_file = db_dir / DB_SOURCE_FILE
+            source_file.write_text(json.dumps({"tag": resolved_tag}))
+        except OSError:
+            sys.stderr.write(
+                f"Warning: could not write {DB_SOURCE_FILE};"
+                " update detection may not work.\n"
+            )
+
         return {
             "db_path": str(final_path),
             "tag": resolved_tag,

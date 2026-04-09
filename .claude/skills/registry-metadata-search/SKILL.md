@@ -16,7 +16,7 @@ If `regmeta` is not yet installed, run these commands:
 uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
 
 # Download the pre-built metadata database (~400 MB download, ~1.6 GB on disk)
-regmeta maintain download --yes
+regmeta maintain update --yes
 ```
 
 Verify the install works:
@@ -211,10 +211,10 @@ Returns min year, max year, year list, gaps, and per-register aliases (for varia
 
 ```bash
 # Download pre-built database from GitHub Releases
-regmeta maintain download                  # interactive confirmation
-regmeta maintain download --yes            # skip confirmation
-regmeta maintain download --tag v0.1.0     # specific release
-regmeta maintain download --force --yes    # overwrite existing DB
+regmeta maintain update                    # interactive confirmation
+regmeta maintain update --yes              # skip confirmation
+regmeta maintain update --tag v0.1.0       # specific release
+regmeta maintain update --force --yes      # overwrite existing DB
 
 # Build database from raw SCB CSV exports (alternative to download)
 regmeta maintain build-db --csv-dir path/to/SCB-data/
@@ -289,7 +289,7 @@ mock-data-wizard compare --columns "Kon,FodelseAr" --register 189
 
 ## Notes
 
-- All query commands are offline. The database must be installed first with `regmeta maintain download`.
+- All query commands are offline. The database must be installed first with `regmeta maintain update`.
 - Register arguments accept numeric IDs, exact names, or substring matches.
 - Variable arguments accept `var_id` (integer) or variable name (string).
 - Search uses substring matching for most fields; `--description` uses full-text search.

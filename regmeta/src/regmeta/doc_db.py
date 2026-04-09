@@ -140,6 +140,7 @@ def open_doc_db(db_path: Path) -> sqlite3.Connection:
 
     return open_db(
         db_path,
+        check_schema=False,
         error_code="doc_db_not_found",
         remediation="Run `regmeta maintain build-docs` to build the doc search index.",
     )

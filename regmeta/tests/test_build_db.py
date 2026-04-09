@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import build_db, open_db, get_manifest, _decode_cp1252
+from regmeta.db import SCHEMA_VERSION, build_db, open_db, get_manifest, _decode_cp1252
 from regmeta.errors import RegmetaError
 
 from _csv_fixtures import (
@@ -54,7 +54,7 @@ class TestBuildDb:
 
     def test_manifest(self, db_conn: sqlite3.Connection):
         manifest = get_manifest(db_conn)
-        assert manifest["schema_version"] == "2.1.0"
+        assert manifest["schema_version"] == SCHEMA_VERSION
         assert "import_date" in manifest
 
     def test_register_count(self, db_conn: sqlite3.Connection):
@@ -277,3 +277,92 @@ class TestBuildDbErrors:
         with pytest.raises(RegmetaError) as exc_info:
             open_db(tmp_path / "nonexistent.db")
         assert exc_info.value.code == "db_not_found"
+
+
+class TestSchemaCompat:
+    """open_db rejects databases whose schema major version differs from the code.
+
+    The check compares the major component of SCHEMA_VERSION (in db.py) against
+    the schema_version stored in the database's import_manifest table.  When
+    bumping SCHEMA_VERSION with a breaking change, increment the major version
+    so that old databases are rejected with a clear error message.
+    """
+
+    @staticmethod
+    def _make_db(tmp_path: Path, schema_version: str) -> Path:
+        """Create a minimal SQLite db with a given schema_version in its manifest."""
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute(
+            "INSERT INTO import_manifest VALUES ('schema_version', ?)",
+            (schema_version,),
+        )
+        conn.commit()
+        conn.close()
+        return db_path
+
+    def test_compatible_same_version(self, tmp_path: Path):
+        db = self._make_db(tmp_path, SCHEMA_VERSION)
+        conn = open_db(db)
+        conn.close()
+
+    def test_compatible_minor_bump(self, tmp_path: Path):
+        """A minor version bump in the db is still compatible."""
+        major = SCHEMA_VERSION.split(".")[0]
+        db = self._make_db(tmp_path, f"{major}.99.0")
+        conn = open_db(db)
+        conn.close()
+
+    def test_incompatible_major_mismatch(self, tmp_path: Path):
+        major = int(SCHEMA_VERSION.split(".")[0])
+        db = self._make_db(tmp_path, f"{major + 1}.0.0")
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_incompatible_old_major(self, tmp_path: Path):
+        major = int(SCHEMA_VERSION.split(".")[0])
+        if major == 0:
+            pytest.skip("major is already 0")
+        db = self._make_db(tmp_path, f"{major - 1}.0.0")
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_check_schema_false_skips(self, tmp_path: Path):
+        """check_schema=False bypasses the compatibility check."""
+        major = int(SCHEMA_VERSION.split(".")[0])
+        db = self._make_db(tmp_path, f"{major + 1}.0.0")
+        conn = open_db(db, check_schema=False)
+        conn.close()
+
+    def test_missing_manifest_table(self, tmp_path: Path):
+        """A database without import_manifest is rejected."""
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.execute("CREATE TABLE dummy (x TEXT)")
+        conn.commit()
+        conn.close()
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db_path)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_missing_schema_version_key(self, tmp_path: Path):
+        """A manifest without schema_version is rejected."""
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
+        conn.execute("INSERT INTO import_manifest VALUES ('import_date', '2024-01-01')")
+        conn.commit()
+        conn.close()
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db_path)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_unparseable_schema_version(self, tmp_path: Path):
+        """A manifest with garbage schema_version is rejected."""
+        db = self._make_db(tmp_path, "not-a-version")
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db)
+        assert exc_info.value.code == "schema_incompatible"

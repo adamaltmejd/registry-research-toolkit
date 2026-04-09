@@ -340,12 +340,67 @@ def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
     return default_db_dir().resolve() / filename
 
 
+def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
+    """Raise if the database schema major version is incompatible with the code.
+
+    Treats missing or unparseable schema_version as incompatible — the
+    ``check_schema=False`` escape hatch exists for legitimate bypasses
+    (e.g. ``maintain info``, doc DB).
+    """
+    fix = "Run `regmeta maintain update` to get a compatible database."
+
+    try:
+        manifest = get_manifest(conn)
+    except sqlite3.OperationalError as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database manifest is missing or unreadable in {db_path}. "
+                f"Expected schema v{SCHEMA_VERSION} metadata."
+            ),
+            remediation=fix,
+        ) from exc
+
+    db_ver = manifest.get("schema_version")
+    try:
+        if not db_ver:
+            raise ValueError("missing schema_version")
+        db_major = int(db_ver.split(".")[0])
+        code_major = int(SCHEMA_VERSION.split(".")[0])
+    except (ValueError, IndexError) as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema version is missing or invalid in {db_path}: "
+                f"{db_ver!r}. This version of regmeta expects schema v{SCHEMA_VERSION}."
+            ),
+            remediation=fix,
+        ) from exc
+
+    if db_major != code_major:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Database schema v{db_ver} ({db_path}) is incompatible "
+                f"with this version of regmeta (expects schema v{SCHEMA_VERSION})."
+            ),
+            remediation=fix,
+        )
+
+
 def open_db(
     db_path: Path,
     *,
+    check_schema: bool = True,
     error_code: str = "db_not_found",
     remediation: str = (
-        "Run `regmeta maintain download` to fetch the pre-built DB, "
+        "Run `regmeta maintain update` to fetch the pre-built DB, "
         "or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports."
     ),
 ) -> sqlite3.Connection:
@@ -359,6 +414,12 @@ def open_db(
         )
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    if check_schema:
+        try:
+            _check_schema_compat(conn, db_path)
+        except RegmetaError:
+            conn.close()
+            raise
     return conn
 
 

@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.11"
 
 [options]
-exclude-newer = "2026-03-24T09:15:24.300722Z"
+exclude-newer = "2026-03-25T12:06:55.038956Z"
 exclude-newer-span = "P7D"
 
 [manifest]
@@ -94,7 +94,7 @@ wheels = [
 
 [[package]]
 name = "mock-data-wizard"
-version = "0.4.0a1"
+version = "0.4.0"
 source = { editable = "mock_data_wizard" }
 dependencies = [
     { name = "numpy" },
@@ -274,7 +274,7 @@ wheels = [
 
 [[package]]
 name = "registry-research-toolkit"
-version = "0.4.0a1"
+version = "0.4.0"
 source = { virtual = "." }
 dependencies = [
     { name = "mock-data-wizard" },
@@ -303,7 +303,7 @@ dev = [
 
 [[package]]
 name = "regmeta"
-version = "0.4.0a1"
+version = "0.4.0"
 source = { editable = "regmeta" }
 dependencies = [
     { name = "zstandard" },

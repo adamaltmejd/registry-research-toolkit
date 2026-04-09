@@ -8,7 +8,7 @@ is secondary.
 
 ```bash
 uv tool install "regmeta @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=regmeta"
-regmeta maintain download    # ~400 MB download, ~1.6 GB on disk
+regmeta maintain update      # downloads package + database (~400 MB compressed)
 ```
 
 Alternatively, build from raw SCB CSV exports (requires access to
@@ -62,7 +62,7 @@ Use `--help` on any command or subcommand for full flag documentation.
 
 | Command | Purpose |
 |---|---|
-| `maintain download` | Download pre-built database from GitHub Releases |
+| `maintain update` | Update package and database to the latest version |
 | `maintain build-db` | Build database from SCB CSV exports |
 | `maintain build-docs` | Build documentation search index from markdown files |
 | `maintain info` | Database stats and import metadata |
