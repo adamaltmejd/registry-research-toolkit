@@ -253,7 +253,16 @@ class _NoRepeatParser(argparse.ArgumentParser):
         return super().parse_known_args(args, namespace)
 
 
-_GLOBAL_FLAGS = {"--db", "--format", "--output", "-v", "--verbose", "-q", "--quiet"}
+_GLOBAL_FLAGS = {
+    "--db",
+    "--format",
+    "--output",
+    "-v",
+    "--verbose",
+    "-q",
+    "--quiet",
+    "--version",
+}
 _GLOBAL_FLAGS_WITH_VALUE = {"--db", "--format", "--output"}
 
 
@@ -285,12 +294,9 @@ def _reorder_global_flags(argv: list[str]) -> list[str]:
 def _build_parser() -> argparse.ArgumentParser:
     parser = _NoRepeatParser(
         prog="regmeta",
-        description=(
-            "Search and query SCB registry metadata.\n\n"
-            "Requires a database: run `regmeta maintain update` or `regmeta maintain build-db`.\n"
-            f"Default database: {default_db_dir()} (override with --db or $REGMETA_DB)"
-        ),
+        description="Search and query SCB registry metadata.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
+        add_help=False,
     )
     parser.add_argument(
         "--db",
@@ -319,6 +325,12 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         default=False,
         help="Suppress contextual hints on stderr.",
+    )
+    parser.add_argument(
+        "-h", "--help", action="store_true", default=False, help=argparse.SUPPRESS
+    )
+    parser.add_argument(
+        "--version", action="store_true", default=False, help=argparse.SUPPRESS
     )
 
     sub = parser.add_subparsers(dest="command")
@@ -1718,6 +1730,26 @@ def _write_payload(
             for tag, n in data.get("topics", {}).items():
                 lines.append(f"    {tag}: {n}")
             _write_to("\n".join(lines) + "\n", output_path)
+    elif key == ("maintain", "update"):
+        pass  # status messages already emitted on stderr by run_update()
+    elif key == ("maintain", "info"):
+        lines = [f"  database: {data.get('db_path', 'unknown')}"]
+        manifest = data.get("manifest", {})
+        if manifest.get("schema_version"):
+            lines.append(f"  schema:   {manifest['schema_version']}")
+        if manifest.get("import_date"):
+            lines.append(f"  imported: {manifest['import_date']}")
+        if manifest.get("source_tag"):
+            lines.append(f"  release:  {manifest['source_tag']}")
+        table_counts = data.get("table_counts", {})
+        if table_counts:
+            lines.append("")
+            lines.append("  tables:")
+            for t, n in table_counts.items():
+                lines.append(f"    {t}: {n:,}")
+        _write_to("\n".join(lines) + "\n", output_path)
+    elif key == ("maintain", "build-db"):
+        _write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
     elif key == ("maintain", "build-docs"):
         _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
     else:
@@ -1812,6 +1844,61 @@ COMMAND_DISPATCH = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Usage / version display
+# ---------------------------------------------------------------------------
+
+_COMMAND_TABLE = [
+    ("search", "Search registers, variables, columns, and value codes."),
+    ("get", "Look up registers, schemas, variables, values, and more."),
+    ("resolve", "Map data-file column names to official variable definitions."),
+    ("docs", "Search and browse curated register documentation."),
+    ("maintain", "Install, update, and inspect the local database."),
+]
+
+
+def _version_line(db_arg: str | None = None) -> str:
+    from . import __version__
+
+    db_path = db_path_from_args(db_arg)
+    db_status = str(db_path) if db_path.exists() else "not installed"
+    return f"regmeta v{__version__}  ·  db: {db_status}"
+
+
+def _print_usage(db_arg: str | None = None) -> None:
+    sys.stderr.write(f"{_version_line(db_arg)}\n")
+    db_path = db_path_from_args(db_arg)
+    if not db_path.exists():
+        sys.stderr.write(
+            "\n  No database installed. Run `regmeta maintain update` to get started.\n"
+        )
+    sys.stderr.write("\nCommands:\n")
+    col_w = max(len(name) for name, _ in _COMMAND_TABLE) + 2
+    for name, desc in _COMMAND_TABLE:
+        sys.stderr.write(f"  {name:<{col_w}} {desc}\n")
+    sys.stderr.write("\nRun `regmeta <command> --help` for subcommands and options.\n")
+
+
+def _print_version(db_arg: str | None = None) -> None:
+    from .update import UpdateChecker
+    from . import __version__
+
+    sys.stderr.write(f"{_version_line(db_arg)}\n")
+    sys.stderr.write("Checking for updates...\n")
+    try:
+        checker = UpdateChecker()
+        newer = checker.get_newer_version()
+        if newer:
+            sys.stderr.write(
+                f"Update available: v{__version__} → v{newer}"
+                "  —  run `regmeta maintain update`\n"
+            )
+        else:
+            sys.stderr.write("Up to date.\n")
+    except Exception:
+        sys.stderr.write("Could not check for updates.\n")
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     try:
@@ -1820,9 +1907,13 @@ def run(argv: list[str] | None = None) -> int:
     except SystemExit as exc:
         return exc.code if isinstance(exc.code, int) else EXIT_USAGE
 
-    if not args.command:
-        parser.print_help(sys.stderr)
-        return EXIT_USAGE
+    if getattr(args, "version", False):
+        _print_version(args.db)
+        return 0
+
+    if not args.command or getattr(args, "help", False):
+        _print_usage(args.db)
+        return 0 if getattr(args, "help", False) else EXIT_USAGE
 
     sub_command = None
     if args.command == "maintain":
