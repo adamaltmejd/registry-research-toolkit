@@ -292,7 +292,7 @@ def _reorder_global_flags(argv: list[str]) -> list[str]:
 
 
 def _clean_leaf_help(parser: argparse.ArgumentParser) -> None:
-    """Hide -h/--help from output and rename 'positional arguments' to 'Arguments'."""
+    """Hide -h/--help from output, rename 'positional arguments', add epilog."""
     for action in parser._actions:
         if isinstance(action, argparse._HelpAction):
             action.help = argparse.SUPPRESS
@@ -301,6 +301,9 @@ def _clean_leaf_help(parser: argparse.ArgumentParser) -> None:
         if group.title == "positional arguments":
             group.title = "Arguments"
             break
+    if not parser.epilog:
+        cmd = parser.prog.removeprefix("regmeta ")
+        parser.epilog = f"Run `regmeta {cmd} --examples` for usage examples."
 
 
 def _build_parser() -> argparse.ArgumentParser:
@@ -349,7 +352,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     search_p = sub.add_parser(
         "search",
-        help="Search registers, variables, columns, and values.",
+        help="Search registers, variables, columns, and value codes.",
         description=(
             "Search across metadata. By default searches all fields.\n"
             "Use --field to narrow. Doc results are included and hinted at the bottom.\n"
@@ -369,7 +372,7 @@ def _build_parser() -> argparse.ArgumentParser:
     search_p.add_argument(
         "--query",
         required=True,
-        help="Search term (substring match; FTS for --description).",
+        help="Search term (substring match; FTS for --field description).",
     )
     search_p.add_argument(
         "--field",
@@ -400,7 +403,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     get_p = sub.add_parser(
         "get",
-        help="Retrieve records by type: register, schema, varinfo, values, datacolumns, coded-variables.",
+        help="Look up registers, schemas, variables, values, lineage, and more.",
     )
     get_sub = get_p.add_subparsers(dest="get_command")
 
@@ -416,7 +419,9 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    get_reg.add_argument("register", help="Register name or numeric ID.")
+    get_reg.add_argument(
+        "register", metavar="REGISTER", help="Register name or numeric ID."
+    )
 
     get_schema_p = get_sub.add_parser(
         "schema",
@@ -744,7 +749,18 @@ def _build_parser() -> argparse.ArgumentParser:
         "identifier", help="Variable name or doc filename (e.g. SyssStat, _overview)."
     )
 
-    doc_list_p = doc_sub.add_parser("list", help="Browse available documentation.")
+    doc_list_p = doc_sub.add_parser(
+        "list",
+        help="Browse available documentation.",
+        description=(
+            "List available documentation entries. Use filters to narrow.\n\n"
+            "Examples:\n"
+            "  regmeta docs list\n"
+            "  regmeta docs list --register lisa\n"
+            "  regmeta docs list --type variable --topic income"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
     doc_list_p.add_argument(
         "--type",
         default=None,
@@ -2338,6 +2354,39 @@ docs get — Read full documentation
   "Show the LISA overview"
     regmeta docs get _overview
 """,
+    ("docs", "list"): """\
+docs list — Browse available documentation
+──────────────────────────────────────────
+
+  "What documentation is available?"
+    regmeta docs list
+
+  "What LISA documentation exists?"
+    regmeta docs list --register lisa
+
+  "Show all variable documentation about income"
+    regmeta docs list --type variable --topic income
+""",
+    ("maintain", "update"): """\
+maintain update — Install or update the database
+─────────────────────────────────────────────────
+
+  "Set up regmeta for the first time"
+    regmeta maintain update --yes
+
+  "Update to the latest database"
+    regmeta maintain update
+
+  "Force re-download even if already current"
+    regmeta maintain update --force --yes
+""",
+    ("maintain", "info"): """\
+maintain info — What database am I using?
+─────────────────────────────────────────
+
+  "Show database version, schema, and import stats"
+    regmeta maintain info
+""",
 }
 
 _WORKFLOW_EXAMPLES = """\
@@ -2375,6 +2424,9 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("get", "availability"),
     ("docs", "search"),
     ("docs", "get"),
+    ("docs", "list"),
+    ("maintain", "update"),
+    ("maintain", "info"),
 ]
 
 
