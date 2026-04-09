@@ -24,11 +24,23 @@ extract_init_version() {
     sed -n 's/^__version__ *= *"\([^"]*\)"/\1/p' "$1" | head -1
 }
 
+extract_lock_version() {
+    # Extract version for a package from uv.lock.
+    # Looks for: name = "<pkg_name>"\nversion = "<ver>"
+    awk -v pkg="$1" '
+        /^name = / { found = ($0 == "name = \"" pkg "\"") }
+        found && /^version = / { gsub(/"/, "", $3); print $3; exit }
+    ' uv.lock
+}
+
 # 1. Check version consistency within each package
 for entry in "${packages[@]}"; do
     read -r pkg_name pyproject init <<<"$entry"
     v_pyproject=$(extract_pyproject_version "$pyproject")
     v_init=$(extract_init_version "$init")
+    # uv.lock uses hyphenated names
+    lock_name="${pkg_name//_/-}"
+    v_lock=$(extract_lock_version "$lock_name")
 
     if [[ -z "$v_pyproject" ]]; then
         err "$pkg_name: could not read version from $pyproject"
@@ -40,7 +52,11 @@ for entry in "${packages[@]}"; do
     fi
     if [[ "$v_pyproject" != "$v_init" ]]; then
         err "$pkg_name: pyproject.toml ($v_pyproject) != __init__.py ($v_init)"
-    else
+    fi
+    if [[ -n "$v_lock" && "$v_pyproject" != "$v_lock" ]]; then
+        err "$pkg_name: pyproject.toml ($v_pyproject) != uv.lock ($v_lock) — run \`uv lock\`"
+    fi
+    if [[ "$v_pyproject" == "$v_init" && ( -z "$v_lock" || "$v_pyproject" == "$v_lock" ) ]]; then
         echo "OK: $pkg_name v$v_pyproject"
     fi
 done
