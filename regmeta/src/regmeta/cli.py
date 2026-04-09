@@ -291,6 +291,18 @@ def _reorder_global_flags(argv: list[str]) -> list[str]:
     return front + rest
 
 
+def _clean_leaf_help(parser: argparse.ArgumentParser) -> None:
+    """Hide -h/--help from output and rename 'positional arguments' to 'Arguments'."""
+    for action in parser._actions:
+        if isinstance(action, argparse._HelpAction):
+            action.help = argparse.SUPPRESS
+            break
+    for group in parser._action_groups:
+        if group.title == "positional arguments":
+            group.title = "Arguments"
+            break
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = _NoRepeatParser(
         prog="regmeta",
@@ -342,10 +354,15 @@ def _build_parser() -> argparse.ArgumentParser:
             "Search across metadata. By default searches all fields.\n"
             "Use --field to narrow. Doc results are included and hinted at the bottom.\n"
             "For full documentation search, use: regmeta docs search <query>\n\n"
+            "Note: --type and --register do different things:\n"
+            "  --type register    Filter results to only show registers (not variables)\n"
+            "  --register LISA    Restrict search scope to a specific register\n\n"
             "Examples:\n"
             "  regmeta search --query kommun                        # all fields\n"
             "  regmeta search --query kommun --field datacolumn     # column headers only\n"
-            "  regmeta search --query 0180 --field value            # value codes/labels"
+            "  regmeta search --query 0180 --field value            # value codes/labels\n"
+            "  regmeta search --query utbildning --type register    # find registers\n"
+            "  regmeta search --query kommun --register LISA        # within LISA only"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -388,13 +405,34 @@ def _build_parser() -> argparse.ArgumentParser:
     get_sub = get_p.add_subparsers(dest="get_command")
 
     get_reg = get_sub.add_parser(
-        "register", help="Get register overview with variants."
+        "register",
+        help="Get register overview with variants.",
+        description=(
+            "Show register metadata including all variants (sub-tables),\n"
+            "each with regvar_id, name, description, and secrecy level.\n\n"
+            "Examples:\n"
+            "  regmeta get register LISA\n"
+            "  regmeta get register 34"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_reg.add_argument("register", help="Register name or numeric ID.")
 
     get_schema_p = get_sub.add_parser(
         "schema",
         help="Get column listing per version. Provide regvar_id or --register.",
+        description=(
+            "List columns (aliases, variable names, data types, CVIDs) per\n"
+            "register version. Can be verbose for large registers — use\n"
+            "--years, --columns-like, --summary, or --flat to narrow.\n\n"
+            "Examples:\n"
+            "  regmeta get schema --register LISA --years 2022\n"
+            "  regmeta get schema 153 --years 2022            # by regvar_id\n"
+            '  regmeta get schema --register LISA --columns-like "Merit|Betyg"\n'
+            "  regmeta get schema --register LISA --summary    # one row per variant\n"
+            "  regmeta get schema --register LISA --flat       # one row per alias"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_schema_p.add_argument(
         "regvar_id", nargs="?", default=None, help="Register variant ID."
@@ -427,7 +465,17 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     get_varinfo_p = get_sub.add_parser(
-        "varinfo", help="Get variable details with instance history."
+        "varinfo",
+        help="Get variable details with instance history.",
+        description=(
+            "Show variable definition, description, and every register version\n"
+            "where it appears — with CVIDs, data types, aliases, and value counts.\n\n"
+            "Examples:\n"
+            '  regmeta get varinfo "Kön"\n'
+            "  regmeta get varinfo 44               # by var_id\n"
+            '  regmeta get varinfo "Kön" --register LISA'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_varinfo_p.add_argument("variable", help="Variable name or var_id.")
     get_varinfo_p.add_argument(
@@ -435,7 +483,17 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     get_values_p = get_sub.add_parser(
-        "values", help="Get value-set members (code + label) for a CVID."
+        "values",
+        help="Get value-set members (code + label) for a CVID.",
+        description=(
+            "Show code/label pairs for a categorical variable's value set.\n"
+            "Requires a CVID — find it via `regmeta get varinfo <variable>`.\n"
+            "Value sets are historical unions; use --valid-at for date filtering.\n\n"
+            "Examples:\n"
+            "  regmeta get values 1001\n"
+            "  regmeta get values 1001 --valid-at 2020-01-01"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_values_p.add_argument(
         "cvid", help="CVID (find via: regmeta get varinfo <variable>)."
@@ -558,7 +616,19 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     resolve_p = sub.add_parser(
-        "resolve", help="Resolve column names to variables (exact alias lookup)."
+        "resolve",
+        help="Resolve column names to variables (exact alias lookup).",
+        description=(
+            "Map data-file column names to official variable definitions.\n"
+            "Each column gets status 'matched' or 'no_match'. Matches include\n"
+            "var_id, variable_name, and register_id.\n\n"
+            "Uses exact alias lookup only — no fuzzy matching. For discovery,\n"
+            "use `search --field datacolumn` instead.\n\n"
+            "Examples:\n"
+            '  regmeta resolve --columns "Kon,FodelseAr,Kommun" --register LISA\n'
+            '  echo \'["Kon","FodelseAr"]\' | regmeta resolve --register LISA'
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     resolve_p.add_argument(
         "--columns",
@@ -589,6 +659,15 @@ def _build_parser() -> argparse.ArgumentParser:
     update_p = maintain_sub.add_parser(
         "update",
         help="Update regmeta package and database to the latest version.",
+        description=(
+            "Download the latest regmeta package and pre-built database from\n"
+            "GitHub Releases. Safe to run repeatedly — skips if already current.\n\n"
+            "Examples:\n"
+            "  regmeta maintain update            # interactive confirmation\n"
+            "  regmeta maintain update --yes      # skip confirmation\n"
+            "  regmeta maintain update --force    # re-download even if current"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     update_p.add_argument(
         "--tag", default="latest", help="Target release tag (default: latest)."
@@ -617,7 +696,16 @@ def _build_parser() -> argparse.ArgumentParser:
     doc_sub = doc_p.add_subparsers(dest="doc_command")
 
     doc_search_p = doc_sub.add_parser(
-        "search", help="Full-text search over documentation."
+        "search",
+        help="Full-text search over documentation.",
+        description=(
+            "Search curated register documentation (parsed from SCB PDFs).\n"
+            "Returns titles, types, topics, and relevance scores.\n\n"
+            "Examples:\n"
+            "  regmeta docs search inkomst\n"
+            "  regmeta docs search sysselsättning --register lisa --type variable"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     doc_search_p.add_argument("query", help="Search query.")
     doc_search_p.add_argument(
@@ -642,7 +730,15 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     doc_get_p = doc_sub.add_parser(
-        "get", help="Retrieve full documentation for a variable or topic."
+        "get",
+        help="Retrieve full documentation for a variable or topic.",
+        description=(
+            "Show the full markdown content of a documentation entry.\n\n"
+            "Examples:\n"
+            "  regmeta docs get SyssStat\n"
+            "  regmeta docs get _overview"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     doc_get_p.add_argument(
         "identifier", help="Variable name or doc filename (e.g. SyssStat, _overview)."
@@ -657,6 +753,21 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     doc_list_p.add_argument("--topic", default=None, help="Filter by topic tag.")
     doc_list_p.add_argument("--register", default=None, help="Filter by register.")
+
+    # Clean up help display on all leaf subcommands
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            for sub_p in action.choices.values():
+                sub_actions = [
+                    a
+                    for a in sub_p._actions
+                    if isinstance(a, argparse._SubParsersAction)
+                ]
+                if sub_actions:
+                    for leaf_p in sub_actions[0].choices.values():
+                        _clean_leaf_help(leaf_p)
+                else:
+                    _clean_leaf_help(sub_p)
 
     return parser
 
@@ -1848,12 +1959,74 @@ COMMAND_DISPATCH = {
 # Usage / version display
 # ---------------------------------------------------------------------------
 
-_COMMAND_TABLE = [
-    ("search", "Search registers, variables, columns, and value codes."),
-    ("get", "Look up registers, schemas, variables, values, and more."),
-    ("resolve", "Map data-file column names to official variable definitions."),
-    ("docs", "Search and browse curated register documentation."),
-    ("maintain", "Install, update, and inspect the local database."),
+_KEY_CONCEPTS = [
+    ("register", "A statistical register (e.g. LISA, RTB). Has a numeric register_id."),
+    (
+        "variant",
+        "A sub-table within a register (e.g. LISA/Individer). Has a regvar_id.",
+    ),
+    (
+        "variable",
+        'A logical concept (e.g. "Kön"). Has a var_id. Shared across registers.',
+    ),
+    ("alias", "Column header in a data file. May differ across registers/versions."),
+    ("CVID", "Links a variable instance to its value set. Use with `get values`."),
+    (
+        "value set",
+        "Valid coded values for a categorical variable (e.g. 1=Man, 2=Kvinna).",
+    ),
+]
+
+# (command_syntax, description) for the top-level overview. None = blank separator.
+_COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
+    (
+        "search --query TERM [--field F] [--type T] [--register R] [--years Y]",
+        "Search registers, variables, columns, and value codes.",
+    ),
+    (
+        "resolve [--columns COL,...] [--register R] [--require-match]",
+        "Map data-file column names to variable definitions (exact match).",
+    ),
+    None,
+    ("get register NAME", "Register overview with variants."),
+    (
+        "get schema [REGVAR_ID] [--register R] [--years Y] [--columns-like PAT] [--summary|--flat]",
+        "Column listing per version.",
+    ),
+    ("get varinfo VARIABLE [--register R]", "Variable details with instance history."),
+    ("get values CVID [--valid-at DATE]", "Value codes and labels for a CVID."),
+    (
+        "get datacolumns VARIABLE [--register R]",
+        "All column aliases for a variable across registers.",
+    ),
+    (
+        "get coded-variables [--min-codes N] [--min-registers N]",
+        "Categorical variables ranked by usage.",
+    ),
+    (
+        "get diff --register R --from YEAR --to YEAR [--variable V...]",
+        "Schema changes between two years.",
+    ),
+    ("get lineage VARIABLE [--register R]", "Cross-register variable provenance."),
+    (
+        "get availability TARGET [--register R]",
+        "Temporal availability (years, gaps) for a variable or register.",
+    ),
+    None,
+    (
+        "docs search QUERY [--type T] [--topic T] [--register R]",
+        "Full-text search over curated documentation.",
+    ),
+    ("docs get IDENTIFIER", "Full documentation for a variable or topic."),
+    (
+        "docs list [--type T] [--topic T] [--register R]",
+        "Browse available documentation.",
+    ),
+    None,
+    ("maintain update [--tag TAG] [--force] [--yes]", "Update package and database."),
+    ("maintain info", "Database stats and import metadata."),
+    ("maintain build-db --csv-dir DIR", "Build database from SCB CSV exports."),
+    ("maintain build-docs [--docs-dir DIR]", "Build documentation search index."),
 ]
 
 
@@ -1866,17 +2039,375 @@ def _version_line(db_arg: str | None = None) -> str:
 
 
 def _print_usage(db_arg: str | None = None) -> None:
-    sys.stderr.write(f"{_version_line(db_arg)}\n")
+    """Brief overview (bare `regmeta` with no args)."""
+    w = sys.stderr.write
+    w(f"{_version_line(db_arg)}\n")
     db_path = db_path_from_args(db_arg)
     if not db_path.exists():
-        sys.stderr.write(
-            "\n  No database installed. Run `regmeta maintain update` to get started.\n"
-        )
-    sys.stderr.write("\nCommands:\n")
-    col_w = max(len(name) for name, _ in _COMMAND_TABLE) + 2
-    for name, desc in _COMMAND_TABLE:
-        sys.stderr.write(f"  {name:<{col_w}} {desc}\n")
-    sys.stderr.write("\nRun `regmeta <command> --help` for subcommands and options.\n")
+        w("\n  No database installed. Run `regmeta maintain update` to get started.\n")
+    w("\nCommands:\n")
+    info = _get_subcommand_info(_build_parser())
+    col_w = max(len(name) for name, _, _ in info) + 2
+    for name, _, help_text in info:
+        w(f"  {name:<{col_w}} {help_text}\n")
+    w(
+        "\nRun `regmeta --help` for full reference, `regmeta --examples` for usage examples.\n"
+    )
+
+
+def _print_help(db_arg: str | None = None) -> None:
+    """Full help (regmeta --help)."""
+    w = sys.stderr.write
+    w(f"{_version_line(db_arg)}\n")
+    db_path = db_path_from_args(db_arg)
+    if not db_path.exists():
+        w("\n  No database installed. Run `regmeta maintain update` to get started.\n")
+
+    w("\nKey concepts:\n")
+    name_w = max(len(name) for name, _ in _KEY_CONCEPTS) + 2
+    for name, desc in _KEY_CONCEPTS:
+        w(f"  {name:<{name_w}} {desc}\n")
+
+    w("\nGlobal flags (place before subcommand):\n")
+    w("  --format {table,list,json}   Output format (default: table)\n")
+    w("  --output FILE                Write output to file\n")
+    w("  -v, --verbose                Include envelope metadata\n")
+    w("  -q, --quiet                  Suppress hints on stderr\n")
+
+    w("\nCommands:\n")
+    for entry in _COMMAND_OVERVIEW:
+        if entry is None:
+            w("\n")
+        else:
+            syntax, desc = entry
+            w(f"  {syntax}\n")
+            w(f"      {desc}\n")
+
+    w("\nRun `regmeta <command> --help` for detailed help.\n")
+    w("Run `regmeta --examples` for usage examples and workflows.\n")
+
+
+def _get_subcommand_info(
+    parser: argparse.ArgumentParser,
+) -> list[tuple[str, argparse.ArgumentParser, str]]:
+    """Get [(name, subparser, help_text)] for a parser's subcommands."""
+    for action in parser._actions:
+        if isinstance(action, argparse._SubParsersAction):
+            help_map = {ca.dest: ca.help or "" for ca in action._choices_actions}
+            return [
+                (name, sub_p, help_map.get(name, ""))
+                for name, sub_p in action.choices.items()
+            ]
+    return []
+
+
+def _print_group_brief(parser: argparse.ArgumentParser, group_name: str) -> None:
+    """Brief subcommand listing (shown when no subcommand is given)."""
+    w = sys.stderr.write
+    group_p = None
+    group_help = ""
+    for name, p, h in _get_subcommand_info(parser):
+        if name == group_name:
+            group_p, group_help = p, h
+            break
+    if not group_p:
+        return
+
+    w(f"\nregmeta {group_name} — {group_help}\n\n")
+    w("Subcommands:\n")
+    sub_info = _get_subcommand_info(group_p)
+    col_w = max(len(n) for n, _, _ in sub_info) + 2
+    for name, _, help_text in sub_info:
+        w(f"  {name:<{col_w}} {help_text}\n")
+    w(
+        f"\nRun `regmeta {group_name} <command> --help`"
+        " for detailed help with examples.\n"
+    )
+
+
+def _print_group_detailed(parser: argparse.ArgumentParser, group_name: str) -> None:
+    """Full help for all subcommands in a group (shown with --help)."""
+    w = sys.stderr.write
+    group_p = None
+    group_help = ""
+    for name, p, h in _get_subcommand_info(parser):
+        if name == group_name:
+            group_p, group_help = p, h
+            break
+    if not group_p:
+        return
+
+    w(f"\nregmeta {group_name} — {group_help}\n")
+    for name, sub_p, _ in _get_subcommand_info(group_p):
+        w(f"\n{'─' * 60}\n")
+        w(f"  {group_name} {name}\n")
+        w(f"{'─' * 60}\n\n")
+        w(sub_p.format_help())
+
+
+def _strip_global_flags(reordered: list[str]) -> list[str]:
+    """Remove global flags from reordered argv, leaving command args only."""
+    result: list[str] = []
+    skip_next = False
+    for arg in reordered:
+        if skip_next:
+            skip_next = False
+            continue
+        if arg in _GLOBAL_FLAGS:
+            if arg in _GLOBAL_FLAGS_WITH_VALUE:
+                skip_next = True
+            continue
+        eq_name = arg.split("=", 1)[0] if "=" in arg else None
+        if eq_name in _GLOBAL_FLAGS_WITH_VALUE:
+            continue
+        result.append(arg)
+    return result
+
+
+# ---------------------------------------------------------------------------
+# Examples (agent-oriented: question → command → what to expect)
+# ---------------------------------------------------------------------------
+
+# Keys: "command" for top-level, ("group", "sub") for subcommands.
+# Printed by --examples flag. Order matters — it's the display order.
+_EXAMPLES: dict[str | tuple[str, str], str] = {
+    "search": """\
+search — Finding registers, variables, and values
+──────────────────────────────────────────────────
+
+  "What registers deal with education?"
+    regmeta search --query utbildning --type register
+
+  "Find income-related variables available after 2015"
+    regmeta search --query inkomst --years 2015-
+
+  "Which columns in data files contain kommun?"
+    regmeta search --query kommun --field datacolumn
+
+  "Find variables within LISA mentioning kommun"
+    regmeta search --query kommun --register LISA
+
+  "What value codes include 0180?"
+    regmeta search --query 0180 --field value
+""",
+    "resolve": """\
+resolve — Mapping column headers to official definitions
+────────────────────────────────────────────────────────
+
+  "I have a CSV with columns Kon, FodelseAr, AstKommun — what are they?"
+    regmeta resolve --columns "Kon,FodelseAr,AstKommun" --register LISA
+
+  "Resolve columns from a JSON list"
+    echo '["Kon","FodelseAr"]' | regmeta resolve --register LISA
+
+  resolve is exact match only. If a column shows no_match, try:
+    regmeta search --query AstKommun --field datacolumn
+""",
+    ("get", "register"): """\
+get register — Register overview
+────────────────────────────────
+
+  "Tell me about LISA"
+    regmeta get register LISA
+
+  "What register has ID 34?"
+    regmeta get register 34
+
+  The output lists all variants (sub-tables) with their regvar_id.
+  Use the regvar_id with `get schema` for column details.
+""",
+    ("get", "schema"): """\
+get schema — What columns does a register have?
+────────────────────────────────────────────────
+
+  "What variables are in LISA?"
+    regmeta get schema --register LISA --summary
+
+  "What columns does LISA 2022 have?"
+    regmeta get schema --register LISA --years 2022
+
+  "Show education-related columns in register 340"
+    regmeta get schema --register 340 --columns-like "Merit|Betyg|Prov"
+
+  "One row per column for easy scanning"
+    regmeta get schema --register LISA --flat --years 2022
+
+  For large registers, always narrow with --years, --columns-like,
+  --summary, or --flat. Unfiltered output can be very long.
+""",
+    ("get", "varinfo"): """\
+get varinfo — Variable details and history
+──────────────────────────────────────────
+
+  "What is the variable Kön?"
+    regmeta get varinfo "Kön"
+
+  "Where does variable 44 appear?"
+    regmeta get varinfo 44
+
+  "Show Kön only within LISA"
+    regmeta get varinfo "Kön" --register LISA
+
+  The output includes CVIDs — use those with `get values` to see
+  the actual code/label pairs.
+""",
+    ("get", "values"): """\
+get values — What do the coded values mean?
+───────────────────────────────────────────
+
+  "What are the valid values for CVID 1001?"
+    regmeta get values 1001
+
+  "What values were valid in 2020?"
+    regmeta get values 1001 --valid-at 2020-01-01
+
+  You need a CVID, not a variable name. Get it from `get varinfo`:
+    regmeta get varinfo "Kommun" --register LISA   → find the CVID
+    regmeta get values <cvid>                      → see the codes
+""",
+    ("get", "datacolumns"): """\
+get datacolumns — What column names does a variable appear under?
+────────────────────────────────────────────────────────────────
+
+  "What column headers does Kommun use across registers?"
+    regmeta get datacolumns "Kommun"
+
+  "What aliases does Kön have in LISA specifically?"
+    regmeta get datacolumns "Kön" --register LISA
+""",
+    ("get", "coded-variables"): """\
+get coded-variables — Which variables have value sets?
+──────────────────────────────────────────────────────
+
+  "What are the most widely used categorical variables?"
+    regmeta get coded-variables --min-registers 5
+
+  "Find variables with many value codes"
+    regmeta get coded-variables --min-codes 50 --min-registers 10
+""",
+    ("get", "diff"): """\
+get diff — How has a register changed?
+──────────────────────────────────────
+
+  "What changed in LISA between 2015 and 2020?"
+    regmeta get diff --register LISA --from 2015 --to 2020
+
+  "Did Kon change between 2015 and 2020 in LISA?"
+    regmeta get diff --register LISA --from 2015 --to 2020 --variable Kon
+""",
+    ("get", "lineage"): """\
+get lineage — Where does a variable come from?
+──────────────────────────────────────────────
+
+  "Which register is the source of Kön, and who consumes it?"
+    regmeta get lineage "Kön"
+
+  "Where does LISA get Kön from?"
+    regmeta get lineage "Kön" --register LISA
+""",
+    ("get", "availability"): """\
+get availability — When is something available?
+───────────────────────────────────────────────
+
+  "Is Kön available from 2015 to 2024?"
+    regmeta get availability "Kön"
+
+  "What years does LISA cover?"
+    regmeta get availability LISA
+
+  "When is Kön available in LISA specifically?"
+    regmeta get availability "Kön" --register LISA
+""",
+    ("docs", "search"): """\
+docs search — Search curated documentation
+──────────────────────────────────────────
+
+  "What does the documentation say about income?"
+    regmeta docs search inkomst
+
+  "Find documentation about SyssStat in LISA"
+    regmeta docs search SyssStat --register lisa --type variable
+""",
+    ("docs", "get"): """\
+docs get — Read full documentation
+──────────────────────────────────
+
+  "Show me the full documentation for SyssStat"
+    regmeta docs get SyssStat
+
+  "Show the LISA overview"
+    regmeta docs get _overview
+""",
+}
+
+_WORKFLOW_EXAMPLES = """\
+Common workflows
+────────────────
+
+  "What are the valid values for Kommun in LISA?"
+    regmeta get varinfo "Kommun" --register LISA   → note the CVID
+    regmeta get values <cvid>                      → code/label pairs
+
+  "I have a data file — what do the columns mean?"
+    regmeta resolve --columns "Kon,FodelseAr,AstKommun" --register LISA
+    (for no_match columns, try search:)
+    regmeta search --query AstKommun --field datacolumn
+
+  "How has my register changed since I last looked?"
+    regmeta get diff --register LISA --from 2018 --to 2023
+
+  "What SCB data exists but isn't in my local mock data?"
+    mock-data-wizard compare mock_data/manifest.json
+"""
+
+# Display order for --examples (all)
+_EXAMPLES_ORDER: list[str | tuple[str, str]] = [
+    "search",
+    "resolve",
+    ("get", "register"),
+    ("get", "schema"),
+    ("get", "varinfo"),
+    ("get", "values"),
+    ("get", "datacolumns"),
+    ("get", "coded-variables"),
+    ("get", "diff"),
+    ("get", "lineage"),
+    ("get", "availability"),
+    ("docs", "search"),
+    ("docs", "get"),
+]
+
+
+def _print_examples(cmd_args: list[str]) -> None:
+    """Print examples for the given command path, or all if empty."""
+    w = sys.stderr.write
+
+    if not cmd_args:
+        # All examples
+        for key in _EXAMPLES_ORDER:
+            w(_EXAMPLES[key])
+            w("\n")
+        w(_WORKFLOW_EXAMPLES)
+        return
+
+    cmd = cmd_args[0]
+
+    if len(cmd_args) == 1:
+        if cmd in _EXAMPLES:
+            # Leaf command (search, resolve)
+            w(_EXAMPLES[cmd])
+        else:
+            # Group command (get, docs, maintain) — show all sub-examples
+            for key in _EXAMPLES_ORDER:
+                if isinstance(key, tuple) and key[0] == cmd:
+                    w(_EXAMPLES[key])
+                    w("\n")
+        return
+
+    # Sub-subcommand (get schema, docs search, etc.)
+    key = (cmd_args[0], cmd_args[1])
+    if key in _EXAMPLES:
+        w(_EXAMPLES[key])
 
 
 def _print_version(db_arg: str | None = None) -> None:
@@ -1901,9 +2432,26 @@ def _print_version(db_arg: str | None = None) -> None:
 
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
+    effective = argv if argv is not None else sys.argv[1:]
+    reordered = _reorder_global_flags(effective)
+
+    # Intercept --examples and group --help before argparse processes them
+    cmd_args = _strip_global_flags(reordered)
+
+    if "--examples" in cmd_args:
+        _print_examples([a for a in cmd_args if a != "--examples"])
+        return 0
+
+    if (
+        len(cmd_args) == 2
+        and cmd_args[1] in ("-h", "--help")
+        and cmd_args[0] in ("get", "docs", "maintain")
+    ):
+        _print_group_detailed(parser, cmd_args[0])
+        return 0
+
     try:
-        effective = argv if argv is not None else sys.argv[1:]
-        args = parser.parse_args(_reorder_global_flags(effective))
+        args = parser.parse_args(reordered)
     except SystemExit as exc:
         return exc.code if isinstance(exc.code, int) else EXIT_USAGE
 
@@ -1911,25 +2459,28 @@ def run(argv: list[str] | None = None) -> int:
         _print_version(args.db)
         return 0
 
-    if not args.command or getattr(args, "help", False):
+    if getattr(args, "help", False):
+        _print_help(args.db)
+        return 0
+    if not args.command:
         _print_usage(args.db)
-        return 0 if getattr(args, "help", False) else EXIT_USAGE
+        return EXIT_USAGE
 
     sub_command = None
     if args.command == "maintain":
         sub_command = getattr(args, "maintain_command", None)
         if not sub_command:
-            parser.parse_args(["maintain", "--help"])
+            _print_group_brief(parser, "maintain")
             return EXIT_USAGE
     elif args.command == "get":
         sub_command = getattr(args, "get_command", None)
         if not sub_command:
-            parser.parse_args(["get", "--help"])
+            _print_group_brief(parser, "get")
             return EXIT_USAGE
     elif args.command == "docs":
         sub_command = getattr(args, "doc_command", None)
         if not sub_command:
-            parser.parse_args(["docs", "--help"])
+            _print_group_brief(parser, "docs")
             return EXIT_USAGE
 
     key = (args.command, sub_command)

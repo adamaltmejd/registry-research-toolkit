@@ -71,6 +71,24 @@ No FTS fallback, no confidence scoring. Status is `matched` or `no_match`.
 This is intentional — resolve is for mapping known column headers, not
 discovery.
 
+## Composite registers and source tracking
+
+Registers like LISA, FRIDA, LINDA, and STATIV are composites — most of
+their variables originate in source registers (RTB, RAMS, etc.). The
+`variable` table tracks this via `source_register_id` (FK to `register`)
+and `source_label` (display abbreviation or raw text).
+
+During `build-db`, the `VariabelRegister_Källa` field is resolved using
+deterministic matching only — no fuzzy logic:
+
+1. Extract parenthesized abbreviation (e.g. "Befolkningsregistret (RTB)" → RTB)
+2. Match text before ` : ` separator against register names
+3. Match entire text against register names
+
+Unresolved sources are stored as raw text in `source_label` for human
+review. This is surfaced in `get schema` (source column) and `get lineage`
+(consumer/source classification).
+
 ## Value sets are not version-specific
 
 The Värdemängder export attaches a flat historical union of all code
