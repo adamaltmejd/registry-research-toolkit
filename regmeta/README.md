@@ -80,15 +80,6 @@ Register arguments accept numeric IDs, exact names, or substring matches.
 Stored at `~/.local/share/regmeta/` by default.
 Override with `--db` or `$REGMETA_DB`.
 
-## Known limitations
-
-- **Value sets are not version-specific.** Historical union of all codes
-  per CVID. Use `--valid-at` for temporal filtering.
-- **Database size.** ~1.6 GB on disk (~400 MB compressed).
-- **LISA is composite.** Variables are registered under source registers
-  (RTB, RAMS, etc.), not under LISA itself. Use `docs search` for
-  LISA-specific variable documentation.
-
 ## Files
 
 | Path | Purpose |
