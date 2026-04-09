@@ -39,42 +39,24 @@ def _has_db_asset(release: dict) -> bool:
 
 
 def _is_regmeta_release(release: dict) -> bool:
-    """Match ``regmeta/v*`` tags (and legacy bare ``v*`` during transition)."""
+    """Match ``regmeta/v*`` tags (and legacy bare semver-like ``v*`` tags)."""
     tag = release["tag_name"]
-    return tag.startswith(TAG_PREFIX) or tag.startswith("v")
-
-
-def resolve_latest_release(
-    *,
-    timeout: float = 15,
-) -> tuple[str, str, str | None]:
-    """Return (release_tag, version, db_tag) from GitHub releases.
-
-    Fetches recent releases filtered to ``regmeta/v*`` tags (with fallback
-    to legacy bare ``v*`` tags).  Walks backwards to find the most recent
-    release that includes a database asset.
-
-    *release_tag* is the literal tag of the latest release.
-    *version* is the semver string for comparison with ``__version__``.
-    *db_tag* is the tag of the most recent release with a DB asset,
-    which may be an older release.  ``None`` if no release has one.
-    """
-    req = urllib.request.Request(
-        RELEASES_API_URL + "?per_page=20",
-        headers={"Accept": "application/vnd.github+json"},
+    return tag.startswith(TAG_PREFIX) or (
+        tag.startswith("v") and len(tag) > 1 and tag[1].isdigit()
     )
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            all_releases = json.loads(resp.read())
-    except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
-        raise RegmetaError(
-            exit_code=EXIT_NETWORK,
-            code="release_lookup_failed",
-            error_class="network",
-            message=f"Failed to resolve latest release: {exc}",
-            remediation="Check your internet connection, or specify --tag explicitly.",
-        ) from exc
 
+
+def _pick_release(
+    all_releases: list[dict],
+) -> tuple[str, str, str | None]:
+    """Select the latest regmeta release and the best DB tag from a list.
+
+    Pure function — no I/O.  Filters to regmeta releases, extracts the
+    latest version, and walks backwards to find the most recent release
+    that includes a database asset.
+
+    Returns ``(release_tag, version, db_tag)``.
+    """
     releases = [r for r in all_releases if _is_regmeta_release(r)]
     if not releases:
         raise RegmetaError(
@@ -97,6 +79,40 @@ def resolve_latest_release(
             break
 
     return tag, version, db_tag
+
+
+def resolve_latest_release(
+    *,
+    timeout: float = 15,
+) -> tuple[str, str, str | None]:
+    """Return (release_tag, version, db_tag) from GitHub releases.
+
+    Fetches recent releases filtered to ``regmeta/v*`` tags (with fallback
+    to legacy bare ``v*`` tags).  Walks backwards to find the most recent
+    release that includes a database asset.
+
+    *release_tag* is the literal tag of the latest release.
+    *version* is the semver string for comparison with ``__version__``.
+    *db_tag* is the tag of the most recent release with a DB asset,
+    which may be an older release.  ``None`` if no release has one.
+    """
+    req = urllib.request.Request(
+        RELEASES_API_URL + "?per_page=100",
+        headers={"Accept": "application/vnd.github+json"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            all_releases = json.loads(resp.read())
+    except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
+        raise RegmetaError(
+            exit_code=EXIT_NETWORK,
+            code="release_lookup_failed",
+            error_class="network",
+            message=f"Failed to resolve latest release: {exc}",
+            remediation="Check your internet connection, or specify --tag explicitly.",
+        ) from exc
+
+    return _pick_release(all_releases)
 
 
 def _fmt_size(n: int) -> str:

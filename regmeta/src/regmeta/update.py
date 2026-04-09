@@ -159,8 +159,9 @@ def run_update(
     """Update regmeta package and database to the latest release.
 
     Skips the package upgrade if already on the latest version.
-    Skips the database download if already on the latest release tag
-    (unless *force* is True or the database does not exist).
+    Walks recent releases to find the most recent one with a DB asset
+    and skips the download if already on that tag (unless *force* is
+    True or the database does not exist).
     """
     if db_dir is None:
         db_dir = default_db_dir()
