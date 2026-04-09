@@ -15,6 +15,7 @@ from .db import DB_FILENAME, default_db_dir
 from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
+TAG_PREFIX = "regmeta/"
 DB_ASSET_NAME = "regmeta.db.zst"
 DB_SOURCE_FILE = ".db_source"
 RELEASES_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
@@ -23,35 +24,48 @@ DOWNLOAD_URL = (
 )
 
 
+def _version_from_tag(tag: str) -> str:
+    """Extract version string from a release tag.
+
+    Handles both ``regmeta/v0.5.0`` and legacy ``v0.5.0`` formats.
+    """
+    if "/" in tag:
+        tag = tag.rsplit("/", 1)[1]
+    return tag.lstrip("v")
+
+
+def _has_db_asset(release: dict) -> bool:
+    return any(a["name"] == DB_ASSET_NAME for a in release.get("assets", []))
+
+
+def _is_regmeta_release(release: dict) -> bool:
+    """Match ``regmeta/v*`` tags (and legacy bare ``v*`` during transition)."""
+    tag = release["tag_name"]
+    return tag.startswith(TAG_PREFIX) or tag.startswith("v")
+
+
 def resolve_latest_release(
     *,
     timeout: float = 15,
-) -> tuple[str, str, bool]:
-    """Return (raw_tag, version, has_db_asset) from the latest GitHub release.
+) -> tuple[str, str, str | None]:
+    """Return (release_tag, version, db_tag) from GitHub releases.
 
-    *raw_tag* is the literal tag string (e.g. ``"v0.5.0"``).
-    *version* strips a leading ``v`` for comparison with ``__version__``.
-    *has_db_asset* is True when the release includes ``regmeta.db.zst``.
+    Fetches recent releases filtered to ``regmeta/v*`` tags (with fallback
+    to legacy bare ``v*`` tags).  Walks backwards to find the most recent
+    release that includes a database asset.
+
+    *release_tag* is the literal tag of the latest release.
+    *version* is the semver string for comparison with ``__version__``.
+    *db_tag* is the tag of the most recent release with a DB asset,
+    which may be an older release.  ``None`` if no release has one.
     """
     req = urllib.request.Request(
-        RELEASES_API_URL + "?per_page=1",
+        RELEASES_API_URL + "?per_page=20",
         headers={"Accept": "application/vnd.github+json"},
     )
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
-            releases = json.loads(resp.read())
-            if not releases:
-                raise RegmetaError(
-                    exit_code=EXIT_NETWORK,
-                    code="no_releases",
-                    error_class="network",
-                    message="No releases found.",
-                    remediation=f"Check https://github.com/{GITHUB_REPO}/releases",
-                )
-            release = releases[0]
-            tag = release["tag_name"]
-            has_db = any(a["name"] == DB_ASSET_NAME for a in release.get("assets", []))
-            return tag, tag.lstrip("v"), has_db
+            all_releases = json.loads(resp.read())
     except (urllib.error.URLError, KeyError, json.JSONDecodeError) as exc:
         raise RegmetaError(
             exit_code=EXIT_NETWORK,
@@ -60,6 +74,29 @@ def resolve_latest_release(
             message=f"Failed to resolve latest release: {exc}",
             remediation="Check your internet connection, or specify --tag explicitly.",
         ) from exc
+
+    releases = [r for r in all_releases if _is_regmeta_release(r)]
+    if not releases:
+        raise RegmetaError(
+            exit_code=EXIT_NETWORK,
+            code="no_releases",
+            error_class="network",
+            message="No regmeta releases found.",
+            remediation=f"Check https://github.com/{GITHUB_REPO}/releases",
+        )
+
+    latest = releases[0]
+    tag = latest["tag_name"]
+    version = _version_from_tag(tag)
+
+    # Walk backwards to find the most recent release with a DB asset
+    db_tag = None
+    for r in releases:
+        if _has_db_asset(r):
+            db_tag = r["tag_name"]
+            break
+
+    return tag, version, db_tag
 
 
 def _fmt_size(n: int) -> str:
@@ -158,7 +195,17 @@ def download_db(
 
     # Resolve tag
     if tag == "latest":
-        resolved_tag, _, _ = resolve_latest_release()
+        _release_tag, _ver, db_tag = resolve_latest_release()
+        if not db_tag:
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="no_db_in_release",
+                error_class="configuration",
+                message="No recent release includes a database asset.",
+                remediation="Specify --tag explicitly, or build from CSV with "
+                "`regmeta maintain build-db`.",
+            )
+        resolved_tag = db_tag
     else:
         resolved_tag = tag
     url = DOWNLOAD_URL.format(tag=resolved_tag)

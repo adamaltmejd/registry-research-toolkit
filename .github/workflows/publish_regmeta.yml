@@ -6,7 +6,7 @@ on:
 
 jobs:
   ci:
-    if: startsWith(github.event.release.tag_name, 'v')
+    if: startsWith(github.event.release.tag_name, 'regmeta/v')
     uses: ./.github/workflows/ci.yml
 
   publish:
