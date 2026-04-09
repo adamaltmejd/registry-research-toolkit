@@ -131,14 +131,11 @@ class UpdateChecker:
 # ---------------------------------------------------------------------------
 
 
-def _read_db_source_tag() -> str | None:
+def _read_db_source_tag(db_dir: Path) -> str | None:
     """Read the release tag the local database was downloaded from."""
-    path = default_db_dir() / DB_SOURCE_FILE
-    if not path.exists():
-        return None
     try:
-        return json.loads(path.read_text()).get("tag")
-    except (json.JSONDecodeError, OSError):
+        return json.loads((db_dir / DB_SOURCE_FILE).read_text()).get("tag")
+    except (FileNotFoundError, json.JSONDecodeError, OSError):
         return None
 
 
@@ -214,7 +211,7 @@ def run_update(
 
     # --- Database download ---
     db_path = db_dir / DB_FILENAME
-    local_tag = _read_db_source_tag()
+    local_tag = _read_db_source_tag(db_dir)
     need_db = not db_path.exists() or force or (has_db and local_tag != release_tag)
     if need_db and has_db:
         sys.stderr.write("Updating database...\n")
