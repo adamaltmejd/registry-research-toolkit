@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
-      - run: uv lock --check
+      - run: uv sync --frozen
       - run: bash scripts/check_versions.sh
 
   test:
