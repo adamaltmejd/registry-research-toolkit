@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.11"
 
 [options]
-exclude-newer = "2026-04-02T09:08:58.755069Z"
+exclude-newer = "2026-04-02T10:01:39.519458Z"
 exclude-newer-span = "P7D"
 
 [manifest]
@@ -303,7 +303,7 @@ dev = [
 
 [[package]]
 name = "regmeta"
-version = "0.5.0"
+version = "0.5.1"
 source = { editable = "regmeta" }
 dependencies = [
     { name = "zstandard" },
