@@ -2569,9 +2569,10 @@ def _prompt_first_run_download(args: argparse.Namespace, fmt: str) -> None:
     if missing_main:
         parts.append("main database (~400 MB compressed, ~1.6 GB on disk)")
     if missing_docs:
-        parts.append("doc DB (~200 KB compressed)")
+        parts.append("doc DB (~600 KB compressed, ~3 MB on disk)")
     sys.stderr.write(
-        "Missing required artifact(s): " + ", ".join(parts) + ".\nDownload now? [y/N] "
+        "Query commands require both the main DB and the doc DB.\n"
+        "Missing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
     )
     sys.stderr.flush()
     if input().strip().lower() not in ("y", "yes"):

@@ -45,9 +45,10 @@ jobs:
           uv run regmeta maintain update --force -y
           uv run regmeta get schema --register LISA --summary --format json > /dev/null
           # `docs search` must return at least one result — exit 0 with an
-          # empty result set would mean the doc DB shipped empty.
-          docs_total=$(uv run regmeta docs search lisa --limit 1 --format json | jq '.total_count')
-          if [ "${docs_total:-0}" -lt 1 ]; then
+          # empty result set would mean the doc DB shipped empty. Use
+          # `// 0` so a missing field coerces to a valid integer for -lt.
+          docs_total=$(uv run regmeta docs search lisa --limit 1 --format json | jq '.total_count // 0')
+          if [ "$docs_total" -lt 1 ]; then
             echo "::error::Doc DB appears empty: docs search returned total_count=${docs_total}"
             exit 1
           fi

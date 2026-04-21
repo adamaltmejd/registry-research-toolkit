@@ -121,7 +121,10 @@ by `maintain update` alongside the main DB. Query commands (`search`,
 use the CLI offers to download both artifacts.
 
 `maintain build-docs` is a maintainer-only command that rebuilds the doc
-DB from a repo checkout of `regmeta/docs/` before upload.
+DB from a repo checkout of `regmeta/docs/` before upload. Runtime never
+reads markdown — `repo_docs_dir()` in `doc_db.py` is only consulted by
+`build-docs` when run from a repo checkout, and is absent in installed
+wheels.
 
 See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 

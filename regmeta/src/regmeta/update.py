@@ -269,11 +269,14 @@ def run_update(
         # Walker found nothing AND the user has no usable local copy (or
         # --force was set). Returning success here would leave the install
         # broken — every query command would then fail with db_not_found.
+        reason = "No recent release includes a main-DB asset required for this update."
+        if force and db_path.exists():
+            reason += " (--force requires a fresh asset; none was found.)"
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="no_db_in_release",
             error_class="configuration",
-            message="No recent release includes a main-DB asset required for this update.",
+            message=reason,
             remediation=(
                 "Build from CSV with `regmeta maintain build-db`, "
                 "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
@@ -299,11 +302,14 @@ def run_update(
     elif need_docs and not docs_tag:
         # Symmetric with the main-DB case: fail fast rather than leave the
         # user with a broken install. Query commands require the doc DB.
+        reason = "No recent release includes a doc-DB asset required for this update."
+        if force and docs_path.exists():
+            reason += " (--force requires a fresh asset; none was found.)"
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="no_docs_in_release",
             error_class="configuration",
-            message="No recent release includes a doc-DB asset required for this update.",
+            message=reason,
             remediation=(
                 "Build from markdown with `regmeta maintain build-docs`, "
                 "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
