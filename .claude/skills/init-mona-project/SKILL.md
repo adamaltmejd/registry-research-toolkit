@@ -408,21 +408,23 @@ these checks in order:
 **1. Already a repo?** If `{projdir}/.git/` exists, skip this phase entirely.
 
 **2. Is git installed?** Run `command -v git`. If absent:
-   - Tell the user git is not installed and ask whether they want to
-     install it now. On macOS, `xcode-select --install` pulls it in;
-     on Debian/Ubuntu, `sudo apt install git`. Offer to run the command
-     for them (it will prompt for their password).
-   - If they decline, skip to "not using git" below. **Do not just move on
-     silently** — the user needs to know git was never initialized.
+
+- Tell the user git is not installed and ask whether they want to
+  install it now. On macOS, `xcode-select --install` pulls it in;
+  on Debian/Ubuntu, `sudo apt install git`. Offer to run the command
+  for them (it will prompt for their password).
+- If they decline, skip to "not using git" below. **Do not just move on
+  silently** — the user needs to know git was never initialized.
 
 **3. Is git configured?** Run `git config --get user.email` and
-   `git config --get user.name`. If either is empty:
-   - Tell the user git has no identity set and ask for email + name.
-     Offer to set them with `git config --global user.email ...` /
-     `user.name ...` (explain this affects all their git repos, not
-     just this one). If they prefer repo-local, use `git config` without
-     `--global` from inside `{projdir}` *after* running `git init`.
-   - If they decline to configure git at all, skip to "not using git" below.
+`git config --get user.name`. If either is empty:
+
+- Tell the user git has no identity set and ask for email + name.
+  Offer to set them with `git config --global user.email ...` /
+  `user.name ...` (explain this affects all their git repos, not
+  just this one). If they prefer repo-local, use `git config` without
+  `--global` from inside `{projdir}` *after* running `git init`.
+- If they decline to configure git at all, skip to "not using git" below.
 
 **4. Initialize and commit:**
 
