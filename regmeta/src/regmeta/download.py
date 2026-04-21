@@ -28,6 +28,7 @@ DB_ASSET_NAME = "regmeta.db.zst"
 DB_SOURCE_FILE = ".db_source"
 RELEASES_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
 DOWNLOAD_URL = f"https://github.com/{GITHUB_REPO}/releases/download/{{tag}}/{{asset}}"
+PYPI_JSON_URL = "https://pypi.org/pypi/regmeta/json"
 
 
 @dataclass(frozen=True)
@@ -141,6 +142,44 @@ def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
         ) from exc
 
     return _pick_release(all_releases)
+
+
+def fetch_pypi_latest_version(*, timeout: float = 15) -> str:
+    """Return the latest installable regmeta version from PyPI.
+
+    The package-version check for update prompts and `maintain update` must
+    use PyPI, not GitHub Releases: the publish workflow gates PyPI behind a
+    manual environment approval, so a fresh git tag and its release assets
+    can exist on GitHub for hours before PyPI has the matching wheel. Using
+    the GitHub tag as the "latest" signal causes `uv tool upgrade` to no-op
+    while the updater reports success, leaving users in a "update available"
+    loop until PyPI catches up.
+    """
+    req = urllib.request.Request(
+        PYPI_JSON_URL,
+        headers={"Accept": "application/json", "User-Agent": "regmeta"},
+    )
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = json.loads(resp.read())
+    except (urllib.error.URLError, json.JSONDecodeError) as exc:
+        raise RegmetaError(
+            exit_code=EXIT_NETWORK,
+            code="pypi_lookup_failed",
+            error_class="network",
+            message=f"Failed to resolve PyPI version: {exc}",
+            remediation="Check your internet connection and retry.",
+        ) from exc
+    version = data.get("info", {}).get("version")
+    if not version:
+        raise RegmetaError(
+            exit_code=EXIT_NETWORK,
+            code="pypi_lookup_failed",
+            error_class="network",
+            message="PyPI response missing info.version.",
+            remediation=f"Check {PYPI_JSON_URL} manually.",
+        )
+    return version
 
 
 def _fmt_size(n: int) -> str:

@@ -18,6 +18,7 @@ from .download import (
     DB_SOURCE_FILE,
     download_db,
     download_docs_db,
+    fetch_pypi_latest_version,
     resolve_latest_release,
     version_from_tag,
 )
@@ -123,12 +124,15 @@ class UpdateChecker:
             except (json.JSONDecodeError, OSError):
                 pass
 
-        # Stale or missing cache — hit the network
+        # Stale or missing cache — hit the network. We ask PyPI (not GitHub
+        # Releases) because PyPI is what `uv tool upgrade` actually installs
+        # from; a GitHub tag can exist before PyPI has the matching wheel
+        # while the publish workflow waits on environment approval.
         try:
-            resolution = resolve_latest_release(timeout=self._http_timeout)
+            pypi_ver = fetch_pypi_latest_version(timeout=self._http_timeout)
             self._result = (
-                resolution.version
-                if _parse_version(resolution.version) > _parse_version(__version__)
+                pypi_ver
+                if _parse_version(pypi_ver) > _parse_version(__version__)
                 else None
             )
             self._checked = True
@@ -204,11 +208,23 @@ def run_update(
     if db_dir is None:
         db_dir = default_db_dir()
 
+    # Package version target comes from PyPI (what `uv tool upgrade` can
+    # actually install); asset tags come from GitHub Releases (where the
+    # artifacts are hosted). The two can diverge briefly when a release is
+    # tagged before the gated PyPI publish runs — treating PyPI as the
+    # upgrade target avoids a false-success loop where uv reports "Nothing
+    # to upgrade" but we claim the upgrade happened.
     if tag == "latest":
         resolution = resolve_latest_release(timeout=10)
-        latest_ver = resolution.version
         db_tag = resolution.db_tag
         docs_tag = resolution.docs_tag
+        try:
+            latest_ver = fetch_pypi_latest_version(timeout=10)
+        except RegmetaError:
+            # PyPI unreachable — fall back to the GitHub tag so an offline
+            # operator can still refresh assets. The post-upgrade version
+            # check below catches the no-op case either way.
+            latest_ver = resolution.version
     else:
         latest_ver = version_from_tag(tag)
         db_tag = tag  # assume explicit tag has both assets
@@ -252,8 +268,19 @@ def run_update(
                     "Check that regmeta was installed with `uv tool install regmeta`."
                 ),
             )
-        sys.stderr.write(f"  Package upgraded to v{latest_ver}.\n")
-        result["package"] = {"old_version": current, "new_version": latest_ver}
+        # uv exits 0 with "Nothing to upgrade" when the target version isn't
+        # yet on the resolved index — don't print a false "Package upgraded"
+        # line in that case.
+        uv_output = (proc.stdout or "") + (proc.stderr or "")
+        if "Nothing to upgrade" in uv_output:
+            sys.stderr.write(
+                f"  uv reported nothing to upgrade. v{latest_ver} may not be "
+                f"on the configured index yet — try again shortly.\n"
+            )
+            result["package"] = "no_upgrade"
+        else:
+            sys.stderr.write(f"  Package upgraded to v{latest_ver}.\n")
+            result["package"] = {"old_version": current, "new_version": latest_ver}
 
     # --- Main database ---
     db_path = db_dir / DB_FILENAME

@@ -384,6 +384,9 @@ class TestRunUpdateFailFast:
             )
 
         monkeypatch.setattr(update, "resolve_latest_release", fake_resolve)
+        monkeypatch.setattr(
+            update, "fetch_pypi_latest_version", lambda *, timeout=15: __version__
+        )
 
     def test_missing_main_asset_and_no_local_db_raises(
         self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -427,3 +430,117 @@ class TestRunUpdateFailFast:
         result = run_update(db_dir=tmp_path, yes=True)
         assert result["database"] == "no_db_in_release"
         assert result["docs"] == "no_docs_in_release"
+
+
+class TestRunUpdatePypiBehind:
+    """GitHub tag can land before the gated PyPI publish. PyPI is the
+    source of truth for "what's installable"; GitHub drives asset tags."""
+
+    def test_pypi_behind_github_no_upgrade_offered(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """PyPI says installed == latest; GitHub advertises a newer tag.
+        The package upgrade is skipped and existing local assets matching
+        the GitHub tag are treated as up-to-date."""
+        from regmeta import __version__, update
+        from regmeta.download import ReleaseResolution
+        from regmeta.update import run_update
+
+        newer_tag = "regmeta/v99.99.99"
+        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        (tmp_path / ".db_source").write_text(f'{{"tag": "{newer_tag}"}}')
+        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
+        (tmp_path / ".docs_source").write_text(f'{{"tag": "{newer_tag}"}}')
+
+        monkeypatch.setattr(
+            update,
+            "resolve_latest_release",
+            lambda *, timeout=15: ReleaseResolution(
+                release_tag=newer_tag,
+                version="99.99.99",
+                db_tag=newer_tag,
+                docs_tag=newer_tag,
+            ),
+        )
+        monkeypatch.setattr(
+            update, "fetch_pypi_latest_version", lambda *, timeout=15: __version__
+        )
+
+        result = run_update(db_dir=tmp_path, yes=True)
+        assert result["package"] == "up_to_date"
+        assert result["database"] == "up_to_date"
+        assert result["docs"] == "up_to_date"
+
+    def test_uv_nothing_to_upgrade_reports_no_upgrade(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Belt-and-braces: if PyPI says newer but `uv tool upgrade` reports
+        'Nothing to upgrade' (e.g. uv's index cache lags), don't lie about
+        a successful upgrade."""
+        import subprocess as _subprocess
+
+        from regmeta import update
+        from regmeta.download import ReleaseResolution
+        from regmeta.update import run_update
+
+        target_tag = "regmeta/v99.99.99"
+        (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
+        (tmp_path / ".db_source").write_text(f'{{"tag": "{target_tag}"}}')
+        (tmp_path / DOC_DB_FILENAME).write_bytes(b"docs-placeholder")
+        (tmp_path / ".docs_source").write_text(f'{{"tag": "{target_tag}"}}')
+
+        monkeypatch.setattr(
+            update,
+            "resolve_latest_release",
+            lambda *, timeout=15: ReleaseResolution(
+                release_tag=target_tag,
+                version="99.99.99",
+                db_tag=target_tag,
+                docs_tag=target_tag,
+            ),
+        )
+        monkeypatch.setattr(
+            update, "fetch_pypi_latest_version", lambda *, timeout=15: "99.99.99"
+        )
+
+        def fake_run(cmd, capture_output, text):
+            return _subprocess.CompletedProcess(
+                cmd, returncode=0, stdout="", stderr="Nothing to upgrade\n"
+            )
+
+        monkeypatch.setattr(update.subprocess, "run", fake_run)
+
+        result = run_update(db_dir=tmp_path, yes=True)
+        assert result["package"] == "no_upgrade"
+
+
+class TestUpdateCheckerUsesPypi:
+    """UpdateChecker must compare installed version against PyPI, not GitHub."""
+
+    def test_checker_queries_pypi(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        from regmeta import update
+
+        # Isolate filesystem writes.
+        monkeypatch.setattr(update, "default_db_dir", lambda: tmp_path)
+
+        calls = {"pypi": 0, "github": 0}
+
+        def fake_pypi(*, timeout=15):
+            calls["pypi"] += 1
+            return "99.99.99"
+
+        def fake_github(*, timeout=15):
+            calls["github"] += 1
+            raise AssertionError("UpdateChecker must not hit GitHub for version")
+
+        monkeypatch.setattr(update, "fetch_pypi_latest_version", fake_pypi)
+        monkeypatch.setattr(update, "resolve_latest_release", fake_github)
+
+        checker = update.UpdateChecker(http_timeout=5)
+        newer = checker.get_newer_version(timeout=5)
+
+        assert newer == "99.99.99"
+        assert calls["pypi"] == 1
+        assert calls["github"] == 0
