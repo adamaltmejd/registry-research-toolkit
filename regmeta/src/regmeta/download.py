@@ -11,7 +11,7 @@ from typing import Any
 
 import zstandard
 
-from .db import DB_FILENAME, default_db_dir
+from .db import DB_FILENAME, default_db_dir, open_db
 from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
@@ -251,6 +251,30 @@ def download_db(
         _download_file(url, tmp_zst)
         _decompress(tmp_zst, tmp_db)
         tmp_zst.unlink()
+
+        # Validate schema before clobbering the existing DB: an incompatible
+        # asset (e.g. a stale release DB pre-dating a schema bump) would
+        # otherwise silently replace a working DB and surface as cryptic SQL
+        # errors at query time.
+        try:
+            open_db(tmp_db).close()
+        except RegmetaError as exc:
+            tmp_db.unlink(missing_ok=True)
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="incompatible_db_asset",
+                error_class="configuration",
+                message=(
+                    f"Release {resolved_tag} has a DB asset, but its schema is "
+                    f"incompatible with this version of regmeta: {exc.message}"
+                ),
+                remediation=(
+                    "The maintainer needs to upload a freshly-built DB to a "
+                    "recent release. Report this at "
+                    f"https://github.com/{GITHUB_REPO}/issues. "
+                    "Your existing database (if any) was left untouched."
+                ),
+            ) from exc
 
         if final_path.exists():
             final_path.unlink()

@@ -280,12 +280,15 @@ class TestBuildDbErrors:
 
 
 class TestSchemaCompat:
-    """open_db rejects databases whose schema major version differs from the code.
+    """open_db rejects databases whose schema is incompatible with the code.
 
-    The check compares the major component of SCHEMA_VERSION (in db.py) against
-    the schema_version stored in the database's import_manifest table.  When
-    bumping SCHEMA_VERSION with a breaking change, increment the major version
-    so that old databases are rejected with a clear error message.
+    The check compares the major/minor components of SCHEMA_VERSION (in db.py)
+    against the schema_version stored in the database's import_manifest table.
+    Majors must match exactly, the DB minor must be >= the code minor, and
+    patch is ignored. Bump SCHEMA_VERSION's major for breaking changes and the
+    minor when the code starts reading a new column so that older DBs are
+    rejected up front with a clear error instead of failing later with a
+    cryptic SQL error.
     """
 
     @staticmethod
@@ -326,6 +329,22 @@ class TestSchemaCompat:
         if major == 0:
             pytest.skip("major is already 0")
         db = self._make_db(tmp_path, f"{major - 1}.0.0")
+        with pytest.raises(RegmetaError) as exc_info:
+            open_db(db)
+        assert exc_info.value.code == "schema_incompatible"
+
+    def test_incompatible_old_minor(self, tmp_path: Path):
+        """A DB with the same major but a lower minor is rejected.
+
+        Guards against regressions like v0.5.1's published DB asset (schema
+        2.0.0) being used with code expecting schema 2.1.0 — the old bug
+        surfaced as a runtime `no such column` error instead of a clean
+        schema_incompatible error.
+        """
+        major, minor = (int(x) for x in SCHEMA_VERSION.split(".")[:2])
+        if minor == 0:
+            pytest.skip("minor is already 0")
+        db = self._make_db(tmp_path, f"{major}.{minor - 1}.0")
         with pytest.raises(RegmetaError) as exc_info:
             open_db(db)
         assert exc_info.value.code == "schema_incompatible"

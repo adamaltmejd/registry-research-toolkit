@@ -341,9 +341,14 @@ def db_path_from_args(db_arg: str | None, filename: str = DB_FILENAME) -> Path:
 
 
 def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
-    """Raise if the database schema major version is incompatible with the code.
+    """Raise if the database schema is incompatible with the installed code.
 
-    Treats missing or unparseable schema_version as incompatible — the
+    Code with ``SCHEMA_VERSION = M.m.p`` requires a DB whose manifest records a
+    schema version with the same major M and minor >= m. A lower minor means
+    the code may reference columns that don't exist in the DB; different majors
+    are hard breaks. Patch differences are ignored.
+
+    Missing or unparseable ``schema_version`` is treated as incompatible — the
     ``check_schema=False`` escape hatch exists for legitimate bypasses
     (e.g. ``maintain info``, doc DB).
     """
@@ -367,8 +372,10 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
     try:
         if not db_ver:
             raise ValueError("missing schema_version")
-        db_major = int(db_ver.split(".")[0])
-        code_major = int(SCHEMA_VERSION.split(".")[0])
+        db_parts = db_ver.split(".")
+        db_major, db_minor = int(db_parts[0]), int(db_parts[1])
+        code_parts = SCHEMA_VERSION.split(".")
+        code_major, code_minor = int(code_parts[0]), int(code_parts[1])
     except (ValueError, IndexError) as exc:
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
@@ -381,7 +388,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
             remediation=fix,
         ) from exc
 
-    if db_major != code_major:
+    if db_major != code_major or db_minor < code_minor:
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="schema_incompatible",

@@ -62,7 +62,7 @@ Update the version string in both files:
 but `SCHEMA_VERSION` in that file was not already bumped, bump it now:
 
 - **Major bump** (breaking): renamed/removed tables or columns, changed column semantics
-- **Minor bump** (compatible): new tables, new optional columns, new indexes
+- **Minor bump** (new columns the code reads): added columns/tables that queries reference. `open_db` rejects DBs whose minor is < the code's minor, so this forces a DB rebuild before the package release is usable.
 
 ### 4. Update lockfile
 

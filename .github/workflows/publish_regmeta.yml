@@ -19,5 +19,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
+
+      # Smoke-test the release's DB asset before pushing to PyPI. This runs
+      # after the pypi-environment approval, giving the maintainer a chance to
+      # upload a freshly-built regmeta.db.zst (per .agents/skills/release/SKILL.md)
+      # if SCHEMA_VERSION changed. The check exercises the exact code path that
+      # broke silently in issue #8 (get schema → v.source_label). download_db
+      # validates the DB's schema before install, so an incompatible asset
+      # fails here instead of in users' terminals.
+      - name: Verify release DB asset is usable
+        env:
+          XDG_DATA_HOME: ${{ runner.temp }}/xdg
+        run: |
+          uv sync --frozen
+          uv run regmeta maintain update --force -y
+          uv run regmeta get schema --register LISA --summary --format json > /dev/null
+
       - run: uv build regmeta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@release/v1

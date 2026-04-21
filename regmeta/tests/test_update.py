@@ -1,7 +1,13 @@
 """Tests for the update module (version parsing and release resolution)."""
 
-import pytest
+import sqlite3
+from pathlib import Path
 
+import pytest
+import zstandard
+
+from regmeta import download
+from regmeta.db import DB_FILENAME, SCHEMA_VERSION
 from regmeta.download import _is_regmeta_release, _pick_release, version_from_tag
 from regmeta.errors import RegmetaError
 from regmeta.update import (
@@ -154,3 +160,76 @@ class TestPendingUpdate:
 
     def test_clear_when_missing(self):
         _clear_pending_update()  # should not raise
+
+
+def _write_fake_db_zst(dest_zst: Path, schema_version: str) -> None:
+    """Build a minimal sqlite DB with the given schema_version and zstd it to dest."""
+    db_path = dest_zst.with_suffix(".db.source")
+    conn = sqlite3.connect(db_path)
+    conn.execute("CREATE TABLE import_manifest (key TEXT PRIMARY KEY, value TEXT)")
+    conn.execute(
+        "INSERT INTO import_manifest VALUES ('schema_version', ?)", (schema_version,)
+    )
+    conn.commit()
+    conn.close()
+    cctx = zstandard.ZstdCompressor()
+    with db_path.open("rb") as src, dest_zst.open("wb") as out:
+        cctx.copy_stream(src, out)
+    db_path.unlink()
+
+
+class TestDownloadDbSchemaGuard:
+    """download_db refuses to overwrite an existing DB with an incompatible asset."""
+
+    def _patch_download(
+        self, monkeypatch: pytest.MonkeyPatch, schema_version: str
+    ) -> None:
+        """Replace the network download with a local zstd-ed DB having *schema_version*."""
+
+        def fake_download(url: str, dest: Path) -> None:
+            _write_fake_db_zst(dest, schema_version)
+
+        monkeypatch.setattr(download, "_download_file", fake_download)
+
+    def test_incompatible_asset_aborts_without_overwriting(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Stale DB asset (old minor) must not replace a working local DB."""
+        db_dir = tmp_path / "share"
+        db_dir.mkdir()
+        existing = db_dir / DB_FILENAME
+        existing.write_bytes(b"existing-db-sentinel")
+
+        major, minor = (int(x) for x in SCHEMA_VERSION.split(".")[:2])
+        if minor == 0:
+            pytest.skip("requires a non-zero minor in SCHEMA_VERSION")
+        self._patch_download(monkeypatch, f"{major}.{minor - 1}.0")
+
+        with pytest.raises(RegmetaError) as exc_info:
+            download.download_db(
+                db_dir=db_dir, tag="regmeta/vX.Y.Z", force=True, yes=True
+            )
+        assert exc_info.value.code == "incompatible_db_asset"
+        # Existing DB left untouched.
+        assert existing.read_bytes() == b"existing-db-sentinel"
+        # No tmp files leftover.
+        assert not (db_dir / "regmeta.db.tmp").exists()
+        assert not (db_dir / "regmeta.db.zst.tmp").exists()
+
+    def test_compatible_asset_replaces_existing(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Matching schema version is installed normally."""
+        db_dir = tmp_path / "share"
+        db_dir.mkdir()
+        existing = db_dir / DB_FILENAME
+        existing.write_bytes(b"existing-db-sentinel")
+
+        self._patch_download(monkeypatch, SCHEMA_VERSION)
+
+        result = download.download_db(
+            db_dir=db_dir, tag="regmeta/vX.Y.Z", force=True, yes=True
+        )
+        assert result["tag"] == "regmeta/vX.Y.Z"
+        assert existing.exists()
+        assert existing.read_bytes() != b"existing-db-sentinel"

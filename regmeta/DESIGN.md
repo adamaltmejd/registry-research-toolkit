@@ -126,17 +126,23 @@ Three independent version numbers:
 | Schema version (`SCHEMA_VERSION`) | `db.py` | Database schema compatibility |
 | Contract version (`CONTRACT_VERSION`) | `cli.py` | CLI output envelope format |
 
-**Schema version** uses semver. The **major** component gates compatibility:
-`open_db` compares the major version in the database's `import_manifest`
-against the code's `SCHEMA_VERSION`. A mismatch raises `schema_incompatible`
-(exit 10) and directs the user to re-download the database.
+**Schema version** uses semver. `open_db` compares the `import_manifest`'s
+`schema_version` to the code's `SCHEMA_VERSION`: the major components must
+match and the DB's minor must be `>=` the code's minor. A mismatch raises
+`schema_incompatible` (exit 10) and directs the user to re-download the
+database. Patch differences are ignored.
 
-When making a **breaking schema change** (renamed/removed tables or columns,
-changed semantics), bump the `SCHEMA_VERSION` major version in `db.py`. The
-`TestSchemaCompat` tests in `test_build_db.py` verify this guard works.
+Bumping rules:
 
-Minor/patch bumps (new tables, new optional columns) are backwards-compatible
-and do not trigger rejection.
+- **Major bump** on breaking changes (renamed/removed tables or columns,
+  changed column semantics).
+- **Minor bump** when code starts reading a new column/table added in the
+  build. This forces old DBs (that lack it) to be rejected cleanly at
+  `open_db` instead of failing later with a SQL error.
+
+Either bump requires rebuilding and re-uploading the DB asset before the
+package release goes live — see `.agents/skills/release/SKILL.md`. The
+`TestSchemaCompat` tests in `test_build_db.py` verify the guard.
 
 ### Release tags and distribution
 
