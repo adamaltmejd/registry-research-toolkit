@@ -25,7 +25,7 @@ for other methods.
 ### For AI agents
 
 Point your agent at the
-[registry-metadata-search skill](https://github.com/adamaltmejd/registry-research-toolkit/tree/main/.claude/skills/registry-metadata-search)
+[register-metadata-search skill](https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se/skills/register-metadata-search)
 and ask it to install regmeta and use it. The skill contains install
 instructions, the full command reference, and common query workflows.
 

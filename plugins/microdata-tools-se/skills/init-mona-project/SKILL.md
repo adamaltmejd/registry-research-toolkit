@@ -42,9 +42,10 @@ You are the scaffolder, not the analyst.
 
 - Claude Code reads `CLAUDE.md`.
 - Codex reads `AGENTS.md`.
-- Always write both files with identical content.
-- If one exists and the other is missing, re-enter Phase 2 and backfill the
-  missing file instead of treating the project as complete.
+- Write the file used by your current runtime. In the rest of this skill,
+  `{MEMORY}.md` means that runtime-specific file.
+- If the other runtime's memory file exists but `{MEMORY}.md` does not,
+  re-enter Phase 2 and write `{MEMORY}.md`.
 
 ## Project directory resolution
 
@@ -68,8 +69,8 @@ as `.claude/` or `.codex/`, scaffold into it directly without asking.
 | No project signals found | Run Phase 1 interview and bootstrap |
 | Project dir exists, no `stats.json` | Stop after MONA handoff and wait for `stats.json` |
 | Project dir exists, has `stats.json`, no `mock_data/manifest.json` | Generate mock data, then continue to Phase 2 |
-| Project dir exists, has `mock_data/manifest.json`, missing either `CLAUDE.md` or `AGENTS.md` | Run Phase 2 and backfill the missing memory file |
-| Project dir exists, has `mock_data/manifest.json`, and both memory files | Already initialized; tell the user |
+| Project dir exists, has `mock_data/manifest.json`, no `{MEMORY}.md` | Run Phase 2 and write `{MEMORY}.md` |
+| Project dir exists, has `mock_data/manifest.json`, and `{MEMORY}.md` | Already initialized; tell the user |
 
 ## Workflow
 

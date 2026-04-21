@@ -6,7 +6,7 @@ files in the workspace you give them access to.
 
 ## Data handling
 
-- `registry-metadata-search` queries registry metadata through the local
+- `register-metadata-search` queries register metadata through the local
   `regmeta` CLI. That database contains schema metadata, not microdata.
 - `init-mona-project` scaffolds local project files and invokes the local
   `mock-data-wizard` CLI for MONA mock-data workflows.
@@ -22,4 +22,6 @@ policies of the host application you use to run it.
 
 ## Contact
 
-Questions can be directed to Adam Altmejd at `adam@altmejd.se`.
+Questions can be directed to Adam Altmejd at `adam@altmejd.se`. Bug reports
+and documentation fixes are welcome at
+<https://github.com/adamaltmejd/registry-research-toolkit/issues>.

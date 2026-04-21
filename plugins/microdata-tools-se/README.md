@@ -6,7 +6,7 @@ Socialstyrelsen, and other holders). Bundles two skills:
 | Skill | Purpose |
 |---|---|
 | `init-mona-project` | Scaffold a local R environment for an existing SCB MONA research project (mock data, templates, guardrails). |
-| `registry-metadata-search` | Query register metadata (variables, value codes, schemas) via the `regmeta` CLI. |
+| `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `regmeta` CLI. |
 
 ## Prerequisites
 
@@ -28,25 +28,33 @@ regmeta maintain update --yes   # pull the latest metadata DB
 ```
 
 Skills are then available as `/microdata-tools-se:init-mona-project` and
-`/microdata-tools-se:registry-metadata-search`.
+`/microdata-tools-se:register-metadata-search`.
 
 ### Codex
 
-For workspace-local testing, open this repo in Codex. The workspace
-marketplace entry lives in `.agents/plugins/marketplace.json` and exposes
-`./plugins/microdata-tools-se` as a local plugin.
+Open this repository in Codex and install `microdata-tools-se` from the
+workspace marketplace. The plugin ships with the repository and the bundled
+workspace marketplace entry exposes it to Codex.
 
-If Codex does not pick up marketplace changes immediately, restart it and
-then install `microdata-tools-se` from the workspace marketplace.
+If Codex does not pick up plugin changes immediately, restart Codex and try
+again.
 
 ## Scope
 
 The toolkit targets Swedish register-based work generally — research, report
 writing, statistics production — not only MONA. `init-mona-project` is the
-MONA-specific piece; `registry-metadata-search` works with any register whose
+MONA-specific piece; `register-metadata-search` works with any register whose
 schema is in the `regmeta` DB.
 
 ## Personal data
 
 MONA contains personal data. The skills never export row-level data; only
-aggregate statistics. See the main repo `CLAUDE.md` for full safety rules.
+aggregate statistics.
+
+## Support
+
+Source code and issue tracker:
+[adamaltmejd/registry-research-toolkit](https://github.com/adamaltmejd/registry-research-toolkit)
+
+If the plugin behaves unexpectedly or the documentation is unclear, please
+file an issue.

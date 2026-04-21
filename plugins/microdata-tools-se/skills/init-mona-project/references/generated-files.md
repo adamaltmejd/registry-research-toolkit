@@ -156,7 +156,10 @@ list(
 
 ## Memory files
 
-Write identical content to both `CLAUDE.md` and `AGENTS.md`.
+Write this content to `{MEMORY}.md` only.
+
+- In Claude Code, `{MEMORY}.md` is `CLAUDE.md`.
+- In Codex, `{MEMORY}.md` is `AGENTS.md`.
 
 ````markdown
 # {Project title}
@@ -291,7 +294,7 @@ notes file to read first.}
 Keep `output/` aggregate-only and manually review exports before they leave MONA.
 
 ## Pointers
-- `CLAUDE.md` and `AGENTS.md` - authoritative project briefing
+- `{MEMORY}.md` - authoritative project briefing for the current runtime
 - `notes/` - data docs plus mock-data assessment
 - `src/pipeline.R` - current targets entry point
 ```
