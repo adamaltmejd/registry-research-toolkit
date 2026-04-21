@@ -399,6 +399,54 @@ slipped into the generated `.R` files. Fix by replacing with `\uXXXX`
 escapes or ASCII equivalents (use `-` not `—`) and re-run. Do not finish
 Phase 2 until the suite is green.
 
+### 2.6 Initialize the git repo
+
+After the test suite passes, initialize git in `{projdir}` and make the
+first commit yourself — do **not** tell the user to do this. Work through
+these checks in order:
+
+**1. Already a repo?** If `{projdir}/.git/` exists, skip this phase entirely.
+
+**2. Is git installed?** Run `command -v git`. If absent:
+   - Tell the user git is not installed and ask whether they want to
+     install it now. On macOS, `xcode-select --install` pulls it in;
+     on Debian/Ubuntu, `sudo apt install git`. Offer to run the command
+     for them (it will prompt for their password).
+   - If they decline, skip to "not using git" below. **Do not just move on
+     silently** — the user needs to know git was never initialized.
+
+**3. Is git configured?** Run `git config --get user.email` and
+   `git config --get user.name`. If either is empty:
+   - Tell the user git has no identity set and ask for email + name.
+     Offer to set them with `git config --global user.email ...` /
+     `user.name ...` (explain this affects all their git repos, not
+     just this one). If they prefer repo-local, use `git config` without
+     `--global` from inside `{projdir}` *after* running `git init`.
+   - If they decline to configure git at all, skip to "not using git" below.
+
+**4. Initialize and commit:**
+
+```bash
+cd {projdir}
+git init -q
+git add -A
+git commit -q -m "Initial project scaffold"
+```
+
+**"Not using git" path.** If the user declined to install or configure
+git, append this block to `{projdir}/CLAUDE.md` (at the very top, right
+under the project title) and tell the user you did so:
+
+```markdown
+> **Note:** This project is not under version control. The user declined
+> to install or configure git at scaffold time. If that changes, run
+> `git init && git add -A && git commit -m "Initial project scaffold"`
+> from the project root.
+```
+
+Do not silently configure git globally on the user's behalf under any
+circumstance.
+
 ---
 
 ## Section 5: File templates
@@ -838,11 +886,10 @@ passes, print **a short** message to the user — two things only:
    self-contained: `CLAUDE.md` orients the next agent, `ROADMAP.md` lists
    what to tackle first. Tell the user something like:
 
-   > The project is ready. Review `ROADMAP.md` and fill in any gaps, then
-   > start a fresh `claude` session from `{projdir}` to begin working on
-   > the data processing and analysis code. Don't forget to
-   > `git init && git add -A && git commit -m "Initial project scaffold"`
-   > first.
+   > The project is ready and committed to a fresh git repo. Review
+   > `ROADMAP.md` and fill in any gaps, then start a fresh `claude`
+   > session from `{projdir}` to begin working on the data processing
+   > and analysis code.
 
 Do **not** print a giant tree, a long status dump, or next-step
 recommendations in chat. Everything the next session needs is in
