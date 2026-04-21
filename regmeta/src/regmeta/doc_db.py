@@ -16,6 +16,13 @@ from .errors import EXIT_CONFIG, RegmetaError
 log = logging.getLogger(__name__)
 
 DOC_DB_FILENAME = "regmeta_docs.db"
+DOC_DB_ASSET_NAME = "regmeta_docs.db.zst"
+DOCS_SOURCE_FILE = ".docs_source"
+
+# Versioning parallels the main-DB SCHEMA_VERSION. Bump the minor when the
+# code starts reading a new column / meta key, major when tables or columns
+# are renamed or removed. Patch differences are ignored.
+DOC_SCHEMA_VERSION = "1.0.0"
 
 DOC_DDL = """\
 CREATE TABLE IF NOT EXISTS doc (
@@ -119,48 +126,122 @@ def doc_db_path(db_arg: str | None) -> Path:
     return db_path_from_args(db_arg, filename=DOC_DB_FILENAME)
 
 
-def bundled_docs_dir() -> Path | None:
-    """Find the bundled docs directory shipped with the package."""
-    # Walk up from this file to find regmeta/docs/
+def repo_docs_dir() -> Path | None:
+    """Return the in-repo source-markdown directory, for dev-time builds only.
+
+    Runtime NEVER reads from this — users receive the prebuilt doc DB as a
+    release asset via ``maintain update``. Only ``maintain build-docs`` uses
+    this, so a maintainer working from a checkout can rebuild the doc DB
+    from ``regmeta/docs/`` without passing ``--docs-dir`` every time.
+    """
     pkg_dir = Path(__file__).resolve().parent
-    candidates = [
-        pkg_dir / "docs",  # installed package: docs bundled inside the package dir
-        pkg_dir.parent.parent
-        / "docs",  # development layout: src/regmeta/../../docs → regmeta/docs/
-    ]
-    for candidate in candidates:
-        if candidate.is_dir() and any(candidate.iterdir()):
-            return candidate
+    candidate = pkg_dir.parent.parent / "docs"
+    if candidate.is_dir() and any(candidate.iterdir()):
+        return candidate
     return None
 
 
-def open_doc_db(db_path: Path) -> sqlite3.Connection:
-    """Open the doc index DB read-only."""
-    from .db import open_db
+# ---------------------------------------------------------------------------
+# Schema compatibility
+# ---------------------------------------------------------------------------
 
-    return open_db(
-        db_path,
-        check_schema=False,
-        error_code="doc_db_not_found",
-        remediation="Run `regmeta maintain build-docs` to build the doc search index.",
+
+def _check_doc_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
+    """Raise if the doc DB schema is incompatible with the installed code.
+
+    Mirrors ``_check_schema_compat`` in ``db.py``: same-major / minor>=code
+    rule against ``DOC_SCHEMA_VERSION``. Missing/unparseable metadata is
+    treated as incompatible so stale pre-versioning DBs get replaced.
+    """
+    fix = (
+        "Run `regmeta maintain update` to replace it with a compatible asset. "
+        "(Doc DBs built by pre-0.7 regmeta lack schema_version and are always "
+        "reported as incompatible — the update will overwrite them.)"
     )
+
+    try:
+        row = conn.execute(
+            "SELECT value FROM doc_meta WHERE key = 'schema_version'"
+        ).fetchone()
+    except sqlite3.OperationalError as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="doc_schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Doc DB metadata is missing or unreadable in {db_path}. "
+                f"Expected doc schema v{DOC_SCHEMA_VERSION}."
+            ),
+            remediation=fix,
+        ) from exc
+
+    db_ver = row["value"] if row else None
+    try:
+        if not db_ver:
+            raise ValueError("missing schema_version")
+        db_parts = db_ver.split(".")
+        db_major, db_minor = int(db_parts[0]), int(db_parts[1])
+        code_parts = DOC_SCHEMA_VERSION.split(".")
+        code_major, code_minor = int(code_parts[0]), int(code_parts[1])
+    except (ValueError, IndexError) as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="doc_schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Doc DB schema version is missing or invalid in {db_path}: "
+                f"{db_ver!r}. This version of regmeta expects doc schema v{DOC_SCHEMA_VERSION}."
+            ),
+            remediation=fix,
+        ) from exc
+
+    if db_major != code_major or db_minor < code_minor:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="doc_schema_incompatible",
+            error_class="configuration",
+            message=(
+                f"Doc DB schema v{db_ver} ({db_path}) is incompatible with this "
+                f"version of regmeta (expects doc schema v{DOC_SCHEMA_VERSION})."
+            ),
+            remediation=fix,
+        )
+
+
+# ---------------------------------------------------------------------------
+# Open / ensure
+# ---------------------------------------------------------------------------
+
+
+def open_doc_db(db_path: Path, *, check_schema: bool = True) -> sqlite3.Connection:
+    """Open the doc index DB read-only and verify schema compatibility."""
+    if not db_path.exists():
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="doc_db_not_found",
+            error_class="configuration",
+            message=f"Doc DB not found: {db_path}",
+            remediation="Run `regmeta maintain update` to fetch the doc DB.",
+        )
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    if check_schema:
+        try:
+            _check_doc_schema_compat(conn, db_path)
+        except RegmetaError:
+            conn.close()
+            raise
+    return conn
 
 
 def ensure_doc_db(db_arg: str | None) -> sqlite3.Connection:
-    """Open the doc DB, auto-building from bundled docs if missing."""
+    """Open the doc DB, failing with an actionable error if missing.
+
+    Unlike the pre-0.7 behaviour, this no longer auto-builds from bundled
+    markdown — the doc DB is distributed as a release asset and installed
+    via ``maintain update`` alongside the main DB.
+    """
     path = doc_db_path(db_arg)
-    if not path.exists():
-        docs_dir = bundled_docs_dir()
-        if docs_dir is None:
-            raise RegmetaError(
-                exit_code=EXIT_CONFIG,
-                code="doc_db_not_found",
-                error_class="configuration",
-                message=f"Doc index not found: {path}",
-                remediation="Run `regmeta maintain build-docs --docs-dir <path>` to build the index.",
-            )
-        log.info("Building doc index from %s ...", docs_dir)
-        build_doc_db(docs_dir, path.parent)
     return open_doc_db(path)
 
 
@@ -258,14 +339,15 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
     conn.execute("INSERT INTO doc_fts(doc_fts) VALUES('rebuild')")
 
     # Store metadata
-    conn.execute(
-        "INSERT INTO doc_meta (key, value) VALUES ('doc_count', ?)",
-        (str(total),),
-    )
-    conn.execute(
-        "INSERT INTO doc_meta (key, value) VALUES ('docs_dir', ?)",
-        (str(docs_dir.resolve()),),
-    )
+    for key, value in (
+        ("schema_version", DOC_SCHEMA_VERSION),
+        ("doc_count", str(total)),
+        ("docs_dir", str(docs_dir.resolve())),
+    ):
+        conn.execute(
+            "INSERT INTO doc_meta (key, value) VALUES (?, ?)",
+            (key, value),
+        )
 
     conn.commit()
     conn.close()

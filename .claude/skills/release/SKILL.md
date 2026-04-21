@@ -56,13 +56,20 @@ Update the version string in both files:
 - `<package>/pyproject.toml`: the `version = "X.Y.Z"` line
 - `<package>/src/<package>/__init__.py`: the `__version__ = "X.Y.Z"` line
 
-**regmeta only — schema version check:** Run
+**regmeta only — main-DB schema version check:** Run
 `git diff <tag>..HEAD -- regmeta/src/regmeta/db.py` and check for changes to
 `CREATE TABLE`, `CREATE VIRTUAL TABLE`, or column lists. If the schema changed
 but `SCHEMA_VERSION` in that file was not already bumped, bump it now:
 
 - **Major bump** (breaking): renamed/removed tables or columns, changed column semantics
 - **Minor bump** (new columns the code reads): added columns/tables that queries reference. `open_db` rejects DBs whose minor is < the code's minor, so this forces a DB rebuild before the package release is usable.
+
+**regmeta only — doc-DB schema version check:** Run
+`git diff <tag>..HEAD -- regmeta/src/regmeta/doc_db.py` and check for changes
+to `DOC_DDL` or reads of new `doc_meta` keys. If the doc schema changed but
+`DOC_SCHEMA_VERSION` in that file was not bumped, bump it now. Same
+major/minor rules as `SCHEMA_VERSION`. A bump forces a fresh doc-DB asset
+upload in step 8.
 
 ### 4. Update lockfile
 
@@ -85,8 +92,8 @@ If anything fails, stop and fix. Do not release broken code.
 
 Before committing, verify that all non-bump changes are already committed in
 their own commits with clear messages. The bump commit should contain **only**
-version bump files — `pyproject.toml`, `__init__.py`, `uv.lock`, and `db.py`
-if `SCHEMA_VERSION` was bumped:
+version bump files — `pyproject.toml`, `__init__.py`, `uv.lock`, and (if the
+relevant schema version was bumped) `db.py` or `doc_db.py`:
 
 ```text
 Bump <package> version to X.Y.Z
@@ -105,25 +112,55 @@ EOF
 
 The tag is created by this command from the current HEAD — do not create it separately. If the tag already exists, something went wrong; see error recovery below.
 
-### 8. Build database artifact (regmeta only, conditional)
+### 8. Build and upload release assets (regmeta only, conditional)
 
-Build and upload a new database if **either** condition is true:
+regmeta ships two release assets. Each is optional per release — `maintain
+update` walks backwards through releases to find the most recent one
+carrying each asset, so a doc-less package release still serves the prior
+doc asset. Missing assets must be uploaded **before** approving the publish
+workflow: the CI smoke step runs `maintain update` and fails if the walker
+can't resolve a compatible pair of assets.
+
+The SCB CSV exports live in `SCB-data/` (gitignored). If missing, ask the user.
+
+#### 8a. Main DB asset (`regmeta.db.zst`)
+
+Upload if **either** condition is true:
 
 - `SCHEMA_VERSION` was bumped (either already in the commits or by step 3)
 - The release is a **major** version bump
 
-If neither applies, skip to step 9. The DB must be uploaded **before** approving
-the publish workflow — users need the new DB before the new package version is
-live on PyPI, otherwise they hit `schema_incompatible` (exit 10).
-
-The SCB CSV exports live in `SCB-data/` (gitignored). If missing, ask the user.
+Otherwise skip.
 
 ```bash
 uv run regmeta maintain build-db --csv-dir SCB-data/
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
 gh release upload regmeta/vX.Y.Z regmeta.db.zst
-gh release view regmeta/vX.Y.Z --json assets --jq '.assets[].name'
 rm regmeta.db.zst
+```
+
+#### 8b. Doc DB asset (`regmeta_docs.db.zst`)
+
+Upload if **any** of these is true:
+
+- `DOC_SCHEMA_VERSION` was bumped
+- `git diff <tag>..HEAD -- regmeta/docs/` is non-empty (docs content changed)
+- The release is a **major** version bump
+
+Otherwise skip — users keep getting the prior release's doc asset via the
+walker.
+
+```bash
+uv run regmeta maintain build-docs
+zstd -3 -T0 ~/.local/share/regmeta/regmeta_docs.db -o regmeta_docs.db.zst
+gh release upload regmeta/vX.Y.Z regmeta_docs.db.zst
+rm regmeta_docs.db.zst
+```
+
+Verify both assets are present on the release before approving the workflow:
+
+```bash
+gh release view regmeta/vX.Y.Z --json assets --jq '.assets[].name'
 ```
 
 ### 9. Monitor deployment
@@ -140,6 +177,6 @@ rm regmeta.db.zst
 - If the commit was pushed but `gh release create` fails: the commit is on main — just retry the release creation.
 - If the release was created but CI fails: delete the release and tag, fix the issue, and start over from step 6.
 - If a tag already exists for the target version: something went wrong in a previous attempt. Investigate before proceeding.
-- If `build-db` fails: fix the issue before approving the publish workflow. The release exists but the package must not go live on PyPI without a compatible DB.
+- If `build-db` or `build-docs` fails: fix the issue before approving the publish workflow. The release exists but the package must not go live on PyPI without compatible assets — the CI smoke step will block the publish if the walker can't resolve them.
 - If `gh release upload` fails: retry the upload. The release and tag are fine.
 - Never force-push or amend commits that are already on main.

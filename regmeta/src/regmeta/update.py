@@ -1,4 +1,4 @@
-"""Self-update logic for regmeta package and database."""
+"""Self-update logic for regmeta package, main database, and doc DB."""
 
 from __future__ import annotations
 
@@ -13,11 +13,13 @@ from typing import Any
 
 from . import __version__
 from .db import DB_FILENAME, default_db_dir
+from .doc_db import DOC_DB_FILENAME, DOCS_SOURCE_FILE
 from .download import (
     DB_SOURCE_FILE,
-    version_from_tag,
     download_db,
+    download_docs_db,
     resolve_latest_release,
+    version_from_tag,
 )
 from .errors import EXIT_CONFIG, RegmetaError
 
@@ -123,10 +125,10 @@ class UpdateChecker:
 
         # Stale or missing cache — hit the network
         try:
-            _tag, version, _db_tag = resolve_latest_release(timeout=self._http_timeout)
+            resolution = resolve_latest_release(timeout=self._http_timeout)
             self._result = (
-                version
-                if _parse_version(version) > _parse_version(__version__)
+                resolution.version
+                if _parse_version(resolution.version) > _parse_version(__version__)
                 else None
             )
             self._checked = True
@@ -172,10 +174,10 @@ class UpdateChecker:
 # ---------------------------------------------------------------------------
 
 
-def _read_db_source_tag(db_dir: Path) -> str | None:
-    """Read the release tag the local database was downloaded from."""
+def _read_source_tag(path: Path) -> str | None:
+    """Read the release tag an artifact was downloaded from."""
     try:
-        return json.loads((db_dir / DB_SOURCE_FILE).read_text()).get("tag")
+        return json.loads(path.read_text()).get("tag")
     except (FileNotFoundError, json.JSONDecodeError, OSError):
         return None
 
@@ -192,22 +194,25 @@ def run_update(
     force: bool = False,
     yes: bool = False,
 ) -> dict[str, Any]:
-    """Update regmeta package and database to the latest release.
+    """Update regmeta package, main database, and doc DB to the latest release.
 
-    Skips the package upgrade if already on the latest version.
-    Walks recent releases to find the most recent one with a DB asset
-    and skips the download if already on that tag (unless *force* is
-    True or the database does not exist).
+    Skips the package upgrade if already on the latest version. Each asset
+    is fetched independently: the walker returns the most recent release
+    carrying that asset, so a doc-less package release still serves the
+    previous doc DB. Already-current assets are skipped unless *force*.
     """
     if db_dir is None:
         db_dir = default_db_dir()
 
-    # Resolve the target release
     if tag == "latest":
-        _release_tag, latest_ver, db_tag = resolve_latest_release(timeout=10)
+        resolution = resolve_latest_release(timeout=10)
+        latest_ver = resolution.version
+        db_tag = resolution.db_tag
+        docs_tag = resolution.docs_tag
     else:
         latest_ver = version_from_tag(tag)
-        db_tag = tag  # assume explicit tag has a db
+        db_tag = tag  # assume explicit tag has both assets
+        docs_tag = tag
 
     result: dict[str, Any] = {}
 
@@ -250,22 +255,76 @@ def run_update(
         sys.stderr.write(f"  Package upgraded to v{latest_ver}.\n")
         result["package"] = {"old_version": current, "new_version": latest_ver}
 
-    # --- Database download ---
+    # --- Main database ---
     db_path = db_dir / DB_FILENAME
-    local_tag = _read_db_source_tag(db_dir)
-    need_db = not db_path.exists() or force or (db_tag and local_tag != db_tag)
+    local_db_tag = _read_source_tag(db_dir / DB_SOURCE_FILE)
+    need_db = not db_path.exists() or force or (db_tag and local_db_tag != db_tag)
     if need_db and db_tag:
-        sys.stderr.write("Updating database...\n")
+        sys.stderr.write("Updating main database...\n")
         db_result = download_db(
             db_dir=db_dir, tag=db_tag, force=db_path.exists(), yes=yes
         )
         result["database"] = db_result
+    elif need_db and not db_tag:
+        # Walker found nothing AND the user has no usable local copy (or
+        # --force was set). Returning success here would leave the install
+        # broken — every query command would then fail with db_not_found.
+        reason = "No recent release includes a main-DB asset required for this update."
+        if force and db_path.exists():
+            reason += " (--force requires a fresh asset; none was found.)"
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="no_db_in_release",
+            error_class="configuration",
+            message=reason,
+            remediation=(
+                "Build from CSV with `regmeta maintain build-db`, "
+                "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
+            ),
+        )
     elif not db_tag:
         result["database"] = "no_db_in_release"
     else:
         result["database"] = "up_to_date"
 
-    if result["package"] == "up_to_date" and result["database"] == "up_to_date":
+    # --- Doc DB ---
+    docs_path = db_dir / DOC_DB_FILENAME
+    local_docs_tag = _read_source_tag(db_dir / DOCS_SOURCE_FILE)
+    need_docs = (
+        not docs_path.exists() or force or (docs_tag and local_docs_tag != docs_tag)
+    )
+    if need_docs and docs_tag:
+        sys.stderr.write("Updating doc DB...\n")
+        docs_result = download_docs_db(
+            db_dir=db_dir, tag=docs_tag, force=docs_path.exists()
+        )
+        result["docs"] = docs_result
+    elif need_docs and not docs_tag:
+        # Symmetric with the main-DB case: fail fast rather than leave the
+        # user with a broken install. Query commands require the doc DB.
+        reason = "No recent release includes a doc-DB asset required for this update."
+        if force and docs_path.exists():
+            reason += " (--force requires a fresh asset; none was found.)"
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="no_docs_in_release",
+            error_class="configuration",
+            message=reason,
+            remediation=(
+                "Build from markdown with `regmeta maintain build-docs`, "
+                "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
+            ),
+        )
+    elif not docs_tag:
+        result["docs"] = "no_docs_in_release"
+    else:
+        result["docs"] = "up_to_date"
+
+    if (
+        result["package"] == "up_to_date"
+        and result["database"] == "up_to_date"
+        and result["docs"] == "up_to_date"
+    ):
         sys.stderr.write(f"Already up to date (v{current}).\n")
 
     _clear_check_cache()

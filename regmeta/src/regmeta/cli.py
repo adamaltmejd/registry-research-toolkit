@@ -705,10 +705,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_docs_p = maintain_sub.add_parser(
         "build-docs",
-        help="Build documentation search index from markdown files.",
+        help="Rebuild the doc DB from markdown files (maintainer-only).",
         description=(
             "Rebuild the documentation FTS index from markdown files.\n"
-            "Uses bundled docs by default; override with --docs-dir.\n\n"
+            "End users receive the doc DB via `maintain update`; this command\n"
+            "is for maintainers rebuilding from a repo checkout before upload.\n\n"
             "Examples:\n"
             "  regmeta maintain build-docs\n"
             "  regmeta maintain build-docs --docs-dir /path/to/docs/"
@@ -718,7 +719,10 @@ def _build_parser() -> argparse.ArgumentParser:
     build_docs_p.add_argument(
         "--docs-dir",
         default=None,
-        help="Directory containing register doc subdirectories (default: bundled docs).",
+        help=(
+            "Directory containing register doc subdirectories "
+            "(default: regmeta/docs/ if run from a repo checkout)."
+        ),
     )
 
     # --- doc command family ---
@@ -893,19 +897,25 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 
 def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .doc_db import build_doc_db, bundled_docs_dir
+    from .doc_db import build_doc_db, repo_docs_dir
 
     if args.docs_dir:
         docs_dir = Path(args.docs_dir).resolve()
     else:
-        docs_dir = bundled_docs_dir()
+        docs_dir = repo_docs_dir()
         if docs_dir is None:
             raise RegmetaError(
                 exit_code=EXIT_CONFIG,
                 code="no_docs_dir",
                 error_class="configuration",
-                message="No docs directory specified and bundled docs not found.",
-                remediation="Supply --docs-dir pointing to a directory with register doc subdirectories.",
+                message=(
+                    "No --docs-dir specified and no in-repo docs found. "
+                    "This command is for maintainers rebuilding the doc DB from a repo checkout."
+                ),
+                remediation=(
+                    "Run from a regmeta checkout with `regmeta/docs/` present, "
+                    "or pass --docs-dir pointing to a directory with register doc subdirectories."
+                ),
             )
     db_dir = Path(args.db).resolve() if args.db else None
     if db_dir is None:
@@ -1018,19 +1028,15 @@ def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 def _search_docs(query: str, db_arg: str | None = None) -> list[dict[str, Any]]:
     """Search the doc index for matching documentation.
 
-    Returns lightweight hint results (no full body). Fails silently if
-    the doc DB is not available. Exact variable name matches get a
-    boosted rank so they surface near the top of mixed search results.
+    Returns lightweight hint results (no full body). Exact variable name
+    matches get a boosted rank so they surface near the top of mixed
+    search results. Raises ``RegmetaError`` if the doc DB is missing or
+    incompatible — query commands require docs to be installed.
     """
-    try:
-        from .doc_db import doc_db_path, open_doc_db
-        from .doc_queries import doc_search
+    from .doc_db import ensure_doc_db
+    from .doc_queries import doc_search
 
-        path = doc_db_path(db_arg)
-        conn = open_doc_db(path)
-    except (RegmetaError, sqlite3.Error, OSError):
-        return []
-
+    conn = ensure_doc_db(db_arg)
     try:
         data = doc_search(conn, query, limit=10)
         results = []
@@ -2538,6 +2544,57 @@ def _print_version(db_arg: str | None = None) -> None:
         sys.stderr.write("Could not check for updates.\n")
 
 
+def _prompt_first_run_download(
+    args: argparse.Namespace, fmt: str, *, needs_main: bool
+) -> None:
+    """Offer an interactive download when a query command finds artifacts missing.
+
+    *needs_main* is True for commands that open the main metadata DB
+    (``search``, ``get``, ``resolve``) and False for ``docs/*`` which
+    only read the doc DB. Prompting for the ~400 MB main DB on a
+    docs-only command would be wasteful and can fail the command even
+    when the user has a usable doc DB. In non-interactive contexts
+    (pipes, ``--format json``) this is a no-op — the subsequent handler
+    call will raise ``db_not_found`` / ``doc_db_not_found`` which
+    surface as the standard structured error.
+    """
+    from .doc_db import DOC_DB_FILENAME
+
+    db_path = db_path_from_args(args.db)
+    docs_path = db_path.parent / DOC_DB_FILENAME
+    missing_main = needs_main and not db_path.exists()
+    missing_docs = not docs_path.exists()
+    if not (missing_main or missing_docs):
+        return
+    if fmt == "json" or not sys.stdin.isatty():
+        return
+
+    parts: list[str] = []
+    if missing_main:
+        parts.append("main database (~400 MB compressed, ~1.6 GB on disk)")
+    if missing_docs:
+        parts.append("doc DB (~600 KB compressed, ~3 MB on disk)")
+    header = (
+        "Query commands require both the main DB and the doc DB."
+        if needs_main
+        else "Docs commands require the doc DB."
+    )
+    sys.stderr.write(
+        f"{header}\nMissing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
+    )
+    sys.stderr.flush()
+    if input().strip().lower() not in ("y", "yes"):
+        return
+
+    from .download import download_db, download_docs_db
+
+    if missing_main:
+        download_db(db_dir=db_path.parent, yes=True)
+    if missing_docs:
+        download_docs_db(db_dir=docs_path.parent)
+    sys.stderr.write("\n")
+
+
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     effective = argv if argv is not None else sys.argv[1:]
@@ -2617,21 +2674,20 @@ def run(argv: list[str] | None = None) -> int:
             pass
 
     try:
-        # Auto-download database on first use (interactive only).
-        # Commands that need the main metadata db: search, get/*, resolve.
-        if args.command in ("search", "get", "resolve"):
-            db = db_path_from_args(args.db)
-            if not db.exists() and fmt != "json" and sys.stdin.isatty():
-                sys.stderr.write(
-                    "No database found. Download now?"
-                    " (~400 MB compressed, ~1.6 GB on disk)\n[y/N] "
-                )
-                sys.stderr.flush()
-                if input().strip().lower() in ("y", "yes"):
-                    from .download import download_db
+        # Auto-download artifacts on first use (interactive only). Only
+        # bootstrap the artifacts each command actually needs: search/get/
+        # resolve open the main DB and the doc DB; docs/* only open the
+        # doc DB and must not trigger the ~400 MB main-DB download.
+        needs_main = args.command in ("search", "get", "resolve")
+        if needs_main or args.command == "docs":
+            _prompt_first_run_download(args, fmt, needs_main=needs_main)
+            # Enforce doc-DB presence for non-docs query commands up front
+            # so they fail fast and consistently before doing main-DB query
+            # work. docs/* handlers call ensure_doc_db themselves.
+            if needs_main:
+                from .doc_db import ensure_doc_db
 
-                    download_db(db_dir=db.parent, yes=True)
-                    sys.stderr.write("\n")
+                ensure_doc_db(args.db).close()
         payload, exit_code = handler(args)
         if not quiet and fmt != "json":
             _collect_hints(key, payload.get("data", {}), args, hints)

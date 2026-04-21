@@ -322,6 +322,67 @@ class TestDocList:
 # ---------------------------------------------------------------------------
 
 
+class TestDocDbRequired:
+    """Query commands refuse to run without a doc DB installed."""
+
+    def test_search_without_docs_raises(self, tmp_path: Path):
+        # Build a main DB in an empty dir — no doc DB present.
+        from _csv_fixtures import (
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            write_csv,
+        )
+
+        from regmeta.db import build_db
+
+        csv_dir = tmp_path / "csv"
+        csv_dir.mkdir()
+        write_csv(
+            csv_dir / "Registerinformation.csv",
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+        )
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(csv_dir=csv_dir, db_dir=db_dir)
+
+        data, code = _run_json(
+            ["--db", str(db_dir), "search", "--query", "testvariabel"],
+            verbose=True,
+        )
+        # Doc DB is required; code is EXIT_CONFIG (10) with the structured
+        # doc_db_not_found error the CLI surfaces on missing artifacts.
+        assert code == 10
+        assert data["error"]["code"] == "doc_db_not_found"
+
+    def test_get_without_docs_raises(self, tmp_path: Path):
+        from _csv_fixtures import (
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            write_csv,
+        )
+
+        from regmeta.db import build_db
+
+        csv_dir = tmp_path / "csv"
+        csv_dir.mkdir()
+        write_csv(
+            csv_dir / "Registerinformation.csv",
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+        )
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(csv_dir=csv_dir, db_dir=db_dir)
+
+        data, code = _run_json(
+            ["--db", str(db_dir), "get", "register", "1"],
+            verbose=True,
+        )
+        assert code == 10
+        assert data["error"]["code"] == "doc_db_not_found"
+
+
 class TestBuildDocs:
     def test_build_docs(self, tmp_path: Path):
         docs_dir = tmp_path / "docs" / "myreg"

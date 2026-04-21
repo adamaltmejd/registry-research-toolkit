@@ -20,20 +20,38 @@ jobs:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v8.1.0
 
-      # Smoke-test the release's DB asset before pushing to PyPI. This runs
+      # Smoke-test the release's DB assets before pushing to PyPI. This runs
       # after the pypi-environment approval, giving the maintainer a chance to
-      # upload a freshly-built regmeta.db.zst (per .agents/skills/release/SKILL.md)
-      # if SCHEMA_VERSION changed. The check exercises the exact code path that
-      # broke silently in issue #8 (get schema → v.source_label). download_db
-      # validates the DB's schema before install, so an incompatible asset
-      # fails here instead of in users' terminals.
-      - name: Verify release DB asset is usable
+      # upload freshly-built regmeta.db.zst and regmeta_docs.db.zst assets
+      # (per .claude/skills/release/SKILL.md) if SCHEMA_VERSION or
+      # DOC_SCHEMA_VERSION changed, or if docs content changed.
+      #
+      # download_db and download_docs_db each validate the asset's schema
+      # before install, so an incompatible asset fails here instead of in
+      # users' terminals. `maintain update` resolves the most recent release
+      # carrying each asset via the walker, so a doc-less package release
+      # still serves a prior-release doc DB — if no release in the walker's
+      # window has a usable doc asset, the update fails and the workflow
+      # exits non-zero.
+      #
+      # The smoke queries exercise the exact code paths that broke silently
+      # in issue #8 (get schema → v.source_label) and confirm that the doc
+      # search index is populated and schema-compatible.
+      - name: Verify release DB assets are usable
         env:
           XDG_DATA_HOME: ${{ runner.temp }}/xdg
         run: |
           uv sync --frozen
           uv run regmeta maintain update --force -y
           uv run regmeta get schema --register LISA --summary --format json > /dev/null
+          # `docs search` must return at least one result — exit 0 with an
+          # empty result set would mean the doc DB shipped empty. Use
+          # `// 0` so a missing field coerces to a valid integer for -lt.
+          docs_total=$(uv run regmeta docs search lisa --limit 1 --format json | jq '.total_count // 0')
+          if [ "$docs_total" -lt 1 ]; then
+            echo "::error::Doc DB appears empty: docs search returned total_count=${docs_total}"
+            exit 1
+          fi
 
       - run: uv build regmeta/ --out-dir dist/
       - uses: pypa/gh-action-pypi-publish@release/v1

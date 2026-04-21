@@ -107,23 +107,36 @@ database from ~13 GB to ~1.6 GB.
 
 ## Documentation layer
 
-Register documentation (parsed from SCB PDFs) is stored as Obsidian-compatible
-markdown files with YAML frontmatter, indexed into a separate FTS5 database
-(`regmeta_docs.db`). This has a separate lifecycle from the metadata DB — `build-db`
-does not touch it, `maintain build-docs` rebuilds it independently. Docs are
-keyed to register and variable names, not database IDs, to allow independent
-updates.
+Register documentation (parsed from SCB PDFs) lives as Obsidian-compatible
+markdown files under `regmeta/docs/`, source-of-truth for maintainers, and
+is indexed into a separate FTS5 database (`regmeta_docs.db`) with its own
+`DOC_SCHEMA_VERSION`. Docs are keyed to register and variable names, not
+numeric IDs, so doc updates and main-DB updates are independent.
+
+End users never see the markdown files. The doc DB is distributed as a
+GitHub Release asset (`regmeta_docs.db.zst`) parallel to the main DB asset,
+installed into the same cache dir (`$XDG_DATA_HOME/regmeta/`), and fetched
+by `maintain update` alongside the main DB. Query commands (`search`,
+`get`, `resolve`, `docs/*`) refuse to run without the doc DB — on first
+use the CLI offers to download both artifacts.
+
+`maintain build-docs` is a maintainer-only command that rebuilds the doc
+DB from a repo checkout of `regmeta/docs/` before upload. Runtime never
+reads markdown — `repo_docs_dir()` in `doc_db.py` is only consulted by
+`build-docs` when run from a repo checkout, and is absent in installed
+wheels.
 
 See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
 
 ## Versioning and compatibility
 
-Three independent version numbers:
+Four independent version numbers:
 
 | Version | Location | Purpose |
 |---------|----------|---------|
 | Package version (`__version__`) | `__init__.py`, `pyproject.toml` | Python package / CLI release |
-| Schema version (`SCHEMA_VERSION`) | `db.py` | Database schema compatibility |
+| Main schema version (`SCHEMA_VERSION`) | `db.py` | Main-DB schema compatibility |
+| Doc schema version (`DOC_SCHEMA_VERSION`) | `doc_db.py` | Doc-DB schema compatibility |
 | Contract version (`CONTRACT_VERSION`) | `cli.py` | CLI output envelope format |
 
 **Schema version** uses semver. `open_db` compares the `import_manifest`'s
@@ -153,26 +166,39 @@ scoped to that package.
 | Channel | Trigger | What it distributes |
 |---------|---------|---------------------|
 | PyPI | `publish_regmeta.yml` on `regmeta/v*` release | Python package (wheel + sdist) |
-| GitHub Release asset | Manual upload to the same release | Pre-built database (`regmeta.db.zst`) |
+| GitHub Release asset | Manual upload to the same release | Pre-built main DB (`regmeta.db.zst`) |
+| GitHub Release asset | Manual upload to the same release | Pre-built doc DB (`regmeta_docs.db.zst`) |
 
-The database asset is **optional** per release.  Not every package release
-requires a new database — only schema changes do.  `resolve_latest_release()`
-walks recent releases backwards to find the most recent one that includes a
-DB asset, so users always get a database even when the latest release omits
-one.
+Both DB assets are **optional** per release. A package release only needs a
+new main DB when `SCHEMA_VERSION` changes, and only needs a new doc DB when
+`DOC_SCHEMA_VERSION` changes or `regmeta/docs/` content changes.
+`resolve_latest_release()` walks recent releases backwards looking for each
+asset independently, so a doc-less or DB-less package release does not
+orphan older assets. The publish workflow's smoke step exercises
+`maintain update --force` before allowing PyPI publish, so a release that
+breaks the walker (e.g. incompatible assets, or no resolvable asset at all)
+fails CI instead of shipping.
+
+The wheel contains Python source only. The markdown under `regmeta/docs/`
+is maintainer source-of-truth and is **not** bundled — end users receive
+the built doc DB via `maintain update`.
 
 Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition
 but new releases must use the `regmeta/v*` prefix.
 
 **Update command**: `maintain update` is the single command that brings
 everything current — it runs `uv tool upgrade regmeta` for the package and
-walks releases to find the latest database asset. A background version
-checker runs once per week (cached in `~/.local/share/regmeta/.update_check`)
-and prints a hint on interactive runs when a newer release exists.
+walks releases to find the latest main-DB and doc-DB assets. Already-current
+assets are skipped (tracked via `.db_source` and `.docs_source` in the cache
+dir). A background version checker runs once per week (cached in
+`~/.local/share/regmeta/.update_check`) and prints a hint on interactive
+runs when a newer release exists.
 
-**Auto-download on first use**: query commands (`search`, `get`, `resolve`)
-prompt to download the database interactively when none is found, so users
-don't need to know about `maintain update` on first install.
+**Auto-download on first use**: query commands (`search`, `get`, `resolve`,
+`docs/*`) prompt to download whichever artifacts are missing when invoked
+interactively, so users don't need to know about `maintain update` on first
+install. Non-interactive invocations fail with structured errors
+(`db_not_found`, `doc_db_not_found`) rather than silently skipping.
 
 ### Package version format
 
