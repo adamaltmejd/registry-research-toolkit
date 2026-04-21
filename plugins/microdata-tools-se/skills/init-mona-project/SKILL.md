@@ -45,7 +45,7 @@ You **are** expected to:
 - Copy the template files verbatim — they are the result of prior
   design decisions and should not be "improved" during scaffolding.
 - Produce documentation (`notes/data_*.md`, `notes/mock_data_assessment.md`,
-  `CLAUDE.md`, `ROADMAP.md`) that is concrete, honest about uncertainty,
+  `{MEMORY}.md`, `ROADMAP.md`) that is concrete, honest about uncertainty,
   and useful for the next agent who walks in cold.
 - Leave the project in a state where the researcher can open it, read
   `ROADMAP.md`, and know exactly what to do next.
@@ -54,6 +54,29 @@ Think of yourself as the person building the workbench, not the person
 who will use it. A good workbench is solid, obvious, and unambiguous.
 A bad one is full of pre-set jigs for problems the carpenter hadn't
 decided to solve yet.
+
+## Agent memory file
+
+This skill writes an agent memory file into the scaffolded project. Which
+name you use depends on the runtime you are running under:
+
+- **Claude Code** → write `CLAUDE.md` as the primary file.
+- **Codex** → write `AGENTS.md` as the primary file.
+
+After writing the primary file, create a symlink at the *other* name
+pointing to it, so the project is portable if a future session is handled
+by a different agent:
+
+```bash
+# If you wrote CLAUDE.md:
+cd {projdir} && ln -s CLAUDE.md AGENTS.md
+# If you wrote AGENTS.md:
+cd {projdir} && ln -s AGENTS.md CLAUDE.md
+```
+
+Throughout the rest of this skill, the placeholder `{MEMORY}.md` refers to
+whichever name you wrote as primary. When you see it, substitute the
+correct filename.
 
 ## Phase detection
 
@@ -70,8 +93,8 @@ project directory.
 | No project signals found (no slug-named dir, no scaffold in CWD) | Phase 1: interview + scaffold |
 | Project dir exists, no `stats.json` | Waiting for MONA round-trip — remind user to run the extraction script and bring back `stats.json` |
 | Project dir exists, has `stats.json`, no `mock_data/manifest.json` | Generate mock data, then Phase 2 |
-| Project dir exists, has `mock_data/manifest.json`, no `CLAUDE.md` | Phase 2: enrichment |
-| Project dir exists, has `CLAUDE.md` | Already initialized — tell the user |
+| Project dir exists, has `mock_data/manifest.json`, no `CLAUDE.md` or `AGENTS.md` | Phase 2: enrichment |
+| Project dir exists, has `CLAUDE.md` or `AGENTS.md` | Already initialized — tell the user |
 
 ---
 
@@ -87,7 +110,7 @@ Collect these things from the user:
 
 2. **Target directory** — decide where to scaffold:
    - **If the current working directory is empty** (no files, only
-     `.claude/` or similar invisible metadata), scaffold *into it*
+     `.claude/`, `.codex/`, or similar invisible metadata), scaffold *into it*
      directly. This is the common case when the user has already created
      and navigated to the project folder. Do not ask — just announce
      what you are doing.
@@ -112,7 +135,7 @@ Collect these things from the user:
    > documentation priorities, and a pipeline skeleton tailored to your
    > identification strategy.
 
-   If the user declines, proceed — but the CLAUDE.md will be less specific.
+   If the user declines, proceed — but the `{MEMORY}.md` will be less specific.
 
 In the rest of this skill, `{projdir}` refers to the resolved project
 directory (either `{slug}/` or the current working directory, based on
@@ -295,7 +318,7 @@ findings that need to persist across sessions.
 ### 2.2 Mock data assessment
 
 **This is the most important file you write.** Everything else you
-produce (CLAUDE.md, ROADMAP.md, data docs) is either boilerplate or
+produce (`{MEMORY}.md`, `ROADMAP.md`, data docs) is either boilerplate or
 mechanical translation of tool output. The mock-data assessment is
 where you add real judgment — concrete, file-specific observations
 that the researcher could not trivially re-derive. A generic "verify
@@ -366,8 +389,7 @@ Generate all remaining files using the templates in Section 5:
 - `src/manage_packages.R`
 - `tests/testthat.R`
 - `tests/testthat/test-guards.R`
-- `CLAUDE.md`
-- `AGENTS.md` (symlink)
+- `{MEMORY}.md` (plus the cross-tool symlink — see "Agent memory file" above)
 - `ROADMAP.md`
 
 **Scaffolding is not coding.** Do not write function bodies, analysis code,
@@ -436,7 +458,7 @@ git commit -q -m "Initial project scaffold"
 ```
 
 **"Not using git" path.** If the user declined to install or configure
-git, append this block to `{projdir}/CLAUDE.md` (at the very top, right
+git, append this block to `{projdir}/{MEMORY}.md` (at the very top, right
 under the project title) and tell the user you did so:
 
 ```markdown
@@ -581,9 +603,10 @@ list(
 ### Template files (copy verbatim)
 
 The following files live in `templates/` next to this SKILL.md
-(i.e. `.claude/skills/init-mona-project/templates/` in the
-`registry-research-toolkit` repo). Copy them to the project directory
-without modification:
+(i.e. `plugins/microdata-tools-se/skills/init-mona-project/templates/` in
+the `registry-research-toolkit` repo, or the corresponding path in your
+agent tool's plugin cache). Copy them to the project directory without
+modification:
 
 | Template | Destination |
 |----------|-------------|
@@ -614,12 +637,14 @@ packages beyond the defaults (add them to the `managed_packages` vector).
 # Analysis functions for {slug}
 ```
 
-### `CLAUDE.md`
+### `{MEMORY}.md`
 
-This is the most critical generated file. Interpolate all `{placeholders}`
-with project-specific content from the interview. The agent must write this
-file thoughtfully — it is the primary interface between the user, future
-agent sessions, and the MONA workflow.
+This is the most critical generated file — write it under the filename
+appropriate to your runtime (see "Agent memory file" at the top of this
+skill). Interpolate all `{placeholders}` with project-specific content
+from the interview. The agent must write this file thoughtfully — it is
+the primary interface between the user, future agent sessions, and the
+MONA workflow.
 
 ````markdown
 # {Project title}
@@ -793,14 +818,6 @@ The sections above are mandatory — do not omit any of them. Add
 project-specific sections as needed (e.g. variable construction notes,
 sample selection criteria).
 
-### `AGENTS.md`
-
-Create as a symlink:
-
-```bash
-cd {projdir} && ln -s CLAUDE.md AGENTS.md
-```
-
 ### `ROADMAP.md`
 
 This is the **handoff document for future agent sessions**. Write it like
@@ -815,7 +832,7 @@ Structure:
 
 ## What this project is
 {2–4 sentences: research question + identification strategy, drawn from
-the interview. Keep it short — CLAUDE.md has the detail.}
+the interview. Keep it short — `{MEMORY}.md` has the detail.}
 
 ## Where we are
 - Local R scaffold is set up.
@@ -858,7 +875,7 @@ scaffold first, e.g. the baseline DiDiD without controls, in `src/analysis.R`.}
 Notepad++ before export.}
 
 ## Pointers
-- `CLAUDE.md` — the authoritative agent briefing. Read it first.
+- `{MEMORY}.md` — the authoritative agent briefing. Read it first.
 - `notes/` — data docs + mock-data assessment.
 - `src/pipeline.R` — targets entry point; currently scaffolded with paths
   only, no data targets yet.
@@ -885,7 +902,7 @@ passes, print **a short** message to the user — two things only:
 1. Scaffolding complete. One line confirming what was set up (project
    directory path, register count in `notes/`, tests green).
 2. **Start a new session to do any further work.** The project is now
-   self-contained: `CLAUDE.md` orients the next agent, `ROADMAP.md` lists
+   self-contained: `{MEMORY}.md` orients the next agent, `ROADMAP.md` lists
    what to tackle first. Tell the user something like:
 
    > The project is ready and committed to a fresh git repo. Review
@@ -895,7 +912,7 @@ passes, print **a short** message to the user — two things only:
 
 Do **not** print a giant tree, a long status dump, or next-step
 recommendations in chat. Everything the next session needs is in
-`ROADMAP.md` and `CLAUDE.md`. Keep the chat summary under ~6 lines.
+`ROADMAP.md` and `{MEMORY}.md`. Keep the chat summary under ~6 lines.
 
 ---
 

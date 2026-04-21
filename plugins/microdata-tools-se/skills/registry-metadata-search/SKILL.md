@@ -39,5 +39,6 @@ since this skill was written. To check:
 1. Run `regmeta --help` to see the current command reference.
 2. Run `regmeta <command> --help` for current flags and examples.
 3. Check the latest skill definition at
-   `.claude/skills/registry-metadata-search/SKILL.md` in the repo — it may
-   have been updated on a newer branch or release.
+   `plugins/microdata-tools-se/skills/registry-metadata-search/SKILL.md`
+   in the `registry-research-toolkit` repo — it may have been updated on
+   a newer branch or release.
