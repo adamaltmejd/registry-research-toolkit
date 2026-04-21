@@ -1,19 +1,20 @@
 {
-  "name": "microdata-tools-se",
-  "owner": {
-    "name": "Adam Altmejd",
-    "email": "adam@altmejd.se"
-  },
-  "metadata": {
-    "description": "Tooling for working with Swedish administrative register microdata."
+  "name": "registry-research-toolkit",
+  "interface": {
+    "displayName": "Registry Research Toolkit"
   },
   "plugins": [
     {
       "name": "microdata-tools-se",
-      "source": "./plugins/microdata-tools-se",
-      "description": "Metadata search (regmeta) and MONA project scaffolding (init-mona-project).",
-      "category": "research",
-      "tags": ["sweden", "microdata", "registry", "scb", "mona"]
+      "source": {
+        "source": "local",
+        "path": "./plugins/microdata-tools-se"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Research"
     }
   ]
 }
