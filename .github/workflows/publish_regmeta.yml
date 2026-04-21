@@ -18,7 +18,7 @@ jobs:
       id-token: write
     steps:
       - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8
+      - uses: astral-sh/setup-uv@v8.1.0
 
       # Smoke-test the release's DB asset before pushing to PyPI. This runs
       # after the pypi-environment approval, giving the maintainer a chance to
