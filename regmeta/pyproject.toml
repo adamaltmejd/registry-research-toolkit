@@ -34,6 +34,6 @@ xlsx = ["openpyxl>=3.1"]
 packages = ["src/regmeta"]
 
 # Docs are shipped separately as the `regmeta_docs.db.zst` release asset
-# (see doc_db.py and .agents/skills/release/SKILL.md); they are NOT bundled
+# (see doc_db.py and .claude/skills/release/SKILL.md); they are NOT bundled
 # in the wheel. The markdown under regmeta/docs/ is for maintainers to edit
 # and contribute; users get the built doc DB via `regmeta maintain update`.

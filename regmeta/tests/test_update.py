@@ -350,3 +350,76 @@ class TestDownloadDocsDbSchemaGuard:
         with pytest.raises(RegmetaError) as exc_info:
             download.download_docs_db(db_dir=db_dir, tag="latest")
         assert exc_info.value.code == "no_docs_in_release"
+
+
+class TestRunUpdateFailFast:
+    """run_update must not leave the install in a broken state.
+
+    If the walker can't resolve an asset the user doesn't already have,
+    maintain update raises rather than reporting success — otherwise
+    query commands would fail with db_not_found/doc_db_not_found on the
+    very next invocation while `maintain update` claimed to succeed.
+    """
+
+    def _fake_resolve(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        *,
+        db_tag: str | None,
+        docs_tag: str | None,
+    ) -> None:
+        from regmeta import update
+        from regmeta.download import ReleaseResolution
+
+        def fake_resolve(*, timeout: float = 15) -> ReleaseResolution:
+            return ReleaseResolution(
+                release_tag="regmeta/v0.7.0",
+                version="0.7.0",
+                db_tag=db_tag,
+                docs_tag=docs_tag,
+            )
+
+        monkeypatch.setattr(update, "resolve_latest_release", fake_resolve)
+
+    def test_missing_main_asset_and_no_local_db_raises(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        from regmeta.update import run_update
+
+        self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
+        with pytest.raises(RegmetaError) as exc_info:
+            run_update(db_dir=tmp_path, yes=True)
+        assert exc_info.value.code == "no_db_in_release"
+
+    def test_missing_docs_asset_and_no_local_docs_raises(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Main DB present locally, doc asset missing from walker: still raise."""
+        from regmeta.update import run_update
+
+        # Simulate an already-installed main DB so the main-DB branch is
+        # 'up_to_date'; the raise must come from the doc-DB branch only.
+        (tmp_path / DB_FILENAME).write_bytes(b"placeholder")
+        (tmp_path / ".db_source").write_text('{"tag": "regmeta/v0.7.0"}')
+
+        self._fake_resolve(monkeypatch, db_tag="regmeta/v0.7.0", docs_tag=None)
+        with pytest.raises(RegmetaError) as exc_info:
+            run_update(db_dir=tmp_path, yes=True)
+        assert exc_info.value.code == "no_docs_in_release"
+
+    def test_missing_asset_but_local_copy_present_reports_no_in_release(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """If user already has both artifacts locally, missing assets are OK."""
+        from regmeta.update import run_update
+
+        (tmp_path / DB_FILENAME).write_bytes(b"main-db-placeholder")
+        (tmp_path / ".db_source").write_text('{"tag": "regmeta/v0.7.0"}')
+        (tmp_path / DOC_DB_FILENAME).write_bytes(b"doc-db-placeholder")
+        (tmp_path / ".docs_source").write_text('{"tag": "regmeta/v0.7.0"}')
+
+        self._fake_resolve(monkeypatch, db_tag=None, docs_tag=None)
+        # Should not raise: user has working local copies; up-to-date.
+        result = run_update(db_dir=tmp_path, yes=True)
+        assert result["database"] == "no_db_in_release"
+        assert result["docs"] == "no_docs_in_release"

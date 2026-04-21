@@ -265,6 +265,20 @@ def run_update(
             db_dir=db_dir, tag=db_tag, force=db_path.exists(), yes=yes
         )
         result["database"] = db_result
+    elif need_db and not db_tag:
+        # Walker found nothing AND the user has no usable local copy (or
+        # --force was set). Returning success here would leave the install
+        # broken — every query command would then fail with db_not_found.
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="no_db_in_release",
+            error_class="configuration",
+            message="No recent release includes a main-DB asset required for this update.",
+            remediation=(
+                "Build from CSV with `regmeta maintain build-db`, "
+                "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
+            ),
+        )
     elif not db_tag:
         result["database"] = "no_db_in_release"
     else:
@@ -282,6 +296,19 @@ def run_update(
             db_dir=db_dir, tag=docs_tag, force=docs_path.exists()
         )
         result["docs"] = docs_result
+    elif need_docs and not docs_tag:
+        # Symmetric with the main-DB case: fail fast rather than leave the
+        # user with a broken install. Query commands require the doc DB.
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="no_docs_in_release",
+            error_class="configuration",
+            message="No recent release includes a doc-DB asset required for this update.",
+            remediation=(
+                "Build from markdown with `regmeta maintain build-docs`, "
+                "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
+            ),
+        )
     elif not docs_tag:
         result["docs"] = "no_docs_in_release"
     else:

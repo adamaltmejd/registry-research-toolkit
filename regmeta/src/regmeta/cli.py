@@ -2670,11 +2670,10 @@ def run(argv: list[str] | None = None) -> int:
         # AND the doc DB — regmeta refuses to answer queries without either.
         if args.command in ("search", "get", "resolve", "docs"):
             _prompt_first_run_download(args, fmt)
-            # Enforce doc-DB presence for non-docs query commands. docs/*
-            # handlers call ensure_doc_db themselves; search calls it via
-            # _search_docs. Guard get/resolve here so the requirement is
-            # uniform across every query command.
-            if args.command in ("get", "resolve"):
+            # Enforce doc-DB presence for non-docs query commands up front
+            # so they fail fast and consistently before doing main-DB query
+            # work. docs/* handlers call ensure_doc_db themselves.
+            if args.command in ("search", "get", "resolve"):
                 from .doc_db import ensure_doc_db
 
                 ensure_doc_db(args.db).close()
