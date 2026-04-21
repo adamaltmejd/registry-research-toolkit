@@ -8,7 +8,7 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-SKILL_SRC="$REPO_ROOT/.claude/skills/init-mona-project"
+SKILL_SRC="$REPO_ROOT/plugins/microdata-tools-se/skills/init-mona-project"
 TEST_DIR="/tmp/mona-skill-test"
 HARNESS_DIR="/tmp/mona-skill-test-harness"
 STATS_SRC="${STATS_SRC:-$HOME/Code/covid-education-inequality/stats.json}"
@@ -96,17 +96,18 @@ cat > "$HARNESS_DIR/TEST_INSTRUCTIONS.md" <<'EOF'
 
    ```bash
    cd /tmp/mona-skill-test  # or covid-dry-run subdir
-   ls -la AGENTS.md                # expect: -> CLAUDE.md
+   test -f CLAUDE.md               # expect: Claude runtime memory file exists
+   test ! -e AGENTS.md             # expect: no Codex memory file in Claude run
    ls notes/                       # expect: data_*.md per register, README.md, mock_data_assessment.md
    grep -c "P1405" src/pipeline.R  # expect > 0
    Rscript tests/testthat.R        # expect green; ASCII guard passes
    diff src/helpers.R .claude/skills/init-mona-project/templates/src/helpers.R
-   # ^ expect no diff (verbatim template copy)
+   # ^ expect no diff (verbatim template copy; resolves via the test-dir symlink)
    ```
 
 ## What to look for
 
-Checklist in the skill's DESIGN notes (see `.claude/skills/init-mona-project/SKILL.md`):
+Checklist in the skill's DESIGN notes (see `.claude/skills/init-mona-project/SKILL.md` in the test dir — resolves via the symlink to the real skill under `plugins/microdata-tools-se/skills/init-mona-project/SKILL.md`):
 
 - Phase 1 stopped cleanly (no CLAUDE.md or template files written yet)
 - All template files copied byte-for-byte from `templates/`
@@ -120,7 +121,8 @@ Checklist in the skill's DESIGN notes (see `.claude/skills/init-mona-project/SKI
 - `notes/data_*.md` is one file per register (grouping year-by-year
   files), not one per CSV
 - ASCII guard test passes
-- `AGENTS.md` is a symlink to `CLAUDE.md`
+- `CLAUDE.md` exists for the Claude run
+- `AGENTS.md` is not created in the Claude run
 
 ## Cleanup
 

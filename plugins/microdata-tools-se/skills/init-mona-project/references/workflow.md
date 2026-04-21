@@ -235,8 +235,7 @@ Use [generated-files.md](generated-files.md). Generate:
 - `src/manage_packages.R`
 - `tests/testthat.R`
 - `tests/testthat/test-guards.R`
-- `CLAUDE.md`
-- `AGENTS.md`
+- `{MEMORY}.md`
 - `ROADMAP.md`
 
 Rules:
@@ -276,7 +275,7 @@ git commit -q -m "Initial project scaffold"
 ```
 
 If the user declines git install or configuration, add this note directly
-under the project title in both memory files:
+under the project title in `{MEMORY}.md`:
 
 ```markdown
 > **Note:** This project is not under version control. The user declined

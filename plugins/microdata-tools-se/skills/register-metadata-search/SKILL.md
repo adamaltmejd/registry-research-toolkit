@@ -1,12 +1,12 @@
 ---
-name: registry-metadata-search
-description: Query SCB registry metadata using the regmeta CLI. Use when answering questions about Swedish register data — variable definitions, value codes, register schemas, column names, or how data is structured across registers and years.
+name: register-metadata-search
+description: Query SCB register metadata using the regmeta CLI. Use when answering questions about Swedish register data — variable definitions, value codes, register schemas, column names, or how data is structured across registers and years.
 ---
 
-# regmeta — Registry Metadata Queries
+# regmeta — Register Metadata Queries
 
 You have access to `regmeta`, a CLI tool for querying SCB (Statistics Sweden)
-registry metadata. The database contains structural metadata about registers
+register metadata. The database contains structural metadata about registers
 — not microdata.
 
 ## Install
@@ -33,12 +33,10 @@ Use `--format json` when you need structured output for further processing.
 
 ## Troubleshooting
 
-If a command fails unexpectedly or flags seem wrong, the CLI may have changed
-since this skill was written. To check:
+If a command fails unexpectedly or flags seem wrong:
 
 1. Run `regmeta --help` to see the current command reference.
 2. Run `regmeta <command> --help` for current flags and examples.
-3. Check the latest skill definition at
-   `plugins/microdata-tools-se/skills/registry-metadata-search/SKILL.md`
-   in the `registry-research-toolkit` repo — it may have been updated on
-   a newer branch or release.
+3. If the behavior still does not match these instructions, trust the CLI
+   help output and file an issue at
+   <https://github.com/adamaltmejd/registry-research-toolkit/issues>.
