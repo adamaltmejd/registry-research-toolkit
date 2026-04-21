@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from ._util import progress
-from .enrich import SPINE_VAR_IDS, EnrichedFile
+from .enrich import SPINE_VAR_IDS, EnrichedFile, RegisterCandidate
 from .stats import ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
@@ -35,6 +35,7 @@ class OutputFile:
     encoding: str
     header_hash: str
     register_hint: int | None
+    register_hint_candidates: list[RegisterCandidate]
     year_hint: int | None
 
 
@@ -435,6 +436,7 @@ def generate(
                 encoding="utf-8",
                 header_hash=header_hash,
                 register_hint=register_hint,
+                register_hint_candidates=list(efile.register_hint_candidates),
                 year_hint=year_hint,
             )
         )
@@ -480,6 +482,14 @@ def generate(
                         "encoding": f.encoding,
                         "header_hash": f.header_hash,
                         "register_hint": f.register_hint,
+                        "register_hint_candidates": [
+                            {
+                                "register_id": c.register_id,
+                                "match_count": c.match_count,
+                                "total_nonid_cols": c.total_nonid_cols,
+                            }
+                            for c in f.register_hint_candidates
+                        ],
                         "year_hint": f.year_hint,
                     }
                     for f in manifest.files

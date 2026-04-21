@@ -7,7 +7,7 @@ import signal
 import sqlite3
 import time
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -38,12 +38,22 @@ class EnrichedColumn:
 
 
 @dataclass
+class RegisterCandidate:
+    """A plausible source register for a file, with match evidence."""
+
+    register_id: int
+    match_count: int
+    total_nonid_cols: int
+
+
+@dataclass
 class EnrichedFile:
     file_name: str
     relative_path: str
     row_count: int
     columns: list[EnrichedColumn]
     register_hint: int | None = None
+    register_hint_candidates: list[RegisterCandidate] = field(default_factory=list)
 
 
 def _column_from_stats(col: ColumnStats) -> EnrichedColumn:
@@ -108,6 +118,7 @@ def enrich(
         # Per-file resolved vars and the register each file votes for
         file_resolved: dict[str, dict[str, _ResolvedVar]] = {}
         file_register: dict[str, int | None] = {}
+        file_candidates: dict[str, list[RegisterCandidate]] = {}
         value_codes: dict[int, dict[str, str]] = {}
 
         if conn is not None:
@@ -127,12 +138,19 @@ def enrich(
                 # Group files by their voted register so we batch DB queries
                 register_to_files: dict[int | None, list[str]] = {}
                 for file_stats in stats.files:
-                    col_names = [c.column_name for c in file_stats.columns]
-                    voted = _vote_register(
-                        col_names, col_to_registers, file_stats.file_name
+                    nonid_cols = [
+                        c.column_name
+                        for c in file_stats.columns
+                        if c.inferred_type != "id"
+                    ]
+                    result = _vote_register(
+                        nonid_cols, col_to_registers, file_stats.file_name
                     )
-                    file_register[file_stats.file_name] = voted
-                    register_to_files.setdefault(voted, []).append(file_stats.file_name)
+                    file_register[file_stats.file_name] = result.register_id
+                    file_candidates[file_stats.file_name] = result.candidates
+                    register_to_files.setdefault(result.register_id, []).append(
+                        file_stats.file_name
+                    )
 
                 # One _bulk_resolve per distinct voted register
                 for reg_id, _fnames in register_to_files.items():
@@ -176,6 +194,9 @@ def enrich(
                     row_count=file_stats.row_count,
                     columns=enriched_cols,
                     register_hint=file_register.get(file_stats.file_name),
+                    register_hint_candidates=file_candidates.get(
+                        file_stats.file_name, []
+                    ),
                 )
             )
     except sqlite3.OperationalError as exc:
@@ -292,40 +313,78 @@ def _filename_register_fallback(file_name: str) -> int | None:
     return None
 
 
+# Minimum fraction of a file's non-id columns that must resolve inside the
+# winning register. Below this, the vote is treated as low-confidence and
+# register_hint is cleared so downstream tooling asks the user instead of
+# confidently mislabeling the file (see GitHub issue #9).
+_MIN_MATCH_RATE = 0.40
+
+# Cap the candidate list written to the manifest.
+_MAX_CANDIDATES = 5
+
+
+@dataclass
+class _VoteResult:
+    register_id: int | None
+    candidates: list[RegisterCandidate]
+
+
 def _vote_register(
-    file_col_names: list[str],
+    nonid_col_names: list[str],
     col_to_registers: dict[str, list[int]],
     file_name: str = "",
-) -> int | None:
+) -> _VoteResult:
     """Pick the best-fit register for a file via weighted majority vote.
 
     Generic columns (appearing in many registers) are downweighted to avoid
-    noise from Kommun/Kön/Ar which exist in 70-120 registers.
-    Falls back to known SCB delivery table names if the vote is inconclusive.
+    noise from Kommun/Kön/Ar which exist in 70-120 registers. The winner is
+    also required to cover at least ``_MIN_MATCH_RATE`` of the file's non-id
+    columns; otherwise the hint is cleared and falls back to known SCB
+    delivery table names, then to None. Candidates are returned for
+    downstream tooling to present to the user.
     """
-    votes: Counter[int] = Counter()
-    for raw_col in file_col_names:
+    total_nonid = len(nonid_col_names)
+    weighted: Counter[int] = Counter()
+    match_counts: Counter[int] = Counter()
+    for raw_col in nonid_col_names:
         col = strip_project_prefix(raw_col).lower()
         regs = col_to_registers.get(col)
         if not regs:
             continue
         weight = 1.0 / math.log2(max(len(regs), 2))
         for reg_id in regs:
-            votes[reg_id] += weight
+            weighted[reg_id] += weight
+            match_counts[reg_id] += 1
 
-    if not votes:
-        return _filename_register_fallback(file_name)
+    candidates = [
+        RegisterCandidate(
+            register_id=reg_id,
+            match_count=match_counts[reg_id],
+            total_nonid_cols=total_nonid,
+        )
+        for reg_id, _ in sorted(
+            match_counts.items(),
+            key=lambda kv: (-kv[1], -weighted[kv[0]], kv[0]),
+        )
+    ][:_MAX_CANDIDATES]
 
-    top = votes.most_common(2)
+    if not weighted:
+        return _VoteResult(_filename_register_fallback(file_name), candidates)
+
+    top = weighted.most_common(2)
     winner_id, winner_score = top[0]
     if len(top) > 1:
         _, runner_up_score = top[1]
-        # Accept the winner only if it has a 20% lead OR enough evidence (≥3
-        # weighted votes, roughly 3+ register-specific columns).  Without this,
-        # files with only generic columns (Kommun, Kön) produce near-ties.
+        # Margin guard: files dominated by generic columns (Kommun, Kön, Ar)
+        # produce near-ties. Require a 20% lead OR ≥3 weighted votes
+        # (roughly 3+ register-specific columns) before trusting the winner.
         if winner_score < runner_up_score * 1.2 and winner_score < 3:
-            return _filename_register_fallback(file_name)
-    return winner_id
+            return _VoteResult(_filename_register_fallback(file_name), candidates)
+
+    if total_nonid > 0 and match_counts[winner_id] / total_nonid < _MIN_MATCH_RATE:
+        return _VoteResult(_filename_register_fallback(file_name), candidates)
+
+    return _VoteResult(winner_id, candidates)
 
 
 def _bulk_resolve(

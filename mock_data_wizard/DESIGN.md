@@ -76,6 +76,16 @@ manifest includes per-file column lists, register and year hints, and
 header hashes. `mock-data-wizard compare` reads this to verify local
 files against registry schema without requiring separate input.
 
+## Register hint confidence
+
+`register_hint` is set per file by voting on the register that resolves
+the most column names. Files where the top register covers fewer than
+40% of the file's non-id columns emit `register_hint: null` instead of a
+low-confidence winner. Candidates (with `match_count` and
+`total_nonid_cols`) are always written to `register_hint_candidates` so
+downstream tooling can surface the ambiguity instead of silently
+mislabeling the file.
+
 ## Deliberate exclusions
 
 - Household structures, time-varying attributes, employer links

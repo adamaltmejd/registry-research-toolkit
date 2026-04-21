@@ -6,7 +6,7 @@ import csv
 import json
 from pathlib import Path
 
-from mock_data_wizard.enrich import enrich
+from mock_data_wizard.enrich import RegisterCandidate, enrich
 from mock_data_wizard.generate import _remove_stale_files, generate
 from mock_data_wizard.stats import parse_stats
 
@@ -105,6 +105,7 @@ def test_manifest_json(stats_path: Path, tmp_path: Path):
     assert isinstance(f["header_hash"], str) and len(f["header_hash"]) == 64
     # No enrichment → register_hint is None, file has no year in name
     assert f["register_hint"] is None
+    assert f["register_hint_candidates"] == []
     assert f["year_hint"] is None
 
 
@@ -126,6 +127,25 @@ def test_manifest_register_hint_none(stats_path: Path, tmp_path: Path):
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
     assert manifest.files[0].register_hint is None
+
+
+def test_manifest_register_hint_candidates(stats_path: Path, tmp_path: Path):
+    """register_hint_candidates from enrichment is serialized into the manifest."""
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    enriched[0].register_hint = None
+    enriched[0].register_hint_candidates = [
+        RegisterCandidate(register_id=366, match_count=2, total_nonid_cols=6),
+        RegisterCandidate(register_id=190, match_count=1, total_nonid_cols=6),
+    ]
+    out_dir = tmp_path / "output"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+    data = json.loads((out_dir / "manifest.json").read_text())
+    cands = data["files"][0]["register_hint_candidates"]
+    assert cands == [
+        {"register_id": 366, "match_count": 2, "total_nonid_cols": 6},
+        {"register_id": 190, "match_count": 1, "total_nonid_cols": 6},
+    ]
 
 
 def test_manifest_year_hint(tmp_path: Path, stats_path: Path):
