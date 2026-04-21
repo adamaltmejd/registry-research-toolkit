@@ -40,6 +40,7 @@ jobs:
       - name: Verify release DB assets are usable
         env:
           XDG_DATA_HOME: ${{ runner.temp }}/xdg
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv sync --frozen
           uv run regmeta maintain update --force -y

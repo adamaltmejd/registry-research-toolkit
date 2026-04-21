@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import urllib.error
 import urllib.request
@@ -108,11 +109,24 @@ def _pick_release(all_releases: list[dict]) -> ReleaseResolution:
     )
 
 
+def _github_auth_headers() -> dict[str, str]:
+    """Return Authorization header if GITHUB_TOKEN / GH_TOKEN is set.
+
+    Unauthenticated GitHub API access is capped at 60 req/hr per IP, which
+    shared CI runners routinely blow through. Authenticated access is
+    5000/hr per token. End users don't need this, but setting the env var
+    is a cheap way to avoid flakes in CI and busy network environments.
+    """
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    return {"Authorization": f"Bearer {token}"} if token else {}
+
+
 def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
     """Fetch the GitHub releases list and resolve regmeta asset tags."""
+    headers = {"Accept": "application/vnd.github+json", **_github_auth_headers()}
     req = urllib.request.Request(
         RELEASES_API_URL + "?per_page=100",
-        headers={"Accept": "application/vnd.github+json"},
+        headers=headers,
     )
     try:
         with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -152,7 +166,8 @@ def _progress(downloaded: int, total: int) -> None:
 
 
 def _download_file(url: str, dest: Path) -> None:
-    req = urllib.request.Request(url, headers={"User-Agent": "regmeta"})
+    headers = {"User-Agent": "regmeta", **_github_auth_headers()}
+    req = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(req, timeout=30) as resp:
             total = int(resp.headers.get("Content-Length", 0))
