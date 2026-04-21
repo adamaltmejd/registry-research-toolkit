@@ -1,4 +1,4 @@
-"""Download pre-built regmeta database from GitHub Releases."""
+"""Download pre-built regmeta artifacts from GitHub Releases."""
 
 from __future__ import annotations
 
@@ -6,12 +6,19 @@ import json
 import sys
 import urllib.error
 import urllib.request
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import zstandard
 
 from .db import DB_FILENAME, default_db_dir, open_db
+from .doc_db import (
+    DOC_DB_ASSET_NAME,
+    DOC_DB_FILENAME,
+    DOCS_SOURCE_FILE,
+    open_doc_db,
+)
 from .errors import EXIT_CONFIG, EXIT_NETWORK, RegmetaError
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
@@ -19,9 +26,27 @@ TAG_PREFIX = "regmeta/"
 DB_ASSET_NAME = "regmeta.db.zst"
 DB_SOURCE_FILE = ".db_source"
 RELEASES_API_URL = f"https://api.github.com/repos/{GITHUB_REPO}/releases"
-DOWNLOAD_URL = (
-    f"https://github.com/{GITHUB_REPO}/releases/download/{{tag}}/{DB_ASSET_NAME}"
-)
+DOWNLOAD_URL = f"https://github.com/{GITHUB_REPO}/releases/download/{{tag}}/{{asset}}"
+
+
+@dataclass(frozen=True)
+class ReleaseResolution:
+    """Outcome of walking GitHub releases for regmeta artifacts.
+
+    *release_tag* is the literal tag of the latest regmeta release.
+    *version* is the semver string for comparison with ``__version__``.
+    *db_tag* is the tag of the most recent release with a main DB asset.
+    *docs_tag* is the tag of the most recent release with a doc DB asset.
+
+    The walker crosses major/minor boundaries: a doc-less package release
+    does not orphan an older doc asset. Either tag may be ``None`` if no
+    release in the fetched window has that asset.
+    """
+
+    release_tag: str
+    version: str
+    db_tag: str | None
+    docs_tag: str | None
 
 
 def version_from_tag(tag: str) -> str:
@@ -34,8 +59,8 @@ def version_from_tag(tag: str) -> str:
     return tag.lstrip("v")
 
 
-def _has_db_asset(release: dict) -> bool:
-    return any(a["name"] == DB_ASSET_NAME for a in release.get("assets", []))
+def _has_asset(release: dict, asset_name: str) -> bool:
+    return any(a["name"] == asset_name for a in release.get("assets", []))
 
 
 def _is_regmeta_release(release: dict) -> bool:
@@ -46,18 +71,13 @@ def _is_regmeta_release(release: dict) -> bool:
     )
 
 
-def _pick_release(
-    all_releases: list[dict],
-) -> tuple[str, str, str | None]:
-    """Select the latest regmeta release and the best DB tag from a list.
+def _pick_release(all_releases: list[dict]) -> ReleaseResolution:
+    """Select the latest regmeta release and best asset tags from a list.
 
-    Pure function — no I/O.  Filters to regmeta releases, extracts the
-    latest version, and walks backwards to find the most recent release
-    that includes a database asset.
-
-    Assumes *all_releases* is sorted newest-first (GitHub API default).
-
-    Returns ``(release_tag, version, db_tag)``.
+    Pure function — no I/O. Assumes *all_releases* is sorted newest-first
+    (GitHub API default). Walks the list once looking for each asset kind;
+    asset walks do not stop at the latest release, so a doc-less major
+    bump does not orphan an older doc asset.
     """
     releases = [r for r in all_releases if _is_regmeta_release(r)]
     if not releases:
@@ -73,31 +93,23 @@ def _pick_release(
     tag = latest["tag_name"]
     version = version_from_tag(tag)
 
-    # Walk backwards to find the most recent release with a DB asset
-    db_tag = None
+    db_tag: str | None = None
+    docs_tag: str | None = None
     for r in releases:
-        if _has_db_asset(r):
+        if db_tag is None and _has_asset(r, DB_ASSET_NAME):
             db_tag = r["tag_name"]
+        if docs_tag is None and _has_asset(r, DOC_DB_ASSET_NAME):
+            docs_tag = r["tag_name"]
+        if db_tag is not None and docs_tag is not None:
             break
 
-    return tag, version, db_tag
+    return ReleaseResolution(
+        release_tag=tag, version=version, db_tag=db_tag, docs_tag=docs_tag
+    )
 
 
-def resolve_latest_release(
-    *,
-    timeout: float = 15,
-) -> tuple[str, str, str | None]:
-    """Return (release_tag, version, db_tag) from GitHub releases.
-
-    Fetches recent releases filtered to ``regmeta/v*`` tags (with fallback
-    to legacy bare ``v*`` tags).  Walks backwards to find the most recent
-    release that includes a database asset.
-
-    *release_tag* is the literal tag of the latest release.
-    *version* is the semver string for comparison with ``__version__``.
-    *db_tag* is the tag of the most recent release with a DB asset,
-    which may be an older release.  ``None`` if no release has one.
-    """
+def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
+    """Fetch the GitHub releases list and resolve regmeta asset tags."""
     req = urllib.request.Request(
         RELEASES_API_URL + "?per_page=100",
         headers={"Accept": "application/vnd.github+json"},
@@ -120,7 +132,9 @@ def resolve_latest_release(
 def _fmt_size(n: int) -> str:
     if n >= 1024 * 1024 * 1024:
         return f"{n / (1024**3):.1f} GB"
-    return f"{n / (1024**2):.0f} MB"
+    if n >= 1024 * 1024:
+        return f"{n / (1024**2):.0f} MB"
+    return f"{n / 1024:.0f} KB"
 
 
 def _progress(downloaded: int, total: int) -> None:
@@ -130,7 +144,7 @@ def _progress(downloaded: int, total: int) -> None:
         pct = downloaded / total * 100
         bar_w = 30
         filled = int(bar_w * downloaded / total)
-        bar = "\u2588" * filled + "\u2591" * (bar_w - filled)
+        bar = "█" * filled + "░" * (bar_w - filled)
         sys.stderr.write(
             f"\r  [{bar}] {pct:5.1f}%  {_fmt_size(downloaded)} / {_fmt_size(total)}"
         )
@@ -187,6 +201,15 @@ def _decompress(src: Path, dest: Path) -> None:
     sys.stderr.flush()
 
 
+def _write_source_tag(path: Path, tag: str) -> None:
+    try:
+        path.write_text(json.dumps({"tag": tag}))
+    except OSError:
+        sys.stderr.write(
+            f"Warning: could not write {path.name}; update detection may not work.\n"
+        )
+
+
 def download_db(
     db_dir: Path | None = None,
     *,
@@ -194,7 +217,7 @@ def download_db(
     force: bool = False,
     yes: bool = False,
 ) -> dict[str, Any]:
-    """Download pre-built database from GitHub Releases.
+    """Download pre-built main database from GitHub Releases.
 
     Returns dict with db_path, tag, and size_bytes.
     """
@@ -211,10 +234,9 @@ def download_db(
             remediation="Use --force to overwrite.",
         )
 
-    # Resolve tag
     if tag == "latest":
-        _release_tag, _ver, db_tag = resolve_latest_release()
-        if not db_tag:
+        resolution = resolve_latest_release()
+        if not resolution.db_tag:
             raise RegmetaError(
                 exit_code=EXIT_CONFIG,
                 code="no_db_in_release",
@@ -223,12 +245,11 @@ def download_db(
                 remediation="Specify --tag explicitly, or build from CSV with "
                 "`regmeta maintain build-db`.",
             )
-        resolved_tag = db_tag
+        resolved_tag = resolution.db_tag
     else:
         resolved_tag = tag
-    url = DOWNLOAD_URL.format(tag=resolved_tag)
+    url = DOWNLOAD_URL.format(tag=resolved_tag, asset=DB_ASSET_NAME)
 
-    # Confirmation
     if not yes:
         sys.stderr.write(
             f"This will download ~400 MB and decompress to ~1.6 GB.\n"
@@ -247,15 +268,14 @@ def download_db(
     tmp_db = final_path.with_suffix(".db.tmp")
 
     try:
-        sys.stderr.write(f"Downloading {resolved_tag}...\n")
+        sys.stderr.write(f"Downloading {resolved_tag} ({DB_ASSET_NAME})...\n")
         _download_file(url, tmp_zst)
         _decompress(tmp_zst, tmp_db)
         tmp_zst.unlink()
 
-        # Validate schema before clobbering the existing DB: an incompatible
-        # asset (e.g. a stale release DB pre-dating a schema bump) would
-        # otherwise silently replace a working DB and surface as cryptic SQL
-        # errors at query time.
+        # Validate schema before clobbering the existing DB. An incompatible
+        # asset would otherwise silently replace a working DB and surface as
+        # cryptic SQL errors at query time.
         try:
             open_db(tmp_db).close()
         except RegmetaError as exc:
@@ -283,16 +303,101 @@ def download_db(
         size = final_path.stat().st_size
         sys.stderr.write(f"Database ready: {final_path} ({_fmt_size(size)})\n")
 
-        # Record which release tag the db came from so the update checker
-        # can detect when a newer database is available.
-        try:
-            source_file = db_dir / DB_SOURCE_FILE
-            source_file.write_text(json.dumps({"tag": resolved_tag}))
-        except OSError:
-            sys.stderr.write(
-                f"Warning: could not write {DB_SOURCE_FILE};"
-                " update detection may not work.\n"
+        _write_source_tag(db_dir / DB_SOURCE_FILE, resolved_tag)
+
+        return {
+            "db_path": str(final_path),
+            "tag": resolved_tag,
+            "size_bytes": size,
+        }
+    except Exception:
+        for tmp in (tmp_zst, tmp_db):
+            if tmp.exists():
+                tmp.unlink()
+        raise
+
+
+def download_docs_db(
+    db_dir: Path | None = None,
+    *,
+    tag: str = "latest",
+    force: bool = False,
+) -> dict[str, Any]:
+    """Download pre-built doc-index database from GitHub Releases.
+
+    Mirrors :func:`download_db` but for the doc asset. The asset is small
+    (~200 KB compressed → ~3 MB on disk) so there is no confirmation
+    prompt. ``tag="latest"`` resolves via the release walker.
+    """
+    if db_dir is None:
+        db_dir = default_db_dir()
+    final_path = db_dir / DOC_DB_FILENAME
+
+    if final_path.exists() and not force:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="doc_db_exists",
+            error_class="configuration",
+            message=f"Doc DB already exists: {final_path}",
+            remediation="Use --force to overwrite.",
+        )
+
+    if tag == "latest":
+        resolution = resolve_latest_release()
+        if not resolution.docs_tag:
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="no_docs_in_release",
+                error_class="configuration",
+                message="No recent release includes a doc DB asset.",
+                remediation=(
+                    "Specify --tag explicitly, or build from markdown with "
+                    "`regmeta maintain build-docs`."
+                ),
             )
+        resolved_tag = resolution.docs_tag
+    else:
+        resolved_tag = tag
+    url = DOWNLOAD_URL.format(tag=resolved_tag, asset=DOC_DB_ASSET_NAME)
+
+    db_dir.mkdir(parents=True, exist_ok=True)
+    tmp_zst = final_path.with_suffix(".db.zst.tmp")
+    tmp_db = final_path.with_suffix(".db.tmp")
+
+    try:
+        sys.stderr.write(f"Downloading {resolved_tag} ({DOC_DB_ASSET_NAME})...\n")
+        _download_file(url, tmp_zst)
+        _decompress(tmp_zst, tmp_db)
+        tmp_zst.unlink()
+
+        try:
+            open_doc_db(tmp_db).close()
+        except RegmetaError as exc:
+            tmp_db.unlink(missing_ok=True)
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="incompatible_docs_asset",
+                error_class="configuration",
+                message=(
+                    f"Release {resolved_tag} has a doc DB asset, but its schema is "
+                    f"incompatible with this version of regmeta: {exc.message}"
+                ),
+                remediation=(
+                    "The maintainer needs to upload a freshly-built doc DB to a "
+                    "recent release. Report this at "
+                    f"https://github.com/{GITHUB_REPO}/issues. "
+                    "Your existing doc DB (if any) was left untouched."
+                ),
+            ) from exc
+
+        if final_path.exists():
+            final_path.unlink()
+        tmp_db.rename(final_path)
+
+        size = final_path.stat().st_size
+        sys.stderr.write(f"Doc DB ready: {final_path} ({_fmt_size(size)})\n")
+
+        _write_source_tag(db_dir / DOCS_SOURCE_FILE, resolved_tag)
 
         return {
             "db_path": str(final_path),

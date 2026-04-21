@@ -34,7 +34,12 @@ from _csv_fixtures import (
 
 @pytest.fixture(scope="session")
 def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """Build a test database from synthetic fixtures. Shared across all tests."""
+    """Build a test database from synthetic fixtures. Shared across all tests.
+
+    Also builds a minimal doc DB in the same directory because query
+    commands (search/get/resolve) now require both artifacts — the CLI
+    refuses to run queries without docs installed.
+    """
     csv_dir = tmp_path_factory.mktemp("csv")
     db_dir = tmp_path_factory.mktemp("db")
 
@@ -52,8 +57,28 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     )
 
     build_db(csv_dir=csv_dir, db_dir=db_dir)
+    _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"
+
+
+def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -> None:
+    """Write a minimally valid doc DB alongside the main DB.
+
+    Query-command tests don't exercise doc-search behaviour — they just
+    need *a* schema-compatible doc DB present so the presence guard lets
+    them through. Doc-specific behaviour is tested in test_doc_commands.py.
+    """
+    from regmeta.doc_db import build_doc_db
+
+    docs_src = tmp_path_factory.mktemp("stub_docs")
+    reg_dir = docs_src / "stub"
+    reg_dir.mkdir()
+    (reg_dir / "Stub.md").write_text(
+        "---\nvariable: Stub\ndisplay_name: Stub\ntags:\n  - type/variable\n---\n\nStub body.\n",
+        encoding="utf-8",
+    )
+    build_doc_db(docs_src, db_dir)
 
 
 @pytest.fixture()
