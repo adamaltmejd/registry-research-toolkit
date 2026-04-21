@@ -1,0 +1,13 @@
+{
+  "name": "microdata-tools-se",
+  "description": "Tooling for working with Swedish administrative register microdata — metadata search and MONA project scaffolding.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Adam Altmejd",
+    "email": "adam@altmejd.se"
+  },
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "license": "MIT",
+  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "regmeta", "statistics", "research"]
+}
