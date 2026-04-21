@@ -368,13 +368,17 @@ class TestRunUpdateFailFast:
         db_tag: str | None,
         docs_tag: str | None,
     ) -> None:
-        from regmeta import update
+        # Match __version__ so run_update skips the package-upgrade branch
+        # entirely — we're testing asset-resolution behaviour, not uv.
+        # (CI doesn't have regmeta installed as a uv tool, so invoking
+        # `uv tool upgrade regmeta` would fail before any assertion.)
+        from regmeta import __version__, update
         from regmeta.download import ReleaseResolution
 
         def fake_resolve(*, timeout: float = 15) -> ReleaseResolution:
             return ReleaseResolution(
-                release_tag="regmeta/v0.7.0",
-                version="0.7.0",
+                release_tag=f"regmeta/v{__version__}",
+                version=__version__,
                 db_tag=db_tag,
                 docs_tag=docs_tag,
             )
