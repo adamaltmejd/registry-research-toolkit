@@ -14,7 +14,7 @@ The skills wrap two Python CLIs. Install them before enabling the plugin:
 
 ```bash
 uv tool install regmeta
-uv tool install mock-data-wizard
+uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
 regmeta maintain update --yes   # pull the latest metadata DB
 ```
 
