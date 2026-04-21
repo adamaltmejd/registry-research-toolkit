@@ -32,7 +32,12 @@ Skills are then available as `/microdata-tools-se:init-mona-project` and
 
 ### Codex
 
-Add the repo as a marketplace source, then install `microdata-tools-se`.
+For workspace-local testing, open this repo in Codex. The workspace
+marketplace entry lives in `.agents/plugins/marketplace.json` and exposes
+`./plugins/microdata-tools-se` as a local plugin.
+
+If Codex does not pick up marketplace changes immediately, restart it and
+then install `microdata-tools-se` from the workspace marketplace.
 
 ## Scope
 

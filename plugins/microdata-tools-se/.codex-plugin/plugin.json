@@ -4,11 +4,29 @@
   "version": "0.1.0",
   "author": {
     "name": "Adam Altmejd",
-    "email": "adam@altmejd.se"
+    "email": "adam@altmejd.se",
+    "url": "https://github.com/adamaltmejd"
   },
-  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/plugin-restructure/plugins/microdata-tools-se",
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
   "keywords": ["sweden", "microdata", "registry", "scb", "mona", "regmeta", "statistics", "research"],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Microdata Tools SE",
+    "shortDescription": "SCB metadata search and MONA project scaffolding",
+    "longDescription": "Use local Swedish microdata workflow tools to query SCB registry metadata with regmeta and scaffold MONA projects with mock-data guardrails.",
+    "developerName": "Adam Altmejd",
+    "category": "Research",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/adamaltmejd/registry-research-toolkit/tree/plugin-restructure/plugins/microdata-tools-se",
+    "privacyPolicyURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/plugin-restructure/plugins/microdata-tools-se/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/adamaltmejd/registry-research-toolkit/blob/plugin-restructure/plugins/microdata-tools-se/TERMS.md",
+    "defaultPrompt": [
+      "Find the definition and value codes for a Swedish register variable.",
+      "Scaffold a local MONA project workspace with mock-data guardrails."
+    ],
+    "brandColor": "#005AA0",
+    "screenshots": []
+  }
 }
