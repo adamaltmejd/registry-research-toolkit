@@ -251,17 +251,16 @@ class TestDocGet:
         assert "type/variable" in data["tags"]
         assert "topic/social-insurance" in data["tags"]
 
-    def test_get_includes_file_path(self, doc_db_path: str):
+    def test_get_omits_file_path(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "get", "Kommun"])
         assert code == 0
-        assert data["file_path"] is not None
-        assert "testreg/Kommun.md" in data["file_path"]
+        assert "file_path" not in data
 
     def test_get_text_output(self, doc_db_path: str):
         text, code = _run_text(["--db", doc_db_path, "docs", "get", "Kommun"])
         assert code == 0
         assert "fyrställig kod" in text
-        assert "file:" in text
+        assert "file:" not in text
 
 
 # ---------------------------------------------------------------------------
@@ -311,10 +310,10 @@ class TestDocList:
         assert code == 0
         assert data["total_count"] == 4
 
-    def test_list_includes_docs_dir(self, doc_db_path: str):
+    def test_list_omits_docs_dir(self, doc_db_path: str):
         data, code = _run_json(["--db", doc_db_path, "docs", "list"])
         assert code == 0
-        assert data["docs_dir"] is not None
+        assert "docs_dir" not in data
 
 
 # ---------------------------------------------------------------------------

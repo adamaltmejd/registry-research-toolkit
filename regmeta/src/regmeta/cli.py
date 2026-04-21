@@ -689,7 +689,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     build_p = maintain_sub.add_parser(
         "build-db",
-        help="Build database from SCB CSV exports.",
+        help="Build database from SCB CSV exports (maintainer-only).",
         description=(
             "Build the metadata database from raw SCB CSV exports. This\n"
             "replaces the database entirely (not incremental). Most users\n"
@@ -1824,21 +1824,18 @@ def _write_payload(
         )
     elif key == ("docs", "search"):
         results = data.get("results", [])
-        docs_dir = data.get("docs_dir", "")
         rows = [
             {
                 "variable": r.get("variable") or r["filename"],
                 "display_name": r["display_name"],
-                "file": f"{docs_dir}/{r.get('register', '')}/{r['filename']}"
-                if docs_dir
-                else r["filename"],
+                "filename": r["filename"],
                 "snippet": (r.get("snippet") or "")[:80],
             }
             for r in results
         ]
         _write_formatted(
             rows,
-            ["variable", "display_name", "file", "snippet"],
+            ["variable", "display_name", "filename", "snippet"],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,
@@ -1853,8 +1850,6 @@ def _write_payload(
             header.append(f"  tags:         {', '.join(data['tags'])}")
         if data.get("source"):
             header.append(f"  source:       {data['source']}")
-        if data.get("file_path"):
-            header.append(f"  file:         {data['file_path']}")
         _write_to("\n".join(header) + "\n\n", output_path)
         _write_to(data.get("body", "") + "\n", output_path)
     elif key == ("docs", "list"):
@@ -1876,8 +1871,7 @@ def _write_payload(
                 hints=hints,
             )
         else:
-            lines = [f"  docs: {data.get('docs_dir', 'unknown')}"]
-            lines.append(f"  total: {data.get('total_count', 0)}")
+            lines = [f"  total: {data.get('total_count', 0)}"]
             lines.append("")
             lines.append("  registers:")
             for reg, n in data.get("registers", {}).items():
@@ -2075,8 +2069,14 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     None,
     ("maintain update [--tag TAG] [--force] [--yes]", "Update package and database."),
     ("maintain info", "Database stats and import metadata."),
-    ("maintain build-db --csv-dir DIR", "Build database from SCB CSV exports."),
-    ("maintain build-docs [--docs-dir DIR]", "Build documentation search index."),
+    (
+        "maintain build-db --csv-dir DIR",
+        "Build database from SCB CSV exports (maintainer-only).",
+    ),
+    (
+        "maintain build-docs [--docs-dir DIR]",
+        "Rebuild the doc DB from markdown (maintainer-only).",
+    ),
 ]
 
 

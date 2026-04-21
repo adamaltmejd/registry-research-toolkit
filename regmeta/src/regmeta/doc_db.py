@@ -342,7 +342,6 @@ def build_doc_db(docs_dir: Path, db_dir: Path) -> Path:
     for key, value in (
         ("schema_version", DOC_SCHEMA_VERSION),
         ("doc_count", str(total)),
-        ("docs_dir", str(docs_dir.resolve())),
     ):
         conn.execute(
             "INSERT INTO doc_meta (key, value) VALUES (?, ?)",

@@ -29,7 +29,7 @@ def doc_search(
 ) -> dict:
     """FTS5 search over documentation.
 
-    Returns {"total_count": int, "results": [...], "docs_dir": str}.
+    Returns {"total_count": int, "results": [...]}.
     """
     where_parts = ["doc_fts MATCH ?"]
     params: list[object] = [query]
@@ -63,11 +63,9 @@ def doc_search(
         LIMIT ? OFFSET ?
     """
     rows = conn.execute(sql, [*params, limit, offset]).fetchall()
-    docs_dir = _get_docs_dir(conn)
 
     return {
         "total_count": total,
-        "docs_dir": docs_dir,
         "results": [
             {
                 "type": "doc",
@@ -109,8 +107,6 @@ def doc_get(
     if row is None:
         return None
 
-    docs_dir = _get_docs_dir(conn)
-
     return {
         "filename": row["filename"],
         "register": row["register"],
@@ -119,9 +115,6 @@ def doc_get(
         "tags": json.loads(row["tags"]),
         "source": row["source"],
         "body": row["body"],
-        "file_path": f"{docs_dir}/{row['register']}/{row['filename']}"
-        if docs_dir
-        else None,
     }
 
 
@@ -137,10 +130,8 @@ def doc_list(
     Without filters, returns summary stats.
     With filters, returns matching doc records.
     """
-    docs_dir = _get_docs_dir(conn)
-
     if not type_tag and not topic_tag and not register:
-        return _doc_list_summary(conn, docs_dir)
+        return _doc_list_summary(conn)
 
     where_parts = ["1=1"]
     params: list[object] = []
@@ -161,7 +152,6 @@ def doc_list(
 
     return {
         "total_count": len(rows),
-        "docs_dir": docs_dir,
         "results": [
             {
                 "filename": r["filename"],
@@ -174,7 +164,7 @@ def doc_list(
     }
 
 
-def _doc_list_summary(conn: sqlite3.Connection, docs_dir: str | None) -> dict:
+def _doc_list_summary(conn: sqlite3.Connection) -> dict:
     """Summary stats: counts by register, type, and topic."""
     registers = conn.execute(
         "SELECT register, count(*) as n FROM doc GROUP BY register ORDER BY register"
@@ -188,7 +178,6 @@ def _doc_list_summary(conn: sqlite3.Connection, docs_dir: str | None) -> dict:
     topic_tags = {r["tag"]: r["n"] for r in tags if r["tag"].startswith("topic/")}
 
     return {
-        "docs_dir": docs_dir,
         "registers": {r["register"]: r["n"] for r in registers},
         "types": type_tags,
         "topics": topic_tags,
@@ -203,9 +192,3 @@ def doc_exists(conn: sqlite3.Connection, variable: str) -> bool:
         (variable,),
     ).fetchone()
     return row is not None
-
-
-def _get_docs_dir(conn: sqlite3.Connection) -> str | None:
-    """Get the source docs directory from the doc DB metadata."""
-    row = conn.execute("SELECT value FROM doc_meta WHERE key = 'docs_dir'").fetchone()
-    return row["value"] if row else None
