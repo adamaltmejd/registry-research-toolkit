@@ -2544,21 +2544,25 @@ def _print_version(db_arg: str | None = None) -> None:
         sys.stderr.write("Could not check for updates.\n")
 
 
-def _prompt_first_run_download(args: argparse.Namespace, fmt: str) -> None:
+def _prompt_first_run_download(
+    args: argparse.Namespace, fmt: str, *, needs_main: bool
+) -> None:
     """Offer an interactive download when a query command finds artifacts missing.
 
-    Query commands require both the main DB and the doc DB. On first run
-    this helper prompts the user (once, combined) and fetches whichever
-    artifacts are missing via the release walker. In non-interactive
-    contexts (pipes, ``--format json``) it is a no-op — the subsequent
-    handler call will raise ``db_not_found`` / ``doc_db_not_found`` which
+    *needs_main* is True for commands that open the main metadata DB
+    (``search``, ``get``, ``resolve``) and False for ``docs/*`` which
+    only read the doc DB. Prompting for the ~400 MB main DB on a
+    docs-only command would be wasteful and can fail the command even
+    when the user has a usable doc DB. In non-interactive contexts
+    (pipes, ``--format json``) this is a no-op — the subsequent handler
+    call will raise ``db_not_found`` / ``doc_db_not_found`` which
     surface as the standard structured error.
     """
     from .doc_db import DOC_DB_FILENAME
 
     db_path = db_path_from_args(args.db)
     docs_path = db_path.parent / DOC_DB_FILENAME
-    missing_main = not db_path.exists()
+    missing_main = needs_main and not db_path.exists()
     missing_docs = not docs_path.exists()
     if not (missing_main or missing_docs):
         return
@@ -2570,9 +2574,13 @@ def _prompt_first_run_download(args: argparse.Namespace, fmt: str) -> None:
         parts.append("main database (~400 MB compressed, ~1.6 GB on disk)")
     if missing_docs:
         parts.append("doc DB (~600 KB compressed, ~3 MB on disk)")
+    header = (
+        "Query commands require both the main DB and the doc DB."
+        if needs_main
+        else "Docs commands require the doc DB."
+    )
     sys.stderr.write(
-        "Query commands require both the main DB and the doc DB.\n"
-        "Missing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
+        f"{header}\nMissing: " + ", ".join(parts) + ".\nDownload now? [y/N] "
     )
     sys.stderr.flush()
     if input().strip().lower() not in ("y", "yes"):
@@ -2666,15 +2674,17 @@ def run(argv: list[str] | None = None) -> int:
             pass
 
     try:
-        # Auto-download artifacts on first use (interactive only). Query
-        # commands (search, get/*, resolve, docs/*) require the main DB
-        # AND the doc DB — regmeta refuses to answer queries without either.
-        if args.command in ("search", "get", "resolve", "docs"):
-            _prompt_first_run_download(args, fmt)
+        # Auto-download artifacts on first use (interactive only). Only
+        # bootstrap the artifacts each command actually needs: search/get/
+        # resolve open the main DB and the doc DB; docs/* only open the
+        # doc DB and must not trigger the ~400 MB main-DB download.
+        needs_main = args.command in ("search", "get", "resolve")
+        if needs_main or args.command == "docs":
+            _prompt_first_run_download(args, fmt, needs_main=needs_main)
             # Enforce doc-DB presence for non-docs query commands up front
             # so they fail fast and consistently before doing main-DB query
             # work. docs/* handlers call ensure_doc_db themselves.
-            if args.command in ("search", "get", "resolve"):
+            if needs_main:
                 from .doc_db import ensure_doc_db
 
                 ensure_doc_db(args.db).close()
