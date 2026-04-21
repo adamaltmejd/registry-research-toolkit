@@ -166,13 +166,20 @@ def _download_file(url: str, dest: Path) -> None:
             sys.stderr.flush()
     except urllib.error.HTTPError as exc:
         if exc.code == 404:
+            # GitHub returns 404 for both "tag doesn't exist" and "tag exists
+            # but this asset isn't attached" — we can't tell them apart from
+            # the HTTPError alone, so cover both in the remediation.
             raise RegmetaError(
                 exit_code=EXIT_CONFIG,
                 code="release_not_found",
                 error_class="configuration",
                 message=f"Release asset not found: {url}",
-                remediation="Check the --tag value. Available releases: "
-                f"https://github.com/{GITHUB_REPO}/releases",
+                remediation=(
+                    "Check the --tag value, or the release may not include "
+                    "this asset (only releases where the relevant schema/content "
+                    "changed carry a fresh asset). Available releases: "
+                    f"https://github.com/{GITHUB_REPO}/releases"
+                ),
             ) from exc
         raise RegmetaError(
             exit_code=EXIT_NETWORK,
@@ -326,7 +333,7 @@ def download_docs_db(
     """Download pre-built doc-index database from GitHub Releases.
 
     Mirrors :func:`download_db` but for the doc asset. The asset is small
-    (~200 KB compressed → ~3 MB on disk) so there is no confirmation
+    (~600 KB compressed → ~3 MB on disk) so there is no confirmation
     prompt. ``tag="latest"`` resolves via the release walker.
     """
     if db_dir is None:

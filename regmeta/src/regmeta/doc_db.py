@@ -153,7 +153,11 @@ def _check_doc_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
     rule against ``DOC_SCHEMA_VERSION``. Missing/unparseable metadata is
     treated as incompatible so stale pre-versioning DBs get replaced.
     """
-    fix = "Run `regmeta maintain update` to get a compatible doc DB."
+    fix = (
+        "Run `regmeta maintain update` to replace it with a compatible asset. "
+        "(Doc DBs built by pre-0.7 regmeta lack schema_version and are always "
+        "reported as incompatible — the update will overwrite them.)"
+    )
 
     try:
         row = conn.execute(
