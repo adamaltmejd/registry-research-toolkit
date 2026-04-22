@@ -16,7 +16,7 @@ Create a release with arguments: `$ARGUMENTS`
 | Package | pyproject.toml | `__init__.py` | Publish workflow |
 |---|---|---|---|
 | regmeta | `regmeta/pyproject.toml` | `regmeta/src/regmeta/__init__.py` | `publish_regmeta.yml` (needs environment approval) |
-| mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | None |
+| mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | `publish_mock_data_wizard.yml` (needs environment approval) |
 
 ## Validation
 

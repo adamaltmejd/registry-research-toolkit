@@ -407,11 +407,45 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_update(_args: argparse.Namespace) -> int:
+    from .update import run_update
+
+    return run_update()
+
+
+def _print_version() -> None:
+    from . import __version__
+    from .update import UpdateChecker
+
+    sys.stderr.write(f"mock-data-wizard v{__version__}\n")
+    sys.stderr.write("Checking for updates...\n")
+    try:
+        checker = UpdateChecker(http_timeout=10)
+        newer = checker.get_newer_version(timeout=10)
+        if newer:
+            sys.stderr.write(
+                f"Update available: v{__version__} → v{newer}"
+                "  —  run `mock-data-wizard update`\n"
+            )
+        elif checker.completed:
+            sys.stderr.write("Up to date.\n")
+        else:
+            sys.stderr.write("Could not check for updates.\n")
+    except Exception:
+        sys.stderr.write("Could not check for updates.\n")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="mock-data-wizard",
         description=DESCRIPTION,
         formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "--version",
+        action="store_true",
+        default=False,
+        help="Show version and check for updates.",
     )
     sub = parser.add_subparsers(dest="command")
 
@@ -539,6 +573,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show per-file timing breakdown",
     )
 
+    sub.add_parser(
+        "update",
+        help="Update mock-data-wizard to the latest version on PyPI",
+        description=(
+            "Check PyPI for a newer version of mock-data-wizard and run "
+            "`uv tool upgrade mock-data-wizard` if one is available."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+
     return parser
 
 
@@ -546,19 +590,55 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    if args.version:
+        _print_version()
+        return 0
+
     if args.command is None:
         parser.print_help()
         return 0
 
-    if args.command == "generate-script":
-        return _cmd_generate_script(args)
-    if args.command == "compare":
-        return _cmd_compare(args)
-    if args.command == "generate":
-        return _cmd_generate(args)
+    if args.command == "update":
+        return _cmd_update(args)
 
-    parser.print_help()
-    return 1
+    # Kick off the PyPI update check in the background so it runs in parallel
+    # with the user's actual work. Skipped for `update` (just ran the check)
+    # and in non-interactive contexts where a trailing notice would clutter
+    # piped output.
+    update_checker = None
+    if sys.stderr.isatty():
+        try:
+            from .update import UpdateChecker
+
+            update_checker = UpdateChecker()
+        except Exception:
+            pass
+
+    try:
+        if args.command == "generate-script":
+            rc = _cmd_generate_script(args)
+        elif args.command == "compare":
+            rc = _cmd_compare(args)
+        elif args.command == "generate":
+            rc = _cmd_generate(args)
+        else:
+            parser.print_help()
+            return 1
+    finally:
+        if update_checker is not None:
+            try:
+                newer = update_checker.get_newer_version()
+                if newer:
+                    from . import __version__
+
+                    sys.stderr.write(
+                        f"\n  Update available: v{__version__} → v{newer}"
+                        "  —  run `mock-data-wizard update`\n"
+                    )
+            except Exception:
+                pass
+
+    return rc
 
 
 if __name__ == "__main__":
