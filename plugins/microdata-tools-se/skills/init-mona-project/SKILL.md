@@ -44,8 +44,8 @@ You are the scaffolder, not the analyst.
 - Codex reads `AGENTS.md`.
 - Write the file used by your current runtime. In the rest of this skill,
   `{MEMORY}.md` means that runtime-specific file.
-- If the other runtime's memory file exists but `{MEMORY}.md` does not,
-  re-enter Phase 2 and write `{MEMORY}.md`.
+- A project is scaffolded for one runtime only. If the user switches agents
+  later, they resolve memory-file naming themselves.
 
 ## Project directory resolution
 
