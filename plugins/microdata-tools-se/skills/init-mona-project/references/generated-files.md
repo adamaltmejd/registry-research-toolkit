@@ -131,8 +131,9 @@ c(
       }
     )
   ),
+  # User targets go below in their own list so new entries do not need to
+  # chase the trailing comma of the paths block above.
   list(
-    # Add targets below inside this second list.
     # -- Data loading targets --------------------------------------------------
     # Example:
     # tar_target(
