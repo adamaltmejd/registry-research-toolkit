@@ -159,7 +159,8 @@ list(
 Write this content to `{MEMORY}.md` only.
 
 - In Claude Code, `{MEMORY}.md` is `CLAUDE.md`.
-- In Codex, `{MEMORY}.md` is `AGENTS.md`.
+- In other agent runtimes, `{MEMORY}.md` is `AGENTS.md`.
+- Never create both files or a symlink between them during one scaffold run.
 
 ````markdown
 # {Project title}
@@ -284,11 +285,16 @@ air format src/
 Spot-check the items flagged in `notes/mock_data_assessment.md` before coding.
 
 ### 2. Write data processing
-{Name the first concrete function, what it takes, what it returns, and which
-notes file to read first.}
+{Name the first register or file family to load only if the research plan
+makes it clearly primary. Otherwise say `Not yet specified` and list what
+must be clarified first. Point to the relevant `notes/data_*.md`. Keep this
+to one loading or harmonization step, not a full pipeline.}
 
 ### 3. Write analysis
-{Name the first estimator or analysis scaffold to add in `src/analysis.R`.}
+{If the research design is already pinned down, state the first analysis task
+briefly. Otherwise say `Not yet specified` and list the unresolved design
+choices. Do not invent an estimator, function name, control set, or outcome
+hierarchy the user did not provide.}
 
 ### 4. Output and export review
 Keep `output/` aggregate-only and manually review exports before they leave MONA.

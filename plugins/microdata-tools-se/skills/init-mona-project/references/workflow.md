@@ -170,15 +170,30 @@ findings that need to persist across sessions.
 
 ### Mock data assessment
 
-This file must add real judgment. Do not paraphrase the manifest.
+This file is the evidence summary for what the scaffold learned locally. Do
+not paraphrase the manifest or invent issues.
 
-Actually probe the mock data:
+Build it from three layers:
 
-- sample rows with `fread`
-- `n_distinct` on key identifiers
-- null rates
-- categorical distributions
-- cross-file join coverage
+1. **Standardized scripted checks**: repeatable baseline metrics with explicit
+   inputs and calculations.
+2. **Additional runtime probing**: one-off R checks for project-specific
+   questions the standardized checks did not cover.
+3. **Interpretation and synthesis**: careful reading of script output,
+   `manifest.json`, regmeta results, and relevant docs.
+
+Hard rules:
+
+- Never fabricate a finding, warning, mismatch, or code-set issue.
+- If something was not measured, say `Not assessed`.
+- If something comes from a heuristic, metadata hint, or low-confidence
+  register match, label it that way.
+- If prose disagrees with script output, the prose is wrong. Fix it.
+
+Actually probe the mock data. Start with repeatable scripted checks. Prefer a
+shared assessment script if one exists; otherwise write an explicit baseline
+`Rscript` block and record it in the note. Then add extra targeted probes when
+the project needs them.
 
 For each mock CSV, check:
 
@@ -188,28 +203,49 @@ For each mock CSV, check:
 - categorical codes present in mock data but absent from regmeta, and the
   reverse
 - whether shared identifier columns overlap across linked files
+- schema or code-set mismatches, but only when backed by a direct comparison
+  artifact or script output; otherwise mark them `Not assessed`
 
 Write `notes/mock_data_assessment.md` using this structure:
 
 ```markdown
 # Mock Data Assessment
 
-Generated from `mock_data/manifest.json`. These findings should be verified
-against the real data on MONA.
+Generated from `mock_data/manifest.json`, scripted probes, and targeted
+runtime checks. These findings should be verified against the real data on MONA.
+
+## Evidence sources
+
+- Standardized checks: {script path, command, or inline R block}
+- Additional probes: {project-specific checks, or `None`}
+- Metadata/docs consulted: {regmeta commands, docs, or `None`}
 
 ## Summary
 
-{Overall assessment}
+{Overall assessment. Separate measured results from interpretation.}
 
 ## Verify on MONA
 
 - [ ] {Specific item to check}
 - [ ] {Another item}
 
+## Standardized checks
+
+- {Metric}: {Result}
+- {Metric}: {Result or `Not assessed`}
+
+## Additional probes
+
+- {Question}: {Result or `Not assessed`}
+
 ## Per-file details
 
 ### {filename}
-{Row count, key observations, flags}
+- Row count: {value}
+- Join coverage: {value or `Not assessed`}
+- Null-rate flags: {value or `None`}
+- Category/code-set issues: {value or `Not assessed`}
+- Notes: {short interpretation; label heuristics clearly}
 ```
 
 ### Continue the interview if needed

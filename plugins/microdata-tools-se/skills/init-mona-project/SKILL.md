@@ -40,12 +40,13 @@ You are the scaffolder, not the analyst.
 
 ## Memory files
 
-- Claude Code reads `CLAUDE.md`.
-- Codex reads `AGENTS.md`.
-- Write the file used by your current runtime. In the rest of this skill,
-  `{MEMORY}.md` means that runtime-specific file.
-- A project is scaffolded for one runtime only. If the user switches agents
-  later, they resolve memory-file naming themselves.
+- In Claude Code, write `CLAUDE.md`.
+- In other agent runtimes, write `AGENTS.md`.
+- Write exactly one runtime-specific memory file during a scaffold run. In the
+  rest of this skill, `{MEMORY}.md` means that single file.
+- Never create both files.
+- Never create a symlink between them.
+- This skill does not auto-manage cross-runtime duplication or conversion.
 
 ## Project directory resolution
 
@@ -116,8 +117,11 @@ files. It contains:
 - `tar_option_set(packages = ...)` must keep the template's minimal package
   list at scaffold time.
 - Group `notes/data_*.md` by register, not by CSV file.
-- `notes/mock_data_assessment.md` must contain concrete findings from probing
-  the mock data, not generic reminders.
+- `notes/mock_data_assessment.md` must separate measured results from
+  interpretation, and it must be grounded in scripted checks plus any
+  project-specific follow-up probes.
+- Never fabricate warnings, schema mismatches, code-set issues, or join
+  findings. If something was not measured, say `Not assessed`.
 - Run `Rscript tests/testthat.R` before you declare the scaffold complete.
 - If git is absent or unconfigured, ask the user before installing or
   configuring it. Never silently set global git config.
