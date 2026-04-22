@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — metadata search and MONA project scaffolding.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
