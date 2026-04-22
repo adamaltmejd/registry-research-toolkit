@@ -3,7 +3,7 @@ revision = 3
 requires-python = ">=3.11"
 
 [options]
-exclude-newer = "2026-04-14T18:42:26.439119Z"
+exclude-newer = "2026-04-15T08:20:16.296108Z"
 exclude-newer-span = "P7D"
 
 [manifest]
@@ -94,7 +94,7 @@ wheels = [
 
 [[package]]
 name = "mock-data-wizard"
-version = "0.4.0"
+version = "0.4.1"
 source = { editable = "mock_data_wizard" }
 dependencies = [
     { name = "numpy" },
