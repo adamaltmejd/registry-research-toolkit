@@ -14,7 +14,7 @@ TEST_DIR="${TEST_DIR:-/tmp/mona-plugin-test}"
 HARNESS_DIR="${HARNESS_DIR:-/tmp/mona-plugin-test-harness}"
 STATS_SRC="${STATS_SRC:-$HOME/Code/covid-education-inequality/stats.json}"
 MARKETPLACE_NAME="${MARKETPLACE_NAME:-registry-research-toolkit}"
-MARKETPLACE_SOURCE="${MARKETPLACE_SOURCE:-adamaltmejd/registry-research-toolkit@plugin-restructure}"
+MARKETPLACE_SOURCE="${MARKETPLACE_SOURCE:-adamaltmejd/registry-research-toolkit}"
 CODEX_CONFIG="${CODEX_CONFIG:-$HOME/.codex/config.toml}"
 
 MOCK_DATA_WIZARD_INSTALL='uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"'
@@ -103,8 +103,8 @@ $PREEXISTING_MARKETPLACE_NOTE## Preflight
    codex plugin marketplace add "$MARKETPLACE_SOURCE"
    \`\`\`
 
-   For this prerelease test, the branch ref is intentional. After the plugin is
-   merged, the \`@plugin-restructure\` suffix should no longer be needed.
+   To test an unmerged branch, override with
+   \`MARKETPLACE_SOURCE=adamaltmejd/registry-research-toolkit@<branch>\`.
 
 2. Open a fresh Codex session with \`cwd=$TEST_DIR\`.
 
