@@ -45,6 +45,7 @@ non_ascii_lines <- function(path) {
 test_that("MONA-uploaded R files are ASCII-only", {
   files <- c(
     here::here("run.R"),
+    here::here("extract_stats.R"),
     sort(list.files(
       here::here("src"),
       pattern = "\\.R$",
