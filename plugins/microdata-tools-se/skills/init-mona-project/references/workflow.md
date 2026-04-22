@@ -83,14 +83,14 @@ If either command fails, stop and install it before proceeding:
 uv tool install regmeta
 regmeta maintain update
 
-uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+uv tool install mock-data-wizard
 ```
 
 If a prior install is broken, reinstall with `--force`:
 
 ```bash
 uv tool install --force regmeta
-uv tool install --force "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+uv tool install --force mock-data-wizard
 ```
 
 ### Generate the extraction script

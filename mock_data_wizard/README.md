@@ -7,12 +7,15 @@ secondary.
 ## Install
 
 ```bash
-uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+uv tool install mock-data-wizard
 ```
 
 Requires `regmeta` for metadata enrichment (population spine, value
 code validation, compare). Install regmeta first — see
 [regmeta/README.md](../regmeta/README.md).
+
+Upgrade with `mock-data-wizard update`. The CLI also checks for a newer
+version on startup and points at this command if one is available.
 
 ## Quick start
 

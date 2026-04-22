@@ -17,7 +17,7 @@ MARKETPLACE_NAME="${MARKETPLACE_NAME:-registry-research-toolkit}"
 MARKETPLACE_SOURCE="${MARKETPLACE_SOURCE:-adamaltmejd/registry-research-toolkit}"
 CODEX_CONFIG="${CODEX_CONFIG:-$HOME/.codex/config.toml}"
 
-MOCK_DATA_WIZARD_INSTALL='uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"'
+MOCK_DATA_WIZARD_INSTALL='uv tool install mock-data-wizard'
 
 if [[ ! -d "$PLUGIN_SRC" ]]; then
 	echo "ERROR: plugin not found at $PLUGIN_SRC" >&2

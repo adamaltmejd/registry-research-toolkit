@@ -22,23 +22,40 @@ for other methods.
 
 ## Install
 
-### For AI agents
+### Agent plugin (recommended)
 
-Point your agent at the
-[register-metadata-search skill](https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se/skills/register-metadata-search)
-and ask it to install regmeta and use it. The skill contains install
-instructions, the full command reference, and common query workflows.
+The toolkit ships as the `microdata-tools-se` plugin. In Claude Code:
 
-### Manual
+```text
+/plugin marketplace add adamaltmejd/registry-research-toolkit
+/plugin install microdata-tools-se@microdata-tools-se
+```
+
+In Codex:
 
 ```bash
-# regmeta (metadata queries)
-uv tool install regmeta
-regmeta maintain update
-
-# mock-data-wizard (mock data generation, depends on regmeta)
-uv tool install "mock-data-wizard @ git+https://github.com/adamaltmejd/registry-research-toolkit#subdirectory=mock_data_wizard"
+codex plugin marketplace add adamaltmejd/registry-research-toolkit
 ```
+
+then install `microdata-tools-se` from the plugin marketplace UI.
+
+This bundles two skills —
+`/microdata-tools-se:register-metadata-search` and
+`/microdata-tools-se:init-mona-project` — and keeps them updated through the
+plugin host. The skills use the underlying CLIs below; install those once per
+machine.
+
+### CLIs
+
+```bash
+uv tool install regmeta
+regmeta maintain update            # download metadata DB (~400 MB compressed)
+
+uv tool install mock-data-wizard   # depends on regmeta
+```
+
+Both CLIs check for updates on startup and ship explicit upgrade paths
+(`regmeta maintain update`, `mock-data-wizard update`).
 
 ## Quick start
 
