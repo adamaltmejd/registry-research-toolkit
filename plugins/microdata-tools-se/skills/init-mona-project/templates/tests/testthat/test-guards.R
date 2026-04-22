@@ -3,7 +3,7 @@
 # These tests run locally before uploading code to MONA. The ASCII guard
 # is the most important: MONA runs Windows with a locale-dependent encoding,
 # and non-ASCII bytes in R source files cause silent corruption or parse
-# errors. The rule is simple: all src/*.R files must be pure ASCII.
+# errors. The rule is simple: all R files uploaded to MONA must be pure ASCII.
 #
 # For Swedish characters in strings (variable names, grep patterns, labels),
 # use \uXXXX escapes. Common ones:
@@ -43,11 +43,16 @@ non_ascii_lines <- function(path) {
 }
 
 test_that("MONA-uploaded R files are ASCII-only", {
-  files <- sort(list.files(
-    here::here("src"),
-    pattern = "\\.R$",
-    full.names = TRUE
-  ))
+  files <- c(
+    here::here("run.R"),
+    here::here("extract_stats.R"),
+    sort(list.files(
+      here::here("src"),
+      pattern = "\\.R$",
+      full.names = TRUE
+    ))
+  )
+  files <- files[file.exists(files)]
 
   bad <- unlist(lapply(files, non_ascii_lines), use.names = FALSE)
 

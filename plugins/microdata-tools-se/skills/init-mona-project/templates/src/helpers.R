@@ -192,15 +192,33 @@ tar_save_csv <- function(name, cmd) {
 tar_save_plot <- function(name, cmd, format = c(".svg", ".png"), ...) {
   target_name <- deparse(substitute(name))
   filenames <- paste0(target_name, format)
+  plot_expr <- substitute(cmd)
+  plot_args <- as.list(substitute(list(...)))[-1L]
 
   targets::tar_target_raw(
     target_name,
-    substitute({
-      plot_theme()
-      files <- file.path(output_dir, "plots", filenames)
-      p <- cmd
-      sapply(files, save_plot, .plot = p, ...)
-    }),
+    substitute(
+      {
+        plot_theme()
+        files <- file.path(output_dir, "plots", filenames)
+        p <- plot_expr
+        vapply(
+          files,
+          function(fn) {
+            do.call(
+              save_plot,
+              c(list(.plot = p, fn = fn), plot_args)
+            )
+          },
+          character(1)
+        )
+      },
+      env = list(
+        filenames = filenames,
+        plot_expr = plot_expr,
+        plot_args = plot_args
+      )
+    ),
     format = "file"
   )
 }

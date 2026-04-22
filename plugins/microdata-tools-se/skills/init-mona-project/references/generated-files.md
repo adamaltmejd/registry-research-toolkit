@@ -10,6 +10,7 @@ Copy these files verbatim from `templates/`:
 | Template | Destination |
 |----------|-------------|
 | `templates/air.toml` | `{projdir}/air.toml` |
+| `templates/run.R` | `{projdir}/run.R` |
 | `templates/src/helpers.R` | `{projdir}/src/helpers.R` |
 | `templates/src/plotting.R` | `{projdir}/src/plotting.R` |
 | `templates/src/manage_packages.R` | `{projdir}/src/manage_packages.R` |
@@ -86,58 +87,63 @@ source(here::here("src", "data_processing.R"))
 source(here::here("src", "analysis.R"))
 source(here::here("src", "plotting.R"))
 
-list(
-  # -- Paths ------------------------------------------------------------------
-  tar_target(
-    raw_data_path,
-    {
-      path <- trimws(Sys.getenv("RAW_DATA_PATH", unset = ""))
-      if (nzchar(path)) {
-        path.expand(path)
-      } else if (dir.exists("//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data")) {
-        "//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data"
-      } else {
-        here::here("mock_data")
+c(
+  list(
+    # -- Paths ----------------------------------------------------------------
+    tar_target(
+      raw_data_path,
+      {
+        path <- trimws(Sys.getenv("RAW_DATA_PATH", unset = ""))
+        if (nzchar(path)) {
+          path.expand(path)
+        } else if (dir.exists("//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data")) {
+          "//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data"
+        } else {
+          here::here("mock_data")
+        }
+      },
+      cue = tar_cue(mode = "always")
+    ),
+    tar_target(
+      output_dir,
+      {
+        is_mock <- identical(raw_data_path, here::here("mock_data"))
+        if (is_mock) {
+          message("Using mock data -- outputs go to output_mock/")
+        }
+        dir <- here::here(if (is_mock) "output_mock" else "output")
+        dir.create(
+          file.path(dir, "tables"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir.create(
+          file.path(dir, "plots"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir.create(
+          file.path(dir, "logs"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir
       }
-    },
-    cue = tar_cue(mode = "always")
+    )
   ),
-  tar_target(
-    output_dir,
-    {
-      is_mock <- identical(raw_data_path, here::here("mock_data"))
-      if (is_mock) {
-        message("Using mock data -- outputs go to output_mock/")
-      }
-      dir <- here::here(if (is_mock) "output_mock" else "output")
-      dir.create(
-        file.path(dir, "tables"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir.create(
-        file.path(dir, "plots"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir.create(
-        file.path(dir, "logs"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir
-    }
+  # User targets go below in their own list so new entries do not need to
+  # chase the trailing comma of the paths block above.
+  list(
+    # -- Data loading targets --------------------------------------------------
+    # Example:
+    # tar_target(
+    #   raw_persons,
+    #   read_data(file.path(raw_data_path, "persons_2020.csv"))
+    # )
+    # -- Processing targets ----------------------------------------------------
+    # -- Analysis targets ------------------------------------------------------
+    # -- Output targets --------------------------------------------------------
   )
-  # Add targets below. Remember the comma after output_dir when you do.
-  # -- Data loading targets ----------------------------------------------------
-  # Example:
-  # ,tar_target(
-  #   raw_persons,
-  #   read_data(file.path(raw_data_path, "persons_2020.csv"))
-  # )
-  # -- Processing targets ------------------------------------------------------
-  # -- Analysis targets --------------------------------------------------------
-  # -- Output targets ----------------------------------------------------------
 )
 ```
 
@@ -159,7 +165,8 @@ list(
 Write this content to `{MEMORY}.md` only.
 
 - In Claude Code, `{MEMORY}.md` is `CLAUDE.md`.
-- In Codex, `{MEMORY}.md` is `AGENTS.md`.
+- In other agent runtimes, `{MEMORY}.md` is `AGENTS.md`.
+- Never create both files or a symlink between them during one scaffold run.
 
 ````markdown
 # {Project title}
@@ -174,11 +181,11 @@ This project uses individual-level registry data from SCB, accessed through
 MONA. **Under no circumstances may any personal data be exported from MONA.**
 Only aggregate statistics, tables, and figures may be exported.
 
-- The `extract_stats.R` script exports only aggregate statistics with
-  disclosure control.
-- Pipeline outputs in `output/` must contain only aggregate results.
-- Never include individual-level data in comments, commits, documentation, or
-  any file that leaves MONA.
+- `output/` must contain only aggregate results that are safe to export.
+- Never include row-level data in commits, documentation, issue text, agent
+  messages, or any file that leaves MONA.
+- `output_mock/` is local synthetic output only and must never be mistaken for
+  real MONA output.
 
 ## You only have mock data
 
@@ -191,7 +198,9 @@ Only aggregate statistics, tables, and figures may be exported.
 
 ## Project structure
 
+- `run.R` - non-interactive entry point for running the pipeline on MONA
 - `src/` - R code uploaded to MONA
+- `src/pipeline.R` - targets graph and shared path/output targets
 - `notes/` - local project documentation
 - `mock_data/` - synthetic CSVs plus `manifest.json`
 - `output/` - MONA outputs, git-tracked, aggregate only
@@ -217,14 +226,23 @@ Only aggregate statistics, tables, and figures may be exported.
 - Run scripts via the **Batch client** or the MONA RStudio session.
 - Review every export manually before it leaves MONA.
 
-## Data file inventory
+## Targets pipeline
 
-| Register | Files | Year range | Key columns | Notes doc |
-|----------|-------|------------|-------------|-----------|
-| {register_id} - {register name} | `{filename pattern}` | {year range} | {important cols} | `notes/data_{slug}.md` |
+- `run.R` is the entry point for non-interactive runs on MONA.
+- `src/pipeline.R` defines the targets graph and top-level path logic.
+- `raw_data_path` resolves `RAW_DATA_PATH`, then the MONA UNC path, then
+  `mock_data/`.
+- `output_dir` switches between `output/` and `output_mock/` depending on the
+  active data source.
+- Put reusable data-cleaning logic in `src/data_processing.R`.
+- Put analysis code in `src/analysis.R` and plotting helpers in `src/plotting.R`.
 
-> When filenames with Swedish characters appear in `.R` source code, write
-> them using `\uXXXX` escapes. The ASCII guard enforces this.
+## Documentation
+
+- `notes/data_*.md` - register-level documentation and caveats
+- `notes/mock_data_assessment.md` - measured mock-data findings plus what to
+  verify on MONA
+- `ROADMAP.md` - handoff for the next agent session
 
 ## Pipeline audits
 
@@ -241,9 +259,10 @@ dt |>
 
 ## Testing strategy
 
-- local `tests/testthat/` for function logic
-- pipeline audits inside `src/` for mock-versus-real divergence
-- ASCII guard before upload
+- `tests/testthat/` is for local checks only; run it before upload, not on MONA
+- pipeline audits inside `src/` should catch mock-versus-real divergence on both
+  local runs and MONA runs
+- the ASCII guard is a local pre-upload safety check
 
 ## Code formatting
 
@@ -271,6 +290,7 @@ air format src/
 ## Where we are
 - Local R scaffold is set up.
 - Mock data generated from `stats.json` ({N} files across {M} registers).
+- `run.R` is ready as the MONA pipeline entry point.
 - Register docs live in `notes/data_*.md`.
 - Mock-data caveats live in `notes/mock_data_assessment.md`.
 - MONA packages still need installation there via `src/manage_packages.R`.
@@ -284,11 +304,16 @@ air format src/
 Spot-check the items flagged in `notes/mock_data_assessment.md` before coding.
 
 ### 2. Write data processing
-{Name the first concrete function, what it takes, what it returns, and which
-notes file to read first.}
+{Name the first register or file family to load only if the research plan
+makes it clearly primary. Otherwise say `Not yet specified` and list what
+must be clarified first. Point to the relevant `notes/data_*.md`. Keep this
+to one loading or harmonization step, not a full pipeline.}
 
 ### 3. Write analysis
-{Name the first estimator or analysis scaffold to add in `src/analysis.R`.}
+{If the research design is already pinned down, state the first analysis task
+briefly. Otherwise say `Not yet specified` and list the unresolved design
+choices. Do not invent an estimator, function name, control set, or outcome
+hierarchy the user did not provide.}
 
 ### 4. Output and export review
 Keep `output/` aggregate-only and manually review exports before they leave MONA.
@@ -296,6 +321,7 @@ Keep `output/` aggregate-only and manually review exports before they leave MONA
 ## Pointers
 - `{MEMORY}.md` - authoritative project briefing for the current runtime
 - `notes/` - data docs plus mock-data assessment
+- `run.R` - non-interactive entry point for MONA runs
 - `src/pipeline.R` - current targets entry point
 ```
 
