@@ -116,12 +116,19 @@ files. It contains:
 - `src/data_processing.R` and `src/analysis.R` stay as stubs only.
 - `tar_option_set(packages = ...)` must keep the template's minimal package
   list at scaffold time.
+- Start with a short onboarding message that explains the two-phase workflow
+  for a first-time user. Do not open with a raw questionnaire or a non-blocking
+  CLI quirk.
 - Group `notes/data_*.md` by register, not by CSV file.
 - `notes/mock_data_assessment.md` must separate measured results from
   interpretation, and it must be grounded in scripted checks plus any
   project-specific follow-up probes.
 - Never fabricate warnings, schema mismatches, code-set issues, or join
   findings. If something was not measured, say `Not assessed`.
+- Do not describe the expected Phase 1 pause after `extract_stats.R` as a
+  failure or limitation.
+- Do not describe missing years or files in `mock_data/` as an arbitrary mock
+  artifact. The generator reflects what was present in `stats.json`.
 - Run `Rscript tests/testthat.R` before you declare the scaffold complete.
 - If git is absent or unconfigured, ask the user before installing or
   configuring it. Never silently set global git config.

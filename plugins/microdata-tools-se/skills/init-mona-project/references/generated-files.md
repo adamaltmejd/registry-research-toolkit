@@ -10,6 +10,7 @@ Copy these files verbatim from `templates/`:
 | Template | Destination |
 |----------|-------------|
 | `templates/air.toml` | `{projdir}/air.toml` |
+| `templates/run.R` | `{projdir}/run.R` |
 | `templates/src/helpers.R` | `{projdir}/src/helpers.R` |
 | `templates/src/plotting.R` | `{projdir}/src/plotting.R` |
 | `templates/src/manage_packages.R` | `{projdir}/src/manage_packages.R` |
@@ -175,11 +176,11 @@ This project uses individual-level registry data from SCB, accessed through
 MONA. **Under no circumstances may any personal data be exported from MONA.**
 Only aggregate statistics, tables, and figures may be exported.
 
-- The `extract_stats.R` script exports only aggregate statistics with
-  disclosure control.
-- Pipeline outputs in `output/` must contain only aggregate results.
-- Never include individual-level data in comments, commits, documentation, or
-  any file that leaves MONA.
+- `output/` must contain only aggregate results that are safe to export.
+- Never include row-level data in commits, documentation, issue text, agent
+  messages, or any file that leaves MONA.
+- `output_mock/` is local synthetic output only and must never be mistaken for
+  real MONA output.
 
 ## You only have mock data
 
@@ -192,7 +193,9 @@ Only aggregate statistics, tables, and figures may be exported.
 
 ## Project structure
 
+- `run.R` - non-interactive entry point for running the pipeline on MONA
 - `src/` - R code uploaded to MONA
+- `src/pipeline.R` - targets graph and shared path/output targets
 - `notes/` - local project documentation
 - `mock_data/` - synthetic CSVs plus `manifest.json`
 - `output/` - MONA outputs, git-tracked, aggregate only
@@ -218,14 +221,23 @@ Only aggregate statistics, tables, and figures may be exported.
 - Run scripts via the **Batch client** or the MONA RStudio session.
 - Review every export manually before it leaves MONA.
 
-## Data file inventory
+## Targets pipeline
 
-| Register | Files | Year range | Key columns | Notes doc |
-|----------|-------|------------|-------------|-----------|
-| {register_id} - {register name} | `{filename pattern}` | {year range} | {important cols} | `notes/data_{slug}.md` |
+- `run.R` is the entry point for non-interactive runs on MONA.
+- `src/pipeline.R` defines the targets graph and top-level path logic.
+- `raw_data_path` resolves `RAW_DATA_PATH`, then the MONA UNC path, then
+  `mock_data/`.
+- `output_dir` switches between `output/` and `output_mock/` depending on the
+  active data source.
+- Put reusable data-cleaning logic in `src/data_processing.R`.
+- Put analysis code in `src/analysis.R` and plotting helpers in `src/plotting.R`.
 
-> When filenames with Swedish characters appear in `.R` source code, write
-> them using `\uXXXX` escapes. The ASCII guard enforces this.
+## Documentation
+
+- `notes/data_*.md` - register-level documentation and caveats
+- `notes/mock_data_assessment.md` - measured mock-data findings plus what to
+  verify on MONA
+- `ROADMAP.md` - handoff for the next agent session
 
 ## Pipeline audits
 
@@ -242,9 +254,10 @@ dt |>
 
 ## Testing strategy
 
-- local `tests/testthat/` for function logic
-- pipeline audits inside `src/` for mock-versus-real divergence
-- ASCII guard before upload
+- `tests/testthat/` is for local checks only; run it before upload, not on MONA
+- pipeline audits inside `src/` should catch mock-versus-real divergence on both
+  local runs and MONA runs
+- the ASCII guard is a local pre-upload safety check
 
 ## Code formatting
 
@@ -272,6 +285,7 @@ air format src/
 ## Where we are
 - Local R scaffold is set up.
 - Mock data generated from `stats.json` ({N} files across {M} registers).
+- `run.R` is ready as the MONA pipeline entry point.
 - Register docs live in `notes/data_*.md`.
 - Mock-data caveats live in `notes/mock_data_assessment.md`.
 - MONA packages still need installation there via `src/manage_packages.R`.
@@ -302,6 +316,7 @@ Keep `output/` aggregate-only and manually review exports before they leave MONA
 ## Pointers
 - `{MEMORY}.md` - authoritative project briefing for the current runtime
 - `notes/` - data docs plus mock-data assessment
+- `run.R` - non-interactive entry point for MONA runs
 - `src/pipeline.R` - current targets entry point
 ```
 
