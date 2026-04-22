@@ -6,7 +6,7 @@
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se"
   },
-  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit",
+  "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se",
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
   "keywords": ["sweden", "microdata", "registry", "scb", "mona", "regmeta", "statistics", "research"]

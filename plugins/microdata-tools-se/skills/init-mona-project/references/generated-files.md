@@ -87,58 +87,62 @@ source(here::here("src", "data_processing.R"))
 source(here::here("src", "analysis.R"))
 source(here::here("src", "plotting.R"))
 
-list(
-  # -- Paths ------------------------------------------------------------------
-  tar_target(
-    raw_data_path,
-    {
-      path <- trimws(Sys.getenv("RAW_DATA_PATH", unset = ""))
-      if (nzchar(path)) {
-        path.expand(path)
-      } else if (dir.exists("//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data")) {
-        "//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data"
-      } else {
-        here::here("mock_data")
+c(
+  list(
+    # -- Paths ----------------------------------------------------------------
+    tar_target(
+      raw_data_path,
+      {
+        path <- trimws(Sys.getenv("RAW_DATA_PATH", unset = ""))
+        if (nzchar(path)) {
+          path.expand(path)
+        } else if (dir.exists("//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data")) {
+          "//micro.intra/Projekt/{P_NUM}$/{P_NUM}_Data"
+        } else {
+          here::here("mock_data")
+        }
+      },
+      cue = tar_cue(mode = "always")
+    ),
+    tar_target(
+      output_dir,
+      {
+        is_mock <- identical(raw_data_path, here::here("mock_data"))
+        if (is_mock) {
+          message("Using mock data -- outputs go to output_mock/")
+        }
+        dir <- here::here(if (is_mock) "output_mock" else "output")
+        dir.create(
+          file.path(dir, "tables"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir.create(
+          file.path(dir, "plots"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir.create(
+          file.path(dir, "logs"),
+          recursive = TRUE,
+          showWarnings = FALSE
+        )
+        dir
       }
-    },
-    cue = tar_cue(mode = "always")
+    )
   ),
-  tar_target(
-    output_dir,
-    {
-      is_mock <- identical(raw_data_path, here::here("mock_data"))
-      if (is_mock) {
-        message("Using mock data -- outputs go to output_mock/")
-      }
-      dir <- here::here(if (is_mock) "output_mock" else "output")
-      dir.create(
-        file.path(dir, "tables"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir.create(
-        file.path(dir, "plots"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir.create(
-        file.path(dir, "logs"),
-        recursive = TRUE,
-        showWarnings = FALSE
-      )
-      dir
-    }
+  list(
+    # Add targets below inside this second list.
+    # -- Data loading targets --------------------------------------------------
+    # Example:
+    # tar_target(
+    #   raw_persons,
+    #   read_data(file.path(raw_data_path, "persons_2020.csv"))
+    # )
+    # -- Processing targets ----------------------------------------------------
+    # -- Analysis targets ------------------------------------------------------
+    # -- Output targets --------------------------------------------------------
   )
-  # Add targets below. Remember the comma after output_dir when you do.
-  # -- Data loading targets ----------------------------------------------------
-  # Example:
-  # ,tar_target(
-  #   raw_persons,
-  #   read_data(file.path(raw_data_path, "persons_2020.csv"))
-  # )
-  # -- Processing targets ------------------------------------------------------
-  # -- Analysis targets --------------------------------------------------------
-  # -- Output targets ----------------------------------------------------------
 )
 ```
 

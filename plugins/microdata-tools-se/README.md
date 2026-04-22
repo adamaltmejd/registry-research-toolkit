@@ -35,14 +35,11 @@ Skills are then available as `/microdata-tools-se:init-mona-project` and
 Add the marketplace from the public GitHub repo:
 
 ```bash
-codex plugin marketplace add adamaltmejd/registry-research-toolkit@plugin-restructure
+codex plugin marketplace add adamaltmejd/registry-research-toolkit
 ```
 
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
-
-The branch ref is only needed for this prerelease build. After the plugin is
-merged, the `@plugin-restructure` suffix should no longer be needed.
 
 ## Scope
 

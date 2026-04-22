@@ -158,7 +158,7 @@ For each register group:
 1. Resolve representative columns:
 
 ```bash
-regmeta resolve --columns "{comma-separated columns}" --register {register_hint} --format json
+regmeta --format json resolve --columns "{comma-separated columns}" --register {register_hint}
 ```
 
 2. Fetch the human-readable register name:
