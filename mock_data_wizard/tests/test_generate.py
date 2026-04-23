@@ -47,7 +47,7 @@ def test_deterministic_output(stats_path: Path, tmp_path: Path):
 
     assert len(m1.files) == len(m2.files)
     for f1, f2 in zip(m1.files, m2.files):
-        assert f1.sha256 == f2.sha256, f"SHA mismatch for {f1.file_name}"
+        assert f1.sha256 == f2.sha256, f"SHA mismatch for {f1.source_name}"
 
 
 def test_different_seeds_differ(stats_path: Path, tmp_path: Path):
@@ -88,15 +88,18 @@ def test_manifest_json(stats_path: Path, tmp_path: Path):
     assert manifest_path.exists()
     data = json.loads(manifest_path.read_text())
 
-    # Top-level v2 fields
-    assert data["schema_version"] == "2"
+    # Top-level v3 fields
+    assert data["schema_version"] == "3"
     assert "generated_at" in data
     assert data["seed"] == 42
 
-    # Per-file v2 fields
+    # Per-source v3 fields
     assert len(data["files"]) == 1
     f = data["files"][0]
-    assert f["file_name"] == "persons.csv"
+    assert f["source_name"] == "persons.csv"
+    assert f["source_type"] == "file"
+    assert f["source_detail"]["path"].endswith("persons.csv")
+    assert f["output_file"] == "persons.csv"
     assert "sha256" in f
     assert set(f["columns"]) == {"LopNr", "Kon", "FodelseAr", "Kommun", "Datum", "Namn"}
     assert f["column_count"] == 6
@@ -149,10 +152,10 @@ def test_manifest_register_hint_candidates(stats_path: Path, tmp_path: Path):
 
 
 def test_manifest_year_hint(tmp_path: Path, stats_path: Path):
-    """Year hint is extracted from filename containing a 4-digit year."""
+    """Year hint is extracted from source name containing a 4-digit year."""
     stats = parse_stats(stats_path)
-    # Rename the file to include a year
-    stats.files[0].file_name = "LISA_2022.csv"
+    # Rename the source to include a year
+    stats.sources[0].source_name = "LISA_2022.csv"
     enriched = enrich(stats)
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
@@ -242,7 +245,7 @@ def test_id_uniqueness_when_pool_sufficient(
 
 
 def test_id_uniqueness_single_file(stats_path: Path, tmp_path: Path):
-    """Single-file register with n_distinct == row_count must have unique IDs."""
+    """Single-source register with n_distinct == row_count must have unique IDs."""
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
     out_dir = tmp_path / "output"
@@ -259,23 +262,43 @@ def test_multi_file_output_order(multi_file_stats_path: Path, tmp_path: Path):
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
 
-    # Files should be in lexical order
-    file_names = [f.file_name for f in manifest.files]
-    assert file_names == sorted(file_names)
+    # Sources should be in lexical order
+    names = [f.source_name for f in manifest.files]
+    assert names == sorted(names)
 
 
-def test_stale_files_removed_on_regenerate(stats_path: Path, tmp_path: Path):
-    """Re-running generate removes files from a previous run that are no longer produced."""
+def test_stale_files_kept_by_default(stats_path: Path, tmp_path: Path):
+    """Re-running generate without force keeps stale files on disk."""
     out_dir = tmp_path / "output"
     out_dir.mkdir()
 
-    # Simulate leftover from a previous run
     (out_dir / "old_file.csv").write_text("stale")
     (out_dir / "another_old.csv").write_text("stale")
 
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
-    generate(stats, enriched, seed=42, output_dir=out_dir)
+    generate(stats, enriched, seed=42, output_dir=out_dir)  # no force=
+
+    remaining = {p.name for p in out_dir.iterdir()}
+    # Stale files survive — warn-and-keep is the default.
+    assert "old_file.csv" in remaining
+    assert "another_old.csv" in remaining
+    # New mock and manifest are present.
+    assert "persons.csv" in remaining
+    assert "manifest.json" in remaining
+
+
+def test_stale_files_removed_with_force(stats_path: Path, tmp_path: Path):
+    """`force=True` deletes files from a previous run that aren't produced this time."""
+    out_dir = tmp_path / "output"
+    out_dir.mkdir()
+
+    (out_dir / "old_file.csv").write_text("stale")
+    (out_dir / "another_old.csv").write_text("stale")
+
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    generate(stats, enriched, seed=42, output_dir=out_dir, force=True)
 
     remaining = {p.name for p in out_dir.iterdir()}
     assert "old_file.csv" not in remaining
@@ -317,7 +340,7 @@ def _enrich_with_spine(stats, var_id_map: dict[str, int] | None = None):
 
 
 def test_spine_consistency(spine_stats_path: Path, tmp_path: Path):
-    """Shared birth-invariant column has identical values per individual across files."""
+    """Shared birth-invariant column has identical values per individual across sources."""
     stats = parse_stats(spine_stats_path)
     enriched = _enrich_with_spine(stats, {"Kon": 44})
     out_dir = tmp_path / "output"
@@ -355,7 +378,7 @@ def test_spine_deterministic(spine_stats_path: Path, tmp_path: Path):
     m2 = generate(stats, enriched, seed=42, output_dir=tmp_path / "r2")
 
     for f1, f2 in zip(m1.files, m2.files):
-        assert f1.sha256 == f2.sha256, f"SHA mismatch for {f1.file_name}"
+        assert f1.sha256 == f2.sha256, f"SHA mismatch for {f1.source_name}"
 
 
 def test_no_enrichment_no_spine(spine_stats_path: Path, tmp_path: Path):
@@ -378,7 +401,7 @@ def test_no_enrichment_no_spine(spine_stats_path: Path, tmp_path: Path):
 def test_spine_authority_uses_largest_population(
     spine_stats_path: Path, tmp_path: Path
 ):
-    """Spine uses the authority file's distribution (pop.csv has more individuals)."""
+    """Spine uses the authority source's distribution (pop.csv has more individuals)."""
     stats = parse_stats(spine_stats_path)
     enriched = _enrich_with_spine(stats, {"Kon": 44})
     out_dir = tmp_path / "output"

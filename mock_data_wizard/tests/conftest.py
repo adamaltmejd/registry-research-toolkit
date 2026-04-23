@@ -12,13 +12,15 @@ from regmeta.db import DDL, SCHEMA_VERSION
 
 
 MINIMAL_STATS = {
-    "contract_version": "1.0.0",
+    "contract_version": "2.0.0",
     "generated_at": "2026-03-15T10:00:00Z",
-    "project_paths": ["\\\\micro.intra\\projekt\\P1405$\\P1405_Data"],
-    "files": [
+    "sources": [
         {
-            "file_name": "persons.csv",
-            "relative_path": "persons.csv",
+            "source_name": "persons.csv",
+            "source_type": "file",
+            "source_detail": {
+                "path": "\\\\micro.intra\\projekt\\P1405$\\P1405_Data\\persons.csv"
+            },
             "row_count": 1000,
             "columns": [
                 {
@@ -117,13 +119,13 @@ MINIMAL_STATS = {
 }
 
 SPINE_STATS = {
-    "contract_version": "1.0.0",
+    "contract_version": "2.0.0",
     "generated_at": "2026-03-15T10:00:00Z",
-    "project_paths": ["\\\\micro.intra\\projekt\\P1405$\\P1405_Data"],
-    "files": [
+    "sources": [
         {
-            "file_name": "pop.csv",
-            "relative_path": "pop.csv",
+            "source_name": "pop.csv",
+            "source_type": "file",
+            "source_detail": {"path": "pop.csv"},
             "row_count": 500,
             "columns": [
                 {
@@ -147,8 +149,9 @@ SPINE_STATS = {
             ],
         },
         {
-            "file_name": "edu.csv",
-            "relative_path": "edu.csv",
+            "source_name": "edu.csv",
+            "source_type": "file",
+            "source_detail": {"path": "edu.csv"},
             "row_count": 300,
             "columns": [
                 {
@@ -184,25 +187,25 @@ SPINE_STATS = {
     "shared_columns": [
         {
             "column_name": "LopNr",
-            "files": ["pop.csv", "edu.csv"],
+            "sources": ["pop.csv", "edu.csv"],
             "max_n_distinct": 500,
         },
         {
             "column_name": "Kon",
-            "files": ["pop.csv", "edu.csv"],
+            "sources": ["pop.csv", "edu.csv"],
             "max_n_distinct": 2,
         },
     ],
 }
 
 MULTI_FILE_STATS = {
-    "contract_version": "1.0.0",
+    "contract_version": "2.0.0",
     "generated_at": "2026-03-15T10:00:00Z",
-    "project_paths": ["\\\\micro.intra\\projekt\\P1405$\\P1405_Data"],
-    "files": [
+    "sources": [
         {
-            "file_name": "file_a.csv",
-            "relative_path": "file_a.csv",
+            "source_name": "file_a.csv",
+            "source_type": "file",
+            "source_detail": {"path": "file_a.csv"},
             "row_count": 500,
             "columns": [
                 {
@@ -226,8 +229,9 @@ MULTI_FILE_STATS = {
             ],
         },
         {
-            "file_name": "file_b.csv",
-            "relative_path": "file_b.csv",
+            "source_name": "file_b.csv",
+            "source_type": "file",
+            "source_detail": {"path": "file_b.csv"},
             "row_count": 300,
             "columns": [
                 {
@@ -254,7 +258,7 @@ MULTI_FILE_STATS = {
     "shared_columns": [
         {
             "column_name": "LopNr",
-            "files": ["file_a.csv", "file_b.csv"],
+            "sources": ["file_a.csv", "file_b.csv"],
             "max_n_distinct": 500,
         }
     ],

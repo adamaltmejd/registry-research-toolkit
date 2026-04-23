@@ -15,18 +15,19 @@ from pathlib import Path
 import numpy as np
 
 from ._util import progress
-from .enrich import SPINE_VAR_IDS, EnrichedFile, RegisterCandidate
+from .enrich import SPINE_VAR_IDS, EnrichedSource, RegisterCandidate
 from .stats import ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
-_MANIFEST_SCHEMA_VERSION = "2"
+_MANIFEST_SCHEMA_VERSION = "3"
 _YEAR_RE = re.compile(r"\d{4}")
 
 
 @dataclass
 class OutputFile:
-    file_name: str
-    relative_path: str
+    source_name: str
+    source_type: str
+    source_detail: dict
     row_count: int
     sha256: str
     columns: list[str]
@@ -49,9 +50,9 @@ class Manifest:
     files: list[OutputFile]
 
 
-def _sub_seed(master_seed: int, file_name: str, column_name: str) -> int:
-    """Derive a deterministic sub-seed from master seed, file, and column."""
-    h = hashlib.sha256(f"{master_seed}:{file_name}:{column_name}".encode())
+def _sub_seed(master_seed: int, source_name: str, column_name: str) -> int:
+    """Derive a deterministic sub-seed from master seed, source, and column."""
+    h = hashlib.sha256(f"{master_seed}:{source_name}:{column_name}".encode())
     return int.from_bytes(h.digest()[:4], "big")
 
 
@@ -195,35 +196,61 @@ def _apply_nulls(
     return result
 
 
-def _remove_stale_files(output_dir: Path, written_files: set[str]) -> list[str]:
-    """Remove files from a previous run that are not in the current generation."""
-    removed = []
+def _output_filename(source_name: str) -> str:
+    """Derive the output CSV filename for a source.
+
+    File sources already carry the extension (e.g. `persons.csv`); SQL
+    sources typically use a bare table name like `dbo.persons`. In both
+    cases we want a single `.csv` CSV on disk.
+    """
+    lower = source_name.lower()
+    if lower.endswith(".csv") or lower.endswith(".txt"):
+        return source_name
+    # Replace schema separator dots with underscores; keep it filesystem-safe.
+    safe = source_name.replace("/", "_").replace("\\", "_").replace(".", "_")
+    return f"{safe}.csv"
+
+
+def _find_stale_files(output_dir: Path, written_files: set[str]) -> list[str]:
+    """Return filenames in output_dir that aren't part of the current run."""
+    stale = []
     for path in sorted(output_dir.iterdir()):
         if path.name == _MANIFEST_FILENAME:
             continue
         if path.is_file() and path.name not in written_files:
-            path.unlink()
-            removed.append(path.name)
+            stale.append(path.name)
+    return stale
+
+
+def _remove_stale_files(output_dir: Path, written_files: set[str]) -> list[str]:
+    """Remove files from a previous run that are not in the current generation."""
+    removed = _find_stale_files(output_dir, written_files)
+    for name in removed:
+        (output_dir / name).unlink()
     return removed
 
 
 def generate(
     stats: ProjectStats,
-    enriched: list[EnrichedFile],
+    enriched: list[EnrichedSource],
     seed: int,
     sample_pct: float = 1.0,
     output_dir: Path = Path("mock_data"),
     verbose: bool = False,
+    force: bool = False,
 ) -> Manifest:
     """Generate mock CSV files from stats and enrichment.
 
     Args:
         stats: Parsed stats JSON.
-        enriched: Enriched file/column metadata.
+        enriched: Enriched source/column metadata.
         seed: Master random seed for deterministic generation.
         sample_pct: Fraction of original row count to generate (0.0-1.0].
         output_dir: Directory to write CSV files.
-        verbose: Log per-file timing breakdown to stderr.
+        verbose: Log per-source timing breakdown to stderr.
+        force: If True, delete stale output files from previous runs.
+            Default (False) warns about stale files but leaves them on
+            disk — the safer choice when SOURCES shrinks between runs.
 
     Returns:
         Manifest describing generated files.
@@ -231,10 +258,10 @@ def generate(
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Determine id_subtype per column name from the first file that has it
+    # Determine id_subtype per column name from the first source that has it
     id_subtypes: dict[str, str] = {}
-    for file_stats in stats.files:
-        for col in file_stats.columns:
+    for source in stats.sources:
+        for col in source.columns:
             if col.inferred_type == "id" and col.column_name not in id_subtypes:
                 id_subtypes[col.column_name] = col.stats["id_subtype"]
 
@@ -263,7 +290,7 @@ def generate(
 
     # --- Population spine for birth-invariant attributes ---
     # Ensures shared columns like Kön/Födelseår have consistent values
-    # for the same individual across files.
+    # for the same individual across sources.
     spine: dict[str, dict] = {}
     spine_id_cols: dict[str, str] = {}
 
@@ -279,29 +306,31 @@ def generate(
         if col_var_ids.get(sc.column_name) not in SPINE_VAR_IDS:
             continue
 
-        # Find shared ID column connecting files with this column
+        # Find shared ID column connecting sources with this column
         id_col_name = None
         for id_sc in stats.shared_columns:
-            if id_sc.column_name in id_subtypes and set(id_sc.files) & set(sc.files):
+            if id_sc.column_name in id_subtypes and set(id_sc.sources) & set(
+                sc.sources
+            ):
                 id_col_name = id_sc.column_name
                 break
         if id_col_name is None or id_col_name not in shared_pools:
             continue
 
-        # Authority file: largest population for the ID column
-        best_file, best_nd = None, -1
-        for fs in stats.files:
-            if fs.file_name not in sc.files:
+        # Authority source: largest population for the ID column
+        best_source, best_nd = None, -1
+        for src in stats.sources:
+            if src.source_name not in sc.sources:
                 continue
-            for col in fs.columns:
+            for col in src.columns:
                 if col.column_name == id_col_name and col.n_distinct > best_nd:
                     best_nd = col.n_distinct
-                    best_file = fs.file_name
+                    best_source = src.source_name
 
         authority_ecol = None
-        if best_file:
+        if best_source:
             for ef in enriched:
-                if ef.file_name == best_file:
+                if ef.source_name == best_source:
                     for ec in ef.columns:
                         if ec.column_name == sc.column_name:
                             authority_ecol = ec
@@ -327,30 +356,30 @@ def generate(
 
     output_files: list[OutputFile] = []
 
-    # Process files in lexical order for determinism
-    file_pairs = sorted(
-        zip(stats.files, enriched),
-        key=lambda pair: pair[0].relative_path,
+    # Process sources in lexical order by source_name for determinism
+    source_pairs = sorted(
+        zip(stats.sources, enriched),
+        key=lambda pair: pair[0].source_name,
     )
 
-    total_files = len(file_pairs)
-    total_rows = sum(max(1, int(fs.row_count * sample_pct)) for fs, _ in file_pairs)
+    total_sources = len(source_pairs)
+    total_rows = sum(max(1, int(s.row_count * sample_pct)) for s, _ in source_pairs)
     t0 = time.monotonic()
 
-    for file_idx, (file_stats, efile) in enumerate(file_pairs, 1):
-        n_rows = max(1, int(file_stats.row_count * sample_pct))
-        n_cols = len(efile.columns)
+    for source_idx, (source, esource) in enumerate(source_pairs, 1):
+        n_rows = max(1, int(source.row_count * sample_pct))
+        n_cols = len(esource.columns)
         progress(
-            f"[{file_idx}/{total_files}] {file_stats.file_name} "
+            f"[{source_idx}/{total_sources}] {source.source_name} "
             f"({n_rows:,} rows × {n_cols} cols)"
         )
 
-        t_file = time.monotonic()
+        t_source = time.monotonic()
         t_gen = 0.0
         columns_data: dict[str, list] = {}
 
         # Process ID columns first so spine lookups can reference them
-        for ecol in sorted(efile.columns, key=lambda c: c.inferred_type != "id"):
+        for ecol in sorted(esource.columns, key=lambda c: c.inferred_type != "id"):
             t_col = time.monotonic()
 
             if (
@@ -362,7 +391,7 @@ def generate(
                 raw = np.array([mapping[v] for v in columns_data[id_col]])
             else:
                 col_rng = np.random.default_rng(
-                    _sub_seed(seed, file_stats.file_name, ecol.column_name)
+                    _sub_seed(seed, source.source_name, ecol.column_name)
                 )
                 if ecol.inferred_type == "numeric":
                     raw = _generate_numeric(col_rng, n_rows, ecol.stats)
@@ -389,7 +418,7 @@ def generate(
                     )
 
             null_rng = np.random.default_rng(
-                _sub_seed(seed, file_stats.file_name, f"{ecol.column_name}:nulls")
+                _sub_seed(seed, source.source_name, f"{ecol.column_name}:nulls")
             )
             columns_data[ecol.column_name] = _apply_nulls(
                 null_rng,
@@ -400,8 +429,8 @@ def generate(
 
         # Write CSV — build in memory then flush once
         t_write = time.monotonic()
-        out_path = output_dir / file_stats.file_name
-        col_names = [ecol.column_name for ecol in efile.columns]
+        out_path = output_dir / _output_filename(source.source_name)
+        col_names = [ecol.column_name for ecol in esource.columns]
         buf = io.StringIO()
         writer = csv.writer(buf)
         writer.writerow(col_names)
@@ -411,23 +440,24 @@ def generate(
         t_write = time.monotonic() - t_write
 
         if verbose:
-            t_total_file = time.monotonic() - t_file
+            t_total_source = time.monotonic() - t_source
             progress(
-                f"  {t_total_file:.2f}s (generate {t_gen:.2f}s, write {t_write:.2f}s)"
+                f"  {t_total_source:.2f}s (generate {t_gen:.2f}s, write {t_write:.2f}s)"
             )
 
-        register_hint = efile.register_hint
+        register_hint = esource.register_hint
 
-        # Derive year_hint from file name
-        year_match = _YEAR_RE.search(file_stats.file_name)
+        # Derive year_hint from source name
+        year_match = _YEAR_RE.search(source.source_name)
         year_hint = int(year_match.group()) if year_match else None
 
         header_hash = hashlib.sha256(",".join(sorted(col_names)).encode()).hexdigest()
 
         output_files.append(
             OutputFile(
-                file_name=file_stats.file_name,
-                relative_path=file_stats.relative_path,
+                source_name=source.source_name,
+                source_type=source.source_type,
+                source_detail=dict(source.source_detail),
                 row_count=n_rows,
                 sha256=hashlib.sha256(content_bytes).hexdigest(),
                 columns=col_names,
@@ -436,20 +466,30 @@ def generate(
                 encoding="utf-8",
                 header_hash=header_hash,
                 register_hint=register_hint,
-                register_hint_candidates=list(efile.register_hint_candidates),
+                register_hint_candidates=list(esource.register_hint_candidates),
                 year_hint=year_hint,
             )
         )
 
-    # Clean stale files from previous runs
-    written_names = {f.file_name for f in output_files}
-    removed = _remove_stale_files(output_dir, written_names)
-    if removed:
-        progress(f"Removed {len(removed)} stale file(s): {', '.join(removed)}")
+    # Handle stale output files from previous runs. Default is warn-and-keep
+    # so that shrinking SOURCES doesn't silently delete mock CSVs that
+    # downstream code still references. --force opts into deletion.
+    written_names = {_output_filename(f.source_name) for f in output_files}
+    if force:
+        removed = _remove_stale_files(output_dir, written_names)
+        if removed:
+            progress(f"Removed {len(removed)} stale file(s): {', '.join(removed)}")
+    else:
+        stale = _find_stale_files(output_dir, written_names)
+        if stale:
+            progress(
+                f"WARNING: {len(stale)} stale file(s) in {output_dir} not produced "
+                f"by this run: {', '.join(stale)}. Pass --force to delete them."
+            )
 
     elapsed = time.monotonic() - t0
     progress(
-        f"Generated {total_rows:,} rows across {total_files} files in {elapsed:.1f}s"
+        f"Generated {total_rows:,} rows across {total_sources} sources in {elapsed:.1f}s"
     )
 
     # Write manifest
@@ -472,8 +512,10 @@ def generate(
                 "output_dir": manifest.output_dir,
                 "files": [
                     {
-                        "file_name": f.file_name,
-                        "relative_path": f.relative_path,
+                        "source_name": f.source_name,
+                        "source_type": f.source_type,
+                        "source_detail": f.source_detail,
+                        "output_file": _output_filename(f.source_name),
                         "row_count": f.row_count,
                         "sha256": f.sha256,
                         "columns": f.columns,

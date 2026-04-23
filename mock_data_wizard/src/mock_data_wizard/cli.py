@@ -127,13 +127,25 @@ def _cmd_generate_script(args: argparse.Namespace) -> int:
         )
         return 1
 
+    # MONA convention: DSN name = project number. When -p is given we emit
+    # a sql_source skeleton alongside file_source; discovery handles the
+    # case where the project has no SQL (graceful skip).
+    if args.no_sql:
+        sql_dsn = None
+    elif args.sql_dsn is not None:
+        sql_dsn = args.sql_dsn
+    elif project_num:
+        sql_dsn = f"P{project_num}"
+    else:
+        sql_dsn = None
+
     if args.output:
         output = Path(args.output)
     elif project_num:
         output = Path(f"extract_stats_P{project_num}.R")
     else:
         output = Path("extract_stats.R")
-    result = generate_script(paths, output)
+    result = generate_script(paths, output, sql_dsn=sql_dsn)
     print(f"R script written to: {result}")
     return 0
 
@@ -158,15 +170,15 @@ def _cmd_compare(args: argparse.Namespace) -> int:
             return 1
         manifest_data = json.loads(manifest_path.read_text(encoding="utf-8"))
         sv = manifest_data.get("schema_version")
-        if sv != "2":
+        if sv != "3":
             print(
-                f"Error: unsupported manifest schema_version '{sv}'. Expected '2'.\n"
-                "Regenerate with mock-data-wizard >= v0.2.0.",
+                f"Error: unsupported manifest schema_version '{sv}'. Expected '3'.\n"
+                "Regenerate with mock-data-wizard >= v0.3.0.",
                 file=sys.stderr,
             )
             return 1
         for f in manifest_data.get("files", []):
-            label = f["file_name"]
+            label = f["source_name"]
             columns_by_file[label] = f.get("columns", [])
             register_hints[label] = f.get("register_hint")
             year_hints[label] = f.get("year_hint")
@@ -324,7 +336,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
 
     output_dir = Path(args.output_dir) if args.output_dir else Path("mock_data")
-    n_files = len(stats.files)
+    n_sources = len(stats.sources)
     sample_label = f" at {args.sample_pct:.0%}" if args.sample_pct < 1.0 else ""
 
     # Check for existing output directory with files
@@ -333,30 +345,23 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         if output_dir.is_dir()
         else []
     )
-    if existing_files:
-        if args.yes and not args.force:
-            print(
-                f"Error: output directory {output_dir}/ already contains "
-                f"{len(existing_files)} file(s).\n"
-                f"Use --force to overwrite (stale files will be removed).",
-                file=sys.stderr,
-            )
+    if existing_files and not args.yes and not args.force:
+        print(
+            f"WARNING: {output_dir}/ already contains {len(existing_files)} "
+            f"file(s) from a previous run.\n"
+            f"Continuing will overwrite matching files; stale files (not "
+            f"produced by this run) will be left in place with a warning.\n"
+            f"Pass --force to delete stale files instead.\n"
+            f"Press Y to continue or any other key to abort.",
+            flush=True,
+        )
+        if not _confirm():
+            print("Aborted.", file=sys.stderr)
             return 1
-        if not args.force:
-            print(
-                f"WARNING: {output_dir}/ already contains {len(existing_files)} "
-                f"file(s) from a previous run.\n"
-                f"Continuing will overwrite matching files and remove stale ones.\n"
-                f"Press Y to continue or any other key to abort.",
-                flush=True,
-            )
-            if not _confirm():
-                print("Aborted.", file=sys.stderr)
-                return 1
 
     if not (args.yes or existing_files):
         print(
-            f"Will generate {n_files} mock CSV files{sample_label} "
+            f"Will generate {n_sources} mock CSV files{sample_label} "
             f"from {stats_path} into {output_dir}/\n"
             f"This may take a while. Press Y to continue or any other key to abort.",
             flush=True,
@@ -396,6 +401,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             sample_pct=args.sample_pct,
             output_dir=output_dir,
             verbose=args.verbose,
+            force=args.force,
         )
     except KeyboardInterrupt:
         print("\nAborted.", file=sys.stderr)
@@ -403,7 +409,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
     print(f"Generated {len(manifest.files)} file(s) in {manifest.output_dir}")
     for f in manifest.files:
-        print(f"  {f.file_name}: {f.row_count} rows (sha256: {f.sha256[:12]}...)")
+        print(f"  {f.source_name}: {f.row_count} rows (sha256: {f.sha256[:12]}...)")
     return 0
 
 
@@ -470,6 +476,17 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         "-o",
         help="Output path for the R script (default: extract_stats_P<num>.R)",
+    )
+    gs.add_argument(
+        "--sql-dsn",
+        help="ODBC DSN for a sql_source() skeleton in SOURCES. Defaults to P<num> "
+        "when --project is given (MONA convention). Discovery gracefully skips it "
+        "if the project has no SQL.",
+    )
+    gs.add_argument(
+        "--no-sql",
+        action="store_true",
+        help="Do not emit a sql_source() skeleton, even when --project implies a DSN.",
     )
 
     # compare
@@ -559,12 +576,13 @@ def build_parser() -> argparse.ArgumentParser:
         "-y",
         "--yes",
         action="store_true",
-        help="Skip confirmation prompt (does NOT override --force for existing output)",
+        help="Skip confirmation prompts. Stale files are still kept-and-warned unless --force.",
     )
     gen.add_argument(
         "--force",
         action="store_true",
-        help="Overwrite existing output directory (stale files are removed)",
+        help="Delete stale files (those in the output directory that aren't produced by this run). "
+        "Default is warn-and-keep: safer when SOURCES shrinks between runs.",
     )
     gen.add_argument(
         "-v",
