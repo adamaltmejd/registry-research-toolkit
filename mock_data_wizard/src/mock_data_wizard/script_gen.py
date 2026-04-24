@@ -14,7 +14,7 @@ def _strip_template_indent(template: str, indent: int = 4) -> str:
     textwrap.dedent can't be used here: some of our template lines are R
     string literals that embed `\\n` escapes. Python sees those embedded
     newlines as real line breaks, and the continuation "lines" inside the
-    R literal have 0 or 2 leading spaces — which breaks dedent's common-
+    R literal have 0 or 2 leading spaces -- which breaks dedent's common-
     prefix algorithm. We just strip the template's own left margin from
     lines that have it, and leave others (R-literal continuations) alone.
     """
@@ -25,13 +25,13 @@ def _strip_template_indent(template: str, indent: int = 4) -> str:
     )
 
 
-# ── Name-based column classification ──────────────────────────────────────
+# -- Name-based column classification --------------------------------------
 #
 # Columns are classified by matching their name against known SCB patterns.
 # These run before any data-driven heuristics. First match wins.
 #
 # Patterns are case-insensitive R regexes matched with grepl().
-# Each CategoricalPattern has a max_distinct cap — if the column has more
+# Each CategoricalPattern has a max_distinct cap -- if the column has more
 # distinct values than the cap, the match is ignored (likely a false positive).
 
 
@@ -68,7 +68,7 @@ CATEGORICAL_PATTERNS: list[CategoricalPattern] = [
     CategoricalPattern("medb(orgarskap)?", max_distinct=300),  # citizenship ~230
 ]
 
-# ── Data-driven classification thresholds ─────────────────────────────────
+# -- Data-driven classification thresholds ---------------------------------
 #
 # Applied when no name pattern matches. A column is categorical if
 # n_distinct <= min(FREQ_CAP, n_rows * FREQ_RATIO). Otherwise numeric
@@ -76,12 +76,12 @@ CATEGORICAL_PATTERNS: list[CategoricalPattern] = [
 
 FREQ_CAP = 50  # absolute max distinct values to still count as categorical
 FREQ_RATIO = 0.01  # relative max (fraction of n_rows)
-NUMERIC_ID_RATIO = 0.95  # numeric ID if n_distinct > ratio × n_rows ...
+NUMERIC_ID_RATIO = 0.95  # numeric ID if n_distinct > ratio * n_rows ...
 NUMERIC_ID_MIN = 100  # ... and n_distinct > this minimum
-STRING_ID_RATIO = 0.5  # string ID if n_distinct > ratio × n_rows ...
+STRING_ID_RATIO = 0.5  # string ID if n_distinct > ratio * n_rows ...
 STRING_ID_MIN = 100  # ... and n_distinct > this minimum
 
-# ── Disclosure control ────────────────────────────────────────────────────
+# -- Disclosure control ----------------------------------------------------
 #
 # Applied when summarizing columns to prevent leaking individual-level data.
 # Categorical: values with count < SUPPRESS_K are merged into "_other".
@@ -89,15 +89,15 @@ STRING_ID_MIN = 100  # ... and n_distinct > this minimum
 # by uniform noise in [-NOISE_PCT, +NOISE_PCT] relative to the true value.
 
 SUPPRESS_K = 5  # k-anonymity threshold for categorical frequency tables
-NOISE_PCT = 0.005  # ±0.5% relative noise on numeric aggregates
+NOISE_PCT = 0.005  # +/-0.5% relative noise on numeric aggregates
 
 # Minimum plausible population size before we flag a source as potentially
-# re-identifiable even after k-anonymity. 20×SUPPRESS_K is a rule-of-thumb —
+# re-identifiable even after k-anonymity. 20*SUPPRESS_K is a rule-of-thumb --
 # below that, even suppressed aggregates may correspond to identifiable
 # individuals, especially when the user has narrowed sources with a filter.
 SMALL_POP_MULT = 20
 
-# ── Date detection ────────────────────────────────────────────────────────
+# -- Date detection --------------------------------------------------------
 #
 # A string column is classified as date if >CLASSIFY_THRESHOLD of a 200-row
 # sample parses successfully. When summarizing, >SUMMARIZE_THRESHOLD must
@@ -107,12 +107,12 @@ DATE_FORMATS = ["%Y-%m-%d", "%Y/%m/%d", "%d/%m/%Y", "%d-%m-%Y", "%Y%m%d"]
 DATE_CLASSIFY_THRESHOLD = 0.8
 DATE_SUMMARIZE_THRESHOLD = 0.5
 
-# ── File scanning ─────────────────────────────────────────────────────────
+# -- File scanning ---------------------------------------------------------
 
 FILE_PATTERN = "\\\\.(csv|CSV|txt|TXT)$"
 
 
-# ── R code generation helpers ─────────────────────────────────────────────
+# -- R code generation helpers ---------------------------------------------
 
 
 def _build_r_id_check() -> str:
@@ -157,8 +157,8 @@ def _build_sources_block(
 ) -> str:
     """Render the SOURCES <- list(...) block.
 
-    Emits one `file_source(path=...)` per given path, and — when `sql_dsn`
-    is supplied — a `sql_source(dsn=...)` as well. Both sources start in
+    Emits one `file_source(path=...)` per given path, and -- when `sql_dsn`
+    is supplied -- a `sql_source(dsn=...)` as well. Both sources start in
     discovery mode; the user re-runs the script once it's edited down to
     what they actually want. If one source has nothing to offer (e.g. the
     project has no SQL), its discovery step fails gracefully and the
@@ -171,14 +171,14 @@ def _build_sources_block(
 
 
 R_TEMPLATE = _strip_template_indent("""\
-    # ── mock-data-wizard stats extractor ──────────────────────────────
+    # -- mock-data-wizard stats extractor ------------------------------
     # Generated by mock-data-wizard. Run this script on MONA to produce
     # aggregate statistics. NO individual-level data is exported.
     #
     # Output: see OUTPUT_PATH below
-    # ──────────────────────────────────────────────────────────────────
+    # ------------------------------------------------------------------
 
-    # Prevent .RData save on exit — only delete if we created it
+    # Prevent .RData save on exit -- only delete if we created it
     .had_rdata <- file.exists(".RData")
     .Last <- function() {{
       if (!.had_rdata && file.exists(".RData")) file.remove(".RData")
@@ -199,7 +199,7 @@ R_TEMPLATE = _strip_template_indent("""\
           pkg, pkg
         ))
       }}
-      message(sprintf("Package '%s' not installed — attempting install.packages('%s')...", pkg, pkg))
+      message(sprintf("Package '%s' not installed -- attempting install.packages('%s')...", pkg, pkg))
       install_ok <- tryCatch({{
         install.packages(pkg, repos = repos, quiet = TRUE)
         TRUE
@@ -222,8 +222,19 @@ R_TEMPLATE = _strip_template_indent("""\
     library(data.table)
     library(jsonlite)
 
-    # ── Source constructors (defined before SOURCES so the block below
-    # can call them) ──────────────────────────────────────────────────
+    # Timestamped progress log. Uses message() (stderr) so the .Rout file
+    # on batch clients shows lines as they happen rather than waiting on
+    # stdout buffering.
+    .mdw_log <- function(fmt, ...) {{
+      message(sprintf("[%s] %s", format(Sys.time(), "%H:%M:%S"), sprintf(fmt, ...)))
+    }}
+    # Rows/cols readable in progress lines: 125430 -> "125,430".
+    .mdw_num <- function(n) formatC(n, big.mark = ",", format = "d")
+    # Seconds elapsed between two Sys.time() values.
+    .mdw_secs <- function(t0, t1 = Sys.time()) as.numeric(difftime(t1, t0, units = "secs"))
+
+    # -- Source constructors (defined before SOURCES so the block below
+    # can call them) --------------------------------------------------
 
     file_source <- function(path, include = NULL, exclude = NULL, pattern = NULL,
                             all = FALSE) {{
@@ -239,9 +250,9 @@ R_TEMPLATE = _strip_template_indent("""\
       )
     }}
 
-    # sql_source() — read from a DBI-compatible database (MONA: MS SQL
+    # sql_source() -- read from a DBI-compatible database (MONA: MS SQL
     # Server via ODBC). Requires DBI and odbc R packages. Credentials are
-    # taken from a Windows system DSN — no raw passwords in this script.
+    # taken from a Windows system DSN -- no raw passwords in this script.
     #
     # If `tables`, `pattern`, and `queries` are all NULL, the script runs
     # in discovery mode and prints suggested tables for you to paste back.
@@ -286,9 +297,9 @@ R_TEMPLATE = _strip_template_indent("""\
       )
     }}
 
-    # ══════════════════════════════════════════════════════════════════
-    # ── USER CONFIGURATION ────────────────────────────────────────────
-    # ══════════════════════════════════════════════════════════════════
+    # ==================================================================
+    # -- USER CONFIGURATION --------------------------------------------
+    # ==================================================================
     #
     # Declare your data sources below. Each source is a call to one of
     # the constructors defined just above.
@@ -327,11 +338,11 @@ R_TEMPLATE = _strip_template_indent("""\
     # PII REMINDER: narrowing data with include/exclude/where may reduce
     # the effective population. Combined with small cells, this can
     # weaken k-anonymity. The script warns if any source has fewer than
-    # {small_pop_mult} × SUPPRESS_K rows.
+    # {small_pop_mult} * SUPPRESS_K rows.
 
     {sources_block}
 
-    # Output path for stats.json — defaults to current working directory.
+    # Output path for stats.json -- defaults to current working directory.
     OUTPUT_PATH <- file.path(getwd(), "stats.json")
 
     # If a previously-written mdw_sources_<timestamp>.R file exists in the
@@ -356,9 +367,9 @@ R_TEMPLATE = _strip_template_indent("""\
       source(.mdw_loaded_sources_file, local = FALSE)
     }}
 
-    # ══════════════════════════════════════════════════════════════════
-    # ── LIBRARY CODE — do not edit below this line ────────────────────
-    # ══════════════════════════════════════════════════════════════════
+    # ==================================================================
+    # -- LIBRARY CODE -- do not edit below this line --------------------
+    # ==================================================================
 
     # Column classification thresholds
     FREQ_CAP       <- {freq_cap}L        # max distinct values to classify as categorical
@@ -368,7 +379,7 @@ R_TEMPLATE = _strip_template_indent("""\
     STRING_ID_RATIO <- {string_id_ratio}    # string col is ID if n_distinct > ratio * n_rows
     STRING_ID_MIN  <- {string_id_min}L      # ... and n_distinct exceeds this minimum
 
-    # Disclosure control — prevents leaking individual-level data
+    # Disclosure control -- prevents leaking individual-level data
     SUPPRESS_K     <- {suppress_k}L      # merge categorical values with count < k into "_other"
     NOISE_PCT      <- {noise_pct}        # perturb numeric stats by +/- this fraction
     SMALL_POP_MULT <- {small_pop_mult}L  # warn when a source has fewer than SMALL_POP_MULT * SUPPRESS_K rows
@@ -381,14 +392,14 @@ R_TEMPLATE = _strip_template_indent("""\
     # Default file scan pattern (used by file_source when pattern is NULL)
     DEFAULT_FILE_PATTERN <- "{file_pattern}"
 
-    # ── Discovery mode ────────────────────────────────────────────────
+    # -- Discovery mode ------------------------------------------------
     # A source enters discovery mode when it has no filtering info at all.
     # file_source: no include, no exclude, no pattern.
     # sql_source:  no tables, no pattern, no queries.
-    # `all = TRUE` on either constructor opts OUT of discovery — the user
+    # `all = TRUE` on either constructor opts OUT of discovery -- the user
     # is explicitly saying "give me everything in this source."
     # If any source needs discovery, we run discovery for ALL sources,
-    # print a suggested SOURCES block, and exit — no stats.json is written.
+    # print a suggested SOURCES block, and exit -- no stats.json is written.
 
     needs_discovery <- function(src) {{
       if (isTRUE(src$all)) return(FALSE)
@@ -401,9 +412,9 @@ R_TEMPLATE = _strip_template_indent("""\
       FALSE
     }}
 
-    # ── Source dispatch ────────────────────────────────────────────────
+    # -- Source dispatch ------------------------------------------------
     # source_fetch(src) returns list of list(source_name, source_type,
-    # source_detail, dt) — one per physical table/file the source produced.
+    # source_detail, dt) -- one per physical table/file the source produced.
 
     source_fetch <- function(src) {{
       type <- src$type
@@ -435,7 +446,7 @@ R_TEMPLATE = _strip_template_indent("""\
         found <- found[!(basename(found) %in% src$exclude)]
       }}
       # Basenames become source_name, which must be unique. Two files with
-      # the same basename in different subdirectories collide — the user
+      # the same basename in different subdirectories collide -- the user
       # must narrow `path =` to reach the specific file they want.
       names_vec <- basename(found)
       dupes <- unique(names_vec[duplicated(names_vec)])
@@ -445,12 +456,20 @@ R_TEMPLATE = _strip_template_indent("""\
           src$path, paste(dupes, collapse = ", ")
         ))
       }}
-      lapply(found, function(fp) {{
+      n_found <- length(found)
+      lapply(seq_along(found), function(i) {{
+        fp <- found[[i]]
+        t0 <- Sys.time()
         dt <- tryCatch(
           data.table::fread(fp, nThread = 1L),
           error = function(e) stop(sprintf("Failed to read %s: %s", fp, conditionMessage(e)))
         )
-        if (is.null(dt) || nrow(dt) == 0L) return(NULL)
+        if (is.null(dt) || nrow(dt) == 0L) {{
+          .mdw_log("  read  %d/%d %s: empty, skipped", i, n_found, basename(fp))
+          return(NULL)
+        }}
+        .mdw_log("  read  %d/%d %s: %s rows x %d cols (%.1fs)",
+                 i, n_found, basename(fp), .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
         list(
           source_name   = basename(fp),
           source_type   = "file",
@@ -460,9 +479,9 @@ R_TEMPLATE = _strip_template_indent("""\
       }})
     }}
 
-    # ── SQL dispatch ───────────────────────────────────────────────────
+    # -- SQL dispatch ---------------------------------------------------
 
-    # Test hook — tests may override the connection constructor via
+    # Test hook -- tests may override the connection constructor via
     # options(mdw.sql_connect = function(src) DBI::dbConnect(...)).
     # Production path: DBI::dbConnect(odbc::odbc(), ...) using src fields.
     sql_connect <- function(src) {{
@@ -482,7 +501,7 @@ R_TEMPLATE = _strip_template_indent("""\
       do.call(DBI::dbConnect, args)
     }}
 
-    # Fully-qualified table list — schemas + names in "schema.table" form
+    # Fully-qualified table list -- schemas + names in "schema.table" form
     # if the dialect supports schemas (MS SQL), else bare names (SQLite).
     sql_list_tables <- function(conn, src) {{
       override <- getOption("mdw.sql_list_tables")
@@ -496,7 +515,7 @@ R_TEMPLATE = _strip_template_indent("""\
         if (!is.null(src$schema)) rows <- rows[rows$TABLE_SCHEMA %in% src$schema, , drop = FALSE]
         sort(unique(paste(rows$TABLE_SCHEMA, rows$TABLE_NAME, sep = ".")))
       }}, error = function(e) {{
-        # Dialects without information_schema (SQLite, etc.) — fall back.
+        # Dialects without information_schema (SQLite, etc.) -- fall back.
         sort(unique(DBI::dbListTables(conn)))
       }})
     }}
@@ -508,7 +527,7 @@ R_TEMPLATE = _strip_template_indent("""\
     }}
 
     # Resolve tables to named list(alias = qualified_name). Enforces unique
-    # aliases — if two schemas share a table name, the user must supply an
+    # aliases -- if two schemas share a table name, the user must supply an
     # explicit alias via named vector.
     resolve_table_aliases <- function(tables) {{
       if (is.null(tables) || length(tables) == 0L) return(list())
@@ -575,14 +594,21 @@ R_TEMPLATE = _strip_template_indent("""\
 
       # Resolve the table list (either explicit, pattern-matched, or via raw queries).
       if (!is.null(src$queries)) {{
-        # Custom queries mode — each named entry becomes one source.
+        # Custom queries mode -- each named entry becomes one source.
         qnames <- names(src$queries)
         if (is.null(qnames) || any(!nzchar(qnames)))
           stop("sql_source(): when using `queries`, supply a NAMED character vector")
+        n_q <- length(src$queries)
         items <- lapply(seq_along(src$queries), function(i) {{
+          t0 <- Sys.time()
           dt <- sql_run_query(conn, src$queries[[i]], src$encoding)
           if (src$normalize_names) dt <- normalize_column_names(dt)
-          if (nrow(dt) == 0L) return(NULL)
+          if (nrow(dt) == 0L) {{
+            .mdw_log("  fetch %d/%d %s: empty, skipped", i, n_q, qnames[i])
+            return(NULL)
+          }}
+          .mdw_log("  fetch %d/%d %s: %s rows x %d cols (%.1fs)",
+                   i, n_q, qnames[i], .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
           list(
             source_name   = qnames[i],
             source_type   = "sql",
@@ -628,12 +654,21 @@ R_TEMPLATE = _strip_template_indent("""\
         stop(sprintf("sql_source(dsn='%s'): no tables selected after filters.", src$dsn))
       }}
 
-      lapply(names(resolved), function(alias) {{
+      aliases <- names(resolved)
+      n_tbl <- length(aliases)
+      lapply(seq_along(aliases), function(i) {{
+        alias <- aliases[[i]]
         qualified_table <- resolved[[alias]]
         q <- sql_build_query(qualified_table, src)
+        t0 <- Sys.time()
         dt <- sql_run_query(conn, q, src$encoding)
         if (src$normalize_names) dt <- normalize_column_names(dt)
-        if (nrow(dt) == 0L) return(NULL)
+        if (nrow(dt) == 0L) {{
+          .mdw_log("  fetch %d/%d %s: empty, skipped", i, n_tbl, alias)
+          return(NULL)
+        }}
+        .mdw_log("  fetch %d/%d %s: %s rows x %d cols (%.1fs)",
+                 i, n_tbl, alias, .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
         list(
           source_name   = alias,
           source_type   = "sql",
@@ -648,7 +683,7 @@ R_TEMPLATE = _strip_template_indent("""\
       }})
     }}
 
-    # ── Discovery: list available items per source without fetching data.
+    # -- Discovery: list available items per source without fetching data.
     # For files we return basenames; when two basenames collide (same file
     # name in different subdirectories), we warn and keep only one entry
     # since `include = c(name)` cannot disambiguate between them. The user
@@ -696,7 +731,7 @@ R_TEMPLATE = _strip_template_indent("""\
       }}
     }}
 
-    # ── Column classification / summarization ─────────────────────────
+    # -- Column classification / summarization -------------------------
 
     # Name-based ID detection
     is_known_id <- function(col_name) {{
@@ -786,7 +821,7 @@ R_TEMPLATE = _strip_template_indent("""\
         }}
       }} else if (col_type == "categorical") {{
         tbl <- sort(table(as.character(x[!is.na(x)])), decreasing = TRUE)
-        # Suppress rare values (k-anonymity) — merge into _other
+        # Suppress rare values (k-anonymity) -- merge into _other
         counts   <- as.integer(tbl)
         labels   <- names(tbl)
         keep     <- counts >= SUPPRESS_K
@@ -845,9 +880,9 @@ R_TEMPLATE = _strip_template_indent("""\
       columns
     }}
 
-    # ══════════════════════════════════════════════════════════════════
-    # ── Main ──────────────────────────────────────────────────────────
-    # ══════════════════════════════════════════════════════════════════
+    # ==================================================================
+    # -- Main ----------------------------------------------------------
+    # ==================================================================
 
     if (!is.list(SOURCES) || length(SOURCES) == 0L) {{
       stop("SOURCES is empty. Add at least one file_source(...) or sql_source(...) call in the USER CONFIGURATION block.")
@@ -856,14 +891,14 @@ R_TEMPLATE = _strip_template_indent("""\
     # Discovery mode: if any source has no filters, run discovery for ALL
     # sources, write a ready-to-edit SOURCES block to a timestamped file
     # (mdw_sources_<ts>.R), and exit. The next run finds that file,
-    # sources it, and processes — no copy-paste into this script.
+    # sources it, and processes -- no copy-paste into this script.
     #
     # Writing to a file (rather than cat-ing to stdout) also dodges
     # Windows CP1252 console mangling of UTF-8 filenames and saves the
     # user from scrolling through hundreds of tables in the .Rout output.
     if (any(vapply(SOURCES, needs_discovery, logical(1)))) {{
       # If the user already has a mdw_sources file loaded, it's still in
-      # discovery state — which means they edited the file but didn't
+      # discovery state -- which means they edited the file but didn't
       # narrow it (or the default still has discovery-triggering sources).
       # Don't silently write a new file over their work. Tell them what
       # to fix.
@@ -878,7 +913,7 @@ R_TEMPLATE = _strip_template_indent("""\
       lines <- character(0)
       lines <- c(lines, "# Discovered SOURCES from mock-data-wizard.")
       lines <- c(lines, "# Edit this file to narrow each source to the items you want,")
-      lines <- c(lines, "# then re-run the extract script — it will load this file")
+      lines <- c(lines, "# then re-run the extract script -- it will load this file")
       lines <- c(lines, "# automatically. Delete this file to re-discover.")
       lines <- c(lines, "")
       lines <- c(lines, "SOURCES <- list(")
@@ -908,30 +943,50 @@ R_TEMPLATE = _strip_template_indent("""\
       writeLines(enc2utf8(lines), con = suggestion_path, useBytes = TRUE)
 
       cat("\n")
-      cat("════════════════════════════════════════════════════════════════\n")
-      cat("  DISCOVERY MODE — no data was processed, no stats.json written.\n")
-      cat("════════════════════════════════════════════════════════════════\n")
+      cat("================================================================\n")
+      cat("  DISCOVERY MODE -- no data was processed, no stats.json written.\n")
+      cat("================================================================\n")
       cat(sprintf("  Found: %d file(s), %d SQL table(s)\n", total_files, total_tables))
       cat(sprintf("  Written to: %s\n", suggestion_path))
       cat("\n")
       cat("  Next step: open that file, edit the SOURCES list down to only\n")
       cat("  the files/tables you actually want, save, and re-run this\n")
-      cat("  extract script — it will load the file automatically.\n")
+      cat("  extract script -- it will load the file automatically.\n")
       cat("  (Delete the file to re-discover.)\n")
-      cat("════════════════════════════════════════════════════════════════\n")
+      cat("================================================================\n")
       # Clean up and exit without writing stats.json
       .cleanup_rdata <- !.had_rdata && file.exists(".RData")
       if (.cleanup_rdata) file.remove(".RData")
       quit(save = "no", status = 0L)
     }}
 
+    # Extraction start banner -- first cat() after the batch-mode code
+    # echo. Everything before this point was function/config setup only.
+    .mdw_t0 <- Sys.time()
+    cat("\n")
+    cat("================================================================\n")
+    cat(sprintf("  mock-data-wizard extraction -- started %s\n",
+                format(.mdw_t0, "%Y-%m-%d %H:%M:%S")))
+    cat(sprintf("  %d source(s) configured\n", length(SOURCES)))
+    cat("================================================================\n\n")
+    flush.console()
+
     source_results <- list()
     all_columns    <- list()  # column_name -> list(source_names = chr, max_nd = int)
 
-    for (src in SOURCES) {{
+    for (src_idx in seq_along(SOURCES)) {{
+      src <- SOURCES[[src_idx]]
+      src_desc <- if (src$type == "file") sprintf("file path='%s'", src$path)
+                  else                    sprintf("sql dsn='%s'", src$dsn)
+      .mdw_log("source %d/%d: %s", src_idx, length(SOURCES), src_desc)
+      t_src <- Sys.time()
       items <- source_fetch(src)
-      for (item in items) {{
-        if (is.null(item)) next
+      items <- Filter(Negate(is.null), items)
+      .mdw_log("  fetched %d non-empty item(s) in %.1fs",
+               length(items), .mdw_secs(t_src))
+
+      for (item_idx in seq_along(items)) {{
+        item <- items[[item_idx]]
         n_rows <- nrow(item$dt)
 
         if (n_rows < SMALL_POP_MULT * SUPPRESS_K) {{
@@ -941,7 +996,11 @@ R_TEMPLATE = _strip_template_indent("""\
           ))
         }}
 
+        t_proc <- Sys.time()
         columns <- process_table(item$dt)
+        .mdw_log("  stats %d/%d %s: %s rows, %d cols (%.1fs)",
+                 item_idx, length(items), item$source_name,
+                 .mdw_num(n_rows), length(columns), .mdw_secs(t_proc))
 
         for (col_summary in columns) {{
           cname <- col_summary$column_name
@@ -957,7 +1016,6 @@ R_TEMPLATE = _strip_template_indent("""\
           row_count     = n_rows,
           columns       = columns
         )
-        message(sprintf("Processed: [%s] %s (%d rows)", item$source_type, item$source_name, n_rows))
       }}
     }}
 
@@ -986,7 +1044,16 @@ R_TEMPLATE = _strip_template_indent("""\
     )
 
     jsonlite::write_json(result, OUTPUT_PATH, auto_unbox = TRUE, pretty = TRUE, na = "null")
-    message(sprintf("Stats written to: %s", OUTPUT_PATH))
+    .mdw_log("stats.json written: %s", OUTPUT_PATH)
+
+    cat("\n")
+    cat("================================================================\n")
+    cat(sprintf("  mock-data-wizard extraction -- done in %.1fs\n",
+                .mdw_secs(.mdw_t0)))
+    cat(sprintf("  %d source(s), %d table(s), %d shared column(s)\n",
+                length(SOURCES), length(source_results), length(shared)))
+    cat("================================================================\n")
+    flush.console()
 
     # Clean up workspace so R has nothing to save
     .cleanup_rdata <- !.had_rdata && file.exists(".RData")
