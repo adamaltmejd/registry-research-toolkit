@@ -27,7 +27,9 @@ Thumbs.db
 
 # Project
 .tmp/
-SCB-data/
+
+# Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed)
+regmeta/input_data/
 
 # mock-data-wizard generated output
 mock_data/

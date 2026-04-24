@@ -15,7 +15,7 @@ Alternatively, build from raw SCB CSV exports (requires access to
 mikrometadata.scb.se):
 
 ```bash
-regmeta maintain build-db --csv-dir path/to/SCB-data/
+regmeta maintain build-db --csv-dir regmeta/input_data/SCB/
 ```
 
 ## Quick start

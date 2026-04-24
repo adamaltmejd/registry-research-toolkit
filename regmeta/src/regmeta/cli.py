@@ -695,7 +695,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "replaces the database entirely (not incremental). Most users\n"
             "should use `maintain update` instead.\n\n"
             "Examples:\n"
-            "  regmeta maintain build-db --csv-dir /path/to/SCB-data/"
+            "  regmeta maintain build-db --csv-dir regmeta/input_data/SCB/"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -2426,7 +2426,7 @@ maintain build-db — Build database from raw CSVs
 ─────────────────────────────────────────────────
 
   "Build the database from SCB CSV exports"
-    regmeta maintain build-db --csv-dir /path/to/SCB-data/
+    regmeta maintain build-db --csv-dir regmeta/input_data/SCB/
 
   Most users should use `maintain update` to download a pre-built
   database instead.
