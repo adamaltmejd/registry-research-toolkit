@@ -703,6 +703,24 @@ def _build_parser() -> argparse.ArgumentParser:
         "--csv-dir", required=True, help="Directory containing SCB CSV exports."
     )
 
+    parse_sos_p = maintain_sub.add_parser(
+        "parse-sos",
+        help="Parse Socialstyrelsen metadata Excel deliveries (maintainer-only).",
+        description=(
+            "Parse one Socialstyrelsen register .xlsx (or a directory of them)\n"
+            "into structured JSON. Useful for inspecting upstream deliveries\n"
+            "before build-db. Does not modify the database.\n\n"
+            "Examples:\n"
+            "  regmeta maintain parse-sos input_data/Socialstyrelsen/\n"
+            "  regmeta maintain parse-sos input_data/Socialstyrelsen/PAR.xlsx"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parse_sos_p.add_argument(
+        "path",
+        help="Path to an .xlsx file or a directory containing them.",
+    )
+
     build_docs_p = maintain_sub.add_parser(
         "build-docs",
         help="Rebuild the doc DB from markdown files (maintainer-only).",
@@ -887,6 +905,65 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         args_payload={"tag": args.tag, "force": args.force},
         db_info=None,
         data=result,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    import dataclasses
+    from datetime import date
+
+    from .sources.sos import SosParseError, parse_directory, parse_register_file
+
+    start = time.perf_counter()
+    path = Path(args.path).expanduser().resolve()
+
+    try:
+        if path.is_dir():
+            results = parse_directory(path)
+        elif path.is_file():
+            results = [parse_register_file(path)]
+        else:
+            raise RegmetaError(
+                exit_code=EXIT_NOT_FOUND,
+                code="path_not_found",
+                error_class="input",
+                message=f"{path} is neither a file nor a directory",
+                remediation="Pass a .xlsx file or a directory containing them.",
+            )
+    except SosParseError as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="sos_parse_error",
+            error_class="input",
+            message=str(exc),
+            remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
+        ) from exc
+
+    def _encode(obj: Any) -> Any:
+        if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
+            return dataclasses.asdict(obj)
+        if isinstance(obj, Path):
+            return str(obj)
+        if isinstance(obj, date):
+            return obj.isoformat()
+        raise TypeError(f"cannot serialise {type(obj).__name__}")
+
+    data = {
+        "registers": [
+            json.loads(
+                json.dumps(dataclasses.asdict(r), default=_encode, ensure_ascii=False)
+            )
+            for r in results
+        ],
+        "register_count": len(results),
+    }
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain parse-sos",
+        args_payload={"path": str(path)},
+        db_info=None,
+        data=data,
         duration_ms=duration_ms,
     ), 0
 
@@ -1907,6 +1984,12 @@ def _write_payload(
         _write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
     elif key == ("maintain", "build-docs"):
         _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
+    elif key == ("maintain", "parse-sos"):
+        count = data.get("register_count", 0)
+        _write_to(
+            f"Parsed {count} register(s). Use --format json for full detail.\n",
+            output_path,
+        )
     else:
         _write_json(payload, output_path)
 
@@ -1993,6 +2076,7 @@ COMMAND_DISPATCH = {
     ("get", "availability"): _cmd_get_availability,
     ("resolve", None): _cmd_resolve,
     ("maintain", "build-docs"): _cmd_maintain_build_docs,
+    ("maintain", "parse-sos"): _cmd_maintain_parse_sos,
     ("docs", "search"): _cmd_doc_search,
     ("docs", "get"): _cmd_doc_get,
     ("docs", "list"): _cmd_doc_list,
@@ -2076,6 +2160,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     (
         "maintain build-docs [--docs-dir DIR]",
         "Rebuild the doc DB from markdown (maintainer-only).",
+    ),
+    (
+        "maintain parse-sos PATH",
+        "Parse Socialstyrelsen metadata Excel files; emit JSON (maintainer-only).",
     ),
 ]
 
@@ -2431,6 +2519,13 @@ maintain build-db — Build database from raw CSVs
   Most users should use `maintain update` to download a pre-built
   database instead.
 """,
+    ("maintain", "parse-sos"): """\
+maintain parse-sos — Parse Socialstyrelsen metadata Excel files (maintainer-only)
+
+Examples:
+    regmeta maintain parse-sos regmeta/input_data/Socialstyrelsen/
+    regmeta maintain parse-sos path/to/PAR.xlsx --format json
+""",
     ("maintain", "build-docs"): """\
 maintain build-docs — Rebuild documentation index
 ──────────────────────────────────────────────────
@@ -2487,6 +2582,7 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("maintain", "info"),
     ("maintain", "build-db"),
     ("maintain", "build-docs"),
+    ("maintain", "parse-sos"),
 ]
 
 

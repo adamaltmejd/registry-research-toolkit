@@ -26,6 +26,30 @@ All metadata lives in a single SQLite file (~1.6 GB). Chosen because:
 The database is read-only from the perspective of query commands.
 `maintain build-db` replaces it entirely (not incremental).
 
+## Data providers
+
+regmeta is provider-agnostic at the query layer: one metadata DB, one
+docs DB, one CLI. Users searching or resolving variables shouldn't need
+to know which agency published a given register.
+
+Provider-specific logic lives under `regmeta/src/regmeta/sources/`:
+
+- `sources/sos.py` — parses Socialstyrelsen register metadata Excel
+  deliveries (`.xlsx` per register). Returns `SosRegister` dataclasses.
+  Isolated here so the quirks of that format (sheet-name variance,
+  "metadatat"-typo section headings, phantom row counts, non-standard
+  kodlistor) don't leak into schema or query code.
+- SCB CSV import currently lives in `db.py::build_db`. Moving it under
+  `sources/scb.py` with the same intermediate-representation pattern is
+  tracked as a follow-up — non-blocking for additional providers.
+
+The build-db step consumes each provider's parser and maps into the
+unified schema. Providers share `register`, `variable`, `value_code`,
+etc.; provider-specific fields live on optional columns or in
+enrichment tables when they have no shared analogue. Adding a new
+provider means writing a parser in `sources/` and a mapping step in
+`build-db`; no query-layer or CLI changes should be needed.
+
 ## CSV import and encoding
 
 SCB exports are pipe-delimited, cp1252 encoded. Several bytes in the
