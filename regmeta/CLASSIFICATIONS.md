@@ -267,28 +267,43 @@ disambiguates: `variable_instance.vardemangdsversion` is year-stamped
 (`LKF 1990-01-01/...`), so a per-year split is purely seed-side — no
 schema change, no FK rework. **Decision: yearly split**.
 
-`scripts/extract_lkf.py` drafts the canonical CSVs from SCB's per-year
-publications. Status:
+`scripts/extract_lkf.py` drafts the canonical CSVs from SCB's publications.
+Status (53 years, ~31k codes):
 
-- **2016–2026**: SCB publishes `lkf{year}.xls`/`.xlsx`. Script auto-downloads,
-  handles the three different layouts SCB has used (2018–19 / 2021–22 /
-  2023+), and writes `lkf{year}.csv` with 1500–1700 codes each (län +
-  kommun + församling). 2020 was published as `lkf2020_justerad-1.xls`
-  (corrected edition); the script knows the override.
-- **2015 and earlier**: PDF only. The 2015 PDF is downloadable via
-  `--download-pdfs`; pre-2015 isn't at SCB's standard URL pattern (would
-  need REGINA, paper archives, or hand-build).
+- **1974–2015** (kommun + derived län): from `knkodnyckel.xls`, SCB's
+  kommun-history file with 12 period-snapshots. Script derives 2-digit
+  län codes as kommun prefixes and labels them via a year-aware map
+  (handles the 1997 Skåne/Dalarna and 1998 Västra Götaland reforms).
+  Församlings (6-digit) are NOT in this file — pre-2016 parishes remain
+  a gap. 17 km/län codes per period × ~291 kommun = ~310 codes/year.
+- **2016–2026** (full LKF — län + kommun + församling): per-year
+  `lkf{year}.xls`/`.xlsx`. Script handles the three different layouts
+  SCB has used (2018–19 / 2021–22 / 2023+) and the non-standard
+  filenames for 2020 (`_justerad`) and 2026 (date-stamped subdir).
+  ~1500–1700 codes/year.
+- **Pre-1974**: not at SCB's modern downloads. REGINA covers 1952+ but
+  isn't a downloadable file.
+- **2015 parishes**: PDF only (`lkf2015.pdf`). Download via
+  `--download-pdfs`, OCR separately if needed.
 
 Run when ready:
 
 ```bash
-# Generate canonical CSVs for 2016–2026:
+# Generate canonical CSVs for 1974–2026:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
     --out regmeta/input_data/classifications/
+
+# Restrict to specific years:
+uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
+    --years 1990 2000 2010 --out /tmp/sample/
 
 # Also download PDFs (2015–2021) for OCR / cross-checking:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
     --download-pdfs
+
+# Print starter classifications.toml entries:
+uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
+    --emit-toml > /tmp/lkf_seed.toml
 ```
 
 Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the

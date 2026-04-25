@@ -13,23 +13,26 @@ kommun, and the 6-digit församling — all of which appear together in
 register data. The output is one canonical CSV per year, ready to wire
 into ``classifications.toml`` as ``valid_codes_file = "lkf{YEAR}.csv"``.
 
-Status of SCB downloads (as of probing in 2026-04):
+Coverage (as of probing in 2026-04):
 
-    1980–2014  no XLS/XLSX found at SCB's standard URL — likely paper/archived
-    2015       PDF only (lkf2015.pdf), needs OCR pipeline
-    2016–2019  XLS + PDF
-    2020       XLS + PDF (filenames suffixed _justerad / _justerad-1)
-    2021       XLS + PDF
-    2022–2025  XLS only
-    2026       XLSX (in date-stamped subpath /2025-06-19/lkf2026.xlsx)
+    1974–2015  knkodnyckel.xls — kommun (4-digit) + derived län (2-digit).
+               Parishes (6-digit) are not in this file; they remain a gap.
+               12 period-snapshots cover this range; län names are year-aware
+               to handle the 1997 (Skåne, Dalarna) and 1998 (Västra Götaland)
+               reforms.
+    2016–2026  per-year lkf{year}.xls/.xlsx — full LKF (län + kommun + parish).
+               2020 and 2026 have non-standard filenames (URL_OVERRIDES).
+    2015 PDF   downloadable via --download-pdfs but not parsed here. OCR it
+               separately if you want parishes for 2015.
+    Pre-1974   not addressable from SCB's modern downloads. REGINA (the SCB
+               regional-indelningar tracker) covers 1952+ but isn't a file.
 
-This script covers 11 yearly snapshots (2016–2026) of the ~47 distinct
-year-stamped vardemangdsversion strings in the regmeta DB. Years without
-a published XLS/XLSX fall back to is_valid=NULL until someone OCRs the
-PDFs (2015) or sources pre-2015 from REGINA / paper archives.
+Run:
+    uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
+        --out regmeta/input_data/classifications/
 
-PDFs for 2015–2021 are available via the same script with --download-pdfs;
-they're cached for downstream OCR but not parsed here.
+Add --download-pdfs to also fetch the PDF editions for 2015–2021.
+Add --emit-toml to print starter [[classification]] entries on stdout.
 
 Usage:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
@@ -46,8 +49,12 @@ import sys
 import urllib.request
 from pathlib import Path
 
-# Years we know are downloadable as XLS/XLSX (probed empirically).
+# Years we know are downloadable as full LKF XLS/XLSX (län + kommun + parish).
 YEARS_AVAILABLE = list(range(2016, 2027))
+
+# Years served from the kommun-history file (kommun + derived län only — no
+# parishes). Together with YEARS_AVAILABLE this gives 1974–2026 coverage.
+KN_YEARS = list(range(1974, 2016))
 
 BASE_URL = "https://www.scb.se/contentassets/13ec5841d80045498d960d456e87ea78"
 URL_OVERRIDES = {
@@ -57,6 +64,80 @@ URL_OVERRIDES = {
     # 2026 sits in a date-stamped subdirectory.
     2026: f"{BASE_URL}/2025-06-19/lkf2026.xlsx",
 }
+
+# Kommun-history file: 12 period-snapshots from 1974 onwards in column pairs.
+KNKODNYCKEL_URL = (
+    "https://www.scb.se/contentassets/6a74a52b28994e2bbe23dcdd6754987c/knkodnyckel.xls"
+)
+KNKODNYCKEL_PERIODS: list[tuple[int, int, int]] = [
+    # (year_from, year_to_inclusive, kod_col)
+    (1974, 1976, 0),
+    (1977, 1979, 4),
+    (1980, 1982, 8),
+    (1983, 1991, 12),
+    (1992, 1994, 16),
+    (1995, 1996, 20),
+    (1997, 1997, 24),
+    (1998, 1998, 28),
+    (1999, 2002, 32),
+    (2003, 2006, 36),
+    (2007, 2007, 40),
+    (2008, 2099, 43),
+]
+
+# Län names. The post-1998 set is stable; pre-reform names are hardcoded.
+# Reforms: 1997 (Skåne, Dalarnas), 1998 (Västra Götaland).
+_LAN_BASE = {
+    "01": "Stockholms län",
+    "03": "Uppsala län",
+    "04": "Södermanlands län",
+    "05": "Östergötlands län",
+    "06": "Jönköpings län",
+    "07": "Kronobergs län",
+    "08": "Kalmar län",
+    "09": "Gotlands län",
+    "10": "Blekinge län",
+    "13": "Hallands län",
+    "17": "Värmlands län",
+    "18": "Örebro län",
+    "19": "Västmanlands län",
+    "21": "Gävleborgs län",
+    "22": "Västernorrlands län",
+    "23": "Jämtlands län",
+    "24": "Västerbottens län",
+    "25": "Norrbottens län",
+}
+
+
+def lan_names_for(year: int) -> dict[str, str]:
+    """Return the län-code → name map valid for the given year."""
+    if year < 1997:
+        return {
+            **_LAN_BASE,
+            "11": "Kristianstads län",
+            "12": "Malmöhus län",
+            "14": "Göteborgs och Bohus län",
+            "15": "Älvsborgs län",
+            "16": "Skaraborgs län",
+            "20": "Kopparbergs län",
+        }
+    if year == 1997:  # Kristianstad+Malmöhus → Skåne; Kopparberg → Dalarna
+        return {
+            **_LAN_BASE,
+            "12": "Skåne län",
+            "14": "Göteborgs och Bohus län",
+            "15": "Älvsborgs län",
+            "16": "Skaraborgs län",
+            "20": "Dalarnas län",
+        }
+    # 1998+: GoB + Älvsborg + parts of Skaraborg → Västra Götaland
+    return {
+        **_LAN_BASE,
+        "12": "Skåne län",
+        "14": "Västra Götalands län",
+        "20": "Dalarnas län",
+    }
+
 
 # PDFs available at the standard URL pattern. 2015 is PDF-only; 2016–2021 also
 # have PDFs (kept for cross-checking against XLS extraction).
@@ -143,6 +224,53 @@ def extract(year: int, src: Path) -> dict[str, str]:
     return out
 
 
+def extract_from_knkodnyckel(year: int, src: Path) -> dict[str, str]:
+    """Return {kommun: name, lan: name} for a year served from knkodnyckel.xls.
+
+    Knkodnyckel covers 1974+ as 12 period-snapshots in column pairs. It only
+    has kommun codes — län codes are 2-digit prefixes of the kommun, named
+    via lan_names_for() (year-aware to handle the 1997/1998 reforms).
+    Församlings (6-digit) aren't here; pre-2016 parishes stay unmapped.
+    """
+    period_col = next(
+        (col for lo, hi, col in KNKODNYCKEL_PERIODS if lo <= year <= hi),
+        None,
+    )
+    if period_col is None:
+        raise SystemExit(f"no knkodnyckel period covers year {year}")
+
+    import xlrd
+
+    wb = xlrd.open_workbook(src)
+    sh = wb.sheet_by_index(0)
+
+    out: dict[str, str] = {}
+    seen_lan: set[str] = set()
+    lan_lookup = lan_names_for(year)
+    for i in range(2, sh.nrows):
+        row = sh.row_values(i)
+        if period_col + 1 >= len(row):
+            continue
+        kod_cell = row[period_col]
+        namn_cell = row[period_col + 1]
+        # xlrd returns numeric kommun codes as float — re-pad to 4 digits.
+        if isinstance(kod_cell, float):
+            kod = f"{int(kod_cell):04d}"
+        else:
+            kod = str(kod_cell).strip()
+        namn = str(namn_cell).strip() if namn_cell else ""
+        if not (kod.isdigit() and len(kod) == 4 and namn):
+            continue
+        # Names in knkodnyckel are uppercase; title-case them so they match
+        # the modern XLS extraction style.
+        out[kod] = namn.title().replace("Och ", "och ")
+        seen_lan.add(kod[:2])
+
+    for lan_code in sorted(seen_lan):
+        out[lan_code] = lan_lookup.get(lan_code, f"Län {lan_code}")
+    return out
+
+
 def write_csv(year: int, codes: dict[str, str], out_dir: Path) -> Path:
     out = out_dir / f"lkf{year}.csv"
     with out.open("w", encoding="utf-8", newline="") as fh:
@@ -199,8 +327,12 @@ def main() -> int:
         "--years",
         type=int,
         nargs="*",
-        default=YEARS_AVAILABLE,
-        help="Specific years to extract (default: all known available).",
+        default=KN_YEARS + YEARS_AVAILABLE,
+        help=(
+            "Specific years to extract (default: 1974–2026). 1974–2015 read "
+            "kommun + derived län from knkodnyckel.xls (no parishes). "
+            "2016–2026 read full LKF (län + kommun + parish) from per-year XLS."
+        ),
     )
     p.add_argument(
         "--emit-toml",
@@ -220,14 +352,31 @@ def main() -> int:
     args.out.mkdir(parents=True, exist_ok=True)
     args.cache.mkdir(parents=True, exist_ok=True)
 
+    # knkodnyckel.xls is shared across all kn-years; download once.
+    knkod_src: Path | None = None
+    if any(y not in YEARS_AVAILABLE for y in args.years):
+        knkod_src = args.cache / "knkodnyckel.xls"
+        if not knkod_src.exists():
+            print(f"  downloading {KNKODNYCKEL_URL}", file=sys.stderr)
+            urllib.request.urlretrieve(KNKODNYCKEL_URL, knkod_src)
+
     prev_year: int | None = None
     for year in sorted(args.years):
         print(f"\n=== LKF {year} ===", file=sys.stderr)
         try:
-            src = download(year, args.cache)
-            codes = extract(year, src)
+            if year in YEARS_AVAILABLE:
+                src = download(year, args.cache)
+                codes = extract(year, src)
+                source_note = src.name
+            else:
+                assert knkod_src is not None
+                codes = extract_from_knkodnyckel(year, knkod_src)
+                source_note = "knkodnyckel.xls (kommun + derived län only)"
             out = write_csv(year, codes, args.out)
-            print(f"  wrote {out} ({len(codes)} codes)", file=sys.stderr)
+            print(
+                f"  wrote {out} ({len(codes)} codes from {source_note})",
+                file=sys.stderr,
+            )
             if args.emit_toml:
                 sys.stdout.write(emit_toml_entry(year, prev_year))
                 sys.stdout.write("\n")
