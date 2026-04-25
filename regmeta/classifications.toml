@@ -1,0 +1,488 @@
+# Classification seed for regmeta.
+#
+# Each [[classification]] entry declares one normalized code system
+# (SUN2000, SSYK2012, SNI2007, ...) and lists the raw
+# `variable_instance.vardemangdsversion` strings that map to it.
+#
+# Matching is exact string equality against variable_instance rows during
+# `regmeta maintain build-db`. Trailing / leading whitespace is preserved
+# verbatim — SCB's export contains many labels with stray whitespace, and
+# `get values` already exposes the raw string. Keep what you see here.
+#
+# Optional `valid_codes_file` points to a CSV under
+# regmeta/input_data/classifications/ that lists the canonical (officially
+# published) codes for the classification. Each `classification_code` row is
+# then marked `is_valid=1` if its vardekod is in the CSV, else `is_valid=0`.
+# Codes that appear in the CSV but never in observed data are still inserted
+# as canonical-but-unobserved (queryable, no `cvid_value_code` linkage).
+# Without the field, all codes for the classification carry `is_valid=NULL`
+# (validity unknown).
+#
+# Build-time invariants (violations fail the build loudly):
+#   - Every string listed under `vardemangdsversion` must match >= 1 instance
+#   - Every classification must resolve to >= 1 instance
+#   - Every classification must resolve to >= 1 distinct value code
+#   - A given `vardemangdsversion` string may belong to at most one classification
+#   - Every `supersedes` reference must resolve to a declared short_name
+#   - Every `valid_codes_file` must resolve to an existing CSV with header
+#     `vardekod,vardebenamning` and at least one row
+#
+# To enumerate candidates from the live data:
+#   SELECT vardemangdsversion, COUNT(*) FROM variable_instance
+#   WHERE vardemangdsversion IS NOT NULL AND vardemangdsversion != ''
+#   GROUP BY vardemangdsversion ORDER BY 2 DESC;
+#
+# Scope of this seed: well-known SCB classifications. Socialstyrelsen
+# classifications (ICD, KVÅ, ATC, ...) live in a separate branch.
+
+# ---------------------------------------------------------------------------
+# Education — Svensk utbildningsnomenklatur (SUN)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SUN1996"
+name = "Svensk utbildningsnomenklatur 1996"
+name_en = "Swedish Standard Classification of Education 1996"
+publisher = "SCB"
+version = "1996"
+valid_from = 1996
+valid_to = 1999
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+vardemangdsversion = [
+  "SUN 1996",
+  "SUN 1996, 5 positioner, brutto",
+]
+
+# SUN2000 has three orthogonal dimensions, each with its own code space:
+#   - Utbildningsnivå       → 3-digit numeric education level
+#   - Utbildningsinriktning → 3-digit numeric field of study
+#   - Utbildningsgrupper    → 3-character alphanumeric standardized groups
+# A code like "520" appears in both Nivå ("Övrig eftergymnasial utbildning,
+# 2 år") and Inriktning ("Teknik och teknisk industri, allmän utbildning"),
+# so they must be separate classifications.
+#
+# The supersedes chain runs only on the Nivå axis since SUN1996 was a single
+# combined level+direction system (5-digit codes) and "level" is the most
+# common interpretation.
+
+[[classification]]
+short_name = "SUN2000-NIVA"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2000 — Level"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN1996"
+valid_codes_file = "sun2000-niva.csv"
+vardemangdsversion = [
+  "SUN 2000 - Utbildningsnivå",
+  "Utbildningsnivå (SUN 2000)  ",
+  "SUN2000Niva",
+]
+
+[[classification]]
+short_name = "SUN2000-INRIKTNING"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2000 — Field of Study"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+valid_codes_file = "sun2000-inriktning.csv"
+vardemangdsversion = [
+  "SUN 2000 - Utbildningsinriktning",
+  "SUN2000Inriktning",
+]
+
+[[classification]]
+short_name = "SUN2000-GRUPP"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2000 — Education Groups"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+description = "Standardized education groups (3-character alphanumeric codes like 01Z, 15B, 35J)."
+valid_codes_file = "sun2000-grupp.csv"
+vardemangdsversion = [
+  "SUN 2000 - Gruppering",
+]
+
+[[classification]]
+short_name = "SUN2020-NIVA"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2020 — Level"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-NIVA"
+valid_codes_file = "sun2020-niva.csv"
+vardemangdsversion = [
+  "SUN 2020 - Utbildningsnivå",
+]
+
+# Cross-register aggregations of SUN education-level codes. SCB defines two
+# canonical coarsenings used across many registers, with code spaces that are
+# stable across SUN versions (2000 and 2020) and disjoint from the canonical
+# numeric NIVA codes. They are intentionally NOT linked to a specific SUN
+# version (no `supersedes`, no SUN linkage) — they are independent code
+# systems in their own right. Single-register aggregations like
+# "SUN 2000 NivåDet"/"SUN 2020 NivåDet" (mostly UREG only) and
+# "SUN 2000 NivåGymnasial" stay unmapped: queryable via raw vardemangdsversion.
+
+[[classification]]
+short_name = "NIVA-OLD"
+name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
+name_en = "Education level — legacy 7-level aggregation"
+publisher = "SCB"
+description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Stable across SUN 2000 and SUN 2020."
+valid_codes_file = "niva-old.csv"
+vardemangdsversion = [
+  "SUN 2000 NivaOld",
+  "SUN 2020 NivaOld",
+]
+
+[[classification]]
+short_name = "NIVA-GROV"
+name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
+name_en = "Education level — coarse 5-level aggregation"
+publisher = "SCB"
+description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
+valid_codes_file = "niva-grov.csv"
+vardemangdsversion = [
+  "SUN 2000 NivåGrov",
+  "SUN 2020 NivåGrov",
+]
+
+[[classification]]
+short_name = "SUN2020-INRIKTNING"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2020 — Field of Study"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-INRIKTNING"
+valid_codes_file = "sun2020-inriktning.csv"
+vardemangdsversion = [
+  "SUN 2020 - Utbildningsinriktning",
+]
+
+[[classification]]
+short_name = "SUN2020-GRUPP"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2020 — Education Groups"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-GRUPP"
+description = "Standardized education groups, including the more detailed 'Gruppering - Detaljerad' variant."
+valid_codes_file = "sun2020-grupp.csv"
+vardemangdsversion = [
+  "SUN 2020 - Gruppering",
+  "SUN 2020 - Gruppering - Detaljerad",
+]
+
+# ---------------------------------------------------------------------------
+# Occupation — Standard för svensk yrkesklassificering (SSYK)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SSYK96"
+name = "Standard för svensk yrkesklassificering 1996"
+name_en = "Swedish Standard Classification of Occupations 1996"
+publisher = "SCB"
+version = "1996"
+valid_from = 1996
+valid_to = 2013
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+vardemangdsversion = [
+  "Standard för svensk yrkesklassificering 1996",
+  "SSYK 96, alternativ",
+  "SSYK 96, AKU Yrkesgrupp",
+  "SSYK 96, AKU Undergrupp",
+  "Yrke (SSYK 1996) 4-siffrig",
+  "SSYK-koder i LINDA",
+]
+
+[[classification]]
+short_name = "SSYK2012"
+name = "Standard för svensk yrkesklassificering 2012"
+name_en = "Swedish Standard Classification of Occupations 2012"
+publisher = "SCB"
+version = "2012"
+valid_from = 2014
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+supersedes = "SSYK96"
+valid_codes_file = "ssyk2012.csv"
+vardemangdsversion = [
+  "Standard för svensk yrkesklassificering 2012",
+  "SSYK 2012, 3- och 4-siffernivå",
+  "SSYK 2012, alla nivåer",
+  "SSYK 2012 (4-siffrig)",
+  "SSYK2012_4",
+  "Yrke (SSYK 2012) 4-siffrig ",
+]
+
+# ---------------------------------------------------------------------------
+# Industry — Svensk näringsgrensindelning (SNI)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SNI69"
+name = "Svensk standard för näringsgrensindelning 1969"
+name_en = "Swedish Standard Industrial Classification 1969"
+publisher = "SCB"
+version = "1969"
+valid_from = 1969
+valid_to = 1991
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+valid_codes_file = "sni69.csv"
+vardemangdsversion = [
+  "Svensk standard för näringsgrensindelning, SNI 69",
+  "SNI 69, AKU",
+  "SNI69_6",
+]
+
+[[classification]]
+short_name = "SNI92"
+name = "Svensk standard för näringsgrensindelning 1992"
+name_en = "Swedish Standard Industrial Classification 1992"
+publisher = "SCB"
+version = "1992"
+valid_from = 1992
+valid_to = 2001
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI69"
+valid_codes_file = "sni92.csv"
+vardemangdsversion = [
+  "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
+  "Svensk standard för näringsgrensindelning, brancher SNI 92",
+  "SNI 92, begränsad nivå",
+  "SNI 92, grov nivå",
+  "SNI, 92, detaljgrupp",
+]
+
+[[classification]]
+short_name = "SNI2002"
+name = "Svensk standard för näringsgrensindelning 2002"
+name_en = "Swedish Standard Industrial Classification 2002"
+publisher = "SCB"
+version = "2002"
+valid_from = 2002
+valid_to = 2007
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI92"
+valid_codes_file = "sni2002.csv"
+vardemangdsversion = [
+  "Standard för svensk näringsgrensindelning, 2002 Branscher",
+  "Standard för svensk näringsgrensindelning, 2002, Aktiviteter",
+  "SNI 2002, grov nivå",
+  "SNI 2002, Aktiviteter, alternativ",
+  "SNI 2002, begränsad nivå",
+]
+
+[[classification]]
+short_name = "SNI2007"
+name = "Svensk standard för näringsgrensindelning 2007"
+name_en = "Swedish Standard Industrial Classification 2007"
+publisher = "SCB"
+version = "2007"
+valid_from = 2008
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI2002"
+valid_codes_file = "sni2007.csv"
+vardemangdsversion = [
+  "SNI 2007, Aktiviteter, alternativ",
+  "SNI 2007, Branscher, alternativ",
+  "SNI 2007, Branscher Huvudgrupp, alternativ",
+  "Standard för svensk näringsgrensindelning 2007, Aktiviteter",
+  "Standard för svensk näringsgrensindelning 2007, Branscher",
+  "SNI 2007, grov nivå - \"populärversion\"",
+  "SNI 2007, utökad nivå - \"populärversion\"",
+  "SNI 2007, grov redovisningsnivå",
+  "SNI 2007, utökad redovisningsnivå",
+  "SNI 2007, konjunkturstatistik, variant",
+  "SNI 2007 MIR",
+  "Näringsgrupp SNI2007",
+  "Två-siffrig kod på grov avdelningsnivå, SNI2007",
+  "Branschgruppering enligt SNI2007, som används för redovsning",
+  "BlTyp SNI2007",
+  "NR:s näringsgrensindelning SNI 2007",
+  "NR:s näringsgrensindelning SNI2007",
+  "NR:s näringsgrensindelning SNI 2007, IVP2008",
+]
+
+# ---------------------------------------------------------------------------
+# Geography — Län, kommuner och församlingar (LKF)
+# ---------------------------------------------------------------------------
+# SCB publishes LKF as a yearly snapshot. Each "LKF YYYY-01-01 ..." or
+# "YYYY-01-01 ..." variant carries the codes valid at that date. We union
+# all snapshots into one "LKF" classification — year-level validity can
+# be added later via classification_code.valid_from/valid_to if needed.
+
+[[classification]]
+short_name = "LKF"
+name = "Län, kommuner och församlingar"
+name_en = "Counties, municipalities and parishes"
+publisher = "SCB"
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+description = "Yearly snapshots of Swedish county (län), municipality (kommun) and parish (församling) codes. Unioned across years."
+vardemangdsversion = [
+  "LKF 1986-01-01/ Län, kommuner och församlingar",
+  "LKF 1987-01-01/ Län, kommuner och församlingar",
+  "LKF 1988-01-01/ Län, kommuner och församlingar",
+  "LKF 1989-01-01/ Län, kommuner och församlingar",
+  "LKF 1990-01-01/ Län, kommuner och församlingar",
+  "LKF 1991-01-01/ Län, kommuner och församlingar",
+  "LKF 1992-01-01/ Län, kommuner och församlingar",
+  "LKF 1993-01-01/ Län, kommuner och församlingar",
+  "LKF 1994-01-01/ Län, kommuner och församlingar",
+  "LKF 1995-01-01/ Län, kommuner och församlingar",
+  "LKF 1996-01-01/ Län, kommuner och församlingar",
+  "LKF 1997-01-01/ Län, kommuner och församlingar",
+  "LKF 1998-01-01/ Län, kommuner och församlingar",
+  "LKF 1999-01-01/ Län, kommuner och församlingar",
+  "LKF 1980-01-01/ Län, kommuner och församlingar",
+  "LKF 1981-01-01/ Län, kommuner och församlingar",
+  "LKF 1982-01-01/ Län, kommuner och församlingar",
+  "LKF 1983-01-01/ Län, kommuner och församlingar",
+  "LKF 1984-01-01/ Län, kommuner och församlingar",
+  "LKF 1985-01-01/ Län, kommuner och församlingar",
+  "LKF 2000-01-01/ Län, kommuner och församlingar",
+  "LKF 2001-01-01/ Län, kommuner och församlingar",
+  "LKF 2002-01-01/ Län, kommuner och församlingar",
+  "LKF 2003-01-01/ Län, kommuner och församlingar",
+  "LKF 2004-01-01/ Län, kommuner och församlingar",
+  "LKF 2005-01-01/ Län, kommuner och församlingar",
+  "LKF 2006-01-01/ Län, kommuner och församlingar",
+  "LKF 2007-01-01/ Län, kommuner och församlingar",
+  "LKF 2008-01-01/ Län, kommuner och församlingar ",
+  "LKF 2009-01-01/ Län, kommuner och församlingar ",
+  "LKF 2010-01-01/ Län, kommuner och församlingar ",
+  "LKF 2011-01-01/ Län, kommuner och församlingar ",
+  "LKF 2012-01-01/ Län, kommuner och församlingar ",
+  "LKF 2013-01-01/ Län, kommuner och församlingar ",
+  "LKF 2014-01-01/ Län, kommuner och församlingar ",
+  "LKF 2015-01-01/ Län, kommuner och församlingar ",
+  "LKF 2016-01-01/ Län, kommuner och församlingar ",
+  "LKF 2017-01-01/ Län, kommuner och församlingar ",
+  "2018-01-01/ Län, kommuner och församlingar ",
+  "2019-01-01/ Län, kommuner och församlingar ",
+  "2020-01-01/ Län, kommuner och församlingar ",
+  "2021-01-01/ Län, kommuner och församlingar ",
+  "2022-01-01/ Län, kommuner och församlingar ",
+  "2023-01-01 /Län, kommuner och församlingar",
+  "2024-01-01 /Län, kommuner och församlingar",
+  "LKF 2025-01-01 /Län, kommuner och församlingar",
+  "LKF 2026-01-01 /Län, kommuner och församlingar",
+  "LKF 2006 med tillägg",
+]
+
+# ---------------------------------------------------------------------------
+# Institutional sector — Sektor 2000
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SEKTOR2000"
+name = "Institutionell sektorindelning 2000"
+name_en = "Standard for Institutional Sector Classification 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-institutionell-sektorindelning-insekt/"
+vardemangdsversion = [
+  "Sektor 2000",
+]
+
+# ---------------------------------------------------------------------------
+# Legal form — Juridisk form
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "JURFORM2000"
+name = "Standard för indelning efter juridisk form 2000"
+name_en = "Swedish Standard Classification by Legal Form 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+vardemangdsversion = [
+  "Standard för indelning efter juridisk form 2000",
+]
+
+[[classification]]
+short_name = "JURFORM2020"
+name = "Standard för indelning efter juridisk form 2020"
+name_en = "Swedish Standard Classification by Legal Form 2020"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+supersedes = "JURFORM2000"
+vardemangdsversion = [
+  "Standard för indelning efter juridisk form 2020",
+]
+
+# ---------------------------------------------------------------------------
+# Owner category — Ägarkategori
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "AGARKAT2000"
+name = "Standard för indelning efter ägarkategori 2000"
+name_en = "Swedish Standard Classification by Owner Category 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+vardemangdsversion = [
+  "Standard för indelning efter ägarkategori 2000",
+]
+
+[[classification]]
+short_name = "AGARKAT2020"
+name = "Standard för indelning efter ägarkategori 2020"
+name_en = "Swedish Standard Classification by Owner Category 2020"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+supersedes = "AGARKAT2000"
+vardemangdsversion = [
+  "Standard för indelning efter ägarkategori 2020",
+]
+
+# ---------------------------------------------------------------------------
+# International — ISCED
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "ISCED2011"
+name = "International Standard Classification of Education 2011 — Level"
+name_en = "International Standard Classification of Education 2011 — Level"
+publisher = "UNESCO"
+version = "2011"
+valid_from = 2011
+url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
+vardemangdsversion = [
+  "ISCED 2011 - Nivå",
+  "ISCED 2011 AES",
+]
+
+[[classification]]
+short_name = "ISCED-F2013"
+name = "ISCED Fields of Education and Training 2013"
+name_en = "ISCED Fields of Education and Training 2013"
+publisher = "UNESCO"
+version = "2013"
+valid_from = 2013
+url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
+vardemangdsversion = [
+  "ISCED-F 2013 - Inriktning",
+  "ISCED F 2013 ",
+]

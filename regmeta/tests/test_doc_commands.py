@@ -343,7 +343,7 @@ class TestDocDbRequired:
         )
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir)
+        build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
 
         data, code = _run_json(
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
@@ -372,7 +372,7 @@ class TestDocDbRequired:
         )
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir)
+        build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
 
         data, code = _run_json(
             ["--db", str(db_dir), "get", "register", "1"],
@@ -434,7 +434,7 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
         REGISTERINFORMATION_HEADER,
         REGISTERINFORMATION_ROWS,
     )
-    build_db(csv_dir=csv_dir, db_dir=combined)
+    build_db(csv_dir=csv_dir, db_dir=combined, classifications_seed=False)
 
     # Copy the doc DB alongside it
     shutil.copy(doc_db_dir / "regmeta_docs.db", combined / "regmeta_docs.db")

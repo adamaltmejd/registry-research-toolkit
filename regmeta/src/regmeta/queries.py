@@ -663,8 +663,11 @@ def get_varinfo(
 
         instances = conn.execute(
             "SELECT vi.cvid, vi.regvar_id, vi.regver_id, vi.datatyp, vi.datalangd, "
+            "vi.vardemangdsversion, vi.classification_id, "
+            "c.short_name AS classification, "
             "rv.registervariantnamn, rver.registerversionnamn "
             "FROM variable_instance vi "
+            "LEFT JOIN classification c ON vi.classification_id = c.id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
             "WHERE vi.register_id = ? AND vi.var_id = ? "
@@ -695,20 +698,23 @@ def get_varinfo(
         instances_out: list[dict[str, Any]] = []
         for inst in instances:
             cvid = inst["cvid"]
-            instances_out.append(
-                {
-                    "cvid": cvid,
-                    "regvar_id": inst["regvar_id"],
-                    "variant_name": inst["registervariantnamn"],
-                    "regver_id": inst["regver_id"],
-                    "version_name": inst["registerversionnamn"],
-                    "year": extract_year(inst["registerversionnamn"] or ""),
-                    "datatyp": inst["datatyp"],
-                    "datalangd": inst["datalangd"],
-                    "aliases": aliases_map[cvid],
-                    "value_set_count": value_counts[cvid],
-                }
-            )
+            inst_dict: dict[str, Any] = {
+                "cvid": cvid,
+                "regvar_id": inst["regvar_id"],
+                "variant_name": inst["registervariantnamn"],
+                "regver_id": inst["regver_id"],
+                "version_name": inst["registerversionnamn"],
+                "year": extract_year(inst["registerversionnamn"] or ""),
+                "datatyp": inst["datatyp"],
+                "datalangd": inst["datalangd"],
+                "aliases": aliases_map[cvid],
+                "value_set_count": value_counts[cvid],
+            }
+            if inst["classification"]:
+                inst_dict["classification"] = inst["classification"]
+            instances_out.append(inst_dict)
+
+        var_classifications = classifications_for_variable(conn, rid, vid)
 
         variables_out.append(
             {
@@ -725,6 +731,7 @@ def get_varinfo(
                 "variabelhamtadfran": var["variabelhamtadfran"],
                 "variabelregister_kalla": var["variabelregister_kalla"],
                 "mattenhet": var["mattenhet"],
+                "classifications": var_classifications,
                 "instances": instances_out,
             }
         )
@@ -1726,3 +1733,185 @@ def compare(
         )
 
     return {"files": files_out}
+
+
+# ---------------------------------------------------------------------------
+# Classifications
+# ---------------------------------------------------------------------------
+
+
+def _classification_row(row: sqlite3.Row) -> dict[str, Any]:
+    d = dict(row)
+    # Drop NULL fields to keep JSON output lean.
+    return {k: v for k, v in d.items() if v is not None}
+
+
+def list_classifications(conn: sqlite3.Connection) -> list[dict[str, Any]]:
+    """Enumerate all classifications with a superseded_by back-pointer."""
+    rows = conn.execute(
+        """
+        SELECT c.id, c.short_name, c.name, c.name_en, c.publisher, c.version,
+               c.valid_from, c.valid_to, c.description, c.url, c.code_count,
+               c.valid_code_count,
+               s.short_name AS supersedes,
+               sb.short_name AS superseded_by
+        FROM classification c
+        LEFT JOIN classification s  ON c.supersedes_id = s.id
+        LEFT JOIN classification sb ON sb.supersedes_id = c.id
+        ORDER BY c.short_name
+        """
+    ).fetchall()
+    return [_classification_row(r) for r in rows]
+
+
+def _resolve_classification_id(conn: sqlite3.Connection, value: str) -> int:
+    """Resolve a classification by id, short_name (case-insensitive), or substring."""
+    int_value = _try_int(value)
+    if isinstance(int_value, int):
+        row = conn.execute(
+            "SELECT id FROM classification WHERE id = ?", (int_value,)
+        ).fetchone()
+        if row:
+            return row["id"]
+
+    row = conn.execute(
+        "SELECT id FROM classification WHERE LOWER(short_name) = LOWER(?)",
+        (value,),
+    ).fetchone()
+    if row:
+        return row["id"]
+
+    rows = conn.execute(
+        "SELECT id, short_name FROM classification "
+        "WHERE LOWER(short_name) LIKE '%' || LOWER(?) || '%' "
+        "   OR LOWER(name) LIKE '%' || LOWER(?) || '%' "
+        "ORDER BY short_name",
+        (value, value),
+    ).fetchall()
+    if len(rows) == 1:
+        return rows[0]["id"]
+    if len(rows) > 1:
+        candidates = ", ".join(r["short_name"] for r in rows)
+        raise RegmetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="ambiguous",
+            error_class="query",
+            message=(f"Classification {value!r} is ambiguous: matches {candidates}."),
+            remediation="Use the exact short_name.",
+        )
+    raise RegmetaError(
+        exit_code=EXIT_NOT_FOUND,
+        code="not_found",
+        error_class="query",
+        message=f"No classification matching '{value}'.",
+        remediation="Use `regmeta get classification --list` to see available classifications.",
+    )
+
+
+def get_classification(conn: sqlite3.Connection, identifier: str) -> dict[str, Any]:
+    """Return one classification's metadata (no codes)."""
+    cls_id = _resolve_classification_id(conn, identifier)
+    row = conn.execute(
+        """
+        SELECT c.*, s.short_name AS supersedes,
+               sb.short_name AS superseded_by
+        FROM classification c
+        LEFT JOIN classification s  ON c.supersedes_id = s.id
+        LEFT JOIN classification sb ON sb.supersedes_id = c.id
+        WHERE c.id = ?
+        """,
+        (cls_id,),
+    ).fetchone()
+    data = _classification_row(row)
+    # supersedes_id is an internal FK; supersedes short_name is the useful form.
+    data.pop("supersedes_id", None)
+    return data
+
+
+def get_classification_codes(
+    conn: sqlite3.Connection,
+    identifier: str,
+    *,
+    level: int | None = None,
+    only_valid: bool = False,
+) -> dict[str, Any]:
+    """Return a classification plus its full code list (optionally filtered).
+
+    With ``only_valid=True`` the result only includes codes flagged as
+    canonical (``is_valid=1``). Classifications without a canonical CSV have
+    ``is_valid=NULL`` everywhere; ``only_valid`` will return zero codes for
+    them, which is the correct semantics ("no canonical list available").
+    """
+    cls_id = _resolve_classification_id(conn, identifier)
+    meta = get_classification(conn, identifier)
+
+    sql = (
+        "SELECT vc.vardekod, vc.vardebenamning, cc.level, cc.is_valid "
+        "FROM classification_code cc "
+        "JOIN value_code vc ON cc.code_id = vc.code_id "
+        "WHERE cc.classification_id = ?"
+    )
+    params: list[Any] = [cls_id]
+    if level is not None:
+        sql += " AND cc.level = ?"
+        params.append(level)
+    if only_valid:
+        sql += " AND cc.is_valid = 1"
+    sql += " ORDER BY vc.vardekod"
+
+    # Strip is_valid when NULL so classifications without a canonical CSV
+    # don't carry a meaningless field on every code.
+    codes = [
+        {k: v for k, v in dict(r).items() if v is not None or k != "is_valid"}
+        for r in conn.execute(sql, params).fetchall()
+    ]
+    meta["codes"] = codes
+    return meta
+
+
+def search_variables_by_classification(
+    conn: sqlite3.Connection,
+    identifier: str,
+    *,
+    limit: int = 100,
+    offset: int = 0,
+) -> list[dict[str, Any]]:
+    """List variables that have at least one instance tagged with this classification."""
+    cls_id = _resolve_classification_id(conn, identifier)
+    rows = conn.execute(
+        """
+        SELECT DISTINCT v.register_id, r.registernamn AS register_name,
+               v.var_id, v.variabelnamn AS variable_name
+        FROM variable_instance vi
+        JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id
+        JOIN register r ON v.register_id = r.register_id
+        WHERE vi.classification_id = ?
+        ORDER BY r.registernamn, v.variabelnamn
+        LIMIT ? OFFSET ?
+        """,
+        (cls_id, limit, offset),
+    ).fetchall()
+    return [dict(r) for r in rows]
+
+
+def classifications_for_variable(
+    conn: sqlite3.Connection, register_id: int, var_id: int
+) -> list[dict[str, Any]]:
+    """Return the distinct classifications a variable's instances use.
+
+    A single variable can span multiple classifications across its lifetime
+    (e.g. SUN2000 → SUN2020), so this returns a list, not a scalar.
+    """
+    rows = conn.execute(
+        """
+        SELECT c.id, c.short_name, c.name, c.publisher, c.version,
+               COUNT(DISTINCT vi.cvid) AS instance_count
+        FROM variable_instance vi
+        JOIN classification c ON vi.classification_id = c.id
+        WHERE vi.register_id = ? AND vi.var_id = ?
+        GROUP BY c.id
+        ORDER BY c.short_name
+        """,
+        (register_id, var_id),
+    ).fetchall()
+    return [dict(r) for r in rows]

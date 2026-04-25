@@ -1,0 +1,98 @@
+vardekod,vardebenamning
+01Z,Folkskoleutbildning och motsvarande
+02Z,Grundskoleutbildning och motsvarande
+03A,"Samhällsvetenskaplig, social och humanistisk gymnasieutbildning"
+03N,Naturvetenskaplig gymnasieutbildning
+13Z,Gymnasial utbildning inom pedagogiska området
+14P,"Motsv minst 30 'nya' högskolepoäng inom pedagogik, ej examen"
+15B,Förskollärarutbildning
+15F,Fritidspedagogutbildning
+15G,Lärarutbildning för grundskolans lägre åldrar
+15H,"Ämneslärarutbildning, allmänna ämnen"
+15P,Utbildning för lärare i praktiskt-estetiskt ämne
+15S,Speciallärarutbildning
+15V,Yrkeslärarutbildning
+15X,Övrig eftergymnasial utbildning inom pedagogik / lärarutbildning
+23E,Estetisk utbildning på gymnasial nivå
+23M,Gymnasial utbildning för medieproduktion
+24P,"Motsv minst 30 'nya' högskolepoäng inom humaniora/konst, ej examen"
+25H,Humanistisk högskoleutbildning (minst 3 år)
+25K,Konstnärlig eftergymnasial utbildning
+25M,"Medieproduktion, eftergymnasial utbildning"
+25T,Teologisk eftergymnasial utbildning (minst 3 år)
+25X,Övrig eftergymnasial utbildning inom humaniora och konst
+33E,Handelsgymnasium / ekonomisk linje/program på gymnasiet
+33H,Yrkesinriktad utbildning på gymnasial nivå inom handel och administration
+34P,"Motsv minst 30 'nya' högskolepoäng inom samhällsv/ekonomi/juridik, ej examen"
+35B,Biblioteks- och informationsvetenskaplig högskoleutbildning (minst 3 år)
+35E,Ekonomutbildning (högskoleutbildning minst 3 år)
+35F,"Högskoleutbildning för organisation, administration och förvaltning (minst tre år)"
+35J,Juridisk högskoleutbildning (minst 3 år)
+35M,Journalist- och medieutbildning (eftergymnasial)
+35P,Högskoleutbildning i psykologi och psykoterapi (minst 3 år)
+35S,Samhälls- och beteendeveten- skaplig högskoleutbildning (minst 3 år)
+35X,"Övrig eftergymn utb inom samhällsv, juridik, handel och administration"
+43Z,Yrkesinriktad utbildning på gymnasial nivå inom naturvetensk/matematik/data
+44P,"Motsv minst 30 'nya' högskolepoäng inom naturvetensk/matematik/data, ej examen"
+45D,Programmerar- o systemerarutbildning (eftergymnasial)
+45N,Naturvetenskaplig högskoleutbildning (minst 3 år)
+45X,"Övrig eftergymnasial utbildning inom naturvetenskap, matematik och data"
+53A,"Tekniskt gymnasium, 1-3 år"
+53B,Byggutbildning vid gymnasium eller yrkesskola
+53E,Elektro- och datateknisk utbildning vid gymnasium eller yrkesskola
+53F,Fordons- och farkostutbildning vid gymnasium eller yrkesskola
+53K,Textil- o konfektionsutbildning vid gymnasium eller yrkesskola
+53L,Livsmedelsutbildning vid gymnasium eller yrkesskola
+53P,Processutbildning vid gymnasium eller yrkesskola
+53R,Energi- och VVS-utbildning vid gymnasium eller yrkesskola
+53T,Träutbildning vid gymnasium eller yrkesskola
+53V,Verkstadsutbildning vid gymnasium eller yrkesskola
+53X,Övrig gymnasial utbildning inom teknik och tillverkning
+54P,"Motsv minst 30 'nya' högskolepoäng inom teknik, ej examen"
+55A,Arkitekt- och landskapsarkitektutbildning
+55C,"Civilingenjörsutbildning; väg- och vatten, byggnad, lantmäteri"
+55D,"Civilingenjörsutbildning; maskin, fordon/farkost, industriell ekonomi"
+55E,"Civilingenjörsutbildning; elektro- teknik, teknisk fysik och data"
+55F,"Civilingenjörsutbildning; kemi- och bioteknik, material- och bergsteknik"
+55G,Civilingenjörsutbildning; övrig/ospec. inriktning
+55H,"Ingenjörsutbildning; väg- och vatten, byggnad, lantmäteri (eftergymnasial)"
+55I,"Ingenjörsutbildning; maskin, fordon/farkost, industriell ekonomi (eftergymnasial)"
+55J,"Ingenjörsutbildning; elektroteknik, teknisk fysik och data (eftergymnasial)"
+55K,"Ingenjörsutbildning; kemi- och bioteknik, material- och bergsteknik (eftergymn)"
+55L,Ingenjörsutbildning; övrig/ospec. inriktning (eftergymnasial)
+55X,Övrig eftergymnasial utbildning inom teknik och tillverkning
+63Z,Gymnasial utbildning inom lant- och skogsbruk / djursjukvård
+64P,"Motsv minst 30 'nya' högskolepoäng inom lant- o skogsbruk / djursjukvård, ej examen"
+65J,Jordbruksvetenskaplig högskoleutbildning (minst 3 år)
+65S,Skogsvetenskaplig högskoleutbildning (minst 3 år)
+65V,Veterinärutbildning
+65X,Övrig eftergymn utbildning inom lant- och skogsbruk / djursjukvård
+73B,Gymnasial utbildning med inriktning mot barn och ungdom
+73O,Omvårdnads- och omsorgsutbildning på gymnasial nivå
+73T,Tandvårdsutbildning på gymnasial nivå
+73X,Övrig gymnasial utbildning inom hälso- och sjukvård / social omsorg
+74P,"Motsv minst 30 'nya' högskolepoäng inom hälso- o sjukvård / social omsorg, ej examen"
+75A,Apotekarutbildning
+75B,Arbetsterapeututbildning
+75D,Biomedicinsk analytiker- och laboratorieassistentutbildning
+75F,Fritidsledarutbildning (eftergymnasial)
+75H,Läkarutbildning
+75J,Receptarieutbildning
+75L,Sjukgymnastutbildning/fysioterapeututbildning
+75N,Sjuksköterskeutbildning
+75O,Social serviceutbildning
+75P,Socionomutbildning
+75T,Tandhygienistutbildning
+75V,Tandläkarutbildning
+75X,Övrig eftergymn utb inom hälso- och sjukvård / social omsorg
+83R,Hotell- och restaurangutbildning på gymnasial nivå
+83T,Transportutbildning på gymnasial nivå
+83X,Övrig gymnasial utbildning inom tjänsteområdet
+84P,"Motsv minst 30 'nya' högskolepoäng inom tjänsteområdet, ej examen"
+85M,Yrkesmilitärutbildning på efter- gymnasial nivå
+85P,Polisutbildning
+85T,Transportutbildning på eftergymnasial nivå
+85X,Övrig eftergymnasial utbildning inom tjänsteområdet
+93Z,"Gymnasial utbildning, ospecificerad"
+95Z,"Eftergymnasial utbildning, ospecificerad"
+99Z,Okänd utbildning

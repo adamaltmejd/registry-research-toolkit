@@ -56,7 +56,7 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
         csv_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
     )
 
-    build_db(csv_dir=csv_dir, db_dir=db_dir)
+    build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"

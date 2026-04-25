@@ -1,0 +1,230 @@
+vardekod,vardebenamning
+01Z,Folkskoleutbildning och motsvarande
+01ZA,Folkskoleutbildning och motsvarande
+02Z,Grundskoleutbildning och motsvarande
+02ZA,Grundskoleutbildning och motsvarande
+03A,"Samhällsvetenskaplig, social och humanistisk gymnasieutbildning"
+03AA,"Samhällsvetenskaplig, social och humanistisk gymnasieutbildning"
+03N,Naturvetenskaplig gymnasieutbildning
+03NA,Naturvetenskaplig gymnasieutbildning
+13Z,Gymnasial utbildning inom pedagogik och lärarutbildning
+13ZA,Gymnasieutbildning inom pedagogik och lärarutbildning
+14P,"Minst 30 högskolepoäng inom pedagogik och lärarutbildning, ej examen"
+14PH,"180 eller fler högskolepoäng inom pedagogik och lärarutbildning, ej examen"
+14PL,"30-179 högskolepoäng inom pedagogik och lärarutbildning, ej examen"
+15B,Förskollärarutbildning
+15BA,Förskollärarutbildning
+15F,Fritidspedagogutbildning
+15FA,Fritidspedagogutbildning
+15G,Lärarutbildning för grundskolans tidiga åldrar
+15GA,Lärarutbildning för grundskolans tidiga åldrar
+15H,"Ämneslärarutbildning, allmänna ämnen"
+15HA,"Ämneslärarutbildning, allmänna ämnen"
+15P,Lärarutbildning i praktisk-estetiska ämnen
+15PA,Lärarutbildning i praktisk-estetiska ämnen
+15S,Speciallärar- och specialpedagogutbildning
+15SA,Speciallärar- och specialpedagogutbildning
+15V,Yrkeslärarutbildning
+15VA,Yrkeslärarutbildning
+15X,Övrig eftergymnasial utbildning inom pedagogik och lärarutbildning
+15XA,Övrig eftergymnasial utbildning inom pedagogik och lärarutbildning
+23E,Estetisk utbildning på gymnasial nivå
+23EA,"Gymnasieutbildning, estetisk"
+23M,Gymnasial utbildning för medieproduktion
+23MA,Gymnasieutbildning inom medieproduktion
+23XA,Övrig gymnasial utbildning inom humaniora och konst
+24P,"Minst 30 högskolepoäng inom humaniora och konst, ej examen"
+24PH,"180 eller fler högskolepoäng inom humaniora och konst, ej examen"
+24PL,"30-179 högskolepoäng inom humaniora och konst, ej examen"
+25H,Humanistisk högskoleutbildning (minst 3 år)
+25HA,"Eftergymnasial utbildning inom historia och filosofi, minst 3 år"
+25HB,"Eftergymnasial språk- och litteraturvetenskaplig utbildning, minst 3 år"
+25K,Konstnärlig eftergymnasial utbildning
+25KA,Eftergymnasial konstnärlig utbildning
+25M,"Medieproduktion, eftergymnasial utbildning"
+25MA,Eftergymnasial utbildning inom medieproduktion
+25T,Teologisk eftergymnasial utbildning (minst 3 år)
+25TA,"Eftergymnasial teologisk utbildning, minst 3 år"
+25X,Övrig eftergymnasial utbildning inom humaniora och konst
+25XA,Övrig eftergymnasial utbildning inom humaniora och konst
+33E,Ekonomisk gymnasieutbildning
+33EA,Gymnasieutbildning inom ekonomi
+33H,Yrkesinriktad utbildning på gymnasial nivå inom handel och administration
+33HA,Gymnasieutbildning inom handel och administration
+33XA,"Övrig gymnasial utbildning inom samhällsvetenskap, juridik, handel och administration"
+34P,"Minst 30 högskolepoäng inom samhällsvetenskap, ekonomi och juridik, ej examen"
+34PH,"180 eller fler högskolepoäng inom samhällsvetenskap, ekonomi och juridik, ej examen"
+34PL,"30-179 högskolepoäng inom samhällsvetenskap, ekonomi och juridik, ej examen"
+34YA,Eftergymnasial yrkesutbildning inom ekonomi kortare än 3 år
+34YB,Eftergymnasial yrkesutbildning inom administration kortare än 3 år
+35B,Biblioteks- och informationsvetenskaplig högskoleutbildning (minst 3 år)
+35BA,"Eftergymnasial utbildning inom biblioteks- och informationsvetenskap, minst 3 år"
+35E,Ekonomutbildning (högskoleutbildning minst 3 år)
+35EA,"Eftergymnasial ekonomutbildning, minst 3 år"
+35F,"Högskoleutbildning inom organisation, administration och förvaltning (minst 3 år)"
+35FA,"Eftergymnasial utbildning inom organisation, administration och förvaltning, minst 3 år"
+35J,Juridisk högskoleutbildning (minst 3 år)
+35JA,"Eftergymnasial utbildning inom juridik och rättsvetenskap, minst 3 år"
+35M,Journalist- och medieutbildning (eftergymnasial)
+35MA,Eftergymnasial journalist- och medieutbildning
+35P,Högskoleutbildning i psykologi och psykoterapi (minst 3 år)
+35PA,Psykolog- och psykoterapeututbildning
+35PB,"Annan eftergymnasial utbildning i psykologi och psykoterapi, minst 3 år"
+35S,Samhälls- och beteendevetenskaplig högskoleutbildning (minst 3 år)
+35SA,"Eftergymnasial utbildning inom samhälls- och beteendevetenskap, minst 3 år"
+35X,"Övrig eftergymnasial utbildning inom samhällsvetenskap, juridik, handel och administration"
+35XA,"Övrig eftergymnasial utbildning inom samhällsvetenskap, juridik, handel och administration"
+43Z,"Yrkesinriktad gymnasieutbildning inom naturvetenskap, matematik och IKT"
+43ZA,"Yrkesinriktad gymnasieutbildning inom naturvetenskap, matematik och IKT"
+44P,"Minst 30 högskolepoäng inom naturvetenskap, matematik och IKT ej examen"
+44PH,"180 eller fler högskolepoäng inom naturvetenskap, matematik och IKT ej examen"
+44PL,"30-179 högskolepoäng inom naturvetenskap, matematik och IKT ej examen"
+45D,Programmerar- och systemerarutbildning (eftergymnasial)
+45DA,"Eftergymnasial utbildning inom IKT, kortare än 3 år"
+45DB,"Eftergymnasial utbildning inom IKT, minst 3 år"
+45N,Naturvetenskaplig högskoleutbildning (minst 3 år)
+45NA,"Eftergymnasial utbildning inom biologi och miljövetenskap, minst 3 år"
+45NB,"Eftergymnasial utbildning inom fysik, matematik och statistik, minst 3 år"
+45NC,"Eftergymnasial utbildning inom geovetenskap, minst 3 år"
+45ND,"Eftergymnasial utbildning inom kemi, minst 3 år"
+45X,"Övrig eftergymnasial utbildning inom naturvetenskap, matematik och IKT"
+45XA,"Övrig eftergymnasial utbildning inom naturvetenskap, matematik och IKT"
+53A,"Tekniskt gymnasium, 1-3 år"
+53AA,"Tekniskt gymnasium, 1-3 år"
+53B,Gymnasieutbildning inom bygg
+53BA,Gymnasieutbildning inom bygg
+53E,Gymnasieutbildning inom elektro- och datateknik
+53EA,Gymnasieutbildning inom elektro- och datateknik
+53F,Gymnasieutbildning inom fordonsteknik
+53FA,Gymnasieutbildning inom fordonsteknik
+53K,Gymnasieutbildning inom textil- och konfektionsteknik
+53KA,Gymnasieutbildning inom textil- och konfektionsteknik
+53L,Gymnasieutbildning inom livsmedel
+53LA,Gymnasieutbildning inom livsmedel
+53P,Gymnasieutbildning inom processteknik
+53PA,Gymnasieutbildning inom processteknik
+53R,Gymnasieutbildning inom energi och VVS
+53RA,Gymnasieutbildning inom energi och VVS
+53T,Gymnasieutbildning inom träteknik
+53TA,Gymnasieutbildning inom träteknik
+53V,Gymnasieutbildning inom verkstadsteknik
+53VA,Gymnasieutbildning inom industriteknik
+53X,Övrig gymnasial utbildning inom teknik och tillverkning
+53XA,Övrig gymnasial utbildning inom teknik och tillverkning
+54P,"Minst 30 högskolepoäng inom teknik och tillverkning, ej examen"
+54PH,"180 eller fler högskolepoäng inom teknik och tillverkning, ej examen"
+54PL,"30-179 högskolepoäng inom teknik och tillverkning, ej examen"
+54YA,Eftergymnasial yrkesutbildning inom bygg- och anläggningsteknik kortare än 3 år
+54YB,Eftergymnasial yrkesutbildning inom industriteknik kortare än 3 år
+54YC,Eftergymnasial yrkesutbildning inom elektroteknik och datateknik kortare än 3 år
+55A,Arkitekt- och landskapsarkitektutbildning
+55AA,Arkitekt- och landskapsarkitektutbildning
+55C,"Civilingenjörsutbildning inom samhällsbyggnad, byggnadsteknik och miljöteknik"
+55CA,"Civilingenjörsutbildning inom samhällsbyggnad, byggnadsteknik och miljöteknik"
+55D,"Civilingenjörsutbildning inom maskin, fordon, farkost och industriell ekonomi"
+55DA,"Civilingenjörsutbildning, industriell ekonomi"
+55DB,"Civilingenjörsutbildning inom maskin, fordon och farkost"
+55E,"Civilingenjörsutbildning inom elektroteknik, teknisk fysik och datateknik"
+55EA,"Civilingenjörsutbildning inom elektroteknik, teknisk fysik och datateknik"
+55F,"Civilingenjörsutbildning inom kemi- och bioteknik, material- och geoteknik"
+55FA,"Civilingenjörsutbildning inom kemi- och bioteknik, material- och geoteknik"
+55G,Övrig civilingenjörsutbildning
+55GA,Övrig civilingenjörsutbildning
+55H,"Ingenjörsutbildning inom samhällsbyggnad, byggnadsteknik och miljöteknik (eftergymnasial)"
+55HA,"Ingenjörsutbildning inom samhällsbyggnad, byggnadsteknik och miljöteknik (eftergymnasial)"
+55I,"Ingenjörsutbildning inom maskin, fordon, farkost och industriell ekonomi  (eftergymnasial)"
+55IA,"Ingenjörsutbildning inom maskin, fordon, farkost och industriell ekonomi (eftergymnasial)"
+55J,"Ingenjörsutbildning inom elektroteknik, teknisk fysik och datateknik (eftergymnasial)"
+55JA,"Ingenjörsutbildning inom elektroteknik, teknisk fysik och datateknik (eftergymnasial)"
+55K,"Ingenjörsutbildning inom kemi- och bioteknik, material- och geoteknik (eftergymnasial)"
+55KA,"Ingenjörsutbildning inom kemi- och bioteknik, material- och geoteknik (eftergymnasial)"
+55L,Övrig ingenjörsutbildning (eftergymnasial)
+55LA,Övrig ingenjörsutbildning (eftergymnasial)
+55X,Övrig eftergymnasial utbildning inom teknik och tillverkning
+55XA,Övrig eftergymnasial utbildning inom teknik och tillverkning
+63AA,Gymnasieutbildning inom lantbruk
+63XA,Övrig gymnasial utbildning inom lant- och skogsbruk samt djursjukvård
+63Z,Gymnasial utbildning inom lant- och skogsbruk samt djursjukvård
+64P,"Minst 30 högskolepoäng inom lant- och skogsbruk samt djursjukvård, ej examen"
+64PH,"180 eller fler högskolepoäng inom lant- och skogsbruk samt djursjukvård, ej examen"
+64PL,"30-179 högskolepoäng inom lant- och skogsbruk samt djursjukvård, ej examen"
+65J,Lantbruksvetenskaplig högskoleutbildning (minst 3 år)
+65JA,"Eftergymnasial utbildning inom lantbruk och trädgård, minst 3 år"
+65S,Skogsbruksvetenskaplig högskoleutbildning (minst 3 år)
+65SA,"Eftergymnasial utbildning inom skogsbruksvetenskap, minst 3 år"
+65V,Veterinärutbildning
+65VA,Veterinärutbildning
+65X,"Övrig eftergymnasial utbildning inom lant- och skogsbruk, samt djursjukvård"
+65XA,"Övrig eftergymnasial utbildning inom lant- och skogsbruk, samt djursjukvård"
+73B,Gymnasial utbildning med inriktning mot barn och ungdom
+73BA,Gymnasieutbildning inom barn och ungdom
+73O,Omvårdnads- och omsorgsutbildning på gymnasial nivå
+73OA,Gymnasieutbildning inom omvårdnad och social omsorg
+73T,Tandvårdsutbildning på gymnasial nivå
+73TA,Gymnasieutbildning inom tandvård
+73X,Övrig gymnasial utbildning inom hälso- och sjukvård och social omsorg
+73XA,Övrig gymnasial utbildning inom hälso- och sjukvård och social omsorg
+74P,"Minst 30 högskolepoäng inom hälso- o sjukvård och social omsorg, ej examen"
+74PH,"180 eller fler högskolepoäng inom hälso- och sjukvård och social omsorg, ej examen"
+74PL,"30-179 högskolepoäng inom hälso- och sjukvård och social omsorg, ej examen"
+74YA,Eftergymnasial yrkesutbildning inom omvårdnad kortare än 3 år
+74YB,Eftergymnasial yrkesutbildning inom tandvård kortare än 3 år
+75A,Apotekarutbildning
+75AA,Apotekarutbildning
+75B,Arbetsterapeututbildning
+75BA,Arbetsterapeututbildning
+75D,Biomedicinsk analytikerutbildning
+75DA,Biomedicinsk analytikerutbildning
+75F,Fritidsledarutbildning (eftergymnasial)
+75FA,Fritidsledarutbildning (eftergymnasial)
+75H,Läkarutbildning
+75HA,Läkarutbildning
+75J,Receptarieutbildning
+75JA,Receptarieutbildning
+75L,Fysioterapeututbildning
+75LA,Fysioterapeututbildning
+75N,Sjuksköterskeutbildning
+75NA,Sjuksköterskeutbildning
+75NB,"Specialistsjuksköterskeutbildning, anestesi"
+75ND,"Specialistsjuksköterskeutbildning, barnsjukvård"
+75NE,"Specialistsjuksköterskeutbildning, distriktssköterska"
+75NF,"Specialistsjuksköterskeutbildning, intensivvård"
+75NG,"Specialistsjuksköterskeutbildning, operation"
+75NH,"Specialistsjuksköterskeutbildning, psykiatri"
+75NO,Övrig specialistsjuksköterskeutbildning
+75NP,Barnmorskeutbildning
+75NR,Röntgensjuksköterskeutbildning
+75O,Social service- och omsorgsutbildning
+75OA,Eftergymnasial social service- och omsorgsutbildning
+75P,Socionomutbildning
+75PA,Socionomutbildning
+75T,Tandhygienistutbildning
+75TA,Tandhygienistutbildning
+75V,Tandläkarutbildning
+75VA,Tandläkarutbildning
+75X,Övrig eftergymnasial utbildning inom hälso- och sjukvård och social omsorg
+75XA,Övrig eftergymnasial utbildning inom hälso- och sjukvård och social omsorg
+83HA,Gymnasieutbildning inom hår- och skönhetsvård
+83R,Hotell- och restaurangutbildning på gymnasial nivå
+83RA,"Gymnasieutbildning inom hotell, restaurang och turism"
+83T,Transportutbildning på gymnasial nivå
+83TA,Gymnasieutbildning inom transport
+83X,Övrig gymnasial utbildning inom tjänster
+83XA,Övrig gymnasial utbildning inom tjänster
+84P,"Minst 30 högskolepoäng inom tjänster, ej examen"
+84PH,"180 eller fler högskolepoäng inom tjänster, ej examen"
+84PL,"30-179 högskolepoäng inom tjänster, ej examen"
+84YA,Eftergymnasial yrkesutbildning inom personliga tjänster kortare än 3 år
+85M,Militär utbildning på eftergymnasial nivå
+85MA,Eftergymnasial militär utbildning
+85P,Polisutbildning
+85PA,Polisutbildning
+85T,Transportutbildning på eftergymnasial nivå
+85TA,Eftergymnasial utbildning inom transport
+85X,Övrig eftergymnasial utbildning inom tjänster
+85XA,Övrig eftergymnasial utbildning inom tjänster
+93Z,"Gymnasial utbildning, okänd inriktning"
+93ZA,"Gymnasieutbildning, okänd inriktning"
+95Z,"Eftergymnasial utbildning, okänd inriktning"
+95ZA,"Eftergymnasial utbildning, okänd inriktning"
+99ZA,Okänd

@@ -48,6 +48,7 @@ Use `--help` on any command or subcommand for full flag documentation.
 | `get diff` | Schema changes between two years for a register |
 | `get lineage` | Variable provenance across registers |
 | `get availability` | Temporal coverage for a variable or register |
+| `get classification` | Normalized code systems (SUN, SSYK, SNI, LKF, ...) with `--list`, `--codes`, `--variables` |
 | `resolve` | Exact alias lookup for column names (batch) |
 
 ### Documentation

@@ -15,9 +15,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "2.1.0"
+SCHEMA_VERSION = "2.2.0"
 DB_FILENAME = "regmeta.db"
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
@@ -181,6 +182,7 @@ CREATE TABLE variable_instance (
     datalangd TEXT,
     vardemangdsversion TEXT,
     vardemangdsniva TEXT,
+    classification_id INTEGER REFERENCES classification(id),
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
@@ -196,6 +198,42 @@ CREATE TABLE variable_context (
     objekttypnamn TEXT NOT NULL,
     PRIMARY KEY (cvid, populationnamn, objekttypnamn)
 );
+
+-- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
+-- Populated at build time from a maintainer-curated seed (classifications.toml)
+-- that maps raw variable_instance.vardemangdsversion labels to normalized
+-- classification rows. See DESIGN.md § "Classifications".
+CREATE TABLE classification (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    short_name       TEXT NOT NULL UNIQUE,
+    name             TEXT NOT NULL,
+    name_en          TEXT,
+    publisher        TEXT,
+    version          TEXT,
+    valid_from       INTEGER,
+    valid_to         INTEGER,
+    description      TEXT,
+    url              TEXT,
+    supersedes_id    INTEGER REFERENCES classification(id),
+    code_count       INTEGER NOT NULL DEFAULT 0,
+    -- Number of canonical codes when a valid_codes CSV was provided; NULL
+    -- otherwise. valid_code_count <= code_count is *not* invariant: canonical
+    -- codes that never appeared in any observed instance still count, but
+    -- observed-only noise codes inflate code_count.
+    valid_code_count INTEGER
+);
+
+-- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),
+-- 0 = observed-only (seen in data but not in the CSV), NULL = no CSV exists
+-- for this classification (validity unknown).
+CREATE TABLE classification_code (
+    classification_id INTEGER NOT NULL REFERENCES classification(id),
+    code_id           INTEGER NOT NULL REFERENCES value_code(code_id),
+    level             INTEGER,
+    is_valid          INTEGER,
+    PRIMARY KEY (classification_id, code_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 
 -- Enrichment tables
 CREATE TABLE value_code (
@@ -277,6 +315,16 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     tokenize='unicode61'
 );
 
+CREATE VIRTUAL TABLE classification_fts USING fts5(
+    short_name,
+    name,
+    name_en,
+    description,
+    content='classification',
+    content_rowid='id',
+    tokenize='unicode61'
+);
+
 -- Performance indexes
 CREATE INDEX idx_register_variant_register ON register_variant(register_id);
 CREATE INDEX idx_register_version_regvar ON register_version(regvar_id);
@@ -284,6 +332,8 @@ CREATE INDEX idx_variable_instance_register ON variable_instance(register_id);
 CREATE INDEX idx_variable_instance_var ON variable_instance(register_id, var_id);
 CREATE INDEX idx_variable_instance_regvar ON variable_instance(regvar_id);
 CREATE INDEX idx_variable_instance_regver ON variable_instance(regver_id);
+CREATE INDEX idx_variable_instance_classification ON variable_instance(classification_id)
+    WHERE classification_id IS NOT NULL;
 CREATE INDEX idx_variable_alias_kolumnnamn ON variable_alias(kolumnnamn);
 CREATE INDEX idx_value_code_vardekod ON value_code(vardekod);
 
@@ -786,7 +836,7 @@ def _import_registerinformation(
     )
     conn.executemany(
         "INSERT INTO variable_instance VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :datatyp, :datalangd, NULL, NULL)",
+        ":var_id, :datatyp, :datalangd, NULL, NULL, NULL)",
         list(instances.values()),
     )
     conn.executemany(
@@ -1170,8 +1220,25 @@ def utc_now() -> str:
 # ---------------------------------------------------------------------------
 
 
-def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
+def build_db(
+    csv_dir: Path,
+    db_dir: Path,
+    *,
+    classifications_seed: Path | None | bool = None,
+    classifications_csv_dir: Path | None = None,
+) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
+
+    ``classifications_seed`` controls classification population:
+      - ``None`` (default): use ``repo_seed_path()`` if a seed exists in the
+        repo checkout, otherwise skip.
+      - A ``Path``: use the given seed file.
+      - ``False``: skip classification population entirely (for tests).
+
+    ``classifications_csv_dir`` is the directory containing per-classification
+    valid-codes CSVs. If ``None``, defaults to ``<csv_dir>/../classifications/``
+    when that directory exists. Required (per-entry) only for seed entries
+    that set ``valid_codes_file``.
 
     Returns a summary dict for the CLI to display.
     """
@@ -1259,6 +1326,35 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
                     )
             elif filename == "VardemangderValidDates.csv":
                 row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
+
+        # Classifications — maintainer-curated normalized code systems.
+        seed: Path | None
+        if classifications_seed is False:
+            seed = None
+        elif classifications_seed is None:
+            seed = repo_seed_path()
+        else:
+            seed = classifications_seed  # type: ignore[assignment]
+        if seed is not None:
+            cls_dir = classifications_csv_dir
+            if cls_dir is None:
+                # Default: sibling of csv_dir named "classifications".
+                candidate = csv_dir.parent / "classifications"
+                if candidate.is_dir():
+                    cls_dir = candidate
+            elif not cls_dir.is_dir():
+                raise RegmetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="classification_csv_dir_not_found",
+                    error_class="configuration",
+                    message=f"classifications_csv_dir not found: {cls_dir}",
+                    remediation="Create the directory or omit the flag.",
+                )
+            row_counts["classifications.toml"] = populate_classifications(
+                conn, seed, valid_codes_dir=cls_dir
+            )
+        else:
+            _progress("Skipping classifications (seed file not found)")
 
         # Populate code_variable_map from junction + variable_instance
         _progress("Building code_variable_map...")
