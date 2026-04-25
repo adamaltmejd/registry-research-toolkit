@@ -17,7 +17,19 @@ from pathlib import Path
 
 import pytest
 
-pytest.importorskip("openpyxl")
+# The parser module imports lazily, so unit tests over pure helpers can run
+# without openpyxl. Tests that actually load workbooks are gated by the
+# `requires_openpyxl` mark below.
+try:
+    import openpyxl  # noqa: F401
+except ImportError:
+    HAS_OPENPYXL = False
+else:
+    HAS_OPENPYXL = True
+
+requires_openpyxl = pytest.mark.skipif(
+    not HAS_OPENPYXL, reason="openpyxl is required for this test"
+)
 
 from regmeta.sources.sos import (  # noqa: E402
     SosDcatAp,
@@ -26,6 +38,7 @@ from regmeta.sources.sos import (  # noqa: E402
     _as_date,
     _as_int,
     _clean,
+    _format_code,
     _normalise,
     parse_directory,
     parse_register_file,
@@ -86,6 +99,93 @@ def test_dcat_ap_extras_roundtrip() -> None:
     assert ap.title_sv == "Foo"
 
 
+class _FakeCell:
+    """Minimal duck-typed stand-in for an openpyxl cell — enough for
+    `_format_code` to inspect `value` and `number_format` without pulling
+    in the optional dep."""
+
+    def __init__(self, value: object, number_format: str = "General") -> None:
+        self.value = value
+        self.number_format = number_format
+
+
+def test_format_code_passes_strings_through() -> None:
+    assert _format_code(_FakeCell("ABC123")) == "ABC123"
+    assert _format_code(_FakeCell("  001 ")) == "001"
+    assert _format_code(_FakeCell(None)) is None
+    assert _format_code(_FakeCell("")) is None
+
+
+def test_format_code_pads_int_with_pure_zero_format() -> None:
+    # An Excel cell storing the integer 1 displayed as "001" (number_format
+    # "000") would silently lose the padding without this preservation —
+    # the bug Codex flagged. Pure-zero formats are the only ones we treat
+    # as code padding; "General" stays as plain str().
+    assert _format_code(_FakeCell(1, "000")) == "001"
+    assert _format_code(_FakeCell(12, "000")) == "012"
+    assert _format_code(_FakeCell(123, "000")) == "123"
+    assert _format_code(_FakeCell(7, "General")) == "7"
+    assert _format_code(_FakeCell(7.0, "00")) == "07"
+    assert _format_code(_FakeCell(7.5, "General")) == "7.5"
+
+
+def _write_minimal_workbook(
+    path: Path,
+    *,
+    kod_rows: list[tuple[str | None, object, str | None]] | None = None,
+    kod_format: str = "@",
+) -> None:
+    """Write a minimal SoS-shaped workbook at `path`. Optionally include a
+    Kodlista_TEST sheet with given rows and a number_format on the Kod column."""
+    import openpyxl
+
+    wb = openpyxl.Workbook()
+    wb.active.title = "Generell information"
+    wb.create_sheet("Metadata-Datamängd (DCAT-AP)")
+    var_ws = wb.create_sheet("Metadata - Variabelnivå")
+    var_ws.append(["Variabelnamn"])
+    var_ws.append(["TESTVAR"])
+    if kod_rows is not None:
+        kod_ws = wb.create_sheet("Kodlista_TEST")
+        kod_ws.append(["Tidsperiod", "Kod", "Beskrivning"])
+        for tp, kod, desc in kod_rows:
+            kod_ws.append([tp, kod, desc])
+        for row in kod_ws.iter_rows(min_row=2, min_col=2, max_col=2):
+            for cell in row:
+                cell.number_format = kod_format
+    wb.save(path)
+
+
+@requires_openpyxl
+def test_zero_padded_kod_round_trips_through_workbook(tmp_path: Path) -> None:
+    p = tmp_path / "Test.xlsx"
+    _write_minimal_workbook(
+        p,
+        kod_rows=[("2024", 1, "first"), ("2024", 12, "twelfth")],
+        kod_format="000",
+    )
+    result = parse_register_file(p)
+    assert len(result.kodlistor) == 1
+    assert [r.kod for r in result.kodlistor[0].rows] == ["001", "012"]
+
+
+@requires_openpyxl
+def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
+    tmp_path: Path,
+) -> None:
+    p = tmp_path / "TEST.XLSX"
+    _write_minimal_workbook(p)
+    results = parse_directory(tmp_path)
+    assert len(results) == 1
+    assert results[0].source_file.name == "TEST.XLSX"
+
+
+@requires_openpyxl
+def test_directory_passed_as_file_rejected(tmp_path: Path) -> None:
+    with pytest.raises(SosParseError, match="not a file"):
+        parse_register_file(tmp_path)
+
+
 # ---------------------------------------------------------------------------
 # Integration tests against real deliveries
 # ---------------------------------------------------------------------------
@@ -95,8 +195,8 @@ def _locate_sos_data() -> Path | None:
     """Find `regmeta/input_data/Socialstyrelsen/` — gitignored, so it may
     live in the main checkout rather than the current worktree.
 
-    Honour `SOS_METADATA_FIXTURES` first. Otherwise walk upward so
-    worktrees can find the sibling main checkout.
+    Honour `REGMETA_SOS_DATA` first. Otherwise walk upward so worktrees
+    can find the sibling main checkout.
     """
     env = os.environ.get("REGMETA_SOS_DATA")
     if env:
@@ -118,10 +218,10 @@ SOS_DATA = _locate_sos_data()
 
 
 requires_sos_data = pytest.mark.skipif(
-    SOS_DATA is None,
+    SOS_DATA is None or not HAS_OPENPYXL,
     reason=(
-        "Socialstyrelsen input data not present (gitignored); set "
-        "REGMETA_SOS_DATA to run integration tests"
+        "Socialstyrelsen input data not present (gitignored) or openpyxl "
+        "missing; set REGMETA_SOS_DATA and install regmeta[xlsx] to run"
     ),
 )
 

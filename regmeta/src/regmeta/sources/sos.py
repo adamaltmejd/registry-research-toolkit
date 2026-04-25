@@ -204,80 +204,98 @@ def parse_register_file(path: Path | str) -> SosRegister:
         raise SosParseError(f"{p.name} is an Office lock file; skip")
     if not p.exists():
         raise SosParseError(f"{p} does not exist")
+    if not p.is_file():
+        raise SosParseError(f"{p} is not a file")
     try:
         wb = openpyxl.load_workbook(p, read_only=True, data_only=True)
     except zipfile.BadZipFile as exc:
         raise SosParseError(f"{p.name} is not a valid .xlsx file") from exc
+    except (OSError, ValueError, KeyError) as exc:
+        # openpyxl can raise these on partially corrupt files (truncated XML,
+        # missing relationships, unexpected schema). Wrap so callers see a
+        # uniform error type.
+        raise SosParseError(
+            f"{p.name} could not be read as a valid .xlsx file: {exc}"
+        ) from exc
 
-    warnings: list[str] = []
+    try:
+        warnings: list[str] = []
 
-    generell = _find_sheet(wb, ["generell", "information"])
-    dcat = _find_sheet(wb, ["datamängd", "dcat"]) or _find_sheet(
-        wb, ["metadata", "datamängd"]
-    )
-    deldat = (
-        _find_sheet(wb, ["deldatamängder", "datavyer"])
-        or _find_sheet(wb, ["metadata", "deldatamängder"])
-        or _find_sheet(wb, ["deldatamängder"])
-    )
-    varsheet = _find_sheet(wb, ["metadata", "variabelnivå"]) or _find_sheet(
-        wb, ["metadata", "variabler"]
-    )
+        generell = _find_sheet(wb, ["generell", "information"])
+        dcat = _find_sheet(wb, ["datamängd", "dcat"]) or _find_sheet(
+            wb, ["metadata", "datamängd"]
+        )
+        deldat = (
+            _find_sheet(wb, ["deldatamängder", "datavyer"])
+            or _find_sheet(wb, ["metadata", "deldatamängder"])
+            or _find_sheet(wb, ["deldatamängder"])
+        )
+        varsheet = _find_sheet(wb, ["metadata", "variabelnivå"]) or _find_sheet(
+            wb, ["metadata", "variabler"]
+        )
 
-    if varsheet is None:
-        raise SosParseError(f"{p.name}: no variable-level sheet found")
+        if varsheet is None:
+            raise SosParseError(f"{p.name}: no variable-level sheet found")
 
-    gen = _parse_generell(wb[generell]) if generell else {}
-    dcat_ap = _parse_dcat_ap(wb[dcat]) if dcat else SosDcatAp()
-    deldatamangder = tuple(_parse_deldatamangder(wb[deldat])) if deldat else ()
-    variables = tuple(_parse_variables(wb[varsheet]))
+        gen = _parse_generell(wb[generell]) if generell else {}
+        dcat_ap = _parse_dcat_ap(wb[dcat]) if dcat else SosDcatAp()
+        deldatamangder = tuple(_parse_deldatamangder(wb[deldat])) if deldat else ()
+        variables = tuple(_parse_variables(wb[varsheet]))
 
-    kodlistor: list[SosKodlista] = []
-    quality_sheets: list[SosQualitySheet] = []
-    for sheet_name in wb.sheetnames:
-        low = sheet_name.lower()
-        if low.startswith("kodlista"):
-            try:
-                kod, kod_warnings = _parse_kodlista(wb[sheet_name])
-                kodlistor.append(kod)
-                warnings.extend(kod_warnings)
-            except Exception as exc:
-                warnings.append(f"kodlista {sheet_name!r}: {exc}")
-        elif low.startswith("kvalitet"):
-            quality_sheets.append(_parse_quality_sheet(wb[sheet_name]))
+        kodlistor: list[SosKodlista] = []
+        quality_sheets: list[SosQualitySheet] = []
+        for sheet_name in wb.sheetnames:
+            low = sheet_name.lower()
+            if low.startswith("kodlista"):
+                try:
+                    kod, kod_warnings = _parse_kodlista(wb[sheet_name])
+                    kodlistor.append(kod)
+                    warnings.extend(kod_warnings)
+                except Exception as exc:
+                    warnings.append(f"kodlista {sheet_name!r}: {exc}")
+            elif low.startswith("kvalitet"):
+                quality_sheets.append(_parse_quality_sheet(wb[sheet_name]))
 
-    if generell is None:
-        warnings.append("missing Generell information sheet")
-    if dcat is None:
-        warnings.append("missing DCAT-AP sheet")
-    if deldat is None:
-        warnings.append("missing Deldatamängder sheet (implicit single subset)")
+        if generell is None:
+            warnings.append("missing Generell information sheet")
+        if dcat is None:
+            warnings.append("missing DCAT-AP sheet")
+        if deldat is None:
+            warnings.append("missing Deldatamängder sheet (implicit single subset)")
 
-    return SosRegister(
-        source_file=p,
-        dataset_name=gen.get("dataset_name"),
-        dataset_version=gen.get("dataset_version"),
-        dataset_date=gen.get("dataset_date"),
-        template_version=gen.get("template_version"),
-        template_date=gen.get("template_date"),
-        contact_email=gen.get("contact_email"),
-        dcat_ap=dcat_ap,
-        deldatamangder=deldatamangder,
-        variables=variables,
-        kodlistor=tuple(kodlistor),
-        quality_sheets=tuple(quality_sheets),
-        warnings=tuple(warnings),
-    )
+        return SosRegister(
+            source_file=p,
+            dataset_name=gen.get("dataset_name"),
+            dataset_version=gen.get("dataset_version"),
+            dataset_date=gen.get("dataset_date"),
+            template_version=gen.get("template_version"),
+            template_date=gen.get("template_date"),
+            contact_email=gen.get("contact_email"),
+            dcat_ap=dcat_ap,
+            deldatamangder=deldatamangder,
+            variables=variables,
+            kodlistor=tuple(kodlistor),
+            quality_sheets=tuple(quality_sheets),
+            warnings=tuple(warnings),
+        )
+    finally:
+        wb.close()
 
 
 def parse_directory(directory: Path | str) -> list[SosRegister]:
     """Parse every `.xlsx` file in a directory, skipping Office lock files.
-    Files that fail to parse raise `SosParseError` — caller decides whether
-    to collect or halt."""
+    Halts on the first parse failure (raises `SosParseError`); call per file
+    if you need to collect errors instead."""
 
     d = Path(directory)
     out: list[SosRegister] = []
-    for f in sorted(d.glob("*.xlsx")):
+    for f in sorted(d.iterdir()):
+        if not f.is_file():
+            continue
+        # Case-insensitive: some deliveries arrive as `.XLSX` on case-sensitive
+        # filesystems, and a strict `*.xlsx` glob would skip them silently.
+        if f.suffix.lower() != ".xlsx":
+            continue
         if f.name.startswith("~$"):
             continue
         out.append(parse_register_file(f))
@@ -317,6 +335,53 @@ def _row_iter(ws: Any, start: int = 1) -> Iterable[tuple[Any, ...]]:
             empty_streak += 1
             if empty_streak >= empty_limit:
                 break
+
+
+def _cell_row_iter(ws: Any, start: int = 1) -> Iterable[tuple[Any, ...]]:
+    """Like `_row_iter` but yields tuples of openpyxl cell objects, so
+    callers can inspect formatting (e.g. number_format on code columns)."""
+    empty_streak = 0
+    empty_limit = 50
+    for cells in ws.iter_rows(min_row=start, values_only=False):
+        if any(c.value is not None and str(c.value).strip() for c in cells):
+            empty_streak = 0
+            yield tuple(cells)
+        else:
+            empty_streak += 1
+            if empty_streak >= empty_limit:
+                break
+
+
+def _at(row: tuple[Any, ...], idx: int | None) -> Any:
+    if idx is None or idx >= len(row):
+        return None
+    return row[idx]
+
+
+_PURE_ZERO_FMT = re.compile(r"^0+$")
+
+
+def _format_code(cell: Any) -> str | None:
+    """Render a code-column cell to a string, preserving leading zeros from
+    Excel display formatting. Excel may store '001' as the integer 1 with
+    number_format '000'; without consulting the format we'd silently emit
+    '1' and corrupt code identity for downstream joins."""
+    v = cell.value
+    if v is None:
+        return None
+    if isinstance(v, bool):  # bool is a subclass of int — handle first
+        return str(v)
+    if isinstance(v, (int, float)):
+        if isinstance(v, float):
+            if not v.is_integer():
+                return str(v)
+            v = int(v)
+        fmt = cell.number_format or ""
+        if _PURE_ZERO_FMT.fullmatch(fmt):
+            return str(v).zfill(len(fmt))
+        return str(v)
+    s = str(v).strip()
+    return s or None
 
 
 def _clean(v: Any) -> str | None:
@@ -498,8 +563,9 @@ def _parse_deldatamangder(ws: Any) -> Iterable[SosDeldatamangd]:
 
 _VAR_HEADERS = {
     "deldatamängdsnamn": "deldatamangd",
-    # BU splits deldatamängd into dataset + view
-    "datamängdsnamn": "deldatamangd_parent",
+    # BU splits deldatamängd into dataset + view; we keep the view name
+    # ("Datavynamn") as the deldatamängd identity and drop the parent
+    # ("Datamängdsnamn") since it duplicates the register-level name.
     "datavynamn": "deldatamangd",
     "variabelnamn": "name",
     "variabeletikett": "label",
@@ -585,11 +651,14 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
 
     header_found = False
     col_tp = col_kod = col_desc = col_var = None
-    last_tidsperiod: str | None = (
-        None  # forward-fill: some sheets put the period once on a header row above rows that leave it blank
-    )
-    all_rows = list(_row_iter(ws))
-    for row in all_rows:
+    # forward-fill: some sheets put the period once on a header row above
+    # rows that leave it blank
+    last_tidsperiod: str | None = None
+    # iterate cells (not just values) so the kod column can preserve leading
+    # zeros from number_format
+    all_cell_rows = list(_cell_row_iter(ws))
+    for cells in all_cell_rows:
+        row = tuple(c.value for c in cells)
         first = _clean(row[0]) if row else None
         second = _clean(row[1]) if len(row) > 1 else None
 
@@ -632,14 +701,12 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
                     continue
             continue
 
-        def pick(idx: int | None) -> Any:
-            if idx is None or idx >= len(row):
-                return None
-            return row[idx]
-
-        tp_val = _clean(pick(col_tp))
-        kod_val = pick(col_kod)
-        kod_str = _clean(kod_val) if kod_val is not None else None
+        tp_val = _clean(_at(row, col_tp))
+        kod_str = (
+            _format_code(cells[col_kod])
+            if col_kod is not None and col_kod < len(cells)
+            else None
+        )
 
         # Rows carrying only a Tidsperiod (no code) act as a section header
         # for the rows beneath them; remember and forward-fill.
@@ -653,8 +720,10 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
             SosKodlistaRow(
                 tidsperiod=tp_val or last_tidsperiod,
                 kod=kod_str,
-                beskrivning=_clean(pick(col_desc)),
-                variable_name=_clean(pick(col_var)) if col_var is not None else None,
+                beskrivning=_clean(_at(row, col_desc)),
+                variable_name=(
+                    _clean(_at(row, col_var)) if col_var is not None else None
+                ),
             )
         )
 
@@ -663,7 +732,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
             f"kodlista {sheet_name!r}: no Tidsperiod/Kod header row found; "
             "structured rows skipped (raw content preserved)"
         )
-        raw_rows = [tuple(r) for r in all_rows]
+        raw_rows = [tuple(c.value for c in cells) for cells in all_cell_rows]
 
     return (
         SosKodlista(

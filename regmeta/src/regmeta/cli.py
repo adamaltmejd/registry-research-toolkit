@@ -940,22 +940,21 @@ def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], i
             remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
         ) from exc
 
-    def _encode(obj: Any) -> Any:
+    def _to_plain(obj: Any) -> Any:
         if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
-            return dataclasses.asdict(obj)
+            return _to_plain(dataclasses.asdict(obj))
+        if isinstance(obj, dict):
+            return {k: _to_plain(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [_to_plain(v) for v in obj]
         if isinstance(obj, Path):
             return str(obj)
         if isinstance(obj, date):
             return obj.isoformat()
-        raise TypeError(f"cannot serialise {type(obj).__name__}")
+        return obj
 
     data = {
-        "registers": [
-            json.loads(
-                json.dumps(dataclasses.asdict(r), default=_encode, ensure_ascii=False)
-            )
-            for r in results
-        ],
+        "registers": [_to_plain(r) for r in results],
         "register_count": len(results),
     }
     duration_ms = int((time.perf_counter() - start) * 1000)
