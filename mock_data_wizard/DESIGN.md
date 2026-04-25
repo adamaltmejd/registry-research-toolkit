@@ -23,10 +23,13 @@ declare what data to aggregate. Two constructors are available:
   Credentials come from the Windows system DSN; the script never carries
   passwords.
 
-Sources dispatch through `source_fetch(src)` to a uniform
-`list(source_name, source_type, source_detail, dt)` shape, so the
-classify/summarize pipeline is identical regardless of where the data
-came from.
+Sources dispatch through `source_iter(src)`, which returns a streaming
+iterator `list(n_items, fetch_item(i), close())`. Main pulls one item
+at a time, fetching as `list(source_name, source_type, source_detail,
+dt)`, runs the classify/summarize pipeline, and drops the table before
+the next fetch. Lazy-by-design: peak memory stays near a single table
+rather than the sum of all tables in the source, which matters on MONA
+projects with hundreds of SQL views.
 
 ### Discovery mode
 

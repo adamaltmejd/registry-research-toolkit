@@ -413,14 +413,22 @@ R_TEMPLATE = _strip_template_indent("""\
     }}
 
     # -- Source dispatch ------------------------------------------------
-    # source_fetch(src) returns list of list(source_name, source_type,
-    # source_detail, dt) -- one per physical table/file the source produced.
+    # source_iter(src) returns a streaming iterator so Main can fetch,
+    # process, and free one table at a time. Loading everything up-front
+    # (the old source_fetch design) blew past 300+ GB peak RSS on projects
+    # with hundreds of SQL tables. Shape:
+    #   list(
+    #     n_items    = integer,
+    #     fetch_item = function(i) list(source_name, source_type,
+    #                                   source_detail, dt) or NULL,
+    #     close      = function() NULL    # releases SQL conn etc.
+    #   )
 
-    source_fetch <- function(src) {{
+    source_iter <- function(src) {{
       type <- src$type
       if (is.null(type)) stop("Source has no `type`: check your SOURCES block")
-      if (type == "file") return(source_fetch_file(src))
-      if (type == "sql")  return(source_fetch_sql(src))
+      if (type == "file") return(source_iter_file(src))
+      if (type == "sql")  return(source_iter_sql(src))
       stop(sprintf("Unknown source type: %s", type))
     }}
 
@@ -437,7 +445,7 @@ R_TEMPLATE = _strip_template_indent("""\
       unique(normalizePath(found, mustWork = FALSE))
     }}
 
-    source_fetch_file <- function(src) {{
+    source_iter_file <- function(src) {{
       found <- list_files_in_source(src)
       if (!is.null(src$include)) {{
         found <- found[basename(found) %in% src$include]
@@ -457,26 +465,30 @@ R_TEMPLATE = _strip_template_indent("""\
         ))
       }}
       n_found <- length(found)
-      lapply(seq_along(found), function(i) {{
-        fp <- found[[i]]
-        t0 <- Sys.time()
-        dt <- tryCatch(
-          data.table::fread(fp, nThread = 1L),
-          error = function(e) stop(sprintf("Failed to read %s: %s", fp, conditionMessage(e)))
-        )
-        if (is.null(dt) || nrow(dt) == 0L) {{
-          .mdw_log("  read  %d/%d %s: empty, skipped", i, n_found, basename(fp))
-          return(NULL)
-        }}
-        .mdw_log("  read  %d/%d %s: %s rows x %d cols (%.1fs)",
-                 i, n_found, basename(fp), .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
-        list(
-          source_name   = basename(fp),
-          source_type   = "file",
-          source_detail = list(path = fp),
-          dt            = dt
-        )
-      }})
+      list(
+        n_items = n_found,
+        fetch_item = function(i) {{
+          fp <- found[[i]]
+          t0 <- Sys.time()
+          dt <- tryCatch(
+            data.table::fread(fp, nThread = 1L),
+            error = function(e) stop(sprintf("Failed to read %s: %s", fp, conditionMessage(e)))
+          )
+          if (is.null(dt) || nrow(dt) == 0L) {{
+            .mdw_log("  read  %d/%d %s: empty, skipped", i, n_found, basename(fp))
+            return(NULL)
+          }}
+          .mdw_log("  read  %d/%d %s: %s rows x %d cols (%.1fs)",
+                   i, n_found, basename(fp), .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
+          list(
+            source_name   = basename(fp),
+            source_type   = "file",
+            source_detail = list(path = fp),
+            dt            = dt
+          )
+        }},
+        close = function() invisible(NULL)
+      )
     }}
 
     # -- SQL dispatch ---------------------------------------------------
@@ -588,99 +600,107 @@ R_TEMPLATE = _strip_template_indent("""\
       data.table::as.data.table(DBI::dbFetch(res, n = -1L))
     }}
 
-    source_fetch_sql <- function(src) {{
+    source_iter_sql <- function(src) {{
+      # Connection is held open across the iteration and closed when
+      # Main calls iter$close() after processing every table. Cannot use
+      # on.exit() here because that would fire as soon as this constructor
+      # returns, before fetch_item() ever runs.
       conn <- sql_connect(src)
-      on.exit(DBI::dbDisconnect(conn), add = TRUE)
 
-      # Resolve the table list (either explicit, pattern-matched, or via raw queries).
+      close_fn <- function() {{
+        if (!is.null(conn)) {{
+          tryCatch(DBI::dbDisconnect(conn), error = function(e) invisible(NULL))
+          conn <<- NULL
+        }}
+        invisible(NULL)
+      }}
+
+      # Resolve the per-item plan: each plan has an alias, a query to
+      # run, and the source_detail we want to record in stats.json.
       if (!is.null(src$queries)) {{
         # Custom queries mode -- each named entry becomes one source.
         qnames <- names(src$queries)
         if (is.null(qnames) || any(!nzchar(qnames)))
           stop("sql_source(): when using `queries`, supply a NAMED character vector")
-        n_q <- length(src$queries)
-        items <- lapply(seq_along(src$queries), function(i) {{
+        plans <- lapply(seq_along(src$queries), function(i) {{
+          list(
+            alias  = qnames[i],
+            query  = src$queries[[i]],
+            detail = list(dsn = src$dsn, database = src$database, query = src$queries[[i]])
+          )
+        }})
+      }} else {{
+        qualified <- if (!is.null(src$tables)) {{
+          src$tables
+        }} else if (!is.null(src$pattern)) {{
+          # Pattern mode: discover views, filter by regex.
+          all_tbls <- sql_list_tables(conn, src)
+          if (src$exclude_archived) {{
+            all_tbls <- all_tbls[!grepl("(^|\\\\.)x_", all_tbls)]
+          }}
+          pat <- paste(src$pattern, collapse = "|")
+          all_tbls[grepl(pat, all_tbls, ignore.case = TRUE)]
+        }} else if (isTRUE(src$all)) {{
+          # All-tables mode: discover views and use every one.
+          all_tbls <- sql_list_tables(conn, src)
+          if (src$exclude_archived) {{
+            all_tbls <- all_tbls[!grepl("(^|\\\\.)x_", all_tbls)]
+          }}
+          all_tbls
+        }} else {{
+          stop("sql_source(): provide one of `tables`, `pattern`, `queries`, or `all = TRUE`.")
+        }}
+
+        if (!is.null(src$include)) {{
+          qualified <- qualified[vapply(qualified, strip_schema, character(1)) %in% src$include |
+                                 qualified %in% src$include]
+        }}
+        if (!is.null(src$exclude)) {{
+          qualified <- qualified[!(vapply(qualified, strip_schema, character(1)) %in% src$exclude) &
+                                 !(qualified %in% src$exclude)]
+        }}
+
+        resolved <- resolve_table_aliases(qualified)
+        if (length(resolved) == 0L) {{
+          close_fn()
+          stop(sprintf("sql_source(dsn='%s'): no tables selected after filters.", src$dsn))
+        }}
+
+        aliases <- names(resolved)
+        plans <- lapply(aliases, function(alias) {{
+          qt <- resolved[[alias]]
+          q  <- sql_build_query(qt, src)
+          list(
+            alias  = alias,
+            query  = q,
+            detail = list(dsn = src$dsn, database = src$database, table = qt, query = q)
+          )
+        }})
+      }}
+
+      n_plans <- length(plans)
+      list(
+        n_items = n_plans,
+        fetch_item = function(i) {{
+          p <- plans[[i]]
           t0 <- Sys.time()
-          dt <- sql_run_query(conn, src$queries[[i]], src$encoding)
+          dt <- sql_run_query(conn, p$query, src$encoding)
           if (src$normalize_names) dt <- normalize_column_names(dt)
           if (nrow(dt) == 0L) {{
-            .mdw_log("  fetch %d/%d %s: empty, skipped", i, n_q, qnames[i])
+            .mdw_log("  fetch %d/%d %s: empty, skipped", i, n_plans, p$alias)
             return(NULL)
           }}
           .mdw_log("  fetch %d/%d %s: %s rows x %d cols (%.1fs)",
-                   i, n_q, qnames[i], .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
+                   i, n_plans, p$alias, .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
           list(
-            source_name   = qnames[i],
+            source_name   = p$alias,
             source_type   = "sql",
-            source_detail = list(dsn = src$dsn, database = src$database, query = src$queries[[i]]),
+            source_detail = p$detail,
             dt            = dt
           )
-        }})
-        return(items)
-      }}
-
-      qualified <- if (!is.null(src$tables)) {{
-        src$tables
-      }} else if (!is.null(src$pattern)) {{
-        # Pattern mode: discover views, filter by regex.
-        all_tbls <- sql_list_tables(conn, src)
-        if (src$exclude_archived) {{
-          all_tbls <- all_tbls[!grepl("(^|\\\\.)x_", all_tbls)]
-        }}
-        pat <- paste(src$pattern, collapse = "|")
-        all_tbls[grepl(pat, all_tbls, ignore.case = TRUE)]
-      }} else if (isTRUE(src$all)) {{
-        # All-tables mode: discover views and use every one.
-        all_tbls <- sql_list_tables(conn, src)
-        if (src$exclude_archived) {{
-          all_tbls <- all_tbls[!grepl("(^|\\\\.)x_", all_tbls)]
-        }}
-        all_tbls
-      }} else {{
-        stop("sql_source(): provide one of `tables`, `pattern`, `queries`, or `all = TRUE`.")
-      }}
-
-      if (!is.null(src$include)) {{
-        qualified <- qualified[vapply(qualified, strip_schema, character(1)) %in% src$include |
-                               qualified %in% src$include]
-      }}
-      if (!is.null(src$exclude)) {{
-        qualified <- qualified[!(vapply(qualified, strip_schema, character(1)) %in% src$exclude) &
-                               !(qualified %in% src$exclude)]
-      }}
-
-      resolved <- resolve_table_aliases(qualified)
-      if (length(resolved) == 0L) {{
-        stop(sprintf("sql_source(dsn='%s'): no tables selected after filters.", src$dsn))
-      }}
-
-      aliases <- names(resolved)
-      n_tbl <- length(aliases)
-      lapply(seq_along(aliases), function(i) {{
-        alias <- aliases[[i]]
-        qualified_table <- resolved[[alias]]
-        q <- sql_build_query(qualified_table, src)
-        t0 <- Sys.time()
-        dt <- sql_run_query(conn, q, src$encoding)
-        if (src$normalize_names) dt <- normalize_column_names(dt)
-        if (nrow(dt) == 0L) {{
-          .mdw_log("  fetch %d/%d %s: empty, skipped", i, n_tbl, alias)
-          return(NULL)
-        }}
-        .mdw_log("  fetch %d/%d %s: %s rows x %d cols (%.1fs)",
-                 i, n_tbl, alias, .mdw_num(nrow(dt)), ncol(dt), .mdw_secs(t0))
-        list(
-          source_name   = alias,
-          source_type   = "sql",
-          source_detail = list(
-            dsn       = src$dsn,
-            database  = src$database,
-            table     = qualified_table,
-            query     = q
-          ),
-          dt            = dt
-        )
-      }})
+        }},
+        close = close_fn
+      )
     }}
 
     # -- Discovery: list available items per source without fetching data.
@@ -980,43 +1000,57 @@ R_TEMPLATE = _strip_template_indent("""\
                   else                    sprintf("sql dsn='%s'", src$dsn)
       .mdw_log("source %d/%d: %s", src_idx, length(SOURCES), src_desc)
       t_src <- Sys.time()
-      items <- source_fetch(src)
-      items <- Filter(Negate(is.null), items)
-      .mdw_log("  fetched %d non-empty item(s) in %.1fs",
-               length(items), .mdw_secs(t_src))
 
-      for (item_idx in seq_along(items)) {{
-        item <- items[[item_idx]]
-        n_rows <- nrow(item$dt)
+      iter <- source_iter(src)
+      kept <- 0L
+      # Stream items: fetch one, process it, free it, then move on. This
+      # is what keeps peak memory bounded to roughly one table at a time
+      # instead of the sum of all tables.
+      tryCatch({{
+        for (i in seq_len(iter$n_items)) {{
+          item <- iter$fetch_item(i)
+          if (is.null(item)) next
+          kept <- kept + 1L
+          n_rows <- nrow(item$dt)
 
-        if (n_rows < SMALL_POP_MULT * SUPPRESS_K) {{
-          message(sprintf(
-            "WARNING: source '%s' has only %d rows (< %d). Aggregates may be identifiable even after k-anonymity.",
-            item$source_name, n_rows, SMALL_POP_MULT * SUPPRESS_K
-          ))
+          if (n_rows < SMALL_POP_MULT * SUPPRESS_K) {{
+            message(sprintf(
+              "WARNING: source '%s' has only %d rows (< %d). Aggregates may be identifiable even after k-anonymity.",
+              item$source_name, n_rows, SMALL_POP_MULT * SUPPRESS_K
+            ))
+          }}
+
+          t_proc <- Sys.time()
+          columns <- process_table(item$dt)
+          .mdw_log("  stats %d/%d %s: %s rows, %d cols (%.1fs)",
+                   i, iter$n_items, item$source_name,
+                   .mdw_num(n_rows), length(columns), .mdw_secs(t_proc))
+
+          for (col_summary in columns) {{
+            cname <- col_summary$column_name
+            if (is.null(all_columns[[cname]])) all_columns[[cname]] <- list(source_names = character(0), max_nd = 0L)
+            all_columns[[cname]]$source_names <- c(all_columns[[cname]]$source_names, item$source_name)
+            all_columns[[cname]]$max_nd <- max(all_columns[[cname]]$max_nd, col_summary$n_distinct)
+          }}
+
+          source_results[[length(source_results) + 1L]] <- list(
+            source_name   = item$source_name,
+            source_type   = item$source_type,
+            source_detail = item$source_detail,
+            row_count     = n_rows,
+            columns       = columns
+          )
+
+          # Drop every reference to the fetched table before the next
+          # iteration starts, then nudge the GC so R returns memory to
+          # the OS rather than holding peak across all tables.
+          rm(item, columns)
+          gc(verbose = FALSE)
         }}
+      }}, finally = iter$close())
 
-        t_proc <- Sys.time()
-        columns <- process_table(item$dt)
-        .mdw_log("  stats %d/%d %s: %s rows, %d cols (%.1fs)",
-                 item_idx, length(items), item$source_name,
-                 .mdw_num(n_rows), length(columns), .mdw_secs(t_proc))
-
-        for (col_summary in columns) {{
-          cname <- col_summary$column_name
-          if (is.null(all_columns[[cname]])) all_columns[[cname]] <- list(source_names = character(0), max_nd = 0L)
-          all_columns[[cname]]$source_names <- c(all_columns[[cname]]$source_names, item$source_name)
-          all_columns[[cname]]$max_nd <- max(all_columns[[cname]]$max_nd, col_summary$n_distinct)
-        }}
-
-        source_results[[length(source_results) + 1L]] <- list(
-          source_name   = item$source_name,
-          source_type   = item$source_type,
-          source_detail = item$source_detail,
-          row_count     = n_rows,
-          columns       = columns
-        )
-      }}
+      .mdw_log("  source %d done: %d non-empty item(s) in %.1fs",
+               src_idx, kept, .mdw_secs(t_src))
     }}
 
     if (length(source_results) == 0L) {{

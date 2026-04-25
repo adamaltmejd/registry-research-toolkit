@@ -98,14 +98,16 @@ def test_user_config_and_library_sections_present(tmp_path: Path):
     assert "sql_source <- function(" in content
 
 
-def test_source_fetch_dispatch_present(tmp_path: Path):
-    """The library section dispatches sources via source_fetch()."""
+def test_source_iter_dispatch_present(tmp_path: Path):
+    """Sources dispatch via source_iter() -- a streaming iterator so Main
+    can fetch, process, and free one table at a time (prevents peak-RSS
+    blowup on projects with many large SQL tables)."""
     out = tmp_path / "test.R"
     generate_script(["\\\\server\\share"], out)
     content = out.read_text()
-    assert "source_fetch <- function(src)" in content
-    assert "source_fetch_file <- function(src)" in content
-    assert "source_fetch_sql <- function(src)" in content
+    assert "source_iter <- function(src)" in content
+    assert "source_iter_file <- function(src)" in content
+    assert "source_iter_sql <- function(src)" in content
     # Main loop emits source_name / source_type / source_detail into stats.json
     assert "source_name" in content
     assert "source_type" in content
@@ -197,7 +199,7 @@ def test_all_flag_opts_out_of_discovery(tmp_path: Path):
     assert "all = FALSE" in content  # default in both signatures
     # needs_discovery() short-circuits on isTRUE(src$all)
     assert "if (isTRUE(src$all)) return(FALSE)" in content
-    # source_fetch_sql handles the all-tables branch
+    # source_iter_sql handles the all-tables branch
     assert "All-tables mode" in content
     # Comment block documents the shortcut
     assert "all = TRUE" in content
