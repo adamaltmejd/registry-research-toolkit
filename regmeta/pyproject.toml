@@ -28,6 +28,8 @@ Issues = "https://github.com/adamaltmejd/registry-research-toolkit/issues"
 regmeta = "regmeta.cli:main"
 
 [project.optional-dependencies]
+# Required for maintainer-only xlsx parsing (SCB ID-kolumner, Socialstyrelsen
+# register metadata). End users who only query the DB don't need this.
 xlsx = ["openpyxl>=3.1"]
 
 [tool.hatch.build.targets.wheel]
