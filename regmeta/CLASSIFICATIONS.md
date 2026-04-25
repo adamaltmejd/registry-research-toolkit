@@ -254,27 +254,42 @@ Page: <https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regional
 
 The classification is a **union of yearly snapshots** (codes valid at any
 point 1980–2026). SCB publishes a separate snapshot per year, not a
-combined list.
-
-**Decision: needs per-year split.** Initial plan was to union all snapshots
-into one `lkf.csv`, but the data has **665 codes with conflicting labels
-across years** — these are real historical renames, not noise. Examples:
+combined list. The data has **665 codes with conflicting labels across
+years** — real historical renames, not noise. Examples:
 
 - `12` → `Malmöhus län` (pre-1997) vs `Skåne län` (post-1997)
 - `14` → `Göteborgs och Bohus län` (pre-1998) vs `Västra Götalands län` (post-1998)
 - `20` → `Kopparbergs län` (pre-1997) vs `Dalarnas län` (post-1997)
 - 4 distinct merger states for parish `018805`
 
-A naive union loses the historical meaning. Options:
+A naive union would silently lose the historical meaning. The data already
+disambiguates: `variable_instance.vardemangdsversion` is year-stamped
+(`LKF 1990-01-01/...`), so a per-year split is purely seed-side — no
+schema change, no FK rework. **Decision: yearly split**.
 
-a) **Per-year sub-classifications** (`LKF2020`, `LKF2021`, ...) — requires
-   splitting the seed entry, reworking the FK so each `variable_instance`
-   maps to a year-specific classification. Faithful to SCB's intent.
-b) **Union with most-recent label** — each conflicted code shows only its
-   current label. Simple but lossy.
-c) **Skip** — leave as the unknown-validity classification it is today.
+`scripts/extract_lkf.py` drafts the canonical CSVs from SCB's per-year
+publications. Status:
 
-Pending decision.
+- **2016–2026 (minus 2020)**: SCB publishes `lkf{year}.xls`/`.xlsx` at the
+  predictable URL pattern. Script auto-downloads, handles the three
+  different layouts SCB has used (2018–19 / 2021–22 / 2023+), and writes
+  `lkf{year}.csv` with 1500–1700 codes each (län + kommun + församling).
+- **2015 and earlier**: PDF only. Would need separate OCR pipeline.
+- **2020**: missing from SCB at the standard URL pattern (paths probed,
+  none returned 200). Possibly never published as XLS, or moved.
+
+Run when ready:
+
+```bash
+uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
+    --out regmeta/input_data/classifications/
+```
+
+Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the
+year-string variants need to be reconciled against the existing LKF entry
+in `classifications.toml`). The current single `LKF` entry should then be
+removed, with each year's vardemangdsversion strings moved to the
+appropriate `LKF{year}` entry.
 
 ### Education — ISCED 2011
 
