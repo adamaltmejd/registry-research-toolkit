@@ -133,16 +133,20 @@ def _write_minimal_workbook(
     *,
     kod_rows: list[tuple[str | None, object, str | None]] | None = None,
     kod_format: str = "@",
+    var_header: list[str] | None = None,
 ) -> None:
     """Write a minimal SoS-shaped workbook at `path`. Optionally include a
-    Kodlista_TEST sheet with given rows and a number_format on the Kod column."""
+    Kodlista_TEST sheet with given rows and a number_format on the Kod
+    column. `var_header` overrides the default `["Variabelnamn"]` header
+    on the variable sheet (used by tests that exercise malformed-shape
+    failure paths)."""
     import openpyxl
 
     wb = openpyxl.Workbook()
     wb.active.title = "Generell information"
     wb.create_sheet("Metadata-Datamängd (DCAT-AP)")
     var_ws = wb.create_sheet("Metadata - Variabelnivå")
-    var_ws.append(["Variabelnamn"])
+    var_ws.append(var_header if var_header is not None else ["Variabelnamn"])
     var_ws.append(["TESTVAR"])
     if kod_rows is not None:
         kod_ws = wb.create_sheet("Kodlista_TEST")
@@ -183,6 +187,27 @@ def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
 def test_directory_passed_as_file_rejected(tmp_path: Path) -> None:
     with pytest.raises(SosParseError, match="not a regular file"):
         parse_register_file(tmp_path)
+
+
+@requires_openpyxl
+def test_variable_sheet_without_variabelnamn_header_raises(tmp_path: Path) -> None:
+    # An upstream rename or malformed delivery would leave the varsheet
+    # without a Variabelnamn column. Silently returning zero variables
+    # would hide the problem, so we fail fast here.
+    p = tmp_path / "Test.xlsx"
+    _write_minimal_workbook(p, var_header=["Foo", "Bar"])
+    with pytest.raises(SosParseError, match="Variabelnamn"):
+        parse_register_file(p)
+
+
+@requires_openpyxl
+def test_unsupported_xls_format_wrapped_as_sos_parse_error(tmp_path: Path) -> None:
+    # openpyxl raises InvalidFileException for `.xls`/`.xlsb`; surface as
+    # SosParseError so the parser's contract holds for common wrong inputs.
+    p = tmp_path / "test.xls"
+    p.write_bytes(b"")
+    with pytest.raises(SosParseError, match="does not support"):
+        parse_register_file(p)
 
 
 # ---------------------------------------------------------------------------

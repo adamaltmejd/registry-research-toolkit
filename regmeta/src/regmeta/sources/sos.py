@@ -208,6 +208,12 @@ def parse_register_file(path: Path | str) -> SosRegister:
         wb = openpyxl.load_workbook(p, read_only=True, data_only=True)
     except zipfile.BadZipFile as exc:
         raise SosParseError(f"{p.name} is not a valid .xlsx file") from exc
+    except openpyxl.utils.exceptions.InvalidFileException as exc:
+        # `.xls`, `.xlsb`, and other formats openpyxl doesn't support.
+        raise SosParseError(
+            f"{p.name}: openpyxl does not support this file format "
+            "(only .xlsx/.xlsm/.xltx/.xltm)"
+        ) from exc
     except (OSError, ValueError, KeyError) as exc:
         # openpyxl can raise these on partially corrupt files (truncated XML,
         # missing relationships, unexpected schema). Wrap so callers see a
@@ -588,7 +594,9 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
     rows = _row_iter(ws)
     header = next(rows, None)
     if header is None:
-        return
+        raise SosParseError(
+            f"variable sheet {ws.title!r} is empty; cannot extract variables"
+        )
     col_map: dict[str, int] = {}
     for i, h in enumerate(header):
         if not h:
@@ -598,7 +606,13 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
             col_map[stem] = i
 
     if "name" not in col_map:
-        return
+        # Without a Variabelnamn column we silently return zero rows, hiding
+        # an upstream rename or malformed delivery. Fail loudly instead.
+        header_cols = ", ".join(repr(h) for h in header if h) or "(none)"
+        raise SosParseError(
+            f"variable sheet {ws.title!r} is missing a 'Variabelnamn' header; "
+            f"found columns: {header_cols}"
+        )
 
     for row in rows:
         name = _clean(_pick(row, col_map, "name"))
