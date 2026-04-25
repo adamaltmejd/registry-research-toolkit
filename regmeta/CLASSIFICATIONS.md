@@ -270,19 +270,25 @@ schema change, no FK rework. **Decision: yearly split**.
 `scripts/extract_lkf.py` drafts the canonical CSVs from SCB's per-year
 publications. Status:
 
-- **2016–2026 (minus 2020)**: SCB publishes `lkf{year}.xls`/`.xlsx` at the
-  predictable URL pattern. Script auto-downloads, handles the three
-  different layouts SCB has used (2018–19 / 2021–22 / 2023+), and writes
-  `lkf{year}.csv` with 1500–1700 codes each (län + kommun + församling).
-- **2015 and earlier**: PDF only. Would need separate OCR pipeline.
-- **2020**: missing from SCB at the standard URL pattern (paths probed,
-  none returned 200). Possibly never published as XLS, or moved.
+- **2016–2026**: SCB publishes `lkf{year}.xls`/`.xlsx`. Script auto-downloads,
+  handles the three different layouts SCB has used (2018–19 / 2021–22 /
+  2023+), and writes `lkf{year}.csv` with 1500–1700 codes each (län +
+  kommun + församling). 2020 was published as `lkf2020_justerad-1.xls`
+  (corrected edition); the script knows the override.
+- **2015 and earlier**: PDF only. The 2015 PDF is downloadable via
+  `--download-pdfs`; pre-2015 isn't at SCB's standard URL pattern (would
+  need REGINA, paper archives, or hand-build).
 
 Run when ready:
 
 ```bash
+# Generate canonical CSVs for 2016–2026:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
     --out regmeta/input_data/classifications/
+
+# Also download PDFs (2015–2021) for OCR / cross-checking:
+uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
+    --download-pdfs
 ```
 
 Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the

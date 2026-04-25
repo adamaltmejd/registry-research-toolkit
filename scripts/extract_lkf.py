@@ -15,16 +15,21 @@ into ``classifications.toml`` as ``valid_codes_file = "lkf{YEAR}.csv"``.
 
 Status of SCB downloads (as of probing in 2026-04):
 
-    1980–2014  no XLS/XLSX found at standard URL — likely paper/archived
-    2015       PDF only (lkf2015.pdf), needs separate OCR pipeline
-    2016–2019  XLS available
-    2020       missing (skipped or different URL pattern)
-    2021–2025  XLS available
-    2026       XLSX (different subpath: 2025-06-19/lkf2026.xlsx)
+    1980–2014  no XLS/XLSX found at SCB's standard URL — likely paper/archived
+    2015       PDF only (lkf2015.pdf), needs OCR pipeline
+    2016–2019  XLS + PDF
+    2020       XLS + PDF (filenames suffixed _justerad / _justerad-1)
+    2021       XLS + PDF
+    2022–2025  XLS only
+    2026       XLSX (in date-stamped subpath /2025-06-19/lkf2026.xlsx)
 
-This script therefore covers ~10 of the ~47 yearly vardemangdsversion
-strings the regmeta DB carries. Years without a published file fall back
-to is_valid=NULL until someone tracks down or hand-builds the missing list.
+This script covers 11 yearly snapshots (2016–2026) of the ~47 distinct
+year-stamped vardemangdsversion strings in the regmeta DB. Years without
+a published XLS/XLSX fall back to is_valid=NULL until someone OCRs the
+PDFs (2015) or sources pre-2015 from REGINA / paper archives.
+
+PDFs for 2015–2021 are available via the same script with --download-pdfs;
+they're cached for downstream OCR but not parsed here.
 
 Usage:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
@@ -41,13 +46,29 @@ import sys
 import urllib.request
 from pathlib import Path
 
-# Years we know are downloadable (probed empirically).
-YEARS_AVAILABLE = list(range(2016, 2020)) + list(range(2021, 2027))
+# Years we know are downloadable as XLS/XLSX (probed empirically).
+YEARS_AVAILABLE = list(range(2016, 2027))
 
 BASE_URL = "https://www.scb.se/contentassets/13ec5841d80045498d960d456e87ea78"
 URL_OVERRIDES = {
+    # 2020 was published as a "justerad" (corrected) edition with a non-standard
+    # filename; the standard /lkf2020.xls path returns 404.
+    2020: f"{BASE_URL}/lkf2020_justerad-1.xls",
+    # 2026 sits in a date-stamped subdirectory.
     2026: f"{BASE_URL}/2025-06-19/lkf2026.xlsx",
 }
+
+# PDFs available at the standard URL pattern. 2015 is PDF-only; 2016–2021 also
+# have PDFs (kept for cross-checking against XLS extraction).
+PDF_YEARS = list(range(2015, 2022))
+PDF_OVERRIDES = {
+    # 2020 PDF is also _justerad.
+    2020: f"{BASE_URL}/lkf2020_justerad.pdf",
+}
+
+
+def pdf_url_for(year: int) -> str:
+    return PDF_OVERRIDES.get(year, f"{BASE_URL}/lkf{year}.pdf")
 
 
 def url_for(year: int) -> str:
@@ -186,6 +207,14 @@ def main() -> int:
         action="store_true",
         help="Print starter classifications.toml entries on stderr.",
     )
+    p.add_argument(
+        "--download-pdfs",
+        action="store_true",
+        help=(
+            "Also download the PDF edition for each year listed in PDF_YEARS. "
+            "Saved to the cache dir for later OCR/cross-checking; not parsed."
+        ),
+    )
     args = p.parse_args()
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -205,6 +234,23 @@ def main() -> int:
             prev_year = year
         except Exception as exc:
             print(f"  FAILED: {exc}", file=sys.stderr)
+
+    if args.download_pdfs:
+        print("\n=== downloading PDFs ===", file=sys.stderr)
+        for year in PDF_YEARS:
+            url = pdf_url_for(year)
+            dst = args.cache / f"lkf{year}.pdf"
+            if dst.exists():
+                print(f"  lkf{year}.pdf already cached", file=sys.stderr)
+                continue
+            try:
+                urllib.request.urlretrieve(url, dst)
+                print(
+                    f"  lkf{year}.pdf: {dst.stat().st_size} bytes",
+                    file=sys.stderr,
+                )
+            except Exception as exc:
+                print(f"  lkf{year}.pdf FAILED: {exc}", file=sys.stderr)
     return 0
 
 
