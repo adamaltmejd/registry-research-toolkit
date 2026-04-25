@@ -1,0 +1,502 @@
+vardekod,vardebenamning
+0,Militärt arbete
+01,Militärt arbete
+011,Militärer
+0110,Militärer
+1,Ledningsarbete
+11,Politiskt arbete m.m.
+111,Högre ämbetsmän och politiker
+1110,Högre ämbetsmän och politiker
+112,Chefstjänstemän i intresseorganisationer
+1120,Chefstjänstemän i intresseorganisationer
+12,"Ledningsarbete i stora och medelstora företag, myndigheter m.m."
+121,"Verkställande direktörer, verkschefer m.fl."
+1210,"Verkställande direktörer, verkschefer m.fl."
+122,Drift- och verksamhetschefer
+1221,"Driftchefer inom jordbruk, trädgård, skogsbruk och fiske"
+1222,"Driftchefer inom tillverkning, el-, värme- och vattenförsörjning m.m."
+1223,Driftchefer inom byggverksamhet
+1224,"Driftchefer inom handel, hotell och restaurang, transport och kommunikation"
+1225,"Driftchefer inom finansiell verksamhet, fastighetsbolag, företagstjänster m.m."
+1226,Verksamhetschefer inom offentlig förvaltning m.m.
+1227,Verksamhetschefer inom utbildning
+1228,Verksamhetschefer inom vård och omsorg
+1229,Övriga drift- och verksamhetschefer
+123,Chefer för särskilda funktioner
+1231,Ekonomichefer och administrativa chefer
+1232,Personalchefer
+1233,Försäljnings- och marknadschefer
+1234,Reklam- och PR-chefer
+1235,Inköps- och distributionschefer
+1236,IT-chefer
+1237,Forsknings- och utvecklingschefer
+1239,Övriga chefer inom specialområden
+13,"Ledningsarbete i mindre företag, myndigheter m.m."
+131,Chefer för mindre företag och enheter
+1311,"Chefer för mindre företag inom jordbruk, trädgård, skogsbruk och fiske"
+1312,"Chefer för mindre företag inom tillverkning, el-, värme- och vattenförsörjning m.m."
+1313,Chefer för mindre byggföretag
+1314,"Chefer för mindre företag inom handel, hotell och restaurang, transport och kommunikation"
+1315,"Chefer för mindre företag inom finansiell verksamhet, fastighetsbolag, företagstjänster m.m."
+1316,Chefer för mindre enheter inom offentlig förvaltning m.m.
+1317,Chefer för mindre enheter inom utbildning
+1318,Chefer för mindre enheter inom vård och omsorg
+1319,Chefer för övriga mindre företag och enheter
+2,Arbete som kräver teoretisk specialistkompetens
+21,Arbete som kräver teoretisk specialistkompetens inom teknik och datavetenskap m.m.
+211,"Fysiker, kemister m.fl."
+2111,Fysiker och astronomer
+2112,Meteorologer
+2113,Kemister
+2114,"Geologer, geofysiker m.fl."
+212,Matematiker och statistiker
+2121,Matematiker
+2122,Statistiker
+213,Dataspecialister
+2131,Systemerare och programmerare
+2139,Övriga dataspecialister
+214,"Civilingenjörer, arkitekter m.fl."
+2141,Arkitekter och stadsplanerare
+2142,"Civilingenjörer m.fl., bygg och anläggning"
+2143,"Civilingenjörer m.fl., elkraft"
+2144,"Civilingenjörer m.fl., elektronik och teleteknik"
+2145,"Civilingenjörer m.fl., maskin"
+2146,"Civilingenjörer m.fl., kemi"
+2147,"Civilingenjörer m.fl., gruvteknik och metallurgi"
+2148,Lantmätare
+2149,Övriga civilingenjörer m.fl.
+22,"Arbete som kräver teoretisk specialistkompetens inom biologi, hälso- och sjukvård"
+221,"Specialister inom biologi, jord- och skogsbruk m.m."
+2211,Biologer
+2212,Farmakologer m.fl.
+2213,Agronomer och hortonomer
+2214,Jägmästare m.fl.
+222,Hälso- och sjukvårdsspecialister
+2221,Läkare
+2222,Tandläkare
+2223,Veterinärer
+2224,Apotekare
+2225,Logopeder
+2229,Övriga hälso- och sjukvårdsspecialister
+223,Barnmorskor. sjuksköterskor med särskild kompetens
+2231,Barnmorskor
+2232,"Avdelningschefer, vårdavdelning/mottagning"
+2233,Akutsjuksköterskor m.fl.
+2234,Barnsjuksköterskor
+2235,Distriktssköterskor
+2236,Andra sjuksköterskor med särskild kompetens
+23,"Lärararbete inom universitet, gymnasie- och grundskola"
+231,Universitets- och högskollärare
+2310,Universitets- och högskollärare
+232,Gymnasielärare m.fl.
+2321,Gymnasielärare i allmänna ämnen
+2322,Gymnasielärare i yrkesämnen
+2323,Lärare i estetiska och praktiska ämnen
+233,Grundskollärare
+2330,Grundskollärare
+234,Speciallärare
+2340,Speciallärare
+235,Andra pedagoger med teoretisk specialistkompetens
+2351,Skol- och utbildningskonsulenter m.fl.
+2359,Övriga pedagoger med teoretisk specialistkompetens
+24,Annat arbete som kräver teoretisk specialistkompetens
+241,"Företagsekonomer, marknadsförare och personaltjänstemän"
+2411,Revisorer m.fl.
+2412,Personaltjänstemän och yrkesvägledare
+2413,Marknadsanalytiker och marknadsförare
+2414,Organisationsutvecklare
+2419,Övriga företagsekonomer
+242,Jurister
+2421,Advokater och åklagare
+2422,Domare
+2423,"Företags-, förvaltnings- och organisationsjurister"
+2429,Övriga jurister
+243,"Arkivarier, bibliotekarier m.fl."
+2431,"Arkivarier, museitjänstemän m.fl."
+2432,Bibliotekarier m.fl.
+244,Samhälls- och språkvetare
+2441,Nationalekonomer
+2442,"Sociologer, arkeologer m.fl."
+2443,"Filosofer, historiker och statsvetare"
+2444,"Språkvetare, översättare och tolkar"
+245,"Journalister, konstnärer, skådespelare m.fl."
+2451,"Journalister, författare, informatörer m.fl."
+2452,"Skulptörer, målare m.fl."
+2453,"Kompositörer, musiker och sångare inom klassisk musik"
+2454,Koreografer och dansare
+2455,Regissörer och skådespelare
+2456,Formgivare
+246,Präster
+2460,Präster
+247,Administratörer i offentlig förvaltning
+2470,Administratörer i offentlig förvaltning
+248,Administratörer i intresseorganisationer
+2480,Administratörer i intresseorganisationer
+249,"Psykologer, socialsekreterare m.fl."
+2491,Psykologer m.fl.
+2492,Socialsekreterare och kuratorer
+3,Arbete som kräver kortare högskoleutbildning eller motsvarande kunskaper
+31,Tekniker- och ingenjörsarbete m.m.
+311,Ingenjörer och tekniker
+3111,Laboratorieingenjörer
+3112,Byggnadsingenjörer och byggnadstekniker
+3113,Elingenjörer och eltekniker
+3114,Ingenjörer och tekniker inom elektronik och teleteknik
+3115,Maskiningenjörer och maskintekniker
+3116,Kemiingenjörer och kemitekniker
+3117,Ingenjörer och tekniker inom gruvteknik och metallurgi
+3118,Kartingenjörer m.fl.
+3119,Övriga ingenjörer och tekniker
+312,Datatekniker och dataoperatörer
+3121,Datatekniker
+3122,Dataoperatörer
+313,"Fotografer. ljud- och bildtekniker, sjukhustekniker m.fl."
+3131,Fotografer
+3132,Ljud- och bildtekniker
+3133,"Kopplingstekniker, radioassistenter m.fl."
+3134,Sjukhusingenjörer och sjukhustekniker
+314,"Piloter, fartygsbefäl m.fl."
+3141,Maskinbefäl
+3142,Fartygsbefäl m.fl.
+3143,Piloter m.fl.
+3144,Flygledare
+3145,Flygtekniker
+315,Säkerhets- och kvalitetsinspektörer
+3151,Byggnads- och brandinspektörer
+3152,Säkerhetsinspektörer m.fl.
+32,"Arbete inom biologi, hälso- och sjukvård som kräver kortare högskoleutbildning"
+321,"Lantmästare, skogsmästare m.fl."
+3211,"Lantmästare, trädgårdsingenjörer m.fl."
+3212,Skogsmästare m.fl.
+322,"Sjukgymnaster, tandhygienister m.fl."
+3221,Arbetsterapeuter
+3222,Miljö- och hälsoskyddsinspektörer m.fl.
+3223,Dietister
+3224,Optiker
+3225,Tandhygienister
+3226,Sjukgymnaster m.fl.
+3227,Djursjukvårdare
+3228,Receptarier
+3229,Övriga terapeuter
+323,Sjuksköterskor
+3231,"Sjuksköterskor, medicin/kirurgi"
+3232,Operationssjuksköterskor
+3233,Geriatriksjuksköterskor
+3234,"Sjuksköterskor, psykiatrisk vård"
+3235,Röntgensjuksköterskor
+3239,Övriga sjuksköterskor
+324,Biomedicinska analytiker
+3240,Biomedicinska analytiker
+33,Lärararbete som kräver kortare högskoleutbildning
+331,Förskollärare och fritidspedagoger
+3310,Förskollärare och fritidspedagoger
+332,Andra lärare och instruktörer
+3320,Andra lärare och instruktörer
+34,Annat arbete som kräver kortare högskoleutbildning
+341,"Säljare, inköpare, mäklare m.fl."
+3411,Värdepappersmäklare
+3412,Försäkringsrepresentanter
+3413,"Fastighetsmäklare, fastighetsförvaltare m.fl."
+3414,Reseproducenter
+3415,Företagssäljare
+3416,Inköpare
+3417,Värderare och auktionister
+3418,Banktjänstemän och kreditrådgivare
+3419,"Övriga säljare, inköpare, mäklare m.fl."
+342,"Agenter, förmedlare m.fl."
+3421,Agenter
+3422,Speditörer
+3423,Platsförmedlare och arbetsvägledare
+3429,Övriga agenter m.fl.
+343,"Redovisningsekonomer, administrativa assistenter m.fl."
+3431,Administrativa assistenter
+3432,Boutredare
+3433,Redovisningsekonomer m.fl.
+344,"Tull-, taxerings- och socialförsäkringstjänstemän"
+3441,Tulltjänstemän
+3442,Taxeringstjänstemän
+3443,Socialförsäkringstjänstemän
+3449,"Övriga tull-, taxerings- och socialförsäkringstjänstemän"
+345,Poliser
+3450,Poliser
+346,"Behandlingsassistenter, fritidsledare m.fl."
+3461,Behandlingsassistenter m.fl.
+3462,Fritidsledare m.fl.
+347,"Tecknare, underhållare, professionella idrottsutövare m.fl."
+3471,"Tecknare, illustratörer, dekoratörer m.fl."
+3472,"Presentatörer i radio, TV m.m."
+3473,"Musiker, sångare, dansare m.fl. inom underhållning"
+3474,Cirkus- och varietéartister m.fl.
+3475,"Idrottstränare, professionella idrottsutövare m.fl."
+3476,"Inspicienter, rekvisitörer m.fl."
+348,Pastorer
+3480,Pastorer
+4,Kontors- och kundservicearbete
+41,Kontorsarbete m.m.
+411,Kontorssekreterare och dataregistrerare
+4111,Dataregistrerare
+4112,"Kontorssekreterare, läkarsekreterare m.fl."
+412,Bokförings- och redovisningsassistenter
+4120,Bokförings- och redovisningsassistenter
+413,Lager- och transportassistenter
+4131,Lagerassistenter m.fl.
+4132,Transportassistenter
+414,Biblioteksassistenter m.fl.
+4140,Biblioteksassistenter m.fl.
+415,Brevbärare m.fl.
+4150,Brevbärare m.fl.
+419,Övrig kontorspersonal
+4190,Övrig kontorspersonal
+42,Kundservicearbete
+421,Kassapersonal m.fl.
+4211,"Butikskassörer, biljettförsäljare m.fl."
+4212,Bank- och postkassörer
+4213,Croupierer m.fl.
+4214,Pantlånare
+4215,Inkasserare m.fl.
+422,Kundinformatörer
+4221,Resebyrå- och turistbyråtjänstemän
+4222,Receptionister m.fl.
+4223,Telefonister
+4224,Trafikinformatörer m.fl.
+5,"Service-, omsorgs- och försäljningsarbete"
+51,"Service-, omsorgs- och säkerhetsarbete"
+511,Resevärdar m.fl.
+5111,Flygvärdinnor m.fl.
+5112,Tågmästare m.fl.
+5113,Guider och reseledare
+512,Storhushålls- och restaurangpersonal
+5121,Storhushållsföreståndare m.fl.
+5122,Kockar och kokerskor
+5123,"Hovmästare, servitörer och bartendrar"
+513,Vård- och omsorgspersonal
+5131,Barnskötare m.fl.
+5132,"Undersköterskor, sjukvårdsbiträden m.fl."
+5133,"Vårdbiträden, personliga assistenter m.fl."
+5134,Skötare och vårdare
+5135,Tandsköterskor
+5139,Övrig vård- och omsorgspersonal
+514,"Frisörer och annan servicepersonal, personliga tjänster"
+5141,"Frisörer, hudterapeuter m.fl."
+5142,Begravningsentreprenörer
+5149,"Övrig servicepersonal, personliga tjänster"
+515,Säkerhetspersonal
+5151,Brandmän
+5152,Väktare och ordningsvakter
+5153,Kriminalvårdare
+5159,Övrig säkerhetspersonal
+52,Försäljningsarbete inom detaljhandel m.m.
+521,Fotomodeller m.fl.
+5210,Fotomodeller m.fl.
+522,"Försäljare, detaljhandel. demonstratörer m.fl."
+5221,"Försäljare, dagligvaror"
+5222,"Försäljare, fackhandel"
+5223,Kaféföreståndare
+5224,Kioskföreståndare
+5225,Bensinstationsföreståndare m.fl.
+5226,"Bil-, båt- och husvagnsförsäljare"
+5227,"Demonstratörer, uthyrare m.fl."
+6,"Arbete inom jordbruk, trädgård, skogsbruk och fiske"
+61,"Arbete inom jordbruk, trädgård, skogsbruk och fiske"
+611,Växtodlare inom jordbruk och trädgård
+6111,"Odlare av jordbruksväxter, frukt- och bärodlare"
+6112,Trädgårdsodlare
+6113,Trädgårdsanläggare m.fl.
+612,Djuruppfödare och djurskötare
+6121,Husdjursuppfödare och husdjursskötare
+6122,Fjäderfäuppfödare
+6129,Övriga djuruppfödare och djurskötare
+613,"Växtodlare och djuruppfödare, blandad drift"
+6130,"Växtodlare och djuruppfödare, blandad drift"
+614,Skogsbrukare
+6140,Skogsbrukare
+615,Fiskare och jägare
+6151,Fiskodlare
+6152,Fiskare
+6153,Jägare
+7,Hantverksarbete inom byggverksamhet och tillverkning
+71,"Gruv-, bygg- och anläggningsarbete"
+711,"Gruv- och bergarbetare, stenhuggare"
+7111,Gruv- och bergarbetare
+7112,Stenhuggare m.fl.
+712,Byggnads- och anläggningsarbetare
+7121,Murare m.fl.
+7122,Betongarbetare
+7123,"Byggnadsträarbetare, inredningssnickare m.fl."
+7124,Anläggningsarbetare
+7129,Övriga byggnads- och anläggningsarbetare
+713,Byggnadshantverkare
+7131,Takmontörer
+7132,Golvläggare
+7133,Isoleringsmontörer
+7134,Glasmästare
+7135,VVS-montörer m.fl.
+7136,Installationselektriker
+7137,Fastighetsskötare
+7139,Övriga byggnadshantverkare
+714,"Målare, lackerare, skorstensfejare m.fl."
+7141,Målare
+7142,Lackerare
+7143,Skorstensfejare och saneringsarbetare
+72,"Metallhantverk, reparatörsarbete m.m."
+721,"Gjutare, svetsare, plåtslagare m.fl."
+7211,Gjutare
+7212,Svetsare och gasskärare
+7213,Tunnplåtslagare
+7214,Stålkonstruktionsmontörer och grovplåtslagare
+7215,Riggare och kabelsplitsare
+7216,Dykare
+722,"Smeder, verktygsmakare m.fl."
+7221,Smeder
+7222,Verktygsmakare m.fl.
+7223,Verktygsuppsättare
+7224,Slipare m.fl.
+7231,Motorfordonsmekaniker och motorfordonsreparatörer
+7232,Flygmekaniker och flygreparatörer
+7233,"Maskinmekaniker, maskinmontörer och maskinreparatörer"
+724,"Elmontörer, tele- och elektronikreparatörer m.fl."
+7241,Elmontörer och elreparatörer
+7242,Tele- och elektronikreparatörer m.fl.
+7243,Distributionselektriker
+73,"Finmekaniskt och grafiskt hantverk, konsthantverk m.m."
+731,Finmekaniker m.fl.
+7311,Finmekaniker
+7312,Musikinstrumentmakare m.fl.
+7313,Guld- och silversmeder
+732,"Drejare, glashyttearbetare, dekorationsmålare m.fl."
+7321,Drejare m.fl.
+7322,Glashyttearbetare m.fl.
+7323,Glasgravörer
+7324,Dekorationsmålare
+733,"Konsthantverkare i trä, textil, läder m.m."
+7330,"Konsthantverkare i trä, textil, läder m.m."
+734,Grafiker m.fl.
+7341,Text- och bildoperatörer m.fl.
+7342,"Etsare och gravörer, tryckmedier"
+7343,Privatbokbindare
+7344,Screen- och schablontryckare
+74,Annat hantverksarbete
+741,"Slaktare, bagare, konditorer m.fl."
+7411,"Slaktare, styckare m.fl."
+7412,Bagare och konditorer
+7413,Provsmakare och kvalitetsbedömare
+742,"Möbelsnickare, modellsnickare m.fl."
+7421,Möbelsnickare m.fl.
+7422,Korgmakare och borstbindare
+743,"Skräddare, tillskärare, tapetserare m.fl."
+7431,"Skräddare, modister och ateljésömmerskor"
+7432,Körsnärer
+7433,Tillskärare
+7434,Sömmare
+7435,Tapetserare
+744,"Garvare, skinnberedare och skomakare"
+7441,Garvare och skinnberedare
+7442,Skomakare m.fl.
+8,"Process- och maskinoperatörsarbete, transportarbete m.m."
+81,Processoperatörsarbete
+811,"Malmförädlingsoperatörer, brunnsborrare m.fl."
+8111,"Operatörer, stenkross- och malmförädlingsanläggning"
+8112,Brunnsborrare m.fl.
+812,Processoperatörer vid stål- och metallverk
+8121,Ugnsoperatörer m.fl.
+8122,Valsverksoperatörer
+8123,Värmebehandlingsoperatörer
+8124,Tråddragare m.fl.
+8125,Gjuterioperatörer
+813,"Processoperatörer, glas och keramiska produkter"
+8130,"Processoperatörer, glas och keramiska produkter"
+814,"Processoperatörer, trä- och pappersindustri"
+8141,Sågverksoperatörer
+8142,"Processoperatörer, träfiberindustri"
+8143,"Processoperatörer, pappersmassa"
+8144,"Processoperatörer, papper"
+815,"Processoperatörer, kemisk basindustri"
+8150,"Processoperatörer, kemisk basindustri"
+816,Driftmaskinister m.fl.
+8160,Driftmaskinister m.fl.
+817,Industrirobotoperatörer
+8170,Industrirobotoperatörer
+82,Maskinoperatörs- och monteringsarbete
+821,"Maskinoperatörer, metall- och mineralbehandling"
+8211,Verktygsmaskinoperatörer
+8212,"Maskinoperatörer, sten-, cement- och betongvaror"
+822,"Maskinoperatörer, kemisk-teknisk industri"
+8221,"Maskinoperatörer, läkemedelsindustri och hygienteknisk industri"
+8222,"Maskinoperatörer, ammunitions- och sprängämnesindustri"
+8223,"Maskinoperatörer, ytbehandling"
+8224,"Maskinoperatörer, fotografiska produkter"
+8229,"Övriga maskinoperatörer, kemisk-teknisk industri"
+823,"Maskinoperatörer, gummi- och plastindustri"
+8231,"Maskinoperatörer, gummiindustri"
+8232,"Maskinoperatörer, plastindustri"
+824,"Maskinoperatörer, trävaruindustri"
+8240,"Maskinoperatörer, trävaruindustri"
+825,"Maskinoperatörer, grafisk industri, pappersvaruindustri"
+8251,"Maskinoperatörer, tryckeri"
+8252,"Maskinoperatörer, bokbinderi"
+8253,"Maskinoperatörer, pappersvaruindustri"
+826,"Maskinoperatörer, textil-, skinn- och läderindustri"
+8261,"Maskinoperatörer, garnberedning"
+8262,"Maskinoperatörer, vävning och stickning"
+8263,Symaskinoperatörer
+8264,"Maskinoperatörer, blekning, färgning och tvättning"
+8265,"Maskinoperatörer, skoindustri m.m."
+8269,"Övriga maskinoperatörer, textil-, skinn- och läderindustri"
+827,"Maskinoperatörer, livsmedelsindustri m.m."
+8271,"Maskinoperatörer, kött- och fiskberedning"
+8273,"Maskinoperatörer, kvarnindustri"
+8274,"Maskinoperatörer, bageri och konfektyrindustri"
+8275,"Maskinoperatörer, frukt- och grönsaksberedning"
+8276,"Maskinoperatörer, sockerindustri"
+8277,"Maskinoperatörer, te-, kaffe- och kakaoberedning"
+8278,"Maskinoperatörer, bryggeri m.m."
+8279,"Maskinoperatörer, tobaksindustri"
+828,Montörer
+8281,Fordonsmontörer m.fl.
+8282,"Montörer, el- och teleutrustning"
+8284,"Montörer, träprodukter m.m."
+8285,"Montörer, papp- och textilprodukter m.m."
+829,Övriga maskinoperatörer och montörer
+8290,Övriga maskinoperatörer och montörer
+83,Transport- och maskinförararbete
+831,Lokförare m.fl.
+8311,Lokförare
+8312,Bangårdspersonal
+832,Fordonsförare
+8321,Bil- och taxiförare
+8322,Buss- och spårvagnsförare
+8323,Lastbils- och långtradarförare
+833,Maskinförare
+8331,Förare av jordbruks- och skogsmaskiner
+8332,Anläggningsmaskinförare m.fl.
+8333,Kranförare m.fl.
+8334,Truckförare
+834,Däckspersonal
+8340,Däckspersonal
+9,Arbete utan krav på särskild yrkesutbildning
+91,Servicearbete utan krav på särskild yrkesutbildning
+911,Torg- och marknadsförsäljare
+9110,Torg- och marknadsförsäljare
+912,Städare m.fl.
+9121,Hembiträden m.fl.
+9122,Hotell- och kontorsstädare m.fl.
+9123,Fönsterputsare
+913,Köks- och restaurangbiträden
+9130,Köks- och restaurangbiträden
+9141,Tidningsdistributörer m.fl.
+9142,Vaktmästare m.fl.
+9143,Mätaravläsare
+915,Renhållnings- och återvinningsarbetare
+9150,Renhållnings- och återvinningsarbetare
+919,Övriga servicearbetare
+9190,Övriga servicearbetare
+92,Arbete inom lantbruk m.m. utan krav på särskild yrkesutbildning
+921,"Medhjälpare inom jordbruk, trädgård, skogsbruk och fiske"
+9210,"Medhjälpare inom jordbruk, trädgård, skogsbruk och fiske"
+93,Annat arbete utan krav på särskild yrkesutbildning
+931,Grovarbetare inom bygg och anläggning
+9310,Grovarbetare inom bygg och anläggning
+932,Handpaketerare och andra fabriksarbetare
+9320,Handpaketerare och andra fabriksarbetare
+933,Godshanterare och expressbud
+9330,Godshanterare och expressbud

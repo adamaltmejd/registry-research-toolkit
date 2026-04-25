@@ -202,6 +202,7 @@ version = "1996"
 valid_from = 1996
 valid_to = 2013
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+valid_codes_file = "ssyk96.csv"
 vardemangdsversion = [
   "Standard för svensk yrkesklassificering 1996",
   "SSYK 96, alternativ",
