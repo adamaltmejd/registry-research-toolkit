@@ -20,14 +20,41 @@ import datetime
 import os
 import platform
 import shutil
+import socket
 import subprocess
 import sys
 import time
 import traceback
 from pathlib import Path
 
+# MONA batch footgun: Python's stdout is buffered to a memory buffer in
+# batch mode (no console). When that buffer fills, the script hangs in
+# BatchClient with no error. Redirect stdout to devnull on the batch
+# server (hostnames start with "MBS"); leave it alone in interactive
+# desktop sessions. Source: MONA's "Inaktivera python-konsolen i batch".
+# We log to stderr (line-buffered) and to a file regardless, so this
+# doesn't affect the probe's output.
+if socket.gethostname()[:3].upper() == "MBS":
+    sys.stdout = open(os.devnull, "w")
+
 PROJECT_DSN = "P1105"  # empty -> skip MS SQL probes
 SAMPLE_TABLE = "Individ_2018"  # ~8M rows. Empty -> skip table probe.
+
+# MONA has no internet. So pip can only work via (a) an internal mirror
+# configured at the system level, (b) wheels supplied via --find-links,
+# or (c) packages already installed in site-packages. The probe hunts
+# for all three.
+
+# Likely internal Python-mirror locations (by symmetry with MonaCRAN at
+# file://micro.intra/apps/R/MonaCRAN). Edit if you know better paths.
+CANDIDATE_MIRROR_PATHS = (
+    r"\\micro.intra\apps\Python",
+    r"\\micro.intra\apps\python",
+    r"\\micro.intra\apps\PyPI",
+    r"\\micro.intra\apps\pypi",
+    r"R:\Python",
+    r"R:\PyPI",
+)
 
 
 # ---- 0. setup --------------------------------------------------------
@@ -101,24 +128,82 @@ log(f"PIP_FIND_LINKS:  {os.environ.get('PIP_FIND_LINKS', '<unset>')}")
 log(f"PYTHONPATH:      {os.environ.get('PYTHONPATH', '<unset>')}")
 
 
-# ---- 2. pip availability + reachable index --------------------------
+# ---- 2. pip availability ---------------------------------------------
 
-section("2. PIP / PYPI MIRROR")
+section("2. PIP")
 
 
-def _check_pip():
+# Try every reasonable way of getting at pip on Windows -- bare `pip`,
+# `python -m pip`, the py launcher, and the `Scripts\pip.exe` shim.
+# User reported that `pip` alone returns nothing in PowerShell + Git Bash,
+# which usually means PATH doesn't include the Python Scripts folder.
+PIP_INVOCATIONS = [
+    [sys.executable, "-m", "pip", "--version"],
+    ["pip", "--version"],
+    ["pip3", "--version"],
+    ["py", "-m", "pip", "--version"],
+    [str(Path(sys.prefix) / "Scripts" / "pip.exe"), "--version"],
+    [str(Path(sys.prefix) / "Scripts" / "pip3.exe"), "--version"],
+]
+
+
+def _try_pip_invocations():
+    found = []
+    for cmd in PIP_INVOCATIONS:
+        try:
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=15)
+            ok = r.returncode == 0 and r.stdout.strip()
+            tag = "OK " if ok else "FAIL"
+            line = (r.stdout.strip() or r.stderr.strip() or "<no output>")[:120]
+            log(f"     [{tag}] {' '.join(cmd):<70s} -> {line}")
+            if ok:
+                found.append(cmd)
+        except FileNotFoundError:
+            log(f"     [N/A] {' '.join(cmd):<70s} -> executable not found")
+        except Exception as e:
+            log(f"     [ERR] {' '.join(cmd):<70s} -> {type(e).__name__}: {e}")
+    if not found:
+        raise RuntimeError("no pip invocation worked")
+
+
+probe("try every way to invoke pip", _try_pip_invocations)
+
+
+def _ensurepip_bootstrap():
+    # If pip really isn't installed, ensurepip from the stdlib can lay
+    # it down without needing the network.
     r = subprocess.run(
-        [sys.executable, "-m", "pip", "--version"],
+        [sys.executable, "-m", "ensurepip", "--version"],
         capture_output=True,
         text=True,
         timeout=30,
     )
-    log(f"     {r.stdout.strip() or r.stderr.strip()}")
+    log(f"     stdout: {r.stdout.strip() or '<empty>'}")
+    if r.stderr.strip():
+        log(f"     stderr: {r.stderr.strip()}")
     if r.returncode != 0:
-        raise RuntimeError(f"pip exited {r.returncode}")
+        raise RuntimeError(f"ensurepip exited {r.returncode}")
 
 
-probe("python -m pip --version", _check_pip)
+probe("python -m ensurepip --version (bootstrap fallback)", _ensurepip_bootstrap)
+
+
+def _list_scripts_dir():
+    # If pip is anywhere, it's probably here. Listing this folder is the
+    # cheapest possible directory probe.
+    scripts = Path(sys.prefix) / "Scripts"
+    log(f"     scripts dir: {scripts}")
+    if not scripts.exists():
+        log("     <missing>")
+        return
+    entries = sorted(p.name for p in scripts.iterdir())
+    log(f"     {len(entries)} entries; pip-related:")
+    for e in entries:
+        if any(k in e.lower() for k in ("pip", "wheel", "easy_install")):
+            log(f"       {e}")
+
+
+probe(f"list contents of {Path(sys.prefix) / 'Scripts'}", _list_scripts_dir)
 
 
 def _check_pip_config():
@@ -136,23 +221,114 @@ def _check_pip_config():
 probe("pip config list", _check_pip_config)
 
 
-def _check_pip_index():
-    # Don't actually install -- just ask pip what the resolver sees for duckdb.
-    # `pip index versions` is the cheapest probe of "can pip reach an index".
+def _check_pip_freeze():
+    # Lists installed packages -- shows whether duckdb/pyodbc are
+    # already present without needing any network access.
     r = subprocess.run(
-        [sys.executable, "-m", "pip", "index", "versions", "duckdb"],
+        [sys.executable, "-m", "pip", "list", "--format=freeze"],
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    if r.returncode != 0:
+        raise RuntimeError(f"pip list exited {r.returncode}: {r.stderr.strip()[:200]}")
+    pkgs = [
+        line
+        for line in r.stdout.splitlines()
+        if any(
+            line.lower().startswith(p)
+            for p in ("duckdb", "pyodbc", "numpy", "pandas", "polars", "pyarrow")
+        )
+    ]
+    log(f"     {len(r.stdout.splitlines())} packages installed total")
+    log("     of interest:")
+    for p in pkgs:
+        log(f"       {p}")
+    if not pkgs:
+        log("       (none of duckdb/pyodbc/numpy/pandas/polars/pyarrow)")
+
+
+probe("pip list (what's already installed)", _check_pip_freeze)
+
+
+# ---- 2b. discover internal Python mirror -----------------------------
+#
+# Symmetry argument: MonaCRAN is at file://micro.intra/apps/R/MonaCRAN.
+# A Python mirror would likely live somewhere similar. Hunt for it.
+
+section("2b. INTERNAL PYTHON MIRROR DISCOVERY")
+
+
+def _check_mirror_paths():
+    found = []
+    for raw in CANDIDATE_MIRROR_PATHS:
+        p = Path(raw)
+        try:
+            exists = p.exists()
+        except Exception as e:
+            log(f"     {raw:<50s} : <error: {type(e).__name__}>")
+            continue
+        if exists:
+            try:
+                # Sample a few entries so we don't spam the log on a huge mirror
+                kids = []
+                for i, child in enumerate(p.iterdir()):
+                    if i >= 6:
+                        kids.append("...")
+                        break
+                    kids.append(child.name)
+                log(f"     {raw:<50s} : EXISTS, contents: {kids}")
+                found.append(raw)
+            except Exception as e:
+                log(f"     {raw:<50s} : EXISTS but iterdir failed: {type(e).__name__}")
+                found.append(raw)
+        else:
+            log(f"     {raw:<50s} : not found")
+    if not found:
+        log("")
+        log("     No internal Python mirror found at common paths.")
+        log("     If MONA has one, please tell us where -- the rework can")
+        log("     point pip at it via PIP_INDEX_URL=file://... or we ship")
+        log("     vendored wheels via --find-links.")
+
+
+probe("scan likely internal mirror paths", _check_mirror_paths)
+
+
+def _check_pip_dry_install_no_index():
+    # Probe whether `pip install --no-index --find-links <somewhere>` would
+    # find duckdb if we were to ship vendored wheels alongside the package.
+    # We use the cwd as a stand-in --find-links target (almost certainly
+    # empty), which lets us see exactly what error pip raises -- this tells
+    # us whether the offline path is even structurally available.
+    r = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "--dry-run",
+            "--no-index",
+            f"--find-links={Path.cwd().as_posix()}",
+            "duckdb",
+        ],
         capture_output=True,
         text=True,
         timeout=120,
     )
-    log(f"     stdout: {(r.stdout or '').strip()[:300]}")
-    if r.stderr:
-        log(f"     stderr: {r.stderr.strip()[:300]}")
-    if r.returncode != 0:
-        raise RuntimeError(f"pip index versions exited {r.returncode}")
+    log(f"     return code: {r.returncode}")
+    out = (r.stdout + r.stderr).strip()
+    for line in out.splitlines()[:10]:
+        log(f"     {line}")
+    # We expect failure here (no wheel available); the *kind* of failure is
+    # the signal: "Could not find a version" means the offline path works,
+    # we just need wheels. "ERROR: --no-index ..." would mean a deeper issue.
 
 
-probe("pip index versions duckdb (does pip reach an index?)", _check_pip_index)
+probe(
+    "pip install --dry-run --no-index --find-links=. duckdb (would offline mode work?)",
+    _check_pip_dry_install_no_index,
+)
 
 
 # ---- 3. import already-installed packages ---------------------------
@@ -318,11 +494,34 @@ if PROJECT_DSN and pyodbc is not None:
     log(f"Using DSN: {PROJECT_DSN}")
     log(f"Drivers visible to pyodbc: {pyodbc.drivers()}")
 
-    def _sql_connect():
+    # Two connection styles to try -- DSN-based (what the R script uses)
+    # and the direct driver/server/database string from the MONA docs.
+    # Whichever works, we use; if both work the rework prefers DSN.
+    def _sql_connect_dsn():
         global sql_con
         sql_con = pyodbc.connect(f"DSN={PROJECT_DSN}")
 
-    probe(f"pyodbc.connect(DSN={PROJECT_DSN})", _sql_connect)
+    if not probe(f"pyodbc.connect(DSN={PROJECT_DSN})", _sql_connect_dsn):
+
+        def _sql_connect_driver():
+            # MONA-docs style. Database name == project number.
+            # Server name unknown to us (MQ02\B is just an example in the
+            # docs); pyodbc.drivers() may also give hints. If this fails
+            # the log shows the exact connection string for the user to
+            # adjust.
+            global sql_con
+            conn_str = (
+                "Driver={ODBC Driver 17 for SQL Server};"
+                f"Server=MQ02\\B;Database={PROJECT_DSN};"
+                "Trusted_Connection=yes;"
+            )
+            log(f"     trying conn_str: {conn_str}")
+            sql_con = pyodbc.connect(conn_str)
+
+        probe(
+            "pyodbc.connect (driver+server+database, MONA-docs style)",
+            _sql_connect_driver,
+        )
 
 if sql_con is not None:
 
@@ -444,6 +643,69 @@ if sql_con is not None:
 
     probe("close MS SQL", _close_sql)
 
+
+# ---- 8. interpretation ----------------------------------------------
+#
+# Summarise the findings into a clear "next step" so we don't have to
+# read the whole log to know what to do.
+
+section("8. WHAT THIS MEANS FOR THE REWORK")
+
+
+def _has(mod: str) -> bool:
+    try:
+        __import__(mod)
+        return True
+    except Exception:
+        return False
+
+
+duckdb_ok = _has("duckdb")
+pyodbc_ok = _has("pyodbc")
+
+# pip availability -- tries every invocation form
+pip_ok = False
+for cmd in PIP_INVOCATIONS:
+    try:
+        if subprocess.run(cmd, capture_output=True, timeout=15).returncode == 0:
+            pip_ok = True
+            break
+    except (FileNotFoundError, OSError):
+        continue
+
+# Was any candidate mirror present?
+mirror_found = any(Path(m).exists() for m in CANDIDATE_MIRROR_PATHS)
+
+log(f"  duckdb importable:   {duckdb_ok}")
+log(f"  pyodbc importable:   {pyodbc_ok}")
+log(f"  pip available:       {pip_ok}")
+log(f"  mirror found:        {mirror_found}")
+log("")
+
+if duckdb_ok and pyodbc_ok:
+    log("  -> Both core deps already installed. The Python rewrite is")
+    log("     immediately viable: ship mock_data_wizard, run as a CLI on")
+    log("     MONA, no pip work needed.")
+elif duckdb_ok and not pyodbc_ok:
+    log("  -> duckdb works but pyodbc is missing. file_source path is")
+    log("     fully covered; sql_source needs pyodbc.")
+    if pip_ok and mirror_found:
+        log("     Mirror present + pip available -> try `pip install pyodbc`.")
+    elif pip_ok:
+        log("     pip exists but no mirror -> ship pyodbc as a vendored wheel")
+        log("     and install with `pip install --no-index --find-links <dir>`.")
+    else:
+        log("     No pip -> need help from MONA admins to add pyodbc.")
+elif not duckdb_ok and pip_ok and mirror_found:
+    log("  -> pip + mirror both work. `pip install duckdb pyodbc` should")
+    log("     work as a one-time setup step in the project.")
+elif not duckdb_ok and pip_ok:
+    log("  -> pip exists but no mirror -> ship vendored wheels with")
+    log("     mock_data_wizard and install with --no-index --find-links.")
+    log("     Need cp313 win_amd64 wheels for: duckdb, pyodbc, numpy.")
+elif not duckdb_ok and not pip_ok:
+    log("  -> Neither duckdb nor pip available. The Python rewrite is not")
+    log("     viable without admin help. Stay on the R-on-MONA path.")
 
 log("")
 log("=" * 70)
