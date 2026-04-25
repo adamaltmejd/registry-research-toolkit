@@ -117,10 +117,9 @@ def test_format_code_passes_strings_through() -> None:
 
 
 def test_format_code_pads_int_with_pure_zero_format() -> None:
-    # An Excel cell storing the integer 1 displayed as "001" (number_format
-    # "000") would silently lose the padding without this preservation —
-    # the bug Codex flagged. Pure-zero formats are the only ones we treat
-    # as code padding; "General" stays as plain str().
+    # Excel stores e.g. "001" as int 1 with number_format "000"; without
+    # consulting the format we'd lose the leading zeros and corrupt code
+    # identity. Only pure-zero formats are treated as code padding.
     assert _format_code(_FakeCell(1, "000")) == "001"
     assert _format_code(_FakeCell(12, "000")) == "012"
     assert _format_code(_FakeCell(123, "000")) == "123"
@@ -182,7 +181,7 @@ def test_uppercase_xlsx_extension_picked_up_by_directory_parse(
 
 @requires_openpyxl
 def test_directory_passed_as_file_rejected(tmp_path: Path) -> None:
-    with pytest.raises(SosParseError, match="not a file"):
+    with pytest.raises(SosParseError, match="not a regular file"):
         parse_register_file(tmp_path)
 
 

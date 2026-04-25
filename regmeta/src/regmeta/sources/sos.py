@@ -202,10 +202,8 @@ def parse_register_file(path: Path | str) -> SosRegister:
     p = Path(path)
     if p.name.startswith("~$"):
         raise SosParseError(f"{p.name} is an Office lock file; skip")
-    if not p.exists():
-        raise SosParseError(f"{p} does not exist")
     if not p.is_file():
-        raise SosParseError(f"{p} is not a file")
+        raise SosParseError(f"{p} is not a regular file (missing or a directory)")
     try:
         wb = openpyxl.load_workbook(p, read_only=True, data_only=True)
     except zipfile.BadZipFile as exc:
@@ -220,19 +218,20 @@ def parse_register_file(path: Path | str) -> SosRegister:
 
     try:
         warnings: list[str] = []
+        norm_sheets = {_normalise(n): n for n in wb.sheetnames}
 
-        generell = _find_sheet(wb, ["generell", "information"])
-        dcat = _find_sheet(wb, ["datamängd", "dcat"]) or _find_sheet(
-            wb, ["metadata", "datamängd"]
+        generell = _find_sheet(norm_sheets, ["generell", "information"])
+        dcat = _find_sheet(norm_sheets, ["datamängd", "dcat"]) or _find_sheet(
+            norm_sheets, ["metadata", "datamängd"]
         )
         deldat = (
-            _find_sheet(wb, ["deldatamängder", "datavyer"])
-            or _find_sheet(wb, ["metadata", "deldatamängder"])
-            or _find_sheet(wb, ["deldatamängder"])
+            _find_sheet(norm_sheets, ["deldatamängder", "datavyer"])
+            or _find_sheet(norm_sheets, ["metadata", "deldatamängder"])
+            or _find_sheet(norm_sheets, ["deldatamängder"])
         )
-        varsheet = _find_sheet(wb, ["metadata", "variabelnivå"]) or _find_sheet(
-            wb, ["metadata", "variabler"]
-        )
+        varsheet = _find_sheet(
+            norm_sheets, ["metadata", "variabelnivå"]
+        ) or _find_sheet(norm_sheets, ["metadata", "variabler"])
 
         if varsheet is None:
             raise SosParseError(f"{p.name}: no variable-level sheet found")
@@ -311,14 +310,15 @@ def _normalise(s: str) -> str:
     return re.sub(r"[\s_\-()]+", "", s).lower()
 
 
-def _find_sheet(wb: Any, tokens: list[str]) -> str | None:
-    """Return the first sheet name whose normalised form contains every
-    token in `tokens` (also normalised)."""
+def _find_sheet(norm_sheets: dict[str, str], tokens: list[str]) -> str | None:
+    """Return the first original sheet name whose normalised form contains
+    every token in `tokens` (also normalised). Caller is expected to build
+    `norm_sheets` once via `{_normalise(n): n for n in wb.sheetnames}` so
+    repeated lookups don't re-normalise."""
     wanted = [_normalise(t) for t in tokens]
-    for name in wb.sheetnames:
-        norm = _normalise(name)
+    for norm, original in norm_sheets.items():
         if all(t in norm for t in wanted):
-            return name
+            return original
     return None
 
 
@@ -356,6 +356,13 @@ def _at(row: tuple[Any, ...], idx: int | None) -> Any:
     if idx is None or idx >= len(row):
         return None
     return row[idx]
+
+
+def _pick(row: tuple[Any, ...], col_map: dict[str, int], field_name: str) -> Any:
+    """Look up `field_name` in `col_map` and return the row value at that
+    index, or None if the column is absent or short. Convenience for
+    header-mapped sheet parsers."""
+    return _at(row, col_map.get(field_name))
 
 
 _PURE_ZERO_FMT = re.compile(r"^0+$")
@@ -526,11 +533,10 @@ _DELDATAMANGD_HEADERS = {
 
 def _parse_deldatamangder(ws: Any) -> Iterable[SosDeldatamangd]:
     rows = _row_iter(ws)
-    try:
-        header = next(iter(rows))
-    except StopIteration:
+    header = next(rows, None)
+    if header is None:
         return
-    col_map = {}
+    col_map: dict[str, int] = {}
     for i, h in enumerate(header):
         stem = _DELDATAMANGD_HEADERS.get(_clean(h or "").lower() if h else "")
         if stem:
@@ -540,24 +546,17 @@ def _parse_deldatamangder(ws: Any) -> Iterable[SosDeldatamangd]:
         return  # not a deldatamängd sheet shape; silently skip
 
     for row in rows:
-
-        def pick(field_name: str) -> Any:
-            idx = col_map.get(field_name)
-            if idx is None or idx >= len(row):
-                return None
-            return row[idx]
-
-        name = _clean(pick("name"))
+        name = _clean(_pick(row, col_map, "name"))
         if not name:
             continue
         yield SosDeldatamangd(
             name=name,
-            label=_clean(pick("label")),
-            description=_clean(pick("description")),
-            data_from=_as_int(pick("data_from")),
-            data_to=_as_int(pick("data_to")),
-            update_frequency=_clean(pick("update_frequency")),
-            aggregation_level=_clean(pick("aggregation_level")),
+            label=_clean(_pick(row, col_map, "label")),
+            description=_clean(_pick(row, col_map, "description")),
+            data_from=_as_int(_pick(row, col_map, "data_from")),
+            data_to=_as_int(_pick(row, col_map, "data_to")),
+            update_frequency=_clean(_pick(row, col_map, "update_frequency")),
+            aggregation_level=_clean(_pick(row, col_map, "aggregation_level")),
         )
 
 
@@ -587,9 +586,8 @@ _VAR_HEADERS = {
 
 def _parse_variables(ws: Any) -> Iterable[SosVariable]:
     rows = _row_iter(ws)
-    try:
-        header = next(iter(rows))
-    except StopIteration:
+    header = next(rows, None)
+    if header is None:
         return
     col_map: dict[str, int] = {}
     for i, h in enumerate(header):
@@ -603,33 +601,28 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
         return
 
     for row in rows:
-
-        def pick(field_name: str) -> Any:
-            idx = col_map.get(field_name)
-            if idx is None or idx >= len(row):
-                return None
-            return row[idx]
-
-        name = _clean(pick("name"))
+        name = _clean(_pick(row, col_map, "name"))
         if not name:
             continue
         yield SosVariable(
-            deldatamangd=_clean(pick("deldatamangd")),
+            deldatamangd=_clean(_pick(row, col_map, "deldatamangd")),
             name=name,
-            label=_clean(pick("label")),
-            description=_clean(pick("description")),
-            object_type=_clean(pick("object_type")),
-            value_set_text=_clean(pick("value_set_text")),
-            external_classification=_clean(pick("external_classification")),
-            data_type=_clean(pick("data_type")),
-            is_join_variable=_clean(pick("is_join_variable")),
-            join_description=_clean(pick("join_description")),
-            presentation_order=_as_int(pick("presentation_order")),
-            data_from=_as_int(pick("data_from")),
-            data_to=_as_int(pick("data_to")),
-            quality_note=_clean(pick("quality_note")),
-            origin=_clean(pick("origin")),
-            source_detail=_clean(pick("source_detail")),
+            label=_clean(_pick(row, col_map, "label")),
+            description=_clean(_pick(row, col_map, "description")),
+            object_type=_clean(_pick(row, col_map, "object_type")),
+            value_set_text=_clean(_pick(row, col_map, "value_set_text")),
+            external_classification=_clean(
+                _pick(row, col_map, "external_classification")
+            ),
+            data_type=_clean(_pick(row, col_map, "data_type")),
+            is_join_variable=_clean(_pick(row, col_map, "is_join_variable")),
+            join_description=_clean(_pick(row, col_map, "join_description")),
+            presentation_order=_as_int(_pick(row, col_map, "presentation_order")),
+            data_from=_as_int(_pick(row, col_map, "data_from")),
+            data_to=_as_int(_pick(row, col_map, "data_to")),
+            quality_note=_clean(_pick(row, col_map, "quality_note")),
+            origin=_clean(_pick(row, col_map, "origin")),
+            source_detail=_clean(_pick(row, col_map, "source_detail")),
         )
 
 
@@ -649,8 +642,10 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
     suffix = sheet_name.split("_", 1)[1] if "_" in sheet_name else sheet_name
     suffix = suffix.split("!", 1)[0].strip()
 
-    header_found = False
-    col_tp = col_kod = col_desc = col_var = None
+    col_tp: int | None = None
+    col_kod: int | None = None
+    col_desc: int | None = None
+    col_var: int | None = None
     # forward-fill: some sheets put the period once on a header row above
     # rows that leave it blank
     last_tidsperiod: str | None = None
@@ -662,7 +657,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
         first = _clean(row[0]) if row else None
         second = _clean(row[1]) if len(row) > 1 else None
 
-        if not header_found:
+        if col_tp is None:
             # Detect the column-header row by looking for "Tidsperiod" + "Kod"
             # anywhere in the row. MFR-style sheets also carry a Variabelnamn
             # column (per-row variable) in addition to the Kodverk preamble
@@ -679,7 +674,6 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
                 elif hl == "variabelnamn":
                     positions["var"] = i
             if "tp" in positions and "kod" in positions:
-                header_found = True
                 col_tp = positions["tp"]
                 col_kod = positions["kod"]
                 col_desc = positions.get("desc")
@@ -727,7 +721,7 @@ def _parse_kodlista(ws: Any) -> tuple[SosKodlista, list[str]]:
             )
         )
 
-    if not header_found:
+    if col_tp is None:
         warnings.append(
             f"kodlista {sheet_name!r}: no Tidsperiod/Kod header row found; "
             "structured rows skipped (raw content preserved)"
