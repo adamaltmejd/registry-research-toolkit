@@ -281,118 +281,205 @@ def _apply_valid_codes(
 ) -> None:
     """Mark canonical/observed codes per CSV; insert canonical-only codes.
 
-    For each classification with a resolved CSV path:
-      - Read the canonical code → label map.
-      - For each canonical code, ensure a ``value_code`` row exists. Codes
-        that aren't already in ``value_code`` (i.e. canonical-but-unobserved)
-        are inserted with the CSV-supplied label.
-      - Insert any canonical-but-unobserved codes into ``classification_code``
-        (they'd be missing because the JOIN on ``cvid_value_code`` produced
-        nothing for them).
-      - Mark every ``classification_code`` row in this classification as
-        ``is_valid=1`` (vardekod stripped) when the code appears in the CSV,
-        else ``is_valid=0``.
-      - Set ``classification.valid_code_count`` to the canonical count.
+    Strategy (designed to scale to 50+ classifications with 1000s of codes
+    each — the previous TRIM(vardekod) IN (?, ?, ...) pattern was O(N×M) and
+    didn't use the value_code index):
+
+      1. Once: build a temp table ``_vc_trim(code_id, kod)`` with
+         pre-trimmed vardekods, indexed on ``kod``.
+      2. Once: stage every classification's canonical codes into temp
+         ``_canon(short_name, vardekod)``.
+      3. Once: bulk-insert any canonical codes missing from value_code.
+      4. Once: bulk-insert canonical-but-unobserved classification_code rows
+         via JOIN with _vc_trim and _canon.
+      5. Once: bulk-mark is_valid on every classification_code row of every
+         classification with a CSV.
+
+    Per-classification operations (the old hot path) are eliminated.
     """
-    for entry in entries:
-        path = entry.get("_valid_codes_path")
-        if path is None:
-            continue
-        short = entry["short_name"]
-        cls_id = id_by_short[short]
-        canon = load_valid_codes(path)
-        _progress(
-            f"  Applying canonical codes for {short} from {path.name} ({len(canon)} codes)..."
+    import time as _time
+
+    def _step(msg: str) -> None:
+        _progress(f"  [{_time.strftime('%H:%M:%S')}] {msg}")
+
+    csv_entries = [e for e in entries if e.get("_valid_codes_path")]
+    if not csv_entries:
+        return
+
+    _step(f"Applying canonical codes for {len(csv_entries)} classifications...")
+
+    # 1. Pre-trimmed value_code mirror with an indexed kod column.
+    _step("  step 1/6: build _vc_trim (mirror of value_code with TRIM)...")
+    conn.execute("DROP TABLE IF EXISTS _vc_trim")
+    conn.execute("CREATE TEMP TABLE _vc_trim (code_id INTEGER PRIMARY KEY, kod TEXT)")
+    conn.execute("INSERT INTO _vc_trim SELECT code_id, TRIM(vardekod) FROM value_code")
+    conn.execute("CREATE INDEX _vc_trim_kod ON _vc_trim(kod)")
+    n = conn.execute("SELECT COUNT(*) FROM _vc_trim").fetchone()[0]
+    _step(f"    _vc_trim has {n:,} rows")
+
+    # 2. Stage all canonical codes once.
+    _step("  step 2/6: stage _canon from CSVs...")
+    conn.execute("DROP TABLE IF EXISTS _canon")
+    conn.execute(
+        "CREATE TEMP TABLE _canon ("
+        "  cls_id INTEGER NOT NULL,"
+        "  vardekod TEXT NOT NULL,"
+        "  label TEXT NOT NULL,"
+        "  PRIMARY KEY (cls_id, vardekod)"
+        ") WITHOUT ROWID"
+    )
+    canon_by_cls: dict[int, dict[str, str]] = {}
+    for entry in csv_entries:
+        cls_id = id_by_short[entry["short_name"]]
+        canon = load_valid_codes(entry["_valid_codes_path"])
+        canon_by_cls[cls_id] = canon
+        conn.executemany(
+            "INSERT INTO _canon (cls_id, vardekod, label) VALUES (?, ?, ?)",
+            [(cls_id, code, label) for code, label in canon.items()],
         )
+    conn.execute("CREATE INDEX _canon_kod ON _canon(vardekod)")
+    n = conn.execute("SELECT COUNT(*) FROM _canon").fetchone()[0]
+    _step(f"    _canon has {n:,} rows")
 
-        # 1. Ensure every canonical code has a value_code row. Cache code_id.
-        canon_code_ids: dict[str, int] = {}
-        for code, label in canon.items():
-            row = conn.execute(
-                "SELECT code_id FROM value_code "
-                "WHERE TRIM(vardekod) = ? AND vardebenamning = ? LIMIT 1",
-                (code, label),
-            ).fetchone()
-            if row is not None:
-                canon_code_ids[code] = row[0]
-                continue
-            # Fallback: any value_code row with the same code (label may differ
-            # in observed data — CSV is canonical, so we still consider it the
-            # canonical code).
-            row = conn.execute(
-                "SELECT code_id FROM value_code WHERE TRIM(vardekod) = ? LIMIT 1",
-                (code,),
-            ).fetchone()
-            if row is not None:
-                canon_code_ids[code] = row[0]
-                continue
-            cur = conn.execute(
-                "INSERT INTO value_code (vardekod, vardebenamning) VALUES (?, ?)",
-                (code, label),
-            )
-            canon_code_ids[code] = cur.lastrowid
-
-        # 2. Insert canonical-but-unobserved codes into classification_code.
-        for code, code_id in canon_code_ids.items():
-            level = len(code) if code.isdigit() else None
-            conn.execute(
-                "INSERT OR IGNORE INTO classification_code "
-                "(classification_id, code_id, level, is_valid) "
-                "VALUES (?, ?, ?, 1)",
-                (cls_id, code_id, level),
-            )
-
-        # 3. Mark every existing classification_code row in this classification.
-        # is_valid=1 if the value_code's stripped vardekod matches a canonical
-        # code, else 0.
+    # 3. Insert any canonical codes missing from value_code (canonical-but-
+    # unobserved with no existing value_code row at all). Take the first
+    # observed label for each missing vardekod from _canon (any classification's
+    # CSV will do — vardekods that need this are unique to one classification
+    # per the seed invariant).
+    _step("  step 3/6: insert missing value_code rows...")
+    cur = conn.execute(
+        """
+        INSERT INTO value_code (vardekod, vardebenamning)
+        SELECT DISTINCT c.vardekod, c.label
+        FROM _canon c
+        WHERE NOT EXISTS (SELECT 1 FROM _vc_trim t WHERE t.kod = c.vardekod)
+        """
+    )
+    _step(f"    inserted {cur.rowcount} canonical-but-unobserved value_code rows")
+    if cur.rowcount > 0:
+        # Refresh _vc_trim to include the inserts.
         conn.execute(
-            """
-            UPDATE classification_code
-            SET is_valid = (
-                SELECT CASE WHEN EXISTS (
-                    SELECT 1 FROM value_code vc
-                    WHERE vc.code_id = classification_code.code_id
-                      AND TRIM(vc.vardekod) IN (%s)
-                ) THEN 1 ELSE 0 END
-            )
-            WHERE classification_id = ?
-            """
-            % ",".join("?" * len(canon_code_ids)),
-            (*canon_code_ids.keys(), cls_id),
+            "INSERT INTO _vc_trim "
+            "SELECT vc.code_id, TRIM(vc.vardekod) FROM value_code vc "
+            "WHERE NOT EXISTS (SELECT 1 FROM _vc_trim t WHERE t.code_id = vc.code_id)"
         )
 
-        valid_count = conn.execute(
-            "SELECT COUNT(*) FROM classification_code "
-            "WHERE classification_id = ? AND is_valid = 1",
+    # 4a. Materialize observed (cls_id, vardekod) pairs already present in CC
+    # for the CSV-backed classifications. This lets us tell which canonical
+    # vardekods are NOT yet represented in CC for a given classification.
+    _step("  step 4a/7: materialize _cc_kods...")
+    conn.execute("DROP TABLE IF EXISTS _cc_kods")
+    conn.execute(
+        "CREATE TEMP TABLE _cc_kods ("
+        "  cls_id INTEGER NOT NULL,"
+        "  vardekod TEXT NOT NULL,"
+        "  PRIMARY KEY (cls_id, vardekod)"
+        ") WITHOUT ROWID"
+    )
+    conn.execute(
+        """
+        INSERT OR IGNORE INTO _cc_kods (cls_id, vardekod)
+        SELECT cc.classification_id, t.kod
+        FROM classification_code cc
+        JOIN _vc_trim t ON t.code_id = cc.code_id
+        WHERE cc.classification_id IN (SELECT DISTINCT cls_id FROM _canon)
+        """
+    )
+    n = conn.execute("SELECT COUNT(*) FROM _cc_kods").fetchone()[0]
+    _step(f"    _cc_kods has {n:,} rows")
+
+    # 4b. Materialize (cls_id, code_id) pairs where the code's vardekod is
+    # canonical for cls_id. Used by step 6's is_valid lookup. WITHOUT ROWID
+    # PK gives O(log n) EXISTS check.
+    _step("  step 4b/7: materialize _canon_pairs...")
+    conn.execute("DROP TABLE IF EXISTS _canon_pairs")
+    conn.execute(
+        "CREATE TEMP TABLE _canon_pairs ("
+        "  cls_id INTEGER NOT NULL,"
+        "  code_id INTEGER NOT NULL,"
+        "  PRIMARY KEY (cls_id, code_id)"
+        ") WITHOUT ROWID"
+    )
+    conn.execute(
+        """
+        INSERT INTO _canon_pairs (cls_id, code_id)
+        SELECT DISTINCT c.cls_id, t.code_id
+        FROM _canon c JOIN _vc_trim t ON t.kod = c.vardekod
+        """
+    )
+    n = conn.execute("SELECT COUNT(*) FROM _canon_pairs").fetchone()[0]
+    _step(f"    _canon_pairs has {n:,} rows")
+
+    # 5. Insert canonical-but-unobserved CC rows: ONE representative per
+    # (cls_id, vardekod) where no CC row exists yet for that pair (i.e. no
+    # observed instance for cls_id used a code with that vardekod). Picking
+    # MIN(code_id) is arbitrary but stable. The bulk approach earlier was
+    # wrong because it inserted EVERY code_id matching a canonical vardekod,
+    # pulling in unrelated cross-classification value_code variants.
+    _step("  step 5/7: insert canonical-but-unobserved CC representatives...")
+    cur = conn.execute(
+        """
+        INSERT OR IGNORE INTO classification_code (classification_id, code_id, level, is_valid)
+        SELECT c.cls_id, MIN(t.code_id),
+               CASE WHEN c.vardekod GLOB '[0-9]*'
+                         AND NOT c.vardekod GLOB '*[^0-9]*'
+                    THEN length(c.vardekod) ELSE NULL END,
+               1
+        FROM _canon c
+        JOIN _vc_trim t ON t.kod = c.vardekod
+        WHERE NOT EXISTS (
+            SELECT 1 FROM _cc_kods k
+            WHERE k.cls_id = c.cls_id AND k.vardekod = c.vardekod
+        )
+        GROUP BY c.cls_id, c.vardekod
+        """
+    )
+    _step(f"    inserted {cur.rowcount} canonical-but-unobserved rows")
+
+    # 6. Mark is_valid on every CC row belonging to a CSV-backed classification.
+    # Vardekod-based: every label variant of a canonical code is treated as
+    # canonical. (This matches our convention "is_valid is about the code, not
+    # the label". Year-specific label distinctions, e.g. LKF, are handled by
+    # the per-year classification split, not by per-label is_valid.)
+    _step("  step 6/7: UPDATE classification_code SET is_valid...")
+    conn.execute(
+        """
+        UPDATE classification_code
+        SET is_valid = CASE WHEN EXISTS (
+            SELECT 1 FROM _canon_pairs cp
+            WHERE cp.cls_id = classification_code.classification_id
+              AND cp.code_id = classification_code.code_id
+        ) THEN 1 ELSE 0 END
+        WHERE classification_id IN (SELECT DISTINCT cls_id FROM _canon_pairs)
+        """
+    )
+    _step("    UPDATE done")
+    _step("  step 7/7: per-classification reporting...")
+
+    # Per-classification reporting.
+    for entry in csv_entries:
+        cls_id = id_by_short[entry["short_name"]]
+        valid, observed_only = conn.execute(
+            "SELECT "
+            "  SUM(CASE WHEN is_valid = 1 THEN 1 ELSE 0 END), "
+            "  SUM(CASE WHEN is_valid = 0 THEN 1 ELSE 0 END) "
+            "FROM classification_code WHERE classification_id = ?",
             (cls_id,),
-        ).fetchone()[0]
-        observed_only = conn.execute(
-            "SELECT COUNT(*) FROM classification_code "
-            "WHERE classification_id = ? AND is_valid = 0",
-            (cls_id,),
-        ).fetchone()[0]
-        unobserved = conn.execute(
-            """
-            SELECT COUNT(*) FROM classification_code cc
-            JOIN value_code vc ON cc.code_id = vc.code_id
-            WHERE cc.classification_id = ? AND cc.is_valid = 1
-              AND NOT EXISTS (
-                SELECT 1 FROM cvid_value_code cvc
-                JOIN variable_instance vi ON cvc.cvid = vi.cvid
-                WHERE cvc.code_id = vc.code_id
-                  AND vi.classification_id = cc.classification_id
-              )
-            """,
-            (cls_id,),
-        ).fetchone()[0]
+        ).fetchone()
         conn.execute(
             "UPDATE classification SET valid_code_count = ? WHERE id = ?",
-            (valid_count, cls_id),
+            (valid, cls_id),
         )
         _progress(
-            f"    {valid_count} canonical, {observed_only} observed-only, "
-            f"{unobserved} canonical-but-unobserved"
+            f"    {entry['short_name']}: {valid} canonical, "
+            f"{observed_only or 0} observed-only "
+            f"(from {entry['_valid_codes_path'].name}, {len(canon_by_cls[cls_id])} CSV codes)"
         )
+
+    conn.execute("DROP TABLE IF EXISTS _canon_pairs")
+    conn.execute("DROP TABLE IF EXISTS _cc_kods")
+    conn.execute("DROP TABLE IF EXISTS _canon")
+    conn.execute("DROP TABLE IF EXISTS _vc_trim")
 
 
 def populate_classifications(

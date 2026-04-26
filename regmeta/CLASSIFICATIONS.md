@@ -53,7 +53,8 @@ vardekod,vardebenamning
 
 ## Status overview
 
-23 classifications. **14 done, 9 to go.**
+69 classifications (one per snapshot year for LKF, plus 22 others).
+**61 done, 8 to go.**
 
 | short_name | status | code_count | valid | notes |
 |---|---|---:|---:|---|
@@ -72,7 +73,7 @@ vardekod,vardebenamning
 | `NIVA-OLD` | ✓ | 32 | 7 | hand-written from LISA/UREG docs |
 | `NIVA-GROV` | ✓ | 14 | 5 | hand-written from LISA/UREG docs |
 | `SUN1996` | — | 4 818 | — | PDF only (`mis-1996-1.pdf`) |
-| `LKF` | — | 4 844 | — | **needs per-year split** (see Pending below) |
+| `LKF{1980..2026}` | ✓ | 47 entries | varies | per-year split, see "Geography — LKF" |
 | `ISCED2011` | — | 53 | — | needs SCB-specific docs (extends UNESCO ISCED 2011) |
 | `ISCED-F2013` | — | 164 | — | UNESCO PDF only |
 | `SEKTOR2000` | — | 22 | — | INSEKT 2014 — `mis2014-1.pdf` |
@@ -259,64 +260,51 @@ ISCED-F 2013 has ~150 codes — bigger lift.
 5-position combined level+direction code. ~5000 codes — heavier extraction.
 Lower priority since SUN 1996 is fully superseded.
 
-
-### Geography — LKF
+### Geography — LKF (per-year split)
 
 Page: <https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/>
 
-The classification is a **union of yearly snapshots** (codes valid at any
-point 1980–2026). SCB publishes a separate snapshot per year, not a
-combined list. The data has **665 codes with conflicting labels across
-years** — real historical renames, not noise. Examples:
-
-- `12` → `Malmöhus län` (pre-1997) vs `Skåne län` (post-1997)
-- `14` → `Göteborgs och Bohus län` (pre-1998) vs `Västra Götalands län` (post-1998)
-- `20` → `Kopparbergs län` (pre-1997) vs `Dalarnas län` (post-1997)
-- 4 distinct merger states for parish `018805`
-
-A naive union would silently lose the historical meaning. The data already
+LKF is split into 47 per-year classifications `LKF1980` … `LKF2026`,
+each with its own canonical CSV. Single-year codes change across the
+sequence (Skåne 1997, Västra Götaland 1998, parish mergers ongoing), so
+each year is its own published snapshot — 665 codes had conflicting
+labels under the previous unified entry. The data already
 disambiguates: `variable_instance.vardemangdsversion` is year-stamped
-(`LKF 1990-01-01/...`), so a per-year split is purely seed-side — no
-schema change, no FK rework. **Decision: yearly split**.
+(`LKF 1990-01-01/...`), so the split is purely seed-side — no schema
+change, no FK rework. `supersedes` chains the years sequentially.
 
-`scripts/extract_lkf.py` drafts the canonical CSVs from SCB's publications.
-Status (53 years, ~31k codes):
+CSVs come from `scripts/extract_lkf.py`:
 
-- **1974–2015** (kommun + derived län): from `knkodnyckel.xls`, SCB's
+- **1980–2015** (kommun + derived län): from `knkodnyckel.xls`, SCB's
   kommun-history file with 12 period-snapshots. Script derives 2-digit
   län codes as kommun prefixes and labels them via a year-aware map
-  (handles the 1997 Skåne/Dalarna and 1998 Västra Götaland reforms).
-  Församlings (6-digit) are NOT in this file — pre-2016 parishes remain
-  a gap. 17 km/län codes per period × ~291 kommun = ~310 codes/year.
+  (handles 1997 Skåne/Dalarna and 1998 Västra Götaland reforms). ~310
+  codes/year. **Församlings (6-digit) NOT included** — pre-2016 parishes
+  are a remaining gap.
 - **2016–2026** (full LKF — län + kommun + församling): per-year
-  `lkf{year}.xls`/`.xlsx`. Script handles the three different layouts
-  SCB has used (2018–19 / 2021–22 / 2023+) and the non-standard
-  filenames for 2020 (`_justerad`) and 2026 (date-stamped subdir).
-  ~1500–1700 codes/year.
-- **Pre-1974**: not at SCB's modern downloads. REGINA covers 1952+ but
-  isn't a downloadable file.
-- **2015 parishes**: PDF only (`lkf2015.pdf`). Download via
-  `--download-pdfs`, OCR separately if needed.
+  `lkf{year}.xls`/`.xlsx`. Script handles the three different sheet
+  layouts SCB has used (2018–19 / 2021–22 / 2023+) and the non-standard
+  filenames for 2020 (`_justerad`) and 2026 (date-stamped subdir). ~1500–1700
+  codes/year.
+- **Pre-1980 / 2015 parishes**: not wired. The script can produce
+  1974–1979 CSVs but the regmeta data has no instances for those years
+  so no seed entries exist for them. The 2015 PDF can be OCR'd to
+  recover that year's parishes.
 
-Run when ready:
+Re-run extraction:
 
 ```bash
-# Generate canonical CSVs for 1974–2026:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
     --out regmeta/input_data/classifications/
 
-# Restrict to specific years:
-uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
-    --years 1990 2000 2010 --out /tmp/sample/
-
-# Also download PDFs (2015–2021) for OCR / cross-checking:
+# Optional: also download PDFs for OCR / cross-checking:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
     --download-pdfs
-
-# Print starter classifications.toml entries:
-uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
-    --emit-toml > /tmp/lkf_seed.toml
 ```
+
+The current toml entries were generated by `--emit-toml` then spliced in.
+If SCB adds a new yearly snapshot, add an `LKF{year}` block manually (or
+re-run --emit-toml and merge).
 
 Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the
 year-string variants need to be reconciled against the existing LKF entry
