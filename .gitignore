@@ -35,6 +35,13 @@ mock_output/
 stats.json
 extract_stats*.R
 
+# MONA probe artefacts -- can contain workspace metadata (paths,
+# hostnames, DSNs); inspect before sharing. The findings that matter
+# live in mock_data_wizard/DESIGN.md.
+mdw_probe_*.log
+mdw_python_probe_*.log
+mdw_py_probe_*.csv
+
 # regmeta database (built from SCB exports, not committed)
 *.db
 

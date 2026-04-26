@@ -4,12 +4,54 @@ Design rationale and constraints. For usage, see `mock-data-wizard --help`.
 
 ## Two-step workflow
 
-1. `generate-script` produces an R script to run on MONA
-2. User runs the script on MONA, exports `stats.json`
-3. `generate` produces mock CSVs locally from `stats.json`
+1. `extract` runs on MONA: aggregates configured sources to `stats.json`.
+2. User exports `stats.json` from MONA.
+3. `generate` runs locally: produces mock CSVs from `stats.json`.
 
-This separation exists because MONA has no internet access and no Python.
-The R script runs inside MONA; everything else runs locally.
+The Python package itself ships to MONA and runs as the extract step;
+nothing is generated as a templated R script. This is possible because
+the MONA batch client has Python pre-installed (see "MONA Python runtime"
+below). The earlier R-script-generation approach is preserved in git
+history (commits up to and including the streaming-iterator refactor),
+but the runtime is Python going forward.
+
+## MONA Python runtime (probed 2026-04-25 on project P1105)
+
+The batch client ships with the WinPython-31700 distribution at
+`E:\Programs\WinPython-31700\python` (Python 3.13.7, MSC v.1944 64-bit).
+This is a curated bundle: 955 packages pre-installed, including every
+runtime dep we need. No internet access; no internal PyPI mirror at the
+common paths we checked. `python -m pip` works, but `pip` is not on
+PATH (the `Scripts\` folder is not exported).
+
+Pre-installed deps relevant to the rework:
+
+| Package  | Version | Used for                                      |
+|----------|---------|-----------------------------------------------|
+| duckdb   | 1.4.0   | `file_source` aggregation over CSVs           |
+| pyodbc   | 5.2.0   | `sql_source` aggregation against MS SQL views |
+| numpy    | 2.3.3   | shared with the local `generate` step         |
+
+ODBC: `Driver={ODBC Driver 17 for SQL Server}` per the MONA docs;
+`Trusted_Connection=yes` (no passwords carried in code). DSN-based
+connections (`pyodbc.connect("DSN=P1105")`) also work — the R-side
+probe verified the per-project DSN exists and resolves.
+
+Disk: `C:\Windows\TEMP` has ~54 GB free on the batch client (good for
+DuckDB spill). The user's home share `\\micro.intra\mydocs\...` only
+has ~250 MB free; we never write outputs there.
+
+Stdout footgun: in batch mode, Python's stdout is buffered to an
+in-memory buffer; once full, the script hangs in BatchClient with no
+error. Mitigation per MONA's docs: detect hostname starting with
+`MBS` and redirect `sys.stdout` to `os.devnull` at the top of any
+batch-run script. We log to stderr and to a file regardless, so this
+only suppresses incidental prints from libraries.
+
+RAM: 150–200 GB on the batch server. DuckDB defaults to ~80% of RAM
+for `memory_limit`, which is plenty for any single-source aggregation
+we'll run. We don't override it; we just set `temp_directory` to point
+at `C:\Windows\TEMP` and `preserve_insertion_order = false`.
 
 ## Source model
 
