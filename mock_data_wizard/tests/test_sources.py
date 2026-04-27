@@ -16,10 +16,11 @@ from mock_data_wizard.sources import (
     FileSource,
     SourceHandle,
     SqlSource,
+    SqlTable,
     _build_pyodbc_connstr,
     _is_archived,
-    _resolve_table_aliases,
-    _resolve_where,
+    _normalize_to_sql_tables,
+    _resolve_sql_aliases,
     _wrap_with_where,
     file_source,
     filter_files,
@@ -29,6 +30,7 @@ from mock_data_wizard.sources import (
     list_files_in_source,
     needs_discovery,
     sql_source,
+    sql_table,
 )
 
 
@@ -201,19 +203,64 @@ def test_iter_file_source_duplicate_basenames_raises(tmp_path: Path):
 # -- SQL helpers ---------------------------------------------------------
 
 
-def test_resolve_table_aliases_from_list_strips_schema():
-    out = _resolve_table_aliases(["dbo.persons", "dbo.events"])
-    assert out == {"persons": "dbo.persons", "events": "dbo.events"}
+def test_normalize_strings_become_bare_sql_tables():
+    out = _normalize_to_sql_tables(["dbo.persons", "dbo.events"])
+    assert out == [
+        SqlTable(qualified="dbo.persons"),
+        SqlTable(qualified="dbo.events"),
+    ]
 
 
-def test_resolve_table_aliases_from_dict_passthrough():
-    out = _resolve_table_aliases({"p_dbo": "dbo.persons", "p_p1": "P1105.persons"})
-    assert out == {"p_dbo": "dbo.persons", "p_p1": "P1105.persons"}
+def test_normalize_passes_through_sql_tables():
+    t = sql_table("dbo.lisa_2018", where="AR > 2018")
+    assert _normalize_to_sql_tables([t]) == [t]
 
 
-def test_resolve_table_aliases_conflict_raises():
+def test_normalize_mapping_assigns_alias_from_key():
+    out = _normalize_to_sql_tables({"p_dbo": "dbo.persons", "p_p1": "P1105.persons"})
+    assert out == [
+        SqlTable(qualified="dbo.persons", alias="p_dbo"),
+        SqlTable(qualified="P1105.persons", alias="p_p1"),
+    ]
+
+
+def test_normalize_mapping_with_sql_table_keeps_existing_alias():
+    t = sql_table("dbo.persons", alias="explicit")
+    out = _normalize_to_sql_tables({"key_overridden_by_explicit": t})
+    assert out == [t]
+
+
+def test_normalize_mapping_with_sql_table_takes_key_when_no_alias():
+    t = sql_table("dbo.persons", where="active = 1")
+    out = _normalize_to_sql_tables({"alias_from_key": t})
+    assert out[0].qualified == "dbo.persons"
+    assert out[0].where == "active = 1"
+    assert out[0].alias == "alias_from_key"
+
+
+def test_normalize_rejects_unknown_entry_types():
+    with pytest.raises(TypeError, match="must be str or SqlTable"):
+        _normalize_to_sql_tables([42])  # type: ignore[list-item]
+
+
+def test_resolve_sql_aliases_strips_schema_by_default():
+    tables = [SqlTable(qualified="dbo.persons"), SqlTable(qualified="dbo.events")]
+    out = _resolve_sql_aliases(tables)
+    assert set(out) == {"persons", "events"}
+    assert out["persons"].qualified == "dbo.persons"
+
+
+def test_resolve_sql_aliases_uses_explicit_alias_when_set():
+    out = _resolve_sql_aliases([sql_table("dbo.persons", alias="people")])
+    assert "people" in out
+    assert "persons" not in out
+
+
+def test_resolve_sql_aliases_conflict_raises():
     with pytest.raises(ValueError, match="Ambiguous table aliases"):
-        _resolve_table_aliases(["dbo.persons", "P1105.persons"])
+        _resolve_sql_aliases(
+            [SqlTable(qualified="dbo.persons"), SqlTable(qualified="P1105.persons")]
+        )
 
 
 def test_is_archived_recognises_x_prefix():
@@ -346,29 +393,19 @@ def test_iter_source_unknown_type_raises():
         list(iter_source("not a source"))
 
 
-# -- WHERE clauses --------------------------------------------------------
+# -- WHERE clauses (table-level via sql_table; file-source-level) --------
 
 
-def test_resolve_where_string_applies_to_any_alias():
-    assert _resolve_where("AR > 2015", "any_alias") == "AR > 2015"
+def test_sql_table_validates_qualified():
+    with pytest.raises(ValueError, match="non-empty string"):
+        sql_table("")
 
 
-def test_resolve_where_dict_per_alias():
-    where = {"lisa_2018": "AR > 2018", "lisa_2019": "AR > 2019"}
-    assert _resolve_where(where, "lisa_2018") == "AR > 2018"
-    assert _resolve_where(where, "lisa_2019") == "AR > 2019"
-    # Missing alias gets no filter (don't surprise the user with a typo)
-    assert _resolve_where(where, "lisa_2020") is None
-
-
-def test_resolve_where_none_returns_none():
-    assert _resolve_where(None, "x") is None
-    assert _resolve_where("", "x") is None
-
-
-def test_resolve_where_invalid_type_raises():
-    with pytest.raises(TypeError, match="must be str"):
-        _resolve_where(123, "x")  # type: ignore[arg-type]
+def test_sql_table_returns_frozen_dataclass():
+    t = sql_table("dbo.persons", where="active = 1", alias="people")
+    assert t.qualified == "dbo.persons"
+    assert t.where == "active = 1"
+    assert t.alias == "people"
 
 
 def test_wrap_with_where_no_clause_passthrough():
@@ -381,30 +418,41 @@ def test_wrap_with_where_produces_aliased_derived_table():
     assert out == "(SELECT * FROM [dbo].[t] WHERE AR > 2015) AS __mdw_src"
 
 
-def test_iter_sql_source_with_string_where_wraps_all_tables():
-    src = sql_source(
-        "P1105", tables=["dbo.lisa_2018", "dbo.lisa_2019"], where="AR > 2015"
-    )
-    handles = list(iter_sql_source(src, conn=_FakeConn(view_rows=[])))
-    for h in handles:
-        assert h.table.startswith("(SELECT * FROM ")
-        assert "WHERE AR > 2015" in h.table
-        assert h.table.endswith("AS __mdw_src")
-        assert h.source_detail["where"] == "AR > 2015"
-
-
-def test_iter_sql_source_with_dict_where_routes_per_alias():
+def test_iter_sql_source_attaches_per_table_where():
     src = sql_source(
         "P1105",
-        tables=["dbo.lisa_2018", "dbo.lisa_2019"],
-        where={"lisa_2018": "AR > 2018"},  # only lisa_2018 gets filtered
+        tables=(
+            sql_table("dbo.lisa_2018", where="AR > 2018"),
+            sql_table("dbo.par", where="INDATUM > '2015-01-01'"),
+            "dbo.fodelse",  # no filter
+        ),
     )
     handles = {h.source_name: h for h in iter_sql_source(src, conn=_FakeConn([]))}
     assert "WHERE AR > 2018" in handles["lisa_2018"].table
     assert handles["lisa_2018"].source_detail["where"] == "AR > 2018"
-    # lisa_2019 unfiltered — bare quoted name, no derived-table wrapper
-    assert "WHERE" not in handles["lisa_2019"].table
-    assert "where" not in handles["lisa_2019"].source_detail
+    assert "INDATUM > '2015-01-01'" in handles["par"].table
+    assert handles["par"].source_detail["where"] == "INDATUM > '2015-01-01'"
+    # Unfiltered: bare quoted name, no derived-table wrapper
+    assert "WHERE" not in handles["fodelse"].table
+    assert "where" not in handles["fodelse"].source_detail
+
+
+def test_iter_sql_source_no_filters_means_no_wrapping():
+    src = sql_source("P1105", tables=["dbo.persons"])
+    handles = list(iter_sql_source(src, conn=_FakeConn([])))
+    assert "WHERE" not in handles[0].table
+    assert handles[0].table == "[dbo].[persons]"
+
+
+def test_iter_sql_source_mapping_alias_with_sql_table():
+    src = sql_source(
+        "P1105",
+        tables={"events": sql_table("dbo.events_v2", where="ts > '2015-01-01'")},
+    )
+    handles = list(iter_sql_source(src, conn=_FakeConn([])))
+    assert handles[0].source_name == "events"
+    assert "ts > '2015-01-01'" in handles[0].table
+    assert handles[0].source_detail["table"] == "dbo.events_v2"
 
 
 def test_iter_file_source_with_where_filters_rows(tmp_path: Path):

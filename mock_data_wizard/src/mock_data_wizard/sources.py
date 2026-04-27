@@ -23,9 +23,9 @@ everything in this source).
 from __future__ import annotations
 
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Iterator, Mapping, Sequence
+from typing import Any, Iterator, Mapping, Sequence, Union
 
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 
@@ -47,10 +47,32 @@ class FileSource:
     type: str = field(default="file", init=False)
 
 
+@dataclass(frozen=True)
+class SqlTable:
+    """A single SQL table reference with optional cohort filter and alias.
+
+    ``qualified`` is the dialect-specific table identifier (``schema.name``
+    on MS SQL). ``where`` becomes a ``WHERE`` clause applied server-side
+    before any aggregation, scoped to this table only. ``alias`` defaults
+    to the unqualified portion of ``qualified`` and is used as the
+    ``source_name`` in ``stats.json`` and as the dedup key when multiple
+    schemas share a table name.
+    """
+
+    qualified: str
+    where: str | None = None
+    alias: str | None = None
+
+
+# What sql_source(tables=) accepts. A bare string is shorthand for
+# SqlTable(qualified=...). Mapping keys override the SqlTable.alias.
+SqlTableSpec = Union[str, SqlTable]
+
+
 @dataclass
 class SqlSource:
     dsn: str
-    tables: Sequence[str] | Mapping[str, str] | None = None
+    tables: Sequence[SqlTableSpec] | Mapping[str, SqlTableSpec] | None = None
     pattern: tuple[str, ...] | None = None
     schema: tuple[str, ...] | None = None
     driver: str | None = None
@@ -58,7 +80,6 @@ class SqlSource:
     database: str | None = None
     all: bool = False
     exclude_archived: bool = True
-    where: str | Mapping[str, str] | None = None
     type: str = field(default="sql", init=False)
 
 
@@ -97,9 +118,35 @@ def file_source(
     )
 
 
+def sql_table(
+    qualified: str,
+    where: str | None = None,
+    alias: str | None = None,
+) -> SqlTable:
+    """Declare a single SQL table with an optional WHERE filter.
+
+    ``where`` is applied server-side as a derived-table predicate,
+    scoped to this table alone. Use this when different tables in the
+    same source need different cohort filters -- a source-wide
+    ``where=`` would apply to columns the table may not have.
+
+        sql_source(
+            dsn="P1105",
+            tables=(
+                sql_table("dbo.lisa_2018", where="AR > 2015"),
+                sql_table("dbo.par",       where="INDATUM > '2015-01-01'"),
+                "dbo.fodelse",  # plain string -> no filter
+            ),
+        )
+    """
+    if not isinstance(qualified, str) or not qualified:
+        raise ValueError("sql_table(): `qualified` must be a non-empty string")
+    return SqlTable(qualified=qualified, where=where, alias=alias)
+
+
 def sql_source(
     dsn: str,
-    tables: Sequence[str] | Mapping[str, str] | None = None,
+    tables: Sequence[SqlTableSpec] | Mapping[str, SqlTableSpec] | None = None,
     pattern: str | Sequence[str] | None = None,
     schema: str | Sequence[str] | None = None,
     driver: str | None = None,
@@ -107,17 +154,15 @@ def sql_source(
     database: str | None = None,
     all: bool = False,
     exclude_archived: bool = True,
-    where: str | Mapping[str, str] | None = None,
 ) -> SqlSource:
     """Declare an ODBC-backed source.
 
     Discovery triggers when none of ``tables``, ``pattern``, or
     ``all=True`` is supplied.
 
-    ``where``: SQL predicate applied to every table in the source. Pass a
-    string for a single predicate (``where="AR > 2015"``) or a dict
-    keyed by alias for per-table predicates (``where={"lisa_2018":
-    "AR > 2018"}``). Tables not present as keys get no filter.
+    Per-table filters live on individual ``sql_table()`` entries; there
+    is no source-wide ``where`` because heterogeneous tables in one
+    source typically need different (or no) predicates.
     """
     if not isinstance(dsn, str) or not dsn:
         raise ValueError("sql_source(): `dsn` must be a non-empty string")
@@ -139,7 +184,6 @@ def sql_source(
         database=database,
         all=all,
         exclude_archived=exclude_archived,
-        where=where,
     )
 
 
@@ -185,20 +229,6 @@ class SourceHandle:
 
 
 _DERIVED_ALIAS = "__mdw_src"
-
-
-def _resolve_where(src_where: str | Mapping[str, str] | None, alias: str) -> str | None:
-    """Pick the WHERE predicate that applies to ``alias``."""
-    if src_where is None:
-        return None
-    if isinstance(src_where, str):
-        return src_where or None
-    if isinstance(src_where, Mapping):
-        return src_where.get(alias)
-    raise TypeError(
-        f"`where` must be str, Mapping[str, str], or None; got "
-        f"{type(src_where).__name__}"
-    )
 
 
 def _wrap_with_where(table_ref: str, where: str | None) -> str:
@@ -273,7 +303,7 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 f"CREATE OR REPLACE VIEW {quoted_view} AS "
                 f"SELECT * FROM read_csv_auto('{quoted_path}', header=true)"
             )
-            where = _resolve_where(src.where, fp.name)
+            where = src.where
             table_ref = _wrap_with_where(quoted_view, where)
             detail: dict[str, Any] = {"path": str(fp)}
             if where:
@@ -336,23 +366,53 @@ def _strip_schema(qual: str) -> str:
     return qual.rsplit(".", 1)[-1]
 
 
-def _resolve_table_aliases(
-    tables: Sequence[str] | Mapping[str, str],
-) -> dict[str, str]:
+def _normalize_to_sql_tables(
+    tables: Sequence[SqlTableSpec] | Mapping[str, SqlTableSpec],
+) -> list[SqlTable]:
+    """Coerce strings, SqlTable, and alias-maps into a uniform list."""
+    out: list[SqlTable] = []
     if isinstance(tables, Mapping):
-        items = list(tables.items())
-    else:
-        items = [(_strip_schema(t), t) for t in tables]
-    seen: dict[str, list[str]] = {}
-    for alias, qual in items:
-        seen.setdefault(alias, []).append(qual)
-    dupes = {a: q for a, q in seen.items() if len(q) > 1}
+        for alias, val in tables.items():
+            if isinstance(val, str):
+                out.append(SqlTable(qualified=val, alias=alias))
+            elif isinstance(val, SqlTable):
+                # Mapping key wins as the alias if the SqlTable didn't set one.
+                if val.alias is None:
+                    out.append(replace(val, alias=alias))
+                else:
+                    out.append(val)
+            else:
+                raise TypeError(
+                    f"tables[{alias!r}] must be str or SqlTable; "
+                    f"got {type(val).__name__}"
+                )
+        return out
+    for t in tables:
+        if isinstance(t, str):
+            out.append(SqlTable(qualified=t))
+        elif isinstance(t, SqlTable):
+            out.append(t)
+        else:
+            raise TypeError(
+                f"tables entries must be str or SqlTable; got {type(t).__name__}"
+            )
+    return out
+
+
+def _resolve_sql_aliases(normalized: Sequence[SqlTable]) -> dict[str, SqlTable]:
+    """Map alias -> SqlTable, raising on conflict."""
+    seen: dict[str, list[SqlTable]] = {}
+    for t in normalized:
+        alias = t.alias or _strip_schema(t.qualified)
+        seen.setdefault(alias, []).append(t)
+    dupes = {a: ts for a, ts in seen.items() if len(ts) > 1}
     if dupes:
+        names = sorted(dupes)
         raise ValueError(
-            f"Ambiguous table aliases: {sorted(dupes)}. Supply explicit aliases via "
-            "a dict, e.g. {'persons_dbo': 'dbo.persons'}."
+            f"Ambiguous table aliases: {names}. Pass explicit alias= on "
+            f"sql_table(), e.g. sql_table('dbo.persons', alias='persons_dbo')."
         )
-    return dict(items)
+    return {(t.alias or _strip_schema(t.qualified)): t for t in normalized}
 
 
 def _quote_qualified(qualified: str) -> str:
@@ -363,9 +423,9 @@ def _is_archived(qualified_or_bare: str) -> bool:
     return _strip_schema(qualified_or_bare).lower().startswith("x_")
 
 
-def _select_sql_tables(conn: Any, src: SqlSource) -> dict[str, str]:
+def _select_sql_tables(conn: Any, src: SqlSource) -> dict[str, SqlTable]:
     if src.tables is not None:
-        return _resolve_table_aliases(src.tables)
+        return _resolve_sql_aliases(_normalize_to_sql_tables(src.tables))
     discovered = list_sql_views(conn, src)
     if src.exclude_archived:
         discovered = [t for t in discovered if not _is_archived(t)]
@@ -376,7 +436,7 @@ def _select_sql_tables(conn: Any, src: SqlSource) -> dict[str, str]:
         raise ValueError(
             "sql_source(): provide one of `tables`, `pattern`, or `all=True`."
         )
-    return _resolve_table_aliases(discovered)
+    return _resolve_sql_aliases([SqlTable(qualified=t) for t in discovered])
 
 
 def iter_sql_source(src: SqlSource, conn: Any = None) -> Iterator[SourceHandle]:
@@ -389,16 +449,17 @@ def iter_sql_source(src: SqlSource, conn: Any = None) -> Iterator[SourceHandle]:
             raise ValueError(
                 f"sql_source(dsn='{src.dsn}'): no tables selected after filters."
             )
-        for alias, qual in aliases.items():
-            where = _resolve_where(src.where, alias)
-            table_ref = _wrap_with_where(_quote_qualified(qual), where)
+        for alias, sqltbl in aliases.items():
+            table_ref = _wrap_with_where(
+                _quote_qualified(sqltbl.qualified), sqltbl.where
+            )
             detail: dict[str, Any] = {
                 "dsn": src.dsn,
                 "database": src.database,
-                "table": qual,
+                "table": sqltbl.qualified,
             }
-            if where:
-                detail["where"] = where
+            if sqltbl.where:
+                detail["where"] = sqltbl.where
             yield SourceHandle(
                 dialect=MSSQL,
                 conn=conn,

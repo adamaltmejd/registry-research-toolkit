@@ -131,43 +131,41 @@ default — whichever doesn't apply drops itself.
 
 ### Cohort filtering with `where`
 
-Both source types accept a `where=` clause that narrows the cohort
-**before** any aggregation. For example, restricting health-registry
-mock data to recent years:
+Filters are declared **per-table** via `sql_table()`, not at the source
+level. Different tables in one source typically have different filter
+columns (LISA's `AR`, PAR's `INDATUM`, etc.), so a source-wide `where=`
+would silently fail or — worse — mismatch a column the next table
+doesn't have.
 
 ```python
 sql_source(
     dsn = "P1105",
-    tables = ("dbo.lisa_2016", "dbo.lisa_2017", "dbo.lisa_2018"),
-    where = "AR > 2015",   # applied to every table
+    tables = (
+        sql_table("dbo.lisa_2018", where = "AR > 2015"),
+        sql_table("dbo.par",       where = "INDATUM > '2015-01-01'"),
+        "dbo.fodelse",  # plain string -> no filter
+    ),
 )
 ```
 
-For per-table predicates, pass a dict keyed by alias:
+For files, `where=` lives on `file_source(...)` itself: each file is its
+own table and the predicate runs against the DuckDB-typed columns from
+`read_csv_auto`.
 
-```python
-sql_source(
-    dsn = "P1105",
-    tables = ("dbo.lisa_2018", "dbo.lisa_2019"),
-    where = {"lisa_2018": "AR > 2018"},   # only this one is filtered
-)
-```
-
-Implementation: when the iterator yields a `SourceHandle`, the
-`table` field is a derived-table reference like `(SELECT * FROM
-[dbo].[lisa_2018] WHERE AR > 2018) AS __mdw_src`. Every downstream
-emitter just pastes this into `FROM {table}`, so cohort filtering is
-transparent to `count_rows`, `_pre_classify`, and every typed
-aggregate query.
+Implementation: the iterator wraps the table reference in a derived
+table — `(SELECT * FROM [dbo].[lisa_2018] WHERE AR > 2015) AS
+__mdw_src` — that downstream emitters just paste into `FROM {table}`.
+Cohort filtering is transparent to `count_rows`, `_pre_classify`, and
+every typed aggregate query.
 
 The small-population warning fires on the **filtered** row count,
 which is the disclosure-relevant denominator. A `where` that narrows
 to a handful of individuals is exactly the kind of risk
-SMALL\_POP\_MULT × SUPPRESS\_K is meant to flag.
+SMALL_POP_MULT × SUPPRESS_K is meant to flag.
 
-The clause is recorded in `source_detail.where` in `stats.json` so
-the downstream `generate` step can echo it (e.g., apply the same
-year filter to the mock data range).
+The clause is recorded in `source_detail.where` in `stats.json` so the
+downstream `generate` step can echo it (e.g., apply the same year
+filter to the mock data range).
 
 ### File discovery quirks
 

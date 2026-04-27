@@ -41,6 +41,7 @@ from .sources import (
     needs_discovery,
     sql_connect,
     sql_source,
+    sql_table,
 )
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 from .summarize import small_pop_threshold, summarize_column
@@ -229,8 +230,7 @@ def run_extract(
 # -- Discovery mode --------------------------------------------------------
 
 
-def _format_where_arg(where: Any) -> str:
-    """Render the `where=` keyword argument for the discovery skeleton."""
+def _format_file_where_arg(where: Any) -> str:
     if where is None:
         return ""
     return f"        where={where!r},\n"
@@ -246,7 +246,7 @@ def _format_file_skeleton(src: FileSource) -> str:
         f"    file_source(\n"
         f"        path={src.path!r},\n"
         f"        include=(\n{inc_lines},\n        ),\n"
-        f"{_format_where_arg(src.where)}"
+        f"{_format_file_where_arg(src.where)}"
         f"    ),"
     )
 
@@ -267,12 +267,15 @@ def _format_sql_skeleton(src: SqlSource) -> str:
         tables = [t for t in tables if not _is_archived(t)]
     if not tables:
         return f"    # sql_source(dsn={src.dsn!r}) -- no matching tables"
+    # Plain strings keep the skeleton compact. To attach a WHERE filter,
+    # the user wraps a row in sql_table(..., where=...) after narrowing.
     tbl_lines = ",\n".join(f"            {t!r}" for t in tables)
     return (
         f"    sql_source(\n"
         f"        dsn={src.dsn!r},\n"
         f"        tables=(\n{tbl_lines},\n        ),\n"
-        f"{_format_where_arg(src.where)}"
+        f"        # Attach a per-table cohort filter by wrapping a row, e.g.:\n"
+        f"        #   sql_table('dbo.persons', where='AR > 2015'),\n"
         f"    ),"
     )
 
@@ -311,7 +314,11 @@ def find_latest_sources_file(directory: Path) -> Path | None:
 def load_sources_file(path: Path) -> list[Any]:
     """Exec a sidecar ``mdw_sources_*.py`` and return its ``SOURCES``."""
     code = Path(path).read_text(encoding="utf-8")
-    ns: dict[str, Any] = {"file_source": file_source, "sql_source": sql_source}
+    ns: dict[str, Any] = {
+        "file_source": file_source,
+        "sql_source": sql_source,
+        "sql_table": sql_table,
+    }
     exec(compile(code, str(path), "exec"), ns)
     return list(ns.get("SOURCES", []))
 
