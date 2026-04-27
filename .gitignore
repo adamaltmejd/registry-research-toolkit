@@ -41,6 +41,7 @@ extract_stats*.R
 mdw_probe_*.log
 mdw_python_probe_*.log
 mdw_py_probe_*.csv
+mdw_upload_probe_*.txt
 
 # regmeta database (built from SCB exports, not committed)
 *.db

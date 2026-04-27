@@ -53,6 +53,32 @@ for `memory_limit`, which is plenty for any single-source aggregation
 we'll run. We don't override it; we just set `temp_directory` to point
 at `C:\Windows\TEMP` and `preserve_insertion_order = false`.
 
+## MONA upload (probed 2026-04-27 on MBS16)
+
+The MONA upload UI's officially advertised whitelist (`TXT/RTF/PDF/DTA/
+SAS7BDAT/SPSS/QGIS SHAPE/PNG/JPG`, 10 MB cap, "TXT (Not UNICODE)") is
+stricter than what's actually enforced. Verified directly:
+
+- **`.py` is accepted** and runs under WinPython on the batch host.
+- **Source bytes round-trip verbatim** — UTF-8 sentinels (`Födelseår
+  Kön Län`) survive in the file's own bytes after upload; the file
+  decodes cleanly as UTF-8 with no BOM. **The shipped bundle can use
+  raw UTF-8** — no ASCII-escape pass needed.
+- **Non-ASCII filenames** can be created on the home share.
+- **cwd at batch start is the user's home share** (`\\micro.intra\
+  mydocs\...\InBox`, ~250 MB free) — the script must never depend on
+  cwd for output. `stats.json` is small enough to live next to the
+  script; everything else (DuckDB spill especially) goes to
+  `C:\Windows\TEMP`.
+- **`locale.getpreferredencoding()` is `cp1252`** — pass `encoding=`
+  explicitly on every CSV/text open; do not rely on the default.
+
+Architectural consequence: we ship `mock_data_wizard` to MONA as a
+single bundled `.py` file built by an in-repo amalgamator. One file
+sidesteps the multi-upload UX, fits the 10 MB cap with two orders of
+magnitude to spare, and the "Not UNICODE" line in the upload notice
+turns out to be advisory rather than enforced.
+
 ## Source model
 
 The R script's `SOURCES <- list(...)` block is the single place users
