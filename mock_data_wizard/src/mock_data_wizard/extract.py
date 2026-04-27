@@ -43,11 +43,11 @@ from .sources import (
     sql_source,
 )
 from .sql_emit import DUCKDB, MSSQL, quote_ident
-from .stats import CONTRACT_VERSION
 from .summarize import small_pop_threshold, summarize_column
 
 log = logging.getLogger("mdw.extract")
 
+CONTRACT_VERSION = "2.0.0"
 SAMPLE_SIZE = 1000
 
 

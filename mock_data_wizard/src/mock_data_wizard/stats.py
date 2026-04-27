@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-CONTRACT_VERSION = "2.0.0"
+from .extract import CONTRACT_VERSION  # producer owns the version
 
 VALID_TYPES = frozenset({"numeric", "categorical", "high_cardinality", "date", "id"})
 VALID_SOURCE_TYPES = frozenset({"file", "sql"})

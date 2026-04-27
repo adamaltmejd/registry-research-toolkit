@@ -413,6 +413,34 @@ def _cmd_generate(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_build_bundle(args: argparse.Namespace) -> int:
+    """Amalgamate the runtime modules into a single .py for MONA upload."""
+    import importlib.util
+
+    builder_path = (
+        Path(__file__).resolve().parents[3]
+        / "mock_data_wizard"
+        / "scripts"
+        / "build_mona_bundle.py"
+    )
+    if not builder_path.exists():
+        print(
+            f"Error: bundler script not found at {builder_path}.\n"
+            "build-bundle requires a source checkout of the repo.",
+            file=sys.stderr,
+        )
+        return 1
+    spec = importlib.util.spec_from_file_location("_bmb", builder_path)
+    assert spec and spec.loader
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+
+    output = Path(args.output) if args.output else mod.OUTPUT_DEFAULT
+    out = mod.build_bundle(output)
+    print(f"Built {out} ({out.stat().st_size:,} bytes)")
+    return 0
+
+
 def _cmd_update(_args: argparse.Namespace) -> int:
     from .update import run_update
 
@@ -591,6 +619,24 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show per-file timing breakdown",
     )
 
+    # build-bundle
+    bb = sub.add_parser(
+        "build-bundle",
+        help="Build the single-file .py bundle for MONA upload",
+        description=(
+            "Concatenate the runtime modules into one .py at\n"
+            "mock_data_wizard/dist/mock_data_wizard_extract.py.\n"
+            "Upload that file to MONA, edit its SOURCES = [...] block,\n"
+            "and run `python mock_data_wizard_extract.py` in the batch client."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    bb.add_argument(
+        "--output",
+        "-o",
+        help="Output path (default: mock_data_wizard/dist/mock_data_wizard_extract.py)",
+    )
+
     sub.add_parser(
         "update",
         help="Update mock-data-wizard to the latest version on PyPI",
@@ -635,6 +681,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "generate-script":
             rc = _cmd_generate_script(args)
+        elif args.command == "build-bundle":
+            rc = _cmd_build_bundle(args)
         elif args.command == "compare":
             rc = _cmd_compare(args)
         elif args.command == "generate":
