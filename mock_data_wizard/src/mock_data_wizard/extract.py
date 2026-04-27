@@ -229,6 +229,13 @@ def run_extract(
 # -- Discovery mode --------------------------------------------------------
 
 
+def _format_where_arg(where: Any) -> str:
+    """Render the `where=` keyword argument for the discovery skeleton."""
+    if where is None:
+        return ""
+    return f"        where={where!r},\n"
+
+
 def _format_file_skeleton(src: FileSource) -> str:
     files = list_files_in_source(src)
     basenames = sorted({f.name for f in files})
@@ -239,6 +246,7 @@ def _format_file_skeleton(src: FileSource) -> str:
         f"    file_source(\n"
         f"        path={src.path!r},\n"
         f"        include=(\n{inc_lines},\n        ),\n"
+        f"{_format_where_arg(src.where)}"
         f"    ),"
     )
 
@@ -264,6 +272,7 @@ def _format_sql_skeleton(src: SqlSource) -> str:
         f"    sql_source(\n"
         f"        dsn={src.dsn!r},\n"
         f"        tables=(\n{tbl_lines},\n        ),\n"
+        f"{_format_where_arg(src.where)}"
         f"    ),"
     )
 

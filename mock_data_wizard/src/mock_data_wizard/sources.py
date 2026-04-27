@@ -43,6 +43,7 @@ class FileSource:
     pattern: str | None = None
     all: bool = False
     encoding: str = "utf-8"
+    where: str | None = None
     type: str = field(default="file", init=False)
 
 
@@ -57,6 +58,7 @@ class SqlSource:
     database: str | None = None
     all: bool = False
     exclude_archived: bool = True
+    where: str | Mapping[str, str] | None = None
     type: str = field(default="sql", init=False)
 
 
@@ -70,11 +72,17 @@ def file_source(
     pattern: str | None = None,
     all: bool = False,
     encoding: str = "utf-8",
+    where: str | None = None,
 ) -> FileSource:
     """Declare a file-backed source.
 
     Discovery triggers when none of ``include``, ``exclude``, ``pattern``,
     or ``all=True`` is supplied.
+
+    ``where``: SQL predicate applied as ``WHERE {where}`` to every file in
+    the source before aggregation. Useful for multi-year CSVs that should
+    be narrowed to a cohort. The clause runs against the DuckDB-typed
+    columns from ``read_csv_auto``.
     """
     if not isinstance(path, str) or not path:
         raise ValueError("file_source(): `path` must be a non-empty string")
@@ -85,6 +93,7 @@ def file_source(
         pattern=pattern,
         all=all,
         encoding=encoding,
+        where=where,
     )
 
 
@@ -98,11 +107,17 @@ def sql_source(
     database: str | None = None,
     all: bool = False,
     exclude_archived: bool = True,
+    where: str | Mapping[str, str] | None = None,
 ) -> SqlSource:
     """Declare an ODBC-backed source.
 
     Discovery triggers when none of ``tables``, ``pattern``, or
     ``all=True`` is supplied.
+
+    ``where``: SQL predicate applied to every table in the source. Pass a
+    string for a single predicate (``where="AR > 2015"``) or a dict
+    keyed by alias for per-table predicates (``where={"lisa_2018":
+    "AR > 2018"}``). Tables not present as keys get no filter.
     """
     if not isinstance(dsn, str) or not dsn:
         raise ValueError("sql_source(): `dsn` must be a non-empty string")
@@ -124,6 +139,7 @@ def sql_source(
         database=database,
         all=all,
         exclude_archived=exclude_archived,
+        where=where,
     )
 
 
@@ -147,6 +163,11 @@ def needs_discovery(src: Any) -> bool:
 class SourceHandle:
     """A single table within a source, ready for ``classify`` / ``summarize``.
 
+    ``table`` is whatever the caller pastes into ``FROM {table}``: a
+    quoted view/table name, or, when the source has a ``where`` filter,
+    a quoted derived-table expression like ``(SELECT * FROM ... WHERE
+    ...) AS __mdw_src``. Downstream emitters don't care which.
+
     The connection is shared across all handles from one source iteration
     and is closed when the iterator is exhausted (or its caller stops
     consuming and the iterator is garbage-collected).
@@ -154,10 +175,41 @@ class SourceHandle:
 
     dialect: str
     conn: Any
-    table: str  # already quoted, ready to drop into ``FROM {table}``
+    table: str
     source_name: str
     source_type: str
     source_detail: dict[str, Any]
+
+
+# -- WHERE-clause routing --------------------------------------------------
+
+
+_DERIVED_ALIAS = "__mdw_src"
+
+
+def _resolve_where(src_where: str | Mapping[str, str] | None, alias: str) -> str | None:
+    """Pick the WHERE predicate that applies to ``alias``."""
+    if src_where is None:
+        return None
+    if isinstance(src_where, str):
+        return src_where or None
+    if isinstance(src_where, Mapping):
+        return src_where.get(alias)
+    raise TypeError(
+        f"`where` must be str, Mapping[str, str], or None; got "
+        f"{type(src_where).__name__}"
+    )
+
+
+def _wrap_with_where(table_ref: str, where: str | None) -> str:
+    """Wrap a quoted table reference in a derived-table that applies WHERE.
+
+    Pasting the result into ``FROM {table_ref}`` runs the predicate
+    server-side before any aggregation -- transparent to every emitter.
+    """
+    if not where:
+        return table_ref
+    return f"(SELECT * FROM {table_ref} WHERE {where}) AS {_DERIVED_ALIAS}"
 
 
 # -- File iteration -------------------------------------------------------
@@ -221,14 +273,19 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 f"CREATE OR REPLACE VIEW {quoted_view} AS "
                 f"SELECT * FROM read_csv_auto('{quoted_path}', header=true)"
             )
+            where = _resolve_where(src.where, fp.name)
+            table_ref = _wrap_with_where(quoted_view, where)
+            detail: dict[str, Any] = {"path": str(fp)}
+            if where:
+                detail["where"] = where
             try:
                 yield SourceHandle(
                     dialect=DUCKDB,
                     conn=conn,
-                    table=quoted_view,
+                    table=table_ref,
                     source_name=fp.name,
                     source_type="file",
-                    source_detail={"path": str(fp)},
+                    source_detail=detail,
                 )
             finally:
                 conn.execute(f"DROP VIEW IF EXISTS {quoted_view}")
@@ -333,17 +390,22 @@ def iter_sql_source(src: SqlSource, conn: Any = None) -> Iterator[SourceHandle]:
                 f"sql_source(dsn='{src.dsn}'): no tables selected after filters."
             )
         for alias, qual in aliases.items():
+            where = _resolve_where(src.where, alias)
+            table_ref = _wrap_with_where(_quote_qualified(qual), where)
+            detail: dict[str, Any] = {
+                "dsn": src.dsn,
+                "database": src.database,
+                "table": qual,
+            }
+            if where:
+                detail["where"] = where
             yield SourceHandle(
                 dialect=MSSQL,
                 conn=conn,
-                table=_quote_qualified(qual),
+                table=table_ref,
                 source_name=alias,
                 source_type="sql",
-                source_detail={
-                    "dsn": src.dsn,
-                    "database": src.database,
-                    "table": qual,
-                },
+                source_detail=detail,
             )
     finally:
         if own_conn:

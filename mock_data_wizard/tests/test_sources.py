@@ -19,6 +19,8 @@ from mock_data_wizard.sources import (
     _build_pyodbc_connstr,
     _is_archived,
     _resolve_table_aliases,
+    _resolve_where,
+    _wrap_with_where,
     file_source,
     filter_files,
     iter_file_source,
@@ -342,3 +344,82 @@ def test_iter_source_dispatches_to_sql():
 def test_iter_source_unknown_type_raises():
     with pytest.raises(TypeError):
         list(iter_source("not a source"))
+
+
+# -- WHERE clauses --------------------------------------------------------
+
+
+def test_resolve_where_string_applies_to_any_alias():
+    assert _resolve_where("AR > 2015", "any_alias") == "AR > 2015"
+
+
+def test_resolve_where_dict_per_alias():
+    where = {"lisa_2018": "AR > 2018", "lisa_2019": "AR > 2019"}
+    assert _resolve_where(where, "lisa_2018") == "AR > 2018"
+    assert _resolve_where(where, "lisa_2019") == "AR > 2019"
+    # Missing alias gets no filter (don't surprise the user with a typo)
+    assert _resolve_where(where, "lisa_2020") is None
+
+
+def test_resolve_where_none_returns_none():
+    assert _resolve_where(None, "x") is None
+    assert _resolve_where("", "x") is None
+
+
+def test_resolve_where_invalid_type_raises():
+    with pytest.raises(TypeError, match="must be str"):
+        _resolve_where(123, "x")  # type: ignore[arg-type]
+
+
+def test_wrap_with_where_no_clause_passthrough():
+    assert _wrap_with_where('"v"', None) == '"v"'
+    assert _wrap_with_where('"v"', "") == '"v"'
+
+
+def test_wrap_with_where_produces_aliased_derived_table():
+    out = _wrap_with_where("[dbo].[t]", "AR > 2015")
+    assert out == "(SELECT * FROM [dbo].[t] WHERE AR > 2015) AS __mdw_src"
+
+
+def test_iter_sql_source_with_string_where_wraps_all_tables():
+    src = sql_source(
+        "P1105", tables=["dbo.lisa_2018", "dbo.lisa_2019"], where="AR > 2015"
+    )
+    handles = list(iter_sql_source(src, conn=_FakeConn(view_rows=[])))
+    for h in handles:
+        assert h.table.startswith("(SELECT * FROM ")
+        assert "WHERE AR > 2015" in h.table
+        assert h.table.endswith("AS __mdw_src")
+        assert h.source_detail["where"] == "AR > 2015"
+
+
+def test_iter_sql_source_with_dict_where_routes_per_alias():
+    src = sql_source(
+        "P1105",
+        tables=["dbo.lisa_2018", "dbo.lisa_2019"],
+        where={"lisa_2018": "AR > 2018"},  # only lisa_2018 gets filtered
+    )
+    handles = {h.source_name: h for h in iter_sql_source(src, conn=_FakeConn([]))}
+    assert "WHERE AR > 2018" in handles["lisa_2018"].table
+    assert handles["lisa_2018"].source_detail["where"] == "AR > 2018"
+    # lisa_2019 unfiltered — bare quoted name, no derived-table wrapper
+    assert "WHERE" not in handles["lisa_2019"].table
+    assert "where" not in handles["lisa_2019"].source_detail
+
+
+def test_iter_file_source_with_where_filters_rows(tmp_path: Path):
+    """End-to-end: where clause actually narrows row count via DuckDB."""
+    (tmp_path / "events.csv").write_text(
+        "ar,event\n2014,a\n2015,b\n2016,c\n2017,d\n2018,e\n",
+        encoding="utf-8",
+    )
+    src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT COUNT(*) FROM {handle.table}")
+            (n,) = cur.fetchone()
+            assert n == 3  # 2016, 2017, 2018
+        finally:
+            cur.close()
+        assert handle.source_detail["where"] == "ar > 2015"

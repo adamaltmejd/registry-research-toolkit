@@ -99,6 +99,28 @@ def test_run_extract_raises_when_no_data(tmp_path: Path):
         run_extract([src], tmp_path / "stats.json")
 
 
+def test_run_extract_where_narrows_row_count_and_records_clause(tmp_path: Path):
+    """End-to-end: stats.json reflects the FILTERED set, not the source set."""
+    _write_csv(
+        tmp_path / "events.csv",
+        # 8 rows total, 5 with ar > 2015
+        "lopnr,ar,kommun\n"
+        "1,2013,0114\n2,2014,0114\n3,2015,0115\n"
+        "4,2016,0114\n5,2017,0115\n6,2018,0114\n7,2019,0115\n8,2020,0114\n",
+    )
+    src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
+    out = tmp_path / "stats.json"
+    result = run_extract([src], out, seed=0)
+
+    src_out = result["sources"][0]
+    assert src_out["row_count"] == 5  # filtered, not 8
+    assert src_out["source_detail"]["where"] == "ar > 2015"
+    # Classification should still work end-to-end through the derived table.
+    by_name = {c["column_name"]: c for c in src_out["columns"]}
+    assert by_name["lopnr"]["inferred_type"] == "id"
+    assert by_name["kommun"]["inferred_type"] == "categorical"
+
+
 # -- _shared_columns -----------------------------------------------------
 
 
