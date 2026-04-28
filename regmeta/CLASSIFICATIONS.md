@@ -72,15 +72,15 @@ vardekod,vardebenamning
 | `SSYK96` | ✓ | ~830 | 501 | scraped from ssyksok.scb.se |
 | `NIVA-OLD` | ✓ | 32 | 7 | hand-written from LISA/UREG docs |
 | `NIVA-GROV` | ✓ | 14 | 5 | hand-written from LISA/UREG docs |
-| `SUN1996` | — | 4 818 | — | PDF only (`mis-1996-1.pdf`) |
+| `SUN1996` | ✓ | 4 818 | 4 601 | scraped from metadata.scb.se klassdb (2-, 3-, 5-pos levels) |
 | `LKF{1980..2026}` | ✓ | 47 entries | varies | per-year split, see "Geography — LKF" |
-| `ISCED2011` | — | 53 | — | needs SCB-specific docs (extends UNESCO ISCED 2011) |
-| `ISCED-F2013` | — | 164 | — | UNESCO PDF only |
-| `SEKTOR2000` | — | 22 | — | INSEKT 2014 — `mis2014-1.pdf` |
-| `JURFORM2000` | — | 45 | — | SCB juridisk form |
-| `JURFORM2020` | — | 39 | — | SCB juridisk form |
-| `AGARKAT2000` | — | 19 | — | SCB ägarkategori |
-| `AGARKAT2020` | — | 10 | — | SCB ägarkategori |
+| `ISCED2011` | ✓ | 53 | 66 | full UNESCO spec via SSB Klass 3426 |
+| `ISCED-F2013` | ✓ | 164 | 218 | full UNESCO spec via SSB Klass 3428 (+ 2 missing UNESCO codes) |
+| `SEKTOR2000` | ✓ | 53 | 73 | INSEKT 2000 from metadata.scb.se klassdb (Sektor + Undersektor + Delsektor) |
+| `JURFORM2000` | ✓ | 45 | 36 | scraped from metadata.scb.se klassdb |
+| `JURFORM2020` | ✓ | 39 | 36 | scraped from metadata.scb.se klassdb |
+| `AGARKAT2000` | ✓ | 19 | 11 | scraped from metadata.scb.se klassdb (Nivå 1 + Nivå 2) |
+| `AGARKAT2020` | ✓ | 10 | 11 | scraped from metadata.scb.se klassdb (Nivå 1 + Nivå 2) |
 
 `code_count` and `valid` columns reflect the latest build. `valid` may exceed
 the CSV row count when SCB exports carry the same canonical code under
@@ -225,40 +225,42 @@ Notes:
   `01.110`, ranges `102-103`, letters from Avdelning) — most are real
   references in alt format, not noise.
 
-## Pending — not yet done
+### SUN 1996, SEKTOR/INSEKT, JURFORM, AGARKAT — scraped from SCB Klassdb
 
-### Small SCB classifications (PDF only)
+Page: <https://metadata.scb.se/klassdb.aspx>
 
-These have no XLSX download. Each has 10–50 codes, small enough to
-hand-transcribe from the PDF.
+The SCB Klassifikationsdatabasen UI uses ASP.NET WebForms `__doPostBack`
+navigation, so there are no stable deep-link URLs. The data is reachable
+through the values pane (`tvKlass2`) once a version is selected via
+`__doPostBack('tvKlass', 'sVMF\\<vmf>\\VMK\\<vmk>\\VMV\\<vmv>')`. Each
+version then exposes one or more "Nivå N" levels addressed by appending
+`\\VMN\\<id1>\\<id2>...`.
 
-| short_name | source PDF |
-|---|---|
-| `SEKTOR2000` | <https://www.scb.se/contentassets/99af4dcf7296448db1386574e1aa6b9b/mis2014-1.pdf> (INSEKT 2014) |
-| `SEKTOR2000` (older) | <https://www.scb.se/contentassets/99af4dcf7296448db1386574e1aa6b9b/mis2001_2.pdf> (Sektor 2000) |
-| `JURFORM2000` | SCB juridisk form (variabelbeskrivning page) |
-| `JURFORM2020` | SCB juridisk form (Företagsregistret) |
-| `AGARKAT2000` | SCB ägarkategori — check Klassifikationsdatabasen at <https://metadata.scb.se/klassdb.aspx> |
-| `AGARKAT2020` | SCB ägarkategori — same |
+These were one-shot scrapes (browser-driven JS in the page DOM, output
+piped via `console.log` or `Blob` download). The CSVs ship as snapshots —
+re-extract only if SCB updates the codes. Reference IDs (in case
+re-scrape is needed):
 
-### UNESCO ISCED
+| short_name | vmk | vmv | levels |
+|---|---|---|---|
+| `SUN1996` | 801 | 781 | 2-pos / 3-pos / 5-pos (4601 codes) |
+| `SEKTOR2000` | 652 | 491 | Sektor / Undersektor / Delsektor (73 codes) |
+| `JURFORM2000` | 653 | 493 | Nivå 1 (36 codes) |
+| `JURFORM2020` | 653 | 80811 | Nivå 1 (36 codes) |
+| `AGARKAT2000` | 654 | 495 | Nivå 1 + Nivå 2 (11 codes) |
+| `AGARKAT2020` | 654 | 80806 | Nivå 1 + Nivå 2 (11 codes) |
 
-| short_name | source PDF |
-|---|---|
-| `ISCED2011` | <https://uis.unesco.org/sites/default/files/documents/isced-2011-operational-manual-guidelines-for-classifying-national-education-programmes-and-related-qualifications-2015-en_1.pdf> |
-| `ISCED-F2013` | UNESCO UIS — same site |
+Edge cases:
 
-ISCED 2011 has only 9 levels (0–8 plus subdivisions). Quick to hand-write.
-ISCED-F 2013 has ~150 codes — bigger lift.
-
-### Education — SUN 1996 (legacy)
-
-| short_name | source PDF |
-|---|---|
-| `SUN1996` | <https://www.scb.se/contentassets/aeeedec0e28c465aa524429407dcd5ba/mis-1996-1.pdf> |
-
-5-position combined level+direction code. ~5000 codes — heavier extraction.
-Lower priority since SUN 1996 is fully superseded.
+- `SEKTOR2000` toml lists two vardemängdsversionen: the canonical
+  `Standard för institutionell sektorindelning 2000` (53 observed
+  3-digit codes — match Delsektor) and a register-local `Sektor 2000`
+  (23 codes with a different 1-2 digit code scheme that mostly stays
+  `is_valid=0`). The canonical CSV serves the standard one.
+- `JURFORM 2020` is identical to `JURFORM 2000` except code `84`
+  changed from "Landsting" to "Regioner".
+- `AGARKAT` 2000 and 2020 differ only in code `30/3` Region(kontrollerade)
+  rename.
 
 ### Geography — LKF (per-year split)
 
@@ -314,18 +316,26 @@ appropriate `LKF{year}` entry.
 
 ### Education — ISCED 2011
 
-`ISCED2011` observed data has 53 codes spanning 1-digit (`0`–`8` standard
-UNESCO levels) AND 3-digit codes (`242`, `343`, `443`, ...) that look
-SCB-specific (combining ISCED level + behörighet/inriktning attributes).
-These 3-digit codes are NOT in UNESCO's standard ISCED 2011 spec, so we
-need SCB's own ISCED 2011 documentation to know what's canonical — not
-the UNESCO PDF. Pending: locate SCB's mapping/spec for the extended
-3-digit scheme.
+`ISCED2011` canonical CSV (`isced2011.csv`) was sourced from SSB's Klass
+register, version 3426 (Norwegian translation of UNESCO ISCED 2011 with
+all three levels: 1-digit, 2-digit, 3-digit — 66 codes total). All 39
+observed Nivå codes match. The 3-digit codes I'd previously flagged as
+"SCB-specific" turn out to be standard UNESCO level-3 detail codes.
+
+The "ISCED 2011 AES" vardemängd uses different padded codes (`000`,
+`200`, `300`, `302`, …) which appear to be SCB-specific. Only `100`
+matches the canonical set; the other 13 stay as `is_valid=0`.
 
 ### UNESCO ISCED-F 2013
 
-| short_name | source PDF |
-|---|---|
-| `ISCED-F2013` | <https://uis.unesco.org/en/topic/international-standard-classification-education-isced> |
+`ISCED-F2013` canonical CSV (`isced-f2013.csv`) was sourced from SSB's
+Klass register, version 3428 (UNESCO ISCED-F 2013 — 216 codes spanning
+broad/narrow/detailed fields). 124/126 observed `ISCED-F 2013 -
+Inriktning` codes match. The two SSB drops (`0110` Education NFD, `0739`
+Architecture and construction NEC) were re-added since they're standard
+UNESCO and present in SCB data.
 
-~150 codes — bigger lift. Hand-transcribe from UNESCO ISCED-F 2013 spec.
+The second vardemängd `ISCED F 2013 ` (with trailing space) carries 38
+codes mostly in Swedish (`Pedagogik och lärarutbildning`, etc.) — only
+12 match UNESCO. This looks like a register-local mapping mislabelled as
+ISCED-F; left at `is_valid=0` for the non-matching codes.

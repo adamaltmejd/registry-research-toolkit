@@ -1,0 +1,74 @@
+vardekod,vardebenamning
+1,Icke-finansiell företagssektor
+2,Finansiell företagssektor
+3,Statlig sektor
+4,Kommunal sektor
+5,Socialförsäkringsfonder
+6,Hushåll
+7,Hushållens icke-vinstdrivande organisationer
+8,Utlandet
+11,Icke-finansiella företag
+12,Statliga affärsverk
+13,Filialer till icke-finansiella företag i utlandet
+14,Icke-finansiella företags icke-vinstdrivande organisationer
+21,Monetära finansinstitut
+22,Andra finansinstitut
+23,Försäkringsföretag och pensionsinstitut
+24,Finansiella serviceföretag
+25,Finansiella företags icke-vinstdrivande organisationer
+31,Statlig förvaltning
+32,Andra institutioner hänförliga till statliga sektorn
+41,Primärkommunal undersektor
+42,Landstingskommunal undersektor
+50,Socialförsäkringsfonder
+61,Hushåll med företagarinkomst
+62,Hushåll med annan inkomst än företagarinkomst
+71,Hushållens icke-vinstdrivande organisationer utom registrerade trossamfund
+72,Registrerade trossamfund
+81,Europeiska unionen
+82,Övriga utlandet
+110,Icke-finansiella företag
+120,Statliga affärsverk
+130,Filialer till icke-finansiella företag i utlandet
+140,Icke-finansiella företags icke-vinstdrivande organisationer
+211,Centralbanker
+212,Banker (utom centralbanker)
+213,Bankfilialer till banker i utlandet
+214,Bostadsinstitut
+215,Andra monetära kreditmarknadsföretag
+216,Monetära värdepappersfonder
+217,Monetära värdepappersbolag och fondkommissionärer
+219,Övriga monetära finansinstitut
+221,Icke-monetära kreditmarknadsföretag
+222,Icke-monetära värdepappersfonder
+223,Icke-monetära värdepappersbolag och fondkommissionärer
+224,Investmentbolag
+229,Övriga finansinstitut
+231,Försäkringsföretag och pensionsinstitut utom pensionsstiftelser och understödsföreningar
+232,Filialer till försäkringsföretag och pensionsinstitut i utlandet
+233,Pensionsstiftelser och understödsföreningar
+240,Finansiella serviceföretag
+250,Finansiella företags icke-vinstdrivande organisationer
+311,Statlig förvaltning utom Riksgäldskontoret
+312,Riksgäldskontoret
+320,Andra institutioner hänförliga till statliga sektorn
+411,Primärkommuner
+412,Kommunalförbund som till övervägande del består av kommuner
+413,Andra institutioner hänförliga till primärkommunal undersektor
+421,Landsting
+422,Kommunalförbund som till övervägande del består av landsting
+423,Andra institutioner hänförliga till landstingskommunal undersektor
+500,Socialförsäkringsfonder
+611,Hushåll med företagarinkomst från rörelse med anställda
+612,Hushåll med företagarinkomst från rörelse utan anställda
+621,Hushåll med inkomst av tjänst
+622,Hushåll med inkomst av kapital
+623,Hushåll med inkomst av pensioner
+624,Hushåll med inkomst av andra transfereringar
+625,Institutionshushåll
+710,Hushållens icke-vinstdrivande organisationer utom registrerade trossamfund
+721,Svenska kyrkan
+722,Andra registrerade trossamfund
+811,EU:s medlemsländer
+812,EU:s institutioner
+820,Övriga utlandet

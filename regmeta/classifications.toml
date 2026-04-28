@@ -52,6 +52,7 @@ vardemangdsversion = [
   "SUN 1996",
   "SUN 1996, 5 positioner, brutto",
 ]
+valid_codes_file = "sun1996.csv"
 
 # SUN2000 has three orthogonal dimensions, each with its own code space:
 #   - Utbildningsnivå       → 3-digit numeric education level
@@ -1049,7 +1050,9 @@ valid_from = 2000
 url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-institutionell-sektorindelning-insekt/"
 vardemangdsversion = [
   "Sektor 2000",
+  "Standard för institutionell sektorindelning 2000",
 ]
+valid_codes_file = "sektor2000.csv"
 
 # ---------------------------------------------------------------------------
 # Legal form — Juridisk form
@@ -1066,6 +1069,7 @@ valid_to = 2019
 vardemangdsversion = [
   "Standard för indelning efter juridisk form 2000",
 ]
+valid_codes_file = "jurform2000.csv"
 
 [[classification]]
 short_name = "JURFORM2020"
@@ -1078,6 +1082,7 @@ supersedes = "JURFORM2000"
 vardemangdsversion = [
   "Standard för indelning efter juridisk form 2020",
 ]
+valid_codes_file = "jurform2020.csv"
 
 # ---------------------------------------------------------------------------
 # Owner category — Ägarkategori
@@ -1094,6 +1099,7 @@ valid_to = 2019
 vardemangdsversion = [
   "Standard för indelning efter ägarkategori 2000",
 ]
+valid_codes_file = "agarkat2000.csv"
 
 [[classification]]
 short_name = "AGARKAT2020"
@@ -1106,6 +1112,7 @@ supersedes = "AGARKAT2000"
 vardemangdsversion = [
   "Standard för indelning efter ägarkategori 2020",
 ]
+valid_codes_file = "agarkat2020.csv"
 
 # ---------------------------------------------------------------------------
 # International — ISCED
@@ -1123,6 +1130,7 @@ vardemangdsversion = [
   "ISCED 2011 - Nivå",
   "ISCED 2011 AES",
 ]
+valid_codes_file = "isced2011.csv"
 
 [[classification]]
 short_name = "ISCED-F2013"
@@ -1136,3 +1144,4 @@ vardemangdsversion = [
   "ISCED-F 2013 - Inriktning",
   "ISCED F 2013 ",
 ]
+valid_codes_file = "isced-f2013.csv"
