@@ -74,21 +74,26 @@ vardemangdsversion = ["Kon-2"]
 """
 
 
-def _write_test_csvs(csv_dir: Path) -> None:
+def _make_input_dir(tmp_path: Path) -> Path:
+    """Create <tmp_path>/input/SCB/ with the standard test fixture CSVs."""
+    input_dir = tmp_path / "input"
+    scb_dir = input_dir / "SCB"
+    scb_dir.mkdir(parents=True)
     write_csv(
-        csv_dir / "Registerinformation.csv",
+        scb_dir / "Registerinformation.csv",
         REGISTERINFORMATION_HEADER,
         REGISTERINFORMATION_ROWS,
     )
-    write_csv(csv_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
-    write_csv(csv_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
-    write_csv(csv_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+    write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
+    write_csv(scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+    write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
     write_csv(
-        csv_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, EXTENDED_VARDEMANGDER_ROWS
+        scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, EXTENDED_VARDEMANGDER_ROWS
     )
     write_csv(
-        csv_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
     )
+    return input_dir
 
 
 # ---------------------------------------------------------------------------
@@ -227,16 +232,14 @@ class TestLoadValidCodes:
 
 class TestPopulateClassifications:
     def _build_with_seed(self, tmp_path: Path, seed_toml: str) -> tuple[Path, Path]:
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        _write_test_csvs(csv_dir)
+        input_dir = _make_input_dir(tmp_path)
 
         seed = tmp_path / "classifications.toml"
         seed.write_text(seed_toml, encoding="utf-8")
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=seed)
+        build_db(input_dir=input_dir, db_dir=db_dir, classifications_seed=seed)
         return db_dir / "regmeta.db", seed
 
     def test_classification_inserted(self, tmp_path: Path):
@@ -317,7 +320,8 @@ class TestPopulateClassifications:
         """
         # CSV: '1' is observed (Man), 'Z' is canonical-but-unobserved.
         # '2' (Kvinna) is observed-only — not in CSV → is_valid=0.
-        cls_dir = tmp_path / "csv_classifications"
+        input_dir = _make_input_dir(tmp_path)
+        cls_dir = input_dir / "classifications"
         cls_dir.mkdir()
         (cls_dir / "testkon.csv").write_text(
             "vardekod,vardebenamning\n1,Man\nZ,Other\n", encoding="utf-8"
@@ -328,18 +332,14 @@ class TestPopulateClassifications:
             'vardemangdsversion = ["Kön"]\n'
         )
 
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        _write_test_csvs(csv_dir)
         seed = tmp_path / "classifications.toml"
         seed.write_text(seed_toml, encoding="utf-8")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         build_db(
-            csv_dir=csv_dir,
+            input_dir=input_dir,
             db_dir=db_dir,
             classifications_seed=seed,
-            classifications_csv_dir=cls_dir,
         )
 
         conn = sqlite3.connect(db_dir / "regmeta.db")
@@ -366,21 +366,17 @@ class TestPopulateClassifications:
             'valid_codes_file = "nope.csv"\n'
             'vardemangdsversion = ["Kön"]\n'
         )
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        _write_test_csvs(csv_dir)
+        input_dir = _make_input_dir(tmp_path)
+        (input_dir / "classifications").mkdir()
         seed = tmp_path / "classifications.toml"
         seed.write_text(seed_toml, encoding="utf-8")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        cls_dir = tmp_path / "csv_classifications"
-        cls_dir.mkdir()
         with pytest.raises(RegmetaError) as ei:
             build_db(
-                csv_dir=csv_dir,
+                input_dir=input_dir,
                 db_dir=db_dir,
                 classifications_seed=seed,
-                classifications_csv_dir=cls_dir,
             )
         assert ei.value.code == "classification_csv_not_found"
 
@@ -390,20 +386,18 @@ class TestPopulateClassifications:
             'valid_codes_file = "x.csv"\n'
             'vardemangdsversion = ["Kön"]\n'
         )
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        _write_test_csvs(csv_dir)
+        # No <input_dir>/classifications/ subdir → seed entry with
+        # valid_codes_file should error.
+        input_dir = _make_input_dir(tmp_path)
         seed = tmp_path / "classifications.toml"
         seed.write_text(seed_toml, encoding="utf-8")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
         with pytest.raises(RegmetaError) as ei:
             build_db(
-                csv_dir=csv_dir,
+                input_dir=input_dir,
                 db_dir=db_dir,
                 classifications_seed=seed,
-                # No classifications_csv_dir, and the csv_dir's parent has no
-                # "classifications" sibling → should error.
             )
         assert ei.value.code == "classification_csv_dir_missing"
 
@@ -465,16 +459,14 @@ def _run_json(db_dir: Path, args: list[str]) -> tuple[dict, int]:
 @pytest.fixture(scope="module")
 def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     tmp = tmp_path_factory.mktemp("cls")
-    csv_dir = tmp / "csv"
-    csv_dir.mkdir()
-    _write_test_csvs(csv_dir)
+    input_dir = _make_input_dir(tmp)
 
     seed = tmp / "classifications.toml"
     seed.write_text(TEST_SEED_TOML, encoding="utf-8")
 
     db_dir = tmp / "db"
     db_dir.mkdir()
-    build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=seed)
+    build_db(input_dir=input_dir, db_dir=db_dir, classifications_seed=seed)
 
     # Query commands require a doc DB alongside.
     from regmeta.doc_db import build_doc_db

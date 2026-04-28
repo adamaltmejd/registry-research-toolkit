@@ -255,8 +255,7 @@ def _resolve_valid_codes_paths(
                     "valid_codes_dir is configured for the build."
                 ),
                 remediation=(
-                    "Pass --classifications-dir to maintain build-db, or place "
-                    "the CSVs under <csv_dir>/../classifications/."
+                    "Place the canonical CSV under <input_dir>/classifications/."
                 ),
             )
         path = (valid_codes_dir / rel).resolve()

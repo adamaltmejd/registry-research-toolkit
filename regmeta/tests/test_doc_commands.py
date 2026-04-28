@@ -334,16 +334,18 @@ class TestDocDbRequired:
 
         from regmeta.db import build_db
 
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
+        scb_dir = tmp_path / "input" / "SCB"
+        scb_dir.mkdir(parents=True)
         write_csv(
-            csv_dir / "Registerinformation.csv",
+            scb_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
             REGISTERINFORMATION_ROWS,
         )
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
+        build_db(
+            input_dir=tmp_path / "input", db_dir=db_dir, classifications_seed=False
+        )
 
         data, code = _run_json(
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
@@ -363,16 +365,18 @@ class TestDocDbRequired:
 
         from regmeta.db import build_db
 
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
+        scb_dir = tmp_path / "input" / "SCB"
+        scb_dir.mkdir(parents=True)
         write_csv(
-            csv_dir / "Registerinformation.csv",
+            scb_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
             REGISTERINFORMATION_ROWS,
         )
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
+        build_db(
+            input_dir=tmp_path / "input", db_dir=db_dir, classifications_seed=False
+        )
 
         data, code = _run_json(
             ["--db", str(db_dir), "get", "register", "1"],
@@ -422,7 +426,9 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     combined = tmp_path_factory.mktemp("combined")
 
     # Build a minimal metadata DB
-    csv_dir = tmp_path_factory.mktemp("csv_combined")
+    input_dir = tmp_path_factory.mktemp("input_combined")
+    scb_dir = input_dir / "SCB"
+    scb_dir.mkdir()
     from _csv_fixtures import (
         REGISTERINFORMATION_HEADER,
         REGISTERINFORMATION_ROWS,
@@ -430,11 +436,11 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     )
 
     write_csv(
-        csv_dir / "Registerinformation.csv",
+        scb_dir / "Registerinformation.csv",
         REGISTERINFORMATION_HEADER,
         REGISTERINFORMATION_ROWS,
     )
-    build_db(csv_dir=csv_dir, db_dir=combined, classifications_seed=False)
+    build_db(input_dir=input_dir, db_dir=combined, classifications_seed=False)
 
     # Copy the doc DB alongside it
     shutil.copy(doc_db_dir / "regmeta_docs.db", combined / "regmeta_docs.db")

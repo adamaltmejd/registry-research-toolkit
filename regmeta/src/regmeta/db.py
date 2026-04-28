@@ -458,7 +458,7 @@ def open_db(
     error_code: str = "db_not_found",
     remediation: str = (
         "Run `regmeta maintain update` to fetch the pre-built DB, "
-        "or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports."
+        "or `regmeta maintain build-db --input-dir <path>` to build from CSV exports."
     ),
 ) -> sqlite3.Connection:
     if not db_path.exists():
@@ -1221,13 +1221,17 @@ def utc_now() -> str:
 
 
 def build_db(
-    csv_dir: Path,
+    input_dir: Path,
     db_dir: Path,
     *,
     classifications_seed: Path | None | bool = None,
-    classifications_csv_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
+
+    ``input_dir`` must contain:
+      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports
+      - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
+        (optional; required only for seed entries that set ``valid_codes_file``)
 
     ``classifications_seed`` controls classification population:
       - ``None`` (default): use ``repo_seed_path()`` if a seed exists in the
@@ -1235,32 +1239,38 @@ def build_db(
       - A ``Path``: use the given seed file.
       - ``False``: skip classification population entirely (for tests).
 
-    ``classifications_csv_dir`` is the directory containing per-classification
-    valid-codes CSVs. If ``None``, defaults to ``<csv_dir>/../classifications/``
-    when that directory exists. Required (per-entry) only for seed entries
-    that set ``valid_codes_file``.
-
     Returns a summary dict for the CLI to display.
     """
-    csv_dir = csv_dir.expanduser().resolve()
+    input_dir = input_dir.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
+    scb_dir = input_dir / "SCB"
+    cls_dir = input_dir / "classifications"
 
-    if not csv_dir.is_dir():
+    if not input_dir.is_dir():
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
-            code="csv_dir_not_found",
+            code="input_dir_not_found",
             error_class="configuration",
-            message=f"CSV directory not found: {csv_dir}",
-            remediation="Provide the directory containing SCB metadata CSV exports.",
+            message=f"Input directory not found: {input_dir}",
+            remediation="Provide a directory containing SCB/ and classifications/ subdirectories.",
         )
 
-    ri_path = csv_dir / "Registerinformation.csv"
+    if not scb_dir.is_dir():
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_dir_not_found",
+            error_class="configuration",
+            message=f"SCB subdirectory not found: {scb_dir}",
+            remediation="Place SCB metadata CSV exports under <input_dir>/SCB/.",
+        )
+
+    ri_path = scb_dir / "Registerinformation.csv"
     if not ri_path.exists():
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="csv_missing_backbone",
             error_class="configuration",
-            message="Registerinformation.csv not found in the CSV directory.",
+            message=f"Registerinformation.csv not found in {scb_dir}.",
             remediation="Export all metadata files from mikrometadata.scb.se.",
         )
 
@@ -1288,13 +1298,13 @@ def build_db(
 
         # Pre-scan validity item_ids (needed during Vardemangder import)
         validity_item_ids: set[int] | None = None
-        vvd_path = csv_dir / "VardemangderValidDates.csv"
+        vvd_path = scb_dir / "VardemangderValidDates.csv"
         if vvd_path.exists():
             validity_item_ids = _load_validity_item_ids(vvd_path)
 
         # Enrichment files (optional)
         for filename in ENRICHMENT_FILES:
-            path = csv_dir / filename
+            path = scb_dir / filename
             if not path.exists():
                 _progress(f"Skipping {filename} (not found)")
                 continue
@@ -1336,22 +1346,9 @@ def build_db(
         else:
             seed = classifications_seed  # type: ignore[assignment]
         if seed is not None:
-            cls_dir = classifications_csv_dir
-            if cls_dir is None:
-                # Default: sibling of csv_dir named "classifications".
-                candidate = csv_dir.parent / "classifications"
-                if candidate.is_dir():
-                    cls_dir = candidate
-            elif not cls_dir.is_dir():
-                raise RegmetaError(
-                    exit_code=EXIT_CONFIG,
-                    code="classification_csv_dir_not_found",
-                    error_class="configuration",
-                    message=f"classifications_csv_dir not found: {cls_dir}",
-                    remediation="Create the directory or omit the flag.",
-                )
+            valid_codes_dir = cls_dir if cls_dir.is_dir() else None
             row_counts["classifications.toml"] = populate_classifications(
-                conn, seed, valid_codes_dir=cls_dir
+                conn, seed, valid_codes_dir=valid_codes_dir
             )
         else:
             _progress("Skipping classifications (seed file not found)")
@@ -1368,7 +1365,7 @@ def build_db(
         _progress(f"  {cvm_count:,} code×variable mappings")
 
         # Reference files (optional)
-        sql_path = csv_dir / "Tabelldefinitioner.sql"
+        sql_path = scb_dir / "Tabelldefinitioner.sql"
         if sql_path.exists():
             row_counts["Tabelldefinitioner.sql"] = _import_tabelldefinitioner(
                 conn, sql_path
@@ -1376,7 +1373,7 @@ def build_db(
         else:
             _progress("Skipping Tabelldefinitioner.sql (not found)")
 
-        xlsx_path = csv_dir / "ID-kolumner.xlsx"
+        xlsx_path = scb_dir / "ID-kolumner.xlsx"
         if xlsx_path.exists():
             row_counts["ID-kolumner.xlsx"] = _import_id_kolumner(conn, xlsx_path)
         else:
@@ -1388,7 +1385,7 @@ def build_db(
         manifest_data = {
             "schema_version": SCHEMA_VERSION,
             "import_date": utc_now(),
-            "csv_dir": str(csv_dir),
+            "input_dir": str(input_dir),
             "source_checksums": source_checksums,
             "row_counts": row_counts,
         }

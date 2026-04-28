@@ -40,23 +40,25 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     commands (search/get/resolve) now require both artifacts — the CLI
     refuses to run queries without docs installed.
     """
-    csv_dir = tmp_path_factory.mktemp("csv")
+    input_dir = tmp_path_factory.mktemp("input")
+    scb_dir = input_dir / "SCB"
+    scb_dir.mkdir()
     db_dir = tmp_path_factory.mktemp("db")
 
     write_csv(
-        csv_dir / "Registerinformation.csv",
+        scb_dir / "Registerinformation.csv",
         REGISTERINFORMATION_HEADER,
         REGISTERINFORMATION_ROWS,
     )
-    write_csv(csv_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
-    write_csv(csv_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
-    write_csv(csv_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
-    write_csv(csv_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+    write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
+    write_csv(scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+    write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+    write_csv(scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
     write_csv(
-        csv_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
     )
 
-    build_db(csv_dir=csv_dir, db_dir=db_dir, classifications_seed=False)
+    build_db(input_dir=input_dir, db_dir=db_dir, classifications_seed=False)
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"

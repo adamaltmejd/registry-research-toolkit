@@ -764,21 +764,18 @@ def _build_parser() -> argparse.ArgumentParser:
             "Build the metadata database from raw SCB CSV exports. This\n"
             "replaces the database entirely (not incremental). Most users\n"
             "should use `maintain update` instead.\n\n"
+            "The input directory must contain:\n"
+            "  <input-dir>/SCB/*.csv             — SCB metadata exports\n"
+            "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
             "Examples:\n"
-            "  regmeta maintain build-db --csv-dir regmeta/input_data/SCB/"
+            "  regmeta maintain build-db --input-dir regmeta/input_data/"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_p.add_argument(
-        "--csv-dir", required=True, help="Directory containing SCB CSV exports."
-    )
-    build_p.add_argument(
-        "--classifications-dir",
-        default=None,
-        help=(
-            "Directory containing per-classification valid-codes CSVs. "
-            "Defaults to <csv_dir>/../classifications/ if that path exists."
-        ),
+        "--input-dir",
+        required=True,
+        help="Directory containing SCB/ and classifications/ subdirectories.",
     )
 
     build_docs_p = maintain_sub.add_parser(
@@ -906,19 +903,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
-    cls_dir = Path(args.classifications_dir) if args.classifications_dir else None
-    result = build_db(
-        csv_dir=Path(args.csv_dir),
-        db_dir=db_dir,
-        classifications_csv_dir=cls_dir,
-    )
+    result = build_db(input_dir=Path(args.input_dir), db_dir=db_dir)
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",
-        args_payload={
-            "csv_dir": args.csv_dir,
-            "classifications_dir": args.classifications_dir,
-        },
+        args_payload={"input_dir": args.input_dir},
         db_info={
             "schema_version": SCHEMA_VERSION,
             "import_date": result["import_date"],
@@ -2324,7 +2313,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     ("maintain update [--tag TAG] [--force] [--yes]", "Update package and database."),
     ("maintain info", "Database stats and import metadata."),
     (
-        "maintain build-db --csv-dir DIR",
+        "maintain build-db --input-dir DIR",
         "Build database from SCB CSV exports (maintainer-only).",
     ),
     (
@@ -2699,7 +2688,7 @@ maintain build-db — Build database from raw CSVs
 ─────────────────────────────────────────────────
 
   "Build the database from SCB CSV exports"
-    regmeta maintain build-db --csv-dir regmeta/input_data/SCB/
+    regmeta maintain build-db --input-dir regmeta/input_data/
 
   Most users should use `maintain update` to download a pre-built
   database instead.

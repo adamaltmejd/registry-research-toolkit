@@ -43,7 +43,7 @@ vardekod,vardebenamning
    header above.
 3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry
    in `regmeta/classifications.toml`.
-4. Run `regmeta maintain build-db --csv-dir regmeta/input_data/SCB/`.
+4. Run `regmeta maintain build-db --input-dir regmeta/input_data/`.
    Build output reports per-classification: canonical / observed-only /
    canonical-but-unobserved counts.
 5. Spot-check with
