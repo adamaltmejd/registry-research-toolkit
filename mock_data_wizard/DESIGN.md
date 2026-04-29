@@ -11,6 +11,63 @@ Design rationale and constraints. For usage, see `mock-data-wizard --help`.
 This separation exists because MONA has no internet access and no Python.
 The R script runs inside MONA; everything else runs locally.
 
+## Source model
+
+The R script's `SOURCES <- list(...)` block is the single place users
+declare what data to aggregate. Two constructors are available:
+
+- `file_source(path, include, exclude, pattern)` — a directory (or single
+  file) of CSV/TXT data.
+- `sql_source(dsn, tables, pattern, queries, where, select, ...)` — an
+  ODBC-accessible database. On MONA this is MS SQL via a per-project DSN.
+  Credentials come from the Windows system DSN; the script never carries
+  passwords.
+
+Sources dispatch through `source_fetch(src)` to a uniform
+`list(source_name, source_type, source_detail, dt)` shape, so the
+classify/summarize pipeline is identical regardless of where the data
+came from.
+
+### Discovery mode
+
+If any source has no filtering info (`file_source` with no include/
+exclude/pattern, or `sql_source` with no tables/pattern/queries), the
+script writes a timestamped file `mdw_sources_<YYYYMMDD_HHMMSS>.R`
+alongside itself and exits without writing `stats.json`. The file
+contains a `SOURCES <- list(...)` block listing everything discoverable.
+
+Users who know up-front that they want everything can opt out of
+discovery with `all = TRUE` on either constructor: `file_source(path, all
+= TRUE)` processes every matching file in `path`; `sql_source(dsn, all =
+TRUE)` discovers all non-archived views and processes each. The flag
+keeps the in-script `SOURCES` block compact compared to a giant
+`include = c(...)` list.
+
+On the next run, the extract script automatically loads the latest
+`mdw_sources_*.R` file (sourcing it overrides the in-script `SOURCES`)
+and processes normally. The user narrows the list by editing the file
+directly — no copy-paste back into the extract script. Deleting the
+file(s) triggers a fresh discovery on the next run. If the loaded file
+is still in a discovery-triggering state (the user ran discovery but
+forgot to narrow a source), the script errors with a message pointing
+at the file rather than silently overwriting it.
+
+Discovery failures are tolerated: a `sql_source` pointed at a DSN that
+doesn't exist on a given project just emits a `[sql] discovery failed`
+comment and the other sources continue. `generate-script -p P<num>`
+uses this to emit both a `file_source` and a `sql_source` skeleton by
+default — whichever doesn't apply drops itself.
+
+### File discovery quirks
+
+Two files with the same basename in different subdirectories collide
+— `include = c("name.csv")` can't select between them, and they'd
+both get `source_name = "name.csv"`. Discovery dedupes basenames in
+the written suggestion and warns about the collision; processing fails
+fast if the user narrows `include` but the matched files still have
+duplicate basenames. The fix is to narrow `path =` to a subdirectory
+that selects the specific file.
+
 ## PII safety
 
 The R script exports **only** aggregate statistics. This is the core safety
@@ -27,6 +84,13 @@ invariant — no individual-level data leaves MONA.
 **Low-cardinality threshold:** `n_distinct <= min(50, n_rows * 0.01)`.
 
 Cells with 5 or fewer individuals are censored in frequency tables.
+
+**Small-population warning:** If a source has fewer than
+`SMALL_POP_MULT × SUPPRESS_K` rows (default 100), the R script emits a
+warning. This catches narrowed populations — a `WHERE` clause or
+`include` list that collapses the source to a handful of individuals
+can leave aggregates effectively identifiable even after cell
+suppression. The warning doesn't block; it surfaces the risk.
 
 ## Generation strategy
 
@@ -72,9 +136,21 @@ legitimately contain rare codes.
 ## Manifest
 
 Generation produces a `manifest.json` alongside the mock CSVs. The
-manifest includes per-file column lists, register and year hints, and
+manifest includes per-source column lists, register and year hints, and
 header hashes. `mock-data-wizard compare` reads this to verify local
 files against registry schema without requiring separate input.
+
+## Stale-file handling on regenerate
+
+When `generate` runs into an output directory that already contains
+files, it warns about any file that would no longer be produced but
+leaves them on disk by default. Pass `--force` to remove stale files.
+
+This matters because `SOURCES` can shrink between runs (e.g., the user
+dropped a `sql_source` they no longer need). Silently deleting
+previously-generated mock CSVs from that run would surprise downstream
+code that still references them. Warn-and-keep is the safer default;
+`--force` is the explicit opt-in to clean up.
 
 ## Register hint confidence
 
@@ -91,5 +167,4 @@ mislabeling the file.
 - Household structures, time-varying attributes, employer links
 - Interactive wizard / state machine
 - HTTP portal for metadata browsing
-- SQL Server / non-CSV data sources
 - Per-column type info in manifest (misleading for mock data)

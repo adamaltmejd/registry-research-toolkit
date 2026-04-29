@@ -9,7 +9,7 @@ from regmeta.errors import RegmetaError
 
 from mock_data_wizard.enrich import (
     EnrichedColumn,
-    EnrichedFile,
+    EnrichedSource,
     _check_value_code_drift,
     _vote_register,
     enrich,
@@ -23,7 +23,8 @@ def test_enrich_without_db(stats_path: Path):
     result = enrich(stats)
     assert len(result) == 1
     assert len(result[0].columns) == 6
-    assert result[0].file_name == "persons.csv"
+    assert result[0].source_name == "persons.csv"
+    assert result[0].source_type == "file"
     for col in result[0].columns:
         assert col.register_id is None
         assert col.value_codes is None
@@ -50,19 +51,20 @@ def test_enrich_multi_file(multi_file_stats_path: Path):
     stats = parse_stats(multi_file_stats_path)
     result = enrich(stats)
     assert len(result) == 2
-    names = {f.file_name for f in result}
+    names = {f.source_name for f in result}
     assert names == {"file_a.csv", "file_b.csv"}
 
 
 def _make_enriched(
-    file_name: str,
+    source_name: str,
     col_name: str,
     frequencies: dict[str, int],
     value_codes: dict[str, str] | None,
-) -> EnrichedFile:
-    return EnrichedFile(
-        file_name=file_name,
-        relative_path=file_name,
+) -> EnrichedSource:
+    return EnrichedSource(
+        source_name=source_name,
+        source_type="file",
+        source_detail={"path": source_name},
         row_count=100,
         columns=[
             EnrichedColumn(

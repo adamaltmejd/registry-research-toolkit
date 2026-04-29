@@ -7,9 +7,10 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-CONTRACT_VERSION = "1.0.0"
+CONTRACT_VERSION = "2.0.0"
 
 VALID_TYPES = frozenset({"numeric", "categorical", "high_cardinality", "date", "id"})
+VALID_SOURCE_TYPES = frozenset({"file", "sql"})
 
 
 @dataclass
@@ -24,9 +25,10 @@ class ColumnStats:
 
 
 @dataclass
-class FileStats:
-    file_name: str
-    relative_path: str
+class SourceStats:
+    source_name: str
+    source_type: str
+    source_detail: dict[str, Any]
     row_count: int
     columns: list[ColumnStats]
 
@@ -34,7 +36,7 @@ class FileStats:
 @dataclass
 class SharedColumn:
     column_name: str
-    files: list[str]
+    sources: list[str]
     max_n_distinct: int
 
 
@@ -42,8 +44,7 @@ class SharedColumn:
 class ProjectStats:
     contract_version: str
     generated_at: str
-    project_paths: list[str]
-    files: list[FileStats]
+    sources: list[SourceStats]
     shared_columns: list[SharedColumn]
 
 
@@ -76,15 +77,27 @@ def _parse_column(raw: dict, context: str) -> ColumnStats:
     )
 
 
-def _parse_file(raw: dict) -> FileStats:
-    name = _require(raw, "file_name", "files[]")
-    ctx = f"file '{name}'"
+def _parse_source(raw: dict) -> SourceStats:
+    name = _require(raw, "source_name", "sources[]")
+    ctx = f"source '{name}'"
+    source_type = _require(raw, "source_type", ctx)
+    if source_type not in VALID_SOURCE_TYPES:
+        raise StatsValidationError(
+            f"Invalid source_type '{source_type}' for {ctx}. "
+            f"Valid types: {sorted(VALID_SOURCE_TYPES)}"
+        )
     columns_raw = _require(raw, "columns", ctx)
     if not columns_raw:
-        raise StatsValidationError(f"File '{name}' has no columns")
-    return FileStats(
-        file_name=name,
-        relative_path=raw.get("relative_path", name),
+        raise StatsValidationError(f"Source '{name}' has no columns")
+    detail = raw.get("source_detail", {})
+    if not isinstance(detail, dict):
+        raise StatsValidationError(
+            f"source_detail must be an object in {ctx}, got {type(detail).__name__}"
+        )
+    return SourceStats(
+        source_name=name,
+        source_type=source_type,
+        source_detail=detail,
         row_count=_require(raw, "row_count", ctx),
         columns=[_parse_column(c, ctx) for c in columns_raw],
     )
@@ -93,7 +106,7 @@ def _parse_file(raw: dict) -> FileStats:
 def _parse_shared(raw: dict) -> SharedColumn:
     return SharedColumn(
         column_name=_require(raw, "column_name", "shared_columns[]"),
-        files=_require(raw, "files", "shared_columns[]"),
+        sources=_require(raw, "sources", "shared_columns[]"),
         max_n_distinct=_require(raw, "max_n_distinct", "shared_columns[]"),
     )
 
@@ -110,17 +123,17 @@ def parse_stats(path: Path) -> ProjectStats:
     if major != CONTRACT_VERSION.split(".")[0]:
         raise StatsValidationError(
             f"Unsupported contract major version '{version}' "
-            f"(expected {CONTRACT_VERSION.split('.')[0]}.x.x)"
+            f"(expected {CONTRACT_VERSION.split('.')[0]}.x.x). "
+            f"Regenerate stats.json with mock-data-wizard >= v0.3.0."
         )
 
-    files_raw = _require(raw, "files", "root")
-    if not files_raw:
-        raise StatsValidationError("No files in stats JSON")
+    sources_raw = _require(raw, "sources", "root")
+    if not sources_raw:
+        raise StatsValidationError("No sources in stats JSON")
 
     return ProjectStats(
         contract_version=version,
         generated_at=raw.get("generated_at", ""),
-        project_paths=raw.get("project_paths", []),
-        files=[_parse_file(f) for f in files_raw],
+        sources=[_parse_source(s) for s in sources_raw],
         shared_columns=[_parse_shared(s) for s in raw.get("shared_columns", [])],
     )
