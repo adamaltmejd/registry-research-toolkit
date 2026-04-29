@@ -1235,9 +1235,10 @@ def build_db(
         (optional; required only for seed entries that set ``valid_codes_file``)
 
     Classification population is controlled by:
-      - ``skip_classifications=True`` — skip entirely (used by tests).
+      - ``skip_classifications=True`` — skip entirely (tests only).
       - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
-        when running from a repo checkout; ``None`` otherwise.
+        when running from a repo checkout; the build errors out if neither
+        is available (build-db is maintainer-only and requires the seed).
 
     Returns a summary dict for the CLI to display.
     """
@@ -1339,14 +1340,29 @@ def build_db(
                 row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
 
         # Classifications — maintainer-curated normalized code systems.
-        seed = None if skip_classifications else (seed_path or repo_seed_path())
-        if seed is not None:
+        if skip_classifications:
+            _progress("Skipping classifications (skip_classifications=True)")
+        else:
+            seed = seed_path or repo_seed_path()
+            if seed is None:
+                raise RegmetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="classification_seed_not_found",
+                    error_class="configuration",
+                    message=(
+                        "Classification seed not found. build-db requires the "
+                        "in-repo classifications.toml; it is a maintainer-only "
+                        "command and is not supported from wheel installs."
+                    ),
+                    remediation=(
+                        "Run from a repo checkout, or run "
+                        "`regmeta maintain update` to fetch the prebuilt DB."
+                    ),
+                )
             valid_codes_dir = cls_dir if cls_dir.is_dir() else None
             row_counts["classifications.toml"] = populate_classifications(
                 conn, seed, valid_codes_dir=valid_codes_dir
             )
-        else:
-            _progress("Skipping classifications (seed file not found)")
 
         # Populate code_variable_map from junction + variable_instance
         _progress("Building code_variable_map...")

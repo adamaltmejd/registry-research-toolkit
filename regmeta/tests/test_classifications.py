@@ -401,6 +401,22 @@ class TestPopulateClassifications:
         # backbone import because its CVID is unknown) or classification_empty.
         assert ei.value.code in {"classification_empty", "classification_seed_drift"}
 
+    def test_missing_seed_fails_build(self, tmp_path: Path, monkeypatch):
+        """build-db must error when no seed is available — silently shipping
+        a DB without classifications would let downstream queries return all
+        NULL FKs without warning. Wheel installs run `maintain update`, not
+        `build-db`, so this path is unreachable in production.
+        """
+        from regmeta import db as db_mod
+
+        monkeypatch.setattr(db_mod, "repo_seed_path", lambda: None)
+        input_dir = _make_input_dir(tmp_path)
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        with pytest.raises(RegmetaError) as ei:
+            build_db(input_dir=input_dir, db_dir=db_dir)
+        assert ei.value.code == "classification_seed_not_found"
+
 
 # ---------------------------------------------------------------------------
 # CLI commands — get classification
