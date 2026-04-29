@@ -121,6 +121,78 @@ changes between years, both definitions appear. Temporal filtering via
 `get values --valid-at <date>` uses supplementary validity date ranges
 from `VardemangderValidDates.csv`.
 
+## Classifications
+
+Named code systems (SUN2000, SSYK2012, SNI2007, LKF, ...) are first-class
+entities. Each `classification` row carries metadata (publisher, version,
+validity range, supersedes link, canonical URL) and a cached `code_count`.
+The `classification_code` junction holds the deduplicated union of value
+codes that belong to the classification, with an optional `level` integer
+for prefix-hierarchy filtering (length of all-digit codes; NULL for
+non-numeric codes like ICD letters).
+
+The FK lives on `variable_instance`, not on `variable`. SCB's data model
+already places the classification label (`vardemangdsversion`) per
+instance, and many headline variables genuinely span multiple
+classifications across their lifetime — e.g. `Utbildningsnivå` (var_id 66)
+uses SUN 2000 codes through 2018 and SUN 2020 codes from 2019 onwards;
+`SSYK` and `SNI` show the same generational drift. Linking at the instance
+level keeps each code system distinct (SUN 2000 codes never bleed into
+SUN 2020) and lets variable-level helpers aggregate when needed.
+
+The `classification_id` column is populated at build time from a
+maintainer-curated TOML seed at `regmeta/classifications.toml`. Each entry
+declares a normalized classification and lists the raw
+`vardemangdsversion` strings that map to it — exact match, no fuzzy
+inference. Match strings are deterministic and auditable: any maintainer
+can enumerate them via
+`SELECT DISTINCT vardemangdsversion FROM variable_instance`.
+
+Build-time invariants (violations fail `maintain build-db` loudly, exit 10):
+
+- Every seed `vardemangdsversion` string must match at least one instance.
+- Every classification must resolve to at least one tagged instance and
+  at least one value code.
+- A given `vardemangdsversion` string may belong to at most one
+  classification.
+- Every `supersedes` reference must resolve to a declared `short_name`.
+- Every `valid_codes_file`, when present, must resolve to a CSV under the
+  classifications directory with header `vardekod,vardebenamning`.
+
+### Canonical vs observed codes
+
+`classification_code.is_valid` distinguishes published canonical codes
+from codes that merely show up in the data. SCB's metadata exports
+contain plenty of noise (`*`, `***`, `0000`, `[BLANK]`, stray prefix
+levels) that has no place in an authoritative code list, but is also
+useful to keep around so a researcher seeing one of those values in a
+register can look it up.
+
+A seed entry's optional `valid_codes_file` points at a CSV under
+`regmeta/input_data/classifications/` (header
+`vardekod,vardebenamning`). At build time:
+
+- Every CSV code is ensured to exist in `value_code` (canonical-but-
+  unobserved codes get a fresh row with no `cvid_value_code` linkage).
+- Every `classification_code` row in that classification is marked
+  `is_valid=1` (canonical) or `is_valid=0` (observed-only).
+- `classification.valid_code_count` caches the canonical count; it is
+  `NULL` for classifications without a CSV.
+
+Without a CSV, every row carries `is_valid=NULL` (validity unknown).
+The CLI exposes this via `get classification --codes --only-valid` and
+includes `is_valid` per code in JSON output (omitted when NULL).
+
+Hierarchy is intentionally not encoded as `parent_code_id`. The `level`
+column captures the most useful filter ("top-level only"); deeper
+parent/child queries fall back to prefix matching on `vardekod`. Code
+sets without prefix hierarchy (ICD-10, ATC) keep `level = NULL` and use
+their own conventions.
+
+The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled
+in the wheel — same status as `regmeta/docs/`. Users receive the
+already-populated classification tables via the prebuilt DB asset.
+
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs

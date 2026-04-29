@@ -326,24 +326,14 @@ class TestDocDbRequired:
 
     def test_search_without_docs_raises(self, tmp_path: Path):
         # Build a main DB in an empty dir — no doc DB present.
-        from _csv_fixtures import (
-            REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
-            write_csv,
-        )
+        from _csv_fixtures import write_scb_input
 
         from regmeta.db import build_db
 
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        write_csv(
-            csv_dir / "Registerinformation.csv",
-            REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
-        )
+        write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir)
+        build_db(input_dir=tmp_path / "input", db_dir=db_dir, skip_classifications=True)
 
         data, code = _run_json(
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
@@ -355,24 +345,14 @@ class TestDocDbRequired:
         assert data["error"]["code"] == "doc_db_not_found"
 
     def test_get_without_docs_raises(self, tmp_path: Path):
-        from _csv_fixtures import (
-            REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
-            write_csv,
-        )
+        from _csv_fixtures import write_scb_input
 
         from regmeta.db import build_db
 
-        csv_dir = tmp_path / "csv"
-        csv_dir.mkdir()
-        write_csv(
-            csv_dir / "Registerinformation.csv",
-            REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
-        )
+        write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(csv_dir=csv_dir, db_dir=db_dir)
+        build_db(input_dir=tmp_path / "input", db_dir=db_dir, skip_classifications=True)
 
         data, code = _run_json(
             ["--db", str(db_dir), "get", "register", "1"],
@@ -422,19 +402,11 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     combined = tmp_path_factory.mktemp("combined")
 
     # Build a minimal metadata DB
-    csv_dir = tmp_path_factory.mktemp("csv_combined")
-    from _csv_fixtures import (
-        REGISTERINFORMATION_HEADER,
-        REGISTERINFORMATION_ROWS,
-        write_csv,
-    )
+    input_dir = tmp_path_factory.mktemp("input_combined")
+    from _csv_fixtures import write_scb_input
 
-    write_csv(
-        csv_dir / "Registerinformation.csv",
-        REGISTERINFORMATION_HEADER,
-        REGISTERINFORMATION_ROWS,
-    )
-    build_db(csv_dir=csv_dir, db_dir=combined)
+    write_scb_input(input_dir, include=("registerinformation",))
+    build_db(input_dir=input_dir, db_dir=combined, skip_classifications=True)
 
     # Copy the doc DB alongside it
     shutil.copy(doc_db_dir / "regmeta_docs.db", combined / "regmeta_docs.db")

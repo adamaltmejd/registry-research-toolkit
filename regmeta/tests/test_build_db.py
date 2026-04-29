@@ -225,10 +225,11 @@ class TestBuildDb:
 
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""
-        csv_dir = fixture_db.parent.parent / "csv_rebuild"
-        csv_dir.mkdir(exist_ok=True)
+        input_dir = fixture_db.parent.parent / "input_rebuild"
+        scb_dir = input_dir / "SCB"
+        scb_dir.mkdir(parents=True, exist_ok=True)
         write_csv(
-            csv_dir / "Registerinformation.csv",
+            scb_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
             REGISTERINFORMATION_ROWS[:1],
         )
@@ -236,41 +237,49 @@ class TestBuildDb:
         db_dir = fixture_db.parent.parent / "db_rebuild"
         db_dir.mkdir(exist_ok=True)
 
-        result = build_db(csv_dir=csv_dir, db_dir=db_dir)
+        result = build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
         assert Path(result["db_path"]).exists()
 
         # Rebuild with same data should work
-        result2 = build_db(csv_dir=csv_dir, db_dir=db_dir)
+        result2 = build_db(
+            input_dir=input_dir, db_dir=db_dir, skip_classifications=True
+        )
         assert Path(result2["db_path"]).exists()
 
 
 class TestBuildDbErrors:
-    def test_missing_csv_dir(self, tmp_path: Path):
+    def test_missing_input_dir(self, tmp_path: Path):
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(csv_dir=tmp_path / "nonexistent", db_dir=tmp_path)
-        assert exc_info.value.code == "csv_dir_not_found"
+            build_db(input_dir=tmp_path / "nonexistent", db_dir=tmp_path)
+        assert exc_info.value.code == "input_dir_not_found"
+
+    def test_missing_scb_dir(self, tmp_path: Path):
+        # input_dir exists but no SCB/ subdirectory
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=tmp_path, db_dir=tmp_path)
+        assert exc_info.value.code == "scb_dir_not_found"
 
     def test_missing_backbone(self, tmp_path: Path):
-        csv_dir = tmp_path / "empty_csv"
-        csv_dir.mkdir()
+        scb_dir = tmp_path / "SCB"
+        scb_dir.mkdir()
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(csv_dir=csv_dir, db_dir=tmp_path)
+            build_db(input_dir=tmp_path, db_dir=tmp_path)
         assert exc_info.value.code == "csv_missing_backbone"
 
     def test_empty_csv(self, tmp_path: Path):
-        csv_dir = tmp_path / "bad_csv"
-        csv_dir.mkdir()
-        (csv_dir / "Registerinformation.csv").write_bytes(b"")
+        scb_dir = tmp_path / "SCB"
+        scb_dir.mkdir()
+        (scb_dir / "Registerinformation.csv").write_bytes(b"")
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(csv_dir=csv_dir, db_dir=tmp_path)
+            build_db(input_dir=tmp_path, db_dir=tmp_path)
         assert exc_info.value.code == "csv_empty"
 
     def test_bad_header(self, tmp_path: Path):
-        csv_dir = tmp_path / "bad_header"
-        csv_dir.mkdir()
-        (csv_dir / "Registerinformation.csv").write_bytes(b"Wrong|Header\r\n")
+        scb_dir = tmp_path / "SCB"
+        scb_dir.mkdir()
+        (scb_dir / "Registerinformation.csv").write_bytes(b"Wrong|Header\r\n")
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(csv_dir=csv_dir, db_dir=tmp_path)
+            build_db(input_dir=tmp_path, db_dir=tmp_path)
         assert exc_info.value.code == "csv_bad_header"
 
     def test_db_not_found(self, tmp_path: Path):

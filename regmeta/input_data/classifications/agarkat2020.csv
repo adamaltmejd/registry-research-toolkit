@@ -1,0 +1,12 @@
+vardekod,vardebenamning
+1,Statligt kontrollerade enheter
+2,Kommunalt kontrollerade enheter
+3,Regionkontrollerade enheter
+4,Privat svenskkontrollerade enheter
+5,Utlandskontrollerade enheter
+10,Statligt kontrollerade enheter
+20,Kommunalt kontrollerade enheter
+30,Regionkontrollerade enheter
+41,Privat svenskkontrollerade enheter utan koncerntillhörighet
+42,Privat svenskkontrollerade enheter med koncerntillhörighet
+50,Utlandskontrollerade enheter

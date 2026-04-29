@@ -28,8 +28,12 @@ Thumbs.db
 # Project
 .tmp/
 
-# Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed)
-regmeta/input_data/
+# Input data (SCB CSVs, Socialstyrelsen metadata, source PDFs — not committed).
+# Listed per-subdirectory so the maintainer-curated classifications/ folder
+# can stay tracked without an exclude/re-include dance (git doesn't traverse
+# into a parent dir that's been ignored at the directory level).
+regmeta/input_data/*
+!regmeta/input_data/classifications/
 
 # mock-data-wizard generated output
 mock_data/

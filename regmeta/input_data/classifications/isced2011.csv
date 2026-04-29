@@ -1,0 +1,67 @@
+vardekod,vardebenamning
+0,Less than primary education
+1,Primary education
+2,Lower secondary education
+3,Upper secondary education
+4,Post-secondary non-tertiary education
+5,Short-cycle tertiary education
+6,Bachelor's or equivalent level
+7,Master's or equivalent level
+8,Doctoral or equivalent level
+9,Not elsewhere classified
+01,Never attended an education programme
+02,Some early childhood education
+03,Some primary education (without level completion)
+10,Primary
+24,General
+25,Vocational
+34,General
+35,Vocational
+44,General
+45,Vocational
+54,General
+55,Vocational
+56,Orientation unspecified
+64,Academic
+65,Professional
+66,Orientation unspecified
+74,Academic
+75,Professional
+76,Orientation unspecified
+84,Academic
+85,Professional
+86,Orientation unspecified
+99,Not elsewhere classified
+010,Never attended an education programme
+020,Some early childhood education
+030,Some primary education (without level completion)
+100,Including recognised successful completion of a lower secondary programme insufficient for level completion or partial level completion
+242,"Partial level completion, without direct access to upper secondary education"
+243,"Level completion, without direct access to upper secondary education"
+244,"Level completion, with direct access to upper secondary education"
+252,"Partial level completion, without direct access to upper secondary education"
+253,"Level completion, without direct access to upper secondary education"
+254,"Level completion, with direct access to upper secondary education"
+342,"Partial level completion, without direct access to tertiary education"
+343,"Level completion, without direct access to tertiary education"
+344,"Level completion, with direct access to tertiary education"
+352,"Partial level completion, without direct access to tertiary education"
+353,"Level completion, without direct access to tertiary education"
+354,"Level completion, with direct access to tertiary education"
+443,"Level completion, without direct access to tertiary education"
+444,"Level completion, with direct access to tertiary education"
+453,"Level completion, without direct access to tertiary education"
+454,"Level completion, with direct access to tertiary education"
+540,Not further defined
+550,Not further defined
+560,Not further defined
+640,Not further defined
+650,Not further defined
+660,Not further defined
+740,Not further defined
+750,Not further defined
+760,Not further defined
+840,Not further defined
+850,Not further defined
+860,Not further defined
+999,Not elsewhere classified

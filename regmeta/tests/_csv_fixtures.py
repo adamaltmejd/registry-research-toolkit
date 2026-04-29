@@ -638,3 +638,47 @@ def write_csv(
 ) -> None:
     content = header + "\r\n" + "\r\n".join(rows) + "\r\n"
     path.write_bytes(content.encode(encoding))
+
+
+def write_scb_input(
+    input_dir: Path,
+    *,
+    vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
+    include: tuple[str, ...] = (
+        "registerinformation",
+        "unika",
+        "identifierare",
+        "timeseries",
+        "vardemangder",
+        "valid_dates",
+    ),
+) -> Path:
+    """Materialize the standard SCB CSV fixture set under ``<input_dir>/SCB/``.
+
+    Returns the SCB subdirectory path. ``include`` lets a test build a partial
+    set (e.g. just Registerinformation.csv); ``vardemangder_rows`` lets a test
+    swap in alternate value-set rows without re-implementing the rest.
+    """
+    scb_dir = input_dir / "SCB"
+    scb_dir.mkdir(parents=True, exist_ok=True)
+    if "registerinformation" in include:
+        write_csv(
+            scb_dir / "Registerinformation.csv",
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+        )
+    if "unika" in include:
+        write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
+    if "identifierare" in include:
+        write_csv(
+            scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS
+        )
+    if "timeseries" in include:
+        write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+    if "vardemangder" in include:
+        write_csv(scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, vardemangder_rows)
+    if "valid_dates" in include:
+        write_csv(
+            scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+    return scb_dir

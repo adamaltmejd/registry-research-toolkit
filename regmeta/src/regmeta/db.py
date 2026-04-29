@@ -15,9 +15,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
+from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "2.1.0"
+SCHEMA_VERSION = "2.2.0"
 DB_FILENAME = "regmeta.db"
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
@@ -181,6 +182,7 @@ CREATE TABLE variable_instance (
     datalangd TEXT,
     vardemangdsversion TEXT,
     vardemangdsniva TEXT,
+    classification_id INTEGER REFERENCES classification(id),
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
@@ -196,6 +198,42 @@ CREATE TABLE variable_context (
     objekttypnamn TEXT NOT NULL,
     PRIMARY KEY (cvid, populationnamn, objekttypnamn)
 );
+
+-- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
+-- Populated at build time from a maintainer-curated seed (classifications.toml)
+-- that maps raw variable_instance.vardemangdsversion labels to normalized
+-- classification rows. See DESIGN.md § "Classifications".
+CREATE TABLE classification (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    short_name       TEXT NOT NULL UNIQUE,
+    name             TEXT NOT NULL,
+    name_en          TEXT,
+    publisher        TEXT,
+    version          TEXT,
+    valid_from       INTEGER,
+    valid_to         INTEGER,
+    description      TEXT,
+    url              TEXT,
+    supersedes_id    INTEGER REFERENCES classification(id),
+    code_count       INTEGER NOT NULL DEFAULT 0,
+    -- Number of canonical codes when a valid_codes CSV was provided; NULL
+    -- otherwise. valid_code_count <= code_count is *not* invariant: canonical
+    -- codes that never appeared in any observed instance still count, but
+    -- observed-only noise codes inflate code_count.
+    valid_code_count INTEGER
+);
+
+-- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),
+-- 0 = observed-only (seen in data but not in the CSV), NULL = no CSV exists
+-- for this classification (validity unknown).
+CREATE TABLE classification_code (
+    classification_id INTEGER NOT NULL REFERENCES classification(id),
+    code_id           INTEGER NOT NULL REFERENCES value_code(code_id),
+    level             INTEGER,
+    is_valid          INTEGER,
+    PRIMARY KEY (classification_id, code_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 
 -- Enrichment tables
 CREATE TABLE value_code (
@@ -277,6 +315,16 @@ CREATE VIRTUAL TABLE variable_fts USING fts5(
     tokenize='unicode61'
 );
 
+CREATE VIRTUAL TABLE classification_fts USING fts5(
+    short_name,
+    name,
+    name_en,
+    description,
+    content='classification',
+    content_rowid='id',
+    tokenize='unicode61'
+);
+
 -- Performance indexes
 CREATE INDEX idx_register_variant_register ON register_variant(register_id);
 CREATE INDEX idx_register_version_regvar ON register_version(regvar_id);
@@ -284,6 +332,8 @@ CREATE INDEX idx_variable_instance_register ON variable_instance(register_id);
 CREATE INDEX idx_variable_instance_var ON variable_instance(register_id, var_id);
 CREATE INDEX idx_variable_instance_regvar ON variable_instance(regvar_id);
 CREATE INDEX idx_variable_instance_regver ON variable_instance(regver_id);
+CREATE INDEX idx_variable_instance_classification ON variable_instance(classification_id)
+    WHERE classification_id IS NOT NULL;
 CREATE INDEX idx_variable_alias_kolumnnamn ON variable_alias(kolumnnamn);
 CREATE INDEX idx_value_code_vardekod ON value_code(vardekod);
 
@@ -408,7 +458,7 @@ def open_db(
     error_code: str = "db_not_found",
     remediation: str = (
         "Run `regmeta maintain update` to fetch the pre-built DB, "
-        "or `regmeta maintain build-db --csv-dir <path>` to build from CSV exports."
+        "or `regmeta maintain build-db --input-dir <path>` to build from CSV exports."
     ),
 ) -> sqlite3.Connection:
     if not db_path.exists():
@@ -786,7 +836,7 @@ def _import_registerinformation(
     )
     conn.executemany(
         "INSERT INTO variable_instance VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :datatyp, :datalangd, NULL, NULL)",
+        ":var_id, :datatyp, :datalangd, NULL, NULL, NULL)",
         list(instances.values()),
     )
     conn.executemany(
@@ -1170,30 +1220,58 @@ def utc_now() -> str:
 # ---------------------------------------------------------------------------
 
 
-def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
+def build_db(
+    input_dir: Path,
+    db_dir: Path,
+    *,
+    seed_path: Path | None = None,
+    skip_classifications: bool = False,
+) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
+
+    ``input_dir`` must contain:
+      - ``<input_dir>/SCB/*.csv``             — SCB metadata CSV exports
+      - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
+        (optional; required only for seed entries that set ``valid_codes_file``)
+
+    Classification population is controlled by:
+      - ``skip_classifications=True`` — skip entirely (tests only).
+      - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
+        when running from a repo checkout; the build errors out if neither
+        is available (build-db is maintainer-only and requires the seed).
 
     Returns a summary dict for the CLI to display.
     """
-    csv_dir = csv_dir.expanduser().resolve()
+    input_dir = input_dir.expanduser().resolve()
     db_dir = db_dir.expanduser().resolve()
+    scb_dir = input_dir / "SCB"
+    cls_dir = input_dir / "classifications"
 
-    if not csv_dir.is_dir():
+    if not input_dir.is_dir():
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
-            code="csv_dir_not_found",
+            code="input_dir_not_found",
             error_class="configuration",
-            message=f"CSV directory not found: {csv_dir}",
-            remediation="Provide the directory containing SCB metadata CSV exports.",
+            message=f"Input directory not found: {input_dir}",
+            remediation="Provide a directory containing SCB/ and classifications/ subdirectories.",
         )
 
-    ri_path = csv_dir / "Registerinformation.csv"
+    if not scb_dir.is_dir():
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="scb_dir_not_found",
+            error_class="configuration",
+            message=f"SCB subdirectory not found: {scb_dir}",
+            remediation="Place SCB metadata CSV exports under <input_dir>/SCB/.",
+        )
+
+    ri_path = scb_dir / "Registerinformation.csv"
     if not ri_path.exists():
         raise RegmetaError(
             exit_code=EXIT_CONFIG,
             code="csv_missing_backbone",
             error_class="configuration",
-            message="Registerinformation.csv not found in the CSV directory.",
+            message=f"Registerinformation.csv not found in {scb_dir}.",
             remediation="Export all metadata files from mikrometadata.scb.se.",
         )
 
@@ -1207,6 +1285,7 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
     conn = sqlite3.connect(tmp_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
     try:
         conn.executescript(DDL)
@@ -1221,13 +1300,13 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
 
         # Pre-scan validity item_ids (needed during Vardemangder import)
         validity_item_ids: set[int] | None = None
-        vvd_path = csv_dir / "VardemangderValidDates.csv"
+        vvd_path = scb_dir / "VardemangderValidDates.csv"
         if vvd_path.exists():
             validity_item_ids = _load_validity_item_ids(vvd_path)
 
         # Enrichment files (optional)
         for filename in ENRICHMENT_FILES:
-            path = csv_dir / filename
+            path = scb_dir / filename
             if not path.exists():
                 _progress(f"Skipping {filename} (not found)")
                 continue
@@ -1260,6 +1339,31 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
             elif filename == "VardemangderValidDates.csv":
                 row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
 
+        # Classifications — maintainer-curated normalized code systems.
+        if skip_classifications:
+            _progress("Skipping classifications (skip_classifications=True)")
+        else:
+            seed = seed_path or repo_seed_path()
+            if seed is None:
+                raise RegmetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="classification_seed_not_found",
+                    error_class="configuration",
+                    message=(
+                        "Classification seed not found. build-db requires the "
+                        "in-repo classifications.toml; it is a maintainer-only "
+                        "command and is not supported from wheel installs."
+                    ),
+                    remediation=(
+                        "Run from a repo checkout, or run "
+                        "`regmeta maintain update` to fetch the prebuilt DB."
+                    ),
+                )
+            valid_codes_dir = cls_dir if cls_dir.is_dir() else None
+            row_counts["classifications.toml"] = populate_classifications(
+                conn, seed, valid_codes_dir=valid_codes_dir
+            )
+
         # Populate code_variable_map from junction + variable_instance
         _progress("Building code_variable_map...")
         conn.execute(
@@ -1272,7 +1376,7 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
         _progress(f"  {cvm_count:,} code×variable mappings")
 
         # Reference files (optional)
-        sql_path = csv_dir / "Tabelldefinitioner.sql"
+        sql_path = scb_dir / "Tabelldefinitioner.sql"
         if sql_path.exists():
             row_counts["Tabelldefinitioner.sql"] = _import_tabelldefinitioner(
                 conn, sql_path
@@ -1280,7 +1384,7 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
         else:
             _progress("Skipping Tabelldefinitioner.sql (not found)")
 
-        xlsx_path = csv_dir / "ID-kolumner.xlsx"
+        xlsx_path = scb_dir / "ID-kolumner.xlsx"
         if xlsx_path.exists():
             row_counts["ID-kolumner.xlsx"] = _import_id_kolumner(conn, xlsx_path)
         else:
@@ -1292,7 +1396,7 @@ def build_db(csv_dir: Path, db_dir: Path) -> dict[str, Any]:
         manifest_data = {
             "schema_version": SCHEMA_VERSION,
             "import_date": utc_now(),
-            "csv_dir": str(csv_dir),
+            "input_dir": str(input_dir),
             "source_checksums": source_checksums,
             "row_counts": row_counts,
         }
