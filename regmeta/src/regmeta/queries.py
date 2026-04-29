@@ -1808,9 +1808,7 @@ def _resolve_classification_id(conn: sqlite3.Connection, value: str) -> int:
     )
 
 
-def get_classification(conn: sqlite3.Connection, identifier: str) -> dict[str, Any]:
-    """Return one classification's metadata (no codes)."""
-    cls_id = _resolve_classification_id(conn, identifier)
+def _classification_by_id(conn: sqlite3.Connection, cls_id: int) -> dict[str, Any]:
     row = conn.execute(
         """
         SELECT c.*, s.short_name AS supersedes,
@@ -1828,6 +1826,11 @@ def get_classification(conn: sqlite3.Connection, identifier: str) -> dict[str, A
     return data
 
 
+def get_classification(conn: sqlite3.Connection, identifier: str) -> dict[str, Any]:
+    """Return one classification's metadata (no codes)."""
+    return _classification_by_id(conn, _resolve_classification_id(conn, identifier))
+
+
 def get_classification_codes(
     conn: sqlite3.Connection,
     identifier: str,
@@ -1843,7 +1846,7 @@ def get_classification_codes(
     them, which is the correct semantics ("no canonical list available").
     """
     cls_id = _resolve_classification_id(conn, identifier)
-    meta = get_classification(conn, identifier)
+    meta = _classification_by_id(conn, cls_id)
 
     sql = (
         "SELECT vc.vardekod, vc.vardebenamning, cc.level, cc.is_valid "

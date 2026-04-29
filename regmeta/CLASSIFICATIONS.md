@@ -53,8 +53,8 @@ vardekod,vardebenamning
 
 ## Status overview
 
-69 classifications (one per snapshot year for LKF, plus 22 others).
-**61 done, 8 to go.**
+69 classifications (47 per-year LKF entries + 22 others). All currently
+declared in `classifications.toml` ship with a `valid_codes_file`.
 
 | short_name | status | code_count | valid | notes |
 |---|---|---:|---:|---|

@@ -267,7 +267,19 @@ def _resolve_valid_codes_paths(
                     "Place the canonical CSV under <input_dir>/classifications/."
                 ),
             )
-        path = (valid_codes_dir / rel).resolve()
+        base = valid_codes_dir.resolve()
+        path = (base / rel).resolve()
+        if not path.is_relative_to(base):
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="classification_csv_invalid",
+                error_class="configuration",
+                message=(
+                    f"{entry['short_name']}: valid_codes_file {rel!r} escapes "
+                    f"{base} (resolved to {path})."
+                ),
+                remediation="Use a plain filename, not a path with '..' segments.",
+            )
         if not path.is_file():
             raise RegmetaError(
                 exit_code=EXIT_CONFIG,
@@ -292,17 +304,17 @@ def _apply_valid_codes(
 
     Strategy (designed to scale to 50+ classifications with 1000s of codes
     each — the previous TRIM(vardekod) IN (?, ?, ...) pattern was O(N×M) and
-    didn't use the value_code index):
+    didn't use the value_code index). Steps below are numbered to match the
+    log lines.
 
-      1. Once: build a temp table ``_vc_trim(code_id, kod)`` with
-         pre-trimmed vardekods, indexed on ``kod``.
-      2. Once: stage every classification's canonical codes into temp
-         ``_canon(short_name, vardekod)``.
-      3. Once: bulk-insert any canonical codes missing from value_code.
-      4. Once: bulk-insert canonical-but-unobserved classification_code rows
-         via JOIN with _vc_trim and _canon.
-      5. Once: bulk-mark is_valid on every classification_code row of every
-         classification with a CSV.
+      1. build _vc_trim(code_id, kod) — pre-trimmed value_code mirror.
+      2. stage _canon(cls_id, vardekod, label) from every CSV.
+      3. insert canonical-but-unobserved value_code rows.
+      4a. materialize _cc_kods(cls_id, vardekod) — pairs already in CC.
+      4b. materialize _canon_pairs(cls_id, code_id) — for is_valid lookup.
+      5. insert canonical-but-unobserved classification_code rows.
+      6. UPDATE classification_code SET is_valid = ... for CSV-backed cls.
+      7. rollup valid_code_count and emit per-classification report.
 
     Per-classification operations (the old hot path) are eliminated.
     """
@@ -315,7 +327,7 @@ def _apply_valid_codes(
     _step(f"Applying canonical codes for {len(csv_paths)} classifications...")
 
     # 1. Pre-trimmed value_code mirror with an indexed kod column.
-    _step("  step 1/6: build _vc_trim (mirror of value_code with TRIM)...")
+    _step("  step 1/7: build _vc_trim (mirror of value_code with TRIM)...")
     conn.execute("DROP TABLE IF EXISTS _vc_trim")
     conn.execute("CREATE TEMP TABLE _vc_trim (code_id INTEGER PRIMARY KEY, kod TEXT)")
     conn.execute("INSERT INTO _vc_trim SELECT code_id, TRIM(vardekod) FROM value_code")
@@ -324,7 +336,7 @@ def _apply_valid_codes(
     _step(f"    _vc_trim has {n:,} rows")
 
     # 2. Stage all canonical codes once.
-    _step("  step 2/6: stage _canon from CSVs...")
+    _step("  step 2/7: stage _canon from CSVs...")
     conn.execute("DROP TABLE IF EXISTS _canon")
     conn.execute(
         "CREATE TEMP TABLE _canon ("
@@ -350,11 +362,15 @@ def _apply_valid_codes(
     _step(f"    _canon has {n:,} rows")
 
     # 3. Insert any canonical codes missing from value_code (canonical-but-
-    # unobserved with no existing value_code row at all). Take the first
-    # observed label for each missing vardekod from _canon (any classification's
-    # CSV will do — vardekods that need this are unique to one classification
-    # per the seed invariant).
-    _step("  step 3/6: insert missing value_code rows...")
+    # unobserved with no existing value_code row at all). DISTINCT on
+    # (vardekod, label): if two classifications both list the same canonical
+    # vardekod with different labels and neither is observed in data, both
+    # rows get inserted. Step 5 then picks MIN(code_id) per (cls_id, vardekod),
+    # so the "wrong" label row may end up unreferenced. This is a documented
+    # edge case: it only fires when (a) two CSVs share a vardekod, (b) the
+    # labels disagree, and (c) the code is unobserved in both classifications.
+    # No current classification triggers it.
+    _step("  step 3/7: insert missing value_code rows...")
     cur = conn.execute(
         """
         INSERT INTO value_code (vardekod, vardebenamning)

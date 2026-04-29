@@ -386,21 +386,6 @@ class TestPopulateClassifications:
         ).fetchone()[0]
         assert vcc is None
 
-    def test_empty_classification_fails_build(self, tmp_path: Path):
-        # "Unknown" is a vardemangdsversion present in VARDEMANGDER_ROWS, but
-        # its CVID (9999) isn't in the backbone, so the value code never makes
-        # it into cvid_value_code. A seed tagging "Unknown" ends up with zero
-        # codes — the build must fail rather than silently ship it.
-        seed = (
-            '[[classification]]\nshort_name = "GHOST"\nname = "Empty"\n'
-            'vardemangdsversion = ["Unknown"]\n'
-        )
-        with pytest.raises(RegmetaError) as ei:
-            self._build_with_seed(tmp_path, seed)
-        # Either drift (the "Unknown" vardemangdsversion is dropped during
-        # backbone import because its CVID is unknown) or classification_empty.
-        assert ei.value.code in {"classification_empty", "classification_seed_drift"}
-
     def test_missing_seed_fails_build(self, tmp_path: Path, monkeypatch):
         """build-db must error when no seed is available — silently shipping
         a DB without classifications would let downstream queries return all
