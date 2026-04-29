@@ -1861,10 +1861,12 @@ def get_classification_codes(
 
     # Strip is_valid when NULL so classifications without a canonical CSV
     # don't carry a meaningless field on every code.
-    codes = [
-        {k: v for k, v in dict(r).items() if v is not None or k != "is_valid"}
-        for r in conn.execute(sql, params).fetchall()
-    ]
+    codes = []
+    for r in conn.execute(sql, params).fetchall():
+        row = dict(r)
+        if row["is_valid"] is None:
+            del row["is_valid"]
+        codes.append(row)
     meta["codes"] = codes
     return meta
 

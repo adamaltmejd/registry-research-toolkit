@@ -14,21 +14,7 @@ from regmeta.classifications import load_seed, load_valid_codes
 from regmeta.db import build_db
 from regmeta.errors import RegmetaError
 
-from _csv_fixtures import (
-    IDENTIFIERARE_HEADER,
-    IDENTIFIERARE_ROWS,
-    PIPE,
-    REGISTERINFORMATION_HEADER,
-    REGISTERINFORMATION_ROWS,
-    TIMESERIES_HEADER,
-    TIMESERIES_ROWS,
-    UNIKA_HEADER,
-    UNIKA_ROWS,
-    VALID_DATES_HEADER,
-    VALID_DATES_ROWS,
-    VARDEMANGDER_HEADER,
-    write_csv,
-)
+from _csv_fixtures import PIPE, write_scb_input
 
 
 # CVID 1004 has vardemangdsversion = "Kon-2" (a fake successor) so we can
@@ -77,22 +63,7 @@ vardemangdsversion = ["Kon-2"]
 def _make_input_dir(tmp_path: Path) -> Path:
     """Create <tmp_path>/input/SCB/ with the standard test fixture CSVs."""
     input_dir = tmp_path / "input"
-    scb_dir = input_dir / "SCB"
-    scb_dir.mkdir(parents=True)
-    write_csv(
-        scb_dir / "Registerinformation.csv",
-        REGISTERINFORMATION_HEADER,
-        REGISTERINFORMATION_ROWS,
-    )
-    write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
-    write_csv(scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
-    write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
-    write_csv(
-        scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, EXTENDED_VARDEMANGDER_ROWS
-    )
-    write_csv(
-        scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
-    )
+    write_scb_input(input_dir, vardemangder_rows=EXTENDED_VARDEMANGDER_ROWS)
     return input_dir
 
 
@@ -239,7 +210,7 @@ class TestPopulateClassifications:
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=input_dir, db_dir=db_dir, classifications_seed=seed)
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
         return db_dir / "regmeta.db", seed
 
     def test_classification_inserted(self, tmp_path: Path):
@@ -339,7 +310,7 @@ class TestPopulateClassifications:
         build_db(
             input_dir=input_dir,
             db_dir=db_dir,
-            classifications_seed=seed,
+            seed_path=seed,
         )
 
         conn = sqlite3.connect(db_dir / "regmeta.db")
@@ -376,7 +347,7 @@ class TestPopulateClassifications:
             build_db(
                 input_dir=input_dir,
                 db_dir=db_dir,
-                classifications_seed=seed,
+                seed_path=seed,
             )
         assert ei.value.code == "classification_csv_not_found"
 
@@ -397,7 +368,7 @@ class TestPopulateClassifications:
             build_db(
                 input_dir=input_dir,
                 db_dir=db_dir,
-                classifications_seed=seed,
+                seed_path=seed,
             )
         assert ei.value.code == "classification_csv_dir_missing"
 
@@ -466,7 +437,7 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
     db_dir = tmp / "db"
     db_dir.mkdir()
-    build_db(input_dir=input_dir, db_dir=db_dir, classifications_seed=seed)
+    build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
 
     # Query commands require a doc DB alongside.
     from regmeta.doc_db import build_doc_db

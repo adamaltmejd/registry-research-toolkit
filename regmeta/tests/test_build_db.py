@@ -237,14 +237,12 @@ class TestBuildDb:
         db_dir = fixture_db.parent.parent / "db_rebuild"
         db_dir.mkdir(exist_ok=True)
 
-        result = build_db(
-            input_dir=input_dir, db_dir=db_dir, classifications_seed=False
-        )
+        result = build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
         assert Path(result["db_path"]).exists()
 
         # Rebuild with same data should work
         result2 = build_db(
-            input_dir=input_dir, db_dir=db_dir, classifications_seed=False
+            input_dir=input_dir, db_dir=db_dir, skip_classifications=True
         )
         assert Path(result2["db_path"]).exists()
 

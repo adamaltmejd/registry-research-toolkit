@@ -1224,7 +1224,8 @@ def build_db(
     input_dir: Path,
     db_dir: Path,
     *,
-    classifications_seed: Path | None | bool = None,
+    seed_path: Path | None = None,
+    skip_classifications: bool = False,
 ) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
 
@@ -1233,11 +1234,10 @@ def build_db(
       - ``<input_dir>/classifications/*.csv`` — canonical classification CSVs
         (optional; required only for seed entries that set ``valid_codes_file``)
 
-    ``classifications_seed`` controls classification population:
-      - ``None`` (default): use ``repo_seed_path()`` if a seed exists in the
-        repo checkout, otherwise skip.
-      - A ``Path``: use the given seed file.
-      - ``False``: skip classification population entirely (for tests).
+    Classification population is controlled by:
+      - ``skip_classifications=True`` — skip entirely (used by tests).
+      - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
+        when running from a repo checkout; ``None`` otherwise.
 
     Returns a summary dict for the CLI to display.
     """
@@ -1284,6 +1284,7 @@ def build_db(
     conn = sqlite3.connect(tmp_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
+    conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
     try:
         conn.executescript(DDL)
@@ -1338,13 +1339,7 @@ def build_db(
                 row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
 
         # Classifications — maintainer-curated normalized code systems.
-        seed: Path | None
-        if classifications_seed is False:
-            seed = None
-        elif classifications_seed is None:
-            seed = repo_seed_path()
-        else:
-            seed = classifications_seed  # type: ignore[assignment]
+        seed = None if skip_classifications else (seed_path or repo_seed_path())
         if seed is not None:
             valid_codes_dir = cls_dir if cls_dir.is_dir() else None
             row_counts["classifications.toml"] = populate_classifications(

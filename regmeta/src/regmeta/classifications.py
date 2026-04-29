@@ -15,6 +15,7 @@ from __future__ import annotations
 import csv
 import sqlite3
 import sys
+import time
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,14 @@ from .errors import EXIT_CONFIG, RegmetaError
 
 _REQUIRED_FIELDS = ("short_name", "name", "vardemangdsversion")
 _VALID_CODES_HEADER = ("vardekod", "vardebenamning")
+
+# level = number of digits for all-digit codes, NULL otherwise. Used in
+# multiple INSERTs against classification_code; keep the SQL identical so
+# canonical-only rows and observed rows agree on level.
+_LEVEL_EXPR = (
+    "CASE WHEN {col} GLOB '[0-9]*' AND NOT {col} GLOB '*[^0-9]*' "
+    "THEN length({col}) ELSE NULL END"
+)
 
 
 def repo_seed_path() -> Path | None:
@@ -234,16 +243,16 @@ def _progress(msg: str) -> None:
 
 def _resolve_valid_codes_paths(
     entries: list[dict[str, Any]], valid_codes_dir: Path | None
-) -> None:
-    """Mutate each entry to add ``_valid_codes_path`` (resolved Path or None).
+) -> dict[str, Path]:
+    """Return ``{short_name: resolved_path}`` for entries with a canonical CSV.
 
     A seed entry with ``valid_codes_file`` set but no ``valid_codes_dir``
     available, or a missing/non-file path, is a build-stop error.
     """
+    resolved: dict[str, Path] = {}
     for entry in entries:
         rel = entry.get("valid_codes_file")
         if rel is None:
-            entry["_valid_codes_path"] = None
             continue
         if valid_codes_dir is None:
             raise RegmetaError(
@@ -270,12 +279,13 @@ def _resolve_valid_codes_paths(
                 ),
                 remediation="Create the CSV at that path or fix the seed entry.",
             )
-        entry["_valid_codes_path"] = path
+        resolved[entry["short_name"]] = path
+    return resolved
 
 
 def _apply_valid_codes(
     conn: sqlite3.Connection,
-    entries: list[dict[str, Any]],
+    csv_paths: dict[str, Path],
     id_by_short: dict[str, int],
 ) -> None:
     """Mark canonical/observed codes per CSV; insert canonical-only codes.
@@ -296,16 +306,13 @@ def _apply_valid_codes(
 
     Per-classification operations (the old hot path) are eliminated.
     """
-    import time as _time
-
-    def _step(msg: str) -> None:
-        _progress(f"  [{_time.strftime('%H:%M:%S')}] {msg}")
-
-    csv_entries = [e for e in entries if e.get("_valid_codes_path")]
-    if not csv_entries:
+    if not csv_paths:
         return
 
-    _step(f"Applying canonical codes for {len(csv_entries)} classifications...")
+    def _step(msg: str) -> None:
+        _progress(f"  [{time.strftime('%H:%M:%S')}] {msg}")
+
+    _step(f"Applying canonical codes for {len(csv_paths)} classifications...")
 
     # 1. Pre-trimmed value_code mirror with an indexed kod column.
     _step("  step 1/6: build _vc_trim (mirror of value_code with TRIM)...")
@@ -328,14 +335,16 @@ def _apply_valid_codes(
         ") WITHOUT ROWID"
     )
     canon_by_cls: dict[int, dict[str, str]] = {}
-    for entry in csv_entries:
-        cls_id = id_by_short[entry["short_name"]]
-        canon = load_valid_codes(entry["_valid_codes_path"])
+    canon_rows: list[tuple[int, str, str]] = []
+    for short_name, csv_path in csv_paths.items():
+        cls_id = id_by_short[short_name]
+        canon = load_valid_codes(csv_path)
         canon_by_cls[cls_id] = canon
-        conn.executemany(
-            "INSERT INTO _canon (cls_id, vardekod, label) VALUES (?, ?, ?)",
-            [(cls_id, code, label) for code, label in canon.items()],
-        )
+        canon_rows.extend((cls_id, code, label) for code, label in canon.items())
+    conn.executemany(
+        "INSERT INTO _canon (cls_id, vardekod, label) VALUES (?, ?, ?)",
+        canon_rows,
+    )
     conn.execute("CREATE INDEX _canon_kod ON _canon(vardekod)")
     n = conn.execute("SELECT COUNT(*) FROM _canon").fetchone()[0]
     _step(f"    _canon has {n:,} rows")
@@ -415,15 +424,14 @@ def _apply_valid_codes(
     # MIN(code_id) is arbitrary but stable. The bulk approach earlier was
     # wrong because it inserted EVERY code_id matching a canonical vardekod,
     # pulling in unrelated cross-classification value_code variants.
+    # is_valid stays NULL here; step 6 sets it for all CSV-backed rows.
     _step("  step 5/7: insert canonical-but-unobserved CC representatives...")
     cur = conn.execute(
-        """
+        f"""
         INSERT OR IGNORE INTO classification_code (classification_id, code_id, level, is_valid)
         SELECT c.cls_id, MIN(t.code_id),
-               CASE WHEN c.vardekod GLOB '[0-9]*'
-                         AND NOT c.vardekod GLOB '*[^0-9]*'
-                    THEN length(c.vardekod) ELSE NULL END,
-               1
+               {_LEVEL_EXPR.format(col="c.vardekod")},
+               NULL
         FROM _canon c
         JOIN _vc_trim t ON t.kod = c.vardekod
         WHERE NOT EXISTS (
@@ -453,26 +461,38 @@ def _apply_valid_codes(
         """
     )
     _step("    UPDATE done")
-    _step("  step 7/7: per-classification reporting...")
+    _step("  step 7/7: rollup and reporting...")
 
-    # Per-classification reporting.
-    for entry in csv_entries:
-        cls_id = id_by_short[entry["short_name"]]
-        valid, observed_only = conn.execute(
-            "SELECT "
-            "  SUM(CASE WHEN is_valid = 1 THEN 1 ELSE 0 END), "
-            "  SUM(CASE WHEN is_valid = 0 THEN 1 ELSE 0 END) "
-            "FROM classification_code WHERE classification_id = ?",
-            (cls_id,),
-        ).fetchone()
-        conn.execute(
-            "UPDATE classification SET valid_code_count = ? WHERE id = ?",
-            (valid, cls_id),
+    conn.execute(
+        """
+        UPDATE classification SET valid_code_count = (
+            SELECT COUNT(*) FROM classification_code
+            WHERE classification_id = classification.id AND is_valid = 1
         )
+        WHERE id IN (SELECT DISTINCT cls_id FROM _canon_pairs)
+        """
+    )
+
+    counts = {
+        row[0]: (row[1] or 0, row[2] or 0)
+        for row in conn.execute(
+            """
+            SELECT cls.short_name,
+                   SUM(CASE WHEN cc.is_valid = 1 THEN 1 ELSE 0 END),
+                   SUM(CASE WHEN cc.is_valid = 0 THEN 1 ELSE 0 END)
+            FROM classification cls
+            JOIN classification_code cc ON cc.classification_id = cls.id
+            WHERE cls.id IN (SELECT DISTINCT cls_id FROM _canon_pairs)
+            GROUP BY cls.short_name
+            """
+        ).fetchall()
+    }
+    for short_name, csv_path in csv_paths.items():
+        valid, observed_only = counts.get(short_name, (0, 0))
+        cls_id = id_by_short[short_name]
         _progress(
-            f"    {entry['short_name']}: {valid} canonical, "
-            f"{observed_only or 0} observed-only "
-            f"(from {entry['_valid_codes_path'].name}, {len(canon_by_cls[cls_id])} CSV codes)"
+            f"    {short_name}: {valid} canonical, {observed_only} observed-only "
+            f"(from {csv_path.name}, {len(canon_by_cls[cls_id])} CSV codes)"
         )
 
     conn.execute("DROP TABLE IF EXISTS _canon_pairs")
@@ -508,7 +528,7 @@ def populate_classifications(
     Returns the number of classifications inserted.
     """
     entries = load_seed(seed_path)
-    _resolve_valid_codes_paths(entries, valid_codes_dir)
+    csv_paths = _resolve_valid_codes_paths(entries, valid_codes_dir)
     _progress(
         f"Populating classifications from {seed_path.name} ({len(entries)} entries)..."
     )
@@ -548,38 +568,49 @@ def populate_classifications(
 
     # Tag matching variable instances. The seed has ~100+ vardemangdsversion
     # strings and the table has ~500k rows — without an index on
-    # vardemangdsversion each UPDATE would full-scan the table. Build the
+    # vardemangdsversion the UPDATE would full-scan the table. Build the
     # index once, drop it after population (it's not useful at query time).
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_vi_vardemangdsversion_tmp "
         "ON variable_instance(vardemangdsversion)"
     )
     try:
-        # Validate that every seed string hits at least one instance —
-        # otherwise either the seed has drifted or the underlying data
-        # changed, and we should not silently ship an incomplete
-        # classification.
-        unmatched: list[tuple[str, str]] = []
-        for entry in entries:
-            cls_id = id_by_short[entry["short_name"]]
-            for version_str in entry["vardemangdsversion"]:
-                cur = conn.execute(
-                    "UPDATE variable_instance SET classification_id = ? "
-                    "WHERE vardemangdsversion = ? AND classification_id IS NULL",
-                    (cls_id, version_str),
-                )
-                if cur.rowcount == 0:
-                    # rowcount==0 either because no row matches OR because
-                    # another classification already claimed it (caught by
-                    # the duplicate check in load_seed). Verify via SELECT
-                    # so the error message is precise.
-                    exists = conn.execute(
-                        "SELECT 1 FROM variable_instance "
-                        "WHERE vardemangdsversion = ? LIMIT 1",
-                        (version_str,),
-                    ).fetchone()
-                    if exists is None:
-                        unmatched.append((entry["short_name"], version_str))
+        conn.execute("DROP TABLE IF EXISTS _vmap")
+        conn.execute(
+            "CREATE TEMP TABLE _vmap (vers TEXT PRIMARY KEY, cls_id INTEGER NOT NULL) "
+            "WITHOUT ROWID"
+        )
+        conn.executemany(
+            "INSERT INTO _vmap (vers, cls_id) VALUES (?, ?)",
+            [
+                (v, id_by_short[entry["short_name"]])
+                for entry in entries
+                for v in entry["vardemangdsversion"]
+            ],
+        )
+        conn.execute(
+            """
+            UPDATE variable_instance
+            SET classification_id = (SELECT cls_id FROM _vmap WHERE vers = vardemangdsversion)
+            WHERE vardemangdsversion IN (SELECT vers FROM _vmap)
+            """
+        )
+        # Drift detection: any seed string that matches no instance.
+        # load_seed already rejects strings claimed by two classifications,
+        # so a non-match here means the data lacks the version entirely.
+        unmatched = conn.execute(
+            """
+            SELECT cls.short_name, m.vers
+            FROM _vmap m
+            JOIN classification cls ON cls.id = m.cls_id
+            WHERE NOT EXISTS (
+                SELECT 1 FROM variable_instance vi
+                WHERE vi.vardemangdsversion = m.vers
+            )
+            ORDER BY cls.short_name, m.vers
+            """
+        ).fetchall()
+        conn.execute("DROP TABLE IF EXISTS _vmap")
     finally:
         conn.execute("DROP INDEX IF EXISTS idx_vi_vardemangdsversion_tmp")
 
@@ -602,22 +633,16 @@ def populate_classifications(
         )
 
     # Populate classification_code with the deduplicated union of codes
-    # reachable through tagged instances. level = numeric code length for
-    # all-digit codes, NULL otherwise (see DESIGN.md). is_valid is filled
-    # in afterwards by _apply_valid_codes when a CSV is provided.
+    # reachable through tagged instances. is_valid is filled in afterwards
+    # by _apply_valid_codes when a CSV is provided.
     _progress("  Building classification_code junction...")
     conn.execute(
-        """
+        f"""
         INSERT INTO classification_code (classification_id, code_id, level, is_valid)
         SELECT DISTINCT
             vi.classification_id,
             cvc.code_id,
-            CASE
-                WHEN vc.vardekod GLOB '[0-9]*'
-                     AND NOT vc.vardekod GLOB '*[^0-9]*'
-                THEN length(vc.vardekod)
-                ELSE NULL
-            END,
+            {_LEVEL_EXPR.format(col="vc.vardekod")},
             NULL
         FROM variable_instance vi
         JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid
@@ -626,7 +651,7 @@ def populate_classifications(
         """
     )
 
-    _apply_valid_codes(conn, entries, id_by_short)
+    _apply_valid_codes(conn, csv_paths, id_by_short)
 
     # Cache code_count for every classification; valid_code_count was set
     # by _apply_valid_codes for classifications with a CSV (NULL otherwise).
