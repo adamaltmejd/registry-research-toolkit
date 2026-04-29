@@ -1747,17 +1747,24 @@ def _classification_row(row: sqlite3.Row) -> dict[str, Any]:
 
 
 def list_classifications(conn: sqlite3.Connection) -> list[dict[str, Any]]:
-    """Enumerate all classifications with a superseded_by back-pointer."""
+    """Enumerate all classifications with a superseded_by back-pointer.
+
+    superseded_by uses a scalar GROUP_CONCAT subquery rather than a LEFT JOIN
+    on supersedes_id: a classification can be superseded by more than one
+    successor (the schema doesn't enforce 1:1), and a JOIN would multiply
+    the parent row. The result is comma-separated when there are multiple.
+    """
     rows = conn.execute(
         """
         SELECT c.id, c.short_name, c.name, c.name_en, c.publisher, c.version,
                c.valid_from, c.valid_to, c.description, c.url, c.code_count,
                c.valid_code_count,
                s.short_name AS supersedes,
-               sb.short_name AS superseded_by
+               (SELECT GROUP_CONCAT(short_name, ',')
+                FROM (SELECT short_name FROM classification
+                      WHERE supersedes_id = c.id ORDER BY short_name)) AS superseded_by
         FROM classification c
-        LEFT JOIN classification s  ON c.supersedes_id = s.id
-        LEFT JOIN classification sb ON sb.supersedes_id = c.id
+        LEFT JOIN classification s ON c.supersedes_id = s.id
         ORDER BY c.short_name
         """
     ).fetchall()
@@ -1809,13 +1816,15 @@ def _resolve_classification_id(conn: sqlite3.Connection, value: str) -> int:
 
 
 def _classification_by_id(conn: sqlite3.Connection, cls_id: int) -> dict[str, Any]:
+    # Scalar GROUP_CONCAT for superseded_by — see list_classifications for why.
     row = conn.execute(
         """
         SELECT c.*, s.short_name AS supersedes,
-               sb.short_name AS superseded_by
+               (SELECT GROUP_CONCAT(short_name, ',')
+                FROM (SELECT short_name FROM classification
+                      WHERE supersedes_id = c.id ORDER BY short_name)) AS superseded_by
         FROM classification c
-        LEFT JOIN classification s  ON c.supersedes_id = s.id
-        LEFT JOIN classification sb ON sb.supersedes_id = c.id
+        LEFT JOIN classification s ON c.supersedes_id = s.id
         WHERE c.id = ?
         """,
         (cls_id,),

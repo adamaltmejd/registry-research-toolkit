@@ -386,6 +386,170 @@ class TestPopulateClassifications:
         ).fetchone()[0]
         assert vcc is None
 
+    def test_shared_vardekod_binds_canonical_label(self, tmp_path: Path):
+        """Two classifications can share a vardekod with different canonical
+        labels. The canonical-but-unobserved CC row must reference the
+        value_code row whose label matches the *current* classification's
+        CSV — not some other classification's label for the same code.
+
+        Reproduces a P1 bug where step 5 picked MIN(code_id) over all
+        value_code rows with the matching vardekod, ignoring the label.
+        """
+        # TESTKON observes code "1" → label "Man" (from EXTENDED_VARDEMANGDER_ROWS).
+        # TESTKON2 uses "Kon-2" (codes 10/20/30) — does NOT observe "1".
+        # Both classifications declare canonical "1" but with different labels.
+        input_dir = _make_input_dir(tmp_path)
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir()
+        (cls_dir / "testkon.csv").write_text(
+            "vardekod,vardebenamning\n1,Man\n2,Kvinna\n", encoding="utf-8"
+        )
+        # TESTKON2 canonical "1" → "Stockholm" (deliberately unobserved here);
+        # the bug bound it to TESTKON's "Man" label.
+        (cls_dir / "testkon2.csv").write_text(
+            "vardekod,vardebenamning\n1,Stockholm\n10,Female\n",
+            encoding="utf-8",
+        )
+        seed_toml = (
+            '[[classification]]\nshort_name = "TESTKON"\nname = "Test"\n'
+            'valid_codes_file = "testkon.csv"\n'
+            'vardemangdsversion = ["Kön"]\n'
+            '[[classification]]\nshort_name = "TESTKON2"\nname = "Test 2"\n'
+            'valid_codes_file = "testkon2.csv"\n'
+            'vardemangdsversion = ["Kon-2"]\n'
+        )
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(seed_toml, encoding="utf-8")
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+
+        conn = sqlite3.connect(db_dir / "regmeta.db")
+        conn.row_factory = sqlite3.Row
+        # TESTKON2's CC row for vardekod "1" must reference the "Stockholm"
+        # value_code, not the "Man" one observed by TESTKON.
+        row = conn.execute(
+            "SELECT vc.vardekod, vc.vardebenamning, cc.is_valid "
+            "FROM classification_code cc "
+            "JOIN value_code vc ON cc.code_id = vc.code_id "
+            "JOIN classification c ON cc.classification_id = c.id "
+            "WHERE c.short_name = 'TESTKON2' AND vc.vardekod = '1'"
+        ).fetchone()
+        assert row is not None
+        assert row["vardebenamning"] == "Stockholm"
+        assert row["is_valid"] == 1
+
+    def test_valid_code_count_counts_distinct_vardekods(self, tmp_path: Path):
+        """valid_code_count should reflect canonical *codes*, not CC rows.
+
+        When value_code holds multiple labels for one vardekod (label drift in
+        observed data), step 6 marks every label variant as is_valid=1
+        (intentional — validity is per-code). The cached count must still
+        report the canonical CSV cardinality, so it uses COUNT(DISTINCT
+        vardekod) rather than COUNT(*).
+        """
+        # Add a second-label variant for code "1": (1, "Man") observed AND
+        # (1, "Manlig") observed via CVID 1001. Without the fix this inflates
+        # valid_code_count from 2 to 3.
+        rows = list(EXTENDED_VARDEMANGDER_ROWS) + [
+            PIPE.join(["Kön", "1", "1", "Manlig", "1001", "5010"])
+        ]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, vardemangder_rows=rows)
+        cls_dir = input_dir / "classifications"
+        cls_dir.mkdir()
+        (cls_dir / "testkon.csv").write_text(
+            "vardekod,vardebenamning\n1,Man\n2,Kvinna\n", encoding="utf-8"
+        )
+        seed_toml = (
+            '[[classification]]\nshort_name = "TESTKON"\nname = "Test"\n'
+            'valid_codes_file = "testkon.csv"\n'
+            'vardemangdsversion = ["Kön"]\n'
+        )
+        seed = tmp_path / "classifications.toml"
+        seed.write_text(seed_toml, encoding="utf-8")
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+
+        conn = sqlite3.connect(db_dir / "regmeta.db")
+        conn.row_factory = sqlite3.Row
+        # Sanity: three CC rows for TESTKON (one per distinct value_code:
+        # "1"/"Man", "1"/"Manlig", "2"/"Kvinna") all with is_valid=1.
+        cc_rows = conn.execute(
+            "SELECT vc.vardekod, vc.vardebenamning, cc.is_valid "
+            "FROM classification_code cc "
+            "JOIN value_code vc ON cc.code_id = vc.code_id "
+            "JOIN classification c ON cc.classification_id = c.id "
+            "WHERE c.short_name = 'TESTKON' "
+            "ORDER BY vc.vardekod, vc.vardebenamning"
+        ).fetchall()
+        assert [
+            (r["vardekod"], r["vardebenamning"], r["is_valid"]) for r in cc_rows
+        ] == [
+            ("1", "Man", 1),
+            ("1", "Manlig", 1),
+            ("2", "Kvinna", 1),
+        ]
+        # valid_code_count must be 2 (distinct canonical vardekods) — NOT 3.
+        cnt = conn.execute(
+            "SELECT valid_code_count FROM classification WHERE short_name='TESTKON'"
+        ).fetchone()[0]
+        assert cnt == 2
+
+    def test_multi_successor_does_not_duplicate_listing(self, tmp_path: Path):
+        """A classification superseded by more than one successor must appear
+        once in list_classifications, with all successor short_names in
+        superseded_by. Pre-fix the LEFT JOIN multiplied the parent row.
+        """
+        from regmeta.queries import _classification_by_id, list_classifications
+
+        db_path = tmp_path / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        # Minimal schema — only what list_classifications touches.
+        conn.executescript(
+            """
+            CREATE TABLE classification (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                short_name TEXT NOT NULL UNIQUE,
+                name TEXT NOT NULL,
+                name_en TEXT, publisher TEXT, version TEXT,
+                valid_from INTEGER, valid_to INTEGER,
+                description TEXT, url TEXT,
+                supersedes_id INTEGER REFERENCES classification(id),
+                code_count INTEGER NOT NULL DEFAULT 0,
+                valid_code_count INTEGER
+            );
+            """
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name) VALUES ('OLD', 'Old')"
+        )
+        old_id = conn.execute(
+            "SELECT id FROM classification WHERE short_name='OLD'"
+        ).fetchone()["id"]
+        conn.execute(
+            "INSERT INTO classification (short_name, name, supersedes_id) "
+            "VALUES ('NEW_A', 'New A', ?)",
+            (old_id,),
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, supersedes_id) "
+            "VALUES ('NEW_B', 'New B', ?)",
+            (old_id,),
+        )
+        conn.commit()
+
+        listed = list_classifications(conn)
+        # OLD must appear exactly once; superseded_by carries both successors.
+        old_rows = [c for c in listed if c["short_name"] == "OLD"]
+        assert len(old_rows) == 1
+        assert old_rows[0]["superseded_by"] == "NEW_A,NEW_B"
+        # And _classification_by_id (fetchone path) is also stable.
+        single = _classification_by_id(conn, old_id)
+        assert single["superseded_by"] == "NEW_A,NEW_B"
+
     def test_missing_seed_fails_build(self, tmp_path: Path, monkeypatch):
         """build-db must error when no seed is available — silently shipping
         a DB without classifications would let downstream queries return all

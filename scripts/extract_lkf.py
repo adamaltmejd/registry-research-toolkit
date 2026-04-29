@@ -201,8 +201,8 @@ def extract(year: int, src: Path) -> dict[str, str]:
             if cell is None:
                 i += 1
                 continue
-            code = str(cell).strip()
-            if not (code.isdigit() and len(code) in (2, 4, 6)):
+            code = _normalize_code(cell)
+            if code is None:
                 i += 1
                 continue
             # Found a code. Take the next non-empty cell as its label, then
@@ -222,6 +222,33 @@ def extract(year: int, src: Path) -> dict[str, str]:
                 out.setdefault(code, label)
             i = label_idx + 1
     return out
+
+
+def _normalize_code(cell: object) -> str | None:
+    """Return a 2/4/6-digit LKF code string, or None if the cell isn't one.
+
+    openpyxl/xlrd return text-formatted codes as strings (already zero-padded)
+    but numeric-formatted codes as int/float — Excel drops leading zeros there.
+    For numeric cells we try the smallest matching width: int 1 → "01",
+    int 114 → "0114", int 11400 → "011400". Bare ints and stringified floats
+    that don't fit any width are rejected.
+    """
+    if isinstance(cell, bool):
+        return None
+    if isinstance(cell, (int, float)):
+        if isinstance(cell, float) and not cell.is_integer():
+            return None
+        raw = str(int(cell))
+        if not raw.isdigit():
+            return None
+        for width in (2, 4, 6):
+            if len(raw) <= width:
+                return raw.zfill(width)
+        return None
+    code = str(cell).strip()
+    if code.isdigit() and len(code) in (2, 4, 6):
+        return code
+    return None
 
 
 def extract_from_knkodnyckel(year: int, src: Path) -> dict[str, str]:
@@ -360,6 +387,8 @@ def main() -> int:
             print(f"  downloading {KNKODNYCKEL_URL}", file=sys.stderr)
             urllib.request.urlretrieve(KNKODNYCKEL_URL, knkod_src)
 
+    failed_years: list[int] = []
+    failed_pdfs: list[int] = []
     prev_year: int | None = None
     for year in sorted(args.years):
         print(f"\n=== LKF {year} ===", file=sys.stderr)
@@ -383,6 +412,7 @@ def main() -> int:
             prev_year = year
         except Exception as exc:
             print(f"  FAILED: {exc}", file=sys.stderr)
+            failed_years.append(year)
 
     if args.download_pdfs:
         print("\n=== downloading PDFs ===", file=sys.stderr)
@@ -400,6 +430,19 @@ def main() -> int:
                 )
             except Exception as exc:
                 print(f"  lkf{year}.pdf FAILED: {exc}", file=sys.stderr)
+                failed_pdfs.append(year)
+
+    if failed_years or failed_pdfs:
+        msg_parts = []
+        if failed_years:
+            msg_parts.append(f"years: {', '.join(str(y) for y in failed_years)}")
+        if failed_pdfs:
+            msg_parts.append(f"pdfs: {', '.join(str(y) for y in failed_pdfs)}")
+        print(
+            f"\n{len(failed_years) + len(failed_pdfs)} failures ({'; '.join(msg_parts)})",
+            file=sys.stderr,
+        )
+        return 1
     return 0
 
 
