@@ -335,7 +335,7 @@ Inriktning` codes match. The two SSB drops (`0110` Education NFD, `0739`
 Architecture and construction NEC) were re-added since they're standard
 UNESCO and present in SCB data.
 
-The second vardemängd `ISCED F 2013 ` (with trailing space) carries 38
+The second vardemängd `ISCED F 2013` (with a trailing space in the source) carries 38
 codes mostly in Swedish (`Pedagogik och lärarutbildning`, etc.) — only
 12 match UNESCO. This looks like a register-local mapping mislabelled as
 ISCED-F; left at `is_valid=0` for the non-matching codes.
