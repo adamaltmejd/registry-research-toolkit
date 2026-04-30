@@ -23,6 +23,7 @@ from __future__ import annotations
 import json
 import logging
 import random
+import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -125,7 +126,17 @@ def _pre_classify(
 
 def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict."""
+    log.info("[%s] counting rows...", handle.source_name)
+    _flush_log_handlers()
+    t0 = time.monotonic()
     n_rows = _count_rows(handle.conn, handle.table)
+    log.info(
+        "[%s] %d rows (%.1fs)",
+        handle.source_name,
+        n_rows,
+        time.monotonic() - t0,
+    )
+    _flush_log_handlers()
     if n_rows < small_pop_threshold():
         log.warning(
             "source %r has only %d rows (< %d). Aggregates may be "
@@ -135,8 +146,13 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
             small_pop_threshold(),
         )
 
+    cols = _list_columns(handle.conn, handle.table, handle.dialect)
+    log.info("[%s] %d columns to classify", handle.source_name, len(cols))
+    _flush_log_handlers()
+
     columns_out: list[dict[str, Any]] = []
-    for col in _list_columns(handle.conn, handle.table, handle.dialect):
+    for i, col in enumerate(cols, 1):
+        t_col = time.monotonic()
         n_distinct, null_count, sample = _pre_classify(
             handle.conn, handle.table, col, handle.dialect
         )
@@ -155,6 +171,16 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
                 rng=rng,
             )
         )
+        log.debug(
+            "[%s] col %d/%d %s -> %s (%.1fs)",
+            handle.source_name,
+            i,
+            len(cols),
+            col,
+            col_type,
+            time.monotonic() - t_col,
+        )
+        _flush_log_handlers()
 
     return {
         "source_name": handle.source_name,
@@ -163,6 +189,14 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
         "row_count": n_rows,
         "columns": columns_out,
     }
+
+
+def _flush_log_handlers() -> None:
+    for h in logging.getLogger().handlers:
+        try:
+            h.flush()
+        except Exception:
+            pass
 
 
 def _shared_columns(source_results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -203,10 +237,22 @@ def run_extract(
     the file).
     """
     rng = random.Random(seed)
+    sources = list(sources)
+    log.info("run_extract: %d source declaration(s)", len(sources))
+    _flush_log_handlers()
     source_results: list[dict[str, Any]] = []
-    for src in sources:
+    for src_idx, src in enumerate(sources, 1):
+        log.info("source %d/%d: %r", src_idx, len(sources), src)
+        _flush_log_handlers()
         for handle in iter_source(src):
             source_results.append(process_handle(handle, rng))
+            log.info(
+                "source %d/%d: handle done (%d total handle(s) so far)",
+                src_idx,
+                len(sources),
+                len(source_results),
+            )
+            _flush_log_handlers()
 
     if not source_results:
         raise RuntimeError(
