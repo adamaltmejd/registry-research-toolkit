@@ -38,8 +38,8 @@ MODULE_ORDER = ("classify", "sql_emit", "sources", "summarize", "extract")
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA extract bundle.
 
-Self-contained single-file Python script. Edit the SOURCES = [...] block
-near the bottom, then run on MONA:
+Self-contained single-file Python script. Edit the configure() function
+just below the boot trace, then run on MONA:
 
     python mock_data_wizard_extract.py
 
@@ -60,44 +60,196 @@ scripts/build_mona_bundle.py. DO NOT edit code mid-bundle by hand --
 edit the source modules and re-bundle.
 """
 from __future__ import annotations
+
+import os as _boot_os
+import socket as _boot_socket
+import sys as _boot_sys
+import traceback as _boot_traceback
+from datetime import datetime as _boot_datetime
+from pathlib import Path as _boot_Path
+
+_BOOT_HOST = _boot_socket.gethostname()
+_BOOT_HERE = _boot_Path(__file__).resolve().parent
+
+
+# ===========================================================================
+# USER CONFIGURATION -- edit before running on MONA.
+# ===========================================================================
+# This is the only block you need to edit. Everything below this point is
+# the bundled mock_data_wizard runtime (regenerate via build_mona_bundle.py
+# -- DO NOT edit module bodies by hand).
+#
+# DEBUG=False (default): no log file is written. On MBS-prefixed hosts
+# (batch / RDP) stdout+stderr are still redirected to /dev/null to avoid
+# the well-documented BatchClient in-memory buffer hang.
+#
+# DEBUG=True: a combined log file mdw_log_<HOST>_<TS>.txt is written next
+# to this script. It captures the boot trace, our structured logging, AND
+# whatever stdout / stderr emit (pyodbc / MSSQL driver / duckdb / numpy
+# warnings). Single file, line-buffered, flushed per record.
+#
+# VERBOSE=True: in addition to DEBUG, enables per-column progress lines
+# inside the log file. Worth it on a long sql_source extract; noisy
+# otherwise. Has no effect when DEBUG=False.
+#
+# DISCOVERY MODE: return one source per location with no filters; the
+# extract scans it, writes a `mdw_sources_<TS>.py` sidecar next to this
+# script listing everything it found, and exits without writing
+# stats.json. Edit the sidecar to narrow scope, then re-run -- the
+# sidecar overrides whatever configure() returns.
+#
+#     return [sql_source(dsn="P1105")]
+#     return [file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data")]
+#
+# NARROWED EXTRACT: declare exactly what to aggregate:
+#
+#     return [
+#         sql_source(
+#             dsn="P1105",
+#             tables=(
+#                 sql_table("dbo.lisa_2018", where="AR > 2015"),
+#                 sql_table("dbo.par",       where="INDATUM > '2015-01-01'"),
+#                 "dbo.fodelse",
+#             ),
+#         ),
+#         file_source(path=r"<unc-path>", include=("a.csv", "b.csv")),
+#     ]
+#
+# configure() is called AFTER the bundle modules load, so file_source(),
+# sql_source(), and sql_table() are all in scope here.
+DEBUG = False
+VERBOSE = False
+
+
+def configure():
+    return []
+
+
+# ===========================================================================
+# Boot wiring -- stdlib only. Runs before any package imports below so it
+# can capture a heavy-import or dataclass-init crash.
+# ===========================================================================
+_BOOT_TS = _boot_datetime.now().strftime("%Y%m%d_%H%M%S")
+_BOOT_PATH = _BOOT_HERE / f"mdw_log_{_BOOT_HOST}_{_BOOT_TS}.txt"
+_BOOT_ON_MBS = _BOOT_HOST.upper().startswith("MBS")
+
+
+def _boot_log(msg: str) -> None:
+    if not DEBUG:
+        return
+    try:
+        with _BOOT_PATH.open("a", encoding="utf-8") as fp:
+            fp.write(f"[{_boot_datetime.now().isoformat()}] {msg}\\n")
+    except Exception:
+        pass
+
+
+# Console redirect:
+#   DEBUG=True  -> redirect stdout/stderr to the log file so library
+#                  warnings / driver chatter land alongside our logs.
+#   DEBUG=False -> on MBS hosts redirect to /dev/null (the documented
+#                  fix for the BatchClient buffer hang); on non-MBS
+#                  hosts leave the console alone (interactive use).
+# Both paths also dup2 fd 1/fd 2 so C-extensions writing directly to
+# the OS file descriptors are caught.
+if DEBUG:
+    _boot_redir_fp = open(_BOOT_PATH, "a", encoding="utf-8", buffering=1)  # noqa: SIM115
+    _boot_sys.stdout = _boot_redir_fp
+    _boot_sys.stderr = _boot_redir_fp
+    try:
+        _boot_os.dup2(_boot_redir_fp.fileno(), 1)
+        _boot_os.dup2(_boot_redir_fp.fileno(), 2)
+    except Exception:
+        pass
+elif _BOOT_ON_MBS:
+    _boot_redir_fp = open(_boot_os.devnull, "w")  # noqa: SIM115
+    _boot_sys.stdout = _boot_redir_fp
+    _boot_sys.stderr = _boot_redir_fp
+    try:
+        _boot_devnull_fd = _boot_os.open(_boot_os.devnull, _boot_os.O_WRONLY)
+        _boot_os.dup2(_boot_devnull_fd, 1)
+        _boot_os.dup2(_boot_devnull_fd, 2)
+    except Exception:
+        pass
+
+
+_boot_log(f"boot start host={_BOOT_HOST} cwd={_boot_os.getcwd()}")
+_boot_log(f"script={_boot_Path(__file__).resolve()}")
+_boot_log(f"python={_boot_sys.version.splitlines()[0]}")
+_boot_log(f"DEBUG={DEBUG} VERBOSE={VERBOSE}")
+
+
+def _boot_excepthook(exc_type, exc_val, exc_tb) -> None:
+    _boot_log("UNCAUGHT EXCEPTION (excepthook):")
+    _boot_log("".join(_boot_traceback.format_exception(exc_type, exc_val, exc_tb)))
+    _boot_sys.__excepthook__(exc_type, exc_val, exc_tb)
+
+
+_boot_sys.excepthook = _boot_excepthook
+_boot_log("boot trace installed; loading bundle modules...")
 '''
 
 BUNDLE_RUNNER = """\
 # ===========================================================================
-# Runner -- edit the SOURCES list below before running on MONA.
+# Runner -- everything user-editable is in the configure block above.
 # ===========================================================================
 
 import logging
-import os
-import socket
-import sys
 
-# MBS-batch stdout footgun: in batch mode stdout is buffered to memory and
-# can hang the script when the buffer fills. Per MONA Python docs, redirect
-# on MBS-prefixed hosts.
-if socket.gethostname().upper().startswith("MBS"):
-    sys.stdout = open(os.devnull, "w")  # noqa: SIM115
+_boot_log("bundle modules loaded; configuring runner")
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s %(name)s %(levelname)s %(message)s",
-    stream=sys.stderr,
-)
+# Logging:
+#   DEBUG=True  -> FileHandler on the combined log file. VERBOSE=True
+#                  drops the level to DEBUG so per-column progress lines
+#                  are emitted; otherwise we stay at INFO.
+#   DEBUG=False -> NullHandler. No log file written.
+_log_root = logging.getLogger()
+if DEBUG:
+    _log_root.setLevel(logging.DEBUG if VERBOSE else logging.INFO)
+    _h = logging.FileHandler(_BOOT_PATH, mode="a", encoding="utf-8")
+    _h.setFormatter(
+        logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
+    )
+    _log_root.addHandler(_h)
+else:
+    _log_root.setLevel(logging.CRITICAL + 1)
+    _log_root.addHandler(logging.NullHandler())
 
-# ---------------------------------------------------------------------------
-# USER CONFIGURATION -- edit me before running on MONA.
-# ---------------------------------------------------------------------------
-SOURCES = [
-    # Examples:
-    #   file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data"),
-    #   sql_source(dsn="P1105"),
-    #
-    # A source with no include/exclude/pattern/all triggers discovery mode.
-]
-
+_log = logging.getLogger("mdw.bundle")
 
 if __name__ == "__main__":
-    main(SOURCES, output_dir=Path(__file__).resolve().parent)
+    _log.info("output_dir=%s", _BOOT_HERE)
+    SOURCES = configure()
+    _log.info("configure() returned %d source(s)", len(SOURCES))
+    if not SOURCES:
+        # Sidecar override takes precedence inside main(); only error
+        # out here if there's nothing for main() to fall back on.
+        _sidecar = find_latest_sources_file(_BOOT_HERE)
+        if _sidecar is None:
+            _log.error(
+                "configure() returned [] and no mdw_sources_*.py sidecar "
+                "found in %s. Edit configure() (e.g. "
+                '`return [sql_source(dsn=\"<your_project_dsn>\")]`) or '
+                "drop a sidecar next to this script.",
+                _BOOT_HERE,
+            )
+            _boot_sys.exit(2)
+        _log.info("configure() empty -- main() will load sidecar %s", _sidecar)
+    try:
+        result = main(SOURCES, output_dir=_BOOT_HERE)
+    except Exception:
+        _log.error("mdw bundle failed:\\n%s", _boot_traceback.format_exc())
+        _boot_sys.exit(1)
+    if result is None:
+        _log.info("discovery sidecar written -- edit it and re-run.")
+    else:
+        _log.info(
+            "extract complete: %d source(s), stats.json -> %s",
+            len(result.get("sources", [])),
+            _BOOT_HERE / "stats.json",
+        )
+    if DEBUG:
+        _log.info("done. log file: %s", _BOOT_PATH)
 """
 
 

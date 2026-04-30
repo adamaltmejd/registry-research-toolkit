@@ -45,8 +45,36 @@ Stdout footgun: in batch mode, Python's stdout is buffered to an
 in-memory buffer; once full, the script hangs in BatchClient with no
 error. Mitigation per MONA's docs: detect hostname starting with
 `MBS` and redirect `sys.stdout` to `os.devnull` at the top of any
-batch-run script. We log to stderr and to a file regardless, so this
-only suppresses incidental prints from libraries.
+batch-run script.
+
+The bundle has two flags at the top of its USER CONFIGURATION block —
+`DEBUG` (default `False`) and `VERBOSE` (default `False`) — that
+switch the diagnostic strategy:
+
+- **`DEBUG=False`** (default, clean runs): no log file is written.
+  On MBS hosts we still redirect `sys.stdout` *and* `sys.stderr` to
+  `/dev/null`, including `os.dup2` over fd 1/fd 2 so C-extension
+  output can't slip through. On non-MBS hosts the console is left
+  alone (interactive use). On a successful run, the only artefact on
+  disk is `stats.json`.
+- **`DEBUG=True`**: a single combined log file
+  `mdw_log_<HOST>_<TS>.txt` is opened line-buffered and used for
+  everything — boot trace, our `logging.FileHandler`, and (via
+  `sys.stdout`/`sys.stderr` redirection plus `os.dup2`) any output
+  from pyodbc / MSSQL driver / duckdb / numpy. One file, no
+  interleaving with /dev/null, full diagnostics.
+- **`VERBOSE=True`** (only effective with `DEBUG`): drops the logger
+  level from `INFO` to `DEBUG`, which adds the per-column progress
+  lines from `process_handle`. Worth turning on for a long
+  `sql_source` run to see which column the script is stuck on; noisy
+  for short runs.
+
+Why redirect stderr too: the MONA doc example only shows stdout, but
+the underlying problem ("the console" is buffered to memory)
+plausibly applies to both, and our per-column logging produces real
+volume there. Why redirect at the OS fd level: Python's
+`sys.stdout`/`sys.stderr` swap only catches Python-side writes; C
+extensions can bypass it.
 
 RAM: 150–200 GB on the batch server. DuckDB defaults to ~80% of RAM
 for `memory_limit`, which is plenty for any single-source aggregation

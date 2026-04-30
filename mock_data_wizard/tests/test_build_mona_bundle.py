@@ -56,11 +56,24 @@ def test_bundle_exposes_expected_top_level_names(tmp_path: Path):
 def test_bundle_has_runner_block(tmp_path: Path):
     out = _build_bundle_to(tmp_path / "bundle.py")
     text = out.read_text(encoding="utf-8")
-    assert "SOURCES = [" in text
+    assert "def configure():" in text
     assert 'if __name__ == "__main__":' in text
+    assert "SOURCES = configure()" in text
     assert "main(SOURCES, output_dir=" in text
     # MBS-batch stdout footgun mitigation must be present
-    assert 'socket.gethostname().upper().startswith("MBS")' in text
+    assert '.upper().startswith("MBS")' in text
+
+
+def test_bundle_configure_lives_above_module_bodies(tmp_path: Path):
+    """The user-edited block must come before any 'from sources.py' code so
+    it's the first thing visible when the file is opened."""
+    out = _build_bundle_to(tmp_path / "bundle.py")
+    text = out.read_text(encoding="utf-8")
+    configure_pos = text.index("def configure():")
+    classify_pos = text.index("# classify.py")
+    assert configure_pos < classify_pos, (
+        "configure() must be at the top, before the bundled module bodies"
+    )
 
 
 def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
@@ -77,15 +90,16 @@ def test_bundle_runs_against_a_real_csv(tmp_path: Path):
     """Spawn the bundle as a subprocess and check stats.json comes out."""
     bundle = _build_bundle_to(tmp_path / "mock_data_wizard_extract.py")
 
-    # Patch SOURCES = [ ... examples ... ] with one real file_source
+    # Patch configure() to return one real file_source.
     text = bundle.read_text(encoding="utf-8")
     patched = text.replace(
-        "SOURCES = [\n    # Examples",
-        "SOURCES = [\n    file_source(path=str(Path(__file__).resolve().parent), "
-        'include=("data.csv",)),\n    # Examples',
+        "def configure():\n    return []",
+        "def configure():\n    return [\n        "
+        "file_source(path=str(Path(__file__).resolve().parent), "
+        'include=("data.csv",))\n    ]',
         1,
     )
-    assert patched != text, "SOURCES patch did not apply"
+    assert patched != text, "configure() patch did not apply"
     bundle.write_text(patched, encoding="utf-8")
 
     (tmp_path / "data.csv").write_text(
