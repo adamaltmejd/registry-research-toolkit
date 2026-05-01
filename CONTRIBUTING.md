@@ -31,7 +31,7 @@ and publishing. For manual database releases:
 
 ```bash
 # Build DB from SCB CSV exports
-regmeta maintain build-db --csv-dir path/to/SCB-data/
+regmeta maintain build-db --csv-dir regmeta/input_data/SCB/
 
 # Compress and attach to an existing release
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst

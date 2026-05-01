@@ -15,21 +15,7 @@ import pytest
 
 from regmeta.db import build_db
 
-from _csv_fixtures import (
-    IDENTIFIERARE_HEADER,
-    IDENTIFIERARE_ROWS,
-    REGISTERINFORMATION_HEADER,
-    REGISTERINFORMATION_ROWS,
-    TIMESERIES_HEADER,
-    TIMESERIES_ROWS,
-    UNIKA_HEADER,
-    UNIKA_ROWS,
-    VALID_DATES_HEADER,
-    VALID_DATES_ROWS,
-    VARDEMANGDER_HEADER,
-    VARDEMANGDER_ROWS,
-    write_csv,
-)
+from _csv_fixtures import write_scb_input
 
 
 @pytest.fixture(scope="session")
@@ -40,23 +26,12 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     commands (search/get/resolve) now require both artifacts — the CLI
     refuses to run queries without docs installed.
     """
-    csv_dir = tmp_path_factory.mktemp("csv")
+    input_dir = tmp_path_factory.mktemp("input")
     db_dir = tmp_path_factory.mktemp("db")
 
-    write_csv(
-        csv_dir / "Registerinformation.csv",
-        REGISTERINFORMATION_HEADER,
-        REGISTERINFORMATION_ROWS,
-    )
-    write_csv(csv_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
-    write_csv(csv_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
-    write_csv(csv_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
-    write_csv(csv_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
-    write_csv(
-        csv_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
-    )
+    write_scb_input(input_dir)
 
-    build_db(csv_dir=csv_dir, db_dir=db_dir)
+    build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"

@@ -25,6 +25,8 @@ from .db import (
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 from .queries import (
     get_availability,
+    get_classification,
+    get_classification_codes,
     get_coded_variables,
     get_datacolumns,
     get_diff,
@@ -33,8 +35,10 @@ from .queries import (
     get_schema,
     get_values,
     get_varinfo,
+    list_classifications,
     resolve,
     search,
+    search_variables_by_classification,
 )
 
 CONTRACT_VERSION = "3.0.0"
@@ -602,6 +606,72 @@ def _build_parser() -> argparse.ArgumentParser:
         "--register", default=None, help="Filter by register (name or ID)."
     )
 
+    get_cls_p = get_sub.add_parser(
+        "classification",
+        help="Show normalized code systems (SUN2000, SSYK, SNI, LKF, ...).",
+        description=(
+            "List classifications, show metadata, or dump the full code list.\n\n"
+            "Classifications are normalized code systems (SUN, SSYK, SNI, ...)\n"
+            "that aggregate the value codes produced by many variable instances.\n\n"
+            "Examples:\n"
+            "  regmeta get classification --list\n"
+            "  regmeta get classification SUN2000\n"
+            "  regmeta get classification SUN2000 --codes\n"
+            "  regmeta get classification SUN2000 --codes --level 3"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    get_cls_p.add_argument(
+        "classification",
+        nargs="?",
+        default=None,
+        help="Classification short_name or id (e.g. SUN2000).",
+    )
+    cls_mode = get_cls_p.add_mutually_exclusive_group()
+    cls_mode.add_argument(
+        "--list",
+        dest="list_all",
+        action="store_true",
+        help="Enumerate all classifications.",
+    )
+    cls_mode.add_argument(
+        "--codes",
+        action="store_true",
+        help="Include the full code list.",
+    )
+    cls_mode.add_argument(
+        "--variables",
+        action="store_true",
+        help="List variables tagged with this classification.",
+    )
+    get_cls_p.add_argument(
+        "--level",
+        type=int,
+        default=None,
+        help="With --codes: only include codes at this hierarchical level.",
+    )
+    get_cls_p.add_argument(
+        "--only-valid",
+        dest="only_valid",
+        action="store_true",
+        help=(
+            "With --codes: only include canonical codes (is_valid=1). "
+            "Empty for classifications without a canonical CSV."
+        ),
+    )
+    get_cls_p.add_argument(
+        "--limit",
+        type=int,
+        default=100,
+        help="With --variables: max results (default 100).",
+    )
+    get_cls_p.add_argument(
+        "--offset",
+        type=int,
+        default=0,
+        help="With --variables: pagination offset (default 0).",
+    )
+
     get_avail_p = get_sub.add_parser(
         "availability",
         help="Show temporal availability (years, gaps, aliases) for a variable or register.",
@@ -694,13 +764,36 @@ def _build_parser() -> argparse.ArgumentParser:
             "Build the metadata database from raw SCB CSV exports. This\n"
             "replaces the database entirely (not incremental). Most users\n"
             "should use `maintain update` instead.\n\n"
+            "The input directory must contain:\n"
+            "  <input-dir>/SCB/*.csv             — SCB metadata exports\n"
+            "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
             "Examples:\n"
-            "  regmeta maintain build-db --csv-dir /path/to/SCB-data/"
+            "  regmeta maintain build-db --input-dir regmeta/input_data/"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     build_p.add_argument(
-        "--csv-dir", required=True, help="Directory containing SCB CSV exports."
+        "--input-dir",
+        required=True,
+        help="Directory containing SCB/ and classifications/ subdirectories.",
+    )
+
+    parse_sos_p = maintain_sub.add_parser(
+        "parse-sos",
+        help="Parse Socialstyrelsen metadata Excel deliveries (maintainer-only).",
+        description=(
+            "Parse one Socialstyrelsen register .xlsx (or a directory of them)\n"
+            "into structured JSON. Useful for inspecting upstream deliveries\n"
+            "before build-db. Does not modify the database.\n\n"
+            "Examples:\n"
+            "  regmeta maintain parse-sos input_data/Socialstyrelsen/\n"
+            "  regmeta maintain parse-sos input_data/Socialstyrelsen/PAR.xlsx"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parse_sos_p.add_argument(
+        "path",
+        help="Path to an .xlsx file or a directory containing them.",
     )
 
     build_docs_p = maintain_sub.add_parser(
@@ -828,11 +921,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
-    result = build_db(csv_dir=Path(args.csv_dir), db_dir=db_dir)
+    result = build_db(input_dir=Path(args.input_dir), db_dir=db_dir)
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",
-        args_payload={"csv_dir": args.csv_dir},
+        args_payload={"input_dir": args.input_dir},
         db_info={
             "schema_version": SCHEMA_VERSION,
             "import_date": result["import_date"],
@@ -887,6 +980,64 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         args_payload={"tag": args.tag, "force": args.force},
         db_info=None,
         data=result,
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    import dataclasses
+    from datetime import date
+
+    from .sources.sos import SosParseError, parse_directory, parse_register_file
+
+    start = time.perf_counter()
+    path = Path(args.path).expanduser().resolve()
+
+    try:
+        if path.is_dir():
+            results = parse_directory(path)
+        elif path.is_file():
+            results = [parse_register_file(path)]
+        else:
+            raise RegmetaError(
+                exit_code=EXIT_NOT_FOUND,
+                code="path_not_found",
+                error_class="input",
+                message=f"{path} is neither a file nor a directory",
+                remediation="Pass a .xlsx file or a directory containing them.",
+            )
+    except SosParseError as exc:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="sos_parse_error",
+            error_class="input",
+            message=str(exc),
+            remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
+        ) from exc
+
+    def _to_plain(obj: Any) -> Any:
+        if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
+            return _to_plain(dataclasses.asdict(obj))
+        if isinstance(obj, dict):
+            return {k: _to_plain(v) for k, v in obj.items()}
+        if isinstance(obj, (list, tuple)):
+            return [_to_plain(v) for v in obj]
+        if isinstance(obj, Path):
+            return str(obj)
+        if isinstance(obj, date):
+            return obj.isoformat()
+        return obj
+
+    data = {
+        "registers": [_to_plain(r) for r in results],
+        "register_count": len(results),
+    }
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain parse-sos",
+        args_payload={"path": str(path)},
+        db_info=None,
+        data=data,
         duration_ms=duration_ms,
     ), 0
 
@@ -1355,6 +1506,88 @@ def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.list_all and args.classification:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="--list does not take a positional argument.",
+            remediation="Run `regmeta get classification --list` (no name).",
+        )
+    if not args.list_all and not args.classification:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="Provide a classification short_name or use --list.",
+            remediation="Try `regmeta get classification --list`.",
+        )
+    if args.level is not None and not args.codes:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="--level requires --codes.",
+            remediation="Add --codes to filter the code list by level.",
+        )
+    if args.only_valid and not args.codes:
+        raise RegmetaError(
+            exit_code=EXIT_USAGE,
+            code="usage_error",
+            error_class="usage",
+            message="--only-valid requires --codes.",
+            remediation="Add --codes to filter the code list by validity.",
+        )
+
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    conn = open_db(db)
+    try:
+        info = _db_info(conn)
+        if args.list_all:
+            data: Any = {"classifications": list_classifications(conn)}
+            args_payload: dict[str, Any] = {"list": True}
+        elif args.codes:
+            data = get_classification_codes(
+                conn,
+                args.classification,
+                level=args.level,
+                only_valid=args.only_valid,
+            )
+            args_payload = {"classification": args.classification}
+            if args.level is not None:
+                args_payload["level"] = args.level
+            if args.only_valid:
+                args_payload["only_valid"] = True
+        elif args.variables:
+            variables = search_variables_by_classification(
+                conn,
+                args.classification,
+                limit=args.limit,
+                offset=args.offset,
+            )
+            data = {"variables": variables, "count": len(variables)}
+            args_payload = {
+                "classification": args.classification,
+                "limit": args.limit,
+                "offset": args.offset,
+            }
+        else:
+            data = get_classification(conn, args.classification)
+            args_payload = {"classification": args.classification}
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="get classification",
+        args_payload=args_payload,
+        db_info=info,
+        data=data,
+        duration_ms=duration_ms,
+    ), 0
+
+
 def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
@@ -1790,6 +2023,91 @@ def _write_payload(
         all_gaps = data.get("gaps", [])
         if all_gaps:
             _write_to(f"\nGaps: {', '.join(str(g) for g in all_gaps)}\n", output_path)
+    elif key == ("get", "classification"):
+        if "classifications" in data:
+            rows = [
+                {
+                    "short_name": c.get("short_name", ""),
+                    "name": c.get("name", ""),
+                    "version": c.get("version", ""),
+                    "publisher": c.get("publisher", ""),
+                    "code_count": c.get("code_count", 0),
+                    "supersedes": c.get("supersedes", ""),
+                }
+                for c in data.get("classifications", [])
+            ]
+            _write_formatted(
+                rows,
+                [
+                    "short_name",
+                    "name",
+                    "version",
+                    "publisher",
+                    "code_count",
+                    "supersedes",
+                ],
+                output_path,
+                fmt=fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
+        elif "codes" in data:
+            header = (
+                f"{data.get('short_name', '')} — {data.get('name', '')}\n"
+                f"{data.get('code_count', len(data.get('codes', [])))} codes\n\n"
+            )
+            _write_to(header, output_path)
+            _write_formatted(
+                data.get("codes", []),
+                ["vardekod", "vardebenamning", "level"],
+                output_path,
+                fmt=fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
+        elif "variables" in data:
+            _write_formatted(
+                data.get("variables", []),
+                ["register_id", "register_name", "var_id", "variable_name"],
+                output_path,
+                fmt=fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
+        else:
+            rows = [
+                {
+                    "short_name": data.get("short_name", ""),
+                    "name": data.get("name", ""),
+                    "publisher": data.get("publisher", ""),
+                    "version": data.get("version", ""),
+                    "valid_from": data.get("valid_from", ""),
+                    "valid_to": data.get("valid_to", ""),
+                    "code_count": data.get("code_count", 0),
+                    "supersedes": data.get("supersedes", ""),
+                    "superseded_by": data.get("superseded_by", ""),
+                    "url": data.get("url", ""),
+                }
+            ]
+            _write_formatted(
+                rows,
+                [
+                    "short_name",
+                    "name",
+                    "publisher",
+                    "version",
+                    "valid_from",
+                    "valid_to",
+                    "code_count",
+                    "supersedes",
+                    "superseded_by",
+                    "url",
+                ],
+                output_path,
+                fmt="list" if fmt == "table" else fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
     elif key == ("resolve", None):
         rows = []
         for col in data.get("columns", []):
@@ -1907,6 +2225,12 @@ def _write_payload(
         _write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
     elif key == ("maintain", "build-docs"):
         _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
+    elif key == ("maintain", "parse-sos"):
+        count = data.get("register_count", 0)
+        _write_to(
+            f"Parsed {count} register(s). Use --format json for full detail.\n",
+            output_path,
+        )
     else:
         _write_json(payload, output_path)
 
@@ -1991,8 +2315,10 @@ COMMAND_DISPATCH = {
     ("get", "diff"): _cmd_get_diff,
     ("get", "lineage"): _cmd_get_lineage,
     ("get", "availability"): _cmd_get_availability,
+    ("get", "classification"): _cmd_get_classification,
     ("resolve", None): _cmd_resolve,
     ("maintain", "build-docs"): _cmd_maintain_build_docs,
+    ("maintain", "parse-sos"): _cmd_maintain_parse_sos,
     ("docs", "search"): _cmd_doc_search,
     ("docs", "get"): _cmd_doc_get,
     ("docs", "list"): _cmd_doc_list,
@@ -2070,12 +2396,16 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     ("maintain update [--tag TAG] [--force] [--yes]", "Update package and database."),
     ("maintain info", "Database stats and import metadata."),
     (
-        "maintain build-db --csv-dir DIR",
+        "maintain build-db --input-dir DIR",
         "Build database from SCB CSV exports (maintainer-only).",
     ),
     (
         "maintain build-docs [--docs-dir DIR]",
         "Rebuild the doc DB from markdown (maintainer-only).",
+    ),
+    (
+        "maintain parse-sos PATH",
+        "Parse Socialstyrelsen metadata Excel files; emit JSON (maintainer-only).",
     ),
 ]
 
@@ -2368,6 +2698,25 @@ get availability — When is something available?
   "When is Kön available in LISA specifically?"
     regmeta get availability "Kön" --register LISA
 """,
+    ("get", "classification"): """\
+get classification — Normalized code systems
+────────────────────────────────────────────
+
+  "What classifications exist?"
+    regmeta get classification --list
+
+  "Show metadata for SUN2000"
+    regmeta get classification SUN2000
+
+  "List every code in SUN2000"
+    regmeta get classification SUN2000 --codes
+
+  "Top-level SSYK codes only"
+    regmeta get classification SSYK2012 --codes --level 1
+
+  "Which variables use SUN2020?"
+    regmeta get classification SUN2020 --variables
+""",
     ("docs", "search"): """\
 docs search — Search curated documentation
 ──────────────────────────────────────────
@@ -2426,10 +2775,17 @@ maintain build-db — Build database from raw CSVs
 ─────────────────────────────────────────────────
 
   "Build the database from SCB CSV exports"
-    regmeta maintain build-db --csv-dir /path/to/SCB-data/
+    regmeta maintain build-db --input-dir regmeta/input_data/
 
   Most users should use `maintain update` to download a pre-built
   database instead.
+""",
+    ("maintain", "parse-sos"): """\
+maintain parse-sos — Parse Socialstyrelsen metadata Excel files (maintainer-only)
+
+Examples:
+    regmeta maintain parse-sos regmeta/input_data/Socialstyrelsen/
+    regmeta maintain parse-sos path/to/PAR.xlsx --format json
 """,
     ("maintain", "build-docs"): """\
 maintain build-docs — Rebuild documentation index
@@ -2480,6 +2836,7 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("get", "diff"),
     ("get", "lineage"),
     ("get", "availability"),
+    ("get", "classification"),
     ("docs", "search"),
     ("docs", "get"),
     ("docs", "list"),
@@ -2487,6 +2844,7 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("maintain", "info"),
     ("maintain", "build-db"),
     ("maintain", "build-docs"),
+    ("maintain", "parse-sos"),
 ]
 
 

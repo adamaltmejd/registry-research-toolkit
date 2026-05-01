@@ -1,0 +1,1147 @@
+# Classification seed for regmeta.
+#
+# Each [[classification]] entry declares one normalized code system
+# (SUN2000, SSYK2012, SNI2007, ...) and lists the raw
+# `variable_instance.vardemangdsversion` strings that map to it.
+#
+# Matching is exact string equality against variable_instance rows during
+# `regmeta maintain build-db`. Trailing / leading whitespace is preserved
+# verbatim — SCB's export contains many labels with stray whitespace, and
+# `get values` already exposes the raw string. Keep what you see here.
+#
+# Optional `valid_codes_file` points to a CSV under
+# regmeta/input_data/classifications/ that lists the canonical (officially
+# published) codes for the classification. Each `classification_code` row is
+# then marked `is_valid=1` if its vardekod is in the CSV, else `is_valid=0`.
+# Codes that appear in the CSV but never in observed data are still inserted
+# as canonical-but-unobserved (queryable, no `cvid_value_code` linkage).
+# Without the field, all codes for the classification carry `is_valid=NULL`
+# (validity unknown).
+#
+# Build-time invariants (violations fail the build loudly):
+#   - Every string listed under `vardemangdsversion` must match >= 1 instance
+#   - Every classification must resolve to >= 1 instance
+#   - Every classification must resolve to >= 1 distinct value code
+#   - A given `vardemangdsversion` string may belong to at most one classification
+#   - Every `supersedes` reference must resolve to a declared short_name
+#   - Every `valid_codes_file` must resolve to an existing CSV with header
+#     `vardekod,vardebenamning` and at least one row
+#
+# To enumerate candidates from the live data:
+#   SELECT vardemangdsversion, COUNT(*) FROM variable_instance
+#   WHERE vardemangdsversion IS NOT NULL AND vardemangdsversion != ''
+#   GROUP BY vardemangdsversion ORDER BY 2 DESC;
+#
+# Scope of this seed: well-known SCB classifications. Socialstyrelsen
+# classifications (ICD, KVÅ, ATC, ...) live in a separate branch.
+
+# ---------------------------------------------------------------------------
+# Education — Svensk utbildningsnomenklatur (SUN)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SUN1996"
+name = "Svensk utbildningsnomenklatur 1996"
+name_en = "Swedish Standard Classification of Education 1996"
+publisher = "SCB"
+version = "1996"
+valid_from = 1996
+valid_to = 1999
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+vardemangdsversion = [
+  "SUN 1996",
+  "SUN 1996, 5 positioner, brutto",
+]
+valid_codes_file = "sun1996.csv"
+
+# SUN2000 has three orthogonal dimensions, each with its own code space:
+#   - Utbildningsnivå       → 3-digit numeric education level
+#   - Utbildningsinriktning → 3-digit numeric field of study
+#   - Utbildningsgrupper    → 3-character alphanumeric standardized groups
+# A code like "520" appears in both Nivå ("Övrig eftergymnasial utbildning,
+# 2 år") and Inriktning ("Teknik och teknisk industri, allmän utbildning"),
+# so they must be separate classifications.
+#
+# The supersedes chain runs only on the Nivå axis since SUN1996 was a single
+# combined level+direction system (5-digit codes) and "level" is the most
+# common interpretation.
+
+[[classification]]
+short_name = "SUN2000-NIVA"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2000 — Level"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN1996"
+valid_codes_file = "sun2000-niva.csv"
+vardemangdsversion = [
+  "SUN 2000 - Utbildningsnivå",
+  "Utbildningsnivå (SUN 2000)  ",
+  "SUN2000Niva",
+]
+
+[[classification]]
+short_name = "SUN2000-INRIKTNING"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2000 — Field of Study"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+valid_codes_file = "sun2000-inriktning.csv"
+vardemangdsversion = [
+  "SUN 2000 - Utbildningsinriktning",
+  "SUN2000Inriktning",
+]
+
+[[classification]]
+short_name = "SUN2000-GRUPP"
+name = "Svensk utbildningsnomenklatur 2000 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2000 — Education Groups"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+description = "Standardized education groups (3-character alphanumeric codes like 01Z, 15B, 35J)."
+valid_codes_file = "sun2000-grupp.csv"
+vardemangdsversion = [
+  "SUN 2000 - Gruppering",
+]
+
+[[classification]]
+short_name = "SUN2020-NIVA"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsnivå"
+name_en = "Swedish Standard Classification of Education 2020 — Level"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-NIVA"
+valid_codes_file = "sun2020-niva.csv"
+vardemangdsversion = [
+  "SUN 2020 - Utbildningsnivå",
+]
+
+# Cross-register aggregations of SUN education-level codes. SCB defines two
+# canonical coarsenings used across many registers, with code spaces that are
+# stable across SUN versions (2000 and 2020) and disjoint from the canonical
+# numeric NIVA codes. They are intentionally NOT linked to a specific SUN
+# version (no `supersedes`, no SUN linkage) — they are independent code
+# systems in their own right. Single-register aggregations like
+# "SUN 2000 NivåDet"/"SUN 2020 NivåDet" (mostly UREG only) and
+# "SUN 2000 NivåGymnasial" stay unmapped: queryable via raw vardemangdsversion.
+
+[[classification]]
+short_name = "NIVA-OLD"
+name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
+name_en = "Education level — legacy 7-level aggregation"
+publisher = "SCB"
+description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Stable across SUN 2000 and SUN 2020."
+valid_codes_file = "niva-old.csv"
+vardemangdsversion = [
+  "SUN 2000 NivaOld",
+  "SUN 2020 NivaOld",
+]
+
+[[classification]]
+short_name = "NIVA-GROV"
+name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
+name_en = "Education level — coarse 5-level aggregation"
+publisher = "SCB"
+description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
+valid_codes_file = "niva-grov.csv"
+vardemangdsversion = [
+  "SUN 2000 NivåGrov",
+  "SUN 2020 NivåGrov",
+]
+
+[[classification]]
+short_name = "SUN2020-INRIKTNING"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsinriktning"
+name_en = "Swedish Standard Classification of Education 2020 — Field of Study"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-INRIKTNING"
+valid_codes_file = "sun2020-inriktning.csv"
+vardemangdsversion = [
+  "SUN 2020 - Utbildningsinriktning",
+]
+
+[[classification]]
+short_name = "SUN2020-GRUPP"
+name = "Svensk utbildningsnomenklatur 2020 — Utbildningsgrupper"
+name_en = "Swedish Standard Classification of Education 2020 — Education Groups"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/svensk-utbildningsnomenklatur-sun/"
+supersedes = "SUN2000-GRUPP"
+description = "Standardized education groups, including the more detailed 'Gruppering - Detaljerad' variant."
+valid_codes_file = "sun2020-grupp.csv"
+vardemangdsversion = [
+  "SUN 2020 - Gruppering",
+  "SUN 2020 - Gruppering - Detaljerad",
+]
+
+# ---------------------------------------------------------------------------
+# Occupation — Standard för svensk yrkesklassificering (SSYK)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SSYK96"
+name = "Standard för svensk yrkesklassificering 1996"
+name_en = "Swedish Standard Classification of Occupations 1996"
+publisher = "SCB"
+version = "1996"
+valid_from = 1996
+valid_to = 2013
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+valid_codes_file = "ssyk96.csv"
+vardemangdsversion = [
+  "Standard för svensk yrkesklassificering 1996",
+  "SSYK 96, alternativ",
+  "SSYK 96, AKU Yrkesgrupp",
+  "SSYK 96, AKU Undergrupp",
+  "Yrke (SSYK 1996) 4-siffrig",
+  "SSYK-koder i LINDA",
+]
+
+[[classification]]
+short_name = "SSYK2012"
+name = "Standard för svensk yrkesklassificering 2012"
+name_en = "Swedish Standard Classification of Occupations 2012"
+publisher = "SCB"
+version = "2012"
+valid_from = 2014
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-yrkesklassificering-ssyk/"
+supersedes = "SSYK96"
+valid_codes_file = "ssyk2012.csv"
+vardemangdsversion = [
+  "Standard för svensk yrkesklassificering 2012",
+  "SSYK 2012, 3- och 4-siffernivå",
+  "SSYK 2012, alla nivåer",
+  "SSYK 2012 (4-siffrig)",
+  "SSYK2012_4",
+  "Yrke (SSYK 2012) 4-siffrig ",
+]
+
+# ---------------------------------------------------------------------------
+# Industry — Svensk näringsgrensindelning (SNI)
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SNI69"
+name = "Svensk standard för näringsgrensindelning 1969"
+name_en = "Swedish Standard Industrial Classification 1969"
+publisher = "SCB"
+version = "1969"
+valid_from = 1969
+valid_to = 1991
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+valid_codes_file = "sni69.csv"
+vardemangdsversion = [
+  "Svensk standard för näringsgrensindelning, SNI 69",
+  "SNI 69, AKU",
+  "SNI69_6",
+]
+
+[[classification]]
+short_name = "SNI92"
+name = "Svensk standard för näringsgrensindelning 1992"
+name_en = "Swedish Standard Industrial Classification 1992"
+publisher = "SCB"
+version = "1992"
+valid_from = 1992
+valid_to = 2001
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI69"
+valid_codes_file = "sni92.csv"
+vardemangdsversion = [
+  "Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter",
+  "Svensk standard för näringsgrensindelning, brancher SNI 92",
+  "SNI 92, begränsad nivå",
+  "SNI 92, grov nivå",
+  "SNI, 92, detaljgrupp",
+]
+
+[[classification]]
+short_name = "SNI2002"
+name = "Svensk standard för näringsgrensindelning 2002"
+name_en = "Swedish Standard Industrial Classification 2002"
+publisher = "SCB"
+version = "2002"
+valid_from = 2002
+valid_to = 2007
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI92"
+valid_codes_file = "sni2002.csv"
+vardemangdsversion = [
+  "Standard för svensk näringsgrensindelning, 2002 Branscher",
+  "Standard för svensk näringsgrensindelning, 2002, Aktiviteter",
+  "SNI 2002, grov nivå",
+  "SNI 2002, Aktiviteter, alternativ",
+  "SNI 2002, begränsad nivå",
+]
+
+[[classification]]
+short_name = "SNI2007"
+name = "Svensk standard för näringsgrensindelning 2007"
+name_en = "Swedish Standard Industrial Classification 2007"
+publisher = "SCB"
+version = "2007"
+valid_from = 2008
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-svensk-naringsgrensindelning-sni/"
+supersedes = "SNI2002"
+valid_codes_file = "sni2007.csv"
+vardemangdsversion = [
+  "SNI 2007, Aktiviteter, alternativ",
+  "SNI 2007, Branscher, alternativ",
+  "SNI 2007, Branscher Huvudgrupp, alternativ",
+  "Standard för svensk näringsgrensindelning 2007, Aktiviteter",
+  "Standard för svensk näringsgrensindelning 2007, Branscher",
+  "SNI 2007, grov nivå - \"populärversion\"",
+  "SNI 2007, utökad nivå - \"populärversion\"",
+  "SNI 2007, grov redovisningsnivå",
+  "SNI 2007, utökad redovisningsnivå",
+  "SNI 2007, konjunkturstatistik, variant",
+  "SNI 2007 MIR",
+  "Näringsgrupp SNI2007",
+  "Två-siffrig kod på grov avdelningsnivå, SNI2007",
+  "Branschgruppering enligt SNI2007, som används för redovsning",
+  "BlTyp SNI2007",
+  "NR:s näringsgrensindelning SNI 2007",
+  "NR:s näringsgrensindelning SNI2007",
+  "NR:s näringsgrensindelning SNI 2007, IVP2008",
+]
+
+# ---------------------------------------------------------------------------
+# Geography — Län, kommuner och församlingar (LKF)
+# ---------------------------------------------------------------------------
+# SCB publishes LKF as a yearly snapshot. Codes change across years
+# (Skåne 1997, Västra Götaland 1998, parish mergers ongoing), so each
+# year is its own LKF{year} classification with its own canonical CSV.
+# 1974–2015 codes come from knkodnyckel.xls (kommun + derived län only —
+# no parishes); 2016+ from per-year lkf{year}.xls/.xlsx (full LKF).
+# See scripts/extract_lkf.py and CLASSIFICATIONS.md for details.
+
+[[classification]]
+short_name = "LKF1980"
+name = "Län, kommuner och församlingar 1980"
+name_en = "Counties, municipalities and parishes 1980"
+publisher = "SCB"
+version = "1980"
+valid_from = 1980
+valid_to = 1980
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+valid_codes_file = "lkf1980.csv"
+vardemangdsversion = [
+  'LKF 1980-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1981"
+name = "Län, kommuner och församlingar 1981"
+name_en = "Counties, municipalities and parishes 1981"
+publisher = "SCB"
+version = "1981"
+valid_from = 1981
+valid_to = 1981
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1980"
+valid_codes_file = "lkf1981.csv"
+vardemangdsversion = [
+  'LKF 1981-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1982"
+name = "Län, kommuner och församlingar 1982"
+name_en = "Counties, municipalities and parishes 1982"
+publisher = "SCB"
+version = "1982"
+valid_from = 1982
+valid_to = 1982
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1981"
+valid_codes_file = "lkf1982.csv"
+vardemangdsversion = [
+  'LKF 1982-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1983"
+name = "Län, kommuner och församlingar 1983"
+name_en = "Counties, municipalities and parishes 1983"
+publisher = "SCB"
+version = "1983"
+valid_from = 1983
+valid_to = 1983
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1982"
+valid_codes_file = "lkf1983.csv"
+vardemangdsversion = [
+  'LKF 1983-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1984"
+name = "Län, kommuner och församlingar 1984"
+name_en = "Counties, municipalities and parishes 1984"
+publisher = "SCB"
+version = "1984"
+valid_from = 1984
+valid_to = 1984
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1983"
+valid_codes_file = "lkf1984.csv"
+vardemangdsversion = [
+  'LKF 1984-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1985"
+name = "Län, kommuner och församlingar 1985"
+name_en = "Counties, municipalities and parishes 1985"
+publisher = "SCB"
+version = "1985"
+valid_from = 1985
+valid_to = 1985
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1984"
+valid_codes_file = "lkf1985.csv"
+vardemangdsversion = [
+  'LKF 1985-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1986"
+name = "Län, kommuner och församlingar 1986"
+name_en = "Counties, municipalities and parishes 1986"
+publisher = "SCB"
+version = "1986"
+valid_from = 1986
+valid_to = 1986
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1985"
+valid_codes_file = "lkf1986.csv"
+vardemangdsversion = [
+  'LKF 1986-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1987"
+name = "Län, kommuner och församlingar 1987"
+name_en = "Counties, municipalities and parishes 1987"
+publisher = "SCB"
+version = "1987"
+valid_from = 1987
+valid_to = 1987
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1986"
+valid_codes_file = "lkf1987.csv"
+vardemangdsversion = [
+  'LKF 1987-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1988"
+name = "Län, kommuner och församlingar 1988"
+name_en = "Counties, municipalities and parishes 1988"
+publisher = "SCB"
+version = "1988"
+valid_from = 1988
+valid_to = 1988
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1987"
+valid_codes_file = "lkf1988.csv"
+vardemangdsversion = [
+  'LKF 1988-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1989"
+name = "Län, kommuner och församlingar 1989"
+name_en = "Counties, municipalities and parishes 1989"
+publisher = "SCB"
+version = "1989"
+valid_from = 1989
+valid_to = 1989
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1988"
+valid_codes_file = "lkf1989.csv"
+vardemangdsversion = [
+  'LKF 1989-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1990"
+name = "Län, kommuner och församlingar 1990"
+name_en = "Counties, municipalities and parishes 1990"
+publisher = "SCB"
+version = "1990"
+valid_from = 1990
+valid_to = 1990
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1989"
+valid_codes_file = "lkf1990.csv"
+vardemangdsversion = [
+  'LKF 1990-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1991"
+name = "Län, kommuner och församlingar 1991"
+name_en = "Counties, municipalities and parishes 1991"
+publisher = "SCB"
+version = "1991"
+valid_from = 1991
+valid_to = 1991
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1990"
+valid_codes_file = "lkf1991.csv"
+vardemangdsversion = [
+  'LKF 1991-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1992"
+name = "Län, kommuner och församlingar 1992"
+name_en = "Counties, municipalities and parishes 1992"
+publisher = "SCB"
+version = "1992"
+valid_from = 1992
+valid_to = 1992
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1991"
+valid_codes_file = "lkf1992.csv"
+vardemangdsversion = [
+  'LKF 1992-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1993"
+name = "Län, kommuner och församlingar 1993"
+name_en = "Counties, municipalities and parishes 1993"
+publisher = "SCB"
+version = "1993"
+valid_from = 1993
+valid_to = 1993
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1992"
+valid_codes_file = "lkf1993.csv"
+vardemangdsversion = [
+  'LKF 1993-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1994"
+name = "Län, kommuner och församlingar 1994"
+name_en = "Counties, municipalities and parishes 1994"
+publisher = "SCB"
+version = "1994"
+valid_from = 1994
+valid_to = 1994
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1993"
+valid_codes_file = "lkf1994.csv"
+vardemangdsversion = [
+  'LKF 1994-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1995"
+name = "Län, kommuner och församlingar 1995"
+name_en = "Counties, municipalities and parishes 1995"
+publisher = "SCB"
+version = "1995"
+valid_from = 1995
+valid_to = 1995
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1994"
+valid_codes_file = "lkf1995.csv"
+vardemangdsversion = [
+  'LKF 1995-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1996"
+name = "Län, kommuner och församlingar 1996"
+name_en = "Counties, municipalities and parishes 1996"
+publisher = "SCB"
+version = "1996"
+valid_from = 1996
+valid_to = 1996
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1995"
+valid_codes_file = "lkf1996.csv"
+vardemangdsversion = [
+  'LKF 1996-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1997"
+name = "Län, kommuner och församlingar 1997"
+name_en = "Counties, municipalities and parishes 1997"
+publisher = "SCB"
+version = "1997"
+valid_from = 1997
+valid_to = 1997
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1996"
+valid_codes_file = "lkf1997.csv"
+vardemangdsversion = [
+  'LKF 1997-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1998"
+name = "Län, kommuner och församlingar 1998"
+name_en = "Counties, municipalities and parishes 1998"
+publisher = "SCB"
+version = "1998"
+valid_from = 1998
+valid_to = 1998
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1997"
+valid_codes_file = "lkf1998.csv"
+vardemangdsversion = [
+  'LKF 1998-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF1999"
+name = "Län, kommuner och församlingar 1999"
+name_en = "Counties, municipalities and parishes 1999"
+publisher = "SCB"
+version = "1999"
+valid_from = 1999
+valid_to = 1999
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1998"
+valid_codes_file = "lkf1999.csv"
+vardemangdsversion = [
+  'LKF 1999-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2000"
+name = "Län, kommuner och församlingar 2000"
+name_en = "Counties, municipalities and parishes 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2000
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF1999"
+valid_codes_file = "lkf2000.csv"
+vardemangdsversion = [
+  'LKF 2000-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2001"
+name = "Län, kommuner och församlingar 2001"
+name_en = "Counties, municipalities and parishes 2001"
+publisher = "SCB"
+version = "2001"
+valid_from = 2001
+valid_to = 2001
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2000"
+valid_codes_file = "lkf2001.csv"
+vardemangdsversion = [
+  'LKF 2001-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2002"
+name = "Län, kommuner och församlingar 2002"
+name_en = "Counties, municipalities and parishes 2002"
+publisher = "SCB"
+version = "2002"
+valid_from = 2002
+valid_to = 2002
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2001"
+valid_codes_file = "lkf2002.csv"
+vardemangdsversion = [
+  'LKF 2002-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2003"
+name = "Län, kommuner och församlingar 2003"
+name_en = "Counties, municipalities and parishes 2003"
+publisher = "SCB"
+version = "2003"
+valid_from = 2003
+valid_to = 2003
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2002"
+valid_codes_file = "lkf2003.csv"
+vardemangdsversion = [
+  'LKF 2003-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2004"
+name = "Län, kommuner och församlingar 2004"
+name_en = "Counties, municipalities and parishes 2004"
+publisher = "SCB"
+version = "2004"
+valid_from = 2004
+valid_to = 2004
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2003"
+valid_codes_file = "lkf2004.csv"
+vardemangdsversion = [
+  'LKF 2004-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2005"
+name = "Län, kommuner och församlingar 2005"
+name_en = "Counties, municipalities and parishes 2005"
+publisher = "SCB"
+version = "2005"
+valid_from = 2005
+valid_to = 2005
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2004"
+valid_codes_file = "lkf2005.csv"
+vardemangdsversion = [
+  'LKF 2005-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2006"
+name = "Län, kommuner och församlingar 2006"
+name_en = "Counties, municipalities and parishes 2006"
+publisher = "SCB"
+version = "2006"
+valid_from = 2006
+valid_to = 2006
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2005"
+valid_codes_file = "lkf2006.csv"
+vardemangdsversion = [
+  'LKF 2006-01-01/ Län, kommuner och församlingar',
+  'LKF 2006 med tillägg',
+]
+
+[[classification]]
+short_name = "LKF2007"
+name = "Län, kommuner och församlingar 2007"
+name_en = "Counties, municipalities and parishes 2007"
+publisher = "SCB"
+version = "2007"
+valid_from = 2007
+valid_to = 2007
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2006"
+valid_codes_file = "lkf2007.csv"
+vardemangdsversion = [
+  'LKF 2007-01-01/ Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2008"
+name = "Län, kommuner och församlingar 2008"
+name_en = "Counties, municipalities and parishes 2008"
+publisher = "SCB"
+version = "2008"
+valid_from = 2008
+valid_to = 2008
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2007"
+valid_codes_file = "lkf2008.csv"
+vardemangdsversion = [
+  'LKF 2008-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2009"
+name = "Län, kommuner och församlingar 2009"
+name_en = "Counties, municipalities and parishes 2009"
+publisher = "SCB"
+version = "2009"
+valid_from = 2009
+valid_to = 2009
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2008"
+valid_codes_file = "lkf2009.csv"
+vardemangdsversion = [
+  'LKF 2009-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2010"
+name = "Län, kommuner och församlingar 2010"
+name_en = "Counties, municipalities and parishes 2010"
+publisher = "SCB"
+version = "2010"
+valid_from = 2010
+valid_to = 2010
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2009"
+valid_codes_file = "lkf2010.csv"
+vardemangdsversion = [
+  'LKF 2010-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2011"
+name = "Län, kommuner och församlingar 2011"
+name_en = "Counties, municipalities and parishes 2011"
+publisher = "SCB"
+version = "2011"
+valid_from = 2011
+valid_to = 2011
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2010"
+valid_codes_file = "lkf2011.csv"
+vardemangdsversion = [
+  'LKF 2011-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2012"
+name = "Län, kommuner och församlingar 2012"
+name_en = "Counties, municipalities and parishes 2012"
+publisher = "SCB"
+version = "2012"
+valid_from = 2012
+valid_to = 2012
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2011"
+valid_codes_file = "lkf2012.csv"
+vardemangdsversion = [
+  'LKF 2012-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2013"
+name = "Län, kommuner och församlingar 2013"
+name_en = "Counties, municipalities and parishes 2013"
+publisher = "SCB"
+version = "2013"
+valid_from = 2013
+valid_to = 2013
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2012"
+valid_codes_file = "lkf2013.csv"
+vardemangdsversion = [
+  'LKF 2013-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2014"
+name = "Län, kommuner och församlingar 2014"
+name_en = "Counties, municipalities and parishes 2014"
+publisher = "SCB"
+version = "2014"
+valid_from = 2014
+valid_to = 2014
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2013"
+valid_codes_file = "lkf2014.csv"
+vardemangdsversion = [
+  'LKF 2014-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2015"
+name = "Län, kommuner och församlingar 2015"
+name_en = "Counties, municipalities and parishes 2015"
+publisher = "SCB"
+version = "2015"
+valid_from = 2015
+valid_to = 2015
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2014"
+valid_codes_file = "lkf2015.csv"
+vardemangdsversion = [
+  'LKF 2015-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2016"
+name = "Län, kommuner och församlingar 2016"
+name_en = "Counties, municipalities and parishes 2016"
+publisher = "SCB"
+version = "2016"
+valid_from = 2016
+valid_to = 2016
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2015"
+valid_codes_file = "lkf2016.csv"
+vardemangdsversion = [
+  'LKF 2016-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2017"
+name = "Län, kommuner och församlingar 2017"
+name_en = "Counties, municipalities and parishes 2017"
+publisher = "SCB"
+version = "2017"
+valid_from = 2017
+valid_to = 2017
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2016"
+valid_codes_file = "lkf2017.csv"
+vardemangdsversion = [
+  'LKF 2017-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2018"
+name = "Län, kommuner och församlingar 2018"
+name_en = "Counties, municipalities and parishes 2018"
+publisher = "SCB"
+version = "2018"
+valid_from = 2018
+valid_to = 2018
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2017"
+valid_codes_file = "lkf2018.csv"
+vardemangdsversion = [
+  '2018-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2019"
+name = "Län, kommuner och församlingar 2019"
+name_en = "Counties, municipalities and parishes 2019"
+publisher = "SCB"
+version = "2019"
+valid_from = 2019
+valid_to = 2019
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2018"
+valid_codes_file = "lkf2019.csv"
+vardemangdsversion = [
+  '2019-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2020"
+name = "Län, kommuner och församlingar 2020"
+name_en = "Counties, municipalities and parishes 2020"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+valid_to = 2020
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2019"
+valid_codes_file = "lkf2020.csv"
+vardemangdsversion = [
+  '2020-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2021"
+name = "Län, kommuner och församlingar 2021"
+name_en = "Counties, municipalities and parishes 2021"
+publisher = "SCB"
+version = "2021"
+valid_from = 2021
+valid_to = 2021
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2020"
+valid_codes_file = "lkf2021.csv"
+vardemangdsversion = [
+  '2021-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2022"
+name = "Län, kommuner och församlingar 2022"
+name_en = "Counties, municipalities and parishes 2022"
+publisher = "SCB"
+version = "2022"
+valid_from = 2022
+valid_to = 2022
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2021"
+valid_codes_file = "lkf2022.csv"
+vardemangdsversion = [
+  '2022-01-01/ Län, kommuner och församlingar ',
+]
+
+[[classification]]
+short_name = "LKF2023"
+name = "Län, kommuner och församlingar 2023"
+name_en = "Counties, municipalities and parishes 2023"
+publisher = "SCB"
+version = "2023"
+valid_from = 2023
+valid_to = 2023
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2022"
+valid_codes_file = "lkf2023.csv"
+vardemangdsversion = [
+  '2023-01-01 /Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2024"
+name = "Län, kommuner och församlingar 2024"
+name_en = "Counties, municipalities and parishes 2024"
+publisher = "SCB"
+version = "2024"
+valid_from = 2024
+valid_to = 2024
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2023"
+valid_codes_file = "lkf2024.csv"
+vardemangdsversion = [
+  '2024-01-01 /Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2025"
+name = "Län, kommuner och församlingar 2025"
+name_en = "Counties, municipalities and parishes 2025"
+publisher = "SCB"
+version = "2025"
+valid_from = 2025
+valid_to = 2025
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2024"
+valid_codes_file = "lkf2025.csv"
+vardemangdsversion = [
+  'LKF 2025-01-01 /Län, kommuner och församlingar',
+]
+
+[[classification]]
+short_name = "LKF2026"
+name = "Län, kommuner och församlingar 2026"
+name_en = "Counties, municipalities and parishes 2026"
+publisher = "SCB"
+version = "2026"
+valid_from = 2026
+valid_to = 2026
+url = "https://www.scb.se/hitta-statistik/regional-statistik-och-kartor/regionala-indelningar/lan-och-kommuner/"
+supersedes = "LKF2025"
+valid_codes_file = "lkf2026.csv"
+vardemangdsversion = [
+  'LKF 2026-01-01 /Län, kommuner och församlingar',
+]
+
+# ---------------------------------------------------------------------------
+# Institutional sector — Sektor 2000
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "SEKTOR2000"
+name = "Institutionell sektorindelning 2000"
+name_en = "Standard for Institutional Sector Classification 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+url = "https://www.scb.se/dokumentation/klassifikationer-och-standarder/standard-for-institutionell-sektorindelning-insekt/"
+vardemangdsversion = [
+  "Sektor 2000",
+  "Standard för institutionell sektorindelning 2000",
+]
+valid_codes_file = "sektor2000.csv"
+
+# ---------------------------------------------------------------------------
+# Legal form — Juridisk form
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "JURFORM2000"
+name = "Standard för indelning efter juridisk form 2000"
+name_en = "Swedish Standard Classification by Legal Form 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+vardemangdsversion = [
+  "Standard för indelning efter juridisk form 2000",
+]
+valid_codes_file = "jurform2000.csv"
+
+[[classification]]
+short_name = "JURFORM2020"
+name = "Standard för indelning efter juridisk form 2020"
+name_en = "Swedish Standard Classification by Legal Form 2020"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+supersedes = "JURFORM2000"
+vardemangdsversion = [
+  "Standard för indelning efter juridisk form 2020",
+]
+valid_codes_file = "jurform2020.csv"
+
+# ---------------------------------------------------------------------------
+# Owner category — Ägarkategori
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "AGARKAT2000"
+name = "Standard för indelning efter ägarkategori 2000"
+name_en = "Swedish Standard Classification by Owner Category 2000"
+publisher = "SCB"
+version = "2000"
+valid_from = 2000
+valid_to = 2019
+vardemangdsversion = [
+  "Standard för indelning efter ägarkategori 2000",
+]
+valid_codes_file = "agarkat2000.csv"
+
+[[classification]]
+short_name = "AGARKAT2020"
+name = "Standard för indelning efter ägarkategori 2020"
+name_en = "Swedish Standard Classification by Owner Category 2020"
+publisher = "SCB"
+version = "2020"
+valid_from = 2020
+supersedes = "AGARKAT2000"
+vardemangdsversion = [
+  "Standard för indelning efter ägarkategori 2020",
+]
+valid_codes_file = "agarkat2020.csv"
+
+# ---------------------------------------------------------------------------
+# International — ISCED
+# ---------------------------------------------------------------------------
+
+[[classification]]
+short_name = "ISCED2011"
+name = "International Standard Classification of Education 2011 — Level"
+name_en = "International Standard Classification of Education 2011 — Level"
+publisher = "UNESCO"
+version = "2011"
+valid_from = 2011
+url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
+vardemangdsversion = [
+  "ISCED 2011 - Nivå",
+  "ISCED 2011 AES",
+]
+valid_codes_file = "isced2011.csv"
+
+[[classification]]
+short_name = "ISCED-F2013"
+name = "ISCED Fields of Education and Training 2013"
+name_en = "ISCED Fields of Education and Training 2013"
+publisher = "UNESCO"
+version = "2013"
+valid_from = 2013
+url = "https://uis.unesco.org/en/topic/international-standard-classification-education-isced"
+vardemangdsversion = [
+  "ISCED-F 2013 - Inriktning",
+  "ISCED F 2013 ",
+]
+valid_codes_file = "isced-f2013.csv"

@@ -1,0 +1,52 @@
+vardekod,vardebenamning
+000,Övrig och ospecificerad förskoleutbildning
+001,Förskola
+002,Förskoleklass
+100,Övrig och ospecificerad förgymnasial utbildning kortare än 9 år
+102,"Grundskoleutbildning, årskurs 1-6"
+106,Folkskoleutbildning
+200,"Övrig och ospecificerad förgymnasial utbildning, 9 (10) år"
+204,Realskoleutbildning
+206,"Grundskoleutbildning, årskurs 7-9"
+310,"Övrig och ospecificerad gymnasial utbildning, kortare än två år"
+312,"Gymnasial utbildning kortare än två år, teoretisk och studieförberedande, ej slutbetyg"
+313,"Gymnasial utbildning kortare än två år, yrkesinriktad, ej slutbetyg"
+316,"Gymnasial utbildning kortare än två år, teoretisk och studieförberedande"
+317,"Gymnasial utbildning kortare än två år, yrkesinriktad "
+320,"Övrig och ospecificerad gymnasial utbildning, två år"
+322,"Gymnasial utbildning två år, teoretisk och studieförberedande, ej slutbetyg"
+323,"Gymnasial utbildning två år, yrkesinriktad, ej slutbetyg"
+326,"Gymnasial utbildning två år, teoretisk och studieförberedande"
+327,"Gymnasial utbildning två år, yrkesinriktad "
+330,"Övrig och ospecificerad gymnasial utbildning, tre år"
+332,"Gymnasial utbildning tre år, teoretisk och studieförberedande, ej slutbetyg"
+333,"Gymnasial utbildning tre år, yrkesinriktad, ej slutbetyg"
+336,"Gymnasial utbildning tre år, teoretisk och studieförberedande"
+337,"Gymnasial utbildning tre år, yrkesinriktad "
+410,"Övrig och ospecificerad eftergymnasial utbildning, kortare än två år"
+412,"Högskoleutbildning, 20 poäng eller 30 högskolepoäng, ej examen"
+413,Gymnasial påbyggnadsutbildning
+415,"Eftergymnasial utbildning kortare än två år, ej universitet/högskola"
+417,"Högskoleutbildning kortare än två år, yrkesinriktad"
+520,"Övrig och ospecificerad eftergymnasial utbildning, två år"
+522,"Högskoleutbildning, 80 poäng eller 120 högskolepoäng, ej examen"
+525,"Eftergymnasial utbildning två år, ej universitet/högskola"
+526,"Högskoleutbildning två år, generell"
+527,"Högskoleutbildning två år, yrkesinriktad"
+530,"Övrig och ospecificerad eftergymnasial utbildning, tre år"
+532,"Högskoleutbildning, 120 poäng eller 180 högskolepoäng, ej examen"
+535,"Eftergymnasial utbildning tre år, ej universitet/högskola"
+536,"Högskoleutbildning tre år, generell"
+537,"Högskoleutbildning tre år, yrkesinriktad"
+540,"Övrig och ospecificerad eftergymnasial utbildning, fyra år"
+545,"Eftergymnasial utbildning fyra år, ej universitet/högskola"
+546,"Högskoleutbildning fyra år, generell"
+547,"Högskoleutbildning fyra år, yrkesinriktad"
+550,"Övrig och ospecificerad eftergymnasial utbildning, fem år eller längre"
+555,"Eftergymnasial utbildning, fem år eller längre, ej universitet/högskola"
+556,"Högskoleutbildning fem år eller längre, generell"
+557,"Högskoleutbildning fem år eller längre, yrkesinriktad"
+600,Övrig och ospecificerad forskarutbildning
+620,Licentiatutbildning
+640,Doktorsutbildning
+999,Okänd

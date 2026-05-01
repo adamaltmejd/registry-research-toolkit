@@ -1,0 +1,503 @@
+vardekod,vardebenamning
+0,Allmän utbildning
+01,"Bred, generell utbildning"
+010,"Bred, generell utbildning"
+010a,"Bred, generell utbildning, allmän inriktning"
+010b,"Bred, generell utbildning, samhällsvetenskaplig och humanistisk inriktning"
+010c,"Bred, generell utbildning, naturvetenskaplig inriktning"
+010x,"Bred, generell utbildning, annan inriktning"
+08,Läs- och skrivinlärning för vuxna
+080,Läs- och skrivinlärning för vuxna
+080z,Läs- och skrivinlärning för vuxna
+09,Personlig utveckling
+090,Personlig utveckling
+090z,Personlig utveckling
+1,Pedagogik och lärarutbildning
+14,Pedagogik och lärarutbildning
+140,"Pedagogik och lärarutbildning, allmän utbildning"
+140z,"Pedagogik och lärarutbildning, allmän utbildning"
+142,Pedagogik
+142z,Pedagogik
+143,Lärarutbildning för förskola och fritidsverksamhet
+143a,"Lärarutbildning, inriktning förskola"
+143b,"Lärarutbildning, inriktning fritidsverksamhet"
+143x,Annan lärarutbildning för förskola och fritidsverksamhet
+144,Lärarutbildning för grundskolans lägre åldrar
+144a,"Lärarutbildning, grundskolans lägre åldrar, allmän ämnesinriktning"
+144b,"Lärarutbildning, grundskolans lägre åldrar, matematik och naturorienterande ämnen"
+144c,"Lärarutbildning, grundskolans lägre åldrar, svenska och samhällsorienterade ämnen"
+144x,Annan lärarutbildning för grundskolans lägre åldrar
+145,Ämneslärarutbildning
+145a,"Ämneslärarutbildning, matematik, data och naturvetenskap"
+145b,"Ämneslärarutbildning, historia, samhällsvetenskap och ekonomi"
+145c,"Ämneslärarutbildning, språk "
+145d,"Ämneslärarutbildning, matematik, data, och naturvetenskap i kombination med historia, samhällsvetenskap och ekonomi "
+145e,"Ämneslärarutbildning, matematik, data, och naturvetenskap i kombination med språk"
+145f,"Ämneslärarutbildning, historia, samhällsvetenskap och ekonomi i kombination med språk"
+145g,"Ämneslärarutbildning, matematik, data och naturvetenskap i kombination praktisk-estetiska ämnen "
+145h,"Ämneslärarutbildning, historia, samhällsvetenskap och ekonomi i kombination med praktisk-estetiska ämnen "
+145i,"Ämneslärarutbildning, språk, i kombination med praktisk-estetiska ämnen "
+145x,Annan ämneslärarutbildning
+146,Lärarutbildning i yrkesämne och praktisk-estetiska ämnen
+146a,"Lärarutbildning, industri och hantverk"
+146b,"Lärarutbildning, handel och administration"
+146c,"Lärarutbildning, hotell och restaurang"
+146d,"Lärarutbildning, livsmedel och konditori"
+146e,"Lärarutbildning, naturbruk"
+146f,"Lärarutbildning, vård och omsorg"
+146g,"Lärarutbildning, medieproduktion"
+146h,"Lärarutbildning, musik"
+146i,"Lärarutbildning, bild och formkonst"
+146j,"Lärarutbildning, dans och teater"
+146k,"Lärarutbildning, trä- och metallslöjd samt textilslöjd"
+146l,"Lärarutbildning, idrott och hälsa"
+146m,"Lärarutbildning, hushållsvetenskap"
+146x,Lärarutbildning i annat yrkesämne och praktisk-estetiska ämnen
+149,"Pedagogik och lärarutbildning, övrig och ospecificerad utbildning"
+149a,Specialpedagogutbildning
+149b,Hemspråks- och modersmålslärarutbildning
+149c,Skolledarutbildning
+149x,Annan utbildning inom pedagogik och lärarutbildning
+2,Humaniora och konst
+21,Konst och media
+210,"Konst och media, allmän utbildning"
+210z,"Konst och media, allmän utbildning"
+211,Bild- och formkonst
+211a,Bild- och formkonstnärlig utbildning
+211b,Konstvetenskap och konsthistoria
+211x,Annan utbildning inom bild- och formkonst
+212,"Musik, dans och dramatik"
+212a,Musik
+212b,"Dans, teater och dramatik"
+212c,"Musik-, dans-, film- och teatervetenskap samt -historia"
+212x,"Annan utbildning inom musik, dans och dramatik"
+213,Medieproduktion
+213a,"Medieproduktion, allmän utbildning"
+213b,"Film-, radio- och TV-produktion"
+213c,Grafisk teknik och bokbinderi
+213d,"Illustration, reklam, grafisk formgivning och foto"
+213x,Annan utbildning inom medieproduktion
+214,Formgivning
+214a,Modedesign
+214b,Inredningsdesign
+214c,Industri- och produktdesign
+214x,Annan utbildning inom formgivning
+215,Konsthantverk
+215z,Konsthantverk
+219,"Konst och media, övrig och ospecificerad utbildning"
+219z,"Konst och media, övrig och ospecificerad utbildning"
+22,Humaniora
+220,"Humaniora, allmän utbildning"
+220z,"Humaniora, allmän utbildning"
+221,Religion
+221a,Teologie kandidatutbildning och motsvarande
+221b,"Pastors-, missionärs- och diakonutbildning"
+221x,Annan utbildning i religion
+222,Främmande språk och språkvetenskap
+222a,Allmän språkkunskap och allmänt språkliga utbildningar
+222b,Engelska
+222c,Tyska
+222d,Franska
+222e,Spanska
+222f,Ryska
+222g,Svenska som främmande språk
+222x,Annan utbildning i främmande språk
+223,Svenska och litteraturvetenskap
+223a,Svenska och nordiska språk
+223b,Andra modersmål och teckenspråk
+223c,Litteraturvetenskap och litteraturhistoria
+223x,Annan utbildning i svenska och litteraturvetenskap
+225,Historia och arkeologi
+225a,Historia
+225b,Arkeologi
+225c,"Kulturvård, kulturadministration och museivetenskap"
+225x,Annan utbildning inom historia och arkeologi
+226,Filosofi och logik
+226z,Filosofi och logik
+229,"Humaniora, övrig och ospecificerad utbildning"
+229z,"Humaniora, övrig och ospecificerad utbildning"
+3,"Samhällsvetenskap, juridik, handel, administration"
+31,Samhälls- och beteendevetenskap
+310,"Samhälls- och beteendevetenskap, allmän utbildning"
+310a,"Beteendevetenskap, allmän utbildning"
+310b,"Samhällsvetenskap, allmän utbildning"
+310x,Annan bred utbildning i samhälls- och beteendevetenskap
+311,Psykologi
+311a,Psykologutbildning
+311b,"Psykologutbildning, inklusive fullgjord praktiktjänstgöring (PTP)"
+311c,Psykoterapeututbildning
+311x,Annan utbildning i psykologi
+312,"Sociologi, etnologi och kulturgeografi"
+312a,Sociologi
+312b,Socialantropologi och etnologi
+312c,Kultur- och samhällsgeografi
+312x,"Annan utbildning i sociologi, etnologi och kulturgeografi"
+313,Statsvetenskap
+313z,Statsvetenskap
+314,Nationalekonomi och ekonomisk historia
+314z,Nationalekonomi och ekonomisk historia
+319,"Samhälls- och beteendevetenskap, övrig och ospecificerad utbildning"
+319z,"Samhälls- och beteendevetenskap, övrig och ospecificerad utbildning"
+32,Journalistik och information
+320,"Journalistik och information, allmän utbildning"
+320z,"Journalistik och information, allmän utbildning"
+321,Journalistik och medievetenskap
+321a,Journalistik
+321b,Medie- och kommunikationsvetenskap
+321x,Annan utbildning i journalistik och medievetenskap
+322,Biblioteks- och dokumentationsvetenskap
+322a,Bibliotekarieutbildning samt biblioteks- och informationsvetenskap
+322b,Dokumentations- och informationsvetenskap
+322x,Annan utbildning i biblioteks- och dokumentationsvetenskap
+329,"Journalistik och information, övrig och ospecificerad utbildning"
+329z,"Journalistik och information, övrig och ospecificerad utbildning"
+34,"Företagsekonomi, handel och administration"
+340,"Företagsekonomi, handel och administration, allmän utbildning"
+340a,Ekonomutbildning och företagsekonomi
+340b,Handel och administration
+340x,"Annan bred utbildning i företagsekonomi, handel och administration"
+341,"Inköp, försäljning och distribution"
+341z,"Inköp, försäljning och distribution"
+342,Marknadsföring
+342z,Marknadsföring
+343,"Bank, försäkring och finansiering"
+343z,"Bank, försäkring och finansiering"
+344,Redovisning och beskattning
+344z,Redovisning och beskattning
+345,Ledning och administration
+345a,"Ledarskap, organisation och styrning"
+345b,Administration och förvaltning
+345c,Personaladministration
+345x,Annan utbildning i ledning och administration
+346,Kontorsservice och sekreterartjänster
+346a,Läkarsekreterarutbildning
+346x,Annan utbildning i kontorsservice och sekreterartjänster
+347,Arbetsplatsrelaterad utbildning
+347z,Arbetsplatsrelaterad utbildning
+349,"Företagsekonomi, handel, administration, övrig och ospecificerad utbildning"
+349z,"Företagsekonomi, handel, administration, övrig och ospecificerad utbildning"
+38,Juridik och rättsvetenskap
+380,Juridik och rättsvetenskap
+380a,Juristutbildning (juris kand och motsvarande)
+380b,Juristutbildning inklusive fullgjord tingsmeritering
+380x,Annan utbildning i juridik och rättsvetenskap
+4,"Naturvetenskap, matematik och data"
+42,Biologi och miljövetenskap
+420,"Biologi och miljövetenskap, allmän utbildning"
+420z,"Biologi och miljövetenskap, allmän utbildning"
+421,Biologi och biokemi
+421a,Biologi
+421b,"Biokemi, toxikologi, farmakologi och nutrition"
+421x,Annan utbildning i biologi och biokemi
+422,Miljövetenskap
+422z,Miljövetenskap
+429,"Biologi och miljövetenskap, övrig och ospecificerad utbildning"
+429z,"Biologi och miljövetenskap, övrig och ospecificerad utbildning"
+44,"Fysik, kemi och geovetenskap"
+440,"Fysik, kemi och geovetenskap, allmän utbildning"
+440z,"Fysik, kemi och geovetenskap, allmän utbildning"
+441,Fysik
+441z,Fysik
+442,Kemi
+442z,Kemi
+443,Geovetenskap och naturgeografi
+443z,Geovetenskap och naturgeografi
+449,"Fysik, kemi och geovetenskap, övrig och ospecificerad utbildning"
+449z,"Fysik, kemi och geovetenskap, övrig och ospecificerad utbildning"
+46,Matematik och övrig naturvetenskap
+460,"Matematik och naturvetenskap, allmän utbildning"
+460z,"Matematik och naturvetenskap, allmän utbildning"
+461,Matematik
+461z,Matematik
+462,Statistik
+462z,Statistik
+469,"Matematik och naturvetenskap, övrig och ospecificerad utbildning"
+469z,"Matematik och naturvetenskap, övrig och ospecificerad utbildning"
+48,Data
+480,"Data, allmän utbildning"
+480z,"Data, allmän utbildning"
+481,"Informatik, datavetenskap och systemvetenskap"
+481a,Systemvetenskap och programvaruteknik
+481b,Datavetenskap och datalogi
+481x,Annan utbildning inom datavetenskap och systemvetenskap
+482,Datoranvändning
+482z,Datoranvändning
+489,"Data, övrig och ospecificerad utbildning"
+489z,"Data, övrig och ospecificerad utbildning "
+5,Teknik och tillverkning
+52,Teknik och teknisk industri
+520,"Teknik och teknisk industri, allmän utbildning"
+520a,"Civilingenjörsutbildning, generell teknik och teknisk fysik"
+520b,"Ingenjörsutbildning, generell teknik och teknisk fysik"
+520x,Annan bred utbildning i teknik och teknisk industri
+521,Maskinteknik och verkstadsteknik
+521a,"Civilingenjörsutbildning, inriktning maskinteknik"
+521b,"Ingenjörsutbildning, inriktning maskinteknik"
+521c,Industri och verkstadsteknik
+521x,Annan utbildning i maskinteknik och verkstadsteknik
+522,Energi- och elektroteknik
+522a,"Civilingenjörsutbildning, inriktning energi- och elektroteknik"
+522b,"Ingenjörsutbildning, inriktning energi- och elektroteknik"
+522c,Elektrisk installation och elmekanik
+522d,"Energi, drift och underhåll"
+522x,Annan utbildning i energi- och elektroteknik
+523,"Elektronik, datateknik och automation"
+523a,"Civilingenjörsutbildning, inriktning elektronik, datateknik och automation"
+523b,"Ingenjörsutbildning, inriktning elektronik, datateknik och automation"
+523c,"Elektronik-, tele- och datatekniskt arbete"
+523d,"Automation, styr- och reglerteknik"
+523x,"Annan utbildning i elektronik, datateknik och automation "
+524,Kemi- och bioteknik
+524a,"Civilingenjörsutbildning, inriktning kemi- och bioteknik"
+524b,"Ingenjörsutbildning, inriktning kemi- och bioteknik"
+524c,Laboratorieteknik
+524d,Processindustriteknik
+524x,Annan utbildning i kemi- och bioteknik
+525,Fordons- och farkostteknik
+525a,"Civilingenjörsutbildning, inriktning fordons- och farkostteknik"
+525b,"Ingenjörsutbildning, inriktning fordons- och farkostteknik"
+525c,Fordonsteknik
+525d,Fartygs- och flygteknik
+525x,Annan utbildning i fordons- och farkostteknik
+526,Industriell ekonomi och organisation
+526a,"Civilingenjörsutbildning, inriktning industriell ekonomi och organisation"
+526b,"Ingenjörsutbildning, inriktning industriell ekonomi och organisation"
+526x,Annan utbildning i industriell ekonomi och organisation
+529,"Teknik och teknisk industri, övrig och ospecificerad utbildning"
+529a,"Civilingenjörsutbildning, övrig och ospecificerad utbildning"
+529b,"Ingenjörsutbildning, övrig och ospecificerad utbildning"
+529x,Annan utbildning inom teknik och teknisk industri
+54,Material och tillverkning
+540,"Material och tillverkning, allmän utbildning"
+540a,"Civilingenjörsutbildning, inriktning materialteknik"
+540b,"Ingenjörsutbildning, inriktning materialteknik"
+540x,Annan bred utbildning i material och tillverkning
+541,Tillverkning och hantering av livsmedel
+541a,"Civilingenjörsutbildning, inriktning livsmedel"
+541b,"Ingenjörsutbildning, inriktning livsmedel"
+541c,"Tillverkning och hantering av livsmedel, allmän utbildning"
+541d,Kött och charkuteri
+541e,Bageri och konditori
+541x,Annan utbildning i tillverkning och hantering av livsmedel
+542,"Tillverkning av textilier, konfektion och lädervaror"
+542a,"Civilingenjörsutbildning, inriktning textilteknologi"
+542b,"Ingenjörsutbildning, inriktning textilteknologi"
+542c,Tillverkning av textilier och konfektion
+542d,Sko- och läderarbete
+542x,"Annan utbildning inom textilier, konfektion och läder"
+543,"Tillverkning av trä-, pappers-, glas-, porslin- och plastprodukter"
+543a,"Civilingenjörsutbildning, inriktning trä, papper, glas, porslin och plast "
+543b,"Ingenjörsutbildning, inriktning trä, papper, glas, porslin och plast"
+543c,Trätekniskt arbete
+543d,Pappersmassa- och papperstillverkning
+543e,Glas- och porslinstillverkning
+543f,Tillverkning av plast- och gummiprodukter
+543x,Annan utbildning i tillverkning i specifikt material
+544,Berg- och mineralteknik
+544a,"Civilingenjörsutbildning, inriktning berg- och mineralteknik"
+544b,"Ingenjörsutbildning, inriktning berg- och mineralteknik"
+544c,Gruv- och järnbruksarbete
+544x,Annan utbildning inom berg- och mineralteknik
+549,"Material och tillverkning, övrig och ospecificerad utbildning"
+549z,"Material och tillverkning, övrig och ospecificerad utbildning"
+58,Samhällsbyggnad och byggnadsteknik
+580,"Samhällsbyggnad och byggnadsteknik, allmän utbildning"
+580a,"Civilingenjörsutbildning, bred inriktning mot byggande, bl.a. lantmäteri "
+580b,"Ingenjörsutbildning, bred inriktning mot byggande, bl.a. lantmäteri"
+580x,Annan bred utbildning inom samhällsbyggnad och byggnadsteknik
+581,Samhällsbyggnad och arkitektur
+581a,"Civilingenjörsutbildning, inriktning samhällsbyggnad och samhällsmiljö"
+581b,"Ingenjörsutbildning, inriktning samhällsbyggnad och samhällsmiljö"
+581c,Arkitektutbildning
+581d,Landskapsarkitekts- och landskapsingenjörsutbildning
+581x,Annan utbildning inom samhällsbyggnad och arkitektur
+582,Byggnadsteknik och anläggningsteknik
+582a,"Civilingenjörsutbildning, inriktning byggnadsteknik"
+582b,"Ingenjörsutbildning, inriktning byggnadsteknik"
+582c,"Byggnadsarbete, allmän utbildning"
+582d,Byggnadssnickeri
+582e,Måleri
+582f,VVS-utbildning
+582g,"Betong-, anläggnings- och vägarbete"
+582h,Murarutbildning
+582i,Plåtslageri
+582x,Annan utbildning inom byggnads- och anläggningsteknik
+589,"Samhällsbyggnad och byggnadsteknik, övrig och ospecificerad utbildning"
+589z,"Samhällsbyggnad och byggnadsteknik, övrig och ospecificerad utbildning"
+6,Lant- och skogsbruk samt djursjukvård
+62,"Lantbruk, trädgård, skog och fiske"
+620,"Lantbruk, trädgård, skog och fiske, allmän utbildning"
+620z,"Lantbruk, trädgård, skog och fiske, allmän utbildning"
+621,Lantbruk
+621a,Agronomutbildning
+621b,Lantmästarutbildning
+621c,"Utbildning i lantbruk, allmän"
+621d,Utbildning i jordbruk och växtodling
+621e,Utbildning i djurhållning
+621f,Utbildning i hästhållning och hippologutbildning
+621g,Utbildning i djurvård
+621x,Annan utbildning inom lantbruk
+622,Trädgård
+622a,Hortonomutbildning
+622b,Trädgårdsingenjörs- och trädgårdsteknikerutbildning
+622c,Utbildning i trädgårdsbruk
+622x,Annan utbildning inom trädgård
+623,Skog
+623a,Jägmästar- och skogsvetarutbildning
+623b,"Skogsmästar-, skogstekniker- och skogsingenjörsutbildning"
+623c,Utbildning i skogsbruk
+623x,Annan utbildning inom skog
+624,Fiske och vattenbruk
+624z,Fiske och vattenbruk
+629,"Lantbruk, trädgård, skog och fiske, övrig och ospecificerad utbildning"
+629z,"Lantbruk, trädgård, skog och fiske, övrig och ospecificerad utbildning"
+64,Djursjukvård
+640,Djursjukvård
+640a,Veterinärutbildning
+640x,Annan utbildning inom djursjukvård
+7,Hälso- och sjukvård samt social omsorg
+72,Hälso- och sjukvård
+720,"Hälso- och sjukvård, allmän utbildning"
+720z,"Hälso- och sjukvård, allmän utbildning"
+721,Medicin
+721a,Läkarutbildning
+721b,"Läkarutbildning, inklusive fullgjord allmäntjänstgöring (AT)"
+721c,"Läkarutbildning, specialistkompetens inom kirurgi, anestesi- och intensivvård"
+721d,"Läkarutbildning, specialistkompetens inom invärtes medicin"
+721e,"Läkarutbildning, specialistkompetens inom barnmedicin"
+721f,"Läkarutbildning, specialistkompetens inom geriatrik "
+721g,"Läkarutbildning, specialistkompetens inom allmänmedicin"
+721h,"Läkarutbildning, specialistkompetens inom psykiatri"
+721i,"Läkarutbildning, specialistkompetens inom radiologi"
+721j,"Läkarutbildning, kliniska laboratoriespecialiteter"
+721k,"Läkarutbildning, annan specialistkompetens"
+721x,Annan utbildning inom medicin
+723,Omvårdnad
+723a,"Sjuksköterskeutbildning, grundutbildning "
+723b,"Sjuksköterskeutbildning, allmän hälso- och sjukvård "
+723c,"Sjuksköterskeutbildning, anestesi, intensivvård, akut, olycksfall, operation"
+723d,"Sjuksköterskeutbildning, barn och ungdom"
+723e,"Sjuksköterskeutbildning, geriatrisk vård"
+723f,"Sjuksköterskeutbildning, psykiatrisk vård "
+723g,"Sjuksköterskeutbildning, distriktssköterskeverksamhet"
+723h,"Sjuksköterskeutbildning, barnmorskeverksamhet "
+723i,"Sjuksköterskeutbildning, diagnostisk radiologi och onkologi"
+723j,"Sjuksköterskeutbildning, annan specialisering"
+723m,"Annan omvårdnadsutbildning, allmän vård och omsorg"
+723n,"Annan omvårdnadsutbildning, inriktning mot sjukvård"
+723o,"Annan omvårdnadsutbildning, inriktning mot psykiatrisk vård"
+723p,"Annan omvårdnadsutbildning, inriktning mot äldreomsorg"
+723q,"Annan omvårdnadsutbildning, inriktning mot psykiskt utvecklingsstörda"
+723r,"Annan omvårdnadsutbildning, inriktning mot funktionshindrade"
+723s,"Annan omvårdnadsutbildning, övriga inriktningar"
+723x,Annan utbildning inom omvårdnad
+724,Tandvård
+724a,Tandläkarutbildning
+724b,"Tandläkarutbildning, inklusive specialisering"
+724c,Tandhygienistutbildning
+724d,Tandsköterskeutbildning
+724e,Tandteknikerutbildning
+724x,Annan utbildning inom tandvård
+725,Tekniskt inriktad vårdutbildning
+725a,Optikerutbildning
+725b,Audionomutbildning
+725c,Ortopedingenjörsutbildning
+725d,Biomedicinsk analytikerutbildning
+725e,Sjukhusfysikerutbildning
+725f,Röntgensjuksköterskeutbildning
+725x,Annan tekniskt inriktad vårdutbildning
+726,"Terapi, rehabilitering och kostbehandling"
+726a,Sjukgymnastutbildning
+726b,Arbetsterapeututbildning
+726c,Logopedutbildning
+726d,Dietistutbildning
+726x,"Annan utbildning inom terapi, rehabilitering och kostbehandling"
+727,Farmaci
+727a,Apotekarutbildning
+727b,Receptarieutbildning
+727x,Annan utbildning inom farmaci
+729,"Hälso- och sjukvård, övrig och ospecificerad utbildning"
+729z,"Hälso- och sjukvård, övrig och ospecificerad utbildning"
+76,"Socialt arbete, omsorg och vägledning"
+760,"Socialt arbete och omsorg, allmän utbildning"
+760z,"Socialt arbete och omsorg, allmän utbildning"
+761,Barn och ungdom
+761a,"Barn och ungdom, allmän utbildning"
+761b,Barnomsorg
+761c,Fritidsverksamhet för barn och ungdom
+761x,Annan utbildning inom barn och ungdom
+762,Socialt arbete och vägledning
+762a,"Social service och omsorg, allmän utbildning"
+762b,"Social omsorgsutbildning, äldre och handikappade"
+762c,"Social omsorgsutbildning, socialpedagogisk behandling"
+762d,Socionomutbildning
+762e,"Socionomutbildning, äldre och handikappade"
+762f,"Socionomutbildning, socialpedagogisk behandling"
+762g,Studie- och yrkesvägledarutbildning
+762x,Annan utbildning inom socialt arbete och vägledning
+769,"Socialt arbete och omsorg, övrig och ospecificerad utbildning"
+769z,"Socialt arbete och omsorg, övrig och ospecificerad utbildning"
+8,Tjänster
+81,Personliga tjänster
+810,"Personliga tjänster, allmän utbildning"
+810z,"Personliga tjänster, allmän utbildning"
+811,"Hotell, restaurang och storhushåll"
+811a,"Hotell, restaurang och storhushåll, allmän utbildning"
+811b,Utbildning för hotell
+811c,Utbildning för restaurang
+811d,Utbildning för storhushåll
+811x,"Annan utbildning inom hotell, restaurang och storhushåll"
+812,"Turism, resor och fritid"
+812z,"Turism, resor och fritid"
+813,Idrott och friskvård
+813z,Idrott och friskvård
+814,Hushållstjänster och lokalvård
+814a,"Hem- och hushållsvetenskap, allmän utbildning"
+814b,Utbildning för lokalvård
+814x,Annan utbildning inom hushållstjänster och lokalvård
+815,Hår- och skönhetsvård
+815a,Utbildning för hårvård
+815x,Annan utbildning inom hår- och skönhetsvård
+819,"Personliga tjänster, övrig och ospecificerad utbildning"
+819z,"Personliga tjänster, övrig och ospecificerad utbildning"
+84,Transporttjänster
+840,Transporttjänster
+840a,"Transporttjänster, allmän utbildning"
+840b,Utbildning för landtransporter
+840c,Utbildning för sjöfart
+840d,Utbildning för luftfart
+840e,Utbildning för postservice
+840x,Annan utbildning inom transporttjänster
+85,Miljövård och miljöskydd
+850,"Miljövård och miljöskydd, allmän utbildning"
+850z,"Miljövård och miljöskydd, allmän utbildning"
+851,Miljövårdsteknik och miljökontroll
+851z,Miljövårdsteknik och miljökontroll
+852,Naturvård och djurskydd
+852z,Naturvård och djurskydd
+853,Renhållning och avfallshantering
+853z,Renhållning och avfallshantering
+859,"Miljövård och miljöskydd, övrig och ospecificerad utbildning"
+859z,"Miljövård och miljöskydd, övrig och ospecificerad utbildning"
+86,Säkerhetstjänster
+860,"Säkerhetstjänster, allmän utbildning"
+860z,"Säkerhetstjänster, allmän utbildning"
+861,Säkerhet i samhället
+861a,Polisutbildning
+861b,Utbildning för brandskydd och annan räddningstjänst
+861c,Civilförsvarsutbildning
+861x,Annan utbildning inom säkerhet i samhället
+862,Arbetsmiljö och arbetarskydd
+862z,Arbetsmiljö och arbetarskydd
+863,Militär utbildning
+863a,Yrkesofficersutbildning
+863b,Reservofficersutbildning
+863c,Taktisk utbildning för militärer
+863d,Fackutbildning för militärer
+863e,Stabsutbildning för militärer
+863f,Högre chefsutbildning för militärer
+863x,Annan militär utbildning
+869,"Säkerhetstjänster, övrig och ospecificerad utbildning"
+869z,"Säkerhetstjänster, övrig och ospecificerad utbildning"
+999,Okänd
+999z,Okänd
