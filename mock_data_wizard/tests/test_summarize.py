@@ -84,6 +84,15 @@ def test_suppress_below_k_no_other_when_all_pass():
     assert OTHER_LABEL not in out
 
 
+def test_suppress_below_k_nulls_other_when_total_below_k():
+    # Two suppressed singletons sum to 2 < SUPPRESS_K. Emitting "_other": 2
+    # would expose the existence of 2 outlier rows, so the bucket count itself
+    # is k-anonymized to None.
+    rows = [{"val": "A", "n": 100}, {"val": "B", "n": 1}, {"val": "C", "n": 1}]
+    out = _suppress_below_k(rows)
+    assert out == {"A": 100, OTHER_LABEL: None}
+
+
 def test_small_pop_threshold():
     assert small_pop_threshold() == 100
 

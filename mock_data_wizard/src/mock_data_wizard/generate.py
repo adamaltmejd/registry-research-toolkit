@@ -87,7 +87,10 @@ def _generate_categorical(
 ) -> np.ndarray:
     frequencies = stats.get("frequencies", {})
     freq = {k: v for k, v in frequencies.items() if k != "_other"}
-    other_weight = frequencies.get("_other", 0)
+    # `_other` may be null: extract nulls the bucket when 0 < suppressed_total
+    # < SUPPRESS_K so the exact tiny count can't be inferred. Treat as 0 --
+    # we never emit "_other" as a value, only use it to weight unseen codes.
+    other_weight = frequencies.get("_other") or 0
 
     if freq:
         codes = list(freq.keys())

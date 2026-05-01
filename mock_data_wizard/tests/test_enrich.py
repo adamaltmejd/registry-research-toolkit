@@ -10,6 +10,7 @@ from regmeta.errors import RegmetaError
 from mock_data_wizard.enrich import (
     EnrichedColumn,
     EnrichedSource,
+    _bulk_fetch_value_codes,
     _check_value_code_drift,
     _vote_register,
     enrich,
@@ -107,6 +108,24 @@ def test_drift_skipped_without_value_codes():
     assert _check_value_code_drift([ef]) == []
 
 
+def test_drift_ignores_whitespace_only_observed_codes():
+    # SCB tables sometimes encode "no value" as a blank-padded string
+    # (e.g. "    "). These are sentinels, not drift.
+    ef = _make_enriched(
+        "f.csv", "Kon", {"1": 50, "    ": 5}, {"1": "Man", "2": "Kvinna"}
+    )
+    assert _check_value_code_drift([ef]) == []
+
+
+def test_drift_strips_trailing_whitespace_for_comparison():
+    # Fixed-width columns store padded codes ('1 ', '2 '); regmeta has the
+    # clean code ('1', '2'). Compare on stripped form.
+    ef = _make_enriched(
+        "f.csv", "SsykStatus", {"1 ": 50, "2 ": 40}, {"1": "Foo", "2": "Bar"}
+    )
+    assert _check_value_code_drift([ef]) == []
+
+
 def test_enrich_resolves_from_db(stats_path: Path, regmeta_db: Path):
     """Enrichment against a real regmeta DB resolves columns and fetches value codes."""
     stats = parse_stats(stats_path)
@@ -118,6 +137,102 @@ def test_enrich_resolves_from_db(stats_path: Path, regmeta_db: Path):
     assert kon.var_id == 44
     assert kon.variable_name == "Kön"
     assert kon.value_codes == {"1": "Man", "2": "Kvinna"}
+
+
+def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path):
+    """Same var_id in two registers with conflicting code schemes: pick the
+    CVID under the resolved register that matches the observed codes.
+
+    This regression covers the production failure where var_id=15 (Civilstånd)
+    in RTB has 1991-style numeric codes and in LISA has alphabetic codes — the
+    old "max code count" picker silently mis-resolved.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a second register, same var_id=44, different CVID with conflicting codes.
+    conn.executescript(
+        """
+        INSERT INTO register (register_id, registernamn) VALUES (2, 'OTHER');
+        INSERT INTO register_variant (regvar_id, register_id, registervariantnamn,
+            registervariantsekretess) VALUES (20, 2, 'Other variant', 'Nej');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (200, 20, '1991');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (2001, 2, 20, 200, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (3, 'A', 'Alpha');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (4, 'B', 'Beta');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (5, 'C', 'Gamma');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 3);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 4);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 5);
+        """
+    )
+    conn.commit()
+
+    # var_id=44 in reg=1: observed {"1","2"} matches CVID 1001's {"1","2"}.
+    # var_id=44 in reg=2: observed {"A","B"} matches CVID 2001's {"A","B","C"}.
+    requests = {
+        ("a.csv", "Kon"): (44, 1, {"1", "2"}),
+        ("b.csv", "Kon"): (44, 2, {"A", "B"}),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    assert out[("a.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
+    assert out[("b.csv", "Kon")] == {"A": "Alpha", "B": "Beta", "C": "Gamma"}
+
+
+def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
+    """If no CVID under the resolved register has any overlap with observed
+    codes, omit the entry — better to leave value_codes unset than to enrich
+    with an unrelated code universe."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Observed codes that exist nowhere in the regmeta DB
+    requests = {("f.csv", "Kon"): (44, 1, {"X", "Y", "Z"})}
+    out = _bulk_fetch_value_codes(conn, requests)
+    assert ("f.csv", "Kon") not in out
+
+
+def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path):
+    """Two columns resolving to the same (var_id, register_id) but with
+    different observed codes must each get their own CVID pick.
+
+    Real case: Individ_2019 has both Sun2000Inr and Sun2020Inr, both
+    resolved to (var=784, reg=34). Sun2000-only CVIDs include codes like
+    `314z, 762g, 863c` that newer Sun2020-only CVIDs don't, and vice
+    versa. Sharing a single CVID across both columns silently drops one
+    side's codes.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a second CVID under the same register/variable with different codes.
+    conn.executescript(
+        """
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1002, 1, 10, 100, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (3, '3', 'X');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (4, '4', 'Y');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1002, 3);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1002, 4);
+        """
+    )
+    conn.commit()
+
+    # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
+    requests = {
+        ("f.csv", "ColA"): (44, 1, {"1", "2"}),
+        ("f.csv", "ColB"): (44, 1, {"3", "4"}),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    assert out[("f.csv", "ColA")] == {"1": "Man", "2": "Kvinna"}
+    assert out[("f.csv", "ColB")] == {"3": "X", "4": "Y"}
 
 
 # ---------------------------------------------------------------------------

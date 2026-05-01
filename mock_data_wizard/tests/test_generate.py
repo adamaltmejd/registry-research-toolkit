@@ -6,9 +6,26 @@ import csv
 import json
 from pathlib import Path
 
+import numpy as np
+
 from mock_data_wizard.enrich import RegisterCandidate, enrich
-from mock_data_wizard.generate import _remove_stale_files, generate
+from mock_data_wizard.generate import (
+    _generate_categorical,
+    _remove_stale_files,
+    generate,
+)
 from mock_data_wizard.stats import parse_stats
+
+
+def test_generate_categorical_tolerates_null_other():
+    # extract emits "_other": None when 0 < suppressed_total < SUPPRESS_K to
+    # avoid leaking the exact small count. _generate_categorical must treat
+    # this as no extra weight rather than crashing on `None > 0`.
+    rng = np.random.default_rng(0)
+    stats = {"frequencies": {"A": 100, "B": 50, "_other": None}}
+    out = _generate_categorical(rng, n=200, stats=stats, value_codes=None)
+    assert len(out) == 200
+    assert set(out.tolist()) <= {"A", "B"}
 
 
 def test_generates_csv_files(stats_path: Path, tmp_path: Path):

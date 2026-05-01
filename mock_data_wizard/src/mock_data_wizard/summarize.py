@@ -88,14 +88,16 @@ def _to_iso(v: Any) -> str | None:
     return s.split(" ", 1)[0] if "-" in s[:10] else s
 
 
-def _suppress_below_k(rows: Sequence[dict[str, Any]]) -> dict[str, int]:
+def _suppress_below_k(rows: Sequence[dict[str, Any]]) -> dict[str, int | None]:
     """Apply k-anonymity to a frequency-table query result.
 
     Drops the NULL group (null_count is tracked separately), folds counts
     below ``SUPPRESS_K`` into ``_other``, and returns a dict in original
-    (descending-count) order.
+    (descending-count) order. ``_other`` itself is also k-anonymized: if
+    ``0 < other < SUPPRESS_K``, the exact count would expose a handful of
+    outlier individuals, so it is emitted as ``None``.
     """
-    out: dict[str, int] = {}
+    out: dict[str, int | None] = {}
     other = 0
     for r in rows:
         val = r.get("val")
@@ -107,7 +109,7 @@ def _suppress_below_k(rows: Sequence[dict[str, Any]]) -> dict[str, int]:
         else:
             out[str(val)] = n
     if other > 0:
-        out[OTHER_LABEL] = other
+        out[OTHER_LABEL] = other if other >= SUPPRESS_K else None
     return out
 
 
