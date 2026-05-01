@@ -49,15 +49,17 @@ def test_compare_columns_requires_register(regmeta_db: Path):
 
 def test_compare_manifest(regmeta_db: Path, tmp_path: Path, capsys):
     manifest = {
-        "schema_version": "2",
+        "schema_version": "3",
         "generated_at": "2026-03-23T00:00:00Z",
         "seed": 42,
         "sample_pct": 1.0,
         "output_dir": str(tmp_path),
         "files": [
             {
-                "file_name": "test.csv",
-                "relative_path": "test.csv",
+                "source_name": "test.csv",
+                "source_type": "file",
+                "source_detail": {"path": "test.csv"},
+                "output_file": "test.csv",
                 "row_count": 100,
                 "sha256": "abc",
                 "columns": ["Kon", "UnknownCol"],
@@ -118,7 +120,7 @@ def test_compare_files(regmeta_db: Path, tmp_path: Path, capsys):
 
 def test_compare_bad_manifest_version(regmeta_db: Path, tmp_path: Path):
     manifest_path = tmp_path / "manifest.json"
-    manifest_path.write_text(json.dumps({"schema_version": "1", "files": []}))
+    manifest_path.write_text(json.dumps({"schema_version": "2", "files": []}))
 
     rc = main(
         [

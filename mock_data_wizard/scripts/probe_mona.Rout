@@ -1,0 +1,1647 @@
+
+R version 4.5.3 (2026-03-11 ucrt) -- "Reassured Reassurer"
+Copyright (C) 2026 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
++----------------------------------------------------------+
+|                        __              __                |
+|       /\ |_  _    |_  |__)  . _   |\/|/  \|\ | /\        |
+|      /--\|_)(_)|_||_  | \   || )  |  |\__/| \|/--\       |
+|                                                          |
+|   MONA has a local CRAN-mirror that is used by default.  |
+|    You can install packages with install.packages();     |
+|  Packages you install remain installed for your account  |
+|        across R sessions (batch or interactive).         |
+|                                                          |
+| Reinstalling a package that is loaded by another of your |
+|  R sessions (batch or interactive) may cause an error.   |
+|    If that happens you must close all your R sessions    |
+|             and reinstall the package again.             |
+|                                                          |
++----------------------------------------------------------+
+
+> # MONA probe for the mock_data_wizard DuckDB rework.
+> #
+> # Runs a battery of tests checking whether assumptions in the planned
+> # rewrite hold on the MONA batch client. Writes everything to a single
+> # log file in the working directory, designed to be exported and shared.
+> #
+> # PII SAFETY (mandatory invariant for anything exported from MONA):
+> #   - No row-level data is ever logged or printed.
+> #   - Schema metadata (column names + types) IS logged.
+> #   - Aggregate statistics (count, min/max/mean/sd) on a real column
+> #     ARE logged -- same disclosure level as the production tool.
+> #   - Frequency tables on real columns are NOT logged (cell values
+> #     would be unsuppressed). Only the row count of the result is.
+> #   - The batch server echoes the script source AND captures stderr
+> #     into the .Rout file, so both source and message() output must
+> #     be PII-clean. Probes never `print()` query results at top level.
+> #
+> # Usage on the MONA batch client:
+> #   The exact invocation is decided by the batch server. The script
+> #   is self-contained and writes mdw_probe_<timestamp>.log alongside
+> #   itself; export that log AND/OR the .Rout file.
+> #
+> # Optional: to also test connecting MS SQL through DuckDB's ODBC scanner,
+> # set the project DSN in the variable below before running. Leave blank
+> # to skip the SQL tests (the file-side tests still tell us most of what
+> # we need).
+> PROJECT_DSN <- "P1105"            # Empty -> skip MS SQL probes.
+> SAMPLE_TABLE <- "Individ_2018"    # ~8M rows. Empty -> skip table probe.
+> 
+> # ---- 0. setup --------------------------------------------------------
+> 
+> ts <- format(Sys.time(), "%Y%m%d_%H%M%S")
+> log_path <- file.path(getwd(), sprintf("mdw_probe_%s.log", ts))
+> log_con <- file(log_path, open = "wt", encoding = "UTF-8")
+> 
+> log_line <- function(...) {
++   msg <- paste0(...)
++   writeLines(msg, log_con); flush(log_con)
++   message(msg)
++ }
+> 
+> log_section <- function(title) {
++   log_line("")
++   log_line(strrep("=", 70))
++   log_line(title)
++   log_line(strrep("=", 70))
++ }
+> 
+> # Wrap a probe so one failure doesn't kill the run. Records ok/fail +
+> # the message + elapsed seconds. Result also returned in case caller
+> # wants to use it.
+> probe <- function(name, expr) {
++   log_line("")
++   log_line(sprintf("[probe] %s", name))
++   t0 <- Sys.time()
++   out <- tryCatch(
++     list(ok = TRUE, value = force(expr)),
++     error   = function(e) list(ok = FALSE, value = NULL, msg = conditionMessage(e)),
++     warning = function(w) list(ok = TRUE,  value = NULL, msg = conditionMessage(w))
++   )
++   dt <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
++   status <- if (isTRUE(out$ok)) "OK" else "FAIL"
++   log_line(sprintf("  -> %s (%.2fs)", status, dt))
++   if (!is.null(out$msg)) log_line(sprintf("     %s", out$msg))
++   invisible(out)
++ }
+> 
+> # ---- 1. environment --------------------------------------------------
+> 
+> log_section("1. ENVIRONMENT")
+
+======================================================================
+1. ENVIRONMENT
+======================================================================
+> log_line(sprintf("R version:       %s", R.version.string))
+R version:       R version 4.5.3 (2026-03-11 ucrt)
+> log_line(sprintf("Platform:        %s", R.version$platform))
+Platform:        x86_64-w64-mingw32
+> log_line(sprintf("OS:              %s", Sys.info()[["sysname"]]))
+OS:              Windows
+> log_line(sprintf("Machine:         %s", Sys.info()[["machine"]]))
+Machine:         x86-64
+> log_line(sprintf("Locale:          %s", Sys.getlocale()))
+Locale:          LC_COLLATE=Swedish_Sweden.1252;LC_CTYPE=Swedish_Sweden.1252;LC_MONETARY=Swedish_Sweden.1252;LC_NUMERIC=C;LC_TIME=Swedish_Sweden.1252
+> log_line(sprintf("getwd():         %s", getwd()))
+getwd():         \\micro.intra/mydocs/mydocs/uualtada/my documents/InBox
+> log_line(sprintf("tempdir():       %s", tempdir()))
+tempdir():       C:\Windows\TEMP\RtmpEhkBho
+> log_line(sprintf("R_LIBS_USER:     %s", Sys.getenv("R_LIBS_USER")))
+R_LIBS_USER:     R:/win-library/4.5
+> log_line(sprintf(".libPaths()[1]:  %s", .libPaths()[1]))
+.libPaths()[1]:  R:/win-library/4.5
+> log_line(sprintf("CRAN mirror:     %s", getOption("repos")[["CRAN"]]))
+CRAN mirror:     file://micro.intra/apps/R/MonaCRAN
+> log_line(sprintf("Probe log file:  %s", log_path))
+Probe log file:  \\micro.intra/mydocs/mydocs/uualtada/my documents/InBox/mdw_probe_20260425_211528.log
+> 
+> # ---- 2. CRAN reachability + already-installed packages ---------------
+> 
+> log_section("2. CRAN AND INSTALLED PACKAGES")
+
+======================================================================
+2. CRAN AND INSTALLED PACKAGES
+======================================================================
+> 
+> probe("getOption('repos') resolves", {
++   repos <- getOption("repos")
++   if (is.null(repos) || identical(unname(repos[["CRAN"]]), "@CRAN@")) {
++     stop("CRAN mirror is the @CRAN@ sentinel (would prompt interactively)")
++   }
++   log_line(sprintf("     CRAN -> %s", repos[["CRAN"]]))
++   TRUE
++ })
+
+[probe] getOption('repos') resolves
+     CRAN -> file://micro.intra/apps/R/MonaCRAN
+  -> OK (0.00s)
+> 
+> probe("available.packages() reaches CRAN", {
++   ap <- available.packages()
++   log_line(sprintf("     %d packages visible on CRAN", nrow(ap)))
++   for (p in c("duckdb", "DBI", "odbc", "data.table", "jsonlite", "arrow")) {
++     if (p %in% rownames(ap)) {
++       log_line(sprintf("     %-12s available, version %s", p, ap[p, "Version"]))
++     } else {
++       log_line(sprintf("     %-12s NOT FOUND on this CRAN mirror", p))
++     }
++   }
++   TRUE
++ })
+
+[probe] available.packages() reaches CRAN
+     23314 packages visible on CRAN
+     duckdb       available, version 1.4.4
+     DBI          available, version 1.3.0
+     odbc         available, version 1.6.4.1
+     data.table   available, version 1.18.2.1
+     jsonlite     available, version 2.0.0
+     arrow        available, version 23.0.1.1
+  -> OK (2.80s)
+> 
+> for (pkg in c("DBI", "odbc", "data.table", "jsonlite", "duckdb", "arrow")) {
++   probe(sprintf("'%s' already installed", pkg), {
++     if (pkg %in% rownames(installed.packages())) {
++       v <- as.character(packageVersion(pkg))
++       log_line(sprintf("     installed, version %s", v))
++       TRUE
++     } else {
++       log_line("     NOT installed")
++       FALSE
++     }
++   })
++ }
+
+[probe] 'DBI' already installed
+     installed, version 1.3.0
+  -> OK (32.38s)
+
+[probe] 'odbc' already installed
+     installed, version 1.6.4.1
+  -> OK (0.02s)
+
+[probe] 'data.table' already installed
+     installed, version 1.18.2.1
+  -> OK (0.02s)
+
+[probe] 'jsonlite' already installed
+     installed, version 2.0.0
+  -> OK (0.02s)
+
+[probe] 'duckdb' already installed
+     NOT installed
+  -> OK (0.01s)
+
+[probe] 'arrow' already installed
+     NOT installed
+  -> OK (0.01s)
+> 
+> # ---- 3. install duckdb if missing ------------------------------------
+> 
+> log_section("3. DUCKDB INSTALL")
+
+======================================================================
+3. DUCKDB INSTALL
+======================================================================
+> 
+> probe("install.packages('duckdb')", {
++   if ("duckdb" %in% rownames(installed.packages())) {
++     log_line("     already installed, skipping install")
++     return(TRUE)
++   }
++   install.packages("duckdb", quiet = TRUE)
++   if (!"duckdb" %in% rownames(installed.packages())) {
++     stop("install.packages succeeded silently but package not found")
++   }
++   log_line(sprintf("     installed version %s", as.character(packageVersion("duckdb"))))
++   TRUE
++ })
+
+[probe] install.packages('duckdb')
+package 'duckdb' successfully unpacked and MD5 sums checked
+     installed version 1.4.4
+  -> OK (20.27s)
+> 
+> probe("library(duckdb) loads", {
++   suppressPackageStartupMessages(library(duckdb))
++   log_line(sprintf("     duckdb version %s", as.character(packageVersion("duckdb"))))
++   TRUE
++ })
+
+[probe] library(duckdb) loads
+     duckdb version 1.4.4
+  -> OK (3.09s)
+> 
+> # ---- 4. duckdb basic functionality -----------------------------------
+> 
+> log_section("4. DUCKDB BASIC")
+
+======================================================================
+4. DUCKDB BASIC
+======================================================================
+> 
+> duck_con <- NULL
+> 
+> probe("open in-memory DuckDB connection", {
++   duck_con <<- DBI::dbConnect(duckdb::duckdb(), dbdir = ":memory:")
++   TRUE
++ })
+
+[probe] open in-memory DuckDB connection
+  -> OK (0.24s)
+> 
+> probe("trivial SELECT", {
++   r <- DBI::dbGetQuery(duck_con, "SELECT 1 AS x, 'hi' AS y")
++   log_line(sprintf("     got %d row(s), %d col(s)", nrow(r), ncol(r)))
++   TRUE
++ })
+
+[probe] trivial SELECT
+     got 1 row(s), 2 col(s)
+  -> OK (0.00s)
+> 
+> probe("server-side aggregations: STDDEV / PERCENTILE_CONT / APPROX_COUNT_DISTINCT", {
++   DBI::dbExecute(duck_con, "CREATE TABLE t AS SELECT range AS n FROM range(0, 100000)")
++   r <- DBI::dbGetQuery(duck_con, "
++     SELECT
++       MIN(n) AS min_n, MAX(n) AS max_n, AVG(n) AS mean_n,
++       STDDEV(n) AS sd_n,
++       PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY n) AS p50,
++       APPROX_COUNT_DISTINCT(n) AS approx_nd
++     FROM t
++   ")
++   log_line(sprintf("     min=%.0f max=%.0f mean=%.2f sd=%.2f p50=%.0f approx_nd=%d",
++                    r$min_n, r$max_n, r$mean_n, r$sd_n, r$p50, r$approx_nd))
++   DBI::dbExecute(duck_con, "DROP TABLE t")
++   TRUE
++ })
+
+[probe] server-side aggregations: STDDEV / PERCENTILE_CONT / APPROX_COUNT_DISTINCT
+     min=0 max=99999 mean=49999.50 sd=28867.66 p50=50000 approx_nd=96408
+  -> OK (0.03s)
+> 
+> probe("USING SAMPLE for classification", {
++   DBI::dbExecute(duck_con, "CREATE TABLE t AS SELECT range AS n FROM range(0, 1000000)")
++   r <- DBI::dbGetQuery(duck_con, "SELECT * FROM t USING SAMPLE 1000 ROWS")
++   log_line(sprintf("     sample returned %d rows", nrow(r)))
++   DBI::dbExecute(duck_con, "DROP TABLE t")
++   TRUE
++ })
+
+[probe] USING SAMPLE for classification
+     sample returned 1000 rows
+  -> OK (0.04s)
+> 
+> # ---- 5. duckdb CSV reading -------------------------------------------
+> 
+> log_section("5. DUCKDB CSV READING")
+
+======================================================================
+5. DUCKDB CSV READING
+======================================================================
+> 
+> # Build a small fully-synthetic CSV in tempdir. Neutral identifiers
+> # only -- nothing personnummer-shaped, even though it's all generated.
+> csv_path <- file.path(tempdir(), "mdw_probe_sample.csv")
+> df <- data.frame(
++   id    = sprintf("ROW%07d", seq_len(1000L)),
++   value = as.integer(round(rnorm(1000, 50, 15))),
++   group = sample(c("A", "B", "C"), 1000, TRUE),
++   stringsAsFactors = FALSE
++ )
+> write.csv(df, csv_path, row.names = FALSE)
+> log_line(sprintf("Wrote test CSV: %s (%d rows)", csv_path, nrow(df)))
+Wrote test CSV: C:\Windows\TEMP\RtmpEhkBho/mdw_probe_sample.csv (1000 rows)
+> 
+> probe("read_csv_auto on a small CSV", {
++   q <- sprintf("SELECT COUNT(*) AS n FROM read_csv_auto('%s')",
++                gsub("'", "''", csv_path))
++   r <- DBI::dbGetQuery(duck_con, q)
++   log_line(sprintf("     count via read_csv_auto: %d", r$n))
++   TRUE
++ })
+
+[probe] read_csv_auto on a small CSV
+     count via read_csv_auto: 1000
+  -> OK (0.03s)
+> 
+> probe("CREATE VIEW over read_csv_auto + aggregate", {
++   DBI::dbExecute(duck_con, sprintf(
++     "CREATE OR REPLACE VIEW vcsv AS SELECT * FROM read_csv_auto('%s')",
++     gsub("'", "''", csv_path)
++   ))
++   r <- DBI::dbGetQuery(duck_con, "
++     SELECT \"group\" AS g,
++            COUNT(*) AS n,
++            AVG(value) AS mean_value
++     FROM vcsv GROUP BY \"group\" ORDER BY g
++   ")
++   # Synthetic data, safe to log values
++   log_line(sprintf("     %d groups", nrow(r)))
++   for (i in seq_len(nrow(r))) {
++     log_line(sprintf("     %s: n=%d mean=%.2f", r$g[i], r$n[i], r$mean_value[i]))
++   }
++   TRUE
++ })
+
+[probe] CREATE VIEW over read_csv_auto + aggregate
+     3 groups
+     A: n=336 mean=52.47
+     B: n=333 mean=50.24
+     C: n=331 mean=48.34
+  -> OK (0.05s)
+> 
+> probe("DESCRIBE on the view (column names + types)", {
++   r <- DBI::dbGetQuery(duck_con, "DESCRIBE vcsv")
++   log_line(sprintf("     %d columns", nrow(r)))
++   for (i in seq_len(nrow(r))) {
++     log_line(sprintf("     %-20s %s", r$column_name[i], r$column_type[i]))
++   }
++   TRUE
++ })
+
+[probe] DESCRIBE on the view (column names + types)
+     3 columns
+     id                   VARCHAR
+     value                BIGINT
+     group                VARCHAR
+  -> OK (0.04s)
+> 
+> # ---- 6. duckdb large-CSV memory behaviour ----------------------------
+> 
+> log_section("6. DUCKDB LARGE-CSV MEMORY BEHAVIOUR")
+
+======================================================================
+6. DUCKDB LARGE-CSV MEMORY BEHAVIOUR
+======================================================================
+> 
+> # 5M rows, ~100MB CSV. Tests that DuckDB streams instead of materialising.
+> big_csv <- file.path(tempdir(), "mdw_probe_big.csv")
+> probe("write 5M-row CSV", {
++   con <- file(big_csv, open = "wt")
++   on.exit(close(con))
++   writeLines("id,age,group", con)
++   set.seed(1)
++   chunk <- 500000L
++   for (b in 1:10) {
++     ids   <- sprintf("ID%07d", ((b-1)*chunk + 1):(b*chunk))
++     ages  <- sample(0:100, chunk, TRUE)
++     grps  <- sample(c("A","B","C","D"), chunk, TRUE)
++     writeLines(paste(ids, ages, grps, sep = ","), con)
++   }
++   log_line(sprintf("     wrote %s (%.1f MB)",
++                    big_csv, file.info(big_csv)$size / 1024^2))
++   TRUE
++ })
+
+[probe] write 5M-row CSV
+     wrote C:\Windows\TEMP\RtmpEhkBho/mdw_probe_big.csv (75.9 MB)
+  -> OK (14.06s)
+> 
+> probe("aggregate 5M-row CSV (no full materialisation in R)", {
++   before <- gc(reset = TRUE)
++   q <- sprintf("
++     SELECT
++       COUNT(*) AS n,
++       COUNT(DISTINCT id) AS nd_id,
++       AVG(age) AS mean_age,
++       STDDEV(age) AS sd_age,
++       PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY age) AS p50
++     FROM read_csv_auto('%s')
++   ", gsub("'", "''", big_csv))
++   r <- DBI::dbGetQuery(duck_con, q)
++   after <- gc()
++   used_mb <- sum(after[, 2]) - sum(before[, 2])
++   log_line(sprintf("     n=%d nd_id=%d mean_age=%.2f sd_age=%.2f p50=%.1f",
++                    r$n, r$nd_id, r$mean_age, r$sd_age, r$p50))
++   log_line(sprintf("     R heap delta during query: %+.1f MB", used_mb))
++   TRUE
++ })
+
+[probe] aggregate 5M-row CSV (no full materialisation in R)
+  -> FAIL (2.41s)
+     Invalid Error: Invalid Input Error: CSV Error on Line: 4999746
+Original Line: 
+ID4999745
+Expected Number of Columns: 3 Found: 1
+Possible fixes:
+* Disable the parser's strict mode (strict_mode=false) to allow reading rows that do not comply with the CSV standard.
+* Enable null padding (null_padding=true) to replace missing values with NULL
+* Enable ignore errors (ignore_errors=true) to skip this row
+
+  file = C:\Windows\TEMP\RtmpEhkBho/mdw_probe_big.csv
+  delimiter = , (Auto-Detected)
+  quote = (empty) (Auto-Detected)
+  escape = (empty) (Auto-Detected)
+  new_line = \r\n (Auto-Detected)
+  header = true (Auto-Detected)
+  skip_rows = 0 (Auto-Detected)
+  comment = (empty) (Auto-Detected)
+  strict_mode = true (Auto-Detected)
+  date_format =  (Auto-Detected)
+  timestamp_format =  (Auto-Detected)
+  null_padding = 0
+  sample_size = 20480
+  ignore_errors = false
+  all_varchar = 0
+
+
+i Context: rapi_execute
+i Error type: INVALID
+> 
+> # ---- 7. duckdb community odbc extension (the big question) -----------
+> 
+> log_section("7. DUCKDB ODBC SCANNER EXTENSION (COMMUNITY)")
+
+======================================================================
+7. DUCKDB ODBC SCANNER EXTENSION (COMMUNITY)
+======================================================================
+> 
+> probe("INSTALL odbc_scanner FROM community", {
++   DBI::dbExecute(duck_con, "INSTALL odbc_scanner FROM community")
++   TRUE
++ })
+
+[probe] INSTALL odbc_scanner FROM community
+  -> FAIL (253.46s)
+     Invalid Error: IO Error: Failed to download extension "odbc_scanner" at URL "http://community-extensions.duckdb.org/v1.4.4/windows_amd64_mingw/odbc_scanner.duckdb_extension.gz"
+
+Candidate extensions: "mysql_scanner", "postgres_scanner", "sqlite_scanner", "ducklake", "uc_catalog"
+For more info, visit https://duckdb.org/docs/stable/extensions/troubleshooting?version=v1.4.4&platform=windows_amd64_mingw&extension=odbc_scanner (ERROR Could not establish connection)
+i Context: rapi_execute
+i Error type: INVALID
+> 
+> probe("LOAD odbc_scanner", {
++   DBI::dbExecute(duck_con, "LOAD odbc_scanner")
++   TRUE
++ })
+
+[probe] LOAD odbc_scanner
+  -> FAIL (0.05s)
+     Invalid Error: IO Error: Extension "\\cifs_2_hd_micro\AppData\uualtada\R\data\R\duckdb\extensions\v1.4.4\windows_amd64_mingw\odbc_scanner.duckdb_extension" not found.
+
+Candidate extensions: "mysql_scanner", "postgres_scanner", "sqlite_scanner", "ducklake", "uc_catalog"
+i Context: rapi_execute
+i Error type: INVALID
+> 
+> probe("list installed extensions", {
++   r <- DBI::dbGetQuery(duck_con, "SELECT extension_name, installed, loaded FROM duckdb_extensions() WHERE installed OR loaded")
++   for (i in seq_len(nrow(r))) {
++     log_line(sprintf("     %-20s installed=%s loaded=%s",
++                      r$extension_name[i], r$installed[i], r$loaded[i]))
++   }
++   TRUE
++ })
+
+[probe] list installed extensions
+     core_functions       installed=TRUE loaded=TRUE
+     parquet              installed=TRUE loaded=TRUE
+  -> OK (0.07s)
+> 
+> # ---- 8. odbc / DBI baseline + DSN inventory --------------------------
+> 
+> log_section("8. ODBC / DBI BASELINE")
+
+======================================================================
+8. ODBC / DBI BASELINE
+======================================================================
+> 
+> probe("library(DBI) + library(odbc)", {
++   suppressPackageStartupMessages({ library(DBI); library(odbc) })
++   log_line(sprintf("     DBI %s, odbc %s",
++                    as.character(packageVersion("DBI")),
++                    as.character(packageVersion("odbc"))))
++   TRUE
++ })
+
+[probe] library(DBI) + library(odbc)
+     DBI 1.3.0, odbc 1.6.4.1
+  -> OK (3.99s)
+> 
+> probe("odbc::odbcListDrivers()", {
++   r <- odbc::odbcListDrivers()
++   log_line(sprintf("     %d drivers", nrow(r)))
++   for (i in seq_len(nrow(r))) log_line(sprintf("     %s", r$name[i]))
++   TRUE
++ })
+
+[probe] odbc::odbcListDrivers()
+     21 drivers
+     SQL Server
+     SQL Server
+     SQL Server
+     SQL Server
+     SQL Server
+     SQL Server
+     SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 18 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+     ODBC Driver 17 for SQL Server
+  -> OK (0.04s)
+> 
+> probe("odbc::odbcListDataSources()", {
++   r <- odbc::odbcListDataSources()
++   log_line(sprintf("     %d DSNs", nrow(r)))
++   for (i in seq_len(nrow(r))) log_line(sprintf("     %s [%s]", r$name[i], r$description[i]))
++   TRUE
++ })
+
+[probe] odbc::odbcListDataSources()
+     738 DSNs
+     Regionkartor [ODBC Driver 17 for SQL Server]
+     IND_EXT_GOLD [ODBC Driver 17 for SQL Server]
+     KaU_Samspel [ODBC Driver 17 for SQL Server]
+     P0198 [ODBC Driver 17 for SQL Server]
+     P0239_LiU_SambearbUtb [ODBC Driver 17 for SQL Server]
+     P0277_Riksrev_Personbilar [ODBC Driver 17 for SQL Server]
+     P0284_Naringsdep_Integr_databas [ODBC Driver 17 for SQL Server]
+     P0286_SACO_Livslonestudie [ODBC Driver 17 for SQL Server]
+     P0330_GU_Vara_databasen [ODBC Driver 17 for SQL Server]
+     P0368_SU_Utvardering_utbildning [ODBC Driver 17 for SQL Server]
+     P0372_CSN_Studerandes_situation [ODBC Driver 17 for SQL Server]
+     P0382_Statsk_Oversyn_kostnadsutj [ODBC Driver 17 for SQL Server]
+     P0441_Komplettering_exportinfo [ODBC Driver 17 for SQL Server]
+     P0457_SK_Kostnadsskillnader [ODBC Driver 17 for SQL Server]
+     P0469_SK_Inkomstutjamning [ODBC Driver 17 for SQL Server]
+     P0493_Tillvaxt_Miljotekniksstrat [ODBC Driver 17 for SQL Server]
+     P0521_UKA_Examinerade [ODBC Driver 17 for SQL Server]
+     P0544_SU_Ungdomshemmet [ODBC Driver 17 for SQL Server]
+     P0548_UU_Elbil [ODBC Driver 17 for SQL Server]
+     P0564_CTH_Kapacitet [ODBC Driver 17 for SQL Server]
+     P0577_Boverket_Flyttmonster [ODBC Driver 17 for SQL Server]
+     P0582 [ODBC Driver 17 for SQL Server]
+     P0609 [ODBC Driver 17 for SQL Server]
+     P0637 [ODBC Driver 17 for SQL Server]
+     P0922 [ODBC Driver 17 for SQL Server]
+     P0972 [ODBC Driver 17 for SQL Server]
+     SOFI_P7 [ODBC Driver 17 for SQL Server]
+     SU_SULCIS2 [ODBC Driver 17 for SQL Server]
+     KK_ORU [ODBC Driver 17 for SQL Server]
+     MAH_Valda [ODBC Driver 17 for SQL Server]
+     P0001 [ODBC Driver 17 for SQL Server]
+     P0002 [ODBC Driver 17 for SQL Server]
+     P0041_ORU_ESI [ODBC Driver 17 for SQL Server]
+     P0085_FK_LISA [ODBC Driver 17 for SQL Server]
+     P0218_REMESO [ODBC Driver 17 for SQL Server]
+     P0232_UU_Uppvaxt_brott [ODBC Driver 17 for SQL Server]
+     p0236_IHH_Generationsskiften [ODBC Driver 17 for SQL Server]
+     P0253_Svenska_foretag [ODBC Driver 17 for SQL Server]
+     P0278_Foretagens_dynamik [ODBC Driver 17 for SQL Server]
+     P0291 [ODBC Driver 17 for SQL Server]
+     P0294_Skolverket_Vuxdatalager [ODBC Driver 17 for SQL Server]
+     P0295_SU_Krim_brottslighet [ODBC Driver 17 for SQL Server]
+     P0312_UU_Karval [ODBC Driver 17 for SQL Server]
+     P0323_Umu_Nek_Hanes [ODBC Driver 17 for SQL Server]
+     P0326_IHH_Business_clusters [ODBC Driver 17 for SQL Server]
+     P0333_SU_Langtidssjukskrivna [ODBC Driver 17 for SQL Server]
+     P0339_SU_SOFI_RotRut [ODBC Driver 17 for SQL Server]
+     P0358_LU_CIRCLE_Innovationer [ODBC Driver 17 for SQL Server]
+     P0359_KTH_CESIS_Innovationer [ODBC Driver 17 for SQL Server]
+     P0360_LTU_CIIR_Innovationer [ODBC Driver 17 for SQL Server]
+     P0366_JIBS_Mikrodata_pappersindu [ODBC Driver 17 for SQL Server]
+     P0374_VTI_KTH_Bilinnehav [ODBC Driver 17 for SQL Server]
+     P0375_UU_Utvardering_tandvardsst [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Arbete [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Barn [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Brott [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Enkat [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Ftg [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Halsa [ODBC Driver 17 for SQL Server]
+     P0388_IFN_Politik [ODBC Driver 17 for SQL Server]
+     P0392_GU_SWIP [ODBC Driver 17 for SQL Server]
+     P0393_UU_NatEk_Intergen [ODBC Driver 17 for SQL Server]
+     P0402_LU_HEALTH_Val [ODBC Driver 17 for SQL Server]
+     P0403_Trafa_Postundersokningen [ODBC Driver 17 for SQL Server]
+     P0404_UU_Foretagens_dynamik [ODBC Driver 17 for SQL Server]
+     P0405_VTI_Sv_personbilsparken [ODBC Driver 17 for SQL Server]
+     P0407_LU_Socioekonomisk_stratifi [ODBC Driver 17 for SQL Server]
+     P0411_LU_Relatedness [ODBC Driver 17 for SQL Server]
+     P0414_HH_Sarskolan_och_sen [ODBC Driver 17 for SQL Server]
+     P0415_SU_Natek_diskriminering [ODBC Driver 17 for SQL Server]
+     P0419_SU_Ungdomsprojektet_2012 [ODBC Driver 17 for SQL Server]
+     P0422_LU_Ekh_Ekonomisk_demografi [ODBC Driver 17 for SQL Server]
+     P0425_KI_Kognitiva_funktioner [ODBC Driver 17 for SQL Server]
+     P0448_HHS_VD_ersattning [ODBC Driver 17 for SQL Server]
+     P0452_Socioekonomisk_trafikbulle [ODBC Driver 17 for SQL Server]
+     P0455_SU_Konsskillnader [ODBC Driver 17 for SQL Server]
+     P0461_GU_Hyresarbetskraft [ODBC Driver 17 for SQL Server]
+     P0467_Metabolism_Swe_Cities [ODBC Driver 17 for SQL Server]
+     P0471_SU_Effekter_hsreformen [ODBC Driver 17 for SQL Server]
+     P0478_SU_SOFI_Invandrarna [ODBC Driver 17 for SQL Server]
+     P0485_CIIR_Innovationer_Enkat [ODBC Driver 17 for SQL Server]
+     P0491_LU_FTG_INT_LANKAR [ODBC Driver 17 for SQL Server]
+     P0492_KTH_Personbilar_korstracko [ODBC Driver 17 for SQL Server]
+     P0504_IFN_Talent_Swe [ODBC Driver 17 for SQL Server]
+     P0511_HHS_Arbetskraft [ODBC Driver 17 for SQL Server]
+     P0520_HHS_Talent [ODBC Driver 17 for SQL Server]
+     P0523_LU_Karriarutfall [ODBC Driver 17 for SQL Server]
+     P0524_LU_Arbetslivet [ODBC Driver 17 for SQL Server]
+     P0525_LNU_Giftermal [ODBC Driver 17 for SQL Server]
+     P0545_IFAU_Naturvetenskap [ODBC Driver 17 for SQL Server]
+     P0545_IFAU_Naturvetenskap_Enkat [ODBC Driver 17 for SQL Server]
+     P0551_SU_Arb_brott [ODBC Driver 17 for SQL Server]
+     P0562_Agrifood_Utv_Jbr_Fiske [ODBC Driver 17 for SQL Server]
+     P0563_IFAU_KSKV [ODBC Driver 17 for SQL Server]
+     P0566_IFN_Formogenhet [ODBC Driver 17 for SQL Server]
+     P0568_UU_Arbetsloshet_konsumtion [ODBC Driver 17 for SQL Server]
+     P0569_IFAU_NV_Forskola [ODBC Driver 17 for SQL Server]
+     P0572_UU_Uttag_tjanstepension [ODBC Driver 17 for SQL Server]
+     P0583 [ODBC Driver 17 for SQL Server]
+     P0586 [ODBC Driver 17 for SQL Server]
+     P0587 [ODBC Driver 17 for SQL Server]
+     P0588 [ODBC Driver 17 for SQL Server]
+     P0592 [ODBC Driver 17 for SQL Server]
+     P0598 [ODBC Driver 17 for SQL Server]
+     P0601 [ODBC Driver 17 for SQL Server]
+     P0603 [ODBC Driver 17 for SQL Server]
+     P0605 [ODBC Driver 17 for SQL Server]
+     P0613 [ODBC Driver 17 for SQL Server]
+     P0614 [ODBC Driver 17 for SQL Server]
+     P0623 [ODBC Driver 17 for SQL Server]
+     P0624 [ODBC Driver 17 for SQL Server]
+     P0625 [ODBC Driver 17 for SQL Server]
+     P0626 [ODBC Driver 17 for SQL Server]
+     P0638 [ODBC Driver 17 for SQL Server]
+     P0643 [ODBC Driver 17 for SQL Server]
+     P0648 [ODBC Driver 17 for SQL Server]
+     P0650 [ODBC Driver 17 for SQL Server]
+     P0651 [ODBC Driver 17 for SQL Server]
+     P0661 [ODBC Driver 17 for SQL Server]
+     P0662 [ODBC Driver 17 for SQL Server]
+     P0667 [ODBC Driver 17 for SQL Server]
+     P0673 [ODBC Driver 17 for SQL Server]
+     P0674 [ODBC Driver 17 for SQL Server]
+     P0676 [ODBC Driver 17 for SQL Server]
+     P0679 [ODBC Driver 17 for SQL Server]
+     P0682 [ODBC Driver 17 for SQL Server]
+     P0689 [ODBC Driver 17 for SQL Server]
+     P0695 [ODBC Driver 17 for SQL Server]
+     P0707 [ODBC Driver 17 for SQL Server]
+     P0717 [ODBC Driver 17 for SQL Server]
+     P0720 [ODBC Driver 17 for SQL Server]
+     P0722 [ODBC Driver 17 for SQL Server]
+     P0725 [ODBC Driver 17 for SQL Server]
+     P0731 [ODBC Driver 17 for SQL Server]
+     P0733 [ODBC Driver 17 for SQL Server]
+     P0736 [ODBC Driver 17 for SQL Server]
+     P0738 [ODBC Driver 17 for SQL Server]
+     P0744 [ODBC Driver 17 for SQL Server]
+     P0746 [ODBC Driver 17 for SQL Server]
+     P0753 [ODBC Driver 17 for SQL Server]
+     P0769 [ODBC Driver 17 for SQL Server]
+     P0774 [ODBC Driver 17 for SQL Server]
+     P0777 [ODBC Driver 17 for SQL Server]
+     P0784 [ODBC Driver 17 for SQL Server]
+     P0789 [ODBC Driver 17 for SQL Server]
+     P0794 [ODBC Driver 17 for SQL Server]
+     P0807 [ODBC Driver 17 for SQL Server]
+     P0809 [ODBC Driver 17 for SQL Server]
+     P0814 [ODBC Driver 17 for SQL Server]
+     P0815 [ODBC Driver 17 for SQL Server]
+     P0827 [ODBC Driver 17 for SQL Server]
+     P0828 [ODBC Driver 17 for SQL Server]
+     P0829 [ODBC Driver 17 for SQL Server]
+     P0833 [ODBC Driver 17 for SQL Server]
+     P0837 [ODBC Driver 17 for SQL Server]
+     P0839 [ODBC Driver 17 for SQL Server]
+     P0846 [ODBC Driver 17 for SQL Server]
+     P0848 [ODBC Driver 17 for SQL Server]
+     P0850 [ODBC Driver 17 for SQL Server]
+     P0854 [ODBC Driver 17 for SQL Server]
+     P0855 [ODBC Driver 17 for SQL Server]
+     P0856 [ODBC Driver 17 for SQL Server]
+     P0857 [ODBC Driver 17 for SQL Server]
+     P0862 [ODBC Driver 17 for SQL Server]
+     P0864 [ODBC Driver 17 for SQL Server]
+     P0870 [ODBC Driver 17 for SQL Server]
+     P0874 [ODBC Driver 17 for SQL Server]
+     P0876 [ODBC Driver 17 for SQL Server]
+     P0877 [ODBC Driver 17 for SQL Server]
+     P0878 [ODBC Driver 17 for SQL Server]
+     P0880 [ODBC Driver 17 for SQL Server]
+     P0881 [ODBC Driver 17 for SQL Server]
+     P0889 [ODBC Driver 17 for SQL Server]
+     P0890 [ODBC Driver 17 for SQL Server]
+     P0891 [ODBC Driver 17 for SQL Server]
+     P0893 [ODBC Driver 17 for SQL Server]
+     P0894 [ODBC Driver 17 for SQL Server]
+     P0895 [ODBC Driver 17 for SQL Server]
+     P0899 [ODBC Driver 17 for SQL Server]
+     P0901 [ODBC Driver 17 for SQL Server]
+     P0902 [ODBC Driver 17 for SQL Server]
+     P0903 [ODBC Driver 17 for SQL Server]
+     P0905 [ODBC Driver 17 for SQL Server]
+     P0906 [ODBC Driver 17 for SQL Server]
+     P0907 [ODBC Driver 17 for SQL Server]
+     P0910 [ODBC Driver 17 for SQL Server]
+     P0911 [ODBC Driver 17 for SQL Server]
+     P0914 [ODBC Driver 17 for SQL Server]
+     P0918 [ODBC Driver 17 for SQL Server]
+     P0919 [ODBC Driver 17 for SQL Server]
+     P0924 [ODBC Driver 17 for SQL Server]
+     P0925 [ODBC Driver 17 for SQL Server]
+     P0926 [ODBC Driver 17 for SQL Server]
+     P0927 [ODBC Driver 17 for SQL Server]
+     P0928 [ODBC Driver 17 for SQL Server]
+     P0930 [ODBC Driver 17 for SQL Server]
+     P0934 [ODBC Driver 17 for SQL Server]
+     P0936 [ODBC Driver 17 for SQL Server]
+     P0942 [ODBC Driver 17 for SQL Server]
+     P0945 [ODBC Driver 17 for SQL Server]
+     P0948 [ODBC Driver 17 for SQL Server]
+     P0950 [ODBC Driver 17 for SQL Server]
+     P0953 [ODBC Driver 17 for SQL Server]
+     P0954 [ODBC Driver 17 for SQL Server]
+     P0955 [ODBC Driver 17 for SQL Server]
+     P0957 [ODBC Driver 17 for SQL Server]
+     P0960 [ODBC Driver 17 for SQL Server]
+     P0963 [ODBC Driver 17 for SQL Server]
+     P0964 [ODBC Driver 17 for SQL Server]
+     P0966 [ODBC Driver 17 for SQL Server]
+     P0967 [ODBC Driver 17 for SQL Server]
+     P0968 [ODBC Driver 17 for SQL Server]
+     P0973 [ODBC Driver 17 for SQL Server]
+     P0975 [ODBC Driver 17 for SQL Server]
+     P0978 [ODBC Driver 17 for SQL Server]
+     P0983 [ODBC Driver 17 for SQL Server]
+     P0984 [ODBC Driver 17 for SQL Server]
+     P0986 [ODBC Driver 17 for SQL Server]
+     P0988 [ODBC Driver 17 for SQL Server]
+     P0989 [ODBC Driver 17 for SQL Server]
+     P0990 [ODBC Driver 17 for SQL Server]
+     P0991 [ODBC Driver 17 for SQL Server]
+     P0992 [ODBC Driver 17 for SQL Server]
+     P0993 [ODBC Driver 17 for SQL Server]
+     P0995 [ODBC Driver 17 for SQL Server]
+     P0996 [ODBC Driver 17 for SQL Server]
+     P0999 [ODBC Driver 17 for SQL Server]
+     P1000 [ODBC Driver 17 for SQL Server]
+     P1001 [ODBC Driver 17 for SQL Server]
+     P1003 [ODBC Driver 17 for SQL Server]
+     P1004 [ODBC Driver 17 for SQL Server]
+     P1005 [ODBC Driver 17 for SQL Server]
+     P1006 [ODBC Driver 17 for SQL Server]
+     P1007 [ODBC Driver 17 for SQL Server]
+     P1008 [ODBC Driver 17 for SQL Server]
+     P1011 [ODBC Driver 17 for SQL Server]
+     P1012 [ODBC Driver 17 for SQL Server]
+     P1013 [ODBC Driver 17 for SQL Server]
+     P1016 [ODBC Driver 17 for SQL Server]
+     P1017 [ODBC Driver 17 for SQL Server]
+     P1018 [ODBC Driver 17 for SQL Server]
+     P1019 [ODBC Driver 17 for SQL Server]
+     P1023 [ODBC Driver 17 for SQL Server]
+     P1024 [ODBC Driver 17 for SQL Server]
+     P1026 [ODBC Driver 17 for SQL Server]
+     P1027 [ODBC Driver 17 for SQL Server]
+     P1028 [ODBC Driver 17 for SQL Server]
+     P1030 [ODBC Driver 17 for SQL Server]
+     P1033 [ODBC Driver 17 for SQL Server]
+     P1034 [ODBC Driver 17 for SQL Server]
+     P1035 [ODBC Driver 17 for SQL Server]
+     P1036 [ODBC Driver 17 for SQL Server]
+     P1037 [ODBC Driver 17 for SQL Server]
+     P1040 [ODBC Driver 17 for SQL Server]
+     P1041 [ODBC Driver 17 for SQL Server]
+     P1043 [ODBC Driver 17 for SQL Server]
+     P1044 [ODBC Driver 17 for SQL Server]
+     P1045 [ODBC Driver 17 for SQL Server]
+     P1046 [ODBC Driver 17 for SQL Server]
+     P1047 [ODBC Driver 17 for SQL Server]
+     P1048 [ODBC Driver 17 for SQL Server]
+     P1049 [ODBC Driver 17 for SQL Server]
+     P1050 [ODBC Driver 17 for SQL Server]
+     P1053 [ODBC Driver 17 for SQL Server]
+     P1057 [ODBC Driver 17 for SQL Server]
+     P1060 [ODBC Driver 17 for SQL Server]
+     P1061 [ODBC Driver 17 for SQL Server]
+     P1064 [ODBC Driver 17 for SQL Server]
+     P1066 [ODBC Driver 17 for SQL Server]
+     P1068 [ODBC Driver 17 for SQL Server]
+     P1069 [ODBC Driver 17 for SQL Server]
+     P1070 [ODBC Driver 17 for SQL Server]
+     P1071 [ODBC Driver 17 for SQL Server]
+     P1072 [ODBC Driver 17 for SQL Server]
+     P1073 [ODBC Driver 17 for SQL Server]
+     P1074 [ODBC Driver 17 for SQL Server]
+     P1075 [ODBC Driver 17 for SQL Server]
+     P1076 [ODBC Driver 17 for SQL Server]
+     P1079 [ODBC Driver 17 for SQL Server]
+     P1080 [ODBC Driver 17 for SQL Server]
+     P1081 [ODBC Driver 17 for SQL Server]
+     P1083 [ODBC Driver 17 for SQL Server]
+     P1085 [ODBC Driver 17 for SQL Server]
+     P1086 [ODBC Driver 17 for SQL Server]
+     P1087 [ODBC Driver 17 for SQL Server]
+     P1088 [ODBC Driver 17 for SQL Server]
+     P1089 [ODBC Driver 17 for SQL Server]
+     P1091 [ODBC Driver 17 for SQL Server]
+     P1093 [ODBC Driver 17 for SQL Server]
+     P1094 [ODBC Driver 17 for SQL Server]
+     P1096 [ODBC Driver 17 for SQL Server]
+     P1097 [ODBC Driver 17 for SQL Server]
+     P1099 [ODBC Driver 17 for SQL Server]
+     P1100 [ODBC Driver 17 for SQL Server]
+     P1101 [ODBC Driver 17 for SQL Server]
+     P1102 [ODBC Driver 17 for SQL Server]
+     P1103 [ODBC Driver 17 for SQL Server]
+     P1105 [ODBC Driver 17 for SQL Server]
+     P1106 [ODBC Driver 17 for SQL Server]
+     P1107 [ODBC Driver 17 for SQL Server]
+     P1116 [ODBC Driver 17 for SQL Server]
+     P1118 [ODBC Driver 17 for SQL Server]
+     P1119 [ODBC Driver 17 for SQL Server]
+     P1120 [ODBC Driver 17 for SQL Server]
+     P1121 [ODBC Driver 17 for SQL Server]
+     P1123 [ODBC Driver 17 for SQL Server]
+     P1124 [ODBC Driver 17 for SQL Server]
+     P1125 [ODBC Driver 17 for SQL Server]
+     P1127 [ODBC Driver 17 for SQL Server]
+     P1128 [ODBC Driver 17 for SQL Server]
+     P1129 [ODBC Driver 17 for SQL Server]
+     P1130 [ODBC Driver 17 for SQL Server]
+     P1131 [ODBC Driver 17 for SQL Server]
+     P1132 [ODBC Driver 17 for SQL Server]
+     P1133 [ODBC Driver 17 for SQL Server]
+     P1134 [ODBC Driver 17 for SQL Server]
+     P1138 [ODBC Driver 17 for SQL Server]
+     P1139 [ODBC Driver 17 for SQL Server]
+     P1140 [ODBC Driver 17 for SQL Server]
+     P1142 [ODBC Driver 17 for SQL Server]
+     P1144 [ODBC Driver 17 for SQL Server]
+     P1146 [ODBC Driver 17 for SQL Server]
+     P1151 [ODBC Driver 17 for SQL Server]
+     P1152 [ODBC Driver 17 for SQL Server]
+     P1153 [ODBC Driver 17 for SQL Server]
+     P1154 [ODBC Driver 17 for SQL Server]
+     P1156 [ODBC Driver 17 for SQL Server]
+     P1157 [ODBC Driver 17 for SQL Server]
+     P1158 [ODBC Driver 17 for SQL Server]
+     P1159 [ODBC Driver 17 for SQL Server]
+     P1160 [ODBC Driver 17 for SQL Server]
+     P1161 [ODBC Driver 17 for SQL Server]
+     P1162 [ODBC Driver 17 for SQL Server]
+     P1163 [ODBC Driver 17 for SQL Server]
+     P1165 [ODBC Driver 17 for SQL Server]
+     P1167 [ODBC Driver 17 for SQL Server]
+     P1168 [ODBC Driver 17 for SQL Server]
+     P1169 [ODBC Driver 17 for SQL Server]
+     P1170 [ODBC Driver 17 for SQL Server]
+     P1172 [ODBC Driver 17 for SQL Server]
+     P1177 [ODBC Driver 17 for SQL Server]
+     SOFI_P1 [ODBC Driver 17 for SQL Server]
+     SOFI_P10 [ODBC Driver 17 for SQL Server]
+     SOFI_P12 [ODBC Driver 17 for SQL Server]
+     SOFI_P2 [ODBC Driver 17 for SQL Server]
+     SOFI_P3 [ODBC Driver 17 for SQL Server]
+     SOFI_P456 [ODBC Driver 17 for SQL Server]
+     SOFI_P8 [ODBC Driver 17 for SQL Server]
+     Sofi_P9 [ODBC Driver 17 for SQL Server]
+     VXU_Inf_omf [ODBC Driver 17 for SQL Server]
+     P1178 [ODBC Driver 17 for SQL Server]
+     P1179 [ODBC Driver 17 for SQL Server]
+     P0484_SU_SOFI_Utbildningsinnehal [ODBC Driver 17 for SQL Server]
+     P0515_IFFS_Segregeringens_dynami [ODBC Driver 17 for SQL Server]
+     P0813 [ODBC Driver 17 for SQL Server]
+     P0896 [ODBC Driver 17 for SQL Server]
+     P1180 [ODBC Driver 17 for SQL Server]
+     P1182 [ODBC Driver 17 for SQL Server]
+     P1183 [ODBC Driver 17 for SQL Server]
+     P1051 [ODBC Driver 17 for SQL Server]
+     P1184 [ODBC Driver 17 for SQL Server]
+     P1186 [ODBC Driver 17 for SQL Server]
+     P1187 [ODBC Driver 17 for SQL Server]
+     P1188 [ODBC Driver 17 for SQL Server]
+     P1189 [ODBC Driver 17 for SQL Server]
+     P1190 [ODBC Driver 17 for SQL Server]
+     P1191 [ODBC Driver 17 for SQL Server]
+     P1192 [ODBC Driver 17 for SQL Server]
+     P1193 [ODBC Driver 17 for SQL Server]
+     P1194 [ODBC Driver 17 for SQL Server]
+     P1197 [ODBC Driver 17 for SQL Server]
+     P1200 [ODBC Driver 17 for SQL Server]
+     P1201 [ODBC Driver 17 for SQL Server]
+     P1202 [ODBC Driver 17 for SQL Server]
+     P1203 [ODBC Driver 17 for SQL Server]
+     P1204 [ODBC Driver 17 for SQL Server]
+     P1205 [ODBC Driver 17 for SQL Server]
+     P1206 [ODBC Driver 17 for SQL Server]
+     P1207 [ODBC Driver 17 for SQL Server]
+     P1209 [ODBC Driver 17 for SQL Server]
+     P1210 [ODBC Driver 17 for SQL Server]
+     P1211 [ODBC Driver 17 for SQL Server]
+     P1212 [ODBC Driver 17 for SQL Server]
+     P1216 [ODBC Driver 17 for SQL Server]
+     P1217 [ODBC Driver 17 for SQL Server]
+     P1218 [ODBC Driver 17 for SQL Server]
+     P1219 [ODBC Driver 17 for SQL Server]
+     P1220 [ODBC Driver 17 for SQL Server]
+     P1221 [ODBC Driver 17 for SQL Server]
+     P1222 [ODBC Driver 17 for SQL Server]
+     P1225 [ODBC Driver 17 for SQL Server]
+     P1226 [ODBC Driver 17 for SQL Server]
+     P1228 [ODBC Driver 17 for SQL Server]
+     P1230 [ODBC Driver 17 for SQL Server]
+     P1232 [ODBC Driver 17 for SQL Server]
+     P0144 [ODBC Driver 17 for SQL Server]
+     P1233 [ODBC Driver 17 for SQL Server]
+     P1234 [ODBC Driver 17 for SQL Server]
+     P1235 [ODBC Driver 17 for SQL Server]
+     P1236 [ODBC Driver 17 for SQL Server]
+     P1237 [ODBC Driver 17 for SQL Server]
+     P1238 [ODBC Driver 17 for SQL Server]
+     P1239 [ODBC Driver 17 for SQL Server]
+     P1240 [ODBC Driver 17 for SQL Server]
+     P0692 [ODBC Driver 17 for SQL Server]
+     P1241 [ODBC Driver 17 for SQL Server]
+     P1242 [ODBC Driver 17 for SQL Server]
+     P1243 [ODBC Driver 17 for SQL Server]
+     P1244 [ODBC Driver 17 for SQL Server]
+     P1246 [ODBC Driver 17 for SQL Server]
+     P1248 [ODBC Driver 17 for SQL Server]
+     P1249 [ODBC Driver 17 for SQL Server]
+     P1250 [ODBC Driver 17 for SQL Server]
+     P1251 [ODBC Driver 17 for SQL Server]
+     P1252 [ODBC Driver 17 for SQL Server]
+     P1253 [ODBC Driver 17 for SQL Server]
+     P1254 [ODBC Driver 17 for SQL Server]
+     P1255 [ODBC Driver 17 for SQL Server]
+     P1257 [ODBC Driver 17 for SQL Server]
+     P1258 [ODBC Driver 17 for SQL Server]
+     P1259 [ODBC Driver 17 for SQL Server]
+     P1260 [ODBC Driver 17 for SQL Server]
+     P1261 [ODBC Driver 17 for SQL Server]
+     P1247 [ODBC Driver 17 for SQL Server]
+     P1262 [ODBC Driver 17 for SQL Server]
+     P1263 [ODBC Driver 17 for SQL Server]
+     P1264 [ODBC Driver 17 for SQL Server]
+     P1265 [ODBC Driver 17 for SQL Server]
+     P1266 [ODBC Driver 17 for SQL Server]
+     P0041 [ODBC Driver 17 for SQL Server]
+     P0085 [ODBC Driver 17 for SQL Server]
+     P0218 [ODBC Driver 17 for SQL Server]
+     P0232 [ODBC Driver 17 for SQL Server]
+     p0236 [ODBC Driver 17 for SQL Server]
+     P0239 [ODBC Driver 17 for SQL Server]
+     P0253 [ODBC Driver 17 for SQL Server]
+     P0277 [ODBC Driver 17 for SQL Server]
+     P0278 [ODBC Driver 17 for SQL Server]
+     P0284 [ODBC Driver 17 for SQL Server]
+     P0286 [ODBC Driver 17 for SQL Server]
+     P0294 [ODBC Driver 17 for SQL Server]
+     P0295 [ODBC Driver 17 for SQL Server]
+     P0312 [ODBC Driver 17 for SQL Server]
+     P0323 [ODBC Driver 17 for SQL Server]
+     P0326 [ODBC Driver 17 for SQL Server]
+     P0330 [ODBC Driver 17 for SQL Server]
+     P0333 [ODBC Driver 17 for SQL Server]
+     P0339 [ODBC Driver 17 for SQL Server]
+     P0358 [ODBC Driver 17 for SQL Server]
+     P0359 [ODBC Driver 17 for SQL Server]
+     P0360 [ODBC Driver 17 for SQL Server]
+     P0366 [ODBC Driver 17 for SQL Server]
+     P0368 [ODBC Driver 17 for SQL Server]
+     P0372 [ODBC Driver 17 for SQL Server]
+     P0374 [ODBC Driver 17 for SQL Server]
+     P0375 [ODBC Driver 17 for SQL Server]
+     P0382 [ODBC Driver 17 for SQL Server]
+     P0388 [ODBC Driver 17 for SQL Server]
+     P0392 [ODBC Driver 17 for SQL Server]
+     P0393 [ODBC Driver 17 for SQL Server]
+     P0402 [ODBC Driver 17 for SQL Server]
+     P0403 [ODBC Driver 17 for SQL Server]
+     P0404 [ODBC Driver 17 for SQL Server]
+     P0405 [ODBC Driver 17 for SQL Server]
+     P0407 [ODBC Driver 17 for SQL Server]
+     P0411 [ODBC Driver 17 for SQL Server]
+     P0414 [ODBC Driver 17 for SQL Server]
+     P0415 [ODBC Driver 17 for SQL Server]
+     P0419 [ODBC Driver 17 for SQL Server]
+     P0422 [ODBC Driver 17 for SQL Server]
+     P0425 [ODBC Driver 17 for SQL Server]
+     P0441 [ODBC Driver 17 for SQL Server]
+     P0448 [ODBC Driver 17 for SQL Server]
+     P0452 [ODBC Driver 17 for SQL Server]
+     P0455 [ODBC Driver 17 for SQL Server]
+     P0457 [ODBC Driver 17 for SQL Server]
+     P0461 [ODBC Driver 17 for SQL Server]
+     P0467 [ODBC Driver 17 for SQL Server]
+     P0469 [ODBC Driver 17 for SQL Server]
+     P0471 [ODBC Driver 17 for SQL Server]
+     P0478 [ODBC Driver 17 for SQL Server]
+     P0484 [ODBC Driver 17 for SQL Server]
+     P0485 [ODBC Driver 17 for SQL Server]
+     P0491 [ODBC Driver 17 for SQL Server]
+     P0492 [ODBC Driver 17 for SQL Server]
+     P0493 [ODBC Driver 17 for SQL Server]
+     P0504 [ODBC Driver 17 for SQL Server]
+     P0511 [ODBC Driver 17 for SQL Server]
+     P0515 [ODBC Driver 17 for SQL Server]
+     P0520 [ODBC Driver 17 for SQL Server]
+     P0521 [ODBC Driver 17 for SQL Server]
+     P0523 [ODBC Driver 17 for SQL Server]
+     P0524 [ODBC Driver 17 for SQL Server]
+     P0525 [ODBC Driver 17 for SQL Server]
+     P0544 [ODBC Driver 17 for SQL Server]
+     P0545 [ODBC Driver 17 for SQL Server]
+     P0548 [ODBC Driver 17 for SQL Server]
+     P0551 [ODBC Driver 17 for SQL Server]
+     P0562 [ODBC Driver 17 for SQL Server]
+     P0563 [ODBC Driver 17 for SQL Server]
+     P0564 [ODBC Driver 17 for SQL Server]
+     P0566 [ODBC Driver 17 for SQL Server]
+     P0568 [ODBC Driver 17 for SQL Server]
+     P0569 [ODBC Driver 17 for SQL Server]
+     P0572 [ODBC Driver 17 for SQL Server]
+     P0577 [ODBC Driver 17 for SQL Server]
+     P1267 [ODBC Driver 17 for SQL Server]
+     P1268 [ODBC Driver 17 for SQL Server]
+     P1269 [ODBC Driver 17 for SQL Server]
+     P1270 [ODBC Driver 17 for SQL Server]
+     P1271 [ODBC Driver 17 for SQL Server]
+     P1272 [ODBC Driver 17 for SQL Server]
+     P1274 [ODBC Driver 17 for SQL Server]
+     P1275 [ODBC Driver 17 for SQL Server]
+     P1276 [ODBC Driver 17 for SQL Server]
+     P1277 [ODBC Driver 17 for SQL Server]
+     P1278 [ODBC Driver 17 for SQL Server]
+     P1279 [ODBC Driver 17 for SQL Server]
+     P1280 [ODBC Driver 17 for SQL Server]
+     P1281 [ODBC Driver 17 for SQL Server]
+     P1282 [ODBC Driver 17 for SQL Server]
+     P1283 [ODBC Driver 17 for SQL Server]
+     P1284 [ODBC Driver 17 for SQL Server]
+     P1285 [ODBC Driver 17 for SQL Server]
+     P1286 [ODBC Driver 17 for SQL Server]
+     P1289 [ODBC Driver 17 for SQL Server]
+     P1290 [ODBC Driver 17 for SQL Server]
+     P1292 [ODBC Driver 17 for SQL Server]
+     P1291 [ODBC Driver 17 for SQL Server]
+     P1293 [ODBC Driver 17 for SQL Server]
+     P1295 [ODBC Driver 17 for SQL Server]
+     P1294 [ODBC Driver 17 for SQL Server]
+     P1297 [ODBC Driver 17 for SQL Server]
+     P1300 [ODBC Driver 17 for SQL Server]
+     P1302 [ODBC Driver 17 for SQL Server]
+     P1304 [ODBC Driver 17 for SQL Server]
+     P1305 [ODBC Driver 17 for SQL Server]
+     P1306 [ODBC Driver 17 for SQL Server]
+     P1308 [ODBC Driver 17 for SQL Server]
+     P1309 [ODBC Driver 17 for SQL Server]
+     P1311 [ODBC Driver 17 for SQL Server]
+     P1312 [ODBC Driver 17 for SQL Server]
+     P1315 [ODBC Driver 17 for SQL Server]
+     P1316 [ODBC Driver 17 for SQL Server]
+     P1318 [ODBC Driver 17 for SQL Server]
+     P1319 [ODBC Driver 17 for SQL Server]
+     P1320 [ODBC Driver 17 for SQL Server]
+     P1321 [ODBC Driver 17 for SQL Server]
+     P1322 [ODBC Driver 17 for SQL Server]
+     P1324 [ODBC Driver 17 for SQL Server]
+     P1325 [ODBC Driver 17 for SQL Server]
+     P1326 [ODBC Driver 17 for SQL Server]
+     P1327 [ODBC Driver 17 for SQL Server]
+     P1328 [ODBC Driver 17 for SQL Server]
+     P1329 [ODBC Driver 17 for SQL Server]
+     P1330 [ODBC Driver 17 for SQL Server]
+     P1331 [ODBC Driver 17 for SQL Server]
+     P1332 [ODBC Driver 17 for SQL Server]
+     P0003 [ODBC Driver 17 for SQL Server]
+     P0040 [ODBC Driver 17 for SQL Server]
+     P0044 [ODBC Driver 17 for SQL Server]
+     P0046 [ODBC Driver 17 for SQL Server]
+     P0057 [ODBC Driver 17 for SQL Server]
+     P0061 [ODBC Driver 17 for SQL Server]
+     P0063 [ODBC Driver 17 for SQL Server]
+     P0064 [ODBC Driver 17 for SQL Server]
+     P0067 [ODBC Driver 17 for SQL Server]
+     P0150 [ODBC Driver 17 for SQL Server]
+     P0152 [ODBC Driver 17 for SQL Server]
+     P0866 [ODBC Driver 17 for SQL Server]
+     P1333 [ODBC Driver 17 for SQL Server]
+     P1334 [ODBC Driver 17 for SQL Server]
+     P1335 [ODBC Driver 17 for SQL Server]
+     P1336 [ODBC Driver 17 for SQL Server]
+     P1337 [ODBC Driver 17 for SQL Server]
+     P1341 [ODBC Driver 17 for SQL Server]
+     P1342 [ODBC Driver 17 for SQL Server]
+     P1343 [ODBC Driver 17 for SQL Server]
+     P1344 [ODBC Driver 17 for SQL Server]
+     P1345 [ODBC Driver 17 for SQL Server]
+     P1346 [ODBC Driver 17 for SQL Server]
+     P1347 [ODBC Driver 17 for SQL Server]
+     P1348 [ODBC Driver 17 for SQL Server]
+     P1349 [ODBC Driver 17 for SQL Server]
+     P1350 [ODBC Driver 17 for SQL Server]
+     P1351 [ODBC Driver 17 for SQL Server]
+     P1353 [ODBC Driver 17 for SQL Server]
+     P1355 [ODBC Driver 17 for SQL Server]
+     P1356 [ODBC Driver 17 for SQL Server]
+     P1357 [ODBC Driver 17 for SQL Server]
+     P1358 [ODBC Driver 17 for SQL Server]
+     P1359 [ODBC Driver 17 for SQL Server]
+     P1360 [ODBC Driver 17 for SQL Server]
+     P1361 [ODBC Driver 17 for SQL Server]
+     P1362 [ODBC Driver 17 for SQL Server]
+     P1363 [ODBC Driver 17 for SQL Server]
+     P1364 [ODBC Driver 17 for SQL Server]
+     P1365 [ODBC Driver 17 for SQL Server]
+     P1366 [ODBC Driver 17 for SQL Server]
+     P1368 [ODBC Driver 17 for SQL Server]
+     P1369 [ODBC Driver 17 for SQL Server]
+     P1370 [ODBC Driver 17 for SQL Server]
+     P1371 [ODBC Driver 17 for SQL Server]
+     P1372 [ODBC Driver 17 for SQL Server]
+     P1373 [ODBC Driver 17 for SQL Server]
+     P1374 [ODBC Driver 17 for SQL Server]
+     P1375 [ODBC Driver 17 for SQL Server]
+     P1376 [ODBC Driver 17 for SQL Server]
+     P1377 [ODBC Driver 17 for SQL Server]
+     P1378 [ODBC Driver 17 for SQL Server]
+     P1379 [ODBC Driver 17 for SQL Server]
+     P1380 [ODBC Driver 17 for SQL Server]
+     P1381 [ODBC Driver 17 for SQL Server]
+     P1382 [ODBC Driver 17 for SQL Server]
+     P1383 [ODBC Driver 17 for SQL Server]
+     P1388 [ODBC Driver 17 for SQL Server]
+     P1389 [ODBC Driver 17 for SQL Server]
+     P1390 [ODBC Driver 17 for SQL Server]
+     P1391 [ODBC Driver 17 for SQL Server]
+     P1392 [ODBC Driver 17 for SQL Server]
+     P1393 [ODBC Driver 17 for SQL Server]
+     P1394 [ODBC Driver 17 for SQL Server]
+     P1395 [ODBC Driver 17 for SQL Server]
+     P1396 [ODBC Driver 17 for SQL Server]
+     P1398 [ODBC Driver 17 for SQL Server]
+     P1399 [ODBC Driver 17 for SQL Server]
+     P1400 [ODBC Driver 17 for SQL Server]
+     P1401 [ODBC Driver 17 for SQL Server]
+     P1402 [ODBC Driver 17 for SQL Server]
+     P1403 [ODBC Driver 17 for SQL Server]
+     P1404 [ODBC Driver 17 for SQL Server]
+     P1406 [ODBC Driver 17 for SQL Server]
+     P1407 [ODBC Driver 17 for SQL Server]
+     P1408 [ODBC Driver 17 for SQL Server]
+     P1409 [ODBC Driver 17 for SQL Server]
+     P1410 [ODBC Driver 17 for SQL Server]
+     P1412 [ODBC Driver 17 for SQL Server]
+     P1413 [ODBC Driver 17 for SQL Server]
+     P1414 [ODBC Driver 17 for SQL Server]
+     P1415 [ODBC Driver 17 for SQL Server]
+     P1416 [ODBC Driver 17 for SQL Server]
+     P1417 [ODBC Driver 17 for SQL Server]
+     P1418 [ODBC Driver 17 for SQL Server]
+     P1419 [ODBC Driver 17 for SQL Server]
+     P1420 [ODBC Driver 17 for SQL Server]
+     P1421 [ODBC Driver 17 for SQL Server]
+     P1422 [ODBC Driver 17 for SQL Server]
+     P1423 [ODBC Driver 17 for SQL Server]
+     P1424 [ODBC Driver 17 for SQL Server]
+     P1425 [ODBC Driver 17 for SQL Server]
+     P1426 [ODBC Driver 17 for SQL Server]
+     P1427 [ODBC Driver 17 for SQL Server]
+     P1428 [ODBC Driver 17 for SQL Server]
+     P1430 [ODBC Driver 17 for SQL Server]
+     P1433 [ODBC Driver 17 for SQL Server]
+     P1432 [ODBC Driver 17 for SQL Server]
+     P1434 [ODBC Driver 17 for SQL Server]
+     P1435 [ODBC Driver 17 for SQL Server]
+     P1436 [ODBC Driver 17 for SQL Server]
+     P1437 [ODBC Driver 17 for SQL Server]
+     P1438 [ODBC Driver 17 for SQL Server]
+     P1439 [ODBC Driver 17 for SQL Server]
+     P1440 [ODBC Driver 17 for SQL Server]
+     P1441 [ODBC Driver 17 for SQL Server]
+     P1442 [ODBC Driver 17 for SQL Server]
+     P1443 [ODBC Driver 17 for SQL Server]
+     P1444 [ODBC Driver 17 for SQL Server]
+     P1445 [ODBC Driver 17 for SQL Server]
+     P1446 [ODBC Driver 17 for SQL Server]
+     P1447 [ODBC Driver 17 for SQL Server]
+     P1448 [ODBC Driver 17 for SQL Server]
+     P1449 [ODBC Driver 17 for SQL Server]
+     P1450 [ODBC Driver 17 for SQL Server]
+     P1451 [ODBC Driver 17 for SQL Server]
+     P1453 [ODBC Driver 17 for SQL Server]
+     P1452 [ODBC Driver 17 for SQL Server]
+     P1454 [ODBC Driver 17 for SQL Server]
+     P1455 [ODBC Driver 17 for SQL Server]
+     P1456 [ODBC Driver 17 for SQL Server]
+     P1457 [ODBC Driver 17 for SQL Server]
+     P1458 [ODBC Driver 17 for SQL Server]
+     P1459 [ODBC Driver 17 for SQL Server]
+     P1460 [ODBC Driver 17 for SQL Server]
+     P1463 [ODBC Driver 17 for SQL Server]
+     P1465 [ODBC Driver 17 for SQL Server]
+     P1466 [ODBC Driver 17 for SQL Server]
+     P1467 [ODBC Driver 17 for SQL Server]
+     P1468 [ODBC Driver 17 for SQL Server]
+     P1469 [ODBC Driver 17 for SQL Server]
+     P1470 [ODBC Driver 17 for SQL Server]
+     P1472 [ODBC Driver 17 for SQL Server]
+     P1473 [ODBC Driver 17 for SQL Server]
+     P1474 [ODBC Driver 17 for SQL Server]
+     P1475 [ODBC Driver 17 for SQL Server]
+     P1476 [ODBC Driver 17 for SQL Server]
+     P1477 [ODBC Driver 17 for SQL Server]
+     P1478 [ODBC Driver 17 for SQL Server]
+     P1479 [ODBC Driver 17 for SQL Server]
+     P1480 [ODBC Driver 17 for SQL Server]
+     P1481 [ODBC Driver 17 for SQL Server]
+     P1482 [ODBC Driver 17 for SQL Server]
+     P1483 [ODBC Driver 17 for SQL Server]
+     P1484 [ODBC Driver 17 for SQL Server]
+     P1485 [ODBC Driver 17 for SQL Server]
+     P1486 [ODBC Driver 17 for SQL Server]
+     P1487 [ODBC Driver 17 for SQL Server]
+     P1488 [ODBC Driver 17 for SQL Server]
+     P1489 [ODBC Driver 17 for SQL Server]
+     P1490 [ODBC Driver 17 for SQL Server]
+     P1491 [ODBC Driver 17 for SQL Server]
+     P1492 [ODBC Driver 17 for SQL Server]
+     P1493 [ODBC Driver 17 for SQL Server]
+     P1494 [ODBC Driver 17 for SQL Server]
+     P1495 [ODBC Driver 17 for SQL Server]
+     P1496 [ODBC Driver 17 for SQL Server]
+     P1497 [ODBC Driver 17 for SQL Server]
+     P1498 [ODBC Driver 17 for SQL Server]
+     P1500 [ODBC Driver 17 for SQL Server]
+     P1501 [ODBC Driver 17 for SQL Server]
+     P1507 [ODBC Driver 17 for SQL Server]
+     P1508 [ODBC Driver 17 for SQL Server]
+     P1509 [ODBC Driver 17 for SQL Server]
+     P1510 [ODBC Driver 17 for SQL Server]
+     P1511 [ODBC Driver 17 for SQL Server]
+     P1512 [ODBC Driver 17 for SQL Server]
+     P1513 [ODBC Driver 17 for SQL Server]
+     P1514 [ODBC Driver 17 for SQL Server]
+     P1517 [ODBC Driver 17 for SQL Server]
+     P1518 [ODBC Driver 17 for SQL Server]
+     P1519 [ODBC Driver 17 for SQL Server]
+     P1520 [ODBC Driver 17 for SQL Server]
+     P1522 [ODBC Driver 17 for SQL Server]
+     P1523 [ODBC Driver 17 for SQL Server]
+     P1525 [ODBC Driver 17 for SQL Server]
+     P1526 [ODBC Driver 17 for SQL Server]
+     P1527 [ODBC Driver 17 for SQL Server]
+     P1528 [ODBC Driver 17 for SQL Server]
+     P1529 [ODBC Driver 17 for SQL Server]
+  -> OK (1.10s)
+> 
+> # ---- 9. MS SQL probe (if DSN provided) -------------------------------
+> 
+> log_section("9. MS SQL VIA ODBC (optional)")
+
+======================================================================
+9. MS SQL VIA ODBC (optional)
+======================================================================
+> 
+> if (nzchar(PROJECT_DSN)) {
++   log_line(sprintf("Using DSN: %s", PROJECT_DSN))
++ 
++   sql_con <- NULL
++   probe(sprintf("DBI::dbConnect(odbc::odbc(), dsn='%s')", PROJECT_DSN), {
++     sql_con <<- DBI::dbConnect(odbc::odbc(), dsn = PROJECT_DSN)
++     TRUE
++   })
++ 
++   if (!is.null(sql_con)) {
++     probe("SELECT 1 against MS SQL", {
++       r <- DBI::dbGetQuery(sql_con, "SELECT 1 AS x")
++       log_line(sprintf("     ok, got %d row(s)", nrow(r)))
++       TRUE
++     })
++ 
++     probe("MS SQL @@VERSION", {
++       r <- DBI::dbGetQuery(sql_con, "SELECT @@VERSION AS v")
++       log_line(sprintf("     %s", substr(as.character(r$v), 1, 200)))
++       TRUE
++     })
++ 
++     probe("server-side aggregation on MS SQL: STDEV + PERCENTILE_CONT", {
++       r <- DBI::dbGetQuery(sql_con, "
++         SELECT
++           STDEV(CAST(n AS FLOAT)) AS sd_n,
++           PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY CAST(n AS FLOAT)) OVER () AS p50
++         FROM (SELECT 1 n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5) t
++       ")
++       log_line(sprintf("     sd=%.4f p50=%.2f", r$sd_n[1], r$p50[1]))
++       TRUE
++     })
++ 
++     probe("server-side APPROX_COUNT_DISTINCT (SQL Server 2019+)", {
++       r <- DBI::dbGetQuery(sql_con, "
++         SELECT APPROX_COUNT_DISTINCT(n) AS nd
++         FROM (SELECT 1 n UNION ALL SELECT 2 UNION ALL SELECT 1 UNION ALL SELECT 3) t
++       ")
++       log_line(sprintf("     nd=%d", r$nd[1]))
++       TRUE
++     })
++ 
++     if (nzchar(SAMPLE_TABLE)) {
++       probe(sprintf("COUNT(*) on table %s (server-side)", SAMPLE_TABLE), {
++         q <- sprintf("SELECT COUNT_BIG(*) AS n FROM %s", SAMPLE_TABLE)
++         r <- DBI::dbGetQuery(sql_con, q)
++         log_line(sprintf("     n_rows = %s", format(r$n[1], scientific = FALSE)))
++         TRUE
++       })
++ 
++       # NOTE: deliberately no `SELECT TOP N *` probe. We can confirm the
++       # table is queryable via INFORMATION_SCHEMA + COUNT_BIG without
++       # ever pulling row-level data into R memory.
++ 
++       sample_cols <- NULL
++       probe(sprintf("INFORMATION_SCHEMA.COLUMNS for %s", SAMPLE_TABLE), {
++         q <- sprintf("
++           SELECT COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH
++           FROM INFORMATION_SCHEMA.COLUMNS
++           WHERE TABLE_NAME = '%s'
++           ORDER BY ORDINAL_POSITION
++         ", gsub("'", "''", SAMPLE_TABLE))
++         r <- DBI::dbGetQuery(sql_con, q)
++         sample_cols <<- r
++         log_line(sprintf("     %d columns", nrow(r)))
++         for (i in seq_len(min(nrow(r), 30))) {
++           log_line(sprintf("     %-30s %s", r$COLUMN_NAME[i], r$DATA_TYPE[i]))
++         }
++         if (nrow(r) > 30) log_line(sprintf("     ... (%d more)", nrow(r) - 30))
++         TRUE
++       })
++ 
++       # The real fallback-path question: does server-side aggregation on
++       # an 8M-row table return a small result with bounded R memory?
++       # PII safety: we run MIN/MAX/AVG/STDEV against the chosen column
++       # to exercise the aggregation pipeline, but the resulting numbers
++       # are NOT logged. We log only the row count, elapsed time, R heap
++       # delta, and (boolean) whether each aggregate came back finite.
++       probe(sprintf("server-side COUNT_BIG + STDEV on %s (timing/memory only)", SAMPLE_TABLE), {
++         numeric_types <- c("int", "bigint", "smallint", "tinyint", "decimal",
++                            "numeric", "float", "real", "money", "smallmoney")
++         num_col <- if (!is.null(sample_cols)) {
++           hits <- sample_cols$COLUMN_NAME[tolower(sample_cols$DATA_TYPE) %in% numeric_types]
++           if (length(hits) > 0) hits[1] else NA
++         } else NA
++ 
++         q <- if (!is.na(num_col)) {
++           sprintf("
++             SELECT
++               COUNT_BIG(*) AS n,
++               MIN(CAST([%s] AS FLOAT)) AS min_v,
++               MAX(CAST([%s] AS FLOAT)) AS max_v,
++               AVG(CAST([%s] AS FLOAT)) AS mean_v,
++               STDEV(CAST([%s] AS FLOAT)) AS sd_v
++             FROM %s
++           ", num_col, num_col, num_col, num_col, SAMPLE_TABLE)
++         } else {
++           sprintf("SELECT COUNT_BIG(*) AS n FROM %s", SAMPLE_TABLE)
++         }
++         before <- gc(reset = TRUE)
++         t0 <- Sys.time()
++         r <- DBI::dbGetQuery(sql_con, q)
++         secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
++         after <- gc()
++         used_mb <- sum(after[, 2]) - sum(before[, 2])
++         all_finite <- if (!is.na(num_col) && "min_v" %in% names(r)) {
++           all(is.finite(c(r$min_v[1], r$max_v[1], r$mean_v[1], r$sd_v[1])))
++         } else NA
++         # Drop the result frame before logging anything so it can't
++         # leak via subsequent error formatters.
++         n_rows <- r$n[1]
++         rm(r); invisible(gc(verbose = FALSE))
++         log_line(sprintf("     col='%s'  n_rows=%s  elapsed=%.2fs  R-heap-delta=%+.1f MB  aggs_finite=%s",
++                          if (!is.na(num_col)) num_col else "<count only>",
++                          format(n_rows, scientific = FALSE), secs, used_mb,
++                          if (is.na(all_finite)) "n/a" else as.character(all_finite)))
++         TRUE
++       })
++ 
++       probe(sprintf("server-side GROUP BY on %s (count-only, no values logged)", SAMPLE_TABLE), {
++         # Pick a likely categorical column: short char/varchar.
++         # PII safety: the cell values and counts are NEVER logged.
++         # We log only the column name (schema) and the number of
++         # groups returned, which is what the rework actually needs
++         # to know -- "does GROUP BY return a small bounded result?"
++         cat_col <- if (!is.null(sample_cols)) {
++           short_chars <- sample_cols[
++             tolower(sample_cols$DATA_TYPE) %in% c("char", "varchar", "nchar", "nvarchar") &
++               (is.na(sample_cols$CHARACTER_MAXIMUM_LENGTH) |
++                  sample_cols$CHARACTER_MAXIMUM_LENGTH <= 10),
++           ]
++           if (nrow(short_chars) > 0) short_chars$COLUMN_NAME[1] else NA
++         } else NA
++ 
++         if (is.na(cat_col)) {
++           log_line("     no obvious categorical column found, skipping")
++           return(TRUE)
++         }
++         # COUNT(DISTINCT) returns a single number, not the values.
++         # Bounds the result to one row regardless of cardinality.
++         q <- sprintf("SELECT COUNT(DISTINCT [%s]) AS nd FROM %s",
++                      cat_col, SAMPLE_TABLE)
++         before <- gc(reset = TRUE)
++         t0 <- Sys.time()
++         r <- DBI::dbGetQuery(sql_con, q)
++         secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
++         after <- gc()
++         used_mb <- sum(after[, 2]) - sum(before[, 2])
++         log_line(sprintf("     col='%s'  n_distinct=%s  elapsed=%.2fs  R-heap-delta=%+.1f MB",
++                          cat_col, format(r$nd[1], scientific = FALSE),
++                          secs, used_mb))
++         rm(r); invisible(gc(verbose = FALSE))
++         TRUE
++       })
++     }
++ 
++     # The actual unification question: can DuckDB query MS SQL via the
++     # odbc_scanner extension? Only meaningful if section 7 succeeded.
++     duck_attached <- FALSE
++     probe("DuckDB ATTACH MS SQL via odbc_scanner", {
++       attach_sql <- sprintf("ATTACH 'DSN=%s' AS sqldb (TYPE odbc)", PROJECT_DSN)
++       DBI::dbExecute(duck_con, attach_sql)
++       r <- DBI::dbGetQuery(duck_con, "SELECT 1 AS x")
++       duck_attached <<- TRUE
++       log_line(sprintf("     attached + queried, got %d row(s)", nrow(r)))
++       TRUE
++     })
++ 
++     if (duck_attached && nzchar(SAMPLE_TABLE)) {
++       # Cross-engine sanity: same aggregation through DuckDB->odbc bridge.
++       probe(sprintf("DuckDB->ODBC: COUNT(*) on sqldb.%s", SAMPLE_TABLE), {
++         before <- gc(reset = TRUE)
++         t0 <- Sys.time()
++         r <- DBI::dbGetQuery(duck_con,
++                              sprintf("SELECT COUNT(*) AS n FROM sqldb.%s", SAMPLE_TABLE))
++         secs <- as.numeric(difftime(Sys.time(), t0, units = "secs"))
++         after <- gc()
++         used_mb <- sum(after[, 2]) - sum(before[, 2])
++         log_line(sprintf("     n=%s  elapsed=%.2fs  R-heap-delta=%+.1f MB",
++                          format(r$n[1], scientific = FALSE), secs, used_mb))
++         TRUE
++       })
++     }
++ 
++     tryCatch(DBI::dbDisconnect(sql_con), error = function(e) NULL)
++   }
++ } else {
++   log_line("PROJECT_DSN is empty -- skipping MS SQL probes.")
++   log_line("Edit the top of this script to set PROJECT_DSN to your project DSN")
++   log_line("(e.g. 'P1105') and SAMPLE_TABLE to a small view to enable section 9.")
++ }
+Using DSN: P1105
+
+[probe] DBI::dbConnect(odbc::odbc(), dsn='P1105')
+  -> OK (0.07s)
+
+[probe] SELECT 1 against MS SQL
+     ok, got 1 row(s)
+  -> OK (0.01s)
+
+[probe] MS SQL @@VERSION
+     Microsoft SQL Server 2022 (RTM-CU24-GDR) (KB5083252) - 16.0.4250.1 (X64) 
+	Mar 13 2026 00:15:17 
+	Copyright (C) 2022 Microsoft Corporation
+	Enterprise Edition: Core-based Licensing (64-bit) on Windows
+  -> OK (0.00s)
+
+[probe] server-side aggregation on MS SQL: STDEV + PERCENTILE_CONT
+  -> FAIL (0.33s)
+     ! ODBC failed with error 42000 from [Microsoft][ODBC Driver 17 for SQL
+  Server][SQL Server].
+x Column 't.n' is invalid in the select list because it is not contained in
+  either an aggregate function or the GROUP BY clause.
+* <SQL> '
+*  SELECT
+*  STDEV(CAST(n AS FLOAT)) AS sd_n,
+*  PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY CAST(n AS FLOAT)) OVER () AS p50
+*  FROM (SELECT 1 n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+  UNION ALL SELECT 5) t
+*  '
+i From 'nanodbc/nanodbc.cpp:1802'.
+
+[probe] server-side APPROX_COUNT_DISTINCT (SQL Server 2019+)
+  -> FAIL (0.01s)
+     invalid format '%d'; use format %f, %e, %g or %a for numeric objects
+
+[probe] COUNT(*) on table Individ_2018 (server-side)
+     n_rows = 8410456
+  -> OK (0.10s)
+
+[probe] INFORMATION_SCHEMA.COLUMNS for Individ_2018
+     127 columns
+     P1105_LopNr_PersonNr           int
+     P1105_LopNr_FamId              int
+     P1105_LopNr_PeOrgNr_LISA       int
+     P1105_LopNr_CfarNr_LISA        int
+     P1105_LopNr_ArbstId            int
+     P1105_LopNr_KU1PeOrgNr         int
+     P1105_LopNr_KU1CfarNr          int
+     P1105_LopNr_KU2PeOrgNr         int
+     P1105_LopNr_KU2CfarNr          int
+     P1105_LopNr_KU3PeOrgNr         int
+     P1105_LopNr_KU3CfarNr          int
+     Lan                            char
+     Kommun                         char
+     Distriktskod                   char
+     Civil                          varchar
+     CivilAntAr                     int
+     FamStF                         varchar
+     SenInvAr                       char
+     FamTypF                        char
+     KonsViktF04                    numeric
+     Barn0_3                        int
+     Barn4_6                        int
+     Barn7_10                       int
+     Barn11_15                      int
+     Barn16_17                      int
+     Barn18_19                      int
+     Barn20plus                     int
+     Sun2000niva_old                char
+     Sun2000niva                    char
+     Sun2000Inr                     char
+     ... (97 more)
+  -> OK (0.10s)
+
+[probe] server-side COUNT_BIG + STDEV on Individ_2018 (timing/memory only)
+     col='P1105_LopNr_PersonNr'  n_rows=8410456  elapsed=0.87s  R-heap-delta=+0.0 MB  aggs_finite=TRUE
+  -> OK (1.30s)
+
+[probe] server-side GROUP BY on Individ_2018 (count-only, no values logged)
+     col='Lan'  n_distinct=21  elapsed=0.15s  R-heap-delta=+0.0 MB
+  -> OK (0.53s)
+
+[probe] DuckDB ATTACH MS SQL via odbc_scanner
+  -> FAIL (0.05s)
+     Invalid Error: IO Error: Extension "\\cifs_2_hd_micro\AppData\uualtada\R\data\R\duckdb\extensions\v1.4.4\windows_amd64_mingw\odbc.duckdb_extension" not found.
+
+Candidate extensions: "md", "ducklake", "encodings", "autocomplete", "postgres_scanner"
+i Context: rapi_execute
+i Error type: INVALID
+> 
+> # ---- 10. cleanup -----------------------------------------------------
+> 
+> log_section("10. CLEANUP")
+
+======================================================================
+10. CLEANUP
+======================================================================
+> 
+> probe("disconnect DuckDB", {
++   DBI::dbDisconnect(duck_con, shutdown = TRUE)
++   TRUE
++ })
+
+[probe] disconnect DuckDB
+  -> OK (0.00s)
+> 
+> probe("remove probe CSVs", {
++   for (p in c(csv_path, big_csv)) {
++     if (file.exists(p)) file.remove(p)
++   }
++   TRUE
++ })
+
+[probe] remove probe CSVs
+  -> OK (0.01s)
+     cannot remove file 'C:\Windows\TEMP\RtmpEhkBho/mdw_probe_big.csv', reason 'Permission denied'
+> 
+> log_line("")
+
+> log_line(strrep("=", 70))
+======================================================================
+> log_line("DONE")
+DONE
+> log_line(sprintf("Log written to: %s", log_path))
+Log written to: \\micro.intra/mydocs/mydocs/uualtada/my documents/InBox/mdw_probe_20260425_211528.log
+> log_line(strrep("=", 70))
+======================================================================
+> 
+> close(log_con)
+> 
+> proc.time()
+   user  system elapsed 
+  21.93    3.32  339.90 

@@ -47,9 +47,10 @@ class RegisterCandidate:
 
 
 @dataclass
-class EnrichedFile:
-    file_name: str
-    relative_path: str
+class EnrichedSource:
+    source_name: str
+    source_type: str
+    source_detail: dict[str, Any]
     row_count: int
     columns: list[EnrichedColumn]
     register_hint: int | None = None
@@ -72,7 +73,7 @@ def enrich(
     *,
     register: str | None = None,
     db_path: Path | None = None,
-) -> list[EnrichedFile]:
+) -> list[EnrichedSource]:
     """Combine stats with regmeta metadata.
 
     If db_path is provided, opens the regmeta database and uses it to resolve
@@ -102,80 +103,88 @@ def enrich(
         signal.signal(signal.SIGINT, _sigint_handler)
         conn.set_progress_handler(_progress_handler, 10000)
 
-    total = len(stats.files)
+    total = len(stats.sources)
     if conn is not None:
-        progress(f"Enriching {total} files with regmeta...")
+        progress(f"Enriching {total} sources with regmeta...")
 
     t0 = time.monotonic()
 
     try:
-        # Collect all unique column names across all files
+        # Collect all unique column names across all sources
         all_col_names: set[str] = set()
-        for file_stats in stats.files:
-            for col in file_stats.columns:
+        for source in stats.sources:
+            for col in source.columns:
                 all_col_names.add(col.column_name)
 
-        # Per-file resolved vars and the register each file votes for
-        file_resolved: dict[str, dict[str, _ResolvedVar]] = {}
-        file_register: dict[str, int | None] = {}
-        file_candidates: dict[str, list[RegisterCandidate]] = {}
-        value_codes: dict[int, dict[str, str]] = {}
+        # Per-source resolved vars and the register each source votes for
+        source_resolved: dict[str, dict[str, _ResolvedVar]] = {}
+        source_register: dict[str, int | None] = {}
+        source_candidates: dict[str, list[RegisterCandidate]] = {}
 
         if conn is not None:
             if register:
-                # Explicit register: single pass, all files use it
+                # Explicit register: single pass, all sources use it
                 reg_ids = regmeta.resolve_register_ids(conn, register)
                 global_resolved = _bulk_resolve(conn, all_col_names, reg_ids or None)
-                for file_stats in stats.files:
-                    file_resolved[file_stats.file_name] = global_resolved
-                    file_register[file_stats.file_name] = (
+                for source in stats.sources:
+                    source_resolved[source.source_name] = global_resolved
+                    source_register[source.source_name] = (
                         reg_ids[0] if reg_ids else None
                     )
             else:
-                # Two-pass: vote on register per file, then resolve within it
+                # Two-pass: vote on register per source, then resolve within it
                 col_to_registers = _bulk_resolve_all_registers(conn, all_col_names)
 
-                # Group files by their voted register so we batch DB queries
-                register_to_files: dict[int | None, list[str]] = {}
-                for file_stats in stats.files:
+                # Group sources by their voted register so we batch DB queries
+                register_to_sources: dict[int | None, list[str]] = {}
+                for source in stats.sources:
                     nonid_cols = [
-                        c.column_name
-                        for c in file_stats.columns
-                        if c.inferred_type != "id"
+                        c.column_name for c in source.columns if c.inferred_type != "id"
                     ]
                     result = _vote_register(
-                        nonid_cols, col_to_registers, file_stats.file_name
+                        nonid_cols, col_to_registers, source.source_name
                     )
-                    file_register[file_stats.file_name] = result.register_id
-                    file_candidates[file_stats.file_name] = result.candidates
-                    register_to_files.setdefault(result.register_id, []).append(
-                        file_stats.file_name
+                    source_register[source.source_name] = result.register_id
+                    source_candidates[source.source_name] = result.candidates
+                    register_to_sources.setdefault(result.register_id, []).append(
+                        source.source_name
                     )
 
                 # One _bulk_resolve per distinct voted register
-                for reg_id, _fnames in register_to_files.items():
+                for reg_id, _names in register_to_sources.items():
                     reg_ids = [reg_id] if reg_id is not None else None
                     resolved = _bulk_resolve(conn, all_col_names, reg_ids)
-                    for fname in _fnames:
-                        file_resolved[fname] = resolved
+                    for name in _names:
+                        source_resolved[name] = resolved
 
-            # Collect categorical var_ids for value code fetch
-            cat_var_ids: set[int] = set()
-            for file_stats in stats.files:
-                resolved = file_resolved.get(file_stats.file_name, {})
-                for col in file_stats.columns:
+            # Build per-column requests: (source_name, column_name) -> (var_id,
+            # register_id, observed_codes). One source can have two columns
+            # resolving to the same (var, reg) (e.g. Individ_2019 with both
+            # Sun2000Inr and Sun2020Inr → both → var=784/reg=34) so we cannot
+            # share CVID picks per pair — each column needs its own decision.
+            requests: dict[tuple[str, str], tuple[int, int, set[str]]] = {}
+            for source in stats.sources:
+                resolved = source_resolved.get(source.source_name, {})
+                for col in source.columns:
                     rv = _lookup_resolved(resolved, col.column_name)
-                    if col.inferred_type == "categorical" and rv is not None:
-                        cat_var_ids.add(rv.var_id)
-            if cat_var_ids:
-                value_codes = _bulk_fetch_value_codes(conn, cat_var_ids)
+                    if col.inferred_type != "categorical" or rv is None:
+                        continue
+                    observed = set(col.stats.get("frequencies", {})) - {"_other"}
+                    requests[(source.source_name, col.column_name)] = (
+                        rv.var_id,
+                        rv.register_id,
+                        observed,
+                    )
+            value_codes_by_col: dict[tuple[str, str], dict[str, str]] = {}
+            if requests:
+                value_codes_by_col = _bulk_fetch_value_codes(conn, requests)
 
         matched_total = 0
-        enriched_files: list[EnrichedFile] = []
-        for file_stats in stats.files:
-            resolved = file_resolved.get(file_stats.file_name, {})
+        enriched_sources: list[EnrichedSource] = []
+        for source in stats.sources:
+            resolved = source_resolved.get(source.source_name, {})
             enriched_cols = []
-            for col in file_stats.columns:
+            for col in source.columns:
                 ecol = _column_from_stats(col)
                 rv = _lookup_resolved(resolved, ecol.column_name)
                 if rv is not None:
@@ -183,19 +192,23 @@ def enrich(
                     ecol.var_id = rv.var_id
                     ecol.variable_name = rv.variable_name
                     matched_total += 1
-                    if ecol.inferred_type == "categorical" and rv.var_id in value_codes:
-                        ecol.value_codes = value_codes[rv.var_id]
+                    codes = value_codes_by_col.get(
+                        (source.source_name, ecol.column_name)
+                    )
+                    if ecol.inferred_type == "categorical" and codes:
+                        ecol.value_codes = codes
                 enriched_cols.append(ecol)
 
-            enriched_files.append(
-                EnrichedFile(
-                    file_name=file_stats.file_name,
-                    relative_path=file_stats.relative_path,
-                    row_count=file_stats.row_count,
+            enriched_sources.append(
+                EnrichedSource(
+                    source_name=source.source_name,
+                    source_type=source.source_type,
+                    source_detail=source.source_detail,
+                    row_count=source.row_count,
                     columns=enriched_cols,
-                    register_hint=file_register.get(file_stats.file_name),
-                    register_hint_candidates=file_candidates.get(
-                        file_stats.file_name, []
+                    register_hint=source_register.get(source.source_name),
+                    register_hint_candidates=source_candidates.get(
+                        source.source_name, []
                     ),
                 )
             )
@@ -211,30 +224,38 @@ def enrich(
 
     if conn is not None:
         elapsed = time.monotonic() - t0
-        total_cols = sum(len(f.columns) for f in enriched_files)
+        total_cols = sum(len(f.columns) for f in enriched_sources)
         progress(
-            f"Enriched {total} files ({matched_total}/{total_cols} columns matched) "
+            f"Enriched {total} sources ({matched_total}/{total_cols} columns matched) "
             f"in {elapsed:.1f}s"
         )
-        for w in _check_value_code_drift(enriched_files):
+        for w in _check_value_code_drift(enriched_sources):
             progress(f"  Warning: {w}")
 
-    return enriched_files
+    return enriched_sources
 
 
-def _check_value_code_drift(enriched_files: list[EnrichedFile]) -> list[str]:
-    """Warn when stats contain frequency codes absent from regmeta value codes."""
+def _check_value_code_drift(enriched_sources: list[EnrichedSource]) -> list[str]:
+    """Warn when stats contain frequency codes absent from regmeta value codes.
+
+    Compares on stripped codes and drops whitespace-only/empty observed values:
+    SCB tables often pad fixed-width columns (e.g. SsykStatus stores '1 ', '2 ')
+    and use blank strings as "no value" sentinels. Neither is a real drift.
+    """
     warnings: list[str] = []
-    for ef in enriched_files:
+    for ef in enriched_sources:
         for ec in ef.columns:
             if ec.inferred_type != "categorical" or not ec.value_codes:
                 continue
             freq_keys = set(ec.stats.get("frequencies", {})) - {"_other"}
-            unknown = sorted(freq_keys - set(ec.value_codes))
+            valid_stripped = {v.strip() for v in ec.value_codes if v.strip()}
+            unknown = sorted(
+                k for k in freq_keys if k.strip() and k.strip() not in valid_stripped
+            )
             if unknown:
                 codes = ", ".join(unknown)
                 warnings.append(
-                    f"{ef.file_name}/{ec.column_name}: "
+                    f"{ef.source_name}/{ec.column_name}: "
                     f"codes [{codes}] not in regmeta value set"
                 )
     return warnings
@@ -304,9 +325,9 @@ _SCB_TABLE_REGISTER: dict[str, int] = {
 }
 
 
-def _filename_register_fallback(file_name: str) -> int | None:
-    """Match known SCB delivery table names to register IDs."""
-    stem = file_name.rsplit(".", 1)[0].lower()
+def _source_name_register_fallback(source_name: str) -> int | None:
+    """Match known SCB delivery table names to register IDs by source name stem."""
+    stem = source_name.rsplit(".", 1)[0].lower()
     for prefix, reg_id in _SCB_TABLE_REGISTER.items():
         if stem.startswith(prefix):
             return reg_id
@@ -332,15 +353,15 @@ class _VoteResult:
 def _vote_register(
     nonid_col_names: list[str],
     col_to_registers: dict[str, list[int]],
-    file_name: str = "",
+    source_name: str = "",
 ) -> _VoteResult:
-    """Pick the best-fit register for a file via weighted majority vote.
+    """Pick the best-fit register for a source via weighted majority vote.
 
     Generic columns (appearing in many registers) are downweighted to avoid
     noise from Kommun/Kön/Ar which exist in 70-120 registers. The winner is
-    also required to cover at least ``_MIN_MATCH_RATE`` of the file's non-id
-    columns; otherwise the hint is cleared and falls back to known SCB
-    delivery table names, then to None. Candidates are returned for
+    also required to cover at least ``_MIN_MATCH_RATE`` of the source's
+    non-id columns; otherwise the hint is cleared and falls back to known
+    SCB delivery table names, then to None. Candidates are returned for
     downstream tooling to present to the user.
     """
     total_nonid = len(nonid_col_names)
@@ -369,20 +390,20 @@ def _vote_register(
     ][:_MAX_CANDIDATES]
 
     if not weighted:
-        return _VoteResult(_filename_register_fallback(file_name), candidates)
+        return _VoteResult(_source_name_register_fallback(source_name), candidates)
 
     top = weighted.most_common(2)
     winner_id, winner_score = top[0]
     if len(top) > 1:
         _, runner_up_score = top[1]
-        # Margin guard: files dominated by generic columns (Kommun, Kön, Ar)
+        # Margin guard: sources dominated by generic columns (Kommun, Kön, Ar)
         # produce near-ties. Require a 20% lead OR ≥3 weighted votes
         # (roughly 3+ register-specific columns) before trusting the winner.
         if winner_score < runner_up_score * 1.2 and winner_score < 3:
-            return _VoteResult(_filename_register_fallback(file_name), candidates)
+            return _VoteResult(_source_name_register_fallback(source_name), candidates)
 
     if total_nonid > 0 and match_counts[winner_id] / total_nonid < _MIN_MATCH_RATE:
-        return _VoteResult(_filename_register_fallback(file_name), candidates)
+        return _VoteResult(_source_name_register_fallback(source_name), candidates)
 
     return _VoteResult(winner_id, candidates)
 
@@ -436,62 +457,77 @@ def _bulk_resolve(
 
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
-    var_ids: set[int],
-) -> dict[int, dict[str, str]]:
-    """Fetch value codes for a set of var_ids. Returns var_id -> {code: label}.
+    requests: dict[Any, tuple[int, int, set[str]]],
+) -> dict[Any, dict[str, str]]:
+    """Pick the best CVID for each request, returning {key: {code: label}}.
 
-    For each var_id, picks the CVID with the most value codes.
+    Each request is ``(var_id, register_id, observed_codes)``. We filter
+    CVIDs to the resolved register and pick the one with highest overlap
+    against the observed codes (tiebreak: more codes wins). When no CVID
+    overlaps, we omit the entry -- better to leave value_codes unset
+    than to enrich with an unrelated code universe (e.g. dotted FamStF
+    codes for 3-digit data).
+
+    The opaque key lets the caller use any identifier — typically
+    ``(source_name, column_name)`` — so two columns that resolve to the
+    same (var_id, register_id) but have different observed codes can
+    still pick different CVIDs.
+
+    Note: ranking by data overlap is a stopgap. The principled signal is
+    classification metadata on the CVID (which coding scheme it belongs
+    to: SUN2000 vs SUN2020, etc.). When the name/classification signal
+    is wired up (issue #26), overlap should drop to a last-resort
+    fallback for variables where that metadata is absent.
     """
-    if not var_ids:
+    if not requests:
         return {}
 
-    # Find best CVID per var_id (the one with the most value codes)
-    var_list = sorted(var_ids)
-    placeholders = ",".join("?" for _ in var_list)
-    best_cvids = conn.execute(
-        "SELECT vi.var_id, vi.cvid, COUNT(*) as cnt "
-        "FROM variable_instance vi "
-        "JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid "
-        f"WHERE vi.var_id IN ({placeholders}) "
-        "GROUP BY vi.var_id, vi.cvid "
-        "ORDER BY vi.var_id, cnt DESC",
-        var_list,
+    # 1. Enumerate CVIDs for every distinct var_id (one query, dedup'd).
+    var_ids = sorted({var_id for var_id, _, _ in requests.values()})
+    placeholders = ",".join("?" for _ in var_ids)
+    cvid_rows = conn.execute(
+        "SELECT var_id, register_id, cvid "
+        "FROM variable_instance "
+        f"WHERE var_id IN ({placeholders})",
+        var_ids,
     ).fetchall()
+    pair_to_cvids: dict[tuple[int, int], set[int]] = {}
+    for r in cvid_rows:
+        pair_to_cvids.setdefault((r["var_id"], r["register_id"]), set()).add(r["cvid"])
 
-    # Pick best CVID per var_id
-    var_to_cvid: dict[int, int] = {}
-    for r in best_cvids:
-        if r["var_id"] not in var_to_cvid:
-            var_to_cvid[r["var_id"]] = r["cvid"]
-
-    if not var_to_cvid:
+    # 2. Fetch codes for every relevant CVID (one query). Index by cvid.
+    all_cvids = sorted({c for cvids in pair_to_cvids.values() for c in cvids})
+    if not all_cvids:
         return {}
-
-    # Fetch all value codes for the selected CVIDs in one query
-    cvid_list = sorted(set(var_to_cvid.values()))
-    placeholders = ",".join("?" for _ in cvid_list)
+    placeholders = ",".join("?" for _ in all_cvids)
     value_rows = conn.execute(
         "SELECT cvc.cvid, vc.vardekod, vc.vardebenamning "
         "FROM cvid_value_code cvc "
         "JOIN value_code vc ON cvc.code_id = vc.code_id "
-        f"WHERE cvc.cvid IN ({placeholders}) "
-        "ORDER BY cvc.cvid, vc.vardekod",
-        cvid_list,
+        f"WHERE cvc.cvid IN ({placeholders})",
+        all_cvids,
     ).fetchall()
-
-    # Group by CVID, filtering out SCB type-hint codes
     cvid_to_codes: dict[int, dict[str, str]] = {}
     for r in value_rows:
         if r["vardekod"] not in _SCB_TYPE_HINTS:
             cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
 
-    # Map back to var_id (skip empty or single-code sets — a lone code
-    # is never a useful categorical universe)
-    result: dict[int, dict[str, str]] = {}
-    for var_id, cvid in var_to_cvid.items():
-        codes = cvid_to_codes.get(cvid)
-        if codes and len(codes) > 1:
-            result[var_id] = codes
+    # 3. Per request, score each register-matching CVID by (overlap, code_count)
+    # and take the max. Skip when no CVID has any overlap.
+    result: dict[Any, dict[str, str]] = {}
+    for key, (var_id, register_id, observed) in requests.items():
+        cvids = pair_to_cvids.get((var_id, register_id), set())
+        best: tuple[int, int, dict[str, str]] | None = None
+        for cvid in cvids:
+            codes = cvid_to_codes.get(cvid, {})
+            if len(codes) <= 1:
+                continue  # a lone code is never a useful categorical universe
+            overlap = len(observed & codes.keys()) if observed else 0
+            score = (overlap, len(codes))
+            if best is None or score > best[:2]:
+                best = (overlap, len(codes), codes)
+        if best is not None and (not observed or best[0] > 0):
+            result[key] = best[2]
 
     return result
 

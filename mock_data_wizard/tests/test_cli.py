@@ -1,4 +1,4 @@
-"""Tests for CLI overwrite/force behavior."""
+"""Tests for CLI overwrite/force/warn-and-keep behavior."""
 
 from __future__ import annotations
 
@@ -19,7 +19,8 @@ def _setup(tmp_path: Path) -> tuple[Path, Path]:
     return stats_path, out_dir
 
 
-def test_yes_without_force_errors_when_dir_exists(tmp_path: Path):
+def test_yes_keeps_stale_by_default(tmp_path: Path, capsys):
+    """`-y` proceeds without prompting; stale files are kept (warn-and-keep default)."""
     stats_path, out_dir = _setup(tmp_path)
     rc = main(
         [
@@ -32,9 +33,14 @@ def test_yes_without_force_errors_when_dir_exists(tmp_path: Path):
             "-y",
         ]
     )
-    assert rc == 1
-    # Stale file should still be there (nothing was overwritten)
+    assert rc == 0
+    # Stale file is still on disk
     assert (out_dir / "stale.csv").exists()
+    # Mock CSV was produced
+    assert (out_dir / "persons.csv").exists()
+    # User saw the stale-files warning
+    err = capsys.readouterr().err
+    assert "stale" in err.lower()
 
 
 def test_force_overwrites_and_removes_stale(tmp_path: Path):
