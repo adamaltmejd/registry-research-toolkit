@@ -101,27 +101,38 @@ Bump <package> version to X.Y.Z
 
 Then push to main.
 
-### 7. Create GitHub release
+### 7. Create draft GitHub release
+
+The publish workflow fires on `release: published`, so the release must be
+created as a **draft** until any required assets (regmeta only) are uploaded.
+A `release: published` event with missing assets races the workflow's smoke
+step against the upload — if the maintainer approves the environment gate
+before assets land, the smoke step walks back to a prior release and may pick
+up an incompatible asset, failing the publish.
 
 ```bash
-gh release create <package>/vX.Y.Z --title "<package> vX.Y.Z" --notes "$(cat <<'EOF'
+gh release create <package>/vX.Y.Z --draft --title "<package> vX.Y.Z" --notes "$(cat <<'EOF'
 <release notes>
 EOF
 )"
 ```
 
-The tag is created by this command from the current HEAD — do not create it separately. If the tag already exists, something went wrong; see error recovery below.
+The tag is created by this command from the current HEAD — do not create it
+separately. The `--draft` flag means no workflow fires yet. If the tag
+already exists, something went wrong; see error recovery below.
 
 ### 8. Build and upload release assets (regmeta only, conditional)
 
 regmeta ships two release assets. Each is optional per release — `maintain
 update` walks backwards through releases to find the most recent one
 carrying each asset, so a doc-less package release still serves the prior
-doc asset. Missing assets must be uploaded **before** approving the publish
-workflow: the CI smoke step runs `maintain update` and fails if the walker
-can't resolve a compatible pair of assets.
+doc asset. Missing required assets must be uploaded **before** publishing
+the release: the CI smoke step runs `maintain update` and fails if the
+walker can't resolve a compatible pair of assets.
 
-The SCB CSV exports live in `SCB-data/` (gitignored). If missing, ask the user.
+The raw SCB CSV exports and curated classification CSVs live under
+`regmeta/input_data/` (gitignored), with `SCB/`, `Socialstyrelsen/`, and
+`classifications/` subdirectories. If missing, ask the user.
 
 #### 8a. Main DB asset (`regmeta.db.zst`)
 
@@ -133,7 +144,7 @@ Upload if **either** condition is true:
 Otherwise skip.
 
 ```bash
-uv run regmeta maintain build-db --csv-dir SCB-data/
+uv run regmeta maintain build-db --input-dir regmeta/input_data/
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
 gh release upload regmeta/vX.Y.Z regmeta.db.zst
 rm regmeta.db.zst
@@ -157,13 +168,21 @@ gh release upload regmeta/vX.Y.Z regmeta_docs.db.zst
 rm regmeta_docs.db.zst
 ```
 
-Verify both assets are present on the release before approving the workflow:
+Verify the expected assets are present on the draft release before publishing:
 
 ```bash
 gh release view regmeta/vX.Y.Z --json assets --jq '.assets[].name'
 ```
 
-### 9. Monitor deployment
+### 9. Publish the draft release
+
+This is what fires the publish workflow.
+
+```bash
+gh release edit <package>/vX.Y.Z --draft=false
+```
+
+### 10. Monitor deployment
 
 - If the package has a publish workflow (see table above):
   - Find the triggered run: `gh run list --workflow=<workflow> --limit 1 --json databaseId,url`
@@ -177,6 +196,7 @@ gh release view regmeta/vX.Y.Z --json assets --jq '.assets[].name'
 - If the commit was pushed but `gh release create` fails: the commit is on main — just retry the release creation.
 - If the release was created but CI fails: delete the release and tag, fix the issue, and start over from step 6.
 - If a tag already exists for the target version: something went wrong in a previous attempt. Investigate before proceeding.
-- If `build-db` or `build-docs` fails: fix the issue before approving the publish workflow. The release exists but the package must not go live on PyPI without compatible assets — the CI smoke step will block the publish if the walker can't resolve them.
-- If `gh release upload` fails: retry the upload. The release and tag are fine.
+- If `build-db` or `build-docs` fails: fix the issue before publishing. The draft release exists but `--draft=false` should not run until assets are valid — the CI smoke step will block the publish if the walker can't resolve them.
+- If `gh release upload` fails on a draft: retry the upload. The draft and tag are fine.
+- If the publish workflow fails because assets weren't on the release at trigger time (race between `release: published` and asset upload): re-run the failed publish job with `gh run rerun <run-id> --failed` once assets are uploaded. This is what `--draft` in step 7 prevents — only relevant when recovering from a prior non-draft release.
 - Never force-push or amend commits that are already on main.
