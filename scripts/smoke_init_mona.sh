@@ -136,6 +136,8 @@ $PREEXISTING_MARKETPLACE_NOTE## Preflight
    ls -la "$TEST_DIR"/{covid-dry-run,} 2>/dev/null
    test ! -e "$TEST_DIR/plugins"
    test ! -e "$TEST_DIR/.agents"
+   # Bundle was built next to the project scaffold:
+   find "$TEST_DIR" -name mock_data_wizard_extract.py
    \`\`\`
 
 7. Simulate returning from MONA:

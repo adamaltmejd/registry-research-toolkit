@@ -85,7 +85,7 @@ High-level sequence:
    - collect slug, target directory, SCB project number, and research plan
    - create the minimal scaffold
    - verify `mock-data-wizard` and `regmeta`
-   - generate `extract_stats.R`
+   - build the MONA extract bundle (`mock_data_wizard_extract.py`)
    - stop after MONA handoff instructions
 2. Mock data generation:
    - when `stats.json` is present but `mock_data/manifest.json` is absent,
@@ -125,8 +125,8 @@ files. It contains:
   project-specific follow-up probes.
 - Never fabricate warnings, schema mismatches, code-set issues, or join
   findings. If something was not measured, say `Not assessed`.
-- Do not describe the expected Phase 1 pause after `extract_stats.R` as a
-  failure or limitation.
+- Do not describe the expected Phase 1 pause after building the MONA
+  extract bundle as a failure or limitation.
 - Do not describe missing years or files in `mock_data/` as an arbitrary mock
   artifact. The generator reflects what was present in `stats.json`.
 - Run `Rscript tests/testthat.R` before you declare the scaffold complete.

@@ -150,7 +150,6 @@ def _generate_date(
         span = 1
 
     offsets = rng.integers(0, span + 1, size=n)
-    # Use the format from the R script if available
     output_fmt = "%Y-%m-%d"
     if fmt in ("%d/%m/%Y", "%d-%m-%Y", "%Y%m%d"):
         output_fmt = fmt
