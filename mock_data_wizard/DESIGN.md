@@ -2,18 +2,19 @@
 
 Design rationale and constraints. For usage, see `mock-data-wizard --help`.
 
-## Two-step workflow
+## Workflow
 
-1. `extract` runs on MONA: aggregates configured sources to `stats.json`.
-2. User exports `stats.json` from MONA.
-3. `generate` runs locally: produces mock CSVs from `stats.json`.
+1. `build-bundle` runs locally: amalgamates the runtime modules into a
+   single `mock_data_wizard_extract.py` for MONA upload.
+2. The bundle runs on MONA: aggregates configured sources to `stats.json`.
+3. User exports `stats.json` from MONA.
+4. `generate` runs locally: produces mock CSVs from `stats.json`.
 
-The Python package itself ships to MONA and runs as the extract step;
-nothing is generated as a templated R script. This is possible because
-the MONA batch client has Python pre-installed (see "MONA Python runtime"
-below). The earlier R-script-generation approach is preserved in git
-history (commits up to and including the streaming-iterator refactor),
-but the runtime is Python going forward.
+The Python package itself ships to MONA and runs as the extract step.
+This is possible because the MONA batch client has Python pre-installed
+(see "MONA Python runtime" below). The earlier R-script-generation
+approach is preserved in git history (commits up to and including the
+streaming-iterator refactor), but the runtime is Python going forward.
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
@@ -109,53 +110,51 @@ turns out to be advisory rather than enforced.
 
 ## Source model
 
-The R script's `SOURCES <- list(...)` block is the single place users
-declare what data to aggregate. Two constructors are available:
+The bundle's `configure()` function is the single place users declare
+what data to aggregate. It returns a list of sources. Two constructors
+are available:
 
 - `file_source(path, include, exclude, pattern)` — a directory (or single
   file) of CSV/TXT data.
-- `sql_source(dsn, tables, pattern, queries, where, select, ...)` — an
-  ODBC-accessible database. On MONA this is MS SQL via a per-project DSN.
-  Credentials come from the Windows system DSN; the script never carries
-  passwords.
+- `sql_source(dsn, tables, pattern, queries, ...)` — an ODBC-accessible
+  database. On MONA this is MS SQL via a per-project DSN. Credentials
+  come from the Windows system DSN; the bundle never carries passwords.
 
-Sources dispatch through `source_iter(src)`, which returns a streaming
-iterator `list(n_items, fetch_item(i), close())`. Main pulls one item
-at a time, fetching as `list(source_name, source_type, source_detail,
-dt)`, runs the classify/summarize pipeline, and drops the table before
-the next fetch. Lazy-by-design: peak memory stays near a single table
-rather than the sum of all tables in the source, which matters on MONA
-projects with hundreds of SQL views.
+Sources dispatch through `iter_source(src)`, which yields streaming
+`SourceHandle` instances (one per table). The main loop pulls one
+handle at a time, runs the classify/summarize pipeline against it, and
+closes it before the next fetch. Lazy-by-design: peak memory stays
+near a single table rather than the sum of all tables in the source,
+which matters on MONA projects with hundreds of SQL views.
 
 ### Discovery mode
 
 If any source has no filtering info (`file_source` with no include/
 exclude/pattern, or `sql_source` with no tables/pattern/queries), the
-script writes a timestamped file `mdw_sources_<YYYYMMDD_HHMMSS>.R`
-alongside itself and exits without writing `stats.json`. The file
-contains a `SOURCES <- list(...)` block listing everything discoverable.
+bundle writes a timestamped file `mdw_sources_<YYYYMMDD_HHMMSS>.py`
+alongside itself and exits without writing `stats.json`. The sidecar
+contains a `SOURCES = [...]` list with every discoverable item.
 
 Users who know up-front that they want everything can opt out of
-discovery with `all = TRUE` on either constructor: `file_source(path, all
-= TRUE)` processes every matching file in `path`; `sql_source(dsn, all =
-TRUE)` discovers all non-archived views and processes each. The flag
-keeps the in-script `SOURCES` block compact compared to a giant
-`include = c(...)` list.
+discovery with `all=True` on either constructor: `file_source(path,
+all=True)` processes every matching file in `path`; `sql_source(dsn,
+all=True)` discovers all non-archived views and processes each. The
+flag keeps `configure()` compact compared to a giant `include=(...)`
+tuple.
 
-On the next run, the extract script automatically loads the latest
-`mdw_sources_*.R` file (sourcing it overrides the in-script `SOURCES`)
-and processes normally. The user narrows the list by editing the file
-directly — no copy-paste back into the extract script. Deleting the
-file(s) triggers a fresh discovery on the next run. If the loaded file
-is still in a discovery-triggering state (the user ran discovery but
-forgot to narrow a source), the script errors with a message pointing
-at the file rather than silently overwriting it.
+On the next run, the bundle automatically loads the latest
+`mdw_sources_*.py` sidecar (its `SOURCES` overrides whatever
+`configure()` returns) and processes normally. The user narrows the
+list by editing the sidecar directly — no copy-paste back into
+`configure()`. Deleting the sidecar(s) triggers a fresh discovery on
+the next run. If the loaded sidecar is still in a discovery-triggering
+state (the user ran discovery but forgot to narrow a source), the
+bundle errors with a message pointing at the file rather than silently
+overwriting it.
 
 Discovery failures are tolerated: a `sql_source` pointed at a DSN that
-doesn't exist on a given project just emits a `[sql] discovery failed`
-comment and the other sources continue. `generate-script -p P<num>`
-uses this to emit both a `file_source` and a `sql_source` skeleton by
-default — whichever doesn't apply drops itself.
+doesn't exist on a given project just logs `[sql] discovery failed`
+and the other sources continue.
 
 ### Cohort filtering with `where`
 
@@ -198,16 +197,16 @@ filter to the mock data range).
 ### File discovery quirks
 
 Two files with the same basename in different subdirectories collide
-— `include = c("name.csv")` can't select between them, and they'd
-both get `source_name = "name.csv"`. Discovery dedupes basenames in
-the written suggestion and warns about the collision; processing fails
+— `include=("name.csv",)` can't select between them, and they'd both
+get `source_name = "name.csv"`. Discovery dedupes basenames in the
+written suggestion and warns about the collision; processing fails
 fast if the user narrows `include` but the matched files still have
-duplicate basenames. The fix is to narrow `path =` to a subdirectory
+duplicate basenames. The fix is to narrow `path=` to a subdirectory
 that selects the specific file.
 
 ## PII safety
 
-The R script exports **only** aggregate statistics. This is the core safety
+The bundle exports **only** aggregate statistics. This is the core safety
 invariant — no individual-level data leaves MONA.
 
 | Column type | What gets exported |
@@ -223,7 +222,7 @@ invariant — no individual-level data leaves MONA.
 Cells with 5 or fewer individuals are censored in frequency tables.
 
 **Small-population warning:** If a source has fewer than
-`SMALL_POP_MULT × SUPPRESS_K` rows (default 100), the R script emits a
+`SMALL_POP_MULT × SUPPRESS_K` rows (default 100), the bundle emits a
 warning. This catches narrowed populations — a `WHERE` clause or
 `include` list that collapses the source to a handful of individuals
 can leave aggregates effectively identifiable even after cell

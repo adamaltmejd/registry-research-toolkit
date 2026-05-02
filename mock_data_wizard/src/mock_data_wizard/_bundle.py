@@ -1,10 +1,8 @@
 """Build a single-file .py bundle for upload to MONA.
 
 Concatenates the wizard runtime modules (classify, sql_emit, sources,
-summarize, extract) into one file at
-``mock_data_wizard/dist/mock_data_wizard_extract.py``. The user uploads
-that file, edits the ``SOURCES = [...]`` block near the bottom, and
-runs:
+summarize, extract) into one file. The user uploads that file, edits
+the ``configure()`` block near the top, and runs::
 
     python mock_data_wizard_extract.py
 
@@ -15,22 +13,15 @@ batch client; see ``DESIGN.md`` for the runtime probe results).
 Per-module docstrings and ``#`` comments are dropped during
 amalgamation. The repo source remains the documentation; the bundle is
 the artifact.
-
-Usage:
-    uv run python mock_data_wizard/scripts/build_mona_bundle.py
 """
 
 from __future__ import annotations
 
-import argparse
 import ast
-import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-PKG_DIR = REPO_ROOT / "mock_data_wizard" / "src" / "mock_data_wizard"
-DIST_DIR = REPO_ROOT / "mock_data_wizard" / "dist"
-OUTPUT_DEFAULT = DIST_DIR / "mock_data_wizard_extract.py"
+PKG_DIR = Path(__file__).resolve().parent
+DEFAULT_OUTPUT_NAME = "mock_data_wizard_extract.py"
 
 # Dependency-ordered: each module imports only earlier ones.
 MODULE_ORDER = ("classify", "sql_emit", "sources", "summarize", "extract")
@@ -56,7 +47,7 @@ suppression (k-anonymity, threshold = 5) and uniform noise injection
 data passes through Python.
 
 This file is built from the mock_data_wizard package by
-scripts/build_mona_bundle.py. DO NOT edit code mid-bundle by hand --
+`mock-data-wizard build-bundle`. DO NOT edit code mid-bundle by hand --
 edit the source modules and re-bundle.
 """
 from __future__ import annotations
@@ -76,8 +67,8 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # USER CONFIGURATION -- edit before running on MONA.
 # ===========================================================================
 # This is the only block you need to edit. Everything below this point is
-# the bundled mock_data_wizard runtime (regenerate via build_mona_bundle.py
-# -- DO NOT edit module bodies by hand).
+# the bundled mock_data_wizard runtime (regenerate via
+# `mock-data-wizard build-bundle` -- DO NOT edit module bodies by hand).
 #
 # DEBUG=False (default): no log file is written. On MBS-prefixed hosts
 # (batch / RDP) stdout+stderr are still redirected to /dev/null to avoid
@@ -299,27 +290,3 @@ def build_bundle(output: Path) -> Path:
     parts.append(BUNDLE_RUNNER)
     output.write_text("\n".join(parts), encoding="utf-8")
     return output
-
-
-def _parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    p.add_argument(
-        "--output",
-        "-o",
-        type=Path,
-        default=OUTPUT_DEFAULT,
-        help=f"Output path (default: {OUTPUT_DEFAULT})",
-    )
-    return p
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
-    out = build_bundle(args.output)
-    size = out.stat().st_size
-    print(f"Built {out} ({size:,} bytes)")
-    return 0
-
-
-if __name__ == "__main__":
-    sys.exit(main())

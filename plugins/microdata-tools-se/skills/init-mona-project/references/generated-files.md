@@ -51,7 +51,9 @@ main:
 mock_data/
 output_mock/
 _targets/
-extract_stats*.R
+mock_data_wizard_extract.py
+mdw_sources_*.py
+mdw_log_*.txt
 .Rhistory
 .DS_Store
 Rplots.pdf

@@ -1,4 +1,4 @@
-"""Parse and validate the stats JSON contract produced by the R script."""
+"""Parse and validate the stats JSON contract produced by the MONA extract bundle."""
 
 from __future__ import annotations
 

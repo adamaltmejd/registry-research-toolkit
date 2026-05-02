@@ -72,8 +72,9 @@ regmeta docs search "disponibel inkomst"             # search documentation
 ### mock-data-wizard
 
 ```bash
-mock-data-wizard generate-script -p P1405            # R script for MONA
-# Run on MONA, download stats.json
+mock-data-wizard build-bundle                        # build mock_data_wizard_extract.py
+# Upload the bundle to MONA, edit configure(), run `python mock_data_wizard_extract.py`,
+# download stats.json
 mock-data-wizard generate --stats stats.json --seed 42   # mock CSVs
 ```
 

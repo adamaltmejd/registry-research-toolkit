@@ -7,22 +7,22 @@ import sys
 from pathlib import Path
 
 
-PROJECT_PATH_TEMPLATE = "\\\\micro.intra\\projekt\\P{num}$\\P{num}_Data"
-
 DESCRIPTION = """\
 Generate mock CSV data from MONA project metadata, without exporting any
-personal data. This is a two-step process:
+personal data. The workflow has two steps:
 
-  Step 1: Generate an R script and run it on MONA.
-          The script reads your project's data files and exports only
+  Step 1: Build the MONA extract bundle and run it on MONA.
+          The bundle reads your project's data files and exports only
           aggregate statistics (counts, means, frequencies — no individual
           records) to a stats.json file.
 
-    mock-data-wizard generate-script -p P1405
-    # Upload the R script to MONA and run it in the Batch client.
+    mock-data-wizard build-bundle
+    # Upload mock_data_wizard_extract.py to MONA, edit its configure()
+    # block, and run `python mock_data_wizard_extract.py` in the Batch
+    # client.
     # Download the resulting stats.json to your local machine.
     # IMPORTANT: verify that stats.json does not contain any personal
-    # data. The script censors cells with 5 or fewer individuals, but
+    # data. The bundle censors cells with 5 or fewer individuals, but
     # you should verify yourself that no personal data is leaking.
 
   Step 2: Generate mock CSV files from the stats.
@@ -34,16 +34,16 @@ personal data. This is a two-step process:
   real data, but contain only synthetic values.
 """
 
-GENERATE_SCRIPT_HELP = """\
-Generate an R script that extracts aggregate statistics from your MONA
-project data. The script is designed to be run on MONA with Rscript.
+BUILD_BUNDLE_HELP = """\
+Build the single-file Python bundle that runs the extract step on MONA.
 
-  1. Run this command locally to create the R script.
-  2. Upload the script to your MONA project directory.
-  3. Run it on MONA in the Batch client:  Rscript extract_stats_P1405.R
-  4. Download the resulting stats.json to your local machine.
+  1. Run this command locally to create mock_data_wizard_extract.py.
+  2. Upload the bundle to your MONA project directory.
+  3. Edit the configure() block at the top to declare your data sources.
+  4. Run on MONA in the Batch client:  python mock_data_wizard_extract.py
+  5. Download the resulting stats.json to your local machine.
 
-The R script only exports aggregate statistics — no individual-level data
+The bundle only exports aggregate statistics — no individual-level data
 leaves MONA.
 """
 
@@ -59,7 +59,7 @@ CSV and --columns modes require --register.
 """
 
 GENERATE_HELP = """\
-Generate mock CSV files from a stats.json produced by the R script.
+Generate mock CSV files from a stats.json produced by the MONA extract bundle.
 
 By default, uses the regmeta database to enrich categorical columns with
 registry metadata (value codes, variable names). If the regmeta database
@@ -95,59 +95,6 @@ def _confirm() -> bool:
             return input().strip().lower() == "y"
         except (KeyboardInterrupt, EOFError):
             return False
-
-
-def _parse_project_number(value: str) -> str:
-    """Extract numeric project ID from 'P1405', 'p1405', or '1405'."""
-    stripped = value.strip().upper()
-    if stripped.startswith("P"):
-        stripped = stripped[1:]
-    if not stripped.isdigit():
-        raise ValueError(
-            f"Invalid project number: {value!r} (expected e.g. '1405' or 'P1405')"
-        )
-    return stripped
-
-
-def _cmd_generate_script(args: argparse.Namespace) -> int:
-    from .script_gen import generate_script
-
-    paths: list[str] = []
-    project_num: str | None = None
-    if args.project:
-        project_num = _parse_project_number(args.project)
-        paths.append(PROJECT_PATH_TEMPLATE.format(num=project_num))
-    if args.project_dir:
-        paths.extend(p.strip() for p in args.project_dir if p.strip())
-    if not paths:
-        print(
-            "Error: provide --project or --project-dir\n"
-            "  Example: mock-data-wizard generate-script -p P1405",
-            file=sys.stderr,
-        )
-        return 1
-
-    # MONA convention: DSN name = project number. When -p is given we emit
-    # a sql_source skeleton alongside file_source; discovery handles the
-    # case where the project has no SQL (graceful skip).
-    if args.no_sql:
-        sql_dsn = None
-    elif args.sql_dsn is not None:
-        sql_dsn = args.sql_dsn
-    elif project_num:
-        sql_dsn = f"P{project_num}"
-    else:
-        sql_dsn = None
-
-    if args.output:
-        output = Path(args.output)
-    elif project_num:
-        output = Path(f"extract_stats_P{project_num}.R")
-    else:
-        output = Path("extract_stats.R")
-    result = generate_script(paths, output, sql_dsn=sql_dsn)
-    print(f"R script written to: {result}")
-    return 0
 
 
 def _cmd_compare(args: argparse.Namespace) -> int:
@@ -415,28 +362,10 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
 def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
-    import importlib.util
+    from . import _bundle
 
-    builder_path = (
-        Path(__file__).resolve().parents[3]
-        / "mock_data_wizard"
-        / "scripts"
-        / "build_mona_bundle.py"
-    )
-    if not builder_path.exists():
-        print(
-            f"Error: bundler script not found at {builder_path}.\n"
-            "build-bundle requires a source checkout of the repo.",
-            file=sys.stderr,
-        )
-        return 1
-    spec = importlib.util.spec_from_file_location("_bmb", builder_path)
-    assert spec and spec.loader
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-
-    output = Path(args.output) if args.output else mod.OUTPUT_DEFAULT
-    out = mod.build_bundle(output)
+    output = Path(args.output) if args.output else Path(_bundle.DEFAULT_OUTPUT_NAME)
+    out = _bundle.build_bundle(output)
     print(f"Built {out} ({out.stat().st_size:,} bytes)")
     return 0
 
@@ -483,38 +412,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     sub = parser.add_subparsers(dest="command")
 
-    # generate-script
-    gs = sub.add_parser(
-        "generate-script",
-        help="Step 1: Generate an R script to run on MONA",
-        description=GENERATE_SCRIPT_HELP,
+    # build-bundle
+    bb = sub.add_parser(
+        "build-bundle",
+        help="Step 1: Build the MONA extract bundle to upload",
+        description=BUILD_BUNDLE_HELP,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    gs.add_argument(
-        "--project",
-        "-p",
-        help="SCB project number (e.g. P1405 or 1405). Builds the standard MONA data path automatically.",
-    )
-    gs.add_argument(
-        "--project-dir",
-        nargs="+",
-        help="Custom data path(s) to scan. Combinable with --project.",
-    )
-    gs.add_argument(
+    bb.add_argument(
         "--output",
         "-o",
-        help="Output path for the R script (default: extract_stats_P<num>.R)",
-    )
-    gs.add_argument(
-        "--sql-dsn",
-        help="ODBC DSN for a sql_source() skeleton in SOURCES. Defaults to P<num> "
-        "when --project is given (MONA convention). Discovery gracefully skips it "
-        "if the project has no SQL.",
-    )
-    gs.add_argument(
-        "--no-sql",
-        action="store_true",
-        help="Do not emit a sql_source() skeleton, even when --project implies a DSN.",
+        help="Output path (default: mock_data_wizard_extract.py in cwd)",
     )
 
     # compare
@@ -619,24 +527,6 @@ def build_parser() -> argparse.ArgumentParser:
         help="Show per-file timing breakdown",
     )
 
-    # build-bundle
-    bb = sub.add_parser(
-        "build-bundle",
-        help="Build the single-file .py bundle for MONA upload",
-        description=(
-            "Concatenate the runtime modules into one .py at\n"
-            "mock_data_wizard/dist/mock_data_wizard_extract.py.\n"
-            "Upload that file to MONA, edit its SOURCES = [...] block,\n"
-            "and run `python mock_data_wizard_extract.py` in the batch client."
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    bb.add_argument(
-        "--output",
-        "-o",
-        help="Output path (default: mock_data_wizard/dist/mock_data_wizard_extract.py)",
-    )
-
     sub.add_parser(
         "update",
         help="Update mock-data-wizard to the latest version on PyPI",
@@ -679,9 +569,7 @@ def main(argv: list[str] | None = None) -> int:
             pass
 
     try:
-        if args.command == "generate-script":
-            rc = _cmd_generate_script(args)
-        elif args.command == "build-bundle":
+        if args.command == "build-bundle":
             rc = _cmd_build_bundle(args)
         elif args.command == "compare":
             rc = _cmd_compare(args)

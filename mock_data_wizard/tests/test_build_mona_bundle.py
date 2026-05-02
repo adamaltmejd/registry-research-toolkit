@@ -8,7 +8,6 @@ stats.json comes out with the expected shape.
 from __future__ import annotations
 
 import ast
-import importlib.util
 import json
 import subprocess
 import sys
@@ -16,20 +15,11 @@ from pathlib import Path
 
 import pytest
 
-REPO_ROOT = Path(__file__).resolve().parents[2]
-BUILDER_PATH = REPO_ROOT / "mock_data_wizard" / "scripts" / "build_mona_bundle.py"
-
-
-def _load_builder():
-    spec = importlib.util.spec_from_file_location("bmb", BUILDER_PATH)
-    assert spec and spec.loader
-    mod = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
+from mock_data_wizard import _bundle
 
 
 def _build_bundle_to(out_path: Path) -> Path:
-    return _load_builder().build_bundle(out_path)
+    return _bundle.build_bundle(out_path)
 
 
 def test_bundle_parses_as_python(tmp_path: Path):

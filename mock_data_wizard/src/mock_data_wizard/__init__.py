@@ -2,7 +2,6 @@
 
 from .enrich import EnrichedColumn, EnrichedSource, enrich
 from .generate import Manifest, OutputFile, generate
-from .script_gen import generate_script
 from .stats import (
     ColumnStats,
     ProjectStats,
@@ -24,8 +23,7 @@ __all__ = [
     "StatsValidationError",
     "enrich",
     "generate",
-    "generate_script",
     "parse_stats",
 ]
 
-__version__ = "0.5.0"
+__version__ = "0.6.0"
