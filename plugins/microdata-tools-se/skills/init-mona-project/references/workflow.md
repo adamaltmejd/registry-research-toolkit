@@ -115,9 +115,14 @@ Tell the user exactly what to do:
 > 2. Open the bundle in Notepad++ and edit the `configure()` block at the top
 >    to return the list of sources you want to aggregate. The file has inline
 >    examples for `file_source(...)` and `sql_source(...)`. If you don't know
->    what's available yet, leave `configure()` returning `[]` — the bundle
->    will write a `mdw_sources_<timestamp>.py` sidecar listing every
->    discoverable file and SQL view, then exit.
+>    what's available yet, return one bare source with no filters to trigger
+>    discovery — for example
+>    `return [sql_source(dsn="P{num}")]` or
+>    `return [file_source(path=r"\\micro.intra\projekt\P{num}$\P{num}_Data")]`.
+>    On the first run the bundle writes a `mdw_sources_<timestamp>.py` sidecar
+>    listing every discoverable file and SQL view, then exits.
+>    (Returning `[]` is an error, not discovery — the bundle exits with a
+>    message asking you to populate `configure()` or drop a sidecar.)
 > 3. Open the **Batch client**, choose **Python**, select
 >    `mock_data_wizard_extract.py`, and run it.
 > 4. The bundle writes `stats.json` next to itself. (If discovery ran, edit

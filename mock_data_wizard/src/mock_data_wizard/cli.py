@@ -9,7 +9,7 @@ from pathlib import Path
 
 DESCRIPTION = """\
 Generate mock CSV data from MONA project metadata, without exporting any
-personal data. This is a two-step process:
+personal data. The workflow has two steps:
 
   Step 1: Build the MONA extract bundle and run it on MONA.
           The bundle reads your project's data files and exports only

@@ -139,8 +139,8 @@ Users who know up-front that they want everything can opt out of
 discovery with `all=True` on either constructor: `file_source(path,
 all=True)` processes every matching file in `path`; `sql_source(dsn,
 all=True)` discovers all non-archived views and processes each. The
-flag keeps the in-script `SOURCES` list compact compared to a giant
-`include=(...)` tuple.
+flag keeps `configure()` compact compared to a giant `include=(...)`
+tuple.
 
 On the next run, the bundle automatically loads the latest
 `mdw_sources_*.py` sidecar (its `SOURCES` overrides whatever

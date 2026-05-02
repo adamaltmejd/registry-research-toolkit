@@ -1,8 +1,10 @@
-"""MONA Python probe -- mirrors probe_mona.R but tests the Python stack.
+"""MONA Python probe -- exercises the Python stack on the MONA batch client.
 
-Question this answers: would it be simpler to ship mock_data_wizard
-itself to MONA (Python on the batch client) instead of generating an
-R script that re-implements aggregation logic in R?
+Verifies that the runtime mock_data_wizard ships in
+(`mock_data_wizard_extract.py`) actually works on MONA: stdlib + numpy
++ duckdb + pyodbc, file IO, ODBC against the project DSN. Re-run this
+when MONA's WinPython distribution changes to confirm the bundle still
+boots.
 
 Run on the MONA batch client however the batch server runs Python
 scripts. Writes mdw_python_probe_<timestamp>.log alongside itself.
@@ -494,9 +496,9 @@ if PROJECT_DSN and pyodbc is not None:
     log(f"Using DSN: {PROJECT_DSN}")
     log(f"Drivers visible to pyodbc: {pyodbc.drivers()}")
 
-    # Two connection styles to try -- DSN-based (what the R script uses)
+    # Two connection styles to try -- DSN-based (what the bundle uses)
     # and the direct driver/server/database string from the MONA docs.
-    # Whichever works, we use; if both work the rework prefers DSN.
+    # Whichever works, we use; if both work the bundle prefers DSN.
     def _sql_connect_dsn():
         global sql_con
         sql_con = pyodbc.connect(f"DSN={PROJECT_DSN}")

@@ -217,9 +217,10 @@ def high_cardinality_aggs_sql(table: str, col: str, dialect: str) -> str:
 def date_aggs_sql(table: str, col: str, dialect: str) -> str:
     """Min/max plus count/null/distinct for a date column.
 
-    Date-format detection (the YYYYMMDD vs YYYY-MM-DD parser dance) stays
-    R-side because formats vary across SCB registries and we don't want
-    to push that logic into SQL.
+    Date-format detection (the YYYYMMDD vs YYYY-MM-DD parser dance)
+    happens in Python (see ``classify.detect_date_format``) because
+    formats vary across SCB registries and we don't want to push that
+    logic into SQL.
     """
     _check_dialect(dialect)
     qcol = quote_ident(col, dialect)

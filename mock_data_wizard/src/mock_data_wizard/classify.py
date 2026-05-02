@@ -2,12 +2,10 @@
 high_cardinality, date} for a column based on its name, true n_distinct,
 true n_rows, and a sample of values.
 
-Pure functions, no IO. Mirrors the R-side ``classify_column`` from the
-legacy ``script_gen.py`` template, but takes the true ``n_distinct``
-(from a SQL pre-classify pass) as an explicit input rather than
-recomputing from a fully-materialised column. This is what makes the
-DuckDB-on-MONA path work: the column never lives in memory, only the
-sample does.
+Pure functions, no IO. Takes the true ``n_distinct`` (from a SQL
+pre-classify pass) as an explicit input rather than recomputing from a
+fully-materialised column. This is what makes the DuckDB-on-MONA path
+work: the column never lives in memory, only the sample does.
 """
 
 from __future__ import annotations

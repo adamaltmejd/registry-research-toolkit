@@ -27,9 +27,10 @@ mock-data-wizard build-bundle
 # Upload the bundle to MONA. The first run is a discovery pass — the
 # bundle lists available files and SQL tables into a timestamped sidecar
 # `mdw_sources_<YYYYMMDD_HHMMSS>.py` alongside the script, then exits.
-# Edit either the bundle's configure() block or the sidecar to narrow
-# each source to what you want, then re-run `python mock_data_wizard_extract.py`
-# — it auto-loads the latest sidecar and produces stats.json.
+# Edit the sidecar to narrow each source to what you want, then re-run
+# `python mock_data_wizard_extract.py` — it auto-loads the latest sidecar
+# and produces stats.json. (Once a sidecar exists it overrides `configure()`;
+# delete the sidecar if you want `configure()` edits to take effect again.)
 # IMPORTANT: verify stats.json contains no PII.
 
 # Step 2: Generate mock CSV files locally
