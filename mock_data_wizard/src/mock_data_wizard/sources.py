@@ -36,7 +36,14 @@ DEFAULT_FILE_PATTERN = r"\.(csv|txt|tsv)$"
 # registered as a VIEW. The TABLE materialises read_csv_auto once,
 # avoiding per-aggregate-query reparses; VIEW keeps memory bounded for
 # files that would not fit. Override via MDW_MEMORY_THRESHOLD_MB.
-_DEFAULT_MEMORY_THRESHOLD_MB = 256
+#
+# Default: 50 GiB. The MONA batch server has 150-200 GB RAM and DuckDB
+# defaults to ~80% of RAM as its budget; sources iterate sequentially
+# and DROP TABLE between handles, so peak DuckDB memory is bounded to
+# one source at a time (PERCENTILE_CONT sorts spill to TEMP if needed).
+# CI / laptop runs use small fixtures so the threshold is irrelevant
+# there; lower it via the env var if a host is tighter on RAM.
+_DEFAULT_MEMORY_THRESHOLD_MB = 50 * 1024
 
 
 # -- Source dataclasses ---------------------------------------------------

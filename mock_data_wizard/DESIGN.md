@@ -244,17 +244,26 @@ to be hand-edited, so silent drops would mask user typos.
 ### File materialisation threshold
 
 `iter_file_source` size-gates how each CSV is exposed to DuckDB. Files
-at or below `MDW_MEMORY_THRESHOLD_MB` (default 256 MB) become a
-`CREATE OR REPLACE TABLE` — `read_csv_auto` runs once and every
-downstream `aggs` / `quantiles` / `freqs` query hits the materialised
-columns. Larger files stay as a `VIEW` so peak memory stays bounded:
-each query reparses the CSV but the table never lives in RAM.
+at or below `MDW_MEMORY_THRESHOLD_MB` (default 50 GiB on MONA-class
+hosts) become a `CREATE OR REPLACE TABLE` — `read_csv_auto` runs once
+and every downstream `aggs` / `quantiles` / `freqs` query hits the
+materialised columns. Larger files stay as a `VIEW` so peak memory
+stays bounded: each query reparses the CSV but the table never lives
+in RAM.
 
 The threshold matters because the per-column query overhead dominates
 wall time on small inputs that would otherwise be summarised in a
 single pass. The output is identical either way — only the time/memory
 trade differs. Override the threshold via the env var; set it to `0`
 to force the VIEW path for every file.
+
+The default is sized for the MONA batch server (150–200 GB RAM,
+DuckDB at ~80% of that, sources iterate sequentially with
+`DROP TABLE` between handles, percentile sorts spill to
+`C:\Windows\TEMP` if needed). Lower it on tighter hosts. If we ever
+parallelise across sources, the threshold needs to drop in
+proportion or scheduling needs to become budget-aware — peak memory
+is currently single-source because the loop is single-threaded.
 
 ### File discovery quirks
 
