@@ -353,6 +353,31 @@ def test_iter_sql_source_permissive_lists_everything_unfiltered():
     assert sorted(h.source_name for h in handles) == ["lisa_2018", "rams_2018"]
 
 
+def test_iter_sql_source_permissive_disambiguates_cross_schema_collisions():
+    """Discover must NOT raise on `dbo.persons` + `dim.persons` -- the
+    user didn't curate the table list, so we silently key the colliders
+    by their qualified names instead of erroring out."""
+    discovered = [
+        ("dbo", "persons"),
+        ("dim", "persons"),
+        ("dbo", "events"),
+    ]
+    raw = SqlSource(dsn="P1105")
+    handles = list(
+        iter_sql_source(raw, conn=_FakeConn(view_rows=discovered), permissive=True)
+    )
+    names = sorted(h.source_name for h in handles)
+    assert names == ["dbo.persons", "dim.persons", "events"]
+
+
+def test_iter_sql_source_strict_still_raises_on_collision():
+    """Extract mode keeps the strict behavior: explicit `tables=` with
+    same-named entries from different schemas must raise."""
+    src = sql_source("P1105", tables=["dbo.persons", "dim.persons"])
+    with pytest.raises(ValueError, match="Ambiguous table aliases"):
+        list(iter_sql_source(src, conn=_FakeConn(view_rows=[])))
+
+
 # -- iter_source dispatch -------------------------------------------------
 
 

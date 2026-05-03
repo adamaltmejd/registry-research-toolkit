@@ -49,15 +49,17 @@ EXTRA_CATEGORICAL = (
     re.compile(r"_kod$", re.IGNORECASE),
 )
 
-# Date roots. *Datum*, *Tidpunkt*, *Date* etc.
+# Date roots. *Datum*, *Tidpunkt*, etc.
 DATE_PATTERNS = (
     re.compile(r"datum", re.IGNORECASE),
     re.compile(r"tidpunkt", re.IGNORECASE),
-    re.compile(r"(^|_)ar$", re.IGNORECASE),  # AR (year) is date-ish; YYYYMMDD-int
     re.compile(r"birth.*date|fodelse.*datum", re.IGNORECASE),
 )
 
-# Numeric roots. Money, income, pension, compensation.
+# Numeric roots. Money, income, pension, compensation, year (AR is a
+# 4-digit year column whose values don't parse as dates -- belongs here,
+# not under DATE_PATTERNS where the summarizer would silently drop
+# min/max/quantiles after _to_date('2019') fails).
 NUMERIC_PATTERNS = (
     re.compile(r"belopp", re.IGNORECASE),
     re.compile(r"(^|_)ink", re.IGNORECASE),  # InkomstSumma, IncomeKr
@@ -65,6 +67,7 @@ NUMERIC_PATTERNS = (
     re.compile(r"erst", re.IGNORECASE),
     re.compile(r"sum$|^sum_|_sum$", re.IGNORECASE),
     re.compile(r"alder", re.IGNORECASE),  # age
+    re.compile(r"(^|_)ar$", re.IGNORECASE),  # AR (year)
 )
 
 
@@ -86,6 +89,42 @@ def _classify_name(col_name: str) -> str:
     return "high_cardinality"
 
 
+def _validate_discover_payload(payload: Any, source_label: str) -> None:
+    """Type-check a discover.json payload.
+
+    Raises ``ValueError`` with a CLI-friendly message when the user
+    points configure at the wrong file (e.g. ``stats.json`` -- which
+    has the same top-level shape but lacks a discover contract version)
+    or a partial / malformed discover file.
+    """
+    if not isinstance(payload, dict):
+        raise ValueError(f"{source_label}: top-level value must be an object")
+    cv = payload.get("contract_version")
+    if not (isinstance(cv, str) and cv.startswith("discover-")):
+        raise ValueError(
+            f"{source_label}: expected a discover.json (contract_version "
+            f"like 'discover-1.0.0'), got contract_version={cv!r}. "
+            f"Did you point configure at stats.json by mistake?"
+        )
+    sources = payload.get("sources")
+    if not isinstance(sources, list):
+        raise ValueError(f"{source_label}: 'sources' must be a list")
+    for i, src in enumerate(sources):
+        if not isinstance(src, dict):
+            raise ValueError(f"{source_label}: sources[{i}] must be an object")
+        if "source_name" not in src:
+            raise ValueError(f"{source_label}: sources[{i}] missing 'source_name'")
+        cols = src.get("columns", [])
+        if not isinstance(cols, list):
+            raise ValueError(f"{source_label}: sources[{i}].columns must be a list")
+        for j, col in enumerate(cols):
+            if not isinstance(col, dict) or "name" not in col:
+                raise ValueError(
+                    f"{source_label}: sources[{i}].columns[{j}] must be an "
+                    f"object with a 'name' key"
+                )
+
+
 def build_config(discover: dict[str, Any]) -> dict[str, Any]:
     """Author a mdw_config.json payload from a discover.json payload."""
     column_types: dict[str, dict[str, dict[str, str]]] = {}
@@ -104,7 +143,7 @@ def build_config(discover: dict[str, Any]) -> dict[str, Any]:
 
 
 def _summary_counts(payload: dict[str, Any]) -> Counter[str]:
-    """Count assigned types across all sources for the per-source summary."""
+    """Count assigned types across all sources (one combined tally)."""
     c: Counter[str] = Counter()
     for cols in payload.get("column_types", {}).values():
         for entry in cols.values():
@@ -149,7 +188,8 @@ def configure_from_discover(
         )
 
     payload = json.loads(discover_path.read_text(encoding="utf-8"))
-    if not payload.get("sources"):
+    _validate_discover_payload(payload, str(discover_path))
+    if not payload["sources"]:
         raise ValueError(f"{discover_path} has no sources -- nothing to configure.")
 
     config = build_config(payload)

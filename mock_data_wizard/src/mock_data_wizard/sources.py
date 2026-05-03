@@ -407,20 +407,38 @@ def _normalize_to_sql_tables(
     return out
 
 
-def _resolve_sql_aliases(normalized: Sequence[SqlTable]) -> dict[str, SqlTable]:
-    """Map alias -> SqlTable, raising on conflict."""
+def _resolve_sql_aliases(
+    normalized: Sequence[SqlTable], *, on_collision: str = "raise"
+) -> dict[str, SqlTable]:
+    """Map alias -> SqlTable.
+
+    ``on_collision`` controls behavior when two tables share an alias:
+
+    - ``"raise"`` (default, extract mode): raise ``ValueError``. The
+      user explicitly named these tables; ambiguity is a config bug.
+    - ``"qualify"`` (discover mode): the user didn't pick the table
+      list -- the iterator did -- so we silently disambiguate by
+      keying both colliding rows under their qualified names.
+    """
     seen: dict[str, list[SqlTable]] = {}
     for t in normalized:
         alias = t.alias or _strip_schema(t.qualified)
         seen.setdefault(alias, []).append(t)
     dupes = {a: ts for a, ts in seen.items() if len(ts) > 1}
-    if dupes:
+    if dupes and on_collision == "raise":
         names = sorted(dupes)
         raise ValueError(
             f"Ambiguous table aliases: {names}. Pass explicit alias= on "
             f"sql_table(), e.g. sql_table('dbo.persons', alias='persons_dbo')."
         )
-    return {(t.alias or _strip_schema(t.qualified)): t for t in normalized}
+    out: dict[str, SqlTable] = {}
+    for alias, group in seen.items():
+        if len(group) == 1:
+            out[alias] = group[0]
+        else:
+            for t in group:
+                out[t.qualified] = t
+    return out
 
 
 def _quote_qualified(qualified: str) -> str:
@@ -453,7 +471,10 @@ def _select_sql_tables(
         raise ValueError(
             "sql_source(): provide one of `tables`, `pattern`, or `all=True`."
         )
-    return _resolve_sql_aliases([SqlTable(qualified=t) for t in discovered])
+    return _resolve_sql_aliases(
+        [SqlTable(qualified=t) for t in discovered],
+        on_collision="qualify" if permissive else "raise",
+    )
 
 
 def iter_sql_source(

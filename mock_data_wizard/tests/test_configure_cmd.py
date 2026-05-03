@@ -39,7 +39,7 @@ from mock_data_wizard.configure import (
         ("Kon", "categorical"),
         ("InDatum", "date"),
         ("Tidpunkt", "date"),
-        ("AR", "date"),
+        ("AR", "numeric"),
         ("Belopp", "numeric"),
         ("InkomstSumma", "numeric"),
         ("PensionAr", "numeric"),
@@ -85,7 +85,8 @@ def test_build_config_routes_columns_per_source():
 
 def _write_discover(tmp_path: Path, payload: dict) -> Path:
     p = tmp_path / "discover.json"
-    p.write_text(json.dumps(payload), encoding="utf-8")
+    full = {"contract_version": "discover-1.0.0", **payload}
+    p.write_text(json.dumps(full), encoding="utf-8")
     return p
 
 
@@ -148,6 +149,39 @@ def test_configure_raises_when_discover_has_no_sources(tmp_path: Path):
 def test_configure_raises_when_input_missing(tmp_path: Path):
     with pytest.raises(FileNotFoundError):
         configure_from_discover(tmp_path / "nope.json")
+
+
+def test_configure_rejects_stats_json_with_actionable_error(tmp_path: Path):
+    """Pointing configure at stats.json (or anything without a discover
+    contract_version) must fail with a controlled message, not KeyError."""
+    bad = tmp_path / "stats.json"
+    bad.write_text(
+        json.dumps(
+            {
+                "contract_version": "2.0.0",
+                "sources": [{"source_name": "a", "columns": []}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="discover.json"):
+        configure_from_discover(bad)
+
+
+def test_configure_rejects_payload_missing_columns_key(tmp_path: Path):
+    """Partial discover file: a column entry without 'name'."""
+    p = tmp_path / "discover.json"
+    p.write_text(
+        json.dumps(
+            {
+                "contract_version": "discover-1.0.0",
+                "sources": [{"source_name": "a", "columns": [{"sql_type": "int"}]}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="'name' key"):
+        configure_from_discover(p)
 
 
 def test_cli_configure_invokes_module(tmp_path: Path):
