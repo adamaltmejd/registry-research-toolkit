@@ -251,3 +251,42 @@ def test_main_rejects_sidecar_with_discovery_source(tmp_path: Path):
     )
     with pytest.raises(RuntimeError, match="discovery-mode source"):
         main([], output_dir=tmp_path)
+
+
+# -- deterministic classification sample (#18) ---------------------------
+
+
+def _classify_with_seed(tmp_path: Path, csv_name: str, seed: int) -> dict[str, str]:
+    """Run extract on a fixture and return {column_name: inferred_type}."""
+    out = tmp_path / f"stats_{seed}.json"
+    src = file_source(str(tmp_path), include=[csv_name])
+    result = run_extract([src], out, seed=0, classifier_seed=seed)
+    src_out = result["sources"][0]
+    return {c["column_name"]: c["inferred_type"] for c in src_out["columns"]}
+
+
+def test_classifier_sample_is_deterministic_across_reruns(tmp_path: Path):
+    # 1500 rows so the 1000-row sample actually has to choose.
+    rows = ["mixed,kommun"]
+    for i in range(1, 1301):
+        rows.append(f"{i},0114")
+    for i in range(1301, 1501):
+        rows.append(f"x{i},0115")
+    _write_csv(tmp_path / "data.csv", "\n".join(rows) + "\n")
+
+    classifications_a = _classify_with_seed(tmp_path, "data.csv", seed=0)
+    classifications_b = _classify_with_seed(tmp_path, "data.csv", seed=0)
+    assert classifications_a == classifications_b, (
+        "same fixture + same seed must produce identical classifications"
+    )
+
+
+def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main([src], output_dir=tmp_path, seed=0, classifier_seed=42)
+    assert result is not None
+    assert result["sources"][0]["row_count"] == 6

@@ -108,8 +108,14 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #
 # configure() is called AFTER the bundle modules load, so file_source(),
 # sql_source(), and sql_table() are all in scope here.
+#
+# CLASSIFIER_SEED controls the per-column sample used for type
+# classification. Same data + same seed -> same classifications across
+# reruns and across same-shape sibling tables (e.g. lisa_2015..2019).
+# Vary it only if you have a reason to.
 DEBUG = False
 VERBOSE = False
+CLASSIFIER_SEED = 0
 
 
 def configure():
@@ -227,7 +233,7 @@ if __name__ == "__main__":
             _boot_sys.exit(2)
         _log.info("configure() empty -- main() will load sidecar %s", _sidecar)
     try:
-        result = main(SOURCES, output_dir=_BOOT_HERE)
+        result = main(SOURCES, output_dir=_BOOT_HERE, classifier_seed=CLASSIFIER_SEED)
     except Exception:
         _log.error("mdw bundle failed:\\n%s", _boot_traceback.format_exc())
         _boot_sys.exit(1)

@@ -246,6 +246,19 @@ All randomness is seeded. Sub-seeds are derived via
 `sha256(f"{master_seed}:{file}:{column}")`. Same seed produces identical
 output. This makes mock data reproducible for CI and testing.
 
+The extract step has a separate `CLASSIFIER_SEED` (default `0`,
+exposed at the top of the bundle) that controls the per-column sample
+used by `_pre_classify` to infer column type. The DuckDB branch uses
+`USING SAMPLE reservoir(N ROWS) REPEATABLE (seed)` so the sample is
+content-addressed and reproducible. The MSSQL branch orders by
+`HASHBYTES('SHA1', CAST(col AS NVARCHAR(MAX)))` instead — same data
+yields the same row order regardless of physical layout, so
+same-shape sibling tables (e.g. `lisa_2015` … `lisa_2019`) classify
+the same column the same way. Earlier runs used `LIMIT 1000` /
+`TOP 1000` with no order, which produced flicker like `Distriktskod`
+classifying as `date` in some LISA years and `high_cardinality` in
+others — that flicker is gone.
+
 ## Population spine
 
 Birth-invariant attributes (Kön, Födelseår, Födelselän, Födelseland) are

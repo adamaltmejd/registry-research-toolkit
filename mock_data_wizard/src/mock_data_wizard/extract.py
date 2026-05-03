@@ -86,8 +86,15 @@ def _pre_classify(
     col: str,
     dialect: str,
     sample_n: int = SAMPLE_SIZE,
+    seed: int = 0,
 ) -> tuple[int, int, list[Any]]:
-    """Return ``(n_distinct, null_count, sample_values)`` for one column."""
+    """Return ``(n_distinct, null_count, sample_values)`` for one column.
+
+    The sample is deterministic across reruns for a given (data, seed):
+    DuckDB uses a seeded reservoir sample; MSSQL orders by a content
+    hash of the column value (the seed is unused on that branch -- the
+    hash provides stable order across same-shape sibling tables).
+    """
     qcol = quote_ident(col, dialect)
     counts_sql = (
         f"SELECT COUNT(DISTINCT {qcol}) AS n_distinct, "
@@ -104,12 +111,21 @@ def _pre_classify(
         cur.close()
 
     if dialect == DUCKDB:
+        # `reservoir` is required: bare `USING SAMPLE N ROWS REPEATABLE (s)`
+        # errors out in current DuckDB.
         sample_sql = (
-            f"SELECT {qcol} FROM {table} WHERE {qcol} IS NOT NULL LIMIT {sample_n}"
+            f"SELECT {qcol} FROM {table} WHERE {qcol} IS NOT NULL "
+            f"USING SAMPLE reservoir({sample_n} ROWS) REPEATABLE ({seed})"
         )
     else:
+        # SQL Server's TOP N without ORDER BY returns scan-order rows --
+        # stable within a session on a heap, but not across reruns or
+        # across same-shape sibling tables. Hashing the value gives a
+        # content-addressed order independent of physical layout.
         sample_sql = (
-            f"SELECT TOP {sample_n} {qcol} FROM {table} WHERE {qcol} IS NOT NULL"
+            f"SELECT TOP {sample_n} {qcol} FROM {table} "
+            f"WHERE {qcol} IS NOT NULL "
+            f"ORDER BY HASHBYTES('SHA1', CAST({qcol} AS NVARCHAR(MAX)))"
         )
     cur = conn.cursor()
     try:
@@ -124,7 +140,12 @@ def _pre_classify(
 # -- Per-handle pipeline ---------------------------------------------------
 
 
-def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
+def process_handle(
+    handle: SourceHandle,
+    rng: random.Random,
+    *,
+    classifier_seed: int = 0,
+) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict."""
     log.info("[%s] counting rows...", handle.source_name)
     _flush_log_handlers()
@@ -154,7 +175,7 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
     for i, col in enumerate(cols, 1):
         t_col = time.monotonic()
         n_distinct, null_count, sample = _pre_classify(
-            handle.conn, handle.table, col, handle.dialect
+            handle.conn, handle.table, col, handle.dialect, seed=classifier_seed
         )
         col_type = classify_column(col, n_rows, n_distinct, sample)
         columns_out.append(
@@ -230,11 +251,17 @@ def run_extract(
     output_path: Path,
     *,
     seed: int | None = None,
+    classifier_seed: int = 0,
 ) -> dict[str, Any]:
     """Run the full extract pipeline and write ``output_path``.
 
     Returns the parsed ``stats.json`` dict (callers can also just read
     the file).
+
+    ``seed`` controls Python-side noise injection in :mod:`summarize`.
+    ``classifier_seed`` controls the per-column classification sample
+    (DuckDB ``REPEATABLE`` reservoir); same data + same seed always
+    classifies the same way.
     """
     rng = random.Random(seed)
     sources = list(sources)
@@ -245,7 +272,9 @@ def run_extract(
         log.info("source %d/%d: %r", src_idx, len(sources), src)
         _flush_log_handlers()
         for handle in iter_source(src):
-            source_results.append(process_handle(handle, rng))
+            source_results.append(
+                process_handle(handle, rng, classifier_seed=classifier_seed)
+            )
             log.info(
                 "source %d/%d: handle done (%d total handle(s) so far)",
                 src_idx,
@@ -378,6 +407,7 @@ def main(
     output_path: Path | None = None,
     *,
     seed: int | None = None,
+    classifier_seed: int = 0,
 ) -> dict[str, Any] | None:
     """Top-level orchestration.
 
@@ -386,6 +416,9 @@ def main(
         output_dir: Directory for ``stats.json`` and sidecar files.
         output_path: Override path for ``stats.json``.
         seed: RNG seed for reproducible noise (omit for non-determinism).
+        classifier_seed: Seed for the per-column classification sample.
+            Same data + same seed always produces the same classifications;
+            varying the seed is permitted to differ.
 
     Returns the stats dict on a successful run, or ``None`` if discovery
     mode wrote a sidecar and exited.
@@ -416,4 +449,4 @@ def main(
         )
         return None
 
-    return run_extract(sources, output_path, seed=seed)
+    return run_extract(sources, output_path, seed=seed, classifier_seed=classifier_seed)
