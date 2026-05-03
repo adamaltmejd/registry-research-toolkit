@@ -400,19 +400,12 @@ def _cmd_configure(args: argparse.Namespace) -> int:
     """Author mdw_config.json from a discover.json."""
     from .configure import configure_from_discover
 
-    discover_path = Path(args.discover)
     output_path = Path(args.output) if args.output else None
     try:
         configure_from_discover(
-            discover_path, output_path=output_path, overwrite=args.overwrite
+            Path(args.discover), output_path=output_path, overwrite=args.overwrite
         )
-    except FileNotFoundError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except FileExistsError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except ValueError as e:
+    except (FileNotFoundError, FileExistsError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
         return 1
     return 0

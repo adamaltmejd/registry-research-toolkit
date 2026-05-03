@@ -267,9 +267,9 @@ and typos error out instead of getting silently dropped.
   type. When *any* inline hint is supplied, the bundle skips the
   per-column sample query for that column entirely — that is the
   perf win the override is for.
-- Each output column carries `source_of_type: "override"` (the
-  expected case in extract mode); the legacy `"auto"` value is
-  reserved for tests that go through the classifier path directly.
+- Each output column carries `source_of_type: "override"` so
+  downstream consumers can audit that every column went through the
+  config — the extract path has no auto-classifier fallback.
 - `column_options` is a separate namespace reserved for non-type
   overrides (e.g. `suppress_k` for disclosure-control hardening).
   Validated here; consumed in `summarize`. Each option key is

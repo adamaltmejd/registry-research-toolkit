@@ -16,11 +16,10 @@ from mock_data_wizard.config import parse_config
 from mock_data_wizard.extract import (
     _shared_columns,
     main,
-    process_handle,
     run_discover,
     run_extract_typed,
 )
-from mock_data_wizard.sources import file_source, iter_source
+from mock_data_wizard.sources import file_source
 
 
 def _write_csv(p: Path, content: str) -> None:
@@ -439,31 +438,3 @@ def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     src = file_source(str(tmp_path), include=["data.csv"])
     with pytest.raises(ValueError, match="expected one of"):
         main([src], output_dir=tmp_path, mode="extract", seed=0)
-
-
-# -- process_handle auto-classify path (used by extract.run_extract_typed
-#    via require_typed=False indirectly; tested here in isolation) ------
-
-
-def test_process_handle_auto_classifies_when_config_is_none(tmp_path: Path):
-    import random as _r
-
-    _write_csv(
-        tmp_path / "data.csv",
-        "lopnr,age,kommun\n"
-        "1,25,0114\n2,30,0114\n3,42,0115\n4,55,0114\n"
-        "5,29,0115\n6,38,0114\n7,47,0115\n8,33,0114\n",
-    )
-    src = file_source(str(tmp_path), include=["data.csv"])
-    rng = _r.Random(0)
-    # Iterate within the generator's lifetime: the file source closes its
-    # owned DuckDB connection when the iterator exhausts.
-    out = None
-    for handle in iter_source(src):
-        out = process_handle(handle, rng, config=None, require_typed=False)
-    assert out is not None
-    by_name = {c["column_name"]: c for c in out["columns"]}
-    assert by_name["lopnr"]["inferred_type"] == "id"
-    assert by_name["age"]["inferred_type"] == "numeric"
-    assert by_name["kommun"]["inferred_type"] == "categorical"
-    assert all(c["source_of_type"] == "auto" for c in by_name.values())

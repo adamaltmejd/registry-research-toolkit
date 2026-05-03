@@ -71,21 +71,22 @@ NUMERIC_PATTERNS = (
 )
 
 
+_PATTERN_RULES: tuple[tuple[str, tuple[re.Pattern[str], ...]], ...] = (
+    ("categorical", EXTRA_CATEGORICAL),
+    ("date", DATE_PATTERNS),
+    ("numeric", NUMERIC_PATTERNS),
+)
+
+
 def _classify_name(col_name: str) -> str:
     """Return one of the five mock_data_wizard column types for ``col_name``."""
     if is_known_id(col_name):
         return "id"
     if known_categorical_cap(col_name) is not None:
         return "categorical"
-    for pat in EXTRA_CATEGORICAL:
-        if pat.search(col_name):
-            return "categorical"
-    for pat in DATE_PATTERNS:
-        if pat.search(col_name):
-            return "date"
-    for pat in NUMERIC_PATTERNS:
-        if pat.search(col_name):
-            return "numeric"
+    for col_type, patterns in _PATTERN_RULES:
+        if any(p.search(col_name) for p in patterns):
+            return col_type
     return "high_cardinality"
 
 

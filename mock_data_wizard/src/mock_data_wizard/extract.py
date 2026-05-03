@@ -28,7 +28,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
-from .classify import classify_column
 from .config import MDWConfig, load_config
 from .scan import write_export
 from .sources import SourceHandle, iter_source
@@ -74,36 +73,27 @@ def _describe_columns_sql(conn: Any, qualified: str) -> list[dict[str, Any]]:
 
     ``qualified`` is ``schema.name`` (unquoted). The query targets the
     server's catalog, not the table itself, so it works against views
-    we don't have row-level access to.
+    we don't have row-level access to. ``sources.py`` always emits
+    schema-qualified names for SQL handles, so the unqualified case
+    isn't reachable.
     """
     schema, _, name = qualified.partition(".")
     if not name:
-        # Bare table name (no schema) -- match anywhere.
-        cur = conn.cursor()
-        try:
-            cur.execute(
-                "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
-                "FROM INFORMATION_SCHEMA.COLUMNS "
-                "WHERE TABLE_NAME = ? "
-                "ORDER BY ORDINAL_POSITION",
-                (qualified,),
-            )
-            rows = cur.fetchall()
-        finally:
-            cur.close()
-    else:
-        cur = conn.cursor()
-        try:
-            cur.execute(
-                "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
-                "FROM INFORMATION_SCHEMA.COLUMNS "
-                "WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? "
-                "ORDER BY ORDINAL_POSITION",
-                (schema, name),
-            )
-            rows = cur.fetchall()
-        finally:
-            cur.close()
+        raise ValueError(
+            f"sql table reference must be schema-qualified, got {qualified!r}"
+        )
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
+            "FROM INFORMATION_SCHEMA.COLUMNS "
+            "WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? "
+            "ORDER BY ORDINAL_POSITION",
+            (schema, name),
+        )
+        rows = cur.fetchall()
+    finally:
+        cur.close()
     return [
         {"name": r[0], "sql_type": r[1], "nullable": str(r[2]).upper() == "YES"}
         for r in rows
@@ -208,16 +198,16 @@ def _sample_values(
 def process_handle(
     handle: SourceHandle,
     rng: random.Random,
+    config: MDWConfig,
     *,
     classifier_seed: int = 0,
-    config: MDWConfig | None = None,
-    require_typed: bool = False,
 ) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict.
 
-    ``require_typed=True`` (extract mode) errors when a column has no
-    override in ``config`` -- the classifier path is gone in that mode.
-    ``False`` (legacy / fallback) lets ``classify_column`` decide.
+    Every column must carry a type override in ``config``; this is the
+    only entry point and it has no classifier fallback. Subtype /
+    date-format detection still runs the per-column sample when the
+    override has no inline hint -- ``classifier_seed`` controls that.
     """
     log.info("[%s] counting rows...", handle.source_name)
     _flush_log_handlers()
@@ -250,19 +240,19 @@ def process_handle(
             handle.conn, handle.table, col, handle.dialect
         )
 
-        override = config.lookup_type(handle.source_name, col) if config else None
-        if require_typed and override is None:
+        override = config.lookup_type(handle.source_name, col)
+        if override is None:
             raise RuntimeError(
                 f"extract mode: column {handle.source_name!r}.{col!r} has no "
                 f"type override in mdw_config.json. Re-run discover and "
                 f"configure to refresh it, or add an entry by hand."
             )
-        options = config.lookup_options(handle.source_name, col) if config else {}
+        options = config.lookup_options(handle.source_name, col)
         # Skip the per-column sample query when an inline hint pins the
         # subtype/format -- nothing downstream consumes the sample then.
         sample: list[Any] = (
             []
-            if override is not None and override.has_inline_hint()
+            if override.has_inline_hint()
             else _sample_values(
                 handle.conn,
                 handle.table,
@@ -271,18 +261,13 @@ def process_handle(
                 seed=classifier_seed,
             )
         )
-        col_type = (
-            override.type
-            if override is not None
-            else classify_column(col, n_rows, n_distinct, sample)
-        )
 
         columns_out.append(
             summarize_column(
                 handle.conn,
                 handle.table,
                 col,
-                col_type,
+                override.type,
                 n_rows=n_rows,
                 n_distinct=n_distinct,
                 null_count=null_count,
@@ -294,13 +279,12 @@ def process_handle(
             )
         )
         log.debug(
-            "[%s] col %d/%d %s -> %s (%s) (%.1fs)",
+            "[%s] col %d/%d %s -> %s (%.1fs)",
             handle.source_name,
             i,
             len(cols),
             col,
-            col_type,
-            "override" if override else "auto",
+            override.type,
             time.monotonic() - t_col,
         )
         _flush_log_handlers()
@@ -378,9 +362,8 @@ def run_extract_typed(
                 process_handle(
                     handle,
                     rng,
+                    config,
                     classifier_seed=classifier_seed,
-                    config=config,
-                    require_typed=True,
                 )
             )
             log.info(
