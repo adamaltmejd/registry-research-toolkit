@@ -405,6 +405,35 @@ authority file (which stats drive generation) is selected by highest
 Without regmeta enrichment, the spine is empty and behavior is identical
 to pre-spine generation.
 
+## CVID picker
+
+A `var_id` can resolve to multiple `cvid`s under the same register — the
+SCB metadata carries one CVID per coding-scheme version (e.g. SUN2000 vs
+SUN2020 for variable 784 "Yrkesinriktning"). The picker chooses one.
+
+Tiered scoring per `(cvid)` candidate: `(shared_tokens, substring_hits,
+overlap, code_count)`. The first non-zero pair wins; later fields break
+ties.
+
+1. **Name / classification.** Tokenize the column name and the CVID's
+   `(classification.short_name, vardemangdsversion)` strings using the
+   camelcase regex `[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+` and lowercase
+   them. Shared-token count is the primary signal; substring containment
+   in either direction is the secondary fallback for cases where
+   tokenization is too coarse (e.g. `SUN2000` tokenizes to `['2000']`
+   only, but `'sun'` ⊂ `'sun2000'` still works). Tokens shorter than 2
+   chars are dropped — single letters are too noisy.
+2. **Code-set overlap (last resort).** When no CVID has any name signal,
+   fall back to overlap between observed codes and the CVID's code set.
+   Requires `overlap / max(|observed|, 1) >= MIN_OVERLAP_RATIO` (default
+   `0.5`); below the floor, no entry is emitted. This avoids enriching
+   e.g. a 3-digit BTYP column with a 4-letter FamStF code universe just
+   because it's the only candidate.
+
+When a name match exists, the picker accepts the CVID even at zero code
+overlap — the name is the principled signal, and code drift is
+already surfaced separately by the value-code drift warnings.
+
 ## Value code drift warnings
 
 After enrichment, frequency codes from stats are cross-checked against

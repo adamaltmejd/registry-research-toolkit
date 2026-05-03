@@ -175,8 +175,8 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
     # var_id=44 in reg=1: observed {"1","2"} matches CVID 1001's {"1","2"}.
     # var_id=44 in reg=2: observed {"A","B"} matches CVID 2001's {"A","B","C"}.
     requests = {
-        ("a.csv", "Kon"): (44, 1, {"1", "2"}),
-        ("b.csv", "Kon"): (44, 2, {"A", "B"}),
+        ("a.csv", "Kon"): (44, 1, {"1", "2"}, "Kon"),
+        ("b.csv", "Kon"): (44, 2, {"A", "B"}, "Kon"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("a.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
@@ -192,9 +192,122 @@ def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
     conn = sqlite3.connect(str(regmeta_db))
     conn.row_factory = sqlite3.Row
     # Observed codes that exist nowhere in the regmeta DB
-    requests = {("f.csv", "Kon"): (44, 1, {"X", "Y", "Z"})}
+    requests = {("f.csv", "Kon"): (44, 1, {"X", "Y", "Z"}, "Kon")}
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("f.csv", "Kon") not in out
+
+
+def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
+    """Two CVIDs under the same (var_id, register_id) with overlapping code
+    sets — name/classification metadata picks the right one even when raw
+    overlap ties. Issue #26: SUN2000Inr-style columns whose observed codes
+    are a subset of both SUN2000 and SUN2020 must resolve to SUN2000.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Two CVIDs under the same (var=44, reg=1). CVID 1101 is SUN2000 (5 codes
+    # 1..5); CVID 1102 is SUN2020 (7 codes 1..7). Observed {1,2,3,4,5} is a
+    # full subset of both — tier-2 overlap ties at 5/5; without name signal
+    # the larger code_count (1102) wins. With classification metadata, the
+    # name-match picker prefers 1101.
+    conn.executescript(
+        """
+        INSERT INTO classification (id, short_name, name)
+            VALUES (1, 'SUN2000', 'Svensk utbildningsnomenklatur 2000');
+        INSERT INTO classification (id, short_name, name)
+            VALUES (2, 'SUN2020', 'Svensk utbildningsnomenklatur 2020');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            classification_id)
+            VALUES (1101, 1, 10, 100, 44, 'int', '4', 'SUN2000', '4', 1);
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            classification_id)
+            VALUES (1102, 1, 10, 100, 44, 'int', '4', 'SUN2020', '4', 2);
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (101, '1', 'A');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (102, '2', 'B');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (103, '3', 'C');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (104, '4', 'D');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (105, '5', 'E');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (106, '6', 'F');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (107, '7', 'G');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 101);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 102);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 103);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 104);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 105);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 101);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 102);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 103);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 104);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 105);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 106);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 107);
+        """
+    )
+    conn.commit()
+
+    requests = {
+        ("f.csv", "Sun2000Inr"): (44, 1, {"1", "2", "3", "4", "5"}, "Sun2000Inr"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # SUN2000 has 5 codes; SUN2020 has 7. Picking by name → SUN2000 (5 codes).
+    assert out[("f.csv", "Sun2000Inr")] == {
+        "1": "A",
+        "2": "B",
+        "3": "C",
+        "4": "D",
+        "5": "E",
+    }
+
+
+def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
+    """Issue #25: when no CVID has a name signal AND none meets
+    MIN_OVERLAP_RATIO, omit the entry rather than mis-enriching with an
+    unrelated code universe.
+
+    Regression for the BTYP failure: observed {0..9, B, F, H, L, P} (15
+    codes) against a CVID with {A, E, I, S} — zero overlap. The old picker
+    would silently emit the {A, E, I, S} universe; we want no enrichment.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a CVID for var_id=44 in register 1 with codes {A,E,I,S} and no
+    # classification metadata (so name-match has nothing to latch onto).
+    conn.executescript(
+        """
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1201, 1, 10, 100, 44, 'char', '1', 'FamStF', '1');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (201, 'A', 'Alpha');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (202, 'E', 'Echo');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (203, 'I', 'India');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (204, 'S', 'Sierra');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 201);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 202);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 203);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 204);
+        """
+    )
+    conn.commit()
+
+    requests = {
+        ("f.csv", "BTyp"): (
+            44,
+            1,
+            {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "F", "H", "L", "P"},
+            "BTyp",
+        ),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # The fixture's pre-existing CVID 1001 is also in scope: codes {"1","2"}.
+    # 2/15 = 0.13 < 0.5 → also fails. CVID 1201: 0/15 = 0 < 0.5 → fails.
+    # Both candidates rejected, no entry emitted.
+    assert ("f.csv", "BTyp") not in out
 
 
 def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path):
@@ -227,8 +340,8 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path)
 
     # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
     requests = {
-        ("f.csv", "ColA"): (44, 1, {"1", "2"}),
-        ("f.csv", "ColB"): (44, 1, {"3", "4"}),
+        ("f.csv", "ColA"): (44, 1, {"1", "2"}, "ColA"),
+        ("f.csv", "ColB"): (44, 1, {"3", "4"}, "ColB"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("f.csv", "ColA")] == {"1": "Man", "2": "Kvinna"}

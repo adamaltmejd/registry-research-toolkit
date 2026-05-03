@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 import signal
 import sqlite3
 import time
@@ -158,11 +159,14 @@ def enrich(
                         source_resolved[name] = resolved
 
             # Build per-column requests: (source_name, column_name) -> (var_id,
-            # register_id, observed_codes). One source can have two columns
-            # resolving to the same (var, reg) (e.g. Individ_2019 with both
-            # Sun2000Inr and Sun2020Inr → both → var=784/reg=34) so we cannot
-            # share CVID picks per pair — each column needs its own decision.
-            requests: dict[tuple[str, str], tuple[int, int, set[str]]] = {}
+            # register_id, observed_codes, column_name). One source can have
+            # two columns resolving to the same (var, reg) (e.g. Individ_2019
+            # with both Sun2000Inr and Sun2020Inr → both → var=784/reg=34) so
+            # we cannot share CVID picks per pair — each column needs its own
+            # decision. column_name is carried in the value (not just the key)
+            # so _bulk_fetch_value_codes can run name-based ranking without
+            # learning the caller's key shape.
+            requests: dict[tuple[str, str], tuple[int, int, set[str], str]] = {}
             for source in stats.sources:
                 resolved = source_resolved.get(source.source_name, {})
                 for col in source.columns:
@@ -174,6 +178,7 @@ def enrich(
                         rv.var_id,
                         rv.register_id,
                         observed,
+                        col.column_name,
                     )
             value_codes_by_col: dict[tuple[str, str], dict[str, str]] = {}
             if requests:
@@ -455,45 +460,100 @@ def _bulk_resolve(
     return result
 
 
+# Tier-2 (overlap-only) acceptance floor. Below this, an unrelated code
+# universe is more likely than a real match — better to leave value_codes
+# unset than to mis-enrich with the wrong scheme. See issue #25 (BTYP:
+# observed {0..9,B,F,H,L,P} vs CVID {A,E,I,S}: 0% overlap should not pick
+# the CVID just because it's the only candidate).
+MIN_OVERLAP_RATIO = 0.5
+
+# CamelCase + alpha/digit boundary tokenizer. Plain non-alnum splits fail
+# on the flagship case: `Sun2000Inr` would stay one token while
+# `SUN2000-INRIKTNING` splits, leaving the intersection empty.
+_TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+")
+
+
+def _tokenize(s: str) -> list[str]:
+    # Filter to ≥2 char tokens: single letters are too noisy as a name
+    # signal (e.g. "Kön" → ['n'] would spuriously match any column name
+    # containing 'n').
+    return [m.lower() for m in _TOKEN_RE.findall(s) if len(m) >= 2]
+
+
+def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
+    """Score a CVID's name labels against a column name.
+
+    Returns ``(shared_tokens, substring_hits)``. A non-zero pair means the
+    CVID is a tier-1 candidate; ``(0, 0)`` falls through to overlap ranking.
+    Substring is the fallback for cases where camelcase tokenization yields
+    too-coarse tokens (e.g. ``SUN2000`` → ``['2000']`` only).
+    """
+    col_tokens = _tokenize(col_name)
+    if not col_tokens:
+        return (0, 0)
+    col_token_set = set(col_tokens)
+    col_lower = col_name.lower()
+    label_token_set: set[str] = set()
+    label_concat = ""
+    for lab in labels:
+        if lab:
+            label_token_set.update(_tokenize(lab))
+            label_concat += " " + lab.lower()
+    shared = len(col_token_set & label_token_set)
+    if shared:
+        return (shared, 0)
+    substring_hits = sum(1 for t in col_token_set if t in label_concat) + sum(
+        1 for t in label_token_set if t in col_lower
+    )
+    return (0, substring_hits)
+
+
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
-    requests: dict[Any, tuple[int, int, set[str]]],
+    requests: dict[Any, tuple[int, int, set[str], str]],
 ) -> dict[Any, dict[str, str]]:
     """Pick the best CVID for each request, returning {key: {code: label}}.
 
-    Each request is ``(var_id, register_id, observed_codes)``. We filter
-    CVIDs to the resolved register and pick the one with highest overlap
-    against the observed codes (tiebreak: more codes wins). When no CVID
-    overlaps, we omit the entry -- better to leave value_codes unset
-    than to enrich with an unrelated code universe (e.g. dotted FamStF
-    codes for 3-digit data).
+    Each request is ``(var_id, register_id, observed_codes, column_name)``.
+    We filter CVIDs to the resolved register and rank with a tiered score:
+
+    1. **Name/classification.** Tokenize ``column_name`` and the CVID's
+       ``(short_name, vardemangdsversion)`` strings; score by shared token
+       count, with substring containment as fallback. Any non-zero name
+       signal accepts the CVID regardless of code overlap — name is the
+       principled signal (which coding scheme: SUN2000 vs SUN2020).
+    2. **Code-set overlap.** Last-resort tiebreak when no CVID has a name
+       signal. Requires ``overlap / max(len(observed), 1) >=
+       MIN_OVERLAP_RATIO`` to accept; otherwise omit the entry. This
+       avoids enriching e.g. a 3-digit BTYP column with the dotted
+       FamStF code universe.
 
     The opaque key lets the caller use any identifier — typically
     ``(source_name, column_name)`` — so two columns that resolve to the
-    same (var_id, register_id) but have different observed codes can
+    same (var_id, register_id) but with different observed codes can
     still pick different CVIDs.
-
-    Note: ranking by data overlap is a stopgap. The principled signal is
-    classification metadata on the CVID (which coding scheme it belongs
-    to: SUN2000 vs SUN2020, etc.). When the name/classification signal
-    is wired up (issue #26), overlap should drop to a last-resort
-    fallback for variables where that metadata is absent.
     """
     if not requests:
         return {}
 
     # 1. Enumerate CVIDs for every distinct var_id (one query, dedup'd).
-    var_ids = sorted({var_id for var_id, _, _ in requests.values()})
+    # Pull classification short_name and vardemangdsversion via LEFT JOIN —
+    # mirrors the shape used in regmeta/queries.py:664–676.
+    var_ids = sorted({var_id for var_id, _, _, _ in requests.values()})
     placeholders = ",".join("?" for _ in var_ids)
     cvid_rows = conn.execute(
-        "SELECT var_id, register_id, cvid "
-        "FROM variable_instance "
-        f"WHERE var_id IN ({placeholders})",
+        "SELECT vi.var_id, vi.register_id, vi.cvid, "
+        "vi.vardemangdsversion, c.short_name AS classification "
+        "FROM variable_instance vi "
+        "LEFT JOIN classification c ON vi.classification_id = c.id "
+        f"WHERE vi.var_id IN ({placeholders})",
         var_ids,
     ).fetchall()
     pair_to_cvids: dict[tuple[int, int], set[int]] = {}
+    cvid_meta: dict[int, tuple[str | None, str | None]] = {}
     for r in cvid_rows:
         pair_to_cvids.setdefault((r["var_id"], r["register_id"]), set()).add(r["cvid"])
+        cvid_meta[r["cvid"]] = (r["classification"], r["vardemangdsversion"])
 
     # 2. Fetch codes for every relevant CVID (one query). Index by cvid.
     all_cvids = sorted({c for cvids in pair_to_cvids.values() for c in cvids})
@@ -512,22 +572,37 @@ def _bulk_fetch_value_codes(
         if r["vardekod"] not in _SCB_TYPE_HINTS:
             cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
 
-    # 3. Per request, score each register-matching CVID by (overlap, code_count)
-    # and take the max. Skip when no CVID has any overlap.
+    # 3. Per request, score each register-matching CVID with the tuple
+    # (shared_tokens, substring_hits, overlap, code_count). Tier 1 wins
+    # whenever any name signal is present; tier 2 enforces MIN_OVERLAP_RATIO.
     result: dict[Any, dict[str, str]] = {}
-    for key, (var_id, register_id, observed) in requests.items():
+    for key, (var_id, register_id, observed, column_name) in requests.items():
         cvids = pair_to_cvids.get((var_id, register_id), set())
-        best: tuple[int, int, dict[str, str]] | None = None
+        best: tuple[int, int, int, int, dict[str, str]] | None = None
         for cvid in cvids:
             codes = cvid_to_codes.get(cvid, {})
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
+            cls_short, vmv = cvid_meta.get(cvid, (None, None))
+            shared, substring = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
-            score = (overlap, len(codes))
-            if best is None or score > best[:2]:
-                best = (overlap, len(codes), codes)
-        if best is not None and (not observed or best[0] > 0):
-            result[key] = best[2]
+            score = (shared, substring, overlap, len(codes))
+            if best is None or score > best[:4]:
+                best = (shared, substring, overlap, len(codes), codes)
+        if best is None:
+            continue
+        if best[0] > 0 or best[1] > 0:
+            # Tier 1: name match — accept even at zero overlap.
+            result[key] = best[4]
+            continue
+        # Tier 2: no name signal. Require overlap floor when we have
+        # observed codes to compare against; with no observed codes there
+        # is no signal at all, so omit.
+        if not observed:
+            continue
+        ratio = best[2] / max(len(observed), 1)
+        if ratio >= MIN_OVERLAP_RATIO:
+            result[key] = best[4]
 
     return result
 
