@@ -405,6 +405,47 @@ authority file (which stats drive generation) is selected by highest
 Without regmeta enrichment, the spine is empty and behavior is identical
 to pre-spine generation.
 
+## CVID picker
+
+A `var_id` can resolve to multiple `cvid`s under the same register — the
+SCB metadata carries one CVID per coding-scheme version (e.g. SUN2000 vs
+SUN2020 for variable 784 "Yrkesinriktning"). The picker chooses one.
+
+Tiered scoring per `(cvid)` candidate: `(shared_tokens, prefix_hits,
+overlap, code_count)`. The first non-zero pair wins; later fields break
+ties.
+
+1. **Name / classification.** Tokenize the column name and the CVID's
+   `(classification.short_name, vardemangdsversion)` strings using a
+   camelcase regex with four alternatives: `[A-Z]+(?=[A-Z][a-z])` (run
+   before a CamelCase boundary), `[A-Z]+(?![a-z])` (run not followed by
+   lowercase, capturing all-caps abbreviations like `SUN`/`SSYK`/`SNI`),
+   `[A-Z]?[a-z]+` (a normal word), and `\d+` (digits). Inputs are first
+   NFKD-folded and stripped of combining marks so `Kön` and `Kon`
+   produce the same tokens — SCB column names typically drop diacritics
+   while regmeta labels keep them. Shared-token count is the primary
+   signal; **prefix containment** in either direction is the secondary
+   fallback (catches Swedish compound splits like `FamSt` ↔
+   `FamiljeStallningKod`). Free infix matching is deliberately avoided
+   — `btyp` should not match `aktivitetstyp`. Tokens shorter than 2
+   chars are dropped.
+2. **Code-set overlap (last resort).** When no CVID has any name signal,
+   fall back to overlap between observed codes and the CVID's code set.
+   Requires `overlap / max(|observed|, 1) >= MIN_OVERLAP_RATIO` (default
+   `0.5`); below the floor, no entry is emitted. This avoids enriching
+   e.g. a 3-digit BTYP column with a 4-letter FamStF code universe just
+   because it's the only candidate. **Tradeoff:** the 50% floor will
+   suppress legitimate enrichment for cohort or sample columns that
+   only observe a fraction of the universe. The principled fix is
+   wider classification metadata (so tier 1 fires); the floor is the
+   safety net while metadata coverage is incomplete.
+
+When a name match exists, the picker accepts the CVID even at zero code
+overlap — the name is the principled signal, and code drift is
+already surfaced separately by the value-code drift warnings. Callers
+must therefore treat enrichment's `value_codes` as a coding-scheme
+hint, not a validation of the observed code set.
+
 ## Value code drift warnings
 
 After enrichment, frequency codes from stats are cross-checked against
