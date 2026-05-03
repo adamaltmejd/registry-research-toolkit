@@ -194,6 +194,21 @@ The clause is recorded in `source_detail.where` in `stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
+### File materialisation threshold
+
+`iter_file_source` size-gates how each CSV is exposed to DuckDB. Files
+at or below `MDW_MEMORY_THRESHOLD_MB` (default 256 MB) become a
+`CREATE OR REPLACE TABLE` — `read_csv_auto` runs once and every
+downstream `aggs` / `quantiles` / `freqs` query hits the materialised
+columns. Larger files stay as a `VIEW` so peak memory stays bounded:
+each query reparses the CSV but the table never lives in RAM.
+
+The threshold matters because the per-column query overhead dominates
+wall time on small inputs that would otherwise be summarised in a
+single pass. The output is identical either way — only the time/memory
+trade differs. Override the threshold via the env var; set it to `0`
+to force the VIEW path for every file.
+
 ### File discovery quirks
 
 Two files with the same basename in different subdirectories collide

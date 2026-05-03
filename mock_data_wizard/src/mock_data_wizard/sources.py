@@ -22,6 +22,7 @@ everything in this source).
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -30,6 +31,12 @@ from typing import Any, Iterator, Mapping, Sequence, Union
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 
 DEFAULT_FILE_PATTERN = r"\.(csv|txt|tsv)$"
+
+# Files at or below this size are loaded into a DuckDB TABLE instead of
+# registered as a VIEW. The TABLE materialises read_csv_auto once,
+# avoiding per-aggregate-query reparses; VIEW keeps memory bounded for
+# files that would not fit. Override via MDW_MEMORY_THRESHOLD_MB.
+_DEFAULT_MEMORY_THRESHOLD_MB = 256
 
 
 # -- Source dataclasses ---------------------------------------------------
@@ -294,13 +301,20 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
         conn = duckdb.connect()
     files = filter_files(list_files_in_source(src), src)
     _check_unique_basenames(files, src.path)
+    threshold_bytes = (
+        int(os.environ.get("MDW_MEMORY_THRESHOLD_MB", _DEFAULT_MEMORY_THRESHOLD_MB))
+        * 1024
+        * 1024
+    )
     try:
         for fp in files:
             view_name = fp.stem
             quoted_view = quote_ident(view_name, DUCKDB)
             quoted_path = str(fp).replace("'", "''")
+            materialise = fp.stat().st_size <= threshold_bytes
+            kind = "TABLE" if materialise else "VIEW"
             conn.execute(
-                f"CREATE OR REPLACE VIEW {quoted_view} AS "
+                f"CREATE OR REPLACE {kind} {quoted_view} AS "
                 f"SELECT * FROM read_csv_auto('{quoted_path}', header=true)"
             )
             where = src.where
@@ -318,7 +332,7 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                     source_detail=detail,
                 )
             finally:
-                conn.execute(f"DROP VIEW IF EXISTS {quoted_view}")
+                conn.execute(f"DROP {kind} IF EXISTS {quoted_view}")
     finally:
         if own_conn:
             conn.close()

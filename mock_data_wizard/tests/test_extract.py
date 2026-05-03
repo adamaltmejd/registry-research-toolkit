@@ -281,6 +281,33 @@ def test_classifier_sample_is_deterministic_across_reruns(tmp_path: Path):
     )
 
 
+def test_table_and_view_paths_produce_identical_stats(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """#22: VIEW vs TABLE materialisation must yield identical stats.json
+    for the same fixture (only `generated_at` is allowed to differ)."""
+    _write_csv(
+        tmp_path / "people.csv",
+        "lopnr,age,kommun,name\n"
+        "1,25,0114,alice\n2,30,0114,bob\n3,42,0115,carol\n4,55,0114,dave\n"
+        "5,29,0115,eve\n6,38,0114,frank\n7,47,0115,grace\n8,33,0114,heidi\n",
+    )
+
+    src = file_source(str(tmp_path), include=["people.csv"])
+
+    monkeypatch.delenv("MDW_MEMORY_THRESHOLD_MB", raising=False)
+    table_path = tmp_path / "stats_table.json"
+    table_result = run_extract([src], table_path, seed=0)
+
+    monkeypatch.setenv("MDW_MEMORY_THRESHOLD_MB", "0")
+    view_path = tmp_path / "stats_view.json"
+    view_result = run_extract([src], view_path, seed=0)
+
+    table_result.pop("generated_at", None)
+    view_result.pop("generated_at", None)
+    assert table_result == view_result
+
+
 def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
     _write_csv(
         tmp_path / "data.csv",
