@@ -237,7 +237,7 @@ and typos error out instead of getting silently dropped.
 
 ```json
 {
-  "version": 1,
+  "contract_version": "mdw-config-1.0.0",
   "column_types": {
     "Population_PersonNr_*": {
       "FelPersonNr": {"type": "high_cardinality"},

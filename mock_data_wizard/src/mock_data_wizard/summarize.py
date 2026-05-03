@@ -188,7 +188,7 @@ def summarize_column(
         conn: DB-API 2.0 connection.
         table: Already-quoted/qualified table reference for the dialect.
         col_name: Unquoted column name (``sql_emit`` handles quoting).
-        col_type: One of ``classify.classify_column``'s outputs.
+        col_type: One of ``classify.COLUMN_TYPES``.
         n_rows: Total rows in the source.
         n_distinct, null_count: Pre-computed by the caller (during the
             same scan that produced the sample) so we don't pay for them

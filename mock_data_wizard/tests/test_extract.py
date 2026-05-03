@@ -78,7 +78,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
     )
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -116,7 +116,7 @@ def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
     # Missing 'age' override.
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "data.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -132,7 +132,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
     _write_csv(tmp_path / "b.csv", "lopnr,sex\n1,M\n2,F\n3,M\n4,F\n5,M\n6,F\n")
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "a.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -164,7 +164,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
     )
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "events.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -183,7 +183,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
 
 
 def test_run_extract_typed_raises_when_no_data(tmp_path: Path):
-    config = parse_config({"version": 1, "column_types": {}})
+    config = parse_config({"contract_version": "mdw-config-1.0.0", "column_types": {}})
     src = file_source(str(tmp_path), include=["nonexistent.csv"])
     with pytest.raises(RuntimeError, match="No data sources"):
         run_extract_typed([src], tmp_path / "stats.json", config)
@@ -257,7 +257,7 @@ def test_main_extract_runs_typed_pipeline(tmp_path: Path):
     (tmp_path / "mdw_config.json").write_text(
         json.dumps(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -292,7 +292,7 @@ def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
     (tmp_path / "mdw_config.json").write_text(
         json.dumps(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id"},
@@ -327,7 +327,7 @@ def test_table_and_view_paths_produce_identical_stats(
     )
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -366,7 +366,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     )
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "data.csv": {
                     "name": {"type": "id", "id_subtype": "string"},
@@ -402,7 +402,7 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     )
     config = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "data.csv": {
                     "lopnr": {"type": "id"},
@@ -431,7 +431,10 @@ def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "data.csv", "x\n1\n")
     (tmp_path / "mdw_config.json").write_text(
         json.dumps(
-            {"version": 1, "column_types": {"data.csv": {"x": {"type": "blob"}}}}
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "column_types": {"data.csv": {"x": {"type": "blob"}}},
+            }
         ),
         encoding="utf-8",
     )

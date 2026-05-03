@@ -107,6 +107,9 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #                 next to this script. Authoritative SOURCES filtering
 #                 is required (no permissive listing in this mode).
 #
+# Override at runtime without editing the bundle:
+#   MDW_MODE=extract python mock_data_wizard_extract.py
+#
 # DISCOVER SHAPE: leave SOURCES wide and let discover walk everything:
 #
 #     return [sql_source(dsn="P1105")]
@@ -134,7 +137,7 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # date-format detection in extract mode. Same data + same seed -> same
 # subtypes across reruns and across same-shape sibling tables (e.g.
 # lisa_2015..2019). Vary it only if you have a reason to.
-MODE = "discover"
+MODE = _boot_os.environ.get("MDW_MODE", "discover")
 DEBUG = False
 VERBOSE = False
 CLASSIFIER_SEED = 0

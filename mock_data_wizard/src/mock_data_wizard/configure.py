@@ -32,11 +32,11 @@ from pathlib import Path
 from typing import Any
 
 from .classify import is_known_id, known_categorical_cap
+from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
 
 log = logging.getLogger("mdw.configure")
 
 CONFIG_FILENAME = "mdw_config.json"
-SCHEMA_VERSION = 1
 
 # Extra categorical name roots beyond classify.CATEGORICAL_PATTERNS.
 # These are register-specific glossary entries that the data-driven
@@ -110,12 +110,28 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
     sources = payload.get("sources")
     if not isinstance(sources, list):
         raise ValueError(f"{source_label}: 'sources' must be a list")
+    seen_names: dict[str, int] = {}
     for i, src in enumerate(sources):
         if not isinstance(src, dict):
             raise ValueError(f"{source_label}: sources[{i}] must be an object")
         if "source_name" not in src:
             raise ValueError(f"{source_label}: sources[{i}] missing 'source_name'")
-        cols = src.get("columns", [])
+        name = src["source_name"]
+        if name in seen_names:
+            raise ValueError(
+                f"{source_label}: duplicate source_name {name!r} at sources["
+                f"{seen_names[name]}] and sources[{i}]. The configurer keys "
+                f"column overrides by source_name; collisions would silently "
+                f"drop one source's column map."
+            )
+        seen_names[name] = i
+        if "columns" not in src:
+            raise ValueError(
+                f"{source_label}: sources[{i}] ({name!r}) missing 'columns'. "
+                f"A truncated discover.json would silently produce an "
+                f"incomplete mdw_config.json."
+            )
+        cols = src["columns"]
         if not isinstance(cols, list):
             raise ValueError(f"{source_label}: sources[{i}].columns must be a list")
         for j, col in enumerate(cols):
@@ -138,7 +154,7 @@ def build_config(discover: dict[str, Any]) -> dict[str, Any]:
         if cols_out:
             column_types[source_name] = cols_out
     return {
-        "version": SCHEMA_VERSION,
+        "contract_version": CONFIG_SCHEMA_VERSION,
         "column_types": column_types,
     }
 

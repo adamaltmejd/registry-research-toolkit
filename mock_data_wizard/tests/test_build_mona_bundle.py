@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import ast
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -56,7 +57,8 @@ def test_bundle_has_runner_block(tmp_path: Path):
     assert 'if __name__ == "__main__":' in text
     assert "SOURCES = configure()" in text
     assert "result = main(" in text
-    assert 'MODE = "discover"' in text
+    # MODE is env-var-overridable; check the assignment shape.
+    assert 'MDW_MODE", "discover"' in text
     # MBS-batch stdout footgun mitigation must be present
     assert '.upper().startswith("MBS")' in text
 
@@ -96,23 +98,19 @@ def _patch_configure(bundle: Path) -> None:
     bundle.write_text(patched, encoding="utf-8")
 
 
-def _set_mode(bundle: Path, mode: str) -> None:
-    """Patch the executable MODE assignment line. The bundle header
-    docstring also contains the string ``MODE = "discover"`` so we
-    pin the match to the assignment shape (no trailing comment)."""
-    text = bundle.read_text(encoding="utf-8")
-    new = text.replace('\nMODE = "discover"\n', f'\nMODE = "{mode}"\n', 1)
-    assert new != text, "MODE patch did not apply"
-    bundle.write_text(new, encoding="utf-8")
-
-
-def _run_bundle(bundle: Path, cwd: Path) -> subprocess.CompletedProcess:
+def _run_bundle(
+    bundle: Path, cwd: Path, *, mode: str | None = None
+) -> subprocess.CompletedProcess:
+    env = None
+    if mode is not None:
+        env = {**os.environ, "MDW_MODE": mode}
     result = subprocess.run(
         [sys.executable, str(bundle)],
         cwd=cwd,
         capture_output=True,
         text=True,
         timeout=60,
+        env=env,
     )
     if result.returncode != 0:
         pytest.fail(
@@ -155,7 +153,6 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
     """MODE=extract reads mdw_config.json and emits typed stats.json."""
     bundle = _build_bundle_to(tmp_path / "mock_data_wizard_extract.py")
     _patch_configure(bundle)
-    _set_mode(bundle, "extract")
 
     (tmp_path / "data.csv").write_text(
         "lopnr,age,kommun\n"
@@ -166,7 +163,7 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
     (tmp_path / "mdw_config.json").write_text(
         json.dumps(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -179,7 +176,7 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
         encoding="utf-8",
     )
 
-    _run_bundle(bundle, cwd=tmp_path)
+    _run_bundle(bundle, cwd=tmp_path, mode="extract")
     stats_path = tmp_path / "stats.json"
     assert stats_path.exists()
     stats = json.loads(stats_path.read_text(encoding="utf-8"))

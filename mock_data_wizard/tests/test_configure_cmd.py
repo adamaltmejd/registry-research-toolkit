@@ -72,7 +72,7 @@ def test_build_config_routes_columns_per_source():
         ],
     }
     out = build_config(discover)
-    assert out["version"] == 1
+    assert out["contract_version"] == "mdw-config-1.0.0"
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
     assert cols["Kommun"] == {"type": "categorical"}
@@ -181,6 +181,33 @@ def test_configure_rejects_payload_missing_columns_key(tmp_path: Path):
         encoding="utf-8",
     )
     with pytest.raises(ValueError, match="'name' key"):
+        configure_from_discover(p)
+
+
+def test_configure_rejects_source_missing_columns_field(tmp_path: Path):
+    """A truncated discover.json with no 'columns' field must fail at the
+    contract boundary, not silently emit an incomplete mdw_config.json."""
+    p = _write_discover(
+        tmp_path,
+        {"sources": [{"source_name": "a"}]},
+    )
+    with pytest.raises(ValueError, match="missing 'columns'"):
+        configure_from_discover(p)
+
+
+def test_configure_rejects_duplicate_source_names(tmp_path: Path):
+    """Two sources sharing source_name would silently drop one source's
+    column map (column_types is keyed by source_name)."""
+    p = _write_discover(
+        tmp_path,
+        {
+            "sources": [
+                {"source_name": "data.csv", "columns": [{"name": "LopNr"}]},
+                {"source_name": "data.csv", "columns": [{"name": "Belopp"}]},
+            ]
+        },
+    )
+    with pytest.raises(ValueError, match="duplicate source_name"):
         configure_from_discover(p)
 
 

@@ -106,6 +106,12 @@ def _describe_columns_duckdb(conn: Any, table: str) -> list[dict[str, Any]]:
     Works on any FROM-able expression (registered view, registered table,
     or a ``read_csv_auto(...)`` call). DESCRIBE returns
     ``column_name, column_type, null, key, default, extra``.
+
+    ``table`` is f-string interpolated, not parameterised: it is built
+    by ``sources.iter_file_source`` from ``configure()``-supplied paths
+    (typed in by the analyst editing the bundle) and DuckDB ``DESCRIBE``
+    accepts a FROM-clause expression rather than a parameterised name,
+    so ``?`` substitution would not work here.
     """
     cur = conn.cursor()
     try:
@@ -233,6 +239,18 @@ def process_handle(
     log.info("[%s] %d columns to summarise", handle.source_name, len(cols))
     _flush_log_handlers()
 
+    # Validate the full column set up front so the user sees every
+    # missing override at once instead of one error per re-run.
+    missing = [c for c in cols if config.lookup_type(handle.source_name, c) is None]
+    if missing:
+        listed = ", ".join(repr(c) for c in missing)
+        raise RuntimeError(
+            f"extract mode: source {handle.source_name!r} has "
+            f"{len(missing)} column(s) with no type override in "
+            f"mdw_config.json: {listed}. Re-run discover and configure "
+            f"to refresh it, or add the missing entries by hand."
+        )
+
     columns_out: list[dict[str, Any]] = []
     for i, col in enumerate(cols, 1):
         t_col = time.monotonic()
@@ -241,12 +259,7 @@ def process_handle(
         )
 
         override = config.lookup_type(handle.source_name, col)
-        if override is None:
-            raise RuntimeError(
-                f"extract mode: column {handle.source_name!r}.{col!r} has no "
-                f"type override in mdw_config.json. Re-run discover and "
-                f"configure to refresh it, or add an entry by hand."
-            )
+        assert override is not None  # validated above
         options = config.lookup_options(handle.source_name, col)
         # Skip the per-column sample query when an inline hint pins the
         # subtype/format -- nothing downstream consumes the sample then.
