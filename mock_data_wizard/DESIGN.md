@@ -194,6 +194,86 @@ The clause is recorded in `source_detail.where` in `stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
+### Per-column type overrides via `mdw_config.json`
+
+Place a `mdw_config.json` next to the bundle's `stats.json` output to
+override the classifier on specific columns. The bundle reads it at
+`main()` startup; absence is fine, presence is strict (typos error
+out instead of getting silently dropped).
+
+```json
+{
+  "version": 1,
+  "column_types": {
+    "Population_PersonNr_*": {
+      "FelPersonNr": {"type": "high_cardinality"},
+      "BirthDate": {"type": "date", "date_format": "%Y%m%d"},
+      "Salary": {"type": "numeric", "numeric_subtype": "integer"}
+    },
+    "Individ_*": {
+      "Distriktskod": {"type": "high_cardinality"}
+    }
+  },
+  "column_options": {
+    "Population_*": {
+      "Salary": {"suppress_k": 20}
+    }
+  }
+}
+```
+
+- Table-glob keys use `fnmatchcase` semantics. Multiple globs may
+  match a `source_name`; **insertion order matters and last match
+  wins**. List broad globs first (`lisa_*`) and specific overrides
+  below them (`lisa_2018`). The same precedence applies in both
+  `column_types` and `column_options`.
+- Each `column_types` entry's `type` is required and must be one of
+  `id`, `categorical`, `numeric`, `high_cardinality`, `date`. Inline
+  subtype/format hints are optional and only valid for the matching
+  type. When *any* inline hint is supplied, the bundle skips the
+  per-column sample query for that column entirely — that is the
+  perf win the override is for.
+- Each output column carries `source_of_type: "auto"` (classifier)
+  or `"override"` (`mdw_config.json` win) so downstream consumers can
+  distinguish.
+- `column_options` is a separate namespace reserved for non-type
+  overrides (e.g. `suppress_k` for disclosure-control hardening).
+  Validated here; consumed in `summarize`. Each option key is
+  checked against `VALID_OPTION_KEYS` and the option's own
+  invariants. `suppress_k` in particular is floored at the global
+  `SUPPRESS_K` — overrides may only *raise* the disclosure-control
+  threshold for a column, never lower it. A typo'd `0` would
+  otherwise turn the override into a fail-open path.
+
+Strict validation: unknown types, unknown option keys, duplicate JSON
+keys, schema-version mismatches, and stray fields all raise. The
+configurer file is meant to be hand-edited, so silent drops would
+mask user typos.
+
+### File materialisation threshold
+
+`iter_file_source` size-gates how each CSV is exposed to DuckDB. Files
+at or below `MDW_MEMORY_THRESHOLD_MB` (default 50 GiB on MONA-class
+hosts) become a `CREATE OR REPLACE TABLE` — `read_csv_auto` runs once
+and every downstream `aggs` / `quantiles` / `freqs` query hits the
+materialised columns. Larger files stay as a `VIEW` so peak memory
+stays bounded: each query reparses the CSV but the table never lives
+in RAM.
+
+The threshold matters because the per-column query overhead dominates
+wall time on small inputs that would otherwise be summarised in a
+single pass. The output is identical either way — only the time/memory
+trade differs. Override the threshold via the env var; set it to `0`
+to force the VIEW path for every file.
+
+The default is sized for the MONA batch server (150–200 GB RAM,
+DuckDB at ~80% of that, sources iterate sequentially with
+`DROP TABLE` between handles, percentile sorts spill to
+`C:\Windows\TEMP` if needed). Lower it on tighter hosts. If we ever
+parallelise across sources, the threshold needs to drop in
+proportion or scheduling needs to become budget-aware — peak memory
+is currently single-source because the loop is single-threaded.
+
 ### File discovery quirks
 
 Two files with the same basename in different subdirectories collide
@@ -211,18 +291,71 @@ invariant — no individual-level data leaves MONA.
 
 | Column type | What gets exported |
 |---|---|
-| Numeric | min, max, mean, sd, quantiles, null_rate |
-| Low-cardinality categorical | frequency table `{value: count}` |
-| High-cardinality string | n_distinct, min/max length, null_rate |
-| Date | min, max, null_rate |
-| ID-like | n_distinct, null_rate |
+| Numeric | min, max, mean, sd, quantiles (each ±0.5% noise), null_rate¹ |
+| Low-cardinality categorical | frequency table, `_other` bucket k-censored |
+| High-cardinality string | n_distinct, min/max/mean length, null_rate¹ |
+| Date | min, max, quantiles (each ±7-day jitter), date_format, null_rate¹ |
+| ID-like | n_distinct, id_subtype, null_rate¹ |
+
+¹ When `0 < null_count < SUPPRESS_K`, both `null_count` and `null_rate`
+are omitted from the per-column dict (the `nullable: true` flag stays).
+An exact small null-count would expose a handful of outliers.
 
 **Low-cardinality threshold:** `n_distinct <= min(50, n_rows * 0.01)`.
 
-Cells with 5 or fewer individuals are censored in frequency tables.
+**`SUPPRESS_K` (default 10).** Frequency-table cells with counts below
+`SUPPRESS_K` fold into a single `_other` bucket. The `_other` bucket
+itself is k-anonymized: when `0 < other < SUPPRESS_K`, the bucket is
+dropped entirely (consumers default its weight to 0). Override
+per-column via `mdw_config.json`'s `column_options[<glob>][<col>]
+.suppress_k` — values must be ≥ the global `SUPPRESS_K`, so the
+override can only *raise* the threshold, never lower it.
+
+**Date jitter (`DATE_JITTER_DAYS = 7`).** `min`/`max`/quantiles for
+date columns are perturbed by a deterministic uniform jitter of ±7
+days. Quantiles are estimated from the per-column sample in Python
+rather than via SQL — server-side `DATEDIFF` would need a per-dialect,
+per-storage-format dance (DATE vs YYYYMMDD-int vs YYYY-MM-DD-string)
+that buys nothing because the sample is already on the wire.
+
+### Pre-export PII scanner
+
+`scan.write_export(path, payload)` is the *only* code path that writes
+files leaving the bundle's `output_dir` (`stats.json` today,
+`discover.json` once #21 lands; `mdw_config.json` is an *input* and
+isn't covered). It is defense-in-depth on top of the per-type branches
+in `summarize.py`, which already only emit aggregates by construction.
+The scanner exists for the case where a misclassified column (e.g.
+`FelPersonNr` flickering into `categorical`) would route raw values
+into a frequency table.
+
+Patterns applied (compiled at import):
+
+- Swedish personnummer (12-digit YYYYMMDDXXXX and 10-digit
+  YYMMDD-XXXX / YYMMDD+XXXX), with date-validity gate AND Luhn check.
+- Email address (conservative shape).
+- Swedish mobile number (07X / +46-7X prefixes).
+
+Numeric scalars are **not** scanned by default — counts that happen
+to be 8–12 digits long would false-positive without telling us
+anything useful. Strings only.
+
+Flow:
+
+1. Stamp an in-band `pii_scan: {scanner_version, patterns_applied,
+   matches_found: 0}` attestation into the payload.
+2. Serialise to `<path>.tmp`.
+3. Walk all string-typed values *and* string-typed dict keys; collect
+   matches.
+4. Clean → `os.replace(tmp, path)` (atomic). Match → `unlink(tmp)`,
+   raise `PIIScannerError`. The canonical path is **never** created
+   on a match.
+
+A standalone `mock-data-wizard scan <file>` re-runs the same scanner
+against an existing JSON file (`--keep` to inspect without deleting).
 
 **Small-population warning:** If a source has fewer than
-`SMALL_POP_MULT × SUPPRESS_K` rows (default 100), the bundle emits a
+`SMALL_POP_MULT × SUPPRESS_K` rows (default 200), the bundle emits a
 warning. This catches narrowed populations — a `WHERE` clause or
 `include` list that collapses the source to a handful of individuals
 can leave aggregates effectively identifiable even after cell
@@ -245,6 +378,19 @@ suppression. The warning doesn't block; it surfaces the risk.
 All randomness is seeded. Sub-seeds are derived via
 `sha256(f"{master_seed}:{file}:{column}")`. Same seed produces identical
 output. This makes mock data reproducible for CI and testing.
+
+The extract step has a separate `CLASSIFIER_SEED` (default `0`,
+exposed at the top of the bundle) that controls the per-column sample
+used by `_pre_classify` to infer column type. The DuckDB branch uses
+`USING SAMPLE reservoir(N ROWS) REPEATABLE (seed)` so the sample is
+content-addressed and reproducible. The MSSQL branch orders by
+`HASHBYTES('SHA1', CAST(col AS NVARCHAR(MAX)))` instead — same data
+yields the same row order regardless of physical layout, so
+same-shape sibling tables (e.g. `lisa_2015` … `lisa_2019`) classify
+the same column the same way. Earlier runs used `LIMIT 1000` /
+`TOP 1000` with no order, which produced flicker like `Distriktskod`
+classifying as `date` in some LISA years and `high_cardinality` in
+others — that flicker is gone.
 
 ## Population spine
 

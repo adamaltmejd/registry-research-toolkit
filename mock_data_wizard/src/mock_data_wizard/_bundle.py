@@ -24,7 +24,15 @@ PKG_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_NAME = "mock_data_wizard_extract.py"
 
 # Dependency-ordered: each module imports only earlier ones.
-MODULE_ORDER = ("classify", "sql_emit", "sources", "summarize", "extract")
+MODULE_ORDER = (
+    "classify",
+    "sql_emit",
+    "sources",
+    "summarize",
+    "config",
+    "scan",
+    "extract",
+)
 
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA extract bundle.
@@ -42,9 +50,11 @@ and exits without writing stats.json. Edit that sidecar to narrow the
 list, then re-run -- the sidecar overrides the in-script SOURCES.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
-suppression (k-anonymity, threshold = 5) and uniform noise injection
-(+/- 0.5%) are applied after server-side aggregation. No row-level
-data passes through Python.
+suppression (k-anonymity, default threshold = 10), uniform noise
+injection (+/- 0.5%) on numeric aggregates, and +/- 7-day jitter on
+date min/max/quantiles are applied after server-side aggregation.
+null_count is censored when 0 < null_count < k. No row-level data
+passes through Python.
 
 This file is built from the mock_data_wizard package by
 `mock-data-wizard build-bundle`. DO NOT edit code mid-bundle by hand --
@@ -108,8 +118,14 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #
 # configure() is called AFTER the bundle modules load, so file_source(),
 # sql_source(), and sql_table() are all in scope here.
+#
+# CLASSIFIER_SEED controls the per-column sample used for type
+# classification. Same data + same seed -> same classifications across
+# reruns and across same-shape sibling tables (e.g. lisa_2015..2019).
+# Vary it only if you have a reason to.
 DEBUG = False
 VERBOSE = False
+CLASSIFIER_SEED = 0
 
 
 def configure():
@@ -227,7 +243,7 @@ if __name__ == "__main__":
             _boot_sys.exit(2)
         _log.info("configure() empty -- main() will load sidecar %s", _sidecar)
     try:
-        result = main(SOURCES, output_dir=_BOOT_HERE)
+        result = main(SOURCES, output_dir=_BOOT_HERE, classifier_seed=CLASSIFIER_SEED)
     except Exception:
         _log.error("mdw bundle failed:\\n%s", _boot_traceback.format_exc())
         _boot_sys.exit(1)
@@ -242,6 +258,17 @@ if __name__ == "__main__":
     if DEBUG:
         _log.info("done. log file: %s", _BOOT_PATH)
 """
+
+
+def _is_type_checking_block(node: ast.stmt) -> bool:
+    """``if TYPE_CHECKING:`` is typing-only -- never executes, but if
+    left in the bundle its body still gets unparsed and intra-pkg
+    imports inside leak into the artifact."""
+    return (
+        isinstance(node, ast.If)
+        and isinstance(node.test, ast.Name)
+        and node.test.id == "TYPE_CHECKING"
+    )
 
 
 def _slice_module(name: str) -> str:
@@ -272,6 +299,8 @@ def _slice_module(name: str) -> str:
                 continue
             if node.module and node.module.startswith("mock_data_wizard"):
                 continue
+        if _is_type_checking_block(node):
+            continue
         kept.append(node)
 
     return ast.unparse(ast.Module(body=kept, type_ignores=[]))

@@ -376,6 +376,35 @@ def _cmd_update(_args: argparse.Namespace) -> int:
     return run_update()
 
 
+def _cmd_scan(args: argparse.Namespace) -> int:
+    """Run the PII scanner against an existing JSON file."""
+    from . import scan as scan_mod
+
+    target = Path(args.path)
+    if not target.exists():
+        print(f"Error: file not found: {target}", file=sys.stderr)
+        return 1
+    matches = scan_mod.scan_file(target)
+    if not matches:
+        print(f"clean: {target} ({len(scan_mod.PATTERNS_APPLIED)} patterns checked)")
+        return 0
+    print(f"PII matches in {target}:", file=sys.stderr)
+    for m in matches[:50]:
+        print(f"  {m}", file=sys.stderr)
+    if len(matches) > 50:
+        print(f"  ... and {len(matches) - 50} more", file=sys.stderr)
+    if args.keep:
+        print(f"(--keep set: {target} left in place)", file=sys.stderr)
+    else:
+        try:
+            target.unlink()
+            print(f"deleted {target}", file=sys.stderr)
+        except OSError as e:
+            print(f"failed to delete {target}: {e}", file=sys.stderr)
+            return 1
+    return 1
+
+
 def _print_version() -> None:
     from . import __version__
     from .update import UpdateChecker
@@ -537,6 +566,24 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    # scan
+    scan_p = sub.add_parser(
+        "scan",
+        help="Scan a JSON file for PII patterns (defense-in-depth check)",
+        description=(
+            "Re-runs the bundle's pre-export scanner over an existing JSON "
+            "file. By default, deletes the file and exits non-zero on a "
+            "match. Use --keep to inspect without deleting."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    scan_p.add_argument("path", help="Path to a JSON file to scan.")
+    scan_p.add_argument(
+        "--keep",
+        action="store_true",
+        help="Don't delete the file on a match (inspection mode).",
+    )
+
     return parser
 
 
@@ -575,6 +622,8 @@ def main(argv: list[str] | None = None) -> int:
             rc = _cmd_compare(args)
         elif args.command == "generate":
             rc = _cmd_generate(args)
+        elif args.command == "scan":
+            rc = _cmd_scan(args)
         else:
             parser.print_help()
             return 1

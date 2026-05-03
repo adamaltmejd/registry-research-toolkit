@@ -251,3 +251,190 @@ def test_main_rejects_sidecar_with_discovery_source(tmp_path: Path):
     )
     with pytest.raises(RuntimeError, match="discovery-mode source"):
         main([], output_dir=tmp_path)
+
+
+# -- deterministic classification sample (#18) ---------------------------
+
+
+def _classify_with_seed(tmp_path: Path, csv_name: str, seed: int) -> dict[str, str]:
+    """Run extract on a fixture and return {column_name: inferred_type}."""
+    out = tmp_path / f"stats_{seed}.json"
+    src = file_source(str(tmp_path), include=[csv_name])
+    result = run_extract([src], out, seed=0, classifier_seed=seed)
+    src_out = result["sources"][0]
+    return {c["column_name"]: c["inferred_type"] for c in src_out["columns"]}
+
+
+def test_classifier_sample_is_deterministic_across_reruns(tmp_path: Path):
+    # 1500 rows so the 1000-row sample actually has to choose.
+    rows = ["mixed,kommun"]
+    for i in range(1, 1301):
+        rows.append(f"{i},0114")
+    for i in range(1301, 1501):
+        rows.append(f"x{i},0115")
+    _write_csv(tmp_path / "data.csv", "\n".join(rows) + "\n")
+
+    classifications_a = _classify_with_seed(tmp_path, "data.csv", seed=0)
+    classifications_b = _classify_with_seed(tmp_path, "data.csv", seed=0)
+    assert classifications_a == classifications_b, (
+        "same fixture + same seed must produce identical classifications"
+    )
+
+
+def test_table_and_view_paths_produce_identical_stats(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """#22: VIEW vs TABLE materialisation must yield identical stats.json
+    for the same fixture (only `generated_at` is allowed to differ)."""
+    _write_csv(
+        tmp_path / "people.csv",
+        "lopnr,age,kommun,name\n"
+        "1,25,0114,alice\n2,30,0114,bob\n3,42,0115,carol\n4,55,0114,dave\n"
+        "5,29,0115,eve\n6,38,0114,frank\n7,47,0115,grace\n8,33,0114,heidi\n",
+    )
+
+    src = file_source(str(tmp_path), include=["people.csv"])
+
+    monkeypatch.delenv("MDW_MEMORY_THRESHOLD_MB", raising=False)
+    table_path = tmp_path / "stats_table.json"
+    table_result = run_extract([src], table_path, seed=0)
+
+    monkeypatch.setenv("MDW_MEMORY_THRESHOLD_MB", "0")
+    view_path = tmp_path / "stats_view.json"
+    view_result = run_extract([src], view_path, seed=0)
+
+    table_result.pop("generated_at", None)
+    view_result.pop("generated_at", None)
+    assert table_result == view_result
+
+
+def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main([src], output_dir=tmp_path, seed=0, classifier_seed=42)
+    assert result is not None
+    assert result["sources"][0]["row_count"] == 6
+
+
+# -- mdw_config.json overrides (#19) -------------------------------------
+
+
+def _write_mdw_config(tmp_path: Path, payload: dict) -> None:
+    (tmp_path / "mdw_config.json").write_text(json.dumps(payload), encoding="utf-8")
+
+
+def test_extract_stamps_source_of_type_auto_without_config(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = run_extract([src], tmp_path / "stats.json", seed=0)
+    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
+    assert all(c["source_of_type"] == "auto" for c in cols.values())
+
+
+def test_extract_honors_column_type_override(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
+    )
+    _write_mdw_config(
+        tmp_path,
+        {
+            "version": 1,
+            "column_types": {
+                "data.csv": {"name": {"type": "categorical"}},
+            },
+        },
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main([src], output_dir=tmp_path, seed=0)
+    assert result is not None
+    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
+    assert cols["name"]["inferred_type"] == "categorical"
+    assert cols["name"]["source_of_type"] == "override"
+    assert cols["lopnr"]["source_of_type"] == "auto"
+
+
+def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
+    """Inline subtype hint -> _sample_values is NOT called for that column."""
+    from mock_data_wizard import extract
+
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
+    )
+    _write_mdw_config(
+        tmp_path,
+        {
+            "version": 1,
+            "column_types": {
+                "data.csv": {
+                    "name": {"type": "id", "id_subtype": "string"},
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                },
+            },
+        },
+    )
+
+    sample_calls: list[str] = []
+    real_sample = extract._sample_values
+
+    def spy(conn, table, col, dialect, *args, **kwargs):
+        sample_calls.append(col)
+        return real_sample(conn, table, col, dialect, *args, **kwargs)
+
+    monkeypatch.setattr(extract, "_sample_values", spy)
+
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main([src], output_dir=tmp_path, seed=0)
+    assert result is not None
+    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
+    assert cols["name"]["stats"]["id_subtype"] == "string"
+    assert cols["lopnr"]["stats"]["id_subtype"] == "integer"
+    assert sample_calls == []  # both columns had inline hints
+
+
+def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkeypatch):
+    from mock_data_wizard import extract
+
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
+    )
+    _write_mdw_config(
+        tmp_path,
+        {
+            "version": 1,
+            "column_types": {"data.csv": {"name": {"type": "id"}}},
+        },
+    )
+
+    sample_calls: list[str] = []
+    real_sample = extract._sample_values
+
+    def spy(conn, table, col, dialect, *args, **kwargs):
+        sample_calls.append(col)
+        return real_sample(conn, table, col, dialect, *args, **kwargs)
+
+    monkeypatch.setattr(extract, "_sample_values", spy)
+
+    src = file_source(str(tmp_path), include=["data.csv"])
+    main([src], output_dir=tmp_path, seed=0)
+    assert "name" in sample_calls
+    assert "lopnr" in sample_calls
+
+
+def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
+    _write_csv(tmp_path / "data.csv", "x\n1\n")
+    _write_mdw_config(
+        tmp_path,
+        {"version": 1, "column_types": {"data.csv": {"x": {"type": "blob"}}}},
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    with pytest.raises(ValueError, match="expected one of"):
+        main([src], output_dir=tmp_path, seed=0)

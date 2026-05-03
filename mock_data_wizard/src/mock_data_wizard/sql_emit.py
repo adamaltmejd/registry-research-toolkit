@@ -1,23 +1,25 @@
-"""SQL emitter for the server-side aggregation rewrite.
+"""SQL emitter for the server-side aggregation step.
 
 Emits dialect-aware aggregation SQL for two backends:
 
-- ``duckdb``: ``file_source`` aggregations against a registered VIEW over
-  ``read_csv_auto(path)``. Lets us aggregate CSVs without ever materialising
-  them in R memory.
+- ``duckdb``: ``file_source`` aggregations against a registered VIEW or
+  TABLE over ``read_csv_auto(path)``. Lets us aggregate CSVs without
+  ever materialising them in Python.
 - ``mssql``:  ``sql_source`` aggregations against the existing project
   ODBC views.
 
 The emitter is pure string construction. It never opens a connection,
-never sees data. The R extract script feeds these strings to DBI and
-gets back tiny result frames where k-anonymity / noise post-processing
-happens.
+never sees data. ``summarize.py`` feeds these strings to DB-API 2.0
+and gets back tiny result rows where k-anonymity / noise / date jitter
+post-processing happens.
 
 The dialects diverge in a small number of places. Each helper isolates
 one divergence; the public emitters compose them.
 """
 
 from __future__ import annotations
+
+from .classify import COLUMN_TYPES
 
 DUCKDB = "duckdb"
 MSSQL = "mssql"
@@ -100,9 +102,10 @@ def count_rows_sql(table: str, dialect: str) -> str:
 
 # -- Per-type aggregation emitters -----------------------------------------
 #
-# Each returns a SQL string that R executes and gets back a single-row
-# result frame (except categorical_freqs_sql, which returns up to
-# max_groups rows). Suppression and noise injection live in R.
+# Each returns a SQL string that ``summarize.py`` executes and gets back
+# a single-row result (except categorical_freqs_sql, which returns up to
+# max_groups rows). Suppression / noise / jitter post-processing lives
+# in summarize.py.
 
 
 def _common_count_aggs(qcol: str) -> str:
@@ -148,15 +151,14 @@ def numeric_quantiles_sql(
 
     T-SQL: PERCENTILE_CONT is window-only (illegal as plain aggregate).
     Wrap with TOP 1 ... OVER () so all quantiles materialise once and
-    R receives a one-row result. The optimiser computes percentiles on
-    the same sort.
+    summarize.py receives a one-row result. The optimiser computes
+    percentiles on the same sort.
     """
     _check_dialect(dialect)
     qcol = quote_ident(col, dialect)
     cast = double_cast(qcol, dialect)
     cols = []
     for q in quantiles:
-        # Match the R contract's "p01"/"p50"/"p99"... naming
         alias = f"p{int(round(q * 100)):02d}"
         if dialect == DUCKDB:
             cols.append(
@@ -182,7 +184,8 @@ def categorical_freqs_sql(
     """Frequency table for a low-cardinality categorical column.
 
     Returns up to ``max_groups`` rows of ``(val, n)`` ordered by ``n DESC``.
-    Cell suppression (k-anonymity) is applied in R after this returns.
+    Cell suppression (k-anonymity) is applied in ``summarize.py`` after
+    this query returns.
     """
     _check_dialect(dialect)
     qcol = quote_ident(col, dialect)
@@ -199,7 +202,8 @@ def high_cardinality_aggs_sql(table: str, col: str, dialect: str) -> str:
     """Length-based stats for a high-cardinality string column.
 
     Min/max/mean of ``LENGTH(col)`` plus the usual count/null/distinct
-    triple. R uses these to seed placeholder generation (val_000001).
+    triple. ``generate.py`` uses these to seed placeholder generation
+    (``val_000001``).
     """
     _check_dialect(dialect)
     qcol = quote_ident(col, dialect)
@@ -245,11 +249,6 @@ def id_aggs_sql(table: str, col: str, dialect: str) -> str:
 
 # -- Dispatch --------------------------------------------------------------
 
-# Maps inferred col_type -> ordered list of (kind, emitter) pairs.
-# R loops over the list, executes each query, and merges the results
-# into the per-column summary dict that lands in stats.json.
-COLUMN_TYPES = ("numeric", "categorical", "high_cardinality", "date", "id")
-
 
 def queries_for_column(
     table: str, col: str, col_type: str, dialect: str
@@ -257,7 +256,7 @@ def queries_for_column(
     """Return the dialect-aware SQL queries needed for a typed column.
 
     The returned dict's keys are stable identifiers (``"aggs"``,
-    ``"quantiles"``, ``"freqs"``) so the R caller can dispatch on kind
+    ``"quantiles"``, ``"freqs"``) so summarize.py can dispatch on kind
     when merging results.
     """
     _check_dialect(dialect)

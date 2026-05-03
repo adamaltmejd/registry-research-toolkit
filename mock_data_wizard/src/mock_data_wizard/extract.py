@@ -20,7 +20,6 @@ orchestrates.
 
 from __future__ import annotations
 
-import json
 import logging
 import random
 import time
@@ -30,6 +29,8 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 from .classify import classify_column
+from .config import MDWConfig, load_config
+from .scan import write_export
 from .sources import (
     FileSource,
     SourceHandle,
@@ -80,51 +81,89 @@ def _list_columns(conn: Any, table: str, dialect: str) -> list[str]:
         cur.close()
 
 
-def _pre_classify(
-    conn: Any,
-    table: str,
-    col: str,
-    dialect: str,
-    sample_n: int = SAMPLE_SIZE,
-) -> tuple[int, int, list[Any]]:
-    """Return ``(n_distinct, null_count, sample_values)`` for one column."""
+def _count_distinct_and_nulls(
+    conn: Any, table: str, col: str, dialect: str
+) -> tuple[int, int]:
+    """Return ``(n_distinct, null_count)`` for one column.
+
+    Always called -- both counts land in ``stats.json`` and are not
+    derivable from a type override.
+    """
     qcol = quote_ident(col, dialect)
-    counts_sql = (
+    sql = (
         f"SELECT COUNT(DISTINCT {qcol}) AS n_distinct, "
         f"SUM(CASE WHEN {qcol} IS NULL THEN 1 ELSE 0 END) AS null_count "
         f"FROM {table}"
     )
     cur = conn.cursor()
     try:
-        cur.execute(counts_sql)
+        cur.execute(sql)
         row = cur.fetchone()
-        n_distinct = int(row[0] or 0)
-        null_count = int(row[1] or 0)
+        return int(row[0] or 0), int(row[1] or 0)
     finally:
         cur.close()
 
+
+def _sample_values(
+    conn: Any,
+    table: str,
+    col: str,
+    dialect: str,
+    sample_n: int = SAMPLE_SIZE,
+    seed: int = 0,
+) -> list[Any]:
+    """Return a deterministic sample of non-null values for one column.
+
+    Same data + same seed yields the same sample. DuckDB uses a seeded
+    reservoir sample; MSSQL orders by a content hash of the column
+    value so sibling tables with the same shape sample the same rows
+    (the seed has no effect on the MSSQL branch -- the hash is the
+    determinism source).
+    """
+    qcol = quote_ident(col, dialect)
     if dialect == DUCKDB:
+        # `reservoir` is required: bare `USING SAMPLE N ROWS REPEATABLE (s)`
+        # errors out in current DuckDB.
         sample_sql = (
-            f"SELECT {qcol} FROM {table} WHERE {qcol} IS NOT NULL LIMIT {sample_n}"
+            f"SELECT {qcol} FROM {table} WHERE {qcol} IS NOT NULL "
+            f"USING SAMPLE reservoir({sample_n} ROWS) REPEATABLE ({seed})"
         )
     else:
+        # SQL Server's TOP N without ORDER BY returns scan-order rows --
+        # stable within a session on a heap, but not across reruns or
+        # across same-shape sibling tables.
+        #
+        # Ties on this ORDER BY key (rows that share the column value all
+        # hash to the same bucket) are deliberately not broken: the
+        # sample is consumed for type classification, where what matters
+        # is which *values* appear, not which physical rows. The set of
+        # values whose hash sorts before the TOP cut is fully
+        # deterministic; only the last value's row count can wobble
+        # within its single bucket, and a row-level tiebreaker would
+        # require a universal row id we don't have.
         sample_sql = (
-            f"SELECT TOP {sample_n} {qcol} FROM {table} WHERE {qcol} IS NOT NULL"
+            f"SELECT TOP {sample_n} {qcol} FROM {table} "
+            f"WHERE {qcol} IS NOT NULL "
+            f"ORDER BY HASHBYTES('SHA1', CAST({qcol} AS NVARCHAR(MAX)))"
         )
     cur = conn.cursor()
     try:
         cur.execute(sample_sql)
-        sample = [r[0] for r in cur.fetchall()]
+        return [r[0] for r in cur.fetchall()]
     finally:
         cur.close()
-
-    return n_distinct, null_count, sample
 
 
 # -- Per-handle pipeline ---------------------------------------------------
 
 
-def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
+def process_handle(
+    handle: SourceHandle,
+    rng: random.Random,
+    *,
+    classifier_seed: int = 0,
+    config: MDWConfig | None = None,
+) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict."""
     log.info("[%s] counting rows...", handle.source_name)
     _flush_log_handlers()
@@ -153,10 +192,31 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
     columns_out: list[dict[str, Any]] = []
     for i, col in enumerate(cols, 1):
         t_col = time.monotonic()
-        n_distinct, null_count, sample = _pre_classify(
+        n_distinct, null_count = _count_distinct_and_nulls(
             handle.conn, handle.table, col, handle.dialect
         )
-        col_type = classify_column(col, n_rows, n_distinct, sample)
+
+        override = config.lookup_type(handle.source_name, col) if config else None
+        options = config.lookup_options(handle.source_name, col) if config else {}
+        # Skip the per-column sample query when an inline hint pins the
+        # subtype/format -- nothing downstream consumes the sample then.
+        sample: list[Any] = (
+            []
+            if override is not None and override.has_inline_hint()
+            else _sample_values(
+                handle.conn,
+                handle.table,
+                col,
+                handle.dialect,
+                seed=classifier_seed,
+            )
+        )
+        col_type = (
+            override.type
+            if override is not None
+            else classify_column(col, n_rows, n_distinct, sample)
+        )
+
         columns_out.append(
             summarize_column(
                 handle.conn,
@@ -169,15 +229,18 @@ def process_handle(handle: SourceHandle, rng: random.Random) -> dict[str, Any]:
                 sample=sample,
                 dialect=handle.dialect,
                 rng=rng,
+                override=override,
+                options=options,
             )
         )
         log.debug(
-            "[%s] col %d/%d %s -> %s (%.1fs)",
+            "[%s] col %d/%d %s -> %s (%s) (%.1fs)",
             handle.source_name,
             i,
             len(cols),
             col,
             col_type,
+            "override" if override else "auto",
             time.monotonic() - t_col,
         )
         _flush_log_handlers()
@@ -230,11 +293,19 @@ def run_extract(
     output_path: Path,
     *,
     seed: int | None = None,
+    classifier_seed: int = 0,
+    config: MDWConfig | None = None,
 ) -> dict[str, Any]:
     """Run the full extract pipeline and write ``output_path``.
 
     Returns the parsed ``stats.json`` dict (callers can also just read
     the file).
+
+    ``seed`` controls Python-side noise injection in :mod:`summarize`.
+    ``classifier_seed`` controls the per-column classification sample
+    (DuckDB ``REPEATABLE`` reservoir); same data + same seed always
+    classifies the same way. ``config`` carries optional per-column
+    type overrides loaded from ``mdw_config.json``.
     """
     rng = random.Random(seed)
     sources = list(sources)
@@ -245,7 +316,14 @@ def run_extract(
         log.info("source %d/%d: %r", src_idx, len(sources), src)
         _flush_log_handlers()
         for handle in iter_source(src):
-            source_results.append(process_handle(handle, rng))
+            source_results.append(
+                process_handle(
+                    handle,
+                    rng,
+                    classifier_seed=classifier_seed,
+                    config=config,
+                )
+            )
             log.info(
                 "source %d/%d: handle done (%d total handle(s) so far)",
                 src_idx,
@@ -265,10 +343,7 @@ def run_extract(
         "sources": source_results,
         "shared_columns": _shared_columns(source_results),
     }
-    Path(output_path).write_text(
-        json.dumps(result, indent=2, ensure_ascii=False, default=str),
-        encoding="utf-8",
-    )
+    write_export(Path(output_path), result)
     log.info("stats.json written: %s", output_path)
     return result
 
@@ -378,6 +453,7 @@ def main(
     output_path: Path | None = None,
     *,
     seed: int | None = None,
+    classifier_seed: int = 0,
 ) -> dict[str, Any] | None:
     """Top-level orchestration.
 
@@ -386,6 +462,13 @@ def main(
         output_dir: Directory for ``stats.json`` and sidecar files.
         output_path: Override path for ``stats.json``.
         seed: RNG seed for reproducible noise (omit for non-determinism).
+        classifier_seed: Seed for the per-column classification sample.
+            Same data + same seed always produces the same classifications;
+            varying the seed is permitted to differ.
+
+    Loads ``mdw_config.json`` from ``output_dir`` if present (per-column
+    type and option overrides). Strict on schema violations -- typos in
+    the config block extract rather than getting silently ignored.
 
     Returns the stats dict on a successful run, or ``None`` if discovery
     mode wrote a sidecar and exited.
@@ -416,4 +499,18 @@ def main(
         )
         return None
 
-    return run_extract(sources, output_path, seed=seed)
+    config = load_config(output_dir)
+    if config is not None:
+        log.info(
+            "loaded mdw_config.json: %d type override(s), %d option override(s)",
+            sum(len(v) for v in config.column_types.values()),
+            sum(len(v) for v in config.column_options.values()),
+        )
+
+    return run_extract(
+        sources,
+        output_path,
+        seed=seed,
+        classifier_seed=classifier_seed,
+        config=config,
+    )
