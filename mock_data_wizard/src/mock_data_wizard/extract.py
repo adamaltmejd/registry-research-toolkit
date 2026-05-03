@@ -20,7 +20,6 @@ orchestrates.
 
 from __future__ import annotations
 
-import json
 import logging
 import random
 import time
@@ -31,6 +30,7 @@ from typing import Any, Iterable, Sequence
 
 from .classify import classify_column
 from .config import MDWConfig, load_config
+from .scan import write_export
 from .sources import (
     FileSource,
     SourceHandle,
@@ -345,10 +345,7 @@ def run_extract(
         "sources": source_results,
         "shared_columns": _shared_columns(source_results),
     }
-    Path(output_path).write_text(
-        json.dumps(result, indent=2, ensure_ascii=False, default=str),
-        encoding="utf-8",
-    )
+    write_export(Path(output_path), result)
     log.info("stats.json written: %s", output_path)
     return result
 

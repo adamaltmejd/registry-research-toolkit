@@ -299,6 +299,42 @@ rather than via SQL — server-side `DATEDIFF` would need a per-dialect,
 per-storage-format dance (DATE vs YYYYMMDD-int vs YYYY-MM-DD-string)
 that buys nothing because the sample is already on the wire.
 
+### Pre-export PII scanner
+
+`scan.write_export(path, payload)` is the *only* code path that writes
+files leaving the bundle's `output_dir` (`stats.json` today,
+`discover.json` once #21 lands; `mdw_config.json` is an *input* and
+isn't covered). It is defense-in-depth on top of the per-type branches
+in `summarize.py`, which already only emit aggregates by construction.
+The scanner exists for the case where a misclassified column (e.g.
+`FelPersonNr` flickering into `categorical`) would route raw values
+into a frequency table.
+
+Patterns applied (compiled at import):
+
+- Swedish personnummer (12-digit YYYYMMDDXXXX and 10-digit
+  YYMMDD-XXXX / YYMMDD+XXXX), with date-validity gate AND Luhn check.
+- Email address (conservative shape).
+- Swedish mobile number (07X / +46-7X prefixes).
+
+Numeric scalars are **not** scanned by default — counts that happen
+to be 8–12 digits long would false-positive without telling us
+anything useful. Strings only.
+
+Flow:
+
+1. Stamp an in-band `pii_scan: {scanner_version, patterns_applied,
+   matches_found: 0}` attestation into the payload.
+2. Serialise to `<path>.tmp`.
+3. Walk all string-typed values *and* string-typed dict keys; collect
+   matches.
+4. Clean → `os.replace(tmp, path)` (atomic). Match → `unlink(tmp)`,
+   raise `PIIScannerError`. The canonical path is **never** created
+   on a match.
+
+A standalone `mock-data-wizard scan <file>` re-runs the same scanner
+against an existing JSON file (`--keep` to inspect without deleting).
+
 **Small-population warning:** If a source has fewer than
 `SMALL_POP_MULT × SUPPRESS_K` rows (default 200), the bundle emits a
 warning. This catches narrowed populations — a `WHERE` clause or
