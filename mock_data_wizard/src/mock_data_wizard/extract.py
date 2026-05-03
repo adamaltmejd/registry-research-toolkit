@@ -132,6 +132,15 @@ def _sample_values(
         # SQL Server's TOP N without ORDER BY returns scan-order rows --
         # stable within a session on a heap, but not across reruns or
         # across same-shape sibling tables.
+        #
+        # Ties on this ORDER BY key (rows that share the column value all
+        # hash to the same bucket) are deliberately not broken: the
+        # sample is consumed for type classification, where what matters
+        # is which *values* appear, not which physical rows. The set of
+        # values whose hash sorts before the TOP cut is fully
+        # deterministic; only the last value's row count can wobble
+        # within its single bucket, and a row-level tiebreaker would
+        # require a universal row id we don't have.
         sample_sql = (
             f"SELECT TOP {sample_n} {qcol} FROM {table} "
             f"WHERE {qcol} IS NOT NULL "

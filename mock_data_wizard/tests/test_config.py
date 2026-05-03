@@ -154,14 +154,101 @@ def test_lookup_options_merges_matching_globs():
         {
             "version": 1,
             "column_options": {
-                "*": {"col": {"suppress_k": 5}},
-                "Specific_*": {"col": {"suppress_k": 20, "extra": "y"}},
+                "*": {"col": {"suppress_k": 10}},
+                "Specific_*": {"col": {"suppress_k": 20}},
             },
         }
     )
     # Later-glob wins on key conflict (specific overrides general).
-    merged = cfg.lookup_options("Specific_x", "col")
-    assert merged == {"suppress_k": 20, "extra": "y"}
+    assert cfg.lookup_options("Specific_x", "col") == {"suppress_k": 20}
+    # Only the broad glob matches -> its value carries through.
+    assert cfg.lookup_options("Other_x", "col") == {"suppress_k": 10}
+
+
+# -- column_options validation -------------------------------------------
+
+
+def test_parse_config_rejects_unknown_option_key():
+    """A typo like 'supress_k' must fail fast, not silently no-op."""
+    with pytest.raises(ValueError, match="unknown option 'supress_k'"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": {"supress_k": 10}}},
+            }
+        )
+
+
+def test_parse_config_rejects_suppress_k_below_floor():
+    """suppress_k=0 would disable the disclosure-control gate."""
+    with pytest.raises(ValueError, match="below the global minimum"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": {"suppress_k": 0}}},
+            }
+        )
+
+
+def test_parse_config_rejects_negative_suppress_k():
+    with pytest.raises(ValueError, match="below the global minimum"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": {"suppress_k": -5}}},
+            }
+        )
+
+
+def test_parse_config_rejects_non_int_suppress_k():
+    with pytest.raises(ValueError, match="suppress_k must be an int"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": {"suppress_k": "10"}}},
+            }
+        )
+
+
+def test_parse_config_rejects_bool_suppress_k():
+    """``bool`` is an ``int`` subclass in Python; reject it explicitly."""
+    with pytest.raises(ValueError, match="suppress_k must be an int"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": {"suppress_k": True}}},
+            }
+        )
+
+
+def test_parse_config_accepts_suppress_k_at_floor():
+    cfg = parse_config(
+        {
+            "version": 1,
+            "column_options": {"*": {"col": {"suppress_k": 10}}},
+        }
+    )
+    assert cfg.lookup_options("any_table", "col") == {"suppress_k": 10}
+
+
+def test_parse_config_accepts_suppress_k_above_floor():
+    cfg = parse_config(
+        {
+            "version": 1,
+            "column_options": {"*": {"col": {"suppress_k": 100}}},
+        }
+    )
+    assert cfg.lookup_options("any_table", "col") == {"suppress_k": 100}
+
+
+def test_parse_config_rejects_non_dict_options_value():
+    with pytest.raises(ValueError, match="must be an object"):
+        parse_config(
+            {
+                "version": 1,
+                "column_options": {"*": {"col": "not-a-dict"}},
+            }
+        )
 
 
 # -- load_config: file-system integration --------------------------------

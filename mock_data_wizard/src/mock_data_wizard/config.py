@@ -7,9 +7,14 @@ Reads ``mdw_config.json`` next to ``stats.json``. Two concerns:
   ``{"type": ..., "id_subtype": ..., "numeric_subtype": ...,
   "date_format": ...}``. Inline subtype/format hints let the bundle
   skip the sample query for that column entirely.
-- ``column_options``: per-column option overrides reserved for
-  downstream consumers (``suppress_k`` on the disclosure-control
-  side). Loaded here but not consumed by extract directly.
+- ``column_options``: per-column option overrides for downstream
+  consumers (``suppress_k`` on the disclosure-control side). Validated
+  here, consumed in ``summarize.py``. Each option key is checked
+  against ``VALID_OPTION_KEYS`` and the option's own invariants;
+  ``suppress_k`` in particular is floored at the global ``SUPPRESS_K``
+  so an override can only *raise* the disclosure-control threshold
+  for a column, never lower it (a typo'd ``0`` would otherwise turn
+  the override into a fail-open path).
 
 The two namespaces are separate on purpose: type and option are
 independent concerns and mixing them in one entry would cross-pollute
@@ -33,6 +38,7 @@ from pathlib import Path
 from typing import Any
 
 from .classify import COLUMN_TYPES
+from .summarize import SUPPRESS_K
 
 CONFIG_FILENAME = "mdw_config.json"
 SCHEMA_VERSION = 1
@@ -47,6 +53,10 @@ INLINE_HINT_KEYS: dict[str, tuple[str, ...]] = {
     "high_cardinality": (),
 }
 assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
+
+# Per-column option keys recognised in `column_options`. Strict: anything
+# not in this set raises at parse time so a typo can't silently no-op.
+VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 
 
 @dataclass(frozen=True)
@@ -163,6 +173,47 @@ def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
     )
 
 
+def _parse_options(table_glob: str, col: str, raw: Any) -> dict[str, Any]:
+    """Validate one column's options dict.
+
+    Strict on unknown keys (typo guard). Per-key validation enforces the
+    invariants each option needs:
+
+    - ``suppress_k``: a positive int (not bool -- ``bool`` is an ``int``
+      subclass in Python and would slip past a naive isinstance check).
+      Floored at the global ``SUPPRESS_K`` so an override can only
+      *raise* the disclosure-control threshold for a specific column,
+      never lower it below the project-wide minimum. A typo'd ``0`` or
+      ``-1`` would otherwise turn the override into a fail-open path.
+    """
+    if not isinstance(raw, dict):
+        raise ValueError(
+            f"column_options[{table_glob!r}][{col!r}] must be an object, "
+            f"got {type(raw).__name__}"
+        )
+    out: dict[str, Any] = {}
+    for key, val in raw.items():
+        if key not in VALID_OPTION_KEYS:
+            raise ValueError(
+                f"column_options[{table_glob!r}][{col!r}] has unknown option "
+                f"{key!r} (allowed: {sorted(VALID_OPTION_KEYS)})"
+            )
+        if key == "suppress_k":
+            if isinstance(val, bool) or not isinstance(val, int):
+                raise ValueError(
+                    f"column_options[{table_glob!r}][{col!r}].suppress_k must be "
+                    f"an int, got {type(val).__name__} ({val!r})"
+                )
+            if val < SUPPRESS_K:
+                raise ValueError(
+                    f"column_options[{table_glob!r}][{col!r}].suppress_k={val} "
+                    f"is below the global minimum SUPPRESS_K={SUPPRESS_K}; "
+                    f"overrides may only raise the threshold, not lower it"
+                )
+        out[key] = val
+    return out
+
+
 _TOP_LEVEL_KEYS = frozenset({"version", "column_types", "column_options"})
 
 
@@ -206,13 +257,9 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
                 f"column_options[{table_glob!r}] must be an object, "
                 f"got {type(cols).__name__}"
             )
-        for col, opts in cols.items():
-            if not isinstance(opts, dict):
-                raise ValueError(
-                    f"column_options[{table_glob!r}][{col!r}] must be an object, "
-                    f"got {type(opts).__name__}"
-                )
-        column_options[table_glob] = dict(cols)
+        column_options[table_glob] = {
+            col: _parse_options(table_glob, col, opts) for col, opts in cols.items()
+        }
 
     return MDWConfig(
         version=version, column_types=column_types, column_options=column_options

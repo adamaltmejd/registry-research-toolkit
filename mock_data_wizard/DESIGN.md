@@ -238,11 +238,17 @@ out instead of getting silently dropped).
   distinguish.
 - `column_options` is a separate namespace reserved for non-type
   overrides (e.g. `suppress_k` for disclosure-control hardening).
-  Loaded here; consumed in `summarize`.
+  Validated here; consumed in `summarize`. Each option key is
+  checked against `VALID_OPTION_KEYS` and the option's own
+  invariants. `suppress_k` in particular is floored at the global
+  `SUPPRESS_K` — overrides may only *raise* the disclosure-control
+  threshold for a column, never lower it. A typo'd `0` would
+  otherwise turn the override into a fail-open path.
 
-Strict validation: unknown types, duplicate JSON keys, schema-version
-mismatches, and stray fields all raise. The configurer file is meant
-to be hand-edited, so silent drops would mask user typos.
+Strict validation: unknown types, unknown option keys, duplicate JSON
+keys, schema-version mismatches, and stray fields all raise. The
+configurer file is meant to be hand-edited, so silent drops would
+mask user typos.
 
 ### File materialisation threshold
 
@@ -302,7 +308,8 @@ An exact small null-count would expose a handful of outliers.
 itself is k-anonymized: when `0 < other < SUPPRESS_K`, the bucket is
 dropped entirely (consumers default its weight to 0). Override
 per-column via `mdw_config.json`'s `column_options[<glob>][<col>]
-.suppress_k`.
+.suppress_k` — values must be ≥ the global `SUPPRESS_K`, so the
+override can only *raise* the threshold, never lower it.
 
 **Date jitter (`DATE_JITTER_DAYS = 7`).** `min`/`max`/quantiles for
 date columns are perturbed by a deterministic uniform jitter of ±7

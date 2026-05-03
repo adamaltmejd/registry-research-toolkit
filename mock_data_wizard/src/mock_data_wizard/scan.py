@@ -248,7 +248,10 @@ def write_export(path: Path, payload: dict) -> None:
     if matches:
         raise PIIScannerError(matches)
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
+    # ``with_name`` instead of ``with_suffix(path.suffix + ".tmp")`` -- the
+    # latter relies on Python accepting multi-dot suffixes ("..json.tmp")
+    # which historically raised ValueError; with_name always works.
+    tmp = path.with_name(path.name + ".tmp")
     tmp.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, default=str),
         encoding="utf-8",
