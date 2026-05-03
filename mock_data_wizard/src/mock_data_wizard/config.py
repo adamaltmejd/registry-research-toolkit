@@ -15,6 +15,10 @@ The two namespaces are separate on purpose: type and option are
 independent concerns and mixing them in one entry would cross-pollute
 the schema.
 
+Order matters in both namespaces: when multiple table-globs match a
+source, **last match wins**. List broad globs first (``lisa_*``) and
+specific overrides below them (``lisa_2018``).
+
 Strict by design: unknown types, duplicate keys (same string twice in
 one JSON object -- a typo footgun), and schema-version mismatches
 raise. Better to fail fast than silently swallow user intent.
@@ -73,20 +77,22 @@ class MDWConfig:
     ) -> ColumnTypeOverride | None:
         """Return the override for ``(source_name, column_name)`` or None.
 
-        Multiple table-globs may match. Insertion order from the JSON
-        decides; first match wins. Within a matching glob, the column
-        name is matched exactly (case-sensitive)."""
+        Multiple table-globs may match. JSON insertion order decides;
+        last match wins, so the user lists broad globs first and
+        specific overrides below them (symmetric with ``lookup_options``).
+        Within a matching glob, the column name is matched exactly
+        (case-sensitive)."""
+        match: ColumnTypeOverride | None = None
         for glob, cols in self.column_types.items():
             if fnmatch.fnmatchcase(source_name, glob) and column_name in cols:
-                return cols[column_name]
-        return None
+                match = cols[column_name]
+        return match
 
     def lookup_options(self, source_name: str, column_name: str) -> dict[str, Any]:
         """Return merged options for ``(source_name, column_name)``.
 
-        Later globs win on conflicting keys; this is the conventional
-        "specific overrides general" behaviour assuming the user lists
-        the broad globs first.
+        Later globs win on conflicting keys; lists broad globs first and
+        specific overrides below them (symmetric with ``lookup_type``).
         """
         merged: dict[str, Any] = {}
         for glob, cols in self.column_options.items():

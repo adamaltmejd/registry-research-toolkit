@@ -132,7 +132,7 @@ def test_lookup_type_matches_glob_and_column():
     assert cfg.lookup_type("Otherthing", "Distriktskod") is None
 
 
-def test_lookup_type_first_glob_wins():
+def test_lookup_type_last_glob_wins():
     cfg = parse_config(
         {
             "version": 1,
@@ -142,9 +142,11 @@ def test_lookup_type_first_glob_wins():
             },
         }
     )
-    # First-match: the broad glob wins (the user is responsible for
-    # listing specific globs first if they want the opposite).
-    assert cfg.lookup_type("Specific_table", "col").type == "id"
+    # Last-match: list broad globs first, specific overrides below.
+    # Symmetric with lookup_options' merge precedence.
+    assert cfg.lookup_type("Specific_table", "col").type == "numeric"
+    # A name only the broad glob matches still gets the broad rule.
+    assert cfg.lookup_type("Other_table", "col").type == "id"
 
 
 def test_lookup_options_merges_matching_globs():

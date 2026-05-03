@@ -223,7 +223,10 @@ out instead of getting silently dropped).
 ```
 
 - Table-glob keys use `fnmatchcase` semantics. Multiple globs may
-  match a `source_name`; the first match wins (insertion order).
+  match a `source_name`; **insertion order matters and last match
+  wins**. List broad globs first (`lisa_*`) and specific overrides
+  below them (`lisa_2018`). The same precedence applies in both
+  `column_types` and `column_options`.
 - Each `column_types` entry's `type` is required and must be one of
   `id`, `categorical`, `numeric`, `high_cardinality`, `date`. Inline
   subtype/format hints are optional and only valid for the matching
