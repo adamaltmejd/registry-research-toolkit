@@ -606,11 +606,11 @@ def _bulk_fetch_value_codes(
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
             cls_short, vmv = cvid_meta[cvid]
-            shared, substring = _name_score(column_name, cls_short, vmv)
+            shared, prefix = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
-            score = (shared, substring, overlap, len(codes))
+            score = (shared, prefix, overlap, len(codes))
             if best is None or score > best[:4]:
-                best = (shared, substring, overlap, len(codes), codes)
+                best = (shared, prefix, overlap, len(codes), codes)
         if best is None:
             continue
         if best[0] > 0 or best[1] > 0:

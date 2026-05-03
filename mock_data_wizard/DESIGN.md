@@ -411,7 +411,7 @@ A `var_id` can resolve to multiple `cvid`s under the same register — the
 SCB metadata carries one CVID per coding-scheme version (e.g. SUN2000 vs
 SUN2020 for variable 784 "Yrkesinriktning"). The picker chooses one.
 
-Tiered scoring per `(cvid)` candidate: `(shared_tokens, substring_hits,
+Tiered scoring per `(cvid)` candidate: `(shared_tokens, prefix_hits,
 overlap, code_count)`. The first non-zero pair wins; later fields break
 ties.
 
