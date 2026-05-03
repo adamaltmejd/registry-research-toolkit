@@ -42,9 +42,11 @@ and exits without writing stats.json. Edit that sidecar to narrow the
 list, then re-run -- the sidecar overrides the in-script SOURCES.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
-suppression (k-anonymity, threshold = 5) and uniform noise injection
-(+/- 0.5%) are applied after server-side aggregation. No row-level
-data passes through Python.
+suppression (k-anonymity, default threshold = 10), uniform noise
+injection (+/- 0.5%) on numeric aggregates, and +/- 7-day jitter on
+date min/max/quantiles are applied after server-side aggregation.
+null_count is censored when 0 < null_count < k. No row-level data
+passes through Python.
 
 This file is built from the mock_data_wizard package by
 `mock-data-wizard build-bundle`. DO NOT edit code mid-bundle by hand --

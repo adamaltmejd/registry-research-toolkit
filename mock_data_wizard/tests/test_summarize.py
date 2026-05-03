@@ -66,6 +66,7 @@ def test_to_iso_handles_date_datetime_and_strings():
 
 
 def test_suppress_below_k_drops_null_and_folds_small():
+    # k=10: "C" (n=4), "D" (n=2) fold into _other = 6 < k -> dropped entirely.
     rows = [
         {"val": "A", "n": 100},
         {"val": "B", "n": 50},
@@ -74,27 +75,47 @@ def test_suppress_below_k_drops_null_and_folds_small():
         {"val": "D", "n": 2},  # below k: fold
     ]
     out = _suppress_below_k(rows)
-    assert out == {"A": 100, "B": 50, OTHER_LABEL: 6}
-
-
-def test_suppress_below_k_no_other_when_all_pass():
-    rows = [{"val": "A", "n": 10}, {"val": "B", "n": 8}]
-    out = _suppress_below_k(rows)
-    assert out == {"A": 10, "B": 8}
+    assert out == {"A": 100, "B": 50}
     assert OTHER_LABEL not in out
 
 
-def test_suppress_below_k_nulls_other_when_total_below_k():
-    # Two suppressed singletons sum to 2 < SUPPRESS_K. Emitting "_other": 2
-    # would expose the existence of 2 outlier rows, so the bucket count itself
-    # is k-anonymized to None.
+def test_suppress_below_k_emits_other_when_bucket_passes():
+    # _other = 6+5 = 11 >= k -> emitted as-is.
+    rows = [
+        {"val": "A", "n": 100},
+        {"val": "B", "n": 50},
+        {"val": "C", "n": 6},
+        {"val": "D", "n": 5},
+    ]
+    out = _suppress_below_k(rows)
+    assert out == {"A": 100, "B": 50, OTHER_LABEL: 11}
+
+
+def test_suppress_below_k_no_other_when_all_pass():
+    rows = [{"val": "A", "n": 50}, {"val": "B", "n": 30}]
+    out = _suppress_below_k(rows)
+    assert out == {"A": 50, "B": 30}
+    assert OTHER_LABEL not in out
+
+
+def test_suppress_below_k_drops_other_entirely_when_total_below_k():
     rows = [{"val": "A", "n": 100}, {"val": "B", "n": 1}, {"val": "C", "n": 1}]
     out = _suppress_below_k(rows)
-    assert out == {"A": 100, OTHER_LABEL: None}
+    assert out == {"A": 100}
+    assert OTHER_LABEL not in out
+
+
+def test_suppress_below_k_honors_per_call_k_override():
+    rows = [{"val": "A", "n": 100}, {"val": "B", "n": 30}, {"val": "C", "n": 8}]
+    # Default k=10 -> C folds into _other=8, which is < k, so dropped.
+    assert _suppress_below_k(rows) == {"A": 100, "B": 30}
+    # Per-call k=5 -> C passes outright.
+    assert _suppress_below_k(rows, suppress_k=5) == {"A": 100, "B": 30, "C": 8}
 
 
 def test_small_pop_threshold():
-    assert small_pop_threshold() == 100
+    # SMALL_POP_MULT (20) * SUPPRESS_K (10) -> 200
+    assert small_pop_threshold() == 200
 
 
 # -- numeric --------------------------------------------------------------
@@ -160,6 +181,7 @@ def test_summarize_numeric_integer_subtype(conn):
 
 def test_summarize_categorical_applies_k_anonymity(conn):
     conn.execute("CREATE TABLE t(x VARCHAR)")
+    # _other = 4+2 = 6 < k=10 -> dropped entirely.
     rows = [("A",)] * 100 + [("B",)] * 30 + [("C",)] * 4 + [("D",)] * 2
     conn.executemany("INSERT INTO t VALUES (?)", rows)
     out = summarize_column(
@@ -174,8 +196,31 @@ def test_summarize_categorical_applies_k_anonymity(conn):
         dialect="duckdb",
     )
     s = out["stats"]
-    assert s["frequencies"] == {"A": 100, "B": 30, OTHER_LABEL: 6}
+    assert s["frequencies"] == {"A": 100, "B": 30}
+    assert OTHER_LABEL not in s["frequencies"]
     assert s["suppressed_below_k"] == SUPPRESS_K
+
+
+def test_summarize_categorical_per_column_suppress_k_override(conn):
+    """A higher per-column k is honored via options."""
+    conn.execute("CREATE TABLE t(x VARCHAR)")
+    rows = [("A",)] * 100 + [("B",)] * 15
+    conn.executemany("INSERT INTO t VALUES (?)", rows)
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="x",
+        col_type="categorical",
+        n_rows=len(rows),
+        n_distinct=2,
+        null_count=0,
+        sample=["A", "B"],
+        dialect="duckdb",
+        options={"suppress_k": 20},
+    )
+    s = out["stats"]
+    assert s["frequencies"] == {"A": 100}
+    assert s["suppressed_below_k"] == 20
 
 
 def test_summarize_categorical_no_other_when_all_above_k(conn):
@@ -224,7 +269,9 @@ def test_summarize_high_cardinality_lengths(conn):
 # -- date -----------------------------------------------------------------
 
 
-def test_summarize_date_min_max_iso(conn):
+def test_summarize_date_min_max_iso_within_jitter_band(conn):
+    from datetime import date as _date
+
     conn.execute("CREATE TABLE t(d DATE)")
     rows = [
         ("2020-01-01",),
@@ -243,9 +290,76 @@ def test_summarize_date_min_max_iso(conn):
         null_count=0,
         sample=[date(2020, 1, 1), date(2020, 6, 15)],
         dialect="duckdb",
+        rng=random.Random(0),
     )
-    assert out["stats"]["min"] == "2020-01-01"
-    assert out["stats"]["max"] == "2022-12-31"
+    # +/- 7 day jitter applied.
+    min_d = _date.fromisoformat(out["stats"]["min"])
+    max_d = _date.fromisoformat(out["stats"]["max"])
+    assert abs((min_d - _date(2020, 1, 1)).days) <= 7
+    assert abs((max_d - _date(2022, 12, 31)).days) <= 7
+    # Re-running with same seed reproduces the same jitter.
+    out2 = summarize_column(
+        conn,
+        table="t",
+        col_name="d",
+        col_type="date",
+        n_rows=4,
+        n_distinct=4,
+        null_count=0,
+        sample=[date(2020, 1, 1), date(2020, 6, 15)],
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    assert out["stats"]["min"] == out2["stats"]["min"]
+    assert out["stats"]["max"] == out2["stats"]["max"]
+
+
+def test_summarize_date_emits_python_quantiles_when_format_known(conn):
+    conn.execute("CREATE TABLE t(d DATE)")
+    rows = [(f"2020-{m:02d}-15",) for m in range(1, 13)]
+    conn.executemany("INSERT INTO t VALUES (?)", rows)
+    sample = [r[0] for r in rows] * 4  # 48 strings
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="d",
+        col_type="date",
+        n_rows=12,
+        n_distinct=12,
+        null_count=0,
+        sample=sample,
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    s = out["stats"]
+    assert s.get("date_format") == "%Y-%m-%d"
+    qs = s.get("quantiles")
+    assert qs is not None
+    assert set(qs) == {"p01", "p05", "p25", "p50", "p75", "p95", "p99"}
+    for v in qs.values():
+        d = date.fromisoformat(v)
+        assert 2019 <= d.year <= 2021
+
+
+def test_summarize_date_skips_quantiles_when_no_sample(conn):
+    """Inline-override path leaves sample empty -> no quantiles emitted."""
+    conn.execute("CREATE TABLE t(d DATE)")
+    conn.executemany("INSERT INTO t VALUES (?)", [("2020-01-01",), ("2022-12-31",)])
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="d",
+        col_type="date",
+        n_rows=2,
+        n_distinct=2,
+        null_count=0,
+        sample=[],
+        date_format="%Y-%m-%d",
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    assert out["stats"]["date_format"] == "%Y-%m-%d"
+    assert "quantiles" not in out["stats"]
 
 
 def test_summarize_date_records_format_when_string_sample(conn):
@@ -321,6 +435,48 @@ def test_summarize_records_null_count_and_rate(conn):
     assert out["nullable"] is True
     assert out["null_count"] == 20
     assert out["null_rate"] == 0.2
+
+
+def test_summarize_censors_small_null_count(conn):
+    """0 < null_count < SUPPRESS_K -> omit null_count and null_rate."""
+    conn.execute("CREATE TABLE t(x BIGINT)")
+    conn.executemany("INSERT INTO t VALUES (?)", [(i,) for i in range(95)])
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="x",
+        col_type="numeric",
+        n_rows=100,
+        n_distinct=95,
+        null_count=5,  # < SUPPRESS_K=10
+        sample=list(range(95)),
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    assert out["nullable"] is True
+    assert "null_count" not in out
+    assert "null_rate" not in out
+
+
+def test_summarize_keeps_null_count_when_zero(conn):
+    """null_count == 0 stays in the dict (nullable=False is a real fact)."""
+    conn.execute("CREATE TABLE t(x BIGINT)")
+    conn.executemany("INSERT INTO t VALUES (?)", [(i,) for i in range(10)])
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="x",
+        col_type="numeric",
+        n_rows=10,
+        n_distinct=10,
+        null_count=0,
+        sample=list(range(10)),
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    assert out["nullable"] is False
+    assert out["null_count"] == 0
+    assert out["null_rate"] == 0.0
 
 
 def test_summarize_unknown_col_type_raises(conn):

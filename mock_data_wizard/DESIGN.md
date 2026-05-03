@@ -273,18 +273,34 @@ invariant — no individual-level data leaves MONA.
 
 | Column type | What gets exported |
 |---|---|
-| Numeric | min, max, mean, sd, quantiles, null_rate |
-| Low-cardinality categorical | frequency table `{value: count}` |
-| High-cardinality string | n_distinct, min/max length, null_rate |
-| Date | min, max, null_rate |
-| ID-like | n_distinct, null_rate |
+| Numeric | min, max, mean, sd, quantiles (each ±0.5% noise), null_rate¹ |
+| Low-cardinality categorical | frequency table, `_other` bucket k-censored |
+| High-cardinality string | n_distinct, min/max/mean length, null_rate¹ |
+| Date | min, max, quantiles (each ±7-day jitter), date_format, null_rate¹ |
+| ID-like | n_distinct, id_subtype, null_rate¹ |
+
+¹ When `0 < null_count < SUPPRESS_K`, both `null_count` and `null_rate`
+are omitted from the per-column dict (the `nullable: true` flag stays).
+An exact small null-count would expose a handful of outliers.
 
 **Low-cardinality threshold:** `n_distinct <= min(50, n_rows * 0.01)`.
 
-Cells with 5 or fewer individuals are censored in frequency tables.
+**`SUPPRESS_K` (default 10).** Frequency-table cells with counts below
+`SUPPRESS_K` fold into a single `_other` bucket. The `_other` bucket
+itself is k-anonymized: when `0 < other < SUPPRESS_K`, the bucket is
+dropped entirely (consumers default its weight to 0). Override
+per-column via `mdw_config.json`'s `column_options[<glob>][<col>]
+.suppress_k`.
+
+**Date jitter (`DATE_JITTER_DAYS = 7`).** `min`/`max`/quantiles for
+date columns are perturbed by a deterministic uniform jitter of ±7
+days. Quantiles are estimated from the per-column sample in Python
+rather than via SQL — server-side `DATEDIFF` would need a per-dialect,
+per-storage-format dance (DATE vs YYYYMMDD-int vs YYYY-MM-DD-string)
+that buys nothing because the sample is already on the wire.
 
 **Small-population warning:** If a source has fewer than
-`SMALL_POP_MULT × SUPPRESS_K` rows (default 100), the bundle emits a
+`SMALL_POP_MULT × SUPPRESS_K` rows (default 200), the bundle emits a
 warning. This catches narrowed populations — a `WHERE` clause or
 `include` list that collapses the source to a handful of individuals
 can leave aggregates effectively identifiable even after cell
