@@ -160,13 +160,13 @@ def enrich(
                         source_resolved[name] = resolved
 
             # Build per-column requests: (source_name, column_name) -> (var_id,
-            # register_id, observed_codes, column_name). One source can have
-            # two columns resolving to the same (var, reg) (e.g. Individ_2019
-            # with both Sun2000Inr and Sun2020Inr → both → var=784/reg=34) so
-            # we cannot share CVID picks per pair — each column needs its own
-            # decision. column_name is carried in the value (not just the key)
-            # so _bulk_fetch_value_codes can run name-based ranking without
-            # learning the caller's key shape.
+            # register_id, observed_codes, column_name_for_scoring). One
+            # source can have two columns resolving to the same (var, reg)
+            # (e.g. Individ_2019 with both Sun2000Inr and Sun2020Inr → both →
+            # var=784/reg=34) so we cannot share CVID picks per pair — each
+            # column needs its own decision. The 4th slot is the
+            # project-prefix-stripped form so `_name_score` doesn't tokenize
+            # the `P1105_` artifact (which would emit a stray digit token).
             requests: dict[tuple[str, str], tuple[int, int, set[str], str]] = {}
             for source in stats.sources:
                 resolved = source_resolved.get(source.source_name, {})
@@ -179,7 +179,7 @@ def enrich(
                         rv.var_id,
                         rv.register_id,
                         observed,
-                        col.column_name,
+                        strip_project_prefix(col.column_name),
                     )
             value_codes_by_col: dict[tuple[str, str], dict[str, str]] = {}
             if requests:
@@ -552,8 +552,8 @@ def _bulk_fetch_value_codes(
         return {}
 
     # 1. Enumerate CVIDs for every distinct var_id (one query, dedup'd).
-    # Pull classification short_name and vardemangdsversion via LEFT JOIN —
-    # mirrors the shape used in regmeta/queries.py:664–676.
+    # LEFT JOIN classification so a CVID without classification metadata
+    # still appears (with NULL short_name) — tier-2 overlap can still pick it.
     var_ids = sorted({var_id for var_id, _, _, _ in requests.values()})
     placeholders = ",".join("?" for _ in var_ids)
     cvid_rows = conn.execute(
@@ -587,9 +587,7 @@ def _bulk_fetch_value_codes(
         if r["vardekod"] not in _SCB_TYPE_HINTS:
             cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
 
-    # 3. Per request, score each register-matching CVID with the tuple
-    # (shared_tokens, substring_hits, overlap, code_count). Tier 1 wins
-    # whenever any name signal is present; tier 2 enforces MIN_OVERLAP_RATIO.
+    # 3. Per request, score each register-matching CVID and pick the max.
     result: dict[Any, dict[str, str]] = {}
     for key, (var_id, register_id, observed, column_name) in requests.items():
         cvids = pair_to_cvids.get((var_id, register_id), set())
