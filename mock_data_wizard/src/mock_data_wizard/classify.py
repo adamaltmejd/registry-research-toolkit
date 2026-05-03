@@ -1,11 +1,11 @@
-"""Column classifier -- decides one of {id, categorical, numeric,
-high_cardinality, date} for a column based on its name, true n_distinct,
-true n_rows, and a sample of values.
+"""Column-name patterns and date-format helpers shared across the package.
 
-Pure functions, no IO. Takes the true ``n_distinct`` (from a SQL
-pre-classify pass) as an explicit input rather than recomputing from a
-fully-materialised column. This is what makes the DuckDB-on-MONA path
-work: the column never lives in memory, only the sample does.
+Pure functions, no IO. The data-driven ``classify_column`` path was
+removed when extract switched to a config-driven workflow (every column
+must carry a ``mdw_config.json`` override). What remains is the
+name-pattern surface used by ``configure.py`` to author that config,
+plus the date-format helpers consumed by ``summarize.py`` when a date
+override has no inline ``date_format`` hint.
 """
 
 from __future__ import annotations
@@ -39,7 +39,7 @@ class IdPattern:
 @dataclass(frozen=True)
 class CategoricalPattern:
     pattern: str
-    max_distinct: int  # if true n_distinct exceeds this, ignore the match
+    max_distinct: int  # advisory cap, used by future regmeta-aware paths
     exclude: str | None = None
 
 
@@ -57,15 +57,6 @@ CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (
     CategoricalPattern("medb(orgarskap)?", max_distinct=300),  # citizenship ~230
 )
 
-
-# -- Data-driven thresholds ------------------------------------------------
-
-FREQ_CAP = 50  # absolute cap on n_distinct for "categorical"
-FREQ_RATIO = 0.01  # relative cap (fraction of n_rows)
-NUMERIC_ID_RATIO = 0.95  # numeric ID if nd > ratio * n_rows AND ...
-NUMERIC_ID_MIN = 100  # ... nd > this minimum
-STRING_ID_RATIO = 0.5  # string ID if nd > ratio * n_rows AND ...
-STRING_ID_MIN = 100  # ... nd > this minimum
 
 # -- Date detection --------------------------------------------------------
 
@@ -128,17 +119,6 @@ def detect_date_format(values: Sequence[str]) -> str | None:
     return None
 
 
-def _is_yyyymmdd_int_date(values: Sequence[int]) -> bool:
-    """YYYYMMDD-shaped integer column heuristic, matching the R behaviour."""
-    if not values:
-        return False
-    sample = values[:200]
-    if not all(18000101 <= v <= 22001231 for v in sample):
-        return False
-    parsed = sum(1 for v in sample if _parses_as_date(str(int(v)), "%Y%m%d"))
-    return parsed > len(sample) * DATE_CLASSIFY_THRESHOLD
-
-
 def _python_kind(values: Sequence[object]) -> str:
     """Coarse type label derived from the non-null sample.
 
@@ -170,72 +150,3 @@ def _python_kind(values: Sequence[object]) -> str:
         return "string"
     # Mixed: treat as string (the sample might have been coerced)
     return "string"
-
-
-# -- Public API ------------------------------------------------------------
-
-
-def classify_column(
-    col_name: str,
-    n_rows: int,
-    n_distinct: int,
-    sample: Sequence[object],
-) -> str:
-    """Classify a column.
-
-    Args:
-        col_name:    The column's name (used for pattern matching).
-        n_rows:      Exact total row count for the source.
-        n_distinct:  Exact COUNT(DISTINCT col) over the full source.
-        sample:      Non-null sample values pulled from the source. Used
-                     for type detection (numeric vs string vs date) and
-                     date-format detection. Can be empty.
-
-    Returns:
-        One of "id", "categorical", "numeric", "high_cardinality", "date".
-    """
-    if is_known_id(col_name):
-        return "id"
-
-    cap = known_categorical_cap(col_name)
-    if cap is not None and n_distinct <= cap:
-        return "categorical"
-
-    threshold = max(2, min(FREQ_CAP, int(n_rows * FREQ_RATIO)))
-    kind = _python_kind(sample)
-
-    if kind == "bool":
-        return "categorical"
-
-    if kind in ("numeric_int", "numeric_float"):
-        if n_distinct > n_rows * NUMERIC_ID_RATIO and n_distinct > NUMERIC_ID_MIN:
-            return "id"
-        if n_distinct <= threshold:
-            return "categorical"
-        if kind == "numeric_int":
-            int_vals = [int(v) for v in sample if v is not None]
-            if _is_yyyymmdd_int_date(int_vals):
-                return "date"
-        return "numeric"
-
-    if kind == "date":
-        return "date"
-
-    # string (or empty)
-    str_vals = [str(v) for v in sample if v is not None]
-    if not str_vals:
-        # No sample data to inspect (column may be all-null in the sample
-        # window even though n_distinct from the SQL pre-classify pass
-        # tells us about the full column). Use cardinality alone.
-        if n_distinct <= threshold:
-            return "categorical"
-        return "high_cardinality"
-
-    if detect_date_format(str_vals) is not None:
-        return "date"
-
-    if n_distinct > n_rows * STRING_ID_RATIO and n_distinct > STRING_ID_MIN:
-        return "id"
-    if n_distinct <= threshold:
-        return "categorical"
-    return "high_cardinality"

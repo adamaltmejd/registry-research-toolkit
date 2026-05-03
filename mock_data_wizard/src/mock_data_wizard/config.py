@@ -41,7 +41,7 @@ from .classify import COLUMN_TYPES
 from .summarize import SUPPRESS_K
 
 CONFIG_FILENAME = "mdw_config.json"
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = "mdw-config-1.0.0"
 
 VALID_ID_SUBTYPES = ("integer", "string")
 VALID_NUMERIC_SUBTYPES = ("integer", "double")
@@ -76,7 +76,7 @@ class ColumnTypeOverride:
 
 @dataclass(frozen=True)
 class MDWConfig:
-    version: int
+    contract_version: str
     # table-glob -> column-name -> override
     column_types: dict[str, dict[str, ColumnTypeOverride]] = field(default_factory=dict)
     # table-glob -> column-name -> {option: value, ...} (consumed by #17)
@@ -214,17 +214,20 @@ def _parse_options(table_glob: str, col: str, raw: Any) -> dict[str, Any]:
     return out
 
 
-_TOP_LEVEL_KEYS = frozenset({"version", "column_types", "column_options"})
+_TOP_LEVEL_KEYS = frozenset({"contract_version", "column_types", "column_options"})
 
 
 def parse_config(payload: dict[str, Any]) -> MDWConfig:
-    if "version" not in payload:
-        raise ValueError("mdw_config.json: missing required key 'version'")
-    version = payload["version"]
-    if version != SCHEMA_VERSION:
+    if "contract_version" not in payload:
         raise ValueError(
-            f"mdw_config.json: unsupported version {version!r} "
-            f"(this build supports {SCHEMA_VERSION})"
+            "mdw_config.json: missing required key 'contract_version' "
+            f"(expected {SCHEMA_VERSION!r})"
+        )
+    contract_version = payload["contract_version"]
+    if contract_version != SCHEMA_VERSION:
+        raise ValueError(
+            f"mdw_config.json: unsupported contract_version {contract_version!r} "
+            f"(this build supports {SCHEMA_VERSION!r})"
         )
     extra = set(payload) - _TOP_LEVEL_KEYS
     if extra:
@@ -262,7 +265,9 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         }
 
     return MDWConfig(
-        version=version, column_types=column_types, column_options=column_options
+        contract_version=contract_version,
+        column_types=column_types,
+        column_options=column_options,
     )
 
 

@@ -35,26 +35,32 @@ MODULE_ORDER = (
 )
 
 BUNDLE_HEADER = '''\
-"""mock-data-wizard MONA extract bundle.
+"""mock-data-wizard MONA discover/extract bundle.
 
-Self-contained single-file Python script. Edit the configure() function
-just below the boot trace, then run on MONA:
+Self-contained single-file Python script. Edit configure() and the MODE
+flag in the user-config block, then run on MONA:
 
     python mock_data_wizard_extract.py
 
-Output: stats.json next to this script.
+Two modes, one bundle:
 
-Discovery mode: leaving any source without filters triggers a scan that
-writes a mdw_sources_<TS>.py sidecar listing everything discoverable
-and exits without writing stats.json. Edit that sidecar to narrow the
-list, then re-run -- the sidecar overrides the in-script SOURCES.
+  MODE = "discover"  (default)
+    Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
+    plus COUNT(*). Output: discover.json next to this script.
+    Copy discover.json off MONA, run `mock-data-wizard configure
+    discover.json` locally to author mdw_config.json, upload it back
+    next to the bundle, then re-run with MODE = "extract".
+
+  MODE = "extract"
+    Typed aggregation. Reads mdw_config.json from this directory
+    (every column must carry a type override) and writes stats.json.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression (k-anonymity, default threshold = 10), uniform noise
 injection (+/- 0.5%) on numeric aggregates, and +/- 7-day jitter on
 date min/max/quantiles are applied after server-side aggregation.
-null_count is censored when 0 < null_count < k. No row-level data
-passes through Python.
+null_count is censored when 0 < null_count < k. discover.json carries
+metadata only -- column names, SQL types, row counts -- no values.
 
 This file is built from the mock_data_wizard package by
 `mock-data-wizard build-bundle`. DO NOT edit code mid-bundle by hand --
@@ -93,16 +99,24 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # inside the log file. Worth it on a long sql_source extract; noisy
 # otherwise. Has no effect when DEBUG=False.
 #
-# DISCOVERY MODE: return one source per location with no filters; the
-# extract scans it, writes a `mdw_sources_<TS>.py` sidecar next to this
-# script listing everything it found, and exits without writing
-# stats.json. Edit the sidecar to narrow scope, then re-run -- the
-# sidecar overrides whatever configure() returns.
+# MODE picks the run flavour:
+#   "discover" -- emits discover.json (metadata only). Default. SQL
+#                 sources without `tables=` / `pattern=` / `all=True`
+#                 are listed permissively here.
+#   "extract"  -- emits stats.json. Requires mdw_config.json sitting
+#                 next to this script. Authoritative SOURCES filtering
+#                 is required (no permissive listing in this mode).
+#
+# Override at runtime without editing the bundle:
+#   MDW_MODE=extract python mock_data_wizard_extract.py
+#
+# DISCOVER SHAPE: leave SOURCES wide and let discover walk everything:
 #
 #     return [sql_source(dsn="P1105")]
 #     return [file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data")]
 #
-# NARROWED EXTRACT: declare exactly what to aggregate:
+# EXTRACT SHAPE: declare exactly what to aggregate. mdw_config.json
+# next to this script declares per-column types.
 #
 #     return [
 #         sql_source(
@@ -119,10 +133,11 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # configure() is called AFTER the bundle modules load, so file_source(),
 # sql_source(), and sql_table() are all in scope here.
 #
-# CLASSIFIER_SEED controls the per-column sample used for type
-# classification. Same data + same seed -> same classifications across
-# reruns and across same-shape sibling tables (e.g. lisa_2015..2019).
-# Vary it only if you have a reason to.
+# CLASSIFIER_SEED controls the per-column sample used for subtype /
+# date-format detection in extract mode. Same data + same seed -> same
+# subtypes across reruns and across same-shape sibling tables (e.g.
+# lisa_2015..2019). Vary it only if you have a reason to.
+MODE = _boot_os.environ.get("MDW_MODE", "discover")
 DEBUG = False
 VERBOSE = False
 CLASSIFIER_SEED = 0
@@ -183,7 +198,7 @@ elif _BOOT_ON_MBS:
 _boot_log(f"boot start host={_BOOT_HOST} cwd={_boot_os.getcwd()}")
 _boot_log(f"script={_boot_Path(__file__).resolve()}")
 _boot_log(f"python={_boot_sys.version.splitlines()[0]}")
-_boot_log(f"DEBUG={DEBUG} VERBOSE={VERBOSE}")
+_boot_log(f"MODE={MODE} DEBUG={DEBUG} VERBOSE={VERBOSE}")
 
 
 def _boot_excepthook(exc_type, exc_val, exc_tb) -> None:
@@ -225,30 +240,34 @@ else:
 _log = logging.getLogger("mdw.bundle")
 
 if __name__ == "__main__":
-    _log.info("output_dir=%s", _BOOT_HERE)
+    _log.info("output_dir=%s mode=%s", _BOOT_HERE, MODE)
+    if MODE not in ("discover", "extract"):
+        _log.error("MODE must be 'discover' or 'extract'; got %r", MODE)
+        _boot_sys.exit(2)
     SOURCES = configure()
     _log.info("configure() returned %d source(s)", len(SOURCES))
     if not SOURCES:
-        # Sidecar override takes precedence inside main(); only error
-        # out here if there's nothing for main() to fall back on.
-        _sidecar = find_latest_sources_file(_BOOT_HERE)
-        if _sidecar is None:
-            _log.error(
-                "configure() returned [] and no mdw_sources_*.py sidecar "
-                "found in %s. Edit configure() (e.g. "
-                '`return [sql_source(dsn=\"<your_project_dsn>\")]`) or '
-                "drop a sidecar next to this script.",
-                _BOOT_HERE,
-            )
-            _boot_sys.exit(2)
-        _log.info("configure() empty -- main() will load sidecar %s", _sidecar)
+        _log.error(
+            "configure() returned []. Edit configure() in this file (e.g. "
+            '`return [sql_source(dsn=\"<your_project_dsn>\")]`).'
+        )
+        _boot_sys.exit(2)
     try:
-        result = main(SOURCES, output_dir=_BOOT_HERE, classifier_seed=CLASSIFIER_SEED)
+        result = main(
+            SOURCES,
+            output_dir=_BOOT_HERE,
+            mode=MODE,
+            classifier_seed=CLASSIFIER_SEED,
+        )
     except Exception:
         _log.error("mdw bundle failed:\\n%s", _boot_traceback.format_exc())
         _boot_sys.exit(1)
-    if result is None:
-        _log.info("discovery sidecar written -- edit it and re-run.")
+    if MODE == "discover":
+        _log.info(
+            "discover complete: %d source(s), discover.json -> %s",
+            len(result.get("sources", [])),
+            _BOOT_HERE / "discover.json",
+        )
     else:
         _log.info(
             "extract complete: %d source(s), stats.json -> %s",

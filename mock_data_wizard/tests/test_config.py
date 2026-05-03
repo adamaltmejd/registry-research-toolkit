@@ -19,31 +19,31 @@ from mock_data_wizard.config import (
 
 
 def test_parse_config_minimal_valid():
-    cfg = parse_config({"version": 1})
-    assert cfg.version == 1
+    cfg = parse_config({"contract_version": "mdw-config-1.0.0"})
+    assert cfg.contract_version == "mdw-config-1.0.0"
     assert cfg.column_types == {}
     assert cfg.column_options == {}
 
 
-def test_parse_config_rejects_missing_version():
-    with pytest.raises(ValueError, match="missing required key 'version'"):
+def test_parse_config_rejects_missing_contract_version():
+    with pytest.raises(ValueError, match="missing required key 'contract_version'"):
         parse_config({})
 
 
-def test_parse_config_rejects_unsupported_version():
-    with pytest.raises(ValueError, match="unsupported version"):
-        parse_config({"version": 99})
+def test_parse_config_rejects_unsupported_contract_version():
+    with pytest.raises(ValueError, match="unsupported contract_version"):
+        parse_config({"contract_version": "mdw-config-9.9.9"})
 
 
 def test_parse_config_rejects_unknown_top_level_key():
     """A typo like 'column_type' must fail fast, not silently no-op."""
     with pytest.raises(ValueError, match="unknown top-level key"):
-        parse_config({"version": 1, "column_type": {}})
+        parse_config({"contract_version": "mdw-config-1.0.0", "column_type": {}})
 
 
 def test_parse_config_rejects_unknown_type():
     payload = {
-        "version": 1,
+        "contract_version": "mdw-config-1.0.0",
         "column_types": {"*": {"col": {"type": "blob"}}},
     }
     with pytest.raises(ValueError, match="expected one of"):
@@ -52,7 +52,7 @@ def test_parse_config_rejects_unknown_type():
 
 def test_parse_config_rejects_inline_hint_on_wrong_type():
     payload = {
-        "version": 1,
+        "contract_version": "mdw-config-1.0.0",
         # date_format is not valid for type=numeric
         "column_types": {"*": {"col": {"type": "numeric", "date_format": "%Y-%m-%d"}}},
     }
@@ -62,7 +62,7 @@ def test_parse_config_rejects_inline_hint_on_wrong_type():
 
 def test_parse_config_accepts_inline_subtypes():
     payload = {
-        "version": 1,
+        "contract_version": "mdw-config-1.0.0",
         "column_types": {
             "table_*": {
                 "id_col": {"type": "id", "id_subtype": "string"},
@@ -80,7 +80,12 @@ def test_parse_config_accepts_inline_subtypes():
 
 
 def test_parse_config_id_without_inline_hint_is_not_inline():
-    cfg = parse_config({"version": 1, "column_types": {"*": {"col": {"type": "id"}}}})
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {"*": {"col": {"type": "id"}}},
+        }
+    )
     assert cfg.column_types["*"]["col"].has_inline_hint() is False
 
 
@@ -88,7 +93,7 @@ def test_parse_config_rejects_invalid_subtype_value():
     with pytest.raises(ValueError, match="id_subtype="):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_types": {"*": {"col": {"type": "id", "id_subtype": "blob"}}},
             }
         )
@@ -101,7 +106,7 @@ def test_load_config_rejects_duplicate_keys(tmp_path: Path):
     # json.loads silently keeps the second value on duplicate keys; the
     # object_pairs_hook should raise instead.
     raw = (
-        '{"version": 1, "column_types": {"t": {"col": {"type": "id"},'
+        '{"contract_version": "mdw-config-1.0.0", "column_types": {"t": {"col": {"type": "id"},'
         ' "col": {"type": "numeric"}}}}'
     )
     (tmp_path / "mdw_config.json").write_text(raw, encoding="utf-8")
@@ -115,7 +120,7 @@ def test_load_config_rejects_duplicate_keys(tmp_path: Path):
 def test_lookup_type_matches_glob_and_column():
     cfg = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "Individ_*": {"Distriktskod": {"type": "high_cardinality"}},
                 "Pop_*": {"Salary": {"type": "numeric"}},
@@ -135,7 +140,7 @@ def test_lookup_type_matches_glob_and_column():
 def test_lookup_type_last_glob_wins():
     cfg = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_types": {
                 "*": {"col": {"type": "id"}},
                 "Specific_*": {"col": {"type": "numeric"}},
@@ -152,7 +157,7 @@ def test_lookup_type_last_glob_wins():
 def test_lookup_options_merges_matching_globs():
     cfg = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_options": {
                 "*": {"col": {"suppress_k": 10}},
                 "Specific_*": {"col": {"suppress_k": 20}},
@@ -173,7 +178,7 @@ def test_parse_config_rejects_unknown_option_key():
     with pytest.raises(ValueError, match="unknown option 'supress_k'"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": {"supress_k": 10}}},
             }
         )
@@ -184,7 +189,7 @@ def test_parse_config_rejects_suppress_k_below_floor():
     with pytest.raises(ValueError, match="below the global minimum"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": {"suppress_k": 0}}},
             }
         )
@@ -194,7 +199,7 @@ def test_parse_config_rejects_negative_suppress_k():
     with pytest.raises(ValueError, match="below the global minimum"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": {"suppress_k": -5}}},
             }
         )
@@ -204,7 +209,7 @@ def test_parse_config_rejects_non_int_suppress_k():
     with pytest.raises(ValueError, match="suppress_k must be an int"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": {"suppress_k": "10"}}},
             }
         )
@@ -215,7 +220,7 @@ def test_parse_config_rejects_bool_suppress_k():
     with pytest.raises(ValueError, match="suppress_k must be an int"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": {"suppress_k": True}}},
             }
         )
@@ -224,7 +229,7 @@ def test_parse_config_rejects_bool_suppress_k():
 def test_parse_config_accepts_suppress_k_at_floor():
     cfg = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_options": {"*": {"col": {"suppress_k": 10}}},
         }
     )
@@ -234,7 +239,7 @@ def test_parse_config_accepts_suppress_k_at_floor():
 def test_parse_config_accepts_suppress_k_above_floor():
     cfg = parse_config(
         {
-            "version": 1,
+            "contract_version": "mdw-config-1.0.0",
             "column_options": {"*": {"col": {"suppress_k": 100}}},
         }
     )
@@ -245,7 +250,7 @@ def test_parse_config_rejects_non_dict_options_value():
     with pytest.raises(ValueError, match="must be an object"):
         parse_config(
             {
-                "version": 1,
+                "contract_version": "mdw-config-1.0.0",
                 "column_options": {"*": {"col": "not-a-dict"}},
             }
         )
@@ -260,7 +265,7 @@ def test_load_config_returns_none_when_missing(tmp_path: Path):
 
 def test_load_config_round_trips_through_disk(tmp_path: Path):
     payload = {
-        "version": 1,
+        "contract_version": "mdw-config-1.0.0",
         "column_types": {"Pop_*": {"Salary": {"type": "numeric"}}},
     }
     (tmp_path / "mdw_config.json").write_text(json.dumps(payload), encoding="utf-8")

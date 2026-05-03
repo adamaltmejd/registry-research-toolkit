@@ -28,7 +28,6 @@ from mock_data_wizard.sources import (
     iter_source,
     iter_sql_source,
     list_files_in_source,
-    needs_discovery,
     sql_source,
     sql_table,
 )
@@ -68,38 +67,6 @@ def test_sql_source_normalises_pattern_and_schema():
 def test_sql_source_accepts_dict_tables():
     src = sql_source("P1105", tables={"persons": "dbo.persons"})
     assert src.tables == {"persons": "dbo.persons"}
-
-
-# -- needs_discovery ------------------------------------------------------
-
-
-def test_needs_discovery_file_no_filters_true(tmp_path: Path):
-    assert needs_discovery(file_source(str(tmp_path))) is True
-
-
-def test_needs_discovery_file_with_include_false(tmp_path: Path):
-    assert needs_discovery(file_source(str(tmp_path), include=["a.csv"])) is False
-
-
-def test_needs_discovery_file_all_opts_out(tmp_path: Path):
-    assert needs_discovery(file_source(str(tmp_path), all=True)) is False
-
-
-def test_needs_discovery_sql_no_filters_true():
-    assert needs_discovery(sql_source("P1105")) is True
-
-
-def test_needs_discovery_sql_with_tables_false():
-    assert needs_discovery(sql_source("P1105", tables=["dbo.persons"])) is False
-
-
-def test_needs_discovery_sql_all_opts_out():
-    assert needs_discovery(sql_source("P1105", all=True)) is False
-
-
-def test_needs_discovery_unknown_raises():
-    with pytest.raises(TypeError):
-        needs_discovery("not a source")
 
 
 # -- file listing / filtering --------------------------------------------
@@ -369,6 +336,46 @@ def test_iter_sql_source_no_filter_and_no_all_raises():
     raw = SqlSource(dsn="P1105")
     with pytest.raises(ValueError, match="provide one of"):
         list(iter_sql_source(raw, conn=_FakeConn(view_rows=[])))
+
+
+def test_iter_sql_source_permissive_lists_everything_unfiltered():
+    """Discover-mode permissive: no tables/pattern/all -> list everything."""
+    discovered = [
+        ("dbo", "lisa_2018"),
+        ("dbo", "rams_2018"),
+        ("dbo", "x_archived"),
+    ]
+    raw = SqlSource(dsn="P1105")
+    handles = list(
+        iter_sql_source(raw, conn=_FakeConn(view_rows=discovered), permissive=True)
+    )
+    # exclude_archived defaults to True
+    assert sorted(h.source_name for h in handles) == ["lisa_2018", "rams_2018"]
+
+
+def test_iter_sql_source_permissive_disambiguates_cross_schema_collisions():
+    """Discover must NOT raise on `dbo.persons` + `dim.persons` -- the
+    user didn't curate the table list, so we silently key the colliders
+    by their qualified names instead of erroring out."""
+    discovered = [
+        ("dbo", "persons"),
+        ("dim", "persons"),
+        ("dbo", "events"),
+    ]
+    raw = SqlSource(dsn="P1105")
+    handles = list(
+        iter_sql_source(raw, conn=_FakeConn(view_rows=discovered), permissive=True)
+    )
+    names = sorted(h.source_name for h in handles)
+    assert names == ["dbo.persons", "dim.persons", "events"]
+
+
+def test_iter_sql_source_strict_still_raises_on_collision():
+    """Extract mode keeps the strict behavior: explicit `tables=` with
+    same-named entries from different schemas must raise."""
+    src = sql_source("P1105", tables=["dbo.persons", "dim.persons"])
+    with pytest.raises(ValueError, match="Ambiguous table aliases"):
+        list(iter_sql_source(src, conn=_FakeConn(view_rows=[])))
 
 
 # -- iter_source dispatch -------------------------------------------------

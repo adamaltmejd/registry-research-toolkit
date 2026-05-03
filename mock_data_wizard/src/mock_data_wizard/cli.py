@@ -9,23 +9,29 @@ from pathlib import Path
 
 DESCRIPTION = """\
 Generate mock CSV data from MONA project metadata, without exporting any
-personal data. The workflow has two steps:
+personal data. The workflow has three on-MONA-and-back steps:
 
-  Step 1: Build the MONA extract bundle and run it on MONA.
-          The bundle reads your project's data files and exports only
-          aggregate statistics (counts, means, frequencies — no individual
-          records) to a stats.json file.
+  Step 1: Build the bundle locally.
 
     mock-data-wizard build-bundle
-    # Upload mock_data_wizard_extract.py to MONA, edit its configure()
-    # block, and run `python mock_data_wizard_extract.py` in the Batch
-    # client.
-    # Download the resulting stats.json to your local machine.
-    # IMPORTANT: verify that stats.json does not contain any personal
-    # data. The bundle censors cells with 5 or fewer individuals, but
-    # you should verify yourself that no personal data is leaking.
+    # Produces mock_data_wizard_extract.py in the current directory.
 
-  Step 2: Generate mock CSV files from the stats.
+  Step 2: Discover schemas on MONA, configure types locally, extract
+          aggregates on MONA.
+
+    # Edit configure() in the bundle, leave MODE = "discover".
+    # Upload to MONA and run:
+    python mock_data_wizard_extract.py        # writes discover.json
+    # Copy discover.json off MONA, then locally:
+    mock-data-wizard configure discover.json  # writes mdw_config.json
+    # Edit mdw_config.json if needed; upload it next to the bundle.
+    # On MONA, set MODE = "extract" in the bundle and re-run:
+    python mock_data_wizard_extract.py        # writes stats.json
+    # Verify that stats.json contains no personal data, then copy it
+    # off MONA. The bundle censors cells with fewer than k individuals
+    # (default k=10) but you should still spot-check before exporting.
+
+  Step 3: Generate mock CSV files from the stats.
 
     mock-data-wizard generate
 
@@ -35,16 +41,30 @@ personal data. The workflow has two steps:
 """
 
 BUILD_BUNDLE_HELP = """\
-Build the single-file Python bundle that runs the extract step on MONA.
+Build the single-file Python bundle that runs on MONA.
 
   1. Run this command locally to create mock_data_wizard_extract.py.
   2. Upload the bundle to your MONA project directory.
   3. Edit the configure() block at the top to declare your data sources.
-  4. Run on MONA in the Batch client:  python mock_data_wizard_extract.py
-  5. Download the resulting stats.json to your local machine.
+  4. With MODE = "discover", run on MONA: python mock_data_wizard_extract.py
+     -> writes discover.json
+  5. Copy discover.json off MONA, run `mock-data-wizard configure
+     discover.json` locally to author mdw_config.json, upload it next
+     to the bundle.
+  6. Switch the bundle to MODE = "extract" and re-run on MONA
+     -> writes stats.json (only aggregate statistics; no row-level data).
+"""
 
-The bundle only exports aggregate statistics — no individual-level data
-leaves MONA.
+CONFIGURE_HELP = """\
+Author mdw_config.json from a discover.json produced by the bundle in
+discover mode.
+
+The configurer assigns one of {id, categorical, numeric,
+high_cardinality, date} per column based on name patterns (lopnr ->
+id, *Datum* -> date, *Belopp* -> numeric, etc.). Anything ambiguous
+defaults to high_cardinality, which is the safe choice -- it emits
+only string-length aggregates. You'll want to review and edit the
+output by hand before uploading mdw_config.json back to MONA.
 """
 
 COMPARE_HELP = """\
@@ -376,6 +396,21 @@ def _cmd_update(_args: argparse.Namespace) -> int:
     return run_update()
 
 
+def _cmd_configure(args: argparse.Namespace) -> int:
+    """Author mdw_config.json from a discover.json."""
+    from .configure import configure_from_discover
+
+    output_path = Path(args.output) if args.output else None
+    try:
+        configure_from_discover(
+            Path(args.discover), output_path=output_path, overwrite=args.overwrite
+        )
+    except (FileNotFoundError, FileExistsError, ValueError) as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+    return 0
+
+
 def _cmd_scan(args: argparse.Namespace) -> int:
     """Run the PII scanner against an existing JSON file."""
     from . import scan as scan_mod
@@ -566,6 +601,28 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
 
+    # configure
+    cfg = sub.add_parser(
+        "configure",
+        help="Author mdw_config.json from discover.json",
+        description=CONFIGURE_HELP,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    cfg.add_argument(
+        "discover",
+        help="Path to discover.json produced by the bundle in discover mode.",
+    )
+    cfg.add_argument(
+        "--output",
+        "-o",
+        help="Output path for mdw_config.json (default: next to discover.json).",
+    )
+    cfg.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Replace mdw_config.json if it already exists.",
+    )
+
     # scan
     scan_p = sub.add_parser(
         "scan",
@@ -620,6 +677,8 @@ def main(argv: list[str] | None = None) -> int:
             rc = _cmd_build_bundle(args)
         elif args.command == "compare":
             rc = _cmd_compare(args)
+        elif args.command == "configure":
+            rc = _cmd_configure(args)
         elif args.command == "generate":
             rc = _cmd_generate(args)
         elif args.command == "scan":
