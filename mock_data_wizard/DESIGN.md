@@ -424,18 +424,27 @@ ties.
    NFKD-folded and stripped of combining marks so `Kön` and `Kon`
    produce the same tokens — SCB column names typically drop diacritics
    while regmeta labels keep them. Shared-token count is the primary
-   signal; substring containment in either direction is the secondary
-   fallback. Tokens shorter than 2 chars are dropped.
+   signal; **prefix containment** in either direction is the secondary
+   fallback (catches Swedish compound splits like `FamSt` ↔
+   `FamiljeStallningKod`). Free infix matching is deliberately avoided
+   — `btyp` should not match `aktivitetstyp`. Tokens shorter than 2
+   chars are dropped.
 2. **Code-set overlap (last resort).** When no CVID has any name signal,
    fall back to overlap between observed codes and the CVID's code set.
    Requires `overlap / max(|observed|, 1) >= MIN_OVERLAP_RATIO` (default
    `0.5`); below the floor, no entry is emitted. This avoids enriching
    e.g. a 3-digit BTYP column with a 4-letter FamStF code universe just
-   because it's the only candidate.
+   because it's the only candidate. **Tradeoff:** the 50% floor will
+   suppress legitimate enrichment for cohort or sample columns that
+   only observe a fraction of the universe. The principled fix is
+   wider classification metadata (so tier 1 fires); the floor is the
+   safety net while metadata coverage is incomplete.
 
 When a name match exists, the picker accepts the CVID even at zero code
 overlap — the name is the principled signal, and code drift is
-already surfaced separately by the value-code drift warnings.
+already surfaced separately by the value-code drift warnings. Callers
+must therefore treat enrichment's `value_codes` as a coding-scheme
+hint, not a validation of the observed code set.
 
 ## Value code drift warnings
 

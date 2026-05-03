@@ -397,6 +397,23 @@ def test_name_score_no_match_returns_zero():
     assert _name_score("BTyp", "FamStF") == (0, 0)
 
 
+def test_name_score_prefix_match_for_compound_split():
+    # Swedish compound words are the use case for the prefix fallback:
+    # `FamSt` tokenizes to ['fam', 'st'] while `FamiljeStallningKod`
+    # tokenizes to ['familje', 'stallning', 'kod']. No shared tokens, but
+    # `fam` is a prefix of `familje` and `st` is a prefix of `stallning`.
+    shared, prefix_hits = _name_score("FamSt", "FamiljeStallningKod")
+    assert shared == 0
+    assert prefix_hits >= 2
+
+
+def test_name_score_no_infix_false_positive():
+    # Regression: the previous infix substring check would match `btyp`
+    # inside `aktivitetstyp` and silently promote an unrelated CVID to
+    # tier-1. Prefix-only matching prevents this.
+    assert _name_score("BTyp", "Aktivitetstyp") == (0, 0)
+
+
 # ---------------------------------------------------------------------------
 # _vote_register confidence and candidate reporting
 # ---------------------------------------------------------------------------

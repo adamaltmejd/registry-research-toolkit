@@ -498,29 +498,32 @@ def _tokenize(s: str) -> list[str]:
 def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
     """Score a CVID's name labels against a column name.
 
-    Returns ``(shared_tokens, substring_hits)``. A non-zero pair means the
+    Returns ``(shared_tokens, prefix_hits)``. A non-zero pair means the
     CVID is a tier-1 candidate; ``(0, 0)`` falls through to overlap ranking.
-    Substring is the fallback for cases where camelcase tokenization yields
-    too-coarse tokens (e.g. ``SUN2000`` → ``['2000']`` only).
+
+    Prefix matching is the secondary signal: it catches Swedish compound
+    splits where one side breaks `FamSt` into `["fam", "st"]` and the
+    other carries `FamiljeStallningKod` → `["familje", "stallning",
+    "kod"]`. Restricting to *prefix* (not free infix) avoids the
+    false-positive `"btyp" in "aktivitetstyp"`, which would otherwise
+    promote an unrelated CVID to tier-1.
     """
-    col_tokens = _tokenize(col_name)
-    if not col_tokens:
+    col_token_set = set(_tokenize(col_name))
+    if not col_token_set:
         return (0, 0)
-    col_token_set = set(col_tokens)
-    col_lower = col_name.lower()
     label_token_set: set[str] = set()
-    label_concat = ""
     for lab in labels:
         if lab:
             label_token_set.update(_tokenize(lab))
-            label_concat += " " + lab.lower()
     shared = len(col_token_set & label_token_set)
     if shared:
         return (shared, 0)
-    substring_hits = sum(1 for t in col_token_set if t in label_concat) + sum(
-        1 for t in label_token_set if t in col_lower
+    prefix_hits = sum(
+        1
+        for ct in col_token_set
+        if any(lt.startswith(ct) or ct.startswith(lt) for lt in label_token_set)
     )
-    return (0, substring_hits)
+    return (0, prefix_hits)
 
 
 def _bulk_fetch_value_codes(
@@ -534,9 +537,13 @@ def _bulk_fetch_value_codes(
 
     1. **Name/classification.** Tokenize ``column_name`` and the CVID's
        ``(short_name, vardemangdsversion)`` strings; score by shared token
-       count, with substring containment as fallback. Any non-zero name
-       signal accepts the CVID regardless of code overlap — name is the
+       count, with prefix containment as fallback. Any non-zero name
+       signal accepts the CVID *regardless of code overlap* — name is the
        principled signal (which coding scheme: SUN2000 vs SUN2020).
+       Callers must therefore not treat the returned ``value_codes`` as
+       a code-set validation; drift between observed codes and the
+       picked CVID's universe is surfaced separately by
+       ``_check_value_code_drift``.
     2. **Code-set overlap.** Last-resort tiebreak when no CVID has a name
        signal. Requires ``overlap / max(len(observed), 1) >=
        MIN_OVERLAP_RATIO`` to accept; otherwise omit the entry. This
@@ -588,15 +595,17 @@ def _bulk_fetch_value_codes(
             cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
 
     # 3. Per request, score each register-matching CVID and pick the max.
+    # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-
+    # ordered; identical scores would otherwise resolve unpredictably).
     result: dict[Any, dict[str, str]] = {}
     for key, (var_id, register_id, observed, column_name) in requests.items():
-        cvids = pair_to_cvids.get((var_id, register_id), set())
+        cvids = sorted(pair_to_cvids.get((var_id, register_id), set()))
         best: tuple[int, int, int, int, dict[str, str]] | None = None
         for cvid in cvids:
             codes = cvid_to_codes.get(cvid, {})
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
-            cls_short, vmv = cvid_meta.get(cvid, (None, None))
+            cls_short, vmv = cvid_meta[cvid]
             shared, substring = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
             score = (shared, substring, overlap, len(codes))
