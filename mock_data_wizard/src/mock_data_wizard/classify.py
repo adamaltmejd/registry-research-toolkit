@@ -15,6 +15,17 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from typing import Sequence
 
+# Canonical inferred-type enum. One source of truth -- imported by
+# config (validation), sql_emit (dispatch), and stats (consumer-side).
+COLUMN_TYPES: tuple[str, ...] = (
+    "id",
+    "categorical",
+    "numeric",
+    "high_cardinality",
+    "date",
+)
+
+
 # -- Name-based patterns ---------------------------------------------------
 # First match wins. Patterns are regexes matched case-insensitively.
 

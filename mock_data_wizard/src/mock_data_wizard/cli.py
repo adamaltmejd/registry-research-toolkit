@@ -382,8 +382,8 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
     target = Path(args.path)
     if not target.exists():
-        print(f"file not found: {target}", file=sys.stderr)
-        return 2
+        print(f"Error: file not found: {target}", file=sys.stderr)
+        return 1
     matches = scan_mod.scan_file(target)
     if not matches:
         print(f"clean: {target} ({len(scan_mod.PATTERNS_APPLIED)} patterns checked)")

@@ -35,6 +35,12 @@ def test_parse_config_rejects_unsupported_version():
         parse_config({"version": 99})
 
 
+def test_parse_config_rejects_unknown_top_level_key():
+    """A typo like 'column_type' must fail fast, not silently no-op."""
+    with pytest.raises(ValueError, match="unknown top-level key"):
+        parse_config({"version": 1, "column_type": {}})
+
+
 def test_parse_config_rejects_unknown_type():
     payload = {
         "version": 1,

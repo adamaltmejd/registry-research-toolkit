@@ -68,6 +68,17 @@ def test_personnummer_with_invalid_date_does_not_match():
     assert hits == []
 
 
+def test_personnummer_with_calendar_invalid_day_does_not_match():
+    """Feb 31 / Apr 31 etc. are mm/dd-in-range but not real dates -- the
+    tighter validity gate must catch them before reaching Luhn."""
+    # Iterate impossible mm/dd combinations; none of these can ever be a
+    # real personnummer regardless of the last-4 checksum.
+    for impossible in ("19810231", "19810431", "19810230", "20211131"):
+        # Pad with arbitrary 4 digits; Luhn doesn't matter -- the date
+        # gate rejects first.
+        assert scan_string(impossible + "0000") == [], impossible
+
+
 # -- scan_string: negative (must NOT match) ------------------------------
 
 

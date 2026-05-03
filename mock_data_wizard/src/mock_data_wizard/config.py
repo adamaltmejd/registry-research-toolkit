@@ -28,19 +28,21 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from .classify import COLUMN_TYPES
+
 CONFIG_FILENAME = "mdw_config.json"
 SCHEMA_VERSION = 1
 
-VALID_TYPES = ("id", "categorical", "numeric", "high_cardinality", "date")
 VALID_ID_SUBTYPES = ("integer", "string")
 VALID_NUMERIC_SUBTYPES = ("integer", "double")
-INLINE_HINT_KEYS = {
+INLINE_HINT_KEYS: dict[str, tuple[str, ...]] = {
     "id": ("id_subtype",),
     "numeric": ("numeric_subtype",),
     "date": ("date_format",),
     "categorical": (),
     "high_cardinality": (),
 }
+assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
 
 
 @dataclass(frozen=True)
@@ -55,9 +57,7 @@ class ColumnTypeOverride:
     date_format: str | None = None
 
     def has_inline_hint(self) -> bool:
-        return any(
-            getattr(self, k) is not None for k in INLINE_HINT_KEYS.get(self.type, ())
-        )
+        return any(getattr(self, k) is not None for k in INLINE_HINT_KEYS[self.type])
 
 
 @dataclass(frozen=True)
@@ -117,10 +117,10 @@ def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
             f"column_types[{table_glob!r}][{col!r}] is missing required key 'type'"
         )
     typ = raw["type"]
-    if typ not in VALID_TYPES:
+    if typ not in COLUMN_TYPES:
         raise ValueError(
             f"column_types[{table_glob!r}][{col!r}].type={typ!r}, "
-            f"expected one of {VALID_TYPES}"
+            f"expected one of {COLUMN_TYPES}"
         )
 
     allowed = {"type"} | set(INLINE_HINT_KEYS[typ])
@@ -151,6 +151,9 @@ def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
     )
 
 
+_TOP_LEVEL_KEYS = frozenset({"version", "column_types", "column_options"})
+
+
 def parse_config(payload: dict[str, Any]) -> MDWConfig:
     if "version" not in payload:
         raise ValueError("mdw_config.json: missing required key 'version'")
@@ -159,6 +162,12 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         raise ValueError(
             f"mdw_config.json: unsupported version {version!r} "
             f"(this build supports {SCHEMA_VERSION})"
+        )
+    extra = set(payload) - _TOP_LEVEL_KEYS
+    if extra:
+        raise ValueError(
+            f"mdw_config.json: unknown top-level key(s) {sorted(extra)} "
+            f"(allowed: {sorted(_TOP_LEVEL_KEYS)})"
         )
 
     raw_types = payload.get("column_types", {})

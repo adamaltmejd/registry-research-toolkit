@@ -260,6 +260,17 @@ if __name__ == "__main__":
 """
 
 
+def _is_type_checking_block(node: ast.stmt) -> bool:
+    """``if TYPE_CHECKING:`` is typing-only -- never executes, but if
+    left in the bundle its body still gets unparsed and intra-pkg
+    imports inside leak into the artifact."""
+    return (
+        isinstance(node, ast.If)
+        and isinstance(node.test, ast.Name)
+        and node.test.id == "TYPE_CHECKING"
+    )
+
+
 def _slice_module(name: str) -> str:
     """Read a module, drop docstring + __future__ + intra-pkg imports.
 
@@ -288,6 +299,8 @@ def _slice_module(name: str) -> str:
                 continue
             if node.module and node.module.startswith("mock_data_wizard"):
                 continue
+        if _is_type_checking_block(node):
+            continue
         kept.append(node)
 
     return ast.unparse(ast.Module(body=kept, type_ignores=[]))

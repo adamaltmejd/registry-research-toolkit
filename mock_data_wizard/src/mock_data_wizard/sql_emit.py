@@ -19,6 +19,8 @@ one divergence; the public emitters compose them.
 
 from __future__ import annotations
 
+from .classify import COLUMN_TYPES
+
 DUCKDB = "duckdb"
 MSSQL = "mssql"
 DIALECTS = (DUCKDB, MSSQL)
@@ -246,11 +248,6 @@ def id_aggs_sql(table: str, col: str, dialect: str) -> str:
 
 
 # -- Dispatch --------------------------------------------------------------
-
-# Maps inferred col_type -> ordered dict of (kind -> SQL).
-# summarize.py loops over the dict, executes each query, and merges
-# the results into the per-column summary dict that lands in stats.json.
-COLUMN_TYPES = ("numeric", "categorical", "high_cardinality", "date", "id")
 
 
 def queries_for_column(

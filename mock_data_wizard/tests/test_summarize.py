@@ -13,13 +13,14 @@ from datetime import date
 import duckdb
 import pytest
 
+from mock_data_wizard.config import ColumnTypeOverride
 from mock_data_wizard.summarize import (
     NOISE_PCT,
     OTHER_LABEL,
     SUPPRESS_K,
     _perturb,
     _suppress_below_k,
-    _to_iso,
+    _to_date,
     small_pop_threshold,
     summarize_column,
 )
@@ -58,11 +59,20 @@ def test_perturb_none_passthrough():
     assert _perturb(None, random.Random(0)) is None
 
 
-def test_to_iso_handles_date_datetime_and_strings():
-    assert _to_iso(date(2020, 1, 5)) == "2020-01-05"
-    assert _to_iso("2020-01-05 00:00:00") == "2020-01-05"
-    assert _to_iso("20200105") == "2020-01-05"
-    assert _to_iso(None) is None
+def test_to_date_handles_date_datetime_and_strings():
+    assert _to_date(date(2020, 1, 5)) == date(2020, 1, 5)
+    assert _to_date("2020-01-05 00:00:00") == date(2020, 1, 5)
+    assert _to_date("20200105") == date(2020, 1, 5)
+    assert _to_date(None) is None
+
+
+def test_to_date_uses_override_format():
+    assert _to_date("2020.01.05", "%Y.%m.%d") == date(2020, 1, 5)
+
+
+def test_to_date_returns_none_on_unparseable():
+    assert _to_date("not-a-date") is None
+    assert _to_date(42) is None
 
 
 def test_suppress_below_k_drops_null_and_folds_small():
@@ -314,6 +324,55 @@ def test_summarize_date_min_max_iso_within_jitter_band(conn):
     assert out["stats"]["max"] == out2["stats"]["max"]
 
 
+def test_summarize_date_min_le_max_on_narrow_range(conn):
+    """Independent +/-7d jitter on same-day min and max could swap them;
+    we sort the pair so the bound invariant holds."""
+    conn.execute("CREATE TABLE t(d DATE)")
+    conn.execute("INSERT INTO t VALUES ('2020-06-15')")
+    for seed in range(20):
+        out = summarize_column(
+            conn,
+            table="t",
+            col_name="d",
+            col_type="date",
+            n_rows=1,
+            n_distinct=1,
+            null_count=0,
+            sample=[date(2020, 6, 15)],
+            dialect="duckdb",
+            rng=random.Random(seed),
+        )
+        min_d = date.fromisoformat(out["stats"]["min"])
+        max_d = date.fromisoformat(out["stats"]["max"])
+        assert min_d <= max_d
+
+
+def test_summarize_date_quantiles_are_monotonic(conn):
+    """Independent jitter on per-quantile values can reorder them; the
+    output must remain non-decreasing."""
+    conn.execute("CREATE TABLE t(d DATE)")
+    rows = [("2020-06-15",)] * 50  # all identical -> jitter alone drives spread
+    conn.executemany("INSERT INTO t VALUES (?)", rows)
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="d",
+        col_type="date",
+        n_rows=50,
+        n_distinct=1,
+        null_count=0,
+        sample=[r[0] for r in rows],
+        dialect="duckdb",
+        rng=random.Random(0),
+    )
+    qs = out["stats"]["quantiles"]
+    values = [
+        date.fromisoformat(qs[k])
+        for k in ("p01", "p05", "p25", "p50", "p75", "p95", "p99")
+    ]
+    assert values == sorted(values)
+
+
 def test_summarize_date_emits_python_quantiles_when_format_known(conn):
     conn.execute("CREATE TABLE t(d DATE)")
     rows = [(f"2020-{m:02d}-15",) for m in range(1, 13)]
@@ -354,7 +413,7 @@ def test_summarize_date_skips_quantiles_when_no_sample(conn):
         n_distinct=2,
         null_count=0,
         sample=[],
-        date_format="%Y-%m-%d",
+        override=ColumnTypeOverride(type="date", date_format="%Y-%m-%d"),
         dialect="duckdb",
         rng=random.Random(0),
     )

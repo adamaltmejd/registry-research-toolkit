@@ -8,16 +8,16 @@ scanner runs as the *final* step before any file leaves the bundle's
 ``output_dir`` -- if it matches anything PII-shaped, the target file
 is never written.
 
-The flow is temp-file + atomic rename:
+The flow is in-memory scan + temp-file + atomic rename:
 
 1. Caller hands us ``(path, payload)``.
 2. We stamp an in-band ``pii_scan`` attestation into ``payload``.
-3. Serialise to ``<path>.tmp``.
-4. Scan the temp.
-5. Clean -> ``os.replace(tmp, path)`` (atomic on Posix and Windows).
-6. Match -> unlink tmp, raise. The target path is *never* created.
+3. Scan the in-memory ``payload``. Match -> raise; no file is written.
+4. Serialise to ``<path>.tmp``.
+5. ``os.replace(tmp, path)`` (atomic on Posix and Windows).
 
-So a partially-scanned export can never become the canonical file.
+The PII payload never touches disk on a dirty scan, and a partially
+written file can never become the canonical export.
 
 Conservatively scoped: strings only by default. Numeric scalars (n_rows,
 counts, etc.) are not scanned because plain large integers like
@@ -33,6 +33,7 @@ import logging
 import os
 import re
 from dataclasses import dataclass
+from datetime import date
 from pathlib import Path
 from typing import Any, Iterator
 
@@ -84,8 +85,19 @@ def _luhn_valid(digits: str) -> bool:
     return s % 10 == 0
 
 
+def _is_calendar_date(yyyy: int, mm: int, dd: int) -> bool:
+    try:
+        date(yyyy, mm, dd)
+    except ValueError:
+        return False
+    return True
+
+
 def _is_plausible_yymmdd(yy: int, mm: int, dd: int) -> bool:
-    return 1 <= mm <= 12 and 1 <= dd <= 31
+    # Century is ambiguous on the 10-digit form, so check (mm, dd) against
+    # a leap year: accepts Feb 29 (could be 1996/2000/...) but still
+    # rejects Feb 30 / Nov 31 / etc.
+    return _is_calendar_date(2000, mm, dd)
 
 
 def _is_plausible_yyyymmdd(yyyy: int, mm: int, dd: int) -> bool:
@@ -93,7 +105,7 @@ def _is_plausible_yyyymmdd(yyyy: int, mm: int, dd: int) -> bool:
     # are dates/years but unlikely to be a personnummer prefix.
     if not (1850 <= yyyy <= 2099):
         return False
-    return _is_plausible_yymmdd(yyyy % 100, mm, dd)
+    return _is_calendar_date(yyyy, mm, dd)
 
 
 def _redact(s: str) -> str:
@@ -204,18 +216,15 @@ def write_export(path: Path, payload: dict) -> None:
         "patterns_applied": list(PATTERNS_APPLIED),
         "matches_found": 0,
     }
+    matches = scan_payload(payload)
+    if matches:
+        raise PIIScannerError(matches)
+    path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, default=str),
         encoding="utf-8",
     )
-    matches = scan_payload(payload)
-    if matches:
-        try:
-            tmp.unlink()
-        except FileNotFoundError:
-            pass
-        raise PIIScannerError(matches)
     os.replace(tmp, path)
 
 

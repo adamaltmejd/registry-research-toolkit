@@ -189,32 +189,24 @@ def process_handle(
 
         override = config.lookup_type(handle.source_name, col) if config else None
         options = config.lookup_options(handle.source_name, col) if config else {}
-        if override is not None:
-            col_type = override.type
-            source_of_type = "override"
-            # Inline subtype/format hint -> sample is unused downstream;
-            # skip the per-column scan entirely.
-            sample: list[Any] = (
-                []
-                if override.has_inline_hint()
-                else _sample_values(
-                    handle.conn,
-                    handle.table,
-                    col,
-                    handle.dialect,
-                    seed=classifier_seed,
-                )
-            )
-        else:
-            sample = _sample_values(
+        # Skip the per-column sample query when an inline hint pins the
+        # subtype/format -- nothing downstream consumes the sample then.
+        sample: list[Any] = (
+            []
+            if override is not None and override.has_inline_hint()
+            else _sample_values(
                 handle.conn,
                 handle.table,
                 col,
                 handle.dialect,
                 seed=classifier_seed,
             )
-            col_type = classify_column(col, n_rows, n_distinct, sample)
-            source_of_type = "auto"
+        )
+        col_type = (
+            override.type
+            if override is not None
+            else classify_column(col, n_rows, n_distinct, sample)
+        )
 
         columns_out.append(
             summarize_column(
@@ -228,10 +220,7 @@ def process_handle(
                 sample=sample,
                 dialect=handle.dialect,
                 rng=rng,
-                source_of_type=source_of_type,
-                id_subtype=override.id_subtype if override else None,
-                numeric_subtype=override.numeric_subtype if override else None,
-                date_format=override.date_format if override else None,
+                override=override,
                 options=options,
             )
         )
@@ -242,7 +231,7 @@ def process_handle(
             len(cols),
             col,
             col_type,
-            source_of_type,
+            "override" if override else "auto",
             time.monotonic() - t_col,
         )
         _flush_log_handlers()

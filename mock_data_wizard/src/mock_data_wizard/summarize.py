@@ -14,10 +14,13 @@ from __future__ import annotations
 
 import random
 from datetime import date, datetime, timedelta
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any, Sequence
 
 from .classify import DATE_FORMATS, _python_kind, detect_date_format
 from .sql_emit import queries_for_column
+
+if TYPE_CHECKING:
+    from .config import ColumnTypeOverride
 
 # Disclosure-control thresholds.
 SUPPRESS_K = 10  # categorical counts below this fold into _other
@@ -70,23 +73,31 @@ def _fetch_all(conn, sql: str) -> list[dict[str, Any]]:
         cur.close()
 
 
-def _to_iso(v: Any) -> str | None:
+def _to_date(v: Any, override_format: str | None = None) -> date | None:
+    """Coerce a SQL-returned value to a ``date``. Returns ``None`` when no
+    parser succeeds. ``override_format`` is tried first so a config-pinned
+    format (e.g. ``%Y.%m.%d``) wins over the built-in DATE_FORMATS list."""
     if v is None:
         return None
     if isinstance(v, datetime):
-        return v.date().isoformat()
+        return v.date()
     if isinstance(v, date):
-        return v.isoformat()
+        return v
     s = str(v).strip()
     if not s:
         return None
-    for fmt in DATE_FORMATS:
+    formats = (override_format, *DATE_FORMATS) if override_format else DATE_FORMATS
+    for fmt in formats:
         try:
-            return datetime.strptime(s, fmt).date().isoformat()
+            return datetime.strptime(s, fmt).date()
         except (ValueError, TypeError):
             continue
-    # Already ISO-ish? Trim time component if present.
-    return s.split(" ", 1)[0] if "-" in s[:10] else s
+    # ISO-ish fallback: trim a trailing time component before retrying.
+    head = s.split(" ", 1)[0]
+    try:
+        return datetime.strptime(head, "%Y-%m-%d").date()
+    except (ValueError, TypeError):
+        return None
 
 
 def _suppress_below_k(
@@ -117,11 +128,9 @@ def _suppress_below_k(
     return out
 
 
-def _jitter_iso_date(iso: str, rng: random.Random) -> str:
-    """Apply uniform +/- DATE_JITTER_DAYS jitter to an ISO date."""
-    d = datetime.strptime(iso, "%Y-%m-%d").date()
-    d2 = d + timedelta(days=rng.randint(-DATE_JITTER_DAYS, DATE_JITTER_DAYS))
-    return d2.isoformat()
+def _jitter_date(d: date, rng: random.Random) -> date:
+    """Apply uniform +/- DATE_JITTER_DAYS jitter to a date."""
+    return d + timedelta(days=rng.randint(-DATE_JITTER_DAYS, DATE_JITTER_DAYS))
 
 
 def _date_quantiles_from_sample(
@@ -132,6 +141,10 @@ def _date_quantiles_from_sample(
     Doing this server-side would require a per-dialect, per-storage-format
     DATEDIFF dance; the sample is already on the wire so quantile
     estimation here is cheap and correct enough for mock-data fidelity.
+
+    Independent jitter can violate monotonicity (p25 > p50 etc.) on
+    narrow samples. We sort the jittered values and re-assign them to
+    the quantile labels so consumers see a non-decreasing sequence.
     """
     parsed: list[date] = []
     for v in sample:
@@ -145,13 +158,13 @@ def _date_quantiles_from_sample(
         return {}
     parsed.sort()
     n = len(parsed)
-    out: dict[str, str] = {}
-    for q in DATE_QUANTILES:
-        idx = min(n - 1, int(q * n))
-        d = parsed[idx]
-        d2 = d + timedelta(days=rng.randint(-DATE_JITTER_DAYS, DATE_JITTER_DAYS))
-        out[f"p{int(round(q * 100)):02d}"] = d2.isoformat()
-    return out
+    jittered = sorted(
+        _jitter_date(parsed[min(n - 1, int(q * n))], rng) for q in DATE_QUANTILES
+    )
+    return {
+        f"p{int(round(q * 100)):02d}": d.isoformat()
+        for q, d in zip(DATE_QUANTILES, jittered)
+    }
 
 
 def summarize_column(
@@ -166,10 +179,7 @@ def summarize_column(
     dialect: str,
     rng: random.Random | None = None,
     *,
-    source_of_type: str = "auto",
-    id_subtype: str | None = None,
-    numeric_subtype: str | None = None,
-    date_format: str | None = None,
+    override: ColumnTypeOverride | None = None,
     options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compute the per-column ``stats.json`` fragment for one column.
@@ -187,12 +197,9 @@ def summarize_column(
             May be empty when an inline override hint is supplied.
         dialect: ``duckdb`` or ``mssql``.
         rng: Optional seeded RNG for deterministic noise (tests).
-        source_of_type: ``"auto"`` for classifier-inferred, ``"override"``
-            when a ``mdw_config.json`` entry forced ``col_type``.
-        id_subtype, numeric_subtype, date_format: When supplied, used
-            verbatim instead of being inferred from ``sample``. This is
-            the path that lets a fully-typed config skip the per-column
-            sample query.
+        override: When supplied, marks ``source_of_type="override"`` and
+            carries any inline subtype/format hints that let the caller
+            skip the per-column sample query.
         options: Per-column option overrides loaded from
             ``mdw_config.json``. Reserved for downstream consumers
             (e.g. ``suppress_k`` in disclosure-control hardening).
@@ -200,13 +207,16 @@ def summarize_column(
     rng = rng or random.Random()
     options = options or {}
     suppress_k = int(options.get("suppress_k", SUPPRESS_K))
+    id_subtype = override.id_subtype if override else None
+    numeric_subtype = override.numeric_subtype if override else None
+    date_format = override.date_format if override else None
 
     queries = queries_for_column(table, col_name, col_type, dialect)
 
     base: dict[str, Any] = {
         "column_name": col_name,
         "inferred_type": col_type,
-        "source_of_type": source_of_type,
+        "source_of_type": "override" if override else "auto",
         "nullable": null_count > 0,
         "n_distinct": int(n_distinct),
     }
@@ -252,12 +262,18 @@ def summarize_column(
 
     elif col_type == "date":
         agg = _fetch_one(conn, queries["aggs"])
-        min_iso = _to_iso(agg.get("min_v"))
-        max_iso = _to_iso(agg.get("max_v"))
-        if min_iso is not None:
-            stats["min"] = _jitter_iso_date(min_iso, rng)
-        if max_iso is not None:
-            stats["max"] = _jitter_iso_date(max_iso, rng)
+        min_d = _to_date(agg.get("min_v"), date_format)
+        max_d = _to_date(agg.get("max_v"), date_format)
+        if min_d is not None and max_d is not None:
+            # Independent jitter can produce min > max on narrow ranges;
+            # sort the jittered pair so the bound invariant holds.
+            jittered = sorted((_jitter_date(min_d, rng), _jitter_date(max_d, rng)))
+            stats["min"] = jittered[0].isoformat()
+            stats["max"] = jittered[1].isoformat()
+        elif min_d is not None:
+            stats["min"] = _jitter_date(min_d, rng).isoformat()
+        elif max_d is not None:
+            stats["max"] = _jitter_date(max_d, rng).isoformat()
         # Detect format if not pinned via override.
         fmt = date_format
         if fmt is None:

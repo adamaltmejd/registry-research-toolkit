@@ -7,9 +7,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from .classify import COLUMN_TYPES
 from .extract import CONTRACT_VERSION  # producer owns the version
 
-VALID_TYPES = frozenset({"numeric", "categorical", "high_cardinality", "date", "id"})
 VALID_SOURCE_TYPES = frozenset({"file", "sql"})
 
 
@@ -61,10 +61,10 @@ def _require(obj: dict, key: str, context: str) -> Any:
 def _parse_column(raw: dict, context: str) -> ColumnStats:
     name = _require(raw, "column_name", context)
     inferred = _require(raw, "inferred_type", context)
-    if inferred not in VALID_TYPES:
+    if inferred not in COLUMN_TYPES:
         raise StatsValidationError(
             f"Invalid inferred_type '{inferred}' for column '{name}' in {context}. "
-            f"Valid types: {sorted(VALID_TYPES)}"
+            f"Valid types: {sorted(COLUMN_TYPES)}"
         )
     return ColumnStats(
         column_name=name,
