@@ -238,15 +238,26 @@ def summarize_column(
             kind = _python_kind(sample)
             is_int = kind == "numeric_int"
             stats["numeric_subtype"] = "integer" if is_int else "double"
-        stats["min"] = _perturb(agg.get("min_v"), rng, is_int=is_int)
-        stats["max"] = _perturb(agg.get("max_v"), rng, is_int=is_int)
+        # Independent +/- relative noise on min/max can swap them on
+        # narrow ranges (and on min == max); sort the perturbed pair so
+        # the bound invariant holds.
+        mn = _perturb(agg.get("min_v"), rng, is_int=is_int)
+        mx = _perturb(agg.get("max_v"), rng, is_int=is_int)
+        if mn is not None and mx is not None:
+            mn, mx = sorted((mn, mx))
+        stats["min"] = mn
+        stats["max"] = mx
         stats["mean"] = _perturb(agg.get("mean_v"), rng)
         stats["sd"] = _perturb(agg.get("sd_v"), rng)
         q = _fetch_one(conn, queries["quantiles"])
-        stats["quantiles"] = {
-            label: _perturb(q.get(label), rng, is_int=is_int)
-            for label in ("p01", "p05", "p25", "p50", "p75", "p95", "p99")
-        }
+        # Same independent-noise problem on adjacent quantiles -- sort
+        # the perturbed values and re-zip with the labels so consumers
+        # see a non-decreasing sequence.
+        q_labels = ("p01", "p05", "p25", "p50", "p75", "p95", "p99")
+        q_vals = [_perturb(q.get(label), rng, is_int=is_int) for label in q_labels]
+        if all(v is not None for v in q_vals):
+            q_vals = sorted(q_vals)
+        stats["quantiles"] = dict(zip(q_labels, q_vals))
 
     elif col_type == "categorical":
         rows = _fetch_all(conn, queries["freqs"])

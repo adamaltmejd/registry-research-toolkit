@@ -78,10 +78,12 @@ class MDWConfig:
         """Return the override for ``(source_name, column_name)`` or None.
 
         Multiple table-globs may match. JSON insertion order decides;
-        last match wins, so the user lists broad globs first and
-        specific overrides below them (symmetric with ``lookup_options``).
-        Within a matching glob, the column name is matched exactly
-        (case-sensitive)."""
+        last match wins -- the entire override record is replaced (a
+        column has exactly one type, so merging fields across globs
+        doesn't make sense). List broad globs first and specific
+        overrides below them. Within a matching glob, the column name
+        is matched exactly (case-sensitive).
+        """
         match: ColumnTypeOverride | None = None
         for glob, cols in self.column_types.items():
             if fnmatch.fnmatchcase(source_name, glob) and column_name in cols:
@@ -91,8 +93,12 @@ class MDWConfig:
     def lookup_options(self, source_name: str, column_name: str) -> dict[str, Any]:
         """Return merged options for ``(source_name, column_name)``.
 
-        Later globs win on conflicting keys; lists broad globs first and
-        specific overrides below them (symmetric with ``lookup_type``).
+        Same last-glob-wins ordering as ``lookup_type``, but per-key:
+        non-conflicting keys from earlier matches persist, and only
+        keys present in a later matching glob are overridden. Options
+        are independent concerns (``suppress_k`` doesn't preclude any
+        future option), so merging is the natural fit -- in contrast
+        to ``lookup_type`` where the type is atomic.
         """
         merged: dict[str, Any] = {}
         for glob, cols in self.column_options.items():

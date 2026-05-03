@@ -186,6 +186,53 @@ def test_summarize_numeric_integer_subtype(conn):
     assert isinstance(s["quantiles"]["p50"], int)
 
 
+def test_summarize_numeric_min_le_max_on_narrow_range(conn):
+    """Independent +/- relative noise on min and max can swap them when
+    min == max (or near it); the perturbed pair must be sorted."""
+    conn.execute("CREATE TABLE t(x DOUBLE)")
+    conn.execute("INSERT INTO t VALUES (42.0)")
+    for seed in range(50):
+        out = summarize_column(
+            conn,
+            table="t",
+            col_name="x",
+            col_type="numeric",
+            n_rows=1,
+            n_distinct=1,
+            null_count=0,
+            sample=[42.0],
+            dialect="duckdb",
+            rng=random.Random(seed),
+        )
+        s = out["stats"]
+        assert s["min"] <= s["max"], f"seed {seed}: {s['min']} > {s['max']}"
+
+
+def test_summarize_numeric_quantiles_are_monotonic(conn):
+    """Independent +/- relative noise on adjacent quantiles can reorder
+    them on tightly-clustered values; the output must remain
+    non-decreasing."""
+    conn.execute("CREATE TABLE t(x DOUBLE)")
+    # All identical -> jitter alone drives any spread between quantiles.
+    conn.executemany("INSERT INTO t VALUES (?)", [(1.0,)] * 50)
+    for seed in range(20):
+        out = summarize_column(
+            conn,
+            table="t",
+            col_name="x",
+            col_type="numeric",
+            n_rows=50,
+            n_distinct=1,
+            null_count=0,
+            sample=[1.0] * 50,
+            dialect="duckdb",
+            rng=random.Random(seed),
+        )
+        qs = out["stats"]["quantiles"]
+        values = [qs[k] for k in ("p01", "p05", "p25", "p50", "p75", "p95", "p99")]
+        assert values == sorted(values), f"seed {seed}: {values}"
+
+
 # -- categorical ----------------------------------------------------------
 
 

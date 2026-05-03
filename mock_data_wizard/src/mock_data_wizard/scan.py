@@ -48,6 +48,14 @@ SCANNER_VERSION = "1"
 
 _PNR_12 = re.compile(r"\b(\d{12})\b")
 _PNR_10 = re.compile(r"\b(\d{6})[-+](\d{4})\b")
+# Bare 10-digit personnummer (YYMMDDXXXX, no separator). Anchored to the
+# whole string -- a 10-digit run inside narrative text is too FP-prone
+# (random 10-digit strings pass the date+Luhn gate at ~0.4%, vs. ~0.09%
+# for 12-digit). The leak vector we care about is a misclassified column
+# emitting bare PNRs as frequency-table keys, and those keys are atomic
+# strings, so the whole-string anchor catches the leak without expanding
+# FP surface to UNC paths, log lines, row counts, etc.
+_PNR_10_BARE = re.compile(r"^(\d{10})$")
 # Email: kept tight to reduce false positives from arbitrary
 # `something@thing` strings inside JSON paths.
 _EMAIL = re.compile(
@@ -163,18 +171,22 @@ def _walk_strings(node: Any, path: str = "$") -> Iterator[tuple[str, str]]:
             yield from _walk_strings(v, f"{path}[{i}]")
 
 
-def scan_string(s: str) -> list[str]:
-    """Return the list of pattern names matched in ``s`` (each at most
-    once per call)."""
-    hits: list[str] = []
+def _has_personnummer(s: str) -> bool:
+    """True if ``s`` contains anything that passes a personnummer-shape
+    check (date validity + Luhn). Three forms:
+
+    - 12-digit ``YYYYMMDDXXXX`` anywhere in ``s``
+    - 10-digit ``YYMMDD[-+]XXXX`` anywhere in ``s``
+    - bare 10-digit ``YYMMDDXXXX`` only when it IS the entire stripped
+      string (see ``_PNR_10_BARE`` for the rationale)
+    """
     for m in _PNR_12.finditer(s):
         digits = m.group(1)
         yyyy = int(digits[:4])
         mm = int(digits[4:6])
         dd = int(digits[6:8])
         if _is_plausible_yyyymmdd(yyyy, mm, dd) and _luhn_valid(digits):
-            hits.append("personnummer")
-            break
+            return True
     for m in _PNR_10.finditer(s):
         ymd = m.group(1)
         last4 = m.group(2)
@@ -182,8 +194,24 @@ def scan_string(s: str) -> list[str]:
         mm = int(ymd[2:4])
         dd = int(ymd[4:6])
         if _is_plausible_yymmdd(yy, mm, dd) and _luhn_valid(ymd + last4):
-            hits.append("personnummer")
-            break
+            return True
+    bare = _PNR_10_BARE.match(s.strip())
+    if bare is not None:
+        digits = bare.group(1)
+        yy = int(digits[:2])
+        mm = int(digits[2:4])
+        dd = int(digits[4:6])
+        if _is_plausible_yymmdd(yy, mm, dd) and _luhn_valid(digits):
+            return True
+    return False
+
+
+def scan_string(s: str) -> list[str]:
+    """Return the list of pattern names matched in ``s`` (each at most
+    once per call)."""
+    hits: list[str] = []
+    if _has_personnummer(s):
+        hits.append("personnummer")
     if _EMAIL.search(s):
         hits.append("email")
     if _MOBILE.search(s):

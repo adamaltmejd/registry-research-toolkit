@@ -46,6 +46,24 @@ def test_personnummer_10_digit_with_separator_match():
     assert hits == ["personnummer"]
 
 
+def test_personnummer_10_digit_bare_whole_string_match():
+    """A bare 10-digit personnummer that IS the entire string (the leak
+    vector: a misclassified column emitting it as a frequency-table key)."""
+    hits = scan_string("8112289874")
+    assert hits == ["personnummer"]
+    # Surrounding whitespace must still match (whole-stripped-string).
+    assert scan_string("  8112289874\n") == ["personnummer"]
+
+
+def test_personnummer_10_digit_bare_in_narrative_text_does_not_match():
+    """A 10-digit run inside surrounding text is too FP-prone (~0.4% of
+    random 10-digit strings pass date+Luhn). We deliberately decline to
+    match these -- the whole-string anchor catches the leak vector
+    without expanding to row counts, paths, log lines, etc."""
+    assert scan_string("Customer 8112289874 was here.") == []
+    assert scan_string("row count: 8112289874") == []
+
+
 def test_email_match():
     hits = scan_string("contact: jane.doe@example.com today")
     assert "email" in hits
