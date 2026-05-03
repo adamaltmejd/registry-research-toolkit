@@ -12,6 +12,8 @@ from mock_data_wizard.enrich import (
     EnrichedSource,
     _bulk_fetch_value_codes,
     _check_value_code_drift,
+    _name_score,
+    _tokenize,
     _vote_register,
     enrich,
 )
@@ -184,17 +186,20 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
 
 
 def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
-    """If no CVID under the resolved register has any overlap with observed
-    codes, omit the entry — better to leave value_codes unset than to enrich
-    with an unrelated code universe."""
+    """No name signal and no overlap → omit the entry. Better to leave
+    value_codes unset than to enrich with an unrelated code universe.
+
+    The column name `FooBar` shares no tokens with the fixture CVID's
+    label `Kön`, so tier 1 doesn't fire; observed codes {X,Y,Z} also
+    don't overlap CVID codes {1,2}, so tier 2 fails the floor.
+    """
     import sqlite3
 
     conn = sqlite3.connect(str(regmeta_db))
     conn.row_factory = sqlite3.Row
-    # Observed codes that exist nowhere in the regmeta DB
-    requests = {("f.csv", "Kon"): (44, 1, {"X", "Y", "Z"}, "Kon")}
+    requests = {("f.csv", "FooBar"): (44, 1, {"X", "Y", "Z"}, "FooBar")}
     out = _bulk_fetch_value_codes(conn, requests)
-    assert ("f.csv", "Kon") not in out
+    assert ("f.csv", "FooBar") not in out
 
 
 def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
@@ -346,6 +351,50 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path)
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("f.csv", "ColA")] == {"1": "Man", "2": "Kvinna"}
     assert out[("f.csv", "ColB")] == {"3": "X", "4": "Y"}
+
+
+# ---------------------------------------------------------------------------
+# _tokenize / _name_score: Unicode and SCB naming conventions
+# ---------------------------------------------------------------------------
+
+
+def test_tokenize_handles_camelcase_with_digits():
+    assert _tokenize("Sun2000Inr") == ["sun", "2000", "inr"]
+
+
+def test_tokenize_handles_uppercase_runs():
+    # All-caps runs were the original blind spot: SUN/SSYK/SNI vanished.
+    assert _tokenize("SUN2000") == ["sun", "2000"]
+    assert _tokenize("SSYK4") == ["ssyk"]  # '4' dropped by ≥2 filter
+    assert _tokenize("SNI2007") == ["sni", "2007"]
+
+
+def test_tokenize_strips_swedish_diacritics():
+    # SCB column names typically strip diacritics (`Kon`, `Fodelseland`)
+    # while regmeta labels keep them (`Kön`, `Födelseland`). Both forms
+    # must produce the same token set so the picker can match across them.
+    assert _tokenize("Kön") == ["kon"]
+    assert _tokenize("Födelseland") == _tokenize("Fodelseland") == ["fodelseland"]
+    assert _tokenize("Älder") == _tokenize("Alder") == ["alder"]
+
+
+def test_name_score_matches_diacritic_stripped_form():
+    # Column "Kon" should match a CVID labeled "Kön" via diacritic folding,
+    # even though the raw strings differ in their middle character.
+    score = _name_score("Kon", "Kön")
+    assert score[0] >= 1  # at least one shared token
+
+
+def test_name_score_matches_uppercase_abbreviation():
+    # Column SsykYrkeskod against CVID with vardemangdsversion "SSYK2012":
+    # tokens [ssyk, yrkeskod] vs [ssyk, 2012] share 'ssyk'.
+    score = _name_score("SsykYrkeskod", "SSYK2012")
+    assert score[0] >= 1
+
+
+def test_name_score_no_match_returns_zero():
+    # Unrelated names produce no signal, leaving (0, 0) → tier-2 fallback.
+    assert _name_score("BTyp", "FamStF") == (0, 0)
 
 
 # ---------------------------------------------------------------------------

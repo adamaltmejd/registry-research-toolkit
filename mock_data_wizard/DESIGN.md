@@ -416,13 +416,16 @@ overlap, code_count)`. The first non-zero pair wins; later fields break
 ties.
 
 1. **Name / classification.** Tokenize the column name and the CVID's
-   `(classification.short_name, vardemangdsversion)` strings using the
-   camelcase regex `[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+` and lowercase
-   them. Shared-token count is the primary signal; substring containment
-   in either direction is the secondary fallback for cases where
-   tokenization is too coarse (e.g. `SUN2000` tokenizes to `['2000']`
-   only, but `'sun'` ⊂ `'sun2000'` still works). Tokens shorter than 2
-   chars are dropped — single letters are too noisy.
+   `(classification.short_name, vardemangdsversion)` strings using a
+   camelcase regex with four alternatives: `[A-Z]+(?=[A-Z][a-z])` (run
+   before a CamelCase boundary), `[A-Z]+(?![a-z])` (run not followed by
+   lowercase, capturing all-caps abbreviations like `SUN`/`SSYK`/`SNI`),
+   `[A-Z]?[a-z]+` (a normal word), and `\d+` (digits). Inputs are first
+   NFKD-folded and stripped of combining marks so `Kön` and `Kon`
+   produce the same tokens — SCB column names typically drop diacritics
+   while regmeta labels keep them. Shared-token count is the primary
+   signal; substring containment in either direction is the secondary
+   fallback. Tokens shorter than 2 chars are dropped.
 2. **Code-set overlap (last resort).** When no CVID has any name signal,
    fall back to overlap between observed codes and the CVID's code set.
    Requires `overlap / max(|observed|, 1) >= MIN_OVERLAP_RATIO` (default

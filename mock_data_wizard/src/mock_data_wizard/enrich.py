@@ -7,6 +7,7 @@ import re
 import signal
 import sqlite3
 import time
+import unicodedata
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -467,17 +468,31 @@ def _bulk_resolve(
 # the CVID just because it's the only candidate).
 MIN_OVERLAP_RATIO = 0.5
 
-# CamelCase + alpha/digit boundary tokenizer. Plain non-alnum splits fail
-# on the flagship case: `Sun2000Inr` would stay one token while
-# `SUN2000-INRIKTNING` splits, leaving the intersection empty.
-_TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]?[a-z]+|\d+")
+# CamelCase + alpha/digit boundary tokenizer. Four alternatives:
+#   1. `[A-Z]+(?=[A-Z][a-z])` — uppercase run before a CamelCase boundary
+#      (e.g. `URL` in `URLPath`).
+#   2. `[A-Z]+(?![a-z])` — uppercase run not followed by lowercase, i.e.
+#      ending the string or followed by a digit / non-letter
+#      (e.g. `SSYK` in `SSYK4`, `SUN` in `SUN2000`, `SNI` in `SNI2007`).
+#      Without this, all-caps abbreviations vanish from the token set.
+#   3. `[A-Z]?[a-z]+` — a normal capitalised or lowercase word.
+#   4. `\d+` — a digit run.
+# Plain non-alnum splits fail on the flagship case: `Sun2000Inr` would
+# stay one token while `SUN2000-INRIKTNING` splits, leaving the
+# intersection empty.
+_TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+")
 
 
 def _tokenize(s: str) -> list[str]:
-    # Filter to ≥2 char tokens: single letters are too noisy as a name
-    # signal (e.g. "Kön" → ['n'] would spuriously match any column name
-    # containing 'n').
-    return [m.lower() for m in _TOKEN_RE.findall(s) if len(m) >= 2]
+    # SCB column names typically strip diacritics (`Kon`, `Fodelseland`)
+    # while regmeta labels keep them (`Kön`, `Födelseland`). Fold to
+    # NFKD + drop combining marks before matching so the two forms align.
+    folded = "".join(
+        ch for ch in unicodedata.normalize("NFKD", s) if not unicodedata.combining(ch)
+    )
+    # Filter to ≥2 char tokens: single letters carry no semantic signal
+    # and would spuriously match common column names.
+    return [m.lower() for m in _TOKEN_RE.findall(folded) if len(m) >= 2]
 
 
 def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
