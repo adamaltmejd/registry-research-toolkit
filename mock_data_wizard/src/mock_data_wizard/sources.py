@@ -1,11 +1,12 @@
 """Source declarations and streaming iteration.
 
 A "source" is a config object describing where to find tables. The
-script's ``SOURCES = [...]`` block is built from ``file_source(...)`` and
-``sql_source(...)`` calls. At extract time, ``iter_source(src)`` yields
-:class:`SourceHandle` objects -- one per table -- carrying a live
-connection and a quoted table reference. Classification and summarising
-run against that handle without ever materialising rows in Python.
+script's ``configure()`` returns a ``SOURCES`` list built from
+``file_source(...)`` and ``sql_source(...)`` calls. At extract time,
+``iter_source(src)`` yields :class:`SourceHandle` objects -- one per
+table -- carrying a live connection and a quoted table reference.
+Classification and summarising run against that handle without ever
+materialising rows in Python.
 
 Two source types:
 
@@ -14,10 +15,9 @@ Two source types:
 - :class:`SqlSource` -- tables/views in an ODBC database; the iterator
   holds one pyodbc connection open and yields handles in sequence.
 
-Discovery: a source declared without any filtering info enters discovery
-mode. The extract script writes a SOURCES skeleton and exits before
-running any aggregation. ``all=True`` opts out of discovery (give me
-everything in this source).
+A SQL source with no ``tables=``, ``pattern=``, or ``all=True`` is
+ambiguous in extract mode and ``iter_sql_source`` raises. Discover mode
+passes ``permissive=True`` to enumerate everything reachable.
 """
 
 from __future__ import annotations
@@ -199,19 +199,6 @@ def sql_source(
         all=all,
         exclude_archived=exclude_archived,
     )
-
-
-# -- Discovery predicate --------------------------------------------------
-
-
-def needs_discovery(src: Any) -> bool:
-    if getattr(src, "all", False):
-        return False
-    if isinstance(src, FileSource):
-        return src.include is None and src.exclude is None and src.pattern is None
-    if isinstance(src, SqlSource):
-        return src.tables is None and src.pattern is None
-    raise TypeError(f"Unknown source: {src!r}")
 
 
 # -- Handle ---------------------------------------------------------------
@@ -444,7 +431,16 @@ def _is_archived(qualified_or_bare: str) -> bool:
     return _strip_schema(qualified_or_bare).lower().startswith("x_")
 
 
-def _select_sql_tables(conn: Any, src: SqlSource) -> dict[str, SqlTable]:
+def _select_sql_tables(
+    conn: Any, src: SqlSource, *, permissive: bool = False
+) -> dict[str, SqlTable]:
+    """Resolve which tables a SQL source iterates.
+
+    ``permissive=True`` (discover mode) treats absent ``tables``/
+    ``pattern``/``all`` as "give me everything reachable". Extract mode
+    keeps the strict default so a typo'd source can't silently match
+    every view in the DSN.
+    """
     if src.tables is not None:
         return _resolve_sql_aliases(_normalize_to_sql_tables(src.tables))
     discovered = list_sql_views(conn, src)
@@ -453,19 +449,21 @@ def _select_sql_tables(conn: Any, src: SqlSource) -> dict[str, SqlTable]:
     if src.pattern is not None:
         pat = re.compile("|".join(src.pattern), re.IGNORECASE)
         discovered = [t for t in discovered if pat.search(t)]
-    elif not src.all:
+    elif not src.all and not permissive:
         raise ValueError(
             "sql_source(): provide one of `tables`, `pattern`, or `all=True`."
         )
     return _resolve_sql_aliases([SqlTable(qualified=t) for t in discovered])
 
 
-def iter_sql_source(src: SqlSource, conn: Any = None) -> Iterator[SourceHandle]:
+def iter_sql_source(
+    src: SqlSource, conn: Any = None, *, permissive: bool = False
+) -> Iterator[SourceHandle]:
     own_conn = conn is None
     if own_conn:
         conn = sql_connect(src)
     try:
-        aliases = _select_sql_tables(conn, src)
+        aliases = _select_sql_tables(conn, src, permissive=permissive)
         if not aliases:
             raise ValueError(
                 f"sql_source(dsn='{src.dsn}'): no tables selected after filters."
@@ -500,9 +498,11 @@ def iter_sql_source(src: SqlSource, conn: Any = None) -> Iterator[SourceHandle]:
 # -- Dispatch -------------------------------------------------------------
 
 
-def iter_source(src: Any, conn: Any = None) -> Iterator[SourceHandle]:
+def iter_source(
+    src: Any, conn: Any = None, *, permissive: bool = False
+) -> Iterator[SourceHandle]:
     if isinstance(src, FileSource):
         return iter_file_source(src, conn=conn)
     if isinstance(src, SqlSource):
-        return iter_sql_source(src, conn=conn)
+        return iter_sql_source(src, conn=conn, permissive=permissive)
     raise TypeError(f"Unknown source: {src!r}")

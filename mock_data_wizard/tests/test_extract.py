@@ -1,7 +1,8 @@
 """End-to-end and unit tests for extract.py.
 
-The pipeline tests run real DuckDB against tmp CSVs. Discovery and
-sidecar tests don't touch any DB.
+Two top-level entry points: ``run_discover`` (metadata-only walk) and
+``run_extract_typed`` (typed pipeline against ``mdw_config.json``).
+``main`` dispatches between them via ``mode=``.
 """
 
 from __future__ import annotations
@@ -11,114 +12,182 @@ from pathlib import Path
 
 import pytest
 
+from mock_data_wizard.config import parse_config
 from mock_data_wizard.extract import (
     _shared_columns,
-    emit_sources_skeleton,
-    find_latest_sources_file,
-    load_sources_file,
     main,
-    run_extract,
+    process_handle,
+    run_discover,
+    run_extract_typed,
 )
-from mock_data_wizard.sources import file_source
+from mock_data_wizard.sources import file_source, iter_source
 
 
 def _write_csv(p: Path, content: str) -> None:
     p.write_text(content, encoding="utf-8")
 
 
-# -- run_extract end-to-end ----------------------------------------------
+# -- run_discover end-to-end ---------------------------------------------
 
 
-def test_run_extract_file_source_writes_valid_stats_json(tmp_path: Path):
+def test_run_discover_file_source_writes_metadata(tmp_path: Path):
     _write_csv(
         tmp_path / "people.csv",
-        # 8 rows, 4 cols: lopnr (id), age (numeric), kommun (cat), name (high-card)
-        "lopnr,age,kommun,name\n"
-        "1,25,0114,alice\n"
-        "2,30,0114,bob\n"
-        "3,42,0115,carol\n"
-        "4,55,0114,dave\n"
-        "5,29,0115,eve\n"
-        "6,38,0114,frank\n"
-        "7,47,0115,grace\n"
-        "8,33,0114,heidi\n",
+        "lopnr,age,kommun\n1,25,0114\n2,30,0114\n3,42,0115\n",
     )
-    out = tmp_path / "stats.json"
+    out = tmp_path / "discover.json"
     src = file_source(str(tmp_path), include=["people.csv"])
-    result = run_extract([src], out, seed=0)
+    result = run_discover([src], out)
 
-    # File on disk matches the returned dict
+    on_disk = json.loads(out.read_text(encoding="utf-8"))
+    assert on_disk == result
+    assert result["contract_version"] == "discover-1.0.0"
+    src_out = result["sources"][0]
+    assert src_out["source_name"] == "people.csv"
+    assert src_out["row_count"] == 3
+    col_names = [c["name"] for c in src_out["columns"]]
+    assert col_names == ["lopnr", "age", "kommun"]
+    # DuckDB DESCRIBE gives sql_type and null
+    for c in src_out["columns"]:
+        assert "sql_type" in c
+        assert "nullable" in c
+
+
+def test_run_discover_pii_scan_passes_clean_payload(tmp_path: Path):
+    _write_csv(tmp_path / "data.csv", "x,y\n1,2\n3,4\n")
+    out = tmp_path / "discover.json"
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = run_discover([src], out)
+    assert result["pii_scan"]["matches_found"] == 0
+
+
+def test_run_discover_raises_when_no_data(tmp_path: Path):
+    src = file_source(str(tmp_path), include=["nonexistent.csv"])
+    with pytest.raises(RuntimeError, match="No data sources"):
+        run_discover([src], tmp_path / "discover.json")
+
+
+# -- run_extract_typed end-to-end ----------------------------------------
+
+
+def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
+    _write_csv(
+        tmp_path / "people.csv",
+        "lopnr,age,kommun,name\n"
+        "1,25,0114,alice\n2,30,0114,bob\n3,42,0115,carol\n4,55,0114,dave\n"
+        "5,29,0115,eve\n6,38,0114,frank\n7,47,0115,grace\n8,33,0114,heidi\n",
+    )
+    config = parse_config(
+        {
+            "version": 1,
+            "column_types": {
+                "people.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "age": {"type": "numeric", "numeric_subtype": "integer"},
+                    "kommun": {"type": "categorical"},
+                    "name": {"type": "high_cardinality"},
+                }
+            },
+        }
+    )
+    src = file_source(str(tmp_path), include=["people.csv"])
+    out = tmp_path / "stats.json"
+    result = run_extract_typed([src], out, config, seed=0)
+
     on_disk = json.loads(out.read_text(encoding="utf-8"))
     assert on_disk == result
 
-    # Contract-level structure
     assert result["contract_version"] == "2.0.0"
-    assert "generated_at" in result
-    assert len(result["sources"]) == 1
-
     src_out = result["sources"][0]
     assert src_out["source_name"] == "people.csv"
-    assert src_out["source_type"] == "file"
     assert src_out["row_count"] == 8
-
     by_name = {c["column_name"]: c for c in src_out["columns"]}
-    assert set(by_name) == {"lopnr", "age", "kommun", "name"}
     assert by_name["lopnr"]["inferred_type"] == "id"
     assert by_name["age"]["inferred_type"] == "numeric"
     assert by_name["kommun"]["inferred_type"] == "categorical"
-    # name with 8 distinct out of 8 rows is high-card or id depending on
-    # threshold; both are acceptable for this fixture.
-    assert by_name["name"]["inferred_type"] in ("id", "high_cardinality")
+    assert by_name["name"]["inferred_type"] == "high_cardinality"
+    assert all(c["source_of_type"] == "override" for c in by_name.values())
 
 
-def test_run_extract_records_shared_columns(tmp_path: Path):
+def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
     _write_csv(
-        tmp_path / "a.csv",
+        tmp_path / "data.csv",
         "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
     )
-    _write_csv(
-        tmp_path / "b.csv",
-        "lopnr,sex\n1,M\n2,F\n3,M\n4,F\n5,M\n6,F\n",
+    # Missing 'age' override.
+    config = parse_config(
+        {
+            "version": 1,
+            "column_types": {
+                "data.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
+            },
+        }
     )
-    out = tmp_path / "stats.json"
-    src = file_source(str(tmp_path), include=["a.csv", "b.csv"])
-    result = run_extract([src], out, seed=1)
+    src = file_source(str(tmp_path), include=["data.csv"])
+    with pytest.raises(RuntimeError, match="no type override"):
+        run_extract_typed([src], tmp_path / "stats.json", config)
 
+
+def test_run_extract_typed_records_shared_columns(tmp_path: Path):
+    _write_csv(tmp_path / "a.csv", "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n")
+    _write_csv(tmp_path / "b.csv", "lopnr,sex\n1,M\n2,F\n3,M\n4,F\n5,M\n6,F\n")
+    config = parse_config(
+        {
+            "version": 1,
+            "column_types": {
+                "a.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "age": {"type": "numeric", "numeric_subtype": "integer"},
+                },
+                "b.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "sex": {"type": "categorical"},
+                },
+            },
+        }
+    )
+    src = file_source(str(tmp_path), include=["a.csv", "b.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=1)
     shared = {s["column_name"]: s for s in result["shared_columns"]}
     assert "lopnr" in shared
     assert sorted(shared["lopnr"]["sources"]) == ["a.csv", "b.csv"]
-    # age and sex appear only in one source each
     assert "age" not in shared
     assert "sex" not in shared
 
 
-def test_run_extract_raises_when_no_data(tmp_path: Path):
-    # Source with include= that matches nothing produces zero handles.
-    src = file_source(str(tmp_path), include=["nonexistent.csv"])
-    with pytest.raises(RuntimeError, match="No data sources"):
-        run_extract([src], tmp_path / "stats.json")
-
-
-def test_run_extract_where_narrows_row_count_and_records_clause(tmp_path: Path):
+def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
     """End-to-end: stats.json reflects the FILTERED set, not the source set."""
     _write_csv(
         tmp_path / "events.csv",
-        # 8 rows total, 5 with ar > 2015
         "lopnr,ar,kommun\n"
         "1,2013,0114\n2,2014,0114\n3,2015,0115\n"
         "4,2016,0114\n5,2017,0115\n6,2018,0114\n7,2019,0115\n8,2020,0114\n",
     )
+    config = parse_config(
+        {
+            "version": 1,
+            "column_types": {
+                "events.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "ar": {"type": "numeric", "numeric_subtype": "integer"},
+                    "kommun": {"type": "categorical"},
+                }
+            },
+        }
+    )
     src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
-    out = tmp_path / "stats.json"
-    result = run_extract([src], out, seed=0)
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
 
     src_out = result["sources"][0]
     assert src_out["row_count"] == 5  # filtered, not 8
     assert src_out["source_detail"]["where"] == "ar > 2015"
-    # Classification should still work end-to-end through the derived table.
-    by_name = {c["column_name"]: c for c in src_out["columns"]}
-    assert by_name["lopnr"]["inferred_type"] == "id"
-    assert by_name["kommun"]["inferred_type"] == "categorical"
+
+
+def test_run_extract_typed_raises_when_no_data(tmp_path: Path):
+    config = parse_config({"version": 1, "column_types": {}})
+    src = file_source(str(tmp_path), include=["nonexistent.csv"])
+    with pytest.raises(RuntimeError, match="No data sources"):
+        run_extract_typed([src], tmp_path / "stats.json", config)
 
 
 # -- _shared_columns -----------------------------------------------------
@@ -149,8 +218,6 @@ def test_shared_columns_keeps_only_2plus_sources():
 
 
 def test_shared_columns_dedups_when_same_source_twice():
-    # Same source name appearing twice (rare but possible) shouldn't count
-    # as two for the 2+ rule.
     src_results = [
         {
             "source_name": "a",
@@ -164,121 +231,88 @@ def test_shared_columns_dedups_when_same_source_twice():
     assert _shared_columns(src_results) == []
 
 
-# -- discovery skeleton --------------------------------------------------
-
-
-def test_emit_sources_skeleton_for_file_source(tmp_path: Path):
-    _write_csv(tmp_path / "alpha.csv", "x\n1\n")
-    _write_csv(tmp_path / "beta.csv", "x\n2\n")
-    out_dir = tmp_path / "out"
-    src = file_source(str(tmp_path))
-    skel = emit_sources_skeleton([src], out_dir)
-    assert skel.exists()
-    text = skel.read_text(encoding="utf-8")
-    assert "SOURCES = [" in text
-    assert "file_source(" in text
-    assert "'alpha.csv'" in text
-    assert "'beta.csv'" in text
-    assert text.endswith("\n")
-
-
-def test_emit_sources_skeleton_handles_unknown_source(tmp_path: Path):
-    out_dir = tmp_path / "out"
-    skel = emit_sources_skeleton(["not a source"], out_dir)
-    assert "unknown source skipped" in skel.read_text(encoding="utf-8")
-
-
-# -- sidecar load / latest -----------------------------------------------
-
-
-def test_find_latest_sources_file_picks_lexicographic_max(tmp_path: Path):
-    (tmp_path / "mdw_sources_20260101_120000.py").write_text("SOURCES = []\n")
-    (tmp_path / "mdw_sources_20260427_103254.py").write_text("SOURCES = []\n")
-    latest = find_latest_sources_file(tmp_path)
-    assert latest is not None
-    assert latest.name == "mdw_sources_20260427_103254.py"
-
-
-def test_find_latest_sources_file_none_when_empty(tmp_path: Path):
-    assert find_latest_sources_file(tmp_path) is None
-
-
-def test_load_sources_file_executes_and_returns_sources(tmp_path: Path):
-    sidecar = tmp_path / "mdw_sources_20260427.py"
-    sidecar.write_text(
-        "SOURCES = [\n"
-        f'    file_source(path={str(tmp_path)!r}, include=("a.csv",)),\n'
-        "]\n",
-        encoding="utf-8",
-    )
-    out = load_sources_file(sidecar)
-    assert len(out) == 1
-    assert out[0].path == str(tmp_path)
-    assert out[0].include == ("a.csv",)
-
-
 # -- main() flow ---------------------------------------------------------
 
 
-def test_main_discovery_mode_writes_skeleton_and_returns_none(tmp_path: Path):
+def test_main_discover_writes_discover_json(tmp_path: Path):
+    _write_csv(tmp_path / "x.csv", "a,b\n1,2\n3,4\n")
+    src = file_source(str(tmp_path), include=["x.csv"])
+    out = main([src], output_dir=tmp_path, mode="discover")
+    assert out is not None
+    assert (tmp_path / "discover.json").exists()
+    assert out["contract_version"] == "discover-1.0.0"
+
+
+def test_main_extract_requires_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "x.csv", "a\n1\n")
-    out = main([file_source(str(tmp_path))], output_dir=tmp_path)
-    assert out is None
-    skeletons = list(tmp_path.glob("mdw_sources_*.py"))
-    assert len(skeletons) == 1
+    src = file_source(str(tmp_path), include=["x.csv"])
+    with pytest.raises(RuntimeError, match="mdw_config.json"):
+        main([src], output_dir=tmp_path, mode="extract")
 
 
-def test_main_loads_sidecar_and_runs_pipeline(tmp_path: Path):
-    _write_csv(tmp_path / "data.csv", "x\n1\n2\n3\n4\n5\n6\n")
-    sidecar = tmp_path / "mdw_sources_20260427_120000.py"
-    sidecar.write_text(
-        "SOURCES = [\n"
-        f'    file_source(path={str(tmp_path)!r}, include=("data.csv",)),\n'
-        "]\n",
+def test_main_extract_runs_typed_pipeline(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
+    )
+    (tmp_path / "mdw_config.json").write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "column_types": {
+                    "data.csv": {
+                        "lopnr": {"type": "id", "id_subtype": "integer"},
+                        "age": {"type": "numeric", "numeric_subtype": "integer"},
+                    }
+                },
+            }
+        ),
         encoding="utf-8",
     )
-    # Pass an empty in-script sources list -- sidecar overrides it.
-    result = main([], output_dir=tmp_path, seed=0)
-    assert result is not None
-    assert result["sources"][0]["source_name"] == "data.csv"
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main([src], output_dir=tmp_path, mode="extract", seed=0)
+    assert result["sources"][0]["row_count"] == 6
+    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
+    assert cols["age"]["inferred_type"] == "numeric"
+    assert cols["age"]["source_of_type"] == "override"
 
 
-def test_main_rejects_sidecar_with_discovery_source(tmp_path: Path):
-    sidecar = tmp_path / "mdw_sources_20260427_120000.py"
-    sidecar.write_text(
-        f"SOURCES = [file_source(path={str(tmp_path)!r})]\n",
-        encoding="utf-8",
-    )
-    with pytest.raises(RuntimeError, match="discovery-mode source"):
-        main([], output_dir=tmp_path)
+def test_main_rejects_unknown_mode(tmp_path: Path):
+    with pytest.raises(ValueError, match="must be 'discover' or 'extract'"):
+        main([], output_dir=tmp_path, mode="weird")
 
 
 # -- deterministic classification sample (#18) ---------------------------
 
 
-def _classify_with_seed(tmp_path: Path, csv_name: str, seed: int) -> dict[str, str]:
-    """Run extract on a fixture and return {column_name: inferred_type}."""
-    out = tmp_path / f"stats_{seed}.json"
-    src = file_source(str(tmp_path), include=[csv_name])
-    result = run_extract([src], out, seed=0, classifier_seed=seed)
-    src_out = result["sources"][0]
-    return {c["column_name"]: c["inferred_type"] for c in src_out["columns"]}
-
-
-def test_classifier_sample_is_deterministic_across_reruns(tmp_path: Path):
-    # 1500 rows so the 1000-row sample actually has to choose.
-    rows = ["mixed,kommun"]
-    for i in range(1, 1301):
-        rows.append(f"{i},0114")
-    for i in range(1301, 1501):
-        rows.append(f"x{i},0115")
-    _write_csv(tmp_path / "data.csv", "\n".join(rows) + "\n")
-
-    classifications_a = _classify_with_seed(tmp_path, "data.csv", seed=0)
-    classifications_b = _classify_with_seed(tmp_path, "data.csv", seed=0)
-    assert classifications_a == classifications_b, (
-        "same fixture + same seed must produce identical classifications"
+def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
     )
+    (tmp_path / "mdw_config.json").write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "column_types": {
+                    "data.csv": {
+                        "lopnr": {"type": "id"},
+                        "age": {"type": "numeric"},
+                    }
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    result = main(
+        [src],
+        output_dir=tmp_path,
+        mode="extract",
+        seed=0,
+        classifier_seed=42,
+    )
+    assert result["sources"][0]["row_count"] == 6
 
 
 def test_table_and_view_paths_produce_identical_stats(
@@ -292,72 +326,35 @@ def test_table_and_view_paths_produce_identical_stats(
         "1,25,0114,alice\n2,30,0114,bob\n3,42,0115,carol\n4,55,0114,dave\n"
         "5,29,0115,eve\n6,38,0114,frank\n7,47,0115,grace\n8,33,0114,heidi\n",
     )
-
+    config = parse_config(
+        {
+            "version": 1,
+            "column_types": {
+                "people.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "age": {"type": "numeric", "numeric_subtype": "integer"},
+                    "kommun": {"type": "categorical"},
+                    "name": {"type": "high_cardinality"},
+                }
+            },
+        }
+    )
     src = file_source(str(tmp_path), include=["people.csv"])
 
     monkeypatch.delenv("MDW_MEMORY_THRESHOLD_MB", raising=False)
-    table_path = tmp_path / "stats_table.json"
-    table_result = run_extract([src], table_path, seed=0)
+    table_result = run_extract_typed(
+        [src], tmp_path / "stats_table.json", config, seed=0
+    )
 
     monkeypatch.setenv("MDW_MEMORY_THRESHOLD_MB", "0")
-    view_path = tmp_path / "stats_view.json"
-    view_result = run_extract([src], view_path, seed=0)
+    view_result = run_extract_typed([src], tmp_path / "stats_view.json", config, seed=0)
 
     table_result.pop("generated_at", None)
     view_result.pop("generated_at", None)
     assert table_result == view_result
 
 
-def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
-    _write_csv(
-        tmp_path / "data.csv",
-        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
-    )
-    src = file_source(str(tmp_path), include=["data.csv"])
-    result = main([src], output_dir=tmp_path, seed=0, classifier_seed=42)
-    assert result is not None
-    assert result["sources"][0]["row_count"] == 6
-
-
 # -- mdw_config.json overrides (#19) -------------------------------------
-
-
-def _write_mdw_config(tmp_path: Path, payload: dict) -> None:
-    (tmp_path / "mdw_config.json").write_text(json.dumps(payload), encoding="utf-8")
-
-
-def test_extract_stamps_source_of_type_auto_without_config(tmp_path: Path):
-    _write_csv(
-        tmp_path / "data.csv",
-        "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
-    )
-    src = file_source(str(tmp_path), include=["data.csv"])
-    result = run_extract([src], tmp_path / "stats.json", seed=0)
-    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
-    assert all(c["source_of_type"] == "auto" for c in cols.values())
-
-
-def test_extract_honors_column_type_override(tmp_path: Path):
-    _write_csv(
-        tmp_path / "data.csv",
-        "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
-    )
-    _write_mdw_config(
-        tmp_path,
-        {
-            "version": 1,
-            "column_types": {
-                "data.csv": {"name": {"type": "categorical"}},
-            },
-        },
-    )
-    src = file_source(str(tmp_path), include=["data.csv"])
-    result = main([src], output_dir=tmp_path, seed=0)
-    assert result is not None
-    cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
-    assert cols["name"]["inferred_type"] == "categorical"
-    assert cols["name"]["source_of_type"] == "override"
-    assert cols["lopnr"]["source_of_type"] == "auto"
 
 
 def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
@@ -368,17 +365,16 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
         tmp_path / "data.csv",
         "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
     )
-    _write_mdw_config(
-        tmp_path,
+    config = parse_config(
         {
             "version": 1,
             "column_types": {
                 "data.csv": {
                     "name": {"type": "id", "id_subtype": "string"},
                     "lopnr": {"type": "id", "id_subtype": "integer"},
-                },
+                }
             },
-        },
+        }
     )
 
     sample_calls: list[str] = []
@@ -391,8 +387,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(extract, "_sample_values", spy)
 
     src = file_source(str(tmp_path), include=["data.csv"])
-    result = main([src], output_dir=tmp_path, seed=0)
-    assert result is not None
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
     cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
     assert cols["name"]["stats"]["id_subtype"] == "string"
     assert cols["lopnr"]["stats"]["id_subtype"] == "integer"
@@ -406,12 +401,16 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
         tmp_path / "data.csv",
         "lopnr,name\n1,a\n2,b\n3,c\n4,d\n5,e\n6,f\n",
     )
-    _write_mdw_config(
-        tmp_path,
+    config = parse_config(
         {
             "version": 1,
-            "column_types": {"data.csv": {"name": {"type": "id"}}},
-        },
+            "column_types": {
+                "data.csv": {
+                    "lopnr": {"type": "id"},
+                    "name": {"type": "id"},
+                }
+            },
+        }
     )
 
     sample_calls: list[str] = []
@@ -424,17 +423,47 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     monkeypatch.setattr(extract, "_sample_values", spy)
 
     src = file_source(str(tmp_path), include=["data.csv"])
-    main([src], output_dir=tmp_path, seed=0)
+    run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
     assert "name" in sample_calls
     assert "lopnr" in sample_calls
 
 
 def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "data.csv", "x\n1\n")
-    _write_mdw_config(
-        tmp_path,
-        {"version": 1, "column_types": {"data.csv": {"x": {"type": "blob"}}}},
+    (tmp_path / "mdw_config.json").write_text(
+        json.dumps(
+            {"version": 1, "column_types": {"data.csv": {"x": {"type": "blob"}}}}
+        ),
+        encoding="utf-8",
     )
     src = file_source(str(tmp_path), include=["data.csv"])
     with pytest.raises(ValueError, match="expected one of"):
-        main([src], output_dir=tmp_path, seed=0)
+        main([src], output_dir=tmp_path, mode="extract", seed=0)
+
+
+# -- process_handle auto-classify path (used by extract.run_extract_typed
+#    via require_typed=False indirectly; tested here in isolation) ------
+
+
+def test_process_handle_auto_classifies_when_config_is_none(tmp_path: Path):
+    import random as _r
+
+    _write_csv(
+        tmp_path / "data.csv",
+        "lopnr,age,kommun\n"
+        "1,25,0114\n2,30,0114\n3,42,0115\n4,55,0114\n"
+        "5,29,0115\n6,38,0114\n7,47,0115\n8,33,0114\n",
+    )
+    src = file_source(str(tmp_path), include=["data.csv"])
+    rng = _r.Random(0)
+    # Iterate within the generator's lifetime: the file source closes its
+    # owned DuckDB connection when the iterator exhausts.
+    out = None
+    for handle in iter_source(src):
+        out = process_handle(handle, rng, config=None, require_typed=False)
+    assert out is not None
+    by_name = {c["column_name"]: c for c in out["columns"]}
+    assert by_name["lopnr"]["inferred_type"] == "id"
+    assert by_name["age"]["inferred_type"] == "numeric"
+    assert by_name["kommun"]["inferred_type"] == "categorical"
+    assert all(c["source_of_type"] == "auto" for c in by_name.values())

@@ -1,21 +1,21 @@
-"""Entry point for the on-MONA extract step.
+"""Entry points for the on-MONA discover and extract steps.
 
-Drives the pipeline:
+Two modes, one bundle:
 
-    SOURCES = [...]                            (declared by the user)
-        -> per source: iterate :class:`SourceHandle`s (one per table)
-        -> per handle: COUNT(*), list columns, pre-classify, summarise
-        -> aggregate into ``stats.json``
-
-Discovery: if any source has no filtering info, the script writes a
-sidecar ``mdw_sources_<TS>.py`` listing everything discoverable and
-exits before running any aggregation. The user narrows the file in
-place; the next run picks up the latest sidecar automatically (it
-overrides the in-script ``SOURCES``).
+- ``MODE = "discover"`` -- metadata-only walk over ``SOURCES``. SQL
+  sources read ``INFORMATION_SCHEMA.COLUMNS`` and ``COUNT(*)``; file
+  sources use DuckDB ``DESCRIBE`` and ``COUNT(*)``. No samples, no
+  distinct counts. Output: ``discover.json``. The user copies it
+  off MONA and runs ``mock-data-wizard configure`` locally to author
+  ``mdw_config.json``.
+- ``MODE = "extract"`` -- typed aggregation. Reads ``mdw_config.json``
+  uploaded next to the bundle, requires every column to have a type
+  override, and produces ``stats.json``. No data-driven classifier
+  pass: the configured type drives the per-column SQL.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression and noise live in :mod:`summarize`; this module just
-orchestrates.
+orchestrates and routes the export through :func:`scan.write_export`.
 """
 
 from __future__ import annotations
@@ -31,26 +31,14 @@ from typing import Any, Iterable, Sequence
 from .classify import classify_column
 from .config import MDWConfig, load_config
 from .scan import write_export
-from .sources import (
-    FileSource,
-    SourceHandle,
-    SqlSource,
-    _is_archived,
-    file_source,
-    iter_source,
-    list_files_in_source,
-    list_sql_views,
-    needs_discovery,
-    sql_connect,
-    sql_source,
-    sql_table,
-)
+from .sources import SourceHandle, iter_source
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 from .summarize import small_pop_threshold, summarize_column
 
 log = logging.getLogger("mdw.extract")
 
 CONTRACT_VERSION = "2.0.0"
+DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
 SAMPLE_SIZE = 1000
 
 
@@ -79,6 +67,66 @@ def _list_columns(conn: Any, table: str, dialect: str) -> list[str]:
         return [d[0] for d in cur.description]
     finally:
         cur.close()
+
+
+def _describe_columns_sql(conn: Any, qualified: str) -> list[dict[str, Any]]:
+    """Pull column metadata for a SQL table from INFORMATION_SCHEMA.
+
+    ``qualified`` is ``schema.name`` (unquoted). The query targets the
+    server's catalog, not the table itself, so it works against views
+    we don't have row-level access to.
+    """
+    schema, _, name = qualified.partition(".")
+    if not name:
+        # Bare table name (no schema) -- match anywhere.
+        cur = conn.cursor()
+        try:
+            cur.execute(
+                "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
+                "FROM INFORMATION_SCHEMA.COLUMNS "
+                "WHERE TABLE_NAME = ? "
+                "ORDER BY ORDINAL_POSITION",
+                (qualified,),
+            )
+            rows = cur.fetchall()
+        finally:
+            cur.close()
+    else:
+        cur = conn.cursor()
+        try:
+            cur.execute(
+                "SELECT COLUMN_NAME, DATA_TYPE, IS_NULLABLE "
+                "FROM INFORMATION_SCHEMA.COLUMNS "
+                "WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ? "
+                "ORDER BY ORDINAL_POSITION",
+                (schema, name),
+            )
+            rows = cur.fetchall()
+        finally:
+            cur.close()
+    return [
+        {"name": r[0], "sql_type": r[1], "nullable": str(r[2]).upper() == "YES"}
+        for r in rows
+    ]
+
+
+def _describe_columns_duckdb(conn: Any, table: str) -> list[dict[str, Any]]:
+    """Pull column metadata from DuckDB ``DESCRIBE``.
+
+    Works on any FROM-able expression (registered view, registered table,
+    or a ``read_csv_auto(...)`` call). DESCRIBE returns
+    ``column_name, column_type, null, key, default, extra``.
+    """
+    cur = conn.cursor()
+    try:
+        cur.execute(f"DESCRIBE SELECT * FROM {table} LIMIT 0")
+        rows = cur.fetchall()
+    finally:
+        cur.close()
+    return [
+        {"name": r[0], "sql_type": r[1], "nullable": str(r[2]).upper() == "YES"}
+        for r in rows
+    ]
 
 
 def _count_distinct_and_nulls(
@@ -154,7 +202,7 @@ def _sample_values(
         cur.close()
 
 
-# -- Per-handle pipeline ---------------------------------------------------
+# -- Per-handle pipeline (extract mode) -----------------------------------
 
 
 def process_handle(
@@ -163,8 +211,14 @@ def process_handle(
     *,
     classifier_seed: int = 0,
     config: MDWConfig | None = None,
+    require_typed: bool = False,
 ) -> dict[str, Any]:
-    """Process one :class:`SourceHandle` into a source-level stats dict."""
+    """Process one :class:`SourceHandle` into a source-level stats dict.
+
+    ``require_typed=True`` (extract mode) errors when a column has no
+    override in ``config`` -- the classifier path is gone in that mode.
+    ``False`` (legacy / fallback) lets ``classify_column`` decide.
+    """
     log.info("[%s] counting rows...", handle.source_name)
     _flush_log_handlers()
     t0 = time.monotonic()
@@ -186,7 +240,7 @@ def process_handle(
         )
 
     cols = _list_columns(handle.conn, handle.table, handle.dialect)
-    log.info("[%s] %d columns to classify", handle.source_name, len(cols))
+    log.info("[%s] %d columns to summarise", handle.source_name, len(cols))
     _flush_log_handlers()
 
     columns_out: list[dict[str, Any]] = []
@@ -197,6 +251,12 @@ def process_handle(
         )
 
         override = config.lookup_type(handle.source_name, col) if config else None
+        if require_typed and override is None:
+            raise RuntimeError(
+                f"extract mode: column {handle.source_name!r}.{col!r} has no "
+                f"type override in mdw_config.json. Re-run discover and "
+                f"configure to refresh it, or add an entry by hand."
+            )
         options = config.lookup_options(handle.source_name, col) if config else {}
         # Skip the per-column sample query when an inline hint pins the
         # subtype/format -- nothing downstream consumes the sample then.
@@ -285,31 +345,29 @@ def _shared_columns(source_results: Sequence[dict[str, Any]]) -> list[dict[str, 
     ]
 
 
-# -- Top-level orchestration ----------------------------------------------
+# -- Top-level orchestration: extract mode --------------------------------
 
 
-def run_extract(
+def run_extract_typed(
     sources: Iterable[Any],
     output_path: Path,
+    config: MDWConfig,
     *,
     seed: int | None = None,
     classifier_seed: int = 0,
-    config: MDWConfig | None = None,
 ) -> dict[str, Any]:
-    """Run the full extract pipeline and write ``output_path``.
+    """Run the typed extract pipeline and write ``stats.json``.
 
-    Returns the parsed ``stats.json`` dict (callers can also just read
-    the file).
-
-    ``seed`` controls Python-side noise injection in :mod:`summarize`.
-    ``classifier_seed`` controls the per-column classification sample
-    (DuckDB ``REPEATABLE`` reservoir); same data + same seed always
-    classifies the same way. ``config`` carries optional per-column
-    type overrides loaded from ``mdw_config.json``.
+    Every column must carry a type override in ``config`` -- this mode
+    has no classifier fallback. Run ``discover`` + ``configure`` first
+    to author the file. ``seed`` controls Python-side noise injection;
+    ``classifier_seed`` controls the per-column sample for subtype /
+    date-format detection (still used when the override is present
+    without an inline hint).
     """
     rng = random.Random(seed)
     sources = list(sources)
-    log.info("run_extract: %d source declaration(s)", len(sources))
+    log.info("run_extract_typed: %d source declaration(s)", len(sources))
     _flush_log_handlers()
     source_results: list[dict[str, Any]] = []
     for src_idx, src in enumerate(sources, 1):
@@ -322,6 +380,7 @@ def run_extract(
                     rng,
                     classifier_seed=classifier_seed,
                     config=config,
+                    require_typed=True,
                 )
             )
             log.info(
@@ -348,100 +407,87 @@ def run_extract(
     return result
 
 
-# -- Discovery mode --------------------------------------------------------
+# -- Top-level orchestration: discover mode -------------------------------
 
 
-def _format_file_where_arg(where: Any) -> str:
-    if where is None:
-        return ""
-    return f"        where={where!r},\n"
+def _discover_handle(handle: SourceHandle) -> dict[str, Any]:
+    """Metadata-only walk for one source handle.
 
-
-def _format_file_skeleton(src: FileSource) -> str:
-    files = list_files_in_source(src)
-    basenames = sorted({f.name for f in files})
-    if not basenames:
-        return f"    # file_source(path={src.path!r}) -- no matching files"
-    inc_lines = ",\n".join(f"            {b!r}" for b in basenames)
-    return (
-        f"    file_source(\n"
-        f"        path={src.path!r},\n"
-        f"        include=(\n{inc_lines},\n        ),\n"
-        f"{_format_file_where_arg(src.where)}"
-        f"    ),"
+    Pulls ``COUNT(*)`` (honoring any ``where`` clause on the source) and
+    column metadata from the catalog, never the data. No samples, no
+    distinct counts.
+    """
+    log.info("[%s] discover: counting rows...", handle.source_name)
+    _flush_log_handlers()
+    t0 = time.monotonic()
+    n_rows = _count_rows(handle.conn, handle.table)
+    log.info(
+        "[%s] %d rows (%.1fs)",
+        handle.source_name,
+        n_rows,
+        time.monotonic() - t0,
     )
-
-
-def _format_sql_skeleton(src: SqlSource) -> str:
-    try:
-        conn = sql_connect(src)
-        try:
-            tables = list_sql_views(conn, src)
-        finally:
-            conn.close()
-    except Exception as e:
-        return (
-            f"    # sql_source(dsn={src.dsn!r}) discovery failed: "
-            f"{type(e).__name__}: {e}"
-        )
-    if src.exclude_archived:
-        tables = [t for t in tables if not _is_archived(t)]
-    if not tables:
-        return f"    # sql_source(dsn={src.dsn!r}) -- no matching tables"
-    # Plain strings keep the skeleton compact. To attach a WHERE filter,
-    # the user wraps a row in sql_table(..., where=...) after narrowing.
-    tbl_lines = ",\n".join(f"            {t!r}" for t in tables)
-    return (
-        f"    sql_source(\n"
-        f"        dsn={src.dsn!r},\n"
-        f"        tables=(\n{tbl_lines},\n        ),\n"
-        f"        # Attach a per-table cohort filter by wrapping a row, e.g.:\n"
-        f"        #   sql_table('dbo.persons', where='AR > 2015'),\n"
-        f"    ),"
-    )
-
-
-def emit_sources_skeleton(sources: Iterable[Any], output_dir: Path) -> Path:
-    """Write a ``mdw_sources_<TS>.py`` skeleton next to the script."""
-    output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    output_path = output_dir / f"mdw_sources_{timestamp}.py"
-
-    parts = [
-        "# Auto-generated by mock-data-wizard discovery.",
-        "# Edit this file to narrow what gets aggregated, then re-run.",
-        "# Delete this file (and any sibling mdw_sources_*.py) to re-discover.",
-        "",
-        "SOURCES = [",
-    ]
-    for src in sources:
-        if isinstance(src, FileSource):
-            parts.append(_format_file_skeleton(src))
-        elif isinstance(src, SqlSource):
-            parts.append(_format_sql_skeleton(src))
-        else:
-            parts.append(f"    # unknown source skipped: {src!r}")
-    parts.append("]")
-    output_path.write_text("\n".join(parts) + "\n", encoding="utf-8")
-    return output_path
-
-
-def find_latest_sources_file(directory: Path) -> Path | None:
-    candidates = sorted(Path(directory).glob("mdw_sources_*.py"))
-    return candidates[-1] if candidates else None
-
-
-def load_sources_file(path: Path) -> list[Any]:
-    """Exec a sidecar ``mdw_sources_*.py`` and return its ``SOURCES``."""
-    code = Path(path).read_text(encoding="utf-8")
-    ns: dict[str, Any] = {
-        "file_source": file_source,
-        "sql_source": sql_source,
-        "sql_table": sql_table,
+    if handle.source_type == "sql":
+        qualified = handle.source_detail.get("table")
+        if not isinstance(qualified, str):
+            raise RuntimeError(
+                f"sql handle {handle.source_name!r} has no source_detail['table']"
+            )
+        columns = _describe_columns_sql(handle.conn, qualified)
+    else:
+        columns = _describe_columns_duckdb(handle.conn, handle.table)
+    log.info("[%s] discover: %d columns", handle.source_name, len(columns))
+    _flush_log_handlers()
+    return {
+        "source_name": handle.source_name,
+        "source_type": handle.source_type,
+        "source_detail": handle.source_detail,
+        "row_count": n_rows,
+        "columns": columns,
     }
-    exec(compile(code, str(path), "exec"), ns)
-    return list(ns.get("SOURCES", []))
+
+
+def run_discover(
+    sources: Iterable[Any],
+    output_path: Path,
+) -> dict[str, Any]:
+    """Walk ``sources`` for metadata only and write ``discover.json``.
+
+    SQL sources without ``tables=`` / ``pattern=`` / ``all=True`` are
+    treated as "list everything reachable in this DSN" -- discover is
+    the place where you don't yet know what to narrow to. Extract mode
+    keeps the strict default.
+    """
+    sources = list(sources)
+    log.info("run_discover: %d source declaration(s)", len(sources))
+    _flush_log_handlers()
+    source_results: list[dict[str, Any]] = []
+    for src_idx, src in enumerate(sources, 1):
+        log.info("source %d/%d: %r", src_idx, len(sources), src)
+        _flush_log_handlers()
+        for handle in iter_source(src, permissive=True):
+            source_results.append(_discover_handle(handle))
+            log.info(
+                "source %d/%d: handle done (%d total handle(s) so far)",
+                src_idx,
+                len(sources),
+                len(source_results),
+            )
+            _flush_log_handlers()
+
+    if not source_results:
+        raise RuntimeError(
+            "No data sources produced any tables. Check your SOURCES block."
+        )
+
+    result = {
+        "contract_version": DISCOVER_CONTRACT_VERSION,
+        "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "sources": source_results,
+    }
+    write_export(Path(output_path), result)
+    log.info("discover.json written: %s", output_path)
+    return result
 
 
 # -- Public entry point ----------------------------------------------------
@@ -452,65 +498,62 @@ def main(
     output_dir: Path,
     output_path: Path | None = None,
     *,
+    mode: str = "discover",
     seed: int | None = None,
     classifier_seed: int = 0,
-) -> dict[str, Any] | None:
-    """Top-level orchestration.
+) -> dict[str, Any]:
+    """Top-level orchestration. Dispatches on ``mode``.
 
     Args:
-        sources: In-script SOURCES (used unless a sidecar overrides).
-        output_dir: Directory for ``stats.json`` and sidecar files.
-        output_path: Override path for ``stats.json``.
-        seed: RNG seed for reproducible noise (omit for non-determinism).
-        classifier_seed: Seed for the per-column classification sample.
-            Same data + same seed always produces the same classifications;
-            varying the seed is permitted to differ.
+        sources: ``SOURCES`` returned from ``configure()``.
+        output_dir: Directory for the output file (and for reading
+            ``mdw_config.json`` in extract mode).
+        output_path: Override the output filename. Defaults to
+            ``discover.json`` (discover mode) or ``stats.json``
+            (extract mode).
+        mode: ``"discover"`` for the metadata-only walk that produces
+            ``discover.json``, or ``"extract"`` for the typed pipeline
+            that produces ``stats.json``. Extract mode requires a
+            ``mdw_config.json`` next to ``output_dir``.
+        seed: RNG seed for reproducible noise (extract only).
+        classifier_seed: Seed for the per-column classification sample
+            (extract only).
 
-    Loads ``mdw_config.json`` from ``output_dir`` if present (per-column
-    type and option overrides). Strict on schema violations -- typos in
-    the config block extract rather than getting silently ignored.
-
-    Returns the stats dict on a successful run, or ``None`` if discovery
-    mode wrote a sidecar and exited.
+    Returns the result dict.
     """
+    if mode not in ("discover", "extract"):
+        raise ValueError(f"mode must be 'discover' or 'extract', got {mode!r}")
     sources = list(sources)
     output_dir = Path(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_path = (
-        Path(output_path) if output_path is not None else output_dir / "stats.json"
-    )
 
-    sidecar = find_latest_sources_file(output_dir)
-    if sidecar is not None:
-        log.info("loading SOURCES override from %s", sidecar)
-        sources = load_sources_file(sidecar)
-        if any(needs_discovery(s) for s in sources):
-            raise RuntimeError(
-                f"Sidecar {sidecar} still has discovery-mode source(s). "
-                "Narrow with include/tables/pattern, set all=True, or "
-                "delete the file to re-discover."
-            )
-    elif any(needs_discovery(s) for s in sources):
-        log.info("discovery mode: scanning %d source(s)", len(sources))
-        path = emit_sources_skeleton(sources, output_dir)
-        log.info(
-            "wrote %s -- edit to narrow scope, then re-run. No stats.json written.",
-            path,
+    if mode == "discover":
+        path = (
+            Path(output_path)
+            if output_path is not None
+            else output_dir / "discover.json"
         )
-        return None
+        return run_discover(sources, path)
 
     config = load_config(output_dir)
-    if config is not None:
-        log.info(
-            "loaded mdw_config.json: %d type override(s), %d option override(s)",
-            sum(len(v) for v in config.column_types.values()),
-            sum(len(v) for v in config.column_options.values()),
+    if config is None:
+        raise RuntimeError(
+            f"extract mode requires mdw_config.json next to the bundle "
+            f"({output_dir}/mdw_config.json). Run mode='discover' first, "
+            f"then mock-data-wizard configure on the resulting "
+            f"discover.json."
         )
+    log.info(
+        "loaded mdw_config.json: %d type override(s), %d option override(s)",
+        sum(len(v) for v in config.column_types.values()),
+        sum(len(v) for v in config.column_options.values()),
+    )
 
-    return run_extract(
+    path = Path(output_path) if output_path is not None else output_dir / "stats.json"
+    return run_extract_typed(
         sources,
-        output_path,
+        path,
+        config,
         seed=seed,
         classifier_seed=classifier_seed,
-        config=config,
     )

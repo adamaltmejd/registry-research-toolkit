@@ -4,17 +4,36 @@ Design rationale and constraints. For usage, see `mock-data-wizard --help`.
 
 ## Workflow
 
-1. `build-bundle` runs locally: amalgamates the runtime modules into a
-   single `mock_data_wizard_extract.py` for MONA upload.
-2. The bundle runs on MONA: aggregates configured sources to `stats.json`.
-3. User exports `stats.json` from MONA.
-4. `generate` runs locally: produces mock CSVs from `stats.json`.
+The bundle has two modes (`MODE = "discover"` / `"extract"`) and the
+end-to-end loop crosses the MONA boundary three times:
 
-The Python package itself ships to MONA and runs as the extract step.
-This is possible because the MONA batch client has Python pre-installed
-(see "MONA Python runtime" below). The earlier R-script-generation
-approach is preserved in git history (commits up to and including the
-streaming-iterator refactor), but the runtime is Python going forward.
+1. `mock-data-wizard build-bundle` (local) — amalgamates the runtime
+   modules into a single `mock_data_wizard_extract.py` for MONA upload.
+2. **Discover** on MONA. Edit `configure()` in the bundle, leave
+   `MODE = "discover"`, upload, and run:
+   `python mock_data_wizard_extract.py` — writes `discover.json`
+   (metadata only: column names, SQL types, row counts; no values, no
+   distinct counts, no samples).
+3. `mock-data-wizard configure discover.json` (local) — reads
+   `discover.json`, applies the name-pattern classifier (`lopnr → id`,
+   `*Datum* → date`, `*Belopp* → numeric`, …), defaults the rest to
+   `high_cardinality`, and writes `mdw_config.json`. The user reviews
+   and edits this file by hand before re-uploading.
+4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
+   `mdw_config.json` next to it, re-run on MONA — writes `stats.json`
+   (only aggregate statistics; the configured types drive per-column
+   SQL with no data-driven classifier pass).
+5. `mock-data-wizard generate` (local) — produces mock CSVs from
+   `stats.json`.
+
+Why three trips. Discover is metadata-only and PII-safe by
+construction; running it first means the per-column type assignment
+happens locally where regmeta and human review are available. Extract
+is the slow part (full-population aggregation) — splitting it out
+means each iteration of the type config doesn't pay 20-hour-class
+re-runs to fix a misclassified column. The earlier R-script-generation
+approach is preserved in git history; the runtime is Python going
+forward.
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
@@ -127,34 +146,49 @@ closes it before the next fetch. Lazy-by-design: peak memory stays
 near a single table rather than the sum of all tables in the source,
 which matters on MONA projects with hundreds of SQL views.
 
-### Discovery mode
+### Discover mode (`MODE = "discover"`)
 
-If any source has no filtering info (`file_source` with no include/
-exclude/pattern, or `sql_source` with no tables/pattern/queries), the
-bundle writes a timestamped file `mdw_sources_<YYYYMMDD_HHMMSS>.py`
-alongside itself and exits without writing `stats.json`. The sidecar
-contains a `SOURCES = [...]` list with every discoverable item.
+The bundle's first MONA trip. SQL sources without `tables=`, `pattern=`,
+or `all=True` are listed permissively here — the user typically declares
+`sql_source(dsn="P1105")` and lets discover enumerate every non-archived
+view in the DSN. File sources walk every CSV that matches the default
+pattern. For each table/file, the discoverer pulls `COUNT(*)` plus
+column metadata from `INFORMATION_SCHEMA.COLUMNS` (SQL) or DuckDB
+`DESCRIBE` (files). No row-level data is read.
 
-Users who know up-front that they want everything can opt out of
-discovery with `all=True` on either constructor: `file_source(path,
-all=True)` processes every matching file in `path`; `sql_source(dsn,
-all=True)` discovers all non-archived views and processes each. The
-flag keeps `configure()` compact compared to a giant `include=(...)`
-tuple.
+Output is `discover.json`:
 
-On the next run, the bundle automatically loads the latest
-`mdw_sources_*.py` sidecar (its `SOURCES` overrides whatever
-`configure()` returns) and processes normally. The user narrows the
-list by editing the sidecar directly — no copy-paste back into
-`configure()`. Deleting the sidecar(s) triggers a fresh discovery on
-the next run. If the loaded sidecar is still in a discovery-triggering
-state (the user ran discovery but forgot to narrow a source), the
-bundle errors with a message pointing at the file rather than silently
-overwriting it.
+```json
+{
+  "contract_version": "discover-1.0.0",
+  "sources": [
+    {
+      "source_name": "lisa_2018",
+      "source_type": "sql",
+      "source_detail": {"dsn": "P1105", "table": "dbo.lisa_2018"},
+      "row_count": 8492768,
+      "columns": [
+        {"name": "P1105_LopNr_PersonNr", "sql_type": "varchar", "nullable": false},
+        {"name": "Lan", "sql_type": "char", "nullable": true}
+      ]
+    }
+  ]
+}
+```
 
-Discovery failures are tolerated: a `sql_source` pointed at a DSN that
-doesn't exist on a given project just logs `[sql] discovery failed`
-and the other sources continue.
+Discover passes through the same `scan.write_export` PII scanner as
+`stats.json` — column names and `sql_type` strings are unlikely to
+contain personnummer, but defense-in-depth is cheap.
+
+### Extract mode (`MODE = "extract"`)
+
+The bundle's second MONA trip. Requires `mdw_config.json` next to
+the bundle. Source filtering is **strict** here — `sql_source` must
+declare `tables=`, `pattern=`, or `all=True`; the permissive
+unfiltered mode is discover-only. Every column the source yields must
+have a type override in `mdw_config.json`; an unconfigured column
+errors out (it would have to fall back to a data-driven classifier
+pass, which this mode explicitly does not have).
 
 ### Cohort filtering with `where`
 
@@ -194,12 +228,12 @@ The clause is recorded in `source_detail.where` in `stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
-### Per-column type overrides via `mdw_config.json`
+### Per-column type config via `mdw_config.json`
 
-Place a `mdw_config.json` next to the bundle's `stats.json` output to
-override the classifier on specific columns. The bundle reads it at
-`main()` startup; absence is fine, presence is strict (typos error
-out instead of getting silently dropped).
+Authored by `mock-data-wizard configure` from a `discover.json` and
+uploaded next to the bundle. Extract mode is strict: every column on
+every source must carry a type entry, the schema is validated on load,
+and typos error out instead of getting silently dropped.
 
 ```json
 {
@@ -233,9 +267,9 @@ out instead of getting silently dropped).
   type. When *any* inline hint is supplied, the bundle skips the
   per-column sample query for that column entirely — that is the
   perf win the override is for.
-- Each output column carries `source_of_type: "auto"` (classifier)
-  or `"override"` (`mdw_config.json` win) so downstream consumers can
-  distinguish.
+- Each output column carries `source_of_type: "override"` (the
+  expected case in extract mode); the legacy `"auto"` value is
+  reserved for tests that go through the classifier path directly.
 - `column_options` is a separate namespace reserved for non-type
   overrides (e.g. `suppress_k` for disclosure-control hardening).
   Validated here; consumed in `summarize`. Each option key is
@@ -321,13 +355,14 @@ that buys nothing because the sample is already on the wire.
 ### Pre-export PII scanner
 
 `scan.write_export(path, payload)` is the *only* code path that writes
-files leaving the bundle's `output_dir` (`stats.json` today,
-`discover.json` once #21 lands; `mdw_config.json` is an *input* and
-isn't covered). It is defense-in-depth on top of the per-type branches
-in `summarize.py`, which already only emit aggregates by construction.
-The scanner exists for the case where a misclassified column (e.g.
-`FelPersonNr` flickering into `categorical`) would route raw values
-into a frequency table.
+files leaving the bundle's `output_dir`: `stats.json` (extract mode)
+and `discover.json` (discover mode) both go through it.
+`mdw_config.json` is an *input* and isn't covered by this scanner.
+The scanner is defense-in-depth on top of the per-type branches in
+`summarize.py`, which already only emit aggregates by construction.
+It exists for the case where a misclassified column (e.g.
+`FelPersonNr` flickering into `categorical` in tests / dev), would
+route raw values into a frequency table.
 
 Patterns applied (compiled at import):
 
