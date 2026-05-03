@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 from .classify import classify_column
+from .config import MDWConfig, load_config
 from .sources import (
     FileSource,
     SourceHandle,
@@ -80,36 +81,46 @@ def _list_columns(conn: Any, table: str, dialect: str) -> list[str]:
         cur.close()
 
 
-def _pre_classify(
-    conn: Any,
-    table: str,
-    col: str,
-    dialect: str,
-    sample_n: int = SAMPLE_SIZE,
-    seed: int = 0,
-) -> tuple[int, int, list[Any]]:
-    """Return ``(n_distinct, null_count, sample_values)`` for one column.
+def _count_distinct_and_nulls(
+    conn: Any, table: str, col: str, dialect: str
+) -> tuple[int, int]:
+    """Return ``(n_distinct, null_count)`` for one column.
 
-    The sample is deterministic across reruns for a given (data, seed):
-    DuckDB uses a seeded reservoir sample; MSSQL orders by a content
-    hash of the column value (the seed is unused on that branch -- the
-    hash provides stable order across same-shape sibling tables).
+    Always called -- both counts land in ``stats.json`` and are not
+    derivable from a type override.
     """
     qcol = quote_ident(col, dialect)
-    counts_sql = (
+    sql = (
         f"SELECT COUNT(DISTINCT {qcol}) AS n_distinct, "
         f"SUM(CASE WHEN {qcol} IS NULL THEN 1 ELSE 0 END) AS null_count "
         f"FROM {table}"
     )
     cur = conn.cursor()
     try:
-        cur.execute(counts_sql)
+        cur.execute(sql)
         row = cur.fetchone()
-        n_distinct = int(row[0] or 0)
-        null_count = int(row[1] or 0)
+        return int(row[0] or 0), int(row[1] or 0)
     finally:
         cur.close()
 
+
+def _sample_values(
+    conn: Any,
+    table: str,
+    col: str,
+    dialect: str,
+    sample_n: int = SAMPLE_SIZE,
+    seed: int = 0,
+) -> list[Any]:
+    """Return a deterministic sample of non-null values for one column.
+
+    Same data + same seed yields the same sample. DuckDB uses a seeded
+    reservoir sample; MSSQL orders by a content hash of the column
+    value so sibling tables with the same shape sample the same rows
+    (the seed has no effect on the MSSQL branch -- the hash is the
+    determinism source).
+    """
+    qcol = quote_ident(col, dialect)
     if dialect == DUCKDB:
         # `reservoir` is required: bare `USING SAMPLE N ROWS REPEATABLE (s)`
         # errors out in current DuckDB.
@@ -120,8 +131,7 @@ def _pre_classify(
     else:
         # SQL Server's TOP N without ORDER BY returns scan-order rows --
         # stable within a session on a heap, but not across reruns or
-        # across same-shape sibling tables. Hashing the value gives a
-        # content-addressed order independent of physical layout.
+        # across same-shape sibling tables.
         sample_sql = (
             f"SELECT TOP {sample_n} {qcol} FROM {table} "
             f"WHERE {qcol} IS NOT NULL "
@@ -130,11 +140,9 @@ def _pre_classify(
     cur = conn.cursor()
     try:
         cur.execute(sample_sql)
-        sample = [r[0] for r in cur.fetchall()]
+        return [r[0] for r in cur.fetchall()]
     finally:
         cur.close()
-
-    return n_distinct, null_count, sample
 
 
 # -- Per-handle pipeline ---------------------------------------------------
@@ -145,6 +153,7 @@ def process_handle(
     rng: random.Random,
     *,
     classifier_seed: int = 0,
+    config: MDWConfig | None = None,
 ) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict."""
     log.info("[%s] counting rows...", handle.source_name)
@@ -174,10 +183,39 @@ def process_handle(
     columns_out: list[dict[str, Any]] = []
     for i, col in enumerate(cols, 1):
         t_col = time.monotonic()
-        n_distinct, null_count, sample = _pre_classify(
-            handle.conn, handle.table, col, handle.dialect, seed=classifier_seed
+        n_distinct, null_count = _count_distinct_and_nulls(
+            handle.conn, handle.table, col, handle.dialect
         )
-        col_type = classify_column(col, n_rows, n_distinct, sample)
+
+        override = config.lookup_type(handle.source_name, col) if config else None
+        options = config.lookup_options(handle.source_name, col) if config else {}
+        if override is not None:
+            col_type = override.type
+            source_of_type = "override"
+            # Inline subtype/format hint -> sample is unused downstream;
+            # skip the per-column scan entirely.
+            sample: list[Any] = (
+                []
+                if override.has_inline_hint()
+                else _sample_values(
+                    handle.conn,
+                    handle.table,
+                    col,
+                    handle.dialect,
+                    seed=classifier_seed,
+                )
+            )
+        else:
+            sample = _sample_values(
+                handle.conn,
+                handle.table,
+                col,
+                handle.dialect,
+                seed=classifier_seed,
+            )
+            col_type = classify_column(col, n_rows, n_distinct, sample)
+            source_of_type = "auto"
+
         columns_out.append(
             summarize_column(
                 handle.conn,
@@ -190,15 +228,21 @@ def process_handle(
                 sample=sample,
                 dialect=handle.dialect,
                 rng=rng,
+                source_of_type=source_of_type,
+                id_subtype=override.id_subtype if override else None,
+                numeric_subtype=override.numeric_subtype if override else None,
+                date_format=override.date_format if override else None,
+                options=options,
             )
         )
         log.debug(
-            "[%s] col %d/%d %s -> %s (%.1fs)",
+            "[%s] col %d/%d %s -> %s (%s) (%.1fs)",
             handle.source_name,
             i,
             len(cols),
             col,
             col_type,
+            source_of_type,
             time.monotonic() - t_col,
         )
         _flush_log_handlers()
@@ -252,6 +296,7 @@ def run_extract(
     *,
     seed: int | None = None,
     classifier_seed: int = 0,
+    config: MDWConfig | None = None,
 ) -> dict[str, Any]:
     """Run the full extract pipeline and write ``output_path``.
 
@@ -261,7 +306,8 @@ def run_extract(
     ``seed`` controls Python-side noise injection in :mod:`summarize`.
     ``classifier_seed`` controls the per-column classification sample
     (DuckDB ``REPEATABLE`` reservoir); same data + same seed always
-    classifies the same way.
+    classifies the same way. ``config`` carries optional per-column
+    type overrides loaded from ``mdw_config.json``.
     """
     rng = random.Random(seed)
     sources = list(sources)
@@ -273,7 +319,12 @@ def run_extract(
         _flush_log_handlers()
         for handle in iter_source(src):
             source_results.append(
-                process_handle(handle, rng, classifier_seed=classifier_seed)
+                process_handle(
+                    handle,
+                    rng,
+                    classifier_seed=classifier_seed,
+                    config=config,
+                )
             )
             log.info(
                 "source %d/%d: handle done (%d total handle(s) so far)",
@@ -420,6 +471,10 @@ def main(
             Same data + same seed always produces the same classifications;
             varying the seed is permitted to differ.
 
+    Loads ``mdw_config.json`` from ``output_dir`` if present (per-column
+    type and option overrides). Strict on schema violations -- typos in
+    the config block extract rather than getting silently ignored.
+
     Returns the stats dict on a successful run, or ``None`` if discovery
     mode wrote a sidecar and exited.
     """
@@ -449,4 +504,18 @@ def main(
         )
         return None
 
-    return run_extract(sources, output_path, seed=seed, classifier_seed=classifier_seed)
+    config = load_config(output_dir)
+    if config is not None:
+        log.info(
+            "loaded mdw_config.json: %d type override(s), %d option override(s)",
+            sum(len(v) for v in config.column_types.values()),
+            sum(len(v) for v in config.column_options.values()),
+        )
+
+    return run_extract(
+        sources,
+        output_path,
+        seed=seed,
+        classifier_seed=classifier_seed,
+        config=config,
+    )

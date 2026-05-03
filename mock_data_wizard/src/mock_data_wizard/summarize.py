@@ -124,6 +124,12 @@ def summarize_column(
     sample: Sequence[Any],
     dialect: str,
     rng: random.Random | None = None,
+    *,
+    source_of_type: str = "auto",
+    id_subtype: str | None = None,
+    numeric_subtype: str | None = None,
+    date_format: str | None = None,
+    options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compute the per-column ``stats.json`` fragment for one column.
 
@@ -137,15 +143,27 @@ def summarize_column(
             same scan that produced the sample) so we don't pay for them
             twice.
         sample: Sample of values used for subtype / date-format detection.
+            May be empty when an inline override hint is supplied.
         dialect: ``duckdb`` or ``mssql``.
         rng: Optional seeded RNG for deterministic noise (tests).
+        source_of_type: ``"auto"`` for classifier-inferred, ``"override"``
+            when a ``mdw_config.json`` entry forced ``col_type``.
+        id_subtype, numeric_subtype, date_format: When supplied, used
+            verbatim instead of being inferred from ``sample``. This is
+            the path that lets a fully-typed config skip the per-column
+            sample query.
+        options: Per-column option overrides loaded from
+            ``mdw_config.json``. Reserved for downstream consumers
+            (e.g. ``suppress_k`` in disclosure-control hardening).
     """
     rng = rng or random.Random()
+    _ = options  # consumed in #17
     queries = queries_for_column(table, col_name, col_type, dialect)
 
     base: dict[str, Any] = {
         "column_name": col_name,
         "inferred_type": col_type,
+        "source_of_type": source_of_type,
         "nullable": null_count > 0,
         "null_count": int(null_count),
         "null_rate": round(null_count / max(n_rows, 1), 6),
@@ -155,9 +173,13 @@ def summarize_column(
 
     if col_type == "numeric":
         agg = _fetch_one(conn, queries["aggs"])
-        kind = _python_kind(sample)
-        is_int = kind == "numeric_int"
-        stats["numeric_subtype"] = "integer" if is_int else "double"
+        if numeric_subtype is not None:
+            stats["numeric_subtype"] = numeric_subtype
+            is_int = numeric_subtype == "integer"
+        else:
+            kind = _python_kind(sample)
+            is_int = kind == "numeric_int"
+            stats["numeric_subtype"] = "integer" if is_int else "double"
         stats["min"] = _perturb(agg.get("min_v"), rng, is_int=is_int)
         stats["max"] = _perturb(agg.get("max_v"), rng, is_int=is_int)
         stats["mean"] = _perturb(agg.get("mean_v"), rng)
@@ -188,17 +210,23 @@ def summarize_column(
             stats["min"] = min_iso
         if max_iso is not None:
             stats["max"] = max_iso
-        str_sample = [str(v) for v in sample if v is not None]
-        if str_sample:
-            fmt = detect_date_format(str_sample)
-            if fmt is not None:
-                stats["date_format"] = fmt
+        if date_format is not None:
+            stats["date_format"] = date_format
+        else:
+            str_sample = [str(v) for v in sample if v is not None]
+            if str_sample:
+                fmt = detect_date_format(str_sample)
+                if fmt is not None:
+                    stats["date_format"] = fmt
 
     elif col_type == "id":
-        kind = _python_kind(sample)
-        stats["id_subtype"] = (
-            "integer" if kind in ("numeric_int", "numeric_float") else "string"
-        )
+        if id_subtype is not None:
+            stats["id_subtype"] = id_subtype
+        else:
+            kind = _python_kind(sample)
+            stats["id_subtype"] = (
+                "integer" if kind in ("numeric_int", "numeric_float") else "string"
+            )
 
     else:
         raise ValueError(f"unknown col_type: {col_type!r}")

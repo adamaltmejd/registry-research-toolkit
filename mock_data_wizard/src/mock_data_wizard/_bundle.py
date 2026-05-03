@@ -24,7 +24,7 @@ PKG_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_NAME = "mock_data_wizard_extract.py"
 
 # Dependency-ordered: each module imports only earlier ones.
-MODULE_ORDER = ("classify", "sql_emit", "sources", "summarize", "extract")
+MODULE_ORDER = ("classify", "sql_emit", "sources", "summarize", "config", "extract")
 
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA extract bundle.

@@ -194,6 +194,53 @@ The clause is recorded in `source_detail.where` in `stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
+### Per-column type overrides via `mdw_config.json`
+
+Place a `mdw_config.json` next to the bundle's `stats.json` output to
+override the classifier on specific columns. The bundle reads it at
+`main()` startup; absence is fine, presence is strict (typos error
+out instead of getting silently dropped).
+
+```json
+{
+  "version": 1,
+  "column_types": {
+    "Population_PersonNr_*": {
+      "FelPersonNr": {"type": "high_cardinality"},
+      "BirthDate": {"type": "date", "date_format": "%Y%m%d"},
+      "Salary": {"type": "numeric", "numeric_subtype": "integer"}
+    },
+    "Individ_*": {
+      "Distriktskod": {"type": "high_cardinality"}
+    }
+  },
+  "column_options": {
+    "Population_*": {
+      "Salary": {"suppress_k": 20}
+    }
+  }
+}
+```
+
+- Table-glob keys use `fnmatchcase` semantics. Multiple globs may
+  match a `source_name`; the first match wins (insertion order).
+- Each `column_types` entry's `type` is required and must be one of
+  `id`, `categorical`, `numeric`, `high_cardinality`, `date`. Inline
+  subtype/format hints are optional and only valid for the matching
+  type. When *any* inline hint is supplied, the bundle skips the
+  per-column sample query for that column entirely — that is the
+  perf win the override is for.
+- Each output column carries `source_of_type: "auto"` (classifier)
+  or `"override"` (`mdw_config.json` win) so downstream consumers can
+  distinguish.
+- `column_options` is a separate namespace reserved for non-type
+  overrides (e.g. `suppress_k` for disclosure-control hardening).
+  Loaded here; consumed in `summarize`.
+
+Strict validation: unknown types, duplicate JSON keys, schema-version
+mismatches, and stray fields all raise. The configurer file is meant
+to be hand-edited, so silent drops would mask user typos.
+
 ### File materialisation threshold
 
 `iter_file_source` size-gates how each CSV is exposed to DuckDB. Files
