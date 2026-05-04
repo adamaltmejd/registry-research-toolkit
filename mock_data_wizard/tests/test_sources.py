@@ -167,6 +167,43 @@ def test_iter_file_source_duplicate_basenames_raises(tmp_path: Path):
         list(iter_file_source(file_source(str(tmp_path))))
 
 
+def test_iter_file_source_reads_latin1_encoded_csv(tmp_path: Path):
+    p = tmp_path / "swedish.csv"
+    p.write_bytes("namn,ort\nÅke,Malmö\nÖrjan,Växjö\n".encode("latin-1"))
+    src = file_source(str(tmp_path), include=["swedish.csv"], encoding="latin-1")
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT namn, ort FROM {handle.table} ORDER BY namn")
+            rows = cur.fetchall()
+            assert rows == [("Åke", "Malmö"), ("Örjan", "Växjö")]
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_aliases_cp1252_to_latin1(tmp_path: Path):
+    """SCB-typical encoding name should round-trip via the alias map."""
+    p = tmp_path / "cp.csv"
+    p.write_bytes("x\nMalmö\n".encode("cp1252"))
+    src = file_source(str(tmp_path), include=["cp.csv"], encoding="cp1252")
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT x FROM {handle.table}")
+            assert cur.fetchall() == [("Malmö",)]
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_utf8_failure_hint(tmp_path: Path):
+    """Non-UTF-8 bytes under the default encoding should surface a hint."""
+    p = tmp_path / "bad.csv"
+    p.write_bytes("x\nMalm\xf6\n".encode("latin-1"))
+    src = file_source(str(tmp_path), include=["bad.csv"])  # default utf-8
+    with pytest.raises(RuntimeError, match="encoding='latin-1'"):
+        list(iter_file_source(src))
+
+
 # -- SQL helpers ---------------------------------------------------------
 
 

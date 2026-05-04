@@ -22,6 +22,7 @@ passes ``permissive=True`` to enumerate everything reachable.
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 from dataclasses import dataclass, field, replace
@@ -30,7 +31,36 @@ from typing import Any, Iterator, Mapping, Sequence, Union
 
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 
+log = logging.getLogger("mdw.sources")
+
 DEFAULT_FILE_PATTERN = r"\.(csv|txt|tsv)$"
+
+# DuckDB read_csv only accepts {utf-8, utf-16, latin-1}. cp1252 is the
+# common-on-Windows superset of latin-1; for SCB content (åäö +
+# standard punctuation) the latin-1 subset round-trips fine, so accept
+# both spellings and forward latin-1 to DuckDB. Anything outside the
+# accepted set is forwarded verbatim and DuckDB will reject it with its
+# own error.
+_DUCKDB_ENCODINGS = {"utf-8", "utf-16", "latin-1"}
+_ENCODING_ALIASES = {
+    "utf8": "utf-8",
+    "utf_8": "utf-8",
+    "utf16": "utf-16",
+    "utf_16": "utf-16",
+    "latin1": "latin-1",
+    "latin_1": "latin-1",
+    "iso-8859-1": "latin-1",
+    "iso_8859_1": "latin-1",
+    "cp1252": "latin-1",
+    "windows-1252": "latin-1",
+    "windows_1252": "latin-1",
+}
+
+
+def _normalise_csv_encoding(encoding: str) -> str:
+    key = encoding.strip().lower()
+    return _ENCODING_ALIASES.get(key, key)
+
 
 # Files at or below this size are loaded into a DuckDB TABLE instead of
 # registered as a VIEW. The TABLE materialises read_csv_auto once,
@@ -300,6 +330,7 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
         * 1024
         * 1024
     )
+    encoding = _normalise_csv_encoding(src.encoding)
     try:
         for fp in files:
             view_name = fp.stem
@@ -307,10 +338,30 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
             quoted_path = str(fp).replace("'", "''")
             materialise = fp.stat().st_size <= threshold_bytes
             kind = "TABLE" if materialise else "VIEW"
-            conn.execute(
-                f"CREATE OR REPLACE {kind} {quoted_view} AS "
-                f"SELECT * FROM read_csv_auto('{quoted_path}', header=true)"
+            log.info(
+                "[%s] read_csv_auto (%s, encoding=%s, %.1f MB)",
+                fp.name,
+                kind.lower(),
+                encoding,
+                fp.stat().st_size / (1024 * 1024),
             )
+            try:
+                conn.execute(
+                    f"CREATE OR REPLACE {kind} {quoted_view} AS "
+                    f"SELECT * FROM read_csv_auto("
+                    f"'{quoted_path}', header=true, encoding='{encoding}')"
+                )
+            except Exception as exc:
+                hint = (
+                    " Try `file_source(..., encoding='latin-1')` if the file"
+                    " is Windows-1252 (common for SCB exports)."
+                    if encoding == "utf-8"
+                    else ""
+                )
+                raise RuntimeError(
+                    f"DuckDB rejected {fp.name} with encoding={encoding!r}: "
+                    f"{exc}.{hint}"
+                ) from exc
             where = src.where
             table_ref = _wrap_with_where(quoted_view, where)
             detail: dict[str, Any] = {"path": str(fp)}
