@@ -140,8 +140,8 @@ class MDWConfig:
         entry = self.sources.get(source_name)
         if entry is None:
             return (False, None)
-        year = entry.get("year")
-        return (True, int(year) if year is not None else None)
+        # Type already validated by ``_parse_source_entry``: int or None.
+        return (True, entry.get("year"))
 
     def lookup_type(
         self, source_name: str, column_name: str
@@ -471,26 +471,17 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         raise ValueError("mdw_config.json: panels must be an array")
     panels: list[Panel] = []
     seen_panel_ids: set[str] = set()
-    seen_merged_sources: dict[str, str] = {}  # source -> first panel_id
     seen_panel_keys: dict[str, str] = {}  # panel_key -> first panel_id
+    # source -> first panel_id that owns it. Covers both merged_table
+    # `source` and separate_files `members[].source`: ``panel_by_source``
+    # in generate.py is a flat dict keyed by source, so any collision
+    # silently drops the second panel's behavior at generation time.
+    seen_panel_sources: dict[str, str] = {}
     for i, raw in enumerate(raw_panels):
         panel = _parse_panel(raw, i)
         if panel.panel_id in seen_panel_ids:
             raise ValueError(f"panels: duplicate panel_id {panel.panel_id!r}")
         seen_panel_ids.add(panel.panel_id)
-        # Two merged panels on the same source would silently lose all
-        # but the last in the generator's source -> panel map. Reject:
-        # multi-key panels are out of scope (a single source has at
-        # most one panel-key in this contract).
-        if panel.layout == "merged_table" and panel.source is not None:
-            prior = seen_merged_sources.get(panel.source)
-            if prior is not None:
-                raise ValueError(
-                    f"panels: {panel.panel_id!r} and {prior!r} both declare "
-                    f"layout=merged_table on source {panel.source!r}; "
-                    f"a source may participate in at most one merged panel"
-                )
-            seen_merged_sources[panel.source] = panel.panel_id
         # Two panels sharing a panel_key would each build their own pool
         # and clobber each other in ``panel_pool_for_col`` at generation
         # time. Reject: a panel_key column has one id universe, so two
@@ -503,6 +494,24 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
                 f"should belong to a single panel (merge the entries)"
             )
         seen_panel_keys[panel.panel_key] = panel.panel_id
+        # Build the set of sources this panel claims. A merged_table
+        # panel claims its single source; a separate_files panel claims
+        # each member's source. A source can only belong to one panel
+        # (multi-key panels are out of scope).
+        claimed_sources: list[str] = []
+        if panel.layout == "merged_table":
+            claimed_sources.append(panel.source)
+        else:  # separate_files
+            claimed_sources.extend(m.source for m in panel.members)
+        for src in claimed_sources:
+            prior = seen_panel_sources.get(src)
+            if prior is not None:
+                raise ValueError(
+                    f"panels: {panel.panel_id!r} and {prior!r} both reference "
+                    f"source {src!r}; a source may participate in at most one "
+                    f"panel (merge the panels or split the source)"
+                )
+            seen_panel_sources[src] = panel.panel_id
         panels.append(panel)
 
     return MDWConfig(

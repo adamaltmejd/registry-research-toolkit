@@ -641,6 +641,9 @@ def _bulk_fetch_value_codes(
     # 3. Per request, score each register-matching CVID and pick the max.
     # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-
     # ordered; identical scores would otherwise resolve unpredictably).
+    # Score tuple positions are stable: (year_known, -year_distance,
+    # shared_tokens, prefix_hits, overlap, len_codes). Earlier tiers
+    # dominate in tuple comparison; later fields break ties.
     result: dict[Any, dict[str, str]] = {}
     for key, (
         var_id,
@@ -650,10 +653,7 @@ def _bulk_fetch_value_codes(
         column_name,
     ) in requests.items():
         cvids = sorted(pair_to_cvids.get((var_id, register_id), set()))
-        # Score tuple: (year_known, -year_distance, shared, prefix,
-        # overlap, len(codes), codes). The trailing ``codes`` is carried
-        # to avoid re-looking it up after picking.
-        best: tuple[int, int, int, int, int, int, dict[str, str]] | None = None
+        best: tuple[tuple[int, int, int, int, int, int], dict[str, str]] | None = None
         for cvid in cvids:
             codes = cvid_to_codes.get(cvid, {})
             if len(codes) <= 1:
@@ -663,32 +663,26 @@ def _bulk_fetch_value_codes(
             shared, prefix = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
             score = (year_known, year_dist, shared, prefix, overlap, len(codes))
-            if best is None or score > best[:6]:
-                best = (
-                    year_known,
-                    year_dist,
-                    shared,
-                    prefix,
-                    overlap,
-                    len(codes),
-                    codes,
-                )
+            if best is None or score > best[0]:
+                best = (score, codes)
         if best is None:
             continue
+        score, codes = best
+        year_known, _, shared, prefix, overlap, _ = score
         # Tier 1 (year) or Tier 2 (name) accept directly. Year-known with
         # exact or near match expresses real semantic alignment; name
         # match expresses the same for classification schemes.
-        if best[0] > 0 or best[2] > 0 or best[3] > 0:
-            result[key] = best[6]
+        if year_known > 0 or shared > 0 or prefix > 0:
+            result[key] = codes
             continue
         # Tier 3: no year, no name signal. Require overlap floor when we
         # have observed codes; with no observed codes there is no signal
         # at all, so omit.
         if not observed:
             continue
-        ratio = best[4] / max(len(observed), 1)
+        ratio = overlap / max(len(observed), 1)
         if ratio >= MIN_OVERLAP_RATIO:
-            result[key] = best[6]
+            result[key] = codes
 
     return result
 

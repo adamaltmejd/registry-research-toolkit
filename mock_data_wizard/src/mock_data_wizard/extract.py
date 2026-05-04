@@ -49,6 +49,9 @@ def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
     An explicit ``"year": null`` in the config's ``sources`` block
     suppresses the regex fallback -- the user is asserting "no year for
     this source".
+
+    ``config=None`` is the discover-time call (no config exists yet);
+    discover always derives the year from the source name regex.
     """
     if config is not None:
         configured, year = config.source_year(source_name)
@@ -230,9 +233,10 @@ def _extract_merged_panel_periods(
 
     Periods with ``n_panel_ids < SUPPRESS_K`` are dropped: the
     aggregate identifies a tiny sub-cohort and would leak under k-
-    anonymity. ``period`` is coerced to ``int`` (years are the dominant
-    case); strings/dates would round-trip through JSON differently and
-    the consumer expects a comparable scalar.
+    anonymity. ``period`` is preserved as int when the time_key column
+    is integral (years are the dominant case); non-integer values
+    (date/quarter strings) are kept as ``str`` so sub-annual panels
+    don't crash the run.
     """
     qcol_time = quote_ident(panel.time_key, handle.dialect)
     qcol_panel = quote_ident(panel.panel_key, handle.dialect)
@@ -263,12 +267,32 @@ def _extract_merged_panel_periods(
             continue
         out.append(
             {
-                "period": int(period_raw),
+                "period": _coerce_period(period_raw),
                 "n_rows": n_rows,
                 "n_panel_ids": n_panel_ids,
             }
         )
     return out
+
+
+def _coerce_period(value: Any) -> int | str:
+    """Normalise a SQL time_key value to a JSON-stable scalar.
+
+    Integers (incl. integer-valued strings like ``"2018"``) become
+    ``int``; everything else is stringified. Keeps year panels unchanged
+    while letting date/quarter time_keys (``"2019-Q1"``, ``"2019-01"``)
+    survive without crashing the run.
+    """
+    if isinstance(value, bool):
+        return str(value)  # avoid bool being read as int
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            return value
+    return str(value)
 
 
 def _build_panels_block(

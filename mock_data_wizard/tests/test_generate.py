@@ -701,3 +701,70 @@ def test_panel_separate_files_deterministic(tmp_path: Path):
     m2 = generate(stats, enriched, seed=7, output_dir=tmp_path / "a2")
     for f1, f2 in zip(m1.files, m2.files):
         assert f1.sha256 == f2.sha256
+
+
+def test_panel_merged_table_string_periods(tmp_path: Path):
+    """A merged_table panel keyed by quarter/month strings flows
+    end-to-end: the time_key column carries the string periods and the
+    panel_key column is drawn from the matching period subset."""
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "swecov.csv",
+                "source_type": "file",
+                "source_detail": {"path": "swecov.csv"},
+                "row_count": 200,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 80,
+                        "stats": {"id_subtype": "integer"},
+                    },
+                    {
+                        "column_name": "Q",
+                        "inferred_type": "categorical",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 2,
+                        "stats": {"top_values": [["2019-Q1", 100], ["2019-Q2", 100]]},
+                    },
+                ],
+            }
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "swecov_q",
+                "layout": "merged_table",
+                "source": "swecov.csv",
+                "panel_key": "LopNr",
+                "time_key": "Q",
+                "by_period": [
+                    {"period": "2019-Q1", "n_rows": 100, "n_panel_ids": 70},
+                    {"period": "2019-Q2", "n_rows": 100, "n_panel_ids": 80},
+                ],
+            }
+        ],
+    }
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 200
+    quarters = {r["Q"] for r in rows}
+    assert quarters == {"2019-Q1", "2019-Q2"}
+    # Panel-key values must be in the pool universe (1..max(80) = 1..80).
+    pool_universe = set(range(1, 81))
+    assert {int(r["LopNr"]) for r in rows} <= pool_universe

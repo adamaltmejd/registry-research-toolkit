@@ -42,7 +42,9 @@ class SharedColumn:
 
 @dataclass
 class PanelPeriod:
-    period: int
+    # ``period`` is whatever the time_key column carries: usually a year
+    # (int), but may be a quarter/date string for sub-annual panels.
+    period: int | str
     n_rows: int
     n_panel_ids: int
     source: str | None = None  # set on separate_files layout, else None
@@ -130,24 +132,47 @@ def _parse_shared(raw: dict) -> SharedColumn:
     )
 
 
+_PANEL_LAYOUTS = frozenset({"merged_table", "separate_files"})
+
+
 def _parse_panel(raw: dict) -> Panel:
     pid = _require(raw, "panel_id", "panels[]")
-    by_period_raw = _require(raw, "by_period", f"panels[panel_id={pid!r}]")
+    ctx = f"panels[panel_id={pid!r}]"
+    layout = _require(raw, "layout", ctx)
+    if layout not in _PANEL_LAYOUTS:
+        raise StatsValidationError(
+            f"panel {pid!r}: invalid layout {layout!r} "
+            f"(expected one of {sorted(_PANEL_LAYOUTS)})"
+        )
+    by_period_raw = _require(raw, "by_period", ctx)
     if not isinstance(by_period_raw, list):
         raise StatsValidationError(
             f"panel {pid!r}: by_period must be a list, got {type(by_period_raw).__name__}"
         )
+    source = raw.get("source")
+    time_key = raw.get("time_key")
+    if layout == "merged_table":
+        # Match config.py: a merged_table panel always carries source +
+        # time_key. Generators rely on this to skip None-checks downstream.
+        if not isinstance(source, str) or not source:
+            raise StatsValidationError(
+                f"panel {pid!r} (layout=merged_table) requires non-empty 'source'"
+            )
+        if not isinstance(time_key, str) or not time_key:
+            raise StatsValidationError(
+                f"panel {pid!r} (layout=merged_table) requires non-empty 'time_key'"
+            )
     return Panel(
         panel_id=pid,
-        panel_key=_require(raw, "panel_key", f"panels[panel_id={pid!r}]"),
-        layout=_require(raw, "layout", f"panels[panel_id={pid!r}]"),
-        source=raw.get("source"),
-        time_key=raw.get("time_key"),
+        panel_key=_require(raw, "panel_key", ctx),
+        layout=layout,
+        source=source,
+        time_key=time_key,
         by_period=[
             PanelPeriod(
-                period=_require(p, "period", f"panels[{pid!r}].by_period[]"),
-                n_rows=_require(p, "n_rows", f"panels[{pid!r}].by_period[]"),
-                n_panel_ids=_require(p, "n_panel_ids", f"panels[{pid!r}].by_period[]"),
+                period=_require(p, "period", f"{ctx}.by_period[]"),
+                n_rows=_require(p, "n_rows", f"{ctx}.by_period[]"),
+                n_panel_ids=_require(p, "n_panel_ids", f"{ctx}.by_period[]"),
                 source=p.get("source"),
             )
             for p in by_period_raw

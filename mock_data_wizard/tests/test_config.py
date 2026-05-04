@@ -489,7 +489,7 @@ def test_parse_config_rejects_separate_panel_with_source_field():
 def test_parse_config_rejects_two_merged_panels_on_same_source():
     """Two merged_table panels on one source would silently lose all but
     the last in the extract-side merged_panel_by_source map."""
-    with pytest.raises(ValueError, match="merged_table on source 'x'"):
+    with pytest.raises(ValueError, match="both reference source 'x'"):
         parse_config(
             {
                 "contract_version": "mdw-config-1.0.0",
@@ -507,6 +507,58 @@ def test_parse_config_rejects_two_merged_panels_on_same_source():
                         "source": "x",
                         "panel_key": "id2",
                         "time_key": "t",
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_two_separate_panels_sharing_member_source():
+    """Two separate_files panels listing the same source as a member
+    would silently collide in generate.py's panel_by_source map (last
+    write wins). Reject at parse time."""
+    with pytest.raises(ValueError, match="both reference source 'shared.csv'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "separate_files",
+                        "panel_key": "LopNr",
+                        "members": [{"source": "shared.csv", "period": 2018}],
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "separate_files",
+                        "panel_key": "OrgNr",
+                        "members": [{"source": "shared.csv", "period": 2018}],
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_merged_and_separate_sharing_source():
+    """A merged_table source and a separate_files member referencing
+    the same source would collide in panel_by_source (last write wins)."""
+    with pytest.raises(ValueError, match="both reference source 'x.csv'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "merged",
+                        "layout": "merged_table",
+                        "source": "x.csv",
+                        "panel_key": "LopNr",
+                        "time_key": "ar",
+                    },
+                    {
+                        "panel_id": "split",
+                        "layout": "separate_files",
+                        "panel_key": "OrgNr",
+                        "members": [{"source": "x.csv", "period": 2018}],
                     },
                 ],
             }

@@ -639,6 +639,54 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
     assert periods == {2019}
 
 
+def test_run_extract_typed_merged_panel_handles_string_time_key(tmp_path: Path):
+    """A merged_table panel keyed by quarter / month strings (e.g.
+    ``"2019-Q1"``) must not crash extract. Periods are preserved as
+    strings in stats.json.
+    """
+    rows = ["lopnr,quarter"]
+    # 12 distinct lopnr per quarter, two quarters (clears SUPPRESS_K=10).
+    for q in ("2019-Q1", "2019-Q2"):
+        rows.extend(f"{i},{q}" for i in range(1, 13))
+    _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "swecov.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "quarter": {"type": "categorical"},
+                }
+            },
+            "panels": [
+                {
+                    "panel_id": "swecov_q",
+                    "layout": "merged_table",
+                    "source": "swecov.csv",
+                    "panel_key": "lopnr",
+                    "time_key": "quarter",
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["swecov.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    p = result["panels"][0]
+    periods = {bp["period"] for bp in p["by_period"]}
+    assert periods == {"2019-Q1", "2019-Q2"}
+
+
+def test_coerce_period_normalises_value():
+    from mock_data_wizard.extract import _coerce_period
+
+    assert _coerce_period(2018) == 2018
+    assert _coerce_period("2018") == 2018  # numeric strings -> int
+    assert _coerce_period("2019-Q1") == "2019-Q1"
+    assert _coerce_period("2019-01-15") == "2019-01-15"
+    # bool is an int subclass — must not silently become 0/1
+    assert _coerce_period(True) == "True"
+
+
 def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: Path):
     _write_csv(tmp_path / "x.csv", "a\n" + "\n".join(str(i) for i in range(20)) + "\n")
     config = parse_config(

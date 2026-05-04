@@ -542,6 +542,17 @@ Two layouts share one downstream representation. Extract:
 Periods with `n_panel_ids < SUPPRESS_K` are dropped — a tiny panel
 cohort is identifying.
 
+`period` is normalised at extract time: integer-valued time_keys (years
+in the dominant case, or numeric strings like `"2018"`) become `int`;
+anything else (date / quarter strings like `"2019-Q1"`) is preserved as
+`str` so sub-annual panels don't crash the run.
+
+Source-collision rule: a source may participate in **at most one panel**
+(merged or separate). `parse_config` rejects two panels claiming the same
+source so a generator-side `panel_by_source` collision can't silently
+drop the second panel's behavior. Multi-key panels (one source, two
+panel_keys) are explicitly out of scope.
+
 `stats.json` carries a top-level `panels` array, decoupled from
 `sources`:
 
