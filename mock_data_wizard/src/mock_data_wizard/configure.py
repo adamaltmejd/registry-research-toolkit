@@ -83,7 +83,11 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
     """Map a sql_type string to ``"numeric"``, ``"date"``, or ``None``."""
     if not sql_type:
         return None
-    head = sql_type.strip().split("(", 1)[0].split()[0].lower()
+    stripped = sql_type.strip()
+    if not stripped:
+        return None
+    # "DECIMAL(18,2)" → "DECIMAL"; "TIMESTAMP WITH TIME ZONE" → "TIMESTAMP".
+    head = stripped.split("(", 1)[0].split()[0].lower()
     if head in _NUMERIC_SQL:
         return "numeric"
     if head in _DATE_SQL:
@@ -225,10 +229,21 @@ def build_config(
     """
     classified_lower: set[str] = set()
     if register is not None:
+        # An empty string here usually means an unset env var in scripts
+        # like `--register "$REGISTER"`. Refuse explicitly: regmeta's
+        # `LIKE '%' || ? || '%'` fallback would otherwise match every
+        # register and over-type the whole config as `categorical`.
+        if not register.strip():
+            raise ValueError(
+                "--register must be a non-empty register name or id "
+                "(got empty string). Omit --register to skip regmeta lookup."
+            )
         from regmeta import open_db, resolve_register_ids
         from regmeta.db import db_path_from_args
 
-        resolved_db = Path(db_path) if db_path else db_path_from_args(None)
+        # Match the documented `--db` semantics on `compare`: argument
+        # is a *directory*; `db_path_from_args` appends `regmeta.db`.
+        resolved_db = db_path_from_args(str(db_path) if db_path else None)
         conn = open_db(resolved_db)
         try:
             register_ids = resolve_register_ids(conn, register)

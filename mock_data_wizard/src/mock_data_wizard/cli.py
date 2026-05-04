@@ -398,6 +398,10 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 def _cmd_configure(args: argparse.Namespace) -> int:
     """Author mdw_config.json from a discover.json."""
+    import sqlite3
+
+    from regmeta.errors import RegmetaError
+
     from .configure import configure_from_discover
 
     output_path = Path(args.output) if args.output else None
@@ -412,6 +416,21 @@ def _cmd_configure(args: argparse.Namespace) -> int:
         )
     except (FileNotFoundError, FileExistsError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except RegmetaError as e:
+        # Surface regmeta-side problems (missing DB, schema mismatch, ...)
+        # as a friendly CLI error rather than a stack trace. Hint the
+        # --no-regmeta-equivalent escape so users in automation can recover.
+        print(f"Error: regmeta lookup failed: {e.message}", file=sys.stderr)
+        if e.remediation:
+            print(f"  {e.remediation}", file=sys.stderr)
+        print(
+            "  (omit --register to skip regmeta lookup entirely)",
+            file=sys.stderr,
+        )
+        return 1
+    except sqlite3.OperationalError as e:
+        print(f"Error: regmeta database access failed: {e}", file=sys.stderr)
         return 1
     return 0
 
@@ -639,8 +658,10 @@ def build_parser() -> argparse.ArgumentParser:
     cfg.add_argument(
         "--db",
         help=(
-            "Path to regmeta.db. Defaults to the standard regmeta install "
-            "location (XDG data dir). Only used when --register is set."
+            "Path to the regmeta database directory (matches the same flag "
+            "on `compare` / `generate`). Defaults to the standard regmeta "
+            "install location (XDG data dir). Only used when --register "
+            "is set."
         ),
     )
 

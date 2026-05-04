@@ -37,12 +37,15 @@ from mock_data_wizard.configure import (
         ("MONEY", "numeric"),
         ("DATE", "date"),
         ("TIMESTAMP", "date"),
+        ("TIMESTAMP WITH TIME ZONE", "date"),
         ("datetime2", "date"),
         ("VARCHAR", None),
         ("char(4)", None),
         ("nvarchar(255)", None),
         ("text", None),
         ("", None),
+        ("   ", None),  # whitespace-only must not raise IndexError
+        ("\t\n", None),
         (None, None),
     ],
 )
@@ -173,6 +176,84 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
     cols = out["column_types"]["lisa_2018"]
     assert cols["Sun2000Inr"] == {"type": "categorical"}
     assert cols["MysteryCode"] == {"type": "high_cardinality"}
+
+
+def test_build_config_empty_register_string_raises():
+    """Codex P1: `--register ""` from an unset env var must not silently
+    match every register via regmeta's LIKE-fallback. The over-typing
+    would corrupt the inferred config without any visible error."""
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {"source_name": "x", "columns": [{"name": "a", "sql_type": "int"}]}
+        ],
+    }
+    with pytest.raises(ValueError, match="--register must be a non-empty"):
+        build_config(discover, register="")
+    with pytest.raises(ValueError, match="--register must be a non-empty"):
+        build_config(discover, register="   ")
+
+
+def test_build_config_db_path_uses_directory_semantics(monkeypatch):
+    """Aligns with `compare` / `generate`: `--db` is a *directory*; the
+    code appends `regmeta.db` via `db_path_from_args`. Passing a path
+    that already ends in `regmeta.db` would otherwise produce a weird
+    `<dir>/regmeta.db/regmeta.db` -- but the user-facing flag must be
+    consistent across subcommands."""
+    seen: dict = {}
+
+    def fake_from_args(arg, filename="regmeta.db"):
+        seen["arg"] = arg
+        return Path("/fake/dir") / filename
+
+    monkeypatch.setattr("regmeta.db.db_path_from_args", fake_from_args, raising=True)
+
+    class FakeConn:
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.resolve_register_ids", lambda c, r: [34], raising=True)
+    monkeypatch.setattr("regmeta.open_db", lambda p: FakeConn(), raising=True)
+    monkeypatch.setattr(cfg_mod, "_classification_lookup", lambda *a, **k: set())
+
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {"source_name": "x", "columns": [{"name": "a", "sql_type": "int"}]}
+        ],
+    }
+    build_config(discover, register="LISA", db_path=Path("/some/dir"))
+    assert seen["arg"] == "/some/dir"
+    # When db_path is None, default-dir resolution kicks in (arg=None).
+    seen.clear()
+    build_config(discover, register="LISA", db_path=None)
+    assert seen["arg"] is None
+
+
+def test_cli_configure_handles_regmeta_error(monkeypatch, tmp_path: Path):
+    """Codex P2 / Copilot suppressed: a regmeta-side failure during
+    configure (missing DB, schema mismatch, ...) must surface as a
+    clean CLI Error line, not a stack trace."""
+    from mock_data_wizard.cli import main as cli_main
+    from regmeta.errors import RegmetaError
+
+    discover_path = _write_discover(
+        tmp_path,
+        {"sources": [{"source_name": "a", "columns": [{"name": "x"}]}]},
+    )
+
+    def boom(*a, **k):
+        raise RegmetaError(
+            exit_code=10,
+            code="DB_NOT_FOUND",
+            error_class="config",
+            message="regmeta.db not found at /fake/path",
+            remediation="Run `regmeta init` to create the database.",
+        )
+
+    monkeypatch.setattr(cfg_mod, "configure_from_discover", boom)
+    rc = cli_main(["configure", "--register", "LISA", str(discover_path)])
+    assert rc == 1
 
 
 def test_build_config_register_unresolved_raises(monkeypatch):
