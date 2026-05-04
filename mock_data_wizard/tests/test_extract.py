@@ -427,6 +427,241 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     assert "lopnr" in sample_calls
 
 
+# -- year detection (#24) -------------------------------------------------
+
+
+def test_run_discover_emits_year_when_detectable(tmp_path: Path):
+    """Discover detects year from filename and stamps it in source_detail."""
+    _write_csv(tmp_path / "lisa_2018.csv", "x,y\n1,2\n3,4\n")
+    src = file_source(str(tmp_path), include=["lisa_2018.csv"])
+    result = run_discover([src], tmp_path / "discover.json")
+    detail = result["sources"][0]["source_detail"]
+    assert detail["year"] == 2018
+
+
+def test_run_discover_omits_year_when_none_detectable(tmp_path: Path):
+    _write_csv(tmp_path / "people.csv", "x\n1\n2\n")
+    src = file_source(str(tmp_path), include=["people.csv"])
+    result = run_discover([src], tmp_path / "discover.json")
+    assert "year" not in result["sources"][0]["source_detail"]
+
+
+def test_run_extract_typed_emits_year_in_source_detail(tmp_path: Path):
+    """Extract carries the year through to stats.json -- regex fallback
+    when no config override is supplied."""
+    _write_csv(
+        tmp_path / "rtb2019.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 21)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "rtb2019.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
+            },
+        }
+    )
+    src = file_source(str(tmp_path), include=["rtb2019.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    detail = result["sources"][0]["source_detail"]
+    assert detail["year"] == 2019
+
+
+def test_run_extract_typed_uses_config_year_over_regex(tmp_path: Path):
+    """Config-supplied year wins over a wrong filename guess."""
+    # Filename has 2030 but the user knows the real year is 2025.
+    _write_csv(
+        tmp_path / "weird_2030.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 21)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "weird_2030.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
+            },
+            "sources": {"weird_2030.csv": {"year": 2025}},
+        }
+    )
+    src = file_source(str(tmp_path), include=["weird_2030.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    assert result["sources"][0]["source_detail"]["year"] == 2025
+
+
+def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
+    """Explicit null in config suppresses the regex fallback."""
+    _write_csv(
+        tmp_path / "name_2024.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 21)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "name_2024.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
+            },
+            "sources": {"name_2024.csv": {"year": None}},
+        }
+    )
+    src = file_source(str(tmp_path), include=["name_2024.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    # Explicit null in mdw_config.json overrides the regex (2024).
+    detail = result["sources"][0]["source_detail"]
+    assert "year" not in detail
+
+
+# -- panels (#23) --------------------------------------------------------
+
+
+def test_run_extract_typed_emits_separate_files_panel(tmp_path: Path):
+    """A separate_files panel reads ``n_panel_ids`` from each member's
+    panel-key column and ``n_rows`` from each member source."""
+    # Two member files with the same panel_key column. n_distinct on the
+    # panel_key column gives n_panel_ids per period. Use 12+ distinct ids
+    # so we clear the SUPPRESS_K=10 floor.
+    _write_csv(
+        tmp_path / "lisa_2018.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
+    )
+    _write_csv(
+        tmp_path / "lisa_2019.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 17)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
+            "panels": [
+                {
+                    "panel_id": "lisa",
+                    "layout": "separate_files",
+                    "panel_key": "lopnr",
+                    "members": [
+                        {"source": "lisa_2018.csv", "period": 2018},
+                        {"source": "lisa_2019.csv", "period": 2019},
+                    ],
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["lisa_2018.csv", "lisa_2019.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    panels = result["panels"]
+    assert len(panels) == 1
+    p = panels[0]
+    assert p["panel_id"] == "lisa"
+    assert p["panel_key"] == "lopnr"
+    assert p["layout"] == "separate_files"
+    by_period = {bp["period"]: bp for bp in p["by_period"]}
+    assert by_period[2018]["n_rows"] == 13
+    assert by_period[2018]["n_panel_ids"] == 13
+    assert by_period[2018]["source"] == "lisa_2018.csv"
+    assert by_period[2019]["n_rows"] == 16
+    assert by_period[2019]["n_panel_ids"] == 16
+
+
+def test_run_extract_typed_emits_merged_table_panel(tmp_path: Path):
+    """A merged_table panel runs an extra GROUP BY on the source and
+    emits per-period n_rows / n_panel_ids."""
+    rows = []
+    # 12 distinct lopnr per year (clears SUPPRESS_K=10).
+    for ar in (2018, 2019, 2020):
+        for lopnr in range(1, 13):
+            rows.append(f"{lopnr},{ar}")
+    _write_csv(tmp_path / "swecov.csv", "lopnr,ar\n" + "\n".join(rows) + "\n")
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "swecov.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "ar": {"type": "numeric", "numeric_subtype": "integer"},
+                }
+            },
+            "panels": [
+                {
+                    "panel_id": "swecov_inpatient",
+                    "layout": "merged_table",
+                    "source": "swecov.csv",
+                    "panel_key": "lopnr",
+                    "time_key": "ar",
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["swecov.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    panels = result["panels"]
+    assert len(panels) == 1
+    p = panels[0]
+    assert p["layout"] == "merged_table"
+    assert p["source"] == "swecov.csv"
+    assert p["time_key"] == "ar"
+    by_period = {bp["period"]: bp for bp in p["by_period"]}
+    assert set(by_period) == {2018, 2019, 2020}
+    for bp in by_period.values():
+        assert bp["n_rows"] == 12
+        assert bp["n_panel_ids"] == 12
+
+
+def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
+    """A period with n_panel_ids < SUPPRESS_K (=10) is dropped from the
+    panels block: tiny panel cohorts are identifying."""
+    rows = ["lopnr,ar"]
+    # 2018: 5 distinct ids (suppressed). 2019: 12 distinct ids (kept).
+    rows.extend(f"{i},2018" for i in range(1, 6))
+    rows.extend(f"{i},2019" for i in range(1, 13))
+    _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {
+                "swecov.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "ar": {"type": "numeric", "numeric_subtype": "integer"},
+                }
+            },
+            "panels": [
+                {
+                    "panel_id": "swecov",
+                    "layout": "merged_table",
+                    "source": "swecov.csv",
+                    "panel_key": "lopnr",
+                    "time_key": "ar",
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["swecov.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    p = result["panels"][0]
+    periods = {bp["period"] for bp in p["by_period"]}
+    assert periods == {2019}
+
+
+def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: Path):
+    _write_csv(tmp_path / "x.csv", "a\n" + "\n".join(str(i) for i in range(20)) + "\n")
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "column_types": {"x.csv": {"a": {"type": "id", "id_subtype": "integer"}}},
+        }
+    )
+    src = file_source(str(tmp_path), include=["x.csv"])
+    result = run_extract_typed([src], tmp_path / "stats.json", config, seed=0)
+    assert result["panels"] == []
+
+
+def test_year_from_name_helper():
+    from mock_data_wizard.extract import _year_from_name
+
+    assert _year_from_name("lisa_2018") == 2018
+    assert _year_from_name("RTB2019") == 2019
+    assert _year_from_name("Fodelseuppg_20241231") == 2024  # first 4 digits
+    assert _year_from_name("SWECOV_SOS_OV") is None
+    assert _year_from_name("plain") is None
+
+
 def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "data.csv", "x\n1\n")
     (tmp_path / "mdw_config.json").write_text(

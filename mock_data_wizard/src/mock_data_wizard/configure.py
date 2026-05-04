@@ -143,8 +143,15 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
 
 
 def build_config(discover: dict[str, Any]) -> dict[str, Any]:
-    """Author a mdw_config.json payload from a discover.json payload."""
+    """Author a mdw_config.json payload from a discover.json payload.
+
+    Carries any ``year`` from each source's ``source_detail`` (set by
+    discover via a 4-digit name regex) into a top-level ``sources``
+    block. Editable: users can correct mis-detections in mdw_config.json
+    before the extract run.
+    """
     column_types: dict[str, dict[str, dict[str, str]]] = {}
+    sources: dict[str, dict[str, Any]] = {}
     for src in discover.get("sources", []):
         source_name = src["source_name"]
         cols_out: dict[str, dict[str, str]] = {}
@@ -153,10 +160,16 @@ def build_config(discover: dict[str, Any]) -> dict[str, Any]:
             cols_out[col_name] = {"type": _classify_name(col_name)}
         if cols_out:
             column_types[source_name] = cols_out
-    return {
+        year = src.get("source_detail", {}).get("year")
+        if year is not None:
+            sources[source_name] = {"year": int(year)}
+    payload: dict[str, Any] = {
         "contract_version": CONFIG_SCHEMA_VERSION,
         "column_types": column_types,
     }
+    if sources:
+        payload["sources"] = sources
+    return payload
 
 
 def _summary_counts(payload: dict[str, Any]) -> Counter[str]:

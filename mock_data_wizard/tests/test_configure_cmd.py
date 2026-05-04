@@ -262,6 +262,44 @@ def test_cli_configure_overwrite_flag(tmp_path: Path):
     assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
 
 
+def test_build_config_carries_source_year_from_discover():
+    """#24: discover.json's source_detail.year flows into mdw_config's
+    sources block. Users edit there to fix mis-detections."""
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {
+                "source_name": "lisa_2018",
+                "source_detail": {"path": "/x/lisa_2018.csv", "year": 2018},
+                "columns": [{"name": "LopNr"}],
+            },
+            {
+                "source_name": "no_year_table",
+                "source_detail": {"path": "/x/no_year_table.csv"},
+                "columns": [{"name": "LopNr"}],
+            },
+        ],
+    }
+    out = build_config(discover)
+    assert out["sources"] == {"lisa_2018": {"year": 2018}}
+    assert "no_year_table" not in out["sources"]
+
+
+def test_build_config_omits_sources_block_when_no_years():
+    discover = {
+        "sources": [
+            {
+                "source_name": "x",
+                "source_detail": {"path": "/p/x.csv"},
+                "columns": [{"name": "a"}],
+            }
+        ]
+    }
+    out = build_config(discover)
+    # Empty sources block is omitted to keep the config tidy.
+    assert "sources" not in out
+
+
 def test_configure_output_is_valid_mdw_config(tmp_path: Path):
     """Round-trip: configure output must parse cleanly via load_config."""
     from mock_data_wizard.config import parse_config

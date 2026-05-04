@@ -16,7 +16,7 @@ import numpy as np
 
 from ._util import progress
 from .enrich import SPINE_VAR_IDS, EnrichedSource, RegisterCandidate
-from .stats import ProjectStats
+from .stats import Panel, ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
 _MANIFEST_SCHEMA_VERSION = "3"
@@ -167,6 +167,92 @@ def _make_id_pool(n_distinct: int, id_subtype: str) -> np.ndarray:
     return np.array([f"ID_{i:0{pad}d}" for i in range(pool_size)])
 
 
+def _build_panel_pools(
+    panels: list[Panel],
+    id_subtypes: dict[str, str],
+    seed: int,
+    sample_pct: float,
+) -> tuple[dict[str, np.ndarray], dict[tuple[str, int], np.ndarray]]:
+    """Build per-panel id pools and per-period subsets.
+
+    Pool size is ``max(n_panel_ids)`` across the panel's periods. The
+    pool is deterministically shuffled per ``panel_id``; each period
+    takes a *prefix* of the shuffled pool sized to that period's
+    ``n_panel_ids``. Strict prefix nesting gives stable cross-period
+    overlap (panel persistence): sequential periods share
+    ``min(n_panel_ids)`` of their ids. Cross-period attrition modelling
+    (transition matrices, churn) is explicitly out of scope.
+    """
+    pools: dict[str, np.ndarray] = {}
+    subsets: dict[tuple[str, int], np.ndarray] = {}
+    for panel in panels:
+        if not panel.by_period:
+            continue
+        pool_size = max(p.n_panel_ids for p in panel.by_period)
+        if sample_pct < 1.0:
+            pool_size = max(1, int(pool_size * sample_pct))
+        subtype = id_subtypes.get(panel.panel_key, "string")
+        pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", panel.panel_id))
+        indices = np.arange(pool_size)
+        pool_rng.shuffle(indices)
+        if subtype == "integer":
+            pool = indices + 1
+        else:
+            pad = len(str(pool_size))
+            pool = np.array([f"ID_{int(i):0{pad}d}" for i in indices])
+        pools[panel.panel_id] = pool
+        for period_stat in panel.by_period:
+            subset_size = period_stat.n_panel_ids
+            if sample_pct < 1.0:
+                subset_size = max(1, int(subset_size * sample_pct))
+            subset_size = min(subset_size, len(pool))
+            subsets[(panel.panel_id, period_stat.period)] = pool[:subset_size]
+    return pools, subsets
+
+
+def _generate_merged_panel_columns(
+    n_rows: int,
+    panel: Panel,
+    panel_subsets: dict[tuple[str, int], np.ndarray],
+    rng: np.random.Generator,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Co-generate ``(time_key, panel_key)`` for a merged_table panel.
+
+    Each row is assigned a period proportional to ``n_rows[t]``; the
+    panel-key value for that row is then drawn from the period's pool
+    subset. This preserves panel structure: the same panel-key value
+    can appear across multiple periods (subsets share members), and
+    per-period row counts respect the source's distribution.
+    """
+    periods = np.array([p.period for p in panel.by_period])
+    weights = np.array([p.n_rows for p in panel.by_period], dtype=float)
+    if weights.sum() <= 0:
+        # Degenerate panel: empty by_period (all suppressed). Fall back
+        # to picking the first period; downstream sees a stale label
+        # but doesn't crash.
+        return (
+            np.full(n_rows, periods[0] if len(periods) else 0),
+            np.zeros(n_rows, dtype=object),
+        )
+    weights /= weights.sum()
+    period_idx = rng.choice(len(periods), size=n_rows, p=weights)
+    period_values = periods[period_idx]
+    panel_values = np.empty(n_rows, dtype=object)
+    # Group by period to vectorise the per-subset draw.
+    for i, period in enumerate(periods):
+        mask = period_idx == i
+        count = int(mask.sum())
+        if count == 0:
+            continue
+        subset = panel_subsets.get((panel.panel_id, int(period)))
+        if subset is None or len(subset) == 0:
+            panel_values[mask] = ""
+            continue
+        replace = count > len(subset)
+        panel_values[mask] = rng.choice(subset, size=count, replace=replace)
+    return period_values, panel_values
+
+
 def _generate_id(
     rng: np.random.Generator,
     n: int,
@@ -267,10 +353,36 @@ def generate(
             if col.inferred_type == "id" and col.column_name not in id_subtypes:
                 id_subtypes[col.column_name] = col.stats["id_subtype"]
 
+    # Panel pools come first so we can route panel-key columns to them
+    # when building shared_pools below. Panel ids replace the shared
+    # pool for that column so spine + non-panel sources stay aligned
+    # with the same id universe.
+    panel_pools, panel_subsets = _build_panel_pools(
+        stats.panels, id_subtypes, seed, sample_pct
+    )
+    panel_pool_for_col: dict[str, np.ndarray] = {}
+    for panel in stats.panels:
+        if panel.panel_id in panel_pools:
+            panel_pool_for_col[panel.panel_key] = panel_pools[panel.panel_id]
+    panel_by_source: dict[str, tuple[Panel, int | None]] = {}
+    for panel in stats.panels:
+        if panel.layout == "merged_table" and panel.source:
+            panel_by_source[panel.source] = (panel, None)
+        elif panel.layout == "separate_files":
+            for ps in panel.by_period:
+                if ps.source:
+                    panel_by_source[ps.source] = (panel, ps.period)
+
     # Build shared ID pools — sample the pool itself when sample_pct < 1
     # so that files sharing an ID column draw from the same reduced universe
     shared_pools: dict[str, np.ndarray] = {}
     for sc in stats.shared_columns:
+        # If this column is the panel_key of any panel, the panel pool
+        # is authoritative -- sources outside the panel that share this
+        # column then draw from the same universe.
+        if sc.column_name in panel_pool_for_col:
+            shared_pools[sc.column_name] = panel_pool_for_col[sc.column_name]
+            continue
         subtype = id_subtypes.get(sc.column_name, "string")
         pool_size = max(sc.max_n_distinct, 1)
         if sample_pct < 1.0:
@@ -380,9 +492,39 @@ def generate(
         t_gen = 0.0
         columns_data: dict[str, list] = {}
 
+        # Pre-generate panel-managed columns for sources participating
+        # in a panel. The main loop below skips columns already in
+        # ``columns_data``; nullability is intentionally not applied to
+        # panel columns (panel structure must be preserved row-for-row).
+        panel_info = panel_by_source.get(source.source_name)
+        if panel_info is not None:
+            panel_obj, period = panel_info
+            panel_rng = np.random.default_rng(
+                _sub_seed(seed, source.source_name, "__panel__")
+            )
+            if panel_obj.layout == "merged_table" and panel_obj.time_key:
+                time_vals, panel_vals = _generate_merged_panel_columns(
+                    n_rows, panel_obj, panel_subsets, panel_rng
+                )
+                # time_key column may be typed int/categorical; emit
+                # whatever the period values are (typically int years).
+                columns_data[panel_obj.time_key] = time_vals.tolist()
+                columns_data[panel_obj.panel_key] = panel_vals.tolist()
+            elif panel_obj.layout == "separate_files" and period is not None:
+                subset = panel_subsets.get((panel_obj.panel_id, period))
+                if subset is not None and len(subset) > 0:
+                    replace = n_rows > len(subset)
+                    panel_vals = panel_rng.choice(subset, size=n_rows, replace=replace)
+                    columns_data[panel_obj.panel_key] = panel_vals.tolist()
+
         # Process ID columns first so spine lookups can reference them
         for ecol in sorted(esource.columns, key=lambda c: c.inferred_type != "id"):
             t_col = time.monotonic()
+
+            if ecol.column_name in columns_data:
+                # Pre-generated by the panel pass. Skip null injection
+                # too: panel structure relies on row-for-row alignment.
+                continue
 
             if (
                 ecol.column_name in spine

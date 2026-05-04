@@ -41,11 +41,30 @@ class SharedColumn:
 
 
 @dataclass
+class PanelPeriod:
+    period: int
+    n_rows: int
+    n_panel_ids: int
+    source: str | None = None  # set on separate_files layout, else None
+
+
+@dataclass
+class Panel:
+    panel_id: str
+    panel_key: str
+    layout: str
+    by_period: list[PanelPeriod]
+    source: str | None = None  # merged_table: which table holds the panel
+    time_key: str | None = None  # merged_table: column carrying the period
+
+
+@dataclass
 class ProjectStats:
     contract_version: str
     generated_at: str
     sources: list[SourceStats]
     shared_columns: list[SharedColumn]
+    panels: list[Panel] = field(default_factory=list)
 
 
 class StatsValidationError(Exception):
@@ -111,6 +130,31 @@ def _parse_shared(raw: dict) -> SharedColumn:
     )
 
 
+def _parse_panel(raw: dict) -> Panel:
+    pid = _require(raw, "panel_id", "panels[]")
+    by_period_raw = _require(raw, "by_period", f"panels[panel_id={pid!r}]")
+    if not isinstance(by_period_raw, list):
+        raise StatsValidationError(
+            f"panel {pid!r}: by_period must be a list, got {type(by_period_raw).__name__}"
+        )
+    return Panel(
+        panel_id=pid,
+        panel_key=_require(raw, "panel_key", f"panels[panel_id={pid!r}]"),
+        layout=_require(raw, "layout", f"panels[panel_id={pid!r}]"),
+        source=raw.get("source"),
+        time_key=raw.get("time_key"),
+        by_period=[
+            PanelPeriod(
+                period=_require(p, "period", f"panels[{pid!r}].by_period[]"),
+                n_rows=_require(p, "n_rows", f"panels[{pid!r}].by_period[]"),
+                n_panel_ids=_require(p, "n_panel_ids", f"panels[{pid!r}].by_period[]"),
+                source=p.get("source"),
+            )
+            for p in by_period_raw
+        ],
+    )
+
+
 def parse_stats(path: Path) -> ProjectStats:
     """Parse and validate a stats JSON file into ProjectStats."""
     try:
@@ -136,4 +180,5 @@ def parse_stats(path: Path) -> ProjectStats:
         generated_at=raw.get("generated_at", ""),
         sources=[_parse_source(s) for s in sources_raw],
         shared_columns=[_parse_shared(s) for s in raw.get("shared_columns", [])],
+        panels=[_parse_panel(p) for p in raw.get("panels", [])],
     )
