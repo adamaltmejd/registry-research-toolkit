@@ -346,10 +346,16 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 fp.stat().st_size / (1024 * 1024),
             )
             try:
+                # nullstr includes ' ' (single space): SCB CSV exports use a
+                # bare space as the missing-value sentinel in numeric columns,
+                # which would otherwise break DuckDB's strict-mode BIGINT cast
+                # whenever the auto-detector picks a numeric type from a clean
+                # sample but later rows contain the sentinel.
                 conn.execute(
                     f"CREATE OR REPLACE {kind} {quoted_view} AS "
                     f"SELECT * FROM read_csv_auto("
-                    f"'{quoted_path}', header=true, encoding='{encoding}')"
+                    f"'{quoted_path}', header=true, encoding='{encoding}', "
+                    f"nullstr=['', ' '])"
                 )
             except Exception as exc:
                 hint = (

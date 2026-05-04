@@ -204,6 +204,30 @@ def test_iter_file_source_utf8_failure_hint(tmp_path: Path):
         list(iter_file_source(src))
 
 
+def test_iter_file_source_treats_space_as_null_in_numeric_column(tmp_path: Path):
+    """SCB CSVs use ' ' as the missing-value sentinel in numeric columns.
+
+    The auto-detector picks a numeric type from the clean head of the file,
+    so rows containing ' ' beyond the sample window must coerce to NULL
+    instead of failing the strict-mode BIGINT cast.
+    """
+    p = tmp_path / "sentinel.csv"
+    lines = ["id,Hman\n"]
+    # Push the sentinel row past DuckDB's default sample_size (20480) so the
+    # column is committed to BIGINT before the parser sees the space.
+    lines.extend(f"{i},0\n" for i in range(25_000))
+    lines.append("25000, \n")
+    p.write_text("".join(lines), encoding="utf-8")
+    src = file_source(str(tmp_path), include=["sentinel.csv"])
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT Hman FROM {handle.table} WHERE id = 25000")
+            assert cur.fetchone() == (None,)
+        finally:
+            cur.close()
+
+
 # -- SQL helpers ---------------------------------------------------------
 
 
