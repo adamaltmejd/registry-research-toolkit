@@ -82,15 +82,25 @@ def test_render_configure_body_sql_only():
 
 
 def test_render_configure_body_file_only():
-    body = _render_configure_body(file_path="/data/csvs")
+    body = _render_configure_body(file_paths=["/data/csvs"])
     assert "file_source(path='/data/csvs')" in body
     ast.parse(body)
 
 
 def test_render_configure_body_both():
-    body = _render_configure_body(dsn="P1105", file_path="/data")
+    body = _render_configure_body(dsn="P1105", file_paths=["/data"])
     assert "sql_source(dsn='P1105')" in body
     assert "file_source(path='/data')" in body
+    ast.parse(body)
+
+
+def test_render_configure_body_multiple_file_paths():
+    body = _render_configure_body(file_paths=["/data/a", "/data/b", "/data/c"])
+    # Each path should appear as its own file_source(...) call, in order.
+    a = body.index("file_source(path='/data/a')")
+    b = body.index("file_source(path='/data/b')")
+    c = body.index("file_source(path='/data/c')")
+    assert a < b < c
     ast.parse(body)
 
 
@@ -98,7 +108,7 @@ def test_render_configure_body_unc_path_round_trips():
     """UNC paths with backslashes and dollar-signs must survive ``repr``
     quoting and re-parse as a Python string literal."""
     unc = r"\\micro.intra\projekt\P1105$\P1105_Data"
-    body = _render_configure_body(file_path=unc)
+    body = _render_configure_body(file_paths=[unc])
     tree = ast.parse(body)
     # Walk the AST: find the file_source call's path kwarg, assert its
     # constant value matches the input verbatim.
@@ -143,12 +153,13 @@ def _extract_configure_body(src: str) -> str:
     raise AssertionError("no configure() function in bundle")
 
 
-def _file_source_path(body: str) -> str | None:
-    """Return the ``path=`` literal passed to ``file_source(...)`` in *body*.
+def _file_source_paths(body: str) -> list[str]:
+    """Return all ``path=`` literals passed to ``file_source(...)`` in *body*.
 
     Parsing the AST avoids tripping on ``ast.unparse`` re-escaping
-    backslashes in UNC / Windows paths.
+    backslashes in UNC / Windows paths. Order matches source order.
     """
+    paths: list[str] = []
     tree = ast.parse(body)
     for node in ast.walk(tree):
         if (
@@ -162,8 +173,8 @@ def _file_source_path(body: str) -> str | None:
                     and isinstance(kw.value, ast.Constant)
                     and isinstance(kw.value.value, str)
                 ):
-                    return kw.value.value
-    return None
+                    paths.append(kw.value.value)
+    return paths
 
 
 def test_stage1_build_writes_bundle_with_dsn(tmp_path: Path, monkeypatch):
@@ -227,6 +238,7 @@ def test_stage1_build_with_file_source(tmp_path: Path, monkeypatch):
             "P1105",  # project number
             "n",  # SQL source? no
             "y",  # file source? yes (uses default UNC for P1105)
+            "n",  # add another? no
         ],
     )
     rc = interactive._stage1_build(tmp_path)
@@ -234,7 +246,7 @@ def test_stage1_build_with_file_source(tmp_path: Path, monkeypatch):
     src = (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
     body = _extract_configure_body(src)
     assert "sql_source" not in body
-    assert _file_source_path(body) == r"\\micro.intra\projekt\P1105$\P1105_Data"
+    assert _file_source_paths(body) == [r"\\micro.intra\projekt\P1105$\P1105_Data"]
 
 
 def test_stage1_build_custom_file_path(tmp_path: Path, monkeypatch):
@@ -245,6 +257,7 @@ def test_stage1_build_custom_file_path(tmp_path: Path, monkeypatch):
             "n",  # SQL? no
             "c",  # custom path
             r"D:\some\other\path",
+            "n",  # add another? no
         ],
     )
     rc = interactive._stage1_build(tmp_path)
@@ -252,7 +265,53 @@ def test_stage1_build_custom_file_path(tmp_path: Path, monkeypatch):
     body = _extract_configure_body(
         (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
     )
-    assert _file_source_path(body) == r"D:\some\other\path"
+    assert _file_source_paths(body) == [r"D:\some\other\path"]
+
+
+def test_stage1_build_multiple_file_paths(tmp_path: Path, monkeypatch):
+    _canned_inputs(
+        monkeypatch,
+        [
+            "P1105",  # project number
+            "n",  # SQL? no
+            "y",  # file source? yes (default UNC)
+            "y",  # add another? yes
+            r"D:\extra\one",
+            "y",  # add another? yes
+            r"D:\extra\two",
+            "n",  # add another? no
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path)
+    assert rc == 0
+    body = _extract_configure_body(
+        (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
+    )
+    assert _file_source_paths(body) == [
+        r"\\micro.intra\projekt\P1105$\P1105_Data",
+        r"D:\extra\one",
+        r"D:\extra\two",
+    ]
+
+
+def test_stage1_build_no_extra_prompt_when_file_skipped(tmp_path: Path, monkeypatch):
+    """Picking ``n`` for the file question must NOT trigger the
+    "add another?" loop — otherwise the SQL-only flow stalls waiting
+    for input that the canned-input tests don't supply."""
+    _canned_inputs(
+        monkeypatch,
+        [
+            "P1105",
+            "y",  # SQL: yes
+            "n",  # file: no — should skip the add-another loop entirely
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path)
+    assert rc == 0
+    body = _extract_configure_body(
+        (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
+    )
+    assert _file_source_paths(body) == []
 
 
 def test_stage1_aborts_when_no_sources(tmp_path: Path, monkeypatch, capsys):

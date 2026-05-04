@@ -115,7 +115,7 @@ def _prompt_project_number() -> str:
 
 
 def _render_configure_body(
-    *, dsn: str | None = None, file_path: str | None = None
+    *, dsn: str | None = None, file_paths: list[str] | None = None
 ) -> str:
     """Render a ``configure()`` body from the user's Stage 1 answers.
 
@@ -123,13 +123,14 @@ def _render_configure_body(
     (``\\\\micro.intra\\projekt\\P1105$\\P1105_Data``) and DSN names
     round-trip safely as Python literals.
     """
-    if not dsn and not file_path:
-        raise ValueError("at least one of dsn or file_path must be supplied")
+    paths = file_paths or []
+    if not dsn and not paths:
+        raise ValueError("at least one of dsn or file_paths must be supplied")
     items: list[str] = []
     if dsn:
         items.append(f"sql_source(dsn={dsn!r})")
-    if file_path:
-        items.append(f"file_source(path={file_path!r})")
+    for fp in paths:
+        items.append(f"file_source(path={fp!r})")
     body = ",\n        ".join(items)
     return f"def configure():\n    return [\n        {body},\n    ]"
 
@@ -188,17 +189,24 @@ def _stage1_build(cwd: Path) -> int:
         f"(y = '{default_unc}'; c = custom path)",
         default="n",
     )
+    file_paths: list[str] = []
     if file_choice == "y":
-        file_path = default_unc
+        file_paths.append(default_unc)
     elif file_choice == "c":
-        file_path = _prompt("Path").strip()
-        if not file_path:
+        first = _prompt("Path").strip()
+        if not first:
             print("Path cannot be empty.", file=sys.stderr)
             return 1
-    else:
-        file_path = ""
+        file_paths.append(first)
 
-    if not dsn and not file_path:
+    while file_paths and _yes_no("Add another file source path?", default=False):
+        extra = _prompt("Path").strip()
+        if not extra:
+            print("Path cannot be empty; skipping.", file=sys.stderr)
+            continue
+        file_paths.append(extra)
+
+    if not dsn and not file_paths:
         print("Need at least one source. Aborting.", file=sys.stderr)
         return 1
 
@@ -212,7 +220,7 @@ def _stage1_build(cwd: Path) -> int:
             print("Aborted.", file=sys.stderr)
             return 1
 
-    body = _render_configure_body(dsn=dsn or None, file_path=file_path or None)
+    body = _render_configure_body(dsn=dsn or None, file_paths=file_paths)
     out = _bundle.build_bundle(bundle_path, configure_body=body)
     print(f"\nBuilt {out} ({out.stat().st_size:,} bytes)\n")
     _print_discover_instructions()
