@@ -351,11 +351,21 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 # which would otherwise break DuckDB's strict-mode BIGINT cast
                 # whenever the auto-detector picks a numeric type from a clean
                 # sample but later rows contain the sentinel.
+                #
+                # sample_size=-1 forces DuckDB to scan the entire file for
+                # type inference. The default (20480 rows) infers a type
+                # from the head and crashes mid-stream when a rare edge
+                # value appears later (observed: a column of digits with
+                # one literal "C" at row ~60k → BIGINT inferred → conversion
+                # error). One extra ordered scan upfront is cheap; the
+                # alternative is a runtime-only crash that the user can't
+                # see in advance, since at discover/extract time we have no
+                # way to enumerate which columns might surprise us.
                 conn.execute(
                     f"CREATE OR REPLACE {kind} {quoted_view} AS "
                     f"SELECT * FROM read_csv_auto("
                     f"'{quoted_path}', header=true, encoding='{encoding}', "
-                    f"nullstr=['', ' '])"
+                    f"nullstr=['', ' '], sample_size=-1)"
                 )
             except Exception as exc:
                 hint = (
