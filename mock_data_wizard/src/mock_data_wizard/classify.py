@@ -45,6 +45,10 @@ class CategoricalPattern:
 
 ID_PATTERNS: tuple[IdPattern, ...] = (
     IdPattern("lopnr"),  # MONA record-linkage key
+    # Anchored at segment start so "FelPersonNr" (a non-id flag column —
+    # see scan.py) does NOT match while "PersonNr", "PersNr", and
+    # "LopNr_PersNr" all do.
+    IdPattern(r"(^|_)pers(on)?nr"),
 )
 
 CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (

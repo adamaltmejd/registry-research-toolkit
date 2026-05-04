@@ -141,7 +141,7 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
         assert register == "LISA"
         return [34]
 
-    def fake_classification_lookup(col_names, register_ids, db_path):
+    def fake_classification_lookup(conn, col_names, register_ids):
         assert register_ids == [34]
         return {"sun2000inr"}  # lowercase, just like the real impl
 
@@ -282,7 +282,7 @@ def test_build_config_register_unresolved_raises(monkeypatch):
         build_config(discover, register="DOES_NOT_EXIST")
 
 
-def test_classification_lookup_strips_project_prefix(monkeypatch):
+def test_classification_lookup_strips_project_prefix():
     """`P1105_LopNr_PersonNr` should lookup as both raw and stripped name
     so the regmeta side can match the bare `LopNr_PersonNr` form."""
     captured: dict = {}
@@ -296,13 +296,7 @@ def test_classification_lookup_strips_project_prefix(monkeypatch):
         def fetchall(self):
             return []
 
-        def close(self):
-            pass
-
-    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
-    cfg_mod._classification_lookup(
-        {"P1105_LopNr_PersonNr"}, [34], Path("/fake/regmeta.db")
-    )
+    cfg_mod._classification_lookup(FakeConn(), {"P1105_LopNr_PersonNr"}, [34])
     # Both raw and stripped lowercase variants must appear in the bound
     # parameters; otherwise project-prefixed columns silently miss the
     # regmeta join.

@@ -398,8 +398,6 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 def _cmd_configure(args: argparse.Namespace) -> int:
     """Author mdw_config.json from a discover.json."""
-    import sqlite3
-
     from regmeta.errors import RegmetaError
 
     from .configure import configure_from_discover
@@ -428,9 +426,6 @@ def _cmd_configure(args: argparse.Namespace) -> int:
             "  (omit --register to skip regmeta lookup entirely)",
             file=sys.stderr,
         )
-        return 1
-    except sqlite3.OperationalError as e:
-        print(f"Error: regmeta database access failed: {e}", file=sys.stderr)
         return 1
     return 0
 
@@ -658,10 +653,8 @@ def build_parser() -> argparse.ArgumentParser:
     cfg.add_argument(
         "--db",
         help=(
-            "Path to the regmeta database directory (matches the same flag "
-            "on `compare` / `generate`). Defaults to the standard regmeta "
-            "install location (XDG data dir). Only used when --register "
-            "is set."
+            "Path to regmeta database directory (override $REGMETA_DB or "
+            "$XDG_DATA_HOME). Only used when --register is set."
         ),
     )
 

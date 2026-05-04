@@ -24,6 +24,18 @@ def test_is_known_id_lopnr_match():
     assert is_known_id("p1105_lopnr_personnr") is True
 
 
+def test_is_known_id_persnr_match():
+    """`PersNr` and `PersonNr` classify as id; the segment-anchored regex
+    keeps `FelPersonNr` (a non-id flag column — see scan.py) out."""
+    assert is_known_id("PersNr") is True
+    assert is_known_id("PersonNr") is True
+    assert is_known_id("LopNr_PersNr") is True
+    assert is_known_id("P1105_PersonNr") is True
+    # Negative: FelPersonNr must remain non-id
+    assert is_known_id("FelPersonNr") is False
+    assert is_known_id("p1105_felpersonnr") is False
+
+
 def test_is_known_id_no_match():
     assert is_known_id("age") is False
     assert is_known_id("kommun") is False

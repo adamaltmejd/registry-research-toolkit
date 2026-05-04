@@ -105,6 +105,8 @@ def _classify(
     ``has_classification`` is the regmeta signal: ``True`` when the
     column maps to at least one ``variable_instance`` row with a
     non-null ``classification_id`` for the user-supplied register.
+    Always ``False`` when ``--register`` is unset — the whole regmeta
+    layer is skipped in that path.
     """
     if is_known_id(col_name):
         return "id"
@@ -171,7 +173,7 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
 
 
 def _classification_lookup(
-    col_names: set[str], register_ids: list[int], db_path: Path
+    conn: Any, col_names: set[str], register_ids: list[int]
 ) -> set[str]:
     """Return the lowercased subset of ``col_names`` that have a
     non-null ``classification_id`` in ``variable_instance`` for any of
@@ -180,38 +182,33 @@ def _classification_lookup(
     Mirrors the ``variable_alias`` join used by ``enrich._resolve_columns``
     so configure agrees with enrichment on which name maps to which
     variable_instance. Returns lowercased names — callers must lowercase
-    their lookup keys.
+    their lookup keys. ``conn`` is owned by the caller (kept open across
+    ``resolve_register_ids`` and this lookup so we don't reopen the DB).
     """
     if not col_names or not register_ids:
         return set()
-    from regmeta import open_db
-
-    conn = open_db(db_path)
-    try:
-        # Strip project prefixes so `P1105_LopNr` resolves to `LopNr` —
-        # the same trick enrich uses. Both raw and stripped names go in.
-        lookup: set[str] = set()
-        for c in col_names:
-            lookup.add(c)
-            stripped = strip_project_prefix(c)
-            if stripped != c:
-                lookup.add(stripped)
-        col_list = sorted(lookup)
-        col_placeholders = ",".join("?" for _ in col_list)
-        reg_placeholders = ",".join("?" for _ in register_ids)
-        sql = (
-            "SELECT DISTINCT LOWER(va.kolumnnamn) AS lower_name "
-            "FROM variable_alias va "
-            "JOIN variable_instance vi ON va.cvid = vi.cvid "
-            f"WHERE LOWER(va.kolumnnamn) IN ({col_placeholders}) "
-            f"  AND vi.register_id IN ({reg_placeholders}) "
-            "  AND vi.classification_id IS NOT NULL"
-        )
-        params = [c.lower() for c in col_list] + list(register_ids)
-        rows = conn.execute(sql, params).fetchall()
-        return {r["lower_name"] for r in rows}
-    finally:
-        conn.close()
+    # Strip project prefixes so `P1105_LopNr` resolves to `LopNr` —
+    # the same trick enrich uses. Both raw and stripped names go in.
+    lookup: set[str] = set()
+    for c in col_names:
+        lookup.add(c)
+        stripped = strip_project_prefix(c)
+        if stripped != c:
+            lookup.add(stripped)
+    col_list = sorted(lookup)
+    col_placeholders = ",".join("?" for _ in col_list)
+    reg_placeholders = ",".join("?" for _ in register_ids)
+    sql = (
+        "SELECT DISTINCT LOWER(va.kolumnnamn) AS lower_name "
+        "FROM variable_alias va "
+        "JOIN variable_instance vi ON va.cvid = vi.cvid "
+        f"WHERE LOWER(va.kolumnnamn) IN ({col_placeholders}) "
+        f"  AND vi.register_id IN ({reg_placeholders}) "
+        "  AND vi.classification_id IS NOT NULL"
+    )
+    params = [c.lower() for c in col_list] + list(register_ids)
+    rows = conn.execute(sql, params).fetchall()
+    return {r["lower_name"] for r in rows}
 
 
 def build_config(
@@ -247,18 +244,18 @@ def build_config(
         conn = open_db(resolved_db)
         try:
             register_ids = resolve_register_ids(conn, register)
+            if not register_ids:
+                raise ValueError(
+                    f"register {register!r} not found in regmeta. "
+                    f"Either fix the spelling or omit --register."
+                )
+            all_names: set[str] = set()
+            for src in discover.get("sources", []):
+                for col in src.get("columns", []):
+                    all_names.add(col["name"])
+            classified_lower = _classification_lookup(conn, all_names, register_ids)
         finally:
             conn.close()
-        if not register_ids:
-            raise ValueError(
-                f"register {register!r} not found in regmeta. "
-                f"Either fix the spelling or omit --register."
-            )
-        all_names: set[str] = set()
-        for src in discover.get("sources", []):
-            for col in src.get("columns", []):
-                all_names.add(col["name"])
-        classified_lower = _classification_lookup(all_names, register_ids, resolved_db)
 
     column_types: dict[str, dict[str, dict[str, str]]] = {}
     sources: dict[str, dict[str, Any]] = {}
