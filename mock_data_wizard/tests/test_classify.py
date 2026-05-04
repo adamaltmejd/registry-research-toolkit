@@ -51,6 +51,23 @@ def test_known_categorical_cap_no_match():
     assert known_categorical_cap("age") is None
 
 
+def test_known_categorical_cap_demographic_categories():
+    """Demographic SCB columns where SCB doesn't always wire up a
+    classification_id in regmeta. These are the patterns that used to
+    live in ``configure.EXTRA_CATEGORICAL`` and were folded into
+    ``CATEGORICAL_PATTERNS`` so configure has a single source of truth."""
+    assert known_categorical_cap("Kon") == 3  # sex
+    assert known_categorical_cap("p_kon") == 3  # underscore-prefixed form
+    assert known_categorical_cap("CivilStand") == 10
+    assert known_categorical_cap("Lan") == 30  # län (county)
+    assert known_categorical_cap("FodelseLand") == 300
+    assert known_categorical_cap("Yrke_KOD") == 10000  # generic _kod suffix
+    # negative: "kon" must not match in arbitrary substrings
+    assert known_categorical_cap("Konsument") is None
+    # negative: "lan" anchoring must hold (otherwise "Plan" would match)
+    assert known_categorical_cap("Plan") is None
+
+
 # -- date format detection ------------------------------------------------
 
 

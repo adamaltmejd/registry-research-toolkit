@@ -401,9 +401,14 @@ def _cmd_configure(args: argparse.Namespace) -> int:
     from .configure import configure_from_discover
 
     output_path = Path(args.output) if args.output else None
+    db_path = Path(args.db) if args.db else None
     try:
         configure_from_discover(
-            Path(args.discover), output_path=output_path, overwrite=args.overwrite
+            Path(args.discover),
+            output_path=output_path,
+            overwrite=args.overwrite,
+            register=args.register,
+            db_path=db_path,
         )
     except (FileNotFoundError, FileExistsError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
@@ -621,6 +626,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--overwrite",
         action="store_true",
         help="Replace mdw_config.json if it already exists.",
+    )
+    cfg.add_argument(
+        "--register",
+        help=(
+            "Regmeta register name or id (e.g. 'LISA' or '34'). When set, "
+            "columns whose variable_instance has a non-null classification_id "
+            "are typed as 'categorical' (regmeta-authoritative). Without "
+            "--register, type assignment uses sql_type and name patterns only."
+        ),
+    )
+    cfg.add_argument(
+        "--db",
+        help=(
+            "Path to regmeta.db. Defaults to the standard regmeta install "
+            "location (XDG data dir). Only used when --register is set."
+        ),
     )
 
     # scan

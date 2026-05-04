@@ -22,13 +22,12 @@ from __future__ import annotations
 
 import logging
 import random
+import re
 import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
-
-from regmeta import extract_year
 
 from .config import MDWConfig, Panel, load_config
 from .scan import write_export
@@ -41,6 +40,16 @@ log = logging.getLogger("mdw.extract")
 CONTRACT_VERSION = "2.0.0"
 DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
 SAMPLE_SIZE = 1000
+
+# Match regmeta.queries.extract_year so discover-time year detection on
+# MONA stays consistent with the regmeta-side register-version regex,
+# without dragging regmeta into the bundle.
+_YEAR_RE = re.compile(r"\d{4}")
+
+
+def _extract_year(name: str) -> int | None:
+    m = _YEAR_RE.search(name)
+    return int(m.group()) if m else None
 
 
 def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
@@ -57,7 +66,7 @@ def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
         configured, year = config.source_year(source_name)
         if configured:
             return year
-    return extract_year(source_name)
+    return _extract_year(source_name)
 
 
 # -- Per-table SQL helpers -------------------------------------------------

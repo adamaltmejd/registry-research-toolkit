@@ -1,8 +1,8 @@
 """Tests for the local ``configure`` step (discover.json -> mdw_config.json).
 
-The unit tests cover the name-pattern classifier and the file IO around
-``configure_from_discover``. CLI integration is covered via ``argparse``
-parsing in test_cli.py.
+Cover the per-column classifier, the file IO around
+``configure_from_discover``, and the regmeta classification-lookup
+hook (mocked so the test suite doesn't depend on a live regmeta DB).
 """
 
 from __future__ import annotations
@@ -12,51 +12,97 @@ from pathlib import Path
 
 import pytest
 
+from mock_data_wizard import configure as cfg_mod
 from mock_data_wizard.configure import (
-    _classify_name,
+    _classify,
+    _sql_type_kind,
     build_config,
     configure_from_discover,
 )
 
 
-# -- _classify_name patterns ---------------------------------------------
+# -- _sql_type_kind --------------------------------------------------------
 
 
 @pytest.mark.parametrize(
-    "name, expected",
+    "sql_type, expected",
     [
-        ("lopnr", "id"),
-        ("LopNr_PersonNr", "id"),
-        ("Kommun", "categorical"),
-        ("ssyk_4digit", "categorical"),
-        ("Sun2000Inr", "categorical"),
-        ("Sun2020Inr", "categorical"),
-        ("FodelseLand", "categorical"),
-        ("MedborgarLand", "categorical"),
-        ("CivilStand", "categorical"),
-        ("Lan", "categorical"),
-        ("Yrke_KOD", "categorical"),
-        ("Kon", "categorical"),
-        ("InDatum", "date"),
-        ("Tidpunkt", "date"),
-        ("AR", "numeric"),
-        ("Belopp", "numeric"),
-        ("InkomstSumma", "numeric"),
-        ("PensionAr", "numeric"),
-        ("Erstattning", "numeric"),
-        ("Alder", "numeric"),
-        ("RandomString", "high_cardinality"),
-        ("FelPersonNr", "high_cardinality"),
+        ("BIGINT", "numeric"),
+        ("bigint", "numeric"),
+        ("Integer", "numeric"),
+        ("DECIMAL(18,2)", "numeric"),
+        ("numeric(10,4)", "numeric"),
+        ("DOUBLE", "numeric"),
+        ("FLOAT", "numeric"),
+        ("MONEY", "numeric"),
+        ("DATE", "date"),
+        ("TIMESTAMP", "date"),
+        ("datetime2", "date"),
+        ("VARCHAR", None),
+        ("char(4)", None),
+        ("nvarchar(255)", None),
+        ("text", None),
+        ("", None),
+        (None, None),
     ],
 )
-def test_classify_name_known_patterns(name: str, expected: str):
-    assert _classify_name(name) == expected
+def test_sql_type_kind(sql_type: str | None, expected: str | None):
+    assert _sql_type_kind(sql_type) == expected
 
 
-# -- build_config from discover payload ----------------------------------
+# -- _classify priority chain ---------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "name, sql_type, has_classification, expected",
+    [
+        # Layer 1: known id name beats everything
+        ("LopNr", "BIGINT", False, "id"),
+        ("LopNr", "VARCHAR", True, "id"),
+        # Layer 2: regmeta classification wins over name-pattern miss
+        ("RandomName", "INTEGER", True, "categorical"),
+        ("Sun2000Inr", "VARCHAR", True, "categorical"),
+        # Layer 3: known categorical name (no regmeta hit needed)
+        ("Kommun", "VARCHAR", False, "categorical"),
+        ("Sun2000Inr", "VARCHAR", False, "categorical"),
+        ("Sun2020Inr", "VARCHAR", False, "categorical"),
+        ("FodelseLand", "VARCHAR", False, "categorical"),
+        ("MedborgarLand", "VARCHAR", False, "categorical"),
+        ("CivilStand", "VARCHAR", False, "categorical"),
+        ("Lan", "INTEGER", False, "categorical"),
+        ("Yrke_KOD", "VARCHAR", False, "categorical"),
+        ("Kon", "CHAR(1)", False, "categorical"),
+        # Layer 4: sql_type drives numeric / date for unrecognised names
+        ("SammanInk", "BIGINT", False, "numeric"),  # the bug 2 case
+        ("SomeAmount", "DECIMAL(18,2)", False, "numeric"),
+        ("Whatever", "DOUBLE", False, "numeric"),
+        ("InDatum", "DATE", False, "date"),
+        ("Tidpunkt", "TIMESTAMP", False, "date"),
+        # Layer 5: fallthrough
+        ("RandomString", "VARCHAR", False, "high_cardinality"),
+        ("FelPersonNr", "VARCHAR", False, "high_cardinality"),
+        ("Mystery", None, False, "high_cardinality"),
+    ],
+)
+def test_classify_priority_chain(
+    name: str, sql_type: str | None, has_classification: bool, expected: str
+):
+    assert _classify(name, sql_type, has_classification) == expected
+
+
+def test_classify_id_pattern_beats_regmeta_classification():
+    """`is_known_id` runs before the regmeta branch — even if regmeta
+    flags a column as classified, an `lopnr` name should stay `id`."""
+    assert _classify("lopnr", "BIGINT", has_classification=True) == "id"
+
+
+# -- build_config from discover payload ------------------------------------
 
 
 def test_build_config_routes_columns_per_source():
+    """Without --register, classification falls back to sql_type +
+    name patterns. SammanInk used to land in `high_cardinality` — with
+    sql_type-aware classification it lands in `numeric` because BIGINT."""
     discover = {
         "contract_version": "discover-1.0.0",
         "sources": [
@@ -65,8 +111,10 @@ def test_build_config_routes_columns_per_source():
                 "columns": [
                     {"name": "LopNr", "sql_type": "int", "nullable": False},
                     {"name": "Kommun", "sql_type": "char(4)", "nullable": True},
+                    {"name": "SammanInk", "sql_type": "BIGINT", "nullable": True},
                     {"name": "InkomstSumma", "sql_type": "decimal", "nullable": True},
                     {"name": "WhateverElse", "sql_type": "varchar", "nullable": True},
+                    {"name": "BirthDate", "sql_type": "DATE", "nullable": True},
                 ],
             }
         ],
@@ -76,11 +124,113 @@ def test_build_config_routes_columns_per_source():
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
     assert cols["Kommun"] == {"type": "categorical"}
+    assert cols["SammanInk"] == {"type": "numeric"}
     assert cols["InkomstSumma"] == {"type": "numeric"}
     assert cols["WhateverElse"] == {"type": "high_cardinality"}
+    assert cols["BirthDate"] == {"type": "date"}
 
 
-# -- configure_from_discover end-to-end ---------------------------------
+def test_build_config_uses_regmeta_classification(monkeypatch):
+    """When --register is set and regmeta says a column has a non-null
+    classification_id, that column is `categorical` regardless of name."""
+
+    def fake_resolve(conn, register):
+        assert register == "LISA"
+        return [34]
+
+    def fake_classification_lookup(col_names, register_ids, db_path):
+        assert register_ids == [34]
+        return {"sun2000inr"}  # lowercase, just like the real impl
+
+    class FakeConn:
+        def close(self):
+            pass
+
+    monkeypatch.setattr(cfg_mod, "_classification_lookup", fake_classification_lookup)
+    monkeypatch.setattr("regmeta.resolve_register_ids", fake_resolve, raising=True)
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
+    monkeypatch.setattr(
+        "regmeta.db.db_path_from_args",
+        lambda _x: Path("/fake/regmeta.db"),
+        raising=True,
+    )
+
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {
+                "source_name": "lisa_2018",
+                "columns": [
+                    {"name": "Sun2000Inr", "sql_type": "char(4)"},
+                    # MysteryCode has no name pattern and no classification —
+                    # falls back to high_cardinality (VARCHAR).
+                    {"name": "MysteryCode", "sql_type": "varchar"},
+                ],
+            }
+        ],
+    }
+    out = build_config(discover, register="LISA")
+    cols = out["column_types"]["lisa_2018"]
+    assert cols["Sun2000Inr"] == {"type": "categorical"}
+    assert cols["MysteryCode"] == {"type": "high_cardinality"}
+
+
+def test_build_config_register_unresolved_raises(monkeypatch):
+    monkeypatch.setattr(
+        "regmeta.resolve_register_ids", lambda conn, r: [], raising=True
+    )
+
+    class FakeConn:
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
+    monkeypatch.setattr(
+        "regmeta.db.db_path_from_args",
+        lambda _x: Path("/fake/regmeta.db"),
+        raising=True,
+    )
+
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {"source_name": "x", "columns": [{"name": "a", "sql_type": "int"}]}
+        ],
+    }
+    with pytest.raises(ValueError, match="not found in regmeta"):
+        build_config(discover, register="DOES_NOT_EXIST")
+
+
+def test_classification_lookup_strips_project_prefix(monkeypatch):
+    """`P1105_LopNr_PersonNr` should lookup as both raw and stripped name
+    so the regmeta side can match the bare `LopNr_PersonNr` form."""
+    captured: dict = {}
+
+    class FakeConn:
+        def execute(self, sql, params):
+            captured["sql"] = sql
+            captured["params"] = params
+            return self
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
+    cfg_mod._classification_lookup(
+        {"P1105_LopNr_PersonNr"}, [34], Path("/fake/regmeta.db")
+    )
+    # Both raw and stripped lowercase variants must appear in the bound
+    # parameters; otherwise project-prefixed columns silently miss the
+    # regmeta join.
+    lower_params = [p for p in captured["params"] if isinstance(p, str)]
+    assert "p1105_lopnr_personnr" in lower_params
+    assert "lopnr_personnr" in lower_params
+
+
+# -- configure_from_discover end-to-end ------------------------------------
 
 
 def _write_discover(tmp_path: Path, payload: dict) -> Path:
@@ -95,7 +245,10 @@ def test_configure_from_discover_writes_next_to_input(tmp_path: Path):
         tmp_path,
         {
             "sources": [
-                {"source_name": "a", "columns": [{"name": "lopnr"}, {"name": "x"}]},
+                {
+                    "source_name": "a",
+                    "columns": [{"name": "lopnr"}, {"name": "x"}],
+                },
             ]
         },
     )
@@ -104,6 +257,8 @@ def test_configure_from_discover_writes_next_to_input(tmp_path: Path):
     assert out.exists()
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
+    # Without sql_type and without a name pattern, x falls to
+    # high_cardinality — the safe default for unknown VARCHAR-like data.
     assert payload["column_types"]["a"]["x"] == {"type": "high_cardinality"}
 
 
@@ -301,7 +456,7 @@ def test_build_config_omits_sources_block_when_no_years():
 
 
 def test_configure_output_is_valid_mdw_config(tmp_path: Path):
-    """Round-trip: configure output must parse cleanly via load_config."""
+    """Round-trip: configure output must parse cleanly via parse_config."""
     from mock_data_wizard.config import parse_config
 
     discover_path = _write_discover(
@@ -311,9 +466,9 @@ def test_configure_output_is_valid_mdw_config(tmp_path: Path):
                 {
                     "source_name": "lisa_2018",
                     "columns": [
-                        {"name": "LopNr"},
-                        {"name": "Kommun"},
-                        {"name": "InkomstSumma"},
+                        {"name": "LopNr", "sql_type": "int"},
+                        {"name": "Kommun", "sql_type": "char(4)"},
+                        {"name": "InkomstSumma", "sql_type": "decimal(18,2)"},
                     ],
                 }
             ]
