@@ -493,6 +493,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=False,
         help="Show version and check for updates.",
     )
+    parser.add_argument(
+        "--no-interactive",
+        action="store_true",
+        default=False,
+        help="Suppress the interactive default flow; print help if no command is given.",
+    )
     sub = parser.add_subparsers(dest="command")
 
     # build-bundle
@@ -688,8 +694,12 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     if args.command is None:
-        parser.print_help()
-        return 0
+        if args.no_interactive or not sys.stdin.isatty() or not sys.stderr.isatty():
+            parser.print_help()
+            return 0
+        from .interactive import run as interactive_run
+
+        return interactive_run(Path.cwd())
 
     if args.command == "update":
         return _cmd_update(args)
