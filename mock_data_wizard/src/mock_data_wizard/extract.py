@@ -22,12 +22,13 @@ from __future__ import annotations
 
 import logging
 import random
-import re
 import time
 from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
+
+from regmeta import extract_year
 
 from .config import MDWConfig, Panel, load_config
 from .scan import write_export
@@ -41,23 +42,6 @@ CONTRACT_VERSION = "2.0.0"
 DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
 SAMPLE_SIZE = 1000
 
-# Match the first 4-digit run in a source name, e.g. ``lisa_2018`` -> 2018,
-# ``Fodelseuppg_20241231`` -> 2024 (first four digits of the date stamp).
-# Same regex as ``regmeta.queries.extract_year`` so detection agrees on
-# both sides of the boundary.
-_YEAR_RE = re.compile(r"\d{4}")
-
-
-def _year_from_name(source_name: str) -> int | None:
-    """Best-effort year detection from a source name.
-
-    Misfires are expected (e.g. ``Sun2000`` columns -- but those are
-    columns, not source names). User can correct via the ``sources``
-    block in ``mdw_config.json``.
-    """
-    m = _YEAR_RE.search(source_name)
-    return int(m.group()) if m else None
-
 
 def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
     """Year for ``source_name``: config first, name regex as fallback.
@@ -70,7 +54,7 @@ def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
         configured, year = config.source_year(source_name)
         if configured:
             return year
-    return _year_from_name(source_name)
+    return extract_year(source_name)
 
 
 # -- Per-table SQL helpers -------------------------------------------------
@@ -250,7 +234,6 @@ def _extract_merged_panel_periods(
     case); strings/dates would round-trip through JSON differently and
     the consumer expects a comparable scalar.
     """
-    assert panel.layout == "merged_table"
     qcol_time = quote_ident(panel.time_key, handle.dialect)
     qcol_panel = quote_ident(panel.panel_key, handle.dialect)
     sql = (
@@ -614,7 +597,7 @@ def _discover_handle(handle: SourceHandle) -> dict[str, Any]:
     log.info("[%s] discover: %d columns", handle.source_name, len(columns))
     _flush_log_handlers()
     detail = dict(handle.source_detail)
-    year = _year_from_name(handle.source_name)
+    year = _resolve_year(handle.source_name, None)
     if year is not None:
         detail["year"] = year
     return {

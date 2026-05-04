@@ -169,10 +169,10 @@ def test_manifest_register_hint_candidates(stats_path: Path, tmp_path: Path):
 
 
 def test_manifest_year_hint(tmp_path: Path, stats_path: Path):
-    """Year hint is extracted from source name containing a 4-digit year."""
+    """Year hint is read from source_detail.year (populated by extract)."""
     stats = parse_stats(stats_path)
-    # Rename the source to include a year
     stats.sources[0].source_name = "LISA_2022.csv"
+    stats.sources[0].source_detail["year"] = 2022
     enriched = enrich(stats)
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)

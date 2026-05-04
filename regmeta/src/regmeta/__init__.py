@@ -2,6 +2,7 @@ from .db import open_db, db_path_from_args, build_db, default_db_dir
 from .download import download_db
 from .queries import (
     compare,
+    extract_year,
     get_availability,
     get_coded_variables,
     get_datacolumns,
@@ -22,6 +23,7 @@ __all__ = [
     "db_path_from_args",
     "default_db_dir",
     "download_db",
+    "extract_year",
     "get_availability",
     "get_coded_variables",
     "get_datacolumns",

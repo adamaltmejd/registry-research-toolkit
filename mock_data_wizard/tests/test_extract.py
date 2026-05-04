@@ -652,14 +652,14 @@ def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: 
     assert result["panels"] == []
 
 
-def test_year_from_name_helper():
-    from mock_data_wizard.extract import _year_from_name
+def test_resolve_year_falls_back_to_name_regex():
+    from mock_data_wizard.extract import _resolve_year
 
-    assert _year_from_name("lisa_2018") == 2018
-    assert _year_from_name("RTB2019") == 2019
-    assert _year_from_name("Fodelseuppg_20241231") == 2024  # first 4 digits
-    assert _year_from_name("SWECOV_SOS_OV") is None
-    assert _year_from_name("plain") is None
+    assert _resolve_year("lisa_2018", None) == 2018
+    assert _resolve_year("RTB2019", None) == 2019
+    assert _resolve_year("Fodelseuppg_20241231", None) == 2024  # first 4 digits
+    assert _resolve_year("SWECOV_SOS_OV", None) is None
+    assert _resolve_year("plain", None) is None
 
 
 def test_main_raises_on_invalid_mdw_config(tmp_path: Path):

@@ -6,7 +6,6 @@ import csv
 import hashlib
 import io
 import json
-import re
 import time
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
@@ -20,7 +19,6 @@ from .stats import Panel, ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
 _MANIFEST_SCHEMA_VERSION = "3"
-_YEAR_RE = re.compile(r"\d{4}")
 
 
 @dataclass
@@ -193,13 +191,8 @@ def _build_panel_pools(
             pool_size = max(1, int(pool_size * sample_pct))
         subtype = id_subtypes.get(panel.panel_key, "string")
         pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", panel.panel_id))
-        indices = np.arange(pool_size)
-        pool_rng.shuffle(indices)
-        if subtype == "integer":
-            pool = indices + 1
-        else:
-            pad = len(str(pool_size))
-            pool = np.array([f"ID_{int(i):0{pad}d}" for i in indices])
+        pool = _make_id_pool(pool_size, subtype)
+        pool_rng.shuffle(pool)
         pools[panel.panel_id] = pool
         for period_stat in panel.by_period:
             subset_size = period_stat.n_panel_ids
@@ -274,14 +267,12 @@ def _apply_nulls(
     null_rate: float,
 ) -> list:
     """Apply null mask and convert to Python list."""
-    result = values.tolist()
     if null_rate <= 0:
-        return result
-    mask = rng.random(len(result)) < null_rate
-    for i in range(len(result)):
-        if mask[i]:
-            result[i] = ""
-    return result
+        return values.tolist()
+    mask = rng.random(len(values)) < null_rate
+    result = values.astype(object)
+    result[mask] = ""
+    return result.tolist()
 
 
 def _output_filename(source_name: str) -> str:
@@ -595,10 +586,10 @@ def generate(
             )
 
         register_hint = esource.register_hint
-
-        # Derive year_hint from source name
-        year_match = _YEAR_RE.search(source.source_name)
-        year_hint = int(year_match.group()) if year_match else None
+        # extract.py populates source_detail["year"] (config override or
+        # name-regex fallback); reuse it instead of re-running the regex.
+        detail_year = source.source_detail.get("year")
+        year_hint = int(detail_year) if detail_year is not None else None
 
         header_hash = hashlib.sha256(",".join(sorted(col_names)).encode()).hexdigest()
 
