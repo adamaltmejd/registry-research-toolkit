@@ -184,7 +184,7 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     seen: dict[str, Any] = {}
     for k, v in pairs:
         if k in seen:
-            raise ValueError(f"duplicate key {k!r} in mdw_step2_config.json")
+            raise ValueError(f"duplicate key {k!r} in {CONFIG_FILENAME}")
         seen[k] = v
     return seen
 
@@ -415,25 +415,25 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
 def parse_config(payload: dict[str, Any]) -> MDWConfig:
     if "contract_version" not in payload:
         raise ValueError(
-            "mdw_step2_config.json: missing required key 'contract_version' "
+            f"{CONFIG_FILENAME}: missing required key 'contract_version' "
             f"(expected {SCHEMA_VERSION!r})"
         )
     contract_version = payload["contract_version"]
     if contract_version != SCHEMA_VERSION:
         raise ValueError(
-            f"mdw_step2_config.json: unsupported contract_version {contract_version!r} "
+            f"{CONFIG_FILENAME}: unsupported contract_version {contract_version!r} "
             f"(this build supports {SCHEMA_VERSION!r})"
         )
     extra = set(payload) - _TOP_LEVEL_KEYS
     if extra:
         raise ValueError(
-            f"mdw_step2_config.json: unknown top-level key(s) {sorted(extra)} "
+            f"{CONFIG_FILENAME}: unknown top-level key(s) {sorted(extra)} "
             f"(allowed: {sorted(_TOP_LEVEL_KEYS)})"
         )
 
     raw_types = payload.get("column_types", {})
     if not isinstance(raw_types, dict):
-        raise ValueError("mdw_step2_config.json: column_types must be an object")
+        raise ValueError(f"{CONFIG_FILENAME}: column_types must be an object")
     column_types: dict[str, dict[str, ColumnTypeOverride]] = {}
     for table_glob, cols in raw_types.items():
         if not isinstance(cols, dict):
@@ -447,7 +447,7 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
 
     raw_options = payload.get("column_options", {})
     if not isinstance(raw_options, dict):
-        raise ValueError("mdw_step2_config.json: column_options must be an object")
+        raise ValueError(f"{CONFIG_FILENAME}: column_options must be an object")
     column_options: dict[str, dict[str, dict[str, Any]]] = {}
     for table_glob, cols in raw_options.items():
         if not isinstance(cols, dict):
@@ -461,14 +461,14 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
 
     raw_sources = payload.get("sources", {})
     if not isinstance(raw_sources, dict):
-        raise ValueError("mdw_step2_config.json: sources must be an object")
+        raise ValueError(f"{CONFIG_FILENAME}: sources must be an object")
     sources: dict[str, dict[str, Any]] = {
         name: _parse_source_entry(name, entry) for name, entry in raw_sources.items()
     }
 
     raw_panels = payload.get("panels", [])
     if not isinstance(raw_panels, list):
-        raise ValueError("mdw_step2_config.json: panels must be an array")
+        raise ValueError(f"{CONFIG_FILENAME}: panels must be an array")
     panels: list[Panel] = []
     seen_panel_ids: set[str] = set()
     seen_panel_keys: dict[str, str] = {}  # panel_key -> first panel_id
@@ -536,5 +536,5 @@ def load_config(directory: Path) -> MDWConfig | None:
     with path.open("r", encoding="utf-8") as fp:
         payload = json.load(fp, object_pairs_hook=_reject_duplicate_keys)
     if not isinstance(payload, dict):
-        raise ValueError("mdw_step2_config.json: top-level value must be an object")
+        raise ValueError(f"{CONFIG_FILENAME}: top-level value must be an object")
     return parse_config(payload)

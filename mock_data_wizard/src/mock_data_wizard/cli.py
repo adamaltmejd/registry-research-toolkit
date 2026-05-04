@@ -20,8 +20,8 @@ personal data. The workflow has three on-MONA-and-back steps:
           aggregates on MONA.
 
     # Edit configure() in the bundle, leave MODE = "discover".
-    # Upload to MONA and run mdw_runner.py with python on the batch
-    # client -> writes mdw_step1_discovery.json next to the bundle.
+    # Upload to MONA. On MONA's batch client, run mdw_runner.py with
+    # python -> writes mdw_step1_discovery.json next to the bundle.
     # Copy mdw_step1_discovery.json off MONA, then locally:
     mock-data-wizard configure mdw_step1_discovery.json
     # writes mdw_step2_config.json
@@ -48,8 +48,8 @@ Build the single-file Python bundle that runs on MONA.
   1. Run this command locally to create mdw_runner.py.
   2. Upload the bundle to your MONA project directory.
   3. Edit the configure() block at the top to declare your data sources.
-  4. With MODE = "discover", run mdw_runner.py with python on MONA's
-     batch client -> writes mdw_step1_discovery.json.
+  4. With MODE = "discover", on MONA's batch client run mdw_runner.py
+     with python -> writes mdw_step1_discovery.json.
   5. Copy mdw_step1_discovery.json off MONA, run `mock-data-wizard
      configure mdw_step1_discovery.json` locally to author
      mdw_step2_config.json, upload it next to the bundle.
@@ -490,8 +490,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--force",
         action="store_true",
         default=False,
-        help="Skip overwrite confirmations in the interactive flow "
-        "(rebuild bundle, overwrite config, regenerate mock CSVs).",
+        dest="interactive_force",
+        help="Auto-confirm all prompts in the interactive flow "
+        "(rebuild bundle, overwrite config, regenerate mock CSVs). "
+        "Has no effect when a subcommand is given; pass `--force` to "
+        "the subcommand instead.",
     )
     sub = parser.add_subparsers(dest="command")
 
@@ -693,7 +696,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         from .interactive import run as interactive_run
 
-        return interactive_run(Path.cwd(), force=args.force)
+        return interactive_run(Path.cwd(), force=args.interactive_force)
 
     if args.command == "update":
         return _cmd_update(args)

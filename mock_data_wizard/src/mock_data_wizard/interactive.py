@@ -139,7 +139,7 @@ def _print_discover_instructions() -> None:
     print(
         f"Next:\n"
         f"  1. Upload {BUNDLE_FILENAME} to MONA.\n"
-        f"  2. On MONA: run {BUNDLE_FILENAME} with python on the batch client\n"
+        f"  2. On MONA's batch client, run {BUNDLE_FILENAME} with python\n"
         f"     -> writes {DISCOVER_FILENAME} next to the script.\n"
         f"  3. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
         f"  4. Re-run mock-data-wizard."
@@ -151,8 +151,8 @@ def _print_extract_instructions() -> None:
         f"Next:\n"
         f"  1. Upload {CONFIG_FILENAME} next to {BUNDLE_FILENAME} on MONA.\n"
         f'  2. In the bundle, set MODE = "extract".\n'
-        f"  3. On MONA: re-run {BUNDLE_FILENAME} with python on the batch\n"
-        f"     client -> writes {STATS_FILENAME}.\n"
+        f"  3. On MONA's batch client, re-run {BUNDLE_FILENAME} with python\n"
+        f"     -> writes {STATS_FILENAME}.\n"
         f"  4. Sanity check (locally): mock-data-wizard scan {STATS_FILENAME}\n"
         f"  5. Copy {STATS_FILENAME} back into THIS directory.\n"
         f"  6. Re-run mock-data-wizard."

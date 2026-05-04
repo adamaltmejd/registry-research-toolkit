@@ -157,24 +157,28 @@ def _file_source_paths(body: str) -> list[str]:
     """Return all ``path=`` literals passed to ``file_source(...)`` in *body*.
 
     Parsing the AST avoids tripping on ``ast.unparse`` re-escaping
-    backslashes in UNC / Windows paths. Order matches source order.
+    backslashes in UNC / Windows paths. Calls are sorted by
+    ``(lineno, col_offset)`` so order matches source order regardless
+    of ``ast.walk``'s traversal.
     """
-    paths: list[str] = []
+    matches: list[tuple[int, int, str]] = []
     tree = ast.parse(body)
     for node in ast.walk(tree):
-        if (
+        if not (
             isinstance(node, ast.Call)
             and isinstance(node.func, ast.Name)
             and node.func.id == "file_source"
         ):
-            for kw in node.keywords:
-                if (
-                    kw.arg == "path"
-                    and isinstance(kw.value, ast.Constant)
-                    and isinstance(kw.value.value, str)
-                ):
-                    paths.append(kw.value.value)
-    return paths
+            continue
+        for kw in node.keywords:
+            if (
+                kw.arg == "path"
+                and isinstance(kw.value, ast.Constant)
+                and isinstance(kw.value.value, str)
+            ):
+                matches.append((node.lineno, node.col_offset, kw.value.value))
+    matches.sort()
+    return [p for _, _, p in matches]
 
 
 def test_stage1_build_writes_bundle_with_dsn(tmp_path: Path, monkeypatch):
@@ -340,6 +344,23 @@ def test_stage1_refuses_to_overwrite_without_confirm(tmp_path: Path, monkeypatch
     assert bundle.read_bytes() == original
 
 
+def test_stage1_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
+    bundle = tmp_path / "mdw_runner.py"
+    bundle.write_text("# user's hand-edited bundle", encoding="utf-8")
+    _canned_inputs(
+        monkeypatch,
+        [
+            "P1105",  # project number
+            "y",  # SQL source? yes
+            "n",  # file source? no
+            # No rebuild prompt — force=True skips it.
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path, force=True)
+    assert rc == 0
+    assert bundle.read_bytes() != b"# user's hand-edited bundle"
+
+
 # -- _normalize_project_number --------------------------------------------
 
 
@@ -426,6 +447,20 @@ def test_stage3_overwrites_when_confirmed(tmp_path: Path, monkeypatch):
         ["", "y"],  # register: skip, overwrite: yes
     )
     rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(config.read_text(encoding="utf-8"))
+    assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
+
+
+def test_stage3_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
+    _write_discover(
+        tmp_path,
+        [{"source_name": "a", "columns": [{"name": "lopnr", "sql_type": "int"}]}],
+    )
+    config = tmp_path / "mdw_step2_config.json"
+    config.write_text("{}", encoding="utf-8")
+    _canned_inputs(monkeypatch, [""])  # register: skip; no overwrite prompt
+    rc = interactive._stage3_configure(tmp_path, force=True)
     assert rc == 0
     payload = json.loads(config.read_text(encoding="utf-8"))
     assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
