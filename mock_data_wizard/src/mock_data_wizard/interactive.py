@@ -233,11 +233,18 @@ def _stage5_generate(cwd: Path) -> int:
 def _done(cwd: Path) -> int:
     mock_dir = cwd / MOCK_DATA_DIRNAME
     n_files = sum(1 for p in mock_dir.iterdir() if p.is_file())
-    print(
-        "This project looks complete:\n"
-        f"  bundle / {DISCOVER_FILENAME} / {CONFIG_FILENAME} / {STATS_FILENAME} "
-        f"/ {MOCK_DATA_DIRNAME}/ ({n_files} files).\n"
-    )
+    present = [
+        name
+        for name in (
+            BUNDLE_FILENAME,
+            DISCOVER_FILENAME,
+            CONFIG_FILENAME,
+            STATS_FILENAME,
+        )
+        if (cwd / name).exists()
+    ]
+    present.append(f"{MOCK_DATA_DIRNAME}/ ({n_files} files)")
+    print("This project looks complete:\n  " + " / ".join(present) + "\n")
     print(
         "What now?\n"
         "  [r] regenerate mock CSVs from stats.json\n"
