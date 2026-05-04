@@ -39,6 +39,8 @@ log = logging.getLogger("mdw.extract")
 
 CONTRACT_VERSION = "2.0.0"
 DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
+DISCOVER_FILENAME = "discover.json"
+STATS_FILENAME = "stats.json"
 SAMPLE_SIZE = 1000
 
 # Match regmeta.queries.extract_year so discover-time year detection on
@@ -726,7 +728,7 @@ def main(
         path = (
             Path(output_path)
             if output_path is not None
-            else output_dir / "discover.json"
+            else output_dir / DISCOVER_FILENAME
         )
         return run_discover(sources, path)
 
@@ -744,7 +746,7 @@ def main(
         sum(len(v) for v in config.column_options.values()),
     )
 
-    path = Path(output_path) if output_path is not None else output_dir / "stats.json"
+    path = Path(output_path) if output_path is not None else output_dir / STATS_FILENAME
     return run_extract_typed(
         sources,
         path,

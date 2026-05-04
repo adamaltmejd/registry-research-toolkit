@@ -351,3 +351,39 @@ def configure_from_discover(
         file=sys.stderr,
     )
     return target
+
+
+def run_configure_from_discover(
+    discover_path: Path,
+    *,
+    output_path: Path | None = None,
+    overwrite: bool = False,
+    register: str | None = None,
+    db_path: Path | None = None,
+    regmeta_skip_hint: str = "omit --register to skip regmeta lookup entirely",
+) -> int:
+    """CLI/interactive shim around ``configure_from_discover``.
+
+    Catches the documented exception types, prints user-friendly errors
+    to stderr, and returns a CLI exit code (0 success, 1 failure).
+    """
+    from regmeta.errors import RegmetaError
+
+    try:
+        configure_from_discover(
+            discover_path,
+            output_path=output_path,
+            overwrite=overwrite,
+            register=register,
+            db_path=db_path,
+        )
+    except (FileNotFoundError, FileExistsError, ValueError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+    except RegmetaError as exc:
+        print(f"Error: regmeta lookup failed: {exc.message}", file=sys.stderr)
+        if exc.remediation:
+            print(f"  {exc.remediation}", file=sys.stderr)
+        print(f"  ({regmeta_skip_hint})", file=sys.stderr)
+        return 1
+    return 0

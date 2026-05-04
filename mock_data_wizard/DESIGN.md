@@ -36,6 +36,29 @@ re-runs to fix a misclassified column. The earlier R-script-generation
 approach is preserved in git history; the runtime is Python going
 forward.
 
+### Interactive default flow
+
+`mock-data-wizard` with no arguments enters a stage-aware interactive
+flow that detects which pipeline artifact is present in the current
+directory and either runs the corresponding local action or prints
+instructions for the MONA-side action. The detection table:
+
+| Latest artifact in cwd | Stage | Action |
+|---|---|---|
+| (none) | build | Interview; build the bundle with `configure()` filled in |
+| `mock_data_wizard_extract.py` | discover | Print upload + run instructions |
+| `discover.json` | configure | Single register prompt; run `configure_from_discover` |
+| `mdw_config.json` | extract | Print upload + run instructions |
+| `stats.json` | generate | Dispatch to `generate` with defaults |
+| `mock_data/` populated | done | Offer to redo any stage |
+
+Subcommand usage (`mock-data-wizard build-bundle`, `configure`,
+`generate`, …) is unchanged. Non-TTY contexts (pipes, redirected stderr)
+or `--no-interactive` fall back to printing `--help`. The phased
+rollout is tracked in GitHub issues #33 (basic dispatch + Stage 1
+interview), #34 (detailed configure interview), and #35 (detailed
+generate interview).
+
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
 The batch client ships with the WinPython-31700 distribution at
@@ -667,6 +690,5 @@ mislabeling the file.
 ## Deliberate exclusions
 
 - Household structures, time-varying attributes, employer links
-- Interactive wizard / state machine
 - HTTP portal for metadata browsing
 - Per-column type info in manifest (misleading for mock data)

@@ -143,8 +143,7 @@ VERBOSE = False
 CLASSIFIER_SEED = 0
 
 
-def configure():
-    return []
+# __MDW_CONFIGURE_BLOCK__
 
 
 # ===========================================================================
@@ -325,9 +324,28 @@ def _slice_module(name: str) -> str:
     return ast.unparse(ast.Module(body=kept, type_ignores=[]))
 
 
-def build_bundle(output: Path) -> Path:
+CONFIGURE_PLACEHOLDER = "# __MDW_CONFIGURE_BLOCK__"
+DEFAULT_CONFIGURE_BODY = "def configure():\n    return []"
+
+# Fail at import if the header literal drifts from the placeholder constant:
+# str.replace() silently no-ops on a missing substring, which would emit a
+# bundle with no configure() function and crash on MONA at runtime instead.
+assert CONFIGURE_PLACEHOLDER in BUNDLE_HEADER, (
+    f"BUNDLE_HEADER is missing the {CONFIGURE_PLACEHOLDER!r} marker"
+)
+
+
+def build_bundle(output: Path, *, configure_body: str | None = None) -> Path:
+    """Amalgamate the wizard runtime modules into a single ``.py``.
+
+    When ``configure_body`` is supplied (a complete ``def configure(): ...``
+    function source), it fills the configure slot in ``BUNDLE_HEADER``.
+    Otherwise, the editable empty stub is used.
+    """
     output.parent.mkdir(parents=True, exist_ok=True)
-    parts: list[str] = [BUNDLE_HEADER, ""]
+    body = (configure_body or DEFAULT_CONFIGURE_BODY).rstrip()
+    header = BUNDLE_HEADER.replace(CONFIGURE_PLACEHOLDER, body, 1)
+    parts: list[str] = [header, ""]
     for name in MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# {name}.py")

@@ -19,6 +19,7 @@ from .stats import Panel, ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
 _MANIFEST_SCHEMA_VERSION = "3"
+MOCK_DATA_DIRNAME = "mock_data"
 
 
 @dataclass
@@ -307,7 +308,7 @@ def generate(
     enriched: list[EnrichedSource],
     seed: int,
     sample_pct: float = 1.0,
-    output_dir: Path = Path("mock_data"),
+    output_dir: Path = Path(MOCK_DATA_DIRNAME),
     verbose: bool = False,
     force: bool = False,
 ) -> Manifest:
