@@ -327,6 +327,13 @@ def _slice_module(name: str) -> str:
 CONFIGURE_PLACEHOLDER = "# __MDW_CONFIGURE_BLOCK__"
 DEFAULT_CONFIGURE_BODY = "def configure():\n    return []"
 
+# Fail at import if the header literal drifts from the placeholder constant:
+# str.replace() silently no-ops on a missing substring, which would emit a
+# bundle with no configure() function and crash on MONA at runtime instead.
+assert CONFIGURE_PLACEHOLDER in BUNDLE_HEADER, (
+    f"BUNDLE_HEADER is missing the {CONFIGURE_PLACEHOLDER!r} marker"
+)
+
 
 def build_bundle(output: Path, *, configure_body: str | None = None) -> Path:
     """Amalgamate the wizard runtime modules into a single ``.py``.
