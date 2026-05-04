@@ -18,6 +18,7 @@ from mock_data_wizard import interactive
 from mock_data_wizard.interactive import (
     Stage,
     _detect_stage,
+    _normalize_project_number,
     _render_configure_body,
 )
 
@@ -142,12 +143,35 @@ def _extract_configure_body(src: str) -> str:
     raise AssertionError("no configure() function in bundle")
 
 
+def _file_source_path(body: str) -> str | None:
+    """Return the ``path=`` literal passed to ``file_source(...)`` in *body*.
+
+    Parsing the AST avoids tripping on ``ast.unparse`` re-escaping
+    backslashes in UNC / Windows paths.
+    """
+    tree = ast.parse(body)
+    for node in ast.walk(tree):
+        if (
+            isinstance(node, ast.Call)
+            and isinstance(node.func, ast.Name)
+            and node.func.id == "file_source"
+        ):
+            for kw in node.keywords:
+                if (
+                    kw.arg == "path"
+                    and isinstance(kw.value, ast.Constant)
+                    and isinstance(kw.value.value, str)
+                ):
+                    return kw.value.value
+    return None
+
+
 def test_stage1_build_writes_bundle_with_dsn(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
-            "y",  # SQL source? yes
-            "P1105",  # DSN
+            "P1105",  # project number
+            "y",  # SQL source? yes (DSN = project number)
             "n",  # file source? no
         ],
     )
@@ -161,13 +185,48 @@ def test_stage1_build_writes_bundle_with_dsn(tmp_path: Path, monkeypatch):
     assert "file_source" not in body
 
 
+def test_stage1_build_normalizes_bare_digits_to_p_prefix(tmp_path: Path, monkeypatch):
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1105",  # bare digits → normalized to P1105
+            "y",  # SQL? yes
+            "n",  # file? no
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path)
+    assert rc == 0
+    body = _extract_configure_body(
+        (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
+    )
+    assert "sql_source(dsn='P1105')" in body
+
+
+def test_stage1_build_custom_dsn(tmp_path: Path, monkeypatch):
+    _canned_inputs(
+        monkeypatch,
+        [
+            "P1105",  # project number
+            "c",  # custom DSN
+            "MyCustomDSN",  # custom DSN value
+            "n",  # file? no
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path)
+    assert rc == 0
+    body = _extract_configure_body(
+        (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
+    )
+    assert "sql_source(dsn='MyCustomDSN')" in body
+
+
 def test_stage1_build_with_file_source(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
+            "P1105",  # project number
             "n",  # SQL source? no
-            "y",  # file source? yes
-            r"\\micro.intra\projekt\P1105$\P1105_Data",
+            "y",  # file source? yes (uses default UNC for P1105)
         ],
     )
     rc = interactive._stage1_build(tmp_path)
@@ -175,12 +234,29 @@ def test_stage1_build_with_file_source(tmp_path: Path, monkeypatch):
     src = (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
     body = _extract_configure_body(src)
     assert "sql_source" not in body
-    assert "file_source(path=" in body
-    assert "P1105_Data" in body
+    assert _file_source_path(body) == r"\\micro.intra\projekt\P1105$\P1105_Data"
+
+
+def test_stage1_build_custom_file_path(tmp_path: Path, monkeypatch):
+    _canned_inputs(
+        monkeypatch,
+        [
+            "P1105",  # project number
+            "n",  # SQL? no
+            "c",  # custom path
+            r"D:\some\other\path",
+        ],
+    )
+    rc = interactive._stage1_build(tmp_path)
+    assert rc == 0
+    body = _extract_configure_body(
+        (tmp_path / "mock_data_wizard_extract.py").read_text(encoding="utf-8")
+    )
+    assert _file_source_path(body) == r"D:\some\other\path"
 
 
 def test_stage1_aborts_when_no_sources(tmp_path: Path, monkeypatch, capsys):
-    _canned_inputs(monkeypatch, ["n", "n"])
+    _canned_inputs(monkeypatch, ["P1105", "n", "n"])
     rc = interactive._stage1_build(tmp_path)
     assert rc == 1
     assert not (tmp_path / "mock_data_wizard_extract.py").exists()
@@ -194,8 +270,8 @@ def test_stage1_refuses_to_overwrite_without_confirm(tmp_path: Path, monkeypatch
     _canned_inputs(
         monkeypatch,
         [
+            "P1105",  # project number
             "y",  # SQL source? yes
-            "P1105",  # DSN
             "n",  # file source? no
             "n",  # rebuild? no
         ],
@@ -203,6 +279,29 @@ def test_stage1_refuses_to_overwrite_without_confirm(tmp_path: Path, monkeypatch
     rc = interactive._stage1_build(tmp_path)
     assert rc == 1
     assert bundle.read_bytes() == original
+
+
+# -- _normalize_project_number --------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("raw", "expected"),
+    [
+        ("P1405", "P1405"),
+        ("p1405", "P1405"),
+        ("1405", "P1405"),
+        ("  P1405  ", "P1405"),
+        ("0001", "P0001"),
+        ("", None),
+        ("P12", None),  # too few digits
+        ("P12345", None),  # too many digits
+        ("12a4", None),
+        ("PP1405", None),
+        ("project-1405", None),
+    ],
+)
+def test_normalize_project_number(raw: str, expected: str | None):
+    assert _normalize_project_number(raw) == expected
 
 
 # -- Stage 3: configure ----------------------------------------------------
@@ -283,8 +382,11 @@ def test_stage2_prints_discover_instructions(tmp_path: Path, monkeypatch, capsys
     assert rc == 0
     out = capsys.readouterr().out
     assert "mock_data_wizard_extract.py" in out
-    assert 'MODE = "discover"' in out
     assert "discover.json" in out
+    # The MODE/upload-cap noise was trimmed in #36 follow-up — make sure
+    # it doesn't creep back in.
+    assert "10 MB" not in out
+    assert 'MODE = "discover"' not in out
 
 
 def test_stage4_prints_extract_instructions(tmp_path: Path, capsys):

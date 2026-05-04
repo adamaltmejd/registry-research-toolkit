@@ -8,6 +8,7 @@ action that the CLI cannot perform itself.
 from __future__ import annotations
 
 import enum
+import re
 import sys
 from pathlib import Path
 
@@ -68,6 +69,51 @@ def _yes_no(message: str, *, default: bool) -> bool:
         print("Please answer y or n.", file=sys.stderr)
 
 
+def _yes_no_custom(message: str, *, default: str) -> str:
+    """Three-way prompt: returns ``'y'``, ``'n'``, or ``'c'`` (custom)."""
+    suffix_map = {"y": "[Y/n/c]", "n": "[y/N/c]"}
+    suffix = suffix_map[default]
+    while True:
+        try:
+            raw = input(f"{message} {suffix} ").strip().lower()
+        except EOFError:
+            return default
+        if not raw:
+            return default
+        if raw in ("y", "yes"):
+            return "y"
+        if raw in ("n", "no"):
+            return "n"
+        if raw in ("c", "custom"):
+            return "c"
+        print('Please answer y, n, or c (for "custom").', file=sys.stderr)
+
+
+_PROJECT_RE = re.compile(r"^P?(\d{4})$", re.IGNORECASE)
+
+
+def _normalize_project_number(raw: str) -> str | None:
+    """Accept ``P1405``/``p1405``/``1405`` → ``"P1405"``; else ``None``."""
+    m = _PROJECT_RE.match(raw.strip())
+    return f"P{m.group(1)}" if m else None
+
+
+def _prompt_project_number() -> str:
+    while True:
+        raw = _prompt("Project number (e.g. P1405)")
+        if not raw:
+            print("Project number is required.", file=sys.stderr)
+            continue
+        normalized = _normalize_project_number(raw)
+        if not normalized:
+            print(
+                "Expected 4 digits (e.g. 1405) or P-prefixed (e.g. P1405).",
+                file=sys.stderr,
+            )
+            continue
+        return normalized
+
+
 def _render_configure_body(
     *, dsn: str | None = None, file_path: str | None = None
 ) -> str:
@@ -91,12 +137,11 @@ def _render_configure_body(
 def _print_discover_instructions() -> None:
     print(
         f"Next:\n"
-        f"  1. Upload {BUNDLE_FILENAME} to MONA (10 MB cap; .py is accepted).\n"
-        f'  2. Leave MODE = "discover" (the default).\n'
-        f"  3. Run on MONA: python {BUNDLE_FILENAME}\n"
+        f"  1. Upload {BUNDLE_FILENAME} to MONA.\n"
+        f"  2. Run on MONA: python {BUNDLE_FILENAME}\n"
         f"     -> writes {DISCOVER_FILENAME} next to the script.\n"
-        f"  4. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
-        f"  5. Re-run mock-data-wizard."
+        f"  3. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
+        f"  4. Re-run mock-data-wizard."
     )
 
 
@@ -121,13 +166,37 @@ def _stage1_build(cwd: Path) -> int:
         f"{MOCK_DATA_DIRNAME}/) will live here.\n"
     )
 
-    has_sql = _yes_no("Do you have a SQL/ODBC source on MONA?", default=True)
-    dsn = _prompt("DSN name (usually the project ID, e.g. P1105)") if has_sql else ""
+    project = _prompt_project_number()
 
-    has_file = _yes_no(
-        "Do you have file-based data (CSV/TXT on a UNC share)?", default=False
+    sql_choice = _yes_no_custom(
+        f"Do you have a SQL/ODBC source on MONA? (Y = DSN '{project}'; c = custom DSN)",
+        default="y",
     )
-    file_path = _prompt("Path") if has_file else ""
+    if sql_choice == "y":
+        dsn = project
+    elif sql_choice == "c":
+        dsn = _prompt("Custom DSN name").strip()
+        if not dsn:
+            print("DSN cannot be empty.", file=sys.stderr)
+            return 1
+    else:
+        dsn = ""
+
+    default_unc = rf"\\micro.intra\projekt\{project}$\{project}_Data"
+    file_choice = _yes_no_custom(
+        f"Do you have file-based data (CSV/TXT on a UNC share)? "
+        f"(y = '{default_unc}'; c = custom path)",
+        default="n",
+    )
+    if file_choice == "y":
+        file_path = default_unc
+    elif file_choice == "c":
+        file_path = _prompt("Path").strip()
+        if not file_path:
+            print("Path cannot be empty.", file=sys.stderr)
+            return 1
+    else:
+        file_path = ""
 
     if not dsn and not file_path:
         print("Need at least one source. Aborting.", file=sys.stderr)
