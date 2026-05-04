@@ -662,6 +662,35 @@ def test_panel_merged_table_row_counts_per_period(tmp_path: Path):
     assert set(counts) == {2018, 2019, 2020}
 
 
+def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path):
+    """If every period was suppressed (n_panel_ids < SUPPRESS_K) and the
+    panels block landed with by_period=[], generate must NOT overwrite
+    the source's time_key and panel_key with zero/empty values -- it
+    should fall through to normal column generation. The user still
+    sees the panel block (with by_period=[]) but the mock data isn't
+    blanked out."""
+    payload = _panel_stats_merged_table()
+    # Empty by_period mimics the fully-suppressed path.
+    payload["panels"][0]["by_period"] = []
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 300
+    # AR comes from the regular numeric generator (min=2018, max=2020);
+    # values should fall in-range and never be 0 (the panel-degenerate
+    # sentinel from _generate_merged_panel_columns).
+    ars = [int(r["AR"]) for r in rows]
+    assert all(2018 <= a <= 2020 for a in ars)
+    # LopNr comes from the regular id generator; never blank.
+    assert all(r["LopNr"] != "" for r in rows)
+
+
 def test_panel_separate_files_deterministic(tmp_path: Path):
     """Same seed -> identical panel-key column across runs."""
     stats_path = tmp_path / "stats.json"

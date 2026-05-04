@@ -471,11 +471,38 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         raise ValueError("mdw_config.json: panels must be an array")
     panels: list[Panel] = []
     seen_panel_ids: set[str] = set()
+    seen_merged_sources: dict[str, str] = {}  # source -> first panel_id
+    seen_panel_keys: dict[str, str] = {}  # panel_key -> first panel_id
     for i, raw in enumerate(raw_panels):
         panel = _parse_panel(raw, i)
         if panel.panel_id in seen_panel_ids:
             raise ValueError(f"panels: duplicate panel_id {panel.panel_id!r}")
         seen_panel_ids.add(panel.panel_id)
+        # Two merged panels on the same source would silently lose all
+        # but the last in the generator's source -> panel map. Reject:
+        # multi-key panels are out of scope (a single source has at
+        # most one panel-key in this contract).
+        if panel.layout == "merged_table" and panel.source is not None:
+            prior = seen_merged_sources.get(panel.source)
+            if prior is not None:
+                raise ValueError(
+                    f"panels: {panel.panel_id!r} and {prior!r} both declare "
+                    f"layout=merged_table on source {panel.source!r}; "
+                    f"a source may participate in at most one merged panel"
+                )
+            seen_merged_sources[panel.source] = panel.panel_id
+        # Two panels sharing a panel_key would each build their own pool
+        # and clobber each other in ``panel_pool_for_col`` at generation
+        # time. Reject: a panel_key column has one id universe, so two
+        # panels referencing it should be one panel.
+        prior = seen_panel_keys.get(panel.panel_key)
+        if prior is not None:
+            raise ValueError(
+                f"panels: {panel.panel_id!r} and {prior!r} both declare "
+                f"panel_key={panel.panel_key!r}; a panel_key column "
+                f"should belong to a single panel (merge the entries)"
+            )
+        seen_panel_keys[panel.panel_key] = panel.panel_id
         panels.append(panel)
 
     return MDWConfig(

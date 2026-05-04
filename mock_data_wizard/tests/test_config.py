@@ -486,6 +486,61 @@ def test_parse_config_rejects_separate_panel_with_source_field():
         )
 
 
+def test_parse_config_rejects_two_merged_panels_on_same_source():
+    """Two merged_table panels on one source would silently lose all but
+    the last in the extract-side merged_panel_by_source map."""
+    with pytest.raises(ValueError, match="merged_table on source 'x'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "id1",
+                        "time_key": "t",
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "id2",
+                        "time_key": "t",
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_two_panels_with_same_panel_key():
+    """Two panels declaring the same panel_key would each build their
+    own pool and clobber each other's entry in panel_pool_for_col --
+    the second overwrites the first, leaving spine consumers and
+    non-panel sources reading mismatched ids."""
+    with pytest.raises(ValueError, match="panel_key='LopNr'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "LopNr",
+                        "time_key": "t",
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "separate_files",
+                        "panel_key": "LopNr",
+                        "members": [{"source": "y", "period": 2018}],
+                    },
+                ],
+            }
+        )
+
+
 def test_parse_config_rejects_duplicate_panel_period():
     with pytest.raises(ValueError, match="duplicate period 2018"):
         parse_config(

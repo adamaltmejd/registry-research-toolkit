@@ -496,8 +496,13 @@ def generate(
         # in a panel. The main loop below skips columns already in
         # ``columns_data``; nullability is intentionally not applied to
         # panel columns (panel structure must be preserved row-for-row).
+        # When a panel has no surviving periods (every period was
+        # suppressed by the SUPPRESS_K floor in extract), fall through
+        # to normal column generation -- overwriting time_key /
+        # panel_key with empty values would be worse than losing panel
+        # structure.
         panel_info = panel_by_source.get(source.source_name)
-        if panel_info is not None:
+        if panel_info is not None and panel_info[0].by_period:
             panel_obj, period = panel_info
             panel_rng = np.random.default_rng(
                 _sub_seed(seed, source.source_name, "__panel__")
