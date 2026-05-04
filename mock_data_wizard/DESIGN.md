@@ -14,11 +14,12 @@ end-to-end loop crosses the MONA boundary three times:
    `python mock_data_wizard_extract.py` — writes `discover.json`
    (metadata only: column names, SQL types, row counts; no values, no
    distinct counts, no samples).
-3. `mock-data-wizard configure discover.json` (local) — reads
-   `discover.json`, applies the name-pattern classifier (`lopnr → id`,
-   `*Datum* → date`, `*Belopp* → numeric`, …), defaults the rest to
-   `high_cardinality`, and writes `mdw_config.json`. The user reviews
-   and edits this file by hand before re-uploading.
+3. `mock-data-wizard configure [--register LISA] discover.json`
+   (local) — reads `discover.json`, applies the layered classifier
+   (id-name → regmeta classification → categorical-name → sql_type →
+   `high_cardinality` default; see *Configure classifier priority*
+   below), and writes `mdw_config.json`. The user reviews and edits
+   this file by hand before re-uploading.
 4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
    `mdw_config.json` next to it, re-run on MONA — writes `stats.json`
    (only aggregate statistics; the configured types drive per-column
@@ -227,6 +228,39 @@ SMALL_POP_MULT × SUPPRESS_K is meant to flag.
 The clause is recorded in `source_detail.where` in `stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
+
+### Configure classifier priority
+
+`configure` walks each column from `discover.json` and assigns one of
+the five types via this chain (first match wins):
+
+1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
+   can't tell a BIGINT identifier from a BIGINT measure; the name
+   has to.
+2. **Regmeta classification** (only when `--register` is supplied) —
+   if the column joins to a `variable_instance` row with non-null
+   `classification_id` for the named register, it's `categorical` by
+   SCB's own definition. Project-prefix stripping (`P1105_LopNr` →
+   `LopNr`) mirrors the same logic used by enrich.
+3. **`known_categorical_cap(name)`** — name patterns for SCB
+   categoricals where regmeta sometimes lacks a `classification_id`
+   (`Kon`, `Sun2000Inr`, `Kommun`, `CivilStand`, `Lan`, `*_kod`, …).
+4. **`sql_type`** — `BIGINT/INTEGER/DOUBLE/DECIMAL/...` → `numeric`;
+   `DATE/TIMESTAMP/...` → `date`. For SQL sources the database's
+   declared type is authoritative; for CSVs read by DuckDB, `sql_type`
+   is DuckDB's own inference (which already does int-vs-double on
+   the data — no separate value-peeking pass at discover time).
+5. **Fallthrough** — `high_cardinality`. Misclassified, you fix it
+   in `mdw_config.json` for the next iteration.
+
+The chain deliberately gives regmeta authority over names for
+categorical detection but not over `is_known_id`: regmeta has no
+"this is an identifier" type, and id-naming conventions are stable
+across registers. Regmeta's `datatyp` field is **not** consulted —
+it's inconsistent across years for the same variable (a single
+`var_id` can flip between `varchar` / `int` / `char` across
+`variable_instance` rows), so `sql_type` is the more reliable
+storage-type signal.
 
 ### Per-column type config via `mdw_config.json`
 

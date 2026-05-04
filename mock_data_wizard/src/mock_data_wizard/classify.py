@@ -45,6 +45,10 @@ class CategoricalPattern:
 
 ID_PATTERNS: tuple[IdPattern, ...] = (
     IdPattern("lopnr"),  # MONA record-linkage key
+    # Anchored at segment start so "FelPersonNr" (a non-id flag column —
+    # see scan.py) does NOT match while "PersonNr", "PersNr", and
+    # "LopNr_PersNr" all do.
+    IdPattern(r"(^|_)pers(on)?nr"),
 )
 
 CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (
@@ -55,6 +59,11 @@ CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (
     CategoricalPattern(r"sni(\d|_|$)", max_distinct=1500),  # SNI ~800
     CategoricalPattern("(fodelse|fodelses?)land", max_distinct=300),  # ~230
     CategoricalPattern("medb(orgarskap)?", max_distinct=300),  # citizenship ~230
+    CategoricalPattern(r"(^|_)kon$", max_distinct=3),  # sex
+    CategoricalPattern("civil", max_distinct=10),  # CivilStand
+    CategoricalPattern(r"(^|_)lan$", max_distinct=30),  # län (region) — 21
+    CategoricalPattern(r"land(skap)?$", max_distinct=300),  # FodelseLand
+    CategoricalPattern(r"_kod$", max_distinct=10000),  # generic "...kod" code columns
 )
 
 

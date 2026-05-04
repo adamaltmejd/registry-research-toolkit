@@ -398,15 +398,34 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 def _cmd_configure(args: argparse.Namespace) -> int:
     """Author mdw_config.json from a discover.json."""
+    from regmeta.errors import RegmetaError
+
     from .configure import configure_from_discover
 
     output_path = Path(args.output) if args.output else None
+    db_path = Path(args.db) if args.db else None
     try:
         configure_from_discover(
-            Path(args.discover), output_path=output_path, overwrite=args.overwrite
+            Path(args.discover),
+            output_path=output_path,
+            overwrite=args.overwrite,
+            register=args.register,
+            db_path=db_path,
         )
     except (FileNotFoundError, FileExistsError, ValueError) as e:
         print(f"Error: {e}", file=sys.stderr)
+        return 1
+    except RegmetaError as e:
+        # Surface regmeta-side problems (missing DB, schema mismatch, ...)
+        # as a friendly CLI error rather than a stack trace. Hint the
+        # --no-regmeta-equivalent escape so users in automation can recover.
+        print(f"Error: regmeta lookup failed: {e.message}", file=sys.stderr)
+        if e.remediation:
+            print(f"  {e.remediation}", file=sys.stderr)
+        print(
+            "  (omit --register to skip regmeta lookup entirely)",
+            file=sys.stderr,
+        )
         return 1
     return 0
 
@@ -621,6 +640,22 @@ def build_parser() -> argparse.ArgumentParser:
         "--overwrite",
         action="store_true",
         help="Replace mdw_config.json if it already exists.",
+    )
+    cfg.add_argument(
+        "--register",
+        help=(
+            "Regmeta register name or id (e.g. 'LISA' or '34'). When set, "
+            "columns whose variable_instance has a non-null classification_id "
+            "are typed as 'categorical' (regmeta-authoritative). Without "
+            "--register, type assignment uses sql_type and name patterns only."
+        ),
+    )
+    cfg.add_argument(
+        "--db",
+        help=(
+            "Path to regmeta database directory (override $REGMETA_DB or "
+            "$XDG_DATA_HOME). Only used when --register is set."
+        ),
     )
 
     # scan
