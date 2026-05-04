@@ -1,29 +1,22 @@
 """Interactive default flow: stage detection + dispatch.
 
-Phase 1 of the staged interactive rollout (see GitHub #33). Detects which
-pipeline artifact is present in cwd and either runs the local action with
-prompts or prints instructions for the MONA-side action that the CLI
-cannot perform itself.
-
-Stage 1 (build-bundle) gets a full interview. Stages 3 (configure) and 5
-(generate) get a single prompt each and dispatch to existing code with
-defaults; the deeper interviews land in Phase 2 (#34) and Phase 3 (#35).
+Detects which pipeline artifact is present in cwd and either runs the
+local action with prompts or prints instructions for the MONA-side
+action that the CLI cannot perform itself.
 """
 
 from __future__ import annotations
 
 import enum
-import json
 import sys
 from pathlib import Path
 
 from . import _bundle
 from .configure import CONFIG_FILENAME
+from .extract import DISCOVER_FILENAME, STATS_FILENAME
+from .generate import MOCK_DATA_DIRNAME
 
 BUNDLE_FILENAME = _bundle.DEFAULT_OUTPUT_NAME
-DISCOVER_FILENAME = "discover.json"
-STATS_FILENAME = "stats.json"
-MOCK_DATA_DIRNAME = "mock_data"
 
 
 class Stage(enum.Enum):
@@ -36,22 +29,16 @@ class Stage(enum.Enum):
 
 
 def _detect_stage(cwd: Path) -> Stage:
-    bundle = (cwd / BUNDLE_FILENAME).exists()
-    discover = (cwd / DISCOVER_FILENAME).exists()
-    config = (cwd / CONFIG_FILENAME).exists()
-    stats = (cwd / STATS_FILENAME).exists()
-    mock_dir = cwd / MOCK_DATA_DIRNAME
-    has_mock_files = mock_dir.is_dir() and any(p.is_file() for p in mock_dir.iterdir())
-
-    if stats and has_mock_files:
-        return Stage.DONE
-    if stats:
+    if (cwd / STATS_FILENAME).exists():
+        mock_dir = cwd / MOCK_DATA_DIRNAME
+        if mock_dir.is_dir() and any(p.is_file() for p in mock_dir.iterdir()):
+            return Stage.DONE
         return Stage.GENERATE
-    if config:
+    if (cwd / CONFIG_FILENAME).exists():
         return Stage.EXTRACT_INSTRUCTIONS
-    if discover:
+    if (cwd / DISCOVER_FILENAME).exists():
         return Stage.CONFIGURE
-    if bundle:
+    if (cwd / BUNDLE_FILENAME).exists():
         return Stage.DISCOVER_INSTRUCTIONS
     return Stage.BUILD
 
@@ -173,22 +160,12 @@ def _stage2_instructions(cwd: Path) -> int:
 
 
 def _stage3_configure(cwd: Path) -> int:
-    from regmeta.errors import RegmetaError
-
-    from .configure import configure_from_discover
+    from .configure import run_configure_from_discover
 
     discover_path = cwd / DISCOVER_FILENAME
     config_path = cwd / CONFIG_FILENAME
 
-    try:
-        payload = json.loads(discover_path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        print(f"Error: {discover_path} is not valid JSON: {exc}", file=sys.stderr)
-        return 1
-    n_sources = len(payload.get("sources", []))
-    n_cols = sum(len(s.get("columns", [])) for s in payload.get("sources", []))
-    print(f"I see {DISCOVER_FILENAME} ({n_sources} source(s), {n_cols} column(s)).\n")
-
+    print(f"I see {DISCOVER_FILENAME}.\n")
     register_in = _prompt(
         "Which register is this project mostly built around? Press enter to skip\n"
         "(LISA, SCB-RAMS, ... — used by regmeta to pre-classify categorical "
@@ -201,24 +178,15 @@ def _stage3_configure(cwd: Path) -> int:
             print("Aborted.", file=sys.stderr)
             return 1
 
-    try:
-        configure_from_discover(
-            discover_path,
-            output_path=config_path,
-            overwrite=True,
-            register=register,
-        )
-    except (FileNotFoundError, FileExistsError, ValueError) as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        return 1
-    except RegmetaError as exc:
-        print(f"Error: regmeta lookup failed: {exc.message}", file=sys.stderr)
-        if exc.remediation:
-            print(f"  {exc.remediation}", file=sys.stderr)
-        print(
-            "  (leave register blank to skip regmeta lookup entirely)", file=sys.stderr
-        )
-        return 1
+    rc = run_configure_from_discover(
+        discover_path,
+        output_path=config_path,
+        overwrite=True,
+        register=register,
+        regmeta_skip_hint="leave register blank to skip regmeta lookup entirely",
+    )
+    if rc != 0:
+        return rc
 
     print(
         f"\nReview {CONFIG_FILENAME} before uploading. Common edits:\n"
@@ -287,23 +255,19 @@ def _done(cwd: Path) -> int:
     return 0
 
 
+_DISPATCH = {
+    Stage.BUILD: _stage1_build,
+    Stage.DISCOVER_INSTRUCTIONS: _stage2_instructions,
+    Stage.CONFIGURE: _stage3_configure,
+    Stage.EXTRACT_INSTRUCTIONS: _stage4_instructions,
+    Stage.GENERATE: _stage5_generate,
+    Stage.DONE: _done,
+}
+
+
 def run(cwd: Path) -> int:
-    stage = _detect_stage(cwd)
-    print(f"[stage: {stage.value}]\n", file=sys.stderr)
     try:
-        if stage is Stage.BUILD:
-            return _stage1_build(cwd)
-        if stage is Stage.DISCOVER_INSTRUCTIONS:
-            return _stage2_instructions(cwd)
-        if stage is Stage.CONFIGURE:
-            return _stage3_configure(cwd)
-        if stage is Stage.EXTRACT_INSTRUCTIONS:
-            return _stage4_instructions(cwd)
-        if stage is Stage.GENERATE:
-            return _stage5_generate(cwd)
-        if stage is Stage.DONE:
-            return _done(cwd)
+        return _DISPATCH[_detect_stage(cwd)](cwd)
     except KeyboardInterrupt:
         print("\nAborted.", file=sys.stderr)
         return 130
-    return 1

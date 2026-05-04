@@ -288,7 +288,7 @@ def _print_compare_table(data: dict) -> None:
 
 def _cmd_generate(args: argparse.Namespace) -> int:
     from .enrich import enrich
-    from .generate import generate
+    from .generate import MOCK_DATA_DIRNAME, generate
     from .stats import StatsValidationError, parse_stats
 
     stats_path = Path(args.stats)
@@ -302,7 +302,7 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         print(f"Stats validation error: {exc}", file=sys.stderr)
         return 1
 
-    output_dir = Path(args.output_dir) if args.output_dir else Path("mock_data")
+    output_dir = Path(args.output_dir) if args.output_dir else Path(MOCK_DATA_DIRNAME)
     n_sources = len(stats.sources)
     sample_label = f" at {args.sample_pct:.0%}" if args.sample_pct < 1.0 else ""
 
@@ -398,36 +398,15 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 def _cmd_configure(args: argparse.Namespace) -> int:
     """Author mdw_config.json from a discover.json."""
-    from regmeta.errors import RegmetaError
+    from .configure import run_configure_from_discover
 
-    from .configure import configure_from_discover
-
-    output_path = Path(args.output) if args.output else None
-    db_path = Path(args.db) if args.db else None
-    try:
-        configure_from_discover(
-            Path(args.discover),
-            output_path=output_path,
-            overwrite=args.overwrite,
-            register=args.register,
-            db_path=db_path,
-        )
-    except (FileNotFoundError, FileExistsError, ValueError) as e:
-        print(f"Error: {e}", file=sys.stderr)
-        return 1
-    except RegmetaError as e:
-        # Surface regmeta-side problems (missing DB, schema mismatch, ...)
-        # as a friendly CLI error rather than a stack trace. Hint the
-        # --no-regmeta-equivalent escape so users in automation can recover.
-        print(f"Error: regmeta lookup failed: {e.message}", file=sys.stderr)
-        if e.remediation:
-            print(f"  {e.remediation}", file=sys.stderr)
-        print(
-            "  (omit --register to skip regmeta lookup entirely)",
-            file=sys.stderr,
-        )
-        return 1
-    return 0
+    return run_configure_from_discover(
+        Path(args.discover),
+        output_path=Path(args.output) if args.output else None,
+        overwrite=args.overwrite,
+        register=args.register,
+        db_path=Path(args.db) if args.db else None,
+    )
 
 
 def _cmd_scan(args: argparse.Namespace) -> int:

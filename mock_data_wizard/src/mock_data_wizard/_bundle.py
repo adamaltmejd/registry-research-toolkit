@@ -143,8 +143,7 @@ VERBOSE = False
 CLASSIFIER_SEED = 0
 
 
-def configure():
-    return []
+# __MDW_CONFIGURE_BLOCK__
 
 
 # ===========================================================================
@@ -325,20 +324,21 @@ def _slice_module(name: str) -> str:
     return ast.unparse(ast.Module(body=kept, type_ignores=[]))
 
 
-CONFIGURE_STUB = "def configure():\n    return []"
+CONFIGURE_PLACEHOLDER = "# __MDW_CONFIGURE_BLOCK__"
+DEFAULT_CONFIGURE_BODY = "def configure():\n    return []"
 
 
 def build_bundle(output: Path, *, configure_body: str | None = None) -> Path:
     """Amalgamate the wizard runtime modules into a single ``.py``.
 
     When ``configure_body`` is supplied (a complete ``def configure(): ...``
-    function source), it replaces the empty stub in ``BUNDLE_HEADER``. The
-    interactive flow uses this to pre-fill the user's sources; programmatic
-    callers that don't pass ``configure_body`` still get the editable empty
-    stub (backward compatible).
+    function source), it fills the configure slot in ``BUNDLE_HEADER``.
+    Otherwise, the editable empty stub is used.
     """
     output.parent.mkdir(parents=True, exist_ok=True)
-    parts: list[str] = [BUNDLE_HEADER, ""]
+    body = (configure_body or DEFAULT_CONFIGURE_BODY).rstrip()
+    header = BUNDLE_HEADER.replace(CONFIGURE_PLACEHOLDER, body, 1)
+    parts: list[str] = [header, ""]
     for name in MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# {name}.py")
@@ -347,13 +347,5 @@ def build_bundle(output: Path, *, configure_body: str | None = None) -> Path:
         parts.append(_slice_module(name))
         parts.append("")
     parts.append(BUNDLE_RUNNER)
-    text = "\n".join(parts)
-    if configure_body is not None:
-        if CONFIGURE_STUB not in text:
-            raise RuntimeError(
-                "bundle template missing the configure stub — BUNDLE_HEADER "
-                "drifted; update CONFIGURE_STUB in _bundle.py to match"
-            )
-        text = text.replace(CONFIGURE_STUB, configure_body.rstrip(), 1)
-    output.write_text(text, encoding="utf-8")
+    output.write_text("\n".join(parts), encoding="utf-8")
     return output
