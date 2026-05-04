@@ -8,6 +8,7 @@ action that the CLI cannot perform itself.
 from __future__ import annotations
 
 import enum
+import re
 import sys
 from pathlib import Path
 
@@ -68,8 +69,53 @@ def _yes_no(message: str, *, default: bool) -> bool:
         print("Please answer y or n.", file=sys.stderr)
 
 
+def _yes_no_custom(message: str, *, default: str) -> str:
+    """Three-way prompt: returns ``'y'``, ``'n'``, or ``'c'`` (custom)."""
+    suffix_map = {"y": "[Y/n/c]", "n": "[y/N/c]"}
+    suffix = suffix_map[default]
+    while True:
+        try:
+            raw = input(f"{message} {suffix} ").strip().lower()
+        except EOFError:
+            return default
+        if not raw:
+            return default
+        if raw in ("y", "yes"):
+            return "y"
+        if raw in ("n", "no"):
+            return "n"
+        if raw in ("c", "custom"):
+            return "c"
+        print('Please answer y, n, or c (for "custom").', file=sys.stderr)
+
+
+_PROJECT_RE = re.compile(r"^P?(\d{4})$", re.IGNORECASE)
+
+
+def _normalize_project_number(raw: str) -> str | None:
+    """Accept ``P1405``/``p1405``/``1405`` → ``"P1405"``; else ``None``."""
+    m = _PROJECT_RE.match(raw.strip())
+    return f"P{m.group(1)}" if m else None
+
+
+def _prompt_project_number() -> str:
+    while True:
+        raw = _prompt("Project number (e.g. P1405)")
+        if not raw:
+            print("Project number is required.", file=sys.stderr)
+            continue
+        normalized = _normalize_project_number(raw)
+        if not normalized:
+            print(
+                "Expected 4 digits (e.g. 1405) or P-prefixed (e.g. P1405).",
+                file=sys.stderr,
+            )
+            continue
+        return normalized
+
+
 def _render_configure_body(
-    *, dsn: str | None = None, file_path: str | None = None
+    *, dsn: str | None = None, file_paths: list[str] | None = None
 ) -> str:
     """Render a ``configure()`` body from the user's Stage 1 answers.
 
@@ -77,13 +123,14 @@ def _render_configure_body(
     (``\\\\micro.intra\\projekt\\P1105$\\P1105_Data``) and DSN names
     round-trip safely as Python literals.
     """
-    if not dsn and not file_path:
-        raise ValueError("at least one of dsn or file_path must be supplied")
+    paths = file_paths or []
+    if not dsn and not paths:
+        raise ValueError("at least one of dsn or file_paths must be supplied")
     items: list[str] = []
     if dsn:
         items.append(f"sql_source(dsn={dsn!r})")
-    if file_path:
-        items.append(f"file_source(path={file_path!r})")
+    for fp in paths:
+        items.append(f"file_source(path={fp!r})")
     body = ",\n        ".join(items)
     return f"def configure():\n    return [\n        {body},\n    ]"
 
@@ -91,12 +138,11 @@ def _render_configure_body(
 def _print_discover_instructions() -> None:
     print(
         f"Next:\n"
-        f"  1. Upload {BUNDLE_FILENAME} to MONA (10 MB cap; .py is accepted).\n"
-        f'  2. Leave MODE = "discover" (the default).\n'
-        f"  3. Run on MONA: python {BUNDLE_FILENAME}\n"
+        f"  1. Upload {BUNDLE_FILENAME} to MONA.\n"
+        f"  2. On MONA's batch client, run {BUNDLE_FILENAME} with python\n"
         f"     -> writes {DISCOVER_FILENAME} next to the script.\n"
-        f"  4. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
-        f"  5. Re-run mock-data-wizard."
+        f"  3. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
+        f"  4. Re-run mock-data-wizard."
     )
 
 
@@ -105,36 +151,68 @@ def _print_extract_instructions() -> None:
         f"Next:\n"
         f"  1. Upload {CONFIG_FILENAME} next to {BUNDLE_FILENAME} on MONA.\n"
         f'  2. In the bundle, set MODE = "extract".\n'
-        f"  3. Run: python {BUNDLE_FILENAME} -> writes {STATS_FILENAME}.\n"
+        f"  3. On MONA's batch client, re-run {BUNDLE_FILENAME} with python\n"
+        f"     -> writes {STATS_FILENAME}.\n"
         f"  4. Sanity check (locally): mock-data-wizard scan {STATS_FILENAME}\n"
         f"  5. Copy {STATS_FILENAME} back into THIS directory.\n"
         f"  6. Re-run mock-data-wizard."
     )
 
 
-def _stage1_build(cwd: Path) -> int:
+def _stage1_build(cwd: Path, *, force: bool = False) -> int:
     print("Welcome to mock-data-wizard.")
     print("I'm assuming this directory is your project workspace:")
     print(f"  {cwd}")
     print(
-        "All artifacts (bundle, discover.json, mdw_config.json, stats.json,\n"
-        f"{MOCK_DATA_DIRNAME}/) will live here.\n"
+        f"All artifacts ({BUNDLE_FILENAME}, {DISCOVER_FILENAME},\n"
+        f"{CONFIG_FILENAME}, {STATS_FILENAME}, {MOCK_DATA_DIRNAME}/) will live here.\n"
     )
 
-    has_sql = _yes_no("Do you have a SQL/ODBC source on MONA?", default=True)
-    dsn = _prompt("DSN name (usually the project ID, e.g. P1105)") if has_sql else ""
+    project = _prompt_project_number()
 
-    has_file = _yes_no(
-        "Do you have file-based data (CSV/TXT on a UNC share)?", default=False
+    sql_choice = _yes_no_custom(
+        f"Do you have a SQL/ODBC source on MONA? (Y = DSN '{project}'; c = custom DSN)",
+        default="y",
     )
-    file_path = _prompt("Path") if has_file else ""
+    if sql_choice == "y":
+        dsn = project
+    elif sql_choice == "c":
+        dsn = _prompt("Custom DSN name").strip()
+        if not dsn:
+            print("DSN cannot be empty.", file=sys.stderr)
+            return 1
+    else:
+        dsn = ""
 
-    if not dsn and not file_path:
+    default_unc = rf"\\micro.intra\projekt\{project}$\{project}_Data"
+    file_choice = _yes_no_custom(
+        f"Do you have file-based data (CSV/TXT on a UNC share)? "
+        f"(y = '{default_unc}'; c = custom path)",
+        default="n",
+    )
+    file_paths: list[str] = []
+    if file_choice == "y":
+        file_paths.append(default_unc)
+    elif file_choice == "c":
+        first = _prompt("Path").strip()
+        if not first:
+            print("Path cannot be empty.", file=sys.stderr)
+            return 1
+        file_paths.append(first)
+
+    while file_paths and _yes_no("Add another file source path?", default=False):
+        extra = _prompt("Path").strip()
+        if not extra:
+            print("Path cannot be empty; skipping.", file=sys.stderr)
+            continue
+        file_paths.append(extra)
+
+    if not dsn and not file_paths:
         print("Need at least one source. Aborting.", file=sys.stderr)
         return 1
 
     bundle_path = cwd / BUNDLE_FILENAME
-    if bundle_path.exists():
+    if bundle_path.exists() and not force:
         if not _yes_no(
             f"{BUNDLE_FILENAME} already exists. Rebuild? "
             "Any hand-edits to configure() will be lost.",
@@ -143,23 +221,23 @@ def _stage1_build(cwd: Path) -> int:
             print("Aborted.", file=sys.stderr)
             return 1
 
-    body = _render_configure_body(dsn=dsn or None, file_path=file_path or None)
+    body = _render_configure_body(dsn=dsn or None, file_paths=file_paths)
     out = _bundle.build_bundle(bundle_path, configure_body=body)
     print(f"\nBuilt {out} ({out.stat().st_size:,} bytes)\n")
     _print_discover_instructions()
     return 0
 
 
-def _stage2_instructions(cwd: Path) -> int:
+def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
     print(f"I see {BUNDLE_FILENAME} but no {DISCOVER_FILENAME} yet.\n")
     _print_discover_instructions()
     print()
     if _yes_no("Want to rebuild the bundle (e.g. add a source)?", default=False):
-        return _stage1_build(cwd)
+        return _stage1_build(cwd, force=force)
     return 0
 
 
-def _stage3_configure(cwd: Path) -> int:
+def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
     from .configure import run_configure_from_discover
 
     discover_path = cwd / DISCOVER_FILENAME
@@ -173,7 +251,7 @@ def _stage3_configure(cwd: Path) -> int:
     )
     register = register_in or None
 
-    if config_path.exists():
+    if config_path.exists() and not force:
         if not _yes_no(f"{CONFIG_FILENAME} already exists. Overwrite?", default=False):
             print("Aborted.", file=sys.stderr)
             return 1
@@ -199,13 +277,13 @@ def _stage3_configure(cwd: Path) -> int:
     return 0
 
 
-def _stage4_instructions(cwd: Path) -> int:
+def _stage4_instructions(cwd: Path, *, force: bool = False) -> int:
     print(f"I see {CONFIG_FILENAME} but no {STATS_FILENAME} yet.\n")
     _print_extract_instructions()
     return 0
 
 
-def _stage5_generate(cwd: Path) -> int:
+def _stage5_generate(cwd: Path, *, force: bool = False) -> int:
     from argparse import Namespace
 
     from .cli import _cmd_generate
@@ -223,14 +301,14 @@ def _stage5_generate(cwd: Path) -> int:
         db=None,
         no_regmeta=False,
         register=None,
-        yes=False,
-        force=False,
+        yes=force,
+        force=force,
         verbose=False,
     )
     return _cmd_generate(args)
 
 
-def _done(cwd: Path) -> int:
+def _done(cwd: Path, *, force: bool = False) -> int:
     mock_dir = cwd / MOCK_DATA_DIRNAME
     n_files = sum(1 for p in mock_dir.iterdir() if p.is_file())
     present = [
@@ -246,19 +324,19 @@ def _done(cwd: Path) -> int:
     present.append(f"{MOCK_DATA_DIRNAME}/ ({n_files} files)")
     print("This project looks complete:\n  " + " / ".join(present) + "\n")
     print(
-        "What now?\n"
-        "  [r] regenerate mock CSVs from stats.json\n"
-        "  [c] re-run configure (re-author mdw_config.json)\n"
-        "  [b] rebuild the bundle\n"
-        "  [q] quit"
+        f"What now?\n"
+        f"  [r] regenerate mock CSVs from {STATS_FILENAME}\n"
+        f"  [c] re-run configure (re-author {CONFIG_FILENAME})\n"
+        f"  [b] rebuild the bundle\n"
+        f"  [q] quit"
     )
     choice = _prompt("Choice", default="q").lower()
     if choice == "r":
-        return _stage5_generate(cwd)
+        return _stage5_generate(cwd, force=force)
     if choice == "c":
-        return _stage3_configure(cwd)
+        return _stage3_configure(cwd, force=force)
     if choice == "b":
-        return _stage1_build(cwd)
+        return _stage1_build(cwd, force=force)
     return 0
 
 
@@ -272,9 +350,9 @@ _DISPATCH = {
 }
 
 
-def run(cwd: Path) -> int:
+def run(cwd: Path, *, force: bool = False) -> int:
     try:
-        return _DISPATCH[_detect_stage(cwd)](cwd)
+        return _DISPATCH[_detect_stage(cwd)](cwd, force=force)
     except KeyboardInterrupt:
         print("\nAborted.", file=sys.stderr)
         return 130

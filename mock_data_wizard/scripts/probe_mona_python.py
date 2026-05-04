@@ -1,7 +1,7 @@
 """MONA Python probe -- exercises the Python stack on the MONA batch client.
 
 Verifies that the runtime mock_data_wizard ships in
-(`mock_data_wizard_extract.py`) actually works on MONA: stdlib + numpy
+(`mdw_runner.py`) actually works on MONA: stdlib + numpy
 + duckdb + pyodbc, file IO, ODBC against the project DSN. Re-run this
 when MONA's WinPython distribution changes to confirm the bundle still
 boots.

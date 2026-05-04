@@ -38,7 +38,10 @@ regmeta/input_data/*
 # mock-data-wizard generated output
 mock_data/
 mock_output/
-stats.json
+mdw_runner.py
+mdw_step1_discovery.json
+mdw_step2_config.json
+mdw_step3_stats.json
 extract_stats*.R
 
 # MONA probe artefacts -- can contain workspace metadata (paths,

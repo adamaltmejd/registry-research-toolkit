@@ -8,24 +8,24 @@ The bundle has two modes (`MODE = "discover"` / `"extract"`) and the
 end-to-end loop crosses the MONA boundary three times:
 
 1. `mock-data-wizard build-bundle` (local) — amalgamates the runtime
-   modules into a single `mock_data_wizard_extract.py` for MONA upload.
+   modules into a single `mdw_runner.py` for MONA upload.
 2. **Discover** on MONA. Edit `configure()` in the bundle, leave
    `MODE = "discover"`, upload, and run:
-   `python mock_data_wizard_extract.py` — writes `discover.json`
+   `python mdw_runner.py` — writes `mdw_step1_discovery.json`
    (metadata only: column names, SQL types, row counts; no values, no
    distinct counts, no samples).
-3. `mock-data-wizard configure [--register LISA] discover.json`
-   (local) — reads `discover.json`, applies the layered classifier
+3. `mock-data-wizard configure [--register LISA] mdw_step1_discovery.json`
+   (local) — reads `mdw_step1_discovery.json`, applies the layered classifier
    (id-name → regmeta classification → categorical-name → sql_type →
    `high_cardinality` default; see *Configure classifier priority*
-   below), and writes `mdw_config.json`. The user reviews and edits
+   below), and writes `mdw_step2_config.json`. The user reviews and edits
    this file by hand before re-uploading.
 4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
-   `mdw_config.json` next to it, re-run on MONA — writes `stats.json`
+   `mdw_step2_config.json` next to it, re-run on MONA — writes `mdw_step3_stats.json`
    (only aggregate statistics; the configured types drive per-column
    SQL with no data-driven classifier pass).
 5. `mock-data-wizard generate` (local) — produces mock CSVs from
-   `stats.json`.
+   `mdw_step3_stats.json`.
 
 Why three trips. Discover is metadata-only and PII-safe by
 construction; running it first means the per-column type assignment
@@ -46,10 +46,10 @@ instructions for the MONA-side action. The detection table:
 | Latest artifact in cwd | Stage | Action |
 |---|---|---|
 | (none) | build | Interview; build the bundle with `configure()` filled in |
-| `mock_data_wizard_extract.py` | discover | Print upload + run instructions |
-| `discover.json` | configure | Single register prompt; run `configure_from_discover` |
-| `mdw_config.json` | extract | Print upload + run instructions |
-| `stats.json` | generate | Dispatch to `generate` with defaults |
+| `mdw_runner.py` | discover | Print upload + run instructions |
+| `mdw_step1_discovery.json` | configure | Single register prompt; run `configure_from_discover` |
+| `mdw_step2_config.json` | extract | Print upload + run instructions |
+| `mdw_step3_stats.json` | generate | Dispatch to `generate` with defaults |
 | `mock_data/` populated | done | Offer to redo any stage |
 
 Subcommand usage (`mock-data-wizard build-bundle`, `configure`,
@@ -100,7 +100,7 @@ switch the diagnostic strategy:
   `/dev/null`, including `os.dup2` over fd 1/fd 2 so C-extension
   output can't slip through. On non-MBS hosts the console is left
   alone (interactive use). On a successful run, the only artefact on
-  disk is `stats.json`.
+  disk is `mdw_step3_stats.json`.
 - **`DEBUG=True`**: a single combined log file
   `mdw_log_<HOST>_<TS>.txt` is opened line-buffered and used for
   everything — boot trace, our `logging.FileHandler`, and (via
@@ -139,7 +139,7 @@ stricter than what's actually enforced. Verified directly:
 - **Non-ASCII filenames** can be created on the home share.
 - **cwd at batch start is the user's home share** (`\\micro.intra\
   mydocs\...\InBox`, ~250 MB free) — the script must never depend on
-  cwd for output. `stats.json` is small enough to live next to the
+  cwd for output. `mdw_step3_stats.json` is small enough to live next to the
   script; everything else (DuckDB spill especially) goes to
   `C:\Windows\TEMP`.
 - **`locale.getpreferredencoding()` is `cp1252`** — pass `encoding=`
@@ -180,7 +180,7 @@ pattern. For each table/file, the discoverer pulls `COUNT(*)` plus
 column metadata from `INFORMATION_SCHEMA.COLUMNS` (SQL) or DuckDB
 `DESCRIBE` (files). No row-level data is read.
 
-Output is `discover.json`:
+Output is `mdw_step1_discovery.json`:
 
 ```json
 {
@@ -201,16 +201,16 @@ Output is `discover.json`:
 ```
 
 Discover passes through the same `scan.write_export` PII scanner as
-`stats.json` — column names and `sql_type` strings are unlikely to
+`mdw_step3_stats.json` — column names and `sql_type` strings are unlikely to
 contain personnummer, but defense-in-depth is cheap.
 
 ### Extract mode (`MODE = "extract"`)
 
-The bundle's second MONA trip. Requires `mdw_config.json` next to
+The bundle's second MONA trip. Requires `mdw_step2_config.json` next to
 the bundle. Source filtering is **strict** here — `sql_source` must
 declare `tables=`, `pattern=`, or `all=True`; the permissive
 unfiltered mode is discover-only. Every column the source yields must
-have a type override in `mdw_config.json`; an unconfigured column
+have a type override in `mdw_step2_config.json`; an unconfigured column
 errors out (it would have to fall back to a data-driven classifier
 pass, which this mode explicitly does not have).
 
@@ -248,13 +248,13 @@ which is the disclosure-relevant denominator. A `where` that narrows
 to a handful of individuals is exactly the kind of risk
 SMALL_POP_MULT × SUPPRESS_K is meant to flag.
 
-The clause is recorded in `source_detail.where` in `stats.json` so the
+The clause is recorded in `source_detail.where` in `mdw_step3_stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
 ### Configure classifier priority
 
-`configure` walks each column from `discover.json` and assigns one of
+`configure` walks each column from `mdw_step1_discovery.json` and assigns one of
 the five types via this chain (first match wins):
 
 1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
@@ -274,7 +274,7 @@ the five types via this chain (first match wins):
    is DuckDB's own inference (which already does int-vs-double on
    the data — no separate value-peeking pass at discover time).
 5. **Fallthrough** — `high_cardinality`. Misclassified, you fix it
-   in `mdw_config.json` for the next iteration.
+   in `mdw_step2_config.json` for the next iteration.
 
 The chain deliberately gives regmeta authority over names for
 categorical detection but not over `is_known_id`: regmeta has no
@@ -285,9 +285,9 @@ it's inconsistent across years for the same variable (a single
 `variable_instance` rows), so `sql_type` is the more reliable
 storage-type signal.
 
-### Per-column type config via `mdw_config.json`
+### Per-column type config via `mdw_step2_config.json`
 
-Authored by `mock-data-wizard configure` from a `discover.json` and
+Authored by `mock-data-wizard configure` from a `mdw_step1_discovery.json` and
 uploaded next to the bundle. Extract mode is strict: every column on
 every source must carry a type entry, the schema is validated on load,
 and typos error out instead of getting silently dropped.
@@ -409,7 +409,7 @@ An exact small null-count would expose a handful of outliers.
 `SUPPRESS_K` fold into a single `_other` bucket. The `_other` bucket
 itself is k-anonymized: when `0 < other < SUPPRESS_K`, the bucket is
 dropped entirely (consumers default its weight to 0). Override
-per-column via `mdw_config.json`'s `column_options[<glob>][<col>]
+per-column via `mdw_step2_config.json`'s `column_options[<glob>][<col>]
 .suppress_k` — values must be ≥ the global `SUPPRESS_K`, so the
 override can only *raise* the threshold, never lower it.
 
@@ -423,9 +423,9 @@ that buys nothing because the sample is already on the wire.
 ### Pre-export PII scanner
 
 `scan.write_export(path, payload)` is the *only* code path that writes
-files leaving the bundle's `output_dir`: `stats.json` (extract mode)
-and `discover.json` (discover mode) both go through it.
-`mdw_config.json` is an *input* and isn't covered by this scanner.
+files leaving the bundle's `output_dir`: `mdw_step3_stats.json` (extract mode)
+and `mdw_step1_discovery.json` (discover mode) both go through it.
+`mdw_step2_config.json` is an *input* and isn't covered by this scanner.
 The scanner is defense-in-depth on top of the per-type branches in
 `summarize.py`, which already only emit aggregates by construction.
 It exists for the case where a misclassified column (e.g.
@@ -520,7 +520,7 @@ shared_tokens, prefix_hits, overlap, code_count)`. Earlier tiers
 dominate; later fields break ties within a tier.
 
 1. **Year match.** When both the source carries a `year` (set in
-   `source_detail` from a name regex or `mdw_config.json`'s `sources`
+   `source_detail` from a name regex or `mdw_step2_config.json`'s `sources`
    block) and the CVID's `register_version.registerversionnamn` parses
    as a year, prefer the CVID whose year is closest. Exact match
    beats "close"; "close" beats CVIDs with no year info. Year ranks
@@ -563,7 +563,7 @@ coding-scheme hint, not a validation of the observed code set.
 
 Many SCB datasets have **panel structure** — the same person (or firm,
 or family) appears across multiple time periods. Mock data preserves
-this structure when the user declares panels in `mdw_config.json`:
+this structure when the user declares panels in `mdw_step2_config.json`:
 
 ```json
 {
@@ -610,7 +610,7 @@ source so a generator-side `panel_by_source` collision can't silently
 drop the second panel's behavior. Multi-key panels (one source, two
 panel_keys) are explicitly out of scope.
 
-`stats.json` carries a top-level `panels` array, decoupled from
+`mdw_step3_stats.json` carries a top-level `panels` array, decoupled from
 `sources`:
 
 ```json

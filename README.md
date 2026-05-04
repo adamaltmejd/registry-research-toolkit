@@ -72,10 +72,10 @@ regmeta docs search "disponibel inkomst"             # search documentation
 ### mock-data-wizard
 
 ```bash
-mock-data-wizard build-bundle                        # build mock_data_wizard_extract.py
-# Upload the bundle to MONA, edit configure(), run `python mock_data_wizard_extract.py`,
-# download stats.json
-mock-data-wizard generate --stats stats.json --seed 42   # mock CSVs
+mock-data-wizard build-bundle                        # build mdw_runner.py
+# Upload the bundle to MONA, edit configure(), run `python mdw_runner.py`,
+# download mdw_step3_stats.json
+mock-data-wizard generate --stats mdw_step3_stats.json --seed 42   # mock CSVs
 ```
 
 See per-package READMEs for details:

@@ -1,7 +1,7 @@
-"""Local ``configure`` step: discover.json -> mdw_config.json.
+"""Local ``configure`` step: mdw_step1_discovery.json -> mdw_step2_config.json.
 
-Reads ``discover.json`` produced by the bundle in discover mode and
-writes a ``mdw_config.json`` next to it. Per-column type assignment
+Reads ``mdw_step1_discovery.json`` produced by the bundle in discover mode and
+writes a ``mdw_step2_config.json`` next to it. Per-column type assignment
 priority (first match wins):
 
 1. **Known id name.** ``is_known_id(name)`` — ``lopnr`` / ``persnr``.
@@ -21,11 +21,11 @@ priority (first match wins):
    is DuckDB's own inference (which already does int-vs-double on the
    data) — no separate value-peeking pass at discover time.
 5. **Fallthrough.** Anything we don't recognise (VARCHAR/TEXT/...) →
-   ``high_cardinality``. Misclassified, you fix it in mdw_config.json.
+   ``high_cardinality``. Misclassified, you fix it in mdw_step2_config.json.
 
-Year-source carry-through: any ``year`` from ``discover.json``'s
+Year-source carry-through: any ``year`` from ``mdw_step1_discovery.json``'s
 ``source_detail`` lands in a top-level ``sources`` block so the extract
-step can pass it back through to ``stats.json``.
+step can pass it back through to ``mdw_step3_stats.json``.
 """
 
 from __future__ import annotations
@@ -43,7 +43,7 @@ from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
 
 log = logging.getLogger("mdw.configure")
 
-CONFIG_FILENAME = "mdw_config.json"
+CONFIG_FILENAME = "mdw_step2_config.json"
 
 
 # SQL type tokens, normalised to lowercase. Match the leading bare
@@ -121,10 +121,10 @@ def _classify(
 
 
 def _validate_discover_payload(payload: Any, source_label: str) -> None:
-    """Type-check a discover.json payload.
+    """Type-check a mdw_step1_discovery.json payload.
 
     Raises ``ValueError`` with a CLI-friendly message when the user
-    points configure at the wrong file (e.g. ``stats.json`` -- which
+    points configure at the wrong file (e.g. ``mdw_step3_stats.json`` -- which
     has the same top-level shape but lacks a discover contract version)
     or a partial / malformed discover file.
     """
@@ -133,9 +133,9 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
     cv = payload.get("contract_version")
     if not (isinstance(cv, str) and cv.startswith("discover-")):
         raise ValueError(
-            f"{source_label}: expected a discover.json (contract_version "
+            f"{source_label}: expected a mdw_step1_discovery.json (contract_version "
             f"like 'discover-1.0.0'), got contract_version={cv!r}. "
-            f"Did you point configure at stats.json by mistake?"
+            f"Did you point configure at mdw_step3_stats.json by mistake?"
         )
     sources = payload.get("sources")
     if not isinstance(sources, list):
@@ -158,8 +158,8 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
         if "columns" not in src:
             raise ValueError(
                 f"{source_label}: sources[{i}] ({name!r}) missing 'columns'. "
-                f"A truncated discover.json would silently produce an "
-                f"incomplete mdw_config.json."
+                f"A truncated mdw_step1_discovery.json would silently produce an "
+                f"incomplete mdw_step2_config.json."
             )
         cols = src["columns"]
         if not isinstance(cols, list):
@@ -217,7 +217,7 @@ def build_config(
     register: str | None = None,
     db_path: Path | None = None,
 ) -> dict[str, Any]:
-    """Author a mdw_config.json payload from a discover.json payload.
+    """Author a mdw_step2_config.json payload from a mdw_step1_discovery.json payload.
 
     When ``register`` is supplied, opens the regmeta DB at ``db_path``
     (or the default location), resolves the register string to one or
@@ -296,7 +296,7 @@ def _summary_counts(payload: dict[str, Any]) -> Counter[str]:
 
 
 def write_config(path: Path, payload: dict[str, Any]) -> None:
-    """Pretty-write ``mdw_config.json``. UTF-8, keys preserved as-is."""
+    """Pretty-write ``mdw_step2_config.json``. UTF-8, keys preserved as-is."""
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n",
@@ -312,17 +312,17 @@ def configure_from_discover(
     register: str | None = None,
     db_path: Path | None = None,
 ) -> Path:
-    """Top-level entry point: read ``discover_path``, write mdw_config.json.
+    """Top-level entry point: read ``discover_path``, write mdw_step2_config.json.
 
     Returns the path of the written file. Raises on:
-    - missing discover.json
-    - existing mdw_config.json without ``overwrite=True``
+    - missing mdw_step1_discovery.json
+    - existing mdw_step2_config.json without ``overwrite=True``
     - empty discover (zero sources -- nothing to configure)
     - register name supplied but unresolvable in regmeta.
     """
     discover_path = Path(discover_path)
     if not discover_path.exists():
-        raise FileNotFoundError(f"discover.json not found: {discover_path}")
+        raise FileNotFoundError(f"mdw_step1_discovery.json not found: {discover_path}")
 
     target = (
         Path(output_path)

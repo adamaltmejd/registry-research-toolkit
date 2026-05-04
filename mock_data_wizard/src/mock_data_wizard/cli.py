@@ -14,22 +14,24 @@ personal data. The workflow has three on-MONA-and-back steps:
   Step 1: Build the bundle locally.
 
     mock-data-wizard build-bundle
-    # Produces mock_data_wizard_extract.py in the current directory.
+    # Produces mdw_runner.py in the current directory.
 
   Step 2: Discover schemas on MONA, configure types locally, extract
           aggregates on MONA.
 
     # Edit configure() in the bundle, leave MODE = "discover".
-    # Upload to MONA and run:
-    python mock_data_wizard_extract.py        # writes discover.json
-    # Copy discover.json off MONA, then locally:
-    mock-data-wizard configure discover.json  # writes mdw_config.json
-    # Edit mdw_config.json if needed; upload it next to the bundle.
-    # On MONA, set MODE = "extract" in the bundle and re-run:
-    python mock_data_wizard_extract.py        # writes stats.json
-    # Verify that stats.json contains no personal data, then copy it
-    # off MONA. The bundle censors cells with fewer than k individuals
-    # (default k=10) but you should still spot-check before exporting.
+    # Upload to MONA. On MONA's batch client, run mdw_runner.py with
+    # python -> writes mdw_step1_discovery.json next to the bundle.
+    # Copy mdw_step1_discovery.json off MONA, then locally:
+    mock-data-wizard configure mdw_step1_discovery.json
+    # writes mdw_step2_config.json
+    # Edit mdw_step2_config.json if needed; upload next to the bundle.
+    # On MONA, set MODE = "extract" in the bundle and re-run
+    # -> writes mdw_step3_stats.json.
+    # Verify mdw_step3_stats.json contains no personal data, then copy
+    # it off MONA. The bundle censors cells with fewer than k
+    # individuals (default k=10) but you should still spot-check before
+    # exporting.
 
   Step 3: Generate mock CSV files from the stats.
 
@@ -43,28 +45,29 @@ personal data. The workflow has three on-MONA-and-back steps:
 BUILD_BUNDLE_HELP = """\
 Build the single-file Python bundle that runs on MONA.
 
-  1. Run this command locally to create mock_data_wizard_extract.py.
+  1. Run this command locally to create mdw_runner.py.
   2. Upload the bundle to your MONA project directory.
   3. Edit the configure() block at the top to declare your data sources.
-  4. With MODE = "discover", run on MONA: python mock_data_wizard_extract.py
-     -> writes discover.json
-  5. Copy discover.json off MONA, run `mock-data-wizard configure
-     discover.json` locally to author mdw_config.json, upload it next
-     to the bundle.
+  4. With MODE = "discover", on MONA's batch client run mdw_runner.py
+     with python -> writes mdw_step1_discovery.json.
+  5. Copy mdw_step1_discovery.json off MONA, run `mock-data-wizard
+     configure mdw_step1_discovery.json` locally to author
+     mdw_step2_config.json, upload it next to the bundle.
   6. Switch the bundle to MODE = "extract" and re-run on MONA
-     -> writes stats.json (only aggregate statistics; no row-level data).
+     -> writes mdw_step3_stats.json (only aggregate statistics; no
+     row-level data).
 """
 
 CONFIGURE_HELP = """\
-Author mdw_config.json from a discover.json produced by the bundle in
-discover mode.
+Author mdw_step2_config.json from an mdw_step1_discovery.json produced
+by the bundle in discover mode.
 
 The configurer assigns one of {id, categorical, numeric,
 high_cardinality, date} per column based on name patterns (lopnr ->
 id, *Datum* -> date, *Belopp* -> numeric, etc.). Anything ambiguous
 defaults to high_cardinality, which is the safe choice -- it emits
 only string-length aggregates. You'll want to review and edit the
-output by hand before uploading mdw_config.json back to MONA.
+output by hand before uploading mdw_step2_config.json back to MONA.
 """
 
 COMPARE_HELP = """\
@@ -79,7 +82,8 @@ CSV and --columns modes require --register.
 """
 
 GENERATE_HELP = """\
-Generate mock CSV files from a stats.json produced by the MONA extract bundle.
+Generate mock CSV files from an mdw_step3_stats.json produced by the
+MONA extract bundle.
 
 By default, uses the regmeta database to enrich categorical columns with
 registry metadata (value codes, variable names). If the regmeta database
@@ -88,7 +92,7 @@ is not available, use --no-regmeta to skip enrichment.
 Examples:
   mock-data-wizard generate
   mock-data-wizard generate --sample-pct 0.1 --seed 42
-  mock-data-wizard generate --stats path/to/stats.json --no-regmeta
+  mock-data-wizard generate --stats path/to/mdw_step3_stats.json --no-regmeta
 """
 
 
@@ -397,7 +401,7 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 
 def _cmd_configure(args: argparse.Namespace) -> int:
-    """Author mdw_config.json from a discover.json."""
+    """Author mdw_step2_config.json from a mdw_step1_discovery.json."""
     from .configure import run_configure_from_discover
 
     return run_configure_from_discover(
@@ -461,6 +465,10 @@ def _print_version() -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
+    from ._bundle import DEFAULT_OUTPUT_NAME as BUNDLE_FILENAME
+    from .configure import CONFIG_FILENAME
+    from .extract import DISCOVER_FILENAME, STATS_FILENAME
+
     parser = argparse.ArgumentParser(
         prog="mock-data-wizard",
         description=DESCRIPTION,
@@ -478,6 +486,16 @@ def build_parser() -> argparse.ArgumentParser:
         default=False,
         help="Suppress the interactive default flow; print help if no command is given.",
     )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        default=False,
+        dest="interactive_force",
+        help="Auto-confirm all prompts in the interactive flow "
+        "(rebuild bundle, overwrite config, regenerate mock CSVs). "
+        "Has no effect when a subcommand is given; pass `--force` to "
+        "the subcommand instead.",
+    )
     sub = parser.add_subparsers(dest="command")
 
     # build-bundle
@@ -490,7 +508,7 @@ def build_parser() -> argparse.ArgumentParser:
     bb.add_argument(
         "--output",
         "-o",
-        help="Output path (default: mock_data_wizard_extract.py in cwd)",
+        help=f"Output path (default: {BUNDLE_FILENAME} in cwd)",
     )
 
     # compare
@@ -538,14 +556,14 @@ def build_parser() -> argparse.ArgumentParser:
     # generate
     gen = sub.add_parser(
         "generate",
-        help="Step 2: Generate mock CSV files from stats.json",
+        help=f"Step 2: Generate mock CSV files from {STATS_FILENAME}",
         description=GENERATE_HELP,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     gen.add_argument(
         "--stats",
-        default="stats.json",
-        help="Path to stats.json (default: stats.json in current directory)",
+        default=STATS_FILENAME,
+        help=f"Path to {STATS_FILENAME} (default: {STATS_FILENAME} in current directory)",
     )
     gen.add_argument(
         "--seed",
@@ -608,23 +626,23 @@ def build_parser() -> argparse.ArgumentParser:
     # configure
     cfg = sub.add_parser(
         "configure",
-        help="Author mdw_config.json from discover.json",
+        help=f"Author {CONFIG_FILENAME} from {DISCOVER_FILENAME}",
         description=CONFIGURE_HELP,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     cfg.add_argument(
         "discover",
-        help="Path to discover.json produced by the bundle in discover mode.",
+        help=f"Path to {DISCOVER_FILENAME} produced by the bundle in discover mode.",
     )
     cfg.add_argument(
         "--output",
         "-o",
-        help="Output path for mdw_config.json (default: next to discover.json).",
+        help=f"Output path for {CONFIG_FILENAME} (default: next to {DISCOVER_FILENAME}).",
     )
     cfg.add_argument(
         "--overwrite",
         action="store_true",
-        help="Replace mdw_config.json if it already exists.",
+        help=f"Replace {CONFIG_FILENAME} if it already exists.",
     )
     cfg.add_argument(
         "--register",
@@ -678,7 +696,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         from .interactive import run as interactive_run
 
-        return interactive_run(Path.cwd())
+        return interactive_run(Path.cwd(), force=args.interactive_force)
 
     if args.command == "update":
         return _cmd_update(args)

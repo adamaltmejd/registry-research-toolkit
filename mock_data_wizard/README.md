@@ -22,19 +22,19 @@ version on startup and points at this command if one is available.
 ```bash
 # Step 1: Build the MONA extract bundle
 mock-data-wizard build-bundle
-# Writes mock_data_wizard_extract.py in the current directory.
+# Writes mdw_runner.py in the current directory.
 
 # Upload the bundle to MONA. The first run is a discovery pass — the
 # bundle lists available files and SQL tables into a timestamped sidecar
 # `mdw_sources_<YYYYMMDD_HHMMSS>.py` alongside the script, then exits.
 # Edit the sidecar to narrow each source to what you want, then re-run
-# `python mock_data_wizard_extract.py` — it auto-loads the latest sidecar
-# and produces stats.json. (Once a sidecar exists it overrides `configure()`;
+# `python mdw_runner.py` — it auto-loads the latest sidecar
+# and produces mdw_step3_stats.json. (Once a sidecar exists it overrides `configure()`;
 # delete the sidecar if you want `configure()` edits to take effect again.)
-# IMPORTANT: verify stats.json contains no PII.
+# IMPORTANT: verify mdw_step3_stats.json contains no PII.
 
 # Step 2: Generate mock CSV files locally
-mock-data-wizard generate --stats stats.json --seed 42
+mock-data-wizard generate --stats mdw_step3_stats.json --seed 42
 
 # Optional: compare mock data against registry schema
 mock-data-wizard compare manifest.json
@@ -45,7 +45,7 @@ Use `--help` on any command for full flag documentation.
 ## Data sources
 
 The bundle exposes a `configure()` function near the top of
-`mock_data_wizard_extract.py`. Edit it to declare what to aggregate.
+`mdw_runner.py`. Edit it to declare what to aggregate.
 Two constructors are available:
 
 ```python
@@ -69,7 +69,7 @@ def configure():
 Discovery mode: when a source has no filtering info (no `include`/
 `tables`/`pattern`/`queries`), the bundle writes a timestamped
 `mdw_sources_<YYYYMMDD_HHMMSS>.py` sidecar listing everything
-discoverable, and exits without writing `stats.json`. Edit the sidecar
+discoverable, and exits without writing `mdw_step3_stats.json`. Edit the sidecar
 to narrow each source to the items you want, then re-run the bundle —
 it auto-loads the sidecar on the next run (no copy-paste back into
 `configure()`). Delete the sidecar to re-discover. A source that can't
@@ -91,7 +91,7 @@ def configure():
 | Command | Purpose |
 |---|---|
 | `build-bundle` | Build the single-file Python bundle to upload to MONA |
-| `generate` | Produce mock CSV files from stats.json |
+| `generate` | Produce mock CSV files from mdw_step3_stats.json |
 | `compare` | Compare local file columns against registry metadata |
 
 ## PII safety

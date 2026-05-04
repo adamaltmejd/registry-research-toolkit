@@ -99,7 +99,7 @@ class SqlTable:
     on MS SQL). ``where`` becomes a ``WHERE`` clause applied server-side
     before any aggregation, scoped to this table only. ``alias`` defaults
     to the unqualified portion of ``qualified`` and is used as the
-    ``source_name`` in ``stats.json`` and as the dedup key when multiple
+    ``source_name`` in ``mdw_step3_stats.json`` and as the dedup key when multiple
     schemas share a table name.
     """
 

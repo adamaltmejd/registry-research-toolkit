@@ -1,4 +1,4 @@
-"""Tests for the local ``configure`` step (discover.json -> mdw_config.json).
+"""Tests for the local ``configure`` step (mdw_step1_discovery.json -> mdw_step2_config.json).
 
 Cover the per-column classifier, the file IO around
 ``configure_from_discover``, and the regmeta classification-lookup
@@ -309,7 +309,7 @@ def test_classification_lookup_strips_project_prefix():
 
 
 def _write_discover(tmp_path: Path, payload: dict) -> Path:
-    p = tmp_path / "discover.json"
+    p = tmp_path / "mdw_step1_discovery.json"
     full = {"contract_version": "discover-1.0.0", **payload}
     p.write_text(json.dumps(full), encoding="utf-8")
     return p
@@ -328,7 +328,7 @@ def test_configure_from_discover_writes_next_to_input(tmp_path: Path):
         },
     )
     out = configure_from_discover(discover_path)
-    assert out == tmp_path / "mdw_config.json"
+    assert out == tmp_path / "mdw_step2_config.json"
     assert out.exists()
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
@@ -353,7 +353,7 @@ def test_configure_refuses_to_overwrite(tmp_path: Path):
         tmp_path,
         {"sources": [{"source_name": "a", "columns": [{"name": "x"}]}]},
     )
-    (tmp_path / "mdw_config.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "mdw_step2_config.json").write_text("{}", encoding="utf-8")
     with pytest.raises(FileExistsError, match="already exists"):
         configure_from_discover(discover_path)
 
@@ -363,7 +363,7 @@ def test_configure_overwrite_replaces_existing(tmp_path: Path):
         tmp_path,
         {"sources": [{"source_name": "a", "columns": [{"name": "lopnr"}]}]},
     )
-    target = tmp_path / "mdw_config.json"
+    target = tmp_path / "mdw_step2_config.json"
     target.write_text("{}", encoding="utf-8")
     configure_from_discover(discover_path, overwrite=True)
     payload = json.loads(target.read_text(encoding="utf-8"))
@@ -382,9 +382,9 @@ def test_configure_raises_when_input_missing(tmp_path: Path):
 
 
 def test_configure_rejects_stats_json_with_actionable_error(tmp_path: Path):
-    """Pointing configure at stats.json (or anything without a discover
+    """Pointing configure at mdw_step3_stats.json (or anything without a discover
     contract_version) must fail with a controlled message, not KeyError."""
-    bad = tmp_path / "stats.json"
+    bad = tmp_path / "mdw_step3_stats.json"
     bad.write_text(
         json.dumps(
             {
@@ -394,13 +394,13 @@ def test_configure_rejects_stats_json_with_actionable_error(tmp_path: Path):
         ),
         encoding="utf-8",
     )
-    with pytest.raises(ValueError, match="discover.json"):
+    with pytest.raises(ValueError, match="mdw_step1_discovery.json"):
         configure_from_discover(bad)
 
 
 def test_configure_rejects_payload_missing_columns_key(tmp_path: Path):
     """Partial discover file: a column entry without 'name'."""
-    p = tmp_path / "discover.json"
+    p = tmp_path / "mdw_step1_discovery.json"
     p.write_text(
         json.dumps(
             {
@@ -415,8 +415,8 @@ def test_configure_rejects_payload_missing_columns_key(tmp_path: Path):
 
 
 def test_configure_rejects_source_missing_columns_field(tmp_path: Path):
-    """A truncated discover.json with no 'columns' field must fail at the
-    contract boundary, not silently emit an incomplete mdw_config.json."""
+    """A truncated mdw_step1_discovery.json with no 'columns' field must fail at the
+    contract boundary, not silently emit an incomplete mdw_step2_config.json."""
     p = _write_discover(
         tmp_path,
         {"sources": [{"source_name": "a"}]},
@@ -458,7 +458,7 @@ def test_cli_configure_invokes_module(tmp_path: Path):
     )
     rc = cli_main(["configure", str(discover_path)])
     assert rc == 0
-    target = tmp_path / "mdw_config.json"
+    target = tmp_path / "mdw_step2_config.json"
     assert target.exists()
     payload = json.loads(target.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
@@ -472,7 +472,7 @@ def test_cli_configure_refuses_overwrite_without_flag(tmp_path: Path):
         tmp_path,
         {"sources": [{"source_name": "a", "columns": [{"name": "x"}]}]},
     )
-    (tmp_path / "mdw_config.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "mdw_step2_config.json").write_text("{}", encoding="utf-8")
     rc = cli_main(["configure", str(discover_path)])
     assert rc == 1
 
@@ -484,7 +484,7 @@ def test_cli_configure_overwrite_flag(tmp_path: Path):
         tmp_path,
         {"sources": [{"source_name": "a", "columns": [{"name": "lopnr"}]}]},
     )
-    target = tmp_path / "mdw_config.json"
+    target = tmp_path / "mdw_step2_config.json"
     target.write_text("{}", encoding="utf-8")
     rc = cli_main(["configure", str(discover_path), "--overwrite"])
     assert rc == 0
@@ -493,7 +493,7 @@ def test_cli_configure_overwrite_flag(tmp_path: Path):
 
 
 def test_build_config_carries_source_year_from_discover():
-    """#24: discover.json's source_detail.year flows into mdw_config's
+    """#24: mdw_step1_discovery.json's source_detail.year flows into mdw_config's
     sources block. Users edit there to fix mis-detections."""
     discover = {
         "contract_version": "discover-1.0.0",

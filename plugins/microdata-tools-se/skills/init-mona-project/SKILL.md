@@ -1,6 +1,6 @@
 ---
 name: init-mona-project
-description: Scaffold or resume a local R environment for an existing SCB MONA research project. Use when the user wants MONA project setup, mock-data handoff, or scaffold enrichment around `stats.json`.
+description: Scaffold or resume a local R environment for an existing SCB MONA research project. Use when the user wants MONA project setup, mock-data handoff, or scaffold enrichment around `mdw_step3_stats.json`.
 ---
 
 # Initialize MONA Research Project
@@ -55,7 +55,7 @@ Resolve `{projdir}` in this order:
 1. If `$ARGUMENTS` is set and a directory with that name already exists, use
    it.
 2. Else if the current working directory already contains `.Rproj`,
-   `stats.json`, or `mock_data/`, treat the current working directory as the
+   `mdw_step3_stats.json`, or `mock_data/`, treat the current working directory as the
    project root.
 3. Else interview the user and decide whether to scaffold into the current
    working directory or into a new `{slug}/` subdirectory.
@@ -68,8 +68,8 @@ as `.claude/` or `.codex/`, scaffold into it directly without asking.
 | Condition | Action |
 |-----------|--------|
 | No project signals found | Run Phase 1 interview and bootstrap |
-| Project dir exists, no `stats.json` | Stop after MONA handoff and wait for `stats.json` |
-| Project dir exists, has `stats.json`, no `mock_data/manifest.json` | Generate mock data, then continue to Phase 2 |
+| Project dir exists, no `mdw_step3_stats.json` | Stop after MONA handoff and wait for `mdw_step3_stats.json` |
+| Project dir exists, has `mdw_step3_stats.json`, no `mock_data/manifest.json` | Generate mock data, then continue to Phase 2 |
 | Project dir exists, has `mock_data/manifest.json`, no `{MEMORY}.md` | Run Phase 2 and write `{MEMORY}.md` |
 | Project dir exists, has `mock_data/manifest.json`, and `{MEMORY}.md` | Already initialized; tell the user |
 
@@ -85,10 +85,10 @@ High-level sequence:
    - collect slug, target directory, SCB project number, and research plan
    - create the minimal scaffold
    - verify `mock-data-wizard` and `regmeta`
-   - build the MONA extract bundle (`mock_data_wizard_extract.py`)
+   - build the MONA extract bundle (`mdw_runner.py`)
    - stop after MONA handoff instructions
 2. Mock data generation:
-   - when `stats.json` is present but `mock_data/manifest.json` is absent,
+   - when `mdw_step3_stats.json` is present but `mock_data/manifest.json` is absent,
      generate mock data and verify the manifest was created
 3. Phase 2:
    - document data sources by register
@@ -128,7 +128,7 @@ files. It contains:
 - Do not describe the expected Phase 1 pause after building the MONA
   extract bundle as a failure or limitation.
 - Do not describe missing years or files in `mock_data/` as an arbitrary mock
-  artifact. The generator reflects what was present in `stats.json`.
+  artifact. The generator reflects what was present in `mdw_step3_stats.json`.
 - Run `Rscript tests/testthat.R` before you declare the scaffold complete.
 - If git is absent or unconfigured, ask the user before installing or
   configuring it. Never silently set global git config.
