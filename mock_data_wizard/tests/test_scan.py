@@ -167,18 +167,18 @@ def test_scan_payload_does_not_match_numeric_scalars():
 
 
 def test_write_export_clean_payload_creates_target_atomically(tmp_path: Path):
-    out = tmp_path / "stats.json"
+    out = tmp_path / "mdw_step3_stats.json"
     write_export(out, dict(MINIMAL_STATS))  # copy: write_export mutates
     assert out.exists()
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["pii_scan"]["scanner_version"] == SCANNER_VERSION
     assert payload["pii_scan"]["matches_found"] == 0
     # Temp file must not be left behind.
-    assert not (tmp_path / "stats.json.tmp").exists()
+    assert not (tmp_path / "mdw_step3_stats.json.tmp").exists()
 
 
 def test_write_export_dirty_payload_blocks_target_creation(tmp_path: Path):
-    out = tmp_path / "stats.json"
+    out = tmp_path / "mdw_step3_stats.json"
     payload = dict(MINIMAL_STATS)
     payload["sources"] = list(MINIMAL_STATS["sources"])
     payload["sources"][0] = dict(MINIMAL_STATS["sources"][0])
@@ -197,7 +197,7 @@ def test_write_export_dirty_payload_blocks_target_creation(tmp_path: Path):
     assert any(m.pattern == "personnummer" for m in exc.value.matches)
     # Target was never created; temp was cleaned up.
     assert not out.exists()
-    assert not (tmp_path / "stats.json.tmp").exists()
+    assert not (tmp_path / "mdw_step3_stats.json.tmp").exists()
 
 
 def test_write_export_redacts_matched_value_in_error_message(tmp_path: Path):
@@ -206,7 +206,7 @@ def test_write_export_redacts_matched_value_in_error_message(tmp_path: Path):
     Note: the JSON path can still contain the literal value when the
     match is on a dict key -- the operator needs *some* anchor to
     locate the offending column. The export is rejected either way."""
-    out = tmp_path / "stats.json"
+    out = tmp_path / "mdw_step3_stats.json"
     payload = {"Notes": {"comment": "jane.doe@example.com"}}
     with pytest.raises(PIIScannerError) as exc:
         write_export(out, payload)

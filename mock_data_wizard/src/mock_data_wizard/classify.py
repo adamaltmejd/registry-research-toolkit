@@ -2,7 +2,7 @@
 
 Pure functions, no IO. The data-driven ``classify_column`` path was
 removed when extract switched to a config-driven workflow (every column
-must carry a ``mdw_config.json`` override). What remains is the
+must carry a ``mdw_step2_config.json`` override). What remains is the
 name-pattern surface used by ``configure.py`` to author that config,
 plus the date-format helpers consumed by ``summarize.py`` when a date
 override has no inline ``date_format`` hint.

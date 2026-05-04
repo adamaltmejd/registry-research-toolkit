@@ -51,7 +51,7 @@ main:
 mock_data/
 output_mock/
 _targets/
-mock_data_wizard_extract.py
+mdw_runner.py
 mdw_sources_*.py
 mdw_log_*.txt
 .Rhistory
@@ -291,7 +291,7 @@ air format src/
 
 ## Where we are
 - Local R scaffold is set up.
-- Mock data generated from `stats.json` ({N} files across {M} registers).
+- Mock data generated from `mdw_step3_stats.json` ({N} files across {M} registers).
 - `run.R` is ready as the MONA pipeline entry point.
 - Register docs live in `notes/data_*.md`.
 - Mock-data caveats live in `notes/mock_data_assessment.md`.

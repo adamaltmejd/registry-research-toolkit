@@ -3,7 +3,7 @@
 #
 # This script intentionally does not install or link the plugin. It only:
 # - creates a clean test workspace
-# - stages a harness with stats.json and test instructions
+# - stages a harness with mdw_step3_stats.json and test instructions
 # - points the tester at the real Codex marketplace install flow
 set -euo pipefail
 
@@ -12,7 +12,7 @@ PLUGIN_NAME="microdata-tools-se"
 PLUGIN_SRC="$REPO_ROOT/plugins/$PLUGIN_NAME"
 TEST_DIR="${TEST_DIR:-/tmp/mona-plugin-test}"
 HARNESS_DIR="${HARNESS_DIR:-/tmp/mona-plugin-test-harness}"
-STATS_SRC="${STATS_SRC:-$HOME/Code/covid-education-inequality/stats.json}"
+STATS_SRC="${STATS_SRC:-$HOME/Code/covid-education-inequality/mdw_step3_stats.json}"
 MARKETPLACE_NAME="${MARKETPLACE_NAME:-registry-research-toolkit}"
 MARKETPLACE_SOURCE="${MARKETPLACE_SOURCE:-adamaltmejd/registry-research-toolkit}"
 CODEX_CONFIG="${CODEX_CONFIG:-$HOME/.codex/config.toml}"
@@ -25,8 +25,8 @@ if [[ ! -d "$PLUGIN_SRC" ]]; then
 fi
 
 if [[ ! -f "$STATS_SRC" ]]; then
-	echo "ERROR: stats.json not found at $STATS_SRC" >&2
-	echo "Set STATS_SRC=/path/to/stats.json and re-run." >&2
+	echo "ERROR: mdw_step3_stats.json not found at $STATS_SRC" >&2
+	echo "Set STATS_SRC=/path/to/mdw_step3_stats.json and re-run." >&2
 	exit 1
 fi
 
@@ -52,7 +52,7 @@ rm -rf "$TEST_DIR" "$HARNESS_DIR"
 mkdir -p "$TEST_DIR" "$HARNESS_DIR"
 
 echo "Building $HARNESS_DIR (harness - read-only to the test)..."
-cp "$STATS_SRC" "$HARNESS_DIR/stats.json"
+cp "$STATS_SRC" "$HARNESS_DIR/mdw_step3_stats.json"
 
 PREEXISTING_MARKETPLACE_NOTE=""
 if [[ -f "$CODEX_CONFIG" ]] && rg -q '^\[marketplaces\.registry-research-toolkit\]' "$CODEX_CONFIG"; then
@@ -83,7 +83,7 @@ cat >"$HARNESS_DIR/TEST_INSTRUCTIONS.md" <<EOF
 
 - **Test workspace:** \`$TEST_DIR\` - intentionally clean. It should not contain
   a workspace-local \`plugins/\` directory or \`.agents/plugins/marketplace.json\`.
-- **Harness (read-only to the test):** \`$HARNESS_DIR\` - has \`stats.json\`
+- **Harness (read-only to the test):** \`$HARNESS_DIR\` - has \`mdw_step3_stats.json\`
   (150 files, from covid-education-inequality/P1405) and this instructions file.
 - **Reference plugin source:** \`$PLUGIN_SRC\`
 
@@ -119,7 +119,7 @@ $PREEXISTING_MARKETPLACE_NOTE## Preflight
 
 5. When asked, provide:
    - **Project slug**: \`covid-dry-run\` (or accept the suggested default)
-   - **SCB project number**: \`P1405\` (the stats.json was generated from P1405)
+   - **SCB project number**: \`P1405\` (the mdw_step3_stats.json was generated from P1405)
    - **Research plan**: paste the block below, or say "no plan, just scaffold it"
 
    > This project studies whether Swedish immigrant children's educational
@@ -137,21 +137,21 @@ $PREEXISTING_MARKETPLACE_NOTE## Preflight
    test ! -e "$TEST_DIR/plugins"
    test ! -e "$TEST_DIR/.agents"
    # Bundle was built next to the project scaffold (assert it exists):
-   find "$TEST_DIR" -name mock_data_wizard_extract.py -print -quit | grep -q .
+   find "$TEST_DIR" -name mdw_runner.py -print -quit | grep -q .
    \`\`\`
 
 7. Simulate returning from MONA:
 
    \`\`\`bash
-   cp "$HARNESS_DIR/stats.json" "$TEST_DIR/stats.json"
+   cp "$HARNESS_DIR/mdw_step3_stats.json" "$TEST_DIR/mdw_step3_stats.json"
    # or, if the project was scaffolded as a subfolder:
-   # cp "$HARNESS_DIR/stats.json" "$TEST_DIR/covid-dry-run/stats.json"
+   # cp "$HARNESS_DIR/mdw_step3_stats.json" "$TEST_DIR/covid-dry-run/mdw_step3_stats.json"
    \`\`\`
 
 8. In the same or a fresh Codex session (cwd unchanged), run:
 
    \`\`\`text
-   \$microdata-tools-se I have stats.json now, continue init-mona-project.
+   \$microdata-tools-se I have mdw_step3_stats.json now, continue init-mona-project.
    \`\`\`
 
 9. When Phase 2 finishes, verify from a separate shell:

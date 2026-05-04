@@ -133,7 +133,7 @@ def test_invalid_json(tmp_path: Path):
 
 
 def test_parse_panels_block(tmp_path: Path):
-    """#23: stats.json's panels block round-trips through parse_stats."""
+    """#23: mdw_step3_stats.json's panels block round-trips through parse_stats."""
     data = {
         "contract_version": "2.0.0",
         "sources": [
@@ -172,7 +172,7 @@ def test_parse_panels_block(tmp_path: Path):
             },
         ],
     }
-    p = tmp_path / "stats.json"
+    p = tmp_path / "mdw_step3_stats.json"
     p.write_text(json.dumps(data))
     result = parse_stats(p)
     assert len(result.panels) == 2
@@ -187,7 +187,7 @@ def test_parse_panels_block(tmp_path: Path):
 
 
 def test_parse_panels_default_to_empty(stats_path: Path):
-    """A stats.json without a panels block parses with panels=[]."""
+    """A mdw_step3_stats.json without a panels block parses with panels=[]."""
     result = parse_stats(stats_path)
     assert result.panels == []
 

@@ -1,4 +1,4 @@
-"""Tests for config.py -- mdw_config.json schema and lookups."""
+"""Tests for config.py -- mdw_step2_config.json schema and lookups."""
 
 from __future__ import annotations
 
@@ -109,7 +109,7 @@ def test_load_config_rejects_duplicate_keys(tmp_path: Path):
         '{"contract_version": "mdw-config-1.0.0", "column_types": {"t": {"col": {"type": "id"},'
         ' "col": {"type": "numeric"}}}}'
     )
-    (tmp_path / "mdw_config.json").write_text(raw, encoding="utf-8")
+    (tmp_path / "mdw_step2_config.json").write_text(raw, encoding="utf-8")
     with pytest.raises(ValueError, match="duplicate key 'col'"):
         load_config(tmp_path)
 
@@ -268,7 +268,9 @@ def test_load_config_round_trips_through_disk(tmp_path: Path):
         "contract_version": "mdw-config-1.0.0",
         "column_types": {"Pop_*": {"Salary": {"type": "numeric"}}},
     }
-    (tmp_path / "mdw_config.json").write_text(json.dumps(payload), encoding="utf-8")
+    (tmp_path / "mdw_step2_config.json").write_text(
+        json.dumps(payload), encoding="utf-8"
+    )
     cfg = load_config(tmp_path)
     assert isinstance(cfg, MDWConfig)
     assert cfg.lookup_type("Pop_2024", "Salary").type == "numeric"

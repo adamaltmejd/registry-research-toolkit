@@ -139,7 +139,7 @@ def _print_discover_instructions() -> None:
     print(
         f"Next:\n"
         f"  1. Upload {BUNDLE_FILENAME} to MONA.\n"
-        f"  2. Run on MONA: python {BUNDLE_FILENAME}\n"
+        f"  2. On MONA: run {BUNDLE_FILENAME} with python on the batch client\n"
         f"     -> writes {DISCOVER_FILENAME} next to the script.\n"
         f"  3. Copy {DISCOVER_FILENAME} back into THIS directory.\n"
         f"  4. Re-run mock-data-wizard."
@@ -151,20 +151,21 @@ def _print_extract_instructions() -> None:
         f"Next:\n"
         f"  1. Upload {CONFIG_FILENAME} next to {BUNDLE_FILENAME} on MONA.\n"
         f'  2. In the bundle, set MODE = "extract".\n'
-        f"  3. Run: python {BUNDLE_FILENAME} -> writes {STATS_FILENAME}.\n"
+        f"  3. On MONA: re-run {BUNDLE_FILENAME} with python on the batch\n"
+        f"     client -> writes {STATS_FILENAME}.\n"
         f"  4. Sanity check (locally): mock-data-wizard scan {STATS_FILENAME}\n"
         f"  5. Copy {STATS_FILENAME} back into THIS directory.\n"
         f"  6. Re-run mock-data-wizard."
     )
 
 
-def _stage1_build(cwd: Path) -> int:
+def _stage1_build(cwd: Path, *, force: bool = False) -> int:
     print("Welcome to mock-data-wizard.")
     print("I'm assuming this directory is your project workspace:")
     print(f"  {cwd}")
     print(
-        "All artifacts (bundle, discover.json, mdw_config.json, stats.json,\n"
-        f"{MOCK_DATA_DIRNAME}/) will live here.\n"
+        f"All artifacts ({BUNDLE_FILENAME}, {DISCOVER_FILENAME},\n"
+        f"{CONFIG_FILENAME}, {STATS_FILENAME}, {MOCK_DATA_DIRNAME}/) will live here.\n"
     )
 
     project = _prompt_project_number()
@@ -211,7 +212,7 @@ def _stage1_build(cwd: Path) -> int:
         return 1
 
     bundle_path = cwd / BUNDLE_FILENAME
-    if bundle_path.exists():
+    if bundle_path.exists() and not force:
         if not _yes_no(
             f"{BUNDLE_FILENAME} already exists. Rebuild? "
             "Any hand-edits to configure() will be lost.",
@@ -227,16 +228,16 @@ def _stage1_build(cwd: Path) -> int:
     return 0
 
 
-def _stage2_instructions(cwd: Path) -> int:
+def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
     print(f"I see {BUNDLE_FILENAME} but no {DISCOVER_FILENAME} yet.\n")
     _print_discover_instructions()
     print()
     if _yes_no("Want to rebuild the bundle (e.g. add a source)?", default=False):
-        return _stage1_build(cwd)
+        return _stage1_build(cwd, force=force)
     return 0
 
 
-def _stage3_configure(cwd: Path) -> int:
+def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
     from .configure import run_configure_from_discover
 
     discover_path = cwd / DISCOVER_FILENAME
@@ -250,7 +251,7 @@ def _stage3_configure(cwd: Path) -> int:
     )
     register = register_in or None
 
-    if config_path.exists():
+    if config_path.exists() and not force:
         if not _yes_no(f"{CONFIG_FILENAME} already exists. Overwrite?", default=False):
             print("Aborted.", file=sys.stderr)
             return 1
@@ -276,13 +277,13 @@ def _stage3_configure(cwd: Path) -> int:
     return 0
 
 
-def _stage4_instructions(cwd: Path) -> int:
+def _stage4_instructions(cwd: Path, *, force: bool = False) -> int:
     print(f"I see {CONFIG_FILENAME} but no {STATS_FILENAME} yet.\n")
     _print_extract_instructions()
     return 0
 
 
-def _stage5_generate(cwd: Path) -> int:
+def _stage5_generate(cwd: Path, *, force: bool = False) -> int:
     from argparse import Namespace
 
     from .cli import _cmd_generate
@@ -300,14 +301,14 @@ def _stage5_generate(cwd: Path) -> int:
         db=None,
         no_regmeta=False,
         register=None,
-        yes=False,
-        force=False,
+        yes=force,
+        force=force,
         verbose=False,
     )
     return _cmd_generate(args)
 
 
-def _done(cwd: Path) -> int:
+def _done(cwd: Path, *, force: bool = False) -> int:
     mock_dir = cwd / MOCK_DATA_DIRNAME
     n_files = sum(1 for p in mock_dir.iterdir() if p.is_file())
     present = [
@@ -323,19 +324,19 @@ def _done(cwd: Path) -> int:
     present.append(f"{MOCK_DATA_DIRNAME}/ ({n_files} files)")
     print("This project looks complete:\n  " + " / ".join(present) + "\n")
     print(
-        "What now?\n"
-        "  [r] regenerate mock CSVs from stats.json\n"
-        "  [c] re-run configure (re-author mdw_config.json)\n"
-        "  [b] rebuild the bundle\n"
-        "  [q] quit"
+        f"What now?\n"
+        f"  [r] regenerate mock CSVs from {STATS_FILENAME}\n"
+        f"  [c] re-run configure (re-author {CONFIG_FILENAME})\n"
+        f"  [b] rebuild the bundle\n"
+        f"  [q] quit"
     )
     choice = _prompt("Choice", default="q").lower()
     if choice == "r":
-        return _stage5_generate(cwd)
+        return _stage5_generate(cwd, force=force)
     if choice == "c":
-        return _stage3_configure(cwd)
+        return _stage3_configure(cwd, force=force)
     if choice == "b":
-        return _stage1_build(cwd)
+        return _stage1_build(cwd, force=force)
     return 0
 
 
@@ -349,9 +350,9 @@ _DISPATCH = {
 }
 
 
-def run(cwd: Path) -> int:
+def run(cwd: Path, *, force: bool = False) -> int:
     try:
-        return _DISPATCH[_detect_stage(cwd)](cwd)
+        return _DISPATCH[_detect_stage(cwd)](cwd, force=force)
     except KeyboardInterrupt:
         print("\nAborted.", file=sys.stderr)
         return 130

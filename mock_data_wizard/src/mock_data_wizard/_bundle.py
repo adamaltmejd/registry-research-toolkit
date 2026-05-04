@@ -4,7 +4,7 @@ Concatenates the wizard runtime modules (classify, sql_emit, sources,
 summarize, extract) into one file. The user uploads that file, edits
 the ``configure()`` block near the top, and runs::
 
-    python mock_data_wizard_extract.py
+    python mdw_runner.py
 
 The bundle is self-contained -- only stdlib + duckdb + pyodbc + numpy
 (all pre-installed on the WinPython distribution shipped with MONA's
@@ -21,7 +21,7 @@ import ast
 from pathlib import Path
 
 PKG_DIR = Path(__file__).resolve().parent
-DEFAULT_OUTPUT_NAME = "mock_data_wizard_extract.py"
+DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
 # Dependency-ordered: each module imports only earlier ones.
 MODULE_ORDER = (
@@ -38,29 +38,32 @@ BUNDLE_HEADER = '''\
 """mock-data-wizard MONA discover/extract bundle.
 
 Self-contained single-file Python script. Edit configure() and the MODE
-flag in the user-config block, then run on MONA:
+flag in the user-config block, then run on MONA's batch client:
 
-    python mock_data_wizard_extract.py
+    python mdw_runner.py
 
 Two modes, one bundle:
 
   MODE = "discover"  (default)
     Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
-    plus COUNT(*). Output: discover.json next to this script.
-    Copy discover.json off MONA, run `mock-data-wizard configure
-    discover.json` locally to author mdw_config.json, upload it back
-    next to the bundle, then re-run with MODE = "extract".
+    plus COUNT(*). Output: mdw_step1_discovery.json next to this script.
+    Copy mdw_step1_discovery.json off MONA, run `mock-data-wizard
+    configure mdw_step1_discovery.json` locally to author
+    mdw_step2_config.json, upload it back next to the bundle, then
+    re-run with MODE = "extract".
 
   MODE = "extract"
-    Typed aggregation. Reads mdw_config.json from this directory
-    (every column must carry a type override) and writes stats.json.
+    Typed aggregation. Reads mdw_step2_config.json from this directory
+    (every column must carry a type override) and writes
+    mdw_step3_stats.json.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression (k-anonymity, default threshold = 10), uniform noise
 injection (+/- 0.5%) on numeric aggregates, and +/- 7-day jitter on
 date min/max/quantiles are applied after server-side aggregation.
-null_count is censored when 0 < null_count < k. discover.json carries
-metadata only -- column names, SQL types, row counts -- no values.
+null_count is censored when 0 < null_count < k. The discovery JSON
+carries metadata only -- column names, SQL types, row counts -- no
+values.
 
 This file is built from the mock_data_wizard package by
 `mock-data-wizard build-bundle`. DO NOT edit code mid-bundle by hand --
@@ -100,22 +103,23 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # otherwise. Has no effect when DEBUG=False.
 #
 # MODE picks the run flavour:
-#   "discover" -- emits discover.json (metadata only). Default. SQL
-#                 sources without `tables=` / `pattern=` / `all=True`
-#                 are listed permissively here.
-#   "extract"  -- emits stats.json. Requires mdw_config.json sitting
-#                 next to this script. Authoritative SOURCES filtering
-#                 is required (no permissive listing in this mode).
+#   "discover" -- emits mdw_step1_discovery.json (metadata only).
+#                 Default. SQL sources without `tables=` / `pattern=` /
+#                 `all=True` are listed permissively here.
+#   "extract"  -- emits mdw_step3_stats.json. Requires
+#                 mdw_step2_config.json sitting next to this script.
+#                 Authoritative SOURCES filtering is required (no
+#                 permissive listing in this mode).
 #
 # Override at runtime without editing the bundle:
-#   MDW_MODE=extract python mock_data_wizard_extract.py
+#   MDW_MODE=extract python mdw_runner.py
 #
 # DISCOVER SHAPE: leave SOURCES wide and let discover walk everything:
 #
 #     return [sql_source(dsn="P1105")]
 #     return [file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data")]
 #
-# EXTRACT SHAPE: declare exactly what to aggregate. mdw_config.json
+# EXTRACT SHAPE: declare exactly what to aggregate. mdw_step2_config.json
 # next to this script declares per-column types.
 #
 #     return [
@@ -263,15 +267,17 @@ if __name__ == "__main__":
         _boot_sys.exit(1)
     if MODE == "discover":
         _log.info(
-            "discover complete: %d source(s), discover.json -> %s",
+            "discover complete: %d source(s), %s -> %s",
             len(result.get("sources", [])),
-            _BOOT_HERE / "discover.json",
+            DISCOVER_FILENAME,
+            _BOOT_HERE / DISCOVER_FILENAME,
         )
     else:
         _log.info(
-            "extract complete: %d source(s), stats.json -> %s",
+            "extract complete: %d source(s), %s -> %s",
             len(result.get("sources", [])),
-            _BOOT_HERE / "stats.json",
+            STATS_FILENAME,
+            _BOOT_HERE / STATS_FILENAME,
         )
     if DEBUG:
         _log.info("done. log file: %s", _BOOT_PATH)

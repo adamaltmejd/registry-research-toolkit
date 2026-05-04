@@ -507,7 +507,7 @@ def test_panel_separate_files_id_overlap_across_periods(tmp_path: Path):
     holds at the subset level (not at the sampled-value level: with
     replace=True some pool members may not appear in any given sample).
     """
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_separate_files()))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -540,7 +540,7 @@ def test_panel_separate_files_id_overlap_across_periods(tmp_path: Path):
 
 def test_panel_separate_files_per_period_row_count(tmp_path: Path):
     """Generated row counts match by_period.n_rows."""
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_separate_files()))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -614,7 +614,7 @@ def _panel_stats_merged_table() -> dict:
 def test_panel_merged_table_period_alignment(tmp_path: Path):
     """In a merged_table panel, each generated row's panel_key must
     come from the period subset corresponding to its time_key."""
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_merged_table()))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -643,7 +643,7 @@ def test_panel_merged_table_period_alignment(tmp_path: Path):
 
 def test_panel_merged_table_row_counts_per_period(tmp_path: Path):
     """Row counts per period are roughly proportional to by_period.n_rows."""
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_merged_table()))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -672,7 +672,7 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
     payload = _panel_stats_merged_table()
     # Empty by_period mimics the fully-suppressed path.
     payload["panels"][0]["by_period"] = []
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(payload))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -693,7 +693,7 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
 
 def test_panel_separate_files_deterministic(tmp_path: Path):
     """Same seed -> identical panel-key column across runs."""
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_separate_files()))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)
@@ -753,7 +753,7 @@ def test_panel_merged_table_string_periods(tmp_path: Path):
             }
         ],
     }
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     stats_path.write_text(json.dumps(payload))
     stats = parse_stats(stats_path)
     enriched = enrich(stats)

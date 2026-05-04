@@ -2,7 +2,7 @@
 
 Runs the bundler end-to-end into a tmp dir, parses the result, and
 spawns a subprocess that runs the bundle against a tiny CSV. Verifies
-stats.json comes out with the expected shape.
+mdw_step3_stats.json comes out with the expected shape.
 """
 
 from __future__ import annotations
@@ -121,8 +121,8 @@ def _run_bundle(
 
 
 def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
-    """MODE=discover -> discover.json with metadata only (no inferred_type)."""
-    bundle = _build_bundle_to(tmp_path / "mock_data_wizard_extract.py")
+    """MODE=discover -> mdw_step1_discovery.json with metadata only (no inferred_type)."""
+    bundle = _build_bundle_to(tmp_path / "mdw_runner.py")
     _patch_configure(bundle)
     # MODE = "discover" is the default; no patch needed.
 
@@ -134,7 +134,7 @@ def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
     )
     _run_bundle(bundle, cwd=tmp_path)
 
-    discover_path = tmp_path / "discover.json"
+    discover_path = tmp_path / "mdw_step1_discovery.json"
     assert discover_path.exists()
     discover = json.loads(discover_path.read_text(encoding="utf-8"))
     assert discover["contract_version"] == "discover-1.0.0"
@@ -150,8 +150,8 @@ def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
 
 
 def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
-    """MODE=extract reads mdw_config.json and emits typed stats.json."""
-    bundle = _build_bundle_to(tmp_path / "mock_data_wizard_extract.py")
+    """MODE=extract reads mdw_step2_config.json and emits typed mdw_step3_stats.json."""
+    bundle = _build_bundle_to(tmp_path / "mdw_runner.py")
     _patch_configure(bundle)
 
     (tmp_path / "data.csv").write_text(
@@ -160,7 +160,7 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
         "5,29,0115\n6,38,0114\n7,47,0115\n8,33,0114\n",
         encoding="utf-8",
     )
-    (tmp_path / "mdw_config.json").write_text(
+    (tmp_path / "mdw_step2_config.json").write_text(
         json.dumps(
             {
                 "contract_version": "mdw-config-1.0.0",
@@ -177,7 +177,7 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
     )
 
     _run_bundle(bundle, cwd=tmp_path, mode="extract")
-    stats_path = tmp_path / "stats.json"
+    stats_path = tmp_path / "mdw_step3_stats.json"
     assert stats_path.exists()
     stats = json.loads(stats_path.read_text(encoding="utf-8"))
     assert stats["contract_version"] == "2.0.0"
