@@ -28,17 +28,36 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Sequence
 
-from .config import MDWConfig, load_config
+from regmeta import extract_year
+
+from .config import MDWConfig, Panel, load_config
 from .scan import write_export
 from .sources import SourceHandle, iter_source
 from .sql_emit import DUCKDB, MSSQL, quote_ident
-from .summarize import small_pop_threshold, summarize_column
+from .summarize import SUPPRESS_K, small_pop_threshold, summarize_column
 
 log = logging.getLogger("mdw.extract")
 
 CONTRACT_VERSION = "2.0.0"
 DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
 SAMPLE_SIZE = 1000
+
+
+def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
+    """Year for ``source_name``: config first, name regex as fallback.
+
+    An explicit ``"year": null`` in the config's ``sources`` block
+    suppresses the regex fallback -- the user is asserting "no year for
+    this source".
+
+    ``config=None`` is the discover-time call (no config exists yet);
+    discover always derives the year from the source name regex.
+    """
+    if config is not None:
+        configured, year = config.source_year(source_name)
+        if configured:
+            return year
+    return extract_year(source_name)
 
 
 # -- Per-table SQL helpers -------------------------------------------------
@@ -198,6 +217,157 @@ def _sample_values(
         cur.close()
 
 
+# -- Panel extraction (#23) -----------------------------------------------
+
+
+def _extract_merged_panel_periods(
+    handle: SourceHandle, panel: Panel
+) -> list[dict[str, Any]]:
+    """Run the per-period GROUP BY for a merged_table panel on this handle.
+
+    SQL form:
+
+        SELECT time_key AS period, COUNT(*) AS n_rows,
+               COUNT(DISTINCT panel_key) AS n_panel_ids
+        FROM <table> GROUP BY time_key ORDER BY time_key
+
+    Periods with ``n_panel_ids < SUPPRESS_K`` are dropped: the
+    aggregate identifies a tiny sub-cohort and would leak under k-
+    anonymity. ``period`` is preserved as int when the time_key column
+    is integral (years are the dominant case); non-integer values
+    (date/quarter strings) are kept as ``str`` so sub-annual panels
+    don't crash the run.
+    """
+    qcol_time = quote_ident(panel.time_key, handle.dialect)
+    qcol_panel = quote_ident(panel.panel_key, handle.dialect)
+    sql = (
+        f"SELECT {qcol_time} AS period, COUNT(*) AS n_rows, "
+        f"COUNT(DISTINCT {qcol_panel}) AS n_panel_ids "
+        f"FROM {handle.table} GROUP BY {qcol_time} ORDER BY {qcol_time}"
+    )
+    cur = handle.conn.cursor()
+    try:
+        cur.execute(sql)
+        rows = cur.fetchall()
+    finally:
+        cur.close()
+    out: list[dict[str, Any]] = []
+    for r in rows:
+        period_raw, n_rows, n_panel_ids = r[0], int(r[1]), int(r[2])
+        if period_raw is None:
+            continue  # NULL time_key bucket: leave out for clarity
+        if n_panel_ids < SUPPRESS_K:
+            log.warning(
+                "panel %s period %r suppressed (n_panel_ids=%d < %d)",
+                panel.panel_id,
+                period_raw,
+                n_panel_ids,
+                SUPPRESS_K,
+            )
+            continue
+        out.append(
+            {
+                "period": _coerce_period(period_raw),
+                "n_rows": n_rows,
+                "n_panel_ids": n_panel_ids,
+            }
+        )
+    return out
+
+
+def _coerce_period(value: Any) -> int | str:
+    """Normalise a SQL time_key value to a JSON-stable scalar.
+
+    Integers (incl. integer-valued strings like ``"2018"``) become
+    ``int``; everything else is stringified. Keeps year panels unchanged
+    while letting date/quarter time_keys (``"2019-Q1"``, ``"2019-01"``)
+    survive without crashing the run.
+    """
+    if isinstance(value, bool):
+        return str(value)  # avoid bool being read as int
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str):
+        try:
+            return int(value)
+        except ValueError:
+            return value
+    return str(value)
+
+
+def _build_panels_block(
+    config: MDWConfig,
+    source_results: Sequence[dict[str, Any]],
+    merged_periods: dict[str, list[dict[str, Any]]],
+) -> list[dict[str, Any]]:
+    """Assemble the ``panels`` array for stats.json.
+
+    ``merged_periods`` carries pre-computed per-period stats for each
+    merged_table panel. Separate-files panels read ``n_rows`` and
+    ``n_panel_ids`` (from the panel-key column's ``n_distinct``)
+    directly from the per-source results; suppression matches the
+    merged-layout rule (drop periods where ``n_panel_ids < SUPPRESS_K``).
+    """
+    out: list[dict[str, Any]] = []
+    sources_by_name = {s["source_name"]: s for s in source_results}
+    for panel in config.panels:
+        if panel.layout == "merged_table":
+            by_period = merged_periods.get(panel.panel_id, [])
+        else:  # separate_files
+            by_period = []
+            for member in panel.members:
+                src = sources_by_name.get(member.source)
+                if src is None:
+                    log.warning(
+                        "panel %s: member source %r not in extract output -- skipping",
+                        panel.panel_id,
+                        member.source,
+                    )
+                    continue
+                col = next(
+                    (c for c in src["columns"] if c["column_name"] == panel.panel_key),
+                    None,
+                )
+                if col is None:
+                    raise RuntimeError(
+                        f"panel {panel.panel_id!r}: source {member.source!r} has no "
+                        f"column {panel.panel_key!r} (declared as panel_key)"
+                    )
+                n_panel_ids = int(col["n_distinct"])
+                if n_panel_ids < SUPPRESS_K:
+                    log.warning(
+                        "panel %s period %d suppressed (n_panel_ids=%d < %d)",
+                        panel.panel_id,
+                        member.period,
+                        n_panel_ids,
+                        SUPPRESS_K,
+                    )
+                    continue
+                by_period.append(
+                    {
+                        "period": member.period,
+                        "source": member.source,
+                        "n_rows": int(src["row_count"]),
+                        "n_panel_ids": n_panel_ids,
+                    }
+                )
+        entry: dict[str, Any] = {
+            "panel_id": panel.panel_id,
+            "panel_key": panel.panel_key,
+            "layout": panel.layout,
+            "by_period": by_period,
+        }
+        if panel.layout == "merged_table":
+            # Carry source + time_key so the generator can identify which
+            # source feeds the panel and which column drives the period
+            # split. Separate-files layout doesn't need this -- each
+            # member's source already lives in its by_period entry.
+            entry["source"] = panel.source
+            entry["time_key"] = panel.time_key
+        out.append(entry)
+    return out
+
+
 # -- Per-handle pipeline (extract mode) -----------------------------------
 
 
@@ -302,10 +472,14 @@ def process_handle(
         )
         _flush_log_handlers()
 
+    detail = dict(handle.source_detail)
+    year = _resolve_year(handle.source_name, config)
+    if year is not None:
+        detail["year"] = year
     return {
         "source_name": handle.source_name,
         "source_type": handle.source_type,
-        "source_detail": handle.source_detail,
+        "source_detail": detail,
         "row_count": n_rows,
         "columns": columns_out,
     }
@@ -366,6 +540,12 @@ def run_extract_typed(
     sources = list(sources)
     log.info("run_extract_typed: %d source declaration(s)", len(sources))
     _flush_log_handlers()
+    # Build the merged_table panel index up front so we can run the
+    # extra GROUP BY query while each handle's connection is still open.
+    merged_panel_by_source: dict[str, Panel] = {
+        p.source: p for p in config.panels if p.layout == "merged_table"
+    }
+    merged_panel_periods: dict[str, list[dict[str, Any]]] = {}
     source_results: list[dict[str, Any]] = []
     for src_idx, src in enumerate(sources, 1):
         log.info("source %d/%d: %r", src_idx, len(sources), src)
@@ -379,6 +559,11 @@ def run_extract_typed(
                     classifier_seed=classifier_seed,
                 )
             )
+            panel = merged_panel_by_source.get(handle.source_name)
+            if panel is not None:
+                merged_panel_periods[panel.panel_id] = _extract_merged_panel_periods(
+                    handle, panel
+                )
             log.info(
                 "source %d/%d: handle done (%d total handle(s) so far)",
                 src_idx,
@@ -397,6 +582,7 @@ def run_extract_typed(
         "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": source_results,
         "shared_columns": _shared_columns(source_results),
+        "panels": _build_panels_block(config, source_results, merged_panel_periods),
     }
     write_export(Path(output_path), result)
     log.info("stats.json written: %s", output_path)
@@ -434,10 +620,14 @@ def _discover_handle(handle: SourceHandle) -> dict[str, Any]:
         columns = _describe_columns_duckdb(handle.conn, handle.table)
     log.info("[%s] discover: %d columns", handle.source_name, len(columns))
     _flush_log_handlers()
+    detail = dict(handle.source_detail)
+    year = _resolve_year(handle.source_name, None)
+    if year is not None:
+        detail["year"] = year
     return {
         "source_name": handle.source_name,
         "source_type": handle.source_type,
-        "source_detail": handle.source_detail,
+        "source_detail": detail,
         "row_count": n_rows,
         "columns": columns,
     }

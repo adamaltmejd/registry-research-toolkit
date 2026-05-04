@@ -169,10 +169,10 @@ def test_manifest_register_hint_candidates(stats_path: Path, tmp_path: Path):
 
 
 def test_manifest_year_hint(tmp_path: Path, stats_path: Path):
-    """Year hint is extracted from source name containing a 4-digit year."""
+    """Year hint is read from source_detail.year (populated by extract)."""
     stats = parse_stats(stats_path)
-    # Rename the source to include a year
     stats.sources[0].source_name = "LISA_2022.csv"
+    stats.sources[0].source_detail["year"] = 2022
     enriched = enrich(stats)
     out_dir = tmp_path / "output"
     manifest = generate(stats, enriched, seed=42, output_dir=out_dir)
@@ -431,3 +431,340 @@ def test_spine_authority_uses_largest_population(
     # Every individual in pop should have a valid Kon value from the spine
     assert all(v in {"1", "2"} for v in pop.values())
     assert len(pop) == 500
+
+
+# ---------------------------------------------------------------------------
+# #23: panel-aware generation
+# ---------------------------------------------------------------------------
+
+
+def _panel_stats_separate_files() -> dict:
+    """3-period separate-files panel with sufficient n_panel_ids that
+    cross-period overlap is observable."""
+    return {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": f"lisa_{year}.csv",
+                "source_type": "file",
+                "source_detail": {"path": f"lisa_{year}.csv", "year": year},
+                "row_count": rows,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": ids,
+                        "stats": {"id_subtype": "integer"},
+                    }
+                ],
+            }
+            for year, rows, ids in [(2018, 100, 90), (2019, 110, 95), (2020, 100, 85)]
+        ],
+        "shared_columns": [
+            {
+                "column_name": "LopNr",
+                "sources": ["lisa_2018.csv", "lisa_2019.csv", "lisa_2020.csv"],
+                "max_n_distinct": 95,
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "lisa",
+                "layout": "separate_files",
+                "panel_key": "LopNr",
+                "by_period": [
+                    {
+                        "period": 2018,
+                        "source": "lisa_2018.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 90,
+                    },
+                    {
+                        "period": 2019,
+                        "source": "lisa_2019.csv",
+                        "n_rows": 110,
+                        "n_panel_ids": 95,
+                    },
+                    {
+                        "period": 2020,
+                        "source": "lisa_2020.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 85,
+                    },
+                ],
+            }
+        ],
+    }
+
+
+def test_panel_separate_files_id_overlap_across_periods(tmp_path: Path):
+    """Each period's panel_key column draws from a deterministic prefix
+    of the pool. The drawable universes nest, so the *prefix* property
+    holds at the subset level (not at the sampled-value level: with
+    replace=True some pool members may not appear in any given sample).
+    """
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(_panel_stats_separate_files()))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    def ids(name: str) -> set[int]:
+        with (out_dir / name).open() as f:
+            return {int(row["LopNr"]) for row in csv.DictReader(f)}
+
+    ids_2018, ids_2019, ids_2020 = (
+        ids("lisa_2018.csv"),
+        ids("lisa_2019.csv"),
+        ids("lisa_2020.csv"),
+    )
+    # Every value comes from the panel pool [1, 95]. The pool is a
+    # shuffled permutation of 1..95 so all integer ids are valid.
+    pool_universe = set(range(1, 96))
+    assert ids_2018 <= pool_universe
+    assert ids_2019 <= pool_universe
+    assert ids_2020 <= pool_universe
+
+    # Substantial cross-period overlap when periods share most of the
+    # pool: 2018's 90-id universe and 2020's 85-id universe both nest
+    # inside 2019's 95-id universe, so |2018 ∩ 2020| should be large
+    # relative to min(|2018|, |2020|).
+    overlap = ids_2018 & ids_2020
+    assert len(overlap) >= 0.5 * min(len(ids_2018), len(ids_2020))
+
+
+def test_panel_separate_files_per_period_row_count(tmp_path: Path):
+    """Generated row counts match by_period.n_rows."""
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(_panel_stats_separate_files()))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    for year, rows in [(2018, 100), (2019, 110), (2020, 100)]:
+        with (out_dir / f"lisa_{year}.csv").open() as f:
+            data_rows = list(csv.DictReader(f))
+        assert len(data_rows) == rows
+
+
+def _panel_stats_merged_table() -> dict:
+    """One source with year column inside; 3 periods with overlapping
+    panel-id populations."""
+    return {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "swecov.csv",
+                "source_type": "file",
+                "source_detail": {"path": "swecov.csv"},
+                "row_count": 300,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 95,
+                        "stats": {"id_subtype": "integer"},
+                    },
+                    {
+                        "column_name": "AR",
+                        "inferred_type": "numeric",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 3,
+                        "stats": {
+                            "min": 2018,
+                            "max": 2020,
+                            "mean": 2019,
+                            "sd": 0.8,
+                            "numeric_subtype": "integer",
+                        },
+                    },
+                ],
+            }
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "swecov_inpatient",
+                "layout": "merged_table",
+                "source": "swecov.csv",
+                "panel_key": "LopNr",
+                "time_key": "AR",
+                "by_period": [
+                    {"period": 2018, "n_rows": 90, "n_panel_ids": 80},
+                    {"period": 2019, "n_rows": 110, "n_panel_ids": 95},
+                    {"period": 2020, "n_rows": 100, "n_panel_ids": 85},
+                ],
+            }
+        ],
+    }
+
+
+def test_panel_merged_table_period_alignment(tmp_path: Path):
+    """In a merged_table panel, each generated row's panel_key must
+    come from the period subset corresponding to its time_key."""
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(_panel_stats_merged_table()))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    by_period: dict[int, set[int]] = {}
+    for r in rows:
+        by_period.setdefault(int(r["AR"]), set()).add(int(r["LopNr"]))
+
+    # Pool size = max(n_panel_ids) = 95; values are in [1, 95].
+    pool_universe = set(range(1, 96))
+    assert 2018 in by_period and 2019 in by_period and 2020 in by_period
+    for ids in by_period.values():
+        assert ids <= pool_universe
+    # Each period's distinct-id count is bounded by the period's subset
+    # size (n_panel_ids[t]). With ~90/110/100 rows drawn from 80/95/85
+    # subsets, sampling is dense enough that the bound is the dominant
+    # constraint here.
+    assert len(by_period[2018]) <= 80
+    assert len(by_period[2019]) <= 95
+    assert len(by_period[2020]) <= 85
+
+
+def test_panel_merged_table_row_counts_per_period(tmp_path: Path):
+    """Row counts per period are roughly proportional to by_period.n_rows."""
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(_panel_stats_merged_table()))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    counts: dict[int, int] = {}
+    for r in rows:
+        counts[int(r["AR"])] = counts.get(int(r["AR"]), 0) + 1
+    # Total rows must match.
+    assert sum(counts.values()) == 300
+    # Each declared period got at least one row (binomial draw on 300
+    # rows with weights >0.25 makes 0 rows essentially impossible).
+    assert set(counts) == {2018, 2019, 2020}
+
+
+def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path):
+    """If every period was suppressed (n_panel_ids < SUPPRESS_K) and the
+    panels block landed with by_period=[], generate must NOT overwrite
+    the source's time_key and panel_key with zero/empty values -- it
+    should fall through to normal column generation. The user still
+    sees the panel block (with by_period=[]) but the mock data isn't
+    blanked out."""
+    payload = _panel_stats_merged_table()
+    # Empty by_period mimics the fully-suppressed path.
+    payload["panels"][0]["by_period"] = []
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 300
+    # AR comes from the regular numeric generator (min=2018, max=2020);
+    # values should fall in-range and never be 0 (the panel-degenerate
+    # sentinel from _generate_merged_panel_columns).
+    ars = [int(r["AR"]) for r in rows]
+    assert all(2018 <= a <= 2020 for a in ars)
+    # LopNr comes from the regular id generator; never blank.
+    assert all(r["LopNr"] != "" for r in rows)
+
+
+def test_panel_separate_files_deterministic(tmp_path: Path):
+    """Same seed -> identical panel-key column across runs."""
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(_panel_stats_separate_files()))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    m1 = generate(stats, enriched, seed=7, output_dir=tmp_path / "a")
+    m2 = generate(stats, enriched, seed=7, output_dir=tmp_path / "a2")
+    for f1, f2 in zip(m1.files, m2.files):
+        assert f1.sha256 == f2.sha256
+
+
+def test_panel_merged_table_string_periods(tmp_path: Path):
+    """A merged_table panel keyed by quarter/month strings flows
+    end-to-end: the time_key column carries the string periods and the
+    panel_key column is drawn from the matching period subset."""
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "swecov.csv",
+                "source_type": "file",
+                "source_detail": {"path": "swecov.csv"},
+                "row_count": 200,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 80,
+                        "stats": {"id_subtype": "integer"},
+                    },
+                    {
+                        "column_name": "Q",
+                        "inferred_type": "categorical",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 2,
+                        "stats": {"top_values": [["2019-Q1", 100], ["2019-Q2", 100]]},
+                    },
+                ],
+            }
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "swecov_q",
+                "layout": "merged_table",
+                "source": "swecov.csv",
+                "panel_key": "LopNr",
+                "time_key": "Q",
+                "by_period": [
+                    {"period": "2019-Q1", "n_rows": 100, "n_panel_ids": 70},
+                    {"period": "2019-Q2", "n_rows": 100, "n_panel_ids": 80},
+                ],
+            }
+        ],
+    }
+    stats_path = tmp_path / "stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "swecov.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 200
+    quarters = {r["Q"] for r in rows}
+    assert quarters == {"2019-Q1", "2019-Q2"}
+    # Panel-key values must be in the pool universe (1..max(80) = 1..80).
+    pool_universe = set(range(1, 81))
+    assert {int(r["LopNr"]) for r in rows} <= pool_universe

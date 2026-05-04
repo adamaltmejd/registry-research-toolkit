@@ -132,6 +132,66 @@ def test_invalid_json(tmp_path: Path):
         parse_stats(p)
 
 
+def test_parse_panels_block(tmp_path: Path):
+    """#23: stats.json's panels block round-trips through parse_stats."""
+    data = {
+        "contract_version": "2.0.0",
+        "sources": [
+            {
+                "source_name": "x.csv",
+                "source_type": "file",
+                "source_detail": {"path": "x.csv"},
+                "row_count": 10,
+                "columns": [{"column_name": "a", "inferred_type": "id"}],
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "merged",
+                "layout": "merged_table",
+                "source": "x.csv",
+                "panel_key": "a",
+                "time_key": "ar",
+                "by_period": [
+                    {"period": 2018, "n_rows": 100, "n_panel_ids": 80},
+                    {"period": 2019, "n_rows": 110, "n_panel_ids": 85},
+                ],
+            },
+            {
+                "panel_id": "split",
+                "layout": "separate_files",
+                "panel_key": "a",
+                "by_period": [
+                    {
+                        "period": 2020,
+                        "source": "y.csv",
+                        "n_rows": 50,
+                        "n_panel_ids": 40,
+                    },
+                ],
+            },
+        ],
+    }
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(data))
+    result = parse_stats(p)
+    assert len(result.panels) == 2
+    merged = next(pn for pn in result.panels if pn.panel_id == "merged")
+    assert merged.layout == "merged_table"
+    assert merged.source == "x.csv"
+    assert merged.time_key == "ar"
+    assert [bp.period for bp in merged.by_period] == [2018, 2019]
+    split = next(pn for pn in result.panels if pn.panel_id == "split")
+    assert split.layout == "separate_files"
+    assert split.by_period[0].source == "y.csv"
+
+
+def test_parse_panels_default_to_empty(stats_path: Path):
+    """A stats.json without a panels block parses with panels=[]."""
+    result = parse_stats(stats_path)
+    assert result.panels == []
+
+
 def test_no_columns_in_source(tmp_path: Path):
     p = tmp_path / "bad.json"
     data = {

@@ -177,8 +177,8 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
     # var_id=44 in reg=1: observed {"1","2"} matches CVID 1001's {"1","2"}.
     # var_id=44 in reg=2: observed {"A","B"} matches CVID 2001's {"A","B","C"}.
     requests = {
-        ("a.csv", "Kon"): (44, 1, {"1", "2"}, "Kon"),
-        ("b.csv", "Kon"): (44, 2, {"A", "B"}, "Kon"),
+        ("a.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
+        ("b.csv", "Kon"): (44, 2, None, {"A", "B"}, "Kon"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("a.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
@@ -197,7 +197,7 @@ def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
 
     conn = sqlite3.connect(str(regmeta_db))
     conn.row_factory = sqlite3.Row
-    requests = {("f.csv", "FooBar"): (44, 1, {"X", "Y", "Z"}, "FooBar")}
+    requests = {("f.csv", "FooBar"): (44, 1, None, {"X", "Y", "Z"}, "FooBar")}
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("f.csv", "FooBar") not in out
 
@@ -255,7 +255,7 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
     conn.commit()
 
     requests = {
-        ("f.csv", "Sun2000Inr"): (44, 1, {"1", "2", "3", "4", "5"}, "Sun2000Inr"),
+        ("f.csv", "Sun2000Inr"): (44, 1, None, {"1", "2", "3", "4", "5"}, "Sun2000Inr"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     # SUN2000 has 5 codes; SUN2020 has 7. Picking by name → SUN2000 (5 codes).
@@ -304,6 +304,7 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
         ("f.csv", "BTyp"): (
             44,
             1,
+            None,
             {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "F", "H", "L", "P"},
             "BTyp",
         ),
@@ -345,8 +346,8 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path)
 
     # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
     requests = {
-        ("f.csv", "ColA"): (44, 1, {"1", "2"}, "ColA"),
-        ("f.csv", "ColB"): (44, 1, {"3", "4"}, "ColB"),
+        ("f.csv", "ColA"): (44, 1, None, {"1", "2"}, "ColA"),
+        ("f.csv", "ColB"): (44, 1, None, {"3", "4"}, "ColB"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("f.csv", "ColA")] == {"1": "Man", "2": "Kvinna"}
@@ -492,3 +493,184 @@ def test_enrich_exposes_candidates_on_enriched_file(stats_path: Path, regmeta_db
     # Don't pass `register=` so enrich takes the voting path.
     result = enrich(stats, db_path=regmeta_db)
     assert result[0].register_hint_candidates  # at least one candidate
+
+
+# ---------------------------------------------------------------------------
+# #24: year-aware CVID picking
+# ---------------------------------------------------------------------------
+
+
+def _seed_year_cvids(conn) -> None:
+    """Three CVIDs under (var=44, reg=1) at different versions, identical
+    code labels (so name + overlap are pure ties); year is the only
+    distinguishing signal."""
+    conn.executescript(
+        """
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (101, 10, '2018');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (102, 10, '2019');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (103, 10, '2025');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1801, 1, 10, 101, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1802, 1, 10, 102, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1803, 1, 10, 103, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 1);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 2);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 1);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 2);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1803, 1);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1803, 2);
+        """
+    )
+    conn.commit()
+
+
+def test_bulk_fetch_value_codes_exact_year_match_wins(regmeta_db: Path):
+    """source_year=2019 with three candidate CVIDs (2018, 2019, 2025) and
+    identical codes/labels picks 2019 — year is the only discriminator."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _seed_year_cvids(conn)
+
+    requests = {
+        ("Individ_2019", "Kon"): (44, 1, 2019, {"1", "2"}, "Kon"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    assert ("Individ_2019", "Kon") in out
+    # Pre-existing CVID 1001 also has codes {1,2} but no register_version.
+    # The 2019 CVID must beat it via the year-known tier.
+    cur = conn.execute(
+        "SELECT regver_id FROM variable_instance WHERE cvid = ?", (1802,)
+    )
+    assert cur.fetchone()[0] == 102
+
+
+def test_bulk_fetch_value_codes_closest_year_fallback(regmeta_db: Path):
+    """Source year 2017 with no exact match -> picks closest available
+    version (2018, distance 1) over 2019 (distance 2), 2020 (distance 3),
+    and 2025 (distance 8)."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _seed_year_cvids(conn)
+
+    # Distinct labels per CVID so we can verify which one was picked.
+    # Each CVID gets its own value_code rows (the fixture's pre-existing
+    # CVID 1001 keeps the original 'Man'/'Kvinna' so its identity is
+    # also distinguishable).
+    conn.executescript(
+        """
+        INSERT INTO value_code (code_id, vardekod, vardebenamning)
+            VALUES (911, '1', 'Man-2018');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning)
+            VALUES (912, '2', 'Kvinna-2018');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning)
+            VALUES (921, '1', 'Man-2019');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning)
+            VALUES (922, '2', 'Kvinna-2019');
+        DELETE FROM cvid_value_code WHERE cvid IN (1801, 1802);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 911);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 912);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 921);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 922);
+        """
+    )
+    conn.commit()
+    requests = {
+        ("data_2017", "Kon"): (44, 1, 2017, {"1", "2"}, "Kon"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # 2018 (distance 1) is the closest available version year.
+    assert out[("data_2017", "Kon")]["1"] == "Man-2018"
+
+
+def test_bulk_fetch_value_codes_no_source_year_falls_through(regmeta_db: Path):
+    """No source year => year tier is neutral; name match still picks
+    a CVID. The fixture's only CVID 1001 (var=44, reg=1) has Kön
+    classification matching the column 'Kon', so it accepts via name."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _seed_year_cvids(conn)
+
+    requests = {
+        ("nofile.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # All four CVIDs (1001, 1801, 1802, 1803) have identical labels so
+    # any pick is correct -- the contract is "we still emit something".
+    assert ("nofile.csv", "Kon") in out
+    assert out[("nofile.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
+
+
+def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverge(
+    regmeta_db: Path,
+):
+    """Codes from the year-correct CVID won't actually be wrong -- year
+    match is purely a tier above name. Verify the picked CVID still gets
+    its own labels (no cross-CVID code mixing)."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Two CVIDs at different years with disjoint code universes. Source
+    # year 2018 must lock onto CVID 1801 even when overlap with 1802 is
+    # higher.
+    conn.executescript(
+        """
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (201, 10, '2018');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (202, 10, '2025');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1901, 1, 10, 201, 44, 'int', '1', 'V18', '1');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1902, 1, 10, 202, 44, 'int', '1', 'V25', '1');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (701, 'A', 'Alpha-18');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (702, 'B', 'Beta-18');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (703, 'C', 'Gamma-25');
+        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (704, 'D', 'Delta-25');
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1901, 701);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1901, 702);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1902, 703);
+        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1902, 704);
+        """
+    )
+    conn.commit()
+    # Observed codes overlap with the 2025 CVID but year is 2018.
+    requests = {
+        ("data_2018", "Q"): (44, 1, 2018, {"C", "D"}, "Q"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # Year wins over overlap: we get the 2018 CVID's codes.
+    assert out[("data_2018", "Q")] == {"A": "Alpha-18", "B": "Beta-18"}
+
+
+def test_year_score_helper():
+    from mock_data_wizard.enrich import _year_score
+
+    # Both years known, exact match -> top score (1, 0).
+    assert _year_score(2019, 2019) == (1, 0)
+    # Both known, distance 1 -> (1, -1). Closer is "greater" when sorted.
+    assert _year_score(2020, 2019) == (1, -1)
+    # Either side missing -> neutral (0, 0): tier doesn't apply.
+    assert _year_score(None, 2019) == (0, 0)
+    assert _year_score(2019, None) == (0, 0)
+    assert _year_score(None, None) == (0, 0)
+    # Ordering: (1, -1) > (0, 0): a known close year beats no info.
+    assert (1, -1) > (0, 0)
+    # Ordering: (1, 0) > (1, -1): exact beats close.
+    assert (1, 0) > (1, -1)

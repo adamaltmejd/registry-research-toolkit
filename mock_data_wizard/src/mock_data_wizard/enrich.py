@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any
 
 import regmeta
+from regmeta.queries import extract_year as _regver_year
 
 from ._util import progress, strip_project_prefix
 from .stats import ColumnStats, ProjectStats
@@ -159,17 +160,26 @@ def enrich(
                     for name in _names:
                         source_resolved[name] = resolved
 
-            # Build per-column requests: (source_name, column_name) -> (var_id,
-            # register_id, observed_codes, column_name_for_scoring). One
-            # source can have two columns resolving to the same (var, reg)
+            # Build per-column requests: (source_name, column_name) ->
+            # (var_id, register_id, year, observed_codes, column_name_for_scoring).
+            # One source can have two columns resolving to the same (var, reg)
             # (e.g. Individ_2019 with both Sun2000Inr and Sun2020Inr → both →
             # var=784/reg=34) so we cannot share CVID picks per pair — each
-            # column needs its own decision. The 4th slot is the
+            # column needs its own decision. The 5th slot is the
             # project-prefix-stripped form so `_name_score` doesn't tokenize
             # the `P1105_` artifact (which would emit a stray digit token).
-            requests: dict[tuple[str, str], tuple[int, int, set[str], str]] = {}
+            # ``year`` is read from the source's ``source_detail`` (set by
+            # ``extract``); ``None`` means "no year hint" and falls through
+            # to name/overlap ranking.
+            requests: dict[
+                tuple[str, str], tuple[int, int, int | None, set[str], str]
+            ] = {}
             for source in stats.sources:
                 resolved = source_resolved.get(source.source_name, {})
+                source_year_raw = source.source_detail.get("year")
+                source_year = (
+                    int(source_year_raw) if isinstance(source_year_raw, int) else None
+                )
                 for col in source.columns:
                     rv = _lookup_resolved(resolved, col.column_name)
                     if col.inferred_type != "categorical" or rv is None:
@@ -178,6 +188,7 @@ def enrich(
                     requests[(source.source_name, col.column_name)] = (
                         rv.var_id,
                         rv.register_id,
+                        source_year,
                         observed,
                         strip_project_prefix(col.column_name),
                     )
@@ -526,26 +537,49 @@ def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
     return (0, prefix_hits)
 
 
+def _year_score(source_year: int | None, cvid_year: int | None) -> tuple[int, int]:
+    """Rank a CVID by year proximity.
+
+    Returns ``(known, -distance)``. ``known=1`` only when both years are
+    available -- otherwise year is uninformative and the score is
+    ``(0, 0)``, falling through to name and overlap ranking. Among
+    year-known candidates, exact match (``distance=0``) ranks highest;
+    ``distance`` grows linearly with ``|source - cvid|`` so the closer
+    year wins among inexact matches.
+    """
+    if source_year is None or cvid_year is None:
+        return (0, 0)
+    return (1, -abs(source_year - cvid_year))
+
+
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
-    requests: dict[Any, tuple[int, int, set[str], str]],
+    requests: dict[Any, tuple[int, int, int | None, set[str], str]],
 ) -> dict[Any, dict[str, str]]:
     """Pick the best CVID for each request, returning {key: {code: label}}.
 
-    Each request is ``(var_id, register_id, observed_codes, column_name)``.
+    Each request is
+    ``(var_id, register_id, year, observed_codes, column_name)``.
     We filter CVIDs to the resolved register and rank with a tiered score:
 
-    1. **Name/classification.** Tokenize ``column_name`` and the CVID's
+    1. **Year match.** When both the source and the CVID's
+       ``register_version.registerversionnamn`` carry a year, prefer the
+       CVID whose year is closest (exact > closest > no-info). When
+       either side has no year, this tier is neutral and the next tiers
+       decide. Year ranks above name because for register-version drift
+       (Kommun in 2019 vs 2020), the wrong year's labels are wrong, not
+       merely under-precise.
+    2. **Name/classification.** Tokenize ``column_name`` and the CVID's
        ``(short_name, vardemangdsversion)`` strings; score by shared token
        count, with prefix containment as fallback. Any non-zero name
        signal accepts the CVID *regardless of code overlap* — name is the
-       principled signal (which coding scheme: SUN2000 vs SUN2020).
+       principled signal for which coding scheme (SUN2000 vs SUN2020).
        Callers must therefore not treat the returned ``value_codes`` as
        a code-set validation; drift between observed codes and the
        picked CVID's universe is surfaced separately by
        ``_check_value_code_drift``.
-    2. **Code-set overlap.** Last-resort tiebreak when no CVID has a name
-       signal. Requires ``overlap / max(len(observed), 1) >=
+    3. **Code-set overlap.** Last-resort tiebreak when no CVID has a year
+       or name signal. Requires ``overlap / max(len(observed), 1) >=
        MIN_OVERLAP_RATIO`` to accept; otherwise omit the entry. This
        avoids enriching e.g. a 3-digit BTYP column with the dotted
        FamStF code universe.
@@ -560,22 +594,32 @@ def _bulk_fetch_value_codes(
 
     # 1. Enumerate CVIDs for every distinct var_id (one query, dedup'd).
     # LEFT JOIN classification so a CVID without classification metadata
-    # still appears (with NULL short_name) — tier-2 overlap can still pick it.
-    var_ids = sorted({var_id for var_id, _, _, _ in requests.values()})
+    # still appears (with NULL short_name) — overlap can still pick it.
+    # JOIN register_version so we can read the version year per CVID for
+    # the year-match tier (#24).
+    var_ids = sorted({var_id for var_id, _, _, _, _ in requests.values()})
     placeholders = ",".join("?" for _ in var_ids)
     cvid_rows = conn.execute(
         "SELECT vi.var_id, vi.register_id, vi.cvid, "
-        "vi.vardemangdsversion, c.short_name AS classification "
+        "vi.vardemangdsversion, c.short_name AS classification, "
+        "rv.registerversionnamn AS regver_name "
         "FROM variable_instance vi "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
+        "LEFT JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE vi.var_id IN ({placeholders})",
         var_ids,
     ).fetchall()
     pair_to_cvids: dict[tuple[int, int], set[int]] = {}
-    cvid_meta: dict[int, tuple[str | None, str | None]] = {}
+    cvid_meta: dict[int, tuple[str | None, str | None, int | None]] = {}
     for r in cvid_rows:
         pair_to_cvids.setdefault((r["var_id"], r["register_id"]), set()).add(r["cvid"])
-        cvid_meta[r["cvid"]] = (r["classification"], r["vardemangdsversion"])
+        regver_name = r["regver_name"]
+        cvid_year = _regver_year(regver_name) if regver_name else None
+        cvid_meta[r["cvid"]] = (
+            r["classification"],
+            r["vardemangdsversion"],
+            cvid_year,
+        )
 
     # 2. Fetch codes for every relevant CVID (one query). Index by cvid.
     all_cvids = sorted({c for cvids in pair_to_cvids.values() for c in cvids})
@@ -597,34 +641,48 @@ def _bulk_fetch_value_codes(
     # 3. Per request, score each register-matching CVID and pick the max.
     # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-
     # ordered; identical scores would otherwise resolve unpredictably).
+    # Score tuple positions are stable: (year_known, -year_distance,
+    # shared_tokens, prefix_hits, overlap, len_codes). Earlier tiers
+    # dominate in tuple comparison; later fields break ties.
     result: dict[Any, dict[str, str]] = {}
-    for key, (var_id, register_id, observed, column_name) in requests.items():
+    for key, (
+        var_id,
+        register_id,
+        source_year,
+        observed,
+        column_name,
+    ) in requests.items():
         cvids = sorted(pair_to_cvids.get((var_id, register_id), set()))
-        best: tuple[int, int, int, int, dict[str, str]] | None = None
+        best: tuple[tuple[int, int, int, int, int, int], dict[str, str]] | None = None
         for cvid in cvids:
             codes = cvid_to_codes.get(cvid, {})
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
-            cls_short, vmv = cvid_meta[cvid]
+            cls_short, vmv, cvid_year = cvid_meta[cvid]
+            year_known, year_dist = _year_score(source_year, cvid_year)
             shared, prefix = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
-            score = (shared, prefix, overlap, len(codes))
-            if best is None or score > best[:4]:
-                best = (shared, prefix, overlap, len(codes), codes)
+            score = (year_known, year_dist, shared, prefix, overlap, len(codes))
+            if best is None or score > best[0]:
+                best = (score, codes)
         if best is None:
             continue
-        if best[0] > 0 or best[1] > 0:
-            # Tier 1: name match — accept even at zero overlap.
-            result[key] = best[4]
+        score, codes = best
+        year_known, _, shared, prefix, overlap, _ = score
+        # Tier 1 (year) or Tier 2 (name) accept directly. Year-known with
+        # exact or near match expresses real semantic alignment; name
+        # match expresses the same for classification schemes.
+        if year_known > 0 or shared > 0 or prefix > 0:
+            result[key] = codes
             continue
-        # Tier 2: no name signal. Require overlap floor when we have
-        # observed codes to compare against; with no observed codes there
-        # is no signal at all, so omit.
+        # Tier 3: no year, no name signal. Require overlap floor when we
+        # have observed codes; with no observed codes there is no signal
+        # at all, so omit.
         if not observed:
             continue
-        ratio = best[2] / max(len(observed), 1)
+        ratio = overlap / max(len(observed), 1)
         if ratio >= MIN_OVERLAP_RATIO:
-            result[key] = best[4]
+            result[key] = codes
 
     return result
 

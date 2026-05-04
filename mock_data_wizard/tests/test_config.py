@@ -272,3 +272,342 @@ def test_load_config_round_trips_through_disk(tmp_path: Path):
     cfg = load_config(tmp_path)
     assert isinstance(cfg, MDWConfig)
     assert cfg.lookup_type("Pop_2024", "Salary").type == "numeric"
+
+
+# -- per-source metadata (#24) ------------------------------------------
+
+
+def test_parse_config_sources_year_round_trips():
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "sources": {"lisa_2018": {"year": 2018}, "rtb_2019": {"year": 2019}},
+        }
+    )
+    assert cfg.source_year("lisa_2018") == (True, 2018)
+    assert cfg.source_year("rtb_2019") == (True, 2019)
+    # No entry -> caller falls back.
+    assert cfg.source_year("unknown") == (False, None)
+
+
+def test_parse_config_sources_year_null_means_no_year():
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "sources": {"weird_name_2024": {"year": None}},
+        }
+    )
+    # Explicit null is configured-but-no-year (suppresses regex fallback).
+    assert cfg.source_year("weird_name_2024") == (True, None)
+
+
+def test_parse_config_rejects_unknown_source_key():
+    with pytest.raises(ValueError, match="unknown key 'yr'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "sources": {"a": {"yr": 2018}},
+            }
+        )
+
+
+def test_parse_config_rejects_string_year():
+    with pytest.raises(ValueError, match="year must be an int"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "sources": {"a": {"year": "2018"}},
+            }
+        )
+
+
+def test_parse_config_rejects_bool_year():
+    with pytest.raises(ValueError, match="year must be an int"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "sources": {"a": {"year": True}},
+            }
+        )
+
+
+def test_parse_config_rejects_non_dict_source_entry():
+    with pytest.raises(ValueError, match="must be an object"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "sources": {"a": 2018},
+            }
+        )
+
+
+# -- panels (#23) --------------------------------------------------------
+
+
+def test_parse_config_merged_table_panel():
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "panels": [
+                {
+                    "panel_id": "swecov",
+                    "layout": "merged_table",
+                    "source": "SWECOV_SOS_SV",
+                    "panel_key": "P1105_LopNr_PersonNr",
+                    "time_key": "AR",
+                }
+            ],
+        }
+    )
+    assert len(cfg.panels) == 1
+    p = cfg.panels[0]
+    assert p.panel_id == "swecov"
+    assert p.layout == "merged_table"
+    assert p.source == "SWECOV_SOS_SV"
+    assert p.time_key == "AR"
+    assert p.members == ()
+
+
+def test_parse_config_separate_files_panel():
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-1.0.0",
+            "panels": [
+                {
+                    "panel_id": "lisa",
+                    "layout": "separate_files",
+                    "panel_key": "LopNr",
+                    "members": [
+                        {"source": "lisa_2018.csv", "period": 2018},
+                        {"source": "lisa_2019.csv", "period": 2019},
+                    ],
+                }
+            ],
+        }
+    )
+    p = cfg.panels[0]
+    assert p.layout == "separate_files"
+    assert [m.period for m in p.members] == [2018, 2019]
+    assert p.source is None and p.time_key is None
+
+
+def test_parse_config_rejects_duplicate_panel_id():
+    with pytest.raises(ValueError, match="duplicate panel_id"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "merged_table",
+                        "source": "a",
+                        "panel_key": "id",
+                        "time_key": "t",
+                    },
+                    {
+                        "panel_id": "p",
+                        "layout": "merged_table",
+                        "source": "b",
+                        "panel_key": "id",
+                        "time_key": "t",
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_unknown_panel_layout():
+    with pytest.raises(ValueError, match="layout="):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "weird",
+                        "panel_key": "id",
+                    }
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_merged_panel_without_time_key():
+    with pytest.raises(ValueError, match="non-empty string 'time_key'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "merged_table",
+                        "panel_key": "id",
+                        "source": "x",
+                    }
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_separate_panel_without_members():
+    with pytest.raises(ValueError, match="non-empty 'members'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "separate_files",
+                        "panel_key": "id",
+                    }
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_separate_panel_with_source_field():
+    """A separate_files panel must not declare top-level 'source' --
+    that's a merged_table-only field. Catching it stops misconfigured
+    panels from silently behaving like merged_table."""
+    with pytest.raises(ValueError, match="must not declare 'source'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "separate_files",
+                        "panel_key": "id",
+                        "source": "x",
+                        "members": [{"source": "x", "period": 2018}],
+                    }
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_two_merged_panels_on_same_source():
+    """Two merged_table panels on one source would silently lose all but
+    the last in the extract-side merged_panel_by_source map."""
+    with pytest.raises(ValueError, match="both reference source 'x'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "id1",
+                        "time_key": "t",
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "id2",
+                        "time_key": "t",
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_two_separate_panels_sharing_member_source():
+    """Two separate_files panels listing the same source as a member
+    would silently collide in generate.py's panel_by_source map (last
+    write wins). Reject at parse time."""
+    with pytest.raises(ValueError, match="both reference source 'shared.csv'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "separate_files",
+                        "panel_key": "LopNr",
+                        "members": [{"source": "shared.csv", "period": 2018}],
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "separate_files",
+                        "panel_key": "OrgNr",
+                        "members": [{"source": "shared.csv", "period": 2018}],
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_merged_and_separate_sharing_source():
+    """A merged_table source and a separate_files member referencing
+    the same source would collide in panel_by_source (last write wins)."""
+    with pytest.raises(ValueError, match="both reference source 'x.csv'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "merged",
+                        "layout": "merged_table",
+                        "source": "x.csv",
+                        "panel_key": "LopNr",
+                        "time_key": "ar",
+                    },
+                    {
+                        "panel_id": "split",
+                        "layout": "separate_files",
+                        "panel_key": "OrgNr",
+                        "members": [{"source": "x.csv", "period": 2018}],
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_two_panels_with_same_panel_key():
+    """Two panels declaring the same panel_key would each build their
+    own pool and clobber each other's entry in panel_pool_for_col --
+    the second overwrites the first, leaving spine consumers and
+    non-panel sources reading mismatched ids."""
+    with pytest.raises(ValueError, match="panel_key='LopNr'"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "a",
+                        "layout": "merged_table",
+                        "source": "x",
+                        "panel_key": "LopNr",
+                        "time_key": "t",
+                    },
+                    {
+                        "panel_id": "b",
+                        "layout": "separate_files",
+                        "panel_key": "LopNr",
+                        "members": [{"source": "y", "period": 2018}],
+                    },
+                ],
+            }
+        )
+
+
+def test_parse_config_rejects_duplicate_panel_period():
+    with pytest.raises(ValueError, match="duplicate period 2018"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-1.0.0",
+                "panels": [
+                    {
+                        "panel_id": "p",
+                        "layout": "separate_files",
+                        "panel_key": "id",
+                        "members": [
+                            {"source": "a", "period": 2018},
+                            {"source": "b", "period": 2018},
+                        ],
+                    }
+                ],
+            }
+        )

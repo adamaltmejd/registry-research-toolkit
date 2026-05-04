@@ -252,6 +252,10 @@ and typos error out instead of getting silently dropped.
     "Population_*": {
       "Salary": {"suppress_k": 20}
     }
+  },
+  "sources": {
+    "Individ_2018": {"year": 2018},
+    "Individ_2019": {"year": 2019}
   }
 }
 ```
@@ -278,6 +282,13 @@ and typos error out instead of getting silently dropped.
   `SUPPRESS_K` — overrides may only *raise* the disclosure-control
   threshold for a column, never lower it. A typo'd `0` would
   otherwise turn the override into a fail-open path.
+- `sources` is a third namespace, keyed by *exact source name* (no
+  glob — year is per-source, not per-source-class). Currently only
+  `year`; populated by the configurer from a 4-digit name regex and
+  editable to fix mis-detections. An explicit `"year": null`
+  suppresses the regex fallback (the user is asserting "no year").
+  Read by `enrich.py` to bias CVID picking toward the right register
+  version (see CVID picker tier 1).
 
 Strict validation: unknown types, unknown option keys, duplicate JSON
 keys, schema-version mismatches, and stray fields all raise. The
@@ -444,13 +455,22 @@ to pre-spine generation.
 
 A `var_id` can resolve to multiple `cvid`s under the same register — the
 SCB metadata carries one CVID per coding-scheme version (e.g. SUN2000 vs
-SUN2020 for variable 784 "Yrkesinriktning"). The picker chooses one.
+SUN2020 for variable 784 "Yrkesinriktning") and per register version
+(e.g. Kommun in 2019 vs 2020). The picker chooses one.
 
-Tiered scoring per `(cvid)` candidate: `(shared_tokens, prefix_hits,
-overlap, code_count)`. The first non-zero pair wins; later fields break
-ties.
+Tiered scoring per `(cvid)` candidate: `(year_known, -year_distance,
+shared_tokens, prefix_hits, overlap, code_count)`. Earlier tiers
+dominate; later fields break ties within a tier.
 
-1. **Name / classification.** Tokenize the column name and the CVID's
+1. **Year match.** When both the source carries a `year` (set in
+   `source_detail` from a name regex or `mdw_config.json`'s `sources`
+   block) and the CVID's `register_version.registerversionnamn` parses
+   as a year, prefer the CVID whose year is closest. Exact match
+   beats "close"; "close" beats CVIDs with no year info. Year ranks
+   above name because for register-version drift the wrong year's
+   labels are wrong, not merely under-precise. When either side has
+   no year, this tier is neutral and the next tiers decide.
+2. **Name / classification.** Tokenize the column name and the CVID's
    `(classification.short_name, vardemangdsversion)` strings using a
    camelcase regex with four alternatives: `[A-Z]+(?=[A-Z][a-z])` (run
    before a CamelCase boundary), `[A-Z]+(?![a-z])` (run not followed by
@@ -464,22 +484,112 @@ ties.
    `FamiljeStallningKod`). Free infix matching is deliberately avoided
    — `btyp` should not match `aktivitetstyp`. Tokens shorter than 2
    chars are dropped.
-2. **Code-set overlap (last resort).** When no CVID has any name signal,
-   fall back to overlap between observed codes and the CVID's code set.
-   Requires `overlap / max(|observed|, 1) >= MIN_OVERLAP_RATIO` (default
-   `0.5`); below the floor, no entry is emitted. This avoids enriching
-   e.g. a 3-digit BTYP column with a 4-letter FamStF code universe just
-   because it's the only candidate. **Tradeoff:** the 50% floor will
-   suppress legitimate enrichment for cohort or sample columns that
-   only observe a fraction of the universe. The principled fix is
-   wider classification metadata (so tier 1 fires); the floor is the
-   safety net while metadata coverage is incomplete.
+3. **Code-set overlap (last resort).** When no CVID has any year or
+   name signal, fall back to overlap between observed codes and the
+   CVID's code set. Requires `overlap / max(|observed|, 1) >=
+   MIN_OVERLAP_RATIO` (default `0.5`); below the floor, no entry is
+   emitted. This avoids enriching e.g. a 3-digit BTYP column with a
+   4-letter FamStF code universe just because it's the only candidate.
+   **Tradeoff:** the 50% floor will suppress legitimate enrichment for
+   cohort or sample columns that only observe a fraction of the
+   universe. The principled fix is wider classification metadata (so
+   tier 2 fires); the floor is the safety net while metadata coverage
+   is incomplete.
 
-When a name match exists, the picker accepts the CVID even at zero code
-overlap — the name is the principled signal, and code drift is
-already surfaced separately by the value-code drift warnings. Callers
-must therefore treat enrichment's `value_codes` as a coding-scheme
-hint, not a validation of the observed code set.
+When year or name match exists, the picker accepts the CVID even at
+zero code overlap — those are the principled signals, and code drift
+is already surfaced separately by the value-code drift warnings.
+Callers must therefore treat enrichment's `value_codes` as a
+coding-scheme hint, not a validation of the observed code set.
+
+## Panels (`mdw_config.panels`)
+
+Many SCB datasets have **panel structure** — the same person (or firm,
+or family) appears across multiple time periods. Mock data preserves
+this structure when the user declares panels in `mdw_config.json`:
+
+```json
+{
+  "panels": [
+    {
+      "panel_id": "swecov_inpatient",
+      "layout": "merged_table",
+      "source": "SWECOV_SOS_SV",
+      "panel_key": "P1105_LopNr_PersonNr",
+      "time_key": "AR"
+    },
+    {
+      "panel_id": "lisa",
+      "layout": "separate_files",
+      "panel_key": "P1105_LopNr_PersonNr",
+      "members": [
+        {"source": "lisa_2018.csv", "period": 2018},
+        {"source": "lisa_2019.csv", "period": 2019}
+      ]
+    }
+  ]
+}
+```
+
+Two layouts share one downstream representation. Extract:
+
+- **`merged_table`**: one extra `GROUP BY time_key` query per panel,
+  yielding `n_rows` and `COUNT(DISTINCT panel_key)` per period.
+- **`separate_files`**: each member is a separate source whose
+  panel-key column's `n_distinct` already gives `n_panel_ids` for that
+  period. No extra query.
+
+Periods with `n_panel_ids < SUPPRESS_K` are dropped — a tiny panel
+cohort is identifying.
+
+`period` is normalised at extract time: integer-valued time_keys (years
+in the dominant case, or numeric strings like `"2018"`) become `int`;
+anything else (date / quarter strings like `"2019-Q1"`) is preserved as
+`str` so sub-annual panels don't crash the run.
+
+Source-collision rule: a source may participate in **at most one panel**
+(merged or separate). `parse_config` rejects two panels claiming the same
+source so a generator-side `panel_by_source` collision can't silently
+drop the second panel's behavior. Multi-key panels (one source, two
+panel_keys) are explicitly out of scope.
+
+`stats.json` carries a top-level `panels` array, decoupled from
+`sources`:
+
+```json
+{
+  "panels": [
+    {
+      "panel_id": "swecov_inpatient",
+      "panel_key": "P1105_LopNr_PersonNr",
+      "layout": "merged_table",
+      "source": "SWECOV_SOS_SV",
+      "time_key": "AR",
+      "by_period": [{"period": 2018, "n_rows": 1234567, "n_panel_ids": 980000}, ...]
+    }
+  ]
+}
+```
+
+Generation: each panel gets a deterministically-shuffled id pool sized
+to `max(n_panel_ids)`, and each period takes a *prefix* of the pool
+sized to that period's `n_panel_ids`. Strict prefix nesting gives
+stable cross-period overlap (panel persistence) — sequential periods
+share `min(n_panel_ids)` of their ids. The panel pool also overrides
+`shared_pools[panel_key]` so non-panel sources sharing the same column
+draw from the same id universe.
+
+For `merged_table`, `(time_key, panel_key)` are co-generated per row:
+each row's period is drawn from `n_rows[t]` weights, and its panel-key
+value comes from that period's subset. For `separate_files`, each
+source IS one period, so panel-key values come straight from the
+period subset.
+
+**Out of scope:** cross-period transition matrices, attrition / re-entry
+modelling, and multi-key panels. The "fixed pool with shrinking active
+prefix" model is good enough for mock-data fidelity — downstream
+panel-regression code sees correct id stability without us having to
+build a full demographic model.
 
 ## Value code drift warnings
 
