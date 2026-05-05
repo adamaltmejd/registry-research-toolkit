@@ -352,17 +352,24 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 # whenever the auto-detector picks a numeric type from a clean
                 # sample but later rows contain the sentinel.
                 #
-                # sample_size=-1 forces a whole-file scan for type
-                # inference. The default (20480 rows) crashes mid-stream
-                # when a rare edge value appears later (observed: digit
-                # column with one literal "C" at row ~60k → BIGINT
-                # inferred → conversion error). At discover/extract time
-                # we can't enumerate which columns might surprise us, so
-                # a per-column override would be fighting the wrong
-                # battle. Cost: for materialised tables this is free
-                # (the file is read in full anyway); for the VIEW path
-                # (files over MDW_MEMORY_THRESHOLD_MB) it adds one
-                # upfront pass before the first row.
+                # sample_size=-1 forces a whole-file sniffer scan for
+                # type inference. The default (20480 rows) crashes
+                # mid-stream when a rare edge value appears later
+                # (observed: digit column with one literal "C" at
+                # row ~60k → BIGINT inferred → conversion error). At
+                # discover/extract time we can't enumerate which columns
+                # might surprise us, so a per-column override would be
+                # fighting the wrong battle.
+                #
+                # Cost is real: the sniffer is a separate pass from the
+                # read, and on a 50 MB CSV it ran ~12x slower than the
+                # default (492 ms vs 39 ms) — the sniffer is expensive
+                # per row because it evaluates multiple type candidates
+                # per cell. Scales linearly with file size on both the
+                # TABLE and VIEW paths. The proper fix is to skip
+                # inference entirely via `all_varchar=true` + explicit
+                # casts driven by mdw_step2_config.json (see issue #40);
+                # this PR is the safe interim until that lands.
                 conn.execute(
                     f"CREATE OR REPLACE {kind} {quoted_view} AS "
                     f"SELECT * FROM read_csv_auto("

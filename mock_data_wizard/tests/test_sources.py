@@ -248,9 +248,10 @@ def test_iter_file_source_handles_rare_non_numeric_past_sample_window(
     lines.append("25000,C\n")
     p.write_text("".join(lines), encoding="utf-8")
     src = file_source(str(tmp_path), include=["rare_letter.csv"])
-    # Without the fix, materialisation raises a duckdb.ConversionException
-    # at this iteration boundary; with sample_size=-1 the read succeeds
-    # and the rare letter round-trips as a string.
+    # Without the fix the read raises a duckdb.ConversionException
+    # (at CREATE TABLE or during SELECT, depending on whether the file
+    # falls under MDW_MEMORY_THRESHOLD_MB); with sample_size=-1 the
+    # read succeeds and the rare letter round-trips as a string.
     for handle in iter_file_source(src):
         cur = handle.conn.cursor()
         try:
