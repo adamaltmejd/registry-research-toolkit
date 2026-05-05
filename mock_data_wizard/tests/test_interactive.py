@@ -444,7 +444,7 @@ def test_stage3_configure_no_register(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "n",  # suppress_k overrides? no
         ],
     )
@@ -483,7 +483,7 @@ def test_stage3_overwrites_when_confirmed(tmp_path: Path, monkeypatch):
         monkeypatch,
         [
             "y",  # overwrite: yes
-            "",  # register: skip
+            "-",  # register: skip
             "n",  # suppress_k overrides? no
         ],
     )
@@ -505,7 +505,7 @@ def test_stage3_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "n",  # suppress_k overrides? no
         ],
     )
@@ -674,7 +674,7 @@ def test_stage3_separate_files_panel_emitted_when_confirmed(
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "y",  # treat as panel? yes
             "",  # panel_id (default: lisa)
             "",  # panel_key (default: LopNr)
@@ -714,7 +714,7 @@ def test_stage3_panel_declined_does_not_emit_panels_block(tmp_path: Path, monkey
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "n",  # treat as panel? no
             "n",  # suppress_k? no
         ],
@@ -744,7 +744,7 @@ def test_stage3_merged_table_panel_emitted_when_confirmed(tmp_path: Path, monkey
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "y",  # set up merged_table panel? yes
             "",  # panel_key (default: LopNr)
             "",  # panel_id (default: registry_main)
@@ -798,7 +798,7 @@ def test_stage3_separate_files_panel_skips_merged_table_for_same_source(
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "y",  # treat lisa_*  as panel? yes
             "",  # panel_id default
             "",  # panel_key default
@@ -834,7 +834,7 @@ def test_stage3_ambiguous_review_flips_to_categorical(tmp_path: Path, monkeypatc
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "c",  # flip to categorical
             "n",  # suppress_k? no
         ],
@@ -862,7 +862,7 @@ def test_stage3_ambiguous_review_default_keeps_high_cardinality(
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "",  # ambiguous prompt: default ('keep')
             "n",  # suppress_k? no
         ],
@@ -891,7 +891,7 @@ def test_stage3_suppress_k_writes_column_options(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "y",  # suppress_k overrides? yes
             "lisa_*:Diagnos",  # spec
             "20",  # k
@@ -917,7 +917,7 @@ def test_stage3_suppress_k_rejects_below_threshold(tmp_path: Path, monkeypatch):
     _canned_inputs(
         monkeypatch,
         [
-            "",  # register: skip
+            "-",  # register: skip
             "y",  # suppress_k? yes
             "x:Diagnos",  # spec
             "5",  # k=5 → rejected
