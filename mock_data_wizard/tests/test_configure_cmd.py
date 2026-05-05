@@ -188,9 +188,9 @@ def test_build_config_empty_register_string_raises():
             {"source_name": "x", "columns": [{"name": "a", "sql_type": "int"}]}
         ],
     }
-    with pytest.raises(ValueError, match="--register must be a non-empty"):
+    with pytest.raises(ValueError, match="register must be a non-empty"):
         build_config(discover, register="")
-    with pytest.raises(ValueError, match="--register must be a non-empty"):
+    with pytest.raises(ValueError, match="register must be a non-empty"):
         build_config(discover, register="   ")
 
 
@@ -555,3 +555,138 @@ def test_configure_output_is_valid_mdw_config(tmp_path: Path):
     assert cfg.lookup_type("lisa_2018", "LopNr").type == "id"
     assert cfg.lookup_type("lisa_2018", "Kommun").type == "categorical"
     assert cfg.lookup_type("lisa_2018", "InkomstSumma").type == "numeric"
+
+
+# -- Schema family grouping ------------------------------------------------
+
+
+def test_group_schema_families_buckets_identical_schemas():
+    """Annual snapshots with identical (name, sql_type) tuples land in
+    one family; a different-shaped source gets its own bucket."""
+    discover = {
+        "sources": [
+            {
+                "source_name": "slutbetyg_2018.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                ],
+            },
+            {
+                "source_name": "slutbetyg_2019.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                ],
+            },
+            {
+                "source_name": "kursprov_2019.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                    {"name": "Kurs", "sql_type": "varchar"},
+                ],
+            },
+        ]
+    }
+    families = cfg_mod.group_schema_families(discover)
+    assert len(families) == 2
+    sizes = sorted(len(srcs) for srcs in families.values())
+    assert sizes == [1, 2]
+
+
+def test_group_schema_families_distinguishes_sql_types():
+    """Same column names but different sql_types → different families.
+    Catches the case where a CSV gets re-typed across delivery years."""
+    discover = {
+        "sources": [
+            {
+                "source_name": "a",
+                "columns": [{"name": "x", "sql_type": "int"}],
+            },
+            {
+                "source_name": "b",
+                "columns": [{"name": "x", "sql_type": "bigint"}],
+            },
+        ]
+    }
+    families = cfg_mod.group_schema_families(discover)
+    assert len(families) == 2
+
+
+def test_build_config_register_per_source_overrides_global():
+    """Per-source override beats the global ``register`` argument.
+    Sources without a per-source entry fall back to the global default.
+    """
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {
+                "source_name": "lisa_2018",
+                "columns": [{"name": "Kommun", "sql_type": "varchar"}],
+            },
+            {
+                "source_name": "rams_2018",
+                "columns": [{"name": "Yrke", "sql_type": "varchar"}],
+            },
+            {
+                "source_name": "custom",
+                "columns": [{"name": "Foo", "sql_type": "varchar"}],
+            },
+        ],
+    }
+    seen_registers: list[str] = []
+
+    class FakeConn:
+        def execute(self, *_a, **_k):
+            return self
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            pass
+
+    def fake_resolve(_conn, register):
+        seen_registers.append(register)
+        return {"LISA": [34], "RAMS": [37]}.get(register, [])
+
+    import mock_data_wizard.configure as cfg
+
+    monkeypatched = {
+        "regmeta.open_db": lambda _p: FakeConn(),
+        "regmeta.resolve_register_ids": fake_resolve,
+        "regmeta.db.db_path_from_args": lambda _x: Path("/fake/regmeta.db"),
+    }
+    import importlib
+
+    regmeta_mod = importlib.import_module("regmeta")
+    regmeta_db_mod = importlib.import_module("regmeta.db")
+
+    orig = {
+        "open_db": regmeta_mod.open_db,
+        "resolve_register_ids": regmeta_mod.resolve_register_ids,
+        "db_path_from_args": regmeta_db_mod.db_path_from_args,
+        "_classification_lookup": cfg._classification_lookup,
+    }
+    regmeta_mod.open_db = monkeypatched["regmeta.open_db"]
+    regmeta_mod.resolve_register_ids = monkeypatched["regmeta.resolve_register_ids"]
+    regmeta_db_mod.db_path_from_args = monkeypatched["regmeta.db.db_path_from_args"]
+    cfg._classification_lookup = lambda *a, **k: set()
+
+    try:
+        out = cfg.build_config(
+            discover,
+            register="LISA",
+            register_per_source={"rams_2018": "RAMS", "custom": None},
+        )
+    finally:
+        regmeta_mod.open_db = orig["open_db"]
+        regmeta_mod.resolve_register_ids = orig["resolve_register_ids"]
+        regmeta_db_mod.db_path_from_args = orig["db_path_from_args"]
+        cfg._classification_lookup = orig["_classification_lookup"]
+
+    assert sorted(seen_registers) == ["LISA", "RAMS"]
+    # `custom` had register=None so its column falls through to
+    # name-pattern classification (varchar, no pattern → high_cardinality).
+    assert out["column_types"]["custom"]["Foo"] == {"type": "high_cardinality"}

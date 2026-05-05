@@ -30,10 +30,12 @@ step can pass it back through to ``mdw_step3_stats.json``.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import logging
 import sys
 from collections import Counter
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -44,6 +46,13 @@ from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
 log = logging.getLogger("mdw.configure")
 
 CONFIG_FILENAME = "mdw_step2_config.json"
+
+# Match-rate thresholds for confidence labels on auto-guessed registers.
+# `_vote_register` already filters out anything below 0.40, so the floor
+# here is the same; "high" needs a clear majority of non-id columns to
+# resolve inside the winning register.
+_CONFIDENCE_HIGH = 0.75
+_CONFIDENCE_PARTIAL = 0.40
 
 
 # SQL type tokens, normalised to lowercase. Match the leading bare
@@ -215,52 +224,76 @@ def build_config(
     discover: dict[str, Any],
     *,
     register: str | None = None,
+    register_per_source: dict[str, str | None] | None = None,
     db_path: Path | None = None,
 ) -> dict[str, Any]:
     """Author a mdw_step2_config.json payload from a mdw_step1_discovery.json payload.
 
-    When ``register`` is supplied, opens the regmeta DB at ``db_path``
-    (or the default location), resolves the register string to one or
-    more register ids, and uses ``classification_id IS NOT NULL`` from
-    ``variable_instance`` as the categorical signal.
+    Per-source register precedence: ``register_per_source[name]`` (when
+    the key is present, even if the value is ``None``) overrides the
+    global ``register`` argument. Sources whose effective register is
+    ``None`` skip the regmeta classification path entirely; sources
+    sharing a register are batched into one DB query.
     """
-    classified_lower: set[str] = set()
-    if register is not None:
-        # An empty string here usually means an unset env var in scripts
-        # like `--register "$REGISTER"`. Refuse explicitly: regmeta's
-        # `LIKE '%' || ? || '%'` fallback would otherwise match every
-        # register and over-type the whole config as `categorical`.
-        if not register.strip():
-            raise ValueError(
-                "--register must be a non-empty register name or id "
-                "(got empty string). Omit --register to skip regmeta lookup."
-            )
+    sources_in = discover.get("sources", [])
+    overrides = register_per_source or {}
+    effective: dict[str, str | None] = {}
+    for src in sources_in:
+        name = src["source_name"]
+        effective[name] = overrides[name] if name in overrides else register
+
+    # Group sources by their effective register (may be None) so a single
+    # `_classification_lookup` call covers every source under that register.
+    groups: dict[str, list[str]] = {}
+    for name, reg in effective.items():
+        if reg is None:
+            continue
+        groups.setdefault(reg, []).append(name)
+
+    classified_per_source: dict[str, set[str]] = {}
+    if groups:
         from regmeta import open_db, resolve_register_ids
         from regmeta.db import db_path_from_args
 
-        # Match the documented `--db` semantics on `compare`: argument
-        # is a *directory*; `db_path_from_args` appends `regmeta.db`.
+        # Match `compare`'s `--db` semantics: argument is a directory;
+        # `db_path_from_args` appends `regmeta.db`.
         resolved_db = db_path_from_args(str(db_path) if db_path else None)
         conn = open_db(resolved_db)
         try:
-            register_ids = resolve_register_ids(conn, register)
-            if not register_ids:
-                raise ValueError(
-                    f"register {register!r} not found in regmeta. "
-                    f"Either fix the spelling or omit --register."
-                )
-            all_names: set[str] = set()
-            for src in discover.get("sources", []):
-                for col in src.get("columns", []):
-                    all_names.add(col["name"])
-            classified_lower = _classification_lookup(conn, all_names, register_ids)
+            sources_by_name = {s["source_name"]: s for s in sources_in}
+            for reg_str, source_names in groups.items():
+                # An empty string usually means an unset env var in
+                # scripts like `--register "$REGISTER"`. Refuse explicitly:
+                # the `LIKE '%' || ? || '%'` fallback in resolve_register_ids
+                # would otherwise match every register and over-type the
+                # whole config as `categorical`.
+                if not reg_str.strip():
+                    raise ValueError(
+                        "register must be a non-empty register name or id "
+                        "(got empty string). Pass None to skip regmeta lookup."
+                    )
+                register_ids = resolve_register_ids(conn, reg_str)
+                if not register_ids:
+                    raise ValueError(
+                        f"register {reg_str!r} not found in regmeta. "
+                        f"Either fix the spelling or skip regmeta for the "
+                        f"affected sources."
+                    )
+                col_names: set[str] = set()
+                for sn in source_names:
+                    for col in sources_by_name[sn].get("columns", []):
+                        col_names.add(col["name"])
+                classified_lower = _classification_lookup(conn, col_names, register_ids)
+                for sn in source_names:
+                    classified_per_source[sn] = classified_lower
         finally:
             conn.close()
 
     column_types: dict[str, dict[str, dict[str, str]]] = {}
-    sources: dict[str, dict[str, Any]] = {}
-    for src in discover.get("sources", []):
+    sources_out: dict[str, dict[str, Any]] = {}
+    for src in sources_in:
         source_name = src["source_name"]
+        classified_lower = classified_per_source.get(source_name, set())
         cols_out: dict[str, dict[str, str]] = {}
         for col in src.get("columns", []):
             col_name = col["name"]
@@ -276,14 +309,240 @@ def build_config(
             column_types[source_name] = cols_out
         year = src.get("source_detail", {}).get("year")
         if year is not None:
-            sources[source_name] = {"year": int(year)}
+            sources_out[source_name] = {"year": int(year)}
     payload: dict[str, Any] = {
         "contract_version": CONFIG_SCHEMA_VERSION,
         "column_types": column_types,
     }
-    if sources:
-        payload["sources"] = sources
+    if sources_out:
+        payload["sources"] = sources_out
     return payload
+
+
+# -- Schema family grouping + per-family register guessing -----------------
+# Used by the interactive flow to bucket annual snapshots of the same
+# register into one review unit, then auto-pick the best-matching register
+# per family via `enrich._vote_register`.
+
+
+@dataclass
+class FamilyGuess:
+    """Auto-detected register and column metadata for a schema family.
+
+    A *schema family* is a set of sources that share identical
+    ``(column_name, sql_type)`` tuples — typically annual snapshots of
+    the same register (`slutbetyg_Ak9_2018.csv`, `..._2019.csv`, …).
+    Members are grouped so the user reviews 14 schema families instead
+    of 150 files.
+    """
+
+    family_id: str
+    sources: list[str]
+    columns: list[tuple[str, str | None]]
+    register_id: int | None
+    register_name: str | None
+    confidence: str  # "high" | "partial" | "none"
+    match_count: int
+    nonid_count: int
+    classified_cols: set[str] = field(default_factory=set)
+
+
+def _schema_family_id(columns: list[dict]) -> str:
+    """Stable short id from ordered ``(name, sql_type)`` tuples."""
+    payload = repr(tuple((c["name"], c.get("sql_type")) for c in columns))
+    return hashlib.sha1(payload.encode("utf-8")).hexdigest()[:12]
+
+
+def group_schema_families(discover: dict[str, Any]) -> dict[str, list[dict]]:
+    """Group sources by identical column schema. Preserves discovery order."""
+    families: dict[str, list[dict]] = {}
+    for src in discover.get("sources", []):
+        fid = _schema_family_id(src.get("columns", []))
+        families.setdefault(fid, []).append(src)
+    return families
+
+
+def _confidence_label(
+    register_id: int | None, match_count: int, nonid_count: int
+) -> str:
+    if register_id is None:
+        return "none"
+    if nonid_count == 0:
+        return "partial"
+    rate = match_count / nonid_count
+    if rate >= _CONFIDENCE_HIGH:
+        return "high"
+    return "partial"
+
+
+def guess_register_per_family(
+    families: dict[str, list[dict]],
+    *,
+    db_path: Path | None = None,
+) -> dict[str, FamilyGuess]:
+    """For each family, vote on the best-matching register via regmeta.
+
+    Reuses ``enrich._vote_register`` (margin-guarded weighted vote) and
+    ``enrich._source_name_register_fallback`` (RTB / Flergen filename
+    rules) so the wizard agrees with the enrich pipeline on which
+    register a file belongs to.
+
+    If the regmeta DB isn't reachable, every guess is returned with
+    ``register_id=None`` / ``confidence="none"`` so callers can fall
+    back to name-pattern classification without erroring out.
+    """
+    from .enrich import (
+        _bulk_resolve_all_registers,
+        _vote_register,
+    )
+
+    # Empty-family bookkeeping used in both the no-DB and with-DB paths.
+    def _empty(fid: str, sources: list[dict]) -> FamilyGuess:
+        first = sources[0]
+        cols = first.get("columns", [])
+        nonid = [c["name"] for c in cols if not is_known_id(c["name"])]
+        return FamilyGuess(
+            family_id=fid,
+            sources=[s["source_name"] for s in sources],
+            columns=[(c["name"], c.get("sql_type")) for c in cols],
+            register_id=None,
+            register_name=None,
+            confidence="none",
+            match_count=0,
+            nonid_count=len(nonid),
+        )
+
+    # Open regmeta lazily; missing DB / import error → graceful fallback.
+    # Narrow the catch to genuinely-absent-DB conditions so test assertions
+    # (or programmer errors stubbing regmeta) still surface instead of
+    # being silently swallowed.
+    import sqlite3
+
+    from regmeta.errors import RegmetaError
+
+    conn = None
+    try:
+        from regmeta import open_db
+        from regmeta.db import db_path_from_args
+
+        resolved_db = db_path_from_args(str(db_path) if db_path else None)
+        conn = open_db(resolved_db)
+    except (
+        ImportError,
+        FileNotFoundError,
+        OSError,
+        sqlite3.OperationalError,
+        RegmetaError,
+    ) as exc:
+        log.debug("regmeta unavailable for family guess: %s", exc)
+        conn = None
+
+    if conn is None:
+        return {fid: _empty(fid, sources) for fid, sources in families.items()}
+
+    out: dict[str, FamilyGuess] = {}
+    try:
+        all_names: set[str] = set()
+        for sources in families.values():
+            for col in sources[0].get("columns", []):
+                if not is_known_id(col["name"]):
+                    all_names.add(col["name"])
+        col_to_registers = (
+            _bulk_resolve_all_registers(conn, all_names) if all_names else {}
+        )
+
+        for fid, sources in families.items():
+            first = sources[0]
+            cols = first.get("columns", [])
+            nonid = [c["name"] for c in cols if not is_known_id(c["name"])]
+            vote = _vote_register(nonid, col_to_registers, first["source_name"])
+            match_count = 0
+            if vote.register_id is not None:
+                for raw in nonid:
+                    stripped = strip_project_prefix(raw).lower()
+                    if vote.register_id in col_to_registers.get(stripped, []):
+                        match_count += 1
+            out[fid] = FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=vote.register_id,
+                register_name=None,
+                confidence=_confidence_label(vote.register_id, match_count, len(nonid)),
+                match_count=match_count,
+                nonid_count=len(nonid),
+            )
+
+        # One batched name lookup for all winning registers.
+        reg_ids = sorted({g.register_id for g in out.values() if g.register_id})
+        if reg_ids:
+            placeholders = ",".join("?" for _ in reg_ids)
+            sql = (
+                "SELECT register_id, registernamn FROM register "
+                f"WHERE register_id IN ({placeholders})"
+            )
+            rows = conn.execute(sql, list(reg_ids)).fetchall()
+            names = {r["register_id"]: r["registernamn"] for r in rows}
+            for g in out.values():
+                if g.register_id is not None:
+                    g.register_name = names.get(g.register_id)
+
+        # Fetch the classification mask per family so the inspector can
+        # show "categorical (regmeta)" vs "categorical (name)" without a
+        # second DB pass per inspection.
+        by_register: dict[int, list[str]] = {}
+        for fid, g in out.items():
+            if g.register_id is not None:
+                by_register.setdefault(g.register_id, []).append(fid)
+        for reg_id, fids in by_register.items():
+            col_names: set[str] = set()
+            for fid in fids:
+                for name, _sql in out[fid].columns:
+                    col_names.add(name)
+            classified = _classification_lookup(conn, col_names, [reg_id])
+            for fid in fids:
+                out[fid].classified_cols = {
+                    n
+                    for n, _sql in out[fid].columns
+                    if n.lower() in classified
+                    or strip_project_prefix(n).lower() in classified
+                }
+    finally:
+        conn.close()
+
+    return out
+
+
+def resolve_register_to_id_and_name(
+    register: str, *, db_path: Path | None = None
+) -> tuple[int, str] | None:
+    """Resolve a register name or id; return ``(register_id, registernamn)``.
+
+    Returns ``None`` when the register can't be resolved. Used by the
+    interactive flow to validate a user-typed override before applying
+    it to the family.
+    """
+    try:
+        from regmeta import open_db, resolve_register_ids
+        from regmeta.db import db_path_from_args
+    except Exception:
+        return None
+    try:
+        resolved_db = db_path_from_args(str(db_path) if db_path else None)
+        conn = open_db(resolved_db)
+    except Exception:
+        return None
+    try:
+        ids = resolve_register_ids(conn, register)
+        if not ids:
+            return None
+        row = conn.execute(
+            "SELECT registernamn FROM register WHERE register_id = ?",
+            (ids[0],),
+        ).fetchone()
+        return (ids[0], row["registernamn"] if row else register)
+    finally:
+        conn.close()
 
 
 def _summary_counts(payload: dict[str, Any]) -> Counter[str]:

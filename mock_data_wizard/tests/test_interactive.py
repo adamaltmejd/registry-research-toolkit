@@ -424,6 +424,37 @@ def _write_discover(tmp_path: Path, sources: list[dict]) -> Path:
     return p
 
 
+def _stub_no_regmeta_guesses(monkeypatch) -> None:
+    """Force ``guess_register_per_family`` to return all-``None`` guesses.
+
+    Tests that don't care about regmeta auto-classification install this
+    so the family menu shows every family with ``register_id=None`` and
+    ``build_config`` skips the regmeta path entirely.
+    """
+    from mock_data_wizard import configure as cfg_mod
+    from mock_data_wizard.classify import is_known_id
+
+    def _fake(families, **_kw):
+        out = {}
+        for fid, sources in families.items():
+            first = sources[0]
+            cols = first.get("columns", [])
+            nonid = [c["name"] for c in cols if not is_known_id(c["name"])]
+            out[fid] = cfg_mod.FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=None,
+                register_name=None,
+                confidence="none",
+                match_count=0,
+                nonid_count=len(nonid),
+            )
+        return out
+
+    monkeypatch.setattr(cfg_mod, "guess_register_per_family", _fake)
+
+
 def test_stage3_configure_no_register(tmp_path: Path, monkeypatch):
     _write_discover(
         tmp_path,
@@ -441,10 +472,11 @@ def test_stage3_configure_no_register(tmp_path: Path, monkeypatch):
     # cluster (size < 2) and no time_key column — no panel prompts. Both
     # columns classify cleanly — no ambiguous prompts. Suppress_k is the
     # final yes/no.
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "n",  # suppress_k overrides? no
         ],
     )
@@ -479,11 +511,12 @@ def test_stage3_overwrites_when_confirmed(tmp_path: Path, monkeypatch):
     )
     config = tmp_path / "mdw_step2_config.json"
     config.write_text("{}", encoding="utf-8")
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
             "y",  # overwrite: yes
-            "-",  # register: skip
+            "",  # accept all families
             "n",  # suppress_k overrides? no
         ],
     )
@@ -500,12 +533,13 @@ def test_stage3_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
     )
     config = tmp_path / "mdw_step2_config.json"
     config.write_text("{}", encoding="utf-8")
-    # force=True skips the overwrite prompt only; the rest of the
-    # interview still runs.
+    # force=True skips both the overwrite prompt AND the family
+    # interview; only the post-passes (panels, ambiguous, suppress_k)
+    # run.
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
             "n",  # suppress_k overrides? no
         ],
     )
@@ -516,36 +550,6 @@ def test_stage3_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
 
 
 # -- Phase 2 helpers (pure-function unit tests) ---------------------------
-
-
-@pytest.mark.parametrize(
-    "names, expected",
-    [
-        # Single SCB-style prefix shared across multiple sources, with
-        # year suffixes as the SCB-style marker.
-        (["lisa_2018", "lisa_2019", "lisa_2020"], "LISA"),
-        # `dbo.` and `scb_` prefixes are stripped before matching the
-        # stem; either qualifies as an SCB-style marker on its own.
-        (["dbo.scb_rams_2020"], "RAMS"),
-        (["scb_lisa_2018", "scb_lisa_2019"], "LISA"),
-        # No SCB-style marker (no dbo./scb_/year suffix) → no
-        # suggestion. A bare `mydata` or `registry_main` looks like a
-        # register stem to the regex but isn't one; suppressing avoids
-        # pushing a regmeta failure at the user.
-        (["mydata"], None),
-        (["registry_main"], None),
-        # Mixed prefixes → no confident suggestion.
-        (["lisa_2018", "rams_2019"], None),
-        # A name starting with a digit doesn't match the regex; the
-        # whole dataset should fall through to None rather than emit a
-        # spurious suggestion from the other sources.
-        (["lisa_2018", "2020_extras"], None),
-        ([], None),
-    ],
-)
-def test_suggest_register(names: list[str], expected: str | None):
-    discover = {"sources": [{"source_name": n, "columns": []} for n in names]}
-    assert interactive._suggest_register(discover) == expected
 
 
 def test_detect_separate_file_panels_returns_clusters_of_size_2_or_more():
@@ -671,10 +675,11 @@ def test_stage3_separate_files_panel_emitted_when_confirmed(
             },
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "y",  # treat as panel? yes
             "",  # panel_id (default: lisa)
             "",  # panel_key (default: LopNr)
@@ -711,10 +716,11 @@ def test_stage3_panel_declined_does_not_emit_panels_block(tmp_path: Path, monkey
             {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "n",  # treat as panel? no
             "n",  # suppress_k? no
         ],
@@ -741,10 +747,11 @@ def test_stage3_merged_table_panel_emitted_when_confirmed(tmp_path: Path, monkey
             }
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "y",  # set up merged_table panel? yes
             "",  # panel_key (default: LopNr)
             "",  # panel_id (default: registry_main)
@@ -795,10 +802,11 @@ def test_stage3_separate_files_panel_skips_merged_table_for_same_source(
     )
     # If the merged_table loop weren't skipping claimed sources, we'd
     # need extra canned answers and the test would StopIteration.
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "y",  # treat lisa_*  as panel? yes
             "",  # panel_id default
             "",  # panel_key default
@@ -831,10 +839,11 @@ def test_stage3_ambiguous_review_flips_to_categorical(tmp_path: Path, monkeypatc
             }
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "c",  # flip to categorical
             "n",  # suppress_k? no
         ],
@@ -859,10 +868,11 @@ def test_stage3_ambiguous_review_default_keeps_high_cardinality(
             }
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "",  # ambiguous prompt: default ('keep')
             "n",  # suppress_k? no
         ],
@@ -888,10 +898,11 @@ def test_stage3_suppress_k_writes_column_options(tmp_path: Path, monkeypatch):
             }
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "y",  # suppress_k overrides? yes
             "lisa_*:Diagnos",  # spec
             "20",  # k
@@ -914,10 +925,11 @@ def test_stage3_suppress_k_rejects_below_threshold(tmp_path: Path, monkeypatch):
         tmp_path,
         [{"source_name": "x", "columns": [{"name": "LopNr", "sql_type": "int"}]}],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "-",  # register: skip
+            "",  # accept all families
             "y",  # suppress_k? yes
             "x:Diagnos",  # spec
             "5",  # k=5 → rejected
@@ -937,12 +949,14 @@ def test_stage3_suppress_k_rejects_below_threshold(tmp_path: Path, monkeypatch):
 # -- Stage 3: register suggestion ------------------------------------------
 
 
-def test_stage3_register_suggestion_accepted_pre_classifies(
-    tmp_path: Path, monkeypatch
-):
-    """When all sources share a SCB-style prefix, the register prompt
-    pre-fills it. Pressing enter accepts the suggestion and routes
-    through the regmeta classification path."""
+def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch):
+    """When ``guess_register_per_family`` returns a register, columns
+    flagged by ``_classification_lookup`` get typed as ``categorical``
+    via the regmeta path — even if their name pattern wouldn't have
+    classified them.
+    """
+    from mock_data_wizard import configure as cfg_mod
+
     _write_discover(
         tmp_path,
         [
@@ -955,9 +969,30 @@ def test_stage3_register_suggestion_accepted_pre_classifies(
             }
         ],
     )
-    # Stub the regmeta classification path so we don't need a live DB.
-    from mock_data_wizard import configure as cfg_mod
 
+    # Stub the family-guess pass: pretend regmeta confidently picked LISA
+    # for the lone family, with `Sun2000Inr` carrying a classification.
+    def _fake_guess(families, **_kw):
+        out = {}
+        for fid, sources in families.items():
+            cols = sources[0].get("columns", [])
+            out[fid] = cfg_mod.FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=34,
+                register_name="LISA",
+                confidence="high",
+                match_count=2,
+                nonid_count=2,
+                classified_cols={"Sun2000Inr"},
+            )
+        return out
+
+    monkeypatch.setattr(cfg_mod, "guess_register_per_family", _fake_guess)
+
+    # Stub the regmeta path that build_config takes when register_per_source
+    # is non-empty.
     class FakeConn:
         def close(self):
             pass
@@ -976,14 +1011,14 @@ def test_stage3_register_suggestion_accepted_pre_classifies(
     monkeypatch.setattr(
         cfg_mod, "_classification_lookup", lambda *a, **k: {"sun2000inr"}
     )
+
     _canned_inputs(
         monkeypatch,
         [
-            "",  # accept suggested LISA
-            # `MysteryCode` falls back to high_cardinality (varchar, no
-            # name pattern, no classification). The ambiguous regex
-            # doesn't fire — `mysterycode` has no `_kod`/`_typ`/digit
-            # suffix — so no per-column prompt.
+            "",  # accept all families
+            # `MysteryCode` falls back to high_cardinality (no name
+            # pattern, no classification). Ambiguous regex doesn't fire
+            # — no `_kod`/`_typ`/digit suffix.
             "n",  # suppress_k? no
         ],
     )
@@ -993,11 +1028,16 @@ def test_stage3_register_suggestion_accepted_pre_classifies(
         (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
     )
     assert payload["column_types"]["lisa_2018"]["Sun2000Inr"] == {"type": "categorical"}
+    assert payload["column_types"]["lisa_2018"]["MysteryCode"] == {
+        "type": "high_cardinality"
+    }
 
 
-def test_stage3_register_dash_skips_regmeta(tmp_path: Path, monkeypatch):
-    """Even with a strong suggestion, `-` at the register prompt must
-    skip regmeta entirely — required when the regmeta DB is unreachable."""
+def test_stage3_skips_regmeta_when_no_family_resolves(tmp_path: Path, monkeypatch):
+    """When the auto-guess pass finds no register match for any family,
+    ``build_config`` must not open regmeta at all — the user gets
+    name-pattern classification only.
+    """
     _write_discover(
         tmp_path,
         [
@@ -1007,12 +1047,13 @@ def test_stage3_register_dash_skips_regmeta(tmp_path: Path, monkeypatch):
             }
         ],
     )
+    _stub_no_regmeta_guesses(monkeypatch)
 
     def boom(*a, **k):  # pragma: no cover — must not be called
-        raise AssertionError("regmeta path must be skipped for `-`")
+        raise AssertionError("regmeta path must be skipped when no family resolves")
 
     monkeypatch.setattr("regmeta.open_db", boom, raising=True)
-    _canned_inputs(monkeypatch, ["-", "n"])  # skip regmeta, no suppress_k
+    _canned_inputs(monkeypatch, ["", "n"])  # accept families, no suppress_k
     rc = interactive._stage3_configure(tmp_path)
     assert rc == 0
 
@@ -1352,3 +1393,119 @@ def test_main_no_interactive_flag_prints_help_on_tty(monkeypatch, capsys):
     assert rc == 0
     assert sentinel["called"] is False
     assert "usage:" in capsys.readouterr().out
+
+
+def test_format_source_list_year_range_after_extension_strip():
+    """Files with ``.csv`` extensions should still cluster under a
+    common stem and surface the actual year range."""
+    sources = [
+        "Äp9_2003.csv",
+        "Äp9_2004.csv",
+        "Äp9_2005.csv",
+        "Äp9_2006.csv",
+    ]
+    assert interactive._format_source_list(sources) == "Äp9_2003–2006"
+
+
+def test_format_source_list_collapses_gapped_year_ranges():
+    """Non-contiguous years split into separate ranges so missing-year
+    gaps (e.g. COVID-cancelled tests in 2020/2021) stay visible."""
+    sources = [
+        "Kursprov_gymn_VT2017.csv",
+        "Kursprov_gymn_VT2018.csv",
+        "Kursprov_gymn_VT2019.csv",
+        "Kursprov_gymn_VT2022.csv",
+        "Kursprov_gymn_VT2023.csv",
+        "Kursprov_gymn_VT2024.csv",
+    ]
+    assert interactive._format_source_list(sources) == (
+        "Kursprov_gymn_VT_2017–2019, 2022–2024"
+    )
+
+
+def test_format_source_list_singleton_keeps_filename():
+    assert interactive._format_source_list(["Äp9_2003.csv"]) == "Äp9_2003.csv"
+
+
+def test_format_source_list_lists_full_filenames_for_mixed_input():
+    """Files that don't fit the ``<stem>_YYYY`` shape keep their full
+    filenames; year-stem files among them still collapse to a range."""
+    sources = ["foo_2003.csv", "foo_2004.csv", "foo_extras.csv"]
+    assert interactive._format_source_list(sources) == "foo_2003–2004, foo_extras.csv"
+
+
+def test_format_source_list_lists_all_when_no_year_collapse():
+    """Heterogeneous filenames without a shared year stem render in
+    full so the inspector header shows what's actually in the group
+    instead of a truncated common-prefix stub."""
+    sources = [
+        "Distansutb_grund_HT20_VT21.csv",
+        "Distansutb_grund_VT20.csv",
+        "Distansutb_gymn_HT20_VT21.csv",
+        "Distansutb_gymn_VT20.csv",
+    ]
+    assert interactive._format_source_list(sources) == (
+        "Distansutb_grund_HT20_VT21.csv, Distansutb_grund_VT20.csv, "
+        "Distansutb_gymn_HT20_VT21.csv, Distansutb_gymn_VT20.csv"
+    )
+
+
+def test_collapse_year_ranges_handles_gaps_and_singletons():
+    assert interactive._collapse_year_ranges([2003, 2004, 2005]) == "2003–2005"
+    assert interactive._collapse_year_ranges([2003]) == "2003"
+    assert (
+        interactive._collapse_year_ranges([2003, 2004, 2008, 2009, 2012])
+        == "2003–2004, 2008–2009, 2012"
+    )
+    assert interactive._collapse_year_ranges([]) == ""
+
+
+def test_detect_separate_file_panels_handles_csv_extension():
+    """The same ``.csv`` extension fix has to flow through panel
+    detection or every CSV-extension family is silently ineligible."""
+    discover = {
+        "sources": [
+            {"source_name": "Äp9_2003.csv", "columns": []},
+            {"source_name": "Äp9_2004.csv", "columns": []},
+            {"source_name": "Äp9_2005.csv", "columns": []},
+        ]
+    }
+    clusters = interactive._detect_separate_file_panels(discover)
+    assert len(clusters) == 1
+    assert clusters[0]["prefix"] == "Äp9"
+    assert [m["period"] for m in clusters[0]["members"]] == [2003, 2004, 2005]
+    # Members keep the original filename incl. extension so downstream
+    # references still resolve.
+    assert [m["source"] for m in clusters[0]["members"]] == [
+        "Äp9_2003.csv",
+        "Äp9_2004.csv",
+        "Äp9_2005.csv",
+    ]
+
+
+def test_format_source_list_does_not_extract_day_from_yyyymmdd():
+    """`_20241231` is a date stamp, not year=1231 — the regex must not
+    treat the trailing `1231` as a year suffix, so these stay as
+    literal filenames in the inspector header."""
+    sources = [
+        "FlerGen_Adopforaldrar_20241231.csv",
+        "FlerGen_Bioforaldrar_20241231.csv",
+    ]
+    label = interactive._format_source_list(sources)
+    assert "1231" not in label.replace("20241231", "")
+    assert label == (
+        "FlerGen_Adopforaldrar_20241231.csv, FlerGen_Bioforaldrar_20241231.csv"
+    )
+
+
+def test_format_source_list_handles_no_separator_year_suffix():
+    """`..._HT2011` has no underscore between `HT` and the year, but
+    the negative-lookbehind regex still matches because there's no
+    digit immediately before `2011`."""
+    sources = [
+        "Kursprov_gymn_HT2011.csv",
+        "Kursprov_gymn_HT2012.csv",
+        "Kursprov_gymn_HT2013.csv",
+    ]
+    label = interactive._format_source_list(sources)
+    assert label == "Kursprov_gymn_HT_2011–2013"

@@ -9,8 +9,11 @@ from __future__ import annotations
 
 import enum
 import re
+import shutil
 import sys
+import textwrap
 from pathlib import Path
+from typing import Any
 
 from . import _bundle
 from .configure import CONFIG_FILENAME
@@ -247,20 +250,12 @@ def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
 
 # -- Phase 2 helpers (configure interview) ---------------------------------
 
-# Strip the SQL-server `dbo.` schema prefix and SCB's own `scb_` prefix
-# before matching the leading register stem. `lisa_2018` → `lisa`,
-# `dbo.scb_rams_2020` → `rams`. Names starting with a digit don't match
-# (the regex requires letters); the suggester returns None for those.
-_REGISTER_PREFIX_RE = re.compile(r"^(?:dbo\.)?(?:scb_)?([a-z]+)")
-# Only emit a suggestion when each source carries at least one strong
-# SCB-style marker: `dbo.` schema prefix, `scb_` namespace prefix, or a
-# 4-digit year suffix. A bare `registry_main` looks like a register
-# stem to the regex but isn't one — without this gate the wizard would
-# happily push REGISTRY at the user and let regmeta error out.
-_REGISTER_MARKER_RE = re.compile(r"^(?:dbo\.|scb_)|\d{4}$")
-# Trailing 4-digit year, optionally separated by `_` or `-`. Used to
-# cluster `lisa_2018` / `lisa_2019` / `lisa_2020` into one panel.
-_YEAR_SUFFIX_RE = re.compile(r"^(.+?)[_-]?(\d{4})$")
+# Trailing 4-digit year. The negative lookbehind blocks a match when
+# the 4 digits are preceded by another digit — that's how
+# `..._20241231` (a YYYYMMDD date) avoids being parsed as year=1231,
+# while still letting `Kursprov_gymn_HT2011` (no underscore separator
+# but a non-digit boundary) match cleanly.
+_YEAR_SUFFIX_RE = re.compile(r"^(.+?)(?<!\d)(\d{4})$")
 # Column names that look like a panel time-key. Lowercase comparison.
 _TIME_KEY_NAMES = frozenset({"ar", "indatum", "year", "period"})
 # A high_cardinality column with one of these suffixes is almost
@@ -271,38 +266,6 @@ _AMBIGUOUS_SUFFIX_RE = re.compile(r"(_kod|_typ|\d+)$", re.IGNORECASE)
 # wide tables. The remainder is reported once at the end and left for
 # the user to hand-edit.
 _AMBIGUOUS_REVIEW_CAP = 10
-
-
-def _suggest_register(discover: dict) -> str | None:
-    """Heuristic register name from source-name prefixes.
-
-    All source names sharing a single SCB-style prefix → uppercase that
-    prefix (e.g. ``lisa_2018`` + ``lisa_2019`` → ``"LISA"``;
-    ``dbo.scb_rams_2020`` → ``"RAMS"``). Returns ``None`` when:
-
-    - a name doesn't match the prefix regex (e.g. starts with a digit),
-    - sources span multiple prefixes,
-    - or no source carries an SCB-style marker (``dbo.`` / ``scb_`` /
-      year suffix). The marker gate is what stops a generic name like
-      ``registry_main`` from generating a noisy ``REGISTRY`` suggestion
-      that regmeta will then reject.
-    """
-    sources = discover.get("sources", [])
-    if not sources:
-        return None
-    prefixes: set[str] = set()
-    has_marker = False
-    for src in sources:
-        name = src.get("source_name", "").lower()
-        m = _REGISTER_PREFIX_RE.match(name)
-        if not m:
-            return None
-        prefixes.add(m.group(1))
-        if _REGISTER_MARKER_RE.search(name):
-            has_marker = True
-    if not has_marker or len(prefixes) != 1:
-        return None
-    return prefixes.pop().upper()
 
 
 def _detect_separate_file_panels(discover: dict) -> list[dict]:
@@ -316,7 +279,10 @@ def _detect_separate_file_panels(discover: dict) -> list[dict]:
     clusters: dict[str, list[dict]] = {}
     for src in discover.get("sources", []):
         name = src.get("source_name", "")
-        m = _YEAR_SUFFIX_RE.match(name)
+        # Strip any single dot-extension before matching the year
+        # suffix; otherwise `Äp9_2003.csv` never clusters with its
+        # siblings because `.csv` isn't 4 digits.
+        m = _YEAR_SUFFIX_RE.match(_strip_extension(name))
         if not m:
             continue
         prefix = m.group(1).rstrip("_-")
@@ -537,6 +503,508 @@ def _interview_suppress_k(payload: dict) -> None:
         payload["column_options"] = options
 
 
+_CONFIDENCE_GLYPH = {"high": "✓", "partial": "⚠", "none": "✗"}
+_CONFIDENCE_RANK = {"high": 0, "partial": 1, "none": 2}
+_TYPE_KEY_MAP = {
+    "c": "categorical",
+    "n": "numeric",
+    "d": "date",
+    "i": "id",
+    "h": "high_cardinality",
+}
+_VALID_TYPES = frozenset({"id", "categorical", "numeric", "high_cardinality", "date"})
+
+# Below this width we drop the trailing "(X/Y matched)" tail and tighten
+# the source/column count column. Above it we render the full row.
+_NARROW_WIDTH_THRESHOLD = 90
+# Minimum columns we'll render at; below this we just print without
+# pretty alignment (rare — most terminals are 80+).
+_MIN_RENDER_WIDTH = 60
+
+
+def _terminal_width(default: int = 100) -> int:
+    """Best-effort terminal width. Falls back to ``default`` on failure."""
+    try:
+        w = shutil.get_terminal_size().columns
+    except (OSError, ValueError):
+        return default
+    return w if w > 0 else default
+
+
+def _truncate(s: str, width: int) -> str:
+    """Truncate ``s`` to ``width`` with a single-char ellipsis when over."""
+    if width <= 0:
+        return ""
+    if len(s) <= width:
+        return s
+    if width == 1:
+        return "…"
+    return s[: width - 1] + "…"
+
+
+def _print_wrapped(prefix: str, body: str, width: int) -> None:
+    """Print ``prefix + body`` wrapped to ``width``, hanging-indented to
+    align continuation lines under ``body``.
+
+    Used for inspector group/section headers where ``body`` is a
+    comma-separated source list that may exceed terminal width.
+    """
+    indent = " " * len(prefix)
+    wrapped = textwrap.wrap(
+        prefix + body,
+        width=max(width, len(prefix) + 8),
+        subsequent_indent=indent,
+        break_long_words=False,
+        break_on_hyphens=False,
+    )
+    for line in wrapped or [prefix]:
+        print(line)
+
+
+def _strip_extension(name: str) -> str:
+    """Strip a single trailing dot-extension (``foo.csv`` → ``foo``)."""
+    return name.rsplit(".", 1)[0] if "." in name else name
+
+
+def _collapse_year_ranges(years: list[int]) -> str:
+    """``[2003, 2004, 2005, 2008, 2009]`` → ``"2003–2005, 2008–2009"``.
+
+    Contiguous runs collapse; gaps split into separate ranges so things
+    like the COVID-cancelled national-test years (2020/2021 missing)
+    render as ``2012–2019, 2022–2024`` rather than papering over the
+    gap as ``2012–2024``.
+    """
+    if not years:
+        return ""
+    sorted_years = sorted(set(years))
+    ranges: list[tuple[int, int]] = []
+    start = prev = sorted_years[0]
+    for y in sorted_years[1:]:
+        if y == prev + 1:
+            prev = y
+        else:
+            ranges.append((start, prev))
+            start = prev = y
+    ranges.append((start, prev))
+    return ", ".join(f"{s}–{e}" if s != e else str(s) for s, e in ranges)
+
+
+def _format_source_list(sources: list[str]) -> str:
+    """Render a list of source filenames for the inspector / menu.
+
+    Files matching ``<stem>_YYYY[.ext]`` and sharing the same stem
+    collapse into one entry with their year range
+    (``Individ_2018.csv`` … ``Individ_2024.csv`` →
+    ``Individ_2018–2024``). Other files — and singletons — appear with
+    their full filename. Ordering follows the input list so menu and
+    inspector text match the discovery order the user sees elsewhere.
+    """
+    if not sources:
+        return ""
+    if len(sources) == 1:
+        return sources[0]
+    grouped: dict[tuple[str, str], list[tuple[str, int | None]]] = {}
+    order: list[tuple[str, str]] = []
+    for s in sources:
+        base = _strip_extension(s)
+        m = _YEAR_SUFFIX_RE.match(base)
+        if m:
+            key = ("yr", m.group(1).rstrip("_-"))
+            year: int | None = int(m.group(2))
+        else:
+            key = ("lit", s)
+            year = None
+        if key not in grouped:
+            grouped[key] = []
+            order.append(key)
+        grouped[key].append((s, year))
+    parts: list[str] = []
+    for key in order:
+        items = grouped[key]
+        # Only collapse when ≥2 distinct years share a stem; a lone
+        # `Foo_2024.csv` is more honest as the literal filename than
+        # as `Foo_2024`.
+        if key[0] == "yr" and len({y for _, y in items if y is not None}) >= 2:
+            years = [y for _, y in items if y is not None]
+            parts.append(f"{key[1]}_{_collapse_year_ranges(years)}")
+        else:
+            for name, _ in items:
+                parts.append(name)
+    return ", ".join(parts)
+
+
+# -- Register groups -------------------------------------------------------
+# A register group bundles every schema family that shares a register
+# guess. The user reviews one row per register (~10 rows for a typical
+# multi-register study, vs. one per schema family before — which can be
+# 50+ when annual deliveries drift in column shape). Schema variation
+# within a group is surfaced inside the inspector by splitting columns
+# into "shared by all" and "only in <subset>" sections.
+
+
+from dataclasses import dataclass, field  # noqa: E402 — local to this section
+
+
+@dataclass
+class RegisterGroup:
+    """All sources sharing one auto-detected register, regardless of schema variant.
+
+    Members may have different schemas (annual deliveries with column
+    drift). The inspector groups columns by which subset of members
+    contains each one, so the user can read off the stable core vs. the
+    variant-specific columns without first picking a year.
+    """
+
+    group_id: str
+    register_id: int | None
+    register_name: str | None
+    register_str: str
+    confidence: str
+    sources: list[str] = field(default_factory=list)
+    columns_by_source: dict[str, list[tuple[str, str | None]]] = field(
+        default_factory=dict
+    )
+    classified_cols: set[str] = field(default_factory=set)
+    schema_variants: int = 0
+
+
+def _worst_confidence(a: str, b: str) -> str:
+    """Pick the higher-rank (worse) of two confidence labels.
+
+    A register group is only as confident as its weakest schema variant
+    — if any annual delivery has mostly-unmatched columns under the
+    chosen register, the group surfaces ``⚠`` so the user notices.
+    """
+    return max(a, b, key=_CONFIDENCE_RANK.__getitem__)
+
+
+def _register_display(register_id: int | None, register_name: str | None) -> str:
+    if register_name:
+        return f"{register_name} (id={register_id})"
+    if register_id is not None:
+        return f"id={register_id}"
+    return "—"
+
+
+def group_by_register(
+    families: dict[str, list[dict]],
+    guesses: dict[str, Any],
+) -> dict[str, RegisterGroup]:
+    """Bucket schema families by register_id; build per-group metadata.
+
+    No-register families (custom CSVs, key-mapping files, all-id
+    schemas with no regmeta hits) each get their own group rather than
+    being merged into a single "no register" bucket — they're
+    heterogeneous and the user needs to decide on each one separately.
+    """
+    groups: dict[str, RegisterGroup] = {}
+    for fid, family_sources in families.items():
+        guess = guesses[fid]
+        key = (
+            f"reg-{guess.register_id}"
+            if guess.register_id is not None
+            else f"noreg-{fid}"
+        )
+        if key not in groups:
+            groups[key] = RegisterGroup(
+                group_id=key,
+                register_id=guess.register_id,
+                register_name=guess.register_name,
+                register_str=_register_display(guess.register_id, guess.register_name),
+                confidence=guess.confidence,
+            )
+        grp = groups[key]
+        grp.schema_variants += 1
+        grp.confidence = _worst_confidence(grp.confidence, guess.confidence)
+        grp.classified_cols |= guess.classified_cols
+        for src in family_sources:
+            name = src["source_name"]
+            grp.sources.append(name)
+            grp.columns_by_source[name] = [
+                (c["name"], c.get("sql_type")) for c in src.get("columns", [])
+            ]
+    return groups
+
+
+def _columns_by_availability(
+    group: RegisterGroup,
+) -> list[tuple[list[str], list[str]]]:
+    """Return ``[(source_subset, sorted_col_names), ...]`` for the inspector.
+
+    First entry is always the columns shared by all sources (when any
+    exist). Subsequent entries are subsets ordered by descending size,
+    ties broken by alphabetic source list. Source subsets are returned
+    in original discovery order so year-range labels render naturally.
+    """
+    col_to_sources: dict[str, set[str]] = {}
+    for src_name, cols in group.columns_by_source.items():
+        for col_name, _ in cols:
+            col_to_sources.setdefault(col_name, set()).add(src_name)
+    by_set: dict[frozenset[str], list[str]] = {}
+    for col_name, srcs in col_to_sources.items():
+        by_set.setdefault(frozenset(srcs), []).append(col_name)
+
+    ordered_unique = list(dict.fromkeys(group.sources))
+    all_set = frozenset(ordered_unique)
+    sections: list[tuple[list[str], list[str]]] = []
+    if all_set in by_set:
+        sections.append((ordered_unique, sorted(by_set.pop(all_set))))
+    for src_set, cols in sorted(
+        by_set.items(),
+        key=lambda kv: (-len(kv[0]), sorted(kv[0])),
+    ):
+        ordered = [s for s in ordered_unique if s in src_set]
+        sections.append((ordered, sorted(cols)))
+    return sections
+
+
+def _render_register_menu(groups: dict[str, RegisterGroup]) -> list[str]:
+    """Print the register-group menu. Returns group ids in display order."""
+    gids = list(groups.keys())
+    width = _terminal_width()
+
+    n_idx_w = max(2, len(str(len(gids))))
+    fixed_left = 2 + 1 + n_idx_w + 2 + 1
+    fixed_glyph = 3
+    counts_w = len(" 999 src, 99–999 cols, 99 schemas")
+    overhead = fixed_left + fixed_glyph + counts_w + 2
+
+    budget = max(width - overhead, _MIN_RENDER_WIDTH - overhead)
+    label_w = max(16, int(budget * 0.40))
+    register_w = max(20, budget - label_w)
+    cont_indent = " " * (2 + 1 + n_idx_w + 2 + label_w + 1 + 2)
+
+    print("Register groups:\n")
+    for i, gid in enumerate(gids, 1):
+        grp = groups[gid]
+        glyph = _CONFIDENCE_GLYPH[grp.confidence]
+        unique_sources = list(dict.fromkeys(grp.sources))
+        n_src = len(unique_sources)
+        col_counts = [len(cols) for cols in grp.columns_by_source.values()]
+        if grp.schema_variants > 1:
+            lo, hi = min(col_counts), max(col_counts)
+            counts_part = (
+                f"{n_src:>3} src, {lo}–{hi} cols, {grp.schema_variants} schemas"
+            )
+        else:
+            counts_part = f"{n_src:>3} src, {col_counts[0]:>4} cols"
+        label = _truncate(_format_source_list(unique_sources), label_w)
+        reg_chunks = textwrap.wrap(grp.register_str, width=register_w) or [""]
+        first_line = (
+            f"  [{i:>{n_idx_w}}] {label:<{label_w}} {glyph} "
+            f"{reg_chunks[0]:<{register_w}} {counts_part}"
+        )
+        print(first_line)
+        for chunk in reg_chunks[1:]:
+            print(cont_indent + chunk)
+    print()
+    return gids
+
+
+def _resolve_column_type(
+    col_name: str,
+    sources: list[str],
+    columns_by_source: dict[str, list[tuple[str, str | None]]],
+    column_overrides: dict[tuple[str, str], str],
+    config: dict,
+) -> str:
+    """Look up the current effective type for a column in the group.
+
+    Walks group sources in order and returns the first match: an
+    explicit override beats the auto-classified type from ``config``.
+    Returns ``"?"`` if no source carries the column (shouldn't happen
+    for columns surfaced by ``_columns_by_availability``).
+    """
+    for src_name in sources:
+        if (src_name, col_name) in column_overrides:
+            return column_overrides[(src_name, col_name)]
+        cols = config.get("column_types", {}).get(src_name, {})
+        if col_name in cols:
+            return cols[col_name]["type"]
+    return "?"
+
+
+def _inspect_register_group(
+    gid: str,
+    groups: dict[str, RegisterGroup],
+    register_per_source: dict[str, str | None],
+    column_overrides: dict[tuple[str, str], str],
+    config: dict,
+    payload: dict,
+) -> dict:
+    """Inspect / edit a register group. Returns the (possibly rebuilt) config."""
+    from .configure import build_config, resolve_register_to_id_and_name
+
+    while True:
+        grp = groups[gid]
+        unique_sources = list(dict.fromkeys(grp.sources))
+        n_unique = len(unique_sources)
+        width = _terminal_width()
+        print()
+        _print_wrapped("Group: ", _format_source_list(unique_sources), width)
+        print(f"  Register: {grp.register_str}")
+        if grp.schema_variants > 1:
+            print(
+                f"  Sources: {n_unique} files in {grp.schema_variants} schema variants"
+            )
+        else:
+            print(f"  Sources: {n_unique} file(s)")
+
+        sections = _columns_by_availability(grp)
+        # Flat ordered list of (col_name, current_type) so the user's
+        # numeric choice indexes uniformly across all sections.
+        type_rows: list[tuple[str, str]] = []
+
+        total_cols = sum(len(cols) for _, cols in sections)
+        n_idx_w = max(2, len(str(total_cols)))
+        fixed = 4 + 1 + n_idx_w + 2 + 17 + 11 + 2
+        name_w = max(12, width - fixed)
+
+        for src_subset, col_names in sections:
+            print()
+            if len(src_subset) == n_unique:
+                print(f"  Columns shared by all {n_unique} sources ({len(col_names)}):")
+            else:
+                suffix = (
+                    f" ({len(src_subset)}/{n_unique} sources, {len(col_names)} cols):"
+                )
+                _print_wrapped(
+                    "  Only in ",
+                    _format_source_list(src_subset) + suffix,
+                    width,
+                )
+            for col_name in col_names:
+                t = _resolve_column_type(
+                    col_name,
+                    src_subset,
+                    grp.columns_by_source,
+                    column_overrides,
+                    config,
+                )
+                tag = (
+                    "  (regmeta)"
+                    if col_name in grp.classified_cols and t == "categorical"
+                    else ""
+                )
+                idx = len(type_rows) + 1
+                name_disp = _truncate(col_name, name_w)
+                print(f"    [{idx:>{n_idx_w}}] {name_disp:<{name_w}} {t}{tag}")
+                type_rows.append((col_name, t))
+
+        print("\n  [r] change register / [number] change column type / [enter] back")
+        choice = _prompt("  Choice", default="").strip().lower()
+        if choice == "":
+            return config
+        if choice == "r":
+            new_reg = _prompt(
+                "  New register (name or id; blank to skip regmeta for this group)"
+            ).strip()
+            if not new_reg:
+                grp.register_id = None
+                grp.register_name = None
+                grp.register_str = "—"
+                grp.confidence = "none"
+                grp.classified_cols = set()
+                for src_name in grp.sources:
+                    register_per_source[src_name] = None
+            else:
+                resolved = resolve_register_to_id_and_name(new_reg)
+                if resolved is None:
+                    print(
+                        f"  Register {new_reg!r} not found in regmeta.",
+                        file=sys.stderr,
+                    )
+                    continue
+                reg_id, reg_name = resolved
+                grp.register_id = reg_id
+                grp.register_name = reg_name
+                grp.register_str = _register_display(reg_id, reg_name)
+                # User-asserted register — coverage rate unknown until
+                # next regmeta query; treat as "partial" until proven.
+                grp.confidence = "partial"
+                for src_name in grp.sources:
+                    register_per_source[src_name] = reg_name
+            try:
+                config = build_config(payload, register_per_source=register_per_source)
+            except Exception as exc:
+                print(f"  Error rebuilding config: {exc}", file=sys.stderr)
+                continue
+            continue
+        try:
+            i = int(choice)
+        except ValueError:
+            print(f"  Unknown choice: {choice!r}", file=sys.stderr)
+            continue
+        if not 1 <= i <= len(type_rows):
+            print(
+                f"  Column number out of range (1..{len(type_rows)}).",
+                file=sys.stderr,
+            )
+            continue
+        col_name, current = type_rows[i - 1]
+        new_raw = (
+            _prompt(
+                f"  New type for {col_name} (current: {current}) "
+                "— [c]ategorical/[n]umeric/[d]ate/[i]d/[h]igh_cardinality, blank=keep"
+            )
+            .strip()
+            .lower()
+        )
+        if not new_raw:
+            continue
+        new_type = _TYPE_KEY_MAP.get(new_raw, new_raw)
+        if new_type not in _VALID_TYPES:
+            print(f"  Unknown type {new_raw!r}.", file=sys.stderr)
+            continue
+        # Apply the override only to sources that actually have this
+        # column — otherwise an unused override would dangle on a source
+        # whose schema doesn't include it.
+        for src_name in grp.sources:
+            if any(c[0] == col_name for c in grp.columns_by_source.get(src_name, [])):
+                column_overrides[(src_name, col_name)] = new_type
+
+
+def _interview_register_groups(
+    payload: dict,
+    groups: dict[str, RegisterGroup],
+    register_per_source: dict[str, str | None],
+    column_overrides: dict[tuple[str, str], str],
+    config: dict,
+) -> dict:
+    """Register-group review loop. Returns the (possibly rebuilt) config."""
+    gids = _render_register_menu(groups)
+    print("Press [enter] or [a] to accept all, [number] to inspect/edit, [q] to abort.")
+    while True:
+        choice = _prompt("Choice", default="").strip().lower()
+        if choice in ("", "a"):
+            return config
+        if choice == "q":
+            print("Aborted.", file=sys.stderr)
+            raise SystemExit(1)
+        try:
+            idx = int(choice)
+        except ValueError:
+            print(f"  Unknown choice: {choice!r}", file=sys.stderr)
+            continue
+        if not 1 <= idx <= len(gids):
+            print(f"  Group number out of range (1..{len(gids)}).", file=sys.stderr)
+            continue
+        gid = gids[idx - 1]
+        config = _inspect_register_group(
+            gid,
+            groups,
+            register_per_source,
+            column_overrides,
+            config,
+            payload,
+        )
+        gids = _render_register_menu(groups)
+        print(
+            "Press [enter] or [a] to accept all, [number] to inspect/edit, "
+            "[q] to abort."
+        )
+
+
 def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
     import json as _json
 
@@ -546,6 +1014,8 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
         _summary_counts,
         _validate_discover_payload,
         build_config,
+        group_schema_families,
+        guess_register_per_family,
         write_config,
     )
 
@@ -572,29 +1042,71 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
         )
         return 1
 
-    suggested = _suggest_register(payload)
-    register_in = _prompt(
-        "Which register is this project mostly built around?\n"
-        "(LISA, RAMS, ... — pre-classifies categorical columns via regmeta; "
-        "`-` skips regmeta)",
-        default=suggested or "",
-    ).strip()
-    register = None if register_in == "-" else (register_in or None)
+    families = group_schema_families(payload)
+    n_sources = len(payload["sources"])
 
     try:
-        config = build_config(payload, register=register)
-    except ValueError as exc:
-        print(f"Error: {exc}", file=sys.stderr)
-        return 1
+        guesses = guess_register_per_family(families)
     except RegmetaError as exc:
-        print(f"Error: regmeta lookup failed: {exc.message}", file=sys.stderr)
-        if exc.remediation:
-            print(f"  {exc.remediation}", file=sys.stderr)
         print(
-            "  (use `-` at the register prompt to skip regmeta entirely)",
+            f"  (regmeta lookup failed: {exc.message}; "
+            f"continuing without auto-classification)",
             file=sys.stderr,
         )
+        from .classify import is_known_id
+        from .configure import FamilyGuess
+
+        guesses = {}
+        for fid, sources in families.items():
+            first = sources[0]
+            cols = first.get("columns", [])
+            nonid = [c["name"] for c in cols if not is_known_id(c["name"])]
+            guesses[fid] = FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=None,
+                register_name=None,
+                confidence="none",
+                match_count=0,
+                nonid_count=len(nonid),
+            )
+
+    groups = group_by_register(families, guesses)
+    print(
+        f"Auto-classifying {n_sources} source(s) into {len(groups)} register "
+        f"group{'' if len(groups) == 1 else 's'}..."
+    )
+
+    register_per_source: dict[str, str | None] = {}
+    for grp in groups.values():
+        chosen = grp.register_name if grp.register_id else None
+        for src_name in grp.sources:
+            register_per_source[src_name] = chosen
+
+    try:
+        config = build_config(payload, register_per_source=register_per_source)
+    except (ValueError, RegmetaError) as exc:
+        print(f"Error: {exc}", file=sys.stderr)
         return 1
+    print()
+
+    column_overrides: dict[tuple[str, str], str] = {}
+    if not force:
+        try:
+            config = _interview_register_groups(
+                payload,
+                groups,
+                register_per_source,
+                column_overrides,
+                config,
+            )
+        except SystemExit as exc:
+            return int(exc.code or 1)
+
+    for (source, col), new_type in column_overrides.items():
+        if source in config["column_types"] and col in config["column_types"][source]:
+            config["column_types"][source][col] = {"type": new_type}
 
     _interview_panels(payload, config)
     _interview_ambiguous(config)

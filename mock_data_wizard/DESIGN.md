@@ -52,9 +52,30 @@ instructions for the MONA-side action. The detection table:
 | `mdw_step3_stats.json` | generate | Interview; collect seed / sample\_pct / regmeta / output dir, then dispatch to `generate` |
 | `mock_data/` populated | done | Offer to redo any stage |
 
-The configure interview surfaces (in order): a register suggestion
-inferred from SCB-style source-name prefixes (`dbo.scb_rams_2020` →
-`RAMS`); separate-files panel candidates from `<prefix>_<year>`
+The configure interview is a family-grouped review menu. Sources are
+bucketed by `(column_name, sql_type)` schema (typically annual snapshots
+of the same register collapse into one family — 150 files → ~14–60
+families), and each family is auto-tagged with a register and
+classification using the existing `enrich._vote_register` voting +
+`_source_name_register_fallback` filename rules. The menu shows one row
+per family with a confidence glyph (`✓` / `⚠` / `✗`), the auto-detected
+register name, source/column counts, and the `match_count/nonid_count`
+ratio that drove the confidence flag. Columns whose `classification_id`
+is non-null in the family's register are tagged `(regmeta)` in the
+inspector so the user can distinguish regmeta-asserted categoricals
+from name-pattern fallbacks.
+
+Inputs the user can give at the family menu:
+
+- `[enter]` / `[a]` — accept all auto-classifications
+- `[number]` — inspect/edit one family (override register, override
+  individual column types — applied to every member of the family)
+- `[q]` — abort without writing
+
+Inside a family, register changes re-run `build_config` to rebuild the
+column-type preview; column-type overrides accumulate and are applied
+once at write time. After the family menu, the existing post-passes
+run unchanged: separate-files panel candidates from `<prefix>_<year>`
 clusters of size ≥ 2; merged-table candidates for sources with an
 `AR`/`INDATUM`/`year`/`period` column; per-column flips for
 `high_cardinality` columns whose names suggest categorical/numeric
@@ -62,6 +83,16 @@ clusters of size ≥ 2; merged-table candidates for sources with an
 optional `suppress_k` walkthrough. Edits operate on the in-memory
 `build_config` payload; `write_config` runs once at the end so
 cancellation leaves no partial files.
+
+Why per-family rather than one global register: most MONA studies pull
+data from several registers at once (Education + LISA + RTB + …). The
+old "one register for the whole project" prompt forced the user to pick
+one and silently dropped the others into the name-pattern fallback. The
+per-family flow lets each family carry its own register, batches DB
+queries by register so one `_classification_lookup` call covers every
+source under that register, and degrades gracefully when regmeta isn't
+reachable (every family becomes `register_id=None` and the user gets
+name-pattern classification only).
 
 The generate interview prompts for `seed`, `sample_pct`,
 regmeta-enrichment toggle, register filter (only when regmeta is on),
