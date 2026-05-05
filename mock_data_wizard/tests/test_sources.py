@@ -228,6 +228,39 @@ def test_iter_file_source_treats_space_as_null_in_numeric_column(tmp_path: Path)
             cur.close()
 
 
+def test_iter_file_source_handles_rare_non_numeric_past_sample_window(
+    tmp_path: Path,
+):
+    """A column of digits with one literal letter past the default
+    sample window must not commit the column to BIGINT.
+
+    Reproduces the production bug: ``slutbetyg_Ak9_2015.csv`` had a
+    ``NO_AMNEN`` column of digits, with a single ``"C"`` at row ~60k.
+    DuckDB's auto-detector with the default sample_size=20480 inferred
+    BIGINT and crashed mid-stream during the SELECT. ``sample_size=-1``
+    forces a whole-file scan so the rare letter is observed before the
+    type is committed; the column resolves to VARCHAR and the read
+    succeeds.
+    """
+    p = tmp_path / "rare_letter.csv"
+    lines = ["id,NO_AMNEN\n"]
+    lines.extend(f"{i},{i % 10}\n" for i in range(25_000))
+    lines.append("25000,C\n")
+    p.write_text("".join(lines), encoding="utf-8")
+    src = file_source(str(tmp_path), include=["rare_letter.csv"])
+    # Without the fix the read raises a duckdb.ConversionException
+    # (at CREATE TABLE or during SELECT, depending on whether the file
+    # falls under MDW_MEMORY_THRESHOLD_MB); with sample_size=-1 the
+    # read succeeds and the rare letter round-trips as a string.
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = 25000")
+            assert cur.fetchone() == ("C",)
+        finally:
+            cur.close()
+
+
 # -- SQL helpers ---------------------------------------------------------
 
 
