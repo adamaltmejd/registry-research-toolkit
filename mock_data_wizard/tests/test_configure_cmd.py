@@ -57,10 +57,13 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
 
 
 _REGMETA_CLASSIFIED = cfg_mod.RegmetaSignal(
-    datatyp_kind="text", classification_short_name="SUN2000"
+    datatyp_kind=None, classification_short_name="SUN2000"
 )
-_REGMETA_TEXT_NO_CLASS = cfg_mod.RegmetaSignal(
-    datatyp_kind="text", classification_short_name=None
+_REGMETA_VALUE_CODES = cfg_mod.RegmetaSignal(
+    datatyp_kind="numeric", classification_short_name=None, has_value_codes=True
+)
+_REGMETA_TEXT_NO_EVIDENCE = cfg_mod.RegmetaSignal(
+    datatyp_kind=None, classification_short_name=None
 )
 _REGMETA_NUMERIC = cfg_mod.RegmetaSignal(
     datatyp_kind="numeric", classification_short_name=None
@@ -77,14 +80,21 @@ _REGMETA_DATE = cfg_mod.RegmetaSignal(
         ("LopNr", "BIGINT", None, "id"),
         ("LopNr", "VARCHAR", _REGMETA_CLASSIFIED, "id"),
         # Layer 2: regmeta evidence wins over CSV sql_type
-        # ("ALKod" stored as char in regmeta but BIGINT in CSV → categorical)
-        ("ALKod", "BIGINT", _REGMETA_TEXT_NO_CLASS, "categorical"),
+        # ("ALKod"/"Kon" have enumerated value codes in regmeta even though
+        # storage is BIGINT/tinyint → categorical)
+        ("ALKod", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
+        ("Kon", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
         ("RandomName", "INTEGER", _REGMETA_CLASSIFIED, "categorical"),
         ("Sun2000Inr", "VARCHAR", _REGMETA_CLASSIFIED, "categorical"),
         # Regmeta says numeric → numeric (ForvErs is int even though SCB
         # codes some "missing" sentinels)
         ("ForvErs", "BIGINT", _REGMETA_NUMERIC, "numeric"),
         ("BirthMoment", "VARCHAR", _REGMETA_DATE, "date"),
+        # A char/varchar column without value codes and without a
+        # classification is NOT enough to call categorical — storage type
+        # alone doesn't carry that semantic. Falls through to sql_type
+        # → high_cardinality. Tester overrides in the inspector if wrong.
+        ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "high_cardinality"),
         # Layer 3: known categorical name (no regmeta hit needed)
         ("Kommun", "VARCHAR", None, "categorical"),
         ("Sun2000Inr", "VARCHAR", None, "categorical"),
@@ -158,9 +168,9 @@ def test_build_config_routes_columns_per_source():
 
 def test_build_config_uses_regmeta_classification(monkeypatch):
     """When --register is set and regmeta says a column has a
-    classification, that column is `categorical` regardless of name.
-    Likewise when regmeta types it as char/varchar — even when the CSV
-    inferred BIGINT (codes that happen to be all digits)."""
+    classification *or* enumerated value codes, that column is
+    `categorical` regardless of name. Storage type (char/tinyint) alone
+    is not enough."""
 
     def fake_resolve(conn, register):
         assert register == "LISA"
@@ -171,15 +181,18 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
         # lowercase keys; mirrors the real impl
         return {
             "sun2000inr": cfg_mod.RegmetaSignal(
-                datatyp_kind="text",
+                datatyp_kind=None,
                 classification_short_name="SUN2000",
             ),
-            # ALKod: SCB stores as char(1) with 5 codes; CSV scan saw
-            # BIGINT because the codes look like integers. Regmeta wins.
+            # ALKod: SCB enumerates 5 value codes in the PDF; the cvid
+            # has rows in cvid_value_code. Stored as char in regmeta
+            # but the CSV scan saw BIGINT — the value-codes signal wins.
             "alkod": cfg_mod.RegmetaSignal(
-                datatyp_kind="text", classification_short_name=None
+                datatyp_kind=None,
+                classification_short_name=None,
+                has_value_codes=True,
             ),
-            # ForvErs: SCB stores as int — regmeta confirms numeric.
+            # ForvErs: SCB stores as int with no value codes — numeric.
             "forvers": cfg_mod.RegmetaSignal(
                 datatyp_kind="numeric", classification_short_name=None
             ),

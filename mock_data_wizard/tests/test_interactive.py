@@ -1013,7 +1013,7 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
         "_regmeta_lookup",
         lambda *a, **k: {
             "sun2000inr": cfg_mod.RegmetaSignal(
-                datatyp_kind="text", classification_short_name="SUN2000"
+                datatyp_kind=None, classification_short_name="SUN2000"
             )
         },
     )

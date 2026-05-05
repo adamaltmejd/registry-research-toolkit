@@ -7,15 +7,19 @@ priority (first match wins):
 1. **Known id name.** ``is_known_id(name)`` — ``lopnr`` / ``persnr``.
    sql_type can't tell a BIGINT identifier apart from a BIGINT measure;
    the name has to.
-2. **Regmeta evidence.** When a ``--register`` is supplied, we join to
-   ``variable_instance`` and trust regmeta's own ``datatyp`` over the
-   CSV-derived ``sql_type``: SCB stores codes as ``char``/``varchar``
-   even when they happen to look like integers in a CSV (``ALKod``,
-   ``SyssStat``, ``FamStF``). Specifically:
-   - ``datatyp`` ∈ {char, varchar, text, ...} → ``categorical``
+2. **Regmeta evidence.** When a ``--register`` is supplied, we join
+   ``variable_instance`` + ``cvid_value_code`` + ``classification`` and
+   trust regmeta's *semantic* signals over the CSV-derived ``sql_type``:
+   - any row in ``cvid_value_code`` for the cvid → ``categorical``
+     (SCB enumerated the codes — e.g. ``Kon`` {1=Man, 2=Kvinna},
+     ``ALKod``, ``SyssStat``, ``FamStF`` — even when ``datatyp`` is
+     ``tinyint``/``int`` and the CSV reads BIGINT)
    - any non-null ``classification_id`` → ``categorical``
    - ``datatyp`` ∈ {int, decimal, float, ...} → ``numeric``
    - ``datatyp`` ∈ {date, datetime, ...} → ``date``
+   ``datatyp`` is *storage* type, not semantic type — a bare ``char``
+   with no value codes / classification is not enough to call a column
+   categorical (it's often free text), so we don't.
 3. **Known categorical name.** ``known_categorical_cap(name) is not
    None`` — ``Kon`` / ``Sun2000Inr`` / ``Kommun`` / ... . Backstop for
    columns regmeta doesn't know.
@@ -92,12 +96,10 @@ _DATE_SQL = frozenset(
 )
 
 # Regmeta `variable_instance.datatyp` tokens, normalised to lowercase.
-# SCB uses these in the source PDFs to declare each variable's storage
-# type — it's the authoritative answer for "is this column a code or a
-# number", because the same code list can be stored in a CSV column that
-# DuckDB infers as either VARCHAR or BIGINT depending on whether the
-# codes happen to be all digits.
-_REGMETA_TEXT = frozenset({"char", "varchar", "nvarchar", "text", "string"})
+# Storage type only — we use it to pick numeric vs. date when nothing
+# else has classified the column. The categorical signal comes from
+# `cvid_value_code` / `classification_id`, not from a "char/varchar"
+# datatyp (a char column with no code list is usually free text).
 _REGMETA_NUMERIC = frozenset(
     {
         "tinyint",
@@ -124,20 +126,26 @@ class RegmetaSignal:
     """Per-column evidence pulled from regmeta for one register.
 
     ``datatyp_kind`` is the bucketed ``variable_instance.datatyp``: one
-    of ``"text"`` / ``"numeric"`` / ``"date"`` / ``None`` (unknown). When
+    of ``"numeric"`` / ``"date"`` / ``None`` (unknown or text). When
     multiple cvids exist for the same column name (multiple years), the
-    first non-null datatyp wins — SCB rarely changes a variable's
-    storage type across versions, and the inspector lets the user
-    override anyway.
+    first non-null datatyp wins. Text storage (``char``/``varchar``)
+    intentionally maps to ``None`` here — it's not a categorical signal
+    on its own; ``has_value_codes`` / ``classification_short_name``
+    are.
 
     ``classification_short_name`` is the short_name of any classification
     attached to this variable (``SUN2020-GRUPP``, ``SSYK2012``, ...).
-    None when the variable has no shared classification — typical for
-    register-local code lists like ``ALKod``.
+    None when the variable has no shared classification.
+
+    ``has_value_codes`` is True when *any* of the cvids for this column
+    under this register has rows in ``cvid_value_code`` — i.e. SCB
+    enumerated the codes in the PDF. Covers register-local code lists
+    like ``ALKod`` / ``Kon`` that aren't tied to a shared classification.
     """
 
     datatyp_kind: str | None
     classification_short_name: str | None
+    has_value_codes: bool = False
 
 
 def _sql_type_kind(sql_type: str | None) -> str | None:
@@ -157,12 +165,15 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
 
 
 def _regmeta_datatyp_kind(datatyp: str | None) -> str | None:
-    """Map a regmeta ``variable_instance.datatyp`` to a kind bucket."""
+    """Map a regmeta ``variable_instance.datatyp`` to a kind bucket.
+
+    Returns ``"numeric"`` / ``"date"`` / ``None``. Text storage tokens
+    (char/varchar/...) intentionally return ``None``: text is not a
+    semantic categorical signal on its own — see ``RegmetaSignal``.
+    """
     if not datatyp:
         return None
     head = datatyp.strip().split("(", 1)[0].split()[0].lower()
-    if head in _REGMETA_TEXT:
-        return "text"
     if head in _REGMETA_NUMERIC:
         return "numeric"
     if head in _REGMETA_DATE:
@@ -185,9 +196,11 @@ def _classify(
     if is_known_id(col_name):
         return "id"
     if signal is not None:
-        # Regmeta wins over CSV-inferred sql_type: SCB encodes
-        # `ALKod`/`SyssStat` as char even when DuckDB sees BIGINT.
-        if signal.datatyp_kind == "text" or signal.classification_short_name:
+        # Regmeta wins over CSV-inferred sql_type when it has a semantic
+        # signal. Value codes (e.g. Kon {1=Man, 2=Kvinna}) and shared
+        # classifications (SUN2020, SSYK2012) both unambiguously mean
+        # categorical; storage type alone (char/varchar/tinyint) does not.
+        if signal.has_value_codes or signal.classification_short_name:
             return "categorical"
         if signal.datatyp_kind == "numeric":
             return "numeric"
@@ -266,8 +279,10 @@ def _regmeta_lookup(
     Aggregation across cvids: when the same alias points at multiple
     ``variable_instance`` rows (one per year/variant), the first
     non-null ``datatyp`` wins (SCB rarely changes storage type across
-    versions) and the most-common ``classification.short_name`` wins.
-    Columns absent from regmeta are absent from the result.
+    versions), the most-common ``classification.short_name`` wins, and
+    ``has_value_codes`` is True if *any* cvid has rows in
+    ``cvid_value_code``. Columns absent from regmeta are absent from
+    the result.
 
     ``conn`` is owned by the caller (kept open across
     ``resolve_register_ids`` and this lookup so we don't reopen the DB).
@@ -285,10 +300,18 @@ def _regmeta_lookup(
     col_list = sorted(lookup)
     col_placeholders = ",".join("?" for _ in col_list)
     reg_placeholders = ",".join("?" for _ in register_ids)
+    # Require >= 2 distinct codes per cvid: ~62% of cvid_value_code
+    # rows are PDF-parse artifacts (`vardekod="Beskrivande text"` /
+    # `"Tal"` from column headers leaking into code cells), each
+    # registered as a single-code cvid. Real categoricals (Kon =
+    # {Man, Kvinna}, ALKod ≥ 5 codes) cross the threshold; date
+    # columns with stray header pollution like DatInv stay below it.
     sql = (
         "SELECT LOWER(va.kolumnnamn) AS lower_name, "
         "       vi.datatyp AS datatyp, "
-        "       c.short_name AS short_name "
+        "       c.short_name AS short_name, "
+        "       (SELECT COUNT(*) FROM cvid_value_code cvc "
+        "        WHERE cvc.cvid = vi.cvid) >= 2 AS has_value_codes "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
@@ -300,6 +323,7 @@ def _regmeta_lookup(
 
     datatyp_kinds: dict[str, str] = {}
     short_name_counts: dict[str, Counter] = {}
+    has_codes: set[str] = set()
     seen: set[str] = set()
     for r in rows:
         name = r["lower_name"]
@@ -311,6 +335,8 @@ def _regmeta_lookup(
         sn = r["short_name"]
         if sn:
             short_name_counts.setdefault(name, Counter())[sn] += 1
+        if r["has_value_codes"]:
+            has_codes.add(name)
     out: dict[str, RegmetaSignal] = {}
     for name in seen:
         sn_counter = short_name_counts.get(name)
@@ -318,6 +344,7 @@ def _regmeta_lookup(
         out[name] = RegmetaSignal(
             datatyp_kind=datatyp_kinds.get(name),
             classification_short_name=sn,
+            has_value_codes=name in has_codes,
         )
     return out
 
