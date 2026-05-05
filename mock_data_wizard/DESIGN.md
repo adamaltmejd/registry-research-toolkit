@@ -47,17 +47,31 @@ instructions for the MONA-side action. The detection table:
 |---|---|---|
 | (none) | build | Interview; build the bundle with `configure()` filled in |
 | `mdw_runner.py` | discover | Print upload + run instructions |
-| `mdw_step1_discovery.json` | configure | Single register prompt; run `configure_from_discover` |
+| `mdw_step1_discovery.json` | configure | Interview; run `build_config` + per-column / panel / suppress\_k edits |
 | `mdw_step2_config.json` | extract | Print upload + run instructions |
-| `mdw_step3_stats.json` | generate | Dispatch to `generate` with defaults |
+| `mdw_step3_stats.json` | generate | Interview; collect seed / sample\_pct / regmeta / output dir, then dispatch to `generate` |
 | `mock_data/` populated | done | Offer to redo any stage |
+
+The configure interview surfaces (in order): a register suggestion
+inferred from SCB-style source-name prefixes (`dbo.scb_rams_2020` →
+`RAMS`); separate-files panel candidates from `<prefix>_<year>`
+clusters of size ≥ 2; merged-table candidates for sources with an
+`AR`/`INDATUM`/`year`/`period` column; per-column flips for
+`high_cardinality` columns whose names suggest categorical/numeric
+(`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
+optional `suppress_k` walkthrough. Edits operate on the in-memory
+`build_config` payload; `write_config` runs once at the end so
+cancellation leaves no partial files.
+
+The generate interview prompts for `seed`, `sample_pct`,
+regmeta-enrichment toggle, register filter (only when regmeta is on),
+output dir, and stale-file handling (only when the output dir already
+contains files). Invalid input re-prompts in place. `--force` accepts
+all defaults and skips every prompt.
 
 Subcommand usage (`mock-data-wizard build-bundle`, `configure`,
 `generate`, …) is unchanged. Non-TTY contexts (pipes, redirected stderr)
-or `--no-interactive` fall back to printing `--help`. The phased
-rollout is tracked in GitHub issues #33 (basic dispatch + Stage 1
-interview), #34 (detailed configure interview), and #35 (detailed
-generate interview).
+or `--no-interactive` fall back to printing `--help`.
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
@@ -143,7 +157,12 @@ stricter than what's actually enforced. Verified directly:
   script; everything else (DuckDB spill especially) goes to
   `C:\Windows\TEMP`.
 - **`locale.getpreferredencoding()` is `cp1252`** — pass `encoding=`
-  explicitly on every CSV/text open; do not rely on the default.
+  explicitly on every CSV/text open; do not rely on the default. The
+  wizard's bundle generator pins `encoding='latin-1'` on every emitted
+  `file_source(...)` call for this reason; `file_source`'s own default
+  is `utf-8` (right for general code), so the override has to land at
+  the bundle-authoring boundary, not in the constructor. Users with
+  UTF-8 files edit the literal in the generated bundle.
 
 Architectural consequence: we ship `mock_data_wizard` to MONA as a
 single bundled `.py` file built by an in-repo amalgamator. One file
