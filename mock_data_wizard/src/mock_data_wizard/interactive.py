@@ -664,7 +664,11 @@ class RegisterGroup:
     columns_by_source: dict[str, list[tuple[str, str | None]]] = field(
         default_factory=dict
     )
-    classified_cols: set[str] = field(default_factory=set)
+    # column name → classification short_name (or None when regmeta sees
+    # the column as categorical text but with no shared classification —
+    # e.g. ALKod, FamStF). Absent when regmeta has no entry. Used by the
+    # inspector to render the trailing "(SUN2020-GRUPP)" / "(regmeta)" tag.
+    regmeta_tags: dict[str, str | None] = field(default_factory=dict)
     schema_variants: int = 0
 
 
@@ -716,7 +720,15 @@ def group_by_register(
         grp = groups[key]
         grp.schema_variants += 1
         grp.confidence = _worst_confidence(grp.confidence, guess.confidence)
-        grp.classified_cols |= guess.classified_cols
+        # Merge regmeta tags across schema variants of the same register.
+        # If a column appears in multiple variants with conflicting
+        # classifications (rare; typically only the schema changes year
+        # to year, not the variable's classification), the first non-None
+        # short_name wins so the user still sees a specific tag.
+        for col_name, sn in guess.regmeta_tags.items():
+            existing = grp.regmeta_tags.get(col_name, ...)
+            if existing is ... or (existing is None and sn is not None):
+                grp.regmeta_tags[col_name] = sn
         for src in family_sources:
             name = src["source_name"]
             grp.sources.append(name)
@@ -857,8 +869,28 @@ def _inspect_register_group(
 
         total_cols = sum(len(cols) for _, cols in sections)
         n_idx_w = max(2, len(str(total_cols)))
-        fixed = 4 + 1 + n_idx_w + 2 + 17 + 11 + 2
-        name_w = max(12, width - fixed)
+        type_w = 16  # fits "high_cardinality"
+        # Size the name column to actual content (longest column name + 1
+        # space gap), not the full terminal width — otherwise short names
+        # leave a giant whitespace gap that pushes long classification
+        # tags off the right edge.
+        all_col_names = [c for _, cols in sections for c in cols]
+        longest_name = max((len(c) for c in all_col_names), default=12)
+        prefix_w = 4 + 1 + n_idx_w + 2  # "    [NN] "
+        name_w = max(12, min(longest_name + 1, max(12, width - prefix_w - type_w - 20)))
+        # Regmeta column: "✓" for in-regmeta, classification short_name
+        # when one exists. Header reads "regmeta" so the bare ✓ rows stay
+        # interpretable.
+        regmeta_w = max(
+            [len("regmeta")] + [len(sn) for sn in grp.regmeta_tags.values() if sn]
+        )
+
+        # Header row: aligned with the data columns below it.
+        header_prefix = " " * prefix_w
+        header_name = "name".ljust(name_w)
+        header_type = "type".ljust(type_w)
+        print()
+        print(f"{header_prefix}{header_name} {header_type} regmeta")
 
         for src_subset, col_names in sections:
             print()
@@ -881,14 +913,18 @@ def _inspect_register_group(
                     column_overrides,
                     config,
                 )
-                tag = (
-                    "  (regmeta)"
-                    if col_name in grp.classified_cols and t == "categorical"
-                    else ""
-                )
+                if col_name in grp.regmeta_tags:
+                    sn = grp.regmeta_tags[col_name]
+                    regmeta_cell = sn if sn else "✓"
+                else:
+                    regmeta_cell = ""
                 idx = len(type_rows) + 1
                 name_disp = _truncate(col_name, name_w)
-                print(f"    [{idx:>{n_idx_w}}] {name_disp:<{name_w}} {t}{tag}")
+                line = (
+                    f"    [{idx:>{n_idx_w}}] {name_disp:<{name_w}} "
+                    f"{t:<{type_w}} {regmeta_cell:<{regmeta_w}}"
+                )
+                print(line.rstrip())
                 type_rows.append((col_name, t))
 
         print("\n  [r] change register / [number] change column type / [enter] back")
@@ -904,7 +940,7 @@ def _inspect_register_group(
                 grp.register_name = None
                 grp.register_str = "—"
                 grp.confidence = "none"
-                grp.classified_cols = set()
+                grp.regmeta_tags = {}
                 for src_name in grp.sources:
                     register_per_source[src_name] = None
             else:

@@ -951,9 +951,9 @@ def test_stage3_suppress_k_rejects_below_threshold(tmp_path: Path, monkeypatch):
 
 def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch):
     """When ``guess_register_per_family`` returns a register, columns
-    flagged by ``_classification_lookup`` get typed as ``categorical``
-    via the regmeta path — even if their name pattern wouldn't have
-    classified them.
+    flagged by ``_regmeta_lookup`` get typed as ``categorical`` via the
+    regmeta path — even if their name pattern wouldn't have classified
+    them.
     """
     from mock_data_wizard import configure as cfg_mod
 
@@ -985,7 +985,7 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
                 confidence="high",
                 match_count=2,
                 nonid_count=2,
-                classified_cols={"Sun2000Inr"},
+                regmeta_tags={"Sun2000Inr": "SUN2000"},
             )
         return out
 
@@ -1009,7 +1009,13 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
         raising=True,
     )
     monkeypatch.setattr(
-        cfg_mod, "_classification_lookup", lambda *a, **k: {"sun2000inr"}
+        cfg_mod,
+        "_regmeta_lookup",
+        lambda *a, **k: {
+            "sun2000inr": cfg_mod.RegmetaSignal(
+                datatyp_kind="text", classification_short_name="SUN2000"
+            )
+        },
     )
 
     _canned_inputs(

@@ -7,14 +7,18 @@ priority (first match wins):
 1. **Known id name.** ``is_known_id(name)`` — ``lopnr`` / ``persnr``.
    sql_type can't tell a BIGINT identifier apart from a BIGINT measure;
    the name has to.
-2. **Regmeta classification.** When a ``--register`` is supplied and
-   the column joins to a ``variable_instance`` row with
-   ``classification_id IS NOT NULL``, the variable is a code-list
-   variable by SCB's own definition: ``categorical``.
+2. **Regmeta evidence.** When a ``--register`` is supplied, we join to
+   ``variable_instance`` and trust regmeta's own ``datatyp`` over the
+   CSV-derived ``sql_type``: SCB stores codes as ``char``/``varchar``
+   even when they happen to look like integers in a CSV (``ALKod``,
+   ``SyssStat``, ``FamStF``). Specifically:
+   - ``datatyp`` ∈ {char, varchar, text, ...} → ``categorical``
+   - any non-null ``classification_id`` → ``categorical``
+   - ``datatyp`` ∈ {int, decimal, float, ...} → ``numeric``
+   - ``datatyp`` ∈ {date, datetime, ...} → ``date``
 3. **Known categorical name.** ``known_categorical_cap(name) is not
-   None`` — ``Kon`` / ``Sun2000Inr`` / ``Kommun`` / ... . SCB doesn't
-   always wire up a ``classification_id`` for these in regmeta, so
-   the name pattern stays as a backstop.
+   None`` — ``Kon`` / ``Sun2000Inr`` / ``Kommun`` / ... . Backstop for
+   columns regmeta doesn't know.
 4. **sql_type.** BIGINT / INTEGER / DOUBLE / DECIMAL / ... → ``numeric``.
    DATE / TIMESTAMP / ... → ``date``. For SQL sources, the database's
    declared type drives the answer; for CSVs read by DuckDB, sql_type
@@ -87,6 +91,54 @@ _DATE_SQL = frozenset(
     }
 )
 
+# Regmeta `variable_instance.datatyp` tokens, normalised to lowercase.
+# SCB uses these in the source PDFs to declare each variable's storage
+# type — it's the authoritative answer for "is this column a code or a
+# number", because the same code list can be stored in a CSV column that
+# DuckDB infers as either VARCHAR or BIGINT depending on whether the
+# codes happen to be all digits.
+_REGMETA_TEXT = frozenset({"char", "varchar", "nvarchar", "text", "string"})
+_REGMETA_NUMERIC = frozenset(
+    {
+        "tinyint",
+        "smallint",
+        "int",
+        "integer",
+        "bigint",
+        "decimal",
+        "numeric",
+        "real",
+        "float",
+        "double",
+        "money",
+        "smallmoney",
+    }
+)
+_REGMETA_DATE = frozenset(
+    {"date", "datetime", "datetime2", "smalldatetime", "timestamp"}
+)
+
+
+@dataclass(frozen=True)
+class RegmetaSignal:
+    """Per-column evidence pulled from regmeta for one register.
+
+    ``datatyp_kind`` is the bucketed ``variable_instance.datatyp``: one
+    of ``"text"`` / ``"numeric"`` / ``"date"`` / ``None`` (unknown). When
+    multiple cvids exist for the same column name (multiple years), the
+    first non-null datatyp wins — SCB rarely changes a variable's
+    storage type across versions, and the inspector lets the user
+    override anyway.
+
+    ``classification_short_name`` is the short_name of any classification
+    attached to this variable (``SUN2020-GRUPP``, ``SSYK2012``, ...).
+    None when the variable has no shared classification — typical for
+    register-local code lists like ``ALKod``.
+    """
+
+    datatyp_kind: str | None
+    classification_short_name: str | None
+
 
 def _sql_type_kind(sql_type: str | None) -> str | None:
     """Map a sql_type string to ``"numeric"``, ``"date"``, or ``None``."""
@@ -104,23 +156,43 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
     return None
 
 
+def _regmeta_datatyp_kind(datatyp: str | None) -> str | None:
+    """Map a regmeta ``variable_instance.datatyp`` to a kind bucket."""
+    if not datatyp:
+        return None
+    head = datatyp.strip().split("(", 1)[0].split()[0].lower()
+    if head in _REGMETA_TEXT:
+        return "text"
+    if head in _REGMETA_NUMERIC:
+        return "numeric"
+    if head in _REGMETA_DATE:
+        return "date"
+    return None
+
+
 def _classify(
     col_name: str,
     sql_type: str | None,
-    has_classification: bool,
+    signal: RegmetaSignal | None,
 ) -> str:
     """Return one of the five mock_data_wizard column types.
 
-    ``has_classification`` is the regmeta signal: ``True`` when the
-    column maps to at least one ``variable_instance`` row with a
-    non-null ``classification_id`` for the user-supplied register.
-    Always ``False`` when ``--register`` is unset — the whole regmeta
-    layer is skipped in that path.
+    ``signal`` is the regmeta evidence for this column under the chosen
+    register. ``None`` means regmeta wasn't consulted (no register set)
+    or the column doesn't appear in regmeta — in which case the name
+    pattern + sql_type fallback drives the type.
     """
     if is_known_id(col_name):
         return "id"
-    if has_classification:
-        return "categorical"
+    if signal is not None:
+        # Regmeta wins over CSV-inferred sql_type: SCB encodes
+        # `ALKod`/`SyssStat` as char even when DuckDB sees BIGINT.
+        if signal.datatyp_kind == "text" or signal.classification_short_name:
+            return "categorical"
+        if signal.datatyp_kind == "numeric":
+            return "numeric"
+        if signal.datatyp_kind == "date":
+            return "date"
     if known_categorical_cap(col_name) is not None:
         return "categorical"
     kind = _sql_type_kind(sql_type)
@@ -181,21 +253,27 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
                 )
 
 
-def _classification_lookup(
+def _regmeta_lookup(
     conn: Any, col_names: set[str], register_ids: list[int]
-) -> set[str]:
-    """Return the lowercased subset of ``col_names`` that have a
-    non-null ``classification_id`` in ``variable_instance`` for any of
-    the supplied registers.
+) -> dict[str, RegmetaSignal]:
+    """Look up regmeta evidence for ``col_names`` under ``register_ids``.
 
-    Mirrors the ``variable_alias`` join used by ``enrich._resolve_columns``
-    so configure agrees with enrichment on which name maps to which
-    variable_instance. Returns lowercased names — callers must lowercase
-    their lookup keys. ``conn`` is owned by the caller (kept open across
+    Returns a dict keyed by lowercased column name; callers must
+    lowercase their lookup keys. Mirrors the ``variable_alias`` join
+    used by ``enrich._resolve_columns`` so configure agrees with
+    enrichment on which name maps to which variable_instance.
+
+    Aggregation across cvids: when the same alias points at multiple
+    ``variable_instance`` rows (one per year/variant), the first
+    non-null ``datatyp`` wins (SCB rarely changes storage type across
+    versions) and the most-common ``classification.short_name`` wins.
+    Columns absent from regmeta are absent from the result.
+
+    ``conn`` is owned by the caller (kept open across
     ``resolve_register_ids`` and this lookup so we don't reopen the DB).
     """
     if not col_names or not register_ids:
-        return set()
+        return {}
     # Strip project prefixes so `P1105_LopNr` resolves to `LopNr` —
     # the same trick enrich uses. Both raw and stripped names go in.
     lookup: set[str] = set()
@@ -208,16 +286,40 @@ def _classification_lookup(
     col_placeholders = ",".join("?" for _ in col_list)
     reg_placeholders = ",".join("?" for _ in register_ids)
     sql = (
-        "SELECT DISTINCT LOWER(va.kolumnnamn) AS lower_name "
+        "SELECT LOWER(va.kolumnnamn) AS lower_name, "
+        "       vi.datatyp AS datatyp, "
+        "       c.short_name AS short_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
+        "LEFT JOIN classification c ON vi.classification_id = c.id "
         f"WHERE LOWER(va.kolumnnamn) IN ({col_placeholders}) "
-        f"  AND vi.register_id IN ({reg_placeholders}) "
-        "  AND vi.classification_id IS NOT NULL"
+        f"  AND vi.register_id IN ({reg_placeholders})"
     )
     params = [c.lower() for c in col_list] + list(register_ids)
     rows = conn.execute(sql, params).fetchall()
-    return {r["lower_name"] for r in rows}
+
+    datatyp_kinds: dict[str, str] = {}
+    short_name_counts: dict[str, Counter] = {}
+    seen: set[str] = set()
+    for r in rows:
+        name = r["lower_name"]
+        seen.add(name)
+        if name not in datatyp_kinds:
+            kind = _regmeta_datatyp_kind(r["datatyp"])
+            if kind is not None:
+                datatyp_kinds[name] = kind
+        sn = r["short_name"]
+        if sn:
+            short_name_counts.setdefault(name, Counter())[sn] += 1
+    out: dict[str, RegmetaSignal] = {}
+    for name in seen:
+        sn_counter = short_name_counts.get(name)
+        sn = sn_counter.most_common(1)[0][0] if sn_counter else None
+        out[name] = RegmetaSignal(
+            datatyp_kind=datatyp_kinds.get(name),
+            classification_short_name=sn,
+        )
+    return out
 
 
 def build_config(
@@ -243,14 +345,14 @@ def build_config(
         effective[name] = overrides[name] if name in overrides else register
 
     # Group sources by their effective register (may be None) so a single
-    # `_classification_lookup` call covers every source under that register.
+    # `_regmeta_lookup` call covers every source under that register.
     groups: dict[str, list[str]] = {}
     for name, reg in effective.items():
         if reg is None:
             continue
         groups.setdefault(reg, []).append(name)
 
-    classified_per_source: dict[str, set[str]] = {}
+    signals_per_source: dict[str, dict[str, RegmetaSignal]] = {}
     if groups:
         from regmeta import open_db, resolve_register_ids
         from regmeta.db import db_path_from_args
@@ -283,9 +385,9 @@ def build_config(
                 for sn in source_names:
                     for col in sources_by_name[sn].get("columns", []):
                         col_names.add(col["name"])
-                classified_lower = _classification_lookup(conn, col_names, register_ids)
+                signals = _regmeta_lookup(conn, col_names, register_ids)
                 for sn in source_names:
-                    classified_per_source[sn] = classified_lower
+                    signals_per_source[sn] = signals
         finally:
             conn.close()
 
@@ -293,18 +395,14 @@ def build_config(
     sources_out: dict[str, dict[str, Any]] = {}
     for src in sources_in:
         source_name = src["source_name"]
-        classified_lower = classified_per_source.get(source_name, set())
+        signals = signals_per_source.get(source_name, {})
         cols_out: dict[str, dict[str, str]] = {}
         for col in src.get("columns", []):
             col_name = col["name"]
             sql_type = col.get("sql_type")
             stripped = strip_project_prefix(col_name).lower()
-            has_classification = (
-                col_name.lower() in classified_lower or stripped in classified_lower
-            )
-            cols_out[col_name] = {
-                "type": _classify(col_name, sql_type, has_classification)
-            }
+            signal = signals.get(col_name.lower()) or signals.get(stripped)
+            cols_out[col_name] = {"type": _classify(col_name, sql_type, signal)}
         if cols_out:
             column_types[source_name] = cols_out
         year = src.get("source_detail", {}).get("year")
@@ -344,7 +442,12 @@ class FamilyGuess:
     confidence: str  # "high" | "partial" | "none"
     match_count: int
     nonid_count: int
-    classified_cols: set[str] = field(default_factory=set)
+    # column name → classification short_name when regmeta links the
+    # variable to a shared classification (e.g. "SUN2020-GRUPP"); None
+    # when regmeta knows the column is categorical (text datatyp) but
+    # has no shared classification (e.g. ALKod, FamStF). Absent when
+    # regmeta has no entry, or types it as numeric/date.
+    regmeta_tags: dict[str, str | None] = field(default_factory=dict)
 
 
 def _schema_family_id(columns: list[dict]) -> str:
@@ -487,9 +590,9 @@ def guess_register_per_family(
                 if g.register_id is not None:
                     g.register_name = names.get(g.register_id)
 
-        # Fetch the classification mask per family so the inspector can
-        # show "categorical (regmeta)" vs "categorical (name)" without a
-        # second DB pass per inspection.
+        # Fetch regmeta evidence per family so the inspector can render
+        # "categorical (SUN2020-GRUPP)" / "categorical (regmeta)" tags
+        # without a second DB pass per inspection.
         by_register: dict[int, list[str]] = {}
         for fid, g in out.items():
             if g.register_id is not None:
@@ -499,14 +602,20 @@ def guess_register_per_family(
             for fid in fids:
                 for name, _sql in out[fid].columns:
                     col_names.add(name)
-            classified = _classification_lookup(conn, col_names, [reg_id])
+            signals = _regmeta_lookup(conn, col_names, [reg_id])
             for fid in fids:
-                out[fid].classified_cols = {
-                    n
-                    for n, _sql in out[fid].columns
-                    if n.lower() in classified
-                    or strip_project_prefix(n).lower() in classified
-                }
+                tags: dict[str, str | None] = {}
+                for n, _sql in out[fid].columns:
+                    sig = signals.get(n.lower()) or signals.get(
+                        strip_project_prefix(n).lower()
+                    )
+                    if sig is None:
+                        continue
+                    # Tag every column regmeta knows about — confirms to
+                    # the tester "this column was looked up." Classification
+                    # short_name when one exists, else bare "(regmeta)".
+                    tags[n] = sig.classification_short_name
+                out[fid].regmeta_tags = tags
     finally:
         conn.close()
 
