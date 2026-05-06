@@ -1,8 +1,7 @@
 """Validate the value-set dedup + year-projection rebuild (issue #41).
 
 Run against a freshly built regmeta.db (after `regmeta maintain build-db`).
-Exits non-zero on any failure. Replaces validate_sentinel_cleanup.py — that
-concern is closed (#42 merged); this is its successor for #41.
+Exits non-zero on any failure.
 
 Checks (PLAN_VALUESET_DEDUP §9):
 
@@ -45,7 +44,13 @@ def main() -> None:
         sys.exit(f"DB not found: {DB}")
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    try:
+        _run_checks(conn)
+    finally:
+        conn.close()
 
+
+def _run_checks(conn: sqlite3.Connection) -> None:
     print(f"Validating {DB}\n")
 
     # ----- Schema shape -----

@@ -513,6 +513,32 @@ class TestVardemangderDrift:
         assert "niva!=version" in exc_info.value.remediation
 
 
+class TestVardemangderRequiresValidDates:
+    """Year-projection guarantees `get values` returns the year-correct set.
+    That guarantee silently degrades to the historical union if
+    VardemangderValidDates.csv is absent — so the build must fail fast when
+    Vardemangder.csv is present without it."""
+
+    def test_missing_valid_dates_with_vardemangder_raises(self, tmp_path: Path) -> None:
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(
+            input_dir,
+            include=(
+                "registerinformation",
+                "unika",
+                "identifierare",
+                "timeseries",
+                "vardemangder",
+                # valid_dates intentionally omitted
+            ),
+        )
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        assert exc_info.value.code == "csv_missing_validity"
+        assert "VardemangderValidDates.csv" in exc_info.value.message
+
+
 # ---------------------------------------------------------------------------
 # Year projection (PLAN_VALUESET_DEDUP §4.3, §9)
 # ---------------------------------------------------------------------------
