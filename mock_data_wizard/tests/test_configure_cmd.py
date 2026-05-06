@@ -185,7 +185,7 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
                 classification_short_name="SUN2000",
             ),
             # ALKod: SCB enumerates 5 value codes in the PDF; the cvid
-            # has rows in cvid_value_code. Stored as char in regmeta
+            # carries a non-null value_set_id. Stored as char in regmeta
             # but the CSV scan saw BIGINT — the value-codes signal wins.
             "alkod": cfg_mod.RegmetaSignal(
                 datatyp_kind=None,

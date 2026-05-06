@@ -8,9 +8,9 @@ priority (first match wins):
    sql_type can't tell a BIGINT identifier apart from a BIGINT measure;
    the name has to.
 2. **Regmeta evidence.** When a ``--register`` is supplied, we join
-   ``variable_instance`` + ``cvid_value_code`` + ``classification`` and
-   trust regmeta's *semantic* signals over the CSV-derived ``sql_type``:
-   - any row in ``cvid_value_code`` for the cvid → ``categorical``
+   ``variable_instance`` + ``classification`` and trust regmeta's
+   *semantic* signals over the CSV-derived ``sql_type``:
+   - non-null ``variable_instance.value_set_id`` → ``categorical``
      (SCB enumerated the codes — e.g. ``Kon`` {1=Man, 2=Kvinna},
      ``ALKod``, ``SyssStat``, ``FamStF`` — even when ``datatyp`` is
      ``tinyint``/``int`` and the CSV reads BIGINT)
@@ -98,7 +98,7 @@ _DATE_SQL = frozenset(
 # Regmeta `variable_instance.datatyp` tokens, normalised to lowercase.
 # Storage type only — we use it to pick numeric vs. date when nothing
 # else has classified the column. The categorical signal comes from
-# `cvid_value_code` / `classification_id`, not from a "char/varchar"
+# `value_set_id` / `classification_id`, not from a "char/varchar"
 # datatyp (a char column with no code list is usually free text).
 _REGMETA_NUMERIC = frozenset(
     {
@@ -138,8 +138,8 @@ class RegmetaSignal:
     None when the variable has no shared classification.
 
     ``has_value_codes`` is True when *any* of the cvids for this column
-    under this register has rows in ``cvid_value_code`` — i.e. SCB
-    enumerated the codes in the PDF. Covers register-local code lists
+    under this register has a non-null ``variable_instance.value_set_id``
+    — i.e. SCB enumerated the codes. Covers register-local code lists
     like ``ALKod`` / ``Kon`` that aren't tied to a shared classification.
     """
 
@@ -280,9 +280,9 @@ def _regmeta_lookup(
     ``variable_instance`` rows (one per year/variant), the first
     non-null ``datatyp`` wins (SCB rarely changes storage type across
     versions), the most-common ``classification.short_name`` wins, and
-    ``has_value_codes`` is True if *any* cvid has rows in
-    ``cvid_value_code``. Columns absent from regmeta are absent from
-    the result.
+    ``has_value_codes`` is True if *any* cvid has a non-null
+    ``value_set_id``. Columns absent from regmeta are absent from the
+    result.
 
     ``conn`` is owned by the caller (kept open across
     ``resolve_register_ids`` and this lookup so we don't reopen the DB).
@@ -300,18 +300,11 @@ def _regmeta_lookup(
     col_list = sorted(lookup)
     col_placeholders = ",".join("?" for _ in col_list)
     reg_placeholders = ",".join("?" for _ in register_ids)
-    # Require >= 2 distinct codes per cvid: ~62% of cvid_value_code
-    # rows are PDF-parse artifacts (`vardekod="Beskrivande text"` /
-    # `"Tal"` from column headers leaking into code cells), each
-    # registered as a single-code cvid. Real categoricals (Kon =
-    # {Man, Kvinna}, ALKod ≥ 5 codes) cross the threshold; date
-    # columns with stray header pollution like DatInv stay below it.
     sql = (
         "SELECT LOWER(va.kolumnnamn) AS lower_name, "
         "       vi.datatyp AS datatyp, "
         "       c.short_name AS short_name, "
-        "       (SELECT COUNT(*) FROM cvid_value_code cvc "
-        "        WHERE cvc.cvid = vi.cvid) >= 2 AS has_value_codes "
+        "       vi.value_set_id IS NOT NULL AS has_value_codes "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
@@ -377,6 +370,16 @@ def build_config(
     for name, reg in effective.items():
         if reg is None:
             continue
+        # An empty string usually means an unset env var in scripts like
+        # `--register "$REGISTER"`. Refuse before opening the DB: the
+        # `LIKE '%' || ? || '%'` fallback in resolve_register_ids would
+        # otherwise match every register and over-type the whole config
+        # as `categorical`.
+        if not reg.strip():
+            raise ValueError(
+                "register must be a non-empty register name or id "
+                "(got empty string). Pass None to skip regmeta lookup."
+            )
         groups.setdefault(reg, []).append(name)
 
     signals_per_source: dict[str, dict[str, RegmetaSignal]] = {}
@@ -391,16 +394,6 @@ def build_config(
         try:
             sources_by_name = {s["source_name"]: s for s in sources_in}
             for reg_str, source_names in groups.items():
-                # An empty string usually means an unset env var in
-                # scripts like `--register "$REGISTER"`. Refuse explicitly:
-                # the `LIKE '%' || ? || '%'` fallback in resolve_register_ids
-                # would otherwise match every register and over-type the
-                # whole config as `categorical`.
-                if not reg_str.strip():
-                    raise ValueError(
-                        "register must be a non-empty register name or id "
-                        "(got empty string). Pass None to skip regmeta lookup."
-                    )
                 register_ids = resolve_register_ids(conn, reg_str)
                 if not register_ids:
                     raise ValueError(
