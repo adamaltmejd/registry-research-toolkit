@@ -665,9 +665,13 @@ VARDEMANGDER_ROWS = (
 )
 
 VALID_DATES_HEADER = PIPE.join(["ItemID", "ValidFrom", "ValidTo"])
+# Default fixture: windows wide enough to cover the standard cvid years
+# (2020-2022). Year-projection tests that need narrower windows (sub-year
+# cutoffs, out-of-window cases, etc.) override this list when calling
+# write_scb_input.
 VALID_DATES_ROWS = [
-    PIPE.join(["5001", "2000-01-01", "2010-12-31"]),
-    PIPE.join(["5003", "2015-01-01", "2025-12-31"]),
+    PIPE.join(["5001", "2000-01-01", "2030-12-31"]),
+    PIPE.join(["5003", "2015-01-01", "2030-12-31"]),
 ]
 
 
@@ -681,7 +685,9 @@ def write_csv(
 def write_scb_input(
     input_dir: Path,
     *,
+    registerinformation_rows: list[str] | None = None,
     vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
+    valid_dates_rows: list[str] | None = None,
     include: tuple[str, ...] = (
         "registerinformation",
         "unika",
@@ -694,16 +700,23 @@ def write_scb_input(
     """Materialize the standard SCB CSV fixture set under ``<input_dir>/SCB/``.
 
     Returns the SCB subdirectory path. ``include`` lets a test build a partial
-    set (e.g. just Registerinformation.csv); ``vardemangder_rows`` lets a test
-    swap in alternate value-set rows without re-implementing the rest.
+    set (e.g. just Registerinformation.csv); ``registerinformation_rows`` /
+    ``vardemangder_rows`` / ``valid_dates_rows`` let a test swap in alternate
+    rows for projection scenarios without re-implementing the rest. The
+    ``*_rows=None`` defaults fall back to the standard fixture lists.
     """
     scb_dir = input_dir / "SCB"
     scb_dir.mkdir(parents=True, exist_ok=True)
     if "registerinformation" in include:
+        rows = (
+            registerinformation_rows
+            if registerinformation_rows is not None
+            else REGISTERINFORMATION_ROWS
+        )
         write_csv(
             scb_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
+            rows,
         )
     if "unika" in include:
         write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)
@@ -716,7 +729,6 @@ def write_scb_input(
     if "vardemangder" in include:
         write_csv(scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, vardemangder_rows)
     if "valid_dates" in include:
-        write_csv(
-            scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
-        )
+        rows = valid_dates_rows if valid_dates_rows is not None else VALID_DATES_ROWS
+        write_csv(scb_dir / "VardemangderValidDates.csv", VALID_DATES_HEADER, rows)
     return scb_dir

@@ -42,7 +42,7 @@ Use `--help` on any command or subcommand for full flag documentation.
 | `get register` | Register overview with variants |
 | `get schema` | Column listing per version, with `--years`, `--columns-like`, `--summary`, `--flat` |
 | `get varinfo` | Variable details with instance history |
-| `get values` | Value-set members for a CVID, with optional `--valid-at` date filter |
+| `get values` | Value-set members for a CVID (year-projected to the cvid's regver year) |
 | `get datacolumns` | All column aliases for a variable across registers |
 | `get coded-variables` | Variables with value sets, ranked by usage |
 | `get diff` | Schema changes between two years for a register |

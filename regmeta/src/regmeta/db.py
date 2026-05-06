@@ -9,16 +9,19 @@ import json
 import os
 import re
 import sqlite3
+import struct
 import sys
 from contextlib import contextmanager
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
+from .queries import extract_year
 
-SCHEMA_VERSION = "2.3.0"
+SCHEMA_VERSION = "3.0.0"
 DB_FILENAME = "regmeta.db"
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
@@ -39,6 +42,26 @@ DB_FILENAME = "regmeta.db"
 # _import_vardemangder. Audit script: scripts/audit_vardemangder.py.
 _VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 _VARDEMANGDER_REAL_SHAPED = frozenset({"1", "2"})
+
+
+def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
+    """Content-addressed sha256 over sorted (vardekod, vardebenamning) pairs.
+
+    Length-prefixed encoding so no byte assumption is needed about source text.
+    Stable across rebuilds given identical inputs (kod/label are stable strings
+    independent of code_id assignment order).
+    """
+    h = hashlib.sha256()
+    h.update(struct.pack(">I", len(pairs)))
+    for kod, label in sorted(pairs):
+        kb = kod.encode("utf-8")
+        lb = label.encode("utf-8")
+        h.update(struct.pack(">I", len(kb)))
+        h.update(kb)
+        h.update(struct.pack(">I", len(lb)))
+        h.update(lb)
+    return h.digest()
+
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
 # Map to their cp850 equivalents rather than rejecting.
@@ -124,7 +147,6 @@ ENRICHMENT_FILES = [
     "Identifierare.csv",
     "Timeseries.csv",
     "Vardemangder.csv",
-    "VardemangderValidDates.csv",
 ]
 
 DDL = """\
@@ -202,6 +224,11 @@ CREATE TABLE variable_instance (
     vardemangdsversion TEXT,
     vardemangdsniva TEXT,
     classification_id INTEGER REFERENCES classification(id),
+    -- value_set_id links to the cvid's deduplicated, year-projected code list.
+    -- NULL when the cvid has no codes (sentinel-only or every union pair
+    -- excluded by year projection). No reverse index — every consumer reaches
+    -- here from the cvid PK side, so the forward path is already optimal.
+    value_set_id INTEGER REFERENCES value_set(value_set_id),
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
@@ -258,30 +285,27 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 CREATE TABLE value_code (
     code_id INTEGER PRIMARY KEY,
     vardekod TEXT NOT NULL,
-    vardebenamning TEXT NOT NULL
+    vardebenamning TEXT NOT NULL,
+    UNIQUE (vardekod, vardebenamning)
 );
 
-CREATE TABLE cvid_value_code (
-    cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
-    code_id INTEGER NOT NULL REFERENCES value_code(code_id),
-    PRIMARY KEY (cvid, code_id)
-) WITHOUT ROWID;
-
--- item→(cvid, code) mapping only for items that have validity date records.
--- PK order (cvid, code_id, item_id) supports temporal query lookups by (cvid, code_id).
-CREATE TABLE value_item (
-    cvid INTEGER NOT NULL,
-    code_id INTEGER NOT NULL,
-    item_id INTEGER NOT NULL,
-    PRIMARY KEY (cvid, code_id, item_id)
-) WITHOUT ROWID;
-
-CREATE TABLE value_item_validity (
-    item_id INTEGER NOT NULL,
-    valid_from TEXT,
-    valid_to TEXT
+-- value_set: one row per distinct year-projected membership.
+-- member_hash = sha256 of length-prefixed sorted (vardekod, vardebenamning)
+-- pairs (see _value_set_hash in this module). Stable across rebuilds given
+-- identical inputs. SCB validity windows (VardemangderValidDates.csv) are
+-- applied at build time; the union of all historical codes is *not* preserved.
+CREATE TABLE value_set (
+    value_set_id INTEGER PRIMARY KEY,
+    member_hash  BLOB NOT NULL UNIQUE,
+    CHECK (length(member_hash) = 32)
 );
-CREATE INDEX idx_value_item_validity_item ON value_item_validity(item_id);
+
+CREATE TABLE value_set_member (
+    value_set_id INTEGER NOT NULL REFERENCES value_set(value_set_id),
+    code_id      INTEGER NOT NULL REFERENCES value_code(code_id),
+    PRIMARY KEY (value_set_id, code_id)
+) WITHOUT ROWID;
+CREATE INDEX idx_value_set_member_code ON value_set_member(code_id);
 
 CREATE TABLE unika_summary (
     register_id INTEGER,
@@ -356,8 +380,10 @@ CREATE INDEX idx_variable_instance_classification ON variable_instance(classific
 CREATE INDEX idx_variable_alias_kolumnnamn ON variable_alias(kolumnnamn);
 CREATE INDEX idx_value_code_vardekod ON value_code(vardekod);
 
--- Pre-aggregated code→variable mapping for search --value (replaces
--- a 662MB secondary index on cvid_value_code with a 90MB summary table).
+-- Pre-aggregated code→variable mapping for search --value. Built from
+-- the year-projected value_set_member rows joined through
+-- variable_instance.value_set_id, so a code only appears here for
+-- (register, var) pairs where it was valid at some cvid year.
 CREATE TABLE code_variable_map (
     code_id INTEGER NOT NULL REFERENCES value_code(code_id),
     register_id INTEGER NOT NULL,
@@ -854,8 +880,10 @@ def _import_registerinformation(
         list(variables.values()),
     )
     conn.executemany(
-        "INSERT INTO variable_instance VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :datatyp, :datalangd, NULL, NULL, NULL)",
+        "INSERT INTO variable_instance "
+        "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd) "
+        "VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
+        ":var_id, :datatyp, :datalangd)",
         list(instances.values()),
     )
     conn.executemany(
@@ -984,56 +1012,51 @@ def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
-def _load_validity_item_ids(path: Path) -> set[int]:
-    """Pre-scan VardemangderValidDates.csv for the set of item_ids with validity."""
-    _progress("Pre-scanning VardemangderValidDates.csv for item_ids...")
-    ids: set[int] = set()
-    with _open_scb_csv(path) as (_, rows):
-        for _, row in rows:
-            ids.add(int(row["ItemID"]))
-    _progress(f"  {len(ids):,} item_ids with validity records")
-    return ids
+def _load_validity_map(path: Path) -> tuple[dict[int, list[tuple[int, int]]], int]:
+    """Load VardemangderValidDates.csv into an in-memory ItemId → year-windows map.
 
-
-def _import_vardemangder_valid_dates(conn: sqlite3.Connection, path: Path) -> int:
-    """Import VardemangderValidDates.csv directly into value_item_validity."""
-    _progress("Importing VardemangderValidDates.csv...")
+    Returns (validity_map, row_count). validity_map[item_id] is a list of
+    (year_from, year_to) tuples — one per validity row for that ItemId.
+    NULL valid_from → 1, NULL valid_to → 9999 (per SCB rule §2.1: NULL means
+    "no boundary"). Year overlap covers SCB's sub-year boundaries losslessly
+    (a window starting 1995-09-01 still covers year 1995). Tracked = present
+    in this map; an ItemId from Vardemangder.csv with no entry here is
+    "untracked" and contributes no constraint.
+    """
+    _progress("Loading VardemangderValidDates.csv into memory...")
+    validity_map: dict[int, list[tuple[int, int]]] = {}
     row_count = 0
-    batch: list[tuple[int, str | None, str | None]] = []
-
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
             row_count += 1
-            batch.append(
-                (
-                    int(row["ItemID"]),
-                    row["ValidFrom"] or None,
-                    row["ValidTo"] or None,
-                )
-            )
-
-    conn.executemany(
-        "INSERT INTO value_item_validity (item_id, valid_from, valid_to) VALUES (?, ?, ?)",
-        batch,
+            item_id = int(row["ItemID"])
+            vf = row["ValidFrom"]
+            vt = row["ValidTo"]
+            year_from = int(vf[:4]) if vf else 1
+            year_to = int(vt[:4]) if vt else 9999
+            validity_map.setdefault(item_id, []).append((year_from, year_to))
+    _progress(
+        f"  {row_count:,} validity rows over {len(validity_map):,} distinct ItemIDs"
     )
-    _progress(f"  {row_count:,} validity ranges")
-    return row_count
+    return validity_map, row_count
 
 
 def _import_vardemangder(
     conn: sqlite3.Connection,
     path: Path,
     known_cvids: set[int],
-    validity_item_ids: set[int] | None,
 ) -> tuple[int, dict[int, tuple[str, str]]]:
-    """Import Vardemangder.csv into normalized value_code + cvid_value_code tables.
+    """Import Vardemangder.csv: write value_code, stage (cvid, code_id, item_id)
+    triples to ``staging._build_cvid_pair`` for the year-projection pass.
 
-    Deduplicates (cvid, code_id) pairs for the junction table.
-    Collects (item_id, cvid, code_id) only for items with validity records
-    and writes them to value_item for temporal query support.
+    The caller must have ATTACHed the staging DB and created the staging table
+    before invoking this function. The actual minting of value_set /
+    value_set_member rows happens later in ``_project_and_mint_value_sets``.
 
     Returns (row_count, cvid_value_set_info) where cvid_value_set_info maps
-    cvid → (vardemangdsversion, vardemangdsniva) for updating variable_instance.
+    cvid → (vardemangdsversion, vardemangdsniva). CVIDs whose only Vardemangder
+    rows were sentinels or fully-empty get no entry here, so their
+    variable_instance.vardemangds{version,niva} stay NULL.
     """
     _progress("Importing Vardemangder.csv (this may take a while)...")
     row_count = 0
@@ -1043,21 +1066,18 @@ def _import_vardemangder(
     code_lookup: dict[tuple[str, str], int] = {}
     next_code_id = 0
 
-    # Per-CVID value set identity, recorded only from real (non-sentinel) rows.
-    # CVIDs whose only rows were sentinels get no entry here, so their
-    # variable_instance.vardemangds{version,niva} stay NULL.
     cvid_value_set_info: dict[int, tuple[str, str]] = {}
 
-    # Junction dedup via INSERT OR IGNORE against PK(cvid, code_id)
-    junction_batch: list[tuple[int, int]] = []
-
-    # item→(cvid, code) mapping for items with validity records
-    validity_set = validity_item_ids or set()
-    value_item_batch: list[tuple[int, int, int]] = []  # (cvid, code_id, item_id)
+    # Stage triples (cvid, code_id, item_id) for projection. item_id=0 is the
+    # sentinel for "Vardemangder.csv shipped this row with empty ItemId" (SCB's
+    # actual ItemIds are positive integers, so 0 is unambiguous). The PK
+    # (cvid, code_id, item_id) dedups identical triples and groups rows for
+    # the per-cvid projection pass.
+    stage_batch: list[tuple[int, int, int]] = []
 
     skipped_sentinel = 0
     skipped_empty = 0
-    drift_samples: dict[str, int] = {}  # unknown sentinel-shape kod → count
+    drift_samples: dict[str, int] = {}
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
@@ -1077,21 +1097,14 @@ def _import_vardemangder(
 
             # Drop SCB type-tag rows masquerading as value codes. Tight match
             # on the documented sentinel shape (kod==version==niva). Looser
-            # variants (e.g. kod==version but niva diverging) fall through to
-            # the drift detector below and fail the build for human review.
+            # variants fall through to the drift detector below.
             if vardekod == version == niva and vardekod in _VARDEMANGDER_SENTINELS:
                 skipped_sentinel += 1
                 continue
 
-            # Detect drift: kod==version with kod in neither allowlist (or
-            # kod==version with kod in SENTINELS but niva diverging — caught
-            # because such rows didn't match the tight skip above and are not
-            # in REAL_SHAPED). Could be a new SCB type-tag placeholder (→ add
-            # to _VARDEMANGDER_SENTINELS) or a new real single-code value set
-            # sharing the shape (→ add to _VARDEMANGDER_REAL_SHAPED). Trigger
-            # is broader than the skip rule (no niva equality) so any
-            # sentinel-shape change SCB ships still surfaces. Raised after
-            # the loop.
+            # Drift detector: kod==version with kod in neither allowlist (or in
+            # SENTINELS but with niva diverging from the tight skip rule). See
+            # `_VARDEMANGDER_*` docstrings.
             if (
                 vardekod
                 and vardekod == version
@@ -1099,8 +1112,7 @@ def _import_vardemangder(
             ):
                 drift_samples[vardekod] = drift_samples.get(vardekod, 0) + 1
 
-            # Drop fully-empty rows (kod, label, item all empty). 51 such rows
-            # in the production CSV; carry no information.
+            # Drop fully-empty rows (kod, label, item all empty).
             if not (vardekod or vardebenamning or raw_item):
                 skipped_empty += 1
                 continue
@@ -1116,41 +1128,24 @@ def _import_vardemangder(
             if cvid not in cvid_value_set_info:
                 cvid_value_set_info[cvid] = (version, niva)
 
-            junction_batch.append((cvid, code_id))
+            item_id = int(raw_item) if raw_item else 0
+            stage_batch.append((cvid, code_id, item_id))
 
-            if raw_item:
-                item_id = int(raw_item)
-                if item_id in validity_set:
-                    value_item_batch.append((cvid, code_id, item_id))
-
-            if len(junction_batch) >= batch_size:
+            if len(stage_batch) >= batch_size:
                 conn.executemany(
-                    "INSERT OR IGNORE INTO cvid_value_code (cvid, code_id) "
-                    "VALUES (?, ?)",
-                    junction_batch,
+                    "INSERT OR IGNORE INTO staging._build_cvid_pair "
+                    "(cvid, code_id, item_id) VALUES (?, ?, ?)",
+                    stage_batch,
                 )
-                junction_batch.clear()
+                stage_batch.clear()
 
-            if len(value_item_batch) >= batch_size:
-                conn.executemany(
-                    "INSERT OR IGNORE INTO value_item (cvid, code_id, item_id) VALUES (?, ?, ?)",
-                    value_item_batch,
-                )
-                value_item_batch.clear()
-
-    if junction_batch:
+    if stage_batch:
         conn.executemany(
-            "INSERT OR IGNORE INTO cvid_value_code (cvid, code_id) VALUES (?, ?)",
-            junction_batch,
+            "INSERT OR IGNORE INTO staging._build_cvid_pair "
+            "(cvid, code_id, item_id) VALUES (?, ?, ?)",
+            stage_batch,
         )
 
-    if value_item_batch:
-        conn.executemany(
-            "INSERT OR IGNORE INTO value_item (cvid, code_id, item_id) VALUES (?, ?, ?)",
-            value_item_batch,
-        )
-
-    # Write value_code lookup table
     _progress(f"  Writing {len(code_lookup):,} value codes...")
     conn.executemany(
         "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (?, ?, ?)",
@@ -1193,6 +1188,181 @@ def _import_vardemangder(
             ),
         )
     return row_count, cvid_value_set_info
+
+
+@dataclass
+class _GroupState:
+    """In-flight group while streaming staging triples grouped by (cvid, code_id).
+
+    ``items`` accumulates item_ids for the current code; ``accepted`` accumulates
+    code_ids that survived projection for the current cvid.
+    """
+
+    cvid: int | None = None
+    code_id: int | None = None
+    items: list[int] = field(default_factory=list)
+    accepted: list[int] = field(default_factory=list)
+
+
+@dataclass
+class _ProjectionStats:
+    cvids_with_set: int = 0
+    cvids_empty_after_projection: int = 0
+    n_value_sets: int = 0
+
+
+def _accept_code(
+    item_ids: list[int],
+    cvid_year: int | None,
+    validity_map: dict[int, list[tuple[int, int]]],
+) -> bool:
+    """Apply the projection rule for one (cvid, code_id) group.
+
+    Single pass: short-circuits on the first covering window. Avoids
+    materializing a windows list — this runs ~50M times during a real-data
+    rebuild, so per-call allocations matter.
+    """
+    has_tracked = False
+    for iid in item_ids:
+        if iid == 0:
+            continue
+        w = validity_map.get(iid)
+        if not w:
+            continue
+        has_tracked = True
+        if cvid_year is None:
+            return True
+        for yf, yt in w:
+            if yf <= cvid_year <= yt:
+                return True
+    return not has_tracked
+
+
+def _project_and_mint_value_sets(
+    conn: sqlite3.Connection,
+    validity_map: dict[int, list[tuple[int, int]]],
+) -> _ProjectionStats:
+    """Project staging triples by cvid year, mint deduplicated value_sets,
+    and update variable_instance.value_set_id.
+
+    Reads ``staging._build_cvid_pair`` and a cvid → year map joined from
+    variable_instance × register_version. For each (cvid, code_id):
+
+    - Collect validity windows of all *tracked* item_ids for the pair (a
+      tracked item_id has at least one entry in ``validity_map``; item_id=0
+      and unknown nonzero ids are *untracked*).
+    - If no tracked windows → include (always-valid).
+    - Otherwise → include iff at least one window covers the cvid year
+      (year overlap, sub-year boundaries absorbed losslessly).
+
+    Yearless cvids (regver name has no plausible 4-digit year) include all
+    union pairs. Mixed tracked+untracked pairs let the tracked window decide;
+    untracked siblings do not relax the constraint.
+
+    Sets are deduplicated by content-addressed sha256 over sorted
+    (vardekod, vardebenamning) pairs.
+    """
+    _progress("Projecting validity windows and minting value_sets...")
+
+    cvid_to_year: dict[int, int | None] = {
+        cvid: extract_year(version_name or "")
+        for cvid, version_name in conn.execute(
+            "SELECT vi.cvid, rv.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rv ON vi.regver_id = rv.regver_id"
+        )
+    }
+    yearless = sum(1 for y in cvid_to_year.values() if y is None)
+    _progress(
+        f"  cvid → year map: {len(cvid_to_year):,} entries "
+        f"({yearless:,} yearless, fall back to all-codes)"
+    )
+
+    code_pair: dict[int, tuple[str, str]] = {
+        code_id: (kod, label)
+        for code_id, kod, label in conn.execute(
+            "SELECT code_id, vardekod, vardebenamning FROM value_code"
+        )
+    }
+
+    cur = conn.execute(
+        "SELECT cvid, code_id, item_id FROM staging._build_cvid_pair "
+        "ORDER BY cvid, code_id, item_id"
+    )
+
+    state = _GroupState()
+    stats = _ProjectionStats()
+    set_id_by_hash: dict[bytes, int] = {}
+    cvid_set_assignments: list[tuple[int, int]] = []
+    member_batch: list[tuple[int, int]] = []
+    member_batch_size = 50_000
+
+    def _flush_members() -> None:
+        if member_batch:
+            conn.executemany(
+                "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+                member_batch,
+            )
+            member_batch.clear()
+
+    def _finish_code() -> None:
+        if state.code_id is None:
+            return
+        if _accept_code(state.items, cvid_to_year.get(state.cvid), validity_map):
+            state.accepted.append(state.code_id)
+
+    def _finish_cvid() -> None:
+        if state.cvid is None:
+            return
+        if not state.accepted:
+            stats.cvids_empty_after_projection += 1
+            return
+        pairs = [code_pair[c] for c in state.accepted]
+        h = _value_set_hash(pairs)
+        set_id = set_id_by_hash.get(h)
+        if set_id is None:
+            cur = conn.execute("INSERT INTO value_set (member_hash) VALUES (?)", (h,))
+            set_id = cur.lastrowid
+            set_id_by_hash[h] = set_id
+            member_batch.extend((set_id, cid) for cid in state.accepted)
+            if len(member_batch) >= member_batch_size:
+                _flush_members()
+        cvid_set_assignments.append((set_id, state.cvid))
+        stats.cvids_with_set += 1
+
+    for cvid, code_id, item_id in cur:
+        if cvid != state.cvid:
+            _finish_code()
+            _finish_cvid()
+            state.cvid = cvid
+            state.code_id = code_id
+            state.items = [item_id]
+            state.accepted = []
+            continue
+        if code_id != state.code_id:
+            _finish_code()
+            state.code_id = code_id
+            state.items = [item_id]
+            continue
+        state.items.append(item_id)
+
+    _finish_code()
+    _finish_cvid()
+    _flush_members()
+
+    if cvid_set_assignments:
+        conn.executemany(
+            "UPDATE variable_instance SET value_set_id = ? WHERE cvid = ?",
+            cvid_set_assignments,
+        )
+
+    stats.n_value_sets = len(set_id_by_hash)
+    _progress(
+        f"  {stats.n_value_sets:,} distinct value_sets minted, "
+        f"{stats.cvids_with_set:,} cvids linked, "
+        f"{stats.cvids_empty_after_projection:,} cvids empty after projection."
+    )
+    return stats
 
 
 def _populate_fts(conn: sqlite3.Connection) -> None:
@@ -1368,17 +1538,40 @@ def build_db(
     db_dir.mkdir(parents=True, exist_ok=True)
     final_path = db_dir / DB_FILENAME
     tmp_path = final_path.with_suffix(".db.tmp")
+    # Sibling staging file holds the (cvid, code_id, item_id) triples consumed
+    # by year-projection. Lives outside the published DB so its pages don't
+    # bloat the freelist of the asset shipped to users (PRAGMA temp_store=MEMORY
+    # would put SQL TEMP tables in RAM, but a 32M-row staging table won't fit).
+    staging_path = tmp_path.with_suffix(".staging.sqlite")
 
     if tmp_path.exists():
         tmp_path.unlink()
+    if staging_path.exists():
+        staging_path.unlink()
 
     conn = sqlite3.connect(tmp_path)
     conn.execute("PRAGMA journal_mode=WAL")
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
+    build_failed = True
     try:
         conn.executescript(DDL)
+
+        # ATTACH staging DB and create the per-build pair table. The PK groups
+        # rows for the per-cvid projection pass and dedups identical triples.
+        # FK declarations don't work across attached DBs — fine, no main-DB
+        # rows reference the staging table. Path is bound (not interpolated)
+        # so quotes/specials in the parent dir can't break or inject SQL.
+        conn.execute("ATTACH DATABASE ? AS staging", (str(staging_path),))
+        conn.execute(
+            "CREATE TABLE staging._build_cvid_pair ("
+            "cvid INTEGER NOT NULL,"
+            "code_id INTEGER NOT NULL,"
+            "item_id INTEGER NOT NULL,"  # 0 = empty ItemId in the source CSV
+            "PRIMARY KEY (cvid, code_id, item_id)"
+            ") WITHOUT ROWID"
+        )
 
         source_checksums: dict[str, str] = {}
         row_counts: dict[str, int] = {}
@@ -1388,13 +1581,37 @@ def build_db(
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
 
-        # Pre-scan validity item_ids (needed during Vardemangder import)
-        validity_item_ids: set[int] | None = None
+        # Pre-load validity windows (consumed by Vardemangder year-projection).
+        # Loaded ahead of the enrichment loop so projection has it ready when
+        # Vardemangder.csv finishes streaming. Required whenever Vardemangder.csv
+        # is present: without it, projection silently degrades to the historical
+        # union (every code "always-valid"), defeating the schema contract that
+        # `get values` returns the year-projected set.
+        validity_map: dict[int, list[tuple[int, int]]] = {}
         vvd_path = scb_dir / "VardemangderValidDates.csv"
+        vm_path = scb_dir / "Vardemangder.csv"
+        if vm_path.exists() and not vvd_path.exists():
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="csv_missing_validity",
+                error_class="configuration",
+                message=(
+                    f"Vardemangder.csv is present but VardemangderValidDates.csv "
+                    f"is missing in {scb_dir}. Year-projection requires both."
+                ),
+                remediation=(
+                    "Re-export VardemangderValidDates.csv from "
+                    "mikrometadata.scb.se alongside Vardemangder.csv."
+                ),
+            )
         if vvd_path.exists():
-            validity_item_ids = _load_validity_item_ids(vvd_path)
+            source_checksums["VardemangderValidDates.csv"] = _file_sha256(vvd_path)
+            validity_map, validity_row_count = _load_validity_map(vvd_path)
+            row_counts["VardemangderValidDates.csv"] = validity_row_count
 
-        # Enrichment files (optional)
+        # Enrichment files (optional). VardemangderValidDates.csv is handled
+        # above (pre-loaded into memory, not written to DB).
+        projection_stats = _ProjectionStats()
         for filename in ENRICHMENT_FILES:
             path = scb_dir / filename
             if not path.exists():
@@ -1409,9 +1626,7 @@ def build_db(
             elif filename == "Timeseries.csv":
                 row_counts[filename] = _import_timeseries(conn, path)
             elif filename == "Vardemangder.csv":
-                vm_count, cvid_vs_info = _import_vardemangder(
-                    conn, path, known_cvids, validity_item_ids
-                )
+                vm_count, cvid_vs_info = _import_vardemangder(conn, path, known_cvids)
                 row_counts[filename] = vm_count
                 if cvid_vs_info:
                     _progress(
@@ -1426,8 +1641,10 @@ def build_db(
                             for cvid, (ver, niva) in cvid_vs_info.items()
                         ],
                     )
-            elif filename == "VardemangderValidDates.csv":
-                row_counts[filename] = _import_vardemangder_valid_dates(conn, path)
+                # Year-project staging pairs and link variable_instance.value_set_id.
+                # Must run after the vardemangds{version,niva} UPDATE because the
+                # projection joins variable_instance × register_version.
+                projection_stats = _project_and_mint_value_sets(conn, validity_map)
 
         # Classifications — maintainer-curated normalized code systems.
         if skip_classifications:
@@ -1454,13 +1671,16 @@ def build_db(
                 conn, seed, valid_codes_dir=valid_codes_dir
             )
 
-        # Populate code_variable_map from junction + variable_instance
+        # Populate code_variable_map from year-projected value_set_member rows
+        # joined through variable_instance.value_set_id. A code only appears
+        # for (register, var) pairs where it was valid at some cvid year.
         _progress("Building code_variable_map...")
         conn.execute(
             "INSERT INTO code_variable_map (code_id, register_id, var_id) "
-            "SELECT DISTINCT cvc.code_id, vi.register_id, vi.var_id "
-            "FROM cvid_value_code cvc "
-            "JOIN variable_instance vi ON cvc.cvid = vi.cvid"
+            "SELECT DISTINCT vsm.code_id, vi.register_id, vi.var_id "
+            "FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "WHERE vi.value_set_id IS NOT NULL"
         )
         cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
         _progress(f"  {cvm_count:,} code×variable mappings")
@@ -1489,6 +1709,11 @@ def build_db(
             "input_dir": str(input_dir),
             "source_checksums": source_checksums,
             "row_counts": row_counts,
+            "projection_stats": {
+                "n_value_sets": projection_stats.n_value_sets,
+                "cvids_with_set": projection_stats.cvids_with_set,
+                "cvids_empty_after_projection": projection_stats.cvids_empty_after_projection,
+            },
         }
         for key, value in manifest_data.items():
             conn.execute(
@@ -1496,16 +1721,39 @@ def build_db(
                 (key, json.dumps(value) if isinstance(value, dict) else str(value)),
             )
 
+        # Validate FK invariants. The build runs with foreign_keys=OFF for
+        # speed; toggling within an active transaction is a no-op, so FK
+        # declarations alone don't validate the data. PRAGMA foreign_key_check
+        # returns rows on violation; the enabling-flip below is cosmetic.
+        violations = list(conn.execute("PRAGMA foreign_key_check"))
+        if violations:
+            sample = ", ".join(f"{v[0]}#{v[1]}" for v in violations[:5])
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="foreign_key_violation",
+                error_class="configuration",
+                message=(
+                    f"PRAGMA foreign_key_check returned {len(violations)} "
+                    f"violation(s) before commit. Sample: {sample}."
+                ),
+                remediation=(
+                    "Inspect the build logs for missing parent rows. This "
+                    "usually means a CVID referenced by Vardemangder.csv "
+                    "was not present in Registerinformation.csv, or a "
+                    "value_set_id was assigned without a corresponding "
+                    "value_set row."
+                ),
+            )
         conn.execute("PRAGMA foreign_keys=ON")
+
         conn.commit()
         _progress("Database built successfully.")
-    except Exception:
+        build_failed = False
+    finally:
         conn.close()
-        if tmp_path.exists():
-            tmp_path.unlink()
-        raise
-    else:
-        conn.close()
+        staging_path.unlink(missing_ok=True)
+        if build_failed:
+            tmp_path.unlink(missing_ok=True)
 
     # Atomic replace
     if final_path.exists():

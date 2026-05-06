@@ -13,7 +13,7 @@ from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 
-_YEAR_RE = re.compile(r"\d{4}")
+_YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
 
 def _try_int(value: str) -> int | str:
@@ -86,7 +86,9 @@ def parse_year_range(spec: str) -> tuple[int | None, int | None]:
 
 
 def extract_year(version_name: str) -> int | None:
-    """Extract the first 4-digit year from a version name string."""
+    """Extract a 1900-2099 year from a version name. Rejects 4-digit runs
+    embedded in longer digit sequences (so "v19999" → None, not 1999) and
+    out-of-range numbers (so "Komvux 1234-poäng" → None, not 1234)."""
     m = _YEAR_RE.search(version_name)
     return int(m.group()) if m else None
 
@@ -689,8 +691,11 @@ def get_varinfo(
             ):
                 aliases_map[row["cvid"]].append(row["kolumnnamn"])
             for row in conn.execute(
-                f"SELECT cvid, COUNT(*) as cnt FROM cvid_value_code "
-                f"WHERE cvid IN ({cvid_ph}) GROUP BY cvid",
+                f"SELECT vi.cvid, COUNT(*) as cnt "
+                f"FROM variable_instance vi "
+                f"JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+                f"WHERE vi.cvid IN ({cvid_ph}) "
+                f"GROUP BY vi.cvid",
                 cvids,
             ):
                 value_counts[row["cvid"]] = row["cnt"]
@@ -948,18 +953,17 @@ def _get_availability_register(
 # ---------------------------------------------------------------------------
 
 
-def get_values(
-    conn: sqlite3.Connection, cvid: str, *, valid_at: str | None = None
-) -> list[dict[str, Any]]:
+def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
     """Get value-set members for a CVID.
 
-    If valid_at is an ISO date (YYYY-MM-DD), only return values whose
-    validity period includes that date.  Codes with no value_item
-    entries (no temporal tracking) are treated as always valid.
+    Returns the year-correct code list — codes valid at the cvid's regver
+    year per SCB validity windows. Year projection happens at build time
+    (see ``regmeta.db._project_and_mint_value_sets``); this query is a plain
+    3-table read with no temporal logic.
     """
     int_cvid = _try_int(cvid)
     inst = conn.execute(
-        "SELECT * FROM variable_instance WHERE cvid = ?", (int_cvid,)
+        "SELECT 1 FROM variable_instance WHERE cvid = ?", (int_cvid,)
     ).fetchone()
     if not inst:
         raise RegmetaError(
@@ -970,41 +974,16 @@ def get_values(
             remediation="Use `regmeta get schema` to find valid CVIDs.",
         )
 
-    if valid_at is None:
-        values = conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning, "
-            "vi.vardemangdsversion, vi.vardemangdsniva "
-            "FROM cvid_value_code cvc "
-            "JOIN value_code vc ON cvc.code_id = vc.code_id "
-            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
-            "WHERE cvc.cvid = ? ORDER BY vc.vardekod",
-            (int_cvid,),
-        ).fetchall()
-    else:
-        # A code is valid at a date if it has no value_item entries (no
-        # temporal tracking), or at least one of its items has a validity
-        # range covering the date.
-        values = conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning, "
-            "vi.vardemangdsversion, vi.vardemangdsniva "
-            "FROM cvid_value_code cvc "
-            "JOIN value_code vc ON cvc.code_id = vc.code_id "
-            "JOIN variable_instance vi ON cvc.cvid = vi.cvid "
-            "WHERE cvc.cvid = ? AND ("
-            "  NOT EXISTS ("
-            "    SELECT 1 FROM value_item vit"
-            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
-            "  )"
-            "  OR EXISTS ("
-            "    SELECT 1 FROM value_item vit"
-            "    JOIN value_item_validity viv ON vit.item_id = viv.item_id"
-            "    WHERE vit.cvid = cvc.cvid AND vit.code_id = cvc.code_id"
-            "    AND (viv.valid_from IS NULL OR viv.valid_from <= ?)"
-            "    AND (viv.valid_to IS NULL OR viv.valid_to >= ?)"
-            "  )"
-            ") ORDER BY vc.vardekod",
-            (int_cvid, valid_at, valid_at),
-        ).fetchall()
+    values = conn.execute(
+        "SELECT vc.vardekod, vc.vardebenamning, "
+        "vi.vardemangdsversion, vi.vardemangdsniva "
+        "FROM variable_instance vi "
+        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "JOIN value_code vc ON vsm.code_id = vc.code_id "
+        "WHERE vi.cvid = ? "
+        "ORDER BY vc.vardekod",
+        (int_cvid,),
+    ).fetchall()
     return [dict(v) for v in values]
 
 
@@ -1472,8 +1451,8 @@ def get_coded_variables(
         "COUNT(DISTINCT vi.cvid) as n_instances "
         "FROM variable v "
         "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
-        "JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid "
-        "JOIN value_code vc ON cvc.code_id = vc.code_id "
+        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "GROUP BY v.variabelnamn "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "
         "ORDER BY n_registers DESC, n_distinct_codes DESC "

@@ -14,7 +14,7 @@
 # published) codes for the classification. Each `classification_code` row is
 # then marked `is_valid=1` if its vardekod is in the CSV, else `is_valid=0`.
 # Codes that appear in the CSV but never in observed data are still inserted
-# as canonical-but-unobserved (queryable, no `cvid_value_code` linkage).
+# as canonical-but-unobserved (queryable, no `value_set_member` linkage).
 # Without the field, all codes for the classification carry `is_valid=NULL`
 # (validity unknown).
 #

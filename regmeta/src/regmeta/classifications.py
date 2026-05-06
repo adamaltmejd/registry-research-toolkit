@@ -542,8 +542,8 @@ def populate_classifications(
 ) -> int:
     """Populate classification / classification_code / variable_instance.classification_id.
 
-    Called once per ``build_db`` run, after value codes are imported so that
-    ``cvid_value_code`` is complete. Strict failure modes:
+    Called once per ``build_db`` run, after value codes are imported and
+    ``variable_instance.value_set_id`` has been linked. Strict failure modes:
 
     - A seed ``vardemangdsversion`` string that matches no instance → fail
     - A classification resolving to zero instances → fail
@@ -556,7 +556,7 @@ def populate_classifications(
     CSV is loaded and used to mark each ``classification_code`` row as
     ``is_valid=1`` (canonical) or ``is_valid=0`` (observed-only). Canonical
     codes that don't appear in observed data are still inserted (they get a
-    fresh ``value_code`` row with no ``cvid_value_code`` linkage).
+    fresh ``value_code`` row with no ``value_set_member`` linkage).
 
     Returns the number of classifications inserted.
     """
@@ -674,12 +674,12 @@ def populate_classifications(
         INSERT INTO classification_code (classification_id, code_id, level, is_valid)
         SELECT DISTINCT
             vi.classification_id,
-            cvc.code_id,
+            vsm.code_id,
             {_LEVEL_EXPR.format(col="vc.vardekod")},
             NULL
         FROM variable_instance vi
-        JOIN cvid_value_code cvc ON vi.cvid = cvc.cvid
-        JOIN value_code vc ON cvc.code_id = vc.code_id
+        JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id
+        JOIN value_code vc ON vsm.code_id = vc.code_id
         WHERE vi.classification_id IS NOT NULL
         """
     )
@@ -709,9 +709,10 @@ def populate_classifications(
             error_class="configuration",
             message=("Classification(s) resolved to zero value codes:\n" + details),
             remediation=(
-                "Tagged instances exist but have no codes in cvid_value_code. "
-                "Either broaden the vardemangdsversion list or remove the "
-                "entry from the seed."
+                "Tagged instances exist but have no codes reachable via "
+                "value_set_member. Either broaden the vardemangdsversion "
+                "list, check that year-projection isn't excluding every "
+                "code (rare), or remove the entry from the seed."
             ),
         )
 

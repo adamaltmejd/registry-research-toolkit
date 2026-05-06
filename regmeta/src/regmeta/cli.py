@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import re
 import shutil
 import sqlite3
 import sys
@@ -497,20 +496,15 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Show code/label pairs for a categorical variable's value set.\n"
             "Requires a CVID — find it via `regmeta get varinfo <variable>`.\n"
-            "Value sets are historical unions; use --valid-at for date filtering.\n\n"
+            "Codes are projected to the cvid's regver year via SCB validity\n"
+            "windows at build time, so the result is the year-correct set.\n\n"
             "Examples:\n"
-            "  regmeta get values 1001\n"
-            "  regmeta get values 1001 --valid-at 2020-01-01"
+            "  regmeta get values 1001"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_values_p.add_argument(
         "cvid", help="CVID (find via: regmeta get varinfo <variable>)."
-    )
-    get_values_p.add_argument(
-        "--valid-at",
-        default=None,
-        help="ISO date (YYYY-MM-DD). Only return values valid at this date.",
     )
 
     get_datacols_p = get_sub.add_parser(
@@ -1361,33 +1355,32 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
-_ISO_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-
-
 def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    if args.valid_at and not _ISO_DATE_RE.match(args.valid_at):
-        raise RegmetaError(
-            exit_code=EXIT_USAGE,
-            code="bad_date",
-            error_class="usage",
-            message=f"Invalid date format: {args.valid_at!r}",
-            remediation="Use ISO format: YYYY-MM-DD (e.g. 2020-01-15).",
-        )
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
         info = _db_info(conn)
-        data = get_values(conn, args.cvid, valid_at=args.valid_at)
+        data = get_values(conn, args.cvid)
+        # Discriminate empty results: a cvid with `vardemangdsversion IS NOT NULL`
+        # had real Vardemangder rows but year-projection excluded every code, so
+        # the empty list signals an SCB validity gap rather than a numeric/text
+        # variable. Read alongside the data so the hint layer can surface it.
+        args._projection_emptied = bool(
+            not data
+            and conn.execute(
+                "SELECT 1 FROM variable_instance "
+                "WHERE cvid = ? AND value_set_id IS NULL "
+                "AND vardemangdsversion IS NOT NULL",
+                (args.cvid,),
+            ).fetchone()
+        )
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    args_payload: dict[str, Any] = {"cvid": args.cvid}
-    if args.valid_at:
-        args_payload["valid_at"] = args.valid_at
     return _success_envelope(
         command="get values",
-        args_payload=args_payload,
+        args_payload={"cvid": args.cvid},
         db_info=info,
         data=data,
         duration_ms=duration_ms,
@@ -2287,13 +2280,14 @@ def _collect_hints(
             )
 
     elif key == ("get", "values"):
-        if not getattr(args, "valid_at", None) and data:
-            values = data if isinstance(data, list) else []
-            if values:
-                _hint_add(
-                    hints,
-                    "Some values have date ranges (--valid-at YYYY-MM-DD to filter)",
-                )
+        if getattr(args, "_projection_emptied", False):
+            _hint_add(
+                hints,
+                "cvid had value codes in Vardemangder.csv but every code was "
+                "excluded by year-projection — likely an SCB validity gap for "
+                "this cvid's regver year. Compare with neighbouring years via "
+                "`regmeta get varinfo <variable>` to see when codes appear.",
+            )
 
 
 # ---------------------------------------------------------------------------
@@ -2364,7 +2358,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
         "Column listing per version.",
     ),
     ("get varinfo VARIABLE [--register R]", "Variable details with instance history."),
-    ("get values CVID [--valid-at DATE]", "Value codes and labels for a CVID."),
+    ("get values CVID", "Value codes and labels for a CVID."),
     (
         "get datacolumns VARIABLE [--register R]",
         "All column aliases for a variable across registers.",
@@ -2638,8 +2632,9 @@ get values — What do the coded values mean?
   "What are the valid values for CVID 1001?"
     regmeta get values 1001
 
-  "What values were valid in 2020?"
-    regmeta get values 1001 --valid-at 2020-01-01
+  Each CVID is already pinned to a single regver year, and the codes
+  shown have been year-projected through SCB validity windows at build
+  time — so the result is the year-correct set, not a historical union.
 
   You need a CVID, not a variable name. Get it from `get varinfo`:
     regmeta get varinfo "Kommun" --register LISA   → find the CVID

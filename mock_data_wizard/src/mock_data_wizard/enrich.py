@@ -627,10 +627,11 @@ def _bulk_fetch_value_codes(
         return {}
     placeholders = ",".join("?" for _ in all_cvids)
     value_rows = conn.execute(
-        "SELECT cvc.cvid, vc.vardekod, vc.vardebenamning "
-        "FROM cvid_value_code cvc "
-        "JOIN value_code vc ON cvc.code_id = vc.code_id "
-        f"WHERE cvc.cvid IN ({placeholders})",
+        "SELECT vi.cvid, vc.vardekod, vc.vardebenamning "
+        "FROM variable_instance vi "
+        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "JOIN value_code vc ON vsm.code_id = vc.code_id "
+        f"WHERE vi.cvid IN ({placeholders})",
         all_cvids,
     ).fetchall()
     cvid_to_codes: dict[int, dict[str, str]] = {}
