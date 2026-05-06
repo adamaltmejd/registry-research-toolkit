@@ -1075,17 +1075,23 @@ def _import_vardemangder(
             niva = row["Värdemängdsnivå"]
             raw_item = row["ItemId"]
 
-            # Drop SCB type-tag rows masquerading as value codes.
-            if vardekod == version and vardekod in _VARDEMANGDER_SENTINELS:
+            # Drop SCB type-tag rows masquerading as value codes. Tight match
+            # on the documented sentinel shape (kod==version==niva). Looser
+            # variants (e.g. kod==version but niva diverging) fall through to
+            # the drift detector below and fail the build for human review.
+            if vardekod == version == niva and vardekod in _VARDEMANGDER_SENTINELS:
                 skipped_sentinel += 1
                 continue
 
-            # Detect drift: kod==version with kod in neither allowlist. Could
-            # be a new SCB type-tag placeholder (→ add to _VARDEMANGDER_SENTINELS)
-            # or a new real single-code value set sharing the shape (→ add to
-            # _VARDEMANGDER_REAL_SHAPED). Trigger is broader than the skip
-            # rule (no niva equality) so a future placeholder where SCB drops
-            # the niva match still surfaces. Raised after the loop.
+            # Detect drift: kod==version with kod in neither allowlist (or
+            # kod==version with kod in SENTINELS but niva diverging — caught
+            # because such rows didn't match the tight skip above and are not
+            # in REAL_SHAPED). Could be a new SCB type-tag placeholder (→ add
+            # to _VARDEMANGDER_SENTINELS) or a new real single-code value set
+            # sharing the shape (→ add to _VARDEMANGDER_REAL_SHAPED). Trigger
+            # is broader than the skip rule (no niva equality) so any
+            # sentinel-shape change SCB ships still surfaces. Raised after
+            # the loop.
             if (
                 vardekod
                 and vardekod == version
@@ -1171,17 +1177,19 @@ def _import_vardemangder(
             code="vardemangder_drift",
             error_class="configuration",
             message=(
-                f"Vardemangder drift: {len(drift_samples)} unknown "
-                f"sentinel-shape vardekod value(s) (kod==version, kod in "
-                f"neither allowlist). Sample: {sample}."
+                f"Vardemangder drift: {len(drift_samples)} sentinel-shape "
+                f"vardekod value(s) (kod==version) require human review. "
+                f"Sample: {sample}."
             ),
             remediation=(
                 "Inspect the listed vardekod values in Vardemangder.csv. "
-                "If they are SCB type-tag placeholders, add them to "
+                "(a) New SCB type-tag placeholder → add to "
                 "_VARDEMANGDER_SENTINELS in regmeta/src/regmeta/db.py. "
-                "If they are real single-code value sets that happen to "
-                "share the shape, add them to _VARDEMANGDER_REAL_SHAPED. "
-                "Then rerun build-db."
+                "(b) New real single-code value set sharing the shape → "
+                "add to _VARDEMANGDER_REAL_SHAPED. (c) Already in "
+                "_VARDEMANGDER_SENTINELS but appeared with niva!=version "
+                "→ SCB changed the sentinel shape; broaden the skip rule "
+                "to match. Then rerun build-db."
             ),
         )
     return row_count, cvid_value_set_info

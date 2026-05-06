@@ -149,6 +149,11 @@ Both classifications are required because the shape alone is ambiguous. An
 unguarded skip on `kod == version` would silently drop the real codes; an
 unguarded keep would let new SCB placeholders pollute the DB.
 
+The skip rule is tight: `kod == version == niva` AND `kod` ∈ `_VARDEMANGDER_SENTINELS`. Looser variants (e.g. `kod == version` but `niva` diverging)
+fall through to the drift detector below and fail the build for human
+review, even when the kod is already a known sentinel string. This guards
+against a future SCB change to the sentinel shape.
+
 A cvid whose only Vardemängder rows were sentinels gets `NULL` for
 `vardemangdsversion`/`vardemangdsniva` on `variable_instance`. Fully-empty
 rows (kod, label, item all empty) are dropped silently.
@@ -303,10 +308,17 @@ database. Patch differences are ignored.
 Bumping rules:
 
 - **Major bump** on breaking changes (renamed/removed tables or columns,
-  changed column semantics).
-- **Minor bump** when code starts reading a new column/table added in the
-  build. This forces old DBs (that lack it) to be rejected cleanly at
-  `open_db` instead of failing later with a SQL error.
+  changed column semantics that consumers must adapt to).
+- **Minor bump** in either of these cases:
+  1. Code starts reading a new column/table added in the build. This
+     forces old DBs (that lack it) to be rejected cleanly at `open_db`
+     instead of failing later with a SQL error.
+  2. Build-time content semantics change in a way that should invalidate
+     prior DBs even though no schema shape changed — e.g. dropping
+     polluting rows from `value_code`, populating columns with NULL where
+     they used to carry placeholder strings. Old DBs would silently serve
+     pre-cleanup data; the bump forces a rebuild on the next `maintain
+     update`.
 
 Either bump requires rebuilding and re-uploading the DB asset before the
 package release goes live — see `.agents/skills/release/SKILL.md`. The

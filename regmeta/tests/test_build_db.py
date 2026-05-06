@@ -503,3 +503,23 @@ class TestVardemangderDrift:
         assert "'ZZZ'" in exc_info.value.message
         assert "_VARDEMANGDER_SENTINELS" in exc_info.value.remediation
         assert "_VARDEMANGDER_REAL_SHAPED" in exc_info.value.remediation
+
+    def test_drift_raises_on_niva_divergent_sentinel(self, tmp_path: Path) -> None:
+        # Skip rule requires kod==version==niva. A row with kod=version="Tal"
+        # but niva diverging is a novel SCB shape — the build must surface it
+        # rather than silently drop it. Failure mode that the upstream
+        # reviewers (Codex, Copilot) flagged as a risk.
+        # Column order: version|niva|kod|label|cvid|item
+        drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
+            "|".join(["Tal", "1", "Tal", "Some label", "2002", "5102"]),
+        ]
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        assert exc_info.value.code == "vardemangder_drift"
+        assert "'Tal'" in exc_info.value.message
+        # Remediation must surface the "already in SENTINELS" case so the
+        # maintainer doesn't try to add Tal a second time.
+        assert "niva!=version" in exc_info.value.remediation
