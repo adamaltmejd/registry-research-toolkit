@@ -18,8 +18,20 @@ from typing import Any, Iterator
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "2.2.0"
+SCHEMA_VERSION = "2.3.0"
 DB_FILENAME = "regmeta.db"
+
+# SCB ships a row in Vardemangder.csv for every variable, including those with
+# no enumerated code list, by stuffing a placeholder string into Värdekod where
+# Värdemängdsversion and Värdemängdsnivå carry the same string. These two are
+# the placeholders observed; they are not real value codes:
+#   - "Tal"               variable is numeric
+#   - "Beskrivande text"  variable is free-form text
+# Detection requires both the kod ∈ this set AND kod == version, because real
+# single-code value sets exist where the kod (e.g. "1", "2") happens to equal
+# the version string (audit found 10 such legitimate cvids — see
+# scripts/audit_vardemangder.py).
+_VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
 # Map to their cp850 equivalents rather than rejecting.
@@ -1024,7 +1036,9 @@ def _import_vardemangder(
     code_lookup: dict[tuple[str, str], int] = {}
     next_code_id = 0
 
-    # Track per-CVID value set identity
+    # Per-CVID value set identity, recorded only from real (non-sentinel) rows.
+    # CVIDs whose only rows were sentinels get no entry here, so their
+    # variable_instance.vardemangds{version,niva} stay NULL.
     cvid_value_set_info: dict[int, tuple[str, str]] = {}
 
     # Junction dedup via INSERT OR IGNORE against PK(cvid, code_id)
@@ -1033,6 +1047,10 @@ def _import_vardemangder(
     # item→(cvid, code) mapping for items with validity records
     validity_set = validity_item_ids or set()
     value_item_batch: list[tuple[int, int, int]] = []  # (cvid, code_id, item_id)
+
+    skipped_sentinel = 0
+    skipped_empty = 0
+    drift_samples: dict[str, int] = {}  # unknown sentinel-shape kod → count
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
@@ -1046,6 +1064,27 @@ def _import_vardemangder(
 
             vardekod = row["Värdekod"]
             vardebenamning = row["Värdebenämning"]
+            version = row["Värdemängdsversion"]
+            niva = row["Värdemängdsnivå"]
+            raw_item = row["ItemId"]
+
+            # Drop SCB type-tag rows masquerading as value codes.
+            if vardekod == version and vardekod in _VARDEMANGDER_SENTINELS:
+                skipped_sentinel += 1
+                continue
+
+            # Detect future SCB drift: sentinel-shape (kod==version==niva) but
+            # kod outside the known set. Could be a new placeholder we haven't
+            # catalogued. Record a sample so we can update _VARDEMANGDER_SENTINELS.
+            if vardekod and vardekod == version == niva:
+                drift_samples[vardekod] = drift_samples.get(vardekod, 0) + 1
+
+            # Drop fully-empty rows (kod, label, item all empty). 51 such rows
+            # in the production CSV; carry no information.
+            if not (vardekod or vardebenamning or raw_item):
+                skipped_empty += 1
+                continue
+
             code_key = (vardekod, vardebenamning)
 
             if code_key not in code_lookup:
@@ -1055,14 +1094,10 @@ def _import_vardemangder(
             code_id = code_lookup[code_key]
 
             if cvid not in cvid_value_set_info:
-                cvid_value_set_info[cvid] = (
-                    row["Värdemängdsversion"],
-                    row["Värdemängdsnivå"],
-                )
+                cvid_value_set_info[cvid] = (version, niva)
 
             junction_batch.append((cvid, code_id))
 
-            raw_item = row["ItemId"]
             if raw_item:
                 item_id = int(raw_item)
                 if item_id in validity_set:
@@ -1106,6 +1141,28 @@ def _import_vardemangder(
         f"  {row_count:,} rows read, {len(code_lookup):,} unique codes, "
         f"{len(cvid_value_set_info):,} CVIDs with values"
     )
+    if skipped_sentinel or skipped_empty:
+        _progress(
+            f"  Skipped {skipped_sentinel:,} SCB type-tag rows "
+            f"({sorted(_VARDEMANGDER_SENTINELS)}) "
+            f"and {skipped_empty:,} fully-empty rows."
+        )
+    # Surface unknown sentinel-shape vardekods so SCB additions don't slip
+    # through silently. Excludes values already in _VARDEMANGDER_SENTINELS.
+    unknown = {
+        k: n for k, n in drift_samples.items() if k not in _VARDEMANGDER_SENTINELS
+    }
+    if unknown:
+        sample = ", ".join(
+            f"{k!r} ({n} rows)"
+            for k, n in sorted(unknown.items(), key=lambda x: -x[1])[:5]
+        )
+        _progress(
+            f"  WARNING: {len(unknown)} unknown sentinel-shape vardekod "
+            f"value(s) seen (kod==version==niva, kod not in known set). "
+            f"Sample: {sample}. If these are SCB type-tags, add them to "
+            f"_VARDEMANGDER_SENTINELS."
+        )
     return row_count, cvid_value_set_info
 
 

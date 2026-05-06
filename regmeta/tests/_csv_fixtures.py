@@ -624,6 +624,24 @@ VARDEMANGDER_ROWS = [
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", "5002"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", ""]),
     PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
+    # SCB type-tag rows masquerading as value codes; importer must skip these
+    # and leave variable_instance.vardemangds{version,niva} NULL.
+    PIPE.join(
+        ["Beskrivande text", "Beskrivande text", "Beskrivande text", "", "1004", ""]
+    ),
+    # "Tal" sentinel — SCB pads the label with the variable name + an internal
+    # source-system code. Still pollution; discard the entire row.
+    PIPE.join(["Tal", "Tal", "Tal", "Some descriptionSCB\\SCBLEOT", "1005", ""]),
+    # False-positive guard: structurally sentinel-shaped (kod==version==niva)
+    # but kod="2" is not a known sentinel placeholder — it's a real single-code
+    # value set ("Övriga civilstånd"). Must survive, AND must trigger the
+    # drift-detection warning.
+    PIPE.join(["2", "2", "2", "Övriga civilstånd", "2002", "5102"]),
+    # Legitimate "Uppgift okänd" entry — empty vardekod IS the kod (the literal
+    # value microdata uses for unknown). Must be preserved.
+    PIPE.join(["SSYK 2012", "SSYK 2012", "", "Uppgift okänd", "2003", "5103"]),
+    # Fully-empty row (kod, label, item all empty); drop silently.
+    PIPE.join(["", "", "", "", "1002", ""]),
 ]
 
 VALID_DATES_HEADER = PIPE.join(["ItemID", "ValidFrom", "ValidTo"])
