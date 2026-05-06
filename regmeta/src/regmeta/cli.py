@@ -1362,6 +1362,19 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     try:
         info = _db_info(conn)
         data = get_values(conn, args.cvid)
+        # Discriminate empty results: a cvid with `vardemangdsversion IS NOT NULL`
+        # had real Vardemangder rows but year-projection excluded every code, so
+        # the empty list signals an SCB validity gap rather than a numeric/text
+        # variable. Read alongside the data so the hint layer can surface it.
+        args._projection_emptied = bool(
+            not data
+            and conn.execute(
+                "SELECT 1 FROM variable_instance "
+                "WHERE cvid = ? AND value_set_id IS NULL "
+                "AND vardemangdsversion IS NOT NULL",
+                (args.cvid,),
+            ).fetchone()
+        )
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
@@ -2264,6 +2277,16 @@ def _collect_hints(
             _hint_add(
                 hints,
                 f"Docs available (run: regmeta docs get {getattr(args, 'variable', '')})",
+            )
+
+    elif key == ("get", "values"):
+        if getattr(args, "_projection_emptied", False):
+            _hint_add(
+                hints,
+                "cvid had value codes in Vardemangder.csv but every code was "
+                "excluded by year-projection — likely an SCB validity gap for "
+                "this cvid's regver year. Compare with neighbouring years via "
+                "`regmeta get varinfo <variable>` to see when codes appear.",
             )
 
 

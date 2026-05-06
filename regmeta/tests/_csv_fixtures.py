@@ -685,6 +685,7 @@ def write_csv(
 def write_scb_input(
     input_dir: Path,
     *,
+    registerinformation_rows: list[str] | None = None,
     vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
     valid_dates_rows: list[str] | None = None,
     include: tuple[str, ...] = (
@@ -699,18 +700,23 @@ def write_scb_input(
     """Materialize the standard SCB CSV fixture set under ``<input_dir>/SCB/``.
 
     Returns the SCB subdirectory path. ``include`` lets a test build a partial
-    set (e.g. just Registerinformation.csv); ``vardemangder_rows`` /
-    ``valid_dates_rows`` let a test swap in alternate rows for year-projection
-    scenarios without re-implementing the rest. ``valid_dates_rows=None``
-    falls back to the wide-default ``VALID_DATES_ROWS``.
+    set (e.g. just Registerinformation.csv); ``registerinformation_rows`` /
+    ``vardemangder_rows`` / ``valid_dates_rows`` let a test swap in alternate
+    rows for projection scenarios without re-implementing the rest. The
+    ``*_rows=None`` defaults fall back to the standard fixture lists.
     """
     scb_dir = input_dir / "SCB"
     scb_dir.mkdir(parents=True, exist_ok=True)
     if "registerinformation" in include:
+        rows = (
+            registerinformation_rows
+            if registerinformation_rows is not None
+            else REGISTERINFORMATION_ROWS
+        )
         write_csv(
             scb_dir / "Registerinformation.csv",
             REGISTERINFORMATION_HEADER,
-            REGISTERINFORMATION_ROWS,
+            rows,
         )
     if "unika" in include:
         write_csv(scb_dir / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, UNIKA_ROWS)

@@ -1208,6 +1208,7 @@ class _GroupState:
 class _ProjectionStats:
     cvids_with_set: int = 0
     cvids_empty_after_projection: int = 0
+    n_value_sets: int = 0
 
 
 def _accept_code(
@@ -1215,25 +1216,32 @@ def _accept_code(
     cvid_year: int | None,
     validity_map: dict[int, list[tuple[int, int]]],
 ) -> bool:
-    """Apply the projection rule for one (cvid, code_id) group."""
-    windows: list[tuple[int, int]] = []
+    """Apply the projection rule for one (cvid, code_id) group.
+
+    Single pass: short-circuits on the first covering window. Avoids
+    materializing a windows list — this runs ~50M times during a real-data
+    rebuild, so per-call allocations matter.
+    """
+    has_tracked = False
     for iid in item_ids:
         if iid == 0:
             continue
         w = validity_map.get(iid)
-        if w:
-            windows.extend(w)
-    if not windows:
-        return True
-    if cvid_year is None:
-        return True
-    return any(yf <= cvid_year <= yt for yf, yt in windows)
+        if not w:
+            continue
+        has_tracked = True
+        if cvid_year is None:
+            return True
+        for yf, yt in w:
+            if yf <= cvid_year <= yt:
+                return True
+    return not has_tracked
 
 
 def _project_and_mint_value_sets(
     conn: sqlite3.Connection,
     validity_map: dict[int, list[tuple[int, int]]],
-) -> None:
+) -> _ProjectionStats:
     """Project staging triples by cvid year, mint deduplicated value_sets,
     and update variable_instance.value_set_id.
 
@@ -1313,12 +1321,9 @@ def _project_and_mint_value_sets(
         h = _value_set_hash(pairs)
         set_id = set_id_by_hash.get(h)
         if set_id is None:
-            set_id = len(set_id_by_hash) + 1
+            cur = conn.execute("INSERT INTO value_set (member_hash) VALUES (?)", (h,))
+            set_id = cur.lastrowid
             set_id_by_hash[h] = set_id
-            conn.execute(
-                "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
-                (set_id, h),
-            )
             member_batch.extend((set_id, cid) for cid in state.accepted)
             if len(member_batch) >= member_batch_size:
                 _flush_members()
@@ -1351,11 +1356,13 @@ def _project_and_mint_value_sets(
             cvid_set_assignments,
         )
 
+    stats.n_value_sets = len(set_id_by_hash)
     _progress(
-        f"  {len(set_id_by_hash):,} distinct value_sets minted, "
+        f"  {stats.n_value_sets:,} distinct value_sets minted, "
         f"{stats.cvids_with_set:,} cvids linked, "
         f"{stats.cvids_empty_after_projection:,} cvids empty after projection."
     )
+    return stats
 
 
 def _populate_fts(conn: sqlite3.Connection) -> None:
@@ -1604,6 +1611,7 @@ def build_db(
 
         # Enrichment files (optional). VardemangderValidDates.csv is handled
         # above (pre-loaded into memory, not written to DB).
+        projection_stats = _ProjectionStats()
         for filename in ENRICHMENT_FILES:
             path = scb_dir / filename
             if not path.exists():
@@ -1636,7 +1644,7 @@ def build_db(
                 # Year-project staging pairs and link variable_instance.value_set_id.
                 # Must run after the vardemangds{version,niva} UPDATE because the
                 # projection joins variable_instance × register_version.
-                _project_and_mint_value_sets(conn, validity_map)
+                projection_stats = _project_and_mint_value_sets(conn, validity_map)
 
         # Classifications — maintainer-curated normalized code systems.
         if skip_classifications:
@@ -1701,6 +1709,11 @@ def build_db(
             "input_dir": str(input_dir),
             "source_checksums": source_checksums,
             "row_counts": row_counts,
+            "projection_stats": {
+                "n_value_sets": projection_stats.n_value_sets,
+                "cvids_with_set": projection_stats.cvids_with_set,
+                "cvids_empty_after_projection": projection_stats.cvids_empty_after_projection,
+            },
         }
         for key, value in manifest_data.items():
             conn.execute(

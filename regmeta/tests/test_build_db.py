@@ -23,6 +23,7 @@ from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
     VARDEMANGDER_REAL_ROWS,
+    _ri_row,
     write_csv,
     write_scb_input,
 )
@@ -729,6 +730,72 @@ class TestYearProjection:
             "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
         ).fetchall()
         conn.close()
+        assert [r["vardekod"] for r in codes] == ["1"]
+
+    def test_yearless_cvid_includes_all_union_pairs(self, tmp_path: Path):
+        # cvid 9001's regver name "Person-År" has no extractable year. The
+        # projection rule's yearless fallback must include the code even
+        # though the tracked window 2030-2099 covers no plausible year.
+        yearless_row = _ri_row(
+            "TESTREG",
+            "Testregistret",
+            "Testning",
+            "Personer",
+            "Personer",
+            "Alla personer",
+            "Nej",
+            "Person-År",  # versionname — no year token
+            "Personer per år",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "Kön",
+            "Personens kön",
+            "Kön enligt folkbokföring",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Kon",
+            "int",
+            "1",
+            "9001",  # cvid
+            "9",
+            "90",
+            "900",
+            "44",
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [yearless_row]
+        vm_rows = [PIPE.join(["Kön", "1", "1", "Man", "9001", "8006"])]
+        valid = [PIPE.join(["8006", "2030-01-01", "2099-12-31"])]
+        input_dir = tmp_path / "input"
+        write_scb_input(
+            input_dir,
+            registerinformation_rows=ri_rows,
+            vardemangder_rows=vm_rows,
+            valid_dates_rows=valid,
+        )
+        db_dir = tmp_path / "db"
+        build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        conn = open_db(db_dir / "regmeta.db")
+        codes = conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 9001 ORDER BY vc.vardekod"
+        ).fetchall()
+        conn.close()
+        # Yearless cvids fall back to the historical union — the tracked
+        # window's exclusion does NOT apply because there's no year to test.
         assert [r["vardekod"] for r in codes] == ["1"]
 
     def test_mixed_tracked_untracked_tracked_wins(self, tmp_path: Path):
