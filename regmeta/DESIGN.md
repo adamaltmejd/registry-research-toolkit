@@ -113,6 +113,65 @@ Unresolved sources are stored as raw text in `source_label` for human
 review. This is surfaced in `get schema` (source column) and `get lineage`
 (consumer/source classification).
 
+## Vardemängder sentinel filtering
+
+`Vardemangder.csv` ships a row for every variable, including those with no
+enumerated code list. SCB encodes "no codes" by stuffing a placeholder string
+into `Värdekod` so that `Värdekod == Värdemängdsversion` (and typically
+`Värdemängdsnivå`). Two disjoint cases occur with this shape, classified by
+two allowlists in `db.py`:
+
+`_VARDEMANGDER_SENTINELS` — placeholder strings that mean "no enumerated
+code list." Not real value codes; dropped silently.
+
+| Värdekod | Meaning |
+|---|---|
+| `Tal` | Numeric variable |
+| `Beskrivande text` | Free-form text variable |
+
+Importing sentinels would pollute `value_code` and `cvid_value_code` with
+rows that are never valid lookups, and write the placeholder into
+`variable_instance.vardemangds{version,niva}` where downstream consumers
+would mistake it for a real classification label. The authoritative type
+signal is `variable_instance.datatyp` — the placeholder adds nothing and is
+sometimes misleading (e.g. cvid 207 `DatInv` is `datatyp='int'` but tagged
+`Beskrivande text`).
+
+`_VARDEMANGDER_REAL_SHAPED` — kods that *happen* to equal their version
+label but are real single-code value sets. Kept silently.
+
+| Värdekod | Label |
+|---|---|
+| `1` | Hade ingen anställning före YH-utbildningen |
+| `2` | Övriga civilstånd |
+
+Both classifications are required because the shape alone is ambiguous. An
+unguarded skip on `kod == version` would silently drop the real codes; an
+unguarded keep would let new SCB placeholders pollute the DB.
+
+A cvid whose only Vardemängder rows were sentinels gets `NULL` for
+`vardemangdsversion`/`vardemangdsniva` on `variable_instance`. Fully-empty
+rows (kod, label, item all empty) are dropped silently.
+
+### Drift detection
+
+A `kod == version` row where kod is in neither allowlist is treated as drift
+and fails the build with `RegmetaError(code="vardemangder_drift", exit 10)`.
+The importer can't tell whether such a row is a new sentinel or a new real
+single-code value set, so the build refuses to ship and prompts the
+maintainer to add the kod to one of the two allowlists.
+
+The drift trigger only requires `kod == version`, not `kod == version ==
+niva`, so a placeholder where SCB drops the niva equality still surfaces.
+Currently observed sentinels have all three fields equal, but no upstream
+guarantee.
+
+This makes the maintainer's release workflow self-checking: any new SCB
+sentinel string causes the rebuild to fail loudly with an actionable
+remediation, rather than silently shipping pollution. There is no
+interactive escape hatch — drift always fails — because the only correct
+response is to update the allowlists, which is a one-line code change.
+
 ## Value sets are not version-specific
 
 The Värdemängder export attaches a flat historical union of all code

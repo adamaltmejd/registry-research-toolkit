@@ -13,7 +13,7 @@ from regmeta.errors import RegmetaError
 from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
-    VARDEMANGDER_ROWS,
+    VARDEMANGDER_REAL_ROWS,
     write_csv,
     write_scb_input,
 )
@@ -473,41 +473,33 @@ class TestSchemaCompat:
         assert exc_info.value.code == "schema_incompatible"
 
 
-class TestVardemangderDriftWarning:
-    """Future SCB sentinel additions (any new placeholder string in
-    Värdekod=Värdemängdsversion=Värdemängdsnivå rows) must surface a build-time
-    warning so they don't silently slip into value_code."""
+class TestVardemangderDrift:
+    """Any kod==version row where kod is in neither the SENTINELS nor the
+    REAL_SHAPED allowlist must hard-fail the build, so SCB additions don't
+    silently slip into value_code or get incorrectly dropped."""
 
-    def test_drift_warning_emitted_for_unknown_sentinel_shape(
-        self, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-    ) -> None:
-        # Fixture cvid 2002 has the row "2|2|2|Övriga civilstånd|2002|5102" —
-        # a real code structurally shaped like a sentinel. The build must:
-        #   - keep the code (verified by other tests)
-        #   - print a drift warning naming "2"
+    def test_default_fixture_does_not_drift(self, tmp_path: Path) -> None:
+        # Sanity: the shared default fixture (which other tests build on)
+        # contains kod="2" — a known real-shaped code in the allowlist — and
+        # must not raise. Guards against drift creeping into the shared set.
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         write_scb_input(input_dir)
         build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
-        err = capfd.readouterr().err
-        assert "WARNING" in err
-        assert "unknown sentinel-shape" in err
-        assert "'2'" in err
 
-    def test_no_drift_warning_when_clean(
-        self, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-    ) -> None:
-        clean_rows = [
-            r
-            for r in VARDEMANGDER_ROWS
-            if not (r.startswith("2|2|2|") or r.startswith("Beskrivande text|"))
-            and not r.startswith("Tal|")
+    def test_drift_raises_on_unknown_kod(self, tmp_path: Path) -> None:
+        # "ZZZ" is in neither allowlist; build must fail with an actionable
+        # error pointing the maintainer at the two allowlists.
+        drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
+            "|".join(["ZZZ", "ZZZ", "ZZZ", "Future placeholder", "2002", "5102"]),
         ]
-        # Drop the cvid 1002 fully-empty row too (still fine — covered by skip).
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
-        write_scb_input(input_dir, vardemangder_rows=clean_rows)
-        build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
-        err = capfd.readouterr().err
-        assert "WARNING" not in err
-        assert "unknown sentinel-shape" not in err
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        assert exc_info.value.code == "vardemangder_drift"
+        assert exc_info.value.exit_code == 10
+        assert "'ZZZ'" in exc_info.value.message
+        assert "_VARDEMANGDER_SENTINELS" in exc_info.value.remediation
+        assert "_VARDEMANGDER_REAL_SHAPED" in exc_info.value.remediation

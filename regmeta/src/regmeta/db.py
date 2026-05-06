@@ -21,17 +21,24 @@ from .errors import EXIT_CONFIG, RegmetaError
 SCHEMA_VERSION = "2.3.0"
 DB_FILENAME = "regmeta.db"
 
-# SCB ships a row in Vardemangder.csv for every variable, including those with
-# no enumerated code list, by stuffing a placeholder string into Värdekod where
-# Värdemängdsversion and Värdemängdsnivå carry the same string. These two are
-# the placeholders observed; they are not real value codes:
+# SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
+# disjoint cases observed; build-db classifies each row using these allowlists:
+#
+# _VARDEMANGDER_SENTINELS — placeholder strings stuffed into Värdekod to mean
+# "no enumerated code list." Not real value codes; dropped silently:
 #   - "Tal"               variable is numeric
 #   - "Beskrivande text"  variable is free-form text
-# Detection requires both the kod ∈ this set AND kod == version, because real
-# single-code value sets exist where the kod (e.g. "1", "2") happens to equal
-# the version string (audit found 10 such legitimate cvids — see
-# scripts/audit_vardemangder.py).
+#
+# _VARDEMANGDER_REAL_SHAPED — kods that *happen* to equal their version label
+# but are real single-code value sets. Kept silently:
+#   - "1"  ("Hade ingen anställning före YH-utbildningen")
+#   - "2"  ("Övriga civilstånd")
+#
+# Any other kod==version row is treated as drift (unknown placeholder) and
+# fails the build with code "vardemangder_drift" — see the drift block in
+# _import_vardemangder. Audit script: scripts/audit_vardemangder.py.
 _VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
+_VARDEMANGDER_REAL_SHAPED = frozenset({"1", "2"})
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
 # Map to their cp850 equivalents rather than rejecting.
@@ -1073,10 +1080,17 @@ def _import_vardemangder(
                 skipped_sentinel += 1
                 continue
 
-            # Detect future SCB drift: sentinel-shape (kod==version==niva) but
-            # kod outside the known set. Could be a new placeholder we haven't
-            # catalogued. Record a sample so we can update _VARDEMANGDER_SENTINELS.
-            if vardekod and vardekod == version == niva:
+            # Detect drift: kod==version with kod in neither allowlist. Could
+            # be a new SCB type-tag placeholder (→ add to _VARDEMANGDER_SENTINELS)
+            # or a new real single-code value set sharing the shape (→ add to
+            # _VARDEMANGDER_REAL_SHAPED). Trigger is broader than the skip
+            # rule (no niva equality) so a future placeholder where SCB drops
+            # the niva match still surfaces. Raised after the loop.
+            if (
+                vardekod
+                and vardekod == version
+                and vardekod not in _VARDEMANGDER_REAL_SHAPED
+            ):
                 drift_samples[vardekod] = drift_samples.get(vardekod, 0) + 1
 
             # Drop fully-empty rows (kod, label, item all empty). 51 such rows
@@ -1147,21 +1161,28 @@ def _import_vardemangder(
             f"({sorted(_VARDEMANGDER_SENTINELS)}) "
             f"and {skipped_empty:,} fully-empty rows."
         )
-    # Surface unknown sentinel-shape vardekods so SCB additions don't slip
-    # through silently. Excludes values already in _VARDEMANGDER_SENTINELS.
-    unknown = {
-        k: n for k, n in drift_samples.items() if k not in _VARDEMANGDER_SENTINELS
-    }
-    if unknown:
+    if drift_samples:
         sample = ", ".join(
             f"{k!r} ({n} rows)"
-            for k, n in sorted(unknown.items(), key=lambda x: -x[1])[:5]
+            for k, n in sorted(drift_samples.items(), key=lambda x: -x[1])[:5]
         )
-        _progress(
-            f"  WARNING: {len(unknown)} unknown sentinel-shape vardekod "
-            f"value(s) seen (kod==version==niva, kod not in known set). "
-            f"Sample: {sample}. If these are SCB type-tags, add them to "
-            f"_VARDEMANGDER_SENTINELS."
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="vardemangder_drift",
+            error_class="configuration",
+            message=(
+                f"Vardemangder drift: {len(drift_samples)} unknown "
+                f"sentinel-shape vardekod value(s) (kod==version, kod in "
+                f"neither allowlist). Sample: {sample}."
+            ),
+            remediation=(
+                "Inspect the listed vardekod values in Vardemangder.csv. "
+                "If they are SCB type-tag placeholders, add them to "
+                "_VARDEMANGDER_SENTINELS in regmeta/src/regmeta/db.py. "
+                "If they are real single-code value sets that happen to "
+                "share the shape, add them to _VARDEMANGDER_REAL_SHAPED. "
+                "Then rerun build-db."
+            ),
         )
     return row_count, cvid_value_set_info
 
@@ -1296,6 +1317,10 @@ def build_db(
       - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
         when running from a repo checkout; the build errors out if neither
         is available (build-db is maintainer-only and requires the seed).
+
+    Raises ``RegmetaError(code="vardemangder_drift")`` if Vardemangder.csv
+    contains unknown sentinel-shape vardekod values — see
+    ``_VARDEMANGDER_SENTINELS`` / ``_VARDEMANGDER_REAL_SHAPED``.
 
     Returns a summary dict for the CLI to display.
     """
