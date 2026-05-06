@@ -113,7 +113,6 @@ _REGMETA_DATE = cfg_mod.RegmetaSignal(
         ("Tidpunkt", "TIMESTAMP", None, "date"),
         # Layer 5: fallthrough
         ("RandomString", "VARCHAR", None, "high_cardinality"),
-        ("FelPersonNr", "VARCHAR", None, "high_cardinality"),
         ("Mystery", None, None, "high_cardinality"),
     ],
 )
@@ -130,6 +129,40 @@ def test_classify_id_pattern_beats_regmeta_classification():
     """`is_known_id` runs before the regmeta branch — even if regmeta
     flags a column as classified, an `lopnr` name should stay `id`."""
     assert _classify("lopnr", "BIGINT", _REGMETA_CLASSIFIED) == "id"
+
+
+@pytest.mark.parametrize(
+    "name, register, expected",
+    [
+        # Exact-name match (case-insensitive) under any register string
+        # that contains "RTB". Variants like "ater_anv" or "AterAnvalt"
+        # do *not* match — those fall through to sql_type / fallback.
+        ("AterAnv", "RTB", "categorical"),
+        ("ateranv", "rtb", "categorical"),
+        ("FELPERSONNR", "Registret över totalbefolkningen (RTB)", "categorical"),
+        ("LopNrByte", "RTB", "categorical"),
+        # Outside RTB, the same names fall through (BIGINT → numeric).
+        ("AterAnv", "LISA", "numeric"),
+        ("LopNrByte", "LISA", "numeric"),
+        ("FelPersonNr", None, "numeric"),
+        # Variants don't match even under RTB
+        ("ater_anv", "RTB", "numeric"),
+        ("AterAnvalt", "RTB", "numeric"),
+    ],
+)
+def test_classify_rtb_binary_flags(name: str, register: str | None, expected: str):
+    """RTB record-quality flag names are classified as binary categorical
+    only when the register string identifies the source as RTB."""
+    assert _classify(name, "BIGINT", None, register) == expected
+
+
+def test_classify_lopnr_id_excludes_lopnrbyte():
+    """`LopNrByte` is the RTB pid-change flag, not an identifier — the
+    `lopnr` ID pattern explicitly excludes it so the register-scoped
+    binary-flag rule can take effect, and outside RTB it doesn't get
+    silently typed as `id` via the unanchored `lopnr` substring match."""
+    assert _classify("LopNrByte", "BIGINT", None, "RTB") == "categorical"
+    assert _classify("LopNrByte", "BIGINT", None, None) == "numeric"
 
 
 # -- build_config from discover payload ------------------------------------

@@ -48,7 +48,7 @@ from pathlib import Path
 from typing import Any
 
 from ._util import strip_project_prefix
-from .classify import is_known_id, known_categorical_cap
+from .classify import is_known_id, is_rtb_binary_flag, known_categorical_cap
 from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
 
 log = logging.getLogger("mdw.configure")
@@ -185,13 +185,16 @@ def _classify(
     col_name: str,
     sql_type: str | None,
     signal: RegmetaSignal | None,
+    register: str | None = None,
 ) -> str:
     """Return one of the five mock_data_wizard column types.
 
     ``signal`` is the regmeta evidence for this column under the chosen
     register. ``None`` means regmeta wasn't consulted (no register set)
     or the column doesn't appear in regmeta — in which case the name
-    pattern + sql_type fallback drives the type.
+    pattern + sql_type fallback drives the type. ``register`` is the
+    user-supplied register string (``"RTB"``, ``"LISA"``, …); only
+    consulted by register-scoped overrides like the RTB flag set.
     """
     if is_known_id(col_name):
         return "id"
@@ -206,6 +209,8 @@ def _classify(
             return "numeric"
         if signal.datatyp_kind == "date":
             return "date"
+    if is_rtb_binary_flag(col_name, register):
+        return "categorical"
     if known_categorical_cap(col_name) is not None:
         return "categorical"
     kind = _sql_type_kind(sql_type)
@@ -416,13 +421,16 @@ def build_config(
     for src in sources_in:
         source_name = src["source_name"]
         signals = signals_per_source.get(source_name, {})
+        src_register = effective.get(source_name)
         cols_out: dict[str, dict[str, str]] = {}
         for col in src.get("columns", []):
             col_name = col["name"]
             sql_type = col.get("sql_type")
             stripped = strip_project_prefix(col_name).lower()
             signal = signals.get(col_name.lower()) or signals.get(stripped)
-            cols_out[col_name] = {"type": _classify(col_name, sql_type, signal)}
+            cols_out[col_name] = {
+                "type": _classify(col_name, sql_type, signal, src_register)
+            }
         if cols_out:
             column_types[source_name] = cols_out
         year = src.get("source_detail", {}).get("year")

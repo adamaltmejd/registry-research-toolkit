@@ -44,7 +44,11 @@ class CategoricalPattern:
 
 
 ID_PATTERNS: tuple[IdPattern, ...] = (
-    IdPattern("lopnr"),  # MONA record-linkage key
+    # Unanchored on purpose so "LopNr", "LopNr_PersNr", and "AarLopNr"
+    # all match. "LopNrByte" (RTB pid-change flag) is a near-miss that
+    # carries pid lineage in its name but isn't itself an identifier;
+    # exclude it explicitly.
+    IdPattern("lopnr", exclude=r"lop_?nr_?byte$"),
     # Anchored at segment start so "FelPersonNr" (a non-id flag column —
     # see scan.py) does NOT match while "PersonNr", "PersNr", and
     # "LopNr_PersNr" all do.
@@ -65,6 +69,33 @@ CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (
     CategoricalPattern(r"land(skap)?$", max_distinct=300),  # FodelseLand
     CategoricalPattern(r"_kod$", max_distinct=10000),  # generic "...kod" code columns
 )
+
+
+# Register-scoped exact-name flags. SCB ships these as 0/1 record-quality
+# markers on RTB extracts. Exact name match only (case-insensitive) and
+# only when the configured register is RTB — outside that context the
+# names are ambiguous enough that we'd rather the user see "high_cardinality"
+# in the inspector and override manually than silently mistype.
+RTB_BINARY_FLAGS: frozenset[str] = frozenset(
+    {
+        "ateranv",  # återanvändning flag
+        "felpersonnr",  # incorrect-pid flag
+        "lopnrbyte",  # pid-change flag
+    }
+)
+
+
+def is_rtb_binary_flag(col_name: str, register: str | None) -> bool:
+    """Whether ``col_name`` is one of the SCB RTB record-quality flags.
+
+    Both inputs are matched case-insensitively. The register check is
+    intentionally a substring match on ``"RTB"`` so it catches both the
+    short alias (``"RTB"``) and the full Swedish register name
+    (``"Registret över totalbefolkningen (RTB)"``).
+    """
+    if not register or "rtb" not in register.lower():
+        return False
+    return col_name.lower() in RTB_BINARY_FLAGS
 
 
 # -- Date detection --------------------------------------------------------
