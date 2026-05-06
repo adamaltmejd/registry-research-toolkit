@@ -19,7 +19,7 @@ from _csv_fixtures import PIPE, write_scb_input
 
 # CVID 1004 has vardemangdsversion = "Kon-2" (a fake successor) so we can
 # exercise the supersedes chain end to end. CVID 9999 ("Unknown") still
-# falls outside the backbone and never makes it into cvid_value_code.
+# falls outside the backbone and never makes it into value_set_member.
 EXTENDED_VARDEMANGDER_ROWS = [
     PIPE.join(["Kön", "1", "1", "Man", "1001", "5001"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "1001", "5002"]),

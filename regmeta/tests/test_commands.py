@@ -411,40 +411,6 @@ class TestGetValues:
         codes = {v["vardekod"] for v in data["data"]}
         assert codes == {"1", "2"}
 
-    def test_valid_at_within_first_range(self, db_path: str):
-        """Item 5001 valid 2000-2010 → Man included; Kvinna always valid."""
-        data, code = _run_json(
-            ["--db", db_path, "get", "values", "1001", "--valid-at", "2005-06-15"]
-        )
-        assert code == 0
-        codes = {v["vardekod"] for v in data["data"]}
-        assert codes == {"1", "2"}
-
-    def test_valid_at_within_second_range(self, db_path: str):
-        """Item 5003 valid 2015-2025 → Man included via second item."""
-        data, code = _run_json(
-            ["--db", db_path, "get", "values", "1001", "--valid-at", "2020-01-01"]
-        )
-        assert code == 0
-        codes = {v["vardekod"] for v in data["data"]}
-        assert codes == {"1", "2"}
-
-    def test_valid_at_in_gap(self, db_path: str):
-        """Between ranges (5001 expired, 5003 not yet valid) → Man excluded."""
-        data, code = _run_json(
-            ["--db", db_path, "get", "values", "1001", "--valid-at", "2012-06-15"]
-        )
-        assert code == 0
-        codes = {v["vardekod"] for v in data["data"]}
-        assert codes == {"2"}
-
-    def test_valid_at_bad_format(self, db_path: str):
-        data, code = _run_json(
-            ["--db", db_path, "get", "values", "1001", "--valid-at", "2020/01/01"]
-        )
-        assert code == 2
-        assert data["error"]["code"] == "bad_date"
-
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16

@@ -129,7 +129,7 @@ code list." Not real value codes; dropped silently.
 | `Tal` | Numeric variable |
 | `Beskrivande text` | Free-form text variable |
 
-Importing sentinels would pollute `value_code` and `cvid_value_code` with
+Importing sentinels would pollute `value_code` with
 rows that are never valid lookups, and write the placeholder into
 `variable_instance.vardemangds{version,niva}` where downstream consumers
 would mistake it for a real classification label. The authoritative type
@@ -177,13 +177,43 @@ remediation, rather than silently shipping pollution. There is no
 interactive escape hatch — drift always fails — because the only correct
 response is to update the allowlists, which is a one-line code change.
 
-## Value sets are not version-specific
+## Value sets are year-projected at build time
 
-The Värdemängder export attaches a flat historical union of all code
-definitions to every CVID, regardless of year. When a code's meaning
-changes between years, both definitions appear. Temporal filtering via
-`get values --valid-at <date>` uses supplementary validity date ranges
-from `VardemangderValidDates.csv`.
+SCB's `Vardemangder.csv` is the historical union — every code that ever
+applied to a variable in any register year, with no temporal qualification.
+SCB's `VardemangderValidDates.csv` (added after this project flagged the
+issue) is the authoritative temporal filter: per `(ItemId, valid_from,
+valid_to)`, with NULL bounds meaning "no boundary." A code without a
+validity row is always valid throughout the variable's lifetime (per SCB
+correspondence).
+
+`build-db` projects every `(cvid, code_id)` pair through validity at build
+time so each cvid carries the codes that were actually valid in its
+regver year. The projection rule:
+
+- For each pair, collect validity windows of all *tracked* ItemIds (those
+  with at least one row in `VardemangderValidDates.csv`).
+- If no tracked windows → include the code (always-valid fallback).
+- Otherwise → include iff at least one window covers the cvid year.
+- Yearless cvids (regver name has no plausible 4-digit year, e.g.
+  `Person-År`) include all union pairs as a fallback.
+- An untracked ItemId next to a tracked one does NOT relax the constraint:
+  the tracked window is authoritative.
+
+Projection is intentionally year-precision, not exact-date. SCB's
+metadata is annual; sub-year boundaries (e.g. `valid_from=1995-09-01`) are
+administrative artifacts that year overlap absorbs losslessly. The
+trade-off — losing sub-year query precision — is paid for by removing
+the temporal axis from the schema entirely. There is no `get values
+--valid-at` flag and no historical-union opt-in: the union is discarded
+by design. Maintainers auditing the raw union should read
+`Vardemangder.csv` directly.
+
+The result is content-addressed and deduplicated: identical year-projected
+sets across cvids share one `value_set` row (`member_hash` = sha256 of
+sorted (vardekod, vardebenamning) pairs); each cvid links to its set via
+`variable_instance.value_set_id`. NULL `value_set_id` means the cvid had
+no codes (sentinel-only or every union pair excluded by projection).
 
 ## Classifications
 
@@ -237,7 +267,7 @@ A seed entry's optional `valid_codes_file` points at a CSV under
 `vardekod,vardebenamning`). At build time:
 
 - Every CSV code is ensured to exist in `value_code` (canonical-but-
-  unobserved codes get a fresh row with no `cvid_value_code` linkage).
+  unobserved codes get a fresh row with no `value_set_member` linkage).
 - Every `classification_code` row in that classification is marked
   `is_valid=1` (canonical) or `is_valid=0` (observed-only).
 - `classification.valid_code_count` caches the canonical count; it is
@@ -260,10 +290,17 @@ already-populated classification tables via the prebuilt DB asset.
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs
-use WITHOUT ROWID. Value codes are deduplicated into `value_code` +
-`cvid_value_code` junction. A pre-aggregated `code_variable_map` replaces
-large secondary indexes for value search queries. These brought the
-database from ~13 GB to ~1.6 GB.
+use WITHOUT ROWID. Value codes are deduplicated into `value_code` (with
+`UNIQUE(vardekod, vardebenamning)`); cvid → code membership is a
+content-addressed `value_set` / `value_set_member` pair, where each
+distinct year-projected code list is stored once and shared by every
+cvid that observes it. SCB's validity windows are applied at build time
+(see "Value sets are year-projected at build time"), eliminating the
+historical-union junction and the per-item validity tables entirely. A
+pre-aggregated `code_variable_map` replaces large secondary indexes for
+value search queries. The original 13 GB raw DB shrank to ~1.6 GB through
+deduplication and integer keys; year-projection is expected to take it
+further still.
 
 ## Documentation layer
 

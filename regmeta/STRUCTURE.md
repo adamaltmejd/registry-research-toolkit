@@ -34,14 +34,13 @@
   - `register_version` — a time-slice or release of a variant
   - `population` and `object_type` — context layers scoped at version level
   - `variable` — a named measurement concept, scoped to a registry via `(register_id, var_id)`
-  - `variable_instance` — a concrete occurrence of a variable in a specific version (CVID-bound; does NOT carry column names)
+  - `variable_instance` — a concrete occurrence of a variable in a specific version (CVID-bound; does NOT carry column names). Carries `value_set_id` linking to the cvid's deduplicated, year-projected code list (NULL when the cvid has no codes).
   - `variable_alias` — all known column names per instance (one instance can have multiple aliases)
   - `variable_context` — population/object-type scope per instance
 - Enrichment entities (from other CSVs):
-  - `value_code` — deduplicated (vardekod, vardebenamning) pairs (from `Vardemangder.csv`)
-  - `cvid_value_code` — junction mapping CVIDs to value codes, deduplicated to PK(cvid, code_id)
-  - `value_item` — item-level (cvid, code_id, item_id) triples, only for items with temporal validity records
-  - `value_item_validity` — date ranges per ItemId (from `VardemangderValidDates.csv`)
+  - `value_code` — deduplicated (vardekod, vardebenamning) pairs (from `Vardemangder.csv`); `UNIQUE(vardekod, vardebenamning)` enforced
+  - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted (vardekod, vardebenamning) pairs; identical sets across cvids share one row.
+  - `value_set_member` — junction mapping each `value_set` to its codes. SCB validity windows (`VardemangderValidDates.csv`) are applied at build time, not stored — see DESIGN.md § "Value sets are year-projected at build time".
   - `code_variable_map` — pre-aggregated code→(register, variable) mapping for efficient value search
   - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
   - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions

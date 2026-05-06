@@ -8,7 +8,56 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import DDL, SCHEMA_VERSION
+from regmeta.db import DDL, SCHEMA_VERSION, _value_set_hash
+
+
+def assign_value_set(
+    conn: sqlite3.Connection, cvid: int, codes: list[tuple[str, str]]
+) -> int:
+    """Test-only helper. Mint or reuse a value_set for ``codes`` (kod/label
+    pairs), insert any missing value_code rows, populate value_set_member,
+    and link ``cvid`` via ``variable_instance.value_set_id``.
+
+    Returns the value_set_id. Idempotent on the (kod, label) inputs because
+    value_set is content-addressed by member_hash.
+    """
+    code_ids: list[int] = []
+    for kod, label in codes:
+        row = conn.execute(
+            "SELECT code_id FROM value_code WHERE vardekod = ? AND vardebenamning = ?",
+            (kod, label),
+        ).fetchone()
+        if row is None:
+            cur = conn.execute(
+                "INSERT INTO value_code (vardekod, vardebenamning) VALUES (?, ?)",
+                (kod, label),
+            )
+            code_id = int(cur.lastrowid)
+        else:
+            code_id = int(row[0])
+        code_ids.append(code_id)
+
+    member_hash = _value_set_hash(list(codes))
+    row = conn.execute(
+        "SELECT value_set_id FROM value_set WHERE member_hash = ?", (member_hash,)
+    ).fetchone()
+    if row is None:
+        cur = conn.execute(
+            "INSERT INTO value_set (member_hash) VALUES (?)", (member_hash,)
+        )
+        value_set_id = int(cur.lastrowid)
+        conn.executemany(
+            "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+            [(value_set_id, c) for c in code_ids],
+        )
+    else:
+        value_set_id = int(row[0])
+
+    conn.execute(
+        "UPDATE variable_instance SET value_set_id = ? WHERE cvid = ?",
+        (value_set_id, cvid),
+    )
+    return value_set_id
 
 
 MINIMAL_STATS = {
@@ -318,14 +367,7 @@ def regmeta_db(tmp_path: Path) -> Path:
     )
     conn.execute("INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')")
     # Two value codes: 1=Man, 2=Kvinna
-    conn.execute(
-        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (1, '1', 'Man')"
-    )
-    conn.execute(
-        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (2, '2', 'Kvinna')"
-    )
-    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 1)")
-    conn.execute("INSERT INTO cvid_value_code (cvid, code_id) VALUES (1001, 2)")
+    assign_value_set(conn, 1001, [("1", "Man"), ("2", "Kvinna")])
     conn.commit()
     conn.close()
     return db_path

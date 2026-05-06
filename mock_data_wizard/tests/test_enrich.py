@@ -19,6 +19,8 @@ from mock_data_wizard.enrich import (
 )
 from mock_data_wizard.stats import parse_stats
 
+from .conftest import assign_value_set
+
 
 def test_enrich_without_db(stats_path: Path):
     """Enrichment without db_path returns unenriched results."""
@@ -164,14 +166,9 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
             VALUES (2001, 2, 20, 200, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (3, 'A', 'Alpha');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (4, 'B', 'Beta');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (5, 'C', 'Gamma');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 3);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 4);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (2001, 5);
         """
     )
+    assign_value_set(conn, 2001, [("A", "Alpha"), ("B", "Beta"), ("C", "Gamma")])
     conn.commit()
 
     # var_id=44 in reg=1: observed {"1","2"} matches CVID 1001's {"1","2"}.
@@ -231,26 +228,25 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
             classification_id)
             VALUES (1102, 1, 10, 100, 44, 'int', '4', 'SUN2020', '4', 2);
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (101, '1', 'A');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (102, '2', 'B');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (103, '3', 'C');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (104, '4', 'D');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (105, '5', 'E');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (106, '6', 'F');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (107, '7', 'G');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 101);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 102);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 103);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 104);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1101, 105);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 101);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 102);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 103);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 104);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 105);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 106);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1102, 107);
         """
+    )
+    assign_value_set(
+        conn,
+        1101,
+        [("1", "A"), ("2", "B"), ("3", "C"), ("4", "D"), ("5", "E")],
+    )
+    assign_value_set(
+        conn,
+        1102,
+        [
+            ("1", "A"),
+            ("2", "B"),
+            ("3", "C"),
+            ("4", "D"),
+            ("5", "E"),
+            ("6", "F"),
+            ("7", "G"),
+        ],
     )
     conn.commit()
 
@@ -288,15 +284,12 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
             VALUES (1201, 1, 10, 100, 44, 'char', '1', 'FamStF', '1');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (201, 'A', 'Alpha');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (202, 'E', 'Echo');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (203, 'I', 'India');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (204, 'S', 'Sierra');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 201);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 202);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 203);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1201, 204);
         """
+    )
+    assign_value_set(
+        conn,
+        1201,
+        [("A", "Alpha"), ("E", "Echo"), ("I", "India"), ("S", "Sierra")],
     )
     conn.commit()
 
@@ -336,12 +329,9 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path)
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
             VALUES (1002, 1, 10, 100, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (3, '3', 'X');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (4, '4', 'Y');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1002, 3);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1002, 4);
         """
     )
+    assign_value_set(conn, 1002, [("3", "X"), ("4", "Y")])
     conn.commit()
 
     # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
@@ -503,7 +493,9 @@ def test_enrich_exposes_candidates_on_enriched_file(stats_path: Path, regmeta_db
 def _seed_year_cvids(conn) -> None:
     """Three CVIDs under (var=44, reg=1) at different versions, identical
     code labels (so name + overlap are pure ties); year is the only
-    distinguishing signal."""
+    distinguishing signal. All three share one value_set (codes {1=Man,
+    2=Kvinna}); the helper dedupes by member_hash so they collapse to a
+    single set across all three cvids — same shape as before, fewer rows."""
     conn.executescript(
         """
         INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
@@ -521,14 +513,10 @@ def _seed_year_cvids(conn) -> None:
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
             VALUES (1803, 1, 10, 103, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 1);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 2);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 1);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 2);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1803, 1);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1803, 2);
         """
     )
+    for cvid in (1801, 1802, 1803):
+        assign_value_set(conn, cvid, [("1", "Man"), ("2", "Kvinna")])
     conn.commit()
 
 
@@ -564,27 +552,13 @@ def test_bulk_fetch_value_codes_closest_year_fallback(regmeta_db: Path):
     conn.row_factory = sqlite3.Row
     _seed_year_cvids(conn)
 
-    # Distinct labels per CVID so we can verify which one was picked.
-    # Each CVID gets its own value_code rows (the fixture's pre-existing
-    # CVID 1001 keeps the original 'Man'/'Kvinna' so its identity is
-    # also distinguishable).
-    conn.executescript(
-        """
-        INSERT INTO value_code (code_id, vardekod, vardebenamning)
-            VALUES (911, '1', 'Man-2018');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning)
-            VALUES (912, '2', 'Kvinna-2018');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning)
-            VALUES (921, '1', 'Man-2019');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning)
-            VALUES (922, '2', 'Kvinna-2019');
-        DELETE FROM cvid_value_code WHERE cvid IN (1801, 1802);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 911);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1801, 912);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 921);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1802, 922);
-        """
-    )
+    # Distinct labels per CVID so we can verify which one was picked. The
+    # helper allocates a *new* value_set for 1801/1802 (because the kod/label
+    # tuples differ from the seed); 1803 keeps the original {1=Man, 2=Kvinna}
+    # set. The fixture's pre-existing CVID 1001 keeps the original
+    # 'Man'/'Kvinna' so its identity is also distinguishable.
+    assign_value_set(conn, 1801, [("1", "Man-2018"), ("2", "Kvinna-2018")])
+    assign_value_set(conn, 1802, [("1", "Man-2019"), ("2", "Kvinna-2019")])
     conn.commit()
     requests = {
         ("data_2017", "Kon"): (44, 1, 2017, {"1", "2"}, "Kon"),
@@ -639,16 +613,10 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
             var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
             VALUES (1902, 1, 10, 202, 44, 'int', '1', 'V25', '1');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (701, 'A', 'Alpha-18');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (702, 'B', 'Beta-18');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (703, 'C', 'Gamma-25');
-        INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (704, 'D', 'Delta-25');
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1901, 701);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1901, 702);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1902, 703);
-        INSERT INTO cvid_value_code (cvid, code_id) VALUES (1902, 704);
         """
     )
+    assign_value_set(conn, 1901, [("A", "Alpha-18"), ("B", "Beta-18")])
+    assign_value_set(conn, 1902, [("C", "Gamma-25"), ("D", "Delta-25")])
     conn.commit()
     # Observed codes overlap with the 2025 CVID but year is 2018.
     requests = {

@@ -7,10 +7,19 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import SCHEMA_VERSION, build_db, open_db, get_manifest, _decode_cp1252
+from regmeta.db import (
+    SCHEMA_VERSION,
+    _decode_cp1252,
+    _project_year,
+    _value_set_hash,
+    build_db,
+    get_manifest,
+    open_db,
+)
 from regmeta.errors import RegmetaError
 
 from _csv_fixtures import (
+    PIPE,
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
     VARDEMANGDER_REAL_ROWS,
@@ -89,20 +98,25 @@ class TestBuildDb:
         assert [a[0] for a in aliases] == ["TestCol", "TestKolumn"]
 
     def test_value_items_filtered(self, db_conn: sqlite3.Connection):
-        """Value items for unknown CVID 9999 should be excluded."""
-        count = db_conn.execute(
-            "SELECT COUNT(*) FROM cvid_value_code WHERE cvid = 9999"
-        ).fetchone()[0]
-        assert count == 0
+        """Unknown CVID 9999 must not produce a value_set link."""
+        row = db_conn.execute(
+            "SELECT 1 FROM variable_instance WHERE cvid = 9999"
+        ).fetchone()
+        # cvid 9999 is filtered before reaching the importer; it has no
+        # variable_instance row at all (Registerinformation.csv has no entry).
+        assert row is None
 
     def test_value_items_present(self, db_conn: sqlite3.Connection):
-        """Deduplicated junction rows for known CVIDs should be imported."""
-        count = db_conn.execute("SELECT COUNT(*) FROM cvid_value_code").fetchone()[0]
-        # 2 Kön codes × 3 cvids (1001, 1003, 2001) = 6
-        # + cvid 2002: ("2", "Övriga civilstånd")
-        # + cvid 2003: ("", "Uppgift okänd")
-        # sentinel/empty rows skipped → 8 total
-        assert count == 8
+        """Deduplicated value_set_member rows should be present for known
+        cvids. After year-projection cvids 1001/1003/2001 share the {Man,
+        Kvinna} set; cvid 2002 has its own {Övriga civilstånd} set; cvid 2003
+        has its own {Uppgift okänd} set."""
+        count = db_conn.execute("SELECT COUNT(*) FROM value_set_member").fetchone()[0]
+        # 2 codes for the shared {Man, Kvinna} set
+        # + 1 code for {Övriga civilstånd}
+        # + 1 code for {Uppgift okänd}
+        # = 4 value_set_member rows.
+        assert count == 4
 
     def test_value_code_deduplicated(self, db_conn: sqlite3.Connection):
         """Value codes should be deduplicated across CVIDs."""
@@ -121,16 +135,19 @@ class TestBuildDb:
 
     def test_sentinel_rows_skipped(self, db_conn: sqlite3.Connection):
         """SCB type-tag rows ("Tal", "Beskrivande text") must not produce
-        value_code rows or cvid_value_code junction rows."""
+        value_code rows; sentinel-only cvids must end up with NULL value_set_id."""
         rows = db_conn.execute(
             "SELECT vardekod FROM value_code "
             "WHERE vardekod IN ('Tal', 'Beskrivande text')"
         ).fetchall()
         assert rows == []
-        sentinel_cvids = db_conn.execute(
-            "SELECT COUNT(*) FROM cvid_value_code WHERE cvid IN (1004, 1005)"
-        ).fetchone()[0]
-        assert sentinel_cvids == 0
+        for cvid in (1004, 1005):
+            row = db_conn.execute(
+                "SELECT value_set_id FROM variable_instance WHERE cvid = ?",
+                (cvid,),
+            ).fetchone()
+            assert row is not None, f"cvid {cvid} should exist"
+            assert row["value_set_id"] is None, f"cvid {cvid} value_set_id"
 
     def test_sentinel_only_cvid_has_null_metadata(self, db_conn: sqlite3.Connection):
         """A cvid whose only Vardemangder rows were sentinels must end up with
@@ -149,9 +166,11 @@ class TestBuildDb:
         real code (e.g. cvid 2002, kod="2", label="Övriga civilstånd"). It must
         be preserved, including its version metadata."""
         code_rows = db_conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning FROM cvid_value_code cvc "
-            "JOIN value_code vc ON cvc.code_id = vc.code_id "
-            "WHERE cvc.cvid = 2002"
+            "SELECT vc.vardekod, vc.vardebenamning "
+            "FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 2002"
         ).fetchall()
         assert [(r["vardekod"], r["vardebenamning"]) for r in code_rows] == [
             ("2", "Övriga civilstånd")
@@ -167,57 +186,26 @@ class TestBuildDb:
         """Empty vardekod with a label ("Uppgift okänd") is a legitimate code,
         not pollution. Must survive."""
         rows = db_conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning FROM cvid_value_code cvc "
-            "JOIN value_code vc ON cvc.code_id = vc.code_id "
-            "WHERE cvc.cvid = 2003"
+            "SELECT vc.vardekod, vc.vardebenamning "
+            "FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 2003"
         ).fetchall()
         assert [(r["vardekod"], r["vardebenamning"]) for r in rows] == [
             ("", "Uppgift okänd")
         ]
 
     def test_fully_empty_row_dropped(self, db_conn: sqlite3.Connection):
-        """A row with empty kod, label, and item carries no information; it
-        must not produce a junction row or set version metadata on the cvid."""
-        cnt = db_conn.execute(
-            "SELECT COUNT(*) FROM cvid_value_code WHERE cvid = 1002"
-        ).fetchone()[0]
-        assert cnt == 0
-        meta = db_conn.execute(
-            "SELECT vardemangdsversion, vardemangdsniva "
+        """A row with empty kod, label, and item carries no information; the
+        cvid must end up with NULL value_set_id and NULL version metadata."""
+        row = db_conn.execute(
+            "SELECT value_set_id, vardemangdsversion, vardemangdsniva "
             "FROM variable_instance WHERE cvid = 1002"
         ).fetchone()
-        assert meta["vardemangdsversion"] is None
-        assert meta["vardemangdsniva"] is None
-
-    def test_validity_dates_imported(self, db_conn: sqlite3.Connection):
-        """Validity date ranges should be imported per item_id."""
-        count = db_conn.execute("SELECT COUNT(*) FROM value_item_validity").fetchone()[
-            0
-        ]
-        assert count == 2  # Items 5001 and 5003
-        row = db_conn.execute(
-            "SELECT * FROM value_item_validity WHERE item_id = 5001"
-        ).fetchone()
-        assert row["valid_from"] == "2000-01-01"
-        assert row["valid_to"] == "2010-12-31"
-        row2 = db_conn.execute(
-            "SELECT * FROM value_item_validity WHERE item_id = 5003"
-        ).fetchone()
-        assert row2["valid_from"] == "2015-01-01"
-        assert row2["valid_to"] == "2025-12-31"
-
-    def test_value_item_populated(self, db_conn: sqlite3.Connection):
-        """value_item should contain only items with validity records."""
-        rows = db_conn.execute(
-            "SELECT item_id, cvid, code_id FROM value_item ORDER BY item_id, cvid"
-        ).fetchall()
-        # 5001 appears for CVIDs 1001, 1003, 2001; 5003 only for CVID 1001
-        item_cvids = [(r["item_id"], r["cvid"]) for r in rows]
-        assert (5001, 1001) in item_cvids
-        assert (5001, 1003) in item_cvids
-        assert (5001, 2001) in item_cvids
-        assert (5003, 1001) in item_cvids
-        assert len(rows) == 4
+        assert row["value_set_id"] is None
+        assert row["vardemangdsversion"] is None
+        assert row["vardemangdsniva"] is None
 
     def test_source_resolved_exact(self, db_conn: sqlite3.Connection):
         """OTHERREG Kön has kalla=TESTREG which matches register name exactly."""
@@ -523,3 +511,229 @@ class TestVardemangderDrift:
         # Remediation must surface the "already in SENTINELS" case so the
         # maintainer doesn't try to add Tal a second time.
         assert "niva!=version" in exc_info.value.remediation
+
+
+# ---------------------------------------------------------------------------
+# Year projection (PLAN_VALUESET_DEDUP §4.3, §9)
+# ---------------------------------------------------------------------------
+
+
+class TestProjectionYearExtractor:
+    """``_project_year`` is stricter than ``queries.extract_year``: it bounds
+    matches to 1900-2099 and rejects matches embedded in longer digit runs."""
+
+    def test_extracts_year_from_lisa_2018(self):
+        assert _project_year("LISA 2018") == 2018
+
+    def test_returns_none_for_purely_numeric_out_of_range(self):
+        # Komvux 1234-poäng must yield None, not the bogus year 1234.
+        assert _project_year("Komvux 1234-poäng") is None
+        assert _project_year("1234") is None
+
+    def test_returns_none_for_yearless_names(self):
+        assert _project_year("Person-År") is None
+        assert _project_year("Födelseland") is None
+
+    def test_returns_none_for_none_input(self):
+        assert _project_year(None) is None
+        assert _project_year("") is None
+
+    def test_rejects_year_inside_longer_digit_run(self):
+        # 19999 is not a year; the regex must not match the prefix 1999.
+        assert _project_year("v19999") is None
+
+
+class TestValueSetHash:
+    """``_value_set_hash`` is content-addressed sha256 over sorted
+    (vardekod, vardebenamning) pairs with length-prefixed encoding (PLAN §4.2)."""
+
+    def test_returns_32_byte_digest(self):
+        h = _value_set_hash([("1", "Man"), ("2", "Kvinna")])
+        assert isinstance(h, bytes)
+        assert len(h) == 32
+
+    def test_is_order_independent(self):
+        a = _value_set_hash([("1", "Man"), ("2", "Kvinna")])
+        b = _value_set_hash([("2", "Kvinna"), ("1", "Man")])
+        assert a == b
+
+    def test_distinguishes_different_sets(self):
+        a = _value_set_hash([("1", "Man")])
+        b = _value_set_hash([("1", "Man"), ("2", "Kvinna")])
+        assert a != b
+
+    def test_length_prefixed_encoding_avoids_collision(self):
+        # Without length prefixes, ("ab", "c") and ("a", "bc") could collide.
+        a = _value_set_hash([("ab", "c")])
+        b = _value_set_hash([("a", "bc")])
+        assert a != b
+
+
+class TestMemberHashCheckConstraint:
+    """The DDL declares ``CHECK (length(member_hash) = 32)`` — non-32-byte
+    blobs must be rejected."""
+
+    def test_short_blob_rejected(self, fixture_db: Path):
+        conn = sqlite3.connect(fixture_db)
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(
+                "INSERT INTO value_set (member_hash) VALUES (?)", (b"\x00" * 31,)
+            )
+        conn.close()
+
+
+class TestValueSetDedup:
+    """Two cvids with the same year-projected code list must share one
+    value_set; cvids with different lists must not (PLAN §2.2, §4.2)."""
+
+    def test_identical_sets_share_value_set_id(self, db_conn: sqlite3.Connection):
+        # cvids 1003 and 2001 both end up with {Man, Kvinna} after projection
+        # (default fixture VALID_DATES_ROWS covers their years).
+        rows = db_conn.execute(
+            "SELECT cvid, value_set_id FROM variable_instance "
+            "WHERE cvid IN (1003, 2001)"
+        ).fetchall()
+        ids = {r["cvid"]: r["value_set_id"] for r in rows}
+        assert ids[1003] is not None
+        assert ids[1003] == ids[2001]
+
+    def test_different_sets_get_different_ids(self, db_conn: sqlite3.Connection):
+        # cvid 2002 has {Övriga civilstånd}; cvid 2003 has {Uppgift okänd};
+        # different sets → different ids.
+        rows = db_conn.execute(
+            "SELECT cvid, value_set_id FROM variable_instance "
+            "WHERE cvid IN (2002, 2003)"
+        ).fetchall()
+        ids = {r["cvid"]: r["value_set_id"] for r in rows}
+        assert ids[2002] is not None
+        assert ids[2003] is not None
+        assert ids[2002] != ids[2003]
+
+    def test_member_hash_unique(self, db_conn: sqlite3.Connection):
+        dups = db_conn.execute(
+            "SELECT COUNT(*) FROM value_set GROUP BY member_hash HAVING COUNT(*) > 1"
+        ).fetchall()
+        assert dups == []
+
+
+def _projection_input(tmp_path: Path, vardemangder_rows, valid_dates_rows) -> Path:
+    """Helper: write SCB fixture with custom Vardemangder + ValidDates rows
+    for projection-correctness tests. Returns input dir."""
+    input_dir = tmp_path / "input"
+    write_scb_input(
+        input_dir,
+        vardemangder_rows=vardemangder_rows,
+        valid_dates_rows=valid_dates_rows,
+    )
+    return input_dir
+
+
+class TestYearProjection:
+    """Year-projection scenarios (PLAN §4.3, §9). Each test builds a DB with
+    a tailored Vardemangder + ValidDates fixture and asserts what survives."""
+
+    def test_excludes_out_of_window(self, tmp_path: Path):
+        # cvid 1001 has year 2020. Item 8000 has validity 2011-9999, which
+        # does not cover 2020 (... wait, 2011 <= 2020 <= 9999 is true). Use
+        # a window that genuinely excludes 2020.
+        rows = [
+            PIPE.join(["Kön", "1", "1", "Man-future", "1001", "8000"]),
+            PIPE.join(["Kön", "1", "2", "Kvinna", "1001", ""]),
+        ]
+        valid = [PIPE.join(["8000", "2030-01-01", "2099-12-31"])]
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=_projection_input(tmp_path, rows, valid),
+            db_dir=db_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "regmeta.db")
+        codes = conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+        ).fetchall()
+        conn.close()
+        # Man is excluded (window 2030+ doesn't cover cvid year 2020).
+        # Kvinna is included (untracked → always-valid).
+        assert [r["vardekod"] for r in codes] == ["2"]
+
+    def test_includes_codes_with_no_validity(self, tmp_path: Path):
+        # All Vardemangder ItemIds are untracked (none has a row in
+        # VardemangderValidDates.csv) → every union pair is "always valid".
+        rows = [
+            PIPE.join(["Kön", "1", "1", "Man", "1001", "8001"]),
+            PIPE.join(["Kön", "1", "2", "Kvinna", "1001", "8002"]),
+        ]
+        # Single placeholder row for an unrelated item_id keeps the CSV valid.
+        valid = [PIPE.join(["99999", "2000-01-01", "2099-12-31"])]
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=_projection_input(tmp_path, rows, valid),
+            db_dir=db_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "regmeta.db")
+        codes = conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+        ).fetchall()
+        conn.close()
+        assert [r["vardekod"] for r in codes] == ["1", "2"]
+
+    def test_includes_subyear_overlap(self, tmp_path: Path):
+        # cvid 1001 year=2020. Item with start 2020-09-01 — sub-year cutoff
+        # but the year 2020 still overlaps the window.
+        rows = [
+            PIPE.join(["Kön", "1", "1", "Man", "1001", "8003"]),
+        ]
+        valid = [PIPE.join(["8003", "2020-09-01", "2030-12-31"])]
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=_projection_input(tmp_path, rows, valid),
+            db_dir=db_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "regmeta.db")
+        codes = conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+        ).fetchall()
+        conn.close()
+        assert [r["vardekod"] for r in codes] == ["1"]
+
+    def test_mixed_tracked_untracked_tracked_wins(self, tmp_path: Path):
+        # cvid 1001 year=2020. Same (cvid, code) appears with TWO ItemIds:
+        # one tracked (validity 2030+), one untracked. The conservative rule
+        # (PLAN §4.3): tracked window decides; untracked sibling does NOT
+        # relax the constraint. Code must be EXCLUDED.
+        rows = [
+            PIPE.join(["Kön", "1", "1", "Man", "1001", "8004"]),  # tracked
+            PIPE.join(["Kön", "1", "1", "Man", "1001", "8005"]),  # untracked
+        ]
+        valid = [PIPE.join(["8004", "2030-01-01", "2099-12-31"])]
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=_projection_input(tmp_path, rows, valid),
+            db_dir=db_dir,
+            skip_classifications=True,
+        )
+        conn = open_db(db_dir / "regmeta.db")
+        # Man should NOT be in cvid 1001's value_set (tracked window 2030+
+        # doesn't cover year 2020; the untracked sibling 8005 doesn't relax it).
+        codes = conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "LEFT JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 1001"
+        ).fetchall()
+        conn.close()
+        # Either no codes (value_set_id NULL because all union excluded), or
+        # vardekod is None from the LEFT JOIN. The "Man" code must not appear.
+        kods = [r["vardekod"] for r in codes if r["vardekod"] is not None]
+        assert "1" not in kods
