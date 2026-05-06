@@ -614,7 +614,8 @@ VARDEMANGDER_HEADER = PIPE.join(
     ]
 )
 
-VARDEMANGDER_ROWS = [
+# Real value-code rows: must round-trip through the importer untouched.
+VARDEMANGDER_REAL_ROWS = [
     PIPE.join(["Kön", "1", "1", "Man", "1001", "5001"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "1001", "5002"]),
     PIPE.join(["Kön", "1", "1", "Man", "1001", "5003"]),
@@ -624,7 +625,44 @@ VARDEMANGDER_ROWS = [
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", "5002"]),
     PIPE.join(["Kön", "1", "2", "Kvinna", "2001", ""]),
     PIPE.join(["Unknown", "1", "99", "Phantom", "9999", "5099"]),
+    # Legitimate "Uppgift okänd" entry — empty vardekod IS the kod (the literal
+    # value microdata uses for unknown). Must be preserved.
+    PIPE.join(["SSYK 2012", "SSYK 2012", "", "Uppgift okänd", "2003", "5103"]),
 ]
+
+# SCB type-tag rows masquerading as value codes; importer must skip these
+# and leave variable_instance.vardemangds{version,niva} NULL.
+VARDEMANGDER_SENTINEL_ROWS = [
+    PIPE.join(
+        ["Beskrivande text", "Beskrivande text", "Beskrivande text", "", "1004", ""]
+    ),
+    # "Tal" sentinel — SCB pads the label with the variable name + an internal
+    # source-system code. Still pollution; discard the entire row.
+    PIPE.join(["Tal", "Tal", "Tal", "Some descriptionSCB\\SCBLEOT", "1005", ""]),
+]
+
+# Real single-code value set where kod==version but kod is in the
+# _VARDEMANGDER_REAL_SHAPED allowlist ("2" → "Övriga civilstånd"). Must
+# survive without triggering drift.
+VARDEMANGDER_REAL_SHAPED_ROWS = [
+    PIPE.join(["2", "2", "2", "Övriga civilstånd", "2002", "5102"]),
+]
+
+# Fully-empty rows (kod, label, item all empty); importer drops silently.
+VARDEMANGDER_EMPTY_ROWS = [
+    PIPE.join(["", "", "", "", "1002", ""]),
+]
+
+# Default fixture: every row the importer should accept (including silently-
+# dropped sentinel/empty rows). Drift candidates are NOT included — they would
+# raise vardemangder_drift, breaking every test that builds the default fixture.
+# The drift test constructs its own fixture.
+VARDEMANGDER_ROWS = (
+    VARDEMANGDER_REAL_ROWS
+    + VARDEMANGDER_SENTINEL_ROWS
+    + VARDEMANGDER_REAL_SHAPED_ROWS
+    + VARDEMANGDER_EMPTY_ROWS
+)
 
 VALID_DATES_HEADER = PIPE.join(["ItemID", "ValidFrom", "ValidTo"])
 VALID_DATES_ROWS = [

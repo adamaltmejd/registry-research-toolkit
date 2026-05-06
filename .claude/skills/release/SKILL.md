@@ -150,6 +150,13 @@ gh release upload regmeta/vX.Y.Z regmeta.db.zst
 rm regmeta.db.zst
 ```
 
+If the build fails with `vardemangder_drift` (exit 10), SCB has shipped a
+new `kod==version` row whose kod is in neither `_VARDEMANGDER_SENTINELS`
+nor `_VARDEMANGDER_REAL_SHAPED` (both in `regmeta/src/regmeta/db.py`).
+Inspect the listed values, add each to the appropriate allowlist (sentinel
+placeholder vs. real single-code value set), then rerun. See
+`regmeta/DESIGN.md` § "Vardemängder sentinel filtering".
+
 #### 8b. Doc DB asset (`regmeta_docs.db.zst`)
 
 Upload if **any** of these is true:

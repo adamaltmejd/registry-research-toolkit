@@ -13,7 +13,9 @@ from regmeta.errors import RegmetaError
 from _csv_fixtures import (
     REGISTERINFORMATION_HEADER,
     REGISTERINFORMATION_ROWS,
+    VARDEMANGDER_REAL_ROWS,
     write_csv,
+    write_scb_input,
 )
 
 
@@ -96,14 +98,17 @@ class TestBuildDb:
     def test_value_items_present(self, db_conn: sqlite3.Connection):
         """Deduplicated junction rows for known CVIDs should be imported."""
         count = db_conn.execute("SELECT COUNT(*) FROM cvid_value_code").fetchone()[0]
-        # 2 codes (Man, Kvinna) × 3 CVIDs (1001, 1003, 2001) = 6 distinct pairs
-        assert count == 6
+        # 2 Kön codes × 3 cvids (1001, 1003, 2001) = 6
+        # + cvid 2002: ("2", "Övriga civilstånd")
+        # + cvid 2003: ("", "Uppgift okänd")
+        # sentinel/empty rows skipped → 8 total
+        assert count == 8
 
     def test_value_code_deduplicated(self, db_conn: sqlite3.Connection):
         """Value codes should be deduplicated across CVIDs."""
         count = db_conn.execute("SELECT COUNT(*) FROM value_code").fetchone()[0]
-        # Codes: (1, Man), (2, Kvinna) = 2 unique (9999 CVID filtered out)
-        assert count == 2
+        # ("1","Man"), ("2","Kvinna"), ("2","Övriga civilstånd"), ("","Uppgift okänd")
+        assert count == 4
 
     def test_value_set_info_on_instance(self, db_conn: sqlite3.Connection):
         """Variable instances with values should have vardemangdsversion/niva set."""
@@ -113,6 +118,76 @@ class TestBuildDb:
         ).fetchone()
         assert row["vardemangdsversion"] == "Kön"
         assert row["vardemangdsniva"] == "1"
+
+    def test_sentinel_rows_skipped(self, db_conn: sqlite3.Connection):
+        """SCB type-tag rows ("Tal", "Beskrivande text") must not produce
+        value_code rows or cvid_value_code junction rows."""
+        rows = db_conn.execute(
+            "SELECT vardekod FROM value_code "
+            "WHERE vardekod IN ('Tal', 'Beskrivande text')"
+        ).fetchall()
+        assert rows == []
+        sentinel_cvids = db_conn.execute(
+            "SELECT COUNT(*) FROM cvid_value_code WHERE cvid IN (1004, 1005)"
+        ).fetchone()[0]
+        assert sentinel_cvids == 0
+
+    def test_sentinel_only_cvid_has_null_metadata(self, db_conn: sqlite3.Connection):
+        """A cvid whose only Vardemangder rows were sentinels must end up with
+        NULL vardemangdsversion/niva — not the sentinel string."""
+        for cvid in (1004, 1005):
+            row = db_conn.execute(
+                "SELECT vardemangdsversion, vardemangdsniva "
+                "FROM variable_instance WHERE cvid = ?",
+                (cvid,),
+            ).fetchone()
+            assert row["vardemangdsversion"] is None, f"cvid {cvid}"
+            assert row["vardemangdsniva"] is None, f"cvid {cvid}"
+
+    def test_real_code_with_sentinel_shape_survives(self, db_conn: sqlite3.Connection):
+        """A row where kod==version==niva but kod is not a known sentinel is a
+        real code (e.g. cvid 2002, kod="2", label="Övriga civilstånd"). It must
+        be preserved, including its version metadata."""
+        code_rows = db_conn.execute(
+            "SELECT vc.vardekod, vc.vardebenamning FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "WHERE cvc.cvid = 2002"
+        ).fetchall()
+        assert [(r["vardekod"], r["vardebenamning"]) for r in code_rows] == [
+            ("2", "Övriga civilstånd")
+        ]
+        meta = db_conn.execute(
+            "SELECT vardemangdsversion, vardemangdsniva "
+            "FROM variable_instance WHERE cvid = 2002"
+        ).fetchone()
+        assert meta["vardemangdsversion"] == "2"
+        assert meta["vardemangdsniva"] == "2"
+
+    def test_empty_vardekod_survives(self, db_conn: sqlite3.Connection):
+        """Empty vardekod with a label ("Uppgift okänd") is a legitimate code,
+        not pollution. Must survive."""
+        rows = db_conn.execute(
+            "SELECT vc.vardekod, vc.vardebenamning FROM cvid_value_code cvc "
+            "JOIN value_code vc ON cvc.code_id = vc.code_id "
+            "WHERE cvc.cvid = 2003"
+        ).fetchall()
+        assert [(r["vardekod"], r["vardebenamning"]) for r in rows] == [
+            ("", "Uppgift okänd")
+        ]
+
+    def test_fully_empty_row_dropped(self, db_conn: sqlite3.Connection):
+        """A row with empty kod, label, and item carries no information; it
+        must not produce a junction row or set version metadata on the cvid."""
+        cnt = db_conn.execute(
+            "SELECT COUNT(*) FROM cvid_value_code WHERE cvid = 1002"
+        ).fetchone()[0]
+        assert cnt == 0
+        meta = db_conn.execute(
+            "SELECT vardemangdsversion, vardemangdsniva "
+            "FROM variable_instance WHERE cvid = 1002"
+        ).fetchone()
+        assert meta["vardemangdsversion"] is None
+        assert meta["vardemangdsniva"] is None
 
     def test_validity_dates_imported(self, db_conn: sqlite3.Connection):
         """Validity date ranges should be imported per item_id."""
@@ -192,8 +267,10 @@ class TestBuildDb:
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
         count = db_conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
-        # 2 codes × 2 registers (reg 1 and reg 2 both have var_id 44) = 4
-        assert count == 4
+        # Kön: 2 codes × 2 registers (reg 1, reg 2; both have var_id 44) = 4
+        # cvid 2002 (var_id 300): ("2","Övriga civilstånd") = 1
+        # cvid 2003 (var_id 301): ("","Uppgift okänd") = 1
+        assert count == 6
 
     def test_unika_joined(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM unika_summary").fetchone()[0]
@@ -394,3 +471,55 @@ class TestSchemaCompat:
         with pytest.raises(RegmetaError) as exc_info:
             open_db(db)
         assert exc_info.value.code == "schema_incompatible"
+
+
+class TestVardemangderDrift:
+    """Any kod==version row where kod is in neither the SENTINELS nor the
+    REAL_SHAPED allowlist must hard-fail the build, so SCB additions don't
+    silently slip into value_code or get incorrectly dropped."""
+
+    def test_default_fixture_does_not_drift(self, tmp_path: Path) -> None:
+        # Sanity: the shared default fixture (which other tests build on)
+        # contains kod="2" — a known real-shaped code in the allowlist — and
+        # must not raise. Guards against drift creeping into the shared set.
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir)
+        build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+
+    def test_drift_raises_on_unknown_kod(self, tmp_path: Path) -> None:
+        # "ZZZ" is in neither allowlist; build must fail with an actionable
+        # error pointing the maintainer at the two allowlists.
+        drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
+            "|".join(["ZZZ", "ZZZ", "ZZZ", "Future placeholder", "2002", "5102"]),
+        ]
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        assert exc_info.value.code == "vardemangder_drift"
+        assert exc_info.value.exit_code == 10
+        assert "'ZZZ'" in exc_info.value.message
+        assert "_VARDEMANGDER_SENTINELS" in exc_info.value.remediation
+        assert "_VARDEMANGDER_REAL_SHAPED" in exc_info.value.remediation
+
+    def test_drift_raises_on_niva_divergent_sentinel(self, tmp_path: Path) -> None:
+        # Skip rule requires kod==version==niva. A row with kod=version="Tal"
+        # but niva diverging is a novel SCB shape — the build must surface it
+        # rather than silently drop it. Failure mode that the upstream
+        # reviewers (Codex, Copilot) flagged as a risk.
+        # Column order: version|niva|kod|label|cvid|item
+        drift_rows = list(VARDEMANGDER_REAL_ROWS) + [
+            "|".join(["Tal", "1", "Tal", "Some label", "2002", "5102"]),
+        ]
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        write_scb_input(input_dir, vardemangder_rows=drift_rows)
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        assert exc_info.value.code == "vardemangder_drift"
+        assert "'Tal'" in exc_info.value.message
+        # Remediation must surface the "already in SENTINELS" case so the
+        # maintainer doesn't try to add Tal a second time.
+        assert "niva!=version" in exc_info.value.remediation

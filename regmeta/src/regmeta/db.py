@@ -18,8 +18,27 @@ from typing import Any, Iterator
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 
-SCHEMA_VERSION = "2.2.0"
+SCHEMA_VERSION = "2.3.0"
 DB_FILENAME = "regmeta.db"
+
+# SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
+# disjoint cases observed; build-db classifies each row using these allowlists:
+#
+# _VARDEMANGDER_SENTINELS — placeholder strings stuffed into Värdekod to mean
+# "no enumerated code list." Not real value codes; dropped silently:
+#   - "Tal"               variable is numeric
+#   - "Beskrivande text"  variable is free-form text
+#
+# _VARDEMANGDER_REAL_SHAPED — kods that *happen* to equal their version label
+# but are real single-code value sets. Kept silently:
+#   - "1"  ("Hade ingen anställning före YH-utbildningen")
+#   - "2"  ("Övriga civilstånd")
+#
+# Any other kod==version row is treated as drift (unknown placeholder) and
+# fails the build with code "vardemangder_drift" — see the drift block in
+# _import_vardemangder. Audit script: scripts/audit_vardemangder.py.
+_VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
+_VARDEMANGDER_REAL_SHAPED = frozenset({"1", "2"})
 
 # Bytes undefined in cp1252 but present in SCB data as DOS cp850 remnants.
 # Map to their cp850 equivalents rather than rejecting.
@@ -1024,7 +1043,9 @@ def _import_vardemangder(
     code_lookup: dict[tuple[str, str], int] = {}
     next_code_id = 0
 
-    # Track per-CVID value set identity
+    # Per-CVID value set identity, recorded only from real (non-sentinel) rows.
+    # CVIDs whose only rows were sentinels get no entry here, so their
+    # variable_instance.vardemangds{version,niva} stay NULL.
     cvid_value_set_info: dict[int, tuple[str, str]] = {}
 
     # Junction dedup via INSERT OR IGNORE against PK(cvid, code_id)
@@ -1033,6 +1054,10 @@ def _import_vardemangder(
     # item→(cvid, code) mapping for items with validity records
     validity_set = validity_item_ids or set()
     value_item_batch: list[tuple[int, int, int]] = []  # (cvid, code_id, item_id)
+
+    skipped_sentinel = 0
+    skipped_empty = 0
+    drift_samples: dict[str, int] = {}  # unknown sentinel-shape kod → count
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
@@ -1046,6 +1071,40 @@ def _import_vardemangder(
 
             vardekod = row["Värdekod"]
             vardebenamning = row["Värdebenämning"]
+            version = row["Värdemängdsversion"]
+            niva = row["Värdemängdsnivå"]
+            raw_item = row["ItemId"]
+
+            # Drop SCB type-tag rows masquerading as value codes. Tight match
+            # on the documented sentinel shape (kod==version==niva). Looser
+            # variants (e.g. kod==version but niva diverging) fall through to
+            # the drift detector below and fail the build for human review.
+            if vardekod == version == niva and vardekod in _VARDEMANGDER_SENTINELS:
+                skipped_sentinel += 1
+                continue
+
+            # Detect drift: kod==version with kod in neither allowlist (or
+            # kod==version with kod in SENTINELS but niva diverging — caught
+            # because such rows didn't match the tight skip above and are not
+            # in REAL_SHAPED). Could be a new SCB type-tag placeholder (→ add
+            # to _VARDEMANGDER_SENTINELS) or a new real single-code value set
+            # sharing the shape (→ add to _VARDEMANGDER_REAL_SHAPED). Trigger
+            # is broader than the skip rule (no niva equality) so any
+            # sentinel-shape change SCB ships still surfaces. Raised after
+            # the loop.
+            if (
+                vardekod
+                and vardekod == version
+                and vardekod not in _VARDEMANGDER_REAL_SHAPED
+            ):
+                drift_samples[vardekod] = drift_samples.get(vardekod, 0) + 1
+
+            # Drop fully-empty rows (kod, label, item all empty). 51 such rows
+            # in the production CSV; carry no information.
+            if not (vardekod or vardebenamning or raw_item):
+                skipped_empty += 1
+                continue
+
             code_key = (vardekod, vardebenamning)
 
             if code_key not in code_lookup:
@@ -1055,14 +1114,10 @@ def _import_vardemangder(
             code_id = code_lookup[code_key]
 
             if cvid not in cvid_value_set_info:
-                cvid_value_set_info[cvid] = (
-                    row["Värdemängdsversion"],
-                    row["Värdemängdsnivå"],
-                )
+                cvid_value_set_info[cvid] = (version, niva)
 
             junction_batch.append((cvid, code_id))
 
-            raw_item = row["ItemId"]
             if raw_item:
                 item_id = int(raw_item)
                 if item_id in validity_set:
@@ -1106,6 +1161,37 @@ def _import_vardemangder(
         f"  {row_count:,} rows read, {len(code_lookup):,} unique codes, "
         f"{len(cvid_value_set_info):,} CVIDs with values"
     )
+    if skipped_sentinel or skipped_empty:
+        _progress(
+            f"  Skipped {skipped_sentinel:,} SCB type-tag rows "
+            f"({sorted(_VARDEMANGDER_SENTINELS)}) "
+            f"and {skipped_empty:,} fully-empty rows."
+        )
+    if drift_samples:
+        sample = ", ".join(
+            f"{k!r} ({n} rows)"
+            for k, n in sorted(drift_samples.items(), key=lambda x: -x[1])[:5]
+        )
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="vardemangder_drift",
+            error_class="configuration",
+            message=(
+                f"Vardemangder drift: {len(drift_samples)} sentinel-shape "
+                f"vardekod value(s) (kod==version) require human review. "
+                f"Sample: {sample}."
+            ),
+            remediation=(
+                "Inspect the listed vardekod values in Vardemangder.csv. "
+                "(a) New SCB type-tag placeholder → add to "
+                "_VARDEMANGDER_SENTINELS in regmeta/src/regmeta/db.py. "
+                "(b) New real single-code value set sharing the shape → "
+                "add to _VARDEMANGDER_REAL_SHAPED. (c) Already in "
+                "_VARDEMANGDER_SENTINELS but appeared with niva!=version "
+                "→ SCB changed the sentinel shape; broaden the skip rule "
+                "to match. Then rerun build-db."
+            ),
+        )
     return row_count, cvid_value_set_info
 
 
@@ -1239,6 +1325,10 @@ def build_db(
       - ``seed_path`` — explicit seed file. Defaults to ``repo_seed_path()``
         when running from a repo checkout; the build errors out if neither
         is available (build-db is maintainer-only and requires the seed).
+
+    Raises ``RegmetaError(code="vardemangder_drift")`` if Vardemangder.csv
+    contains unknown sentinel-shape vardekod values — see
+    ``_VARDEMANGDER_SENTINELS`` / ``_VARDEMANGDER_REAL_SHAPED``.
 
     Returns a summary dict for the CLI to display.
     """
