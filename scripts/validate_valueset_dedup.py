@@ -1,9 +1,7 @@
-"""Validate the value-set dedup + year-projection rebuild (issue #41).
+"""Validate the value-set dedup + year-projection rebuild.
 
 Run against a freshly built regmeta.db (after `regmeta maintain build-db`).
 Exits non-zero on any failure.
-
-Checks (PLAN_VALUESET_DEDUP §9):
 
 Schema shape:
   - value_set / value_set_member / variable_instance.value_set_id present
@@ -11,8 +9,7 @@ Schema shape:
   - member_hash uniqueness invariant
 
 Year projection correctness:
-  - ArbSokNov LISA spot-check (cvid-1998 must NOT contain code 4 or 5;
-    cvid-2007/2008 must contain code 4 with the correct meaning)
+  - ArbSokNov LISA spot-check (cvid-1998 must NOT contain code 4 or 5)
   - Andel/grad av aktivitetsersättning, vilande (cvid 421764, year 2010):
     must contain codes 01-04, must NOT contain 00 or 05
   - PRAGMA foreign_key_check returns no rows
@@ -25,6 +22,8 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from regmeta.db import open_db
+
 DB = Path(sys.argv[1] if len(sys.argv) > 1 else "/tmp/regmeta-rebuild-test/regmeta.db")
 
 failures: list[str] = []
@@ -32,18 +31,17 @@ failures: list[str] = []
 
 def fail(msg: str) -> None:
     failures.append(msg)
-    print(f"  ✗ {msg}")
+    print(f"  [FAIL] {msg}")
 
 
 def ok(msg: str) -> None:
-    print(f"  ✓ {msg}")
+    print(f"  [OK] {msg}")
 
 
 def main() -> None:
     if not DB.exists():
         sys.exit(f"DB not found: {DB}")
-    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
+    conn = open_db(DB)
     try:
         _run_checks(conn)
     finally:
@@ -99,8 +97,8 @@ def _run_checks(conn: sqlite3.Connection) -> None:
 
     # ----- Year projection: ArbSokNov LISA anchor -----
     print("\n[projection: ArbSokNov LISA]")
-    # ArbSokNov is variable_id=31554 in LISA per PLAN §2.1. Codes 4 and 5
-    # should not appear in cvids before their introduction (~2006-2007).
+    # ArbSokNov is variable_id=31554 in LISA. Codes 4 and 5 should not
+    # appear in cvids before their introduction (~2006-2007).
     arbs = conn.execute(
         "SELECT vi.cvid, rv.registerversionnamn, vc.vardekod, vc.vardebenamning "
         "FROM variable_instance vi "

@@ -10,13 +10,13 @@ import pytest
 from regmeta.db import (
     SCHEMA_VERSION,
     _decode_cp1252,
-    _project_year,
     _value_set_hash,
     build_db,
     get_manifest,
     open_db,
 )
 from regmeta.errors import RegmetaError
+from regmeta.queries import extract_year
 
 from _csv_fixtures import (
     PIPE,
@@ -540,38 +540,37 @@ class TestVardemangderRequiresValidDates:
 
 
 # ---------------------------------------------------------------------------
-# Year projection (PLAN_VALUESET_DEDUP §4.3, §9)
+# Year projection
 # ---------------------------------------------------------------------------
 
 
-class TestProjectionYearExtractor:
-    """``_project_year`` is stricter than ``queries.extract_year``: it bounds
-    matches to 1900-2099 and rejects matches embedded in longer digit runs."""
+class TestExtractYear:
+    """``extract_year`` matches a 1900-2099 year as a standalone 4-digit
+    token; values outside that range or embedded in longer digit runs return
+    None (yearless fallback for projection)."""
 
     def test_extracts_year_from_lisa_2018(self):
-        assert _project_year("LISA 2018") == 2018
+        assert extract_year("LISA 2018") == 2018
 
-    def test_returns_none_for_purely_numeric_out_of_range(self):
-        # Komvux 1234-poäng must yield None, not the bogus year 1234.
-        assert _project_year("Komvux 1234-poäng") is None
-        assert _project_year("1234") is None
+    def test_returns_none_for_out_of_range(self):
+        assert extract_year("Komvux 1234-poäng") is None
+        assert extract_year("1234") is None
 
     def test_returns_none_for_yearless_names(self):
-        assert _project_year("Person-År") is None
-        assert _project_year("Födelseland") is None
+        assert extract_year("Person-År") is None
+        assert extract_year("Födelseland") is None
 
-    def test_returns_none_for_none_input(self):
-        assert _project_year(None) is None
-        assert _project_year("") is None
+    def test_returns_none_for_empty(self):
+        assert extract_year("") is None
 
     def test_rejects_year_inside_longer_digit_run(self):
         # 19999 is not a year; the regex must not match the prefix 1999.
-        assert _project_year("v19999") is None
+        assert extract_year("v19999") is None
 
 
 class TestValueSetHash:
     """``_value_set_hash`` is content-addressed sha256 over sorted
-    (vardekod, vardebenamning) pairs with length-prefixed encoding (PLAN §4.2)."""
+    (vardekod, vardebenamning) pairs with length-prefixed encoding."""
 
     def test_returns_32_byte_digest(self):
         h = _value_set_hash([("1", "Man"), ("2", "Kvinna")])
@@ -610,7 +609,7 @@ class TestMemberHashCheckConstraint:
 
 class TestValueSetDedup:
     """Two cvids with the same year-projected code list must share one
-    value_set; cvids with different lists must not (PLAN §2.2, §4.2)."""
+    value_set; cvids with different lists must not."""
 
     def test_identical_sets_share_value_set_id(self, db_conn: sqlite3.Connection):
         # cvids 1003 and 2001 both end up with {Man, Kvinna} after projection
@@ -655,13 +654,12 @@ def _projection_input(tmp_path: Path, vardemangder_rows, valid_dates_rows) -> Pa
 
 
 class TestYearProjection:
-    """Year-projection scenarios (PLAN §4.3, §9). Each test builds a DB with
-    a tailored Vardemangder + ValidDates fixture and asserts what survives."""
+    """Each test builds a DB with a tailored Vardemangder + ValidDates fixture
+    and asserts what survives projection."""
 
     def test_excludes_out_of_window(self, tmp_path: Path):
-        # cvid 1001 has year 2020. Item 8000 has validity 2011-9999, which
-        # does not cover 2020 (... wait, 2011 <= 2020 <= 9999 is true). Use
-        # a window that genuinely excludes 2020.
+        # cvid 1001 has year 2020. Item 8000 has validity 2030-2099, which
+        # does not cover 2020 — Man must be excluded.
         rows = [
             PIPE.join(["Kön", "1", "1", "Man-future", "1001", "8000"]),
             PIPE.join(["Kön", "1", "2", "Kvinna", "1001", ""]),
@@ -735,9 +733,9 @@ class TestYearProjection:
 
     def test_mixed_tracked_untracked_tracked_wins(self, tmp_path: Path):
         # cvid 1001 year=2020. Same (cvid, code) appears with TWO ItemIds:
-        # one tracked (validity 2030+), one untracked. The conservative rule
-        # (PLAN §4.3): tracked window decides; untracked sibling does NOT
-        # relax the constraint. Code must be EXCLUDED.
+        # one tracked (validity 2030+), one untracked. The conservative rule:
+        # tracked window decides; untracked sibling does NOT relax the
+        # constraint. Code must be EXCLUDED.
         rows = [
             PIPE.join(["Kön", "1", "1", "Man", "1001", "8004"]),  # tracked
             PIPE.join(["Kön", "1", "1", "Man", "1001", "8005"]),  # untracked

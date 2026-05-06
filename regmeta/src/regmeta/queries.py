@@ -13,7 +13,7 @@ from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
 
-_YEAR_RE = re.compile(r"\d{4}")
+_YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
 
 def _try_int(value: str) -> int | str:
@@ -86,7 +86,9 @@ def parse_year_range(spec: str) -> tuple[int | None, int | None]:
 
 
 def extract_year(version_name: str) -> int | None:
-    """Extract the first 4-digit year from a version name string."""
+    """Extract a 1900-2099 year from a version name. Rejects 4-digit runs
+    embedded in longer digit sequences (so "v19999" → None, not 1999) and
+    out-of-range numbers (so "Komvux 1234-poäng" → None, not 1234)."""
     m = _YEAR_RE.search(version_name)
     return int(m.group()) if m else None
 

@@ -19,6 +19,7 @@ from typing import Any, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
+from .queries import extract_year
 
 SCHEMA_VERSION = "3.0.0"
 DB_FILENAME = "regmeta.db"
@@ -41,20 +42,6 @@ DB_FILENAME = "regmeta.db"
 # _import_vardemangder. Audit script: scripts/audit_vardemangder.py.
 _VARDEMANGDER_SENTINELS = frozenset({"Tal", "Beskrivande text"})
 _VARDEMANGDER_REAL_SHAPED = frozenset({"1", "2"})
-
-# Stricter than queries.extract_year (which accepts any 4-digit run): bound to
-# 1900-2099 and reject matches inside longer digit runs. Used at build time to
-# project SCB validity windows onto each cvid's regver year. Names like "Komvux
-# 1234-poäng" must yield None ("yearless fallback"), not the bogus year 1234.
-_PROJECTION_YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
-
-
-def _project_year(version_name: str | None) -> int | None:
-    """Return cvid year for projection, or None for the yearless fallback."""
-    if not version_name:
-        return None
-    m = _PROJECTION_YEAR_RE.search(version_name)
-    return int(m.group()) if m else None
 
 
 def _value_set_hash(pairs: list[tuple[str, str]]) -> bytes:
@@ -160,7 +147,6 @@ ENRICHMENT_FILES = [
     "Identifierare.csv",
     "Timeseries.csv",
     "Vardemangder.csv",
-    "VardemangderValidDates.csv",
 ]
 
 DDL = """\
@@ -1208,7 +1194,7 @@ def _import_vardemangder(
 class _GroupState:
     """In-flight group while streaming staging triples grouped by (cvid, code_id).
 
-    `items` accumulates item_ids for the current code; `accepted` accumulates
+    ``items`` accumulates item_ids for the current code; ``accepted`` accumulates
     code_ids that survived projection for the current cvid.
     """
 
@@ -1220,14 +1206,6 @@ class _GroupState:
 
 @dataclass
 class _ProjectionStats:
-    """Counters returned by `_project_and_mint_value_sets` for build logging.
-
-    `next_set_id` is the running id allocator; the rest are pure tallies.
-    """
-
-    next_set_id: int = 1
-    minted_sets: int = 0
-    codes_via_overlap: int = 0
     cvids_with_set: int = 0
     cvids_empty_after_projection: int = 0
 
@@ -1246,43 +1224,40 @@ def _accept_code(
         if w:
             windows.extend(w)
     if not windows:
-        return True  # always-valid fallback (PLAN §2.1)
+        return True
     if cvid_year is None:
-        return True  # yearless cvid: take everything
+        return True
     return any(yf <= cvid_year <= yt for yf, yt in windows)
 
 
 def _project_and_mint_value_sets(
     conn: sqlite3.Connection,
     validity_map: dict[int, list[tuple[int, int]]],
-) -> dict[str, int]:
+) -> None:
     """Project staging triples by cvid year, mint deduplicated value_sets,
     and update variable_instance.value_set_id.
 
     Reads ``staging._build_cvid_pair`` and a cvid → year map joined from
-    variable_instance × register_version. For each (cvid, code_id) the
-    projection rule (PLAN §4.3):
+    variable_instance × register_version. For each (cvid, code_id):
 
     - Collect validity windows of all *tracked* item_ids for the pair (a
       tracked item_id has at least one entry in ``validity_map``; item_id=0
       and unknown nonzero ids are *untracked*).
-    - If no tracked windows → include (always-valid, SCB rule §2.1).
+    - If no tracked windows → include (always-valid).
     - Otherwise → include iff at least one window covers the cvid year
       (year overlap, sub-year boundaries absorbed losslessly).
 
     Yearless cvids (regver name has no plausible 4-digit year) include all
-    union pairs — too rare to engineer around. Mixed tracked+untracked pairs
-    let the tracked window decide; untracked siblings do not relax the
-    constraint (PLAN §4.3, §2.5b).
+    union pairs. Mixed tracked+untracked pairs let the tracked window decide;
+    untracked siblings do not relax the constraint.
 
     Sets are deduplicated by content-addressed sha256 over sorted
-    (vardekod, vardebenamning) pairs. Returns counters for logging.
+    (vardekod, vardebenamning) pairs.
     """
     _progress("Projecting validity windows and minting value_sets...")
 
-    # cvid → year (or None for yearless fallback)
     cvid_to_year: dict[int, int | None] = {
-        cvid: _project_year(version_name)
+        cvid: extract_year(version_name or "")
         for cvid, version_name in conn.execute(
             "SELECT vi.cvid, rv.registerversionnamn "
             "FROM variable_instance vi "
@@ -1295,7 +1270,6 @@ def _project_and_mint_value_sets(
         f"({yearless:,} yearless, fall back to all-codes)"
     )
 
-    # code_id → (vardekod, vardebenamning) for hash construction.
     code_pair: dict[int, tuple[str, str]] = {
         code_id: (kod, label)
         for code_id, kod, label in conn.execute(
@@ -1303,8 +1277,6 @@ def _project_and_mint_value_sets(
         )
     }
 
-    # Stream staging rows grouped by cvid. The PK (cvid, code_id, item_id)
-    # gives us the ordering for free.
     cur = conn.execute(
         "SELECT cvid, code_id, item_id FROM staging._build_cvid_pair "
         "ORDER BY cvid, code_id, item_id"
@@ -1313,8 +1285,8 @@ def _project_and_mint_value_sets(
     state = _GroupState()
     stats = _ProjectionStats()
     set_id_by_hash: dict[bytes, int] = {}
-    cvid_set_assignments: list[tuple[int, int]] = []  # (value_set_id, cvid)
-    member_batch: list[tuple[int, int]] = []  # (value_set_id, code_id)
+    cvid_set_assignments: list[tuple[int, int]] = []
+    member_batch: list[tuple[int, int]] = []
     member_batch_size = 50_000
 
     def _flush_members() -> None:
@@ -1330,8 +1302,6 @@ def _project_and_mint_value_sets(
             return
         if _accept_code(state.items, cvid_to_year.get(state.cvid), validity_map):
             state.accepted.append(state.code_id)
-            if any(iid != 0 and iid in validity_map for iid in state.items):
-                stats.codes_via_overlap += 1
 
     def _finish_cvid() -> None:
         if state.cvid is None:
@@ -1343,8 +1313,7 @@ def _project_and_mint_value_sets(
         h = _value_set_hash(pairs)
         set_id = set_id_by_hash.get(h)
         if set_id is None:
-            set_id = stats.next_set_id
-            stats.next_set_id += 1
+            set_id = len(set_id_by_hash) + 1
             set_id_by_hash[h] = set_id
             conn.execute(
                 "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
@@ -1353,7 +1322,6 @@ def _project_and_mint_value_sets(
             member_batch.extend((set_id, cid) for cid in state.accepted)
             if len(member_batch) >= member_batch_size:
                 _flush_members()
-            stats.minted_sets += 1
         cvid_set_assignments.append((set_id, state.cvid))
         stats.cvids_with_set += 1
 
@@ -1373,7 +1341,6 @@ def _project_and_mint_value_sets(
             continue
         state.items.append(item_id)
 
-    # Flush trailing groups.
     _finish_code()
     _finish_cvid()
     _flush_members()
@@ -1385,18 +1352,10 @@ def _project_and_mint_value_sets(
         )
 
     _progress(
-        f"  {stats.minted_sets:,} distinct value_sets minted, "
+        f"  {len(set_id_by_hash):,} distinct value_sets minted, "
         f"{stats.cvids_with_set:,} cvids linked, "
         f"{stats.cvids_empty_after_projection:,} cvids empty after projection."
     )
-
-    return {
-        "value_sets_minted": stats.minted_sets,
-        "cvids_with_value_set": stats.cvids_with_set,
-        "cvids_empty_after_projection": stats.cvids_empty_after_projection,
-        "yearless_cvids": yearless,
-        "codes_via_overlap": stats.codes_via_overlap,
-    }
 
 
 def _populate_fts(conn: sqlite3.Connection) -> None:
@@ -1588,7 +1547,7 @@ def build_db(
     conn.execute("PRAGMA synchronous=NORMAL")
     conn.execute("PRAGMA temp_store=MEMORY")  # classification build uses temp tables
     conn.execute("PRAGMA foreign_keys=OFF")  # Enable after import for speed
-    build_failed = True  # cleared at the end of the try block on success
+    build_failed = True
     try:
         conn.executescript(DDL)
 
@@ -1646,8 +1605,6 @@ def build_db(
         # Enrichment files (optional). VardemangderValidDates.csv is handled
         # above (pre-loaded into memory, not written to DB).
         for filename in ENRICHMENT_FILES:
-            if filename == "VardemangderValidDates.csv":
-                continue
             path = scb_dir / filename
             if not path.exists():
                 _progress(f"Skipping {filename} (not found)")
@@ -1780,10 +1737,6 @@ def build_db(
         _progress("Database built successfully.")
         build_failed = False
     finally:
-        # conn.close() releases the staging attachment automatically; an
-        # explicit DETACH would only matter if we kept the connection open.
-        # Staging file is always disposable; the tmp DB is only disposable
-        # on failure (on success it gets atomically renamed below).
         conn.close()
         staging_path.unlink(missing_ok=True)
         if build_failed:

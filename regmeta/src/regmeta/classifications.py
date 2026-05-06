@@ -712,8 +712,7 @@ def populate_classifications(
                 "Tagged instances exist but have no codes reachable via "
                 "value_set_member. Either broaden the vardemangdsversion "
                 "list, check that year-projection isn't excluding every "
-                "code (rare; see PLAN_VALUESET_DEDUP §8.6), or remove the "
-                "entry from the seed."
+                "code (rare), or remove the entry from the seed."
             ),
         )
 
