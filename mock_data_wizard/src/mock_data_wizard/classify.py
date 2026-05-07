@@ -36,13 +36,6 @@ class IdPattern:
     exclude: str | None = None
 
 
-@dataclass(frozen=True)
-class CategoricalPattern:
-    pattern: str
-    max_distinct: int  # advisory cap, used by future regmeta-aware paths
-    exclude: str | None = None
-
-
 ID_PATTERNS: tuple[IdPattern, ...] = (
     # Unanchored on purpose so "LopNr", "LopNr_PersNr", and "AarLopNr"
     # all match. "LopNrByte" (RTB pid-change flag) is a near-miss that
@@ -55,38 +48,33 @@ ID_PATTERNS: tuple[IdPattern, ...] = (
     IdPattern(r"(^|_)pers(on)?nr"),
 )
 
-CATEGORICAL_PATTERNS: tuple[CategoricalPattern, ...] = (
-    CategoricalPattern("kommun", max_distinct=500, exclude="kommunikation"),  # ~290
-    CategoricalPattern("ssyk", max_distinct=1000),  # SSYK ~400 at 4-digit
-    CategoricalPattern("sun2000", max_distinct=1000),  # SUN2000 ~600
-    CategoricalPattern("sun2020", max_distinct=1000),  # SUN2020 ~600
-    CategoricalPattern(r"sni(\d|_|$)", max_distinct=1500),  # SNI ~800
-    CategoricalPattern("(fodelse|fodelses?)land", max_distinct=300),  # ~230
-    CategoricalPattern("medb(orgarskap)?", max_distinct=300),  # citizenship ~230
-    CategoricalPattern(r"(^|_)kon$", max_distinct=3),  # sex
-    CategoricalPattern("civil", max_distinct=10),  # CivilStand
-    CategoricalPattern(r"(^|_)lan$", max_distinct=30),  # län (region) — 21
-    CategoricalPattern(r"land(skap)?$", max_distinct=300),  # FodelseLand
-    CategoricalPattern(r"_kod$", max_distinct=10000),  # generic "...kod" code columns
-)
 
-
-# Register-scoped exact-name flags. SCB ships these as 0/1 record-quality
-# markers on RTB extracts. Exact name match only (case-insensitive) and
-# only when the configured register is RTB — outside that context the
-# names are ambiguous enough that we'd rather the user see "high_cardinality"
-# in the inspector and override manually than silently mistype.
-RTB_BINARY_FLAGS: frozenset[str] = frozenset(
+# Register-scoped exact-name categoricals. Names regmeta is known to be
+# missing under specific registers but where SCB convention pins the
+# semantics unambiguously. Exact name match only (case-insensitive) and
+# only when the configured register matches — outside that context the
+# names are ambiguous enough that we'd rather the user see
+# "high_cardinality" in the inspector and override manually than silently
+# mistype.
+RTB_NAMED_CATEGORICAL: frozenset[str] = frozenset(
     {
+        # Record-quality flags shipped on most RTB extracts (binary 0/1)
         "ateranv",  # återanvändning flag
         "felpersonnr",  # incorrect-pid flag
         "lopnrbyte",  # pid-change flag
+        # Birth-year and birth-year-month: low-cardinality grouping
+        # variables in any register that ships them, but the name
+        # convention is RTB-specific. Treated as categorical because
+        # mdw's date pipeline currently assumes day-precision (see
+        # github issue on year/year-month support).
+        "fodelsear",
+        "fodelsearman",
     }
 )
 
 
-def is_rtb_binary_flag(col_name: str, register: str | None) -> bool:
-    """Whether ``col_name`` is one of the SCB RTB record-quality flags.
+def is_rtb_named_categorical(col_name: str, register: str | None) -> bool:
+    """Whether ``col_name`` is in the RTB-scoped exact-name categorical set.
 
     Both inputs are matched case-insensitively. The register check is
     intentionally a substring match on ``"RTB"`` so it catches both the
@@ -95,7 +83,7 @@ def is_rtb_binary_flag(col_name: str, register: str | None) -> bool:
     """
     if not register or "rtb" not in register.lower():
         return False
-    return col_name.lower() in RTB_BINARY_FLAGS
+    return col_name.lower() in RTB_NAMED_CATEGORICAL
 
 
 # -- Date detection --------------------------------------------------------
@@ -122,17 +110,6 @@ def is_known_id(col_name: str) -> bool:
         ):
             return True
     return False
-
-
-def known_categorical_cap(col_name: str) -> int | None:
-    """Max n_distinct cap for a name-based categorical match, or None."""
-    name = col_name.lower()
-    for p in CATEGORICAL_PATTERNS:
-        if re.search(p.pattern, name) and not (
-            p.exclude and re.search(p.exclude, name)
-        ):
-            return p.max_distinct
-    return None
 
 
 def _parses_as_date(s: str, fmt: str) -> bool:

@@ -486,7 +486,11 @@ def test_stage3_configure_no_register(tmp_path: Path, monkeypatch):
     assert config.exists()
     payload = json.loads(config.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
-    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "categorical"}
+    # No regmeta guess for this family → no register set → Kommun
+    # lands at high_cardinality (char → fallthrough). User reviews.
+    assert payload["column_types"]["lisa_2018"]["Kommun"] == {
+        "type": "high_cardinality"
+    }
 
 
 def test_stage3_aborts_on_existing_config(tmp_path: Path, monkeypatch):

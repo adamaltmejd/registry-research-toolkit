@@ -20,16 +20,21 @@ priority (first match wins):
    ``datatyp`` is *storage* type, not semantic type — a bare ``char``
    with no value codes / classification is not enough to call a column
    categorical (it's often free text), so we don't.
-3. **Known categorical name.** ``known_categorical_cap(name) is not
-   None`` — ``Kon`` / ``Sun2000Inr`` / ``Kommun`` / ... . Backstop for
-   columns regmeta doesn't know.
+3. **Register-scoped exact-name backstop.** ``is_rtb_named_categorical``
+   covers a small allowlist of SCB names that regmeta is known to be
+   missing (``AterAnv`` / ``FelPersonNr`` / ``LopNrByte`` /
+   ``FodelseAr`` / ``FodelseArMan``). Exact-name match only; no fuzzy
+   patterns. Anything else regmeta doesn't know about falls through.
 4. **sql_type.** BIGINT / INTEGER / DOUBLE / DECIMAL / ... → ``numeric``.
    DATE / TIMESTAMP / ... → ``date``. For SQL sources, the database's
    declared type drives the answer; for CSVs read by DuckDB, sql_type
    is DuckDB's own inference (which already does int-vs-double on the
    data) — no separate value-peeking pass at discover time.
 5. **Fallthrough.** Anything we don't recognise (VARCHAR/TEXT/...) →
-   ``high_cardinality``. Misclassified, you fix it in mdw_step2_config.json.
+   ``high_cardinality``. The inspector surfaces these as a manual-review
+   prompt — no name-pattern guessing, since the false-positive risk on
+   common Swedish stems (``land``, ``utbildning``, ``civil``, ...)
+   outweighs the convenience.
 
 Year-source carry-through: any ``year`` from ``mdw_step1_discovery.json``'s
 ``source_detail`` lands in a top-level ``sources`` block so the extract
@@ -48,7 +53,7 @@ from pathlib import Path
 from typing import Any
 
 from ._util import strip_project_prefix
-from .classify import is_known_id, is_rtb_binary_flag, known_categorical_cap
+from .classify import is_known_id, is_rtb_named_categorical
 from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
 
 log = logging.getLogger("mdw.configure")
@@ -209,9 +214,7 @@ def _classify(
             return "numeric"
         if signal.datatyp_kind == "date":
             return "date"
-    if is_rtb_binary_flag(col_name, register):
-        return "categorical"
-    if known_categorical_cap(col_name) is not None:
+    if is_rtb_named_categorical(col_name, register):
         return "categorical"
     kind = _sql_type_kind(sql_type)
     if kind:

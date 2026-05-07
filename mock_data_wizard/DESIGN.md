@@ -310,30 +310,41 @@ the five types via this chain (first match wins):
 1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
    can't tell a BIGINT identifier from a BIGINT measure; the name
    has to.
-2. **Regmeta classification** (only when `--register` is supplied) —
-   if the column joins to a `variable_instance` row with non-null
-   `classification_id` for the named register, it's `categorical` by
-   SCB's own definition. Project-prefix stripping (`P1105_LopNr` →
-   `LopNr`) mirrors the same logic used by enrich.
-3. **`known_categorical_cap(name)`** — name patterns for SCB
-   categoricals where regmeta sometimes lacks a `classification_id`
-   (`Kon`, `Sun2000Inr`, `Kommun`, `CivilStand`, `Lan`, `*_kod`, …).
+2. **Regmeta evidence** (only when `--register` is supplied) — joining
+   `variable_alias` → `variable_instance` for the named register:
+   - non-null `value_set_id` *or* non-null `classification_id`
+     → `categorical` (SCB enumerated codes / shared classification)
+   - `datatyp` ∈ {int, decimal, ...} → `numeric`
+   - `datatyp` ∈ {date, datetime, ...} → `date`
+
+   Storage type alone (`char` / `varchar` with no value codes and no
+   classification) is **not** taken as a categorical signal — text
+   storage is often free text. Project-prefix stripping (`P1105_LopNr`
+   → `LopNr`) mirrors the same logic used by enrich.
+3. **`is_rtb_named_categorical(name, register)`** — narrow exact-name
+   (case-insensitive) allowlist scoped to RTB. Covers SCB names
+   regmeta is known to be missing under RTB: the record-quality flags
+   `AterAnv` / `FelPersonNr` / `LopNrByte` plus the birth-time grouping
+   variables `FodelseAr` / `FodelseArMan`. No fuzzy patterns —
+   variants fall through.
 4. **`sql_type`** — `BIGINT/INTEGER/DOUBLE/DECIMAL/...` → `numeric`;
    `DATE/TIMESTAMP/...` → `date`. For SQL sources the database's
    declared type is authoritative; for CSVs read by DuckDB, `sql_type`
    is DuckDB's own inference (which already does int-vs-double on
    the data — no separate value-peeking pass at discover time).
-5. **Fallthrough** — `high_cardinality`. Misclassified, you fix it
-   in `mdw_step2_config.json` for the next iteration.
+5. **Fallthrough** — `high_cardinality`. The interactive inspector
+   surfaces these for manual review (regmeta cell is blank, type
+   shows `high_cardinality`); the user overrides via the inspector or
+   directly in `mdw_step2_config.json`.
 
 The chain deliberately gives regmeta authority over names for
 categorical detection but not over `is_known_id`: regmeta has no
 "this is an identifier" type, and id-naming conventions are stable
-across registers. Regmeta's `datatyp` field is **not** consulted —
-it's inconsistent across years for the same variable (a single
-`var_id` can flip between `varchar` / `int` / `char` across
-`variable_instance` rows), so `sql_type` is the more reliable
-storage-type signal.
+across registers. The earlier loose "known categorical name" fallback
+(`Kon` / `Kommun` / `Sun2000Inr` / `FodelseLand` / ...) was removed
+once regmeta's `value_set` schema made these signals authoritative —
+common Swedish stems (`land`, `civil`, `medb`, ...) carry too much
+false-positive risk for a name-pattern guesser to be a net win.
 
 ### Per-column type config via `mdw_step2_config.json`
 

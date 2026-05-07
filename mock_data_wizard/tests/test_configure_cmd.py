@@ -95,16 +95,12 @@ _REGMETA_DATE = cfg_mod.RegmetaSignal(
         # alone doesn't carry that semantic. Falls through to sql_type
         # → high_cardinality. Tester overrides in the inspector if wrong.
         ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "high_cardinality"),
-        # Layer 3: known categorical name (no regmeta hit needed)
-        ("Kommun", "VARCHAR", None, "categorical"),
-        ("Sun2000Inr", "VARCHAR", None, "categorical"),
-        ("Sun2020Inr", "VARCHAR", None, "categorical"),
-        ("FodelseLand", "VARCHAR", None, "categorical"),
-        ("MedborgarLand", "VARCHAR", None, "categorical"),
-        ("CivilStand", "VARCHAR", None, "categorical"),
-        ("Lan", "INTEGER", None, "categorical"),
-        ("Yrke_KOD", "VARCHAR", None, "categorical"),
-        ("Kon", "CHAR(1)", None, "categorical"),
+        # Layer 3 used to be a loose "known categorical name" pass
+        # (Kommun / Sun2000Inr / FodelseLand / Kon / ...). Removed: the
+        # value_set schema makes regmeta authoritative for these, and
+        # the false-positive risk on common Swedish stems was too high.
+        # Anything regmeta doesn't know now falls through to sql_type
+        # or high_cardinality and surfaces in the inspector for review.
         # Layer 4: sql_type drives numeric / date for unrecognised names
         ("SammanInk", "BIGINT", None, "numeric"),  # the bug 2 case
         ("SomeAmount", "DECIMAL(18,2)", None, "numeric"),
@@ -141,25 +137,29 @@ def test_classify_id_pattern_beats_regmeta_classification():
         ("ateranv", "rtb", "categorical"),
         ("FELPERSONNR", "Registret över totalbefolkningen (RTB)", "categorical"),
         ("LopNrByte", "RTB", "categorical"),
+        ("FodelseAr", "RTB", "categorical"),
+        ("FodelseArMan", "RTB", "categorical"),
         # Outside RTB, the same names fall through (BIGINT → numeric).
         ("AterAnv", "LISA", "numeric"),
         ("LopNrByte", "LISA", "numeric"),
         ("FelPersonNr", None, "numeric"),
+        ("FodelseAr", "LISA", "numeric"),
         # Variants don't match even under RTB
         ("ater_anv", "RTB", "numeric"),
         ("AterAnvalt", "RTB", "numeric"),
+        ("FodelseArManed", "RTB", "numeric"),
     ],
 )
-def test_classify_rtb_binary_flags(name: str, register: str | None, expected: str):
-    """RTB record-quality flag names are classified as binary categorical
-    only when the register string identifies the source as RTB."""
+def test_classify_rtb_named_categorical(name: str, register: str | None, expected: str):
+    """RTB-scoped exact-name allowlist: classified as categorical only
+    when the register string identifies the source as RTB."""
     assert _classify(name, "BIGINT", None, register) == expected
 
 
 def test_classify_lopnr_id_excludes_lopnrbyte():
     """`LopNrByte` is the RTB pid-change flag, not an identifier — the
     `lopnr` ID pattern explicitly excludes it so the register-scoped
-    binary-flag rule can take effect, and outside RTB it doesn't get
+    categorical rule can take effect, and outside RTB it doesn't get
     silently typed as `id` via the unanchored `lopnr` substring match."""
     assert _classify("LopNrByte", "BIGINT", None, "RTB") == "categorical"
     assert _classify("LopNrByte", "BIGINT", None, None) == "numeric"
@@ -192,7 +192,9 @@ def test_build_config_routes_columns_per_source():
     assert out["contract_version"] == "mdw-config-1.0.0"
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
-    assert cols["Kommun"] == {"type": "categorical"}
+    # No --register and no name-pattern fallback: Kommun falls through
+    # on its sql_type (char → high_cardinality) and the user reviews.
+    assert cols["Kommun"] == {"type": "high_cardinality"}
     assert cols["SammanInk"] == {"type": "numeric"}
     assert cols["InkomstSumma"] == {"type": "numeric"}
     assert cols["WhateverElse"] == {"type": "high_cardinality"}
@@ -552,7 +554,10 @@ def test_cli_configure_invokes_module(tmp_path: Path):
     assert target.exists()
     payload = json.loads(target.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
-    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "categorical"}
+    # No --register: Kommun has no sql_type, falls through to high_cardinality.
+    assert payload["column_types"]["lisa_2018"]["Kommun"] == {
+        "type": "high_cardinality"
+    }
 
 
 def test_cli_configure_refuses_overwrite_without_flag(tmp_path: Path):
@@ -643,7 +648,8 @@ def test_configure_output_is_valid_mdw_config(tmp_path: Path):
     payload = json.loads(out.read_text(encoding="utf-8"))
     cfg = parse_config(payload)
     assert cfg.lookup_type("lisa_2018", "LopNr").type == "id"
-    assert cfg.lookup_type("lisa_2018", "Kommun").type == "categorical"
+    # No --register: Kommun lands at high_cardinality (char → fallthrough).
+    assert cfg.lookup_type("lisa_2018", "Kommun").type == "high_cardinality"
     assert cfg.lookup_type("lisa_2018", "InkomstSumma").type == "numeric"
 
 
