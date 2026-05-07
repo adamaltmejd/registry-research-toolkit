@@ -836,6 +836,16 @@ def _resolve_column_type(
     return "?"
 
 
+def _is_column_overridden(
+    col_name: str,
+    sources: list[str],
+    column_overrides: dict[tuple[str, str], str],
+) -> bool:
+    """Whether the user has manually changed this column's type in any
+    of the group's sources during this inspector session."""
+    return any((src_name, col_name) in column_overrides for src_name in sources)
+
+
 def _inspect_register_group(
     gid: str,
     groups: dict[str, RegisterGroup],
@@ -869,7 +879,9 @@ def _inspect_register_group(
 
         total_cols = sum(len(cols) for _, cols in sections)
         n_idx_w = max(2, len(str(total_cols)))
-        type_w = 16  # fits "high_cardinality"
+        # Width fits "high_cardinality" (16) plus a trailing "*" marker
+        # for manually-overridden rows.
+        type_w = 17
         # Size the name column to actual content (longest column name + 1
         # space gap), not the full terminal width — otherwise short names
         # leave a giant whitespace gap that pushes long classification
@@ -913,6 +925,14 @@ def _inspect_register_group(
                     column_overrides,
                     config,
                 )
+                # "*" marks rows whose type was changed manually in this
+                # inspector session — distinguishes user judgement from
+                # the auto-classifier's guess.
+                t_disp = (
+                    f"{t}*"
+                    if _is_column_overridden(col_name, src_subset, column_overrides)
+                    else t
+                )
                 if col_name in grp.regmeta_tags:
                     sn = grp.regmeta_tags[col_name]
                     regmeta_cell = sn if sn else "✓"
@@ -922,12 +942,19 @@ def _inspect_register_group(
                 name_disp = _truncate(col_name, name_w)
                 line = (
                     f"    [{idx:>{n_idx_w}}] {name_disp:<{name_w}} "
-                    f"{t:<{type_w}} {regmeta_cell:<{regmeta_w}}"
+                    f"{t_disp:<{type_w}} {regmeta_cell:<{regmeta_w}}"
                 )
                 print(line.rstrip())
                 type_rows.append((col_name, t))
 
         print("\n  [r] change register / [number] change column type / [enter] back")
+        # Only show the legend when at least one override exists in
+        # this group — keeps the help line out of the way when nothing
+        # is starred.
+        if any(
+            src_name in {s for s, _ in column_overrides} for src_name in grp.sources
+        ):
+            print("  ('*' after type = manually overridden in this session)")
         choice = _prompt("  Choice", default="").strip().lower()
         if choice == "":
             return config

@@ -18,6 +18,7 @@ from mock_data_wizard import interactive
 from mock_data_wizard.interactive import (
     Stage,
     _detect_stage,
+    _is_column_overridden,
     _normalize_project_number,
     _render_configure_body,
 )
@@ -1491,6 +1492,26 @@ def test_detect_separate_file_panels_handles_csv_extension():
         "Äp9_2004.csv",
         "Äp9_2005.csv",
     ]
+
+
+def test_is_column_overridden_detects_session_overrides():
+    """The override marker fires when any source in the group has the
+    column in `column_overrides`, and stays False otherwise."""
+    sources = ["lisa_2018", "lisa_2019"]
+
+    # Empty overrides → never marked
+    assert _is_column_overridden("Kommun", sources, {}) is False
+
+    # Override on one source in the group → marked
+    overrides = {("lisa_2018", "Kommun"): "categorical"}
+    assert _is_column_overridden("Kommun", sources, overrides) is True
+
+    # Override only on a source outside the group → not marked
+    other_sources = ["rams_2018"]
+    assert _is_column_overridden("Kommun", other_sources, overrides) is False
+
+    # Different column → not marked
+    assert _is_column_overridden("FodelseLand", sources, overrides) is False
 
 
 def test_format_source_list_does_not_extract_day_from_yyyymmdd():
