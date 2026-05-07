@@ -99,6 +99,22 @@ def _yes_no_custom(message: str, *, default: str) -> str:
 
 
 _PROJECT_RE = re.compile(r"^P?(\d{4})$", re.IGNORECASE)
+# Trailing 4-digit year. The negative lookbehind blocks a match when
+# the 4 digits are preceded by another digit — that's how
+# `..._20241231` (a YYYYMMDD date) avoids being parsed as year=1231,
+# while still letting `Kursprov_gymn_HT2011` (no underscore separator
+# but a non-digit boundary) match cleanly.
+_YEAR_SUFFIX_RE = re.compile(r"^(.+?)(?<!\d)(\d{4})$")
+# Column names that look like a panel time-key. Lowercase comparison.
+_TIME_KEY_NAMES = frozenset({"ar", "indatum", "year", "period"})
+# An opaque column with one of these suffixes is almost
+# always a miscategorised code/type column. `_kod` and `_typ` are SCB
+# conventions; trailing digits cover `Yrke3`, `SNI2007Niva3`, etc.
+_AMBIGUOUS_SUFFIX_RE = re.compile(r"(_kod|_typ|\d+)$", re.IGNORECASE)
+# Cap on per-column ambiguity prompts to avoid death-by-prompts on
+# wide tables. The remainder is reported once at the end and left for
+# the user to hand-edit.
+_AMBIGUOUS_REVIEW_CAP = 10
 
 
 def _normalize_project_number(raw: str) -> str | None:
@@ -256,49 +272,6 @@ def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
 
 # -- Phase 2 helpers (configure interview) ---------------------------------
 
-# Trailing 4-digit year. The negative lookbehind blocks a match when
-# the 4 digits are preceded by another digit — that's how
-# `..._20241231` (a YYYYMMDD date) avoids being parsed as year=1231,
-# while still letting `Kursprov_gymn_HT2011` (no underscore separator
-# but a non-digit boundary) match cleanly.
-_YEAR_SUFFIX_RE = re.compile(r"^(.+?)(?<!\d)(\d{4})$")
-# Column names that look like a panel time-key. Lowercase comparison.
-_TIME_KEY_NAMES = frozenset({"ar", "indatum", "year", "period"})
-# An opaque column with one of these suffixes is almost
-# always a miscategorised code/type column. `_kod` and `_typ` are SCB
-# conventions; trailing digits cover `Yrke3`, `SNI2007Niva3`, etc.
-_AMBIGUOUS_SUFFIX_RE = re.compile(r"(_kod|_typ|\d+)$", re.IGNORECASE)
-# Cap on per-column ambiguity prompts to avoid death-by-prompts on
-# wide tables. The remainder is reported once at the end and left for
-# the user to hand-edit.
-_AMBIGUOUS_REVIEW_CAP = 10
-
-
-def _detect_separate_file_panels(discover: dict) -> list[dict]:
-    """Cluster sources by ``<prefix>_<4-digit year>`` suffix.
-
-    Returns clusters of size ≥ 2 only:
-        ``[{"prefix": "lisa", "members": [{"source": ..., "period": int}, ...]}]``
-    Members are sorted by period ascending so the user sees a stable
-    chronological list.
-    """
-    clusters: dict[str, list[dict]] = {}
-    for src in discover.get("sources", []):
-        name = src.get("source_name", "")
-        m = _match_year_suffix(name)
-        if not m:
-            continue
-        prefix = m.group(1).rstrip("_-")
-        if not prefix:
-            continue
-        year = int(m.group(2))
-        clusters.setdefault(prefix, []).append({"source": name, "period": year})
-    return [
-        {"prefix": p, "members": sorted(ms, key=lambda d: d["period"])}
-        for p, ms in clusters.items()
-        if len(ms) >= 2
-    ]
-
 
 def _find_time_key_in_source(src: dict) -> str | None:
     """Return the source's first ``AR``/``INDATUM``/``year``/``period``
@@ -354,83 +327,6 @@ def _ambiguous_columns(payload: dict) -> list[tuple[str, str]]:
             if entry.get("type") == "opaque" and _AMBIGUOUS_SUFFIX_RE.search(col):
                 out.append((source, col))
     return out
-
-
-def _interview_panels(discover: dict, payload: dict) -> None:
-    """Surface candidate panels and append confirmed ones to ``payload['panels']``.
-
-    Two passes: separate-files clusters first (so the merged-table pass
-    can skip already-claimed sources). Each candidate is presented as a
-    yes/no prompt; declining leaves the schema untouched.
-    """
-    panels: list[dict] = list(payload.get("panels", []))
-    used_sources: set[str] = set()
-    sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
-
-    for cluster in _detect_separate_file_panels(discover):
-        members = cluster["members"]
-        members_str = ", ".join(m["source"] for m in members)
-        print(f"\nThese {len(members)} sources look like a panel: {members_str}")
-        if not _yes_no("Treat them as one panel?", default=True):
-            continue
-        member_srcs = [sources_by_name[m["source"]] for m in members]
-        shared_id = _shared_id_column(member_srcs)
-        panel_id = (
-            _prompt("  panel_id", default=cluster["prefix"]).strip()
-            or cluster["prefix"]
-        )
-        if shared_id:
-            panel_key = _prompt("  panel_key", default=shared_id).strip() or shared_id
-        else:
-            panel_key = _prompt("  panel_key (no shared id-typed column found)").strip()
-            if not panel_key:
-                print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
-                continue
-        panels.append(
-            {
-                "panel_id": panel_id,
-                "layout": "separate_files",
-                "panel_key": panel_key,
-                "members": members,
-            }
-        )
-        used_sources.update(m["source"] for m in members)
-
-    for src in discover.get("sources", []):
-        name = src["source_name"]
-        if name in used_sources:
-            continue
-        time_key = _find_time_key_in_source(src)
-        if not time_key:
-            continue
-        print(f"\nSource {name!r} has a time-key-like column {time_key!r}.")
-        if not _yes_no("Set up a merged_table panel?", default=False):
-            continue
-        from .classify import is_known_id
-
-        ids = [c["name"] for c in src.get("columns", []) if is_known_id(c["name"])]
-        default_pk = ids[0] if len(ids) == 1 else None
-        if default_pk:
-            panel_key = _prompt("  panel_key", default=default_pk).strip() or default_pk
-        else:
-            panel_key = _prompt("  panel_key").strip()
-            if not panel_key:
-                print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
-                continue
-        panel_id = _prompt("  panel_id", default=name).strip() or name
-        panels.append(
-            {
-                "panel_id": panel_id,
-                "layout": "merged_table",
-                "panel_key": panel_key,
-                "source": name,
-                "time_key": time_key,
-            }
-        )
-        used_sources.add(name)
-
-    if panels:
-        payload["panels"] = panels
 
 
 def _interview_ambiguous(payload: dict) -> None:
@@ -663,6 +559,26 @@ def _format_source_list(sources: list[str]) -> str:
 
 
 @dataclass
+class PanelCandidate:
+    """Auto-detected panel shape for a register group.
+
+    ``separate_files``: every group source carries the same year-suffix
+    stem (e.g. ``lisa_2018``, ``lisa_2019``); each source is one period.
+    ``members`` is sorted ascending by period.
+
+    ``merged_table``: a single source carries every period in a
+    ``time_key`` column (``AR`` / ``INDATUM`` / ``year`` / ``period``).
+    """
+
+    layout: str  # "separate_files" | "merged_table"
+    members: list[dict] = field(default_factory=list)
+    source: str | None = None
+    time_key: str | None = None
+    suggested_panel_id: str | None = None
+    suggested_panel_key: str | None = None
+
+
+@dataclass
 class RegisterGroup:
     """All sources sharing one auto-detected register, regardless of schema variant.
 
@@ -682,6 +598,7 @@ class RegisterGroup:
     )
     regmeta_signals: dict[str, RegmetaSignal] = field(default_factory=dict)
     schema_variants: int = 0
+    panel_candidate: PanelCandidate | None = None
 
     @property
     def register_str(self) -> str:
@@ -718,6 +635,7 @@ def group_by_register(
     heterogeneous and the user needs to decide on each one separately.
     """
     groups: dict[str, RegisterGroup] = {}
+    sources_by_name: dict[str, dict] = {}
     for fid, family_sources in families.items():
         guess = guesses[fid]
         key = (
@@ -752,7 +670,260 @@ def group_by_register(
             grp.columns_by_source[name] = [
                 (c["name"], c.get("sql_type")) for c in src.get("columns", [])
             ]
+            sources_by_name[name] = src
+    for grp in groups.values():
+        grp.panel_candidate = _detect_panel_candidate(grp, sources_by_name)
     return groups
+
+
+def _detect_panel_candidate(
+    grp: RegisterGroup,
+    sources_by_name: dict[str, dict],
+) -> PanelCandidate | None:
+    """Return the panel shape implied by the group's sources, or None.
+
+    Two shapes:
+
+    - **separate_files**: every group source matches ``<stem><YYYY>``
+      against a single shared stem. Each source becomes one panel
+      member. Schema drift across periods is tolerated — the group
+      already merges schema variants of the same register.
+    - **merged_table**: a singleton group whose lone source carries an
+      ``AR`` / ``INDATUM`` / ``year`` / ``period`` column.
+
+    Anything else (mixed stems, no time key) returns None — the user
+    can still hand-edit ``panels`` in the JSON.
+    """
+    unique_sources = list(dict.fromkeys(grp.sources))
+    if len(unique_sources) >= 2:
+        prefixes: set[str] = set()
+        members: list[dict] = []
+        for name in unique_sources:
+            m = _match_year_suffix(name)
+            if not m:
+                return None
+            prefix = m.group(1).rstrip("_-")
+            if not prefix:
+                return None
+            prefixes.add(prefix)
+            members.append({"source": name, "period": int(m.group(2))})
+        if len(prefixes) != 1:
+            return None
+        members.sort(key=lambda d: d["period"])
+        member_srcs = [sources_by_name[m["source"]] for m in members]
+        suggested_key = _shared_id_column(member_srcs)
+        return PanelCandidate(
+            layout="separate_files",
+            members=members,
+            suggested_panel_id=next(iter(prefixes)),
+            suggested_panel_key=suggested_key,
+        )
+    if len(unique_sources) == 1:
+        from .classify import is_known_id
+
+        name = unique_sources[0]
+        src = sources_by_name.get(name)
+        if src is None:
+            return None
+        time_key = _find_time_key_in_source(src)
+        if time_key is None:
+            return None
+        ids = [c["name"] for c in src.get("columns", []) if is_known_id(c["name"])]
+        suggested_key = ids[0] if len(ids) == 1 else None
+        return PanelCandidate(
+            layout="merged_table",
+            source=name,
+            time_key=time_key,
+            suggested_panel_id=name,
+            suggested_panel_key=suggested_key,
+        )
+    return None
+
+
+def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | None:
+    """One-line panel summary for the inspector header.
+
+    Three states:
+
+    - configured: ``panel: <id> by <key> (...)``
+    - candidate, not configured: ``panel: candidate (...)  [p to configure]``
+    - neither: ``None`` (the line is omitted entirely)
+    """
+    if configured is not None:
+        layout = configured.get("layout", "?")
+        pid = configured.get("panel_id", "?")
+        pkey = configured.get("panel_key", "?")
+        if layout == "separate_files":
+            members = configured.get("members", [])
+            periods = sorted(
+                m.get("period") for m in members if m.get("period") is not None
+            )
+            if periods:
+                span = f"{len(members)} periods {periods[0]}–{periods[-1]}"
+            else:
+                span = f"{len(members)} periods"
+            return f"panel: {pid} by {pkey} ({span})  [p to edit]"
+        tk = configured.get("time_key", "?")
+        src = configured.get("source", "?")
+        return f"panel: {pid} by {pkey} (merged_table on {src}.{tk})  [p to edit]"
+    cand = grp.panel_candidate
+    if cand is None:
+        return None
+    if cand.layout == "separate_files":
+        periods = sorted(m["period"] for m in cand.members)
+        span = f"{len(cand.members)} sources {periods[0]}–{periods[-1]}"
+        return f"panel: candidate ({span}, no panel_key set)  [p to configure]"
+    return (
+        f"panel: candidate (merged_table on {cand.source}.{cand.time_key}, "
+        f"no panel_key set)  [p to configure]"
+    )
+
+
+def _auto_apply_panel_candidates(
+    groups: dict[str, RegisterGroup],
+) -> dict[str, dict]:
+    """Pre-populate panels for groups whose candidate has an unambiguous key.
+
+    Mirrors how column types are auto-classified: the wizard makes the
+    obvious call up front and the user overrides via the inspector.
+    Auto-apply requires ``suggested_panel_key`` to be set — for
+    separate_files that means a single shared id-typed column across
+    all members; for merged_table it means exactly one id column on
+    the source. Anything else (no shared id, multiple candidate
+    panel_keys) stays as a "candidate" hint until the user hits ``[p]``
+    to pick the key explicitly.
+    """
+    out: dict[str, dict] = {}
+    for gid, grp in groups.items():
+        cand = grp.panel_candidate
+        if cand is None or cand.suggested_panel_key is None:
+            continue
+        if cand.layout == "separate_files":
+            out[gid] = {
+                "panel_id": cand.suggested_panel_id or gid,
+                "layout": "separate_files",
+                "panel_key": cand.suggested_panel_key,
+                "members": cand.members,
+            }
+        else:
+            out[gid] = {
+                "panel_id": cand.suggested_panel_id or cand.source,
+                "layout": "merged_table",
+                "panel_key": cand.suggested_panel_key,
+                "source": cand.source,
+                "time_key": cand.time_key,
+            }
+    return out
+
+
+def _apply_panels_to_config(config: dict, panels_by_gid: dict[str, dict]) -> None:
+    """Mirror ``panels_by_gid`` onto ``config['panels']``.
+
+    Drops the key entirely when empty so the written JSON stays minimal —
+    ``parse_config`` treats missing/empty equivalently, but a stray
+    ``"panels": []`` would mislead readers into thinking the user
+    deliberately authored an empty panel list.
+    """
+    if panels_by_gid:
+        config["panels"] = list(panels_by_gid.values())
+    else:
+        config.pop("panels", None)
+
+
+def _edit_panel_for_group(
+    gid: str, grp: RegisterGroup, panels_by_gid: dict[str, dict]
+) -> None:
+    """Run the [p] sub-prompt for one group, mutating ``panels_by_gid``.
+
+    Source of truth for layout/members is the existing panel when one
+    is already configured (so the user can edit a non-candidate panel
+    they hand-wrote in the JSON); otherwise the auto-detected
+    candidate. With neither, the action is a no-op with a hint.
+    """
+    cand = grp.panel_candidate
+    existing = panels_by_gid.get(gid)
+    if existing is None and cand is None:
+        print("  No panel candidate detected for this group.")
+        return
+
+    if existing is not None:
+        if not _yes_no("  Keep this panel?", default=True):
+            panels_by_gid.pop(gid, None)
+            return
+        layout = existing["layout"]
+    else:
+        if not _yes_no("  Is this a panel?", default=True):
+            return
+        assert (
+            cand is not None
+        )  # _yes_no path requires a candidate; existing handled above
+        layout = cand.layout
+
+    if layout == "separate_files":
+        members = (existing or {}).get("members") or (cand.members if cand else [])
+        if not members:
+            print("  No members available for separate_files panel.", file=sys.stderr)
+            return
+        default_id = (
+            (existing or {}).get("panel_id")
+            or (cand.suggested_panel_id if cand else None)
+            or gid
+        )
+        default_key = (existing or {}).get("panel_key") or (
+            cand.suggested_panel_key if cand else None
+        )
+        panel_id = _prompt("  panel_id", default=default_id).strip() or default_id
+        if default_key:
+            panel_key = (
+                _prompt("  panel_key", default=default_key).strip() or default_key
+            )
+        else:
+            panel_key = _prompt("  panel_key (no shared id-typed column found)").strip()
+            if not panel_key:
+                print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
+                return
+        panels_by_gid[gid] = {
+            "panel_id": panel_id,
+            "layout": "separate_files",
+            "panel_key": panel_key,
+            "members": members,
+        }
+        return
+
+    # merged_table
+    source = (existing or {}).get("source") or (cand.source if cand else None)
+    time_key = (existing or {}).get("time_key") or (cand.time_key if cand else None)
+    if not source:
+        print("  No source available for merged_table panel.", file=sys.stderr)
+        return
+    default_id = (
+        (existing or {}).get("panel_id")
+        or (cand.suggested_panel_id if cand else None)
+        or source
+    )
+    default_key = (existing or {}).get("panel_key") or (
+        cand.suggested_panel_key if cand else None
+    )
+    if default_key:
+        panel_key = _prompt("  panel_key", default=default_key).strip() or default_key
+    else:
+        panel_key = _prompt("  panel_key").strip()
+        if not panel_key:
+            print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
+            return
+    panel_id = _prompt("  panel_id", default=default_id).strip() or default_id
+    if not time_key:
+        time_key = _prompt("  time_key").strip()
+        if not time_key:
+            print("  Skipping panel (no time_key supplied).", file=sys.stderr)
+            return
+    panels_by_gid[gid] = {
+        "panel_id": panel_id,
+        "layout": "merged_table",
+        "panel_key": panel_key,
+        "source": source,
+        "time_key": time_key,
+    }
 
 
 def _columns_by_availability(
@@ -787,16 +958,26 @@ def _columns_by_availability(
     return sections
 
 
-def _render_register_menu(groups: dict[str, RegisterGroup]) -> list[str]:
-    """Print the register-group menu. Returns group ids in display order."""
+def _render_register_menu(
+    groups: dict[str, RegisterGroup],
+    panels_by_gid: dict[str, dict],
+) -> list[str]:
+    """Print the register-group menu. Returns group ids in display order.
+
+    The trailing column is a panel indicator (``✓ panel`` when one is
+    configured; ``⚠ candidate`` when the auto-detector found a shape
+    but couldn't pick a panel_key; blank otherwise) — replaces the
+    earlier source / column / schema counts since per-group counts are
+    already visible in the inspector header.
+    """
     gids = list(groups.keys())
     width = _terminal_width()
 
     n_idx_w = max(2, len(str(len(gids))))
     fixed_left = 2 + 1 + n_idx_w + 2 + 1
     fixed_glyph = 3
-    counts_w = len(" 999 src, 99–999 cols, 99 schemas")
-    overhead = fixed_left + fixed_glyph + counts_w + 2
+    panel_w = len("⚠ candidate")
+    overhead = fixed_left + fixed_glyph + panel_w + 2
 
     budget = max(width - overhead, _MIN_RENDER_WIDTH - overhead)
     label_w = max(16, int(budget * 0.40))
@@ -808,22 +989,19 @@ def _render_register_menu(groups: dict[str, RegisterGroup]) -> list[str]:
         grp = groups[gid]
         glyph = _CONFIDENCE_GLYPH[grp.confidence]
         unique_sources = list(dict.fromkeys(grp.sources))
-        n_src = len(unique_sources)
-        col_counts = [len(cols) for cols in grp.columns_by_source.values()]
-        if grp.schema_variants > 1:
-            lo, hi = min(col_counts), max(col_counts)
-            counts_part = (
-                f"{n_src:>3} src, {lo}–{hi} cols, {grp.schema_variants} schemas"
-            )
+        if gid in panels_by_gid:
+            panel_part = "✓ panel"
+        elif grp.panel_candidate is not None:
+            panel_part = "⚠ candidate"
         else:
-            counts_part = f"{n_src:>3} src, {col_counts[0]:>4} cols"
+            panel_part = ""
         label = _truncate(_format_source_list(unique_sources), label_w)
         reg_chunks = textwrap.wrap(grp.register_str, width=register_w) or [""]
         first_line = (
             f"  [{i:>{n_idx_w}}] {label:<{label_w}} {glyph} "
-            f"{reg_chunks[0]:<{register_w}} {counts_part}"
+            f"{reg_chunks[0]:<{register_w}} {panel_part}"
         )
-        print(first_line)
+        print(first_line.rstrip())
         for chunk in reg_chunks[1:]:
             print(cont_indent + chunk)
     print()
@@ -962,6 +1140,7 @@ def _inspect_register_group(
     groups: dict[str, RegisterGroup],
     register_per_source: dict[str, str | None],
     column_overrides: dict[tuple[str, str], str],
+    panels_by_gid: dict[str, dict],
     config: dict,
     payload: dict,
 ) -> dict:
@@ -984,6 +1163,9 @@ def _inspect_register_group(
             )
         else:
             print(f"  Sources: {n_unique} file(s)")
+        panel_line = _render_panel_line(grp, panels_by_gid.get(gid))
+        if panel_line is not None:
+            print(f"  {panel_line}")
 
         sections = _columns_by_availability(grp)
         # Flat ordered list of (col_name, current_type) so the user's
@@ -1065,7 +1247,10 @@ def _inspect_register_group(
                 print(line.rstrip())
                 type_rows.append((col_name, t))
 
-        print("\n  [r] change register / [number] change column type / [enter] back")
+        print(
+            "\n  [r] change register / [p] panel / [number] change column type / "
+            "[enter] back"
+        )
         # Only show the legend when at least one override exists in
         # this group — keeps the help line out of the way when nothing
         # is starred.
@@ -1076,6 +1261,10 @@ def _inspect_register_group(
         choice = _prompt("  Choice", default="").strip().lower()
         if choice == "":
             return config
+        if choice == "p":
+            _edit_panel_for_group(gid, grp, panels_by_gid)
+            _apply_panels_to_config(config, panels_by_gid)
+            continue
         if choice == "r":
             new_reg = _prompt(
                 "  New register (name or id; blank to skip regmeta for this group)"
@@ -1125,6 +1314,9 @@ def _inspect_register_group(
             except (ValueError, RegmetaError) as exc:
                 print(f"  Error rebuilding config: {exc}", file=sys.stderr)
                 continue
+            # build_config rewrites the dict from scratch — restore the
+            # user's in-progress panel edits.
+            _apply_panels_to_config(config, panels_by_gid)
             continue
         try:
             i = int(choice)
@@ -1165,10 +1357,11 @@ def _interview_register_groups(
     groups: dict[str, RegisterGroup],
     register_per_source: dict[str, str | None],
     column_overrides: dict[tuple[str, str], str],
+    panels_by_gid: dict[str, dict],
     config: dict,
 ) -> dict:
     """Register-group review loop. Returns the (possibly rebuilt) config."""
-    gids = _render_register_menu(groups)
+    gids = _render_register_menu(groups, panels_by_gid)
     print("Press [enter] or [a] to accept all, [number] to inspect/edit, [q] to abort.")
     while True:
         choice = _prompt("Choice", default="").strip().lower()
@@ -1191,10 +1384,11 @@ def _interview_register_groups(
             groups,
             register_per_source,
             column_overrides,
+            panels_by_gid,
             config,
             payload,
         )
-        gids = _render_register_menu(groups)
+        gids = _render_register_menu(groups, panels_by_gid)
         print(
             "Press [enter] or [a] to accept all, [number] to inspect/edit, "
             "[q] to abort."
@@ -1298,6 +1492,13 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
     print()
 
     column_overrides: dict[tuple[str, str], str] = {}
+    panels_by_gid: dict[str, dict] = _auto_apply_panel_candidates(groups)
+    _apply_panels_to_config(config, panels_by_gid)
+    if panels_by_gid:
+        print(
+            f"Auto-detected {len(panels_by_gid)} panel(s); inspect a group "
+            "and press [p] to edit or remove."
+        )
     if not force:
         try:
             config = _interview_register_groups(
@@ -1305,6 +1506,7 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
                 groups,
                 register_per_source,
                 column_overrides,
+                panels_by_gid,
                 config,
             )
         except SystemExit as exc:
@@ -1314,7 +1516,8 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
         if source in config["column_types"] and col in config["column_types"][source]:
             config["column_types"][source][col] = {"type": new_type}
 
-    _interview_panels(payload, config)
+    _apply_panels_to_config(config, panels_by_gid)
+
     _interview_ambiguous(config)
     _interview_suppress_k(config)
 
