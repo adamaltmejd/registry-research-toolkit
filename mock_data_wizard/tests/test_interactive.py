@@ -621,20 +621,57 @@ def test_shared_id_column_returns_unique_match():
     assert interactive._shared_id_column(members) == "LopNr"
 
 
-def test_shared_id_column_none_when_zero_or_multiple():
-    # Zero shared id columns.
+def test_shared_id_column_none_when_no_overlap():
+    """Zero id columns shared across members → None (no panel key
+    candidate at all)."""
     assert (
         interactive._shared_id_column(
             [{"columns": [{"name": "LopNr"}]}, {"columns": [{"name": "Kon"}]}]
         )
         is None
     )
-    # Two shared id columns — ambiguous, no default.
+
+
+def test_shared_id_column_prefers_personnr_when_multiple():
+    """Multiple shared id columns: prefer the person-derived id over
+    a record-level surrogate like ``LopNr``, since PersonNr (or its
+    composite forms) is what spans a panel."""
+    # Bare PersonNr wins over LopNr
     members = [
         {"columns": [{"name": "LopNr"}, {"name": "PersonNr"}]},
         {"columns": [{"name": "LopNr"}, {"name": "PersonNr"}]},
     ]
-    assert interactive._shared_id_column(members) is None
+    assert interactive._shared_id_column(members) == "PersonNr"
+
+    # Composite LopNr_PersonNr wins over both LopNr and PersonNr
+    members = [
+        {
+            "columns": [
+                {"name": "LopNr"},
+                {"name": "PersonNr"},
+                {"name": "LopNr_PersonNr"},
+            ]
+        },
+        {
+            "columns": [
+                {"name": "LopNr"},
+                {"name": "PersonNr"},
+                {"name": "LopNr_PersonNr"},
+            ]
+        },
+    ]
+    assert interactive._shared_id_column(members) == "LopNr_PersonNr"
+
+
+def test_shared_id_column_falls_back_to_alpha_sort():
+    """When several ids are shared but none match the personnr-style
+    preference list, return the alphabetically-first to keep the
+    default deterministic across runs."""
+    members = [
+        {"columns": [{"name": "LopNr_Apa"}, {"name": "LopNr_Banan"}]},
+        {"columns": [{"name": "LopNr_Apa"}, {"name": "LopNr_Banan"}]},
+    ]
+    assert interactive._shared_id_column(members) == "LopNr_Apa"
 
 
 def test_ambiguous_columns_picks_kod_typ_and_digit_suffixes():

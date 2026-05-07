@@ -308,11 +308,14 @@ def _find_time_key_in_source(src: dict) -> str | None:
 
 
 def _shared_id_column(member_sources: list[dict]) -> str | None:
-    """Unique id-typed column name present in every member, else None.
+    """Best-guess id column shared by every member, else None.
 
     Uses ``is_known_id`` (the same name pattern the configurer uses) so
-    a panel_key default lines up with whatever ``build_config`` would
-    classify as ``id`` for these columns.
+    the panel_key default lines up with whatever ``build_config`` would
+    classify as ``id``. When several id columns are shared (e.g.
+    ``LopNr`` + ``LopNr_PersonNr``), prefer the personnr-derived one —
+    it's the actual person identifier, while ``LopNr`` is often a
+    record-level surrogate that doesn't span the panel.
     """
     from .classify import is_known_id
 
@@ -324,7 +327,18 @@ def _shared_id_column(member_sources: list[dict]) -> str | None:
     if not sets:
         return None
     shared = set.intersection(*sets)
-    return next(iter(shared)) if len(shared) == 1 else None
+    if not shared:
+        return None
+    if len(shared) == 1:
+        return next(iter(shared))
+    # Prefer personnr-derived names. Order encodes preference: explicit
+    # composite key first, then bare PersonNr/PersNr, then fallback to
+    # an alphabetic pick so the result is deterministic across runs.
+    for needle in ("lopnr_personnr", "lopnr_persnr", "personnr", "persnr", "personid"):
+        for cand in shared:
+            if cand.lower() == needle:
+                return cand
+    return sorted(shared)[0]
 
 
 def _ambiguous_columns(payload: dict) -> list[tuple[str, str]]:
