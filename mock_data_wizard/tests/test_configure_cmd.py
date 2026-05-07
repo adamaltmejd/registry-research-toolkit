@@ -710,7 +710,7 @@ def test_group_schema_families_distinguishes_sql_types():
     assert len(families) == 2
 
 
-def test_build_config_register_per_source_overrides_global():
+def test_build_config_register_per_source_overrides_global(monkeypatch):
     """Per-source override beats the global ``register`` argument.
     Sources without a per-source entry fall back to the global default.
     """
@@ -749,38 +749,18 @@ def test_build_config_register_per_source_overrides_global():
 
     import mock_data_wizard.configure as cfg
 
-    monkeypatched = {
-        "regmeta.open_db": lambda _p: FakeConn(),
-        "regmeta.resolve_register_ids": fake_resolve,
-        "regmeta.db.db_path_from_args": lambda _x: Path("/fake/regmeta.db"),
-    }
-    import importlib
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", fake_resolve)
+    monkeypatch.setattr(
+        "regmeta.db.db_path_from_args", lambda _x: Path("/fake/regmeta.db")
+    )
+    monkeypatch.setattr(cfg, "_regmeta_lookup", lambda *a, **k: {})
 
-    regmeta_mod = importlib.import_module("regmeta")
-    regmeta_db_mod = importlib.import_module("regmeta.db")
-
-    orig = {
-        "open_db": regmeta_mod.open_db,
-        "resolve_register_ids": regmeta_mod.resolve_register_ids,
-        "db_path_from_args": regmeta_db_mod.db_path_from_args,
-        "_regmeta_lookup": cfg._regmeta_lookup,
-    }
-    regmeta_mod.open_db = monkeypatched["regmeta.open_db"]
-    regmeta_mod.resolve_register_ids = monkeypatched["regmeta.resolve_register_ids"]
-    regmeta_db_mod.db_path_from_args = monkeypatched["regmeta.db.db_path_from_args"]
-    cfg._regmeta_lookup = lambda *a, **k: {}
-
-    try:
-        out = cfg.build_config(
-            discover,
-            register="LISA",
-            register_per_source={"rams_2018": "RAMS", "custom": None},
-        )
-    finally:
-        regmeta_mod.open_db = orig["open_db"]
-        regmeta_mod.resolve_register_ids = orig["resolve_register_ids"]
-        regmeta_db_mod.db_path_from_args = orig["db_path_from_args"]
-        cfg._regmeta_lookup = orig["_regmeta_lookup"]
+    out = cfg.build_config(
+        discover,
+        register="LISA",
+        register_per_source={"rams_2018": "RAMS", "custom": None},
+    )
 
     assert sorted(seen_registers) == ["LISA", "RAMS"]
     # `custom` had register=None so its column falls through to

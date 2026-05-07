@@ -1563,7 +1563,6 @@ def test_refresh_regmeta_signals_replaces_with_new_register_signals(monkeypatch)
         group_id="reg-34",
         register_id=34,
         register_name="LISA",
-        register_str="LISA (id=34)",
         confidence="partial",
     )
     grp.sources = ["lisa_2018"]
@@ -1890,7 +1889,6 @@ def test_collect_precomputed_signals_lowercases_inner_keys():
         group_id="reg-34",
         register_id=34,
         register_name="LISA",
-        register_str="LISA (id=34)",
         confidence="high",
     )
     grp.regmeta_signals = {"Sun2000Inr": sig}
@@ -1910,7 +1908,6 @@ def test_collect_precomputed_signals_falls_back_to_register_id_string():
         group_id="reg-34",
         register_id=34,
         register_name=None,
-        register_str="id=34",
         confidence="partial",
     )
     out = _collect_precomputed_signals({"reg-34": grp})

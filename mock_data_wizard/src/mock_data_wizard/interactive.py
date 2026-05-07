@@ -17,7 +17,12 @@ from pathlib import Path
 from typing import Any
 
 from . import _bundle
-from .configure import CONFIG_FILENAME, RegmetaSignal, regmeta_implied_type
+from .configure import (
+    CONFIG_FILENAME,
+    Confidence,
+    RegmetaSignal,
+    regmeta_implied_type,
+)
 from .extract import DISCOVER_FILENAME, STATS_FILENAME
 from .generate import MOCK_DATA_DIRNAME
 
@@ -280,11 +285,7 @@ def _detect_separate_file_panels(discover: dict) -> list[dict]:
     clusters: dict[str, list[dict]] = {}
     for src in discover.get("sources", []):
         name = src.get("source_name", "")
-        # Try the raw name first so SQL table names like
-        # `dbo.scb_rams_2018` (where the dot is a schema separator,
-        # not an extension) cluster correctly. Fall back to stripped
-        # for filename sources like `Äp9_2003.csv`.
-        m = _YEAR_SUFFIX_RE.match(name) or _YEAR_SUFFIX_RE.match(_strip_extension(name))
+        m = _match_year_suffix(name)
         if not m:
             continue
         prefix = m.group(1).rstrip("_-")
@@ -530,9 +531,6 @@ _TYPE_KEY_MAP = {
 }
 _VALID_TYPES = frozenset({"id", "categorical", "numeric", "high_cardinality", "date"})
 
-# Below this width we drop the trailing "(X/Y matched)" tail and tighten
-# the source/column count column. Above it we render the full row.
-_NARROW_WIDTH_THRESHOLD = 90
 # Minimum columns we'll render at; below this we just print without
 # pretty alignment (rare — most terminals are 80+).
 _MIN_RENDER_WIDTH = 60
@@ -582,6 +580,16 @@ def _strip_extension(name: str) -> str:
     return name.rsplit(".", 1)[0] if "." in name else name
 
 
+def _match_year_suffix(name: str) -> re.Match[str] | None:
+    """Match ``<stem><year>`` against ``name``, falling back to stripped form.
+
+    Raw name first preserves SQL table names like ``dbo.scb_rams_2018``
+    where the dot is a schema separator; the stripped fallback handles
+    filename sources like ``Äp9_2003.csv``.
+    """
+    return _YEAR_SUFFIX_RE.match(name) or _YEAR_SUFFIX_RE.match(_strip_extension(name))
+
+
 def _collapse_year_ranges(years: list[int]) -> str:
     """``[2003, 2004, 2005, 2008, 2009]`` → ``"2003–2005, 2008–2009"``.
 
@@ -622,10 +630,7 @@ def _format_source_list(sources: list[str]) -> str:
     grouped: dict[tuple[str, str], list[tuple[str, int | None]]] = {}
     order: list[tuple[str, str]] = []
     for s in sources:
-        # Same precedence as `_detect_separate_file_panels`: raw name
-        # first (preserves `dbo.scb_rams_2018`), then stripped for
-        # filename sources.
-        m = _YEAR_SUFFIX_RE.match(s) or _YEAR_SUFFIX_RE.match(_strip_extension(s))
+        m = _match_year_suffix(s)
         if m:
             key = ("yr", m.group(1).rstrip("_-"))
             year: int | None = int(m.group(2))
@@ -639,9 +644,8 @@ def _format_source_list(sources: list[str]) -> str:
     parts: list[str] = []
     for key in order:
         items = grouped[key]
-        # Only collapse when ≥2 distinct years share a stem; a lone
-        # `Foo_2024.csv` is more honest as the literal filename than
-        # as `Foo_2024`.
+        # A lone `Foo_2024.csv` reads more honestly as the literal
+        # filename than as `Foo_2024`, so only collapse when ≥2 years.
         if key[0] == "yr" and len({y for _, y in items if y is not None}) >= 2:
             years = [y for _, y in items if y is not None]
             parts.append(f"{key[1]}_{_collapse_year_ranges(years)}")
@@ -660,9 +664,6 @@ def _format_source_list(sources: list[str]) -> str:
 # into "shared by all" and "only in <subset>" sections.
 
 
-_NO_REGISTER_MARKER = "—"
-
-
 @dataclass
 class RegisterGroup:
     """All sources sharing one auto-detected register, regardless of schema variant.
@@ -676,22 +677,20 @@ class RegisterGroup:
     group_id: str
     register_id: int | None
     register_name: str | None
-    register_str: str
-    confidence: str
+    confidence: Confidence
     sources: list[str] = field(default_factory=list)
     columns_by_source: dict[str, list[tuple[str, str | None]]] = field(
         default_factory=dict
     )
-    # column name → full RegmetaSignal for every column regmeta knows
-    # about under the chosen register. Absent when regmeta has no entry.
-    # The inspector uses this to render the classification short_name (or
-    # ✓ when none), to detect manual-override conflicts, and to
-    # short-circuit the regmeta query in build_config.
     regmeta_signals: dict[str, RegmetaSignal] = field(default_factory=dict)
     schema_variants: int = 0
 
+    @property
+    def register_str(self) -> str:
+        return _register_display(self.register_id, self.register_name)
 
-def _worst_confidence(a: str, b: str) -> str:
+
+def _worst_confidence(a: Confidence, b: Confidence) -> Confidence:
     """Pick the higher-rank (worse) of two confidence labels.
 
     A register group is only as confident as its weakest schema variant
@@ -706,7 +705,7 @@ def _register_display(register_id: int | None, register_name: str | None) -> str
         return f"{register_name} (id={register_id})"
     if register_id is not None:
         return f"id={register_id}"
-    return _NO_REGISTER_MARKER
+    return "—"
 
 
 def group_by_register(
@@ -733,7 +732,6 @@ def group_by_register(
                 group_id=key,
                 register_id=guess.register_id,
                 register_name=guess.register_name,
-                register_str=_register_display(guess.register_id, guess.register_name),
                 confidence=guess.confidence,
             )
         grp = groups[key]
@@ -929,7 +927,7 @@ def _refresh_regmeta_signals(grp: "RegisterGroup", reg_id: int) -> None:
     from regmeta import open_db
     from regmeta.db import db_path_from_args
 
-    from ._util import strip_project_prefix
+    from ._util import lookup_with_prefix_fallback
     from .configure import _regmeta_lookup
 
     col_names: set[str] = set()
@@ -948,9 +946,7 @@ def _refresh_regmeta_signals(grp: "RegisterGroup", reg_id: int) -> None:
 
     refreshed: dict[str, RegmetaSignal] = {}
     for name in col_names:
-        sig = signals.get(name.lower()) or signals.get(
-            strip_project_prefix(name).lower()
-        )
+        sig = lookup_with_prefix_fallback(signals, name)
         if sig is not None:
             refreshed[name] = sig
     grp.regmeta_signals = refreshed
@@ -965,6 +961,8 @@ def _inspect_register_group(
     payload: dict,
 ) -> dict:
     """Inspect / edit a register group. Returns the (possibly rebuilt) config."""
+    from regmeta.errors import RegmetaError
+
     from .configure import build_config, resolve_register_to_id_and_name
 
     while True:
@@ -1080,7 +1078,6 @@ def _inspect_register_group(
             if not new_reg:
                 grp.register_id = None
                 grp.register_name = None
-                grp.register_str = _NO_REGISTER_MARKER
                 grp.confidence = "none"
                 grp.regmeta_signals = {}
                 for src_name in grp.sources:
@@ -1096,7 +1093,6 @@ def _inspect_register_group(
                 reg_id, reg_name = resolved
                 grp.register_id = reg_id
                 grp.register_name = reg_name
-                grp.register_str = _register_display(reg_id, reg_name)
                 # User-asserted register — coverage rate unknown until
                 # next regmeta query; treat as "partial" until proven.
                 grp.confidence = "partial"
@@ -1106,7 +1102,7 @@ def _inspect_register_group(
                 # coverage under the new register, not the auto-guess.
                 try:
                     _refresh_regmeta_signals(grp, reg_id)
-                except Exception as exc:
+                except RegmetaError as exc:
                     print(
                         f"  Warning: could not refresh regmeta signals: {exc}",
                         file=sys.stderr,
@@ -1117,7 +1113,7 @@ def _inspect_register_group(
                     register_per_source=register_per_source,
                     precomputed_signals=_collect_precomputed_signals(groups),
                 )
-            except Exception as exc:
+            except (ValueError, RegmetaError) as exc:
                 print(f"  Error rebuilding config: {exc}", file=sys.stderr)
                 continue
             continue

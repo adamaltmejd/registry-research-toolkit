@@ -50,11 +50,13 @@ import sys
 from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
-from ._util import strip_project_prefix
+from ._util import lookup_with_prefix_fallback, strip_project_prefix
 from .classify import is_known_id, is_rtb_named_categorical
 from .config import SCHEMA_VERSION as CONFIG_SCHEMA_VERSION
+
+Confidence = Literal["high", "partial", "none"]
 
 log = logging.getLogger("mdw.configure")
 
@@ -369,7 +371,6 @@ def build_config(
     """
     sources_in = discover.get("sources", [])
     overrides = register_per_source or {}
-    # Copy so we can fill in DB-fetched signals without mutating the caller's dict.
     cached = dict(precomputed_signals) if precomputed_signals else {}
     effective: dict[str, str | None] = {}
     for src in sources_in:
@@ -435,8 +436,7 @@ def build_config(
         for col in src.get("columns", []):
             col_name = col["name"]
             sql_type = col.get("sql_type")
-            stripped = strip_project_prefix(col_name).lower()
-            signal = signals.get(col_name.lower()) or signals.get(stripped)
+            signal = lookup_with_prefix_fallback(signals, col_name)
             cols_out[col_name] = {
                 "type": _classify(col_name, sql_type, signal, src_register)
             }
@@ -476,14 +476,9 @@ class FamilyGuess:
     columns: list[tuple[str, str | None]]
     register_id: int | None
     register_name: str | None
-    confidence: str  # "high" | "partial" | "none"
+    confidence: Confidence
     match_count: int
     nonid_count: int
-    # column name → full RegmetaSignal for every column regmeta knows
-    # about under the chosen register. Absent when regmeta has no entry.
-    # Carries enough information for the inspector to render the
-    # classification short_name, detect override conflicts, and
-    # short-circuit the regmeta query in build_config.
     regmeta_signals: dict[str, RegmetaSignal] = field(default_factory=dict)
 
 
@@ -504,7 +499,7 @@ def group_schema_families(discover: dict[str, Any]) -> dict[str, list[dict]]:
 
 def _confidence_label(
     register_id: int | None, match_count: int, nonid_count: int
-) -> str:
+) -> Confidence:
     if register_id is None:
         return "none"
     if nonid_count == 0:
@@ -644,9 +639,7 @@ def guess_register_per_family(
             for fid in fids:
                 fam_signals: dict[str, RegmetaSignal] = {}
                 for n, _sql in out[fid].columns:
-                    sig = signals.get(n.lower()) or signals.get(
-                        strip_project_prefix(n).lower()
-                    )
+                    sig = lookup_with_prefix_fallback(signals, n)
                     if sig is not None:
                         fam_signals[n] = sig
                 out[fid].regmeta_signals = fam_signals
@@ -665,15 +658,16 @@ def resolve_register_to_id_and_name(
     interactive flow to validate a user-typed override before applying
     it to the family.
     """
-    try:
-        from regmeta import open_db, resolve_register_ids
-        from regmeta.db import db_path_from_args
-    except Exception:
-        return None
+    import sqlite3
+
+    from regmeta import open_db, resolve_register_ids
+    from regmeta.db import db_path_from_args
+    from regmeta.errors import RegmetaError
+
     try:
         resolved_db = db_path_from_args(str(db_path) if db_path else None)
         conn = open_db(resolved_db)
-    except Exception:
+    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
         return None
     try:
         ids = resolve_register_ids(conn, register)

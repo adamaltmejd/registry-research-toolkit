@@ -16,7 +16,7 @@ from typing import Any
 import regmeta
 from regmeta.queries import extract_year as _regver_year
 
-from ._util import progress, strip_project_prefix
+from ._util import lookup_with_prefix_fallback, progress, strip_project_prefix
 from .stats import ColumnStats, ProjectStats
 
 # Birth-invariant regmeta var_ids eligible for population spine.
@@ -181,7 +181,7 @@ def enrich(
                     int(source_year_raw) if isinstance(source_year_raw, int) else None
                 )
                 for col in source.columns:
-                    rv = _lookup_resolved(resolved, col.column_name)
+                    rv = lookup_with_prefix_fallback(resolved, col.column_name)
                     if col.inferred_type != "categorical" or rv is None:
                         continue
                     observed = set(col.stats.get("frequencies", {})) - {"_other"}
@@ -203,7 +203,7 @@ def enrich(
             enriched_cols = []
             for col in source.columns:
                 ecol = _column_from_stats(col)
-                rv = _lookup_resolved(resolved, ecol.column_name)
+                rv = lookup_with_prefix_fallback(resolved, ecol.column_name)
                 if rv is not None:
                     ecol.register_id = rv.register_id
                     ecol.var_id = rv.var_id
@@ -288,15 +288,6 @@ class _ResolvedVar:
     register_id: int
     var_id: int
     variable_name: str
-
-
-def _lookup_resolved(
-    resolved: dict[str, _ResolvedVar], col_name: str
-) -> _ResolvedVar | None:
-    """Look up a column by name, falling back to the prefix-stripped form."""
-    return resolved.get(col_name.lower()) or resolved.get(
-        strip_project_prefix(col_name).lower()
-    )
 
 
 def _bulk_resolve_all_registers(
