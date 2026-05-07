@@ -316,8 +316,10 @@ def _build_panel_members(sources: list[str], years: dict[str, int]) -> list[dict
     When every source has a distinct year, ``period`` is the year
     itself — most readable. When sources share a year (e.g. HT/VT
     intra-year shards), disambiguate with an alphabetic rank within
-    that year encoded as ``year * 100 + rank``. Sorted ascending so
-    the JSON reads chronologically.
+    that year encoded as ``year * M + rank``, where ``M`` is the
+    smallest power of ten that fits the densest year's shard count
+    (so 100+ same-year shards never collide with the next year). Sorted
+    ascending so the JSON reads chronologically.
     """
     if len(set(years.values())) == len(sources):
         members = [{"source": n, "period": years[n]} for n in sources]
@@ -325,11 +327,17 @@ def _build_panel_members(sources: list[str], years: dict[str, int]) -> list[dict
         same_year: dict[int, list[str]] = {}
         for n in sources:
             same_year.setdefault(years[n], []).append(n)
+        max_per_year = max(len(names) for names in same_year.values())
+        multiplier = 100
+        while multiplier <= max_per_year:
+            multiplier *= 10
         rank: dict[str, int] = {}
-        for y, names in same_year.items():
+        for _, names in same_year.items():
             for i, n in enumerate(sorted(names), start=1):
                 rank[n] = i
-        members = [{"source": n, "period": years[n] * 100 + rank[n]} for n in sources]
+        members = [
+            {"source": n, "period": years[n] * multiplier + rank[n]} for n in sources
+        ]
     members.sort(key=lambda d: d["period"])
     return members
 
@@ -739,24 +747,23 @@ def _detect_panel_candidate(
 ) -> PanelCandidate | None:
     """Return the panel shape implied by the group's sources, or None.
 
-    Two shapes:
+    Two member-emission paths:
 
-    - **separate_files**: every group source matches ``<stem><YYYY>``
-      against a single shared stem. Each source becomes one panel
-      member. Schema drift across periods is tolerated — the group
-      already merges schema variants of the same register.
-    - **merged_table**: a singleton group whose lone source carries an
-      ``AR`` / ``INDATUM`` / ``year`` / ``period`` column.
+    - Multi-source group: every source must match ``...<YYYY>``. Each
+      source becomes a file-member with the parsed year as ``period``.
+      The year suffix is the gate that distinguishes annual snapshots
+      of one register from sibling tables of one register (e.g.
+      RTB main/address/kommun, no year tags). Schema drift across
+      periods is tolerated — the group already merges schema variants.
+    - Singleton group: the lone source must carry an
+      ``AR`` / ``INDATUM`` / ``year`` / ``period`` column; it becomes
+      a column-member with that column as ``time_key``.
 
-    Anything else (mixed stems, no time key) returns None — the user
-    can still hand-edit ``panels`` in the JSON.
+    Anything else (no year suffix, no time key) returns None — the
+    user can still hand-edit ``panels`` in the JSON.
     """
     unique_sources = list(dict.fromkeys(grp.sources))
     if len(unique_sources) >= 2:
-        # Year suffix is the gate that distinguishes annual snapshots
-        # of one register from "different tables of one register"
-        # (e.g. RTB delivered as main/address/kommun without year tags
-        # — same shared id column, same register, but not a panel).
         years_per_source: dict[str, int] = {}
         for name in unique_sources:
             m = _match_year_suffix(name)
@@ -819,11 +826,13 @@ def _summarise_panel_members(members: list[dict]) -> str:
 def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | None:
     """One-line panel summary for the inspector header.
 
-    Three states:
+    States:
 
     - configured: ``panel: <id> by <key> (...)``
-    - candidate, not configured: ``panel: candidate (...)  [p to configure]``
-    - neither: ``None`` (the line is omitted entirely)
+    - candidate w/ unambiguous suggested key, not configured (e.g. user
+      removed an auto-applied panel): show the suggested key
+    - candidate w/ no suggested key: ``panel: candidate (..., no panel_key set)``
+    - no candidate: ``None`` (line omitted)
     """
     if configured is not None:
         pid = configured.get("panel_id", "?")
@@ -835,11 +844,13 @@ def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | Non
     cand = grp.panel_candidate
     if cand is None:
         return None
-    return (
-        f"panel: candidate "
-        f"({_summarise_panel_members(cand.members)}, no panel_key set)"
-        f"  [p to configure]"
-    )
+    summary = _summarise_panel_members(cand.members)
+    if cand.suggested_panel_key:
+        return (
+            f"panel: candidate ({summary}, suggested panel_key="
+            f"{cand.suggested_panel_key})  [p to configure]"
+        )
+    return f"panel: candidate ({summary}, no panel_key set)  [p to configure]"
 
 
 def _auto_apply_panel_candidates(
@@ -854,17 +865,38 @@ def _auto_apply_panel_candidates(
     across all members; for a column-member singleton it means exactly
     one id column on the source. Anything else stays as a "candidate"
     hint until the user hits ``[p]`` to pick the key explicitly.
+
+    Skips candidates whose ``panel_id``, ``panel_key``, or member source
+    would collide with an already-applied panel — ``parse_config``
+    rejects such configs, so silently writing them out would surface as
+    a downstream extract failure. The colliding group keeps its
+    ``panel_candidate`` and the user can resolve it via ``[p]``.
     """
     out: dict[str, dict] = {}
+    seen_ids: set[str] = set()
+    seen_keys: set[str] = set()
+    seen_sources: set[str] = set()
     for gid, grp in groups.items():
         cand = grp.panel_candidate
         if cand is None or cand.suggested_panel_key is None:
             continue
+        panel_id = cand.suggested_panel_id or gid
+        panel_key = cand.suggested_panel_key
+        member_sources = [m["source"] for m in cand.members]
+        if (
+            panel_id in seen_ids
+            or panel_key in seen_keys
+            or any(s in seen_sources for s in member_sources)
+        ):
+            continue
         out[gid] = {
-            "panel_id": cand.suggested_panel_id or gid,
-            "panel_key": cand.suggested_panel_key,
+            "panel_id": panel_id,
+            "panel_key": panel_key,
             "members": cand.members,
         }
+        seen_ids.add(panel_id)
+        seen_keys.add(panel_key)
+        seen_sources.update(member_sources)
     return out
 
 
@@ -1095,9 +1127,12 @@ def _render_register_menu(
 
     The trailing column is a panel indicator (``✓ panel`` when one is
     configured; ``⚠ candidate`` when the auto-detector found a shape
-    but couldn't pick a panel_key; blank otherwise) — replaces the
-    earlier source / column / schema counts since per-group counts are
-    already visible in the inspector header.
+    but couldn't pick a panel_key — i.e. genuinely ambiguous and needs
+    user input; blank otherwise) — replaces the earlier source / column
+    / schema counts since per-group counts are already visible in the
+    inspector header. A candidate with an unambiguous suggested key
+    that is *not* configured (e.g. user explicitly removed it) leaves
+    the column blank rather than nagging.
     """
     gids = list(groups.keys())
     width = _terminal_width()
@@ -1120,7 +1155,10 @@ def _render_register_menu(
         unique_sources = list(dict.fromkeys(grp.sources))
         if gid in panels_by_gid:
             panel_part = "✓ panel"
-        elif grp.panel_candidate is not None:
+        elif (
+            grp.panel_candidate is not None
+            and grp.panel_candidate.suggested_panel_key is None
+        ):
             panel_part = "⚠ candidate"
         else:
             panel_part = ""

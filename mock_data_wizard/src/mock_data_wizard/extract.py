@@ -372,6 +372,17 @@ def _build_panels_block(
                     "n_panel_ids": n_panel_ids,
                 }
             )
+        if not members_out:
+            # Every declared member was missing from the extract -- that
+            # is a configuration error (typos, filtered-out sources),
+            # not a routine suppression case. Surface it here rather
+            # than silently producing a stats payload that would fail
+            # downstream schema validation with a less actionable error.
+            raise RuntimeError(
+                f"panel {panel.panel_id!r}: no member sources matched the "
+                f"extract output (declared: "
+                f"{[m.source for m in panel.members]!r})"
+            )
         out.append(
             {
                 "panel_id": panel.panel_id,

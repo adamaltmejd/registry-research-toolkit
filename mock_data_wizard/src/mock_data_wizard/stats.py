@@ -155,13 +155,32 @@ def _parse_panel(raw: dict) -> Panel:
                 f"panel {pid!r}: member {m_src!r} must have exactly one of "
                 f"'period' or 'time_key'"
             )
-        members.append(
-            PanelMemberRef(
-                source=m_src,
-                period=m.get("period"),
-                time_key=m.get("time_key"),
-            )
-        )
+        if has_period:
+            period = m["period"]
+            # period is a JSON scalar (int or string after _coerce_period).
+            # Reject null/bool/empty so PanelMemberRef invariants hold.
+            if isinstance(period, bool) or period is None:
+                raise StatsValidationError(
+                    f"panel {pid!r}: member {m_src!r} period must be int or string, "
+                    f"got {type(period).__name__}"
+                )
+            if isinstance(period, str) and not period:
+                raise StatsValidationError(
+                    f"panel {pid!r}: member {m_src!r} period must be non-empty"
+                )
+            if not isinstance(period, (int, str)):
+                raise StatsValidationError(
+                    f"panel {pid!r}: member {m_src!r} period must be int or string, "
+                    f"got {type(period).__name__}"
+                )
+            members.append(PanelMemberRef(source=m_src, period=period))
+        else:
+            tk = m["time_key"]
+            if not isinstance(tk, str) or not tk:
+                raise StatsValidationError(
+                    f"panel {pid!r}: member {m_src!r} time_key must be a non-empty string"
+                )
+            members.append(PanelMemberRef(source=m_src, time_key=tk))
     by_period_raw = _require(raw, "by_period", ctx)
     if not isinstance(by_period_raw, list):
         raise StatsValidationError(

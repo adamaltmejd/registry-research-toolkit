@@ -1262,6 +1262,118 @@ def test_register_menu_shows_panel_indicators(capsys):
     assert "panel" not in plain_line and "candidate" not in plain_line
 
 
+def test_register_menu_blanks_unambiguous_candidate_when_not_configured():
+    """A candidate with a suggested_panel_key is no longer flagged
+    ``⚠ candidate`` once the user has explicitly removed the
+    auto-applied panel — the warning is reserved for genuinely
+    ambiguous shapes that still need a key picked."""
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name="LISA",
+        confidence="high",
+        sources=["lisa_2018", "lisa_2019"],
+        columns_by_source={
+            "lisa_2018": [("LopNr", "int")],
+            "lisa_2019": [("LopNr", "int")],
+        },
+        schema_variants=1,
+        panel_candidate=interactive.PanelCandidate(
+            members=[
+                {"source": "lisa_2018", "period": 2018},
+                {"source": "lisa_2019", "period": 2019},
+            ],
+            suggested_panel_id="lisa",
+            suggested_panel_key="LopNr",  # unambiguous
+        ),
+    )
+    import io
+    import contextlib
+
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        interactive._render_register_menu({grp.group_id: grp}, panels_by_gid={})
+    out = buf.getvalue()
+    assert "⚠ candidate" not in out
+    assert "✓ panel" not in out
+
+
+# -- _auto_apply_panel_candidates -----------------------------------------
+
+
+def _candidate_grp(
+    gid: str,
+    suggested_id: str,
+    suggested_key: str | None,
+    sources: list[str],
+) -> interactive.RegisterGroup:
+    return interactive.RegisterGroup(
+        group_id=gid,
+        register_id=None,
+        register_name=None,
+        confidence="high",
+        sources=sources,
+        panel_candidate=interactive.PanelCandidate(
+            members=[{"source": s, "period": 2017 + i} for i, s in enumerate(sources)],
+            suggested_panel_id=suggested_id,
+            suggested_panel_key=suggested_key,
+        ),
+    )
+
+
+def test_auto_apply_skips_panel_key_collision():
+    """Two groups whose only shared id-typed column is ``LopNr`` would
+    each auto-apply with the same ``panel_key``; ``parse_config``
+    rejects that. Auto-apply must skip the conflicting candidate
+    instead of silently writing both."""
+    a = _candidate_grp("g1", "lisa", "LopNr", ["lisa_2018", "lisa_2019"])
+    b = _candidate_grp("g2", "rtb", "LopNr", ["rtb_2018", "rtb_2019"])
+    out = interactive._auto_apply_panel_candidates({"g1": a, "g2": b})
+    assert set(out.keys()) == {"g1"}
+    assert out["g1"]["panel_key"] == "LopNr"
+
+
+def test_auto_apply_skips_panel_id_collision():
+    """When two candidates fall back to the same suggested_panel_id
+    (e.g. both name-derived from a generic stem), only the first
+    auto-applies."""
+    a = _candidate_grp("g1", "panel", "LopNrA", ["a_2018", "a_2019"])
+    b = _candidate_grp("g2", "panel", "LopNrB", ["b_2018", "b_2019"])
+    out = interactive._auto_apply_panel_candidates({"g1": a, "g2": b})
+    assert set(out.keys()) == {"g1"}
+
+
+def test_auto_apply_distinct_keys_and_ids_both_apply():
+    """Sanity check: distinct panel_id + distinct panel_key still
+    auto-applies both."""
+    a = _candidate_grp("g1", "lisa", "LopNr", ["lisa_2018", "lisa_2019"])
+    b = _candidate_grp("g2", "spine", "PnrId", ["spine_2018", "spine_2019"])
+    out = interactive._auto_apply_panel_candidates({"g1": a, "g2": b})
+    assert set(out.keys()) == {"g1", "g2"}
+
+
+# -- _build_panel_members period encoding ---------------------------------
+
+
+def test_build_panel_members_widens_multiplier_for_dense_years():
+    """At 100+ shards in a single year, ``year * 100 + rank`` would
+    spill into the next year (rank 100 in 2018 would equal year 2019).
+    The encoder must pick a wider multiplier."""
+    sources_a = [f"reg_2018_{i:03d}" for i in range(150)]
+    sources_b = ["reg_2019_001"]
+    sources = sources_a + sources_b
+    years = {n: 2018 for n in sources_a} | {n: 2019 for n in sources_b}
+    members = interactive._build_panel_members(sources, years)
+    periods = [m["period"] for m in members]
+    # all unique, no collisions across years
+    assert len(set(periods)) == len(periods)
+    # multiplier widened to >=1000 — a rank-100 in 2018 must not equal
+    # the encoding of any period in 2019.
+    encoded_2019 = {p for n, p in zip(sources, periods) if years[n] == 2019}
+    encoded_2018 = {p for n, p in zip(sources, periods) if years[n] == 2018}
+    assert encoded_2019.isdisjoint(encoded_2018)
+
+
 # -- Stage 3: ambiguous-column review --------------------------------------
 
 

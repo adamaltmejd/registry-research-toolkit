@@ -707,18 +707,24 @@ the config schema, plus the per-period stats in `by_period`:
 ```
 
 Generation: each panel gets a deterministically-shuffled id pool sized
-to `max(n_panel_ids)`, and each period takes a *prefix* of the pool
-sized to that period's `n_panel_ids`. Strict prefix nesting gives
-stable cross-period overlap (panel persistence) — sequential periods
-share `min(n_panel_ids)` of their ids. The panel pool also overrides
+to `max(n_panel_ids)`, and each `(period, source)` entry takes a
+*prefix* of the pool sized to that entry's own `n_panel_ids`. Strict
+prefix nesting gives stable cross-period overlap (panel persistence)
+— sequential periods share `min(n_panel_ids)` of their ids — and
+per-source distinctness matches stats (a smaller member contributing
+to the same period draws fewer distinct panel-keys, not the
+sibling's larger count). The panel pool also overrides
 `shared_pools[panel_key]` so non-panel sources sharing the same column
 draw from the same id universe.
 
-For `merged_table`, `(time_key, panel_key)` are co-generated per row:
-each row's period is drawn from `n_rows[t]` weights, and its panel-key
-value comes from that period's subset. For `separate_files`, each
-source IS one period, so panel-key values come straight from the
-period subset.
+For column-members (a `time_key` column inside one source),
+`(time_key, panel_key)` are co-generated per row: each row's period is
+drawn from `n_rows[t]` weights, and its panel-key value comes from
+that period's subset. For file-members (one source IS one period),
+panel-key values come straight from the `(panel_id, period, source)`
+subset. Mixed panels (some members file, some column) work because
+every `by_period` entry carries a `source`, so subsets never bleed
+across members.
 
 **Out of scope:** cross-period transition matrices, attrition / re-entry
 modelling, and multi-key panels. The "fixed pool with shrinking active

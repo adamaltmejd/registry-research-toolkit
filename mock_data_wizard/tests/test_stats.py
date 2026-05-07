@@ -194,6 +194,62 @@ def test_parse_panels_block(tmp_path: Path):
     assert split.by_period[0].source == "y.csv"
 
 
+def _stats_with_panel_member(tmp_path: Path, member: dict) -> Path:
+    data = {
+        "contract_version": "2.0.0",
+        "sources": [
+            {
+                "source_name": "x.csv",
+                "source_type": "file",
+                "source_detail": {"path": "x.csv"},
+                "row_count": 10,
+                "columns": [{"column_name": "a", "inferred_type": "id"}],
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "p",
+                "panel_key": "a",
+                "members": [member],
+                "by_period": [
+                    {
+                        "period": 2018,
+                        "source": "x.csv",
+                        "n_rows": 1,
+                        "n_panel_ids": 1,
+                    }
+                ],
+            }
+        ],
+    }
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(data))
+    return p
+
+
+def test_parse_panels_rejects_null_period(tmp_path: Path):
+    """``{"period": null}`` passes the period-xor-time_key gate but
+    must not flow into PanelMemberRef as ``period=None`` — generation
+    later assumes a real scalar."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": None})
+    with pytest.raises(StatsValidationError, match="period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_empty_time_key(tmp_path: Path):
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "time_key": ""})
+    with pytest.raises(StatsValidationError, match="time_key"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_bool_period(tmp_path: Path):
+    """``True`` is technically an int subclass; reject it explicitly so
+    period stays unambiguously a year/quarter scalar."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": True})
+    with pytest.raises(StatsValidationError, match="period"):
+        parse_stats(p)
+
+
 def test_parse_panels_default_to_empty(stats_path: Path):
     """A mdw_step3_stats.json without a panels block parses with panels=[]."""
     result = parse_stats(stats_path)

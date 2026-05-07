@@ -708,6 +708,106 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
     assert all(r["LopNr"] != "" for r in rows)
 
 
+def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path):
+    """Mixed-member panel where the column-member source has every
+    period suppressed but the file-member sibling survives. The
+    column-member's time_key / panel_key columns must be normal-
+    generated values rather than uninitialised np.empty garbage.
+    """
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "tax_history.csv",
+                "source_type": "file",
+                "source_detail": {"path": "tax_history.csv"},
+                "row_count": 50,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 40,
+                        "stats": {"id_subtype": "integer"},
+                    },
+                    {
+                        "column_name": "AR",
+                        "inferred_type": "numeric",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 1,
+                        "stats": {
+                            "min": 2022,
+                            "max": 2022,
+                            "mean": 2022,
+                            "sd": 0.0,
+                            "numeric_subtype": "integer",
+                        },
+                    },
+                ],
+            },
+            {
+                "source_name": "tax_2024.csv",
+                "source_type": "file",
+                "source_detail": {"path": "tax_2024.csv", "year": 2024},
+                "row_count": 80,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 70,
+                        "stats": {"id_subtype": "integer"},
+                    }
+                ],
+            },
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "tax",
+                "panel_key": "LopNr",
+                "members": [
+                    {"source": "tax_history.csv", "time_key": "AR"},
+                    {"source": "tax_2024.csv", "period": 2024},
+                ],
+                # Only the file-member contributed surviving periods;
+                # the column-member's by_period rows were all suppressed.
+                "by_period": [
+                    {
+                        "period": 2024,
+                        "source": "tax_2024.csv",
+                        "n_rows": 80,
+                        "n_panel_ids": 70,
+                    }
+                ],
+            }
+        ],
+    }
+    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=11, output_dir=out_dir)
+    with (out_dir / "tax_history.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 50
+    # Both columns must carry real values (not blank or None-stringified).
+    assert all(r["LopNr"] not in ("", "None") for r in rows)
+    assert all(r["AR"] not in ("", "None") for r in rows)
+    # AR is the singular numeric value 2022 -- normal generation must
+    # have run, not the panel pre-generation.
+    ars = [int(r["AR"]) for r in rows]
+    assert all(a == 2022 for a in ars)
+
+
 def test_panel_separate_files_deterministic(tmp_path: Path):
     """Same seed -> identical panel-key column across runs."""
     stats_path = tmp_path / "mdw_step3_stats.json"

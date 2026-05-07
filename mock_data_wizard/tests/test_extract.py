@@ -707,6 +707,37 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
     assert by_period[2024]["n_rows"] == 13
 
 
+def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
+    """When every declared member of a panel is missing from the
+    extract output (typo, filtered-out source), surface the error here
+    rather than emit ``members: []`` and break later in stats parsing.
+    """
+    _write_csv(
+        tmp_path / "lisa_2018.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-2.0.0",
+            "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
+            "panels": [
+                {
+                    "panel_id": "lisa",
+                    "panel_key": "lopnr",
+                    "members": [
+                        # Both sources misspelled / not in the include list.
+                        {"source": "lisa_2018_typo.csv", "period": 2018},
+                        {"source": "lisa_2019_typo.csv", "period": 2019},
+                    ],
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["lisa_2018.csv"])
+    with pytest.raises(RuntimeError, match="no member sources matched"):
+        run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+
+
 def test_coerce_period_normalises_value():
     from mock_data_wizard.extract import _coerce_period
 
