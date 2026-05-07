@@ -654,9 +654,12 @@ def resolve_register_to_id_and_name(
 ) -> tuple[int, str] | None:
     """Resolve a register name or id; return ``(register_id, registernamn)``.
 
-    Returns ``None`` when the register can't be resolved. Used by the
-    interactive flow to validate a user-typed override before applying
-    it to the family.
+    Returns ``None`` when no register matches. Raises ``ValueError`` when
+    the input is ambiguous (matches multiple registers via substring
+    fallback), with the candidate list in the message — callers should
+    surface it to the user so they can re-type something more specific.
+    Used by the interactive flow to validate a user-typed override
+    before applying it to the family.
     """
     import sqlite3
 
@@ -673,6 +676,20 @@ def resolve_register_to_id_and_name(
         ids = resolve_register_ids(conn, register)
         if not ids:
             return None
+        if len(ids) > 1:
+            placeholders = ",".join("?" for _ in ids)
+            rows = conn.execute(
+                "SELECT register_id, registernamn FROM register "
+                f"WHERE register_id IN ({placeholders})",
+                list(ids),
+            ).fetchall()
+            candidates = ", ".join(
+                f"{r['registernamn']} (id={r['register_id']})" for r in rows
+            )
+            raise ValueError(
+                f"Register {register!r} is ambiguous; matches: {candidates}. "
+                "Re-enter a more specific name or the numeric id."
+            )
         row = conn.execute(
             "SELECT registernamn FROM register WHERE register_id = ?",
             (ids[0],),

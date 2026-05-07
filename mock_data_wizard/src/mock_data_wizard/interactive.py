@@ -906,13 +906,20 @@ def _collect_precomputed_signals(
     key is lowercased to match ``_regmeta_lookup``'s output convention
     (``RegisterGroup.regmeta_signals`` uses original-case keys for
     inspector display).
+
+    Multiple groups can share a register key (e.g. after a user
+    re-points one group to match another). Their per-column signals
+    are merged so ``build_config``'s cache short-circuit doesn't drop
+    columns that only one of the groups had fetched evidence for.
     """
     out: dict[str, dict[str, RegmetaSignal]] = {}
     for grp in groups.values():
         if grp.register_id is None:
             continue
         key = grp.register_name or str(grp.register_id)
-        out[key] = {n.lower(): sig for n, sig in grp.regmeta_signals.items()}
+        bucket = out.setdefault(key, {})
+        for n, sig in grp.regmeta_signals.items():
+            bucket[n.lower()] = sig
     return out
 
 
@@ -1083,7 +1090,11 @@ def _inspect_register_group(
                 for src_name in grp.sources:
                     register_per_source[src_name] = None
             else:
-                resolved = resolve_register_to_id_and_name(new_reg)
+                try:
+                    resolved = resolve_register_to_id_and_name(new_reg)
+                except ValueError as exc:
+                    print(f"  {exc}", file=sys.stderr)
+                    continue
                 if resolved is None:
                     print(
                         f"  Register {new_reg!r} not found in regmeta.",

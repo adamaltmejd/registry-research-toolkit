@@ -1915,6 +1915,30 @@ def test_collect_precomputed_signals_falls_back_to_register_id_string():
     assert "LISA" not in out
 
 
+def test_collect_precomputed_signals_merges_duplicate_register_keys():
+    """Two groups pointing at the same register (e.g. after the user
+    re-points one to match another) must contribute their signals to a
+    single merged map — otherwise `build_config`'s cache short-circuit
+    would skip the DB lookup and silently drop the columns one of the
+    groups had fetched evidence for."""
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import RegisterGroup, _collect_precomputed_signals
+
+    sig_a = RegmetaSignal(datatyp_kind=None, classification_short_name="A")
+    sig_b = RegmetaSignal(datatyp_kind=None, classification_short_name="B")
+    g1 = RegisterGroup(
+        group_id="reg-34", register_id=34, register_name="LISA", confidence="high"
+    )
+    g1.regmeta_signals = {"ColA": sig_a}
+    g2 = RegisterGroup(
+        group_id="reg-34-x", register_id=34, register_name="LISA", confidence="partial"
+    )
+    g2.regmeta_signals = {"ColB": sig_b}
+
+    out = _collect_precomputed_signals({"g1": g1, "g2": g2})
+    assert out == {"LISA": {"cola": sig_a, "colb": sig_b}}
+
+
 def test_build_config_uses_precomputed_signals_without_db(monkeypatch):
     """When `precomputed_signals` covers every register that
     `register_per_source` references, `build_config` must not open the

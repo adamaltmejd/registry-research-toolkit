@@ -766,3 +766,56 @@ def test_build_config_register_per_source_overrides_global(monkeypatch):
     # `custom` had register=None so its column falls through to
     # name-pattern classification (varchar, no pattern → high_cardinality).
     assert out["column_types"]["custom"]["Foo"] == {"type": "high_cardinality"}
+
+
+def test_resolve_register_to_id_and_name_rejects_ambiguous(monkeypatch):
+    """Substring matches can return multiple registers — the inspector
+    helper must surface the candidate list as ValueError instead of
+    silently picking ids[0] and applying the wrong register."""
+    from mock_data_wizard.configure import resolve_register_to_id_and_name
+
+    class FakeConn:
+        def __init__(self):
+            self._next: list = []
+
+        def execute(self, sql, params=()):
+            self._sql = sql
+            self._params = params
+            return self
+
+        def fetchall(self):
+            assert "WHERE register_id IN" in self._sql
+            return [
+                {"register_id": 34, "registernamn": "LISA"},
+                {"register_id": 60, "registernamn": "LISA-Plus"},
+            ]
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", lambda _c, _v: [34, 60])
+    monkeypatch.setattr("regmeta.db.db_path_from_args", lambda _x: Path("/fake.db"))
+
+    with pytest.raises(ValueError, match="ambiguous"):
+        resolve_register_to_id_and_name("LISA")
+
+
+def test_resolve_register_to_id_and_name_unique_match(monkeypatch):
+    from mock_data_wizard.configure import resolve_register_to_id_and_name
+
+    class FakeConn:
+        def execute(self, _sql, _params=()):
+            return self
+
+        def fetchone(self):
+            return {"registernamn": "LISA"}
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", lambda _c, _v: [34])
+    monkeypatch.setattr("regmeta.db.db_path_from_args", lambda _x: Path("/fake.db"))
+
+    assert resolve_register_to_id_and_name("LISA") == (34, "LISA")
