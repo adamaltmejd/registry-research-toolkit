@@ -60,12 +60,10 @@ log = logging.getLogger("mdw.configure")
 
 CONFIG_FILENAME = "mdw_step2_config.json"
 
-# Match-rate thresholds for confidence labels on auto-guessed registers.
-# `_vote_register` already filters out anything below 0.40, so the floor
-# here is the same; "high" needs a clear majority of non-id columns to
-# resolve inside the winning register.
+# Match rate at or above which a register guess is labelled "high" rather
+# than "partial" — i.e. a clear majority of non-id columns resolve inside
+# the winning register.
 _CONFIDENCE_HIGH = 0.75
-_CONFIDENCE_PARTIAL = 0.40
 
 
 # SQL type tokens, normalised to lowercase. Match the leading bare
@@ -128,28 +126,17 @@ _REGMETA_DATE = frozenset(
 
 @dataclass(frozen=True)
 class RegmetaSignal:
-    """Per-column evidence pulled from regmeta for one register.
+    """Per-column evidence pulled from regmeta for one register."""
 
-    ``datatyp_kind`` is the bucketed ``variable_instance.datatyp``: one
-    of ``"numeric"`` / ``"date"`` / ``None`` (unknown or text). When
-    multiple cvids exist for the same column name (multiple years), the
-    first non-null datatyp wins. Text storage (``char``/``varchar``)
-    intentionally maps to ``None`` here — it's not a categorical signal
-    on its own; ``has_value_codes`` / ``classification_short_name``
-    are.
-
-    ``classification_short_name`` is the short_name of any classification
-    attached to this variable (``SUN2020-GRUPP``, ``SSYK2012``, ...).
-    None when the variable has no shared classification.
-
-    ``has_value_codes`` is True when *any* of the cvids for this column
-    under this register has a non-null ``variable_instance.value_set_id``
-    — i.e. SCB enumerated the codes. Covers register-local code lists
-    like ``ALKod`` / ``Kon`` that aren't tied to a shared classification.
-    """
-
+    # "numeric" / "date" / None. Text storage (char/varchar) maps to
+    # None — it isn't a categorical signal on its own.
     datatyp_kind: str | None
+    # short_name of the classification attached to this variable
+    # (SUN2020-GRUPP, SSYK2012, ...). None when no shared classification.
     classification_short_name: str | None
+    # True when any cvid for this column under this register has a
+    # non-null value_set_id — i.e. SCB enumerated the codes (covers
+    # register-local code lists like ALKod / Kon).
     has_value_codes: bool = False
 
 
@@ -186,6 +173,23 @@ def _regmeta_datatyp_kind(datatyp: str | None) -> str | None:
     return None
 
 
+def regmeta_implied_type(signal: RegmetaSignal | None) -> str | None:
+    """The semantic type regmeta implies for a column, if any.
+
+    Mirrors the regmeta branch of ``_classify`` so the inspector can
+    detect when a manual override conflicts with what regmeta says.
+    Returns ``None`` when regmeta has no opinion (storage type alone is
+    not enough — see ``RegmetaSignal``).
+    """
+    if signal is None:
+        return None
+    if signal.has_value_codes or signal.classification_short_name:
+        return "categorical"
+    if signal.datatyp_kind in {"numeric", "date"}:
+        return signal.datatyp_kind
+    return None
+
+
 def _classify(
     col_name: str,
     sql_type: str | None,
@@ -203,17 +207,9 @@ def _classify(
     """
     if is_known_id(col_name):
         return "id"
-    if signal is not None:
-        # Regmeta wins over CSV-inferred sql_type when it has a semantic
-        # signal. Value codes (e.g. Kon {1=Man, 2=Kvinna}) and shared
-        # classifications (SUN2020, SSYK2012) both unambiguously mean
-        # categorical; storage type alone (char/varchar/tinyint) does not.
-        if signal.has_value_codes or signal.classification_short_name:
-            return "categorical"
-        if signal.datatyp_kind == "numeric":
-            return "numeric"
-        if signal.datatyp_kind == "date":
-            return "date"
+    implied = regmeta_implied_type(signal)
+    if implied is not None:
+        return implied
     if is_rtb_named_categorical(col_name, register):
         return "categorical"
     kind = _sql_type_kind(sql_type)
@@ -355,6 +351,7 @@ def build_config(
     *,
     register: str | None = None,
     register_per_source: dict[str, str | None] | None = None,
+    precomputed_signals: dict[str, dict[str, RegmetaSignal]] | None = None,
     db_path: Path | None = None,
 ) -> dict[str, Any]:
     """Author a mdw_step2_config.json payload from a mdw_step1_discovery.json payload.
@@ -364,9 +361,16 @@ def build_config(
     global ``register`` argument. Sources whose effective register is
     ``None`` skip the regmeta classification path entirely; sources
     sharing a register are batched into one DB query.
+
+    ``precomputed_signals`` is keyed by register string and lets the
+    caller pass in regmeta evidence already fetched (e.g. by
+    ``guess_register_per_family``) so we don't requery the same rows.
+    Registers not in the dict still trigger a DB lookup.
     """
     sources_in = discover.get("sources", [])
     overrides = register_per_source or {}
+    # Copy so we can fill in DB-fetched signals without mutating the caller's dict.
+    cached = dict(precomputed_signals) if precomputed_signals else {}
     effective: dict[str, str | None] = {}
     for src in sources_in:
         name = src["source_name"]
@@ -391,7 +395,8 @@ def build_config(
         groups.setdefault(reg, []).append(name)
 
     signals_per_source: dict[str, dict[str, RegmetaSignal]] = {}
-    if groups:
+    needs_db = [reg_str for reg_str in groups if reg_str not in cached]
+    if needs_db:
         from regmeta import open_db, resolve_register_ids
         from regmeta.db import db_path_from_args
 
@@ -401,7 +406,7 @@ def build_config(
         conn = open_db(resolved_db)
         try:
             sources_by_name = {s["source_name"]: s for s in sources_in}
-            for reg_str, source_names in groups.items():
+            for reg_str in needs_db:
                 register_ids = resolve_register_ids(conn, reg_str)
                 if not register_ids:
                     raise ValueError(
@@ -410,14 +415,15 @@ def build_config(
                         f"affected sources."
                     )
                 col_names: set[str] = set()
-                for sn in source_names:
+                for sn in groups[reg_str]:
                     for col in sources_by_name[sn].get("columns", []):
                         col_names.add(col["name"])
-                signals = _regmeta_lookup(conn, col_names, register_ids)
-                for sn in source_names:
-                    signals_per_source[sn] = signals
+                cached[reg_str] = _regmeta_lookup(conn, col_names, register_ids)
         finally:
             conn.close()
+    for reg_str, source_names in groups.items():
+        for sn in source_names:
+            signals_per_source[sn] = cached[reg_str]
 
     column_types: dict[str, dict[str, dict[str, str]]] = {}
     sources_out: dict[str, dict[str, Any]] = {}
@@ -473,12 +479,12 @@ class FamilyGuess:
     confidence: str  # "high" | "partial" | "none"
     match_count: int
     nonid_count: int
-    # column name → classification short_name when regmeta links the
-    # variable to a shared classification (e.g. "SUN2020-GRUPP"); None
-    # when regmeta knows the column is categorical (text datatyp) but
-    # has no shared classification (e.g. ALKod, FamStF). Absent when
-    # regmeta has no entry, or types it as numeric/date.
-    regmeta_tags: dict[str, str | None] = field(default_factory=dict)
+    # column name → full RegmetaSignal for every column regmeta knows
+    # about under the chosen register. Absent when regmeta has no entry.
+    # Carries enough information for the inspector to render the
+    # classification short_name, detect override conflicts, and
+    # short-circuit the regmeta query in build_config.
+    regmeta_signals: dict[str, RegmetaSignal] = field(default_factory=dict)
 
 
 def _schema_family_id(columns: list[dict]) -> str:
@@ -621,9 +627,10 @@ def guess_register_per_family(
                 if g.register_id is not None:
                     g.register_name = names.get(g.register_id)
 
-        # Fetch regmeta evidence per family so the inspector can render
-        # "categorical (SUN2020-GRUPP)" / "categorical (regmeta)" tags
-        # without a second DB pass per inspection.
+        # Fetch regmeta evidence per family so the inspector and
+        # build_config can both reuse it without a second DB pass.
+        # Batched per register: every family under the same register
+        # shares one lookup keyed by the columns of all those families.
         by_register: dict[int, list[str]] = {}
         for fid, g in out.items():
             if g.register_id is not None:
@@ -635,18 +642,14 @@ def guess_register_per_family(
                     col_names.add(name)
             signals = _regmeta_lookup(conn, col_names, [reg_id])
             for fid in fids:
-                tags: dict[str, str | None] = {}
+                fam_signals: dict[str, RegmetaSignal] = {}
                 for n, _sql in out[fid].columns:
                     sig = signals.get(n.lower()) or signals.get(
                         strip_project_prefix(n).lower()
                     )
-                    if sig is None:
-                        continue
-                    # Tag every column regmeta knows about — confirms to
-                    # the tester "this column was looked up." Classification
-                    # short_name when one exists, else bare "(regmeta)".
-                    tags[n] = sig.classification_short_name
-                out[fid].regmeta_tags = tags
+                    if sig is not None:
+                        fam_signals[n] = sig
+                out[fid].regmeta_signals = fam_signals
     finally:
         conn.close()
 

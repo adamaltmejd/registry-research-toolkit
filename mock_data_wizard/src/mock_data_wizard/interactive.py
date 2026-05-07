@@ -12,11 +12,12 @@ import re
 import shutil
 import sys
 import textwrap
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 from . import _bundle
-from .configure import CONFIG_FILENAME
+from .configure import CONFIG_FILENAME, RegmetaSignal, regmeta_implied_type
 from .extract import DISCOVER_FILENAME, STATS_FILENAME
 from .generate import MOCK_DATA_DIRNAME
 
@@ -659,7 +660,7 @@ def _format_source_list(sources: list[str]) -> str:
 # into "shared by all" and "only in <subset>" sections.
 
 
-from dataclasses import dataclass, field  # noqa: E402 — local to this section
+_NO_REGISTER_MARKER = "—"
 
 
 @dataclass
@@ -681,11 +682,12 @@ class RegisterGroup:
     columns_by_source: dict[str, list[tuple[str, str | None]]] = field(
         default_factory=dict
     )
-    # column name → classification short_name (or None when regmeta sees
-    # the column as categorical text but with no shared classification —
-    # e.g. ALKod, FamStF). Absent when regmeta has no entry. Used by the
-    # inspector to render the trailing "(SUN2020-GRUPP)" / "(regmeta)" tag.
-    regmeta_tags: dict[str, str | None] = field(default_factory=dict)
+    # column name → full RegmetaSignal for every column regmeta knows
+    # about under the chosen register. Absent when regmeta has no entry.
+    # The inspector uses this to render the classification short_name (or
+    # ✓ when none), to detect manual-override conflicts, and to
+    # short-circuit the regmeta query in build_config.
+    regmeta_signals: dict[str, RegmetaSignal] = field(default_factory=dict)
     schema_variants: int = 0
 
 
@@ -704,7 +706,7 @@ def _register_display(register_id: int | None, register_name: str | None) -> str
         return f"{register_name} (id={register_id})"
     if register_id is not None:
         return f"id={register_id}"
-    return "—"
+    return _NO_REGISTER_MARKER
 
 
 def group_by_register(
@@ -737,15 +739,17 @@ def group_by_register(
         grp = groups[key]
         grp.schema_variants += 1
         grp.confidence = _worst_confidence(grp.confidence, guess.confidence)
-        # Merge regmeta tags across schema variants of the same register.
-        # If a column appears in multiple variants with conflicting
-        # classifications (rare; typically only the schema changes year
-        # to year, not the variable's classification), the first non-None
-        # short_name wins so the user still sees a specific tag.
-        for col_name, sn in guess.regmeta_tags.items():
-            existing = grp.regmeta_tags.get(col_name, ...)
-            if existing is ... or (existing is None and sn is not None):
-                grp.regmeta_tags[col_name] = sn
+        # Merge regmeta signals across schema variants of the same
+        # register. The first non-None classification short_name wins
+        # (in practice this rarely matters: schemas drift year to year
+        # but a variable's classification doesn't).
+        for col_name, sig in guess.regmeta_signals.items():
+            existing = grp.regmeta_signals.get(col_name)
+            if existing is None or (
+                existing.classification_short_name is None
+                and sig.classification_short_name is not None
+            ):
+                grp.regmeta_signals[col_name] = sig
         for src in family_sources:
             name = src["source_name"]
             grp.sources.append(name)
@@ -863,13 +867,64 @@ def _is_column_overridden(
     return any((src_name, col_name) in column_overrides for src_name in sources)
 
 
-def _refresh_regmeta_tags(grp: "RegisterGroup", reg_id: int) -> None:
-    """Re-query regmeta for the group's columns under ``reg_id`` and
-    overwrite ``grp.regmeta_tags`` with the result.
+def _regmeta_cell(
+    signal: RegmetaSignal | None,
+    effective_type: str,
+    is_overridden: bool,
+) -> str:
+    """Render the regmeta column for one row in the inspector.
 
-    Called after the user changes a group's register so the regmeta
-    column in the inspector reflects coverage under the *new* register
-    rather than stale tags from the auto-guess.
+    - Empty when regmeta has no entry for the column.
+    - Plain ✓ or classification short_name when regmeta agrees (or has
+      no opinion) with the column's effective type.
+    - ⚠-prefixed when the user's manual override contradicts what
+      regmeta implies. The short_name (or bare ⚠) lets the user see
+      both the warning and what regmeta actually said about the column.
+    """
+    if signal is None:
+        return ""
+    label = signal.classification_short_name or "✓"
+    if not is_overridden:
+        return label
+    implied = regmeta_implied_type(signal)
+    if implied is None or implied == effective_type:
+        return label
+    return (
+        f"⚠ {signal.classification_short_name}"
+        if signal.classification_short_name
+        else "⚠"
+    )
+
+
+def _collect_precomputed_signals(
+    groups: dict[str, "RegisterGroup"],
+) -> dict[str, dict[str, RegmetaSignal]]:
+    """Index already-fetched regmeta signals by the register string
+    that ``build_config`` will look them up under.
+
+    Outer key matches whatever ``register_per_source`` carries for the
+    group's sources — preferring the registernamn, falling back to a
+    stringified register_id when the name lookup didn't populate. Inner
+    key is lowercased to match ``_regmeta_lookup``'s output convention
+    (``RegisterGroup.regmeta_signals`` uses original-case keys for
+    inspector display).
+    """
+    out: dict[str, dict[str, RegmetaSignal]] = {}
+    for grp in groups.values():
+        if grp.register_id is None:
+            continue
+        key = grp.register_name or str(grp.register_id)
+        out[key] = {n.lower(): sig for n, sig in grp.regmeta_signals.items()}
+    return out
+
+
+def _refresh_regmeta_signals(grp: "RegisterGroup", reg_id: int) -> None:
+    """Re-query regmeta for the group's columns under ``reg_id`` and
+    overwrite ``grp.regmeta_signals`` with the result.
+
+    Called after the user changes a group's register so the inspector
+    reflects coverage under the *new* register rather than stale signals
+    from the auto-guess.
     """
     from regmeta import open_db
     from regmeta.db import db_path_from_args
@@ -882,7 +937,7 @@ def _refresh_regmeta_tags(grp: "RegisterGroup", reg_id: int) -> None:
         for name, _sql in cols:
             col_names.add(name)
     if not col_names:
-        grp.regmeta_tags = {}
+        grp.regmeta_signals = {}
         return
 
     conn = open_db(db_path_from_args(None))
@@ -891,14 +946,14 @@ def _refresh_regmeta_tags(grp: "RegisterGroup", reg_id: int) -> None:
     finally:
         conn.close()
 
-    tags: dict[str, str | None] = {}
+    refreshed: dict[str, RegmetaSignal] = {}
     for name in col_names:
         sig = signals.get(name.lower()) or signals.get(
             strip_project_prefix(name).lower()
         )
         if sig is not None:
-            tags[name] = sig.classification_short_name
-    grp.regmeta_tags = tags
+            refreshed[name] = sig
+    grp.regmeta_signals = refreshed
 
 
 def _inspect_register_group(
@@ -944,12 +999,20 @@ def _inspect_register_group(
         all_col_names = [c for _, cols in sections for c in cols]
         longest_name = max((len(c) for c in all_col_names), default=12)
         prefix_w = 4 + 1 + n_idx_w + 2  # "    [NN] "
-        name_w = max(12, min(longest_name + 1, max(12, width - prefix_w - type_w - 20)))
-        # Regmeta column: "✓" for in-regmeta, classification short_name
-        # when one exists. Header reads "regmeta" so the bare ✓ rows stay
-        # interpretable.
+        name_w = max(12, min(longest_name + 1, width - prefix_w - type_w - 20))
+        # Regmeta column: classification short_name when one exists,
+        # bare ✓ when regmeta knows the column with no classification,
+        # ⚠ (or "⚠ short_name") when the manually-overridden type
+        # contradicts what regmeta implies. Header reads "regmeta" so
+        # the bare ✓ rows stay interpretable.
         regmeta_w = max(
-            [len("regmeta")] + [len(sn) for sn in grp.regmeta_tags.values() if sn]
+            [len("regmeta")]
+            + [
+                # 2 = "⚠ " prefix; reserve enough space even if no
+                # conflict actually fires this render.
+                len(sig.classification_short_name or "✓") + 2
+                for sig in grp.regmeta_signals.values()
+            ]
         )
 
         # Header row: aligned with the data columns below it.
@@ -983,16 +1046,13 @@ def _inspect_register_group(
                 # "*" marks rows whose type was changed manually in this
                 # inspector session — distinguishes user judgement from
                 # the auto-classifier's guess.
-                t_disp = (
-                    f"{t}*"
-                    if _is_column_overridden(col_name, src_subset, column_overrides)
-                    else t
+                is_overridden = _is_column_overridden(
+                    col_name, src_subset, column_overrides
                 )
-                if col_name in grp.regmeta_tags:
-                    sn = grp.regmeta_tags[col_name]
-                    regmeta_cell = sn if sn else "✓"
-                else:
-                    regmeta_cell = ""
+                t_disp = f"{t}*" if is_overridden else t
+                regmeta_cell = _regmeta_cell(
+                    grp.regmeta_signals.get(col_name), t, is_overridden
+                )
                 idx = len(type_rows) + 1
                 name_disp = _truncate(col_name, name_w)
                 line = (
@@ -1020,9 +1080,9 @@ def _inspect_register_group(
             if not new_reg:
                 grp.register_id = None
                 grp.register_name = None
-                grp.register_str = "—"
+                grp.register_str = _NO_REGISTER_MARKER
                 grp.confidence = "none"
-                grp.regmeta_tags = {}
+                grp.regmeta_signals = {}
                 for src_name in grp.sources:
                     register_per_source[src_name] = None
             else:
@@ -1041,18 +1101,22 @@ def _inspect_register_group(
                 # next regmeta query; treat as "partial" until proven.
                 grp.confidence = "partial"
                 for src_name in grp.sources:
-                    register_per_source[src_name] = reg_name
-                # Refresh regmeta column tags so the inspector reflects
+                    register_per_source[src_name] = reg_name or str(reg_id)
+                # Refresh regmeta signals so the inspector reflects
                 # coverage under the new register, not the auto-guess.
                 try:
-                    _refresh_regmeta_tags(grp, reg_id)
+                    _refresh_regmeta_signals(grp, reg_id)
                 except Exception as exc:
                     print(
-                        f"  Warning: could not refresh regmeta tags: {exc}",
+                        f"  Warning: could not refresh regmeta signals: {exc}",
                         file=sys.stderr,
                     )
             try:
-                config = build_config(payload, register_per_source=register_per_source)
+                config = build_config(
+                    payload,
+                    register_per_source=register_per_source,
+                    precomputed_signals=_collect_precomputed_signals(groups),
+                )
             except Exception as exc:
                 print(f"  Error rebuilding config: {exc}", file=sys.stderr)
                 continue
@@ -1207,12 +1271,22 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
 
     register_per_source: dict[str, str | None] = {}
     for grp in groups.values():
-        chosen = grp.register_name if grp.register_id else None
+        # Prefer the registernamn so the config carries a human-readable
+        # register tag; fall back to the numeric id when the name lookup
+        # didn't populate (e.g. the register table query returned no row).
+        if grp.register_id is None:
+            chosen: str | None = None
+        else:
+            chosen = grp.register_name or str(grp.register_id)
         for src_name in grp.sources:
             register_per_source[src_name] = chosen
 
     try:
-        config = build_config(payload, register_per_source=register_per_source)
+        config = build_config(
+            payload,
+            register_per_source=register_per_source,
+            precomputed_signals=_collect_precomputed_signals(groups),
+        )
     except (ValueError, RegmetaError) as exc:
         print(f"Error: {exc}", file=sys.stderr)
         return 1

@@ -1044,7 +1044,12 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
                 confidence="high",
                 match_count=2,
                 nonid_count=2,
-                regmeta_tags={"Sun2000Inr": "SUN2000"},
+                regmeta_signals={
+                    "Sun2000Inr": cfg_mod.RegmetaSignal(
+                        datatyp_kind=None,
+                        classification_short_name="SUN2000",
+                    )
+                },
             )
         return out
 
@@ -1548,10 +1553,10 @@ def test_detect_separate_file_panels_handles_csv_extension():
     ]
 
 
-def test_refresh_regmeta_tags_replaces_with_new_register_signals(monkeypatch):
+def test_refresh_regmeta_signals_replaces_with_new_register_signals(monkeypatch):
     """After a register change, the inspector calls
-    `_refresh_regmeta_tags` to overwrite stale tags from the auto-guess
-    with a fresh lookup against the new register."""
+    `_refresh_regmeta_signals` to overwrite stale signals from the
+    auto-guess with a fresh lookup against the new register."""
     from mock_data_wizard import configure as cfg_mod
 
     grp = interactive.RegisterGroup(
@@ -1565,23 +1570,29 @@ def test_refresh_regmeta_tags_replaces_with_new_register_signals(monkeypatch):
     grp.columns_by_source = {
         "lisa_2018": [("Sun2000Inr", "varchar"), ("Mystery", "int")],
     }
-    # Stale tags from a previous register
-    grp.regmeta_tags = {"Sun2000Inr": "OLD-TAG", "GoneCol": None}
+    # Stale signals from a previous register
+    grp.regmeta_signals = {
+        "Sun2000Inr": cfg_mod.RegmetaSignal(
+            datatyp_kind=None, classification_short_name="OLD-TAG"
+        ),
+        "GoneCol": cfg_mod.RegmetaSignal(
+            datatyp_kind="numeric", classification_short_name=None
+        ),
+    }
 
     seen: dict = {}
+
+    sun_sig = cfg_mod.RegmetaSignal(
+        datatyp_kind=None, classification_short_name="SUN2000-INRIKTNING"
+    )
+    mystery_sig = cfg_mod.RegmetaSignal(
+        datatyp_kind="numeric", classification_short_name=None
+    )
 
     def fake_lookup(conn, col_names, register_ids):
         seen["col_names"] = set(col_names)
         seen["register_ids"] = list(register_ids)
-        return {
-            "sun2000inr": cfg_mod.RegmetaSignal(
-                datatyp_kind=None, classification_short_name="SUN2000-INRIKTNING"
-            ),
-            # Mystery: regmeta sees it but no classification
-            "mystery": cfg_mod.RegmetaSignal(
-                datatyp_kind="numeric", classification_short_name=None
-            ),
-        }
+        return {"sun2000inr": sun_sig, "mystery": mystery_sig}
 
     class FakeConn:
         def close(self):
@@ -1593,13 +1604,13 @@ def test_refresh_regmeta_tags_replaces_with_new_register_signals(monkeypatch):
         "regmeta.db.db_path_from_args", lambda _p: "/fake.db", raising=True
     )
 
-    interactive._refresh_regmeta_tags(grp, 99)
+    interactive._refresh_regmeta_signals(grp, 99)
 
     # Lookup ran against the new register id with the group's columns
     assert seen["register_ids"] == [99]
     assert {"Sun2000Inr", "Mystery"} == seen["col_names"]
-    # Tags now reflect the new register; the old GoneCol entry is gone.
-    assert grp.regmeta_tags == {"Sun2000Inr": "SUN2000-INRIKTNING", "Mystery": None}
+    # Signals now reflect the new register; the old GoneCol entry is gone.
+    assert grp.regmeta_signals == {"Sun2000Inr": sun_sig, "Mystery": mystery_sig}
 
 
 def test_is_column_overridden_detects_session_overrides():
@@ -1648,3 +1659,300 @@ def test_format_source_list_handles_no_separator_year_suffix():
     ]
     label = interactive._format_source_list(sources)
     assert label == "Kursprov_gymn_HT_2011–2013"
+
+
+# -- Inspector ⚠ conflict marker -------------------------------------------
+
+
+def test_regmeta_cell_no_signal_renders_blank():
+    from mock_data_wizard.interactive import _regmeta_cell
+
+    assert _regmeta_cell(None, "high_cardinality", is_overridden=False) == ""
+    assert _regmeta_cell(None, "categorical", is_overridden=True) == ""
+
+
+def test_regmeta_cell_no_override_keeps_short_name_or_check():
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import _regmeta_cell
+
+    classified = RegmetaSignal(
+        datatyp_kind=None, classification_short_name="SUN2000-GRUPP"
+    )
+    bare_codes = RegmetaSignal(
+        datatyp_kind=None, classification_short_name=None, has_value_codes=True
+    )
+
+    # No override: render the short_name when one exists, else ✓
+    assert _regmeta_cell(classified, "categorical", False) == "SUN2000-GRUPP"
+    assert _regmeta_cell(bare_codes, "categorical", False) == "✓"
+
+
+def test_regmeta_cell_override_matching_implied_keeps_short_name():
+    """An override that agrees with regmeta's implied type is not a
+    conflict — the cell still shows the short_name, no ⚠."""
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import _regmeta_cell
+
+    sig = RegmetaSignal(datatyp_kind="numeric", classification_short_name=None)
+    # Manual override to numeric matches what regmeta says → no warning
+    assert _regmeta_cell(sig, "numeric", is_overridden=True) == "✓"
+
+
+def test_regmeta_cell_override_conflicts_emits_warning():
+    """Manual override that disagrees with regmeta's implied type
+    emits ⚠. Short_name is preserved alongside the warning when one
+    exists, so the user can see both."""
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import _regmeta_cell
+
+    classified = RegmetaSignal(
+        datatyp_kind=None, classification_short_name="SUN2000-GRUPP"
+    )
+    bare_codes = RegmetaSignal(
+        datatyp_kind=None, classification_short_name=None, has_value_codes=True
+    )
+    numeric = RegmetaSignal(datatyp_kind="numeric", classification_short_name=None)
+
+    # regmeta says categorical, user picks numeric → conflict
+    assert _regmeta_cell(classified, "numeric", is_overridden=True) == "⚠ SUN2000-GRUPP"
+    # bare value codes → no short_name to show alongside ⚠
+    assert _regmeta_cell(bare_codes, "high_cardinality", is_overridden=True) == "⚠"
+    # regmeta says numeric, user picks categorical → conflict
+    assert _regmeta_cell(numeric, "categorical", is_overridden=True) == "⚠"
+
+
+def test_regmeta_cell_override_when_regmeta_has_no_opinion():
+    """When regmeta has the column in its DB but with no semantic
+    signal (no value codes, no classification, text/unknown datatyp),
+    a manual override doesn't conflict — show the bare ✓."""
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import _regmeta_cell
+
+    sig = RegmetaSignal(datatyp_kind=None, classification_short_name=None)
+    assert _regmeta_cell(sig, "categorical", is_overridden=True) == "✓"
+    assert _regmeta_cell(sig, "numeric", is_overridden=True) == "✓"
+
+
+# -- Inspector override flow -----------------------------------------------
+
+
+def test_inspect_register_group_applies_column_override(tmp_path: Path, monkeypatch):
+    """End-to-end: stub guess_register_per_family, drive
+    `_stage3_configure` through the family menu → group inspector →
+    type override → enter back → write. The chosen override must land
+    in the written mdw_step2_config.json."""
+    from mock_data_wizard import configure as cfg_mod
+
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "MysteryCode", "sql_type": "varchar"},
+                ],
+            }
+        ],
+    )
+
+    def _fake_guess(families, **_kw):
+        out = {}
+        for fid, sources in families.items():
+            cols = sources[0].get("columns", [])
+            out[fid] = cfg_mod.FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=34,
+                register_name="LISA",
+                confidence="high",
+                match_count=1,
+                nonid_count=1,
+                regmeta_signals={},  # MysteryCode unknown to regmeta
+            )
+        return out
+
+    monkeypatch.setattr(cfg_mod, "guess_register_per_family", _fake_guess)
+
+    # build_config doesn't need to hit regmeta — every register that
+    # appears in register_per_source is already in precomputed_signals
+    # (with an empty signal map for "LISA").
+    def boom(*_a, **_kw):  # pragma: no cover
+        raise AssertionError("regmeta DB must not be opened")
+
+    monkeypatch.setattr("regmeta.open_db", boom, raising=True)
+
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect group [1]
+            "2",  # column #2 (MysteryCode); LopNr is column #1
+            "c",  # → categorical
+            "",  # back out of inspector
+            "",  # accept all groups
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    cols = payload["column_types"]["lisa_2018"]
+    assert cols["LopNr"] == {"type": "id"}
+    # The override flipped MysteryCode from its auto-classified
+    # high_cardinality to categorical and was applied at write time.
+    assert cols["MysteryCode"] == {"type": "categorical"}
+
+
+def test_inspect_register_group_apply_then_back_preserves_override(
+    tmp_path: Path, monkeypatch
+):
+    """Re-entering the inspector for the same group on a second pass
+    shows the * marker on the previously-overridden column. The marker
+    is what the user relies on to spot prior decisions, so verify the
+    override is not silently re-classified."""
+    from mock_data_wizard import configure as cfg_mod
+
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "MysteryCode", "sql_type": "varchar"},
+                ],
+            }
+        ],
+    )
+
+    def _fake_guess(families, **_kw):
+        out = {}
+        for fid, sources in families.items():
+            cols = sources[0].get("columns", [])
+            out[fid] = cfg_mod.FamilyGuess(
+                family_id=fid,
+                sources=[s["source_name"] for s in sources],
+                columns=[(c["name"], c.get("sql_type")) for c in cols],
+                register_id=34,
+                register_name="LISA",
+                confidence="high",
+                match_count=1,
+                nonid_count=1,
+                regmeta_signals={},
+            )
+        return out
+
+    monkeypatch.setattr(cfg_mod, "guess_register_per_family", _fake_guess)
+    monkeypatch.setattr(
+        "regmeta.open_db",
+        lambda *_a, **_kw: (_ for _ in ()).throw(
+            AssertionError("regmeta DB must not be opened")
+        ),
+        raising=True,
+    )
+
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect group
+            "2",  # MysteryCode
+            "c",  # → categorical
+            "",  # back to menu
+            "1",  # inspect again (second pass)
+            "",  # back without changing
+            "",  # accept all
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    assert payload["column_types"]["lisa_2018"]["MysteryCode"] == {
+        "type": "categorical"
+    }
+
+
+def test_collect_precomputed_signals_lowercases_inner_keys():
+    """`build_config` looks up signals with lowercased column names —
+    the cache passed in must use the same convention even though
+    `RegisterGroup.regmeta_signals` is keyed by original case for
+    inspector display."""
+    from mock_data_wizard.configure import RegmetaSignal
+    from mock_data_wizard.interactive import RegisterGroup, _collect_precomputed_signals
+
+    sig = RegmetaSignal(datatyp_kind=None, classification_short_name="SUN2000")
+    grp = RegisterGroup(
+        group_id="reg-34",
+        register_id=34,
+        register_name="LISA",
+        register_str="LISA (id=34)",
+        confidence="high",
+    )
+    grp.regmeta_signals = {"Sun2000Inr": sig}
+
+    out = _collect_precomputed_signals({"reg-34": grp})
+    assert out == {"LISA": {"sun2000inr": sig}}
+
+
+def test_collect_precomputed_signals_falls_back_to_register_id_string():
+    """When `register_name` is None but `register_id` is set, the cache
+    key uses str(register_id) so it lines up with what
+    `_stage3_configure` puts into `register_per_source` in the same
+    edge case."""
+    from mock_data_wizard.interactive import RegisterGroup, _collect_precomputed_signals
+
+    grp = RegisterGroup(
+        group_id="reg-34",
+        register_id=34,
+        register_name=None,
+        register_str="id=34",
+        confidence="partial",
+    )
+    out = _collect_precomputed_signals({"reg-34": grp})
+    assert "34" in out
+    assert "LISA" not in out
+
+
+def test_build_config_uses_precomputed_signals_without_db(monkeypatch):
+    """When `precomputed_signals` covers every register that
+    `register_per_source` references, `build_config` must not open the
+    regmeta DB at all."""
+    from mock_data_wizard.configure import RegmetaSignal, build_config
+
+    def boom(*_a, **_kw):  # pragma: no cover
+        raise AssertionError("regmeta DB must not be opened")
+
+    monkeypatch.setattr("regmeta.open_db", boom, raising=True)
+    monkeypatch.setattr("regmeta.resolve_register_ids", boom, raising=True)
+
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {
+                "source_name": "lisa_2018",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Sun2000Inr", "sql_type": "varchar"},
+                ],
+            }
+        ],
+    }
+    out = build_config(
+        discover,
+        register_per_source={"lisa_2018": "LISA"},
+        precomputed_signals={
+            "LISA": {
+                "sun2000inr": RegmetaSignal(
+                    datatyp_kind=None, classification_short_name="SUN2000"
+                )
+            }
+        },
+    )
+    cols = out["column_types"]["lisa_2018"]
+    assert cols["LopNr"] == {"type": "id"}
+    assert cols["Sun2000Inr"] == {"type": "categorical"}
