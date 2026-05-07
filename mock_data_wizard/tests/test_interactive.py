@@ -816,23 +816,29 @@ def test_stage3_panel_removed_via_inspector(tmp_path: Path, monkeypatch):
 
 def test_stage3_panel_edited_via_inspector(tmp_path: Path, monkeypatch):
     """An auto-applied panel can be edited via [p]; the user can
-    change panel_id and panel_key while keeping the layout."""
+    override the panel_key. (panel_id is auto-derived and only
+    re-namable by hand-editing the JSON.)"""
+    cols = [
+        {"name": "LopNr", "sql_type": "int"},
+        {"name": "PersonNr", "sql_type": "int"},
+    ]
     _write_discover(
         tmp_path,
         [
-            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
-            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2018", "columns": cols},
+            {"source_name": "lisa_2019", "columns": cols},
         ],
     )
     _stub_no_regmeta_guesses(monkeypatch)
+    # _shared_id_column prefers PersonNr (personnr-style) over LopNr;
+    # the user overrides back to LopNr.
     _canned_inputs(
         monkeypatch,
         [
             "1",  # inspect
             "p",  # edit panel
             "y",  # keep this panel? yes
-            "lisa_panel",  # panel_id override
-            "LopNr",  # panel_key (same)
+            "LopNr",  # panel_key override
             "",  # back out
             "",  # accept all groups
             "n",  # suppress_k? no
@@ -843,7 +849,7 @@ def test_stage3_panel_edited_via_inspector(tmp_path: Path, monkeypatch):
     payload = json.loads(
         (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
     )
-    assert payload["panels"][0]["panel_id"] == "lisa_panel"
+    assert payload["panels"][0]["panel_id"] == "lisa"
     assert payload["panels"][0]["panel_key"] == "LopNr"
 
 
@@ -930,19 +936,21 @@ def test_detect_panel_candidate_merged_table_singleton():
     assert cand.suggested_panel_key == "LopNr"
 
 
-def test_detect_panel_candidate_none_when_mixed_stems():
-    """Two sources sharing a register but not a year-suffix stem are
-    not auto-eligible for a separate_files panel."""
+def test_detect_panel_candidate_none_when_no_year_suffix():
+    """Sources without a year suffix (e.g. RTB delivered as
+    main/address/kommun tables) must not auto-cluster as a panel —
+    the year gate is what distinguishes annual snapshots from a
+    register's component tables."""
     grp = interactive.RegisterGroup(
-        group_id="reg-1",
+        group_id="reg-rtb",
         register_id=1,
-        register_name=None,
-        confidence="partial",
-        sources=["lisa_2018", "rams_2018"],
+        register_name="RTB",
+        confidence="high",
+        sources=["RTB_main", "RTB_address", "RTB_kommun"],
     )
     sources_by_name = {
-        "lisa_2018": {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
-        "rams_2018": {"source_name": "rams_2018", "columns": [{"name": "LopNr"}]},
+        n: {"source_name": n, "columns": [{"name": "LopNr"}]}
+        for n in ["RTB_main", "RTB_address", "RTB_kommun"]
     }
     assert interactive._detect_panel_candidate(grp, sources_by_name) is None
 
@@ -959,6 +967,79 @@ def test_detect_panel_candidate_none_when_singleton_no_time_key():
         "spine": {"source_name": "spine", "columns": [{"name": "LopNr"}]},
     }
     assert interactive._detect_panel_candidate(grp, sources_by_name) is None
+
+
+def test_detect_panel_candidate_clusters_intra_year_shards():
+    """SCB national-tests style: HT/VT splits of the same register
+    each carry a year suffix and share an id column. They cluster as
+    one panel; same-year siblings disambiguate via alphabetic rank
+    encoded as ``year * 100 + rank``."""
+    sources = [
+        "Kursprov_gymn_HT_2011",
+        "Kursprov_gymn_VT_2012",
+        "Kursprov_gymn_HT_2012",
+        "Kursprov_gymn_VT_2013",
+    ]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=342,
+        register_name="Gymnasieskola: nationella prov",
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "P1105_LopNr_PersonNr"}]}
+        for s in sources
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert cand.layout == "separate_files"
+    assert cand.suggested_panel_id == "Kursprov_gymn"
+    assert cand.suggested_panel_key == "P1105_LopNr_PersonNr"
+    # year=2011 unique → period 2011*100+1=201101.
+    # year=2012 has HT (alphabetically first → rank 1) and VT (rank 2)
+    # → 201201, 201202. year=2013 unique → 201301.
+    # Encoded as year*100+rank for ALL members because at least one
+    # year was duplicated.
+    assert [m["period"] for m in cand.members] == [201101, 201201, 201202, 201301]
+    assert [m["source"] for m in cand.members] == [
+        "Kursprov_gymn_HT_2011",
+        "Kursprov_gymn_HT_2012",
+        "Kursprov_gymn_VT_2012",
+        "Kursprov_gymn_VT_2013",
+    ]
+
+
+def test_detect_panel_candidate_distinct_years_use_year_directly():
+    """When every source has a unique year, ``period`` is just the
+    year — most readable JSON, no encoding overhead."""
+    sources = ["Kursprov_HT_2011", "Kursprov_HT_2012", "Kursprov_HT_2013"]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert cand.suggested_panel_id == "Kursprov_HT"
+    assert [m["period"] for m in cand.members] == [2011, 2012, 2013]
+
+
+def test_longest_common_prefix():
+    assert interactive._longest_common_prefix(["lisa_2018", "lisa_2019"]) == "lisa_201"
+    assert (
+        interactive._longest_common_prefix(
+            ["Kursprov_gymn_HT_2011", "Kursprov_gymn_VT_2012"]
+        )
+        == "Kursprov_gymn_"
+    )
+    assert interactive._longest_common_prefix(["abc", "xyz"]) == ""
+    assert interactive._longest_common_prefix([]) == ""
 
 
 # -- _render_panel_line ----------------------------------------------------
