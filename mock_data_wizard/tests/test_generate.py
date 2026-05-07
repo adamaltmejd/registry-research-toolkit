@@ -708,6 +708,81 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
     assert all(r["LopNr"] != "" for r in rows)
 
 
+def test_panels_sharing_panel_key_share_pool(tmp_path: Path):
+    """Two panels declaring the same panel_key (the common SCB case
+    where every register is keyed on ``P1105_LopNr_PersonNr``) must
+    draw their panel_key columns from the same id universe — not from
+    independent shuffled pools that would collide on output."""
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": f"{name}.csv",
+                "source_type": "file",
+                "source_detail": {"path": f"{name}.csv", "year": 2020},
+                "row_count": 30,
+                "columns": [
+                    {
+                        "column_name": "Pnr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 30,
+                        "stats": {"id_subtype": "integer"},
+                    }
+                ],
+            }
+            for name in ("lisa_2020", "rtb_2020")
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "lisa",
+                "panel_key": "Pnr",
+                "members": [{"source": "lisa_2020.csv", "period": 2020}],
+                "by_period": [
+                    {
+                        "period": 2020,
+                        "source": "lisa_2020.csv",
+                        "n_rows": 30,
+                        "n_panel_ids": 30,
+                    }
+                ],
+            },
+            {
+                "panel_id": "rtb",
+                "panel_key": "Pnr",
+                "members": [{"source": "rtb_2020.csv", "period": 2020}],
+                "by_period": [
+                    {
+                        "period": 2020,
+                        "source": "rtb_2020.csv",
+                        "n_rows": 30,
+                        "n_panel_ids": 30,
+                    }
+                ],
+            },
+        ],
+    }
+    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "lisa_2020.csv").open() as f:
+        lisa_ids = {row["Pnr"] for row in csv.DictReader(f)}
+    with (out_dir / "rtb_2020.csv").open() as f:
+        rtb_ids = {row["Pnr"] for row in csv.DictReader(f)}
+
+    # Both panels drew from the same shuffled universe sized to 30,
+    # so the two id sets must be identical (each saw the same prefix).
+    assert lisa_ids == rtb_ids
+
+
 def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path):
     """Mixed-member panel where the column-member source has every
     period suppressed but the file-member sibling survives. The

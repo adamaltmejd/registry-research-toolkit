@@ -706,11 +706,15 @@ the config schema, plus the per-period stats in `by_period`:
 }
 ```
 
-Generation: each panel gets a deterministically-shuffled id pool sized
-to `max(n_panel_ids)`, and each `(period, source)` entry takes a
-*prefix* of the pool sized to that entry's own `n_panel_ids`. Strict
-prefix nesting gives stable cross-period overlap (panel persistence)
-— sequential periods share `min(n_panel_ids)` of their ids — and
+Generation: panels sharing a `panel_key` share one id pool — in SCB
+data nearly every register is keyed on the same person id (e.g.
+`P1105_LopNr_PersonNr`), and that's *the* id universe, not many
+parallel ones. Each pool is deterministically shuffled per panel_key
+and sized to `max(n_panel_ids)` across every period of every panel
+using that key. Each `(period, source)` entry takes a *prefix* of
+the pool sized to that entry's own `n_panel_ids`. Strict prefix
+nesting gives stable cross-period overlap (panel persistence) —
+sequential periods share `min(n_panel_ids)` of their ids — and
 per-source distinctness matches stats (a smaller member contributing
 to the same period draws fewer distinct panel-keys, not the
 sibling's larger count). The panel pool also overrides

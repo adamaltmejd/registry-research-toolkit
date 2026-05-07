@@ -1321,16 +1321,17 @@ def _candidate_grp(
     )
 
 
-def test_auto_apply_skips_panel_key_collision():
-    """Two groups whose only shared id-typed column is ``LopNr`` would
-    each auto-apply with the same ``panel_key``; ``parse_config``
-    rejects that. Auto-apply must skip the conflicting candidate
-    instead of silently writing both."""
-    a = _candidate_grp("g1", "lisa", "LopNr", ["lisa_2018", "lisa_2019"])
-    b = _candidate_grp("g2", "rtb", "LopNr", ["rtb_2018", "rtb_2019"])
+def test_auto_apply_allows_shared_panel_key():
+    """SCB registers commonly share the person-id panel_key (e.g.
+    ``P1105_LopNr_PersonNr``) across many distinct panels. Both must
+    auto-apply; generate.py shares the pool, parse_config accepts it.
+    """
+    a = _candidate_grp("g1", "lisa", "P1105_LopNr_PersonNr", ["lisa_2018", "lisa_2019"])
+    b = _candidate_grp("g2", "rtb", "P1105_LopNr_PersonNr", ["rtb_2018", "rtb_2019"])
     out = interactive._auto_apply_panel_candidates({"g1": a, "g2": b})
-    assert set(out.keys()) == {"g1"}
-    assert out["g1"]["panel_key"] == "LopNr"
+    assert set(out.keys()) == {"g1", "g2"}
+    assert out["g1"]["panel_key"] == "P1105_LopNr_PersonNr"
+    assert out["g2"]["panel_key"] == "P1105_LopNr_PersonNr"
 
 
 def test_auto_apply_skips_panel_id_collision():

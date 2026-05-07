@@ -172,37 +172,51 @@ def _build_panel_pools(
     seed: int,
     sample_pct: float,
 ) -> tuple[dict[str, np.ndarray], dict[tuple[str, int | str, str], np.ndarray]]:
-    """Build per-panel id pools and per-(period, source) subsets.
+    """Build per-panel-key id pools and per-(period, source) subsets.
 
-    Pool size is ``max(n_panel_ids)`` across the panel's periods. The
-    pool is deterministically shuffled per ``panel_id``; each
-    ``(period, source)`` entry takes a *prefix* of the shuffled pool
-    sized to that entry's ``n_panel_ids``. Strict prefix nesting gives
-    stable cross-period overlap (panel persistence): sequential periods
-    share ``min(n_panel_ids)`` of their ids, and per-source distinctness
-    matches the source's stats (no inflation when a sibling member
-    contributes more ids to the same period). Cross-period attrition
+    All panels sharing a ``panel_key`` share one id pool — in SCB
+    register data, panel_key is typically the person identifier (e.g.
+    ``P1105_LopNr_PersonNr``) and dozens of distinct registers
+    legitimately reference the same id universe. Pool size is
+    ``max(n_panel_ids)`` across every period of every panel using that
+    key, and the shuffle seed derives from the key (not panel_id) so
+    the universe is stable.
+
+    Each ``(period, source)`` entry takes a *prefix* of the shuffled
+    pool sized to that entry's ``n_panel_ids``. Strict prefix nesting
+    gives stable cross-period overlap (panel persistence): sequential
+    periods share ``min(n_panel_ids)`` of their ids, and per-source
+    distinctness matches the source's stats. Cross-period attrition
     modelling (transition matrices, churn) is explicitly out of scope.
+
+    Returned ``pools`` is keyed by ``panel_id`` for the caller's
+    convenience — entries for panels sharing a ``panel_key`` reference
+    the same underlying array.
     """
-    pools: dict[str, np.ndarray] = {}
-    subsets: dict[tuple[str, int | str, str], np.ndarray] = {}
+    by_key: dict[str, list[Panel]] = {}
     for panel in panels:
         if not panel.by_period:
             continue
-        pool_size = max(p.n_panel_ids for p in panel.by_period)
+        by_key.setdefault(panel.panel_key, []).append(panel)
+
+    pools: dict[str, np.ndarray] = {}
+    subsets: dict[tuple[str, int | str, str], np.ndarray] = {}
+    for panel_key, key_panels in by_key.items():
+        pool_size = max(p.n_panel_ids for pn in key_panels for p in pn.by_period)
         if sample_pct < 1.0:
             pool_size = max(1, int(pool_size * sample_pct))
-        subtype = id_subtypes.get(panel.panel_key, "string")
-        pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", panel.panel_id))
+        subtype = id_subtypes.get(panel_key, "string")
+        pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", panel_key))
         pool = _make_id_pool(pool_size, subtype)
         pool_rng.shuffle(pool)
-        pools[panel.panel_id] = pool
-        for ps in panel.by_period:
-            subset_size = ps.n_panel_ids
-            if sample_pct < 1.0:
-                subset_size = max(1, int(subset_size * sample_pct))
-            subset_size = min(subset_size, len(pool))
-            subsets[(panel.panel_id, ps.period, ps.source)] = pool[:subset_size]
+        for panel in key_panels:
+            pools[panel.panel_id] = pool
+            for ps in panel.by_period:
+                subset_size = ps.n_panel_ids
+                if sample_pct < 1.0:
+                    subset_size = max(1, int(subset_size * sample_pct))
+                subset_size = min(subset_size, len(pool))
+                subsets[(panel.panel_id, ps.period, ps.source)] = pool[:subset_size]
     return pools, subsets
 
 

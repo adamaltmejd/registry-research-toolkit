@@ -866,36 +866,31 @@ def _auto_apply_panel_candidates(
     one id column on the source. Anything else stays as a "candidate"
     hint until the user hits ``[p]`` to pick the key explicitly.
 
-    Skips candidates whose ``panel_id``, ``panel_key``, or member source
-    would collide with an already-applied panel — ``parse_config``
-    rejects such configs, so silently writing them out would surface as
-    a downstream extract failure. The colliding group keeps its
+    Skips candidates whose ``panel_id`` or member source would collide
+    with an already-applied panel — ``parse_config`` rejects those
+    cases. ``panel_key`` collisions are *allowed*: SCB registers
+    routinely share the person id (e.g. ``P1105_LopNr_PersonNr``)
+    across dozens of distinct panels, and ``_build_panel_pools``
+    handles the shared id universe. The colliding group keeps its
     ``panel_candidate`` and the user can resolve it via ``[p]``.
     """
     out: dict[str, dict] = {}
     seen_ids: set[str] = set()
-    seen_keys: set[str] = set()
     seen_sources: set[str] = set()
     for gid, grp in groups.items():
         cand = grp.panel_candidate
         if cand is None or cand.suggested_panel_key is None:
             continue
         panel_id = cand.suggested_panel_id or gid
-        panel_key = cand.suggested_panel_key
         member_sources = [m["source"] for m in cand.members]
-        if (
-            panel_id in seen_ids
-            or panel_key in seen_keys
-            or any(s in seen_sources for s in member_sources)
-        ):
+        if panel_id in seen_ids or any(s in seen_sources for s in member_sources):
             continue
         out[gid] = {
             "panel_id": panel_id,
-            "panel_key": panel_key,
+            "panel_key": cand.suggested_panel_key,
             "members": cand.members,
         }
         seen_ids.add(panel_id)
-        seen_keys.add(panel_key)
         seen_sources.update(member_sources)
     return out
 

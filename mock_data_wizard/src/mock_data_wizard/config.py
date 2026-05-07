@@ -471,10 +471,8 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         raise ValueError(f"{CONFIG_FILENAME}: panels must be an array")
     panels: list[Panel] = []
     seen_panel_ids: set[str] = set()
-    seen_panel_keys: dict[str, str] = {}  # panel_key -> first panel_id
-    # source -> first panel_id that owns it. Covers both merged_table
-    # `source` and separate_files `members[].source`: ``panel_by_source``
-    # in generate.py is a flat dict keyed by source, so any collision
+    # source -> first panel_id that owns it. ``panel_by_source`` in
+    # generate.py is a flat dict keyed by source, so any collision
     # silently drops the second panel's behavior at generation time.
     seen_panel_sources: dict[str, str] = {}
     for i, raw in enumerate(raw_panels):
@@ -482,18 +480,11 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         if panel.panel_id in seen_panel_ids:
             raise ValueError(f"panels: duplicate panel_id {panel.panel_id!r}")
         seen_panel_ids.add(panel.panel_id)
-        # Two panels sharing a panel_key would each build their own pool
-        # and clobber each other in ``panel_pool_for_col`` at generation
-        # time. Reject: a panel_key column has one id universe, so two
-        # panels referencing it should be one panel.
-        prior = seen_panel_keys.get(panel.panel_key)
-        if prior is not None:
-            raise ValueError(
-                f"panels: {panel.panel_id!r} and {prior!r} both declare "
-                f"panel_key={panel.panel_key!r}; a panel_key column "
-                f"should belong to a single panel (merge the entries)"
-            )
-        seen_panel_keys[panel.panel_key] = panel.panel_id
+        # Two panels CAN share a panel_key — in SCB data nearly every
+        # register is keyed on the same person id (e.g.
+        # ``P1105_LopNr_PersonNr``). They share one id universe by
+        # design; generate.py builds one pool per panel_key sized to
+        # the largest contributor.
         # A source can only belong to one panel (multi-key panels are
         # out of scope). Each member's source is claimed regardless of
         # whether it contributes via period or time_key.

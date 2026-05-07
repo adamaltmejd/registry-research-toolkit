@@ -506,25 +506,29 @@ def test_parse_config_rejects_two_panels_sharing_a_source():
         )
 
 
-def test_parse_config_rejects_two_panels_with_same_panel_key():
-    with pytest.raises(ValueError, match="panel_key='LopNr'"):
-        parse_config(
-            {
-                "contract_version": "mdw-config-2.0.0",
-                "panels": [
-                    {
-                        "panel_id": "a",
-                        "panel_key": "LopNr",
-                        "members": [{"source": "x", "time_key": "AR"}],
-                    },
-                    {
-                        "panel_id": "b",
-                        "panel_key": "LopNr",
-                        "members": [{"source": "y", "period": 2018}],
-                    },
-                ],
-            }
-        )
+def test_parse_config_allows_two_panels_with_same_panel_key():
+    """SCB registers routinely share a person-id panel_key across
+    many distinct panels. parse_config accepts it; generate.py builds
+    one shared pool per panel_key."""
+    cfg = parse_config(
+        {
+            "contract_version": "mdw-config-2.0.0",
+            "panels": [
+                {
+                    "panel_id": "lisa",
+                    "panel_key": "P1105_LopNr_PersonNr",
+                    "members": [{"source": "x", "time_key": "AR"}],
+                },
+                {
+                    "panel_id": "rtb",
+                    "panel_key": "P1105_LopNr_PersonNr",
+                    "members": [{"source": "y", "period": 2018}],
+                },
+            ],
+        }
+    )
+    keys = [p.panel_key for p in cfg.panels]
+    assert keys == ["P1105_LopNr_PersonNr", "P1105_LopNr_PersonNr"]
 
 
 def test_parse_config_rejects_duplicate_period_in_one_panel():
