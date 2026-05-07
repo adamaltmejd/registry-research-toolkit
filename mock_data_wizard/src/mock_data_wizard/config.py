@@ -45,7 +45,7 @@ from .classify import COLUMN_TYPES
 from .summarize import SUPPRESS_K
 
 CONFIG_FILENAME = "mdw_step2_config.json"
-SCHEMA_VERSION = "mdw-config-1.0.0"
+SCHEMA_VERSION = "mdw-config-2.0.0"
 
 VALID_ID_SUBTYPES = ("integer", "string")
 VALID_NUMERIC_SUBTYPES = ("integer", "double")
@@ -66,9 +66,6 @@ VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 # in this set raises at parse time so a typo can't silently no-op.
 VALID_SOURCE_KEYS: tuple[str, ...] = ("year",)
 
-# Panel layouts supported by the panel block (#23).
-VALID_PANEL_LAYOUTS: tuple[str, ...] = ("merged_table", "separate_files")
-
 
 @dataclass(frozen=True)
 class ColumnTypeOverride:
@@ -87,28 +84,44 @@ class ColumnTypeOverride:
 
 @dataclass(frozen=True)
 class PanelMember:
-    """One period's source within a ``separate_files`` panel."""
+    """One source contributing to a panel.
+
+    Exactly one of ``period`` and ``time_key`` is set:
+
+    - ``period``: a literal integer period for a one-period-per-file
+      delivery (the source contributes a single period's rows).
+    - ``time_key``: a column name on the source whose values carry the
+      period for each row. The source can contribute many periods.
+
+    Mixing the two within the same panel is allowed — e.g. a long
+    history in one merged file with a ``year`` column, plus the most
+    recent year as a separate file.
+    """
 
     source: str
-    period: int
+    period: int | None = None
+    time_key: str | None = None
+
+    def __post_init__(self) -> None:
+        if (self.period is None) == (self.time_key is None):
+            raise ValueError(
+                f"PanelMember(source={self.source!r}): exactly one of "
+                f"'period' or 'time_key' must be set"
+            )
 
 
 @dataclass(frozen=True)
 class Panel:
     """A panel declaration on the configure side.
 
-    ``layout="merged_table"``: one source carries every period in a
-    ``time_key`` column. Requires ``source`` and ``time_key``.
-
-    ``layout="separate_files"``: each period is a separate source.
-    Requires ``members``.
+    A panel is a unit of analysis where the same entities (identified
+    by ``panel_key``) recur across multiple periods. Each member
+    declares how its rows map to a period — either via the filename
+    (``period`` literal) or via a column on the source (``time_key``).
     """
 
     panel_id: str
-    layout: str
     panel_key: str
-    source: str | None = None
-    time_key: str | None = None
     members: tuple[PanelMember, ...] = ()
 
 
@@ -283,15 +296,17 @@ _TOP_LEVEL_KEYS = frozenset(
 def _parse_panel(raw: Any, idx: int) -> Panel:
     """Validate one panel declaration.
 
-    Strict on unknown keys (typo guard) and on layout-specific required
-    fields. ``merged_table`` needs ``source`` + ``time_key``;
-    ``separate_files`` needs a non-empty ``members`` list of
-    ``{source, period}`` objects.
+    Required: ``panel_id`` (str), ``panel_key`` (str), ``members``
+    (non-empty list). Each member is ``{"source": str, "period": int}``
+    OR ``{"source": str, "time_key": str}`` — exactly one of period /
+    time_key. Source uniqueness within the panel is enforced; period
+    uniqueness across file-members is enforced (column-member periods
+    materialise at extract time and are validated there).
     """
     if not isinstance(raw, dict):
         raise ValueError(f"panels[{idx}] must be an object, got {type(raw).__name__}")
-    required = {"panel_id", "layout", "panel_key"}
-    allowed = required | {"source", "time_key", "members"}
+    required = {"panel_id", "panel_key", "members"}
+    allowed = required
     extra = set(raw) - allowed
     if extra:
         raise ValueError(
@@ -304,77 +319,62 @@ def _parse_panel(raw: Any, idx: int) -> Panel:
     panel_id = raw["panel_id"]
     if not isinstance(panel_id, str) or not panel_id:
         raise ValueError(f"panels[{idx}].panel_id must be a non-empty string")
-    layout = raw["layout"]
-    if layout not in VALID_PANEL_LAYOUTS:
-        raise ValueError(
-            f"panels[{idx}].layout={layout!r}, expected one of {VALID_PANEL_LAYOUTS}"
-        )
     panel_key = raw["panel_key"]
     if not isinstance(panel_key, str) or not panel_key:
         raise ValueError(f"panels[{idx}].panel_key must be a non-empty string")
-
-    if layout == "merged_table":
-        for k in ("source", "time_key"):
-            v = raw.get(k)
-            if not isinstance(v, str) or not v:
-                raise ValueError(
-                    f"panels[{idx}] (layout=merged_table) requires "
-                    f"non-empty string {k!r}"
-                )
-        if "members" in raw:
-            raise ValueError(
-                f"panels[{idx}] (layout=merged_table) must not declare 'members'"
-            )
-        return Panel(
-            panel_id=panel_id,
-            layout=layout,
-            panel_key=panel_key,
-            source=raw["source"],
-            time_key=raw["time_key"],
-        )
-
-    # layout == "separate_files"
-    members_raw = raw.get("members")
+    members_raw = raw["members"]
     if not isinstance(members_raw, list) or not members_raw:
-        raise ValueError(
-            f"panels[{idx}] (layout=separate_files) requires a non-empty 'members' list"
-        )
-    for k in ("source", "time_key"):
-        if k in raw:
-            raise ValueError(
-                f"panels[{idx}] (layout=separate_files) must not declare {k!r}"
-            )
+        raise ValueError(f"panels[{idx}].members must be a non-empty list")
+
     members: list[PanelMember] = []
+    seen_sources: set[str] = set()
     seen_periods: set[int] = set()
     for j, m in enumerate(members_raw):
         if not isinstance(m, dict):
             raise ValueError(
                 f"panels[{idx}].members[{j}] must be an object, got {type(m).__name__}"
             )
-        member_extra = set(m) - {"source", "period"}
+        member_extra = set(m) - {"source", "period", "time_key"}
         if member_extra:
             raise ValueError(
                 f"panels[{idx}].members[{j}] has unknown key(s) "
-                f"{sorted(member_extra)} (allowed: ['source', 'period'])"
+                f"{sorted(member_extra)} (allowed: ['period', 'source', 'time_key'])"
             )
         src = m.get("source")
         if not isinstance(src, str) or not src:
             raise ValueError(
                 f"panels[{idx}].members[{j}].source must be a non-empty string"
             )
-        period = m.get("period")
-        if isinstance(period, bool) or not isinstance(period, int):
+        if src in seen_sources:
+            raise ValueError(f"panels[{idx}].members has duplicate source {src!r}")
+        seen_sources.add(src)
+        has_period = "period" in m
+        has_time_key = "time_key" in m
+        if has_period == has_time_key:
             raise ValueError(
-                f"panels[{idx}].members[{j}].period must be an int, "
-                f"got {type(period).__name__}"
+                f"panels[{idx}].members[{j}] (source={src!r}): exactly one of "
+                f"'period' or 'time_key' must be set"
             )
-        if period in seen_periods:
-            raise ValueError(f"panels[{idx}].members has duplicate period {period}")
-        seen_periods.add(period)
-        members.append(PanelMember(source=src, period=period))
+        if has_period:
+            period = m["period"]
+            if isinstance(period, bool) or not isinstance(period, int):
+                raise ValueError(
+                    f"panels[{idx}].members[{j}].period must be an int, "
+                    f"got {type(period).__name__}"
+                )
+            if period in seen_periods:
+                raise ValueError(f"panels[{idx}].members has duplicate period {period}")
+            seen_periods.add(period)
+            members.append(PanelMember(source=src, period=period))
+        else:
+            time_key = m["time_key"]
+            if not isinstance(time_key, str) or not time_key:
+                raise ValueError(
+                    f"panels[{idx}].members[{j}].time_key must be a non-empty string"
+                )
+            members.append(PanelMember(source=src, time_key=time_key))
     return Panel(
         panel_id=panel_id,
-        layout=layout,
         panel_key=panel_key,
         members=tuple(members),
     )
@@ -494,16 +494,10 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
                 f"should belong to a single panel (merge the entries)"
             )
         seen_panel_keys[panel.panel_key] = panel.panel_id
-        # Build the set of sources this panel claims. A merged_table
-        # panel claims its single source; a separate_files panel claims
-        # each member's source. A source can only belong to one panel
-        # (multi-key panels are out of scope).
-        claimed_sources: list[str] = []
-        if panel.layout == "merged_table":
-            claimed_sources.append(panel.source)
-        else:  # separate_files
-            claimed_sources.extend(m.source for m in panel.members)
-        for src in claimed_sources:
+        # A source can only belong to one panel (multi-key panels are
+        # out of scope). Each member's source is claimed regardless of
+        # whether it contributes via period or time_key.
+        for src in (m.source for m in panel.members):
             prior = seen_panel_sources.get(src)
             if prior is not None:
                 raise ValueError(

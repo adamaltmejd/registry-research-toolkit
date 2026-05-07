@@ -660,8 +660,8 @@ def test_ambiguous_columns_picks_kod_typ_and_digit_suffixes():
 
 def test_stage3_separate_files_panel_auto_applied(tmp_path: Path, monkeypatch):
     """A `lisa_2018`/`lisa_2019` cluster with an unambiguous shared
-    id column should auto-apply a separate_files panel — the user just
-    accepts all without entering the inspector."""
+    id column should auto-apply a panel — the user just accepts all
+    without entering the inspector."""
     _write_discover(
         tmp_path,
         [
@@ -691,7 +691,6 @@ def test_stage3_separate_files_panel_auto_applied(tmp_path: Path, monkeypatch):
     assert payload["panels"] == [
         {
             "panel_id": "lisa",
-            "layout": "separate_files",
             "panel_key": "LopNr",
             "members": [
                 {"source": "lisa_2018", "period": 2018},
@@ -707,7 +706,7 @@ def test_stage3_separate_files_panel_auto_applied(tmp_path: Path, monkeypatch):
 
 def test_stage3_merged_table_panel_auto_applied(tmp_path: Path, monkeypatch):
     """Singleton group with an unambiguous time-key + lone id column
-    should auto-apply a merged_table panel."""
+    should auto-apply a column-member panel."""
     _write_discover(
         tmp_path,
         [
@@ -737,10 +736,8 @@ def test_stage3_merged_table_panel_auto_applied(tmp_path: Path, monkeypatch):
     assert payload["panels"] == [
         {
             "panel_id": "registry_main",
-            "layout": "merged_table",
             "panel_key": "LopNr",
-            "source": "registry_main",
-            "time_key": "AR",
+            "members": [{"source": "registry_main", "time_key": "AR"}],
         }
     ]
 
@@ -838,6 +835,7 @@ def test_stage3_panel_edited_via_inspector(tmp_path: Path, monkeypatch):
             "1",  # inspect
             "p",  # edit panel
             "y",  # keep this panel? yes
+            "",  # member-toggle prompt: keep all → finish
             "LopNr",  # panel_key override
             "",  # back out
             "",  # accept all groups
@@ -851,6 +849,91 @@ def test_stage3_panel_edited_via_inspector(tmp_path: Path, monkeypatch):
     )
     assert payload["panels"][0]["panel_id"] == "lisa"
     assert payload["panels"][0]["panel_key"] == "LopNr"
+
+
+def test_stage3_panel_member_toggle_removes_then_re_adds(tmp_path: Path, monkeypatch):
+    """The [p] flow exposes a member picker. The user can drop a
+    source by index and add another back via the [+ N] entries; the
+    final panel reflects exactly the member set they chose."""
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [{"name": "LopNr", "sql_type": "int"}],
+            },
+            {
+                "source_name": "lisa_2019",
+                "columns": [{"name": "LopNr", "sql_type": "int"}],
+            },
+            {
+                "source_name": "lisa_2020",
+                "columns": [{"name": "LopNr", "sql_type": "int"}],
+            },
+        ],
+    )
+    _stub_no_regmeta_guesses(monkeypatch)
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect group
+            "p",  # edit panel
+            "y",  # keep this panel? yes
+            "1",  # remove member 1 (lisa_2018)
+            "",  # finish member edit
+            "",  # accept default panel_key
+            "",  # back out of inspector
+            "",  # accept all groups
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    assert [m["source"] for m in payload["panels"][0]["members"]] == [
+        "lisa_2019",
+        "lisa_2020",
+    ]
+
+
+def test_stage3_panel_member_toggle_can_add_dropped_source(tmp_path: Path, monkeypatch):
+    """A source removed via the member picker can be added back: the
+    + entries in the picker re-include outside group sources, defaulting
+    the period from the year suffix."""
+    _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    _stub_no_regmeta_guesses(monkeypatch)
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect group
+            "p",  # edit panel
+            "y",  # keep this panel? yes
+            "1",  # remove member 1 (lisa_2018)
+            "2",  # add it back via the + entry (now at index 2)
+            "p",  # add as period
+            "",  # accept default period (2018)
+            "",  # finish member edit
+            "",  # accept default panel_key
+            "",  # back out of inspector
+            "",  # accept all groups
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    members = sorted(payload["panels"][0]["members"], key=lambda m: m["period"])
+    assert [m["source"] for m in members] == ["lisa_2018", "lisa_2019"]
 
 
 def test_stage3_panel_force_skips_interview_but_keeps_auto_apply(
@@ -903,13 +986,13 @@ def test_detect_panel_candidate_separate_files():
     }
     cand = interactive._detect_panel_candidate(grp, sources_by_name)
     assert cand is not None
-    assert cand.layout == "separate_files"
     assert cand.suggested_panel_id == "lisa"
     assert cand.suggested_panel_key == "LopNr"
     assert [m["period"] for m in cand.members] == [2018, 2019, 2020]
+    assert all(m.get("time_key") is None for m in cand.members)
 
 
-def test_detect_panel_candidate_merged_table_singleton():
+def test_detect_panel_candidate_singleton_with_time_key():
     grp = interactive.RegisterGroup(
         group_id="noreg-x",
         register_id=None,
@@ -929,9 +1012,7 @@ def test_detect_panel_candidate_merged_table_singleton():
     }
     cand = interactive._detect_panel_candidate(grp, sources_by_name)
     assert cand is not None
-    assert cand.layout == "merged_table"
-    assert cand.source == "registry_main"
-    assert cand.time_key == "AR"
+    assert cand.members == [{"source": "registry_main", "time_key": "AR"}]
     assert cand.suggested_panel_id == "registry_main"
     assert cand.suggested_panel_key == "LopNr"
 
@@ -993,7 +1074,6 @@ def test_detect_panel_candidate_clusters_intra_year_shards():
     }
     cand = interactive._detect_panel_candidate(grp, sources_by_name)
     assert cand is not None
-    assert cand.layout == "separate_files"
     assert cand.suggested_panel_id == "Kursprov_gymn"
     assert cand.suggested_panel_key == "P1105_LopNr_PersonNr"
     # year=2011 unique → period 2011*100+1=201101.
@@ -1045,7 +1125,7 @@ def test_longest_common_prefix():
 # -- _render_panel_line ----------------------------------------------------
 
 
-def test_render_panel_line_for_configured_separate_files():
+def test_render_panel_line_for_configured_panel():
     grp = interactive.RegisterGroup(
         group_id="reg-1",
         register_id=1,
@@ -1054,7 +1134,6 @@ def test_render_panel_line_for_configured_separate_files():
     )
     configured = {
         "panel_id": "lisa",
-        "layout": "separate_files",
         "panel_key": "LopNr",
         "members": [
             {"source": "lisa_2018", "period": 2018},
@@ -1075,7 +1154,6 @@ def test_render_panel_line_for_candidate_no_panel_set():
         register_name=None,
         confidence="high",
         panel_candidate=interactive.PanelCandidate(
-            layout="separate_files",
             members=[
                 {"source": "lisa_2018", "period": 2018},
                 {"source": "lisa_2019", "period": 2019},
@@ -1119,7 +1197,6 @@ def test_register_menu_shows_panel_indicators(capsys):
         },
         schema_variants=1,
         panel_candidate=interactive.PanelCandidate(
-            layout="separate_files",
             members=[
                 {"source": "lisa_2018", "period": 2018},
                 {"source": "lisa_2019", "period": 2019},
@@ -1140,7 +1217,6 @@ def test_register_menu_shows_panel_indicators(capsys):
         },
         schema_variants=1,
         panel_candidate=interactive.PanelCandidate(
-            layout="separate_files",
             members=[
                 {"source": "spine_2018", "period": 2018},
                 {"source": "spine_2019", "period": 2019},
@@ -1166,7 +1242,6 @@ def test_register_menu_shows_panel_indicators(capsys):
     panels_by_gid = {
         "reg-1": {
             "panel_id": "lisa",
-            "layout": "separate_files",
             "panel_key": "LopNr",
             "members": [
                 {"source": "lisa_2018", "period": 2018},

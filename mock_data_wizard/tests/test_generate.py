@@ -474,8 +474,12 @@ def _panel_stats_separate_files() -> dict:
         "panels": [
             {
                 "panel_id": "lisa",
-                "layout": "separate_files",
                 "panel_key": "LopNr",
+                "members": [
+                    {"source": "lisa_2018.csv", "period": 2018},
+                    {"source": "lisa_2019.csv", "period": 2019},
+                    {"source": "lisa_2020.csv", "period": 2020},
+                ],
                 "by_period": [
                     {
                         "period": 2018,
@@ -597,14 +601,27 @@ def _panel_stats_merged_table() -> dict:
         "panels": [
             {
                 "panel_id": "swecov_inpatient",
-                "layout": "merged_table",
-                "source": "swecov.csv",
                 "panel_key": "LopNr",
-                "time_key": "AR",
+                "members": [{"source": "swecov.csv", "time_key": "AR"}],
                 "by_period": [
-                    {"period": 2018, "n_rows": 90, "n_panel_ids": 80},
-                    {"period": 2019, "n_rows": 110, "n_panel_ids": 95},
-                    {"period": 2020, "n_rows": 100, "n_panel_ids": 85},
+                    {
+                        "period": 2018,
+                        "source": "swecov.csv",
+                        "n_rows": 90,
+                        "n_panel_ids": 80,
+                    },
+                    {
+                        "period": 2019,
+                        "source": "swecov.csv",
+                        "n_rows": 110,
+                        "n_panel_ids": 95,
+                    },
+                    {
+                        "period": 2020,
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 85,
+                    },
                 ],
             }
         ],
@@ -742,13 +759,21 @@ def test_panel_merged_table_string_periods(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "swecov_q",
-                "layout": "merged_table",
-                "source": "swecov.csv",
                 "panel_key": "LopNr",
-                "time_key": "Q",
+                "members": [{"source": "swecov.csv", "time_key": "Q"}],
                 "by_period": [
-                    {"period": "2019-Q1", "n_rows": 100, "n_panel_ids": 70},
-                    {"period": "2019-Q2", "n_rows": 100, "n_panel_ids": 80},
+                    {
+                        "period": "2019-Q1",
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 70,
+                    },
+                    {
+                        "period": "2019-Q2",
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 80,
+                    },
                 ],
             }
         ],

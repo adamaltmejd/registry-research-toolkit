@@ -195,12 +195,21 @@ def _build_panel_pools(
         pool = _make_id_pool(pool_size, subtype)
         pool_rng.shuffle(pool)
         pools[panel.panel_id] = pool
-        for period_stat in panel.by_period:
-            subset_size = period_stat.n_panel_ids
+        # Subsets are keyed per period — multi-source panels can have
+        # the same period contributed by multiple members, so take the
+        # max ``n_panel_ids`` to size the subset for the largest
+        # contributor (smaller members still draw from the same pool).
+        max_panel_ids: dict[int | str, int] = {}
+        for ps in panel.by_period:
+            max_panel_ids[ps.period] = max(
+                max_panel_ids.get(ps.period, 0), ps.n_panel_ids
+            )
+        for period, n_panel_ids in max_panel_ids.items():
+            subset_size = n_panel_ids
             if sample_pct < 1.0:
                 subset_size = max(1, int(subset_size * sample_pct))
             subset_size = min(subset_size, len(pool))
-            subsets[(panel.panel_id, period_stat.period)] = pool[:subset_size]
+            subsets[(panel.panel_id, period)] = pool[:subset_size]
     return pools, subsets
 
 
@@ -209,23 +218,28 @@ def _generate_merged_panel_columns(
     panel: Panel,
     panel_subsets: dict[tuple[str, int | str], np.ndarray],
     rng: np.random.Generator,
+    *,
+    member_source: str,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Co-generate ``(time_key, panel_key)`` for a merged_table panel.
+    """Co-generate ``(time_key, panel_key)`` for a column-member.
 
-    Each row is assigned a period proportional to ``n_rows[t]``; the
+    Each row is assigned one of the periods that this member's source
+    actually contributed to, weighted by its observed ``n_rows``. The
     panel-key value for that row is then drawn from the period's pool
-    subset. This preserves panel structure: the same panel-key value
-    can appear across multiple periods (subsets share members), and
-    per-period row counts respect the source's distribution.
+    subset. Restricting to ``member_source`` keeps generated rows
+    consistent with the extract output — a multi-source panel won't
+    bleed periods from a sibling member into this file.
     """
-    period_list = [p.period for p in panel.by_period]
+    member_periods = [p for p in panel.by_period if p.source == member_source]
+    if not member_periods:
+        return np.empty(n_rows, dtype=object), np.empty(n_rows, dtype=object)
+    period_list = [p.period for p in member_periods]
     periods = np.array(period_list, dtype=object)
-    weights = np.array([p.n_rows for p in panel.by_period], dtype=float)
+    weights = np.array([p.n_rows for p in member_periods], dtype=float)
     weights /= weights.sum()
     period_idx = rng.choice(len(periods), size=n_rows, p=weights)
     period_values = periods[period_idx]
     panel_values = np.empty(n_rows, dtype=object)
-    # Group by period to vectorise the per-subset draw.
     for i, period in enumerate(period_list):
         mask = period_idx == i
         count = int(mask.sum())
@@ -349,15 +363,17 @@ def generate(
     for panel in stats.panels:
         if panel.panel_id in panel_pools:
             panel_pool_for_col[panel.panel_key] = panel_pools[panel.panel_id]
-    panel_by_source: dict[str, tuple[Panel, int | str | None]] = {}
+    # panel_by_source maps a source name → (panel, member-info). For a
+    # file-member, member-info is the literal period (int/str). For a
+    # column-member, it's the time_key column name (str). The two are
+    # disambiguated downstream via the member type stored alongside.
+    panel_by_source: dict[str, tuple[Panel, int | str | None, str | None]] = {}
     for panel in stats.panels:
-        if panel.layout == "merged_table":
-            # stats._parse_panel guarantees source is non-empty here.
-            panel_by_source[panel.source] = (panel, None)
-        else:  # separate_files
-            for ps in panel.by_period:
-                if ps.source:
-                    panel_by_source[ps.source] = (panel, ps.period)
+        for member in panel.members:
+            if member.time_key is not None:
+                panel_by_source[member.source] = (panel, None, member.time_key)
+            else:
+                panel_by_source[member.source] = (panel, member.period, None)
 
     # Build shared ID pools — sample the pool itself when sample_pct < 1
     # so that files sharing an ID column draw from the same reduced universe
@@ -489,20 +505,26 @@ def generate(
         # structure.
         panel_info = panel_by_source.get(source.source_name)
         if panel_info is not None and panel_info[0].by_period:
-            panel_obj, period = panel_info
+            panel_obj, period, time_key = panel_info
             panel_rng = np.random.default_rng(
                 _sub_seed(seed, source.source_name, "__panel__")
             )
-            if panel_obj.layout == "merged_table":
-                # stats._parse_panel guarantees time_key is non-empty here.
+            if time_key is not None:
+                # Column-member: filter by_period to this source's
+                # contributions before sampling so the (time_key,
+                # panel_key) pair stays internally consistent.
                 time_vals, panel_vals = _generate_merged_panel_columns(
-                    n_rows, panel_obj, panel_subsets, panel_rng
+                    n_rows,
+                    panel_obj,
+                    panel_subsets,
+                    panel_rng,
+                    member_source=source.source_name,
                 )
                 # time_key column may be typed int/categorical; emit
                 # whatever the period values are (typically int years).
-                columns_data[panel_obj.time_key] = time_vals.tolist()
+                columns_data[time_key] = time_vals.tolist()
                 columns_data[panel_obj.panel_key] = panel_vals.tolist()
-            elif period is not None:  # separate_files
+            elif period is not None:  # file-member
                 subset = panel_subsets.get((panel_obj.panel_id, period))
                 if subset is not None and len(subset) > 0:
                     replace = n_rows > len(subset)

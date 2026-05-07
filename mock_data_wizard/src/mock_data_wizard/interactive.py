@@ -623,18 +623,14 @@ def _format_source_list(sources: list[str]) -> str:
 class PanelCandidate:
     """Auto-detected panel shape for a register group.
 
-    ``separate_files``: every group source carries the same year-suffix
-    stem (e.g. ``lisa_2018``, ``lisa_2019``); each source is one period.
-    ``members`` is sorted ascending by period.
-
-    ``merged_table``: a single source carries every period in a
-    ``time_key`` column (``AR`` / ``INDATUM`` / ``year`` / ``period``).
+    ``members`` is a list of dicts, each with ``source`` and either
+    ``period`` (a literal int — file-member, one period per source) or
+    ``time_key`` (a column name — column-member, periods materialise at
+    extract time). Members are sorted: file-members ascending by
+    period, column-members at the end in source order.
     """
 
-    layout: str  # "separate_files" | "merged_table"
     members: list[dict] = field(default_factory=list)
-    source: str | None = None
-    time_key: str | None = None
     suggested_panel_id: str | None = None
     suggested_panel_key: str | None = None
 
@@ -771,7 +767,6 @@ def _detect_panel_candidate(
         suggested_key = _shared_id_column(member_srcs)
         members = _build_panel_members(unique_sources, years_per_source)
         return PanelCandidate(
-            layout="separate_files",
             members=members,
             suggested_panel_id=_suggest_panel_id(grp, unique_sources),
             suggested_panel_key=suggested_key,
@@ -789,13 +784,36 @@ def _detect_panel_candidate(
         ids = [c["name"] for c in src.get("columns", []) if is_known_id(c["name"])]
         suggested_key = ids[0] if len(ids) == 1 else None
         return PanelCandidate(
-            layout="merged_table",
-            source=name,
-            time_key=time_key,
+            members=[{"source": name, "time_key": time_key}],
             suggested_panel_id=name,
             suggested_panel_key=suggested_key,
         )
     return None
+
+
+def _summarise_panel_members(members: list[dict]) -> str:
+    """Short one-liner describing a member list.
+
+    File-members surface as ``N periods YYYY–YYYY``; column-members
+    surface as ``N column-members on <src>.<time_key>``. Mixed panels
+    show both halves comma-joined.
+    """
+    file_periods = [m["period"] for m in members if m.get("period") is not None]
+    col_members = [m for m in members if m.get("time_key") is not None]
+    parts: list[str] = []
+    if file_periods:
+        ps = sorted(file_periods)
+        if len(ps) == 1:
+            parts.append(f"1 period {ps[0]}")
+        else:
+            parts.append(f"{len(ps)} periods {ps[0]}–{ps[-1]}")
+    if col_members:
+        if len(col_members) == 1:
+            cm = col_members[0]
+            parts.append(f"on {cm['source']}.{cm['time_key']}")
+        else:
+            parts.append(f"{len(col_members)} time_key sources")
+    return ", ".join(parts) or f"{len(members)} members"
 
 
 def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | None:
@@ -808,32 +826,19 @@ def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | Non
     - neither: ``None`` (the line is omitted entirely)
     """
     if configured is not None:
-        layout = configured.get("layout", "?")
         pid = configured.get("panel_id", "?")
         pkey = configured.get("panel_key", "?")
-        if layout == "separate_files":
-            members = configured.get("members", [])
-            periods = sorted(
-                m.get("period") for m in members if m.get("period") is not None
-            )
-            if periods:
-                span = f"{len(members)} periods {periods[0]}–{periods[-1]}"
-            else:
-                span = f"{len(members)} periods"
-            return f"panel: {pid} by {pkey} ({span})  [p to edit]"
-        tk = configured.get("time_key", "?")
-        src = configured.get("source", "?")
-        return f"panel: {pid} by {pkey} (merged_table on {src}.{tk})  [p to edit]"
+        members = configured.get("members", [])
+        return (
+            f"panel: {pid} by {pkey} ({_summarise_panel_members(members)})  [p to edit]"
+        )
     cand = grp.panel_candidate
     if cand is None:
         return None
-    if cand.layout == "separate_files":
-        periods = sorted(m["period"] for m in cand.members)
-        span = f"{len(cand.members)} sources {periods[0]}–{periods[-1]}"
-        return f"panel: candidate ({span}, no panel_key set)  [p to configure]"
     return (
-        f"panel: candidate (merged_table on {cand.source}.{cand.time_key}, "
-        f"no panel_key set)  [p to configure]"
+        f"panel: candidate "
+        f"({_summarise_panel_members(cand.members)}, no panel_key set)"
+        f"  [p to configure]"
     )
 
 
@@ -845,32 +850,21 @@ def _auto_apply_panel_candidates(
     Mirrors how column types are auto-classified: the wizard makes the
     obvious call up front and the user overrides via the inspector.
     Auto-apply requires ``suggested_panel_key`` to be set — for
-    separate_files that means a single shared id-typed column across
-    all members; for merged_table it means exactly one id column on
-    the source. Anything else (no shared id, multiple candidate
-    panel_keys) stays as a "candidate" hint until the user hits ``[p]``
-    to pick the key explicitly.
+    file-member groups that means a single shared id-typed column
+    across all members; for a column-member singleton it means exactly
+    one id column on the source. Anything else stays as a "candidate"
+    hint until the user hits ``[p]`` to pick the key explicitly.
     """
     out: dict[str, dict] = {}
     for gid, grp in groups.items():
         cand = grp.panel_candidate
         if cand is None or cand.suggested_panel_key is None:
             continue
-        if cand.layout == "separate_files":
-            out[gid] = {
-                "panel_id": cand.suggested_panel_id or gid,
-                "layout": "separate_files",
-                "panel_key": cand.suggested_panel_key,
-                "members": cand.members,
-            }
-        else:
-            out[gid] = {
-                "panel_id": cand.suggested_panel_id or cand.source,
-                "layout": "merged_table",
-                "panel_key": cand.suggested_panel_key,
-                "source": cand.source,
-                "time_key": cand.time_key,
-            }
+        out[gid] = {
+            "panel_id": cand.suggested_panel_id or gid,
+            "panel_key": cand.suggested_panel_key,
+            "members": cand.members,
+        }
     return out
 
 
@@ -888,83 +882,165 @@ def _apply_panels_to_config(config: dict, panels_by_gid: dict[str, dict]) -> Non
         config.pop("panels", None)
 
 
+def _format_member(m: dict) -> str:
+    """Compact per-member label for the inspector member picker."""
+    if m.get("period") is not None:
+        return f"{m['source']} (period={m['period']})"
+    return f"{m['source']} (time_key={m['time_key']})"
+
+
+def _toggle_panel_members(
+    panel_members: list[dict], grp: RegisterGroup
+) -> list[dict] | None:
+    """Interactive add/remove member loop. Returns ``None`` on cancel.
+
+    Sources currently in the panel are listed first with ``-`` to
+    remove. Group sources outside the panel are listed next with ``+``
+    to add. Adding a source asks whether to attach it via period
+    (year-suffix derived) or time_key (column name).
+    """
+    members = [dict(m) for m in panel_members]
+    while True:
+        print()
+        print("  Members:")
+        in_panel_sources = {m["source"] for m in members}
+        for i, m in enumerate(members, 1):
+            print(f"    [- {i}] {_format_member(m)}")
+        unique_sources = list(dict.fromkeys(grp.sources))
+        outside = [s for s in unique_sources if s not in in_panel_sources]
+        for j, s in enumerate(outside, len(members) + 1):
+            print(f"    [+ {j}] {s}")
+        if not members and not outside:
+            print("    (no group sources)")
+        choice = _prompt("  Toggle by number, [enter] to finish", default="").strip()
+        if not choice:
+            return members
+        try:
+            idx = int(choice)
+        except ValueError:
+            print(f"  Unknown choice {choice!r}.", file=sys.stderr)
+            continue
+        if 1 <= idx <= len(members):
+            members.pop(idx - 1)
+            continue
+        out_idx = idx - len(members) - 1
+        if not 0 <= out_idx < len(outside):
+            print(f"  Number out of range: {idx}", file=sys.stderr)
+            continue
+        new_src = outside[out_idx]
+        new_member = _prompt_member_kind(new_src, grp)
+        if new_member is not None:
+            members.append(new_member)
+
+
+def _prompt_member_kind(src: str, grp: RegisterGroup) -> dict | None:
+    """Ask whether the new member is a file-member or column-member.
+
+    File-members default the period from the year-suffix in the source
+    name. Column-members default the time_key from any AR / INDATUM /
+    year / period column on the source.
+    """
+    cols = [c for c, _ in grp.columns_by_source.get(src, [])]
+    time_key_default: str | None = next(
+        (c for c in cols if c.lower() in _TIME_KEY_NAMES),
+        None,
+    )
+    year_match = _match_year_suffix(src)
+    period_default = int(year_match.group(2)) if year_match else None
+    options = []
+    if period_default is not None:
+        options.append("p")
+    if time_key_default is not None:
+        options.append("t")
+    if not options:
+        # Neither auto-default; prompt for explicit period int or
+        # time_key column name.
+        print(
+            f"  No year suffix in {src!r} and no AR/INDATUM/year/period column — "
+            "supply a period or time_key explicitly."
+        )
+        options = ["p", "t"]
+    kinds = "/".join(f"[{o}]" for o in options)
+    raw = (
+        _prompt(f"  Add {src!r} as {kinds}: [p]eriod / [t]ime_key", default=options[0])
+        .strip()
+        .lower()
+    )
+    if raw in ("p", "period"):
+        if period_default is not None:
+            period_str = _prompt(
+                "    period", default=str(period_default)
+            ).strip() or str(period_default)
+        else:
+            period_str = _prompt("    period").strip()
+        try:
+            period = int(period_str)
+        except ValueError:
+            print(f"  Invalid period {period_str!r}.", file=sys.stderr)
+            return None
+        return {"source": src, "period": period}
+    if raw in ("t", "time_key"):
+        if time_key_default is not None:
+            tk = (
+                _prompt("    time_key", default=time_key_default).strip()
+                or time_key_default
+            )
+        else:
+            tk = _prompt("    time_key (column name on this source)").strip()
+        if not tk:
+            print("  No time_key supplied; skipping.", file=sys.stderr)
+            return None
+        return {"source": src, "time_key": tk}
+    print(f"  Unknown choice {raw!r}.", file=sys.stderr)
+    return None
+
+
 def _edit_panel_for_group(
     gid: str, grp: RegisterGroup, panels_by_gid: dict[str, dict]
 ) -> None:
     """Run the [p] sub-prompt for one group, mutating ``panels_by_gid``.
 
-    Source of truth for layout/members is the existing panel when one
-    is already configured (so the user can edit a non-candidate panel
-    they hand-wrote in the JSON); otherwise the auto-detected
-    candidate. With neither, the action is a no-op with a hint.
+    Three branches:
+
+    - Existing panel: ``Keep this panel? [Y/n]`` → ``n`` removes it,
+      ``y`` lets the user re-edit panel_key and members.
+    - No existing, has candidate: ``Is this a panel? [Y/n]`` → ``y``
+      configures from the candidate (with member-edit pass).
+    - No existing, no candidate: lets the user start with an empty
+      member list and add from group sources.
     """
     cand = grp.panel_candidate
     existing = panels_by_gid.get(gid)
-    if existing is None and cand is None:
-        print("  No panel candidate detected for this group.")
-        return
 
     if existing is not None:
         if not _yes_no("  Keep this panel?", default=True):
             panels_by_gid.pop(gid, None)
             return
-        layout = existing["layout"]
+        members: list[dict] = [dict(m) for m in existing.get("members", [])]
+        default_key = existing["panel_key"]
+        panel_id = existing["panel_id"]
     else:
-        if not _yes_no("  Is this a panel?", default=True):
-            return
-        assert (
-            cand is not None
-        )  # _yes_no path requires a candidate; existing handled above
-        layout = cand.layout
-
-    if layout == "separate_files":
-        members = (existing or {}).get("members") or (cand.members if cand else [])
-        if not members:
-            print("  No members available for separate_files panel.", file=sys.stderr)
-            return
-        # panel_id is auto-derived; user edits the JSON to rename. The
-        # only meaningful question on the inspector path is panel_key.
-        panel_id = (
-            (existing or {}).get("panel_id")
-            or (cand.suggested_panel_id if cand else None)
-            or gid
-        )
-        default_key = (existing or {}).get("panel_key") or (
-            cand.suggested_panel_key if cand else None
-        )
-        if default_key:
-            panel_key = (
-                _prompt("  panel_key", default=default_key).strip() or default_key
-            )
-        else:
-            panel_key = _prompt("  panel_key (no shared id-typed column found)").strip()
-            if not panel_key:
-                print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
+        if cand is not None:
+            if not _yes_no("  Is this a panel?", default=True):
                 return
-        panels_by_gid[gid] = {
-            "panel_id": panel_id,
-            "layout": "separate_files",
-            "panel_key": panel_key,
-            "members": members,
-        }
+            members = [dict(m) for m in cand.members]
+            default_key = cand.suggested_panel_key
+            panel_id = cand.suggested_panel_id or gid
+        else:
+            if not _yes_no("  Set up a panel for this group?", default=False):
+                return
+            members = []
+            default_key = None
+            panel_id = grp.register_name or gid
+
+    edited = _toggle_panel_members(members, grp)
+    if edited is None or not edited:
+        if existing is not None:
+            panels_by_gid.pop(gid, None)
         return
 
-    # merged_table
-    source = (existing or {}).get("source") or (cand.source if cand else None)
-    time_key = (existing or {}).get("time_key") or (cand.time_key if cand else None)
-    if not source or not time_key:
-        # Both come from auto-detection on the source's columns; if
-        # they're missing here, the candidate didn't materialise.
-        print("  No merged_table candidate detected for this group.", file=sys.stderr)
-        return
-    panel_id = (
-        (existing or {}).get("panel_id")
-        or (cand.suggested_panel_id if cand else None)
-        or source
-    )
-    default_key = (existing or {}).get("panel_key") or (
-        cand.suggested_panel_key if cand else None
-    )
+    # panel_id is auto-derived; user edits the JSON to rename. The only
+    # meaningful question on the inspector path is panel_key.
     if default_key:
         panel_key = _prompt("  panel_key", default=default_key).strip() or default_key
     else:
@@ -974,10 +1050,8 @@ def _edit_panel_for_group(
             return
     panels_by_gid[gid] = {
         "panel_id": panel_id,
-        "layout": "merged_table",
         "panel_key": panel_key,
-        "source": source,
-        "time_key": time_key,
+        "members": edited,
     }
 
 

@@ -133,7 +133,7 @@ def test_invalid_json(tmp_path: Path):
 
 
 def test_parse_panels_block(tmp_path: Path):
-    """#23: mdw_step3_stats.json's panels block round-trips through parse_stats."""
+    """mdw_step3_stats.json's panels block round-trips through parse_stats."""
     data = {
         "contract_version": "2.0.0",
         "sources": [
@@ -148,19 +148,27 @@ def test_parse_panels_block(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "merged",
-                "layout": "merged_table",
-                "source": "x.csv",
                 "panel_key": "a",
-                "time_key": "ar",
+                "members": [{"source": "x.csv", "time_key": "ar"}],
                 "by_period": [
-                    {"period": 2018, "n_rows": 100, "n_panel_ids": 80},
-                    {"period": 2019, "n_rows": 110, "n_panel_ids": 85},
+                    {
+                        "period": 2018,
+                        "source": "x.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 80,
+                    },
+                    {
+                        "period": 2019,
+                        "source": "x.csv",
+                        "n_rows": 110,
+                        "n_panel_ids": 85,
+                    },
                 ],
             },
             {
                 "panel_id": "split",
-                "layout": "separate_files",
                 "panel_key": "a",
+                "members": [{"source": "y.csv", "period": 2020}],
                 "by_period": [
                     {
                         "period": 2020,
@@ -177,12 +185,12 @@ def test_parse_panels_block(tmp_path: Path):
     result = parse_stats(p)
     assert len(result.panels) == 2
     merged = next(pn for pn in result.panels if pn.panel_id == "merged")
-    assert merged.layout == "merged_table"
-    assert merged.source == "x.csv"
-    assert merged.time_key == "ar"
+    assert len(merged.members) == 1
+    assert merged.members[0].source == "x.csv"
+    assert merged.members[0].time_key == "ar"
     assert [bp.period for bp in merged.by_period] == [2018, 2019]
     split = next(pn for pn in result.panels if pn.panel_id == "split")
-    assert split.layout == "separate_files"
+    assert split.members[0].period == 2020
     assert split.by_period[0].source == "y.csv"
 
 
