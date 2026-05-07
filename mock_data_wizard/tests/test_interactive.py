@@ -555,61 +555,6 @@ def test_stage3_force_overwrites_without_prompt(tmp_path: Path, monkeypatch):
 # -- Phase 2 helpers (pure-function unit tests) ---------------------------
 
 
-def test_detect_separate_file_panels_returns_clusters_of_size_2_or_more():
-    discover = {
-        "sources": [
-            {"source_name": "lisa_2018", "columns": []},
-            {"source_name": "lisa_2019", "columns": []},
-            {"source_name": "lisa_2020", "columns": []},
-            # Singleton — must not be surfaced.
-            {"source_name": "rams_2020", "columns": []},
-            # No year suffix — must not be surfaced.
-            {"source_name": "spine", "columns": []},
-        ]
-    }
-    clusters = interactive._detect_separate_file_panels(discover)
-    assert len(clusters) == 1
-    cluster = clusters[0]
-    assert cluster["prefix"] == "lisa"
-    # Members sorted ascending by period.
-    assert [m["period"] for m in cluster["members"]] == [2018, 2019, 2020]
-    assert [m["source"] for m in cluster["members"]] == [
-        "lisa_2018",
-        "lisa_2019",
-        "lisa_2020",
-    ]
-
-
-def test_detect_separate_file_panels_handles_separator_variants():
-    """Both `lisa_2018` and `lisa-2018` should cluster under `lisa`."""
-    discover = {
-        "sources": [
-            {"source_name": "lisa_2018", "columns": []},
-            {"source_name": "lisa-2019", "columns": []},
-        ]
-    }
-    clusters = interactive._detect_separate_file_panels(discover)
-    assert len(clusters) == 1
-    assert clusters[0]["prefix"] == "lisa"
-
-
-def test_detect_separate_file_panels_preserves_sql_schema_dot():
-    """SQL table source names like `dbo.scb_rams_2018` use the dot as
-    a schema separator, not a file extension. The year-suffix match
-    must run on the raw name first so the trailing `2018` is seen."""
-    discover = {
-        "sources": [
-            {"source_name": "dbo.scb_rams_2018", "columns": []},
-            {"source_name": "dbo.scb_rams_2019", "columns": []},
-        ]
-    }
-    clusters = interactive._detect_separate_file_panels(discover)
-    assert len(clusters) == 1
-    assert clusters[0]["prefix"] == "dbo.scb_rams"
-    years = sorted(m["period"] for m in clusters[0]["members"])
-    assert years == [2018, 2019]
-
-
 def test_find_time_key_in_source():
     src = {
         "columns": [
@@ -710,15 +655,13 @@ def test_ambiguous_columns_picks_kod_typ_and_digit_suffixes():
     assert cols == ["Niva_typ", "SNI3", "Yrke_kod"]
 
 
-# -- Stage 3: panel detection interview ------------------------------------
+# -- Stage 3: panel configuration via the inspector ------------------------
 
 
-def test_stage3_separate_files_panel_emitted_when_confirmed(
-    tmp_path: Path, monkeypatch
-):
-    """A `lisa_2018`/`lisa_2019` cluster confirmed by the user should
-    emit a `panels: [{layout: "separate_files", ...}]` block; the
-    panel_key default is the unique shared id column."""
+def test_stage3_separate_files_panel_auto_applied(tmp_path: Path, monkeypatch):
+    """A `lisa_2018`/`lisa_2019` cluster with an unambiguous shared
+    id column should auto-apply a separate_files panel — the user just
+    accepts all without entering the inspector."""
     _write_discover(
         tmp_path,
         [
@@ -736,10 +679,7 @@ def test_stage3_separate_files_panel_emitted_when_confirmed(
     _canned_inputs(
         monkeypatch,
         [
-            "",  # accept all families
-            "y",  # treat as panel? yes
-            "",  # panel_id (default: lisa)
-            "",  # panel_key (default: LopNr)
+            "",  # accept all groups (panel auto-applied up front)
             "n",  # suppress_k? no
         ],
     )
@@ -765,32 +705,9 @@ def test_stage3_separate_files_panel_emitted_when_confirmed(
     parse_config(payload)
 
 
-def test_stage3_panel_declined_does_not_emit_panels_block(tmp_path: Path, monkeypatch):
-    _write_discover(
-        tmp_path,
-        [
-            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
-            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
-        ],
-    )
-    _stub_no_regmeta_guesses(monkeypatch)
-    _canned_inputs(
-        monkeypatch,
-        [
-            "",  # accept all families
-            "n",  # treat as panel? no
-            "n",  # suppress_k? no
-        ],
-    )
-    rc = interactive._stage3_configure(tmp_path)
-    assert rc == 0
-    payload = json.loads(
-        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
-    )
-    assert "panels" not in payload
-
-
-def test_stage3_merged_table_panel_emitted_when_confirmed(tmp_path: Path, monkeypatch):
+def test_stage3_merged_table_panel_auto_applied(tmp_path: Path, monkeypatch):
+    """Singleton group with an unambiguous time-key + lone id column
+    should auto-apply a merged_table panel."""
     _write_discover(
         tmp_path,
         [
@@ -808,10 +725,7 @@ def test_stage3_merged_table_panel_emitted_when_confirmed(tmp_path: Path, monkey
     _canned_inputs(
         monkeypatch,
         [
-            "",  # accept all families
-            "y",  # set up merged_table panel? yes
-            "",  # panel_key (default: LopNr)
-            "",  # panel_id (default: registry_main)
+            "",  # accept all groups (auto-applied)
             "n",  # suppress_k? no
         ],
     )
@@ -831,42 +745,34 @@ def test_stage3_merged_table_panel_emitted_when_confirmed(tmp_path: Path, monkey
     ]
 
 
-def test_stage3_separate_files_panel_skips_merged_table_for_same_source(
-    tmp_path: Path, monkeypatch
-):
-    """A source already claimed by a separate-files cluster must not
-    also be offered as a merged_table candidate (single-source = single
-    panel; otherwise the config validator rejects it)."""
+def test_stage3_panel_not_auto_applied_when_no_shared_id(tmp_path: Path, monkeypatch):
+    """Two same-schema members with no id-typed column → no auto-apply
+    (panel_key would have to be guessed). Accepting all should leave
+    panels off; the user has to hit [p] to supply a key explicitly."""
     _write_discover(
         tmp_path,
         [
             {
-                "source_name": "lisa_2018",
+                "source_name": "spine_2018",
                 "columns": [
-                    {"name": "LopNr", "sql_type": "int"},
-                    # `AR` would normally trigger the merged_table prompt.
-                    {"name": "AR", "sql_type": "int"},
+                    {"name": "Kommun", "sql_type": "char(4)"},
+                    {"name": "Year", "sql_type": "int"},
                 ],
             },
             {
-                "source_name": "lisa_2019",
+                "source_name": "spine_2019",
                 "columns": [
-                    {"name": "LopNr", "sql_type": "int"},
-                    {"name": "AR", "sql_type": "int"},
+                    {"name": "Kommun", "sql_type": "char(4)"},
+                    {"name": "Year", "sql_type": "int"},
                 ],
             },
         ],
     )
-    # If the merged_table loop weren't skipping claimed sources, we'd
-    # need extra canned answers and the test would StopIteration.
     _stub_no_regmeta_guesses(monkeypatch)
     _canned_inputs(
         monkeypatch,
         [
-            "",  # accept all families
-            "y",  # treat lisa_*  as panel? yes
-            "",  # panel_id default
-            "",  # panel_key default
+            "",  # accept all groups
             "n",  # suppress_k? no
         ],
     )
@@ -875,8 +781,329 @@ def test_stage3_separate_files_panel_skips_merged_table_for_same_source(
     payload = json.loads(
         (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
     )
-    assert len(payload["panels"]) == 1
-    assert payload["panels"][0]["layout"] == "separate_files"
+    assert "panels" not in payload
+
+
+def test_stage3_panel_removed_via_inspector(tmp_path: Path, monkeypatch):
+    """An auto-applied panel can be removed by entering the inspector,
+    hitting [p], and answering "n" to "Keep this panel?"."""
+    _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    _stub_no_regmeta_guesses(monkeypatch)
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect group 1
+            "p",  # edit panel
+            "n",  # keep this panel? no → remove
+            "",  # back out of inspector
+            "",  # accept all groups
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    assert "panels" not in payload
+
+
+def test_stage3_panel_edited_via_inspector(tmp_path: Path, monkeypatch):
+    """An auto-applied panel can be edited via [p]; the user can
+    change panel_id and panel_key while keeping the layout."""
+    _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    _stub_no_regmeta_guesses(monkeypatch)
+    _canned_inputs(
+        monkeypatch,
+        [
+            "1",  # inspect
+            "p",  # edit panel
+            "y",  # keep this panel? yes
+            "lisa_panel",  # panel_id override
+            "LopNr",  # panel_key (same)
+            "",  # back out
+            "",  # accept all groups
+            "n",  # suppress_k? no
+        ],
+    )
+    rc = interactive._stage3_configure(tmp_path)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    assert payload["panels"][0]["panel_id"] == "lisa_panel"
+    assert payload["panels"][0]["panel_key"] == "LopNr"
+
+
+def test_stage3_panel_force_skips_interview_but_keeps_auto_apply(
+    tmp_path: Path, monkeypatch
+):
+    """`--force` skips the interview but auto-applied panels still
+    land in the output (consistent with auto-classified column types
+    landing under --force)."""
+    _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    _stub_no_regmeta_guesses(monkeypatch)
+    _canned_inputs(monkeypatch, ["n"])  # only suppress_k prompts
+    rc = interactive._stage3_configure(tmp_path, force=True)
+    assert rc == 0
+    payload = json.loads(
+        (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
+    )
+    assert payload["panels"][0]["panel_id"] == "lisa"
+
+
+# -- Panel candidate detection --------------------------------------------
+
+
+def test_detect_panel_candidate_separate_files():
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name="LISA",
+        confidence="high",
+        sources=["lisa_2018", "lisa_2019", "lisa_2020"],
+    )
+    sources_by_name = {
+        "lisa_2018": {
+            "source_name": "lisa_2018",
+            "columns": [{"name": "LopNr"}, {"name": "Kommun"}],
+        },
+        "lisa_2019": {
+            "source_name": "lisa_2019",
+            "columns": [{"name": "LopNr"}, {"name": "Kommun"}],
+        },
+        "lisa_2020": {
+            "source_name": "lisa_2020",
+            "columns": [{"name": "LopNr"}, {"name": "Kommun"}],
+        },
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert cand.layout == "separate_files"
+    assert cand.suggested_panel_id == "lisa"
+    assert cand.suggested_panel_key == "LopNr"
+    assert [m["period"] for m in cand.members] == [2018, 2019, 2020]
+
+
+def test_detect_panel_candidate_merged_table_singleton():
+    grp = interactive.RegisterGroup(
+        group_id="noreg-x",
+        register_id=None,
+        register_name=None,
+        confidence="none",
+        sources=["registry_main"],
+    )
+    sources_by_name = {
+        "registry_main": {
+            "source_name": "registry_main",
+            "columns": [
+                {"name": "LopNr"},
+                {"name": "AR"},
+                {"name": "Belopp"},
+            ],
+        }
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert cand.layout == "merged_table"
+    assert cand.source == "registry_main"
+    assert cand.time_key == "AR"
+    assert cand.suggested_panel_id == "registry_main"
+    assert cand.suggested_panel_key == "LopNr"
+
+
+def test_detect_panel_candidate_none_when_mixed_stems():
+    """Two sources sharing a register but not a year-suffix stem are
+    not auto-eligible for a separate_files panel."""
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="partial",
+        sources=["lisa_2018", "rams_2018"],
+    )
+    sources_by_name = {
+        "lisa_2018": {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+        "rams_2018": {"source_name": "rams_2018", "columns": [{"name": "LopNr"}]},
+    }
+    assert interactive._detect_panel_candidate(grp, sources_by_name) is None
+
+
+def test_detect_panel_candidate_none_when_singleton_no_time_key():
+    grp = interactive.RegisterGroup(
+        group_id="noreg-x",
+        register_id=None,
+        register_name=None,
+        confidence="none",
+        sources=["spine"],
+    )
+    sources_by_name = {
+        "spine": {"source_name": "spine", "columns": [{"name": "LopNr"}]},
+    }
+    assert interactive._detect_panel_candidate(grp, sources_by_name) is None
+
+
+# -- _render_panel_line ----------------------------------------------------
+
+
+def test_render_panel_line_for_configured_separate_files():
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+    )
+    configured = {
+        "panel_id": "lisa",
+        "layout": "separate_files",
+        "panel_key": "LopNr",
+        "members": [
+            {"source": "lisa_2018", "period": 2018},
+            {"source": "lisa_2024", "period": 2024},
+        ],
+    }
+    line = interactive._render_panel_line(grp, configured)
+    assert line is not None
+    assert "panel: lisa by LopNr" in line
+    assert "2 periods 2018–2024" in line
+    assert "[p to edit]" in line
+
+
+def test_render_panel_line_for_candidate_no_panel_set():
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        panel_candidate=interactive.PanelCandidate(
+            layout="separate_files",
+            members=[
+                {"source": "lisa_2018", "period": 2018},
+                {"source": "lisa_2019", "period": 2019},
+            ],
+            suggested_panel_id="lisa",
+            suggested_panel_key="LopNr",
+        ),
+    )
+    line = interactive._render_panel_line(grp, None)
+    assert line is not None
+    assert "candidate" in line
+    assert "[p to configure]" in line
+
+
+def test_render_panel_line_returns_none_when_no_candidate_no_existing():
+    grp = interactive.RegisterGroup(
+        group_id="x",
+        register_id=None,
+        register_name=None,
+        confidence="none",
+    )
+    assert interactive._render_panel_line(grp, None) is None
+
+
+# -- Register menu panel indicator ----------------------------------------
+
+
+def test_register_menu_shows_panel_indicators(capsys):
+    """Menu's last column tags each group with its panel state:
+    ``✓ panel`` when configured, ``⚠ candidate`` when detected but
+    not auto-applied, blank when no candidate at all."""
+    set_grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name="LISA",
+        confidence="high",
+        sources=["lisa_2018", "lisa_2019"],
+        columns_by_source={
+            "lisa_2018": [("LopNr", "int")],
+            "lisa_2019": [("LopNr", "int")],
+        },
+        schema_variants=1,
+        panel_candidate=interactive.PanelCandidate(
+            layout="separate_files",
+            members=[
+                {"source": "lisa_2018", "period": 2018},
+                {"source": "lisa_2019", "period": 2019},
+            ],
+            suggested_panel_id="lisa",
+            suggested_panel_key="LopNr",
+        ),
+    )
+    candidate_grp = interactive.RegisterGroup(
+        group_id="reg-2",
+        register_id=2,
+        register_name=None,
+        confidence="partial",
+        sources=["spine_2018", "spine_2019"],
+        columns_by_source={
+            "spine_2018": [("Kommun", "char(4)")],
+            "spine_2019": [("Kommun", "char(4)")],
+        },
+        schema_variants=1,
+        panel_candidate=interactive.PanelCandidate(
+            layout="separate_files",
+            members=[
+                {"source": "spine_2018", "period": 2018},
+                {"source": "spine_2019", "period": 2019},
+            ],
+            suggested_panel_id="spine",
+            suggested_panel_key=None,  # ambiguous → no auto-apply
+        ),
+    )
+    plain_grp = interactive.RegisterGroup(
+        group_id="noreg-x",
+        register_id=None,
+        register_name=None,
+        confidence="none",
+        sources=["spine"],
+        columns_by_source={"spine": [("LopNr", "int")]},
+        schema_variants=1,
+    )
+    groups = {
+        set_grp.group_id: set_grp,
+        candidate_grp.group_id: candidate_grp,
+        plain_grp.group_id: plain_grp,
+    }
+    panels_by_gid = {
+        "reg-1": {
+            "panel_id": "lisa",
+            "layout": "separate_files",
+            "panel_key": "LopNr",
+            "members": [
+                {"source": "lisa_2018", "period": 2018},
+                {"source": "lisa_2019", "period": 2019},
+            ],
+        }
+    }
+
+    gids = interactive._render_register_menu(groups, panels_by_gid)
+    assert gids == ["reg-1", "reg-2", "noreg-x"]
+    out = capsys.readouterr().out
+    lines = out.splitlines()
+    set_line = next(line for line in lines if "[ 1]" in line)
+    candidate_line = next(line for line in lines if "[ 2]" in line)
+    plain_line = next(line for line in lines if "[ 3]" in line)
+    assert "✓ panel" in set_line
+    assert "⚠ candidate" in candidate_line
+    assert "panel" not in plain_line and "candidate" not in plain_line
 
 
 # -- Stage 3: ambiguous-column review --------------------------------------
@@ -1522,29 +1749,6 @@ def test_collapse_year_ranges_handles_gaps_and_singletons():
         == "2003–2004, 2008–2009, 2012"
     )
     assert interactive._collapse_year_ranges([]) == ""
-
-
-def test_detect_separate_file_panels_handles_csv_extension():
-    """The same ``.csv`` extension fix has to flow through panel
-    detection or every CSV-extension family is silently ineligible."""
-    discover = {
-        "sources": [
-            {"source_name": "Äp9_2003.csv", "columns": []},
-            {"source_name": "Äp9_2004.csv", "columns": []},
-            {"source_name": "Äp9_2005.csv", "columns": []},
-        ]
-    }
-    clusters = interactive._detect_separate_file_panels(discover)
-    assert len(clusters) == 1
-    assert clusters[0]["prefix"] == "Äp9"
-    assert [m["period"] for m in clusters[0]["members"]] == [2003, 2004, 2005]
-    # Members keep the original filename incl. extension so downstream
-    # references still resolve.
-    assert [m["source"] for m in clusters[0]["members"]] == [
-        "Äp9_2003.csv",
-        "Äp9_2004.csv",
-        "Äp9_2005.csv",
-    ]
 
 
 def test_refresh_regmeta_signals_replaces_with_new_register_signals(monkeypatch):

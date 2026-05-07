@@ -80,11 +80,15 @@ Inside a group, register changes re-run `build_config` and re-query
 regmeta to refresh the inspector's column tags under the new register.
 Column-type overrides accumulate (and render with a trailing `*` so a
 second pass shows what's been touched) and are applied once at write
-time. After the group menu, the existing post-passes run unchanged:
-separate-files panel candidates from `<prefix>_<year>` clusters of
-size ≥ 2; merged-table candidates for sources with an
-`AR`/`INDATUM`/`year`/`period` column; per-column flips for
-`opaque` columns whose names suggest categorical/numeric
+time. The inspector also surfaces a **panel candidate** per group
+when the auto-detector can shape one (≥ 2 sources sharing a
+`<stem>_<YYYY>` filename → separate-files; singleton with an
+`AR`/`INDATUM`/`year`/`period` column → merged-table); `[p]`
+configures or removes it without leaving the group view. Anything
+the auto-detector can't shape stays unconfigured — the user
+hand-edits `panels` in the JSON, same UX contract as types.
+After the group menu, two post-passes still run: per-column flips
+for `opaque` columns whose names suggest categorical/numeric
 (`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
 optional `suppress_k` walkthrough. Edits operate on the in-memory
 `build_config` payload; `write_config` runs once at the end so
