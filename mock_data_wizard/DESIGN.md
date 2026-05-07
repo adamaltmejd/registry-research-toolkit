@@ -52,31 +52,37 @@ instructions for the MONA-side action. The detection table:
 | `mdw_step3_stats.json` | generate | Interview; collect seed / sample\_pct / regmeta / output dir, then dispatch to `generate` |
 | `mock_data/` populated | done | Offer to redo any stage |
 
-The configure interview is a family-grouped review menu. Sources are
-bucketed by `(column_name, sql_type)` schema (typically annual snapshots
-of the same register collapse into one family — 150 files → ~14–60
-families), and each family is auto-tagged with a register and
-classification using the existing `enrich._vote_register` voting +
-`_source_name_register_fallback` filename rules. The menu shows one row
-per family with a confidence glyph (`✓` / `⚠` / `✗`), the auto-detected
-register name, source/column counts, and the `match_count/nonid_count`
-ratio that drove the confidence flag. Columns whose `classification_id`
-is non-null in the family's register are tagged `(regmeta)` in the
-inspector so the user can distinguish regmeta-asserted categoricals
-from name-pattern fallbacks.
+The configure interview is a register-grouped review menu. Sources are
+first bucketed by `(column_name, sql_type)` schema family (annual
+snapshots of the same register typically collapse into one family —
+150 files → ~14–60 families), then families are merged into register
+groups by `group_by_register`. Each family is auto-tagged with a
+register via `enrich._vote_register` voting plus a
+`_source_name_register_fallback` filename rule; families that resolved
+to the same `register_id` share one row in the menu. Each row shows a
+confidence glyph (`✓` / `⚠` / `✗` — the worst across families in the
+group), the auto-detected register name, source/column counts, and the
+`match_count/nonid_count` ratio. Columns where regmeta carries a
+`value_set_id` or `classification_id` under the chosen register are
+tagged in the inspector with the classification short_name (e.g.
+`SUN2020-GRUPP`) or a bare `✓`, so the user can distinguish
+regmeta-asserted typing from name-pattern fallbacks.
 
-Inputs the user can give at the family menu:
+Inputs the user can give at the register-group menu:
 
 - `[enter]` / `[a]` — accept all auto-classifications
-- `[number]` — inspect/edit one family (override register, override
-  individual column types — applied to every member of the family)
+- `[number]` — inspect/edit one register group (override register,
+  override individual column types — applied to every source in the
+  group)
 - `[q]` — abort without writing
 
-Inside a family, register changes re-run `build_config` to rebuild the
-column-type preview; column-type overrides accumulate and are applied
-once at write time. After the family menu, the existing post-passes
-run unchanged: separate-files panel candidates from `<prefix>_<year>`
-clusters of size ≥ 2; merged-table candidates for sources with an
+Inside a group, register changes re-run `build_config` and re-query
+regmeta to refresh the inspector's column tags under the new register.
+Column-type overrides accumulate (and render with a trailing `*` so a
+second pass shows what's been touched) and are applied once at write
+time. After the group menu, the existing post-passes run unchanged:
+separate-files panel candidates from `<prefix>_<year>` clusters of
+size ≥ 2; merged-table candidates for sources with an
 `AR`/`INDATUM`/`year`/`period` column; per-column flips for
 `high_cardinality` columns whose names suggest categorical/numeric
 (`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
@@ -84,15 +90,15 @@ optional `suppress_k` walkthrough. Edits operate on the in-memory
 `build_config` payload; `write_config` runs once at the end so
 cancellation leaves no partial files.
 
-Why per-family rather than one global register: most MONA studies pull
-data from several registers at once (Education + LISA + RTB + …). The
-old "one register for the whole project" prompt forced the user to pick
-one and silently dropped the others into the name-pattern fallback. The
-per-family flow lets each family carry its own register, batches DB
-queries by register so one `_classification_lookup` call covers every
-source under that register, and degrades gracefully when regmeta isn't
-reachable (every family becomes `register_id=None` and the user gets
-name-pattern classification only).
+Why per-register-group rather than one global register: most MONA
+studies pull data from several registers at once (Education + LISA +
+RTB + …). The old "one register for the whole project" prompt forced
+the user to pick one and silently dropped the others into the
+name-pattern fallback. The per-group flow lets each group carry its
+own register via `register_per_source`, batches DB queries so one
+`_regmeta_lookup` call covers every source under that register, and
+degrades gracefully when regmeta isn't reachable (every group becomes
+`register_id=None` and the user reviews by hand from the inspector).
 
 The generate interview prompts for `seed`, `sample_pct`,
 regmeta-enrichment toggle, register filter (only when regmeta is on),

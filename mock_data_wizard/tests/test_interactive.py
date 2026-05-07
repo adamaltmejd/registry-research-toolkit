@@ -595,6 +595,23 @@ def test_detect_separate_file_panels_handles_separator_variants():
     assert clusters[0]["prefix"] == "lisa"
 
 
+def test_detect_separate_file_panels_preserves_sql_schema_dot():
+    """SQL table source names like `dbo.scb_rams_2018` use the dot as
+    a schema separator, not a file extension. The year-suffix match
+    must run on the raw name first so the trailing `2018` is seen."""
+    discover = {
+        "sources": [
+            {"source_name": "dbo.scb_rams_2018", "columns": []},
+            {"source_name": "dbo.scb_rams_2019", "columns": []},
+        ]
+    }
+    clusters = interactive._detect_separate_file_panels(discover)
+    assert len(clusters) == 1
+    assert clusters[0]["prefix"] == "dbo.scb_rams"
+    years = sorted(m["period"] for m in clusters[0]["members"])
+    assert years == [2018, 2019]
+
+
 def test_find_time_key_in_source():
     src = {
         "columns": [
@@ -1529,6 +1546,60 @@ def test_detect_separate_file_panels_handles_csv_extension():
         "Äp9_2004.csv",
         "Äp9_2005.csv",
     ]
+
+
+def test_refresh_regmeta_tags_replaces_with_new_register_signals(monkeypatch):
+    """After a register change, the inspector calls
+    `_refresh_regmeta_tags` to overwrite stale tags from the auto-guess
+    with a fresh lookup against the new register."""
+    from mock_data_wizard import configure as cfg_mod
+
+    grp = interactive.RegisterGroup(
+        group_id="reg-34",
+        register_id=34,
+        register_name="LISA",
+        register_str="LISA (id=34)",
+        confidence="partial",
+    )
+    grp.sources = ["lisa_2018"]
+    grp.columns_by_source = {
+        "lisa_2018": [("Sun2000Inr", "varchar"), ("Mystery", "int")],
+    }
+    # Stale tags from a previous register
+    grp.regmeta_tags = {"Sun2000Inr": "OLD-TAG", "GoneCol": None}
+
+    seen: dict = {}
+
+    def fake_lookup(conn, col_names, register_ids):
+        seen["col_names"] = set(col_names)
+        seen["register_ids"] = list(register_ids)
+        return {
+            "sun2000inr": cfg_mod.RegmetaSignal(
+                datatyp_kind=None, classification_short_name="SUN2000-INRIKTNING"
+            ),
+            # Mystery: regmeta sees it but no classification
+            "mystery": cfg_mod.RegmetaSignal(
+                datatyp_kind="numeric", classification_short_name=None
+            ),
+        }
+
+    class FakeConn:
+        def close(self):
+            pass
+
+    monkeypatch.setattr(cfg_mod, "_regmeta_lookup", fake_lookup)
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
+    monkeypatch.setattr(
+        "regmeta.db.db_path_from_args", lambda _p: "/fake.db", raising=True
+    )
+
+    interactive._refresh_regmeta_tags(grp, 99)
+
+    # Lookup ran against the new register id with the group's columns
+    assert seen["register_ids"] == [99]
+    assert {"Sun2000Inr", "Mystery"} == seen["col_names"]
+    # Tags now reflect the new register; the old GoneCol entry is gone.
+    assert grp.regmeta_tags == {"Sun2000Inr": "SUN2000-INRIKTNING", "Mystery": None}
 
 
 def test_is_column_overridden_detects_session_overrides():

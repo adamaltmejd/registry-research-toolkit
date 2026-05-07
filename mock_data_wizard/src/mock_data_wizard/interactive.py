@@ -279,10 +279,11 @@ def _detect_separate_file_panels(discover: dict) -> list[dict]:
     clusters: dict[str, list[dict]] = {}
     for src in discover.get("sources", []):
         name = src.get("source_name", "")
-        # Strip any single dot-extension before matching the year
-        # suffix; otherwise `Äp9_2003.csv` never clusters with its
-        # siblings because `.csv` isn't 4 digits.
-        m = _YEAR_SUFFIX_RE.match(_strip_extension(name))
+        # Try the raw name first so SQL table names like
+        # `dbo.scb_rams_2018` (where the dot is a schema separator,
+        # not an extension) cluster correctly. Fall back to stripped
+        # for filename sources like `Äp9_2003.csv`.
+        m = _YEAR_SUFFIX_RE.match(name) or _YEAR_SUFFIX_RE.match(_strip_extension(name))
         if not m:
             continue
         prefix = m.group(1).rstrip("_-")
@@ -620,8 +621,10 @@ def _format_source_list(sources: list[str]) -> str:
     grouped: dict[tuple[str, str], list[tuple[str, int | None]]] = {}
     order: list[tuple[str, str]] = []
     for s in sources:
-        base = _strip_extension(s)
-        m = _YEAR_SUFFIX_RE.match(base)
+        # Same precedence as `_detect_separate_file_panels`: raw name
+        # first (preserves `dbo.scb_rams_2018`), then stripped for
+        # filename sources.
+        m = _YEAR_SUFFIX_RE.match(s) or _YEAR_SUFFIX_RE.match(_strip_extension(s))
         if m:
             key = ("yr", m.group(1).rstrip("_-"))
             year: int | None = int(m.group(2))
@@ -860,6 +863,44 @@ def _is_column_overridden(
     return any((src_name, col_name) in column_overrides for src_name in sources)
 
 
+def _refresh_regmeta_tags(grp: "RegisterGroup", reg_id: int) -> None:
+    """Re-query regmeta for the group's columns under ``reg_id`` and
+    overwrite ``grp.regmeta_tags`` with the result.
+
+    Called after the user changes a group's register so the regmeta
+    column in the inspector reflects coverage under the *new* register
+    rather than stale tags from the auto-guess.
+    """
+    from regmeta import open_db
+    from regmeta.db import db_path_from_args
+
+    from ._util import strip_project_prefix
+    from .configure import _regmeta_lookup
+
+    col_names: set[str] = set()
+    for cols in grp.columns_by_source.values():
+        for name, _sql in cols:
+            col_names.add(name)
+    if not col_names:
+        grp.regmeta_tags = {}
+        return
+
+    conn = open_db(db_path_from_args(None))
+    try:
+        signals = _regmeta_lookup(conn, col_names, [reg_id])
+    finally:
+        conn.close()
+
+    tags: dict[str, str | None] = {}
+    for name in col_names:
+        sig = signals.get(name.lower()) or signals.get(
+            strip_project_prefix(name).lower()
+        )
+        if sig is not None:
+            tags[name] = sig.classification_short_name
+    grp.regmeta_tags = tags
+
+
 def _inspect_register_group(
     gid: str,
     groups: dict[str, RegisterGroup],
@@ -1001,6 +1042,15 @@ def _inspect_register_group(
                 grp.confidence = "partial"
                 for src_name in grp.sources:
                     register_per_source[src_name] = reg_name
+                # Refresh regmeta column tags so the inspector reflects
+                # coverage under the new register, not the auto-guess.
+                try:
+                    _refresh_regmeta_tags(grp, reg_id)
+                except Exception as exc:
+                    print(
+                        f"  Warning: could not refresh regmeta tags: {exc}",
+                        file=sys.stderr,
+                    )
             try:
                 config = build_config(payload, register_per_source=register_per_source)
             except Exception as exc:
