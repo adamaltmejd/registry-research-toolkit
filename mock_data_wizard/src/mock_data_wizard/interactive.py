@@ -104,7 +104,36 @@ _PROJECT_RE = re.compile(r"^P?(\d{4})$", re.IGNORECASE)
 # `..._20241231` (a YYYYMMDD date) avoids being parsed as year=1231,
 # while still letting `Kursprov_gymn_HT2011` (no underscore separator
 # but a non-digit boundary) match cleanly.
-_YEAR_SUFFIX_RE = re.compile(r"^(.+?)(?<!\d)(\d{4})$")
+# Locates a date token (YYYY, YYYYMM, YYYY[_-]MM) anywhere in a name.
+# Stem (variable, non-greedy) and suffix (constant across siblings)
+# bracket the date. Negative lookbehind/lookahead block the digit
+# before/after the token from being eaten — that's how `_20241231`
+# (a YYYYMMDD stamp) avoids being parsed as year=1231 or
+# year=2024+month=12+day=31, since the trailing `31` would force the
+# suffix to start with a digit.
+_DATE_TOKEN_RE = re.compile(
+    r"""^
+    (?P<stem>.+?)
+    (?<!\d)
+    (?P<year>\d{4})
+    (?:(?P<sep>[_-])?(?P<month>0[1-9]|1[0-2]))?
+    (?P<suffix>(?!\d).*)
+    $""",
+    re.VERBOSE,
+)
+# Intra-year shard tags → first month of the term (1–12). Used as a
+# fallback month source when a filename carries a term marker rather
+# than an explicit YYYYMM. VT (vårtermin/spring) → January; HT
+# (hösttermin/autumn) → August. Q1–Q4 follow calendar quarters.
+_INTRA_YEAR_TAG_MONTH = {
+    "VT": 1,
+    "HT": 8,
+    "Q1": 1,
+    "Q2": 4,
+    "Q3": 7,
+    "Q4": 10,
+}
+_TAG_TOKEN_SPLIT_RE = re.compile(r"[_\-]")
 # Column names that look like a panel time-key. Lowercase comparison.
 _TIME_KEY_NAMES = frozenset({"ar", "indatum", "year", "period"})
 # An opaque column with one of these suffixes is almost
@@ -292,35 +321,62 @@ def _longest_common_prefix(strs: list[str]) -> str:
 def _suggest_panel_id(grp: "RegisterGroup", sources: list[str]) -> str:
     """Default panel_id for a register group's auto-detected panel.
 
-    Prefers the longest common stem (year suffix stripped) across
+    Prefers the longest common stem (date token stripped) across
     sources — ``Kursprov_gymn_HT_2011`` / ``Kursprov_gymn_VT_2012`` →
-    ``Kursprov_gymn``. Falls back to the register name (the panel
-    *is* the register, so it's a sensible label) and finally to the
-    group_id when no name is available.
+    ``Kursprov_gymn``. Appends a constant suffix when present so
+    embedded-date families like ``Arb_AGIIndivid201907_Def`` /
+    ``Arb_AGIIndivid202302_Def`` collapse to ``Arb_AGIIndivid_Def``.
+    Falls back to the register name and then the group_id.
     """
     stems: list[str] = []
+    suffixes: list[str] = []
     for n in sources:
-        m = _match_year_suffix(n)
-        stems.append(m.group(1).rstrip("_-") if m else n)
-    common = _longest_common_prefix(stems).rstrip("_-")
-    if common:
-        return common
+        token = _match_date_token(n)
+        if token is not None:
+            stems.append(token.stem.rstrip("_-"))
+            suffixes.append(token.suffix.strip("_-"))
+        else:
+            stems.append(n)
+            suffixes.append("")
+    common_stem = _longest_common_prefix(stems).rstrip("_-")
+    common_suffix = suffixes[0] if len(set(suffixes)) == 1 else ""
+    parts = [p for p in (common_stem, common_suffix) if p]
+    if parts:
+        return "_".join(parts)
     if grp.register_name:
         return grp.register_name
     return grp.group_id
 
 
-def _build_panel_members(sources: list[str], years: dict[str, int]) -> list[dict]:
+def _build_panel_members(
+    sources: list[str],
+    years: dict[str, int],
+    months: dict[str, int | None],
+) -> list[dict]:
     """Build panel members with unique integer periods.
 
-    When every source has a distinct year, ``period`` is the year
-    itself — most readable. When sources share a year (e.g. HT/VT
-    intra-year shards), disambiguate with an alphabetic rank within
-    that year encoded as ``year * M + rank``, where ``M`` is the
-    smallest power of ten that fits the densest year's shard count
-    (so 100+ same-year shards never collide with the next year). Sorted
-    ascending so the JSON reads chronologically.
+    Three encoding strategies, in order of preference:
+
+    1. **Year-month** — when every source has a month (explicit YYYYMM
+       in the filename or a recognised intra-year tag like HT/VT/Q1–Q4),
+       encode ``period = year * 100 + month``. Reads chronologically
+       (VT2012=201201 < HT2012=201208). Falls through to (3) only if
+       encodings collide (e.g. two ``HT_2012`` shards).
+    2. **Year-as-period** — when every source has a distinct year and
+       no month information, ``period`` is the year itself.
+    3. **Alphabetic-rank fallback** — same-year siblings without a
+       month get ``year * M + rank``, where ``M`` is the smallest
+       power of ten that fits the densest year's shard count (so 100+
+       same-year shards never collide with the next year).
+
+    Members are sorted by ``period`` so the JSON reads chronologically.
     """
+    if all(months.get(n) is not None for n in sources):
+        encoded = {n: years[n] * 100 + months[n] for n in sources}  # type: ignore[operator]
+        if len(set(encoded.values())) == len(sources):
+            members = [{"source": n, "period": encoded[n]} for n in sources]
+            members.sort(key=lambda d: d["period"])
+            return members
     if len(set(years.values())) == len(sources):
         members = [{"source": n, "period": years[n]} for n in sources]
     else:
@@ -543,14 +599,75 @@ def _strip_extension(name: str) -> str:
     return name.rsplit(".", 1)[0] if "." in name else name
 
 
-def _match_year_suffix(name: str) -> re.Match[str] | None:
-    """Match ``<stem><year>`` against ``name``, falling back to stripped form.
+@dataclass(frozen=True, slots=True)
+class _DateToken:
+    """A date marker located within a filename.
 
-    Raw name first preserves SQL table names like ``dbo.scb_rams_2018``
-    where the dot is a schema separator; the stripped fallback handles
-    filename sources like ``Äp9_2003.csv``.
+    ``stem`` and ``suffix`` retain the original separators; the
+    ``shape_key`` derives a separator-tolerant identity so siblings
+    that differ only in date can be recognised as one panel even if
+    one writes ``foo_2019_def`` and another ``foo-2020-def``.
     """
-    return _YEAR_SUFFIX_RE.match(name) or _YEAR_SUFFIX_RE.match(_strip_extension(name))
+
+    stem: str
+    year: int
+    month: int | None
+    suffix: str
+
+    @property
+    def shape_key(self) -> tuple[str, str]:
+        """Identity used to decide whether two tokens belong to the same panel.
+
+        Strips a recognised intra-year tag (HT/VT/Q1–Q4) from the trailing
+        position of the stem so ``..._HT_2011`` and ``..._VT_2012`` share
+        a key — they differ only in the tag, which encodes the period,
+        not the panel identity.
+        """
+        stem = self.stem.rstrip("_-")
+        if stem:
+            last = _TAG_TOKEN_SPLIT_RE.split(stem)[-1].upper()
+            if last in _INTRA_YEAR_TAG_MONTH:
+                stem = stem[: -len(last)].rstrip("_-")
+        return (stem, self.suffix.strip("_-"))
+
+
+def _match_date_token(name: str) -> _DateToken | None:
+    """Locate a date token in ``name``.
+
+    Tries the extension-stripped form first so filename suffixes like
+    ``.csv`` don't leak into the captured ``suffix`` group. Falls back
+    to the raw name for SQL-table sources like ``dbo.scb_rams_2018``,
+    where ``_strip_extension`` would over-shorten the input to ``dbo``.
+    Returns ``None`` when no valid date token is present (e.g. a
+    YYYYMMDD timestamp where the trailing day digits force the
+    suffix-starts-with-non-digit lookahead to fail).
+    """
+    for s in (_strip_extension(name), name):
+        m = _DATE_TOKEN_RE.match(s)
+        if m:
+            return _DateToken(
+                stem=m["stem"],
+                year=int(m["year"]),
+                month=int(m["month"]) if m["month"] else None,
+                suffix=m["suffix"],
+            )
+    return None
+
+
+def _resolve_period_month(token: _DateToken) -> int | None:
+    """Return the month-of-term-start for ``token``, or ``None``.
+
+    Prefers an explicit YYYYMM month from the filename, then falls
+    back to a recognised HT/VT/Q1–Q4 tag at the trailing ``_-``-
+    separated token of the stem.
+    """
+    if token.month is not None:
+        return token.month
+    rstripped = token.stem.rstrip("_-")
+    if not rstripped:
+        return None
+    last = _TAG_TOKEN_SPLIT_RE.split(rstripped)[-1].upper()
+    return _INTRA_YEAR_TAG_MONTH.get(last)
 
 
 def _collapse_year_ranges(years: list[int]) -> str:
@@ -593,10 +710,13 @@ def _format_source_list(sources: list[str]) -> str:
     grouped: dict[tuple[str, str], list[tuple[str, int | None]]] = {}
     order: list[tuple[str, str]] = []
     for s in sources:
-        m = _match_year_suffix(s)
-        if m:
-            key = ("yr", m.group(1).rstrip("_-"))
-            year: int | None = int(m.group(2))
+        token = _match_date_token(s)
+        # Only collapse year-only tokens with empty suffix — embedded
+        # dates (`..._201907_Def`) and monthly grain don't have a
+        # tidy short form, so they're listed literally.
+        if token is not None and token.month is None and not token.suffix.strip("_-"):
+            key = ("yr", token.stem.rstrip("_-"))
+            year: int | None = token.year
         else:
             key = ("lit", s)
             year = None
@@ -756,30 +876,47 @@ def _detect_panel_candidate(
 
     Two member-emission paths:
 
-    - Multi-source group: every source must match ``...<YYYY>``. Each
-      source becomes a file-member with the parsed year as ``period``.
-      The year suffix is the gate that distinguishes annual snapshots
-      of one register from sibling tables of one register (e.g.
-      RTB main/address/kommun, no year tags). Schema drift across
-      periods is tolerated — the group already merges schema variants.
+    - Multi-source group: every source must carry a date token in its
+      name (trailing year, embedded ``YYYY[_-]MM`` / ``YYYYMM``, or
+      year-suffix with HT/VT/Q tag). All sources must share the same
+      stem and constant suffix and the same date granularity (all
+      year-only or all year+month) — mixed shapes signal heterogeneous
+      tables and don't form a single panel.
     - Singleton group: the lone source must carry an
       ``AR`` / ``INDATUM`` / ``year`` / ``period`` column; it becomes
       a column-member with that column as ``time_key``.
 
-    Anything else (no year suffix, no time key) returns None — the
-    user can still hand-edit ``panels`` in the JSON.
+    Anything else (no date token, mismatched shape, no time key)
+    returns None — the user can still hand-edit ``panels`` in the JSON.
     """
     unique_sources = list(dict.fromkeys(grp.sources))
     if len(unique_sources) >= 2:
-        years_per_source: dict[str, int] = {}
+        tokens: dict[str, _DateToken] = {}
         for name in unique_sources:
-            m = _match_year_suffix(name)
-            if not m:
+            t = _match_date_token(name)
+            if t is None:
                 return None
-            years_per_source[name] = int(m.group(2))
+            tokens[name] = t
+        # All siblings must have the same shape (stem + suffix) — a
+        # group containing both `foo_2019_def` and `foo_2020_xyz` is
+        # heterogeneous and shouldn't merge into one panel.
+        if len({t.shape_key for t in tokens.values()}) > 1:
+            return None
+        # Date granularity must be uniform across siblings: all
+        # year-only or all year+month. Mixing year-only with monthly
+        # files in one panel would force a fake month on the year-only
+        # members; user policy says these stay as separate panels.
+        months_per_source: dict[str, int | None] = {
+            name: _resolve_period_month(t) for name, t in tokens.items()
+        }
+        if len({m is None for m in months_per_source.values()}) > 1:
+            return None
+        years_per_source = {name: t.year for name, t in tokens.items()}
         member_srcs = [sources_by_name[name] for name in unique_sources]
         suggested_key = _shared_id_column(member_srcs)
-        members = _build_panel_members(unique_sources, years_per_source)
+        members = _build_panel_members(
+            unique_sources, years_per_source, months_per_source
+        )
         return PanelCandidate(
             members=members,
             suggested_panel_id=_suggest_panel_id(grp, unique_sources),
@@ -978,8 +1115,12 @@ def _prompt_member_kind(src: str, grp: RegisterGroup) -> dict | None:
         (c for c in cols if c.lower() in _TIME_KEY_NAMES),
         None,
     )
-    year_match = _match_year_suffix(src)
-    period_default = int(year_match.group(2)) if year_match else None
+    token = _match_date_token(src)
+    if token is None:
+        period_default: int | None = None
+    else:
+        month = _resolve_period_month(token)
+        period_default = token.year * 100 + month if month is not None else token.year
     options = []
     if period_default is not None:
         options.append("p")

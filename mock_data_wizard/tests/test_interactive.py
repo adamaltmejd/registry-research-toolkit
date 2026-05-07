@@ -1053,8 +1053,8 @@ def test_detect_panel_candidate_none_when_singleton_no_time_key():
 def test_detect_panel_candidate_clusters_intra_year_shards():
     """SCB national-tests style: HT/VT splits of the same register
     each carry a year suffix and share an id column. They cluster as
-    one panel; same-year siblings disambiguate via alphabetic rank
-    encoded as ``year * 100 + rank``."""
+    one panel; the HT/VT tag drives chronological ``year*100+month``
+    encoding (VT → Jan, HT → Aug)."""
     sources = [
         "Kursprov_gymn_HT_2011",
         "Kursprov_gymn_VT_2012",
@@ -1076,24 +1076,23 @@ def test_detect_panel_candidate_clusters_intra_year_shards():
     assert cand is not None
     assert cand.suggested_panel_id == "Kursprov_gymn"
     assert cand.suggested_panel_key == "P1105_LopNr_PersonNr"
-    # year=2011 unique → period 2011*100+1=201101.
-    # year=2012 has HT (alphabetically first → rank 1) and VT (rank 2)
-    # → 201201, 201202. year=2013 unique → 201301.
-    # Encoded as year*100+rank for ALL members because at least one
-    # year was duplicated.
-    assert [m["period"] for m in cand.members] == [201101, 201201, 201202, 201301]
+    # HT_2011 → 2011*100 + 8 = 201108
+    # VT_2012 → 2012*100 + 1 = 201201 (sorts before HT_2012, as it should)
+    # HT_2012 → 2012*100 + 8 = 201208
+    # VT_2013 → 2013*100 + 1 = 201301
+    assert [m["period"] for m in cand.members] == [201108, 201201, 201208, 201301]
     assert [m["source"] for m in cand.members] == [
         "Kursprov_gymn_HT_2011",
-        "Kursprov_gymn_HT_2012",
         "Kursprov_gymn_VT_2012",
+        "Kursprov_gymn_HT_2012",
         "Kursprov_gymn_VT_2013",
     ]
 
 
 def test_detect_panel_candidate_distinct_years_use_year_directly():
-    """When every source has a unique year, ``period`` is just the
-    year — most readable JSON, no encoding overhead."""
-    sources = ["Kursprov_HT_2011", "Kursprov_HT_2012", "Kursprov_HT_2013"]
+    """Untagged sources with distinct years → ``period`` is the year
+    itself, the most readable JSON shape."""
+    sources = ["Kursprov_2011", "Kursprov_2012", "Kursprov_2013"]
     grp = interactive.RegisterGroup(
         group_id="reg-1",
         register_id=1,
@@ -1106,8 +1105,105 @@ def test_detect_panel_candidate_distinct_years_use_year_directly():
     }
     cand = interactive._detect_panel_candidate(grp, sources_by_name)
     assert cand is not None
-    assert cand.suggested_panel_id == "Kursprov_HT"
+    assert cand.suggested_panel_id == "Kursprov"
     assert [m["period"] for m in cand.members] == [2011, 2012, 2013]
+
+
+def test_detect_panel_candidate_all_tagged_distinct_years_get_month_encoding():
+    """Even when years are already distinct, recognising HT/VT tags
+    gives the JSON sub-year resolution that makes time differences
+    obvious to a reader."""
+    sources = ["foo_HT_2011", "foo_VT_2012", "foo_HT_2013"]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert [m["period"] for m in cand.members] == [201108, 201201, 201308]
+
+
+def test_detect_panel_candidate_embedded_yyyymm_with_constant_suffix():
+    """``Arb_AGIIndivid201907_Def`` style: stem and ``_Def`` suffix
+    bracket an embedded YYYYMM. Period reads as YYYYMM directly."""
+    sources = [
+        "Arb_AGIIndivid201907_Def.csv",
+        "Arb_AGIIndivid202302_Def.csv",
+        "Arb_AGIIndivid202311_Def.csv",
+    ]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert cand.suggested_panel_id == "Arb_AGIIndivid_Def"
+    assert [m["period"] for m in cand.members] == [201907, 202302, 202311]
+
+
+def test_detect_panel_candidate_separated_yyyy_mm():
+    """``data_2019_03`` and ``data_2020-07`` style: explicit separator
+    between year and month."""
+    sources = ["data_2019_03", "data_2019_09", "data_2020-07"]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    cand = interactive._detect_panel_candidate(grp, sources_by_name)
+    assert cand is not None
+    assert [m["period"] for m in cand.members] == [201903, 201909, 202007]
+
+
+def test_detect_panel_candidate_rejects_mixed_granularity():
+    """A group containing both year-only and month-tagged files isn't
+    a single panel — the user is expected to split them."""
+    sources = ["foo_2018", "foo_2019_03"]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    assert interactive._detect_panel_candidate(grp, sources_by_name) is None
+
+
+def test_detect_panel_candidate_rejects_mixed_suffix():
+    """Different constant suffixes mean different tables — the group
+    is heterogeneous, no panel candidate."""
+    sources = ["foo_201907_Def", "foo_202302_Prelim"]
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=list(sources),
+    )
+    sources_by_name = {
+        s: {"source_name": s, "columns": [{"name": "LopNr"}]} for s in sources
+    }
+    assert interactive._detect_panel_candidate(grp, sources_by_name) is None
 
 
 def test_longest_common_prefix():
@@ -1465,7 +1561,8 @@ def test_build_panel_members_widens_multiplier_for_dense_years():
     sources_b = ["reg_2019_001"]
     sources = sources_a + sources_b
     years = {n: 2018 for n in sources_a} | {n: 2019 for n in sources_b}
-    members = interactive._build_panel_members(sources, years)
+    months = {n: None for n in sources}
+    members = interactive._build_panel_members(sources, years, months)
     periods = [m["period"] for m in members]
     # all unique, no collisions across years
     assert len(set(periods)) == len(periods)
@@ -1474,6 +1571,64 @@ def test_build_panel_members_widens_multiplier_for_dense_years():
     encoded_2019 = {p for n, p in zip(sources, periods) if years[n] == 2019}
     encoded_2018 = {p for n, p in zip(sources, periods) if years[n] == 2018}
     assert encoded_2019.isdisjoint(encoded_2018)
+
+
+def test_build_panel_members_yyyymm_fallback_on_collision():
+    """Two sources sharing the same year+month would collide under
+    YYYYMM encoding — fall through to the alpha-rank scheme."""
+    sources = ["foo_HT_2012_a", "foo_HT_2012_b"]
+    years = {n: 2012 for n in sources}
+    # Both resolve to month=8 (HT) but the names differ; the YYYYMM
+    # encoding would produce 201208 for both, so the encoder must
+    # fall back. Caller passes already-resolved months.
+    months = {n: 8 for n in sources}
+    members = interactive._build_panel_members(sources, years, months)
+    periods = [m["period"] for m in members]
+    assert len(set(periods)) == 2
+
+
+def test_match_date_token_shapes():
+    """Cover the date shapes the detector should recognise — and the
+    YYYYMMDD case it must reject."""
+    cases: list[tuple[str, int, int | None, str]] = [
+        # (input, year, month, suffix)
+        ("foo_2019", 2019, None, ""),
+        ("foo_2019.csv", 2019, None, ""),
+        ("foo_HT_2011", 2011, None, ""),
+        ("foo_HT2011", 2011, None, ""),
+        ("foo_201907_Def", 2019, 7, "_Def"),
+        ("foo_2019_03", 2019, 3, ""),
+        ("foo_2020-07_Def", 2020, 7, "_Def"),
+        ("Arb_AGIIndivid202311_Def.csv", 2023, 11, "_Def"),
+    ]
+    for name, year, month, suffix in cases:
+        token = interactive._match_date_token(name)
+        assert token is not None, name
+        assert token.year == year, name
+        assert token.month == month, name
+        assert token.suffix == suffix, name
+
+
+def test_match_date_token_rejects_yyyymmdd():
+    """``foo_20241231`` is a date stamp, not year=1231 or year=2024
+    + month=12 — the trailing day digits force the suffix-starts-with-
+    non-digit lookahead to fail."""
+    assert interactive._match_date_token("foo_20241231.csv") is None
+    assert interactive._match_date_token("foo_20241231") is None
+
+
+def test_resolve_period_month_prefers_explicit_yyyymm_over_tag():
+    """An explicit YYYYMM from the filename wins over a tag in the
+    stem — though in practice a name carrying both is unusual."""
+    explicit = interactive._match_date_token("foo_201907_Def")
+    assert explicit is not None
+    assert interactive._resolve_period_month(explicit) == 7
+    tagged = interactive._match_date_token("Kursprov_HT_2011")
+    assert tagged is not None
+    assert interactive._resolve_period_month(tagged) == 8
+    bare = interactive._match_date_token("foo_2019")
+    assert bare is not None
+    assert interactive._resolve_period_month(bare) is None
 
 
 # -- Stage 3: ambiguous-column review --------------------------------------
