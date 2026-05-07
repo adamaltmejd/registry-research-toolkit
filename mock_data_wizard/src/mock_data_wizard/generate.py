@@ -116,7 +116,7 @@ def _generate_categorical(
     return np.array([f"cat_{i}" for i in range(n)])
 
 
-def _generate_high_cardinality(
+def _generate_text(
     rng: np.random.Generator,
     n: int,
     stats: dict,
@@ -535,10 +535,8 @@ def generate(
                     raw = _generate_categorical(
                         col_rng, n_rows, ecol.stats, ecol.value_codes
                     )
-                elif ecol.inferred_type == "high_cardinality":
-                    raw = _generate_high_cardinality(
-                        col_rng, n_rows, ecol.stats, ecol.n_distinct
-                    )
+                elif ecol.inferred_type == "text":
+                    raw = _generate_text(col_rng, n_rows, ecol.stats, ecol.n_distinct)
                 elif ecol.inferred_type == "date":
                     raw = _generate_date(col_rng, n_rows, ecol.stats)
                 elif ecol.inferred_type == "id":

@@ -264,7 +264,7 @@ def summarize_column(
         stats["frequencies"] = _suppress_below_k(rows, suppress_k)
         stats["suppressed_below_k"] = suppress_k
 
-    elif col_type == "high_cardinality":
+    elif col_type == "text":
         agg = _fetch_one(conn, queries["aggs"])
         if agg.get("min_length") is not None:
             stats["min_length"] = int(agg["min_length"])

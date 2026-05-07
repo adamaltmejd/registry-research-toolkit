@@ -84,7 +84,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
                     "lopnr": {"type": "id", "id_subtype": "integer"},
                     "age": {"type": "numeric", "numeric_subtype": "integer"},
                     "kommun": {"type": "categorical"},
-                    "name": {"type": "high_cardinality"},
+                    "name": {"type": "text"},
                 }
             },
         }
@@ -104,7 +104,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
     assert by_name["lopnr"]["inferred_type"] == "id"
     assert by_name["age"]["inferred_type"] == "numeric"
     assert by_name["kommun"]["inferred_type"] == "categorical"
-    assert by_name["name"]["inferred_type"] == "high_cardinality"
+    assert by_name["name"]["inferred_type"] == "text"
     assert all(c["source_of_type"] == "override" for c in by_name.values())
 
 
@@ -333,7 +333,7 @@ def test_table_and_view_paths_produce_identical_stats(
                     "lopnr": {"type": "id", "id_subtype": "integer"},
                     "age": {"type": "numeric", "numeric_subtype": "integer"},
                     "kommun": {"type": "categorical"},
-                    "name": {"type": "high_cardinality"},
+                    "name": {"type": "text"},
                 }
             },
         }

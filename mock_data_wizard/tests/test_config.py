@@ -122,13 +122,13 @@ def test_lookup_type_matches_glob_and_column():
         {
             "contract_version": "mdw-config-1.0.0",
             "column_types": {
-                "Individ_*": {"Distriktskod": {"type": "high_cardinality"}},
+                "Individ_*": {"Distriktskod": {"type": "text"}},
                 "Pop_*": {"Salary": {"type": "numeric"}},
             },
         }
     )
     assert cfg.lookup_type("Individ_2018", "Distriktskod") == ColumnTypeOverride(
-        type="high_cardinality"
+        type="text"
     )
     assert cfg.lookup_type("Pop_2024", "Salary") == ColumnTypeOverride(type="numeric")
     # Glob matches but column doesn't:

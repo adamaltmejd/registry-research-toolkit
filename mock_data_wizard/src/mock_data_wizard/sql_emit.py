@@ -198,8 +198,8 @@ def categorical_freqs_sql(
     )
 
 
-def high_cardinality_aggs_sql(table: str, col: str, dialect: str) -> str:
-    """Length-based stats for a high-cardinality string column.
+def text_aggs_sql(table: str, col: str, dialect: str) -> str:
+    """Length-based stats for a free-text / high-cardinality string column.
 
     Min/max/mean of ``LENGTH(col)`` plus the usual count/null/distinct
     triple. ``generate.py`` uses these to seed placeholder generation
@@ -267,8 +267,8 @@ def queries_for_column(
         }
     if col_type == "categorical":
         return {"freqs": categorical_freqs_sql(table, col, dialect)}
-    if col_type == "high_cardinality":
-        return {"aggs": high_cardinality_aggs_sql(table, col, dialect)}
+    if col_type == "text":
+        return {"aggs": text_aggs_sql(table, col, dialect)}
     if col_type == "date":
         return {"aggs": date_aggs_sql(table, col, dialect)}
     if col_type == "id":

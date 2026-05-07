@@ -40,7 +40,7 @@ def test_column_types(stats_path: Path):
     assert cols["Kon"].inferred_type == "categorical"
     assert cols["FodelseAr"].inferred_type == "numeric"
     assert cols["Datum"].inferred_type == "date"
-    assert cols["Namn"].inferred_type == "high_cardinality"
+    assert cols["Namn"].inferred_type == "text"
 
 
 def test_nullable(stats_path: Path):

@@ -63,9 +63,9 @@ Author mdw_step2_config.json from an mdw_step1_discovery.json produced
 by the bundle in discover mode.
 
 The configurer assigns one of {id, categorical, numeric,
-high_cardinality, date} per column based on name patterns (lopnr ->
+text, date} per column based on name patterns (lopnr ->
 id, *Datum* -> date, *Belopp* -> numeric, etc.). Anything ambiguous
-defaults to high_cardinality, which is the safe choice -- it emits
+defaults to text, which is the safe choice -- it emits
 only string-length aggregates. You'll want to review and edit the
 output by hand before uploading mdw_step2_config.json back to MONA.
 """
