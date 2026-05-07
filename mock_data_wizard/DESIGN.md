@@ -52,16 +52,53 @@ instructions for the MONA-side action. The detection table:
 | `mdw_step3_stats.json` | generate | Interview; collect seed / sample\_pct / regmeta / output dir, then dispatch to `generate` |
 | `mock_data/` populated | done | Offer to redo any stage |
 
-The configure interview surfaces (in order): a register suggestion
-inferred from SCB-style source-name prefixes (`dbo.scb_rams_2020` →
-`RAMS`); separate-files panel candidates from `<prefix>_<year>`
-clusters of size ≥ 2; merged-table candidates for sources with an
+The configure interview is a register-grouped review menu. Sources are
+first bucketed by `(column_name, sql_type)` schema family (annual
+snapshots of the same register typically collapse into one family —
+150 files → ~14–60 families), then families are merged into register
+groups by `group_by_register`. Each family is auto-tagged with a
+register via `enrich._vote_register` voting plus a
+`_source_name_register_fallback` filename rule; families that resolved
+to the same `register_id` share one row in the menu. Each row shows a
+confidence glyph (`✓` / `⚠` / `✗` — the worst across families in the
+group), the auto-detected register name, source/column counts, and the
+`match_count/nonid_count` ratio. Columns where regmeta carries a
+`value_set_id` or `classification_id` under the chosen register are
+tagged in the inspector with the classification short_name (e.g.
+`SUN2020-GRUPP`) or a bare `✓`, so the user can distinguish
+regmeta-asserted typing from name-pattern fallbacks.
+
+Inputs the user can give at the register-group menu:
+
+- `[enter]` / `[a]` — accept all auto-classifications
+- `[number]` — inspect/edit one register group (override register,
+  override individual column types — applied to every source in the
+  group)
+- `[q]` — abort without writing
+
+Inside a group, register changes re-run `build_config` and re-query
+regmeta to refresh the inspector's column tags under the new register.
+Column-type overrides accumulate (and render with a trailing `*` so a
+second pass shows what's been touched) and are applied once at write
+time. After the group menu, the existing post-passes run unchanged:
+separate-files panel candidates from `<prefix>_<year>` clusters of
+size ≥ 2; merged-table candidates for sources with an
 `AR`/`INDATUM`/`year`/`period` column; per-column flips for
 `high_cardinality` columns whose names suggest categorical/numeric
 (`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
 optional `suppress_k` walkthrough. Edits operate on the in-memory
 `build_config` payload; `write_config` runs once at the end so
 cancellation leaves no partial files.
+
+Why per-register-group rather than one global register: most MONA
+studies pull data from several registers at once (Education + LISA +
+RTB + …). The old "one register for the whole project" prompt forced
+the user to pick one and silently dropped the others into the
+name-pattern fallback. The per-group flow lets each group carry its
+own register via `register_per_source`, batches DB queries so one
+`_regmeta_lookup` call covers every source under that register, and
+degrades gracefully when regmeta isn't reachable (every group becomes
+`register_id=None` and the user reviews by hand from the inspector).
 
 The generate interview prompts for `seed`, `sample_pct`,
 regmeta-enrichment toggle, register filter (only when regmeta is on),
@@ -279,30 +316,41 @@ the five types via this chain (first match wins):
 1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
    can't tell a BIGINT identifier from a BIGINT measure; the name
    has to.
-2. **Regmeta classification** (only when `--register` is supplied) —
-   if the column joins to a `variable_instance` row with non-null
-   `classification_id` for the named register, it's `categorical` by
-   SCB's own definition. Project-prefix stripping (`P1105_LopNr` →
-   `LopNr`) mirrors the same logic used by enrich.
-3. **`known_categorical_cap(name)`** — name patterns for SCB
-   categoricals where regmeta sometimes lacks a `classification_id`
-   (`Kon`, `Sun2000Inr`, `Kommun`, `CivilStand`, `Lan`, `*_kod`, …).
+2. **Regmeta evidence** (only when `--register` is supplied) — joining
+   `variable_alias` → `variable_instance` for the named register:
+   - non-null `value_set_id` *or* non-null `classification_id`
+     → `categorical` (SCB enumerated codes / shared classification)
+   - `datatyp` ∈ {int, decimal, ...} → `numeric`
+   - `datatyp` ∈ {date, datetime, ...} → `date`
+
+   Storage type alone (`char` / `varchar` with no value codes and no
+   classification) is **not** taken as a categorical signal — text
+   storage is often free text. Project-prefix stripping (`P1105_LopNr`
+   → `LopNr`) mirrors the same logic used by enrich.
+3. **`is_rtb_named_categorical(name, register)`** — narrow exact-name
+   (case-insensitive) allowlist scoped to RTB. Covers SCB names
+   regmeta is known to be missing under RTB: the record-quality flags
+   `AterAnv` / `FelPersonNr` / `LopNrByte` plus the birth-time grouping
+   variables `FodelseAr` / `FodelseArMan`. No fuzzy patterns —
+   variants fall through.
 4. **`sql_type`** — `BIGINT/INTEGER/DOUBLE/DECIMAL/...` → `numeric`;
    `DATE/TIMESTAMP/...` → `date`. For SQL sources the database's
    declared type is authoritative; for CSVs read by DuckDB, `sql_type`
    is DuckDB's own inference (which already does int-vs-double on
    the data — no separate value-peeking pass at discover time).
-5. **Fallthrough** — `high_cardinality`. Misclassified, you fix it
-   in `mdw_step2_config.json` for the next iteration.
+5. **Fallthrough** — `high_cardinality`. The interactive inspector
+   surfaces these for manual review (regmeta cell is blank, type
+   shows `high_cardinality`); the user overrides via the inspector or
+   directly in `mdw_step2_config.json`.
 
 The chain deliberately gives regmeta authority over names for
 categorical detection but not over `is_known_id`: regmeta has no
 "this is an identifier" type, and id-naming conventions are stable
-across registers. Regmeta's `datatyp` field is **not** consulted —
-it's inconsistent across years for the same variable (a single
-`var_id` can flip between `varchar` / `int` / `char` across
-`variable_instance` rows), so `sql_type` is the more reliable
-storage-type signal.
+across registers. The earlier loose "known categorical name" fallback
+(`Kon` / `Kommun` / `Sun2000Inr` / `FodelseLand` / ...) was removed
+once regmeta's `value_set` schema made these signals authoritative —
+common Swedish stems (`land`, `civil`, `medb`, ...) carry too much
+false-positive risk for a name-pattern guesser to be a net win.
 
 ### Per-column type config via `mdw_step2_config.json`
 

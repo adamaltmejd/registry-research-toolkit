@@ -2,17 +2,18 @@
 
 After Wave 3, ``classify_column`` was removed -- extract is now
 config-driven and the data-driven dispatch tree is gone. What remains
-is the name-pattern surface used by ``configure.py`` plus the date
-helpers consumed by ``summarize.py``.
+is the narrow name-pattern surface used by ``configure.py`` plus the
+date helpers consumed by ``summarize.py``.
 """
 
 from __future__ import annotations
 
 from mock_data_wizard.classify import (
     DATE_FORMATS,
+    RTB_NAMED_CATEGORICAL,
     detect_date_format,
     is_known_id,
-    known_categorical_cap,
+    is_rtb_named_categorical,
 )
 
 
@@ -41,43 +42,39 @@ def test_is_known_id_no_match():
     assert is_known_id("kommun") is False
 
 
-def test_known_categorical_cap_kommun():
-    assert known_categorical_cap("Kommun") == 500
-    # exclude rule: "kommunikation" should NOT match the kommun pattern
-    assert known_categorical_cap("Kommunikation") is None
+def test_is_known_id_lopnrbyte_excluded():
+    """`LopNrByte` carries `lopnr` in its name but is the RTB pid-change
+    flag, not an identifier — the exclude on the lopnr pattern keeps it
+    out so the register-scoped categorical rule can take effect."""
+    assert is_known_id("LopNrByte") is False
+    assert is_known_id("lop_nr_byte") is False
 
 
-def test_known_categorical_cap_ssyk_sun_sni():
-    assert known_categorical_cap("SSYK4") == 1000
-    assert known_categorical_cap("Sun2000Niva") == 1000
-    assert known_categorical_cap("Sun2020Inriktning") == 1000
-    assert known_categorical_cap("SNI2007") == 1500
+def test_is_rtb_named_categorical_membership():
+    """Exact-name match (case-insensitive), only when the register
+    string contains 'RTB'. Outside RTB or for variants, returns False."""
+    # Membership constant is lowercase; the lookup itself lowercases inputs
+    assert "ateranv" in RTB_NAMED_CATEGORICAL
+    assert "fodelsearman" in RTB_NAMED_CATEGORICAL
 
+    # Positive matches under various forms of the RTB register string
+    assert is_rtb_named_categorical("AterAnv", "RTB") is True
+    assert is_rtb_named_categorical("FELPERSONNR", "rtb") is True
+    assert (
+        is_rtb_named_categorical("LopNrByte", "Registret över totalbefolkningen (RTB)")
+        is True
+    )
+    assert is_rtb_named_categorical("FodelseAr", "RTB") is True
+    assert is_rtb_named_categorical("FodelseArMan", "RTB") is True
 
-def test_known_categorical_cap_country_and_citizenship():
-    assert known_categorical_cap("Fodelseland") == 300
-    assert known_categorical_cap("Medborgarskap") == 300
+    # Outside RTB: false (caller falls through to sql_type / manual review)
+    assert is_rtb_named_categorical("AterAnv", "LISA") is False
+    assert is_rtb_named_categorical("FodelseAr", None) is False
 
-
-def test_known_categorical_cap_no_match():
-    assert known_categorical_cap("age") is None
-
-
-def test_known_categorical_cap_demographic_categories():
-    """Demographic SCB columns where SCB doesn't always wire up a
-    classification_id in regmeta. These are the patterns that used to
-    live in ``configure.EXTRA_CATEGORICAL`` and were folded into
-    ``CATEGORICAL_PATTERNS`` so configure has a single source of truth."""
-    assert known_categorical_cap("Kon") == 3  # sex
-    assert known_categorical_cap("p_kon") == 3  # underscore-prefixed form
-    assert known_categorical_cap("CivilStand") == 10
-    assert known_categorical_cap("Lan") == 30  # län (county)
-    assert known_categorical_cap("FodelseLand") == 300
-    assert known_categorical_cap("Yrke_KOD") == 10000  # generic _kod suffix
-    # negative: "kon" must not match in arbitrary substrings
-    assert known_categorical_cap("Konsument") is None
-    # negative: "lan" anchoring must hold (otherwise "Plan" would match)
-    assert known_categorical_cap("Plan") is None
+    # Variants with separators or suffixes don't match
+    assert is_rtb_named_categorical("ater_anv", "RTB") is False
+    assert is_rtb_named_categorical("AterAnvalt", "RTB") is False
+    assert is_rtb_named_categorical("FodelseArManed", "RTB") is False
 
 
 # -- date format detection ------------------------------------------------

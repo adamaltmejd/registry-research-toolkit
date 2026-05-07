@@ -56,47 +56,113 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
 # -- _classify priority chain ---------------------------------------------
 
 
+_REGMETA_CLASSIFIED = cfg_mod.RegmetaSignal(
+    datatyp_kind=None, classification_short_name="SUN2000"
+)
+_REGMETA_VALUE_CODES = cfg_mod.RegmetaSignal(
+    datatyp_kind="numeric", classification_short_name=None, has_value_codes=True
+)
+_REGMETA_TEXT_NO_EVIDENCE = cfg_mod.RegmetaSignal(
+    datatyp_kind=None, classification_short_name=None
+)
+_REGMETA_NUMERIC = cfg_mod.RegmetaSignal(
+    datatyp_kind="numeric", classification_short_name=None
+)
+_REGMETA_DATE = cfg_mod.RegmetaSignal(
+    datatyp_kind="date", classification_short_name=None
+)
+
+
 @pytest.mark.parametrize(
-    "name, sql_type, has_classification, expected",
+    "name, sql_type, signal, expected",
     [
         # Layer 1: known id name beats everything
-        ("LopNr", "BIGINT", False, "id"),
-        ("LopNr", "VARCHAR", True, "id"),
-        # Layer 2: regmeta classification wins over name-pattern miss
-        ("RandomName", "INTEGER", True, "categorical"),
-        ("Sun2000Inr", "VARCHAR", True, "categorical"),
-        # Layer 3: known categorical name (no regmeta hit needed)
-        ("Kommun", "VARCHAR", False, "categorical"),
-        ("Sun2000Inr", "VARCHAR", False, "categorical"),
-        ("Sun2020Inr", "VARCHAR", False, "categorical"),
-        ("FodelseLand", "VARCHAR", False, "categorical"),
-        ("MedborgarLand", "VARCHAR", False, "categorical"),
-        ("CivilStand", "VARCHAR", False, "categorical"),
-        ("Lan", "INTEGER", False, "categorical"),
-        ("Yrke_KOD", "VARCHAR", False, "categorical"),
-        ("Kon", "CHAR(1)", False, "categorical"),
+        ("LopNr", "BIGINT", None, "id"),
+        ("LopNr", "VARCHAR", _REGMETA_CLASSIFIED, "id"),
+        # Layer 2: regmeta evidence wins over CSV sql_type
+        # ("ALKod"/"Kon" have enumerated value codes in regmeta even though
+        # storage is BIGINT/tinyint → categorical)
+        ("ALKod", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
+        ("Kon", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
+        ("RandomName", "INTEGER", _REGMETA_CLASSIFIED, "categorical"),
+        ("Sun2000Inr", "VARCHAR", _REGMETA_CLASSIFIED, "categorical"),
+        # Regmeta says numeric → numeric (ForvErs is int even though SCB
+        # codes some "missing" sentinels)
+        ("ForvErs", "BIGINT", _REGMETA_NUMERIC, "numeric"),
+        ("BirthMoment", "VARCHAR", _REGMETA_DATE, "date"),
+        # A char/varchar column without value codes and without a
+        # classification is NOT enough to call categorical — storage type
+        # alone doesn't carry that semantic. Falls through to sql_type
+        # → high_cardinality. Tester overrides in the inspector if wrong.
+        ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "high_cardinality"),
+        # Layer 3 used to be a loose "known categorical name" pass
+        # (Kommun / Sun2000Inr / FodelseLand / Kon / ...). Removed: the
+        # value_set schema makes regmeta authoritative for these, and
+        # the false-positive risk on common Swedish stems was too high.
+        # Anything regmeta doesn't know now falls through to sql_type
+        # or high_cardinality and surfaces in the inspector for review.
         # Layer 4: sql_type drives numeric / date for unrecognised names
-        ("SammanInk", "BIGINT", False, "numeric"),  # the bug 2 case
-        ("SomeAmount", "DECIMAL(18,2)", False, "numeric"),
-        ("Whatever", "DOUBLE", False, "numeric"),
-        ("InDatum", "DATE", False, "date"),
-        ("Tidpunkt", "TIMESTAMP", False, "date"),
+        ("SammanInk", "BIGINT", None, "numeric"),  # the bug 2 case
+        ("SomeAmount", "DECIMAL(18,2)", None, "numeric"),
+        ("Whatever", "DOUBLE", None, "numeric"),
+        ("InDatum", "DATE", None, "date"),
+        ("Tidpunkt", "TIMESTAMP", None, "date"),
         # Layer 5: fallthrough
-        ("RandomString", "VARCHAR", False, "high_cardinality"),
-        ("FelPersonNr", "VARCHAR", False, "high_cardinality"),
-        ("Mystery", None, False, "high_cardinality"),
+        ("RandomString", "VARCHAR", None, "high_cardinality"),
+        ("Mystery", None, None, "high_cardinality"),
     ],
 )
 def test_classify_priority_chain(
-    name: str, sql_type: str | None, has_classification: bool, expected: str
+    name: str,
+    sql_type: str | None,
+    signal: cfg_mod.RegmetaSignal | None,
+    expected: str,
 ):
-    assert _classify(name, sql_type, has_classification) == expected
+    assert _classify(name, sql_type, signal) == expected
 
 
 def test_classify_id_pattern_beats_regmeta_classification():
     """`is_known_id` runs before the regmeta branch — even if regmeta
     flags a column as classified, an `lopnr` name should stay `id`."""
-    assert _classify("lopnr", "BIGINT", has_classification=True) == "id"
+    assert _classify("lopnr", "BIGINT", _REGMETA_CLASSIFIED) == "id"
+
+
+@pytest.mark.parametrize(
+    "name, register, expected",
+    [
+        # Exact-name match (case-insensitive) under any register string
+        # that contains "RTB". Variants like "ater_anv" or "AterAnvalt"
+        # do *not* match — those fall through to sql_type / fallback.
+        ("AterAnv", "RTB", "categorical"),
+        ("ateranv", "rtb", "categorical"),
+        ("FELPERSONNR", "Registret över totalbefolkningen (RTB)", "categorical"),
+        ("LopNrByte", "RTB", "categorical"),
+        ("FodelseAr", "RTB", "categorical"),
+        ("FodelseArMan", "RTB", "categorical"),
+        # Outside RTB, the same names fall through (BIGINT → numeric).
+        ("AterAnv", "LISA", "numeric"),
+        ("LopNrByte", "LISA", "numeric"),
+        ("FelPersonNr", None, "numeric"),
+        ("FodelseAr", "LISA", "numeric"),
+        # Variants don't match even under RTB
+        ("ater_anv", "RTB", "numeric"),
+        ("AterAnvalt", "RTB", "numeric"),
+        ("FodelseArManed", "RTB", "numeric"),
+    ],
+)
+def test_classify_rtb_named_categorical(name: str, register: str | None, expected: str):
+    """RTB-scoped exact-name allowlist: classified as categorical only
+    when the register string identifies the source as RTB."""
+    assert _classify(name, "BIGINT", None, register) == expected
+
+
+def test_classify_lopnr_id_excludes_lopnrbyte():
+    """`LopNrByte` is the RTB pid-change flag, not an identifier — the
+    `lopnr` ID pattern explicitly excludes it so the register-scoped
+    categorical rule can take effect, and outside RTB it doesn't get
+    silently typed as `id` via the unanchored `lopnr` substring match."""
+    assert _classify("LopNrByte", "BIGINT", None, "RTB") == "categorical"
+    assert _classify("LopNrByte", "BIGINT", None, None) == "numeric"
 
 
 # -- build_config from discover payload ------------------------------------
@@ -126,7 +192,9 @@ def test_build_config_routes_columns_per_source():
     assert out["contract_version"] == "mdw-config-1.0.0"
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
-    assert cols["Kommun"] == {"type": "categorical"}
+    # No --register and no name-pattern fallback: Kommun falls through
+    # on its sql_type (char → high_cardinality) and the user reviews.
+    assert cols["Kommun"] == {"type": "high_cardinality"}
     assert cols["SammanInk"] == {"type": "numeric"}
     assert cols["InkomstSumma"] == {"type": "numeric"}
     assert cols["WhateverElse"] == {"type": "high_cardinality"}
@@ -134,22 +202,42 @@ def test_build_config_routes_columns_per_source():
 
 
 def test_build_config_uses_regmeta_classification(monkeypatch):
-    """When --register is set and regmeta says a column has a non-null
-    classification_id, that column is `categorical` regardless of name."""
+    """When --register is set and regmeta says a column has a
+    classification *or* enumerated value codes, that column is
+    `categorical` regardless of name. Storage type (char/tinyint) alone
+    is not enough."""
 
     def fake_resolve(conn, register):
         assert register == "LISA"
         return [34]
 
-    def fake_classification_lookup(conn, col_names, register_ids):
+    def fake_regmeta_lookup(conn, col_names, register_ids):
         assert register_ids == [34]
-        return {"sun2000inr"}  # lowercase, just like the real impl
+        # lowercase keys; mirrors the real impl
+        return {
+            "sun2000inr": cfg_mod.RegmetaSignal(
+                datatyp_kind=None,
+                classification_short_name="SUN2000",
+            ),
+            # ALKod: SCB enumerates 5 value codes in the PDF; the cvid
+            # carries a non-null value_set_id. Stored as char in regmeta
+            # but the CSV scan saw BIGINT — the value-codes signal wins.
+            "alkod": cfg_mod.RegmetaSignal(
+                datatyp_kind=None,
+                classification_short_name=None,
+                has_value_codes=True,
+            ),
+            # ForvErs: SCB stores as int with no value codes — numeric.
+            "forvers": cfg_mod.RegmetaSignal(
+                datatyp_kind="numeric", classification_short_name=None
+            ),
+        }
 
     class FakeConn:
         def close(self):
             pass
 
-    monkeypatch.setattr(cfg_mod, "_classification_lookup", fake_classification_lookup)
+    monkeypatch.setattr(cfg_mod, "_regmeta_lookup", fake_regmeta_lookup)
     monkeypatch.setattr("regmeta.resolve_register_ids", fake_resolve, raising=True)
     monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn(), raising=True)
     monkeypatch.setattr(
@@ -165,7 +253,9 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
                 "source_name": "lisa_2018",
                 "columns": [
                     {"name": "Sun2000Inr", "sql_type": "char(4)"},
-                    # MysteryCode has no name pattern and no classification —
+                    {"name": "ALKod", "sql_type": "BIGINT"},
+                    {"name": "ForvErs", "sql_type": "BIGINT"},
+                    # MysteryCode has no name pattern and no regmeta entry —
                     # falls back to high_cardinality (VARCHAR).
                     {"name": "MysteryCode", "sql_type": "varchar"},
                 ],
@@ -175,6 +265,8 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
     out = build_config(discover, register="LISA")
     cols = out["column_types"]["lisa_2018"]
     assert cols["Sun2000Inr"] == {"type": "categorical"}
+    assert cols["ALKod"] == {"type": "categorical"}
+    assert cols["ForvErs"] == {"type": "numeric"}
     assert cols["MysteryCode"] == {"type": "high_cardinality"}
 
 
@@ -188,9 +280,9 @@ def test_build_config_empty_register_string_raises():
             {"source_name": "x", "columns": [{"name": "a", "sql_type": "int"}]}
         ],
     }
-    with pytest.raises(ValueError, match="--register must be a non-empty"):
+    with pytest.raises(ValueError, match="register must be a non-empty"):
         build_config(discover, register="")
-    with pytest.raises(ValueError, match="--register must be a non-empty"):
+    with pytest.raises(ValueError, match="register must be a non-empty"):
         build_config(discover, register="   ")
 
 
@@ -214,7 +306,7 @@ def test_build_config_db_path_uses_directory_semantics(monkeypatch):
 
     monkeypatch.setattr("regmeta.resolve_register_ids", lambda c, r: [34], raising=True)
     monkeypatch.setattr("regmeta.open_db", lambda p: FakeConn(), raising=True)
-    monkeypatch.setattr(cfg_mod, "_classification_lookup", lambda *a, **k: set())
+    monkeypatch.setattr(cfg_mod, "_regmeta_lookup", lambda *a, **k: {})
 
     discover = {
         "contract_version": "discover-1.0.0",
@@ -282,7 +374,7 @@ def test_build_config_register_unresolved_raises(monkeypatch):
         build_config(discover, register="DOES_NOT_EXIST")
 
 
-def test_classification_lookup_strips_project_prefix():
+def test_regmeta_lookup_strips_project_prefix():
     """`P1105_LopNr_PersonNr` should lookup as both raw and stripped name
     so the regmeta side can match the bare `LopNr_PersonNr` form."""
     captured: dict = {}
@@ -296,7 +388,7 @@ def test_classification_lookup_strips_project_prefix():
         def fetchall(self):
             return []
 
-    cfg_mod._classification_lookup(FakeConn(), {"P1105_LopNr_PersonNr"}, [34])
+    cfg_mod._regmeta_lookup(FakeConn(), {"P1105_LopNr_PersonNr"}, [34])
     # Both raw and stripped lowercase variants must appear in the bound
     # parameters; otherwise project-prefixed columns silently miss the
     # regmeta join.
@@ -462,7 +554,10 @@ def test_cli_configure_invokes_module(tmp_path: Path):
     assert target.exists()
     payload = json.loads(target.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
-    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "categorical"}
+    # No --register: Kommun has no sql_type, falls through to high_cardinality.
+    assert payload["column_types"]["lisa_2018"]["Kommun"] == {
+        "type": "high_cardinality"
+    }
 
 
 def test_cli_configure_refuses_overwrite_without_flag(tmp_path: Path):
@@ -553,5 +648,174 @@ def test_configure_output_is_valid_mdw_config(tmp_path: Path):
     payload = json.loads(out.read_text(encoding="utf-8"))
     cfg = parse_config(payload)
     assert cfg.lookup_type("lisa_2018", "LopNr").type == "id"
-    assert cfg.lookup_type("lisa_2018", "Kommun").type == "categorical"
+    # No --register: Kommun lands at high_cardinality (char → fallthrough).
+    assert cfg.lookup_type("lisa_2018", "Kommun").type == "high_cardinality"
     assert cfg.lookup_type("lisa_2018", "InkomstSumma").type == "numeric"
+
+
+# -- Schema family grouping ------------------------------------------------
+
+
+def test_group_schema_families_buckets_identical_schemas():
+    """Annual snapshots with identical (name, sql_type) tuples land in
+    one family; a different-shaped source gets its own bucket."""
+    discover = {
+        "sources": [
+            {
+                "source_name": "slutbetyg_2018.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                ],
+            },
+            {
+                "source_name": "slutbetyg_2019.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                ],
+            },
+            {
+                "source_name": "kursprov_2019.csv",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "int"},
+                    {"name": "Betyg", "sql_type": "varchar"},
+                    {"name": "Kurs", "sql_type": "varchar"},
+                ],
+            },
+        ]
+    }
+    families = cfg_mod.group_schema_families(discover)
+    assert len(families) == 2
+    sizes = sorted(len(srcs) for srcs in families.values())
+    assert sizes == [1, 2]
+
+
+def test_group_schema_families_distinguishes_sql_types():
+    """Same column names but different sql_types → different families.
+    Catches the case where a CSV gets re-typed across delivery years."""
+    discover = {
+        "sources": [
+            {
+                "source_name": "a",
+                "columns": [{"name": "x", "sql_type": "int"}],
+            },
+            {
+                "source_name": "b",
+                "columns": [{"name": "x", "sql_type": "bigint"}],
+            },
+        ]
+    }
+    families = cfg_mod.group_schema_families(discover)
+    assert len(families) == 2
+
+
+def test_build_config_register_per_source_overrides_global(monkeypatch):
+    """Per-source override beats the global ``register`` argument.
+    Sources without a per-source entry fall back to the global default.
+    """
+    discover = {
+        "contract_version": "discover-1.0.0",
+        "sources": [
+            {
+                "source_name": "lisa_2018",
+                "columns": [{"name": "Kommun", "sql_type": "varchar"}],
+            },
+            {
+                "source_name": "rams_2018",
+                "columns": [{"name": "Yrke", "sql_type": "varchar"}],
+            },
+            {
+                "source_name": "custom",
+                "columns": [{"name": "Foo", "sql_type": "varchar"}],
+            },
+        ],
+    }
+    seen_registers: list[str] = []
+
+    class FakeConn:
+        def execute(self, *_a, **_k):
+            return self
+
+        def fetchall(self):
+            return []
+
+        def close(self):
+            pass
+
+    def fake_resolve(_conn, register):
+        seen_registers.append(register)
+        return {"LISA": [34], "RAMS": [37]}.get(register, [])
+
+    import mock_data_wizard.configure as cfg
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", fake_resolve)
+    monkeypatch.setattr(
+        "regmeta.db.db_path_from_args", lambda _x: Path("/fake/regmeta.db")
+    )
+    monkeypatch.setattr(cfg, "_regmeta_lookup", lambda *a, **k: {})
+
+    out = cfg.build_config(
+        discover,
+        register="LISA",
+        register_per_source={"rams_2018": "RAMS", "custom": None},
+    )
+
+    assert sorted(seen_registers) == ["LISA", "RAMS"]
+    # `custom` had register=None so its column falls through to
+    # name-pattern classification (varchar, no pattern → high_cardinality).
+    assert out["column_types"]["custom"]["Foo"] == {"type": "high_cardinality"}
+
+
+def test_resolve_register_to_id_and_name_rejects_ambiguous(monkeypatch):
+    """Substring matches can return multiple registers — the inspector
+    helper must surface the candidate list as ValueError instead of
+    silently picking ids[0] and applying the wrong register."""
+    from mock_data_wizard.configure import resolve_register_to_id_and_name
+
+    class FakeConn:
+        def __init__(self):
+            self._next: list = []
+
+        def execute(self, sql, params=()):
+            self._sql = sql
+            self._params = params
+            return self
+
+        def fetchall(self):
+            assert "WHERE register_id IN" in self._sql
+            return [
+                {"register_id": 34, "registernamn": "LISA"},
+                {"register_id": 60, "registernamn": "LISA-Plus"},
+            ]
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", lambda _c, _v: [34, 60])
+    monkeypatch.setattr("regmeta.db.db_path_from_args", lambda _x: Path("/fake.db"))
+
+    with pytest.raises(ValueError, match="ambiguous"):
+        resolve_register_to_id_and_name("LISA")
+
+
+def test_resolve_register_to_id_and_name_unique_match(monkeypatch):
+    from mock_data_wizard.configure import resolve_register_to_id_and_name
+
+    class FakeConn:
+        def execute(self, _sql, _params=()):
+            return self
+
+        def fetchone(self):
+            return {"registernamn": "LISA"}
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr("regmeta.open_db", lambda _p: FakeConn())
+    monkeypatch.setattr("regmeta.resolve_register_ids", lambda _c, _v: [34])
+    monkeypatch.setattr("regmeta.db.db_path_from_args", lambda _x: Path("/fake.db"))
+
+    assert resolve_register_to_id_and_name("LISA") == (34, "LISA")
