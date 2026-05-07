@@ -488,8 +488,8 @@ def test_stage3_configure_no_register(tmp_path: Path, monkeypatch):
     payload = json.loads(config.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
     # No regmeta guess for this family → no register set → Kommun
-    # lands at text (char → fallthrough). User reviews.
-    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "text"}
+    # lands at opaque (char → fallthrough). User reviews.
+    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "opaque"}
 
 
 def test_stage3_aborts_on_existing_config(tmp_path: Path, monkeypatch):
@@ -694,14 +694,14 @@ def test_ambiguous_columns_picks_kod_typ_and_digit_suffixes():
         "column_types": {
             "lisa_2018": {
                 # Ambiguous — `_kod`, `_typ`, trailing digit
-                "Yrke_kod": {"type": "text"},
-                "Niva_typ": {"type": "text"},
-                "SNI3": {"type": "text"},
+                "Yrke_kod": {"type": "opaque"},
+                "Niva_typ": {"type": "opaque"},
+                "SNI3": {"type": "opaque"},
                 # Not ambiguous — already typed.
                 "Kommun": {"type": "categorical"},
                 "LopNr": {"type": "id"},
-                # Plain text with no suffix — leave alone.
-                "FreeText": {"type": "text"},
+                # Plain opaque with no suffix — leave alone.
+                "FreeText": {"type": "opaque"},
             }
         }
     }
@@ -889,7 +889,7 @@ def test_stage3_ambiguous_review_flips_to_categorical(tmp_path: Path, monkeypatc
             {
                 "source_name": "src",
                 "columns": [
-                    # `_kod` suffix + VARCHAR → text fallback;
+                    # `_kod` suffix + VARCHAR → opaque fallback;
                     # the wizard should ask whether to flip it.
                     {"name": "Yrke_kod", "sql_type": "varchar"},
                 ],
@@ -913,7 +913,7 @@ def test_stage3_ambiguous_review_flips_to_categorical(tmp_path: Path, monkeypatc
     assert payload["column_types"]["src"]["Yrke_kod"] == {"type": "categorical"}
 
 
-def test_stage3_ambiguous_review_default_keeps_text(tmp_path: Path, monkeypatch):
+def test_stage3_ambiguous_review_default_keeps_opaque(tmp_path: Path, monkeypatch):
     _write_discover(
         tmp_path,
         [
@@ -937,7 +937,7 @@ def test_stage3_ambiguous_review_default_keeps_text(tmp_path: Path, monkeypatch)
     payload = json.loads(
         (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
     )
-    assert payload["column_types"]["src"]["Niva_typ"] == {"type": "text"}
+    assert payload["column_types"]["src"]["Niva_typ"] == {"type": "opaque"}
 
 
 # -- Stage 3: suppress_k walkthrough ---------------------------------------
@@ -1082,7 +1082,7 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
         monkeypatch,
         [
             "",  # accept all families
-            # `MysteryCode` falls back to text (no name
+            # `MysteryCode` falls back to opaque (no name
             # pattern, no classification). Ambiguous regex doesn't fire
             # — no `_kod`/`_typ`/digit suffix.
             "n",  # suppress_k? no
@@ -1094,7 +1094,7 @@ def test_stage3_auto_guessed_register_pre_classifies(tmp_path: Path, monkeypatch
         (tmp_path / "mdw_step2_config.json").read_text(encoding="utf-8")
     )
     assert payload["column_types"]["lisa_2018"]["Sun2000Inr"] == {"type": "categorical"}
-    assert payload["column_types"]["lisa_2018"]["MysteryCode"] == {"type": "text"}
+    assert payload["column_types"]["lisa_2018"]["MysteryCode"] == {"type": "opaque"}
 
 
 def test_stage3_skips_regmeta_when_no_family_resolves(tmp_path: Path, monkeypatch):
@@ -1660,7 +1660,7 @@ def test_format_source_list_handles_no_separator_year_suffix():
 def test_regmeta_cell_no_signal_renders_blank():
     from mock_data_wizard.interactive import _regmeta_cell
 
-    assert _regmeta_cell(None, "text", is_overridden=False) == ""
+    assert _regmeta_cell(None, "opaque", is_overridden=False) == ""
     assert _regmeta_cell(None, "categorical", is_overridden=True) == ""
 
 
@@ -1709,7 +1709,7 @@ def test_regmeta_cell_override_conflicts_emits_warning():
     # regmeta says categorical, user picks numeric → conflict
     assert _regmeta_cell(classified, "numeric", is_overridden=True) == "⚠ SUN2000-GRUPP"
     # bare value codes → no short_name to show alongside ⚠
-    assert _regmeta_cell(bare_codes, "text", is_overridden=True) == "⚠"
+    assert _regmeta_cell(bare_codes, "opaque", is_overridden=True) == "⚠"
     # regmeta says numeric, user picks categorical → conflict
     assert _regmeta_cell(numeric, "categorical", is_overridden=True) == "⚠"
 
@@ -1795,7 +1795,7 @@ def test_inspect_register_group_applies_column_override(tmp_path: Path, monkeypa
     cols = payload["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
     # The override flipped MysteryCode from its auto-classified
-    # text to categorical and was applied at write time.
+    # opaque to categorical and was applied at write time.
     assert cols["MysteryCode"] == {"type": "categorical"}
 
 

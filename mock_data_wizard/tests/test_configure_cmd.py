@@ -93,14 +93,14 @@ _REGMETA_DATE = cfg_mod.RegmetaSignal(
         # A char/varchar column without value codes and without a
         # classification is NOT enough to call categorical — storage type
         # alone doesn't carry that semantic. Falls through to sql_type
-        # → text. Tester overrides in the inspector if wrong.
-        ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "text"),
+        # → opaque. Tester overrides in the inspector if wrong.
+        ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "opaque"),
         # Layer 3 used to be a loose "known categorical name" pass
         # (Kommun / Sun2000Inr / FodelseLand / Kon / ...). Removed: the
         # value_set schema makes regmeta authoritative for these, and
         # the false-positive risk on common Swedish stems was too high.
         # Anything regmeta doesn't know now falls through to sql_type
-        # or text and surfaces in the inspector for review.
+        # or opaque and surfaces in the inspector for review.
         # Layer 4: sql_type drives numeric / date for unrecognised names
         ("SammanInk", "BIGINT", None, "numeric"),  # the bug 2 case
         ("SomeAmount", "DECIMAL(18,2)", None, "numeric"),
@@ -108,8 +108,8 @@ _REGMETA_DATE = cfg_mod.RegmetaSignal(
         ("InDatum", "DATE", None, "date"),
         ("Tidpunkt", "TIMESTAMP", None, "date"),
         # Layer 5: fallthrough
-        ("RandomString", "VARCHAR", None, "text"),
-        ("Mystery", None, None, "text"),
+        ("RandomString", "VARCHAR", None, "opaque"),
+        ("Mystery", None, None, "opaque"),
     ],
 )
 def test_classify_priority_chain(
@@ -170,7 +170,7 @@ def test_classify_lopnr_id_excludes_lopnrbyte():
 
 def test_build_config_routes_columns_per_source():
     """Without --register, classification falls back to sql_type +
-    name patterns. SammanInk used to land in `text` — with
+    name patterns. SammanInk used to land in `opaque` — with
     sql_type-aware classification it lands in `numeric` because BIGINT."""
     discover = {
         "contract_version": "discover-1.0.0",
@@ -193,11 +193,11 @@ def test_build_config_routes_columns_per_source():
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
     # No --register and no name-pattern fallback: Kommun falls through
-    # on its sql_type (char → text) and the user reviews.
-    assert cols["Kommun"] == {"type": "text"}
+    # on its sql_type (char → opaque) and the user reviews.
+    assert cols["Kommun"] == {"type": "opaque"}
     assert cols["SammanInk"] == {"type": "numeric"}
     assert cols["InkomstSumma"] == {"type": "numeric"}
-    assert cols["WhateverElse"] == {"type": "text"}
+    assert cols["WhateverElse"] == {"type": "opaque"}
     assert cols["BirthDate"] == {"type": "date"}
 
 
@@ -256,7 +256,7 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
                     {"name": "ALKod", "sql_type": "BIGINT"},
                     {"name": "ForvErs", "sql_type": "BIGINT"},
                     # MysteryCode has no name pattern and no regmeta entry —
-                    # falls back to text (VARCHAR).
+                    # falls back to opaque (VARCHAR).
                     {"name": "MysteryCode", "sql_type": "varchar"},
                 ],
             }
@@ -267,7 +267,7 @@ def test_build_config_uses_regmeta_classification(monkeypatch):
     assert cols["Sun2000Inr"] == {"type": "categorical"}
     assert cols["ALKod"] == {"type": "categorical"}
     assert cols["ForvErs"] == {"type": "numeric"}
-    assert cols["MysteryCode"] == {"type": "text"}
+    assert cols["MysteryCode"] == {"type": "opaque"}
 
 
 def test_build_config_empty_register_string_raises():
@@ -425,8 +425,8 @@ def test_configure_from_discover_writes_next_to_input(tmp_path: Path):
     payload = json.loads(out.read_text(encoding="utf-8"))
     assert payload["column_types"]["a"]["lopnr"] == {"type": "id"}
     # Without sql_type and without a name pattern, x falls to
-    # text — the safe default for unknown VARCHAR-like data.
-    assert payload["column_types"]["a"]["x"] == {"type": "text"}
+    # opaque — the safe default for unknown VARCHAR-like data.
+    assert payload["column_types"]["a"]["x"] == {"type": "opaque"}
 
 
 def test_configure_from_discover_respects_explicit_output(tmp_path: Path):
@@ -554,8 +554,8 @@ def test_cli_configure_invokes_module(tmp_path: Path):
     assert target.exists()
     payload = json.loads(target.read_text(encoding="utf-8"))
     assert payload["column_types"]["lisa_2018"]["LopNr"] == {"type": "id"}
-    # No --register: Kommun has no sql_type, falls through to text.
-    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "text"}
+    # No --register: Kommun has no sql_type, falls through to opaque.
+    assert payload["column_types"]["lisa_2018"]["Kommun"] == {"type": "opaque"}
 
 
 def test_cli_configure_refuses_overwrite_without_flag(tmp_path: Path):
@@ -646,8 +646,8 @@ def test_configure_output_is_valid_mdw_config(tmp_path: Path):
     payload = json.loads(out.read_text(encoding="utf-8"))
     cfg = parse_config(payload)
     assert cfg.lookup_type("lisa_2018", "LopNr").type == "id"
-    # No --register: Kommun lands at text (char → fallthrough).
-    assert cfg.lookup_type("lisa_2018", "Kommun").type == "text"
+    # No --register: Kommun lands at opaque (char → fallthrough).
+    assert cfg.lookup_type("lisa_2018", "Kommun").type == "opaque"
     assert cfg.lookup_type("lisa_2018", "InkomstSumma").type == "numeric"
 
 
@@ -762,8 +762,8 @@ def test_build_config_register_per_source_overrides_global(monkeypatch):
 
     assert sorted(seen_registers) == ["LISA", "RAMS"]
     # `custom` had register=None so its column falls through to
-    # name-pattern classification (varchar, no pattern → text).
-    assert out["column_types"]["custom"]["Foo"] == {"type": "text"}
+    # name-pattern classification (varchar, no pattern → opaque).
+    assert out["column_types"]["custom"]["Foo"] == {"type": "opaque"}
 
 
 def test_resolve_register_to_id_and_name_rejects_ambiguous(monkeypatch):

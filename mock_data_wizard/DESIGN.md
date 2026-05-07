@@ -17,7 +17,7 @@ end-to-end loop crosses the MONA boundary three times:
 3. `mock-data-wizard configure [--register LISA] mdw_step1_discovery.json`
    (local) — reads `mdw_step1_discovery.json`, applies the layered classifier
    (id-name → regmeta classification → categorical-name → sql_type →
-   `text` default; see *Configure classifier priority*
+   `opaque` default; see *Configure classifier priority*
    below), and writes `mdw_step2_config.json`. The user reviews and edits
    this file by hand before re-uploading.
 4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
@@ -84,7 +84,7 @@ time. After the group menu, the existing post-passes run unchanged:
 separate-files panel candidates from `<prefix>_<year>` clusters of
 size ≥ 2; merged-table candidates for sources with an
 `AR`/`INDATUM`/`year`/`period` column; per-column flips for
-`text` columns whose names suggest categorical/numeric
+`opaque` columns whose names suggest categorical/numeric
 (`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
 optional `suppress_k` walkthrough. Edits operate on the in-memory
 `build_config` payload; `write_config` runs once at the end so
@@ -338,10 +338,11 @@ the five types via this chain (first match wins):
    declared type is authoritative; for CSVs read by DuckDB, `sql_type`
    is DuckDB's own inference (which already does int-vs-double on
    the data — no separate value-peeking pass at discover time).
-5. **Fallthrough** — `text`. The interactive inspector
-   surfaces these for manual review (regmeta cell is blank, type
-   shows `text`); the user overrides via the inspector or
-   directly in `mdw_step2_config.json`.
+5. **Fallthrough** — `opaque` (we don't model the value
+   distribution; record length stats and emit placeholders). The
+   interactive inspector surfaces these for manual review (regmeta
+   cell is blank, type shows `opaque`); the user overrides via the
+   inspector or directly in `mdw_step2_config.json`.
 
 The chain deliberately gives regmeta authority over names for
 categorical detection but not over `is_known_id`: regmeta has no
@@ -364,12 +365,12 @@ and typos error out instead of getting silently dropped.
   "contract_version": "mdw-config-1.0.0",
   "column_types": {
     "Population_PersonNr_*": {
-      "FelPersonNr": {"type": "text"},
+      "FelPersonNr": {"type": "opaque"},
       "BirthDate": {"type": "date", "date_format": "%Y%m%d"},
       "Salary": {"type": "numeric", "numeric_subtype": "integer"}
     },
     "Individ_*": {
-      "Distriktskod": {"type": "text"}
+      "Distriktskod": {"type": "opaque"}
     }
   },
   "column_options": {
@@ -390,7 +391,7 @@ and typos error out instead of getting silently dropped.
   below them (`lisa_2018`). The same precedence applies in both
   `column_types` and `column_options`.
 - Each `column_types` entry's `type` is required and must be one of
-  `id`, `categorical`, `numeric`, `text`, `date`. Inline
+  `id`, `categorical`, `numeric`, `opaque`, `date`. Inline
   subtype/format hints are optional and only valid for the matching
   type. When *any* inline hint is supplied, the bundle skips the
   per-column sample query for that column entirely — that is the
@@ -462,7 +463,7 @@ invariant — no individual-level data leaves MONA.
 |---|---|
 | Numeric | min, max, mean, sd, quantiles (each ±0.5% noise), null_rate¹ |
 | Low-cardinality categorical | frequency table, `_other` bucket k-censored |
-| Text (high-cardinality string) | n_distinct, min/max/mean length, null_rate¹ |
+| Opaque (high-cardinality string we don't model) | n_distinct, min/max/mean length, null_rate¹ |
 | Date | min, max, quantiles (each ±7-day jitter), date_format, null_rate¹ |
 | ID-like | n_distinct, id_subtype, null_rate¹ |
 
@@ -538,7 +539,7 @@ suppression. The warning doesn't block; it surfaces the risk.
 | Numeric | `normal(mean, sd)` clamped to `[min, max]` |
 | Categorical (with frequencies) | Sample from frequency weights |
 | Categorical (with regmeta codes) | Sample from regmeta value set |
-| Text (high-cardinality string) | `val_000001` placeholders |
+| Opaque (high-cardinality string we don't model) | `val_000001` placeholders |
 | Date | Uniform between min and max |
 | Shared ID | Shared pool of synthetic IDs across files |
 | Nulls | Boolean mask at observed `null_rate` |
@@ -559,7 +560,7 @@ yields the same row order regardless of physical layout, so
 same-shape sibling tables (e.g. `lisa_2015` … `lisa_2019`) classify
 the same column the same way. Earlier runs used `LIMIT 1000` /
 `TOP 1000` with no order, which produced flicker like `Distriktskod`
-classifying as `date` in some LISA years and `text` in
+classifying as `date` in some LISA years and `opaque` in
 others — that flicker is gone.
 
 ## Population spine

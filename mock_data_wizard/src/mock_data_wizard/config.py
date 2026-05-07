@@ -54,7 +54,7 @@ INLINE_HINT_KEYS: dict[str, tuple[str, ...]] = {
     "numeric": ("numeric_subtype",),
     "date": ("date_format",),
     "categorical": (),
-    "text": (),
+    "opaque": (),
 }
 assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
 

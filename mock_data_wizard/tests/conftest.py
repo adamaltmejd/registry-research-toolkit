@@ -150,7 +150,7 @@ MINIMAL_STATS = {
                 },
                 {
                     "column_name": "Namn",
-                    "inferred_type": "text",
+                    "inferred_type": "opaque",
                     "nullable": False,
                     "null_count": 0,
                     "null_rate": 0.0,

@@ -198,8 +198,9 @@ def categorical_freqs_sql(
     )
 
 
-def text_aggs_sql(table: str, col: str, dialect: str) -> str:
-    """Length-based stats for a free-text / high-cardinality string column.
+def opaque_aggs_sql(table: str, col: str, dialect: str) -> str:
+    """Length-based stats for an opaque (free-text / high-cardinality)
+    string column whose value distribution we don't model.
 
     Min/max/mean of ``LENGTH(col)`` plus the usual count/null/distinct
     triple. ``generate.py`` uses these to seed placeholder generation
@@ -267,8 +268,8 @@ def queries_for_column(
         }
     if col_type == "categorical":
         return {"freqs": categorical_freqs_sql(table, col, dialect)}
-    if col_type == "text":
-        return {"aggs": text_aggs_sql(table, col, dialect)}
+    if col_type == "opaque":
+        return {"aggs": opaque_aggs_sql(table, col, dialect)}
     if col_type == "date":
         return {"aggs": date_aggs_sql(table, col, dialect)}
     if col_type == "id":

@@ -63,11 +63,12 @@ Author mdw_step2_config.json from an mdw_step1_discovery.json produced
 by the bundle in discover mode.
 
 The configurer assigns one of {id, categorical, numeric,
-text, date} per column based on name patterns (lopnr ->
+opaque, date} per column based on name patterns (lopnr ->
 id, *Datum* -> date, *Belopp* -> numeric, etc.). Anything ambiguous
-defaults to text, which is the safe choice -- it emits
-only string-length aggregates. You'll want to review and edit the
-output by hand before uploading mdw_step2_config.json back to MONA.
+defaults to opaque (we don't model the value distribution; just
+length stats and placeholder generation). You'll want to review
+and edit the output by hand before uploading mdw_step2_config.json
+back to MONA.
 """
 
 COMPARE_HELP = """\

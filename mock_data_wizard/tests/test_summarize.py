@@ -299,10 +299,10 @@ def test_summarize_categorical_no_other_when_all_above_k(conn):
     assert OTHER_LABEL not in out["stats"]["frequencies"]
 
 
-# -- text -----------------------------------------------------------------
+# -- opaque ---------------------------------------------------------------
 
 
-def test_summarize_text_lengths(conn):
+def test_summarize_opaque_lengths(conn):
     conn.execute("CREATE TABLE t(x VARCHAR)")
     rows = [("a",), ("bb",), ("ccc",), ("dddd",), ("eeeee",)]
     conn.executemany("INSERT INTO t VALUES (?)", rows)
@@ -310,7 +310,7 @@ def test_summarize_text_lengths(conn):
         conn,
         table="t",
         col_name="x",
-        col_type="text",
+        col_type="opaque",
         n_rows=5,
         n_distinct=5,
         null_count=0,

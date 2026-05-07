@@ -264,7 +264,7 @@ def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
 _YEAR_SUFFIX_RE = re.compile(r"^(.+?)(?<!\d)(\d{4})$")
 # Column names that look like a panel time-key. Lowercase comparison.
 _TIME_KEY_NAMES = frozenset({"ar", "indatum", "year", "period"})
-# A text column with one of these suffixes is almost
+# An opaque column with one of these suffixes is almost
 # always a miscategorised code/type column. `_kod` and `_typ` are SCB
 # conventions; trailing digits cover `Yrke3`, `SNI2007Niva3`, etc.
 _AMBIGUOUS_SUFFIX_RE = re.compile(r"(_kod|_typ|\d+)$", re.IGNORECASE)
@@ -345,13 +345,13 @@ def _shared_id_column(member_sources: list[dict]) -> str | None:
 
 
 def _ambiguous_columns(payload: dict) -> list[tuple[str, str]]:
-    """``[(source, column)]`` for ``text`` columns whose
+    """``[(source, column)]`` for ``opaque`` columns whose
     names suggest they might be categorical/numeric instead.
     """
     out: list[tuple[str, str]] = []
     for source, cols in payload.get("column_types", {}).items():
         for col, entry in cols.items():
-            if entry.get("type") == "text" and _AMBIGUOUS_SUFFIX_RE.search(col):
+            if entry.get("type") == "opaque" and _AMBIGUOUS_SUFFIX_RE.search(col):
                 out.append((source, col))
     return out
 
@@ -434,7 +434,7 @@ def _interview_panels(discover: dict, payload: dict) -> None:
 
 
 def _interview_ambiguous(payload: dict) -> None:
-    """Walk the user through suspicious ``text`` columns.
+    """Walk the user through suspicious ``opaque`` columns.
 
     Per-column three-way prompt: keep / flip-categorical / flip-numeric.
     Capped at ``_AMBIGUOUS_REVIEW_CAP`` to avoid death-by-prompts; the
@@ -446,7 +446,7 @@ def _interview_ambiguous(payload: dict) -> None:
     truncated = candidates[_AMBIGUOUS_REVIEW_CAP:]
     candidates = candidates[:_AMBIGUOUS_REVIEW_CAP]
     print(
-        f"\n{len(candidates)} `text` column(s) have suspicious "
+        f"\n{len(candidates)} `opaque` column(s) have suspicious "
         f"names (`*_kod`, `*_typ`, trailing digits)."
     )
     for source, col in candidates:
@@ -462,7 +462,7 @@ def _interview_ambiguous(payload: dict) -> None:
             payload["column_types"][source][col] = {"type": "categorical"}
         elif choice in ("n", "numeric"):
             payload["column_types"][source][col] = {"type": "numeric"}
-        # anything else (incl. 'k') → keep as text
+        # anything else (incl. 'k') → keep as opaque
     if truncated:
         print(
             f"  …and {len(truncated)} more — review by hand in {CONFIG_FILENAME}.",
@@ -525,9 +525,9 @@ _TYPE_KEY_MAP = {
     "n": "numeric",
     "d": "date",
     "i": "id",
-    "t": "text",
+    "o": "opaque",
 }
-_VALID_TYPES = frozenset({"id", "categorical", "numeric", "text", "date"})
+_VALID_TYPES = frozenset({"id", "categorical", "numeric", "opaque", "date"})
 
 # Minimum columns we'll render at; below this we just print without
 # pretty alignment (rare — most terminals are 80+).
@@ -1141,7 +1141,7 @@ def _inspect_register_group(
         new_raw = (
             _prompt(
                 f"  New type for {col_name} (current: {current}) "
-                "— [c]ategorical/[n]umeric/[d]ate/[i]d/[t]ext, blank=keep"
+                "— [c]ategorical/[n]umeric/[d]ate/[i]d/[o]paque, blank=keep"
             )
             .strip()
             .lower()
