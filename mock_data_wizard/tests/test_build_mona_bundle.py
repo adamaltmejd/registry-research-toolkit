@@ -163,7 +163,7 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
     (tmp_path / "mdw_step2_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-1.0.0",
+                "contract_version": "mdw-config-2.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id", "id_subtype": "integer"},

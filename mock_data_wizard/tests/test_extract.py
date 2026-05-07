@@ -78,7 +78,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -116,7 +116,7 @@ def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
     # Missing 'age' override.
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "data.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -132,7 +132,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
     _write_csv(tmp_path / "b.csv", "lopnr,sex\n1,M\n2,F\n3,M\n4,F\n5,M\n6,F\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "a.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -164,7 +164,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "events.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -183,7 +183,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
 
 
 def test_run_extract_typed_raises_when_no_data(tmp_path: Path):
-    config = parse_config({"contract_version": "mdw-config-1.0.0", "column_types": {}})
+    config = parse_config({"contract_version": "mdw-config-2.0.0", "column_types": {}})
     src = file_source(str(tmp_path), include=["nonexistent.csv"])
     with pytest.raises(RuntimeError, match="No data sources"):
         run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config)
@@ -257,7 +257,7 @@ def test_main_extract_runs_typed_pipeline(tmp_path: Path):
     (tmp_path / "mdw_step2_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-1.0.0",
+                "contract_version": "mdw-config-2.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -292,7 +292,7 @@ def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
     (tmp_path / "mdw_step2_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-1.0.0",
+                "contract_version": "mdw-config-2.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id"},
@@ -327,7 +327,7 @@ def test_table_and_view_paths_produce_identical_stats(
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -366,7 +366,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "data.csv": {
                     "name": {"type": "id", "id_subtype": "string"},
@@ -402,7 +402,7 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "data.csv": {
                     "lopnr": {"type": "id"},
@@ -455,7 +455,7 @@ def test_run_extract_typed_emits_year_in_source_detail(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "rtb2019.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -476,7 +476,7 @@ def test_run_extract_typed_uses_config_year_over_regex(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "weird_2030.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -496,7 +496,7 @@ def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "name_2024.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -513,12 +513,9 @@ def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
 # -- panels (#23) --------------------------------------------------------
 
 
-def test_run_extract_typed_emits_separate_files_panel(tmp_path: Path):
-    """A separate_files panel reads ``n_panel_ids`` from each member's
-    panel-key column and ``n_rows`` from each member source."""
-    # Two member files with the same panel_key column. n_distinct on the
-    # panel_key column gives n_panel_ids per period. Use 12+ distinct ids
-    # so we clear the SUPPRESS_K=10 floor.
+def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
+    """A panel made of file-members reads ``n_panel_ids`` from each
+    member's panel-key column and ``n_rows`` from each member source."""
     _write_csv(
         tmp_path / "lisa_2018.csv",
         "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
@@ -529,12 +526,11 @@ def test_run_extract_typed_emits_separate_files_panel(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
             "panels": [
                 {
                     "panel_id": "lisa",
-                    "layout": "separate_files",
                     "panel_key": "lopnr",
                     "members": [
                         {"source": "lisa_2018.csv", "period": 2018},
@@ -551,7 +547,10 @@ def test_run_extract_typed_emits_separate_files_panel(tmp_path: Path):
     p = panels[0]
     assert p["panel_id"] == "lisa"
     assert p["panel_key"] == "lopnr"
-    assert p["layout"] == "separate_files"
+    assert p["members"] == [
+        {"source": "lisa_2018.csv", "period": 2018},
+        {"source": "lisa_2019.csv", "period": 2019},
+    ]
     by_period = {bp["period"]: bp for bp in p["by_period"]}
     assert by_period[2018]["n_rows"] == 13
     assert by_period[2018]["n_panel_ids"] == 13
@@ -560,18 +559,17 @@ def test_run_extract_typed_emits_separate_files_panel(tmp_path: Path):
     assert by_period[2019]["n_panel_ids"] == 16
 
 
-def test_run_extract_typed_emits_merged_table_panel(tmp_path: Path):
-    """A merged_table panel runs an extra GROUP BY on the source and
-    emits per-period n_rows / n_panel_ids."""
+def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
+    """A panel with a single column-member runs an extra GROUP BY on
+    the source and emits per-period n_rows / n_panel_ids."""
     rows = []
-    # 12 distinct lopnr per year (clears SUPPRESS_K=10).
     for ar in (2018, 2019, 2020):
         for lopnr in range(1, 13):
             rows.append(f"{lopnr},{ar}")
     _write_csv(tmp_path / "swecov.csv", "lopnr,ar\n" + "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -581,10 +579,8 @@ def test_run_extract_typed_emits_merged_table_panel(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov_inpatient",
-                    "layout": "merged_table",
-                    "source": "swecov.csv",
                     "panel_key": "lopnr",
-                    "time_key": "ar",
+                    "members": [{"source": "swecov.csv", "time_key": "ar"}],
                 }
             ],
         }
@@ -594,27 +590,25 @@ def test_run_extract_typed_emits_merged_table_panel(tmp_path: Path):
     panels = result["panels"]
     assert len(panels) == 1
     p = panels[0]
-    assert p["layout"] == "merged_table"
-    assert p["source"] == "swecov.csv"
-    assert p["time_key"] == "ar"
+    assert p["members"] == [{"source": "swecov.csv", "time_key": "ar"}]
     by_period = {bp["period"]: bp for bp in p["by_period"]}
     assert set(by_period) == {2018, 2019, 2020}
     for bp in by_period.values():
         assert bp["n_rows"] == 12
         assert bp["n_panel_ids"] == 12
+        assert bp["source"] == "swecov.csv"
 
 
 def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
     """A period with n_panel_ids < SUPPRESS_K (=10) is dropped from the
     panels block: tiny panel cohorts are identifying."""
     rows = ["lopnr,ar"]
-    # 2018: 5 distinct ids (suppressed). 2019: 12 distinct ids (kept).
     rows.extend(f"{i},2018" for i in range(1, 6))
     rows.extend(f"{i},2019" for i in range(1, 13))
     _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -624,10 +618,8 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov",
-                    "layout": "merged_table",
-                    "source": "swecov.csv",
                     "panel_key": "lopnr",
-                    "time_key": "ar",
+                    "members": [{"source": "swecov.csv", "time_key": "ar"}],
                 }
             ],
         }
@@ -639,19 +631,18 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
     assert periods == {2019}
 
 
-def test_run_extract_typed_merged_panel_handles_string_time_key(tmp_path: Path):
-    """A merged_table panel keyed by quarter / month strings (e.g.
+def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
+    """A column-member keyed by quarter / month strings (e.g.
     ``"2019-Q1"``) must not crash extract. Periods are preserved as
     strings in mdw_step3_stats.json.
     """
     rows = ["lopnr,quarter"]
-    # 12 distinct lopnr per quarter, two quarters (clears SUPPRESS_K=10).
     for q in ("2019-Q1", "2019-Q2"):
         rows.extend(f"{i},{q}" for i in range(1, 13))
     _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -661,10 +652,8 @@ def test_run_extract_typed_merged_panel_handles_string_time_key(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov_q",
-                    "layout": "merged_table",
-                    "source": "swecov.csv",
                     "panel_key": "lopnr",
-                    "time_key": "quarter",
+                    "members": [{"source": "swecov.csv", "time_key": "quarter"}],
                 }
             ],
         }
@@ -674,6 +663,79 @@ def test_run_extract_typed_merged_panel_handles_string_time_key(tmp_path: Path):
     p = result["panels"][0]
     periods = {bp["period"] for bp in p["by_period"]}
     assert periods == {"2019-Q1", "2019-Q2"}
+
+
+def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
+    """Mixed file-and-column members in one panel: history file with a
+    time_key column + a fresh per-year file. by_period spans both."""
+    history_rows = ["lopnr,ar"]
+    for ar in (2022, 2023):
+        history_rows.extend(f"{i},{ar}" for i in range(1, 13))
+    _write_csv(tmp_path / "tax_history.csv", "\n".join(history_rows) + "\n")
+    _write_csv(
+        tmp_path / "tax_2024.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-2.0.0",
+            "column_types": {
+                "*": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                    "ar": {"type": "numeric", "numeric_subtype": "integer"},
+                }
+            },
+            "panels": [
+                {
+                    "panel_id": "tax",
+                    "panel_key": "lopnr",
+                    "members": [
+                        {"source": "tax_history.csv", "time_key": "ar"},
+                        {"source": "tax_2024.csv", "period": 2024},
+                    ],
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["tax_history.csv", "tax_2024.csv"])
+    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    p = result["panels"][0]
+    by_period = {bp["period"]: bp for bp in p["by_period"]}
+    assert set(by_period) == {2022, 2023, 2024}
+    assert by_period[2022]["source"] == "tax_history.csv"
+    assert by_period[2024]["source"] == "tax_2024.csv"
+    assert by_period[2024]["n_rows"] == 13
+
+
+def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
+    """When every declared member of a panel is missing from the
+    extract output (typo, filtered-out source), surface the error here
+    rather than emit ``members: []`` and break later in stats parsing.
+    """
+    _write_csv(
+        tmp_path / "lisa_2018.csv",
+        "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
+    )
+    config = parse_config(
+        {
+            "contract_version": "mdw-config-2.0.0",
+            "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
+            "panels": [
+                {
+                    "panel_id": "lisa",
+                    "panel_key": "lopnr",
+                    "members": [
+                        # Both sources misspelled / not in the include list.
+                        {"source": "lisa_2018_typo.csv", "period": 2018},
+                        {"source": "lisa_2019_typo.csv", "period": 2019},
+                    ],
+                }
+            ],
+        }
+    )
+    src = file_source(str(tmp_path), include=["lisa_2018.csv"])
+    with pytest.raises(RuntimeError, match="no member sources matched"):
+        run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
 
 
 def test_coerce_period_normalises_value():
@@ -691,7 +753,7 @@ def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: 
     _write_csv(tmp_path / "x.csv", "a\n" + "\n".join(str(i) for i in range(20)) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-1.0.0",
+            "contract_version": "mdw-config-2.0.0",
             "column_types": {"x.csv": {"a": {"type": "id", "id_subtype": "integer"}}},
         }
     )
@@ -715,7 +777,7 @@ def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     (tmp_path / "mdw_step2_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-1.0.0",
+                "contract_version": "mdw-config-2.0.0",
                 "column_types": {"data.csv": {"x": {"type": "blob"}}},
             }
         ),

@@ -81,12 +81,14 @@ regmeta to refresh the inspector's column tags under the new register.
 Column-type overrides accumulate (and render with a trailing `*` so a
 second pass shows what's been touched) and are applied once at write
 time. The inspector also surfaces a **panel candidate** per group
-when the auto-detector can shape one (≥ 2 sources sharing a
-`<stem>_<YYYY>` filename → separate-files; singleton with an
-`AR`/`INDATUM`/`year`/`period` column → merged-table); `[p]`
-configures or removes it without leaving the group view. Anything
-the auto-detector can't shape stays unconfigured — the user
-hand-edits `panels` in the JSON, same UX contract as types.
+when the auto-detector can shape one (≥ 2 sources, every name
+carries a year suffix, and at least one shared id-typed column →
+file-members; or a singleton with an `AR`/`INDATUM`/`year`/`period`
+column → column-member). Candidates with an unambiguous panel_key
+auto-apply up front; the inspector's `[p]` lets the user keep,
+remove, or edit the panel — including a member subset picker (drop
+sources that don't belong, add sources outside the auto-detected set
+either as a literal-period file-member or a time_key column-member).
 After the group menu, two post-passes still run: per-column flips
 for `opaque` columns whose names suggest categorical/numeric
 (`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
@@ -366,7 +368,7 @@ and typos error out instead of getting silently dropped.
 
 ```json
 {
-  "contract_version": "mdw-config-1.0.0",
+  "contract_version": "mdw-config-2.0.0",
   "column_types": {
     "Population_PersonNr_*": {
       "FelPersonNr": {"type": "opaque"},
@@ -642,14 +644,11 @@ this structure when the user declares panels in `mdw_step2_config.json`:
   "panels": [
     {
       "panel_id": "swecov_inpatient",
-      "layout": "merged_table",
-      "source": "SWECOV_SOS_SV",
       "panel_key": "P1105_LopNr_PersonNr",
-      "time_key": "AR"
+      "members": [{"source": "SWECOV_SOS_SV", "time_key": "AR"}]
     },
     {
       "panel_id": "lisa",
-      "layout": "separate_files",
       "panel_key": "P1105_LopNr_PersonNr",
       "members": [
         {"source": "lisa_2018.csv", "period": 2018},
@@ -660,13 +659,19 @@ this structure when the user declares panels in `mdw_step2_config.json`:
 }
 ```
 
-Two layouts share one downstream representation. Extract:
+A panel is `(panel_id, panel_key, members)`. Each member declares its
+source plus exactly one of:
 
-- **`merged_table`**: one extra `GROUP BY time_key` query per panel,
-  yielding `n_rows` and `COUNT(DISTINCT panel_key)` per period.
-- **`separate_files`**: each member is a separate source whose
-  panel-key column's `n_distinct` already gives `n_panel_ids` for that
-  period. No extra query.
+- **`period`**: a literal integer for a one-period-per-file delivery.
+  ``n_rows`` and ``n_panel_ids`` come from the source's row count and
+  the panel-key column's ``n_distinct``.
+- **`time_key`**: a column on the source whose values carry the period
+  for each row. Extract runs `GROUP BY time_key` to get per-period
+  ``n_rows`` and ``COUNT(DISTINCT panel_key)``.
+
+Mixing the two within one panel is allowed: a long history in one
+merged file with a `year` column plus the most recent year as a
+separate file, joined under one panel_id, is a valid configuration.
 
 Periods with `n_panel_ids < SUPPRESS_K` are dropped — a tiny panel
 cohort is identifying.
@@ -676,14 +681,14 @@ in the dominant case, or numeric strings like `"2018"`) become `int`;
 anything else (date / quarter strings like `"2019-Q1"`) is preserved as
 `str` so sub-annual panels don't crash the run.
 
-Source-collision rule: a source may participate in **at most one panel**
-(merged or separate). `parse_config` rejects two panels claiming the same
-source so a generator-side `panel_by_source` collision can't silently
-drop the second panel's behavior. Multi-key panels (one source, two
-panel_keys) are explicitly out of scope.
+Source-collision rule: a source may participate in **at most one panel**.
+`parse_config` rejects two panels claiming the same source so a
+generator-side `panel_by_source` collision can't silently drop the
+second panel's behavior. Multi-key panels (one source, two panel_keys)
+are explicitly out of scope.
 
-`mdw_step3_stats.json` carries a top-level `panels` array, decoupled from
-`sources`:
+`mdw_step3_stats.json` carries a top-level `panels` array that mirrors
+the config schema, plus the per-period stats in `by_period`:
 
 ```json
 {
@@ -691,28 +696,39 @@ panel_keys) are explicitly out of scope.
     {
       "panel_id": "swecov_inpatient",
       "panel_key": "P1105_LopNr_PersonNr",
-      "layout": "merged_table",
-      "source": "SWECOV_SOS_SV",
-      "time_key": "AR",
-      "by_period": [{"period": 2018, "n_rows": 1234567, "n_panel_ids": 980000}, ...]
+      "members": [{"source": "SWECOV_SOS_SV", "time_key": "AR"}],
+      "by_period": [
+        {"period": 2018, "source": "SWECOV_SOS_SV", "n_rows": 1234567, "n_panel_ids": 980000},
+        ...
+      ]
     }
   ]
 }
 ```
 
-Generation: each panel gets a deterministically-shuffled id pool sized
-to `max(n_panel_ids)`, and each period takes a *prefix* of the pool
-sized to that period's `n_panel_ids`. Strict prefix nesting gives
-stable cross-period overlap (panel persistence) — sequential periods
-share `min(n_panel_ids)` of their ids. The panel pool also overrides
+Generation: panels sharing a `panel_key` share one id pool — in SCB
+data nearly every register is keyed on the same person id (e.g.
+`P1105_LopNr_PersonNr`), and that's *the* id universe, not many
+parallel ones. Each pool is deterministically shuffled per panel_key
+and sized to `max(n_panel_ids)` across every period of every panel
+using that key. Each `(period, source)` entry takes a *prefix* of
+the pool sized to that entry's own `n_panel_ids`. Strict prefix
+nesting gives stable cross-period overlap (panel persistence) —
+sequential periods share `min(n_panel_ids)` of their ids — and
+per-source distinctness matches stats (a smaller member contributing
+to the same period draws fewer distinct panel-keys, not the
+sibling's larger count). The panel pool also overrides
 `shared_pools[panel_key]` so non-panel sources sharing the same column
 draw from the same id universe.
 
-For `merged_table`, `(time_key, panel_key)` are co-generated per row:
-each row's period is drawn from `n_rows[t]` weights, and its panel-key
-value comes from that period's subset. For `separate_files`, each
-source IS one period, so panel-key values come straight from the
-period subset.
+For column-members (a `time_key` column inside one source),
+`(time_key, panel_key)` are co-generated per row: each row's period is
+drawn from `n_rows[t]` weights, and its panel-key value comes from
+that period's subset. For file-members (one source IS one period),
+panel-key values come straight from the `(panel_id, period, source)`
+subset. Mixed panels (some members file, some column) work because
+every `by_period` entry carries a `source`, so subsets never bleed
+across members.
 
 **Out of scope:** cross-period transition matrices, attrition / re-entry
 modelling, and multi-key panels. The "fixed pool with shrinking active

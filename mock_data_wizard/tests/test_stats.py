@@ -133,7 +133,7 @@ def test_invalid_json(tmp_path: Path):
 
 
 def test_parse_panels_block(tmp_path: Path):
-    """#23: mdw_step3_stats.json's panels block round-trips through parse_stats."""
+    """mdw_step3_stats.json's panels block round-trips through parse_stats."""
     data = {
         "contract_version": "2.0.0",
         "sources": [
@@ -148,19 +148,27 @@ def test_parse_panels_block(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "merged",
-                "layout": "merged_table",
-                "source": "x.csv",
                 "panel_key": "a",
-                "time_key": "ar",
+                "members": [{"source": "x.csv", "time_key": "ar"}],
                 "by_period": [
-                    {"period": 2018, "n_rows": 100, "n_panel_ids": 80},
-                    {"period": 2019, "n_rows": 110, "n_panel_ids": 85},
+                    {
+                        "period": 2018,
+                        "source": "x.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 80,
+                    },
+                    {
+                        "period": 2019,
+                        "source": "x.csv",
+                        "n_rows": 110,
+                        "n_panel_ids": 85,
+                    },
                 ],
             },
             {
                 "panel_id": "split",
-                "layout": "separate_files",
                 "panel_key": "a",
+                "members": [{"source": "y.csv", "period": 2020}],
                 "by_period": [
                     {
                         "period": 2020,
@@ -177,19 +185,139 @@ def test_parse_panels_block(tmp_path: Path):
     result = parse_stats(p)
     assert len(result.panels) == 2
     merged = next(pn for pn in result.panels if pn.panel_id == "merged")
-    assert merged.layout == "merged_table"
-    assert merged.source == "x.csv"
-    assert merged.time_key == "ar"
+    assert len(merged.members) == 1
+    assert merged.members[0].source == "x.csv"
+    assert merged.members[0].time_key == "ar"
     assert [bp.period for bp in merged.by_period] == [2018, 2019]
     split = next(pn for pn in result.panels if pn.panel_id == "split")
-    assert split.layout == "separate_files"
+    assert split.members[0].period == 2020
     assert split.by_period[0].source == "y.csv"
+
+
+def _stats_with_panel_member(tmp_path: Path, member: dict) -> Path:
+    data = {
+        "contract_version": "2.0.0",
+        "sources": [
+            {
+                "source_name": "x.csv",
+                "source_type": "file",
+                "source_detail": {"path": "x.csv"},
+                "row_count": 10,
+                "columns": [{"column_name": "a", "inferred_type": "id"}],
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "p",
+                "panel_key": "a",
+                "members": [member],
+                "by_period": [
+                    {
+                        "period": 2018,
+                        "source": "x.csv",
+                        "n_rows": 1,
+                        "n_panel_ids": 1,
+                    }
+                ],
+            }
+        ],
+    }
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(data))
+    return p
+
+
+def test_parse_panels_rejects_null_period(tmp_path: Path):
+    """``{"period": null}`` passes the period-xor-time_key gate but
+    must not flow into PanelMemberRef as ``period=None`` — generation
+    later assumes a real scalar."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": None})
+    with pytest.raises(StatsValidationError, match="period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_empty_time_key(tmp_path: Path):
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "time_key": ""})
+    with pytest.raises(StatsValidationError, match="time_key"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_bool_period(tmp_path: Path):
+    """``True`` is technically an int subclass; reject it explicitly so
+    period stays unambiguously a year/quarter scalar."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": True})
+    with pytest.raises(StatsValidationError, match="period"):
+        parse_stats(p)
 
 
 def test_parse_panels_default_to_empty(stats_path: Path):
     """A mdw_step3_stats.json without a panels block parses with panels=[]."""
     result = parse_stats(stats_path)
     assert result.panels == []
+
+
+def _stats_with_by_period_entry(tmp_path: Path, by_period_entry: dict) -> Path:
+    data = {
+        "contract_version": "2.0.0",
+        "sources": [
+            {
+                "source_name": "x.csv",
+                "source_type": "file",
+                "source_detail": {"path": "x.csv"},
+                "row_count": 10,
+                "columns": [{"column_name": "a", "inferred_type": "id"}],
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "p",
+                "panel_key": "a",
+                "members": [{"source": "x.csv", "period": 2018}],
+                "by_period": [by_period_entry],
+            }
+        ],
+    }
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(data))
+    return p
+
+
+def test_parse_panels_rejects_null_by_period_period(tmp_path: Path):
+    """``by_period[].period = null`` would propagate into PanelPeriod as
+    ``period=None`` and break pool keying in generate."""
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": None, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_bool_by_period_period(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": True, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_empty_by_period_source(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": 2018, "source": "", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.source"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_non_int_by_period_n_rows(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": 2018, "source": "x.csv", "n_rows": "10", "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="n_rows"):
+        parse_stats(p)
 
 
 def test_no_columns_in_source(tmp_path: Path):

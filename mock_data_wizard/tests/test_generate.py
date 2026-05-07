@@ -474,8 +474,12 @@ def _panel_stats_separate_files() -> dict:
         "panels": [
             {
                 "panel_id": "lisa",
-                "layout": "separate_files",
                 "panel_key": "LopNr",
+                "members": [
+                    {"source": "lisa_2018.csv", "period": 2018},
+                    {"source": "lisa_2019.csv", "period": 2019},
+                    {"source": "lisa_2020.csv", "period": 2020},
+                ],
                 "by_period": [
                     {
                         "period": 2018,
@@ -597,14 +601,27 @@ def _panel_stats_merged_table() -> dict:
         "panels": [
             {
                 "panel_id": "swecov_inpatient",
-                "layout": "merged_table",
-                "source": "swecov.csv",
                 "panel_key": "LopNr",
-                "time_key": "AR",
+                "members": [{"source": "swecov.csv", "time_key": "AR"}],
                 "by_period": [
-                    {"period": 2018, "n_rows": 90, "n_panel_ids": 80},
-                    {"period": 2019, "n_rows": 110, "n_panel_ids": 95},
-                    {"period": 2020, "n_rows": 100, "n_panel_ids": 85},
+                    {
+                        "period": 2018,
+                        "source": "swecov.csv",
+                        "n_rows": 90,
+                        "n_panel_ids": 80,
+                    },
+                    {
+                        "period": 2019,
+                        "source": "swecov.csv",
+                        "n_rows": 110,
+                        "n_panel_ids": 95,
+                    },
+                    {
+                        "period": 2020,
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 85,
+                    },
                 ],
             }
         ],
@@ -691,6 +708,181 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
     assert all(r["LopNr"] != "" for r in rows)
 
 
+def test_panels_sharing_panel_key_share_pool(tmp_path: Path):
+    """Two panels declaring the same panel_key (the common SCB case
+    where every register is keyed on ``P1105_LopNr_PersonNr``) must
+    draw their panel_key columns from the same id universe — not from
+    independent shuffled pools that would collide on output."""
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": f"{name}.csv",
+                "source_type": "file",
+                "source_detail": {"path": f"{name}.csv", "year": 2020},
+                "row_count": 30,
+                "columns": [
+                    {
+                        "column_name": "Pnr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 30,
+                        "stats": {"id_subtype": "integer"},
+                    }
+                ],
+            }
+            for name in ("lisa_2020", "rtb_2020")
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "lisa",
+                "panel_key": "Pnr",
+                "members": [{"source": "lisa_2020.csv", "period": 2020}],
+                "by_period": [
+                    {
+                        "period": 2020,
+                        "source": "lisa_2020.csv",
+                        "n_rows": 30,
+                        "n_panel_ids": 30,
+                    }
+                ],
+            },
+            {
+                "panel_id": "rtb",
+                "panel_key": "Pnr",
+                "members": [{"source": "rtb_2020.csv", "period": 2020}],
+                "by_period": [
+                    {
+                        "period": 2020,
+                        "source": "rtb_2020.csv",
+                        "n_rows": 30,
+                        "n_panel_ids": 30,
+                    }
+                ],
+            },
+        ],
+    }
+    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=42, output_dir=out_dir)
+
+    with (out_dir / "lisa_2020.csv").open() as f:
+        lisa_ids = {row["Pnr"] for row in csv.DictReader(f)}
+    with (out_dir / "rtb_2020.csv").open() as f:
+        rtb_ids = {row["Pnr"] for row in csv.DictReader(f)}
+
+    # Both panels drew from the same shuffled universe sized to 30,
+    # so the two id sets must be identical (each saw the same prefix).
+    assert lisa_ids == rtb_ids
+
+
+def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path):
+    """Mixed-member panel where the column-member source has every
+    period suppressed but the file-member sibling survives. The
+    column-member's time_key / panel_key columns must be normal-
+    generated values rather than uninitialised np.empty garbage.
+    """
+    payload = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "tax_history.csv",
+                "source_type": "file",
+                "source_detail": {"path": "tax_history.csv"},
+                "row_count": 50,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 40,
+                        "stats": {"id_subtype": "integer"},
+                    },
+                    {
+                        "column_name": "AR",
+                        "inferred_type": "numeric",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 1,
+                        "stats": {
+                            "min": 2022,
+                            "max": 2022,
+                            "mean": 2022,
+                            "sd": 0.0,
+                            "numeric_subtype": "integer",
+                        },
+                    },
+                ],
+            },
+            {
+                "source_name": "tax_2024.csv",
+                "source_type": "file",
+                "source_detail": {"path": "tax_2024.csv", "year": 2024},
+                "row_count": 80,
+                "columns": [
+                    {
+                        "column_name": "LopNr",
+                        "inferred_type": "id",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 70,
+                        "stats": {"id_subtype": "integer"},
+                    }
+                ],
+            },
+        ],
+        "shared_columns": [],
+        "panels": [
+            {
+                "panel_id": "tax",
+                "panel_key": "LopNr",
+                "members": [
+                    {"source": "tax_history.csv", "time_key": "AR"},
+                    {"source": "tax_2024.csv", "period": 2024},
+                ],
+                # Only the file-member contributed surviving periods;
+                # the column-member's by_period rows were all suppressed.
+                "by_period": [
+                    {
+                        "period": 2024,
+                        "source": "tax_2024.csv",
+                        "n_rows": 80,
+                        "n_panel_ids": 70,
+                    }
+                ],
+            }
+        ],
+    }
+    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path.write_text(json.dumps(payload))
+    stats = parse_stats(stats_path)
+    enriched = enrich(stats)
+    out_dir = tmp_path / "out"
+    generate(stats, enriched, seed=11, output_dir=out_dir)
+    with (out_dir / "tax_history.csv").open() as f:
+        rows = list(csv.DictReader(f))
+    assert len(rows) == 50
+    # Both columns must carry real values (not blank or None-stringified).
+    assert all(r["LopNr"] not in ("", "None") for r in rows)
+    assert all(r["AR"] not in ("", "None") for r in rows)
+    # AR is the singular numeric value 2022 -- normal generation must
+    # have run, not the panel pre-generation.
+    ars = [int(r["AR"]) for r in rows]
+    assert all(a == 2022 for a in ars)
+
+
 def test_panel_separate_files_deterministic(tmp_path: Path):
     """Same seed -> identical panel-key column across runs."""
     stats_path = tmp_path / "mdw_step3_stats.json"
@@ -742,13 +934,21 @@ def test_panel_merged_table_string_periods(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "swecov_q",
-                "layout": "merged_table",
-                "source": "swecov.csv",
                 "panel_key": "LopNr",
-                "time_key": "Q",
+                "members": [{"source": "swecov.csv", "time_key": "Q"}],
                 "by_period": [
-                    {"period": "2019-Q1", "n_rows": 100, "n_panel_ids": 70},
-                    {"period": "2019-Q2", "n_rows": 100, "n_panel_ids": 80},
+                    {
+                        "period": "2019-Q1",
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 70,
+                    },
+                    {
+                        "period": "2019-Q2",
+                        "source": "swecov.csv",
+                        "n_rows": 100,
+                        "n_panel_ids": 80,
+                    },
                 ],
             }
         ],

@@ -189,7 +189,7 @@ def test_build_config_routes_columns_per_source():
         ],
     }
     out = build_config(discover)
-    assert out["contract_version"] == "mdw-config-1.0.0"
+    assert out["contract_version"] == "mdw-config-2.0.0"
     cols = out["column_types"]["lisa_2018"]
     assert cols["LopNr"] == {"type": "id"}
     # No --register and no name-pattern fallback: Kommun falls through
