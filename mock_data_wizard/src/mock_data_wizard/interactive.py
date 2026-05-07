@@ -273,6 +273,67 @@ def _stage2_instructions(cwd: Path, *, force: bool = False) -> int:
 # -- Phase 2 helpers (configure interview) ---------------------------------
 
 
+def _longest_common_prefix(strs: list[str]) -> str:
+    """Longest character-wise prefix across ``strs``.
+
+    Used to suggest a ``panel_id`` from a panel's source names —
+    ``[Kursprov_gymn_HT_2011, Kursprov_gymn_VT_2012]`` → ``Kursprov_gymn_``.
+    """
+    if not strs:
+        return ""
+    s_min = min(strs)
+    s_max = max(strs)
+    for i, c in enumerate(s_min):
+        if c != s_max[i]:
+            return s_min[:i]
+    return s_min
+
+
+def _suggest_panel_id(grp: "RegisterGroup", sources: list[str]) -> str:
+    """Default panel_id for a register group's auto-detected panel.
+
+    Prefers the longest common stem (year suffix stripped) across
+    sources — ``Kursprov_gymn_HT_2011`` / ``Kursprov_gymn_VT_2012`` →
+    ``Kursprov_gymn``. Falls back to the register name (the panel
+    *is* the register, so it's a sensible label) and finally to the
+    group_id when no name is available.
+    """
+    stems: list[str] = []
+    for n in sources:
+        m = _match_year_suffix(n)
+        stems.append(m.group(1).rstrip("_-") if m else n)
+    common = _longest_common_prefix(stems).rstrip("_-")
+    if common:
+        return common
+    if grp.register_name:
+        return grp.register_name
+    return grp.group_id
+
+
+def _build_panel_members(sources: list[str], years: dict[str, int]) -> list[dict]:
+    """Build panel members with unique integer periods.
+
+    When every source has a distinct year, ``period`` is the year
+    itself — most readable. When sources share a year (e.g. HT/VT
+    intra-year shards), disambiguate with an alphabetic rank within
+    that year encoded as ``year * 100 + rank``. Sorted ascending so
+    the JSON reads chronologically.
+    """
+    if len(set(years.values())) == len(sources):
+        members = [{"source": n, "period": years[n]} for n in sources]
+    else:
+        same_year: dict[int, list[str]] = {}
+        for n in sources:
+            same_year.setdefault(years[n], []).append(n)
+        rank: dict[str, int] = {}
+        for y, names in same_year.items():
+            for i, n in enumerate(sorted(names), start=1):
+                rank[n] = i
+        members = [{"source": n, "period": years[n] * 100 + rank[n]} for n in sources]
+    members.sort(key=lambda d: d["period"])
+    return members
+
+
 def _find_time_key_in_source(src: dict) -> str | None:
     """Return the source's first ``AR``/``INDATUM``/``year``/``period``
     column name (matched case-insensitively), else ``None``."""
@@ -696,26 +757,23 @@ def _detect_panel_candidate(
     """
     unique_sources = list(dict.fromkeys(grp.sources))
     if len(unique_sources) >= 2:
-        prefixes: set[str] = set()
-        members: list[dict] = []
+        # Year suffix is the gate that distinguishes annual snapshots
+        # of one register from "different tables of one register"
+        # (e.g. RTB delivered as main/address/kommun without year tags
+        # — same shared id column, same register, but not a panel).
+        years_per_source: dict[str, int] = {}
         for name in unique_sources:
             m = _match_year_suffix(name)
             if not m:
                 return None
-            prefix = m.group(1).rstrip("_-")
-            if not prefix:
-                return None
-            prefixes.add(prefix)
-            members.append({"source": name, "period": int(m.group(2))})
-        if len(prefixes) != 1:
-            return None
-        members.sort(key=lambda d: d["period"])
-        member_srcs = [sources_by_name[m["source"]] for m in members]
+            years_per_source[name] = int(m.group(2))
+        member_srcs = [sources_by_name[name] for name in unique_sources]
         suggested_key = _shared_id_column(member_srcs)
+        members = _build_panel_members(unique_sources, years_per_source)
         return PanelCandidate(
             layout="separate_files",
             members=members,
-            suggested_panel_id=next(iter(prefixes)),
+            suggested_panel_id=_suggest_panel_id(grp, unique_sources),
             suggested_panel_key=suggested_key,
         )
     if len(unique_sources) == 1:
@@ -864,7 +922,9 @@ def _edit_panel_for_group(
         if not members:
             print("  No members available for separate_files panel.", file=sys.stderr)
             return
-        default_id = (
+        # panel_id is auto-derived; user edits the JSON to rename. The
+        # only meaningful question on the inspector path is panel_key.
+        panel_id = (
             (existing or {}).get("panel_id")
             or (cand.suggested_panel_id if cand else None)
             or gid
@@ -872,7 +932,6 @@ def _edit_panel_for_group(
         default_key = (existing or {}).get("panel_key") or (
             cand.suggested_panel_key if cand else None
         )
-        panel_id = _prompt("  panel_id", default=default_id).strip() or default_id
         if default_key:
             panel_key = (
                 _prompt("  panel_key", default=default_key).strip() or default_key
@@ -893,10 +952,12 @@ def _edit_panel_for_group(
     # merged_table
     source = (existing or {}).get("source") or (cand.source if cand else None)
     time_key = (existing or {}).get("time_key") or (cand.time_key if cand else None)
-    if not source:
-        print("  No source available for merged_table panel.", file=sys.stderr)
+    if not source or not time_key:
+        # Both come from auto-detection on the source's columns; if
+        # they're missing here, the candidate didn't materialise.
+        print("  No merged_table candidate detected for this group.", file=sys.stderr)
         return
-    default_id = (
+    panel_id = (
         (existing or {}).get("panel_id")
         or (cand.suggested_panel_id if cand else None)
         or source
@@ -910,12 +971,6 @@ def _edit_panel_for_group(
         panel_key = _prompt("  panel_key").strip()
         if not panel_key:
             print("  Skipping panel (no panel_key supplied).", file=sys.stderr)
-            return
-    panel_id = _prompt("  panel_id", default=default_id).strip() or default_id
-    if not time_key:
-        time_key = _prompt("  time_key").strip()
-        if not time_key:
-            print("  Skipping panel (no time_key supplied).", file=sys.stderr)
             return
     panels_by_gid[gid] = {
         "panel_id": panel_id,
