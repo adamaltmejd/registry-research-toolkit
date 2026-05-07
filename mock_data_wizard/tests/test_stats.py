@@ -256,6 +256,70 @@ def test_parse_panels_default_to_empty(stats_path: Path):
     assert result.panels == []
 
 
+def _stats_with_by_period_entry(tmp_path: Path, by_period_entry: dict) -> Path:
+    data = {
+        "contract_version": "2.0.0",
+        "sources": [
+            {
+                "source_name": "x.csv",
+                "source_type": "file",
+                "source_detail": {"path": "x.csv"},
+                "row_count": 10,
+                "columns": [{"column_name": "a", "inferred_type": "id"}],
+            }
+        ],
+        "panels": [
+            {
+                "panel_id": "p",
+                "panel_key": "a",
+                "members": [{"source": "x.csv", "period": 2018}],
+                "by_period": [by_period_entry],
+            }
+        ],
+    }
+    p = tmp_path / "stats.json"
+    p.write_text(json.dumps(data))
+    return p
+
+
+def test_parse_panels_rejects_null_by_period_period(tmp_path: Path):
+    """``by_period[].period = null`` would propagate into PanelPeriod as
+    ``period=None`` and break pool keying in generate."""
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": None, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_bool_by_period_period(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": True, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.period"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_empty_by_period_source(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": 2018, "source": "", "n_rows": 1, "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="by_period.source"):
+        parse_stats(p)
+
+
+def test_parse_panels_rejects_non_int_by_period_n_rows(tmp_path: Path):
+    p = _stats_with_by_period_entry(
+        tmp_path,
+        {"period": 2018, "source": "x.csv", "n_rows": "10", "n_panel_ids": 1},
+    )
+    with pytest.raises(StatsValidationError, match="n_rows"):
+        parse_stats(p)
+
+
 def test_no_columns_in_source(tmp_path: Path):
     p = tmp_path / "bad.json"
     data = {

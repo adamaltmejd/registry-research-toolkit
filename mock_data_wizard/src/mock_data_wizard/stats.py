@@ -186,19 +186,56 @@ def _parse_panel(raw: dict) -> Panel:
         raise StatsValidationError(
             f"panel {pid!r}: by_period must be a list, got {type(by_period_raw).__name__}"
         )
+    by_period: list[PanelPeriod] = []
+    for p in by_period_raw:
+        bp_ctx = f"{ctx}.by_period[]"
+        period = _require(p, "period", bp_ctx)
+        # period: int or non-empty str. Reject null/bool/empty so
+        # downstream pool-keying invariants hold.
+        if isinstance(period, bool) or period is None:
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.period must be int or string, "
+                f"got {type(period).__name__}"
+            )
+        if isinstance(period, str) and not period:
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.period must be non-empty"
+            )
+        if not isinstance(period, (int, str)):
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.period must be int or string, "
+                f"got {type(period).__name__}"
+            )
+        source = _require(p, "source", bp_ctx)
+        if not isinstance(source, str) or not source:
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.source must be a non-empty string"
+            )
+        n_rows = _require(p, "n_rows", bp_ctx)
+        if isinstance(n_rows, bool) or not isinstance(n_rows, int):
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.n_rows must be int, "
+                f"got {type(n_rows).__name__}"
+            )
+        n_panel_ids = _require(p, "n_panel_ids", bp_ctx)
+        if isinstance(n_panel_ids, bool) or not isinstance(n_panel_ids, int):
+            raise StatsValidationError(
+                f"panel {pid!r}: by_period.n_panel_ids must be int, "
+                f"got {type(n_panel_ids).__name__}"
+            )
+        by_period.append(
+            PanelPeriod(
+                period=period,
+                source=source,
+                n_rows=n_rows,
+                n_panel_ids=n_panel_ids,
+            )
+        )
     return Panel(
         panel_id=pid,
         panel_key=_require(raw, "panel_key", ctx),
         members=members,
-        by_period=[
-            PanelPeriod(
-                period=_require(p, "period", f"{ctx}.by_period[]"),
-                source=_require(p, "source", f"{ctx}.by_period[]"),
-                n_rows=_require(p, "n_rows", f"{ctx}.by_period[]"),
-                n_panel_ids=_require(p, "n_panel_ids", f"{ctx}.by_period[]"),
-            )
-            for p in by_period_raw
-        ],
+        by_period=by_period,
     )
 
 

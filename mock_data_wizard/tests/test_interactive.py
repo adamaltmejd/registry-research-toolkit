@@ -1298,6 +1298,107 @@ def test_register_menu_blanks_unambiguous_candidate_when_not_configured():
     assert "✓ panel" not in out
 
 
+def test_declined_candidate_suppresses_menu_warning_and_inspector_line():
+    """Once the user declines a candidate via [p], both the menu
+    indicator and the inspector header omit the candidate so the user
+    isn't re-prompted for a panel they already rejected."""
+    cand = interactive.PanelCandidate(
+        members=[{"source": "x", "time_key": "AR"}],
+        suggested_panel_id="x",
+        suggested_panel_key=None,  # ambiguous → would show ⚠ candidate
+    )
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=["x"],
+        columns_by_source={"x": [("AR", "int")]},
+        schema_variants=1,
+        panel_candidate=cand,
+    )
+    # Pre-decline: both surfaces show the candidate.
+    assert interactive._render_panel_line(grp, None) is not None
+    import io
+    import contextlib
+
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        interactive._render_register_menu({grp.group_id: grp}, panels_by_gid={})
+    assert "⚠ candidate" in buf.getvalue()
+
+    # Decline: both surfaces go quiet.
+    cand.declined = True
+    assert interactive._render_panel_line(grp, None) is None
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        interactive._render_register_menu({grp.group_id: grp}, panels_by_gid={})
+    assert "⚠ candidate" not in buf.getvalue()
+
+
+def test_edit_panel_marks_candidate_declined_when_removed(monkeypatch, capsys):
+    """Removing an existing panel via Keep this panel? → n flips
+    ``cand.declined``, so re-entering [p] won't re-offer the same
+    candidate without the user asking."""
+    cand = interactive.PanelCandidate(
+        members=[
+            {"source": "lisa_2018", "period": 2018},
+            {"source": "lisa_2019", "period": 2019},
+        ],
+        suggested_panel_id="lisa",
+        suggested_panel_key="LopNr",
+    )
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name="LISA",
+        confidence="high",
+        sources=["lisa_2018", "lisa_2019"],
+        columns_by_source={
+            "lisa_2018": [("LopNr", "int")],
+            "lisa_2019": [("LopNr", "int")],
+        },
+        panel_candidate=cand,
+    )
+    panels_by_gid = {
+        "reg-1": {
+            "panel_id": "lisa",
+            "panel_key": "LopNr",
+            "members": list(cand.members),
+        }
+    }
+    _canned_inputs(monkeypatch, ["n"])
+    interactive._edit_panel_for_group("reg-1", grp, panels_by_gid)
+    capsys.readouterr()  # discard prompt output
+    assert "reg-1" not in panels_by_gid
+    assert cand.declined is True
+
+
+def test_edit_panel_marks_candidate_declined_when_user_says_no(monkeypatch, capsys):
+    """Declining a fresh candidate via Is this a panel? → n flips
+    ``cand.declined`` so the inspector stops offering it."""
+    cand = interactive.PanelCandidate(
+        members=[{"source": "x", "time_key": "AR"}],
+        suggested_panel_id="x",
+        suggested_panel_key=None,  # ambiguous candidate, no auto-apply
+    )
+    grp = interactive.RegisterGroup(
+        group_id="reg-1",
+        register_id=1,
+        register_name=None,
+        confidence="high",
+        sources=["x"],
+        columns_by_source={"x": [("AR", "int")]},
+        panel_candidate=cand,
+    )
+    panels_by_gid: dict[str, dict] = {}
+    _canned_inputs(monkeypatch, ["n"])
+    interactive._edit_panel_for_group("reg-1", grp, panels_by_gid)
+    capsys.readouterr()
+    assert panels_by_gid == {}
+    assert cand.declined is True
+
+
 # -- _auto_apply_panel_candidates -----------------------------------------
 
 

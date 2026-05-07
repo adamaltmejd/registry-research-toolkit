@@ -636,11 +636,18 @@ class PanelCandidate:
     ``time_key`` (a column name — column-member, periods materialise at
     extract time). Members are sorted: file-members ascending by
     period, column-members at the end in source order.
+
+    ``declined`` flips to True once the user explicitly removes the
+    auto-applied panel or declines the candidate via ``[p]``. Both the
+    menu indicator and the inspector header suppress the candidate
+    line when declined, so re-entering the inspector doesn't keep
+    re-offering a panel the user just rejected.
     """
 
     members: list[dict] = field(default_factory=list)
     suggested_panel_id: str | None = None
     suggested_panel_key: str | None = None
+    declined: bool = False
 
 
 @dataclass
@@ -842,7 +849,7 @@ def _render_panel_line(grp: RegisterGroup, configured: dict | None) -> str | Non
             f"panel: {pid} by {pkey} ({_summarise_panel_members(members)})  [p to edit]"
         )
     cand = grp.panel_candidate
-    if cand is None:
+    if cand is None or cand.declined:
         return None
     summary = _summarise_panel_members(cand.members)
     if cand.suggested_panel_key:
@@ -866,24 +873,24 @@ def _auto_apply_panel_candidates(
     one id column on the source. Anything else stays as a "candidate"
     hint until the user hits ``[p]`` to pick the key explicitly.
 
-    Skips candidates whose ``panel_id`` or member source would collide
-    with an already-applied panel — ``parse_config`` rejects those
-    cases. ``panel_key`` collisions are *allowed*: SCB registers
-    routinely share the person id (e.g. ``P1105_LopNr_PersonNr``)
-    across dozens of distinct panels, and ``_build_panel_pools``
-    handles the shared id universe. The colliding group keeps its
-    ``panel_candidate`` and the user can resolve it via ``[p]``.
+    Skips candidates whose ``panel_id`` would collide with an
+    already-applied panel — distinct groups can derive the same stem
+    (e.g. two unrelated registers both reduce to ``rams``), and
+    ``parse_config`` rejects duplicate panel_ids. ``panel_key``
+    collisions are *allowed*: SCB registers routinely share the person
+    id (e.g. ``P1105_LopNr_PersonNr``) across dozens of distinct
+    panels, and ``_build_panel_pools`` handles the shared id universe.
+    Source collisions can't happen here — ``group_by_register`` puts
+    each source in exactly one group.
     """
     out: dict[str, dict] = {}
     seen_ids: set[str] = set()
-    seen_sources: set[str] = set()
     for gid, grp in groups.items():
         cand = grp.panel_candidate
         if cand is None or cand.suggested_panel_key is None:
             continue
         panel_id = cand.suggested_panel_id or gid
-        member_sources = [m["source"] for m in cand.members]
-        if panel_id in seen_ids or any(s in seen_sources for s in member_sources):
+        if panel_id in seen_ids:
             continue
         out[gid] = {
             "panel_id": panel_id,
@@ -891,7 +898,6 @@ def _auto_apply_panel_candidates(
             "members": cand.members,
         }
         seen_ids.add(panel_id)
-        seen_sources.update(member_sources)
     return out
 
 
@@ -1035,6 +1041,10 @@ def _edit_panel_for_group(
       configures from the candidate (with member-edit pass).
     - No existing, no candidate: lets the user start with an empty
       member list and add from group sources.
+
+    When a user removes an existing panel or declines a candidate, the
+    group's ``panel_candidate.declined`` flips so the menu/inspector
+    don't keep nagging. Confirming a configuration clears the flag.
     """
     cand = grp.panel_candidate
     existing = panels_by_gid.get(gid)
@@ -1042,13 +1052,16 @@ def _edit_panel_for_group(
     if existing is not None:
         if not _yes_no("  Keep this panel?", default=True):
             panels_by_gid.pop(gid, None)
+            if cand is not None:
+                cand.declined = True
             return
         members: list[dict] = [dict(m) for m in existing.get("members", [])]
         default_key = existing["panel_key"]
         panel_id = existing["panel_id"]
     else:
-        if cand is not None:
+        if cand is not None and not cand.declined:
             if not _yes_no("  Is this a panel?", default=True):
+                cand.declined = True
                 return
             members = [dict(m) for m in cand.members]
             default_key = cand.suggested_panel_key
@@ -1064,6 +1077,8 @@ def _edit_panel_for_group(
     if edited is None or not edited:
         if existing is not None:
             panels_by_gid.pop(gid, None)
+            if cand is not None:
+                cand.declined = True
         return
 
     # panel_id is auto-derived; user edits the JSON to rename. The only
@@ -1080,6 +1095,8 @@ def _edit_panel_for_group(
         "panel_key": panel_key,
         "members": edited,
     }
+    if cand is not None:
+        cand.declined = False
 
 
 def _columns_by_availability(
@@ -1125,9 +1142,9 @@ def _render_register_menu(
     but couldn't pick a panel_key — i.e. genuinely ambiguous and needs
     user input; blank otherwise) — replaces the earlier source / column
     / schema counts since per-group counts are already visible in the
-    inspector header. A candidate with an unambiguous suggested key
-    that is *not* configured (e.g. user explicitly removed it) leaves
-    the column blank rather than nagging.
+    inspector header. A candidate is suppressed (blank) once the user
+    explicitly declines it (via ``cand.declined``); an unambiguous
+    candidate that simply hasn't been configured yet also stays blank.
     """
     gids = list(groups.keys())
     width = _terminal_width()
@@ -1152,6 +1169,7 @@ def _render_register_menu(
             panel_part = "✓ panel"
         elif (
             grp.panel_candidate is not None
+            and not grp.panel_candidate.declined
             and grp.panel_candidate.suggested_panel_key is None
         ):
             panel_part = "⚠ candidate"
@@ -1677,8 +1695,6 @@ def _stage3_configure(cwd: Path, *, force: bool = False) -> int:
     for (source, col), new_type in column_overrides.items():
         if source in config["column_types"] and col in config["column_types"][source]:
             config["column_types"][source][col] = {"type": new_type}
-
-    _apply_panels_to_config(config, panels_by_gid)
 
     _interview_ambiguous(config)
     _interview_suppress_k(config)
