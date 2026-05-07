@@ -415,6 +415,152 @@ class TestGetValues:
         data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16
 
+    def test_by_variable_year_resolves_to_single_cvid(self, db_path: str):
+        """variable + year → flat value list (cvid shape)."""
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "values",
+                "Kön",
+                "--register",
+                "TESTREG",
+                "--year",
+                "2020",
+            ]
+        )
+        assert code == 0
+        assert isinstance(data["data"], list)
+        codes = {v["vardekod"] for v in data["data"]}
+        assert codes == {"1", "2"}
+
+    def test_by_variable_multi_year(self, db_path: str):
+        """variable (no year) → multi-instance year × codes view."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "Kön", "--register", "TESTREG"]
+        )
+        assert code == 0
+        payload = data["data"]
+        assert payload["variabelnamn"] == "Kön"
+        instances = payload["instances"]
+        # CVIDs 1001 (2020), 1003 (2021), 1004 (2022). 1004 has no value set
+        # (Beskrivande-text sentinel) so its values list is empty but the
+        # instance is still present.
+        years = {i["year"] for i in instances}
+        assert years == {2020, 2021, 2022}
+        coded = {i["cvid"]: i["values"] for i in instances if i["values"]}
+        assert 1001 in coded
+        assert {v["vardekod"] for v in coded[1001]} == {"1", "2"}
+
+    def test_by_variable_year_collapses_across_registers(self, db_path: str):
+        """variable + year across multiple registers collapses if codes match.
+
+        var_id=44 ("Kön") exists in both TESTREG (cvid 1003) and OTHERREG
+        (cvid 2001) for 2021. Both carry the same {1=Man, 2=Kvinna} codes,
+        so the multi-register case should collapse to one flat list — the
+        answer is unambiguous even if the provenance isn't.
+        """
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "Kön", "--year", "2021"]
+        )
+        assert code == 0
+        assert isinstance(data["data"], list)
+        codes = {v["vardekod"] for v in data["data"]}
+        assert codes == {"1", "2"}
+
+    def test_by_variable_unknown(self, db_path: str):
+        data, code = _run_json(["--db", db_path, "get", "values", "NONEXISTENT_VAR"])
+        assert code == 16
+
+    def test_by_variable_year_no_match(self, db_path: str):
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "values",
+                "Kön",
+                "--register",
+                "TESTREG",
+                "--year",
+                "1999",
+            ]
+        )
+        assert code == 16
+
+    def test_cvid_with_year_or_register_errors(self, db_path: str):
+        """Numeric target is a CVID; --year/--register are usage errors."""
+        data, code = _run_json(
+            ["--db", db_path, "get", "values", "1001", "--year", "2020"]
+        )
+        assert code == 2
+        assert data["error"]["code"] == "usage_error"
+
+    def test_groups_payload_disagreement(self):
+        """When (variable, year) hits multiple distinct value sets, the
+        handler buckets them by code-set so callers don't drown in repeats.
+        """
+        from regmeta.cli import _group_instances_by_codes
+
+        instances = [
+            {
+                "cvid": 1,
+                "register_id": 100,
+                "register_name": "RegA",
+                "regvar_id": 10,
+                "variant_name": "A1",
+                "regver_id": 200,
+                "version_name": "2017",
+                "year": 2017,
+                "values": [
+                    {"vardekod": "1", "vardebenamning": "Man"},
+                    {"vardekod": "2", "vardebenamning": "Kvinna"},
+                ],
+            },
+            {
+                "cvid": 2,
+                "register_id": 101,
+                "register_name": "RegB",
+                "regvar_id": 11,
+                "variant_name": "B1",
+                "regver_id": 201,
+                "version_name": "2017",
+                "year": 2017,
+                "values": [
+                    {"vardekod": "1", "vardebenamning": "Man"},
+                    {"vardekod": "2", "vardebenamning": "Kvinna"},
+                ],
+            },
+            {
+                "cvid": 3,
+                "register_id": 102,
+                "register_name": "RegC",
+                "regvar_id": 12,
+                "variant_name": "C1",
+                "regver_id": 202,
+                "version_name": "2017",
+                "year": 2017,
+                "values": [
+                    {"vardekod": "1", "vardebenamning": "Pojke"},
+                    {"vardekod": "2", "vardebenamning": "Flicka"},
+                ],
+            },
+        ]
+        multi = {"input": "Kön", "variabelnamn": "Kön"}
+        out = _group_instances_by_codes(multi, instances, 2017)
+        assert out["value_set_count"] == 2
+        assert out["instance_count"] == 3
+        assert out["register_count"] == 3
+        # Largest group (Man/Kvinna, 2 instances) comes first.
+        assert out["groups"][0]["instance_count"] == 2
+        assert out["groups"][0]["register_count"] == 2
+        assert out["groups"][0]["registers"] == ["RegA", "RegB"]
+        assert out["groups"][1]["instance_count"] == 1
+        assert out["groups"][1]["registers"] == ["RegC"]
+        labels = {v["vardebenamning"] for v in out["groups"][1]["values"]}
+        assert labels == {"Pojke", "Flicka"}
+
 
 # ---------------------------------------------------------------------------
 # Get datacolumns

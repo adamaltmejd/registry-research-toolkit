@@ -987,6 +987,133 @@ def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
     return [dict(v) for v in values]
 
 
+def get_values_by_variable(
+    conn: sqlite3.Connection,
+    variable: str,
+    *,
+    register: str | None = None,
+    year: int | None = None,
+) -> dict[str, Any]:
+    """Resolve a variable to its instances and return year-correct codes per instance.
+
+    Each instance is one cvid → year-correct value list. Filter via
+    ``register`` and/or ``year``. Returns
+    ``{input, variabelnamn, instances: [{cvid, register_id, register_name,
+    regvar_id, variant_name, regver_id, version_name, year, values}]}``.
+    Resolution mirrors ``get_varinfo``: var_id → variabelnamn → alias.
+    """
+    reg_ids: list[int] | None = None
+    if register:
+        reg_ids = require_register_ids(conn, register)
+
+    int_variable = _try_int(variable)
+
+    if reg_ids:
+        ph = _in_placeholders(reg_ids)
+        rows_by_id = conn.execute(
+            f"SELECT register_id, var_id, variabelnamn FROM variable "
+            f"WHERE var_id = ? AND register_id IN ({ph})",
+            [int_variable, *reg_ids],
+        ).fetchall()
+        rows_by_name = conn.execute(
+            f"SELECT register_id, var_id, variabelnamn FROM variable "
+            f"WHERE LOWER(variabelnamn) = LOWER(?) AND register_id IN ({ph})",
+            [variable, *reg_ids],
+        ).fetchall()
+    else:
+        rows_by_id = conn.execute(
+            "SELECT register_id, var_id, variabelnamn FROM variable WHERE var_id = ?",
+            (int_variable,),
+        ).fetchall()
+        rows_by_name = conn.execute(
+            "SELECT register_id, var_id, variabelnamn FROM variable "
+            "WHERE LOWER(variabelnamn) = LOWER(?)",
+            (variable,),
+        ).fetchall()
+
+    matched = rows_by_id if rows_by_id else rows_by_name
+
+    if not matched:
+        alias_sql = (
+            "SELECT DISTINCT v.register_id, v.var_id, v.variabelnamn "
+            "FROM variable_alias a "
+            "JOIN variable_instance vi ON a.cvid = vi.cvid "
+            "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+            "WHERE LOWER(a.kolumnnamn) = LOWER(?)"
+        )
+        if reg_ids:
+            ph = _in_placeholders(reg_ids)
+            alias_sql += f" AND v.register_id IN ({ph})"
+            matched = conn.execute(alias_sql, [variable, *reg_ids]).fetchall()
+        else:
+            matched = conn.execute(alias_sql, (variable,)).fetchall()
+
+    if not matched:
+        raise RegmetaError(
+            exit_code=EXIT_NOT_FOUND,
+            code="not_found",
+            error_class="query",
+            message=f"No variable matching '{variable}'"
+            + (f" in register '{register}'" if register else "")
+            + ".",
+            remediation="Use `regmeta search --query <term>` to find variables.",
+        )
+
+    variabelnamn = matched[0]["variabelnamn"]
+
+    instances: list[dict[str, Any]] = []
+    for var in matched:
+        rid, vid = var["register_id"], var["var_id"]
+        rows = conn.execute(
+            "SELECT vi.cvid, vi.regvar_id, vi.regver_id, "
+            "r.registernamn, rv.registervariantnamn, rver.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register r ON vi.register_id = r.register_id "
+            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "WHERE vi.register_id = ? AND vi.var_id = ? "
+            "ORDER BY rver.registerversionnamn",
+            (rid, vid),
+        ).fetchall()
+        for row in rows:
+            inst_year = extract_year(row["registerversionnamn"] or "")
+            if year is not None and inst_year != year:
+                continue
+
+            values = conn.execute(
+                "SELECT vc.vardekod, vc.vardebenamning, "
+                "vi.vardemangdsversion, vi.vardemangdsniva "
+                "FROM variable_instance vi "
+                "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+                "JOIN value_code vc ON vsm.code_id = vc.code_id "
+                "WHERE vi.cvid = ? "
+                "ORDER BY vc.vardekod",
+                (row["cvid"],),
+            ).fetchall()
+
+            instances.append(
+                {
+                    "cvid": row["cvid"],
+                    "register_id": rid,
+                    "register_name": row["registernamn"],
+                    "regvar_id": row["regvar_id"],
+                    "variant_name": row["registervariantnamn"],
+                    "regver_id": row["regver_id"],
+                    "version_name": row["registerversionnamn"],
+                    "year": inst_year,
+                    "values": [dict(v) for v in values],
+                }
+            )
+
+    instances.sort(key=lambda i: (i["register_name"] or "", i["year"] or 0, i["cvid"]))
+
+    return {
+        "input": variable,
+        "variabelnamn": variabelnamn,
+        "instances": instances,
+    }
+
+
 # ---------------------------------------------------------------------------
 # Resolve
 # ---------------------------------------------------------------------------
