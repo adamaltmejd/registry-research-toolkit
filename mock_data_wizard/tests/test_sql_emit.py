@@ -19,12 +19,12 @@ from mock_data_wizard.sql_emit import (
     count_rows_sql,
     date_aggs_sql,
     double_cast,
-    high_cardinality_aggs_sql,
     id_aggs_sql,
     length_fn,
     limit_clause,
     numeric_aggs_sql,
     numeric_quantiles_sql,
+    opaque_aggs_sql,
     queries_for_column,
     quote_ident,
     sample_sql,
@@ -215,11 +215,11 @@ def test_categorical_freqs_mssql_uses_top_prefix():
     assert "[cat]" in sql
 
 
-# -- high cardinality ------------------------------------------------------
+# -- opaque ----------------------------------------------------------------
 
 
-def test_high_cardinality_returns_length_stats(duck_with_table):
-    sql = high_cardinality_aggs_sql("t", "hi", DUCKDB)
+def test_opaque_returns_length_stats(duck_with_table):
+    sql = opaque_aggs_sql("t", "hi", DUCKDB)
     cur = duck_with_table.execute(sql)
     cols = [d[0] for d in cur.description]
     assert cols == [
@@ -235,8 +235,8 @@ def test_high_cardinality_returns_length_stats(duck_with_table):
     assert row[4] == 20  # max length
 
 
-def test_high_cardinality_mssql_uses_LEN():
-    sql = high_cardinality_aggs_sql("dbo.t", "hi", MSSQL)
+def test_opaque_mssql_uses_LEN():
+    sql = opaque_aggs_sql("dbo.t", "hi", MSSQL)
     assert "LEN([hi])" in sql
     assert "length(" not in sql
 

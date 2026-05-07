@@ -21,7 +21,7 @@ COLUMN_TYPES: tuple[str, ...] = (
     "id",
     "categorical",
     "numeric",
-    "high_cardinality",
+    "opaque",
     "date",
 )
 
@@ -54,7 +54,7 @@ ID_PATTERNS: tuple[IdPattern, ...] = (
 # semantics unambiguously. Exact name match only (case-insensitive) and
 # only when the configured register matches — outside that context the
 # names are ambiguous enough that we'd rather the user see
-# "high_cardinality" in the inspector and override manually than silently
+# "opaque" in the inspector and override manually than silently
 # mistype.
 RTB_NAMED_CATEGORICAL: frozenset[str] = frozenset(
     {

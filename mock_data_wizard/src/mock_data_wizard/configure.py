@@ -31,7 +31,7 @@ priority (first match wins):
    is DuckDB's own inference (which already does int-vs-double on the
    data) — no separate value-peeking pass at discover time.
 5. **Fallthrough.** Anything we don't recognise (VARCHAR/TEXT/...) →
-   ``high_cardinality``. The inspector surfaces these as a manual-review
+   ``opaque``. The inspector surfaces these as a manual-review
    prompt — no name-pattern guessing, since the false-positive risk on
    common Swedish stems (``land``, ``utbildning``, ``civil``, ...)
    outweighs the convenience.
@@ -217,7 +217,7 @@ def _classify(
     kind = _sql_type_kind(sql_type)
     if kind:
         return kind
-    return "high_cardinality"
+    return "opaque"
 
 
 def _validate_discover_payload(payload: Any, source_label: str) -> None:
