@@ -33,6 +33,7 @@ from .queries import (
     get_register,
     get_schema,
     get_values,
+    get_values_by_variable,
     get_varinfo,
     list_classifications,
     resolve,
@@ -103,6 +104,41 @@ def _write_json(payload: dict[str, Any], output_path: str | None) -> None:
         tmp_file.replace(tmp)
     else:
         sys.stdout.write(content)
+
+
+def _write_groups_payload(data: dict[str, Any], output_path: str | None) -> None:
+    """Render the `get values` disagreement payload (groups by value-set)."""
+    n_groups = data.get("value_set_count", len(data.get("groups", [])))
+    n_inst = data.get("instance_count", 0)
+    n_regs = data.get("register_count", 0)
+    year = data.get("year")
+    name = data.get("variabelnamn") or data.get("input") or ""
+
+    parts = [f"Variable '{name}'"]
+    if year is not None:
+        parts.append(f"year {year}")
+    parts.append(
+        f"{n_groups} distinct value set(s) across {n_inst} instance(s) "
+        f"in {n_regs} register(s)"
+    )
+    lines = [" — ".join(parts), ""]
+
+    cap = 10
+    for i, group in enumerate(data.get("groups", []), 1):
+        ic = group.get("instance_count", 0)
+        rc = group.get("register_count", 0)
+        lines.append(f"[Group {i}] {ic} instance(s) across {rc} register(s)")
+        for v in group.get("values", []):
+            kod = v.get("vardekod") or "(empty)"
+            label = v.get("vardebenamning", "")
+            lines.append(f"  {kod:<8}  {label}")
+        regs = group.get("registers", [])
+        shown = regs[:cap]
+        more = f" (+{len(regs) - cap} more)" if len(regs) > cap else ""
+        lines.append(f"  Registers: {', '.join(shown)}{more}")
+        lines.append("")
+
+    _write_to("\n".join(lines), output_path)
 
 
 def _terminal_width(output_path: str | None) -> int:
@@ -492,19 +528,34 @@ def _build_parser() -> argparse.ArgumentParser:
 
     get_values_p = get_sub.add_parser(
         "values",
-        help="Get value-set members (code + label) for a CVID.",
+        help="Get value-set members (code + label) by variable or CVID.",
         description=(
             "Show code/label pairs for a categorical variable's value set.\n"
-            "Requires a CVID — find it via `regmeta get varinfo <variable>`.\n"
-            "Codes are projected to the cvid's regver year via SCB validity\n"
+            "Codes are projected to each cvid's regver year via SCB validity\n"
             "windows at build time, so the result is the year-correct set.\n\n"
+            "TARGET dispatch: a fully numeric arg is treated as a CVID; any\n"
+            "other arg is treated as a variable name (or column alias).\n\n"
             "Examples:\n"
-            "  regmeta get values 1001"
+            "  regmeta get values 1001                                  # by CVID\n"
+            '  regmeta get values "ArbSokNov" --register LISA            # year × codes table\n'
+            '  regmeta get values "ArbSokNov" --register LISA --year 2015  # codes for one year'
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_values_p.add_argument(
-        "cvid", help="CVID (find via: regmeta get varinfo <variable>)."
+        "target",
+        help="Variable name, column alias, or CVID. Numeric input is treated as a CVID.",
+    )
+    get_values_p.add_argument(
+        "--register",
+        default=None,
+        help="Filter by register (only used with a variable target).",
+    )
+    get_values_p.add_argument(
+        "--year",
+        type=int,
+        default=None,
+        help="Filter to a single year (only used with a variable target).",
     )
 
     get_datacols_p = get_sub.add_parser(
@@ -1355,32 +1406,175 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
+def _group_instances_by_codes(
+    instances: list[dict[str, Any]],
+    *,
+    input_value: str,
+    variabelnamn: str,
+    year: int | None,
+) -> dict[str, Any]:
+    """Bucket instances by their (vardekod, vardebenamning) set so callers
+    don't have to scroll through dozens of rows of identical codes. Used when
+    a (variable, year) lookup hits multiple distinct value sets.
+    """
+    buckets: dict[tuple, list[dict[str, Any]]] = {}
+    for inst in instances:
+        key = tuple(
+            sorted((v["vardekod"], v["vardebenamning"]) for v in inst["values"])
+        )
+        buckets.setdefault(key, []).append(inst)
+
+    # Largest group first; tie-break by the value-set key for determinism.
+    sorted_keys = sorted(buckets.keys(), key=lambda k: (-len(buckets[k]), k))
+
+    groups_out: list[dict[str, Any]] = []
+    for key in sorted_keys:
+        members = buckets[key]
+        registers = sorted({m["register_name"] for m in members})
+        groups_out.append(
+            {
+                "values": [
+                    {"vardekod": code, "vardebenamning": label} for code, label in key
+                ],
+                "instance_count": len(members),
+                "register_count": len(registers),
+                "registers": registers,
+                "instances": [
+                    {
+                        "cvid": m["cvid"],
+                        "register_id": m["register_id"],
+                        "register_name": m["register_name"],
+                        "regvar_id": m["regvar_id"],
+                        "variant_name": m["variant_name"],
+                        "regver_id": m["regver_id"],
+                        "version_name": m["version_name"],
+                        "year": m["year"],
+                    }
+                    for m in members
+                ],
+            }
+        )
+
+    return {
+        "input": input_value,
+        "variabelnamn": variabelnamn,
+        "year": year,
+        "value_set_count": len(groups_out),
+        "instance_count": len(instances),
+        "register_count": len({i["register_name"] for i in instances}),
+        "groups": groups_out,
+    }
+
+
 def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     conn = open_db(db)
+
+    target = args.target
+    is_cvid = target.isdigit()
+    args._is_cvid = is_cvid
+    args._projection_emptied = False
+    args._collapsed_instances = 0
+    args._collapsed_registers = 0
+
     try:
         info = _db_info(conn)
-        data = get_values(conn, args.cvid)
-        # Discriminate empty results: a cvid with `vardemangdsversion IS NOT NULL`
-        # had real Vardemangder rows but year-projection excluded every code, so
-        # the empty list signals an SCB validity gap rather than a numeric/text
-        # variable. Read alongside the data so the hint layer can surface it.
-        args._projection_emptied = bool(
-            not data
-            and conn.execute(
-                "SELECT 1 FROM variable_instance "
-                "WHERE cvid = ? AND value_set_id IS NULL "
-                "AND vardemangdsversion IS NOT NULL",
-                (args.cvid,),
-            ).fetchone()
-        )
+        if is_cvid:
+            if args.register is not None or args.year is not None:
+                raise RegmetaError(
+                    exit_code=EXIT_USAGE,
+                    code="usage_error",
+                    error_class="usage",
+                    message=(
+                        "--register and --year are not valid with a CVID; "
+                        "a CVID already pins one register/year."
+                    ),
+                    remediation=(
+                        "Drop --register/--year, or pass a variable name "
+                        "instead of a CVID."
+                    ),
+                )
+            data: list[dict[str, Any]] | dict[str, Any] = get_values(conn, target)
+            # Discriminate empty results: a cvid with `vardemangdsversion IS NOT NULL`
+            # had real Vardemangder rows but year-projection excluded every code, so
+            # the empty list signals an SCB validity gap rather than a numeric/text
+            # variable. Read alongside the data so the hint layer can surface it.
+            if not data:
+                args._projection_emptied = bool(
+                    conn.execute(
+                        "SELECT 1 FROM variable_instance "
+                        "WHERE cvid = ? AND value_set_id IS NULL "
+                        "AND vardemangdsversion IS NOT NULL",
+                        (target,),
+                    ).fetchone()
+                )
+        else:
+            multi = get_values_by_variable(
+                conn, target, register=args.register, year=args.year
+            )
+            instances = multi["instances"]
+
+            if args.year is not None:
+                if not instances:
+                    raise RegmetaError(
+                        exit_code=EXIT_NOT_FOUND,
+                        code="not_found",
+                        error_class="query",
+                        message=(
+                            f"No instance of '{target}' for year {args.year}"
+                            + (
+                                f" in register '{args.register}'"
+                                if args.register
+                                else ""
+                            )
+                            + "."
+                        ),
+                        remediation=(
+                            f"Run `regmeta get availability {target}` to see "
+                            "covered years."
+                        ),
+                    )
+                # >1 instance for one (variable, year) is common in SCB:
+                # a variable like "Kön" can carry the same {1=Man, 2=Kvinna}
+                # codes across dozens of registers and variants. The
+                # *answer* (the codes) isn't ambiguous — only the
+                # provenance is. Collapse on identical (vardekod,
+                # vardebenamning) sets regardless of register; only fall
+                # back to the multi-instance shape when codes truly
+                # disagree.
+                value_keys = {
+                    tuple(
+                        sorted(
+                            (v["vardekod"], v["vardebenamning"]) for v in i["values"]
+                        )
+                    )
+                    for i in instances
+                }
+                regs = sorted({i["register_name"] for i in instances})
+                if len(value_keys) == 1:
+                    args._collapsed_instances = len(instances)
+                    args._collapsed_registers = len(regs)
+                    data = instances[0]["values"]
+                else:
+                    data = _group_instances_by_codes(
+                        instances,
+                        input_value=multi["input"],
+                        variabelnamn=multi["variabelnamn"],
+                        year=args.year,
+                    )
+            else:
+                data = multi
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="get values",
-        args_payload={"cvid": args.cvid},
+        args_payload={
+            "target": target,
+            "register": args.register,
+            "year": args.year,
+        },
         db_info=info,
         data=data,
         duration_ms=duration_ms,
@@ -1851,14 +2045,61 @@ def _write_payload(
             hints=hints,
         )
     elif key == ("get", "values"):
-        _write_formatted(
-            data if isinstance(data, list) else [],
-            ["vardekod", "vardebenamning"],
-            output_path,
-            fmt=fmt,
-            fmt_explicit=fmt_explicit,
-            hints=hints,
-        )
+        # Three payload shapes:
+        #   list                       — flat value list (cvid path, or
+        #                                variable+year that collapsed)
+        #   {instances: [...]}         — multi-year (no --year given)
+        #   {groups: [...]}            — variable+year disagreement, grouped
+        #                                by distinct value set
+        if isinstance(data, list):
+            _write_formatted(
+                data,
+                ["vardekod", "vardebenamning"],
+                output_path,
+                fmt=fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
+        elif isinstance(data, dict) and "groups" in data:
+            _write_groups_payload(data, output_path)
+        elif isinstance(data, dict):
+            instances = data.get("instances", [])
+            # Show variant column only when it actually disambiguates rows —
+            # otherwise it's noise. Detected by any (register, year) carrying
+            # more than one regvar_id.
+            seen: dict[tuple[Any, Any], set[Any]] = {}
+            for inst in instances:
+                key = (inst.get("register_name"), inst.get("year"))
+                seen.setdefault(key, set()).add(inst.get("regvar_id"))
+            show_variant = any(len(v) > 1 for v in seen.values())
+            rows: list[dict[str, Any]] = []
+            for inst in instances:
+                values = inst.get("values", [])
+                if not values:
+                    continue
+                for v in values:
+                    row = {
+                        "register": inst.get("register_name", ""),
+                        "year": inst.get("year", ""),
+                        "cvid": inst.get("cvid", ""),
+                        "vardekod": v.get("vardekod", ""),
+                        "vardebenamning": v.get("vardebenamning", ""),
+                    }
+                    if show_variant:
+                        row["variant"] = inst.get("variant_name", "") or ""
+                    rows.append(row)
+            cols = ["register", "year"]
+            if show_variant:
+                cols.append("variant")
+            cols += ["cvid", "vardekod", "vardebenamning"]
+            _write_formatted(
+                rows,
+                cols,
+                output_path,
+                fmt=fmt,
+                fmt_explicit=fmt_explicit,
+                hints=hints,
+            )
     elif key == ("get", "datacolumns"):
         _write_formatted(
             data if isinstance(data, list) else [],
@@ -2286,8 +2527,45 @@ def _collect_hints(
                 "cvid had value codes in Vardemangder.csv but every code was "
                 "excluded by year-projection — likely an SCB validity gap for "
                 "this cvid's regver year. Compare with neighbouring years via "
-                "`regmeta get varinfo <variable>` to see when codes appear.",
+                "`regmeta get values <variable>` to see when codes appear.",
             )
+        collapsed = getattr(args, "_collapsed_instances", 0)
+        collapsed_regs = getattr(args, "_collapsed_registers", 0)
+        if collapsed > 1:
+            scope = (
+                f"{collapsed_regs} register(s)"
+                if collapsed_regs > 1
+                else "different variants in one register"
+            )
+            _hint_add(
+                hints,
+                f"Codes are identical across {collapsed} instance(s) "
+                f"spanning {scope} — collapsed to one list.",
+            )
+        # Groups view (disagreement case) carries its own header summary —
+        # no extra hint needed.
+        if isinstance(data, dict) and "instances" in data:
+            instances = data.get("instances", [])
+            n_with = sum(1 for i in instances if i.get("values"))
+            n_without = len(instances) - n_with
+            n_regs = len({i.get("register_name") for i in instances})
+            if n_without and n_with:
+                _hint_add(
+                    hints,
+                    f"{n_without}/{len(instances)} instance(s) had no value set "
+                    "(elided from table; see JSON for full picture).",
+                )
+            elif n_without and not n_with:
+                _hint_add(
+                    hints,
+                    "No instance carries a value set — variable may be "
+                    "numeric/text, or year-projection emptied every cvid.",
+                )
+            if n_regs > 1 and not getattr(args, "register", None):
+                _hint_add(
+                    hints,
+                    f"Variable spans {n_regs} register(s); use --register to narrow.",
+                )
 
 
 # ---------------------------------------------------------------------------
@@ -2358,7 +2636,10 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
         "Column listing per version.",
     ),
     ("get varinfo VARIABLE [--register R]", "Variable details with instance history."),
-    ("get values CVID", "Value codes and labels for a CVID."),
+    (
+        "get values TARGET [--register R] [--year Y]",
+        "Value codes by CVID, or year × codes view by variable.",
+    ),
     (
         "get datacolumns VARIABLE [--register R]",
         "All column aliases for a variable across registers.",
@@ -2629,16 +2910,25 @@ get varinfo — Variable details and history
 get values — What do the coded values mean?
 ───────────────────────────────────────────
 
+  "How did ArbSokNov's codes evolve across LISA years?"
+    regmeta get values "ArbSokNov" --register LISA
+        → year × codes table (one row per cvid, codes inline)
+
+  "What codes were valid for ArbSokNov in 2015 specifically?"
+    regmeta get values "ArbSokNov" --register LISA --year 2015
+
   "What are the valid values for CVID 1001?"
     regmeta get values 1001
 
-  Each CVID is already pinned to a single regver year, and the codes
-  shown have been year-projected through SCB validity windows at build
-  time — so the result is the year-correct set, not a historical union.
+  Numeric input is treated as a CVID; anything else as a variable name
+  (or column alias). Codes are year-projected through SCB validity
+  windows at build time, so each cvid carries the year-correct set.
 
-  You need a CVID, not a variable name. Get it from `get varinfo`:
-    regmeta get varinfo "Kommun" --register LISA   → find the CVID
-    regmeta get values <cvid>                      → see the codes
+  When --year is given, instances sharing the same code/label set
+  collapse to a single flat list (the answer is unambiguous even when
+  the variable spans many registers); when value sets genuinely
+  disagree, the result is bucketed by distinct value set instead.
+  Use --register to narrow provenance to one register.
 """,
     ("get", "datacolumns"): """\
 get datacolumns — What column names does a variable appear under?
@@ -2799,8 +3089,8 @@ Common workflows
 ────────────────
 
   "What are the valid values for Kommun in LISA?"
-    regmeta get varinfo "Kommun" --register LISA   → note the CVID
-    regmeta get values <cvid>                      → code/label pairs
+    regmeta get values "Kommun" --register LISA              → year × codes
+    regmeta get values "Kommun" --register LISA --year 2022  → one year's codes
 
   "I have a data file — what do the columns mean?"
     regmeta resolve --columns "Kon,FodelseAr,AstKommun" --register LISA
