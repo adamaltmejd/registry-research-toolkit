@@ -146,9 +146,11 @@ class NotInitializedError(Exception):
     """Raised by ``get_state`` when ``mock_data_config.json`` is absent."""
 
 
-class ValidationError(Exception):
+class ValidationError(ValueError):
     """Raised on invalid input (unknown type, unresolved register, missing
-    source/column, etc.)."""
+    source/column, etc.). Inherits from ``ValueError`` so structural
+    config errors surfaced via ``parse_config`` and editor-side input
+    validation share one error type."""
 
 
 class StaleStateError(Exception):
@@ -714,7 +716,12 @@ def _build_snapshot(
     snapshot_version: str,
     db_path: Path | None,
 ) -> StateSnapshot:
-    config = parse_config(payload)
+    try:
+        config = parse_config(payload)
+    except ValueError as exc:
+        # Surface structural / version errors through the editor's own
+        # error type so UI clients have one Exception to catch.
+        raise ValidationError(str(exc)) from exc
     register_to_columns: dict[str, set[str]] = {}
     if discover is not None:
         sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
@@ -1092,7 +1099,10 @@ def set_group_register(
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        config = parse_config(payload)
+        try:
+            config = parse_config(payload)
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
 
         # Resolve group_id → list of source_names.
         affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
@@ -1223,20 +1233,27 @@ def _sources_in_group(
                 for sn, entry in config.sources.items()
                 if entry.get("register") == target
             ]
-        # Numeric register_id: re-resolve every source's register and match.
+        # Numeric register_id: resolve each unique register string once,
+        # then match. A project with N sources sharing M registers does
+        # M lookups, not N.
         try:
             target_id = int(rest)
         except ValueError:
             return []
-        out: list[str] = []
-        for sn, entry in config.sources.items():
-            register = entry.get("register")
-            if not register:
-                continue
+        unique_registers = {
+            entry.get("register")
+            for entry in config.sources.values()
+            if entry.get("register")
+        }
+        register_ids: dict[str, int | None] = {}
+        for register in unique_registers:
             reg = resolve_register(register, db_path=db_path)
-            if reg is not None and reg.id == target_id:
-                out.append(sn)
-        return out
+            register_ids[register] = reg.id if reg is not None else None
+        return [
+            sn
+            for sn, entry in config.sources.items()
+            if register_ids.get(entry.get("register")) == target_id
+        ]
     return []
 
 
@@ -1325,8 +1342,6 @@ def put_panel(
                 break
         if not replaced:
             panels.append(serialized)
-        if not panels:
-            payload.pop("panels", None)
         # Validate the resulting payload via parse_config to catch source
         # collisions and other integrity errors.
         try:
