@@ -547,8 +547,9 @@ class TestGetValues:
                 ],
             },
         ]
-        multi = {"input": "Kön", "variabelnamn": "Kön"}
-        out = _group_instances_by_codes(multi, instances, 2017)
+        out = _group_instances_by_codes(
+            instances, input_value="Kön", variabelnamn="Kön", year=2017
+        )
         assert out["value_set_count"] == 2
         assert out["instance_count"] == 3
         assert out["register_count"] == 3
@@ -560,6 +561,209 @@ class TestGetValues:
         assert out["groups"][1]["registers"] == ["RegC"]
         labels = {v["vardebenamning"] for v in out["groups"][1]["values"]}
         assert labels == {"Pojke", "Flicka"}
+
+    def test_groups_text_rendering(self, tmp_path):
+        """`_write_groups_payload` renders a header summary, per-group code
+        listing, and a registers footer (with overflow hint when truncated).
+        """
+        from regmeta.cli import _write_groups_payload
+
+        payload = {
+            "input": "Kön",
+            "variabelnamn": "Kön",
+            "year": 2017,
+            "value_set_count": 2,
+            "instance_count": 14,
+            "register_count": 13,
+            "groups": [
+                {
+                    "values": [
+                        {"vardekod": "1", "vardebenamning": "Man"},
+                        {"vardekod": "2", "vardebenamning": "Kvinna"},
+                    ],
+                    "instance_count": 12,
+                    "register_count": 12,
+                    "registers": [f"Reg{i:02d}" for i in range(12)],
+                },
+                {
+                    "values": [
+                        {"vardekod": "1", "vardebenamning": "Pojke"},
+                        {"vardekod": "2", "vardebenamning": "Flicka"},
+                    ],
+                    "instance_count": 2,
+                    "register_count": 1,
+                    "registers": ["RegC"],
+                },
+            ],
+        }
+        out = tmp_path / "groups.txt"
+        _write_groups_payload(payload, str(out))
+        text = out.read_text()
+        # Header summary
+        assert "Variable 'Kön'" in text
+        assert "year 2017" in text
+        assert "2 distinct value set(s)" in text
+        # Both groups rendered
+        assert "[Group 1]" in text and "[Group 2]" in text
+        assert "Man" in text and "Pojke" in text
+        # Register list with overflow hint (12 registers, cap=10)
+        assert "+2 more" in text
+
+    def test_ambiguous_alias_errors(self, tmp_path):
+        """Column aliases shared across unrelated variables (e.g. "Rad")
+        must error rather than silently merging value sets under one name.
+        """
+        import sqlite3
+
+        from regmeta.db import DDL
+        from regmeta.queries import get_values_by_variable
+
+        db = tmp_path / "amb.db"
+        conn = sqlite3.connect(str(db))
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        conn.execute("INSERT INTO register VALUES (1, 'R1', NULL, NULL)")
+        conn.execute("INSERT INTO register VALUES (2, 'R2', NULL, NULL)")
+        conn.execute(
+            "INSERT INTO register_variant VALUES (10, 1, 'V1', NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_variant VALUES (11, 2, 'V2', NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_version VALUES (101, 11, '2020', NULL, NULL, NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 50, 'AppleVar')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (2, 51, 'BananaVar')"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "VALUES (5001, 1, 10, 100, 50)"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "VALUES (5002, 2, 11, 101, 51)"
+        )
+        # Same alias 'Rad' used for two unrelated variables.
+        conn.execute("INSERT INTO variable_alias VALUES (5001, 'Rad')")
+        conn.execute("INSERT INTO variable_alias VALUES (5002, 'Rad')")
+        conn.commit()
+
+        import pytest
+
+        from regmeta.errors import RegmetaError
+
+        with pytest.raises(RegmetaError) as exc:
+            get_values_by_variable(conn, "Rad")
+        assert exc.value.code == "ambiguous_alias"
+        assert exc.value.exit_code == 2
+        # Message names both variables (or shows count + sample).
+        assert "AppleVar" in exc.value.message
+        assert "BananaVar" in exc.value.message
+        conn.close()
+
+    def test_groups_cli_end_to_end(self, tmp_path):
+        """Full CLI path: `get values <var> --year Y` across registers with
+        disagreeing code labels emits a `groups`-shaped payload.
+        """
+        import sqlite3
+
+        from regmeta.db import DDL, SCHEMA_VERSION
+
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        db = db_dir / "regmeta.db"
+        conn = sqlite3.connect(str(db))
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        conn.execute(
+            "INSERT INTO import_manifest VALUES ('schema_version', ?)",
+            (SCHEMA_VERSION,),
+        )
+        # Two registers, same variable name + var_id, same year, different code labels.
+        conn.execute("INSERT INTO register VALUES (1, 'RegAdult', NULL, NULL)")
+        conn.execute("INSERT INTO register VALUES (2, 'RegChild', NULL, NULL)")
+        conn.execute(
+            "INSERT INTO register_variant VALUES (10, 1, 'Adults', NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_variant VALUES (11, 2, 'Children', NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO register_version VALUES (101, 11, '2020', NULL, NULL, NULL, NULL, NULL)"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 44, 'Kön')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (2, 44, 'Kön')"
+        )
+        # Two cvids, two distinct value sets. member_hash must be 32 bytes.
+        conn.execute(
+            "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
+            (b"\xaa" * 32,),
+        )
+        conn.execute(
+            "INSERT INTO value_set (value_set_id, member_hash) VALUES (2, ?)",
+            (b"\xbb" * 32,),
+        )
+        conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
+        conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+        conn.execute("INSERT INTO value_code VALUES (3, '1', 'Pojke')")
+        conn.execute("INSERT INTO value_code VALUES (4, '2', 'Flicka')")
+        conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
+        conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
+        conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
+        conn.execute("INSERT INTO value_set_member VALUES (2, 4)")
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, value_set_id) "
+            "VALUES (5001, 1, 10, 100, 44, 1)"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, value_set_id) "
+            "VALUES (5002, 2, 11, 101, 44, 2)"
+        )
+        # docs DB stub — query commands require it present.
+        from regmeta.doc_db import build_doc_db
+
+        docs_src = tmp_path / "docs"
+        (docs_src / "stub").mkdir(parents=True)
+        (docs_src / "stub" / "Stub.md").write_text(
+            "---\nvariable: Stub\ndisplay_name: Stub\ntags:\n  - type/variable\n---\n\nx\n",
+            encoding="utf-8",
+        )
+        build_doc_db(docs_src, db_dir)
+        conn.commit()
+        conn.close()
+
+        data, code = _run_json(
+            ["--db", str(db_dir), "get", "values", "Kön", "--year", "2020"]
+        )
+        assert code == 0
+        payload = data["data"]
+        assert "groups" in payload
+        assert payload["value_set_count"] == 2
+        assert payload["instance_count"] == 2
+        assert payload["register_count"] == 2
+        # Two groups, each with one instance from one register.
+        labels = {
+            tuple(sorted(v["vardebenamning"] for v in g["values"]))
+            for g in payload["groups"]
+        }
+        assert labels == {("Kvinna", "Man"), ("Flicka", "Pojke")}
 
 
 # ---------------------------------------------------------------------------

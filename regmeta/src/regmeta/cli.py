@@ -534,7 +534,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "Codes are projected to each cvid's regver year via SCB validity\n"
             "windows at build time, so the result is the year-correct set.\n\n"
             "TARGET dispatch: a fully numeric arg is treated as a CVID; any\n"
-            "other arg is treated as a variable name (or var_id alias).\n\n"
+            "other arg is treated as a variable name (or column alias).\n\n"
             "Examples:\n"
             "  regmeta get values 1001                                  # by CVID\n"
             '  regmeta get values "ArbSokNov" --register LISA            # year × codes table\n'
@@ -544,7 +544,7 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     get_values_p.add_argument(
         "target",
-        help="Variable name, var_id, or CVID. Numeric input is treated as a CVID.",
+        help="Variable name, column alias, or CVID. Numeric input is treated as a CVID.",
     )
     get_values_p.add_argument(
         "--register",
@@ -1407,8 +1407,10 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _group_instances_by_codes(
-    multi: dict[str, Any],
     instances: list[dict[str, Any]],
+    *,
+    input_value: str,
+    variabelnamn: str,
     year: int | None,
 ) -> dict[str, Any]:
     """Bucket instances by their (vardekod, vardebenamning) set so callers
@@ -1454,8 +1456,8 @@ def _group_instances_by_codes(
         )
 
     return {
-        "input": multi["input"],
-        "variabelnamn": multi["variabelnamn"],
+        "input": input_value,
+        "variabelnamn": variabelnamn,
         "year": year,
         "value_set_count": len(groups_out),
         "instance_count": len(instances),
@@ -1555,7 +1557,12 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                     args._collapsed_registers = len(regs)
                     data = instances[0]["values"]
                 else:
-                    data = _group_instances_by_codes(multi, instances, args.year)
+                    data = _group_instances_by_codes(
+                        instances,
+                        input_value=multi["input"],
+                        variabelnamn=multi["variabelnamn"],
+                        year=args.year,
+                    )
             else:
                 data = multi
     finally:
@@ -2914,12 +2921,14 @@ get values — What do the coded values mean?
     regmeta get values 1001
 
   Numeric input is treated as a CVID; anything else as a variable name
-  (or var_id alias). Codes are year-projected through SCB validity
+  (or column alias). Codes are year-projected through SCB validity
   windows at build time, so each cvid carries the year-correct set.
 
-  When the variable spans multiple registers, --register narrows. With
-  --year, the call resolves to one cvid; --register may be required to
-  disambiguate.
+  When --year is given, instances sharing the same code/label set
+  collapse to a single flat list (the answer is unambiguous even when
+  the variable spans many registers); when value sets genuinely
+  disagree, the result is bucketed by distinct value set instead.
+  Use --register to narrow provenance to one register.
 """,
     ("get", "datacolumns"): """\
 get datacolumns — What column names does a variable appear under?

@@ -1006,25 +1006,30 @@ def get_values_by_variable(
     if register:
         reg_ids = require_register_ids(conn, register)
 
-    int_variable = _try_int(variable)
+    int_variable: int | None
+    raw_int = _try_int(variable)
+    int_variable = raw_int if isinstance(raw_int, int) else None
 
+    rows_by_id: list[Any] = []
     if reg_ids:
         ph = _in_placeholders(reg_ids)
-        rows_by_id = conn.execute(
-            f"SELECT register_id, var_id, variabelnamn FROM variable "
-            f"WHERE var_id = ? AND register_id IN ({ph})",
-            [int_variable, *reg_ids],
-        ).fetchall()
+        if int_variable is not None:
+            rows_by_id = conn.execute(
+                f"SELECT register_id, var_id, variabelnamn FROM variable "
+                f"WHERE var_id = ? AND register_id IN ({ph})",
+                [int_variable, *reg_ids],
+            ).fetchall()
         rows_by_name = conn.execute(
             f"SELECT register_id, var_id, variabelnamn FROM variable "
             f"WHERE LOWER(variabelnamn) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
-        rows_by_id = conn.execute(
-            "SELECT register_id, var_id, variabelnamn FROM variable WHERE var_id = ?",
-            (int_variable,),
-        ).fetchall()
+        if int_variable is not None:
+            rows_by_id = conn.execute(
+                "SELECT register_id, var_id, variabelnamn FROM variable WHERE var_id = ?",
+                (int_variable,),
+            ).fetchall()
         rows_by_name = conn.execute(
             "SELECT register_id, var_id, variabelnamn FROM variable "
             "WHERE LOWER(variabelnamn) = LOWER(?)",
@@ -1048,6 +1053,29 @@ def get_values_by_variable(
         else:
             matched = conn.execute(alias_sql, (variable,)).fetchall()
 
+        # Generic column aliases (e.g. "Rad", "Kolumn1", "OBS_VALUE") map to
+        # many unrelated variables. Refuse to silently merge their value sets
+        # under one name — surface the spread so the caller can pick.
+        distinct_names = {m["variabelnamn"] for m in matched}
+        if len(distinct_names) > 1:
+            sample = ", ".join(sorted(distinct_names)[:5])
+            more = (
+                f" (+{len(distinct_names) - 5} more)" if len(distinct_names) > 5 else ""
+            )
+            raise RegmetaError(
+                exit_code=EXIT_USAGE,
+                code="ambiguous_alias",
+                error_class="usage",
+                message=(
+                    f"Column alias '{variable}' maps to "
+                    f"{len(distinct_names)} distinct variables: {sample}{more}."
+                ),
+                remediation=(
+                    f"Run `regmeta get datacolumns {variable}` to see the spread, "
+                    "then call `regmeta get values <variabelnamn> --register R`."
+                ),
+            )
+
     if not matched:
         raise RegmetaError(
             exit_code=EXIT_NOT_FOUND,
@@ -1061,48 +1089,60 @@ def get_values_by_variable(
 
     variabelnamn = matched[0]["variabelnamn"]
 
-    instances: list[dict[str, Any]] = []
+    # Batch-fetch instances for all (register_id, var_id) pairs in one query,
+    # then batch-fetch all value codes in a second query keyed on cvid. Avoids
+    # the N+1 pattern when a variable spans dozens of registers.
+    pair_clauses = " OR ".join(
+        ["(vi.register_id = ? AND vi.var_id = ?)"] * len(matched)
+    )
+    pair_params: list[Any] = []
     for var in matched:
-        rid, vid = var["register_id"], var["var_id"]
-        rows = conn.execute(
-            "SELECT vi.cvid, vi.regvar_id, vi.regver_id, "
-            "r.registernamn, rv.registervariantnamn, rver.registerversionnamn "
-            "FROM variable_instance vi "
-            "JOIN register r ON vi.register_id = r.register_id "
-            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
-            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-            "WHERE vi.register_id = ? AND vi.var_id = ? "
-            "ORDER BY rver.registerversionnamn",
-            (rid, vid),
-        ).fetchall()
-        for row in rows:
-            inst_year = extract_year(row["registerversionnamn"] or "")
-            if year is not None and inst_year != year:
-                continue
+        pair_params.extend([var["register_id"], var["var_id"]])
 
-            values = conn.execute(
-                "SELECT vc.vardekod, vc.vardebenamning, "
-                "vi.vardemangdsversion, vi.vardemangdsniva "
-                "FROM variable_instance vi "
-                "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-                "JOIN value_code vc ON vsm.code_id = vc.code_id "
-                "WHERE vi.cvid = ? "
-                "ORDER BY vc.vardekod",
-                (row["cvid"],),
-            ).fetchall()
+    inst_rows = conn.execute(
+        f"SELECT vi.cvid, vi.register_id, vi.var_id, vi.regvar_id, vi.regver_id, "
+        f"r.registernamn, rv.registervariantnamn, rver.registerversionnamn "
+        f"FROM variable_instance vi "
+        f"JOIN register r ON vi.register_id = r.register_id "
+        f"JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+        f"JOIN register_version rver ON vi.regver_id = rver.regver_id "
+        f"WHERE {pair_clauses}",
+        pair_params,
+    ).fetchall()
 
-            instances.append(
-                {
-                    "cvid": row["cvid"],
-                    "register_id": rid,
-                    "register_name": row["registernamn"],
-                    "regvar_id": row["regvar_id"],
-                    "variant_name": row["registervariantnamn"],
-                    "regver_id": row["regver_id"],
-                    "version_name": row["registerversionnamn"],
-                    "year": inst_year,
-                    "values": [dict(v) for v in values],
-                }
+    instances: list[dict[str, Any]] = []
+    cvid_index: dict[Any, dict[str, Any]] = {}
+    for row in inst_rows:
+        inst_year = extract_year(row["registerversionnamn"] or "")
+        if year is not None and inst_year != year:
+            continue
+        inst = {
+            "cvid": row["cvid"],
+            "register_id": row["register_id"],
+            "register_name": row["registernamn"],
+            "regvar_id": row["regvar_id"],
+            "variant_name": row["registervariantnamn"],
+            "regver_id": row["regver_id"],
+            "version_name": row["registerversionnamn"],
+            "year": inst_year,
+            "values": [],
+        }
+        instances.append(inst)
+        cvid_index[row["cvid"]] = inst
+
+    if cvid_index:
+        cvid_ph = _in_placeholders(list(cvid_index))
+        for row in conn.execute(
+            f"SELECT vi.cvid, vc.vardekod, vc.vardebenamning "
+            f"FROM variable_instance vi "
+            f"JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            f"JOIN value_code vc ON vsm.code_id = vc.code_id "
+            f"WHERE vi.cvid IN ({cvid_ph}) "
+            f"ORDER BY vi.cvid, vc.vardekod",
+            list(cvid_index),
+        ):
+            cvid_index[row["cvid"]]["values"].append(
+                {"vardekod": row["vardekod"], "vardebenamning": row["vardebenamning"]}
             )
 
     instances.sort(key=lambda i: (i["register_name"] or "", i["year"] or 0, i["cvid"]))
