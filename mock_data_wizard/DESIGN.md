@@ -11,21 +11,23 @@ end-to-end loop crosses the MONA boundary three times:
    modules into a single `mdw_runner.py` for MONA upload.
 2. **Discover** on MONA. Edit `configure()` in the bundle, leave
    `MODE = "discover"`, upload, and run:
-   `python mdw_runner.py` — writes `mdw_step1_discovery.json`
+   `python mdw_runner.py` — writes `mock_data_discovery.json`
    (metadata only: column names, SQL types, row counts; no values, no
    distinct counts, no samples).
-3. `mock-data-wizard configure [--register LISA] mdw_step1_discovery.json`
-   (local) — reads `mdw_step1_discovery.json`, applies the layered classifier
-   (id-name → regmeta classification → categorical-name → sql_type →
-   `opaque` default; see *Configure classifier priority*
-   below), and writes `mdw_step2_config.json`. The user reviews and edits
-   this file by hand before re-uploading.
+3. **Author config** (local) — author `mock_data_config.json` from
+   `mock_data_discovery.json` via `mock_data_wizard.editor.init_if_missing`
+   (or an external UI calling the same API; see *Editor API* below).
+   The editor applies the layered classifier (id-name → regmeta
+   classification → categorical-name → sql_type → `opaque` default;
+   see *Configure classifier priority* below) and persists year +
+   register per source. Subsequent edits go through the editor
+   mutators; the file may also be hand-edited.
 4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
-   `mdw_step2_config.json` next to it, re-run on MONA — writes `mdw_step3_stats.json`
+   `mock_data_config.json` next to it, re-run on MONA — writes `mock_data_stats.json`
    (only aggregate statistics; the configured types drive per-column
    SQL with no data-driven classifier pass).
 5. `mock-data-wizard generate` (local) — produces mock CSVs from
-   `mdw_step3_stats.json`.
+   `mock_data_stats.json`.
 
 Why three trips. Discover is metadata-only and PII-safe by
 construction; running it first means the per-column type assignment
@@ -36,85 +38,23 @@ re-runs to fix a misclassified column. The earlier R-script-generation
 approach is preserved in git history; the runtime is Python going
 forward.
 
-### Interactive default flow
+### Configure step (editor API)
 
-`mock-data-wizard` with no arguments enters a stage-aware interactive
-flow that detects which pipeline artifact is present in the current
-directory and either runs the corresponding local action or prints
-instructions for the MONA-side action. The detection table:
+There is no built-in TUI for the configure step. The
+`mock_data_wizard.editor` module exposes a stateless API
+(`init_if_missing`, `get_state`, mutators) that authors and mutates
+`mock_data_config.json` in place; a UI lives outside this package. See
+the *Editor API* section for the contract.
 
-| Latest artifact in cwd | Stage | Action |
-|---|---|---|
-| (none) | build | Interview; build the bundle with `configure()` filled in |
-| `mdw_runner.py` | discover | Print upload + run instructions |
-| `mdw_step1_discovery.json` | configure | Interview; run `build_config` + per-column / panel / suppress\_k edits |
-| `mdw_step2_config.json` | extract | Print upload + run instructions |
-| `mdw_step3_stats.json` | generate | Interview; collect seed / sample\_pct / regmeta / output dir, then dispatch to `generate` |
-| `mock_data/` populated | done | Offer to redo any stage |
+The CLI keeps the bundle / aggregate / generate surface only:
+`mock-data-wizard build-bundle`, `mock-data-wizard generate`,
+`mock-data-wizard compare`, `mock-data-wizard scan`,
+`mock-data-wizard update`. Bare `mock-data-wizard` prints help.
 
-The configure interview is a register-grouped review menu. Sources are
-first bucketed by `(column_name, sql_type)` schema family (annual
-snapshots of the same register typically collapse into one family —
-150 files → ~14–60 families), then families are merged into register
-groups by `group_by_register`. Each family is auto-tagged with a
-register via `enrich._vote_register` voting plus a
-`_source_name_register_fallback` filename rule; families that resolved
-to the same `register_id` share one row in the menu. Each row shows a
-confidence glyph (`✓` / `⚠` / `✗` — the worst across families in the
-group), the auto-detected register name, source/column counts, and the
-`match_count/nonid_count` ratio. Columns where regmeta carries a
-`value_set_id` or `classification_id` under the chosen register are
-tagged in the inspector with the classification short_name (e.g.
-`SUN2020-GRUPP`) or a bare `✓`, so the user can distinguish
-regmeta-asserted typing from name-pattern fallbacks.
-
-Inputs the user can give at the register-group menu:
-
-- `[enter]` / `[a]` — accept all auto-classifications
-- `[number]` — inspect/edit one register group (override register,
-  override individual column types — applied to every source in the
-  group)
-- `[q]` — abort without writing
-
-Inside a group, register changes re-run `build_config` and re-query
-regmeta to refresh the inspector's column tags under the new register.
-Column-type overrides accumulate (and render with a trailing `*` so a
-second pass shows what's been touched) and are applied once at write
-time. The inspector also surfaces a **panel candidate** per group
-when the auto-detector can shape one (≥ 2 sources, every name
-carries a year suffix, and at least one shared id-typed column →
-file-members; or a singleton with an `AR`/`INDATUM`/`year`/`period`
-column → column-member). Candidates with an unambiguous panel_key
-auto-apply up front; the inspector's `[p]` lets the user keep,
-remove, or edit the panel — including a member subset picker (drop
-sources that don't belong, add sources outside the auto-detected set
-either as a literal-period file-member or a time_key column-member).
-After the group menu, two post-passes still run: per-column flips
-for `opaque` columns whose names suggest categorical/numeric
-(`*_kod`, `*_typ`, trailing digits — capped at 10 prompts); and an
-optional `suppress_k` walkthrough. Edits operate on the in-memory
-`build_config` payload; `write_config` runs once at the end so
-cancellation leaves no partial files.
-
-Why per-register-group rather than one global register: most MONA
-studies pull data from several registers at once (Education + LISA +
-RTB + …). The old "one register for the whole project" prompt forced
-the user to pick one and silently dropped the others into the
-name-pattern fallback. The per-group flow lets each group carry its
-own register via `register_per_source`, batches DB queries so one
-`_regmeta_lookup` call covers every source under that register, and
-degrades gracefully when regmeta isn't reachable (every group becomes
-`register_id=None` and the user reviews by hand from the inspector).
-
-The generate interview prompts for `seed`, `sample_pct`,
-regmeta-enrichment toggle, register filter (only when regmeta is on),
-output dir, and stale-file handling (only when the output dir already
-contains files). Invalid input re-prompts in place. `--force` accepts
-all defaults and skips every prompt.
-
-Subcommand usage (`mock-data-wizard build-bundle`, `configure`,
-`generate`, …) is unchanged. Non-TTY contexts (pipes, redirected stderr)
-or `--no-interactive` fall back to printing `--help`.
+The generate command exposes `seed`, `sample-pct`, regmeta-enrichment
+toggle, register filter (only when regmeta is on), output dir, and
+stale-file handling. Pass `--yes` to skip prompts and `--force` to
+delete stale files instead of warning-and-keeping them.
 
 ## MONA Python runtime (probed 2026-04-25 on project P1105)
 
@@ -157,7 +97,7 @@ switch the diagnostic strategy:
   `/dev/null`, including `os.dup2` over fd 1/fd 2 so C-extension
   output can't slip through. On non-MBS hosts the console is left
   alone (interactive use). On a successful run, the only artefact on
-  disk is `mdw_step3_stats.json`.
+  disk is `mock_data_stats.json`.
 - **`DEBUG=True`**: a single combined log file
   `mdw_log_<HOST>_<TS>.txt` is opened line-buffered and used for
   everything — boot trace, our `logging.FileHandler`, and (via
@@ -196,7 +136,7 @@ stricter than what's actually enforced. Verified directly:
 - **Non-ASCII filenames** can be created on the home share.
 - **cwd at batch start is the user's home share** (`\\micro.intra\
   mydocs\...\InBox`, ~250 MB free) — the script must never depend on
-  cwd for output. `mdw_step3_stats.json` is small enough to live next to the
+  cwd for output. `mock_data_stats.json` is small enough to live next to the
   script; everything else (DuckDB spill especially) goes to
   `C:\Windows\TEMP`.
 - **`locale.getpreferredencoding()` is `cp1252`** — pass `encoding=`
@@ -242,7 +182,7 @@ pattern. For each table/file, the discoverer pulls `COUNT(*)` plus
 column metadata from `INFORMATION_SCHEMA.COLUMNS` (SQL) or DuckDB
 `DESCRIBE` (files). No row-level data is read.
 
-Output is `mdw_step1_discovery.json`:
+Output is `mock_data_discovery.json`:
 
 ```json
 {
@@ -263,16 +203,16 @@ Output is `mdw_step1_discovery.json`:
 ```
 
 Discover passes through the same `scan.write_export` PII scanner as
-`mdw_step3_stats.json` — column names and `sql_type` strings are unlikely to
+`mock_data_stats.json` — column names and `sql_type` strings are unlikely to
 contain personnummer, but defense-in-depth is cheap.
 
 ### Extract mode (`MODE = "extract"`)
 
-The bundle's second MONA trip. Requires `mdw_step2_config.json` next to
+The bundle's second MONA trip. Requires `mock_data_config.json` next to
 the bundle. Source filtering is **strict** here — `sql_source` must
 declare `tables=`, `pattern=`, or `all=True`; the permissive
 unfiltered mode is discover-only. Every column the source yields must
-have a type override in `mdw_step2_config.json`; an unconfigured column
+have a type override in `mock_data_config.json`; an unconfigured column
 errors out (it would have to fall back to a data-driven classifier
 pass, which this mode explicitly does not have).
 
@@ -310,20 +250,21 @@ which is the disclosure-relevant denominator. A `where` that narrows
 to a handful of individuals is exactly the kind of risk
 SMALL_POP_MULT × SUPPRESS_K is meant to flag.
 
-The clause is recorded in `source_detail.where` in `mdw_step3_stats.json` so the
+The clause is recorded in `source_detail.where` in `mock_data_stats.json` so the
 downstream `generate` step can echo it (e.g., apply the same year
 filter to the mock data range).
 
 ### Configure classifier priority
 
-`configure` walks each column from `mdw_step1_discovery.json` and assigns one of
+`configure` walks each column from `mock_data_discovery.json` and assigns one of
 the five types via this chain (first match wins):
 
 1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
    can't tell a BIGINT identifier from a BIGINT measure; the name
    has to.
-2. **Regmeta evidence** (only when `--register` is supplied) — joining
-   `variable_alias` → `variable_instance` for the named register:
+2. **Regmeta evidence** (only when the source's group has a register
+   assigned — auto-detected at init or chosen via the editor) — joining
+   `variable_alias` → `variable_instance` for that register:
    - non-null `value_set_id` *or* non-null `classification_id`
      → `categorical` (SCB enumerated codes / shared classification)
    - `datatyp` ∈ {int, decimal, ...} → `numeric`
@@ -346,9 +287,9 @@ the five types via this chain (first match wins):
    the data — no separate value-peeking pass at discover time).
 5. **Fallthrough** — `opaque` (we don't model the value
    distribution; record length stats and emit placeholders). The
-   interactive inspector surfaces these for manual review (regmeta
-   cell is blank, type shows `opaque`); the user overrides via the
-   inspector or directly in `mdw_step2_config.json`.
+   editor surfaces these via `ColumnInfo.current_type == "opaque"`;
+   the user overrides via `set_column_type` or by hand-editing
+   `mock_data_config.json`.
 
 The chain deliberately gives regmeta authority over names for
 categorical detection but not over `is_known_id`: regmeta has no
@@ -359,52 +300,53 @@ once regmeta's `value_set` schema made these signals authoritative —
 common Swedish stems (`land`, `civil`, `medb`, ...) carry too much
 false-positive risk for a name-pattern guesser to be a net win.
 
-### Per-column type config via `mdw_step2_config.json`
+### Per-column type config via `mock_data_config.json`
 
-Authored by `mock-data-wizard configure` from a `mdw_step1_discovery.json` and
-uploaded next to the bundle. Extract mode is strict: every column on
-every source must carry a type entry, the schema is validated on load,
-and typos error out instead of getting silently dropped.
+Authored by `mock_data_wizard.editor.init_if_missing` from a
+`mock_data_discovery.json` and uploaded next to the bundle. Extract
+mode is strict: every column on every source must carry a type entry,
+the schema is validated on load, and typos error out instead of
+getting silently dropped.
 
 ```json
 {
-  "contract_version": "mdw-config-2.0.0",
+  "contract_version": "mdw-config-3.0.0",
+  "discover_hash": "<sha256>",
   "column_types": {
-    "Population_PersonNr_*": {
+    "Population_PersonNr_2018": {
       "FelPersonNr": {"type": "opaque"},
       "BirthDate": {"type": "date", "date_format": "%Y%m%d"},
       "Salary": {"type": "numeric", "numeric_subtype": "integer"}
     },
-    "Individ_*": {
+    "Individ_2018": {
       "Distriktskod": {"type": "opaque"}
     }
   },
   "column_options": {
-    "Population_*": {
+    "Population_PersonNr_2018": {
       "Salary": {"suppress_k": 20}
     }
   },
   "sources": {
-    "Individ_2018": {"year": 2018},
-    "Individ_2019": {"year": 2019}
-  }
+    "Individ_2018": {"year": 2018, "register": "LISA"},
+    "Individ_2019": {"year": 2019, "register": "LISA"}
+  },
+  "manual_columns": [["Population_PersonNr_2018", "FelPersonNr"]]
 }
 ```
 
-- Table-glob keys use `fnmatchcase` semantics. Multiple globs may
-  match a `source_name`; **insertion order matters and last match
-  wins**. List broad globs first (`lisa_*`) and specific overrides
-  below them (`lisa_2018`). The same precedence applies in both
-  `column_types` and `column_options`.
+- Keys in `column_types`, `column_options`, and `sources` are exact
+  `source_name` matches. The 2.0.0 `fnmatchcase` glob form was
+  dropped in 3.0.0 — with the editor API in place, globs are
+  redundant noise the editor would silently flatten on first edit
+  anyway. N exact entries is what the editor produces and the
+  bundle parser consumes.
 - Each `column_types` entry's `type` is required and must be one of
   `id`, `categorical`, `numeric`, `opaque`, `date`. Inline
   subtype/format hints are optional and only valid for the matching
   type. When *any* inline hint is supplied, the bundle skips the
   per-column sample query for that column entirely — that is the
   perf win the override is for.
-- Each output column carries `source_of_type: "override"` so
-  downstream consumers can audit that every column went through the
-  config — the extract path has no auto-classifier fallback.
 - `column_options` is a separate namespace reserved for non-type
   overrides (e.g. `suppress_k` for disclosure-control hardening).
   Validated here; consumed in `summarize`. Each option key is
@@ -413,18 +355,220 @@ and typos error out instead of getting silently dropped.
   `SUPPRESS_K` — overrides may only *raise* the disclosure-control
   threshold for a column, never lower it. A typo'd `0` would
   otherwise turn the override into a fail-open path.
-- `sources` is a third namespace, keyed by *exact source name* (no
-  glob — year is per-source, not per-source-class). Currently only
-  `year`; populated by the configurer from a 4-digit name regex and
-  editable to fix mis-detections. An explicit `"year": null`
-  suppresses the regex fallback (the user is asserting "no year").
-  Read by `enrich.py` to bias CVID picking toward the right register
-  version (see CVID picker tier 1).
+- `sources[name]` carries `year` and `register`. `year` is populated
+  by the configurer from a 4-digit name regex; an explicit
+  `"year": null` suppresses the regex fallback (the user is asserting
+  "no year"). Read by `enrich.py` to bias CVID picking toward the
+  right register version (see CVID picker tier 1). `register`
+  records which register's regmeta evidence drove auto-classification
+  for the source; persisted so reopening the editor restores the
+  context, and so the file documents itself.
+- `discover_hash` is sha256 of the discover payload's
+  `(source_name, [(col_name, sql_type), ...])` tuples (sorted on
+  both axes for determinism). `row_count`, `nullable`, and
+  `source_detail` are deliberately excluded: they shift between
+  MONA runs without invalidating type overrides, and including them
+  would fire spurious drift warnings. The editor recomputes the
+  hash on every read and surfaces a `discover_drift` warning when
+  it differs from what's stored.
+- `manual_columns` records `[source_name, column_name]` pairs the
+  user explicitly overrode. Re-classification operations (e.g.
+  changing a group's register) skip these by default. Kept as a
+  side namespace rather than a per-column `provenance` field so the
+  bundle's strict parser doesn't need to know about it; the bundle
+  ignores `manual_columns` entirely.
 
 Strict validation: unknown types, unknown option keys, duplicate JSON
 keys, schema-version mismatches, and stray fields all raise. The
 configurer file is meant to be hand-edited, so silent drops would
 mask user typos.
+
+The auto-classifier runs once when `mock_data_config.json` doesn't
+exist. After that, every load reads the JSON as-is — re-running
+discover does *not* re-trigger classification. The user (or UI)
+re-runs it explicitly: per-group via `editor.set_group_register`
+(skips `manual_columns` by default), or whole-project via
+`editor.init_if_missing(overwrite=True)`, which wipes the JSON and
+re-runs from scratch. The classifier is a starting point, not an
+authority that gets to second-guess the user on every reload.
+
+## Editor API
+
+The `mock_data_wizard.editor` module exposes a stateless, autosaving
+local API for authoring and mutating `mock_data_config.json`. Pure
+functions over `project_dir` plus the regmeta DB; no module-level
+session state. UI tooling (browser, TUI, etc.) lives outside this
+package and calls this API directly.
+
+### Design principles
+
+1. **Single source of truth.** `mock_data_config.json` is the source
+   of truth for configuration. Every API call builds, reads,
+   validates, mutates and writes this file.
+2. **Autosave and crash safety.** Every mutation writes the new
+   configuration atomically (`tmp` file + `os.replace`) and returns a
+   fresh snapshot. There is no explicit "save" operation.
+3. **Concurrency via revision tokens.** Each `StateSnapshot` carries
+   a `snapshot_version` token (SHA-256 of the on-disk config bytes),
+   *not* stored in the JSON. Mutating functions require an
+   `expected_version` argument; if the on-disk file's current token
+   differs (another writer or a manual `vim` edit), the function
+   raises `StaleStateError` without writing. Each mutation also holds
+   an exclusive `fcntl.flock` on a `.mock_data_config.lock` sidecar
+   for the read+write window, so two in-flight mutators serialise
+   instead of both passing the version check and clobbering each
+   other's writes.
+4. **Manual overrides preserved.** A top-level `manual_columns` array
+   records `(source, column)` pairs the user explicitly overrode.
+   Re-classification operations (e.g. `set_group_register`) skip
+   those entries by default. Provenance lives in this side namespace
+   so the bundle's strict parser doesn't need to know about it.
+5. **Stable discovery hash.** A `discover_hash` field summarises the
+   discover payload (sorted sources × sorted columns of
+   `(name, sql_type)` tuples). The editor recomputes the hash on
+   every read and surfaces a `discover_drift` warning when it differs
+   from the stored value.
+6. **Grouping rule.** Sources are grouped by their current `register`
+   field, not by schema fingerprint:
+   - All sources sharing a non-null `register` form one group, with
+     `group_id = "reg-<register_id>"`.
+   - Each source with `register == null` forms its own singleton
+     group, `group_id = "noreg-<source_name>"`. Unassigned sources
+     are heterogeneous and shouldn't share a reclassification action.
+7. **Dense classification.** Every column on every source carries a
+   type entry after `init_if_missing` (defaulting to `opaque`). The
+   bundle's extract mode is strict — a sparse config has no use.
+8. **Inline subtype/format hints** (`id_subtype`, `numeric_subtype`,
+   `date_format`) are an extract-time optimization (skip the
+   per-column sample query on MONA) *and* a manual-override hatch
+   for cases where sampling is ambiguous (e.g. `01-02-2018` parses
+   two ways) or impossible (all-NULL columns). The classifier
+   populates them at `init_if_missing` when it can derive them
+   locally; the bundle uses them when present and falls back to
+   sampling when absent.
+
+### Data models
+
+`StateSnapshot` is the frozen return value of `get_state` and every
+mutator:
+
+| Field | Description |
+| --- | --- |
+| `config` | Parsed `MDWConfig` — the raw configuration data. |
+| `groups` | Tuple of `RegisterGroupView` — one per register-group. |
+| `discover` | The discovery payload, if loaded, for client use. |
+| `warnings` | Tuple of `EditorWarning(code, message, context)`. Codes include `discover_drift`. |
+| `snapshot_version` | Opaque token for the current config version. Pass back as `expected_version` on the next mutation. Not stored in the JSON. |
+
+`RegisterGroupView` exposes `group_id`, `register_id`, `register_name`,
+`confidence` (`"high"` / `"partial"` / `"none"`), `sources`,
+`columns_by_source` (mapping to tuples of `ColumnInfo`),
+`schema_variants` (count of distinct column schemas in the group;
+`>1` means drift), and `panel_candidate` (a `PanelCandidate` from
+`panels.py` or `None`).
+
+`ColumnInfo` exposes `name`, `sql_type`, `current_type`, `hint`
+(inline `id_subtype` / `numeric_subtype` / `date_format` projected
+into a dict, or `None`), `provenance` (`"manual"` / `"auto"`, derived
+from `manual_columns`), `regmeta_signal`, and `regmeta_implied_type`.
+
+### API functions
+
+All functions live in `mock_data_wizard.editor` and take a
+`project_dir: Path` plus an optional `db_path: Path | None` to
+override the regmeta DB location.
+
+**Reading and initialization.**
+
+- `get_state(project_dir, *, discover_path=None, db_path=None)` —
+  reads the config, returns a snapshot. Raises
+  `NotInitializedError` when the config is absent. When
+  `discover_path` is None, defaults to
+  `project_dir / mock_data_discovery.json`; if that's also absent,
+  succeeds with empty `discover` and skips drift detection.
+- `init_if_missing(project_dir, discover_path, *, db_path=None,
+  overwrite=False)` — creates an initial config from a discover
+  payload. Idempotent unless `overwrite=True`. Auto-detects each
+  source's register, runs the per-group classifier, persists year +
+  register, and surfaces unambiguous panel candidates directly into
+  `panels`.
+
+**Mutators** (all require `expected_version: str`).
+
+- `set_column_type(project_dir, source_name, column_name, new_type, *,
+  expected_version, hint=UNCHANGED, db_path=None)` — sets the type of
+  one column. `(source_name, column_name)` must exist in the discover
+  payload; unknown pairs raise `ValidationError`. Adds the pair to
+  `manual_columns`. `hint` semantics: `UNCHANGED` preserves any
+  existing hint that's still valid for `new_type` (silently dropped
+  otherwise); `None` clears any hint; a dict sets it (validated
+  against `INLINE_HINT_KEYS[new_type]`).
+- `set_group_register(project_dir, group_id, register, *,
+  expected_version, db_path=None, reclassify_manual=False)` —
+  assigns or clears a register for a group, then re-classifies. With
+  `reclassify_manual=False` (default), columns in `manual_columns`
+  are preserved; with `reclassify_manual=True`, all columns are
+  re-classified and the affected entries are removed from
+  `manual_columns`. **When a column's type changes during
+  reclassification, its `column_options` entry is dropped** —
+  options can be type-specific. Note that affected sources'
+  `group_id`s change (since they derive from `register`); clients
+  re-fetch.
+- `set_source_metadata(project_dir, source_name, *, expected_version,
+  year=UNCHANGED, db_path=None)` — modifies per-source metadata.
+  Currently scoped to `year`; register changes go through
+  `set_group_register`.
+- `set_column_options(project_dir, source_name, column_name, options,
+  *, expected_version, db_path=None)` — sets or clears column
+  options. Keys validated against `VALID_OPTION_KEYS`; passing
+  `options=None` clears all options for the column.
+- `put_panel(project_dir, panel, *, expected_version, db_path=None)`
+  — adds or replaces a panel by `panel_id`. The full payload is
+  re-validated via `parse_config` so source-collision and
+  panel-key invariants surface as `ValidationError`.
+- `remove_panel(project_dir, panel_id, *, expected_version,
+  db_path=None)` — removes a panel by id. No-op when absent.
+
+**Helpers** (no `expected_version`; pure relative to regmeta).
+
+- `list_registers(*, db_path=None) -> list[Register]` — returns `[]`
+  when regmeta is unavailable.
+- `resolve_register(name_or_id, *, db_path=None) -> Register | None`
+  — returns `None` when regmeta is unavailable, the input doesn't
+  match, or the match is ambiguous.
+- `detect_year_from_source_name(source_name) -> int | None` — naive
+  4-digit-year search, exposed for UI affordances.
+- `detect_panel_member_kind(source_name, columns) ->
+  PanelMemberSuggestion` — single-source panel-member shape inference.
+
+The editor re-exports `Panel`, `PanelMember`, `Register`, and
+`PanelMemberSuggestion` from their defining modules, plus the
+constants `VALID_COLUMN_TYPES`, `VALID_OPTION_KEYS`,
+`VALID_ID_SUBTYPES`, `VALID_NUMERIC_SUBTYPES`, `INLINE_HINT_KEYS`,
+and `GLOBAL_SUPPRESS_K`.
+
+### Errors
+
+- `NotInitializedError` — `get_state` when the config file is absent.
+- `ValidationError` — invalid input (unknown type, unknown option
+  key, unresolved register, unknown source/column).
+- `StaleStateError` — `expected_version` mismatch. Clients
+  re-fetch via `get_state` and retry.
+
+### Performance expectations
+
+The API is designed for local operation on projects with up to
+hundreds of sources and thousands of columns. Estimated worst-case
+timings on typical hardware:
+
+| Operation | Disk I/O | Regmeta DB | Target total |
+| --- | --- | --- | --- |
+| `get_state` | 1 read | 0 queries (lookups via cached signals) | <50 ms |
+| `set_column_type` | 1 read + 1 write | 0 queries | <100 ms |
+| `set_group_register` | 1 read + 1 write | batched per-register query | <300 ms |
+
+If classification on large projects proves too slow, a regmeta cache
+keyed by `(register_id, db_mtime)` may be introduced.
 
 ### File materialisation threshold
 
@@ -489,7 +633,7 @@ will hit that cap.
 `SUPPRESS_K` fold into a single `_other` bucket. The `_other` bucket
 itself is k-anonymized: when `0 < other < SUPPRESS_K`, the bucket is
 dropped entirely (consumers default its weight to 0). Override
-per-column via `mdw_step2_config.json`'s `column_options[<glob>][<col>]
+per-column via `mock_data_config.json`'s `column_options[<glob>][<col>]
 .suppress_k` — values must be ≥ the global `SUPPRESS_K`, so the
 override can only *raise* the threshold, never lower it.
 
@@ -503,9 +647,9 @@ that buys nothing because the sample is already on the wire.
 ### Pre-export PII scanner
 
 `scan.write_export(path, payload)` is the *only* code path that writes
-files leaving the bundle's `output_dir`: `mdw_step3_stats.json` (extract mode)
-and `mdw_step1_discovery.json` (discover mode) both go through it.
-`mdw_step2_config.json` is an *input* and isn't covered by this scanner.
+files leaving the bundle's `output_dir`: `mock_data_stats.json` (extract mode)
+and `mock_data_discovery.json` (discover mode) both go through it.
+`mock_data_config.json` is an *input* and isn't covered by this scanner.
 The scanner is defense-in-depth on top of the per-type branches in
 `summarize.py`, which already only emit aggregates by construction.
 It exists for the case where a misclassified column (e.g.
@@ -600,7 +744,7 @@ shared_tokens, prefix_hits, overlap, code_count)`. Earlier tiers
 dominate; later fields break ties within a tier.
 
 1. **Year match.** When both the source carries a `year` (set in
-   `source_detail` from a name regex or `mdw_step2_config.json`'s `sources`
+   `source_detail` from a name regex or `mock_data_config.json`'s `sources`
    block) and the CVID's `register_version.registerversionnamn` parses
    as a year, prefer the CVID whose year is closest. Exact match
    beats "close"; "close" beats CVIDs with no year info. Year ranks
@@ -643,7 +787,7 @@ coding-scheme hint, not a validation of the observed code set.
 
 Many SCB datasets have **panel structure** — the same person (or firm,
 or family) appears across multiple time periods. Mock data preserves
-this structure when the user declares panels in `mdw_step2_config.json`:
+this structure when the user declares panels in `mock_data_config.json`:
 
 ```json
 {
@@ -693,7 +837,7 @@ generator-side `panel_by_source` collision can't silently drop the
 second panel's behavior. Multi-key panels (one source, two panel_keys)
 are explicitly out of scope.
 
-`mdw_step3_stats.json` carries a top-level `panels` array that mirrors
+`mock_data_stats.json` carries a top-level `panels` array that mirrors
 the config schema, plus the per-period stats in `by_period`:
 
 ```json

@@ -1,7 +1,7 @@
 """End-to-end and unit tests for extract.py.
 
 Two top-level entry points: ``run_discover`` (metadata-only walk) and
-``run_extract_typed`` (typed pipeline against ``mdw_step2_config.json``).
+``run_extract_typed`` (typed pipeline against ``mock_data_config.json``).
 ``main`` dispatches between them via ``mode=``.
 """
 
@@ -34,7 +34,7 @@ def test_run_discover_file_source_writes_metadata(tmp_path: Path):
         tmp_path / "people.csv",
         "lopnr,age,kommun\n1,25,0114\n2,30,0114\n3,42,0115\n",
     )
-    out = tmp_path / "mdw_step1_discovery.json"
+    out = tmp_path / "mock_data_discovery.json"
     src = file_source(str(tmp_path), include=["people.csv"])
     result = run_discover([src], out)
 
@@ -54,7 +54,7 @@ def test_run_discover_file_source_writes_metadata(tmp_path: Path):
 
 def test_run_discover_pii_scan_passes_clean_payload(tmp_path: Path):
     _write_csv(tmp_path / "data.csv", "x,y\n1,2\n3,4\n")
-    out = tmp_path / "mdw_step1_discovery.json"
+    out = tmp_path / "mock_data_discovery.json"
     src = file_source(str(tmp_path), include=["data.csv"])
     result = run_discover([src], out)
     assert result["pii_scan"]["matches_found"] == 0
@@ -63,7 +63,7 @@ def test_run_discover_pii_scan_passes_clean_payload(tmp_path: Path):
 def test_run_discover_raises_when_no_data(tmp_path: Path):
     src = file_source(str(tmp_path), include=["nonexistent.csv"])
     with pytest.raises(RuntimeError, match="No data sources"):
-        run_discover([src], tmp_path / "mdw_step1_discovery.json")
+        run_discover([src], tmp_path / "mock_data_discovery.json")
 
 
 # -- run_extract_typed end-to-end ----------------------------------------
@@ -78,7 +78,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -90,7 +90,7 @@ def test_run_extract_typed_writes_valid_stats_json(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["people.csv"])
-    out = tmp_path / "mdw_step3_stats.json"
+    out = tmp_path / "mock_data_stats.json"
     result = run_extract_typed([src], out, config, seed=0)
 
     on_disk = json.loads(out.read_text(encoding="utf-8"))
@@ -116,7 +116,7 @@ def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
     # Missing 'age' override.
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "data.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -124,7 +124,7 @@ def test_run_extract_typed_errors_on_unconfigured_column(tmp_path: Path):
     )
     src = file_source(str(tmp_path), include=["data.csv"])
     with pytest.raises(RuntimeError, match="no type override"):
-        run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config)
+        run_extract_typed([src], tmp_path / "mock_data_stats.json", config)
 
 
 def test_run_extract_typed_records_shared_columns(tmp_path: Path):
@@ -132,7 +132,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
     _write_csv(tmp_path / "b.csv", "lopnr,sex\n1,M\n2,F\n3,M\n4,F\n5,M\n6,F\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "a.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -146,7 +146,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["a.csv", "b.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=1)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=1)
     shared = {s["column_name"]: s for s in result["shared_columns"]}
     assert "lopnr" in shared
     assert sorted(shared["lopnr"]["sources"]) == ["a.csv", "b.csv"]
@@ -155,7 +155,7 @@ def test_run_extract_typed_records_shared_columns(tmp_path: Path):
 
 
 def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
-    """End-to-end: mdw_step3_stats.json reflects the FILTERED set, not the source set."""
+    """End-to-end: mock_data_stats.json reflects the FILTERED set, not the source set."""
     _write_csv(
         tmp_path / "events.csv",
         "lopnr,ar,kommun\n"
@@ -164,7 +164,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "events.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -175,7 +175,7 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
 
     src_out = result["sources"][0]
     assert src_out["row_count"] == 5  # filtered, not 8
@@ -183,10 +183,10 @@ def test_run_extract_typed_where_narrows_row_count(tmp_path: Path):
 
 
 def test_run_extract_typed_raises_when_no_data(tmp_path: Path):
-    config = parse_config({"contract_version": "mdw-config-2.0.0", "column_types": {}})
+    config = parse_config({"contract_version": "mdw-config-3.0.0", "column_types": {}})
     src = file_source(str(tmp_path), include=["nonexistent.csv"])
     with pytest.raises(RuntimeError, match="No data sources"):
-        run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config)
+        run_extract_typed([src], tmp_path / "mock_data_stats.json", config)
 
 
 # -- _shared_columns -----------------------------------------------------
@@ -238,14 +238,14 @@ def test_main_discover_writes_discover_json(tmp_path: Path):
     src = file_source(str(tmp_path), include=["x.csv"])
     out = main([src], output_dir=tmp_path, mode="discover")
     assert out is not None
-    assert (tmp_path / "mdw_step1_discovery.json").exists()
+    assert (tmp_path / "mock_data_discovery.json").exists()
     assert out["contract_version"] == "discover-1.0.0"
 
 
 def test_main_extract_requires_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "x.csv", "a\n1\n")
     src = file_source(str(tmp_path), include=["x.csv"])
-    with pytest.raises(RuntimeError, match="mdw_step2_config.json"):
+    with pytest.raises(RuntimeError, match="mock_data_config.json"):
         main([src], output_dir=tmp_path, mode="extract")
 
 
@@ -254,10 +254,10 @@ def test_main_extract_runs_typed_pipeline(tmp_path: Path):
         tmp_path / "data.csv",
         "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
     )
-    (tmp_path / "mdw_step2_config.json").write_text(
+    (tmp_path / "mock_data_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-2.0.0",
+                "contract_version": "mdw-config-3.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -289,10 +289,10 @@ def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
         tmp_path / "data.csv",
         "lopnr,age\n1,20\n2,30\n3,40\n4,50\n5,60\n6,70\n",
     )
-    (tmp_path / "mdw_step2_config.json").write_text(
+    (tmp_path / "mock_data_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-2.0.0",
+                "contract_version": "mdw-config-3.0.0",
                 "column_types": {
                     "data.csv": {
                         "lopnr": {"type": "id"},
@@ -317,7 +317,7 @@ def test_classifier_seed_is_threaded_through_main(tmp_path: Path):
 def test_table_and_view_paths_produce_identical_stats(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
-    """#22: VIEW vs TABLE materialisation must yield identical mdw_step3_stats.json
+    """#22: VIEW vs TABLE materialisation must yield identical mock_data_stats.json
     for the same fixture (only `generated_at` is allowed to differ)."""
     _write_csv(
         tmp_path / "people.csv",
@@ -327,7 +327,7 @@ def test_table_and_view_paths_produce_identical_stats(
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "people.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -353,7 +353,7 @@ def test_table_and_view_paths_produce_identical_stats(
     assert table_result == view_result
 
 
-# -- mdw_step2_config.json overrides (#19) -------------------------------------
+# -- mock_data_config.json overrides (#19) -------------------------------------
 
 
 def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
@@ -366,7 +366,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "data.csv": {
                     "name": {"type": "id", "id_subtype": "string"},
@@ -386,7 +386,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     monkeypatch.setattr(extract, "_sample_values", spy)
 
     src = file_source(str(tmp_path), include=["data.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     cols = {c["column_name"]: c for c in result["sources"][0]["columns"]}
     assert cols["name"]["stats"]["id_subtype"] == "string"
     assert cols["lopnr"]["stats"]["id_subtype"] == "integer"
@@ -402,7 +402,7 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "data.csv": {
                     "lopnr": {"type": "id"},
@@ -422,7 +422,7 @@ def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkey
     monkeypatch.setattr(extract, "_sample_values", spy)
 
     src = file_source(str(tmp_path), include=["data.csv"])
-    run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     assert "name" in sample_calls
     assert "lopnr" in sample_calls
 
@@ -434,7 +434,7 @@ def test_run_discover_emits_year_when_detectable(tmp_path: Path):
     """Discover detects year from filename and stamps it in source_detail."""
     _write_csv(tmp_path / "lisa_2018.csv", "x,y\n1,2\n3,4\n")
     src = file_source(str(tmp_path), include=["lisa_2018.csv"])
-    result = run_discover([src], tmp_path / "mdw_step1_discovery.json")
+    result = run_discover([src], tmp_path / "mock_data_discovery.json")
     detail = result["sources"][0]["source_detail"]
     assert detail["year"] == 2018
 
@@ -442,12 +442,12 @@ def test_run_discover_emits_year_when_detectable(tmp_path: Path):
 def test_run_discover_omits_year_when_none_detectable(tmp_path: Path):
     _write_csv(tmp_path / "people.csv", "x\n1\n2\n")
     src = file_source(str(tmp_path), include=["people.csv"])
-    result = run_discover([src], tmp_path / "mdw_step1_discovery.json")
+    result = run_discover([src], tmp_path / "mock_data_discovery.json")
     assert "year" not in result["sources"][0]["source_detail"]
 
 
 def test_run_extract_typed_emits_year_in_source_detail(tmp_path: Path):
-    """Extract carries the year through to mdw_step3_stats.json -- regex fallback
+    """Extract carries the year through to mock_data_stats.json -- regex fallback
     when no config override is supplied."""
     _write_csv(
         tmp_path / "rtb2019.csv",
@@ -455,14 +455,14 @@ def test_run_extract_typed_emits_year_in_source_detail(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "rtb2019.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
         }
     )
     src = file_source(str(tmp_path), include=["rtb2019.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     detail = result["sources"][0]["source_detail"]
     assert detail["year"] == 2019
 
@@ -476,7 +476,7 @@ def test_run_extract_typed_uses_config_year_over_regex(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "weird_2030.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -484,7 +484,7 @@ def test_run_extract_typed_uses_config_year_over_regex(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["weird_2030.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     assert result["sources"][0]["source_detail"]["year"] == 2025
 
 
@@ -496,7 +496,7 @@ def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "name_2024.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
             },
@@ -504,8 +504,8 @@ def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["name_2024.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
-    # Explicit null in mdw_step2_config.json overrides the regex (2024).
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
+    # Explicit null in mock_data_config.json overrides the regex (2024).
     detail = result["sources"][0]["source_detail"]
     assert "year" not in detail
 
@@ -526,8 +526,11 @@ def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
-            "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
+            "contract_version": "mdw-config-3.0.0",
+            "column_types": {
+                "lisa_2018.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}},
+                "lisa_2019.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}},
+            },
             "panels": [
                 {
                     "panel_id": "lisa",
@@ -541,7 +544,7 @@ def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["lisa_2018.csv", "lisa_2019.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     panels = result["panels"]
     assert len(panels) == 1
     p = panels[0]
@@ -569,7 +572,7 @@ def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
     _write_csv(tmp_path / "swecov.csv", "lopnr,ar\n" + "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -586,7 +589,7 @@ def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["swecov.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     panels = result["panels"]
     assert len(panels) == 1
     p = panels[0]
@@ -608,7 +611,7 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
     _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -625,7 +628,7 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["swecov.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     p = result["panels"][0]
     periods = {bp["period"] for bp in p["by_period"]}
     assert periods == {2019}
@@ -634,7 +637,7 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
 def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
     """A column-member keyed by quarter / month strings (e.g.
     ``"2019-Q1"``) must not crash extract. Periods are preserved as
-    strings in mdw_step3_stats.json.
+    strings in mock_data_stats.json.
     """
     rows = ["lopnr,quarter"]
     for q in ("2019-Q1", "2019-Q2"):
@@ -642,7 +645,7 @@ def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
     _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
                 "swecov.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
@@ -659,7 +662,7 @@ def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["swecov.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     p = result["panels"][0]
     periods = {bp["period"] for bp in p["by_period"]}
     assert periods == {"2019-Q1", "2019-Q2"}
@@ -678,12 +681,15 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {
-                "*": {
+                "tax_history.csv": {
                     "lopnr": {"type": "id", "id_subtype": "integer"},
                     "ar": {"type": "numeric", "numeric_subtype": "integer"},
-                }
+                },
+                "tax_2024.csv": {
+                    "lopnr": {"type": "id", "id_subtype": "integer"},
+                },
             },
             "panels": [
                 {
@@ -698,7 +704,7 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["tax_history.csv", "tax_2024.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     p = result["panels"][0]
     by_period = {bp["period"]: bp for bp in p["by_period"]}
     assert set(by_period) == {2022, 2023, 2024}
@@ -718,8 +724,11 @@ def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
     )
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
-            "column_types": {"*": {"lopnr": {"type": "id", "id_subtype": "integer"}}},
+            "contract_version": "mdw-config-3.0.0",
+            "column_types": {
+                "lisa_2018.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}},
+                "lisa_2019.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}},
+            },
             "panels": [
                 {
                     "panel_id": "lisa",
@@ -735,7 +744,7 @@ def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
     )
     src = file_source(str(tmp_path), include=["lisa_2018.csv"])
     with pytest.raises(RuntimeError, match="no member sources matched"):
-        run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+        run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
 
 
 def test_coerce_period_normalises_value():
@@ -753,12 +762,12 @@ def test_run_extract_typed_panels_block_empty_when_no_panels_declared(tmp_path: 
     _write_csv(tmp_path / "x.csv", "a\n" + "\n".join(str(i) for i in range(20)) + "\n")
     config = parse_config(
         {
-            "contract_version": "mdw-config-2.0.0",
+            "contract_version": "mdw-config-3.0.0",
             "column_types": {"x.csv": {"a": {"type": "id", "id_subtype": "integer"}}},
         }
     )
     src = file_source(str(tmp_path), include=["x.csv"])
-    result = run_extract_typed([src], tmp_path / "mdw_step3_stats.json", config, seed=0)
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
     assert result["panels"] == []
 
 
@@ -774,10 +783,10 @@ def test_resolve_year_falls_back_to_name_regex():
 
 def test_main_raises_on_invalid_mdw_config(tmp_path: Path):
     _write_csv(tmp_path / "data.csv", "x\n1\n")
-    (tmp_path / "mdw_step2_config.json").write_text(
+    (tmp_path / "mock_data_config.json").write_text(
         json.dumps(
             {
-                "contract_version": "mdw-config-2.0.0",
+                "contract_version": "mdw-config-3.0.0",
                 "column_types": {"data.csv": {"x": {"type": "blob"}}},
             }
         ),

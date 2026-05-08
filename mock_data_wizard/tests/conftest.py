@@ -316,21 +316,21 @@ MULTI_FILE_STATS = {
 
 @pytest.fixture
 def stats_path(tmp_path: Path) -> Path:
-    p = tmp_path / "mdw_step3_stats.json"
+    p = tmp_path / "mock_data_stats.json"
     p.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")
     return p
 
 
 @pytest.fixture
 def spine_stats_path(tmp_path: Path) -> Path:
-    p = tmp_path / "mdw_step3_stats.json"
+    p = tmp_path / "mock_data_stats.json"
     p.write_text(json.dumps(SPINE_STATS), encoding="utf-8")
     return p
 
 
 @pytest.fixture
 def multi_file_stats_path(tmp_path: Path) -> Path:
-    p = tmp_path / "mdw_step3_stats.json"
+    p = tmp_path / "mock_data_stats.json"
     p.write_text(json.dumps(MULTI_FILE_STATS), encoding="utf-8")
     return p
 

@@ -1,41 +1,50 @@
 """User-supplied configuration for extract.
 
-Reads ``mdw_step2_config.json`` next to ``mdw_step3_stats.json``. Three concerns:
+Reads ``mock_data_config.json`` next to ``mock_data_stats.json``. Schema
+version 3.0.0. Five concerns:
 
-- ``column_types``: per-column type overrides for the classifier.
-  Each entry is keyed by table-glob -> column-name -> override dict
+- ``column_types``: per-column type overrides for the classifier. Keyed
+  by exact ``source_name`` -> column-name -> override dict
   ``{"type": ..., "id_subtype": ..., "numeric_subtype": ...,
   "date_format": ...}``. Inline subtype/format hints let the bundle
-  skip the sample query for that column entirely.
+  skip the per-column sample query at extract time and serve as a
+  manual-override hatch when sampling would be ambiguous (e.g.
+  ``01-02-2018`` could parse two ways) or impossible (all-NULL
+  columns).
 - ``column_options``: per-column option overrides for downstream
   consumers (``suppress_k`` on the disclosure-control side). Validated
-  here, consumed in ``summarize.py``. Each option key is checked
-  against ``VALID_OPTION_KEYS`` and the option's own invariants;
-  ``suppress_k`` in particular is floored at the global ``SUPPRESS_K``
-  so an override can only *raise* the disclosure-control threshold
-  for a column, never lower it (a typo'd ``0`` would otherwise turn
-  the override into a fail-open path).
-- ``sources``: per-source metadata, keyed by exact source name.
-  Currently carries ``year`` for year-aware CVID selection in
-  ``enrich.py``. The configurer seeds entries from a 4-digit name
-  regex; users can correct mis-detections by editing the file.
+  here, consumed in ``summarize.py``. ``suppress_k`` is floored at the
+  global ``SUPPRESS_K`` so an override can only *raise* the
+  disclosure-control threshold for a column, never lower it (a typo'd
+  ``0`` would otherwise turn the override into a fail-open path).
+- ``sources``: per-source metadata, keyed by exact source name. Carries
+  ``year`` (year-aware CVID selection in ``enrich.py``) and
+  ``register`` (which register's regmeta evidence drove this source's
+  classification — persisted so reopening the editor restores
+  context).
+- ``manual_columns``: top-level array of ``[source, column]`` pairs the
+  user explicitly overrode. Re-classification operations (e.g.
+  changing a group's register) skip these by default. Side namespace
+  rather than a per-column ``provenance`` field so the bundle's
+  strict parser doesn't need to know about it; the bundle ignores
+  ``manual_columns`` entirely.
+- ``discover_hash``: SHA-256 of the discover payload's
+  ``(source_name, [(col, sql_type), ...])`` tuples (sorted on both
+  axes for determinism). The editor recomputes the hash on every
+  read and surfaces a ``discover_drift`` warning when it differs.
 
-The three namespaces are separate on purpose: type, option, and
-source-level metadata are independent concerns and mixing them in
-one entry would cross-pollute the schema.
+Version 3.0.0 dropped ``fnmatchcase`` glob keys in favour of exact
+``source_name`` matches. With the editor producing N exact entries on
+every save, globs were redundant noise. **No backwards compatibility**
+— pre-3.0.0 files raise on read with a regenerate hint.
 
-Order matters in both namespaces: when multiple table-globs match a
-source, **last match wins**. List broad globs first (``lisa_*``) and
-specific overrides below them (``lisa_2018``).
-
-Strict by design: unknown types, duplicate keys (same string twice in
-one JSON object -- a typo footgun), and schema-version mismatches
+Strict by design: unknown types, unknown options, unknown source keys,
+duplicate JSON keys (a typo footgun), and schema-version mismatches all
 raise. Better to fail fast than silently swallow user intent.
 """
 
 from __future__ import annotations
 
-import fnmatch
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -44,8 +53,8 @@ from typing import Any
 from .classify import COLUMN_TYPES
 from .summarize import SUPPRESS_K
 
-CONFIG_FILENAME = "mdw_step2_config.json"
-SCHEMA_VERSION = "mdw-config-2.0.0"
+CONFIG_FILENAME = "mock_data_config.json"
+SCHEMA_VERSION = "mdw-config-3.0.0"
 
 VALID_ID_SUBTYPES = ("integer", "string")
 VALID_NUMERIC_SUBTYPES = ("integer", "double")
@@ -64,7 +73,7 @@ VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 
 # Per-source metadata keys recognised in `sources`. Strict: anything not
 # in this set raises at parse time so a typo can't silently no-op.
-VALID_SOURCE_KEYS: tuple[str, ...] = ("year",)
+VALID_SOURCE_KEYS: tuple[str, ...] = ("year", "register")
 
 
 @dataclass(frozen=True)
@@ -128,18 +137,23 @@ class Panel:
 @dataclass(frozen=True)
 class MDWConfig:
     contract_version: str
-    # table-glob -> column-name -> override
+    # exact source-name -> column-name -> override
     column_types: dict[str, dict[str, ColumnTypeOverride]] = field(default_factory=dict)
-    # table-glob -> column-name -> {option: value, ...} (consumed by #17)
+    # exact source-name -> column-name -> {option: value, ...}
     column_options: dict[str, dict[str, dict[str, Any]]] = field(default_factory=dict)
-    # exact source-name -> {key: value, ...} (year, ...). Exact-match only:
-    # year is a per-source fact, not a class-of-source rule, so a glob
-    # would invite confusion with the column_types/column_options globs.
+    # exact source-name -> {key: value, ...}. Carries `year` and `register`.
     sources: dict[str, dict[str, Any]] = field(default_factory=dict)
-    # Panel declarations (#23): explicit panel_id + (panel_key, time_key
-    # or member list) per panel. Out of scope for auto-detection -- the
-    # configurer surfaces candidates, the user confirms.
+    # Panel declarations: explicit panel_id + (panel_key, time_key or
+    # member list) per panel.
     panels: tuple[Panel, ...] = ()
+    # Top-level provenance: (source, column) pairs the user explicitly
+    # overrode. Re-classification skips these by default.
+    manual_columns: tuple[tuple[str, str], ...] = ()
+    # SHA-256 of the discover payload's (source, [(col, sql_type)])
+    # tuples (sorted both axes). The editor recomputes on read and
+    # warns on drift. None when the config was written without a
+    # discover payload (rare; mostly hand-edited test fixtures).
+    discover_hash: str | None = None
 
     def source_year(self, source_name: str) -> tuple[bool, int | None]:
         """Return ``(configured, year)`` for ``source_name``.
@@ -151,9 +165,8 @@ class MDWConfig:
           fallback (the user is asserting "no year for this source").
         """
         entry = self.sources.get(source_name)
-        if entry is None:
+        if entry is None or "year" not in entry:
             return (False, None)
-        # Type already validated by ``_parse_source_entry``: int or None.
         return (True, entry.get("year"))
 
     def lookup_type(
@@ -161,34 +174,19 @@ class MDWConfig:
     ) -> ColumnTypeOverride | None:
         """Return the override for ``(source_name, column_name)`` or None.
 
-        Multiple table-globs may match. JSON insertion order decides;
-        last match wins -- the entire override record is replaced (a
-        column has exactly one type, so merging fields across globs
-        doesn't make sense). List broad globs first and specific
-        overrides below them. Within a matching glob, the column name
-        is matched exactly (case-sensitive).
+        Exact ``source_name`` match (case-sensitive); the column name is
+        also matched exactly. With 3.0.0's exact-name keying the lookup
+        is a single dict access.
         """
-        match: ColumnTypeOverride | None = None
-        for glob, cols in self.column_types.items():
-            if fnmatch.fnmatchcase(source_name, glob) and column_name in cols:
-                match = cols[column_name]
-        return match
+        return self.column_types.get(source_name, {}).get(column_name)
 
     def lookup_options(self, source_name: str, column_name: str) -> dict[str, Any]:
-        """Return merged options for ``(source_name, column_name)``.
+        """Return options for ``(source_name, column_name)``.
 
-        Same last-glob-wins ordering as ``lookup_type``, but per-key:
-        non-conflicting keys from earlier matches persist, and only
-        keys present in a later matching glob are overridden. Options
-        are independent concerns (``suppress_k`` doesn't preclude any
-        future option), so merging is the natural fit -- in contrast
-        to ``lookup_type`` where the type is atomic.
+        Exact-name lookup, returning a copy so callers can't mutate the
+        stored dict. Empty when no entry exists.
         """
-        merged: dict[str, Any] = {}
-        for glob, cols in self.column_options.items():
-            if fnmatch.fnmatchcase(source_name, glob) and column_name in cols:
-                merged.update(cols[column_name])
-        return merged
+        return dict(self.column_options.get(source_name, {}).get(column_name, {}))
 
 
 def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -202,20 +200,20 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     return seen
 
 
-def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
+def _parse_override(source_name: str, col: str, raw: Any) -> ColumnTypeOverride:
     if not isinstance(raw, dict):
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}] must be an object, "
+            f"column_types[{source_name!r}][{col!r}] must be an object, "
             f"got {type(raw).__name__}"
         )
     if "type" not in raw:
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}] is missing required key 'type'"
+            f"column_types[{source_name!r}][{col!r}] is missing required key 'type'"
         )
     typ = raw["type"]
     if typ not in COLUMN_TYPES:
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}].type={typ!r}, "
+            f"column_types[{source_name!r}][{col!r}].type={typ!r}, "
             f"expected one of {COLUMN_TYPES}"
         )
 
@@ -223,20 +221,20 @@ def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
     extra = set(raw) - allowed
     if extra:
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}] has key(s) {sorted(extra)} "
+            f"column_types[{source_name!r}][{col!r}] has key(s) {sorted(extra)} "
             f"not valid for type={typ!r} (allowed: {sorted(allowed)})"
         )
 
     id_subtype = raw.get("id_subtype")
     if id_subtype is not None and id_subtype not in VALID_ID_SUBTYPES:
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}].id_subtype={id_subtype!r}, "
+            f"column_types[{source_name!r}][{col!r}].id_subtype={id_subtype!r}, "
             f"expected one of {VALID_ID_SUBTYPES}"
         )
     numeric_subtype = raw.get("numeric_subtype")
     if numeric_subtype is not None and numeric_subtype not in VALID_NUMERIC_SUBTYPES:
         raise ValueError(
-            f"column_types[{table_glob!r}][{col!r}].numeric_subtype="
+            f"column_types[{source_name!r}][{col!r}].numeric_subtype="
             f"{numeric_subtype!r}, expected one of {VALID_NUMERIC_SUBTYPES}"
         )
     return ColumnTypeOverride(
@@ -247,40 +245,35 @@ def _parse_override(table_glob: str, col: str, raw: Any) -> ColumnTypeOverride:
     )
 
 
-def _parse_options(table_glob: str, col: str, raw: Any) -> dict[str, Any]:
+def _parse_options(source_name: str, col: str, raw: Any) -> dict[str, Any]:
     """Validate one column's options dict.
 
     Strict on unknown keys (typo guard). Per-key validation enforces the
-    invariants each option needs:
-
-    - ``suppress_k``: a positive int (not bool -- ``bool`` is an ``int``
-      subclass in Python and would slip past a naive isinstance check).
-      Floored at the global ``SUPPRESS_K`` so an override can only
-      *raise* the disclosure-control threshold for a specific column,
-      never lower it below the project-wide minimum. A typo'd ``0`` or
-      ``-1`` would otherwise turn the override into a fail-open path.
+    invariants each option needs. ``suppress_k`` is floored at the
+    global ``SUPPRESS_K`` so an override can only raise the threshold,
+    never lower it below the project-wide minimum.
     """
     if not isinstance(raw, dict):
         raise ValueError(
-            f"column_options[{table_glob!r}][{col!r}] must be an object, "
+            f"column_options[{source_name!r}][{col!r}] must be an object, "
             f"got {type(raw).__name__}"
         )
     out: dict[str, Any] = {}
     for key, val in raw.items():
         if key not in VALID_OPTION_KEYS:
             raise ValueError(
-                f"column_options[{table_glob!r}][{col!r}] has unknown option "
+                f"column_options[{source_name!r}][{col!r}] has unknown option "
                 f"{key!r} (allowed: {sorted(VALID_OPTION_KEYS)})"
             )
         if key == "suppress_k":
             if isinstance(val, bool) or not isinstance(val, int):
                 raise ValueError(
-                    f"column_options[{table_glob!r}][{col!r}].suppress_k must be "
+                    f"column_options[{source_name!r}][{col!r}].suppress_k must be "
                     f"an int, got {type(val).__name__} ({val!r})"
                 )
             if val < SUPPRESS_K:
                 raise ValueError(
-                    f"column_options[{table_glob!r}][{col!r}].suppress_k={val} "
+                    f"column_options[{source_name!r}][{col!r}].suppress_k={val} "
                     f"is below the global minimum SUPPRESS_K={SUPPRESS_K}; "
                     f"overrides may only raise the threshold, not lower it"
                 )
@@ -289,20 +282,20 @@ def _parse_options(table_glob: str, col: str, raw: Any) -> dict[str, Any]:
 
 
 _TOP_LEVEL_KEYS = frozenset(
-    {"contract_version", "column_types", "column_options", "sources", "panels"}
+    {
+        "contract_version",
+        "discover_hash",
+        "column_types",
+        "column_options",
+        "sources",
+        "panels",
+        "manual_columns",
+    }
 )
 
 
 def _parse_panel(raw: Any, idx: int) -> Panel:
-    """Validate one panel declaration.
-
-    Required: ``panel_id`` (str), ``panel_key`` (str), ``members``
-    (non-empty list). Each member is ``{"source": str, "period": int}``
-    OR ``{"source": str, "time_key": str}`` — exactly one of period /
-    time_key. Source uniqueness within the panel is enforced; period
-    uniqueness across file-members is enforced (column-member periods
-    materialise at extract time and are validated there).
-    """
+    """Validate one panel declaration."""
     if not isinstance(raw, dict):
         raise ValueError(f"panels[{idx}] must be an object, got {type(raw).__name__}")
     required = {"panel_id", "panel_key", "members"}
@@ -387,6 +380,8 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
 
     - ``year``: int (or null to mean "no year"). Rejects bool because
       ``bool`` is an ``int`` subclass in Python.
+    - ``register``: str (or null) — name or numeric id of the register
+      whose regmeta evidence drove classification for this source.
     """
     if not isinstance(raw, dict):
         raise ValueError(
@@ -409,7 +404,49 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
                     f"got {type(val).__name__} ({val!r})"
                 )
             out["year"] = val
+        elif key == "register":
+            if val is None:
+                out["register"] = None
+                continue
+            if not isinstance(val, str):
+                raise ValueError(
+                    f"sources[{source_name!r}].register must be a string or null, "
+                    f"got {type(val).__name__} ({val!r})"
+                )
+            out["register"] = val
     return out
+
+
+def _parse_manual_columns(raw: Any) -> tuple[tuple[str, str], ...]:
+    """Validate ``[[source, column], ...]`` pairs.
+
+    Order is preserved (informational only; semantics are set membership).
+    Duplicates are rejected — a duplicate signals confusion, not idempotence.
+    """
+    if not isinstance(raw, list):
+        raise ValueError(
+            f"{CONFIG_FILENAME}: manual_columns must be an array, "
+            f"got {type(raw).__name__}"
+        )
+    seen: set[tuple[str, str]] = set()
+    out: list[tuple[str, str]] = []
+    for i, pair in enumerate(raw):
+        if not isinstance(pair, list) or len(pair) != 2:
+            raise ValueError(
+                f"manual_columns[{i}] must be a 2-element list "
+                f"[source, column], got {pair!r}"
+            )
+        src, col = pair
+        if not isinstance(src, str) or not src:
+            raise ValueError(f"manual_columns[{i}][0] must be a non-empty string")
+        if not isinstance(col, str) or not col:
+            raise ValueError(f"manual_columns[{i}][1] must be a non-empty string")
+        key = (src, col)
+        if key in seen:
+            raise ValueError(f"manual_columns: duplicate entry {list(key)}")
+        seen.add(key)
+        out.append(key)
+    return tuple(out)
 
 
 def parse_config(payload: dict[str, Any]) -> MDWConfig:
@@ -420,9 +457,15 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         )
     contract_version = payload["contract_version"]
     if contract_version != SCHEMA_VERSION:
+        # Pre-3.0.0 (1.0.0 / 2.0.0) carried glob-keyed column_types and
+        # no manual_columns / discover_hash. Editor produces 3.0.0 from
+        # discover; tell the user to regenerate rather than migrate.
         raise ValueError(
-            f"{CONFIG_FILENAME}: unsupported contract_version {contract_version!r} "
-            f"(this build supports {SCHEMA_VERSION!r})"
+            f"{CONFIG_FILENAME}: unsupported contract_version "
+            f"{contract_version!r} (this build supports {SCHEMA_VERSION!r}). "
+            f"Regenerate the config from a fresh discover payload via "
+            f"the editor's init_if_missing(); pre-3.0.0 schemas are not "
+            f"migrated."
         )
     extra = set(payload) - _TOP_LEVEL_KEYS
     if extra:
@@ -435,28 +478,28 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
     if not isinstance(raw_types, dict):
         raise ValueError(f"{CONFIG_FILENAME}: column_types must be an object")
     column_types: dict[str, dict[str, ColumnTypeOverride]] = {}
-    for table_glob, cols in raw_types.items():
+    for source_name, cols in raw_types.items():
         if not isinstance(cols, dict):
             raise ValueError(
-                f"column_types[{table_glob!r}] must be an object, "
+                f"column_types[{source_name!r}] must be an object, "
                 f"got {type(cols).__name__}"
             )
-        column_types[table_glob] = {
-            col: _parse_override(table_glob, col, raw) for col, raw in cols.items()
+        column_types[source_name] = {
+            col: _parse_override(source_name, col, raw) for col, raw in cols.items()
         }
 
     raw_options = payload.get("column_options", {})
     if not isinstance(raw_options, dict):
         raise ValueError(f"{CONFIG_FILENAME}: column_options must be an object")
     column_options: dict[str, dict[str, dict[str, Any]]] = {}
-    for table_glob, cols in raw_options.items():
+    for source_name, cols in raw_options.items():
         if not isinstance(cols, dict):
             raise ValueError(
-                f"column_options[{table_glob!r}] must be an object, "
+                f"column_options[{source_name!r}] must be an object, "
                 f"got {type(cols).__name__}"
             )
-        column_options[table_glob] = {
-            col: _parse_options(table_glob, col, opts) for col, opts in cols.items()
+        column_options[source_name] = {
+            col: _parse_options(source_name, col, opts) for col, opts in cols.items()
         }
 
     raw_sources = payload.get("sources", {})
@@ -471,23 +514,12 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
         raise ValueError(f"{CONFIG_FILENAME}: panels must be an array")
     panels: list[Panel] = []
     seen_panel_ids: set[str] = set()
-    # source -> first panel_id that owns it. ``panel_by_source`` in
-    # generate.py is a flat dict keyed by source, so any collision
-    # silently drops the second panel's behavior at generation time.
     seen_panel_sources: dict[str, str] = {}
     for i, raw in enumerate(raw_panels):
         panel = _parse_panel(raw, i)
         if panel.panel_id in seen_panel_ids:
             raise ValueError(f"panels: duplicate panel_id {panel.panel_id!r}")
         seen_panel_ids.add(panel.panel_id)
-        # Two panels CAN share a panel_key — in SCB data nearly every
-        # register is keyed on the same person id (e.g.
-        # ``P1105_LopNr_PersonNr``). They share one id universe by
-        # design; generate.py builds one pool per panel_key sized to
-        # the largest contributor.
-        # A source can only belong to one panel (multi-key panels are
-        # out of scope). Each member's source is claimed regardless of
-        # whether it contributes via period or time_key.
         for src in (m.source for m in panel.members):
             prior = seen_panel_sources.get(src)
             if prior is not None:
@@ -499,21 +531,31 @@ def parse_config(payload: dict[str, Any]) -> MDWConfig:
             seen_panel_sources[src] = panel.panel_id
         panels.append(panel)
 
+    manual_columns = _parse_manual_columns(payload.get("manual_columns", []))
+
+    discover_hash = payload.get("discover_hash")
+    if discover_hash is not None and not isinstance(discover_hash, str):
+        raise ValueError(
+            f"{CONFIG_FILENAME}: discover_hash must be a string or absent, "
+            f"got {type(discover_hash).__name__}"
+        )
+
     return MDWConfig(
         contract_version=contract_version,
         column_types=column_types,
         column_options=column_options,
         sources=sources,
         panels=tuple(panels),
+        manual_columns=manual_columns,
+        discover_hash=discover_hash,
     )
 
 
 def load_config(directory: Path) -> MDWConfig | None:
-    """Load ``mdw_step2_config.json`` from ``directory`` if present.
+    """Load ``mock_data_config.json`` from ``directory`` if present.
 
     Returns None if no file is there. Raises on any structural problem
-    -- the configurer is meant to flag typos at extract time, not
-    silently ignore them.
+    -- the editor flags typos at extract time, not silently ignores them.
     """
     path = Path(directory) / CONFIG_FILENAME
     if not path.exists():

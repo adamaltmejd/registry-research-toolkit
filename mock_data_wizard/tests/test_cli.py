@@ -11,7 +11,7 @@ from .conftest import MINIMAL_STATS
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
-    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path = tmp_path / "mock_data_stats.json"
     stats_path.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")
     out_dir = tmp_path / "mock_data"
     out_dir.mkdir()
@@ -82,7 +82,7 @@ def test_yes_and_force_overwrites(tmp_path: Path):
 
 
 def test_force_on_empty_dir_works(tmp_path: Path):
-    stats_path = tmp_path / "mdw_step3_stats.json"
+    stats_path = tmp_path / "mock_data_stats.json"
     stats_path.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")
     out_dir = tmp_path / "mock_data"
     rc = main(

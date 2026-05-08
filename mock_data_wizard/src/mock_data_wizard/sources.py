@@ -99,7 +99,7 @@ class SqlTable:
     on MS SQL). ``where`` becomes a ``WHERE`` clause applied server-side
     before any aggregation, scoped to this table only. ``alias`` defaults
     to the unqualified portion of ``qualified`` and is used as the
-    ``source_name`` in ``mdw_step3_stats.json`` and as the dedup key when multiple
+    ``source_name`` in ``mock_data_stats.json`` and as the dedup key when multiple
     schemas share a table name.
     """
 
@@ -368,7 +368,7 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
                 # per cell. Scales linearly with file size on both the
                 # TABLE and VIEW paths. The proper fix is to skip
                 # inference entirely via `all_varchar=true` + explicit
-                # casts driven by mdw_step2_config.json (see issue #40);
+                # casts driven by mock_data_config.json (see issue #40);
                 # this PR is the safe interim until that lands.
                 conn.execute(
                     f"CREATE OR REPLACE {kind} {quoted_view} AS "

@@ -252,7 +252,7 @@ def parse_stats(path: Path) -> ProjectStats:
         raise StatsValidationError(
             f"Unsupported contract major version '{version}' "
             f"(expected {CONTRACT_VERSION.split('.')[0]}.x.x). "
-            f"Regenerate mdw_step3_stats.json with mock-data-wizard >= v0.3.0."
+            f"Regenerate mock_data_stats.json with mock-data-wizard >= v0.3.0."
         )
 
     sources_raw = _require(raw, "sources", "root")
