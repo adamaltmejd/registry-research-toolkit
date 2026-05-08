@@ -12,7 +12,10 @@ helpers so tests don't depend on a live regmeta install.
 from __future__ import annotations
 
 import json
+import threading
+import time
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -759,6 +762,85 @@ def test_snapshot_version_changes_after_mutation(tmp_path: Path):
         tmp_path, "x", year=2024, expected_version=snap.snapshot_version
     )
     assert snap.snapshot_version != snap2.snapshot_version
+
+
+def test_concurrent_mutations_serialize_without_clobber(tmp_path: Path, monkeypatch):
+    """Two threads mutating different columns from the same snapshot
+    must serialize via the cross-process file lock. Without the lock,
+    both `_verify_version` calls pass against the same on-disk hash and
+    the second `os.replace` silently clobbers the first; with the lock,
+    one mutation wins and the other raises StaleStateError."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "A"}, {"name": "B"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    v0 = snap.snapshot_version
+
+    # Widen the read+write window so both threads enter the critical
+    # section before either replaces the file. The sleep happens after
+    # _verify_version but before os.replace, which is the racy window.
+    real_atomic_write = editor._atomic_write
+
+    def slow_atomic_write(path, payload):
+        time.sleep(0.05)
+        real_atomic_write(path, payload)
+
+    monkeypatch.setattr(editor, "_atomic_write", slow_atomic_write)
+
+    barrier = threading.Barrier(2)
+    results: dict[str, Any] = {}
+
+    def mutate(key: str, col: str) -> None:
+        barrier.wait()
+        try:
+            results[key] = set_column_type(
+                tmp_path, "x", col, "id", expected_version=v0
+            )
+        except StaleStateError as exc:
+            results[key] = exc
+
+    t1 = threading.Thread(target=mutate, args=("a", "A"))
+    t2 = threading.Thread(target=mutate, args=("b", "B"))
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
+
+    successes = [v for v in results.values() if not isinstance(v, Exception)]
+    failures = [v for v in results.values() if isinstance(v, StaleStateError)]
+    assert len(successes) == 1
+    assert len(failures) == 1
+
+
+def test_set_column_options_rejects_unknown_source(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "Salary"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_column_options(
+            tmp_path,
+            "ghost_source",
+            "Salary",
+            {"suppress_k": 20},
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_column_options_rejects_unknown_column(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "Salary"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_column_options(
+            tmp_path,
+            "x",
+            "ghost_column",
+            {"suppress_k": 20},
+            expected_version=snap.snapshot_version,
+        )
 
 
 # -- Regmeta-absent graceful behaviour ------------------------------------

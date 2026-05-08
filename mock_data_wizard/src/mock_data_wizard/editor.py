@@ -25,13 +25,15 @@ Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
 import tempfile
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Iterator, Literal
 
 from .classify import (
     COLUMN_TYPES,
@@ -255,6 +257,22 @@ def _atomic_write(path: Path, payload: dict[str, Any]) -> None:
         except FileNotFoundError:
             pass
         raise
+
+
+@contextmanager
+def _config_lock(project_dir: Path) -> Iterator[None]:
+    """Hold an exclusive cross-process lock on a sidecar file for the
+    duration of a mutation. ``snapshot_version`` is a CAS token at read
+    time only; without serialising the read+write window, two clients
+    mutating from the same snapshot can both pass ``_verify_version``
+    and the second ``os.replace`` silently clobbers the first. The lock
+    closes that window. POSIX-only (fcntl); the editor API is local."""
+    project_dir.mkdir(parents=True, exist_ok=True)
+    lock_path = project_dir / ".mock_data_config.lock"
+    # "a" avoids truncating the (always-empty) sidecar; close() releases the flock.
+    with open(lock_path, "a") as fp:
+        fcntl.flock(fp.fileno(), fcntl.LOCK_EX)
+        yield
 
 
 def _read_payload(project_dir: Path) -> tuple[dict[str, Any], str]:
@@ -788,86 +806,89 @@ def init_if_missing(
     project_dir = Path(project_dir)
     discover_path = Path(discover_path)
     target = _config_path(project_dir)
+    # Common case: already initialized — read-only path, no lock needed.
     if target.exists() and not overwrite:
         return get_state(project_dir, discover_path=discover_path, db_path=db_path)
+    with _config_lock(project_dir):
+        # Re-check after acquiring: another writer may have just initialized.
+        if target.exists() and not overwrite:
+            return get_state(project_dir, discover_path=discover_path, db_path=db_path)
+        discover = _read_discover(discover_path)
+        if not discover["sources"]:
+            raise ValidationError(
+                f"{discover_path} has no sources -- nothing to configure."
+            )
 
-    discover = _read_discover(discover_path)
-    if not discover["sources"]:
-        raise ValidationError(
-            f"{discover_path} has no sources -- nothing to configure."
-        )
+        register_per_source = _autodetect_register_per_source(discover, db_path)
+        register_to_columns: dict[str, set[str]] = {}
+        sources_by_name = {s["source_name"]: s for s in discover["sources"]}
+        for source_name, register in register_per_source.items():
+            if register is None:
+                continue
+            src = sources_by_name[source_name]
+            register_to_columns.setdefault(register, set()).update(
+                c["name"] for c in src.get("columns", [])
+            )
+        signals_per_register = _resolve_signals_for_groups(register_to_columns, db_path)
 
-    register_per_source = _autodetect_register_per_source(discover, db_path)
-    register_to_columns: dict[str, set[str]] = {}
-    sources_by_name = {s["source_name"]: s for s in discover["sources"]}
-    for source_name, register in register_per_source.items():
-        if register is None:
-            continue
-        src = sources_by_name[source_name]
-        register_to_columns.setdefault(register, set()).update(
-            c["name"] for c in src.get("columns", [])
-        )
-    signals_per_register = _resolve_signals_for_groups(register_to_columns, db_path)
+        column_types: dict[str, dict[str, dict[str, Any]]] = {}
+        sources_out: dict[str, dict[str, Any]] = {}
+        panels_out: list[dict[str, Any]] = []
+        panel_sources_seen: set[str] = set()
 
-    column_types: dict[str, dict[str, dict[str, Any]]] = {}
-    sources_out: dict[str, dict[str, Any]] = {}
-    panels_out: list[dict[str, Any]] = []
-    panel_sources_seen: set[str] = set()
+        for src in discover["sources"]:
+            source_name = src["source_name"]
+            register = register_per_source.get(source_name)
+            signals = signals_per_register.get(register, {}) if register else {}
+            column_types[source_name] = _classify_columns(
+                src.get("columns", []), register, signals
+            )
+            meta: dict[str, Any] = {}
+            year = src.get("source_detail", {}).get("year")
+            if year is None:
+                year = detect_year_from_source_name(source_name)
+            if year is not None:
+                meta["year"] = int(year)
+            if register is not None:
+                meta["register"] = register
+            if meta:
+                sources_out[source_name] = meta
 
-    for src in discover["sources"]:
-        source_name = src["source_name"]
-        register = register_per_source.get(source_name)
-        signals = signals_per_register.get(register, {}) if register else {}
-        column_types[source_name] = _classify_columns(
-            src.get("columns", []), register, signals
-        )
-        meta: dict[str, Any] = {}
-        year = src.get("source_detail", {}).get("year")
-        if year is None:
-            year = detect_year_from_source_name(source_name)
-        if year is not None:
-            meta["year"] = int(year)
-        if register is not None:
-            meta["register"] = register
-        if meta:
-            sources_out[source_name] = meta
+        # Auto-apply unambiguous panel candidates per register-group.
+        by_register: dict[str | None, list[str]] = {}
+        for source_name, register in register_per_source.items():
+            by_register.setdefault(register, []).append(source_name)
+        for register, source_names in by_register.items():
+            if register is None:
+                # Unassigned sources don't get cross-source panel candidates.
+                continue
+            cand = detect_panel_candidate(source_names, sources_by_name)
+            if cand is None or cand.suggested_panel_key is None:
+                continue
+            if any(m["source"] in panel_sources_seen for m in cand.members):
+                continue
+            panel_id = cand.suggested_panel_id or f"reg-{register}-panel"
+            panels_out.append(
+                {
+                    "panel_id": panel_id,
+                    "panel_key": cand.suggested_panel_key,
+                    "members": list(cand.members),
+                }
+            )
+            for m in cand.members:
+                panel_sources_seen.add(m["source"])
 
-    # Auto-apply unambiguous panel candidates per register-group.
-    by_register: dict[str | None, list[str]] = {}
-    for source_name, register in register_per_source.items():
-        by_register.setdefault(register, []).append(source_name)
-    for register, source_names in by_register.items():
-        if register is None:
-            # Unassigned sources don't get cross-source panel candidates.
-            continue
-        cand = detect_panel_candidate(source_names, sources_by_name)
-        if cand is None or cand.suggested_panel_key is None:
-            continue
-        if any(m["source"] in panel_sources_seen for m in cand.members):
-            continue
-        panel_id = cand.suggested_panel_id or f"reg-{register}-panel"
-        panels_out.append(
-            {
-                "panel_id": panel_id,
-                "panel_key": cand.suggested_panel_key,
-                "members": list(cand.members),
-            }
-        )
-        for m in cand.members:
-            panel_sources_seen.add(m["source"])
-
-    payload: dict[str, Any] = {
-        "contract_version": SCHEMA_VERSION,
-        "discover_hash": _compute_discover_hash(discover),
-        "column_types": column_types,
-    }
-    if sources_out:
-        payload["sources"] = sources_out
-    if panels_out:
-        payload["panels"] = panels_out
-    _atomic_write(target, payload)
-
-    snapshot_version = _compute_snapshot_version(target)
+        payload: dict[str, Any] = {
+            "contract_version": SCHEMA_VERSION,
+            "discover_hash": _compute_discover_hash(discover),
+            "column_types": column_types,
+        }
+        if sources_out:
+            payload["sources"] = sources_out
+        if panels_out:
+            payload["panels"] = panels_out
+        _atomic_write(target, payload)
+        snapshot_version = _compute_snapshot_version(target)
     return _build_snapshot(project_dir, payload, discover, snapshot_version, db_path)
 
 
@@ -941,6 +962,19 @@ def _source_exists_in_discover(
     return column_name in payload.get("column_types", {}).get(source_name, {})
 
 
+def _assert_column_in_discover(
+    project_dir: Path,
+    payload: dict[str, Any],
+    source_name: str,
+    column_name: str,
+) -> None:
+    if not _source_exists_in_discover(project_dir, payload, source_name, column_name):
+        raise ValidationError(
+            f"({source_name!r}, {column_name!r}) not found in discover or "
+            f"existing column_types — refusing to silently create entries."
+        )
+
+
 def set_column_type(
     project_dir: Path,
     source_name: str,
@@ -962,49 +996,46 @@ def set_column_type(
             f"new_type={new_type!r}, expected one of {VALID_COLUMN_TYPES}"
         )
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    if not _source_exists_in_discover(project_dir, payload, source_name, column_name):
-        raise ValidationError(
-            f"({source_name!r}, {column_name!r}) not found in discover or "
-            f"existing column_types — refusing to silently create entries."
-        )
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        _assert_column_in_discover(project_dir, payload, source_name, column_name)
 
-    column_types = payload.setdefault("column_types", {})
-    cols = column_types.setdefault(source_name, {})
-    existing = cols.get(column_name, {})
-    old_type = existing.get("type")
-    if isinstance(hint, _Unchanged):
-        # Preserve survivor hint keys for the new type.
-        new_entry = {"type": new_type}
-        new_entry.update(_existing_hint_keys_valid_for(existing, new_type))
-    else:
-        validated = _validate_hint(new_type, hint)
-        new_entry = {"type": new_type}
-        if validated:
-            new_entry.update(validated)
-    cols[column_name] = new_entry
+        column_types = payload.setdefault("column_types", {})
+        cols = column_types.setdefault(source_name, {})
+        existing = cols.get(column_name, {})
+        old_type = existing.get("type")
+        if isinstance(hint, _Unchanged):
+            # Preserve survivor hint keys for the new type.
+            new_entry = {"type": new_type}
+            new_entry.update(_existing_hint_keys_valid_for(existing, new_type))
+        else:
+            validated = _validate_hint(new_type, hint)
+            new_entry = {"type": new_type}
+            if validated:
+                new_entry.update(validated)
+        cols[column_name] = new_entry
 
-    # Type changed: drop column_options for this column. Options can be
-    # type-specific (e.g. suppress_k is a categorical/numeric concern);
-    # mirrors set_group_register's reclassification path.
-    if old_type is not None and old_type != new_type:
-        column_options = payload.get("column_options")
-        if column_options:
-            opts_for_source = column_options.get(source_name)
-            if opts_for_source and column_name in opts_for_source:
-                opts_for_source.pop(column_name, None)
-                if not opts_for_source:
-                    column_options.pop(source_name, None)
-            if not column_options:
-                payload.pop("column_options", None)
+        # Type changed: drop column_options for this column. Options can
+        # be type-specific (e.g. suppress_k is categorical/numeric);
+        # mirrors set_group_register's reclassification path.
+        if old_type is not None and old_type != new_type:
+            column_options = payload.get("column_options")
+            if column_options:
+                opts_for_source = column_options.get(source_name)
+                if opts_for_source and column_name in opts_for_source:
+                    opts_for_source.pop(column_name, None)
+                    if not opts_for_source:
+                        column_options.pop(source_name, None)
+                if not column_options:
+                    payload.pop("column_options", None)
 
-    manual = payload.get("manual_columns", [])
-    pair = [source_name, column_name]
-    if pair not in manual:
-        manual.append(pair)
-        payload["manual_columns"] = manual
+        manual = payload.get("manual_columns", [])
+        pair = [source_name, column_name]
+        if pair not in manual:
+            manual.append(pair)
+            payload["manual_columns"] = manual
 
-    _atomic_write(_config_path(project_dir), payload)
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 
@@ -1021,103 +1052,108 @@ def set_group_register(
     columns. Per session decision: when a column's type changes during
     reclassification, its ``column_options`` entry is dropped."""
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    config = parse_config(payload)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        config = parse_config(payload)
 
-    # Resolve group_id → list of source_names.
-    affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
-    if not affected_sources:
-        raise ValidationError(f"group_id={group_id!r} not found in current snapshot.")
+        # Resolve group_id → list of source_names.
+        affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
+        if not affected_sources:
+            raise ValidationError(
+                f"group_id={group_id!r} not found in current snapshot."
+            )
 
-    # Resolve the new register against regmeta when non-null.
-    register_str: str | None
-    if register is None:
-        register_str = None
-    else:
-        reg = resolve_register(register, db_path=db_path)
-        if reg is None:
-            raise ValidationError(f"register={register!r} did not resolve in regmeta.")
-        register_str = reg.name
-
-    # Discover payload (for column lists). Bail if absent — re-classify
-    # needs the discover schema to know which columns exist.
-    discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
-    if not discover_path.exists():
-        raise ValidationError(
-            f"set_group_register requires {DISCOVER_FILENAME_DEFAULT} next to "
-            f"the config to re-classify columns."
-        )
-    discover = _read_discover(discover_path)
-    sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
-
-    # Update `register` on each affected source.
-    sources_block = payload.setdefault("sources", {})
-    for sn in affected_sources:
-        entry = sources_block.setdefault(sn, {})
-        if register_str is None:
-            entry.pop("register", None)
+        # Resolve the new register against regmeta when non-null.
+        register_str: str | None
+        if register is None:
+            register_str = None
         else:
-            entry["register"] = register_str
+            reg = resolve_register(register, db_path=db_path)
+            if reg is None:
+                raise ValidationError(
+                    f"register={register!r} did not resolve in regmeta."
+                )
+            register_str = reg.name
 
-    # Resolve regmeta signals once for the new register.
-    if register_str is not None:
-        all_cols: set[str] = set()
+        # Discover payload (for column lists). Bail if absent —
+        # re-classify needs the discover schema.
+        discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
+        if not discover_path.exists():
+            raise ValidationError(
+                f"set_group_register requires {DISCOVER_FILENAME_DEFAULT} next to "
+                f"the config to re-classify columns."
+            )
+        discover = _read_discover(discover_path)
+        sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
+
+        # Update `register` on each affected source.
+        sources_block = payload.setdefault("sources", {})
+        for sn in affected_sources:
+            entry = sources_block.setdefault(sn, {})
+            if register_str is None:
+                entry.pop("register", None)
+            else:
+                entry["register"] = register_str
+
+        # Resolve regmeta signals once for the new register.
+        if register_str is not None:
+            all_cols: set[str] = set()
+            for sn in affected_sources:
+                src = sources_by_name.get(sn)
+                if src is None:
+                    continue
+                for c in src.get("columns", []):
+                    all_cols.add(c["name"])
+            signals = _resolve_signals_for_register(register_str, all_cols, db_path)
+        else:
+            signals = {}
+
+        manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
+        column_types = payload.setdefault("column_types", {})
+        column_options = payload.get("column_options", {})
+
         for sn in affected_sources:
             src = sources_by_name.get(sn)
             if src is None:
                 continue
-            for c in src.get("columns", []):
-                all_cols.add(c["name"])
-        signals = _resolve_signals_for_register(register_str, all_cols, db_path)
-    else:
-        signals = {}
+            new_cols = _classify_columns(src.get("columns", []), register_str, signals)
+            existing_cols = column_types.get(sn, {})
+            out_cols: dict[str, dict[str, Any]] = {}
+            for col_name, classified in new_cols.items():
+                is_manual = (sn, col_name) in manual_pairs
+                if is_manual and not reclassify_manual:
+                    # Preserve manual override exactly.
+                    if col_name in existing_cols:
+                        out_cols[col_name] = existing_cols[col_name]
+                    else:
+                        out_cols[col_name] = classified
+                    continue
+                # Auto column (or manual being reclassified): write the
+                # classifier output.
+                if reclassify_manual and is_manual:
+                    manual_pairs.discard((sn, col_name))
+                old_type = existing_cols.get(col_name, {}).get("type")
+                new_type = classified["type"]
+                out_cols[col_name] = classified
+                if old_type is not None and old_type != new_type:
+                    # Type changed: drop column_options for this column
+                    # (session decision — options can be type-specific).
+                    opts_for_source = column_options.get(sn)
+                    if opts_for_source and col_name in opts_for_source:
+                        opts_for_source.pop(col_name, None)
+                        if not opts_for_source:
+                            column_options.pop(sn, None)
+            column_types[sn] = out_cols
 
-    manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
-    column_types = payload.setdefault("column_types", {})
-    column_options = payload.get("column_options", {})
+        if reclassify_manual:
+            payload["manual_columns"] = [list(p) for p in manual_pairs]
+        if column_options:
+            payload["column_options"] = column_options
+        elif "column_options" in payload:
+            # Empty dict left over from drops — keep schema clean.
+            del payload["column_options"]
 
-    for sn in affected_sources:
-        src = sources_by_name.get(sn)
-        if src is None:
-            continue
-        new_cols = _classify_columns(src.get("columns", []), register_str, signals)
-        existing_cols = column_types.get(sn, {})
-        out_cols: dict[str, dict[str, Any]] = {}
-        for col_name, classified in new_cols.items():
-            is_manual = (sn, col_name) in manual_pairs
-            if is_manual and not reclassify_manual:
-                # Preserve manual override exactly.
-                if col_name in existing_cols:
-                    out_cols[col_name] = existing_cols[col_name]
-                else:
-                    out_cols[col_name] = classified
-                continue
-            # Auto column (or manual being reclassified): write the
-            # classifier output.
-            if reclassify_manual and is_manual:
-                manual_pairs.discard((sn, col_name))
-            old_type = existing_cols.get(col_name, {}).get("type")
-            new_type = classified["type"]
-            out_cols[col_name] = classified
-            if old_type is not None and old_type != new_type:
-                # Type changed: drop column_options for this column
-                # (session decision — options can be type-specific).
-                opts_for_source = column_options.get(sn)
-                if opts_for_source and col_name in opts_for_source:
-                    opts_for_source.pop(col_name, None)
-                    if not opts_for_source:
-                        column_options.pop(sn, None)
-        column_types[sn] = out_cols
-
-    if reclassify_manual:
-        payload["manual_columns"] = [list(p) for p in manual_pairs]
-    if column_options:
-        payload["column_options"] = column_options
-    elif "column_options" in payload:
-        # Empty dict left over from drops — keep schema clean.
-        del payload["column_options"]
-
-    _atomic_write(_config_path(project_dir), payload)
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 
@@ -1173,21 +1209,22 @@ def set_source_metadata(
 ) -> StateSnapshot:
     """Modify per-source metadata. Currently scoped to ``year``."""
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    sources = payload.setdefault("sources", {})
-    entry = sources.setdefault(source_name, {})
-    if not isinstance(year, _Unchanged):
-        if year is None:
-            entry["year"] = None
-        elif isinstance(year, int) and not isinstance(year, bool):
-            entry["year"] = year
-        else:
-            raise ValidationError(
-                f"year must be int or None, got {type(year).__name__}"
-            )
-    if not entry:
-        sources.pop(source_name, None)
-    _atomic_write(_config_path(project_dir), payload)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        sources = payload.setdefault("sources", {})
+        entry = sources.setdefault(source_name, {})
+        if not isinstance(year, _Unchanged):
+            if year is None:
+                entry["year"] = None
+            elif isinstance(year, int) and not isinstance(year, bool):
+                entry["year"] = year
+            else:
+                raise ValidationError(
+                    f"year must be int or None, got {type(year).__name__}"
+                )
+        if not entry:
+            sources.pop(source_name, None)
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 
@@ -1202,26 +1239,26 @@ def set_column_options(
 ) -> StateSnapshot:
     """Set or clear ``column_options`` for one column."""
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    column_options = payload.setdefault("column_options", {})
-    if options is None:
-        # Clear.
-        cols = column_options.get(source_name)
-        if cols and column_name in cols:
-            cols.pop(column_name)
-            if not cols:
-                column_options.pop(source_name, None)
-    else:
-        # Validate via the parser's _parse_options (raises ValueError).
-        try:
-            validated = _parse_options(source_name, column_name, options)
-        except ValueError as exc:
-            raise ValidationError(str(exc)) from exc
-        cols = column_options.setdefault(source_name, {})
-        cols[column_name] = validated
-    if not column_options:
-        payload.pop("column_options", None)
-    _atomic_write(_config_path(project_dir), payload)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        _assert_column_in_discover(project_dir, payload, source_name, column_name)
+        column_options = payload.setdefault("column_options", {})
+        if options is None:
+            cols = column_options.get(source_name)
+            if cols and column_name in cols:
+                cols.pop(column_name)
+                if not cols:
+                    column_options.pop(source_name, None)
+        else:
+            try:
+                validated = _parse_options(source_name, column_name, options)
+            except ValueError as exc:
+                raise ValidationError(str(exc)) from exc
+            cols = column_options.setdefault(source_name, {})
+            cols[column_name] = validated
+        if not column_options:
+            payload.pop("column_options", None)
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 
@@ -1234,26 +1271,27 @@ def put_panel(
 ) -> StateSnapshot:
     """Add or replace a panel by ``panel_id``."""
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    panels = payload.setdefault("panels", [])
-    serialized = _panel_to_dict(panel)
-    replaced = False
-    for i, existing in enumerate(panels):
-        if existing.get("panel_id") == panel.panel_id:
-            panels[i] = serialized
-            replaced = True
-            break
-    if not replaced:
-        panels.append(serialized)
-    if not panels:
-        payload.pop("panels", None)
-    # Validate the resulting payload via parse_config to catch source
-    # collisions and other integrity errors.
-    try:
-        parse_config(payload)
-    except ValueError as exc:
-        raise ValidationError(str(exc)) from exc
-    _atomic_write(_config_path(project_dir), payload)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        panels = payload.setdefault("panels", [])
+        serialized = _panel_to_dict(panel)
+        replaced = False
+        for i, existing in enumerate(panels):
+            if existing.get("panel_id") == panel.panel_id:
+                panels[i] = serialized
+                replaced = True
+                break
+        if not replaced:
+            panels.append(serialized)
+        if not panels:
+            payload.pop("panels", None)
+        # Validate the resulting payload via parse_config to catch source
+        # collisions and other integrity errors.
+        try:
+            parse_config(payload)
+        except ValueError as exc:
+            raise ValidationError(str(exc)) from exc
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 
@@ -1266,12 +1304,13 @@ def remove_panel(
 ) -> StateSnapshot:
     """Remove a panel by id. No-op when the id is absent."""
     project_dir = Path(project_dir)
-    payload = _verify_version(project_dir, expected_version)
-    panels = payload.get("panels", [])
-    payload["panels"] = [p for p in panels if p.get("panel_id") != panel_id]
-    if not payload["panels"]:
-        payload.pop("panels", None)
-    _atomic_write(_config_path(project_dir), payload)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        panels = payload.get("panels", [])
+        payload["panels"] = [p for p in panels if p.get("panel_id") != panel_id]
+        if not payload["panels"]:
+            payload.pop("panels", None)
+        _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
 

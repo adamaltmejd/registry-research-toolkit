@@ -413,7 +413,11 @@ package and calls this API directly.
    *not* stored in the JSON. Mutating functions require an
    `expected_version` argument; if the on-disk file's current token
    differs (another writer or a manual `vim` edit), the function
-   raises `StaleStateError` without writing.
+   raises `StaleStateError` without writing. Each mutation also holds
+   an exclusive `fcntl.flock` on a `.mock_data_config.lock` sidecar
+   for the read+write window, so two in-flight mutators serialise
+   instead of both passing the version check and clobbering each
+   other's writes.
 4. **Manual overrides preserved.** A top-level `manual_columns` array
    records `(source, column)` pairs the user explicitly overrode.
    Re-classification operations (e.g. `set_group_register`) skip
