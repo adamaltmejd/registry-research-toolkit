@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>mock_data_wizard UI — frontend not built</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 40rem;
+         margin: 4rem auto; padding: 0 1rem; line-height: 1.5; color: #222; }
+  code { background: #f4f4f4; padding: 0.1em 0.3em; border-radius: 3px; }
+  pre  { background: #f4f4f4; padding: 0.75rem 1rem; border-radius: 4px;
+         overflow-x: auto; }
+</style>
+</head>
+<body>
+<h1>mock_data_wizard UI</h1>
+<p>This is the placeholder served when the Svelte frontend hasn't been
+built yet. The HTTP API at <code>/api/state</code> is live regardless;
+this just means there's no SPA on top of it.</p>
+<p>To build the frontend (one-time setup needs <code>bun</code>):</p>
+<pre>cd mock_data_wizard/web
+bun install
+bun run build</pre>
+<p>This writes the production bundle into
+<code>src/mock_data_wizard/static/</code>, replacing this page.</p>
+</body>
+</html>
