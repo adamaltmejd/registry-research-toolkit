@@ -14,12 +14,14 @@ end-to-end loop crosses the MONA boundary three times:
    `python mdw_runner.py` — writes `mock_data_discovery.json`
    (metadata only: column names, SQL types, row counts; no values, no
    distinct counts, no samples).
-3. `mock-data-wizard configure mock_data_discovery.json`
-   (local) — reads `mock_data_discovery.json`, applies the layered classifier
-   (id-name → regmeta classification → categorical-name → sql_type →
-   `opaque` default; see *Configure classifier priority*
-   below), and writes `mock_data_config.json`. The user reviews and edits
-   this file by hand before re-uploading.
+3. **Author config** (local) — author `mock_data_config.json` from
+   `mock_data_discovery.json` via `mock_data_wizard.editor.init_if_missing`
+   (or an external UI calling the same API; see *Editor API* below).
+   The editor applies the layered classifier (id-name → regmeta
+   classification → categorical-name → sql_type → `opaque` default;
+   see *Configure classifier priority* below) and persists year +
+   register per source. Subsequent edits go through the editor
+   mutators; the file may also be hand-edited.
 4. **Extract** on MONA. Switch the bundle's `MODE = "extract"`, place
    `mock_data_config.json` next to it, re-run on MONA — writes `mock_data_stats.json`
    (only aggregate statistics; the configured types drive per-column
@@ -451,7 +453,7 @@ mutator:
 | `config` | Parsed `MDWConfig` — the raw configuration data. |
 | `groups` | Tuple of `RegisterGroupView` — one per register-group. |
 | `discover` | The discovery payload, if loaded, for client use. |
-| `warnings` | Tuple of `Warning(code, message, context)`. Codes include `discover_drift`. |
+| `warnings` | Tuple of `EditorWarning(code, message, context)`. Codes include `discover_drift`. |
 | `snapshot_version` | Opaque token for the current config version. Pass back as `expected_version` on the next mutation. Not stored in the JSON. |
 
 `RegisterGroupView` exposes `group_id`, `register_id`, `register_name`,

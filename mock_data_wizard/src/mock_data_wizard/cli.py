@@ -69,7 +69,7 @@ CSV and --columns modes require --register.
 """
 
 GENERATE_HELP = """\
-Generate mock CSV files from an mock_data_stats.json produced by the
+Generate mock CSV files from a mock_data_stats.json produced by the
 MONA extract bundle.
 
 By default, uses the regmeta database to enrich categorical columns with

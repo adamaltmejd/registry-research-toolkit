@@ -324,6 +324,59 @@ def test_set_column_type_rejects_invalid_hint_key(tmp_path: Path):
         )
 
 
+def test_set_column_type_drops_options_on_type_change(tmp_path: Path):
+    """Type-specific options must be cleared when the type changes
+    (mirrors set_group_register's reclassification path)."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "Code", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_options(
+        tmp_path,
+        "x",
+        "Code",
+        {"suppress_k": 20},
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.column_options["x"]["Code"] == {"suppress_k": 20}
+
+    # Flip type opaque → id; column_options should be dropped.
+    snap = set_column_type(
+        tmp_path,
+        "x",
+        "Code",
+        "id",
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.column_types["x"]["Code"].type == "id"
+    assert "x" not in snap.config.column_options
+
+
+def test_set_column_type_preserves_options_when_type_unchanged(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "Code", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_options(
+        tmp_path,
+        "x",
+        "Code",
+        {"suppress_k": 20},
+        expected_version=snap.snapshot_version,
+    )
+    # Re-assert the existing type — options should survive.
+    snap = set_column_type(
+        tmp_path,
+        "x",
+        "Code",
+        "opaque",
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.column_options["x"]["Code"] == {"suppress_k": 20}
+
+
 # -- set_group_register ----------------------------------------------------
 
 
@@ -494,6 +547,45 @@ def test_set_group_register_rejects_unknown_group(tmp_path: Path):
         set_group_register(
             tmp_path,
             "noreg-does_not_exist",
+            None,
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_group_register_rejects_stale_noreg_for_assigned_source(
+    tmp_path: Path, monkeypatch
+):
+    """A source that already has a register assigned must not match a
+    stale `noreg-<name>` group_id — the previous fallthrough silently
+    re-assigned the register."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(
+        editor, "_resolve_signals_for_register", lambda reg, cols, db_path: {}
+    )
+
+    # First, legitimately assign a register to x.
+    snap = set_group_register(
+        tmp_path,
+        "noreg-x",
+        "LISA",
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.sources["x"]["register"] == "LISA"
+
+    # Now reusing the stale `noreg-x` group_id must not match.
+    with pytest.raises(ValidationError, match="not found"):
+        set_group_register(
+            tmp_path,
+            "noreg-x",
             None,
             expected_version=snap.snapshot_version,
         )

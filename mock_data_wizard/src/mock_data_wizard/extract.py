@@ -6,8 +6,8 @@ Two modes, one bundle:
   sources read ``INFORMATION_SCHEMA.COLUMNS`` and ``COUNT(*)``; file
   sources use DuckDB ``DESCRIBE`` and ``COUNT(*)``. No samples, no
   distinct counts. Output: ``mock_data_discovery.json``. The user copies it
-  off MONA and runs ``mock-data-wizard configure`` locally to author
-  ``mock_data_config.json``.
+  off MONA and authors ``mock_data_config.json`` locally via the
+  ``mock_data_wizard.editor`` API (or an external UI calling that API).
 - ``MODE = "extract"`` -- typed aggregation. Reads ``mock_data_config.json``
   uploaded next to the bundle, requires every column to have a type
   override, and produces ``mock_data_stats.json``. No data-driven classifier
@@ -755,7 +755,8 @@ def main(
         raise RuntimeError(
             f"extract mode requires mock_data_config.json next to the bundle "
             f"({output_dir}/mock_data_config.json). Run mode='discover' first, "
-            f"then mock-data-wizard configure on the resulting "
+            f"then author mock_data_config.json locally via the "
+            f"mock_data_wizard.editor API (init_if_missing) on the resulting "
             f"mock_data_discovery.json."
         )
     log.info(

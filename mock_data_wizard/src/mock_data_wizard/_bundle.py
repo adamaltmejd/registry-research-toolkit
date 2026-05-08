@@ -47,10 +47,11 @@ Two modes, one bundle:
   MODE = "discover"  (default)
     Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
     plus COUNT(*). Output: mock_data_discovery.json next to this script.
-    Copy mock_data_discovery.json off MONA, run `mock-data-wizard
-    configure mock_data_discovery.json` locally to author
-    mock_data_config.json, upload it back next to the bundle, then
-    re-run with MODE = "extract".
+    Copy mock_data_discovery.json off MONA, author mock_data_config.json
+    locally via the mock_data_wizard.editor API
+    (`editor.init_if_missing(project_dir, "mock_data_discovery.json")`)
+    or an external UI, upload it back next to the bundle, then re-run
+    with MODE = "extract".
 
   MODE = "extract"
     Typed aggregation. Reads mock_data_config.json from this directory

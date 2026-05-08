@@ -80,7 +80,7 @@ __all__ = [
     "StateSnapshot",
     "RegisterGroupView",
     "ColumnInfo",
-    "Warning",
+    "EditorWarning",
     "Panel",
     "PanelMember",
     "PanelMemberSuggestion",
@@ -160,7 +160,7 @@ class StaleStateError(Exception):
 
 
 @dataclass(frozen=True)
-class Warning:
+class EditorWarning:
     """One non-fatal observation surfaced by ``get_state`` (e.g.
     ``discover_drift`` when the discover payload's hash differs from the
     stored ``discover_hash``)."""
@@ -220,7 +220,7 @@ class StateSnapshot:
     config: MDWConfig
     groups: tuple[RegisterGroupView, ...]
     discover: dict[str, Any] | None
-    warnings: tuple[Warning, ...]
+    warnings: tuple[EditorWarning, ...]
     snapshot_version: str
 
 
@@ -712,12 +712,12 @@ def _build_snapshot(
     signals = _resolve_signals_for_groups(register_to_columns, db_path)
     groups = _build_groups(config, discover, signals, db_path)
 
-    warnings: list[Warning] = []
+    warnings: list[EditorWarning] = []
     if discover is not None and config.discover_hash is not None:
         current_hash = _compute_discover_hash(discover)
         if current_hash != config.discover_hash:
             warnings.append(
-                Warning(
+                EditorWarning(
                     code="discover_drift",
                     message=(
                         "discover payload differs from the snapshot the config "
@@ -972,6 +972,7 @@ def set_column_type(
     column_types = payload.setdefault("column_types", {})
     cols = column_types.setdefault(source_name, {})
     existing = cols.get(column_name, {})
+    old_type = existing.get("type")
     if isinstance(hint, _Unchanged):
         # Preserve survivor hint keys for the new type.
         new_entry = {"type": new_type}
@@ -982,6 +983,20 @@ def set_column_type(
         if validated:
             new_entry.update(validated)
     cols[column_name] = new_entry
+
+    # Type changed: drop column_options for this column. Options can be
+    # type-specific (e.g. suppress_k is a categorical/numeric concern);
+    # mirrors set_group_register's reclassification path.
+    if old_type is not None and old_type != new_type:
+        column_options = payload.get("column_options")
+        if column_options:
+            opts_for_source = column_options.get(source_name)
+            if opts_for_source and column_name in opts_for_source:
+                opts_for_source.pop(column_name, None)
+                if not opts_for_source:
+                    column_options.pop(source_name, None)
+            if not column_options:
+                payload.pop("column_options", None)
 
     manual = payload.get("manual_columns", [])
     pair = [source_name, column_name]
@@ -1010,7 +1025,7 @@ def set_group_register(
     config = parse_config(payload)
 
     # Resolve group_id → list of source_names.
-    affected_sources: list[str] = _sources_in_group(config, group_id)
+    affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
     if not affected_sources:
         raise ValidationError(f"group_id={group_id!r} not found in current snapshot.")
 
@@ -1106,15 +1121,21 @@ def set_group_register(
     return get_state(project_dir, db_path=db_path)
 
 
-def _sources_in_group(config: MDWConfig, group_id: str) -> list[str]:
+def _sources_in_group(
+    config: MDWConfig, group_id: str, db_path: Path | None = None
+) -> list[str]:
     """Reverse the group_id naming scheme to the underlying source list."""
     if group_id.startswith("noreg-"):
         sn = group_id[len("noreg-") :]
         entry = config.sources.get(sn)
-        if entry is not None and not entry.get("register"):
+        # A source with a register assigned does not belong to a noreg
+        # group, even if the caller passed a stale group_id.
+        if entry is not None and entry.get("register"):
+            return []
+        if entry is not None:
             return [sn]
-        # If the source is not in config, but has no register entry,
-        # still report it (the editor uses sources from discover too).
+        # No `sources` entry: surface the source if column_types carries
+        # it (dense classification means it usually does).
         return [sn] if sn in config.column_types else []
     if group_id.startswith("reg-"):
         rest = group_id[len("reg-") :]
@@ -1135,7 +1156,7 @@ def _sources_in_group(config: MDWConfig, group_id: str) -> list[str]:
             register = entry.get("register")
             if not register:
                 continue
-            reg = resolve_register(register)
+            reg = resolve_register(register, db_path=db_path)
             if reg is not None and reg.id == target_id:
                 out.append(sn)
         return out
