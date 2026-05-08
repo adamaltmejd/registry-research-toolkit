@@ -11,6 +11,18 @@ import pytest
 from regmeta.db import DDL, SCHEMA_VERSION, _value_set_hash
 
 
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--update-golden",
+        action="store_true",
+        default=False,
+        help=(
+            "Rewrite golden fixture files (e.g. "
+            "tests/data/state_snapshot.golden.json) instead of diffing."
+        ),
+    )
+
+
 def assign_value_set(
     conn: sqlite3.Connection, cvid: int, codes: list[tuple[str, str]]
 ) -> int:
