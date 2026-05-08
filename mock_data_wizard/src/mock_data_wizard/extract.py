@@ -5,12 +5,12 @@ Two modes, one bundle:
 - ``MODE = "discover"`` -- metadata-only walk over ``SOURCES``. SQL
   sources read ``INFORMATION_SCHEMA.COLUMNS`` and ``COUNT(*)``; file
   sources use DuckDB ``DESCRIBE`` and ``COUNT(*)``. No samples, no
-  distinct counts. Output: ``mdw_step1_discovery.json``. The user copies it
+  distinct counts. Output: ``mock_data_discovery.json``. The user copies it
   off MONA and runs ``mock-data-wizard configure`` locally to author
-  ``mdw_step2_config.json``.
-- ``MODE = "extract"`` -- typed aggregation. Reads ``mdw_step2_config.json``
+  ``mock_data_config.json``.
+- ``MODE = "extract"`` -- typed aggregation. Reads ``mock_data_config.json``
   uploaded next to the bundle, requires every column to have a type
-  override, and produces ``mdw_step3_stats.json``. No data-driven classifier
+  override, and produces ``mock_data_stats.json``. No data-driven classifier
   pass: the configured type drives the per-column SQL.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
@@ -39,8 +39,8 @@ log = logging.getLogger("mdw.extract")
 
 CONTRACT_VERSION = "2.0.0"
 DISCOVER_CONTRACT_VERSION = "discover-1.0.0"
-DISCOVER_FILENAME = "mdw_step1_discovery.json"
-STATS_FILENAME = "mdw_step3_stats.json"
+DISCOVER_FILENAME = "mock_data_discovery.json"
+STATS_FILENAME = "mock_data_stats.json"
 SAMPLE_SIZE = 1000
 
 # Match regmeta.queries.extract_year so discover-time year detection on
@@ -160,7 +160,7 @@ def _count_distinct_and_nulls(
 ) -> tuple[int, int]:
     """Return ``(n_distinct, null_count)`` for one column.
 
-    Always called -- both counts land in ``mdw_step3_stats.json`` and are not
+    Always called -- both counts land in ``mock_data_stats.json`` and are not
     derivable from a type override.
     """
     qcol = quote_ident(col, dialect)
@@ -312,7 +312,7 @@ def _build_panels_block(
     source_results: Sequence[dict[str, Any]],
     time_key_periods: dict[tuple[str, str], list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
-    """Assemble the ``panels`` array for mdw_step3_stats.json.
+    """Assemble the ``panels`` array for mock_data_stats.json.
 
     ``time_key_periods`` is keyed by ``(panel_id, member.source)`` and
     carries pre-computed per-period stats for column-members (the
@@ -443,7 +443,7 @@ def process_handle(
         raise RuntimeError(
             f"extract mode: source {handle.source_name!r} has "
             f"{len(missing)} column(s) with no type override in "
-            f"mdw_step2_config.json: {listed}. Re-run discover and configure "
+            f"mock_data_config.json: {listed}. Re-run discover and configure "
             f"to refresh it, or add the missing entries by hand."
         )
 
@@ -553,7 +553,7 @@ def run_extract_typed(
     seed: int | None = None,
     classifier_seed: int = 0,
 ) -> dict[str, Any]:
-    """Run the typed extract pipeline and write ``mdw_step3_stats.json``.
+    """Run the typed extract pipeline and write ``mock_data_stats.json``.
 
     Every column must carry a type override in ``config`` -- this mode
     has no classifier fallback. Run ``discover`` + ``configure`` first
@@ -614,7 +614,7 @@ def run_extract_typed(
         "panels": _build_panels_block(config, source_results, time_key_periods),
     }
     write_export(Path(output_path), result)
-    log.info("mdw_step3_stats.json written: %s", output_path)
+    log.info("mock_data_stats.json written: %s", output_path)
     return result
 
 
@@ -666,7 +666,7 @@ def run_discover(
     sources: Iterable[Any],
     output_path: Path,
 ) -> dict[str, Any]:
-    """Walk ``sources`` for metadata only and write ``mdw_step1_discovery.json``.
+    """Walk ``sources`` for metadata only and write ``mock_data_discovery.json``.
 
     SQL sources without ``tables=`` / ``pattern=`` / ``all=True`` are
     treated as "list everything reachable in this DSN" -- discover is
@@ -701,7 +701,7 @@ def run_discover(
         "sources": source_results,
     }
     write_export(Path(output_path), result)
-    log.info("mdw_step1_discovery.json written: %s", output_path)
+    log.info("mock_data_discovery.json written: %s", output_path)
     return result
 
 
@@ -722,14 +722,14 @@ def main(
     Args:
         sources: ``SOURCES`` returned from ``configure()``.
         output_dir: Directory for the output file (and for reading
-            ``mdw_step2_config.json`` in extract mode).
+            ``mock_data_config.json`` in extract mode).
         output_path: Override the output filename. Defaults to
-            ``mdw_step1_discovery.json`` (discover mode) or ``mdw_step3_stats.json``
+            ``mock_data_discovery.json`` (discover mode) or ``mock_data_stats.json``
             (extract mode).
         mode: ``"discover"`` for the metadata-only walk that produces
-            ``mdw_step1_discovery.json``, or ``"extract"`` for the typed pipeline
-            that produces ``mdw_step3_stats.json``. Extract mode requires a
-            ``mdw_step2_config.json`` next to ``output_dir``.
+            ``mock_data_discovery.json``, or ``"extract"`` for the typed pipeline
+            that produces ``mock_data_stats.json``. Extract mode requires a
+            ``mock_data_config.json`` next to ``output_dir``.
         seed: RNG seed for reproducible noise (extract only).
         classifier_seed: Seed for the per-column classification sample
             (extract only).
@@ -753,13 +753,13 @@ def main(
     config = load_config(output_dir)
     if config is None:
         raise RuntimeError(
-            f"extract mode requires mdw_step2_config.json next to the bundle "
-            f"({output_dir}/mdw_step2_config.json). Run mode='discover' first, "
+            f"extract mode requires mock_data_config.json next to the bundle "
+            f"({output_dir}/mock_data_config.json). Run mode='discover' first, "
             f"then mock-data-wizard configure on the resulting "
-            f"mdw_step1_discovery.json."
+            f"mock_data_discovery.json."
         )
     log.info(
-        "loaded mdw_step2_config.json: %d type override(s), %d option override(s)",
+        "loaded mock_data_config.json: %d type override(s), %d option override(s)",
         sum(len(v) for v in config.column_types.values()),
         sum(len(v) for v in config.column_options.values()),
     )

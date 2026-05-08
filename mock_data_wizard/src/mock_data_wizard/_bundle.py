@@ -46,16 +46,16 @@ Two modes, one bundle:
 
   MODE = "discover"  (default)
     Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
-    plus COUNT(*). Output: mdw_step1_discovery.json next to this script.
-    Copy mdw_step1_discovery.json off MONA, run `mock-data-wizard
-    configure mdw_step1_discovery.json` locally to author
-    mdw_step2_config.json, upload it back next to the bundle, then
+    plus COUNT(*). Output: mock_data_discovery.json next to this script.
+    Copy mock_data_discovery.json off MONA, run `mock-data-wizard
+    configure mock_data_discovery.json` locally to author
+    mock_data_config.json, upload it back next to the bundle, then
     re-run with MODE = "extract".
 
   MODE = "extract"
-    Typed aggregation. Reads mdw_step2_config.json from this directory
+    Typed aggregation. Reads mock_data_config.json from this directory
     (every column must carry a type override) and writes
-    mdw_step3_stats.json.
+    mock_data_stats.json.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression (k-anonymity, default threshold = 10), uniform noise
@@ -103,11 +103,11 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 # otherwise. Has no effect when DEBUG=False.
 #
 # MODE picks the run flavour:
-#   "discover" -- emits mdw_step1_discovery.json (metadata only).
+#   "discover" -- emits mock_data_discovery.json (metadata only).
 #                 Default. SQL sources without `tables=` / `pattern=` /
 #                 `all=True` are listed permissively here.
-#   "extract"  -- emits mdw_step3_stats.json. Requires
-#                 mdw_step2_config.json sitting next to this script.
+#   "extract"  -- emits mock_data_stats.json. Requires
+#                 mock_data_config.json sitting next to this script.
 #                 Authoritative SOURCES filtering is required (no
 #                 permissive listing in this mode).
 #
@@ -119,7 +119,7 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #     return [sql_source(dsn="P1105")]
 #     return [file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data")]
 #
-# EXTRACT SHAPE: declare exactly what to aggregate. mdw_step2_config.json
+# EXTRACT SHAPE: declare exactly what to aggregate. mock_data_config.json
 # next to this script declares per-column types.
 #
 #     return [

@@ -4,7 +4,7 @@ Runs the typed SQL queries from ``sql_emit.queries_for_column`` against a
 DB-API 2.0 connection (DuckDB or pyodbc-wrapped MS SQL), applies
 disclosure-control post-processing (k-anonymity on frequencies, uniform
 relative noise on numeric aggregates, jitter on dates), and returns the
-per-column dict that lands in ``mdw_step3_stats.json``.
+per-column dict that lands in ``mock_data_stats.json``.
 
 PII safety: suppression and noise are applied to **aggregates**, not
 rows. No individual-level data passes through Python.
@@ -182,7 +182,7 @@ def summarize_column(
     override: ColumnTypeOverride | None = None,
     options: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Compute the per-column ``mdw_step3_stats.json`` fragment for one column.
+    """Compute the per-column ``mock_data_stats.json`` fragment for one column.
 
     Args:
         conn: DB-API 2.0 connection.
@@ -201,7 +201,7 @@ def summarize_column(
             carries any inline subtype/format hints that let the caller
             skip the per-column sample query.
         options: Per-column option overrides loaded from
-            ``mdw_step2_config.json``. Reserved for downstream consumers
+            ``mock_data_config.json``. Reserved for downstream consumers
             (e.g. ``suppress_k`` in disclosure-control hardening).
     """
     rng = rng or random.Random()
