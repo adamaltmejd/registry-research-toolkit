@@ -5,9 +5,61 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from mock_data_wizard.cli import main
+import pytest
+
+from mock_data_wizard.cli import build_parser, main
 
 from .conftest import MINIMAL_STATS
+
+
+# -- `ui` subcommand parsing ----------------------------------------------
+
+
+def test_ui_subcommand_parses_minimum_args():
+    parser = build_parser()
+    args = parser.parse_args(["ui", "/tmp/proj"])
+    assert args.command == "ui"
+    assert args.project_dir == "/tmp/proj"
+    assert args.host == "127.0.0.1"
+    assert args.port == 8765
+    assert args.unsafe_host is False
+    assert args.no_browser is False
+    assert args.db_path is None
+
+
+def test_ui_subcommand_overrides():
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "ui",
+            "/tmp/proj",
+            "--port",
+            "9000",
+            "--host",
+            "::1",
+            "--no-browser",
+            "--db-path",
+            "/tmp/regmeta.db",
+        ]
+    )
+    assert args.port == 9000
+    assert args.host == "::1"
+    assert args.no_browser is True
+    assert args.db_path == "/tmp/regmeta.db"
+
+
+def test_ui_requires_project_dir():
+    parser = build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["ui"])
+
+
+def test_ui_rejects_non_loopback_without_unsafe(tmp_path: Path, capsys):
+    """Concrete safety gate: 0.0.0.0 without --unsafe-host fails fast."""
+    rc = main(["ui", str(tmp_path), "--host", "0.0.0.0", "--no-browser"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "refusing to bind" in captured.err
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
