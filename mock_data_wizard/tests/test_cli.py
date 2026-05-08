@@ -62,6 +62,38 @@ def test_ui_rejects_non_loopback_without_unsafe(tmp_path: Path, capsys):
     assert "refusing to bind" in captured.err
 
 
+def test_ui_brackets_ipv6_url(tmp_path: Path, capsys, monkeypatch):
+    """`--host ::1` must print/open `http://[::1]:PORT/`, not the
+    raw `http://::1:PORT/` (which is invalid because of the colon
+    collision)."""
+    from mock_data_wizard import server as server_mod
+
+    # Build the server, capture the URL, then trigger KeyboardInterrupt
+    # in serve_forever so the CLI exits without blocking.
+    captured_url: list[str] = []
+
+    real_open = server_mod.build_server
+
+    def _wrap(config: server_mod.ServerConfig):
+        httpd = real_open(config)
+        original = httpd.serve_forever
+
+        def _capture_and_stop(*a, **kw):
+            captured_url.append(httpd.server_address[0])
+            raise KeyboardInterrupt
+
+        httpd.serve_forever = _capture_and_stop  # type: ignore[method-assign]
+        # Restore for downstream cleanup; serve_forever raises immediately.
+        del original
+        return httpd
+
+    monkeypatch.setattr(server_mod, "build_server", _wrap)
+    rc = main(["ui", str(tmp_path), "--host", "::1", "--no-browser", "--port", "0"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "http://[::1]:" in out, f"expected bracketed IPv6 URL in: {out!r}"
+
+
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
     stats_path = tmp_path / "mock_data_stats.json"
     stats_path.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")

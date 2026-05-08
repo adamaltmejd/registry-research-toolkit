@@ -451,7 +451,10 @@ def _cmd_ui(args: argparse.Namespace) -> int:
         return 1
 
     bound_host, bound_port = httpd.server_address[:2]
-    url = f"http://{bound_host}:{bound_port}/"
+    # IPv6 literals must be bracketed in URLs so the port colon doesn't
+    # collide with the address colons (`http://[::1]:8765/`).
+    display_host = f"[{bound_host}]" if ":" in bound_host else bound_host
+    url = f"http://{display_host}:{bound_port}/"
     print(f"mock-data-wizard ui serving {project_dir} at {url}")
     print("Press Ctrl-C to stop.")
 

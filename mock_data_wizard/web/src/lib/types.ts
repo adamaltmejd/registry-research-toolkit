@@ -140,6 +140,17 @@ const COLUMN_TYPES = new Set<ColumnType>([
   "date",
 ]);
 
+const ID_SUBTYPES = new Set<IdSubtype>(["integer", "string"]);
+const NUMERIC_SUBTYPES = new Set<NumericSubtype>(["integer", "double"]);
+
+const HINT_KEYS_BY_TYPE: Record<ColumnType, ReadonlySet<string>> = {
+  id: new Set(["id_subtype"]),
+  numeric: new Set(["numeric_subtype"]),
+  date: new Set(["date_format"]),
+  categorical: new Set(),
+  opaque: new Set(),
+};
+
 function isObject(x: unknown): x is Record<string, unknown> {
   return typeof x === "object" && x !== null && !Array.isArray(x);
 }
@@ -156,6 +167,28 @@ function isColumnType(x: unknown): x is ColumnType {
   return typeof x === "string" && COLUMN_TYPES.has(x as ColumnType);
 }
 
+function isIdSubtype(x: unknown): x is IdSubtype {
+  return typeof x === "string" && ID_SUBTYPES.has(x as IdSubtype);
+}
+
+function isNumericSubtype(x: unknown): x is NumericSubtype {
+  return typeof x === "string" && NUMERIC_SUBTYPES.has(x as NumericSubtype);
+}
+
+function isColumnTypeOverride(x: unknown): x is ColumnTypeOverride {
+  if (!isObject(x)) return false;
+  if (!isColumnType(x.type)) return false;
+  const allowed = HINT_KEYS_BY_TYPE[x.type];
+  for (const key of Object.keys(x)) {
+    if (key === "type") continue;
+    if (!allowed.has(key)) return false;
+    if (key === "id_subtype" && !isIdSubtype(x[key])) return false;
+    if (key === "numeric_subtype" && !isNumericSubtype(x[key])) return false;
+    if (key === "date_format" && typeof x[key] !== "string") return false;
+  }
+  return true;
+}
+
 function isPanelMember(x: unknown): x is PanelMember {
   if (!isObject(x)) return false;
   if (typeof x.source !== "string") return false;
@@ -164,6 +197,31 @@ function isPanelMember(x: unknown): x is PanelMember {
   if (hasPeriod === hasTimeKey) return false;
   if (hasPeriod && typeof x.period !== "number") return false;
   if (hasTimeKey && typeof x.time_key !== "string") return false;
+  return true;
+}
+
+function isPanel(x: unknown): x is Panel {
+  if (!isObject(x)) return false;
+  if (typeof x.panel_id !== "string") return false;
+  if (typeof x.panel_key !== "string") return false;
+  return Array.isArray(x.members) && x.members.every(isPanelMember);
+}
+
+function isManualColumnEntry(x: unknown): x is [string, string] {
+  return (
+    Array.isArray(x) &&
+    x.length === 2 &&
+    typeof x[0] === "string" &&
+    typeof x[1] === "string"
+  );
+}
+
+function isSourceEntry(
+  x: unknown,
+): x is { year?: number | null; register?: string | null } {
+  if (!isObject(x)) return false;
+  if ("year" in x && !isNumberOrNull(x.year)) return false;
+  if ("register" in x && !isStringOrNull(x.register)) return false;
   return true;
 }
 
@@ -218,15 +276,38 @@ function isRegisterGroupView(x: unknown): x is RegisterGroupView {
 
 function isMDWConfig(x: unknown): x is MDWConfig {
   if (!isObject(x)) return false;
-  return (
-    typeof x.contract_version === "string" &&
-    isStringOrNull(x.discover_hash) &&
-    isObject(x.column_types) &&
-    isObject(x.column_options) &&
-    isObject(x.sources) &&
-    Array.isArray(x.panels) &&
-    Array.isArray(x.manual_columns)
-  );
+  if (typeof x.contract_version !== "string") return false;
+  if (!isStringOrNull(x.discover_hash)) return false;
+
+  if (!isObject(x.column_types)) return false;
+  for (const cols of Object.values(x.column_types)) {
+    if (!isObject(cols)) return false;
+    for (const ovr of Object.values(cols)) {
+      if (!isColumnTypeOverride(ovr)) return false;
+    }
+  }
+
+  if (!isObject(x.column_options)) return false;
+  for (const cols of Object.values(x.column_options)) {
+    if (!isObject(cols)) return false;
+    for (const opts of Object.values(cols)) {
+      if (!isObject(opts)) return false;
+    }
+  }
+
+  if (!isObject(x.sources)) return false;
+  for (const entry of Object.values(x.sources)) {
+    if (!isSourceEntry(entry)) return false;
+  }
+
+  if (!Array.isArray(x.panels) || !x.panels.every(isPanel)) return false;
+  if (
+    !Array.isArray(x.manual_columns) ||
+    !x.manual_columns.every(isManualColumnEntry)
+  ) {
+    return false;
+  }
+  return true;
 }
 
 function isEditorWarning(x: unknown): x is EditorWarning {

@@ -29,22 +29,20 @@
   );
   let submitting = $state(false);
 
-  function buildHint(): Record<string, unknown> | null | undefined {
-    if (selectedType === "id" && idSubtype) {
-      return { id_subtype: idSubtype };
-    }
-    if (selectedType === "numeric" && numericSubtype) {
+  function buildHint(): Record<string, unknown> | null {
+    // Always send an explicit hint based on form state. Earlier we
+    // returned `undefined` to preserve the server's existing value
+    // when type was unchanged, but that made the "unset" option in
+    // the dropdown a no-op — users couldn't clear an existing hint
+    // without first changing the type. Explicit-always trades the
+    // UNCHANGED micro-optimization for a form that actually does
+    // what it says.
+    if (selectedType === "id" && idSubtype) return { id_subtype: idSubtype };
+    if (selectedType === "numeric" && numericSubtype)
       return { numeric_subtype: numericSubtype };
-    }
-    if (selectedType === "date" && dateFormat) {
+    if (selectedType === "date" && dateFormat)
       return { date_format: dateFormat };
-    }
-    // No inline hint applicable: explicitly clear any existing one
-    // when the type changed; preserve when unchanged.
-    if (selectedType !== column.current_type) {
-      return null;
-    }
-    return undefined;
+    return null;
   }
 
   async function submit(event: SubmitEvent): Promise<void> {
@@ -53,13 +51,12 @@
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
     submitting = true;
-    const hint = buildHint();
     const ok = await store.setColumnType({
       source: sourceName,
       column: column.name,
       type: selectedType,
       expected_version: version,
-      ...(hint === undefined ? {} : { hint }),
+      hint: buildHint(),
     });
     submitting = false;
     if (ok) {

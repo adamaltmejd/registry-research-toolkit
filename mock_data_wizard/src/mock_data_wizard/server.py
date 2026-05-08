@@ -44,16 +44,13 @@ __all__ = [
     "build_server",
     "serve",
     "is_loopback_host",
+    "is_ipv6_host",
 ]
 
 
 _LOG = logging.getLogger("mock_data_wizard.server")
 
 _STATIC_DIR = Path(str(importlib.resources.files("mock_data_wizard") / "static"))
-
-# Files Vite emits with a content-hash in the name can be cached
-# aggressively. Everything else (notably ``index.html``) must not be.
-_HASHED_ASSET_PREFIX = "/assets/"
 
 _MIME_TYPES = {
     ".html": "text/html; charset=utf-8",
@@ -109,6 +106,20 @@ def is_loopback_host(host: str) -> bool:
     return False
 
 
+def is_ipv6_host(host: str) -> bool:
+    """True when ``host`` is an IPv6 literal. The ``:`` discriminator is
+    sufficient because hostnames and IPv4 literals never contain one."""
+    return ":" in host
+
+
+class _ThreadingHTTPServer6(ThreadingHTTPServer):
+    """IPv6 variant. Stdlib's ``ThreadingHTTPServer`` defaults to
+    ``AF_INET``, so binding ``::1`` fails at ``getaddrinfo`` time. This
+    subclass flips the family for IPv6 hosts."""
+
+    address_family = socket.AF_INET6
+
+
 def build_server(config: ServerConfig) -> ThreadingHTTPServer:
     """Construct a ``ThreadingHTTPServer`` bound to ``config.host:config.port``.
 
@@ -124,7 +135,10 @@ def build_server(config: ServerConfig) -> ThreadingHTTPServer:
         )
 
     handler_cls = _make_handler(config)
-    return ThreadingHTTPServer((config.host, config.port), handler_cls)
+    server_cls = (
+        _ThreadingHTTPServer6 if is_ipv6_host(config.host) else ThreadingHTTPServer
+    )
+    return server_cls((config.host, config.port), handler_cls)
 
 
 def serve(config: ServerConfig) -> None:
@@ -280,10 +294,20 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
             data = target.read_bytes()
             mime = _MIME_TYPES.get(target.suffix.lower(), "application/octet-stream")
 
+            # Decide caching from the *resolved* path, not the request URL:
+            # `/assets/../index.html` resolves to the SPA shell but its raw
+            # URL prefix would imply long-lived caching, which would stick
+            # users on a stale shell. Hashed-asset caching is opt-in and
+            # restricted to files actually living under root/assets/.
+            relative = target.relative_to(root) if target.is_relative_to(root) else None
+            is_hashed_asset = (
+                relative is not None
+                and relative.parts
+                and relative.parts[0] == "assets"
+                and target.name != "index.html"
+            )
             cache_control = (
-                "public, max-age=31536000, immutable"
-                if path.startswith(_HASHED_ASSET_PREFIX)
-                else "no-cache"
+                "public, max-age=31536000, immutable" if is_hashed_asset else "no-cache"
             )
             self._send_bytes(HTTPStatus.OK, mime, data, cache_control=cache_control)
 

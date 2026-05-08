@@ -269,6 +269,40 @@ def test_method_not_allowed_on_static(running_server: str):
     assert body["error"]["code"] == "method_not_allowed"
 
 
+# -- Cache-control headers ------------------------------------------------
+
+
+def _fetch_headers(url: str) -> tuple[int, dict[str, str]]:
+    req = Request(url, method="GET")
+    try:
+        with urlopen(req) as resp:
+            resp.read()
+            return resp.status, {k.lower(): v for k, v in resp.headers.items()}
+    except HTTPError as exc:
+        exc.read()
+        return exc.code, {k.lower(): v for k, v in exc.headers.items()}
+
+
+def test_index_html_no_cache(running_server: str):
+    """The SPA shell must never be `immutable` — users would get stuck
+    on stale shells across deploys."""
+    status, headers = _fetch_headers(f"{running_server}/")
+    assert status == 200
+    assert "no-cache" in headers["cache-control"].lower()
+
+
+def test_traversal_into_index_uses_no_cache(running_server: str):
+    """Regression: cache-control was decided from the raw URL prefix,
+    so `/assets/../index.html` resolved to the SPA shell but inherited
+    `immutable` caching. The fix bases the decision on the resolved
+    target's path under the static root."""
+    status, headers = _fetch_headers(f"{running_server}/assets/../index.html")
+    assert status == 200
+    assert "no-cache" in headers["cache-control"].lower(), (
+        f"expected no-cache for resolved-to-index, got {headers.get('cache-control')!r}"
+    )
+
+
 # -- Loopback gate --------------------------------------------------------
 
 
@@ -289,3 +323,24 @@ def test_is_loopback_host_true_for_loopback():
 def test_is_loopback_host_false_for_external():
     assert not server.is_loopback_host("0.0.0.0")
     assert not server.is_loopback_host("8.8.8.8")
+
+
+def test_is_ipv6_host_distinguishes_literals():
+    assert server.is_ipv6_host("::1")
+    assert server.is_ipv6_host("fe80::1")
+    assert not server.is_ipv6_host("127.0.0.1")
+    assert not server.is_ipv6_host("localhost")
+
+
+def test_build_server_binds_ipv6_loopback(tmp_path: Path):
+    """Regression for the IPv6 bug: stdlib ThreadingHTTPServer defaults
+    to AF_INET, so passing ``::1`` would crash at getaddrinfo time
+    without the AF_INET6 subclass."""
+    config = ServerConfig(project_dir=tmp_path, host="::1", port=0)
+    httpd = build_server(config)
+    try:
+        host, port = httpd.server_address[:2]
+        assert host == "::1"
+        assert port > 0
+    finally:
+        httpd.server_close()
