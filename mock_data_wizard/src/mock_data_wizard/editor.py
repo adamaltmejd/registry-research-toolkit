@@ -25,7 +25,6 @@ Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 from __future__ import annotations
 
-import fcntl
 import hashlib
 import json
 import os
@@ -266,7 +265,19 @@ def _config_lock(project_dir: Path) -> Iterator[None]:
     time only; without serialising the read+write window, two clients
     mutating from the same snapshot can both pass ``_verify_version``
     and the second ``os.replace`` silently clobbers the first. The lock
-    closes that window. POSIX-only (fcntl); the editor API is local."""
+    closes that window.
+
+    POSIX-only: ``fcntl`` is unavailable on Windows. Lazy-imported here
+    so read paths (``get_state``) and the no-mutation branch of
+    ``init_if_missing`` remain importable cross-platform; only mutators
+    raise on Windows, with a clear message."""
+    try:
+        import fcntl
+    except ModuleNotFoundError as exc:  # pragma: no cover - Windows path
+        raise NotImplementedError(
+            "mock_data_wizard.editor mutations require POSIX fcntl; "
+            "Windows is not supported for the editor write path."
+        ) from exc
     project_dir.mkdir(parents=True, exist_ok=True)
     lock_path = project_dir / ".mock_data_config.lock"
     # "a" avoids truncating the (always-empty) sidecar; close() releases the flock.
@@ -938,6 +949,18 @@ def _existing_hint_keys_valid_for(
     return {k: v for k, v in type_entry.items() if k != "type" and k in allowed}
 
 
+def _load_local_discover(project_dir: Path) -> dict[str, Any] | None:
+    """Read+validate ``mock_data_discovery.json`` next to the config, or
+    return None when the file is absent or malformed."""
+    candidate = project_dir / DISCOVER_FILENAME_DEFAULT
+    if not candidate.exists():
+        return None
+    try:
+        return _read_discover(candidate)
+    except ValueError:
+        return None
+
+
 def _source_exists_in_discover(
     project_dir: Path,
     payload: dict[str, Any],
@@ -947,18 +970,13 @@ def _source_exists_in_discover(
     """Whether ``(source_name, column_name)`` is in the discover payload
     next to the config (or, if discover is absent, in the existing
     ``column_types`` map)."""
-    candidate = project_dir / DISCOVER_FILENAME_DEFAULT
-    if candidate.exists():
-        try:
-            discover = _read_discover(candidate)
-        except ValueError:
-            discover = None
-        if discover is not None:
-            for src in discover.get("sources", []):
-                if src["source_name"] != source_name:
-                    continue
-                return any(c["name"] == column_name for c in src.get("columns", []))
-            return False
+    discover = _load_local_discover(project_dir)
+    if discover is not None:
+        for src in discover.get("sources", []):
+            if src["source_name"] != source_name:
+                continue
+            return any(c["name"] == column_name for c in src.get("columns", []))
+        return False
     return column_name in payload.get("column_types", {}).get(source_name, {})
 
 
@@ -972,6 +990,26 @@ def _assert_column_in_discover(
         raise ValidationError(
             f"({source_name!r}, {column_name!r}) not found in discover or "
             f"existing column_types — refusing to silently create entries."
+        )
+
+
+def _assert_source_in_discover(
+    project_dir: Path, payload: dict[str, Any], source_name: str
+) -> None:
+    """Reject unknown ``source_name`` so a typo can't silently create a
+    phantom source entry. Falls back to ``column_types`` keys when the
+    discover payload is absent (mirrors ``_source_exists_in_discover``)."""
+    discover = _load_local_discover(project_dir)
+    if discover is not None:
+        known = {src["source_name"] for src in discover.get("sources", [])}
+    else:
+        known = set(payload.get("column_types", {}).keys()) | set(
+            payload.get("sources", {}).keys()
+        )
+    if source_name not in known:
+        raise ValidationError(
+            f"source_name={source_name!r} not found in discover or existing "
+            f"config — refusing to silently create entries."
         )
 
 
@@ -1146,7 +1184,10 @@ def set_group_register(
             column_types[sn] = out_cols
 
         if reclassify_manual:
-            payload["manual_columns"] = [list(p) for p in manual_pairs]
+            # Sort for deterministic JSON output — manual_pairs is a set,
+            # so insertion order isn't preserved and would otherwise
+            # produce noisy diffs across runs.
+            payload["manual_columns"] = [list(p) for p in sorted(manual_pairs)]
         if column_options:
             payload["column_options"] = column_options
         elif "column_options" in payload:
@@ -1211,6 +1252,7 @@ def set_source_metadata(
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
+        _assert_source_in_discover(project_dir, payload, source_name)
         sources = payload.setdefault("sources", {})
         entry = sources.setdefault(source_name, {})
         if not isinstance(year, _Unchanged):

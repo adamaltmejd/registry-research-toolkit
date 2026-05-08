@@ -892,3 +892,117 @@ def test_get_state_rejects_pre_3_0_0_config(tmp_path: Path):
     )
     with pytest.raises(ValueError, match="Regenerate.*editor"):
         get_state(tmp_path)
+
+
+# -- Cross-platform import + Windows-mutation diagnostics -----------------
+
+
+def test_config_lock_raises_clear_error_when_fcntl_missing(tmp_path: Path, monkeypatch):
+    """On Windows, ``fcntl`` is unavailable. Read paths must still work
+    (the lock is only acquired on mutation); when a mutator tries to
+    acquire the lock, it must fail with a clear, actionable message
+    rather than ``ModuleNotFoundError: No module named 'fcntl'``."""
+    import builtins
+
+    real_import = builtins.__import__
+
+    def fake_import(name, *args, **kwargs):
+        if name == "fcntl":
+            raise ModuleNotFoundError("No module named 'fcntl'")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+    with pytest.raises(NotImplementedError, match="POSIX"):
+        with editor._config_lock(tmp_path):
+            pass
+
+
+# -- set_source_metadata source validation --------------------------------
+
+
+def test_set_source_metadata_rejects_unknown_source(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_source_metadata(
+            tmp_path,
+            "ghost_source",
+            year=2024,
+            expected_version=snap.snapshot_version,
+        )
+
+
+# -- Discover-hash determinism --------------------------------------------
+
+
+def test_compute_discover_hash_is_order_invariant():
+    """Hash must depend only on (source_name, [(col, sql_type)]) sets,
+    not on insertion order of sources or columns. Otherwise a re-run of
+    discover that emits the same content in a different order would
+    spuriously trigger ``discover_drift``."""
+    payload_a = _discover(
+        [
+            {
+                "source_name": "a",
+                "columns": [
+                    {"name": "LopNr", "sql_type": "BIGINT"},
+                    {"name": "Salary", "sql_type": "DECIMAL"},
+                ],
+            },
+            {"source_name": "b", "columns": [{"name": "Year", "sql_type": "INT"}]},
+        ]
+    )
+    payload_b = _discover(
+        [
+            {"source_name": "b", "columns": [{"name": "Year", "sql_type": "INT"}]},
+            {
+                "source_name": "a",
+                "columns": [
+                    {"name": "Salary", "sql_type": "DECIMAL"},
+                    {"name": "LopNr", "sql_type": "BIGINT"},
+                ],
+            },
+        ]
+    )
+    assert editor._compute_discover_hash(payload_a) == editor._compute_discover_hash(
+        payload_b
+    )
+
+
+def test_compute_discover_hash_ignores_row_count_and_nullable():
+    """row_count, nullable, and source_detail vary across MONA runs but
+    don't change the schema; the hash must ignore them."""
+    base = {
+        "source_name": "x",
+        "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+    }
+    payload_a = _discover([base])
+    payload_b = _discover(
+        [
+            {
+                **base,
+                "row_count": 1_000_000,
+                "source_detail": {"year": 2018},
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT", "nullable": True}],
+            }
+        ]
+    )
+    assert editor._compute_discover_hash(payload_a) == editor._compute_discover_hash(
+        payload_b
+    )
+
+
+def test_compute_discover_hash_changes_on_schema_change():
+    """A column rename or sql_type change must flip the hash so
+    ``discover_drift`` fires."""
+    payload_a = _discover(
+        [{"source_name": "x", "columns": [{"name": "LopNr", "sql_type": "BIGINT"}]}]
+    )
+    payload_b = _discover(
+        [{"source_name": "x", "columns": [{"name": "LopNr", "sql_type": "INT"}]}]
+    )
+    assert editor._compute_discover_hash(payload_a) != editor._compute_discover_hash(
+        payload_b
+    )
