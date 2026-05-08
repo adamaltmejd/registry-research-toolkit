@@ -149,13 +149,7 @@ def _generate_date(
         span = 1
 
     offsets = rng.integers(0, span + 1, size=n)
-    output_fmt = "%Y-%m-%d"
-    if fmt in ("%d/%m/%Y", "%d-%m-%Y", "%Y%m%d"):
-        output_fmt = fmt
-
-    return np.array(
-        [(d_min + timedelta(days=int(o))).strftime(output_fmt) for o in offsets]
-    )
+    return np.array([(d_min + timedelta(days=int(o))).strftime(fmt) for o in offsets])
 
 
 def _make_id_pool(n_distinct: int, id_subtype: str) -> np.ndarray:

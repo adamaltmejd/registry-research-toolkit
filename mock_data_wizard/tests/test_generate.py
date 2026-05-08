@@ -11,10 +11,22 @@ import numpy as np
 from mock_data_wizard.enrich import RegisterCandidate, enrich
 from mock_data_wizard.generate import (
     _generate_categorical,
+    _generate_date,
     _remove_stale_files,
     generate,
 )
 from mock_data_wizard.stats import parse_stats
+
+
+def test_generate_date_round_trips_pinned_format():
+    # _generate_date must format output using the pinned date_format,
+    # not silently fall back to ISO. Previously a hardcoded allowlist
+    # accepted only %d/%m/%Y, %d-%m-%Y, %Y%m%d; everything else (e.g.
+    # %Y/%m/%d) was forced back to %Y-%m-%d, breaking round-trip.
+    rng = np.random.default_rng(0)
+    stats = {"min": "2020-01-01", "max": "2020-12-31", "date_format": "%Y/%m/%d"}
+    out = _generate_date(rng, n=50, stats=stats)
+    assert all("/" in v and "-" not in v for v in out.tolist())
 
 
 def test_generate_categorical_tolerates_null_other():

@@ -468,8 +468,8 @@ invariant — no individual-level data leaves MONA.
 | Column type | What gets exported |
 |---|---|
 | Numeric | min, max, mean, sd, quantiles (each ±0.5% noise), null_rate¹ |
-| Low-cardinality categorical | frequency table, `_other` bucket k-censored |
-| Opaque (high-cardinality string we don't model) | n_distinct, min/max/mean length, null_rate¹ |
+| Categorical | frequency table (top 200 groups), `_other` bucket k-censored |
+| Opaque (free-text string we don't model) | n_distinct, min/max/mean length, null_rate¹ |
 | Date | min, max, quantiles (each ±7-day jitter), date_format, null_rate¹ |
 | ID-like | n_distinct, id_subtype, null_rate¹ |
 
@@ -477,7 +477,13 @@ invariant — no individual-level data leaves MONA.
 are omitted from the per-column dict (the `nullable: true` flag stays).
 An exact small null-count would expose a handful of outliers.
 
-**Low-cardinality threshold:** `n_distinct <= min(50, n_rows * 0.01)`.
+**Categorical-vs-opaque routing** is decided by the classifier, not by
+cardinality at summarize time: regmeta value codes / classifications
+or the RTB exact-name backstop yield `categorical`; everything else
+falls through to `opaque`. The categorical frequency query is capped
+at 200 groups (`categorical_freqs_sql`); higher-cardinality columns
+that legitimately want frequency tables need a manual override and
+will hit that cap.
 
 **`SUPPRESS_K` (default 10).** Frequency-table cells with counts below
 `SUPPRESS_K` fold into a single `_other` bucket. The `_other` bucket
