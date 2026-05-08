@@ -925,6 +925,62 @@ low-confidence winner. Candidates (with `match_count` and
 downstream tooling can surface the ambiguity instead of silently
 mislabeling the file.
 
+## Web UI
+
+`mock-data-wizard ui <project_dir>` starts a local HTTP server that
+exposes the editor API and serves a Svelte SPA from
+`src/mock_data_wizard/static/`. Single-project per server: each invocation
+binds to one `project_dir` and survives until Ctrl-C.
+
+**Binding + safety.** Default `--host 127.0.0.1`. Non-loopback hosts
+(including `0.0.0.0`) are rejected at parse time unless `--unsafe-host`
+is also passed. There is no auth — local-only binding is the only
+control. Document this explicitly in any deploy notes.
+
+**HTTP surface (v1).**
+
+| Method | Path | Editor call | Errors |
+| --- | --- | --- | --- |
+| GET  | `/api/state` | `editor.get_state` | 404 not_initialized |
+| POST | `/api/column-type` | `editor.set_column_type` | 400 validation, 409 stale_state |
+| POST | `/api/group-register` | `editor.set_group_register` | 400 validation, 409 stale_state |
+| GET  | `/api/registers` | `editor.list_registers` | — |
+| GET  | `/`, `/assets/*` | static SPA bundle | 404 not_found |
+
+Error envelope: `{"error": {"code", "message", "context?"}}`. The 409
+`stale_state` envelope carries the fresh `StateSnapshot` in
+`context.fresh_state` so the SPA can re-apply without an extra GET. If
+the post-stale `get_state` itself fails (config deleted mid-flight),
+the 409 is still returned without `fresh_state`.
+
+**Concurrency.** `ThreadingHTTPServer` runs one thread per request
+because the SPA fires the four GET endpoints in parallel on first load.
+Mutations are still serialised by the editor's `_config_lock` (fcntl on
+a sidecar file), so the server doesn't need a top-level lock.
+
+**Static asset shipping.** The frontend lives in `mock_data_wizard/web/`
+(plain Svelte 5 + Vite + TS, bun-managed). `vite build` writes to
+`../src/mock_data_wizard/static/` and that directory is committed —
+hatchling auto-bundles non-Python files in the package, so the wheel
+ships pure-Python with the SPA inside it. Editable installs serve the
+on-disk directory directly, so `bun run dev` (or a fresh `bun run
+build`) is live immediately. CI rebuilds the bundle and fails the PR if
+`static/` differs from a clean rebuild — that is the drift guard.
+
+**Wire format contract.** `_serialize.state_snapshot_to_dict` converts
+the editor's frozen dataclasses to JSON-safe dicts; the frontend's
+`web/src/lib/types.ts` mirrors that shape by hand. Drift is caught by a
+golden-fixture test (`tests/data/state_snapshot.golden.json`): the
+Python side serializes a deterministic synthetic project (regmeta
+stubbed) and diffs against the committed JSON; the Bun side parses the
+same file via `isStateSnapshot`. Update with
+`uv run pytest tests/test_serialize.py::test_golden_fixture_matches --update-golden`,
+then update `types.ts` until both tests pass.
+
+**v1 mutators.** `set_column_type` and `set_group_register` only.
+Source year, column options, panel CRUD, and `init_if_missing`
+overwrite are deferred to v2.
+
 ## Deliberate exclusions
 
 - Household structures, time-varying attributes, employer links

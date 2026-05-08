@@ -25,6 +25,7 @@ globs:
   - "**/*.md"
   - "!.venv"
   - "!node_modules"
+  - "!**/node_modules"
   - "!archive"
   - "!.tmp"
   # Raw marker output (build artifacts)

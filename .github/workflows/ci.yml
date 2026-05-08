@@ -34,3 +34,20 @@ jobs:
       - uses: astral-sh/setup-uv@v8.1.0
       - run: uv sync --frozen
       - run: uv run python -m pytest -m "not integration"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mock_data_wizard/web
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun test
+      - run: bun run build
+      # Catches "edited the frontend without rebuilding the bundle"
+      # — the static dir ships in the wheel, so it must match source.
+      - name: Assert built bundle matches commit
+        run: git diff --exit-code -- ../src/mock_data_wizard/static/
