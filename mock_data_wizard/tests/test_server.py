@@ -221,6 +221,52 @@ def test_set_group_register_validation(running_server: str):
     assert body["error"]["code"] == "validation"
 
 
+def test_set_group_register_requires_register_key(running_server: str):
+    """A missing `register` key must fail validation rather than silently
+    clearing the group's register. Regression: `body.get("register")`
+    used to default to None, turning typos into destructive writes."""
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/group-register",
+        {
+            "group_id": "noreg-src",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "register" in body["error"]["message"]
+
+
+def test_set_group_register_explicit_null_is_accepted(
+    running_server: str, monkeypatch: pytest.MonkeyPatch
+):
+    """Explicit JSON null is the documented way to clear; ensure it
+    reaches the editor (even though the editor here is a no-op stub)."""
+    called: dict[str, Any] = {}
+
+    def fake_set(*args, **kwargs):
+        called["register"] = args[2] if len(args) > 2 else kwargs.get("new_register")
+        from mock_data_wizard.editor import get_state
+
+        return get_state(args[0])
+
+    monkeypatch.setattr(server.editor, "set_group_register", fake_set)
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, _body = _fetch(
+        "POST",
+        f"{running_server}/api/group-register",
+        {
+            "group_id": "noreg-src",
+            "register": None,
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 200
+    assert called["register"] is None
+
+
 def test_list_registers_returns_payload(
     running_server: str, monkeypatch: pytest.MonkeyPatch
 ):
@@ -267,6 +313,30 @@ def test_method_not_allowed_on_static(running_server: str):
     status, body = _fetch("POST", f"{running_server}/", {"x": 1})
     assert status == 405
     assert body["error"]["code"] == "method_not_allowed"
+
+
+def test_method_not_allowed_on_known_api_path(running_server: str):
+    """DELETE on /api/state must return an enveloped 405 (not the
+    stdlib HTML 501) — the SPA's parseEnvelope expects JSON."""
+    status, body = _fetch("DELETE", f"{running_server}/api/state")
+    assert status == 405
+    assert body["error"]["code"] == "method_not_allowed"
+
+
+def test_unhandled_exception_returns_envelope(
+    running_server: str, monkeypatch: pytest.MonkeyPatch
+):
+    """An unexpected exception in an editor call must surface as a
+    JSON 500 envelope, not BaseHTTPRequestHandler's HTML default —
+    otherwise the SPA's parseEnvelope crashes on the first byte."""
+
+    def boom(*args, **kwargs):
+        raise RuntimeError("simulated corruption")
+
+    monkeypatch.setattr(server.editor, "get_state", boom)
+    status, body = _fetch("GET", f"{running_server}/api/state")
+    assert status == 500
+    assert body["error"]["code"] == "internal"
 
 
 # -- Cache-control headers ------------------------------------------------

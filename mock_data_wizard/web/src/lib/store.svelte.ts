@@ -33,6 +33,7 @@ class Store {
   busy = $state(false);
 
   private nextToastId = 1;
+  private toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
 
   async load(): Promise<void> {
     try {
@@ -66,12 +67,19 @@ class Store {
   pushToast(level: Toast["level"], message: string): void {
     const id = this.nextToastId++;
     this.toasts = [...this.toasts, { id, level, message }];
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      this.toastTimers.delete(id);
       this.toasts = this.toasts.filter((t) => t.id !== id);
     }, TOAST_TIMEOUT_MS);
+    this.toastTimers.set(id, timer);
   }
 
   dismissToast(id: number): void {
+    const timer = this.toastTimers.get(id);
+    if (timer !== undefined) {
+      clearTimeout(timer);
+      this.toastTimers.delete(id);
+    }
     this.toasts = this.toasts.filter((t) => t.id !== id);
   }
 

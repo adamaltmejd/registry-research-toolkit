@@ -52,6 +52,11 @@ _LOG = logging.getLogger("mock_data_wizard.server")
 
 _STATIC_DIR = Path(str(importlib.resources.files("mock_data_wizard") / "static"))
 
+
+class _BadJSON(Exception):
+    """Internal: maps to a 400 ``invalid_json`` envelope."""
+
+
 _MIME_TYPES = {
     ".html": "text/html; charset=utf-8",
     ".js": "application/javascript; charset=utf-8",
@@ -168,6 +173,9 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
     }
+    # Paths that exist for at least one method — used to distinguish
+    # 405 (path exists, wrong verb) from 404 (path does not exist).
+    api_paths: frozenset[str] = frozenset(p for _, p in api_routes)
 
     class Handler(BaseHTTPRequestHandler):
         # http.server defaults to HTTP/1.0; advertising 1.1 lets the
@@ -182,6 +190,23 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
 
         def do_POST(self) -> None:  # noqa: N802
             self._dispatch("POST", api_routes)
+
+        # Other verbs land here. BaseHTTPRequestHandler would otherwise
+        # 501 with an HTML body that breaks the SPA's parseEnvelope().
+        def do_PUT(self) -> None:  # noqa: N802
+            self._dispatch("PUT", api_routes)
+
+        def do_DELETE(self) -> None:  # noqa: N802
+            self._dispatch("DELETE", api_routes)
+
+        def do_PATCH(self) -> None:  # noqa: N802
+            self._dispatch("PATCH", api_routes)
+
+        def do_OPTIONS(self) -> None:  # noqa: N802
+            self._dispatch("OPTIONS", api_routes)
+
+        def do_HEAD(self) -> None:  # noqa: N802
+            self._dispatch("HEAD", api_routes)
 
         def _dispatch(
             self,
@@ -209,6 +234,13 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ) -> None:
             handler = routes.get((method, path))
             if handler is None:
+                if path in api_paths:
+                    self._send_error_envelope(
+                        HTTPStatus.METHOD_NOT_ALLOWED,
+                        "method_not_allowed",
+                        f"{method} not allowed on {path}",
+                    )
+                    return
                 self._send_error_envelope(
                     HTTPStatus.NOT_FOUND, "not_found", f"no route for {method} {path}"
                 )
@@ -249,6 +281,17 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
                     HTTPStatus.CONFLICT, "stale_state", str(exc), context=context
                 )
                 return
+            except Exception:
+                # Anything else is a bug or a corrupt-state condition.
+                # The SPA's parseEnvelope expects JSON, so we must not
+                # let BaseHTTPRequestHandler emit its default HTML 500.
+                _LOG.exception("unhandled error in %s %s", method, path)
+                self._send_error_envelope(
+                    HTTPStatus.INTERNAL_SERVER_ERROR,
+                    "internal",
+                    "internal server error; check the server log",
+                )
+                return
 
             self._send_json(status, payload)
 
@@ -287,7 +330,11 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
                     self._send_error_envelope(
                         HTTPStatus.NOT_FOUND,
                         "not_found",
-                        "static asset not built; run `bun run build` in web/",
+                        (
+                            "bundled SPA assets are missing — reinstall "
+                            "the package, or for a source checkout run "
+                            "`bun run build` in mock_data_wizard/web/."
+                        ),
                     )
                     return
 
@@ -372,10 +419,6 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
     return Handler
 
 
-class _BadJSON(Exception):
-    """Internal: maps to a 400 ``invalid_json`` envelope."""
-
-
 # -- API handlers --------------------------------------------------------
 
 
@@ -423,7 +466,14 @@ def _api_set_group_register(
 ) -> tuple[int, dict[str, Any]]:
     group_id = _required_str(body, "group_id")
     expected_version = _required_str(body, "expected_version")
-    register_value = body.get("register")
+    # `register` must be present; only an explicit JSON null clears it.
+    # A missing key would otherwise let a stale frontend or typo trigger
+    # a destructive reclassification write.
+    if "register" not in body:
+        raise editor.ValidationError(
+            "missing required field 'register' (use null to clear)"
+        )
+    register_value = body["register"]
     if register_value is not None and not isinstance(register_value, str):
         raise editor.ValidationError(
             f"register must be a string or null, got {type(register_value).__name__}"
