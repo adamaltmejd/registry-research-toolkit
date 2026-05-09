@@ -38,6 +38,28 @@ const TOAST_TIMEOUT_MS = 6000;
 // doesn't pile up over the page.
 const MAX_TOASTS = 4;
 
+// localStorage key for the per-browser "group columns by name" view
+// preference. Per-browser, not per-project — this is a UI affordance,
+// not project state, so it doesn't belong in mock_data_config.json.
+const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
+
+function loadGroupingPref(): boolean {
+  if (typeof localStorage === "undefined") return true;
+  const raw = localStorage.getItem(VIEW_PREF_KEY);
+  if (raw === null) return true; // default: grouped
+  return raw === "true";
+}
+
+function saveGroupingPref(value: boolean): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(VIEW_PREF_KEY, String(value));
+  } catch {
+    // Storage quota / private mode — failing silently here is fine; the
+    // toggle still works in-session.
+  }
+}
+
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
@@ -53,6 +75,10 @@ class Store {
    * Open modals subscribe to this and self-close when it changes — their
    * pre-mutation snapshot is no longer trustworthy. */
   staleRecoveryTick = $state(0);
+  /** UI view: collapse same-named agreeing columns within a register
+   * into one row, badged "× N". Persisted to localStorage so it
+   * survives reloads. Default true. */
+  groupColumnsByName = $state(loadGroupingPref());
 
   private nextToastId = 1;
   private toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -138,6 +164,11 @@ class Store {
       this.toasts = this.toasts.filter((t) => t.id !== id);
     }, TOAST_TIMEOUT_MS);
     this.toastTimers.set(id, timer);
+  }
+
+  setGroupColumnsByName(value: boolean): void {
+    this.groupColumnsByName = value;
+    saveGroupingPref(value);
   }
 
   dismissToast(id: number): void {

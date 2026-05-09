@@ -6,14 +6,57 @@
   import Modal from "./Modal.svelte";
 
   interface Props {
-    sourceName: string;
+    /** Sources making up the partition the user clicked. The scope
+     *  picker can narrow this to one or widen it to the whole register
+     *  (when registerSources is a strict superset). */
+    sources: string[];
+    /** All sources in the surrounding register. When equal in length to
+     *  `sources`, the partition spans the whole register (no
+     *  reconcile-all option needed). */
+    registerSources: string[];
+    /** Cosmetic — used in modal copy. */
+    registerName: string | null;
     column: ColumnInfo;
     onClose: () => void;
   }
 
-  let { sourceName, column, onClose }: Props = $props();
+  let { sources, registerSources, registerName, column, onClose }: Props =
+    $props();
 
   const TYPES: ColumnType[] = ["id", "categorical", "numeric", "opaque", "date"];
+
+  // Three scope choices map to three explicit user intents:
+  //   - "partition": apply to all sources in this row's variant. Default
+  //     for both fully-agreeing rows (= the whole register) and
+  //     disagreement rows (= just this variant's sources).
+  //   - "single": apply to one source (picked from the partition).
+  //   - "register": reconcile every source in the register to this type.
+  //     Only offered when the partition is a strict subset of the
+  //     register (i.e. sibling variants exist).
+  type Scope = "partition" | "single" | "register";
+
+  // Scope picker is meaningful only when the register has more than one
+  // source. With one source the only valid target is that source.
+  let showScopePicker = $derived(registerSources.length > 1);
+  // "Reconcile across the whole register" is only useful when the
+  // partition is a strict subset (sibling variants exist).
+  let canReconcileAll = $derived(sources.length < registerSources.length);
+  // Default scope: when the partition has multiple sources, the user
+  // clicked the row to edit them together — keep that intent. When the
+  // partition is one source, there's nothing else to bulk-edit, so
+  // "single" is the natural default.
+  let scope: Scope = $state(
+    untrack(() => (sources.length > 1 ? "partition" : "single")),
+  );
+  let singleSource: string = $state(
+    untrack(() => (sources.length > 0 ? sources[0] : "")),
+  );
+
+  let effectiveSources = $derived.by(() => {
+    if (scope === "single") return singleSource ? [singleSource] : [];
+    if (scope === "register") return [...registerSources];
+    return [...sources];
+  });
 
   // Modal editor: snapshot the prop once on mount and let local edit
   // state diverge. `untrack` signals to the compiler that not reacting
@@ -52,8 +95,9 @@
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
     submitting = true;
+    const targets = effectiveSources;
     const ok = await store.setColumnType({
-      sources: [sourceName],
+      sources: targets,
       column: column.name,
       type: selectedType,
       expected_version: version,
@@ -61,9 +105,12 @@
     });
     submitting = false;
     if (ok) {
+      const n = targets.length;
       store.pushToast(
         "info",
-        `Saved ${column.name} → ${selectedType}`,
+        n === 1
+          ? `Saved ${column.name} → ${selectedType}`
+          : `Saved ${column.name} → ${selectedType} (${n} sources)`,
       );
       onClose();
     }
@@ -74,8 +121,26 @@
   <form onsubmit={submit}>
     <header>
       <div class="heading-stack">
-        <span class="source-line" title={sourceName}>{sourceName}</span>
+        {#if sources.length === 1}
+          <span class="source-line" title={sources[0]}>{sources[0]}</span>
+        {:else}
+          <span class="source-line bulk">
+            applying to {sources.length} sources{registerName
+              ? ` in ${registerName}`
+              : ""}
+          </span>
+        {/if}
         <h3 id="column-type-editor-heading">{column.name}</h3>
+        {#if sources.length > 1}
+          <details class="source-list-detail">
+            <summary>show source names</summary>
+            <ul>
+              {#each sources as sn (sn)}
+                <li class="mono">{sn}</li>
+              {/each}
+            </ul>
+          </details>
+        {/if}
       </div>
       <button type="button" class="close" aria-label="Close" onclick={onClose}>
         ×
@@ -104,6 +169,45 @@
       <p class="regmeta-context regmeta-missing">
         regmeta: no record for this column name.
       </p>
+    {/if}
+
+    {#if showScopePicker}
+      <fieldset class="scope">
+        <legend>Apply to</legend>
+        {#if sources.length > 1}
+          <label class="radio">
+            <input
+              type="radio"
+              name="scope"
+              value="partition"
+              bind:group={scope}
+            />
+            All {sources.length} sources in this variant
+          </label>
+        {/if}
+        <label class="radio">
+          <input type="radio" name="scope" value="single" bind:group={scope} />
+          Only
+          <select bind:value={singleSource} aria-label="single source">
+            {#each sources as sn (sn)}
+              <option value={sn}>{sn}</option>
+            {/each}
+          </select>
+        </label>
+        {#if canReconcileAll}
+          <label class="radio">
+            <input
+              type="radio"
+              name="scope"
+              value="register"
+              bind:group={scope}
+            />
+            All {registerSources.length} sources in
+            {registerName ?? "this register"}
+            <span class="hint">· reconcile</span>
+          </label>
+        {/if}
+      </fieldset>
     {/if}
 
     <fieldset>
@@ -155,8 +259,18 @@
       <button type="button" onclick={onClose} disabled={submitting}
         >Cancel</button
       >
-      <button type="submit" class="primary" disabled={submitting}>
-        {submitting ? "Saving…" : "Save"}
+      <button
+        type="submit"
+        class="primary"
+        disabled={submitting || effectiveSources.length === 0}
+      >
+        {#if submitting}
+          Saving…
+        {:else if effectiveSources.length > 1}
+          Save · {effectiveSources.length} sources
+        {:else}
+          Save
+        {/if}
       </button>
     </footer>
   </form>
@@ -188,6 +302,34 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  .source-line.bulk {
+    font-family: system-ui, sans-serif;
+    color: #555;
+    font-weight: 500;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+  .source-list-detail {
+    margin-top: 0.15rem;
+    font-size: 0.82rem;
+    color: #666;
+  }
+  .source-list-detail > summary {
+    cursor: pointer;
+    list-style: revert;
+    user-select: none;
+  }
+  .source-list-detail ul {
+    max-height: 8rem;
+    overflow: auto;
+    margin: 0.3rem 0 0;
+    padding: 0 0 0 1.2rem;
+  }
+  .source-list-detail .mono {
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
   }
   h3 {
     margin: 0;
@@ -230,6 +372,12 @@
     border-radius: 4px;
     padding: 0.5rem 0.75rem;
     margin: 0;
+  }
+  .scope {
+    background: #fafbff;
+  }
+  .scope .radio select {
+    margin-left: 0.3rem;
   }
   legend {
     padding: 0 0.25rem;

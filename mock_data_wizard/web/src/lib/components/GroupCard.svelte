@@ -10,9 +10,11 @@
 
   let { group }: Props = $props();
 
-  let editingColumn:
-    | { source: string; column: ColumnInfo }
-    | null = $state(null);
+  // Modal target: list of sources to apply the column-type edit to. In
+  // grouped mode this is a partition's source members; in per-source
+  // mode it is a single-element list.
+  let editingColumn: { sources: string[]; column: ColumnInfo } | null =
+    $state(null);
   let editingRegister = $state(false);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
@@ -21,9 +23,6 @@
     none: "no confidence",
   };
 
-  // Per-source year metadata lives on the snapshot's config.sources, not
-  // on the column-level data the table renders. Pull it out once for
-  // each source row so panels of yearly CSVs read at a glance.
   let sourceYears = $derived.by(() => {
     const m: Record<string, number | null> = {};
     const sources = store.snapshot?.config.sources ?? {};
@@ -33,10 +32,6 @@
     return m;
   });
 
-  // Panel definitions touching this group. Typical case is zero or one,
-  // but we render every match rather than `find`-ing the first to avoid
-  // silently dropping a second panel if the data model ever lets a
-  // group's sources span more than one panel.
   let panelsForGroup = $derived.by(() => {
     const panels = store.snapshot?.config.panels ?? [];
     const groupSourceSet = new Set(group.sources);
@@ -55,19 +50,11 @@
     return min === max ? `${min}` : `${min}–${max}`;
   }
 
-  // Inline subtype/format suffix shown on the type pill — only the
-  // value, since the key is implied by the type ("integer" under id is
-  // an id_subtype; "%Y%m%d" under date is a date_format).
   function hintSuffix(col: ColumnInfo): string {
     if (!col.hint) return "";
     return Object.values(col.hint).map(String).join(" · ");
   }
 
-  // Regmeta context tacked onto the pill: classification short name when
-  // present, otherwise "value codes" if regmeta has a code lookup. The
-  // bare-match case (regmeta knew the column but had no classification
-  // or codes) is intentionally silent — it adds nothing the type pill
-  // doesn't already show.
   function regmetaSuffix(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
@@ -76,17 +63,11 @@
     return "";
   }
 
-  // Categoricals that aren't backed by a regmeta classification or
-  // value-code set are an audit gap — most likely candidates for
-  // manual review or for a missing regmeta entry. Marker stays subtle.
   function isUnmatchedCategorical(col: ColumnInfo): boolean {
     if (col.current_type !== "categorical") return false;
     return regmetaSuffix(col) === "";
   }
 
-  // Current type disagrees with what regmeta would classify the column
-  // as. This is the main signal that a manual override may be needed.
-  // Manual overrides are exempt — the user has already decided.
   function isRegmetaMismatch(col: ColumnInfo): boolean {
     if (col.provenance === "manual") return false;
     if (col.regmeta_implied_type === null) return false;
@@ -110,6 +91,111 @@
     }
     return { total: cols.length, unmatched, manual, mismatch };
   }
+
+  // Partition equality key. Two (source, column-of-name) cells agree when
+  // they share current_type and every active hint slot. provenance is
+  // intentionally excluded — a manual override and an auto match that
+  // landed on the same type are "agreeing" for bulk-edit purposes; the
+  // manual count is still surfaced on the row.
+  function partitionKey(col: ColumnInfo): string {
+    const h = col.hint ?? {};
+    return [
+      col.current_type,
+      String(h.id_subtype ?? ""),
+      String(h.numeric_subtype ?? ""),
+      String(h.date_format ?? ""),
+    ].join("|");
+  }
+
+  interface ColumnPartition {
+    name: string;
+    variant_index: number;
+    variant_count: number;
+    sources: string[];
+    sample: ColumnInfo;
+    sql_type_summary: string;
+    manual_count: number;
+    /** Sources in the register that do not carry this column at all.
+     * Counted only on variant_index === 0 to avoid double-attribution
+     * when a column has multiple type variants. */
+    missing_in_count: number;
+  }
+
+  let partitions: ColumnPartition[] = $derived.by(() => {
+    if (!store.groupColumnsByName) return [];
+    // Column name order = first-seen order across the register's sources.
+    const nameOrder: string[] = [];
+    const seenNames = new Set<string>();
+    for (const sn of group.sources) {
+      for (const c of group.columns_by_source[sn] ?? []) {
+        if (!seenNames.has(c.name)) {
+          nameOrder.push(c.name);
+          seenNames.add(c.name);
+        }
+      }
+    }
+    interface PartBuild {
+      key: string;
+      sources: string[];
+      sample: ColumnInfo;
+      sql_types: Map<string, number>;
+      manual_count: number;
+    }
+    const out: ColumnPartition[] = [];
+    for (const name of nameOrder) {
+      const groups = new Map<string, PartBuild>();
+      let missing = 0;
+      for (const sn of group.sources) {
+        const col = (group.columns_by_source[sn] ?? []).find(
+          (c) => c.name === name,
+        );
+        if (!col) {
+          missing++;
+          continue;
+        }
+        const key = partitionKey(col);
+        let part = groups.get(key);
+        if (!part) {
+          part = {
+            key,
+            sources: [],
+            sample: col,
+            sql_types: new Map(),
+            manual_count: 0,
+          };
+          groups.set(key, part);
+        }
+        part.sources.push(sn);
+        const sqlT = col.sql_type ?? "—";
+        part.sql_types.set(sqlT, (part.sql_types.get(sqlT) ?? 0) + 1);
+        if (col.provenance === "manual") part.manual_count++;
+      }
+      const built = Array.from(groups.values());
+      built.forEach((b, i) => {
+        const items = Array.from(b.sql_types.entries());
+        let summary: string;
+        if (items.length === 1) {
+          summary = items[0][0];
+        } else {
+          summary = items
+            .sort((a, c) => c[1] - a[1])
+            .map(([t, n]) => `${t} ×${n}`)
+            .join(" / ");
+        }
+        out.push({
+          name,
+          variant_index: i,
+          variant_count: built.length,
+          sources: b.sources,
+          sample: b.sample,
+          sql_type_summary: summary,
+          manual_count: b.manual_count,
+          missing_in_count: i === 0 ? missing : 0,
+        });
+      });
+    }
+    return out;
+  });
 </script>
 
 <section class="group" class:no-register={group.register_id === null}>
@@ -130,10 +216,6 @@
         · {group.sources.length} source{group.sources.length === 1 ? "" : "s"}
         · {group.schema_variants} schema{group.schema_variants === 1 ? "" : "s"}
         {#if group.panel_candidate && panelsForGroup.length === 0}
-          <!-- Candidate detection runs even after a panel is registered;
-               only flag it as a *candidate* when the group hasn't been
-               promoted yet, otherwise the PANEL summary block below
-               shows the same files twice. -->
           · panel candidate ({group.panel_candidate.members.length})
         {/if}
       </p>
@@ -157,102 +239,222 @@
     </p>
   {/each}
 
-  {#each group.sources as sourceName (sourceName)}
-    {@const cols = group.columns_by_source[sourceName] ?? []}
-    {@const stats = statsFor(cols)}
-    {@const year = sourceYears[sourceName]}
-    <details class="source">
-      <summary>
-        <span class="source-name mono">{sourceName}</span>
-        <span class="source-stats">
-          {#if year !== null && year !== undefined}
-            <span class="stat-year" title="detected source year">{year}</span>
-          {/if}
-          <span class="stat-cols">{stats.total} col{stats.total === 1 ? "" : "s"}</span>
-          {#if stats.unmatched > 0}
-            <span class="stat-unmatched" title="categoricals without regmeta classification or value codes"
-              >● {stats.unmatched} unmatched</span
-            >
-          {/if}
-          {#if stats.mismatch > 0}
-            <span class="stat-mismatch" title="auto-classified type disagrees with regmeta-implied type"
-              >⚠ {stats.mismatch} regmeta mismatch</span
-            >
-          {/if}
-          {#if stats.manual > 0}
-            <span class="stat-manual" title="manual type overrides"
-              >★ {stats.manual} manual</span
-            >
-          {/if}
-        </span>
-      </summary>
-      <table>
-        <thead>
-          <tr>
-            <th>Column</th>
-            <th>SQL</th>
-            <th>Type</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each cols as col (col.name)}
-            {@const hint = hintSuffix(col)}
-            {@const regmeta = regmetaSuffix(col)}
-            {@const mismatch = isRegmetaMismatch(col)}
-            {@const provLabel = col.provenance === "manual" ? "manual override" : "auto-classified"}
-            <tr>
-              <td class="mono col-name" title={col.name}>{col.name}</td>
-              <td class="mono dim">{col.sql_type ?? "—"}</td>
-              <td>
-                <button
-                  class="type-pill type-{col.current_type} prov-{col.provenance}"
-                  title={[col.current_type, hint, regmeta].filter(Boolean).join(" · ") + ` (${provLabel})`}
-                  onclick={() =>
-                    (editingColumn = { source: sourceName, column: col })}
+  {#if store.groupColumnsByName}
+    <!-- Grouped mode: one row per (column name, type, hint) partition. -->
+    <table class="grouped-table">
+      <thead>
+        <tr>
+          <th>Column</th>
+          <th>SQL</th>
+          <th>Type</th>
+        </tr>
+      </thead>
+      <tbody>
+        {#each partitions as p (p.name + "/" + p.variant_index)}
+          {@const hint = hintSuffix(p.sample)}
+          {@const regmeta = regmetaSuffix(p.sample)}
+          {@const mismatch = isRegmetaMismatch(p.sample)}
+          {@const split = p.variant_count > 1}
+          <tr class:split>
+            <td class="mono col-name" title={p.name}>
+              {p.name}
+              {#if split}
+                <span
+                  class="split-marker"
+                  title={`${p.variant_count} type variants for this column in this register`}
+                  aria-label="split column"
                 >
-                  <span class="type-name">{col.current_type}</span>
-                  {#if hint}
-                    <span class="type-suffix">· {hint}</span>
-                  {/if}
-                  {#if regmeta}
-                    <span class="type-suffix regmeta">· {regmeta}</span>
-                  {/if}
-                </button>
-                {#if mismatch}
-                  <span
-                    class="mismatch-marker"
-                    title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
-                    aria-label="regmeta type mismatch">⚠</span
-                  >
-                {:else if isUnmatchedCategorical(col)}
-                  <span
-                    class="unmatched-marker"
-                    title="categorical without regmeta classification or value codes"
-                    aria-label="unmatched categorical">●</span
+                  ⇅ {p.variant_index + 1}/{p.variant_count}
+                </span>
+              {/if}
+              {#if p.missing_in_count > 0}
+                <span
+                  class="missing-marker"
+                  title={`${p.missing_in_count} source${p.missing_in_count === 1 ? "" : "s"} in this register do not carry this column`}
+                >
+                  · missing in {p.missing_in_count}
+                </span>
+              {/if}
+            </td>
+            <td class="mono dim">{p.sql_type_summary}</td>
+            <td>
+              <button
+                class="type-pill type-{p.sample.current_type}"
+                title={[p.sample.current_type, hint, regmeta]
+                  .filter(Boolean)
+                  .join(" · ") +
+                  ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
+                  (p.manual_count > 0
+                    ? `, ${p.manual_count} manual`
+                    : "") +
+                  ")"}
+                onclick={() =>
+                  (editingColumn = {
+                    sources: [...p.sources],
+                    column: p.sample,
+                  })}
+              >
+                <span class="type-name">{p.sample.current_type}</span>
+                {#if hint}
+                  <span class="type-suffix">· {hint}</span>
+                {/if}
+                {#if regmeta}
+                  <span class="type-suffix regmeta">· {regmeta}</span>
+                {/if}
+                <span class="count-badge">× {p.sources.length}</span>
+                {#if p.manual_count > 0}
+                  <span class="manual-badge" title="manual overrides in this group"
+                    >★{p.manual_count}</span
                   >
                 {/if}
-              </td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+              </button>
+              {#if mismatch}
+                <span
+                  class="mismatch-marker"
+                  title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
+                  aria-label="regmeta type mismatch">⚠</span
+                >
+              {:else if isUnmatchedCategorical(p.sample)}
+                <span
+                  class="unmatched-marker"
+                  title="categorical without regmeta classification or value codes"
+                  aria-label="unmatched categorical">●</span
+                >
+              {/if}
+            </td>
+          </tr>
+        {/each}
+      </tbody>
+    </table>
+
+    <!-- Per-source detail collapsed by default — preserves source-level
+         visibility (year, source name) without dominating the table. -->
+    <details class="sources-detail">
+      <summary>
+        Sources ({group.sources.length})
+      </summary>
+      <ul class="source-list">
+        {#each group.sources as sn (sn)}
+          <li>
+            <span class="mono">{sn}</span>
+            {#if sourceYears[sn] !== null && sourceYears[sn] !== undefined}
+              <span class="stat-year" title="detected source year"
+                >{sourceYears[sn]}</span
+              >
+            {/if}
+          </li>
+        {/each}
+      </ul>
     </details>
-  {/each}
+  {:else}
+    <!-- Per-source mode: original rendering (one <details> per source). -->
+    {#each group.sources as sourceName (sourceName)}
+      {@const cols = group.columns_by_source[sourceName] ?? []}
+      {@const stats = statsFor(cols)}
+      {@const year = sourceYears[sourceName]}
+      <details class="source">
+        <summary>
+          <span class="source-name mono">{sourceName}</span>
+          <span class="source-stats">
+            {#if year !== null && year !== undefined}
+              <span class="stat-year" title="detected source year">{year}</span>
+            {/if}
+            <span class="stat-cols"
+              >{stats.total} col{stats.total === 1 ? "" : "s"}</span
+            >
+            {#if stats.unmatched > 0}
+              <span
+                class="stat-unmatched"
+                title="categoricals without regmeta classification or value codes"
+                >● {stats.unmatched} unmatched</span
+              >
+            {/if}
+            {#if stats.mismatch > 0}
+              <span
+                class="stat-mismatch"
+                title="auto-classified type disagrees with regmeta-implied type"
+                >⚠ {stats.mismatch} regmeta mismatch</span
+              >
+            {/if}
+            {#if stats.manual > 0}
+              <span class="stat-manual" title="manual type overrides"
+                >★ {stats.manual} manual</span
+              >
+            {/if}
+          </span>
+        </summary>
+        <table>
+          <thead>
+            <tr>
+              <th>Column</th>
+              <th>SQL</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each cols as col (col.name)}
+              {@const hint = hintSuffix(col)}
+              {@const regmeta = regmetaSuffix(col)}
+              {@const mismatch = isRegmetaMismatch(col)}
+              {@const provLabel =
+                col.provenance === "manual"
+                  ? "manual override"
+                  : "auto-classified"}
+              <tr>
+                <td class="mono col-name" title={col.name}>{col.name}</td>
+                <td class="mono dim">{col.sql_type ?? "—"}</td>
+                <td>
+                  <button
+                    class="type-pill type-{col.current_type} prov-{col.provenance}"
+                    title={[col.current_type, hint, regmeta]
+                      .filter(Boolean)
+                      .join(" · ") + ` (${provLabel})`}
+                    onclick={() =>
+                      (editingColumn = { sources: [sourceName], column: col })}
+                  >
+                    <span class="type-name">{col.current_type}</span>
+                    {#if hint}
+                      <span class="type-suffix">· {hint}</span>
+                    {/if}
+                    {#if regmeta}
+                      <span class="type-suffix regmeta">· {regmeta}</span>
+                    {/if}
+                  </button>
+                  {#if mismatch}
+                    <span
+                      class="mismatch-marker"
+                      title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
+                      aria-label="regmeta type mismatch">⚠</span
+                    >
+                  {:else if isUnmatchedCategorical(col)}
+                    <span
+                      class="unmatched-marker"
+                      title="categorical without regmeta classification or value codes"
+                      aria-label="unmatched categorical">●</span
+                    >
+                  {/if}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </details>
+    {/each}
+  {/if}
 </section>
 
 {#if editingColumn}
   <ColumnTypeEditor
-    sourceName={editingColumn.source}
+    sources={editingColumn.sources}
+    registerSources={[...group.sources]}
+    registerName={group.register_name}
     column={editingColumn.column}
     onClose={() => (editingColumn = null)}
   />
 {/if}
 
 {#if editingRegister}
-  <RegisterEditor
-    {group}
-    onClose={() => (editingRegister = false)}
-  />
+  <RegisterEditor {group} onClose={() => (editingRegister = false)} />
 {/if}
 
 <style>
@@ -358,7 +560,6 @@
   .source > summary::-webkit-details-marker {
     display: none;
   }
-  /* Custom chevron — rotates when the source expands. */
   .source > summary::before {
     content: "▸";
     color: #888;
@@ -420,6 +621,9 @@
     font-size: 0.9rem;
     table-layout: fixed;
   }
+  .grouped-table {
+    margin-top: 0.5rem;
+  }
   th,
   td {
     text-align: left;
@@ -443,6 +647,13 @@
   th:nth-child(3) {
     width: 32%;
   }
+  /* Visually link rows belonging to the same split column. The thin
+     left-border is just enough to read the grouping at a glance without
+     drawing attention away from the type pills themselves. */
+  .grouped-table tr.split td:first-child {
+    border-left: 2px solid #d6c5e6;
+    padding-left: 0.5rem;
+  }
   .mono {
     font-family: ui-monospace, monospace;
   }
@@ -453,6 +664,18 @@
   }
   .dim {
     color: #888;
+  }
+  .split-marker {
+    color: #6f4ca0;
+    font-size: 0.78rem;
+    margin-left: 0.35rem;
+    font-family: system-ui, sans-serif;
+  }
+  .missing-marker {
+    color: #888;
+    font-size: 0.78rem;
+    margin-left: 0.35rem;
+    font-family: system-ui, sans-serif;
   }
   .type-pill {
     background: #eef2fb;
@@ -471,8 +694,6 @@
   .type-pill:hover {
     background: #e0e7f7;
   }
-  /* Provenance is folded onto the pill itself: auto = quiet (default),
-     manual = solid left-border accent so edits stand out at a glance. */
   .type-pill.prov-manual {
     border-left: 3px solid #b34a00;
     padding-left: calc(0.5rem - 2px);
@@ -493,9 +714,6 @@
     background: #faefe0;
     color: #7c4400;
   }
-  /* Warmer than disabled-grey so the user doesn't read it as "not
-     interactive". Kept neutral enough not to compete with the typed
-     pills. */
   .type-opaque {
     background: #f4f0e8;
     color: #5a523f;
@@ -506,9 +724,21 @@
     opacity: 0.65;
     font-size: 0.85em;
   }
-  /* Subtle audit marker: faint orange dot beside categoricals without a
-     regmeta classification or value-code set. Big enough to scan, quiet
-     enough not to scream. */
+  .count-badge {
+    margin-left: 0.4rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+    font-size: 0.78em;
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+  .manual-badge {
+    margin-left: 0.25rem;
+    color: #b34a00;
+    font-size: 0.8em;
+    font-family: system-ui, sans-serif;
+  }
   .unmatched-marker {
     margin-left: 0.4rem;
     color: #b34a00;
@@ -517,9 +747,6 @@
     line-height: 1;
     vertical-align: middle;
   }
-  /* Stronger signal than .unmatched-marker — current type *contradicts*
-     regmeta, which usually means the auto-classifier picked something
-     the user should look at. */
   .mismatch-marker {
     margin-left: 0.4rem;
     color: #b34a00;
@@ -539,5 +766,46 @@
   }
   .link:hover {
     text-decoration: underline;
+  }
+  .sources-detail {
+    margin-top: 0.6rem;
+    border-top: 1px solid #f0f0f0;
+    padding-top: 0.4rem;
+  }
+  .sources-detail > summary {
+    cursor: pointer;
+    color: #666;
+    font-size: 0.85rem;
+    user-select: none;
+    list-style: none;
+  }
+  .sources-detail > summary::-webkit-details-marker {
+    display: none;
+  }
+  .sources-detail > summary::before {
+    content: "▸";
+    color: #888;
+    font-size: 0.7rem;
+    margin-right: 0.4rem;
+    transition: transform 0.12s ease;
+    display: inline-block;
+  }
+  .sources-detail[open] > summary::before {
+    transform: rotate(90deg);
+  }
+  .source-list {
+    list-style: none;
+    padding: 0.4rem 0 0 1.2rem;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+    gap: 0.2rem 0.75rem;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .source-list li {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
   }
 </style>

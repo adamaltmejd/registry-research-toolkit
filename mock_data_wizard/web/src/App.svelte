@@ -25,7 +25,34 @@
 </script>
 
 <header class="app-header">
-  <h1>mock_data_wizard</h1>
+  <div class="header-row">
+    <h1>mock_data_wizard</h1>
+    {#if snapshot}
+      <fieldset class="view-toggle" aria-label="Column view">
+        <legend class="sr-only">Column view</legend>
+        <label class:active={store.groupColumnsByName}>
+          <input
+            type="radio"
+            name="view-mode"
+            value="grouped"
+            checked={store.groupColumnsByName}
+            onchange={() => store.setGroupColumnsByName(true)}
+          />
+          grouped by name
+        </label>
+        <label class:active={!store.groupColumnsByName}>
+          <input
+            type="radio"
+            name="view-mode"
+            value="per-source"
+            checked={!store.groupColumnsByName}
+            onchange={() => store.setGroupColumnsByName(false)}
+          />
+          per source
+        </label>
+      </fieldset>
+    {/if}
+  </div>
   {#if snapshot}
     <p class="meta">
       contract <code>{snapshot.config.contract_version}</code>
@@ -117,6 +144,13 @@
     color: #fff;
     padding: 1rem 2rem;
   }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
   .app-header h1 {
     margin: 0;
     font-size: 1.25rem;
@@ -135,6 +169,52 @@
   .app-header code.dim {
     color: #b0bcdb;
     cursor: help;
+  }
+  .view-toggle {
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 999px;
+    padding: 0.15rem;
+    margin: 0;
+    display: inline-flex;
+    gap: 0.1rem;
+    background: rgba(0, 0, 0, 0.12);
+  }
+  .view-toggle label {
+    color: #cfdaef;
+    font-size: 0.82rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 999px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.12s ease, color 0.12s ease;
+  }
+  .view-toggle label:hover {
+    color: #fff;
+  }
+  .view-toggle label.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+  .view-toggle input {
+    /* Hidden but accessible — the visible label IS the control. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    border: 0;
   }
   main {
     max-width: 72rem;
