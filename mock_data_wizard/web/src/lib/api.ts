@@ -80,7 +80,10 @@ export function listRegisters(): Promise<RegistersResponse> {
 }
 
 export interface SetColumnTypeArgs {
-  source: string;
+  /** Non-empty list of sources to update. Server validates every
+   *  (source, column) pair before writing; a single bad pair aborts
+   *  the whole call with no on-disk changes. */
+  sources: string[];
   column: string;
   type: string;
   expected_version: string;

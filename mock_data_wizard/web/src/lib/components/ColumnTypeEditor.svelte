@@ -53,7 +53,7 @@
     if (!version) return;
     submitting = true;
     const ok = await store.setColumnType({
-      source: sourceName,
+      sources: [sourceName],
       column: column.name,
       type: selectedType,
       expected_version: version,
