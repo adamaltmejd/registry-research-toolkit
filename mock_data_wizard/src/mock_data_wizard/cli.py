@@ -416,6 +416,81 @@ def _cmd_scan(args: argparse.Namespace) -> int:
     return 1
 
 
+def _cmd_ui(args: argparse.Namespace) -> int:
+    """Serve the local web UI bound to ``args.project_dir``."""
+    import logging
+
+    from . import server as server_mod
+
+    project_dir = Path(args.project_dir).resolve()
+    if not project_dir.is_dir():
+        print(
+            f"Error: project_dir does not exist or is not a directory: {project_dir}",
+            file=sys.stderr,
+        )
+        return 1
+
+    if not args.unsafe_host and not server_mod.is_loopback_host(args.host):
+        print(
+            f"Error: refusing to bind {args.host!r} — pass --unsafe-host to "
+            f"override. There is no auth; use only on trusted networks.",
+            file=sys.stderr,
+        )
+        return 2
+
+    # Surface server-side errors (especially 500 tracebacks) on stderr.
+    # Without this, the server logger has no handler attached and a
+    # crashed editor call returns a JSON 500 envelope but the traceback
+    # is silently dropped — leaving the user with no diagnostic.
+    server_logger = logging.getLogger("mock_data_wizard.server")
+    if not server_logger.handlers:
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        server_logger.addHandler(handler)
+        server_logger.setLevel(
+            logging.DEBUG if getattr(args, "verbose", False) else logging.WARNING
+        )
+
+    db_path = Path(args.db_path).resolve() if args.db_path else None
+    config = server_mod.ServerConfig(
+        project_dir=project_dir,
+        host=args.host,
+        port=args.port,
+        db_path=db_path,
+        unsafe_host=args.unsafe_host,
+    )
+    try:
+        httpd = server_mod.build_server(config)
+    except (OSError, ValueError) as exc:
+        print(f"Error starting server: {exc}", file=sys.stderr)
+        return 1
+
+    bound_host, bound_port = httpd.server_address[:2]
+    # IPv6 literals must be bracketed in URLs so the port colon doesn't
+    # collide with the address colons (`http://[::1]:8765/`).
+    display_host = f"[{bound_host}]" if ":" in bound_host else bound_host
+    url = f"http://{display_host}:{bound_port}/"
+    print(f"mock-data-wizard ui serving {project_dir} at {url}")
+    print("Press Ctrl-C to stop.")
+
+    if not args.no_browser:
+        import webbrowser
+
+        try:
+            webbrowser.open(url)
+        except Exception:
+            # webbrowser failures shouldn't sink the server.
+            pass
+
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\nShutting down.", file=sys.stderr)
+    finally:
+        httpd.server_close()
+    return 0
+
+
 def _print_version() -> None:
     from . import __version__
     from .update import UpdateChecker
@@ -598,6 +673,62 @@ def build_parser() -> argparse.ArgumentParser:
         help="Don't delete the file on a match (inspection mode).",
     )
 
+    # ui
+    ui = sub.add_parser(
+        "ui",
+        help="Launch the local web UI for editing mock_data_config.json",
+        description=(
+            "Start a local HTTP server that exposes the editor API and "
+            "serves the bundled web UI. Binds 127.0.0.1 only by default; "
+            "no auth — use --unsafe-host to expose non-loopback only on "
+            "trusted networks."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    ui.add_argument(
+        "project_dir",
+        help=(
+            "Project directory containing mock_data_config.json (and "
+            "optionally mock_data_discovery.json next to it)."
+        ),
+    )
+    ui.add_argument(
+        "--port",
+        type=int,
+        default=8765,
+        help="Port to bind (default: 8765).",
+    )
+    ui.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help=(
+            "Host to bind (default: 127.0.0.1). Non-loopback hosts are "
+            "rejected unless --unsafe-host is also passed."
+        ),
+    )
+    ui.add_argument(
+        "--unsafe-host",
+        action="store_true",
+        help=(
+            "Allow binding non-loopback hosts. There is no auth; only "
+            "use on trusted networks."
+        ),
+    )
+    ui.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Don't open the URL in a browser tab.",
+    )
+    ui.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Log every request to stderr (default: warnings + 500s only).",
+    )
+    ui.add_argument(
+        "--db-path",
+        help="Override the regmeta DB path (default: regmeta's lookup chain).",
+    )
+
     return parser
 
 
@@ -638,6 +769,8 @@ def main(argv: list[str] | None = None) -> int:
             rc = _cmd_generate(args)
         elif args.command == "scan":
             rc = _cmd_scan(args)
+        elif args.command == "ui":
+            rc = _cmd_ui(args)
         else:
             parser.print_help()
             return 1

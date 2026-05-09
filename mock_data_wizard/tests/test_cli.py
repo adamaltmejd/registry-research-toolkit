@@ -5,9 +5,93 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from mock_data_wizard.cli import main
+import pytest
+
+from mock_data_wizard.cli import build_parser, main
 
 from .conftest import MINIMAL_STATS
+
+
+# -- `ui` subcommand parsing ----------------------------------------------
+
+
+def test_ui_subcommand_parses_minimum_args():
+    parser = build_parser()
+    args = parser.parse_args(["ui", "/tmp/proj"])
+    assert args.command == "ui"
+    assert args.project_dir == "/tmp/proj"
+    assert args.host == "127.0.0.1"
+    assert args.port == 8765
+    assert args.unsafe_host is False
+    assert args.no_browser is False
+    assert args.db_path is None
+
+
+def test_ui_subcommand_overrides():
+    parser = build_parser()
+    args = parser.parse_args(
+        [
+            "ui",
+            "/tmp/proj",
+            "--port",
+            "9000",
+            "--host",
+            "::1",
+            "--no-browser",
+            "--db-path",
+            "/tmp/regmeta.db",
+        ]
+    )
+    assert args.port == 9000
+    assert args.host == "::1"
+    assert args.no_browser is True
+    assert args.db_path == "/tmp/regmeta.db"
+
+
+def test_ui_requires_project_dir():
+    parser = build_parser()
+    with pytest.raises(SystemExit):
+        parser.parse_args(["ui"])
+
+
+def test_ui_rejects_non_loopback_without_unsafe(tmp_path: Path, capsys):
+    """Concrete safety gate: 0.0.0.0 without --unsafe-host fails fast."""
+    rc = main(["ui", str(tmp_path), "--host", "0.0.0.0", "--no-browser"])
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "refusing to bind" in captured.err
+
+
+def test_ui_brackets_ipv6_url(tmp_path: Path, capsys, monkeypatch):
+    """`--host ::1` must print/open `http://[::1]:PORT/`, not the
+    raw `http://::1:PORT/` (which is invalid because of the colon
+    collision)."""
+    from mock_data_wizard import server as server_mod
+
+    # Build the server, capture the URL, then trigger KeyboardInterrupt
+    # in serve_forever so the CLI exits without blocking.
+    captured_url: list[str] = []
+
+    real_open = server_mod.build_server
+
+    def _wrap(config: server_mod.ServerConfig):
+        httpd = real_open(config)
+        original = httpd.serve_forever
+
+        def _capture_and_stop(*a, **kw):
+            captured_url.append(httpd.server_address[0])
+            raise KeyboardInterrupt
+
+        httpd.serve_forever = _capture_and_stop  # type: ignore[method-assign]
+        # Restore for downstream cleanup; serve_forever raises immediately.
+        del original
+        return httpd
+
+    monkeypatch.setattr(server_mod, "build_server", _wrap)
+    rc = main(["ui", str(tmp_path), "--host", "::1", "--no-browser", "--port", "0"])
+    assert rc == 0
+    out = capsys.readouterr().out
+    assert "http://[::1]:" in out, f"expected bracketed IPv6 URL in: {out!r}"
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
