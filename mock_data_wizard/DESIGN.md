@@ -495,14 +495,19 @@ override the regmeta DB location.
 
 **Mutators** (all require `expected_version: str`).
 
-- `set_column_type(project_dir, source_name, column_name, new_type, *,
-  expected_version, hint=UNCHANGED, db_path=None)` — sets the type of
-  one column. `(source_name, column_name)` must exist in the discover
-  payload; unknown pairs raise `ValidationError`. Adds the pair to
-  `manual_columns`. `hint` semantics: `UNCHANGED` preserves any
-  existing hint that's still valid for `new_type` (silently dropped
-  otherwise); `None` clears any hint; a dict sets it (validated
-  against `INLINE_HINT_KEYS[new_type]`).
+- `set_column_type(project_dir, source_names, column_name, new_type,
+  *, expected_version, hint=UNCHANGED, db_path=None)` — sets the type
+  of `column_name` across one or more sources. `source_names` is a
+  non-empty sequence; every `(sn, column_name)` pair must exist in
+  the discover payload (a single bad pair aborts the whole call with
+  no on-disk changes). All affected pairs land in `manual_columns`.
+  Bulk semantics: per-source updates happen under one `_config_lock`
+  and one `_atomic_write`, so the snapshot version advances exactly
+  once and clients can't observe a partial apply. `hint` is
+  validated once and applied identically to every targeted source;
+  `UNCHANGED` preserves any existing hint that's still valid for
+  `new_type` (silently dropped otherwise); `None` clears any hint;
+  a dict sets it (validated against `INLINE_HINT_KEYS[new_type]`).
 - `set_group_register(project_dir, group_id, register, *,
   expected_version, db_path=None, reclassify_manual=False)` —
   assigns or clears a register for a group, then re-classifies. With

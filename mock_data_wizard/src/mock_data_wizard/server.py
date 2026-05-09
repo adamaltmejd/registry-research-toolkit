@@ -510,7 +510,7 @@ def _api_init(config: ServerConfig, body: dict[str, Any]) -> tuple[int, dict[str
 def _api_set_column_type(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
-    source = _required_str(body, "source")
+    sources = _required_str_list(body, "sources")
     column = _required_str(body, "column")
     new_type = _required_str(body, "type")
     expected_version = _required_str(body, "expected_version")
@@ -531,7 +531,7 @@ def _api_set_column_type(
 
     snap = editor.set_column_type(
         config.project_dir,
-        source,
+        sources,
         column,
         new_type,
         expected_version=expected_version,
@@ -588,4 +588,22 @@ def _required_str(body: dict[str, Any], key: str) -> str:
         raise editor.ValidationError(
             f"field {key!r} must be a string, got {type(value).__name__}"
         )
+    return value
+
+
+def _required_str_list(body: dict[str, Any], key: str) -> list[str]:
+    if key not in body:
+        raise editor.ValidationError(f"missing required field {key!r}")
+    value = body[key]
+    if not isinstance(value, list):
+        raise editor.ValidationError(
+            f"field {key!r} must be an array, got {type(value).__name__}"
+        )
+    if not value:
+        raise editor.ValidationError(f"field {key!r} must be non-empty")
+    for i, entry in enumerate(value):
+        if not isinstance(entry, str):
+            raise editor.ValidationError(
+                f"field {key!r}[{i}] must be a string, got {type(entry).__name__}"
+            )
     return value

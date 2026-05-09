@@ -32,6 +32,7 @@ import tempfile
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
+from collections.abc import Sequence
 from typing import Any, Iterator, Literal
 
 from .classify import (
@@ -1022,7 +1023,7 @@ def _assert_source_in_discover(
 
 def set_column_type(
     project_dir: Path,
-    source_name: str,
+    source_names: Sequence[str],
     column_name: str,
     new_type: str,
     *,
@@ -1030,54 +1031,77 @@ def set_column_type(
     hint: dict[str, Any] | None | _Unchanged = UNCHANGED,
     db_path: Path | None = None,
 ) -> StateSnapshot:
-    """Set or override the type of one column. See ``DESIGN.md`` § Editor API.
+    """Set or override the type of ``column_name`` across one or more
+    sources. See ``DESIGN.md`` § Editor API.
 
-    ``hint`` semantics: ``UNCHANGED`` preserves the existing hint *if*
+    Bulk semantics: every ``(sn, column_name)`` pair is validated against
+    discover before any write; a single bad pair aborts the whole call
+    with no on-disk changes. Per-source updates happen under one
+    ``_config_lock`` and one ``_atomic_write``, so the snapshot version
+    advances exactly once and clients can't observe a partial apply.
+
+    ``hint`` semantics: ``UNCHANGED`` preserves any existing hint *if*
     it remains valid for ``new_type`` (silently dropped otherwise);
-    ``None`` clears any hint; a dict sets it (validated).
+    ``None`` clears any hint; a dict sets it (validated). The hint is
+    validated once and applied identically to every targeted source.
     """
     if new_type not in VALID_COLUMN_TYPES:
         raise ValidationError(
             f"new_type={new_type!r}, expected one of {VALID_COLUMN_TYPES}"
         )
+    sources_list = list(source_names)
+    if not sources_list:
+        raise ValidationError("source_names must be non-empty")
+    if len(set(sources_list)) != len(sources_list):
+        raise ValidationError(f"source_names contains duplicates: {sources_list}")
+
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        _assert_column_in_discover(project_dir, payload, source_name, column_name)
+        # Validate every pair before mutating anything; bulk writes are
+        # all-or-nothing.
+        for sn in sources_list:
+            _assert_column_in_discover(project_dir, payload, sn, column_name)
+
+        # Validate the hint once: same input, same result for every source.
+        if isinstance(hint, _Unchanged):
+            shared_validated_hint: dict[str, Any] | None | _Unchanged = UNCHANGED
+        else:
+            shared_validated_hint = _validate_hint(new_type, hint)
 
         column_types = payload.setdefault("column_types", {})
-        cols = column_types.setdefault(source_name, {})
-        existing = cols.get(column_name, {})
-        old_type = existing.get("type")
-        if isinstance(hint, _Unchanged):
-            # Preserve survivor hint keys for the new type.
-            new_entry = {"type": new_type}
-            new_entry.update(_existing_hint_keys_valid_for(existing, new_type))
-        else:
-            validated = _validate_hint(new_type, hint)
-            new_entry = {"type": new_type}
-            if validated:
-                new_entry.update(validated)
-        cols[column_name] = new_entry
+        column_options = payload.get("column_options")
+        manual = payload.get("manual_columns", [])
 
-        # Type changed: drop column_options for this column. Options can
-        # be type-specific (e.g. suppress_k is categorical/numeric);
-        # mirrors set_group_register's reclassification path.
-        if old_type is not None and old_type != new_type:
-            column_options = payload.get("column_options")
-            if column_options:
-                opts_for_source = column_options.get(source_name)
+        for sn in sources_list:
+            cols = column_types.setdefault(sn, {})
+            existing = cols.get(column_name, {})
+            old_type = existing.get("type")
+            if isinstance(shared_validated_hint, _Unchanged):
+                new_entry: dict[str, Any] = {"type": new_type}
+                new_entry.update(_existing_hint_keys_valid_for(existing, new_type))
+            else:
+                new_entry = {"type": new_type}
+                if shared_validated_hint:
+                    new_entry.update(shared_validated_hint)
+            cols[column_name] = new_entry
+
+            # Type changed: drop column_options for this column. Mirrors
+            # set_group_register's reclassification path.
+            if old_type is not None and old_type != new_type and column_options:
+                opts_for_source = column_options.get(sn)
                 if opts_for_source and column_name in opts_for_source:
                     opts_for_source.pop(column_name, None)
                     if not opts_for_source:
-                        column_options.pop(source_name, None)
-                if not column_options:
-                    payload.pop("column_options", None)
+                        column_options.pop(sn, None)
 
-        manual = payload.get("manual_columns", [])
-        pair = [source_name, column_name]
-        if pair not in manual:
-            manual.append(pair)
+            pair = [sn, column_name]
+            if pair not in manual:
+                manual.append(pair)
+
+        if column_options is not None and not column_options:
+            payload.pop("column_options", None)
+        if manual:
             payload["manual_columns"] = manual
 
         _atomic_write(_config_path(project_dir), payload)

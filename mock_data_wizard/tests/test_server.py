@@ -223,7 +223,7 @@ def test_set_column_type_round_trip(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "categorical",
             "expected_version": version,
@@ -241,7 +241,7 @@ def test_set_column_type_validation_error(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "not_a_type",
             "expected_version": snapshot["snapshot_version"],
@@ -256,10 +256,44 @@ def test_set_column_type_missing_field(running_server: str):
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-type",
-        {"source": "src", "column": "x"},  # no type, no expected_version
+        {"sources": ["src"], "column": "x"},  # no type, no expected_version
     )
     assert status == 400
     assert body["error"]["code"] == "validation"
+
+
+def test_set_column_type_rejects_empty_sources(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-type",
+        {
+            "sources": [],
+            "column": "Mystery",
+            "type": "categorical",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "non-empty" in body["error"]["message"]
+
+
+def test_set_column_type_rejects_non_array_sources(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-type",
+        {
+            "sources": "src",
+            "column": "Mystery",
+            "type": "categorical",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "array" in body["error"]["message"]
 
 
 def test_stale_state_returns_409_with_fresh_state(running_server: str):
@@ -273,7 +307,7 @@ def test_stale_state_returns_409_with_fresh_state(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "categorical",
             "expected_version": "stale-token",
