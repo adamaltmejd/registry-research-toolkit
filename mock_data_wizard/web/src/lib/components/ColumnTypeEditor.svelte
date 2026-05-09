@@ -58,6 +58,19 @@
     return [...sources];
   });
 
+  // SCB register names are usually "Long descriptive name (ACRONYM)".
+  // The full name is fine in the modal subline (which can wrap onto
+  // multiple lines), but inside a radio label it stretches the form
+  // unreadably wide. Pull out the trailing ALL-CAPS acronym when
+  // present; tooltip carries the full name. Falls back to the full
+  // name (truncated by CSS) when there's no parenthetical to extract.
+  function shortRegisterName(full: string | null): string | null {
+    if (!full) return null;
+    const m = full.match(/\(([A-ZÅÄÖ0-9][A-ZÅÄÖ0-9 -]{1,15})\)\s*$/);
+    return m ? m[1] : full;
+  }
+  let registerShort = $derived(shortRegisterName(registerName));
+
   // Modal editor: snapshot the prop once on mount and let local edit
   // state diverge. `untrack` signals to the compiler that not reacting
   // to upstream changes is intentional.
@@ -125,9 +138,12 @@
           <span class="source-line" title={sources[0]}>{sources[0]}</span>
         {:else}
           <span class="source-line bulk">
-            applying to {sources.length} sources{registerName
-              ? ` in ${registerName}`
-              : ""}
+            applying to {sources.length} sources{registerShort
+              ? " in "
+              : ""}{#if registerShort}<span
+                class="register-name"
+                title={registerName ?? undefined}>{registerShort}</span
+              >{/if}
           </span>
         {/if}
         <h3 id="column-type-editor-heading">{column.name}</h3>
@@ -203,7 +219,9 @@
               bind:group={scope}
             />
             All {registerSources.length} sources in
-            {registerName ?? "this register"}
+            <span class="register-name" title={registerName ?? undefined}
+              >{registerShort ?? "this register"}</span
+            >
             <span class="hint">· reconcile</span>
           </label>
         {/if}
@@ -378,6 +396,20 @@
   }
   .scope .radio select {
     margin-left: 0.3rem;
+  }
+  /* Acronym-with-tooltip pattern: extracted "(LISA)" form fits on the
+     line; long unabbreviated names stay intact but get cut off with
+     ellipsis, keeping the radio label single-line. The full register
+     name is always available via the title tooltip. */
+  .register-name {
+    display: inline-block;
+    max-width: 22rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: bottom;
+    border-bottom: 1px dotted rgba(0, 0, 0, 0.25);
+    cursor: help;
   }
   legend {
     padding: 0 0.25rem;
