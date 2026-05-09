@@ -13,8 +13,11 @@
   // Modal target: list of sources to apply the column-type edit to. In
   // grouped mode this is a partition's source members; in per-source
   // mode it is a single-element list.
-  let editingColumn: { sources: string[]; column: ColumnInfo } | null =
-    $state(null);
+  let editingColumn: {
+    sources: string[];
+    registerSourcesWithColumn: string[];
+    column: ColumnInfo;
+  } | null = $state(null);
   let editingRegister = $state(false);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
@@ -61,6 +64,19 @@
     if (sig.classification_short_name) return sig.classification_short_name;
     if (sig.has_value_codes) return "value codes";
     return "";
+  }
+
+  // Per-source mode helper: list every source in the register that
+  // carries `colName`. Used to feed ColumnTypeEditor's register-wide
+  // reconcile target with the carriers only — sources missing the
+  // column would otherwise fail server-side pair validation.
+  function carriersForColumn(colName: string): string[] {
+    const out: string[] = [];
+    for (const sn of group.sources) {
+      const cols = group.columns_by_source[sn] ?? [];
+      if (cols.some((c) => c.name === colName)) out.push(sn);
+    }
+    return out;
   }
 
   function isUnmatchedCategorical(col: ColumnInfo): boolean {
@@ -112,6 +128,11 @@
     variant_index: number;
     variant_count: number;
     sources: string[];
+    /** Union of `sources` across every variant of this column-name —
+     * i.e. all register sources that actually carry the column. Used
+     * by the editor's register-wide reconcile target so the request
+     * never includes sources where the column is missing. */
+    carrier_sources: string[];
     sample: ColumnInfo;
     sql_type_summary: string;
     manual_count: number;
@@ -171,6 +192,9 @@
         if (col.provenance === "manual") part.manual_count++;
       }
       const built = Array.from(groups.values());
+      // Carrier set = sources across every variant; the variants
+      // partition this set, so concatenation is already unique.
+      const carrierSources = built.flatMap((b) => b.sources);
       built.forEach((b, i) => {
         const items = Array.from(b.sql_types.entries());
         let summary: string;
@@ -187,6 +211,7 @@
           variant_index: i,
           variant_count: built.length,
           sources: b.sources,
+          carrier_sources: carrierSources,
           sample: b.sample,
           sql_type_summary: summary,
           manual_count: b.manual_count,
@@ -291,6 +316,7 @@
                 onclick={() =>
                   (editingColumn = {
                     sources: [...p.sources],
+                    registerSourcesWithColumn: [...p.carrier_sources],
                     column: p.sample,
                   })}
               >
@@ -410,7 +436,11 @@
                       .filter(Boolean)
                       .join(" · ") + ` (${provLabel})`}
                     onclick={() =>
-                      (editingColumn = { sources: [sourceName], column: col })}
+                      (editingColumn = {
+                        sources: [sourceName],
+                        registerSourcesWithColumn: carriersForColumn(col.name),
+                        column: col,
+                      })}
                   >
                     <span class="type-name">{col.current_type}</span>
                     {#if hint}
@@ -446,7 +476,7 @@
 {#if editingColumn}
   <ColumnTypeEditor
     sources={editingColumn.sources}
-    registerSources={[...group.sources]}
+    registerSourcesWithColumn={editingColumn.registerSourcesWithColumn}
     registerName={group.register_name}
     column={editingColumn.column}
     onClose={() => (editingColumn = null)}

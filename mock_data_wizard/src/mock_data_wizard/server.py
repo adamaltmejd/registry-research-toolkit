@@ -481,10 +481,13 @@ def _api_get_state(config: ServerConfig) -> tuple[int, dict[str, Any]]:
 
 
 def _api_init(config: ServerConfig, body: dict[str, Any]) -> tuple[int, dict[str, Any]]:
-    """Idempotent: re-runs ``init_if_missing`` and returns the snapshot.
-    Without a discover file present the empty-state UI has nothing to
-    bootstrap from, so we surface a `not_initialized` 404 rather than
-    silently writing an empty config."""
+    """Idempotent: bootstraps from discover when the config is missing,
+    otherwise returns the current snapshot.
+
+    Discover is only required for first-time bootstrap. Once the project
+    is initialised, ``POST /api/init`` is a safe no-op even if the
+    discover file has been removed — the contract stays idempotent for
+    callers that don't track local file state."""
     # Lock the contract: the only way to clobber an existing config is
     # to delete the file on disk. If a future client sends ``{"force":
     # true}`` or similar, fail loudly rather than silently ignoring.
@@ -494,16 +497,22 @@ def _api_init(config: ServerConfig, body: dict[str, Any]) -> tuple[int, dict[str
             f"{sorted(body)}. Overwrite mode is intentionally not "
             f"exposed — delete the config file to re-initialise."
         )
+    config_path = config.project_dir / editor.CONFIG_FILENAME
     discover_path = config.project_dir / editor.DISCOVER_FILENAME_DEFAULT
-    if not discover_path.exists():
-        raise editor.NotInitializedError(
-            f"{discover_path} not found. Run the discover step on MONA "
-            f"first, then place {editor.DISCOVER_FILENAME_DEFAULT} next "
-            f"to your project before initialising."
+    if config_path.exists():
+        # Already initialised — read-only no-op. get_state's discover
+        # fallback handles the case where discover.json is absent.
+        snap = editor.get_state(config.project_dir, db_path=config.db_path)
+    else:
+        if not discover_path.exists():
+            raise editor.NotInitializedError(
+                f"{discover_path} not found. Run the discover step on MONA "
+                f"first, then place {editor.DISCOVER_FILENAME_DEFAULT} next "
+                f"to your project before initialising."
+            )
+        snap = editor.init_if_missing(
+            config.project_dir, discover_path, db_path=config.db_path
         )
-    snap = editor.init_if_missing(
-        config.project_dir, discover_path, db_path=config.db_path
-    )
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 
 

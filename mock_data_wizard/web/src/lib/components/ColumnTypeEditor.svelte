@@ -8,20 +8,28 @@
   interface Props {
     /** Sources making up the partition the user clicked. The scope
      *  picker can narrow this to one or widen it to the whole register
-     *  (when registerSources is a strict superset). */
+     *  (when registerSourcesWithColumn is a strict superset). */
     sources: string[];
-    /** All sources in the surrounding register. When equal in length to
-     *  `sources`, the partition spans the whole register (no
-     *  reconcile-all option needed). */
-    registerSources: string[];
+    /** Sources in the surrounding register that actually carry this
+     *  column. Used as the target for register-wide reconcile so the
+     *  request never includes sources where the column is missing —
+     *  the server validates every (source, column) pair and would
+     *  reject the whole call otherwise. Equal to `sources` when the
+     *  partition already spans every carrier. */
+    registerSourcesWithColumn: string[];
     /** Cosmetic — used in modal copy. */
     registerName: string | null;
     column: ColumnInfo;
     onClose: () => void;
   }
 
-  let { sources, registerSources, registerName, column, onClose }: Props =
-    $props();
+  let {
+    sources,
+    registerSourcesWithColumn,
+    registerName,
+    column,
+    onClose,
+  }: Props = $props();
 
   const TYPES: ColumnType[] = ["id", "categorical", "numeric", "opaque", "date"];
 
@@ -35,12 +43,15 @@
   //     register (i.e. sibling variants exist).
   type Scope = "partition" | "single" | "register";
 
-  // Scope picker is meaningful only when the register has more than one
-  // source. With one source the only valid target is that source.
-  let showScopePicker = $derived(registerSources.length > 1);
+  // Scope picker is meaningful only when more than one carrier source
+  // exists. With one source the only valid target is that source.
+  let showScopePicker = $derived(registerSourcesWithColumn.length > 1);
   // "Reconcile across the whole register" is only useful when the
-  // partition is a strict subset (sibling variants exist).
-  let canReconcileAll = $derived(sources.length < registerSources.length);
+  // partition is a strict subset of the carrier set (sibling variants
+  // exist for the same column).
+  let canReconcileAll = $derived(
+    sources.length < registerSourcesWithColumn.length,
+  );
   // Default scope: when the partition has multiple sources, the user
   // clicked the row to edit them together — keep that intent. When the
   // partition is one source, there's nothing else to bulk-edit, so
@@ -54,7 +65,7 @@
 
   let effectiveSources = $derived.by(() => {
     if (scope === "single") return singleSource ? [singleSource] : [];
-    if (scope === "register") return [...registerSources];
+    if (scope === "register") return [...registerSourcesWithColumn];
     return [...sources];
   });
 
@@ -218,7 +229,7 @@
               value="register"
               bind:group={scope}
             />
-            All {registerSources.length} sources in
+            All {registerSourcesWithColumn.length} sources in
             <span class="register-name" title={registerName ?? undefined}
               >{registerShort ?? "this register"}</span
             >
