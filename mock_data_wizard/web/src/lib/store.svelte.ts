@@ -9,6 +9,7 @@ import {
   ApiError,
   ApiStaleState,
   getState as fetchState,
+  initProject as apiInitProject,
   listRegisters,
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
@@ -23,14 +24,30 @@ export interface Toast {
   message: string;
 }
 
+/** Distinguish "config exists but couldn't load" (real error) from
+ * "config not initialised yet" (which the empty-state UI handles). */
+export type LoadState =
+  | { kind: "loading" }
+  | { kind: "ready" }
+  | { kind: "uninitialised" }
+  | { kind: "error"; message: string };
+
 const TOAST_TIMEOUT_MS = 6000;
+// Cap on visible toasts. Older ones are dropped when this is exceeded so
+// a flurry of stale-state errors during a contentious editing session
+// doesn't pile up over the page.
+const MAX_TOASTS = 4;
 
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
   toasts: Toast[] = $state([]);
-  loadError: string | null = $state(null);
+  loadState: LoadState = $state({ kind: "loading" });
   busy = $state(false);
+  /** Bumped whenever stale-state recovery refreshes the snapshot.
+   * Open modals subscribe to this and self-close when it changes — their
+   * pre-mutation snapshot is no longer trustworthy. */
+  staleRecoveryTick = $state(0);
 
   private nextToastId = 1;
   private toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -38,9 +55,30 @@ class Store {
   async load(): Promise<void> {
     try {
       this.snapshot = await fetchState();
-      this.loadError = null;
+      this.loadState = { kind: "ready" };
     } catch (exc) {
-      this.loadError = exc instanceof Error ? exc.message : String(exc);
+      if (exc instanceof ApiError && exc.code === "not_initialized") {
+        this.snapshot = null;
+        this.loadState = { kind: "uninitialised" };
+        return;
+      }
+      const message = exc instanceof Error ? exc.message : String(exc);
+      this.loadState = { kind: "error", message };
+    }
+  }
+
+  async init(): Promise<void> {
+    if (this.busy) return;
+    this.busy = true;
+    try {
+      this.snapshot = await apiInitProject();
+      this.loadState = { kind: "ready" };
+      this.pushToast("info", "Project initialised. Review the auto-classified columns below.");
+    } catch (exc) {
+      const message = exc instanceof Error ? exc.message : String(exc);
+      this.pushToast("error", `Could not initialise: ${message}`);
+    } finally {
+      this.busy = false;
     }
   }
 
@@ -73,7 +111,18 @@ class Store {
 
   pushToast(level: Toast["level"], message: string): void {
     const id = this.nextToastId++;
-    this.toasts = [...this.toasts, { id, level, message }];
+    let next = [...this.toasts, { id, level, message }];
+    while (next.length > MAX_TOASTS) {
+      const dropped = next.shift();
+      if (dropped) {
+        const timer = this.toastTimers.get(dropped.id);
+        if (timer !== undefined) {
+          clearTimeout(timer);
+          this.toastTimers.delete(dropped.id);
+        }
+      }
+    }
+    this.toasts = next;
     const timer = setTimeout(() => {
       this.toastTimers.delete(id);
       this.toasts = this.toasts.filter((t) => t.id !== id);
@@ -103,6 +152,9 @@ class Store {
         if (exc.freshState) {
           this.snapshot = exc.freshState;
         }
+        // Bump the tick so any open modal can self-close: its mounted
+        // snapshot of the column/group state is no longer trustworthy.
+        this.staleRecoveryTick++;
         this.pushToast(
           "warning",
           "Another writer updated the config; your change was not applied. The view has been refreshed.",

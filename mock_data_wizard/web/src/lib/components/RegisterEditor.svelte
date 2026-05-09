@@ -3,6 +3,7 @@
 
   import { store } from "../store.svelte";
   import type { RegisterGroupView } from "../types";
+  import Modal from "./Modal.svelte";
 
   interface Props {
     group: RegisterGroupView;
@@ -13,18 +14,19 @@
 
   // Modal dialog: snapshot the prop once on mount; `untrack` signals
   // that not reacting to upstream `group` changes is intentional.
-  let selectedRegister: string = $state(
-    untrack(() => group.register_name ?? ""),
-  );
+  const initialName: string = untrack(() => group.register_name ?? "");
+  let selectedRegister: string = $state(initialName);
   let reclassifyManual = $state(false);
   let submitting = $state(false);
   let confirming = $state(false);
+  let validationError: string | null = $state(null);
 
   $effect(() => {
     void store.ensureRegisters();
   });
 
   let registers = $derived(store.registers ?? []);
+  let registerNames = $derived(new Set(registers.map((r) => r.name)));
 
   let manualCount = $derived.by(() => {
     const manual = store.snapshot?.config.manual_columns ?? [];
@@ -32,9 +34,24 @@
     return manual.filter(([s, _c]) => sources.has(s)).length;
   });
 
+  let trimmedRegister = $derived(selectedRegister.trim());
+  let registerChanged = $derived(trimmedRegister !== initialName);
+  // Apply enabled when something would change AND the input either
+  // resolves to a known register name or is empty (clearing the
+  // assignment). Unknown text gets caught client-side instead of the
+  // user discovering it after submit.
+  let inputResolves = $derived(
+    trimmedRegister === "" || registerNames.has(trimmedRegister),
+  );
+  let canApply = $derived(registerChanged && inputResolves && !submitting);
+  // Confirm step only fires when the register actually changes AND the
+  // sources have manual edits that would be at risk. Earlier this was
+  // gated only on manual count, which made every Apply two clicks even
+  // when the input was unchanged.
+  let needsConfirm = $derived(registerChanged && manualCount > 0);
+
   function valueOrNull(): string | null {
-    const trimmed = selectedRegister.trim();
-    return trimmed === "" ? null : trimmed;
+    return trimmedRegister === "" ? null : trimmedRegister;
   }
 
   async function commit(): Promise<void> {
@@ -49,6 +66,12 @@
     });
     submitting = false;
     if (ok) {
+      const verb = valueOrNull() === null ? "Cleared" : "Set";
+      const tail =
+        valueOrNull() === null
+          ? `register on ${group.group_id}`
+          : `${group.group_id} → ${valueOrNull()}`;
+      store.pushToast("info", `${verb} ${tail}`);
       onClose();
     }
   }
@@ -56,30 +79,33 @@
   async function onSubmit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
     if (submitting) return;
-    if (manualCount > 0 && !confirming) {
+    if (!registerChanged) return; // no-op guard, also covered by canApply
+    if (!inputResolves) {
+      validationError = `'${trimmedRegister}' is not a known register name. Pick one from the autocomplete or leave the field empty to clear the assignment.`;
+      return;
+    }
+    if (needsConfirm && !confirming) {
       confirming = true;
       return;
     }
     await commit();
   }
+
+  function onInput() {
+    // Clear inline error eagerly — the user is typing again.
+    validationError = null;
+    // Stepping back through Apply→Confirm should drop the confirmation
+    // if the user changes the register again mid-flow.
+    confirming = false;
+  }
 </script>
 
-<div
-  class="overlay"
-  role="dialog"
-  aria-modal="true"
-  aria-label="Edit group register"
-  tabindex="-1"
-  onclick={(e) => {
-    if (e.target === e.currentTarget) onClose();
-  }}
-  onkeydown={(e) => {
-    if (e.key === "Escape") onClose();
-  }}
->
-  <form class="card" onsubmit={onSubmit}>
+<Modal headingId="register-editor-heading" {onClose}>
+  <form onsubmit={onSubmit}>
     <header>
-      <h3>Set register · {group.group_id}</h3>
+      <h3 id="register-editor-heading">
+        Set register · <span class="mono">{group.group_id}</span>
+      </h3>
       <button type="button" class="close" aria-label="Close" onclick={onClose}>
         ×
       </button>
@@ -96,8 +122,11 @@
         type="text"
         list="register-options"
         bind:value={selectedRegister}
+        oninput={onInput}
         placeholder="(none — clear)"
         spellcheck="false"
+        aria-invalid={!inputResolves}
+        aria-describedby={validationError ? "register-error" : undefined}
       />
       <datalist id="register-options">
         {#each registers as r (r.id)}
@@ -106,7 +135,16 @@
       </datalist>
     </label>
 
-    {#if manualCount > 0}
+    {#if validationError}
+      <p id="register-error" class="error" role="alert">{validationError}</p>
+    {:else if !inputResolves && trimmedRegister !== ""}
+      <p class="hint-line">
+        not a known register — Apply will be blocked until you pick one
+        from the suggestions.
+      </p>
+    {/if}
+
+    {#if manualCount > 0 && registerChanged}
       <label class="checkbox">
         <input type="checkbox" bind:checked={reclassifyManual} />
         Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"} too
@@ -128,7 +166,16 @@
       <button type="button" onclick={onClose} disabled={submitting}
         >Cancel</button
       >
-      <button type="submit" class="primary" disabled={submitting}>
+      <button
+        type="submit"
+        class="primary"
+        disabled={!canApply}
+        title={!registerChanged
+          ? "No change to apply"
+          : !inputResolves
+            ? "Pick a known register"
+            : ""}
+      >
         {#if submitting}
           Saving…
         {:else if confirming}
@@ -139,23 +186,10 @@
       </button>
     </footer>
   </form>
-</div>
+</Modal>
 
 <style>
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: grid;
-    place-items: center;
-    z-index: 100;
-  }
-  .card {
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    padding: 1rem 1.25rem;
-    width: min(32rem, 92vw);
+  form {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -163,11 +197,18 @@
   header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    gap: 1rem;
   }
   h3 {
     margin: 0;
     font-size: 1rem;
+    min-width: 0;
+    flex: 1 1 auto;
+    word-break: break-word;
+  }
+  .mono {
+    font-family: ui-monospace, monospace;
   }
   .close {
     background: transparent;
@@ -175,6 +216,9 @@
     font-size: 1.4rem;
     cursor: pointer;
     color: #666;
+    flex: 0 0 auto;
+    padding: 0;
+    line-height: 1;
   }
   .row {
     display: grid;
@@ -192,6 +236,10 @@
     border-radius: 4px;
     font: inherit;
   }
+  input[aria-invalid="true"] {
+    border-color: #c44;
+    outline-color: #c44;
+  }
   .checkbox {
     display: flex;
     align-items: center;
@@ -202,6 +250,7 @@
     color: #666;
     font-size: 0.9rem;
     margin: 0;
+    word-break: break-word;
   }
   .warn {
     background: #fff8e1;
@@ -211,6 +260,20 @@
     margin: 0;
     color: #5b4a14;
     font-size: 0.9rem;
+  }
+  .error {
+    background: #fde8e8;
+    border: 1px solid #e0a0a0;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    color: #882020;
+    font-size: 0.88rem;
+  }
+  .hint-line {
+    margin: 0;
+    color: #888;
+    font-size: 0.85rem;
   }
   footer {
     display: flex;
@@ -232,6 +295,6 @@
   }
   button:disabled {
     opacity: 0.6;
-    cursor: progress;
+    cursor: not-allowed;
   }
 </style>

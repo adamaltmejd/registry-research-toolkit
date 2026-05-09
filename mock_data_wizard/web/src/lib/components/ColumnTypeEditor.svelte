@@ -3,6 +3,7 @@
 
   import { store } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
+  import Modal from "./Modal.svelte";
 
   interface Props {
     sourceName: string;
@@ -60,31 +61,50 @@
     });
     submitting = false;
     if (ok) {
+      store.pushToast(
+        "info",
+        `Saved ${column.name} → ${selectedType}`,
+      );
       onClose();
     }
   }
 </script>
 
-<div
-  class="overlay"
-  role="dialog"
-  aria-modal="true"
-  aria-label="Edit column type"
-  tabindex="-1"
-  onclick={(e) => {
-    if (e.target === e.currentTarget) onClose();
-  }}
-  onkeydown={(e) => {
-    if (e.key === "Escape") onClose();
-  }}
->
-  <form class="card" onsubmit={submit}>
+<Modal headingId="column-type-editor-heading" {onClose}>
+  <form onsubmit={submit}>
     <header>
-      <h3>{sourceName} → {column.name}</h3>
+      <div class="heading-stack">
+        <span class="source-line" title={sourceName}>{sourceName}</span>
+        <h3 id="column-type-editor-heading">{column.name}</h3>
+      </div>
       <button type="button" class="close" aria-label="Close" onclick={onClose}>
         ×
       </button>
     </header>
+
+    {#if column.regmeta_signal}
+      <p class="regmeta-context" aria-label="regmeta context">
+        regmeta:
+        {#if column.regmeta_signal.classification_short_name}
+          <code>{column.regmeta_signal.classification_short_name}</code>
+        {/if}
+        {#if column.regmeta_signal.has_value_codes}
+          {#if column.regmeta_signal.classification_short_name}·{/if}
+          value codes available
+        {/if}
+        {#if column.regmeta_signal.datatyp_kind}
+          · datatype <code>{column.regmeta_signal.datatyp_kind}</code>
+        {/if}
+        {#if !column.regmeta_signal.classification_short_name && !column.regmeta_signal.has_value_codes && !column.regmeta_signal.datatyp_kind}
+          column known to regmeta but with no classification, codes, or
+          datatype hint.
+        {/if}
+      </p>
+    {:else}
+      <p class="regmeta-context regmeta-missing">
+        regmeta: no record for this column name.
+      </p>
+    {/if}
 
     <fieldset>
       <legend>Type</legend>
@@ -140,23 +160,10 @@
       </button>
     </footer>
   </form>
-</div>
+</Modal>
 
 <style>
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
-    display: grid;
-    place-items: center;
-    z-index: 100;
-  }
-  .card {
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    padding: 1rem 1.25rem;
-    width: min(28rem, 90vw);
+  form {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
@@ -164,13 +171,29 @@
   header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
+  }
+  .heading-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .source-line {
+    color: #777;
+    font-size: 0.85rem;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   h3 {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-family: ui-monospace, monospace;
+    word-break: break-word;
   }
   .close {
     background: transparent;
@@ -178,6 +201,29 @@
     font-size: 1.4rem;
     cursor: pointer;
     color: #666;
+    flex: 0 0 auto;
+    padding: 0;
+    line-height: 1;
+  }
+  .regmeta-context {
+    margin: 0;
+    padding: 0.4rem 0.6rem;
+    background: #f4f6fb;
+    border-left: 3px solid #c8d3ec;
+    font-size: 0.85rem;
+    color: #444;
+    border-radius: 3px;
+  }
+  .regmeta-context code {
+    background: #fff;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    font-size: 0.95em;
+  }
+  .regmeta-missing {
+    background: #fff8e9;
+    border-left-color: #f0c14b;
+    color: #5b4a14;
   }
   fieldset {
     border: 1px solid #ddd;

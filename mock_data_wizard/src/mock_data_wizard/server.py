@@ -206,6 +206,7 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
 
     api_routes: dict[tuple[str, str], Callable[[dict[str, Any]], tuple[int, dict]]] = {
         ("GET", "/api/state"): lambda body: _api_get_state(config),
+        ("POST", "/api/init"): lambda body: _api_init(config, body),
         ("POST", "/api/column-type"): lambda body: _api_set_column_type(config, body),
         ("POST", "/api/group-register"): lambda body: _api_set_group_register(
             config, body
@@ -476,6 +477,24 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
 
 def _api_get_state(config: ServerConfig) -> tuple[int, dict[str, Any]]:
     snap = editor.get_state(config.project_dir, db_path=config.db_path)
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_init(config: ServerConfig, body: dict[str, Any]) -> tuple[int, dict[str, Any]]:
+    """Idempotent: re-runs ``init_if_missing`` and returns the snapshot.
+    Without a discover file present the empty-state UI has nothing to
+    bootstrap from, so we surface a `not_initialized` 404 rather than
+    silently writing an empty config."""
+    discover_path = config.project_dir / editor.DISCOVER_FILENAME_DEFAULT
+    if not discover_path.exists():
+        raise editor.NotInitializedError(
+            f"{discover_path} not found. Run the discover step on MONA "
+            f"first, then place {editor.DISCOVER_FILENAME_DEFAULT} next "
+            f"to your project before initialising."
+        )
+    snap = editor.init_if_missing(
+        config.project_dir, discover_path, db_path=config.db_path
+    )
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 
 

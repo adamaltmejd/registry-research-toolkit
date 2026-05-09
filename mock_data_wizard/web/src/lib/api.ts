@@ -67,6 +67,14 @@ export function getState(): Promise<StateSnapshot> {
   return send<StateSnapshot>("/api/state", { method: "GET" });
 }
 
+export function initProject(): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/init", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+}
+
 export function listRegisters(): Promise<RegistersResponse> {
   return send<RegistersResponse>("/api/registers", { method: "GET" });
 }

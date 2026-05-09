@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ColumnInfo, RegisterGroupView } from "../types";
+  import { store } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
 
@@ -19,6 +20,40 @@
     partial: "partial confidence",
     none: "no confidence",
   };
+
+  // Per-source year metadata lives on the snapshot's config.sources, not
+  // on the column-level data the table renders. Pull it out once for
+  // each source row so panels of yearly CSVs read at a glance.
+  let sourceYears = $derived.by(() => {
+    const m: Record<string, number | null> = {};
+    const sources = store.snapshot?.config.sources ?? {};
+    for (const s of group.sources) {
+      m[s] = sources[s]?.year ?? null;
+    }
+    return m;
+  });
+
+  // Panel definition for this group, if any. The candidate badge in
+  // meta tells the user a panel exists; the summary block tells them
+  // what it actually covers (key column, period range).
+  let panelForGroup = $derived.by(() => {
+    const panels = store.snapshot?.config.panels ?? [];
+    const groupSourceSet = new Set(group.sources);
+    return panels.find((p) =>
+      p.members.some((m) => groupSourceSet.has(m.source)),
+    );
+  });
+
+  let panelPeriodRange = $derived.by(() => {
+    if (!panelForGroup) return null;
+    const periods = panelForGroup.members
+      .map((m) => m.period)
+      .filter((p): p is number => typeof p === "number");
+    if (periods.length === 0) return null;
+    const min = Math.min(...periods);
+    const max = Math.max(...periods);
+    return min === max ? `${min}` : `${min}–${max}`;
+  });
 
   // Inline subtype/format suffix shown on the type pill — only the
   // value, since the key is implied by the type ("integer" under id is
@@ -49,25 +84,37 @@
     return regmetaSuffix(col) === "";
   }
 
+  // Current type disagrees with what regmeta would classify the column
+  // as. This is the main signal that a manual override may be needed.
+  // Manual overrides are exempt — the user has already decided.
+  function isRegmetaMismatch(col: ColumnInfo): boolean {
+    if (col.provenance === "manual") return false;
+    if (col.regmeta_implied_type === null) return false;
+    return col.regmeta_implied_type !== col.current_type;
+  }
+
   interface SourceStats {
     total: number;
     unmatched: number;
     manual: number;
+    mismatch: number;
   }
   function statsFor(cols: ColumnInfo[]): SourceStats {
     let unmatched = 0;
     let manual = 0;
+    let mismatch = 0;
     for (const c of cols) {
       if (isUnmatchedCategorical(c)) unmatched++;
       if (c.provenance === "manual") manual++;
+      if (isRegmetaMismatch(c)) mismatch++;
     }
-    return { total: cols.length, unmatched, manual };
+    return { total: cols.length, unmatched, manual, mismatch };
   }
 </script>
 
 <section class="group" class:no-register={group.register_id === null}>
   <header>
-    <div>
+    <div class="title-block">
       <h2>
         {#if group.register_name}
           {group.register_name}
@@ -92,17 +139,39 @@
     </button>
   </header>
 
+  {#if panelForGroup}
+    <p class="panel-summary" title="Panel definition (config.panels)">
+      <span class="panel-tag">panel</span>
+      <code>{panelForGroup.panel_id}</code>
+      · keyed on <code>{panelForGroup.panel_key}</code>
+      {#if panelPeriodRange}
+        · {panelPeriodRange} ({panelForGroup.members.length} files)
+      {:else}
+        · {panelForGroup.members.length} members
+      {/if}
+    </p>
+  {/if}
+
   {#each group.sources as sourceName (sourceName)}
     {@const cols = group.columns_by_source[sourceName] ?? []}
     {@const stats = statsFor(cols)}
+    {@const year = sourceYears[sourceName]}
     <details class="source">
       <summary>
         <span class="source-name mono">{sourceName}</span>
         <span class="source-stats">
+          {#if year !== null && year !== undefined}
+            <span class="stat-year" title="detected source year">{year}</span>
+          {/if}
           <span class="stat-cols">{stats.total} col{stats.total === 1 ? "" : "s"}</span>
           {#if stats.unmatched > 0}
             <span class="stat-unmatched" title="categoricals without regmeta classification or value codes"
               >● {stats.unmatched} unmatched</span
+            >
+          {/if}
+          {#if stats.mismatch > 0}
+            <span class="stat-mismatch" title="auto-classified type disagrees with regmeta-implied type"
+              >⚠ {stats.mismatch} regmeta mismatch</span
             >
           {/if}
           {#if stats.manual > 0}
@@ -124,8 +193,9 @@
           {#each cols as col (col.name)}
             {@const hint = hintSuffix(col)}
             {@const regmeta = regmetaSuffix(col)}
+            {@const mismatch = isRegmetaMismatch(col)}
             <tr>
-              <td class="mono">{col.name}</td>
+              <td class="mono col-name" title={col.name}>{col.name}</td>
               <td class="mono dim">{col.sql_type ?? "—"}</td>
               <td>
                 <button
@@ -144,7 +214,13 @@
                     <span class="type-suffix regmeta">· {regmeta}</span>
                   {/if}
                 </button>
-                {#if isUnmatchedCategorical(col)}
+                {#if mismatch}
+                  <span
+                    class="mismatch-marker"
+                    title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
+                    aria-label="regmeta type mismatch">⚠</span
+                  >
+                {:else if isUnmatchedCategorical(col)}
                   <span
                     class="unmatched-marker"
                     title="categorical without regmeta classification or value codes"
@@ -194,10 +270,16 @@
     align-items: flex-start;
     gap: 1rem;
     margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .title-block {
+    min-width: 0;
+    flex: 1 1 16rem;
   }
   h2 {
     margin: 0;
     font-size: 1.1rem;
+    word-break: break-word;
   }
   h2 small {
     color: #888;
@@ -233,6 +315,29 @@
     background: #f0e0e0;
     color: #883333;
   }
+  .panel-summary {
+    margin: 0 0 0.5rem;
+    padding: 0.4rem 0.6rem;
+    background: #f4f6fb;
+    border-left: 3px solid #c8d3ec;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    color: #444;
+  }
+  .panel-summary code {
+    background: #fff;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.95em;
+  }
+  .panel-tag {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: #1a3b80;
+    margin-right: 0.25rem;
+  }
   .source {
     margin-top: 0.5rem;
     border-top: 1px solid #f0f0f0;
@@ -257,6 +362,7 @@
     transition: transform 0.12s ease;
     display: inline-block;
     width: 0.7rem;
+    flex: 0 0 auto;
   }
   .source[open] > summary::before {
     transform: rotate(90deg);
@@ -268,7 +374,8 @@
     font-size: 0.92rem;
     color: #444;
     flex: 1 1 auto;
-    word-break: break-all;
+    min-width: 0;
+    overflow-wrap: anywhere;
   }
   .source-stats {
     display: inline-flex;
@@ -277,6 +384,16 @@
     font-size: 0.82rem;
     color: #666;
     flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .stat-year {
+    background: #eef2fb;
+    color: #1a3b80;
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.78rem;
   }
   .stat-cols {
     color: #888;
@@ -284,6 +401,10 @@
   .stat-unmatched {
     color: #b34a00;
     opacity: 0.85;
+  }
+  .stat-mismatch {
+    color: #b34a00;
+    font-weight: 600;
   }
   .stat-manual {
     color: #b34a00;
@@ -293,12 +414,14 @@
     width: 100%;
     border-collapse: collapse;
     font-size: 0.9rem;
+    table-layout: fixed;
   }
   th,
   td {
     text-align: left;
     padding: 0.3rem 0.4rem;
     border-bottom: 1px solid #f0f0f0;
+    vertical-align: middle;
   }
   th {
     color: #777;
@@ -307,8 +430,22 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
+  th:nth-child(1) {
+    width: 50%;
+  }
+  th:nth-child(2) {
+    width: 18%;
+  }
+  th:nth-child(3) {
+    width: 32%;
+  }
   .mono {
     font-family: ui-monospace, monospace;
+  }
+  .col-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .dim {
     color: #888;
@@ -322,6 +459,10 @@
     cursor: pointer;
     font: inherit;
     font-family: ui-monospace, monospace;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .type-pill:hover {
     background: #e0e7f7;
@@ -348,9 +489,13 @@
     background: #faefe0;
     color: #7c4400;
   }
+  /* Warmer than disabled-grey so the user doesn't read it as "not
+     interactive". Kept neutral enough not to compete with the typed
+     pills. */
   .type-opaque {
-    background: #f0f0f0;
-    color: #555;
+    background: #f4f0e8;
+    color: #5a523f;
+    border-color: #d8d0bf;
   }
   .type-suffix {
     margin-left: 0.15rem;
@@ -368,6 +513,16 @@
     line-height: 1;
     vertical-align: middle;
   }
+  /* Stronger signal than .unmatched-marker — current type *contradicts*
+     regmeta, which usually means the auto-classifier picked something
+     the user should look at. */
+  .mismatch-marker {
+    margin-left: 0.4rem;
+    color: #b34a00;
+    font-size: 0.85rem;
+    line-height: 1;
+    vertical-align: middle;
+  }
   .link {
     background: transparent;
     border: 0;
@@ -375,6 +530,8 @@
     cursor: pointer;
     font: inherit;
     padding: 0;
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
   .link:hover {
     text-decoration: underline;

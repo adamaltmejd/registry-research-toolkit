@@ -134,6 +134,57 @@ def test_get_state_404_when_not_initialized(tmp_path: Path):
     assert body["error"]["code"] == "not_initialized"
 
 
+def test_init_creates_config_then_idempotent(tmp_path: Path):
+    """POST /api/init bootstraps from discover; second call is a no-op."""
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "src",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            }
+        ],
+    )
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    base = f"http://{host}:{port}"
+    try:
+        status, body = _fetch("POST", f"{base}/api/init", {})
+        assert status == 200
+        assert body["config"]["contract_version"] == "mdw-config-3.0.0"
+        assert (tmp_path / "mock_data_config.json").exists()
+
+        # Idempotent: second call returns the same snapshot.
+        status2, body2 = _fetch("POST", f"{base}/api/init", {})
+        assert status2 == 200
+        assert body2["snapshot_version"] == body["snapshot_version"]
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+
+
+def test_init_404_when_no_discover(tmp_path: Path):
+    """POST /api/init with no mock_data_discovery.json → 404 not_initialized."""
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    try:
+        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {})
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+    assert status == 404
+    assert body["error"]["code"] == "not_initialized"
+    assert "mock_data_discovery.json" in body["error"]["message"]
+
+
 def test_set_column_type_round_trip(running_server: str):
     _, snapshot = _fetch("GET", f"{running_server}/api/state")
     version = snapshot["snapshot_version"]

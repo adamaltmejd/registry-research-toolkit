@@ -10,6 +10,18 @@
 
   let snapshot = $derived(store.snapshot);
   let warnings = $derived(snapshot?.warnings ?? []);
+
+  // Header count: peel off the synthetic `noreg-…` "unassigned" group so
+  // "11 groups" doesn't read as "11 registers" when one of them is in
+  // fact unmatched. Keep an explicit sub-count when any are unassigned.
+  let registerCount = $derived(
+    (snapshot?.groups ?? []).filter((g) => g.register_id !== null).length,
+  );
+  let unassignedCount = $derived(
+    (snapshot?.groups ?? []).filter((g) => g.register_id === null).length,
+  );
+
+  let totalPanels = $derived(snapshot?.config.panels.length ?? 0);
 </script>
 
 <header class="app-header">
@@ -17,20 +29,52 @@
   {#if snapshot}
     <p class="meta">
       contract <code>{snapshot.config.contract_version}</code>
-      · {snapshot.groups.length} group{snapshot.groups.length === 1 ? "" : "s"}
+      · {registerCount} register{registerCount === 1 ? "" : "s"}
+      {#if unassignedCount > 0}
+        + {unassignedCount} unassigned
+      {/if}
+      {#if totalPanels > 0}
+        · {totalPanels} panel{totalPanels === 1 ? "" : "s"}
+      {/if}
       · snapshot
-      <code class="dim">{snapshot.snapshot_version.slice(0, 12)}…</code>
+      <code
+        class="dim"
+        title={`snapshot_version ${snapshot.snapshot_version}\ndiscover_hash ${snapshot.config.discover_hash ?? "—"}`}
+        >{snapshot.snapshot_version.slice(0, 12)}…</code
+      >
     </p>
   {/if}
 </header>
 
-{#if store.loadError}
+{#if store.loadState.kind === "error"}
   <div class="banner banner-error">
     <strong>Error loading state.</strong>
-    {store.loadError}
+    {store.loadState.message}
     <button onclick={() => store.load()}>Retry</button>
   </div>
-{:else if snapshot === null}
+{:else if store.loadState.kind === "uninitialised"}
+  <section class="empty-state">
+    <h2>This project hasn't been configured yet</h2>
+    <p>
+      Initialise from <code>mock_data_discovery.json</code> to apply the
+      auto-classifier (id-name → regmeta classification → categorical
+      heuristics → SQL type). You'll be able to review and override every
+      column before extract.
+    </p>
+    <button
+      class="primary"
+      onclick={() => store.init()}
+      disabled={store.busy}
+    >
+      {store.busy ? "Initialising…" : "Initialise project"}
+    </button>
+    <p class="muted">
+      No discover file? Run the discover step on MONA first; the
+      <code>mdw_runner.py</code> bundle writes
+      <code>mock_data_discovery.json</code> next to itself.
+    </p>
+  </section>
+{:else if store.loadState.kind === "loading" || snapshot === null}
   <p class="loading">Loading snapshot…</p>
 {:else}
   {#each warnings as warn (warn.code)}
@@ -90,6 +134,7 @@
   }
   .app-header code.dim {
     color: #b0bcdb;
+    cursor: help;
   }
   main {
     max-width: 72rem;
@@ -100,6 +145,50 @@
     text-align: center;
     padding: 2rem;
     color: #777;
+  }
+  .empty-state {
+    max-width: 36rem;
+    margin: 3rem auto 1rem;
+    background: #fff;
+    border: 1px solid #e1e1e1;
+    border-radius: 6px;
+    padding: 1.5rem 1.75rem;
+    text-align: center;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  .empty-state h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.1rem;
+  }
+  .empty-state p {
+    margin: 0.4rem 0;
+    color: #444;
+    font-size: 0.95rem;
+  }
+  .empty-state .muted {
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+  }
+  .empty-state code {
+    background: #f0f0f4;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+  }
+  .empty-state button {
+    margin-top: 0.75rem;
+    padding: 0.5rem 1rem;
+    border: 1px solid #1656c0;
+    background: #1656c0;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+  }
+  .empty-state button:disabled {
+    opacity: 0.6;
+    cursor: progress;
   }
   .banner {
     max-width: 72rem;
