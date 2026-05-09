@@ -485,6 +485,15 @@ def _api_init(config: ServerConfig, body: dict[str, Any]) -> tuple[int, dict[str
     Without a discover file present the empty-state UI has nothing to
     bootstrap from, so we surface a `not_initialized` 404 rather than
     silently writing an empty config."""
+    # Lock the contract: the only way to clobber an existing config is
+    # to delete the file on disk. If a future client sends ``{"force":
+    # true}`` or similar, fail loudly rather than silently ignoring.
+    if body:
+        raise editor.ValidationError(
+            f"POST /api/init does not accept a body; got keys "
+            f"{sorted(body)}. Overwrite mode is intentionally not "
+            f"exposed — delete the config file to re-initialise."
+        )
     discover_path = config.project_dir / editor.DISCOVER_FILENAME_DEFAULT
     if not discover_path.exists():
         raise editor.NotInitializedError(

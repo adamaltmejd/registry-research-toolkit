@@ -27,6 +27,14 @@
 
   let registers = $derived(store.registers ?? []);
   let registerNames = $derived(new Set(registers.map((r) => r.name)));
+  // When the register list couldn't load (regmeta unavailable), the
+  // client-side gate has nothing to validate against. Skip it so manual
+  // entry still works; the server-side validator stays the source of
+  // truth. The user gets a warning toast on the failed fetch, so the
+  // missing autocomplete isn't silent.
+  let canValidateLocally = $derived(
+    !store.registersUnavailable && registers.length > 0,
+  );
 
   let manualCount = $derived.by(() => {
     const manual = store.snapshot?.config.manual_columns ?? [];
@@ -39,9 +47,12 @@
   // Apply enabled when something would change AND the input either
   // resolves to a known register name or is empty (clearing the
   // assignment). Unknown text gets caught client-side instead of the
-  // user discovering it after submit.
+  // user discovering it after submit — but only when we actually have a
+  // register list to check against; otherwise we let the server decide.
   let inputResolves = $derived(
-    trimmedRegister === "" || registerNames.has(trimmedRegister),
+    trimmedRegister === "" ||
+      !canValidateLocally ||
+      registerNames.has(trimmedRegister),
   );
   let canApply = $derived(registerChanged && inputResolves && !submitting);
   // Confirm step only fires when the register actually changes AND the

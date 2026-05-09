@@ -185,6 +185,36 @@ def test_init_404_when_no_discover(tmp_path: Path):
     assert "mock_data_discovery.json" in body["error"]["message"]
 
 
+def test_init_400_when_body_has_unknown_keys(tmp_path: Path):
+    """POST /api/init rejects non-empty bodies — locks down the contract
+    against silent ignoring of future fields like ``force``."""
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "src",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            }
+        ],
+    )
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    try:
+        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {"force": True})
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "force" in body["error"]["message"]
+    # Side-effect-free: nothing was written.
+    assert not (tmp_path / "mock_data_config.json").exists()
+
+
 def test_set_column_type_round_trip(running_server: str):
     _, snapshot = _fetch("GET", f"{running_server}/api/state")
     version = snapshot["snapshot_version"]

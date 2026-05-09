@@ -41,6 +41,11 @@ const MAX_TOASTS = 4;
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
+  /** True when ``listRegisters`` failed (regmeta unavailable etc.).
+   * RegisterEditor uses this to soften client-side validation: when we
+   * can't enumerate valid names, manual entry must still be permitted
+   * and the server stays the source of truth. */
+  registersUnavailable = $state(false);
   toasts: Toast[] = $state([]);
   loadState: LoadState = $state({ kind: "loading" });
   busy = $state(false);
@@ -88,11 +93,16 @@ class Store {
     try {
       const response = await listRegisters();
       this.registers = response.registers;
+      this.registersUnavailable = false;
     } catch (exc) {
       // Regmeta unavailable; surface an empty list rather than
       // blocking the modal, but warn once so a broken regmeta install
       // is visible (the autocomplete would otherwise look intentional).
+      // The flag is what RegisterEditor reads to skip client-side
+      // name-resolution; without it, the empty list would block every
+      // manual name and contradict the toast we're about to push.
       this.registers = [];
+      this.registersUnavailable = true;
       const message = exc instanceof Error ? exc.message : String(exc);
       this.pushToast(
         "warning",

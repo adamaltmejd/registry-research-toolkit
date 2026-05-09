@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { ColumnInfo, RegisterGroupView } from "../types";
+  import type { ColumnInfo, Panel, RegisterGroupView } from "../types";
   import { store } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
@@ -33,27 +33,27 @@
     return m;
   });
 
-  // Panel definition for this group, if any. The candidate badge in
-  // meta tells the user a panel exists; the summary block tells them
-  // what it actually covers (key column, period range).
-  let panelForGroup = $derived.by(() => {
+  // Panel definitions touching this group. Typical case is zero or one,
+  // but we render every match rather than `find`-ing the first to avoid
+  // silently dropping a second panel if the data model ever lets a
+  // group's sources span more than one panel.
+  let panelsForGroup = $derived.by(() => {
     const panels = store.snapshot?.config.panels ?? [];
     const groupSourceSet = new Set(group.sources);
-    return panels.find((p) =>
+    return panels.filter((p) =>
       p.members.some((m) => groupSourceSet.has(m.source)),
     );
   });
 
-  let panelPeriodRange = $derived.by(() => {
-    if (!panelForGroup) return null;
-    const periods = panelForGroup.members
+  function panelPeriodRange(panel: Panel): string | null {
+    const periods = panel.members
       .map((m) => m.period)
       .filter((p): p is number => typeof p === "number");
     if (periods.length === 0) return null;
     const min = Math.min(...periods);
     const max = Math.max(...periods);
     return min === max ? `${min}` : `${min}–${max}`;
-  });
+  }
 
   // Inline subtype/format suffix shown on the type pill — only the
   // value, since the key is implied by the type ("integer" under id is
@@ -139,18 +139,19 @@
     </button>
   </header>
 
-  {#if panelForGroup}
+  {#each panelsForGroup as panel (panel.panel_id)}
+    {@const range = panelPeriodRange(panel)}
     <p class="panel-summary" title="Panel definition (config.panels)">
       <span class="panel-tag">panel</span>
-      <code>{panelForGroup.panel_id}</code>
-      · keyed on <code>{panelForGroup.panel_key}</code>
-      {#if panelPeriodRange}
-        · {panelPeriodRange} ({panelForGroup.members.length} files)
+      <code>{panel.panel_id}</code>
+      · keyed on <code>{panel.panel_key}</code>
+      {#if range}
+        · {range} ({panel.members.length} files)
       {:else}
-        · {panelForGroup.members.length} members
+        · {panel.members.length} members
       {/if}
     </p>
-  {/if}
+  {/each}
 
   {#each group.sources as sourceName (sourceName)}
     {@const cols = group.columns_by_source[sourceName] ?? []}

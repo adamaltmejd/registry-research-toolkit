@@ -17,19 +17,18 @@
   let cardEl: HTMLDivElement | undefined = $state();
 
   // Auto-close on stale-state recovery: the modal's snapshot of the
-  // column/group is no longer trustworthy. The store bumps the tick;
-  // we watch it after the modal mounts so the initial render doesn't
-  // immediately trip the close.
-  let mountedTick = -1;
+  // column/group is no longer trustworthy. The first effect pass latches
+  // a baseline; every subsequent pass means the store bumped the tick,
+  // so we close. A boolean (rather than comparing to a sentinel value)
+  // avoids coupling to whatever initial value the store happens to use.
+  let observedTick = false;
   $effect(() => {
-    const tick = store.staleRecoveryTick;
-    if (mountedTick === -1) {
-      mountedTick = tick;
+    void store.staleRecoveryTick;
+    if (!observedTick) {
+      observedTick = true;
       return;
     }
-    if (tick !== mountedTick) {
-      onClose();
-    }
+    onClose();
   });
 
   function focusableTargets(): HTMLElement[] {
@@ -84,7 +83,14 @@
       if (dialogEl && dialogEl.parentElement === document.body) {
         dialogEl.remove();
       }
-      previouslyFocused?.focus?.();
+      // Only restore focus if the originating element is still in the
+      // DOM. After a stale-state refresh the snapshot may have been
+      // re-rendered and the trigger button replaced, in which case
+      // focusing a detached node is a silent no-op at best and a
+      // confusing accessibility regression at worst.
+      if (previouslyFocused?.isConnected) {
+        previouslyFocused.focus();
+      }
     };
   });
 
