@@ -50,9 +50,16 @@ class Store {
     try {
       const response = await listRegisters();
       this.registers = response.registers;
-    } catch {
-      // Regmeta unavailable; surface an empty list rather than blocking.
+    } catch (exc) {
+      // Regmeta unavailable; surface an empty list rather than
+      // blocking the modal, but warn once so a broken regmeta install
+      // is visible (the autocomplete would otherwise look intentional).
       this.registers = [];
+      const message = exc instanceof Error ? exc.message : String(exc);
+      this.pushToast(
+        "warning",
+        `Could not load register list: ${message}. Type the register name manually.`,
+      );
     }
   }
 

@@ -246,11 +246,11 @@ def test_set_group_register_explicit_null_is_accepted(
     reaches the editor (even though the editor here is a no-op stub)."""
     called: dict[str, Any] = {}
 
-    def fake_set(*args, **kwargs):
-        called["register"] = args[2] if len(args) > 2 else kwargs.get("new_register")
+    def fake_set(project_dir, group_id, register, **kwargs):
+        called["register"] = register
         from mock_data_wizard.editor import get_state
 
-        return get_state(args[0])
+        return get_state(project_dir)
 
     monkeypatch.setattr(server.editor, "set_group_register", fake_set)
     _, snapshot = _fetch("GET", f"{running_server}/api/state")
@@ -414,3 +414,90 @@ def test_build_server_binds_ipv6_loopback(tmp_path: Path):
         assert port > 0
     finally:
         httpd.server_close()
+
+
+def test_resolve_bind_family_prefers_ipv4_when_dual_stack(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """`localhost` typically resolves to both 127.0.0.1 and ::1; we
+    prefer AF_INET to match stdlib HTTPServer's default and what most
+    local clients connect to."""
+    import socket as _socket
+
+    def fake_getaddrinfo(host, port, **kwargs):
+        return [
+            (_socket.AF_INET, _socket.SOCK_STREAM, 0, "", ("127.0.0.1", 0)),
+            (_socket.AF_INET6, _socket.SOCK_STREAM, 0, "", ("::1", 0, 0, 0)),
+        ]
+
+    monkeypatch.setattr(server.socket, "getaddrinfo", fake_getaddrinfo)
+    assert server._resolve_bind_family("localhost") == _socket.AF_INET
+
+
+def test_resolve_bind_family_picks_ipv6_when_no_ipv4(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """Regression: a hostname that resolves only to IPv6 (e.g.
+    `ip6-localhost`, or `localhost` on IPv6-only setups) used to take
+    the AF_INET path because the colon heuristic only inspected the
+    string. The fix consults `getaddrinfo` for non-literal hosts."""
+    import socket as _socket
+
+    def fake_getaddrinfo(host, port, **kwargs):
+        return [(_socket.AF_INET6, _socket.SOCK_STREAM, 0, "", ("::1", 0, 0, 0))]
+
+    monkeypatch.setattr(server.socket, "getaddrinfo", fake_getaddrinfo)
+    assert server._resolve_bind_family("ip6-localhost") == _socket.AF_INET6
+
+
+def test_resolve_bind_family_falls_back_to_ipv4_on_resolve_failure(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    def fake_getaddrinfo(*args, **kwargs):
+        raise OSError("dns down")
+
+    import socket as _socket
+
+    monkeypatch.setattr(server.socket, "getaddrinfo", fake_getaddrinfo)
+    assert server._resolve_bind_family("anything") == _socket.AF_INET
+
+
+def test_payload_too_large_returns_413(running_server: str):
+    """Oversized Content-Length must be rejected with a 413 envelope
+    before the server reads anything off the wire — otherwise a bogus
+    header could pin a worker thread or balloon memory."""
+    huge = str(server._MAX_REQUEST_BYTES + 1)
+    # urllib would set its own Content-Length from a real `data=` body;
+    # to advertise an oversized length without sending the bytes, drop
+    # to a raw socket.
+    import socket as _socket
+    from urllib.parse import urlparse as _urlparse
+
+    parsed = _urlparse(running_server)
+    sock = _socket.create_connection((parsed.hostname, parsed.port), timeout=5)
+    try:
+        request = (
+            f"POST /api/column-type HTTP/1.1\r\n"
+            f"Host: {parsed.hostname}:{parsed.port}\r\n"
+            f"Content-Type: application/json\r\n"
+            f"Content-Length: {huge}\r\n"
+            f"Connection: close\r\n"
+            f"\r\n"
+        ).encode("ascii")
+        sock.sendall(request)
+        # Read until close. We never write the giant body — server should
+        # 413 before reading rfile.
+        chunks: list[bytes] = []
+        while True:
+            chunk = sock.recv(4096)
+            if not chunk:
+                break
+            chunks.append(chunk)
+        raw = b"".join(chunks)
+    finally:
+        sock.close()
+    head, _, body = raw.partition(b"\r\n\r\n")
+    status_line = head.split(b"\r\n", 1)[0].decode("ascii")
+    assert "413" in status_line, status_line
+    envelope = json.loads(body)
+    assert envelope["error"]["code"] == "payload_too_large"

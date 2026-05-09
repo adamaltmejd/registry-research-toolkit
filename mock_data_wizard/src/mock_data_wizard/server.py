@@ -52,9 +52,19 @@ _LOG = logging.getLogger("mock_data_wizard.server")
 
 _STATIC_DIR = Path(str(importlib.resources.files("mock_data_wizard") / "static"))
 
+# JSON request bodies are tiny (a column-type mutation is well under 1 KiB).
+# Cap at 1 MiB so a bogus or malicious Content-Length can't pin a worker
+# thread or balloon memory. Loopback-only mitigates the threat, but it's
+# cheap insurance.
+_MAX_REQUEST_BYTES = 1 * 1024 * 1024
+
 
 class _BadJSON(Exception):
     """Internal: maps to a 400 ``invalid_json`` envelope."""
+
+
+class _PayloadTooLarge(Exception):
+    """Internal: maps to a 413 ``payload_too_large`` envelope."""
 
 
 _MIME_TYPES = {
@@ -113,8 +123,35 @@ def is_loopback_host(host: str) -> bool:
 
 def is_ipv6_host(host: str) -> bool:
     """True when ``host`` is an IPv6 literal. The ``:`` discriminator is
-    sufficient because hostnames and IPv4 literals never contain one."""
+    sufficient because hostnames and IPv4 literals never contain one.
+    Used for URL formatting (bracketing), not for picking the bind
+    family — see ``_resolve_bind_family``."""
     return ":" in host
+
+
+def _resolve_bind_family(host: str) -> int:
+    """Pick ``AF_INET`` vs ``AF_INET6`` for binding ``host``.
+
+    A literal IPv6 address always needs ``AF_INET6``. For hostnames we
+    resolve with ``getaddrinfo`` and prefer ``AF_INET`` when it's
+    available — that matches stdlib ``HTTPServer``'s default and is
+    what most local clients connect to. We only flip to ``AF_INET6``
+    when the host resolves exclusively to IPv6 (e.g. ``ip6-localhost``,
+    or ``localhost`` on IPv6-only setups). On resolution failure we
+    fall back to ``AF_INET`` and let the bind error surface.
+    """
+    if ":" in host:
+        return socket.AF_INET6
+    try:
+        infos = socket.getaddrinfo(host, None, type=socket.SOCK_STREAM)
+    except OSError:
+        return socket.AF_INET
+    families = {info[0] for info in infos}
+    if socket.AF_INET in families:
+        return socket.AF_INET
+    if socket.AF_INET6 in families:
+        return socket.AF_INET6
+    return socket.AF_INET
 
 
 class _ThreadingHTTPServer6(ThreadingHTTPServer):
@@ -141,7 +178,9 @@ def build_server(config: ServerConfig) -> ThreadingHTTPServer:
 
     handler_cls = _make_handler(config)
     server_cls = (
-        _ThreadingHTTPServer6 if is_ipv6_host(config.host) else ThreadingHTTPServer
+        _ThreadingHTTPServer6
+        if _resolve_bind_family(config.host) == socket.AF_INET6
+        else ThreadingHTTPServer
     )
     return server_cls((config.host, config.port), handler_cls)
 
@@ -247,6 +286,13 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
                 return
             try:
                 body = self._read_json_body() if method == "POST" else {}
+            except _PayloadTooLarge as exc:
+                self._send_error_envelope(
+                    HTTPStatus.REQUEST_ENTITY_TOO_LARGE,
+                    "payload_too_large",
+                    str(exc),
+                )
+                return
             except _BadJSON as exc:
                 self._send_error_envelope(
                     HTTPStatus.BAD_REQUEST, "invalid_json", str(exc)
@@ -368,6 +414,12 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
                 length = int(length_header)
             except ValueError as exc:
                 raise _BadJSON("invalid Content-Length") from exc
+            if length < 0:
+                raise _BadJSON("invalid Content-Length")
+            if length > _MAX_REQUEST_BYTES:
+                raise _PayloadTooLarge(
+                    f"request body too large ({length} > {_MAX_REQUEST_BYTES} bytes)"
+                )
             if length == 0:
                 return {}
             raw = self.rfile.read(length)

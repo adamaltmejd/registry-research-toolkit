@@ -418,6 +418,8 @@ def _cmd_scan(args: argparse.Namespace) -> int:
 
 def _cmd_ui(args: argparse.Namespace) -> int:
     """Serve the local web UI bound to ``args.project_dir``."""
+    import logging
+
     from . import server as server_mod
 
     project_dir = Path(args.project_dir).resolve()
@@ -435,6 +437,19 @@ def _cmd_ui(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 2
+
+    # Surface server-side errors (especially 500 tracebacks) on stderr.
+    # Without this, the server logger has no handler attached and a
+    # crashed editor call returns a JSON 500 envelope but the traceback
+    # is silently dropped — leaving the user with no diagnostic.
+    server_logger = logging.getLogger("mock_data_wizard.server")
+    if not server_logger.handlers:
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+        server_logger.addHandler(handler)
+        server_logger.setLevel(
+            logging.DEBUG if getattr(args, "verbose", False) else logging.WARNING
+        )
 
     db_path = Path(args.db_path).resolve() if args.db_path else None
     config = server_mod.ServerConfig(
@@ -703,6 +718,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--no-browser",
         action="store_true",
         help="Don't open the URL in a browser tab.",
+    )
+    ui.add_argument(
+        "--verbose",
+        action="store_true",
+        help="Log every request to stderr (default: warnings + 500s only).",
     )
     ui.add_argument(
         "--db-path",

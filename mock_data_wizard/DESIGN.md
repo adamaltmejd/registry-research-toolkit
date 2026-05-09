@@ -934,8 +934,16 @@ binds to one `project_dir` and survives until Ctrl-C.
 
 **Binding + safety.** Default `--host 127.0.0.1`. Non-loopback hosts
 (including `0.0.0.0`) are rejected at parse time unless `--unsafe-host`
-is also passed. There is no auth — local-only binding is the only
-control. Document this explicitly in any deploy notes.
+is also passed. The bind family (`AF_INET` vs `AF_INET6`) is picked
+from `getaddrinfo` rather than the host string, so loopback hostnames
+that resolve only to IPv6 (`ip6-localhost`, or `localhost` on
+IPv6-only setups) bind correctly; literal `::1` always uses IPv6.
+There is no auth — local-only binding is the only control. Document
+this explicitly in any deploy notes.
+
+POST bodies are capped at 1 MiB (`_MAX_REQUEST_BYTES`); oversized
+`Content-Length` headers are rejected with a 413 envelope before any
+body bytes are read.
 
 **HTTP surface (v1).**
 
