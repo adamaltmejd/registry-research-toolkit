@@ -129,7 +129,11 @@
         >
         · {group.sources.length} source{group.sources.length === 1 ? "" : "s"}
         · {group.schema_variants} schema{group.schema_variants === 1 ? "" : "s"}
-        {#if group.panel_candidate}
+        {#if group.panel_candidate && panelsForGroup.length === 0}
+          <!-- Candidate detection runs even after a panel is registered;
+               only flag it as a *candidate* when the group hasn't been
+               promoted yet, otherwise the PANEL summary block below
+               shows the same files twice. -->
           · panel candidate ({group.panel_candidate.members.length})
         {/if}
       </p>
@@ -195,15 +199,14 @@
             {@const hint = hintSuffix(col)}
             {@const regmeta = regmetaSuffix(col)}
             {@const mismatch = isRegmetaMismatch(col)}
+            {@const provLabel = col.provenance === "manual" ? "manual override" : "auto-classified"}
             <tr>
               <td class="mono col-name" title={col.name}>{col.name}</td>
               <td class="mono dim">{col.sql_type ?? "—"}</td>
               <td>
                 <button
                   class="type-pill type-{col.current_type} prov-{col.provenance}"
-                  title={col.provenance === "manual"
-                    ? "manual override"
-                    : "auto-classified"}
+                  title={[col.current_type, hint, regmeta].filter(Boolean).join(" · ") + ` (${provLabel})`}
                   onclick={() =>
                     (editingColumn = { source: sourceName, column: col })}
                 >

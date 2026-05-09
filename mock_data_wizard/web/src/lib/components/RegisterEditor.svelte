@@ -12,6 +12,11 @@
 
   let { group, onClose }: Props = $props();
 
+  // Inline the source list when it fits comfortably; collapse behind a
+  // <details> when it doesn't. Threshold picked empirically — 5 fits on
+  // one wrapped line at typical modal widths.
+  const SOURCE_PREVIEW_LIMIT = 5;
+
   // Modal dialog: snapshot the prop once on mount; `untrack` signals
   // that not reacting to upstream `group` changes is intentional.
   const initialName: string = untrack(() => group.register_name ?? "");
@@ -122,10 +127,23 @@
       </button>
     </header>
 
-    <p class="muted">
+    <div class="muted">
       Sources affected: <strong>{group.sources.length}</strong>
-      ({group.sources.join(", ")}).
-    </p>
+      {#if group.sources.length <= SOURCE_PREVIEW_LIMIT}
+        ({group.sources.join(", ")}).
+      {:else}
+        <details class="source-list">
+          <!-- A registered panel can hold ~30 yearly files; comma-joining
+               them paints a wall of text that pushes Apply off-screen. -->
+          <summary>show {group.sources.length} files</summary>
+          <ul>
+            {#each group.sources as src (src)}
+              <li class="mono">{src}</li>
+            {/each}
+          </ul>
+        </details>
+      {/if}
+    </div>
 
     <label class="row">
       <span>Register</span>
@@ -262,6 +280,36 @@
     font-size: 0.9rem;
     margin: 0;
     word-break: break-word;
+  }
+  .source-list {
+    display: inline;
+  }
+  .source-list summary {
+    display: inline;
+    cursor: pointer;
+    color: #1656c0;
+    list-style: none;
+  }
+  .source-list summary::-webkit-details-marker {
+    display: none;
+  }
+  .source-list summary:hover {
+    text-decoration: underline;
+  }
+  .source-list[open] summary {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .source-list ul {
+    margin: 0;
+    padding-left: 1.25rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .source-list li {
+    word-break: break-all;
   }
   .warn {
     background: #fff8e1;

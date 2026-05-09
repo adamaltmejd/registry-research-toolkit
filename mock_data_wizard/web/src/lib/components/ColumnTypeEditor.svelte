@@ -282,6 +282,6 @@
   }
   button:disabled {
     opacity: 0.6;
-    cursor: progress;
+    cursor: not-allowed;
   }
 </style>
