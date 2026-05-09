@@ -44,6 +44,13 @@ mdw_step2_config.json
 mdw_step3_stats.json
 extract_stats*.R
 
+# mock-data-wizard runtime artifacts (transient — fcntl sidecar, run logs)
+.mock_data_config.lock
+mdw_log_*.txt
+
+# Local test workspaces (real user data, not part of the toolkit)
+/covid-education-immigrants-test/
+
 # MONA probe artefacts -- can contain workspace metadata (paths,
 # hostnames, DSNs); inspect before sharing. The findings that matter
 # live in mock_data_wizard/DESIGN.md.
