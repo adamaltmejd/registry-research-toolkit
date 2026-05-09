@@ -20,11 +20,48 @@
     none: "no confidence",
   };
 
-  function hintSummary(col: ColumnInfo): string {
+  // Inline subtype/format suffix shown on the type pill — only the
+  // value, since the key is implied by the type ("integer" under id is
+  // an id_subtype; "%Y%m%d" under date is a date_format).
+  function hintSuffix(col: ColumnInfo): string {
     if (!col.hint) return "";
-    return Object.entries(col.hint)
-      .map(([k, v]) => `${k}=${String(v)}`)
-      .join(", ");
+    return Object.values(col.hint).map(String).join(" · ");
+  }
+
+  // Regmeta context tacked onto the pill: classification short name when
+  // present, otherwise "value codes" if regmeta has a code lookup. The
+  // bare-match case (regmeta knew the column but had no classification
+  // or codes) is intentionally silent — it adds nothing the type pill
+  // doesn't already show.
+  function regmetaSuffix(col: ColumnInfo): string {
+    const sig = col.regmeta_signal;
+    if (!sig) return "";
+    if (sig.classification_short_name) return sig.classification_short_name;
+    if (sig.has_value_codes) return "value codes";
+    return "";
+  }
+
+  // Categoricals that aren't backed by a regmeta classification or
+  // value-code set are an audit gap — most likely candidates for
+  // manual review or for a missing regmeta entry. Marker stays subtle.
+  function isUnmatchedCategorical(col: ColumnInfo): boolean {
+    if (col.current_type !== "categorical") return false;
+    return regmetaSuffix(col) === "";
+  }
+
+  interface SourceStats {
+    total: number;
+    unmatched: number;
+    manual: number;
+  }
+  function statsFor(cols: ColumnInfo[]): SourceStats {
+    let unmatched = 0;
+    let manual = 0;
+    for (const c of cols) {
+      if (isUnmatchedCategorical(c)) unmatched++;
+      if (c.provenance === "manual") manual++;
+    }
+    return { total: cols.length, unmatched, manual };
   }
 </script>
 
@@ -57,41 +94,69 @@
 
   {#each group.sources as sourceName (sourceName)}
     {@const cols = group.columns_by_source[sourceName] ?? []}
-    <div class="source">
-      <h3 class="source-name">{sourceName}</h3>
+    {@const stats = statsFor(cols)}
+    <details class="source">
+      <summary>
+        <span class="source-name mono">{sourceName}</span>
+        <span class="source-stats">
+          <span class="stat-cols">{stats.total} col{stats.total === 1 ? "" : "s"}</span>
+          {#if stats.unmatched > 0}
+            <span class="stat-unmatched" title="categoricals without regmeta classification or value codes"
+              >● {stats.unmatched} unmatched</span
+            >
+          {/if}
+          {#if stats.manual > 0}
+            <span class="stat-manual" title="manual type overrides"
+              >★ {stats.manual} manual</span
+            >
+          {/if}
+        </span>
+      </summary>
       <table>
         <thead>
           <tr>
             <th>Column</th>
             <th>SQL</th>
             <th>Type</th>
-            <th>Hint</th>
-            <th>Source</th>
           </tr>
         </thead>
         <tbody>
           {#each cols as col (col.name)}
+            {@const hint = hintSuffix(col)}
+            {@const regmeta = regmetaSuffix(col)}
             <tr>
               <td class="mono">{col.name}</td>
               <td class="mono dim">{col.sql_type ?? "—"}</td>
               <td>
                 <button
-                  class="type-pill type-{col.current_type}"
+                  class="type-pill type-{col.current_type} prov-{col.provenance}"
+                  title={col.provenance === "manual"
+                    ? "manual override"
+                    : "auto-classified"}
                   onclick={() =>
                     (editingColumn = { source: sourceName, column: col })}
                 >
-                  {col.current_type}
+                  <span class="type-name">{col.current_type}</span>
+                  {#if hint}
+                    <span class="type-suffix">· {hint}</span>
+                  {/if}
+                  {#if regmeta}
+                    <span class="type-suffix regmeta">· {regmeta}</span>
+                  {/if}
                 </button>
-              </td>
-              <td class="mono dim">{hintSummary(col) || "—"}</td>
-              <td>
-                <span class="prov prov-{col.provenance}">{col.provenance}</span>
+                {#if isUnmatchedCategorical(col)}
+                  <span
+                    class="unmatched-marker"
+                    title="categorical without regmeta classification or value codes"
+                    aria-label="unmatched categorical">●</span
+                  >
+                {/if}
               </td>
             </tr>
           {/each}
         </tbody>
       </table>
-    </div>
+    </details>
   {/each}
 </section>
 
@@ -169,13 +234,60 @@
     color: #883333;
   }
   .source {
-    margin-top: 0.75rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid #f0f0f0;
+  }
+  .source > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.4rem 0.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    user-select: none;
+  }
+  .source > summary::-webkit-details-marker {
+    display: none;
+  }
+  /* Custom chevron — rotates when the source expands. */
+  .source > summary::before {
+    content: "▸";
+    color: #888;
+    font-size: 0.75rem;
+    transition: transform 0.12s ease;
+    display: inline-block;
+    width: 0.7rem;
+  }
+  .source[open] > summary::before {
+    transform: rotate(90deg);
+  }
+  .source > summary:hover {
+    background: #fafafa;
   }
   .source-name {
-    font-size: 0.95rem;
-    margin: 0 0 0.25rem 0;
-    font-family: ui-monospace, monospace;
+    font-size: 0.92rem;
     color: #444;
+    flex: 1 1 auto;
+    word-break: break-all;
+  }
+  .source-stats {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 0.82rem;
+    color: #666;
+    flex: 0 0 auto;
+  }
+  .stat-cols {
+    color: #888;
+  }
+  .stat-unmatched {
+    color: #b34a00;
+    opacity: 0.85;
+  }
+  .stat-manual {
+    color: #b34a00;
+    font-weight: 600;
   }
   table {
     width: 100%;
@@ -214,6 +326,12 @@
   .type-pill:hover {
     background: #e0e7f7;
   }
+  /* Provenance is folded onto the pill itself: auto = quiet (default),
+     manual = solid left-border accent so edits stand out at a glance. */
+  .type-pill.prov-manual {
+    border-left: 3px solid #b34a00;
+    padding-left: calc(0.5rem - 2px);
+  }
   .type-id {
     background: #e8f1fa;
     color: #114a85;
@@ -234,13 +352,21 @@
     background: #f0f0f0;
     color: #555;
   }
-  .prov {
-    font-size: 0.78rem;
-    color: #666;
+  .type-suffix {
+    margin-left: 0.15rem;
+    opacity: 0.65;
+    font-size: 0.85em;
   }
-  .prov-manual {
+  /* Subtle audit marker: faint orange dot beside categoricals without a
+     regmeta classification or value-code set. Big enough to scan, quiet
+     enough not to scream. */
+  .unmatched-marker {
+    margin-left: 0.4rem;
     color: #b34a00;
-    font-weight: 600;
+    opacity: 0.55;
+    font-size: 0.7rem;
+    line-height: 1;
+    vertical-align: middle;
   }
   .link {
     background: transparent;
