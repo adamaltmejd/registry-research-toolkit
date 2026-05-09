@@ -51,6 +51,9 @@ mdw_log_*.txt
 # Local test workspaces (real user data, not part of the toolkit)
 /covid-education-immigrants-test/
 
+# Personal exploration scripts (not part of the toolkit's curated scripts/)
+scripts/sample_*.py
+
 # MONA probe artefacts -- can contain workspace metadata (paths,
 # hostnames, DSNs); inspect before sharing. The findings that matter
 # live in mock_data_wizard/DESIGN.md.
