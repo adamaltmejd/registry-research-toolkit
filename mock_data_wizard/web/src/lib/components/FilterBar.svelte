@@ -5,6 +5,7 @@
     type ConcernFilter,
   } from "../store.svelte";
   import type { ColumnInfo, ColumnType, StateSnapshot } from "../types";
+  import ColumnsPicker from "./ColumnsPicker.svelte";
 
   interface Props {
     snapshot: StateSnapshot;
@@ -88,6 +89,7 @@
         Clear filters
       </button>
     {/if}
+    <ColumnsPicker />
   </div>
 
   <div class="row chips" aria-label="Type filter">

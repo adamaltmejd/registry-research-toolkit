@@ -293,6 +293,60 @@
     }
     return out;
   });
+
+  // Coverage cell state for one source within one row's context.
+  //  - present: source carries this column with this row's type variant
+  //  - variant: source carries the column but in a different type
+  //             variant (only meaningful in grouped view)
+  //  - missing: source does not carry this column at all
+  //  - self:    per-source view marker for the row's own source
+  type CoverageStatus = "present" | "variant" | "missing" | "self";
+  interface CoverageCell {
+    source: string;
+    status: CoverageStatus;
+  }
+
+  function coverageForPartition(p: ColumnPartition): CoverageCell[] {
+    const inVariant = new Set(p.sources);
+    const carrier = new Set(Object.keys(cellsByName(p.name)));
+    return group.sources.map((src) => {
+      if (inVariant.has(src)) return { source: src, status: "present" };
+      if (carrier.has(src)) return { source: src, status: "variant" };
+      return { source: src, status: "missing" };
+    });
+  }
+
+  function coverageForSourceColumn(
+    currentSource: string,
+    colName: string,
+  ): CoverageCell[] {
+    const carriers = cellsByName(colName);
+    return group.sources.map((src) => {
+      if (src === currentSource) return { source: src, status: "self" };
+      if (src in carriers) return { source: src, status: "present" };
+      return { source: src, status: "missing" };
+    });
+  }
+
+  function coverageTooltip(cell: CoverageCell): string {
+    switch (cell.status) {
+      case "present":
+        return `${cell.source} — present`;
+      case "variant":
+        return `${cell.source} — different type variant`;
+      case "missing":
+        return `${cell.source} — missing`;
+      case "self":
+        return `${cell.source} — this row`;
+    }
+  }
+
+  function coverageAriaLabel(cells: CoverageCell[]): string {
+    const present = cells.filter(
+      (c) => c.status === "present" || c.status === "self",
+    ).length;
+    return `${present}/${cells.length} sources present`;
+  }
 </script>
 
 <details
@@ -356,13 +410,26 @@
   {/each}
 
   {#if store.groupColumnsByName}
-    <!-- Grouped mode: one row per (column name, type, hint) partition. -->
+    <!-- Grouped mode: one row per (column name, type, hint) partition.
+         Optional columns (sql / type / coverage) are gated by the
+         visibility flags driven by ColumnsPicker. The "missing in N"
+         inline marker is only rendered when Coverage is hidden — when
+         the per-source coverage map is visible, it carries the same
+         information more legibly. -->
+    {@const cols = store.visibleColumns}
     <table class="grouped-table">
+      <colgroup>
+        <col class="col-name" />
+        {#if cols.sql}<col class="col-sql" />{/if}
+        {#if cols.type}<col class="col-type" />{/if}
+        {#if cols.coverage}<col class="col-coverage" />{/if}
+      </colgroup>
       <thead>
         <tr>
           <th>Column</th>
-          <th>SQL</th>
-          <th>Type</th>
+          {#if cols.sql}<th>SQL</th>{/if}
+          {#if cols.type}<th>Type</th>{/if}
+          {#if cols.coverage}<th>Coverage</th>{/if}
         </tr>
       </thead>
       <tbody>
@@ -372,7 +439,7 @@
           {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
           {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
-          {@const showCount = p.sources.length > 1}
+          {@const coverage = cols.coverage ? coverageForPartition(p) : []}
           <tr class:split>
             <td class="mono col-name" title={p.name}>
               {p.name}
@@ -385,7 +452,7 @@
                   ⇅ {p.variant_index + 1}/{p.variant_count}
                 </span>
               {/if}
-              {#if p.missing_in_count > 0}
+              {#if !cols.coverage && p.missing_in_count > 0}
                 <span
                   class="missing-marker"
                   title={`${p.missing_in_count} source${p.missing_in_count === 1 ? "" : "s"} in this register do not carry this column`}
@@ -394,55 +461,71 @@
                 </span>
               {/if}
             </td>
-            <td class="mono dim">{p.sql_type_summary}</td>
-            <td class="type-cell">
-              <button
-                class="type-pill type-{p.sample.current_type}"
-                title={[p.sample.current_type, hint]
-                  .filter(Boolean)
-                  .join(" · ") +
-                  ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
-                  (p.manual_count > 0
-                    ? `, ${p.manual_count} manual`
-                    : "") +
-                  ")"}
-                onclick={() =>
-                  (editingColumn = {
-                    sources: [...p.sources],
-                    cellBySource: cellsByName(p.name),
-                    column: p.sample,
-                  })}
-              >
-                <span class="type-name">{p.sample.current_type}</span>
-                {#if hint}
-                  <span class="type-suffix">· {hint}</span>
+            {#if cols.sql}
+              <td class="mono dim">{p.sql_type_summary}</td>
+            {/if}
+            {#if cols.type}
+              <td class="type-cell">
+                <button
+                  class="type-pill type-{p.sample.current_type}"
+                  title={[p.sample.current_type, hint]
+                    .filter(Boolean)
+                    .join(" · ") +
+                    ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
+                    (p.manual_count > 0
+                      ? `, ${p.manual_count} manual`
+                      : "") +
+                    ")"}
+                  onclick={() =>
+                    (editingColumn = {
+                      sources: [...p.sources],
+                      cellBySource: cellsByName(p.name),
+                      column: p.sample,
+                    })}
+                >
+                  <span class="type-name">{p.sample.current_type}</span>
+                  {#if hint}
+                    <span class="type-suffix">· {hint}</span>
+                  {/if}
+                </button>
+                {#if regmeta}
+                  <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
                 {/if}
-              </button>
-              {#if regmeta}
-                <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
-              {/if}
-              {#if showCount}
-                <span class="count-badge">× {p.sources.length}</span>
-              {/if}
-              {#if p.manual_count > 0}
-                <span class="manual-badge" title="manual overrides in this partition"
-                  >★{p.manual_count}</span
+                {#if p.manual_count > 0}
+                  <span class="manual-badge" title="manual overrides in this partition"
+                    >★{p.manual_count}</span
+                  >
+                {/if}
+                {#if mismatch}
+                  <span
+                    class="mismatch-marker"
+                    title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
+                    aria-label="regmeta type mismatch">⚠</span
+                  >
+                {:else if isUnmatchedCategorical(p.sample)}
+                  <span
+                    class="unmatched-marker"
+                    title="categorical without regmeta classification or value codes"
+                    aria-label="unmatched categorical">●</span
+                  >
+                {/if}
+              </td>
+            {/if}
+            {#if cols.coverage}
+              <td class="coverage-cell">
+                <div
+                  class="coverage-grid"
+                  aria-label={coverageAriaLabel(coverage)}
                 >
-              {/if}
-              {#if mismatch}
-                <span
-                  class="mismatch-marker"
-                  title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
-                  aria-label="regmeta type mismatch">⚠</span
-                >
-              {:else if isUnmatchedCategorical(p.sample)}
-                <span
-                  class="unmatched-marker"
-                  title="categorical without regmeta classification or value codes"
-                  aria-label="unmatched categorical">●</span
-                >
-              {/if}
-            </td>
+                  {#each coverage as cell (cell.source)}
+                    <span
+                      class="coverage-box coverage-{cell.status}"
+                      title={coverageTooltip(cell)}
+                    ></span>
+                  {/each}
+                </div>
+              </td>
+            {/if}
           </tr>
         {/each}
       </tbody>
@@ -471,6 +554,7 @@
     <!-- Per-source mode: original rendering (one <details> per source).
          Sources with zero matching columns under active filters are
          already removed in `filteredSources`. -->
+    {@const visCols = store.visibleColumns}
     {#each filteredSources as fs (fs.name)}
       {@const sourceName = fs.name}
       {@const cols = fs.cols}
@@ -508,11 +592,18 @@
           </span>
         </summary>
         <table>
+          <colgroup>
+            <col class="col-name" />
+            {#if visCols.sql}<col class="col-sql" />{/if}
+            {#if visCols.type}<col class="col-type" />{/if}
+            {#if visCols.coverage}<col class="col-coverage" />{/if}
+          </colgroup>
           <thead>
             <tr>
               <th>Column</th>
-              <th>SQL</th>
-              <th>Type</th>
+              {#if visCols.sql}<th>SQL</th>{/if}
+              {#if visCols.type}<th>Type</th>{/if}
+              {#if visCols.coverage}<th>Coverage</th>{/if}
             </tr>
           </thead>
           <tbody>
@@ -525,44 +616,66 @@
                 col.provenance === "manual"
                   ? "manual override"
                   : "auto-classified"}
+              {@const coverage = visCols.coverage
+                ? coverageForSourceColumn(sourceName, col.name)
+                : []}
               <tr>
                 <td class="mono col-name" title={col.name}>{col.name}</td>
-                <td class="mono dim">{col.sql_type ?? "—"}</td>
-                <td class="type-cell">
-                  <button
-                    class="type-pill type-{col.current_type} prov-{col.provenance}"
-                    title={[col.current_type, hint]
-                      .filter(Boolean)
-                      .join(" · ") + ` (${provLabel})`}
-                    onclick={() =>
-                      (editingColumn = {
-                        sources: [sourceName],
-                        cellBySource: cellsByName(col.name),
-                        column: col,
-                      })}
-                  >
-                    <span class="type-name">{col.current_type}</span>
-                    {#if hint}
-                      <span class="type-suffix">· {hint}</span>
+                {#if visCols.sql}
+                  <td class="mono dim">{col.sql_type ?? "—"}</td>
+                {/if}
+                {#if visCols.type}
+                  <td class="type-cell">
+                    <button
+                      class="type-pill type-{col.current_type} prov-{col.provenance}"
+                      title={[col.current_type, hint]
+                        .filter(Boolean)
+                        .join(" · ") + ` (${provLabel})`}
+                      onclick={() =>
+                        (editingColumn = {
+                          sources: [sourceName],
+                          cellBySource: cellsByName(col.name),
+                          column: col,
+                        })}
+                    >
+                      <span class="type-name">{col.current_type}</span>
+                      {#if hint}
+                        <span class="type-suffix">· {hint}</span>
+                      {/if}
+                    </button>
+                    {#if regmeta}
+                      <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
                     {/if}
-                  </button>
-                  {#if regmeta}
-                    <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
-                  {/if}
-                  {#if mismatch}
-                    <span
-                      class="mismatch-marker"
-                      title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
-                      aria-label="regmeta type mismatch">⚠</span
+                    {#if mismatch}
+                      <span
+                        class="mismatch-marker"
+                        title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
+                        aria-label="regmeta type mismatch">⚠</span
+                      >
+                    {:else if isUnmatchedCategorical(col)}
+                      <span
+                        class="unmatched-marker"
+                        title="categorical without regmeta classification or value codes"
+                        aria-label="unmatched categorical">●</span
+                      >
+                    {/if}
+                  </td>
+                {/if}
+                {#if visCols.coverage}
+                  <td class="coverage-cell">
+                    <div
+                      class="coverage-grid"
+                      aria-label={coverageAriaLabel(coverage)}
                     >
-                  {:else if isUnmatchedCategorical(col)}
-                    <span
-                      class="unmatched-marker"
-                      title="categorical without regmeta classification or value codes"
-                      aria-label="unmatched categorical">●</span
-                    >
-                  {/if}
-                </td>
+                      {#each coverage as cell (cell.source)}
+                        <span
+                          class="coverage-box coverage-{cell.status}"
+                          title={coverageTooltip(cell)}
+                        ></span>
+                      {/each}
+                    </div>
+                  </td>
+                {/if}
               </tr>
             {/each}
           </tbody>
@@ -787,7 +900,12 @@
     text-align: left;
     padding: 0.3rem 0.4rem;
     border-bottom: 1px solid #f0f0f0;
-    vertical-align: middle;
+    /* Top-align so the type pill, name, and first row of coverage
+       boxes share a common baseline when the row is forced taller by
+       a multi-line Coverage cell. vertical-align: middle would leave
+       the pill floating in empty space when Coverage wraps to 3+
+       lines; top alignment keeps the row visually anchored. */
+    vertical-align: top;
   }
   th {
     color: #777;
@@ -796,14 +914,17 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  th:nth-child(1) {
-    width: 42%;
+  /* Column widths driven by colgroup classes so the table layout
+     adapts to whichever optional columns are visible. The "name"
+     column has no fixed width — it absorbs the slack. */
+  col.col-sql {
+    width: 8rem;
   }
-  th:nth-child(2) {
-    width: 14%;
+  col.col-type {
+    width: 14rem;
   }
-  th:nth-child(3) {
-    width: 44%;
+  col.col-coverage {
+    width: 12rem;
   }
   /* Visually link rows belonging to the same split column. The thin
      left-border is just enough to read the grouping at a glance without
@@ -904,15 +1025,6 @@
     cursor: help;
     flex: 0 0 auto;
   }
-  .count-badge {
-    padding: 0 0.35rem;
-    border-radius: 999px;
-    background: rgba(0, 0, 0, 0.08);
-    font-size: 0.78em;
-    font-family: system-ui, sans-serif;
-    font-weight: 600;
-    flex: 0 0 auto;
-  }
   .manual-badge {
     color: #b34a00;
     font-size: 0.8em;
@@ -931,6 +1043,59 @@
     font-size: 0.85rem;
     line-height: 1;
     flex: 0 0 auto;
+  }
+  /* Coverage cell — one box per source in the register, in the same
+     order as group.sources. Box state: present (green) / variant
+     (amber, only meaningful in grouped view) / missing (red) / self
+     (the row's own source, per-source view). The flex-wrap container
+     handles the 30+ source case by line-breaking instead of squashing
+     boxes below a readable size. */
+  .coverage-cell {
+    /* Slim the cell padding-top so the first row of boxes lines up
+       visually with the top of the type pill (pills have a slightly
+       taller baseline than 10px boxes). */
+    padding-top: 0.45rem;
+  }
+  .coverage-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    /* Cap on row height before wrap kicks in: ~6 rows of 10px boxes
+       + gaps. Keeps a row from ballooning vertically on registers with
+       hundreds of sources; the user can still see the shape, and the
+       aria-label gives the exact counts to assistive tech. */
+    max-height: 4.5rem;
+    overflow: hidden;
+  }
+  .coverage-box {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    box-sizing: border-box;
+    border: 1px solid transparent;
+    flex: 0 0 auto;
+  }
+  .coverage-present {
+    background: #b8e0c2;
+    border-color: #5ca06f;
+  }
+  .coverage-variant {
+    /* Source carries the column but classified to a different type
+       variant in this register — neither "present in this row" nor
+       "missing entirely". Amber sits in between visually. */
+    background: #f5d99b;
+    border-color: #c08a30;
+  }
+  .coverage-missing {
+    background: #f0c2c2;
+    border-color: #b85050;
+  }
+  .coverage-self {
+    /* Per-source view: the box for the row's own source. Bright fill
+       + dark border so the eye lands on it instantly while scanning a
+       map of green/red boxes. */
+    background: #4ca866;
+    border-color: #1a661a;
   }
   .link {
     background: transparent;
