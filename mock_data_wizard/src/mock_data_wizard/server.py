@@ -208,6 +208,9 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("GET", "/api/state"): lambda body: _api_get_state(config),
         ("POST", "/api/init"): lambda body: _api_init(config, body),
         ("POST", "/api/column-type"): lambda body: _api_set_column_type(config, body),
+        ("POST", "/api/unset-column-manual"): lambda body: _api_unset_column_manual(
+            config, body
+        ),
         ("POST", "/api/group-register"): lambda body: _api_set_group_register(
             config, body
         ),
@@ -545,6 +548,22 @@ def _api_set_column_type(
         new_type,
         expected_version=expected_version,
         hint=hint_arg,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_unset_column_manual(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    sources = _required_str_list(body, "sources")
+    column = _required_str(body, "column")
+    expected_version = _required_str(body, "expected_version")
+    snap = editor.unset_column_manual_override(
+        config.project_dir,
+        sources,
+        column,
+        expected_version=expected_version,
         db_path=config.db_path,
     )
     return HTTPStatus.OK, state_snapshot_to_dict(snap)

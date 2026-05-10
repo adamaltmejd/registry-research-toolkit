@@ -13,8 +13,10 @@ import {
   listRegisters,
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
+  unsetColumnManual as apiUnsetColumnManual,
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
+  type UnsetColumnManualArgs,
 } from "./api";
 import type {
   ColumnInfo,
@@ -213,6 +215,10 @@ class Store {
 
   async setColumnType(args: SetColumnTypeArgs): Promise<boolean> {
     return this.runMutation(() => apiSetColumnType(args));
+  }
+
+  async unsetColumnManual(args: UnsetColumnManualArgs): Promise<boolean> {
+    return this.runMutation(() => apiUnsetColumnManual(args));
   }
 
   async setGroupRegister(args: SetGroupRegisterArgs): Promise<boolean> {

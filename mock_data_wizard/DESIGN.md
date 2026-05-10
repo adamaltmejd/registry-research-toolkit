@@ -500,14 +500,30 @@ override the regmeta DB location.
   of `column_name` across one or more sources. `source_names` is a
   non-empty sequence; every `(sn, column_name)` pair must exist in
   the discover payload (a single bad pair aborts the whole call with
-  no on-disk changes). All affected pairs land in `manual_columns`.
-  Bulk semantics: per-source updates happen under one `_config_lock`
-  and one `_atomic_write`, so the snapshot version advances exactly
-  once and clients can't observe a partial apply. `hint` is
+  no on-disk changes). Sources whose existing type+hint match the
+  request are no-op skipped: re-asserting the same value does **not**
+  promote an auto cell to manual, and a fully-no-op call leaves
+  `snapshot_version` unchanged (no atomic write). Sources whose
+  value actually changes get added to `manual_columns`. Bulk
+  semantics: per-source updates happen under one `_config_lock` and
+  at most one `_atomic_write`, so the snapshot version advances
+  exactly once and clients can't observe a partial apply. `hint` is
   validated once and applied identically to every targeted source;
   `UNCHANGED` preserves any existing hint that's still valid for
   `new_type` (silently dropped otherwise); `None` clears any hint;
   a dict sets it (validated against `INLINE_HINT_KEYS[new_type]`).
+- `unset_column_manual_override(project_dir, source_names, column_name,
+  *, expected_version, db_path=None)` — drops the manual marker for
+  `column_name` across one or more sources and re-runs the auto
+  classifier on those cells (using each source's current register).
+  Pairs that aren't currently in `manual_columns` are silently
+  skipped — the contract is "ensure not manual", not "fail when not
+  manual". When the new auto type differs from the existing one,
+  that cell's `column_options` entry is dropped (mirrors
+  `set_group_register`'s reclassify path). Requires
+  `mock_data_discovery.json` next to the config (the classifier needs
+  the source schema). A fully-no-op call leaves `snapshot_version`
+  unchanged.
 - `set_group_register(project_dir, group_id, register, *,
   expected_version, db_path=None, reclassify_manual=False)` —
   assigns or clears a register for a group, then re-classifies. With
@@ -957,6 +973,7 @@ body bytes are read.
 | GET  | `/api/state` | `editor.get_state` | 404 not_initialized |
 | POST | `/api/init` | `editor.init_if_missing` | 404 not_initialized (no config and no discover file), 400 validation |
 | POST | `/api/column-type` | `editor.set_column_type` | 400 validation, 409 stale_state |
+| POST | `/api/unset-column-manual` | `editor.unset_column_manual_override` | 400 validation, 409 stale_state |
 | POST | `/api/group-register` | `editor.set_group_register` | 400 validation, 409 stale_state |
 | GET  | `/api/registers` | `editor.list_registers` | — |
 | GET  | `/`, `/assets/*` | static SPA bundle | 404 not_found |

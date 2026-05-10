@@ -40,9 +40,13 @@
   // here on purpose.
   function focusableTargets(): HTMLElement[] {
     if (!cardEl) return [];
+    // `summary` is focusable when its parent `<details>` is the standard
+    // disclosure widget — omitting it would let Tab jump out of the trap
+    // when a `<details>` (e.g. ColumnTypeEditor's "show source names") is
+    // the natural next focus target.
     return Array.from(
       cardEl.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
       ),
     ).filter((el) => !el.hasAttribute("inert"));
   }
@@ -90,8 +94,14 @@
       }
       // Remove the portaled node — Svelte's destroy step expects to
       // clean up its rendered tree but won't traverse out of #app.
+      // try/catch defends against future Svelte teardown changes that
+      // could try to detach the same node twice.
       if (dialogEl && dialogEl.parentElement === document.body) {
-        dialogEl.remove();
+        try {
+          dialogEl.remove();
+        } catch {
+          // Already detached by a concurrent teardown — nothing to do.
+        }
       }
       // Only restore focus if the originating element is still in the
       // DOM. After a stale-state refresh the snapshot may have been

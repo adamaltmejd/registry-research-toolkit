@@ -86,7 +86,16 @@
     oninput?.();
   }
 
+  // Pending blur-driven close. Tracked so a quick blur→focus within the
+  // delay can cancel the close — otherwise the dropdown flickers shut
+  // even though the input is focused again.
+  let blurCloseTimer: ReturnType<typeof setTimeout> | null = null;
+
   function handleFocus() {
+    if (blurCloseTimer !== null) {
+      clearTimeout(blurCloseTimer);
+      blurCloseTimer = null;
+    }
     open = true;
   }
 
@@ -96,7 +105,9 @@
     // focus moves (Tab) without the timeout race.
     const next = event.relatedTarget as Node | null;
     if (next && listEl?.contains(next)) return;
-    setTimeout(() => {
+    if (blurCloseTimer !== null) clearTimeout(blurCloseTimer);
+    blurCloseTimer = setTimeout(() => {
+      blurCloseTimer = null;
       open = false;
     }, 100);
   }

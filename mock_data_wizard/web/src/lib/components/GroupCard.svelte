@@ -17,10 +17,13 @@
 
   // Modal target: list of sources to apply the column-type edit to. In
   // grouped mode this is a partition's source members; in per-source
-  // mode it is a single-element list.
+  // mode it is a single-element list. `cellBySource` carries every
+  // carrier's ColumnInfo so the modal can detect which scopes have a
+  // manual override (driving the Unset button).
   let editingColumn: {
     sources: string[];
     registerSourcesWithColumn: string[];
+    cellBySource: Record<string, ColumnInfo>;
     column: ColumnInfo;
   } | null = $state(null);
   let editingRegister = $state(false);
@@ -98,6 +101,20 @@
     return out;
   }
 
+  // Map carrier source → its cell for `colName`. Feeds the modal's
+  // scope-aware "any manual in scope?" check (drives the Unset button)
+  // and a future no-op detector. Sources missing the column are
+  // simply absent from the map.
+  function cellsByName(colName: string): Record<string, ColumnInfo> {
+    const out: Record<string, ColumnInfo> = {};
+    for (const sn of group.sources) {
+      const cols = group.columns_by_source[sn] ?? [];
+      const cell = cols.find((c) => c.name === colName);
+      if (cell) out[sn] = cell;
+    }
+    return out;
+  }
+
   // Concern predicates live in the store so the FilterBar's chip counts
   // and the row-level markers below stay in lockstep with each other.
   // Local aliases keep the template readable.
@@ -162,9 +179,30 @@
   }
 
   // When filters are active, expand the card automatically so the
-   // matched columns are visible without an extra click. The user can
-   // still toggle individual cards once filters are cleared.
+  // matched columns are visible without an extra click. The user can
+  // still toggle individual cards once filters are cleared.
   let forceOpen = $derived(store.hasActiveFilters());
+
+  // Persist user's expand/collapse choice across re-renders. The
+  // alternative (`open={forceOpen || undefined}`) re-applies the prop
+  // every time the snapshot changes — saving a column type collapses
+  // any card the user had opened. With `bind:open` the DOM state is
+  // authoritative; the effect below only forces it true when filters
+  // become active, never back to false (clearing filters leaves the
+  // card however the user wants it).
+  let groupOpen = $state(false);
+  $effect(() => {
+    if (forceOpen) groupOpen = true;
+  });
+
+  // Per-source `<details>` open state (only used in per-source view).
+  // Keyed by source name — same persistence story as `groupOpen`.
+  let sourceOpenState: Record<string, boolean> = $state({});
+  $effect(() => {
+    if (forceOpen && !store.groupColumnsByName) {
+      for (const sn of group.sources) sourceOpenState[sn] = true;
+    }
+  });
 
   let partitions: ColumnPartition[] = $derived.by(() => {
     if (!store.groupColumnsByName) return [];
@@ -288,7 +326,7 @@
   class="group"
   class:no-register={group.register_id === null}
   title={group.group_id}
-  open={forceOpen || undefined}
+  bind:open={groupOpen}
 >
   <!-- Group-level collapse: header always visible, contents (panels,
        column table, source list) hidden until expanded. Default closed
@@ -399,6 +437,7 @@
                   (editingColumn = {
                     sources: [...p.sources],
                     registerSourcesWithColumn: [...p.carrier_sources],
+                    cellBySource: cellsByName(p.name),
                     column: p.sample,
                   })}
               >
@@ -465,7 +504,7 @@
       {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
       {@const year = sourceYears[sourceName]}
-      <details class="source" open={forceOpen || undefined}>
+      <details class="source" bind:open={sourceOpenState[fs.name]}>
         <summary>
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
@@ -527,6 +566,7 @@
                       (editingColumn = {
                         sources: [sourceName],
                         registerSourcesWithColumn: carriersForColumn(col.name),
+                        cellBySource: cellsByName(col.name),
                         column: col,
                       })}
                   >
@@ -565,6 +605,7 @@
   <ColumnTypeEditor
     sources={editingColumn.sources}
     registerSourcesWithColumn={editingColumn.registerSourcesWithColumn}
+    cellBySource={editingColumn.cellBySource}
     registerName={group.register_name}
     column={editingColumn.column}
     onClose={() => (editingColumn = null)}

@@ -1080,6 +1080,7 @@ def set_column_type(
         column_types = payload.setdefault("column_types", {})
         column_options = payload.get("column_options")
         manual = payload.get("manual_columns", [])
+        dirty = False
 
         for sn in sources_list:
             cols = column_types.setdefault(sn, {})
@@ -1092,7 +1093,18 @@ def set_column_type(
                 new_entry = {"type": new_type}
                 if shared_validated_hint:
                     new_entry.update(shared_validated_hint)
+
+            # No-op for this source: re-asserting the same type+hint
+            # shouldn't promote an auto cell to manual. The user opening
+            # the modal and pressing Save without changing anything is a
+            # common cancel-by-mistake; silently flipping provenance is
+            # surprising. Already-manual cells stay manual (their pair
+            # is already in `manual`).
+            if existing == new_entry:
+                continue
+
             cols[column_name] = new_entry
+            dirty = True
 
             # Type changed: drop column_options for this column. Mirrors
             # set_group_register's reclassification path.
@@ -1111,6 +1123,110 @@ def set_column_type(
             payload.pop("column_options", None)
         if manual:
             payload["manual_columns"] = manual
+
+        if dirty:
+            _atomic_write(_config_path(project_dir), payload)
+    return get_state(project_dir, db_path=db_path)
+
+
+def unset_column_manual_override(
+    project_dir: Path,
+    source_names: Sequence[str],
+    column_name: str,
+    *,
+    expected_version: str,
+    db_path: Path | None = None,
+) -> StateSnapshot:
+    """Drop manual-override markers for ``column_name`` across one or more
+    sources and re-classify those cells from scratch. Pairs that aren't
+    currently in ``manual_columns`` are silently skipped — the contract
+    is "ensure not manual", not "fail when not manual".
+
+    Bulk semantics mirror ``set_column_type``: every ``(sn, column_name)``
+    pair is validated against discover before any write; the snapshot
+    advances exactly once. ``column_options`` for the cell is dropped
+    when the new auto type differs from the existing one (mirrors the
+    set_group_register reclassify path)."""
+    sources_list = list(source_names)
+    if not sources_list:
+        raise ValidationError("source_names must be non-empty")
+    if len(set(sources_list)) != len(sources_list):
+        raise ValidationError(f"source_names contains duplicates: {sources_list}")
+
+    project_dir = Path(project_dir)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        for sn in sources_list:
+            _assert_column_in_discover(project_dir, payload, sn, column_name)
+
+        manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
+        # Filter to pairs that are actually manual — non-manual pairs are
+        # a no-op (no marker to clear, no reclassify needed).
+        to_clear = [sn for sn in sources_list if (sn, column_name) in manual_pairs]
+        if not to_clear:
+            return get_state(project_dir, db_path=db_path)
+
+        discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
+        if not discover_path.exists():
+            raise ValidationError(
+                f"unset_column_manual_override requires {DISCOVER_FILENAME_DEFAULT} "
+                f"next to the config to re-classify the column."
+            )
+        discover = _read_discover(discover_path)
+        sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
+
+        sources_block = payload.setdefault("sources", {})
+        column_types = payload.setdefault("column_types", {})
+        column_options = payload.get("column_options")
+
+        # Group by register so each register's signals are resolved once.
+        by_register: dict[str | None, list[str]] = {}
+        for sn in to_clear:
+            register_str = sources_block.get(sn, {}).get("register") or None
+            by_register.setdefault(register_str, []).append(sn)
+
+        for register_str, group_sources in by_register.items():
+            if register_str is not None:
+                cols_for_signals: set[str] = {column_name}
+                signals = _resolve_signals_for_register(
+                    register_str, cols_for_signals, db_path
+                )
+            else:
+                signals = {}
+            for sn in group_sources:
+                src = sources_by_name.get(sn)
+                if src is None:
+                    continue
+                src_columns = [
+                    c for c in src.get("columns", []) if c["name"] == column_name
+                ]
+                if not src_columns:
+                    continue
+                classified = _classify_columns(src_columns, register_str, signals)
+                new_entry = classified.get(column_name)
+                if new_entry is None:
+                    continue
+                cols = column_types.setdefault(sn, {})
+                old_entry = cols.get(column_name, {})
+                old_type = old_entry.get("type")
+                cols[column_name] = new_entry
+                # Type changed: drop column_options for this cell.
+                if (
+                    old_type is not None
+                    and old_type != new_entry["type"]
+                    and column_options
+                ):
+                    opts_for_source = column_options.get(sn)
+                    if opts_for_source and column_name in opts_for_source:
+                        opts_for_source.pop(column_name, None)
+                        if not opts_for_source:
+                            column_options.pop(sn, None)
+                manual_pairs.discard((sn, column_name))
+
+        if column_options is not None and not column_options:
+            payload.pop("column_options", None)
+        # Sort for deterministic JSON output (matches set_group_register).
+        payload["manual_columns"] = [list(p) for p in sorted(manual_pairs)]
 
         _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)

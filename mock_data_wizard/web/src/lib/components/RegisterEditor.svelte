@@ -154,6 +154,13 @@
     // if the user changes the register again mid-flow.
     confirming = false;
   }
+
+  function onReclassifyToggle() {
+    // Toggling the destructive option mid-confirm changes the parameters
+    // of the operation — drop the confirmation so the user sees the new
+    // warning copy before committing.
+    confirming = false;
+  }
 </script>
 
 <Modal headingId="register-editor-heading" {onClose}>
@@ -207,7 +214,11 @@
 
     {#if manualCount > 0}
       <label class="checkbox">
-        <input type="checkbox" bind:checked={reclassifyManual} />
+        <input
+          type="checkbox"
+          bind:checked={reclassifyManual}
+          onchange={onReclassifyToggle}
+        />
         Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
       </label>
     {/if}
