@@ -593,14 +593,15 @@
     display: none;
   }
   .group-summary::before {
-    content: "▸";
+    content: "▶";
     color: #888;
-    font-size: 0.85rem;
+    font-size: 1rem;
+    line-height: 1;
     margin-top: 0.2rem;
     transition: transform 0.12s ease;
     display: inline-block;
     flex: 0 0 auto;
-    width: 0.9rem;
+    width: 1.1rem;
   }
   .group[open] > .group-summary::before {
     transform: rotate(90deg);
@@ -694,12 +695,13 @@
     display: none;
   }
   .source > summary::before {
-    content: "▸";
+    content: "▶";
     color: #888;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    line-height: 1;
     transition: transform 0.12s ease;
     display: inline-block;
-    width: 0.7rem;
+    width: 0.95rem;
     flex: 0 0 auto;
   }
   .source[open] > summary::before {
@@ -936,9 +938,10 @@
     display: none;
   }
   .sources-detail > summary::before {
-    content: "▸";
+    content: "▶";
     color: #888;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
+    line-height: 1;
     margin-right: 0.4rem;
     transition: transform 0.12s ease;
     display: inline-block;
