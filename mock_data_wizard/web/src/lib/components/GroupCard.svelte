@@ -468,49 +468,51 @@
             {/if}
             {#if visCols.type}
               <td class="type-cell">
-                <button
-                  class="type-pill type-{p.sample.current_type}"
-                  title={[p.sample.current_type, hint]
-                    .filter(Boolean)
-                    .join(" · ") +
-                    ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
-                    (p.manual_count > 0
-                      ? `, ${p.manual_count} manual`
-                      : "") +
-                    ")"}
-                  onclick={() =>
-                    (editingColumn = {
-                      sources: [...p.sources],
-                      cellBySource: cellsByName(p.name),
-                      column: p.sample,
-                    })}
-                >
-                  <span class="type-name">{p.sample.current_type}</span>
-                  {#if hint}
-                    <span class="type-suffix">· {hint}</span>
+                <div class="type-cell-inner">
+                  <button
+                    class="type-pill type-{p.sample.current_type}"
+                    title={[p.sample.current_type, hint]
+                      .filter(Boolean)
+                      .join(" · ") +
+                      ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
+                      (p.manual_count > 0
+                        ? `, ${p.manual_count} manual`
+                        : "") +
+                      ")"}
+                    onclick={() =>
+                      (editingColumn = {
+                        sources: [...p.sources],
+                        cellBySource: cellsByName(p.name),
+                        column: p.sample,
+                      })}
+                  >
+                    <span class="type-name">{p.sample.current_type}</span>
+                    {#if hint}
+                      <span class="type-suffix">· {hint}</span>
+                    {/if}
+                  </button>
+                  {#if regmeta}
+                    <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
                   {/if}
-                </button>
-                {#if regmeta}
-                  <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
-                {/if}
-                {#if p.manual_count > 0}
-                  <span class="manual-badge" title="manual overrides in this partition"
-                    >★{p.manual_count}</span
-                  >
-                {/if}
-                {#if mismatch}
-                  <span
-                    class="mismatch-marker"
-                    title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
-                    aria-label="regmeta type mismatch">⚠</span
-                  >
-                {:else if isUnmatchedCategorical(p.sample)}
-                  <span
-                    class="unmatched-marker"
-                    title="categorical without regmeta classification or value codes"
-                    aria-label="unmatched categorical">●</span
-                  >
-                {/if}
+                  {#if p.manual_count > 0}
+                    <span class="manual-badge" title="manual overrides in this partition"
+                      >★{p.manual_count}</span
+                    >
+                  {/if}
+                  {#if mismatch}
+                    <span
+                      class="mismatch-marker"
+                      title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
+                      aria-label="regmeta type mismatch">⚠</span
+                    >
+                  {:else if isUnmatchedCategorical(p.sample)}
+                    <span
+                      class="unmatched-marker"
+                      title="categorical without regmeta classification or value codes"
+                      aria-label="unmatched categorical">●</span
+                    >
+                  {/if}
+                </div>
               </td>
             {/if}
             {#if visCols.coverage}
@@ -629,39 +631,41 @@
                 {/if}
                 {#if visCols.type}
                   <td class="type-cell">
-                    <button
-                      class="type-pill type-{col.current_type} prov-{col.provenance}"
-                      title={[col.current_type, hint]
-                        .filter(Boolean)
-                        .join(" · ") + ` (${provLabel})`}
-                      onclick={() =>
-                        (editingColumn = {
-                          sources: [sourceName],
-                          cellBySource: cellsByName(col.name),
-                          column: col,
-                        })}
-                    >
-                      <span class="type-name">{col.current_type}</span>
-                      {#if hint}
-                        <span class="type-suffix">· {hint}</span>
+                    <div class="type-cell-inner">
+                      <button
+                        class="type-pill type-{col.current_type} prov-{col.provenance}"
+                        title={[col.current_type, hint]
+                          .filter(Boolean)
+                          .join(" · ") + ` (${provLabel})`}
+                        onclick={() =>
+                          (editingColumn = {
+                            sources: [sourceName],
+                            cellBySource: cellsByName(col.name),
+                            column: col,
+                          })}
+                      >
+                        <span class="type-name">{col.current_type}</span>
+                        {#if hint}
+                          <span class="type-suffix">· {hint}</span>
+                        {/if}
+                      </button>
+                      {#if regmeta}
+                        <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
                       {/if}
-                    </button>
-                    {#if regmeta}
-                      <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
-                    {/if}
-                    {#if mismatch}
-                      <span
-                        class="mismatch-marker"
-                        title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
-                        aria-label="regmeta type mismatch">⚠</span
-                      >
-                    {:else if isUnmatchedCategorical(col)}
-                      <span
-                        class="unmatched-marker"
-                        title="categorical without regmeta classification or value codes"
-                        aria-label="unmatched categorical">●</span
-                      >
-                    {/if}
+                      {#if mismatch}
+                        <span
+                          class="mismatch-marker"
+                          title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
+                          aria-label="regmeta type mismatch">⚠</span
+                        >
+                      {:else if isUnmatchedCategorical(col)}
+                        <span
+                          class="unmatched-marker"
+                          title="categorical without regmeta classification or value codes"
+                          aria-label="unmatched categorical">●</span
+                        >
+                      {/if}
+                    </div>
                   </td>
                 {/if}
                 {#if visCols.coverage}
@@ -959,7 +963,11 @@
      on a single flex row that wraps when the cell is too narrow.
      Pill stays a fixed-content button; the surrounding badges wrap to
      the next line instead of forcing the pill to ellipsis-truncate. */
-  .type-cell {
+  /* Flex on the inner div — NOT on the td. `display: flex` on a <td>
+     breaks the cell out of CSS table layout, so the row no longer
+     keeps sibling cells at a shared height (visible as misaligned row
+     borders when Coverage forces the row taller). */
+  .type-cell-inner {
     display: flex;
     flex-wrap: wrap;
     gap: 0.25rem;
