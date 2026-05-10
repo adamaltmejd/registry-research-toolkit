@@ -90,10 +90,11 @@ const TOAST_TIMEOUT_MS = 6000;
 // doesn't pile up over the page.
 const MAX_TOASTS = 4;
 
-// localStorage key for the per-browser "group columns by name" view
-// preference. Per-browser, not per-project — this is a UI affordance,
-// not project state, so it doesn't belong in mock_data_config.json.
+// localStorage keys for per-browser view preferences. Per-browser, not
+// per-project — these are UI affordances, not project state, so they
+// don't belong in mock_data_config.json.
 const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
+const COLUMNS_PREF_KEY = "mdw.web.visibleColumns";
 
 function loadGroupingPref(): boolean {
   if (typeof localStorage === "undefined") return true;
@@ -120,6 +121,54 @@ function saveGroupingPref(value: boolean): void {
   }
 }
 
+/** Optional columns in the per-group column table. The "name" column is
+ * always rendered. Defaults: sql hidden (raw discover types are noise
+ * for most reviewers), type and coverage shown. */
+export type OptionalColumnId = "sql" | "type" | "coverage";
+
+export interface VisibleColumns {
+  sql: boolean;
+  type: boolean;
+  coverage: boolean;
+}
+
+const DEFAULT_VISIBLE_COLUMNS: VisibleColumns = {
+  sql: false,
+  type: true,
+  coverage: true,
+};
+
+function loadVisibleColumns(): VisibleColumns {
+  if (typeof localStorage === "undefined") return { ...DEFAULT_VISIBLE_COLUMNS };
+  try {
+    const raw = localStorage.getItem(COLUMNS_PREF_KEY);
+    if (raw === null) return { ...DEFAULT_VISIBLE_COLUMNS };
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return { ...DEFAULT_VISIBLE_COLUMNS };
+    // Per-key boolean coercion: an upgrade may add a column id (parsed
+    // is missing the key → falls through to the default) and a hand-
+    // edited or stale payload may have non-boolean values for known
+    // keys (ignored, default wins).
+    const out = { ...DEFAULT_VISIBLE_COLUMNS };
+    for (const key of Object.keys(out) as OptionalColumnId[]) {
+      const v = (parsed as Record<string, unknown>)[key];
+      if (typeof v === "boolean") out[key] = v;
+    }
+    return out;
+  } catch {
+    return { ...DEFAULT_VISIBLE_COLUMNS };
+  }
+}
+
+function saveVisibleColumns(value: VisibleColumns): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(COLUMNS_PREF_KEY, JSON.stringify(value));
+  } catch {
+    // Storage quota / private mode — non-fatal.
+  }
+}
+
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
@@ -139,6 +188,11 @@ class Store {
    * into one row, badged "× N". Persisted to localStorage so it
    * survives reloads. Default true. */
   groupColumnsByName = $state(loadGroupingPref());
+
+  /** Optional column visibility in the per-group table. The "name"
+   * column is always shown; the rest are toggleable via ColumnsPicker.
+   * Persisted to localStorage. */
+  visibleColumns: VisibleColumns = $state(loadVisibleColumns());
 
   /** Free-text filter on column name. Substring, case-insensitive.
    * Session-scoped — losing the filter on reload is the right default
@@ -249,6 +303,11 @@ class Store {
   setGroupColumnsByName(value: boolean): void {
     this.groupColumnsByName = value;
     saveGroupingPref(value);
+  }
+
+  toggleColumnVisibility(id: OptionalColumnId): void {
+    this.visibleColumns[id] = !this.visibleColumns[id];
+    saveVisibleColumns(this.visibleColumns);
   }
 
   setFilterQuery(value: string): void {
