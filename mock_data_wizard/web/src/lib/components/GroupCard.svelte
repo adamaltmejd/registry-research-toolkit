@@ -1,6 +1,11 @@
 <script lang="ts">
   import type { ColumnInfo, Panel, RegisterGroupView } from "../types";
-  import { store } from "../store.svelte";
+  import {
+    columnIsManual,
+    columnIsMismatch,
+    columnIsUnmatchedCategorical,
+    store,
+  } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
 
@@ -58,11 +63,25 @@
     return Object.values(col.hint).map(String).join(" · ");
   }
 
-  function regmetaSuffix(col: ColumnInfo): string {
+  // Compact label for the regmeta evidence badge. Classification name
+  // wins over the generic "value codes" because it carries more info
+  // (e.g. "LKF2012" tells the user which version of the kommun coding).
+  function regmetaBadge(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
     if (sig.classification_short_name) return sig.classification_short_name;
-    if (sig.has_value_codes) return "value codes";
+    if (sig.has_value_codes) return "vc";
+    return "";
+  }
+
+  // Long-form text for the badge tooltip — same source data, expanded.
+  function regmetaBadgeTitle(col: ColumnInfo): string {
+    const sig = col.regmeta_signal;
+    if (!sig) return "";
+    if (sig.classification_short_name) {
+      return `regmeta classification: ${sig.classification_short_name}`;
+    }
+    if (sig.has_value_codes) return "regmeta: value codes available";
     return "";
   }
 
@@ -79,16 +98,11 @@
     return out;
   }
 
-  function isUnmatchedCategorical(col: ColumnInfo): boolean {
-    if (col.current_type !== "categorical") return false;
-    return regmetaSuffix(col) === "";
-  }
-
-  function isRegmetaMismatch(col: ColumnInfo): boolean {
-    if (col.provenance === "manual") return false;
-    if (col.regmeta_implied_type === null) return false;
-    return col.regmeta_implied_type !== col.current_type;
-  }
+  // Concern predicates live in the store so the FilterBar's chip counts
+  // and the row-level markers below stay in lockstep with each other.
+  // Local aliases keep the template readable.
+  const isUnmatchedCategorical = columnIsUnmatchedCategorical;
+  const isRegmetaMismatch = columnIsMismatch;
 
   interface SourceStats {
     total: number;
@@ -102,7 +116,7 @@
     let mismatch = 0;
     for (const c of cols) {
       if (isUnmatchedCategorical(c)) unmatched++;
-      if (c.provenance === "manual") manual++;
+      if (columnIsManual(c)) manual++;
       if (isRegmetaMismatch(c)) mismatch++;
     }
     return { total: cols.length, unmatched, manual, mismatch };
@@ -141,6 +155,11 @@
      * when a column has multiple type variants. */
     missing_in_count: number;
   }
+
+  // When filters are active, expand the card automatically so the
+   // matched columns are visible without an extra click. The user can
+   // still toggle individual cards once filters are cleared.
+  let forceOpen = $derived(store.hasActiveFilters());
 
   let partitions: ColumnPartition[] = $derived.by(() => {
     if (!store.groupColumnsByName) return [];
@@ -221,9 +240,44 @@
     }
     return out;
   });
+
+  // Partitions filtered by the active filter chips / search. Hide the
+  // partition rather than dim it: the user asked for a focused view,
+  // dimmed rows would just be visual noise.
+  let visiblePartitions = $derived(
+    store.hasActiveFilters()
+      ? partitions.filter((p) => store.columnMatchesFilters(p.sample))
+      : partitions,
+  );
+
+  // Per-source view: columns to render under each source, after filters.
+  // Sources with no matching columns are dropped entirely from the
+  // expanded card so the user doesn't scroll past empty source rows.
+  interface FilteredSource {
+    name: string;
+    cols: ColumnInfo[];
+  }
+  let filteredSources = $derived.by<FilteredSource[]>(() => {
+    if (store.groupColumnsByName) return [];
+    const out: FilteredSource[] = [];
+    for (const sn of group.sources) {
+      const all = group.columns_by_source[sn] ?? [];
+      const cols = store.hasActiveFilters()
+        ? all.filter((c) => store.columnMatchesFilters(c))
+        : all;
+      if (cols.length === 0 && store.hasActiveFilters()) continue;
+      out.push({ name: sn, cols });
+    }
+    return out;
+  });
 </script>
 
-<details class="group" class:no-register={group.register_id === null}>
+<details
+  class="group"
+  class:no-register={group.register_id === null}
+  title={group.group_id}
+  open={forceOpen || undefined}
+>
   <!-- Group-level collapse: header always visible, contents (panels,
        column table, source list) hidden until expanded. Default closed
        so a fresh page load shows N register summaries instead of an
@@ -236,15 +290,17 @@
           {group.register_name}
         {:else}
           <span class="unassigned">unassigned</span>
+          <small class="group-id">· {group.group_id}</small>
         {/if}
-        <small>· {group.group_id}</small>
       </h2>
       <p class="meta">
         <span class="conf conf-{group.confidence}"
           >{CONFIDENCE_LABEL[group.confidence]}</span
         >
         · {group.sources.length} source{group.sources.length === 1 ? "" : "s"}
-        · {group.schema_variants} schema{group.schema_variants === 1 ? "" : "s"}
+        {#if group.schema_variants > 1}
+          · {group.schema_variants} schemas
+        {/if}
         {#if group.panel_candidate && panelsForGroup.length === 0}
           · panel candidate ({group.panel_candidate.members.length})
         {/if}
@@ -287,11 +343,13 @@
         </tr>
       </thead>
       <tbody>
-        {#each partitions as p (p.name + "/" + p.variant_index)}
+        {#each visiblePartitions as p (p.name + "/" + p.variant_index)}
           {@const hint = hintSuffix(p.sample)}
-          {@const regmeta = regmetaSuffix(p.sample)}
+          {@const regmeta = regmetaBadge(p.sample)}
+          {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
           {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
+          {@const showCount = p.sources.length > 1}
           <tr class:split>
             <td class="mono col-name" title={p.name}>
               {p.name}
@@ -314,10 +372,10 @@
               {/if}
             </td>
             <td class="mono dim">{p.sql_type_summary}</td>
-            <td>
+            <td class="type-cell">
               <button
                 class="type-pill type-{p.sample.current_type}"
-                title={[p.sample.current_type, hint, regmeta]
+                title={[p.sample.current_type, hint]
                   .filter(Boolean)
                   .join(" · ") +
                   ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
@@ -336,16 +394,18 @@
                 {#if hint}
                   <span class="type-suffix">· {hint}</span>
                 {/if}
-                {#if regmeta}
-                  <span class="type-suffix regmeta">· {regmeta}</span>
-                {/if}
-                <span class="count-badge">× {p.sources.length}</span>
-                {#if p.manual_count > 0}
-                  <span class="manual-badge" title="manual overrides in this group"
-                    >★{p.manual_count}</span
-                  >
-                {/if}
               </button>
+              {#if regmeta}
+                <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
+              {/if}
+              {#if showCount}
+                <span class="count-badge">× {p.sources.length}</span>
+              {/if}
+              {#if p.manual_count > 0}
+                <span class="manual-badge" title="manual overrides in this partition"
+                  >★{p.manual_count}</span
+                >
+              {/if}
               {#if mismatch}
                 <span
                   class="mismatch-marker"
@@ -385,12 +445,15 @@
       </ul>
     </details>
   {:else}
-    <!-- Per-source mode: original rendering (one <details> per source). -->
-    {#each group.sources as sourceName (sourceName)}
-      {@const cols = group.columns_by_source[sourceName] ?? []}
+    <!-- Per-source mode: original rendering (one <details> per source).
+         Sources with zero matching columns under active filters are
+         already removed in `filteredSources`. -->
+    {#each filteredSources as fs (fs.name)}
+      {@const sourceName = fs.name}
+      {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
       {@const year = sourceYears[sourceName]}
-      <details class="source">
+      <details class="source" open={forceOpen || undefined}>
         <summary>
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
@@ -432,7 +495,8 @@
           <tbody>
             {#each cols as col (col.name)}
               {@const hint = hintSuffix(col)}
-              {@const regmeta = regmetaSuffix(col)}
+              {@const regmeta = regmetaBadge(col)}
+              {@const regmetaTitle = regmetaBadgeTitle(col)}
               {@const mismatch = isRegmetaMismatch(col)}
               {@const provLabel =
                 col.provenance === "manual"
@@ -441,10 +505,10 @@
               <tr>
                 <td class="mono col-name" title={col.name}>{col.name}</td>
                 <td class="mono dim">{col.sql_type ?? "—"}</td>
-                <td>
+                <td class="type-cell">
                   <button
                     class="type-pill type-{col.current_type} prov-{col.provenance}"
-                    title={[col.current_type, hint, regmeta]
+                    title={[col.current_type, hint]
                       .filter(Boolean)
                       .join(" · ") + ` (${provLabel})`}
                     onclick={() =>
@@ -458,10 +522,10 @@
                     {#if hint}
                       <span class="type-suffix">· {hint}</span>
                     {/if}
-                    {#if regmeta}
-                      <span class="type-suffix regmeta">· {regmeta}</span>
-                    {/if}
                   </button>
+                  {#if regmeta}
+                    <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
+                  {/if}
                   {#if mismatch}
                     <span
                       class="mismatch-marker"
@@ -555,6 +619,12 @@
     font-weight: normal;
     font-family: ui-monospace, monospace;
     font-size: 0.85rem;
+  }
+  /* group_id only renders on unassigned groups, where it doubles as
+     the file/source identifier. Register groups carry it in `title`
+     instead so the card title isn't crowded with reg-N noise. */
+  .group-id {
+    font-style: normal;
   }
   .unassigned {
     color: #a06400;
@@ -702,13 +772,13 @@
     letter-spacing: 0.04em;
   }
   th:nth-child(1) {
-    width: 50%;
+    width: 42%;
   }
   th:nth-child(2) {
-    width: 18%;
+    width: 14%;
   }
   th:nth-child(3) {
-    width: 32%;
+    width: 44%;
   }
   /* Visually link rows belonging to the same split column. The thin
      left-border is just enough to read the grouping at a glance without
@@ -740,6 +810,16 @@
     margin-left: 0.35rem;
     font-family: system-ui, sans-serif;
   }
+  /* Type cell hosts pill + regmeta tag + count + manual badge + marker
+     on a single flex row that wraps when the cell is too narrow.
+     Pill stays a fixed-content button; the surrounding badges wrap to
+     the next line instead of forcing the pill to ellipsis-truncate. */
+  .type-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+  }
   .type-pill {
     background: #eef2fb;
     color: #1a3b80;
@@ -749,10 +829,8 @@
     cursor: pointer;
     font: inherit;
     font-family: ui-monospace, monospace;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
+    flex: 0 0 auto;
   }
   .type-pill:hover {
     background: #e0e7f7;
@@ -787,35 +865,47 @@
     opacity: 0.65;
     font-size: 0.85em;
   }
+  /* Regmeta evidence as a sibling tag rather than a pill suffix:
+     classification short-name ("LKF2012") or "vc" for value codes,
+     full text in the tooltip. Keeping it outside the pill lets the
+     pill stay readable even when the cell is narrow. */
+  .regmeta-tag {
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    background: #f0e8fa;
+    color: #5d2b8c;
+    font-size: 0.78em;
+    font-family: ui-monospace, monospace;
+    cursor: help;
+    flex: 0 0 auto;
+  }
   .count-badge {
-    margin-left: 0.4rem;
     padding: 0 0.35rem;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.08);
     font-size: 0.78em;
     font-family: system-ui, sans-serif;
     font-weight: 600;
+    flex: 0 0 auto;
   }
   .manual-badge {
-    margin-left: 0.25rem;
     color: #b34a00;
     font-size: 0.8em;
     font-family: system-ui, sans-serif;
+    flex: 0 0 auto;
   }
   .unmatched-marker {
-    margin-left: 0.4rem;
     color: #b34a00;
     opacity: 0.55;
     font-size: 0.7rem;
     line-height: 1;
-    vertical-align: middle;
+    flex: 0 0 auto;
   }
   .mismatch-marker {
-    margin-left: 0.4rem;
     color: #b34a00;
     font-size: 0.85rem;
     line-height: 1;
-    vertical-align: middle;
+    flex: 0 0 auto;
   }
   .link {
     background: transparent;

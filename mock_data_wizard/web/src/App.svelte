@@ -1,11 +1,36 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
+  import FilterBar from "./lib/components/FilterBar.svelte";
   import GroupCard from "./lib/components/GroupCard.svelte";
   import { store } from "./lib/store.svelte";
 
   onMount(() => {
     void store.load();
+  });
+
+  // Header height is variable (the meta line wraps on narrow viewports
+  // and grows with deeper content), so the FilterBar's `top` for sticky
+  // stacking can't be a hard-coded rem. Publish the live height as a
+  // root CSS variable that FilterBar reads. ResizeObserver covers both
+  // viewport-width changes and content-driven reflow.
+  let headerEl: HTMLElement | undefined = $state();
+  $effect(() => {
+    if (!headerEl) return;
+    const root = document.documentElement;
+    const update = () => {
+      root.style.setProperty(
+        "--mdw-header-height",
+        `${headerEl!.getBoundingClientRect().height}px`,
+      );
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(headerEl);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty("--mdw-header-height");
+    };
   });
 
   let snapshot = $derived(store.snapshot);
@@ -22,9 +47,26 @@
   );
 
   let totalPanels = $derived(snapshot?.config.panels.length ?? 0);
+
+  // Hide groups that have no columns matching the active filter so the
+  // user doesn't scroll past empty cards. Computed in the parent so the
+  // empty-state banner below can read the visible count.
+  let visibleGroups = $derived.by(() => {
+    if (!snapshot) return [];
+    if (!store.hasActiveFilters()) return snapshot.groups;
+    return snapshot.groups.filter((g) => {
+      for (const cols of Object.values(g.columns_by_source)) {
+        for (const c of cols) {
+          if (store.columnMatchesFilters(c)) return true;
+        }
+      }
+      return false;
+    });
+  });
+  let visibleGroupCount = $derived(visibleGroups.length);
 </script>
 
-<header class="app-header">
+<header class="app-header" bind:this={headerEl}>
   <div class="header-row">
     <h1>mock_data_wizard</h1>
     {#if snapshot}
@@ -111,10 +153,20 @@
     </div>
   {/each}
 
+  <FilterBar {snapshot} />
+
   <main>
-    {#each snapshot.groups as group (group.group_id)}
+    {#each visibleGroups as group (group.group_id)}
       <GroupCard {group} />
     {/each}
+    {#if store.hasActiveFilters() && visibleGroupCount === 0}
+      <p class="empty-filter">
+        No columns match the current filters.
+        <button type="button" onclick={() => store.clearFilters()}
+          >Clear filters</button
+        >
+      </p>
+    {/if}
   </main>
 {/if}
 
@@ -143,6 +195,12 @@
     background: #1656c0;
     color: #fff;
     padding: 1rem 2rem;
+    /* Sticky so the view toggle and filter chips stay reachable while
+       scrolling deep into a group's column table. */
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
   }
   .header-row {
     display: flex;
@@ -225,6 +283,28 @@
     text-align: center;
     padding: 2rem;
     color: #777;
+  }
+  .empty-filter {
+    text-align: center;
+    color: #666;
+    padding: 1.5rem 1rem;
+    margin: 1rem 0 0;
+    background: #fff;
+    border: 1px dashed #cfd2d8;
+    border-radius: 6px;
+  }
+  .empty-filter button {
+    margin-left: 0.5rem;
+    padding: 0.3rem 0.7rem;
+    border: 1px solid #1656c0;
+    background: #fff;
+    color: #1656c0;
+    border-radius: 4px;
+    cursor: pointer;
+    font: inherit;
+  }
+  .empty-filter button:hover {
+    background: #eef2fb;
   }
   .empty-state {
     max-width: 36rem;

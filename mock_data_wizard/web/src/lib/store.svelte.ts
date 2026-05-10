@@ -16,7 +16,57 @@ import {
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
 } from "./api";
-import type { RegisterEntry, StateSnapshot } from "./types";
+import type {
+  ColumnInfo,
+  ColumnType,
+  RegisterEntry,
+  StateSnapshot,
+} from "./types";
+
+/** Concern flags surfaced by the filter chips. Each picks a different
+ * subset of cells the user is likely to want to review:
+ *  - manual:    user-edited types (the audit trail)
+ *  - mismatch:  auto-classified types that disagree with regmeta
+ *  - unmatched: categoricals with no regmeta evidence (best-effort)
+ *  - opaque:    free-text classifier fallback (commonly worth reviewing)
+ */
+export type ConcernFilter = "manual" | "mismatch" | "unmatched" | "opaque";
+
+/** Predicate checks pulled out of GroupCard so the FilterBar can use the
+ * same definitions for its counts. Keeping these in the store module
+ * avoids a circular import between the filter UI and the row renderer. */
+export function columnIsManual(c: ColumnInfo): boolean {
+  return c.provenance === "manual";
+}
+
+export function columnIsMismatch(c: ColumnInfo): boolean {
+  if (c.provenance === "manual") return false;
+  if (c.regmeta_implied_type === null) return false;
+  return c.regmeta_implied_type !== c.current_type;
+}
+
+export function columnIsUnmatchedCategorical(c: ColumnInfo): boolean {
+  if (c.current_type !== "categorical") return false;
+  const sig = c.regmeta_signal;
+  if (!sig) return true;
+  return !sig.classification_short_name && !sig.has_value_codes;
+}
+
+export function columnHasConcern(
+  c: ColumnInfo,
+  concern: ConcernFilter,
+): boolean {
+  switch (concern) {
+    case "manual":
+      return columnIsManual(c);
+    case "mismatch":
+      return columnIsMismatch(c);
+    case "unmatched":
+      return columnIsUnmatchedCategorical(c);
+    case "opaque":
+      return c.current_type === "opaque";
+  }
+}
 
 export interface Toast {
   id: number;
@@ -87,6 +137,18 @@ class Store {
    * into one row, badged "× N". Persisted to localStorage so it
    * survives reloads. Default true. */
   groupColumnsByName = $state(loadGroupingPref());
+
+  /** Free-text filter on column name. Substring, case-insensitive.
+   * Session-scoped — losing the filter on reload is the right default
+   * (otherwise a stale filter from yesterday silently hides everything
+   * on tomorrow's project). */
+  filterQuery = $state("");
+  /** Single column-type filter, or null for "all". */
+  filterType: ColumnType | null = $state(null);
+  /** Single concern filter, or null for "all". Mutually exclusive with
+   * itself: clicking the active chip clears it. Combining chips would
+   * give an empty intersection on most projects. */
+  filterConcern: ConcernFilter | null = $state(null);
 
   private nextToastId = 1;
   private toastTimers = new Map<number, ReturnType<typeof setTimeout>>();
@@ -177,6 +239,48 @@ class Store {
   setGroupColumnsByName(value: boolean): void {
     this.groupColumnsByName = value;
     saveGroupingPref(value);
+  }
+
+  setFilterQuery(value: string): void {
+    this.filterQuery = value;
+  }
+
+  /** Toggle a type chip: clicking the active type clears the filter. */
+  toggleFilterType(t: ColumnType): void {
+    this.filterType = this.filterType === t ? null : t;
+  }
+
+  /** Toggle a concern chip: clicking the active concern clears it. */
+  toggleFilterConcern(c: ConcernFilter): void {
+    this.filterConcern = this.filterConcern === c ? null : c;
+  }
+
+  clearFilters(): void {
+    this.filterQuery = "";
+    this.filterType = null;
+    this.filterConcern = null;
+  }
+
+  hasActiveFilters(): boolean {
+    return (
+      this.filterQuery !== "" ||
+      this.filterType !== null ||
+      this.filterConcern !== null
+    );
+  }
+
+  /** True when this column matches all active filters. Empty filters
+   * pass everything; the FilterBar's counts use the same predicate. */
+  columnMatchesFilters(c: ColumnInfo): boolean {
+    const q = this.filterQuery.trim().toLowerCase();
+    if (q !== "" && !c.name.toLowerCase().includes(q)) return false;
+    if (this.filterType !== null && c.current_type !== this.filterType) {
+      return false;
+    }
+    if (this.filterConcern !== null && !columnHasConcern(c, this.filterConcern)) {
+      return false;
+    }
+    return true;
   }
 
   dismissToast(id: number): void {

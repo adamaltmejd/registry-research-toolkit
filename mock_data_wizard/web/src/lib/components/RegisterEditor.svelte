@@ -4,6 +4,7 @@
   import { store } from "../store.svelte";
   import type { RegisterGroupView } from "../types";
   import Modal from "./Modal.svelte";
+  import RegisterCombobox from "./RegisterCombobox.svelte";
 
   interface Props {
     group: RegisterGroupView;
@@ -186,21 +187,13 @@
 
     <label class="row">
       <span>Register</span>
-      <input
-        type="text"
-        list="register-options"
+      <RegisterCombobox
+        {registers}
         bind:value={selectedRegister}
         oninput={onInput}
-        placeholder="(none — clear)"
-        spellcheck="false"
-        aria-invalid={!inputResolves}
-        aria-describedby={validationError ? "register-error" : undefined}
+        ariaInvalid={!inputResolves}
+        ariaDescribedby={validationError ? "register-error" : undefined}
       />
-      <datalist id="register-options">
-        {#each registers as r (r.id)}
-          <option value={r.name}></option>
-        {/each}
-      </datalist>
     </label>
 
     {#if validationError}
@@ -297,16 +290,6 @@
   .row span {
     color: #666;
     font-size: 0.9rem;
-  }
-  input[type="text"] {
-    padding: 0.35rem 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font: inherit;
-  }
-  input[aria-invalid="true"] {
-    border-color: #c44;
-    outline-color: #c44;
   }
   .checkbox {
     display: flex;
