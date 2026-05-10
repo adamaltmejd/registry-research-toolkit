@@ -1155,6 +1155,13 @@ def unset_column_manual_override(
     advances exactly once. ``column_options`` for the cell is dropped
     when the new auto type differs from the existing one (mirrors the
     set_group_register reclassify path)."""
+    # `str` and `bytes` satisfy `Sequence[str]` structurally, so without
+    # this guard `list("src")` would silently produce `['s', 'r', 'c']`.
+    if isinstance(source_names, (str, bytes)):
+        raise ValidationError(
+            f"source_names must be a sequence of source names, not a single "
+            f"{type(source_names).__name__}; pass [source_name] for one source."
+        )
     sources_list = list(source_names)
     if not sources_list:
         raise ValidationError("source_names must be non-empty")
@@ -1164,22 +1171,43 @@ def unset_column_manual_override(
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        for sn in sources_list:
-            _assert_column_in_discover(project_dir, payload, sn, column_name)
 
-        manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
+        # Read discover once and reuse for both validation and reclassify.
+        # Re-reading would open a TOCTOU window where a source visible at
+        # validation time vanishes before classification, leading to a
+        # partial apply (some markers cleared, others left stale).
+        discover = _load_local_discover(project_dir)
+        sources_by_name: dict[str, dict[str, Any]] | None = (
+            {s["source_name"]: s for s in discover.get("sources", [])}
+            if discover is not None
+            else None
+        )
+        for sn in sources_list:
+            if sources_by_name is not None:
+                src = sources_by_name.get(sn)
+                found = src is not None and any(
+                    c["name"] == column_name for c in src.get("columns", [])
+                )
+            else:
+                # Fallback when discover is absent: trust existing column_types.
+                found = column_name in payload.get("column_types", {}).get(sn, {})
+            if not found:
+                raise ValidationError(
+                    f"({sn!r}, {column_name!r}) not found in discover or "
+                    f"existing column_types — refusing to silently create entries."
+                )
+
+        manual_pairs = {tuple(p) for p in payload.get("manual_columns", [])}
         to_clear = [sn for sn in sources_list if (sn, column_name) in manual_pairs]
         if not to_clear:
             return get_state(project_dir, db_path=db_path)
 
         # Reclassify needs the discover schema; bail loudly if it's gone.
-        discover = _load_local_discover(project_dir)
-        if discover is None:
+        if sources_by_name is None:
             raise ValidationError(
                 f"unset_column_manual_override requires {DISCOVER_FILENAME_DEFAULT} "
                 f"next to the config to re-classify the column."
             )
-        sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
 
         sources_block = payload.setdefault("sources", {})
         column_types = payload.setdefault("column_types", {})
@@ -1198,18 +1226,14 @@ def unset_column_manual_override(
                 else {}
             )
             for sn in group_sources:
-                src = sources_by_name.get(sn)
-                if src is None:
-                    continue
+                # Validation above proved the pair exists in our discover
+                # snapshot, so direct indexing is safe here.
+                src = sources_by_name[sn]
                 src_columns = [
                     c for c in src.get("columns", []) if c["name"] == column_name
                 ]
-                if not src_columns:
-                    continue
                 classified = _classify_columns(src_columns, register_str, signals)
-                new_entry = classified.get(column_name)
-                if new_entry is None:
-                    continue
+                new_entry = classified[column_name]
                 cols = column_types.setdefault(sn, {})
                 old_type = cols.get(column_name, {}).get("type")
                 cols[column_name] = new_entry

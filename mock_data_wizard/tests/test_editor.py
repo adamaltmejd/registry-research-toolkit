@@ -725,6 +725,50 @@ def test_unset_column_manual_override_rejects_unknown_pair(tmp_path: Path):
         )
 
 
+def test_unset_column_manual_override_rejects_str_source_names(tmp_path: Path):
+    """A bare string would split into single chars under ``list(...)`` — guard
+    against it the same way ``set_column_type`` does."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be a sequence"):
+        unset_column_manual_override(
+            tmp_path,
+            "x",  # type: ignore[arg-type]
+            "C",
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_unset_column_manual_override_atomic_on_partial_unknown(tmp_path: Path):
+    """Validation is all-or-nothing: a single unknown pair aborts the call
+    with no on-disk changes, even when other pairs would succeed."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+            {"source_name": "b", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_type(
+        tmp_path, ["a"], "K", "id", expected_version=snap.snapshot_version
+    )
+    v_before = snap.snapshot_version
+    with pytest.raises(ValidationError, match="not found in discover"):
+        unset_column_manual_override(
+            tmp_path,
+            ["a", "ghost"],
+            "K",
+            expected_version=v_before,
+        )
+    # Marker on `a` is preserved; no partial apply.
+    snap_after = get_state(tmp_path)
+    assert snap_after.snapshot_version == v_before
+    assert ("a", "K") in snap_after.config.manual_columns
+
+
 # -- set_group_register ----------------------------------------------------
 
 
