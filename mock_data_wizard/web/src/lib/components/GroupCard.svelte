@@ -517,6 +517,7 @@
               <td class="coverage-cell">
                 <div
                   class="coverage-grid"
+                  role="img"
                   aria-label={coverageAriaLabel(coverage)}
                 >
                   {#each coverage as cell (cell.source)}
@@ -667,6 +668,7 @@
                   <td class="coverage-cell">
                     <div
                       class="coverage-grid"
+                      role="img"
                       aria-label={coverageAriaLabel(coverage)}
                     >
                       {#each coverage as cell (cell.source)}

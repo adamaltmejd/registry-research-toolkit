@@ -55,7 +55,6 @@
   <button
     type="button"
     class="trigger"
-    aria-haspopup="true"
     aria-expanded={open}
     onclick={toggleOpen}
     title="Choose which columns to display"
@@ -65,7 +64,7 @@
     <span class="caret" aria-hidden="true">▾</span>
   </button>
   {#if open}
-    <div class="popover" role="menu">
+    <div class="popover">
       <p class="hint">Column “Name” is always shown.</p>
       <ul>
         {#each COLUMNS as col (col.id)}

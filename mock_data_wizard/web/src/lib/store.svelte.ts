@@ -143,11 +143,18 @@ function loadVisibleColumns(): VisibleColumns {
   try {
     const raw = localStorage.getItem(COLUMNS_PREF_KEY);
     if (raw === null) return { ...DEFAULT_VISIBLE_COLUMNS };
-    const parsed = JSON.parse(raw) as Partial<VisibleColumns>;
-    // Spread defaults first so a stored payload missing a key (e.g.
-    // upgrade adds a new column id) keeps the new column at its default
-    // rather than silently disappearing.
-    return { ...DEFAULT_VISIBLE_COLUMNS, ...parsed };
+    const parsed = JSON.parse(raw) as unknown;
+    if (!parsed || typeof parsed !== "object") return { ...DEFAULT_VISIBLE_COLUMNS };
+    // Per-key boolean coercion: an upgrade may add a column id (parsed
+    // is missing the key → falls through to the default) and a hand-
+    // edited or stale payload may have non-boolean values for known
+    // keys (ignored, default wins).
+    const out = { ...DEFAULT_VISIBLE_COLUMNS };
+    for (const key of Object.keys(out) as OptionalColumnId[]) {
+      const v = (parsed as Record<string, unknown>)[key];
+      if (typeof v === "boolean") out[key] = v;
+    }
+    return out;
   } catch {
     return { ...DEFAULT_VISIBLE_COLUMNS };
   }
