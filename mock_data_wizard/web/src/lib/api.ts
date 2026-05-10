@@ -67,12 +67,23 @@ export function getState(): Promise<StateSnapshot> {
   return send<StateSnapshot>("/api/state", { method: "GET" });
 }
 
+export function initProject(): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/init", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: "{}",
+  });
+}
+
 export function listRegisters(): Promise<RegistersResponse> {
   return send<RegistersResponse>("/api/registers", { method: "GET" });
 }
 
 export interface SetColumnTypeArgs {
-  source: string;
+  /** Non-empty list of sources to update. Server validates every
+   *  (source, column) pair before writing; a single bad pair aborts
+   *  the whole call with no on-disk changes. */
+  sources: string[];
   column: string;
   type: string;
   expected_version: string;

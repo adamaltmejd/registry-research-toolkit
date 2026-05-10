@@ -439,7 +439,7 @@ def _build_golden_snapshot(
     # Mark Salary on lisa_2018 as a manual override with an inline hint.
     snap = editor.set_column_type(
         tmp_path,
-        "lisa_2018",
+        ["lisa_2018"],
         "Salary",
         "numeric",
         expected_version=snap.snapshot_version,

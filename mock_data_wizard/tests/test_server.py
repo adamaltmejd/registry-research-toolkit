@@ -134,6 +134,118 @@ def test_get_state_404_when_not_initialized(tmp_path: Path):
     assert body["error"]["code"] == "not_initialized"
 
 
+def test_init_creates_config_then_idempotent(tmp_path: Path):
+    """POST /api/init bootstraps from discover; second call is a no-op."""
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "src",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            }
+        ],
+    )
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    base = f"http://{host}:{port}"
+    try:
+        status, body = _fetch("POST", f"{base}/api/init", {})
+        assert status == 200
+        assert body["config"]["contract_version"] == "mdw-config-3.0.0"
+        assert (tmp_path / "mock_data_config.json").exists()
+
+        # Idempotent: second call returns the same snapshot.
+        status2, body2 = _fetch("POST", f"{base}/api/init", {})
+        assert status2 == 200
+        assert body2["snapshot_version"] == body["snapshot_version"]
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+
+
+def test_init_404_when_no_discover(tmp_path: Path):
+    """POST /api/init with no mock_data_discovery.json → 404 not_initialized."""
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    try:
+        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {})
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+    assert status == 404
+    assert body["error"]["code"] == "not_initialized"
+    assert "mock_data_discovery.json" in body["error"]["message"]
+
+
+def test_init_idempotent_when_discover_removed(tmp_path: Path):
+    """POST /api/init on an already-initialised project succeeds even
+    when discover.json has been removed — discover is only required for
+    first-time bootstrap, not for the read-only no-op branch."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "src",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            }
+        ],
+    )
+    editor.init_if_missing(tmp_path, discover_path)
+    discover_path.unlink()
+
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    try:
+        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {})
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+    assert status == 200
+    assert body["config"]["contract_version"] == "mdw-config-3.0.0"
+
+
+def test_init_400_when_body_has_unknown_keys(tmp_path: Path):
+    """POST /api/init rejects non-empty bodies — locks down the contract
+    against silent ignoring of future fields like ``force``."""
+    _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "src",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            }
+        ],
+    )
+    config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    try:
+        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {"force": True})
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "force" in body["error"]["message"]
+    # Side-effect-free: nothing was written.
+    assert not (tmp_path / "mock_data_config.json").exists()
+
+
 def test_set_column_type_round_trip(running_server: str):
     _, snapshot = _fetch("GET", f"{running_server}/api/state")
     version = snapshot["snapshot_version"]
@@ -142,7 +254,7 @@ def test_set_column_type_round_trip(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "categorical",
             "expected_version": version,
@@ -160,7 +272,7 @@ def test_set_column_type_validation_error(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "not_a_type",
             "expected_version": snapshot["snapshot_version"],
@@ -175,10 +287,44 @@ def test_set_column_type_missing_field(running_server: str):
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-type",
-        {"source": "src", "column": "x"},  # no type, no expected_version
+        {"sources": ["src"], "column": "x"},  # no type, no expected_version
     )
     assert status == 400
     assert body["error"]["code"] == "validation"
+
+
+def test_set_column_type_rejects_empty_sources(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-type",
+        {
+            "sources": [],
+            "column": "Mystery",
+            "type": "categorical",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "non-empty" in body["error"]["message"]
+
+
+def test_set_column_type_rejects_non_array_sources(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-type",
+        {
+            "sources": "src",
+            "column": "Mystery",
+            "type": "categorical",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "array" in body["error"]["message"]
 
 
 def test_stale_state_returns_409_with_fresh_state(running_server: str):
@@ -192,7 +338,7 @@ def test_stale_state_returns_409_with_fresh_state(running_server: str):
         "POST",
         f"{running_server}/api/column-type",
         {
-            "source": "src",
+            "sources": ["src"],
             "column": "Mystery",
             "type": "categorical",
             "expected_version": "stale-token",

@@ -218,7 +218,7 @@ def test_set_column_type_marks_manual(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     snap2 = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "Mystery",
         "categorical",
         expected_version=snap.snapshot_version,
@@ -235,8 +235,26 @@ def test_set_column_type_rejects_unknown_pair(tmp_path: Path):
     with pytest.raises(ValidationError, match="not found in discover"):
         set_column_type(
             tmp_path,
-            "x",
+            ["x"],
             "DoesNotExist",
+            "id",
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_column_type_rejects_scalar_string_source(tmp_path: Path):
+    """A bare ``str`` satisfies ``Sequence[str]`` structurally; without
+    the runtime guard ``list("src")`` would silently iterate per
+    character. Caller misuse must fail loudly."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not a single str"):
+        set_column_type(
+            tmp_path,
+            "x",  # type: ignore[arg-type]
+            "LopNr",
             "id",
             expected_version=snap.snapshot_version,
         )
@@ -250,7 +268,7 @@ def test_set_column_type_rejects_unknown_type(tmp_path: Path):
     with pytest.raises(ValidationError, match="expected one of"):
         set_column_type(
             tmp_path,
-            "x",
+            ["x"],
             "LopNr",
             "blob",
             expected_version=snap.snapshot_version,
@@ -267,7 +285,7 @@ def test_set_column_type_hint_unchanged_dropped_when_invalid(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "BirthDate",
         "date",
         hint={"date_format": "%Y%m%d"},
@@ -276,7 +294,7 @@ def test_set_column_type_hint_unchanged_dropped_when_invalid(tmp_path: Path):
     assert snap.config.column_types["x"]["BirthDate"].date_format == "%Y%m%d"
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "BirthDate",
         "numeric",
         expected_version=snap.snapshot_version,
@@ -293,7 +311,7 @@ def test_set_column_type_hint_none_clears(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "Salary",
         "numeric",
         hint={"numeric_subtype": "integer"},
@@ -301,7 +319,7 @@ def test_set_column_type_hint_none_clears(tmp_path: Path):
     )
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "Salary",
         "numeric",
         hint=None,
@@ -319,7 +337,7 @@ def test_set_column_type_rejects_invalid_hint_key(tmp_path: Path):
     with pytest.raises(ValidationError, match="not valid for type"):
         set_column_type(
             tmp_path,
-            "x",
+            ["x"],
             "Salary",
             "numeric",
             hint={"date_format": "%Y%m%d"},
@@ -347,7 +365,7 @@ def test_set_column_type_drops_options_on_type_change(tmp_path: Path):
     # Flip type opaque → id; column_options should be dropped.
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "Code",
         "id",
         expected_version=snap.snapshot_version,
@@ -372,12 +390,136 @@ def test_set_column_type_preserves_options_when_type_unchanged(tmp_path: Path):
     # Re-assert the existing type — options should survive.
     snap = set_column_type(
         tmp_path,
-        "x",
+        ["x"],
         "Code",
         "opaque",
         expected_version=snap.snapshot_version,
     )
     assert snap.config.column_options["x"]["Code"] == {"suppress_k": 20}
+
+
+def test_set_column_type_bulk_applies_to_all_sources(tmp_path: Path):
+    """Bulk apply: every targeted source gets the new type, every pair
+    lands in manual_columns, and the snapshot_version advances exactly
+    once for the whole call."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": f"y{yr}",
+                "columns": [{"name": "Kommun", "sql_type": "VARCHAR"}],
+            }
+            for yr in (2018, 2019, 2020)
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    v_before = snap.snapshot_version
+    snap = set_column_type(
+        tmp_path,
+        ["y2018", "y2019", "y2020"],
+        "Kommun",
+        "id",
+        expected_version=v_before,
+        hint={"id_subtype": "string"},
+    )
+    for sn in ("y2018", "y2019", "y2020"):
+        entry = snap.config.column_types[sn]["Kommun"]
+        assert entry.type == "id"
+        assert entry.id_subtype == "string"
+        assert (sn, "Kommun") in snap.config.manual_columns
+    # One write → one new version.
+    assert snap.snapshot_version != v_before
+
+
+def test_set_column_type_bulk_drops_column_options_per_source(tmp_path: Path):
+    """A type change should drop column_options for every targeted source
+    that had options, identically to the single-source path."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "Code", "sql_type": "VARCHAR"}]},
+            {"source_name": "b", "columns": [{"name": "Code", "sql_type": "VARCHAR"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_options(
+        tmp_path,
+        "a",
+        "Code",
+        {"suppress_k": 20},
+        expected_version=snap.snapshot_version,
+    )
+    snap = set_column_options(
+        tmp_path,
+        "b",
+        "Code",
+        {"suppress_k": 20},
+        expected_version=snap.snapshot_version,
+    )
+    snap = set_column_type(
+        tmp_path,
+        ["a", "b"],
+        "Code",
+        "id",
+        expected_version=snap.snapshot_version,
+    )
+    assert "a" not in snap.config.column_options
+    assert "b" not in snap.config.column_options
+
+
+def test_set_column_type_bulk_atomic_on_bad_pair(tmp_path: Path):
+    """If any (source, column) pair is unknown, the entire bulk call
+    aborts with no on-disk change."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "Code"}]},
+            {"source_name": "b", "columns": [{"name": "Other"}]},  # no "Code"
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    v_before = snap.snapshot_version
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_column_type(
+            tmp_path,
+            ["a", "b"],
+            "Code",
+            "id",
+            expected_version=v_before,
+        )
+    snap_after = editor.get_state(tmp_path)
+    assert snap_after.snapshot_version == v_before
+    # `a` was the valid pair but must NOT have been written before the
+    # second pair's validation failed.
+    assert (
+        "Code" not in snap_after.config.column_types.get("a", {})
+        or snap_after.config.column_types["a"]["Code"].type == "opaque"
+    )
+    assert ("a", "Code") not in snap_after.config.manual_columns
+
+
+def test_set_column_type_rejects_empty_sources(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="non-empty"):
+        set_column_type(tmp_path, [], "C", "id", expected_version=snap.snapshot_version)
+
+
+def test_set_column_type_rejects_duplicate_sources(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="duplicates"):
+        set_column_type(
+            tmp_path,
+            ["x", "x"],
+            "C",
+            "id",
+            expected_version=snap.snapshot_version,
+        )
 
 
 # -- set_group_register ----------------------------------------------------
@@ -447,7 +589,7 @@ def test_set_group_register_preserves_manual_override(tmp_path: Path, monkeypatc
     snap = init_if_missing(tmp_path, discover_path)
     snap = set_column_type(
         tmp_path,
-        "src1",
+        ["src1"],
         "Mystery",
         "numeric",
         expected_version=snap.snapshot_version,
@@ -494,7 +636,7 @@ def test_set_group_register_reclassify_manual_clears_override(
     snap = init_if_missing(tmp_path, discover_path)
     snap = set_column_type(
         tmp_path,
-        "src1",
+        ["src1"],
         "Mystery",
         "numeric",
         expected_version=snap.snapshot_version,
@@ -795,7 +937,7 @@ def test_concurrent_mutations_serialize_without_clobber(tmp_path: Path, monkeypa
         barrier.wait()
         try:
             results[key] = set_column_type(
-                tmp_path, "x", col, "id", expected_version=v0
+                tmp_path, ["x"], col, "id", expected_version=v0
             )
         except StaleStateError as exc:
             results[key] = exc

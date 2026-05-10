@@ -495,14 +495,19 @@ override the regmeta DB location.
 
 **Mutators** (all require `expected_version: str`).
 
-- `set_column_type(project_dir, source_name, column_name, new_type, *,
-  expected_version, hint=UNCHANGED, db_path=None)` — sets the type of
-  one column. `(source_name, column_name)` must exist in the discover
-  payload; unknown pairs raise `ValidationError`. Adds the pair to
-  `manual_columns`. `hint` semantics: `UNCHANGED` preserves any
-  existing hint that's still valid for `new_type` (silently dropped
-  otherwise); `None` clears any hint; a dict sets it (validated
-  against `INLINE_HINT_KEYS[new_type]`).
+- `set_column_type(project_dir, source_names, column_name, new_type,
+  *, expected_version, hint=UNCHANGED, db_path=None)` — sets the type
+  of `column_name` across one or more sources. `source_names` is a
+  non-empty sequence; every `(sn, column_name)` pair must exist in
+  the discover payload (a single bad pair aborts the whole call with
+  no on-disk changes). All affected pairs land in `manual_columns`.
+  Bulk semantics: per-source updates happen under one `_config_lock`
+  and one `_atomic_write`, so the snapshot version advances exactly
+  once and clients can't observe a partial apply. `hint` is
+  validated once and applied identically to every targeted source;
+  `UNCHANGED` preserves any existing hint that's still valid for
+  `new_type` (silently dropped otherwise); `None` clears any hint;
+  a dict sets it (validated against `INLINE_HINT_KEYS[new_type]`).
 - `set_group_register(project_dir, group_id, register, *,
   expected_version, db_path=None, reclassify_manual=False)` —
   assigns or clears a register for a group, then re-classifies. With
@@ -950,10 +955,21 @@ body bytes are read.
 | Method | Path | Editor call | Errors |
 | --- | --- | --- | --- |
 | GET  | `/api/state` | `editor.get_state` | 404 not_initialized |
+| POST | `/api/init` | `editor.init_if_missing` | 404 not_initialized (no config and no discover file), 400 validation |
 | POST | `/api/column-type` | `editor.set_column_type` | 400 validation, 409 stale_state |
 | POST | `/api/group-register` | `editor.set_group_register` | 400 validation, 409 stale_state |
 | GET  | `/api/registers` | `editor.list_registers` | — |
 | GET  | `/`, `/assets/*` | static SPA bundle | 404 not_found |
+
+`POST /api/init` is idempotent: runs `init_if_missing` against
+`project_dir/mock_data_discovery.json` for first-time bootstrap. If the
+config already exists, returns the current snapshot — discover.json is
+not required in this branch, so callers can re-poll `/api/init` as a
+safe no-op without tracking local file state. The endpoint exists so
+the SPA can offer a one-click bootstrap when `GET /api/state` returns
+`not_initialized` — without it, a fresh project lands on a hard error
+and the user has to drop into Python. Overwrite mode is deliberately
+not exposed; clobbering manual edits requires deleting the file.
 
 Error envelope: `{"error": {"code", "message", "context?"}}`. The 409
 `stale_state` envelope carries the fresh `StateSnapshot` in
