@@ -1,35 +1,29 @@
 <script lang="ts">
   import { untrack } from "svelte";
 
-  import { store } from "../store.svelte";
+  import { columnIsManual, store } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
   import Modal from "./Modal.svelte";
 
   interface Props {
     /** Sources making up the partition the user clicked. The scope
-     *  picker can narrow this to one or widen it to the whole register
-     *  (when registerSourcesWithColumn is a strict superset). */
+     *  picker can narrow this to one or widen it to every carrier in
+     *  `cellBySource` (when that's a strict superset). */
     sources: string[];
-    /** Sources in the surrounding register that actually carry this
-     *  column. Used as the target for register-wide reconcile so the
-     *  request never includes sources where the column is missing —
-     *  the server validates every (source, column) pair and would
-     *  reject the whole call otherwise. Equal to `sources` when the
-     *  partition already spans every carrier. */
-    registerSourcesWithColumn: string[];
+    /** Carrier source → ColumnInfo for the edited column. Keys are
+     *  every source in the surrounding register that actually carries
+     *  the column — the server validates every (source, column) pair
+     *  and would reject a call that includes a source missing it. */
+    cellBySource: Record<string, ColumnInfo>;
     /** Cosmetic — used in modal copy. */
     registerName: string | null;
     column: ColumnInfo;
     onClose: () => void;
   }
 
-  let {
-    sources,
-    registerSourcesWithColumn,
-    registerName,
-    column,
-    onClose,
-  }: Props = $props();
+  let { sources, cellBySource, registerName, column, onClose }: Props = $props();
+
+  let registerSourcesWithColumn = $derived(Object.keys(cellBySource));
 
   const TYPES: ColumnType[] = ["id", "categorical", "numeric", "opaque", "date"];
 
@@ -68,6 +62,14 @@
     if (scope === "register") return [...registerSourcesWithColumn];
     return [...sources];
   });
+
+  // Manual-override count in current scope; drives the Unset button.
+  let manualInScopeCount = $derived(
+    effectiveSources
+      .map((sn) => cellBySource[sn])
+      .filter((c): c is ColumnInfo => c !== undefined)
+      .filter(columnIsManual).length,
+  );
 
   // SCB register names are usually "Long descriptive name (ACRONYM)".
   // The full name is fine in the modal subline (which can wrap onto
@@ -111,6 +113,32 @@
     if (selectedType === "date" && dateFormat)
       return { date_format: dateFormat };
     return null;
+  }
+
+  async function unsetManual(): Promise<void> {
+    if (submitting) return;
+    const version = store.snapshot?.snapshot_version;
+    if (!version) return;
+    // Server silently skips non-manual pairs, so we send the whole scope.
+    // Snapshot the count before await — the snapshot may advance under
+    // us and re-derive `manualInScopeCount` against the cleared state.
+    const n = manualInScopeCount;
+    submitting = true;
+    const ok = await store.unsetColumnManual({
+      sources: effectiveSources,
+      column: column.name,
+      expected_version: version,
+    });
+    submitting = false;
+    if (ok) {
+      store.pushToast(
+        "info",
+        n === 1
+          ? `Cleared manual override on ${column.name}`
+          : `Cleared ${n} manual overrides on ${column.name}`,
+      );
+      onClose();
+    }
   }
 
   async function submit(event: SubmitEvent): Promise<void> {
@@ -191,10 +219,16 @@
           column known to regmeta but with no classification, codes, or
           datatype hint.
         {/if}
+        {#if sources.length > 1}
+          <span class="regmeta-scope-note">
+            (from {sources[0]}; other sources in this partition may differ)
+          </span>
+        {/if}
       </p>
     {:else}
       <p class="regmeta-context regmeta-missing">
-        regmeta: no record for this column name.
+        regmeta: no record for this column name{#if sources.length > 1} (checked
+          on {sources[0]}){/if}.
       </p>
     {/if}
 
@@ -285,6 +319,21 @@
     {/if}
 
     <footer>
+      {#if manualInScopeCount > 0}
+        <button
+          type="button"
+          class="unset"
+          onclick={unsetManual}
+          disabled={submitting}
+          title={`Drop the manual marker and re-run auto classification on ${manualInScopeCount} cell${manualInScopeCount === 1 ? "" : "s"} in scope`}
+        >
+          {#if manualInScopeCount === 1}
+            Unset manual override
+          {:else}
+            Unset · {manualInScopeCount} manual
+          {/if}
+        </button>
+      {/if}
       <button type="button" onclick={onClose} disabled={submitting}
         >Cancel</button
       >
@@ -396,6 +445,12 @@
     border-left-color: #f0c14b;
     color: #5b4a14;
   }
+  .regmeta-scope-note {
+    color: #888;
+    font-style: italic;
+    display: inline-block;
+    margin-left: 0.25rem;
+  }
   fieldset {
     border: 1px solid #ddd;
     border-radius: 4px;
@@ -457,6 +512,17 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .unset {
+    /* Destructive-flavoured but not primary: an orange tint signals
+       "this drops your edit" without competing with the blue Save. */
+    border-color: #d49a4f;
+    color: #884a14;
+    margin-right: auto;
+  }
+  .unset:hover:not(:disabled) {
+    background: #fdf3e3;
   }
   button {
     padding: 0.4rem 0.9rem;

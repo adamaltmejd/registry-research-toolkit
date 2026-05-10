@@ -86,7 +86,18 @@
     oninput?.();
   }
 
+  // Cancelled by a fast blur→focus (e.g. clicking the listbox) to avoid
+  // dropdown flicker.
+  let blurCloseTimer: ReturnType<typeof setTimeout> | null = null;
+  $effect(() => () => {
+    if (blurCloseTimer !== null) clearTimeout(blurCloseTimer);
+  });
+
   function handleFocus() {
+    if (blurCloseTimer !== null) {
+      clearTimeout(blurCloseTimer);
+      blurCloseTimer = null;
+    }
     open = true;
   }
 
@@ -96,7 +107,9 @@
     // focus moves (Tab) without the timeout race.
     const next = event.relatedTarget as Node | null;
     if (next && listEl?.contains(next)) return;
-    setTimeout(() => {
+    if (blurCloseTimer !== null) clearTimeout(blurCloseTimer);
+    blurCloseTimer = setTimeout(() => {
+      blurCloseTimer = null;
       open = false;
     }, 100);
   }

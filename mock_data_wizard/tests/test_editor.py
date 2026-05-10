@@ -35,6 +35,7 @@ from mock_data_wizard.editor import (
     set_column_type,
     set_group_register,
     set_source_metadata,
+    unset_column_manual_override,
 )
 
 
@@ -490,11 +491,10 @@ def test_set_column_type_bulk_atomic_on_bad_pair(tmp_path: Path):
     snap_after = editor.get_state(tmp_path)
     assert snap_after.snapshot_version == v_before
     # `a` was the valid pair but must NOT have been written before the
-    # second pair's validation failed.
-    assert (
-        "Code" not in snap_after.config.column_types.get("a", {})
-        or snap_after.config.column_types["a"]["Code"].type == "opaque"
-    )
+    # second pair's validation failed: the partial apply would have set
+    # type="id" and added the manual marker.
+    code_a = snap_after.config.column_types.get("a", {}).get("Code")
+    assert code_a is None or code_a.type != "id"
     assert ("a", "Code") not in snap_after.config.manual_columns
 
 
@@ -520,6 +520,253 @@ def test_set_column_type_rejects_duplicate_sources(tmp_path: Path):
             "id",
             expected_version=snap.snapshot_version,
         )
+
+
+def test_set_column_type_noop_does_not_mark_manual(tmp_path: Path):
+    """Re-asserting the same type+hint must not promote auto → manual.
+    Re-saving without changes is a common cancel-by-mistake; silently
+    flipping provenance is surprising."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "LopNr", "sql_type": "BIGINT"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    auto_type = snap.config.column_types["x"]["LopNr"].type
+    v_before = snap.snapshot_version
+    snap2 = set_column_type(
+        tmp_path,
+        ["x"],
+        "LopNr",
+        auto_type,
+        expected_version=v_before,
+    )
+    # Re-asserting the auto type is a no-op: no manual marker, no
+    # snapshot bump.
+    assert ("x", "LopNr") not in snap2.config.manual_columns
+    assert snap2.snapshot_version == v_before
+
+
+def test_set_column_type_noop_preserves_existing_manual_marker(tmp_path: Path):
+    """Re-saving an already-manual cell with the same value keeps the
+    manual marker (it was set on a prior actual change)."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_type(
+        tmp_path,
+        ["x"],
+        "Mystery",
+        "categorical",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("x", "Mystery") in snap.config.manual_columns
+    v_after_first = snap.snapshot_version
+    # Re-save same value — marker stays, no version bump.
+    snap2 = set_column_type(
+        tmp_path,
+        ["x"],
+        "Mystery",
+        "categorical",
+        expected_version=v_after_first,
+    )
+    assert ("x", "Mystery") in snap2.config.manual_columns
+    assert snap2.snapshot_version == v_after_first
+
+
+def test_set_column_type_partial_noop_only_marks_changed_sources(tmp_path: Path):
+    """Bulk apply where some sources match and some don't: only the
+    sources whose value actually changes get the manual marker."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+            {"source_name": "b", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    # First, edit only `a` to id (manual).
+    snap = set_column_type(
+        tmp_path,
+        ["a"],
+        "K",
+        "id",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("a", "K") in snap.config.manual_columns
+    assert ("b", "K") not in snap.config.manual_columns
+    # Now bulk-apply id to both. `a` is already id → no-op for `a`;
+    # `b` changes → manual marker added.
+    snap2 = set_column_type(
+        tmp_path,
+        ["a", "b"],
+        "K",
+        "id",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("a", "K") in snap2.config.manual_columns
+    assert ("b", "K") in snap2.config.manual_columns
+    # Snapshot did advance (b changed).
+    assert snap2.snapshot_version != snap.snapshot_version
+
+
+# -- unset_column_manual_override -----------------------------------------
+
+
+def test_unset_column_manual_override_clears_marker_and_reclassifies(
+    tmp_path: Path, monkeypatch
+):
+    """Removing the manual marker should re-run classification so the
+    cell's type returns to the auto value."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    auto_type = snap.config.column_types["x"]["Mystery"].type
+    # Force a manual override to a different type.
+    snap = set_column_type(
+        tmp_path,
+        ["x"],
+        "Mystery",
+        "id",
+        hint={"id_subtype": "string"},
+        expected_version=snap.snapshot_version,
+    )
+    assert ("x", "Mystery") in snap.config.manual_columns
+    assert snap.config.column_types["x"]["Mystery"].type == "id"
+    # Unset.
+    snap2 = unset_column_manual_override(
+        tmp_path,
+        ["x"],
+        "Mystery",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("x", "Mystery") not in snap2.config.manual_columns
+    assert snap2.config.column_types["x"]["Mystery"].type == auto_type
+    # column_options for this cell should be dropped if the type changed.
+    assert "Mystery" not in snap2.config.column_options.get("x", {})
+
+
+def test_unset_column_manual_override_silent_skip_on_non_manual(tmp_path: Path):
+    """Pairs that aren't currently manual are silently skipped — no-op,
+    no version bump."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "K", "sql_type": "VARCHAR"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    v_before = snap.snapshot_version
+    snap2 = unset_column_manual_override(
+        tmp_path,
+        ["x"],
+        "K",
+        expected_version=v_before,
+    )
+    assert snap2.snapshot_version == v_before
+    assert ("x", "K") not in snap2.config.manual_columns
+
+
+def test_unset_column_manual_override_partial_targets(tmp_path: Path):
+    """When the call lists a mix of manual and non-manual sources, only
+    the manual ones are reclassified; non-manual ones are untouched."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+            {"source_name": "b", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    # Manual on `a` only.
+    snap = set_column_type(
+        tmp_path,
+        ["a"],
+        "K",
+        "id",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("a", "K") in snap.config.manual_columns
+    # Unset across both; only `a` is affected.
+    snap2 = unset_column_manual_override(
+        tmp_path,
+        ["a", "b"],
+        "K",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("a", "K") not in snap2.config.manual_columns
+    assert ("b", "K") not in snap2.config.manual_columns
+    assert snap2.snapshot_version != snap.snapshot_version
+
+
+def test_unset_column_manual_override_rejects_empty_sources(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="non-empty"):
+        unset_column_manual_override(
+            tmp_path, [], "C", expected_version=snap.snapshot_version
+        )
+
+
+def test_unset_column_manual_override_rejects_unknown_pair(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        unset_column_manual_override(
+            tmp_path,
+            ["x"],
+            "DoesNotExist",
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_unset_column_manual_override_rejects_str_source_names(tmp_path: Path):
+    """A bare string would split into single chars under ``list(...)`` — guard
+    against it the same way ``set_column_type`` does."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "C"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be a sequence"):
+        unset_column_manual_override(
+            tmp_path,
+            "x",  # type: ignore[arg-type]
+            "C",
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_unset_column_manual_override_atomic_on_partial_unknown(tmp_path: Path):
+    """Validation is all-or-nothing: a single unknown pair aborts the call
+    with no on-disk changes, even when other pairs would succeed."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "a", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+            {"source_name": "b", "columns": [{"name": "K", "sql_type": "VARCHAR"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_column_type(
+        tmp_path, ["a"], "K", "id", expected_version=snap.snapshot_version
+    )
+    v_before = snap.snapshot_version
+    with pytest.raises(ValidationError, match="not found in discover"):
+        unset_column_manual_override(
+            tmp_path,
+            ["a", "ghost"],
+            "K",
+            expected_version=v_before,
+        )
+    # Marker on `a` is preserved; no partial apply.
+    snap_after = get_state(tmp_path)
+    assert snap_after.snapshot_version == v_before
+    assert ("a", "K") in snap_after.config.manual_columns
 
 
 # -- set_group_register ----------------------------------------------------

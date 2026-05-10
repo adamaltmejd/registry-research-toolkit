@@ -154,6 +154,7 @@
     // if the user changes the register again mid-flow.
     confirming = false;
   }
+
 </script>
 
 <Modal headingId="register-editor-heading" {onClose}>
@@ -207,7 +208,11 @@
 
     {#if manualCount > 0}
       <label class="checkbox">
-        <input type="checkbox" bind:checked={reclassifyManual} />
+        <input
+          type="checkbox"
+          bind:checked={reclassifyManual}
+          onchange={() => (confirming = false)}
+        />
         Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
       </label>
     {/if}

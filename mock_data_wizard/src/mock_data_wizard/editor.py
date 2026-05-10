@@ -1001,6 +1001,23 @@ def _assert_column_in_discover(
         )
 
 
+def _drop_column_options(
+    column_options: dict[str, dict[str, Any]] | None,
+    source_name: str,
+    column_name: str,
+) -> None:
+    """Drop the ``column_options`` entry for one cell, pruning the empty
+    source dict when it was the last column. Called whenever a cell's
+    type changes — options can be type-specific."""
+    if not column_options:
+        return
+    opts = column_options.get(source_name)
+    if opts and column_name in opts:
+        opts.pop(column_name, None)
+        if not opts:
+            column_options.pop(source_name, None)
+
+
 def _assert_source_in_discover(
     project_dir: Path, payload: dict[str, Any], source_name: str
 ) -> None:
@@ -1080,6 +1097,7 @@ def set_column_type(
         column_types = payload.setdefault("column_types", {})
         column_options = payload.get("column_options")
         manual = payload.get("manual_columns", [])
+        dirty = False
 
         for sn in sources_list:
             cols = column_types.setdefault(sn, {})
@@ -1092,16 +1110,18 @@ def set_column_type(
                 new_entry = {"type": new_type}
                 if shared_validated_hint:
                     new_entry.update(shared_validated_hint)
-            cols[column_name] = new_entry
 
-            # Type changed: drop column_options for this column. Mirrors
-            # set_group_register's reclassification path.
-            if old_type is not None and old_type != new_type and column_options:
-                opts_for_source = column_options.get(sn)
-                if opts_for_source and column_name in opts_for_source:
-                    opts_for_source.pop(column_name, None)
-                    if not opts_for_source:
-                        column_options.pop(sn, None)
+            # Re-asserting same type+hint shouldn't promote auto→manual
+            # (cancel-by-mistake on Save is common). Already-manual cells
+            # stay manual — their pair is already in `manual`.
+            if existing == new_entry:
+                continue
+
+            cols[column_name] = new_entry
+            dirty = True
+
+            if old_type is not None and old_type != new_type:
+                _drop_column_options(column_options, sn, column_name)
 
             pair = [sn, column_name]
             if pair not in manual:
@@ -1111,6 +1131,120 @@ def set_column_type(
             payload.pop("column_options", None)
         if manual:
             payload["manual_columns"] = manual
+
+        if dirty:
+            _atomic_write(_config_path(project_dir), payload)
+    return get_state(project_dir, db_path=db_path)
+
+
+def unset_column_manual_override(
+    project_dir: Path,
+    source_names: Sequence[str],
+    column_name: str,
+    *,
+    expected_version: str,
+    db_path: Path | None = None,
+) -> StateSnapshot:
+    """Drop manual-override markers for ``column_name`` across one or more
+    sources and re-classify those cells from scratch. Pairs that aren't
+    currently in ``manual_columns`` are silently skipped — the contract
+    is "ensure not manual", not "fail when not manual".
+
+    Bulk semantics mirror ``set_column_type``: every ``(sn, column_name)``
+    pair is validated against discover before any write; the snapshot
+    advances exactly once. ``column_options`` for the cell is dropped
+    when the new auto type differs from the existing one (mirrors the
+    set_group_register reclassify path)."""
+    # `str` and `bytes` satisfy `Sequence[str]` structurally, so without
+    # this guard `list("src")` would silently produce `['s', 'r', 'c']`.
+    if isinstance(source_names, (str, bytes)):
+        raise ValidationError(
+            f"source_names must be a sequence of source names, not a single "
+            f"{type(source_names).__name__}; pass [source_name] for one source."
+        )
+    sources_list = list(source_names)
+    if not sources_list:
+        raise ValidationError("source_names must be non-empty")
+    if len(set(sources_list)) != len(sources_list):
+        raise ValidationError(f"source_names contains duplicates: {sources_list}")
+
+    project_dir = Path(project_dir)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+
+        # Read discover once and reuse for both validation and reclassify.
+        # Re-reading would open a TOCTOU window where a source visible at
+        # validation time vanishes before classification, leading to a
+        # partial apply (some markers cleared, others left stale).
+        discover = _load_local_discover(project_dir)
+        sources_by_name: dict[str, dict[str, Any]] | None = (
+            {s["source_name"]: s for s in discover.get("sources", [])}
+            if discover is not None
+            else None
+        )
+        for sn in sources_list:
+            if sources_by_name is not None:
+                src = sources_by_name.get(sn)
+                found = src is not None and any(
+                    c["name"] == column_name for c in src.get("columns", [])
+                )
+            else:
+                # Fallback when discover is absent: trust existing column_types.
+                found = column_name in payload.get("column_types", {}).get(sn, {})
+            if not found:
+                raise ValidationError(
+                    f"({sn!r}, {column_name!r}) not found in discover or "
+                    f"existing column_types — refusing to silently create entries."
+                )
+
+        manual_pairs = {tuple(p) for p in payload.get("manual_columns", [])}
+        to_clear = [sn for sn in sources_list if (sn, column_name) in manual_pairs]
+        if not to_clear:
+            return get_state(project_dir, db_path=db_path)
+
+        # Reclassify needs the discover schema; bail loudly if it's gone.
+        if sources_by_name is None:
+            raise ValidationError(
+                f"unset_column_manual_override requires {DISCOVER_FILENAME_DEFAULT} "
+                f"next to the config to re-classify the column."
+            )
+
+        sources_block = payload.setdefault("sources", {})
+        column_types = payload.setdefault("column_types", {})
+        column_options = payload.get("column_options")
+
+        # Group by register so each register's signals batch into one DB hit.
+        by_register: dict[str | None, list[str]] = {}
+        for sn in to_clear:
+            register_str = sources_block.get(sn, {}).get("register") or None
+            by_register.setdefault(register_str, []).append(sn)
+
+        for register_str, group_sources in by_register.items():
+            signals = (
+                _resolve_signals_for_register(register_str, {column_name}, db_path)
+                if register_str is not None
+                else {}
+            )
+            for sn in group_sources:
+                # Validation above proved the pair exists in our discover
+                # snapshot, so direct indexing is safe here.
+                src = sources_by_name[sn]
+                src_columns = [
+                    c for c in src.get("columns", []) if c["name"] == column_name
+                ]
+                classified = _classify_columns(src_columns, register_str, signals)
+                new_entry = classified[column_name]
+                cols = column_types.setdefault(sn, {})
+                old_type = cols.get(column_name, {}).get("type")
+                cols[column_name] = new_entry
+                if old_type is not None and old_type != new_entry["type"]:
+                    _drop_column_options(column_options, sn, column_name)
+                manual_pairs.discard((sn, column_name))
+
+        if column_options is not None and not column_options:
+            payload.pop("column_options", None)
+        # Sort for deterministic JSON output (matches set_group_register).
+        payload["manual_columns"] = [list(p) for p in sorted(manual_pairs)]
 
         _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
@@ -1216,13 +1350,7 @@ def set_group_register(
                 new_type = classified["type"]
                 out_cols[col_name] = classified
                 if old_type is not None and old_type != new_type:
-                    # Type changed: drop column_options for this column
-                    # (session decision — options can be type-specific).
-                    opts_for_source = column_options.get(sn)
-                    if opts_for_source and col_name in opts_for_source:
-                        opts_for_source.pop(col_name, None)
-                        if not opts_for_source:
-                            column_options.pop(sn, None)
+                    _drop_column_options(column_options, sn, col_name)
             column_types[sn] = out_cols
 
         if reclassify_manual:

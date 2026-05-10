@@ -40,9 +40,13 @@
   // here on purpose.
   function focusableTargets(): HTMLElement[] {
     if (!cardEl) return [];
+    // `summary` is focusable when its parent `<details>` is the standard
+    // disclosure widget — omitting it would let Tab jump out of the trap
+    // when a `<details>` (e.g. ColumnTypeEditor's "show source names") is
+    // the natural next focus target.
     return Array.from(
       cardEl.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), summary, [tabindex]:not([tabindex="-1"])',
       ),
     ).filter((el) => !el.hasAttribute("inert"));
   }

@@ -99,6 +99,24 @@ export function setColumnType(args: SetColumnTypeArgs): Promise<StateSnapshot> {
   });
 }
 
+export interface UnsetColumnManualArgs {
+  /** Non-empty list of sources whose manual marker on `column` should be
+   *  cleared. Pairs that aren't currently manual are silently skipped. */
+  sources: string[];
+  column: string;
+  expected_version: string;
+}
+
+export function unsetColumnManual(
+  args: UnsetColumnManualArgs,
+): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/unset-column-manual", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
 export interface SetGroupRegisterArgs {
   group_id: string;
   register: string | null;
