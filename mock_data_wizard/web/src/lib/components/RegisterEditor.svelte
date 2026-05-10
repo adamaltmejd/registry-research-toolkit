@@ -59,12 +59,23 @@
       !canValidateLocally ||
       registerNames.has(trimmedRegister),
   );
-  let canApply = $derived(registerChanged && inputResolves && !submitting);
-  // Confirm step only fires when the register actually changes AND the
-  // sources have manual edits that would be at risk. Earlier this was
-  // gated only on manual count, which made every Apply two clicks even
-  // when the input was unchanged.
-  let needsConfirm = $derived(registerChanged && manualCount > 0);
+  // Apply is enabled when there is some change to make: either the
+  // register itself changes, or the user opts to reclassify manual
+  // overrides on the (possibly unchanged) register. The latter is the
+  // only UI path to drop accidental manual type edits without a
+  // register flip — set_group_register on the server runs reclassify
+  // regardless of whether the register value moved.
+  let intendsReclassify = $derived(reclassifyManual && manualCount > 0);
+  let canApply = $derived(
+    (registerChanged || intendsReclassify) && inputResolves && !submitting,
+  );
+  // Confirm step fires whenever a destructive reclassification is
+  // queued: a register change with manuals at risk, or an explicit
+  // reclassify-manuals tick. No-op submits are blocked by canApply, so
+  // the confirm step never fires on unchanged input.
+  let needsConfirm = $derived(
+    (registerChanged && manualCount > 0) || intendsReclassify,
+  );
 
   function valueOrNull(): string | null {
     return trimmedRegister === "" ? null : trimmedRegister;
@@ -73,21 +84,31 @@
   async function commit(): Promise<void> {
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
+    // Capture values that drive the success toast before the API call:
+    // the snapshot refresh during `await` re-derives manualCount (now 0
+    // for a successful reclassify), which would otherwise pick the wrong
+    // toast branch.
+    const wasReclassifyOnly = !registerChanged && intendsReclassify;
+    const reclassifiedCount = manualCount;
+    const finalValue = valueOrNull();
     submitting = true;
     const ok = await store.setGroupRegister({
       group_id: group.group_id,
-      register: valueOrNull(),
+      register: finalValue,
       expected_version: version,
       reclassify_manual: reclassifyManual,
     });
     submitting = false;
     if (ok) {
-      const verb = valueOrNull() === null ? "Cleared" : "Set";
-      const tail =
-        valueOrNull() === null
-          ? `register on ${group.group_id}`
-          : `${group.group_id} → ${valueOrNull()}`;
-      store.pushToast("info", `${verb} ${tail}`);
+      let message: string;
+      if (wasReclassifyOnly) {
+        message = `Re-classified ${reclassifiedCount} manual column${reclassifiedCount === 1 ? "" : "s"} on ${group.group_id}`;
+      } else if (finalValue === null) {
+        message = `Cleared register on ${group.group_id}`;
+      } else {
+        message = `Set ${group.group_id} → ${finalValue}`;
+      }
+      store.pushToast("info", message);
       onClose();
     }
   }
@@ -95,7 +116,7 @@
   async function onSubmit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
     if (submitting) return;
-    if (!registerChanged) return; // no-op guard, also covered by canApply
+    if (!registerChanged && !intendsReclassify) return; // no-op guard
     if (!inputResolves) {
       validationError = `'${trimmedRegister}' is not a known register name. Pick one from the autocomplete or leave the field empty to clear the assignment.`;
       return;
@@ -173,10 +194,10 @@
       </p>
     {/if}
 
-    {#if manualCount > 0 && registerChanged}
+    {#if manualCount > 0}
       <label class="checkbox">
         <input type="checkbox" bind:checked={reclassifyManual} />
-        Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"} too
+        Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
       </label>
     {/if}
 
@@ -199,7 +220,7 @@
         type="submit"
         class="primary"
         disabled={!canApply}
-        title={!registerChanged
+        title={!registerChanged && !intendsReclassify
           ? "No change to apply"
           : !inputResolves
             ? "Pick a known register"

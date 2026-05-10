@@ -45,9 +45,17 @@ const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
 
 function loadGroupingPref(): boolean {
   if (typeof localStorage === "undefined") return true;
-  const raw = localStorage.getItem(VIEW_PREF_KEY);
-  if (raw === null) return true; // default: grouped
-  return raw === "true";
+  // localStorage access can throw SecurityError in privacy-restricted
+  // or opaque-origin contexts; falling back to the default keeps app
+  // startup from blowing up before the UI renders. The write path
+  // already swallows the same error.
+  try {
+    const raw = localStorage.getItem(VIEW_PREF_KEY);
+    if (raw === null) return true; // default: grouped
+    return raw === "true";
+  } catch {
+    return true;
+  }
 }
 
 function saveGroupingPref(value: boolean): void {
