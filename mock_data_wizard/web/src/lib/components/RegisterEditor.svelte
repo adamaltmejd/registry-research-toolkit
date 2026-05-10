@@ -31,7 +31,6 @@
   });
 
   let registers = $derived(store.registers ?? []);
-  let registerNames = $derived(new Set(registers.map((r) => r.name)));
   // When the register list couldn't load (regmeta unavailable), the
   // client-side gate has nothing to validate against. Skip it so manual
   // entry still works; the server-side validator stays the source of
@@ -40,6 +39,27 @@
   let canValidateLocally = $derived(
     !store.registersUnavailable && registers.length > 0,
   );
+
+  // Mirror the server's resolve order (regmeta.queries.resolve_register_ids):
+  //   1. exact numeric register_id
+  //   2. case-insensitive exact name
+  //   3. case-insensitive substring (only if uniquely resolves)
+  // The client previously only matched display names, which blocked
+  // valid numeric IDs and unique substrings the backend would accept.
+  function resolvesAgainstList(input: string): boolean {
+    const v = input.trim();
+    if (!v) return true;
+    const asNum = Number(v);
+    if (Number.isInteger(asNum) && registers.some((r) => r.id === asNum)) {
+      return true;
+    }
+    const lower = v.toLowerCase();
+    if (registers.some((r) => r.name.toLowerCase() === lower)) return true;
+    const matches = registers.filter((r) =>
+      r.name.toLowerCase().includes(lower),
+    );
+    return matches.length === 1;
+  }
 
   let manualCount = $derived.by(() => {
     const manual = store.snapshot?.config.manual_columns ?? [];
@@ -50,14 +70,12 @@
   let trimmedRegister = $derived(selectedRegister.trim());
   let registerChanged = $derived(trimmedRegister !== initialName);
   // Apply enabled when something would change AND the input either
-  // resolves to a known register name or is empty (clearing the
-  // assignment). Unknown text gets caught client-side instead of the
-  // user discovering it after submit — but only when we actually have a
-  // register list to check against; otherwise we let the server decide.
+  // resolves on the client or is empty (clearing the assignment).
+  // Unknown text gets caught client-side instead of the user discovering
+  // it after submit — but only when we actually have a register list to
+  // check against; otherwise we let the server decide.
   let inputResolves = $derived(
-    trimmedRegister === "" ||
-      !canValidateLocally ||
-      registerNames.has(trimmedRegister),
+    !canValidateLocally || resolvesAgainstList(trimmedRegister),
   );
   // Apply is enabled when there is some change to make: either the
   // register itself changes, or the user opts to reclassify manual
