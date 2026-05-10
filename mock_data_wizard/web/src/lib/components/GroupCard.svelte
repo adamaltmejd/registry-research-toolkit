@@ -87,18 +87,27 @@
     return "";
   }
 
-  // Map carrier source → its cell for `colName`. Sources missing the
-  // column are absent from the map; keys double as the carrier list
-  // for ColumnTypeEditor's register-wide reconcile target (the server
-  // rejects calls that include sources missing the column).
+  // Map carrier source → its cell, indexed by column name. Built once
+  // per render of this group instead of per row: the per-source view
+  // looks up every column under every source, and the grouped view
+  // looks up every partition. Keys of `cellsByNameMap[colName]` double
+  // as the carrier list for ColumnTypeEditor's register-wide reconcile
+  // target (the server rejects calls that include sources missing the
+  // column).
+  let cellsByNameMap = $derived.by<Record<string, Record<string, ColumnInfo>>>(
+    () => {
+      const m: Record<string, Record<string, ColumnInfo>> = {};
+      for (const sn of group.sources) {
+        for (const c of group.columns_by_source[sn] ?? []) {
+          (m[c.name] ??= {})[sn] = c;
+        }
+      }
+      return m;
+    },
+  );
+
   function cellsByName(colName: string): Record<string, ColumnInfo> {
-    const out: Record<string, ColumnInfo> = {};
-    for (const sn of group.sources) {
-      const cols = group.columns_by_source[sn] ?? [];
-      const cell = cols.find((c) => c.name === colName);
-      if (cell) out[sn] = cell;
-    }
-    return out;
+    return cellsByNameMap[colName] ?? {};
   }
 
   // Concern predicates live in the store so the FilterBar's chip counts
@@ -294,12 +303,9 @@
     return out;
   });
 
-  // Coverage cell state for one source within one row's context.
-  //  - present: source carries this column with this row's type variant
-  //  - variant: source carries the column but in a different type
-  //             variant (only meaningful in grouped view)
-  //  - missing: source does not carry this column at all
-  //  - self:    per-source view marker for the row's own source
+  // `variant` only fires in grouped mode (source carries the column
+  // but in a different type variant). `self` only fires in per-source
+  // mode (the row's own source).
   type CoverageStatus = "present" | "variant" | "missing" | "self";
   interface CoverageCell {
     source: string;
@@ -308,10 +314,10 @@
 
   function coverageForPartition(p: ColumnPartition): CoverageCell[] {
     const inVariant = new Set(p.sources);
-    const carrier = new Set(Object.keys(cellsByName(p.name)));
+    const carriers = cellsByName(p.name);
     return group.sources.map((src) => {
       if (inVariant.has(src)) return { source: src, status: "present" };
-      if (carrier.has(src)) return { source: src, status: "variant" };
+      if (src in carriers) return { source: src, status: "variant" };
       return { source: src, status: "missing" };
     });
   }
@@ -410,26 +416,22 @@
   {/each}
 
   {#if store.groupColumnsByName}
-    <!-- Grouped mode: one row per (column name, type, hint) partition.
-         Optional columns (sql / type / coverage) are gated by the
-         visibility flags driven by ColumnsPicker. The "missing in N"
-         inline marker is only rendered when Coverage is hidden — when
-         the per-source coverage map is visible, it carries the same
-         information more legibly. -->
-    {@const cols = store.visibleColumns}
+    <!-- "missing in N" inline marker only when the Coverage column is
+         hidden — otherwise the per-source map carries the same info. -->
+    {@const visCols = store.visibleColumns}
     <table class="grouped-table">
       <colgroup>
         <col class="col-name" />
-        {#if cols.sql}<col class="col-sql" />{/if}
-        {#if cols.type}<col class="col-type" />{/if}
-        {#if cols.coverage}<col class="col-coverage" />{/if}
+        {#if visCols.sql}<col class="col-sql" />{/if}
+        {#if visCols.type}<col class="col-type" />{/if}
+        {#if visCols.coverage}<col class="col-coverage" />{/if}
       </colgroup>
       <thead>
         <tr>
           <th>Column</th>
-          {#if cols.sql}<th>SQL</th>{/if}
-          {#if cols.type}<th>Type</th>{/if}
-          {#if cols.coverage}<th>Coverage</th>{/if}
+          {#if visCols.sql}<th>SQL</th>{/if}
+          {#if visCols.type}<th>Type</th>{/if}
+          {#if visCols.coverage}<th>Coverage</th>{/if}
         </tr>
       </thead>
       <tbody>
@@ -439,7 +441,7 @@
           {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
           {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
-          {@const coverage = cols.coverage ? coverageForPartition(p) : []}
+          {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
           <tr class:split>
             <td class="mono col-name" title={p.name}>
               {p.name}
@@ -452,7 +454,7 @@
                   ⇅ {p.variant_index + 1}/{p.variant_count}
                 </span>
               {/if}
-              {#if !cols.coverage && p.missing_in_count > 0}
+              {#if !visCols.coverage && p.missing_in_count > 0}
                 <span
                   class="missing-marker"
                   title={`${p.missing_in_count} source${p.missing_in_count === 1 ? "" : "s"} in this register do not carry this column`}
@@ -461,10 +463,10 @@
                 </span>
               {/if}
             </td>
-            {#if cols.sql}
+            {#if visCols.sql}
               <td class="mono dim">{p.sql_type_summary}</td>
             {/if}
-            {#if cols.type}
+            {#if visCols.type}
               <td class="type-cell">
                 <button
                   class="type-pill type-{p.sample.current_type}"
@@ -511,7 +513,7 @@
                 {/if}
               </td>
             {/if}
-            {#if cols.coverage}
+            {#if visCols.coverage}
               <td class="coverage-cell">
                 <div
                   class="coverage-grid"
@@ -900,11 +902,8 @@
     text-align: left;
     padding: 0.3rem 0.4rem;
     border-bottom: 1px solid #f0f0f0;
-    /* Top-align so the type pill, name, and first row of coverage
-       boxes share a common baseline when the row is forced taller by
-       a multi-line Coverage cell. vertical-align: middle would leave
-       the pill floating in empty space when Coverage wraps to 3+
-       lines; top alignment keeps the row visually anchored. */
+    /* Top-align: keeps the type pill anchored when Coverage wraps to
+       multiple lines (vertical-align: middle would leave it floating). */
     vertical-align: top;
   }
   th {
@@ -914,9 +913,7 @@
     text-transform: uppercase;
     letter-spacing: 0.04em;
   }
-  /* Column widths driven by colgroup classes so the table layout
-     adapts to whichever optional columns are visible. The "name"
-     column has no fixed width — it absorbs the slack. */
+  /* The "name" column has no fixed width — it absorbs the slack. */
   col.col-sql {
     width: 8rem;
   }
@@ -1044,26 +1041,21 @@
     line-height: 1;
     flex: 0 0 auto;
   }
-  /* Coverage cell — one box per source in the register, in the same
-     order as group.sources. Box state: present (green) / variant
-     (amber, only meaningful in grouped view) / missing (red) / self
-     (the row's own source, per-source view). The flex-wrap container
-     handles the 30+ source case by line-breaking instead of squashing
-     boxes below a readable size. */
+  /* One box per source in group.sources order. Variant (amber) only
+     applies in grouped mode. Capped to ~6 wrap-rows so registers with
+     hundreds of sources can't balloon a single table row vertically;
+     the aria-label carries exact counts for assistive tech. The flex
+     container stays inside the <td> — display: flex on the cell itself
+     would break the CSS table layout. */
   .coverage-cell {
-    /* Slim the cell padding-top so the first row of boxes lines up
-       visually with the top of the type pill (pills have a slightly
-       taller baseline than 10px boxes). */
+    /* Lift baseline so the first wrap-row aligns with the type pill,
+       which sits slightly higher than a 10px box. */
     padding-top: 0.45rem;
   }
   .coverage-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 2px;
-    /* Cap on row height before wrap kicks in: ~6 rows of 10px boxes
-       + gaps. Keeps a row from ballooning vertically on registers with
-       hundreds of sources; the user can still see the shape, and the
-       aria-label gives the exact counts to assistive tech. */
     max-height: 4.5rem;
     overflow: hidden;
   }
@@ -1091,9 +1083,7 @@
     border-color: #b85050;
   }
   .coverage-self {
-    /* Per-source view: the box for the row's own source. Bright fill
-       + dark border so the eye lands on it instantly while scanning a
-       map of green/red boxes. */
+    /* High-contrast so the row's own source pops while scanning. */
     background: #4ca866;
     border-color: #1a661a;
   }

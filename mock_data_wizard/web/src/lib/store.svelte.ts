@@ -299,12 +299,8 @@ class Store {
   }
 
   toggleColumnVisibility(id: OptionalColumnId): void {
-    const next: VisibleColumns = {
-      ...this.visibleColumns,
-      [id]: !this.visibleColumns[id],
-    };
-    this.visibleColumns = next;
-    saveVisibleColumns(next);
+    this.visibleColumns[id] = !this.visibleColumns[id];
+    saveVisibleColumns(this.visibleColumns);
   }
 
   setFilterQuery(value: string): void {

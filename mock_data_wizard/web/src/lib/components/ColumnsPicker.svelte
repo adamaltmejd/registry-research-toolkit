@@ -28,8 +28,8 @@
     open = false;
   }
 
-  // Outside-click + Escape close the popover. Listeners are attached
-  // only while open to avoid leaking handlers when the picker is idle.
+  // Listeners only while open — leaving Escape attached when idle would
+  // intercept it from any other component on the page.
   $effect(() => {
     if (!open) return;
     const onPointerDown = (e: PointerEvent): void => {
