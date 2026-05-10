@@ -1,26 +1,19 @@
 <script lang="ts">
   import { untrack } from "svelte";
 
-  import { store } from "../store.svelte";
+  import { columnIsManual, store } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
   import Modal from "./Modal.svelte";
 
   interface Props {
     /** Sources making up the partition the user clicked. The scope
-     *  picker can narrow this to one or widen it to the whole register
-     *  (when registerSourcesWithColumn is a strict superset). */
+     *  picker can narrow this to one or widen it to every carrier in
+     *  `cellBySource` (when that's a strict superset). */
     sources: string[];
-    /** Sources in the surrounding register that actually carry this
-     *  column. Used as the target for register-wide reconcile so the
-     *  request never includes sources where the column is missing —
-     *  the server validates every (source, column) pair and would
-     *  reject the whole call otherwise. Equal to `sources` when the
-     *  partition already spans every carrier. */
-    registerSourcesWithColumn: string[];
-    /** Map source name → that source's ColumnInfo for the edited
-     *  column. Covers every source in registerSourcesWithColumn so the
-     *  modal can compute "is any cell in scope manual?" (drives the
-     *  Unset button) and detect no-op submits without a refetch. */
+    /** Carrier source → ColumnInfo for the edited column. Keys are
+     *  every source in the surrounding register that actually carries
+     *  the column — the server validates every (source, column) pair
+     *  and would reject a call that includes a source missing it. */
     cellBySource: Record<string, ColumnInfo>;
     /** Cosmetic — used in modal copy. */
     registerName: string | null;
@@ -28,14 +21,9 @@
     onClose: () => void;
   }
 
-  let {
-    sources,
-    registerSourcesWithColumn,
-    cellBySource,
-    registerName,
-    column,
-    onClose,
-  }: Props = $props();
+  let { sources, cellBySource, registerName, column, onClose }: Props = $props();
+
+  let registerSourcesWithColumn = $derived(Object.keys(cellBySource));
 
   const TYPES: ColumnType[] = ["id", "categorical", "numeric", "opaque", "date"];
 
@@ -75,16 +63,12 @@
     return [...sources];
   });
 
-  // Cells targeted by the current scope. Used to count manual overrides
-  // in scope (drives the Unset button) — falls back gracefully when a
-  // source is missing from the map.
-  let effectiveCells = $derived(
+  // Manual-override count in current scope; drives the Unset button.
+  let manualInScopeCount = $derived(
     effectiveSources
       .map((sn) => cellBySource[sn])
-      .filter((c): c is ColumnInfo => c !== undefined),
-  );
-  let manualInScopeCount = $derived(
-    effectiveCells.filter((c) => c.provenance === "manual").length,
+      .filter((c): c is ColumnInfo => c !== undefined)
+      .filter(columnIsManual).length,
   );
 
   // SCB register names are usually "Long descriptive name (ACRONYM)".
@@ -135,18 +119,18 @@
     if (submitting) return;
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
-    // Target every source in scope; the server silently skips non-manual
-    // pairs, so we don't need to filter client-side.
-    const targets = effectiveSources;
+    // Server silently skips non-manual pairs, so we send the whole scope.
+    // Snapshot the count before await — the snapshot may advance under
+    // us and re-derive `manualInScopeCount` against the cleared state.
+    const n = manualInScopeCount;
     submitting = true;
     const ok = await store.unsetColumnManual({
-      sources: targets,
+      sources: effectiveSources,
       column: column.name,
       expected_version: version,
     });
     submitting = false;
     if (ok) {
-      const n = manualInScopeCount;
       store.pushToast(
         "info",
         n === 1

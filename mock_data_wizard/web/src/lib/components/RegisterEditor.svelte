@@ -155,12 +155,6 @@
     confirming = false;
   }
 
-  function onReclassifyToggle() {
-    // Toggling the destructive option mid-confirm changes the parameters
-    // of the operation — drop the confirmation so the user sees the new
-    // warning copy before committing.
-    confirming = false;
-  }
 </script>
 
 <Modal headingId="register-editor-heading" {onClose}>
@@ -217,7 +211,7 @@
         <input
           type="checkbox"
           bind:checked={reclassifyManual}
-          onchange={onReclassifyToggle}
+          onchange={() => (confirming = false)}
         />
         Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
       </label>

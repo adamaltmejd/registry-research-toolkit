@@ -17,12 +17,11 @@
 
   // Modal target: list of sources to apply the column-type edit to. In
   // grouped mode this is a partition's source members; in per-source
-  // mode it is a single-element list. `cellBySource` carries every
-  // carrier's ColumnInfo so the modal can detect which scopes have a
-  // manual override (driving the Unset button).
+  // mode it is a single-element list. `cellBySource` covers every
+  // carrier source — its keys are the register-wide reconcile target
+  // and its values feed the modal's manual-override count.
   let editingColumn: {
     sources: string[];
-    registerSourcesWithColumn: string[];
     cellBySource: Record<string, ColumnInfo>;
     column: ColumnInfo;
   } | null = $state(null);
@@ -88,23 +87,10 @@
     return "";
   }
 
-  // Per-source mode helper: list every source in the register that
-  // carries `colName`. Used to feed ColumnTypeEditor's register-wide
-  // reconcile target with the carriers only — sources missing the
-  // column would otherwise fail server-side pair validation.
-  function carriersForColumn(colName: string): string[] {
-    const out: string[] = [];
-    for (const sn of group.sources) {
-      const cols = group.columns_by_source[sn] ?? [];
-      if (cols.some((c) => c.name === colName)) out.push(sn);
-    }
-    return out;
-  }
-
-  // Map carrier source → its cell for `colName`. Feeds the modal's
-  // scope-aware "any manual in scope?" check (drives the Unset button)
-  // and a future no-op detector. Sources missing the column are
-  // simply absent from the map.
+  // Map carrier source → its cell for `colName`. Sources missing the
+  // column are absent from the map; keys double as the carrier list
+  // for ColumnTypeEditor's register-wide reconcile target (the server
+  // rejects calls that include sources missing the column).
   function cellsByName(colName: string): Record<string, ColumnInfo> {
     const out: Record<string, ColumnInfo> = {};
     for (const sn of group.sources) {
@@ -159,11 +145,6 @@
     variant_index: number;
     variant_count: number;
     sources: string[];
-    /** Union of `sources` across every variant of this column-name —
-     * i.e. all register sources that actually carry the column. Used
-     * by the editor's register-wide reconcile target so the request
-     * never includes sources where the column is missing. */
-    carrier_sources: string[];
     sample: ColumnInfo;
     /** Every ColumnInfo aggregated into this partition, in source
      * order. Filter checks scan this rather than `sample` because
@@ -178,29 +159,25 @@
     missing_in_count: number;
   }
 
-  // When filters are active, expand the card automatically so the
-  // matched columns are visible without an extra click. The user can
-  // still toggle individual cards once filters are cleared.
+  // Persist the user's expand/collapse across snapshot re-renders.
+  // `open={forceOpen || undefined}` would re-apply on every snapshot
+  // change, collapsing cards the user had opened after each save.
+  // With `bind:open` the DOM is authoritative; the effects below only
+  // force-open in one direction (filters appear), never force-close.
   let forceOpen = $derived(store.hasActiveFilters());
 
-  // Persist user's expand/collapse choice across re-renders. The
-  // alternative (`open={forceOpen || undefined}`) re-applies the prop
-  // every time the snapshot changes — saving a column type collapses
-  // any card the user had opened. With `bind:open` the DOM state is
-  // authoritative; the effect below only forces it true when filters
-  // become active, never back to false (clearing filters leaves the
-  // card however the user wants it).
   let groupOpen = $state(false);
   $effect(() => {
-    if (forceOpen) groupOpen = true;
+    if (forceOpen && !groupOpen) groupOpen = true;
   });
 
-  // Per-source `<details>` open state (only used in per-source view).
-  // Keyed by source name — same persistence story as `groupOpen`.
+  // Per-source `<details>` open state (per-source view only). Same
+  // persistence story as `groupOpen`.
   let sourceOpenState: Record<string, boolean> = $state({});
   $effect(() => {
-    if (forceOpen && !store.groupColumnsByName) {
-      for (const sn of group.sources) sourceOpenState[sn] = true;
+    if (!forceOpen || store.groupColumnsByName) return;
+    for (const sn of group.sources) {
+      if (!sourceOpenState[sn]) sourceOpenState[sn] = true;
     }
   });
 
@@ -257,9 +234,6 @@
         if (col.provenance === "manual") part.manual_count++;
       }
       const built = Array.from(groups.values());
-      // Carrier set = sources across every variant; the variants
-      // partition this set, so concatenation is already unique.
-      const carrierSources = built.flatMap((b) => b.sources);
       built.forEach((b, i) => {
         const items = Array.from(b.sql_types.entries());
         let summary: string;
@@ -276,7 +250,6 @@
           variant_index: i,
           variant_count: built.length,
           sources: b.sources,
-          carrier_sources: carrierSources,
           sample: b.sample,
           cells: b.cells,
           sql_type_summary: summary,
@@ -436,7 +409,6 @@
                 onclick={() =>
                   (editingColumn = {
                     sources: [...p.sources],
-                    registerSourcesWithColumn: [...p.carrier_sources],
                     cellBySource: cellsByName(p.name),
                     column: p.sample,
                   })}
@@ -565,7 +537,6 @@
                     onclick={() =>
                       (editingColumn = {
                         sources: [sourceName],
-                        registerSourcesWithColumn: carriersForColumn(col.name),
                         cellBySource: cellsByName(col.name),
                         column: col,
                       })}
@@ -604,7 +575,6 @@
 {#if editingColumn}
   <ColumnTypeEditor
     sources={editingColumn.sources}
-    registerSourcesWithColumn={editingColumn.registerSourcesWithColumn}
     cellBySource={editingColumn.cellBySource}
     registerName={group.register_name}
     column={editingColumn.column}

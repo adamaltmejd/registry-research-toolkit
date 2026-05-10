@@ -1001,6 +1001,23 @@ def _assert_column_in_discover(
         )
 
 
+def _drop_column_options(
+    column_options: dict[str, dict[str, Any]] | None,
+    source_name: str,
+    column_name: str,
+) -> None:
+    """Drop the ``column_options`` entry for one cell, pruning the empty
+    source dict when it was the last column. Called whenever a cell's
+    type changes — options can be type-specific."""
+    if not column_options:
+        return
+    opts = column_options.get(source_name)
+    if opts and column_name in opts:
+        opts.pop(column_name, None)
+        if not opts:
+            column_options.pop(source_name, None)
+
+
 def _assert_source_in_discover(
     project_dir: Path, payload: dict[str, Any], source_name: str
 ) -> None:
@@ -1094,26 +1111,17 @@ def set_column_type(
                 if shared_validated_hint:
                     new_entry.update(shared_validated_hint)
 
-            # No-op for this source: re-asserting the same type+hint
-            # shouldn't promote an auto cell to manual. The user opening
-            # the modal and pressing Save without changing anything is a
-            # common cancel-by-mistake; silently flipping provenance is
-            # surprising. Already-manual cells stay manual (their pair
-            # is already in `manual`).
+            # Re-asserting same type+hint shouldn't promote auto→manual
+            # (cancel-by-mistake on Save is common). Already-manual cells
+            # stay manual — their pair is already in `manual`.
             if existing == new_entry:
                 continue
 
             cols[column_name] = new_entry
             dirty = True
 
-            # Type changed: drop column_options for this column. Mirrors
-            # set_group_register's reclassification path.
-            if old_type is not None and old_type != new_type and column_options:
-                opts_for_source = column_options.get(sn)
-                if opts_for_source and column_name in opts_for_source:
-                    opts_for_source.pop(column_name, None)
-                    if not opts_for_source:
-                        column_options.pop(sn, None)
+            if old_type is not None and old_type != new_type:
+                _drop_column_options(column_options, sn, column_name)
 
             pair = [sn, column_name]
             if pair not in manual:
@@ -1160,39 +1168,35 @@ def unset_column_manual_override(
             _assert_column_in_discover(project_dir, payload, sn, column_name)
 
         manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
-        # Filter to pairs that are actually manual — non-manual pairs are
-        # a no-op (no marker to clear, no reclassify needed).
         to_clear = [sn for sn in sources_list if (sn, column_name) in manual_pairs]
         if not to_clear:
             return get_state(project_dir, db_path=db_path)
 
-        discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
-        if not discover_path.exists():
+        # Reclassify needs the discover schema; bail loudly if it's gone.
+        discover = _load_local_discover(project_dir)
+        if discover is None:
             raise ValidationError(
                 f"unset_column_manual_override requires {DISCOVER_FILENAME_DEFAULT} "
                 f"next to the config to re-classify the column."
             )
-        discover = _read_discover(discover_path)
         sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
 
         sources_block = payload.setdefault("sources", {})
         column_types = payload.setdefault("column_types", {})
         column_options = payload.get("column_options")
 
-        # Group by register so each register's signals are resolved once.
+        # Group by register so each register's signals batch into one DB hit.
         by_register: dict[str | None, list[str]] = {}
         for sn in to_clear:
             register_str = sources_block.get(sn, {}).get("register") or None
             by_register.setdefault(register_str, []).append(sn)
 
         for register_str, group_sources in by_register.items():
-            if register_str is not None:
-                cols_for_signals: set[str] = {column_name}
-                signals = _resolve_signals_for_register(
-                    register_str, cols_for_signals, db_path
-                )
-            else:
-                signals = {}
+            signals = (
+                _resolve_signals_for_register(register_str, {column_name}, db_path)
+                if register_str is not None
+                else {}
+            )
             for sn in group_sources:
                 src = sources_by_name.get(sn)
                 if src is None:
@@ -1207,20 +1211,10 @@ def unset_column_manual_override(
                 if new_entry is None:
                     continue
                 cols = column_types.setdefault(sn, {})
-                old_entry = cols.get(column_name, {})
-                old_type = old_entry.get("type")
+                old_type = cols.get(column_name, {}).get("type")
                 cols[column_name] = new_entry
-                # Type changed: drop column_options for this cell.
-                if (
-                    old_type is not None
-                    and old_type != new_entry["type"]
-                    and column_options
-                ):
-                    opts_for_source = column_options.get(sn)
-                    if opts_for_source and column_name in opts_for_source:
-                        opts_for_source.pop(column_name, None)
-                        if not opts_for_source:
-                            column_options.pop(sn, None)
+                if old_type is not None and old_type != new_entry["type"]:
+                    _drop_column_options(column_options, sn, column_name)
                 manual_pairs.discard((sn, column_name))
 
         if column_options is not None and not column_options:
@@ -1332,13 +1326,7 @@ def set_group_register(
                 new_type = classified["type"]
                 out_cols[col_name] = classified
                 if old_type is not None and old_type != new_type:
-                    # Type changed: drop column_options for this column
-                    # (session decision — options can be type-specific).
-                    opts_for_source = column_options.get(sn)
-                    if opts_for_source and col_name in opts_for_source:
-                        opts_for_source.pop(col_name, None)
-                        if not opts_for_source:
-                            column_options.pop(sn, None)
+                    _drop_column_options(column_options, sn, col_name)
             column_types[sn] = out_cols
 
         if reclassify_manual:

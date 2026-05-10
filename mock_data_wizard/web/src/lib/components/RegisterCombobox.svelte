@@ -86,10 +86,12 @@
     oninput?.();
   }
 
-  // Pending blur-driven close. Tracked so a quick blur→focus within the
-  // delay can cancel the close — otherwise the dropdown flickers shut
-  // even though the input is focused again.
+  // Cancelled by a fast blur→focus (e.g. clicking the listbox) to avoid
+  // dropdown flicker.
   let blurCloseTimer: ReturnType<typeof setTimeout> | null = null;
+  $effect(() => () => {
+    if (blurCloseTimer !== null) clearTimeout(blurCloseTimer);
+  });
 
   function handleFocus() {
     if (blurCloseTimer !== null) {

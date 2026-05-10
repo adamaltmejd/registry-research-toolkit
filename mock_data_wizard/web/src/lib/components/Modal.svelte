@@ -94,14 +94,8 @@
       }
       // Remove the portaled node — Svelte's destroy step expects to
       // clean up its rendered tree but won't traverse out of #app.
-      // try/catch defends against future Svelte teardown changes that
-      // could try to detach the same node twice.
       if (dialogEl && dialogEl.parentElement === document.body) {
-        try {
-          dialogEl.remove();
-        } catch {
-          // Already detached by a concurrent teardown — nothing to do.
-        }
+        dialogEl.remove();
       }
       // Only restore focus if the originating element is still in the
       // DOM. After a stale-state refresh the snapshot may have been
