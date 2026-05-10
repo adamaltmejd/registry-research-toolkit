@@ -242,6 +242,24 @@ def test_set_column_type_rejects_unknown_pair(tmp_path: Path):
         )
 
 
+def test_set_column_type_rejects_scalar_string_source(tmp_path: Path):
+    """A bare ``str`` satisfies ``Sequence[str]`` structurally; without
+    the runtime guard ``list("src")`` would silently iterate per
+    character. Caller misuse must fail loudly."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not a single str"):
+        set_column_type(
+            tmp_path,
+            "x",  # type: ignore[arg-type]
+            "LopNr",
+            "id",
+            expected_version=snap.snapshot_version,
+        )
+
+
 def test_set_column_type_rejects_unknown_type(tmp_path: Path):
     discover_path = _write_discover(
         tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]

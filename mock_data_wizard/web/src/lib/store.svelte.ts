@@ -169,6 +169,10 @@ class Store {
   }
 
   async init(): Promise<void> {
+    // Reusing the mutation `busy` flag: from the empty-state UI no
+    // mutation path is reachable (groups don't render until loaded),
+    // so init can't race with setColumnType / setGroupRegister. The
+    // shared flag also disables the Initialise button on double-click.
     if (this.busy) return;
     this.busy = true;
     try {
@@ -279,6 +283,27 @@ class Store {
     }
     if (this.filterConcern !== null && !columnHasConcern(c, this.filterConcern)) {
       return false;
+    }
+    return true;
+  }
+
+  /** Filter check for a grouped-by-name partition (multiple cells that
+   * share name + type + hints). Name and type are uniform across the
+   * partition, but provenance and regmeta context can differ — so the
+   * concern check must scan every cell. Filtering on `sample` alone
+   * would hide a partition whose only manually-edited source happens
+   * not to be the sample, defeating the "find what I edited" workflow. */
+  columnsMatchFilters(cells: readonly ColumnInfo[]): boolean {
+    if (cells.length === 0) return false;
+    const sample = cells[0];
+    const q = this.filterQuery.trim().toLowerCase();
+    if (q !== "" && !sample.name.toLowerCase().includes(q)) return false;
+    if (this.filterType !== null && sample.current_type !== this.filterType) {
+      return false;
+    }
+    if (this.filterConcern !== null) {
+      const concern = this.filterConcern;
+      if (!cells.some((c) => columnHasConcern(c, concern))) return false;
     }
     return true;
   }

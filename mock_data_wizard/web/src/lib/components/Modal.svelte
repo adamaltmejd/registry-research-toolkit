@@ -31,6 +31,13 @@
     onClose();
   });
 
+  // Find focusable descendants of the card. The element-level `inert`
+  // check below only catches elements directly marked inert; we rely on
+  // the portal-to-body design to guarantee no ancestor of `cardEl`
+  // (above the dialog node itself) is inerted. If that invariant ever
+  // breaks — e.g. someone nests a Modal inside another inerted region
+  // — the trap would silently leak focus, so the assumption is loud
+  // here on purpose.
   function focusableTargets(): HTMLElement[] {
     if (!cardEl) return [];
     return Array.from(
@@ -72,13 +79,11 @@
     // dialog. Avoiding an explicit focus on the first input keeps screen
     // readers from announcing "categorical, radio button, 2 of 5" before
     // the dialog title — they read the title first because focus is on
-    // the dialog. setTimeout(0) (rather than requestAnimationFrame)
-    // because RAF can be deferred indefinitely if the click that opened
-    // the modal triggered a re-flow that the browser groups into the
-    // next tick.
-    setTimeout(() => {
-      dialogEl?.focus();
-    }, 0);
+    // the dialog. Synchronous focus inside onMount: the node is already
+    // attached to the body at this point, so no deferral is needed and
+    // we close the gap where Tab/Esc pressed before a setTimeout fires
+    // would land on the previously-focused element.
+    dialogEl?.focus();
     return () => {
       for (const t of inertTargets) {
         t.removeAttribute("inert");

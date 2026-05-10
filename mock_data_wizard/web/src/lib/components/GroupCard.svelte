@@ -148,6 +148,11 @@
      * never includes sources where the column is missing. */
     carrier_sources: string[];
     sample: ColumnInfo;
+    /** Every ColumnInfo aggregated into this partition, in source
+     * order. Filter checks scan this rather than `sample` because
+     * provenance / regmeta context can differ across cells with the
+     * same type+hints (e.g. one source manually edited, siblings auto). */
+    cells: ColumnInfo[];
     sql_type_summary: string;
     manual_count: number;
     /** Sources in the register that do not carry this column at all.
@@ -178,6 +183,7 @@
       key: string;
       sources: string[];
       sample: ColumnInfo;
+      cells: ColumnInfo[];
       sql_types: Map<string, number>;
       manual_count: number;
     }
@@ -200,12 +206,14 @@
             key,
             sources: [],
             sample: col,
+            cells: [],
             sql_types: new Map(),
             manual_count: 0,
           };
           groups.set(key, part);
         }
         part.sources.push(sn);
+        part.cells.push(col);
         const sqlT = col.sql_type ?? "—";
         part.sql_types.set(sqlT, (part.sql_types.get(sqlT) ?? 0) + 1);
         if (col.provenance === "manual") part.manual_count++;
@@ -232,6 +240,7 @@
           sources: b.sources,
           carrier_sources: carrierSources,
           sample: b.sample,
+          cells: b.cells,
           sql_type_summary: summary,
           manual_count: b.manual_count,
           missing_in_count: i === 0 ? missing : 0,
@@ -243,10 +252,13 @@
 
   // Partitions filtered by the active filter chips / search. Hide the
   // partition rather than dim it: the user asked for a focused view,
-  // dimmed rows would just be visual noise.
+  // dimmed rows would just be visual noise. The concern check scans
+  // every cell in the partition, not just `sample` — otherwise a
+  // partition whose only manual cell isn't the sample would vanish
+  // from the "manual" filter.
   let visiblePartitions = $derived(
     store.hasActiveFilters()
-      ? partitions.filter((p) => store.columnMatchesFilters(p.sample))
+      ? partitions.filter((p) => store.columnsMatchFilters(p.cells))
       : partitions,
   );
 

@@ -1049,6 +1049,14 @@ def set_column_type(
         raise ValidationError(
             f"new_type={new_type!r}, expected one of {VALID_COLUMN_TYPES}"
         )
+    # `str` and `bytes` satisfy `Sequence[str]` structurally, so without
+    # this guard `list("src")` would silently produce `['s', 'r', 'c']`.
+    # Fail loudly instead of running per-character validation.
+    if isinstance(source_names, (str, bytes)):
+        raise ValidationError(
+            f"source_names must be a sequence of source names, not a single "
+            f"{type(source_names).__name__}; pass [source_name] for one source."
+        )
     sources_list = list(source_names)
     if not sources_list:
         raise ValidationError("source_names must be non-empty")
