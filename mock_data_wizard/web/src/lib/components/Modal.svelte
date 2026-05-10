@@ -53,9 +53,14 @@
     if (dialogEl && dialogEl.parentElement !== document.body) {
       document.body.appendChild(dialogEl);
     }
+    // Skip non-interactive head-style siblings; setting `inert` on them
+    // is a no-op but bloats the cleanup list and clutters the DOM during
+    // inspection. Vite injects style tags into the body in dev mode, so
+    // this matters in practice.
+    const NON_INTERACTIVE = new Set(["SCRIPT", "STYLE", "LINK", "META"]);
     for (const sibling of Array.from(document.body.children)) {
       if (sibling === dialogEl) continue;
-      if (sibling.tagName === "SCRIPT") continue;
+      if (NON_INTERACTIVE.has(sibling.tagName)) continue;
       if (!sibling.hasAttribute("inert")) {
         sibling.setAttribute("inert", "");
         inertTargets.push(sibling);

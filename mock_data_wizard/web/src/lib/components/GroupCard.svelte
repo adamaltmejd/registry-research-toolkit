@@ -223,8 +223,13 @@
   });
 </script>
 
-<section class="group" class:no-register={group.register_id === null}>
-  <header>
+<details class="group" class:no-register={group.register_id === null}>
+  <!-- Group-level collapse: header always visible, contents (panels,
+       column table, source list) hidden until expanded. Default closed
+       so a fresh page load shows N register summaries instead of an
+       N-table wall. The "Edit register…" button stops propagation so
+       clicking it doesn't also toggle the details. -->
+  <summary class="group-summary">
     <div class="title-block">
       <h2>
         {#if group.register_name}
@@ -245,10 +250,17 @@
         {/if}
       </p>
     </div>
-    <button class="link" onclick={() => (editingRegister = true)}>
+    <button
+      class="link"
+      onclick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        editingRegister = true;
+      }}
+    >
       Edit register…
     </button>
-  </header>
+  </summary>
 
   {#each panelsForGroup as panel (panel.panel_id)}
     {@const range = panelPeriodRange(panel)}
@@ -471,7 +483,7 @@
       </details>
     {/each}
   {/if}
-</section>
+</details>
 
 {#if editingColumn}
   <ColumnTypeEditor
@@ -500,13 +512,34 @@
     border-color: #f0c14b;
     background: #fffaf0;
   }
-  header {
+  .group-summary {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 1rem;
-    margin-bottom: 0.5rem;
     flex-wrap: wrap;
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  .group[open] > .group-summary {
+    margin-bottom: 0.5rem;
+  }
+  .group-summary::-webkit-details-marker {
+    display: none;
+  }
+  .group-summary::before {
+    content: "▸";
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 0.2rem;
+    transition: transform 0.12s ease;
+    display: inline-block;
+    flex: 0 0 auto;
+    width: 0.9rem;
+  }
+  .group[open] > .group-summary::before {
+    transform: rotate(90deg);
   }
   .title-block {
     min-width: 0;

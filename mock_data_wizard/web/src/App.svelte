@@ -38,7 +38,7 @@
             checked={store.groupColumnsByName}
             onchange={() => store.setGroupColumnsByName(true)}
           />
-          grouped by name
+          by column
         </label>
         <label class:active={!store.groupColumnsByName}>
           <input
@@ -48,7 +48,7 @@
             checked={!store.groupColumnsByName}
             onchange={() => store.setGroupColumnsByName(false)}
           />
-          per source
+          by source
         </label>
       </fieldset>
     {/if}
