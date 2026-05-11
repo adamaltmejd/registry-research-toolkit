@@ -8,6 +8,7 @@ about table selection and handle shape, not query execution).
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 import pytest
@@ -239,34 +240,46 @@ def test_iter_file_source_treats_space_as_null_in_numeric_column(tmp_path: Path)
             cur.close()
 
 
-def test_iter_file_source_handles_rare_non_numeric_past_sample_window(
+def test_iter_file_source_no_config_uses_all_varchar(tmp_path: Path):
+    """Discover mode (no config) reads every column as VARCHAR. No
+    sniffer runs, so there is no rare-row crash path and no
+    sample-size cost. Numeric/date detection moves to the extract-time
+    opaque auto-promotion step."""
+    p = tmp_path / "infer.csv"
+    p.write_text("id,score\n1,10\n2,20\n", encoding="utf-8")
+    src = file_source(str(tmp_path), include=["infer.csv"])
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            assert schema == {"id": "VARCHAR", "score": "VARCHAR"}
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_no_config_handles_rare_letter_past_window(
     tmp_path: Path,
 ):
-    """A column of digits with one literal letter past the default
-    sample window must not commit the column to BIGINT.
-
-    Reproduces the production bug: ``slutbetyg_Ak9_2015.csv`` had a
-    ``NO_AMNEN`` column of digits, with a single ``"C"`` at row ~60k.
-    DuckDB's auto-detector with the default sample_size=20480 inferred
-    BIGINT and crashed mid-stream during the SELECT. ``sample_size=-1``
-    forces a whole-file scan so the rare letter is observed before the
-    type is committed; the column resolves to VARCHAR and the read
-    succeeds.
-    """
+    """The slutbetyg-style file (digits with one literal letter past the
+    default sample window) must read cleanly at discover. Previously
+    DuckDB's auto-detector with the default 20480-row sample inferred
+    BIGINT and crashed during the SELECT; ``sample_size=-1`` fixed the
+    crash at full-file sniffer cost; ``all_varchar=true`` sidesteps the
+    inference entirely — no scan, no crash."""
     p = tmp_path / "rare_letter.csv"
     lines = ["id,NO_AMNEN\n"]
     lines.extend(f"{i},{i % 10}\n" for i in range(25_000))
     lines.append("25000,C\n")
     p.write_text("".join(lines), encoding="utf-8")
     src = file_source(str(tmp_path), include=["rare_letter.csv"])
-    # Without the fix the read raises a duckdb.ConversionException
-    # (at CREATE TABLE or during SELECT, depending on whether the file
-    # falls under MDW_MEMORY_THRESHOLD_MB); with sample_size=-1 the
-    # read succeeds and the rare letter round-trips as a string.
     for handle in iter_file_source(src):
         cur = handle.conn.cursor()
         try:
-            cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = 25000")
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            assert schema == {"id": "VARCHAR", "NO_AMNEN": "VARCHAR"}
+            cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = '25000'")
             assert cur.fetchone() == ("C",)
         finally:
             cur.close()
@@ -430,30 +443,13 @@ def test_iter_file_source_with_config_passes_through_unknown_columns(
             cur.close()
 
 
-def test_iter_file_source_without_config_falls_back_to_inference(tmp_path: Path):
-    """Discover mode (no config) keeps the auto-inference path so the
-    classifier still has SQL types to seed on."""
-    p = tmp_path / "infer.csv"
-    p.write_text("id,score\n1,10\n2,20\n", encoding="utf-8")
-    src = file_source(str(tmp_path), include=["infer.csv"])
-    for handle in iter_file_source(src):
-        cur = handle.conn.cursor()
-        try:
-            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
-            schema = {r[0]: r[1] for r in cur.fetchall()}
-            # auto-inference picks numeric types
-            assert schema["id"] == "BIGINT"
-            assert schema["score"] == "BIGINT"
-        finally:
-            cur.close()
-
-
-def test_iter_file_source_config_without_entry_for_file_uses_inference(
+def test_iter_file_source_config_without_entry_for_file_uses_all_varchar(
     tmp_path: Path,
 ):
-    """A config that has *some* sources but not this one falls back to
-    auto-inference for the absent file. Mirrors the behaviour of a
-    discover-then-edit workflow where a new file appears mid-stream."""
+    """A config that has *some* sources but not this one reads the absent
+    file the same way discover does — all-VARCHAR, no inference. The
+    opaque auto-promotion only runs against opaque overrides that
+    actually exist for the file."""
     p = tmp_path / "untouched.csv"
     p.write_text("id,n\n1,10\n", encoding="utf-8")
     cfg = _config_with({"other.csv": {"id": ColumnTypeOverride(type="id")}})
@@ -463,10 +459,150 @@ def test_iter_file_source_config_without_entry_for_file_uses_inference(
         try:
             cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
             schema = {r[0]: r[1] for r in cur.fetchall()}
-            # No overrides -> auto-inference applied.
-            assert schema["n"] == "BIGINT"
+            assert schema == {"id": "VARCHAR", "n": "VARCHAR"}
         finally:
             cur.close()
+
+
+# -- opaque auto-promotion at extract ------------------------------------
+
+
+def test_opaque_with_all_ints_promotes_to_numeric_integer(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+):
+    """An opaque column whose non-null values all cleanly TRY_CAST to
+    BIGINT is auto-promoted to numeric/integer. The override is mutated
+    in place so process_handle dispatches the numeric branch; a WARNING
+    is logged so the MONA-side run log records the decision."""
+    p = tmp_path / "promote_int.csv"
+    p.write_text("id,maybe_num\n1,10\n2,20\n3,30\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "promote_int.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "maybe_num": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["promote_int.csv"])
+    with caplog.at_level(logging.WARNING, logger="mdw.sources"):
+        for handle in iter_file_source(src, config=cfg):
+            cur = handle.conn.cursor()
+            try:
+                cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+                schema = {r[0]: r[1] for r in cur.fetchall()}
+                assert schema["maybe_num"] == "BIGINT"
+            finally:
+                cur.close()
+    promoted = cfg.column_types["promote_int.csv"]["maybe_num"]
+    assert promoted.type == "numeric"
+    assert promoted.numeric_subtype == "integer"
+    assert any(
+        "maybe_num" in r.message and "numeric/integer" in r.message
+        for r in caplog.records
+    )
+
+
+def test_opaque_with_floats_promotes_to_numeric_double(tmp_path: Path):
+    """All-DOUBLE-clean (but not all-BIGINT-clean) opaque column promotes
+    to numeric/double."""
+    p = tmp_path / "promote_float.csv"
+    p.write_text("id,p\n1,1.5\n2,2.5\n3,3.0\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "promote_float.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "p": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["promote_float.csv"])
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            assert schema["p"] == "DOUBLE"
+        finally:
+            cur.close()
+    promoted = cfg.column_types["promote_float.csv"]["p"]
+    assert promoted.type == "numeric"
+    assert promoted.numeric_subtype == "double"
+
+
+def test_opaque_with_iso_dates_promotes_to_date(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+):
+    """ISO-style dates TRY_CAST cleanly to DATE → promotion. The view
+    keeps the column as VARCHAR (date stats use lexicographic MIN/MAX
+    plus Python-side parsing); the override flip is what matters."""
+    p = tmp_path / "promote_date.csv"
+    p.write_text(
+        "id,d\n1,2023-01-15\n2,2023-06-30\n3,2024-02-01\n",
+        encoding="utf-8",
+    )
+    cfg = _config_with(
+        {
+            "promote_date.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "d": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["promote_date.csv"])
+    with caplog.at_level(logging.WARNING, logger="mdw.sources"):
+        for _ in iter_file_source(src, config=cfg):
+            pass
+    assert cfg.column_types["promote_date.csv"]["d"].type == "date"
+    assert any("'d'" in r.message and "date" in r.message for r in caplog.records)
+
+
+def test_opaque_with_mixed_values_stays_opaque(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+):
+    """An opaque column with a non-castable value stays opaque. No
+    warning, no schema change."""
+    p = tmp_path / "stay_opaque.csv"
+    p.write_text("id,mixed\n1,10\n2,foo\n3,30\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "stay_opaque.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "mixed": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["stay_opaque.csv"])
+    with caplog.at_level(logging.WARNING, logger="mdw.sources"):
+        for handle in iter_file_source(src, config=cfg):
+            cur = handle.conn.cursor()
+            try:
+                cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+                schema = {r[0]: r[1] for r in cur.fetchall()}
+                assert schema["mixed"] == "VARCHAR"
+            finally:
+                cur.close()
+    assert cfg.column_types["stay_opaque.csv"]["mixed"].type == "opaque"
+    assert not any("promoted" in r.message for r in caplog.records)
+
+
+def test_opaque_all_null_stays_opaque(tmp_path: Path):
+    """An opaque column with no non-null values can't be probed
+    (nothing to TRY_CAST). Stays opaque."""
+    p = tmp_path / "all_null.csv"
+    p.write_text("id,e\n1,\n2,\n3,\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "all_null.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "e": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["all_null.csv"])
+    for _ in iter_file_source(src, config=cfg):
+        pass
+    assert cfg.column_types["all_null.csv"]["e"].type == "opaque"
 
 
 # -- SQL helpers ---------------------------------------------------------
@@ -765,12 +901,18 @@ def test_iter_sql_source_mapping_alias_with_sql_table():
 
 
 def test_iter_file_source_with_where_filters_rows(tmp_path: Path):
-    """End-to-end: where clause actually narrows row count via DuckDB."""
+    """End-to-end: where clause actually narrows row count via DuckDB.
+
+    File reads are all-VARCHAR (no inference), so a WHERE clause that
+    needs numeric semantics has to cast (or compare against string
+    literals). Year-like values sort identically under lex and numeric
+    comparison, so `ar > '2015'` is the natural form for SCB years.
+    """
     (tmp_path / "events.csv").write_text(
         "ar,event\n2014,a\n2015,b\n2016,c\n2017,d\n2018,e\n",
         encoding="utf-8",
     )
-    src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
+    src = file_source(str(tmp_path), include=["events.csv"], where="ar > '2015'")
     for handle in iter_file_source(src):
         cur = handle.conn.cursor()
         try:
@@ -779,4 +921,4 @@ def test_iter_file_source_with_where_filters_rows(tmp_path: Path):
             assert n == 3  # 2016, 2017, 2018
         finally:
             cur.close()
-        assert handle.source_detail["where"] == "ar > 2015"
+        assert handle.source_detail["where"] == "ar > '2015'"

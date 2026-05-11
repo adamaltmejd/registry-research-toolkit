@@ -19,11 +19,13 @@ A SQL source with no ``tables=``, ``pattern=``, or ``all=True`` is
 ambiguous in extract mode and ``iter_sql_source`` raises. Discover mode
 passes ``permissive=True`` to enumerate everything reachable.
 
-CSV typing splits on whether ``iter_source`` was given an
-``MDWConfig``: extract mode reads ``all_varchar=true`` and applies a
-per-column ``CAST`` (deterministic, single-pass), discover mode reads
-``read_csv_auto(sample_size=-1)`` so the classifier has typed columns
-to seed on. See ``mock_data_wizard/DESIGN.md`` § *CSV typing*.
+CSV reads are always ``all_varchar=true``: no type sniffer runs, so a
+rare row past the default sample window can't crash the read. Extract
+mode (``config`` supplied) layers a per-column ``CAST`` on top driven
+by ``mock_data_config.json``, then probes any ``opaque`` columns with
+``TRY_CAST`` to auto-promote columns that are uniformly numeric or
+date into the matching aggregation branch. See
+``mock_data_wizard/DESIGN.md`` § *CSV typing*.
 """
 
 from __future__ import annotations
@@ -349,6 +351,21 @@ def _semantic_to_duckdb_cast(override: ColumnTypeOverride) -> str | None:
     return None
 
 
+def _build_varchar_select(quoted_path: str, encoding: str) -> str:
+    """SELECT that reads the CSV as all-VARCHAR.
+
+    ``all_varchar=true`` skips DuckDB's type sniffer entirely — every
+    column comes back as VARCHAR and ``nullstr=['', ' ']`` still
+    applies, so the SCB ' ' sentinel becomes NULL. No inference means
+    no rare-row crash from a sample that disagreed with later rows.
+    """
+    return (
+        f"SELECT * FROM read_csv_auto("
+        f"'{quoted_path}', header=true, encoding='{encoding}', "
+        f"nullstr=['', ' '], all_varchar=true)"
+    )
+
+
 def _build_cast_select(
     conn: Any,
     quoted_path: str,
@@ -357,21 +374,13 @@ def _build_cast_select(
 ) -> str:
     """Build a SELECT that reads the CSV as VARCHAR and casts per-column.
 
-    The inner ``read_csv_auto(..., all_varchar=true)`` skips DuckDB's
-    type sniffer entirely: every column comes back as VARCHAR and
-    ``nullstr=['', ' ']`` still applies (so the SCB ' ' sentinel becomes
-    NULL before the cast sees it). DESCRIBE on the inner SELECT pulls
-    the column list from the header without scanning the file.
-
-    Columns absent from ``overrides`` pass through as VARCHAR;
-    ``extract.process_handle`` validates the full column set against the
-    config and raises one error listing every missing override.
+    DESCRIBE on the inner all-varchar SELECT pulls the column list from
+    the header without scanning the file. Columns absent from
+    ``overrides`` pass through as VARCHAR; ``extract.process_handle``
+    validates the full column set against the config and raises one
+    error listing every missing override.
     """
-    raw_select = (
-        f"SELECT * FROM read_csv_auto("
-        f"'{quoted_path}', header=true, encoding='{encoding}', "
-        f"nullstr=['', ' '], all_varchar=true)"
-    )
+    raw_select = _build_varchar_select(quoted_path, encoding)
     desc = conn.execute(f"DESCRIBE {raw_select}").fetchall()
     col_names = [r[0] for r in desc]
     parts: list[str] = []
@@ -386,6 +395,109 @@ def _build_cast_select(
     return f"SELECT {', '.join(parts)} FROM ({raw_select}) AS __mdw_raw"
 
 
+def _probe_and_promote_opaque(
+    conn: Any,
+    quoted_table: str,
+    overrides: dict[str, ColumnTypeOverride],
+    *,
+    file_name: str,
+) -> bool:
+    """Auto-promote opaque columns to numeric/date when TRY_CAST is clean.
+
+    For each column the user marked ``opaque``, batched into one query:
+    count non-null rows, then count how many cleanly ``TRY_CAST`` to
+    ``BIGINT``, ``DOUBLE``, ``DATE``. When every non-null value casts
+    to the same target, the override is mutated in place to that type.
+
+    Why this is safe to do without explicit user opt-in: the numeric
+    and date branches emit only **perturbed aggregates** (min/max with
+    relative noise, mean/sd, date min/max with ±N-day jitter). No
+    individual values land in the output. Promotion to ``categorical``
+    or ``id`` is deliberately NOT supported here — those branches emit
+    frequency tables and distinct-value lists, which would leak PII if
+    we promoted a misclassified opaque column. ``opaque`` stays as-is
+    when none of the cast targets is clean.
+
+    Each promotion is logged at WARNING so the MONA-side run log
+    records the decision and the user can override in the next config
+    iteration.
+
+    Returns ``True`` when any column was promoted. ``overrides`` is
+    mutated in place; ``MDWConfig.column_types`` is the same dict
+    object the caller looked up, so ``extract.process_handle`` sees the
+    promoted type without an extra plumbing step.
+
+    Caveat: DuckDB's ``TRY_CAST(... AS DATE)`` accepts ISO 'YYYY-MM-DD'
+    and similar. YYYYMMDD strings (common in SCB) satisfy BIGINT first
+    and promote to ``numeric/integer``. The warning makes that visible;
+    the user can flip the override to ``date`` in the next iteration.
+    """
+    opaque_cols = [c for c, ov in overrides.items() if ov.type == "opaque"]
+    if not opaque_cols:
+        return False
+    # The BIGINT predicate is a round-trip check, not a bare TRY_CAST:
+    # DuckDB happily rounds "1.5" -> 2 when casting VARCHAR to BIGINT,
+    # so the naive ``TRY_CAST(... AS BIGINT) IS NOT NULL`` matches
+    # float-shaped values. Requiring the BIGINT result to equal the
+    # DOUBLE result keeps "1", "1e3", "3.0" classified as integer
+    # while pushing "1.5", "2.5" down to DOUBLE.
+    parts: list[str] = []
+    for i, col in enumerate(opaque_cols):
+        qcol = quote_ident(col, DUCKDB)
+        parts.extend(
+            [
+                f"COUNT(*) FILTER (WHERE {qcol} IS NOT NULL) AS c{i}_nn",
+                f"COUNT(*) FILTER (WHERE {qcol} IS NOT NULL "
+                f"AND TRY_CAST({qcol} AS BIGINT) IS NOT NULL "
+                f"AND TRY_CAST({qcol} AS BIGINT) = TRY_CAST({qcol} AS DOUBLE)) "
+                f"AS c{i}_bi",
+                f"COUNT(*) FILTER (WHERE {qcol} IS NOT NULL "
+                f"AND TRY_CAST({qcol} AS DOUBLE) IS NOT NULL) AS c{i}_db",
+                f"COUNT(*) FILTER (WHERE {qcol} IS NOT NULL "
+                f"AND TRY_CAST({qcol} AS DATE) IS NOT NULL) AS c{i}_dt",
+            ]
+        )
+    sql = f"SELECT {', '.join(parts)} FROM {quoted_table}"
+    cur = conn.cursor()
+    try:
+        cur.execute(sql)
+        row = cur.fetchone()
+    finally:
+        cur.close()
+    any_promoted = False
+    for i, col in enumerate(opaque_cols):
+        nn = row[4 * i]
+        bi = row[4 * i + 1]
+        db = row[4 * i + 2]
+        dt = row[4 * i + 3]
+        if nn == 0:
+            continue
+        if bi == nn:
+            new_type, new_sub = "numeric", "integer"
+        elif db == nn:
+            new_type, new_sub = "numeric", "double"
+        elif dt == nn:
+            new_type, new_sub = "date", None
+        else:
+            continue
+        overrides[col] = replace(
+            overrides[col],
+            type=new_type,
+            numeric_subtype=new_sub if new_type == "numeric" else None,
+        )
+        log.warning(
+            "[%s] column %r auto-promoted opaque -> %s%s "
+            "(every non-null value TRY_CASTs cleanly). Override in "
+            "mock_data_config.json if wrong.",
+            file_name,
+            col,
+            new_type,
+            f"/{new_sub}" if new_sub else "",
+        )
+        any_promoted = True
+    return any_promoted
+
+
 def iter_file_source(
     src: FileSource,
     conn: Any = None,
@@ -398,15 +510,16 @@ def iter_file_source(
     dropped after the consumer moves on, so peak DuckDB state stays at one
     table even for source directories with hundreds of files.
 
-    When ``config`` is supplied (extract mode), each file is read with
-    ``all_varchar=true`` and per-column ``CAST``s built from
-    ``config.column_types``. The sniffer is skipped entirely — ~10×
-    faster on real-world CSVs (issue #40 benchmarks) and removes the
-    "rare row breaks the run" failure mode that ``sample_size=-1`` only
-    masked at a steep cost. ``config=None`` (discover mode, or sources
-    with no override entries) falls back to ``read_csv_auto`` with
-    ``sample_size=-1`` so the discover step still has typed columns to
-    seed the classifier.
+    Reads are always ``all_varchar=true`` — no type sniffer, so a rare
+    row past the default sample window can't crash the load. With
+    ``config`` supplied (extract mode), per-column ``CAST``s from
+    ``config.column_types`` are layered on top and any ``opaque``
+    columns are probed via ``TRY_CAST``; columns whose every non-null
+    value is uniformly numeric or date are auto-promoted in place (and
+    a WARNING is logged per promotion). Without ``config`` (discover
+    mode, or a file not present in the config) every column reports
+    ``VARCHAR``; the classifier downstream relies on name patterns and
+    regmeta evidence rather than a SQL-type signal.
     """
     import duckdb
 
@@ -428,7 +541,7 @@ def iter_file_source(
             quoted_path = str(fp).replace("'", "''")
             materialise = fp.stat().st_size <= threshold_bytes
             kind = "TABLE" if materialise else "VIEW"
-            overrides: Mapping[str, ColumnTypeOverride] = (
+            overrides: dict[str, ColumnTypeOverride] = (
                 config.column_types.get(fp.name, {}) if config is not None else {}
             )
             log.info(
@@ -437,7 +550,7 @@ def iter_file_source(
                 kind.lower(),
                 encoding,
                 fp.stat().st_size / (1024 * 1024),
-                "config-cast" if overrides else "auto-infer",
+                "config-cast" if overrides else "all-varchar",
             )
             try:
                 if overrides:
@@ -445,24 +558,22 @@ def iter_file_source(
                         conn, quoted_path, encoding, overrides
                     )
                 else:
-                    # Discover mode (or a source missing from the config):
-                    # let DuckDB infer types so the classifier has something
-                    # to work with. ``sample_size=-1`` forces a whole-file
-                    # sniffer scan; the default (20480 rows) crashes mid-
-                    # stream when a rare edge value appears later (observed:
-                    # digit column with one literal "C" at row ~60k → BIGINT
-                    # inferred → conversion error). The sniffer is ~10×
-                    # slower than a typed read on real-world CSVs (492 ms vs
-                    # 39 ms on a 50 MB file; see issue #40), so we only
-                    # accept that cost on discover, where it runs once.
-                    # ``nullstr=['', ' ']`` matches the SCB CSV missing-
-                    # value sentinel.
-                    select_sql = (
-                        f"SELECT * FROM read_csv_auto("
-                        f"'{quoted_path}', header=true, encoding='{encoding}', "
-                        f"nullstr=['', ' '], sample_size=-1)"
-                    )
+                    select_sql = _build_varchar_select(quoted_path, encoding)
                 conn.execute(f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}")
+                # Extract-mode auto-promotion: probe any opaque columns and
+                # rebuild the cast view if any flipped to numeric/date.
+                # Rebuild is free for VIEW kind and one extra in-memory cast
+                # pass for TABLE kind (no extra file read in either case,
+                # because read_csv_auto re-reads via the OS page cache).
+                if overrides and _probe_and_promote_opaque(
+                    conn, quoted_view, overrides, file_name=fp.name
+                ):
+                    select_sql = _build_cast_select(
+                        conn, quoted_path, encoding, overrides
+                    )
+                    conn.execute(
+                        f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}"
+                    )
             except Exception as exc:
                 hint = (
                     " Try `file_source(..., encoding='latin-1')` if the file"
