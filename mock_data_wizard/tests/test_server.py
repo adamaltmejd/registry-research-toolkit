@@ -850,6 +850,8 @@ def test_column_values_response_surfaces_variance_fields(running_server: str):
     assert body["note"] is None
     assert body["classifications"] == []
     assert body["picked_classification"] is None
+    assert body["value_sets"] == []
+    assert body["picked_value_set"] is None
 
 
 def test_column_values_rejects_non_string_picked_classification(
@@ -872,6 +874,73 @@ def test_column_values_accepts_null_picked_classification(running_server: str):
     )
     assert status == 200
     assert body["picked_classification"] is None
+
+
+def test_column_values_rejects_non_int_picked_value_set(running_server: str):
+    """``picked_value_set`` must be an integer or null; strings, floats,
+    and bools are rejected so the server isn't ambiguous about which
+    value-set the client meant."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "picked_value_set": "1"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_rejects_bool_picked_value_set(running_server: str):
+    """Bools are ints in Python; reject explicitly so ``True`` doesn't
+    accidentally pick value_set_id 1."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "picked_value_set": True},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_accepts_null_picked_value_set(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "picked_value_set": None},
+    )
+    assert status == 200
+    assert body["picked_value_set"] is None
+
+
+def test_column_values_rejects_non_list_relevant_years(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "relevant_years": "2024"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_rejects_non_int_relevant_years_entries(
+    running_server: str,
+):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "relevant_years": ["2024"]},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_accepts_empty_relevant_years(running_server: str):
+    """Empty list is treated the same as omitting the field — no filter."""
+    status, _body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "relevant_years": []},
+    )
+    assert status == 200
 
 
 def test_payload_too_large_returns_413(running_server: str):

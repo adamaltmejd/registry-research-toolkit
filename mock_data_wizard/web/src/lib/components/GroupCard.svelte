@@ -702,6 +702,7 @@
   <ValueCodesModal
     register={group.register_name}
     column={viewingValuesFor}
+    sourceYears={sourceYears}
     onClose={() => (viewingValuesFor = null)}
   />
 {/if}

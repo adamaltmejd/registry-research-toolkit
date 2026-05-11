@@ -179,6 +179,23 @@ export interface ColumnValueCode {
  * across years. Null only when kind === "none". */
 export type VarianceTier = "1" | "2" | "3a" | "3b";
 
+/** One distinct value-set group attached to a column×register (issue
+ * #64 follow-up). Surfaced as a picker option on the values path so the
+ * user can drill from "union of all years" into one year-correct group.
+ *
+ * cvids are intentionally not on the wire — a single popular column
+ * (e.g. RTB×Kon) covers thousands of cvids per group, and "applies to"
+ * is scoped to the project's sources via year intersection rather than
+ * to the regmeta cvid set.
+ */
+export interface ValueSetGroup {
+  value_set_id: number;
+  /** Year window from register_version names; null when none of the
+   * cvids' regver names parse to a year. */
+  year_min: number | null;
+  year_max: number | null;
+}
+
 export interface ColumnValuesResponse {
   /** "classification" — canonical SCB classification code list.
    *  "values" — per-instance value codes aggregated for this register.
@@ -196,6 +213,13 @@ export interface ColumnValuesResponse {
   /** Which classification's codes are rendered. Only meaningful when
    * `kind === "classification"` and the picker is shown. */
   picked_classification: string | null;
+  /** Distinct value-set groups attached to this column under this
+   * register. Populated when > 1 across years (drives the tier 2 / 3a
+   * picker). Ordered chronologically by year_min. */
+  value_sets: ValueSetGroup[];
+  /** value_set_id actually rendered. null = union (tier 2 default).
+   * For tier 3a the server fills this with the most-common group. */
+  picked_value_set: number | null;
 }
 
 export interface GetColumnValuesArgs {
@@ -206,6 +230,16 @@ export interface GetColumnValuesArgs {
   /** Opt into a non-default classification when the column maps to
    * multiple across years. Ignored when not a candidate. */
   picked_classification?: string | null;
+  /** Opt into a specific value-set on the per-instance values path.
+   * null = let the server pick the tier default (union for tier 2,
+   * most-common for tier 3a). Ignored when not a candidate. */
+  picked_value_set?: number | null;
+  /** Project source years (deduped, non-null). Server drops value-set
+   * groups that don't overlap any of these so the picker stops
+   * surfacing year windows the project doesn't touch. Falls back to
+   * "show all + note" when no group overlaps. Omit / empty = no
+   * filter. */
+  relevant_years?: number[];
 }
 
 export function getColumnValues(

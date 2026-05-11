@@ -671,7 +671,8 @@ def _api_get_column_values(
     about an unassigned column too — the server returns ``kind="none"``
     when there's nothing to look up. ``column`` is required.
     ``picked_classification`` opts into a non-default classification when
-    the column maps to multiple across years.
+    the column maps to multiple across years; ``picked_value_set`` does
+    the analogous thing for the per-instance values path.
     """
     column = _required_str(body, "column")
     if "register" not in body:
@@ -689,10 +690,36 @@ def _api_get_column_values(
             "picked_classification must be a string or null, "
             f"got {type(picked).__name__}"
         )
+    picked_vs_raw = body.get("picked_value_set")
+    # JSON booleans are ints in Python; reject them explicitly so a
+    # client bug doesn't accidentally pick value_set_id 0 / 1.
+    if picked_vs_raw is not None and (
+        isinstance(picked_vs_raw, bool) or not isinstance(picked_vs_raw, int)
+    ):
+        raise editor.ValidationError(
+            "picked_value_set must be an integer or null, "
+            f"got {type(picked_vs_raw).__name__}"
+        )
+    relevant_years_raw = body.get("relevant_years")
+    relevant_years: list[int] | None = None
+    if relevant_years_raw is not None:
+        if not isinstance(relevant_years_raw, list):
+            raise editor.ValidationError(
+                "relevant_years must be a list of integers or null, "
+                f"got {type(relevant_years_raw).__name__}"
+            )
+        for y in relevant_years_raw:
+            if isinstance(y, bool) or not isinstance(y, int):
+                raise editor.ValidationError(
+                    f"relevant_years entries must be integers, got {type(y).__name__}"
+                )
+        relevant_years = list(relevant_years_raw)
     result = editor.get_column_values(
         register_value,
         column,
         picked_classification=picked,
+        picked_value_set=picked_vs_raw,
+        relevant_years=relevant_years,
         db_path=config.db_path,
     )
     return HTTPStatus.OK, {
@@ -704,6 +731,19 @@ def _api_get_column_values(
         "note": result.note,
         "classifications": list(result.classifications),
         "picked_classification": result.picked_classification,
+        # cvids stay server-side: a hot column like RTB×Kon has thousands
+        # of cvids per group, and the UI scopes "applies to" to the
+        # project's sources (cross-referenced by year) rather than to
+        # the regmeta cvid set. Year window + value_set_id is enough.
+        "value_sets": [
+            {
+                "value_set_id": g.value_set_id,
+                "year_min": g.year_min,
+                "year_max": g.year_max,
+            }
+            for g in result.value_sets
+        ],
+        "picked_value_set": result.picked_value_set,
     }
 
 

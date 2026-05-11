@@ -1797,7 +1797,11 @@ def test_get_column_values_tier_1_no_variance(regmeta_db: Path):
 def test_get_column_values_tier_2_multiple_value_sets_no_collision(
     regmeta_db: Path,
 ):
-    """Two value_sets that share labels (no collision) → tier 2."""
+    """Two value_sets that share labels (no collision) → tier 2.
+
+    Default rendering is the union; ``value_sets`` carries both groups
+    in chronological order so the popup can show a picker.
+    """
     import sqlite3
 
     from .conftest import assign_value_set
@@ -1814,12 +1818,24 @@ def test_get_column_values_tier_2_multiple_value_sets_no_collision(
     assert result.kind == "values"
     assert result.tier == "2"
     assert result.note is not None
-    assert "Not all codes are valid" in result.note
+    assert "Value code sets differ" in result.note
     assert {c.code for c in result.codes} == {"1", "2", "3"}
+    # Tier 2 default = union (no value-set filter applied).
+    assert result.picked_value_set is None
+    # Two value-set groups, ordered chronologically by year_min.
+    assert len(result.value_sets) == 2
+    assert [g.year_min for g in result.value_sets] == [2020, 2021]
+    assert result.value_sets[0].cvids == (1001,)
+    assert result.value_sets[1].cvids == (1002,)
 
 
 def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
-    """Same vardekod with two distinct vardebenamning → tier 3a."""
+    """Same vardekod with two distinct vardebenamning → tier 3a.
+
+    Default rendering is the most-common value-set (most cvids) so the
+    labels are self-consistent. Tie on cvid count → chronological order
+    via ``value_sets`` sort key, so the earlier year wins.
+    """
     import sqlite3
 
     from .conftest import assign_value_set
@@ -1837,6 +1853,15 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
     assert result.tier == "3a"
     assert result.note is not None
     assert "different meanings" in result.note
+    # Default = a concrete value-set, not the union.
+    assert result.picked_value_set is not None
+    # Labels rendered are self-consistent (no mix of Man/Male).
+    code_map = {c.code: c.label for c in result.codes}
+    assert code_map in (
+        {"1": "Man", "2": "Kvinna"},
+        {"1": "Male", "2": "Female"},
+    )
+    assert len(result.value_sets) == 2
 
 
 def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
@@ -1951,6 +1976,183 @@ def test_get_column_values_picked_classification_invalid_falls_back(
     assert result.kind == "classification"
     # Falls back to a candidate from the list (most-common winner).
     assert result.picked_classification in {"CLS_A", "CLS_B"}
+
+
+# -- value-set picker (issue #64, follow-up) -----------------------------
+
+
+def test_get_column_values_picked_value_set_honored(regmeta_db: Path):
+    """Tier 2 default is the union; passing ``picked_value_set`` filters
+    to that group's codes only."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
+    # Widen the code set for the new year so we can prove which group
+    # the picker rendered.
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    conn.commit()
+    conn.close()
+
+    default = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert default.tier == "2"
+    assert {c.code for c in default.codes} == {"1", "2", "3"}
+
+    # Pick the 2020 group (cvid=1001) → only its codes show.
+    early = next(g for g in default.value_sets if g.year_min == 2020)
+    picked = editor.get_column_values(
+        "TESTREG",
+        "Kon",
+        picked_value_set=early.value_set_id,
+        db_path=regmeta_db.parent,
+    )
+    assert picked.tier == "2"
+    assert picked.picked_value_set == early.value_set_id
+    assert {c.code for c in picked.codes} == {"1", "2"}
+
+
+def test_get_column_values_picked_value_set_invalid_falls_back(regmeta_db: Path):
+    """Bad ``picked_value_set`` degrades to the tier default rather than
+    blanking the popup."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values(
+        "TESTREG",
+        "Kon",
+        picked_value_set=99999,
+        db_path=regmeta_db.parent,
+    )
+    assert result.tier == "2"
+    # Tier 2 default = union (not the bad pick).
+    assert result.picked_value_set is None
+    assert {c.code for c in result.codes} == {"1", "2", "3"}
+
+
+def test_get_column_values_relevant_years_filters_value_sets(
+    regmeta_db: Path,
+):
+    """Project that only loaded 2024 files should not see 2020 value-sets
+    in the picker. The 2020-only group drops out; the 2024 group becomes
+    the lone option (tier collapses to 1, picker disappears in the UI)."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2024")
+    # 2024 introduces a new code "3" that didn't exist in 2020.
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values(
+        "TESTREG", "Kon", relevant_years=[2024], db_path=regmeta_db.parent
+    )
+    assert result.kind == "values"
+    # Filtered to one group → tier 1 (no variance once we scope to 2024).
+    assert result.tier == "1"
+    # Picker collapses; only the 2024 group survives.
+    assert len(result.value_sets) == 1
+    assert result.value_sets[0].year_min == 2024
+    # Codes are 2024-specific (includes the new "3"), not the union.
+    assert {c.code for c in result.codes} == {"1", "2", "3"}
+
+
+def test_get_column_values_relevant_years_falls_back_when_no_overlap(
+    regmeta_db: Path,
+):
+    """When no value-set covers the project's year, fall back to the
+    full set and surface a note explaining why."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    conn.commit()
+    conn.close()
+
+    # Project years (2030, 2031) don't overlap any regmeta value-set.
+    result = editor.get_column_values(
+        "TESTREG",
+        "Kon",
+        relevant_years=[2030, 2031],
+        db_path=regmeta_db.parent,
+    )
+    assert result.kind == "values"
+    # Full set retained as fallback.
+    assert len(result.value_sets) == 2
+    assert result.note is not None
+    assert "no value-set covering your project's years" in result.note
+    assert "2030" in result.note and "2031" in result.note
+
+
+def test_get_column_values_relevant_years_keeps_yearless_groups(
+    regmeta_db: Path,
+):
+    """Groups with no parseable year survive the filter — we can't
+    disprove their relevance and excluding them would hide otherwise
+    useful codes for projects against yearless regmeta versions."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a yearless cvid (regver name "provisorisk" → extract_year → None).
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="provisorisk")
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("9", "Okänd")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values(
+        "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
+    )
+    # 2020 group + yearless group both kept.
+    assert len(result.value_sets) == 2
+    years = {g.year_min for g in result.value_sets}
+    assert years == {2020, None}
+
+
+def test_value_set_groups_chronological_with_unparsable_year_last(
+    regmeta_db: Path,
+):
+    """``_fetch_value_set_groups`` orders by year_min asc, with yearless
+    groups (regver name without a parseable year) sinking to the end."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # cvid 1002: yearless registerversionnamn → year_min is None.
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="provisorisk")
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    # cvid 1003: 2019 → should sort before 2020.
+    _add_extra_cvid(conn, cvid=1003, regver_id=102, regversion_name="2019")
+    assign_value_set(conn, 1003, [("1", "Man"), ("2", "Kvinna"), ("9", "Okänd")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.tier == "2"
+    years = [g.year_min for g in result.value_sets]
+    assert years == [2019, 2020, None]
 
 
 # -- _dedupe_codes -------------------------------------------------------
