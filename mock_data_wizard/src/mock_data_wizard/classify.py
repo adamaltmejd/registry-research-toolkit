@@ -254,11 +254,22 @@ class RegmetaSignal:
     datatyp_kind: str | None
     # short_name of the classification attached to this variable
     # (SUN2020-GRUPP, SSYK2012, ...). None when no shared classification.
+    # When n_classifications > 1 this is the most-common winner.
     classification_short_name: str | None
     # True when any cvid for this column under this register has a
     # non-null value_set_id — i.e. SCB enumerated the codes (covers
     # register-local code lists like ALKod / Kon).
     has_value_codes: bool = False
+    # Count of distinct ``vi.value_set_id`` across cvids for this column
+    # under this register. ``> 1`` means the code set differs across
+    # years — the popup union may include codes that aren't valid every
+    # year. NULL value_set_ids are excluded.
+    n_value_sets: int = 0
+    # Count of distinct ``classification.short_name`` across cvids.
+    # ``> 1`` means the column maps to different classifications across
+    # years (e.g. Kommun → LKF2012 vs other LKF versions) — the inline
+    # badge says "varies" instead of showing one winner.
+    n_classifications: int = 0
 
 
 def _sql_type_kind(sql_type: str | None) -> str | None:
@@ -377,7 +388,7 @@ def _regmeta_lookup(
         "SELECT LOWER(va.kolumnnamn) AS lower_name, "
         "       vi.datatyp AS datatyp, "
         "       c.short_name AS short_name, "
-        "       vi.value_set_id IS NOT NULL AS has_value_codes "
+        "       vi.value_set_id AS value_set_id "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
@@ -389,7 +400,7 @@ def _regmeta_lookup(
 
     datatyp_kinds: dict[str, str] = {}
     short_name_counts: dict[str, Counter] = {}
-    has_codes: set[str] = set()
+    value_set_ids: dict[str, set[int]] = {}
     seen: set[str] = set()
     for r in rows:
         name = r["lower_name"]
@@ -401,16 +412,20 @@ def _regmeta_lookup(
         sn = r["short_name"]
         if sn:
             short_name_counts.setdefault(name, Counter())[sn] += 1
-        if r["has_value_codes"]:
-            has_codes.add(name)
+        vsid = r["value_set_id"]
+        if vsid is not None:
+            value_set_ids.setdefault(name, set()).add(int(vsid))
     out: dict[str, RegmetaSignal] = {}
     for name in seen:
         sn_counter = short_name_counts.get(name)
         sn = sn_counter.most_common(1)[0][0] if sn_counter else None
+        vsids = value_set_ids.get(name, set())
         out[name] = RegmetaSignal(
             datatyp_kind=datatyp_kinds.get(name),
             classification_short_name=sn,
-            has_value_codes=name in has_codes,
+            has_value_codes=bool(vsids),
+            n_value_sets=len(vsids),
+            n_classifications=len(sn_counter) if sn_counter else 0,
         )
     return out
 

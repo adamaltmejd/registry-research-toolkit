@@ -837,6 +837,43 @@ def test_column_values_requires_column_field(running_server: str):
     assert "column" in body["error"]["message"]
 
 
+def test_column_values_response_surfaces_variance_fields(running_server: str):
+    """Variance fields are part of the wire contract (issue #64) — clients
+    rely on them even when regmeta is missing and the tier is null."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon"},
+    )
+    assert status == 200
+    assert body["tier"] is None
+    assert body["note"] is None
+    assert body["classifications"] == []
+    assert body["picked_classification"] is None
+
+
+def test_column_values_rejects_non_string_picked_classification(
+    running_server: str,
+):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "picked_classification": 42},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_accepts_null_picked_classification(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon", "picked_classification": None},
+    )
+    assert status == 200
+    assert body["picked_classification"] is None
+
+
 def test_payload_too_large_returns_413(running_server: str):
     """Oversized Content-Length must be rejected with a 413 envelope
     before the server reads anything off the wire — otherwise a bogus

@@ -172,6 +172,13 @@ export interface ColumnValueCode {
   label: string | null;
 }
 
+/** Year-variance tier surfaced inside the value-codes popup (issue #64).
+ * 1 = uniform across years; 2 = code set widens/narrows but every code
+ * has one label; 3a = same code has different labels across years
+ * (municipal reorgs); 3b = column maps to different classifications
+ * across years. Null only when kind === "none". */
+export type VarianceTier = "1" | "2" | "3a" | "3b";
+
 export interface ColumnValuesResponse {
   /** "classification" — canonical SCB classification code list.
    *  "values" — per-instance value codes aggregated for this register.
@@ -180,6 +187,15 @@ export interface ColumnValuesResponse {
   title: string;
   description: string | null;
   codes: ColumnValueCode[];
+  tier: VarianceTier | null;
+  /** Human-readable variance note. Null for tier 1 / kind="none". */
+  note: string | null;
+  /** Distinct classification short_names attached to this column under
+   * this register. Populated when > 1 across years (drives the picker). */
+  classifications: string[];
+  /** Which classification's codes are rendered. Only meaningful when
+   * `kind === "classification"` and the picker is shown. */
+  picked_classification: string | null;
 }
 
 export interface GetColumnValuesArgs {
@@ -187,6 +203,9 @@ export interface GetColumnValuesArgs {
    *  register assigned (server returns kind="none"). */
   register: string | null;
   column: string;
+  /** Opt into a non-default classification when the column maps to
+   * multiple across years. Ignored when not a candidate. */
+  picked_classification?: string | null;
 }
 
 export function getColumnValues(

@@ -1698,6 +1698,261 @@ def test_get_column_values_classification_path(regmeta_db: Path):
     assert code_map == {"1": "Man", "2": "Kvinna"}
 
 
+# -- variance signal (issue #64) -----------------------------------------
+
+
+def _add_extra_cvid(
+    conn,
+    cvid: int,
+    regver_id: int,
+    regversion_name: str,
+    classification_id: int | None = None,
+    value_set_id: int | None = None,
+) -> None:
+    """Test helper. Add a second cvid for var_id=44 (the conftest Kön
+    fixture) under TESTREG so we can simulate multi-year columns."""
+    conn.execute(
+        "INSERT INTO register_version (regver_id, regvar_id, registerversionnamn) "
+        "VALUES (?, 10, ?)",
+        (regver_id, regversion_name),
+    )
+    conn.execute(
+        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, "
+        "var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva, "
+        "classification_id, value_set_id) "
+        "VALUES (?, 1, 10, ?, 44, 'int', '1', 'Kön', '1', ?, ?)",
+        (cvid, regver_id, classification_id, value_set_id),
+    )
+    conn.execute(
+        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, 'Kon')", (cvid,)
+    )
+
+
+def test_regmeta_signal_counts_distinct_value_sets_and_classifications(
+    regmeta_db: Path,
+):
+    """The fixture has one cvid with one value_set; n_value_sets=1,
+    n_classifications=0 (no classification attached)."""
+    import sqlite3
+
+    from mock_data_wizard.classify import _regmeta_lookup
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    signals = _regmeta_lookup(conn, {"Kon"}, [1])
+    conn.close()
+    sig = signals["kon"]
+    assert sig.n_value_sets == 1
+    assert sig.n_classifications == 0
+    assert sig.has_value_codes is True
+
+
+def test_regmeta_signal_counts_multiple_value_sets_and_classifications(
+    regmeta_db: Path,
+):
+    """Two cvids with two distinct value_sets and two distinct
+    classifications → n_value_sets=2, n_classifications=2."""
+    import sqlite3
+
+    from mock_data_wizard.classify import _regmeta_lookup
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'desc', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'desc', 2);
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+        """
+    )
+    _add_extra_cvid(
+        conn, cvid=1002, regver_id=101, regversion_name="2021", classification_id=2
+    )
+    # Distinct value_set for the new cvid: different label so the hash
+    # diverges.
+    assign_value_set(conn, 1002, [("1", "Male"), ("2", "Female")])
+    conn.commit()
+    signals = _regmeta_lookup(conn, {"Kon"}, [1])
+    conn.close()
+    sig = signals["kon"]
+    assert sig.n_value_sets == 2
+    assert sig.n_classifications == 2
+    # most-common is undefined when counts tie; assert it's one of them.
+    assert sig.classification_short_name in {"CLS_A", "CLS_B"}
+
+
+def test_get_column_values_tier_1_no_variance(regmeta_db: Path):
+    """Single value_set, no classification → tier 1, no note."""
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    assert result.tier == "1"
+    assert result.note is None
+    assert result.classifications == ()
+    assert result.picked_classification is None
+
+
+def test_get_column_values_tier_2_multiple_value_sets_no_collision(
+    regmeta_db: Path,
+):
+    """Two value_sets that share labels (no collision) → tier 2."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
+    # Widen the code set: add code "3" with a fresh label.
+    assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    assert result.tier == "2"
+    assert result.note is not None
+    assert "Not all codes are valid" in result.note
+    assert {c.code for c in result.codes} == {"1", "2", "3"}
+
+
+def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
+    """Same vardekod with two distinct vardebenamning → tier 3a."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
+    # Same codes, different labels (year-over-year relabel).
+    assign_value_set(conn, 1002, [("1", "Male"), ("2", "Female")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    assert result.tier == "3a"
+    assert result.note is not None
+    assert "different meanings" in result.note
+
+
+def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
+    """Two distinct classifications across years → tier 3b with picker."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'Class A', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'Class B', 2);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 2, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+        """
+    )
+    _add_extra_cvid(
+        conn, cvid=1002, regver_id=101, regversion_name="2021", classification_id=2
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "classification"
+    assert result.tier == "3b"
+    assert result.note is not None
+    assert "Showing" in result.note
+    # Picker shows both classifications, sorted.
+    assert result.classifications == ("CLS_A", "CLS_B")
+    assert result.picked_classification in {"CLS_A", "CLS_B"}
+
+
+def test_get_column_values_picked_classification_honored(regmeta_db: Path):
+    """User picks the non-default classification; the popup re-fetches
+    that classification's codes."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a third code that only lives in CLS_B so we can prove we
+    # rendered the right classification.
+    conn.executescript(
+        """
+        INSERT INTO value_code (vardekod, vardebenamning) VALUES ('9', 'OnlyB');
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'Class A', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'Class B', 3);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 2, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2', '9');
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+        """
+    )
+    _add_extra_cvid(
+        conn, cvid=1002, regver_id=101, regversion_name="2021", classification_id=2
+    )
+    conn.commit()
+    conn.close()
+
+    picked = editor.get_column_values(
+        "TESTREG",
+        "Kon",
+        picked_classification="CLS_B",
+        db_path=regmeta_db.parent,
+    )
+    assert picked.tier == "3b"
+    assert picked.picked_classification == "CLS_B"
+    assert {c.code for c in picked.codes} == {"1", "2", "9"}
+
+
+def test_get_column_values_picked_classification_invalid_falls_back(
+    regmeta_db: Path,
+):
+    """Bad picks degrade silently to the default winner rather than
+    erroring — picker state shouldn't break the popup."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'Class A', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'Class B', 2);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 2, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+        """
+    )
+    _add_extra_cvid(
+        conn, cvid=1002, regver_id=101, regversion_name="2021", classification_id=2
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values(
+        "TESTREG",
+        "Kon",
+        picked_classification="NOT_A_REAL_CLS",
+        db_path=regmeta_db.parent,
+    )
+    assert result.kind == "classification"
+    # Falls back to a candidate from the list (most-common winner).
+    assert result.picked_classification in {"CLS_A", "CLS_B"}
+
+
 # -- _dedupe_codes -------------------------------------------------------
 
 

@@ -98,7 +98,9 @@
             "regmeta_signal": {
               "datatyp_kind": "numeric",
               "classification_short_name": null,
-              "has_value_codes": false
+              "has_value_codes": false,
+              "n_value_sets": 0,
+              "n_classifications": 0
             },
             "regmeta_implied_type": "numeric"
           },
@@ -111,7 +113,9 @@
             "regmeta_signal": {
               "datatyp_kind": null,
               "classification_short_name": "KON",
-              "has_value_codes": true
+              "has_value_codes": true,
+              "n_value_sets": 0,
+              "n_classifications": 0
             },
             "regmeta_implied_type": "categorical"
           }
@@ -135,7 +139,9 @@
             "regmeta_signal": {
               "datatyp_kind": "numeric",
               "classification_short_name": null,
-              "has_value_codes": false
+              "has_value_codes": false,
+              "n_value_sets": 0,
+              "n_classifications": 0
             },
             "regmeta_implied_type": "numeric"
           },
@@ -148,7 +154,9 @@
             "regmeta_signal": {
               "datatyp_kind": null,
               "classification_short_name": "KON",
-              "has_value_codes": true
+              "has_value_codes": true,
+              "n_value_sets": 0,
+              "n_classifications": 0
             },
             "regmeta_implied_type": "categorical"
           }

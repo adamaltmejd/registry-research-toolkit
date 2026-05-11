@@ -1576,6 +1576,20 @@ class ColumnValue:
     label: str | None
 
 
+VarianceTier = Literal["1", "2", "3a", "3b"]
+
+
+# Year-variance notes surfaced inside the popup. Kept as module-level
+# constants so tests can assert on the exact text without re-deriving it.
+_NOTE_TIER_2 = (
+    "Value code sets differ by period. Not all codes are valid for every year."
+)
+_NOTE_TIER_3A = (
+    "Some codes have different meanings in different years (e.g. municipal "
+    "reorgs). Use `regmeta get values <var>` for year-correct lookups."
+)
+
+
 @dataclass(frozen=True)
 class ColumnValuesResult:
     """Year-correct value codes for one (register, column) pair.
@@ -1593,18 +1607,55 @@ class ColumnValuesResult:
 
     ``title`` is short user-facing text (classification short_name or
     variable name); ``description`` is optional long text shown below.
+
+    ``tier`` flags the year-variance shape (issue #64). ``None`` only when
+    ``kind="none"``. ``note`` is the user-facing variance message (None
+    when there is nothing to warn about). ``classifications`` lists every
+    distinct ``classification.short_name`` attached to this column under
+    this register — populated when more than one exists so the popup can
+    render a picker. ``picked_classification`` is the short_name actually
+    rendered (only populated on the classification path when picker is
+    relevant).
     """
 
     kind: Literal["classification", "values", "none"]
     title: str
     description: str | None
     codes: tuple[ColumnValue, ...]
+    tier: VarianceTier | None = None
+    note: str | None = None
+    classifications: tuple[str, ...] = ()
+    picked_classification: str | None = None
+
+
+def _fetch_distinct_classifications(
+    conn: Any, matched_alias: str, register_ids: list[int]
+) -> tuple[str, ...]:
+    """Distinct ``classification.short_name`` attached to ``matched_alias``
+    under ``register_ids``. Ordered alphabetically so the picker is
+    stable across opens. Empty tuple when no classifications are attached."""
+    if not register_ids:
+        return ()
+    ph = ",".join("?" for _ in register_ids)
+    rows = conn.execute(
+        "SELECT DISTINCT c.short_name "
+        "FROM variable_alias va "
+        "JOIN variable_instance vi ON va.cvid = vi.cvid "
+        "JOIN classification c ON vi.classification_id = c.id "
+        f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
+        f"  AND vi.register_id IN ({ph}) "
+        "  AND c.short_name IS NOT NULL "
+        "ORDER BY c.short_name",
+        [matched_alias, *register_ids],
+    ).fetchall()
+    return tuple(r["short_name"] for r in rows)
 
 
 def get_column_values(
     register: str | None,
     column: str,
     *,
+    picked_classification: str | None = None,
     db_path: Path | None = None,
 ) -> ColumnValuesResult:
     """Resolve value codes for one column under one register.
@@ -1614,6 +1665,11 @@ def get_column_values(
     hierarchy levels) while per-instance codes can be a register-local
     subset. Falls back to per-instance value codes when no classification
     is attached, and to ``kind="none"`` when regmeta has no codes either.
+
+    ``picked_classification`` opts into rendering a non-default
+    classification when the column maps to multiple. Ignored when not in
+    the column's distinct classifications for this register (the popup
+    falls back to the default winner rather than 404-ing).
 
     Returns ``kind="none"`` rather than raising when regmeta is missing,
     the register doesn't resolve, or the column is unknown — the UI
@@ -1649,13 +1705,33 @@ def get_column_values(
         # doesn't know.
         matched_alias = _matched_alias_key(signals, column) or column
 
+        # Distinct classifications: populated when the picker is relevant
+        # (i.e. > 1 across years). Fetched lazily — most columns have one
+        # or zero classifications, no need to hit the DB twice.
+        classifications: tuple[str, ...] = ()
+        if signal is not None and signal.n_classifications > 1:
+            classifications = _fetch_distinct_classifications(
+                conn, matched_alias, register_ids
+            )
+
         # Classification path: when a short_name is attached, fetch the
         # canonical code list. ``get_classification_codes`` raises on
         # not_found; fall through to the per-instance path below in that
         # case so a stale classification name doesn't blank the popover.
         if signal is not None and signal.classification_short_name:
+            # Honor an explicit pick when it's a real candidate for this
+            # column. Bad picks degrade silently to the default winner
+            # rather than 404 — the UI is just showing year-variance and
+            # a transient picker state shouldn't break the popup.
+            chosen_sn = signal.classification_short_name
+            if (
+                picked_classification
+                and classifications
+                and picked_classification in classifications
+            ):
+                chosen_sn = picked_classification
             try:
-                meta = get_classification_codes(conn, signal.classification_short_name)
+                meta = get_classification_codes(conn, chosen_sn)
             except RegmetaError:
                 meta = None
             if meta is not None:
@@ -1667,13 +1743,24 @@ def get_column_values(
                     for c in meta.get("codes", [])
                 )
                 if codes:
-                    title = meta.get("short_name") or signal.classification_short_name
+                    title = meta.get("short_name") or chosen_sn
                     description = meta.get("description") or meta.get("name")
+                    tier, note = _tier_for_classification_path(
+                        signal.n_value_sets,
+                        signal.n_classifications,
+                        chosen_sn,
+                    )
                     return ColumnValuesResult(
                         kind="classification",
                         title=title,
                         description=description,
                         codes=codes,
+                        tier=tier,
+                        note=note,
+                        classifications=classifications,
+                        picked_classification=(
+                            chosen_sn if signal.n_classifications > 1 else None
+                        ),
                     )
 
         # Per-instance values path: aggregate codes across variable
@@ -1694,18 +1781,75 @@ def get_column_values(
                 "ORDER BY vc.vardekod",
                 [matched_alias, *register_ids],
             ).fetchall()
-            codes = _dedupe_codes(
-                (str(r["vardekod"]), r["vardebenamning"]) for r in rows
-            )
+            raw_pairs = [(str(r["vardekod"]), r["vardebenamning"]) for r in rows]
+            codes = _dedupe_codes(iter(raw_pairs))
             if codes:
+                tier, note = _tier_for_values_path(
+                    raw_pairs, signal.n_value_sets, signal.n_classifications
+                )
                 return ColumnValuesResult(
                     kind="values",
                     title=column,
                     description=None,
                     codes=codes,
+                    tier=tier,
+                    note=note,
+                    classifications=classifications,
+                    picked_classification=None,
                 )
 
         return empty
+
+
+def _tier_for_classification_path(
+    n_value_sets: int, n_classifications: int, picked: str
+) -> tuple[VarianceTier, str | None]:
+    """Tier + note for the classification path.
+
+    3b dominates 2: when a column maps to multiple classifications the
+    picker note is the actionable signal; an extra "value-sets differ"
+    note would just be noise on top of that.
+    """
+    if n_classifications > 1:
+        return ("3b", _note_tier_3b(picked))
+    if n_value_sets > 1:
+        return ("2", _NOTE_TIER_2)
+    return ("1", None)
+
+
+def _tier_for_values_path(
+    raw_pairs: list[tuple[str, str | None]],
+    n_value_sets: int,
+    n_classifications: int,
+) -> tuple[VarianceTier, str | None]:
+    """Tier + note for the per-instance values path.
+
+    3a (label collisions on the same code) dominates 2 because the
+    rendered popup actually loses meaning under 3a — the deduped list
+    arbitrarily picks one label per code. 3b is conceptually possible
+    here too (signal carries a classification short_name but
+    ``get_classification_codes`` returned empty / not_found, so we fell
+    through). Treating that as 3b would invite a picker that promises
+    classification codes we couldn't fetch; flag the simpler tiers
+    instead.
+    """
+    labels_per_code: dict[str, set[str]] = {}
+    for code, label in raw_pairs:
+        if label is None:
+            continue
+        labels_per_code.setdefault(code, set()).add(label)
+    if any(len(s) > 1 for s in labels_per_code.values()):
+        return ("3a", _NOTE_TIER_3A)
+    if n_value_sets > 1 or n_classifications > 1:
+        return ("2", _NOTE_TIER_2)
+    return ("1", None)
+
+
+def _note_tier_3b(picked: str) -> str:
+    return (
+        f"This column maps to different classifications across years. "
+        f"Showing {picked} — pick another below for year-correct codes."
+    )
 
 
 def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:

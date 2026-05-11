@@ -670,6 +670,8 @@ def _api_get_column_values(
     ``register`` is optional (JSON null is allowed) so the UI can ask
     about an unassigned column too — the server returns ``kind="none"``
     when there's nothing to look up. ``column`` is required.
+    ``picked_classification`` opts into a non-default classification when
+    the column maps to multiple across years.
     """
     column = _required_str(body, "column")
     if "register" not in body:
@@ -681,12 +683,27 @@ def _api_get_column_values(
         raise editor.ValidationError(
             f"register must be a string or null, got {type(register_value).__name__}"
         )
-    result = editor.get_column_values(register_value, column, db_path=config.db_path)
+    picked = body.get("picked_classification")
+    if picked is not None and not isinstance(picked, str):
+        raise editor.ValidationError(
+            "picked_classification must be a string or null, "
+            f"got {type(picked).__name__}"
+        )
+    result = editor.get_column_values(
+        register_value,
+        column,
+        picked_classification=picked,
+        db_path=config.db_path,
+    )
     return HTTPStatus.OK, {
         "kind": result.kind,
         "title": result.title,
         "description": result.description,
         "codes": [{"code": c.code, "label": c.label} for c in result.codes],
+        "tier": result.tier,
+        "note": result.note,
+        "classifications": list(result.classifications),
+        "picked_classification": result.picked_classification,
     }
 
 

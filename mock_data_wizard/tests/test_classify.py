@@ -322,12 +322,12 @@ class _FakeConn:
         return _FakeRows(self._rows)
 
 
-def _row(lower_name, datatyp=None, short_name=None, has_value_codes=0):
+def _row(lower_name, datatyp=None, short_name=None, value_set_id=None):
     return {
         "lower_name": lower_name,
         "datatyp": datatyp,
         "short_name": short_name,
-        "has_value_codes": has_value_codes,
+        "value_set_id": value_set_id,
     }
 
 
@@ -358,12 +358,13 @@ def test_regmeta_lookup_aggregates_classification_majority():
 def test_regmeta_lookup_has_value_codes_any_wins():
     conn = _FakeConn(
         [
-            _row("alkod", has_value_codes=0),
-            _row("alkod", has_value_codes=1),
+            _row("alkod", value_set_id=None),
+            _row("alkod", value_set_id=7),
         ]
     )
     result = _regmeta_lookup(conn, {"ALKod"}, [34])
     assert result["alkod"].has_value_codes is True
+    assert result["alkod"].n_value_sets == 1
 
 
 def test_regmeta_lookup_first_non_null_datatyp_wins():

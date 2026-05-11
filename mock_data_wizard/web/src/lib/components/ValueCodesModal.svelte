@@ -22,21 +22,35 @@
     | { kind: "loading" }
     | { kind: "ok"; data: ColumnValuesResponse }
     | { kind: "error"; message: string };
-  let state: LoadState = $state({ kind: "loading" });
+  // `null` = render the column's default (most-common) classification.
+  // Set by clicking a chip in the picker; passed back to the server on
+  // re-fetch so the popup honors the pick.
+  let pickedClassification: string | null = $state(null);
+  let loadState: LoadState = $state({ kind: "loading" });
 
   onMount(() => {
     void load();
   });
 
   async function load(): Promise<void> {
-    state = { kind: "loading" };
+    loadState = { kind: "loading" };
     try {
-      const data = await getColumnValues({ register, column });
-      state = { kind: "ok", data };
+      const data = await getColumnValues({
+        register,
+        column,
+        picked_classification: pickedClassification,
+      });
+      loadState = { kind: "ok", data };
     } catch (exc) {
       const message = exc instanceof Error ? exc.message : String(exc);
-      state = { kind: "error", message };
+      loadState = { kind: "error", message };
     }
+  }
+
+  function pickClassification(short_name: string): void {
+    if (pickedClassification === short_name) return;
+    pickedClassification = short_name;
+    void load();
   }
 </script>
 
@@ -48,11 +62,11 @@
         {#if register}· <span class="register-name">{register}</span>{/if}
       </span>
       <h3 id="value-codes-heading" class="mono">{column}</h3>
-      {#if state.kind === "ok" && state.data.kind !== "none"}
-        <span class="kind-tag kind-{state.data.kind}" title={state.data.kind}>
-          {state.data.kind === "classification"
-            ? `classification · ${state.data.title}`
-            : `value codes · ${state.data.codes.length}`}
+      {#if loadState.kind === "ok" && loadState.data.kind !== "none"}
+        <span class="kind-tag kind-{loadState.data.kind}" title={loadState.data.kind}>
+          {loadState.data.kind === "classification"
+            ? `classification · ${loadState.data.title}`
+            : `value codes · ${loadState.data.codes.length}`}
         </span>
       {/if}
     </div>
@@ -61,24 +75,51 @@
     </button>
   </header>
 
-  {#if state.kind === "loading"}
+  {#if loadState.kind === "loading"}
     <p class="status">Loading…</p>
-  {:else if state.kind === "error"}
+  {:else if loadState.kind === "error"}
     <p class="status error">
-      Could not load values: {state.message}
+      Could not load values: {loadState.message}
       <button type="button" class="retry" onclick={() => void load()}>
         Retry
       </button>
     </p>
-  {:else if state.data.kind === "none"}
+  {:else if loadState.data.kind === "none"}
     <p class="status muted">
       regmeta has no value codes for <code>{column}</code>{register
         ? ` under ${register}`
         : ""}.
     </p>
   {:else}
-    {#if state.data.description}
-      <p class="description">{state.data.description}</p>
+    {#if loadState.data.note}
+      <p class="variance-note variance-{loadState.data.tier ?? '1'}">
+        {loadState.data.note}
+      </p>
+    {/if}
+    {#if loadState.data.classifications.length > 1}
+      {@const picked =
+        loadState.data.picked_classification ?? loadState.data.classifications[0]}
+      <div class="classification-picker">
+        <span class="picker-label">Classification:</span>
+        <ul class="picker-chips">
+          {#each loadState.data.classifications as sn (sn)}
+            <li>
+              <button
+                type="button"
+                class="chip"
+                class:active={sn === picked}
+                aria-pressed={sn === picked}
+                onclick={() => pickClassification(sn)}
+              >
+                {sn}
+              </button>
+            </li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+    {#if loadState.data.description}
+      <p class="description">{loadState.data.description}</p>
     {/if}
     <div class="codes-wrap">
       <table class="codes">
@@ -93,7 +134,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each state.data.codes as c (c.code)}
+          {#each loadState.data.codes as c (c.code)}
             <tr>
               <td class="mono">{c.code}</td>
               <td>{c.label ?? ""}</td>
@@ -181,6 +222,73 @@
     border-radius: 3px;
     cursor: pointer;
     font: inherit;
+  }
+  /* Variance notes (issue #64). Tier 2 = code set differs across years
+     but labels are stable. Tier 3a = same code, different labels (the
+     dangerous one). Tier 3b = different classifications (paired with
+     the picker). Color escalates from amber to red so the eye lands on
+     3a / 3b without reading the text first. */
+  .variance-note {
+    margin: 0 0 0.4rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    border: 1px solid #e8c184;
+    background: #fff7e6;
+    color: #7a4a00;
+  }
+  .variance-3a {
+    border-color: #e0a0a0;
+    background: #fde8e8;
+    color: #882020;
+  }
+  .variance-3b {
+    border-color: #e8c184;
+    background: #fff7e6;
+    color: #7a4a00;
+  }
+  .classification-picker {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.2rem 0 0.5rem;
+    flex-wrap: wrap;
+  }
+  .picker-label {
+    color: #555;
+    font-size: 0.85rem;
+  }
+  .picker-chips {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+  }
+  .chip {
+    padding: 0.1rem 0.55rem;
+    border: 1px solid #c8d3ec;
+    border-radius: 3px;
+    background: #eef2fb;
+    color: #1a3b80;
+    font: inherit;
+    font-family: ui-monospace, monospace;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  .chip:hover {
+    background: #e0e7f7;
+  }
+  .chip.active {
+    background: #1a3b80;
+    color: #fff;
+    border-color: #1a3b80;
+  }
+  .chip:focus-visible {
+    outline: 2px solid #1a3b80;
+    outline-offset: 1px;
   }
   .description {
     margin: 0;

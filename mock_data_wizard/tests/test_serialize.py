@@ -115,11 +115,15 @@ def test_regmeta_signal_to_dict():
         datatyp_kind="numeric",
         classification_short_name="SUN2020-GRUPP",
         has_value_codes=True,
+        n_value_sets=2,
+        n_classifications=3,
     )
     assert _regmeta_signal_to_dict(sig) == {
         "datatyp_kind": "numeric",
         "classification_short_name": "SUN2020-GRUPP",
         "has_value_codes": True,
+        "n_value_sets": 2,
+        "n_classifications": 3,
     }
 
 
@@ -131,6 +135,8 @@ def test_regmeta_signal_nullable_fields():
         "datatyp_kind": None,
         "classification_short_name": None,
         "has_value_codes": False,
+        "n_value_sets": 0,
+        "n_classifications": 0,
     }
 
 
@@ -188,6 +194,8 @@ def test_column_info_to_dict_full():
             "datatyp_kind": "numeric",
             "classification_short_name": None,
             "has_value_codes": False,
+            "n_value_sets": 0,
+            "n_classifications": 0,
         },
         "regmeta_implied_type": "numeric",
     }
