@@ -51,21 +51,42 @@
     return m;
   });
 
+  let groupSourceSet = $derived(new Set(group.sources));
   let panelsForGroup = $derived.by(() => {
     const panels = store.snapshot?.config.panels ?? [];
-    const groupSourceSet = new Set(group.sources);
     return panels.filter((p) =>
       p.members.some((m) => groupSourceSet.has(m.source)),
     );
   });
+
+  // A panel can straddle two groups when early/late years split into
+  // different schema variants. Per-card labels and source lists should
+  // describe what's *in this group*; the out-of-group tail is surfaced
+  // separately so the count never reads "12 of 8 sources".
+  interface PanelView {
+    panel: Panel;
+    inGroup: string[];
+    outOfGroup: number;
+  }
+  let panelViewsForGroup: PanelView[] = $derived(
+    panelsForGroup.map((panel) => {
+      const inGroup: string[] = [];
+      let outOfGroup = 0;
+      for (const m of panel.members) {
+        if (groupSourceSet.has(m.source)) inGroup.push(m.source);
+        else outOfGroup += 1;
+      }
+      return { panel, inGroup, outOfGroup };
+    }),
+  );
 
   // Sources in this group that no panel currently claims. Drives the
   // "Unassigned sources" box: when non-empty, the user can designate
   // an additional panel that covers just the leftovers.
   let unassignedSources: string[] = $derived.by(() => {
     const claimed = new Set<string>();
-    for (const p of panelsForGroup) {
-      for (const m of p.members) claimed.add(m.source);
+    for (const v of panelViewsForGroup) {
+      for (const sn of v.inGroup) claimed.add(sn);
     }
     return group.sources.filter((sn) => !claimed.has(sn));
   });
@@ -460,11 +481,11 @@
     </button>
   </section>
 
-  {#each panelsForGroup as panel (panel.panel_id)}
+  {#each panelViewsForGroup as { panel, inGroup, outOfGroup } (panel.panel_id)}
     {@const coverageLabel =
-      panel.members.length < group.sources.length
-        ? `${panel.members.length} of ${group.sources.length} sources`
-        : `${panel.members.length} member${panel.members.length === 1 ? "" : "s"}`}
+      inGroup.length < group.sources.length
+        ? `${inGroup.length} of ${group.sources.length} sources`
+        : `${inGroup.length} member${inGroup.length === 1 ? "" : "s"}`}
     <section class="panel-box">
       <div class="panel-box-header">
         <span class="panel-tag">panel</span>
@@ -480,11 +501,12 @@
       <p class="panel-box-meta">
         entity_key: <code>{panel.entity_key}</code>
         · {panelTimeKeySummary(panel)} · {coverageLabel}
+        {#if outOfGroup > 0}
+          <span class="muted"> · +{outOfGroup} in another group</span>
+        {/if}
       </p>
       <p class="panel-box-sources">
-        Sources: <span class="mono"
-          >{panel.members.map((m) => m.source).join(", ")}</span
-        >
+        Sources: <span class="mono">{inGroup.join(", ")}</span>
       </p>
     </section>
   {/each}

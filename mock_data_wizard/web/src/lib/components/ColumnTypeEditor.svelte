@@ -357,21 +357,7 @@
 </Modal>
 
 <style>
-  form {
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-    gap: 0.75rem;
-  }
-  .modal-body {
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
+  /* form + .modal-body flex/scroll layout is defined in Modal.svelte. */
   header {
     display: flex;
     justify-content: space-between;

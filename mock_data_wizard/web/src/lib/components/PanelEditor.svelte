@@ -44,6 +44,11 @@
     if (existing) {
       for (const m of existing.members) fromExisting.set(m.source, m.time_key);
     }
+    // `restrictToSources: []` is treated the same as omitting it: an empty
+    // scope would otherwise leave the picker with nothing selected, which
+    // is a footgun if a future caller forwards a possibly-empty leftover
+    // list. Arrays are truthy in JS, so we have to check length explicitly.
+    const hasRestrict = !!restrictToSources && restrictToSources.length > 0;
     // Ignore group.panel_candidate when we're designating a panel for a
     // leftover subset: the candidate is computed against the whole
     // group, so its seeds would pre-fill sources already claimed by
@@ -51,15 +56,13 @@
     // rule (config._parse_panels). Hints are still per-source, so they
     // remain useful pre-fills for the leftover subset.
     const fromCandidate = new Map<string, number | string>();
-    if (!existing && !restrictToSources && group.panel_candidate) {
+    if (!existing && !hasRestrict && group.panel_candidate) {
       for (const m of group.panel_candidate.members) {
         fromCandidate.set(m.source, m.time_key);
       }
     }
     const seeded = fromExisting.size > 0 ? fromExisting : fromCandidate;
-    const inScope = restrictToSources
-      ? new Set(restrictToSources)
-      : null;
+    const inScope = hasRestrict ? new Set(restrictToSources) : null;
 
     const out: Record<string, MemberDraft> = {};
     for (const sn of allSources) {
@@ -267,10 +270,27 @@
       .map((sn) => `${sn}: already in panel ${otherPanelsBySource[sn]}`),
   );
 
+  // Client-side mirror of the server's duplicate-id rejection. Excludes
+  // the panel currently being edited so renaming to the same id is a no-op
+  // rather than a conflict. defaultPanelId() seeds a free id, but the
+  // user can type into the field after mount, so re-check on every change.
+  let panelIdCollisionError: string | null = $derived.by(() => {
+    if (panelIdTrimmed.length === 0) return null;
+    const panels = store.snapshot?.config.panels ?? [];
+    for (const p of panels) {
+      if (existing && p.panel_id === existing.panel_id) continue;
+      if (p.panel_id === panelIdTrimmed) {
+        return `panel_id '${panelIdTrimmed}' already in use`;
+      }
+    }
+    return null;
+  });
+
   let validationErrors: string[] = $derived(
     [
       selectedSources.length === 0 ? "select at least one source" : null,
       panelIdTrimmed.length === 0 ? "panel_id required" : null,
+      panelIdCollisionError,
       entityKeyError,
       duplicateLiteralError,
       ...overlapErrors,
@@ -422,10 +442,11 @@
           Members ({selectedSources.length}/{allSources.length})
         </legend>
         <ul>
-          {#each allSources as sn (sn)}
+          {#each allSources as sn, idx (sn)}
             {@const d = draft[sn]}
             {@const cols = group.columns_by_source[sn] ?? []}
             {@const otherPanel = otherPanelsBySource[sn]}
+            {@const timeKeyLabelId = `time-key-label-${idx}`}
             <li class:disabled={!d.selected}>
               <label class="source-row">
                 {#if allSources.length > 1}
@@ -447,11 +468,11 @@
               </label>
               {#if d.selected}
                 <div class="time-key-block">
-                  <span class="field-label" id={`time-key-label-${sn}`}>time_key</span>
+                  <span class="field-label" id={timeKeyLabelId}>time_key</span>
                   <div
                     class="mode-toggle"
                     role="radiogroup"
-                    aria-labelledby={`time-key-label-${sn}`}
+                    aria-labelledby={timeKeyLabelId}
                   >
                     {#each MODE_OPTIONS as opt (opt.value)}
                       <label class:active={d.mode === opt.value}>
@@ -547,28 +568,7 @@
 </Modal>
 
 <style>
-  form {
-    /* Fill the modal's height so the scrollable body region has a real
-       container to scroll against. `display: contents` would skip this
-       wrapping, but it strips the form box from the accessibility tree
-       in some browsers, so we use a real flex column instead. */
-    display: flex;
-    flex-direction: column;
-    flex: 1 1 auto;
-    min-height: 0;
-    gap: 0.75rem;
-  }
-  .modal-body {
-    /* The variable-length middle region: long member lists scroll
-       inside this box while the heading and the action buttons stay
-       pinned at the top and bottom of the modal card. */
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
+  /* form + .modal-body flex/scroll layout is defined in Modal.svelte. */
   .field-label {
     color: #666;
     font-size: 0.78rem;

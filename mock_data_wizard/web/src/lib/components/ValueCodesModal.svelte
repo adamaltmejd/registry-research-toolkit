@@ -173,78 +173,80 @@
     </button>
   </header>
 
-  {#if loadState.kind === "loading"}
-    <p class="status">Loading…</p>
-  {:else if loadState.kind === "error"}
-    <p class="status error">
-      Could not load values: {loadState.message}
-      <button type="button" class="retry" onclick={() => void load()}>
-        Retry
-      </button>
-    </p>
-  {:else if loadState.data.kind === "none"}
-    <p class="status muted">
-      regmeta has no value codes for <code>{column}</code>{register
-        ? ` under ${register}`
-        : ""}.
-    </p>
-  {:else}
-    {#if loadState.data.note && loadState.data.tier}
-      <p class="variance-note variance-{loadState.data.tier}">
-        {loadState.data.note}
+  <div class="modal-body">
+    {#if loadState.kind === "loading"}
+      <p class="status">Loading…</p>
+    {:else if loadState.kind === "error"}
+      <p class="status error">
+        Could not load values: {loadState.message}
+        <button type="button" class="retry" onclick={() => void load()}>
+          Retry
+        </button>
       </p>
-    {/if}
-    {#if loadState.data.kind === "classification" && loadState.data.classifications.length > 1}
-      {@const picked =
-        loadState.data.picked_classification ?? loadState.data.classifications[0]}
-      <Picker
-        label="Classification:"
-        options={loadState.data.classifications}
-        value={picked}
-        optionLabel={(sn) => sn}
-        eqKey={(sn) => sn}
-        onPick={pickClassification}
-      />
-    {/if}
-    {#if loadState.data.value_sets.length > 1}
-      {@const opts = vsOptions(loadState.data)}
-      {@const active = vsActive(loadState.data)}
-      <Picker
-        label="Value-set:"
-        options={opts}
-        value={active}
-        optionLabel={vsLabel}
-        eqKey={vsKey}
-        activeDescription={vsActiveDescription(active)}
-        onPick={pickValueSet}
-      />
-    {/if}
-    {#if loadState.data.description}
-      <p class="description">{loadState.data.description}</p>
-    {/if}
-    <div class="codes-wrap">
-      <table class="codes">
-        <colgroup>
-          <col class="col-code" />
-          <col class="col-label" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th>Code</th>
-            <th>Label</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each loadState.data.codes as c (c.code)}
+    {:else if loadState.data.kind === "none"}
+      <p class="status muted">
+        regmeta has no value codes for <code>{column}</code>{register
+          ? ` under ${register}`
+          : ""}.
+      </p>
+    {:else}
+      {#if loadState.data.note && loadState.data.tier}
+        <p class="variance-note variance-{loadState.data.tier}">
+          {loadState.data.note}
+        </p>
+      {/if}
+      {#if loadState.data.kind === "classification" && loadState.data.classifications.length > 1}
+        {@const picked =
+          loadState.data.picked_classification ?? loadState.data.classifications[0]}
+        <Picker
+          label="Classification:"
+          options={loadState.data.classifications}
+          value={picked}
+          optionLabel={(sn) => sn}
+          eqKey={(sn) => sn}
+          onPick={pickClassification}
+        />
+      {/if}
+      {#if loadState.data.value_sets.length > 1}
+        {@const opts = vsOptions(loadState.data)}
+        {@const active = vsActive(loadState.data)}
+        <Picker
+          label="Value-set:"
+          options={opts}
+          value={active}
+          optionLabel={vsLabel}
+          eqKey={vsKey}
+          activeDescription={vsActiveDescription(active)}
+          onPick={pickValueSet}
+        />
+      {/if}
+      {#if loadState.data.description}
+        <p class="description">{loadState.data.description}</p>
+      {/if}
+      <div class="codes-wrap">
+        <table class="codes">
+          <colgroup>
+            <col class="col-code" />
+            <col class="col-label" />
+          </colgroup>
+          <thead>
             <tr>
-              <td class="mono">{c.code}</td>
-              <td>{c.label ?? ""}</td>
+              <th>Code</th>
+              <th>Label</th>
             </tr>
-          {/each}
-        </tbody>
-      </table>
-    </div>
-  {/if}
+          </thead>
+          <tbody>
+            {#each loadState.data.codes as c (c.code)}
+              <tr>
+                <td class="mono">{c.code}</td>
+                <td>{c.label ?? ""}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {/if}
+  </div>
 
   <footer>
     <button type="button" onclick={onClose}>Close</button>
