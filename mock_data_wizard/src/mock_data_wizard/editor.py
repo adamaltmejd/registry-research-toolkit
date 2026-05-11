@@ -1954,7 +1954,6 @@ def get_column_values(
                 tier, tier_note = _tier_for_values_path(
                     raw_pairs,
                     n_value_sets=len(groups_used),
-                    n_classifications=signal.n_classifications,
                 )
                 chosen_vs = _resolve_picked_value_set(
                     tier, groups_used, picked_value_set
@@ -1966,6 +1965,11 @@ def get_column_values(
                     if not codes:
                         codes = union_codes
                         chosen_vs = None
+                # ``classifications`` deliberately empty here: we're on
+                # the values-path fallback (classification lookup either
+                # absent or failed). Surfacing classification short_names
+                # would imply the rendered codes belong to a specific
+                # classification, when really we couldn't fetch any.
                 return ColumnValuesResult(
                     kind="values",
                     title=column,
@@ -1973,7 +1977,7 @@ def get_column_values(
                     codes=codes,
                     tier=tier,
                     note=_join_notes(filter_note, tier_note),
-                    classifications=classifications,
+                    classifications=(),
                     picked_classification=None,
                     value_sets=groups_used,
                     picked_value_set=chosen_vs,
@@ -2001,18 +2005,16 @@ def _tier_for_classification_path(
 def _tier_for_values_path(
     raw_pairs: list[tuple[str, str | None]],
     n_value_sets: int,
-    n_classifications: int,
 ) -> tuple[VarianceTier, str | None]:
     """Tier + note for the per-instance values path.
 
     3a (label collisions on the same code) dominates 2 because the
     rendered popup actually loses meaning under 3a — the deduped list
-    arbitrarily picks one label per code. 3b is conceptually possible
-    here too (signal carries a classification short_name but
-    ``get_classification_codes`` returned empty / not_found, so we fell
-    through). Treating that as 3b would invite a picker that promises
-    classification codes we couldn't fetch; flag the simpler tiers
-    instead.
+    arbitrarily picks one label per code. 3b never applies here: if the
+    caller fell through from the classification path (lookup failed),
+    we deliberately drop ``classifications`` from the response so the
+    UI doesn't render a picker we can't honor, and the tier stays in
+    {1, 2, 3a} for consistency.
     """
     labels_per_code: dict[str, set[str]] = {}
     for code, label in raw_pairs:
@@ -2021,7 +2023,7 @@ def _tier_for_values_path(
         labels_per_code.setdefault(code, set()).add(label)
     if any(len(s) > 1 for s in labels_per_code.values()):
         return ("3a", _NOTE_TIER_3A)
-    if n_value_sets > 1 or n_classifications > 1:
+    if n_value_sets > 1:
         return ("2", _NOTE_TIER_2)
     return ("1", None)
 

@@ -98,11 +98,13 @@
   }
 
   // Long-form text for the badge tooltip — same source data, expanded.
+  // Keep this purely descriptive; the click CTA is appended by TypeCell
+  // so the rendered title doesn't repeat "click to …" twice.
   function regmetaBadgeTitle(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
     if (sig.n_classifications > 1) {
-      return `regmeta: ${sig.n_classifications} classifications across years (e.g. ${sig.classification_short_name}); click to see codes for each`;
+      return `regmeta: ${sig.n_classifications} classifications across years (e.g. ${sig.classification_short_name})`;
     }
     if (sig.classification_short_name) {
       return `regmeta classification: ${sig.classification_short_name}`;

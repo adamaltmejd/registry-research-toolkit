@@ -230,7 +230,7 @@
         {loadState.data.note}
       </p>
     {/if}
-    {#if loadState.data.classifications.length > 1}
+    {#if loadState.data.kind === "classification" && loadState.data.classifications.length > 1}
       {@const picked =
         loadState.data.picked_classification ?? loadState.data.classifications[0]}
       <Picker
