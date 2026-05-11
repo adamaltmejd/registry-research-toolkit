@@ -13,19 +13,24 @@
 
   let { group, onClose }: Props = $props();
 
-  // Inline the source list when it fits comfortably; collapse behind a
-  // <details> when it doesn't. Threshold picked empirically — 5 fits on
-  // one wrapped line at typical modal widths.
-  const SOURCE_PREVIEW_LIMIT = 5;
-
   // Modal dialog: snapshot the prop once on mount; `untrack` signals
   // that not reacting to upstream `group` changes is intentional.
   const initialName: string = untrack(() => group.register_name ?? "");
+  const initialSources: readonly string[] = untrack(() => [...group.sources]);
+  const isSingleton = initialSources.length === 1;
   let selectedRegister: string = $state(initialName);
   let reclassifyManual = $state(false);
   let submitting = $state(false);
   let confirming = $state(false);
   let validationError: string | null = $state(null);
+
+  // Per-source inclusion. Unchecked sources fall out into their own
+  // `noreg-<source_name>` group on the next snapshot rebuild. Default
+  // every source to checked — Edit register must remain a no-op when
+  // the user only opens the modal and clicks Apply.
+  let sourceIncluded: Record<string, boolean> = $state(
+    Object.fromEntries(initialSources.map((sn) => [sn, true])),
+  );
 
   $effect(() => {
     void store.ensureRegisters();
@@ -62,58 +67,112 @@
     return matches.length === 1;
   }
 
-  let manualCount = $derived.by(() => {
-    const manual = store.snapshot?.config.manual_columns ?? [];
-    const sources = new Set(group.sources);
-    return manual.filter(([s, _c]) => sources.has(s)).length;
-  });
-
   let trimmedRegister = $derived(selectedRegister.trim());
   let registerChanged = $derived(trimmedRegister !== initialName);
-  // Apply enabled when something would change AND the input either
-  // resolves on the client or is empty (clearing the assignment).
-  // Unknown text gets caught client-side instead of the user discovering
-  // it after submit — but only when we actually have a register list to
-  // check against; otherwise we let the server decide.
   let inputResolves = $derived(
     !canValidateLocally || resolvesAgainstList(trimmedRegister),
   );
-  // Apply is enabled when there is some change to make: either the
-  // register itself changes, or the user opts to reclassify manual
-  // overrides on the (possibly unchanged) register. The latter is the
-  // only UI path to drop accidental manual type edits without a
-  // register flip — set_group_register on the server runs reclassify
-  // regardless of whether the register value moved.
-  let intendsReclassify = $derived(reclassifyManual && manualCount > 0);
-  let canApply = $derived(
-    (registerChanged || intendsReclassify) && inputResolves && !submitting,
+
+  // Buckets of sources by user intent. Excluded sources go to their own
+  // noreg group; included sources either keep or pick up the (possibly
+  // new) register. Singleton groups never enter the exclusion bucket —
+  // there's nothing to peel off.
+  let includedSources = $derived(
+    isSingleton
+      ? initialSources.slice()
+      : initialSources.filter((sn) => sourceIncluded[sn]),
   );
-  // Confirm step fires whenever a destructive reclassification is
-  // queued: a register change with manuals at risk, or an explicit
-  // reclassify-manuals tick. No-op submits are blocked by canApply, so
-  // the confirm step never fires on unchanged input.
+  let excludedSources = $derived(
+    isSingleton ? [] : initialSources.filter((sn) => !sourceIncluded[sn]),
+  );
+  let allExcluded = $derived(
+    !isSingleton && excludedSources.length === initialSources.length,
+  );
+
+  // Sources whose register value would actually move. Used to decide
+  // whether Apply is a no-op and which sources we'd reclassify.
+  let affectedSources = $derived.by(() => {
+    const out: string[] = [];
+    // Excluded sources are cleared (register → null).
+    for (const sn of excludedSources) out.push(sn);
+    // Included sources only count when the register field actually
+    // changed; otherwise they're left alone.
+    if (registerChanged) {
+      for (const sn of includedSources) out.push(sn);
+    }
+    return out;
+  });
+
+  // Manuals on the actually-affected source set. Counting against
+  // `group.sources` (today's behaviour) would over-trip the confirm
+  // step on partial exclusion of clean sources.
+  let manualCount = $derived.by(() => {
+    const manual = store.snapshot?.config.manual_columns ?? [];
+    const affected = new Set(affectedSources);
+    return manual.filter(([s, _c]) => affected.has(s)).length;
+  });
+
+  // Panel membership per source — used to surface the "still in panel"
+  // hint next to each unchecked source. Panels live independently of
+  // register, so excluding a source doesn't drop its panel slot.
+  let panelsBySource = $derived.by(() => {
+    const out: Record<string, string[]> = {};
+    const panels = store.snapshot?.config.panels ?? [];
+    for (const panel of panels) {
+      for (const m of panel.members) {
+        if (!out[m.source]) out[m.source] = [];
+        out[m.source].push(panel.panel_id);
+      }
+    }
+    return out;
+  });
+
+  let intendsReclassify = $derived(reclassifyManual && manualCount > 0);
+  let hasExclusions = $derived(excludedSources.length > 0);
+  let canApply = $derived(
+    (registerChanged || intendsReclassify || hasExclusions) &&
+      inputResolves &&
+      !submitting,
+  );
+  // Confirm fires on destructive reclassification — manuals at risk or
+  // explicit reclassify-manuals — or on full clear (all sources
+  // unchecked), which is structurally equivalent to clearing the
+  // register on the group.
   let needsConfirm = $derived(
-    (registerChanged && manualCount > 0) || intendsReclassify,
+    (registerChanged && manualCount > 0) || intendsReclassify || allExcluded,
   );
 
   function valueOrNull(): string | null {
     return trimmedRegister === "" ? null : trimmedRegister;
   }
 
+  function buildAssignments(finalValue: string | null): Record<string, string | null> {
+    const out: Record<string, string | null> = {};
+    // Excluded sources → cleared.
+    for (const sn of excludedSources) out[sn] = null;
+    // Included sources → the final register value (may equal current).
+    for (const sn of includedSources) out[sn] = finalValue;
+    return out;
+  }
+
   async function commit(): Promise<void> {
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
     // Capture values that drive the success toast before the API call:
-    // the snapshot refresh during `await` re-derives manualCount (now 0
-    // for a successful reclassify), which would otherwise pick the wrong
-    // toast branch.
-    const wasReclassifyOnly = !registerChanged && intendsReclassify;
-    const reclassifiedCount = manualCount;
+    // the snapshot refresh during `await` re-derives manualCount and
+    // bucket sizes, which would otherwise pick the wrong toast branch.
     const finalValue = valueOrNull();
+    const wasReclassifyOnly =
+      !registerChanged && !hasExclusions && intendsReclassify;
+    const reclassifiedCount = manualCount;
+    const includedCount = includedSources.length;
+    const excludedCount = excludedSources.length;
+    const wasFullClear = allExcluded || finalValue === null;
+    const targetName = initialName !== "" ? initialName : (finalValue ?? "");
+
     submitting = true;
-    const ok = await store.setGroupRegister({
-      group_id: group.group_id,
-      register: finalValue,
+    const ok = await store.setSourceRegisters({
+      assignments: buildAssignments(finalValue),
       expected_version: version,
       reclassify_manual: reclassifyManual,
     });
@@ -122,10 +181,16 @@
       let message: string;
       if (wasReclassifyOnly) {
         message = `Re-classified ${reclassifiedCount} manual column${reclassifiedCount === 1 ? "" : "s"} on ${group.group_id}`;
-      } else if (finalValue === null) {
+      } else if (wasFullClear) {
         message = `Cleared register on ${group.group_id}`;
-      } else {
+      } else if (registerChanged && excludedCount > 0) {
+        message = `Set register on ${includedCount}, excluded ${excludedCount}`;
+      } else if (excludedCount > 0) {
+        message = `Excluded ${excludedCount} source${excludedCount === 1 ? "" : "s"} from ${targetName}`;
+      } else if (finalValue !== null) {
         message = `Set ${group.group_id} → ${finalValue}`;
+      } else {
+        message = `Cleared register on ${group.group_id}`;
       }
       store.pushToast("info", message);
       onClose();
@@ -135,7 +200,7 @@
   async function onSubmit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
     if (submitting) return;
-    if (!registerChanged && !intendsReclassify) return; // no-op guard
+    if (!canApply) return; // no-op guard
     if (!inputResolves) {
       validationError = `'${trimmedRegister}' is not a known register name. Pick one from the autocomplete or leave the field empty to clear the assignment.`;
       return;
@@ -155,6 +220,15 @@
     confirming = false;
   }
 
+  function toggleSource(sn: string): void {
+    sourceIncluded = { ...sourceIncluded, [sn]: !sourceIncluded[sn] };
+    confirming = false;
+  }
+
+  // When the user clears the register input, the per-source checkboxes
+  // become meaningless — every source ends up cleared either way. Lock
+  // them so the modal doesn't show contradictory affordances.
+  let checkboxesDisabled = $derived(trimmedRegister === "");
 </script>
 
 <Modal headingId="register-editor-heading" {onClose}>
@@ -169,24 +243,6 @@
     </header>
 
     <div class="modal-body">
-      <div class="muted">
-        Sources affected: <strong>{group.sources.length}</strong>
-        {#if group.sources.length <= SOURCE_PREVIEW_LIMIT}
-          ({group.sources.join(", ")}).
-        {:else}
-          <details class="source-list">
-            <!-- A registered panel can hold ~30 yearly files; comma-joining
-                 them paints a wall of text that pushes Apply off-screen. -->
-            <summary>show {group.sources.length} files</summary>
-            <ul>
-              {#each group.sources as src (src)}
-                <li class="mono">{src}</li>
-              {/each}
-            </ul>
-          </details>
-        {/if}
-      </div>
-
       <label class="row">
         <span>Register</span>
         <RegisterCombobox
@@ -207,6 +263,45 @@
         </p>
       {/if}
 
+      {#if !isSingleton}
+        <fieldset class="sources">
+          <legend>
+            Sources in this group
+            <span class="count">
+              ({includedSources.length} / {initialSources.length} included)
+            </span>
+          </legend>
+          <ul>
+            {#each initialSources as src (src)}
+              {@const included = sourceIncluded[src]}
+              {@const panels = panelsBySource[src] ?? []}
+              <li class:excluded={!included}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={included}
+                    disabled={checkboxesDisabled || submitting}
+                    onchange={() => toggleSource(src)}
+                  />
+                  <span class="mono">{src}</span>
+                </label>
+                {#if !included && !checkboxesDisabled}
+                  <span class="exclusion-hint">
+                    → will become its own group
+                    {#if panels.length > 0}
+                      <span class="panel-note">
+                        · still in panel{panels.length === 1 ? "" : "s"}
+                        <span class="mono">{panels.join(", ")}</span>
+                      </span>
+                    {/if}
+                  </span>
+                {/if}
+              </li>
+            {/each}
+          </ul>
+        </fieldset>
+      {/if}
+
       {#if manualCount > 0}
         <label class="checkbox">
           <input
@@ -220,12 +315,18 @@
 
       {#if confirming}
         <p class="warn">
-          This will re-run classification on
-          {#if reclassifyManual}all{:else}auto-classified{/if}
-          columns in {group.sources.length} source{group.sources.length === 1
-            ? ""
-            : "s"}. Manual columns are
-          {reclassifyManual ? "included" : "preserved"}.
+          {#if allExcluded}
+            All sources unchecked — equivalent to clearing the register
+            on the group. Each source will become its own
+            <span class="mono">noreg-…</span> group.
+          {:else}
+            This will re-run classification on
+            {#if reclassifyManual}all{:else}auto-classified{/if}
+            columns in {affectedSources.length} source{affectedSources.length === 1
+              ? ""
+              : "s"}. Manual columns are
+            {reclassifyManual ? "included" : "preserved"}.
+          {/if}
         </p>
       {/if}
     </div>
@@ -238,11 +339,11 @@
         type="submit"
         class="primary"
         disabled={!canApply}
-        title={!registerChanged && !intendsReclassify
-          ? "No change to apply"
-          : !inputResolves
+        title={!canApply && !submitting
+          ? !inputResolves
             ? "Pick a known register"
-            : ""}
+            : "No change to apply"
+          : ""}
       >
         {#if submitting}
           Saving…
@@ -300,41 +401,55 @@
     gap: 0.4rem;
     color: #333;
   }
-  .muted {
-    color: #666;
-    font-size: 0.9rem;
+  .sources {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
     margin: 0;
-    word-break: break-word;
+    min-width: 0;
   }
-  .source-list {
-    display: inline;
-  }
-  .source-list summary {
-    display: inline;
-    cursor: pointer;
-    color: #1656c0;
-    list-style: none;
-  }
-  .source-list summary::-webkit-details-marker {
-    display: none;
-  }
-  .source-list summary:hover {
-    text-decoration: underline;
-  }
-  .source-list[open] summary {
-    display: block;
-    margin-bottom: 0.25rem;
-  }
-  .source-list ul {
-    margin: 0;
-    padding-left: 1.25rem;
-    max-height: 12rem;
-    overflow-y: auto;
+  .sources legend {
+    padding: 0 0.4rem;
     font-size: 0.85rem;
     color: #555;
   }
-  .source-list li {
+  .sources legend .count {
+    color: #888;
+  }
+  .sources ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    /* Long source lists scroll; modal header/footer stay pinned. */
+    max-height: 14rem;
+    overflow-y: auto;
+  }
+  .sources li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.15rem 0;
+    font-size: 0.9rem;
+  }
+  .sources li label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+    min-width: 0;
     word-break: break-all;
+  }
+  .sources li.excluded label .mono {
+    text-decoration: line-through;
+    color: #888;
+  }
+  .exclusion-hint {
+    color: #888;
+    font-size: 0.85rem;
+  }
+  .panel-note {
+    color: #b86c00;
   }
   .warn {
     background: #fff8e1;

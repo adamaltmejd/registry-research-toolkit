@@ -34,6 +34,7 @@ from mock_data_wizard.editor import (
     set_column_options,
     set_column_type,
     set_group_register,
+    set_source_registers,
     set_source_metadata,
     unset_column_manual_override,
 )
@@ -979,6 +980,262 @@ def test_set_group_register_rejects_stale_noreg_for_assigned_source(
             tmp_path,
             "noreg-x",
             None,
+            expected_version=snap.snapshot_version,
+        )
+
+
+# -- set_source_registers --------------------------------------------------
+
+
+def _multi_source_project(tmp_path: Path) -> Path:
+    """Three sources, all initialised with no register."""
+    return _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}],
+            },
+            {
+                "source_name": "lisa_2019",
+                "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}],
+            },
+            {
+                "source_name": "lisa_aux",
+                "columns": [{"name": "Mystery", "sql_type": "VARCHAR"}],
+            },
+        ],
+    )
+
+
+def test_set_source_registers_partial_exclusion(tmp_path: Path, monkeypatch):
+    """Excluding one source from a group clears its register; the
+    remaining sources receive the new (or unchanged) register."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(editor, "_resolve_signals_for_register", lambda *a, **kw: {})
+
+    # First assign LISA to all three.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA", "lisa_2019": "LISA", "lisa_aux": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.sources["lisa_2018"]["register"] == "LISA"
+    assert snap.config.sources["lisa_aux"]["register"] == "LISA"
+
+    # Then peel `lisa_aux` off — it should land in its own noreg group.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA", "lisa_2019": "LISA", "lisa_aux": None},
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.sources["lisa_2018"]["register"] == "LISA"
+    assert snap.config.sources["lisa_2019"]["register"] == "LISA"
+    assert snap.config.sources["lisa_aux"].get("register") in (None, "")
+    group_ids = {g.group_id for g in snap.groups}
+    assert "noreg-lisa_aux" in group_ids
+
+
+def test_set_source_registers_atomic_on_validation_error(tmp_path: Path, monkeypatch):
+    """A single unresolvable register aborts the whole call before any
+    write. The on-disk file is unchanged."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    initial_version = snap.snapshot_version
+
+    def selective_resolve(name, db_path=None):
+        if name == "LISA":
+            return editor.Register(id=34, name="LISA")
+        return None
+
+    monkeypatch.setattr(editor, "resolve_register", selective_resolve)
+    monkeypatch.setattr(editor, "_resolve_signals_for_register", lambda *a, **kw: {})
+
+    with pytest.raises(ValidationError, match="did not resolve"):
+        set_source_registers(
+            tmp_path,
+            {"lisa_2018": "LISA", "lisa_2019": "BogusRegister"},
+            expected_version=snap.snapshot_version,
+        )
+    # No change on disk.
+    snap = get_state(tmp_path)
+    assert snap.snapshot_version == initial_version
+    assert snap.config.sources.get("lisa_2018", {}).get("register") in (None, "")
+
+
+def test_set_source_registers_rejects_unknown_source(tmp_path: Path):
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found"):
+        set_source_registers(
+            tmp_path,
+            {"phantom_source": None},
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_source_registers_no_op_returns_same_version(tmp_path: Path, monkeypatch):
+    """All assignments equal current + no reclassify_manual → no write,
+    snapshot_version stable. Matches set_column_type's idempotency."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    initial_version = snap.snapshot_version
+    # All sources start with no register; assigning None to all is a no-op.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": None, "lisa_2019": None, "lisa_aux": None},
+        expected_version=initial_version,
+    )
+    assert snap.snapshot_version == initial_version
+
+
+def test_set_source_registers_reclassify_only_changed(tmp_path: Path, monkeypatch):
+    """Reclassification runs only on sources whose register actually
+    changed. A source whose register stays the same is not touched even
+    if the same name appears in the assignments dict."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(editor, "_resolve_signals_for_register", lambda *a, **kw: {})
+
+    # First set `lisa_2018` to LISA.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+
+    # Now mark Mystery on lisa_2018 manually; ensure the next call with
+    # an unchanged register preserves it.
+    snap = set_column_type(
+        tmp_path,
+        ["lisa_2018"],
+        "Mystery",
+        "numeric",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("lisa_2018", "Mystery") in snap.config.manual_columns
+
+    # Re-asserting the same register value on `lisa_2018` while flipping
+    # `lisa_2019` to LISA should not touch lisa_2018's manual.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA", "lisa_2019": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.column_types["lisa_2018"]["Mystery"].type == "numeric"
+    assert ("lisa_2018", "Mystery") in snap.config.manual_columns
+    assert snap.config.sources["lisa_2019"]["register"] == "LISA"
+
+
+def test_set_source_registers_reclassify_manual_force(tmp_path: Path, monkeypatch):
+    """With reclassify_manual=True, an unchanged-register source still
+    gets its manual columns reclassified — matches set_group_register."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(
+        editor,
+        "_resolve_signals_for_register",
+        lambda reg, cols, db_path, **_kw: {
+            "mystery": RegmetaSignal(
+                datatyp_kind=None,
+                classification_short_name="SUN2000",
+            )
+        },
+    )
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+    snap = set_column_type(
+        tmp_path,
+        ["lisa_2018"],
+        "Mystery",
+        "numeric",
+        expected_version=snap.snapshot_version,
+    )
+    assert ("lisa_2018", "Mystery") in snap.config.manual_columns
+
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA"},
+        expected_version=snap.snapshot_version,
+        reclassify_manual=True,
+    )
+    # Re-classified to categorical and dropped from manual_columns.
+    assert snap.config.column_types["lisa_2018"]["Mystery"].type == "categorical"
+    assert ("lisa_2018", "Mystery") not in snap.config.manual_columns
+
+
+def test_set_source_registers_preserves_panel_membership(tmp_path: Path, monkeypatch):
+    """A source's panel slot does not move when its register is cleared
+    — panels live independently of register."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(editor, "_resolve_signals_for_register", lambda *a, **kw: {})
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA", "lisa_2019": "LISA", "lisa_aux": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+    snap = put_panel(
+        tmp_path,
+        Panel(
+            panel_id="lisa_main",
+            entity_key="LopNr",
+            members=(
+                PanelMember(source="lisa_2018", time_key=2018),
+                PanelMember(source="lisa_2019", time_key=2019),
+                PanelMember(source="lisa_aux", time_key=2020),
+            ),
+        ),
+        expected_version=snap.snapshot_version,
+    )
+
+    # Peel lisa_aux off — its panel slot must survive.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_aux": None},
+        expected_version=snap.snapshot_version,
+    )
+    panel = next(p for p in snap.config.panels if p.panel_id == "lisa_main")
+    assert {m.source for m in panel.members} == {
+        "lisa_2018",
+        "lisa_2019",
+        "lisa_aux",
+    }
+
+
+def test_set_source_registers_rejects_invalid_assignments_shape(tmp_path: Path):
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="non-empty"):
+        set_source_registers(
+            tmp_path,
+            {},
+            expected_version=snap.snapshot_version,
+        )
+    with pytest.raises(ValidationError, match="must be a string or None"):
+        set_source_registers(
+            tmp_path,
+            {"lisa_2018": 42},  # type: ignore[dict-item]
             expected_version=snap.snapshot_version,
         )
 
