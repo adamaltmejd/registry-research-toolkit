@@ -17,9 +17,8 @@
     showManualOverrideBorder: boolean;
     regmeta: string;
     regmetaTitle: string;
-    /** When true, render the regmeta badge with a distinct "varies"
-     * style. Set when the column maps to multiple classifications across
-     * years so the user notices before clicking. */
+    /** Render the regmeta badge with the "varies" style when the column
+     * maps to multiple classifications across years. */
     regmetaVaries?: boolean;
     /** 0 hides the badge; only meaningful in grouped mode. */
     manualCount?: number;
@@ -181,9 +180,6 @@
     outline: 2px solid #5d2b8c;
     outline-offset: 1px;
   }
-  /* "varies · N" — the classification differs across years. Border +
-     warmer fill nudge the user to click before assuming a single
-     coding applies to every year. */
   .regmeta-tag.varies {
     background: #fff0d9;
     color: #7a4a00;

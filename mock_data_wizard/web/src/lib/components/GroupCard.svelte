@@ -19,11 +19,6 @@
 
   let { group }: Props = $props();
 
-  // Modal target: list of sources to apply the column-type edit to. In
-  // grouped mode this is a partition's source members; in per-source
-  // mode it is a single-element list. `cellBySource` covers every
-  // carrier source — its keys are the register-wide reconcile target
-  // and its values feed the modal's manual-override count.
   let editingColumn: {
     sources: string[];
     cellBySource: Record<string, ColumnInfo>;
@@ -31,10 +26,6 @@
   } | null = $state(null);
   let editingRegister = $state(false);
   let editingPanel = $state(false);
-  // Value-codes popover target. The register comes from this group;
-  // server side handles the case where no register is set (returns
-  // kind="none"), but we don't open the modal at all in that case
-  // since there are no codes to look up.
   let viewingValuesFor: string | null = $state(null);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
@@ -82,12 +73,8 @@
     return Object.values(col.hint).map(String).join(" · ");
   }
 
-  // Compact label for the regmeta evidence badge. Classification name
-  // wins over the generic "value codes" because it carries more info
-  // (e.g. "LKF2012" tells the user which version of the kommun coding).
-  // When the column maps to multiple classifications across years, show
-  // "varies · N" instead of a single winner — the most-common pick
-  // silently mislabels the other years (issue #64).
+  // "varies · N" when the column maps to multiple classifications: a
+  // most-common winner would silently mislabel the other years.
   function regmetaBadge(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
@@ -97,9 +84,8 @@
     return "";
   }
 
-  // Long-form text for the badge tooltip — same source data, expanded.
-  // Keep this purely descriptive; the click CTA is appended by TypeCell
-  // so the rendered title doesn't repeat "click to …" twice.
+  // Tooltip text; TypeCell appends the click CTA so this stays purely
+  // descriptive (no "click to …" duplication).
   function regmetaBadgeTitle(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";

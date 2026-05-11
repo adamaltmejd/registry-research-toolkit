@@ -13,34 +13,19 @@
     register: string | null;
     column: string;
     /** Project sources in the calling group with their detected year.
-     * Used to render "applies to: foo_2018.csv (2018), …" against the
-     * value-set picker so the user sees which of *their* sources a
-     * given year window covers — regmeta-level cvids are noisy and not
-     * project-specific. Empty = no source info available (the chip
-     * just falls back to the year range). */
+     * Drives the "applies to: foo_2018.csv (2018), …" line under the
+     * value-set picker. Empty = no source info, line is hidden. */
     sourceYears?: Record<string, number | null>;
     onClose: () => void;
   }
 
   let { register, column, sourceYears = {}, onClose }: Props = $props();
 
-  // Loading + result state. The fetch is on-demand (per CLAUDE.md
-  // request: "fetching them on click from regmeta, not prefetching"), so
-  // the modal opens immediately and replaces "Loading…" with the result
-  // once the network round-trip completes. Errors render inline rather
-  // than as a toast — the popover is throwaway, so co-locating the
-  // failure with the empty list saves the user a glance away.
   type LoadState =
     | { kind: "loading" }
     | { kind: "ok"; data: ColumnValuesResponse }
     | { kind: "error"; message: string };
-  // `null` = render the column's default (most-common) classification.
-  // Set by clicking a chip in the picker; passed back to the server on
-  // re-fetch so the popup honors the pick.
   let pickedClassification: string | null = $state(null);
-  // null = let the server decide (union for tier 2, most-common for
-  // tier 3a). A sentinel `"union"` chip in the tier-2 picker maps back
-  // to null so the user can return to the default after drilling in.
   let pickedValueSet: number | null = $state(null);
   let loadState: LoadState = $state({ kind: "loading" });
 
@@ -48,11 +33,6 @@
     void load();
   });
 
-  // Project years (deduped, non-null) drive the server-side filter so
-  // the picker only surfaces value-sets that intersect the user's data.
-  // Yearless project sources can't be placed on the timeline and don't
-  // participate in the filter; the popup still tells the user about
-  // them in the "applies to" line.
   let relevantYears = $derived(
     Array.from(
       new Set(
@@ -86,11 +66,8 @@
     void load();
   }
 
-  // Value-set picker options. Tier 2 prepends a Union sentinel (id=null)
-  // so it can be the default; tier 3a omits it because the union there
-  // arbitrarily picks one label per code (the original 3a footgun).
-  // Sentinel typed as `ValueSetGroup | null` so `Picker` keeps its
-  // generic identity helpers working uniformly.
+  // Tier 2 prepends a Union sentinel as the default; tier 3a omits it
+  // because under 3a the union arbitrarily picks one label per code.
   type VsOption = { kind: "union" } | { kind: "group"; group: ValueSetGroup };
 
   function vsOptions(data: ColumnValuesResponse): VsOption[] {
@@ -129,47 +106,34 @@
     return `${g.year_min}–${g.year_max}`;
   }
 
-  /** Cap on source names rendered in "applies to" before collapsing to
-   * "+N more". Keeps the line on one or two visual rows for typical
-   * project sizes; the user can drill into config to see the rest. */
   const APPLIES_TO_CAP = 6;
 
-  /** "applies to" text for the currently selected option, scoped to the
-   * project's sources rather than every cvid regmeta knows about. A
-   * project source matches a value-set group iff its detected year
-   * falls within [year_min, year_max]; yearless project sources are
-   * mentioned separately because we can't place them on the timeline. */
+  // Project sources matching the picked group: detected year in
+  // [year_min, year_max]. Yearless sources mentioned separately since
+  // we can't place them on the timeline.
   function vsActiveDescription(opt: VsOption | null): string | null {
     if (opt === null || opt.kind === "union") return null;
     const g = opt.group;
     const entries = Object.entries(sourceYears);
     if (entries.length === 0) return null;
-    const inRange: string[] = [];
-    let yearless = 0;
-    for (const [name, year] of entries) {
-      if (year === null) {
-        yearless += 1;
-        continue;
-      }
-      if (
-        g.year_min !== null &&
-        g.year_max !== null &&
-        year >= g.year_min &&
-        year <= g.year_max
-      ) {
-        inRange.push(`${name} (${year})`);
-      }
-    }
+    const yearless = entries.filter(([, y]) => y === null).length;
+    const { year_min, year_max } = g;
+    const inRange =
+      year_min === null || year_max === null
+        ? []
+        : entries
+            .filter(
+              (e): e is [string, number] =>
+                e[1] !== null && e[1] >= year_min && e[1] <= year_max,
+            )
+            .map(([name, y]) => `${name} (${y})`)
+            .sort();
     if (inRange.length === 0) {
-      // The group's year window doesn't intersect anything we loaded.
-      // Surfacing this is informative: it lets the user know the picker
-      // option is regmeta-only context, not actionable for their data.
       if (yearless > 0) {
         return `no project source falls in this window (${yearless} source${yearless === 1 ? "" : "s"} with unknown year)`;
       }
       return "no project source falls in this window";
     }
-    inRange.sort();
     const head = inRange.slice(0, APPLIES_TO_CAP);
     const overflow = inRange.length - head.length;
     const overflowSuffix = overflow > 0 ? `, +${overflow} more` : "";
@@ -225,8 +189,8 @@
         : ""}.
     </p>
   {:else}
-    {#if loadState.data.note}
-      <p class="variance-note variance-{loadState.data.tier ?? '1'}">
+    {#if loadState.data.note && loadState.data.tier}
+      <p class="variance-note variance-{loadState.data.tier}">
         {loadState.data.note}
       </p>
     {/if}
@@ -360,11 +324,7 @@
     cursor: pointer;
     font: inherit;
   }
-  /* Variance notes (issue #64). Tier 2 = code set differs across years
-     but labels are stable. Tier 3a = same code, different labels (the
-     dangerous one). Tier 3b = different classifications (paired with
-     the picker). Color escalates from amber to red so the eye lands on
-     3a / 3b without reading the text first. */
+  /* Tier 2 / 3b = amber; tier 3a = red (same code, different labels). */
   .variance-note {
     margin: 0 0 0.4rem;
     padding: 0.35rem 0.6rem;
@@ -390,9 +350,8 @@
     color: #555;
     font-size: 0.9rem;
   }
-  /* Code list often runs to hundreds of rows for big classifications
-     (SUN, SSYK, …). Cap height + scroll inside so the modal stays at a
-     usable size and the Close button remains reachable. */
+  /* Big classifications (SUN, SSYK) can run to hundreds of rows;
+     cap height so the Close button stays reachable. */
   .codes-wrap {
     max-height: 22rem;
     overflow: auto;

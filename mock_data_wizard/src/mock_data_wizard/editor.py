@@ -1579,8 +1579,6 @@ class ColumnValue:
 VarianceTier = Literal["1", "2", "3a", "3b"]
 
 
-# Year-variance notes surfaced inside the popup. Kept as module-level
-# constants so tests can assert on the exact text without re-deriving it.
 _NOTE_TIER_2 = (
     "Value code sets differ by period. Showing the union — pick a specific "
     "value-set below for year-correct codes."
@@ -1594,16 +1592,6 @@ _NOTE_TIER_3A = (
 
 @dataclass(frozen=True)
 class ValueSetGroup:
-    """One distinct ``value_set_id`` attached to a column×register.
-
-    ``label_cvid`` is the lowest cvid in the group — used as the chip
-    label so the user can refer back to a concrete variable instance.
-    ``cvids`` is the full sorted list, surfaced when the option is
-    selected so the user sees which sources the picked value-set covers.
-    ``year_min``/``year_max`` are derived from register_version names;
-    ``None`` when no cvid in the group has a parseable year.
-    """
-
     value_set_id: int
     label_cvid: int
     cvids: tuple[int, ...]
@@ -1613,32 +1601,6 @@ class ValueSetGroup:
 
 @dataclass(frozen=True)
 class ColumnValuesResult:
-    """Year-correct value codes for one (register, column) pair.
-
-    ``kind`` distinguishes the source the codes came from:
-      - ``"classification"``: full code list of a SCB classification (e.g.
-        SUN2020). Same codes regardless of register; the chosen register
-        only narrows down which classification this column maps to.
-      - ``"values"``: per-instance value-set codes aggregated across
-        ``variable_instance`` rows for this register. Used when no
-        classification is attached (register-local code lists like
-        ``ALKod`` / ``Kon``).
-      - ``"none"``: regmeta knows the column but has no codes — the
-        caller usually shows "no value codes available".
-
-    ``title`` is short user-facing text (classification short_name or
-    variable name); ``description`` is optional long text shown below.
-
-    ``tier`` flags the year-variance shape (issue #64). ``None`` only when
-    ``kind="none"``. ``note`` is the user-facing variance message (None
-    when there is nothing to warn about). ``classifications`` /
-    ``picked_classification`` drive the tier-3b picker; ``value_sets`` /
-    ``picked_value_set`` drive the tier-2 / tier-3a picker. For tier 2
-    the default is the union (``picked_value_set is None``); for tier 3a
-    the default is the most-common value-set so the rendered labels are
-    self-consistent.
-    """
-
     kind: Literal["classification", "values", "none"]
     title: str
     description: str | None
@@ -1654,9 +1616,6 @@ class ColumnValuesResult:
 def _fetch_distinct_classifications(
     conn: Any, matched_alias: str, register_ids: list[int]
 ) -> tuple[str, ...]:
-    """Distinct ``classification.short_name`` attached to ``matched_alias``
-    under ``register_ids``. Ordered alphabetically so the picker is
-    stable across opens. Empty tuple when no classifications are attached."""
     if not register_ids:
         return ()
     ph = ",".join("?" for _ in register_ids)
@@ -1677,13 +1636,6 @@ def _fetch_distinct_classifications(
 def _fetch_value_set_groups(
     conn: Any, matched_alias: str, register_ids: list[int]
 ) -> tuple[ValueSetGroup, ...]:
-    """Distinct ``value_set_id`` groups attached to ``matched_alias``
-    under ``register_ids``. Each group carries its sorted cvids and the
-    year window derived from ``register_version.registerversionnamn``.
-
-    Ordered by ``year_min`` ascending so the picker is chronological;
-    groups with no parseable year sink to the end. Ties broken by
-    ``label_cvid`` for determinism."""
     if not register_ids:
         return ()
     from regmeta.queries import extract_year
@@ -1726,59 +1678,34 @@ def _fetch_value_set_groups(
     )
 
 
-def _fetch_codes_for_value_set(conn: Any, value_set_id: int) -> tuple[ColumnValue, ...]:
-    """Codes belonging to one ``value_set_id``. Dedupes defensively even
-    though within a value-set ``vardekod`` is normally unique — SCB can
-    carry the same code with two labels in the same year, in which case
-    the first-seen one wins (matches the union path's behavior)."""
-    rows = conn.execute(
-        "SELECT vc.vardekod, vc.vardebenamning "
-        "FROM value_set_member vsm "
-        "JOIN value_code vc ON vsm.code_id = vc.code_id "
-        "WHERE vsm.value_set_id = ? "
-        "ORDER BY vc.vardekod",
-        [value_set_id],
-    ).fetchall()
-    return _dedupe_codes((str(r["vardekod"]), r["vardebenamning"]) for r in rows)
-
-
-def _fetch_raw_pairs_for_groups(
+def _fetch_value_set_codes(
     conn: Any, groups: tuple[ValueSetGroup, ...]
-) -> list[tuple[str, str | None]]:
-    """``(code, label)`` pairs aggregated across the supplied value-set
-    groups. Used both as the source for tier detection (label collisions
-    only show up across rows) and as the union view rendered when no
-    specific value-set is picked. Distinct on ``(vardekod, vardebenamning)``
-    so the tier-3a detector sees each label-variant once."""
+) -> list[tuple[int, str, str | None]]:
     if not groups:
         return []
     vsids = [g.value_set_id for g in groups]
     ph = ",".join("?" for _ in vsids)
     rows = conn.execute(
-        f"SELECT DISTINCT vc.vardekod, vc.vardebenamning "
+        f"SELECT DISTINCT vsm.value_set_id, vc.vardekod, vc.vardebenamning "
         f"FROM value_set_member vsm "
         f"JOIN value_code vc ON vsm.code_id = vc.code_id "
         f"WHERE vsm.value_set_id IN ({ph}) "
         f"ORDER BY vc.vardekod",
         vsids,
     ).fetchall()
-    return [(str(r["vardekod"]), r["vardebenamning"]) for r in rows]
+    return [
+        (int(r["value_set_id"]), str(r["vardekod"]), r["vardebenamning"]) for r in rows
+    ]
 
 
 def _filter_groups_by_relevant_years(
     groups: tuple[ValueSetGroup, ...],
     relevant_years: list[int] | None,
 ) -> tuple[tuple[ValueSetGroup, ...], str | None]:
-    """Trim ``groups`` to those overlapping at least one of
-    ``relevant_years`` (the project's source years). Falls back to the
-    full set with an actionable note when no group overlaps so the
-    popup never blanks. ``None`` / empty input means "no filter applied"
-    and the original groups + a ``None`` note flow through.
-
-    Yearless groups (no parseable register-version year) survive the
-    filter — we can't disprove their relevance to any given year, and
-    excluding them would hide otherwise-useful codes for projects whose
-    sources happen to be against a yearless version."""
+    # Yearless groups (no parseable register-version year) survive the
+    # filter: we can't disprove their relevance, and excluding them
+    # would hide useful codes for projects sourced against a yearless
+    # register version.
     if not relevant_years or not groups:
         return groups, None
     rel = set(relevant_years)
@@ -1802,16 +1729,6 @@ def _filter_groups_by_relevant_years(
     )
 
 
-def _join_notes(*notes: str | None) -> str | None:
-    """Combine multiple variance notes into a single line for the popup.
-    Drops empties; returns ``None`` when nothing meaningful remains so
-    the UI's ``{#if note}`` block stays out of the way."""
-    parts = [n for n in notes if n]
-    if not parts:
-        return None
-    return " ".join(parts)
-
-
 def get_column_values(
     register: str | None,
     column: str,
@@ -1823,33 +1740,9 @@ def get_column_values(
 ) -> ColumnValuesResult:
     """Resolve value codes for one column under one register.
 
-    Strategy: classification beats per-instance codes when both are
-    available — the classification carries the canonical list (often with
-    hierarchy levels) while per-instance codes can be a register-local
-    subset. Falls back to per-instance value codes when no classification
-    is attached, and to ``kind="none"`` when regmeta has no codes either.
-
-    ``picked_classification`` opts into rendering a non-default
-    classification when the column maps to multiple. Ignored when not in
-    the column's distinct classifications for this register (the popup
-    falls back to the default winner rather than 404-ing).
-
-    ``picked_value_set`` opts into rendering a specific ``value_set_id``
-    on the per-instance values path. ``None`` means the default: union
-    for tier 2, most-common value-set for tier 3a. Bad picks (not in
-    the column's groups) degrade to the same default.
-
-    ``relevant_years`` is the project's detected source years (e.g.
-    ``[2024]`` for a project that only loaded 2024 files). When provided,
-    the values path drops value-set groups whose year window doesn't
-    overlap any project year so the picker stops surfacing codes from
-    decades the project doesn't touch. Empty / ``None`` disables the
-    filter; no overlap falls back to the full set with a note.
-
     Returns ``kind="none"`` rather than raising when regmeta is missing,
-    the register doesn't resolve, or the column is unknown — the UI
-    surfaces an empty popover rather than an error envelope, matching
-    the "regmeta degrades gracefully" stance elsewhere in the editor.
+    the register doesn't resolve, or the column is unknown — degrades
+    gracefully into an empty popover.
     """
     if not column or not column.strip():
         raise ValidationError("column must be a non-empty string")
@@ -1873,31 +1766,18 @@ def get_column_values(
                 register_ids = []
         signals = _regmeta_lookup(conn, {column}, register_ids) if register_ids else {}
         signal = lookup_with_prefix_fallback(signals, column)
-        # The matched alias may differ from the literal column when the
-        # signal was found via project-prefix stripping (e.g. column
-        # "P1105_AStud" matched alias "AStud"). Use the matched key for
-        # the per-instance SQL so we don't query for an alias regmeta
-        # doesn't know.
+        # Matched alias can differ from the column literal when regmeta
+        # resolved via project-prefix stripping (e.g. "P1105_AStud" →
+        # "AStud"); per-instance SQL must use the alias regmeta knows.
         matched_alias = _matched_alias_key(signals, column) or column
 
-        # Distinct classifications: populated when the picker is relevant
-        # (i.e. > 1 across years). Fetched lazily — most columns have one
-        # or zero classifications, no need to hit the DB twice.
         classifications: tuple[str, ...] = ()
         if signal is not None and signal.n_classifications > 1:
             classifications = _fetch_distinct_classifications(
                 conn, matched_alias, register_ids
             )
 
-        # Classification path: when a short_name is attached, fetch the
-        # canonical code list. ``get_classification_codes`` raises on
-        # not_found; fall through to the per-instance path below in that
-        # case so a stale classification name doesn't blank the popover.
         if signal is not None and signal.classification_short_name:
-            # Honor an explicit pick when it's a real candidate for this
-            # column. Bad picks degrade silently to the default winner
-            # rather than 404 — the UI is just showing year-variance and
-            # a transient picker state shouldn't break the popup.
             chosen_sn = signal.classification_short_name
             if (
                 picked_classification
@@ -1910,9 +1790,6 @@ def get_column_values(
             except RegmetaError:
                 meta = None
             if meta is not None:
-                # Dedupe on vardekod — SCB classifications occasionally
-                # carry multiple labels per code across versions; the
-                # first occurrence wins for display purposes.
                 codes = _dedupe_codes(
                     (str(c.get("vardekod")), c.get("vardebenamning"))
                     for c in meta.get("codes", [])
@@ -1938,21 +1815,16 @@ def get_column_values(
                         ),
                     )
 
-        # Per-instance values path: enumerate value-set groups, filter to
-        # project years if the caller provided them, then derive codes
-        # and tier from that scoped set. Skipping the year filter for a
-        # project that loaded only 2024 files would otherwise surface
-        # 1961-era codes in the picker.
         if signal is not None and signal.has_value_codes and register_ids:
             all_groups = _fetch_value_set_groups(conn, matched_alias, register_ids)
             groups_used, filter_note = _filter_groups_by_relevant_years(
                 all_groups, relevant_years
             )
-            raw_pairs = _fetch_raw_pairs_for_groups(conn, groups_used)
-            union_codes = _dedupe_codes(iter(raw_pairs))
+            triples = _fetch_value_set_codes(conn, groups_used)
+            union_codes = _dedupe_codes((c, lbl) for _, c, lbl in triples)
             if union_codes:
                 tier, tier_note = _tier_for_values_path(
-                    raw_pairs,
+                    triples,
                     n_value_sets=len(groups_used),
                 )
                 chosen_vs = _resolve_picked_value_set(
@@ -1961,22 +1833,20 @@ def get_column_values(
                 if chosen_vs is None:
                     codes = union_codes
                 else:
-                    codes = _fetch_codes_for_value_set(conn, chosen_vs)
+                    codes = _dedupe_codes(
+                        (c, lbl) for vsid, c, lbl in triples if vsid == chosen_vs
+                    )
                     if not codes:
                         codes = union_codes
                         chosen_vs = None
-                # ``classifications`` deliberately empty here: we're on
-                # the values-path fallback (classification lookup either
-                # absent or failed). Surfacing classification short_names
-                # would imply the rendered codes belong to a specific
-                # classification, when really we couldn't fetch any.
+                note = " ".join(n for n in (filter_note, tier_note) if n) or None
                 return ColumnValuesResult(
                     kind="values",
                     title=column,
                     description=None,
                     codes=codes,
                     tier=tier,
-                    note=_join_notes(filter_note, tier_note),
+                    note=note,
                     classifications=(),
                     picked_classification=None,
                     value_sets=groups_used,
@@ -1989,12 +1859,8 @@ def get_column_values(
 def _tier_for_classification_path(
     n_value_sets: int, n_classifications: int, picked: str
 ) -> tuple[VarianceTier, str | None]:
-    """Tier + note for the classification path.
-
-    3b dominates 2: when a column maps to multiple classifications the
-    picker note is the actionable signal; an extra "value-sets differ"
-    note would just be noise on top of that.
-    """
+    # 3b dominates 2: the picker note is the actionable signal; a
+    # "value-sets differ" note on top would just be noise.
     if n_classifications > 1:
         return ("3b", _note_tier_3b(picked))
     if n_value_sets > 1:
@@ -2003,21 +1869,14 @@ def _tier_for_classification_path(
 
 
 def _tier_for_values_path(
-    raw_pairs: list[tuple[str, str | None]],
+    triples: list[tuple[int, str, str | None]],
     n_value_sets: int,
 ) -> tuple[VarianceTier, str | None]:
-    """Tier + note for the per-instance values path.
-
-    3a (label collisions on the same code) dominates 2 because the
-    rendered popup actually loses meaning under 3a — the deduped list
-    arbitrarily picks one label per code. 3b never applies here: if the
-    caller fell through from the classification path (lookup failed),
-    we deliberately drop ``classifications`` from the response so the
-    UI doesn't render a picker we can't honor, and the tier stays in
-    {1, 2, 3a} for consistency.
-    """
+    # 3a (label collisions on the same code) dominates 2: under 3a the
+    # deduped union arbitrarily picks one label per code, so the popup
+    # loses meaning without the picker note.
     labels_per_code: dict[str, set[str]] = {}
-    for code, label in raw_pairs:
+    for _, code, label in triples:
         if label is None:
             continue
         labels_per_code.setdefault(code, set()).add(label)
@@ -2040,18 +1899,9 @@ def _resolve_picked_value_set(
     value_sets: tuple[ValueSetGroup, ...],
     picked: int | None,
 ) -> int | None:
-    """Decide which ``value_set_id`` to render on the values path.
-
-    - Explicit ``picked`` honored when it's a real group; bad picks
-      degrade silently to the tier default.
-    - Tier 2 default: ``None`` (union) — labels are stable, so the union
-      view is informative.
-    - Tier 3a default: most-common value-set (the one covering the most
-      cvids) so the rendered labels are at least self-consistent for
-      whichever year window dominates. Ties broken by chronological
-      order (already baked into ``value_sets`` ordering).
-    - Tier 1 / no groups: ``None`` (nothing to filter).
-    """
+    # Tier 3a default = most-common value-set (most cvids) so labels stay
+    # self-consistent. Tier 2 default = union (None) since labels are
+    # stable across sets. Bad picks degrade silently to the default.
     if not value_sets:
         return None
     valid_ids = {g.value_set_id for g in value_sets}
@@ -2063,10 +1913,6 @@ def _resolve_picked_value_set(
 
 
 def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
-    """Mirror ``lookup_with_prefix_fallback``'s key resolution and return
-    the *key* it matched, not the value. Used so per-instance SQL queries
-    the same alias regmeta resolved on, even after project-prefix
-    stripping."""
     from ._util import strip_project_prefix
 
     lower = column.lower()
@@ -2081,10 +1927,6 @@ def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | 
 def _dedupe_codes(
     pairs: Iterator[tuple[str, str | None]],
 ) -> tuple[ColumnValue, ...]:
-    """Dedupe ``(code, label)`` pairs by code, preserving first-seen
-    order. SCB sometimes returns multiple labels per code (per-year
-    relabels, partial classification merges); the table renderer keys on
-    code, so we collapse here rather than crash there."""
     seen: dict[str, ColumnValue] = {}
     for code, label in pairs:
         if code in seen:

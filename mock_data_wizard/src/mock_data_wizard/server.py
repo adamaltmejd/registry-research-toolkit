@@ -665,15 +665,6 @@ def _api_remove_panel(
 def _api_get_column_values(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
-    """Return value codes for one (register, column) pair.
-
-    ``register`` is optional (JSON null is allowed) so the UI can ask
-    about an unassigned column too — the server returns ``kind="none"``
-    when there's nothing to look up. ``column`` is required.
-    ``picked_classification`` opts into a non-default classification when
-    the column maps to multiple across years; ``picked_value_set`` does
-    the analogous thing for the per-instance values path.
-    """
     column = _required_str(body, "column")
     if "register" not in body:
         raise editor.ValidationError(
@@ -691,7 +682,7 @@ def _api_get_column_values(
             f"got {type(picked).__name__}"
         )
     picked_vs_raw = body.get("picked_value_set")
-    # JSON booleans are ints in Python; reject them explicitly so a
+    # bool is a subclass of int in Python — reject it explicitly so a
     # client bug doesn't accidentally pick value_set_id 0 / 1.
     if picked_vs_raw is not None and (
         isinstance(picked_vs_raw, bool) or not isinstance(picked_vs_raw, int)
@@ -731,10 +722,6 @@ def _api_get_column_values(
         "note": result.note,
         "classifications": list(result.classifications),
         "picked_classification": result.picked_classification,
-        # cvids stay server-side: a hot column like RTB×Kon has thousands
-        # of cvids per group, and the UI scopes "applies to" to the
-        # project's sources (cross-referenced by year) rather than to
-        # the regmeta cvid set. Year window + value_set_id is enough.
         "value_sets": [
             {
                 "value_set_id": g.value_set_id,

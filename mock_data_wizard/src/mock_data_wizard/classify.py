@@ -260,15 +260,9 @@ class RegmetaSignal:
     # non-null value_set_id — i.e. SCB enumerated the codes (covers
     # register-local code lists like ALKod / Kon).
     has_value_codes: bool = False
-    # Count of distinct ``vi.value_set_id`` across cvids for this column
-    # under this register. ``> 1`` means the code set differs across
-    # years — the popup union may include codes that aren't valid every
-    # year. NULL value_set_ids are excluded.
+    # ``> 1`` means the code set / classification differs across years
+    # (drives the variance-tier popup picker).
     n_value_sets: int = 0
-    # Count of distinct ``classification.short_name`` across cvids.
-    # ``> 1`` means the column maps to different classifications across
-    # years (e.g. Kommun → LKF2012 vs other LKF versions) — the inline
-    # badge says "varies" instead of showing one winner.
     n_classifications: int = 0
 
 

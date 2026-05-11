@@ -1,33 +1,16 @@
 <script lang="ts" generics="T">
-  /**
-   * Reusable picker used by ValueCodesModal across all variance tiers.
-   * Renders as a row of chips when the option count fits, collapses to
-   * a native <select> dropdown beyond a threshold so the popup doesn't
-   * grow unbounded for columns with many year-versions.
-   *
-   * The `eqKey` callback resolves both the option identity (for
-   * comparison against `value`) and the form element value when the
-   * picker collapses to a <select>. Stringified because <select> values
-   * are strings; the caller maps back through `options` on change.
-   */
   interface Props {
-    /** Picker label, e.g. "Classification:" or "Value-set:". */
     label: string;
-    /** Available options. Empty → component renders nothing. */
     options: T[];
-    /** Currently selected option, or null. Compared via `eqKey`. */
     value: T | null;
-    /** Display text for an option (chip body / dropdown row). */
     optionLabel: (option: T) => string;
-    /** Stable identity for an option. Must be unique across `options`. */
+    /** Stable identity for an option. Used both for `value` comparison
+     * and as the <select> form value (stringified). */
     eqKey: (option: T) => string;
-    /** Fired with the option the user picked. */
     onPick: (option: T) => void;
-    /** Optional small note rendered next to the picker (e.g. "applies
-     * to: cvid 1001 (2020)") describing the *currently selected* option. */
+    /** Note rendered next to the picker describing the active option. */
     activeDescription?: string | null;
-    /** Threshold beyond which chips collapse to a <select>. Default 4
-     * — picked to match the user's preference (see issue #64 follow-up). */
+    /** Chip count above which the picker collapses to a <select>. */
     collapseAt?: number;
   }
 
