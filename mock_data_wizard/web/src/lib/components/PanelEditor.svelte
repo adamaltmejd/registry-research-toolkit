@@ -1,9 +1,6 @@
 <script lang="ts">
-  import { untrack } from "svelte";
-
-  import type { PutPanelMember } from "../api";
   import { store } from "../store.svelte";
-  import type { Panel, RegisterGroupView } from "../types";
+  import type { Panel, PanelMember, RegisterGroupView } from "../types";
   import Modal from "./Modal.svelte";
 
   interface Props {
@@ -17,10 +14,6 @@
 
   let { group, existing, onClose }: Props = $props();
 
-  // Snapshot the prop on mount; the user edits diverge from it.
-  // Defaults: when a panel is already attached → preload its values;
-  // otherwise → fall back to the auto-detected candidate so "save" with
-  // no edits accepts the suggestion without typing.
   function defaultPanelId(): string {
     if (existing) return existing.panel_id;
     if (group.panel_candidate?.suggested_panel_id) {
@@ -33,35 +26,18 @@
     return group.panel_candidate?.suggested_panel_key ?? "";
   }
 
-  let panelId: string = $state(untrack(() => defaultPanelId()));
-  let panelKey: string = $state(untrack(() => defaultPanelKey()));
+  let panelId: string = $state(defaultPanelId());
+  let panelKey: string = $state(defaultPanelKey());
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
   let validationError: string | null = $state(null);
 
-  // Members come from the candidate or the existing panel — we don't
-  // expose member editing in this iteration. Showing them so the user
-  // sees what they'd be saving.
   let memberSource: "existing" | "candidate" | "none" = $derived(
     existing ? "existing" : group.panel_candidate ? "candidate" : "none",
   );
-  let displayMembers: PutPanelMember[] = $derived.by(() => {
-    if (existing) {
-      return existing.members.map((m) => ({
-        source: m.source,
-        period: m.period,
-        time_key: m.time_key,
-      }));
-    }
-    if (group.panel_candidate) {
-      return group.panel_candidate.members.map((m) => ({
-        source: m.source,
-        period: m.period,
-        time_key: m.time_key,
-      }));
-    }
-    return [];
-  });
+  let displayMembers: PanelMember[] = $derived(
+    existing?.members ?? group.panel_candidate?.members ?? [],
+  );
 
   let panelIdTrimmed = $derived(panelId.trim());
   let panelKeyTrimmed = $derived(panelKey.trim());
@@ -71,25 +47,6 @@
       panelKeyTrimmed.length > 0 &&
       displayMembers.length > 0,
   );
-
-  function panelToPutArgs(): {
-    panel_id: string;
-    panel_key: string;
-    members: PutPanelMember[];
-  } {
-    return {
-      panel_id: panelIdTrimmed,
-      panel_key: panelKeyTrimmed,
-      members: displayMembers.map((m) => {
-        const out: PutPanelMember = { source: m.source };
-        if (m.period !== undefined && m.period !== null) out.period = m.period;
-        if (m.time_key !== undefined && m.time_key !== null) {
-          out.time_key = m.time_key;
-        }
-        return out;
-      }),
-    };
-  }
 
   async function onSubmit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
@@ -102,7 +59,12 @@
       return;
     }
     submitting = true;
-    const args = { ...panelToPutArgs(), expected_version: version };
+    const args = {
+      panel_id: panelIdTrimmed,
+      panel_key: panelKeyTrimmed,
+      members: displayMembers,
+      expected_version: version,
+    };
     const ok = await store.putPanel(args);
     submitting = false;
     if (ok) {

@@ -619,43 +619,13 @@ def _api_put_panel(
     """Add or replace one panel, identified by ``panel_id``.
 
     Member shape mirrors the on-disk JSON: ``{source, period?, time_key?}``,
-    with exactly one of ``period`` / ``time_key`` per member.
+    with exactly one of ``period`` / ``time_key`` per member. Structural
+    validation is delegated to ``editor.parse_panel_payload`` so the wire
+    format and the on-disk JSON share one validator.
     """
-    panel_id = _required_str(body, "panel_id")
-    panel_key = _required_str(body, "panel_key")
     expected_version = _required_str(body, "expected_version")
-    raw_members = body.get("members")
-    if not isinstance(raw_members, list) or not raw_members:
-        raise editor.ValidationError("members must be a non-empty array")
-    members: list[editor.PanelMember] = []
-    for i, m in enumerate(raw_members):
-        if not isinstance(m, dict):
-            raise editor.ValidationError(
-                f"members[{i}] must be an object, got {type(m).__name__}"
-            )
-        source = m.get("source")
-        if not isinstance(source, str) or not source:
-            raise editor.ValidationError(
-                f"members[{i}].source must be a non-empty string"
-            )
-        period = m.get("period")
-        time_key = m.get("time_key")
-        if (period is None) == (time_key is None):
-            raise editor.ValidationError(
-                f"members[{i}]: exactly one of 'period' or 'time_key' must be set"
-            )
-        if period is not None and (
-            not isinstance(period, int) or isinstance(period, bool)
-        ):
-            raise editor.ValidationError(f"members[{i}].period must be an integer")
-        if time_key is not None and (not isinstance(time_key, str) or not time_key):
-            raise editor.ValidationError(
-                f"members[{i}].time_key must be a non-empty string"
-            )
-        members.append(
-            editor.PanelMember(source=source, period=period, time_key=time_key)
-        )
-    panel = editor.Panel(panel_id=panel_id, panel_key=panel_key, members=tuple(members))
+    panel_body = {k: v for k, v in body.items() if k != "expected_version"}
+    panel = editor.parse_panel_payload(panel_body)
     snap = editor.put_panel(
         config.project_dir,
         panel,

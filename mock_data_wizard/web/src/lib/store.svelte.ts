@@ -369,6 +369,7 @@ class Store {
   }
 
   setGroupOpen(groupId: string, open: boolean): void {
+    if (this.openGroups.has(groupId) === open) return;
     // Reassign the Set so Svelte's reactivity picks up the change —
     // mutating in place won't trigger downstream $derived recomputes.
     const next = new Set(this.openGroups);
@@ -384,6 +385,7 @@ class Store {
 
   setSourceOpen(groupId: string, sourceName: string, open: boolean): void {
     const key = sourceKey(groupId, sourceName);
+    if (this.openSources.has(key) === open) return;
     const next = new Set(this.openSources);
     if (open) next.add(key);
     else next.delete(key);

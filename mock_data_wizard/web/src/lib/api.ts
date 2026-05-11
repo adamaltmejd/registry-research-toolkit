@@ -9,6 +9,7 @@
 
 import type {
   ApiErrorEnvelope,
+  PanelMember,
   RegistersResponse,
   StateSnapshot,
 } from "./types";
@@ -134,18 +135,10 @@ export function setGroupRegister(
   });
 }
 
-export interface PutPanelMember {
-  source: string;
-  /** Set for file-period members; mutually exclusive with `time_key`. */
-  period?: number;
-  /** Set for column-driven members; mutually exclusive with `period`. */
-  time_key?: string;
-}
-
 export interface PutPanelArgs {
   panel_id: string;
   panel_key: string;
-  members: PutPanelMember[];
+  members: PanelMember[];
   expected_version: string;
 }
 
