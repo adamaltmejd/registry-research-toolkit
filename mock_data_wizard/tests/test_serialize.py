@@ -391,7 +391,7 @@ def _build_golden_snapshot(
     monkeypatch.setattr(
         editor,
         "_resolve_signals_for_register",
-        lambda register, cols, db_path: (
+        lambda register, cols, db_path, **_kw: (
             {
                 "salary": RegmetaSignal(
                     datatyp_kind="numeric",

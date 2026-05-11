@@ -322,12 +322,15 @@ class _FakeConn:
         return _FakeRows(self._rows)
 
 
-def _row(lower_name, datatyp=None, short_name=None, value_set_id=None):
+def _row(
+    lower_name, datatyp=None, short_name=None, value_set_id=None, regver_name=None
+):
     return {
         "lower_name": lower_name,
         "datatyp": datatyp,
         "short_name": short_name,
         "value_set_id": value_set_id,
+        "regver_name": regver_name,
     }
 
 
@@ -384,6 +387,78 @@ def test_regmeta_lookup_empty_inputs_short_circuit():
     assert _regmeta_lookup(conn, set(), [34]) == {}
     assert _regmeta_lookup(conn, {"x"}, []) == {}
     assert conn.last_sql is None
+
+
+def test_regmeta_lookup_relevant_years_scopes_variance_counts():
+    """``relevant_years`` filters n_value_sets / n_classifications to
+    in-scope instances; yearless rows still count; classification_short_name
+    and has_value_codes stay unfiltered (whole-history facts)."""
+    conn = _FakeConn(
+        [
+            _row(
+                "lkf",
+                short_name="LKF2012",
+                value_set_id=10,
+                regver_name="lisa.lisa_2018",
+            ),
+            _row(
+                "lkf",
+                short_name="LKF2012",
+                value_set_id=10,
+                regver_name="lisa.lisa_2019",
+            ),
+            _row(
+                "lkf",
+                short_name="LKF2025",
+                value_set_id=20,
+                regver_name="lisa.lisa_2024",
+            ),
+            _row(
+                "lkf",
+                short_name="LKF1990",
+                value_set_id=30,
+                regver_name="lisa.lisa_1990",
+            ),
+            _row(
+                "lkf",
+                short_name="LKFX",
+                value_set_id=40,
+                regver_name=None,
+            ),
+        ]
+    )
+    sig = _regmeta_lookup(conn, {"lkf"}, [34], relevant_years={2018, 2019})["lkf"]
+    # In-scope years: 2018, 2019, plus yearless → LKF2012 (×2), LKFX (×1).
+    assert sig.n_classifications == 2
+    assert sig.n_value_sets == 2
+    # Whole-history facts unaffected by the year filter.
+    assert sig.has_value_codes is True
+    # Majority winner across ALL years (LKF2012 has 2 occurrences).
+    assert sig.classification_short_name == "LKF2012"
+
+
+def test_regmeta_lookup_relevant_years_none_keeps_full_counts():
+    """``relevant_years=None`` is the default and preserves pre-filter
+    counts — the snapshot/popup year-scope must opt in explicitly."""
+    conn = _FakeConn(
+        [
+            _row(
+                "lkf",
+                short_name="LKF2012",
+                value_set_id=10,
+                regver_name="lisa.lisa_2018",
+            ),
+            _row(
+                "lkf",
+                short_name="LKF2025",
+                value_set_id=20,
+                regver_name="lisa.lisa_2024",
+            ),
+        ]
+    )
+    sig = _regmeta_lookup(conn, {"lkf"}, [34])["lkf"]
+    assert sig.n_classifications == 2
+    assert sig.n_value_sets == 2
 
 
 # -- _validate_discover_payload -------------------------------------------

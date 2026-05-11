@@ -803,7 +803,7 @@ def test_set_group_register_drops_options_on_type_change(tmp_path: Path, monkeyp
     monkeypatch.setattr(
         editor,
         "_resolve_signals_for_register",
-        lambda reg, cols, db_path: {
+        lambda reg, cols, db_path, **_kw: {
             "mystery": RegmetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
@@ -849,7 +849,7 @@ def test_set_group_register_preserves_manual_override(tmp_path: Path, monkeypatc
     monkeypatch.setattr(
         editor,
         "_resolve_signals_for_register",
-        lambda reg, cols, db_path: {
+        lambda reg, cols, db_path, **_kw: {
             "mystery": RegmetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
@@ -896,7 +896,7 @@ def test_set_group_register_reclassify_manual_clears_override(
     monkeypatch.setattr(
         editor,
         "_resolve_signals_for_register",
-        lambda reg, cols, db_path: {
+        lambda reg, cols, db_path, **_kw: {
             "mystery": RegmetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
@@ -961,7 +961,7 @@ def test_set_group_register_rejects_stale_noreg_for_assigned_source(
         editor, "resolve_register", lambda name, db_path=None: fake_register
     )
     monkeypatch.setattr(
-        editor, "_resolve_signals_for_register", lambda reg, cols, db_path: {}
+        editor, "_resolve_signals_for_register", lambda reg, cols, db_path, **_kw: {}
     )
 
     # First, legitimately assign a register to x.
@@ -1825,8 +1825,8 @@ def test_get_column_values_tier_2_multiple_value_sets_no_collision(
     # Two value-set groups, ordered chronologically by year_min.
     assert len(result.value_sets) == 2
     assert [g.year_min for g in result.value_sets] == [2020, 2021]
-    assert result.value_sets[0].cvids == (1001,)
-    assert result.value_sets[1].cvids == (1002,)
+    assert result.value_sets[0].cvid_count == 1
+    assert result.value_sets[1].cvid_count == 1
 
 
 def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):

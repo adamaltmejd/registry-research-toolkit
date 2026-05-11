@@ -402,13 +402,20 @@ def _open_regmeta_conn(db_path: Path | None) -> Iterator[Any]:
 
 
 def _resolve_signals_for_register(
-    register_str: str, col_names: set[str], db_path: Path | None
+    register_str: str,
+    col_names: set[str],
+    db_path: Path | None,
+    *,
+    relevant_years: set[int] | None = None,
 ) -> dict[str, RegmetaSignal]:
     """Open regmeta, resolve the register, query column signals.
 
     Returns ``{}`` when regmeta is unavailable, the register doesn't
     resolve, or no columns match. Editor calls this once per register
-    (sources sharing a register batch into one DB call)."""
+    (sources sharing a register batch into one DB call).
+
+    ``relevant_years`` scopes the year-variance counts surfaced on the
+    signal — see ``classify._regmeta_lookup``. ``None`` = no filter."""
     with _open_regmeta_conn(db_path) as conn:
         if conn is None:
             return {}
@@ -421,17 +428,33 @@ def _resolve_signals_for_register(
             return {}
         if not register_ids:
             return {}
-        return _regmeta_lookup(conn, col_names, register_ids)
+        return _regmeta_lookup(
+            conn, col_names, register_ids, relevant_years=relevant_years
+        )
 
 
 def _resolve_signals_for_groups(
-    register_to_columns: dict[str, set[str]], db_path: Path | None
+    register_to_columns: dict[str, set[str]],
+    db_path: Path | None,
+    *,
+    register_to_relevant_years: dict[str, set[int]] | None = None,
 ) -> dict[str, dict[str, RegmetaSignal]]:
     """Resolve signals for every register in one pass. Returns
-    ``{register: {col_lower: RegmetaSignal}}``."""
+    ``{register: {col_lower: RegmetaSignal}}``.
+
+    ``register_to_relevant_years`` maps a register to the project's
+    source years for that register's group. ``None`` (or a missing
+    register entry) means "no year filter for this register"."""
     out: dict[str, dict[str, RegmetaSignal]] = {}
     for register_str, cols in register_to_columns.items():
-        out[register_str] = _resolve_signals_for_register(register_str, cols, db_path)
+        years = (
+            register_to_relevant_years.get(register_str)
+            if register_to_relevant_years is not None
+            else None
+        )
+        out[register_str] = _resolve_signals_for_register(
+            register_str, cols, db_path, relevant_years=years
+        )
     return out
 
 
@@ -751,6 +774,7 @@ def _build_snapshot(
         # error type so UI clients have one Exception to catch.
         raise ValidationError(str(exc)) from exc
     register_to_columns: dict[str, set[str]] = {}
+    register_to_relevant_years: dict[str, set[int]] = {}
     if discover is not None:
         sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
         for source_name, entry in config.sources.items():
@@ -763,6 +787,9 @@ def _build_snapshot(
             register_to_columns.setdefault(register, set()).update(
                 c["name"] for c in src.get("columns", [])
             )
+            year = entry.get("year")
+            if isinstance(year, int):
+                register_to_relevant_years.setdefault(register, set()).add(year)
     else:
         # No discover: still need to expose register groupings using
         # whatever column_types we have.
@@ -772,8 +799,31 @@ def _build_snapshot(
                 continue
             cols = config.column_types.get(source_name, {}).keys()
             register_to_columns.setdefault(register, set()).update(cols)
+            year = entry.get("year")
+            if isinstance(year, int):
+                register_to_relevant_years.setdefault(register, set()).add(year)
 
-    signals = _resolve_signals_for_groups(register_to_columns, db_path)
+    # Year filter only applies when every source in a register-group
+    # carries a configured year: a partial set would silently drop
+    # variants the user never opted out of.
+    scope_for_signals: dict[str, set[int]] = {}
+    for reg, years in register_to_relevant_years.items():
+        cols = register_to_columns.get(reg)
+        if not cols:
+            continue
+        sources_for_reg = [
+            sn for sn, e in config.sources.items() if e.get("register") == reg
+        ]
+        if sources_for_reg and all(
+            isinstance(config.sources[sn].get("year"), int) for sn in sources_for_reg
+        ):
+            scope_for_signals[reg] = years
+
+    signals = _resolve_signals_for_groups(
+        register_to_columns,
+        db_path,
+        register_to_relevant_years=scope_for_signals,
+    )
     groups = _build_groups(config, discover, signals, db_path)
 
     warnings: list[EditorWarning] = []
@@ -1593,8 +1643,11 @@ _NOTE_TIER_3A = (
 @dataclass(frozen=True)
 class ValueSetGroup:
     value_set_id: int
+    # Smallest cvid in the group; used purely as a deterministic
+    # tie-breaker in chronological sort + tier-3a default selection,
+    # not surfaced to the user.
     label_cvid: int
-    cvids: tuple[int, ...]
+    cvid_count: int
     year_min: int | None
     year_max: int | None
 
@@ -1614,23 +1667,37 @@ class ColumnValuesResult:
 
 
 def _fetch_distinct_classifications(
-    conn: Any, matched_alias: str, register_ids: list[int]
+    conn: Any,
+    matched_alias: str,
+    register_ids: list[int],
+    *,
+    relevant_years: set[int] | None = None,
 ) -> tuple[str, ...]:
     if not register_ids:
         return ()
     ph = ",".join("?" for _ in register_ids)
     rows = conn.execute(
-        "SELECT DISTINCT c.short_name "
+        "SELECT DISTINCT c.short_name, rv.registerversionnamn AS regver_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "JOIN classification c ON vi.classification_id = c.id "
+        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
         f"  AND vi.register_id IN ({ph}) "
-        "  AND c.short_name IS NOT NULL "
-        "ORDER BY c.short_name",
+        "  AND c.short_name IS NOT NULL",
         [matched_alias, *register_ids],
     ).fetchall()
-    return tuple(r["short_name"] for r in rows)
+    if relevant_years is None:
+        return tuple(sorted({r["short_name"] for r in rows}))
+    from regmeta.queries import extract_year
+
+    # Yearless instances survive: we can't disprove their relevance.
+    kept: set[str] = set()
+    for r in rows:
+        year = extract_year(r["regver_name"] or "")
+        if year is None or year in relevant_years:
+            kept.add(r["short_name"])
+    return tuple(sorted(kept))
 
 
 def _fetch_value_set_groups(
@@ -1659,13 +1726,13 @@ def _fetch_value_set_groups(
         by_vs.setdefault(vsid, []).append((cvid, year))
     groups: list[ValueSetGroup] = []
     for vsid, items in by_vs.items():
-        cvids = tuple(sorted(c for c, _ in items))
+        cvids = sorted(c for c, _ in items)
         years = sorted(y for _, y in items if y is not None)
         groups.append(
             ValueSetGroup(
                 value_set_id=vsid,
                 label_cvid=cvids[0],
-                cvids=cvids,
+                cvid_count=len(cvids),
                 year_min=years[0] if years else None,
                 year_max=years[-1] if years else None,
             )
@@ -1764,7 +1831,15 @@ def get_column_values(
                 register_ids = resolve_register_ids(conn, register)
             except RegmetaError:
                 register_ids = []
-        signals = _regmeta_lookup(conn, {column}, register_ids) if register_ids else {}
+        # Same year scope is applied to the signal's variance counts and
+        # the picker's classification list — the popup must agree with
+        # the inline badge in GroupCard.
+        years_set: set[int] | None = set(relevant_years) if relevant_years else None
+        signals = (
+            _regmeta_lookup(conn, {column}, register_ids, relevant_years=years_set)
+            if register_ids
+            else {}
+        )
         signal = lookup_with_prefix_fallback(signals, column)
         # Matched alias can differ from the column literal when regmeta
         # resolved via project-prefix stripping (e.g. "P1105_AStud" →
@@ -1774,7 +1849,7 @@ def get_column_values(
         classifications: tuple[str, ...] = ()
         if signal is not None and signal.n_classifications > 1:
             classifications = _fetch_distinct_classifications(
-                conn, matched_alias, register_ids
+                conn, matched_alias, register_ids, relevant_years=years_set
             )
 
         if signal is not None and signal.classification_short_name:
@@ -1908,7 +1983,11 @@ def _resolve_picked_value_set(
     if picked is not None and picked in valid_ids:
         return picked
     if tier == "3a":
-        return max(value_sets, key=lambda g: (len(g.cvids), -g.label_cvid)).value_set_id
+        # Ties broken by lowest ``label_cvid`` (= oldest cvid in the
+        # group), so two equally-large value-sets resolve to the same
+        # winner across runs — keeps the popup deterministic when SCB
+        # has parallel revisions with the same coverage.
+        return max(value_sets, key=lambda g: (g.cvid_count, -g.label_cvid)).value_set_id
     return None
 
 
