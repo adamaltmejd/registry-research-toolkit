@@ -55,8 +55,17 @@ export interface Panel {
 export interface RegmetaSignal {
   /** "numeric" | "date" | null — see classify.RegmetaSignal. */
   datatyp_kind: string | null;
+  /** Most-common classification short_name. When `n_classifications > 1`
+   * this is one of several; the inline badge surfaces the variance and
+   * the value-codes popup offers a picker. */
   classification_short_name: string | null;
   has_value_codes: boolean;
+  /** Distinct ``value_set_id`` count across cvids for this column under
+   * this register. > 1 = code set widens / narrows across years. */
+  n_value_sets: number;
+  /** Distinct ``classification.short_name`` count. > 1 = column maps to
+   * different classifications across years. */
+  n_classifications: number;
 }
 
 export interface ColumnInfo {
@@ -255,7 +264,9 @@ function isRegmetaSignal(x: unknown): x is RegmetaSignal {
   return (
     isStringOrNull(x.datatyp_kind) &&
     isStringOrNull(x.classification_short_name) &&
-    typeof x.has_value_codes === "boolean"
+    typeof x.has_value_codes === "boolean" &&
+    typeof x.n_value_sets === "number" &&
+    typeof x.n_classifications === "number"
   );
 }
 

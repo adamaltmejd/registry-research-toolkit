@@ -254,11 +254,16 @@ class RegmetaSignal:
     datatyp_kind: str | None
     # short_name of the classification attached to this variable
     # (SUN2020-GRUPP, SSYK2012, ...). None when no shared classification.
+    # When n_classifications > 1 this is the most-common winner.
     classification_short_name: str | None
     # True when any cvid for this column under this register has a
     # non-null value_set_id — i.e. SCB enumerated the codes (covers
     # register-local code lists like ALKod / Kon).
     has_value_codes: bool = False
+    # ``> 1`` means the code set / classification differs across years
+    # (drives the variance-tier popup picker).
+    n_value_sets: int = 0
+    n_classifications: int = 0
 
 
 def _sql_type_kind(sql_type: str | None) -> str | None:
@@ -340,7 +345,11 @@ def _classify(
 
 
 def _regmeta_lookup(
-    conn: Any, col_names: set[str], register_ids: list[int]
+    conn: Any,
+    col_names: set[str],
+    register_ids: list[int],
+    *,
+    relevant_years: set[int] | None = None,
 ) -> dict[str, RegmetaSignal]:
     """Look up regmeta evidence for ``col_names`` under ``register_ids``.
 
@@ -357,13 +366,20 @@ def _regmeta_lookup(
     ``value_set_id``. Columns absent from regmeta are absent from the
     result.
 
+    ``relevant_years`` scopes the variance counts (``n_value_sets``,
+    ``n_classifications``) to instances whose register_version year is
+    in the set — keeps the "varies · N" badge consistent with the
+    year-filtered popup. Yearless instances (no parseable year)
+    contribute to the counts since we can't disprove their relevance.
+    ``datatyp_kind`` / ``classification_short_name`` / ``has_value_codes``
+    stay unfiltered: they answer "does regmeta know this column" which
+    isn't a per-year question.
+
     ``conn`` is owned by the caller (kept open across
     ``resolve_register_ids`` and this lookup so we don't reopen the DB).
     """
     if not col_names or not register_ids:
         return {}
-    # Strip project prefixes so `P1105_LopNr` resolves to `LopNr` —
-    # the same trick enrich uses. Both raw and stripped names go in.
     lookup: set[str] = set()
     for c in col_names:
         lookup.add(c)
@@ -373,23 +389,31 @@ def _regmeta_lookup(
     col_list = sorted(lookup)
     col_placeholders = ",".join("?" for _ in col_list)
     reg_placeholders = ",".join("?" for _ in register_ids)
+    # Pull registerversionnamn so the caller can filter variance counts
+    # by year without an extra query.
     sql = (
         "SELECT LOWER(va.kolumnnamn) AS lower_name, "
         "       vi.datatyp AS datatyp, "
         "       c.short_name AS short_name, "
-        "       vi.value_set_id IS NOT NULL AS has_value_codes "
+        "       vi.value_set_id AS value_set_id, "
+        "       rv.registerversionnamn AS regver_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
+        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) IN ({col_placeholders}) "
         f"  AND vi.register_id IN ({reg_placeholders})"
     )
     params = [c.lower() for c in col_list] + list(register_ids)
     rows = conn.execute(sql, params).fetchall()
 
+    from regmeta.queries import extract_year
+
     datatyp_kinds: dict[str, str] = {}
-    short_name_counts: dict[str, Counter] = {}
-    has_codes: set[str] = set()
+    short_name_counts_all: dict[str, Counter] = {}
+    short_name_counts_scoped: dict[str, set[str]] = {}
+    value_set_ids_all: dict[str, set[int]] = {}
+    value_set_ids_scoped: dict[str, set[int]] = {}
     seen: set[str] = set()
     for r in rows:
         name = r["lower_name"]
@@ -399,18 +423,31 @@ def _regmeta_lookup(
             if kind is not None:
                 datatyp_kinds[name] = kind
         sn = r["short_name"]
+        vsid = r["value_set_id"]
         if sn:
-            short_name_counts.setdefault(name, Counter())[sn] += 1
-        if r["has_value_codes"]:
-            has_codes.add(name)
+            short_name_counts_all.setdefault(name, Counter())[sn] += 1
+        if vsid is not None:
+            value_set_ids_all.setdefault(name, set()).add(int(vsid))
+        if relevant_years is None:
+            in_scope = True
+        else:
+            year = extract_year(r["regver_name"] or "")
+            in_scope = year is None or year in relevant_years
+        if in_scope:
+            if sn:
+                short_name_counts_scoped.setdefault(name, set()).add(sn)
+            if vsid is not None:
+                value_set_ids_scoped.setdefault(name, set()).add(int(vsid))
     out: dict[str, RegmetaSignal] = {}
     for name in seen:
-        sn_counter = short_name_counts.get(name)
+        sn_counter = short_name_counts_all.get(name)
         sn = sn_counter.most_common(1)[0][0] if sn_counter else None
         out[name] = RegmetaSignal(
             datatyp_kind=datatyp_kinds.get(name),
             classification_short_name=sn,
-            has_value_codes=name in has_codes,
+            has_value_codes=bool(value_set_ids_all.get(name)),
+            n_value_sets=len(value_set_ids_scoped.get(name, set())),
+            n_classifications=len(short_name_counts_scoped.get(name, set())),
         )
     return out
 

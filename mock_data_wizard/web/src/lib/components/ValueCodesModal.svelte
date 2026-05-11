@@ -1,42 +1,154 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { getColumnValues, type ColumnValuesResponse } from "../api";
+  import {
+    getColumnValues,
+    type ColumnValuesResponse,
+    type ValueSetGroup,
+  } from "../api";
   import Modal from "./Modal.svelte";
+  import Picker from "./Picker.svelte";
 
   interface Props {
     register: string | null;
     column: string;
+    /** Project sources in the calling group with their detected year.
+     * Drives the "applies to: foo_2018.csv (2018), …" line under the
+     * value-set picker. Empty = no source info, line is hidden. */
+    sourceYears?: Record<string, number | null>;
     onClose: () => void;
   }
 
-  let { register, column, onClose }: Props = $props();
+  let { register, column, sourceYears = {}, onClose }: Props = $props();
 
-  // Loading + result state. The fetch is on-demand (per CLAUDE.md
-  // request: "fetching them on click from regmeta, not prefetching"), so
-  // the modal opens immediately and replaces "Loading…" with the result
-  // once the network round-trip completes. Errors render inline rather
-  // than as a toast — the popover is throwaway, so co-locating the
-  // failure with the empty list saves the user a glance away.
   type LoadState =
     | { kind: "loading" }
     | { kind: "ok"; data: ColumnValuesResponse }
     | { kind: "error"; message: string };
-  let state: LoadState = $state({ kind: "loading" });
+  let pickedClassification: string | null = $state(null);
+  let pickedValueSet: number | null = $state(null);
+  let loadState: LoadState = $state({ kind: "loading" });
 
   onMount(() => {
     void load();
   });
 
+  let relevantYears = $derived(
+    Array.from(
+      new Set(
+        Object.values(sourceYears).filter(
+          (y): y is number => typeof y === "number",
+        ),
+      ),
+    ).sort((a, b) => a - b),
+  );
+
   async function load(): Promise<void> {
-    state = { kind: "loading" };
+    loadState = { kind: "loading" };
     try {
-      const data = await getColumnValues({ register, column });
-      state = { kind: "ok", data };
+      const data = await getColumnValues({
+        register,
+        column,
+        picked_classification: pickedClassification,
+        picked_value_set: pickedValueSet,
+        relevant_years: relevantYears,
+      });
+      loadState = { kind: "ok", data };
     } catch (exc) {
       const message = exc instanceof Error ? exc.message : String(exc);
-      state = { kind: "error", message };
+      loadState = { kind: "error", message };
     }
+  }
+
+  function pickClassification(short_name: string): void {
+    if (pickedClassification === short_name) return;
+    pickedClassification = short_name;
+    void load();
+  }
+
+  // Tier 2 prepends a Union sentinel as the default; tier 3a omits it
+  // because under 3a the union arbitrarily picks one label per code.
+  type VsOption = { kind: "union" } | { kind: "group"; group: ValueSetGroup };
+
+  function vsOptions(data: ColumnValuesResponse): VsOption[] {
+    const groups: VsOption[] = data.value_sets.map((g) => ({
+      kind: "group" as const,
+      group: g,
+    }));
+    if (data.tier === "2") {
+      return [{ kind: "union" }, ...groups];
+    }
+    return groups;
+  }
+
+  function vsActive(data: ColumnValuesResponse): VsOption | null {
+    if (data.picked_value_set === null) {
+      return data.tier === "2" ? { kind: "union" } : null;
+    }
+    const hit = data.value_sets.find(
+      (g) => g.value_set_id === data.picked_value_set,
+    );
+    return hit ? { kind: "group", group: hit } : null;
+  }
+
+  function vsKey(opt: VsOption): string {
+    return opt.kind === "union" ? "union" : `vs:${opt.group.value_set_id}`;
+  }
+
+  function vsLabel(opt: VsOption): string {
+    if (opt.kind === "union") return "Union";
+    return yearRangeLabel(opt.group);
+  }
+
+  function yearRangeLabel(g: ValueSetGroup): string {
+    if (g.year_min === null || g.year_max === null) return "no year info";
+    if (g.year_min === g.year_max) return `${g.year_min}`;
+    return `${g.year_min}–${g.year_max}`;
+  }
+
+  const APPLIES_TO_CAP = 6;
+
+  // Project sources matching the picked group: detected year in
+  // [year_min, year_max]. Yearless sources mentioned separately since
+  // we can't place them on the timeline.
+  function vsActiveDescription(opt: VsOption | null): string | null {
+    if (opt === null || opt.kind === "union") return null;
+    const g = opt.group;
+    const entries = Object.entries(sourceYears);
+    if (entries.length === 0) return null;
+    const yearless = entries.filter(([, y]) => y === null).length;
+    const { year_min, year_max } = g;
+    const inRange =
+      year_min === null || year_max === null
+        ? []
+        : entries
+            .filter(
+              (e): e is [string, number] =>
+                e[1] !== null && e[1] >= year_min && e[1] <= year_max,
+            )
+            .map(([name, y]) => `${name} (${y})`)
+            .sort();
+    if (inRange.length === 0) {
+      if (yearless > 0) {
+        return `no project source falls in this window (${yearless} source${yearless === 1 ? "" : "s"} with unknown year)`;
+      }
+      return "no project source falls in this window";
+    }
+    const head = inRange.slice(0, APPLIES_TO_CAP);
+    const overflow = inRange.length - head.length;
+    const overflowSuffix = overflow > 0 ? `, +${overflow} more` : "";
+    const yearlessSuffix =
+      yearless > 0
+        ? ` (${yearless} other source${yearless === 1 ? "" : "s"} with unknown year)`
+        : "";
+    return `applies to ${head.join(", ")}${overflowSuffix}${yearlessSuffix}`;
+  }
+
+  function pickValueSet(opt: VsOption): void {
+    const next = opt.kind === "union" ? null : opt.group.value_set_id;
+    if (next === pickedValueSet) return;
+    pickedValueSet = next;
+    void load();
   }
 </script>
 
@@ -48,11 +160,11 @@
         {#if register}· <span class="register-name">{register}</span>{/if}
       </span>
       <h3 id="value-codes-heading" class="mono">{column}</h3>
-      {#if state.kind === "ok" && state.data.kind !== "none"}
-        <span class="kind-tag kind-{state.data.kind}" title={state.data.kind}>
-          {state.data.kind === "classification"
-            ? `classification · ${state.data.title}`
-            : `value codes · ${state.data.codes.length}`}
+      {#if loadState.kind === "ok" && loadState.data.kind !== "none"}
+        <span class="kind-tag kind-{loadState.data.kind}" title={loadState.data.kind}>
+          {loadState.data.kind === "classification"
+            ? `classification · ${loadState.data.title}`
+            : `value codes · ${loadState.data.codes.length}`}
         </span>
       {/if}
     </div>
@@ -61,24 +173,54 @@
     </button>
   </header>
 
-  {#if state.kind === "loading"}
+  {#if loadState.kind === "loading"}
     <p class="status">Loading…</p>
-  {:else if state.kind === "error"}
+  {:else if loadState.kind === "error"}
     <p class="status error">
-      Could not load values: {state.message}
+      Could not load values: {loadState.message}
       <button type="button" class="retry" onclick={() => void load()}>
         Retry
       </button>
     </p>
-  {:else if state.data.kind === "none"}
+  {:else if loadState.data.kind === "none"}
     <p class="status muted">
       regmeta has no value codes for <code>{column}</code>{register
         ? ` under ${register}`
         : ""}.
     </p>
   {:else}
-    {#if state.data.description}
-      <p class="description">{state.data.description}</p>
+    {#if loadState.data.note && loadState.data.tier}
+      <p class="variance-note variance-{loadState.data.tier}">
+        {loadState.data.note}
+      </p>
+    {/if}
+    {#if loadState.data.kind === "classification" && loadState.data.classifications.length > 1}
+      {@const picked =
+        loadState.data.picked_classification ?? loadState.data.classifications[0]}
+      <Picker
+        label="Classification:"
+        options={loadState.data.classifications}
+        value={picked}
+        optionLabel={(sn) => sn}
+        eqKey={(sn) => sn}
+        onPick={pickClassification}
+      />
+    {/if}
+    {#if loadState.data.value_sets.length > 1}
+      {@const opts = vsOptions(loadState.data)}
+      {@const active = vsActive(loadState.data)}
+      <Picker
+        label="Value-set:"
+        options={opts}
+        value={active}
+        optionLabel={vsLabel}
+        eqKey={vsKey}
+        activeDescription={vsActiveDescription(active)}
+        onPick={pickValueSet}
+      />
+    {/if}
+    {#if loadState.data.description}
+      <p class="description">{loadState.data.description}</p>
     {/if}
     <div class="codes-wrap">
       <table class="codes">
@@ -93,7 +235,7 @@
           </tr>
         </thead>
         <tbody>
-          {#each state.data.codes as c (c.code)}
+          {#each loadState.data.codes as c (c.code)}
             <tr>
               <td class="mono">{c.code}</td>
               <td>{c.label ?? ""}</td>
@@ -182,14 +324,34 @@
     cursor: pointer;
     font: inherit;
   }
+  /* Tier 2 / 3b = amber; tier 3a = red (same code, different labels). */
+  .variance-note {
+    margin: 0 0 0.4rem;
+    padding: 0.35rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    line-height: 1.35;
+    border: 1px solid #e8c184;
+    background: #fff7e6;
+    color: #7a4a00;
+  }
+  .variance-3a {
+    border-color: #e0a0a0;
+    background: #fde8e8;
+    color: #882020;
+  }
+  .variance-3b {
+    border-color: #e8c184;
+    background: #fff7e6;
+    color: #7a4a00;
+  }
   .description {
     margin: 0;
     color: #555;
     font-size: 0.9rem;
   }
-  /* Code list often runs to hundreds of rows for big classifications
-     (SUN, SSYK, …). Cap height + scroll inside so the modal stays at a
-     usable size and the Close button remains reachable. */
+  /* Big classifications (SUN, SSYK) can run to hundreds of rows;
+     cap height so the Close button stays reachable. */
   .codes-wrap {
     max-height: 22rem;
     overflow: auto;

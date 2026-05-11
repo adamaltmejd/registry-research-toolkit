@@ -172,21 +172,35 @@ export interface ColumnValueCode {
   label: string | null;
 }
 
+export type VarianceTier = "1" | "2" | "3a" | "3b";
+
+export interface ValueSetGroup {
+  value_set_id: number;
+  year_min: number | null;
+  year_max: number | null;
+}
+
 export interface ColumnValuesResponse {
-  /** "classification" — canonical SCB classification code list.
-   *  "values" — per-instance value codes aggregated for this register.
-   *  "none" — regmeta has no codes (unmatched, no register, etc.). */
   kind: "classification" | "values" | "none";
   title: string;
   description: string | null;
   codes: ColumnValueCode[];
+  tier: VarianceTier | null;
+  note: string | null;
+  classifications: string[];
+  picked_classification: string | null;
+  value_sets: ValueSetGroup[];
+  picked_value_set: number | null;
 }
 
 export interface GetColumnValuesArgs {
-  /** Register name or numeric id; null when the column's group has no
-   *  register assigned (server returns kind="none"). */
   register: string | null;
   column: string;
+  picked_classification?: string | null;
+  picked_value_set?: number | null;
+  /** Project source years (non-null). Server drops value-set groups
+   * whose year window doesn't overlap any of these. */
+  relevant_years?: number[];
 }
 
 export function getColumnValues(

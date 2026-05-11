@@ -19,11 +19,6 @@
 
   let { group }: Props = $props();
 
-  // Modal target: list of sources to apply the column-type edit to. In
-  // grouped mode this is a partition's source members; in per-source
-  // mode it is a single-element list. `cellBySource` covers every
-  // carrier source — its keys are the register-wide reconcile target
-  // and its values feed the modal's manual-override count.
   let editingColumn: {
     sources: string[];
     cellBySource: Record<string, ColumnInfo>;
@@ -31,10 +26,6 @@
   } | null = $state(null);
   let editingRegister = $state(false);
   let editingPanel = $state(false);
-  // Value-codes popover target. The register comes from this group;
-  // server side handles the case where no register is set (returns
-  // kind="none"), but we don't open the modal at all in that case
-  // since there are no codes to look up.
   let viewingValuesFor: string | null = $state(null);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
@@ -82,21 +73,25 @@
     return Object.values(col.hint).map(String).join(" · ");
   }
 
-  // Compact label for the regmeta evidence badge. Classification name
-  // wins over the generic "value codes" because it carries more info
-  // (e.g. "LKF2012" tells the user which version of the kommun coding).
+  // "varies · N" when the column maps to multiple classifications: a
+  // most-common winner would silently mislabel the other years.
   function regmetaBadge(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
+    if (sig.n_classifications > 1) return `varies · ${sig.n_classifications}`;
     if (sig.classification_short_name) return sig.classification_short_name;
     if (sig.has_value_codes) return "vc";
     return "";
   }
 
-  // Long-form text for the badge tooltip — same source data, expanded.
+  // Tooltip text; TypeCell appends the click CTA so this stays purely
+  // descriptive (no "click to …" duplication).
   function regmetaBadgeTitle(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
     if (!sig) return "";
+    if (sig.n_classifications > 1) {
+      return `regmeta: ${sig.n_classifications} classifications across years (e.g. ${sig.classification_short_name})`;
+    }
     if (sig.classification_short_name) {
       return `regmeta classification: ${sig.classification_short_name}`;
     }
@@ -481,6 +476,8 @@
           {@const hint = hintSuffix(p.sample)}
           {@const regmeta = regmetaBadge(p.sample)}
           {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
+          {@const regmetaVaries =
+            (p.sample.regmeta_signal?.n_classifications ?? 0) > 1}
           {@const split = p.variant_count > 1}
           {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
           <tr
@@ -524,6 +521,7 @@
                 showManualOverrideBorder={false}
                 {regmeta}
                 {regmetaTitle}
+                {regmetaVaries}
                 manualCount={p.manual_count}
                 onEditType={() => openEditorForPartition(p)}
                 onShowValueCodes={() => (viewingValuesFor = p.name)}
@@ -621,6 +619,8 @@
               {@const hint = hintSuffix(col)}
               {@const regmeta = regmetaBadge(col)}
               {@const regmetaTitle = regmetaBadgeTitle(col)}
+              {@const regmetaVaries =
+                (col.regmeta_signal?.n_classifications ?? 0) > 1}
               {@const provLabel =
                 col.provenance === "manual"
                   ? "manual override"
@@ -647,6 +647,7 @@
                     showManualOverrideBorder={true}
                     {regmeta}
                     {regmetaTitle}
+                    {regmetaVaries}
                     onEditType={() => openEditorForCell(sourceName, col)}
                     onShowValueCodes={() => (viewingValuesFor = col.name)}
                   />
@@ -689,6 +690,7 @@
   <ValueCodesModal
     register={group.register_name}
     column={viewingValuesFor}
+    sourceYears={sourceYears}
     onClose={() => (viewingValuesFor = null)}
   />
 {/if}

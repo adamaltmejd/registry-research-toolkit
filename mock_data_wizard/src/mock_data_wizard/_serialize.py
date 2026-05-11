@@ -128,6 +128,8 @@ def _regmeta_signal_to_dict(signal: RegmetaSignal) -> dict[str, Any]:
         "datatyp_kind": signal.datatyp_kind,
         "classification_short_name": signal.classification_short_name,
         "has_value_codes": signal.has_value_codes,
+        "n_value_sets": signal.n_value_sets,
+        "n_classifications": signal.n_classifications,
     }
 
 

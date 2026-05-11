@@ -17,6 +17,9 @@
     showManualOverrideBorder: boolean;
     regmeta: string;
     regmetaTitle: string;
+    /** Render the regmeta badge with the "varies" style when the column
+     * maps to multiple classifications across years. */
+    regmetaVaries?: boolean;
     /** 0 hides the badge; only meaningful in grouped mode. */
     manualCount?: number;
     onEditType: () => void;
@@ -30,6 +33,7 @@
     showManualOverrideBorder,
     regmeta,
     regmetaTitle,
+    regmetaVaries = false,
     manualCount = 0,
     onEditType,
     onShowValueCodes,
@@ -65,6 +69,7 @@
       <button
         type="button"
         class="regmeta-tag"
+        class:varies={regmetaVaries}
         title={`${regmetaTitle} — click to load value codes`}
         onclick={handleRegmetaClick}>{regmeta}</button
       >
@@ -174,6 +179,15 @@
   .regmeta-tag:focus-visible {
     outline: 2px solid #5d2b8c;
     outline-offset: 1px;
+  }
+  .regmeta-tag.varies {
+    background: #fff0d9;
+    color: #7a4a00;
+    border-color: #e8c184;
+  }
+  .regmeta-tag.varies:hover {
+    background: #fde2b6;
+    border-color: #d6a85a;
   }
   .manual-badge {
     color: #b34a00;
