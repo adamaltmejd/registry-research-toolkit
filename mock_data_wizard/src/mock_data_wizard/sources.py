@@ -3,10 +3,10 @@
 A "source" is a config object describing where to find tables. The
 script's ``configure()`` returns a ``SOURCES`` list built from
 ``file_source(...)`` and ``sql_source(...)`` calls. At extract time,
-``iter_source(src)`` yields :class:`SourceHandle` objects -- one per
-table -- carrying a live connection and a quoted table reference.
-Classification and summarising run against that handle without ever
-materialising rows in Python.
+``iter_source(src, config=...)`` yields :class:`SourceHandle` objects
+-- one per table -- carrying a live connection and a quoted table
+reference. Classification and summarising run against that handle
+without ever materialising rows in Python.
 
 Two source types:
 
@@ -18,6 +18,12 @@ Two source types:
 A SQL source with no ``tables=``, ``pattern=``, or ``all=True`` is
 ambiguous in extract mode and ``iter_sql_source`` raises. Discover mode
 passes ``permissive=True`` to enumerate everything reachable.
+
+CSV typing splits on whether ``iter_source`` was given an
+``MDWConfig``: extract mode reads ``all_varchar=true`` and applies a
+per-column ``CAST`` (deterministic, single-pass), discover mode reads
+``read_csv_auto(sample_size=-1)`` so the classifier has typed columns
+to seed on. See ``mock_data_wizard/DESIGN.md`` § *CSV typing*.
 """
 
 from __future__ import annotations
@@ -27,9 +33,12 @@ import os
 import re
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Iterator, Mapping, Sequence, Union
+from typing import TYPE_CHECKING, Any, Iterator, Mapping, Sequence, Union
 
 from .sql_emit import DUCKDB, MSSQL, quote_ident
+
+if TYPE_CHECKING:
+    from .config import ColumnTypeOverride, MDWConfig
 
 log = logging.getLogger("mdw.sources")
 
@@ -311,12 +320,93 @@ def _check_unique_basenames(files: Sequence[Path], src_path: str) -> None:
         )
 
 
-def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle]:
+def _semantic_to_duckdb_cast(override: ColumnTypeOverride) -> str | None:
+    """DuckDB type to CAST a CSV-as-VARCHAR column into for aggregation.
+
+    Returns ``None`` for types that work fine as VARCHAR (id,
+    categorical, opaque, date) — the column is left untyped and the
+    aggregation queries operate on strings:
+
+    - ``id``: opaque token. SCB pids and study-IDs commonly carry leading
+      zeros that a numeric cast would silently drop.
+    - ``categorical``: code lists like ``"01"`` / ``"1"`` that should not
+      collapse under a numeric cast.
+    - ``opaque``: free text; only length stats are computed.
+    - ``date``: SCB date formats are a zoo (YYYYMMDD, DD/MM/YYYY, …) and
+      parsing happens in :func:`summarize._to_date`. Lexicographic
+      ``MIN``/``MAX`` is correct for the SCB-common ISO and YYYYMMDD
+      shapes; pinning a ``date_format`` in the override does not change
+      the SQL path today.
+
+    Only ``numeric`` requires a cast for ``MIN``/``MAX``/``AVG`` /
+    ``STDDEV`` / ``PERCENTILE_CONT`` to behave as numbers.
+    ``numeric_subtype="integer"`` → ``BIGINT`` (clean integer round-trip
+    on min/max). Otherwise ``DOUBLE`` (covers floats and integers up to
+    2^53).
+    """
+    if override.type == "numeric":
+        return "BIGINT" if override.numeric_subtype == "integer" else "DOUBLE"
+    return None
+
+
+def _build_cast_select(
+    conn: Any,
+    quoted_path: str,
+    encoding: str,
+    overrides: Mapping[str, ColumnTypeOverride],
+) -> str:
+    """Build a SELECT that reads the CSV as VARCHAR and casts per-column.
+
+    The inner ``read_csv_auto(..., all_varchar=true)`` skips DuckDB's
+    type sniffer entirely: every column comes back as VARCHAR and
+    ``nullstr=['', ' ']`` still applies (so the SCB ' ' sentinel becomes
+    NULL before the cast sees it). DESCRIBE on the inner SELECT pulls
+    the column list from the header without scanning the file.
+
+    Columns absent from ``overrides`` pass through as VARCHAR;
+    ``extract.process_handle`` validates the full column set against the
+    config and raises one error listing every missing override.
+    """
+    raw_select = (
+        f"SELECT * FROM read_csv_auto("
+        f"'{quoted_path}', header=true, encoding='{encoding}', "
+        f"nullstr=['', ' '], all_varchar=true)"
+    )
+    desc = conn.execute(f"DESCRIBE {raw_select}").fetchall()
+    col_names = [r[0] for r in desc]
+    parts: list[str] = []
+    for name in col_names:
+        qname = quote_ident(name, DUCKDB)
+        ov = overrides.get(name)
+        cast_type = _semantic_to_duckdb_cast(ov) if ov is not None else None
+        if cast_type is None:
+            parts.append(qname)
+        else:
+            parts.append(f"CAST({qname} AS {cast_type}) AS {qname}")
+    return f"SELECT {', '.join(parts)} FROM ({raw_select}) AS __mdw_raw"
+
+
+def iter_file_source(
+    src: FileSource,
+    conn: Any = None,
+    *,
+    config: MDWConfig | None = None,
+) -> Iterator[SourceHandle]:
     """Yield one :class:`SourceHandle` per matched file.
 
     A DuckDB view is registered for the current file before yielding and
     dropped after the consumer moves on, so peak DuckDB state stays at one
     table even for source directories with hundreds of files.
+
+    When ``config`` is supplied (extract mode), each file is read with
+    ``all_varchar=true`` and per-column ``CAST``s built from
+    ``config.column_types``. The sniffer is skipped entirely — ~10×
+    faster on real-world CSVs (issue #40 benchmarks) and removes the
+    "rare row breaks the run" failure mode that ``sample_size=-1`` only
+    masked at a steep cost. ``config=None`` (discover mode, or sources
+    with no override entries) falls back to ``read_csv_auto`` with
+    ``sample_size=-1`` so the discover step still has typed columns to
+    seed the classifier.
     """
     import duckdb
 
@@ -338,44 +428,41 @@ def iter_file_source(src: FileSource, conn: Any = None) -> Iterator[SourceHandle
             quoted_path = str(fp).replace("'", "''")
             materialise = fp.stat().st_size <= threshold_bytes
             kind = "TABLE" if materialise else "VIEW"
+            overrides: Mapping[str, ColumnTypeOverride] = (
+                config.column_types.get(fp.name, {}) if config is not None else {}
+            )
             log.info(
-                "[%s] read_csv_auto (%s, encoding=%s, %.1f MB)",
+                "[%s] read_csv (%s, encoding=%s, %.1f MB, %s)",
                 fp.name,
                 kind.lower(),
                 encoding,
                 fp.stat().st_size / (1024 * 1024),
+                "config-cast" if overrides else "auto-infer",
             )
             try:
-                # nullstr includes ' ' (single space): SCB CSV exports use a
-                # bare space as the missing-value sentinel in numeric columns,
-                # which would otherwise break DuckDB's strict-mode BIGINT cast
-                # whenever the auto-detector picks a numeric type from a clean
-                # sample but later rows contain the sentinel.
-                #
-                # sample_size=-1 forces a whole-file sniffer scan for
-                # type inference. The default (20480 rows) crashes
-                # mid-stream when a rare edge value appears later
-                # (observed: digit column with one literal "C" at
-                # row ~60k → BIGINT inferred → conversion error). At
-                # discover/extract time we can't enumerate which columns
-                # might surprise us, so a per-column override would be
-                # fighting the wrong battle.
-                #
-                # Cost is real: the sniffer is a separate pass from the
-                # read, and on a 50 MB CSV it ran ~12x slower than the
-                # default (492 ms vs 39 ms) — the sniffer is expensive
-                # per row because it evaluates multiple type candidates
-                # per cell. Scales linearly with file size on both the
-                # TABLE and VIEW paths. The proper fix is to skip
-                # inference entirely via `all_varchar=true` + explicit
-                # casts driven by mock_data_config.json (see issue #40);
-                # this PR is the safe interim until that lands.
-                conn.execute(
-                    f"CREATE OR REPLACE {kind} {quoted_view} AS "
-                    f"SELECT * FROM read_csv_auto("
-                    f"'{quoted_path}', header=true, encoding='{encoding}', "
-                    f"nullstr=['', ' '], sample_size=-1)"
-                )
+                if overrides:
+                    select_sql = _build_cast_select(
+                        conn, quoted_path, encoding, overrides
+                    )
+                else:
+                    # Discover mode (or a source missing from the config):
+                    # let DuckDB infer types so the classifier has something
+                    # to work with. ``sample_size=-1`` forces a whole-file
+                    # sniffer scan; the default (20480 rows) crashes mid-
+                    # stream when a rare edge value appears later (observed:
+                    # digit column with one literal "C" at row ~60k → BIGINT
+                    # inferred → conversion error). The sniffer is ~10×
+                    # slower than a typed read on real-world CSVs (492 ms vs
+                    # 39 ms on a 50 MB file; see issue #40), so we only
+                    # accept that cost on discover, where it runs once.
+                    # ``nullstr=['', ' ']`` matches the SCB CSV missing-
+                    # value sentinel.
+                    select_sql = (
+                        f"SELECT * FROM read_csv_auto("
+                        f"'{quoted_path}', header=true, encoding='{encoding}', "
+                        f"nullstr=['', ' '], sample_size=-1)"
+                    )
+                conn.execute(f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}")
             except Exception as exc:
                 hint = (
                     " Try `file_source(..., encoding='latin-1')` if the file"
@@ -596,10 +683,22 @@ def iter_sql_source(
 
 
 def iter_source(
-    src: Any, conn: Any = None, *, permissive: bool = False
+    src: Any,
+    conn: Any = None,
+    *,
+    permissive: bool = False,
+    config: MDWConfig | None = None,
 ) -> Iterator[SourceHandle]:
+    """Dispatch ``src`` to the file/SQL iterator.
+
+    ``config`` is forwarded to file iteration to drive the
+    ``all_varchar=true`` + per-column CAST path. SQL sources read
+    properly-typed columns from the server and ignore the config here.
+    ``permissive`` is the discover-mode flag for SQL listing and is
+    irrelevant to file sources.
+    """
     if isinstance(src, FileSource):
-        return iter_file_source(src, conn=conn)
+        return iter_file_source(src, conn=conn, config=config)
     if isinstance(src, SqlSource):
         return iter_sql_source(src, conn=conn, permissive=permissive)
     raise TypeError(f"Unknown source: {src!r}")

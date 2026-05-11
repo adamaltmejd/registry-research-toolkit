@@ -236,8 +236,9 @@ sql_source(
 ```
 
 For files, `where=` lives on `file_source(...)` itself: each file is its
-own table and the predicate runs against the DuckDB-typed columns from
-`read_csv_auto`.
+own table and the predicate runs against the (typed-by-cast at extract
+time, sniffer-inferred at discover time) columns produced by
+`read_csv_auto` — see *CSV typing* below.
 
 Implementation: the iterator wraps the table reference in a derived
 table — `(SELECT * FROM [dbo].[lisa_2018] WHERE AR > 2015) AS
@@ -606,6 +607,73 @@ timings on typical hardware:
 
 If classification on large projects proves too slow, a regmeta cache
 keyed by `(register_id, db_mtime)` may be introduced.
+
+### CSV typing: discover infers, extract casts
+
+`iter_file_source` reads CSVs two different ways depending on whether
+the call has an `MDWConfig` to lean on:
+
+- **Discover** (`run_discover`, no config yet): `read_csv_auto(...,
+  sample_size=-1)`. The full-file sniffer runs so the discovered
+  `sql_type` per column reflects the whole file rather than the
+  default 20480-row head. The classifier needs *some* type signal to
+  seed on, and discover runs once.
+- **Extract** (`run_extract_typed`, config present): `read_csv_auto(...,
+  all_varchar=true)` wrapped in a `SELECT` that applies a per-column
+  `CAST` driven by `mock_data_config.json`. Type inference is skipped
+  entirely — every column comes off the wire as `VARCHAR` and the cast
+  is the only place a column's storage type is decided.
+
+Why split the paths. The sniffer is a separate pass *on top of* the
+read; on a 50 MB / 1M-row CSV with the OS page cache warm it ran
+~12.6× slower than the default sample-size path (492 ms vs 39 ms; see
+issue #40). The default 20480-row sample is fast but unreliable: a
+single rare value past the sample window can flip a column from
+`VARCHAR` to `BIGINT` and crash mid-stream — observed on
+`slutbetyg_Ak9_2015.csv` where one literal `"C"` at row ~60 000 in a
+column of digits picked `BIGINT` and broke the run. `sample_size=-1`
+plugged the leak but bought it at full sniffer cost on every extract.
+
+The cast path sidesteps both problems: no inference, no rare-row
+surprises, single-pass speed (44 ms vs 39 ms in the same benchmark).
+Errors surface at a known column with a known target type
+(`Could not convert string 'C' to INT64 when casting from source
+column NO_AMNEN`), which is easier to triage than a mid-aggregation
+`ConversionException`.
+
+#### Semantic → DuckDB cast
+
+`_semantic_to_duckdb_cast` (in `sources.py`) maps each
+`ColumnTypeOverride` to the DuckDB type to cast into:
+
+| Semantic type      | Cast               | Why |
+| ------------------ | ------------------ | --- |
+| `id`               | (none — `VARCHAR`) | Pids and study-IDs commonly carry leading zeros that a numeric cast would drop |
+| `categorical`      | (none — `VARCHAR`) | Code lists like `"01"`/`"1"` should not collapse |
+| `opaque`           | (none — `VARCHAR`) | Length stats only |
+| `date`             | (none — `VARCHAR`) | Format zoo parsed in `summarize._to_date`; lexicographic min/max is correct for ISO and YYYYMMDD |
+| `numeric/integer`  | `BIGINT`           | Clean integer round-trip on min/max |
+| `numeric/double`   | `DOUBLE`           | Default for unspecified numeric subtype; covers floats and integers up to 2^53 |
+
+Only `numeric` columns actually need a SQL cast. The other four types
+are aggregated as strings and reduced in Python (frequency counts, length
+stats, date parsing, id_subtype detection) — there is nothing to gain
+from typing them at the SQL layer.
+
+`id_subtype` auto-detection (`_detect_id_subtype` in `summarize.py`)
+treats an all-non-empty, all-int-parseable string sample as
+`integer`. This preserves the pre-`all_varchar` behaviour where
+`read_csv_auto` would have inferred `BIGINT` on the same data.
+
+#### Columns missing from the config
+
+A CSV column with no override entry passes through as `VARCHAR`.
+`process_handle` then validates the full column set against the config
+and raises a single error listing every missing override — better
+than failing the read on the first unknown column. A config that has
+no entry at all for a given file (e.g. a new file appearing between
+discover and extract) falls back to the auto-inference path so the
+read at least succeeds and the validation error names the file.
 
 ### File materialisation threshold
 

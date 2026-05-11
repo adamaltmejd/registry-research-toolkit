@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from mock_data_wizard.config import ColumnTypeOverride, MDWConfig
 from mock_data_wizard.sources import (
     FileSource,
     SourceHandle,
@@ -21,6 +22,7 @@ from mock_data_wizard.sources import (
     _is_archived,
     _normalize_to_sql_tables,
     _resolve_sql_aliases,
+    _semantic_to_duckdb_cast,
     _wrap_with_where,
     file_source,
     filter_files,
@@ -31,6 +33,15 @@ from mock_data_wizard.sources import (
     sql_source,
     sql_table,
 )
+
+
+def _config_with(
+    column_types: dict[str, dict[str, ColumnTypeOverride]],
+) -> MDWConfig:
+    return MDWConfig(
+        contract_version="mdw-config-3.0.0",
+        column_types=column_types,
+    )
 
 
 # -- constructors ---------------------------------------------------------
@@ -257,6 +268,203 @@ def test_iter_file_source_handles_rare_non_numeric_past_sample_window(
         try:
             cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = 25000")
             assert cur.fetchone() == ("C",)
+        finally:
+            cur.close()
+
+
+# -- config-driven cast path (issue #40) ---------------------------------
+
+
+def test_semantic_to_duckdb_cast_only_casts_numeric():
+    """id / categorical / opaque / date keep VARCHAR; numeric picks the
+    BIGINT vs DOUBLE branch on numeric_subtype."""
+    assert _semantic_to_duckdb_cast(ColumnTypeOverride(type="id")) is None
+    assert (
+        _semantic_to_duckdb_cast(ColumnTypeOverride(type="id", id_subtype="integer"))
+        is None
+    )
+    assert _semantic_to_duckdb_cast(ColumnTypeOverride(type="categorical")) is None
+    assert _semantic_to_duckdb_cast(ColumnTypeOverride(type="opaque")) is None
+    assert (
+        _semantic_to_duckdb_cast(ColumnTypeOverride(type="date", date_format="%Y%m%d"))
+        is None
+    )
+    assert (
+        _semantic_to_duckdb_cast(
+            ColumnTypeOverride(type="numeric", numeric_subtype="integer")
+        )
+        == "BIGINT"
+    )
+    assert (
+        _semantic_to_duckdb_cast(
+            ColumnTypeOverride(type="numeric", numeric_subtype="double")
+        )
+        == "DOUBLE"
+    )
+    # Unspecified subtype defaults to DOUBLE (covers floats and ints up to 2^53).
+    assert _semantic_to_duckdb_cast(ColumnTypeOverride(type="numeric")) == "DOUBLE"
+
+
+def test_iter_file_source_with_config_skips_inference_for_rare_letter(
+    tmp_path: Path,
+):
+    """The slutbetyg-style scenario: a column the user has classified
+    as opaque must read cleanly even when DuckDB's auto-inference would
+    have picked BIGINT. The cast path uses ``all_varchar=true``, so
+    inference doesn't run at all and the rare letter round-trips as a
+    string with no per-file ``sample_size=-1`` cost.
+    """
+    p = tmp_path / "rare_letter.csv"
+    lines = ["id,NO_AMNEN\n"]
+    lines.extend(f"{i},{i % 10}\n" for i in range(25_000))
+    lines.append("25000,C\n")
+    p.write_text("".join(lines), encoding="utf-8")
+    cfg = _config_with(
+        {
+            "rare_letter.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "NO_AMNEN": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["rare_letter.csv"])
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = '25000'")
+            assert cur.fetchone() == ("C",)
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            assert schema == {"id": "VARCHAR", "NO_AMNEN": "VARCHAR"}
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_with_config_casts_numeric_columns(tmp_path: Path):
+    """Columns marked numeric get a BIGINT/DOUBLE cast so MIN/MAX/AVG
+    behave numerically. SCB ' ' nulls survive the cast as NULL."""
+    p = tmp_path / "nums.csv"
+    p.write_text(
+        "id,score,price\n1,10, \n2,20,3.5\n3, ,4.5\n4,40,5.5\n",
+        encoding="utf-8",
+    )
+    cfg = _config_with(
+        {
+            "nums.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "score": ColumnTypeOverride(type="numeric", numeric_subtype="integer"),
+                "price": ColumnTypeOverride(type="numeric", numeric_subtype="double"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["nums.csv"])
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            assert schema == {
+                "id": "VARCHAR",
+                "score": "BIGINT",
+                "price": "DOUBLE",
+            }
+            cur.execute(
+                f"SELECT MIN(score), MAX(score), AVG(price) FROM {handle.table}"
+            )
+            mn, mx, avg = cur.fetchone()
+            assert (mn, mx) == (10, 40)
+            assert abs(avg - (3.5 + 4.5 + 5.5) / 3) < 1e-9
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_with_config_raises_named_error_on_bad_numeric_cast(
+    tmp_path: Path,
+):
+    """A column marked numeric that contains non-numeric strings raises
+    at read time with the column name in the error — that is the
+    auditable failure mode the cast path is meant to provide."""
+    p = tmp_path / "bad_numeric.csv"
+    p.write_text("id,n\n1,10\n2,foo\n3,30\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "bad_numeric.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "n": ColumnTypeOverride(type="numeric", numeric_subtype="integer"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["bad_numeric.csv"])
+    with pytest.raises(RuntimeError, match=r"\bn\b"):
+        list(iter_file_source(src, config=cfg))
+
+
+def test_iter_file_source_with_config_passes_through_unknown_columns(
+    tmp_path: Path,
+):
+    """A CSV column the config doesn't mention must still appear in the
+    view (as VARCHAR). ``process_handle`` validates the missing override
+    later with one error listing every offender; the read shouldn't
+    drop the column or fail here."""
+    p = tmp_path / "extra.csv"
+    p.write_text("id,known,unknown\n1,a,x\n2,b,y\n", encoding="utf-8")
+    cfg = _config_with(
+        {
+            "extra.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "known": ColumnTypeOverride(type="categorical"),
+                # `unknown` deliberately omitted from the config
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["extra.csv"])
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            cols = [r[0] for r in cur.fetchall()]
+            assert cols == ["id", "known", "unknown"]
+            cur.execute(f"SELECT unknown FROM {handle.table} ORDER BY id")
+            assert [r[0] for r in cur.fetchall()] == ["x", "y"]
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_without_config_falls_back_to_inference(tmp_path: Path):
+    """Discover mode (no config) keeps the auto-inference path so the
+    classifier still has SQL types to seed on."""
+    p = tmp_path / "infer.csv"
+    p.write_text("id,score\n1,10\n2,20\n", encoding="utf-8")
+    src = file_source(str(tmp_path), include=["infer.csv"])
+    for handle in iter_file_source(src):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            # auto-inference picks numeric types
+            assert schema["id"] == "BIGINT"
+            assert schema["score"] == "BIGINT"
+        finally:
+            cur.close()
+
+
+def test_iter_file_source_config_without_entry_for_file_uses_inference(
+    tmp_path: Path,
+):
+    """A config that has *some* sources but not this one falls back to
+    auto-inference for the absent file. Mirrors the behaviour of a
+    discover-then-edit workflow where a new file appears mid-stream."""
+    p = tmp_path / "untouched.csv"
+    p.write_text("id,n\n1,10\n", encoding="utf-8")
+    cfg = _config_with({"other.csv": {"id": ColumnTypeOverride(type="id")}})
+    src = file_source(str(tmp_path), include=["untouched.csv"])
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+            schema = {r[0]: r[1] for r in cur.fetchall()}
+            # No overrides -> auto-inference applied.
+            assert schema["n"] == "BIGINT"
         finally:
             cur.close()
 

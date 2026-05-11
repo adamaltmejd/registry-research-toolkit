@@ -591,7 +591,7 @@ def run_extract_typed(
     for src_idx, src in enumerate(sources, 1):
         log.info("source %d/%d: %r", src_idx, len(sources), src)
         _flush_log_handlers()
-        for handle in iter_source(src):
+        for handle in iter_source(src, config=config):
             source_results.append(
                 process_handle(
                     handle,
