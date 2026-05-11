@@ -644,13 +644,17 @@ surface at a known column with a known target type
 column NO_AMNEN`), easier to triage than a mid-aggregation
 `ConversionException`.
 
-WHERE-clause caveat: clauses passed to `file_source(..., where=...)`
+WHERE-clause caveat (**breaking change** vs the `sample_size=-1`
+interim from #39): clauses passed to `file_source(..., where=...)`
 operate on the all-varchar view in discover mode and on the typed
 cast view in extract mode. A discover-mode WHERE that compares
-against a numeric literal (`ar > 2015`) errors with a Binder Error;
-write `ar > '2015'` (lex order matches year order for SCB years) or
+against a numeric literal (`ar > 2015`) previously worked because the
+sniffer landed `ar` as `BIGINT`; under `all_varchar=true` it now
+errors with a Binder Error. Two fixes, pick either: write
+`ar > '2015'` (lex order matches year order for SCB years and other
+zero-padded fixed-width integers), or wrap the comparison —
 `CAST(ar AS BIGINT) > 2015`. In extract mode the column is already
-typed if the user marked it numeric.
+typed if the user marked it numeric, so the original form works as-is.
 
 #### Semantic → DuckDB cast
 

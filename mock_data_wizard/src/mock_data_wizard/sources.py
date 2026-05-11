@@ -359,9 +359,10 @@ def _build_varchar_select(quoted_path: str, encoding: str) -> str:
     applies, so the SCB ' ' sentinel becomes NULL. No inference means
     no rare-row crash from a sample that disagreed with later rows.
     """
+    quoted_encoding = encoding.replace("'", "''")
     return (
         f"SELECT * FROM read_csv_auto("
-        f"'{quoted_path}', header=true, encoding='{encoding}', "
+        f"'{quoted_path}', header=true, encoding='{quoted_encoding}', "
         f"nullstr=['', ' '], all_varchar=true)"
     )
 
@@ -562,9 +563,10 @@ def iter_file_source(
                 conn.execute(f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}")
                 # Extract-mode auto-promotion: probe any opaque columns and
                 # rebuild the cast view if any flipped to numeric/date.
-                # Rebuild is free for VIEW kind and one extra in-memory cast
-                # pass for TABLE kind (no extra file read in either case,
-                # because read_csv_auto re-reads via the OS page cache).
+                # Rebuild is metadata-only for VIEW kind; for TABLE kind it
+                # is a second read_csv_auto pass that hits the OS page cache
+                # rather than disk (warm-cache cost; on a cold cache or at
+                # the MDW_MEMORY_THRESHOLD_MB boundary it is a real reread).
                 if overrides and _probe_and_promote_opaque(
                     conn, quoted_view, overrides, file_name=fp.name
                 ):

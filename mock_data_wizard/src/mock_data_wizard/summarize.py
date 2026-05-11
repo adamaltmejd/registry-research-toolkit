@@ -106,10 +106,12 @@ def _detect_id_subtype(sample: Sequence[Any]) -> str:
     The MSSQL path returns native ints/floats for numeric columns, so
     ``_python_kind`` is enough there. The DuckDB file-source path now
     reads CSVs with ``all_varchar=true`` (issue #40), so a numeric LOPNR
-    arrives as a string — we additionally treat an all-non-empty,
-    all-int-parseable string sample as integer. SCB pids with leading
-    zeros normalise the same way: ``int("00012345") == 12345``; mock
-    output for int ids drops the zeros, which mirrors the
+    arrives as a string — we additionally treat a sample of all-digit
+    strings (leading zeros allowed, no sign, no decimal, no exponent)
+    as integer. SCB pids and study-IDs are positive digit strings; this
+    excludes ``"+5"``, ``"-1"``, ``"1.0"``, ``"1e3"`` which ``int(s)``
+    would have accepted but which signal "not really an id" in this
+    domain. Mock output for int ids drops leading zeros, mirroring the
     pre-all_varchar behaviour where the read inferred BIGINT.
     """
     kind = _python_kind(sample)
@@ -122,11 +124,7 @@ def _detect_id_subtype(sample: Sequence[Any]) -> str:
         return "string"
     for v in non_null:
         s = str(v).strip()
-        if not s:
-            return "string"
-        try:
-            int(s)
-        except ValueError:
+        if not s.isdigit():
             return "string"
     return "integer"
 

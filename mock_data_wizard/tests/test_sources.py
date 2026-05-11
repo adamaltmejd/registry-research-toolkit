@@ -922,3 +922,33 @@ def test_iter_file_source_with_where_filters_rows(tmp_path: Path):
         finally:
             cur.close()
         assert handle.source_detail["where"] == "ar > '2015'"
+
+
+def test_iter_file_source_with_where_numeric_literal_works_in_extract_mode(
+    tmp_path: Path,
+):
+    """In extract mode the cast view exposes the column with its
+    configured numeric type, so a WHERE that compares against a bare
+    numeric literal (``ar > 2015``) parses cleanly — DESIGN.md's
+    "the original form works as-is" claim, locked in."""
+    (tmp_path / "events.csv").write_text(
+        "ar,event\n2014,a\n2015,b\n2016,c\n2017,d\n2018,e\n",
+        encoding="utf-8",
+    )
+    cfg = _config_with(
+        {
+            "events.csv": {
+                "ar": ColumnTypeOverride(type="numeric", numeric_subtype="integer"),
+                "event": ColumnTypeOverride(type="categorical"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
+    for handle in iter_file_source(src, config=cfg):
+        cur = handle.conn.cursor()
+        try:
+            cur.execute(f"SELECT COUNT(*) FROM {handle.table}")
+            (n,) = cur.fetchone()
+            assert n == 3  # 2016, 2017, 2018
+        finally:
+            cur.close()
