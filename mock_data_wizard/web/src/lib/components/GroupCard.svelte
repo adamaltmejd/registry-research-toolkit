@@ -25,7 +25,15 @@
     column: ColumnInfo;
   } | null = $state(null);
   let editingRegister = $state(false);
-  let editingPanel = $state(false);
+  // Open the panel picker for either an existing panel (Edit) or a
+  // fresh designation. `restrictToSources`, when set, scopes the
+  // pre-selection to a subset of the group — used by the
+  // "Unassigned sources" box so the picker doesn't re-prefill from a
+  // group-wide candidate that already overlaps another panel.
+  let editingPanel: {
+    existing: Panel | null;
+    restrictToSources?: readonly string[];
+  } | null = $state(null);
   let viewingValuesFor: string | null = $state(null);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
@@ -50,13 +58,17 @@
       p.members.some((m) => groupSourceSet.has(m.source)),
     );
   });
-  // Single-panel attachment is the common case; the editor expects a
-  // 1:1 group↔panel relationship for the "Edit panel" affordance. When
-  // multiple panels overlap a group (rare; usually a hand-edit), the
-  // first one wins for editing — the others are still listed below.
-  let primaryPanelForGroup = $derived(
-    panelsForGroup.length > 0 ? panelsForGroup[0] : null,
-  );
+
+  // Sources in this group that no panel currently claims. Drives the
+  // "Unassigned sources" box: when non-empty, the user can designate
+  // an additional panel that covers just the leftovers.
+  let unassignedSources: string[] = $derived.by(() => {
+    const claimed = new Set<string>();
+    for (const p of panelsForGroup) {
+      for (const m of p.members) claimed.add(m.source);
+    }
+    return group.sources.filter((sn) => !claimed.has(sn));
+  });
 
   function panelPeriodRange(panel: Panel): string | null {
     const periods = panel.members
@@ -66,6 +78,27 @@
     const min = Math.min(...periods);
     const max = Math.max(...periods);
     return min === max ? `${min}` : `${min}–${max}`;
+  }
+
+  // Compact one-line summary of a panel's time_key shape: literal-period
+  // range, the source column for column-keyed members, or both when
+  // the panel mixes the two kinds.
+  function panelTimeKeySummary(panel: Panel): string {
+    const range = panelPeriodRange(panel);
+    const cols = new Set<string>();
+    for (const m of panel.members) {
+      if (typeof m.time_key === "string") cols.add(m.time_key);
+    }
+    const colPart =
+      cols.size === 0
+        ? null
+        : cols.size === 1
+          ? `from column '${[...cols][0]}'`
+          : `from columns: ${[...cols].sort().join(", ")}`;
+    if (range && colPart) return `${range} · ${colPart}`;
+    if (range) return `${range} (from source name)`;
+    if (colPart) return colPart;
+    return "—";
   }
 
   function hintSuffix(col: ColumnInfo): string {
@@ -372,8 +405,9 @@
   <!-- Group-level collapse: header always visible, contents (panels,
        column table, source list) hidden until expanded. Default closed
        so a fresh page load shows N register summaries instead of an
-       N-table wall. The "Edit register…" button stops propagation so
-       clicking it doesn't also toggle the details. -->
+       N-table wall. Action buttons (Edit register, Edit/Designate
+       panel) live inside the expanded card — keeping the summary lean
+       so a wall of cards scans cleanly. -->
   <summary class="group-summary">
     <div class="title-block">
       <h2>
@@ -392,65 +426,116 @@
         {#if group.schema_variants > 1}
           · {group.schema_variants} schemas
         {/if}
-        {#if primaryPanelForGroup}
+        {#if panelsForGroup.length === 1}
           · <span class="panel-tag" title="Panel attached to this group"
             >panel</span
           >
-          <code class="panel-id">{primaryPanelForGroup.panel_id}</code>
-          {@const range = panelPeriodRange(primaryPanelForGroup)}
-          {#if range}
-            ({range}, {primaryPanelForGroup.members.length} members)
-          {:else}
-            ({primaryPanelForGroup.members.length} members)
-          {/if}
+        {:else if panelsForGroup.length > 1}
+          · <span class="panel-tag" title="Panels attached to this group"
+            >{panelsForGroup.length} panels</span
+          >
         {:else if group.panel_candidate}
-          · <span class="panel-candidate-tag" title="Auto-detected panel candidate (not yet designated)"
+          · <span
+            class="panel-candidate-tag"
+            title="Auto-detected panel candidate (not yet designated)"
             >panel candidate</span
           >
           ({group.panel_candidate.members.length})
         {/if}
       </p>
     </div>
-    <div class="actions">
-      <button
-        class="link"
-        onclick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          editingRegister = true;
-        }}
-      >
-        Edit register…
-      </button>
-      <button
-        class="link"
-        onclick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          editingPanel = true;
-        }}
-        title={primaryPanelForGroup
-          ? "Edit attached panel"
-          : "Designate this group as a panel"}
-      >
-        {primaryPanelForGroup ? "Edit panel…" : "Designate panel…"}
-      </button>
-    </div>
   </summary>
 
-  {#each panelsForGroup as panel (panel.panel_id)}
-    {@const range = panelPeriodRange(panel)}
-    <p class="panel-summary" title="Panel definition (config.panels)">
-      <span class="panel-tag">panel</span>
-      <code>{panel.panel_id}</code>
-      · keyed on <code>{panel.entity_key}</code>
-      {#if range}
-        · {range} ({panel.members.length} files)
+  <section class="register-info">
+    <span class="info-line">
+      <span class="info-label">Register:</span>
+      {#if group.register_name}
+        <strong>{group.register_name}</strong>
       {:else}
-        · {panel.members.length} members
+        <span class="unassigned">unassigned</span>
       {/if}
-    </p>
+    </span>
+    <button class="link" onclick={() => (editingRegister = true)}>
+      {group.register_name ? "Edit register…" : "Assign register…"}
+    </button>
+  </section>
+
+  {#each panelsForGroup as panel (panel.panel_id)}
+    {@const coverageLabel =
+      panel.members.length < group.sources.length
+        ? `${panel.members.length} of ${group.sources.length} sources`
+        : `${panel.members.length} member${panel.members.length === 1 ? "" : "s"}`}
+    <section class="panel-box">
+      <div class="panel-box-header">
+        <span class="panel-tag">panel</span>
+        <code class="panel-id">{panel.panel_id}</code>
+        <button
+          class="link panel-box-action"
+          onclick={() => (editingPanel = { existing: panel })}
+          title="Edit this panel"
+        >
+          Edit panel…
+        </button>
+      </div>
+      <p class="panel-box-meta">
+        entity_key: <code>{panel.entity_key}</code>
+        · {panelTimeKeySummary(panel)} · {coverageLabel}
+      </p>
+      <p class="panel-box-sources">
+        Sources: <span class="mono"
+          >{panel.members.map((m) => m.source).join(", ")}</span
+        >
+      </p>
+    </section>
   {/each}
+
+  {#if panelsForGroup.length === 0}
+    <section class="unassigned-box">
+      <div class="unassigned-box-header">
+        <span class="info-line">
+          {#if group.panel_candidate}
+            <span class="panel-candidate-tag">panel candidate</span>
+            <span class="muted"
+              >· {group.panel_candidate.members.length} of {group.sources
+                .length} source{group.sources.length === 1 ? "" : "s"}</span
+            >
+          {:else}
+            <span class="muted">No panel for this register group</span>
+          {/if}
+        </span>
+        <button
+          class="link"
+          onclick={() => (editingPanel = { existing: null })}
+        >
+          Designate panel…
+        </button>
+      </div>
+    </section>
+  {:else if unassignedSources.length > 0}
+    <section class="unassigned-box">
+      <div class="unassigned-box-header">
+        <span class="info-line">
+          <span class="muted"
+            >Unassigned sources ({unassignedSources.length})</span
+          >
+        </span>
+        <button
+          class="link"
+          onclick={() =>
+            (editingPanel = {
+              existing: null,
+              restrictToSources: unassignedSources,
+            })}
+          title="Designate a panel covering only these leftover sources"
+        >
+          Designate panel…
+        </button>
+      </div>
+      <p class="panel-box-sources">
+        <span class="mono">{unassignedSources.join(", ")}</span>
+      </p>
+    </section>
+  {/if}
 
   {#if store.groupColumnsByName}
     <!-- "missing in N" inline marker only when the Coverage column is
@@ -681,8 +766,9 @@
 {#if editingPanel}
   <PanelEditor
     {group}
-    existing={primaryPanelForGroup}
-    onClose={() => (editingPanel = false)}
+    existing={editingPanel.existing}
+    restrictToSources={editingPanel.restrictToSources}
+    onClose={() => (editingPanel = null)}
   />
 {/if}
 
@@ -787,21 +873,89 @@
     background: #f0e0e0;
     color: #883333;
   }
-  .panel-summary {
-    margin: 0 0 0.5rem;
+  .register-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
     padding: 0.4rem 0.6rem;
+    margin: 0 0 0.5rem;
+    background: #fafbff;
+    border: 1px solid #eef0f5;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: #333;
+  }
+  .info-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+  .info-label {
+    color: #666;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .muted {
+    color: #666;
+  }
+  .panel-box {
+    margin: 0 0 0.5rem;
+    padding: 0.5rem 0.6rem;
     background: #f4f6fb;
     border-left: 3px solid #c8d3ec;
     border-radius: 3px;
     font-size: 0.85rem;
     color: #444;
   }
-  .panel-summary code {
+  .panel-box code {
     background: #fff;
     padding: 0.05rem 0.3rem;
     border-radius: 3px;
     font-family: ui-monospace, monospace;
     font-size: 0.95em;
+  }
+  .panel-box-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+  /* Push the action button to the right edge of the box header without
+     introducing a separate flex group — keeps the affordance discoverable
+     while the panel_id stays anchored to the box's start. */
+  .panel-box-action {
+    margin-left: auto;
+  }
+  .panel-box-meta,
+  .panel-box-sources {
+    margin: 0.25rem 0 0;
+    color: #555;
+    overflow-wrap: anywhere;
+  }
+  .panel-box-sources .mono {
+    font-size: 0.82rem;
+    color: #555;
+  }
+  .unassigned-box {
+    margin: 0 0 0.5rem;
+    padding: 0.5rem 0.6rem;
+    background: #fffaf0;
+    border-left: 3px solid #f0c14b;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    color: #444;
+  }
+  .unassigned-box-header {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
   }
   .panel-tag {
     text-transform: uppercase;
@@ -824,14 +978,6 @@
     border-radius: 3px;
     font-family: ui-monospace, monospace;
     font-size: 0.85em;
-  }
-  .actions {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    flex: 0 0 auto;
-    flex-wrap: wrap;
-    justify-content: flex-end;
   }
   .source {
     margin-top: 0.5rem;

@@ -168,65 +168,67 @@
       </button>
     </header>
 
-    <div class="muted">
-      Sources affected: <strong>{group.sources.length}</strong>
-      {#if group.sources.length <= SOURCE_PREVIEW_LIMIT}
-        ({group.sources.join(", ")}).
-      {:else}
-        <details class="source-list">
-          <!-- A registered panel can hold ~30 yearly files; comma-joining
-               them paints a wall of text that pushes Apply off-screen. -->
-          <summary>show {group.sources.length} files</summary>
-          <ul>
-            {#each group.sources as src (src)}
-              <li class="mono">{src}</li>
-            {/each}
-          </ul>
-        </details>
+    <div class="modal-body">
+      <div class="muted">
+        Sources affected: <strong>{group.sources.length}</strong>
+        {#if group.sources.length <= SOURCE_PREVIEW_LIMIT}
+          ({group.sources.join(", ")}).
+        {:else}
+          <details class="source-list">
+            <!-- A registered panel can hold ~30 yearly files; comma-joining
+                 them paints a wall of text that pushes Apply off-screen. -->
+            <summary>show {group.sources.length} files</summary>
+            <ul>
+              {#each group.sources as src (src)}
+                <li class="mono">{src}</li>
+              {/each}
+            </ul>
+          </details>
+        {/if}
+      </div>
+
+      <label class="row">
+        <span>Register</span>
+        <RegisterCombobox
+          {registers}
+          bind:value={selectedRegister}
+          oninput={onInput}
+          ariaInvalid={!inputResolves}
+          ariaDescribedby={validationError ? "register-error" : undefined}
+        />
+      </label>
+
+      {#if validationError}
+        <p id="register-error" class="error" role="alert">{validationError}</p>
+      {:else if !inputResolves && trimmedRegister !== ""}
+        <p class="hint-line">
+          not a known register — Apply will be blocked until you pick one
+          from the suggestions.
+        </p>
+      {/if}
+
+      {#if manualCount > 0}
+        <label class="checkbox">
+          <input
+            type="checkbox"
+            bind:checked={reclassifyManual}
+            onchange={() => (confirming = false)}
+          />
+          Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
+        </label>
+      {/if}
+
+      {#if confirming}
+        <p class="warn">
+          This will re-run classification on
+          {#if reclassifyManual}all{:else}auto-classified{/if}
+          columns in {group.sources.length} source{group.sources.length === 1
+            ? ""
+            : "s"}. Manual columns are
+          {reclassifyManual ? "included" : "preserved"}.
+        </p>
       {/if}
     </div>
-
-    <label class="row">
-      <span>Register</span>
-      <RegisterCombobox
-        {registers}
-        bind:value={selectedRegister}
-        oninput={onInput}
-        ariaInvalid={!inputResolves}
-        ariaDescribedby={validationError ? "register-error" : undefined}
-      />
-    </label>
-
-    {#if validationError}
-      <p id="register-error" class="error" role="alert">{validationError}</p>
-    {:else if !inputResolves && trimmedRegister !== ""}
-      <p class="hint-line">
-        not a known register — Apply will be blocked until you pick one
-        from the suggestions.
-      </p>
-    {/if}
-
-    {#if manualCount > 0}
-      <label class="checkbox">
-        <input
-          type="checkbox"
-          bind:checked={reclassifyManual}
-          onchange={() => (confirming = false)}
-        />
-        Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
-      </label>
-    {/if}
-
-    {#if confirming}
-      <p class="warn">
-        This will re-run classification on
-        {#if reclassifyManual}all{:else}auto-classified{/if}
-        columns in {group.sources.length} source{group.sources.length === 1
-          ? ""
-          : "s"}. Manual columns are
-        {reclassifyManual ? "included" : "preserved"}.
-      </p>
-    {/if}
 
     <footer>
       <button type="button" onclick={onClose} disabled={submitting}
@@ -256,6 +258,16 @@
 
 <style>
   form {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 0.75rem;
+  }
+  .modal-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;

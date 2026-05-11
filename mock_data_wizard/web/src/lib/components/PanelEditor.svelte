@@ -9,10 +9,15 @@
      *  the caller from snapshot.config.panels via member-source overlap
      *  with the group's sources. */
     existing: Panel | null;
+    /** When set (opening the picker from the "unassigned sources" box),
+     *  only these sources are pre-selected and `group.panel_candidate`
+     *  is ignored — the candidate is computed against the whole group
+     *  and would pre-fill sources already claimed by another panel. */
+    restrictToSources?: readonly string[];
     onClose: () => void;
   }
 
-  let { group, existing, onClose }: Props = $props();
+  let { group, existing, restrictToSources, onClose }: Props = $props();
 
   type TimeKeyMode = "name" | "column";
   const MODE_OPTIONS: readonly { value: TimeKeyMode; label: string }[] = [
@@ -39,13 +44,22 @@
     if (existing) {
       for (const m of existing.members) fromExisting.set(m.source, m.time_key);
     }
+    // Ignore group.panel_candidate when we're designating a panel for a
+    // leftover subset: the candidate is computed against the whole
+    // group, so its seeds would pre-fill sources already claimed by
+    // another panel and would silently bounce on the per-source overlap
+    // rule (config._parse_panels). Hints are still per-source, so they
+    // remain useful pre-fills for the leftover subset.
     const fromCandidate = new Map<string, number | string>();
-    if (!existing && group.panel_candidate) {
+    if (!existing && !restrictToSources && group.panel_candidate) {
       for (const m of group.panel_candidate.members) {
         fromCandidate.set(m.source, m.time_key);
       }
     }
     const seeded = fromExisting.size > 0 ? fromExisting : fromCandidate;
+    const inScope = restrictToSources
+      ? new Set(restrictToSources)
+      : null;
 
     const out: Record<string, MemberDraft> = {};
     for (const sn of allSources) {
@@ -83,16 +97,22 @@
         columnValue = "";
       }
 
-      // Seed-driven sources stay opt-in to the seed; for auto-detected
-      // sources, only those with a hint are pre-checked so the user has
-      // to opt unsignalled sources in explicitly. Singleton groups have
-      // no checkbox, so the only source is always selected.
-      const selected =
-        allSources.length === 1
-          ? true
-          : seeded.size > 0
-            ? seeded.has(sn)
-            : yearFromName !== null || detectedColumn !== null;
+      // Selection precedence:
+      //   * singleton group → the only source is implicit
+      //   * restrictToSources → exactly that subset (leftovers flow)
+      //   * existing/candidate seed → opt in to the seed
+      //   * fallback → only sources with a hint pre-check, so the user
+      //     opts unsignalled sources in explicitly
+      let selected: boolean;
+      if (allSources.length === 1) {
+        selected = true;
+      } else if (inScope) {
+        selected = inScope.has(sn);
+      } else if (seeded.size > 0) {
+        selected = seeded.has(sn);
+      } else {
+        selected = yearFromName !== null || detectedColumn !== null;
+      }
 
       out[sn] = { selected, mode, nameValue, columnValue };
     }
@@ -103,10 +123,20 @@
 
   function defaultPanelId(): string {
     if (existing) return existing.panel_id;
-    if (group.panel_candidate?.suggested_panel_id) {
-      return group.panel_candidate.suggested_panel_id;
-    }
-    return group.register_name ?? group.group_id;
+    const base =
+      group.panel_candidate?.suggested_panel_id ??
+      group.register_name ??
+      group.group_id;
+    // Adding a second panel to a register: avoid colliding with one
+    // that already lives in config.panels — the duplicate-id validator
+    // would bounce the save. Suffix numerically until free.
+    const taken = new Set(
+      (store.snapshot?.config.panels ?? []).map((p) => p.panel_id),
+    );
+    if (!taken.has(base)) return base;
+    let i = 2;
+    while (taken.has(`${base}_${i}`)) i++;
+    return `${base}_${i}`;
   }
   function defaultEntityKey(): string {
     if (existing) return existing.entity_key;
@@ -215,12 +245,35 @@
 
   let panelIdTrimmed = $derived(panelId.trim());
   let entityKeyTrimmed = $derived(entityKey.trim());
+
+  // Sources already claimed by another panel in this snapshot. The
+  // server's per-source overlap rule (config._parse_panels) would
+  // reject any save that includes one; surface it as a client-side
+  // error before the request fires. Skip the panel we're currently
+  // editing — overlapping with itself is the "rename" case, not a
+  // conflict.
+  let otherPanelsBySource: Record<string, string> = $derived.by(() => {
+    const map: Record<string, string> = {};
+    const panels = store.snapshot?.config.panels ?? [];
+    for (const p of panels) {
+      if (existing && p.panel_id === existing.panel_id) continue;
+      for (const m of p.members) map[m.source] = p.panel_id;
+    }
+    return map;
+  });
+  let overlapErrors: string[] = $derived(
+    selectedSources
+      .filter((sn) => otherPanelsBySource[sn])
+      .map((sn) => `${sn}: already in panel ${otherPanelsBySource[sn]}`),
+  );
+
   let validationErrors: string[] = $derived(
     [
       selectedSources.length === 0 ? "select at least one source" : null,
       panelIdTrimmed.length === 0 ? "panel_id required" : null,
       entityKeyError,
       duplicateLiteralError,
+      ...overlapErrors,
       ...builtMembers
         .filter((b) => b.error !== null)
         .map((b) => `${b.source}: ${b.error}`),
@@ -317,125 +370,143 @@
       </button>
     </header>
 
-    <label class="row">
-      <span>panel_id</span>
-      <input
-        type="text"
-        bind:value={panelId}
-        spellcheck="false"
-        onfocus={resetConfirm}
-        oninput={resetConfirm}
-        placeholder={existing
-          ? existing.panel_id
-          : group.panel_candidate?.suggested_panel_id ?? ""}
-      />
-    </label>
-
-    <label class="row">
-      <span>entity_key</span>
-      {#if entityKeyOptions.length > 0}
-        <select
-          bind:value={entityKey}
-          onfocus={resetConfirm}
-          onchange={resetConfirm}
-        >
-          {#if entityKey && !entityKeyOptions.includes(entityKey)}
-            <option value={entityKey} disabled>{entityKey} (missing on a member)</option>
-          {/if}
-          {#if entityKey === ""}
-            <option value="" disabled>— pick a column —</option>
-          {/if}
-          {#each entityKeyOptions as col (col)}
-            <option value={col}>{col}</option>
-          {/each}
-        </select>
-      {:else}
+    <div class="modal-body">
+      <label class="row">
+        <span>panel_id</span>
         <input
           type="text"
-          bind:value={entityKey}
+          bind:value={panelId}
           spellcheck="false"
           onfocus={resetConfirm}
           oninput={resetConfirm}
-          placeholder="id column shared across members"
+          placeholder={existing
+            ? existing.panel_id
+            : group.panel_candidate?.suggested_panel_id ?? ""}
         />
-      {/if}
-    </label>
+      </label>
 
-    <fieldset class="members">
-      <legend>
-        Members ({selectedSources.length}/{allSources.length})
-      </legend>
-      <ul>
-        {#each allSources as sn (sn)}
-          {@const d = draft[sn]}
-          {@const cols = group.columns_by_source[sn] ?? []}
-          <li class:disabled={!d.selected}>
-            <label class="source-row">
-              {#if allSources.length > 1}
-                <input
-                  type="checkbox"
-                  checked={d.selected}
-                  onchange={() => toggleSource(sn)}
-                />
-              {/if}
-              <span class="mono source-name">{sn}</span>
-            </label>
-            {#if d.selected}
-              <div class="time-key-block">
-                <div class="mode-toggle" role="radiogroup" aria-label="time_key source">
-                  {#each MODE_OPTIONS as opt (opt.value)}
-                    <label class:active={d.mode === opt.value}>
-                      <input
-                        type="radio"
-                        name={`mode-${sn}`}
-                        value={opt.value}
-                        checked={d.mode === opt.value}
-                        onchange={() => setMode(sn, opt.value)}
-                      />
-                      {opt.label}
-                    </label>
-                  {/each}
-                </div>
-                {#if d.mode === "name"}
-                  <input
-                    type="text"
-                    inputmode="numeric"
-                    pattern="-?\d+"
-                    bind:value={d.nameValue}
-                    onfocus={resetConfirm}
-                    oninput={resetConfirm}
-                    placeholder="literal period (e.g. 2018)"
-                    aria-label={`time_key literal for ${sn}`}
-                  />
-                {:else}
-                  <select
-                    bind:value={d.columnValue}
-                    onfocus={resetConfirm}
-                    onchange={resetConfirm}
-                    aria-label={`time_key column for ${sn}`}
-                  >
-                    {#if d.columnValue === ""}
-                      <option value="" disabled>— pick a column —</option>
-                    {/if}
-                    {#each cols as c (c.name)}
-                      <option value={c.name}>{c.name}</option>
-                    {/each}
-                  </select>
-                {/if}
-              </div>
+      <label class="row">
+        <span>entity_key</span>
+        {#if entityKeyOptions.length > 0}
+          <select
+            bind:value={entityKey}
+            onfocus={resetConfirm}
+            onchange={resetConfirm}
+          >
+            {#if entityKey && !entityKeyOptions.includes(entityKey)}
+              <option value={entityKey} disabled
+                >{entityKey} (missing on a member)</option
+              >
             {/if}
-          </li>
-        {/each}
-      </ul>
-    </fieldset>
+            {#if entityKey === ""}
+              <option value="" disabled>— pick a column —</option>
+            {/if}
+            {#each entityKeyOptions as col (col)}
+              <option value={col}>{col}</option>
+            {/each}
+          </select>
+        {:else}
+          <input
+            type="text"
+            bind:value={entityKey}
+            spellcheck="false"
+            onfocus={resetConfirm}
+            oninput={resetConfirm}
+            placeholder="id column shared across members"
+          />
+        {/if}
+      </label>
 
-    {#if validationErrors.length > 0 && !canSave}
-      <ul class="errors" aria-live="polite">
-        {#each validationErrors as msg (msg)}
-          <li>{msg}</li>
-        {/each}
-      </ul>
-    {/if}
+      <fieldset class="members">
+        <legend>
+          Members ({selectedSources.length}/{allSources.length})
+        </legend>
+        <ul>
+          {#each allSources as sn (sn)}
+            {@const d = draft[sn]}
+            {@const cols = group.columns_by_source[sn] ?? []}
+            {@const otherPanel = otherPanelsBySource[sn]}
+            <li class:disabled={!d.selected}>
+              <label class="source-row">
+                {#if allSources.length > 1}
+                  <input
+                    type="checkbox"
+                    checked={d.selected}
+                    onchange={() => toggleSource(sn)}
+                  />
+                {/if}
+                <span class="mono source-name">{sn}</span>
+                {#if otherPanel}
+                  <span
+                    class="overlap-tag"
+                    title={`Already a member of panel ${otherPanel}; remove it there first to move it here.`}
+                  >
+                    in {otherPanel}
+                  </span>
+                {/if}
+              </label>
+              {#if d.selected}
+                <div class="time-key-block">
+                  <span class="field-label" id={`time-key-label-${sn}`}>time_key</span>
+                  <div
+                    class="mode-toggle"
+                    role="radiogroup"
+                    aria-labelledby={`time-key-label-${sn}`}
+                  >
+                    {#each MODE_OPTIONS as opt (opt.value)}
+                      <label class:active={d.mode === opt.value}>
+                        <input
+                          type="radio"
+                          name={`mode-${sn}`}
+                          value={opt.value}
+                          checked={d.mode === opt.value}
+                          onchange={() => setMode(sn, opt.value)}
+                        />
+                        {opt.label}
+                      </label>
+                    {/each}
+                  </div>
+                  {#if d.mode === "name"}
+                    <input
+                      type="text"
+                      inputmode="numeric"
+                      pattern="-?\d+"
+                      bind:value={d.nameValue}
+                      onfocus={resetConfirm}
+                      oninput={resetConfirm}
+                      placeholder="literal period (e.g. 2018)"
+                      aria-label={`time_key literal for ${sn}`}
+                    />
+                  {:else}
+                    <select
+                      bind:value={d.columnValue}
+                      onfocus={resetConfirm}
+                      onchange={resetConfirm}
+                      aria-label={`time_key column for ${sn}`}
+                    >
+                      {#if d.columnValue === ""}
+                        <option value="" disabled>— pick a column —</option>
+                      {/if}
+                      {#each cols as c (c.name)}
+                        <option value={c.name}>{c.name}</option>
+                      {/each}
+                    </select>
+                  {/if}
+                </div>
+              {/if}
+            </li>
+          {/each}
+        </ul>
+      </fieldset>
+
+      {#if validationErrors.length > 0 && !canSave}
+        <ul class="errors" aria-live="polite">
+          {#each validationErrors as msg (msg)}
+            <li>{msg}</li>
+          {/each}
+        </ul>
+      {/if}
+    </div>
 
     <footer>
       {#if existing}
@@ -477,9 +548,41 @@
 
 <style>
   form {
+    /* Fill the modal's height so the scrollable body region has a real
+       container to scroll against. `display: contents` would skip this
+       wrapping, but it strips the form box from the accessibility tree
+       in some browsers, so we use a real flex column instead. */
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 0.75rem;
+  }
+  .modal-body {
+    /* The variable-length middle region: long member lists scroll
+       inside this box while the heading and the action buttons stay
+       pinned at the top and bottom of the modal card. */
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+  }
+  .field-label {
+    color: #666;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .overlap-tag {
+    background: #fdecd2;
+    color: #7a4a14;
+    border: 1px solid #f0c14b;
+    border-radius: 3px;
+    padding: 0.05rem 0.35rem;
+    font-size: 0.72rem;
+    flex: 0 0 auto;
   }
   header {
     display: flex;

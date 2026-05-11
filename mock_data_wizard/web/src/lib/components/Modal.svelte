@@ -166,8 +166,16 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     padding: 1rem 1.25rem;
     width: min(32rem, 92vw);
+    /* Cap height and let the inner form region scroll. Consumers that
+       structure their form as `<header> + <div class="modal-body"> +
+       <footer>` get sticky action buttons for free. Without this cap,
+       a PanelEditor against a register with 30+ sources pushes the
+       footer below the viewport — and because surrounding content is
+       inert, the user can't scroll the page to reach it either. */
+    max-height: min(85vh, 100%);
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    overflow: hidden;
   }
 </style>
