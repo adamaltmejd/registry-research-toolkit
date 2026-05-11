@@ -103,11 +103,14 @@
 
       // Seed-driven sources stay opt-in to the seed; for auto-detected
       // sources, only those with a hint are pre-checked so the user has
-      // to opt unsignalled sources in explicitly.
+      // to opt unsignalled sources in explicitly. Singleton groups have
+      // no checkbox, so the only source is always selected.
       const selected =
-        seeded.size > 0
-          ? seeded.has(sn)
-          : yearFromName !== null || detectedColumn !== null;
+        allSources.length === 1
+          ? true
+          : seeded.size > 0
+            ? seeded.has(sn)
+            : yearFromName !== null || detectedColumn !== null;
 
       out[sn] = { selected, mode, nameValue, columnValue };
     }
@@ -413,8 +416,9 @@
                 </div>
                 {#if d.mode === "name"}
                   <input
-                    type="number"
-                    step="1"
+                    type="text"
+                    inputmode="numeric"
+                    pattern="-?\d+"
                     bind:value={d.nameValue}
                     onfocus={resetConfirm}
                     oninput={resetConfirm}
@@ -541,7 +545,6 @@
     font-size: 0.9rem;
   }
   input[type="text"],
-  input[type="number"],
   select {
     padding: 0.3rem 0.5rem;
     border: 1px solid #ccc;
@@ -620,8 +623,22 @@
     border-color: #1656c0;
     color: #fff;
   }
+  /* Keep radios in the focus tree (a11y) while letting the label act
+     as the visual control. Focus ring is hoisted to the label. */
   .mode-toggle input {
-    display: none;
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .mode-toggle label:focus-within {
+    outline: 2px solid #1656c0;
+    outline-offset: 1px;
   }
   .errors {
     background: #fff5f5;
