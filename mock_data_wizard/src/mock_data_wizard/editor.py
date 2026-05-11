@@ -488,6 +488,41 @@ def _worst_confidence(a: Confidence, b: Confidence) -> Confidence:
     return max(a, b, key=rank.__getitem__)
 
 
+# Review-order tier: lowest rank surfaces first in `_build_groups`'s
+# sorted output, so the cards needing attention land at the top.
+_REVIEW_RANK: dict[Confidence, int] = {"none": 0, "partial": 1, "high": 2}
+
+
+def _is_unmatched_categorical(col: ColumnInfo) -> bool:
+    """Categorical with no regmeta evidence to back the classification.
+    Mirrors ``columnIsUnmatchedCategorical`` in the frontend store; keep
+    the two in lockstep — drift here changes both card ordering and the
+    "unmatched" filter chip's counts."""
+    if col.current_type != "categorical":
+        return False
+    sig = col.regmeta_signal
+    if sig is None:
+        return True
+    return not sig.classification_short_name and not sig.has_value_codes
+
+
+def _review_sort_key(group: RegisterGroupView) -> tuple[int, int, str]:
+    """Order groups by review need: confidence tier (none → partial →
+    high), then descending unmatched-categorical count, then
+    register_name (or group_id) ascending for a stable tertiary key."""
+    unmatched = sum(
+        1
+        for cols in group.columns_by_source.values()
+        for c in cols
+        if _is_unmatched_categorical(c)
+    )
+    return (
+        _REVIEW_RANK[group.confidence],
+        -unmatched,
+        group.register_name or group.group_id,
+    )
+
+
 # -- Register auto-detection ----------------------------------------------
 
 
@@ -706,7 +741,9 @@ def _build_groups(
             )
         )
 
-    # Unassigned sources — one singleton group per source.
+    # Unassigned sources — one singleton group per source. Built before
+    # the final sort below so noreg groups participate in review-order
+    # ranking alongside the register-assigned ones.
     for source_name in unassigned:
         columns_by_source = {source_name: _build_columns(source_name, {})}
         src = discover_sources_by_name.get(source_name)
@@ -729,7 +766,7 @@ def _build_groups(
             )
         )
 
-    return tuple(groups)
+    return tuple(sorted(groups, key=_review_sort_key))
 
 
 def _member_hints_for(

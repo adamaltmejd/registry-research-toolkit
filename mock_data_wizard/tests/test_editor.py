@@ -1271,6 +1271,151 @@ def test_groups_unassigned_become_singletons(tmp_path: Path):
     assert group_ids == {"noreg-a", "noreg-b"}
 
 
+# -- Review-order sort (issue #68) ----------------------------------------
+
+
+def test_groups_sorted_by_review_need(tmp_path: Path, monkeypatch):
+    """Cards needing the most review surface first: confidence tier asc
+    (none → partial → high), then descending unmatched-categorical count,
+    then register_name ascending as the stable tertiary key.
+
+    Setup: two register groups (one HIGH, one PARTIAL) plus a noreg
+    singleton (always confidence "none"). The tier ordering puts the
+    noreg group first, the partial group second, the high group last."""
+    from mock_data_wizard.registers import Register
+
+    monkeypatch.setattr(
+        editor,
+        "_autodetect_register_per_source",
+        lambda discover, db_path: {
+            "lisa_2018": "LISA",
+            "par_2018": "PAR",
+            "loose": None,
+        },
+    )
+    # LISA: Kon has a regmeta classification → high confidence.
+    # PAR : Kon has no signal → partial confidence (Salary matches, Kon does not).
+    monkeypatch.setattr(
+        editor,
+        "_resolve_signals_for_register",
+        lambda register, cols, db_path, **_kw: (
+            {
+                "salary": RegmetaSignal(
+                    datatyp_kind="numeric",
+                    classification_short_name=None,
+                    has_value_codes=False,
+                ),
+                "kon": RegmetaSignal(
+                    datatyp_kind=None,
+                    classification_short_name="KON",
+                    has_value_codes=True,
+                ),
+            }
+            if register == "LISA"
+            else {
+                "salary": RegmetaSignal(
+                    datatyp_kind="numeric",
+                    classification_short_name=None,
+                    has_value_codes=False,
+                ),
+            }
+        ),
+    )
+    monkeypatch.setattr(
+        editor,
+        "resolve_register",
+        lambda name, db_path=None: (
+            Register(id=1, name="LISA")
+            if name == "LISA"
+            else Register(id=2, name="PAR")
+            if name == "PAR"
+            else None
+        ),
+    )
+
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [
+                    {"name": "LopNr"},
+                    {"name": "Salary", "sql_type": "DECIMAL"},
+                    {"name": "Kon", "sql_type": "VARCHAR"},
+                ],
+            },
+            {
+                "source_name": "par_2018",
+                "columns": [
+                    {"name": "LopNr"},
+                    {"name": "Salary", "sql_type": "DECIMAL"},
+                    {"name": "Kon", "sql_type": "VARCHAR"},
+                ],
+            },
+            {"source_name": "loose", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+
+    assert [g.group_id for g in snap.groups] == [
+        "noreg-loose",  # tier "none"
+        "reg-2",  # tier "partial" (PAR)
+        "reg-1",  # tier "high" (LISA)
+    ]
+
+
+def test_review_sort_key_orders_within_tier():
+    """Within one confidence tier: descending unmatched-categorical count
+    first, then register_name (or group_id) ascending as the stable
+    tertiary key."""
+    from mock_data_wizard.editor import _review_sort_key
+
+    def _g(
+        group_id: str,
+        register_name: str | None,
+        confidence: str,
+        unmatched_cats: int,
+    ):
+        # Pad with as many uncategorised-categorical ColumnInfos as we
+        # need to inflate the unmatched count; current_type "categorical"
+        # + no regmeta_signal is the predicate's positive case.
+        cols = tuple(
+            editor.ColumnInfo(
+                name=f"c{i}",
+                sql_type="VARCHAR",
+                current_type="categorical",
+                hint=None,
+                provenance="auto",
+                regmeta_signal=None,
+                regmeta_implied_type=None,
+            )
+            for i in range(unmatched_cats)
+        )
+        return editor.RegisterGroupView(
+            group_id=group_id,
+            register_id=None,
+            register_name=register_name,
+            confidence=confidence,  # type: ignore[arg-type]
+            sources=("s",),
+            columns_by_source={"s": cols},
+            schema_variants=0,
+            panel_candidate=None,
+            member_hints={},
+        )
+
+    groups = [
+        _g("reg-3", "LISA", "partial", unmatched_cats=1),
+        _g("reg-1", "BEFOLKNING", "partial", unmatched_cats=5),
+        _g("reg-2", "FASTPAK", "partial", unmatched_cats=5),
+        _g("reg-4", "HIGHREG", "high", unmatched_cats=99),  # tier dominates
+    ]
+    ordered = sorted(groups, key=_review_sort_key)
+    # reg-1 and reg-2 tie on unmatched=5; register_name breaks the tie.
+    # reg-3 has fewer unmatched within the same tier so it sorts last
+    # among "partial". The "high"-tier reg-4 sorts last overall.
+    assert [g.group_id for g in ordered] == ["reg-1", "reg-2", "reg-3", "reg-4"]
+
+
 # -- Pre-3.0.0 rejection on get_state -------------------------------------
 
 
