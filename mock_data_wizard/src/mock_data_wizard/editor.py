@@ -885,7 +885,7 @@ def init_if_missing(
                 # Unassigned sources don't get cross-source panel candidates.
                 continue
             cand = detect_panel_candidate(source_names, sources_by_name)
-            if cand is None or cand.suggested_panel_key is None:
+            if cand is None or cand.suggested_entity_key is None:
                 continue
             if any(m["source"] in panel_sources_seen for m in cand.members):
                 continue
@@ -893,8 +893,8 @@ def init_if_missing(
             panels_out.append(
                 {
                     "panel_id": panel_id,
-                    "panel_key": cand.suggested_panel_key,
-                    "members": list(cand.members),
+                    "entity_key": cand.suggested_entity_key,
+                    "members": [dict(m) for m in cand.members],
                 }
             )
             for m in cand.members:
@@ -1720,16 +1720,10 @@ __all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]
 
 
 def _panel_to_dict(panel: Panel) -> dict[str, Any]:
-    members: list[dict[str, Any]] = []
-    for m in panel.members:
-        d: dict[str, Any] = {"source": m.source}
-        if m.period is not None:
-            d["period"] = m.period
-        if m.time_key is not None:
-            d["time_key"] = m.time_key
-        members.append(d)
     return {
         "panel_id": panel.panel_id,
-        "panel_key": panel.panel_key,
-        "members": members,
+        "entity_key": panel.entity_key,
+        "members": [
+            {"source": m.source, "time_key": m.time_key} for m in panel.members
+        ],
     }

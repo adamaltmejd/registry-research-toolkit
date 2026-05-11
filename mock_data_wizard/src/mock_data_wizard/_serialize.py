@@ -80,20 +80,15 @@ def _column_type_override_to_dict(override: ColumnTypeOverride) -> dict[str, Any
 def _panel_to_dict(panel: Panel) -> dict[str, Any]:
     return {
         "panel_id": panel.panel_id,
-        "panel_key": panel.panel_key,
+        "entity_key": panel.entity_key,
         "members": [_panel_member_to_dict(m) for m in panel.members],
     }
 
 
 def _panel_member_to_dict(member: PanelMember) -> dict[str, Any]:
-    """Exactly one of ``period`` / ``time_key`` is set (enforced by
-    ``PanelMember.__post_init__``); emit only the populated key."""
-    out: dict[str, Any] = {"source": member.source}
-    if member.period is not None:
-        out["period"] = member.period
-    if member.time_key is not None:
-        out["time_key"] = member.time_key
-    return out
+    """``time_key`` is polymorphic by JSON type: int for a literal
+    period (file-member), str for a column name (column-member)."""
+    return {"source": member.source, "time_key": member.time_key}
 
 
 def _register_group_view_to_dict(group: RegisterGroupView) -> dict[str, Any]:
@@ -146,7 +141,7 @@ def _panel_candidate_to_dict(candidate: PanelCandidate) -> dict[str, Any]:
     return {
         "members": [dict(m) for m in candidate.members],
         "suggested_panel_id": candidate.suggested_panel_id,
-        "suggested_panel_key": candidate.suggested_panel_key,
+        "suggested_entity_key": candidate.suggested_entity_key,
     }
 
 

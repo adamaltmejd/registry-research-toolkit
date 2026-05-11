@@ -137,7 +137,7 @@ export function setGroupRegister(
 
 export interface PutPanelArgs {
   panel_id: string;
-  panel_key: string;
+  entity_key: string;
   members: PanelMember[];
   expected_version: string;
   /** Renamed-from id when editing. The server drops the old entry in

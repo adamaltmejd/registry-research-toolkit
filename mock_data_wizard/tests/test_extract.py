@@ -513,9 +513,9 @@ def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
 # -- panels (#23) --------------------------------------------------------
 
 
-def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
-    """A panel made of file-members reads ``n_panel_ids`` from each
-    member's panel-key column and ``n_rows`` from each member source."""
+def test_run_extract_typed_emits_panel_with_literal_time_key_members(tmp_path: Path):
+    """A panel made of file-members reads ``n_entity_ids`` from each
+    member's entity-key column and ``n_rows`` from each member source."""
     _write_csv(
         tmp_path / "lisa_2018.csv",
         "lopnr\n" + "\n".join(str(i) for i in range(1, 14)) + "\n",
@@ -534,10 +534,10 @@ def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "lisa",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [
-                        {"source": "lisa_2018.csv", "period": 2018},
-                        {"source": "lisa_2019.csv", "period": 2019},
+                        {"source": "lisa_2018.csv", "time_key": 2018},
+                        {"source": "lisa_2019.csv", "time_key": 2019},
                     ],
                 }
             ],
@@ -549,22 +549,22 @@ def test_run_extract_typed_emits_panel_with_period_members(tmp_path: Path):
     assert len(panels) == 1
     p = panels[0]
     assert p["panel_id"] == "lisa"
-    assert p["panel_key"] == "lopnr"
+    assert p["entity_key"] == "lopnr"
     assert p["members"] == [
-        {"source": "lisa_2018.csv", "period": 2018},
-        {"source": "lisa_2019.csv", "period": 2019},
+        {"source": "lisa_2018.csv", "time_key": 2018},
+        {"source": "lisa_2019.csv", "time_key": 2019},
     ]
     by_period = {bp["period"]: bp for bp in p["by_period"]}
     assert by_period[2018]["n_rows"] == 13
-    assert by_period[2018]["n_panel_ids"] == 13
+    assert by_period[2018]["n_entity_ids"] == 13
     assert by_period[2018]["source"] == "lisa_2018.csv"
     assert by_period[2019]["n_rows"] == 16
-    assert by_period[2019]["n_panel_ids"] == 16
+    assert by_period[2019]["n_entity_ids"] == 16
 
 
-def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
+def test_run_extract_typed_emits_panel_with_column_time_key_member(tmp_path: Path):
     """A panel with a single column-member runs an extra GROUP BY on
-    the source and emits per-period n_rows / n_panel_ids."""
+    the source and emits per-period n_rows / n_entity_ids."""
     rows = []
     for ar in (2018, 2019, 2020):
         for lopnr in range(1, 13):
@@ -582,7 +582,7 @@ def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov_inpatient",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [{"source": "swecov.csv", "time_key": "ar"}],
                 }
             ],
@@ -598,13 +598,13 @@ def test_run_extract_typed_emits_panel_with_time_key_member(tmp_path: Path):
     assert set(by_period) == {2018, 2019, 2020}
     for bp in by_period.values():
         assert bp["n_rows"] == 12
-        assert bp["n_panel_ids"] == 12
+        assert bp["n_entity_ids"] == 12
         assert bp["source"] == "swecov.csv"
 
 
 def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
-    """A period with n_panel_ids < SUPPRESS_K (=10) is dropped from the
-    panels block: tiny panel cohorts are identifying."""
+    """A period with n_entity_ids < SUPPRESS_K (=10) is dropped from
+    the panels block: tiny panel cohorts are identifying."""
     rows = ["lopnr,ar"]
     rows.extend(f"{i},2018" for i in range(1, 6))
     rows.extend(f"{i},2019" for i in range(1, 13))
@@ -621,7 +621,7 @@ def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [{"source": "swecov.csv", "time_key": "ar"}],
                 }
             ],
@@ -655,7 +655,7 @@ def test_run_extract_typed_panel_handles_string_time_key(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "swecov_q",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [{"source": "swecov.csv", "time_key": "quarter"}],
                 }
             ],
@@ -694,10 +694,10 @@ def test_run_extract_typed_emits_mixed_member_panel(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "tax",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [
                         {"source": "tax_history.csv", "time_key": "ar"},
-                        {"source": "tax_2024.csv", "period": 2024},
+                        {"source": "tax_2024.csv", "time_key": 2024},
                     ],
                 }
             ],
@@ -732,11 +732,11 @@ def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
             "panels": [
                 {
                     "panel_id": "lisa",
-                    "panel_key": "lopnr",
+                    "entity_key": "lopnr",
                     "members": [
                         # Both sources misspelled / not in the include list.
-                        {"source": "lisa_2018_typo.csv", "period": 2018},
-                        {"source": "lisa_2019_typo.csv", "period": 2019},
+                        {"source": "lisa_2018_typo.csv", "time_key": 2018},
+                        {"source": "lisa_2019_typo.csv", "time_key": 2019},
                     ],
                 }
             ],

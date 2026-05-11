@@ -40,15 +40,15 @@ export interface ColumnTypeOverride {
 
 export interface PanelMember {
   source: string;
-  /** Set for file-period members; mutually exclusive with `time_key`. */
-  period?: number;
-  /** Set for column-driven members; mutually exclusive with `period`. */
-  time_key?: string;
+  /** Polymorphic by JSON type: `number` = literal period (file-member);
+   *  `string` = column name on the source whose values are the period
+   *  (column-member). */
+  time_key: number | string;
 }
 
 export interface Panel {
   panel_id: string;
-  panel_key: string;
+  entity_key: string;
   members: PanelMember[];
 }
 
@@ -72,14 +72,15 @@ export interface ColumnInfo {
 
 export interface PanelCandidateMember {
   source: string;
-  period?: number;
-  time_key?: string;
+  /** Polymorphic by JSON type: `number` = literal period (file-member);
+   *  `string` = column name on the source. */
+  time_key: number | string;
 }
 
 export interface PanelCandidate {
   members: PanelCandidateMember[];
   suggested_panel_id: string | null;
-  suggested_panel_key: string | null;
+  suggested_entity_key: string | null;
 }
 
 export interface RegisterGroupView {
@@ -205,18 +206,16 @@ function isColumnTypeOverride(x: unknown): x is ColumnTypeOverride {
 function isPanelMember(x: unknown): x is PanelMember {
   if (!isObject(x)) return false;
   if (typeof x.source !== "string") return false;
-  const hasPeriod = "period" in x;
-  const hasTimeKey = "time_key" in x;
-  if (hasPeriod === hasTimeKey) return false;
-  if (hasPeriod && typeof x.period !== "number") return false;
-  if (hasTimeKey && typeof x.time_key !== "string") return false;
-  return true;
+  if (!("time_key" in x)) return false;
+  const tk = x.time_key;
+  if (typeof tk === "number") return true;
+  return typeof tk === "string" && tk.length > 0;
 }
 
 function isPanel(x: unknown): x is Panel {
   if (!isObject(x)) return false;
   if (typeof x.panel_id !== "string") return false;
-  if (typeof x.panel_key !== "string") return false;
+  if (typeof x.entity_key !== "string") return false;
   return Array.isArray(x.members) && x.members.every(isPanelMember);
 }
 
@@ -264,7 +263,7 @@ function isPanelCandidate(x: unknown): x is PanelCandidate {
   if (!isObject(x)) return false;
   if (!Array.isArray(x.members) || !x.members.every(isPanelMember)) return false;
   return (
-    isStringOrNull(x.suggested_panel_id) && isStringOrNull(x.suggested_panel_key)
+    isStringOrNull(x.suggested_panel_id) && isStringOrNull(x.suggested_entity_key)
   );
 }
 

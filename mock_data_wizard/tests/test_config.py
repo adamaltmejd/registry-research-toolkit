@@ -443,17 +443,17 @@ def test_parse_config_rejects_non_dict_source_entry():
 # -- panels --------------------------------------------------------------
 
 
-def test_parse_config_panel_with_period_members():
+def test_parse_config_panel_with_literal_time_key_members():
     cfg = parse_config(
         {
             "contract_version": "mdw-config-3.0.0",
             "panels": [
                 {
                     "panel_id": "lisa",
-                    "panel_key": "LopNr",
+                    "entity_key": "LopNr",
                     "members": [
-                        {"source": "lisa_2018.csv", "period": 2018},
-                        {"source": "lisa_2019.csv", "period": 2019},
+                        {"source": "lisa_2018.csv", "time_key": 2018},
+                        {"source": "lisa_2019.csv", "time_key": 2019},
                     ],
                 }
             ],
@@ -461,21 +461,21 @@ def test_parse_config_panel_with_period_members():
     )
     p = cfg.panels[0]
     assert p.panel_id == "lisa"
-    assert p.panel_key == "LopNr"
-    assert [(m.source, m.period, m.time_key) for m in p.members] == [
-        ("lisa_2018.csv", 2018, None),
-        ("lisa_2019.csv", 2019, None),
+    assert p.entity_key == "LopNr"
+    assert [(m.source, m.time_key) for m in p.members] == [
+        ("lisa_2018.csv", 2018),
+        ("lisa_2019.csv", 2019),
     ]
 
 
-def test_parse_config_panel_with_time_key_member():
+def test_parse_config_panel_with_column_time_key_member():
     cfg = parse_config(
         {
             "contract_version": "mdw-config-3.0.0",
             "panels": [
                 {
                     "panel_id": "swecov",
-                    "panel_key": "P1105_LopNr_PersonNr",
+                    "entity_key": "P1105_LopNr_PersonNr",
                     "members": [
                         {"source": "SWECOV_SOS_SV", "time_key": "AR"},
                     ],
@@ -488,10 +488,9 @@ def test_parse_config_panel_with_time_key_member():
     m = p.members[0]
     assert m.source == "SWECOV_SOS_SV"
     assert m.time_key == "AR"
-    assert m.period is None
 
 
-def test_parse_config_panel_mixes_period_and_time_key_members():
+def test_parse_config_panel_mixes_literal_and_column_time_keys():
     """A panel can intermix file-members and column-members — e.g.
     historical years in one merged file, the latest year in a fresh
     delivery."""
@@ -501,31 +500,31 @@ def test_parse_config_panel_mixes_period_and_time_key_members():
             "panels": [
                 {
                     "panel_id": "tax",
-                    "panel_key": "LopNr",
+                    "entity_key": "LopNr",
                     "members": [
                         {"source": "tax_history.csv", "time_key": "AR"},
-                        {"source": "tax_2024.csv", "period": 2024},
+                        {"source": "tax_2024.csv", "time_key": 2024},
                     ],
                 }
             ],
         }
     )
     p = cfg.panels[0]
-    assert [(m.source, m.period, m.time_key) for m in p.members] == [
-        ("tax_history.csv", None, "AR"),
-        ("tax_2024.csv", 2024, None),
+    assert [(m.source, m.time_key) for m in p.members] == [
+        ("tax_history.csv", "AR"),
+        ("tax_2024.csv", 2024),
     ]
 
 
-def test_parse_config_rejects_member_without_period_or_time_key():
-    with pytest.raises(ValueError, match="exactly one of 'period' or 'time_key'"):
+def test_parse_config_rejects_member_without_time_key():
+    with pytest.raises(ValueError, match="missing required key 'time_key'"):
         parse_config(
             {
                 "contract_version": "mdw-config-3.0.0",
                 "panels": [
                     {
                         "panel_id": "p",
-                        "panel_key": "id",
+                        "entity_key": "id",
                         "members": [{"source": "x"}],
                     }
                 ],
@@ -533,16 +532,18 @@ def test_parse_config_rejects_member_without_period_or_time_key():
         )
 
 
-def test_parse_config_rejects_member_with_both_period_and_time_key():
-    with pytest.raises(ValueError, match="exactly one of 'period' or 'time_key'"):
+def test_parse_config_rejects_member_with_legacy_period_key():
+    """Pre-rename schemas used a separate ``period`` field; reject so a
+    stale config can't silently lose the member."""
+    with pytest.raises(ValueError, match="unknown key"):
         parse_config(
             {
                 "contract_version": "mdw-config-3.0.0",
                 "panels": [
                     {
                         "panel_id": "p",
-                        "panel_key": "id",
-                        "members": [{"source": "x", "period": 2018, "time_key": "AR"}],
+                        "entity_key": "id",
+                        "members": [{"source": "x", "period": 2018}],
                     }
                 ],
             }
@@ -557,12 +558,12 @@ def test_parse_config_rejects_duplicate_panel_id():
                 "panels": [
                     {
                         "panel_id": "p",
-                        "panel_key": "id1",
+                        "entity_key": "id1",
                         "members": [{"source": "a", "time_key": "AR"}],
                     },
                     {
                         "panel_id": "p",
-                        "panel_key": "id2",
+                        "entity_key": "id2",
                         "members": [{"source": "b", "time_key": "AR"}],
                     },
                 ],
@@ -575,7 +576,7 @@ def test_parse_config_rejects_panel_without_members():
         parse_config(
             {
                 "contract_version": "mdw-config-3.0.0",
-                "panels": [{"panel_id": "p", "panel_key": "id", "members": []}],
+                "panels": [{"panel_id": "p", "entity_key": "id", "members": []}],
             }
         )
 
@@ -590,59 +591,59 @@ def test_parse_config_rejects_two_panels_sharing_a_source():
                 "panels": [
                     {
                         "panel_id": "a",
-                        "panel_key": "LopNr",
-                        "members": [{"source": "shared.csv", "period": 2018}],
+                        "entity_key": "LopNr",
+                        "members": [{"source": "shared.csv", "time_key": 2018}],
                     },
                     {
                         "panel_id": "b",
-                        "panel_key": "OrgNr",
-                        "members": [{"source": "shared.csv", "period": 2019}],
+                        "entity_key": "OrgNr",
+                        "members": [{"source": "shared.csv", "time_key": 2019}],
                     },
                 ],
             }
         )
 
 
-def test_parse_config_allows_two_panels_with_same_panel_key():
-    """SCB registers routinely share a person-id panel_key across
+def test_parse_config_allows_two_panels_with_same_entity_key():
+    """SCB registers routinely share a person-id entity_key across
     many distinct panels. parse_config accepts it; generate.py builds
-    one shared pool per panel_key."""
+    one shared pool per entity_key."""
     cfg = parse_config(
         {
             "contract_version": "mdw-config-3.0.0",
             "panels": [
                 {
                     "panel_id": "lisa",
-                    "panel_key": "P1105_LopNr_PersonNr",
+                    "entity_key": "P1105_LopNr_PersonNr",
                     "members": [{"source": "x", "time_key": "AR"}],
                 },
                 {
                     "panel_id": "rtb",
-                    "panel_key": "P1105_LopNr_PersonNr",
-                    "members": [{"source": "y", "period": 2018}],
+                    "entity_key": "P1105_LopNr_PersonNr",
+                    "members": [{"source": "y", "time_key": 2018}],
                 },
             ],
         }
     )
-    keys = [p.panel_key for p in cfg.panels]
+    keys = [p.entity_key for p in cfg.panels]
     assert keys == ["P1105_LopNr_PersonNr", "P1105_LopNr_PersonNr"]
 
 
-def test_parse_config_rejects_duplicate_period_in_one_panel():
-    """Period uniqueness is enforced across file-members. (Column
-    members produce periods at runtime; their uniqueness is validated
-    in extract.)"""
-    with pytest.raises(ValueError, match="duplicate period 2018"):
+def test_parse_config_rejects_duplicate_literal_time_key_in_one_panel():
+    """Literal time_key uniqueness is enforced across file-members.
+    (Column-time-key members produce periods at runtime; their
+    uniqueness is validated in extract.)"""
+    with pytest.raises(ValueError, match="duplicate literal time_key 2018"):
         parse_config(
             {
                 "contract_version": "mdw-config-3.0.0",
                 "panels": [
                     {
                         "panel_id": "p",
-                        "panel_key": "id",
+                        "entity_key": "id",
                         "members": [
-                            {"source": "a", "period": 2018},
-                            {"source": "b", "period": 2018},
+                            {"source": "a", "time_key": 2018},
+                            {"source": "b", "time_key": 2018},
                         ],
                     }
                 ],
@@ -658,10 +659,10 @@ def test_parse_config_rejects_duplicate_source_in_one_panel():
                 "panels": [
                     {
                         "panel_id": "p",
-                        "panel_key": "id",
+                        "entity_key": "id",
                         "members": [
-                            {"source": "x", "period": 2018},
-                            {"source": "x", "period": 2019},
+                            {"source": "x", "time_key": 2018},
+                            {"source": "x", "time_key": 2019},
                         ],
                     }
                 ],

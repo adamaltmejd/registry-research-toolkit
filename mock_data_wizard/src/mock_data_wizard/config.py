@@ -95,11 +95,12 @@ class ColumnTypeOverride:
 class PanelMember:
     """One source contributing to a panel.
 
-    Exactly one of ``period`` and ``time_key`` is set:
+    ``time_key`` is polymorphic by JSON type:
 
-    - ``period``: a literal integer period for a one-period-per-file
-      delivery (the source contributes a single period's rows).
-    - ``time_key``: a column name on the source whose values carry the
+    - ``int``: a literal period for a one-period-per-file delivery (the
+      source contributes a single period's rows). Typically the year
+      derived from the source name.
+    - ``str``: a column name on the source whose values carry the
       period for each row. The source can contribute many periods.
 
     Mixing the two within the same panel is allowed — e.g. a long
@@ -108,14 +109,17 @@ class PanelMember:
     """
 
     source: str
-    period: int | None = None
-    time_key: str | None = None
+    time_key: int | str
 
     def __post_init__(self) -> None:
-        if (self.period is None) == (self.time_key is None):
+        if isinstance(self.time_key, bool) or not isinstance(self.time_key, (int, str)):
             raise ValueError(
-                f"PanelMember(source={self.source!r}): exactly one of "
-                f"'period' or 'time_key' must be set"
+                f"PanelMember(source={self.source!r}): time_key must be int or str, "
+                f"got {type(self.time_key).__name__}"
+            )
+        if isinstance(self.time_key, str) and not self.time_key:
+            raise ValueError(
+                f"PanelMember(source={self.source!r}): time_key must be non-empty"
             )
 
 
@@ -124,13 +128,13 @@ class Panel:
     """A panel declaration on the configure side.
 
     A panel is a unit of analysis where the same entities (identified
-    by ``panel_key``) recur across multiple periods. Each member
-    declares how its rows map to a period — either via the filename
-    (``period`` literal) or via a column on the source (``time_key``).
+    by ``entity_key``) recur across multiple periods. Each member
+    declares how its rows map to a period via ``time_key`` — either an
+    integer literal (file-member) or a column name (column-member).
     """
 
     panel_id: str
-    panel_key: str
+    entity_key: str
     members: tuple[PanelMember, ...] = ()
 
 
@@ -143,8 +147,9 @@ class MDWConfig:
     column_options: dict[str, dict[str, dict[str, Any]]] = field(default_factory=dict)
     # exact source-name -> {key: value, ...}. Carries `year` and `register`.
     sources: dict[str, dict[str, Any]] = field(default_factory=dict)
-    # Panel declarations: explicit panel_id + (panel_key, time_key or
-    # member list) per panel.
+    # Panel declarations: explicit panel_id + entity_key + member list.
+    # Each member has a polymorphic time_key (int = literal period;
+    # str = column name on the source).
     panels: tuple[Panel, ...] = ()
     # Top-level provenance: (source, column) pairs the user explicitly
     # overrode. Re-classification skips these by default.
@@ -298,7 +303,7 @@ def _parse_panel(raw: Any, idx: int) -> Panel:
     """Validate one panel declaration."""
     if not isinstance(raw, dict):
         raise ValueError(f"panels[{idx}] must be an object, got {type(raw).__name__}")
-    required = {"panel_id", "panel_key", "members"}
+    required = {"panel_id", "entity_key", "members"}
     allowed = required
     extra = set(raw) - allowed
     if extra:
@@ -312,26 +317,26 @@ def _parse_panel(raw: Any, idx: int) -> Panel:
     panel_id = raw["panel_id"]
     if not isinstance(panel_id, str) or not panel_id:
         raise ValueError(f"panels[{idx}].panel_id must be a non-empty string")
-    panel_key = raw["panel_key"]
-    if not isinstance(panel_key, str) or not panel_key:
-        raise ValueError(f"panels[{idx}].panel_key must be a non-empty string")
+    entity_key = raw["entity_key"]
+    if not isinstance(entity_key, str) or not entity_key:
+        raise ValueError(f"panels[{idx}].entity_key must be a non-empty string")
     members_raw = raw["members"]
     if not isinstance(members_raw, list) or not members_raw:
         raise ValueError(f"panels[{idx}].members must be a non-empty list")
 
     members: list[PanelMember] = []
     seen_sources: set[str] = set()
-    seen_periods: set[int] = set()
+    seen_int_time_keys: set[int] = set()
     for j, m in enumerate(members_raw):
         if not isinstance(m, dict):
             raise ValueError(
                 f"panels[{idx}].members[{j}] must be an object, got {type(m).__name__}"
             )
-        member_extra = set(m) - {"source", "period", "time_key"}
+        member_extra = set(m) - {"source", "time_key"}
         if member_extra:
             raise ValueError(
                 f"panels[{idx}].members[{j}] has unknown key(s) "
-                f"{sorted(member_extra)} (allowed: ['period', 'source', 'time_key'])"
+                f"{sorted(member_extra)} (allowed: ['source', 'time_key'])"
             )
         src = m.get("source")
         if not isinstance(src, str) or not src:
@@ -341,34 +346,38 @@ def _parse_panel(raw: Any, idx: int) -> Panel:
         if src in seen_sources:
             raise ValueError(f"panels[{idx}].members has duplicate source {src!r}")
         seen_sources.add(src)
-        has_period = "period" in m
-        has_time_key = "time_key" in m
-        if has_period == has_time_key:
+        if "time_key" not in m:
             raise ValueError(
-                f"panels[{idx}].members[{j}] (source={src!r}): exactly one of "
-                f"'period' or 'time_key' must be set"
+                f"panels[{idx}].members[{j}] (source={src!r}): missing required "
+                f"key 'time_key' (int for literal period, str for column name)"
             )
-        if has_period:
-            period = m["period"]
-            if isinstance(period, bool) or not isinstance(period, int):
+        time_key = m["time_key"]
+        # bool is an int subclass in Python; reject explicitly.
+        if isinstance(time_key, bool):
+            raise ValueError(
+                f"panels[{idx}].members[{j}].time_key must be int or non-empty "
+                f"string, got bool"
+            )
+        if isinstance(time_key, int):
+            if time_key in seen_int_time_keys:
                 raise ValueError(
-                    f"panels[{idx}].members[{j}].period must be an int, "
-                    f"got {type(period).__name__}"
+                    f"panels[{idx}].members has duplicate literal time_key {time_key}"
                 )
-            if period in seen_periods:
-                raise ValueError(f"panels[{idx}].members has duplicate period {period}")
-            seen_periods.add(period)
-            members.append(PanelMember(source=src, period=period))
-        else:
-            time_key = m["time_key"]
-            if not isinstance(time_key, str) or not time_key:
+            seen_int_time_keys.add(time_key)
+        elif isinstance(time_key, str):
+            if not time_key:
                 raise ValueError(
                     f"panels[{idx}].members[{j}].time_key must be a non-empty string"
                 )
-            members.append(PanelMember(source=src, time_key=time_key))
+        else:
+            raise ValueError(
+                f"panels[{idx}].members[{j}].time_key must be int or non-empty "
+                f"string, got {type(time_key).__name__}"
+            )
+        members.append(PanelMember(source=src, time_key=time_key))
     return Panel(
         panel_id=panel_id,
-        panel_key=panel_key,
+        entity_key=entity_key,
         members=tuple(members),
     )
 

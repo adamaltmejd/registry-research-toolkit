@@ -178,8 +178,8 @@ def test_build_panel_members_year_as_period():
         months={"Individ_2018": None, "Individ_2019": None},
     )
     assert members == [
-        {"source": "Individ_2018", "period": 2018},
-        {"source": "Individ_2019", "period": 2019},
+        {"source": "Individ_2018", "time_key": 2018},
+        {"source": "Individ_2019", "time_key": 2019},
     ]
 
 
@@ -191,8 +191,8 @@ def test_build_panel_members_year_month_encoding():
     )
     # VT2012 = 201201 < HT2012 = 201208
     assert members == [
-        {"source": "VT2012", "period": 201201},
-        {"source": "HT2012", "period": 201208},
+        {"source": "VT2012", "time_key": 201201},
+        {"source": "HT2012", "time_key": 201208},
     ]
 
 
@@ -205,8 +205,8 @@ def test_build_panel_members_alphabetic_rank_fallback():
     )
     # multiplier = 100; ranks 1, 2
     assert members == [
-        {"source": "a_2018", "period": 201801},
-        {"source": "b_2018", "period": 201802},
+        {"source": "a_2018", "time_key": 201801},
+        {"source": "b_2018", "time_key": 201802},
     ]
 
 
@@ -235,14 +235,14 @@ def test_find_time_key_in_source(columns, expected):
 def test_detect_panel_member_kind_file_member():
     s = detect_panel_member_kind("Individ_2018", ("LopNr", "Kommun"))
     assert s == PanelMemberSuggestion(
-        kind="file", period=2018, suggested_panel_key="LopNr"
+        kind="file", time_key=2018, suggested_entity_key="LopNr"
     )
 
 
 def test_detect_panel_member_kind_column_member():
     s = detect_panel_member_kind("Population", ("LopNr", "AR"))
     assert s == PanelMemberSuggestion(
-        kind="column", time_key="AR", suggested_panel_key="LopNr"
+        kind="column", time_key="AR", suggested_entity_key="LopNr"
     )
 
 
@@ -250,18 +250,18 @@ def test_detect_panel_member_kind_file_takes_precedence():
     """When both shapes apply, file-member wins."""
     s = detect_panel_member_kind("Individ_2018", ("LopNr", "AR"))
     assert s.kind == "file"
-    assert s.period == 2018
+    assert s.time_key == 2018
 
 
 def test_detect_panel_member_kind_no_signal():
     s = detect_panel_member_kind("custom_table", ("col1", "col2"))
-    assert s == PanelMemberSuggestion(kind=None, suggested_panel_key=None)
+    assert s == PanelMemberSuggestion(kind=None, suggested_entity_key=None)
 
 
 def test_detect_panel_member_kind_year_month_period():
     s = detect_panel_member_kind("Foo201907", ("LopNr",))
     assert s.kind == "file"
-    assert s.period == 201907
+    assert s.time_key == 201907
 
 
 # -- detect_panel_candidate (multi-source) --------------------------------
@@ -274,9 +274,9 @@ def test_detect_panel_candidate_multi_source_year_only():
     }
     cand = detect_panel_candidate(["Individ_2018", "Individ_2019"], sources_by_name)
     assert isinstance(cand, PanelCandidate)
-    assert cand.suggested_panel_key == "LopNr"
+    assert cand.suggested_entity_key == "LopNr"
     assert cand.suggested_panel_id == "Individ"
-    assert [m["period"] for m in cand.members] == [2018, 2019]
+    assert [m["time_key"] for m in cand.members] == [2018, 2019]
 
 
 def test_detect_panel_candidate_singleton_with_time_key():
@@ -285,7 +285,7 @@ def test_detect_panel_candidate_singleton_with_time_key():
     assert isinstance(cand, PanelCandidate)
     assert cand.members == ({"source": "Population", "time_key": "AR"},)
     assert cand.suggested_panel_id == "Population"
-    assert cand.suggested_panel_key == "LopNr"
+    assert cand.suggested_entity_key == "LopNr"
 
 
 def test_detect_panel_candidate_singleton_no_time_key_returns_none():

@@ -486,30 +486,30 @@ def _panel_stats_separate_files() -> dict:
         "panels": [
             {
                 "panel_id": "lisa",
-                "panel_key": "LopNr",
+                "entity_key": "LopNr",
                 "members": [
-                    {"source": "lisa_2018.csv", "period": 2018},
-                    {"source": "lisa_2019.csv", "period": 2019},
-                    {"source": "lisa_2020.csv", "period": 2020},
+                    {"source": "lisa_2018.csv", "time_key": 2018},
+                    {"source": "lisa_2019.csv", "time_key": 2019},
+                    {"source": "lisa_2020.csv", "time_key": 2020},
                 ],
                 "by_period": [
                     {
                         "period": 2018,
                         "source": "lisa_2018.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 90,
+                        "n_entity_ids": 90,
                     },
                     {
                         "period": 2019,
                         "source": "lisa_2019.csv",
                         "n_rows": 110,
-                        "n_panel_ids": 95,
+                        "n_entity_ids": 95,
                     },
                     {
                         "period": 2020,
                         "source": "lisa_2020.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 85,
+                        "n_entity_ids": 85,
                     },
                 ],
             }
@@ -518,7 +518,7 @@ def _panel_stats_separate_files() -> dict:
 
 
 def test_panel_separate_files_id_overlap_across_periods(tmp_path: Path):
-    """Each period's panel_key column draws from a deterministic prefix
+    """Each period's entity_key column draws from a deterministic prefix
     of the pool. The drawable universes nest, so the *prefix* property
     holds at the subset level (not at the sampled-value level: with
     replace=True some pool members may not appear in any given sample).
@@ -613,26 +613,26 @@ def _panel_stats_merged_table() -> dict:
         "panels": [
             {
                 "panel_id": "swecov_inpatient",
-                "panel_key": "LopNr",
+                "entity_key": "LopNr",
                 "members": [{"source": "swecov.csv", "time_key": "AR"}],
                 "by_period": [
                     {
                         "period": 2018,
                         "source": "swecov.csv",
                         "n_rows": 90,
-                        "n_panel_ids": 80,
+                        "n_entity_ids": 80,
                     },
                     {
                         "period": 2019,
                         "source": "swecov.csv",
                         "n_rows": 110,
-                        "n_panel_ids": 95,
+                        "n_entity_ids": 95,
                     },
                     {
                         "period": 2020,
                         "source": "swecov.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 85,
+                        "n_entity_ids": 85,
                     },
                 ],
             }
@@ -641,7 +641,7 @@ def _panel_stats_merged_table() -> dict:
 
 
 def test_panel_merged_table_period_alignment(tmp_path: Path):
-    """In a merged_table panel, each generated row's panel_key must
+    """In a merged_table panel, each generated row's entity_key must
     come from the period subset corresponding to its time_key."""
     stats_path = tmp_path / "mock_data_stats.json"
     stats_path.write_text(json.dumps(_panel_stats_merged_table()))
@@ -694,7 +694,7 @@ def test_panel_merged_table_row_counts_per_period(tmp_path: Path):
 def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path):
     """If every period was suppressed (n_panel_ids < SUPPRESS_K) and the
     panels block landed with by_period=[], generate must NOT overwrite
-    the source's time_key and panel_key with zero/empty values -- it
+    the source's time_key and entity_key with zero/empty values -- it
     should fall through to normal column generation. The user still
     sees the panel block (with by_period=[]) but the mock data isn't
     blanked out."""
@@ -720,10 +720,10 @@ def test_panel_merged_table_empty_by_period_falls_back_to_normal(tmp_path: Path)
     assert all(r["LopNr"] != "" for r in rows)
 
 
-def test_panels_sharing_panel_key_share_pool(tmp_path: Path):
-    """Two panels declaring the same panel_key (the common SCB case
+def test_panels_sharing_entity_key_share_pool(tmp_path: Path):
+    """Two panels declaring the same entity_key (the common SCB case
     where every register is keyed on ``P1105_LopNr_PersonNr``) must
-    draw their panel_key columns from the same id universe — not from
+    draw their entity_key columns from the same id universe — not from
     independent shuffled pools that would collide on output."""
     payload = {
         "contract_version": "2.0.0",
@@ -752,27 +752,27 @@ def test_panels_sharing_panel_key_share_pool(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "lisa",
-                "panel_key": "Pnr",
-                "members": [{"source": "lisa_2020.csv", "period": 2020}],
+                "entity_key": "Pnr",
+                "members": [{"source": "lisa_2020.csv", "time_key": 2020}],
                 "by_period": [
                     {
                         "period": 2020,
                         "source": "lisa_2020.csv",
                         "n_rows": 30,
-                        "n_panel_ids": 30,
+                        "n_entity_ids": 30,
                     }
                 ],
             },
             {
                 "panel_id": "rtb",
-                "panel_key": "Pnr",
-                "members": [{"source": "rtb_2020.csv", "period": 2020}],
+                "entity_key": "Pnr",
+                "members": [{"source": "rtb_2020.csv", "time_key": 2020}],
                 "by_period": [
                     {
                         "period": 2020,
                         "source": "rtb_2020.csv",
                         "n_rows": 30,
-                        "n_panel_ids": 30,
+                        "n_entity_ids": 30,
                     }
                 ],
             },
@@ -798,7 +798,7 @@ def test_panels_sharing_panel_key_share_pool(tmp_path: Path):
 def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path):
     """Mixed-member panel where the column-member source has every
     period suppressed but the file-member sibling survives. The
-    column-member's time_key / panel_key columns must be normal-
+    column-member's time_key / entity_key columns must be normal-
     generated values rather than uninitialised np.empty garbage.
     """
     payload = {
@@ -859,10 +859,10 @@ def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path
         "panels": [
             {
                 "panel_id": "tax",
-                "panel_key": "LopNr",
+                "entity_key": "LopNr",
                 "members": [
                     {"source": "tax_history.csv", "time_key": "AR"},
-                    {"source": "tax_2024.csv", "period": 2024},
+                    {"source": "tax_2024.csv", "time_key": 2024},
                 ],
                 # Only the file-member contributed surviving periods;
                 # the column-member's by_period rows were all suppressed.
@@ -871,7 +871,7 @@ def test_panel_column_member_with_no_surviving_periods_falls_back(tmp_path: Path
                         "period": 2024,
                         "source": "tax_2024.csv",
                         "n_rows": 80,
-                        "n_panel_ids": 70,
+                        "n_entity_ids": 70,
                     }
                 ],
             }
@@ -910,7 +910,7 @@ def test_panel_separate_files_deterministic(tmp_path: Path):
 def test_panel_merged_table_string_periods(tmp_path: Path):
     """A merged_table panel keyed by quarter/month strings flows
     end-to-end: the time_key column carries the string periods and the
-    panel_key column is drawn from the matching period subset."""
+    entity_key column is drawn from the matching period subset."""
     payload = {
         "contract_version": "2.0.0",
         "generated_at": "2026-03-15T10:00:00Z",
@@ -946,20 +946,20 @@ def test_panel_merged_table_string_periods(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "swecov_q",
-                "panel_key": "LopNr",
+                "entity_key": "LopNr",
                 "members": [{"source": "swecov.csv", "time_key": "Q"}],
                 "by_period": [
                     {
                         "period": "2019-Q1",
                         "source": "swecov.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 70,
+                        "n_entity_ids": 70,
                     },
                     {
                         "period": "2019-Q2",
                         "source": "swecov.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 80,
+                        "n_entity_ids": 80,
                     },
                 ],
             }
