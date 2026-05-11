@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { TYPE_LABEL_SHORT } from "../types";
   import type { ColumnInfo, Panel, RegisterGroupView } from "../types";
   import {
     columnIsManual,
@@ -8,8 +7,10 @@
     store,
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
+  import CoverageCell, { type CoverageEntry } from "./CoverageCell.svelte";
   import PanelEditor from "./PanelEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
+  import TypeCell from "./TypeCell.svelte";
   import ValueCodesModal from "./ValueCodesModal.svelte";
 
   interface Props {
@@ -343,16 +344,7 @@
     return out;
   });
 
-  // `variant` only fires in grouped mode (source carries the column
-  // but in a different type variant). `self` only fires in per-source
-  // mode (the row's own source).
-  type CoverageStatus = "present" | "variant" | "missing" | "self";
-  interface CoverageCell {
-    source: string;
-    status: CoverageStatus;
-  }
-
-  function coverageForPartition(p: ColumnPartition): CoverageCell[] {
+  function coverageForPartition(p: ColumnPartition): CoverageEntry[] {
     const inVariant = new Set(p.sources);
     const carriers = cellsByName(p.name);
     return group.sources.map((src) => {
@@ -365,33 +357,13 @@
   function coverageForSourceColumn(
     currentSource: string,
     colName: string,
-  ): CoverageCell[] {
+  ): CoverageEntry[] {
     const carriers = cellsByName(colName);
     return group.sources.map((src) => {
       if (src === currentSource) return { source: src, status: "self" };
       if (src in carriers) return { source: src, status: "present" };
       return { source: src, status: "missing" };
     });
-  }
-
-  function coverageTooltip(cell: CoverageCell): string {
-    switch (cell.status) {
-      case "present":
-        return `${cell.source} — present`;
-      case "variant":
-        return `${cell.source} — different type variant`;
-      case "missing":
-        return `${cell.source} — missing`;
-      case "self":
-        return `${cell.source} — this row`;
-    }
-  }
-
-  function coverageAriaLabel(cells: CoverageCell[]): string {
-    const present = cells.filter(
-      (c) => c.status === "present" || c.status === "self",
-    ).length;
-    return `${present}/${cells.length} sources present`;
   }
 </script>
 
@@ -511,7 +483,6 @@
           {@const hint = hintSuffix(p.sample)}
           {@const regmeta = regmetaBadge(p.sample)}
           {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
-          {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
           {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
           <tr
@@ -543,81 +514,25 @@
               <td class="mono dim">{p.sql_type_summary}</td>
             {/if}
             {#if visCols.type}
-              <td class="type-cell">
-                <div class="type-cell-inner">
-                  <button
-                    class="type-pill type-{p.sample.current_type}"
-                    title={[p.sample.current_type, hint]
-                      .filter(Boolean)
-                      .join(" · ") +
-                      ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
-                      (p.manual_count > 0
-                        ? `, ${p.manual_count} manual`
-                        : "") +
-                      ")"}
-                    onclick={(e) => {
-                      e.stopPropagation();
-                      editingColumn = {
-                        sources: [...p.sources],
-                        cellBySource: cellsByName(p.name),
-                        column: p.sample,
-                      };
-                    }}
-                  >
-                    <span class="type-name"
-                      >{TYPE_LABEL_SHORT[p.sample.current_type]}</span
-                    >
-                    {#if hint}
-                      <span class="type-suffix">· {hint}</span>
-                    {/if}
-                  </button>
-                  {#if regmeta}
-                    <button
-                      type="button"
-                      class="regmeta-tag"
-                      title={`${regmetaTitle} — click to load value codes`}
-                      onclick={(e) => {
-                        e.stopPropagation();
-                        viewingValuesFor = p.name;
-                      }}>{regmeta}</button
-                    >
-                  {/if}
-                  {#if p.manual_count > 0}
-                    <span class="manual-badge" title="manual overrides in this partition"
-                      >★{p.manual_count}</span
-                    >
-                  {/if}
-                  {#if mismatch}
-                    <span
-                      class="mismatch-marker"
-                      title={`regmeta implies '${p.sample.regmeta_implied_type}' — current is '${p.sample.current_type}'`}
-                      aria-label="regmeta type mismatch">⚠</span
-                    >
-                  {:else if isUnmatchedCategorical(p.sample)}
-                    <span
-                      class="unmatched-marker"
-                      title="categorical without regmeta classification or value codes"
-                      aria-label="unmatched categorical">●</span
-                    >
-                  {/if}
-                </div>
-              </td>
+              {@const pillTitle =
+                [p.sample.current_type, hint].filter(Boolean).join(" · ") +
+                ` (${p.sources.length} source${p.sources.length === 1 ? "" : "s"}` +
+                (p.manual_count > 0 ? `, ${p.manual_count} manual` : "") +
+                ")"}
+              <TypeCell
+                column={p.sample}
+                {hint}
+                {pillTitle}
+                showManualOverrideBorder={false}
+                {regmeta}
+                {regmetaTitle}
+                manualCount={p.manual_count}
+                onEditType={() => openEditorForPartition(p)}
+                onShowValueCodes={() => (viewingValuesFor = p.name)}
+              />
             {/if}
             {#if visCols.coverage}
-              <td class="coverage-cell">
-                <div
-                  class="coverage-grid"
-                  role="img"
-                  aria-label={coverageAriaLabel(coverage)}
-                >
-                  {#each coverage as cell (cell.source)}
-                    <span
-                      class="coverage-box coverage-{cell.status}"
-                      title={coverageTooltip(cell)}
-                    ></span>
-                  {/each}
-                </div>
-              </td>
+              <CoverageCell cells={coverage} />
             {/if}
           </tr>
         {/each}
@@ -708,7 +623,6 @@
               {@const hint = hintSuffix(col)}
               {@const regmeta = regmetaBadge(col)}
               {@const regmetaTitle = regmetaBadgeTitle(col)}
-              {@const mismatch = isRegmetaMismatch(col)}
               {@const provLabel =
                 col.provenance === "manual"
                   ? "manual override"
@@ -725,71 +639,22 @@
                   <td class="mono dim">{col.sql_type ?? "—"}</td>
                 {/if}
                 {#if visCols.type}
-                  <td class="type-cell">
-                    <div class="type-cell-inner">
-                      <button
-                        class="type-pill type-{col.current_type} prov-{col.provenance}"
-                        title={[col.current_type, hint]
-                          .filter(Boolean)
-                          .join(" · ") + ` (${provLabel})`}
-                        onclick={(e) => {
-                          e.stopPropagation();
-                          editingColumn = {
-                            sources: [sourceName],
-                            cellBySource: cellsByName(col.name),
-                            column: col,
-                          };
-                        }}
-                      >
-                        <span class="type-name"
-                          >{TYPE_LABEL_SHORT[col.current_type]}</span
-                        >
-                        {#if hint}
-                          <span class="type-suffix">· {hint}</span>
-                        {/if}
-                      </button>
-                      {#if regmeta}
-                        <button
-                          type="button"
-                          class="regmeta-tag"
-                          title={`${regmetaTitle} — click to load value codes`}
-                          onclick={(e) => {
-                            e.stopPropagation();
-                            viewingValuesFor = col.name;
-                          }}>{regmeta}</button
-                        >
-                      {/if}
-                      {#if mismatch}
-                        <span
-                          class="mismatch-marker"
-                          title={`regmeta implies '${col.regmeta_implied_type}' — current is '${col.current_type}'`}
-                          aria-label="regmeta type mismatch">⚠</span
-                        >
-                      {:else if isUnmatchedCategorical(col)}
-                        <span
-                          class="unmatched-marker"
-                          title="categorical without regmeta classification or value codes"
-                          aria-label="unmatched categorical">●</span
-                        >
-                      {/if}
-                    </div>
-                  </td>
+                  {@const pillTitle =
+                    [col.current_type, hint].filter(Boolean).join(" · ") +
+                    ` (${provLabel})`}
+                  <TypeCell
+                    column={col}
+                    {hint}
+                    {pillTitle}
+                    showManualOverrideBorder={true}
+                    {regmeta}
+                    {regmetaTitle}
+                    onEditType={() => openEditorForCell(sourceName, col)}
+                    onShowValueCodes={() => (viewingValuesFor = col.name)}
+                  />
                 {/if}
                 {#if visCols.coverage}
-                  <td class="coverage-cell">
-                    <div
-                      class="coverage-grid"
-                      role="img"
-                      aria-label={coverageAriaLabel(coverage)}
-                    >
-                      {#each coverage as cell (cell.source)}
-                        <span
-                          class="coverage-box coverage-{cell.status}"
-                          title={coverageTooltip(cell)}
-                        ></span>
-                      {/each}
-                    </div>
-                  </td>
+                  <CoverageCell cells={coverage} />
                 {/if}
               </tr>
             {/each}
@@ -1114,154 +979,6 @@
     font-size: 0.78rem;
     margin-left: 0.35rem;
     font-family: system-ui, sans-serif;
-  }
-  /* Type cell hosts pill + regmeta tag + count + manual badge + marker
-     on a single flex row that wraps when the cell is too narrow.
-     Pill stays a fixed-content button; the surrounding badges wrap to
-     the next line instead of forcing the pill to ellipsis-truncate. */
-  /* Flex on the inner div — NOT on the td. `display: flex` on a <td>
-     breaks the cell out of CSS table layout, so the row no longer
-     keeps sibling cells at a shared height (visible as misaligned row
-     borders when Coverage forces the row taller). */
-  .type-cell-inner {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    align-items: center;
-  }
-  .type-pill {
-    background: #eef2fb;
-    color: #1a3b80;
-    border: 1px solid #c8d3ec;
-    border-radius: 3px;
-    padding: 0.1rem 0.5rem;
-    cursor: pointer;
-    font: inherit;
-    font-family: ui-monospace, monospace;
-    white-space: nowrap;
-    flex: 0 0 auto;
-  }
-  .type-pill:hover {
-    background: #e0e7f7;
-  }
-  .type-pill.prov-manual {
-    border-left: 3px solid #b34a00;
-    padding-left: calc(0.5rem - 2px);
-  }
-  .type-id {
-    background: #e8f1fa;
-    color: #114a85;
-  }
-  .type-categorical {
-    background: #efe8fa;
-    color: #5d2b8c;
-  }
-  .type-numeric {
-    background: #e8f6ec;
-    color: #185a2b;
-  }
-  .type-date {
-    background: #faefe0;
-    color: #7c4400;
-  }
-  .type-opaque {
-    background: #f4f0e8;
-    color: #5a523f;
-    border-color: #d8d0bf;
-  }
-  .type-suffix {
-    margin-left: 0.15rem;
-    opacity: 0.65;
-    font-size: 0.85em;
-  }
-  /* Regmeta evidence as a sibling tag rather than a pill suffix:
-     classification short-name ("LKF2012") or "vc" for value codes,
-     full text in the tooltip. Keeping it outside the pill lets the
-     pill stay readable even when the cell is narrow. */
-  .regmeta-tag {
-    padding: 0.05rem 0.35rem;
-    border: 1px solid transparent;
-    border-radius: 3px;
-    background: #f0e8fa;
-    color: #5d2b8c;
-    font-size: 0.78em;
-    font-family: ui-monospace, monospace;
-    cursor: pointer;
-    flex: 0 0 auto;
-    line-height: 1.3;
-  }
-  .regmeta-tag:hover {
-    background: #e3d4f4;
-    border-color: #c8b1e2;
-  }
-  .regmeta-tag:focus-visible {
-    outline: 2px solid #5d2b8c;
-    outline-offset: 1px;
-  }
-  .manual-badge {
-    color: #b34a00;
-    font-size: 0.8em;
-    font-family: system-ui, sans-serif;
-    flex: 0 0 auto;
-  }
-  .unmatched-marker {
-    color: #b34a00;
-    opacity: 0.55;
-    font-size: 0.7rem;
-    line-height: 1;
-    flex: 0 0 auto;
-  }
-  .mismatch-marker {
-    color: #b34a00;
-    font-size: 0.85rem;
-    line-height: 1;
-    flex: 0 0 auto;
-  }
-  /* One box per source in group.sources order. Variant (amber) only
-     applies in grouped mode. Capped to ~6 wrap-rows so registers with
-     hundreds of sources can't balloon a single table row vertically;
-     the aria-label carries exact counts for assistive tech. The flex
-     container stays inside the <td> — display: flex on the cell itself
-     would break the CSS table layout. */
-  .coverage-cell {
-    /* Lift baseline so the first wrap-row aligns with the type pill,
-       which sits slightly higher than a 10px box. */
-    padding-top: 0.45rem;
-  }
-  .coverage-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2px;
-    max-height: 4.5rem;
-    overflow: hidden;
-  }
-  .coverage-box {
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    box-sizing: border-box;
-    border: 1px solid transparent;
-    flex: 0 0 auto;
-  }
-  .coverage-present {
-    background: #b8e0c2;
-    border-color: #5ca06f;
-  }
-  .coverage-variant {
-    /* Source carries the column but classified to a different type
-       variant in this register — neither "present in this row" nor
-       "missing entirely". Amber sits in between visually. */
-    background: #f5d99b;
-    border-color: #c08a30;
-  }
-  .coverage-missing {
-    background: #f0c2c2;
-    border-color: #b85050;
-  }
-  .coverage-self {
-    /* High-contrast so the row's own source pops while scanning. */
-    background: #4ca866;
-    border-color: #1a661a;
   }
   .link {
     background: transparent;
