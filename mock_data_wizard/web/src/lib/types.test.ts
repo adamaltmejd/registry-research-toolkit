@@ -41,7 +41,11 @@ describe("StateSnapshot wire format", () => {
   test("invalid column type fails the guard", () => {
     const raw = readFileSync(GOLDEN_PATH, "utf-8");
     const parsed = JSON.parse(raw);
-    parsed.groups[0].columns_by_source.lisa_2018[0].current_type = "bogus";
+    const g = parsed.groups.find(
+      (g: { columns_by_source: Record<string, unknown> }) =>
+        "lisa_2018" in g.columns_by_source,
+    );
+    g.columns_by_source.lisa_2018[0].current_type = "bogus";
     expect(isStateSnapshot(parsed)).toBe(false);
   });
 
