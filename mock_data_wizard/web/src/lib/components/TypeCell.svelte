@@ -1,0 +1,193 @@
+<script lang="ts">
+  import { TYPE_LABEL_SHORT, type ColumnInfo } from "../types";
+
+  interface Props {
+    column: ColumnInfo;
+    hint: string;
+    pillTitle: string;
+    /** Apply the `prov-{provenance}` class on the pill. False in grouped
+     * mode — the row aggregates multiple sources, so a single-cell
+     * provenance indicator would be misleading; the manual-count badge
+     * carries the same info there. True in per-source mode. */
+    showProvIndicator: boolean;
+    regmeta: string;
+    regmetaTitle: string;
+    mismatch: boolean;
+    unmatched: boolean;
+    /** 0 hides the badge; only used by grouped mode. */
+    manualCount: number;
+    onEditType: () => void;
+    onShowValueCodes: () => void;
+  }
+
+  let {
+    column,
+    hint,
+    pillTitle,
+    showProvIndicator,
+    regmeta,
+    regmetaTitle,
+    mismatch,
+    unmatched,
+    manualCount,
+    onEditType,
+    onShowValueCodes,
+  }: Props = $props();
+
+  function handlePillClick(e: MouseEvent): void {
+    e.stopPropagation();
+    onEditType();
+  }
+  function handleRegmetaClick(e: MouseEvent): void {
+    e.stopPropagation();
+    onShowValueCodes();
+  }
+</script>
+
+<td class="type-cell">
+  <div class="type-cell-inner">
+    <button
+      class="type-pill type-{column.current_type}"
+      class:prov-manual={showProvIndicator && column.provenance === "manual"}
+      title={pillTitle}
+      onclick={handlePillClick}
+    >
+      <span class="type-name">{TYPE_LABEL_SHORT[column.current_type]}</span>
+      {#if hint}
+        <span class="type-suffix">· {hint}</span>
+      {/if}
+    </button>
+    {#if regmeta}
+      <button
+        type="button"
+        class="regmeta-tag"
+        title={`${regmetaTitle} — click to load value codes`}
+        onclick={handleRegmetaClick}>{regmeta}</button
+      >
+    {/if}
+    {#if manualCount > 0}
+      <span class="manual-badge" title="manual overrides in this partition"
+        >★{manualCount}</span
+      >
+    {/if}
+    {#if mismatch}
+      <span
+        class="mismatch-marker"
+        title={`regmeta implies '${column.regmeta_implied_type}' — current is '${column.current_type}'`}
+        aria-label="regmeta type mismatch">⚠</span
+      >
+    {:else if unmatched}
+      <span
+        class="unmatched-marker"
+        title="categorical without regmeta classification or value codes"
+        aria-label="unmatched categorical">●</span
+      >
+    {/if}
+  </div>
+</td>
+
+<style>
+  .type-cell {
+    padding: 0.3rem 0.4rem;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  /* Flex on the inner div — NOT on the td. `display: flex` on a <td>
+     breaks the cell out of CSS table layout, so the row no longer keeps
+     sibling cells at a shared height (visible as misaligned row borders
+     when Coverage forces the row taller). */
+  .type-cell-inner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    align-items: center;
+  }
+  .type-pill {
+    background: #eef2fb;
+    color: #1a3b80;
+    border: 1px solid #c8d3ec;
+    border-radius: 3px;
+    padding: 0.1rem 0.5rem;
+    cursor: pointer;
+    font: inherit;
+    font-family: ui-monospace, monospace;
+    white-space: nowrap;
+    flex: 0 0 auto;
+  }
+  .type-pill:hover {
+    background: #e0e7f7;
+  }
+  .type-pill.prov-manual {
+    border-left: 3px solid #b34a00;
+    padding-left: calc(0.5rem - 2px);
+  }
+  .type-id {
+    background: #e8f1fa;
+    color: #114a85;
+  }
+  .type-categorical {
+    background: #efe8fa;
+    color: #5d2b8c;
+  }
+  .type-numeric {
+    background: #e8f6ec;
+    color: #185a2b;
+  }
+  .type-date {
+    background: #faefe0;
+    color: #7c4400;
+  }
+  .type-opaque {
+    background: #f4f0e8;
+    color: #5a523f;
+    border-color: #d8d0bf;
+  }
+  .type-suffix {
+    margin-left: 0.15rem;
+    opacity: 0.65;
+    font-size: 0.85em;
+  }
+  /* Regmeta evidence as a sibling tag rather than a pill suffix:
+     classification short-name ("LKF2012") or "vc" for value codes,
+     full text in the tooltip. Keeping it outside the pill lets the
+     pill stay readable even when the cell is narrow. */
+  .regmeta-tag {
+    padding: 0.05rem 0.35rem;
+    border: 1px solid transparent;
+    border-radius: 3px;
+    background: #f0e8fa;
+    color: #5d2b8c;
+    font-size: 0.78em;
+    font-family: ui-monospace, monospace;
+    cursor: pointer;
+    flex: 0 0 auto;
+    line-height: 1.3;
+  }
+  .regmeta-tag:hover {
+    background: #e3d4f4;
+    border-color: #c8b1e2;
+  }
+  .regmeta-tag:focus-visible {
+    outline: 2px solid #5d2b8c;
+    outline-offset: 1px;
+  }
+  .manual-badge {
+    color: #b34a00;
+    font-size: 0.8em;
+    font-family: system-ui, sans-serif;
+    flex: 0 0 auto;
+  }
+  .unmatched-marker {
+    color: #b34a00;
+    opacity: 0.55;
+    font-size: 0.7rem;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+  .mismatch-marker {
+    color: #b34a00;
+    font-size: 0.85rem;
+    line-height: 1;
+    flex: 0 0 auto;
+  }
+</style>
