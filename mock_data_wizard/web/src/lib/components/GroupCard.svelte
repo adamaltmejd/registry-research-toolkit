@@ -523,7 +523,7 @@
                 column={p.sample}
                 {hint}
                 {pillTitle}
-                showProvIndicator={false}
+                showManualOverrideBorder={false}
                 {regmeta}
                 {regmetaTitle}
                 manualCount={p.manual_count}
@@ -646,7 +646,7 @@
                     column={col}
                     {hint}
                     {pillTitle}
-                    showProvIndicator={true}
+                    showManualOverrideBorder={true}
                     {regmeta}
                     {regmetaTitle}
                     onEditType={() => openEditorForCell(sourceName, col)}

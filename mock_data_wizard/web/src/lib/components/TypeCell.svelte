@@ -9,11 +9,12 @@
     column: ColumnInfo;
     hint: string;
     pillTitle: string;
-    /** Apply the `prov-{provenance}` class on the pill. False in grouped
-     * mode — the row aggregates multiple sources, so a single-cell
-     * provenance indicator would be misleading; the manual-count badge
-     * carries the same info there. True in per-source mode. */
-    showProvIndicator: boolean;
+    /** Apply the `prov-manual` left-border on the pill when this column
+     * is a manual override. False in grouped mode — the row aggregates
+     * multiple sources, so a single-cell indicator would be misleading;
+     * the manual-count badge carries the same info there. True in
+     * per-source mode. (Other provenance values have no styling.) */
+    showManualOverrideBorder: boolean;
     regmeta: string;
     regmetaTitle: string;
     /** 0 hides the badge; only meaningful in grouped mode. */
@@ -26,7 +27,7 @@
     column,
     hint,
     pillTitle,
-    showProvIndicator,
+    showManualOverrideBorder,
     regmeta,
     regmetaTitle,
     manualCount = 0,
@@ -51,7 +52,7 @@
   <div class="type-cell-inner">
     <button
       class="type-pill type-{column.current_type}"
-      class:prov-manual={showProvIndicator && column.provenance === "manual"}
+      class:prov-manual={showManualOverrideBorder && column.provenance === "manual"}
       title={pillTitle}
       onclick={handlePillClick}
     >
