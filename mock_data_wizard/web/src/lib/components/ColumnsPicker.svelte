@@ -57,15 +57,15 @@
     class="trigger"
     aria-expanded={open}
     onclick={toggleOpen}
-    title="Choose which columns to display"
+    title="Choose which fields to display in the per-group table"
   >
-    Columns
+    Fields
     <span class="count">{visibleCount + 1}/{COLUMNS.length + 1}</span>
     <span class="caret" aria-hidden="true">▾</span>
   </button>
   {#if open}
     <div class="popover">
-      <p class="hint">Column “Name” is always shown.</p>
+      <p class="hint">Variable “Name” is always shown.</p>
       <ul>
         {#each COLUMNS as col (col.id)}
           <li>

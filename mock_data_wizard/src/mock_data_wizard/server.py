@@ -215,6 +215,11 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
             config, body
         ),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
+        ("POST", "/api/column-values"): lambda body: _api_get_column_values(
+            config, body
+        ),
+        ("POST", "/api/panel"): lambda body: _api_put_panel(config, body),
+        ("POST", "/api/remove-panel"): lambda body: _api_remove_panel(config, body),
     }
     # Paths that exist for at least one method — used to distinguish
     # 405 (path exists, wrong verb) from 404 (path does not exist).
@@ -605,6 +610,100 @@ def _api_list_registers(config: ServerConfig) -> tuple[int, dict[str, Any]]:
     registers = editor.list_registers(db_path=config.db_path)
     return HTTPStatus.OK, {
         "registers": [{"id": r.id, "name": r.name} for r in registers]
+    }
+
+
+def _api_put_panel(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Add or replace one panel, identified by ``panel_id``.
+
+    Member shape mirrors the on-disk JSON: ``{source, period?, time_key?}``,
+    with exactly one of ``period`` / ``time_key`` per member.
+    """
+    panel_id = _required_str(body, "panel_id")
+    panel_key = _required_str(body, "panel_key")
+    expected_version = _required_str(body, "expected_version")
+    raw_members = body.get("members")
+    if not isinstance(raw_members, list) or not raw_members:
+        raise editor.ValidationError("members must be a non-empty array")
+    members: list[editor.PanelMember] = []
+    for i, m in enumerate(raw_members):
+        if not isinstance(m, dict):
+            raise editor.ValidationError(
+                f"members[{i}] must be an object, got {type(m).__name__}"
+            )
+        source = m.get("source")
+        if not isinstance(source, str) or not source:
+            raise editor.ValidationError(
+                f"members[{i}].source must be a non-empty string"
+            )
+        period = m.get("period")
+        time_key = m.get("time_key")
+        if (period is None) == (time_key is None):
+            raise editor.ValidationError(
+                f"members[{i}]: exactly one of 'period' or 'time_key' must be set"
+            )
+        if period is not None and (
+            not isinstance(period, int) or isinstance(period, bool)
+        ):
+            raise editor.ValidationError(f"members[{i}].period must be an integer")
+        if time_key is not None and (not isinstance(time_key, str) or not time_key):
+            raise editor.ValidationError(
+                f"members[{i}].time_key must be a non-empty string"
+            )
+        members.append(
+            editor.PanelMember(source=source, period=period, time_key=time_key)
+        )
+    panel = editor.Panel(panel_id=panel_id, panel_key=panel_key, members=tuple(members))
+    snap = editor.put_panel(
+        config.project_dir,
+        panel,
+        expected_version=expected_version,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_remove_panel(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    panel_id = _required_str(body, "panel_id")
+    expected_version = _required_str(body, "expected_version")
+    snap = editor.remove_panel(
+        config.project_dir,
+        panel_id,
+        expected_version=expected_version,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_get_column_values(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Return value codes for one (register, column) pair.
+
+    ``register`` is optional (JSON null is allowed) so the UI can ask
+    about an unassigned column too — the server returns ``kind="none"``
+    when there's nothing to look up. ``column`` is required.
+    """
+    column = _required_str(body, "column")
+    if "register" not in body:
+        raise editor.ValidationError(
+            "missing required field 'register' (use null when unassigned)"
+        )
+    register_value = body["register"]
+    if register_value is not None and not isinstance(register_value, str):
+        raise editor.ValidationError(
+            f"register must be a string or null, got {type(register_value).__name__}"
+        )
+    result = editor.get_column_values(register_value, column, db_path=config.db_path)
+    return HTTPStatus.OK, {
+        "kind": result.kind,
+        "title": result.title,
+        "description": result.description,
+        "codes": [{"code": c.code, "label": c.label} for c in result.codes],
     }
 
 

@@ -1531,6 +1531,155 @@ def remove_panel(
     return get_state(project_dir, db_path=db_path)
 
 
+# -- Public API: read-only regmeta lookups -------------------------------
+
+
+@dataclass(frozen=True)
+class ColumnValue:
+    """One code/label pair, used by ``get_column_values`` results."""
+
+    code: str
+    label: str | None
+
+
+@dataclass(frozen=True)
+class ColumnValuesResult:
+    """Year-correct value codes for one (register, column) pair.
+
+    ``kind`` distinguishes the source the codes came from:
+      - ``"classification"``: full code list of a SCB classification (e.g.
+        SUN2020). Same codes regardless of register; the chosen register
+        only narrows down which classification this column maps to.
+      - ``"values"``: per-instance value-set codes aggregated across
+        ``variable_instance`` rows for this register. Used when no
+        classification is attached (register-local code lists like
+        ``ALKod`` / ``Kon``).
+      - ``"none"``: regmeta knows the column but has no codes — the
+        caller usually shows "no value codes available".
+
+    ``title`` is short user-facing text (classification short_name or
+    variable name); ``description`` is optional long text shown below.
+    """
+
+    kind: Literal["classification", "values", "none"]
+    title: str
+    description: str | None
+    codes: tuple[ColumnValue, ...]
+
+
+def get_column_values(
+    register: str | None,
+    column: str,
+    *,
+    db_path: Path | None = None,
+) -> ColumnValuesResult:
+    """Resolve value codes for one column under one register.
+
+    Strategy: classification beats per-instance codes when both are
+    available — the classification carries the canonical list (often with
+    hierarchy levels) while per-instance codes can be a register-local
+    subset. Falls back to per-instance value codes when no classification
+    is attached, and to ``kind="none"`` when regmeta has no codes either.
+
+    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    the register doesn't resolve, or the column is unknown — the UI
+    surfaces an empty popover rather than an error envelope, matching
+    the "regmeta degrades gracefully" stance elsewhere in the editor.
+    """
+    import sqlite3
+
+    if not column or not column.strip():
+        raise ValidationError("column must be a non-empty string")
+
+    try:
+        from regmeta import open_db, resolve_register_ids
+        from regmeta.db import db_path_from_args
+        from regmeta.errors import RegmetaError
+        from regmeta.queries import get_classification_codes
+    except ImportError:
+        return ColumnValuesResult(kind="none", title=column, description=None, codes=())
+
+    try:
+        resolved_db = db_path_from_args(str(db_path) if db_path else None)
+        conn = open_db(resolved_db)
+    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
+        return ColumnValuesResult(kind="none", title=column, description=None, codes=())
+
+    try:
+        register_ids: list[int] = []
+        if register is not None and register.strip():
+            try:
+                register_ids = resolve_register_ids(conn, register)
+            except RegmetaError:
+                register_ids = []
+        signals = _regmeta_lookup(conn, {column}, register_ids) if register_ids else {}
+        signal = lookup_with_prefix_fallback(signals, column)
+
+        # Classification path: when a short_name is attached, fetch the
+        # canonical code list. ``get_classification_codes`` raises on
+        # not_found; fall through to the per-instance path below in that
+        # case so a stale classification name doesn't blank the popover.
+        if signal is not None and signal.classification_short_name:
+            try:
+                meta = get_classification_codes(conn, signal.classification_short_name)
+            except RegmetaError:
+                meta = None
+            if meta is not None:
+                codes = tuple(
+                    ColumnValue(
+                        code=str(c.get("vardekod")),
+                        label=c.get("vardebenamning"),
+                    )
+                    for c in meta.get("codes", [])
+                )
+                if codes:
+                    title = meta.get("short_name") or signal.classification_short_name
+                    description = meta.get("description") or meta.get("name")
+                    return ColumnValuesResult(
+                        kind="classification",
+                        title=title,
+                        description=description,
+                        codes=codes,
+                    )
+
+        # Per-instance values path: aggregate codes across variable
+        # instances for this register. SCB occasionally widens or
+        # narrows the code set across years; deduping by `vardekod`
+        # surfaces a clean union without losing the per-year history
+        # (the user can still hit `regmeta get values` for that).
+        if signal is not None and signal.has_value_codes and register_ids:
+            ph = ",".join("?" for _ in register_ids)
+            rows = conn.execute(
+                "SELECT DISTINCT vc.vardekod, vc.vardebenamning "
+                "FROM variable_alias va "
+                "JOIN variable_instance vi ON va.cvid = vi.cvid "
+                "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+                "JOIN value_code vc ON vsm.code_id = vc.code_id "
+                f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
+                f"  AND vi.register_id IN ({ph}) "
+                "ORDER BY vc.vardekod",
+                [column, *register_ids],
+            ).fetchall()
+            codes = tuple(
+                ColumnValue(code=str(r["vardekod"]), label=r["vardebenamning"])
+                for r in rows
+            )
+            if codes:
+                return ColumnValuesResult(
+                    kind="values",
+                    title=column,
+                    description=None,
+                    codes=codes,
+                )
+
+        return ColumnValuesResult(kind="none", title=column, description=None, codes=())
+    finally:
+        conn.close()
+
+
+__all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]
+
+
 def _panel_to_dict(panel: Panel) -> dict[str, Any]:
     members: list[dict[str, Any]] = []
     for m in panel.members:

@@ -10,6 +10,19 @@
  */
 
 export type ColumnType = "id" | "categorical" | "numeric" | "opaque" | "date";
+
+/** Compact display labels for the five column types. The full names are
+ * reserved for explanatory contexts (radio labels in the type editor,
+ * tooltips); table pills and filter chips read the short form so a long
+ * "categorical" doesn't dominate the row at the expense of the variable
+ * name itself. */
+export const TYPE_LABEL_SHORT: Record<ColumnType, string> = {
+  id: "id",
+  categorical: "cat",
+  numeric: "num",
+  opaque: "opaque",
+  date: "date",
+};
 export type IdSubtype = "integer" | "string";
 export type NumericSubtype = "integer" | "double";
 export type Confidence = "high" | "partial" | "none";

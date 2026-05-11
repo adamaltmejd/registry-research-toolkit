@@ -4,6 +4,7 @@
     store,
     type ConcernFilter,
   } from "../store.svelte";
+  import { TYPE_LABEL_SHORT } from "../types";
   import type { ColumnInfo, ColumnType, StateSnapshot } from "../types";
   import ColumnsPicker from "./ColumnsPicker.svelte";
 
@@ -69,15 +70,15 @@
   });
 </script>
 
-<section class="filter-bar" aria-label="Column filters">
+<section class="filter-bar" aria-label="Variable filters">
   <div class="row">
     <input
       type="search"
-      placeholder="Search column name…"
+      placeholder="Search variable name…"
       value={store.filterQuery}
       oninput={(e) =>
         store.setFilterQuery((e.target as HTMLInputElement).value)}
-      aria-label="Search column name"
+      aria-label="Search variable name"
     />
     {#if store.hasActiveFilters()}
       <button
@@ -103,9 +104,9 @@
         class:empty={n === 0}
         onclick={() => store.toggleFilterType(t)}
         disabled={n === 0 && store.filterType !== t}
-        title={`Show only ${t} columns (${n})`}
+        title={`Show only ${t} variables (${n})`}
       >
-        {t}
+        {TYPE_LABEL_SHORT[t]}
         <span class="count">{n}</span>
       </button>
     {/each}
