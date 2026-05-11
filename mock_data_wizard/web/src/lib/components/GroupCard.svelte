@@ -483,7 +483,6 @@
           {@const hint = hintSuffix(p.sample)}
           {@const regmeta = regmetaBadge(p.sample)}
           {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
-          {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
           {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
           <tr
@@ -527,8 +526,6 @@
                 showProvIndicator={false}
                 {regmeta}
                 {regmetaTitle}
-                {mismatch}
-                unmatched={isUnmatchedCategorical(p.sample)}
                 manualCount={p.manual_count}
                 onEditType={() => openEditorForPartition(p)}
                 onShowValueCodes={() => (viewingValuesFor = p.name)}
@@ -626,7 +623,6 @@
               {@const hint = hintSuffix(col)}
               {@const regmeta = regmetaBadge(col)}
               {@const regmetaTitle = regmetaBadgeTitle(col)}
-              {@const mismatch = isRegmetaMismatch(col)}
               {@const provLabel =
                 col.provenance === "manual"
                   ? "manual override"
@@ -653,9 +649,6 @@
                     showProvIndicator={true}
                     {regmeta}
                     {regmetaTitle}
-                    {mismatch}
-                    unmatched={isUnmatchedCategorical(col)}
-                    manualCount={0}
                     onEditType={() => openEditorForCell(sourceName, col)}
                     onShowValueCodes={() => (viewingValuesFor = col.name)}
                   />

@@ -1,4 +1,8 @@
 <script lang="ts">
+  import {
+    columnIsMismatch,
+    columnIsUnmatchedCategorical,
+  } from "../store.svelte";
   import { TYPE_LABEL_SHORT, type ColumnInfo } from "../types";
 
   interface Props {
@@ -12,10 +16,8 @@
     showProvIndicator: boolean;
     regmeta: string;
     regmetaTitle: string;
-    mismatch: boolean;
-    unmatched: boolean;
-    /** 0 hides the badge; only used by grouped mode. */
-    manualCount: number;
+    /** 0 hides the badge; only meaningful in grouped mode. */
+    manualCount?: number;
     onEditType: () => void;
     onShowValueCodes: () => void;
   }
@@ -27,12 +29,13 @@
     showProvIndicator,
     regmeta,
     regmetaTitle,
-    mismatch,
-    unmatched,
-    manualCount,
+    manualCount = 0,
     onEditType,
     onShowValueCodes,
   }: Props = $props();
+
+  let mismatch = $derived(columnIsMismatch(column));
+  let unmatched = $derived(columnIsUnmatchedCategorical(column));
 
   function handlePillClick(e: MouseEvent): void {
     e.stopPropagation();
