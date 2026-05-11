@@ -464,8 +464,11 @@ mutator:
 `confidence` (`"high"` / `"partial"` / `"none"`), `sources`,
 `columns_by_source` (mapping to tuples of `ColumnInfo`),
 `schema_variants` (count of distinct column schemas in the group;
-`>1` means drift), and `panel_candidate` (a `PanelCandidate` from
-`panels.py` or `None`).
+`>1` means drift), `panel_candidate` (a `PanelCandidate` from
+`panels.py` or `None`), and `member_hints` (per-source
+`PanelMemberHints` seeds — `year_from_name` and `time_key_column` —
+used by the manual panel editor so the client doesn't reimplement
+date-token / time-key-column detection).
 
 `ColumnInfo` exposes `name`, `sql_type`, `current_type`, `hint`
 (inline `id_subtype` / `numeric_subtype` / `date_format` projected

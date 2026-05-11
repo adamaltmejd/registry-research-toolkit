@@ -25,7 +25,7 @@ from .editor import (
     RegisterGroupView,
     StateSnapshot,
 )
-from .panels import PanelCandidate
+from .panels import PanelCandidate, PanelMemberHints
 
 __all__ = ["state_snapshot_to_dict"]
 
@@ -94,6 +94,16 @@ def _register_group_view_to_dict(group: RegisterGroupView) -> dict[str, Any]:
             if group.panel_candidate is not None
             else None
         ),
+        "member_hints": {
+            sn: _panel_member_hints_to_dict(h) for sn, h in group.member_hints.items()
+        },
+    }
+
+
+def _panel_member_hints_to_dict(hints: PanelMemberHints) -> dict[str, Any]:
+    return {
+        "year_from_name": hints.year_from_name,
+        "time_key_column": hints.time_key_column,
     }
 
 

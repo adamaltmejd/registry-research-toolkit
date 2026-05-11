@@ -83,6 +83,18 @@ export interface PanelCandidate {
   suggested_entity_key: string | null;
 }
 
+/** Per-source seeds for the manual panel editor. Both signals are
+ * computed server-side and shipped independently so the editor doesn't
+ * reimplement date-token / time-key-column detection. */
+export interface PanelMemberHints {
+  /** Date-token year (or `year*100+month` when a month is present),
+   *  derived from the source name. Null when no date token matches. */
+  year_from_name: number | null;
+  /** First column on the source whose name matches a recognised
+   *  time-key (AR / INDATUM / year / period, case-insensitive). */
+  time_key_column: string | null;
+}
+
 export interface RegisterGroupView {
   group_id: string;
   register_id: number | null;
@@ -92,6 +104,7 @@ export interface RegisterGroupView {
   columns_by_source: Record<string, ColumnInfo[]>;
   schema_variants: number;
   panel_candidate: PanelCandidate | null;
+  member_hints: Record<string, PanelMemberHints>;
 }
 
 export interface MDWConfig {
@@ -267,6 +280,11 @@ function isPanelCandidate(x: unknown): x is PanelCandidate {
   );
 }
 
+function isPanelMemberHints(x: unknown): x is PanelMemberHints {
+  if (!isObject(x)) return false;
+  return isNumberOrNull(x.year_from_name) && isStringOrNull(x.time_key_column);
+}
+
 function isRegisterGroupView(x: unknown): x is RegisterGroupView {
   if (!isObject(x)) return false;
   if (typeof x.group_id !== "string") return false;
@@ -283,6 +301,10 @@ function isRegisterGroupView(x: unknown): x is RegisterGroupView {
   if (typeof x.schema_variants !== "number") return false;
   if (x.panel_candidate !== null && !isPanelCandidate(x.panel_candidate))
     return false;
+  if (!isObject(x.member_hints)) return false;
+  for (const h of Object.values(x.member_hints)) {
+    if (!isPanelMemberHints(h)) return false;
+  }
   return true;
 }
 

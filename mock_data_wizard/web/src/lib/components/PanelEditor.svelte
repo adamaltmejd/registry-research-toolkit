@@ -1,11 +1,6 @@
 <script lang="ts">
   import { store } from "../store.svelte";
-  import type {
-    ColumnInfo,
-    Panel,
-    PanelMember,
-    RegisterGroupView,
-  } from "../types";
+  import type { Panel, PanelMember, RegisterGroupView } from "../types";
   import Modal from "./Modal.svelte";
 
   interface Props {
@@ -37,22 +32,6 @@
     columnValue: string;
   }
 
-  // Mirrors panels._YEAR_RE / panels._TIME_KEY_NAMES — keep in sync.
-  const YEAR_RE = /\d{4}/;
-  const TIME_KEY_NAMES = new Set(["ar", "indatum", "year", "period"]);
-
-  function detectYearInName(name: string): number | null {
-    const m = name.match(YEAR_RE);
-    return m ? parseInt(m[0], 10) : null;
-  }
-
-  function detectTimeKeyColumn(columns: readonly ColumnInfo[]): string | null {
-    for (const c of columns) {
-      if (TIME_KEY_NAMES.has(c.name.toLowerCase())) return c.name;
-    }
-    return null;
-  }
-
   let allSources: readonly string[] = $derived(group.sources);
 
   function buildDraft(): Record<string, MemberDraft> {
@@ -70,10 +49,13 @@
 
     const out: Record<string, MemberDraft> = {};
     for (const sn of allSources) {
-      const cols = group.columns_by_source[sn] ?? [];
       const seededKey = seeded.get(sn);
-      const yearFromName = detectYearInName(sn);
-      const detectedColumn = detectTimeKeyColumn(cols);
+      // Server-computed hints (panels.detect_panel_member_hints). Both
+      // signals are independent — file/column precedence is the
+      // editor's call to make.
+      const hints = group.member_hints[sn];
+      const yearFromName = hints?.year_from_name ?? null;
+      const detectedColumn = hints?.time_key_column ?? null;
 
       let mode: TimeKeyMode;
       let nameValue: string;

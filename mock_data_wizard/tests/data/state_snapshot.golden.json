@@ -168,6 +168,16 @@
         ],
         "suggested_panel_id": "lisa",
         "suggested_entity_key": "LopNr"
+      },
+      "member_hints": {
+        "lisa_2018": {
+          "year_from_name": 2018,
+          "time_key_column": null
+        },
+        "lisa_2019": {
+          "year_from_name": 2019,
+          "time_key_column": null
+        }
       }
     },
     {
@@ -192,7 +202,13 @@
         ]
       },
       "schema_variants": 1,
-      "panel_candidate": null
+      "panel_candidate": null,
+      "member_hints": {
+        "extras": {
+          "year_from_name": null,
+          "time_key_column": null
+        }
+      }
     }
   ],
   "discover": {

@@ -61,8 +61,10 @@ from .config import (
     parse_config,
 )
 from .panels import (
+    PanelMemberHints,
     PanelMemberSuggestion,
     detect_panel_candidate,
+    detect_panel_member_hints,
     detect_panel_member_kind,
     detect_year_from_source_name,
 )
@@ -88,12 +90,14 @@ __all__ = [
     "EditorWarning",
     "Panel",
     "PanelMember",
+    "PanelMemberHints",
     "PanelMemberSuggestion",
     "Register",
     # Helpers
     "list_registers",
     "resolve_register",
     "detect_year_from_source_name",
+    "detect_panel_member_hints",
     "detect_panel_member_kind",
     # Errors
     "NotInitializedError",
@@ -212,6 +216,12 @@ class RegisterGroupView:
     columns_by_source: dict[str, tuple[ColumnInfo, ...]]
     schema_variants: int
     panel_candidate: Any  # PanelCandidate | None — looser to avoid cycle
+    # Per-source seeds for the manual panel editor. Computed server-side
+    # via ``detect_panel_member_hints`` so the client doesn't reimplement
+    # date-token / time-key-column detection (the previous client code
+    # used a naïve ``\d{4}`` regex that missed HT/VT/Q tags and embedded
+    # YYYYMM tokens).
+    member_hints: dict[str, PanelMemberHints]
 
 
 @dataclass(frozen=True)
@@ -669,6 +679,7 @@ def _build_groups(
                 columns_by_source=columns_by_source,
                 schema_variants=_schema_variants(columns_by_source),
                 panel_candidate=cand,
+                member_hints=_member_hints_for(columns_by_source),
             )
         )
 
@@ -691,10 +702,21 @@ def _build_groups(
                 columns_by_source=columns_by_source,
                 schema_variants=_schema_variants(columns_by_source),
                 panel_candidate=cand,
+                member_hints=_member_hints_for(columns_by_source),
             )
         )
 
     return tuple(groups)
+
+
+def _member_hints_for(
+    columns_by_source: dict[str, tuple[ColumnInfo, ...]],
+) -> dict[str, PanelMemberHints]:
+    """Per-source seeds for the manual panel editor."""
+    return {
+        sn: detect_panel_member_hints(sn, tuple(c.name for c in cols))
+        for sn, cols in columns_by_source.items()
+    }
 
 
 def _hint_dict_for(override: ColumnTypeOverride) -> dict[str, Any] | None:

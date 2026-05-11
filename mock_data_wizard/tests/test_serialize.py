@@ -49,7 +49,7 @@ from mock_data_wizard.editor import (
     RegisterGroupView,
     StateSnapshot,
 )
-from mock_data_wizard.panels import PanelCandidate
+from mock_data_wizard.panels import PanelCandidate, PanelMemberHints
 
 
 GOLDEN_PATH = Path(__file__).parent / "data" / "state_snapshot.golden.json"
@@ -249,11 +249,17 @@ def test_register_group_view_to_dict_with_panel_candidate():
             suggested_panel_id="lisa",
             suggested_entity_key="LopNr",
         ),
+        member_hints={
+            "lisa_2018": PanelMemberHints(year_from_name=2018, time_key_column=None),
+        },
     )
     out = _register_group_view_to_dict(g)
     assert out["sources"] == ["lisa_2018"]
     assert out["columns_by_source"]["lisa_2018"][0]["name"] == "LopNr"
     assert out["panel_candidate"]["suggested_panel_id"] == "lisa"
+    assert out["member_hints"] == {
+        "lisa_2018": {"year_from_name": 2018, "time_key_column": None}
+    }
 
 
 def test_register_group_view_to_dict_without_panel_candidate():
@@ -266,8 +272,15 @@ def test_register_group_view_to_dict_without_panel_candidate():
         columns_by_source={"x": ()},
         schema_variants=1,
         panel_candidate=None,
+        member_hints={
+            "x": PanelMemberHints(year_from_name=None, time_key_column=None),
+        },
     )
-    assert _register_group_view_to_dict(g)["panel_candidate"] is None
+    out = _register_group_view_to_dict(g)
+    assert out["panel_candidate"] is None
+    assert out["member_hints"] == {
+        "x": {"year_from_name": None, "time_key_column": None}
+    }
 
 
 def test_mdw_config_to_dict_minimum():

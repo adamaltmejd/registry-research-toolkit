@@ -308,6 +308,48 @@ def _find_time_key_in_source(columns: list[dict]) -> str | None:
 
 # -- Per-source panel-member suggestion -----------------------------------
 
+
+@dataclass(frozen=True, slots=True)
+class PanelMemberHints:
+    """Independent per-source seeds used by the manual panel editor.
+
+    Unlike ``PanelMemberSuggestion`` (which picks one shape, file beats
+    column), both hints are reported so the editor can pre-fill the
+    "other mode" field as a convenience when the user switches modes.
+
+    The editor was previously reimplementing this detection client-side
+    against a naïve ``\\d{4}`` regex — wrong for HT/VT/Q tags and
+    embedded ``YYYYMM`` tokens. Shipping the hints from the server
+    eliminates the duplication and the divergence.
+    """
+
+    year_from_name: int | None
+    time_key_column: str | None
+
+
+def detect_panel_member_hints(
+    source_name: str, columns: tuple[str, ...]
+) -> PanelMemberHints:
+    """Return the per-source seeds for the manual panel editor.
+
+    ``year_from_name`` is the date-token year (or ``year*100+month``
+    when a month is present) extracted by ``_match_date_token``.
+    ``time_key_column`` is the first recognised time-key column name.
+    Both signals are computed independently; the editor decides which
+    to surface.
+    """
+    token = _match_date_token(source_name)
+    if token is not None:
+        month = _resolve_period_month(token)
+        year_from_name = token.year * 100 + month if month is not None else token.year
+    else:
+        year_from_name = None
+    time_key_column = _find_time_key_in_source([{"name": c} for c in columns])
+    return PanelMemberHints(
+        year_from_name=year_from_name, time_key_column=time_key_column
+    )
+
+
 PanelMemberKind = Literal["file", "column"]
 
 
