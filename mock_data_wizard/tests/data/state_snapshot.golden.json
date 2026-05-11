@@ -68,6 +68,36 @@
   },
   "groups": [
     {
+      "group_id": "noreg-extras",
+      "register_id": null,
+      "register_name": null,
+      "confidence": "none",
+      "sources": [
+        "extras"
+      ],
+      "columns_by_source": {
+        "extras": [
+          {
+            "name": "Mystery",
+            "sql_type": "VARCHAR",
+            "current_type": "opaque",
+            "hint": null,
+            "provenance": "auto",
+            "regmeta_signal": null,
+            "regmeta_implied_type": null
+          }
+        ]
+      },
+      "schema_variants": 1,
+      "panel_candidate": null,
+      "member_hints": {
+        "extras": {
+          "year_from_name": null,
+          "time_key_column": null
+        }
+      }
+    },
+    {
       "group_id": "reg-1",
       "register_id": 1,
       "register_name": "LISA",
@@ -184,36 +214,6 @@
         },
         "lisa_2019": {
           "year_from_name": 2019,
-          "time_key_column": null
-        }
-      }
-    },
-    {
-      "group_id": "noreg-extras",
-      "register_id": null,
-      "register_name": null,
-      "confidence": "none",
-      "sources": [
-        "extras"
-      ],
-      "columns_by_source": {
-        "extras": [
-          {
-            "name": "Mystery",
-            "sql_type": "VARCHAR",
-            "current_type": "opaque",
-            "hint": null,
-            "provenance": "auto",
-            "regmeta_signal": null,
-            "regmeta_implied_type": null
-          }
-        ]
-      },
-      "schema_variants": 1,
-      "panel_candidate": null,
-      "member_hints": {
-        "extras": {
-          "year_from_name": null,
           "time_key_column": null
         }
       }
