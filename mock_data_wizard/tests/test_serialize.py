@@ -30,8 +30,6 @@ from mock_data_wizard._serialize import (
     _editor_warning_to_dict,
     _mdw_config_to_dict,
     _panel_candidate_to_dict,
-    _panel_member_to_dict,
-    _panel_to_dict,
     _regmeta_signal_to_dict,
     _register_group_view_to_dict,
     state_snapshot_to_dict,
@@ -42,6 +40,8 @@ from mock_data_wizard.config import (
     MDWConfig,
     Panel,
     PanelMember,
+    panel_member_to_dict,
+    panel_to_dict,
 )
 from mock_data_wizard.editor import (
     ColumnInfo,
@@ -83,12 +83,12 @@ def test_column_type_override_date_format_round_trip():
 
 def test_panel_member_int_time_key():
     m = PanelMember(source="lisa_2018", time_key=2018)
-    assert _panel_member_to_dict(m) == {"source": "lisa_2018", "time_key": 2018}
+    assert panel_member_to_dict(m) == {"source": "lisa_2018", "time_key": 2018}
 
 
 def test_panel_member_string_time_key():
     m = PanelMember(source="par", time_key="INDATUM")
-    assert _panel_member_to_dict(m) == {"source": "par", "time_key": "INDATUM"}
+    assert panel_member_to_dict(m) == {"source": "par", "time_key": "INDATUM"}
 
 
 def test_panel_to_dict():
@@ -100,7 +100,7 @@ def test_panel_to_dict():
             PanelMember(source="lisa_2019", time_key=2019),
         ),
     )
-    assert _panel_to_dict(panel) == {
+    assert panel_to_dict(panel) == {
         "panel_id": "lisa",
         "entity_key": "P1105_LopNr_PersonNr",
         "members": [

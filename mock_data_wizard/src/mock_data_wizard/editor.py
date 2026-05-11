@@ -57,6 +57,7 @@ from .config import (
     _parse_options,
     _parse_panel,
     _reject_duplicate_keys,
+    panel_to_dict,
     parse_config,
 )
 from .panels import (
@@ -1504,7 +1505,7 @@ def put_panel(
         panels = payload.setdefault("panels", [])
         if previous_panel_id is not None and previous_panel_id != panel.panel_id:
             panels[:] = [p for p in panels if p.get("panel_id") != previous_panel_id]
-        serialized = _panel_to_dict(panel)
+        serialized = panel_to_dict(panel)
         replaced = False
         for i, existing in enumerate(panels):
             if existing.get("panel_id") == panel.panel_id:
@@ -1717,13 +1718,3 @@ def _dedupe_codes(
 
 
 __all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]
-
-
-def _panel_to_dict(panel: Panel) -> dict[str, Any]:
-    return {
-        "panel_id": panel.panel_id,
-        "entity_key": panel.entity_key,
-        "members": [
-            {"source": m.source, "time_key": m.time_key} for m in panel.members
-        ],
-    }

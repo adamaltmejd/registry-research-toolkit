@@ -20,6 +20,10 @@
   let { group, existing, onClose }: Props = $props();
 
   type TimeKeyMode = "name" | "column";
+  const MODE_OPTIONS: readonly { value: TimeKeyMode; label: string }[] = [
+    { value: "name", label: "From source name" },
+    { value: "column", label: "From column" },
+  ];
   interface MemberDraft {
     selected: boolean;
     /** "name" = literal int period from the source name. "column" = a
@@ -33,26 +37,21 @@
     columnValue: string;
   }
 
-  // -- Helpers (mirror panels.py's auto-detection) ---------------------
-
-  // Naive 4-digit year search. Matches `detect_year_from_source_name`
-  // on the Python side.
+  // Mirrors panels._YEAR_RE / panels._TIME_KEY_NAMES — keep in sync.
   const YEAR_RE = /\d{4}/;
+  const TIME_KEY_NAMES = new Set(["ar", "indatum", "year", "period"]);
+
   function detectYearInName(name: string): number | null {
     const m = name.match(YEAR_RE);
     return m ? parseInt(m[0], 10) : null;
   }
 
-  // Same lowercase set as panels._TIME_KEY_NAMES.
-  const TIME_KEY_NAMES = new Set(["ar", "indatum", "year", "period"]);
   function detectTimeKeyColumn(columns: readonly ColumnInfo[]): string | null {
     for (const c of columns) {
       if (TIME_KEY_NAMES.has(c.name.toLowerCase())) return c.name;
     }
     return null;
   }
-
-  // -- Initial draft from existing / candidate / auto-detect ----------
 
   let allSources: readonly string[] = $derived(group.sources);
 
@@ -97,15 +96,14 @@
         nameValue = "";
         columnValue = detectedColumn;
       } else {
-        // Nothing detected — leave both blank; user can pick a mode.
         mode = "name";
         nameValue = "";
         columnValue = "";
       }
 
-      // Pre-checked if seeded by existing/candidate. Otherwise pre-check
-      // whenever the auto-detector found a hint; sources with no signal
-      // are unchecked so the user has to opt them in explicitly.
+      // Seed-driven sources stay opt-in to the seed; for auto-detected
+      // sources, only those with a hint are pre-checked so the user has
+      // to opt unsignalled sources in explicitly.
       const selected =
         seeded.size > 0
           ? seeded.has(sn)
@@ -135,14 +133,11 @@
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
 
-  // -- Derived state --------------------------------------------------
-
   let selectedSources: string[] = $derived(
     allSources.filter((sn) => draft[sn]?.selected),
   );
 
-  // Columns common to every selected source — these are the valid
-  // entity_key candidates. Empty when nothing is selected.
+  // entity_key candidates = column names present on every selected source.
   let entityKeyOptions: string[] = $derived.by(() => {
     if (selectedSources.length === 0) return [];
     const sets = selectedSources.map(
@@ -157,7 +152,6 @@
     return [...intersection].sort();
   });
 
-  // Build the resolved member list, plus per-source validation messages.
   interface BuiltMember {
     source: string;
     member: PanelMember | null;
@@ -205,10 +199,6 @@
     });
   });
 
-  let memberErrors: string[] = $derived(
-    builtMembers.filter((b) => b.error !== null).map((b) => `${b.source}: ${b.error}`),
-  );
-
   // Reject duplicate integer time_keys across file-members (matches the
   // server's parse_panel check). Column time_keys can repeat — they
   // materialise at extract time.
@@ -246,7 +236,9 @@
       panelIdTrimmed.length === 0 ? "panel_id required" : null,
       entityKeyError,
       duplicateLiteralError,
-      ...memberErrors,
+      ...builtMembers
+        .filter((b) => b.error !== null)
+        .map((b) => `${b.source}: ${b.error}`),
     ].filter((m): m is string => m !== null),
   );
 
@@ -257,6 +249,7 @@
   }
 
   function setMode(sn: string, mode: TimeKeyMode): void {
+    if (draft[sn].mode === mode) return;
     draft[sn] = { ...draft[sn], mode };
     resetConfirm();
   }
@@ -321,9 +314,6 @@
     }
   }
 
-  // Single-source groups skip the source picker entirely — there's
-  // nothing to pick from. The lone source is always implicitly selected.
-  let isSingletonGroup = $derived(allSources.length === 1);
 </script>
 
 <Modal headingId="panel-editor-heading" {onClose}>
@@ -396,7 +386,7 @@
           {@const cols = group.columns_by_source[sn] ?? []}
           <li class:disabled={!d.selected}>
             <label class="source-row">
-              {#if !isSingletonGroup}
+              {#if allSources.length > 1}
                 <input
                   type="checkbox"
                   checked={d.selected}
@@ -408,26 +398,18 @@
             {#if d.selected}
               <div class="time-key-block">
                 <div class="mode-toggle" role="radiogroup" aria-label="time_key source">
-                  <label class:active={d.mode === "name"}>
-                    <input
-                      type="radio"
-                      name={`mode-${sn}`}
-                      value="name"
-                      checked={d.mode === "name"}
-                      onchange={() => setMode(sn, "name")}
-                    />
-                    From source name
-                  </label>
-                  <label class:active={d.mode === "column"}>
-                    <input
-                      type="radio"
-                      name={`mode-${sn}`}
-                      value="column"
-                      checked={d.mode === "column"}
-                      onchange={() => setMode(sn, "column")}
-                    />
-                    From column
-                  </label>
+                  {#each MODE_OPTIONS as opt (opt.value)}
+                    <label class:active={d.mode === opt.value}>
+                      <input
+                        type="radio"
+                        name={`mode-${sn}`}
+                        value={opt.value}
+                        checked={d.mode === opt.value}
+                        onchange={() => setMode(sn, opt.value)}
+                      />
+                      {opt.label}
+                    </label>
+                  {/each}
                 </div>
                 {#if d.mode === "name"}
                   <input

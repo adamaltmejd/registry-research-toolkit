@@ -138,6 +138,20 @@ class Panel:
     members: tuple[PanelMember, ...] = ()
 
 
+def panel_member_to_dict(member: PanelMember) -> dict[str, Any]:
+    """``time_key`` is polymorphic by JSON type: int for a literal
+    period (file-member), str for a column name (column-member)."""
+    return {"source": member.source, "time_key": member.time_key}
+
+
+def panel_to_dict(panel: Panel) -> dict[str, Any]:
+    return {
+        "panel_id": panel.panel_id,
+        "entity_key": panel.entity_key,
+        "members": [panel_member_to_dict(m) for m in panel.members],
+    }
+
+
 @dataclass(frozen=True)
 class MDWConfig:
     contract_version: str

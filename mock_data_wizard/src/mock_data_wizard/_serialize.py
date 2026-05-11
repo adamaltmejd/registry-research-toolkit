@@ -18,7 +18,7 @@ from __future__ import annotations
 from typing import Any
 
 from .classify import RegmetaSignal
-from .config import ColumnTypeOverride, MDWConfig, Panel, PanelMember
+from .config import ColumnTypeOverride, MDWConfig, panel_to_dict
 from .editor import (
     ColumnInfo,
     EditorWarning,
@@ -57,7 +57,7 @@ def _mdw_config_to_dict(config: MDWConfig) -> dict[str, Any]:
             for source, cols in config.column_options.items()
         },
         "sources": {name: dict(entry) for name, entry in config.sources.items()},
-        "panels": [_panel_to_dict(p) for p in config.panels],
+        "panels": [panel_to_dict(p) for p in config.panels],
         "manual_columns": [list(pair) for pair in config.manual_columns],
     }
 
@@ -75,20 +75,6 @@ def _column_type_override_to_dict(override: ColumnTypeOverride) -> dict[str, Any
     if override.date_format is not None:
         out["date_format"] = override.date_format
     return out
-
-
-def _panel_to_dict(panel: Panel) -> dict[str, Any]:
-    return {
-        "panel_id": panel.panel_id,
-        "entity_key": panel.entity_key,
-        "members": [_panel_member_to_dict(m) for m in panel.members],
-    }
-
-
-def _panel_member_to_dict(member: PanelMember) -> dict[str, Any]:
-    """``time_key`` is polymorphic by JSON type: int for a literal
-    period (file-member), str for a column name (column-member)."""
-    return {"source": member.source, "time_key": member.time_key}
 
 
 def _register_group_view_to_dict(group: RegisterGroupView) -> dict[str, Any]:
