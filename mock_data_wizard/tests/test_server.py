@@ -608,6 +608,235 @@ def test_resolve_bind_family_falls_back_to_ipv4_on_resolve_failure(
     assert server._resolve_bind_family("anything") == _socket.AF_INET
 
 
+# -- Panel endpoints ------------------------------------------------------
+
+
+@pytest.fixture
+def multi_source_project(tmp_path: Path) -> Path:
+    """Project with two sources so we can exercise panel members + rename."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "lisa_2018",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            },
+            {
+                "source_name": "lisa_2019",
+                "columns": [{"name": "LopNr", "sql_type": "BIGINT"}],
+            },
+        ],
+    )
+    editor.init_if_missing(tmp_path, discover_path)
+    return tmp_path
+
+
+@pytest.fixture
+def panel_server(multi_source_project: Path):
+    config = ServerConfig(project_dir=multi_source_project, host="127.0.0.1", port=0)
+    httpd = build_server(config)
+    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+    thread.start()
+    host, port = httpd.server_address[:2]
+    base_url = f"http://{host}:{port}"
+    try:
+        yield base_url
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
+
+
+def test_panel_create_round_trip(panel_server: str):
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "lisa",
+            "panel_key": "LopNr",
+            "members": [
+                {"source": "lisa_2018", "period": 2018},
+                {"source": "lisa_2019", "period": 2019},
+            ],
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 200
+    panel_ids = [p["panel_id"] for p in body["config"]["panels"]]
+    assert panel_ids == ["lisa"]
+
+
+def test_panel_rename_via_previous_panel_id(panel_server: str):
+    """Rename must drop the renamed-from entry atomically — without
+    ``previous_panel_id`` the source-overlap check would reject the
+    write."""
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    members = [
+        {"source": "lisa_2018", "period": 2018},
+        {"source": "lisa_2019", "period": 2019},
+    ]
+    _, snap1 = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "lisa",
+            "panel_key": "LopNr",
+            "members": members,
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    status, snap2 = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "lisa_v2",
+            "panel_key": "LopNr",
+            "members": members,
+            "expected_version": snap1["snapshot_version"],
+            "previous_panel_id": "lisa",
+        },
+    )
+    assert status == 200
+    panel_ids = [p["panel_id"] for p in snap2["config"]["panels"]]
+    assert panel_ids == ["lisa_v2"]
+
+
+def test_panel_put_rejects_non_string_previous_panel_id(panel_server: str):
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "p",
+            "panel_key": "LopNr",
+            "members": [{"source": "lisa_2018", "period": 2018}],
+            "expected_version": snapshot["snapshot_version"],
+            "previous_panel_id": 42,
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "previous_panel_id" in body["error"]["message"]
+
+
+def test_panel_remove_round_trip(panel_server: str):
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    _, after_create = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "lisa",
+            "panel_key": "LopNr",
+            "members": [{"source": "lisa_2018", "period": 2018}],
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    status, body = _fetch(
+        "POST",
+        f"{panel_server}/api/remove-panel",
+        {
+            "panel_id": "lisa",
+            "expected_version": after_create["snapshot_version"],
+        },
+    )
+    assert status == 200
+    assert body["config"]["panels"] == []
+
+
+def test_panel_remove_missing_panel_id(panel_server: str):
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{panel_server}/api/remove-panel",
+        {"expected_version": snapshot["snapshot_version"]},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "panel_id" in body["error"]["message"]
+
+
+def test_panel_put_rejects_unknown_member_keys(panel_server: str):
+    """Wire validator must reject unknown member keys — the on-disk
+    parser does, and the wire shape is supposed to share that
+    validator (parse_panel_payload)."""
+    _, snapshot = _fetch("GET", f"{panel_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{panel_server}/api/panel",
+        {
+            "panel_id": "lisa",
+            "panel_key": "LopNr",
+            "members": [{"source": "lisa_2018", "period": 2018, "extra": "noise"}],
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+# -- /api/column-values ---------------------------------------------------
+
+
+def test_column_values_returns_none_when_regmeta_missing(running_server: str):
+    """Server must return ``kind="none"`` (200) rather than an error
+    envelope when regmeta is unavailable — matches the editor's
+    "regmeta degrades gracefully" stance."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG", "column": "Kon"},
+    )
+    assert status == 200
+    assert body["kind"] == "none"
+    assert body["title"] == "Kon"
+    assert body["codes"] == []
+
+
+def test_column_values_accepts_null_register(running_server: str):
+    """``register: null`` must be accepted (groups without an assigned
+    register still get the popover, which returns kind="none")."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": None, "column": "Kon"},
+    )
+    assert status == 200
+    assert body["kind"] == "none"
+
+
+def test_column_values_requires_register_field(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"column": "Kon"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "register" in body["error"]["message"]
+
+
+def test_column_values_rejects_non_string_register(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": 42, "column": "Kon"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_values_requires_column_field(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-values",
+        {"register": "TESTREG"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "column" in body["error"]["message"]
+
+
 def test_payload_too_large_returns_413(running_server: str):
     """Oversized Content-Length must be rejected with a 413 envelope
     before the server reads anything off the wire — otherwise a bogus

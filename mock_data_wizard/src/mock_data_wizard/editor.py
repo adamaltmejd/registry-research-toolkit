@@ -1489,12 +1489,21 @@ def put_panel(
     *,
     expected_version: str,
     db_path: Path | None = None,
+    previous_panel_id: str | None = None,
 ) -> StateSnapshot:
-    """Add or replace a panel by ``panel_id``."""
+    """Add or replace a panel by ``panel_id``.
+
+    ``previous_panel_id`` supports rename: when set and different from
+    ``panel.panel_id``, the renamed-from entry is dropped first so it
+    doesn't collide with the new entry on member-source overlap during
+    ``parse_config`` validation.
+    """
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
         panels = payload.setdefault("panels", [])
+        if previous_panel_id is not None and previous_panel_id != panel.panel_id:
+            panels[:] = [p for p in panels if p.get("panel_id") != previous_panel_id]
         serialized = _panel_to_dict(panel)
         replaced = False
         for i, existing in enumerate(panels):
@@ -1595,9 +1604,12 @@ def get_column_values(
     with _open_regmeta_conn(db_path) as conn:
         if conn is None:
             return empty
-        from regmeta import resolve_register_ids
-        from regmeta.errors import RegmetaError
-        from regmeta.queries import get_classification_codes
+        try:
+            from regmeta import resolve_register_ids
+            from regmeta.errors import RegmetaError
+            from regmeta.queries import get_classification_codes
+        except ImportError:
+            return empty
 
         register_ids: list[int] = []
         if register is not None and register.strip():
@@ -1607,6 +1619,12 @@ def get_column_values(
                 register_ids = []
         signals = _regmeta_lookup(conn, {column}, register_ids) if register_ids else {}
         signal = lookup_with_prefix_fallback(signals, column)
+        # The matched alias may differ from the literal column when the
+        # signal was found via project-prefix stripping (e.g. column
+        # "P1105_AStud" matched alias "AStud"). Use the matched key for
+        # the per-instance SQL so we don't query for an alias regmeta
+        # doesn't know.
+        matched_alias = _matched_alias_key(signals, column) or column
 
         # Classification path: when a short_name is attached, fetch the
         # canonical code list. ``get_classification_codes`` raises on
@@ -1618,11 +1636,11 @@ def get_column_values(
             except RegmetaError:
                 meta = None
             if meta is not None:
-                codes = tuple(
-                    ColumnValue(
-                        code=str(c.get("vardekod")),
-                        label=c.get("vardebenamning"),
-                    )
+                # Dedupe on vardekod — SCB classifications occasionally
+                # carry multiple labels per code across versions; the
+                # first occurrence wins for display purposes.
+                codes = _dedupe_codes(
+                    (str(c.get("vardekod")), c.get("vardebenamning"))
                     for c in meta.get("codes", [])
                 )
                 if codes:
@@ -1651,11 +1669,10 @@ def get_column_values(
                 f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
                 f"  AND vi.register_id IN ({ph}) "
                 "ORDER BY vc.vardekod",
-                [column, *register_ids],
+                [matched_alias, *register_ids],
             ).fetchall()
-            codes = tuple(
-                ColumnValue(code=str(r["vardekod"]), label=r["vardebenamning"])
-                for r in rows
+            codes = _dedupe_codes(
+                (str(r["vardekod"]), r["vardebenamning"]) for r in rows
             )
             if codes:
                 return ColumnValuesResult(
@@ -1666,6 +1683,37 @@ def get_column_values(
                 )
 
         return empty
+
+
+def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
+    """Mirror ``lookup_with_prefix_fallback``'s key resolution and return
+    the *key* it matched, not the value. Used so per-instance SQL queries
+    the same alias regmeta resolved on, even after project-prefix
+    stripping."""
+    from ._util import strip_project_prefix
+
+    lower = column.lower()
+    if lower in signals:
+        return lower
+    stripped = strip_project_prefix(column).lower()
+    if stripped in signals:
+        return stripped
+    return None
+
+
+def _dedupe_codes(
+    pairs: Iterator[tuple[str, str | None]],
+) -> tuple[ColumnValue, ...]:
+    """Dedupe ``(code, label)`` pairs by code, preserving first-seen
+    order. SCB sometimes returns multiple labels per code (per-year
+    relabels, partial classification merges); the table renderer keys on
+    code, so we collapse here rather than crash there."""
+    seen: dict[str, ColumnValue] = {}
+    for code, label in pairs:
+        if code in seen:
+            continue
+        seen[code] = ColumnValue(code=code, label=label)
+    return tuple(seen.values())
 
 
 __all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]

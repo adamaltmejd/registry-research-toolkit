@@ -140,6 +140,10 @@ export interface PutPanelArgs {
   panel_key: string;
   members: PanelMember[];
   expected_version: string;
+  /** Renamed-from id when editing. The server drops the old entry in
+   *  the same lock so rename doesn't collide with the new entry on
+   *  member-source overlap. Omit when creating a new panel. */
+  previous_panel_id?: string;
 }
 
 export function putPanel(args: PutPanelArgs): Promise<StateSnapshot> {

@@ -1395,3 +1395,277 @@ def test_compute_discover_hash_changes_on_schema_change():
     assert editor._compute_discover_hash(payload_a) != editor._compute_discover_hash(
         payload_b
     )
+
+
+# -- parse_panel_payload --------------------------------------------------
+
+
+def test_parse_panel_payload_round_trips():
+    raw = {
+        "panel_id": "lisa",
+        "panel_key": "LopNr",
+        "members": [
+            {"source": "lisa_2018", "period": 2018},
+            {"source": "lisa_2019", "period": 2019},
+        ],
+    }
+    panel = editor.parse_panel_payload(raw)
+    assert panel.panel_id == "lisa"
+    assert panel.panel_key == "LopNr"
+    assert tuple(m.source for m in panel.members) == ("lisa_2018", "lisa_2019")
+    assert tuple(m.period for m in panel.members) == (2018, 2019)
+
+
+def test_parse_panel_payload_rejects_unknown_keys():
+    raw = {
+        "panel_id": "p",
+        "panel_key": "k",
+        "members": [{"source": "a", "period": 2020}],
+        "extra": "noise",
+    }
+    with pytest.raises(ValidationError, match="unknown key"):
+        editor.parse_panel_payload(raw)
+
+
+def test_parse_panel_payload_rejects_member_without_period_or_time_key():
+    raw = {
+        "panel_id": "p",
+        "panel_key": "k",
+        "members": [{"source": "a"}],
+    }
+    with pytest.raises(ValidationError, match="exactly one of"):
+        editor.parse_panel_payload(raw)
+
+
+# -- put_panel rename via previous_panel_id ------------------------------
+
+
+def test_put_panel_rename_drops_previous_id(tmp_path: Path):
+    """Renaming a panel via ``previous_panel_id`` must atomically drop
+    the old entry — otherwise the source-overlap check rejects the write."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    original = Panel(
+        panel_id="lisa",
+        panel_key="LopNr",
+        members=(
+            PanelMember(source="lisa_2018", period=2018),
+            PanelMember(source="lisa_2019", period=2019),
+        ),
+    )
+    snap = put_panel(tmp_path, original, expected_version=snap.snapshot_version)
+    renamed = Panel(
+        panel_id="lisa_v2",
+        panel_key="LopNr",
+        members=original.members,
+    )
+    snap = put_panel(
+        tmp_path,
+        renamed,
+        expected_version=snap.snapshot_version,
+        previous_panel_id="lisa",
+    )
+    panel_ids = [p.panel_id for p in snap.config.panels]
+    assert panel_ids == ["lisa_v2"]
+
+
+def test_put_panel_previous_panel_id_equal_to_new_is_noop(tmp_path: Path):
+    """When ``previous_panel_id == panel_id`` the rename branch must not
+    fire (otherwise we'd drop the panel and immediately re-add it, which
+    is wasteful but more importantly hides bugs around in-place edits)."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "LopNr"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    panel = Panel(
+        panel_id="p",
+        panel_key="LopNr",
+        members=(PanelMember(source="x", period=2018),),
+    )
+    snap = put_panel(tmp_path, panel, expected_version=snap.snapshot_version)
+    snap = put_panel(
+        tmp_path,
+        Panel(
+            panel_id="p",
+            panel_key="LopNr",
+            members=(PanelMember(source="x", period=2019),),
+        ),
+        expected_version=snap.snapshot_version,
+        previous_panel_id="p",
+    )
+    panels = [p for p in snap.config.panels if p.panel_id == "p"]
+    assert len(panels) == 1
+    assert panels[0].members[0].period == 2019
+
+
+def test_put_panel_previous_panel_id_unknown_id_is_silent(tmp_path: Path):
+    """Renaming-from a nonexistent id is silently a plain insert. Locks
+    in a forgiving contract: a UI race that double-fires the rename
+    shouldn't 500."""
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "x", "columns": [{"name": "LopNr"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = put_panel(
+        tmp_path,
+        Panel(
+            panel_id="new",
+            panel_key="LopNr",
+            members=(PanelMember(source="x", period=2018),),
+        ),
+        expected_version=snap.snapshot_version,
+        previous_panel_id="never_existed",
+    )
+    assert [p.panel_id for p in snap.config.panels] == ["new"]
+
+
+# -- get_column_values ---------------------------------------------------
+
+
+def test_get_column_values_validation_error_on_empty_column():
+    with pytest.raises(ValidationError, match="non-empty string"):
+        editor.get_column_values("TESTREG", "")
+
+
+def test_get_column_values_returns_none_when_regmeta_missing(monkeypatch):
+    """When ``_open_regmeta_conn`` yields None, the function must return
+    ``kind="none"`` rather than raise — the popover then shows the empty
+    state. Mirrors the "regmeta degrades gracefully" stance elsewhere."""
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _no_conn(_):
+        yield None
+
+    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    result = editor.get_column_values("TESTREG", "Kon")
+    assert result.kind == "none"
+    assert result.title == "Kon"
+    assert result.codes == ()
+
+
+def test_get_column_values_returns_none_when_register_unresolved(
+    regmeta_db: Path,
+):
+    result = editor.get_column_values(
+        "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+
+
+def test_get_column_values_returns_none_when_register_is_none(regmeta_db: Path):
+    """``register=None`` (no register set on the group) returns the empty
+    envelope so the UI can render a clean "no codes" state."""
+    result = editor.get_column_values(None, "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "none"
+
+
+def test_get_column_values_returns_none_for_unknown_column(regmeta_db: Path):
+    result = editor.get_column_values(
+        "TESTREG", "NotAColumn", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+
+
+def test_get_column_values_per_instance_path(regmeta_db: Path):
+    """The fixture has Kon under TESTREG with codes 1=Man, 2=Kvinna and
+    no classification attached → per-instance values path."""
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    assert result.title == "Kon"
+    code_map = {c.code: c.label for c in result.codes}
+    assert code_map == {"1": "Man", "2": "Kvinna"}
+
+
+def test_get_column_values_dedupes_duplicate_codes(regmeta_db: Path):
+    """Same vardekod with two distinct labels (year-over-year relabel)
+    must collapse to one row in the result — the table renderer keys on
+    code and would crash on duplicates."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a second cvid for var_id=44 under the same register with a
+    # different label for code "1" (e.g. relabel from "Man" to "Male").
+    conn.executescript(
+        """
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (101, 10, '2021');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1002, 1, 10, 101, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Kon');
+        """
+    )
+    assign_value_set(conn, 1002, [("1", "Male"), ("2", "Female")])
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    codes = [c.code for c in result.codes]
+    # Each code appears exactly once even though SQL DISTINCT yields four
+    # (vardekod, vardebenamning) rows.
+    assert codes == sorted(set(codes))
+    assert set(codes) == {"1", "2"}
+
+
+def test_get_column_values_handles_prefix_fallback_alias(regmeta_db: Path):
+    """A MONA-prefixed column name (e.g. ``P1105_Kon``) must resolve to
+    the alias ``Kon`` via prefix-strip — both the signal lookup AND the
+    per-instance SQL must use the same resolved alias."""
+    result = editor.get_column_values("TESTREG", "P1105_Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    code_map = {c.code: c.label for c in result.codes}
+    assert code_map == {"1": "Man", "2": "Kvinna"}
+
+
+def test_get_column_values_classification_path(regmeta_db: Path):
+    """When a classification short_name is attached to the variable
+    instance, the canonical classification code list wins over per-
+    instance value codes."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'KON_CLS', 'Kön klassifikation',
+                    'Standard sex classification', 2);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code
+            WHERE vardekod IN ('1', '2');
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "classification"
+    assert result.title == "KON_CLS"
+    assert result.description == "Standard sex classification"
+    code_map = {c.code: c.label for c in result.codes}
+    assert code_map == {"1": "Man", "2": "Kvinna"}
+
+
+# -- _dedupe_codes -------------------------------------------------------
+
+
+def test_dedupe_codes_preserves_first_seen_order():
+    pairs = iter([("2", "Two"), ("1", "One"), ("2", "Other"), ("3", "Three")])
+    out = editor._dedupe_codes(pairs)
+    assert tuple(c.code for c in out) == ("2", "1", "3")
+    # First-seen label wins.
+    assert {c.code: c.label for c in out} == {"2": "Two", "1": "One", "3": "Three"}

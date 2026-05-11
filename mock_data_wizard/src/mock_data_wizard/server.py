@@ -621,16 +621,29 @@ def _api_put_panel(
     Member shape mirrors the on-disk JSON: ``{source, period?, time_key?}``,
     with exactly one of ``period`` / ``time_key`` per member. Structural
     validation is delegated to ``editor.parse_panel_payload`` so the wire
-    format and the on-disk JSON share one validator.
+    format and the on-disk JSON share one validator. Optional
+    ``previous_panel_id`` carries the renamed-from id so rename can drop
+    the old entry atomically (prevents source-overlap collision).
     """
     expected_version = _required_str(body, "expected_version")
-    panel_body = {k: v for k, v in body.items() if k != "expected_version"}
+    previous_panel_id = body.get("previous_panel_id")
+    if previous_panel_id is not None and not isinstance(previous_panel_id, str):
+        raise editor.ValidationError(
+            f"previous_panel_id must be a string or null, "
+            f"got {type(previous_panel_id).__name__}"
+        )
+    panel_body = {
+        k: v
+        for k, v in body.items()
+        if k not in {"expected_version", "previous_panel_id"}
+    }
     panel = editor.parse_panel_payload(panel_body)
     snap = editor.put_panel(
         config.project_dir,
         panel,
         expected_version=expected_version,
         db_path=config.db_path,
+        previous_panel_id=previous_panel_id,
     )
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 

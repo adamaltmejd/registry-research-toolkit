@@ -261,7 +261,7 @@ class Store {
 
   async load(): Promise<void> {
     try {
-      this.snapshot = await fetchState();
+      this.setSnapshot(await fetchState());
       this.loadState = { kind: "ready" };
     } catch (exc) {
       if (exc instanceof ApiError && exc.code === "not_initialized") {
@@ -282,7 +282,7 @@ class Store {
     if (this.busy) return;
     this.busy = true;
     try {
-      this.snapshot = await apiInitProject();
+      this.setSnapshot(await apiInitProject());
       this.loadState = { kind: "ready" };
       this.pushToast("info", "Project initialised. Review the auto-classified columns below.");
     } catch (exc) {
@@ -290,6 +290,43 @@ class Store {
       this.pushToast("error", `Could not initialise: ${message}`);
     } finally {
       this.busy = false;
+    }
+  }
+
+  /** Sole snapshot setter. Also prunes ``openGroups``/``openSources`` of
+   * any entry whose group_id no longer exists in the new snapshot — the
+   * persisted set would otherwise grow forever as users move between
+   * projects or as re-discover renames groups. */
+  private setSnapshot(snap: StateSnapshot): void {
+    this.snapshot = snap;
+    this.pruneOpenStateAgainst(snap);
+  }
+
+  private pruneOpenStateAgainst(snap: StateSnapshot): void {
+    const liveGroupIds = new Set(snap.groups.map((g) => g.group_id));
+    const liveSourceKeys = new Set<string>();
+    for (const g of snap.groups) {
+      for (const sn of g.sources) liveSourceKeys.add(sourceKey(g.group_id, sn));
+    }
+    let groupsChanged = false;
+    const nextGroups = new Set<string>();
+    for (const id of this.openGroups) {
+      if (liveGroupIds.has(id)) nextGroups.add(id);
+      else groupsChanged = true;
+    }
+    if (groupsChanged) {
+      this.openGroups = nextGroups;
+      saveStringSet(OPEN_GROUPS_KEY, nextGroups);
+    }
+    let sourcesChanged = false;
+    const nextSources = new Set<string>();
+    for (const key of this.openSources) {
+      if (liveSourceKeys.has(key)) nextSources.add(key);
+      else sourcesChanged = true;
+    }
+    if (sourcesChanged) {
+      this.openSources = nextSources;
+      saveStringSet(OPEN_SOURCES_KEY, nextSources);
     }
   }
 
@@ -475,12 +512,12 @@ class Store {
     if (this.busy) return false;
     this.busy = true;
     try {
-      this.snapshot = await fn();
+      this.setSnapshot(await fn());
       return true;
     } catch (exc) {
       if (exc instanceof ApiStaleState) {
         if (exc.freshState) {
-          this.snapshot = exc.freshState;
+          this.setSnapshot(exc.freshState);
         }
         // Bump the tick so any open modal can self-close: its mounted
         // snapshot of the column/group state is no longer trustworthy.

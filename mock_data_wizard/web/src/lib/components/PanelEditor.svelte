@@ -30,7 +30,6 @@
   let panelKey: string = $state(defaultPanelKey());
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
-  let validationError: string | null = $state(null);
 
   let memberSource: "existing" | "candidate" | "none" = $derived(
     existing ? "existing" : group.panel_candidate ? "candidate" : "none",
@@ -43,27 +42,37 @@
   let panelKeyTrimmed = $derived(panelKey.trim());
   let canSave = $derived(
     !submitting &&
+      memberSource !== "none" &&
       panelIdTrimmed.length > 0 &&
       panelKeyTrimmed.length > 0 &&
       displayMembers.length > 0,
   );
+
+  // Reset the two-click confirm whenever the user touches anything else
+  // — switching focus to an input, editing a field, or pressing Cancel.
+  // Without this the "Confirm remove" state would silently survive a
+  // mis-click and a second tap on the (still-armed) button would delete.
+  function resetConfirm(): void {
+    confirmingRemoval = false;
+  }
 
   async function onSubmit(event: SubmitEvent): Promise<void> {
     event.preventDefault();
     if (!canSave) return;
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
-    if (memberSource === "none") {
-      validationError =
-        "No panel members to save: this group has no auto-detected panel candidate.";
-      return;
-    }
     submitting = true;
     const args = {
       panel_id: panelIdTrimmed,
       panel_key: panelKeyTrimmed,
       members: displayMembers,
       expected_version: version,
+      // Pass the renamed-from id when the panel_id changed; the server
+      // drops the old entry in the same lock so source-overlap doesn't
+      // reject the rename. Same value as new id is a no-op.
+      ...(existing && existing.panel_id !== panelIdTrimmed
+        ? { previous_panel_id: existing.panel_id }
+        : {}),
     };
     const ok = await store.putPanel(args);
     submitting = false;
@@ -113,7 +122,7 @@
           {:else if memberSource === "candidate"}
             Designate panel
           {:else}
-            Designate panel (no candidate)
+            No panel candidate
           {/if}
         </h3>
       </div>
@@ -129,60 +138,60 @@
         with a time-key column (AR / INDATUM / year / period). Hand-edit
         <code>mock_data_config.json</code> if you need a custom layout.
       </p>
-    {/if}
+    {:else}
+      <label class="row">
+        <span>panel_id</span>
+        <input
+          type="text"
+          bind:value={panelId}
+          spellcheck="false"
+          onfocus={resetConfirm}
+          oninput={resetConfirm}
+          placeholder={existing
+            ? existing.panel_id
+            : group.panel_candidate?.suggested_panel_id ?? ""}
+        />
+      </label>
+      <label class="row">
+        <span>panel_key</span>
+        <input
+          type="text"
+          bind:value={panelKey}
+          spellcheck="false"
+          onfocus={resetConfirm}
+          oninput={resetConfirm}
+          placeholder={existing
+            ? existing.panel_key
+            : group.panel_candidate?.suggested_panel_key ?? "id column"}
+        />
+      </label>
 
-    <label class="row">
-      <span>panel_id</span>
-      <input
-        type="text"
-        bind:value={panelId}
-        spellcheck="false"
-        placeholder={existing
-          ? existing.panel_id
-          : group.panel_candidate?.suggested_panel_id ?? ""}
-      />
-    </label>
-    <label class="row">
-      <span>panel_key</span>
-      <input
-        type="text"
-        bind:value={panelKey}
-        spellcheck="false"
-        placeholder={existing
-          ? existing.panel_key
-          : group.panel_candidate?.suggested_panel_key ?? "id column"}
-      />
-    </label>
-
-    {#if displayMembers.length > 0}
-      <details class="members" open={displayMembers.length <= 8}>
-        <summary>
-          {displayMembers.length} member{displayMembers.length === 1 ? "" : "s"}
-          {#if memberSource === "candidate"}<span class="hint">
-              · from auto-detected candidate</span
-            >{:else if memberSource === "existing"}<span class="hint">
-              · from saved panel</span
-            >{/if}
-        </summary>
-        <ul>
-          {#each displayMembers as m (m.source)}
-            <li>
-              <span class="mono">{m.source}</span>
-              {#if m.period !== undefined && m.period !== null}
-                <span class="period" title="period">{m.period}</span>
-              {:else if m.time_key}
-                <span class="time-key" title="time-key column"
-                  >col: {m.time_key}</span
-                >
-              {/if}
-            </li>
-          {/each}
-        </ul>
-      </details>
-    {/if}
-
-    {#if validationError}
-      <p class="error" role="alert">{validationError}</p>
+      {#if displayMembers.length > 0}
+        <details class="members" open={displayMembers.length <= 8}>
+          <summary>
+            {displayMembers.length} member{displayMembers.length === 1 ? "" : "s"}
+            {#if memberSource === "candidate"}<span class="hint">
+                · from auto-detected candidate</span
+              >{:else if memberSource === "existing"}<span class="hint">
+                · from saved panel</span
+              >{/if}
+          </summary>
+          <ul>
+            {#each displayMembers as m (m.source)}
+              <li>
+                <span class="mono">{m.source}</span>
+                {#if m.period !== undefined && m.period !== null}
+                  <span class="period" title="period">{m.period}</span>
+                {:else if m.time_key}
+                  <span class="time-key" title="time-key column"
+                    >col: {m.time_key}</span
+                  >
+                {/if}
+              </li>
+            {/each}
+          </ul>
+        </details>
+      {/if}
     {/if}
 
     <footer>
@@ -190,25 +199,37 @@
         <button
           type="button"
           class="remove"
+          class:armed={confirmingRemoval}
           onclick={onRemove}
           disabled={submitting}
-          title="Remove this panel from the project"
+          title={confirmingRemoval
+            ? "Click again to confirm removal"
+            : "Remove this panel from the project"}
         >
           {confirmingRemoval ? "Confirm remove" : "Remove panel"}
         </button>
       {/if}
-      <button type="button" onclick={onClose} disabled={submitting}>
+      <button
+        type="button"
+        onclick={() => {
+          resetConfirm();
+          onClose();
+        }}
+        disabled={submitting}
+      >
         Cancel
       </button>
-      <button type="submit" class="primary" disabled={!canSave}>
-        {#if submitting}
-          Saving…
-        {:else if existing}
-          Save
-        {:else}
-          Designate
-        {/if}
-      </button>
+      {#if memberSource !== "none"}
+        <button type="submit" class="primary" disabled={!canSave}>
+          {#if submitting}
+            Saving…
+          {:else if existing}
+            Save
+          {:else}
+            Designate
+          {/if}
+        </button>
+      {/if}
     </footer>
   </form>
 </Modal>
@@ -324,15 +345,6 @@
     color: #5b4a14;
     font-size: 0.9rem;
   }
-  .error {
-    background: #fde8e8;
-    border: 1px solid #e0a0a0;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
-    margin: 0;
-    color: #882020;
-    font-size: 0.88rem;
-  }
   footer {
     display: flex;
     justify-content: flex-end;
@@ -346,6 +358,17 @@
   }
   .remove:hover:not(:disabled) {
     background: #fdf3e3;
+  }
+  /* Armed (one click already received) — flips to a danger appearance
+     so the second click is clearly destructive, not a stray re-press
+     of the original button. */
+  .remove.armed {
+    background: #b94a14;
+    border-color: #b94a14;
+    color: #fff;
+  }
+  .remove.armed:hover:not(:disabled) {
+    background: #a23d10;
   }
   button {
     padding: 0.4rem 0.9rem;

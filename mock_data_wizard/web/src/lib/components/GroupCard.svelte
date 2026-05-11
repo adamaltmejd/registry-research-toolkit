@@ -209,11 +209,12 @@
     store.setSourceOpen(group.group_id, sn, el.open);
   }
 
-  // Row-level click: anywhere on a variable row opens the type editor.
-  // Inner buttons / clickable badges call stopPropagation so the row
-  // handler doesn't double-fire (or compete with their own intent).
-  // Keyboard parity: Enter/Space on the row open the editor too — the
-  // row carries tabindex=0 so it's reachable.
+  // Row-level click is a mouse-only enhancement: clicking anywhere on a
+  // variable row opens the type editor. Inner buttons / clickable badges
+  // stopPropagation so they keep their own intent. Keyboard users tab
+  // straight to the inner type-pill button — we deliberately don't put
+  // role="button"/tabindex on the <tr> because nesting interactive
+  // children inside an exposed-as-button row is invalid AT semantics.
   function openEditorForPartition(p: ColumnPartition): void {
     editingColumn = {
       sources: [...p.sources],
@@ -227,12 +228,6 @@
       cellBySource: cellsByName(col.name),
       column: col,
     };
-  }
-  function rowKeydown(event: KeyboardEvent, open: () => void): void {
-    if (event.key === "Enter" || event.key === " ") {
-      event.preventDefault();
-      open();
-    }
   }
 
   let partitions: ColumnPartition[] = $derived.by(() => {
@@ -522,11 +517,7 @@
           <tr
             class="clickable-row"
             class:split
-            tabindex="0"
-            role="button"
-            aria-label={`Edit type for ${p.name}`}
             onclick={() => openEditorForPartition(p)}
-            onkeydown={(e) => rowKeydown(e, () => openEditorForPartition(p))}
           >
             <td class="mono col-name" title={p.name}>
               {p.name}
@@ -727,12 +718,7 @@
                 : []}
               <tr
                 class="clickable-row"
-                tabindex="0"
-                role="button"
-                aria-label={`Edit type for ${col.name} on ${sourceName}`}
                 onclick={() => openEditorForCell(sourceName, col)}
-                onkeydown={(e) =>
-                  rowKeydown(e, () => openEditorForCell(sourceName, col))}
               >
                 <td class="mono col-name" title={col.name}>{col.name}</td>
                 {#if visCols.sql}
@@ -1096,22 +1082,15 @@
     border-left: 2px solid #d6c5e6;
     padding-left: 0.5rem;
   }
-  /* Whole-row click target. The row carries `role="button"` so screen
-     readers announce the affordance; the cursor + hover make it visible
-     to mouse users. Inner buttons stop propagation so clicks on the
-     type pill / regmeta tag stay scoped to those controls. */
+  /* Whole-row click is a mouse-only enhancement; keyboard users tab
+     straight to the inner type-pill button. Inner buttons stop
+     propagation so clicks on the type pill / regmeta tag stay scoped
+     to those controls. */
   tr.clickable-row {
     cursor: pointer;
   }
   tr.clickable-row:hover td {
     background: #f6f9ff;
-  }
-  tr.clickable-row:focus-visible {
-    outline: 2px solid #1656c0;
-    outline-offset: -2px;
-  }
-  tr.clickable-row:focus {
-    outline: none;
   }
   .mono {
     font-family: ui-monospace, monospace;
