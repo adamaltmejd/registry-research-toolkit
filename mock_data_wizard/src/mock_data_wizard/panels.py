@@ -212,8 +212,8 @@ def _shared_id_column(member_sources: list[dict]) -> str | None:
     """Best-guess id column shared by every member, else None.
 
     Uses ``is_known_id`` (the same name pattern the classifier uses) so
-    the panel_key default lines up with whatever the classifier would
-    assign as ``id``. When several id columns are shared (e.g.
+    the ``entity_key`` default lines up with whatever the classifier
+    would assign as ``id``. When several id columns are shared (e.g.
     ``LopNr`` + ``LopNr_PersonNr``), prefer the personnr-derived one —
     it's the actual person identifier, while ``LopNr`` is often a
     record-level surrogate that doesn't span the panel.
@@ -248,32 +248,32 @@ def _build_panel_members(
     years: dict[str, int],
     months: dict[str, int | None],
 ) -> list[dict]:
-    """Build panel members with unique integer periods.
+    """Build panel members with unique integer ``time_key`` literals.
 
     Three encoding strategies, in order of preference:
 
     1. **Year-month** — when every source has a month (explicit YYYYMM
        or a recognised intra-year tag like HT/VT/Q1–Q4), encode
-       ``period = year * 100 + month``. Reads chronologically
+       ``time_key = year * 100 + month``. Reads chronologically
        (VT2012=201201 < HT2012=201208). Falls through to (3) only if
        encodings collide (e.g. two ``HT_2012`` shards).
     2. **Year-as-period** — when every source has a distinct year and
-       no month information, ``period`` is the year itself.
+       no month information, ``time_key`` is the year itself.
     3. **Alphabetic-rank fallback** — same-year siblings without a
        month get ``year * M + rank``, where ``M`` is the smallest
        power of ten that fits the densest year's shard count (so 100+
        same-year shards never collide with the next year).
 
-    Members are sorted by ``period`` so the JSON reads chronologically.
+    Members are sorted by ``time_key`` so the JSON reads chronologically.
     """
     if all(months.get(n) is not None for n in sources):
         encoded = {n: years[n] * 100 + months[n] for n in sources}  # type: ignore[operator]
         if len(set(encoded.values())) == len(sources):
-            members = [{"source": n, "period": encoded[n]} for n in sources]
-            members.sort(key=lambda d: d["period"])
+            members = [{"source": n, "time_key": encoded[n]} for n in sources]
+            members.sort(key=lambda d: d["time_key"])
             return members
     if len(set(years.values())) == len(sources):
-        members = [{"source": n, "period": years[n]} for n in sources]
+        members = [{"source": n, "time_key": years[n]} for n in sources]
     else:
         same_year: dict[int, list[str]] = {}
         for n in sources:
@@ -287,9 +287,9 @@ def _build_panel_members(
             for i, n in enumerate(sorted(names), start=1):
                 rank[n] = i
         members = [
-            {"source": n, "period": years[n] * multiplier + rank[n]} for n in sources
+            {"source": n, "time_key": years[n] * multiplier + rank[n]} for n in sources
         ]
-    members.sort(key=lambda d: d["period"])
+    members.sort(key=lambda d: d["time_key"])
     return members
 
 
@@ -308,6 +308,48 @@ def _find_time_key_in_source(columns: list[dict]) -> str | None:
 
 # -- Per-source panel-member suggestion -----------------------------------
 
+
+@dataclass(frozen=True, slots=True)
+class PanelMemberHints:
+    """Independent per-source seeds used by the manual panel editor.
+
+    Unlike ``PanelMemberSuggestion`` (which picks one shape, file beats
+    column), both hints are reported so the editor can pre-fill the
+    "other mode" field as a convenience when the user switches modes.
+
+    The editor was previously reimplementing this detection client-side
+    against a naïve ``\\d{4}`` regex — wrong for HT/VT/Q tags and
+    embedded ``YYYYMM`` tokens. Shipping the hints from the server
+    eliminates the duplication and the divergence.
+    """
+
+    year_from_name: int | None
+    time_key_column: str | None
+
+
+def detect_panel_member_hints(
+    source_name: str, columns: tuple[str, ...]
+) -> PanelMemberHints:
+    """Return the per-source seeds for the manual panel editor.
+
+    ``year_from_name`` is the date-token year (or ``year*100+month``
+    when a month is present) extracted by ``_match_date_token``.
+    ``time_key_column`` is the first recognised time-key column name.
+    Both signals are computed independently; the editor decides which
+    to surface.
+    """
+    token = _match_date_token(source_name)
+    if token is not None:
+        month = _resolve_period_month(token)
+        year_from_name = token.year * 100 + month if month is not None else token.year
+    else:
+        year_from_name = None
+    time_key_column = _find_time_key_in_source([{"name": c} for c in columns])
+    return PanelMemberHints(
+        year_from_name=year_from_name, time_key_column=time_key_column
+    )
+
+
 PanelMemberKind = Literal["file", "column"]
 
 
@@ -315,24 +357,25 @@ PanelMemberKind = Literal["file", "column"]
 class PanelMemberSuggestion:
     """Single-source panel-member shape inferred from a name + columns.
 
-    * ``kind == "file"`` — the source carries a date token; ``period``
-      is the encoded year (or year×100+month) and the source contributes
-      a single period.
-    * ``kind == "column"`` — the source carries a time-key column;
-      ``time_key`` names that column and the source contributes many
-      periods.
-    * ``kind is None`` — neither shape detected.
+    ``time_key`` is polymorphic by JSON type:
 
-    ``suggested_panel_key`` is the best-guess id column on this source
+    * ``kind == "file"`` — the source carries a date token; ``time_key``
+      is the encoded year (int, or year×100+month) and the source
+      contributes a single period.
+    * ``kind == "column"`` — the source carries a time-key column;
+      ``time_key`` is that column's name (str) and the source contributes
+      many periods.
+    * ``kind is None`` — neither shape detected; ``time_key`` is None.
+
+    ``suggested_entity_key`` is the best-guess id column on this source
     (``is_known_id`` match). Multi-source aggregation (cross-source key
     selection, common-stem panel_id) is the editor's job; the helper
     only returns per-source signal.
     """
 
     kind: PanelMemberKind | None
-    period: int | None = None
-    time_key: str | None = None
-    suggested_panel_key: str | None = None
+    time_key: int | str | None = None
+    suggested_entity_key: str | None = None
 
 
 def detect_panel_member_kind(
@@ -359,16 +402,16 @@ def detect_panel_member_kind(
         month = _resolve_period_month(token)
         period = token.year * 100 + month if month is not None else token.year
         return PanelMemberSuggestion(
-            kind="file", period=period, suggested_panel_key=suggested_key
+            kind="file", time_key=period, suggested_entity_key=suggested_key
         )
 
     time_key = _find_time_key_in_source(cols_as_dicts)
     if time_key is not None:
         return PanelMemberSuggestion(
-            kind="column", time_key=time_key, suggested_panel_key=suggested_key
+            kind="column", time_key=time_key, suggested_entity_key=suggested_key
         )
 
-    return PanelMemberSuggestion(kind=None, suggested_panel_key=suggested_key)
+    return PanelMemberSuggestion(kind=None, suggested_entity_key=suggested_key)
 
 
 # -- Multi-source panel-shape detection -----------------------------------
@@ -378,14 +421,15 @@ def detect_panel_member_kind(
 class PanelCandidate:
     """Auto-detected panel shape for a register group.
 
-    ``members`` is a list of dicts, each with ``source`` and either
-    ``period`` (a literal int — file-member) or ``time_key`` (a column
-    name — column-member). Members are sorted by period when present.
+    ``members`` is a list of dicts, each with ``source`` and a
+    polymorphic ``time_key``: int for a literal period (file-member),
+    str for a column name (column-member). Members are sorted by
+    time_key when integer.
     """
 
     members: tuple[dict, ...]
     suggested_panel_id: str | None = None
-    suggested_panel_key: str | None = None
+    suggested_entity_key: str | None = None
 
 
 def detect_panel_candidate(
@@ -433,7 +477,7 @@ def detect_panel_candidate(
             suggested_panel_id=suggest_panel_id(
                 unique_sources, register_name=register_name
             ),
-            suggested_panel_key=suggested_key,
+            suggested_entity_key=suggested_key,
         )
     if len(unique_sources) == 1:
         name = unique_sources[0]
@@ -448,6 +492,6 @@ def detect_panel_candidate(
         return PanelCandidate(
             members=({"source": name, "time_key": time_key},),
             suggested_panel_id=name,
-            suggested_panel_key=suggested_key,
+            suggested_entity_key=suggested_key,
         )
     return None

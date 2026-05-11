@@ -40,15 +40,15 @@ export interface ColumnTypeOverride {
 
 export interface PanelMember {
   source: string;
-  /** Set for file-period members; mutually exclusive with `time_key`. */
-  period?: number;
-  /** Set for column-driven members; mutually exclusive with `period`. */
-  time_key?: string;
+  /** Polymorphic by JSON type: `number` = literal period (file-member);
+   *  `string` = column name on the source whose values are the period
+   *  (column-member). */
+  time_key: number | string;
 }
 
 export interface Panel {
   panel_id: string;
-  panel_key: string;
+  entity_key: string;
   members: PanelMember[];
 }
 
@@ -72,14 +72,27 @@ export interface ColumnInfo {
 
 export interface PanelCandidateMember {
   source: string;
-  period?: number;
-  time_key?: string;
+  /** Polymorphic by JSON type: `number` = literal period (file-member);
+   *  `string` = column name on the source. */
+  time_key: number | string;
 }
 
 export interface PanelCandidate {
   members: PanelCandidateMember[];
   suggested_panel_id: string | null;
-  suggested_panel_key: string | null;
+  suggested_entity_key: string | null;
+}
+
+/** Per-source seeds for the manual panel editor. Both signals are
+ * computed server-side and shipped independently so the editor doesn't
+ * reimplement date-token / time-key-column detection. */
+export interface PanelMemberHints {
+  /** Date-token year (or `year*100+month` when a month is present),
+   *  derived from the source name. Null when no date token matches. */
+  year_from_name: number | null;
+  /** First column on the source whose name matches a recognised
+   *  time-key (AR / INDATUM / year / period, case-insensitive). */
+  time_key_column: string | null;
 }
 
 export interface RegisterGroupView {
@@ -91,6 +104,7 @@ export interface RegisterGroupView {
   columns_by_source: Record<string, ColumnInfo[]>;
   schema_variants: number;
   panel_candidate: PanelCandidate | null;
+  member_hints: Record<string, PanelMemberHints>;
 }
 
 export interface MDWConfig {
@@ -205,18 +219,16 @@ function isColumnTypeOverride(x: unknown): x is ColumnTypeOverride {
 function isPanelMember(x: unknown): x is PanelMember {
   if (!isObject(x)) return false;
   if (typeof x.source !== "string") return false;
-  const hasPeriod = "period" in x;
-  const hasTimeKey = "time_key" in x;
-  if (hasPeriod === hasTimeKey) return false;
-  if (hasPeriod && typeof x.period !== "number") return false;
-  if (hasTimeKey && typeof x.time_key !== "string") return false;
-  return true;
+  if (!("time_key" in x)) return false;
+  const tk = x.time_key;
+  if (typeof tk === "number") return true;
+  return typeof tk === "string" && tk.length > 0;
 }
 
 function isPanel(x: unknown): x is Panel {
   if (!isObject(x)) return false;
   if (typeof x.panel_id !== "string") return false;
-  if (typeof x.panel_key !== "string") return false;
+  if (typeof x.entity_key !== "string") return false;
   return Array.isArray(x.members) && x.members.every(isPanelMember);
 }
 
@@ -264,8 +276,13 @@ function isPanelCandidate(x: unknown): x is PanelCandidate {
   if (!isObject(x)) return false;
   if (!Array.isArray(x.members) || !x.members.every(isPanelMember)) return false;
   return (
-    isStringOrNull(x.suggested_panel_id) && isStringOrNull(x.suggested_panel_key)
+    isStringOrNull(x.suggested_panel_id) && isStringOrNull(x.suggested_entity_key)
   );
+}
+
+function isPanelMemberHints(x: unknown): x is PanelMemberHints {
+  if (!isObject(x)) return false;
+  return isNumberOrNull(x.year_from_name) && isStringOrNull(x.time_key_column);
 }
 
 function isRegisterGroupView(x: unknown): x is RegisterGroupView {
@@ -284,6 +301,10 @@ function isRegisterGroupView(x: unknown): x is RegisterGroupView {
   if (typeof x.schema_variants !== "number") return false;
   if (x.panel_candidate !== null && !isPanelCandidate(x.panel_candidate))
     return false;
+  if (!isObject(x.member_hints)) return false;
+  for (const h of Object.values(x.member_hints)) {
+    if (!isPanelMemberHints(h)) return false;
+  }
   return true;
 }
 

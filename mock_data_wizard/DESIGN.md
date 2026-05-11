@@ -464,8 +464,11 @@ mutator:
 `confidence` (`"high"` / `"partial"` / `"none"`), `sources`,
 `columns_by_source` (mapping to tuples of `ColumnInfo`),
 `schema_variants` (count of distinct column schemas in the group;
-`>1` means drift), and `panel_candidate` (a `PanelCandidate` from
-`panels.py` or `None`).
+`>1` means drift), `panel_candidate` (a `PanelCandidate` from
+`panels.py` or `None`), and `member_hints` (per-source
+`PanelMemberHints` seeds — `year_from_name` and `time_key_column` —
+used by the manual panel editor so the client doesn't reimplement
+date-token / time-key-column detection).
 
 `ColumnInfo` exposes `name`, `sql_type`, `current_type`, `hint`
 (inline `id_subtype` / `numeric_subtype` / `date_format` projected
@@ -815,47 +818,51 @@ this structure when the user declares panels in `mock_data_config.json`:
   "panels": [
     {
       "panel_id": "swecov_inpatient",
-      "panel_key": "P1105_LopNr_PersonNr",
+      "entity_key": "P1105_LopNr_PersonNr",
       "members": [{"source": "SWECOV_SOS_SV", "time_key": "AR"}]
     },
     {
       "panel_id": "lisa",
-      "panel_key": "P1105_LopNr_PersonNr",
+      "entity_key": "P1105_LopNr_PersonNr",
       "members": [
-        {"source": "lisa_2018.csv", "period": 2018},
-        {"source": "lisa_2019.csv", "period": 2019}
+        {"source": "lisa_2018.csv", "time_key": 2018},
+        {"source": "lisa_2019.csv", "time_key": 2019}
       ]
     }
   ]
 }
 ```
 
-A panel is `(panel_id, panel_key, members)`. Each member declares its
-source plus exactly one of:
+A panel is `(panel_id, entity_key, members)`. ``entity_key`` is the
+column shared across every member source that points to the recurring
+entity (typically a person id, e.g. `P1105_LopNr_PersonNr`). Each
+member declares its source plus a polymorphic ``time_key`` interpreted
+by JSON type:
 
-- **`period`**: a literal integer for a one-period-per-file delivery.
-  ``n_rows`` and ``n_panel_ids`` come from the source's row count and
-  the panel-key column's ``n_distinct``.
-- **`time_key`**: a column on the source whose values carry the period
-  for each row. Extract runs `GROUP BY time_key` to get per-period
-  ``n_rows`` and ``COUNT(DISTINCT panel_key)``.
+- **`time_key` as `int`** — a literal period for a one-period-per-file
+  delivery. ``n_rows`` and ``n_entity_ids`` come from the source's row
+  count and the entity-key column's ``n_distinct``.
+- **`time_key` as `str`** — a column on the source whose values carry
+  the period for each row. Extract runs `GROUP BY <time_key>` to get
+  per-period ``n_rows`` and ``COUNT(DISTINCT entity_key)``.
 
 Mixing the two within one panel is allowed: a long history in one
 merged file with a `year` column plus the most recent year as a
 separate file, joined under one panel_id, is a valid configuration.
 
-Periods with `n_panel_ids < SUPPRESS_K` are dropped — a tiny panel
+Periods with `n_entity_ids < SUPPRESS_K` are dropped — a tiny panel
 cohort is identifying.
 
-`period` is normalised at extract time: integer-valued time_keys (years
-in the dominant case, or numeric strings like `"2018"`) become `int`;
-anything else (date / quarter strings like `"2019-Q1"`) is preserved as
-`str` so sub-annual panels don't crash the run.
+The `by_period.period` value is normalised at extract time:
+integer-valued column time_keys (years in the dominant case, or
+numeric strings like `"2018"`) become `int`; anything else (date /
+quarter strings like `"2019-Q1"`) is preserved as `str` so sub-annual
+panels don't crash the run.
 
 Source-collision rule: a source may participate in **at most one panel**.
 `parse_config` rejects two panels claiming the same source so a
 generator-side `panel_by_source` collision can't silently drop the
-second panel's behavior. Multi-key panels (one source, two panel_keys)
+second panel's behavior. Multi-key panels (one source, two entity_keys)
 are explicitly out of scope.
 
 `mock_data_stats.json` carries a top-level `panels` array that mirrors
@@ -866,10 +873,10 @@ the config schema, plus the per-period stats in `by_period`:
   "panels": [
     {
       "panel_id": "swecov_inpatient",
-      "panel_key": "P1105_LopNr_PersonNr",
+      "entity_key": "P1105_LopNr_PersonNr",
       "members": [{"source": "SWECOV_SOS_SV", "time_key": "AR"}],
       "by_period": [
-        {"period": 2018, "source": "SWECOV_SOS_SV", "n_rows": 1234567, "n_panel_ids": 980000},
+        {"period": 2018, "source": "SWECOV_SOS_SV", "n_rows": 1234567, "n_entity_ids": 980000},
         ...
       ]
     }
@@ -877,29 +884,54 @@ the config schema, plus the per-period stats in `by_period`:
 }
 ```
 
-Generation: panels sharing a `panel_key` share one id pool — in SCB
+Generation: panels sharing an `entity_key` share one id pool — in SCB
 data nearly every register is keyed on the same person id (e.g.
 `P1105_LopNr_PersonNr`), and that's *the* id universe, not many
-parallel ones. Each pool is deterministically shuffled per panel_key
-and sized to `max(n_panel_ids)` across every period of every panel
+parallel ones. Each pool is deterministically shuffled per entity_key
+and sized to `max(n_entity_ids)` across every period of every panel
 using that key. Each `(period, source)` entry takes a *prefix* of
-the pool sized to that entry's own `n_panel_ids`. Strict prefix
+the pool sized to that entry's own `n_entity_ids`. Strict prefix
 nesting gives stable cross-period overlap (panel persistence) —
-sequential periods share `min(n_panel_ids)` of their ids — and
+sequential periods share `min(n_entity_ids)` of their ids — and
 per-source distinctness matches stats (a smaller member contributing
-to the same period draws fewer distinct panel-keys, not the
+to the same period draws fewer distinct entity-keys, not the
 sibling's larger count). The panel pool also overrides
-`shared_pools[panel_key]` so non-panel sources sharing the same column
+`shared_pools[entity_key]` so non-panel sources sharing the same column
 draw from the same id universe.
 
-For column-members (a `time_key` column inside one source),
-`(time_key, panel_key)` are co-generated per row: each row's period is
-drawn from `n_rows[t]` weights, and its panel-key value comes from
-that period's subset. For file-members (one source IS one period),
-panel-key values come straight from the `(panel_id, period, source)`
-subset. Mixed panels (some members file, some column) work because
-every `by_period` entry carries a `source`, so subsets never bleed
-across members.
+For column-members (a string `time_key` column inside one source),
+`(time_key_column, entity_key)` are co-generated per row: each row's
+period is drawn from `n_rows[t]` weights, and its entity-key value
+comes from that period's subset. For file-members (one source IS one
+period), entity-key values come straight from the
+`(panel_id, period, source)` subset. Mixed panels (some members file,
+some column) work because every `by_period` entry carries a `source`,
+so subsets never bleed across members.
+
+### Manual designation
+
+The web editor's `PanelEditor` opens for any group, not just those
+where `detect_panel_candidate` succeeds. Inside the modal:
+
+- **Source picker** — checkboxes for every source in the group;
+  pre-checked from the candidate or existing panel when present,
+  otherwise pre-checked when the auto-detector found a per-source
+  hint (date token in the filename or a recognised time-key column).
+  Single-source groups skip the picker.
+- **`entity_key`** — dropdown of column names common to every selected
+  source. Pre-filled from `suggested_entity_key` when available.
+- **per-member `time_key`** — toggle per selected source: "From source
+  name" surfaces a numeric input pre-filled from the date token, "From
+  column" surfaces a dropdown of that source's columns pre-filled with
+  the auto-detected time column.
+- **`panel_id`** — free text, pre-filled from `suggested_panel_id` or
+  the existing panel's id.
+
+Client-side validation mirrors `parse_config`: at least one source
+selected, `entity_key` non-empty and present on every selected source,
+no duplicate literal `time_key` values across file-members. The save
+button stays disabled until validation passes, with the errors listed
+inline so the user can fix one at a time.
 
 **Out of scope:** cross-period transition matrices, attrition / re-entry
 modelling, and multi-key panels. The "fixed pool with shrinking active

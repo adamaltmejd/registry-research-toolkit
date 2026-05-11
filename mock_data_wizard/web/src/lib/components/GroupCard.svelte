@@ -69,7 +69,7 @@
 
   function panelPeriodRange(panel: Panel): string | null {
     const periods = panel.members
-      .map((m) => m.period)
+      .map((m) => m.time_key)
       .filter((p): p is number => typeof p === "number");
     if (periods.length === 0) return null;
     const min = Math.min(...periods);
@@ -427,21 +427,19 @@
       >
         Edit register…
       </button>
-      {#if primaryPanelForGroup || group.panel_candidate}
-        <button
-          class="link"
-          onclick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            editingPanel = true;
-          }}
-          title={primaryPanelForGroup
-            ? "Edit attached panel"
-            : "Designate this group as a panel"}
-        >
-          {primaryPanelForGroup ? "Edit panel…" : "Designate panel…"}
-        </button>
-      {/if}
+      <button
+        class="link"
+        onclick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          editingPanel = true;
+        }}
+        title={primaryPanelForGroup
+          ? "Edit attached panel"
+          : "Designate this group as a panel"}
+      >
+        {primaryPanelForGroup ? "Edit panel…" : "Designate panel…"}
+      </button>
     </div>
   </summary>
 
@@ -450,7 +448,7 @@
     <p class="panel-summary" title="Panel definition (config.panels)">
       <span class="panel-tag">panel</span>
       <code>{panel.panel_id}</code>
-      · keyed on <code>{panel.panel_key}</code>
+      · keyed on <code>{panel.entity_key}</code>
       {#if range}
         · {range} ({panel.members.length} files)
       {:else}

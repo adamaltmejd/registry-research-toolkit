@@ -148,33 +148,33 @@ def test_parse_panels_block(tmp_path: Path):
         "panels": [
             {
                 "panel_id": "merged",
-                "panel_key": "a",
+                "entity_key": "a",
                 "members": [{"source": "x.csv", "time_key": "ar"}],
                 "by_period": [
                     {
                         "period": 2018,
                         "source": "x.csv",
                         "n_rows": 100,
-                        "n_panel_ids": 80,
+                        "n_entity_ids": 80,
                     },
                     {
                         "period": 2019,
                         "source": "x.csv",
                         "n_rows": 110,
-                        "n_panel_ids": 85,
+                        "n_entity_ids": 85,
                     },
                 ],
             },
             {
                 "panel_id": "split",
-                "panel_key": "a",
-                "members": [{"source": "y.csv", "period": 2020}],
+                "entity_key": "a",
+                "members": [{"source": "y.csv", "time_key": 2020}],
                 "by_period": [
                     {
                         "period": 2020,
                         "source": "y.csv",
                         "n_rows": 50,
-                        "n_panel_ids": 40,
+                        "n_entity_ids": 40,
                     },
                 ],
             },
@@ -190,7 +190,7 @@ def test_parse_panels_block(tmp_path: Path):
     assert merged.members[0].time_key == "ar"
     assert [bp.period for bp in merged.by_period] == [2018, 2019]
     split = next(pn for pn in result.panels if pn.panel_id == "split")
-    assert split.members[0].period == 2020
+    assert split.members[0].time_key == 2020
     assert split.by_period[0].source == "y.csv"
 
 
@@ -209,14 +209,14 @@ def _stats_with_panel_member(tmp_path: Path, member: dict) -> Path:
         "panels": [
             {
                 "panel_id": "p",
-                "panel_key": "a",
+                "entity_key": "a",
                 "members": [member],
                 "by_period": [
                     {
                         "period": 2018,
                         "source": "x.csv",
                         "n_rows": 1,
-                        "n_panel_ids": 1,
+                        "n_entity_ids": 1,
                     }
                 ],
             }
@@ -227,12 +227,11 @@ def _stats_with_panel_member(tmp_path: Path, member: dict) -> Path:
     return p
 
 
-def test_parse_panels_rejects_null_period(tmp_path: Path):
-    """``{"period": null}`` passes the period-xor-time_key gate but
-    must not flow into PanelMemberRef as ``period=None`` — generation
-    later assumes a real scalar."""
-    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": None})
-    with pytest.raises(StatsValidationError, match="period"):
+def test_parse_panels_rejects_null_time_key(tmp_path: Path):
+    """``{"time_key": null}`` must not flow into PanelMemberRef as a
+    None — generation later assumes a real scalar."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "time_key": None})
+    with pytest.raises(StatsValidationError, match="time_key"):
         parse_stats(p)
 
 
@@ -242,11 +241,11 @@ def test_parse_panels_rejects_empty_time_key(tmp_path: Path):
         parse_stats(p)
 
 
-def test_parse_panels_rejects_bool_period(tmp_path: Path):
+def test_parse_panels_rejects_bool_time_key(tmp_path: Path):
     """``True`` is technically an int subclass; reject it explicitly so
-    period stays unambiguously a year/quarter scalar."""
-    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "period": True})
-    with pytest.raises(StatsValidationError, match="period"):
+    time_key stays unambiguously an int year or a column name string."""
+    p = _stats_with_panel_member(tmp_path, {"source": "x.csv", "time_key": True})
+    with pytest.raises(StatsValidationError, match="time_key"):
         parse_stats(p)
 
 
@@ -271,8 +270,8 @@ def _stats_with_by_period_entry(tmp_path: Path, by_period_entry: dict) -> Path:
         "panels": [
             {
                 "panel_id": "p",
-                "panel_key": "a",
-                "members": [{"source": "x.csv", "period": 2018}],
+                "entity_key": "a",
+                "members": [{"source": "x.csv", "time_key": 2018}],
                 "by_period": [by_period_entry],
             }
         ],
@@ -287,7 +286,7 @@ def test_parse_panels_rejects_null_by_period_period(tmp_path: Path):
     ``period=None`` and break pool keying in generate."""
     p = _stats_with_by_period_entry(
         tmp_path,
-        {"period": None, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+        {"period": None, "source": "x.csv", "n_rows": 1, "n_entity_ids": 1},
     )
     with pytest.raises(StatsValidationError, match="by_period.period"):
         parse_stats(p)
@@ -296,7 +295,7 @@ def test_parse_panels_rejects_null_by_period_period(tmp_path: Path):
 def test_parse_panels_rejects_bool_by_period_period(tmp_path: Path):
     p = _stats_with_by_period_entry(
         tmp_path,
-        {"period": True, "source": "x.csv", "n_rows": 1, "n_panel_ids": 1},
+        {"period": True, "source": "x.csv", "n_rows": 1, "n_entity_ids": 1},
     )
     with pytest.raises(StatsValidationError, match="by_period.period"):
         parse_stats(p)
@@ -305,7 +304,7 @@ def test_parse_panels_rejects_bool_by_period_period(tmp_path: Path):
 def test_parse_panels_rejects_empty_by_period_source(tmp_path: Path):
     p = _stats_with_by_period_entry(
         tmp_path,
-        {"period": 2018, "source": "", "n_rows": 1, "n_panel_ids": 1},
+        {"period": 2018, "source": "", "n_rows": 1, "n_entity_ids": 1},
     )
     with pytest.raises(StatsValidationError, match="by_period.source"):
         parse_stats(p)
@@ -314,7 +313,7 @@ def test_parse_panels_rejects_empty_by_period_source(tmp_path: Path):
 def test_parse_panels_rejects_non_int_by_period_n_rows(tmp_path: Path):
     p = _stats_with_by_period_entry(
         tmp_path,
-        {"period": 2018, "source": "x.csv", "n_rows": "10", "n_panel_ids": 1},
+        {"period": 2018, "source": "x.csv", "n_rows": "10", "n_entity_ids": 1},
     )
     with pytest.raises(StatsValidationError, match="n_rows"):
         parse_stats(p)

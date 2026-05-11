@@ -166,47 +166,47 @@ def _build_panel_pools(
     seed: int,
     sample_pct: float,
 ) -> tuple[dict[str, np.ndarray], dict[tuple[str, int | str, str], np.ndarray]]:
-    """Build per-panel-key id pools and per-(period, source) subsets.
+    """Build per-entity_key id pools and per-(period, source) subsets.
 
-    All panels sharing a ``panel_key`` share one id pool — in SCB
-    register data, panel_key is typically the person identifier (e.g.
-    ``P1105_LopNr_PersonNr``) and dozens of distinct registers
+    All panels sharing an ``entity_key`` share one id pool — in SCB
+    register data, ``entity_key`` is typically the person identifier
+    (e.g. ``P1105_LopNr_PersonNr``) and dozens of distinct registers
     legitimately reference the same id universe. Pool size is
-    ``max(n_panel_ids)`` across every period of every panel using that
+    ``max(n_entity_ids)`` across every period of every panel using that
     key, and the shuffle seed derives from the key (not panel_id) so
     the universe is stable.
 
     Each ``(period, source)`` entry takes a *prefix* of the shuffled
-    pool sized to that entry's ``n_panel_ids``. Strict prefix nesting
+    pool sized to that entry's ``n_entity_ids``. Strict prefix nesting
     gives stable cross-period overlap (panel persistence): sequential
-    periods share ``min(n_panel_ids)`` of their ids, and per-source
+    periods share ``min(n_entity_ids)`` of their ids, and per-source
     distinctness matches the source's stats. Cross-period attrition
     modelling (transition matrices, churn) is explicitly out of scope.
 
     Returned ``pools`` is keyed by ``panel_id`` for the caller's
-    convenience — entries for panels sharing a ``panel_key`` reference
+    convenience — entries for panels sharing an ``entity_key`` reference
     the same underlying array.
     """
     by_key: dict[str, list[Panel]] = {}
     for panel in panels:
         if not panel.by_period:
             continue
-        by_key.setdefault(panel.panel_key, []).append(panel)
+        by_key.setdefault(panel.entity_key, []).append(panel)
 
     pools: dict[str, np.ndarray] = {}
     subsets: dict[tuple[str, int | str, str], np.ndarray] = {}
-    for panel_key, key_panels in by_key.items():
-        pool_size = max(p.n_panel_ids for pn in key_panels for p in pn.by_period)
+    for entity_key, key_panels in by_key.items():
+        pool_size = max(p.n_entity_ids for pn in key_panels for p in pn.by_period)
         if sample_pct < 1.0:
             pool_size = max(1, int(pool_size * sample_pct))
-        subtype = id_subtypes.get(panel_key, "string")
-        pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", panel_key))
+        subtype = id_subtypes.get(entity_key, "string")
+        pool_rng = np.random.default_rng(_sub_seed(seed, "__panel__", entity_key))
         pool = _make_id_pool(pool_size, subtype)
         pool_rng.shuffle(pool)
         for panel in key_panels:
             pools[panel.panel_id] = pool
             for ps in panel.by_period:
-                subset_size = ps.n_panel_ids
+                subset_size = ps.n_entity_ids
                 if sample_pct < 1.0:
                     subset_size = max(1, int(subset_size * sample_pct))
                 subset_size = min(subset_size, len(pool))
@@ -222,11 +222,11 @@ def _generate_merged_panel_columns(
     *,
     member_source: str,
 ) -> tuple[np.ndarray, np.ndarray] | None:
-    """Co-generate ``(time_key, panel_key)`` for a column-member.
+    """Co-generate ``(time_key_column, entity_key)`` for a column-member.
 
     Each row is assigned one of the periods that this member's source
     actually contributed to, weighted by its observed ``n_rows``. The
-    panel-key value for that row is then drawn from the period's pool
+    entity-key value for that row is then drawn from the period's pool
     subset. Restricting to ``member_source`` keeps generated rows
     consistent with the extract output — a multi-source panel won't
     bleed periods from a sibling member into this file.
@@ -245,7 +245,7 @@ def _generate_merged_panel_columns(
     weights /= weights.sum()
     period_idx = rng.choice(len(periods), size=n_rows, p=weights)
     period_values = periods[period_idx]
-    panel_values = np.empty(n_rows, dtype=object)
+    entity_values = np.empty(n_rows, dtype=object)
     for i, period in enumerate(period_list):
         mask = period_idx == i
         count = int(mask.sum())
@@ -253,11 +253,11 @@ def _generate_merged_panel_columns(
             continue
         subset = panel_subsets.get((panel.panel_id, period, member_source))
         if subset is None or len(subset) == 0:
-            panel_values[mask] = ""
+            entity_values[mask] = ""
             continue
         replace = count > len(subset)
-        panel_values[mask] = rng.choice(subset, size=count, replace=replace)
-    return period_values, panel_values
+        entity_values[mask] = rng.choice(subset, size=count, replace=replace)
+    return period_values, entity_values
 
 
 def _generate_id(
@@ -358,7 +358,7 @@ def generate(
             if col.inferred_type == "id" and col.column_name not in id_subtypes:
                 id_subtypes[col.column_name] = col.stats["id_subtype"]
 
-    # Panel pools come first so we can route panel-key columns to them
+    # Panel pools come first so we can route entity-key columns to them
     # when building shared_pools below. Panel ids replace the shared
     # pool for that column so spine + non-panel sources stay aligned
     # with the same id universe.
@@ -368,24 +368,25 @@ def generate(
     panel_pool_for_col: dict[str, np.ndarray] = {}
     for panel in stats.panels:
         if panel.panel_id in panel_pools:
-            panel_pool_for_col[panel.panel_key] = panel_pools[panel.panel_id]
-    # panel_by_source maps a source name → (panel, member-info). For a
-    # file-member, member-info is the literal period (int/str). For a
-    # column-member, it's the time_key column name (str). The two are
-    # disambiguated downstream via the member type stored alongside.
+            panel_pool_for_col[panel.entity_key] = panel_pools[panel.panel_id]
+    # panel_by_source maps a source name → (panel, period, time_key_column).
+    # For a file-member, ``period`` is the literal period (int/str) and
+    # ``time_key_column`` is None. For a column-member, ``period`` is
+    # None and ``time_key_column`` names the column whose values are the
+    # period. Distinguishes the two via member.time_key's runtime type.
     panel_by_source: dict[str, tuple[Panel, int | str | None, str | None]] = {}
     for panel in stats.panels:
         for member in panel.members:
-            if member.time_key is not None:
+            if isinstance(member.time_key, str):
                 panel_by_source[member.source] = (panel, None, member.time_key)
             else:
-                panel_by_source[member.source] = (panel, member.period, None)
+                panel_by_source[member.source] = (panel, member.time_key, None)
 
     # Build shared ID pools — sample the pool itself when sample_pct < 1
     # so that files sharing an ID column draw from the same reduced universe
     shared_pools: dict[str, np.ndarray] = {}
     for sc in stats.shared_columns:
-        # If this column is the panel_key of any panel, the panel pool
+        # If this column is the entity_key of any panel, the panel pool
         # is authoritative -- sources outside the panel that share this
         # column then draw from the same universe.
         if sc.column_name in panel_pool_for_col:
@@ -516,8 +517,8 @@ def generate(
             )
             if time_key is not None:
                 # Column-member: filter by_period to this source's
-                # contributions before sampling so the (time_key,
-                # panel_key) pair stays internally consistent. Returns
+                # contributions before sampling so the (time_key column,
+                # entity_key) pair stays internally consistent. Returns
                 # None when this source has no surviving periods.
                 result = _generate_merged_panel_columns(
                     n_rows,
@@ -527,19 +528,19 @@ def generate(
                     member_source=source.source_name,
                 )
                 if result is not None:
-                    time_vals, panel_vals = result
+                    time_vals, entity_vals = result
                     # time_key column may be typed int/categorical; emit
                     # whatever the period values are (typically int years).
                     columns_data[time_key] = time_vals.tolist()
-                    columns_data[panel_obj.panel_key] = panel_vals.tolist()
+                    columns_data[panel_obj.entity_key] = entity_vals.tolist()
             elif period is not None:  # file-member
                 subset = panel_subsets.get(
                     (panel_obj.panel_id, period, source.source_name)
                 )
                 if subset is not None and len(subset) > 0:
                     replace = n_rows > len(subset)
-                    panel_vals = panel_rng.choice(subset, size=n_rows, replace=replace)
-                    columns_data[panel_obj.panel_key] = panel_vals.tolist()
+                    entity_vals = panel_rng.choice(subset, size=n_rows, replace=replace)
+                    columns_data[panel_obj.entity_key] = entity_vals.tolist()
 
         # Process ID columns first so spine lookups can reference them
         for ecol in sorted(esource.columns, key=lambda c: c.inferred_type != "id"):

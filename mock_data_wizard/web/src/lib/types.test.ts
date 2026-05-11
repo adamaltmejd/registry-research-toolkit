@@ -73,12 +73,15 @@ describe("StateSnapshot wire format", () => {
   test("malformed panel member is caught", () => {
     const raw = readFileSync(GOLDEN_PATH, "utf-8");
     const parsed = JSON.parse(raw);
-    // PanelMember requires exactly one of period / time_key.
-    parsed.config.panels[0].members[0] = {
-      source: "lisa_2018",
-      period: 2018,
-      time_key: "AR",
-    };
+    // PanelMember requires a `time_key` (int or non-empty string).
+    parsed.config.panels[0].members[0] = { source: "lisa_2018" };
+    expect(isStateSnapshot(parsed)).toBe(false);
+  });
+
+  test("panel member with empty string time_key is caught", () => {
+    const raw = readFileSync(GOLDEN_PATH, "utf-8");
+    const parsed = JSON.parse(raw);
+    parsed.config.panels[0].members[0] = { source: "lisa_2018", time_key: "" };
     expect(isStateSnapshot(parsed)).toBe(false);
   });
 

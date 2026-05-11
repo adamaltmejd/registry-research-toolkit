@@ -57,11 +57,14 @@ from .config import (
     _parse_options,
     _parse_panel,
     _reject_duplicate_keys,
+    panel_to_dict,
     parse_config,
 )
 from .panels import (
+    PanelMemberHints,
     PanelMemberSuggestion,
     detect_panel_candidate,
+    detect_panel_member_hints,
     detect_panel_member_kind,
     detect_year_from_source_name,
 )
@@ -87,12 +90,14 @@ __all__ = [
     "EditorWarning",
     "Panel",
     "PanelMember",
+    "PanelMemberHints",
     "PanelMemberSuggestion",
     "Register",
     # Helpers
     "list_registers",
     "resolve_register",
     "detect_year_from_source_name",
+    "detect_panel_member_hints",
     "detect_panel_member_kind",
     # Errors
     "NotInitializedError",
@@ -211,6 +216,12 @@ class RegisterGroupView:
     columns_by_source: dict[str, tuple[ColumnInfo, ...]]
     schema_variants: int
     panel_candidate: Any  # PanelCandidate | None — looser to avoid cycle
+    # Per-source seeds for the manual panel editor. Computed server-side
+    # via ``detect_panel_member_hints`` so the client doesn't reimplement
+    # date-token / time-key-column detection (the previous client code
+    # used a naïve ``\d{4}`` regex that missed HT/VT/Q tags and embedded
+    # YYYYMM tokens).
+    member_hints: dict[str, PanelMemberHints]
 
 
 @dataclass(frozen=True)
@@ -668,6 +679,7 @@ def _build_groups(
                 columns_by_source=columns_by_source,
                 schema_variants=_schema_variants(columns_by_source),
                 panel_candidate=cand,
+                member_hints=_member_hints_for(columns_by_source),
             )
         )
 
@@ -690,10 +702,21 @@ def _build_groups(
                 columns_by_source=columns_by_source,
                 schema_variants=_schema_variants(columns_by_source),
                 panel_candidate=cand,
+                member_hints=_member_hints_for(columns_by_source),
             )
         )
 
     return tuple(groups)
+
+
+def _member_hints_for(
+    columns_by_source: dict[str, tuple[ColumnInfo, ...]],
+) -> dict[str, PanelMemberHints]:
+    """Per-source seeds for the manual panel editor."""
+    return {
+        sn: detect_panel_member_hints(sn, tuple(c.name for c in cols))
+        for sn, cols in columns_by_source.items()
+    }
 
 
 def _hint_dict_for(override: ColumnTypeOverride) -> dict[str, Any] | None:
@@ -885,7 +908,7 @@ def init_if_missing(
                 # Unassigned sources don't get cross-source panel candidates.
                 continue
             cand = detect_panel_candidate(source_names, sources_by_name)
-            if cand is None or cand.suggested_panel_key is None:
+            if cand is None or cand.suggested_entity_key is None:
                 continue
             if any(m["source"] in panel_sources_seen for m in cand.members):
                 continue
@@ -893,8 +916,8 @@ def init_if_missing(
             panels_out.append(
                 {
                     "panel_id": panel_id,
-                    "panel_key": cand.suggested_panel_key,
-                    "members": list(cand.members),
+                    "entity_key": cand.suggested_entity_key,
+                    "members": [dict(m) for m in cand.members],
                 }
             )
             for m in cand.members:
@@ -1504,7 +1527,7 @@ def put_panel(
         panels = payload.setdefault("panels", [])
         if previous_panel_id is not None and previous_panel_id != panel.panel_id:
             panels[:] = [p for p in panels if p.get("panel_id") != previous_panel_id]
-        serialized = _panel_to_dict(panel)
+        serialized = panel_to_dict(panel)
         replaced = False
         for i, existing in enumerate(panels):
             if existing.get("panel_id") == panel.panel_id:
@@ -1717,19 +1740,3 @@ def _dedupe_codes(
 
 
 __all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]
-
-
-def _panel_to_dict(panel: Panel) -> dict[str, Any]:
-    members: list[dict[str, Any]] = []
-    for m in panel.members:
-        d: dict[str, Any] = {"source": m.source}
-        if m.period is not None:
-            d["period"] = m.period
-        if m.time_key is not None:
-            d["time_key"] = m.time_key
-        members.append(d)
-    return {
-        "panel_id": panel.panel_id,
-        "panel_key": panel.panel_key,
-        "members": members,
-    }

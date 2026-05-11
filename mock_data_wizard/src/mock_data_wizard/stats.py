@@ -42,27 +42,27 @@ class SharedColumn:
 
 @dataclass
 class PanelPeriod:
-    # ``period`` is whatever the time_key column carries: usually a year
-    # (int), but may be a quarter/date string for sub-annual panels.
+    # ``period`` is whatever the time_key carries: usually a year (int),
+    # but may be a quarter/date string for sub-annual column-member panels.
     period: int | str
     source: str
     n_rows: int
-    n_panel_ids: int
+    n_entity_ids: int
 
 
 @dataclass
 class PanelMemberRef:
-    """Mirror of ``config.PanelMember``: exactly one of period/time_key."""
+    """Mirror of ``config.PanelMember``: polymorphic ``time_key`` (int for
+    a literal period, str for a column name)."""
 
     source: str
-    period: int | None = None
-    time_key: str | None = None
+    time_key: int | str
 
 
 @dataclass
 class Panel:
     panel_id: str
-    panel_key: str
+    entity_key: str
     members: list[PanelMemberRef]
     by_period: list[PanelPeriod]
 
@@ -148,39 +148,32 @@ def _parse_panel(raw: dict) -> Panel:
     members: list[PanelMemberRef] = []
     for m in members_raw:
         m_src = _require(m, "source", f"{ctx}.members[]")
-        has_period = "period" in m
-        has_tk = "time_key" in m
-        if has_period == has_tk:
+        if "time_key" not in m:
             raise StatsValidationError(
-                f"panel {pid!r}: member {m_src!r} must have exactly one of "
-                f"'period' or 'time_key'"
+                f"panel {pid!r}: member {m_src!r} missing required 'time_key' "
+                f"(int for literal period, str for column name)"
             )
-        if has_period:
-            period = m["period"]
-            # period is a JSON scalar (int or string after _coerce_period).
-            # Reject null/bool/empty so PanelMemberRef invariants hold.
-            if isinstance(period, bool) or period is None:
+        tk = m["time_key"]
+        # bool is an int subclass; reject explicitly.
+        if isinstance(tk, bool):
+            raise StatsValidationError(
+                f"panel {pid!r}: member {m_src!r} time_key must be int or "
+                f"non-empty string, got bool"
+            )
+        if isinstance(tk, int):
+            members.append(PanelMemberRef(source=m_src, time_key=tk))
+        elif isinstance(tk, str):
+            if not tk:
                 raise StatsValidationError(
-                    f"panel {pid!r}: member {m_src!r} period must be int or string, "
-                    f"got {type(period).__name__}"
-                )
-            if isinstance(period, str) and not period:
-                raise StatsValidationError(
-                    f"panel {pid!r}: member {m_src!r} period must be non-empty"
-                )
-            if not isinstance(period, (int, str)):
-                raise StatsValidationError(
-                    f"panel {pid!r}: member {m_src!r} period must be int or string, "
-                    f"got {type(period).__name__}"
-                )
-            members.append(PanelMemberRef(source=m_src, period=period))
-        else:
-            tk = m["time_key"]
-            if not isinstance(tk, str) or not tk:
-                raise StatsValidationError(
-                    f"panel {pid!r}: member {m_src!r} time_key must be a non-empty string"
+                    f"panel {pid!r}: member {m_src!r} time_key must be a "
+                    f"non-empty string"
                 )
             members.append(PanelMemberRef(source=m_src, time_key=tk))
+        else:
+            raise StatsValidationError(
+                f"panel {pid!r}: member {m_src!r} time_key must be int or "
+                f"non-empty string, got {type(tk).__name__}"
+            )
     by_period_raw = _require(raw, "by_period", ctx)
     if not isinstance(by_period_raw, list):
         raise StatsValidationError(
@@ -217,23 +210,23 @@ def _parse_panel(raw: dict) -> Panel:
                 f"panel {pid!r}: by_period.n_rows must be int, "
                 f"got {type(n_rows).__name__}"
             )
-        n_panel_ids = _require(p, "n_panel_ids", bp_ctx)
-        if isinstance(n_panel_ids, bool) or not isinstance(n_panel_ids, int):
+        n_entity_ids = _require(p, "n_entity_ids", bp_ctx)
+        if isinstance(n_entity_ids, bool) or not isinstance(n_entity_ids, int):
             raise StatsValidationError(
-                f"panel {pid!r}: by_period.n_panel_ids must be int, "
-                f"got {type(n_panel_ids).__name__}"
+                f"panel {pid!r}: by_period.n_entity_ids must be int, "
+                f"got {type(n_entity_ids).__name__}"
             )
         by_period.append(
             PanelPeriod(
                 period=period,
                 source=source,
                 n_rows=n_rows,
-                n_panel_ids=n_panel_ids,
+                n_entity_ids=n_entity_ids,
             )
         )
     return Panel(
         panel_id=pid,
-        panel_key=_require(raw, "panel_key", ctx),
+        entity_key=_require(raw, "entity_key", ctx),
         members=members,
         by_period=by_period,
     )

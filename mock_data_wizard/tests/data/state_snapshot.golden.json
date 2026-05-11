@@ -46,15 +46,15 @@
     "panels": [
       {
         "panel_id": "lisa",
-        "panel_key": "LopNr",
+        "entity_key": "LopNr",
         "members": [
           {
             "source": "lisa_2018",
-            "period": 2018
+            "time_key": 2018
           },
           {
             "source": "lisa_2019",
-            "period": 2019
+            "time_key": 2019
           }
         ]
       }
@@ -159,15 +159,25 @@
         "members": [
           {
             "source": "lisa_2018",
-            "period": 2018
+            "time_key": 2018
           },
           {
             "source": "lisa_2019",
-            "period": 2019
+            "time_key": 2019
           }
         ],
         "suggested_panel_id": "lisa",
-        "suggested_panel_key": "LopNr"
+        "suggested_entity_key": "LopNr"
+      },
+      "member_hints": {
+        "lisa_2018": {
+          "year_from_name": 2018,
+          "time_key_column": null
+        },
+        "lisa_2019": {
+          "year_from_name": 2019,
+          "time_key_column": null
+        }
       }
     },
     {
@@ -192,7 +202,13 @@
         ]
       },
       "schema_variants": 1,
-      "panel_candidate": null
+      "panel_candidate": null,
+      "member_hints": {
+        "extras": {
+          "year_from_name": null,
+          "time_key_column": null
+        }
+      }
     }
   ],
   "discover": {

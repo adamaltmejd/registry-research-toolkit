@@ -1064,10 +1064,10 @@ def test_put_panel_adds_and_replaces(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     panel = Panel(
         panel_id="lisa",
-        panel_key="LopNr",
+        entity_key="LopNr",
         members=(
-            PanelMember(source="lisa_2018", period=2018),
-            PanelMember(source="lisa_2019", period=2019),
+            PanelMember(source="lisa_2018", time_key=2018),
+            PanelMember(source="lisa_2019", time_key=2019),
         ),
     )
     snap = put_panel(tmp_path, panel, expected_version=snap.snapshot_version)
@@ -1076,8 +1076,8 @@ def test_put_panel_adds_and_replaces(tmp_path: Path):
     # Replace with a new period set.
     panel2 = Panel(
         panel_id="lisa",
-        panel_key="LopNr",
-        members=(PanelMember(source="lisa_2018", period=2018),),
+        entity_key="LopNr",
+        members=(PanelMember(source="lisa_2018", time_key=2018),),
     )
     snap = put_panel(tmp_path, panel2, expected_version=snap.snapshot_version)
     panels = [p for p in snap.config.panels if p.panel_id == "lisa"]
@@ -1093,8 +1093,8 @@ def test_remove_panel(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     panel = Panel(
         panel_id="lisa",
-        panel_key="LopNr",
-        members=(PanelMember(source="lisa_2018", period=2018),),
+        entity_key="LopNr",
+        members=(PanelMember(source="lisa_2018", time_key=2018),),
     )
     snap = put_panel(tmp_path, panel, expected_version=snap.snapshot_version)
     assert any(p.panel_id == "lisa" for p in snap.config.panels)
@@ -1110,14 +1110,14 @@ def test_put_panel_rejects_source_collision(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     panel1 = Panel(
         panel_id="p1",
-        panel_key="LopNr",
-        members=(PanelMember(source="x", period=2018),),
+        entity_key="LopNr",
+        members=(PanelMember(source="x", time_key=2018),),
     )
     snap = put_panel(tmp_path, panel1, expected_version=snap.snapshot_version)
     panel2 = Panel(
         panel_id="p2",
-        panel_key="LopNr",
-        members=(PanelMember(source="x", period=2019),),
+        entity_key="LopNr",
+        members=(PanelMember(source="x", time_key=2019),),
     )
     with pytest.raises(ValidationError, match="reference source"):
         put_panel(tmp_path, panel2, expected_version=snap.snapshot_version)
@@ -1403,37 +1403,37 @@ def test_compute_discover_hash_changes_on_schema_change():
 def test_parse_panel_payload_round_trips():
     raw = {
         "panel_id": "lisa",
-        "panel_key": "LopNr",
+        "entity_key": "LopNr",
         "members": [
-            {"source": "lisa_2018", "period": 2018},
-            {"source": "lisa_2019", "period": 2019},
+            {"source": "lisa_2018", "time_key": 2018},
+            {"source": "lisa_2019", "time_key": 2019},
         ],
     }
     panel = editor.parse_panel_payload(raw)
     assert panel.panel_id == "lisa"
-    assert panel.panel_key == "LopNr"
+    assert panel.entity_key == "LopNr"
     assert tuple(m.source for m in panel.members) == ("lisa_2018", "lisa_2019")
-    assert tuple(m.period for m in panel.members) == (2018, 2019)
+    assert tuple(m.time_key for m in panel.members) == (2018, 2019)
 
 
 def test_parse_panel_payload_rejects_unknown_keys():
     raw = {
         "panel_id": "p",
-        "panel_key": "k",
-        "members": [{"source": "a", "period": 2020}],
+        "entity_key": "k",
+        "members": [{"source": "a", "time_key": 2020}],
         "extra": "noise",
     }
     with pytest.raises(ValidationError, match="unknown key"):
         editor.parse_panel_payload(raw)
 
 
-def test_parse_panel_payload_rejects_member_without_period_or_time_key():
+def test_parse_panel_payload_rejects_member_without_time_key():
     raw = {
         "panel_id": "p",
-        "panel_key": "k",
+        "entity_key": "k",
         "members": [{"source": "a"}],
     }
-    with pytest.raises(ValidationError, match="exactly one of"):
+    with pytest.raises(ValidationError, match="missing required key 'time_key'"):
         editor.parse_panel_payload(raw)
 
 
@@ -1453,16 +1453,16 @@ def test_put_panel_rename_drops_previous_id(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     original = Panel(
         panel_id="lisa",
-        panel_key="LopNr",
+        entity_key="LopNr",
         members=(
-            PanelMember(source="lisa_2018", period=2018),
-            PanelMember(source="lisa_2019", period=2019),
+            PanelMember(source="lisa_2018", time_key=2018),
+            PanelMember(source="lisa_2019", time_key=2019),
         ),
     )
     snap = put_panel(tmp_path, original, expected_version=snap.snapshot_version)
     renamed = Panel(
         panel_id="lisa_v2",
-        panel_key="LopNr",
+        entity_key="LopNr",
         members=original.members,
     )
     snap = put_panel(
@@ -1486,23 +1486,23 @@ def test_put_panel_previous_panel_id_equal_to_new_is_noop(tmp_path: Path):
     snap = init_if_missing(tmp_path, discover_path)
     panel = Panel(
         panel_id="p",
-        panel_key="LopNr",
-        members=(PanelMember(source="x", period=2018),),
+        entity_key="LopNr",
+        members=(PanelMember(source="x", time_key=2018),),
     )
     snap = put_panel(tmp_path, panel, expected_version=snap.snapshot_version)
     snap = put_panel(
         tmp_path,
         Panel(
             panel_id="p",
-            panel_key="LopNr",
-            members=(PanelMember(source="x", period=2019),),
+            entity_key="LopNr",
+            members=(PanelMember(source="x", time_key=2019),),
         ),
         expected_version=snap.snapshot_version,
         previous_panel_id="p",
     )
     panels = [p for p in snap.config.panels if p.panel_id == "p"]
     assert len(panels) == 1
-    assert panels[0].members[0].period == 2019
+    assert panels[0].members[0].time_key == 2019
 
 
 def test_put_panel_previous_panel_id_unknown_id_is_silent(tmp_path: Path):
@@ -1518,13 +1518,51 @@ def test_put_panel_previous_panel_id_unknown_id_is_silent(tmp_path: Path):
         tmp_path,
         Panel(
             panel_id="new",
-            panel_key="LopNr",
-            members=(PanelMember(source="x", period=2018),),
+            entity_key="LopNr",
+            members=(PanelMember(source="x", time_key=2018),),
         ),
         expected_version=snap.snapshot_version,
         previous_panel_id="never_existed",
     )
     assert [p.panel_id for p in snap.config.panels] == ["new"]
+
+
+def test_put_panel_accepts_manual_designation_with_nonstandard_time_key(
+    tmp_path: Path,
+):
+    """Manual designation flow: the auto-detector misses time-key columns
+    that aren't named AR/INDATUM/year/period, but ``put_panel`` must
+    still accept a hand-built panel pointing at any column name. Mirrors
+    the issue-63 case where the user designates a panel for a source
+    whose time column is e.g. ``tax_year``."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {
+                "source_name": "tax_history",
+                "columns": [
+                    {"name": "LopNr"},
+                    {"name": "tax_year"},
+                ],
+            }
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    # No candidate detected for this group (no date token, no recognised
+    # time-key column). The user designates a panel anyway.
+    assert snap.groups[0].panel_candidate is None
+    snap = put_panel(
+        tmp_path,
+        Panel(
+            panel_id="tax_panel",
+            entity_key="LopNr",
+            members=(PanelMember(source="tax_history", time_key="tax_year"),),
+        ),
+        expected_version=snap.snapshot_version,
+    )
+    [panel] = [p for p in snap.config.panels if p.panel_id == "tax_panel"]
+    assert panel.entity_key == "LopNr"
+    assert panel.members[0].time_key == "tax_year"
 
 
 # -- get_column_values ---------------------------------------------------

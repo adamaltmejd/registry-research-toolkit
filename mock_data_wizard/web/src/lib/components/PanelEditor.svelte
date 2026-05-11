@@ -14,6 +14,93 @@
 
   let { group, existing, onClose }: Props = $props();
 
+  type TimeKeyMode = "name" | "column";
+  const MODE_OPTIONS: readonly { value: TimeKeyMode; label: string }[] = [
+    { value: "name", label: "From source name" },
+    { value: "column", label: "From column" },
+  ];
+  interface MemberDraft {
+    selected: boolean;
+    /** "name" = literal int period from the source name. "column" = a
+     *  string column name on the source whose values are the period. */
+    mode: TimeKeyMode;
+    /** Free-text representation of the literal period (so we can keep
+     *  the field controllable even before the user types a digit). */
+    nameValue: string;
+    /** Selected column name when mode = "column". Empty string means
+     *  "no column picked yet" — validation surfaces that as an error. */
+    columnValue: string;
+  }
+
+  let allSources: readonly string[] = $derived(group.sources);
+
+  function buildDraft(): Record<string, MemberDraft> {
+    const fromExisting = new Map<string, number | string>();
+    if (existing) {
+      for (const m of existing.members) fromExisting.set(m.source, m.time_key);
+    }
+    const fromCandidate = new Map<string, number | string>();
+    if (!existing && group.panel_candidate) {
+      for (const m of group.panel_candidate.members) {
+        fromCandidate.set(m.source, m.time_key);
+      }
+    }
+    const seeded = fromExisting.size > 0 ? fromExisting : fromCandidate;
+
+    const out: Record<string, MemberDraft> = {};
+    for (const sn of allSources) {
+      const seededKey = seeded.get(sn);
+      // Server-computed hints (panels.detect_panel_member_hints). Both
+      // signals are independent — file/column precedence is the
+      // editor's call to make.
+      const hints = group.member_hints[sn];
+      const yearFromName = hints?.year_from_name ?? null;
+      const detectedColumn = hints?.time_key_column ?? null;
+
+      let mode: TimeKeyMode;
+      let nameValue: string;
+      let columnValue: string;
+
+      if (typeof seededKey === "number") {
+        mode = "name";
+        nameValue = String(seededKey);
+        columnValue = detectedColumn ?? "";
+      } else if (typeof seededKey === "string") {
+        mode = "column";
+        nameValue = yearFromName !== null ? String(yearFromName) : "";
+        columnValue = seededKey;
+      } else if (yearFromName !== null) {
+        mode = "name";
+        nameValue = String(yearFromName);
+        columnValue = detectedColumn ?? "";
+      } else if (detectedColumn !== null) {
+        mode = "column";
+        nameValue = "";
+        columnValue = detectedColumn;
+      } else {
+        mode = "name";
+        nameValue = "";
+        columnValue = "";
+      }
+
+      // Seed-driven sources stay opt-in to the seed; for auto-detected
+      // sources, only those with a hint are pre-checked so the user has
+      // to opt unsignalled sources in explicitly. Singleton groups have
+      // no checkbox, so the only source is always selected.
+      const selected =
+        allSources.length === 1
+          ? true
+          : seeded.size > 0
+            ? seeded.has(sn)
+            : yearFromName !== null || detectedColumn !== null;
+
+      out[sn] = { selected, mode, nameValue, columnValue };
+    }
+    return out;
+  }
+
+  let draft: Record<string, MemberDraft> = $state(buildDraft());
+
   function defaultPanelId(): string {
     if (existing) return existing.panel_id;
     if (group.panel_candidate?.suggested_panel_id) {
@@ -21,39 +108,140 @@
     }
     return group.register_name ?? group.group_id;
   }
-  function defaultPanelKey(): string {
-    if (existing) return existing.panel_key;
-    return group.panel_candidate?.suggested_panel_key ?? "";
+  function defaultEntityKey(): string {
+    if (existing) return existing.entity_key;
+    return group.panel_candidate?.suggested_entity_key ?? "";
   }
 
   let panelId: string = $state(defaultPanelId());
-  let panelKey: string = $state(defaultPanelKey());
+  let entityKey: string = $state(defaultEntityKey());
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
 
-  let memberSource: "existing" | "candidate" | "none" = $derived(
-    existing ? "existing" : group.panel_candidate ? "candidate" : "none",
+  let selectedSources: string[] = $derived(
+    allSources.filter((sn) => draft[sn]?.selected),
   );
-  let displayMembers: PanelMember[] = $derived(
-    existing?.members ?? group.panel_candidate?.members ?? [],
-  );
+
+  // entity_key candidates = column names present on every selected source.
+  let entityKeyOptions: string[] = $derived.by(() => {
+    if (selectedSources.length === 0) return [];
+    const sets = selectedSources.map(
+      (sn) =>
+        new Set((group.columns_by_source[sn] ?? []).map((c) => c.name)),
+    );
+    const [first, ...rest] = sets;
+    const intersection = new Set<string>();
+    for (const name of first) {
+      if (rest.every((s) => s.has(name))) intersection.add(name);
+    }
+    return [...intersection].sort();
+  });
+
+  interface BuiltMember {
+    source: string;
+    member: PanelMember | null;
+    error: string | null;
+  }
+  let builtMembers: BuiltMember[] = $derived.by(() => {
+    return selectedSources.map((sn) => {
+      const d = draft[sn];
+      if (d.mode === "name") {
+        const raw = d.nameValue.trim();
+        if (raw === "") {
+          return {
+            source: sn,
+            member: null,
+            error: "literal period required",
+          };
+        }
+        const n = Number(raw);
+        if (!Number.isInteger(n)) {
+          return {
+            source: sn,
+            member: null,
+            error: "literal period must be an integer",
+          };
+        }
+        return { source: sn, member: { source: sn, time_key: n }, error: null };
+      }
+      const col = d.columnValue;
+      if (!col) {
+        return { source: sn, member: null, error: "pick a column" };
+      }
+      const cols = group.columns_by_source[sn] ?? [];
+      if (!cols.some((c) => c.name === col)) {
+        return {
+          source: sn,
+          member: null,
+          error: `column '${col}' missing on this source`,
+        };
+      }
+      return {
+        source: sn,
+        member: { source: sn, time_key: col },
+        error: null,
+      };
+    });
+  });
+
+  // Reject duplicate integer time_keys across file-members (matches the
+  // server's parse_panel check). Column time_keys can repeat — they
+  // materialise at extract time.
+  let duplicateLiteralError: string | null = $derived.by(() => {
+    const seen = new Set<number>();
+    for (const b of builtMembers) {
+      if (b.member && typeof b.member.time_key === "number") {
+        if (seen.has(b.member.time_key)) {
+          return `duplicate literal period ${b.member.time_key}`;
+        }
+        seen.add(b.member.time_key);
+      }
+    }
+    return null;
+  });
+
+  let entityKeyError: string | null = $derived.by(() => {
+    const trimmed = entityKey.trim();
+    if (!trimmed) return "entity_key required";
+    if (selectedSources.length === 0) return null;
+    for (const sn of selectedSources) {
+      const cols = group.columns_by_source[sn] ?? [];
+      if (!cols.some((c) => c.name === trimmed)) {
+        return `column '${trimmed}' missing on ${sn}`;
+      }
+    }
+    return null;
+  });
 
   let panelIdTrimmed = $derived(panelId.trim());
-  let panelKeyTrimmed = $derived(panelKey.trim());
-  let canSave = $derived(
-    !submitting &&
-      memberSource !== "none" &&
-      panelIdTrimmed.length > 0 &&
-      panelKeyTrimmed.length > 0 &&
-      displayMembers.length > 0,
+  let entityKeyTrimmed = $derived(entityKey.trim());
+  let validationErrors: string[] = $derived(
+    [
+      selectedSources.length === 0 ? "select at least one source" : null,
+      panelIdTrimmed.length === 0 ? "panel_id required" : null,
+      entityKeyError,
+      duplicateLiteralError,
+      ...builtMembers
+        .filter((b) => b.error !== null)
+        .map((b) => `${b.source}: ${b.error}`),
+    ].filter((m): m is string => m !== null),
   );
 
-  // Reset the two-click confirm whenever the user touches anything else
-  // — switching focus to an input, editing a field, or pressing Cancel.
-  // Without this the "Confirm remove" state would silently survive a
-  // mis-click and a second tap on the (still-armed) button would delete.
+  let canSave = $derived(!submitting && validationErrors.length === 0);
+
   function resetConfirm(): void {
     confirmingRemoval = false;
+  }
+
+  function setMode(sn: string, mode: TimeKeyMode): void {
+    if (draft[sn].mode === mode) return;
+    draft[sn] = { ...draft[sn], mode };
+    resetConfirm();
+  }
+
+  function toggleSource(sn: string): void {
+    draft[sn] = { ...draft[sn], selected: !draft[sn].selected };
+    resetConfirm();
   }
 
   async function onSubmit(event: SubmitEvent): Promise<void> {
@@ -61,15 +249,18 @@
     if (!canSave) return;
     const version = store.snapshot?.snapshot_version;
     if (!version) return;
+    const members: PanelMember[] = builtMembers
+      .map((b) => b.member)
+      .filter((m): m is PanelMember => m !== null);
     submitting = true;
     const args = {
       panel_id: panelIdTrimmed,
-      panel_key: panelKeyTrimmed,
-      members: displayMembers,
+      entity_key: entityKeyTrimmed,
+      members,
       expected_version: version,
-      // Pass the renamed-from id when the panel_id changed; the server
-      // drops the old entry in the same lock so source-overlap doesn't
-      // reject the rename. Same value as new id is a no-op.
+      // Pass the renamed-from id when the panel_id changed; server drops
+      // the old entry in the same lock so source-overlap doesn't reject
+      // the rename. Same value as new id is a no-op.
       ...(existing && existing.panel_id !== panelIdTrimmed
         ? { previous_panel_id: existing.panel_id }
         : {}),
@@ -107,6 +298,7 @@
       onClose();
     }
   }
+
 </script>
 
 <Modal headingId="panel-editor-heading" {onClose}>
@@ -117,13 +309,7 @@
           panel · <span class="mono">{group.group_id}</span>
         </span>
         <h3 id="panel-editor-heading">
-          {#if existing}
-            Edit panel
-          {:else if memberSource === "candidate"}
-            Designate panel
-          {:else}
-            No panel candidate
-          {/if}
+          {existing ? "Edit panel" : "Designate panel"}
         </h3>
       </div>
       <button type="button" class="close" aria-label="Close" onclick={onClose}>
@@ -131,67 +317,124 @@
       </button>
     </header>
 
-    {#if memberSource === "none"}
-      <p class="warn">
-        No panel candidate was detected for this group. Panels need either
-        siblings with date tokens in their filenames, or a single source
-        with a time-key column (AR / INDATUM / year / period). Hand-edit
-        <code>mock_data_config.json</code> if you need a custom layout.
-      </p>
-    {:else}
-      <label class="row">
-        <span>panel_id</span>
-        <input
-          type="text"
-          bind:value={panelId}
-          spellcheck="false"
-          onfocus={resetConfirm}
-          oninput={resetConfirm}
-          placeholder={existing
-            ? existing.panel_id
-            : group.panel_candidate?.suggested_panel_id ?? ""}
-        />
-      </label>
-      <label class="row">
-        <span>panel_key</span>
-        <input
-          type="text"
-          bind:value={panelKey}
-          spellcheck="false"
-          onfocus={resetConfirm}
-          oninput={resetConfirm}
-          placeholder={existing
-            ? existing.panel_key
-            : group.panel_candidate?.suggested_panel_key ?? "id column"}
-        />
-      </label>
+    <label class="row">
+      <span>panel_id</span>
+      <input
+        type="text"
+        bind:value={panelId}
+        spellcheck="false"
+        onfocus={resetConfirm}
+        oninput={resetConfirm}
+        placeholder={existing
+          ? existing.panel_id
+          : group.panel_candidate?.suggested_panel_id ?? ""}
+      />
+    </label>
 
-      {#if displayMembers.length > 0}
-        <details class="members" open={displayMembers.length <= 8}>
-          <summary>
-            {displayMembers.length} member{displayMembers.length === 1 ? "" : "s"}
-            {#if memberSource === "candidate"}<span class="hint">
-                · from auto-detected candidate</span
-              >{:else if memberSource === "existing"}<span class="hint">
-                · from saved panel</span
-              >{/if}
-          </summary>
-          <ul>
-            {#each displayMembers as m (m.source)}
-              <li>
-                <span class="mono">{m.source}</span>
-                {#if m.period !== undefined && m.period !== null}
-                  <span class="period" title="period">{m.period}</span>
-                {:else if m.time_key}
-                  <span class="time-key" title="time-key column"
-                    >col: {m.time_key}</span
-                  >
-                {/if}
-              </li>
-            {/each}
-          </ul>
-        </details>
+    <label class="row">
+      <span>entity_key</span>
+      {#if entityKeyOptions.length > 0}
+        <select
+          bind:value={entityKey}
+          onfocus={resetConfirm}
+          onchange={resetConfirm}
+        >
+          {#if entityKey && !entityKeyOptions.includes(entityKey)}
+            <option value={entityKey} disabled>{entityKey} (missing on a member)</option>
+          {/if}
+          {#if entityKey === ""}
+            <option value="" disabled>— pick a column —</option>
+          {/if}
+          {#each entityKeyOptions as col (col)}
+            <option value={col}>{col}</option>
+          {/each}
+        </select>
+      {:else}
+        <input
+          type="text"
+          bind:value={entityKey}
+          spellcheck="false"
+          onfocus={resetConfirm}
+          oninput={resetConfirm}
+          placeholder="id column shared across members"
+        />
       {/if}
+    </label>
+
+    <fieldset class="members">
+      <legend>
+        Members ({selectedSources.length}/{allSources.length})
+      </legend>
+      <ul>
+        {#each allSources as sn (sn)}
+          {@const d = draft[sn]}
+          {@const cols = group.columns_by_source[sn] ?? []}
+          <li class:disabled={!d.selected}>
+            <label class="source-row">
+              {#if allSources.length > 1}
+                <input
+                  type="checkbox"
+                  checked={d.selected}
+                  onchange={() => toggleSource(sn)}
+                />
+              {/if}
+              <span class="mono source-name">{sn}</span>
+            </label>
+            {#if d.selected}
+              <div class="time-key-block">
+                <div class="mode-toggle" role="radiogroup" aria-label="time_key source">
+                  {#each MODE_OPTIONS as opt (opt.value)}
+                    <label class:active={d.mode === opt.value}>
+                      <input
+                        type="radio"
+                        name={`mode-${sn}`}
+                        value={opt.value}
+                        checked={d.mode === opt.value}
+                        onchange={() => setMode(sn, opt.value)}
+                      />
+                      {opt.label}
+                    </label>
+                  {/each}
+                </div>
+                {#if d.mode === "name"}
+                  <input
+                    type="text"
+                    inputmode="numeric"
+                    pattern="-?\d+"
+                    bind:value={d.nameValue}
+                    onfocus={resetConfirm}
+                    oninput={resetConfirm}
+                    placeholder="literal period (e.g. 2018)"
+                    aria-label={`time_key literal for ${sn}`}
+                  />
+                {:else}
+                  <select
+                    bind:value={d.columnValue}
+                    onfocus={resetConfirm}
+                    onchange={resetConfirm}
+                    aria-label={`time_key column for ${sn}`}
+                  >
+                    {#if d.columnValue === ""}
+                      <option value="" disabled>— pick a column —</option>
+                    {/if}
+                    {#each cols as c (c.name)}
+                      <option value={c.name}>{c.name}</option>
+                    {/each}
+                  </select>
+                {/if}
+              </div>
+            {/if}
+          </li>
+        {/each}
+      </ul>
+    </fieldset>
+
+    {#if validationErrors.length > 0 && !canSave}
+      <ul class="errors" aria-live="polite">
+        {#each validationErrors as msg (msg)}
+          <li>{msg}</li>
+        {/each}
+      </ul>
     {/if}
 
     <footer>
@@ -219,17 +462,15 @@
       >
         Cancel
       </button>
-      {#if memberSource !== "none"}
-        <button type="submit" class="primary" disabled={!canSave}>
-          {#if submitting}
-            Saving…
-          {:else if existing}
-            Save
-          {:else}
-            Designate
-          {/if}
-        </button>
-      {/if}
+      <button type="submit" class="primary" disabled={!canSave}>
+        {#if submitting}
+          Saving…
+        {:else if existing}
+          Save
+        {:else}
+          Designate
+        {/if}
+      </button>
     </footer>
   </form>
 </Modal>
@@ -285,65 +526,113 @@
     color: #666;
     font-size: 0.9rem;
   }
-  input[type="text"] {
+  input[type="text"],
+  select {
     padding: 0.3rem 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     font: inherit;
     font-family: ui-monospace, monospace;
+    width: 100%;
+    box-sizing: border-box;
   }
   .members {
     border: 1px solid #eee;
     border-radius: 4px;
-    padding: 0.4rem 0.6rem;
+    padding: 0.5rem 0.75rem 0.75rem;
     background: #fafbff;
+    margin: 0;
   }
-  .members summary {
-    cursor: pointer;
-    user-select: none;
-    color: #444;
-    font-size: 0.9rem;
+  .members legend {
+    color: #666;
+    font-size: 0.85rem;
+    padding: 0 0.3rem;
   }
   .members ul {
     list-style: none;
-    margin: 0.4rem 0 0;
+    margin: 0;
     padding: 0;
-    max-height: 14rem;
-    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 0.2rem;
-    font-size: 0.85rem;
+    gap: 0.4rem;
   }
   .members li {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
-    padding: 0.15rem 0.25rem;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  .period {
-    color: #1a3b80;
-    font-family: ui-monospace, monospace;
-    font-size: 0.85rem;
-  }
-  .time-key {
-    color: #5d2b8c;
-    font-family: ui-monospace, monospace;
-    font-size: 0.85rem;
-  }
-  .hint {
-    color: #888;
-    font-size: 0.82rem;
-  }
-  .warn {
-    background: #fff8e1;
-    border: 1px solid #f0c14b;
+    padding: 0.35rem 0.45rem;
+    border: 1px solid #eef0f5;
     border-radius: 4px;
-    padding: 0.5rem 0.75rem;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .members li.disabled {
+    background: #f6f6f6;
+    color: #888;
+  }
+  .source-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+  }
+  .source-name {
+    flex: 1 1 auto;
+    overflow-wrap: anywhere;
+    font-size: 0.92rem;
+  }
+  .time-key-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding-left: 1.7rem;
+  }
+  .mode-toggle {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+  .mode-toggle label {
+    cursor: pointer;
+    padding: 0.15rem 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    color: #555;
+    background: #fff;
+    user-select: none;
+  }
+  .mode-toggle label.active {
+    background: #1656c0;
+    border-color: #1656c0;
+    color: #fff;
+  }
+  /* Keep radios in the focus tree (a11y) while letting the label act
+     as the visual control. Focus ring is hoisted to the label. */
+  .mode-toggle input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .mode-toggle label:focus-within {
+    outline: 2px solid #1656c0;
+    outline-offset: 1px;
+  }
+  .errors {
+    background: #fff5f5;
+    border: 1px solid #e0b4b4;
+    border-radius: 4px;
+    padding: 0.45rem 0.75rem 0.45rem 1.7rem;
     margin: 0;
-    color: #5b4a14;
-    font-size: 0.9rem;
+    color: #7a2929;
+    font-size: 0.85rem;
+  }
+  .errors li {
+    margin: 0.1rem 0;
   }
   footer {
     display: flex;

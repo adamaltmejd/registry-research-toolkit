@@ -654,10 +654,10 @@ def test_panel_create_round_trip(panel_server: str):
         f"{panel_server}/api/panel",
         {
             "panel_id": "lisa",
-            "panel_key": "LopNr",
+            "entity_key": "LopNr",
             "members": [
-                {"source": "lisa_2018", "period": 2018},
-                {"source": "lisa_2019", "period": 2019},
+                {"source": "lisa_2018", "time_key": 2018},
+                {"source": "lisa_2019", "time_key": 2019},
             ],
             "expected_version": snapshot["snapshot_version"],
         },
@@ -673,15 +673,15 @@ def test_panel_rename_via_previous_panel_id(panel_server: str):
     write."""
     _, snapshot = _fetch("GET", f"{panel_server}/api/state")
     members = [
-        {"source": "lisa_2018", "period": 2018},
-        {"source": "lisa_2019", "period": 2019},
+        {"source": "lisa_2018", "time_key": 2018},
+        {"source": "lisa_2019", "time_key": 2019},
     ]
     _, snap1 = _fetch(
         "POST",
         f"{panel_server}/api/panel",
         {
             "panel_id": "lisa",
-            "panel_key": "LopNr",
+            "entity_key": "LopNr",
             "members": members,
             "expected_version": snapshot["snapshot_version"],
         },
@@ -691,7 +691,7 @@ def test_panel_rename_via_previous_panel_id(panel_server: str):
         f"{panel_server}/api/panel",
         {
             "panel_id": "lisa_v2",
-            "panel_key": "LopNr",
+            "entity_key": "LopNr",
             "members": members,
             "expected_version": snap1["snapshot_version"],
             "previous_panel_id": "lisa",
@@ -709,8 +709,8 @@ def test_panel_put_rejects_non_string_previous_panel_id(panel_server: str):
         f"{panel_server}/api/panel",
         {
             "panel_id": "p",
-            "panel_key": "LopNr",
-            "members": [{"source": "lisa_2018", "period": 2018}],
+            "entity_key": "LopNr",
+            "members": [{"source": "lisa_2018", "time_key": 2018}],
             "expected_version": snapshot["snapshot_version"],
             "previous_panel_id": 42,
         },
@@ -727,8 +727,8 @@ def test_panel_remove_round_trip(panel_server: str):
         f"{panel_server}/api/panel",
         {
             "panel_id": "lisa",
-            "panel_key": "LopNr",
-            "members": [{"source": "lisa_2018", "period": 2018}],
+            "entity_key": "LopNr",
+            "members": [{"source": "lisa_2018", "time_key": 2018}],
             "expected_version": snapshot["snapshot_version"],
         },
     )
@@ -766,8 +766,8 @@ def test_panel_put_rejects_unknown_member_keys(panel_server: str):
         f"{panel_server}/api/panel",
         {
             "panel_id": "lisa",
-            "panel_key": "LopNr",
-            "members": [{"source": "lisa_2018", "period": 2018, "extra": "noise"}],
+            "entity_key": "LopNr",
+            "members": [{"source": "lisa_2018", "time_key": 2018, "extra": "noise"}],
             "expected_version": snapshot["snapshot_version"],
         },
     )

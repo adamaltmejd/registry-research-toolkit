@@ -30,8 +30,6 @@ from mock_data_wizard._serialize import (
     _editor_warning_to_dict,
     _mdw_config_to_dict,
     _panel_candidate_to_dict,
-    _panel_member_to_dict,
-    _panel_to_dict,
     _regmeta_signal_to_dict,
     _register_group_view_to_dict,
     state_snapshot_to_dict,
@@ -42,6 +40,8 @@ from mock_data_wizard.config import (
     MDWConfig,
     Panel,
     PanelMember,
+    panel_member_to_dict,
+    panel_to_dict,
 )
 from mock_data_wizard.editor import (
     ColumnInfo,
@@ -49,7 +49,7 @@ from mock_data_wizard.editor import (
     RegisterGroupView,
     StateSnapshot,
 )
-from mock_data_wizard.panels import PanelCandidate
+from mock_data_wizard.panels import PanelCandidate, PanelMemberHints
 
 
 GOLDEN_PATH = Path(__file__).parent / "data" / "state_snapshot.golden.json"
@@ -81,31 +81,31 @@ def test_column_type_override_date_format_round_trip():
     }
 
 
-def test_panel_member_period_only():
-    m = PanelMember(source="lisa_2018", period=2018)
-    assert _panel_member_to_dict(m) == {"source": "lisa_2018", "period": 2018}
+def test_panel_member_int_time_key():
+    m = PanelMember(source="lisa_2018", time_key=2018)
+    assert panel_member_to_dict(m) == {"source": "lisa_2018", "time_key": 2018}
 
 
-def test_panel_member_time_key_only():
+def test_panel_member_string_time_key():
     m = PanelMember(source="par", time_key="INDATUM")
-    assert _panel_member_to_dict(m) == {"source": "par", "time_key": "INDATUM"}
+    assert panel_member_to_dict(m) == {"source": "par", "time_key": "INDATUM"}
 
 
 def test_panel_to_dict():
     panel = Panel(
         panel_id="lisa",
-        panel_key="P1105_LopNr_PersonNr",
+        entity_key="P1105_LopNr_PersonNr",
         members=(
-            PanelMember(source="lisa_2018", period=2018),
-            PanelMember(source="lisa_2019", period=2019),
+            PanelMember(source="lisa_2018", time_key=2018),
+            PanelMember(source="lisa_2019", time_key=2019),
         ),
     )
-    assert _panel_to_dict(panel) == {
+    assert panel_to_dict(panel) == {
         "panel_id": "lisa",
-        "panel_key": "P1105_LopNr_PersonNr",
+        "entity_key": "P1105_LopNr_PersonNr",
         "members": [
-            {"source": "lisa_2018", "period": 2018},
-            {"source": "lisa_2019", "period": 2019},
+            {"source": "lisa_2018", "time_key": 2018},
+            {"source": "lisa_2019", "time_key": 2019},
         ],
     }
 
@@ -137,26 +137,26 @@ def test_regmeta_signal_nullable_fields():
 def test_panel_candidate_to_dict():
     cand = PanelCandidate(
         members=(
-            {"source": "lisa_2018", "period": 2018},
-            {"source": "lisa_2019", "period": 2019},
+            {"source": "lisa_2018", "time_key": 2018},
+            {"source": "lisa_2019", "time_key": 2019},
         ),
         suggested_panel_id="lisa",
-        suggested_panel_key="LopNr",
+        suggested_entity_key="LopNr",
     )
     assert _panel_candidate_to_dict(cand) == {
         "members": [
-            {"source": "lisa_2018", "period": 2018},
-            {"source": "lisa_2019", "period": 2019},
+            {"source": "lisa_2018", "time_key": 2018},
+            {"source": "lisa_2019", "time_key": 2019},
         ],
         "suggested_panel_id": "lisa",
-        "suggested_panel_key": "LopNr",
+        "suggested_entity_key": "LopNr",
     }
 
 
 def test_panel_candidate_breaks_aliasing():
     """The serialiser must shallow-copy each member dict so a frontend
     pickling the response can't mutate the editor's view."""
-    member = {"source": "x", "period": 2018}
+    member = {"source": "x", "time_key": 2018}
     cand = PanelCandidate(members=(member,))
     out = _panel_candidate_to_dict(cand)
     out["members"][0]["source"] = "MUTATED"
@@ -245,15 +245,21 @@ def test_register_group_view_to_dict_with_panel_candidate():
         columns_by_source={"lisa_2018": (info,)},
         schema_variants=1,
         panel_candidate=PanelCandidate(
-            members=({"source": "lisa_2018", "period": 2018},),
+            members=({"source": "lisa_2018", "time_key": 2018},),
             suggested_panel_id="lisa",
-            suggested_panel_key="LopNr",
+            suggested_entity_key="LopNr",
         ),
+        member_hints={
+            "lisa_2018": PanelMemberHints(year_from_name=2018, time_key_column=None),
+        },
     )
     out = _register_group_view_to_dict(g)
     assert out["sources"] == ["lisa_2018"]
     assert out["columns_by_source"]["lisa_2018"][0]["name"] == "LopNr"
     assert out["panel_candidate"]["suggested_panel_id"] == "lisa"
+    assert out["member_hints"] == {
+        "lisa_2018": {"year_from_name": 2018, "time_key_column": None}
+    }
 
 
 def test_register_group_view_to_dict_without_panel_candidate():
@@ -266,8 +272,15 @@ def test_register_group_view_to_dict_without_panel_candidate():
         columns_by_source={"x": ()},
         schema_variants=1,
         panel_candidate=None,
+        member_hints={
+            "x": PanelMemberHints(year_from_name=None, time_key_column=None),
+        },
     )
-    assert _register_group_view_to_dict(g)["panel_candidate"] is None
+    out = _register_group_view_to_dict(g)
+    assert out["panel_candidate"] is None
+    assert out["member_hints"] == {
+        "x": {"year_from_name": None, "time_key_column": None}
+    }
 
 
 def test_mdw_config_to_dict_minimum():
@@ -295,8 +308,8 @@ def test_mdw_config_to_dict_full():
         panels=(
             Panel(
                 panel_id="lisa",
-                panel_key="LopNr",
-                members=(PanelMember(source="lisa_2018", period=2018),),
+                entity_key="LopNr",
+                members=(PanelMember(source="lisa_2018", time_key=2018),),
             ),
         ),
         manual_columns=(("lisa_2018", "LopNr"),),

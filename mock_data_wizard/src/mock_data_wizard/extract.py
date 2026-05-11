@@ -232,28 +232,28 @@ def _sample_values(
 
 
 def _extract_time_key_member_periods(
-    handle: SourceHandle, panel: Panel, time_key: str
+    handle: SourceHandle, panel: Panel, time_key_column: str
 ) -> list[dict[str, Any]]:
     """Run the per-period GROUP BY for one column-member on this handle.
 
     SQL form:
 
-        SELECT time_key AS period, COUNT(*) AS n_rows,
-               COUNT(DISTINCT panel_key) AS n_panel_ids
-        FROM <table> GROUP BY time_key ORDER BY time_key
+        SELECT time_key_column AS period, COUNT(*) AS n_rows,
+               COUNT(DISTINCT entity_key) AS n_entity_ids
+        FROM <table> GROUP BY time_key_column ORDER BY time_key_column
 
-    Periods with ``n_panel_ids < SUPPRESS_K`` are dropped: the
+    Periods with ``n_entity_ids < SUPPRESS_K`` are dropped: the
     aggregate identifies a tiny sub-cohort and would leak under k-
-    anonymity. ``period`` is preserved as int when the time_key column
+    anonymity. ``period`` is preserved as int when the time-key column
     is integral (years are the dominant case); non-integer values
     (date/quarter strings) are kept as ``str`` so sub-annual panels
     don't crash the run.
     """
-    qcol_time = quote_ident(time_key, handle.dialect)
-    qcol_panel = quote_ident(panel.panel_key, handle.dialect)
+    qcol_time = quote_ident(time_key_column, handle.dialect)
+    qcol_entity = quote_ident(panel.entity_key, handle.dialect)
     sql = (
         f"SELECT {qcol_time} AS period, COUNT(*) AS n_rows, "
-        f"COUNT(DISTINCT {qcol_panel}) AS n_panel_ids "
+        f"COUNT(DISTINCT {qcol_entity}) AS n_entity_ids "
         f"FROM {handle.table} GROUP BY {qcol_time} ORDER BY {qcol_time}"
     )
     cur = handle.conn.cursor()
@@ -264,15 +264,15 @@ def _extract_time_key_member_periods(
         cur.close()
     out: list[dict[str, Any]] = []
     for r in rows:
-        period_raw, n_rows, n_panel_ids = r[0], int(r[1]), int(r[2])
+        period_raw, n_rows, n_entity_ids = r[0], int(r[1]), int(r[2])
         if period_raw is None:
             continue  # NULL time_key bucket: leave out for clarity
-        if n_panel_ids < SUPPRESS_K:
+        if n_entity_ids < SUPPRESS_K:
             log.warning(
-                "panel %s period %r suppressed (n_panel_ids=%d < %d)",
+                "panel %s period %r suppressed (n_entity_ids=%d < %d)",
                 panel.panel_id,
                 period_raw,
-                n_panel_ids,
+                n_entity_ids,
                 SUPPRESS_K,
             )
             continue
@@ -281,7 +281,7 @@ def _extract_time_key_member_periods(
                 "period": _coerce_period(period_raw),
                 "source": handle.source_name,
                 "n_rows": n_rows,
-                "n_panel_ids": n_panel_ids,
+                "n_entity_ids": n_entity_ids,
             }
         )
     return out
@@ -316,10 +316,10 @@ def _build_panels_block(
 
     ``time_key_periods`` is keyed by ``(panel_id, member.source)`` and
     carries pre-computed per-period stats for column-members (the
-    ``GROUP BY time_key`` query result). File-members read
-    ``n_rows`` from the per-source row count and ``n_panel_ids`` from
-    the panel-key column's ``n_distinct``. Suppression is uniform
-    (drop periods where ``n_panel_ids < SUPPRESS_K``).
+    ``GROUP BY time_key`` query result). File-members read ``n_rows``
+    from the per-source row count and ``n_entity_ids`` from the
+    entity-key column's ``n_distinct``. Suppression is uniform (drop
+    periods where ``n_entity_ids < SUPPRESS_K``).
     """
     out: list[dict[str, Any]] = []
     sources_by_name = {s["source_name"]: s for s in source_results}
@@ -335,41 +335,45 @@ def _build_panels_block(
                     member.source,
                 )
                 continue
-            if member.time_key is not None:
-                members_out.append(
-                    {"source": member.source, "time_key": member.time_key}
-                )
+            members_out.append({"source": member.source, "time_key": member.time_key})
+            if isinstance(member.time_key, str):
+                # Column-member: by-period stats produced by the
+                # GROUP BY query at handle-processing time.
                 by_period.extend(
                     time_key_periods.get((panel.panel_id, member.source), [])
                 )
                 continue
-            # File-member: one period from the source-level row count.
+            # File-member (int time_key): one period from the source-level
+            # row count.
             col = next(
-                (c for c in src_data["columns"] if c["column_name"] == panel.panel_key),
+                (
+                    c
+                    for c in src_data["columns"]
+                    if c["column_name"] == panel.entity_key
+                ),
                 None,
             )
             if col is None:
                 raise RuntimeError(
                     f"panel {panel.panel_id!r}: source {member.source!r} has no "
-                    f"column {panel.panel_key!r} (declared as panel_key)"
+                    f"column {panel.entity_key!r} (declared as entity_key)"
                 )
-            n_panel_ids = int(col["n_distinct"])
-            members_out.append({"source": member.source, "period": member.period})
-            if n_panel_ids < SUPPRESS_K:
+            n_entity_ids = int(col["n_distinct"])
+            if n_entity_ids < SUPPRESS_K:
                 log.warning(
-                    "panel %s period %d suppressed (n_panel_ids=%d < %d)",
+                    "panel %s period %d suppressed (n_entity_ids=%d < %d)",
                     panel.panel_id,
-                    member.period,
-                    n_panel_ids,
+                    member.time_key,
+                    n_entity_ids,
                     SUPPRESS_K,
                 )
                 continue
             by_period.append(
                 {
-                    "period": member.period,
+                    "period": member.time_key,
                     "source": member.source,
                     "n_rows": int(src_data["row_count"]),
-                    "n_panel_ids": n_panel_ids,
+                    "n_entity_ids": n_entity_ids,
                 }
             )
         if not members_out:
@@ -386,7 +390,7 @@ def _build_panels_block(
         out.append(
             {
                 "panel_id": panel.panel_id,
-                "panel_key": panel.panel_key,
+                "entity_key": panel.entity_key,
                 "members": members_out,
                 "by_period": by_period,
             }
@@ -571,7 +575,7 @@ def run_extract_typed(
     time_key_member_by_source: dict[str, tuple[Panel, str]] = {}
     for panel in config.panels:
         for member in panel.members:
-            if member.time_key is not None:
+            if isinstance(member.time_key, str):
                 time_key_member_by_source[member.source] = (panel, member.time_key)
     time_key_periods: dict[tuple[str, str], list[dict[str, Any]]] = {}
     source_results: list[dict[str, Any]] = []

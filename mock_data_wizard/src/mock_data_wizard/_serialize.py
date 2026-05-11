@@ -18,14 +18,14 @@ from __future__ import annotations
 from typing import Any
 
 from .classify import RegmetaSignal
-from .config import ColumnTypeOverride, MDWConfig, Panel, PanelMember
+from .config import ColumnTypeOverride, MDWConfig, panel_to_dict
 from .editor import (
     ColumnInfo,
     EditorWarning,
     RegisterGroupView,
     StateSnapshot,
 )
-from .panels import PanelCandidate
+from .panels import PanelCandidate, PanelMemberHints
 
 __all__ = ["state_snapshot_to_dict"]
 
@@ -57,7 +57,7 @@ def _mdw_config_to_dict(config: MDWConfig) -> dict[str, Any]:
             for source, cols in config.column_options.items()
         },
         "sources": {name: dict(entry) for name, entry in config.sources.items()},
-        "panels": [_panel_to_dict(p) for p in config.panels],
+        "panels": [panel_to_dict(p) for p in config.panels],
         "manual_columns": [list(pair) for pair in config.manual_columns],
     }
 
@@ -74,25 +74,6 @@ def _column_type_override_to_dict(override: ColumnTypeOverride) -> dict[str, Any
         out["numeric_subtype"] = override.numeric_subtype
     if override.date_format is not None:
         out["date_format"] = override.date_format
-    return out
-
-
-def _panel_to_dict(panel: Panel) -> dict[str, Any]:
-    return {
-        "panel_id": panel.panel_id,
-        "panel_key": panel.panel_key,
-        "members": [_panel_member_to_dict(m) for m in panel.members],
-    }
-
-
-def _panel_member_to_dict(member: PanelMember) -> dict[str, Any]:
-    """Exactly one of ``period`` / ``time_key`` is set (enforced by
-    ``PanelMember.__post_init__``); emit only the populated key."""
-    out: dict[str, Any] = {"source": member.source}
-    if member.period is not None:
-        out["period"] = member.period
-    if member.time_key is not None:
-        out["time_key"] = member.time_key
     return out
 
 
@@ -113,6 +94,16 @@ def _register_group_view_to_dict(group: RegisterGroupView) -> dict[str, Any]:
             if group.panel_candidate is not None
             else None
         ),
+        "member_hints": {
+            sn: _panel_member_hints_to_dict(h) for sn, h in group.member_hints.items()
+        },
+    }
+
+
+def _panel_member_hints_to_dict(hints: PanelMemberHints) -> dict[str, Any]:
+    return {
+        "year_from_name": hints.year_from_name,
+        "time_key_column": hints.time_key_column,
     }
 
 
@@ -146,7 +137,7 @@ def _panel_candidate_to_dict(candidate: PanelCandidate) -> dict[str, Any]:
     return {
         "members": [dict(m) for m in candidate.members],
         "suggested_panel_id": candidate.suggested_panel_id,
-        "suggested_panel_key": candidate.suggested_panel_key,
+        "suggested_entity_key": candidate.suggested_entity_key,
     }
 
 
