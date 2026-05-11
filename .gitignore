@@ -74,3 +74,10 @@ regmeta/docs/_raw/
 # Archive (concluded investigations, ad-hoc scripts, internal notes)
 archive/
 *.har
+
+# Claude Code harness state (transient locks, per-user settings, worktree shims).
+# `.claude/skills/` is intentionally tracked for shared skills, so ignore the
+# transient pieces individually rather than blanket-ignoring `.claude/`.
+.claude/scheduled_tasks.lock
+.claude/worktrees/
+.claude/settings.local.json
