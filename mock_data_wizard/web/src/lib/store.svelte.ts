@@ -11,9 +11,13 @@ import {
   getState as fetchState,
   initProject as apiInitProject,
   listRegisters,
+  putPanel as apiPutPanel,
+  removePanel as apiRemovePanel,
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
   unsetColumnManual as apiUnsetColumnManual,
+  type PutPanelArgs,
+  type RemovePanelArgs,
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
   type UnsetColumnManualArgs,
@@ -95,6 +99,8 @@ const MAX_TOASTS = 4;
 // don't belong in mock_data_config.json.
 const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
 const COLUMNS_PREF_KEY = "mdw.web.visibleColumns";
+const OPEN_GROUPS_KEY = "mdw.web.openGroups";
+const OPEN_SOURCES_KEY = "mdw.web.openSources";
 
 function loadGroupingPref(): boolean {
   if (typeof localStorage === "undefined") return true;
@@ -169,6 +175,43 @@ function saveVisibleColumns(value: VisibleColumns): void {
   }
 }
 
+/** Per-browser persistence for the user's expand/collapse state. Stored
+ * as a flat string array (open group_ids) so a fresh page load — or any
+ * snapshot mutation that re-renders the GroupCard list — preserves
+ * exactly which cards the user had open. Closed-by-default for groups
+ * that have never been touched is still the right initial behavior;
+ * only opened groups are persisted. */
+function loadStringSet(key: string): Set<string> {
+  if (typeof localStorage === "undefined") return new Set();
+  try {
+    const raw = localStorage.getItem(key);
+    if (raw === null) return new Set();
+    const parsed = JSON.parse(raw) as unknown;
+    if (!Array.isArray(parsed)) return new Set();
+    return new Set(parsed.filter((v): v is string => typeof v === "string"));
+  } catch {
+    return new Set();
+  }
+}
+
+function saveStringSet(key: string, value: Set<string>): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(key, JSON.stringify([...value]));
+  } catch {
+    // Storage quota / private mode — non-fatal.
+  }
+}
+
+/** "<group_id>|<source_name>" composite keys. Flat string set keeps the
+ * persistence shape identical to OPEN_GROUPS_KEY and avoids a nested
+ * Map<string, Set<string>> serialiser; the pipe is safe because
+ * group_ids ("reg-N" / "noreg-<source>") and source names don't carry
+ * one in practice. */
+function sourceKey(groupId: string, sourceName: string): string {
+  return `${groupId}|${sourceName}`;
+}
+
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
@@ -194,6 +237,13 @@ class Store {
    * Persisted to localStorage. */
   visibleColumns: VisibleColumns = $state(loadVisibleColumns());
 
+  /** Open group_ids and "<group_id>|<source>" keys. Persisted to
+   * localStorage so reload + post-mutation re-renders don't collapse
+   * cards the user is actively working on. Closed-by-default: only
+   * touched entries are persisted. */
+  openGroups: Set<string> = $state(loadStringSet(OPEN_GROUPS_KEY));
+  openSources: Set<string> = $state(loadStringSet(OPEN_SOURCES_KEY));
+
   /** Free-text filter on column name. Substring, case-insensitive.
    * Session-scoped — losing the filter on reload is the right default
    * (otherwise a stale filter from yesterday silently hides everything
@@ -211,7 +261,7 @@ class Store {
 
   async load(): Promise<void> {
     try {
-      this.snapshot = await fetchState();
+      this.setSnapshot(await fetchState());
       this.loadState = { kind: "ready" };
     } catch (exc) {
       if (exc instanceof ApiError && exc.code === "not_initialized") {
@@ -232,7 +282,7 @@ class Store {
     if (this.busy) return;
     this.busy = true;
     try {
-      this.snapshot = await apiInitProject();
+      this.setSnapshot(await apiInitProject());
       this.loadState = { kind: "ready" };
       this.pushToast("info", "Project initialised. Review the auto-classified columns below.");
     } catch (exc) {
@@ -240,6 +290,43 @@ class Store {
       this.pushToast("error", `Could not initialise: ${message}`);
     } finally {
       this.busy = false;
+    }
+  }
+
+  /** Sole snapshot setter. Also prunes ``openGroups``/``openSources`` of
+   * any entry whose group_id no longer exists in the new snapshot — the
+   * persisted set would otherwise grow forever as users move between
+   * projects or as re-discover renames groups. */
+  private setSnapshot(snap: StateSnapshot): void {
+    this.snapshot = snap;
+    this.pruneOpenStateAgainst(snap);
+  }
+
+  private pruneOpenStateAgainst(snap: StateSnapshot): void {
+    const liveGroupIds = new Set(snap.groups.map((g) => g.group_id));
+    const liveSourceKeys = new Set<string>();
+    for (const g of snap.groups) {
+      for (const sn of g.sources) liveSourceKeys.add(sourceKey(g.group_id, sn));
+    }
+    let groupsChanged = false;
+    const nextGroups = new Set<string>();
+    for (const id of this.openGroups) {
+      if (liveGroupIds.has(id)) nextGroups.add(id);
+      else groupsChanged = true;
+    }
+    if (groupsChanged) {
+      this.openGroups = nextGroups;
+      saveStringSet(OPEN_GROUPS_KEY, nextGroups);
+    }
+    let sourcesChanged = false;
+    const nextSources = new Set<string>();
+    for (const key of this.openSources) {
+      if (liveSourceKeys.has(key)) nextSources.add(key);
+      else sourcesChanged = true;
+    }
+    if (sourcesChanged) {
+      this.openSources = nextSources;
+      saveStringSet(OPEN_SOURCES_KEY, nextSources);
     }
   }
 
@@ -279,6 +366,14 @@ class Store {
     return this.runMutation(() => apiSetGroupRegister(args));
   }
 
+  async putPanel(args: PutPanelArgs): Promise<boolean> {
+    return this.runMutation(() => apiPutPanel(args));
+  }
+
+  async removePanel(args: RemovePanelArgs): Promise<boolean> {
+    return this.runMutation(() => apiRemovePanel(args));
+  }
+
   pushToast(level: Toast["level"], message: string): void {
     const id = this.nextToastId++;
     let next = [...this.toasts, { id, level, message }];
@@ -308,6 +403,35 @@ class Store {
   toggleColumnVisibility(id: OptionalColumnId): void {
     this.visibleColumns[id] = !this.visibleColumns[id];
     saveVisibleColumns(this.visibleColumns);
+  }
+
+  setGroupOpen(groupId: string, open: boolean): void {
+    if (this.openGroups.has(groupId) === open) return;
+    // Reassign the Set so Svelte's reactivity picks up the change —
+    // mutating in place won't trigger downstream $derived recomputes.
+    const next = new Set(this.openGroups);
+    if (open) next.add(groupId);
+    else next.delete(groupId);
+    this.openGroups = next;
+    saveStringSet(OPEN_GROUPS_KEY, next);
+  }
+
+  isGroupOpen(groupId: string): boolean {
+    return this.openGroups.has(groupId);
+  }
+
+  setSourceOpen(groupId: string, sourceName: string, open: boolean): void {
+    const key = sourceKey(groupId, sourceName);
+    if (this.openSources.has(key) === open) return;
+    const next = new Set(this.openSources);
+    if (open) next.add(key);
+    else next.delete(key);
+    this.openSources = next;
+    saveStringSet(OPEN_SOURCES_KEY, next);
+  }
+
+  isSourceOpen(groupId: string, sourceName: string): boolean {
+    return this.openSources.has(sourceKey(groupId, sourceName));
   }
 
   setFilterQuery(value: string): void {
@@ -388,12 +512,12 @@ class Store {
     if (this.busy) return false;
     this.busy = true;
     try {
-      this.snapshot = await fn();
+      this.setSnapshot(await fn());
       return true;
     } catch (exc) {
       if (exc instanceof ApiStaleState) {
         if (exc.freshState) {
-          this.snapshot = exc.freshState;
+          this.setSnapshot(exc.freshState);
         }
         // Bump the tick so any open modal can self-close: its mounted
         // snapshot of the column/group state is no longer trustworthy.

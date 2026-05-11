@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { TYPE_LABEL_SHORT } from "../types";
   import type { ColumnInfo, Panel, RegisterGroupView } from "../types";
   import {
     columnIsManual,
@@ -7,7 +8,9 @@
     store,
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
+  import PanelEditor from "./PanelEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
+  import ValueCodesModal from "./ValueCodesModal.svelte";
 
   interface Props {
     group: RegisterGroupView;
@@ -26,6 +29,12 @@
     column: ColumnInfo;
   } | null = $state(null);
   let editingRegister = $state(false);
+  let editingPanel = $state(false);
+  // Value-codes popover target. The register comes from this group;
+  // server side handles the case where no register is set (returns
+  // kind="none"), but we don't open the modal at all in that case
+  // since there are no codes to look up.
+  let viewingValuesFor: string | null = $state(null);
 
   const CONFIDENCE_LABEL: Record<string, string> = {
     high: "high confidence",
@@ -49,6 +58,13 @@
       p.members.some((m) => groupSourceSet.has(m.source)),
     );
   });
+  // Single-panel attachment is the common case; the editor expects a
+  // 1:1 group↔panel relationship for the "Edit panel" affordance. When
+  // multiple panels overlap a group (rare; usually a hand-edit), the
+  // first one wins for editing — the others are still listed below.
+  let primaryPanelForGroup = $derived(
+    panelsForGroup.length > 0 ? panelsForGroup[0] : null,
+  );
 
   function panelPeriodRange(panel: Panel): string | null {
     const periods = panel.members
@@ -168,27 +184,51 @@
     missing_in_count: number;
   }
 
-  // Persist the user's expand/collapse across snapshot re-renders.
-  // `open={forceOpen || undefined}` would re-apply on every snapshot
-  // change, collapsing cards the user had opened after each save.
-  // With `bind:open` the DOM is authoritative; the effects below only
-  // force-open in one direction (filters appear), never force-close.
+  // Open state lives in the store (localStorage-backed) so reload and
+  // post-mutation re-renders preserve which cards the user has opened.
+  // `forceOpen` reflects active filters: when filters are on, we open
+  // every group/source so the user sees what survives the filter — but
+  // we never force-close, leaving the persistent state untouched.
   let forceOpen = $derived(store.hasActiveFilters());
+  let groupOpen = $derived(forceOpen || store.isGroupOpen(group.group_id));
+  function onGroupToggle(event: Event): void {
+    const el = event.currentTarget as HTMLDetailsElement;
+    // While `forceOpen` is true we don't mutate persisted state — the
+    // user can't really "close" a forced-open card; the toggle attempt
+    // shouldn't leak into long-term state.
+    if (forceOpen) return;
+    store.setGroupOpen(group.group_id, el.open);
+  }
 
-  let groupOpen = $state(false);
-  $effect(() => {
-    if (forceOpen && !groupOpen) groupOpen = true;
-  });
+  function isSourceOpen(sn: string): boolean {
+    return forceOpen || store.isSourceOpen(group.group_id, sn);
+  }
+  function onSourceToggle(sn: string, event: Event): void {
+    if (forceOpen) return;
+    const el = event.currentTarget as HTMLDetailsElement;
+    store.setSourceOpen(group.group_id, sn, el.open);
+  }
 
-  // Per-source `<details>` open state (per-source view only). Same
-  // persistence story as `groupOpen`.
-  let sourceOpenState: Record<string, boolean> = $state({});
-  $effect(() => {
-    if (!forceOpen || store.groupColumnsByName) return;
-    for (const sn of group.sources) {
-      if (!sourceOpenState[sn]) sourceOpenState[sn] = true;
-    }
-  });
+  // Row-level click is a mouse-only enhancement: clicking anywhere on a
+  // variable row opens the type editor. Inner buttons / clickable badges
+  // stopPropagation so they keep their own intent. Keyboard users tab
+  // straight to the inner type-pill button — we deliberately don't put
+  // role="button"/tabindex on the <tr> because nesting interactive
+  // children inside an exposed-as-button row is invalid AT semantics.
+  function openEditorForPartition(p: ColumnPartition): void {
+    editingColumn = {
+      sources: [...p.sources],
+      cellBySource: cellsByName(p.name),
+      column: p.sample,
+    };
+  }
+  function openEditorForCell(sn: string, col: ColumnInfo): void {
+    editingColumn = {
+      sources: [sn],
+      cellBySource: cellsByName(col.name),
+      column: col,
+    };
+  }
 
   let partitions: ColumnPartition[] = $derived.by(() => {
     if (!store.groupColumnsByName) return [];
@@ -359,7 +399,8 @@
   class="group"
   class:no-register={group.register_id === null}
   title={group.group_id}
-  bind:open={groupOpen}
+  open={groupOpen}
+  ontoggle={onGroupToggle}
 >
   <!-- Group-level collapse: header always visible, contents (panels,
        column table, source list) hidden until expanded. Default closed
@@ -384,21 +425,52 @@
         {#if group.schema_variants > 1}
           · {group.schema_variants} schemas
         {/if}
-        {#if group.panel_candidate && panelsForGroup.length === 0}
-          · panel candidate ({group.panel_candidate.members.length})
+        {#if primaryPanelForGroup}
+          · <span class="panel-tag" title="Panel attached to this group"
+            >panel</span
+          >
+          <code class="panel-id">{primaryPanelForGroup.panel_id}</code>
+          {@const range = panelPeriodRange(primaryPanelForGroup)}
+          {#if range}
+            ({range}, {primaryPanelForGroup.members.length} members)
+          {:else}
+            ({primaryPanelForGroup.members.length} members)
+          {/if}
+        {:else if group.panel_candidate}
+          · <span class="panel-candidate-tag" title="Auto-detected panel candidate (not yet designated)"
+            >panel candidate</span
+          >
+          ({group.panel_candidate.members.length})
         {/if}
       </p>
     </div>
-    <button
-      class="link"
-      onclick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        editingRegister = true;
-      }}
-    >
-      Edit register…
-    </button>
+    <div class="actions">
+      <button
+        class="link"
+        onclick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          editingRegister = true;
+        }}
+      >
+        Edit register…
+      </button>
+      {#if primaryPanelForGroup || group.panel_candidate}
+        <button
+          class="link"
+          onclick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            editingPanel = true;
+          }}
+          title={primaryPanelForGroup
+            ? "Edit attached panel"
+            : "Designate this group as a panel"}
+        >
+          {primaryPanelForGroup ? "Edit panel…" : "Designate panel…"}
+        </button>
+      {/if}
+    </div>
   </summary>
 
   {#each panelsForGroup as panel (panel.panel_id)}
@@ -428,7 +500,7 @@
       </colgroup>
       <thead>
         <tr>
-          <th>Column</th>
+          <th>Variable</th>
           {#if visCols.sql}<th>SQL</th>{/if}
           {#if visCols.type}<th>Type</th>{/if}
           {#if visCols.coverage}<th>Coverage</th>{/if}
@@ -442,7 +514,11 @@
           {@const mismatch = isRegmetaMismatch(p.sample)}
           {@const split = p.variant_count > 1}
           {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
-          <tr class:split>
+          <tr
+            class="clickable-row"
+            class:split
+            onclick={() => openEditorForPartition(p)}
+          >
             <td class="mono col-name" title={p.name}>
               {p.name}
               {#if split}
@@ -479,20 +555,32 @@
                         ? `, ${p.manual_count} manual`
                         : "") +
                       ")"}
-                    onclick={() =>
-                      (editingColumn = {
+                    onclick={(e) => {
+                      e.stopPropagation();
+                      editingColumn = {
                         sources: [...p.sources],
                         cellBySource: cellsByName(p.name),
                         column: p.sample,
-                      })}
+                      };
+                    }}
                   >
-                    <span class="type-name">{p.sample.current_type}</span>
+                    <span class="type-name"
+                      >{TYPE_LABEL_SHORT[p.sample.current_type]}</span
+                    >
                     {#if hint}
                       <span class="type-suffix">· {hint}</span>
                     {/if}
                   </button>
                   {#if regmeta}
-                    <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
+                    <button
+                      type="button"
+                      class="regmeta-tag"
+                      title={`${regmetaTitle} — click to load value codes`}
+                      onclick={(e) => {
+                        e.stopPropagation();
+                        viewingValuesFor = p.name;
+                      }}>{regmeta}</button
+                    >
                   {/if}
                   {#if p.manual_count > 0}
                     <span class="manual-badge" title="manual overrides in this partition"
@@ -565,7 +653,11 @@
       {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
       {@const year = sourceYears[sourceName]}
-      <details class="source" bind:open={sourceOpenState[fs.name]}>
+      <details
+        class="source"
+        open={isSourceOpen(fs.name)}
+        ontoggle={(event) => onSourceToggle(fs.name, event)}
+      >
         <summary>
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
@@ -605,7 +697,7 @@
           </colgroup>
           <thead>
             <tr>
-              <th>Column</th>
+              <th>Variable</th>
               {#if visCols.sql}<th>SQL</th>{/if}
               {#if visCols.type}<th>Type</th>{/if}
               {#if visCols.coverage}<th>Coverage</th>{/if}
@@ -624,7 +716,10 @@
               {@const coverage = visCols.coverage
                 ? coverageForSourceColumn(sourceName, col.name)
                 : []}
-              <tr>
+              <tr
+                class="clickable-row"
+                onclick={() => openEditorForCell(sourceName, col)}
+              >
                 <td class="mono col-name" title={col.name}>{col.name}</td>
                 {#if visCols.sql}
                   <td class="mono dim">{col.sql_type ?? "—"}</td>
@@ -637,20 +732,32 @@
                         title={[col.current_type, hint]
                           .filter(Boolean)
                           .join(" · ") + ` (${provLabel})`}
-                        onclick={() =>
-                          (editingColumn = {
+                        onclick={(e) => {
+                          e.stopPropagation();
+                          editingColumn = {
                             sources: [sourceName],
                             cellBySource: cellsByName(col.name),
                             column: col,
-                          })}
+                          };
+                        }}
                       >
-                        <span class="type-name">{col.current_type}</span>
+                        <span class="type-name"
+                          >{TYPE_LABEL_SHORT[col.current_type]}</span
+                        >
                         {#if hint}
                           <span class="type-suffix">· {hint}</span>
                         {/if}
                       </button>
                       {#if regmeta}
-                        <span class="regmeta-tag" title={regmetaTitle}>{regmeta}</span>
+                        <button
+                          type="button"
+                          class="regmeta-tag"
+                          title={`${regmetaTitle} — click to load value codes`}
+                          onclick={(e) => {
+                            e.stopPropagation();
+                            viewingValuesFor = col.name;
+                          }}>{regmeta}</button
+                        >
                       {/if}
                       {#if mismatch}
                         <span
@@ -705,6 +812,22 @@
 
 {#if editingRegister}
   <RegisterEditor {group} onClose={() => (editingRegister = false)} />
+{/if}
+
+{#if editingPanel}
+  <PanelEditor
+    {group}
+    existing={primaryPanelForGroup}
+    onClose={() => (editingPanel = false)}
+  />
+{/if}
+
+{#if viewingValuesFor !== null}
+  <ValueCodesModal
+    register={group.register_name}
+    column={viewingValuesFor}
+    onClose={() => (viewingValuesFor = null)}
+  />
 {/if}
 
 <style>
@@ -822,6 +945,29 @@
     color: #1a3b80;
     margin-right: 0.25rem;
   }
+  .panel-candidate-tag {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: #7a5b00;
+    margin-right: 0.25rem;
+  }
+  .panel-id {
+    background: #eef2fb;
+    color: #1a3b80;
+    padding: 0.05rem 0.35rem;
+    border-radius: 3px;
+    font-family: ui-monospace, monospace;
+    font-size: 0.85em;
+  }
+  .actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
   .source {
     margin-top: 0.5rem;
     border-top: 1px solid #f0f0f0;
@@ -936,6 +1082,16 @@
     border-left: 2px solid #d6c5e6;
     padding-left: 0.5rem;
   }
+  /* Whole-row click is a mouse-only enhancement; keyboard users tab
+     straight to the inner type-pill button. Inner buttons stop
+     propagation so clicks on the type pill / regmeta tag stay scoped
+     to those controls. */
+  tr.clickable-row {
+    cursor: pointer;
+  }
+  tr.clickable-row:hover td {
+    background: #f6f9ff;
+  }
   .mono {
     font-family: ui-monospace, monospace;
   }
@@ -1024,13 +1180,23 @@
      pill stay readable even when the cell is narrow. */
   .regmeta-tag {
     padding: 0.05rem 0.35rem;
+    border: 1px solid transparent;
     border-radius: 3px;
     background: #f0e8fa;
     color: #5d2b8c;
     font-size: 0.78em;
     font-family: ui-monospace, monospace;
-    cursor: help;
+    cursor: pointer;
     flex: 0 0 auto;
+    line-height: 1.3;
+  }
+  .regmeta-tag:hover {
+    background: #e3d4f4;
+    border-color: #c8b1e2;
+  }
+  .regmeta-tag:focus-visible {
+    outline: 2px solid #5d2b8c;
+    outline-offset: 1px;
   }
   .manual-badge {
     color: #b34a00;

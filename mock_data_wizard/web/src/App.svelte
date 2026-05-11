@@ -70,8 +70,8 @@
   <div class="header-row">
     <h1>mock_data_wizard</h1>
     {#if snapshot}
-      <fieldset class="view-toggle" aria-label="Column view">
-        <legend class="sr-only">Column view</legend>
+      <fieldset class="view-toggle" aria-label="Variable view">
+        <legend class="sr-only">Variable view</legend>
         <label class:active={store.groupColumnsByName}>
           <input
             type="radio"
@@ -80,7 +80,7 @@
             checked={store.groupColumnsByName}
             onchange={() => store.setGroupColumnsByName(true)}
           />
-          by column
+          by variable
         </label>
         <label class:active={!store.groupColumnsByName}>
           <input

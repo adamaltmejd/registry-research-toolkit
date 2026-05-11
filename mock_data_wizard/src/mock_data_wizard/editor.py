@@ -55,6 +55,7 @@ from .config import (
     Panel,
     PanelMember,
     _parse_options,
+    _parse_panel,
     _reject_duplicate_keys,
     parse_config,
 )
@@ -77,6 +78,7 @@ __all__ = [
     "set_source_metadata",
     "set_column_options",
     "put_panel",
+    "parse_panel_payload",
     "remove_panel",
     # Data models
     "StateSnapshot",
@@ -362,6 +364,32 @@ def _classify_columns(
     return out
 
 
+@contextmanager
+def _open_regmeta_conn(db_path: Path | None) -> Iterator[Any]:
+    """Open a regmeta DB connection. Yields ``None`` when regmeta is
+    unavailable or the DB can't be opened — callers handle that branch
+    before using the connection. Closes on exit when one was opened."""
+    import sqlite3
+
+    try:
+        from regmeta import open_db
+        from regmeta.db import db_path_from_args
+        from regmeta.errors import RegmetaError
+    except ImportError:
+        yield None
+        return
+    try:
+        resolved = db_path_from_args(str(db_path) if db_path else None)
+        conn = open_db(resolved)
+    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
+        yield None
+        return
+    try:
+        yield conn
+    finally:
+        conn.close()
+
+
 def _resolve_signals_for_register(
     register_str: str, col_names: set[str], db_path: Path | None
 ) -> dict[str, RegmetaSignal]:
@@ -370,20 +398,12 @@ def _resolve_signals_for_register(
     Returns ``{}`` when regmeta is unavailable, the register doesn't
     resolve, or no columns match. Editor calls this once per register
     (sources sharing a register batch into one DB call)."""
-    import sqlite3
-
-    try:
-        from regmeta import open_db, resolve_register_ids
-        from regmeta.db import db_path_from_args
+    with _open_regmeta_conn(db_path) as conn:
+        if conn is None:
+            return {}
+        from regmeta import resolve_register_ids
         from regmeta.errors import RegmetaError
-    except ImportError:
-        return {}
-    try:
-        resolved = db_path_from_args(str(db_path) if db_path else None)
-        conn = open_db(resolved)
-    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
-        return {}
-    try:
+
         try:
             register_ids = resolve_register_ids(conn, register_str)
         except RegmetaError:
@@ -391,8 +411,6 @@ def _resolve_signals_for_register(
         if not register_ids:
             return {}
         return _regmeta_lookup(conn, col_names, register_ids)
-    finally:
-        conn.close()
 
 
 def _resolve_signals_for_groups(
@@ -449,31 +467,19 @@ def _autodetect_register_per_source(
     editor stores the chosen register in ``sources[name].register``;
     ``set_group_register`` is the only way to change it after init.
     """
-    import sqlite3
-
-    try:
-        from regmeta import open_db
-        from regmeta.db import db_path_from_args
-        from regmeta.errors import RegmetaError
-    except ImportError:
-        return {src["source_name"]: None for src in discover.get("sources", [])}
-
-    try:
-        resolved = db_path_from_args(str(db_path) if db_path else None)
-        conn = open_db(resolved)
-    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
-        return {src["source_name"]: None for src in discover.get("sources", [])}
-
-    from .classify import is_known_id
-    from .enrich import (
-        _bulk_resolve_all_registers,
-        _source_name_register_fallback,
-        _vote_register,
-    )
-
     sources = discover.get("sources", [])
-    out: dict[str, str | None] = {}
-    try:
+    with _open_regmeta_conn(db_path) as conn:
+        if conn is None:
+            return {src["source_name"]: None for src in sources}
+
+        from .classify import is_known_id
+        from .enrich import (
+            _bulk_resolve_all_registers,
+            _source_name_register_fallback,
+            _vote_register,
+        )
+
+        out: dict[str, str | None] = {}
         all_names: set[str] = set()
         for src in sources:
             for col in src.get("columns", []):
@@ -508,9 +514,7 @@ def _autodetect_register_per_source(
         for src in sources:
             rid = chosen_ids[src["source_name"]]
             out[src["source_name"]] = names.get(rid) if rid is not None else None
-    finally:
-        conn.close()
-    return out
+        return out
 
 
 # -- Group view assembly --------------------------------------------------
@@ -795,12 +799,11 @@ def get_state(
     """
     project_dir = Path(project_dir)
     payload, snapshot_version = _read_payload(project_dir)
+    discover: dict[str, Any] | None
     if discover_path is None:
-        candidate = project_dir / DISCOVER_FILENAME_DEFAULT
-        discover_path = candidate if candidate.exists() else None
-    discover = (
-        _read_discover(Path(discover_path)) if discover_path is not None else None
-    )
+        discover = _load_local_discover(project_dir)
+    else:
+        discover = _read_discover(Path(discover_path))
     return _build_snapshot(project_dir, payload, discover, snapshot_version, db_path)
 
 
@@ -961,40 +964,38 @@ def _load_local_discover(project_dir: Path) -> dict[str, Any] | None:
     """Read+validate ``mock_data_discovery.json`` next to the config, or
     return None when the file is absent or malformed."""
     candidate = project_dir / DISCOVER_FILENAME_DEFAULT
-    if not candidate.exists():
-        return None
     try:
         return _read_discover(candidate)
-    except ValueError:
+    except (FileNotFoundError, ValueError):
         return None
 
 
-def _source_exists_in_discover(
+def _discover_sources_index(
     project_dir: Path,
-    payload: dict[str, Any],
-    source_name: str,
-    column_name: str,
-) -> bool:
-    """Whether ``(source_name, column_name)`` is in the discover payload
-    next to the config (or, if discover is absent, in the existing
-    ``column_types`` map)."""
+) -> dict[str, dict[str, Any]] | None:
+    """Load discover once and index by ``source_name``. Returns ``None``
+    when discover is absent or unreadable — callers fall back to
+    ``payload["column_types"]`` keys."""
     discover = _load_local_discover(project_dir)
-    if discover is not None:
-        for src in discover.get("sources", []):
-            if src["source_name"] != source_name:
-                continue
-            return any(c["name"] == column_name for c in src.get("columns", []))
-        return False
-    return column_name in payload.get("column_types", {}).get(source_name, {})
+    if discover is None:
+        return None
+    return {s["source_name"]: s for s in discover.get("sources", [])}
 
 
 def _assert_column_in_discover(
-    project_dir: Path,
+    sources_by_name: dict[str, dict[str, Any]] | None,
     payload: dict[str, Any],
     source_name: str,
     column_name: str,
 ) -> None:
-    if not _source_exists_in_discover(project_dir, payload, source_name, column_name):
+    if sources_by_name is not None:
+        src = sources_by_name.get(source_name)
+        found = src is not None and any(
+            c["name"] == column_name for c in src.get("columns", [])
+        )
+    else:
+        found = column_name in payload.get("column_types", {}).get(source_name, {})
+    if not found:
         raise ValidationError(
             f"({source_name!r}, {column_name!r}) not found in discover or "
             f"existing column_types — refusing to silently create entries."
@@ -1019,14 +1020,15 @@ def _drop_column_options(
 
 
 def _assert_source_in_discover(
-    project_dir: Path, payload: dict[str, Any], source_name: str
+    sources_by_name: dict[str, dict[str, Any]] | None,
+    payload: dict[str, Any],
+    source_name: str,
 ) -> None:
     """Reject unknown ``source_name`` so a typo can't silently create a
-    phantom source entry. Falls back to ``column_types`` keys when the
-    discover payload is absent (mirrors ``_source_exists_in_discover``)."""
-    discover = _load_local_discover(project_dir)
-    if discover is not None:
-        known = {src["source_name"] for src in discover.get("sources", [])}
+    phantom source entry. Falls back to ``column_types``/``sources`` keys
+    when the discover payload is absent."""
+    if sources_by_name is not None:
+        known = set(sources_by_name)
     else:
         known = set(payload.get("column_types", {}).keys()) | set(
             payload.get("sources", {}).keys()
@@ -1084,9 +1086,11 @@ def set_column_type(
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
         # Validate every pair before mutating anything; bulk writes are
-        # all-or-nothing.
+        # all-or-nothing. Load discover once — _assert_column_in_discover
+        # would otherwise reopen the file per source.
+        sources_by_name = _discover_sources_index(project_dir)
         for sn in sources_list:
-            _assert_column_in_discover(project_dir, payload, sn, column_name)
+            _assert_column_in_discover(sources_by_name, payload, sn, column_name)
 
         # Validate the hint once: same input, same result for every source.
         if isinstance(hint, _Unchanged):
@@ -1172,30 +1176,13 @@ def unset_column_manual_override(
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
 
-        # Read discover once and reuse for both validation and reclassify.
+        # Load discover once: reused for validation AND reclassify below.
         # Re-reading would open a TOCTOU window where a source visible at
         # validation time vanishes before classification, leading to a
         # partial apply (some markers cleared, others left stale).
-        discover = _load_local_discover(project_dir)
-        sources_by_name: dict[str, dict[str, Any]] | None = (
-            {s["source_name"]: s for s in discover.get("sources", [])}
-            if discover is not None
-            else None
-        )
+        sources_by_name = _discover_sources_index(project_dir)
         for sn in sources_list:
-            if sources_by_name is not None:
-                src = sources_by_name.get(sn)
-                found = src is not None and any(
-                    c["name"] == column_name for c in src.get("columns", [])
-                )
-            else:
-                # Fallback when discover is absent: trust existing column_types.
-                found = column_name in payload.get("column_types", {}).get(sn, {})
-            if not found:
-                raise ValidationError(
-                    f"({sn!r}, {column_name!r}) not found in discover or "
-                    f"existing column_types — refusing to silently create entries."
-                )
+            _assert_column_in_discover(sources_by_name, payload, sn, column_name)
 
         manual_pairs = {tuple(p) for p in payload.get("manual_columns", [])}
         to_clear = [sn for sn in sources_list if (sn, column_name) in manual_pairs]
@@ -1429,7 +1416,9 @@ def set_source_metadata(
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        _assert_source_in_discover(project_dir, payload, source_name)
+        _assert_source_in_discover(
+            _discover_sources_index(project_dir), payload, source_name
+        )
         sources = payload.setdefault("sources", {})
         entry = sources.setdefault(source_name, {})
         if not isinstance(year, _Unchanged):
@@ -1460,7 +1449,9 @@ def set_column_options(
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        _assert_column_in_discover(project_dir, payload, source_name, column_name)
+        _assert_column_in_discover(
+            _discover_sources_index(project_dir), payload, source_name, column_name
+        )
         column_options = payload.setdefault("column_options", {})
         if options is None:
             cols = column_options.get(source_name)
@@ -1481,18 +1472,38 @@ def set_column_options(
     return get_state(project_dir, db_path=db_path)
 
 
+def parse_panel_payload(raw: dict[str, Any]) -> Panel:
+    """Parse a wire-shape ``{panel_id, panel_key, members}`` dict into a
+    ``Panel``. Reuses ``config._parse_panel`` so the wire format and the
+    on-disk JSON share one validator. Raises ``ValidationError`` on any
+    structural problem."""
+    try:
+        return _parse_panel(raw, idx=0)
+    except ValueError as exc:
+        raise ValidationError(str(exc)) from exc
+
+
 def put_panel(
     project_dir: Path,
     panel: Panel,
     *,
     expected_version: str,
     db_path: Path | None = None,
+    previous_panel_id: str | None = None,
 ) -> StateSnapshot:
-    """Add or replace a panel by ``panel_id``."""
+    """Add or replace a panel by ``panel_id``.
+
+    ``previous_panel_id`` supports rename: when set and different from
+    ``panel.panel_id``, the renamed-from entry is dropped first so it
+    doesn't collide with the new entry on member-source overlap during
+    ``parse_config`` validation.
+    """
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
         panels = payload.setdefault("panels", [])
+        if previous_panel_id is not None and previous_panel_id != panel.panel_id:
+            panels[:] = [p for p in panels if p.get("panel_id") != previous_panel_id]
         serialized = _panel_to_dict(panel)
         replaced = False
         for i, existing in enumerate(panels):
@@ -1529,6 +1540,183 @@ def remove_panel(
             payload.pop("panels", None)
         _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
+
+
+# -- Public API: read-only regmeta lookups -------------------------------
+
+
+@dataclass(frozen=True)
+class ColumnValue:
+    """One code/label pair, used by ``get_column_values`` results."""
+
+    code: str
+    label: str | None
+
+
+@dataclass(frozen=True)
+class ColumnValuesResult:
+    """Year-correct value codes for one (register, column) pair.
+
+    ``kind`` distinguishes the source the codes came from:
+      - ``"classification"``: full code list of a SCB classification (e.g.
+        SUN2020). Same codes regardless of register; the chosen register
+        only narrows down which classification this column maps to.
+      - ``"values"``: per-instance value-set codes aggregated across
+        ``variable_instance`` rows for this register. Used when no
+        classification is attached (register-local code lists like
+        ``ALKod`` / ``Kon``).
+      - ``"none"``: regmeta knows the column but has no codes — the
+        caller usually shows "no value codes available".
+
+    ``title`` is short user-facing text (classification short_name or
+    variable name); ``description`` is optional long text shown below.
+    """
+
+    kind: Literal["classification", "values", "none"]
+    title: str
+    description: str | None
+    codes: tuple[ColumnValue, ...]
+
+
+def get_column_values(
+    register: str | None,
+    column: str,
+    *,
+    db_path: Path | None = None,
+) -> ColumnValuesResult:
+    """Resolve value codes for one column under one register.
+
+    Strategy: classification beats per-instance codes when both are
+    available — the classification carries the canonical list (often with
+    hierarchy levels) while per-instance codes can be a register-local
+    subset. Falls back to per-instance value codes when no classification
+    is attached, and to ``kind="none"`` when regmeta has no codes either.
+
+    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    the register doesn't resolve, or the column is unknown — the UI
+    surfaces an empty popover rather than an error envelope, matching
+    the "regmeta degrades gracefully" stance elsewhere in the editor.
+    """
+    if not column or not column.strip():
+        raise ValidationError("column must be a non-empty string")
+
+    empty = ColumnValuesResult(kind="none", title=column, description=None, codes=())
+    with _open_regmeta_conn(db_path) as conn:
+        if conn is None:
+            return empty
+        try:
+            from regmeta import resolve_register_ids
+            from regmeta.errors import RegmetaError
+            from regmeta.queries import get_classification_codes
+        except ImportError:
+            return empty
+
+        register_ids: list[int] = []
+        if register is not None and register.strip():
+            try:
+                register_ids = resolve_register_ids(conn, register)
+            except RegmetaError:
+                register_ids = []
+        signals = _regmeta_lookup(conn, {column}, register_ids) if register_ids else {}
+        signal = lookup_with_prefix_fallback(signals, column)
+        # The matched alias may differ from the literal column when the
+        # signal was found via project-prefix stripping (e.g. column
+        # "P1105_AStud" matched alias "AStud"). Use the matched key for
+        # the per-instance SQL so we don't query for an alias regmeta
+        # doesn't know.
+        matched_alias = _matched_alias_key(signals, column) or column
+
+        # Classification path: when a short_name is attached, fetch the
+        # canonical code list. ``get_classification_codes`` raises on
+        # not_found; fall through to the per-instance path below in that
+        # case so a stale classification name doesn't blank the popover.
+        if signal is not None and signal.classification_short_name:
+            try:
+                meta = get_classification_codes(conn, signal.classification_short_name)
+            except RegmetaError:
+                meta = None
+            if meta is not None:
+                # Dedupe on vardekod — SCB classifications occasionally
+                # carry multiple labels per code across versions; the
+                # first occurrence wins for display purposes.
+                codes = _dedupe_codes(
+                    (str(c.get("vardekod")), c.get("vardebenamning"))
+                    for c in meta.get("codes", [])
+                )
+                if codes:
+                    title = meta.get("short_name") or signal.classification_short_name
+                    description = meta.get("description") or meta.get("name")
+                    return ColumnValuesResult(
+                        kind="classification",
+                        title=title,
+                        description=description,
+                        codes=codes,
+                    )
+
+        # Per-instance values path: aggregate codes across variable
+        # instances for this register. SCB occasionally widens or
+        # narrows the code set across years; deduping by `vardekod`
+        # surfaces a clean union without losing the per-year history
+        # (the user can still hit `regmeta get values` for that).
+        if signal is not None and signal.has_value_codes and register_ids:
+            ph = ",".join("?" for _ in register_ids)
+            rows = conn.execute(
+                "SELECT DISTINCT vc.vardekod, vc.vardebenamning "
+                "FROM variable_alias va "
+                "JOIN variable_instance vi ON va.cvid = vi.cvid "
+                "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+                "JOIN value_code vc ON vsm.code_id = vc.code_id "
+                f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
+                f"  AND vi.register_id IN ({ph}) "
+                "ORDER BY vc.vardekod",
+                [matched_alias, *register_ids],
+            ).fetchall()
+            codes = _dedupe_codes(
+                (str(r["vardekod"]), r["vardebenamning"]) for r in rows
+            )
+            if codes:
+                return ColumnValuesResult(
+                    kind="values",
+                    title=column,
+                    description=None,
+                    codes=codes,
+                )
+
+        return empty
+
+
+def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
+    """Mirror ``lookup_with_prefix_fallback``'s key resolution and return
+    the *key* it matched, not the value. Used so per-instance SQL queries
+    the same alias regmeta resolved on, even after project-prefix
+    stripping."""
+    from ._util import strip_project_prefix
+
+    lower = column.lower()
+    if lower in signals:
+        return lower
+    stripped = strip_project_prefix(column).lower()
+    if stripped in signals:
+        return stripped
+    return None
+
+
+def _dedupe_codes(
+    pairs: Iterator[tuple[str, str | None]],
+) -> tuple[ColumnValue, ...]:
+    """Dedupe ``(code, label)`` pairs by code, preserving first-seen
+    order. SCB sometimes returns multiple labels per code (per-year
+    relabels, partial classification merges); the table renderer keys on
+    code, so we collapse here rather than crash there."""
+    seen: dict[str, ColumnValue] = {}
+    for code, label in pairs:
+        if code in seen:
+            continue
+        seen[code] = ColumnValue(code=code, label=label)
+    return tuple(seen.values())
+
+
+__all__ += ["ColumnValue", "ColumnValuesResult", "get_column_values"]
 
 
 def _panel_to_dict(panel: Panel) -> dict[str, Any]:

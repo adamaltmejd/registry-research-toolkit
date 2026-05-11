@@ -9,6 +9,7 @@
 
 import type {
   ApiErrorEnvelope,
+  PanelMember,
   RegistersResponse,
   StateSnapshot,
 } from "./types";
@@ -128,6 +129,70 @@ export function setGroupRegister(
   args: SetGroupRegisterArgs,
 ): Promise<StateSnapshot> {
   return send<StateSnapshot>("/api/group-register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface PutPanelArgs {
+  panel_id: string;
+  panel_key: string;
+  members: PanelMember[];
+  expected_version: string;
+  /** Renamed-from id when editing. The server drops the old entry in
+   *  the same lock so rename doesn't collide with the new entry on
+   *  member-source overlap. Omit when creating a new panel. */
+  previous_panel_id?: string;
+}
+
+export function putPanel(args: PutPanelArgs): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/panel", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface RemovePanelArgs {
+  panel_id: string;
+  expected_version: string;
+}
+
+export function removePanel(args: RemovePanelArgs): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/remove-panel", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface ColumnValueCode {
+  code: string;
+  label: string | null;
+}
+
+export interface ColumnValuesResponse {
+  /** "classification" — canonical SCB classification code list.
+   *  "values" — per-instance value codes aggregated for this register.
+   *  "none" — regmeta has no codes (unmatched, no register, etc.). */
+  kind: "classification" | "values" | "none";
+  title: string;
+  description: string | null;
+  codes: ColumnValueCode[];
+}
+
+export interface GetColumnValuesArgs {
+  /** Register name or numeric id; null when the column's group has no
+   *  register assigned (server returns kind="none"). */
+  register: string | null;
+  column: string;
+}
+
+export function getColumnValues(
+  args: GetColumnValuesArgs,
+): Promise<ColumnValuesResponse> {
+  return send<ColumnValuesResponse>("/api/column-values", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(args),
