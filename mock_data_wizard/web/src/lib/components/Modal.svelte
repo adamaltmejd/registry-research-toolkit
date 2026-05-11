@@ -166,6 +166,36 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     padding: 1rem 1.25rem;
     width: min(32rem, 92vw);
+    /* Cap height and let the inner body region scroll. Consumers that
+       structure their content as `<header> + <div class="modal-body"> +
+       <footer>` get sticky action buttons via the :global rules below.
+       Consumers that don't (or whose body fits) get a card-level scroll
+       fallback so the footer stays reachable. Without this cap, a
+       PanelEditor against a register with 30+ sources pushes the footer
+       below the viewport — and because surrounding content is inert,
+       the user can't scroll the page to reach it either. */
+    max-height: min(85vh, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    overflow-y: auto;
+  }
+  /* Consumer contract: any form inside a Modal becomes a flex column
+     that fills the card, and any `.modal-body` inside the card (with or
+     without a wrapping form) is the scrollable middle region. Hoisting
+     this here so PanelEditor / RegisterEditor / ColumnTypeEditor /
+     ValueCodesModal don't each redeclare the same five-line pattern. */
+  .card :global(form) {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+    gap: 0.75rem;
+  }
+  .card :global(.modal-body) {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;

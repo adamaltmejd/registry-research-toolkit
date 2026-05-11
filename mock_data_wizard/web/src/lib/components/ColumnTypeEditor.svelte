@@ -202,121 +202,123 @@
       </button>
     </header>
 
-    {#if column.regmeta_signal}
-      <p class="regmeta-context" aria-label="regmeta context">
-        regmeta:
-        {#if column.regmeta_signal.classification_short_name}
-          <code>{column.regmeta_signal.classification_short_name}</code>
-        {/if}
-        {#if column.regmeta_signal.has_value_codes}
-          {#if column.regmeta_signal.classification_short_name}·{/if}
-          value codes available
-        {/if}
-        {#if column.regmeta_signal.datatyp_kind}
-          · datatype <code>{column.regmeta_signal.datatyp_kind}</code>
-        {/if}
-        {#if !column.regmeta_signal.classification_short_name && !column.regmeta_signal.has_value_codes && !column.regmeta_signal.datatyp_kind}
-          column known to regmeta but with no classification, codes, or
-          datatype hint.
-        {/if}
-        {#if sources.length > 1}
-          <span class="regmeta-scope-note">
-            (from {sources[0]}; other sources in this partition may differ)
-          </span>
-        {/if}
-      </p>
-    {:else}
-      <p class="regmeta-context regmeta-missing">
-        regmeta: no record for this column name{#if sources.length > 1} (checked
-          on {sources[0]}){/if}.
-      </p>
-    {/if}
+    <div class="modal-body">
+      {#if column.regmeta_signal}
+        <p class="regmeta-context" aria-label="regmeta context">
+          regmeta:
+          {#if column.regmeta_signal.classification_short_name}
+            <code>{column.regmeta_signal.classification_short_name}</code>
+          {/if}
+          {#if column.regmeta_signal.has_value_codes}
+            {#if column.regmeta_signal.classification_short_name}·{/if}
+            value codes available
+          {/if}
+          {#if column.regmeta_signal.datatyp_kind}
+            · datatype <code>{column.regmeta_signal.datatyp_kind}</code>
+          {/if}
+          {#if !column.regmeta_signal.classification_short_name && !column.regmeta_signal.has_value_codes && !column.regmeta_signal.datatyp_kind}
+            column known to regmeta but with no classification, codes, or
+            datatype hint.
+          {/if}
+          {#if sources.length > 1}
+            <span class="regmeta-scope-note">
+              (from {sources[0]}; other sources in this partition may differ)
+            </span>
+          {/if}
+        </p>
+      {:else}
+        <p class="regmeta-context regmeta-missing">
+          regmeta: no record for this column name{#if sources.length > 1} (checked
+            on {sources[0]}){/if}.
+        </p>
+      {/if}
 
-    {#if showScopePicker}
-      <fieldset class="scope">
-        <legend>Apply to</legend>
-        {#if sources.length > 1}
+      {#if showScopePicker}
+        <fieldset class="scope">
+          <legend>Apply to</legend>
+          {#if sources.length > 1}
+            <label class="radio">
+              <input
+                type="radio"
+                name="scope"
+                value="partition"
+                bind:group={scope}
+              />
+              All {sources.length} sources in this variant
+            </label>
+          {/if}
           <label class="radio">
-            <input
-              type="radio"
-              name="scope"
-              value="partition"
-              bind:group={scope}
-            />
-            All {sources.length} sources in this variant
+            <input type="radio" name="scope" value="single" bind:group={scope} />
+            Only
+            <select bind:value={singleSource} aria-label="single source">
+              {#each sources as sn (sn)}
+                <option value={sn}>{sn}</option>
+              {/each}
+            </select>
           </label>
-        {/if}
-        <label class="radio">
-          <input type="radio" name="scope" value="single" bind:group={scope} />
-          Only
-          <select bind:value={singleSource} aria-label="single source">
-            {#each sources as sn (sn)}
-              <option value={sn}>{sn}</option>
-            {/each}
+          {#if canReconcileAll}
+            <label class="radio">
+              <input
+                type="radio"
+                name="scope"
+                value="register"
+                bind:group={scope}
+              />
+              All {registerSourcesWithColumn.length} sources in
+              <span class="register-name" title={registerName ?? undefined}
+                >{registerShort ?? "this register"}</span
+              >
+              <span class="hint">· reconcile</span>
+            </label>
+          {/if}
+        </fieldset>
+      {/if}
+
+      <fieldset>
+        <legend>Type</legend>
+        {#each TYPES as t (t)}
+          <label class="radio">
+            <input type="radio" name="type" value={t} bind:group={selectedType} />
+            {t}
+            {#if t === column.regmeta_implied_type}
+              <span class="hint" title="regmeta-implied type for this column"
+                >· regmeta</span
+              >
+            {/if}
+          </label>
+        {/each}
+      </fieldset>
+
+      {#if selectedType === "id"}
+        <label class="row">
+          <span>id_subtype</span>
+          <select bind:value={idSubtype}>
+            <option value="">(unset — sample at extract)</option>
+            <option value="integer">integer</option>
+            <option value="string">string</option>
           </select>
         </label>
-        {#if canReconcileAll}
-          <label class="radio">
-            <input
-              type="radio"
-              name="scope"
-              value="register"
-              bind:group={scope}
-            />
-            All {registerSourcesWithColumn.length} sources in
-            <span class="register-name" title={registerName ?? undefined}
-              >{registerShort ?? "this register"}</span
-            >
-            <span class="hint">· reconcile</span>
-          </label>
-        {/if}
-      </fieldset>
-    {/if}
-
-    <fieldset>
-      <legend>Type</legend>
-      {#each TYPES as t (t)}
-        <label class="radio">
-          <input type="radio" name="type" value={t} bind:group={selectedType} />
-          {t}
-          {#if t === column.regmeta_implied_type}
-            <span class="hint" title="regmeta-implied type for this column"
-              >· regmeta</span
-            >
-          {/if}
+      {:else if selectedType === "numeric"}
+        <label class="row">
+          <span>numeric_subtype</span>
+          <select bind:value={numericSubtype}>
+            <option value="">(unset — sample at extract)</option>
+            <option value="integer">integer</option>
+            <option value="double">double</option>
+          </select>
         </label>
-      {/each}
-    </fieldset>
-
-    {#if selectedType === "id"}
-      <label class="row">
-        <span>id_subtype</span>
-        <select bind:value={idSubtype}>
-          <option value="">(unset — sample at extract)</option>
-          <option value="integer">integer</option>
-          <option value="string">string</option>
-        </select>
-      </label>
-    {:else if selectedType === "numeric"}
-      <label class="row">
-        <span>numeric_subtype</span>
-        <select bind:value={numericSubtype}>
-          <option value="">(unset — sample at extract)</option>
-          <option value="integer">integer</option>
-          <option value="double">double</option>
-        </select>
-      </label>
-    {:else if selectedType === "date"}
-      <label class="row">
-        <span>date_format</span>
-        <input
-          type="text"
-          placeholder="e.g. %Y%m%d"
-          bind:value={dateFormat}
-          spellcheck="false"
-        />
-      </label>
-    {/if}
+      {:else if selectedType === "date"}
+        <label class="row">
+          <span>date_format</span>
+          <input
+            type="text"
+            placeholder="e.g. %Y%m%d"
+            bind:value={dateFormat}
+            spellcheck="false"
+          />
+        </label>
+      {/if}
+    </div>
 
     <footer>
       {#if manualInScopeCount > 0}
@@ -355,11 +357,7 @@
 </Modal>
 
 <style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-  }
+  /* form + .modal-body flex/scroll layout is defined in Modal.svelte. */
   header {
     display: flex;
     justify-content: space-between;
