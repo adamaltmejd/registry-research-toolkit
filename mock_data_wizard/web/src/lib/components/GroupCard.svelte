@@ -4,6 +4,8 @@
     columnIsManual,
     columnIsMismatch,
     columnIsUnmatchedCategorical,
+    hasRegmetaValueDisplay,
+    sourceYearsFor,
     store,
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
@@ -42,14 +44,7 @@
     none: "no confidence",
   };
 
-  let sourceYears = $derived.by(() => {
-    const m: Record<string, number | null> = {};
-    const sources = store.snapshot?.config.sources ?? {};
-    for (const s of group.sources) {
-      m[s] = sources[s]?.year ?? null;
-    }
-    return m;
-  });
+  let sourceYears = $derived(sourceYearsFor(group.sources));
 
   let groupSourceSet = $derived(new Set(group.sources));
   let panelsForGroup = $derived.by(() => {
@@ -131,11 +126,10 @@
   // most-common winner would silently mislabel the other years.
   function regmetaBadge(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
-    if (!sig) return "";
-    if (sig.n_classifications > 1) return `varies · ${sig.n_classifications}`;
-    if (sig.classification_short_name) return sig.classification_short_name;
-    if (sig.has_value_codes) return "vc";
-    return "";
+    if (!hasRegmetaValueDisplay(sig)) return "";
+    if (sig!.n_classifications > 1) return `varies · ${sig!.n_classifications}`;
+    if (sig!.classification_short_name) return sig!.classification_short_name;
+    return "vc";
   }
 
   // Tooltip text; TypeCell appends the click CTA so this stays purely

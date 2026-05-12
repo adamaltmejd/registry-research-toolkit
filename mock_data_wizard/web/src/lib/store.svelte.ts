@@ -30,6 +30,7 @@ import type {
   ColumnInfo,
   ColumnType,
   RegisterEntry,
+  RegmetaSignal,
   StateSnapshot,
 } from "./types";
 
@@ -60,6 +61,30 @@ export function columnIsUnmatchedCategorical(c: ColumnInfo): boolean {
   const sig = c.regmeta_signal;
   if (!sig) return true;
   return !sig.classification_short_name && !sig.has_value_codes;
+}
+
+/** True when the column has anything for ValueCodesPanel / regmeta-badge
+ *  to render. Must stay in lockstep with GroupCard's badge logic — when
+ *  this is false, neither the table badge nor the editor's inline panel
+ *  show up. */
+export function hasRegmetaValueDisplay(sig: RegmetaSignal | null): boolean {
+  if (!sig) return false;
+  return (
+    sig.n_classifications > 1 ||
+    !!sig.classification_short_name ||
+    sig.has_value_codes
+  );
+}
+
+/** Build the {source → year} map the inline value-codes panel needs.
+ *  Snapshot-scoped; callers pass the subset of sources they care about. */
+export function sourceYearsFor(
+  sources: Iterable<string>,
+): Record<string, number | null> {
+  const cfg = store.snapshot?.config.sources ?? {};
+  const out: Record<string, number | null> = {};
+  for (const sn of sources) out[sn] = cfg[sn]?.year ?? null;
+  return out;
 }
 
 export function columnHasConcern(
@@ -272,16 +297,10 @@ class Store {
    *  inline panel keeps it open; the user who doesn't, doesn't see it. */
   valueCodesExpandedInEditor = $state(loadValueCodesExpanded());
 
-  /** Per-(register, column) cache of regmeta varinfo, scoped to the
-   *  current snapshot version. Snapshot bumps clear this so a follow-up
-   *  open fetches fresh — matches the same invalidation policy as
-   *  ``registers`` (lazy + busted on snapshot change). The cache lives
-   *  here, not in the modal, so two modals opened on the same column
-   *  in close succession only fire one HTTP call. */
+  /** Per-(register, column) varinfo cache scoped to the current
+   *  snapshot. Lives on the store so two modals on the same column
+   *  share one HTTP call. */
   private varinfoCache = new Map<string, ColumnVarinfoResponse>();
-  // In-flight promises are coalesced under the same key so a flurry of
-  // mounts (modal flip, snapshot re-render) doesn't fan out into N
-  // round-trips for the same column.
   private varinfoInFlight = new Map<string, Promise<ColumnVarinfoResponse>>();
 
   /** Free-text filter on column name. Substring, case-insensitive.
@@ -342,11 +361,8 @@ class Store {
     this.snapshot = snap;
     this.pruneOpenStateAgainst(snap);
     if (prev !== snap.snapshot_version) {
-      // Snapshot version is the cache key for regmeta-backed lookups —
-      // any mutation that flips the version may have changed the
-      // register assignment under a column, so the cached description
-      // is no longer load-bearing. Drop in-flight too: their result is
-      // tied to the previous snapshot's register and would race in.
+      // A version bump can change a column's register assignment, so
+      // cached descriptions and in-flight requests are no longer valid.
       this.varinfoCache.clear();
       this.varinfoInFlight.clear();
     }

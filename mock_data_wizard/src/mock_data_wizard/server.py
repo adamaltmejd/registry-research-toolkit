@@ -714,15 +714,7 @@ def _api_get_column_values(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
     column = _required_str(body, "column")
-    if "register" not in body:
-        raise editor.ValidationError(
-            "missing required field 'register' (use null when unassigned)"
-        )
-    register_value = body["register"]
-    if register_value is not None and not isinstance(register_value, str):
-        raise editor.ValidationError(
-            f"register must be a string or null, got {type(register_value).__name__}"
-        )
+    register_value = _required_nullable_str(body, "register")
     picked = body.get("picked_classification")
     if picked is not None and not isinstance(picked, str):
         raise editor.ValidationError(
@@ -793,15 +785,7 @@ def _api_get_column_varinfo(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
     column = _required_str(body, "column")
-    if "register" not in body:
-        raise editor.ValidationError(
-            "missing required field 'register' (use null when unassigned)"
-        )
-    register_value = body["register"]
-    if register_value is not None and not isinstance(register_value, str):
-        raise editor.ValidationError(
-            f"register must be a string or null, got {type(register_value).__name__}"
-        )
+    register_value = _required_nullable_str(body, "register")
     result = editor.get_column_varinfo(register_value, column, db_path=config.db_path)
     return HTTPStatus.OK, _serialize_varinfo(result)
 
@@ -846,6 +830,19 @@ def _serialize_varinfo_description(desc: editor.VarinfoDescription) -> dict[str,
         "var_id": desc.var_id,
         "register_name": desc.register_name,
     }
+
+
+def _required_nullable_str(body: dict[str, Any], key: str) -> str | None:
+    if key not in body:
+        raise editor.ValidationError(
+            f"missing required field {key!r} (use null when unassigned)"
+        )
+    value = body[key]
+    if value is not None and not isinstance(value, str):
+        raise editor.ValidationError(
+            f"{key} must be a string or null, got {type(value).__name__}"
+        )
+    return value
 
 
 def _required_str(body: dict[str, Any], key: str) -> str:

@@ -8,11 +8,9 @@
      * and as the <select> form value (stringified). */
     eqKey: (option: T) => string;
     onPick: (option: T) => void;
-    /** Per-option hover tooltip. Returns null when the option has no
-     * description (the title attribute is then omitted). In chip mode
-     * every chip carries its own tooltip; in select mode the tooltip
-     * tracks the currently active option (browsers don't render
-     * <option> titles reliably). */
+    /** Per-option hover tooltip; null = omit the title attribute.
+     *  Select-mode shows the active option's tooltip on the <select>
+     *  itself because browsers don't render <option> titles reliably. */
     optionTooltip?: (option: T) => string | null;
     /** Chip count above which the picker collapses to a <select>. */
     collapseAt?: number;

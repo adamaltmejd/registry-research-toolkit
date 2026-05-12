@@ -1823,10 +1823,7 @@ class ValueSetGroup:
 
 @dataclass(frozen=True)
 class ClassificationGroup:
-    """One classification entry in ``ColumnValuesResult.classifications``.
-    Carries the year-range over which this classification appears for the
-    column, so the picker can render a "Applies to: …" tooltip the same
-    way the value-set picker does."""
+    """One classification entry with its year window."""
 
     short_name: str
     year_min: int | None
@@ -2152,14 +2149,9 @@ def _tier_for_values_path(
     triples: list[tuple[int, str, str | None]],
     n_value_sets: int,
 ) -> tuple[VarianceTier, str | None]:
-    # 3a's note tells the user to pick another value-set below — only
-    # actionable when there are multiple sets to choose from. With a
-    # single set, label divergence is internal to that set (e.g. SCB
-    # has multiple ``value_code`` rows sharing one vardekod with
-    # different vardebenamning); the user can't fix it via picking,
-    # so we drop to tier 1 and live with the first-seen label. Without
-    # this gate the panel renders the 3a banner with no picker beneath
-    # it — visible bug.
+    # Tier 3a's note is "pick another value-set below" — pointless with a
+    # single set (label divergence inside the set isn't pickable). Drop
+    # to tier 1 to avoid rendering the banner without a picker beneath.
     if n_value_sets <= 1:
         return ("1", None)
     # 3a (label collisions on the same code) dominates 2: under 3a the

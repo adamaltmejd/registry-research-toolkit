@@ -2,7 +2,12 @@
   import { onMount, untrack } from "svelte";
 
   import type { ColumnVarinfoResponse, VarinfoDescription } from "../api";
-  import { columnIsManual, store } from "../store.svelte";
+  import {
+    columnIsManual,
+    hasRegmetaValueDisplay,
+    sourceYearsFor,
+    store,
+  } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
   import Modal from "./Modal.svelte";
   import ValueCodesPanel from "./ValueCodesPanel.svelte";
@@ -101,9 +106,6 @@
   );
   let submitting = $state(false);
 
-  // -- Varinfo (regmeta variable description) ------------------------
-  // Fetched lazily on mount; the store coalesces duplicate fetches and
-  // caches per (register, column) until the next snapshot bump.
   type VarinfoState =
     | { kind: "loading" }
     | { kind: "loaded"; data: ColumnVarinfoResponse }
@@ -134,33 +136,13 @@
       : `var_id ${d.var_id}`;
   }
 
-  // -- Inline value-codes view ---------------------------------------
-  // Gate matches GroupCard.regmetaBadge: anywhere the regmeta tag is
-  // clickable on the row, the inline expander should be available in
-  // the editor. Otherwise there's nothing for the panel to render.
-  let canShowValueCodes = $derived.by(() => {
-    const sig = column.regmeta_signal;
-    if (!sig) return false;
-    return (
-      sig.n_classifications > 1 ||
-      !!sig.classification_short_name ||
-      sig.has_value_codes
-    );
-  });
-  let valueCodesExpanded = $derived(store.valueCodesExpandedInEditor);
+  let canShowValueCodes = $derived(hasRegmetaValueDisplay(column.regmeta_signal));
+  // Mount ValueCodesPanel on first expand and keep it mounted; <details>
+  // hides it via CSS when closed. Re-mounting would re-fire the
+  // /api/column-values request on every toggle.
+  let valueCodesEverExpanded = $state(store.valueCodesExpandedInEditor);
 
-  // Pass project-source years (group context) to the panel so its
-  // "applies to: foo_2018 (2018), …" line works the same as the
-  // standalone modal. Source years live on the snapshot, not on the
-  // column, so derive here at the editor scope.
-  let sourceYears = $derived.by(() => {
-    const m: Record<string, number | null> = {};
-    const cfgSources = store.snapshot?.config.sources ?? {};
-    for (const sn of registerSourcesWithColumn) {
-      m[sn] = cfgSources[sn]?.year ?? null;
-    }
-    return m;
-  });
+  let sourceYears = $derived(sourceYearsFor(registerSourcesWithColumn));
 
   function buildHint(): Record<string, unknown> | null {
     // Always send an explicit hint based on form state. Earlier we
@@ -427,16 +409,19 @@
       {#if canShowValueCodes}
         <details
           class="value-codes-inline"
-          open={valueCodesExpanded}
-          ontoggle={(e) =>
-            store.setValueCodesExpandedInEditor(
-              (e.currentTarget as HTMLDetailsElement).open,
-            )}
+          open={store.valueCodesExpandedInEditor}
+          ontoggle={(e) => {
+            const open = (e.currentTarget as HTMLDetailsElement).open;
+            store.setValueCodesExpandedInEditor(open);
+            if (open) valueCodesEverExpanded = true;
+          }}
         >
           <summary>
-            {valueCodesExpanded ? "Hide value codes" : "Show value codes"}
+            {store.valueCodesExpandedInEditor
+              ? "Hide value codes"
+              : "Show value codes"}
           </summary>
-          {#if valueCodesExpanded}
+          {#if valueCodesEverExpanded}
             <ValueCodesPanel
               register={registerName}
               column={column.name}
