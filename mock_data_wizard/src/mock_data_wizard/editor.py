@@ -1892,13 +1892,19 @@ def _fetch_distinct_classifications(
     register_ids: list[int],
     *,
     relevant_years: set[int] | None = None,
+    var_id: int | None = None,
 ) -> tuple[ClassificationGroup, ...]:
+    """Resolve the classifications attached to ``matched_alias`` in
+    ``register_ids``. When ``var_id`` is set, restrict to classifications
+    attached to that variable's instances — without the filter, an SCB
+    column-name slot reused across var_ids with divergent classification
+    bindings would surface the wrong primary in the popup."""
     if not register_ids:
         return ()
     from regmeta.queries import extract_year
 
     ph = ",".join("?" for _ in register_ids)
-    rows = conn.execute(
+    sql = (
         "SELECT DISTINCT c.short_name, rv.registerversionnamn AS regver_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
@@ -1906,9 +1912,13 @@ def _fetch_distinct_classifications(
         "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
         f"  AND vi.register_id IN ({ph}) "
-        "  AND c.short_name IS NOT NULL",
-        [matched_alias, *register_ids],
-    ).fetchall()
+        "  AND c.short_name IS NOT NULL"
+    )
+    params: list[Any] = [matched_alias, *register_ids]
+    if var_id is not None:
+        sql += " AND vi.var_id = ?"
+        params.append(var_id)
+    rows = conn.execute(sql, params).fetchall()
     # Aggregate (short_name → set of years seen), then min/max for the
     # picker tooltip. Yearless rows survive filtering (we can't disprove
     # their relevance) but they don't contribute to the year window.
@@ -2110,14 +2120,33 @@ def get_column_values(
         # "AStud"); per-instance SQL must use the alias regmeta knows.
         matched_alias = _matched_alias_key(signals, column) or column
 
+        # When ``picked_var_id`` is set, always fetch the scoped list — the
+        # aggregated ``signal.n_classifications`` counts across all var_ids,
+        # so the scoped count (and primary) can disagree. Falling through to
+        # value-codes is fine if the scoped list is empty.
         classifications: tuple[ClassificationGroup, ...] = ()
-        if signal is not None and signal.n_classifications > 1:
+        if signal is not None and (
+            signal.n_classifications > 1 or picked_var_id is not None
+        ):
             classifications = _fetch_distinct_classifications(
-                conn, matched_alias, register_ids, relevant_years=years_set
+                conn,
+                matched_alias,
+                register_ids,
+                relevant_years=years_set,
+                var_id=picked_var_id,
             )
 
-        if signal is not None and signal.classification_short_name:
-            chosen_sn = signal.classification_short_name
+        has_classification = (
+            bool(classifications)
+            if picked_var_id is not None
+            else (signal is not None and bool(signal.classification_short_name))
+        )
+        if signal is not None and has_classification:
+            chosen_sn = (
+                classifications[0].short_name
+                if picked_var_id is not None
+                else signal.classification_short_name
+            )
             classification_names = {g.short_name for g in classifications}
             if (
                 picked_classification
@@ -2151,7 +2180,7 @@ def get_column_values(
                         note=note,
                         classifications=classifications,
                         picked_classification=(
-                            chosen_sn if signal.n_classifications > 1 else None
+                            chosen_sn if len(classifications) > 1 else None
                         ),
                     )
 

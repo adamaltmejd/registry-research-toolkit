@@ -49,7 +49,14 @@
 
   let relevantYears = $derived(relevantYearsFromMap(sourceYears));
 
+  // Request token: each load() captures the current value and only commits
+  // its result if the token is still current. Prevents an older in-flight
+  // request from overwriting the newer scope when the user flips
+  // pickedVarId / source years while the previous request is in flight.
+  let loadToken = 0;
+
   async function load(): Promise<void> {
+    const token = ++loadToken;
     loadState = { kind: "loading" };
     try {
       const data = await getColumnValues({
@@ -60,8 +67,10 @@
         picked_var_id: pickedVarId,
         relevant_years: relevantYears,
       });
+      if (token !== loadToken) return;
       loadState = { kind: "ok", data };
     } catch (exc) {
+      if (token !== loadToken) return;
       const message = exc instanceof Error ? exc.message : String(exc);
       loadState = { kind: "error", message };
     }

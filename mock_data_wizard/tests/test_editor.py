@@ -3014,3 +3014,74 @@ def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
     )
     codes_alt = {c.code for c in alt_result.codes}
     assert codes_alt == {"M", "F"}
+
+
+def test_get_column_values_scopes_classifications_by_picked_var_id(
+    regmeta_db: Path,
+):
+    """When a column slot aliases to multiple var_ids with divergent
+    classifications, ``picked_var_id`` must scope which classification's
+    codes the popup returns. Without scoping, the popup shows the
+    aggregated primary regardless of which variable the varinfo popup
+    selected — silently mismatched metadata for the alternative."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Two classifications with disjoint code sets so the response codes
+    # uniquely identify which one was returned. var_id=44 (fixture) maps
+    # to CLS_A; the new var_id=45 maps to CLS_B.
+    conn.executescript(
+        """
+        INSERT INTO value_code (vardekod, vardebenamning) VALUES ('9', 'OnlyB');
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'Class A', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'Class B', 1);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 2, code_id, NULL, 1 FROM value_code WHERE vardekod = '9';
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Annan Kön', 'En annan kön-variabel');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            classification_id)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'Kön', '1', 2);
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # No var_id scoping → aggregated primary wins (CLS_A is most common
+    # because fixture cvid 1001 has it; classifications list shows both).
+    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert union_result.kind == "classification"
+    assert {g.short_name for g in union_result.classifications} == {"CLS_A", "CLS_B"}
+    assert {c.code for c in union_result.codes} == {"1", "2"}
+
+    # Scope to var_id=44 → CLS_A only (codes "1"/"2").
+    primary = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+    )
+    assert primary.kind == "classification"
+    assert [g.short_name for g in primary.classifications] == ["CLS_A"]
+    assert {c.code for c in primary.codes} == {"1", "2"}
+    # Single-option list → picker hidden, picked_classification is None.
+    assert primary.picked_classification is None
+
+    # Scope to var_id=45 → CLS_B only (code "9"). Crucial: without the
+    # fix, this would have returned CLS_A's codes because the aggregated
+    # signal.classification_short_name picked CLS_A as primary.
+    alt = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+    )
+    assert alt.kind == "classification"
+    assert [g.short_name for g in alt.classifications] == ["CLS_B"]
+    assert {c.code for c in alt.codes} == {"9"}
+    assert alt.picked_classification is None
