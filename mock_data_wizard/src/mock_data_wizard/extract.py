@@ -43,18 +43,10 @@ DISCOVER_FILENAME = "mock_data_discovery.json"
 STATS_FILENAME = "mock_data_stats.json"
 SAMPLE_SIZE = 1000
 
-# Year detection on MONA-side source names. Two patterns:
-#   - 4-digit year (e.g. ``LISA_2019``) — matches regmeta's
-#     ``extract_year``; the natural form in SCB register-version names.
-#   - HT/VT term code (e.g. ``Distansutb_HT20_VT21``) — Swedish academic
-#     term shorthand (HT=Höstterminen/autumn, VT=Vårterminen/spring).
-#     Two-digit year expanded via a century window: 00–69 → 20xx,
-#     70–99 → 19xx (no SCB filename predates 1970 in practice). The
-#     ``(?!\d)`` tail prevents ``HT2020`` from matching as ``HT20`` —
-#     that case lets the 4-digit pattern win cleanly.
-# Regmeta-side ``extract_year`` keeps its 4-digit-only form: SCB's
-# ``registerversionnamn`` strings always spell out the year in full, so
-# term-code parsing would only add ambiguity there.
+# Year detection duplicates ``panels.detect_year_from_source_name``
+# deliberately: this module is the on-MONA bundle root (see ``_bundle.py``)
+# and the bundle MODULE_ORDER does not include ``panels`` to keep the
+# artifact small. Keep these byte-identical to ``panels``.
 _YEAR_RE = re.compile(r"\d{4}")
 _TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")
 
@@ -64,11 +56,6 @@ def _expand_term_year(two_digit: int) -> int:
 
 
 def _extract_year(name: str) -> int | None:
-    """First 4-digit year or HT/VT term code in ``name``, in scan order.
-
-    Returns whichever pattern matches *earliest* in the string, so
-    ``HT20_VT21`` resolves to 2020 (autumn term — the earliest data in
-    that academic year)."""
     y4 = _YEAR_RE.search(name)
     term = _TERM_YEAR_RE.search(name)
     if y4 is None and term is None:

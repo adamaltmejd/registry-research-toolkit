@@ -32,8 +32,8 @@ from .classify import is_known_id
 
 # Year detection for source names. Matches either a 4-digit year
 # (``LISA_2019``) or an HT/VT term code (``Distansutb_HT20_VT21`` ⇒ HT20
-# ⇒ 2020). Mirrors ``extract._extract_year`` so discover-time and
-# editor-time year resolution agree byte-for-byte on the same name.
+# ⇒ 2020). Duplicated byte-for-byte in ``extract.py`` (bundle minimalism
+# — ``panels`` is not in the bundle MODULE_ORDER); keep them in sync.
 _YEAR_RE = re.compile(r"\d{4}")
 _TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")
 

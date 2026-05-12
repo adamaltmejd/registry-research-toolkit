@@ -217,7 +217,6 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("POST", "/api/source-registers"): lambda body: _api_set_source_registers(
             config, body
         ),
-        ("POST", "/api/source-year"): lambda body: _api_set_source_year(config, body),
         ("POST", "/api/source-years"): lambda body: _api_set_source_years(config, body),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
@@ -656,54 +655,17 @@ def _api_set_source_registers(
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 
 
-def _api_set_source_year(
-    config: ServerConfig, body: dict[str, Any]
-) -> tuple[int, dict[str, Any]]:
-    """Set the per-source ``year`` metadata.
-
-    Body shape: ``{source_name, year, expected_version}``. ``year`` is an
-    integer (assert "this source is from this year") or JSON null
-    (assert "this source has no year — suppress name-regex detection").
-    Source must already exist in the config. Returns the refreshed
-    snapshot — signals downstream of ``relevant_years`` (variance counts
-    in the value-codes popup, the year tabs in the inline panel) pick up
-    the new year on the next read."""
-    source_name = _required_str(body, "source_name")
-    expected_version = _required_str(body, "expected_version")
-    if "year" not in body:
-        raise editor.ValidationError("missing required field 'year'")
-    year_raw = body["year"]
-    if year_raw is None:
-        year: int | None = None
-    elif isinstance(year_raw, bool) or not isinstance(year_raw, int):
-        raise editor.ValidationError(
-            f"year must be an integer or null, got {type(year_raw).__name__}"
-        )
-    else:
-        year = year_raw
-    snap = editor.set_source_metadata(
-        config.project_dir,
-        source_name,
-        expected_version=expected_version,
-        year=year,
-        db_path=config.db_path,
-    )
-    return HTTPStatus.OK, state_snapshot_to_dict(snap)
-
-
 def _api_set_source_years(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
     """Bulk-set per-source ``year`` across multiple sources atomically.
 
     Body shape: ``{assignments: {source_name: year|null, ...},
-    expected_version}``. Each year is an integer (assert "this source is
-    from this year") or null (assert "no year — suppress filename regex
-    fallback"). Every listed source must exist in the current config; an
-    unknown source aborts the whole call before any on-disk write.
-    Sources whose ``year`` actually moves are dropped from
-    ``auto_years``; a fully no-op call leaves ``snapshot_version``
-    unchanged."""
+    expected_version}``. Each year is an integer (set the year) or null
+    (delete the ``year`` key — sends the row back to "missing"). Every
+    listed source must exist in the current config; an unknown source
+    aborts the whole call before any on-disk write. A fully no-op call
+    leaves ``snapshot_version`` unchanged."""
     expected_version = _required_str(body, "expected_version")
     raw = body.get("assignments")
     if not isinstance(raw, dict):

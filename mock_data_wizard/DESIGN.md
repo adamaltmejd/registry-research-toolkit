@@ -545,17 +545,14 @@ override the regmeta DB location.
   `set_source_registers`. The reclassify and `column_options`
   contract is identical. Note that affected sources' `group_id`s
   change (since they derive from `register`); clients re-fetch.
-- `set_source_metadata(project_dir, source_name, *, expected_version,
-  year=UNCHANGED, db_path=None)` — modifies per-source metadata.
-  Currently scoped to `year`; register changes go through
-  `set_group_register`.
 - `set_source_years(project_dir, assignments, *, expected_version,
-  db_path=None)` — bulk variant for the Edit-register popup, which
-  surfaces a year input per source. `assignments` maps
-  `source_name` → `int` (set year) or `None` (assert "no year").
-  Every listed source is validated before any on-disk write; one
-  unknown source aborts the whole call. A fully no-op call leaves
-  `snapshot_version` unchanged.
+  db_path=None)` — bulk-update per-source `year`. Used by the
+  Edit-register popup, which surfaces a year input per source.
+  `assignments` maps `source_name` → `int` (set year) or `None`
+  (delete the `year` key, reverting to "missing"). Register changes
+  go through `set_group_register`. Every listed source is validated
+  before any on-disk write; one unknown source aborts the whole
+  call. A fully no-op call leaves `snapshot_version` unchanged.
 - `set_column_options(project_dir, source_name, column_name, options,
   *, expected_version, db_path=None)` — sets or clears column
   options. Keys validated against `VALID_OPTION_KEYS`; passing

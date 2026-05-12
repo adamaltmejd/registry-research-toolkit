@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
 
-  import { sourceYearProvenanceFor, store } from "../store.svelte";
+  import { sourceYearInfoFor, store } from "../store.svelte";
   import type { RegisterGroupView } from "../types";
   import Modal from "./Modal.svelte";
   import RegisterCombobox from "./RegisterCombobox.svelte";
@@ -35,17 +35,12 @@
   // Snapshot the year + provenance for each source at modal-open time.
   // The form's editable values diverge locally; on Save we diff and POST
   // only the sources whose value moved.
-  const initialYears: Record<string, number | null> = untrack(() => {
-    const cfg = store.snapshot?.config.sources ?? {};
-    const out: Record<string, number | null> = {};
-    for (const sn of initialSources) {
-      const entry = cfg[sn];
-      out[sn] = entry !== undefined && "year" in entry ? (entry.year ?? null) : null;
-    }
-    return out;
-  });
-  const initialProvenance = untrack(() =>
-    sourceYearProvenanceFor(initialSources),
+  const initialInfo = untrack(() => sourceYearInfoFor(initialSources));
+  const initialYears: Record<string, number | null> = Object.fromEntries(
+    initialSources.map((sn) => [sn, initialInfo[sn].year]),
+  );
+  const initialProvenance: Record<string, "set" | "missing"> = Object.fromEntries(
+    initialSources.map((sn) => [sn, initialInfo[sn].provenance]),
   );
 
   // Editable per-source year input. Empty string = "unset" — clearing a
@@ -356,12 +351,7 @@
   }
 
   function toggleSource(sn: string): void {
-    sourceIncluded = { ...sourceIncluded, [sn]: !sourceIncluded[sn] };
-    confirming = false;
-  }
-
-  function onYearInput(sn: string, value: string): void {
-    yearInput = { ...yearInput, [sn]: value };
+    sourceIncluded[sn] = !sourceIncluded[sn];
     confirming = false;
   }
 
@@ -478,7 +468,7 @@
                   class="year-input"
                   class:year-input-invalid={invalid}
                   bind:value={yearInput[src]}
-                  oninput={() => onYearInput(src, yearInput[src] ?? "")}
+                  oninput={() => (confirming = false)}
                   disabled={submitting}
                   aria-label={`year for ${src}`}
                   aria-invalid={invalid}

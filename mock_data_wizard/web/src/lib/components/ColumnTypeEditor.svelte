@@ -5,8 +5,8 @@
   import {
     columnIsManual,
     hasRegmetaValueDisplay,
-    sourceYearProvenanceFor,
-    sourceYearsFor,
+    relevantYearsFromMap,
+    sourceYearInfoFor,
     store,
   } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
@@ -120,22 +120,13 @@
   // ``var_id`` then.
   let userPickedVarId: number | null = $state(null);
 
-  let sourceYears = $derived(sourceYearsFor(registerSourcesWithColumn));
-  let sourceYearProvenance = $derived(
-    sourceYearProvenanceFor(registerSourcesWithColumn),
+  let sourceYearInfo = $derived(sourceYearInfoFor(registerSourcesWithColumn));
+  let sourceYears = $derived(
+    Object.fromEntries(
+      registerSourcesWithColumn.map((sn) => [sn, sourceYearInfo[sn].year]),
+    ),
   );
-  // Years that should drive the year-aware primary picker. Same shape as
-  // ValueCodesPanel's filter — the non-null source years in the calling
-  // partition.
-  let relevantYears = $derived(
-    Array.from(
-      new Set(
-        Object.values(sourceYears).filter(
-          (y): y is number => typeof y === "number",
-        ),
-      ),
-    ).sort((a, b) => a - b),
-  );
+  let relevantYears = $derived(relevantYearsFromMap(sourceYears));
   // True when *every* source in the partition is in the "missing" state
   // — i.e. auto-detection failed and the user hasn't intervened. A
   // source whose `year` is explicitly null (user asserting "no year")
@@ -144,7 +135,7 @@
   // warning that replaces the description / value-code body when regmeta
   // would otherwise mix wrong-era variables.
   let allYearsUnknown = $derived(
-    sources.every((sn) => sourceYearProvenance[sn] === "missing"),
+    sources.every((sn) => sourceYearInfo[sn].provenance === "missing"),
   );
 
   async function loadVarinfo(): Promise<void> {
@@ -161,11 +152,8 @@
     }
   }
 
-  // Load varinfo on mount and reload whenever the source years change
-  // (the manual year picker writes through to the snapshot, which flows
-  // back here via ``sourceYears`` → ``relevantYears``). The store's
-  // varinfo cache is keyed on ``(register, column, years)`` so duplicate
-  // calls for the same key cost one HTTP request.
+  // Depend on the join'd key so $effect re-fires only when the year set
+  // changes value (not on every Array reassignment).
   let varinfoYearKey = $derived(relevantYears.join(","));
   $effect(() => {
     varinfoYearKey;
@@ -176,19 +164,14 @@
     void loadVarinfo();
   });
 
-  // Concise source line: "var_id 137 in LISA"; falls back to the bare
-  // var_id when the description carries no register name (shouldn't
-  // happen for resolved rows, but the field is nullable upstream).
   function varSourceLine(d: VarinfoDescription): string {
     return d.register_name
       ? `var_id ${d.var_id} in ${d.register_name}`
       : `var_id ${d.var_id}`;
   }
 
-  // Active variable for the popup's banner + value-codes panel:
-  // explicit user pick wins, otherwise the server's primary. Returns
-  // null in loading / error / "none" states so the value-codes panel
-  // falls through to the unscoped union (pre-fix behaviour).
+  // Active variable: explicit user pick wins, otherwise the server's
+  // primary. Null in non-loaded states.
   let activeDescription = $derived.by((): VarinfoDescription | null => {
     if (varinfoState.kind !== "loaded") return null;
     const data = varinfoState.data;
@@ -201,9 +184,8 @@
     return alt ? alt.description : data.primary;
   });
   let activeVarId = $derived(activeDescription?.var_id ?? null);
-  // The active variable's cvid count, mirroring the server-side
-  // `primary_share.instances`. Used in the banner's "(N of M cvids)"
-  // hint so the line stays truthful when the user picks an alternative.
+  // Cvid count for the active variable. The banner reads "(N of M cvids)"
+  // and must track user picks, not just the server's primary.
   let activeInstances = $derived.by((): number | null => {
     if (varinfoState.kind !== "loaded") return null;
     const data = varinfoState.data;

@@ -300,28 +300,11 @@ export function getColumnVarinfo(
   });
 }
 
-export interface SetSourceYearArgs {
-  source_name: string;
-  /** Integer year, or null to assert "no year" (suppresses the
-   *  filename regex fallback). Omit to leave unchanged — use one of
-   *  the explicit values when calling this endpoint. */
-  year: number | null;
-  expected_version: string;
-}
-
-export function setSourceYear(args: SetSourceYearArgs): Promise<StateSnapshot> {
-  return send<StateSnapshot>("/api/source-year", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(args),
-  });
-}
-
 export interface SetSourceYearsArgs {
-  /** source_name → year-or-null. Every source must exist in the current
-   *  snapshot; one unknown source aborts the whole call before any
-   *  on-disk write. Sources whose value actually moves are dropped
-   *  from `auto_years`. */
+  /** source_name → integer year (set) or null (delete the `year` key,
+   *  sending the row back to "missing"). Every source must exist in the
+   *  current snapshot; one unknown source aborts the whole call before
+   *  any on-disk write. */
   assignments: Record<string, number | null>;
   expected_version: string;
 }

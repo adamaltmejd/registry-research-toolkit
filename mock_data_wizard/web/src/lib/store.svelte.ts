@@ -17,7 +17,6 @@ import {
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
   setSourceRegisters as apiSetSourceRegisters,
-  setSourceYear as apiSetSourceYear,
   setSourceYears as apiSetSourceYears,
   unsetColumnManual as apiUnsetColumnManual,
   type ColumnVarinfoResponse,
@@ -26,7 +25,6 @@ import {
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
   type SetSourceRegistersArgs,
-  type SetSourceYearArgs,
   type SetSourceYearsArgs,
   type UnsetColumnManualArgs,
 } from "./api";
@@ -80,32 +78,49 @@ export function hasRegmetaValueDisplay(sig: RegmetaSignal | null): boolean {
   );
 }
 
-/** Build the {source → year} map the inline value-codes panel needs.
- *  Snapshot-scoped; callers pass the subset of sources they care about. */
-export function sourceYearsFor(
+/** Per-source year state. ``provenance = "set"`` means the source has a
+ *  ``year`` key (an int, or ``null`` asserting "no year"); ``"missing"``
+ *  means no key at all (auto-detection yielded nothing and the user
+ *  hasn't intervened). Year + provenance are read in one snapshot pass. */
+export interface SourceYearInfo {
+  year: number | null;
+  provenance: "set" | "missing";
+}
+
+/** Snapshot-scoped per-source year info. Returns both year and
+ *  provenance in one pass over ``snapshot.config.sources``. Callers
+ *  that only need years for the ValueCodesPanel pass an extracted map
+ *  derived from this. */
+export function sourceYearInfoFor(
   sources: Iterable<string>,
-): Record<string, number | null> {
+): Record<string, SourceYearInfo> {
   const cfg = store.snapshot?.config.sources ?? {};
-  const out: Record<string, number | null> = {};
-  for (const sn of sources) out[sn] = cfg[sn]?.year ?? null;
+  const out: Record<string, SourceYearInfo> = {};
+  for (const sn of sources) {
+    const entry = cfg[sn];
+    if (entry !== undefined && "year" in entry) {
+      out[sn] = { year: entry.year ?? null, provenance: "set" };
+    } else {
+      out[sn] = { year: null, provenance: "missing" };
+    }
+  }
   return out;
 }
 
-/** Build the {source → "set" | "missing"} map the year picker and
- *  source rows use to decide whether to render the ⚠ "auto-detection
- *  failed" chip. "set" — the source has a `year` key (an int, or `null`
- *  asserting no year). "missing" — no `year` key at all; auto-detection
- *  yielded nothing and the user hasn't intervened. Snapshot-scoped. */
-export function sourceYearProvenanceFor(
-  sources: Iterable<string>,
-): Record<string, "set" | "missing"> {
-  const sourcesCfg = store.snapshot?.config.sources ?? {};
-  const out: Record<string, "set" | "missing"> = {};
-  for (const sn of sources) {
-    const entry = sourcesCfg[sn];
-    out[sn] = entry !== undefined && "year" in entry ? "set" : "missing";
-  }
-  return out;
+/** Sorted, unique, non-null years from a ``{source → year}`` map.
+ *  Used as the ``relevant_years`` filter for varinfo/value-codes
+ *  lookups so a column's SCB-cross-decade slot reuse doesn't surface
+ *  wrong-era variants. */
+export function relevantYearsFromMap(
+  sourceYears: Record<string, number | null>,
+): number[] {
+  return Array.from(
+    new Set(
+      Object.values(sourceYears).filter(
+        (y): y is number => typeof y === "number",
+      ),
+    ),
+  ).sort((a, b) => a - b);
 }
 
 export function columnHasConcern(
@@ -501,10 +516,6 @@ class Store {
 
   async setSourceRegisters(args: SetSourceRegistersArgs): Promise<boolean> {
     return this.runMutation(() => apiSetSourceRegisters(args));
-  }
-
-  async setSourceYear(args: SetSourceYearArgs): Promise<boolean> {
-    return this.runMutation(() => apiSetSourceYear(args));
   }
 
   async setSourceYears(args: SetSourceYearsArgs): Promise<boolean> {

@@ -35,7 +35,7 @@ from mock_data_wizard.editor import (
     set_column_type,
     set_group_register,
     set_source_registers,
-    set_source_metadata,
+    set_source_years,
     unset_column_manual_override,
 )
 
@@ -1288,39 +1288,11 @@ def test_set_source_registers_rejects_invalid_assignments_shape(tmp_path: Path):
         )
 
 
-# -- set_source_metadata ---------------------------------------------------
-
-
-def test_set_source_metadata_year_round_trips(tmp_path: Path):
-    discover_path = _write_discover(
-        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
-    )
-    snap = init_if_missing(tmp_path, discover_path)
-    snap = set_source_metadata(
-        tmp_path, "x", year=2024, expected_version=snap.snapshot_version
-    )
-    assert snap.config.sources["x"]["year"] == 2024
-
-
-def test_set_source_metadata_year_none_means_no_year(tmp_path: Path):
-    discover_path = _write_discover(
-        tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
-    )
-    snap = init_if_missing(tmp_path, discover_path)
-    snap = set_source_metadata(
-        tmp_path, "lisa_2018", year=None, expected_version=snap.snapshot_version
-    )
-    configured, year = snap.config.source_year("lisa_2018")
-    assert (configured, year) == (True, None)
-
-
 # -- set_source_years (bulk) ----------------------------------------------
 
 
 def test_set_source_years_int_sets_year(tmp_path: Path):
     """An int value writes the `year` key for that source."""
-    from mock_data_wizard.editor import set_source_years
-
     discover_path = _write_discover(
         tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
     )
@@ -1336,8 +1308,6 @@ def test_set_source_years_none_deletes_year_key(tmp_path: Path):
     reverts to "missing" — the UI warning resurfaces on next read.
     Distinct from the legacy ``year: null`` state (which the bundle
     still accepts, but no editor path emits anymore)."""
-    from mock_data_wizard.editor import set_source_years
-
     discover_path = _write_discover(
         tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
     )
@@ -1346,7 +1316,6 @@ def test_set_source_years_none_deletes_year_key(tmp_path: Path):
     snap = set_source_years(
         tmp_path, {"lisa_2018": None}, expected_version=snap.snapshot_version
     )
-    # year key is gone; source entry survives if it carries other fields
     entry = snap.config.sources.get("lisa_2018", {})
     assert "year" not in entry
 
@@ -1354,8 +1323,6 @@ def test_set_source_years_none_deletes_year_key(tmp_path: Path):
 def test_set_source_years_none_on_already_missing_is_noop(tmp_path: Path):
     """Asking to delete a year that's already absent must not bump the
     snapshot version — same contract as set_source_registers' no-op path."""
-    from mock_data_wizard.editor import set_source_years
-
     discover_path = _write_discover(
         tmp_path, [{"source_name": "no_year_source", "columns": [{"name": "X"}]}]
     )
@@ -1370,8 +1337,6 @@ def test_set_source_years_none_on_already_missing_is_noop(tmp_path: Path):
 
 
 def test_set_source_years_unknown_source_aborts(tmp_path: Path):
-    from mock_data_wizard.editor import set_source_years
-
     discover_path = _write_discover(
         tmp_path,
         [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}],
@@ -1386,8 +1351,6 @@ def test_set_source_years_unknown_source_aborts(tmp_path: Path):
 
 
 def test_set_source_years_rejects_non_dict(tmp_path: Path):
-    from mock_data_wizard.editor import set_source_years
-
     discover_path = _write_discover(
         tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
     )
@@ -1401,7 +1364,6 @@ def test_set_source_years_rejects_non_dict(tmp_path: Path):
 
 
 def test_set_source_years_rejects_bool_year(tmp_path: Path):
-    from mock_data_wizard.editor import set_source_years
 
     discover_path = _write_discover(
         tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
@@ -1543,9 +1505,7 @@ def test_stale_state_error_blocks_mutation(tmp_path: Path):
     payload["manual_columns"] = [["x", "LopNr"]]
     cfg_path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(StaleStateError):
-        set_source_metadata(
-            tmp_path, "x", year=2024, expected_version=snap.snapshot_version
-        )
+        set_source_years(tmp_path, {"x": 2024}, expected_version=snap.snapshot_version)
 
 
 def test_snapshot_version_changes_after_mutation(tmp_path: Path):
@@ -1553,8 +1513,8 @@ def test_snapshot_version_changes_after_mutation(tmp_path: Path):
         tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
     )
     snap = init_if_missing(tmp_path, discover_path)
-    snap2 = set_source_metadata(
-        tmp_path, "x", year=2024, expected_version=snap.snapshot_version
+    snap2 = set_source_years(
+        tmp_path, {"x": 2024}, expected_version=snap.snapshot_version
     )
     assert snap.snapshot_version != snap2.snapshot_version
 
@@ -1855,23 +1815,6 @@ def test_config_lock_raises_clear_error_when_fcntl_missing(tmp_path: Path, monke
     with pytest.raises(NotImplementedError, match="POSIX"):
         with editor._config_lock(tmp_path):
             pass
-
-
-# -- set_source_metadata source validation --------------------------------
-
-
-def test_set_source_metadata_rejects_unknown_source(tmp_path: Path):
-    discover_path = _write_discover(
-        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
-    )
-    snap = init_if_missing(tmp_path, discover_path)
-    with pytest.raises(ValidationError, match="not found in discover"):
-        set_source_metadata(
-            tmp_path,
-            "ghost_source",
-            year=2024,
-            expected_version=snap.snapshot_version,
-        )
 
 
 # -- Discover-hash determinism --------------------------------------------

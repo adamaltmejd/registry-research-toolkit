@@ -10,7 +10,7 @@ Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 - ``get_state``, ``init_if_missing``
 - ``set_column_type``, ``set_group_register``, ``set_source_registers``,
-  ``set_source_metadata``, ``set_source_years``, ``set_column_options``
+  ``set_source_years``, ``set_column_options``
 - ``put_panel``, ``remove_panel``
 - Helpers: ``list_registers``, ``resolve_register``,
   ``detect_year_from_source_name``, ``detect_panel_member_kind``
@@ -79,7 +79,6 @@ __all__ = [
     "set_column_type",
     "set_group_register",
     "set_source_registers",
-    "set_source_metadata",
     "set_source_years",
     "set_column_options",
     "put_panel",
@@ -1647,38 +1646,6 @@ def _sources_in_group(
     return []
 
 
-def set_source_metadata(
-    project_dir: Path,
-    source_name: str,
-    *,
-    expected_version: str,
-    year: int | None | _Unchanged = UNCHANGED,
-    db_path: Path | None = None,
-) -> StateSnapshot:
-    """Modify per-source metadata. Currently scoped to ``year``."""
-    project_dir = Path(project_dir)
-    with _config_lock(project_dir):
-        payload = _verify_version(project_dir, expected_version)
-        _assert_source_in_discover(
-            _discover_sources_index(project_dir), payload, source_name
-        )
-        sources = payload.setdefault("sources", {})
-        entry = sources.setdefault(source_name, {})
-        if not isinstance(year, _Unchanged):
-            if year is None:
-                entry["year"] = None
-            elif isinstance(year, int) and not isinstance(year, bool):
-                entry["year"] = year
-            else:
-                raise ValidationError(
-                    f"year must be int or None, got {type(year).__name__}"
-                )
-        if not entry:
-            sources.pop(source_name, None)
-        _atomic_write(_config_path(project_dir), payload)
-    return get_state(project_dir, db_path=db_path)
-
-
 def set_source_years(
     project_dir: Path,
     assignments: dict[str, int | None],
@@ -1733,10 +1700,6 @@ def set_source_years(
             had_year = "year" in entry
             old_year = entry.get("year") if had_year else None
             if year is None:
-                # Delete the year key. No-op when it was already absent;
-                # also a no-op pre-existing null counts as a change
-                # (we're collapsing the two equivalent "no year" states
-                # into one, which is the whole point of this branch).
                 if not had_year:
                     continue
                 entry.pop("year", None)
@@ -2423,27 +2386,26 @@ def _rank_variables(
     context we collapse to the original popularity-only ranking — every
     variable is a plausible match."""
     if relevant_years:
-        kept: list[dict[str, Any]] = []
+        # Compute distance once per variable. Variables with parseable
+        # years that don't overlap (dist > 0) are dropped; variables
+        # with no parseable years (dist is None) are kept — "we can't
+        # disprove relevance" mirrors `_filter_groups_by_relevant_years`.
+        scored: list[tuple[int, int, int, dict[str, Any]]] = []
         for v in variables:
             dist = _variable_year_distance(v, relevant_years)
-            # Drop variables with parseable years that don't overlap the
-            # filter window. Variables with no parseable years (dist
-            # returns None) are kept on the principle of "we can't
-            # disprove relevance" — mirrors `_filter_groups_by_relevant_years`.
             if dist is not None and dist > 0:
                 continue
-            kept.append(v)
-
-        def key(v: dict[str, Any]) -> tuple[int, int, int]:
-            dist = _variable_year_distance(v, relevant_years)
             effective_dist = dist if dist is not None else 10_000
-            return (
-                effective_dist,
-                -len(v.get("instances") or ()),
-                int(v["var_id"]),
+            scored.append(
+                (
+                    effective_dist,
+                    -len(v.get("instances") or ()),
+                    int(v["var_id"]),
+                    v,
+                )
             )
-
-        return sorted(kept, key=key)
+        scored.sort(key=lambda t: t[:3])
+        return [t[3] for t in scored]
     return sorted(
         variables,
         key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),

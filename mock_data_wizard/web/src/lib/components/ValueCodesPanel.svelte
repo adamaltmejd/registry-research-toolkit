@@ -5,6 +5,7 @@
     type ColumnValuesResponse,
     type ValueSetGroup,
   } from "../api";
+  import { relevantYearsFromMap } from "../store.svelte";
   import Picker from "./Picker.svelte";
 
   interface Props {
@@ -44,15 +45,7 @@
   let pickedValueSet: number | null = $state(null);
   let loadState: LoadState = $state({ kind: "loading" });
 
-  let relevantYears = $derived(
-    Array.from(
-      new Set(
-        Object.values(sourceYears).filter(
-          (y): y is number => typeof y === "number",
-        ),
-      ),
-    ).sort((a, b) => a - b),
-  );
+  let relevantYears = $derived(relevantYearsFromMap(sourceYears));
 
   async function load(): Promise<void> {
     loadState = { kind: "loading" };

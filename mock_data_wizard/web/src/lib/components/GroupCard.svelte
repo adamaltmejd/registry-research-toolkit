@@ -5,8 +5,7 @@
     columnIsMismatch,
     columnIsUnmatchedCategorical,
     hasRegmetaValueDisplay,
-    sourceYearProvenanceFor,
-    sourceYearsFor,
+    sourceYearInfoFor,
     store,
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
@@ -45,10 +44,10 @@
     none: "no confidence",
   };
 
-  let sourceYears = $derived(sourceYearsFor(group.sources));
-  let sourceYearProvenance = $derived(sourceYearProvenanceFor(group.sources));
+  let sourceYearInfo = $derived(sourceYearInfoFor(group.sources));
   let missingYearCount = $derived(
-    group.sources.filter((sn) => sourceYearProvenance[sn] === "missing").length,
+    group.sources.filter((sn) => sourceYearInfo[sn].provenance === "missing")
+      .length,
   );
 
   let groupSourceSet = $derived(new Set(group.sources));
@@ -660,12 +659,12 @@
       </summary>
       <ul class="source-list">
         {#each group.sources as sn (sn)}
-          {@const missing = sourceYearProvenance[sn] === "missing"}
+          {@const info = sourceYearInfo[sn]}
           <li>
             <span class="mono">{sn}</span>
-            {#if sourceYears[sn] !== null && sourceYears[sn] !== undefined}
-              <span class="stat-year" title="source year">{sourceYears[sn]}</span>
-            {:else if missing}
+            {#if info.year !== null}
+              <span class="stat-year" title="source year">{info.year}</span>
+            {:else if info.provenance === "missing"}
               <span
                 class="stat-year stat-year-missing"
                 title="no year detected from source name — set one in Edit register"
@@ -686,8 +685,9 @@
       {@const sourceName = fs.name}
       {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
-      {@const year = sourceYears[sourceName]}
-      {@const yearMissing = sourceYearProvenance[sourceName] === "missing"}
+      {@const info = sourceYearInfo[sourceName]}
+      {@const year = info.year}
+      {@const yearMissing = info.provenance === "missing"}
       <details
         class="source"
         open={isSourceOpen(fs.name)}
@@ -696,7 +696,7 @@
         <summary>
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
-            {#if year !== null && year !== undefined}
+            {#if year !== null}
               <span class="stat-year" title="source year">{year}</span>
             {:else if yearMissing}
               <span
@@ -822,7 +822,9 @@
   <ValueCodesModal
     register={group.register_name}
     column={viewingValuesFor}
-    sourceYears={sourceYears}
+    sourceYears={Object.fromEntries(
+      group.sources.map((sn) => [sn, sourceYearInfo[sn].year]),
+    )}
     onClose={() => (viewingValuesFor = null)}
   />
 {/if}
