@@ -520,6 +520,46 @@ def test_summarize_id_string(conn):
     assert out["stats"]["id_subtype"] == "string"
 
 
+def test_summarize_id_integer_from_string_sample(conn):
+    """The all_varchar=true CSV path (issue #40) hands the id branch a
+    string sample even for genuine integer ids. An all-int-parseable
+    string sample must still classify as ``integer`` so the generated
+    mock data matches the LOPNR/PERSONNR pattern.
+    """
+    conn.execute("CREATE TABLE t(id VARCHAR)")
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="id",
+        col_type="id",
+        n_rows=1000,
+        n_distinct=1000,
+        null_count=0,
+        sample=["1", "2", "00012345"],
+        dialect="duckdb",
+    )
+    assert out["stats"]["id_subtype"] == "integer"
+
+
+def test_summarize_id_string_when_string_sample_has_letters(conn):
+    """A string sample that contains a non-digit value stays ``string``
+    — the auto-detection only flips to ``integer`` when every value
+    parses as an int."""
+    conn.execute("CREATE TABLE t(id VARCHAR)")
+    out = summarize_column(
+        conn,
+        table="t",
+        col_name="id",
+        col_type="id",
+        n_rows=1000,
+        n_distinct=1000,
+        null_count=0,
+        sample=["1", "2", "AB1234"],
+        dialect="duckdb",
+    )
+    assert out["stats"]["id_subtype"] == "string"
+
+
 # -- nulls / shape --------------------------------------------------------
 
 

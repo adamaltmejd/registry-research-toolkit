@@ -236,8 +236,9 @@ sql_source(
 ```
 
 For files, `where=` lives on `file_source(...)` itself: each file is its
-own table and the predicate runs against the DuckDB-typed columns from
-`read_csv_auto`.
+own table and the predicate runs against the (typed-by-cast at extract
+time, sniffer-inferred at discover time) columns produced by
+`read_csv_auto` — see *CSV typing* below.
 
 Implementation: the iterator wraps the table reference in a derived
 table — `(SELECT * FROM [dbo].[lisa_2018] WHERE AR > 2015) AS
@@ -606,6 +607,148 @@ timings on typical hardware:
 
 If classification on large projects proves too slow, a regmeta cache
 keyed by `(register_id, db_mtime)` may be introduced.
+
+### CSV typing: all-varchar reads, casts at extract, opaque auto-promotion
+
+`iter_file_source` always reads CSVs with `read_csv_auto(...,
+all_varchar=true)`. No type sniffer runs. Every column comes off the
+wire as `VARCHAR`, regardless of mode. From there:
+
+- **Discover** (`run_discover`, no config yet): the all-varchar view
+  is what the handle exposes. Every column in
+  `mock_data_discovery.json` reports `sql_type = "VARCHAR"`. The
+  classifier downstream leans on name patterns and regmeta evidence;
+  the SQL-type fallback in `classify._classify` simply doesn't fire
+  for CSV columns (it still fires for SQL sources, where the server
+  is authoritative on type).
+- **Extract** (`run_extract_typed`, config present): a per-column
+  `CAST` driven by `mock_data_config.json` is layered on top of the
+  all-varchar read. Then any column the user marked `opaque` is
+  probed and may be auto-promoted to `numeric` or `date` — see
+  *Opaque auto-promotion* below.
+
+Why all-varchar everywhere. The sniffer is a separate pass *on top of*
+the read; on a 50 MB / 1M-row CSV with the OS page cache warm it ran
+~12.6× slower than the default sample-size path (492 ms vs 39 ms; see
+issue #40). The default 20480-row sample is fast but unreliable: a
+single rare value past the sample window flips a column from
+`VARCHAR` to `BIGINT` and crashes mid-stream — observed on
+`slutbetyg_Ak9_2015.csv` where one literal `"C"` at row ~60 000 in a
+column of digits picked `BIGINT` and broke the run. `sample_size=-1`
+plugged the leak by scanning the whole file but paid full sniffer
+cost on every load (discover *and* extract). `all_varchar=true`
+sidesteps both: no inference, no rare-row surprises, single-pass
+speed (44 ms vs 39 ms in the same benchmark). Cast errors at extract
+surface at a known column with a known target type
+(`Could not convert string 'C' to INT64 when casting from source
+column NO_AMNEN`), easier to triage than a mid-aggregation
+`ConversionException`.
+
+WHERE-clause caveat (**breaking change** vs the `sample_size=-1`
+interim from #39): clauses passed to `file_source(..., where=...)`
+operate on the all-varchar view in discover mode and on the typed
+cast view in extract mode. A discover-mode WHERE that compares
+against a numeric literal (`ar > 2015`) previously worked because the
+sniffer landed `ar` as `BIGINT`; under `all_varchar=true` it now
+errors with a Binder Error. Two fixes, pick either: write
+`ar > '2015'` (lex order matches year order for SCB years and other
+zero-padded fixed-width integers), or wrap the comparison —
+`CAST(ar AS BIGINT) > 2015`. In extract mode the column is already
+typed if the user marked it numeric, so the original form works as-is.
+
+#### Semantic → DuckDB cast
+
+`_semantic_to_duckdb_cast` (in `sources.py`) maps each
+`ColumnTypeOverride` to the DuckDB type to cast into:
+
+| Semantic type      | Cast               | Why |
+| ------------------ | ------------------ | --- |
+| `id`               | (none — `VARCHAR`) | Pids and study-IDs commonly carry leading zeros that a numeric cast would drop |
+| `categorical`      | (none — `VARCHAR`) | Code lists like `"01"`/`"1"` should not collapse |
+| `opaque`           | (none — `VARCHAR`) | Length stats only |
+| `date`             | (none — `VARCHAR`) | Format zoo parsed in `summarize._to_date`; lexicographic min/max is correct for ISO and YYYYMMDD |
+| `numeric/integer`  | `BIGINT`           | Clean integer round-trip on min/max |
+| `numeric/double`   | `DOUBLE`           | Default for unspecified numeric subtype; covers floats and integers up to 2^53 |
+
+Only `numeric` columns actually need a SQL cast. The other four types
+are aggregated as strings and reduced in Python (frequency counts, length
+stats, date parsing, id_subtype detection) — there is nothing to gain
+from typing them at the SQL layer.
+
+`id_subtype` auto-detection (`_detect_id_subtype` in `summarize.py`)
+treats an all-non-empty, all-int-parseable string sample as
+`integer`. Necessary because every id column arrives as a string off
+the all-varchar read.
+
+#### Opaque auto-promotion
+
+`_probe_and_promote_opaque` (in `sources.py`) runs once per file at
+extract time, batching one query across every column the config
+marked `opaque`:
+
+```sql
+SELECT
+  COUNT(*) FILTER (WHERE col IS NOT NULL) AS nn,
+  COUNT(*) FILTER (WHERE col IS NOT NULL
+    AND TRY_CAST(col AS BIGINT) IS NOT NULL
+    AND TRY_CAST(col AS BIGINT) = TRY_CAST(col AS DOUBLE)) AS bi,
+  COUNT(*) FILTER (WHERE col IS NOT NULL
+    AND TRY_CAST(col AS DOUBLE) IS NOT NULL) AS db,
+  COUNT(*) FILTER (WHERE col IS NOT NULL
+    AND TRY_CAST(col AS DATE) IS NOT NULL) AS dt,
+  ...  -- repeated for each opaque column
+FROM <view>
+```
+
+Rule: `bi == nn → numeric/integer`, else `db == nn → numeric/double`,
+else `dt == nn → date`, else stay `opaque`. The override is mutated
+in place (the dict the caller holds is the same one
+`MDWConfig.column_types` holds, so `process_handle` sees the
+promoted type without an extra plumbing step), the column is re-typed
+to its promoted SQL type, and a WARNING is logged per promotion so
+the MONA-side run log records the decision.
+
+How the re-typing avoids a second CSV read. On the TABLE path the
+file is already materialised as VARCHAR, so each promoted column is
+flipped in place via `ALTER TABLE … ALTER COLUMN … TYPE <new> USING
+CAST(…)` — no new `read_csv_auto` pass. On the VIEW path no
+materialisation happened yet, so the view SQL is rebuilt with the
+final casts and the next downstream query reads with them in a single
+pass. Either way, an opaque promotion costs at most one extra
+in-memory cast, never a re-read.
+
+Why the BIGINT predicate is a round-trip check (`bi = db`) rather
+than a bare `TRY_CAST(... AS BIGINT) IS NOT NULL`: DuckDB happily
+rounds `"1.5" → 2` when casting VARCHAR to BIGINT, so the naive
+predicate matches float-shaped values. The equality with the DOUBLE
+cast keeps `"1"`, `"1e3"`, `"3.0"` integer and pushes `"1.5"`,
+`"2.5"` down to DOUBLE.
+
+Why this is PII-safe without explicit user opt-in. The `numeric` and
+`date` aggregation branches emit only **perturbed aggregates**:
+`min`/`max` carry ±0.5% relative noise (`summarize.NOISE_PCT`); dates
+carry ±7 days of uniform jitter (`summarize.DATE_JITTER_DAYS`); means
+and stddevs are noisy too. No individual values land in the output.
+The `categorical` and `id` branches emit frequency tables and
+distinct-value lists, which would leak PII if a misclassified opaque
+column was promoted there — those branches are deliberately
+unreachable from auto-promotion.
+
+Caveat: DuckDB's `TRY_CAST(... AS DATE)` accepts ISO-style strings
+only. SCB YYYYMMDD-as-integer columns (very common) satisfy BIGINT
+first and land as `numeric/integer`. The WARNING surfaces the
+decision; the user can flip the override to `date` in the next
+config iteration.
+
+#### Columns missing from the config
+
+A CSV column with no override entry passes through as `VARCHAR`.
+`process_handle` then validates the full column set against the config
+and raises a single error listing every missing override — better
+than failing the read on the first unknown column. A config that has
+no entry at all for a given file (e.g. a new file appearing between
+discover and extract) reads as all-varchar and `process_handle` then
+raises about every column being unconfigured.
 
 ### File materialisation threshold
 

@@ -100,6 +100,38 @@ def _to_date(v: Any, override_format: str | None = None) -> date | None:
         return None
 
 
+def _detect_id_subtype(sample: Sequence[Any]) -> str:
+    """Pick ``"integer"`` vs ``"string"`` for an unpinned id column.
+
+    The MSSQL path returns native ints/floats for numeric columns, so
+    ``_python_kind`` is enough there. The DuckDB file-source path now
+    reads CSVs with ``all_varchar=true`` (issue #40), so a numeric LOPNR
+    arrives as a string — we additionally treat a sample of all-digit
+    strings (leading zeros allowed, no sign, no decimal, no exponent)
+    as integer. SCB pids and study-IDs are positive digit strings; this
+    excludes ``"+5"``, ``"-1"``, ``"1.0"``, ``"1e3"`` which ``int(s)``
+    would have accepted but which signal "not really an id" in this
+    domain. Mock output for int ids drops leading zeros, mirroring the
+    pre-all_varchar behaviour where the read inferred BIGINT.
+    """
+    kind = _python_kind(sample)
+    if kind in ("numeric_int", "numeric_float"):
+        return "integer"
+    if kind != "string":
+        return "string"
+    non_null = [v for v in sample if v is not None]
+    if not non_null:
+        return "string"
+    for v in non_null:
+        # .strip() tolerates surrounding whitespace as an SCB-export
+        # artifact (some exporters pad numeric fields); the integer
+        # mock generator will emit unpadded digits regardless.
+        s = str(v).strip()
+        if not s.isdigit():
+            return "string"
+    return "integer"
+
+
 def _suppress_below_k(
     rows: Sequence[dict[str, Any]], suppress_k: int = SUPPRESS_K
 ) -> dict[str, int]:
@@ -303,10 +335,7 @@ def summarize_column(
         if id_subtype is not None:
             stats["id_subtype"] = id_subtype
         else:
-            kind = _python_kind(sample)
-            stats["id_subtype"] = (
-                "integer" if kind in ("numeric_int", "numeric_float") else "string"
-            )
+            stats["id_subtype"] = _detect_id_subtype(sample)
 
     else:
         raise ValueError(f"unknown col_type: {col_type!r}")
