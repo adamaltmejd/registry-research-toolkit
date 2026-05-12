@@ -265,7 +265,13 @@
           </p>
         {:else if varinfoState.data.kind === "none"}
           <p class="varinfo-status varinfo-none">
-            Variable: not described in regmeta
+            {#if varinfoState.data.reason === "no_register"}
+              No register pinned — assign one to see variable info
+            {:else if varinfoState.data.reason === "unavailable"}
+              Variable info unavailable (regmeta not installed)
+            {:else}
+              Variable: not described in regmeta
+            {/if}
           </p>
         {:else}
           {@const data = varinfoState.data}

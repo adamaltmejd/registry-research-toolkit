@@ -70,7 +70,7 @@ from .panels import (
 )
 from .registers import Register, list_registers, resolve_register
 from .summarize import SUPPRESS_K as GLOBAL_SUPPRESS_K
-from ._util import lookup_with_prefix_fallback
+from ._util import lookup_with_prefix_fallback, strip_project_prefix
 
 __all__ = [
     # API
@@ -2197,8 +2197,6 @@ def _resolve_picked_value_set(
 
 
 def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
-    from ._util import strip_project_prefix
-
     lower = column.lower()
     if lower in signals:
         return lower
@@ -2246,6 +2244,9 @@ class VarinfoAlternative:
     instances: int
 
 
+VarinfoNoneReason = Literal["not_found", "unavailable", "no_register"]
+
+
 @dataclass(frozen=True)
 class ColumnVarinfoResult:
     """Resolved varinfo for one (column, register) pair.
@@ -2256,9 +2257,12 @@ class ColumnVarinfoResult:
         the same register (SCB has recycled the column name across var_ids).
         ``primary`` is the variable with the most ``variable_instance``
         rows; ``alternatives`` lists the rest in descending frequency.
-      - ``none``: column unknown to regmeta, register doesn't resolve,
-        or regmeta is unavailable. Treated as a normal outcome, not an
-        error.
+      - ``none``: nothing to render. ``none_reason`` distinguishes the
+        three cases the UI wants to surface differently:
+          * ``"no_register"`` — column has no register pinned;
+          * ``"unavailable"`` — regmeta DB / package not present;
+          * ``"not_found"`` — column is unknown to regmeta (or the
+            register itself doesn't resolve).
     """
 
     kind: Literal["single", "divergent", "none"]
@@ -2266,6 +2270,7 @@ class ColumnVarinfoResult:
     primary_instances: int | None = None
     total_instances: int | None = None
     alternatives: tuple[VarinfoAlternative, ...] = ()
+    none_reason: VarinfoNoneReason | None = None
 
 
 def _varinfo_description_from_row(row: dict[str, Any]) -> VarinfoDescription:
@@ -2300,28 +2305,39 @@ def get_column_varinfo(
     if not column or not column.strip():
         raise ValidationError("column must be a non-empty string")
 
-    none_result = ColumnVarinfoResult(kind="none")
     if register is None or not register.strip():
-        return none_result
+        return ColumnVarinfoResult(kind="none", none_reason="no_register")
+    unavailable = ColumnVarinfoResult(kind="none", none_reason="unavailable")
+    not_found = ColumnVarinfoResult(kind="none", none_reason="not_found")
 
     with _open_regmeta_conn(db_path) as conn:
         if conn is None:
-            return none_result
+            return unavailable
         try:
             from regmeta.errors import RegmetaError
             from regmeta.queries import get_varinfo
         except ImportError:
-            return none_result
+            return unavailable
 
-        try:
-            variables = get_varinfo(conn, column, register=register)
-        except RegmetaError:
-            # "column not in regmeta" is a normal outcome here; degrade
-            # to the empty envelope rather than surfacing a 4xx.
-            return none_result
+        # MONA-prefixed columns (e.g. "P1105_Kon") aren't stored in regmeta
+        # — mirror `get_column_values` and retry with the stripped form.
+        candidates = [column]
+        stripped = strip_project_prefix(column)
+        if stripped and stripped != column:
+            candidates.append(stripped)
+
+        variables: list[dict[str, Any]] | None = None
+        for candidate in candidates:
+            try:
+                variables = get_varinfo(conn, candidate, register=register)
+                break
+            except RegmetaError as exc:
+                if exc.code != "not_found":
+                    raise
+                variables = None
 
         if not variables:
-            return none_result
+            return not_found
 
         # Rank by number of variable_instance rows. ``get_varinfo`` already
         # batches the per-cvid fetch into each variable's ``instances``
@@ -2368,5 +2384,6 @@ __all__ += [
     "ColumnVarinfoResult",
     "VarinfoAlternative",
     "VarinfoDescription",
+    "VarinfoNoneReason",
     "get_column_varinfo",
 ]

@@ -1004,29 +1004,41 @@ def test_column_values_accepts_empty_relevant_years(running_server: str):
 # -- /api/column-varinfo --------------------------------------------------
 
 
-def test_column_varinfo_returns_none_when_regmeta_missing(running_server: str):
+def test_column_varinfo_returns_none_when_regmeta_missing(
+    running_server: str, monkeypatch
+):
     """With regmeta unavailable the server must return the empty envelope
-    (kind="none") rather than an error — matches /api/column-values."""
+    (kind="none") rather than an error — matches /api/column-values. The
+    ``reason`` field lets the client tell "no regmeta installed" apart
+    from "column unknown to regmeta"."""
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _no_conn(_):
+        yield None
+
+    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-varinfo",
         {"register": "TESTREG", "column": "Kon"},
     )
     assert status == 200
-    assert body == {"kind": "none"}
+    assert body == {"kind": "none", "reason": "unavailable"}
 
 
 def test_column_varinfo_accepts_null_register(running_server: str):
     """``register: null`` is the "no register pinned" case (issue #71's
     out-of-scope branch). Server still returns kind="none" rather than
-    rejecting the call."""
+    rejecting the call, and tags it ``reason="no_register"`` so the UI
+    can show a register-prompting message instead of "not in regmeta"."""
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-varinfo",
         {"register": None, "column": "Kon"},
     )
     assert status == 200
-    assert body == {"kind": "none"}
+    assert body == {"kind": "none", "reason": "no_register"}
 
 
 def test_column_varinfo_requires_register_field(running_server: str):

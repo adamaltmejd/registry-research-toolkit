@@ -2653,7 +2653,8 @@ def test_dedupe_codes_preserves_first_seen_order():
 def test_get_column_varinfo_returns_none_when_regmeta_missing(monkeypatch):
     """Same graceful-degradation stance as get_column_values: when regmeta
     is unavailable the editor returns the empty envelope rather than
-    raising — the UI then shows the "not described in regmeta" state."""
+    raising — and tags it ``none_reason="unavailable"`` so the UI can
+    distinguish "regmeta missing" from "column not in regmeta"."""
     from contextlib import contextmanager
 
     @contextmanager
@@ -2663,16 +2664,18 @@ def test_get_column_varinfo_returns_none_when_regmeta_missing(monkeypatch):
     monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
     result = editor.get_column_varinfo("TESTREG", "Kon")
     assert result.kind == "none"
+    assert result.none_reason == "unavailable"
     assert result.primary is None
 
 
 def test_get_column_varinfo_returns_none_when_register_is_none(regmeta_db: Path):
     """Cross-register lookup is intentionally out of scope (issue #71):
     a column without a register pinned can mean too many different
-    things. Return ``kind="none"`` so the editor falls through to the
-    existing "no record" fallback."""
+    things. Return ``kind="none"`` with ``no_register`` so the editor
+    can prompt the user to assign one."""
     result = editor.get_column_varinfo(None, "Kon", db_path=regmeta_db.parent)
     assert result.kind == "none"
+    assert result.none_reason == "no_register"
 
 
 def test_get_column_varinfo_returns_none_for_unknown_column(regmeta_db: Path):
@@ -2680,6 +2683,7 @@ def test_get_column_varinfo_returns_none_for_unknown_column(regmeta_db: Path):
         "TESTREG", "NotAColumn", db_path=regmeta_db.parent
     )
     assert result.kind == "none"
+    assert result.none_reason == "not_found"
 
 
 def test_get_column_varinfo_returns_none_when_register_unresolved(
@@ -2689,6 +2693,45 @@ def test_get_column_varinfo_returns_none_when_register_unresolved(
         "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
     )
     assert result.kind == "none"
+    assert result.none_reason == "not_found"
+
+
+def test_get_column_varinfo_strips_mona_prefix(regmeta_db: Path):
+    """MONA-prefixed columns (e.g. ``P1105_Kon``) aren't stored in regmeta
+    under that name — they're aliased to ``Kon``. Mirror
+    ``get_column_values`` and retry with the stripped form so the
+    editor surfaces varinfo for prefixed datasets too."""
+    result = editor.get_column_varinfo(
+        "TESTREG", "P1105_Kon", db_path=regmeta_db.parent
+    )
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.variabelnamn == "Kön"
+
+
+def test_get_column_varinfo_propagates_non_not_found_regmeta_errors(
+    monkeypatch, regmeta_db: Path
+):
+    """Only ``code="not_found"`` is the documented "normal outcome" for
+    a popover. Other RegmetaErrors (usage_error, ambiguous_alias, …)
+    must propagate so they surface in the UI rather than being silently
+    converted to an empty envelope."""
+    from regmeta import errors as regmeta_errors
+
+    def _raise_usage(*_a, **_kw):
+        raise regmeta_errors.RegmetaError(
+            exit_code=regmeta_errors.EXIT_USAGE,
+            code="usage_error",
+            error_class="query",
+            message="bad call",
+            remediation="fix it",
+        )
+
+    import regmeta.queries
+
+    monkeypatch.setattr(regmeta.queries, "get_varinfo", _raise_usage)
+    with pytest.raises(regmeta_errors.RegmetaError):
+        editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
 
 
 def test_get_column_varinfo_rejects_blank_column(regmeta_db: Path):

@@ -431,8 +431,8 @@ class Store {
     register: string | null,
     column: string,
   ): Promise<ColumnVarinfoResponse> {
-    if (register === null) return { kind: "none" };
-    const key = `${register} ${column}`;
+    if (register === null) return { kind: "none", reason: "no_register" };
+    const key = `${register}::${column}`;
     const cached = this.varinfoCache.get(key);
     if (cached !== undefined) return cached;
     const pending = this.varinfoInFlight.get(key);

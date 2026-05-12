@@ -792,12 +792,12 @@ def _api_get_column_varinfo(
 
 def _serialize_varinfo(result: editor.ColumnVarinfoResult) -> dict[str, Any]:
     if result.kind == "none":
-        return {"kind": "none"}
+        return {"kind": "none", "reason": result.none_reason or "not_found"}
     if result.primary is None:
         # Defensive: kind="single"/"divergent" without a primary would be
         # a bug in get_column_varinfo. Surface as "none" rather than
         # emitting a malformed envelope.
-        return {"kind": "none"}
+        return {"kind": "none", "reason": "not_found"}
     payload: dict[str, Any] = {
         "kind": result.kind,
         "primary": _serialize_varinfo_description(result.primary),

@@ -257,8 +257,10 @@ export interface VarinfoAlternative {
   instances: number;
 }
 
+export type VarinfoNoneReason = "not_found" | "unavailable" | "no_register";
+
 export type ColumnVarinfoResponse =
-  | { kind: "none" }
+  | { kind: "none"; reason: VarinfoNoneReason }
   | {
       kind: "single";
       primary: VarinfoDescription;
