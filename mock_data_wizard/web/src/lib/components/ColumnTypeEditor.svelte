@@ -120,10 +120,15 @@
   // ``var_id`` then.
   let userPickedVarId: number | null = $state(null);
 
-  let sourceYearInfo = $derived(sourceYearInfoFor(registerSourcesWithColumn));
+  // Scoped to `sources` (the partition the user clicked), not to every
+  // carrier in the register. SCB reuses column-name slots across eras —
+  // pulling sibling-era years into `relevantYears` would defeat the
+  // year-aware ranking and surface the wrong-era variable as primary.
+  // Both varinfo lookup and value-codes filtering read this map.
+  let sourceYearInfo = $derived(sourceYearInfoFor(sources));
   let sourceYears = $derived(
     Object.fromEntries(
-      registerSourcesWithColumn.map((sn) => [sn, sourceYearInfo[sn].year]),
+      sources.map((sn) => [sn, sourceYearInfo[sn].year]),
     ),
   );
   let relevantYears = $derived(relevantYearsFromMap(sourceYears));

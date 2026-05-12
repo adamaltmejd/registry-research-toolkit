@@ -464,7 +464,14 @@ class Store {
    *  skipping the round trip keeps the modal's first paint snappy when
    *  there's nothing to resolve. The cache key includes years because
    *  the year-aware ranking can flip the primary across year scopes
-   *  (same column, different year → different variable picked). */
+   *  (same column, different year → different variable picked).
+   *
+   *  Stale-snapshot guard: an in-flight request started under snapshot
+   *  V1 must not write into the V2 cache after a version bump (its
+   *  column→register mapping may no longer hold). We capture the
+   *  snapshot version at request start and drop both the cache write
+   *  and the in-flight cleanup if the version advanced — leaving the
+   *  newer request (if any) intact. */
   async getColumnVarinfo(
     register: string | null,
     column: string,
@@ -479,6 +486,7 @@ class Store {
     if (cached !== undefined) return cached;
     const pending = this.varinfoInFlight.get(key);
     if (pending !== undefined) return pending;
+    const versionAtStart = this.snapshot?.snapshot_version;
     const promise = (async () => {
       try {
         const response = await apiGetColumnVarinfo({
@@ -486,10 +494,14 @@ class Store {
           column,
           relevant_years: relevantYears,
         });
-        this.varinfoCache.set(key, response);
+        if (this.snapshot?.snapshot_version === versionAtStart) {
+          this.varinfoCache.set(key, response);
+        }
         return response;
       } finally {
-        this.varinfoInFlight.delete(key);
+        if (this.snapshot?.snapshot_version === versionAtStart) {
+          this.varinfoInFlight.delete(key);
+        }
       }
     })();
     this.varinfoInFlight.set(key, promise);
