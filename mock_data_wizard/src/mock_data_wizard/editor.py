@@ -9,8 +9,8 @@ returns a fresh snapshot. Concurrency is handled via SHA-256
 Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 - ``get_state``, ``init_if_missing``
-- ``set_column_type``, ``set_group_register``, ``set_source_metadata``,
-  ``set_column_options``
+- ``set_column_type``, ``set_group_register``, ``set_source_registers``,
+  ``set_source_metadata``, ``set_column_options``
 - ``put_panel``, ``remove_panel``
 - Helpers: ``list_registers``, ``resolve_register``,
   ``detect_year_from_source_name``, ``detect_panel_member_kind``
@@ -78,6 +78,7 @@ __all__ = [
     "init_if_missing",
     "set_column_type",
     "set_group_register",
+    "set_source_registers",
     "set_source_metadata",
     "set_column_options",
     "put_panel",
@@ -1347,110 +1348,203 @@ def unset_column_manual_override(
     return get_state(project_dir, db_path=db_path)
 
 
-def set_group_register(
+def set_source_registers(
     project_dir: Path,
-    group_id: str,
-    register: str | None,
+    assignments: dict[str, str | None],
     *,
     expected_version: str,
     db_path: Path | None = None,
     reclassify_manual: bool = False,
 ) -> StateSnapshot:
-    """Assign or clear a register for a group. Re-classifies the group's
-    columns. Per session decision: when a column's type changes during
-    reclassification, its ``column_options`` entry is dropped."""
+    """Assign or clear ``register`` for one or more sources atomically.
+
+    ``assignments`` maps source_name → register name (or ``None`` to
+    clear). Every source must already exist in the config. Each non-null
+    register is resolved against regmeta — an unknown name aborts the
+    whole call before any write. Sources whose register actually changes
+    are re-classified (auto-only by default; manuals included when
+    ``reclassify_manual=True``). Type changes drop the affected cell's
+    ``column_options`` entry (mirrors the historical
+    ``set_group_register`` behaviour).
+
+    When ``reclassify_manual=True`` and a source's register is
+    unchanged, the source is still re-classified — the flag means
+    "force reclassification on these sources", matching
+    ``set_group_register``'s contract for the same flag. The flag's
+    only observable effect is dropping manual overrides, so if no
+    manual_columns intersect the requested sources and no register
+    moves, the call is treated as a no-op (``snapshot_version`` stays
+    stable).
+
+    Atomic: validation runs in full before any mutation, and the snapshot
+    advances exactly once."""
+    if not isinstance(assignments, dict):
+        raise ValidationError(
+            f"assignments must be a dict, got {type(assignments).__name__}"
+        )
+    if not assignments:
+        raise ValidationError("assignments must be non-empty")
+    for sn, val in assignments.items():
+        if not isinstance(sn, str):
+            raise ValidationError(
+                f"assignments keys must be strings, got {type(sn).__name__}"
+            )
+        if val is not None and not isinstance(val, str):
+            raise ValidationError(
+                f"assignments[{sn!r}] must be a string or None, "
+                f"got {type(val).__name__}"
+            )
+
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        try:
-            config = parse_config(payload)
-        except ValueError as exc:
-            raise ValidationError(str(exc)) from exc
 
-        # Resolve group_id → list of source_names.
-        affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
-        if not affected_sources:
-            raise ValidationError(
-                f"group_id={group_id!r} not found in current snapshot."
-            )
-
-        # Resolve the new register against regmeta when non-null.
-        register_str: str | None
-        if register is None:
-            register_str = None
-        else:
-            reg = resolve_register(register, db_path=db_path)
-            if reg is None:
+        # Validate every source exists. Reject unknowns up front so a
+        # typo can't half-apply a batch (the lock is held; rolling back
+        # mid-batch would require duplicating the read).
+        known_sources = set(payload.get("sources", {}).keys()) | set(
+            payload.get("column_types", {}).keys()
+        )
+        for sn in assignments:
+            if sn not in known_sources:
                 raise ValidationError(
-                    f"register={register!r} did not resolve in regmeta."
+                    f"source_name={sn!r} not found in current snapshot."
                 )
-            register_str = reg.name
 
-        # Discover payload (for column lists). Bail if absent —
-        # re-classify needs the discover schema.
-        discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
-        if not discover_path.exists():
-            raise ValidationError(
-                f"set_group_register requires {DISCOVER_FILENAME_DEFAULT} next to "
-                f"the config to re-classify columns."
-            )
-        discover = _read_discover(discover_path)
-        sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
+        # Resolve each non-null register against regmeta. Cache by input
+        # value so a panel-wide batch (many sources sharing one register
+        # name) is one DB hit per distinct name, not one per source.
+        resolve_cache: dict[str, str] = {}
+        resolved: dict[str, str | None] = {}
+        for sn, val in assignments.items():
+            if val is None:
+                resolved[sn] = None
+                continue
+            if val in resolve_cache:
+                resolved[sn] = resolve_cache[val]
+                continue
+            reg = resolve_register(val, db_path=db_path)
+            if reg is None:
+                raise ValidationError(f"register={val!r} did not resolve in regmeta.")
+            resolve_cache[val] = reg.name
+            resolved[sn] = reg.name
 
-        # Update `register` on each affected source.
         sources_block = payload.setdefault("sources", {})
-        for sn in affected_sources:
+
+        # Per-source: did the register actually change? Normalise legacy
+        # `""` entries to None so a "set to empty" assignment on a cleared
+        # source isn't falsely reported as a change.
+        register_changed: dict[str, bool] = {}
+        for sn, new_register in resolved.items():
+            current = sources_block.get(sn, {}).get("register") or None
+            register_changed[sn] = current != new_register
+
+        # ``reclassify_manual=True`` has no observable effect when no
+        # manual overrides intersect the requested sources — the only
+        # thing the flag changes is whether manuals get dropped. Treat
+        # it as effectively False in that case so an idle re-submit
+        # doesn't churn snapshot_version.
+        manual_pairs_initial = {tuple(p) for p in payload.get("manual_columns", [])}
+        effective_reclassify_manual = reclassify_manual and any(
+            sn in assignments for (sn, _c) in manual_pairs_initial
+        )
+
+        # Reclassify a source if its register changes OR the caller asked
+        # for forced reclassification (the same rule the wrapper relied
+        # on for the old "reclassify-only" path on set_group_register).
+        to_reclassify = [
+            sn
+            for sn in assignments
+            if register_changed[sn] or effective_reclassify_manual
+        ]
+        any_change = any(register_changed.values()) or effective_reclassify_manual
+        if not any_change:
+            # Nothing would move: skip the write so the snapshot version
+            # stays stable across no-op submits (matches set_column_type).
+            return get_state(project_dir, db_path=db_path)
+
+        # Discover is required whenever we reclassify; defer the check
+        # to the reclassify branch so a pure no-op (handled above) does
+        # not force a discover file to exist.
+        if to_reclassify:
+            discover_path = project_dir / DISCOVER_FILENAME_DEFAULT
+            if not discover_path.exists():
+                raise ValidationError(
+                    f"set_source_registers requires {DISCOVER_FILENAME_DEFAULT} "
+                    f"next to the config to re-classify columns."
+                )
+            discover = _read_discover(discover_path)
+            sources_by_name = {s["source_name"]: s for s in discover.get("sources", [])}
+        else:
+            sources_by_name = {}
+
+        # Write the new register on each source whose value changed.
+        for sn, new_register in resolved.items():
+            if not register_changed[sn]:
+                continue
             entry = sources_block.setdefault(sn, {})
-            if register_str is None:
+            if new_register is None:
                 entry.pop("register", None)
             else:
-                entry["register"] = register_str
+                entry["register"] = new_register
 
-        # Resolve regmeta signals once for the new register.
-        if register_str is not None:
-            all_cols: set[str] = set()
-            for sn in affected_sources:
-                src = sources_by_name.get(sn)
-                if src is None:
-                    continue
-                for c in src.get("columns", []):
-                    all_cols.add(c["name"])
-            signals = _resolve_signals_for_register(register_str, all_cols, db_path)
-        else:
-            signals = {}
+        # Group reclassify sources by their (now-current) register so
+        # signals are queried once per distinct register, not per source.
+        by_register: dict[str | None, list[str]] = {}
+        for sn in to_reclassify:
+            by_register.setdefault(resolved[sn], []).append(sn)
 
-        manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
+        # Working copy of manual_pairs — `manual_pairs_initial` is the
+        # pre-loop snapshot we used to compute effective_reclassify_manual.
+        manual_pairs = set(manual_pairs_initial)
         column_types = payload.setdefault("column_types", {})
         column_options = payload.get("column_options", {})
 
-        for sn in affected_sources:
-            src = sources_by_name.get(sn)
-            if src is None:
-                continue
-            new_cols = _classify_columns(src.get("columns", []), register_str, signals)
-            existing_cols = column_types.get(sn, {})
-            out_cols: dict[str, dict[str, Any]] = {}
-            for col_name, classified in new_cols.items():
-                is_manual = (sn, col_name) in manual_pairs
-                if is_manual and not reclassify_manual:
-                    # Preserve manual override exactly.
-                    if col_name in existing_cols:
-                        out_cols[col_name] = existing_cols[col_name]
-                    else:
-                        out_cols[col_name] = classified
-                    continue
-                # Auto column (or manual being reclassified): write the
-                # classifier output.
-                if reclassify_manual and is_manual:
-                    manual_pairs.discard((sn, col_name))
-                old_type = existing_cols.get(col_name, {}).get("type")
-                new_type = classified["type"]
-                out_cols[col_name] = classified
-                if old_type is not None and old_type != new_type:
-                    _drop_column_options(column_options, sn, col_name)
-            column_types[sn] = out_cols
+        for register_str, group_sources in by_register.items():
+            if register_str is not None:
+                all_cols: set[str] = set()
+                for sn in group_sources:
+                    src = sources_by_name.get(sn)
+                    if src is None:
+                        continue
+                    for c in src.get("columns", []):
+                        all_cols.add(c["name"])
+                signals = (
+                    _resolve_signals_for_register(register_str, all_cols, db_path)
+                    if all_cols
+                    else {}
+                )
+            else:
+                signals = {}
 
-        if reclassify_manual:
+            for sn in group_sources:
+                src = sources_by_name.get(sn)
+                if src is None:
+                    continue
+                new_cols = _classify_columns(
+                    src.get("columns", []), register_str, signals
+                )
+                existing_cols = column_types.get(sn, {})
+                out_cols: dict[str, dict[str, Any]] = {}
+                for col_name, classified in new_cols.items():
+                    is_manual = (sn, col_name) in manual_pairs
+                    if is_manual and not effective_reclassify_manual:
+                        # Preserve manual override exactly.
+                        if col_name in existing_cols:
+                            out_cols[col_name] = existing_cols[col_name]
+                        else:
+                            out_cols[col_name] = classified
+                        continue
+                    if effective_reclassify_manual and is_manual:
+                        manual_pairs.discard((sn, col_name))
+                    old_type = existing_cols.get(col_name, {}).get("type")
+                    new_type = classified["type"]
+                    out_cols[col_name] = classified
+                    if old_type is not None and old_type != new_type:
+                        _drop_column_options(column_options, sn, col_name)
+                column_types[sn] = out_cols
+
+        if effective_reclassify_manual:
             # Sort for deterministic JSON output — manual_pairs is a set,
             # so insertion order isn't preserved and would otherwise
             # produce noisy diffs across runs.
@@ -1463,6 +1557,44 @@ def set_group_register(
 
         _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
+
+
+def set_group_register(
+    project_dir: Path,
+    group_id: str,
+    register: str | None,
+    *,
+    expected_version: str,
+    db_path: Path | None = None,
+    reclassify_manual: bool = False,
+) -> StateSnapshot:
+    """Assign or clear a register for a group, then reclassify.
+
+    Thin wrapper over ``set_source_registers``: resolves ``group_id``
+    against the current snapshot and forwards an all-same assignment.
+    See ``set_source_registers`` for the reclassify and column_options
+    contract."""
+    project_dir = Path(project_dir)
+    # Resolve group_id without holding the lock — the primitive's
+    # _verify_version catches any concurrent mutation. flock would
+    # deadlock if we re-entered the lock from set_source_registers in
+    # the same process (locks are per-fd).
+    payload, _ = _read_payload(project_dir)
+    try:
+        config = parse_config(payload)
+    except ValueError as exc:
+        raise ValidationError(str(exc)) from exc
+    affected_sources: list[str] = _sources_in_group(config, group_id, db_path)
+    if not affected_sources:
+        raise ValidationError(f"group_id={group_id!r} not found in current snapshot.")
+    assignments: dict[str, str | None] = {sn: register for sn in affected_sources}
+    return set_source_registers(
+        project_dir,
+        assignments,
+        expected_version=expected_version,
+        reclassify_manual=reclassify_manual,
+        db_path=db_path,
+    )
 
 
 def _sources_in_group(

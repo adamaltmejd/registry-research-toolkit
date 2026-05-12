@@ -413,6 +413,64 @@ def test_set_group_register_explicit_null_is_accepted(
     assert called["register"] is None
 
 
+def test_set_source_registers_requires_assignments_key(running_server: str):
+    """Missing `assignments` must fail with 400; the editor's primitive
+    requires a dict and would otherwise crash inside."""
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/source-registers",
+        {"expected_version": snapshot["snapshot_version"]},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "assignments" in body["error"]["message"]
+
+
+def test_set_source_registers_rejects_non_dict_assignments(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/source-registers",
+        {
+            "assignments": ["src"],
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_set_source_registers_forwards_to_editor(
+    running_server: str, monkeypatch: pytest.MonkeyPatch
+):
+    """Smoke-test the wire path: a well-formed body reaches
+    editor.set_source_registers with the assignments dict intact."""
+    called: dict[str, Any] = {}
+
+    def fake_set(project_dir, assignments, **kwargs):
+        called["assignments"] = assignments
+        called["reclassify_manual"] = kwargs.get("reclassify_manual")
+        from mock_data_wizard.editor import get_state
+
+        return get_state(project_dir)
+
+    monkeypatch.setattr(server.editor, "set_source_registers", fake_set)
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, _body = _fetch(
+        "POST",
+        f"{running_server}/api/source-registers",
+        {
+            "assignments": {"src": None, "other": "LISA"},
+            "expected_version": snapshot["snapshot_version"],
+            "reclassify_manual": True,
+        },
+    )
+    assert status == 200
+    assert called["assignments"] == {"src": None, "other": "LISA"}
+    assert called["reclassify_manual"] is True
+
+
 def test_list_registers_returns_payload(
     running_server: str, monkeypatch: pytest.MonkeyPatch
 ):

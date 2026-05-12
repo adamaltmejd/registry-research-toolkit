@@ -135,6 +135,26 @@ export function setGroupRegister(
   });
 }
 
+export interface SetSourceRegistersArgs {
+  /** source_name → register name (or null to clear). Server validates
+   *  every source exists, resolves every non-null name, and runs
+   *  reclassification only on sources whose register actually changed
+   *  (auto-only unless `reclassify_manual` forces it). */
+  assignments: Record<string, string | null>;
+  expected_version: string;
+  reclassify_manual?: boolean;
+}
+
+export function setSourceRegisters(
+  args: SetSourceRegistersArgs,
+): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/source-registers", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
 export interface PutPanelArgs {
   panel_id: string;
   entity_key: string;

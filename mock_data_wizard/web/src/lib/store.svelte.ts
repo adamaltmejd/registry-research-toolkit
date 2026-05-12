@@ -15,11 +15,13 @@ import {
   removePanel as apiRemovePanel,
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
+  setSourceRegisters as apiSetSourceRegisters,
   unsetColumnManual as apiUnsetColumnManual,
   type PutPanelArgs,
   type RemovePanelArgs,
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
+  type SetSourceRegistersArgs,
   type UnsetColumnManualArgs,
 } from "./api";
 import type {
@@ -364,6 +366,10 @@ class Store {
 
   async setGroupRegister(args: SetGroupRegisterArgs): Promise<boolean> {
     return this.runMutation(() => apiSetGroupRegister(args));
+  }
+
+  async setSourceRegisters(args: SetSourceRegistersArgs): Promise<boolean> {
+    return this.runMutation(() => apiSetSourceRegisters(args));
   }
 
   async putPanel(args: PutPanelArgs): Promise<boolean> {

@@ -51,6 +51,39 @@
   // index could point past the new list).
   let highlight = $state(-1);
 
+  // Viewport-anchored coordinates for the suggestions popover. We use
+  // `position: fixed` rather than `absolute` because the combobox is
+  // typically rendered inside a Modal whose `.modal-body` is an
+  // `overflow-y: auto` scroll container — `absolute` would be clipped
+  // by that scroll box, hiding the dropdown after 1–2 lines.
+  let popoverTop = $state(0);
+  let popoverLeft = $state(0);
+  let popoverWidth = $state(0);
+
+  function updatePopoverPosition(): void {
+    if (!inputEl) return;
+    const rect = inputEl.getBoundingClientRect();
+    popoverTop = rect.bottom + 2;
+    popoverLeft = rect.left;
+    popoverWidth = rect.width;
+  }
+
+  // Track the input's position while open so scrolling the modal-body
+  // (or the page, or resizing the window) keeps the popover anchored.
+  // capture:true is required because `scroll` doesn't bubble — without
+  // it we'd only see scrolls on `window`, not on `.modal-body`.
+  $effect(() => {
+    if (!open) return;
+    updatePopoverPosition();
+    const handler = (): void => updatePopoverPosition();
+    window.addEventListener("scroll", handler, { capture: true });
+    window.addEventListener("resize", handler);
+    return () => {
+      window.removeEventListener("scroll", handler, { capture: true });
+      window.removeEventListener("resize", handler);
+    };
+  });
+
   let options = $derived.by<RegisterEntry[]>(() => {
     if (registers.length === 0) return [];
     const q = value.trim().toLowerCase();
@@ -182,6 +215,9 @@
       role="listbox"
       class="suggestions"
       tabindex="-1"
+      style:top="{popoverTop}px"
+      style:left="{popoverLeft}px"
+      style:width="{popoverWidth}px"
     >
       {#each options as r, i (r.id)}
         <li
@@ -226,11 +262,12 @@
     outline-color: #c44;
   }
   .suggestions {
-    position: absolute;
-    top: calc(100% + 2px);
-    left: 0;
-    right: 0;
-    z-index: 10;
+    /* Fixed positioning escapes the modal-body's overflow clip; the
+       coords are written inline from `updatePopoverPosition()`. The
+       z-index sits above Modal's overlay (100) so the dropdown isn't
+       hidden behind the next modal-card layer. */
+    position: fixed;
+    z-index: 200;
     background: #fff;
     border: 1px solid #d0d0d0;
     border-radius: 4px;

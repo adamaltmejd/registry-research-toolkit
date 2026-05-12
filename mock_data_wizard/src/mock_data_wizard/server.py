@@ -214,6 +214,9 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("POST", "/api/group-register"): lambda body: _api_set_group_register(
             config, body
         ),
+        ("POST", "/api/source-registers"): lambda body: _api_set_source_registers(
+            config, body
+        ),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
             config, body
@@ -599,6 +602,48 @@ def _api_set_group_register(
         config.project_dir,
         group_id,
         register_value,
+        expected_version=expected_version,
+        reclassify_manual=reclassify_manual,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_set_source_registers(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Per-source register assignment. ``assignments`` maps source_name
+    → register name (or JSON null to clear). The key must be present so
+    a stale frontend or typo can't trigger a destructive write."""
+    expected_version = _required_str(body, "expected_version")
+    if "assignments" not in body:
+        raise editor.ValidationError("missing required field 'assignments'")
+    raw = body["assignments"]
+    if not isinstance(raw, dict):
+        raise editor.ValidationError(
+            f"assignments must be an object, got {type(raw).__name__}"
+        )
+    if not raw:
+        raise editor.ValidationError("assignments must be non-empty")
+    assignments: dict[str, str | None] = {}
+    for sn, val in raw.items():
+        if not isinstance(sn, str):
+            raise editor.ValidationError(
+                f"assignments keys must be strings, got {type(sn).__name__}"
+            )
+        if val is not None and not isinstance(val, str):
+            raise editor.ValidationError(
+                f"assignments[{sn!r}] must be a string or null, "
+                f"got {type(val).__name__}"
+            )
+        assignments[sn] = val
+    reclassify_manual = body.get("reclassify_manual", False)
+    if not isinstance(reclassify_manual, bool):
+        raise editor.ValidationError("reclassify_manual must be boolean")
+
+    snap = editor.set_source_registers(
+        config.project_dir,
+        assignments,
         expected_version=expected_version,
         reclassify_manual=reclassify_manual,
         db_path=config.db_path,

@@ -527,17 +527,24 @@ override the regmeta DB location.
   `mock_data_discovery.json` next to the config (the classifier needs
   the source schema). A fully-no-op call leaves `snapshot_version`
   unchanged.
+- `set_source_registers(project_dir, assignments, *,
+  expected_version, db_path=None, reclassify_manual=False)` —
+  per-source primitive. `assignments` maps `source_name` →
+  register name (or `None` to clear). Every source is validated
+  and every non-null register is resolved against regmeta before
+  any write; an unknown source or unresolvable register aborts the
+  whole call. Reclassification runs only on sources whose register
+  actually changed (or on all listed sources when
+  `reclassify_manual=True`). A fully-no-op call leaves
+  `snapshot_version` unchanged. `column_options` are dropped per
+  cell on type change, matching `set_group_register`.
 - `set_group_register(project_dir, group_id, register, *,
   expected_version, db_path=None, reclassify_manual=False)` —
-  assigns or clears a register for a group, then re-classifies. With
-  `reclassify_manual=False` (default), columns in `manual_columns`
-  are preserved; with `reclassify_manual=True`, all columns are
-  re-classified and the affected entries are removed from
-  `manual_columns`. **When a column's type changes during
-  reclassification, its `column_options` entry is dropped** —
-  options can be type-specific. Note that affected sources'
-  `group_id`s change (since they derive from `register`); clients
-  re-fetch.
+  thin wrapper that resolves `group_id` to its current source list
+  and forwards an all-same assignment to
+  `set_source_registers`. The reclassify and `column_options`
+  contract is identical. Note that affected sources' `group_id`s
+  change (since they derive from `register`); clients re-fetch.
 - `set_source_metadata(project_dir, source_name, *, expected_version,
   year=UNCHANGED, db_path=None)` — modifies per-source metadata.
   Currently scoped to `year`; register changes go through
@@ -1007,6 +1014,7 @@ body bytes are read.
 | POST | `/api/column-type` | `editor.set_column_type` | 400 validation, 409 stale_state |
 | POST | `/api/unset-column-manual` | `editor.unset_column_manual_override` | 400 validation, 409 stale_state |
 | POST | `/api/group-register` | `editor.set_group_register` | 400 validation, 409 stale_state |
+| POST | `/api/source-registers` | `editor.set_source_registers` | 400 validation, 409 stale_state |
 | GET  | `/api/registers` | `editor.list_registers` | — |
 | GET  | `/`, `/assets/*` | static SPA bundle | 404 not_found |
 
