@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
   import {
     getColumnValues,
     type ClassificationGroup,
@@ -16,6 +14,12 @@
      * Drives the "applies to: foo_2018.csv (2018), …" line under the
      * value-set picker. Empty = no source info, line is hidden. */
     sourceYears?: Record<string, number | null>;
+    /** Restrict value-set lookup to one variable's instances. Passed
+     *  by the editor modal when the varinfo popup has chosen a
+     *  primary (or the user picked an alternative). Without it, an
+     *  SCB column-name slot reused across var_ids would surface code
+     *  lists from variables other than the one the popup describes. */
+    pickedVarId?: number | null;
     /** When true, render the kind tag at the top of the panel. The
      *  modal wrapper sets this false (it shows its own tag in the
      *  modal header); the inline embed in ColumnTypeEditor sets this
@@ -28,6 +32,7 @@
     register,
     column,
     sourceYears = {},
+    pickedVarId = null,
     showKindTag = false,
   }: Props = $props();
 
@@ -38,10 +43,6 @@
   let pickedClassification: string | null = $state(null);
   let pickedValueSet: number | null = $state(null);
   let loadState: LoadState = $state({ kind: "loading" });
-
-  onMount(() => {
-    void load();
-  });
 
   let relevantYears = $derived(
     Array.from(
@@ -61,6 +62,7 @@
         column,
         picked_classification: pickedClassification,
         picked_value_set: pickedValueSet,
+        picked_var_id: pickedVarId,
         relevant_years: relevantYears,
       });
       loadState = { kind: "ok", data };
@@ -69,6 +71,20 @@
       loadState = { kind: "error", message };
     }
   }
+
+  // Reload on mount and whenever the caller-controlled inputs change:
+  //   - ``pickedVarId``: the varinfo popup swapped to an alternative.
+  //   - ``relevantYears``: the source year was changed via the year
+  //     picker, narrowing which value-sets are shown.
+  // The picked-value-set chip is reset because the previous variable's
+  // value_set_id won't match anything in the new scope — leaving it set
+  // would render a stale chip until the user clicks again.
+  $effect(() => {
+    pickedVarId;
+    relevantYears;
+    pickedValueSet = null;
+    void load();
+  });
 
   function pickClassification(short_name: string): void {
     if (pickedClassification === short_name) return;

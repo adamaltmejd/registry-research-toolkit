@@ -30,21 +30,38 @@ from .classify import is_known_id
 
 # -- Year + date tokens ----------------------------------------------------
 
-# Naive 4-digit year search. Matches `regmeta.queries.extract_year` so
-# discover-time year detection on MONA agrees with local resolution.
+# Year detection for source names. Matches either a 4-digit year
+# (``LISA_2019``) or an HT/VT term code (``Distansutb_HT20_VT21`` ⇒ HT20
+# ⇒ 2020). Mirrors ``extract._extract_year`` so discover-time and
+# editor-time year resolution agree byte-for-byte on the same name.
 _YEAR_RE = re.compile(r"\d{4}")
+_TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")
+
+
+def _expand_term_year(two_digit: int) -> int:
+    # 00–69 → 20xx, 70–99 → 19xx. No SCB filename predates 1970.
+    return 2000 + two_digit if two_digit < 70 else 1900 + two_digit
 
 
 def detect_year_from_source_name(source_name: str) -> int | None:
-    """Return the first 4-digit year embedded in ``source_name``, or None.
+    """Return the first year embedded in ``source_name``, or None.
 
-    Naive: returns the first 4-digit run regardless of context. Editor
-    callers can override via the per-source ``year`` field; callers that
-    need richer date-token semantics (panel detection) use
-    ``_match_date_token`` instead.
+    Accepts 4-digit years and HT/VT two-digit term codes. The earliest
+    match in scan order wins (so ``HT20_VT21`` → 2020 — autumn term, the
+    earliest data in that academic year). Editor callers can override
+    via the per-source ``year`` field; callers that need richer
+    date-token semantics (panel detection) use ``_match_date_token``
+    instead.
     """
-    m = _YEAR_RE.search(source_name)
-    return int(m.group(0)) if m else None
+    y4 = _YEAR_RE.search(source_name)
+    term = _TERM_YEAR_RE.search(source_name)
+    if y4 is None and term is None:
+        return None
+    if term is None:
+        return int(y4.group(0))
+    if y4 is None or term.start() < y4.start():
+        return _expand_term_year(int(term.group(1)))
+    return int(y4.group(0))
 
 
 # Locates a date token (YYYY, YYYYMM, YYYY[_-]MM) anywhere in a name.

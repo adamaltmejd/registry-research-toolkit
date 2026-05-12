@@ -17,6 +17,7 @@ import {
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
   setSourceRegisters as apiSetSourceRegisters,
+  setSourceYear as apiSetSourceYear,
   unsetColumnManual as apiUnsetColumnManual,
   type ColumnVarinfoResponse,
   type PutPanelArgs,
@@ -24,6 +25,7 @@ import {
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
   type SetSourceRegistersArgs,
+  type SetSourceYearArgs,
   type UnsetColumnManualArgs,
 } from "./api";
 import type {
@@ -420,26 +422,36 @@ class Store {
     }
   }
 
-  /** Lazy + coalesced varinfo fetch keyed by (register, column). Two
-   *  modals opening the same column race onto one HTTP call; result is
-   *  cached for the rest of the current snapshot. ``register=null``
-   *  short-circuits to the server's "none" envelope without a request —
-   *  the endpoint returns the same envelope, but skipping the round
-   *  trip keeps the modal's first paint snappy when there's nothing to
-   *  resolve. */
+  /** Lazy + coalesced varinfo fetch keyed by (register, column,
+   *  relevant_years). Two modals opening the same column race onto one
+   *  HTTP call; result is cached for the rest of the current snapshot.
+   *  ``register=null`` short-circuits to the server's "none" envelope
+   *  without a request — the endpoint returns the same envelope, but
+   *  skipping the round trip keeps the modal's first paint snappy when
+   *  there's nothing to resolve. The cache key includes years because
+   *  the year-aware ranking can flip the primary across year scopes
+   *  (same column, different year → different variable picked). */
   async getColumnVarinfo(
     register: string | null,
     column: string,
+    relevantYears?: number[],
   ): Promise<ColumnVarinfoResponse> {
     if (register === null) return { kind: "none", reason: "no_register" };
-    const key = `${register}::${column}`;
+    const yearKey = relevantYears && relevantYears.length > 0
+      ? [...relevantYears].sort((a, b) => a - b).join(",")
+      : "";
+    const key = `${register}::${column}::${yearKey}`;
     const cached = this.varinfoCache.get(key);
     if (cached !== undefined) return cached;
     const pending = this.varinfoInFlight.get(key);
     if (pending !== undefined) return pending;
     const promise = (async () => {
       try {
-        const response = await apiGetColumnVarinfo({ register, column });
+        const response = await apiGetColumnVarinfo({
+          register,
+          column,
+          relevant_years: relevantYears,
+        });
         this.varinfoCache.set(key, response);
         return response;
       } finally {
@@ -470,6 +482,10 @@ class Store {
 
   async setSourceRegisters(args: SetSourceRegistersArgs): Promise<boolean> {
     return this.runMutation(() => apiSetSourceRegisters(args));
+  }
+
+  async setSourceYear(args: SetSourceYearArgs): Promise<boolean> {
+    return this.runMutation(() => apiSetSourceYear(args));
   }
 
   async putPanel(args: PutPanelArgs): Promise<boolean> {

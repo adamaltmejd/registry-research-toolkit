@@ -43,15 +43,41 @@ DISCOVER_FILENAME = "mock_data_discovery.json"
 STATS_FILENAME = "mock_data_stats.json"
 SAMPLE_SIZE = 1000
 
-# Match regmeta.queries.extract_year so discover-time year detection on
-# MONA stays consistent with the regmeta-side register-version regex,
-# without dragging regmeta into the bundle.
+# Year detection on MONA-side source names. Two patterns:
+#   - 4-digit year (e.g. ``LISA_2019``) — matches regmeta's
+#     ``extract_year``; the natural form in SCB register-version names.
+#   - HT/VT term code (e.g. ``Distansutb_HT20_VT21``) — Swedish academic
+#     term shorthand (HT=Höstterminen/autumn, VT=Vårterminen/spring).
+#     Two-digit year expanded via a century window: 00–69 → 20xx,
+#     70–99 → 19xx (no SCB filename predates 1970 in practice). The
+#     ``(?!\d)`` tail prevents ``HT2020`` from matching as ``HT20`` —
+#     that case lets the 4-digit pattern win cleanly.
+# Regmeta-side ``extract_year`` keeps its 4-digit-only form: SCB's
+# ``registerversionnamn`` strings always spell out the year in full, so
+# term-code parsing would only add ambiguity there.
 _YEAR_RE = re.compile(r"\d{4}")
+_TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")
+
+
+def _expand_term_year(two_digit: int) -> int:
+    return 2000 + two_digit if two_digit < 70 else 1900 + two_digit
 
 
 def _extract_year(name: str) -> int | None:
-    m = _YEAR_RE.search(name)
-    return int(m.group()) if m else None
+    """First 4-digit year or HT/VT term code in ``name``, in scan order.
+
+    Returns whichever pattern matches *earliest* in the string, so
+    ``HT20_VT21`` resolves to 2020 (autumn term — the earliest data in
+    that academic year)."""
+    y4 = _YEAR_RE.search(name)
+    term = _TERM_YEAR_RE.search(name)
+    if y4 is None and term is None:
+        return None
+    if term is None:
+        return int(y4.group())
+    if y4 is None or term.start() < y4.start():
+        return _expand_term_year(int(term.group(1)))
+    return int(y4.group())
 
 
 def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:

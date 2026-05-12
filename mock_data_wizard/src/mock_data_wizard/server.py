@@ -217,6 +217,7 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("POST", "/api/source-registers"): lambda body: _api_set_source_registers(
             config, body
         ),
+        ("POST", "/api/source-year"): lambda body: _api_set_source_year(config, body),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
             config, body
@@ -654,6 +655,41 @@ def _api_set_source_registers(
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 
 
+def _api_set_source_year(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Set the per-source ``year`` metadata.
+
+    Body shape: ``{source_name, year, expected_version}``. ``year`` is an
+    integer (assert "this source is from this year") or JSON null
+    (assert "this source has no year — suppress name-regex detection").
+    Source must already exist in the config. Returns the refreshed
+    snapshot — signals downstream of ``relevant_years`` (variance counts
+    in the value-codes popup, the year tabs in the inline panel) pick up
+    the new year on the next read."""
+    source_name = _required_str(body, "source_name")
+    expected_version = _required_str(body, "expected_version")
+    if "year" not in body:
+        raise editor.ValidationError("missing required field 'year'")
+    year_raw = body["year"]
+    if year_raw is None:
+        year: int | None = None
+    elif isinstance(year_raw, bool) or not isinstance(year_raw, int):
+        raise editor.ValidationError(
+            f"year must be an integer or null, got {type(year_raw).__name__}"
+        )
+    else:
+        year = year_raw
+    snap = editor.set_source_metadata(
+        config.project_dir,
+        source_name,
+        expected_version=expected_version,
+        year=year,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
 def _api_list_registers(config: ServerConfig) -> tuple[int, dict[str, Any]]:
     registers = editor.list_registers(db_path=config.db_path)
     return HTTPStatus.OK, {
@@ -731,6 +767,14 @@ def _api_get_column_values(
             "picked_value_set must be an integer or null, "
             f"got {type(picked_vs_raw).__name__}"
         )
+    picked_var_id_raw = body.get("picked_var_id")
+    if picked_var_id_raw is not None and (
+        isinstance(picked_var_id_raw, bool) or not isinstance(picked_var_id_raw, int)
+    ):
+        raise editor.ValidationError(
+            "picked_var_id must be an integer or null, "
+            f"got {type(picked_var_id_raw).__name__}"
+        )
     relevant_years_raw = body.get("relevant_years")
     relevant_years: list[int] | None = None
     if relevant_years_raw is not None:
@@ -750,6 +794,7 @@ def _api_get_column_values(
         column,
         picked_classification=picked,
         picked_value_set=picked_vs_raw,
+        picked_var_id=picked_var_id_raw,
         relevant_years=relevant_years,
         db_path=config.db_path,
     )
@@ -786,7 +831,26 @@ def _api_get_column_varinfo(
 ) -> tuple[int, dict[str, Any]]:
     column = _required_str(body, "column")
     register_value = _required_nullable_str(body, "register")
-    result = editor.get_column_varinfo(register_value, column, db_path=config.db_path)
+    relevant_years_raw = body.get("relevant_years")
+    relevant_years: list[int] | None = None
+    if relevant_years_raw is not None:
+        if not isinstance(relevant_years_raw, list):
+            raise editor.ValidationError(
+                "relevant_years must be a list of integers or null, "
+                f"got {type(relevant_years_raw).__name__}"
+            )
+        for y in relevant_years_raw:
+            if isinstance(y, bool) or not isinstance(y, int):
+                raise editor.ValidationError(
+                    f"relevant_years entries must be integers, got {type(y).__name__}"
+                )
+        relevant_years = list(relevant_years_raw)
+    result = editor.get_column_varinfo(
+        register_value,
+        column,
+        relevant_years=relevant_years,
+        db_path=config.db_path,
+    )
     return HTTPStatus.OK, _serialize_varinfo(result)
 
 

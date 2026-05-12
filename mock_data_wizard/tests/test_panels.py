@@ -38,6 +38,20 @@ from mock_data_wizard.panels import (
         ("dbo.scb_rams_2024", 2024),
         ("no_year_here", None),
         ("", None),
+        # HT/VT term codes — Swedish academic-term shorthand. The earliest
+        # match in scan order wins (HT20_VT21 → 2020, autumn term).
+        ("Distansutb_grund_HT20_VT21", 2020),
+        ("Distansutb_VT21", 2021),
+        ("Distansutb_VT21.csv", 2021),
+        # 4-digit year wins over a later term code; an earlier term code
+        # wins over a later 4-digit year.
+        ("rams_2024_HT25", 2024),
+        ("HT19_followup_2024", 2019),
+        # ``HT2020`` is unambiguous — the 4-digit pattern wins (term
+        # pattern's negative lookahead blocks ``HT20`` here).
+        ("survey_HT2020", 2020),
+        # Pre-2000 term codes use the 1970+ century window.
+        ("legacy_HT85", 1985),
     ],
 )
 def test_detect_year_from_source_name(name: str, expected: int | None):

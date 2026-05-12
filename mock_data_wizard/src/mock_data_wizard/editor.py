@@ -1902,23 +1902,37 @@ def _fetch_distinct_classifications(
 
 
 def _fetch_value_set_groups(
-    conn: Any, matched_alias: str, register_ids: list[int]
+    conn: Any,
+    matched_alias: str,
+    register_ids: list[int],
+    *,
+    var_id: int | None = None,
 ) -> tuple[ValueSetGroup, ...]:
+    """Resolve the value-set groups attached to ``matched_alias`` in
+    ``register_ids``. When ``var_id`` is set, restrict to value-sets
+    attached to that variable's instances — without the filter, an SCB
+    column-name slot reused across var_ids (e.g. ``F12`` covering both a
+    Skolform variable and a Distansutb survey question) leaks code lists
+    from variables other than the one the popup is describing."""
     if not register_ids:
         return ()
     from regmeta.queries import extract_year
 
     ph = ",".join("?" for _ in register_ids)
-    rows = conn.execute(
+    sql = (
         "SELECT DISTINCT vi.value_set_id, vi.cvid, rv.registerversionnamn "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
         f"  AND vi.register_id IN ({ph}) "
-        "  AND vi.value_set_id IS NOT NULL",
-        [matched_alias, *register_ids],
-    ).fetchall()
+        "  AND vi.value_set_id IS NOT NULL"
+    )
+    params: list[Any] = [matched_alias, *register_ids]
+    if var_id is not None:
+        sql += " AND vi.var_id = ?"
+        params.append(var_id)
+    rows = conn.execute(sql, params).fetchall()
     by_vs: dict[int, list[tuple[int, int | None]]] = {}
     for r in rows:
         vsid = int(r["value_set_id"])
@@ -2003,10 +2017,17 @@ def get_column_values(
     *,
     picked_classification: str | None = None,
     picked_value_set: int | None = None,
+    picked_var_id: int | None = None,
     relevant_years: list[int] | None = None,
     db_path: Path | None = None,
 ) -> ColumnValuesResult:
     """Resolve value codes for one column under one register.
+
+    ``picked_var_id`` scopes the value-set lookup to one variable. When
+    multiple variables in the same register alias to ``column`` (SCB
+    recycles column slots), passing the var_id chosen in the varinfo
+    popup keeps the year tabs honest — without it, the panel mixes code
+    lists from every variable that ever used the column name.
 
     Returns ``kind="none"`` rather than raising when regmeta is missing,
     the register doesn't resolve, or the column is unknown — degrades
@@ -2093,7 +2114,9 @@ def get_column_values(
                     )
 
         if signal is not None and signal.has_value_codes and register_ids:
-            all_groups = _fetch_value_set_groups(conn, matched_alias, register_ids)
+            all_groups = _fetch_value_set_groups(
+                conn, matched_alias, register_ids, var_id=picked_var_id
+            )
             groups_used, filter_note = _filter_groups_by_relevant_years(
                 all_groups, relevant_years
             )
@@ -2288,14 +2311,76 @@ def _varinfo_description_from_row(row: dict[str, Any]) -> VarinfoDescription:
     )
 
 
+def _variable_year_distance(
+    variable: dict[str, Any], relevant_years: set[int]
+) -> int | None:
+    """Min distance from any instance's year to any year in
+    ``relevant_years``. Returns None when neither side has a year — the
+    caller treats that as "no year signal", same as a non-matching
+    variable, so the popularity tie-breaker takes over."""
+    instance_years = [
+        y
+        for inst in variable.get("instances") or ()
+        if isinstance((y := inst.get("year")), int)
+    ]
+    if not instance_years or not relevant_years:
+        return None
+    return min(abs(iy - ry) for iy in instance_years for ry in relevant_years)
+
+
+def _rank_variables(
+    variables: list[dict[str, Any]], relevant_years: set[int] | None
+) -> list[dict[str, Any]]:
+    """Order variables by year proximity first, popularity second.
+
+    When ``relevant_years`` is set, variables with at least one instance
+    in those years come ahead of variables with none — without that
+    tier, a heavily-revised old variable (e.g. ``F12 = Skolform`` with
+    14 cvids across 1990s–2010s) outranks a small but year-correct
+    match (4 cvids in 2020). Within each tier we sort by minimum year
+    distance (closer wins), then by popularity, then var_id for stable
+    output. With no year context we collapse to the original
+    popularity-only ranking."""
+    if relevant_years:
+
+        def key(v: dict[str, Any]) -> tuple[int, int, int, int]:
+            dist = _variable_year_distance(v, relevant_years)
+            in_window = 0 if dist == 0 else 1
+            # Variables with no year overlap or no parseable years are
+            # pushed last via a sentinel distance — sys.maxsize would
+            # also work, but a fixed cap keeps the key tuple small.
+            effective_dist = dist if dist is not None else 10_000
+            return (
+                in_window,
+                effective_dist,
+                -len(v.get("instances") or ()),
+                int(v["var_id"]),
+            )
+
+        return sorted(variables, key=key)
+    return sorted(
+        variables,
+        key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),
+    )
+
+
 def get_column_varinfo(
     register: str | None,
     column: str,
     *,
+    relevant_years: list[int] | None = None,
     db_path: Path | None = None,
 ) -> ColumnVarinfoResult:
     """Resolve the regmeta variable description(s) for one column under
     one register.
+
+    ``relevant_years`` (typically the source's detected year) tilts the
+    "which variable does this column actually belong to?" picker toward
+    variables with instances in those years — necessary because SCB
+    reuses column-name slots across decades, and a question-number like
+    ``F12`` may map to a Skolform variable from 2004 and a Distansutb
+    survey item from 2020 inside the same register. With no year hint,
+    falls back to pure popularity ranking.
 
     Returns ``kind="none"`` rather than raising when regmeta is missing,
     the register doesn't resolve, or the column is unknown — degrades
@@ -2309,6 +2394,8 @@ def get_column_varinfo(
         return ColumnVarinfoResult(kind="none", none_reason="no_register")
     unavailable = ColumnVarinfoResult(kind="none", none_reason="unavailable")
     not_found = ColumnVarinfoResult(kind="none", none_reason="not_found")
+
+    year_set: set[int] | None = set(relevant_years) if relevant_years else None
 
     with _open_regmeta_conn(db_path) as conn:
         if conn is None:
@@ -2339,13 +2426,7 @@ def get_column_varinfo(
         if not variables:
             return not_found
 
-        # Rank by number of variable_instance rows. ``get_varinfo`` already
-        # batches the per-cvid fetch into each variable's ``instances``
-        # list, so the count is just len(instances) — no extra query.
-        ranked = sorted(
-            variables,
-            key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),
-        )
+        ranked = _rank_variables(variables, year_set)
         primary_row = ranked[0]
         primary = _varinfo_description_from_row(primary_row)
         primary_n = len(primary_row.get("instances") or ())

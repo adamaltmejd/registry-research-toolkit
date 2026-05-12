@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, untrack } from "svelte";
+  import { untrack } from "svelte";
 
   import type { ColumnVarinfoResponse, VarinfoDescription } from "../api";
   import {
@@ -112,20 +112,60 @@
     | { kind: "error"; message: string };
   let varinfoState: VarinfoState = $state({ kind: "loading" });
   let showAlternatives = $state(false);
+  // When the user clicks an alternative in the varinfo popup we swap
+  // the value-codes panel to that variable's scope without re-running
+  // the primary picker. ``null`` means "use whatever the server's
+  // primary is" — the panel falls back to the response's primary
+  // ``var_id`` then.
+  let userPickedVarId: number | null = $state(null);
 
-  onMount(() => {
-    void loadVarinfo();
-  });
+  let sourceYears = $derived(sourceYearsFor(registerSourcesWithColumn));
+  // Years that should drive the year-aware primary picker. Same shape as
+  // ValueCodesPanel's filter — the non-null source years in the calling
+  // partition.
+  let relevantYears = $derived(
+    Array.from(
+      new Set(
+        Object.values(sourceYears).filter(
+          (y): y is number => typeof y === "number",
+        ),
+      ),
+    ).sort((a, b) => a - b),
+  );
+  // True when at least one source in the partition has no detected
+  // year — drives the "year unknown" badge and the manual year picker.
+  let hasUnknownYearSource = $derived(
+    sources.some((sn) => sourceYears[sn] === null || sourceYears[sn] === undefined),
+  );
 
   async function loadVarinfo(): Promise<void> {
     try {
-      const data = await store.getColumnVarinfo(registerName, column.name);
+      const data = await store.getColumnVarinfo(
+        registerName,
+        column.name,
+        relevantYears,
+      );
       varinfoState = { kind: "loaded", data };
     } catch (exc) {
       const message = exc instanceof Error ? exc.message : String(exc);
       varinfoState = { kind: "error", message };
     }
   }
+
+  // Load varinfo on mount and reload whenever the source years change
+  // (the manual year picker writes through to the snapshot, which flows
+  // back here via ``sourceYears`` → ``relevantYears``). The store's
+  // varinfo cache is keyed on ``(register, column, years)`` so duplicate
+  // calls for the same key cost one HTTP request.
+  let varinfoYearKey = $derived(relevantYears.join(","));
+  $effect(() => {
+    varinfoYearKey;
+    // Clear any explicit alternative pick when the year-driven primary
+    // re-ranks — otherwise the previous-year pick would override the
+    // new year-aware primary.
+    userPickedVarId = null;
+    void loadVarinfo();
+  });
 
   // Concise source line: "var_id 137 in LISA"; falls back to the bare
   // var_id when the description carries no register name (shouldn't
@@ -136,13 +176,87 @@
       : `var_id ${d.var_id}`;
   }
 
+  // Active variable for the popup's banner + value-codes panel:
+  // explicit user pick wins, otherwise the server's primary. Returns
+  // null in loading / error / "none" states so the value-codes panel
+  // falls through to the unscoped union (pre-fix behaviour).
+  let activeDescription = $derived.by((): VarinfoDescription | null => {
+    if (varinfoState.kind !== "loaded") return null;
+    const data = varinfoState.data;
+    if (data.kind === "none") return null;
+    if (userPickedVarId === null) return data.primary;
+    if (data.kind === "single") return data.primary;
+    const alt = data.alternatives.find(
+      (a) => a.description.var_id === userPickedVarId,
+    );
+    return alt ? alt.description : data.primary;
+  });
+  let activeVarId = $derived(activeDescription?.var_id ?? null);
+  // The active variable's cvid count, mirroring the server-side
+  // `primary_share.instances`. Used in the banner's "(N of M cvids)"
+  // hint so the line stays truthful when the user picks an alternative.
+  let activeInstances = $derived.by((): number | null => {
+    if (varinfoState.kind !== "loaded") return null;
+    const data = varinfoState.data;
+    if (data.kind === "none") return null;
+    if (activeVarId === null) return null;
+    if (data.primary.var_id === activeVarId) return data.primary_share.instances;
+    if (data.kind !== "divergent") return null;
+    const alt = data.alternatives.find((a) => a.description.var_id === activeVarId);
+    return alt ? alt.instances : null;
+  });
+
   let canShowValueCodes = $derived(hasRegmetaValueDisplay(column.regmeta_signal));
   // Mount ValueCodesPanel on first expand and keep it mounted; <details>
   // hides it via CSS when closed. Re-mounting would re-fire the
   // /api/column-values request on every toggle.
   let valueCodesEverExpanded = $state(store.valueCodesExpandedInEditor);
 
-  let sourceYears = $derived(sourceYearsFor(registerSourcesWithColumn));
+  // Year picker for sources missing an auto-detected year. The dropdown
+  // surfaces the same range we see in real SCB filenames (1990–current);
+  // hand-editing the config remains the escape hatch for outliers.
+  let yearPickerSource: string = $state(
+    untrack(() => sources[0] ?? ""),
+  );
+  let yearPickerValue: string = $state("");
+  let yearPickerSaving = $state(false);
+  // Build a 1990 → current-year option list. Older registers exist but
+  // are vanishingly rare in MONA work; the user can type a year manually
+  // by editing mock_data_config.json if they really need 1985.
+  const CURRENT_YEAR = new Date().getFullYear();
+  let yearPickerOptions = $derived.by(() => {
+    const out: number[] = [];
+    for (let y = CURRENT_YEAR; y >= 1990; y--) out.push(y);
+    return out;
+  });
+
+  async function applyYearPicker(): Promise<void> {
+    if (yearPickerSaving) return;
+    const version = store.snapshot?.snapshot_version;
+    if (!version) return;
+    if (!yearPickerSource) return;
+    const parsed = yearPickerValue === "" ? null : Number(yearPickerValue);
+    if (parsed !== null && !Number.isInteger(parsed)) return;
+    yearPickerSaving = true;
+    const ok = await store.setSourceYear({
+      source_name: yearPickerSource,
+      year: parsed,
+      expected_version: version,
+    });
+    yearPickerSaving = false;
+    if (ok) {
+      store.pushToast(
+        "info",
+        parsed === null
+          ? `Marked ${yearPickerSource} as having no year`
+          : `Set ${yearPickerSource} year to ${parsed}`,
+      );
+      // Re-rank the varinfo primary against the new year set. The store
+      // already cleared its cache on snapshot bump, so this is a fresh
+      // fetch.
+      void loadVarinfo();
+    }
+  }
 
   function buildHint(): Record<string, unknown> | null {
     // Always send an explicit hint based on form state. Earlier we
@@ -275,11 +389,23 @@
           </p>
         {:else}
           {@const data = varinfoState.data}
-          {@const desc = data.primary}
+          {@const desc = activeDescription ?? data.primary}
+          {@const isUserPick =
+            data.kind === "divergent" &&
+            userPickedVarId !== null &&
+            userPickedVarId !== data.primary.var_id}
           <div class="varinfo-body">
             <p class="varinfo-name">
               <span class="varinfo-label">Variable:</span>
               <strong>{desc.variabelnamn ?? column.name}</strong>
+              {#if isUserPick}
+                <span
+                  class="varinfo-userpick"
+                  title="you picked this alternative from the list below"
+                >
+                  · your pick
+                </span>
+              {/if}
               {#if data.kind === "divergent"}
                 <span
                   class="varinfo-warn"
@@ -296,9 +422,9 @@
             {#if desc.variabeldefinition}
               <p class="varinfo-definition">
                 {desc.variabeldefinition}
-                {#if data.kind === "divergent"}
+                {#if data.kind === "divergent" && activeInstances !== null}
                   <span class="varinfo-share">
-                    ({data.primary_share.instances} of {data.primary_share.total}
+                    ({activeInstances} of {data.primary_share.total}
                     cvids)
                   </span>
                 {/if}
@@ -348,31 +474,69 @@
               </details>
             {/if}
             {#if data.kind === "divergent"}
+              {@const primaryVarId = data.primary.var_id}
               <details
                 class="varinfo-more"
                 bind:open={showAlternatives}
               >
                 <summary>
-                  Show {data.alternatives.length} alternative definition{data
-                    .alternatives.length === 1
-                    ? ""
-                    : "s"}
+                  Pick a different variable
+                  ({data.alternatives.length + 1} options)
                 </summary>
+                <p class="varinfo-pick-help">
+                  Click a variable below to scope the value codes to its
+                  instances. SCB reuses column slots across decades, so the
+                  picker's automatic choice can land on the wrong era.
+                </p>
                 <ul class="varinfo-alternatives">
-                  {#each data.alternatives as alt (alt.description.var_id)}
-                    <li>
+                  <li>
+                    <button
+                      type="button"
+                      class="varinfo-pick"
+                      class:varinfo-pick-active={userPickedVarId === null ||
+                        userPickedVarId === primaryVarId}
+                      onclick={() => (userPickedVarId = null)}
+                    >
                       <p class="varinfo-name">
-                        <strong>{alt.description.variabelnamn ?? "(unnamed)"}</strong>
+                        <strong>{data.primary.variabelnamn ?? "(unnamed)"}</strong>
                         <span class="varinfo-share">
-                          · {alt.instances} cvid{alt.instances === 1 ? "" : "s"}
-                          · {varSourceLine(alt.description)}
+                          · primary · {data.primary_share.instances} cvid{data
+                            .primary_share.instances === 1
+                            ? ""
+                            : "s"}
+                          · {varSourceLine(data.primary)}
                         </span>
                       </p>
-                      {#if alt.description.variabeldefinition}
+                      {#if data.primary.variabeldefinition}
                         <p class="varinfo-definition">
-                          {alt.description.variabeldefinition}
+                          {data.primary.variabeldefinition}
                         </p>
                       {/if}
+                    </button>
+                  </li>
+                  {#each data.alternatives as alt (alt.description.var_id)}
+                    <li>
+                      <button
+                        type="button"
+                        class="varinfo-pick"
+                        class:varinfo-pick-active={userPickedVarId ===
+                          alt.description.var_id}
+                        onclick={() =>
+                          (userPickedVarId = alt.description.var_id)}
+                      >
+                        <p class="varinfo-name">
+                          <strong>{alt.description.variabelnamn ?? "(unnamed)"}</strong>
+                          <span class="varinfo-share">
+                            · {alt.instances} cvid{alt.instances === 1 ? "" : "s"}
+                            · {varSourceLine(alt.description)}
+                          </span>
+                        </p>
+                        {#if alt.description.variabeldefinition}
+                          <p class="varinfo-definition">
+                            {alt.description.variabeldefinition}
+                          </p>
+                        {/if}
+                      </button>
                     </li>
                   {/each}
                 </ul>
@@ -381,6 +545,52 @@
           </div>
         {/if}
       </section>
+
+      {#if hasUnknownYearSource}
+        <section class="year-picker" aria-label="source year override">
+          <p class="year-picker-msg">
+            <strong>⚠ Year unknown</strong> — at least one source in this
+            partition has no detected year. The variable picker and value-code
+            tabs lose their year filter without one. Set a year to re-rank the
+            picks.
+          </p>
+          <div class="year-picker-controls">
+            <label>
+              Source
+              <select
+                bind:value={yearPickerSource}
+                disabled={yearPickerSaving}
+                aria-label="source for year override"
+              >
+                {#each sources.filter((sn) => sourceYears[sn] === null || sourceYears[sn] === undefined) as sn (sn)}
+                  <option value={sn}>{sn}</option>
+                {/each}
+              </select>
+            </label>
+            <label>
+              Year
+              <select
+                bind:value={yearPickerValue}
+                disabled={yearPickerSaving}
+                aria-label="year"
+              >
+                <option value="">(unset / no year)</option>
+                {#each yearPickerOptions as y (y)}
+                  <option value={String(y)}>{y}</option>
+                {/each}
+              </select>
+            </label>
+            <button
+              type="button"
+              class="year-picker-apply"
+              onclick={applyYearPicker}
+              disabled={yearPickerSaving || !yearPickerSource}
+            >
+              {yearPickerSaving ? "Saving…" : "Apply"}
+            </button>
+          </div>
+        </section>
+      {/if}
 
       {#if column.regmeta_signal}
         {@const sig = column.regmeta_signal}
@@ -432,6 +642,7 @@
               register={registerName}
               column={column.name}
               {sourceYears}
+              pickedVarId={activeVarId}
             />
           {/if}
         </details>
@@ -669,6 +880,12 @@
     color: #7a4a00;
     font-size: 0.85em;
   }
+  .varinfo-userpick {
+    margin-left: 0.3rem;
+    color: #5d2b8c;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
   .varinfo-definition {
     margin: 0;
     line-height: 1.4;
@@ -700,10 +917,78 @@
   }
   .varinfo-alternatives {
     margin: 0.4rem 0 0;
-    padding-left: 1rem;
+    padding-left: 0;
+    list-style: none;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
+  }
+  .varinfo-pick-help {
+    margin: 0.4rem 0 0;
+    color: #6a614a;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  /* Clickable variable cards. Resetting button defaults (background,
+     padding, etc.) lets us reuse the same layout as the static list
+     items while exposing native button affordances (focus ring,
+     keyboard activation). */
+  .varinfo-pick {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #e1d8b8;
+    border-radius: 4px;
+    padding: 0.35rem 0.55rem;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  .varinfo-pick:hover:not(.varinfo-pick-active) {
+    background: #f7f2e0;
+  }
+  .varinfo-pick-active {
+    background: #ede4c4;
+    border-color: #a8924f;
+    cursor: default;
+  }
+  .year-picker {
+    padding: 0.5rem 0.7rem;
+    background: #fff7e6;
+    border-left: 3px solid #e8c184;
+    border-radius: 3px;
+    color: #4b3a14;
+    font-size: 0.9rem;
+  }
+  .year-picker-msg {
+    margin: 0 0 0.5rem;
+    line-height: 1.4;
+  }
+  .year-picker-controls {
+    display: flex;
+    gap: 0.6rem;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+  .year-picker-controls label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: 0.82rem;
+    color: #555;
+  }
+  .year-picker-apply {
+    padding: 0.35rem 0.9rem;
+    border-radius: 4px;
+    border: 1px solid #b88a3a;
+    background: #fff;
+    color: #4b3a14;
+    cursor: pointer;
+    font: inherit;
+  }
+  .year-picker-apply:hover:not(:disabled) {
+    background: #fbe9c4;
   }
   .retry {
     margin-left: 0.5rem;

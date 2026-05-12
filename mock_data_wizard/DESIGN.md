@@ -567,8 +567,9 @@ override the regmeta DB location.
 - `resolve_register(name_or_id, *, db_path=None) -> Register | None`
   — returns `None` when regmeta is unavailable, the input doesn't
   match, or the match is ambiguous.
-- `detect_year_from_source_name(source_name) -> int | None` — naive
-  4-digit-year search, exposed for UI affordances.
+- `detect_year_from_source_name(source_name) -> int | None` — finds
+  the first 4-digit year or HT/VT term code in a source name (e.g.
+  `Distansutb_HT20_VT21` ⇒ 2020). Exposed for UI affordances.
 - `detect_panel_member_kind(source_name, columns) ->
   PanelMemberSuggestion` — single-source panel-member shape inference.
 

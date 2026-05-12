@@ -224,6 +224,12 @@ export interface GetColumnValuesArgs {
   column: string;
   picked_classification?: string | null;
   picked_value_set?: number | null;
+  /** Restrict value-sets to one variable's instances. Set this to the
+   * primary (or user-chosen) ``var_id`` from the varinfo response when
+   * a column aliases to multiple variables in the same register — the
+   * unscoped union otherwise mixes code lists from variables other
+   * than the one the popup names. */
+  picked_var_id?: number | null;
   /** Project source years (non-null). Server drops value-set groups
    * whose year window doesn't overlap any of these. */
   relevant_years?: number[];
@@ -276,12 +282,35 @@ export type ColumnVarinfoResponse =
 export interface GetColumnVarinfoArgs {
   register: string | null;
   column: string;
+  /** Project source year(s) for the column's sources. When set, the
+   * primary picker prefers variables with instances in those years —
+   * SCB reuses column-name slots across decades, so a popularity-only
+   * ranking surfaces a stale-but-prolific variable over the one that
+   * actually carries the data. */
+  relevant_years?: number[];
 }
 
 export function getColumnVarinfo(
   args: GetColumnVarinfoArgs,
 ): Promise<ColumnVarinfoResponse> {
   return send<ColumnVarinfoResponse>("/api/column-varinfo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface SetSourceYearArgs {
+  source_name: string;
+  /** Integer year, or null to assert "no year" (suppresses the
+   *  filename regex fallback). Omit to leave unchanged — use one of
+   *  the explicit values when calling this endpoint. */
+  year: number | null;
+  expected_version: string;
+}
+
+export function setSourceYear(args: SetSourceYearArgs): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/source-year", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(args),

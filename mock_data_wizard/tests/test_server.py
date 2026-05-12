@@ -471,6 +471,86 @@ def test_set_source_registers_forwards_to_editor(
     assert called["reclassify_manual"] is True
 
 
+def test_set_source_year_forwards_to_editor(
+    running_server: str, monkeypatch: pytest.MonkeyPatch
+):
+    """A well-formed body reaches ``editor.set_source_metadata`` with
+    the ``year`` value passed through. Integer year, JSON null, and a
+    missing key are all distinct cases — the first two succeed, the
+    third is a validation error."""
+    called: dict[str, Any] = {}
+
+    def fake_set(project_dir, source_name, **kwargs):
+        called["source_name"] = source_name
+        called["year"] = kwargs.get("year")
+        from mock_data_wizard.editor import get_state
+
+        return get_state(project_dir)
+
+    monkeypatch.setattr(server.editor, "set_source_metadata", fake_set)
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+
+    # Integer year — common case.
+    status, _body = _fetch(
+        "POST",
+        f"{running_server}/api/source-year",
+        {
+            "source_name": "src",
+            "year": 2020,
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 200
+    assert called["source_name"] == "src"
+    assert called["year"] == 2020
+
+    # Explicit null — suppress regex fallback.
+    status, _body = _fetch(
+        "POST",
+        f"{running_server}/api/source-year",
+        {
+            "source_name": "src",
+            "year": None,
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 200
+    assert called["year"] is None
+
+
+def test_set_source_year_requires_year_key(running_server: str):
+    """Missing ``year`` is a 400 — distinguishing "set to null" from
+    "left unchanged" matters because the underlying editor primitive
+    treats them differently."""
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/source-year",
+        {
+            "source_name": "src",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "year" in body["error"]["message"]
+
+
+def test_set_source_year_rejects_non_int_year(running_server: str):
+    _, snapshot = _fetch("GET", f"{running_server}/api/state")
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/source-year",
+        {
+            "source_name": "src",
+            "year": "2020",
+            "expected_version": snapshot["snapshot_version"],
+        },
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
 def test_list_registers_returns_payload(
     running_server: str, monkeypatch: pytest.MonkeyPatch
 ):
@@ -1091,11 +1171,13 @@ def test_column_varinfo_single_envelope_shape(running_server: str, monkeypatch):
     monkeypatch.setattr(
         server.editor,
         "get_column_varinfo",
-        lambda register, column, *, db_path=None: editor.ColumnVarinfoResult(
-            kind="single",
-            primary=desc,
-            primary_instances=15,
-            total_instances=15,
+        lambda register, column, *, relevant_years=None, db_path=None: (
+            editor.ColumnVarinfoResult(
+                kind="single",
+                primary=desc,
+                primary_instances=15,
+                total_instances=15,
+            )
         ),
     )
     status, body = _fetch(
@@ -1144,14 +1226,16 @@ def test_column_varinfo_divergent_envelope_shape(running_server: str, monkeypatc
     monkeypatch.setattr(
         server.editor,
         "get_column_varinfo",
-        lambda register, column, *, db_path=None: editor.ColumnVarinfoResult(
-            kind="divergent",
-            primary=primary,
-            primary_instances=12,
-            total_instances=15,
-            alternatives=(
-                editor.VarinfoAlternative(description=alt_desc, instances=3),
-            ),
+        lambda register, column, *, relevant_years=None, db_path=None: (
+            editor.ColumnVarinfoResult(
+                kind="divergent",
+                primary=primary,
+                primary_instances=12,
+                total_instances=15,
+                alternatives=(
+                    editor.VarinfoAlternative(description=alt_desc, instances=3),
+                ),
+            )
         ),
     )
     status, body = _fetch(

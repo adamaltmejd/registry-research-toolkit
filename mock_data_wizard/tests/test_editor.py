@@ -2799,3 +2799,144 @@ def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path
     assert alt.description.var_id == 45
     assert alt.description.variabelnamn == "Hushållsställning"
     assert alt.instances == 1
+
+
+def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Path):
+    """When ``relevant_years`` is set, a variable whose instances overlap
+    the requested year wins even when it has fewer cvids than a rival —
+    SCB reuses column-name slots across decades and the year is the only
+    signal that distinguishes them. Same fixture as the popularity test:
+    var_id=44 has cvids in 2020 + 2021, var_id=45 has one cvid in 2010."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning', 'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (120, 10, '2021');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1200, 1, 10, 120, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1200, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # Year 2010 overlaps var_id=45's only instance — it must win the
+    # primary slot even though it has 1 cvid vs var_id=44's 2.
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2010], db_path=regmeta_db.parent
+    )
+    assert result.kind == "divergent"
+    assert result.primary is not None
+    assert result.primary.var_id == 45
+    assert result.alternatives[0].description.var_id == 44
+
+    # Year 2020 falls on var_id=44 — the popularity winner also wins on
+    # year, so the ordering matches the no-year case.
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
+    )
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+    assert result.alternatives[0].description.var_id == 45
+
+    # No year hint → falls back to pure popularity ranking.
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+
+
+def test_get_column_varinfo_year_outside_any_instance_falls_back_to_popularity(
+    regmeta_db: Path,
+):
+    """When no variable's instances overlap the requested year, year
+    proximity orders the tier (closest distance first) — but a tie on
+    distance falls through to popularity. Same fixture as above."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning', 'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # Year 2030: var_id=44 at distance 10, var_id=45 at distance 20.
+    # Closer wins → var_id=44 (which is also the popularity winner).
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2030], db_path=regmeta_db.parent
+    )
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+
+
+def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
+    """The same column name can carry different value-sets under
+    different var_ids. Without ``picked_var_id``, the union of all
+    value-sets is returned; with it, only the chosen variable's sets
+    appear — the popup must be able to show the value codes that
+    actually belong to the variable named in its header."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Second variable also aliased to "Kon" with its own value-set
+    # (codes "M"/"F" instead of "1"/"2"). The fixture's primary variable
+    # var_id=44 already has codes "1=Man" / "2=Kvinna".
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Annan Kön', 'En annan kön-variabel');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    assign_value_set(conn, 1100, [("M", "Male"), ("F", "Female")])
+    conn.commit()
+    conn.close()
+
+    # No var_id scoping → all value-sets across both variables surface
+    # (4 distinct codes: 1, 2, M, F).
+    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    codes_union = {c.code for c in union_result.codes} if union_result.codes else set()
+    assert "1" in codes_union and "M" in codes_union
+
+    # Scope to var_id=44 (the original) → only its codes "1"/"2".
+    primary_result = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+    )
+    codes_primary = {c.code for c in primary_result.codes}
+    assert codes_primary == {"1", "2"}
+
+    # Scope to var_id=45 → only its codes "M"/"F".
+    alt_result = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+    )
+    codes_alt = {c.code for c in alt_result.codes}
+    assert codes_alt == {"M", "F"}
