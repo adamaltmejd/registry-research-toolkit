@@ -1317,25 +1317,56 @@ def test_set_source_metadata_year_none_means_no_year(tmp_path: Path):
 # -- set_source_years (bulk) ----------------------------------------------
 
 
-def test_set_source_years_bulk_writes_each_assignment(tmp_path: Path):
-    """Multiple years persist atomically across sources."""
+def test_set_source_years_int_sets_year(tmp_path: Path):
+    """An int value writes the `year` key for that source."""
     from mock_data_wizard.editor import set_source_years
 
     discover_path = _write_discover(
-        tmp_path,
-        [
-            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
-            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
-        ],
+        tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
     )
     snap = init_if_missing(tmp_path, discover_path)
     snap = set_source_years(
-        tmp_path,
-        {"lisa_2018": 2018, "lisa_2019": None},
-        expected_version=snap.snapshot_version,
+        tmp_path, {"lisa_2018": 2019}, expected_version=snap.snapshot_version
     )
+    assert snap.config.sources["lisa_2018"]["year"] == 2019
+
+
+def test_set_source_years_none_deletes_year_key(tmp_path: Path):
+    """A ``None`` value deletes the ``year`` key entirely so the row
+    reverts to "missing" — the UI warning resurfaces on next read.
+    Distinct from the legacy ``year: null`` state (which the bundle
+    still accepts, but no editor path emits anymore)."""
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
     assert snap.config.sources["lisa_2018"]["year"] == 2018
-    assert snap.config.sources["lisa_2019"]["year"] is None
+    snap = set_source_years(
+        tmp_path, {"lisa_2018": None}, expected_version=snap.snapshot_version
+    )
+    # year key is gone; source entry survives if it carries other fields
+    entry = snap.config.sources.get("lisa_2018", {})
+    assert "year" not in entry
+
+
+def test_set_source_years_none_on_already_missing_is_noop(tmp_path: Path):
+    """Asking to delete a year that's already absent must not bump the
+    snapshot version — same contract as set_source_registers' no-op path."""
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "no_year_source", "columns": [{"name": "X"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    assert "no_year_source" not in snap.config.sources or (
+        "year" not in snap.config.sources.get("no_year_source", {})
+    )
+    snap2 = set_source_years(
+        tmp_path, {"no_year_source": None}, expected_version=snap.snapshot_version
+    )
+    assert snap.snapshot_version == snap2.snapshot_version
 
 
 def test_set_source_years_unknown_source_aborts(tmp_path: Path):

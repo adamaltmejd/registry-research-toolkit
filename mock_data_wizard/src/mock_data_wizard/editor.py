@@ -1686,15 +1686,20 @@ def set_source_years(
     expected_version: str,
     db_path: Path | None = None,
 ) -> StateSnapshot:
-    """Bulk-set ``year`` on multiple sources atomically.
+    """Bulk-update ``year`` on multiple sources atomically.
 
-    ``assignments`` maps ``source_name`` to ``int`` (set explicit year) or
-    ``None`` (assert "no year" — suppresses the filename regex fallback in
-    the bundle's enrichment path). Every source must exist in the current
-    snapshot; unknown sources abort the whole call before any on-disk
-    write.
+    ``assignments`` maps ``source_name`` to either:
 
-    A fully-no-op call leaves ``snapshot_version`` unchanged.
+    - ``int`` — set/replace the year for this source.
+    - ``None`` — **delete** the year key entirely. Sends the row back
+      to the "missing" state (the editor UI's warning resurfaces on
+      next read). Note: legacy on-disk entries with ``"year": null``
+      (configs that pre-date this change) are still readable by the
+      bundle and parser; nothing emits them anymore.
+
+    Every source must exist in the current snapshot; unknown sources
+    abort the whole call before any on-disk write. A fully-no-op call
+    leaves ``snapshot_version`` unchanged.
     """
     if not isinstance(assignments, dict):
         raise ValidationError(
@@ -1727,13 +1732,22 @@ def set_source_years(
             entry = sources.setdefault(sn, {})
             had_year = "year" in entry
             old_year = entry.get("year") if had_year else None
-            entry["year"] = year
-            if had_year and old_year == year:
-                continue
-            any_change = True
+            if year is None:
+                # Delete the year key. No-op when it was already absent;
+                # also a no-op pre-existing null counts as a change
+                # (we're collapsing the two equivalent "no year" states
+                # into one, which is the whole point of this branch).
+                if not had_year:
+                    continue
+                entry.pop("year", None)
+                any_change = True
+            else:
+                if had_year and old_year == year:
+                    continue
+                entry["year"] = year
+                any_change = True
         # Prune sources entries that ended up entirely empty (no `year`
-        # and no `register` — shouldn't happen here since we just wrote
-        # `year`, but mirror set_source_metadata for symmetry).
+        # and no `register`) so JSON output stays clean.
         for sn in list(sources):
             if not sources[sn]:
                 sources.pop(sn)

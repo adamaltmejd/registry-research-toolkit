@@ -48,12 +48,11 @@
     sourceYearProvenanceFor(initialSources),
   );
 
-  // Editable per-source year input. Empty string = no input (no-op for
-  // "missing" rows; preserves the stored null for "set null" rows).
-  // Pre-filled from the stored value when present; rows whose year is
-  // missing (auto-detection failed and the user hasn't intervened)
-  // start empty and carry a ⚠ chip — typing a year is the only way to
-  // dismiss it, by design.
+  // Editable per-source year input. Empty string = "unset" — clearing a
+  // previously-set year persists as the `year` key being removed from
+  // the config entirely, sending the row back to the "missing" state
+  // (⚠ resurfaces on next read). Pre-filled from the stored value when
+  // present; rows that are already missing start empty.
   let yearInput: Record<string, string> = $state(
     Object.fromEntries(
       initialSources.map((sn) => {
@@ -83,11 +82,12 @@
     return Number(trimmed);
   }
 
-  // Year changes the user wants to persist. Two intents land here:
+  // Year changes the user wants to persist. Three intents land here:
   //   1. "set" row with a different valid year → persist new int
   //   2. "missing" row with a typed year → persist new int
-  // A "missing" row left empty is a no-op; a "set" row cleared to empty
-  // persists null (the user intentionally erased the value).
+  //   3. "set" row cleared to empty → persist null (server interprets
+  //      as "delete the year key", sending the row back to "missing")
+  // A "missing" row left empty is a no-op.
   let yearAssignments: Record<string, number | null> = $derived.by(() => {
     const out: Record<string, number | null> = {};
     for (const sn of initialSources) {
@@ -96,6 +96,8 @@
       const parsed = parseYearInput(yearInput[sn] ?? "");
       if (parsed === undefined) continue;
       if (wasSet && parsed === current) continue;
+      // No-op: a missing row left empty is the user not touching the
+      // field at all.
       if (!wasSet && parsed === null) continue;
       out[sn] = parsed;
     }
@@ -358,11 +360,6 @@
     confirming = false;
   }
 
-  function clearYear(sn: string): void {
-    yearInput = { ...yearInput, [sn]: "" };
-    confirming = false;
-  }
-
   function onYearInput(sn: string, value: string): void {
     yearInput = { ...yearInput, [sn]: value };
     confirming = false;
@@ -487,17 +484,6 @@
                   aria-invalid={invalid}
                   spellcheck="false"
                 />
-                {#if value !== ""}
-                  <button
-                    type="button"
-                    class="year-clear"
-                    title="clear input"
-                    onclick={() => clearYear(src)}
-                    disabled={submitting}
-                  >
-                    ×
-                  </button>
-                {/if}
               </span>
             </li>
           {/each}
@@ -724,19 +710,6 @@
   .year-input-invalid {
     border-color: #d49a4f;
     background: #fdf3e3;
-  }
-  .year-clear {
-    border: 1px solid #ccc;
-    background: #fff;
-    color: #666;
-    padding: 0 0.4rem;
-    border-radius: 3px;
-    cursor: pointer;
-    font: inherit;
-    line-height: 1.4;
-  }
-  .year-clear:hover:not(:disabled) {
-    background: #f5f5f5;
   }
   .warn {
     background: #fff8e1;
