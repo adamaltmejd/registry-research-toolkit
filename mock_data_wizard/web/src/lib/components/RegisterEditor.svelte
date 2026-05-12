@@ -48,10 +48,12 @@
     sourceYearProvenanceFor(initialSources),
   );
 
-  // Editable per-source year input. Empty string = "no year" (writes
-  // null on Save). Pre-filled from the stored value when present;
-  // sources whose year is missing (auto-detection failed at init and
-  // the user hasn't intervened) start empty and carry a ⚠ chip.
+  // Editable per-source year input. Empty string = no input (no-op for
+  // "missing" rows; preserves the stored null for "set null" rows).
+  // Pre-filled from the stored value when present; rows whose year is
+  // missing (auto-detection failed and the user hasn't intervened)
+  // start empty and carry a ⚠ chip — typing a year is the only way to
+  // dismiss it, by design.
   let yearInput: Record<string, string> = $state(
     Object.fromEntries(
       initialSources.map((sn) => {
@@ -81,21 +83,19 @@
     return Number(trimmed);
   }
 
-  // Year changes the user wants to persist. Only sources whose parsed
-  // value actually moved AND parse cleanly land here. A missing→null
-  // diff still counts: the user is asserting "no year" rather than
-  // leaving the row in the auto-detection-failed state.
+  // Year changes the user wants to persist. Two intents land here:
+  //   1. "set" row with a different valid year → persist new int
+  //   2. "missing" row with a typed year → persist new int
+  // A "missing" row left empty is a no-op; a "set" row cleared to empty
+  // persists null (the user intentionally erased the value).
   let yearAssignments: Record<string, number | null> = $derived.by(() => {
     const out: Record<string, number | null> = {};
     for (const sn of initialSources) {
-      const parsed = parseYearInput(yearInput[sn] ?? "");
-      if (parsed === undefined) continue;
       const wasSet = initialProvenance[sn] === "set";
       const current = wasSet ? initialYears[sn] : undefined;
+      const parsed = parseYearInput(yearInput[sn] ?? "");
+      if (parsed === undefined) continue;
       if (wasSet && parsed === current) continue;
-      // For "missing" rows: leaving the field empty (parsed === null)
-      // is a no-op — the user didn't touch anything. Only persist if
-      // the user actually typed a year.
       if (!wasSet && parsed === null) continue;
       out[sn] = parsed;
     }
@@ -456,9 +456,8 @@
         </legend>
         <p class="hint-line years-hint">
           Year scopes variable descriptions, value codes, and CVID picking
-          to the right register version. Type a 4-digit year, or leave
-          empty to assert "no year". Rows marked ⚠ had no year detected
-          from the source name — set one (or leave empty to dismiss).
+          to the right register version. Rows marked ⚠ had no year
+          detected from the source name; type a 4-digit year to fix.
         </p>
         <ul class="year-rows">
           {#each initialSources as src (src)}
@@ -470,14 +469,13 @@
               <span class="year-source mono" title={src}>{src}</span>
               <span class="year-controls">
                 {#if prov === "missing"}
-                  <span class="year-warn" title="no year detected from source name — set one or leave empty for 'no year'">
+                  <span class="year-warn" title="no year detected from source name — type a 4-digit year">
                     ⚠
                   </span>
                 {/if}
                 <input
                   type="text"
                   inputmode="numeric"
-                  pattern="\d{4}"
                   maxlength="4"
                   placeholder="YYYY"
                   class="year-input"
@@ -493,7 +491,7 @@
                   <button
                     type="button"
                     class="year-clear"
-                    title="clear year (assert no year)"
+                    title="clear input"
                     onclick={() => clearYear(src)}
                     disabled={submitting}
                   >
