@@ -133,12 +133,9 @@
   );
   let relevantYears = $derived(relevantYearsFromMap(sourceYears));
   // True when *every* source in the partition is in the "missing" state
-  // — i.e. auto-detection failed and the user hasn't intervened. A
-  // source whose `year` is explicitly null (user asserting "no year")
-  // does *not* count as unknown: the user has made a deliberate choice
-  // and the conflict-gate would contradict it. Drives the "set a year"
-  // warning that replaces the description / value-code body when regmeta
-  // would otherwise mix wrong-era variables.
+  // — i.e. auto-detection failed and the user hasn't intervened. Drives
+  // the "set a year" warning that replaces the description / value-code
+  // body when regmeta would otherwise mix wrong-era variables.
   let allYearsUnknown = $derived(
     sources.every((sn) => sourceYearInfo[sn].provenance === "missing"),
   );

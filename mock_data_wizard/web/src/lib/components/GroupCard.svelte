@@ -479,7 +479,7 @@
       {#if missingYearCount > 0}
         <span
           class="missing-year-badge"
-          title={`${missingYearCount} source${missingYearCount === 1 ? "" : "s"} in this group had no year detected — set one in Edit register, or assert "no year" to dismiss`}
+          title={`${missingYearCount} source${missingYearCount === 1 ? "" : "s"} in this group had no year detected — set one in Edit register`}
         >
           ⚠ {missingYearCount} missing year{missingYearCount === 1 ? "" : "s"}
         </span>

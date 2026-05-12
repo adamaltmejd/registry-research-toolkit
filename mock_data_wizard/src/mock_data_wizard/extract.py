@@ -70,16 +70,12 @@ def _extract_year(name: str) -> int | None:
 def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
     """Year for ``source_name``: config first, name regex as fallback.
 
-    An explicit ``"year": null`` in the config's ``sources`` block
-    suppresses the regex fallback -- the user is asserting "no year for
-    this source".
-
     ``config=None`` is the discover-time call (no config exists yet);
     discover always derives the year from the source name regex.
     """
     if config is not None:
-        configured, year = config.source_year(source_name)
-        if configured:
+        year = config.source_year(source_name)
+        if year is not None:
             return year
     return _extract_year(source_name)
 

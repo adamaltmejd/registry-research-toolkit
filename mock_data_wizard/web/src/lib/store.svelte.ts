@@ -78,14 +78,13 @@ export function hasRegmetaValueDisplay(sig: RegmetaSignal | null): boolean {
   );
 }
 
-/** Per-source year state. ``provenance = "set"`` means the source has a
- *  ``year`` key (an int, or ``null`` asserting "no year"); ``"missing"``
- *  means no key at all (auto-detection yielded nothing and the user
- *  hasn't intervened). Year + provenance are read in one snapshot pass. */
-export interface SourceYearInfo {
-  year: number | null;
-  provenance: "set" | "missing";
-}
+/** Per-source year state. ``provenance = "set"`` means the source has
+ *  a ``year`` key (always an int); ``"missing"`` means no key at all
+ *  (auto-detection yielded nothing and the user hasn't intervened).
+ *  Year + provenance are read in one snapshot pass. */
+export type SourceYearInfo =
+  | { year: number; provenance: "set" }
+  | { year: null; provenance: "missing" };
 
 /** Snapshot-scoped per-source year info. Returns both year and
  *  provenance in one pass over ``snapshot.config.sources``. Callers
@@ -97,9 +96,9 @@ export function sourceYearInfoFor(
   const cfg = store.snapshot?.config.sources ?? {};
   const out: Record<string, SourceYearInfo> = {};
   for (const sn of sources) {
-    const entry = cfg[sn];
-    if (entry !== undefined && "year" in entry) {
-      out[sn] = { year: entry.year ?? null, provenance: "set" };
+    const year = cfg[sn]?.year;
+    if (typeof year === "number") {
+      out[sn] = { year, provenance: "set" };
     } else {
       out[sn] = { year: null, provenance: "missing" };
     }

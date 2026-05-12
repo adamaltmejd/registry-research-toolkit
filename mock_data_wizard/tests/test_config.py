@@ -383,21 +383,20 @@ def test_parse_config_sources_year_round_trips():
             "sources": {"lisa_2018": {"year": 2018}, "rtb_2019": {"year": 2019}},
         }
     )
-    assert cfg.source_year("lisa_2018") == (True, 2018)
-    assert cfg.source_year("rtb_2019") == (True, 2019)
+    assert cfg.source_year("lisa_2018") == 2018
+    assert cfg.source_year("rtb_2019") == 2019
     # No entry -> caller falls back.
-    assert cfg.source_year("unknown") == (False, None)
+    assert cfg.source_year("unknown") is None
 
 
-def test_parse_config_sources_year_null_means_no_year():
-    cfg = parse_config(
-        {
-            "contract_version": "mdw-config-3.0.0",
-            "sources": {"weird_name_2024": {"year": None}},
-        }
-    )
-    # Explicit null is configured-but-no-year (suppresses regex fallback).
-    assert cfg.source_year("weird_name_2024") == (True, None)
+def test_parse_config_sources_rejects_null_year():
+    with pytest.raises(ValueError, match="must be an int"):
+        parse_config(
+            {
+                "contract_version": "mdw-config-3.0.0",
+                "sources": {"weird_name_2024": {"year": None}},
+            }
+        )
 
 
 def test_parse_config_rejects_unknown_source_key():

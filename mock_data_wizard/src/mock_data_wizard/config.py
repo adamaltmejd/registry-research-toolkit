@@ -174,19 +174,14 @@ class MDWConfig:
     # discover payload (rare; mostly hand-edited test fixtures).
     discover_hash: str | None = None
 
-    def source_year(self, source_name: str) -> tuple[bool, int | None]:
-        """Return ``(configured, year)`` for ``source_name``.
-
-        - ``(False, None)`` -- the source has no entry in the ``sources``
-          block; the caller may fall back to a name-regex guess.
-        - ``(True, year)`` -- explicit user-supplied year; authoritative.
-        - ``(True, None)`` -- explicit JSON null; suppress the regex
-          fallback (the user is asserting "no year for this source").
-        """
+    def source_year(self, source_name: str) -> int | None:
+        """Return the configured year for ``source_name``, or ``None`` if
+        the source has no ``year`` key. Callers fall back to a
+        name-regex guess when ``None``."""
         entry = self.sources.get(source_name)
-        if entry is None or "year" not in entry:
-            return (False, None)
-        return (True, entry.get("year"))
+        if entry is None:
+            return None
+        return entry.get("year")
 
     def lookup_type(
         self, source_name: str, column_name: str
@@ -401,8 +396,9 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
 
     Strict on unknown keys (typo guard). Per-key validation:
 
-    - ``year``: int (or null to mean "no year"). Rejects bool because
-      ``bool`` is an ``int`` subclass in Python.
+    - ``year``: int. Rejects ``null`` and bool — omit the key entirely
+      to mean "no year configured" (``bool`` is an ``int`` subclass in
+      Python, hence the explicit guard).
     - ``register``: str (or null) — name or numeric id of the register
       whose regmeta evidence drove classification for this source.
     """
@@ -418,13 +414,11 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
                 f"(allowed: {sorted(VALID_SOURCE_KEYS)})"
             )
         if key == "year":
-            if val is None:
-                out["year"] = None
-                continue
             if isinstance(val, bool) or not isinstance(val, int):
                 raise ValueError(
-                    f"sources[{source_name!r}].year must be an int or null, "
-                    f"got {type(val).__name__} ({val!r})"
+                    f"sources[{source_name!r}].year must be an int, "
+                    f"got {type(val).__name__} ({val!r}). Omit the key "
+                    f"entirely to mean 'no year configured'."
                 )
             out["year"] = val
         elif key == "register":

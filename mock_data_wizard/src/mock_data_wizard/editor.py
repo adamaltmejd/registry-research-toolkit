@@ -1660,9 +1660,7 @@ def set_source_years(
     - ``int`` — set/replace the year for this source.
     - ``None`` — **delete** the year key entirely. Sends the row back
       to the "missing" state (the editor UI's warning resurfaces on
-      next read). Note: legacy on-disk entries with ``"year": null``
-      (configs that pre-date this change) are still readable by the
-      bundle and parser; nothing emits them anymore.
+      next read).
 
     Every source must exist in the current snapshot; unknown sources
     abort the whole call before any on-disk write. A fully-no-op call

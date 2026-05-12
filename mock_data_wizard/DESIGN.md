@@ -356,13 +356,14 @@ getting silently dropped.
   threshold for a column, never lower it. A typo'd `0` would
   otherwise turn the override into a fail-open path.
 - `sources[name]` carries `year` and `register`. `year` is populated
-  by the configurer from a 4-digit name regex; an explicit
-  `"year": null` suppresses the regex fallback (the user is asserting
-  "no year"). Read by `enrich.py` to bias CVID picking toward the
-  right register version (see CVID picker tier 1). `register`
-  records which register's regmeta evidence drove auto-classification
-  for the source; persisted so reopening the editor restores the
-  context, and so the file documents itself.
+  by the configurer from a 4-digit name regex; if no year is set
+  (the regex didn't fire and the user hasn't intervened) the editor
+  surfaces a warning until a year is provided. Read by `enrich.py`
+  to bias CVID picking toward the right register version (see CVID
+  picker tier 1). `register` records which register's regmeta
+  evidence drove auto-classification for the source; persisted so
+  reopening the editor restores the context, and so the file
+  documents itself.
 - `discover_hash` is sha256 of the discover payload's
   `(source_name, [(col_name, sql_type), ...])` tuples (sorted on
   both axes for determinism). `row_count`, `nullable`, and

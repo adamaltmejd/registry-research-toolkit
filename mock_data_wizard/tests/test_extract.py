@@ -488,28 +488,6 @@ def test_run_extract_typed_uses_config_year_over_regex(tmp_path: Path):
     assert result["sources"][0]["source_detail"]["year"] == 2025
 
 
-def test_run_extract_typed_config_null_year_suppresses_regex(tmp_path: Path):
-    """Explicit null in config suppresses the regex fallback."""
-    _write_csv(
-        tmp_path / "name_2024.csv",
-        "lopnr\n" + "\n".join(str(i) for i in range(1, 21)) + "\n",
-    )
-    config = parse_config(
-        {
-            "contract_version": "mdw-config-3.0.0",
-            "column_types": {
-                "name_2024.csv": {"lopnr": {"type": "id", "id_subtype": "integer"}}
-            },
-            "sources": {"name_2024.csv": {"year": None}},
-        }
-    )
-    src = file_source(str(tmp_path), include=["name_2024.csv"])
-    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", config, seed=0)
-    # Explicit null in mock_data_config.json overrides the regex (2024).
-    detail = result["sources"][0]["source_detail"]
-    assert "year" not in detail
-
-
 # -- panels (#23) --------------------------------------------------------
 
 

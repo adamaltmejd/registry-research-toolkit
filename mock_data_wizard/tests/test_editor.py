@@ -1305,9 +1305,7 @@ def test_set_source_years_int_sets_year(tmp_path: Path):
 
 def test_set_source_years_none_deletes_year_key(tmp_path: Path):
     """A ``None`` value deletes the ``year`` key entirely so the row
-    reverts to "missing" — the UI warning resurfaces on next read.
-    Distinct from the legacy ``year: null`` state (which the bundle
-    still accepts, but no editor path emits anymore)."""
+    reverts to "missing" — the UI warning resurfaces on next read."""
     discover_path = _write_discover(
         tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
     )

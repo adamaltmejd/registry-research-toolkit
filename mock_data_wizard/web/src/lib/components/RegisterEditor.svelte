@@ -215,12 +215,15 @@
   });
 
   let hasExclusions = $derived(excludedSources.length > 0);
+  // Year saves and register saves go to different endpoints. A year-only
+  // edit must not be blocked by an unresolved register field — the
+  // register isn't being written in that path, so its validity is moot.
+  let registerNeedsWrite = $derived(
+    registerChanged || intendsReclassify || hasExclusions,
+  );
   let canApply = $derived(
-    (registerChanged ||
-      intendsReclassify ||
-      hasExclusions ||
-      yearChangedCount > 0) &&
-      inputResolves &&
+    (registerNeedsWrite || yearChangedCount > 0) &&
+      (!registerNeedsWrite || inputResolves) &&
       !yearHasInvalid &&
       !submitting,
   );
@@ -267,8 +270,6 @@
     const targetName = initialName !== "" ? initialName : (finalValue ?? "");
     const yearChanges = { ...yearAssignments };
     const yearChangeCount = Object.keys(yearChanges).length;
-    const registerNeedsWrite =
-      registerChanged || intendsReclassify || hasExclusions;
 
     submitting = true;
     let ok = true;
@@ -331,7 +332,10 @@
     event.preventDefault();
     if (submitting) return;
     if (!canApply) return; // no-op guard
-    if (!inputResolves) {
+    // Only validate the register field when this submit will actually
+    // write the register. Year-only saves go to a separate endpoint and
+    // don't read the field at all.
+    if (registerNeedsWrite && !inputResolves) {
       validationError = `'${trimmedRegister}' is not a known register name. Pick one from the autocomplete or leave the field empty to clear the assignment.`;
       return;
     }
@@ -386,7 +390,7 @@
 
       {#if validationError}
         <p id="register-error" class="error" role="alert">{validationError}</p>
-      {:else if !inputResolves && trimmedRegister !== ""}
+      {:else if !inputResolves && trimmedRegister !== "" && registerNeedsWrite}
         <p class="hint-line">
           not a known register — Apply will be blocked until you pick one
           from the suggestions.
