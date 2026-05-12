@@ -175,6 +175,41 @@
       : `var_id ${d.var_id}`;
   }
 
+  // SCB's ``VariabelRegister_Källa`` is meant to name an upstream register
+  // (LISA-style "RTB", "RAMS"); when it's just an echo of the column or
+  // variable name it carries no info and clutters the panel.
+  function meaningfulRegisterSource(
+    raw: string | null,
+    columnName: string,
+    variabelnamn: string | null,
+  ): string | null {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+    const norm = trimmed.toLowerCase();
+    if (norm === columnName.toLowerCase()) return null;
+    if (variabelnamn && norm === variabelnamn.toLowerCase()) return null;
+    return trimmed;
+  }
+
+  // SCB often fills ``Variabeldefinition`` with the same text as
+  // ``Variabelnamn`` (sometimes with a trailing period). Surfacing both
+  // reads as a typo. Normalise trailing punctuation + whitespace before
+  // comparing so the definition only appears when it adds info.
+  function meaningfulDefinition(
+    definition: string | null,
+    variabelnamn: string | null,
+  ): string | null {
+    if (!definition) return null;
+    const trimmed = definition.trim();
+    if (!trimmed) return null;
+    if (!variabelnamn) return trimmed;
+    const norm = (s: string): string =>
+      s.trim().replace(/[.。!?]+$/u, "").toLowerCase();
+    if (norm(trimmed) === norm(variabelnamn)) return null;
+    return trimmed;
+  }
+
   // Active variable: explicit user pick wins, otherwise the server's
   // primary. Null in non-loaded states.
   let activeDescription = $derived.by((): VarinfoDescription | null => {
@@ -390,9 +425,17 @@
             data.kind === "divergent" &&
             userPickedVarId !== null &&
             userPickedVarId !== data.primary.var_id}
+          {@const registerSource = meaningfulRegisterSource(
+            desc.variabelregister_kalla,
+            column.name,
+            desc.variabelnamn,
+          )}
+          {@const definitionText = meaningfulDefinition(
+            desc.variabeldefinition,
+            desc.variabelnamn,
+          )}
           <div class="varinfo-body">
             <p class="varinfo-name">
-              <span class="varinfo-label">Variable:</span>
               <strong>{desc.variabelnamn ?? column.name}</strong>
               {#if isUserPick}
                 <span
@@ -415,9 +458,9 @@
                 </span>
               {/if}
             </p>
-            {#if desc.variabeldefinition}
+            {#if definitionText}
               <p class="varinfo-definition">
-                {desc.variabeldefinition}
+                {definitionText}
                 {#if data.kind === "divergent" && activeInstances !== null}
                   <span class="varinfo-share">
                     ({activeInstances} of {data.primary_share.total}
@@ -425,50 +468,39 @@
                   </span>
                 {/if}
               </p>
+            {:else if data.kind === "divergent" && activeInstances !== null}
+              <p class="varinfo-share">
+                ({activeInstances} of {data.primary_share.total} cvids)
+              </p>
             {/if}
-            <ul class="varinfo-meta">
+            <dl class="varinfo-fields">
+              {#if desc.variabelbeskrivning}
+                <dt>Description</dt>
+                <dd>{desc.variabelbeskrivning}</dd>
+              {/if}
+              {#if desc.variabeloperationell_definition}
+                <dt>Definition</dt>
+                <dd>{desc.variabeloperationell_definition}</dd>
+              {/if}
               {#if desc.mattenhet}
-                <li><span class="varinfo-label">Unit:</span> {desc.mattenhet}</li>
+                <dt>Unit</dt>
+                <dd>{desc.mattenhet}</dd>
               {/if}
               {#if desc.variabelreferenstid}
-                <li>
-                  <span class="varinfo-label">Reference time:</span>
-                  {desc.variabelreferenstid}
-                </li>
+                <dt>Reference time</dt>
+                <dd>{desc.variabelreferenstid}</dd>
               {/if}
-              <li>
-                <span class="varinfo-label">Source:</span> {varSourceLine(desc)}
-              </li>
-            </ul>
-            {#if desc.variabelbeskrivning || desc.variabeloperationell_definition || desc.variabelhamtadfran || desc.variabelregister_kalla}
-              <details class="varinfo-more">
-                <summary>More detail</summary>
-                {#if desc.variabelbeskrivning}
-                  <p>
-                    <span class="varinfo-label">Description:</span>
-                    {desc.variabelbeskrivning}
-                  </p>
-                {/if}
-                {#if desc.variabeloperationell_definition}
-                  <p>
-                    <span class="varinfo-label">Operational definition:</span>
-                    {desc.variabeloperationell_definition}
-                  </p>
-                {/if}
-                {#if desc.variabelhamtadfran}
-                  <p>
-                    <span class="varinfo-label">Sourced from:</span>
-                    {desc.variabelhamtadfran}
-                  </p>
-                {/if}
-                {#if desc.variabelregister_kalla}
-                  <p>
-                    <span class="varinfo-label">Register source:</span>
-                    {desc.variabelregister_kalla}
-                  </p>
-                {/if}
-              </details>
-            {/if}
+              {#if desc.variabelhamtadfran}
+                <dt>Sourced from</dt>
+                <dd>{desc.variabelhamtadfran}</dd>
+              {/if}
+              {#if registerSource}
+                <dt>Register source</dt>
+                <dd>{registerSource}</dd>
+              {/if}
+              <dt>Source</dt>
+              <dd>{varSourceLine(desc)}</dd>
+            </dl>
             {#if data.kind === "divergent"}
               {@const primaryVarId = data.primary.var_id}
               <details
@@ -815,15 +847,11 @@
   .varinfo-body {
     display: flex;
     flex-direction: column;
-    gap: 0.3rem;
+    gap: 0.45rem;
   }
   .varinfo-name {
     margin: 0;
-    font-size: 0.95rem;
-  }
-  .varinfo-label {
-    color: #777;
-    font-size: 0.85em;
+    font-size: 1rem;
   }
   .varinfo-warn {
     margin-left: 0.4rem;
@@ -844,12 +872,28 @@
     color: #888;
     font-size: 0.85em;
   }
-  .varinfo-meta {
+  /* Two-column label/value grid. ``dt`` is the muted label, ``dd`` is
+     the content. Long values wrap inside their cell; the label column
+     stays narrow and aligned. */
+  .varinfo-fields {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 0.75rem;
+    row-gap: 0.3rem;
+    margin: 0.15rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+  .varinfo-fields dt {
+    color: #7a7158;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding-top: 0.05rem;
+    white-space: nowrap;
+  }
+  .varinfo-fields dd {
     margin: 0;
-    padding-left: 1rem;
-    color: #555;
-    font-size: 0.85rem;
-    line-height: 1.5;
+    color: #3a3528;
   }
   .varinfo-more {
     margin-top: 0.2rem;
@@ -860,10 +904,6 @@
     cursor: pointer;
     user-select: none;
     color: #555;
-  }
-  .varinfo-more > p {
-    margin: 0.35rem 0 0;
-    line-height: 1.4;
   }
   .varinfo-alternatives {
     margin: 0.4rem 0 0;

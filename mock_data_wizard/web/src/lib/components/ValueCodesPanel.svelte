@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { untrack } from "svelte";
+
   import {
     getColumnValues,
     type ClassificationGroup,
@@ -72,11 +74,17 @@
   // The picked-value-set chip is reset because the previous variable's
   // value_set_id won't match anything in the new scope — leaving it set
   // would render a stale chip until the user clicks again.
+  // The reset + load() is wrapped in `untrack` because load() reads
+  // pickedClassification/pickedValueSet synchronously; without untrack
+  // the effect would self-fire on the user's own picker change and undo
+  // it (resetting pickedValueSet to null, surfacing the server default).
   $effect(() => {
     pickedVarId;
     relevantYears;
-    pickedValueSet = null;
-    void load();
+    untrack(() => {
+      pickedValueSet = null;
+      void load();
+    });
   });
 
   function pickClassification(short_name: string): void {
