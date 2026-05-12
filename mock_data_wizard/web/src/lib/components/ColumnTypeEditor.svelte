@@ -5,6 +5,7 @@
   import {
     columnIsManual,
     hasRegmetaValueDisplay,
+    sourceYearProvenanceFor,
     sourceYearsFor,
     store,
   } from "../store.svelte";
@@ -120,6 +121,9 @@
   let userPickedVarId: number | null = $state(null);
 
   let sourceYears = $derived(sourceYearsFor(registerSourcesWithColumn));
+  let sourceYearProvenance = $derived(
+    sourceYearProvenanceFor(registerSourcesWithColumn),
+  );
   // Years that should drive the year-aware primary picker. Same shape as
   // ValueCodesPanel's filter — the non-null source years in the calling
   // partition.
@@ -132,10 +136,15 @@
       ),
     ).sort((a, b) => a - b),
   );
-  // True when at least one source in the partition has no detected
-  // year — drives the "year unknown" badge and the manual year picker.
-  let hasUnknownYearSource = $derived(
-    sources.some((sn) => sourceYears[sn] === null || sourceYears[sn] === undefined),
+  // True when *every* source in the partition is in the "missing" state
+  // — i.e. auto-detection failed and the user hasn't intervened. A
+  // source whose `year` is explicitly null (user asserting "no year")
+  // does *not* count as unknown: the user has made a deliberate choice
+  // and the conflict-gate would contradict it. Drives the "set a year"
+  // warning that replaces the description / value-code body when regmeta
+  // would otherwise mix wrong-era variables.
+  let allYearsUnknown = $derived(
+    sources.every((sn) => sourceYearProvenance[sn] === "missing"),
   );
 
   async function loadVarinfo(): Promise<void> {
@@ -212,51 +221,22 @@
   // /api/column-values request on every toggle.
   let valueCodesEverExpanded = $state(store.valueCodesExpandedInEditor);
 
-  // Year picker for sources missing an auto-detected year. The dropdown
-  // surfaces the same range we see in real SCB filenames (1990–current);
-  // hand-editing the config remains the escape hatch for outliers.
-  let yearPickerSource: string = $state(
-    untrack(() => sources[0] ?? ""),
-  );
-  let yearPickerValue: string = $state("");
-  let yearPickerSaving = $state(false);
-  // Build a 1990 → current-year option list. Older registers exist but
-  // are vanishingly rare in MONA work; the user can type a year manually
-  // by editing mock_data_config.json if they really need 1985.
-  const CURRENT_YEAR = new Date().getFullYear();
-  let yearPickerOptions = $derived.by(() => {
-    const out: number[] = [];
-    for (let y = CURRENT_YEAR; y >= 1990; y--) out.push(y);
-    return out;
+  // When the year is unset AND the variable / value-code surface is
+  // divergent (multiple var_ids OR multiple value-set windows under one
+  // register), refuse to display description and codes — mixing
+  // wrong-era variants would mislead the user. The Edit register popup
+  // is where the year gets fixed; this gate just routes the user there.
+  let varinfoDivergent = $derived.by(() => {
+    if (varinfoState.kind !== "loaded") return false;
+    return varinfoState.data.kind === "divergent";
   });
-
-  async function applyYearPicker(): Promise<void> {
-    if (yearPickerSaving) return;
-    const version = store.snapshot?.snapshot_version;
-    if (!version) return;
-    if (!yearPickerSource) return;
-    const parsed = yearPickerValue === "" ? null : Number(yearPickerValue);
-    if (parsed !== null && !Number.isInteger(parsed)) return;
-    yearPickerSaving = true;
-    const ok = await store.setSourceYear({
-      source_name: yearPickerSource,
-      year: parsed,
-      expected_version: version,
-    });
-    yearPickerSaving = false;
-    if (ok) {
-      store.pushToast(
-        "info",
-        parsed === null
-          ? `Marked ${yearPickerSource} as having no year`
-          : `Set ${yearPickerSource} year to ${parsed}`,
-      );
-      // Re-rank the varinfo primary against the new year set. The store
-      // already cleared its cache on snapshot bump, so this is a fresh
-      // fetch.
-      void loadVarinfo();
-    }
-  }
+  let valueCodesAcrossYears = $derived(
+    (column.regmeta_signal?.n_value_sets ?? 0) > 1 ||
+      (column.regmeta_signal?.n_classifications ?? 0) > 1,
+  );
+  let yearConflictGated = $derived(
+    allYearsUnknown && (varinfoDivergent || valueCodesAcrossYears),
+  );
 
   function buildHint(): Record<string, unknown> | null {
     // Always send an explicit hint based on form state. Earlier we
@@ -362,7 +342,36 @@
     </header>
 
     <div class="modal-body">
-      <section class="varinfo" aria-label="regmeta variable description">
+      {#if yearConflictGated}
+        <section class="year-conflict" aria-label="year required">
+          <p class="year-conflict-msg">
+            <strong>⚠ Year not set</strong> — under
+            {registerShort ?? registerName ?? "this register"} this column
+            aliases to
+            {#if varinfoDivergent && varinfoState.kind === "loaded" && varinfoState.data.kind === "divergent"}
+              {varinfoState.data.alternatives.length + 1} variables
+            {/if}
+            {#if varinfoDivergent && valueCodesAcrossYears} and {/if}
+            {#if valueCodesAcrossYears}
+              value codes that shifted across years
+            {/if}.
+            Without a year we can't tell which variant applies, so
+            descriptions and value codes are hidden.
+          </p>
+          <p class="year-conflict-action">
+            Set the year in <strong>Edit register</strong> on
+            {registerShort ?? registerName ?? "this group"} (or
+            assert "no year" there to dismiss this warning).
+          </p>
+        </section>
+      {/if}
+      <section
+        class="varinfo"
+        class:varinfo-gated={yearConflictGated}
+        aria-label="regmeta variable description"
+        aria-hidden={yearConflictGated}
+        hidden={yearConflictGated}
+      >
         {#if varinfoState.kind === "loading"}
           <p class="varinfo-status">Loading variable info…</p>
         {:else if varinfoState.kind === "error"}
@@ -546,53 +555,7 @@
         {/if}
       </section>
 
-      {#if hasUnknownYearSource}
-        <section class="year-picker" aria-label="source year override">
-          <p class="year-picker-msg">
-            <strong>⚠ Year unknown</strong> — at least one source in this
-            partition has no detected year. The variable picker and value-code
-            tabs lose their year filter without one. Set a year to re-rank the
-            picks.
-          </p>
-          <div class="year-picker-controls">
-            <label>
-              Source
-              <select
-                bind:value={yearPickerSource}
-                disabled={yearPickerSaving}
-                aria-label="source for year override"
-              >
-                {#each sources.filter((sn) => sourceYears[sn] === null || sourceYears[sn] === undefined) as sn (sn)}
-                  <option value={sn}>{sn}</option>
-                {/each}
-              </select>
-            </label>
-            <label>
-              Year
-              <select
-                bind:value={yearPickerValue}
-                disabled={yearPickerSaving}
-                aria-label="year"
-              >
-                <option value="">(unset / no year)</option>
-                {#each yearPickerOptions as y (y)}
-                  <option value={String(y)}>{y}</option>
-                {/each}
-              </select>
-            </label>
-            <button
-              type="button"
-              class="year-picker-apply"
-              onclick={applyYearPicker}
-              disabled={yearPickerSaving || !yearPickerSource}
-            >
-              {yearPickerSaving ? "Saving…" : "Apply"}
-            </button>
-          </div>
-        </section>
-      {/if}
-
-      {#if column.regmeta_signal}
+      {#if !yearConflictGated && column.regmeta_signal}
         {@const sig = column.regmeta_signal}
         <!-- Surface datatype only when it's the active type signal.
              ``regmeta_implied_type`` gives value-codes / classification
@@ -622,7 +585,7 @@
         {/if}
       {/if}
 
-      {#if canShowValueCodes}
+      {#if !yearConflictGated && canShowValueCodes}
         <details
           class="value-codes-inline"
           open={store.valueCodesExpandedInEditor}
@@ -953,42 +916,22 @@
     border-color: #a8924f;
     cursor: default;
   }
-  .year-picker {
-    padding: 0.5rem 0.7rem;
+  .year-conflict {
+    padding: 0.6rem 0.8rem;
     background: #fff7e6;
     border-left: 3px solid #e8c184;
     border-radius: 3px;
     color: #4b3a14;
     font-size: 0.9rem;
   }
-  .year-picker-msg {
-    margin: 0 0 0.5rem;
+  .year-conflict-msg {
+    margin: 0 0 0.4rem;
+    line-height: 1.45;
+  }
+  .year-conflict-action {
+    margin: 0;
+    color: #5b4a14;
     line-height: 1.4;
-  }
-  .year-picker-controls {
-    display: flex;
-    gap: 0.6rem;
-    align-items: flex-end;
-    flex-wrap: wrap;
-  }
-  .year-picker-controls label {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    font-size: 0.82rem;
-    color: #555;
-  }
-  .year-picker-apply {
-    padding: 0.35rem 0.9rem;
-    border-radius: 4px;
-    border: 1px solid #b88a3a;
-    background: #fff;
-    color: #4b3a14;
-    cursor: pointer;
-    font: inherit;
-  }
-  .year-picker-apply:hover:not(:disabled) {
-    background: #fbe9c4;
   }
   .retry {
     margin-left: 0.5rem;

@@ -218,6 +218,7 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
             config, body
         ),
         ("POST", "/api/source-year"): lambda body: _api_set_source_year(config, body),
+        ("POST", "/api/source-years"): lambda body: _api_set_source_years(config, body),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
             config, body
@@ -685,6 +686,48 @@ def _api_set_source_year(
         source_name,
         expected_version=expected_version,
         year=year,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
+def _api_set_source_years(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Bulk-set per-source ``year`` across multiple sources atomically.
+
+    Body shape: ``{assignments: {source_name: year|null, ...},
+    expected_version}``. Each year is an integer (assert "this source is
+    from this year") or null (assert "no year — suppress filename regex
+    fallback"). Every listed source must exist in the current config; an
+    unknown source aborts the whole call before any on-disk write.
+    Sources whose ``year`` actually moves are dropped from
+    ``auto_years``; a fully no-op call leaves ``snapshot_version``
+    unchanged."""
+    expected_version = _required_str(body, "expected_version")
+    raw = body.get("assignments")
+    if not isinstance(raw, dict):
+        raise editor.ValidationError(
+            f"assignments must be an object, got {type(raw).__name__}"
+        )
+    assignments: dict[str, int | None] = {}
+    for sn, val in raw.items():
+        if not isinstance(sn, str) or not sn:
+            raise editor.ValidationError(
+                f"assignments keys must be non-empty strings, got {sn!r}"
+            )
+        if val is None:
+            assignments[sn] = None
+        elif isinstance(val, bool) or not isinstance(val, int):
+            raise editor.ValidationError(
+                f"assignments[{sn!r}] must be int or null, got {type(val).__name__}"
+            )
+        else:
+            assignments[sn] = val
+    snap = editor.set_source_years(
+        config.project_dir,
+        assignments,
+        expected_version=expected_version,
         db_path=config.db_path,
     )
     return HTTPStatus.OK, state_snapshot_to_dict(snap)

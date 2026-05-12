@@ -10,7 +10,7 @@ Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 - ``get_state``, ``init_if_missing``
 - ``set_column_type``, ``set_group_register``, ``set_source_registers``,
-  ``set_source_metadata``, ``set_column_options``
+  ``set_source_metadata``, ``set_source_years``, ``set_column_options``
 - ``put_panel``, ``remove_panel``
 - Helpers: ``list_registers``, ``resolve_register``,
   ``detect_year_from_source_name``, ``detect_panel_member_kind``
@@ -80,6 +80,7 @@ __all__ = [
     "set_group_register",
     "set_source_registers",
     "set_source_metadata",
+    "set_source_years",
     "set_column_options",
     "put_panel",
     "parse_panel_payload",
@@ -1678,6 +1679,70 @@ def set_source_metadata(
     return get_state(project_dir, db_path=db_path)
 
 
+def set_source_years(
+    project_dir: Path,
+    assignments: dict[str, int | None],
+    *,
+    expected_version: str,
+    db_path: Path | None = None,
+) -> StateSnapshot:
+    """Bulk-set ``year`` on multiple sources atomically.
+
+    ``assignments`` maps ``source_name`` to ``int`` (set explicit year) or
+    ``None`` (assert "no year" — suppresses the filename regex fallback in
+    the bundle's enrichment path). Every source must exist in the current
+    snapshot; unknown sources abort the whole call before any on-disk
+    write.
+
+    A fully-no-op call leaves ``snapshot_version`` unchanged.
+    """
+    if not isinstance(assignments, dict):
+        raise ValidationError(
+            f"assignments must be a dict, got {type(assignments).__name__}"
+        )
+    if not assignments:
+        raise ValidationError("assignments must be non-empty")
+    for sn, val in assignments.items():
+        if not isinstance(sn, str) or not sn:
+            raise ValidationError(
+                f"assignments keys must be non-empty strings, got {sn!r}"
+            )
+        if val is None:
+            continue
+        if isinstance(val, bool) or not isinstance(val, int):
+            raise ValidationError(
+                f"assignments[{sn!r}] must be int or None, got {type(val).__name__}"
+            )
+
+    project_dir = Path(project_dir)
+    with _config_lock(project_dir):
+        payload = _verify_version(project_dir, expected_version)
+        discover_index = _discover_sources_index(project_dir)
+        for sn in assignments:
+            _assert_source_in_discover(discover_index, payload, sn)
+
+        sources = payload.setdefault("sources", {})
+        any_change = False
+        for sn, year in assignments.items():
+            entry = sources.setdefault(sn, {})
+            had_year = "year" in entry
+            old_year = entry.get("year") if had_year else None
+            entry["year"] = year
+            if had_year and old_year == year:
+                continue
+            any_change = True
+        # Prune sources entries that ended up entirely empty (no `year`
+        # and no `register` — shouldn't happen here since we just wrote
+        # `year`, but mirror set_source_metadata for symmetry).
+        for sn in list(sources):
+            if not sources[sn]:
+                sources.pop(sn)
+        if not any_change:
+            return get_state(project_dir, db_path=db_path)
+        _atomic_write(_config_path(project_dir), payload)
+    return get_state(project_dir, db_path=db_path)
+
+
 def set_column_options(
     project_dir: Path,
     source_name: str,
@@ -2331,33 +2396,40 @@ def _variable_year_distance(
 def _rank_variables(
     variables: list[dict[str, Any]], relevant_years: set[int] | None
 ) -> list[dict[str, Any]]:
-    """Order variables by year proximity first, popularity second.
+    """Order variables — and, when ``relevant_years`` is set, drop those
+    with no instance in those years.
 
-    When ``relevant_years`` is set, variables with at least one instance
-    in those years come ahead of variables with none — without that
-    tier, a heavily-revised old variable (e.g. ``F12 = Skolform`` with
-    14 cvids across 1990s–2010s) outranks a small but year-correct
-    match (4 cvids in 2020). Within each tier we sort by minimum year
-    distance (closer wins), then by popularity, then var_id for stable
-    output. With no year context we collapse to the original
-    popularity-only ranking."""
+    Filter rationale: an SCB column-name slot reused across decades (e.g.
+    ``F12`` mapping to a 1990s Skolform variable AND a 2020 Distansutb
+    survey item) shouldn't surface the wrong-era variant as an
+    "alternative" — once the user has told us which year the source is
+    from, off-year variables are not just lower-ranked, they're
+    wrong. Within the kept set, sort by minimum year distance (closer
+    wins), then popularity, then var_id for stable output. With no year
+    context we collapse to the original popularity-only ranking — every
+    variable is a plausible match."""
     if relevant_years:
-
-        def key(v: dict[str, Any]) -> tuple[int, int, int, int]:
+        kept: list[dict[str, Any]] = []
+        for v in variables:
             dist = _variable_year_distance(v, relevant_years)
-            in_window = 0 if dist == 0 else 1
-            # Variables with no year overlap or no parseable years are
-            # pushed last via a sentinel distance — sys.maxsize would
-            # also work, but a fixed cap keeps the key tuple small.
+            # Drop variables with parseable years that don't overlap the
+            # filter window. Variables with no parseable years (dist
+            # returns None) are kept on the principle of "we can't
+            # disprove relevance" — mirrors `_filter_groups_by_relevant_years`.
+            if dist is not None and dist > 0:
+                continue
+            kept.append(v)
+
+        def key(v: dict[str, Any]) -> tuple[int, int, int]:
+            dist = _variable_year_distance(v, relevant_years)
             effective_dist = dist if dist is not None else 10_000
             return (
-                in_window,
                 effective_dist,
                 -len(v.get("instances") or ()),
                 int(v["var_id"]),
             )
 
-        return sorted(variables, key=key)
+        return sorted(kept, key=key)
     return sorted(
         variables,
         key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),
@@ -2374,13 +2446,17 @@ def get_column_varinfo(
     """Resolve the regmeta variable description(s) for one column under
     one register.
 
-    ``relevant_years`` (typically the source's detected year) tilts the
-    "which variable does this column actually belong to?" picker toward
-    variables with instances in those years — necessary because SCB
-    reuses column-name slots across decades, and a question-number like
+    ``relevant_years`` (typically the source's configured year) is a
+    strict filter: variables with parseable instance years that don't
+    overlap the window are dropped entirely. Necessary because SCB
+    reuses column-name slots across decades — a question-number like
     ``F12`` may map to a Skolform variable from 2004 and a Distansutb
-    survey item from 2020 inside the same register. With no year hint,
-    falls back to pure popularity ranking.
+    survey item from 2020 inside the same register, and once the user
+    has set a year the off-year variant is not a viable "alternative",
+    it's wrong. Variables with no parseable years survive the filter
+    (mirrors ``_filter_groups_by_relevant_years``: we can't disprove
+    their relevance). Without ``relevant_years``, falls back to pure
+    popularity ranking and every variable is surfaced.
 
     Returns ``kind="none"`` rather than raising when regmeta is missing,
     the register doesn't resolve, or the column is unknown — degrades
@@ -2427,6 +2503,13 @@ def get_column_varinfo(
             return not_found
 
         ranked = _rank_variables(variables, year_set)
+        if not ranked:
+            # Filter dropped every match: regmeta knows the column under
+            # this register, but only in years that don't overlap the
+            # project's. Treat as not_found — the popup renders "not in
+            # regmeta for these years" rather than a misleading
+            # other-year description.
+            return not_found
         primary_row = ranked[0]
         primary = _varinfo_description_from_row(primary_row)
         primary_n = len(primary_row.get("instances") or ())

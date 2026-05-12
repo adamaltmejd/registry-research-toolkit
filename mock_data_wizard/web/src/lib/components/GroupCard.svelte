@@ -5,6 +5,7 @@
     columnIsMismatch,
     columnIsUnmatchedCategorical,
     hasRegmetaValueDisplay,
+    sourceYearProvenanceFor,
     sourceYearsFor,
     store,
   } from "../store.svelte";
@@ -45,6 +46,7 @@
   };
 
   let sourceYears = $derived(sourceYearsFor(group.sources));
+  let sourceYearProvenance = $derived(sourceYearProvenanceFor(group.sources));
 
   let groupSourceSet = $derived(new Set(group.sources));
   let panelsForGroup = $derived.by(() => {
@@ -647,12 +649,18 @@
       </summary>
       <ul class="source-list">
         {#each group.sources as sn (sn)}
+          {@const missing = sourceYearProvenance[sn] === "missing"}
           <li>
             <span class="mono">{sn}</span>
             {#if sourceYears[sn] !== null && sourceYears[sn] !== undefined}
-              <span class="stat-year" title="detected source year"
-                >{sourceYears[sn]}</span
+              <span class="stat-year" title="source year">{sourceYears[sn]}</span>
+            {:else if missing}
+              <span
+                class="stat-year stat-year-missing"
+                title="no year detected from source name — set one in Edit register"
               >
+                ⚠ no year
+              </span>
             {/if}
           </li>
         {/each}
@@ -668,6 +676,7 @@
       {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
       {@const year = sourceYears[sourceName]}
+      {@const yearMissing = sourceYearProvenance[sourceName] === "missing"}
       <details
         class="source"
         open={isSourceOpen(fs.name)}
@@ -677,7 +686,14 @@
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
             {#if year !== null && year !== undefined}
-              <span class="stat-year" title="detected source year">{year}</span>
+              <span class="stat-year" title="source year">{year}</span>
+            {:else if yearMissing}
+              <span
+                class="stat-year stat-year-missing"
+                title="no year detected from source name — set one in Edit register"
+              >
+                ⚠ no year
+              </span>
             {/if}
             <span class="stat-cols"
               >{stats.total} col{stats.total === 1 ? "" : "s"}</span
@@ -1054,6 +1070,11 @@
     border-radius: 3px;
     font-family: ui-monospace, monospace;
     font-size: 0.78rem;
+  }
+  .stat-year.stat-year-missing {
+    background: #fff7e6;
+    color: #7a4a00;
+    cursor: help;
   }
   .stat-cols {
     color: #888;

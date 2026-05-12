@@ -18,6 +18,7 @@ import {
   setGroupRegister as apiSetGroupRegister,
   setSourceRegisters as apiSetSourceRegisters,
   setSourceYear as apiSetSourceYear,
+  setSourceYears as apiSetSourceYears,
   unsetColumnManual as apiUnsetColumnManual,
   type ColumnVarinfoResponse,
   type PutPanelArgs,
@@ -26,6 +27,7 @@ import {
   type SetGroupRegisterArgs,
   type SetSourceRegistersArgs,
   type SetSourceYearArgs,
+  type SetSourceYearsArgs,
   type UnsetColumnManualArgs,
 } from "./api";
 import type {
@@ -86,6 +88,23 @@ export function sourceYearsFor(
   const cfg = store.snapshot?.config.sources ?? {};
   const out: Record<string, number | null> = {};
   for (const sn of sources) out[sn] = cfg[sn]?.year ?? null;
+  return out;
+}
+
+/** Build the {source → "set" | "missing"} map the year picker and
+ *  source rows use to decide whether to render the ⚠ "auto-detection
+ *  failed" chip. "set" — the source has a `year` key (an int, or `null`
+ *  asserting no year). "missing" — no `year` key at all; auto-detection
+ *  yielded nothing and the user hasn't intervened. Snapshot-scoped. */
+export function sourceYearProvenanceFor(
+  sources: Iterable<string>,
+): Record<string, "set" | "missing"> {
+  const sourcesCfg = store.snapshot?.config.sources ?? {};
+  const out: Record<string, "set" | "missing"> = {};
+  for (const sn of sources) {
+    const entry = sourcesCfg[sn];
+    out[sn] = entry !== undefined && "year" in entry ? "set" : "missing";
+  }
   return out;
 }
 
@@ -486,6 +505,10 @@ class Store {
 
   async setSourceYear(args: SetSourceYearArgs): Promise<boolean> {
     return this.runMutation(() => apiSetSourceYear(args));
+  }
+
+  async setSourceYears(args: SetSourceYearsArgs): Promise<boolean> {
+    return this.runMutation(() => apiSetSourceYears(args));
   }
 
   async putPanel(args: PutPanelArgs): Promise<boolean> {

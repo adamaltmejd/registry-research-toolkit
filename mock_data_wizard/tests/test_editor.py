@@ -198,6 +198,24 @@ def test_init_persists_year_from_source_name(tmp_path: Path):
     assert snap.config.sources["lisa_2018"]["year"] == 2018
 
 
+def test_init_omits_year_key_when_undetectable(tmp_path: Path):
+    """Sources whose name has no 4-digit / HT/VT token get no ``year``
+    key in the config. Distinguishing "year absent" from "year set to
+    null" is what the UI uses to surface a ⚠ on auto-detection-failed
+    rows; explicit user nulls (or successful auto-detections) read as
+    "year set" and don't warn."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "no_year_at_all", "columns": [{"name": "Y"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    assert "year" in snap.config.sources.get("lisa_2018", {})
+    assert "year" not in snap.config.sources.get("no_year_at_all", {})
+
+
 def test_init_raises_on_empty_discover(tmp_path: Path):
     discover_path = _write_discover(tmp_path, [])
     with pytest.raises(ValidationError, match="no sources"):
@@ -1294,6 +1312,76 @@ def test_set_source_metadata_year_none_means_no_year(tmp_path: Path):
     )
     configured, year = snap.config.source_year("lisa_2018")
     assert (configured, year) == (True, None)
+
+
+# -- set_source_years (bulk) ----------------------------------------------
+
+
+def test_set_source_years_bulk_writes_each_assignment(tmp_path: Path):
+    """Multiple years persist atomically across sources."""
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "lisa_2019", "columns": [{"name": "LopNr"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    snap = set_source_years(
+        tmp_path,
+        {"lisa_2018": 2018, "lisa_2019": None},
+        expected_version=snap.snapshot_version,
+    )
+    assert snap.config.sources["lisa_2018"]["year"] == 2018
+    assert snap.config.sources["lisa_2019"]["year"] is None
+
+
+def test_set_source_years_unknown_source_aborts(tmp_path: Path):
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_source_years(
+            tmp_path,
+            {"nonexistent": 2020},
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_source_years_rejects_non_dict(tmp_path: Path):
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be a dict"):
+        set_source_years(
+            tmp_path,
+            ["lisa_2018"],  # type: ignore[arg-type]
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_source_years_rejects_bool_year(tmp_path: Path):
+    from mock_data_wizard.editor import set_source_years
+
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be int or None"):
+        set_source_years(
+            tmp_path,
+            {"x": True},  # type: ignore[dict-item]
+            expected_version=snap.snapshot_version,
+        )
 
 
 # -- set_column_options ---------------------------------------------------
@@ -2802,11 +2890,12 @@ def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path
 
 
 def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Path):
-    """When ``relevant_years`` is set, a variable whose instances overlap
-    the requested year wins even when it has fewer cvids than a rival —
-    SCB reuses column-name slots across decades and the year is the only
-    signal that distinguishes them. Same fixture as the popularity test:
-    var_id=44 has cvids in 2020 + 2021, var_id=45 has one cvid in 2010."""
+    """When ``relevant_years`` is set, variables that don't overlap the
+    requested year are dropped entirely (off-year variants aren't viable
+    alternatives — they're wrong). SCB reuses column-name slots across
+    decades and the year is the only signal that distinguishes them.
+    Same fixture as the popularity test: var_id=44 has cvids in 2020 +
+    2021, var_id=45 has one cvid in 2010."""
     import sqlite3
 
     conn = sqlite3.connect(str(regmeta_db))
@@ -2832,21 +2921,30 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
     conn.commit()
     conn.close()
 
-    # Year 2010 overlaps var_id=45's only instance — it must win the
-    # primary slot even though it has 1 cvid vs var_id=44's 2.
+    # Year 2010 overlaps only var_id=45's instance. var_id=44 (2020 +
+    # 2021) is filtered out entirely — once the user has told us the
+    # source's year, the other-era variable is wrong, not a viable
+    # alternative.
     result = editor.get_column_varinfo(
         "TESTREG", "Kon", relevant_years=[2010], db_path=regmeta_db.parent
     )
-    assert result.kind == "divergent"
+    assert result.kind == "single"
     assert result.primary is not None
     assert result.primary.var_id == 45
-    assert result.alternatives[0].description.var_id == 44
 
-    # Year 2020 falls on var_id=44 — the popularity winner also wins on
-    # year, so the ordering matches the no-year case.
+    # Year 2020 falls on var_id=44 only. var_id=45 (2010) is filtered.
     result = editor.get_column_varinfo(
         "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
     )
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+
+    # Year range spanning both eras keeps both variables (divergent).
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2010, 2020], db_path=regmeta_db.parent
+    )
+    assert result.kind == "divergent"
     assert result.primary is not None
     assert result.primary.var_id == 44
     assert result.alternatives[0].description.var_id == 45
@@ -2857,12 +2955,14 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
     assert result.primary.var_id == 44
 
 
-def test_get_column_varinfo_year_outside_any_instance_falls_back_to_popularity(
+def test_get_column_varinfo_year_outside_any_instance_returns_not_found(
     regmeta_db: Path,
 ):
-    """When no variable's instances overlap the requested year, year
-    proximity orders the tier (closest distance first) — but a tie on
-    distance falls through to popularity. Same fixture as above."""
+    """When no variable's instances overlap the requested year and every
+    matching variable carries parseable years, the strict filter drops
+    them all and the popup gets ``kind="none"`` with reason
+    ``not_found`` — better than surfacing a wrong-era variable as if it
+    described the project's data."""
     import sqlite3
 
     conn = sqlite3.connect(str(regmeta_db))
@@ -2881,13 +2981,13 @@ def test_get_column_varinfo_year_outside_any_instance_falls_back_to_popularity(
     conn.commit()
     conn.close()
 
-    # Year 2030: var_id=44 at distance 10, var_id=45 at distance 20.
-    # Closer wins → var_id=44 (which is also the popularity winner).
+    # 2030 misses var_id=44's 2020+2021 window and var_id=45's 2010
+    # instance. Both variables carry parseable years → both dropped.
     result = editor.get_column_varinfo(
         "TESTREG", "Kon", relevant_years=[2030], db_path=regmeta_db.parent
     )
-    assert result.primary is not None
-    assert result.primary.var_id == 44
+    assert result.kind == "none"
+    assert result.none_reason == "not_found"
 
 
 def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { untrack } from "svelte";
 
-  import { store } from "../store.svelte";
+  import { sourceYearProvenanceFor, store } from "../store.svelte";
   import type { RegisterGroupView } from "../types";
   import Modal from "./Modal.svelte";
   import RegisterCombobox from "./RegisterCombobox.svelte";
@@ -30,6 +30,87 @@
   // the user only opens the modal and clicks Apply.
   let sourceIncluded: Record<string, boolean> = $state(
     Object.fromEntries(initialSources.map((sn) => [sn, true])),
+  );
+
+  // Snapshot the year + provenance for each source at modal-open time.
+  // The form's editable values diverge locally; on Save we diff and POST
+  // only the sources whose value moved.
+  const initialYears: Record<string, number | null> = untrack(() => {
+    const cfg = store.snapshot?.config.sources ?? {};
+    const out: Record<string, number | null> = {};
+    for (const sn of initialSources) {
+      const entry = cfg[sn];
+      out[sn] = entry !== undefined && "year" in entry ? (entry.year ?? null) : null;
+    }
+    return out;
+  });
+  const initialProvenance = untrack(() =>
+    sourceYearProvenanceFor(initialSources),
+  );
+
+  // Editable per-source year input. Empty string = "no year" (writes
+  // null on Save). Pre-filled from the stored value when present;
+  // sources whose year is missing (auto-detection failed at init and
+  // the user hasn't intervened) start empty and carry a ⚠ chip.
+  let yearInput: Record<string, string> = $state(
+    Object.fromEntries(
+      initialSources.map((sn) => {
+        if (initialProvenance[sn] === "missing") return [sn, ""];
+        const y = initialYears[sn];
+        return [sn, y === null ? "" : String(y)];
+      }),
+    ),
+  );
+
+  // Free-text year input with a `\d{4}` shape check. A floored dropdown
+  // (e.g. 1990) was too narrow — Folk- och bostadsräkningen reaches back
+  // to 1960 and individual SCB registers go back to 1968 or earlier. We
+  // don't have a credible upper bound either (delivered years can run
+  // ahead of the calendar year). Trust the user; the server validates
+  // the int shape independently.
+  const YEAR_RE = /^\d{4}$/;
+
+  // Parse a year input string into the value we'll POST. Empty string
+  // means "no year" (null). Returns `undefined` for invalid input
+  // (anything that isn't four digits) so the caller can flag it
+  // without conflating with intentional null.
+  function parseYearInput(v: string): number | null | undefined {
+    const trimmed = v.trim();
+    if (trimmed === "") return null;
+    if (!YEAR_RE.test(trimmed)) return undefined;
+    return Number(trimmed);
+  }
+
+  // Year changes the user wants to persist. Only sources whose parsed
+  // value actually moved AND parse cleanly land here. A missing→null
+  // diff still counts: the user is asserting "no year" rather than
+  // leaving the row in the auto-detection-failed state.
+  let yearAssignments: Record<string, number | null> = $derived.by(() => {
+    const out: Record<string, number | null> = {};
+    for (const sn of initialSources) {
+      const parsed = parseYearInput(yearInput[sn] ?? "");
+      if (parsed === undefined) continue;
+      const wasSet = initialProvenance[sn] === "set";
+      const current = wasSet ? initialYears[sn] : undefined;
+      if (wasSet && parsed === current) continue;
+      // For "missing" rows: leaving the field empty (parsed === null)
+      // is a no-op — the user didn't touch anything. Only persist if
+      // the user actually typed a year.
+      if (!wasSet && parsed === null) continue;
+      out[sn] = parsed;
+    }
+    return out;
+  });
+
+  let yearHasInvalid = $derived(
+    Object.values(yearInput).some(
+      (v) => parseYearInput(v) === undefined,
+    ),
+  );
+
+  let yearChangedCount = $derived(Object.keys(yearAssignments).length);
+  let yearMissingCount = $derived(
+    initialSources.filter((sn) => initialProvenance[sn] === "missing").length,
   );
 
   $effect(() => {
@@ -138,8 +219,12 @@
 
   let hasExclusions = $derived(excludedSources.length > 0);
   let canApply = $derived(
-    (registerChanged || intendsReclassify || hasExclusions) &&
+    (registerChanged ||
+      intendsReclassify ||
+      hasExclusions ||
+      yearChangedCount > 0) &&
       inputResolves &&
+      !yearHasInvalid &&
       !submitting,
   );
   // Confirm fires on destructive reclassification — manuals at risk or
@@ -183,17 +268,48 @@
     const excludedCount = excludedSources.length;
     const wasFullClear = allExcluded || finalValue === null;
     const targetName = initialName !== "" ? initialName : (finalValue ?? "");
+    const yearChanges = { ...yearAssignments };
+    const yearChangeCount = Object.keys(yearChanges).length;
+    const registerNeedsWrite =
+      registerChanged || intendsReclassify || hasExclusions;
 
     submitting = true;
-    const ok = await store.setSourceRegisters({
-      assignments: buildAssignments(finalValue),
-      expected_version: version,
-      reclassify_manual: reclassifyManual,
-    });
+    let ok = true;
+    if (registerNeedsWrite) {
+      ok = await store.setSourceRegisters({
+        assignments: buildAssignments(finalValue),
+        expected_version: version,
+        reclassify_manual: reclassifyManual,
+      });
+    }
+    // Years are persisted after register changes (whose write bumps the
+    // snapshot version). We pull the fresh version from the store
+    // between calls — this is not transactional across the two
+    // endpoints, but the second call validates independently so partial
+    // failure leaves the register write in place rather than rolling it
+    // back. Tradeoff documented; the alternative is widening
+    // set_source_registers' contract, which would force every
+    // register-only call to ship year info too.
+    if (ok && yearChangeCount > 0) {
+      const next = store.snapshot?.snapshot_version;
+      if (next) {
+        ok = await store.setSourceYears({
+          assignments: yearChanges,
+          expected_version: next,
+        });
+      } else {
+        ok = false;
+      }
+    }
     submitting = false;
     if (ok) {
       let message: string;
-      if (wasReclassifyOnly) {
+      if (yearChangeCount > 0 && !registerNeedsWrite) {
+        message =
+          yearChangeCount === 1
+            ? `Updated year on 1 source`
+            : `Updated year on ${yearChangeCount} sources`;
+      } else if (wasReclassifyOnly) {
         message = `Re-classified ${reclassifiedCount} manual column${reclassifiedCount === 1 ? "" : "s"} on ${group.group_id}`;
       } else if (wasFullClear) {
         message = `Cleared register on ${group.group_id}`;
@@ -205,6 +321,9 @@
         message = `Set ${group.group_id} → ${finalValue}`;
       } else {
         message = `Cleared register on ${group.group_id}`;
+      }
+      if (yearChangeCount > 0 && registerNeedsWrite) {
+        message += ` · year on ${yearChangeCount} source${yearChangeCount === 1 ? "" : "s"}`;
       }
       store.pushToast("info", message);
       onClose();
@@ -236,6 +355,16 @@
 
   function toggleSource(sn: string): void {
     sourceIncluded = { ...sourceIncluded, [sn]: !sourceIncluded[sn] };
+    confirming = false;
+  }
+
+  function clearYear(sn: string): void {
+    yearInput = { ...yearInput, [sn]: "" };
+    confirming = false;
+  }
+
+  function onYearInput(sn: string, value: string): void {
+    yearInput = { ...yearInput, [sn]: value };
     confirming = false;
   }
 
@@ -315,6 +444,67 @@
           </ul>
         </fieldset>
       {/if}
+
+      <fieldset class="years">
+        <legend>
+          Source year{initialSources.length === 1 ? "" : "s"}
+          {#if yearMissingCount > 0}
+            <span class="legend-warn" title="auto-detection failed for these sources">
+              · ⚠ {yearMissingCount} missing
+            </span>
+          {/if}
+        </legend>
+        <p class="hint-line years-hint">
+          Year scopes variable descriptions, value codes, and CVID picking
+          to the right register version. Type a 4-digit year, or leave
+          empty to assert "no year". Rows marked ⚠ had no year detected
+          from the source name — set one (or leave empty to dismiss).
+        </p>
+        <ul class="year-rows">
+          {#each initialSources as src (src)}
+            {@const prov = initialProvenance[src]}
+            {@const value = yearInput[src] ?? ""}
+            {@const parsed = parseYearInput(value)}
+            {@const invalid = parsed === undefined}
+            <li class="year-row" class:row-missing={prov === "missing"}>
+              <span class="year-source mono" title={src}>{src}</span>
+              <span class="year-controls">
+                {#if prov === "missing"}
+                  <span class="year-warn" title="no year detected from source name — set one or leave empty for 'no year'">
+                    ⚠
+                  </span>
+                {/if}
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  pattern="\d{4}"
+                  maxlength="4"
+                  placeholder="YYYY"
+                  class="year-input"
+                  class:year-input-invalid={invalid}
+                  bind:value={yearInput[src]}
+                  oninput={() => onYearInput(src, yearInput[src] ?? "")}
+                  disabled={submitting}
+                  aria-label={`year for ${src}`}
+                  aria-invalid={invalid}
+                  spellcheck="false"
+                />
+                {#if value !== ""}
+                  <button
+                    type="button"
+                    class="year-clear"
+                    title="clear year (assert no year)"
+                    onclick={() => clearYear(src)}
+                    disabled={submitting}
+                  >
+                    ×
+                  </button>
+                {/if}
+              </span>
+            </li>
+          {/each}
+        </ul>
+      </fieldset>
 
       {#if groupManualCount > 0}
         <label class="checkbox">
@@ -464,6 +654,91 @@
   }
   .panel-note {
     color: #b86c00;
+  }
+  .years {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.5rem 0.75rem;
+    margin: 0;
+    min-width: 0;
+  }
+  .years legend {
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .legend-warn {
+    color: #7a4a00;
+    font-weight: 500;
+  }
+  .years-hint {
+    margin: 0 0 0.4rem;
+    line-height: 1.35;
+  }
+  .year-rows {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 16rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  .year-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.2rem 0;
+    font-size: 0.88rem;
+  }
+  .year-row.row-missing {
+    background: #fff7e6;
+    border-radius: 3px;
+    padding: 0.2rem 0.4rem;
+  }
+  .year-source {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+  .year-controls {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .year-warn {
+    color: #7a4a00;
+    font-size: 0.95em;
+    cursor: help;
+  }
+  .year-input {
+    width: 5.5rem;
+    padding: 0.25rem 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font: inherit;
+    font-family: ui-monospace, monospace;
+    text-align: center;
+  }
+  .year-input-invalid {
+    border-color: #d49a4f;
+    background: #fdf3e3;
+  }
+  .year-clear {
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #666;
+    padding: 0 0.4rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font: inherit;
+    line-height: 1.4;
+  }
+  .year-clear:hover:not(:disabled) {
+    background: #f5f5f5;
   }
   .warn {
     background: #fff8e1;

@@ -316,3 +316,22 @@ export function setSourceYear(args: SetSourceYearArgs): Promise<StateSnapshot> {
     body: JSON.stringify(args),
   });
 }
+
+export interface SetSourceYearsArgs {
+  /** source_name → year-or-null. Every source must exist in the current
+   *  snapshot; one unknown source aborts the whole call before any
+   *  on-disk write. Sources whose value actually moves are dropped
+   *  from `auto_years`. */
+  assignments: Record<string, number | null>;
+  expected_version: string;
+}
+
+export function setSourceYears(
+  args: SetSourceYearsArgs,
+): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/source-years", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
