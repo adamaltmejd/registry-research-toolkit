@@ -47,6 +47,9 @@
 
   let sourceYears = $derived(sourceYearsFor(group.sources));
   let sourceYearProvenance = $derived(sourceYearProvenanceFor(group.sources));
+  let missingYearCount = $derived(
+    group.sources.filter((sn) => sourceYearProvenance[sn] === "missing").length,
+  );
 
   let groupSourceSet = $derived(new Set(group.sources));
   let panelsForGroup = $derived.by(() => {
@@ -473,6 +476,14 @@
         <strong>{group.register_name}</strong>
       {:else}
         <span class="unassigned">unassigned</span>
+      {/if}
+      {#if missingYearCount > 0}
+        <span
+          class="missing-year-badge"
+          title={`${missingYearCount} source${missingYearCount === 1 ? "" : "s"} in this group had no year detected — set one in Edit register, or assert "no year" to dismiss`}
+        >
+          ⚠ {missingYearCount} missing year{missingYearCount === 1 ? "" : "s"}
+        </span>
       {/if}
     </span>
     <button class="link" onclick={() => (editingRegister = true)}>
@@ -934,6 +945,15 @@
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+  }
+  .missing-year-badge {
+    background: #fff7e6;
+    color: #7a4a00;
+    border: 1px solid #e8c184;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    cursor: help;
   }
   .muted {
     color: #666;
