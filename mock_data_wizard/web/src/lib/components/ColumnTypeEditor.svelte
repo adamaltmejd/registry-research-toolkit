@@ -382,8 +382,7 @@
           </p>
           <p class="year-conflict-action">
             Set the year in <strong>Edit register</strong> on
-            {registerShort ?? registerName ?? "this group"} (or
-            assert "no year" there to dismiss this warning).
+            {registerShort ?? registerName ?? "this group"}.
           </p>
         </section>
       {/if}

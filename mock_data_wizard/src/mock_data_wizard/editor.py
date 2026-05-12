@@ -2399,6 +2399,12 @@ def _variable_year_distance(
     return min(abs(iy - ry) for iy in instance_years for ry in relevant_years)
 
 
+# Sort sentinel for yearless variables: ranks them after any year-matched
+# variable (whose distance is 0 after the dist>0 filter) but before being
+# dropped. Any large number works — picked to be obviously synthetic.
+_NO_YEAR_DISTANCE = 10_000
+
+
 def _rank_variables(
     variables: list[dict[str, Any]], relevant_years: set[int] | None
 ) -> list[dict[str, Any]]:
@@ -2424,7 +2430,7 @@ def _rank_variables(
             dist = _variable_year_distance(v, relevant_years)
             if dist is not None and dist > 0:
                 continue
-            effective_dist = dist if dist is not None else 10_000
+            effective_dist = dist if dist is not None else _NO_YEAR_DISTANCE
             scored.append(
                 (
                     effective_dist,

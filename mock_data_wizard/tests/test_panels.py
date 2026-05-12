@@ -58,6 +58,34 @@ def test_detect_year_from_source_name(name: str, expected: int | None):
     assert detect_year_from_source_name(name) == expected
 
 
+def test_extract_and_panels_year_detection_agree():
+    """``extract._extract_year`` is a byte-for-byte copy of
+    ``panels.detect_year_from_source_name`` (panels isn't in the bundle's
+    MODULE_ORDER, so extract carries its own copy). If panels grows a new
+    case and extract doesn't, the bundle silently regresses. Replay the
+    full corpus through both implementations to catch the drift."""
+    from mock_data_wizard.extract import _extract_year
+
+    corpus = [
+        "Individ_2018",
+        "Individ_2018.csv",
+        "Foo_201907_Def",
+        "Kursprov_HT2011",
+        "dbo.scb_rams_2024",
+        "no_year_here",
+        "",
+        "Distansutb_grund_HT20_VT21",
+        "Distansutb_VT21",
+        "Distansutb_VT21.csv",
+        "rams_2024_HT25",
+        "HT19_followup_2024",
+        "survey_HT2020",
+        "legacy_HT85",
+    ]
+    for name in corpus:
+        assert _extract_year(name) == detect_year_from_source_name(name), name
+
+
 # -- _match_date_token ----------------------------------------------------
 
 
