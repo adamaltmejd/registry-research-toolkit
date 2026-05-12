@@ -393,7 +393,10 @@ def _build_cast_select(
             parts.append(qname)
         else:
             parts.append(f"CAST({qname} AS {cast_type}) AS {qname}")
-    return f"SELECT {', '.join(parts)} FROM ({raw_select}) AS __mdw_raw"
+    # The derived-table alias has its own namespace from column names in
+    # DuckDB, so a column named e.g. `_raw` wouldn't collide; still, use
+    # a distinctly internal name that no SCB CSV header is likely to use.
+    return f"SELECT {', '.join(parts)} FROM ({raw_select}) AS __mdw_csv_inner"
 
 
 def _probe_and_promote_opaque(
@@ -402,7 +405,7 @@ def _probe_and_promote_opaque(
     overrides: dict[str, ColumnTypeOverride],
     *,
     file_name: str,
-) -> bool:
+) -> list[str]:
     """Auto-promote opaque columns to numeric/date when TRY_CAST is clean.
 
     For each column the user marked ``opaque``, batched into one query:
@@ -423,8 +426,8 @@ def _probe_and_promote_opaque(
     records the decision and the user can override in the next config
     iteration.
 
-    Returns ``True`` when any column was promoted. ``overrides`` is
-    mutated in place; ``MDWConfig.column_types`` is the same dict
+    Returns the list of promoted column names (caller order). ``overrides``
+    is mutated in place; ``MDWConfig.column_types`` is the same dict
     object the caller looked up, so ``extract.process_handle`` sees the
     promoted type without an extra plumbing step.
 
@@ -435,7 +438,7 @@ def _probe_and_promote_opaque(
     """
     opaque_cols = [c for c, ov in overrides.items() if ov.type == "opaque"]
     if not opaque_cols:
-        return False
+        return []
     # The BIGINT predicate is a round-trip check, not a bare TRY_CAST:
     # DuckDB happily rounds "1.5" -> 2 when casting VARCHAR to BIGINT,
     # so the naive ``TRY_CAST(... AS BIGINT) IS NOT NULL`` matches
@@ -465,7 +468,7 @@ def _probe_and_promote_opaque(
         row = cur.fetchone()
     finally:
         cur.close()
-    any_promoted = False
+    promoted: list[str] = []
     for i, col in enumerate(opaque_cols):
         nn = row[4 * i]
         bi = row[4 * i + 1]
@@ -495,8 +498,8 @@ def _probe_and_promote_opaque(
             new_type,
             f"/{new_sub}" if new_sub else "",
         )
-        any_promoted = True
-    return any_promoted
+        promoted.append(col)
+    return promoted
 
 
 def iter_file_source(
@@ -517,10 +520,12 @@ def iter_file_source(
     ``config.column_types`` are layered on top and any ``opaque``
     columns are probed via ``TRY_CAST``; columns whose every non-null
     value is uniformly numeric or date are auto-promoted in place (and
-    a WARNING is logged per promotion). Without ``config`` (discover
-    mode, or a file not present in the config) every column reports
-    ``VARCHAR``; the classifier downstream relies on name patterns and
-    regmeta evidence rather than a SQL-type signal.
+    a WARNING is logged per promotion). The promotion is applied via
+    ``ALTER COLUMN TYPE`` on the TABLE path so the file is read exactly
+    once. Without ``config`` (discover mode, or a file not present in
+    the config) every column reports ``VARCHAR``; the classifier
+    downstream relies on name patterns and regmeta evidence rather than
+    a SQL-type signal.
     """
     import duckdb
 
@@ -561,21 +566,34 @@ def iter_file_source(
                 else:
                     select_sql = _build_varchar_select(quoted_path, encoding)
                 conn.execute(f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}")
-                # Extract-mode auto-promotion: probe any opaque columns and
-                # rebuild the cast view if any flipped to numeric/date.
-                # Rebuild is metadata-only for VIEW kind; for TABLE kind it
-                # is a second read_csv_auto pass that hits the OS page cache
-                # rather than disk (warm-cache cost; on a cold cache or at
-                # the MDW_MEMORY_THRESHOLD_MB boundary it is a real reread).
-                if overrides and _probe_and_promote_opaque(
-                    conn, quoted_view, overrides, file_name=fp.name
-                ):
-                    select_sql = _build_cast_select(
-                        conn, quoted_path, encoding, overrides
+                # Extract-mode auto-promotion: probe opaque columns and
+                # apply any flips. On the TABLE path we ALTER COLUMN TYPE
+                # in place so the file is read exactly once (the cast
+                # runs against the already-materialised VARCHAR data).
+                # On the VIEW path the materialisation didn't actually
+                # read the file, so we rebuild the view SQL — the next
+                # downstream query reads with the final casts in one pass.
+                if overrides:
+                    promoted = _probe_and_promote_opaque(
+                        conn, quoted_view, overrides, file_name=fp.name
                     )
-                    conn.execute(
-                        f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}"
-                    )
+                    if promoted and kind == "TABLE":
+                        for col in promoted:
+                            cast_type = _semantic_to_duckdb_cast(overrides[col])
+                            if cast_type is None:
+                                continue  # date promotion stays VARCHAR
+                            qcol = quote_ident(col, DUCKDB)
+                            conn.execute(
+                                f"ALTER TABLE {quoted_view} ALTER COLUMN {qcol} "
+                                f"TYPE {cast_type} USING CAST({qcol} AS {cast_type})"
+                            )
+                    elif promoted:
+                        select_sql = _build_cast_select(
+                            conn, quoted_path, encoding, overrides
+                        )
+                        conn.execute(
+                            f"CREATE OR REPLACE {kind} {quoted_view} AS {select_sql}"
+                        )
             except Exception as exc:
                 hint = (
                     " Try `file_source(..., encoding='latin-1')` if the file"

@@ -586,6 +586,47 @@ def test_opaque_with_mixed_values_stays_opaque(
     assert not any("promoted" in r.message for r in caplog.records)
 
 
+def test_opaque_yyyymmdd_strings_promote_to_integer_not_date(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+):
+    """SCB YYYYMMDD-as-string columns are a known semantic surprise:
+    they satisfy ``TRY_CAST(... AS BIGINT)`` first, so the cascade in
+    ``_probe_and_promote_opaque`` promotes them to ``numeric/integer``
+    rather than ``date``. The DESIGN.md caveat depends on this behaviour
+    — locked in here so a future cascade reorder can't silently flip it
+    without a test failure (and the WARNING gives the user the signal
+    to flip the override to ``date`` in the next config iteration)."""
+    p = tmp_path / "yyyymmdd.csv"
+    p.write_text(
+        "id,d\n1,20230115\n2,20230630\n3,20240201\n",
+        encoding="utf-8",
+    )
+    cfg = _config_with(
+        {
+            "yyyymmdd.csv": {
+                "id": ColumnTypeOverride(type="id"),
+                "d": ColumnTypeOverride(type="opaque"),
+            }
+        }
+    )
+    src = file_source(str(tmp_path), include=["yyyymmdd.csv"])
+    with caplog.at_level(logging.WARNING, logger="mdw.sources"):
+        for handle in iter_file_source(src, config=cfg):
+            cur = handle.conn.cursor()
+            try:
+                cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
+                schema = {r[0]: r[1] for r in cur.fetchall()}
+                assert schema["d"] == "BIGINT"
+            finally:
+                cur.close()
+    promoted = cfg.column_types["yyyymmdd.csv"]["d"]
+    assert promoted.type == "numeric"
+    assert promoted.numeric_subtype == "integer"
+    assert any(
+        "'d'" in r.message and "numeric/integer" in r.message for r in caplog.records
+    )
+
+
 def test_opaque_all_null_stays_opaque(tmp_path: Path):
     """An opaque column with no non-null values can't be probed
     (nothing to TRY_CAST). Stays opaque."""

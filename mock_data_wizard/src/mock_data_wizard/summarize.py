@@ -123,6 +123,9 @@ def _detect_id_subtype(sample: Sequence[Any]) -> str:
     if not non_null:
         return "string"
     for v in non_null:
+        # .strip() tolerates surrounding whitespace as an SCB-export
+        # artifact (some exporters pad numeric fields); the integer
+        # mock generator will emit unpadded digits regardless.
         s = str(v).strip()
         if not s.isdigit():
             return "string"

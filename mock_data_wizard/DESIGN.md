@@ -704,9 +704,18 @@ Rule: `bi == nn → numeric/integer`, else `db == nn → numeric/double`,
 else `dt == nn → date`, else stay `opaque`. The override is mutated
 in place (the dict the caller holds is the same one
 `MDWConfig.column_types` holds, so `process_handle` sees the
-promoted type without an extra plumbing step), the cast view is
-rebuilt with the new type, and a WARNING is logged per promotion so
+promoted type without an extra plumbing step), the column is re-typed
+to its promoted SQL type, and a WARNING is logged per promotion so
 the MONA-side run log records the decision.
+
+How the re-typing avoids a second CSV read. On the TABLE path the
+file is already materialised as VARCHAR, so each promoted column is
+flipped in place via `ALTER TABLE … ALTER COLUMN … TYPE <new> USING
+CAST(…)` — no new `read_csv_auto` pass. On the VIEW path no
+materialisation happened yet, so the view SQL is rebuilt with the
+final casts and the next downstream query reads with them in a single
+pass. Either way, an opaque promotion costs at most one extra
+in-memory cast, never a re-read.
 
 Why the BIGINT predicate is a round-trip check (`bi = db`) rather
 than a bare `TRY_CAST(... AS BIGINT) IS NOT NULL`: DuckDB happily
