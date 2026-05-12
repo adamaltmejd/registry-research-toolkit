@@ -221,6 +221,9 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
             config, body
         ),
+        ("POST", "/api/column-varinfo"): lambda body: _api_get_column_varinfo(
+            config, body
+        ),
         ("POST", "/api/panel"): lambda body: _api_put_panel(config, body),
         ("POST", "/api/remove-panel"): lambda body: _api_remove_panel(config, body),
     }
@@ -765,7 +768,14 @@ def _api_get_column_values(
         "codes": [{"code": c.code, "label": c.label} for c in result.codes],
         "tier": result.tier,
         "note": result.note,
-        "classifications": list(result.classifications),
+        "classifications": [
+            {
+                "short_name": c.short_name,
+                "year_min": c.year_min,
+                "year_max": c.year_max,
+            }
+            for c in result.classifications
+        ],
         "picked_classification": result.picked_classification,
         "value_sets": [
             {
@@ -776,6 +786,65 @@ def _api_get_column_values(
             for g in result.value_sets
         ],
         "picked_value_set": result.picked_value_set,
+    }
+
+
+def _api_get_column_varinfo(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    column = _required_str(body, "column")
+    if "register" not in body:
+        raise editor.ValidationError(
+            "missing required field 'register' (use null when unassigned)"
+        )
+    register_value = body["register"]
+    if register_value is not None and not isinstance(register_value, str):
+        raise editor.ValidationError(
+            f"register must be a string or null, got {type(register_value).__name__}"
+        )
+    result = editor.get_column_varinfo(register_value, column, db_path=config.db_path)
+    return HTTPStatus.OK, _serialize_varinfo(result)
+
+
+def _serialize_varinfo(result: editor.ColumnVarinfoResult) -> dict[str, Any]:
+    if result.kind == "none":
+        return {"kind": "none"}
+    if result.primary is None:
+        # Defensive: kind="single"/"divergent" without a primary would be
+        # a bug in get_column_varinfo. Surface as "none" rather than
+        # emitting a malformed envelope.
+        return {"kind": "none"}
+    payload: dict[str, Any] = {
+        "kind": result.kind,
+        "primary": _serialize_varinfo_description(result.primary),
+        "primary_share": {
+            "instances": result.primary_instances,
+            "total": result.total_instances,
+        },
+    }
+    if result.kind == "divergent":
+        payload["alternatives"] = [
+            {
+                "description": _serialize_varinfo_description(alt.description),
+                "instances": alt.instances,
+            }
+            for alt in result.alternatives
+        ]
+    return payload
+
+
+def _serialize_varinfo_description(desc: editor.VarinfoDescription) -> dict[str, Any]:
+    return {
+        "variabelnamn": desc.variabelnamn,
+        "variabeldefinition": desc.variabeldefinition,
+        "variabelbeskrivning": desc.variabelbeskrivning,
+        "variabeloperationell_definition": desc.variabeloperationell_definition,
+        "variabelreferenstid": desc.variabelreferenstid,
+        "variabelhamtadfran": desc.variabelhamtadfran,
+        "variabelregister_kalla": desc.variabelregister_kalla,
+        "mattenhet": desc.mattenhet,
+        "var_id": desc.var_id,
+        "register_name": desc.register_name,
     }
 
 

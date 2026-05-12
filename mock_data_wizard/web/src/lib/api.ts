@@ -200,6 +200,12 @@ export interface ValueSetGroup {
   year_max: number | null;
 }
 
+export interface ClassificationGroup {
+  short_name: string;
+  year_min: number | null;
+  year_max: number | null;
+}
+
 export interface ColumnValuesResponse {
   kind: "classification" | "values" | "none";
   title: string;
@@ -207,7 +213,7 @@ export interface ColumnValuesResponse {
   codes: ColumnValueCode[];
   tier: VarianceTier | null;
   note: string | null;
-  classifications: string[];
+  classifications: ClassificationGroup[];
   picked_classification: string | null;
   value_sets: ValueSetGroup[];
   picked_value_set: number | null;
@@ -227,6 +233,53 @@ export function getColumnValues(
   args: GetColumnValuesArgs,
 ): Promise<ColumnValuesResponse> {
   return send<ColumnValuesResponse>("/api/column-values", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface VarinfoDescription {
+  variabelnamn: string | null;
+  variabeldefinition: string | null;
+  variabelbeskrivning: string | null;
+  variabeloperationell_definition: string | null;
+  variabelreferenstid: string | null;
+  variabelhamtadfran: string | null;
+  variabelregister_kalla: string | null;
+  mattenhet: string | null;
+  var_id: number;
+  register_name: string | null;
+}
+
+export interface VarinfoAlternative {
+  description: VarinfoDescription;
+  instances: number;
+}
+
+export type ColumnVarinfoResponse =
+  | { kind: "none" }
+  | {
+      kind: "single";
+      primary: VarinfoDescription;
+      primary_share: { instances: number; total: number };
+    }
+  | {
+      kind: "divergent";
+      primary: VarinfoDescription;
+      primary_share: { instances: number; total: number };
+      alternatives: VarinfoAlternative[];
+    };
+
+export interface GetColumnVarinfoArgs {
+  register: string | null;
+  column: string;
+}
+
+export function getColumnVarinfo(
+  args: GetColumnVarinfoArgs,
+): Promise<ColumnVarinfoResponse> {
+  return send<ColumnVarinfoResponse>("/api/column-varinfo", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(args),

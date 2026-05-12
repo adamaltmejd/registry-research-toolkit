@@ -1822,6 +1822,18 @@ class ValueSetGroup:
 
 
 @dataclass(frozen=True)
+class ClassificationGroup:
+    """One classification entry in ``ColumnValuesResult.classifications``.
+    Carries the year-range over which this classification appears for the
+    column, so the picker can render a "Applies to: …" tooltip the same
+    way the value-set picker does."""
+
+    short_name: str
+    year_min: int | None
+    year_max: int | None
+
+
+@dataclass(frozen=True)
 class ColumnValuesResult:
     kind: Literal["classification", "values", "none"]
     title: str
@@ -1829,7 +1841,7 @@ class ColumnValuesResult:
     codes: tuple[ColumnValue, ...]
     tier: VarianceTier | None = None
     note: str | None = None
-    classifications: tuple[str, ...] = ()
+    classifications: tuple[ClassificationGroup, ...] = ()
     picked_classification: str | None = None
     value_sets: tuple[ValueSetGroup, ...] = ()
     picked_value_set: int | None = None
@@ -1841,9 +1853,11 @@ def _fetch_distinct_classifications(
     register_ids: list[int],
     *,
     relevant_years: set[int] | None = None,
-) -> tuple[str, ...]:
+) -> tuple[ClassificationGroup, ...]:
     if not register_ids:
         return ()
+    from regmeta.queries import extract_year
+
     ph = ",".join("?" for _ in register_ids)
     rows = conn.execute(
         "SELECT DISTINCT c.short_name, rv.registerversionnamn AS regver_name "
@@ -1856,17 +1870,38 @@ def _fetch_distinct_classifications(
         "  AND c.short_name IS NOT NULL",
         [matched_alias, *register_ids],
     ).fetchall()
-    if relevant_years is None:
-        return tuple(sorted({r["short_name"] for r in rows}))
-    from regmeta.queries import extract_year
-
-    # Yearless instances survive: we can't disprove their relevance.
-    kept: set[str] = set()
+    # Aggregate (short_name → set of years seen), then min/max for the
+    # picker tooltip. Yearless rows survive filtering (we can't disprove
+    # their relevance) but they don't contribute to the year window.
+    years_by_sn: dict[str, set[int]] = {}
+    seen_yearless: set[str] = set()
     for r in rows:
         year = extract_year(r["regver_name"] or "")
-        if year is None or year in relevant_years:
-            kept.add(r["short_name"])
-    return tuple(sorted(kept))
+        if (
+            relevant_years is not None
+            and year is not None
+            and year not in relevant_years
+        ):
+            continue
+        sn = r["short_name"]
+        if year is None:
+            seen_yearless.add(sn)
+        else:
+            years_by_sn.setdefault(sn, set()).add(year)
+    all_short_names = set(years_by_sn) | seen_yearless
+    return tuple(
+        sorted(
+            (
+                ClassificationGroup(
+                    short_name=sn,
+                    year_min=min(years_by_sn[sn]) if sn in years_by_sn else None,
+                    year_max=max(years_by_sn[sn]) if sn in years_by_sn else None,
+                )
+                for sn in all_short_names
+            ),
+            key=lambda g: (g.year_min is None, g.year_min or 0, g.short_name),
+        )
+    )
 
 
 def _fetch_value_set_groups(
@@ -2015,7 +2050,7 @@ def get_column_values(
         # "AStud"); per-instance SQL must use the alias regmeta knows.
         matched_alias = _matched_alias_key(signals, column) or column
 
-        classifications: tuple[str, ...] = ()
+        classifications: tuple[ClassificationGroup, ...] = ()
         if signal is not None and signal.n_classifications > 1:
             classifications = _fetch_distinct_classifications(
                 conn, matched_alias, register_ids, relevant_years=years_set
@@ -2023,10 +2058,11 @@ def get_column_values(
 
         if signal is not None and signal.classification_short_name:
             chosen_sn = signal.classification_short_name
+            classification_names = {g.short_name for g in classifications}
             if (
                 picked_classification
-                and classifications
-                and picked_classification in classifications
+                and classification_names
+                and picked_classification in classification_names
             ):
                 chosen_sn = picked_classification
             try:
@@ -2116,6 +2152,16 @@ def _tier_for_values_path(
     triples: list[tuple[int, str, str | None]],
     n_value_sets: int,
 ) -> tuple[VarianceTier, str | None]:
+    # 3a's note tells the user to pick another value-set below — only
+    # actionable when there are multiple sets to choose from. With a
+    # single set, label divergence is internal to that set (e.g. SCB
+    # has multiple ``value_code`` rows sharing one vardekod with
+    # different vardebenamning); the user can't fix it via picking,
+    # so we drop to tier 1 and live with the first-seen label. Without
+    # this gate the panel renders the 3a banner with no picker beneath
+    # it — visible bug.
+    if n_value_sets <= 1:
+        return ("1", None)
     # 3a (label collisions on the same code) dominates 2: under 3a the
     # deduped union arbitrarily picks one label per code, so the popup
     # loses meaning without the picker note.
@@ -2126,9 +2172,7 @@ def _tier_for_values_path(
         labels_per_code.setdefault(code, set()).add(label)
     if any(len(s) > 1 for s in labels_per_code.values()):
         return ("3a", _NOTE_TIER_3A)
-    if n_value_sets > 1:
-        return ("2", _NOTE_TIER_2)
-    return ("1", None)
+    return ("2", _NOTE_TIER_2)
 
 
 def _note_tier_3b(picked: str) -> str:
@@ -2183,9 +2227,154 @@ def _dedupe_codes(
     return tuple(seen.values())
 
 
+# -- Public API: column varinfo ------------------------------------------
+
+
+@dataclass(frozen=True)
+class VarinfoDescription:
+    """One regmeta `variable` row, flattened to the fields the editor
+    surfaces. The full audit-trail fields live behind the modal's
+    expander; the primary fields are shown above the fold."""
+
+    variabelnamn: str | None
+    variabeldefinition: str | None
+    variabelbeskrivning: str | None
+    variabeloperationell_definition: str | None
+    variabelreferenstid: str | None
+    variabelhamtadfran: str | None
+    variabelregister_kalla: str | None
+    mattenhet: str | None
+    var_id: int
+    register_name: str | None
+
+
+@dataclass(frozen=True)
+class VarinfoAlternative:
+    description: VarinfoDescription
+    instances: int
+
+
+@dataclass(frozen=True)
+class ColumnVarinfoResult:
+    """Resolved varinfo for one (column, register) pair.
+
+    ``kind`` matches the wire envelope:
+      - ``single``: exactly one variable aliases to this column.
+      - ``divergent``: more than one variable aliases to this column under
+        the same register (SCB has recycled the column name across var_ids).
+        ``primary`` is the variable with the most ``variable_instance``
+        rows; ``alternatives`` lists the rest in descending frequency.
+      - ``none``: column unknown to regmeta, register doesn't resolve,
+        or regmeta is unavailable. Treated as a normal outcome, not an
+        error.
+    """
+
+    kind: Literal["single", "divergent", "none"]
+    primary: VarinfoDescription | None = None
+    primary_instances: int | None = None
+    total_instances: int | None = None
+    alternatives: tuple[VarinfoAlternative, ...] = ()
+
+
+def _varinfo_description_from_row(row: dict[str, Any]) -> VarinfoDescription:
+    return VarinfoDescription(
+        variabelnamn=row.get("variabelnamn"),
+        variabeldefinition=row.get("variabeldefinition"),
+        variabelbeskrivning=row.get("variabelbeskrivning"),
+        variabeloperationell_definition=row.get("variabeloperationell_definition"),
+        variabelreferenstid=row.get("variabelreferenstid"),
+        variabelhamtadfran=row.get("variabelhamtadfran"),
+        variabelregister_kalla=row.get("variabelregister_kalla"),
+        mattenhet=row.get("mattenhet"),
+        var_id=int(row["var_id"]),
+        register_name=row.get("register_name"),
+    )
+
+
+def get_column_varinfo(
+    register: str | None,
+    column: str,
+    *,
+    db_path: Path | None = None,
+) -> ColumnVarinfoResult:
+    """Resolve the regmeta variable description(s) for one column under
+    one register.
+
+    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    the register doesn't resolve, or the column is unknown — degrades
+    gracefully into an empty popover (same stance as
+    ``get_column_values``).
+    """
+    if not column or not column.strip():
+        raise ValidationError("column must be a non-empty string")
+
+    none_result = ColumnVarinfoResult(kind="none")
+    if register is None or not register.strip():
+        return none_result
+
+    with _open_regmeta_conn(db_path) as conn:
+        if conn is None:
+            return none_result
+        try:
+            from regmeta.errors import RegmetaError
+            from regmeta.queries import get_varinfo
+        except ImportError:
+            return none_result
+
+        try:
+            variables = get_varinfo(conn, column, register=register)
+        except RegmetaError:
+            # "column not in regmeta" is a normal outcome here; degrade
+            # to the empty envelope rather than surfacing a 4xx.
+            return none_result
+
+        if not variables:
+            return none_result
+
+        # Rank by number of variable_instance rows. ``get_varinfo`` already
+        # batches the per-cvid fetch into each variable's ``instances``
+        # list, so the count is just len(instances) — no extra query.
+        ranked = sorted(
+            variables,
+            key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),
+        )
+        primary_row = ranked[0]
+        primary = _varinfo_description_from_row(primary_row)
+        primary_n = len(primary_row.get("instances") or ())
+        total = sum(len(v.get("instances") or ()) for v in ranked)
+
+        if len(ranked) == 1:
+            return ColumnVarinfoResult(
+                kind="single",
+                primary=primary,
+                primary_instances=primary_n,
+                total_instances=total,
+            )
+
+        alternatives = tuple(
+            VarinfoAlternative(
+                description=_varinfo_description_from_row(v),
+                instances=len(v.get("instances") or ()),
+            )
+            for v in ranked[1:]
+        )
+        return ColumnVarinfoResult(
+            kind="divergent",
+            primary=primary,
+            primary_instances=primary_n,
+            total_instances=total,
+            alternatives=alternatives,
+        )
+
+
 __all__ += [
     "ColumnValue",
     "ColumnValuesResult",
+    "ClassificationGroup",
     "ValueSetGroup",
     "get_column_values",
+    "ColumnVarinfoResult",
+    "VarinfoAlternative",
+    "VarinfoDescription",
+    "get_column_varinfo",
 ]

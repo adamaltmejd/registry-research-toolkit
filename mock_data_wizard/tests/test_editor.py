@@ -2296,6 +2296,49 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
     assert len(result.value_sets) == 2
 
 
+def test_get_column_values_tier_3a_requires_multiple_value_sets(
+    regmeta_db: Path,
+):
+    """Tier 3a's note tells the user to pick another value-set below —
+    only actionable when there's more than one set. Within one set,
+    label divergence per code (e.g. SCB has multiple value_code rows
+    sharing one vardekod with different vardebenamning) can't be
+    resolved via picking; the response must drop to tier 1 instead of
+    advertising a non-existent picker.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Within the existing single value_set (cvid=1001), attach a second
+    # value_code row for vardekod "1" with a different label. This
+    # represents within-set divergence: same vardekod, different
+    # vardebenamning, both in value_set_id assigned to cvid 1001.
+    # Determine the existing value_set_id from the fixture.
+    row = conn.execute(
+        "SELECT value_set_id FROM variable_instance WHERE cvid = 1001"
+    ).fetchone()
+    value_set_id = row["value_set_id"]
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (?, ?, ?)",
+        (9001, "1", "Male"),
+    )
+    conn.execute(
+        "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+        (value_set_id, 9001),
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    # With only one value_set, picking can't help — must NOT advertise
+    # 3a's picker note.
+    assert result.tier == "1"
+    assert result.note is None
+    assert len(result.value_sets) == 1
+
+
 def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     """Two distinct classifications across years → tier 3b with picker."""
     import sqlite3
@@ -2326,8 +2369,14 @@ def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     assert result.tier == "3b"
     assert result.note is not None
     assert "Showing" in result.note
-    # Picker shows both classifications, sorted.
-    assert result.classifications == ("CLS_A", "CLS_B")
+    # Picker shows both classifications. Sort key is (year_min is None,
+    # year_min, short_name) — fixture has CLS_A on regver "2020" and
+    # CLS_B on regver "2021", so CLS_A wins on year_min.
+    assert [g.short_name for g in result.classifications] == ["CLS_A", "CLS_B"]
+    assert result.classifications[0].year_min == 2020
+    assert result.classifications[0].year_max == 2020
+    assert result.classifications[1].year_min == 2021
+    assert result.classifications[1].year_max == 2021
     assert result.picked_classification in {"CLS_A", "CLS_B"}
 
 
@@ -2596,3 +2645,114 @@ def test_dedupe_codes_preserves_first_seen_order():
     assert tuple(c.code for c in out) == ("2", "1", "3")
     # First-seen label wins.
     assert {c.code: c.label for c in out} == {"2": "Two", "1": "One", "3": "Three"}
+
+
+# -- get_column_varinfo --------------------------------------------------
+
+
+def test_get_column_varinfo_returns_none_when_regmeta_missing(monkeypatch):
+    """Same graceful-degradation stance as get_column_values: when regmeta
+    is unavailable the editor returns the empty envelope rather than
+    raising — the UI then shows the "not described in regmeta" state."""
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _no_conn(_):
+        yield None
+
+    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    result = editor.get_column_varinfo("TESTREG", "Kon")
+    assert result.kind == "none"
+    assert result.primary is None
+
+
+def test_get_column_varinfo_returns_none_when_register_is_none(regmeta_db: Path):
+    """Cross-register lookup is intentionally out of scope (issue #71):
+    a column without a register pinned can mean too many different
+    things. Return ``kind="none"`` so the editor falls through to the
+    existing "no record" fallback."""
+    result = editor.get_column_varinfo(None, "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "none"
+
+
+def test_get_column_varinfo_returns_none_for_unknown_column(regmeta_db: Path):
+    result = editor.get_column_varinfo(
+        "TESTREG", "NotAColumn", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+
+
+def test_get_column_varinfo_returns_none_when_register_unresolved(
+    regmeta_db: Path,
+):
+    result = editor.get_column_varinfo(
+        "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+
+
+def test_get_column_varinfo_rejects_blank_column(regmeta_db: Path):
+    with pytest.raises(editor.ValidationError):
+        editor.get_column_varinfo("TESTREG", "   ", db_path=regmeta_db.parent)
+
+
+def test_get_column_varinfo_single_variant(regmeta_db: Path):
+    """The fixture has one ``Kon`` variable under TESTREG with one cvid:
+    the result must be ``kind="single"`` and surface the canonical
+    description fields."""
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.variabelnamn == "Kön"
+    assert result.primary.variabeldefinition == "Kön enligt folkbokföring"
+    assert result.primary.var_id == 44
+    assert result.primary.register_name == "TESTREG"
+    assert result.primary_instances == 1
+    assert result.total_instances == 1
+    assert result.alternatives == ()
+
+
+def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path):
+    """When SCB has recycled a column name across two var_ids under the
+    same register, the response is ``kind="divergent"`` with the
+    higher-cvid-count variable as primary and the rest as alternatives."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a SECOND variable (var_id=45) also aliased to "Kon", with
+    # fewer cvids than the original (1 vs 2) so the existing var wins.
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning',
+                    'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        -- second cvid for the primary (var_id=44) so it has 2 vs 1
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (120, 10, '2021');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1200, 1, 10, 120, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1200, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "divergent"
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+    assert result.primary_instances == 2
+    assert result.total_instances == 3
+    assert len(result.alternatives) == 1
+    alt = result.alternatives[0]
+    assert alt.description.var_id == 45
+    assert alt.description.variabelnamn == "Hushållsställning"
+    assert alt.instances == 1

@@ -1,9 +1,11 @@
 <script lang="ts">
-  import { untrack } from "svelte";
+  import { onMount, untrack } from "svelte";
 
+  import type { ColumnVarinfoResponse, VarinfoDescription } from "../api";
   import { columnIsManual, store } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
   import Modal from "./Modal.svelte";
+  import ValueCodesPanel from "./ValueCodesPanel.svelte";
 
   interface Props {
     /** Sources making up the partition the user clicked. The scope
@@ -98,6 +100,67 @@
     untrack(() => (column.hint?.date_format as string | undefined) ?? ""),
   );
   let submitting = $state(false);
+
+  // -- Varinfo (regmeta variable description) ------------------------
+  // Fetched lazily on mount; the store coalesces duplicate fetches and
+  // caches per (register, column) until the next snapshot bump.
+  type VarinfoState =
+    | { kind: "loading" }
+    | { kind: "loaded"; data: ColumnVarinfoResponse }
+    | { kind: "error"; message: string };
+  let varinfoState: VarinfoState = $state({ kind: "loading" });
+  let showAlternatives = $state(false);
+
+  onMount(() => {
+    void loadVarinfo();
+  });
+
+  async function loadVarinfo(): Promise<void> {
+    try {
+      const data = await store.getColumnVarinfo(registerName, column.name);
+      varinfoState = { kind: "loaded", data };
+    } catch (exc) {
+      const message = exc instanceof Error ? exc.message : String(exc);
+      varinfoState = { kind: "error", message };
+    }
+  }
+
+  // Concise source line: "var_id 137 in LISA"; falls back to the bare
+  // var_id when the description carries no register name (shouldn't
+  // happen for resolved rows, but the field is nullable upstream).
+  function varSourceLine(d: VarinfoDescription): string {
+    return d.register_name
+      ? `var_id ${d.var_id} in ${d.register_name}`
+      : `var_id ${d.var_id}`;
+  }
+
+  // -- Inline value-codes view ---------------------------------------
+  // Gate matches GroupCard.regmetaBadge: anywhere the regmeta tag is
+  // clickable on the row, the inline expander should be available in
+  // the editor. Otherwise there's nothing for the panel to render.
+  let canShowValueCodes = $derived.by(() => {
+    const sig = column.regmeta_signal;
+    if (!sig) return false;
+    return (
+      sig.n_classifications > 1 ||
+      !!sig.classification_short_name ||
+      sig.has_value_codes
+    );
+  });
+  let valueCodesExpanded = $derived(store.valueCodesExpandedInEditor);
+
+  // Pass project-source years (group context) to the panel so its
+  // "applies to: foo_2018 (2018), …" line works the same as the
+  // standalone modal. Source years live on the snapshot, not on the
+  // column, so derive here at the editor scope.
+  let sourceYears = $derived.by(() => {
+    const m: Record<string, number | null> = {};
+    const cfgSources = store.snapshot?.config.sources ?? {};
+    for (const sn of registerSourcesWithColumn) {
+      m[sn] = cfgSources[sn]?.year ?? null;
+    }
+    return m;
+  });
 
   function buildHint(): Record<string, unknown> | null {
     // Always send an explicit hint based on form state. Earlier we
@@ -203,34 +266,184 @@
     </header>
 
     <div class="modal-body">
+      <section class="varinfo" aria-label="regmeta variable description">
+        {#if varinfoState.kind === "loading"}
+          <p class="varinfo-status">Loading variable info…</p>
+        {:else if varinfoState.kind === "error"}
+          <p class="varinfo-status varinfo-error">
+            Could not load variable info: {varinfoState.message}
+            <button
+              type="button"
+              class="retry"
+              onclick={() => {
+                varinfoState = { kind: "loading" };
+                void loadVarinfo();
+              }}>Retry</button
+            >
+          </p>
+        {:else if varinfoState.data.kind === "none"}
+          <p class="varinfo-status varinfo-none">
+            Variable: not described in regmeta
+          </p>
+        {:else}
+          {@const data = varinfoState.data}
+          {@const desc = data.primary}
+          <div class="varinfo-body">
+            <p class="varinfo-name">
+              <span class="varinfo-label">Variable:</span>
+              <strong>{desc.variabelnamn ?? column.name}</strong>
+              {#if data.kind === "divergent"}
+                <span
+                  class="varinfo-warn"
+                  title="this column aliases to more than one variable under {registerName ??
+                    'this register'}"
+                >
+                  ⚠ also aliases to {data.alternatives.length} other variable{data
+                    .alternatives.length === 1
+                    ? ""
+                    : "s"}
+                </span>
+              {/if}
+            </p>
+            {#if desc.variabeldefinition}
+              <p class="varinfo-definition">
+                {desc.variabeldefinition}
+                {#if data.kind === "divergent"}
+                  <span class="varinfo-share">
+                    ({data.primary_share.instances} of {data.primary_share.total}
+                    cvids)
+                  </span>
+                {/if}
+              </p>
+            {/if}
+            <ul class="varinfo-meta">
+              {#if desc.mattenhet}
+                <li><span class="varinfo-label">Unit:</span> {desc.mattenhet}</li>
+              {/if}
+              {#if desc.variabelreferenstid}
+                <li>
+                  <span class="varinfo-label">Reference time:</span>
+                  {desc.variabelreferenstid}
+                </li>
+              {/if}
+              <li>
+                <span class="varinfo-label">Source:</span> {varSourceLine(desc)}
+              </li>
+            </ul>
+            {#if desc.variabelbeskrivning || desc.variabeloperationell_definition || desc.variabelhamtadfran || desc.variabelregister_kalla}
+              <details class="varinfo-more">
+                <summary>More detail</summary>
+                {#if desc.variabelbeskrivning}
+                  <p>
+                    <span class="varinfo-label">Description:</span>
+                    {desc.variabelbeskrivning}
+                  </p>
+                {/if}
+                {#if desc.variabeloperationell_definition}
+                  <p>
+                    <span class="varinfo-label">Operational definition:</span>
+                    {desc.variabeloperationell_definition}
+                  </p>
+                {/if}
+                {#if desc.variabelhamtadfran}
+                  <p>
+                    <span class="varinfo-label">Sourced from:</span>
+                    {desc.variabelhamtadfran}
+                  </p>
+                {/if}
+                {#if desc.variabelregister_kalla}
+                  <p>
+                    <span class="varinfo-label">Register source:</span>
+                    {desc.variabelregister_kalla}
+                  </p>
+                {/if}
+              </details>
+            {/if}
+            {#if data.kind === "divergent"}
+              <details
+                class="varinfo-more"
+                bind:open={showAlternatives}
+              >
+                <summary>
+                  Show {data.alternatives.length} alternative definition{data
+                    .alternatives.length === 1
+                    ? ""
+                    : "s"}
+                </summary>
+                <ul class="varinfo-alternatives">
+                  {#each data.alternatives as alt (alt.description.var_id)}
+                    <li>
+                      <p class="varinfo-name">
+                        <strong>{alt.description.variabelnamn ?? "(unnamed)"}</strong>
+                        <span class="varinfo-share">
+                          · {alt.instances} cvid{alt.instances === 1 ? "" : "s"}
+                          · {varSourceLine(alt.description)}
+                        </span>
+                      </p>
+                      {#if alt.description.variabeldefinition}
+                        <p class="varinfo-definition">
+                          {alt.description.variabeldefinition}
+                        </p>
+                      {/if}
+                    </li>
+                  {/each}
+                </ul>
+              </details>
+            {/if}
+          </div>
+        {/if}
+      </section>
+
       {#if column.regmeta_signal}
-        <p class="regmeta-context" aria-label="regmeta context">
-          regmeta:
-          {#if column.regmeta_signal.classification_short_name}
-            <code>{column.regmeta_signal.classification_short_name}</code>
+        {@const sig = column.regmeta_signal}
+        <!-- Surface datatype only when it's the active type signal.
+             ``regmeta_implied_type`` gives value-codes / classification
+             precedence: when either is present, the column is
+             categorical and the underlying ``datatyp`` is a storage
+             detail (e.g. Kommun: numeric-coded categorical → datatyp
+             "numeric"). Showing "datatype numeric" on a categorical
+             column reads as a contradiction. -->
+        {@const showDatatype =
+          !!sig.datatyp_kind &&
+          !sig.classification_short_name &&
+          !sig.has_value_codes}
+        {@const showEmpty =
+          !sig.classification_short_name &&
+          !sig.has_value_codes &&
+          !sig.datatyp_kind}
+        {#if showDatatype || showEmpty}
+          <p class="regmeta-context" aria-label="regmeta context">
+            regmeta:
+            {#if showDatatype}
+              datatype <code>{sig.datatyp_kind}</code>
+            {:else if showEmpty}
+              column known to regmeta but with no classification, value codes,
+              or datatype hint.
+            {/if}
+          </p>
+        {/if}
+      {/if}
+
+      {#if canShowValueCodes}
+        <details
+          class="value-codes-inline"
+          open={valueCodesExpanded}
+          ontoggle={(e) =>
+            store.setValueCodesExpandedInEditor(
+              (e.currentTarget as HTMLDetailsElement).open,
+            )}
+        >
+          <summary>
+            {valueCodesExpanded ? "Hide value codes" : "Show value codes"}
+          </summary>
+          {#if valueCodesExpanded}
+            <ValueCodesPanel
+              register={registerName}
+              column={column.name}
+              {sourceYears}
+            />
           {/if}
-          {#if column.regmeta_signal.has_value_codes}
-            {#if column.regmeta_signal.classification_short_name}·{/if}
-            value codes available
-          {/if}
-          {#if column.regmeta_signal.datatyp_kind}
-            · datatype <code>{column.regmeta_signal.datatyp_kind}</code>
-          {/if}
-          {#if !column.regmeta_signal.classification_short_name && !column.regmeta_signal.has_value_codes && !column.regmeta_signal.datatyp_kind}
-            column known to regmeta but with no classification, codes, or
-            datatype hint.
-          {/if}
-          {#if sources.length > 1}
-            <span class="regmeta-scope-note">
-              (from {sources[0]}; other sources in this partition may differ)
-            </span>
-          {/if}
-        </p>
-      {:else}
-        <p class="regmeta-context regmeta-missing">
-          regmeta: no record for this column name{#if sources.length > 1} (checked
-            on {sources[0]}){/if}.
-        </p>
+        </details>
       {/if}
 
       {#if showScopePicker}
@@ -423,6 +636,110 @@
     padding: 0;
     line-height: 1;
   }
+  .varinfo {
+    padding: 0.5rem 0.7rem;
+    background: #fbfaf6;
+    border-left: 3px solid #d8cfa8;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #3a3528;
+  }
+  .varinfo-status {
+    margin: 0;
+    color: #666;
+    font-style: italic;
+  }
+  .varinfo-status.varinfo-none {
+    color: #888;
+  }
+  .varinfo-status.varinfo-error {
+    background: #fde8e8;
+    border: 1px solid #e0a0a0;
+    color: #882020;
+    padding: 0.35rem 0.55rem;
+    border-radius: 3px;
+    font-style: normal;
+  }
+  .varinfo-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .varinfo-name {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+  .varinfo-label {
+    color: #777;
+    font-size: 0.85em;
+  }
+  .varinfo-warn {
+    margin-left: 0.4rem;
+    color: #7a4a00;
+    font-size: 0.85em;
+  }
+  .varinfo-definition {
+    margin: 0;
+    line-height: 1.4;
+  }
+  .varinfo-share {
+    color: #888;
+    font-size: 0.85em;
+  }
+  .varinfo-meta {
+    margin: 0;
+    padding-left: 1rem;
+    color: #555;
+    font-size: 0.85rem;
+    line-height: 1.5;
+  }
+  .varinfo-more {
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .varinfo-more > summary {
+    cursor: pointer;
+    user-select: none;
+    color: #555;
+  }
+  .varinfo-more > p {
+    margin: 0.35rem 0 0;
+    line-height: 1.4;
+  }
+  .varinfo-alternatives {
+    margin: 0.4rem 0 0;
+    padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .retry {
+    margin-left: 0.5rem;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font: inherit;
+  }
+  .value-codes-inline {
+    border: 1px solid #e6dff2;
+    background: #faf7fe;
+    border-radius: 4px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  .value-codes-inline > summary {
+    cursor: pointer;
+    user-select: none;
+    color: #5d2b8c;
+    font-size: 0.88rem;
+  }
+  .value-codes-inline[open] > summary {
+    margin-bottom: 0.4rem;
+  }
   .regmeta-context {
     margin: 0;
     padding: 0.4rem 0.6rem;
@@ -437,17 +754,6 @@
     padding: 0.05rem 0.3rem;
     border-radius: 3px;
     font-size: 0.95em;
-  }
-  .regmeta-missing {
-    background: #fff8e9;
-    border-left-color: #f0c14b;
-    color: #5b4a14;
-  }
-  .regmeta-scope-note {
-    color: #888;
-    font-style: italic;
-    display: inline-block;
-    margin-left: 0.25rem;
   }
   fieldset {
     border: 1px solid #ddd;

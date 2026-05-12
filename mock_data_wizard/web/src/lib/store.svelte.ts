@@ -8,6 +8,7 @@
 import {
   ApiError,
   ApiStaleState,
+  getColumnVarinfo as apiGetColumnVarinfo,
   getState as fetchState,
   initProject as apiInitProject,
   listRegisters,
@@ -17,6 +18,7 @@ import {
   setGroupRegister as apiSetGroupRegister,
   setSourceRegisters as apiSetSourceRegisters,
   unsetColumnManual as apiUnsetColumnManual,
+  type ColumnVarinfoResponse,
   type PutPanelArgs,
   type RemovePanelArgs,
   type SetColumnTypeArgs,
@@ -103,6 +105,7 @@ const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
 const COLUMNS_PREF_KEY = "mdw.web.visibleColumns";
 const OPEN_GROUPS_KEY = "mdw.web.openGroups";
 const OPEN_SOURCES_KEY = "mdw.web.openSources";
+const VALUE_CODES_EXPANDED_KEY = "mdw.web.columnEditor.valueCodesExpanded";
 
 function loadGroupingPref(): boolean {
   if (typeof localStorage === "undefined") return true;
@@ -177,6 +180,24 @@ function saveVisibleColumns(value: VisibleColumns): void {
   }
 }
 
+function loadValueCodesExpanded(): boolean {
+  if (typeof localStorage === "undefined") return false;
+  try {
+    return localStorage.getItem(VALUE_CODES_EXPANDED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function saveValueCodesExpanded(value: boolean): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(VALUE_CODES_EXPANDED_KEY, String(value));
+  } catch {
+    // Storage quota / private mode — non-fatal.
+  }
+}
+
 /** Per-browser persistence for the user's expand/collapse state. Stored
  * as a flat string array (open group_ids) so a fresh page load — or any
  * snapshot mutation that re-renders the GroupCard list — preserves
@@ -246,6 +267,23 @@ class Store {
   openGroups: Set<string> = $state(loadStringSet(OPEN_GROUPS_KEY));
   openSources: Set<string> = $state(loadStringSet(OPEN_SOURCES_KEY));
 
+  /** Persisted "show value codes" toggle inside the column-type editor.
+   *  A single global flag (not per-column) — the user who likes the
+   *  inline panel keeps it open; the user who doesn't, doesn't see it. */
+  valueCodesExpandedInEditor = $state(loadValueCodesExpanded());
+
+  /** Per-(register, column) cache of regmeta varinfo, scoped to the
+   *  current snapshot version. Snapshot bumps clear this so a follow-up
+   *  open fetches fresh — matches the same invalidation policy as
+   *  ``registers`` (lazy + busted on snapshot change). The cache lives
+   *  here, not in the modal, so two modals opened on the same column
+   *  in close succession only fire one HTTP call. */
+  private varinfoCache = new Map<string, ColumnVarinfoResponse>();
+  // In-flight promises are coalesced under the same key so a flurry of
+  // mounts (modal flip, snapshot re-render) doesn't fan out into N
+  // round-trips for the same column.
+  private varinfoInFlight = new Map<string, Promise<ColumnVarinfoResponse>>();
+
   /** Free-text filter on column name. Substring, case-insensitive.
    * Session-scoped — losing the filter on reload is the right default
    * (otherwise a stale filter from yesterday silently hides everything
@@ -300,8 +338,18 @@ class Store {
    * persisted set would otherwise grow forever as users move between
    * projects or as re-discover renames groups. */
   private setSnapshot(snap: StateSnapshot): void {
+    const prev = this.snapshot?.snapshot_version;
     this.snapshot = snap;
     this.pruneOpenStateAgainst(snap);
+    if (prev !== snap.snapshot_version) {
+      // Snapshot version is the cache key for regmeta-backed lookups —
+      // any mutation that flips the version may have changed the
+      // register assignment under a column, so the cached description
+      // is no longer load-bearing. Drop in-flight too: their result is
+      // tied to the previous snapshot's register and would race in.
+      this.varinfoCache.clear();
+      this.varinfoInFlight.clear();
+    }
   }
 
   private pruneOpenStateAgainst(snap: StateSnapshot): void {
@@ -354,6 +402,42 @@ class Store {
         `Could not load register list: ${message}. Type the register name manually.`,
       );
     }
+  }
+
+  /** Lazy + coalesced varinfo fetch keyed by (register, column). Two
+   *  modals opening the same column race onto one HTTP call; result is
+   *  cached for the rest of the current snapshot. ``register=null``
+   *  short-circuits to the server's "none" envelope without a request —
+   *  the endpoint returns the same envelope, but skipping the round
+   *  trip keeps the modal's first paint snappy when there's nothing to
+   *  resolve. */
+  async getColumnVarinfo(
+    register: string | null,
+    column: string,
+  ): Promise<ColumnVarinfoResponse> {
+    if (register === null) return { kind: "none" };
+    const key = `${register} ${column}`;
+    const cached = this.varinfoCache.get(key);
+    if (cached !== undefined) return cached;
+    const pending = this.varinfoInFlight.get(key);
+    if (pending !== undefined) return pending;
+    const promise = (async () => {
+      try {
+        const response = await apiGetColumnVarinfo({ register, column });
+        this.varinfoCache.set(key, response);
+        return response;
+      } finally {
+        this.varinfoInFlight.delete(key);
+      }
+    })();
+    this.varinfoInFlight.set(key, promise);
+    return promise;
+  }
+
+  setValueCodesExpandedInEditor(value: boolean): void {
+    if (this.valueCodesExpandedInEditor === value) return;
+    this.valueCodesExpandedInEditor = value;
+    saveValueCodesExpanded(value);
   }
 
   async setColumnType(args: SetColumnTypeArgs): Promise<boolean> {
