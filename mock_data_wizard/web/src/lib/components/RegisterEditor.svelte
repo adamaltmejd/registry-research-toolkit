@@ -89,24 +89,33 @@
     !isSingleton && excludedSources.length === initialSources.length,
   );
 
-  // Sources whose register value would actually move. Used to decide
-  // whether Apply is a no-op and which sources we'd reclassify.
+  // Manuals across the whole group — keeps the reclassify_manual
+  // checkbox reachable even when nothing else has changed, so a user
+  // can drop accidental manual edits without flipping the register.
+  let groupManualCount = $derived.by(() => {
+    const manual = store.snapshot?.config.manual_columns ?? [];
+    const sources = new Set(initialSources);
+    return manual.filter(([s, _c]) => sources.has(s)).length;
+  });
+
+  let intendsReclassify = $derived(reclassifyManual && groupManualCount > 0);
+
+  // Sources whose state would actually move. Excluded sources always
+  // move (register cleared); included sources move on a register change
+  // or when reclassify_manual forces a re-run on them.
   let affectedSources = $derived.by(() => {
     const out: string[] = [];
-    // Excluded sources are cleared (register → null).
     for (const sn of excludedSources) out.push(sn);
-    // Included sources only count when the register field actually
-    // changed; otherwise they're left alone.
-    if (registerChanged) {
+    if (registerChanged || intendsReclassify) {
       for (const sn of includedSources) out.push(sn);
     }
     return out;
   });
 
-  // Manuals on the actually-affected source set. Counting against
-  // `group.sources` (today's behaviour) would over-trip the confirm
-  // step on partial exclusion of clean sources.
-  let manualCount = $derived.by(() => {
+  // Manuals on the actually-affected source set. Drives the register-
+  // change confirm branch so partial exclusion of clean sources doesn't
+  // over-trip the warning.
+  let affectedManualCount = $derived.by(() => {
     const manual = store.snapshot?.config.manual_columns ?? [];
     const affected = new Set(affectedSources);
     return manual.filter(([s, _c]) => affected.has(s)).length;
@@ -127,7 +136,6 @@
     return out;
   });
 
-  let intendsReclassify = $derived(reclassifyManual && manualCount > 0);
   let hasExclusions = $derived(excludedSources.length > 0);
   let canApply = $derived(
     (registerChanged || intendsReclassify || hasExclusions) &&
@@ -139,7 +147,9 @@
   // unchecked), which is structurally equivalent to clearing the
   // register on the group.
   let needsConfirm = $derived(
-    (registerChanged && manualCount > 0) || intendsReclassify || allExcluded,
+    (registerChanged && affectedManualCount > 0) ||
+      intendsReclassify ||
+      allExcluded,
   );
 
   function valueOrNull(): string | null {
@@ -164,7 +174,11 @@
     const finalValue = valueOrNull();
     const wasReclassifyOnly =
       !registerChanged && !hasExclusions && intendsReclassify;
-    const reclassifiedCount = manualCount;
+    // Reclassify-only forces a re-run on every included source, so the
+    // toast count is the whole group's manuals (no exclusions in this
+    // branch). `affectedManualCount` works too but `groupManualCount`
+    // is the clearer signal of "what got dropped".
+    const reclassifiedCount = groupManualCount;
     const includedCount = includedSources.length;
     const excludedCount = excludedSources.length;
     const wasFullClear = allExcluded || finalValue === null;
@@ -302,14 +316,14 @@
         </fieldset>
       {/if}
 
-      {#if manualCount > 0}
+      {#if groupManualCount > 0}
         <label class="checkbox">
           <input
             type="checkbox"
             bind:checked={reclassifyManual}
             onchange={() => (confirming = false)}
           />
-          Re-classify the {manualCount} manually-edited column{manualCount === 1 ? "" : "s"}
+          Re-classify the {groupManualCount} manually-edited column{groupManualCount === 1 ? "" : "s"}
         </label>
       {/if}
 

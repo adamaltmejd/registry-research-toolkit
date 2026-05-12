@@ -1370,7 +1370,11 @@ def set_source_registers(
     When ``reclassify_manual=True`` and a source's register is
     unchanged, the source is still re-classified — the flag means
     "force reclassification on these sources", matching
-    ``set_group_register``'s contract for the same flag.
+    ``set_group_register``'s contract for the same flag. The flag's
+    only observable effect is dropping manual overrides, so if no
+    manual_columns intersect the requested sources and no register
+    moves, the call is treated as a no-op (``snapshot_version`` stays
+    stable).
 
     Atomic: validation runs in full before any mutation, and the snapshot
     advances exactly once."""
@@ -1427,21 +1431,33 @@ def set_source_registers(
 
         sources_block = payload.setdefault("sources", {})
 
-        # Per-source: did the register actually change?
+        # Per-source: did the register actually change? Normalise legacy
+        # `""` entries to None so a "set to empty" assignment on a cleared
+        # source isn't falsely reported as a change.
         register_changed: dict[str, bool] = {}
         for sn, new_register in resolved.items():
-            current = sources_block.get(sn, {}).get("register")
+            current = sources_block.get(sn, {}).get("register") or None
             register_changed[sn] = current != new_register
+
+        # ``reclassify_manual=True`` has no observable effect when no
+        # manual overrides intersect the requested sources — the only
+        # thing the flag changes is whether manuals get dropped. Treat
+        # it as effectively False in that case so an idle re-submit
+        # doesn't churn snapshot_version.
+        manual_pairs_initial = {tuple(p) for p in payload.get("manual_columns", [])}
+        effective_reclassify_manual = reclassify_manual and any(
+            sn in assignments for (sn, _c) in manual_pairs_initial
+        )
 
         # Reclassify a source if its register changes OR the caller asked
         # for forced reclassification (the same rule the wrapper relied
         # on for the old "reclassify-only" path on set_group_register).
         to_reclassify = [
-            sn for sn in assignments if register_changed[sn] or reclassify_manual
+            sn
+            for sn in assignments
+            if register_changed[sn] or effective_reclassify_manual
         ]
-        any_change = any(register_changed.values()) or (
-            reclassify_manual and to_reclassify
-        )
+        any_change = any(register_changed.values()) or effective_reclassify_manual
         if not any_change:
             # Nothing would move: skip the write so the snapshot version
             # stays stable across no-op submits (matches set_column_type).
@@ -1478,7 +1494,9 @@ def set_source_registers(
         for sn in to_reclassify:
             by_register.setdefault(resolved[sn], []).append(sn)
 
-        manual_pairs = set(tuple(p) for p in payload.get("manual_columns", []))
+        # Working copy of manual_pairs — `manual_pairs_initial` is the
+        # pre-loop snapshot we used to compute effective_reclassify_manual.
+        manual_pairs = set(manual_pairs_initial)
         column_types = payload.setdefault("column_types", {})
         column_options = payload.get("column_options", {})
 
@@ -1510,14 +1528,14 @@ def set_source_registers(
                 out_cols: dict[str, dict[str, Any]] = {}
                 for col_name, classified in new_cols.items():
                     is_manual = (sn, col_name) in manual_pairs
-                    if is_manual and not reclassify_manual:
+                    if is_manual and not effective_reclassify_manual:
                         # Preserve manual override exactly.
                         if col_name in existing_cols:
                             out_cols[col_name] = existing_cols[col_name]
                         else:
                             out_cols[col_name] = classified
                         continue
-                    if reclassify_manual and is_manual:
+                    if effective_reclassify_manual and is_manual:
                         manual_pairs.discard((sn, col_name))
                     old_type = existing_cols.get(col_name, {}).get("type")
                     new_type = classified["type"]
@@ -1526,7 +1544,7 @@ def set_source_registers(
                         _drop_column_options(column_options, sn, col_name)
                 column_types[sn] = out_cols
 
-        if reclassify_manual:
+        if effective_reclassify_manual:
             # Sort for deterministic JSON output — manual_pairs is a set,
             # so insertion order isn't preserved and would otherwise
             # produce noisy diffs across runs.
@@ -1561,7 +1579,7 @@ def set_group_register(
     # _verify_version catches any concurrent mutation. flock would
     # deadlock if we re-entered the lock from set_source_registers in
     # the same process (locks are per-fd).
-    payload, _current = _read_payload(project_dir)
+    payload, _ = _read_payload(project_dir)
     try:
         config = parse_config(payload)
     except ValueError as exc:

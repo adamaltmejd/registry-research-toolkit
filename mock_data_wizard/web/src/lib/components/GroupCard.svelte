@@ -436,7 +436,10 @@
           {group.register_name}
         {:else}
           <span class="unassigned">unassigned</span>
-          <small class="group-id">· {group.group_id}</small>
+          <!-- Unassigned groups are 1-per-source singletons whose
+               group_id is `noreg-<source_name>`. Show the bare source
+               name so the user reads the filename, not the prefix. -->
+          <small class="group-id">· {group.sources[0]}</small>
         {/if}
       </h2>
       <p class="meta">
@@ -861,8 +864,8 @@
     font-family: ui-monospace, monospace;
     font-size: 0.85rem;
   }
-  /* group_id only renders on unassigned groups, where it doubles as
-     the file/source identifier. Register groups carry it in `title`
+  /* Unassigned groups surface the bare source filename here as a
+     muted subtitle. Register groups carry their group_id in `title`
      instead so the card title isn't crowded with reg-N noise. */
   .group-id {
     font-style: normal;

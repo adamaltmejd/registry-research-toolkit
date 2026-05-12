@@ -1136,6 +1136,36 @@ def test_set_source_registers_reclassify_only_changed(tmp_path: Path, monkeypatc
     assert snap.config.sources["lisa_2019"]["register"] == "LISA"
 
 
+def test_set_source_registers_reclassify_manual_noop_without_manuals(
+    tmp_path: Path, monkeypatch
+):
+    """reclassify_manual=True with no register change AND no manual
+    overrides in the requested sources is a no-op — the flag's only
+    observable effect is dropping manual overrides, so without any to
+    drop the snapshot must stay stable."""
+    discover_path = _multi_source_project(tmp_path)
+    snap = init_if_missing(tmp_path, discover_path)
+    fake_register = editor.Register(id=34, name="LISA")
+    monkeypatch.setattr(
+        editor, "resolve_register", lambda name, db_path=None: fake_register
+    )
+    monkeypatch.setattr(editor, "_resolve_signals_for_register", lambda *a, **kw: {})
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA"},
+        expected_version=snap.snapshot_version,
+    )
+    stable_version = snap.snapshot_version
+    # No manuals, no register move — should not advance the version.
+    snap = set_source_registers(
+        tmp_path,
+        {"lisa_2018": "LISA"},
+        expected_version=stable_version,
+        reclassify_manual=True,
+    )
+    assert snap.snapshot_version == stable_version
+
+
 def test_set_source_registers_reclassify_manual_force(tmp_path: Path, monkeypatch):
     """With reclassify_manual=True, an unchanged-register source still
     gets its manual columns reclassified — matches set_group_register."""
