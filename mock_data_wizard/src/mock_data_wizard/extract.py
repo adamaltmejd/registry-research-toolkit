@@ -43,15 +43,28 @@ DISCOVER_FILENAME = "mock_data_discovery.json"
 STATS_FILENAME = "mock_data_stats.json"
 SAMPLE_SIZE = 1000
 
-# Match regmeta.queries.extract_year so discover-time year detection on
-# MONA stays consistent with the regmeta-side register-version regex,
-# without dragging regmeta into the bundle.
+# Year detection duplicates ``panels.detect_year_from_source_name``
+# deliberately: this module is the on-MONA bundle root (see ``_bundle.py``)
+# and the bundle MODULE_ORDER does not include ``panels`` to keep the
+# artifact small. Keep these byte-identical to ``panels``.
 _YEAR_RE = re.compile(r"\d{4}")
+_TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")
+
+
+def _expand_term_year(two_digit: int) -> int:
+    return 2000 + two_digit if two_digit < 70 else 1900 + two_digit
 
 
 def _extract_year(name: str) -> int | None:
-    m = _YEAR_RE.search(name)
-    return int(m.group()) if m else None
+    y4 = _YEAR_RE.search(name)
+    term = _TERM_YEAR_RE.search(name)
+    if y4 is None and term is None:
+        return None
+    if term is None:
+        return int(y4.group())
+    if y4 is None or term.start() < y4.start():
+        return _expand_term_year(int(term.group(1)))
+    return int(y4.group())
 
 
 def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:

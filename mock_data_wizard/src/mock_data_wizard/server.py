@@ -217,8 +217,12 @@ def _make_handler(config: ServerConfig) -> type[BaseHTTPRequestHandler]:
         ("POST", "/api/source-registers"): lambda body: _api_set_source_registers(
             config, body
         ),
+        ("POST", "/api/source-years"): lambda body: _api_set_source_years(config, body),
         ("GET", "/api/registers"): lambda body: _api_list_registers(config),
         ("POST", "/api/column-values"): lambda body: _api_get_column_values(
+            config, body
+        ),
+        ("POST", "/api/column-varinfo"): lambda body: _api_get_column_varinfo(
             config, body
         ),
         ("POST", "/api/panel"): lambda body: _api_put_panel(config, body),
@@ -651,6 +655,46 @@ def _api_set_source_registers(
     return HTTPStatus.OK, state_snapshot_to_dict(snap)
 
 
+def _api_set_source_years(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    """Bulk-set per-source ``year`` across multiple sources atomically.
+
+    Body shape: ``{assignments: {source_name: year|null, ...},
+    expected_version}``. Each year is an integer (set the year) or null
+    (delete the ``year`` key — sends the row back to "missing"). Every
+    listed source must exist in the current config; an unknown source
+    aborts the whole call before any on-disk write. A fully no-op call
+    leaves ``snapshot_version`` unchanged."""
+    expected_version = _required_str(body, "expected_version")
+    raw = body.get("assignments")
+    if not isinstance(raw, dict):
+        raise editor.ValidationError(
+            f"assignments must be an object, got {type(raw).__name__}"
+        )
+    assignments: dict[str, int | None] = {}
+    for sn, val in raw.items():
+        if not isinstance(sn, str) or not sn:
+            raise editor.ValidationError(
+                f"assignments keys must be non-empty strings, got {sn!r}"
+            )
+        if val is None:
+            assignments[sn] = None
+        elif isinstance(val, bool) or not isinstance(val, int):
+            raise editor.ValidationError(
+                f"assignments[{sn!r}] must be int or null, got {type(val).__name__}"
+            )
+        else:
+            assignments[sn] = val
+    snap = editor.set_source_years(
+        config.project_dir,
+        assignments,
+        expected_version=expected_version,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, state_snapshot_to_dict(snap)
+
+
 def _api_list_registers(config: ServerConfig) -> tuple[int, dict[str, Any]]:
     registers = editor.list_registers(db_path=config.db_path)
     return HTTPStatus.OK, {
@@ -711,15 +755,7 @@ def _api_get_column_values(
     config: ServerConfig, body: dict[str, Any]
 ) -> tuple[int, dict[str, Any]]:
     column = _required_str(body, "column")
-    if "register" not in body:
-        raise editor.ValidationError(
-            "missing required field 'register' (use null when unassigned)"
-        )
-    register_value = body["register"]
-    if register_value is not None and not isinstance(register_value, str):
-        raise editor.ValidationError(
-            f"register must be a string or null, got {type(register_value).__name__}"
-        )
+    register_value = _required_nullable_str(body, "register")
     picked = body.get("picked_classification")
     if picked is not None and not isinstance(picked, str):
         raise editor.ValidationError(
@@ -735,6 +771,14 @@ def _api_get_column_values(
         raise editor.ValidationError(
             "picked_value_set must be an integer or null, "
             f"got {type(picked_vs_raw).__name__}"
+        )
+    picked_var_id_raw = body.get("picked_var_id")
+    if picked_var_id_raw is not None and (
+        isinstance(picked_var_id_raw, bool) or not isinstance(picked_var_id_raw, int)
+    ):
+        raise editor.ValidationError(
+            "picked_var_id must be an integer or null, "
+            f"got {type(picked_var_id_raw).__name__}"
         )
     relevant_years_raw = body.get("relevant_years")
     relevant_years: list[int] | None = None
@@ -755,6 +799,7 @@ def _api_get_column_values(
         column,
         picked_classification=picked,
         picked_value_set=picked_vs_raw,
+        picked_var_id=picked_var_id_raw,
         relevant_years=relevant_years,
         db_path=config.db_path,
     )
@@ -765,7 +810,14 @@ def _api_get_column_values(
         "codes": [{"code": c.code, "label": c.label} for c in result.codes],
         "tier": result.tier,
         "note": result.note,
-        "classifications": list(result.classifications),
+        "classifications": [
+            {
+                "short_name": c.short_name,
+                "year_min": c.year_min,
+                "year_max": c.year_max,
+            }
+            for c in result.classifications
+        ],
         "picked_classification": result.picked_classification,
         "value_sets": [
             {
@@ -777,6 +829,85 @@ def _api_get_column_values(
         ],
         "picked_value_set": result.picked_value_set,
     }
+
+
+def _api_get_column_varinfo(
+    config: ServerConfig, body: dict[str, Any]
+) -> tuple[int, dict[str, Any]]:
+    column = _required_str(body, "column")
+    register_value = _required_nullable_str(body, "register")
+    relevant_years_raw = body.get("relevant_years")
+    relevant_years: list[int] | None = None
+    if relevant_years_raw is not None:
+        if not isinstance(relevant_years_raw, list):
+            raise editor.ValidationError(
+                "relevant_years must be a list of integers or null, "
+                f"got {type(relevant_years_raw).__name__}"
+            )
+        for y in relevant_years_raw:
+            if isinstance(y, bool) or not isinstance(y, int):
+                raise editor.ValidationError(
+                    f"relevant_years entries must be integers, got {type(y).__name__}"
+                )
+        relevant_years = list(relevant_years_raw)
+    result = editor.get_column_varinfo(
+        register_value,
+        column,
+        relevant_years=relevant_years,
+        db_path=config.db_path,
+    )
+    return HTTPStatus.OK, _serialize_varinfo(result)
+
+
+def _serialize_varinfo(result: editor.ColumnVarinfoResult) -> dict[str, Any]:
+    if result.kind == "none":
+        return {"kind": "none", "reason": result.none_reason or "not_found"}
+    assert result.primary is not None
+    payload: dict[str, Any] = {
+        "kind": result.kind,
+        "primary": _serialize_varinfo_description(result.primary),
+        "primary_share": {
+            "instances": result.primary_instances,
+            "total": result.total_instances,
+        },
+    }
+    if result.kind == "divergent":
+        payload["alternatives"] = [
+            {
+                "description": _serialize_varinfo_description(alt.description),
+                "instances": alt.instances,
+            }
+            for alt in result.alternatives
+        ]
+    return payload
+
+
+def _serialize_varinfo_description(desc: editor.VarinfoDescription) -> dict[str, Any]:
+    return {
+        "variabelnamn": desc.variabelnamn,
+        "variabeldefinition": desc.variabeldefinition,
+        "variabelbeskrivning": desc.variabelbeskrivning,
+        "variabeloperationell_definition": desc.variabeloperationell_definition,
+        "variabelreferenstid": desc.variabelreferenstid,
+        "variabelhamtadfran": desc.variabelhamtadfran,
+        "variabelregister_kalla": desc.variabelregister_kalla,
+        "mattenhet": desc.mattenhet,
+        "var_id": desc.var_id,
+        "register_name": desc.register_name,
+    }
+
+
+def _required_nullable_str(body: dict[str, Any], key: str) -> str | None:
+    if key not in body:
+        raise editor.ValidationError(
+            f"missing required field {key!r} (use null when unassigned)"
+        )
+    value = body[key]
+    if value is not None and not isinstance(value, str):
+        raise editor.ValidationError(
+            f"{key} must be a string or null, got {type(value).__name__}"
+        )
+    return value
 
 
 def _required_str(body: dict[str, Any], key: str) -> str:

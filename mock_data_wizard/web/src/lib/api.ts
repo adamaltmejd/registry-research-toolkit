@@ -200,6 +200,12 @@ export interface ValueSetGroup {
   year_max: number | null;
 }
 
+export interface ClassificationGroup {
+  short_name: string;
+  year_min: number | null;
+  year_max: number | null;
+}
+
 export interface ColumnValuesResponse {
   kind: "classification" | "values" | "none";
   title: string;
@@ -207,7 +213,7 @@ export interface ColumnValuesResponse {
   codes: ColumnValueCode[];
   tier: VarianceTier | null;
   note: string | null;
-  classifications: string[];
+  classifications: ClassificationGroup[];
   picked_classification: string | null;
   value_sets: ValueSetGroup[];
   picked_value_set: number | null;
@@ -218,6 +224,12 @@ export interface GetColumnValuesArgs {
   column: string;
   picked_classification?: string | null;
   picked_value_set?: number | null;
+  /** Restrict value-sets to one variable's instances. Set this to the
+   * primary (or user-chosen) ``var_id`` from the varinfo response when
+   * a column aliases to multiple variables in the same register — the
+   * unscoped union otherwise mixes code lists from variables other
+   * than the one the popup names. */
+  picked_var_id?: number | null;
   /** Project source years (non-null). Server drops value-set groups
    * whose year window doesn't overlap any of these. */
   relevant_years?: number[];
@@ -227,6 +239,80 @@ export function getColumnValues(
   args: GetColumnValuesArgs,
 ): Promise<ColumnValuesResponse> {
   return send<ColumnValuesResponse>("/api/column-values", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface VarinfoDescription {
+  variabelnamn: string | null;
+  variabeldefinition: string | null;
+  variabelbeskrivning: string | null;
+  variabeloperationell_definition: string | null;
+  variabelreferenstid: string | null;
+  variabelhamtadfran: string | null;
+  variabelregister_kalla: string | null;
+  mattenhet: string | null;
+  var_id: number;
+  register_name: string | null;
+}
+
+export interface VarinfoAlternative {
+  description: VarinfoDescription;
+  instances: number;
+}
+
+export type VarinfoNoneReason = "not_found" | "unavailable" | "no_register";
+
+export type ColumnVarinfoResponse =
+  | { kind: "none"; reason: VarinfoNoneReason }
+  | {
+      kind: "single";
+      primary: VarinfoDescription;
+      primary_share: { instances: number; total: number };
+    }
+  | {
+      kind: "divergent";
+      primary: VarinfoDescription;
+      primary_share: { instances: number; total: number };
+      alternatives: VarinfoAlternative[];
+    };
+
+export interface GetColumnVarinfoArgs {
+  register: string | null;
+  column: string;
+  /** Project source year(s) for the column's sources. When set, the
+   * primary picker prefers variables with instances in those years —
+   * SCB reuses column-name slots across decades, so a popularity-only
+   * ranking surfaces a stale-but-prolific variable over the one that
+   * actually carries the data. */
+  relevant_years?: number[];
+}
+
+export function getColumnVarinfo(
+  args: GetColumnVarinfoArgs,
+): Promise<ColumnVarinfoResponse> {
+  return send<ColumnVarinfoResponse>("/api/column-varinfo", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(args),
+  });
+}
+
+export interface SetSourceYearsArgs {
+  /** source_name → integer year (set) or null (delete the `year` key,
+   *  sending the row back to "missing"). Every source must exist in the
+   *  current snapshot; one unknown source aborts the whole call before
+   *  any on-disk write. */
+  assignments: Record<string, number | null>;
+  expected_version: string;
+}
+
+export function setSourceYears(
+  args: SetSourceYearsArgs,
+): Promise<StateSnapshot> {
+  return send<StateSnapshot>("/api/source-years", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(args),

@@ -35,7 +35,7 @@ from mock_data_wizard.editor import (
     set_column_type,
     set_group_register,
     set_source_registers,
-    set_source_metadata,
+    set_source_years,
     unset_column_manual_override,
 )
 
@@ -196,6 +196,24 @@ def test_init_persists_year_from_source_name(tmp_path: Path):
     )
     snap = init_if_missing(tmp_path, discover_path)
     assert snap.config.sources["lisa_2018"]["year"] == 2018
+
+
+def test_init_omits_year_key_when_undetectable(tmp_path: Path):
+    """Sources whose name has no 4-digit / HT/VT token get no ``year``
+    key in the config. Distinguishing "year absent" from "year set to
+    null" is what the UI uses to surface a ⚠ on auto-detection-failed
+    rows; explicit user nulls (or successful auto-detections) read as
+    "year set" and don't warn."""
+    discover_path = _write_discover(
+        tmp_path,
+        [
+            {"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]},
+            {"source_name": "no_year_at_all", "columns": [{"name": "Y"}]},
+        ],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    assert "year" in snap.config.sources.get("lisa_2018", {})
+    assert "year" not in snap.config.sources.get("no_year_at_all", {})
 
 
 def test_init_raises_on_empty_discover(tmp_path: Path):
@@ -1270,30 +1288,93 @@ def test_set_source_registers_rejects_invalid_assignments_shape(tmp_path: Path):
         )
 
 
-# -- set_source_metadata ---------------------------------------------------
+# -- set_source_years (bulk) ----------------------------------------------
 
 
-def test_set_source_metadata_year_round_trips(tmp_path: Path):
-    discover_path = _write_discover(
-        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
-    )
-    snap = init_if_missing(tmp_path, discover_path)
-    snap = set_source_metadata(
-        tmp_path, "x", year=2024, expected_version=snap.snapshot_version
-    )
-    assert snap.config.sources["x"]["year"] == 2024
-
-
-def test_set_source_metadata_year_none_means_no_year(tmp_path: Path):
+def test_set_source_years_int_sets_year(tmp_path: Path):
+    """An int value writes the `year` key for that source."""
     discover_path = _write_discover(
         tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
     )
     snap = init_if_missing(tmp_path, discover_path)
-    snap = set_source_metadata(
-        tmp_path, "lisa_2018", year=None, expected_version=snap.snapshot_version
+    snap = set_source_years(
+        tmp_path, {"lisa_2018": 2019}, expected_version=snap.snapshot_version
     )
-    configured, year = snap.config.source_year("lisa_2018")
-    assert (configured, year) == (True, None)
+    assert snap.config.sources["lisa_2018"]["year"] == 2019
+
+
+def test_set_source_years_none_deletes_year_key(tmp_path: Path):
+    """A ``None`` value deletes the ``year`` key entirely so the row
+    reverts to "missing" — the UI warning resurfaces on next read.
+    Distinct from the legacy ``year: null`` state (which the bundle
+    still accepts, but no editor path emits anymore)."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    assert snap.config.sources["lisa_2018"]["year"] == 2018
+    snap = set_source_years(
+        tmp_path, {"lisa_2018": None}, expected_version=snap.snapshot_version
+    )
+    entry = snap.config.sources.get("lisa_2018", {})
+    assert "year" not in entry
+
+
+def test_set_source_years_none_on_already_missing_is_noop(tmp_path: Path):
+    """Asking to delete a year that's already absent must not bump the
+    snapshot version — same contract as set_source_registers' no-op path."""
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "no_year_source", "columns": [{"name": "X"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    assert "no_year_source" not in snap.config.sources or (
+        "year" not in snap.config.sources.get("no_year_source", {})
+    )
+    snap2 = set_source_years(
+        tmp_path, {"no_year_source": None}, expected_version=snap.snapshot_version
+    )
+    assert snap.snapshot_version == snap2.snapshot_version
+
+
+def test_set_source_years_unknown_source_aborts(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path,
+        [{"source_name": "lisa_2018", "columns": [{"name": "LopNr"}]}],
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="not found in discover"):
+        set_source_years(
+            tmp_path,
+            {"nonexistent": 2020},
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_source_years_rejects_non_dict(tmp_path: Path):
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be a dict"):
+        set_source_years(
+            tmp_path,
+            ["lisa_2018"],  # type: ignore[arg-type]
+            expected_version=snap.snapshot_version,
+        )
+
+
+def test_set_source_years_rejects_bool_year(tmp_path: Path):
+
+    discover_path = _write_discover(
+        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
+    )
+    snap = init_if_missing(tmp_path, discover_path)
+    with pytest.raises(ValidationError, match="must be int or None"):
+        set_source_years(
+            tmp_path,
+            {"x": True},  # type: ignore[dict-item]
+            expected_version=snap.snapshot_version,
+        )
 
 
 # -- set_column_options ---------------------------------------------------
@@ -1424,9 +1505,7 @@ def test_stale_state_error_blocks_mutation(tmp_path: Path):
     payload["manual_columns"] = [["x", "LopNr"]]
     cfg_path.write_text(json.dumps(payload), encoding="utf-8")
     with pytest.raises(StaleStateError):
-        set_source_metadata(
-            tmp_path, "x", year=2024, expected_version=snap.snapshot_version
-        )
+        set_source_years(tmp_path, {"x": 2024}, expected_version=snap.snapshot_version)
 
 
 def test_snapshot_version_changes_after_mutation(tmp_path: Path):
@@ -1434,8 +1513,8 @@ def test_snapshot_version_changes_after_mutation(tmp_path: Path):
         tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
     )
     snap = init_if_missing(tmp_path, discover_path)
-    snap2 = set_source_metadata(
-        tmp_path, "x", year=2024, expected_version=snap.snapshot_version
+    snap2 = set_source_years(
+        tmp_path, {"x": 2024}, expected_version=snap.snapshot_version
     )
     assert snap.snapshot_version != snap2.snapshot_version
 
@@ -1736,23 +1815,6 @@ def test_config_lock_raises_clear_error_when_fcntl_missing(tmp_path: Path, monke
     with pytest.raises(NotImplementedError, match="POSIX"):
         with editor._config_lock(tmp_path):
             pass
-
-
-# -- set_source_metadata source validation --------------------------------
-
-
-def test_set_source_metadata_rejects_unknown_source(tmp_path: Path):
-    discover_path = _write_discover(
-        tmp_path, [{"source_name": "x", "columns": [{"name": "LopNr"}]}]
-    )
-    snap = init_if_missing(tmp_path, discover_path)
-    with pytest.raises(ValidationError, match="not found in discover"):
-        set_source_metadata(
-            tmp_path,
-            "ghost_source",
-            year=2024,
-            expected_version=snap.snapshot_version,
-        )
 
 
 # -- Discover-hash determinism --------------------------------------------
@@ -2296,6 +2358,49 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
     assert len(result.value_sets) == 2
 
 
+def test_get_column_values_tier_3a_requires_multiple_value_sets(
+    regmeta_db: Path,
+):
+    """Tier 3a's note tells the user to pick another value-set below —
+    only actionable when there's more than one set. Within one set,
+    label divergence per code (e.g. SCB has multiple value_code rows
+    sharing one vardekod with different vardebenamning) can't be
+    resolved via picking; the response must drop to tier 1 instead of
+    advertising a non-existent picker.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Within the existing single value_set (cvid=1001), attach a second
+    # value_code row for vardekod "1" with a different label. This
+    # represents within-set divergence: same vardekod, different
+    # vardebenamning, both in value_set_id assigned to cvid 1001.
+    # Determine the existing value_set_id from the fixture.
+    row = conn.execute(
+        "SELECT value_set_id FROM variable_instance WHERE cvid = 1001"
+    ).fetchone()
+    value_set_id = row["value_set_id"]
+    conn.execute(
+        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (?, ?, ?)",
+        (9001, "1", "Male"),
+    )
+    conn.execute(
+        "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+        (value_set_id, 9001),
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "values"
+    # With only one value_set, picking can't help — must NOT advertise
+    # 3a's picker note.
+    assert result.tier == "1"
+    assert result.note is None
+    assert len(result.value_sets) == 1
+
+
 def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     """Two distinct classifications across years → tier 3b with picker."""
     import sqlite3
@@ -2326,8 +2431,14 @@ def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     assert result.tier == "3b"
     assert result.note is not None
     assert "Showing" in result.note
-    # Picker shows both classifications, sorted.
-    assert result.classifications == ("CLS_A", "CLS_B")
+    # Picker shows both classifications. Sort key is (year_min is None,
+    # year_min, short_name) — fixture has CLS_A on regver "2020" and
+    # CLS_B on regver "2021", so CLS_A wins on year_min.
+    assert [g.short_name for g in result.classifications] == ["CLS_A", "CLS_B"]
+    assert result.classifications[0].year_min == 2020
+    assert result.classifications[0].year_max == 2020
+    assert result.classifications[1].year_min == 2021
+    assert result.classifications[1].year_max == 2021
     assert result.picked_classification in {"CLS_A", "CLS_B"}
 
 
@@ -2596,3 +2707,381 @@ def test_dedupe_codes_preserves_first_seen_order():
     assert tuple(c.code for c in out) == ("2", "1", "3")
     # First-seen label wins.
     assert {c.code: c.label for c in out} == {"2": "Two", "1": "One", "3": "Three"}
+
+
+# -- get_column_varinfo --------------------------------------------------
+
+
+def test_get_column_varinfo_returns_none_when_regmeta_missing(monkeypatch):
+    """Same graceful-degradation stance as get_column_values: when regmeta
+    is unavailable the editor returns the empty envelope rather than
+    raising — and tags it ``none_reason="unavailable"`` so the UI can
+    distinguish "regmeta missing" from "column not in regmeta"."""
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _no_conn(_):
+        yield None
+
+    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    result = editor.get_column_varinfo("TESTREG", "Kon")
+    assert result.kind == "none"
+    assert result.none_reason == "unavailable"
+    assert result.primary is None
+
+
+def test_get_column_varinfo_returns_none_when_register_is_none(regmeta_db: Path):
+    """Cross-register lookup is intentionally out of scope (issue #71):
+    a column without a register pinned can mean too many different
+    things. Return ``kind="none"`` with ``no_register`` so the editor
+    can prompt the user to assign one."""
+    result = editor.get_column_varinfo(None, "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "none"
+    assert result.none_reason == "no_register"
+
+
+def test_get_column_varinfo_returns_none_for_unknown_column(regmeta_db: Path):
+    result = editor.get_column_varinfo(
+        "TESTREG", "NotAColumn", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+    assert result.none_reason == "not_found"
+
+
+def test_get_column_varinfo_returns_none_when_register_unresolved(
+    regmeta_db: Path,
+):
+    result = editor.get_column_varinfo(
+        "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+    assert result.none_reason == "not_found"
+
+
+def test_get_column_varinfo_strips_mona_prefix(regmeta_db: Path):
+    """MONA-prefixed columns (e.g. ``P1105_Kon``) aren't stored in regmeta
+    under that name — they're aliased to ``Kon``. Mirror
+    ``get_column_values`` and retry with the stripped form so the
+    editor surfaces varinfo for prefixed datasets too."""
+    result = editor.get_column_varinfo(
+        "TESTREG", "P1105_Kon", db_path=regmeta_db.parent
+    )
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.variabelnamn == "Kön"
+
+
+def test_get_column_varinfo_propagates_non_not_found_regmeta_errors(
+    monkeypatch, regmeta_db: Path
+):
+    """Only ``code="not_found"`` is the documented "normal outcome" for
+    a popover. Other RegmetaErrors (usage_error, ambiguous_alias, …)
+    must propagate so they surface in the UI rather than being silently
+    converted to an empty envelope."""
+    from regmeta import errors as regmeta_errors
+
+    def _raise_usage(*_a, **_kw):
+        raise regmeta_errors.RegmetaError(
+            exit_code=regmeta_errors.EXIT_USAGE,
+            code="usage_error",
+            error_class="query",
+            message="bad call",
+            remediation="fix it",
+        )
+
+    import regmeta.queries
+
+    monkeypatch.setattr(regmeta.queries, "get_varinfo", _raise_usage)
+    with pytest.raises(regmeta_errors.RegmetaError):
+        editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+
+
+def test_get_column_varinfo_rejects_blank_column(regmeta_db: Path):
+    with pytest.raises(editor.ValidationError):
+        editor.get_column_varinfo("TESTREG", "   ", db_path=regmeta_db.parent)
+
+
+def test_get_column_varinfo_single_variant(regmeta_db: Path):
+    """The fixture has one ``Kon`` variable under TESTREG with one cvid:
+    the result must be ``kind="single"`` and surface the canonical
+    description fields."""
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.variabelnamn == "Kön"
+    assert result.primary.variabeldefinition == "Kön enligt folkbokföring"
+    assert result.primary.var_id == 44
+    assert result.primary.register_name == "TESTREG"
+    assert result.primary_instances == 1
+    assert result.total_instances == 1
+    assert result.alternatives == ()
+
+
+def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path):
+    """When SCB has recycled a column name across two var_ids under the
+    same register, the response is ``kind="divergent"`` with the
+    higher-cvid-count variable as primary and the rest as alternatives."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Add a SECOND variable (var_id=45) also aliased to "Kon", with
+    # fewer cvids than the original (1 vs 2) so the existing var wins.
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning',
+                    'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        -- second cvid for the primary (var_id=44) so it has 2 vs 1
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (120, 10, '2021');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1200, 1, 10, 120, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1200, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.kind == "divergent"
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+    assert result.primary_instances == 2
+    assert result.total_instances == 3
+    assert len(result.alternatives) == 1
+    alt = result.alternatives[0]
+    assert alt.description.var_id == 45
+    assert alt.description.variabelnamn == "Hushållsställning"
+    assert alt.instances == 1
+
+
+def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Path):
+    """When ``relevant_years`` is set, variables that don't overlap the
+    requested year are dropped entirely (off-year variants aren't viable
+    alternatives — they're wrong). SCB reuses column-name slots across
+    decades and the year is the only signal that distinguishes them.
+    Same fixture as the popularity test: var_id=44 has cvids in 2020 +
+    2021, var_id=45 has one cvid in 2010."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning', 'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (120, 10, '2021');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1200, 1, 10, 120, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1200, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # Year 2010 overlaps only var_id=45's instance. var_id=44 (2020 +
+    # 2021) is filtered out entirely — once the user has told us the
+    # source's year, the other-era variable is wrong, not a viable
+    # alternative.
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2010], db_path=regmeta_db.parent
+    )
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.var_id == 45
+
+    # Year 2020 falls on var_id=44 only. var_id=45 (2010) is filtered.
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
+    )
+    assert result.kind == "single"
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+
+    # Year range spanning both eras keeps both variables (divergent).
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2010, 2020], db_path=regmeta_db.parent
+    )
+    assert result.kind == "divergent"
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+    assert result.alternatives[0].description.var_id == 45
+
+    # No year hint → falls back to pure popularity ranking.
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert result.primary is not None
+    assert result.primary.var_id == 44
+
+
+def test_get_column_varinfo_year_outside_any_instance_returns_not_found(
+    regmeta_db: Path,
+):
+    """When no variable's instances overlap the requested year and every
+    matching variable carries parseable years, the strict filter drops
+    them all and the popup gets ``kind="none"`` with reason
+    ``not_found`` — better than surfacing a wrong-era variable as if it
+    described the project's data."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Hushållsställning', 'Personens ställning i hushållet');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'HH', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # 2030 misses var_id=44's 2020+2021 window and var_id=45's 2010
+    # instance. Both variables carry parseable years → both dropped.
+    result = editor.get_column_varinfo(
+        "TESTREG", "Kon", relevant_years=[2030], db_path=regmeta_db.parent
+    )
+    assert result.kind == "none"
+    assert result.none_reason == "not_found"
+
+
+def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
+    """The same column name can carry different value-sets under
+    different var_ids. Without ``picked_var_id``, the union of all
+    value-sets is returned; with it, only the chosen variable's sets
+    appear — the popup must be able to show the value codes that
+    actually belong to the variable named in its header."""
+    import sqlite3
+
+    from .conftest import assign_value_set
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Second variable also aliased to "Kon" with its own value-set
+    # (codes "M"/"F" instead of "1"/"2"). The fixture's primary variable
+    # var_id=44 already has codes "1=Man" / "2=Kvinna".
+    conn.executescript(
+        """
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Annan Kön', 'En annan kön-variabel');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'Kön', '1');
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    assign_value_set(conn, 1100, [("M", "Male"), ("F", "Female")])
+    conn.commit()
+    conn.close()
+
+    # No var_id scoping → all value-sets across both variables surface
+    # (4 distinct codes: 1, 2, M, F).
+    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    codes_union = {c.code for c in union_result.codes} if union_result.codes else set()
+    assert "1" in codes_union and "M" in codes_union
+
+    # Scope to var_id=44 (the original) → only its codes "1"/"2".
+    primary_result = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+    )
+    codes_primary = {c.code for c in primary_result.codes}
+    assert codes_primary == {"1", "2"}
+
+    # Scope to var_id=45 → only its codes "M"/"F".
+    alt_result = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+    )
+    codes_alt = {c.code for c in alt_result.codes}
+    assert codes_alt == {"M", "F"}
+
+
+def test_get_column_values_scopes_classifications_by_picked_var_id(
+    regmeta_db: Path,
+):
+    """When a column slot aliases to multiple var_ids with divergent
+    classifications, ``picked_var_id`` must scope which classification's
+    codes the popup returns. Without scoping, the popup shows the
+    aggregated primary regardless of which variable the varinfo popup
+    selected — silently mismatched metadata for the alternative."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(regmeta_db))
+    conn.row_factory = sqlite3.Row
+    # Two classifications with disjoint code sets so the response codes
+    # uniquely identify which one was returned. var_id=44 (fixture) maps
+    # to CLS_A; the new var_id=45 maps to CLS_B.
+    conn.executescript(
+        """
+        INSERT INTO value_code (vardekod, vardebenamning) VALUES ('9', 'OnlyB');
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (1, 'CLS_A', 'A', 'Class A', 2);
+        INSERT INTO classification (id, short_name, name, description, code_count)
+            VALUES (2, 'CLS_B', 'B', 'Class B', 1);
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 1, code_id, NULL, 1 FROM value_code WHERE vardekod IN ('1', '2');
+        INSERT INTO classification_code (classification_id, code_id, level, is_valid)
+            SELECT 2, code_id, NULL, 1 FROM value_code WHERE vardekod = '9';
+        UPDATE variable_instance SET classification_id = 1 WHERE cvid = 1001;
+
+        INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
+            VALUES (1, 45, 'Annan Kön', 'En annan kön-variabel');
+        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+            VALUES (110, 10, '2010');
+        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            classification_id)
+            VALUES (1100, 1, 10, 110, 45, 'int', '1', 'Kön', '1', 2);
+        INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1100, 'Kon');
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    # No var_id scoping → aggregated primary wins (CLS_A is most common
+    # because fixture cvid 1001 has it; classifications list shows both).
+    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    assert union_result.kind == "classification"
+    assert {g.short_name for g in union_result.classifications} == {"CLS_A", "CLS_B"}
+    assert {c.code for c in union_result.codes} == {"1", "2"}
+
+    # Scope to var_id=44 → CLS_A only (codes "1"/"2").
+    primary = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+    )
+    assert primary.kind == "classification"
+    assert [g.short_name for g in primary.classifications] == ["CLS_A"]
+    assert {c.code for c in primary.codes} == {"1", "2"}
+    # Single-option list → picker hidden, picked_classification is None.
+    assert primary.picked_classification is None
+
+    # Scope to var_id=45 → CLS_B only (code "9"). Crucial: without the
+    # fix, this would have returned CLS_A's codes because the aggregated
+    # signal.classification_short_name picked CLS_A as primary.
+    alt = editor.get_column_values(
+        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+    )
+    assert alt.kind == "classification"
+    assert [g.short_name for g in alt.classifications] == ["CLS_B"]
+    assert {c.code for c in alt.codes} == {"9"}
+    assert alt.picked_classification is None

@@ -8,8 +8,10 @@
      * and as the <select> form value (stringified). */
     eqKey: (option: T) => string;
     onPick: (option: T) => void;
-    /** Note rendered next to the picker describing the active option. */
-    activeDescription?: string | null;
+    /** Per-option hover tooltip; null = omit the title attribute.
+     *  Select-mode shows the active option's tooltip on the <select>
+     *  itself because browsers don't render <option> titles reliably. */
+    optionTooltip?: (option: T) => string | null;
     /** Chip count above which the picker collapses to a <select>. */
     collapseAt?: number;
   }
@@ -21,7 +23,7 @@
     optionLabel,
     eqKey,
     onPick,
-    activeDescription = null,
+    optionTooltip,
     collapseAt = 4,
   }: Props = $props();
 
@@ -44,6 +46,7 @@
         class="picker-select"
         value={value !== null ? eqKey(value) : ""}
         onchange={handleSelectChange}
+        title={(value !== null && optionTooltip?.(value)) || undefined}
       >
         {#each options as opt (eqKey(opt))}
           <option value={eqKey(opt)}>{optionLabel(opt)}</option>
@@ -59,15 +62,13 @@
               class:active={isActive(opt)}
               aria-pressed={isActive(opt)}
               onclick={() => onPick(opt)}
+              title={optionTooltip?.(opt) || undefined}
             >
               {optionLabel(opt)}
             </button>
           </li>
         {/each}
       </ul>
-    {/if}
-    {#if activeDescription}
-      <span class="active-desc">{activeDescription}</span>
     {/if}
   </div>
 {/if}
@@ -129,10 +130,5 @@
   .picker-select:focus-visible {
     outline: 2px solid #1a3b80;
     outline-offset: 1px;
-  }
-  .active-desc {
-    color: #666;
-    font-size: 0.8rem;
-    flex-basis: 100%;
   }
 </style>

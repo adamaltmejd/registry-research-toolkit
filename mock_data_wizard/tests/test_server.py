@@ -1001,6 +1001,179 @@ def test_column_values_accepts_empty_relevant_years(running_server: str):
     assert status == 200
 
 
+# -- /api/column-varinfo --------------------------------------------------
+
+
+def test_column_varinfo_returns_none_when_regmeta_missing(
+    running_server: str, monkeypatch
+):
+    """With regmeta unavailable the server must return the empty envelope
+    (kind="none") rather than an error — matches /api/column-values. The
+    ``reason`` field lets the client tell "no regmeta installed" apart
+    from "column unknown to regmeta"."""
+    from contextlib import contextmanager
+
+    @contextmanager
+    def _no_conn(_):
+        yield None
+
+    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": "TESTREG", "column": "Kon"},
+    )
+    assert status == 200
+    assert body == {"kind": "none", "reason": "unavailable"}
+
+
+def test_column_varinfo_accepts_null_register(running_server: str):
+    """``register: null`` is the "no register pinned" case (issue #71's
+    out-of-scope branch). Server still returns kind="none" rather than
+    rejecting the call, and tags it ``reason="no_register"`` so the UI
+    can show a register-prompting message instead of "not in regmeta"."""
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": None, "column": "Kon"},
+    )
+    assert status == 200
+    assert body == {"kind": "none", "reason": "no_register"}
+
+
+def test_column_varinfo_requires_register_field(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"column": "Kon"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+    assert "register" in body["error"]["message"]
+
+
+def test_column_varinfo_rejects_non_string_register(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": 42, "column": "Kon"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_varinfo_requires_column_field(running_server: str):
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": "TESTREG"},
+    )
+    assert status == 400
+    assert body["error"]["code"] == "validation"
+
+
+def test_column_varinfo_single_envelope_shape(running_server: str, monkeypatch):
+    """When the editor returns a single variable, the wire envelope must
+    carry the primary description + the share counts so the client can
+    render the variable-info block without follow-up calls."""
+    desc = editor.VarinfoDescription(
+        variabelnamn="Civilstånd",
+        variabeldefinition="Personens civilstånd vid årets utgång.",
+        variabelbeskrivning="Civilstånd hämtas från folkbokföringen.",
+        variabeloperationell_definition=None,
+        variabelreferenstid="31 december",
+        variabelhamtadfran=None,
+        variabelregister_kalla=None,
+        mattenhet=None,
+        var_id=137,
+        register_name="LISA",
+    )
+    monkeypatch.setattr(
+        server.editor,
+        "get_column_varinfo",
+        lambda register, column, *, relevant_years=None, db_path=None: (
+            editor.ColumnVarinfoResult(
+                kind="single",
+                primary=desc,
+                primary_instances=15,
+                total_instances=15,
+            )
+        ),
+    )
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": "LISA", "column": "F13"},
+    )
+    assert status == 200
+    assert body["kind"] == "single"
+    assert body["primary"]["variabelnamn"] == "Civilstånd"
+    assert body["primary"]["var_id"] == 137
+    assert body["primary"]["register_name"] == "LISA"
+    assert body["primary"]["variabelreferenstid"] == "31 december"
+    assert body["primary_share"] == {"instances": 15, "total": 15}
+    assert "alternatives" not in body
+
+
+def test_column_varinfo_divergent_envelope_shape(running_server: str, monkeypatch):
+    """The divergent envelope must carry both the primary and the
+    alternatives list — the client uses ``alternatives`` to drive the
+    expandable "Show N alternative definitions" block."""
+    primary = editor.VarinfoDescription(
+        variabelnamn="Civilstånd",
+        variabeldefinition="Personens civilstånd.",
+        variabelbeskrivning=None,
+        variabeloperationell_definition=None,
+        variabelreferenstid=None,
+        variabelhamtadfran=None,
+        variabelregister_kalla=None,
+        mattenhet=None,
+        var_id=137,
+        register_name="LISA",
+    )
+    alt_desc = editor.VarinfoDescription(
+        variabelnamn="Familjeställning",
+        variabeldefinition="Annan definition.",
+        variabelbeskrivning=None,
+        variabeloperationell_definition=None,
+        variabelreferenstid=None,
+        variabelhamtadfran=None,
+        variabelregister_kalla=None,
+        mattenhet=None,
+        var_id=200,
+        register_name="LISA",
+    )
+    monkeypatch.setattr(
+        server.editor,
+        "get_column_varinfo",
+        lambda register, column, *, relevant_years=None, db_path=None: (
+            editor.ColumnVarinfoResult(
+                kind="divergent",
+                primary=primary,
+                primary_instances=12,
+                total_instances=15,
+                alternatives=(
+                    editor.VarinfoAlternative(description=alt_desc, instances=3),
+                ),
+            )
+        ),
+    )
+    status, body = _fetch(
+        "POST",
+        f"{running_server}/api/column-varinfo",
+        {"register": "LISA", "column": "F13"},
+    )
+    assert status == 200
+    assert body["kind"] == "divergent"
+    assert body["primary"]["var_id"] == 137
+    assert body["primary_share"] == {"instances": 12, "total": 15}
+    assert len(body["alternatives"]) == 1
+    alt = body["alternatives"][0]
+    assert alt["instances"] == 3
+    assert alt["description"]["var_id"] == 200
+    assert alt["description"]["variabelnamn"] == "Familjeställning"
+
+
 def test_payload_too_large_returns_413(running_server: str):
     """Oversized Content-Length must be rejected with a 413 envelope
     before the server reads anything off the wire — otherwise a bogus

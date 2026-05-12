@@ -1,9 +1,17 @@
 <script lang="ts">
   import { untrack } from "svelte";
 
-  import { columnIsManual, store } from "../store.svelte";
+  import type { ColumnVarinfoResponse, VarinfoDescription } from "../api";
+  import {
+    columnIsManual,
+    hasRegmetaValueDisplay,
+    relevantYearsFromMap,
+    sourceYearInfoFor,
+    store,
+  } from "../store.svelte";
   import type { ColumnInfo, ColumnType } from "../types";
   import Modal from "./Modal.svelte";
+  import ValueCodesPanel from "./ValueCodesPanel.svelte";
 
   interface Props {
     /** Sources making up the partition the user clicked. The scope
@@ -98,6 +106,159 @@
     untrack(() => (column.hint?.date_format as string | undefined) ?? ""),
   );
   let submitting = $state(false);
+
+  type VarinfoState =
+    | { kind: "loading" }
+    | { kind: "loaded"; data: ColumnVarinfoResponse }
+    | { kind: "error"; message: string };
+  let varinfoState: VarinfoState = $state({ kind: "loading" });
+  let showAlternatives = $state(false);
+  // When the user clicks an alternative in the varinfo popup we swap
+  // the value-codes panel to that variable's scope without re-running
+  // the primary picker. ``null`` means "use whatever the server's
+  // primary is" — the panel falls back to the response's primary
+  // ``var_id`` then.
+  let userPickedVarId: number | null = $state(null);
+
+  // Scoped to `sources` (the partition the user clicked), not to every
+  // carrier in the register. SCB reuses column-name slots across eras —
+  // pulling sibling-era years into `relevantYears` would defeat the
+  // year-aware ranking and surface the wrong-era variable as primary.
+  // Both varinfo lookup and value-codes filtering read this map.
+  let sourceYearInfo = $derived(sourceYearInfoFor(sources));
+  let sourceYears = $derived(
+    Object.fromEntries(
+      sources.map((sn) => [sn, sourceYearInfo[sn].year]),
+    ),
+  );
+  let relevantYears = $derived(relevantYearsFromMap(sourceYears));
+  // True when *every* source in the partition is in the "missing" state
+  // — i.e. auto-detection failed and the user hasn't intervened. A
+  // source whose `year` is explicitly null (user asserting "no year")
+  // does *not* count as unknown: the user has made a deliberate choice
+  // and the conflict-gate would contradict it. Drives the "set a year"
+  // warning that replaces the description / value-code body when regmeta
+  // would otherwise mix wrong-era variables.
+  let allYearsUnknown = $derived(
+    sources.every((sn) => sourceYearInfo[sn].provenance === "missing"),
+  );
+
+  async function loadVarinfo(): Promise<void> {
+    try {
+      const data = await store.getColumnVarinfo(
+        registerName,
+        column.name,
+        relevantYears,
+      );
+      varinfoState = { kind: "loaded", data };
+    } catch (exc) {
+      const message = exc instanceof Error ? exc.message : String(exc);
+      varinfoState = { kind: "error", message };
+    }
+  }
+
+  // Depend on the join'd key so $effect re-fires only when the year set
+  // changes value (not on every Array reassignment).
+  let varinfoYearKey = $derived(relevantYears.join(","));
+  $effect(() => {
+    varinfoYearKey;
+    // Clear any explicit alternative pick when the year-driven primary
+    // re-ranks — otherwise the previous-year pick would override the
+    // new year-aware primary.
+    userPickedVarId = null;
+    void loadVarinfo();
+  });
+
+  function varSourceLine(d: VarinfoDescription): string {
+    return d.register_name
+      ? `var_id ${d.var_id} in ${d.register_name}`
+      : `var_id ${d.var_id}`;
+  }
+
+  // SCB's ``VariabelRegister_Källa`` is meant to name an upstream register
+  // (LISA-style "RTB", "RAMS"); when it's just an echo of the column or
+  // variable name it carries no info and clutters the panel.
+  function meaningfulRegisterSource(
+    raw: string | null,
+    columnName: string,
+    variabelnamn: string | null,
+  ): string | null {
+    if (!raw) return null;
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+    const norm = trimmed.toLowerCase();
+    if (norm === columnName.toLowerCase()) return null;
+    if (variabelnamn && norm === variabelnamn.toLowerCase()) return null;
+    return trimmed;
+  }
+
+  // SCB often fills ``Variabeldefinition`` with the same text as
+  // ``Variabelnamn`` (sometimes with a trailing period). Surfacing both
+  // reads as a typo. Normalise trailing punctuation + whitespace before
+  // comparing so the definition only appears when it adds info.
+  function meaningfulDefinition(
+    definition: string | null,
+    variabelnamn: string | null,
+  ): string | null {
+    if (!definition) return null;
+    const trimmed = definition.trim();
+    if (!trimmed) return null;
+    if (!variabelnamn) return trimmed;
+    const norm = (s: string): string =>
+      s.trim().replace(/[.。!?]+$/u, "").toLowerCase();
+    if (norm(trimmed) === norm(variabelnamn)) return null;
+    return trimmed;
+  }
+
+  // Active variable: explicit user pick wins, otherwise the server's
+  // primary. Null in non-loaded states.
+  let activeDescription = $derived.by((): VarinfoDescription | null => {
+    if (varinfoState.kind !== "loaded") return null;
+    const data = varinfoState.data;
+    if (data.kind === "none") return null;
+    if (userPickedVarId === null) return data.primary;
+    if (data.kind === "single") return data.primary;
+    const alt = data.alternatives.find(
+      (a) => a.description.var_id === userPickedVarId,
+    );
+    return alt ? alt.description : data.primary;
+  });
+  let activeVarId = $derived(activeDescription?.var_id ?? null);
+  // Cvid count for the active variable. The banner reads "(N of M cvids)"
+  // and must track user picks, not just the server's primary.
+  let activeInstances = $derived.by((): number | null => {
+    if (varinfoState.kind !== "loaded") return null;
+    const data = varinfoState.data;
+    if (data.kind === "none") return null;
+    if (activeVarId === null) return null;
+    if (data.primary.var_id === activeVarId) return data.primary_share.instances;
+    if (data.kind !== "divergent") return null;
+    const alt = data.alternatives.find((a) => a.description.var_id === activeVarId);
+    return alt ? alt.instances : null;
+  });
+
+  let canShowValueCodes = $derived(hasRegmetaValueDisplay(column.regmeta_signal));
+  // Mount ValueCodesPanel on first expand and keep it mounted; <details>
+  // hides it via CSS when closed. Re-mounting would re-fire the
+  // /api/column-values request on every toggle.
+  let valueCodesEverExpanded = $state(store.valueCodesExpandedInEditor);
+
+  // When the year is unset AND the variable / value-code surface is
+  // divergent (multiple var_ids OR multiple value-set windows under one
+  // register), refuse to display description and codes — mixing
+  // wrong-era variants would mislead the user. The Edit register popup
+  // is where the year gets fixed; this gate just routes the user there.
+  let varinfoDivergent = $derived.by(() => {
+    if (varinfoState.kind !== "loaded") return false;
+    return varinfoState.data.kind === "divergent";
+  });
+  let valueCodesAcrossYears = $derived(
+    (column.regmeta_signal?.n_value_sets ?? 0) > 1 ||
+      (column.regmeta_signal?.n_classifications ?? 0) > 1,
+  );
+  let yearConflictGated = $derived(
+    allYearsUnknown && (varinfoDivergent || valueCodesAcrossYears),
+  );
 
   function buildHint(): Record<string, unknown> | null {
     // Always send an explicit hint based on form state. Earlier we
@@ -203,34 +364,269 @@
     </header>
 
     <div class="modal-body">
-      {#if column.regmeta_signal}
-        <p class="regmeta-context" aria-label="regmeta context">
-          regmeta:
-          {#if column.regmeta_signal.classification_short_name}
-            <code>{column.regmeta_signal.classification_short_name}</code>
+      {#if yearConflictGated}
+        <section class="year-conflict" aria-label="year required">
+          <p class="year-conflict-msg">
+            <strong>⚠ Year not set</strong> — under
+            {registerShort ?? registerName ?? "this register"} this column
+            aliases to
+            {#if varinfoDivergent && varinfoState.kind === "loaded" && varinfoState.data.kind === "divergent"}
+              {varinfoState.data.alternatives.length + 1} variables
+            {/if}
+            {#if varinfoDivergent && valueCodesAcrossYears} and {/if}
+            {#if valueCodesAcrossYears}
+              value codes that shifted across years
+            {/if}.
+            Without a year we can't tell which variant applies, so
+            descriptions and value codes are hidden.
+          </p>
+          <p class="year-conflict-action">
+            Set the year in <strong>Edit register</strong> on
+            {registerShort ?? registerName ?? "this group"}.
+          </p>
+        </section>
+      {/if}
+      <section
+        class="varinfo"
+        class:varinfo-gated={yearConflictGated}
+        aria-label="regmeta variable description"
+        aria-hidden={yearConflictGated}
+        hidden={yearConflictGated}
+      >
+        {#if varinfoState.kind === "loading"}
+          <p class="varinfo-status">Loading variable info…</p>
+        {:else if varinfoState.kind === "error"}
+          <p class="varinfo-status varinfo-error">
+            Could not load variable info: {varinfoState.message}
+            <button
+              type="button"
+              class="retry"
+              onclick={() => {
+                varinfoState = { kind: "loading" };
+                void loadVarinfo();
+              }}>Retry</button
+            >
+          </p>
+        {:else if varinfoState.data.kind === "none"}
+          <p class="varinfo-status varinfo-none">
+            {#if varinfoState.data.reason === "no_register"}
+              No register pinned — assign one to see variable info
+            {:else if varinfoState.data.reason === "unavailable"}
+              Variable info unavailable (regmeta not installed)
+            {:else}
+              Variable: not described in regmeta
+            {/if}
+          </p>
+        {:else}
+          {@const data = varinfoState.data}
+          {@const desc = activeDescription ?? data.primary}
+          {@const isUserPick =
+            data.kind === "divergent" &&
+            userPickedVarId !== null &&
+            userPickedVarId !== data.primary.var_id}
+          {@const registerSource = meaningfulRegisterSource(
+            desc.variabelregister_kalla,
+            column.name,
+            desc.variabelnamn,
+          )}
+          {@const definitionText = meaningfulDefinition(
+            desc.variabeldefinition,
+            desc.variabelnamn,
+          )}
+          <div class="varinfo-body">
+            <p class="varinfo-name">
+              <strong>{desc.variabelnamn ?? column.name}</strong>
+              {#if isUserPick}
+                <span
+                  class="varinfo-userpick"
+                  title="you picked this alternative from the list below"
+                >
+                  · your pick
+                </span>
+              {/if}
+              {#if data.kind === "divergent"}
+                <span
+                  class="varinfo-warn"
+                  title="this column aliases to more than one variable under {registerName ??
+                    'this register'}"
+                >
+                  ⚠ also aliases to {data.alternatives.length} other variable{data
+                    .alternatives.length === 1
+                    ? ""
+                    : "s"}
+                </span>
+              {/if}
+            </p>
+            {#if definitionText}
+              <p class="varinfo-definition">
+                {definitionText}
+                {#if data.kind === "divergent" && activeInstances !== null}
+                  <span class="varinfo-share">
+                    ({activeInstances} of {data.primary_share.total}
+                    cvids)
+                  </span>
+                {/if}
+              </p>
+            {:else if data.kind === "divergent" && activeInstances !== null}
+              <p class="varinfo-share">
+                ({activeInstances} of {data.primary_share.total} cvids)
+              </p>
+            {/if}
+            <dl class="varinfo-fields">
+              {#if desc.variabelbeskrivning}
+                <dt>Description</dt>
+                <dd>{desc.variabelbeskrivning}</dd>
+              {/if}
+              {#if desc.variabeloperationell_definition}
+                <dt>Definition</dt>
+                <dd>{desc.variabeloperationell_definition}</dd>
+              {/if}
+              {#if desc.mattenhet}
+                <dt>Unit</dt>
+                <dd>{desc.mattenhet}</dd>
+              {/if}
+              {#if desc.variabelreferenstid}
+                <dt>Reference time</dt>
+                <dd>{desc.variabelreferenstid}</dd>
+              {/if}
+              {#if desc.variabelhamtadfran}
+                <dt>Sourced from</dt>
+                <dd>{desc.variabelhamtadfran}</dd>
+              {/if}
+              {#if registerSource}
+                <dt>Register source</dt>
+                <dd>{registerSource}</dd>
+              {/if}
+              <dt>Source</dt>
+              <dd>{varSourceLine(desc)}</dd>
+            </dl>
+            {#if data.kind === "divergent"}
+              {@const primaryVarId = data.primary.var_id}
+              <details
+                class="varinfo-more"
+                bind:open={showAlternatives}
+              >
+                <summary>
+                  Pick a different variable
+                  ({data.alternatives.length + 1} options)
+                </summary>
+                <p class="varinfo-pick-help">
+                  Click a variable below to scope the value codes to its
+                  instances. SCB reuses column slots across decades, so the
+                  picker's automatic choice can land on the wrong era.
+                </p>
+                <ul class="varinfo-alternatives">
+                  <li>
+                    <button
+                      type="button"
+                      class="varinfo-pick"
+                      class:varinfo-pick-active={userPickedVarId === null ||
+                        userPickedVarId === primaryVarId}
+                      onclick={() => (userPickedVarId = null)}
+                    >
+                      <p class="varinfo-name">
+                        <strong>{data.primary.variabelnamn ?? "(unnamed)"}</strong>
+                        <span class="varinfo-share">
+                          · primary · {data.primary_share.instances} cvid{data
+                            .primary_share.instances === 1
+                            ? ""
+                            : "s"}
+                          · {varSourceLine(data.primary)}
+                        </span>
+                      </p>
+                      {#if data.primary.variabeldefinition}
+                        <p class="varinfo-definition">
+                          {data.primary.variabeldefinition}
+                        </p>
+                      {/if}
+                    </button>
+                  </li>
+                  {#each data.alternatives as alt (alt.description.var_id)}
+                    <li>
+                      <button
+                        type="button"
+                        class="varinfo-pick"
+                        class:varinfo-pick-active={userPickedVarId ===
+                          alt.description.var_id}
+                        onclick={() =>
+                          (userPickedVarId = alt.description.var_id)}
+                      >
+                        <p class="varinfo-name">
+                          <strong>{alt.description.variabelnamn ?? "(unnamed)"}</strong>
+                          <span class="varinfo-share">
+                            · {alt.instances} cvid{alt.instances === 1 ? "" : "s"}
+                            · {varSourceLine(alt.description)}
+                          </span>
+                        </p>
+                        {#if alt.description.variabeldefinition}
+                          <p class="varinfo-definition">
+                            {alt.description.variabeldefinition}
+                          </p>
+                        {/if}
+                      </button>
+                    </li>
+                  {/each}
+                </ul>
+              </details>
+            {/if}
+          </div>
+        {/if}
+      </section>
+
+      {#if !yearConflictGated && column.regmeta_signal}
+        {@const sig = column.regmeta_signal}
+        <!-- Surface datatype only when it's the active type signal.
+             ``regmeta_implied_type`` gives value-codes / classification
+             precedence: when either is present, the column is
+             categorical and the underlying ``datatyp`` is a storage
+             detail (e.g. Kommun: numeric-coded categorical → datatyp
+             "numeric"). Showing "datatype numeric" on a categorical
+             column reads as a contradiction. -->
+        {@const showDatatype =
+          !!sig.datatyp_kind &&
+          !sig.classification_short_name &&
+          !sig.has_value_codes}
+        {@const showEmpty =
+          !sig.classification_short_name &&
+          !sig.has_value_codes &&
+          !sig.datatyp_kind}
+        {#if showDatatype || showEmpty}
+          <p class="regmeta-context" aria-label="regmeta context">
+            regmeta:
+            {#if showDatatype}
+              datatype <code>{sig.datatyp_kind}</code>
+            {:else if showEmpty}
+              column known to regmeta but with no classification, value codes,
+              or datatype hint.
+            {/if}
+          </p>
+        {/if}
+      {/if}
+
+      {#if !yearConflictGated && canShowValueCodes}
+        <details
+          class="value-codes-inline"
+          open={store.valueCodesExpandedInEditor}
+          ontoggle={(e) => {
+            const open = (e.currentTarget as HTMLDetailsElement).open;
+            store.setValueCodesExpandedInEditor(open);
+            if (open) valueCodesEverExpanded = true;
+          }}
+        >
+          <summary>
+            {store.valueCodesExpandedInEditor
+              ? "Hide value codes"
+              : "Show value codes"}
+          </summary>
+          {#if valueCodesEverExpanded}
+            <ValueCodesPanel
+              register={registerName}
+              column={column.name}
+              {sourceYears}
+              pickedVarId={activeVarId}
+            />
           {/if}
-          {#if column.regmeta_signal.has_value_codes}
-            {#if column.regmeta_signal.classification_short_name}·{/if}
-            value codes available
-          {/if}
-          {#if column.regmeta_signal.datatyp_kind}
-            · datatype <code>{column.regmeta_signal.datatyp_kind}</code>
-          {/if}
-          {#if !column.regmeta_signal.classification_short_name && !column.regmeta_signal.has_value_codes && !column.regmeta_signal.datatyp_kind}
-            column known to regmeta but with no classification, codes, or
-            datatype hint.
-          {/if}
-          {#if sources.length > 1}
-            <span class="regmeta-scope-note">
-              (from {sources[0]}; other sources in this partition may differ)
-            </span>
-          {/if}
-        </p>
-      {:else}
-        <p class="regmeta-context regmeta-missing">
-          regmeta: no record for this column name{#if sources.length > 1} (checked
-            on {sources[0]}){/if}.
-        </p>
+        </details>
       {/if}
 
       {#if showScopePicker}
@@ -423,6 +819,172 @@
     padding: 0;
     line-height: 1;
   }
+  .varinfo {
+    padding: 0.5rem 0.7rem;
+    background: #fbfaf6;
+    border-left: 3px solid #d8cfa8;
+    border-radius: 3px;
+    font-size: 0.9rem;
+    color: #3a3528;
+  }
+  .varinfo-status {
+    margin: 0;
+    color: #666;
+    font-style: italic;
+  }
+  .varinfo-status.varinfo-none {
+    color: #888;
+  }
+  .varinfo-status.varinfo-error {
+    background: #fde8e8;
+    border: 1px solid #e0a0a0;
+    color: #882020;
+    padding: 0.35rem 0.55rem;
+    border-radius: 3px;
+    font-style: normal;
+  }
+  .varinfo-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .varinfo-name {
+    margin: 0;
+    font-size: 1rem;
+  }
+  .varinfo-warn {
+    margin-left: 0.4rem;
+    color: #7a4a00;
+    font-size: 0.85em;
+  }
+  .varinfo-userpick {
+    margin-left: 0.3rem;
+    color: #5d2b8c;
+    font-size: 0.85em;
+    font-weight: 500;
+  }
+  .varinfo-definition {
+    margin: 0;
+    line-height: 1.4;
+  }
+  .varinfo-share {
+    color: #888;
+    font-size: 0.85em;
+  }
+  /* Two-column label/value grid. ``dt`` is the muted label, ``dd`` is
+     the content. Long values wrap inside their cell; the label column
+     stays narrow and aligned. */
+  .varinfo-fields {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 0.75rem;
+    row-gap: 0.3rem;
+    margin: 0.15rem 0 0;
+    font-size: 0.88rem;
+    line-height: 1.4;
+  }
+  .varinfo-fields dt {
+    color: #7a7158;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding-top: 0.05rem;
+    white-space: nowrap;
+  }
+  .varinfo-fields dd {
+    margin: 0;
+    color: #3a3528;
+  }
+  .varinfo-more {
+    margin-top: 0.2rem;
+    font-size: 0.85rem;
+    color: #555;
+  }
+  .varinfo-more > summary {
+    cursor: pointer;
+    user-select: none;
+    color: #555;
+  }
+  .varinfo-alternatives {
+    margin: 0.4rem 0 0;
+    padding-left: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .varinfo-pick-help {
+    margin: 0.4rem 0 0;
+    color: #6a614a;
+    font-size: 0.82rem;
+    line-height: 1.4;
+  }
+  /* Clickable variable cards. Resetting button defaults (background,
+     padding, etc.) lets us reuse the same layout as the static list
+     items while exposing native button affordances (focus ring,
+     keyboard activation). */
+  .varinfo-pick {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: #fff;
+    border: 1px solid #e1d8b8;
+    border-radius: 4px;
+    padding: 0.35rem 0.55rem;
+    cursor: pointer;
+    font: inherit;
+    color: inherit;
+  }
+  .varinfo-pick:hover:not(.varinfo-pick-active) {
+    background: #f7f2e0;
+  }
+  .varinfo-pick-active {
+    background: #ede4c4;
+    border-color: #a8924f;
+    cursor: default;
+  }
+  .year-conflict {
+    padding: 0.6rem 0.8rem;
+    background: #fff7e6;
+    border-left: 3px solid #e8c184;
+    border-radius: 3px;
+    color: #4b3a14;
+    font-size: 0.9rem;
+  }
+  .year-conflict-msg {
+    margin: 0 0 0.4rem;
+    line-height: 1.45;
+  }
+  .year-conflict-action {
+    margin: 0;
+    color: #5b4a14;
+    line-height: 1.4;
+  }
+  .retry {
+    margin-left: 0.5rem;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    font: inherit;
+  }
+  .value-codes-inline {
+    border: 1px solid #e6dff2;
+    background: #faf7fe;
+    border-radius: 4px;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  .value-codes-inline > summary {
+    cursor: pointer;
+    user-select: none;
+    color: #5d2b8c;
+    font-size: 0.88rem;
+  }
+  .value-codes-inline[open] > summary {
+    margin-bottom: 0.4rem;
+  }
   .regmeta-context {
     margin: 0;
     padding: 0.4rem 0.6rem;
@@ -437,17 +999,6 @@
     padding: 0.05rem 0.3rem;
     border-radius: 3px;
     font-size: 0.95em;
-  }
-  .regmeta-missing {
-    background: #fff8e9;
-    border-left-color: #f0c14b;
-    color: #5b4a14;
-  }
-  .regmeta-scope-note {
-    color: #888;
-    font-style: italic;
-    display: inline-block;
-    margin-left: 0.25rem;
   }
   fieldset {
     border: 1px solid #ddd;

@@ -10,7 +10,7 @@ Module surface (see ``DESIGN.md`` § Editor API for the full contract):
 
 - ``get_state``, ``init_if_missing``
 - ``set_column_type``, ``set_group_register``, ``set_source_registers``,
-  ``set_source_metadata``, ``set_column_options``
+  ``set_source_years``, ``set_column_options``
 - ``put_panel``, ``remove_panel``
 - Helpers: ``list_registers``, ``resolve_register``,
   ``detect_year_from_source_name``, ``detect_panel_member_kind``
@@ -70,7 +70,7 @@ from .panels import (
 )
 from .registers import Register, list_registers, resolve_register
 from .summarize import SUPPRESS_K as GLOBAL_SUPPRESS_K
-from ._util import lookup_with_prefix_fallback
+from ._util import lookup_with_prefix_fallback, strip_project_prefix
 
 __all__ = [
     # API
@@ -79,7 +79,7 @@ __all__ = [
     "set_column_type",
     "set_group_register",
     "set_source_registers",
-    "set_source_metadata",
+    "set_source_years",
     "set_column_options",
     "put_panel",
     "parse_panel_payload",
@@ -1646,34 +1646,76 @@ def _sources_in_group(
     return []
 
 
-def set_source_metadata(
+def set_source_years(
     project_dir: Path,
-    source_name: str,
+    assignments: dict[str, int | None],
     *,
     expected_version: str,
-    year: int | None | _Unchanged = UNCHANGED,
     db_path: Path | None = None,
 ) -> StateSnapshot:
-    """Modify per-source metadata. Currently scoped to ``year``."""
+    """Bulk-update ``year`` on multiple sources atomically.
+
+    ``assignments`` maps ``source_name`` to either:
+
+    - ``int`` — set/replace the year for this source.
+    - ``None`` — **delete** the year key entirely. Sends the row back
+      to the "missing" state (the editor UI's warning resurfaces on
+      next read). Note: legacy on-disk entries with ``"year": null``
+      (configs that pre-date this change) are still readable by the
+      bundle and parser; nothing emits them anymore.
+
+    Every source must exist in the current snapshot; unknown sources
+    abort the whole call before any on-disk write. A fully-no-op call
+    leaves ``snapshot_version`` unchanged.
+    """
+    if not isinstance(assignments, dict):
+        raise ValidationError(
+            f"assignments must be a dict, got {type(assignments).__name__}"
+        )
+    if not assignments:
+        raise ValidationError("assignments must be non-empty")
+    for sn, val in assignments.items():
+        if not isinstance(sn, str) or not sn:
+            raise ValidationError(
+                f"assignments keys must be non-empty strings, got {sn!r}"
+            )
+        if val is None:
+            continue
+        if isinstance(val, bool) or not isinstance(val, int):
+            raise ValidationError(
+                f"assignments[{sn!r}] must be int or None, got {type(val).__name__}"
+            )
+
     project_dir = Path(project_dir)
     with _config_lock(project_dir):
         payload = _verify_version(project_dir, expected_version)
-        _assert_source_in_discover(
-            _discover_sources_index(project_dir), payload, source_name
-        )
+        discover_index = _discover_sources_index(project_dir)
+        for sn in assignments:
+            _assert_source_in_discover(discover_index, payload, sn)
+
         sources = payload.setdefault("sources", {})
-        entry = sources.setdefault(source_name, {})
-        if not isinstance(year, _Unchanged):
+        any_change = False
+        for sn, year in assignments.items():
+            entry = sources.setdefault(sn, {})
+            had_year = "year" in entry
+            old_year = entry.get("year") if had_year else None
             if year is None:
-                entry["year"] = None
-            elif isinstance(year, int) and not isinstance(year, bool):
-                entry["year"] = year
+                if not had_year:
+                    continue
+                entry.pop("year", None)
+                any_change = True
             else:
-                raise ValidationError(
-                    f"year must be int or None, got {type(year).__name__}"
-                )
-        if not entry:
-            sources.pop(source_name, None)
+                if had_year and old_year == year:
+                    continue
+                entry["year"] = year
+                any_change = True
+        # Prune sources entries that ended up entirely empty (no `year`
+        # and no `register`) so JSON output stays clean.
+        for sn in list(sources):
+            if not sources[sn]:
+                sources.pop(sn)
+        if not any_change:
+            return get_state(project_dir, db_path=db_path)
         _atomic_write(_config_path(project_dir), payload)
     return get_state(project_dir, db_path=db_path)
 
@@ -1822,6 +1864,15 @@ class ValueSetGroup:
 
 
 @dataclass(frozen=True)
+class ClassificationGroup:
+    """One classification entry with its year window."""
+
+    short_name: str
+    year_min: int | None
+    year_max: int | None
+
+
+@dataclass(frozen=True)
 class ColumnValuesResult:
     kind: Literal["classification", "values", "none"]
     title: str
@@ -1829,7 +1880,7 @@ class ColumnValuesResult:
     codes: tuple[ColumnValue, ...]
     tier: VarianceTier | None = None
     note: str | None = None
-    classifications: tuple[str, ...] = ()
+    classifications: tuple[ClassificationGroup, ...] = ()
     picked_classification: str | None = None
     value_sets: tuple[ValueSetGroup, ...] = ()
     picked_value_set: int | None = None
@@ -1841,11 +1892,19 @@ def _fetch_distinct_classifications(
     register_ids: list[int],
     *,
     relevant_years: set[int] | None = None,
-) -> tuple[str, ...]:
+    var_id: int | None = None,
+) -> tuple[ClassificationGroup, ...]:
+    """Resolve the classifications attached to ``matched_alias`` in
+    ``register_ids``. When ``var_id`` is set, restrict to classifications
+    attached to that variable's instances — without the filter, an SCB
+    column-name slot reused across var_ids with divergent classification
+    bindings would surface the wrong primary in the popup."""
     if not register_ids:
         return ()
+    from regmeta.queries import extract_year
+
     ph = ",".join("?" for _ in register_ids)
-    rows = conn.execute(
+    sql = (
         "SELECT DISTINCT c.short_name, rv.registerversionnamn AS regver_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
@@ -1853,40 +1912,79 @@ def _fetch_distinct_classifications(
         "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
         f"  AND vi.register_id IN ({ph}) "
-        "  AND c.short_name IS NOT NULL",
-        [matched_alias, *register_ids],
-    ).fetchall()
-    if relevant_years is None:
-        return tuple(sorted({r["short_name"] for r in rows}))
-    from regmeta.queries import extract_year
-
-    # Yearless instances survive: we can't disprove their relevance.
-    kept: set[str] = set()
+        "  AND c.short_name IS NOT NULL"
+    )
+    params: list[Any] = [matched_alias, *register_ids]
+    if var_id is not None:
+        sql += " AND vi.var_id = ?"
+        params.append(var_id)
+    rows = conn.execute(sql, params).fetchall()
+    # Aggregate (short_name → set of years seen), then min/max for the
+    # picker tooltip. Yearless rows survive filtering (we can't disprove
+    # their relevance) but they don't contribute to the year window.
+    years_by_sn: dict[str, set[int]] = {}
+    seen_yearless: set[str] = set()
     for r in rows:
         year = extract_year(r["regver_name"] or "")
-        if year is None or year in relevant_years:
-            kept.add(r["short_name"])
-    return tuple(sorted(kept))
+        if (
+            relevant_years is not None
+            and year is not None
+            and year not in relevant_years
+        ):
+            continue
+        sn = r["short_name"]
+        if year is None:
+            seen_yearless.add(sn)
+        else:
+            years_by_sn.setdefault(sn, set()).add(year)
+    all_short_names = set(years_by_sn) | seen_yearless
+    return tuple(
+        sorted(
+            (
+                ClassificationGroup(
+                    short_name=sn,
+                    year_min=min(years_by_sn[sn]) if sn in years_by_sn else None,
+                    year_max=max(years_by_sn[sn]) if sn in years_by_sn else None,
+                )
+                for sn in all_short_names
+            ),
+            key=lambda g: (g.year_min is None, g.year_min or 0, g.short_name),
+        )
+    )
 
 
 def _fetch_value_set_groups(
-    conn: Any, matched_alias: str, register_ids: list[int]
+    conn: Any,
+    matched_alias: str,
+    register_ids: list[int],
+    *,
+    var_id: int | None = None,
 ) -> tuple[ValueSetGroup, ...]:
+    """Resolve the value-set groups attached to ``matched_alias`` in
+    ``register_ids``. When ``var_id`` is set, restrict to value-sets
+    attached to that variable's instances — without the filter, an SCB
+    column-name slot reused across var_ids (e.g. ``F12`` covering both a
+    Skolform variable and a Distansutb survey question) leaks code lists
+    from variables other than the one the popup is describing."""
     if not register_ids:
         return ()
     from regmeta.queries import extract_year
 
     ph = ",".join("?" for _ in register_ids)
-    rows = conn.execute(
+    sql = (
         "SELECT DISTINCT vi.value_set_id, vi.cvid, rv.registerversionnamn "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "JOIN register_version rv ON vi.regver_id = rv.regver_id "
         f"WHERE LOWER(va.kolumnnamn) = LOWER(?) "
         f"  AND vi.register_id IN ({ph}) "
-        "  AND vi.value_set_id IS NOT NULL",
-        [matched_alias, *register_ids],
-    ).fetchall()
+        "  AND vi.value_set_id IS NOT NULL"
+    )
+    params: list[Any] = [matched_alias, *register_ids]
+    if var_id is not None:
+        sql += " AND vi.var_id = ?"
+        params.append(var_id)
+    rows = conn.execute(sql, params).fetchall()
     by_vs: dict[int, list[tuple[int, int | None]]] = {}
     for r in rows:
         vsid = int(r["value_set_id"])
@@ -1971,10 +2069,17 @@ def get_column_values(
     *,
     picked_classification: str | None = None,
     picked_value_set: int | None = None,
+    picked_var_id: int | None = None,
     relevant_years: list[int] | None = None,
     db_path: Path | None = None,
 ) -> ColumnValuesResult:
     """Resolve value codes for one column under one register.
+
+    ``picked_var_id`` scopes the value-set lookup to one variable. When
+    multiple variables in the same register alias to ``column`` (SCB
+    recycles column slots), passing the var_id chosen in the varinfo
+    popup keeps the year tabs honest — without it, the panel mixes code
+    lists from every variable that ever used the column name.
 
     Returns ``kind="none"`` rather than raising when regmeta is missing,
     the register doesn't resolve, or the column is unknown — degrades
@@ -2015,18 +2120,38 @@ def get_column_values(
         # "AStud"); per-instance SQL must use the alias regmeta knows.
         matched_alias = _matched_alias_key(signals, column) or column
 
-        classifications: tuple[str, ...] = ()
-        if signal is not None and signal.n_classifications > 1:
+        # When ``picked_var_id`` is set, always fetch the scoped list — the
+        # aggregated ``signal.n_classifications`` counts across all var_ids,
+        # so the scoped count (and primary) can disagree. Falling through to
+        # value-codes is fine if the scoped list is empty.
+        classifications: tuple[ClassificationGroup, ...] = ()
+        if signal is not None and (
+            signal.n_classifications > 1 or picked_var_id is not None
+        ):
             classifications = _fetch_distinct_classifications(
-                conn, matched_alias, register_ids, relevant_years=years_set
+                conn,
+                matched_alias,
+                register_ids,
+                relevant_years=years_set,
+                var_id=picked_var_id,
             )
 
-        if signal is not None and signal.classification_short_name:
-            chosen_sn = signal.classification_short_name
+        has_classification = (
+            bool(classifications)
+            if picked_var_id is not None
+            else (signal is not None and bool(signal.classification_short_name))
+        )
+        if signal is not None and has_classification:
+            chosen_sn = (
+                classifications[0].short_name
+                if picked_var_id is not None
+                else signal.classification_short_name
+            )
+            classification_names = {g.short_name for g in classifications}
             if (
                 picked_classification
-                and classifications
-                and picked_classification in classifications
+                and classification_names
+                and picked_classification in classification_names
             ):
                 chosen_sn = picked_classification
             try:
@@ -2055,12 +2180,14 @@ def get_column_values(
                         note=note,
                         classifications=classifications,
                         picked_classification=(
-                            chosen_sn if signal.n_classifications > 1 else None
+                            chosen_sn if len(classifications) > 1 else None
                         ),
                     )
 
         if signal is not None and signal.has_value_codes and register_ids:
-            all_groups = _fetch_value_set_groups(conn, matched_alias, register_ids)
+            all_groups = _fetch_value_set_groups(
+                conn, matched_alias, register_ids, var_id=picked_var_id
+            )
             groups_used, filter_note = _filter_groups_by_relevant_years(
                 all_groups, relevant_years
             )
@@ -2116,6 +2243,11 @@ def _tier_for_values_path(
     triples: list[tuple[int, str, str | None]],
     n_value_sets: int,
 ) -> tuple[VarianceTier, str | None]:
+    # Tier 3a's note is "pick another value-set below" — pointless with a
+    # single set (label divergence inside the set isn't pickable). Drop
+    # to tier 1 to avoid rendering the banner without a picker beneath.
+    if n_value_sets <= 1:
+        return ("1", None)
     # 3a (label collisions on the same code) dominates 2: under 3a the
     # deduped union arbitrarily picks one label per code, so the popup
     # loses meaning without the picker note.
@@ -2126,9 +2258,7 @@ def _tier_for_values_path(
         labels_per_code.setdefault(code, set()).add(label)
     if any(len(s) > 1 for s in labels_per_code.values()):
         return ("3a", _NOTE_TIER_3A)
-    if n_value_sets > 1:
-        return ("2", _NOTE_TIER_2)
-    return ("1", None)
+    return ("2", _NOTE_TIER_2)
 
 
 def _note_tier_3b(picked: str) -> str:
@@ -2161,8 +2291,6 @@ def _resolve_picked_value_set(
 
 
 def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
-    from ._util import strip_project_prefix
-
     lower = column.lower()
     if lower in signals:
         return lower
@@ -2183,9 +2311,254 @@ def _dedupe_codes(
     return tuple(seen.values())
 
 
+# -- Public API: column varinfo ------------------------------------------
+
+
+@dataclass(frozen=True)
+class VarinfoDescription:
+    """One regmeta `variable` row, flattened to the fields the editor
+    surfaces. The full audit-trail fields live behind the modal's
+    expander; the primary fields are shown above the fold."""
+
+    variabelnamn: str | None
+    variabeldefinition: str | None
+    variabelbeskrivning: str | None
+    variabeloperationell_definition: str | None
+    variabelreferenstid: str | None
+    variabelhamtadfran: str | None
+    variabelregister_kalla: str | None
+    mattenhet: str | None
+    var_id: int
+    register_name: str | None
+
+
+@dataclass(frozen=True)
+class VarinfoAlternative:
+    description: VarinfoDescription
+    instances: int
+
+
+VarinfoNoneReason = Literal["not_found", "unavailable", "no_register"]
+
+
+@dataclass(frozen=True)
+class ColumnVarinfoResult:
+    """Resolved varinfo for one (column, register) pair.
+
+    ``kind`` matches the wire envelope:
+      - ``single``: exactly one variable aliases to this column.
+      - ``divergent``: more than one variable aliases to this column under
+        the same register (SCB has recycled the column name across var_ids).
+        ``primary`` is the variable with the most ``variable_instance``
+        rows; ``alternatives`` lists the rest in descending frequency.
+      - ``none``: nothing to render. ``none_reason`` distinguishes the
+        three cases the UI wants to surface differently:
+          * ``"no_register"`` — column has no register pinned;
+          * ``"unavailable"`` — regmeta DB / package not present;
+          * ``"not_found"`` — column is unknown to regmeta (or the
+            register itself doesn't resolve).
+    """
+
+    kind: Literal["single", "divergent", "none"]
+    primary: VarinfoDescription | None = None
+    primary_instances: int | None = None
+    total_instances: int | None = None
+    alternatives: tuple[VarinfoAlternative, ...] = ()
+    none_reason: VarinfoNoneReason | None = None
+
+
+def _varinfo_description_from_row(row: dict[str, Any]) -> VarinfoDescription:
+    return VarinfoDescription(
+        variabelnamn=row.get("variabelnamn"),
+        variabeldefinition=row.get("variabeldefinition"),
+        variabelbeskrivning=row.get("variabelbeskrivning"),
+        variabeloperationell_definition=row.get("variabeloperationell_definition"),
+        variabelreferenstid=row.get("variabelreferenstid"),
+        variabelhamtadfran=row.get("variabelhamtadfran"),
+        variabelregister_kalla=row.get("variabelregister_kalla"),
+        mattenhet=row.get("mattenhet"),
+        var_id=int(row["var_id"]),
+        register_name=row.get("register_name"),
+    )
+
+
+def _variable_year_distance(
+    variable: dict[str, Any], relevant_years: set[int]
+) -> int | None:
+    """Min distance from any instance's year to any year in
+    ``relevant_years``. Returns None when neither side has a year — the
+    caller treats that as "no year signal", same as a non-matching
+    variable, so the popularity tie-breaker takes over."""
+    instance_years = [
+        y
+        for inst in variable.get("instances") or ()
+        if isinstance((y := inst.get("year")), int)
+    ]
+    if not instance_years or not relevant_years:
+        return None
+    return min(abs(iy - ry) for iy in instance_years for ry in relevant_years)
+
+
+# Sort sentinel for yearless variables: ranks them after any year-matched
+# variable (whose distance is 0 after the dist>0 filter) but before being
+# dropped. Any large number works — picked to be obviously synthetic.
+_NO_YEAR_DISTANCE = 10_000
+
+
+def _rank_variables(
+    variables: list[dict[str, Any]], relevant_years: set[int] | None
+) -> list[dict[str, Any]]:
+    """Order variables — and, when ``relevant_years`` is set, drop those
+    with no instance in those years.
+
+    Filter rationale: an SCB column-name slot reused across decades (e.g.
+    ``F12`` mapping to a 1990s Skolform variable AND a 2020 Distansutb
+    survey item) shouldn't surface the wrong-era variant as an
+    "alternative" — once the user has told us which year the source is
+    from, off-year variables are not just lower-ranked, they're
+    wrong. Within the kept set, sort by minimum year distance (closer
+    wins), then popularity, then var_id for stable output. With no year
+    context we collapse to the original popularity-only ranking — every
+    variable is a plausible match."""
+    if relevant_years:
+        # Compute distance once per variable. Variables with parseable
+        # years that don't overlap (dist > 0) are dropped; variables
+        # with no parseable years (dist is None) are kept — "we can't
+        # disprove relevance" mirrors `_filter_groups_by_relevant_years`.
+        scored: list[tuple[int, int, int, dict[str, Any]]] = []
+        for v in variables:
+            dist = _variable_year_distance(v, relevant_years)
+            if dist is not None and dist > 0:
+                continue
+            effective_dist = dist if dist is not None else _NO_YEAR_DISTANCE
+            scored.append(
+                (
+                    effective_dist,
+                    -len(v.get("instances") or ()),
+                    int(v["var_id"]),
+                    v,
+                )
+            )
+        scored.sort(key=lambda t: t[:3])
+        return [t[3] for t in scored]
+    return sorted(
+        variables,
+        key=lambda v: (-len(v.get("instances") or ()), int(v["var_id"])),
+    )
+
+
+def get_column_varinfo(
+    register: str | None,
+    column: str,
+    *,
+    relevant_years: list[int] | None = None,
+    db_path: Path | None = None,
+) -> ColumnVarinfoResult:
+    """Resolve the regmeta variable description(s) for one column under
+    one register.
+
+    ``relevant_years`` (typically the source's configured year) is a
+    strict filter: variables with parseable instance years that don't
+    overlap the window are dropped entirely. Necessary because SCB
+    reuses column-name slots across decades — a question-number like
+    ``F12`` may map to a Skolform variable from 2004 and a Distansutb
+    survey item from 2020 inside the same register, and once the user
+    has set a year the off-year variant is not a viable "alternative",
+    it's wrong. Variables with no parseable years survive the filter
+    (mirrors ``_filter_groups_by_relevant_years``: we can't disprove
+    their relevance). Without ``relevant_years``, falls back to pure
+    popularity ranking and every variable is surfaced.
+
+    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    the register doesn't resolve, or the column is unknown — degrades
+    gracefully into an empty popover (same stance as
+    ``get_column_values``).
+    """
+    if not column or not column.strip():
+        raise ValidationError("column must be a non-empty string")
+
+    if register is None or not register.strip():
+        return ColumnVarinfoResult(kind="none", none_reason="no_register")
+    unavailable = ColumnVarinfoResult(kind="none", none_reason="unavailable")
+    not_found = ColumnVarinfoResult(kind="none", none_reason="not_found")
+
+    year_set: set[int] | None = set(relevant_years) if relevant_years else None
+
+    with _open_regmeta_conn(db_path) as conn:
+        if conn is None:
+            return unavailable
+        try:
+            from regmeta.errors import RegmetaError
+            from regmeta.queries import get_varinfo
+        except ImportError:
+            return unavailable
+
+        # MONA-prefixed columns (e.g. "P1105_Kon") aren't stored in regmeta
+        # — mirror `get_column_values` and retry with the stripped form.
+        candidates = [column]
+        stripped = strip_project_prefix(column)
+        if stripped and stripped != column:
+            candidates.append(stripped)
+
+        variables: list[dict[str, Any]] | None = None
+        for candidate in candidates:
+            try:
+                variables = get_varinfo(conn, candidate, register=register)
+                break
+            except RegmetaError as exc:
+                if exc.code != "not_found":
+                    raise
+                variables = None
+
+        if not variables:
+            return not_found
+
+        ranked = _rank_variables(variables, year_set)
+        if not ranked:
+            # Filter dropped every match: regmeta knows the column under
+            # this register, but only in years that don't overlap the
+            # project's. Treat as not_found — the popup renders "not in
+            # regmeta for these years" rather than a misleading
+            # other-year description.
+            return not_found
+        primary_row = ranked[0]
+        primary = _varinfo_description_from_row(primary_row)
+        primary_n = len(primary_row.get("instances") or ())
+        total = sum(len(v.get("instances") or ()) for v in ranked)
+
+        if len(ranked) == 1:
+            return ColumnVarinfoResult(
+                kind="single",
+                primary=primary,
+                primary_instances=primary_n,
+                total_instances=total,
+            )
+
+        alternatives = tuple(
+            VarinfoAlternative(
+                description=_varinfo_description_from_row(v),
+                instances=len(v.get("instances") or ()),
+            )
+            for v in ranked[1:]
+        )
+        return ColumnVarinfoResult(
+            kind="divergent",
+            primary=primary,
+            primary_instances=primary_n,
+            total_instances=total,
+            alternatives=alternatives,
+        )
+
+
 __all__ += [
     "ColumnValue",
     "ColumnValuesResult",
+    "ClassificationGroup",
     "ValueSetGroup",
     "get_column_values",
+    "ColumnVarinfoResult",
+    "VarinfoAlternative",
+    "VarinfoDescription",
+    "VarinfoNoneReason",
+    "get_column_varinfo",
 ]

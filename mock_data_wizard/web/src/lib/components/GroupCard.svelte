@@ -4,6 +4,8 @@
     columnIsManual,
     columnIsMismatch,
     columnIsUnmatchedCategorical,
+    hasRegmetaValueDisplay,
+    sourceYearInfoFor,
     store,
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
@@ -42,14 +44,11 @@
     none: "no confidence",
   };
 
-  let sourceYears = $derived.by(() => {
-    const m: Record<string, number | null> = {};
-    const sources = store.snapshot?.config.sources ?? {};
-    for (const s of group.sources) {
-      m[s] = sources[s]?.year ?? null;
-    }
-    return m;
-  });
+  let sourceYearInfo = $derived(sourceYearInfoFor(group.sources));
+  let missingYearCount = $derived(
+    group.sources.filter((sn) => sourceYearInfo[sn].provenance === "missing")
+      .length,
+  );
 
   let groupSourceSet = $derived(new Set(group.sources));
   let panelsForGroup = $derived.by(() => {
@@ -131,11 +130,10 @@
   // most-common winner would silently mislabel the other years.
   function regmetaBadge(col: ColumnInfo): string {
     const sig = col.regmeta_signal;
-    if (!sig) return "";
-    if (sig.n_classifications > 1) return `varies · ${sig.n_classifications}`;
-    if (sig.classification_short_name) return sig.classification_short_name;
-    if (sig.has_value_codes) return "vc";
-    return "";
+    if (!hasRegmetaValueDisplay(sig)) return "";
+    if (sig!.n_classifications > 1) return `varies · ${sig!.n_classifications}`;
+    if (sig!.classification_short_name) return sig!.classification_short_name;
+    return "vc";
   }
 
   // Tooltip text; TypeCell appends the click CTA so this stays purely
@@ -478,6 +476,14 @@
       {:else}
         <span class="unassigned">unassigned</span>
       {/if}
+      {#if missingYearCount > 0}
+        <span
+          class="missing-year-badge"
+          title={`${missingYearCount} source${missingYearCount === 1 ? "" : "s"} in this group had no year detected — set one in Edit register, or assert "no year" to dismiss`}
+        >
+          ⚠ {missingYearCount} missing year{missingYearCount === 1 ? "" : "s"}
+        </span>
+      {/if}
     </span>
     <button class="link" onclick={() => (editingRegister = true)}>
       {group.register_name ? "Edit register…" : "Assign register…"}
@@ -653,12 +659,18 @@
       </summary>
       <ul class="source-list">
         {#each group.sources as sn (sn)}
+          {@const info = sourceYearInfo[sn]}
           <li>
             <span class="mono">{sn}</span>
-            {#if sourceYears[sn] !== null && sourceYears[sn] !== undefined}
-              <span class="stat-year" title="detected source year"
-                >{sourceYears[sn]}</span
+            {#if info.year !== null}
+              <span class="stat-year" title="source year">{info.year}</span>
+            {:else if info.provenance === "missing"}
+              <span
+                class="stat-year stat-year-missing"
+                title="no year detected from source name — set one in Edit register"
               >
+                ⚠ no year
+              </span>
             {/if}
           </li>
         {/each}
@@ -673,7 +685,9 @@
       {@const sourceName = fs.name}
       {@const cols = fs.cols}
       {@const stats = statsFor(cols)}
-      {@const year = sourceYears[sourceName]}
+      {@const info = sourceYearInfo[sourceName]}
+      {@const year = info.year}
+      {@const yearMissing = info.provenance === "missing"}
       <details
         class="source"
         open={isSourceOpen(fs.name)}
@@ -682,8 +696,15 @@
         <summary>
           <span class="source-name mono">{sourceName}</span>
           <span class="source-stats">
-            {#if year !== null && year !== undefined}
-              <span class="stat-year" title="detected source year">{year}</span>
+            {#if year !== null}
+              <span class="stat-year" title="source year">{year}</span>
+            {:else if yearMissing}
+              <span
+                class="stat-year stat-year-missing"
+                title="no year detected from source name — set one in Edit register"
+              >
+                ⚠ no year
+              </span>
             {/if}
             <span class="stat-cols"
               >{stats.total} col{stats.total === 1 ? "" : "s"}</span
@@ -801,7 +822,9 @@
   <ValueCodesModal
     register={group.register_name}
     column={viewingValuesFor}
-    sourceYears={sourceYears}
+    sourceYears={Object.fromEntries(
+      group.sources.map((sn) => [sn, sourceYearInfo[sn].year]),
+    )}
     onClose={() => (viewingValuesFor = null)}
   />
 {/if}
@@ -924,6 +947,15 @@
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+  }
+  .missing-year-badge {
+    background: #fff7e6;
+    color: #7a4a00;
+    border: 1px solid #e8c184;
+    padding: 0.1rem 0.45rem;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    cursor: help;
   }
   .muted {
     color: #666;
@@ -1060,6 +1092,11 @@
     border-radius: 3px;
     font-family: ui-monospace, monospace;
     font-size: 0.78rem;
+  }
+  .stat-year.stat-year-missing {
+    background: #fff7e6;
+    color: #7a4a00;
+    cursor: help;
   }
   .stat-cols {
     color: #888;

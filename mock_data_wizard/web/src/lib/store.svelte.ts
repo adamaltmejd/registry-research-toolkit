@@ -8,6 +8,7 @@
 import {
   ApiError,
   ApiStaleState,
+  getColumnVarinfo as apiGetColumnVarinfo,
   getState as fetchState,
   initProject as apiInitProject,
   listRegisters,
@@ -16,18 +17,22 @@ import {
   setColumnType as apiSetColumnType,
   setGroupRegister as apiSetGroupRegister,
   setSourceRegisters as apiSetSourceRegisters,
+  setSourceYears as apiSetSourceYears,
   unsetColumnManual as apiUnsetColumnManual,
+  type ColumnVarinfoResponse,
   type PutPanelArgs,
   type RemovePanelArgs,
   type SetColumnTypeArgs,
   type SetGroupRegisterArgs,
   type SetSourceRegistersArgs,
+  type SetSourceYearsArgs,
   type UnsetColumnManualArgs,
 } from "./api";
 import type {
   ColumnInfo,
   ColumnType,
   RegisterEntry,
+  RegmetaSignal,
   StateSnapshot,
 } from "./types";
 
@@ -58,6 +63,64 @@ export function columnIsUnmatchedCategorical(c: ColumnInfo): boolean {
   const sig = c.regmeta_signal;
   if (!sig) return true;
   return !sig.classification_short_name && !sig.has_value_codes;
+}
+
+/** True when the column has anything for ValueCodesPanel / regmeta-badge
+ *  to render. Must stay in lockstep with GroupCard's badge logic — when
+ *  this is false, neither the table badge nor the editor's inline panel
+ *  show up. */
+export function hasRegmetaValueDisplay(sig: RegmetaSignal | null): boolean {
+  if (!sig) return false;
+  return (
+    sig.n_classifications > 1 ||
+    !!sig.classification_short_name ||
+    sig.has_value_codes
+  );
+}
+
+/** Per-source year state. ``provenance = "set"`` means the source has a
+ *  ``year`` key (an int, or ``null`` asserting "no year"); ``"missing"``
+ *  means no key at all (auto-detection yielded nothing and the user
+ *  hasn't intervened). Year + provenance are read in one snapshot pass. */
+export interface SourceYearInfo {
+  year: number | null;
+  provenance: "set" | "missing";
+}
+
+/** Snapshot-scoped per-source year info. Returns both year and
+ *  provenance in one pass over ``snapshot.config.sources``. Callers
+ *  that only need years for the ValueCodesPanel pass an extracted map
+ *  derived from this. */
+export function sourceYearInfoFor(
+  sources: Iterable<string>,
+): Record<string, SourceYearInfo> {
+  const cfg = store.snapshot?.config.sources ?? {};
+  const out: Record<string, SourceYearInfo> = {};
+  for (const sn of sources) {
+    const entry = cfg[sn];
+    if (entry !== undefined && "year" in entry) {
+      out[sn] = { year: entry.year ?? null, provenance: "set" };
+    } else {
+      out[sn] = { year: null, provenance: "missing" };
+    }
+  }
+  return out;
+}
+
+/** Sorted, unique, non-null years from a ``{source → year}`` map.
+ *  Used as the ``relevant_years`` filter for varinfo/value-codes
+ *  lookups so a column's SCB-cross-decade slot reuse doesn't surface
+ *  wrong-era variants. */
+export function relevantYearsFromMap(
+  sourceYears: Record<string, number | null>,
+): number[] {
+  return Array.from(
+    new Set(
+      Object.values(sourceYears).filter(
+        (y): y is number => typeof y === "number",
+      ),
+    ),
+  ).sort((a, b) => a - b);
 }
 
 export function columnHasConcern(
@@ -103,6 +166,7 @@ const VIEW_PREF_KEY = "mdw.web.groupColumnsByName";
 const COLUMNS_PREF_KEY = "mdw.web.visibleColumns";
 const OPEN_GROUPS_KEY = "mdw.web.openGroups";
 const OPEN_SOURCES_KEY = "mdw.web.openSources";
+const VALUE_CODES_EXPANDED_KEY = "mdw.web.columnEditor.valueCodesExpanded";
 
 function loadGroupingPref(): boolean {
   if (typeof localStorage === "undefined") return true;
@@ -177,6 +241,24 @@ function saveVisibleColumns(value: VisibleColumns): void {
   }
 }
 
+function loadValueCodesExpanded(): boolean {
+  if (typeof localStorage === "undefined") return false;
+  try {
+    return localStorage.getItem(VALUE_CODES_EXPANDED_KEY) === "true";
+  } catch {
+    return false;
+  }
+}
+
+function saveValueCodesExpanded(value: boolean): void {
+  if (typeof localStorage === "undefined") return;
+  try {
+    localStorage.setItem(VALUE_CODES_EXPANDED_KEY, String(value));
+  } catch {
+    // Storage quota / private mode — non-fatal.
+  }
+}
+
 /** Per-browser persistence for the user's expand/collapse state. Stored
  * as a flat string array (open group_ids) so a fresh page load — or any
  * snapshot mutation that re-renders the GroupCard list — preserves
@@ -246,6 +328,17 @@ class Store {
   openGroups: Set<string> = $state(loadStringSet(OPEN_GROUPS_KEY));
   openSources: Set<string> = $state(loadStringSet(OPEN_SOURCES_KEY));
 
+  /** Persisted "show value codes" toggle inside the column-type editor.
+   *  A single global flag (not per-column) — the user who likes the
+   *  inline panel keeps it open; the user who doesn't, doesn't see it. */
+  valueCodesExpandedInEditor = $state(loadValueCodesExpanded());
+
+  /** Per-(register, column) varinfo cache scoped to the current
+   *  snapshot. Lives on the store so two modals on the same column
+   *  share one HTTP call. */
+  private varinfoCache = new Map<string, ColumnVarinfoResponse>();
+  private varinfoInFlight = new Map<string, Promise<ColumnVarinfoResponse>>();
+
   /** Free-text filter on column name. Substring, case-insensitive.
    * Session-scoped — losing the filter on reload is the right default
    * (otherwise a stale filter from yesterday silently hides everything
@@ -300,8 +393,15 @@ class Store {
    * persisted set would otherwise grow forever as users move between
    * projects or as re-discover renames groups. */
   private setSnapshot(snap: StateSnapshot): void {
+    const prev = this.snapshot?.snapshot_version;
     this.snapshot = snap;
     this.pruneOpenStateAgainst(snap);
+    if (prev !== snap.snapshot_version) {
+      // A version bump can change a column's register assignment, so
+      // cached descriptions and in-flight requests are no longer valid.
+      this.varinfoCache.clear();
+      this.varinfoInFlight.clear();
+    }
   }
 
   private pruneOpenStateAgainst(snap: StateSnapshot): void {
@@ -356,6 +456,64 @@ class Store {
     }
   }
 
+  /** Lazy + coalesced varinfo fetch keyed by (register, column,
+   *  relevant_years). Two modals opening the same column race onto one
+   *  HTTP call; result is cached for the rest of the current snapshot.
+   *  ``register=null`` short-circuits to the server's "none" envelope
+   *  without a request — the endpoint returns the same envelope, but
+   *  skipping the round trip keeps the modal's first paint snappy when
+   *  there's nothing to resolve. The cache key includes years because
+   *  the year-aware ranking can flip the primary across year scopes
+   *  (same column, different year → different variable picked).
+   *
+   *  Stale-snapshot guard: an in-flight request started under snapshot
+   *  V1 must not write into the V2 cache after a version bump (its
+   *  column→register mapping may no longer hold). We capture the
+   *  snapshot version at request start and drop both the cache write
+   *  and the in-flight cleanup if the version advanced — leaving the
+   *  newer request (if any) intact. */
+  async getColumnVarinfo(
+    register: string | null,
+    column: string,
+    relevantYears?: number[],
+  ): Promise<ColumnVarinfoResponse> {
+    if (register === null) return { kind: "none", reason: "no_register" };
+    const yearKey = relevantYears && relevantYears.length > 0
+      ? [...relevantYears].sort((a, b) => a - b).join(",")
+      : "";
+    const key = `${register}::${column}::${yearKey}`;
+    const cached = this.varinfoCache.get(key);
+    if (cached !== undefined) return cached;
+    const pending = this.varinfoInFlight.get(key);
+    if (pending !== undefined) return pending;
+    const versionAtStart = this.snapshot?.snapshot_version;
+    const promise = (async () => {
+      try {
+        const response = await apiGetColumnVarinfo({
+          register,
+          column,
+          relevant_years: relevantYears,
+        });
+        if (this.snapshot?.snapshot_version === versionAtStart) {
+          this.varinfoCache.set(key, response);
+        }
+        return response;
+      } finally {
+        if (this.snapshot?.snapshot_version === versionAtStart) {
+          this.varinfoInFlight.delete(key);
+        }
+      }
+    })();
+    this.varinfoInFlight.set(key, promise);
+    return promise;
+  }
+
+  setValueCodesExpandedInEditor(value: boolean): void {
+    if (this.valueCodesExpandedInEditor === value) return;
+    this.valueCodesExpandedInEditor = value;
+    saveValueCodesExpanded(value);
+  }
+
   async setColumnType(args: SetColumnTypeArgs): Promise<boolean> {
     return this.runMutation(() => apiSetColumnType(args));
   }
@@ -370,6 +528,10 @@ class Store {
 
   async setSourceRegisters(args: SetSourceRegistersArgs): Promise<boolean> {
     return this.runMutation(() => apiSetSourceRegisters(args));
+  }
+
+  async setSourceYears(args: SetSourceYearsArgs): Promise<boolean> {
+    return this.runMutation(() => apiSetSourceYears(args));
   }
 
   async putPanel(args: PutPanelArgs): Promise<boolean> {
