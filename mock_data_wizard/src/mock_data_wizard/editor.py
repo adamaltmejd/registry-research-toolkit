@@ -215,7 +215,11 @@ class RegisterGroupView:
     confidence: Confidence
     sources: tuple[str, ...]
     columns_by_source: dict[str, tuple[ColumnInfo, ...]]
-    schema_variants: int
+    # Sources partitioned by (column-name, sql_type) shape. Each inner
+    # tuple is one shape's members in first-seen order; outer order is
+    # first-seen across `sources`. Single-shape groups produce a single
+    # inner tuple. The badge count is ``len(schema_variant_groups)``.
+    schema_variant_groups: tuple[tuple[str, ...], ...]
     panel_candidate: Any  # PanelCandidate | None — looser to avoid cycle
     # Per-source seeds for the manual panel editor. Computed server-side
     # via ``detect_panel_member_hints`` so the client doesn't reimplement
@@ -686,13 +690,21 @@ def _build_groups(
                 )
         return tuple(cols)
 
-    def _schema_variants(columns_by_source: dict[str, tuple[ColumnInfo, ...]]) -> int:
-        if not columns_by_source:
-            return 0
-        seen: set[tuple[tuple[str, str | None], ...]] = set()
-        for cols in columns_by_source.values():
-            seen.add(tuple((c.name, c.sql_type) for c in cols))
-        return len(seen)
+    def _schema_variant_groups(
+        columns_by_source: dict[str, tuple[ColumnInfo, ...]],
+    ) -> tuple[tuple[str, ...], ...]:
+        # Sources sharing exactly the same ``(name, sql_type)`` column
+        # sequence land in the same variant. Order is first-seen so the
+        # client can render "Schema 1 / 2 / ..." stably.
+        order: list[tuple[tuple[str, str | None], ...]] = []
+        members: dict[tuple[tuple[str, str | None], ...], list[str]] = {}
+        for sn, cols in columns_by_source.items():
+            key = tuple((c.name, c.sql_type) for c in cols)
+            if key not in members:
+                order.append(key)
+                members[key] = []
+            members[key].append(sn)
+        return tuple(tuple(members[k]) for k in order)
 
     # Assigned-register groups
     for register_str, source_names in by_register.items():
@@ -736,7 +748,7 @@ def _build_groups(
                 confidence=worst,
                 sources=tuple(source_names),
                 columns_by_source=columns_by_source,
-                schema_variants=_schema_variants(columns_by_source),
+                schema_variant_groups=_schema_variant_groups(columns_by_source),
                 panel_candidate=cand,
                 member_hints=_member_hints_for(columns_by_source),
             )
@@ -761,7 +773,7 @@ def _build_groups(
                 confidence="none",
                 sources=(source_name,),
                 columns_by_source=columns_by_source,
-                schema_variants=_schema_variants(columns_by_source),
+                schema_variant_groups=_schema_variant_groups(columns_by_source),
                 panel_candidate=cand,
                 member_hints=_member_hints_for(columns_by_source),
             )

@@ -10,6 +10,7 @@
   } from "../store.svelte";
   import ColumnTypeEditor from "./ColumnTypeEditor.svelte";
   import CoverageCell, { type CoverageEntry } from "./CoverageCell.svelte";
+  import HoverHint from "./HoverHint.svelte";
   import PanelEditor from "./PanelEditor.svelte";
   import RegisterEditor from "./RegisterEditor.svelte";
   import TypeCell from "./TypeCell.svelte";
@@ -50,32 +51,18 @@
     none: "No confidence: no register assigned, or none of the non-id columns match the assigned register's regmeta.",
   };
 
-  // Schema variants are computed server-side; rebuild them here just for
-  // the meta-line tooltip so the user can see which sources share which
-  // column-shape without expanding the card. Gated behind the
-  // `schema_variants > 1` check that drives the badge — single-variant
-  // groups never render the tooltip, so the work would be wasted.
-  let schemasTooltip = $derived.by(() => {
-    if (group.schema_variants <= 1) return "";
-    const map = new Map<string, string[]>();
-    const order: string[] = [];
-    for (const sn of group.sources) {
-      const cols = group.columns_by_source[sn] ?? [];
-      const key = cols.map((c) => `${c.name}:${c.sql_type ?? ""}`).join("|");
-      if (!map.has(key)) {
-        map.set(key, []);
-        order.push(key);
-      }
-      map.get(key)!.push(sn);
-    }
-    return order
-      .map(
-        (k, i) =>
-          `Schema ${i + 1} (${map.get(k)!.length}): ${map.get(k)!.join(", ")}`,
-      )
-      .join("\n");
-  });
-  let sourcesTooltip = $derived(group.sources.join("\n"));
+  // Schema variants are partitioned server-side (editor._schema_variant_groups);
+  // surface them verbatim. `schema_variant_groups.length` is the badge count.
+  let schemaVariantCount = $derived(group.schema_variant_groups.length);
+  let schemasLines = $derived(
+    schemaVariantCount > 1
+      ? group.schema_variant_groups.map(
+          (members, i) =>
+            `Schema ${i + 1} (${members.length}): ${members.join(", ")}`,
+        )
+      : [],
+  );
+  let sourcesLines = $derived([...group.sources]);
   // Register identifier surfaced on the register-name hover. Resolved
   // groups carry `reg-<id>`; unresolved/noreg groups expose the raw
   // group_id so the user can still copy a stable handle.
@@ -453,11 +440,13 @@
     <div class="title-block">
       <h2>
         {#if group.register_name}
-          <span class="register-name hoverable" title={registerHandle}
-            >{group.register_name}</span
-          >
+          <HoverHint lines={[registerHandle]}>
+            <span class="register-name">{group.register_name}</span>
+          </HoverHint>
         {:else}
-          <span class="unassigned hoverable" title={registerHandle}>unassigned</span>
+          <HoverHint lines={[registerHandle]}>
+            <span class="unassigned">unassigned</span>
+          </HoverHint>
           <!-- Unassigned groups are 1-per-source singletons whose
                group_id is `noreg-<source_name>`. Show the bare source
                name so the user reads the filename, not the prefix. -->
@@ -465,19 +454,19 @@
         {/if}
       </h2>
       <p class="meta">
-        <span
-          class="conf conf-{group.confidence} hoverable"
-          title={CONFIDENCE_TOOLTIP[group.confidence]}
-          >{CONFIDENCE_LABEL[group.confidence]}</span
-        >
-        · <span class="hoverable" title={sourcesTooltip}
+        <HoverHint lines={[CONFIDENCE_TOOLTIP[group.confidence]]}>
+          <span class="conf conf-{group.confidence}"
+            >{CONFIDENCE_LABEL[group.confidence]}</span
+          >
+        </HoverHint>
+        · <HoverHint lines={sourcesLines}
           >{group.sources.length} source{group.sources.length === 1
             ? ""
-            : "s"}</span
+            : "s"}</HoverHint
         >
-        {#if group.schema_variants > 1}
-          · <span class="hoverable" title={schemasTooltip}
-            >{group.schema_variants} schemas</span
+        {#if schemaVariantCount > 1}
+          · <HoverHint lines={schemasLines}
+            >{schemaVariantCount} schemas</HoverHint
           >
         {/if}
         {#if panelsForGroup.length === 1}
@@ -504,11 +493,13 @@
     <span class="info-line">
       <span class="info-label">Register:</span>
       {#if group.register_name}
-        <strong class="hoverable" title={registerHandle}
-          >{group.register_name}</strong
-        >
+        <HoverHint lines={[registerHandle]}>
+          <strong>{group.register_name}</strong>
+        </HoverHint>
       {:else}
-        <span class="unassigned hoverable" title={registerHandle}>unassigned</span>
+        <HoverHint lines={[registerHandle]}>
+          <span class="unassigned">unassigned</span>
+        </HoverHint>
       {/if}
       {#if missingYearCount > 0}
         <span
@@ -529,10 +520,9 @@
       inGroup.length < group.sources.length
         ? `${inGroup.length} of ${group.sources.length} sources`
         : `${inGroup.length} member${inGroup.length === 1 ? "" : "s"}`}
-    {@const memberTooltip = panel.members
+    {@const memberLines = panel.members
       .filter((m) => groupSourceSet.has(m.source))
-      .map((m) => `${m.source} → ${m.time_key}`)
-      .join("\n")}
+      .map((m) => `${m.source} → ${m.time_key}`)}
     <section class="panel-box">
       <div class="panel-box-header">
         <span class="panel-tag">panel</span>
@@ -547,9 +537,8 @@
       </div>
       <p class="panel-box-meta">
         entity_key: <code>{panel.entity_key}</code>
-        · {panelTimeKeySummary(panel)} · <span
-          class="hoverable"
-          title={memberTooltip}>{coverageLabel}</span
+        · {panelTimeKeySummary(panel)} · <HoverHint lines={memberLines}
+          >{coverageLabel}</HoverHint
         >
         {#if outOfGroup > 0}
           <span class="muted"> · +{outOfGroup} in another group</span>
@@ -929,15 +918,6 @@
     margin: 0.25rem 0 0;
     color: #555;
     font-size: 0.9rem;
-  }
-  /* Marker class for hover-revealed tooltips on inline metadata
-     (confidence pill, source/schema counts, register handle). The
-     dotted underline + cursor: help signal that hovering surfaces
-     extra info — the title attribute itself is invisible until then. */
-  .hoverable {
-    cursor: help;
-    text-decoration: underline dotted rgba(0, 0, 0, 0.25);
-    text-underline-offset: 2px;
   }
   .conf {
     padding: 0.05rem 0.4rem;

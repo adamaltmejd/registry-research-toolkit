@@ -88,7 +88,7 @@ def _register_group_view_to_dict(group: RegisterGroupView) -> dict[str, Any]:
             source: [_column_info_to_dict(c) for c in cols]
             for source, cols in group.columns_by_source.items()
         },
-        "schema_variants": group.schema_variants,
+        "schema_variant_groups": [list(g) for g in group.schema_variant_groups],
         "panel_candidate": (
             _panel_candidate_to_dict(group.panel_candidate)
             if group.panel_candidate is not None

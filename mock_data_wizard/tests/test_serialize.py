@@ -251,7 +251,7 @@ def test_register_group_view_to_dict_with_panel_candidate():
         confidence="high",
         sources=("lisa_2018",),
         columns_by_source={"lisa_2018": (info,)},
-        schema_variants=1,
+        schema_variant_groups=(("lisa_2018",),),
         panel_candidate=PanelCandidate(
             members=({"source": "lisa_2018", "time_key": 2018},),
             suggested_panel_id="lisa",
@@ -278,7 +278,7 @@ def test_register_group_view_to_dict_without_panel_candidate():
         confidence="none",
         sources=("x",),
         columns_by_source={"x": ()},
-        schema_variants=1,
+        schema_variant_groups=(("x",),),
         panel_candidate=None,
         member_hints={
             "x": PanelMemberHints(year_from_name=None, time_key_column=None),

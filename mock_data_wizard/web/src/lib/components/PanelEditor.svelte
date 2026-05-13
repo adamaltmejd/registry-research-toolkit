@@ -1,6 +1,7 @@
 <script lang="ts">
   import { store } from "../store.svelte";
   import type { Panel, PanelMember, RegisterGroupView } from "../types";
+  import HoverHint from "./HoverHint.svelte";
   import Modal from "./Modal.svelte";
 
   interface Props {
@@ -149,9 +150,9 @@
   let panelId: string = $state(defaultPanelId());
   let entityKey: string = $state(defaultEntityKey());
 
-  // Hover-revealed help strings; mirrored onto the inputs so screen
-  // readers announce them on focus (a bare title= on the label span is
-  // unreachable without a mouse hover).
+  // Hover- and focus-revealed help strings. Surfaced via HoverHint on
+  // the label (keyboard-reachable), and mirrored as a native title= on
+  // the input so screen readers announce them on focus.
   const PANEL_ID_HELP =
     "Stable identifier for this panel; used as its key in mock_data_config.json and in extract/stats output. Defaults to the register name.";
   const ENTITY_KEY_HELP =
@@ -400,7 +401,9 @@
 
     <div class="modal-body">
       <label class="row">
-        <span class="field-name" title={PANEL_ID_HELP}>panel_id</span>
+        <HoverHint lines={[PANEL_ID_HELP]}>
+          <span>panel_id</span>
+        </HoverHint>
         <input
           type="text"
           bind:value={panelId}
@@ -415,7 +418,9 @@
       </label>
 
       <label class="row">
-        <span class="field-name" title={ENTITY_KEY_HELP}>entity_key</span>
+        <HoverHint lines={[ENTITY_KEY_HELP]}>
+          <span>entity_key</span>
+        </HoverHint>
         {#if entityKeyOptions.length > 0}
           <select
             bind:value={entityKey}
@@ -639,14 +644,6 @@
   .row span {
     color: #666;
     font-size: 0.9rem;
-  }
-  /* Field labels carry a title= explanation of the JSON contract — the
-     dotted underline + cursor: help signals that hovering yields more
-     info, since these labels are otherwise opaque jargon. */
-  .field-name {
-    cursor: help;
-    text-decoration: underline dotted rgba(0, 0, 0, 0.3);
-    text-underline-offset: 2px;
   }
   input[type="text"],
   select {

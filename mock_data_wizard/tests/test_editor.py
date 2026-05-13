@@ -1762,7 +1762,7 @@ def test_review_sort_key_orders_within_tier():
             confidence=confidence,  # type: ignore[arg-type]
             sources=("s",),
             columns_by_source={"s": cols},
-            schema_variants=0,
+            schema_variant_groups=(("s",),),
             panel_candidate=None,
             member_hints={},
         )
