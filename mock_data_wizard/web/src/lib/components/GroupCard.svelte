@@ -52,8 +52,11 @@
 
   // Schema variants are computed server-side; rebuild them here just for
   // the meta-line tooltip so the user can see which sources share which
-  // column-shape without expanding the card.
-  let schemaGroups: string[][] = $derived.by(() => {
+  // column-shape without expanding the card. Gated behind the
+  // `schema_variants > 1` check that drives the badge — single-variant
+  // groups never render the tooltip, so the work would be wasted.
+  let schemasTooltip = $derived.by(() => {
+    if (group.schema_variants <= 1) return "";
     const map = new Map<string, string[]>();
     const order: string[] = [];
     for (const sn of group.sources) {
@@ -65,13 +68,13 @@
       }
       map.get(key)!.push(sn);
     }
-    return order.map((k) => map.get(k)!);
+    return order
+      .map(
+        (k, i) =>
+          `Schema ${i + 1} (${map.get(k)!.length}): ${map.get(k)!.join(", ")}`,
+      )
+      .join("\n");
   });
-  let schemasTooltip = $derived(
-    schemaGroups
-      .map((srcs, i) => `Schema ${i + 1} (${srcs.length}): ${srcs.join(", ")}`)
-      .join("\n"),
-  );
   let sourcesTooltip = $derived(group.sources.join("\n"));
   // Register identifier surfaced on the register-name hover. Resolved
   // groups carry `reg-<id>`; unresolved/noreg groups expose the raw
@@ -450,11 +453,11 @@
     <div class="title-block">
       <h2>
         {#if group.register_name}
-          <span class="register-name" title={registerHandle}
+          <span class="register-name hoverable" title={registerHandle}
             >{group.register_name}</span
           >
         {:else}
-          <span class="unassigned" title={registerHandle}>unassigned</span>
+          <span class="unassigned hoverable" title={registerHandle}>unassigned</span>
           <!-- Unassigned groups are 1-per-source singletons whose
                group_id is `noreg-<source_name>`. Show the bare source
                name so the user reads the filename, not the prefix. -->

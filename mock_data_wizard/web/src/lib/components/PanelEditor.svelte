@@ -148,6 +148,14 @@
 
   let panelId: string = $state(defaultPanelId());
   let entityKey: string = $state(defaultEntityKey());
+
+  // Hover-revealed help strings; mirrored onto the inputs so screen
+  // readers announce them on focus (a bare title= on the label span is
+  // unreachable without a mouse hover).
+  const PANEL_ID_HELP =
+    "Stable identifier for this panel; used as the panel filename and referenced across the project. Defaults to the register name.";
+  const ENTITY_KEY_HELP =
+    "Column name that identifies the entity (e.g. person/firm id) and joins members of this panel together. Must exist on every selected source.";
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
 
@@ -392,15 +400,12 @@
 
     <div class="modal-body">
       <label class="row">
-        <span
-          class="field-name"
-          title="Stable identifier for this panel; used as the panel filename and referenced across the project. Defaults to the register name."
-          >panel_id</span
-        >
+        <span class="field-name" title={PANEL_ID_HELP}>panel_id</span>
         <input
           type="text"
           bind:value={panelId}
           spellcheck="false"
+          title={PANEL_ID_HELP}
           onfocus={resetConfirm}
           oninput={resetConfirm}
           placeholder={existing
@@ -410,14 +415,11 @@
       </label>
 
       <label class="row">
-        <span
-          class="field-name"
-          title="Column name that identifies the entity (e.g. person/firm id) and joins members of this panel together. Must exist on every selected source."
-          >entity_key</span
-        >
+        <span class="field-name" title={ENTITY_KEY_HELP}>entity_key</span>
         {#if entityKeyOptions.length > 0}
           <select
             bind:value={entityKey}
+            title={ENTITY_KEY_HELP}
             onfocus={resetConfirm}
             onchange={resetConfirm}
           >
@@ -438,6 +440,7 @@
             type="text"
             bind:value={entityKey}
             spellcheck="false"
+            title={ENTITY_KEY_HELP}
             onfocus={resetConfirm}
             oninput={resetConfirm}
             placeholder="id column shared across members"
