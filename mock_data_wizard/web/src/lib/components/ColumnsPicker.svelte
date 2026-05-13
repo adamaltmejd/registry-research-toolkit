@@ -8,7 +8,6 @@
   }
 
   const COLUMNS: ColumnEntry[] = [
-    { id: "sql", label: "SQL", description: "Raw SQL type from discover" },
     { id: "type", label: "Type", description: "Classifier output (editable)" },
     {
       id: "coverage",

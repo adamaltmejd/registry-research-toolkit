@@ -1,6 +1,7 @@
 <script lang="ts">
   import { store } from "../store.svelte";
   import type { Panel, PanelMember, RegisterGroupView } from "../types";
+  import HoverHint from "./HoverHint.svelte";
   import Modal from "./Modal.svelte";
 
   interface Props {
@@ -148,6 +149,14 @@
 
   let panelId: string = $state(defaultPanelId());
   let entityKey: string = $state(defaultEntityKey());
+
+  // Hover- and focus-revealed help strings. Surfaced via HoverHint on
+  // the label (keyboard-reachable), and mirrored as a native title= on
+  // the input so screen readers announce them on focus.
+  const PANEL_ID_HELP =
+    "Stable identifier for this panel; used as its key in mock_data_config.json and in extract/stats output. Defaults to the register name.";
+  const ENTITY_KEY_HELP =
+    "Column name that identifies the entity (e.g. person/firm id) and joins members of this panel together. Must exist on every selected source.";
   let submitting = $state(false);
   let confirmingRemoval = $state(false);
 
@@ -392,11 +401,14 @@
 
     <div class="modal-body">
       <label class="row">
-        <span>panel_id</span>
+        <HoverHint lines={[PANEL_ID_HELP]}>
+          <span>panel_id</span>
+        </HoverHint>
         <input
           type="text"
           bind:value={panelId}
           spellcheck="false"
+          title={PANEL_ID_HELP}
           onfocus={resetConfirm}
           oninput={resetConfirm}
           placeholder={existing
@@ -406,10 +418,13 @@
       </label>
 
       <label class="row">
-        <span>entity_key</span>
+        <HoverHint lines={[ENTITY_KEY_HELP]}>
+          <span>entity_key</span>
+        </HoverHint>
         {#if entityKeyOptions.length > 0}
           <select
             bind:value={entityKey}
+            title={ENTITY_KEY_HELP}
             onfocus={resetConfirm}
             onchange={resetConfirm}
           >
@@ -430,6 +445,7 @@
             type="text"
             bind:value={entityKey}
             spellcheck="false"
+            title={ENTITY_KEY_HELP}
             onfocus={resetConfirm}
             oninput={resetConfirm}
             placeholder="id column shared across members"

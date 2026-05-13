@@ -88,7 +88,11 @@
           }
         ]
       },
-      "schema_variants": 1,
+      "schema_variant_groups": [
+        [
+          "extras"
+        ]
+      ],
       "panel_candidate": null,
       "member_hints": {
         "extras": {
@@ -192,7 +196,12 @@
           }
         ]
       },
-      "schema_variants": 1,
+      "schema_variant_groups": [
+        [
+          "lisa_2018",
+          "lisa_2019"
+        ]
+      ],
       "panel_candidate": {
         "members": [
           {

@@ -111,7 +111,12 @@ export interface RegisterGroupView {
   confidence: Confidence;
   sources: string[];
   columns_by_source: Record<string, ColumnInfo[]>;
-  schema_variants: number;
+  /** Sources partitioned by (column-name, sql_type) shape; computed
+   *  server-side so the client never reimplements the variant key. Each
+   *  inner array is one variant's members in source order; outer order
+   *  is first-seen across `sources`. Single-shape groups produce one
+   *  inner array. The badge displays `schema_variant_groups.length`. */
+  schema_variant_groups: string[][];
   panel_candidate: PanelCandidate | null;
   member_hints: Record<string, PanelMemberHints>;
 }
@@ -309,7 +314,11 @@ function isRegisterGroupView(x: unknown): x is RegisterGroupView {
   for (const cols of Object.values(x.columns_by_source)) {
     if (!Array.isArray(cols) || !cols.every(isColumnInfo)) return false;
   }
-  if (typeof x.schema_variants !== "number") return false;
+  if (!Array.isArray(x.schema_variant_groups)) return false;
+  for (const variant of x.schema_variant_groups) {
+    if (!Array.isArray(variant)) return false;
+    if (!variant.every((sn) => typeof sn === "string")) return false;
+  }
   if (x.panel_candidate !== null && !isPanelCandidate(x.panel_candidate))
     return false;
   if (!isObject(x.member_hints)) return false;

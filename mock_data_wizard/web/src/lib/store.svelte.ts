@@ -193,18 +193,15 @@ function saveGroupingPref(value: boolean): void {
 }
 
 /** Optional columns in the per-group column table. The "name" column is
- * always rendered. Defaults: sql hidden (raw discover types are noise
- * for most reviewers), type and coverage shown. */
-export type OptionalColumnId = "sql" | "type" | "coverage";
+ * always rendered. */
+export type OptionalColumnId = "type" | "coverage";
 
 export interface VisibleColumns {
-  sql: boolean;
   type: boolean;
   coverage: boolean;
 }
 
 const DEFAULT_VISIBLE_COLUMNS: VisibleColumns = {
-  sql: false,
   type: true,
   coverage: true,
 };
