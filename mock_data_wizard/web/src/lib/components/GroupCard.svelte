@@ -43,6 +43,42 @@
     partial: "partial confidence",
     none: "no confidence",
   };
+  const CONFIDENCE_TOOLTIP: Record<string, string> = {
+    high: "High confidence: ≥75% of each source's non-id columns are known to regmeta for the assigned register.",
+    partial:
+      "Partial confidence: some non-id columns match the assigned register's regmeta, but coverage is below 75% on at least one source.",
+    none: "No confidence: no register assigned, or none of the non-id columns match the assigned register's regmeta.",
+  };
+
+  // Schema variants are computed server-side; rebuild them here just for
+  // the meta-line tooltip so the user can see which sources share which
+  // column-shape without expanding the card.
+  let schemaGroups: string[][] = $derived.by(() => {
+    const map = new Map<string, string[]>();
+    const order: string[] = [];
+    for (const sn of group.sources) {
+      const cols = group.columns_by_source[sn] ?? [];
+      const key = cols.map((c) => `${c.name}:${c.sql_type ?? ""}`).join("|");
+      if (!map.has(key)) {
+        map.set(key, []);
+        order.push(key);
+      }
+      map.get(key)!.push(sn);
+    }
+    return order.map((k) => map.get(k)!);
+  });
+  let schemasTooltip = $derived(
+    schemaGroups
+      .map((srcs, i) => `Schema ${i + 1} (${srcs.length}): ${srcs.join(", ")}`)
+      .join("\n"),
+  );
+  let sourcesTooltip = $derived(group.sources.join("\n"));
+  // Register identifier surfaced on the register-name hover. Resolved
+  // groups carry `reg-<id>`; unresolved/noreg groups expose the raw
+  // group_id so the user can still copy a stable handle.
+  let registerHandle = $derived(
+    group.register_id !== null ? `reg-${group.register_id}` : group.group_id,
+  );
 
   let sourceYearInfo = $derived(sourceYearInfoFor(group.sources));
   let missingYearCount = $derived(
@@ -224,7 +260,6 @@
      * provenance / regmeta context can differ across cells with the
      * same type+hints (e.g. one source manually edited, siblings auto). */
     cells: ColumnInfo[];
-    sql_type_summary: string;
     manual_count: number;
     /** Sources in the register that do not carry this column at all.
      * Counted only on variant_index === 0 to avoid double-attribution
@@ -296,7 +331,6 @@
       sources: string[];
       sample: ColumnInfo;
       cells: ColumnInfo[];
-      sql_types: Map<string, number>;
       manual_count: number;
     }
     const out: ColumnPartition[] = [];
@@ -319,29 +353,16 @@
             sources: [],
             sample: col,
             cells: [],
-            sql_types: new Map(),
             manual_count: 0,
           };
           groups.set(key, part);
         }
         part.sources.push(sn);
         part.cells.push(col);
-        const sqlT = col.sql_type ?? "—";
-        part.sql_types.set(sqlT, (part.sql_types.get(sqlT) ?? 0) + 1);
         if (col.provenance === "manual") part.manual_count++;
       }
       const built = Array.from(groups.values());
       built.forEach((b, i) => {
-        const items = Array.from(b.sql_types.entries());
-        let summary: string;
-        if (items.length === 1) {
-          summary = items[0][0];
-        } else {
-          summary = items
-            .sort((a, c) => c[1] - a[1])
-            .map(([t, n]) => `${t} ×${n}`)
-            .join(" / ");
-        }
         out.push({
           name,
           variant_index: i,
@@ -349,7 +370,6 @@
           sources: b.sources,
           sample: b.sample,
           cells: b.cells,
-          sql_type_summary: summary,
           manual_count: b.manual_count,
           missing_in_count: i === 0 ? missing : 0,
         });
@@ -417,7 +437,6 @@
 <details
   class="group"
   class:no-register={group.register_id === null}
-  title={group.group_id}
   open={groupOpen}
   ontoggle={onGroupToggle}
 >
@@ -431,9 +450,11 @@
     <div class="title-block">
       <h2>
         {#if group.register_name}
-          {group.register_name}
+          <span class="register-name" title={registerHandle}
+            >{group.register_name}</span
+          >
         {:else}
-          <span class="unassigned">unassigned</span>
+          <span class="unassigned" title={registerHandle}>unassigned</span>
           <!-- Unassigned groups are 1-per-source singletons whose
                group_id is `noreg-<source_name>`. Show the bare source
                name so the user reads the filename, not the prefix. -->
@@ -441,12 +462,20 @@
         {/if}
       </h2>
       <p class="meta">
-        <span class="conf conf-{group.confidence}"
+        <span
+          class="conf conf-{group.confidence} hoverable"
+          title={CONFIDENCE_TOOLTIP[group.confidence]}
           >{CONFIDENCE_LABEL[group.confidence]}</span
         >
-        · {group.sources.length} source{group.sources.length === 1 ? "" : "s"}
+        · <span class="hoverable" title={sourcesTooltip}
+          >{group.sources.length} source{group.sources.length === 1
+            ? ""
+            : "s"}</span
+        >
         {#if group.schema_variants > 1}
-          · {group.schema_variants} schemas
+          · <span class="hoverable" title={schemasTooltip}
+            >{group.schema_variants} schemas</span
+          >
         {/if}
         {#if panelsForGroup.length === 1}
           · <span class="panel-tag" title="Panel attached to this group"
@@ -472,9 +501,11 @@
     <span class="info-line">
       <span class="info-label">Register:</span>
       {#if group.register_name}
-        <strong>{group.register_name}</strong>
+        <strong class="hoverable" title={registerHandle}
+          >{group.register_name}</strong
+        >
       {:else}
-        <span class="unassigned">unassigned</span>
+        <span class="unassigned hoverable" title={registerHandle}>unassigned</span>
       {/if}
       {#if missingYearCount > 0}
         <span
@@ -495,6 +526,10 @@
       inGroup.length < group.sources.length
         ? `${inGroup.length} of ${group.sources.length} sources`
         : `${inGroup.length} member${inGroup.length === 1 ? "" : "s"}`}
+    {@const memberTooltip = panel.members
+      .filter((m) => groupSourceSet.has(m.source))
+      .map((m) => `${m.source} → ${m.time_key}`)
+      .join("\n")}
     <section class="panel-box">
       <div class="panel-box-header">
         <span class="panel-tag">panel</span>
@@ -509,13 +544,13 @@
       </div>
       <p class="panel-box-meta">
         entity_key: <code>{panel.entity_key}</code>
-        · {panelTimeKeySummary(panel)} · {coverageLabel}
+        · {panelTimeKeySummary(panel)} · <span
+          class="hoverable"
+          title={memberTooltip}>{coverageLabel}</span
+        >
         {#if outOfGroup > 0}
           <span class="muted"> · +{outOfGroup} in another group</span>
         {/if}
-      </p>
-      <p class="panel-box-sources">
-        Sources: <span class="mono">{inGroup.join(", ")}</span>
       </p>
     </section>
   {/each}
@@ -575,14 +610,12 @@
     <table class="grouped-table">
       <colgroup>
         <col class="col-name" />
-        {#if visCols.sql}<col class="col-sql" />{/if}
         {#if visCols.type}<col class="col-type" />{/if}
         {#if visCols.coverage}<col class="col-coverage" />{/if}
       </colgroup>
       <thead>
         <tr>
           <th>Variable</th>
-          {#if visCols.sql}<th>SQL</th>{/if}
           {#if visCols.type}<th>Type</th>{/if}
           {#if visCols.coverage}<th>Coverage</th>{/if}
         </tr>
@@ -621,9 +654,6 @@
                 </span>
               {/if}
             </td>
-            {#if visCols.sql}
-              <td class="mono dim">{p.sql_type_summary}</td>
-            {/if}
             {#if visCols.type}
               {@const pillTitle =
                 [p.sample.current_type, hint].filter(Boolean).join(" · ") +
@@ -733,14 +763,12 @@
         <table>
           <colgroup>
             <col class="col-name" />
-            {#if visCols.sql}<col class="col-sql" />{/if}
             {#if visCols.type}<col class="col-type" />{/if}
             {#if visCols.coverage}<col class="col-coverage" />{/if}
           </colgroup>
           <thead>
             <tr>
               <th>Variable</th>
-              {#if visCols.sql}<th>SQL</th>{/if}
               {#if visCols.type}<th>Type</th>{/if}
               {#if visCols.coverage}<th>Coverage</th>{/if}
             </tr>
@@ -764,9 +792,6 @@
                 onclick={() => openEditorForCell(sourceName, col)}
               >
                 <td class="mono col-name" title={col.name}>{col.name}</td>
-                {#if visCols.sql}
-                  <td class="mono dim">{col.sql_type ?? "—"}</td>
-                {/if}
                 {#if visCols.type}
                   {@const pillTitle =
                     [col.current_type, hint].filter(Boolean).join(" · ") +
@@ -901,6 +926,15 @@
     margin: 0.25rem 0 0;
     color: #555;
     font-size: 0.9rem;
+  }
+  /* Marker class for hover-revealed tooltips on inline metadata
+     (confidence pill, source/schema counts, register handle). The
+     dotted underline + cursor: help signal that hovering surfaces
+     extra info — the title attribute itself is invisible until then. */
+  .hoverable {
+    cursor: help;
+    text-decoration: underline dotted rgba(0, 0, 0, 0.25);
+    text-underline-offset: 2px;
   }
   .conf {
     padding: 0.05rem 0.4rem;
@@ -1139,9 +1173,6 @@
     letter-spacing: 0.04em;
   }
   /* The "name" column has no fixed width — it absorbs the slack. */
-  col.col-sql {
-    width: 8rem;
-  }
   col.col-type {
     width: 14rem;
   }
@@ -1172,9 +1203,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-  .dim {
-    color: #888;
   }
   .split-marker {
     color: #6f4ca0;

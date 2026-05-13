@@ -392,7 +392,11 @@
 
     <div class="modal-body">
       <label class="row">
-        <span>panel_id</span>
+        <span
+          class="field-name"
+          title="Stable identifier for this panel; used as the panel filename and referenced across the project. Defaults to the register name."
+          >panel_id</span
+        >
         <input
           type="text"
           bind:value={panelId}
@@ -406,7 +410,11 @@
       </label>
 
       <label class="row">
-        <span>entity_key</span>
+        <span
+          class="field-name"
+          title="Column name that identifies the entity (e.g. person/firm id) and joins members of this panel together. Must exist on every selected source."
+          >entity_key</span
+        >
         {#if entityKeyOptions.length > 0}
           <select
             bind:value={entityKey}
@@ -628,6 +636,14 @@
   .row span {
     color: #666;
     font-size: 0.9rem;
+  }
+  /* Field labels carry a title= explanation of the JSON contract — the
+     dotted underline + cursor: help signals that hovering yields more
+     info, since these labels are otherwise opaque jargon. */
+  .field-name {
+    cursor: help;
+    text-decoration: underline dotted rgba(0, 0, 0, 0.3);
+    text-underline-offset: 2px;
   }
   input[type="text"],
   select {
