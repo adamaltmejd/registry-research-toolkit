@@ -153,7 +153,7 @@
   // readers announce them on focus (a bare title= on the label span is
   // unreachable without a mouse hover).
   const PANEL_ID_HELP =
-    "Stable identifier for this panel; used as the panel filename and referenced across the project. Defaults to the register name.";
+    "Stable identifier for this panel; used as its key in mock_data_config.json and in extract/stats output. Defaults to the register name.";
   const ENTITY_KEY_HELP =
     "Column name that identifies the entity (e.g. person/firm id) and joins members of this panel together. Must exist on every selected source.";
   let submitting = $state(false);
