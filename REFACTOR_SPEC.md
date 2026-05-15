@@ -228,7 +228,7 @@ Step 2 (population definition) is a predicate over base registers,
 executed only inside MONA; modelling it here would overfit early use
 cases. Deferred indefinitely.
 
-### Steward model — three deployments off one codebase
+### Steward model — three URLs, one deployment
 
 - **global** — full catalog spanning every agency reg_meta indexes
   (SCB, Socialstyrelsen, Försäkringskassan, …); orders go to the
@@ -238,11 +238,12 @@ cases. Deferred indefinitely.
 
 All three offer the same user experience; only the catalog they expose
 and the order export they produce differ. Same FastAPI binary, same
-Svelte build, three steward configs picked by URL. Hosted by the
-author for now (no self-hosting requirement; IFAU and SWECOV are not
-expected to operate the service themselves). No user accounts, no
-server-side project storage — projects live in the browser plus the
-researcher's git repo.
+Svelte build, all three steward configs in one image; three hostnames
+point at the same container and the active steward is selected per
+request from the `Host` header (§9.1). Hosted by the author (no
+self-hosting requirement; IFAU and SWECOV are not expected to operate
+the service themselves). No user accounts, no server-side project
+storage — projects live in the browser plus the researcher's git repo.
 
 ## 4. Target package layout
 
@@ -262,10 +263,15 @@ registry-research-toolkit/
   reg_webapp/
     backend/        # FastAPI; depends on reg_meta + reg_schema + reg_monabundle
     frontend/       # Svelte + Vite (bun)
-    stewards/global/  # only the `global` deployment's steward.toml lives here;
-                      # other stewards keep their own config files in their
-                      # own repos and bake them into per-steward images (§9.1)
+    stewards/
+      global/       # steward.toml only (no catalog; full universe)
+      ifau/         # steward.toml + steward.project_data.json
+      swecov/       # steward.toml + steward.project_data.json
 ```
+
+All steward configs live in this monorepo (§9.1). One Docker image
+contains all three; runtime hostname dispatch picks the active
+steward per request. Per-steward repo autonomy is deferred (§14).
 
 Dependency graph (no cycles):
 
@@ -289,10 +295,10 @@ on `reg_webapp/v*` tags.
   `regmeta_docs.db`) are too large to ship inside the wheel (500MB+
   for the main DB) and are distributed as `.zst`-compressed
   **GitHub release artifacts** on `reg_meta/v*` tags. `reg_meta`
-  ships a `regmeta update` command that fetches the matching
-  version into `$XDG_DATA_HOME/regmeta/`; the webapp Dockerfile
-  runs this at image-build time so the DB ends up in an image
-  layer. Mirrors the build/runtime separation needed for a future
+  ships a `reg-meta maintain update` command that fetches the
+  matching version into `$XDG_DATA_HOME/regmeta/`; the webapp
+  Dockerfile runs this at image-build time so the DB ends up in
+  an image layer. Mirrors the build/runtime separation needed for a future
   Go/Rust port of the query layer; also enables a future
   offline-bundle scenario directly.
 - **reg_schema as a standalone package**: the `project_data.json`
@@ -462,17 +468,40 @@ preserves the segment-count discriminator: `sos/lss/2022` is
 always a register_variant slugged `2022`, never an elided
 register_version.
 
-**Reserved slugs.** Build rejects any source ID claiming one of
-the reserved slugs:
+**Slug grammar.** Every slug must match
+`^[a-z][a-z0-9-]*[a-z0-9]$` (lowercase ASCII, kebab-case, must
+start with a letter, must end with a letter or digit, single
+hyphens only). Single-character slugs match `^[a-z]$`.
+Disallowed: leading/trailing hyphens, double hyphens, underscores,
+uppercase, non-ASCII. Additional positional constraints below.
 
-- `class` (provider slot only) — keeps the leading-`class/`
-  discriminator unambiguous.
+**Reserved and disallowed slugs.** Build rejects any slug entry
+hitting one of these:
+
+- `class` — reserved in any slot (keeps the leading-`class/`
+  discriminator unambiguous; collision in the provider slot is the
+  load-bearing case but the literal token is reserved everywhere).
 - `_default` (register_variant slot only) — emitted by the build
   for registers without a sub-decomposition (§5.1); curated
-  variants may not collide.
+  variants may not collide. The underscore prefix is otherwise
+  outside the slug grammar, so no other slug can collide with it.
+- Period-shaped slugs in non-period slots (provider / register /
+  variant / variable): a slug that matches the period grammar
+  (`^\d{4}$`, `^\d{4}-\d{2}$`, `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`)
+  is rejected outside the period slot, because it would make the
+  segment-count discriminator ambiguous to humans reading the
+  FQID. The grammar still parses unambiguously by position; the
+  ban is for legibility.
 
-Both are enforced via the same precheck that runs against the slug
-TOMLs (§5.3) at build time.
+All four are enforced via the same precheck that runs against the
+slug TOMLs (§5.3) at build time.
+
+**"Slug" disambiguation.** "Slug" in §5 means an **FQID slug** —
+a curated token that forms a segment of an FQID. §10 separately
+uses "variable-slug stem" to refer to a small hardcoded subset
+of variable slugs that `reg_mockdata` treats as person-invariant
+(the population spine). The token type is the same; the use is
+different.
 
 **Value sets get no FQID.** Two cases only for declaring a column's
 codes:
@@ -495,11 +524,21 @@ Slugs are **curated, never derived** from human-readable Swedish
 names (those drift). They are anchored to the underlying provider's
 ID system — SCB's `RegisterId` / `RegvarId` / `VarID`,
 Socialstyrelsen's identifier scheme — and stored in per-provider
-TOML files committed to the repo:
+TOML files at `reg_meta_build/fqid_slugs/`. Slugs are build-time
+inputs: `reg_meta_build` reads them, compiles slug columns into
+the DB asset, and `reg_meta`'s query side only ever sees them
+through the DB. The TOMLs are committed to this monorepo
+alongside the rest of `reg_meta_build`.
+
+TOML keys for source IDs are **always quoted strings**, regardless
+of whether the underlying ID looks integer-shaped. This keeps the
+key type uniform across providers (SCB's dot-bearing
+`register.variable` keys must be quoted; SCB's bare `register` keys
+*could* be bare but uniformly are not, for one canonical form).
 
 ```toml
-# reg_meta/slugs/scb.toml
-[register.34]
+# reg_meta_build/fqid_slugs/scb.toml
+[register."34"]
 slug = "lisa"
 
 [register_variant."34.153"]
@@ -515,7 +554,7 @@ slug = "kon"
 ```
 
 ```toml
-# reg_meta/slugs/classifications.toml
+# reg_meta_build/fqid_slugs/classifications.toml
 [classification."SUN2020"]
 slug = "sun"
 version = "2020"
@@ -525,8 +564,9 @@ The build pipeline reads slug TOMLs alongside source CSVs/workbooks,
 populates `slug` columns on `register`, `register_variant`, and
 `classification`, and refuses to compile the DB if any source ID is
 missing a slug entry ("RegisterId 99 in Registerinformation.csv but
-no slug in reg_meta/slugs/scb.toml"). A precheck step lists missing
-slugs without trying the full build, for cleaner failure mode.
+no slug in reg_meta_build/fqid_slugs/scb.toml"). A precheck step
+lists missing slugs without trying the full build, for cleaner
+failure mode.
 
 **Variables are auto-slugged.** The build derives a slug from the
 latest kolumnnamn alias (lowercased, kebab-cased), and the TOML is
@@ -563,17 +603,17 @@ the same TOML row shape: a table keyed by the provider's source ID
 | `display_group` | string              | register_variant  | no       | Presentation-only grouping label. Drift-tolerant; can change. |
 | `deprecated`    | bool (default false)| all               | no       | Source ID dropped from current deliveries (a register retired, a variable removed). The entry is retained forever — resolution succeeds but emits a warning (§6.8.3). |
 | `replaced_by`   | string              | all               | no       | TOML key of the replacement entry. Used to correct a published typo by adding a new row and pointing the old one at it (§5.4); resolution follows the link transitively. Cycles rejected at build. |
-| `same_as`       | array               | variable, classification | no | Curated equivalence — "two slugs name the same concept". Within the same provider: list of TOML keys (`["34.2999"]`). Cross-provider/register (rare): list of inline tables, e.g. `[{provider = "scb", register = "rtb", variable = "kon"}]` for variables, `[{provider = "scb", classification = "sun-v1"}]` for classifications. Resolution traverses `same_as` transitively (§5.5, §6.7); cycles rejected at build. |
+| `same_as`       | array               | variable, classification | no | Curated equivalence — "two slugs name the same concept". Always slug-anchored, never source-ID-anchored, so the link survives even if the underlying provider ID changes form. List of inline tables: for variables, `[{provider = "scb", register = "rtb", variable_slug = "kon"}]` (or `register_variant`/`period` if the equivalence is narrower); for classifications, `[{provider = "scb", classification_slug = "sun-v1"}]`. Provider-internal links still spell out the provider for one canonical form. Resolution traverses `same_as` transitively (§5.5, §6.7); cycles rejected at build. |
 
 Worked examples covering every field:
 
 ```toml
-# reg_meta/slugs/scb.toml — registers and register variants
+# reg_meta_build/fqid_slugs/scb.toml — registers and register variants
 
-[register.34]
+[register."34"]
 slug = "lisa"
 
-[register.99]
+[register."99"]
 slug = "old-register"
 deprecated = true                       # retired delivery; slug retained forever
 
@@ -584,30 +624,32 @@ display_group = "Individer"
 # Typo correction (§5.4): never edit in place. Add a new row and link the
 # old one via replaced_by. The old row stays in the TOML; resolution
 # transparently follows the link.
-[register.40]
+[register."40"]
 slug = "rams-typo"
 replaced_by = "40b"                     # TOML key of the corrected entry
 
-[register.40b]
+[register."40b"]
 slug = "rams"
 
 # Variables. Auto-slugged in the build; explicit entries appear only for
 # overrides or curated cross-edition links.
 [variable."34.137"]
 slug = "civilstand"
-same_as = ["34.2999"]                   # same-provider continuity after rename
+same_as = [                             # always slug-anchored, inline-table form
+  { provider = "scb", register = "lisa", variable_slug = "civilstand-legacy" },
+]
 
-# Cross-register same_as (rare). Inline-table tuple form anchors to slugs;
-# slugs are immutable so the tuple cannot rot.
+# Cross-register same_as (rare). Slug-anchored; slugs are immutable so the
+# tuple cannot rot.
 [variable."40.91"]
 slug = "kon"
 same_as = [
-  { provider = "scb", register = "rtb", variable = "kon" },
+  { provider = "scb", register = "rtb", variable_slug = "kon" },
 ]
 ```
 
 ```toml
-# reg_meta/slugs/classifications.toml
+# reg_meta_build/fqid_slugs/classifications.toml
 
 [classification."SUN2020"]
 slug = "sun"
@@ -617,7 +659,9 @@ version = "2020"
 slug = "sun-old"
 version = "1996"
 deprecated = true
-replaced_by = "SUN2020"
+replaced_by = "SUN2020"                 # TOML key — typo-correction link;
+                                        # cross-classification equivalence
+                                        # uses slug-anchored same_as instead
 ```
 
 ### 5.4 Slug immutability
@@ -729,11 +773,12 @@ is finalised. Headline points:
   - For classifications: a `class/<...>` FQID.
   - For everything else: inline codes in `project_data.codes.json`,
     keyed by binding FQID — no synthetic value-set ID needed.
-- The LISA composite-source gap (§14) is partly addressed: binding
-  FQIDs resolve through reg_meta's existing source-link edges
-  (`variable.source_register_id`), so "variable documented under
-  source register, not under LISA" becomes traversable rather than
-  a validator warning.
+- The LISA composite-source gap is resolved at the data layer:
+  consumer-side binding rows are materialized at build time under
+  the consumer register (§5.6), so a binding FQID under LISA always
+  resolves directly, no fallback or traversal needed. What remains
+  is a UI presentation question — how to surface the underlying
+  RTB/FTB lineage when browsing — tracked in §14.
 
 ### 5.8 Library API surface
 
@@ -779,7 +824,7 @@ collapsing the two — the entity vs. the token that names it.
 | variable_alias | entity | A SQL column header attached to a `variable_instance` (`Kon`, `Kön`). Multiple per instance possible. |
 | classification | entity | A named versioned vocabulary (SUN2020). Provider-independent; addressed via the `class/` prefix. |
 | value_set | entity | A code list attached to a `variable_instance`. Internal to reg_meta; **never exposed via FQID** (§5.2). |
-| slug | string | A curated, immutable identifier token (`lisa`, `kon`, `_default`). Lives in `reg_meta/slugs/*.toml` (§5.3). |
+| slug | string | A curated, immutable identifier token (`lisa`, `kon`, `_default`). Lives in `reg_meta_build/fqid_slugs/*.toml` (§5.3). |
 | variable-slug stem | string | The last segment of a binding FQID — the slug naming the variable concept. Used by spine matching (§10) and code lookups (§6.6). |
 | concept-slug | string | Older term, synonym for variable-slug stem. **Avoid** in new prose; use "variable-slug stem". |
 | binding FQID | string | 5-segment: `<provider>/<register>/<register_variant>/<period>/<variable>` (§5.2). |
@@ -812,7 +857,7 @@ the reg_meta FQID grammar (§5). Single file, owns:
 |-------------------|----------------|:--------:|-------------|
 | `schema_version`  | string         | yes | Semantic version of the schema (e.g. `"1.0.0"`). |
 | `steward`         | string enum    | yes | `"global"` / `"ifau"` / `"swecov"`. Identifies which deployment authored the file. |
-| `reg_meta_version` | string         | yes | Build hash of the reg_meta DB used during authoring. Best-effort drift detection on later resolves. |
+| `reg_meta_version` | string         | yes | Release tag of the reg_meta DB asset used during authoring (e.g. `reg_meta/v0.8.0`). Best-effort drift detection on later resolves. |
 | `name`            | string         | yes | Project identifier (human-readable). |
 | `sources`         | array<Source>  | yes | List of data sources (tables) in the project. |
 | `panels`          | array<Panel>   | no  | Panel definitions over sources. Default `[]`. |
@@ -871,7 +916,7 @@ than in the v1 baseline.
 | Field             | Type           | Required | Description |
 |-------------------|----------------|:--------:|-------------|
 | `name`            | string (FQID)  | yes | Binding FQID: `<provider>/<register>/<variant>/<period>/<variable>` (§5.2). The first four segments must equal the source's `register_version`. |
-| `display_name`    | string         | no  | Actual column header in the delivered data. Optional in the schema because at authoring time the value is just an echo of reg_meta's `variable_alias.kolumnnamn` for the binding — when absent, tools (webapp, bundle, validator) resolve the default from reg_meta. Becomes meaningfully distinct from the default at realign time (§7) when project prefixes are applied (e.g. `LopNr` → `P1105_LopNr_PersonNr`) or at order time when a user renames a column. Steward catalogs (§9.1) typically omit it. |
+| `display_name`    | string         | no  | Actual column header in the delivered data. Optional in the schema because at authoring time the value is just an echo of reg_meta's `variable_alias.kolumnnamn` for the binding — when absent, **reg_meta-backed consumers** (webapp, kit-build, semantic validator) resolve the default from reg_meta. Becomes meaningfully distinct from the default at realign time (§7) when project prefixes are applied (e.g. `LopNr` → `P1105_LopNr_PersonNr`) or at order time when a user renames a column. Steward catalogs (§9.1) typically omit it. Reg_meta-free consumers (the bundle on MONA, `reg-mockdata` against a kit) **never** see unresolved `display_name`: bundle build (§7) and kit build (§8) materialize defaults from reg_meta before emitting their artifacts. |
 | `type`            | enum           | yes | One of `id`, `categorical`, `numeric`, `date`, `datetime`, `opaque`. |
 | `id_subtype`      | enum           | no  | For `id` type: `integer` or `string`. Auto-detected from the data when omitted. |
 | `numeric_subtype` | enum           | no  | For `numeric` type: `integer` or `double`. |
@@ -898,8 +943,15 @@ the alias whose `variable_instance.period` matches the source's
 prefer the most recently asserted one; if that's still ambiguous,
 alphabetical on the alias string is the final deterministic
 tie-break. This is a query rule, not a schema rule — it lives in
-`reg_meta`'s `Catalog.resolve()` and is what every consumer ends
-up calling when `display_name` is absent.
+`reg_meta`'s `Catalog.resolve()` and is what every reg_meta-backed
+consumer ends up calling when `display_name` is absent.
+
+**Display-name collisions.** Two columns on the same source
+resolving to the same `display_name` (either both explicitly, or
+one explicit + one resolving to the same value) produces a
+`display_name_collision` validation error (§6.8.0). Remediation:
+the user sets an explicit `display_name` on one of the columns,
+typically using the project-prefixed form delivered by SCB.
 
 #### The type set
 
@@ -1107,18 +1159,25 @@ rename. Known keys:
 
 - `suppress_k` (int) — disclosure-control threshold for this column's
   frequency table. **Raise-only**: at runtime the effective value
-  is `effective_suppress_k = max(library_default, override)`, so a
+  is `effective_suppress_k = max(SUPPRESS_K, override)`, so a
   typo'd low value is silently floored to the library default
   rather than weakening disclosure control. `reg_monabundle.validate_block`
   emits an info-level `ValidationIssue` when the override is below
   the floor so the user notices the typo, but the runtime never
   applies a value below the floor.
 
-`reg_monabundle` uses a single library default for `SUPPRESS_K` and
-other disclosure-control parameters; steward config does not
-override them. This keeps the spec freestanding: bundle behavior is
-determined by the spec + `reg_monabundle`'s release version, with no
-out-of-band steward configuration influencing runtime.
+`reg_monabundle` ships fixed library defaults for disclosure-control
+parameters; steward config does not override them. This keeps the
+spec freestanding: bundle behavior is determined by the spec +
+`reg_monabundle`'s release version, with no out-of-band steward
+configuration influencing runtime. v1 defaults:
+
+- `SUPPRESS_K = 10` — frequency-table suppression threshold.
+- `SMALL_POP_MULT = 20` — small-population warning trigger
+  (`n_rows < SMALL_POP_MULT * SUPPRESS_K`).
+
+Both values are constants in `reg_monabundle.runtime` and are
+exported for tests to pin against.
 
 Future per-column option keys are added here as the need arises
 (e.g. length caps for opaque generation, override of
@@ -1168,6 +1227,21 @@ project is **freestanding from reg_meta**: a researcher who checks
 `project_data.json` + `project_data.codes.json` +
 `project_data.stats.json` into git can regenerate mock data years
 later regardless of how reg_meta evolves steward-side.
+
+**Codes during authoring.** Before kit-build, classification
+references are stored only as FQIDs on the column (no inline
+codes — those get dereferenced from reg_meta at kit-build).
+Ad-hoc inline codes (a categorical column without a classification
+FQID) need an authoring-time home: the SPA stores them in
+IndexedDB alongside the in-browser project state, in the same
+record but logically separate from `project_data.json` proper —
+keyed by binding FQID, same shape as the post-kit
+`project_data.codes.json` entries. On "Download
+`project_data.json`" the SPA also offers a companion
+`project_data.codes.json` download containing only the ad-hoc
+entries (no classifications dereferenced yet); this is the form
+committed to git pre-kit, and kit-build expands it later. The
+SPA's "Open from file" flow accepts the pair.
 
 Kit-build errors loudly when a referenced FQID no longer resolves
 in the current reg_meta — "FQID `class/foo/2010` not found; closest
@@ -1236,6 +1310,12 @@ class ValidationResult:
 - **`level`** — `error` blocks downstream actions (bundle build,
   kit build); `warning` surfaces in the SPA but doesn't block;
   `info` is purely advisory (e.g. drift, deprecated traversal).
+  `ok = True` means no `error`-level issues — it does **not** mean
+  the result was complete. At catalog-load time (§6.8.3 caller
+  context), unresolved FQIDs are downgraded to `warning`; affected
+  bindings are dropped from the in-memory index but `ok` stays
+  `True`. Consumers that need completeness must inspect the
+  warnings list, not just `ok`.
 - **`code`** — namespaced, stable across releases. Tests pin codes;
   the SPA maps codes to UI affordances. New codes are additive.
   Examples: `fqid_unresolved`, `fqid_outside_steward_catalog`,
@@ -1345,7 +1425,7 @@ inside the MONA bundle** (no reg_meta on MONA, no network).
   deployment never emits this code (no filter).
 
 **Drift detection.** Validation also compares the spec's
-`reg_meta_version` against the running reg_meta build hash. FQIDs
+`reg_meta_version` against the running reg_meta release tag. FQIDs
 are stable, so this is best-effort: a mismatch is reported as
 info, not error, and any deprecation warning includes a note that
 the deprecation was introduced after the spec's recorded version.
@@ -1397,10 +1477,14 @@ kit-build time at the latest.
 ### 6.10 Storage
 
 Project files live in the browser (IndexedDB) during a session and
-as JSON in the user's project git repo for durability. **No
-server-side storage** — git is the durable store, email/git-sharing
-handles collaboration. Server-side projects are a possible v2
-feature, not v1.
+as JSON in the user's project git repo for durability. The
+in-browser record holds the spec plus any ad-hoc inline codes
+authored against it (§6.6 "Codes during authoring"); downloading
+emits `project_data.json` plus the companion
+`project_data.codes.json` (pre-kit form: only ad-hoc entries).
+**No server-side storage** — git is the durable store,
+email/git-sharing handles collaboration. Server-side projects are
+a possible v2 feature, not v1.
 
 ## 7. MONA workflow
 
@@ -1410,7 +1494,16 @@ feature, not v1.
 `reg_monabundle.build`, containing both the bundle runtime code
 (amalgamated from `reg_monabundle.runtime.*` source files) **and**
 the `project_data.json` spec embedded as a JSON string literal near
-the top:
+the top.
+
+**Pre-resolution at build time.** Before embedding the JSON,
+`reg_monabundle.build` resolves every absent `display_name` from
+reg_meta (§6.3 alias resolution) and writes the result back into
+the spec — so the embedded JSON always has `display_name` on every
+column. The bundle on MONA has no reg_meta and never needs one for
+this lookup. Same applies to any other reg_meta-derived defaults
+the spec may grow in future: pre-resolve at build, embed the
+resolved form.
 
 ```python
 # === EMBEDDED PROJECT CONFIG ===
@@ -1521,13 +1614,24 @@ observed `sql_type` per `reg_monabundle.types.is_compatible`.
 
 ### Type compatibility lives in `reg_monabundle`
 
-The SQL→spec-type compatibility map is owned by `reg_monabundle`
-(its pure-python lightweight side, amalgamated into the bundle and
-imported by `reg_webapp`). It encodes "what `reg_monabundle`'s
-extract code can ingest": e.g. `numeric` is compatible with
-`VARCHAR`, `INTEGER`, `DECIMAL`, `DOUBLE` (the bundle probes and
-promotes); `date` is compatible with `VARCHAR`, `DATE`, `DATETIME`
-but not `INTEGER`; etc.
+The SQL↔spec-type machinery is owned by `reg_monabundle` (its
+pure-python lightweight side, amalgamated into the bundle and
+imported by `reg_webapp`). Two functions:
+
+- `reg_monabundle.types.is_compatible(spec_type, sql_type) -> bool`
+  — encodes "what `reg_monabundle`'s extract code can ingest":
+  e.g. `numeric` is compatible with `VARCHAR`, `INTEGER`,
+  `DECIMAL`, `DOUBLE` (the bundle probes and promotes); `date` is
+  compatible with `VARCHAR`, `DATE`, `DATETIME` but not `INTEGER`.
+  Drives realign-time mismatch detection.
+- `reg_monabundle.types.suggest_spec_type(sql_type) -> SpecType`
+  — the inverse mapping: given an observed SQL type, what spec
+  type would a user most plausibly declare for it? `VARCHAR` →
+  `opaque`, `INTEGER` → `numeric` (subtype `integer`), `DATE` →
+  `date`, etc. Used by the realign-review UI to pre-fill the
+  "accept SQL type into spec" affordance (§ Reconciling the patch
+  below). Always returns *some* spec type so the user has a
+  starting point; the user can override before applying.
 
 Living in `reg_monabundle` rather than `reg_webapp` keeps the
 durable artifact durable: the spec, the codes, the stats, and the
@@ -1575,9 +1679,28 @@ both phases in a single invocation. The `--check` flag stops after
 realign (useful for "verify my spec without committing to the long
 run"); `--force` skips realign entirely (escape hatch for the rare
 case where the user knows about the diff and wants to extract the
-matching columns anyway, accepting that some columns may fail to
-cast). Default behavior — no flag — is the safest: realign runs,
-extract follows iff clean.
+matching columns anyway). Default behavior — no flag — is the
+safest: realign runs, extract follows iff clean.
+
+**`--force` extract semantics.** With realign skipped, extract
+proceeds column-by-column. For each column:
+
+- If the column's `display_name` is absent from the data: emit a
+  warning to stderr, skip the column, continue with the rest of
+  the source.
+- If the column's `display_name` is present but its declared
+  `type` is not `is_compatible` with the observed `sql_type`: try
+  the cast; on cast failure, emit a warning and skip the column.
+  On cast success (e.g. a `VARCHAR` declared as `numeric` that
+  parses cleanly), proceed normally.
+- The resulting `project_data.stats.json` records `null_count`
+  and `n_distinct` only for columns that successfully extracted;
+  skipped columns are absent from the per-source `columns` map.
+
+`--force` is **the only path** that produces a partial extract;
+the default and `--check` paths never emit a partial stats file.
+Researchers using `--force` should treat the resulting kit as
+provisional.
 
 ### Permissive embedded JSON
 
@@ -1627,7 +1750,7 @@ patterns; v1 fixes the column-keyspace (binding FQIDs), the period encoding
   "schema_version": "1.0.0",
   "project": "swecov-education",
   "generated_at": "2026-03-04T10:30:00Z",
-  "reg_meta_version": "build-hash-echo",
+  "reg_meta_version": "reg_meta/v0.8.0",
 
   "sources": {
     "lisa_2018": {
@@ -1705,7 +1828,7 @@ patterns; v1 fixes the column-keyspace (binding FQIDs), the period encoding
 | `schema_version`  | string (semver) | yes | This document. Bumped on breaking changes. v1 = `1.x.x`. |
 | `project`         | string          | yes | Echo of `project_data.json`'s `name`. |
 | `generated_at`    | string (ISO-8601) | yes | UTC timestamp the extract finished. |
-| `reg_meta_version`| string          | yes | Echo of the reg_meta build hash recorded in the spec at extract time. Drift detection only; not enforced (§6.8.3). |
+| `reg_meta_version`| string          | yes | Echo of the reg_meta release tag recorded in the spec at extract time. Drift detection only; not enforced (§6.8.3). |
 | `sources`         | object          | yes | Map: source name → per-source stats. |
 | `shared_columns`  | array           | yes | Pool-sizing hints for columns appearing on more than one source; may be empty. |
 | `panels`          | array           | yes | One entry per panel in the spec; may be empty if the spec has no panels. |
@@ -1797,30 +1920,34 @@ time.
 
 ## 9. Webapp architecture
 
-### Multiple deployments off one codebase
+### Multi-steward, single deployment
 
-One shared `reg_webapp` binary; each deployment bakes a single
-steward's configuration into its container image at build time
-(§9.1). Hostname-per-deployment dispatch — there is no `STEWARD`
-env-var switch at runtime because each container is
-single-steward. SPA fetches `/api/context` on boot to learn its
-identity and branding.
+One shared `reg_webapp` binary; **all steward configurations live
+in this monorepo** (§4) and ship inside a single Docker image.
+Runtime dispatch by `Host` header: a request to
+`global.example.org` selects the `global` steward config,
+`ifau.example.org` selects `ifau`, and so on. The SPA fetches
+`/api/context` on boot to learn its identity and branding;
+Cloudflare keys cache by (host, path) so steward responses stay
+separated. Per-steward repo autonomy (stewards versioning their
+own catalogs in their own repos) is deferred (§14).
 
 ```text
-# In this monorepo:
-reg_webapp/stewards/global/
-  steward.toml                       # global deployment's identity
-
-# In each external steward's own repo (illustrative):
-ifau-registry-config/
-  steward.toml
-  steward.project_data.json
-  order_template.j2                  # optional; omit to inherit the default CSV
+reg_webapp/stewards/
+  global/
+    steward.toml                       # identity only; no catalog (full universe)
+  ifau/
+    steward.toml
+    steward.project_data.json
+    order_template.j2                  # optional; omit to inherit the default CSV (§9.5)
+  swecov/
+    steward.toml
+    steward.project_data.json
 ```
 
 ### 9.1 Steward configuration
 
-A steward deployment is configured by two files:
+A steward is configured by two files in `reg_webapp/stewards/<id>/`:
 
 1. **`steward.toml`** — identity and branding (small, ~10 lines).
 2. **`steward.project_data.json`** — the catalog of what's
@@ -1829,11 +1956,9 @@ A steward deployment is configured by two files:
    sources and columns; the FQIDs on those columns *are* the
    catalog. No separate catalog schema.
 
-Both files live in the **steward's own repository** (not in this
-monorepo). Per-steward Docker images are produced by checking out
-the steward's repo at image-build time and copying these two files
-into `/app/steward/` alongside the shared `reg_webapp` binary.
-Stewards version, review, and release their own configurations.
+Adding a new steward is a monorepo PR: drop a directory in
+`stewards/`, register the hostname in DNS/Cloudflare, rebuild the
+image. Catalog updates are PRs against the existing directory.
 
 **`steward.toml`:**
 
@@ -1842,9 +1967,16 @@ id = "ifau"
 name = "IFAU"
 long_name = "Institute for Evaluation of Labour Market and Education Policy"
 hostname = "ifau.example.org"
-order_template = "order_template.j2"   # path relative to steward repo;
+order_template = "order_template.j2"   # path relative to this steward dir;
                                        # omit to inherit the default CSV (§9.5)
 ```
+
+The `id` matches the directory name and is used as the URL slug
+for any future steward-namespaced routes. `hostname` is the
+canonical hostname the runtime matches against the request's
+`Host` header; multiple hostnames per steward (e.g. an apex +
+www variant) are out of scope for v1 — front Cloudflare with a
+redirect instead.
 
 **`steward.project_data.json`:** structurally identical to a
 researcher's project (same `reg_schema` validator). It has many
@@ -1893,7 +2025,9 @@ researcher's project references an FQID not in the index.
 new variable on an existing version), nothing happens
 automatically — the steward decides whether to admit them by
 opening their catalog in the webapp against `global` and adding
-the new columns. Optional CLI: `reg-meta-build steward-diff
+the new columns, then committing the result back into
+`reg_webapp/stewards/<id>/steward.project_data.json`. Optional
+CLI: `reg-meta-build steward-diff
 <steward.project_data.json>` lists FQIDs in reg_meta that aren't
 in the steward catalog, plus FQIDs in the catalog whose
 `register_version` reg_meta no longer knows about (rare — slugs
@@ -1901,6 +2035,18 @@ are immutable, but a previously-active register could be
 `deprecated = true` upstream). Stewards who prefer a non-UI
 workflow can run this and edit JSON directly; the webapp loop is
 the recommended path.
+
+**SPA mode disambiguation.** The catalog-authoring UI (used to
+build a `steward.project_data.json`) and the project-authoring UI
+(used to build a researcher's `project_data.json`) share the same
+underlying machinery but expose different controls. Mode is
+selected by URL route: `/catalog` for steward-catalog authoring
+(panels and `reg_monabundle` block hidden, `display_name` editor
+collapsed), `/` (default) for project authoring (everything
+visible). Loading a file with `panels` or `reg_monabundle` set in
+`/catalog` mode is rejected with a clear error; loading a file
+without them in `/` mode is fine (researchers may have an empty
+panels list).
 
 Per-steward `extensions` (e.g. SWECOV enabling a
 `swecov.filters` namespaced block on projects) are deferred to
@@ -1936,10 +2082,15 @@ here is really cost protection:
 - Aggressive HTTP cache headers on all read endpoints (reg_meta
   only changes when rebuilt). Specifically:
   - `/api/catalog/*` and `/api/context`: `ETag:
-    "<reg_meta_build_hash>-<steward_id>"` plus
-    `Cache-Control: public, max-age=86400, must-revalidate`.
-    Catalog content varies by steward filter, so the key combines
-    both; a rebuild on either axis invalidates the cache cleanly.
+    "<reg_meta_version>-<steward_id>-<sha256(body)[:16]>"` plus
+    `Cache-Control: public, max-age=86400, must-revalidate`. The
+    body-hash component is what makes `If-None-Match` per-URL
+    coherent: every URL gets its own ETag value. The
+    `reg_meta_version` + `steward_id` prefix isn't strictly needed
+    for correctness (the hash already disambiguates) but it keeps
+    ETags human-debuggable when inspecting cache headers, and
+    invalidates the whole keyspace on either axis when one
+    changes (mass body-hash churn does the same job).
   - `/api/docs/*`: same scheme.
   - Write endpoints (`/api/project/*`, `/api/bundle`, `/api/kit`)
     do not set ETag; `/api/bundle` and `/api/kit` are pure
@@ -1948,6 +2099,12 @@ here is really cost protection:
   `/api/kit`, `/api/project/validate`, `/api/project/order`),
   capped at e.g. 30 req/min/IP at the FastAPI layer — separate
   from and stricter than the edge-cached catalog reads.
+- **Body-size cap on write endpoints.** Cloudflare drops requests
+  with body > 1 MB at the edge; FastAPI enforces the same cap on
+  any that slip through (e.g. direct origin hits). 1 MB matches
+  the bundle-output budget (§12) and is comfortably larger than
+  any plausible `project_data.json` + companion codes file. Per
+  R16's 200-column fixture, real projects land at tens of KB.
 
 Rate-limit bucketing is **IP-only** in v1. A localStorage session
 token would let us bucket per-browser (helpful behind NAT) but
@@ -1997,7 +2154,7 @@ no `children`. Search stays separate (it's a distinct operation).
 | Method | Path | Purpose |
 |---|---|---|
 | POST | `/api/project/validate` | Validates a `project_data.json` document; returns structural, namespaced-block, and semantic errors/warnings (§6.8). |
-| POST | `/api/project/order` | Renders the steward's order export. Default template (v1): CSV with columns `provider,register,variant,year,variable,display_name,note`, one row per (`register_version` × variable) tuple in the spec. Stewards that don't ship an `order_template` inherit this default. Custom templates (IFAU spreadsheets, SWECOV PDFs) replace the body via `stewards.order_template`. |
+| POST | `/api/project/order` | Renders the steward's order export. Default template (v1): CSV with columns `provider,register,variant,year,variable,display_name`, one row per (`register_version` × variable) tuple in the spec. Stewards that don't ship an `order_template` inherit this default. Custom templates (IFAU spreadsheets, SWECOV PDFs) replace the body via `stewards.order_template`. |
 | POST | `/api/bundle` | Builds the Python MONA bundle embedding the supplied `project_data.json`. Pure function of the input (no server-side state, no steward config injection); response cacheable by content-hash. Returns `.py` as `application/octet-stream`. |
 | POST | `/api/kit` | Builds a generation kit (zip) from `project_data.json` + `project_data.stats.json`. Dereferences classification FQIDs and binding FQIDs into a sibling `project_data.codes.json` (§6.6). |
 
@@ -2199,6 +2356,18 @@ study adding Migrationsår), the override would go in a future
 config. Schema-design of that override is deferred until a
 concrete project requires it.
 
+**Cross-provider concept linkage** is the same kind of deferred
+problem: today's slug-stem-only rule (`/kon` matches `/kon` across
+all providers) requires that concept-equivalent variables share a
+stem across providers. That's the v1 norm — SCB-only projects, or
+projects against SCB-curated stewards. The day a project mixes
+SCB's `kon` with another provider's `sex` for the same person, the
+generator will silently produce inconsistent draws. The remediation
+will live in the same future `reg_mockdata` namespaced block (e.g.
+`spine_groups`: explicit lists of bindings or stems to treat as
+person-equivalent). The slug-stem rule remains the default; the
+override is the escape hatch.
+
 ### `mdw update`
 
 `maintain update` (downloads the latest reg_meta DB and docs DB
@@ -2228,7 +2397,7 @@ keep their local reg_meta current.
 | Module / behavior | Fate |
 |---|---|
 | reg_meta object model | Provider promoted to first-class; FQID grammar introduced; `slug` columns added to register/register_variant/classification; synthetic `_default` variant for variant-less registers (§5) |
-| reg_meta slug curation | New `reg_meta/slugs/*.toml` files committed to repo; grow-only; CI-enforced immutability (§5.4) |
+| reg_meta slug curation | New `reg_meta_build/fqid_slugs/*.toml` files committed to repo; grow-only; CI-enforced immutability (§5.4) |
 | reg_meta library API | New typed `Catalog.resolve(fqid)` entry point; webapp imports through this surface only (§5.8) |
 | `mock_data_wizard` Python package | Split into `reg_monabundle` (MONA bundle build + runtime + scan + types) and `reg_mockdata` (local mock generation + compare). See §4 and §10. |
 | `mock_data_wizard/server.py` (local HTTP server) | Deleted after migration to `reg_webapp` |
@@ -2308,7 +2477,7 @@ open:
     integration point.
   - `reg_meta_build` releases independently; no runtime consumer
     pins it (it produces the DB asset that `reg_meta` fetches via
-    `regmeta update`).
+    `reg-meta maintain update`).
   - `reg_mockdata` floor-pins `reg_schema` (lowest compatible
     minor) so kits authored against newer webapp versions still
     generate on a slightly-older local install.
@@ -2359,11 +2528,12 @@ graduates to a wider user base.
   Behaviour during the gap is fine in principle (rename = new
   concept by default) but the operational rhythm — how often
   curators review newly-shipped renames — is undecided.
-- **FQID encoding in URLs.** §9.5 puts FQID segments directly in
-  URL paths (`/api/catalog/scb/lisa/individer-15plus/2018/kon`).
-  FastAPI handles slash-bearing path params via `:path` converters,
-  but the URL form is unusual and worth sanity-checking with
-  Cloudflare's edge-cache key behaviour before locking it in.
+- **Per-steward repo autonomy.** v1 hosts every steward's config
+  in this monorepo (§9.1). Stewards versioning their own catalogs
+  in their own repos — useful if IFAU/SWECOV ever operate their
+  own deployments — would reintroduce the external-repo build
+  wiring (build-arg manifest, pinned commits) that v1 sheds. Not
+  needed until a steward asks for it.
 - **`same_as` rendering at generate time.** §10's population spine
   doesn't consult `same_as`; the webapp does, at authoring time.
   Whether `reg-mockdata generate` should also normalize via `same_as`
@@ -2386,10 +2556,10 @@ Not a checklist. A narrative of what blocks what, intended to
 inform sequencing decisions. The order below is the load-bearing
 dependency story, not the day-by-day plan.
 
-**Preconditions for step 1:** A1 (FQID grammar), A2 (LISA-via-RTB
-binding materialization), and A4 (`column_options` keyed by binding
-FQID) must all be locked. All three are applied in `REFACTOR_SPEC.md`,
-so step 1 can start.
+**Preconditions for step 1.** The §5 FQID grammar, the §5.6
+consumer-side binding materialization for composite registers, and
+the §6.5 `column_options` keying are all design-locked in this
+document. Step 1 can start.
 
 1. **reg_meta identifier rebuild (§5).** Split into five sub-steps
    that can be reviewed/merged independently:
@@ -2456,25 +2626,26 @@ the same JSON. This is the single artifact that makes §6.8.0's
 
 <!-- markdownlint-disable-next-line MD029 -->
 6. **Webapp scaffolds: backend + frontend skeleton.** Empty UI,
-   OpenAPI plumbing, one steward (global) wired up, reads reg_meta
-   through the FQID-keyed catalog API. `reg_webapp` imports
-   `reg_meta`, `reg_schema`, `reg_monabundle`. Steward
+   OpenAPI plumbing, the `global` steward dir wired up, reads
+   reg_meta through the FQID-keyed catalog API. `reg_webapp`
+   imports `reg_meta`, `reg_schema`, `reg_monabundle`. Steward
    configuration shape (`steward.toml` + reused
-   `project_data.json` for the catalog; §9.1) is finalised here so
-   IFAU/SWECOV can review the loop before step 11.
+   `project_data.json` for the catalog; §9.1) is finalised here
+   so step 11's catalog authoring is unblocked.
 
 **Step 6.5 — Containerize, Cloudflare, `global` deployment up.**
 
-- `reg_webapp` Dockerfile runs `regmeta update` at image build
-  time to bake the matching reg_meta release's DB into the image
-  layer (§4, B1).
+- `reg_webapp` Dockerfile runs `reg-meta maintain update` at
+  image build time to bake the matching reg_meta release's DB
+  into the image layer (§4).
 - Cloudflare configured in front: edge caching with the §9.4 ETag
   scheme, per-IP rate limits.
-- **R10 validation gate:** before locking the URL form, run a
-  small load through Cloudflare to confirm slash-bearing FQID
-  paths round-trip cleanly through the edge cache; if not, fall
-  back to a query-string form *before* publishing the OpenAPI.
-  Closes the §14 "FQID encoding in URLs" open issue.
+- **R10 validation gate:** run a small load through Cloudflare to
+  confirm slash-bearing FQID paths round-trip cleanly through the
+  edge cache before publishing the OpenAPI. If the edge cache
+  mangles them, fall back to a query-string form *before* the
+  OpenAPI is committed — `/api/catalog/{fqid:path}` is the chosen
+  form (§9.5), and changing it post-publish is expensive.
 - `global` deployment goes live serving `/api/catalog`,
   `/api/context`, and the bare-bones SPA — no authoring UI yet.
 
@@ -2519,11 +2690,13 @@ in step 8 until this window's findings are addressed. Subsumes R7
       `reg_monabundle.runtime` + `reg_mockdata` generate. Schema
       already accepted them at step 3; `reg_monabundle` rejected
       them at bundle-build until now.
-11. **Steward catalogs** (ifau, swecov) authored: each steward
-    builds their `steward.project_data.json` against the `global`
-    deployment, commits it to their own repo, and a per-steward
-    Docker image is produced. Order export exists in CSV form
-    (default template) for all three.
+11. **Steward catalogs** (ifau, swecov) authored: each steward's
+    `steward.project_data.json` is built against the `global`
+    deployment and committed into
+    `reg_webapp/stewards/<id>/steward.project_data.json` in this
+    monorepo. The existing Docker image rebuild picks them up; new
+    hostnames are wired up at Cloudflare. Order export exists in
+    CSV form (default template) for all three stewards.
 12. **Per-steward order templates** and `extensions` toggles
     layered on as steward-specific grammar requirements emerge.
 
@@ -2542,7 +2715,14 @@ are negotiable for v1.
 
 - **Shared validator corpus** (§15 step 5.5). `reg_schema/test_corpus/`
   ships golden `(input.json, expected_ValidationResult.json)` pairs.
-  Three consumers run the same fixtures:
+  **Scope: structural rules only** (§6.8.1) — these are the rules
+  every runtime executes and the only ones that must stay aligned
+  across Python and TS. Namespaced-block rules (§6.8.2,
+  e.g. `reg_monabundle.validate_block`) are tested per owner,
+  inside the owning package, since each owner has a single
+  canonical Python implementation; semantic rules (§6.8.3) are
+  tested inside `reg_webapp` since only the backend has reg_meta.
+  Three consumers run the structural corpus:
   - `reg_schema` Python unit tests (the canonical implementation).
   - The bundle build amalgamates a corpus-runner that asserts at
     bundle load on MONA — catches drift between the durable Python
