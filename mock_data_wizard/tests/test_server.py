@@ -15,6 +15,8 @@ from __future__ import annotations
 
 import json
 import threading
+from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError
@@ -24,6 +26,28 @@ import pytest
 
 from mock_data_wizard import editor, server
 from mock_data_wizard.server import ServerConfig, build_server
+
+
+@contextmanager
+def _running_server(config: ServerConfig) -> Iterator[str]:
+    """Run ``build_server(config)`` in a daemon thread; yield the base URL.
+
+    Uses ``poll_interval=0.05`` so ``httpd.shutdown()`` returns in ~50ms
+    instead of stdlib's default 500ms — the dominant per-test cost.
+    """
+    httpd = build_server(config)
+    thread = threading.Thread(
+        target=lambda: httpd.serve_forever(poll_interval=0.05),
+        daemon=True,
+    )
+    thread.start()
+    try:
+        host, port = httpd.server_address[:2]
+        yield f"http://{host}:{port}"
+    finally:
+        httpd.shutdown()
+        httpd.server_close()
+        thread.join(timeout=2)
 
 
 @pytest.fixture(autouse=True)
@@ -69,20 +93,11 @@ def initialized_project(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def running_server(initialized_project: Path):
+def running_server(initialized_project: Path) -> Iterator[str]:
     """Start a real ThreadingHTTPServer on an ephemeral port."""
     config = ServerConfig(project_dir=initialized_project, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    base_url = f"http://{host}:{port}"
-    try:
+    with _running_server(config) as base_url:
         yield base_url
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
 
 
 # -- Helpers --------------------------------------------------------------
@@ -120,16 +135,8 @@ def test_get_state_returns_snapshot(running_server: str):
 def test_get_state_404_when_not_initialized(tmp_path: Path):
     """Project_dir without mock_data_config.json → 404 not_initialized."""
     config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    try:
-        status, body = _fetch("GET", f"http://{host}:{port}/api/state")
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
+    with _running_server(config) as base_url:
+        status, body = _fetch("GET", f"{base_url}/api/state")
     assert status == 404
     assert body["error"]["code"] == "not_initialized"
 
@@ -146,40 +153,23 @@ def test_init_creates_config_then_idempotent(tmp_path: Path):
         ],
     )
     config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    base = f"http://{host}:{port}"
-    try:
-        status, body = _fetch("POST", f"{base}/api/init", {})
+    with _running_server(config) as base_url:
+        status, body = _fetch("POST", f"{base_url}/api/init", {})
         assert status == 200
         assert body["config"]["contract_version"] == "mdw-config-3.0.0"
         assert (tmp_path / "mock_data_config.json").exists()
 
         # Idempotent: second call returns the same snapshot.
-        status2, body2 = _fetch("POST", f"{base}/api/init", {})
+        status2, body2 = _fetch("POST", f"{base_url}/api/init", {})
         assert status2 == 200
         assert body2["snapshot_version"] == body["snapshot_version"]
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
 
 
 def test_init_404_when_no_discover(tmp_path: Path):
     """POST /api/init with no mock_data_discovery.json → 404 not_initialized."""
     config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    try:
-        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {})
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
+    with _running_server(config) as base_url:
+        status, body = _fetch("POST", f"{base_url}/api/init", {})
     assert status == 404
     assert body["error"]["code"] == "not_initialized"
     assert "mock_data_discovery.json" in body["error"]["message"]
@@ -202,16 +192,8 @@ def test_init_idempotent_when_discover_removed(tmp_path: Path):
     discover_path.unlink()
 
     config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    try:
-        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {})
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
+    with _running_server(config) as base_url:
+        status, body = _fetch("POST", f"{base_url}/api/init", {})
     assert status == 200
     assert body["config"]["contract_version"] == "mdw-config-3.0.0"
 
@@ -229,16 +211,8 @@ def test_init_400_when_body_has_unknown_keys(tmp_path: Path):
         ],
     )
     config = ServerConfig(project_dir=tmp_path, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    try:
-        status, body = _fetch("POST", f"http://{host}:{port}/api/init", {"force": True})
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
+    with _running_server(config) as base_url:
+        status, body = _fetch("POST", f"{base_url}/api/init", {"force": True})
     assert status == 400
     assert body["error"]["code"] == "validation"
     assert "force" in body["error"]["message"]
@@ -690,19 +664,10 @@ def multi_source_project(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def panel_server(multi_source_project: Path):
+def panel_server(multi_source_project: Path) -> Iterator[str]:
     config = ServerConfig(project_dir=multi_source_project, host="127.0.0.1", port=0)
-    httpd = build_server(config)
-    thread = threading.Thread(target=httpd.serve_forever, daemon=True)
-    thread.start()
-    host, port = httpd.server_address[:2]
-    base_url = f"http://{host}:{port}"
-    try:
+    with _running_server(config) as base_url:
         yield base_url
-    finally:
-        httpd.shutdown()
-        httpd.server_close()
-        thread.join(timeout=2)
 
 
 def test_panel_create_round_trip(panel_server: str):
