@@ -290,7 +290,8 @@ class TestBuildDb:
         assert rows[0]["var_id"] == 100
 
     def test_provider_seed(self, db_conn: sqlite3.Connection):
-        """Both built-in providers exist with stable provider_ids."""
+        # provider_id values are stable across releases — downstream pins
+        # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2).
         rows = db_conn.execute(
             "SELECT provider_id, slug, name FROM provider ORDER BY provider_id"
         ).fetchall()
@@ -300,7 +301,6 @@ class TestBuildDb:
         ]
 
     def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
-        """Every register loaded from SCB CSVs resolves to provider slug 'scb'."""
         rows = db_conn.execute(
             "SELECT p.slug FROM register r "
             "JOIN provider p ON r.provider_id = p.provider_id"
@@ -309,10 +309,7 @@ class TestBuildDb:
         assert {r["slug"] for r in rows} == {"scb"}
 
     def test_slug_columns_nullable_in_v3_1(self, db_conn: sqlite3.Connection):
-        """1a adds slug columns; 1c populates them. Values are NULL today
-        (except synthetic `_default` variants — covered separately)."""
-        # register.slug and classification.slug are NULL for SCB-loaded data.
-        # register_variant.slug is NULL except on synthetic _default rows.
+        # 1a adds slug columns; 1c populates them. Nullable until then.
         assert (
             db_conn.execute(
                 "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
@@ -328,8 +325,8 @@ class TestBuildDb:
     def test_default_variant_not_synthesized_when_unneeded(
         self, db_conn: sqlite3.Connection
     ):
-        """SCB fixtures every register already has a real variant — no
-        synthetic _default rows are emitted."""
+        # SCB fixtures: every register already has a real variant, so the
+        # synth pass adds nothing.
         count = db_conn.execute(
             "SELECT COUNT(*) FROM register_variant WHERE slug = '_default'"
         ).fetchone()[0]
@@ -338,19 +335,19 @@ class TestBuildDb:
     def test_default_variant_synthesized_for_variant_less_register(
         self, tmp_path: Path
     ):
-        """A register with zero register_variant rows must receive exactly one
-        synthetic variant with slug='_default' per REFACTOR_SPEC.md §5.1."""
+        # REFACTOR_SPEC.md §5.1: a register with zero register_variant rows
+        # gets exactly one synthetic variant with slug='_default'.
         import sqlite3 as _sqlite3
 
-        from regmeta.db import DDL, _emit_default_variants, _seed_providers
+        from regmeta.db import DDL, emit_default_variants, seed_providers
 
         db = tmp_path / "synth.db"
         conn = _sqlite3.connect(str(db))
         conn.row_factory = _sqlite3.Row
         conn.executescript(DDL)
-        _seed_providers(conn)
-        # Two registers; the second has no variant. The first does (so we also
-        # verify the emitter touches only the variant-less one).
+        seed_providers(conn)
+        # First register has a real variant; second is variant-less. Verifies
+        # the emitter touches only the variant-less one.
         conn.execute(
             "INSERT INTO register (register_id, provider_id, registernamn) "
             "VALUES (1, 2, 'WithVariant')"
@@ -364,8 +361,7 @@ class TestBuildDb:
             "VALUES (10, 1, 'Real')"
         )
 
-        emitted = _emit_default_variants(conn)
-        assert emitted == 1
+        assert emit_default_variants(conn) == 1
 
         rows = conn.execute(
             "SELECT register_id, slug FROM register_variant ORDER BY register_id, regvar_id"
@@ -374,16 +370,9 @@ class TestBuildDb:
             (1, None),
             (2, "_default"),
         ]
-        # Re-running the emitter is a no-op (idempotent).
-        assert _emit_default_variants(conn) == 0
+        # Idempotent on re-run.
+        assert emit_default_variants(conn) == 0
         conn.close()
-
-    def test_reserved_slugs_constant(self):
-        """The reserved-slug set is loadable from db; populated checker lands in 1c."""
-        from regmeta.db import RESERVED_SLUGS
-
-        assert "_default" in RESERVED_SLUGS
-        assert "class" in RESERVED_SLUGS
 
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""

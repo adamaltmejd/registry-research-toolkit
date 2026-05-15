@@ -615,14 +615,14 @@ class TestGetValues:
         """
         import sqlite3
 
-        from regmeta.db import DDL, _seed_providers
+        from regmeta.db import DDL, seed_providers
         from regmeta.queries import get_values_by_variable
 
         db = tmp_path / "amb.db"
         conn = sqlite3.connect(str(db))
         conn.row_factory = sqlite3.Row
         conn.executescript(DDL)
-        _seed_providers(conn)
+        seed_providers(conn)
         conn.execute(
             "INSERT INTO register (register_id, provider_id, registernamn) "
             "VALUES (1, 1, 'R1')"
@@ -698,9 +698,9 @@ class TestGetValues:
             (SCHEMA_VERSION,),
         )
         # Two registers, same variable name + var_id, same year, different code labels.
-        from regmeta.db import _seed_providers
+        from regmeta.db import seed_providers
 
-        _seed_providers(conn)
+        seed_providers(conn)
         conn.execute(
             "INSERT INTO register (register_id, provider_id, registernamn) "
             "VALUES (1, 1, 'RegAdult')"

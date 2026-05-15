@@ -174,15 +174,16 @@ CREATE TABLE provider (
     name        TEXT NOT NULL
 );
 
+-- FQID slug columns (`slug` on register / register_variant / classification,
+-- and synthetic `_default` rows on register_variant) are nullable in 3.1.
+-- Curated values land in step 1c; the build refuses to compile with NULL
+-- slugs from then on. See REFACTOR_SPEC.md §5.1 (synthesis) and §5.3 (TOMLs).
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
     registernamn TEXT NOT NULL,
     registerrubrik TEXT,
     registersyfte TEXT,
-    -- FQID slug (REFACTOR_SPEC.md §5.3). Nullable in 3.1; populated by
-    -- reg_meta_build slug TOMLs in step 1c. The build refuses to compile
-    -- with NULL slugs once 1c lands.
     slug         TEXT
 );
 
@@ -193,9 +194,6 @@ CREATE TABLE register_variant (
     registervariantrubrik TEXT,
     registervariantbeskrivning TEXT,
     registervariantsekretess TEXT,
-    -- FQID slug (§5.3). Synthetic `_default` variants (§5.1) carry the
-    -- reserved `_default` slug; all other slugs come from curated TOMLs in
-    -- step 1c. Nullable until 1c.
     slug          TEXT,
     -- Presentation-only grouping label (§5.3 field reference). Drift-tolerant.
     display_group TEXT
@@ -301,10 +299,8 @@ CREATE TABLE classification (
     -- codes that never appeared in any observed instance still count, but
     -- observed-only noise codes inflate code_count.
     valid_code_count INTEGER,
-    -- FQID slug stem (REFACTOR_SPEC.md §5.3); the classification FQID is
-    -- `class/<slug>/<version>`. Nullable in 3.1; populated by curated
-    -- classification TOML in step 1c. `version` is already populated from
-    -- the existing seed.
+    -- classification FQID is `class/<slug>/<version>`; `version` is already
+    -- populated from the existing seed.
     slug             TEXT
 );
 
@@ -899,9 +895,9 @@ def _import_registerinformation(
     conn.executemany(
         "INSERT INTO register (register_id, provider_id, registernamn, "
         "registerrubrik, registersyfte) "
-        "VALUES (:register_id, :provider_id, :registernamn, :registerrubrik, "
-        ":registersyfte)",
-        [dict(r, provider_id=PROVIDER_ID_SCB) for r in registers.values()],
+        f"VALUES (:register_id, {PROVIDER_ID_SCB}, :registernamn, "
+        ":registerrubrik, :registersyfte)",
+        list(registers.values()),
     )
     conn.executemany(
         "INSERT INTO register_variant ("
@@ -1509,7 +1505,7 @@ def _import_id_kolumner(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
-def _seed_providers(conn: sqlite3.Connection) -> None:
+def seed_providers(conn: sqlite3.Connection) -> None:
     """Insert the built-in `provider` rows.
 
     Must run before any `register` insert because `register.provider_id`
@@ -1521,7 +1517,7 @@ def _seed_providers(conn: sqlite3.Connection) -> None:
     )
 
 
-def _emit_default_variants(conn: sqlite3.Connection) -> int:
+def emit_default_variants(conn: sqlite3.Connection) -> int:
     """Synthesize a `_default` register_variant for every variant-less register.
 
     Implements REFACTOR_SPEC.md §5.1: registers without a sub-decomposition
@@ -1538,7 +1534,7 @@ def _emit_default_variants(conn: sqlite3.Connection) -> int:
         "  SELECT 1 FROM register_variant rv WHERE rv.register_id = r.register_id"
         ")"
     )
-    return cur.rowcount or 0
+    return cur.rowcount
 
 
 def utc_now() -> str:
@@ -1636,7 +1632,7 @@ def build_db(
     build_failed = True
     try:
         conn.executescript(DDL)
-        _seed_providers(conn)
+        seed_providers(conn)
 
         # ATTACH staging DB and create the per-build pair table. The PK groups
         # rows for the per-cvid projection pass and dedups identical triples.
@@ -1661,11 +1657,8 @@ def build_db(
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
 
-        # Synthesize `_default` variants for variant-less registers (§5.1).
-        # Runs after every register-loading source has written its rows. SCB
-        # data always populates a regvar_id; this is the hook for SOS-style
-        # workbooks (LSS/BU/SOL) once those load into the register table.
-        synth = _emit_default_variants(conn)
+        # Runs after every register-loading source has written its rows.
+        synth = emit_default_variants(conn)
         if synth:
             _progress(f"  {synth:,} synthetic `_default` variant(s) emitted")
 
