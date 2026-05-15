@@ -92,14 +92,14 @@ Two Python packages today, both in this repo:
 
 ### `regmeta`
 
-Searchable database of Swedish registry metadata. ~1.6 GB SQLite file
-indexing ~100M value-code rows across hundreds of registers. Built by
-parsing SCB CSV exports and Socialstyrelsen Excel deliveries
-(`maintain build-db`); queried via CLI (`regmeta search`, `regmeta
-get`, `regmeta resolve`, `regmeta docs ...`) and as a Python library.
-Two SQLite databases: the main metadata DB (`regmeta.db`) and a
-separate documentation DB (`regmeta_docs.db`) built from parsed SCB
-PDFs. FTS5 indexes on both. Stable JSON output, structured errors,
+Searchable database of Swedish registry metadata, indexing ~100M
+value-code rows across hundreds of registers. Built by parsing SCB
+CSV exports and Socialstyrelsen Excel deliveries (`maintain
+build-db`); queried via CLI (`regmeta search`, `regmeta get`,
+`regmeta resolve`, `regmeta docs ...`) and as a Python library.
+Two SQLite databases: the main metadata DB (`regmeta.db`,
+~520 MB) and a separate documentation DB (`regmeta_docs.db`,
+~3 MB) built from parsed SCB PDFs. FTS5 indexes on both. Stable JSON output, structured errors,
 meaningful exit codes — designed primarily for agent consumption.
 
 This is the **authoritative knowledge layer**: "what variables exist
@@ -110,7 +110,7 @@ searching for variables during research-question exploration.
 (Post-refactor: renamed to `reg_meta` per §4. The current names are
 preserved in this section to describe today's state.)
 
-### `mock_data_wizard` (CLI: `mdw`)
+### `mock_data_wizard` (CLI: `mock-data-wizard`, colloquially `mdw`)
 
 Generates mock CSVs that match the shape of real MONA data, so agents
 and researchers can develop analysis code outside MONA before delivery
@@ -292,9 +292,10 @@ on `reg_webapp/v*` tags.
 - **reg_meta vs reg_meta_build**: different deps (query needs the
   sqlite3 stdlib; build needs CSV/Excel parsers), different release
   cadence, different operators. The built SQLite DBs (`regmeta.db`,
-  `regmeta_docs.db`) are too large to ship inside the wheel (500MB+
-  for the main DB) and are distributed as `.zst`-compressed
-  **GitHub release artifacts** on `reg_meta/v*` tags. `reg_meta`
+  `regmeta_docs.db`) are too large to ship inside the wheel (~520 MB
+  uncompressed for the main DB; ~120 MB compressed) and are
+  distributed as `.zst`-compressed **GitHub release artifacts** on
+  `reg_meta/v*` tags. `reg_meta`
   ships a `reg-meta maintain update` command that fetches the
   matching version into `$XDG_DATA_HOME/regmeta/`; the webapp
   Dockerfile runs this at image-build time so the DB ends up in
@@ -576,7 +577,9 @@ claims after a SCB rename:
 ```toml
 [variable."34.137"]
 slug = "civilstand"               # explicit override
-same_as = ["34.2999"]             # curated rename equivalence within LISA
+same_as = [                       # slug-anchored, inline-table form (§5.3 field ref)
+  { provider = "scb", register = "lisa", variable_slug = "civilstand-legacy" },
+]
 ```
 
 A one-time `reg-meta-build seed-slugs` command reads the current
@@ -1431,7 +1434,7 @@ info, not error, and any deprecation warning includes a note that
 the deprecation was introduced after the spec's recorded version.
 
 **Caller context — researcher-project vs steward-catalog.** The
-level table above is for the **researcher-project** path
+levels listed above are for the **researcher-project** path
 (`POST /api/project/validate`): unresolved FQIDs are blocking
 errors because the researcher needs to fix them before extract.
 
@@ -2103,8 +2106,8 @@ here is really cost protection:
   with body > 1 MB at the edge; FastAPI enforces the same cap on
   any that slip through (e.g. direct origin hits). 1 MB matches
   the bundle-output budget (§12) and is comfortably larger than
-  any plausible `project_data.json` + companion codes file. Per
-  R16's 200-column fixture, real projects land at tens of KB.
+  any plausible `project_data.json` + companion codes file (the
+  200-column load-test fixture in §12 lands at tens of KB).
 
 Rate-limit bucketing is **IP-only** in v1. A localStorage session
 token would let us bucket per-browser (helpful behind NAT) but
@@ -2154,7 +2157,7 @@ no `children`. Search stays separate (it's a distinct operation).
 | Method | Path | Purpose |
 |---|---|---|
 | POST | `/api/project/validate` | Validates a `project_data.json` document; returns structural, namespaced-block, and semantic errors/warnings (§6.8). |
-| POST | `/api/project/order` | Renders the steward's order export. Default template (v1): CSV with columns `provider,register,variant,year,variable,display_name`, one row per (`register_version` × variable) tuple in the spec. Stewards that don't ship an `order_template` inherit this default. Custom templates (IFAU spreadsheets, SWECOV PDFs) replace the body via `stewards.order_template`. |
+| POST | `/api/project/order` | Renders the steward's order export. Default template (v1): CSV with columns `provider,register,variant,period,variable,display_name`, one row per spec column. `period` carries whatever the source's `register_version` declares (`2018`, `2018-01`, `HT2020`, …). Stewards that don't ship an `order_template` inherit this default. Custom templates (IFAU spreadsheets, SWECOV PDFs) replace the body via `stewards.order_template`. |
 | POST | `/api/bundle` | Builds the Python MONA bundle embedding the supplied `project_data.json`. Pure function of the input (no server-side state, no steward config injection); response cacheable by content-hash. Returns `.py` as `application/octet-stream`. |
 | POST | `/api/kit` | Builds a generation kit (zip) from `project_data.json` + `project_data.stats.json`. Dereferences classification FQIDs and binding FQIDs into a sibling `project_data.codes.json` (§6.6). |
 
@@ -2240,12 +2243,14 @@ the most scrutiny.
 - **SQL→spec-type compatibility map** (`reg_monabundle.types`).
   Drives realign-time mismatch detection (§7); also imported by
   `reg_webapp` for realign-review UI display.
-- **Disclosure-control thresholds** (`SUPPRESS_K`, small-population
-  warning, date jitter, numeric noise). Apply at extract time in
-  the bundle. Library defaults are `reg_monabundle`'s; per-column
-  overrides come from the spec's `reg_monabundle.column_options`.
-  Steward config does not influence these — the spec is the sole
-  source of run-relevant configuration.
+- **Disclosure-control thresholds** (v1: `SUPPRESS_K`,
+  `SMALL_POP_MULT`; see §6.5 for values). Apply at extract time
+  in the bundle. Library defaults are `reg_monabundle`'s;
+  per-column overrides come from the spec's
+  `reg_monabundle.column_options`. Steward config does not
+  influence these — the spec is the sole source of run-relevant
+  configuration. Future thresholds (date jitter, numeric noise)
+  go in the same place once they exist.
 - **CSV typing machinery** (all-varchar reads, semantic → DuckDB
   cast map, opaque auto-promotion, materialisation threshold).
   Operational detail of the extract runner. Documented in
@@ -2282,7 +2287,7 @@ the most scrutiny.
 - **Editor API** (`mock_data_wizard.editor`) — concurrency tokens,
   group views, panel detection, etc. Replaced by `reg_webapp`'s
   in-browser project state. The Python editor module is deleted
-  (per A3 / §15 step 7).
+  at §15 step 7.
 - **Local HTTP server** (`mock_data_wizard.server`, current
   `mock-data-wizard ui`). Deleted; `reg_webapp` covers it.
 
@@ -2291,7 +2296,7 @@ across multiple cvids per variable) becomes unnecessary under
 FQIDs: a binding FQID resolves to exactly one `variable_instance`
 row, which directly carries the cvid via reg_meta. Picking is
 replaced by deterministic resolution. The picker module is
-deleted, not moved.
+deleted, not moved (§15 step 7).
 
 ### Composite entity_key and time_key support
 
@@ -2357,16 +2362,16 @@ config. Schema-design of that override is deferred until a
 concrete project requires it.
 
 **Cross-provider concept linkage** is the same kind of deferred
-problem: today's slug-stem-only rule (`/kon` matches `/kon` across
+problem: v1's slug-stem-only rule (`/kon` matches `/kon` across
 all providers) requires that concept-equivalent variables share a
-stem across providers. That's the v1 norm — SCB-only projects, or
-projects against SCB-curated stewards. The day a project mixes
-SCB's `kon` with another provider's `sex` for the same person, the
-generator will silently produce inconsistent draws. The remediation
-will live in the same future `reg_mockdata` namespaced block (e.g.
-`spine_groups`: explicit lists of bindings or stems to treat as
-person-equivalent). The slug-stem rule remains the default; the
-override is the escape hatch.
+stem across providers. That's fine for the v1 norm — SCB-only
+projects, or projects against SCB-curated stewards. The day a
+project mixes SCB's `kon` with another provider's `sex` for the
+same person, the generator will silently produce inconsistent
+draws. The remediation will live in the same future `reg_mockdata`
+namespaced block (e.g. `spine_groups`: explicit lists of bindings
+or stems to treat as person-equivalent). The slug-stem rule remains
+the default; the override is the escape hatch.
 
 ### `mdw update`
 
@@ -2440,9 +2445,10 @@ open:
   safety net for anyone who skipped the hook. Intentional API
   changes are inspected in the PR diff like any other code change.
   The TypeScript types (`openapi-typescript`-generated) are kept in
-  sync the same way (R14), so any drift surfaces in the same PR.
-  A future Go/Rust port of the query API reproduces the spec;
-  clients are unaffected.
+  sync the same way (codegen step in the SPA build, snapshot-tested
+  in CI), so any drift surfaces in the same PR. A future Go/Rust
+  port of the query API reproduces the spec; clients are
+  unaffected.
 - **Build / runtime cleanly separated.** `reg_meta` (query) is small
   and pure; `reg_meta_build` is operator-side. A future port
   replaces query only; build stays Python.
@@ -2458,11 +2464,12 @@ open:
   - `/api/project/validate`, `/api/project/order`: **p95 ≤ 1 s**.
   - `/api/bundle`, `/api/kit`: **p95 ≤ 5 s** (file packaging +
     amalgamation; larger projects dominate).
-  Load-test corpus: R16's 200-column fixture plus the SWECOV
-  reference catalog. Initial pass before §15 step 12; regressions
-  fail CI thereafter.
+  Load-test corpus: a synthetic 200-column project_data.json
+  fixture (committed under `reg_schema/test_corpus/`) plus the
+  SWECOV reference catalog. Initial pass before §15 step 12;
+  regressions fail CI thereafter.
 - **Bundle size budget (v1 target).** The MONA bundle's emitted
-  `.py` is capped at **1 MB** in v1 (R8). The bundle is uploaded
+  `.py` is capped at **1 MB** in v1. The bundle is uploaded
   through MONA's GUI per round-trip; budget keeps the upload
   responsive and forces deliberation before adding heavy
   amalgamated code. Baseline measured at §15 step 5; verified on
@@ -2577,7 +2584,7 @@ document. Step 1 can start.
      `reg-meta-build precheck-slugs` lists any source IDs missing a
      slug entry (cleaner failure mode than a full build attempt).
    - **1d — CI immutability snapshot.** Slug-grow-only snapshot test
-     enabled **after 1c merges** (R4): turning it on earlier would
+     (§5.4) enabled **after 1c merges**: turning it on earlier would
      fail the build during the bootstrap churn.
    - **1e — Consumer-side binding materialization (§5.6).** LISA-via-RTB
      and other composite-source bindings get materialized at build
@@ -2600,7 +2607,7 @@ document. Step 1 can start.
    - Single-file bundle with embedded config (the modes are still
      the old `--mode=...` shapes here; merged-mode lands in 10a).
    - Discover step still exists; classifier still exists.
-   - **Test-fixture rewrites are part of this step** (R6): every
+   - **Test-fixture rewrites are part of this step**: every
      `mock_data_config.json` fixture is rewritten to
      `project_data.json`, including the binding-FQID columns. The
      fixture corpus is non-trivial and should be in the step's
@@ -2611,8 +2618,8 @@ document. Step 1 can start.
    compare + (for now) classifier. `reg_webapp` doesn't exist yet
    so the bundle-builder is invoked from the mock_data_wizard CLI;
    it just lives in a different module.
-   - **Verification gate (R8):** measure the bundle's output `.py`
-     size against the 1MB v1 budget (§12) on a real MONA test;
+   - **Verification gate:** measure the bundle's output `.py`
+     size against the 1 MB v1 budget (§12) on a real MONA test;
      fail the step if exceeded so the budget bites before it
      compounds.
 
@@ -2640,12 +2647,13 @@ the same JSON. This is the single artifact that makes §6.8.0's
   into the image layer (§4).
 - Cloudflare configured in front: edge caching with the §9.4 ETag
   scheme, per-IP rate limits.
-- **R10 validation gate:** run a small load through Cloudflare to
-  confirm slash-bearing FQID paths round-trip cleanly through the
-  edge cache before publishing the OpenAPI. If the edge cache
-  mangles them, fall back to a query-string form *before* the
-  OpenAPI is committed — `/api/catalog/{fqid:path}` is the chosen
-  form (§9.5), and changing it post-publish is expensive.
+- **Edge-cache validation gate:** run a small load through
+  Cloudflare to confirm slash-bearing FQID paths round-trip
+  cleanly through the edge cache before publishing the OpenAPI.
+  If the edge cache mangles them, fall back to a query-string
+  form *before* the OpenAPI is committed —
+  `/api/catalog/{fqid:path}` is the chosen form (§9.5), and
+  changing it post-publish is expensive.
 - `global` deployment goes live serving `/api/catalog`,
   `/api/context`, and the bare-bones SPA — no authoring UI yet.
 
@@ -2654,16 +2662,17 @@ the same JSON. This is the single artifact that makes §6.8.0's
    `mock_data_wizard.editor` / `mock-data-wizard ui` to webapp
    authoring. `mock_data_wizard.editor`, `mock_data_wizard.server`,
    **and `mock_data_wizard.classify`** are all deleted the same day
-   (D2: classifier becomes dead code once the webapp owns type
-   selection) — no parallel run, no shim, per CLAUDE.md and §13.
-   Testers re-author affected projects.
+   — once the webapp owns type selection the classifier is dead
+   code. No parallel run, no shim, per CLAUDE.md and §13. Testers
+   re-author affected projects.
 
 **Step 7.5 — `global` dogfood (2 weeks).** Testers exercise the
 full author → bundle → realign → re-author loop against the
 `global` deployment before kit-build piles on top. Paired with
-R16's 200-column fixture for realign-UX stress. No new code lands
-in step 8 until this window's findings are addressed. Subsumes R7
-(no separate staging environment).
+the 200-column load-test fixture (§12) for realign-UX stress.
+No new code lands in step 8 until this window's findings are
+addressed. The `global` deployment is the staging environment;
+no separate staging tier.
 
 <!-- markdownlint-disable-next-line MD029 -->
 8. **Webapp kit-build** (`POST /api/kit`) — value-set
@@ -2676,16 +2685,15 @@ in step 8 until this window's findings are addressed. Subsumes R7
    `reg-mockdata compare`. `reg_mockdata` reads pinned codes from
    the kit. Population spine ships as a hardcoded set of binding
    FQID stems matched at generate time. The webapp does NOT depend
-   on `reg_mockdata`. (Classifier deletion moved earlier to step
-   7 per D2.)
+   on `reg_mockdata`. (Classifier deletion already happened at
+   step 7.)
 10. **Bundle merged-mode and composite-key support in
     `reg_monabundle`.**
     - **10a:** merged-mode (realign-then-extract; §7 redesign);
       discover deleted; type-mismatch detection via
       `reg_monabundle.types.is_compatible`. **`reg_monabundle.scan`
-      updated for the new realign output and stats schemas** (R11)
-      — without this the PII scanner runs against schemas it doesn't
-      understand.
+      updated for the new realign output and stats schemas** — without
+      this the PII scanner runs against schemas it doesn't understand.
     - **10b:** composite entity_key/time_key support lands in
       `reg_monabundle.runtime` + `reg_mockdata` generate. Schema
       already accepted them at step 3; `reg_monabundle` rejected
@@ -2747,7 +2755,7 @@ are negotiable for v1.
   against `global` and validated against a narrower steward (e.g.
   `ifau`) emits the expected set of
   `fqid_outside_steward_catalog` warnings — codes + paths, not
-  message strings. Pins B5's feature contract.
+  message strings. Pins the §6.8.3 caller-context contract.
 - **MONA-shape integration.** A `sqlserver-linux` Docker container
   hosts a synthetic MSSQL instance with INFORMATION_SCHEMA-shaped
   fixtures; the bundle's realign and extract queries run against
