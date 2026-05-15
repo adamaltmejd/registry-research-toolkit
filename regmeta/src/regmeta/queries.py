@@ -9,29 +9,12 @@ from __future__ import annotations
 
 import re
 import sqlite3
-from collections.abc import Callable
 from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from .fqid import Fqid, FqidError, derive_variable_slug
+from .fqid import Fqid, derive_variable_slug, try_emit
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
-
-
-def _safe_emit(factory: Callable[..., Fqid], *parts: str | None) -> str | None:
-    """Emit an FQID only when every slug/period part is present.
-
-    Slug columns are populated incrementally (1c onward) — querying against a
-    pre-1c DB yields ``None`` for missing slugs, which would otherwise turn
-    every binding into an FqidError. Validation failures are surfaced as
-    ``None`` rather than crashing query output.
-    """
-    if any(p is None or p == "" for p in parts):
-        return None
-    try:
-        return factory(*parts).emit()
-    except FqidError:
-        return None
 
 
 def _try_int(value: str) -> int | str:
@@ -455,9 +438,7 @@ def get_register(
 ) -> list[dict[str, Any]]:
     """Get register(s) by name or ID with variants.
 
-    Returns a list of register dicts, each with a "variants" key. Register
-    and variant FQIDs are emitted alongside the legacy columns when the
-    relevant slug columns are populated.
+    Returns a list of register dicts, each with a "variants" key.
     """
     reg_ids = require_register_ids(conn, register)
 
@@ -471,7 +452,7 @@ def get_register(
         ).fetchone()
         entry = dict(reg)
         provider_slug = entry.pop("provider_slug")
-        entry["fqid"] = _safe_emit(Fqid.register_fqid, provider_slug, entry["slug"])
+        entry["fqid"] = try_emit(Fqid.register_fqid, provider_slug, entry["slug"])
         variants = conn.execute(
             "SELECT * FROM register_variant WHERE register_id = ? ORDER BY regvar_id",
             (rid,),
@@ -479,7 +460,7 @@ def get_register(
         variant_dicts: list[dict[str, Any]] = []
         for v in variants:
             vd = dict(v)
-            vd["fqid"] = _safe_emit(
+            vd["fqid"] = try_emit(
                 Fqid.register_variant_fqid,
                 provider_slug,
                 entry["slug"],
@@ -596,15 +577,12 @@ def get_schema(
             col_dicts: list[dict[str, Any]] = []
             for c in columns:
                 cd = dict(c)
-                # Derive a variable slug from the lexically-first alias; the
-                # full §5.3 latest-alias rule lands with the 1e build-time
-                # binding materialization.
                 aliases_str = cd.get("aliases") or ""
                 first_alias = next(
                     (a.strip() for a in aliases_str.split(",") if a.strip()), None
                 )
                 variable_slug = derive_variable_slug(first_alias)
-                cd["fqid"] = _safe_emit(
+                cd["fqid"] = try_emit(
                     Fqid.binding_fqid,
                     provider_slug,
                     register_slug,
@@ -627,7 +605,7 @@ def get_schema(
                     "regver_id": ver["regver_id"],
                     "version_name": ver["registerversionnamn"],
                     "year": year,
-                    "fqid": _safe_emit(
+                    "fqid": try_emit(
                         Fqid.register_version_fqid,
                         provider_slug,
                         register_slug,
@@ -645,7 +623,7 @@ def get_schema(
                     "register_id": rv["register_id"],
                     "registervariantnamn": rv["registervariantnamn"],
                     "registervariantrubrik": rv["registervariantrubrik"],
-                    "fqid": _safe_emit(
+                    "fqid": try_emit(
                         Fqid.register_variant_fqid,
                         provider_slug,
                         register_slug,
@@ -798,7 +776,7 @@ def get_varinfo(
                 "datalangd": inst["datalangd"],
                 "aliases": inst_aliases,
                 "value_set_count": value_counts[cvid],
-                "fqid": _safe_emit(
+                "fqid": try_emit(
                     Fqid.binding_fqid,
                     inst["provider_slug"],
                     inst["register_slug"],
@@ -1980,7 +1958,7 @@ def compare(
 
 def _classification_row(row: sqlite3.Row) -> dict[str, Any]:
     d = dict(row)
-    fqid = _safe_emit(Fqid.classification_fqid, d.get("slug"), d.get("version"))
+    fqid = try_emit(Fqid.classification_fqid, d.get("slug"), d.get("version"))
     # Drop NULL fields to keep JSON output lean.
     out = {k: v for k, v in d.items() if v is not None}
     if fqid:

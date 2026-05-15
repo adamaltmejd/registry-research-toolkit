@@ -1,16 +1,8 @@
-"""Tests for FQID emission in query results (REFACTOR_SPEC.md §15 step 1b).
-
-Query commands gain a ``fqid`` key alongside their legacy fields. Where
-slug columns are NULL (the state of the fixture DB until 1c populates
-them), ``fqid`` is None — existing assertions on legacy fields keep
-working. Where slugs are populated (these tests), ``fqid`` carries the
-canonical string.
-"""
+"""Tests for FQID emission in query results."""
 
 from __future__ import annotations
 
 import sqlite3
-from pathlib import Path
 
 import pytest
 
@@ -22,48 +14,12 @@ from regmeta.queries import (
     get_varinfo,
 )
 
-
-def _build_slugged_db(path: Path) -> sqlite3.Connection:
-    """Construct a hand-curated DB exercising all five FQID kinds."""
-    conn = sqlite3.connect(path)
-    conn.row_factory = sqlite3.Row
-    conn.executescript(DDL)
-    seed_providers(conn)
-    conn.execute(
-        "INSERT INTO register (register_id, provider_id, slug, registernamn) "
-        "VALUES (1, 1, 'lisa', 'LISA')"
-    )
-    conn.execute(
-        "INSERT INTO register_variant "
-        "(regvar_id, register_id, slug, registervariantnamn) "
-        "VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
-    )
-    conn.execute(
-        "INSERT INTO register_version "
-        "(regver_id, regvar_id, registerversionnamn) "
-        "VALUES (100, 10, 'LISA 2018')"
-    )
-    conn.execute(
-        "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 44, 'Kön')"
-    )
-    conn.execute(
-        "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
-        "VALUES (1001, 1, 10, 100, 44, 'int')"
-    )
-    conn.execute("INSERT INTO variable_alias VALUES (1001, 'Kon')")
-    conn.execute(
-        "INSERT INTO classification "
-        "(short_name, name, version, slug) "
-        "VALUES ('SUN2020', 'Svensk utbildningsnomenklatur', '2020', 'sun')"
-    )
-    conn.commit()
-    return conn
+from _slugged_db import build_slugged_db
 
 
 @pytest.fixture
-def slugged_conn(tmp_path: Path) -> sqlite3.Connection:
-    return _build_slugged_db(tmp_path / "regmeta.db")
+def slugged_conn() -> sqlite3.Connection:
+    return build_slugged_db()
 
 
 class TestGetRegisterFqid:
@@ -76,20 +32,15 @@ class TestGetRegisterFqid:
         assert reg["fqid"] == "scb/lisa"
         assert reg["variants"][0]["fqid"] == "scb/lisa/individer-15plus"
 
-    def test_null_slugs_yield_null_fqid(self, tmp_path: Path) -> None:
-        # Pre-1c state: slug columns NULL → fqid key is None, legacy fields
-        # still present.
-        conn = sqlite3.connect(tmp_path / "rm.db")
-        conn.row_factory = sqlite3.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 1, 'LISA')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
-            "VALUES (10, 1, 'V')"
+    def test_null_slugs_yield_null_fqid(self) -> None:
+        # Pre-1c state: slug columns NULL → fqid key present but None;
+        # legacy fields unchanged.
+        conn = build_slugged_db(
+            register=("LISA", None, 1, 1),
+            variant=("V", None, 10),
+            version=None,
+            variable=None,
+            classification=None,
         )
         results = get_register(conn, "LISA")
         assert results[0]["fqid"] is None
@@ -121,18 +72,15 @@ class TestGetClassificationFqid:
         result = get_classification(slugged_conn, "SUN2020")
         assert result["fqid"] == "class/sun/2020"
 
-    def test_null_slug_omits_fqid(self, tmp_path: Path) -> None:
-        # Existing seed in the wider repo may have classifications without
-        # slug populated. ``_classification_row`` drops the key entirely
-        # rather than carrying a null value — the existing convention for
-        # lean JSON output.
-        conn = sqlite3.connect(tmp_path / "rm.db")
+    def test_null_slug_omits_fqid(self) -> None:
+        # _classification_row drops NULL fields entirely; with slug NULL,
+        # the fqid key is absent rather than carrying None.
+        conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO classification "
-            "(short_name, name, version) "
+            "INSERT INTO classification (short_name, name, version) "
             "VALUES ('SUN2020', 'SUN', '2020')"
         )
         result = get_classification(conn, "SUN2020")

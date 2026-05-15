@@ -41,9 +41,9 @@ class TestRoundTrip:
     def test_parse_emit_identity(self, value: str, kind: FqidKind) -> None:
         f = parse(value)
         assert f.kind is kind
-        assert f.emit() == value
+        assert str(f) == value
         # Idempotent across one more round-trip.
-        assert parse(f.emit()).emit() == value
+        assert str(parse(str(f))) == value
 
 
 # ---------------------------------------------------------------------------
@@ -210,11 +210,11 @@ class TestMalformed:
 class TestFactories:
     def test_register_factory(self) -> None:
         f = Fqid.register_fqid("scb", "lisa")
-        assert f.emit() == "scb/lisa"
+        assert str(f) == "scb/lisa"
 
     def test_variant_factory_accepts_default(self) -> None:
         f = Fqid.register_variant_fqid("sos", "lss", DEFAULT_VARIANT_SLUG)
-        assert f.emit() == "sos/lss/_default"
+        assert str(f) == "sos/lss/_default"
 
     def test_factory_rejects_bad_slug(self) -> None:
         with pytest.raises(FqidError):
@@ -222,12 +222,12 @@ class TestFactories:
 
     def test_classification_factory(self) -> None:
         f = Fqid.classification_fqid("sun", "2020")
-        assert f.emit() == "class/sun/2020"
+        assert str(f) == "class/sun/2020"
 
     def test_binding_factory(self) -> None:
         f = Fqid.binding_fqid("scb", "lisa", "v1", "2020", "kon")
         assert f.kind is FqidKind.VARIABLE_BINDING
-        assert f.emit() == "scb/lisa/v1/2020/kon"
+        assert str(f) == "scb/lisa/v1/2020/kon"
 
 
 # ---------------------------------------------------------------------------
@@ -275,10 +275,10 @@ class TestVariableSlugDerivation:
 class TestNoElision:
     def test_emit_keeps_default_variant(self) -> None:
         f = Fqid.binding_fqid("sos", "lss", DEFAULT_VARIANT_SLUG, "2022", "kon")
-        assert f.emit() == "sos/lss/_default/2022/kon"
+        assert str(f) == "sos/lss/_default/2022/kon"
 
     def test_no_silent_default_insertion_for_register(self) -> None:
         # A 2-segment FQID stays a register; we don't synthesise a _default
         # variant on emission.
         f = parse("sos/lss")
-        assert f.emit() == "sos/lss"
+        assert str(f) == "sos/lss"
