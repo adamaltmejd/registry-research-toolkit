@@ -210,7 +210,7 @@ class TestPopulateClassifications:
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
         return db_dir / "regmeta.db", seed
 
     def test_classification_inserted(self, tmp_path: Path):
@@ -311,6 +311,7 @@ class TestPopulateClassifications:
             input_dir=input_dir,
             db_dir=db_dir,
             seed_path=seed,
+            skip_slugs=True,
         )
 
         conn = sqlite3.connect(db_dir / "regmeta.db")
@@ -422,7 +423,7 @@ class TestPopulateClassifications:
         seed.write_text(seed_toml, encoding="utf-8")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
 
         conn = sqlite3.connect(db_dir / "regmeta.db")
         conn.row_factory = sqlite3.Row
@@ -470,7 +471,7 @@ class TestPopulateClassifications:
         seed.write_text(seed_toml, encoding="utf-8")
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+        build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
 
         conn = sqlite3.connect(db_dir / "regmeta.db")
         conn.row_factory = sqlite3.Row
@@ -602,7 +603,7 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
     db_dir = tmp / "db"
     db_dir.mkdir()
-    build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed)
+    build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
 
     # Query commands require a doc DB alongside.
     from regmeta.doc_db import build_doc_db

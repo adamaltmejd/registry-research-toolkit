@@ -1,0 +1,16 @@
+# Slug TOML for classifications.
+#
+# REFACTOR_SPEC.md §5.3: classifications live in their own provider-independent
+# file because the FQID grammar (§5.2) routes classifications under
+# `class/<slug>/<version>` rather than under a provider.
+#
+#   [classification."<short_name>"]
+#   slug = "sun"
+#   version = "2020"                  # required; stem of the classification FQID
+#
+# A classification short_name maps to exactly one (slug, version) row. The
+# short_name keys mirror `regmeta/classifications.toml` (the legacy seed) so
+# `populate_slugs` can join the two.
+#
+# Slugs are grow-only and immutable once published (§5.4); see scb.toml for
+# the bootstrap procedure and snapshot enforcement.

@@ -1,0 +1,912 @@
+"""Slug TOML loading, validation, population, and seeding.
+
+REFACTOR_SPEC.md §5.3-§5.4. Curated slugs land in per-provider TOML files at
+``regmeta/fqid_slugs/``; this module parses them, validates the grammar,
+populates the slug columns on ``register`` / ``register_variant`` /
+``classification`` during build, and ships the seed/precheck/snapshot
+machinery the CLI exposes.
+
+Variables are auto-slugged from the latest kolumnnamn; explicit ``[variable]``
+rows are exceptions (overrides, deprecations, ``same_as`` curation).
+"""
+
+from __future__ import annotations
+
+import json
+import sqlite3
+import sys
+import tomllib
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+from .errors import EXIT_CONFIG, RegmetaError
+from .fqid import (
+    DEFAULT_VARIANT_SLUG,
+    FqidKind,
+    _validate_slug,
+    derive_variable_slug,
+    is_slug,
+)
+
+ENTITY_KINDS: tuple[str, ...] = (
+    "register",
+    "register_variant",
+    "variable",
+    "classification",
+)
+PROVIDER_FILE_SUFFIX = ".toml"
+CLASSIFICATIONS_FILE = "classifications.toml"
+SNAPSHOT_FILENAME = ".snapshot.json"
+
+
+@dataclass(frozen=True)
+class SlugEntry:
+    """One row of a slug TOML.
+
+    ``source_id`` is the literal TOML key (always a quoted string per §5.3).
+    ``provider`` is the filename stem for provider-scoped files; ``None`` for
+    classifications.
+    """
+
+    kind: str
+    source_id: str
+    slug: str | None
+    provider: str | None = None
+    version: str | None = None
+    display_group: str | None = None
+    deprecated: bool = False
+    replaced_by: str | None = None
+    same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
+
+
+def repo_slug_dir() -> Path | None:
+    """Return ``regmeta/fqid_slugs/`` from a repo checkout, or ``None``.
+
+    Mirrors ``classifications.repo_seed_path`` — wheel installs do not ship
+    the slug TOMLs; they are maintainer artifacts the build reads from a repo
+    checkout.
+    """
+    pkg_dir = Path(__file__).resolve().parent
+    candidate = pkg_dir.parent.parent / "fqid_slugs"
+    return candidate if candidate.is_dir() else None
+
+
+# ---------------------------------------------------------------------------
+# Parsing and validation
+# ---------------------------------------------------------------------------
+
+
+def _err(code: str, message: str, remediation: str) -> RegmetaError:
+    return RegmetaError(
+        exit_code=EXIT_CONFIG,
+        code=code,
+        error_class="configuration",
+        message=message,
+        remediation=remediation,
+    )
+
+
+def _parse_toml(path: Path) -> dict[str, Any]:
+    try:
+        return tomllib.loads(path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        raise _err(
+            "slug_toml_unreadable",
+            f"Could not parse slug TOML {path}: {exc}",
+            "Ensure the file is valid TOML.",
+        ) from exc
+
+
+def _allowed_fields(kind: str) -> frozenset[str]:
+    base = {"slug", "deprecated", "replaced_by"}
+    if kind == "register_variant":
+        return frozenset(base | {"display_group"})
+    if kind == "classification":
+        return frozenset(base | {"version", "same_as"})
+    if kind == "variable":
+        return frozenset(base | {"same_as"})
+    return frozenset(base)
+
+
+def _validate_same_as(
+    kind: str, source_id: str, raw: Any, *, provider: str | None
+) -> tuple[dict[str, str], ...]:
+    if raw is None:
+        return ()
+    if kind not in ("variable", "classification"):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `same_as` only allowed on variable / classification.",
+            "Remove the field or move the entry to the correct kind.",
+        )
+    if not isinstance(raw, list) or not all(isinstance(r, dict) for r in raw):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `same_as` must be an array of inline tables.",
+            'Use TOML syntax: same_as = [{ provider = "scb", ... }].',
+        )
+    out: list[dict[str, str]] = []
+    for ref in raw:
+        if not all(isinstance(v, str) and v for v in ref.values()):
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `same_as` entries must be non-empty strings.",
+                "Each link names provider + slugs as quoted strings.",
+            )
+        out.append({k: v for k, v in ref.items()})
+    return tuple(out)
+
+
+def _validate_entry_slug(
+    kind: str, source_id: str, slug: str | None, *, required: bool
+) -> None:
+    if slug is None:
+        if required:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: missing required `slug` field.",
+                'Add `slug = "..."` to the entry.',
+            )
+        return
+    if not isinstance(slug, str):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `slug` must be a string, got {type(slug).__name__}.",
+            "Quote the value as a TOML string.",
+        )
+    slot = FqidKind.REGISTER_VARIANT if kind == "register_variant" else kind
+    allow_default = kind == "register_variant"
+    try:
+        _validate_slug(slug, slot, allow_default=allow_default)
+    except ValueError as exc:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: {exc}",
+            "Adjust the slug to match the §5.2 grammar.",
+        ) from exc
+
+
+def _validate_entry(kind: str, source_id: str, entry: dict[str, Any]) -> SlugEntry:
+    allowed = _allowed_fields(kind)
+    unknown = set(entry) - allowed
+    if unknown:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: unknown field(s): {sorted(unknown)}.",
+            f"Allowed fields for {kind}: {sorted(allowed)}.",
+        )
+    slug = entry.get("slug")
+    # Variables auto-slug; an entry without `slug` is still valid as long as it
+    # carries `deprecated` / `replaced_by` / `same_as` (i.e. it overrides
+    # something about the auto-derived row).
+    requires_slug = kind != "variable"
+    _validate_entry_slug(kind, source_id, slug, required=requires_slug)
+    deprecated = bool(entry.get("deprecated", False))
+    replaced_by = entry.get("replaced_by")
+    if replaced_by is not None and (
+        not isinstance(replaced_by, str) or not replaced_by
+    ):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `replaced_by` must be a non-empty string.",
+            "Point it at the TOML key of the replacement row.",
+        )
+    version = entry.get("version")
+    if kind == "classification":
+        if not version or not isinstance(version, str):
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: classifications require a string `version`.",
+                'Add `version = "<stem>"` (e.g. "2020").',
+            )
+    elif version is not None:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `version` is only valid on classifications.",
+            "Remove the field or move the entry to [[classification]].",
+        )
+    display_group = entry.get("display_group")
+    if display_group is not None and not isinstance(display_group, str):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `display_group` must be a string.",
+            "Quote the value or remove it.",
+        )
+    same_as = _validate_same_as(kind, source_id, entry.get("same_as"), provider=None)
+    return SlugEntry(
+        kind=kind,
+        source_id=source_id,
+        slug=slug,
+        version=version,
+        display_group=display_group,
+        deprecated=deprecated,
+        replaced_by=replaced_by,
+        same_as=same_as,
+    )
+
+
+def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
+    """Validate that every ``replaced_by`` target exists in ``entries`` and
+    that the chain is acyclic. Mirrors §5.4: typo corrections add a new row
+    and link the old one — both must be present in the same TOML.
+    """
+    by_key: dict[tuple[str, str], SlugEntry] = {
+        (e.kind, e.source_id): e for e in entries
+    }
+    for entry in entries:
+        if entry.replaced_by is None:
+            continue
+        target_key = (entry.kind, entry.replaced_by)
+        if target_key not in by_key:
+            raise _err(
+                "slug_toml_invalid",
+                f"{scope}: {entry.kind}.{entry.source_id!r} replaced_by "
+                f"{entry.replaced_by!r} which is not declared.",
+                "Add the replacement row, or remove the replaced_by link.",
+            )
+        # Follow the chain to detect cycles.
+        seen: set[tuple[str, str]] = {(entry.kind, entry.source_id)}
+        cur = by_key[target_key]
+        while cur.replaced_by is not None:
+            cur_key = (cur.kind, cur.source_id)
+            if cur_key in seen:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"{scope}: replaced_by cycle through {entry.kind}.{entry.source_id!r}.",
+                    "Break the cycle so resolution terminates.",
+                )
+            seen.add(cur_key)
+            nxt_key = (cur.kind, cur.replaced_by)
+            if nxt_key not in by_key:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"{scope}: {cur.kind}.{cur.source_id!r} replaced_by "
+                    f"{cur.replaced_by!r} which is not declared.",
+                    "Add the replacement row, or remove the replaced_by link.",
+                )
+            cur = by_key[nxt_key]
+
+
+def load_provider_toml(path: Path) -> list[SlugEntry]:
+    """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …)."""
+    provider = path.stem
+    if not is_slug(provider):
+        raise _err(
+            "slug_toml_invalid",
+            f"{path.name}: provider slug {provider!r} fails the FQID grammar.",
+            "Rename the file to a lowercase-kebab provider slug (e.g. `scb.toml`).",
+        )
+    data = _parse_toml(path)
+    entries: list[SlugEntry] = []
+    seen_slugs: dict[tuple[str, str], str] = {}
+    for kind in ("register", "register_variant", "variable"):
+        table = data.get(kind) or {}
+        if not isinstance(table, dict):
+            raise _err(
+                "slug_toml_invalid",
+                f"{path.name}: `{kind}` must be a table-of-tables.",
+                f'Use [{kind}."<id>"] entries, not a flat array.',
+            )
+        for source_id, raw in table.items():
+            if not isinstance(raw, dict):
+                raise _err(
+                    "slug_toml_invalid",
+                    f"{path.name}: {kind}.{source_id!r} must be a TOML table.",
+                    'Use the dotted-key form: [{kind}."<id>"].'.format(kind=kind),
+                )
+            entry = _validate_entry(kind, source_id, raw)
+            if entry.slug is not None:
+                slug_key = (kind, entry.slug)
+                prev = seen_slugs.get(slug_key)
+                if prev is not None:
+                    raise _err(
+                        "slug_toml_invalid",
+                        f"{path.name}: slug {entry.slug!r} reused by "
+                        f"{kind}.{prev!r} and {kind}.{source_id!r}.",
+                        "Slugs must be unique per kind within a provider.",
+                    )
+                seen_slugs[slug_key] = source_id
+            # Replace provider-less default with the filename-derived provider.
+            entries.append(
+                SlugEntry(
+                    kind=entry.kind,
+                    source_id=entry.source_id,
+                    slug=entry.slug,
+                    provider=provider,
+                    version=entry.version,
+                    display_group=entry.display_group,
+                    deprecated=entry.deprecated,
+                    replaced_by=entry.replaced_by,
+                    same_as=entry.same_as,
+                )
+            )
+    _resolve_replaced_by(entries, scope=path.name)
+    return entries
+
+
+def load_classifications_toml(path: Path) -> list[SlugEntry]:
+    """Parse the provider-independent classification slug TOML."""
+    data = _parse_toml(path)
+    table = data.get("classification") or {}
+    if not isinstance(table, dict):
+        raise _err(
+            "slug_toml_invalid",
+            f"{path.name}: `classification` must be a table-of-tables.",
+            'Use [classification."<short_name>"] entries.',
+        )
+    entries: list[SlugEntry] = []
+    seen_pairs: dict[tuple[str, str], str] = {}
+    for source_id, raw in table.items():
+        if not isinstance(raw, dict):
+            raise _err(
+                "slug_toml_invalid",
+                f"{path.name}: classification.{source_id!r} must be a TOML table.",
+                'Use [classification."<short_name>"] = { slug = ..., version = ... }.',
+            )
+        entry = _validate_entry("classification", source_id, raw)
+        pair_key = (entry.slug or "", entry.version or "")
+        prev = seen_pairs.get(pair_key)
+        if prev is not None:
+            raise _err(
+                "slug_toml_invalid",
+                f"{path.name}: (slug={entry.slug!r}, version={entry.version!r}) "
+                f"reused by {prev!r} and {source_id!r}.",
+                "Classification FQIDs are (slug, version) pairs — keep them unique.",
+            )
+        seen_pairs[pair_key] = source_id
+        entries.append(entry)
+    _resolve_replaced_by(entries, scope=path.name)
+    return entries
+
+
+def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
+    """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list."""
+    if not slug_dir.is_dir():
+        raise _err(
+            "slug_dir_not_found",
+            f"Slug directory not found: {slug_dir}",
+            "Create the directory or pass --slug-dir.",
+        )
+    entries: list[SlugEntry] = []
+    seen_providers: set[str] = set()
+    for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}")):
+        if path.name == CLASSIFICATIONS_FILE:
+            entries.extend(load_classifications_toml(path))
+        else:
+            provider = path.stem
+            if provider in seen_providers:
+                raise _err(
+                    "slug_toml_invalid",
+                    f"Duplicate provider file: {path.name}",
+                    "Each provider has a single TOML.",
+                )
+            seen_providers.add(provider)
+            entries.extend(load_provider_toml(path))
+    return entries
+
+
+# ---------------------------------------------------------------------------
+# Build-time population
+# ---------------------------------------------------------------------------
+
+
+def _progress(msg: str) -> None:
+    sys.stderr.write(msg + "\n")
+    sys.stderr.flush()
+
+
+def _parse_register_id(source_id: str) -> int:
+    try:
+        return int(source_id)
+    except ValueError as exc:
+        raise _err(
+            "slug_toml_invalid",
+            f"register.{source_id!r}: TOML key must be the numeric RegisterId.",
+            "Quote SCB's RegisterId integer as a string key.",
+        ) from exc
+
+
+def _parse_variant_id(source_id: str) -> tuple[int, int]:
+    parts = source_id.split(".")
+    if len(parts) != 2:
+        raise _err(
+            "slug_toml_invalid",
+            f"register_variant.{source_id!r}: expected `<RegisterId>.<RegVarID>`.",
+            "Compose the key from SCB's two integer IDs.",
+        )
+    try:
+        return int(parts[0]), int(parts[1])
+    except ValueError as exc:
+        raise _err(
+            "slug_toml_invalid",
+            f"register_variant.{source_id!r}: both halves must be integers.",
+            "Use the literal SCB IDs.",
+        ) from exc
+
+
+def _live_register_ids(conn: sqlite3.Connection, provider_slug: str) -> set[int]:
+    rows = conn.execute(
+        "SELECT r.register_id FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ?",
+        (provider_slug,),
+    ).fetchall()
+    return {r[0] for r in rows}
+
+
+def _live_variant_keys(
+    conn: sqlite3.Connection, provider_slug: str
+) -> set[tuple[int, int]]:
+    rows = conn.execute(
+        "SELECT rv.register_id, rv.regvar_id FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND rv.slug IS NULL",
+        (provider_slug,),
+    ).fetchall()
+    return {(r[0], r[1]) for r in rows}
+
+
+def populate_slugs(
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+    *,
+    strict: bool = True,
+) -> dict[str, int]:
+    """Read ``slug_dir`` and write slug columns on register / register_variant /
+    classification.
+
+    ``strict=True`` (the default for real builds) refuses if any live source
+    ID has no slug entry. Tests pass ``strict=False`` to populate whatever's
+    available without enforcing coverage.
+
+    Returns ``{"register": n, "register_variant": n, "classification": n}``.
+    """
+    entries = load_slug_dir(slug_dir)
+    counts = {"register": 0, "register_variant": 0, "classification": 0}
+
+    # Group by provider for clean error messages.
+    by_provider: dict[str, list[SlugEntry]] = {}
+    classification_entries: list[SlugEntry] = []
+    for entry in entries:
+        if entry.kind == "classification":
+            classification_entries.append(entry)
+        elif entry.provider is not None:
+            by_provider.setdefault(entry.provider, []).append(entry)
+
+    # Enumerate every provider that has live rows; strict mode enforces
+    # coverage on all of them, even when their TOML is missing or empty.
+    live_providers: list[str] = [
+        r[0]
+        for r in conn.execute(
+            "SELECT DISTINCT p.slug FROM provider p "
+            "JOIN register r ON r.provider_id = p.provider_id "
+            "ORDER BY p.slug"
+        ).fetchall()
+    ]
+    for provider_slug in live_providers:
+        prov_entries = by_provider.get(provider_slug, [])
+        live_regs = _live_register_ids(conn, provider_slug)
+        live_variants = _live_variant_keys(conn, provider_slug)
+
+        for entry in prov_entries:
+            if entry.slug is None:
+                continue  # variable override without an explicit slug
+            if entry.kind == "register":
+                register_id = _parse_register_id(entry.source_id)
+                if register_id not in live_regs:
+                    if entry.deprecated:
+                        # Deprecated source IDs may not appear in current
+                        # deliveries (§5.4); skip silently.
+                        continue
+                    raise _err(
+                        "slug_unknown_source_id",
+                        f"{provider_slug}.toml: register.{entry.source_id!r} "
+                        f"has no live row in this build.",
+                        "Mark the entry deprecated=true or drop it.",
+                    )
+                conn.execute(
+                    "UPDATE register SET slug = ? WHERE register_id = ?",
+                    (entry.slug, register_id),
+                )
+                counts["register"] += 1
+            elif entry.kind == "register_variant":
+                key = _parse_variant_id(entry.source_id)
+                if key not in live_variants:
+                    if entry.deprecated:
+                        continue
+                    raise _err(
+                        "slug_unknown_source_id",
+                        f"{provider_slug}.toml: register_variant.{entry.source_id!r} "
+                        f"has no live row in this build.",
+                        "Mark the entry deprecated=true or drop it.",
+                    )
+                conn.execute(
+                    "UPDATE register_variant SET slug = ?, display_group = ? "
+                    "WHERE register_id = ? AND regvar_id = ?",
+                    (entry.slug, entry.display_group, key[0], key[1]),
+                )
+                counts["register_variant"] += 1
+
+        if strict:
+            _enforce_provider_coverage(conn, provider_slug, prov_entries)
+
+    for entry in classification_entries:
+        if entry.slug is None:
+            continue
+        cur = conn.execute(
+            "UPDATE classification SET slug = ? WHERE short_name = ?",
+            (entry.slug, entry.source_id),
+        )
+        if cur.rowcount == 0:
+            if entry.deprecated:
+                continue
+            raise _err(
+                "slug_unknown_source_id",
+                f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "
+                f"has no row in this build.",
+                "Add the short_name to classifications.toml (the seed) or drop "
+                "the slug entry.",
+            )
+        counts["classification"] += 1
+
+    if strict:
+        _enforce_classification_coverage(conn)
+
+    _progress(
+        f"  Slugged {counts['register']:,} registers, "
+        f"{counts['register_variant']:,} variants, "
+        f"{counts['classification']:,} classifications"
+    )
+    return counts
+
+
+def _enforce_provider_coverage(
+    conn: sqlite3.Connection,
+    provider_slug: str,
+    entries: list[SlugEntry],
+) -> None:
+    by_kind: dict[str, set[str]] = {"register": set(), "register_variant": set()}
+    for entry in entries:
+        if entry.kind in by_kind:
+            by_kind[entry.kind].add(entry.source_id)
+
+    missing_regs = conn.execute(
+        "SELECT r.register_id, r.registernamn FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND r.slug IS NULL "
+        "ORDER BY r.register_id",
+        (provider_slug,),
+    ).fetchall()
+    if missing_regs:
+        sample = ", ".join(f"{r[0]} ({r[1]!r})" for r in missing_regs[:5])
+        raise _err(
+            "slug_missing_for_source_id",
+            f"{len(missing_regs)} register(s) under provider {provider_slug!r} "
+            f"have no slug in {provider_slug}.toml. First: {sample}.",
+            "Run `regmeta maintain precheck-slugs` to list every missing ID, "
+            'then add `[register."<id>"] slug = "..."` entries.',
+        )
+
+    missing_variants = conn.execute(
+        "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND rv.slug IS NULL "
+        "ORDER BY rv.register_id, rv.regvar_id",
+        (provider_slug,),
+    ).fetchall()
+    if missing_variants:
+        sample = ", ".join(f"{r[0]}.{r[1]} ({r[2]!r})" for r in missing_variants[:5])
+        raise _err(
+            "slug_missing_for_source_id",
+            f"{len(missing_variants)} register_variant(s) under provider "
+            f"{provider_slug!r} have no slug in {provider_slug}.toml. "
+            f"First: {sample}.",
+            "Run `regmeta maintain precheck-slugs` to list every missing ID, "
+            'then add `[register_variant."<RegisterId>.<RegVarID>"]` entries.',
+        )
+
+
+def _enforce_classification_coverage(conn: sqlite3.Connection) -> None:
+    missing = conn.execute(
+        "SELECT short_name FROM classification WHERE slug IS NULL ORDER BY short_name"
+    ).fetchall()
+    if missing:
+        sample = ", ".join(m[0] for m in missing[:5])
+        raise _err(
+            "slug_missing_for_source_id",
+            f"{len(missing)} classification(s) have no slug in "
+            f"{CLASSIFICATIONS_FILE}. First: {sample}.",
+            'Add a `[classification."<short_name>"]` entry with slug and version.',
+        )
+
+
+# ---------------------------------------------------------------------------
+# seed-slugs
+# ---------------------------------------------------------------------------
+
+
+def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
+    """Emit a starter TOML for ``provider_slug`` from the live build.
+
+    Auto-derives a slug for each register/register_variant from
+    ``registernamn`` / ``registervariantnamn``; the maintainer edits the
+    result by hand before committing. Variables are auto-slugged from
+    kolumnnamn at build time, so they're omitted from the seed.
+    """
+    lines: list[str] = [
+        f"# Starter slug TOML for provider {provider_slug!r}.",
+        "# Generated by `regmeta maintain seed-slugs`. Hand-review every slug,",
+        "# then commit to regmeta/fqid_slugs/.",
+        "#",
+        "# Slugs are §5.2-grammar (lowercase kebab-case) and §5.4-immutable",
+        "# once published — pick stable, descriptive forms.",
+        "",
+    ]
+    regs = conn.execute(
+        "SELECT r.register_id, r.registernamn FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? ORDER BY r.register_id",
+        (provider_slug,),
+    ).fetchall()
+    if not regs:
+        lines.append(f"# (no registers found for provider {provider_slug!r})\n")
+        return "\n".join(lines)
+    for row in regs:
+        register_id, name = row[0], row[1]
+        candidate = derive_variable_slug(name) or "TODO"
+        lines.append(f'[register."{register_id}"]')
+        lines.append(f'slug = "{candidate}"')
+        lines.append("")
+
+    variants = conn.execute(
+        "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn, rv.slug "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? "
+        "ORDER BY rv.register_id, rv.regvar_id",
+        (provider_slug,),
+    ).fetchall()
+    for row in variants:
+        register_id, regvar_id, name, existing_slug = row[0], row[1], row[2], row[3]
+        # Synthetic `_default` variants are emitted by the build, not curated;
+        # skip them so the maintainer's TOML stays minimal.
+        if existing_slug == DEFAULT_VARIANT_SLUG:
+            continue
+        candidate = existing_slug or derive_variable_slug(name) if name else None
+        candidate = candidate or "TODO"
+        lines.append(f'[register_variant."{register_id}.{regvar_id}"]')
+        lines.append(f'slug = "{candidate}"')
+        if name:
+            lines.append(f'display_group = "{name}"')
+        lines.append("")
+    return "\n".join(lines)
+
+
+def seed_classifications_toml(conn: sqlite3.Connection) -> str:
+    """Emit a starter TOML for classifications. The maintainer edits the
+    auto-derived slug — classification short_names like ``SUN2020-NIVA``
+    don't fold to a great default."""
+    lines: list[str] = [
+        "# Starter classification slug TOML.",
+        "# Generated by `regmeta maintain seed-slugs`. Hand-review the slug",
+        "# (auto-derived from short_name, often needs shortening) and version.",
+        "",
+    ]
+    rows = conn.execute(
+        "SELECT short_name, version FROM classification ORDER BY short_name"
+    ).fetchall()
+    if not rows:
+        lines.append("# (no classifications populated yet)\n")
+        return "\n".join(lines)
+    for row in rows:
+        short, version = row[0], row[1]
+        candidate = derive_variable_slug(short) or "TODO"
+        lines.append(f'[classification."{short}"]')
+        lines.append(f'slug = "{candidate}"')
+        lines.append(f'version = "{version or "TODO"}"')
+        lines.append("")
+    return "\n".join(lines)
+
+
+def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
+    """Write a starter TOML for every distinct provider plus classifications.
+
+    Returns ``{filename: written_path}``.
+    """
+    out_dir.mkdir(parents=True, exist_ok=True)
+    written: dict[str, Path] = {}
+    providers = [
+        r[0]
+        for r in conn.execute(
+            "SELECT DISTINCT p.slug FROM provider p "
+            "JOIN register r ON r.provider_id = p.provider_id "
+            "ORDER BY p.slug"
+        ).fetchall()
+    ]
+    for provider_slug in providers:
+        path = out_dir / f"{provider_slug}.toml"
+        path.write_text(seed_provider_toml(conn, provider_slug), encoding="utf-8")
+        written[path.name] = path
+    cls_path = out_dir / CLASSIFICATIONS_FILE
+    cls_path.write_text(seed_classifications_toml(conn), encoding="utf-8")
+    written[cls_path.name] = cls_path
+    return written
+
+
+# ---------------------------------------------------------------------------
+# precheck-slugs
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class PrecheckResult:
+    missing_registers: tuple[tuple[str, str, str], ...]  # (provider, id, name)
+    missing_variants: tuple[tuple[str, str, str], ...]
+    missing_classifications: tuple[str, ...]
+    parse_errors: tuple[str, ...]
+
+    @property
+    def ok(self) -> bool:
+        return not (
+            self.missing_registers
+            or self.missing_variants
+            or self.missing_classifications
+            or self.parse_errors
+        )
+
+
+def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
+    """Enumerate live source IDs that lack a slug entry, plus any TOML
+    parse / validation errors. Does not raise on missing slugs — callers
+    decide whether to exit on the result.
+    """
+    parse_errors: list[str] = []
+    entries: list[SlugEntry] = []
+    try:
+        entries = load_slug_dir(slug_dir)
+    except RegmetaError as exc:
+        parse_errors.append(exc.message)
+
+    by_provider_kind: dict[tuple[str, str], set[str]] = {}
+    classification_ids: set[str] = set()
+    for entry in entries:
+        if entry.kind == "classification":
+            classification_ids.add(entry.source_id)
+        elif entry.provider is not None and entry.slug is not None:
+            by_provider_kind.setdefault((entry.provider, entry.kind), set()).add(
+                entry.source_id
+            )
+
+    missing_regs: list[tuple[str, str, str]] = []
+    missing_variants: list[tuple[str, str, str]] = []
+    providers = [
+        r[0]
+        for r in conn.execute(
+            "SELECT DISTINCT p.slug FROM provider p "
+            "JOIN register r ON r.provider_id = p.provider_id "
+            "ORDER BY p.slug"
+        ).fetchall()
+    ]
+    for provider_slug in providers:
+        slugged_regs = by_provider_kind.get((provider_slug, "register"), set())
+        for register_id, registernamn in conn.execute(
+            "SELECT r.register_id, r.registernamn FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? ORDER BY r.register_id",
+            (provider_slug,),
+        ).fetchall():
+            if str(register_id) not in slugged_regs:
+                missing_regs.append(
+                    (provider_slug, str(register_id), registernamn or "")
+                )
+        slugged_variants = by_provider_kind.get(
+            (provider_slug, "register_variant"), set()
+        )
+        for register_id, regvar_id, name in conn.execute(
+            "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn "
+            "FROM register_variant rv "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND (rv.slug IS NULL OR rv.slug != ?) "
+            "ORDER BY rv.register_id, rv.regvar_id",
+            (provider_slug, DEFAULT_VARIANT_SLUG),
+        ).fetchall():
+            key = f"{register_id}.{regvar_id}"
+            if key not in slugged_variants:
+                missing_variants.append((provider_slug, key, name or ""))
+
+    missing_classifications: list[str] = []
+    for (short,) in conn.execute(
+        "SELECT short_name FROM classification ORDER BY short_name"
+    ).fetchall():
+        if short not in classification_ids:
+            missing_classifications.append(short)
+
+    return PrecheckResult(
+        missing_registers=tuple(missing_regs),
+        missing_variants=tuple(missing_variants),
+        missing_classifications=tuple(missing_classifications),
+        parse_errors=tuple(parse_errors),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Snapshot (§5.4 grow-only immutability)
+# ---------------------------------------------------------------------------
+
+
+def snapshot_payload(entries: list[SlugEntry]) -> dict[str, dict[str, str]]:
+    """Build the canonical ``{key: slug}`` snapshot. Keys are stable per
+    entry; renaming or removing a key fails the snapshot test.
+
+    Variables without a TOML-declared slug are skipped — they auto-derive at
+    build time and aren't part of the curated, hand-frozen set.
+    """
+    payload: dict[str, dict[str, str]] = {
+        "register": {},
+        "register_variant": {},
+        "variable": {},
+        "classification": {},
+    }
+    for entry in entries:
+        if entry.slug is None:
+            continue
+        if entry.kind == "classification":
+            key = f"{entry.source_id}|{entry.version}"
+        elif entry.provider is not None:
+            key = f"{entry.provider}/{entry.source_id}"
+        else:
+            key = entry.source_id
+        payload[entry.kind][key] = entry.slug
+    return payload
+
+
+def read_snapshot(snapshot_path: Path) -> dict[str, dict[str, str]]:
+    if not snapshot_path.is_file():
+        return {kind: {} for kind in ENTITY_KINDS}
+    try:
+        data = json.loads(snapshot_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise _err(
+            "slug_snapshot_unreadable",
+            f"Could not parse slug snapshot {snapshot_path}: {exc}",
+            "Regenerate it with `regmeta maintain precheck-slugs --update-snapshot`.",
+        ) from exc
+    return {kind: dict(data.get(kind) or {}) for kind in ENTITY_KINDS}
+
+
+def write_snapshot(snapshot_path: Path, payload: dict[str, dict[str, str]]) -> None:
+    snapshot_path.parent.mkdir(parents=True, exist_ok=True)
+    snapshot_path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def diff_snapshot(
+    previous: dict[str, dict[str, str]],
+    current: dict[str, dict[str, str]],
+) -> dict[str, list[str]]:
+    """Compare two snapshot payloads. Adds are allowed; removes and slug
+    renames are reported. Returned dict has three keys: ``removed``,
+    ``renamed``, ``added``."""
+    removed: list[str] = []
+    renamed: list[str] = []
+    added: list[str] = []
+    for kind in ENTITY_KINDS:
+        prev = previous.get(kind, {})
+        cur = current.get(kind, {})
+        for key, slug in prev.items():
+            if key not in cur:
+                removed.append(f"{kind}/{key} (was {slug!r})")
+                continue
+            if cur[key] != slug:
+                renamed.append(f"{kind}/{key}: {slug!r} -> {cur[key]!r}")
+        for key, slug in cur.items():
+            if key not in prev:
+                added.append(f"{kind}/{key} = {slug!r}")
+    return {"removed": removed, "renamed": renamed, "added": added}

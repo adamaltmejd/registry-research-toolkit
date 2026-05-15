@@ -388,12 +388,20 @@ class TestBuildDb:
         db_dir = fixture_db.parent.parent / "db_rebuild"
         db_dir.mkdir(exist_ok=True)
 
-        result = build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        result = build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
         assert Path(result["db_path"]).exists()
 
         # Rebuild with same data should work
         result2 = build_db(
-            input_dir=input_dir, db_dir=db_dir, skip_classifications=True
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
         )
         assert Path(result2["db_path"]).exists()
 
@@ -559,7 +567,12 @@ class TestVardemangderDrift:
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
         write_scb_input(input_dir)
-        build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
 
     def test_drift_raises_on_unknown_kod(self, tmp_path: Path) -> None:
         # "ZZZ" is in neither allowlist; build must fail with an actionable
@@ -571,7 +584,12 @@ class TestVardemangderDrift:
         db_dir = tmp_path / "db"
         write_scb_input(input_dir, vardemangder_rows=drift_rows)
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+            )
         assert exc_info.value.code == "vardemangder_drift"
         assert exc_info.value.exit_code == 10
         assert "'ZZZ'" in exc_info.value.message
@@ -591,7 +609,12 @@ class TestVardemangderDrift:
         db_dir = tmp_path / "db"
         write_scb_input(input_dir, vardemangder_rows=drift_rows)
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+            )
         assert exc_info.value.code == "vardemangder_drift"
         assert "'Tal'" in exc_info.value.message
         # Remediation must surface the "already in SENTINELS" case so the
@@ -620,7 +643,12 @@ class TestVardemangderRequiresValidDates:
             ),
         )
         with pytest.raises(RegmetaError) as exc_info:
-            build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+            )
         assert exc_info.value.code == "csv_missing_validity"
         assert "VardemangderValidDates.csv" in exc_info.value.message
 
@@ -756,6 +784,7 @@ class TestYearProjection:
             input_dir=_projection_input(tmp_path, rows, valid),
             db_dir=db_dir,
             skip_classifications=True,
+            skip_slugs=True,
         )
         conn = open_db(db_dir / "regmeta.db")
         codes = conn.execute(
@@ -783,6 +812,7 @@ class TestYearProjection:
             input_dir=_projection_input(tmp_path, rows, valid),
             db_dir=db_dir,
             skip_classifications=True,
+            skip_slugs=True,
         )
         conn = open_db(db_dir / "regmeta.db")
         codes = conn.execute(
@@ -806,6 +836,7 @@ class TestYearProjection:
             input_dir=_projection_input(tmp_path, rows, valid),
             db_dir=db_dir,
             skip_classifications=True,
+            skip_slugs=True,
         )
         conn = open_db(db_dir / "regmeta.db")
         codes = conn.execute(
@@ -870,7 +901,12 @@ class TestYearProjection:
             valid_dates_rows=valid,
         )
         db_dir = tmp_path / "db"
-        build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
         conn = open_db(db_dir / "regmeta.db")
         codes = conn.execute(
             "SELECT vc.vardekod FROM variable_instance vi "
@@ -898,6 +934,7 @@ class TestYearProjection:
             input_dir=_projection_input(tmp_path, rows, valid),
             db_dir=db_dir,
             skip_classifications=True,
+            skip_slugs=True,
         )
         conn = open_db(db_dir / "regmeta.db")
         # Man should NOT be in cvid 1001's value_set (tracked window 2030+

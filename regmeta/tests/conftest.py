@@ -31,7 +31,9 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
     write_scb_input(input_dir)
 
-    build_db(input_dir=input_dir, db_dir=db_dir, skip_classifications=True)
+    build_db(
+        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, skip_slugs=True
+    )
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"
