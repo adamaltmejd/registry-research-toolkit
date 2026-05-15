@@ -289,6 +289,102 @@ class TestBuildDb:
         assert len(rows) == 1
         assert rows[0]["var_id"] == 100
 
+    def test_provider_seed(self, db_conn: sqlite3.Connection):
+        """Both built-in providers exist with stable provider_ids."""
+        rows = db_conn.execute(
+            "SELECT provider_id, slug, name FROM provider ORDER BY provider_id"
+        ).fetchall()
+        assert [(r["provider_id"], r["slug"]) for r in rows] == [
+            (1, "scb"),
+            (2, "sos"),
+        ]
+
+    def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
+        """Every register loaded from SCB CSVs resolves to provider slug 'scb'."""
+        rows = db_conn.execute(
+            "SELECT p.slug FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id"
+        ).fetchall()
+        assert rows  # fixture has registers
+        assert {r["slug"] for r in rows} == {"scb"}
+
+    def test_slug_columns_nullable_in_v3_1(self, db_conn: sqlite3.Connection):
+        """1a adds slug columns; 1c populates them. Values are NULL today
+        (except synthetic `_default` variants — covered separately)."""
+        # register.slug and classification.slug are NULL for SCB-loaded data.
+        # register_variant.slug is NULL except on synthetic _default rows.
+        assert (
+            db_conn.execute(
+                "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
+            ).fetchone()[0]
+            == 0
+        )
+        non_default_variants = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant "
+            "WHERE slug IS NOT NULL AND slug != '_default'"
+        ).fetchone()[0]
+        assert non_default_variants == 0
+
+    def test_default_variant_not_synthesized_when_unneeded(
+        self, db_conn: sqlite3.Connection
+    ):
+        """SCB fixtures every register already has a real variant — no
+        synthetic _default rows are emitted."""
+        count = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant WHERE slug = '_default'"
+        ).fetchone()[0]
+        assert count == 0
+
+    def test_default_variant_synthesized_for_variant_less_register(
+        self, tmp_path: Path
+    ):
+        """A register with zero register_variant rows must receive exactly one
+        synthetic variant with slug='_default' per REFACTOR_SPEC.md §5.1."""
+        import sqlite3 as _sqlite3
+
+        from regmeta.db import DDL, _emit_default_variants, _seed_providers
+
+        db = tmp_path / "synth.db"
+        conn = _sqlite3.connect(str(db))
+        conn.row_factory = _sqlite3.Row
+        conn.executescript(DDL)
+        _seed_providers(conn)
+        # Two registers; the second has no variant. The first does (so we also
+        # verify the emitter touches only the variant-less one).
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 2, 'WithVariant')"
+        )
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 2, 'NoVariant')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (10, 1, 'Real')"
+        )
+
+        emitted = _emit_default_variants(conn)
+        assert emitted == 1
+
+        rows = conn.execute(
+            "SELECT register_id, slug FROM register_variant ORDER BY register_id, regvar_id"
+        ).fetchall()
+        assert [(r["register_id"], r["slug"]) for r in rows] == [
+            (1, None),
+            (2, "_default"),
+        ]
+        # Re-running the emitter is a no-op (idempotent).
+        assert _emit_default_variants(conn) == 0
+        conn.close()
+
+    def test_reserved_slugs_constant(self):
+        """The reserved-slug set is loadable from db; populated checker lands in 1c."""
+        from regmeta.db import RESERVED_SLUGS
+
+        assert "_default" in RESERVED_SLUGS
+        assert "class" in RESERVED_SLUGS
+
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""
         input_dir = fixture_db.parent.parent / "input_rebuild"

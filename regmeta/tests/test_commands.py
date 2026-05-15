@@ -615,20 +615,29 @@ class TestGetValues:
         """
         import sqlite3
 
-        from regmeta.db import DDL
+        from regmeta.db import DDL, _seed_providers
         from regmeta.queries import get_values_by_variable
 
         db = tmp_path / "amb.db"
         conn = sqlite3.connect(str(db))
         conn.row_factory = sqlite3.Row
         conn.executescript(DDL)
-        conn.execute("INSERT INTO register VALUES (1, 'R1', NULL, NULL)")
-        conn.execute("INSERT INTO register VALUES (2, 'R2', NULL, NULL)")
+        _seed_providers(conn)
         conn.execute(
-            "INSERT INTO register_variant VALUES (10, 1, 'V1', NULL, NULL, NULL)"
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 1, 'R1')"
         )
         conn.execute(
-            "INSERT INTO register_variant VALUES (11, 2, 'V2', NULL, NULL, NULL)"
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 1, 'R2')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (10, 1, 'V1')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (11, 2, 'V2')"
         )
         conn.execute(
             "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
@@ -689,13 +698,24 @@ class TestGetValues:
             (SCHEMA_VERSION,),
         )
         # Two registers, same variable name + var_id, same year, different code labels.
-        conn.execute("INSERT INTO register VALUES (1, 'RegAdult', NULL, NULL)")
-        conn.execute("INSERT INTO register VALUES (2, 'RegChild', NULL, NULL)")
+        from regmeta.db import _seed_providers
+
+        _seed_providers(conn)
         conn.execute(
-            "INSERT INTO register_variant VALUES (10, 1, 'Adults', NULL, NULL, NULL)"
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 1, 'RegAdult')"
         )
         conn.execute(
-            "INSERT INTO register_variant VALUES (11, 2, 'Children', NULL, NULL, NULL)"
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 1, 'RegChild')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (10, 1, 'Adults')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (11, 2, 'Children')"
         )
         conn.execute(
             "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
