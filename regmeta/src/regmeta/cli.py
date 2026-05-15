@@ -1160,11 +1160,9 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
 def _cmd_maintain_precheck_slugs(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
-    from .errors import EXIT_CONFIG as _EC
     from .fqid_slugs import (
         SNAPSHOT_FILENAME,
         diff_snapshot,
-        load_slug_dir,
         precheck_slugs,
         read_snapshot,
         snapshot_payload,
@@ -1182,13 +1180,8 @@ def _cmd_maintain_precheck_slugs(
         conn.close()
 
     snapshot_status: dict[str, Any] = {"path": str(snapshot_path)}
-    exit_code = 0
-    if result.parse_errors or not result.ok:
-        exit_code = _EC
-    try:
-        current = snapshot_payload(load_slug_dir(slug_dir))
-    except RegmetaError:
-        current = {}
+    exit_code = EXIT_CONFIG if not result.ok else 0
+    current = snapshot_payload(list(result.entries))
     if args.update_snapshot:
         write_snapshot(snapshot_path, current)
         snapshot_status["updated"] = True
@@ -1199,7 +1192,7 @@ def _cmd_maintain_precheck_slugs(
         snapshot_status["removed"] = diff["removed"]
         snapshot_status["renamed"] = diff["renamed"]
         if diff["removed"] or diff["renamed"]:
-            exit_code = _EC
+            exit_code = EXIT_CONFIG
 
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(

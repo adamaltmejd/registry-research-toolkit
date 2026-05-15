@@ -72,7 +72,7 @@ def is_period(value: str) -> bool:
     return any(p.match(value) for p in _PERIOD_PATTERNS)
 
 
-def _validate_slug(
+def validate_slug(
     value: str,
     slot: FqidKind | str,
     *,
@@ -139,20 +139,20 @@ class Fqid:
 
     @classmethod
     def provider_fqid(cls, provider: str) -> Fqid:
-        _validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(provider, FqidKind.PROVIDER)
         return cls(kind=FqidKind.PROVIDER, provider=provider)
 
     @classmethod
     def register_fqid(cls, provider: str, register: str) -> Fqid:
-        _validate_slug(provider, FqidKind.PROVIDER)
-        _validate_slug(register, FqidKind.REGISTER)
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
         return cls(kind=FqidKind.REGISTER, provider=provider, register=register)
 
     @classmethod
     def register_variant_fqid(cls, provider: str, register: str, variant: str) -> Fqid:
-        _validate_slug(provider, FqidKind.PROVIDER)
-        _validate_slug(register, FqidKind.REGISTER)
-        _validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
         return cls(
             kind=FqidKind.REGISTER_VARIANT,
             provider=provider,
@@ -164,9 +164,9 @@ class Fqid:
     def register_version_fqid(
         cls, provider: str, register: str, variant: str, period: str
     ) -> Fqid:
-        _validate_slug(provider, FqidKind.PROVIDER)
-        _validate_slug(register, FqidKind.REGISTER)
-        _validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
         _validate_period(period)
         return cls(
             kind=FqidKind.REGISTER_VERSION,
@@ -185,11 +185,11 @@ class Fqid:
         period: str,
         variable: str,
     ) -> Fqid:
-        _validate_slug(provider, FqidKind.PROVIDER)
-        _validate_slug(register, FqidKind.REGISTER)
-        _validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
         _validate_period(period)
-        _validate_slug(variable, "variable")
+        validate_slug(variable, "variable")
         return cls(
             kind=FqidKind.VARIABLE_BINDING,
             provider=provider,
@@ -201,8 +201,8 @@ class Fqid:
 
     @classmethod
     def classification_fqid(cls, classification: str, version: str) -> Fqid:
-        _validate_slug(classification, FqidKind.CLASSIFICATION)
-        _validate_slug(version, "classification version", allow_period=True)
+        validate_slug(classification, FqidKind.CLASSIFICATION)
+        validate_slug(version, "classification version", allow_period=True)
         return cls(
             kind=FqidKind.CLASSIFICATION,
             classification=classification,
