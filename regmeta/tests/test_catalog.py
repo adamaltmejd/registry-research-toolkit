@@ -89,6 +89,15 @@ class TestResolveVersion:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2099")
         assert exc.value.code == "fqid_not_found"
 
+    def test_resolves_non_year_period_by_substring(self) -> None:
+        # Half-year and quarter periods match by literal substring against
+        # the version name until a dedicated `period` column lands.
+        conn = build_slugged_db(version=("Test HT2020", 200))
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020")
+        assert isinstance(r, ResolvedRegisterVersion)
+        assert r.regver_id == 200
+        assert r.fqid.period == "HT2020"
+
 
 class TestResolveBinding:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:

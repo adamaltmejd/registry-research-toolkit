@@ -224,6 +224,18 @@ class TestFactories:
         f = Fqid.classification_fqid("sun", "2020")
         assert str(f) == "class/sun/2020"
 
+    def test_classification_accepts_slug_version(self) -> None:
+        # §5.3 examples use year versions; the slug-grammar branch covers
+        # non-year tags like `v1` or `1-0`.
+        assert str(Fqid.classification_fqid("sun", "v1")) == "class/sun/v1"
+        assert str(parse("class/sun/v1")).endswith("/v1")
+
+    def test_classification_rejects_reserved_version(self) -> None:
+        with pytest.raises(FqidError, match="class"):
+            Fqid.classification_fqid("sun", "class")
+        with pytest.raises(FqidError, match="_default"):
+            Fqid.classification_fqid("sun", "_default")
+
     def test_binding_factory(self) -> None:
         f = Fqid.binding_fqid("scb", "lisa", "v1", "2020", "kon")
         assert f.kind is FqidKind.VARIABLE_BINDING

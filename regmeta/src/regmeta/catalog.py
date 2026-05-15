@@ -162,10 +162,10 @@ class Catalog:
         )
 
     def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:
-        # Period filtering happens Python-side because `extract_year` is
-        # regex-anchored ("v19999" matches no year) — a SQL substring filter
-        # would false-positive. Replaced by a direct `period` column once 1c
-        # materializes it.
+        # No dedicated `period` column on register_version yet: year periods
+        # are matched via the regex-anchored `extract_year` (rejects "v19999"
+        # cleanly); non-year periods (`HT2020`, `2020-Q1`) match by literal
+        # substring against the version name.
         rows = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "
@@ -195,10 +195,11 @@ class Catalog:
         )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
-        # Bindings are materialized as DB rows in step 1e; until then resolve
-        # by scanning instances under the variant and deriving variable slug
-        # from kolumnnamn (§5.3). One JOIN'd query so the version match and
-        # the alias lookup share a single roundtrip.
+        # No materialized binding rows yet: scan instances under the variant
+        # and derive each variable slug from kolumnnamn (§5.3). The
+        # `ORDER BY vi.cvid, va.kolumnnamn` makes the first-match return
+        # deterministic — uniqueness of (variant, period, variable_slug) is
+        # an invariant under the §5.3 curation rules, not enforced here.
         rows = self._conn.execute(
             "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
             "vi.var_id, v.variabelnamn, va.kolumnnamn, rver.registerversionnamn "
