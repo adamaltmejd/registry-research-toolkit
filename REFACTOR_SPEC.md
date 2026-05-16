@@ -686,6 +686,19 @@ every project that references it. Concrete rules:
 - CI enforces these via a snapshot test comparing the current TOML
   to the last committed state; non-additive changes fail the build.
 
+**Activation.** The rules above bind only after the first tagged
+release of the refactored system (the first `regmeta` version that
+emits FQIDs into a `project_data.json` consumers can commit).
+Until that release, the slug TOMLs and `.snapshot.json` are free
+curation surface — maintainers may rename, remove, or restructure
+entries as the hand-review progresses, since no external artifact
+references them yet. The grow-only machinery (snapshot file,
+`precheck-slugs --update-snapshot`, snapshot test) ships before
+the gate flips so the mechanism is exercised under realistic load;
+during this window the snapshot is regenerated freely. When v1 is
+cut, the snapshot at that commit becomes the immutable baseline
+and every rule above starts applying.
+
 The same rule applies to every slug-bearing entity: register,
 register_variant, variable, classification. Implication: every
 FQID is safe to embed in `project_data.json` and in webapp-emitted
@@ -2586,8 +2599,12 @@ document. Step 1 can start.
      `reg-meta-build precheck-slugs` lists any source IDs missing a
      slug entry (cleaner failure mode than a full build attempt).
    - **1d — CI immutability snapshot.** Slug-grow-only snapshot test
-     (§5.4) enabled **after 1c merges**: turning it on earlier would
-     fail the build during the bootstrap churn.
+     (§5.4) enabled **after 1c merges** so the mechanism is wired in
+     and exercised; during the pre-v1 curation window the snapshot
+     is treated as a regenerable baseline rather than a hard lock
+     (§5.4 *Activation*). The lock semantics take effect at the
+     first v1 release, when the in-tree snapshot becomes the
+     permanent baseline external consumers depend on.
    - **1e — Consumer-side binding materialization (§5.6).** LISA-via-RTB
      and other composite-source bindings get materialized at build
      time with `via_source_id` edges. Closes the data-layer side of
