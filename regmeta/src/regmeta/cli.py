@@ -822,6 +822,72 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         help="Directory containing SCB/ and classifications/ subdirectories.",
     )
+    build_p.add_argument(
+        "--slug-dir",
+        default=None,
+        help=(
+            "Directory of curated slug TOMLs (default: regmeta/fqid_slugs/ "
+            "when run from a repo checkout)."
+        ),
+    )
+
+    seed_slugs_p = maintain_sub.add_parser(
+        "seed-slugs",
+        help="Emit starter slug TOMLs from the current DB (maintainer-only).",
+        description=(
+            "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml\n"
+            "and <out-dir>/classifications.toml, mirroring REFACTOR_SPEC §5.3.\n"
+            "Slugs are auto-derived from registernamn / variantnamn / short_name\n"
+            "and need maintainer review before commit.\n\n"
+            "Examples:\n"
+            "  regmeta maintain seed-slugs\n"
+            "  regmeta maintain seed-slugs --out-dir /tmp/slugs/"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    seed_slugs_p.add_argument(
+        "--out-dir",
+        default=None,
+        help=(
+            "Where to write the TOMLs (default: regmeta/fqid_slugs/ in a repo "
+            "checkout, else CWD/fqid_slugs/)."
+        ),
+    )
+    seed_slugs_p.add_argument(
+        "--force",
+        action="store_true",
+        help="Overwrite existing TOMLs in --out-dir.",
+    )
+
+    precheck_p = maintain_sub.add_parser(
+        "precheck-slugs",
+        help="Validate slug TOMLs and list source IDs missing a slug entry.",
+        description=(
+            "Verify the slug TOMLs match the current DB. Reports:\n"
+            "  - TOML parse / validation errors\n"
+            "  - register / register_variant / classification rows with no slug\n"
+            "  - non-additive changes vs. the committed snapshot (§5.4)\n\n"
+            "Exits 10 if any check fails (cleaner failure mode than a build).\n\n"
+            "Examples:\n"
+            "  regmeta maintain precheck-slugs\n"
+            "  regmeta maintain precheck-slugs --update-snapshot"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    precheck_p.add_argument(
+        "--slug-dir",
+        default=None,
+        help="Directory of slug TOMLs (default: regmeta/fqid_slugs/).",
+    )
+    precheck_p.add_argument(
+        "--update-snapshot",
+        action="store_true",
+        help=(
+            "Rewrite the snapshot file to match the current TOMLs. Skips the "
+            "snapshot diff but still exits non-zero on parse errors / missing "
+            "slugs so a broken state isn't snapshot-frozen."
+        ),
+    )
 
     parse_sos_p = maintain_sub.add_parser(
         "parse-sos",
@@ -966,7 +1032,12 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
-    result = build_db(input_dir=Path(args.input_dir), db_dir=db_dir)
+    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
+    result = build_db(
+        input_dir=Path(args.input_dir),
+        db_dir=db_dir,
+        slug_dir=slug_dir,
+    )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",
@@ -1027,6 +1098,157 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         data=result,
         duration_ms=duration_ms,
     ), 0
+
+
+def _resolve_slug_dir(slug_arg: str | None) -> Path:
+    from .fqid_slugs import repo_slug_dir
+
+    if slug_arg is not None:
+        return Path(slug_arg).expanduser().resolve()
+    resolved = repo_slug_dir()
+    if resolved is None:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="slug_dir_not_found",
+            error_class="configuration",
+            message=(
+                "Slug TOMLs not found. Pass --slug-dir or run from a regmeta "
+                "checkout containing regmeta/fqid_slugs/."
+            ),
+            remediation=(
+                "Run from a repo checkout, or `regmeta maintain seed-slugs` "
+                "to bootstrap a new slug directory."
+            ),
+        )
+    return resolved
+
+
+def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    from .fqid_slugs import repo_slug_dir, seed_all
+
+    start = time.perf_counter()
+    db = db_path_from_args(args.db)
+    if args.out_dir:
+        out_dir = Path(args.out_dir).expanduser().resolve()
+    else:
+        out_dir = repo_slug_dir() or (Path.cwd() / "fqid_slugs").resolve()
+    if out_dir.exists() and any(out_dir.glob("*.toml")) and not args.force:
+        raise RegmetaError(
+            exit_code=EXIT_CONFIG,
+            code="slug_seed_would_overwrite",
+            error_class="configuration",
+            message=f"{out_dir} already contains TOMLs; refusing to overwrite.",
+            remediation=(
+                "Pass --force to overwrite, or point --out-dir at an empty "
+                "directory for hand-review."
+            ),
+        )
+    conn = open_db(db, check_schema=False)
+    try:
+        written = seed_all(conn, out_dir)
+    finally:
+        conn.close()
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain seed-slugs",
+        args_payload={"out_dir": str(out_dir), "force": args.force},
+        db_info=None,
+        data={
+            "out_dir": str(out_dir),
+            "files": sorted(written.keys()),
+        },
+        duration_ms=duration_ms,
+    ), 0
+
+
+def _cmd_maintain_precheck_slugs(
+    args: argparse.Namespace,
+) -> tuple[dict[str, Any], int]:
+    from .fqid_slugs import (
+        SNAPSHOT_FILENAME,
+        diff_snapshot,
+        precheck_slugs,
+        read_snapshot,
+        snapshot_payload,
+        write_snapshot,
+    )
+
+    start = time.perf_counter()
+    slug_dir = _resolve_slug_dir(args.slug_dir)
+    snapshot_path = slug_dir / SNAPSHOT_FILENAME
+    db = db_path_from_args(args.db)
+    conn = open_db(db, check_schema=False)
+    try:
+        result = precheck_slugs(conn, slug_dir)
+    finally:
+        conn.close()
+
+    snapshot_status: dict[str, Any] = {"path": str(snapshot_path)}
+    exit_code = EXIT_CONFIG if not result.ok else 0
+    current = snapshot_payload(list(result.entries))
+    if args.update_snapshot:
+        # Refuse to overwrite when TOMLs failed to parse — `result.entries`
+        # is the truncated set up to the first error, so writing would wipe
+        # the prior baseline and surface phantom `removed` diffs on the next
+        # run.
+        if result.parse_errors:
+            snapshot_status["updated"] = False
+            snapshot_status["update_skipped_reason"] = "parse_errors"
+        else:
+            # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
+            # a removal or a slug rename — that's how committed FQIDs rot in
+            # researcher project_data.json files. Refusing here is the only
+            # gate; test_slug_snapshot catches the same thing in CI but the
+            # CLI must match so a maintainer's local pre-commit run agrees
+            # with what main will accept.
+            previous = read_snapshot(snapshot_path)
+            diff = diff_snapshot(previous, current)
+            if diff["removed"] or diff["renamed"]:
+                snapshot_status["updated"] = False
+                snapshot_status["update_skipped_reason"] = "non_additive_change"
+                snapshot_status["removed"] = diff["removed"]
+                snapshot_status["renamed"] = diff["renamed"]
+                exit_code = EXIT_CONFIG
+            else:
+                write_snapshot(snapshot_path, current)
+                snapshot_status["updated"] = True
+                snapshot_status["added"] = diff["added"]
+    else:
+        previous = read_snapshot(snapshot_path)
+        diff = diff_snapshot(previous, current)
+        snapshot_status["added"] = diff["added"]
+        snapshot_status["removed"] = diff["removed"]
+        snapshot_status["renamed"] = diff["renamed"]
+        # `added` is non-fatal in spirit but must fail CI so a maintainer
+        # doesn't merge new slugs without refreshing .snapshot.json; mirrors
+        # test_slug_snapshot.test_snapshot_covers_committed_additions.
+        if diff["removed"] or diff["renamed"] or diff["added"]:
+            exit_code = EXIT_CONFIG
+
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return _success_envelope(
+        command="maintain precheck-slugs",
+        args_payload={
+            "slug_dir": str(slug_dir),
+            "update_snapshot": args.update_snapshot,
+        },
+        db_info=None,
+        data={
+            "slug_dir": str(slug_dir),
+            "missing_registers": [
+                {"provider": p, "source_id": sid, "registernamn": name}
+                for (p, sid, name) in result.missing_registers
+            ],
+            "missing_variants": [
+                {"provider": p, "source_id": sid, "name": name}
+                for (p, sid, name) in result.missing_variants
+            ],
+            "missing_classifications": list(result.missing_classifications),
+            "parse_errors": list(result.parse_errors),
+            "snapshot": snapshot_status,
+        },
+        duration_ms=duration_ms,
+    ), exit_code
 
 
 def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2457,6 +2679,92 @@ def _write_payload(
         _write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "build-db"):
         _write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
+    elif key == ("maintain", "seed-slugs"):
+        lines = [f"Seeded slug TOMLs into {data.get('out_dir', '?')}:"]
+        for name in data.get("files", []):
+            lines.append(f"  {name}")
+        lines.append("")
+        lines.append("Hand-review every slug, then commit.")
+        _write_to("\n".join(lines) + "\n", output_path)
+    elif key == ("maintain", "precheck-slugs"):
+        lines: list[str] = []
+        parse_errors = data.get("parse_errors", [])
+        if parse_errors:
+            lines.append("TOML errors:")
+            for err in parse_errors:
+                lines.append(f"  {err}")
+            lines.append("")
+        missing_regs = data.get("missing_registers", [])
+        if missing_regs:
+            lines.append(f"Missing register slugs ({len(missing_regs)}):")
+            for m in missing_regs[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}  {m['registernamn']}")
+            if len(missing_regs) > 20:
+                lines.append(f"  ... and {len(missing_regs) - 20} more")
+            lines.append("")
+        missing_vars = data.get("missing_variants", [])
+        if missing_vars:
+            lines.append(f"Missing variant slugs ({len(missing_vars)}):")
+            for m in missing_vars[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}  {m['name']}")
+            if len(missing_vars) > 20:
+                lines.append(f"  ... and {len(missing_vars) - 20} more")
+            lines.append("")
+        missing_cls = data.get("missing_classifications", [])
+        if missing_cls:
+            lines.append(f"Missing classification slugs ({len(missing_cls)}):")
+            for short in missing_cls[:20]:
+                lines.append(f"  {short}")
+            if len(missing_cls) > 20:
+                lines.append(f"  ... and {len(missing_cls) - 20} more")
+            lines.append("")
+        snap = data.get("snapshot") or {}
+        if snap.get("updated"):
+            lines.append(f"Snapshot rewritten: {snap.get('path')}")
+        elif snap.get("update_skipped_reason") == "parse_errors":
+            lines.append(
+                f"Snapshot NOT rewritten ({snap.get('path')}): fix the TOML "
+                "parse errors above first."
+            )
+        elif snap.get("update_skipped_reason") == "non_additive_change":
+            lines.append(
+                f"Snapshot NOT rewritten ({snap.get('path')}): §5.4 grow-only "
+                "violations present (slugs can only be added, never removed "
+                "or renamed). Restore the entry, or mark the old row "
+                "deprecated=true and add a replaced_by link."
+            )
+            for r in snap.get("removed") or []:
+                lines.append(f"  removed: {r}")
+            for r in snap.get("renamed") or []:
+                lines.append(f"  renamed: {r}")
+        else:
+            removed = snap.get("removed") or []
+            renamed = snap.get("renamed") or []
+            added = snap.get("added") or []
+            if removed or renamed:
+                lines.append("Snapshot violations (§5.4 grow-only):")
+                for r in removed:
+                    lines.append(f"  removed: {r}")
+                for r in renamed:
+                    lines.append(f"  renamed: {r}")
+                lines.append(
+                    "  remediation: restore the entry, or mark the old row "
+                    "deprecated and add a replaced_by link."
+                )
+                lines.append("")
+            if added:
+                lines.append(f"New entries since last snapshot ({len(added)}):")
+                for a in added[:10]:
+                    lines.append(f"  {a}")
+                if len(added) > 10:
+                    lines.append(f"  ... and {len(added) - 10} more")
+                lines.append(
+                    "  run `regmeta maintain precheck-slugs --update-snapshot` "
+                    "after review."
+                )
+        if not lines:
+            lines.append("OK — all live source IDs have curated slugs.")
+        _write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "build-docs"):
         _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
     elif key == ("maintain", "parse-sos"):
@@ -2591,6 +2899,8 @@ COMMAND_DISPATCH = {
     ("resolve", None): _cmd_resolve,
     ("maintain", "build-docs"): _cmd_maintain_build_docs,
     ("maintain", "parse-sos"): _cmd_maintain_parse_sos,
+    ("maintain", "seed-slugs"): _cmd_maintain_seed_slugs,
+    ("maintain", "precheck-slugs"): _cmd_maintain_precheck_slugs,
     ("docs", "search"): _cmd_doc_search,
     ("docs", "get"): _cmd_doc_get,
     ("docs", "list"): _cmd_doc_list,
@@ -2681,6 +2991,14 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
     (
         "maintain parse-sos PATH",
         "Parse Socialstyrelsen metadata Excel files; emit JSON (maintainer-only).",
+    ),
+    (
+        "maintain seed-slugs [--out-dir DIR] [--force]",
+        "Emit starter slug TOMLs from the current DB (maintainer-only).",
+    ),
+    (
+        "maintain precheck-slugs [--slug-dir DIR] [--update-snapshot]",
+        "Validate slug TOMLs and list source IDs missing a slug entry.",
     ),
 ]
 

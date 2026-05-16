@@ -1552,6 +1552,8 @@ def build_db(
     *,
     seed_path: Path | None = None,
     skip_classifications: bool = False,
+    slug_dir: Path | None = None,
+    skip_slugs: bool = False,
 ) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
 
@@ -1746,6 +1748,32 @@ def build_db(
             row_counts["classifications.toml"] = populate_classifications(
                 conn, seed, valid_codes_dir=valid_codes_dir
             )
+
+        # Slug TOMLs (§5.3): populate slug columns on register / register_variant /
+        # classification. Run after classifications so the classification table
+        # is populated before its slugs are written.
+        if skip_slugs:
+            _progress("Skipping slug TOMLs (skip_slugs=True)")
+        else:
+            from .fqid_slugs import populate_slugs, repo_slug_dir
+
+            slug_root = slug_dir or repo_slug_dir()
+            if slug_root is None:
+                raise RegmetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="slug_dir_not_found",
+                    error_class="configuration",
+                    message=(
+                        "Slug TOMLs not found. build-db requires the in-repo "
+                        "regmeta/fqid_slugs/ directory; it is a maintainer-only "
+                        "command and is not supported from wheel installs."
+                    ),
+                    remediation=(
+                        "Run from a repo checkout, pass --slug-dir, or run "
+                        "`regmeta maintain update` to fetch the prebuilt DB."
+                    ),
+                )
+            populate_slugs(conn, slug_root, strict=True)
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears

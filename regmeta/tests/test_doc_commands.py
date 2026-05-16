@@ -333,7 +333,12 @@ class TestDocDbRequired:
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=tmp_path / "input", db_dir=db_dir, skip_classifications=True)
+        build_db(
+            input_dir=tmp_path / "input",
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
 
         data, code = _run_json(
             ["--db", str(db_dir), "search", "--query", "testvariabel"],
@@ -352,7 +357,12 @@ class TestDocDbRequired:
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
         db_dir.mkdir()
-        build_db(input_dir=tmp_path / "input", db_dir=db_dir, skip_classifications=True)
+        build_db(
+            input_dir=tmp_path / "input",
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
 
         data, code = _run_json(
             ["--db", str(db_dir), "get", "register", "1"],
@@ -406,7 +416,9 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     from _csv_fixtures import write_scb_input
 
     write_scb_input(input_dir, include=("registerinformation",))
-    build_db(input_dir=input_dir, db_dir=combined, skip_classifications=True)
+    build_db(
+        input_dir=input_dir, db_dir=combined, skip_classifications=True, skip_slugs=True
+    )
 
     # Copy the doc DB alongside it
     shutil.copy(doc_db_dir / "regmeta_docs.db", combined / "regmeta_docs.db")

@@ -1,0 +1,6 @@
+# Curated FQID slugs for classifications (provider-independent — see
+# REFACTOR_SPEC §5.2 on the `class/<slug>/<version>` namespace).
+#
+# Grow-only and immutable once published; see scb.toml for the bootstrap and
+# snapshot procedure. The short_name keys mirror regmeta/classifications.toml
+# (the legacy seed) so `populate_slugs` can join them.

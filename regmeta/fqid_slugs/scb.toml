@@ -1,0 +1,11 @@
+# Curated FQID slugs for SCB-published registers.
+#
+# Grow-only: entries are added, never deleted or renamed — committed
+# project_data.json files reference these slugs forever (REFACTOR_SPEC §5.4).
+# Typo corrections add a new row and link the old one via `replaced_by`. The
+# snapshot test (regmeta/tests/test_slug_snapshot.py) fails CI on any
+# violation; regenerate with `regmeta maintain precheck-slugs --update-snapshot`
+# after adding rows.
+#
+# Bootstrap from live data with `regmeta maintain seed-slugs`. Schema and
+# field semantics live in REFACTOR_SPEC.md §5.3.
