@@ -1,5 +1,15 @@
-from .db import open_db, db_path_from_args, build_db, default_db_dir
+from .catalog import (
+    Catalog,
+    ResolvedClassification,
+    ResolvedProvider,
+    ResolvedRegister,
+    ResolvedRegisterVariant,
+    ResolvedRegisterVersion,
+    ResolvedVariableBinding,
+)
+from .db import build_db, db_path_from_args, default_db_dir, open_db
 from .download import download_db
+from .fqid import Fqid, FqidError, FqidKind, derive_variable_slug, parse as parse_fqid
 from .queries import (
     compare,
     extract_year,
@@ -20,11 +30,16 @@ from .queries import (
 
 __all__ = [
     "build_db",
+    "Catalog",
     "compare",
     "db_path_from_args",
     "default_db_dir",
+    "derive_variable_slug",
     "download_db",
     "extract_year",
+    "Fqid",
+    "FqidError",
+    "FqidKind",
     "get_availability",
     "get_coded_variables",
     "get_datacolumns",
@@ -36,9 +51,16 @@ __all__ = [
     "get_values_by_variable",
     "get_varinfo",
     "open_db",
+    "parse_fqid",
     "resolve",
     "resolve_register_ids",
+    "ResolvedClassification",
+    "ResolvedProvider",
+    "ResolvedRegister",
+    "ResolvedRegisterVariant",
+    "ResolvedRegisterVersion",
+    "ResolvedVariableBinding",
     "search",
 ]
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"

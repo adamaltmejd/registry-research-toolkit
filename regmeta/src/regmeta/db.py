@@ -24,11 +24,6 @@ from .queries import extract_year
 SCHEMA_VERSION = "3.1.0"
 DB_FILENAME = "regmeta.db"
 
-# FQID slug slots that may never be used as curated slugs (REFACTOR_SPEC.md §5.2).
-# Enforcement against slug TOMLs lands in step 1c; the constants live here so
-# every code path that emits or accepts a slug shares one source of truth.
-RESERVED_SLUGS: frozenset[str] = frozenset({"_default", "class"})
-
 # Built-in data providers. `provider_id` values are stable: rows reference them
 # from `register.provider_id`. Add new providers by appending — never renumber.
 PROVIDER_ID_SCB = 1

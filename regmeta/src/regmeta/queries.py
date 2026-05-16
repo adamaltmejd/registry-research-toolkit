@@ -12,6 +12,7 @@ import sqlite3
 from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from .fqid import Fqid, derive_period, derive_variable_slug, try_emit
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -444,14 +445,29 @@ def get_register(
     registers = []
     for rid in reg_ids:
         reg = conn.execute(
-            "SELECT * FROM register WHERE register_id = ?", (rid,)
+            "SELECT r.*, p.slug AS provider_slug "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE r.register_id = ?",
+            (rid,),
         ).fetchone()
         entry = dict(reg)
+        provider_slug = entry.pop("provider_slug")
+        entry["fqid"] = try_emit(Fqid.register_fqid, provider_slug, entry["slug"])
         variants = conn.execute(
             "SELECT * FROM register_variant WHERE register_id = ? ORDER BY regvar_id",
             (rid,),
         ).fetchall()
-        entry["variants"] = [dict(v) for v in variants]
+        variant_dicts: list[dict[str, Any]] = []
+        for v in variants:
+            vd = dict(v)
+            vd["fqid"] = try_emit(
+                Fqid.register_variant_fqid,
+                provider_slug,
+                entry["slug"],
+                vd["slug"],
+            )
+            variant_dicts.append(vd)
+        entry["variants"] = variant_dicts
         registers.append(entry)
     return registers
 
@@ -477,9 +493,15 @@ def get_schema(
 
     Requires either regvar_id or register. Returns {"variants": [...]}.
     """
+    variant_select = (
+        "SELECT rv.*, p.slug AS provider_slug, r.slug AS register_slug "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+    )
     if regvar_id:
         rv = conn.execute(
-            "SELECT * FROM register_variant WHERE regvar_id = ?",
+            variant_select + "WHERE rv.regvar_id = ?",
             (_try_int(regvar_id),),
         ).fetchone()
         if not rv:
@@ -494,8 +516,8 @@ def get_schema(
     elif register:
         reg_ids = require_register_ids(conn, register)
         variant_rows = conn.execute(
-            f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
-            "ORDER BY register_id, regvar_id",
+            variant_select + f"WHERE rv.register_id IN ({_in_placeholders(reg_ids)}) "
+            "ORDER BY rv.register_id, rv.regvar_id",
             reg_ids,
         ).fetchall()
         if not variant_rows:
@@ -522,6 +544,9 @@ def get_schema(
     variants_out: list[dict[str, Any]] = []
     for rv in variant_rows:
         rvid = rv["regvar_id"]
+        provider_slug = rv["provider_slug"]
+        register_slug = rv["register_slug"]
+        variant_slug = rv["slug"]
         versions = conn.execute(
             "SELECT * FROM register_version WHERE regvar_id = ? ORDER BY regver_id",
             (rvid,),
@@ -539,6 +564,7 @@ def get_schema(
                 "SELECT vi.cvid, vi.var_id, vi.datatyp, vi.datalangd, "
                 "v.variabelnamn, "
                 "COALESCE(v.source_label, '') as source, "
+                "MIN(va.kolumnnamn) as first_alias, "
                 "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
@@ -548,7 +574,25 @@ def get_schema(
                 (ver["regver_id"],),
             ).fetchall()
 
-            col_dicts = [dict(c) for c in columns]
+            # `derive_period` returns the most-specific period token from the
+            # version name, so quarterly/half-year versions keep their precise
+            # identity in the emitted FQID (year alone would alias them).
+            period = derive_period(ver["registerversionnamn"])
+            col_dicts: list[dict[str, Any]] = []
+            for c in columns:
+                cd = dict(c)
+                # `first_alias` from a SQL MIN — deterministic across runs;
+                # the comma-joined `aliases` is still emitted for display.
+                variable_slug = derive_variable_slug(cd.pop("first_alias", None))
+                cd["fqid"] = try_emit(
+                    Fqid.binding_fqid,
+                    provider_slug,
+                    register_slug,
+                    variant_slug,
+                    period,
+                    variable_slug,
+                )
+                col_dicts.append(cd)
             if columns_like:
                 pattern = re.compile(columns_like, re.IGNORECASE)
                 col_dicts = [
@@ -563,6 +607,13 @@ def get_schema(
                     "regver_id": ver["regver_id"],
                     "version_name": ver["registerversionnamn"],
                     "year": year,
+                    "fqid": try_emit(
+                        Fqid.register_version_fqid,
+                        provider_slug,
+                        register_slug,
+                        variant_slug,
+                        period,
+                    ),
                     "columns": col_dicts,
                 }
             )
@@ -574,6 +625,12 @@ def get_schema(
                     "register_id": rv["register_id"],
                     "registervariantnamn": rv["registervariantnamn"],
                     "registervariantrubrik": rv["registervariantrubrik"],
+                    "fqid": try_emit(
+                        Fqid.register_variant_fqid,
+                        provider_slug,
+                        register_slug,
+                        variant_slug,
+                    ),
                     "versions": versions_out,
                 }
             )
@@ -667,11 +724,14 @@ def get_varinfo(
             "SELECT vi.cvid, vi.regvar_id, vi.regver_id, vi.datatyp, vi.datalangd, "
             "vi.vardemangdsversion, vi.classification_id, "
             "c.short_name AS classification, "
-            "rv.registervariantnamn, rver.registerversionnamn "
+            "rv.registervariantnamn, rver.registerversionnamn, "
+            "p.slug AS provider_slug, r.slug AS register_slug, rv.slug AS variant_slug "
             "FROM variable_instance vi "
             "LEFT JOIN classification c ON vi.classification_id = c.id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "JOIN register r ON vi.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE vi.register_id = ? AND vi.var_id = ? "
             "ORDER BY rver.registerversionnamn, vi.cvid",
             (rid, vid),
@@ -703,6 +763,11 @@ def get_varinfo(
         instances_out: list[dict[str, Any]] = []
         for inst in instances:
             cvid = inst["cvid"]
+            inst_aliases = aliases_map[cvid]
+            # First alias is the lexically-smallest kolumnnamn — `aliases_map`
+            # is sorted by ``ORDER BY cvid, kolumnnamn`` in the fetch above.
+            first_alias = inst_aliases[0] if inst_aliases else None
+            variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
                 "cvid": cvid,
                 "regvar_id": inst["regvar_id"],
@@ -712,8 +777,16 @@ def get_varinfo(
                 "year": extract_year(inst["registerversionnamn"] or ""),
                 "datatyp": inst["datatyp"],
                 "datalangd": inst["datalangd"],
-                "aliases": aliases_map[cvid],
+                "aliases": inst_aliases,
                 "value_set_count": value_counts[cvid],
+                "fqid": try_emit(
+                    Fqid.binding_fqid,
+                    inst["provider_slug"],
+                    inst["register_slug"],
+                    inst["variant_slug"],
+                    derive_period(inst["registerversionnamn"]),
+                    variable_slug,
+                ),
             }
             if inst["classification"]:
                 inst_dict["classification"] = inst["classification"]
@@ -1888,8 +1961,12 @@ def compare(
 
 def _classification_row(row: sqlite3.Row) -> dict[str, Any]:
     d = dict(row)
+    fqid = try_emit(Fqid.classification_fqid, d.get("slug"), d.get("version"))
     # Drop NULL fields to keep JSON output lean.
-    return {k: v for k, v in d.items() if v is not None}
+    out = {k: v for k, v in d.items() if v is not None}
+    if fqid:
+        out["fqid"] = fqid
+    return out
 
 
 def list_classifications(conn: sqlite3.Connection) -> list[dict[str, Any]]:
