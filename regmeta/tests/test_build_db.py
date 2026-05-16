@@ -253,6 +253,132 @@ class TestBuildDb:
         assert row["source_register_id"] is None
         assert row["source_label"] is None
 
+    def test_consumer_side_binding_linked(self, db_conn: sqlite3.Connection):
+        """OTHERREG Kön (cvid 2001, year 2021) is sourced from TESTREG. Its
+        via_source_id should point at TESTREG's Kön cvid for year 2021
+        (cvid 1003) per §5.6."""
+        row = db_conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 2001"
+        ).fetchone()
+        assert row["via_source_id"] == 1003
+
+    def test_canonical_binding_has_null_via_source(self, db_conn: sqlite3.Connection):
+        """TESTREG Kön owns the variable concept — its instances are canonical
+        and must keep via_source_id NULL."""
+        rows = db_conn.execute(
+            "SELECT cvid, via_source_id FROM variable_instance "
+            "WHERE register_id = 1 AND var_id = 44"
+        ).fetchall()
+        assert rows
+        assert all(r["via_source_id"] is None for r in rows)
+
+    def test_no_link_when_source_period_missing(self, db_conn: sqlite3.Connection):
+        """ParenVar (cvid 2003) has variable_register_kalla=TESTREG but TESTREG
+        has no matching variable slug — via_source_id stays NULL."""
+        row = db_conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 2003"
+        ).fetchone()
+        assert row["via_source_id"] is None
+
+    def test_linker_keys_by_full_period_not_year(self, tmp_path: Path):
+        """Source `HT2020` must not link to consumer `VT2020` despite sharing
+        the embedded year. Keying on bare year would have produced the wrong
+        via_source_id (PR #80 review P1)."""
+        ht_source = _ri_row(
+            "TESTREG",
+            "Testregistret",
+            "Testning",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "HT2020",
+            "Version HT2020",
+            "",
+            "Godkänd",
+            "2020-07-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "Kön",
+            "Personens kön",
+            "Kön enligt folkbokföring",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "Kon",
+            "int",
+            "1",
+            "7001",
+            "1",
+            "10",
+            "700",
+            "44",
+        )
+        vt_consumer = _ri_row(
+            "OTHERREG",
+            "Annat register",
+            "Annat syfte",
+            "Företag",
+            "Företag",
+            "Alla företag",
+            "Ja",
+            "VT2020",
+            "Version VT2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-06-30",
+            "Alla företag",
+            "Samtliga företag",
+            "",
+            "2020-06-30",
+            "Företag",
+            "Juridisk person",
+            "Kön",
+            "Ägarkön",
+            "Kön på ägare",
+            "",
+            "",
+            "Testregistret",
+            "TESTREG",
+            "",
+            "",
+            "KON",
+            "int",
+            "1",
+            "7002",
+            "2",
+            "20",
+            "701",
+            "44",
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [ht_source, vt_consumer]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "regmeta.db")
+        row = conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 7002"
+        ).fetchone()
+        conn.close()
+        # VT2020 consumer must NOT link to HT2020 source — they share the year
+        # but the period grammar treats them as distinct.
+        assert row["via_source_id"] is None
+
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
         count = db_conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]

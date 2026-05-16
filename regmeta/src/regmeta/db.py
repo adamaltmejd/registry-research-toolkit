@@ -19,9 +19,10 @@ from typing import Any, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
+from .fqid import derive_period, derive_variable_slug
 from .queries import extract_year
 
-SCHEMA_VERSION = "3.1.0"
+SCHEMA_VERSION = "3.2.0"
 DB_FILENAME = "regmeta.db"
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -256,6 +257,10 @@ CREATE TABLE variable_instance (
     -- excluded by year projection). No reverse index — every consumer reaches
     -- here from the cvid PK side, so the forward path is already optimal.
     value_set_id INTEGER REFERENCES value_set(value_set_id),
+    -- §5.6 lineage edge: source cvid for consumer-side bindings (e.g. LISA
+    -- pulling Kön from RTB). NULL on canonical/source instances. Populated
+    -- by `link_consumer_side_bindings` after CSV import.
+    via_source_id INTEGER REFERENCES variable_instance(cvid),
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
@@ -1532,6 +1537,58 @@ def emit_default_variants(conn: sqlite3.Connection) -> int:
     return cur.rowcount
 
 
+def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
+    """Materialize §5.6 consumer-side binding lineage edges.
+
+    Sets `variable_instance.via_source_id` to the canonical source cvid for
+    every instance whose underlying variable was sourced from a different
+    register, matching by (period, variable slug). Returns the edge count.
+    """
+    # One row per (cvid, alias) so cvids with multiple aliases that derive to
+    # different slugs are visible under each. ORDER BY pins tie-breaks: when
+    # two source-side instances key the same (rid, period, slug), the lowest
+    # cvid wins; same for which alias claims a consumer cvid first. Period is
+    # the full §5.2 token (HT/VTYYYY, YYYY-Qn, ...) — keying on bare year
+    # would mis-link sub-year siblings (HT2020 paired with VT2020).
+    rows = conn.execute(
+        "SELECT vi.cvid, vi.register_id, v.source_register_id, "
+        "rver.registerversionnamn, va.kolumnnamn "
+        "FROM variable_instance vi "
+        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
+        "ORDER BY vi.cvid, va.kolumnnamn"
+    ).fetchall()
+
+    by_key: dict[tuple[int, str, str], int] = {}
+    consumer_attempts: list[tuple[int, int, str, str]] = []
+
+    for cvid, rid, src_rid, version_name, kolumnnamn in rows:
+        period = derive_period(version_name)
+        slug = derive_variable_slug(kolumnnamn)
+        if period is None or slug is None:
+            continue
+        by_key.setdefault((rid, period, slug), cvid)
+        if src_rid is not None and src_rid != rid:
+            consumer_attempts.append((cvid, src_rid, period, slug))
+
+    # First match per consumer cvid wins (stable: input is sorted).
+    resolved: dict[int, int] = {}
+    for cvid, src_rid, period, slug in consumer_attempts:
+        if cvid in resolved:
+            continue
+        src_cvid = by_key.get((src_rid, period, slug))
+        if src_cvid is not None and src_cvid != cvid:
+            resolved[cvid] = src_cvid
+
+    if resolved:
+        conn.executemany(
+            "UPDATE variable_instance SET via_source_id = ? WHERE cvid = ?",
+            [(src_cvid, cvid) for cvid, src_cvid in resolved.items()],
+        )
+    return len(resolved)
+
+
 def utc_now() -> str:
     return (
         datetime.now(timezone.utc)
@@ -1658,6 +1715,11 @@ def build_db(
         synth = emit_default_variants(conn)
         if synth:
             _progress(f"  {synth:,} synthetic `_default` variant(s) emitted")
+
+        # §5.6 lineage edges. Depends on source_register_id populated above.
+        n_links = link_consumer_side_bindings(conn)
+        if n_links:
+            _progress(f"  {n_links:,} consumer-side binding edges linked")
 
         # Pre-load validity windows (consumed by Vardemangder year-projection).
         # Loaded ahead of the enrichment loop so projection has it ready when

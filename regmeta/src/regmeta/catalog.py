@@ -61,6 +61,9 @@ class ResolvedVariableBinding:
     var_id: int
     variabelnamn: str | None
     kolumnnamn: str | None
+    # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
+    via_source_id: int | None = None
+    lineage: Fqid | None = None
 
 
 @dataclass(frozen=True)
@@ -204,7 +207,8 @@ class Catalog:
         # uniqueness of (variant, period, variable_slug) is a §5.3 invariant.
         rows = self._conn.execute(
             "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
-            "vi.var_id, v.variabelnamn, va.kolumnnamn, rver.registerversionnamn "
+            "vi.var_id, vi.via_source_id, "
+            "v.variabelnamn, va.kolumnnamn, rver.registerversionnamn "
             "FROM variable_instance vi "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
@@ -220,6 +224,7 @@ class Catalog:
             if derive_period(row["registerversionnamn"]) != fqid.period:
                 continue
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
+                via = row["via_source_id"]
                 return ResolvedVariableBinding(
                     fqid=fqid,
                     cvid=row["cvid"],
@@ -229,8 +234,44 @@ class Catalog:
                     var_id=row["var_id"],
                     variabelnamn=row["variabelnamn"],
                     kolumnnamn=row["kolumnnamn"],
+                    via_source_id=via,
+                    lineage=(
+                        self._lineage_fqid(via, fqid.variable)
+                        if via is not None
+                        else None
+                    ),
                 )
         raise _not_found(fqid)
+
+    def _lineage_fqid(self, via_cvid: int, variable_slug: str) -> Fqid | None:
+        """Source-side binding FQID for a consumer instance, or None if any
+        required slug or the period token is missing."""
+        row = self._conn.execute(
+            "SELECT p.slug AS provider_slug, r.slug AS register_slug, "
+            "rv.slug AS variant_slug, rver.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+            "JOIN register r ON vi.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE vi.cvid = ?",
+            (via_cvid,),
+        ).fetchone()
+        if not row:
+            return None
+        parts = (
+            row["provider_slug"],
+            row["register_slug"],
+            row["variant_slug"],
+            derive_period(row["registerversionnamn"]),
+            variable_slug,
+        )
+        if any(p is None or p == "" for p in parts):
+            return None
+        try:
+            return Fqid.binding_fqid(*parts)
+        except FqidError:
+            return None
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
         row = self._conn.execute(

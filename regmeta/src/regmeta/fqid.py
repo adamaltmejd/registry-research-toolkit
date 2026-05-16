@@ -40,23 +40,31 @@ RESERVED_SLUGS: frozenset[str] = frozenset(
 # §5.2 prose pairs the regex `^[a-z][a-z0-9-]*[a-z0-9]$` with "single hyphens
 # only"; the form below enforces both in one expression.
 _SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*$")
-_PERIOD_PATTERNS = (
-    re.compile(r"^\d{4}$"),
-    re.compile(r"^\d{4}-\d{2}$"),
-    re.compile(r"^[HV]T\d{4}$"),
-    re.compile(r"^\d{4}-Q[1-4]$"),
-)
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
-# Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Trailing
-# `(?!\d)` on the month pattern stops range forms like "2018-2020" matching
-# as `2018-20`. Year pattern anchors against longer digit runs the same way
-# `queries.extract_year` does (rejects "v19999").
+# Period grammar building blocks. Year is 1900-2099, month 01-12. Shared by
+# the anchored validators and the substring extractors so `is_period` and
+# `derive_period` agree on what counts as a period.
+_YEAR = r"(?:19|20)\d{2}"
+_MONTH = r"(?:0[1-9]|1[0-2])"
+
+_PERIOD_PATTERNS = (
+    re.compile(rf"^{_YEAR}$"),
+    re.compile(rf"^{_YEAR}-{_MONTH}$"),
+    re.compile(rf"^[HV]T{_YEAR}$"),
+    re.compile(rf"^{_YEAR}-Q[1-4]$"),
+)
+
+# Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Word
+# boundaries on term/quarter forms reject embedded matches like "XHT2020";
+# trailing `(?!\d)` on the month pattern stops range forms like "2018-2020"
+# matching as `2018-20`. Year pattern anchors against longer digit runs the
+# same way `queries.extract_year` does (rejects "v19999").
 _PERIOD_EXTRACT_PATTERNS = (
-    re.compile(r"[HV]T\d{4}"),
-    re.compile(r"\d{4}-Q[1-4]"),
-    re.compile(r"\d{4}-\d{2}(?!\d)"),
-    re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)"),
+    re.compile(rf"(?<![A-Za-z0-9])[HV]T{_YEAR}(?!\d)"),
+    re.compile(rf"(?<!\d){_YEAR}-Q[1-4](?![A-Za-z0-9])"),
+    re.compile(rf"(?<!\d){_YEAR}-{_MONTH}(?!\d)"),
+    re.compile(rf"(?<!\d){_YEAR}(?!\d)"),
 )
 
 

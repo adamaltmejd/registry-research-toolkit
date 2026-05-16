@@ -132,7 +132,26 @@ class TestPeriodGrammar:
         assert is_period(period)
 
     @pytest.mark.parametrize(
-        "bad", ["", "20188", "2018-1", "Q1-2020", "HT20", "2020-Q0", "2020-Q5", "abc"]
+        "bad",
+        [
+            "",
+            "20188",
+            "2018-1",
+            "Q1-2020",
+            "HT20",
+            "2020-Q0",
+            "2020-Q5",
+            "abc",
+            # Out-of-range constituents must be rejected even though their
+            # shape matches: month 13, year outside 1900-2099, term/quarter
+            # with non-19xx/20xx year. (Codex P2 on PR #80.)
+            "2020-13",
+            "2020-00",
+            "9999",
+            "1899",
+            "HT9999",
+            "9999-Q1",
+        ],
     )
     def test_invalid_periods(self, bad: str) -> None:
         assert not is_period(bad)

@@ -9,7 +9,14 @@ from .catalog import (
 )
 from .db import build_db, db_path_from_args, default_db_dir, open_db
 from .download import download_db
-from .fqid import Fqid, FqidError, FqidKind, derive_variable_slug, parse as parse_fqid
+from .fqid import (
+    Fqid,
+    FqidError,
+    FqidKind,
+    derive_period,
+    derive_variable_slug,
+    parse as parse_fqid,
+)
 from .queries import (
     compare,
     extract_year,
@@ -34,6 +41,7 @@ __all__ = [
     "compare",
     "db_path_from_args",
     "default_db_dir",
+    "derive_period",
     "derive_variable_slug",
     "download_db",
     "extract_year",
@@ -63,4 +71,4 @@ __all__ = [
     "search",
 ]
 
-__version__ = "0.9.0"
+__version__ = "0.11.0"
