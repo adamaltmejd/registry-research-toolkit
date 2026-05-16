@@ -129,6 +129,76 @@ class TestResolveBinding:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/nonexistent")
         assert exc.value.code == "fqid_not_found"
 
+    def test_default_fixture_has_no_lineage(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Canonical bindings (no via_source_id set) expose lineage as None.
+        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.via_source_id is None
+        assert r.lineage is None
+
+
+class TestResolveBindingLineage:
+    """§5.6 consumer-side binding lineage exposure on Catalog.resolve."""
+
+    @staticmethod
+    def _build_consumer_db(version_name: str = "RTB 2018") -> sqlite3.Connection:
+        # RTB owns Kön (cvid 5000); LISA delivers it as a consumer-side
+        # binding (cvid 5001) with via_source_id pointing at RTB's instance.
+        conn = build_slugged_db(
+            register=("RTB", "rtb", 1, 1),
+            variant=("Personer", "personer", 10),
+            version=(version_name, 100),
+            variable=("Kön", 44, 5000, "Kon"),
+        )
+        # Consumer register (LISA) shares slug "kon" so lineage matches.
+        conn.executescript(
+            f"INSERT INTO register (register_id, provider_id, slug, registernamn) "
+            f"VALUES (2, 1, 'lisa', 'LISA');"
+            f"INSERT INTO register_variant "
+            f"(regvar_id, register_id, slug, registervariantnamn) "
+            f"VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
+            f"INSERT INTO register_version "
+            f"(regver_id, regvar_id, registerversionnamn) "
+            f"VALUES (200, 20, 'LISA {version_name.split(' ', 1)[1]}');"
+            f"INSERT INTO variable (register_id, var_id, variabelnamn, source_register_id) "
+            f"VALUES (2, 99, 'Kön', 1);"
+            f"INSERT INTO variable_instance "
+            f"(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
+            f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
+            f"INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+        )
+        conn.commit()
+        return conn
+
+    def test_consumer_binding_exposes_via_source_id(self) -> None:
+        conn = self._build_consumer_db()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 5001
+        assert r.via_source_id == 5000
+
+    def test_consumer_binding_lineage_fqid(self) -> None:
+        conn = self._build_consumer_db()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert str(r.lineage) == "scb/rtb/personer/2018/kon"
+
+    def test_canonical_source_binding_has_no_lineage(self) -> None:
+        conn = self._build_consumer_db()
+        r = Catalog(conn).resolve("scb/rtb/personer/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.via_source_id is None
+        assert r.lineage is None
+
+    def test_lineage_preserves_sub_year_period(self) -> None:
+        # HT2020 source must not collapse to .../2020/... in the lineage FQID.
+        conn = self._build_consumer_db(version_name="RTB HT2020")
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert str(r.lineage) == "scb/rtb/personer/HT2020/kon"
+
 
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
@@ -140,7 +210,7 @@ class TestResolveClassification:
 
     def test_unknown_version_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegmetaError) as exc:
-            Catalog(slugged_conn).resolve("class/sun/9999")
+            Catalog(slugged_conn).resolve("class/sun/2099")
         assert exc.value.code == "fqid_not_found"
 
 
