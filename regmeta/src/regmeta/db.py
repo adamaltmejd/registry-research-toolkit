@@ -1509,10 +1509,12 @@ def seed_providers(conn: sqlite3.Connection) -> None:
     """Insert the built-in `provider` rows.
 
     Must run before any `register` insert because `register.provider_id`
-    REFERENCES `provider`.
+    REFERENCES `provider`. Idempotent: row identity is the seed tuple itself,
+    so calling twice on the same connection (e.g. from a test fixture that
+    also calls `build_db`) is a no-op rather than an `IntegrityError`.
     """
     conn.executemany(
-        "INSERT INTO provider (provider_id, slug, name) VALUES (?, ?, ?)",
+        "INSERT OR IGNORE INTO provider (provider_id, slug, name) VALUES (?, ?, ?)",
         _PROVIDER_SEED,
     )
 

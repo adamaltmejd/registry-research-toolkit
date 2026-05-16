@@ -500,6 +500,28 @@ class TestBuildDb:
         assert emit_default_variants(conn) == 0
         conn.close()
 
+    def test_seed_providers_idempotent(self, tmp_path: Path):
+        # `seed_providers` is now exported as a public helper used by both
+        # `build_db` and mock_data_wizard's regmeta fixture; calling it twice
+        # on the same connection used to raise IntegrityError on the fixed PKs.
+        import sqlite3 as _sqlite3
+
+        from regmeta.db import DDL, seed_providers
+
+        conn = _sqlite3.connect(str(tmp_path / "idem.db"))
+        conn.row_factory = _sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        seed_providers(conn)  # must not raise
+        rows = conn.execute(
+            "SELECT provider_id, slug FROM provider ORDER BY provider_id"
+        ).fetchall()
+        assert [(r["provider_id"], r["slug"]) for r in rows] == [
+            (1, "scb"),
+            (2, "sos"),
+        ]
+        conn.close()
+
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""
         input_dir = fixture_db.parent.parent / "input_rebuild"

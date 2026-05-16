@@ -23,6 +23,7 @@ from typing import Any, Literal
 from .errors import EXIT_CONFIG, RegmetaError
 from .fqid import (
     DEFAULT_VARIANT_SLUG,
+    FqidError,
     FqidKind,
     derive_variable_slug,
     validate_slug,
@@ -280,6 +281,18 @@ def _validate_entry(
                 f"{kind}.{source_id!r}: classifications require a string `version`.",
                 'Add `version = "<stem>"` (e.g. "2020").',
             )
+        # `version` becomes the third segment of `class/<slug>/<version>`, so
+        # it must round-trip through the FQID grammar. Catching this here
+        # surfaces the error at TOML load rather than at FQID emission.
+        try:
+            validate_slug(version, "classification version", allow_period=True)
+        except FqidError as exc:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `version` {version!r} fails the FQID "
+                f"grammar ({exc}).",
+                "Use a kebab-case slug or a period token (e.g. `2020`, `2020-Q1`).",
+            ) from exc
     elif version is not None:
         raise _err(
             "slug_toml_invalid",
@@ -843,6 +856,14 @@ class PrecheckResult:
     missing_variants: tuple[tuple[str, str, str], ...]
     missing_classifications: tuple[str, ...]
     parse_errors: tuple[str, ...]
+    # Reverse direction: TOML source IDs that don't (or no longer) exist in
+    # the DB and would fail `populate_slugs(strict=True)` at build time.
+    # Deprecated entries are excluded — they're allowed to outlive their DB
+    # row. Non-fatal: precheck surfaces them so maintainers can drop or mark
+    # them before a build attempt.
+    stale_registers: tuple[tuple[str, str], ...] = ()  # (provider, source_id)
+    stale_variants: tuple[tuple[str, str], ...] = ()
+    stale_classifications: tuple[str, ...] = ()
     entries: tuple[SlugEntry, ...] = ()
 
     @property
@@ -852,6 +873,9 @@ class PrecheckResult:
             or self.missing_variants
             or self.missing_classifications
             or self.parse_errors
+            or self.stale_registers
+            or self.stale_variants
+            or self.stale_classifications
         )
 
 
@@ -915,13 +939,86 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         if short not in classification_ids
     ]
 
+    stale_regs, stale_vars, stale_cls = _stale_toml_entries(conn, entries)
+
     return PrecheckResult(
         missing_registers=tuple(missing_regs),
         missing_variants=tuple(missing_variants),
         missing_classifications=tuple(missing_classifications),
         parse_errors=tuple(parse_errors),
+        stale_registers=tuple(stale_regs),
+        stale_variants=tuple(stale_vars),
+        stale_classifications=tuple(stale_cls),
         entries=tuple(entries),
     )
+
+
+def _stale_toml_entries(
+    conn: sqlite3.Connection,
+    entries: list[SlugEntry],
+) -> tuple[list[tuple[str, str]], list[tuple[str, str]], list[str]]:
+    """Find TOML entries whose source IDs don't exist in the DB.
+
+    Mirrors the `slug_unknown_source_id` check inside `populate_slugs`, but
+    surfaces every stale entry at once instead of failing on the first.
+    Deprecated entries are skipped — they're allowed to outlive their row.
+    Variable entries are skipped — overrides are deferred to step 1e and
+    `populate_slugs` already rejects them with a clearer error.
+    """
+    stale_regs: list[tuple[str, str]] = []
+    stale_vars: list[tuple[str, str]] = []
+    stale_cls: list[str] = []
+
+    live_regs_by_provider: dict[str, set[int]] = {}
+    live_vars_by_provider: dict[str, set[tuple[int, int]]] = {}
+    for provider_slug in _live_providers(conn):
+        live_regs_by_provider[provider_slug] = _live_register_ids(conn, provider_slug)
+        # `_live_variant_keys` filters to NULL-slug rows for the build-time
+        # gate; for staleness we need every live variant regardless of slug.
+        live_vars_by_provider[provider_slug] = {
+            (rid, vid)
+            for (rid, vid) in conn.execute(
+                "SELECT rv.register_id, rv.regvar_id FROM register_variant rv "
+                "JOIN register r ON rv.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE p.slug = ?",
+                (provider_slug,),
+            ).fetchall()
+        }
+    live_classifications = {
+        short
+        for (short,) in conn.execute("SELECT short_name FROM classification").fetchall()
+    }
+
+    for entry in entries:
+        if entry.deprecated:
+            continue
+        if entry.kind == "register":
+            if entry.provider is None:
+                continue
+            live = live_regs_by_provider.get(entry.provider, set())
+            try:
+                rid = _parse_register_id(entry.source_id)
+            except RegmetaError:
+                continue  # validation already surfaced this as a parse error
+            if rid not in live:
+                stale_regs.append((entry.provider, entry.source_id))
+        elif entry.kind == "register_variant":
+            if entry.provider is None:
+                continue
+            live = live_vars_by_provider.get(entry.provider, set())
+            try:
+                key = _parse_variant_id(entry.source_id)
+            except RegmetaError:
+                continue
+            if key not in live:
+                stale_vars.append((entry.provider, entry.source_id))
+        elif entry.kind == "classification":
+            if entry.source_id not in live_classifications:
+                stale_cls.append(entry.source_id)
+        # `variable` entries are deferred to step 1e; skip.
+
+    return stale_regs, stale_vars, stale_cls
 
 
 # ---------------------------------------------------------------------------
