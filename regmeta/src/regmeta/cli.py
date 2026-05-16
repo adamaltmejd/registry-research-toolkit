@@ -1187,8 +1187,16 @@ def _cmd_maintain_precheck_slugs(
     exit_code = EXIT_CONFIG if not result.ok else 0
     current = snapshot_payload(list(result.entries))
     if args.update_snapshot:
-        write_snapshot(snapshot_path, current)
-        snapshot_status["updated"] = True
+        # Refuse to overwrite when TOMLs failed to parse — `result.entries`
+        # is the truncated set up to the first error, so writing would wipe
+        # the prior baseline and surface phantom `removed` diffs on the next
+        # run.
+        if result.parse_errors:
+            snapshot_status["updated"] = False
+            snapshot_status["update_skipped_reason"] = "parse_errors"
+        else:
+            write_snapshot(snapshot_path, current)
+            snapshot_status["updated"] = True
     else:
         previous = read_snapshot(snapshot_path)
         diff = diff_snapshot(previous, current)
@@ -2697,6 +2705,11 @@ def _write_payload(
         snap = data.get("snapshot") or {}
         if snap.get("updated"):
             lines.append(f"Snapshot rewritten: {snap.get('path')}")
+        elif snap.get("update_skipped_reason") == "parse_errors":
+            lines.append(
+                f"Snapshot NOT rewritten ({snap.get('path')}): fix the TOML "
+                "parse errors above first."
+            )
         else:
             removed = snap.get("removed") or []
             renamed = snap.get("renamed") or []

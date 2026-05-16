@@ -866,3 +866,167 @@ class TestPrecheckCli:
             ]
         )
         assert exit_code != 0
+
+    def test_update_snapshot_refuses_on_parse_error(self, tmp_path: Path):
+        """A corrupted TOML must not silently blow away the baseline snapshot
+        — `precheck_slugs` truncates `entries` at the first parse error and
+        the partial set would otherwise wipe genuine prior entries."""
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        snapshot_before = (
+            '{"classification":{"SUN2020|2020":"sun"},'
+            '"register":{"scb/1":"lisa"},'
+            '"register_variant":{"scb/1.10":"individer-15plus"},'
+            '"variable":{}}'
+        )
+        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
+        # Corrupt the scb.toml so load_slug_dir raises.
+        _write(slug_dir / "scb.toml", '[register."1"]\nslug = "Bad_Slug"\n')
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code != 0
+        # Snapshot file is unchanged — the prior baseline survives.
+        assert (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8") == (
+            snapshot_before
+        )
+
+
+class TestSameAs:
+    """`same_as` is parsed and round-tripped but deferred to step 1e. The
+    parser still enforces shape and kind constraints."""
+
+    def test_accepts_valid_inline_tables(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.137"]\n'
+            'slug = "civilstand"\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand-legacy" }]\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].same_as == (
+            {
+                "provider": "scb",
+                "register": "lisa",
+                "variable_slug": "civilstand-legacy",
+            },
+        )
+
+    def test_rejected_on_register(self, tmp_path: Path):
+        # §5.3 same_as is only valid on variable / classification.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "lisa"\n'
+            'same_as = [{ provider = "scb", register = "rtb" }]\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "same_as" in exc.value.message
+
+    def test_empty_value_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "kon"\nsame_as = [{ provider = "" }]\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+    def test_non_array_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "kon"\nsame_as = "not a list"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+
+class TestCanonicalIntegerKeys:
+    """`"1.10"` and `"1.010"` must not alias the same DB row. Reject the
+    leading-zero form at populate-time so the maintainer gets a loud error
+    instead of silent collisions."""
+
+    def _db_with_register_1_10(self):
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.execute("UPDATE classification SET slug = NULL")
+        conn.commit()
+        return conn
+
+    def test_leading_zero_register_key_rejected(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", '[register."01"]\nslug = "lisa"\n')
+        _write(d / "classifications.toml", "")
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(self._db_with_register_1_10(), d, strict=False)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "canonical" in exc.value.message
+
+    def test_leading_zero_variant_half_rejected(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1.010"]\nslug = "v"\n',
+        )
+        _write(d / "classifications.toml", "")
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(self._db_with_register_1_10(), d, strict=False)
+        assert exc.value.code == "slug_toml_invalid"
+
+
+class TestSeedEmptyDb:
+    """Empty seed output is well-formed and self-explanatory."""
+
+    def test_provider_with_no_registers(self, tmp_path: Path):
+        # Build a DB whose `scb` provider has no register rows.
+        from regmeta.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # Only sos has a register; scb is empty.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 2, 'PAR')"
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert "no registers found" in body
+
+    def test_classifications_table_empty(self, tmp_path: Path):
+        from regmeta.db import DDL, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        body = seed_classifications_toml(conn)
+        assert "no classifications" in body
+
+
+class TestSnapshotCorrupt:
+    """A snapshot file that fails to parse raises `slug_snapshot_unreadable`
+    so the maintainer can't silently progress against garbage."""
+
+    def test_corrupt_json_raises(self, tmp_path: Path):
+        path = tmp_path / "snap.json"
+        path.write_text("{not json", encoding="utf-8")
+        with pytest.raises(RegmetaError) as exc:
+            read_snapshot(path)
+        assert exc.value.code == "slug_snapshot_unreadable"

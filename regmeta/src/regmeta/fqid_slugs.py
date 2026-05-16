@@ -57,7 +57,13 @@ class SlugEntry:
     provider: str | None = None
     version: str | None = None
     display_group: str | None = None
+    # Whether the source ID is retired from current deliveries. populate_slugs
+    # only short-circuits the missing-row branch on this — a still-live row
+    # with `deprecated = true` is still slugged so resolution keeps working.
     deprecated: bool = False
+    # Validated for shape and cycle-freedom (§5.4) but not yet applied to the
+    # DB; the resolver-side typo-correction lands with consumer-side binding
+    # materialization in step 1e.
     replaced_by: str | None = None
     # Parsed and round-tripped but not yet applied — consumer-side binding
     # materialization (§5.6) and the §5.5 cross-rename resolver land in 1e.
@@ -392,15 +398,26 @@ def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
 # ---------------------------------------------------------------------------
 
 
+def _parse_canonical_int(value: str) -> int | None:
+    """Reject leading zeros so `"1.10"` and `"1.010"` cannot alias the same
+    DB row while still appearing distinct as TOML keys."""
+    if not value or not value.isdigit():
+        return None
+    if len(value) > 1 and value[0] == "0":
+        return None
+    return int(value)
+
+
 def _parse_register_id(source_id: str) -> int:
-    try:
-        return int(source_id)
-    except ValueError as exc:
+    parsed = _parse_canonical_int(source_id)
+    if parsed is None:
         raise _err(
             "slug_toml_invalid",
-            f"register.{source_id!r}: TOML key must be the numeric RegisterId.",
+            f"register.{source_id!r}: TOML key must be the numeric RegisterId "
+            f"in canonical form (no leading zeros).",
             "Quote SCB's RegisterId integer as a string key.",
-        ) from exc
+        )
+    return parsed
 
 
 def _parse_variant_id(source_id: str) -> tuple[int, int]:
@@ -411,14 +428,16 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
             f"register_variant.{source_id!r}: expected `<RegisterId>.<RegVarID>`.",
             "Compose the key from SCB's two integer IDs.",
         )
-    try:
-        return int(parts[0]), int(parts[1])
-    except ValueError as exc:
+    reg = _parse_canonical_int(parts[0])
+    var = _parse_canonical_int(parts[1])
+    if reg is None or var is None:
         raise _err(
             "slug_toml_invalid",
-            f"register_variant.{source_id!r}: both halves must be integers.",
+            f"register_variant.{source_id!r}: both halves must be integers "
+            f"in canonical form (no leading zeros).",
             "Use the literal SCB IDs.",
-        ) from exc
+        )
+    return reg, var
 
 
 def _live_register_ids(conn: sqlite3.Connection, provider_slug: str) -> set[int]:
