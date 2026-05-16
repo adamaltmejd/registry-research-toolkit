@@ -220,6 +220,14 @@ class TestMalformed:
         with pytest.raises(FqidError, match="period grammar"):
             parse("sos/lss/2022")
 
+    @pytest.mark.parametrize("bad", [None, 123, b"scb/lisa", ["scb", "lisa"]])
+    def test_non_string_input_typed_error(self, bad: object) -> None:
+        # Non-string input used to surface as `AttributeError` on the
+        # `.startswith()` call. Callers expect every grammar failure to come
+        # out as `FqidError` so they can catch one exception type.
+        with pytest.raises(FqidError, match="must be a string"):
+            parse(bad)  # type: ignore[arg-type]
+
 
 # ---------------------------------------------------------------------------
 # Factory constructors validate

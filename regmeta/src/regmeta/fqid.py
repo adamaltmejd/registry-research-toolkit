@@ -225,6 +225,8 @@ def parse(value: str) -> Fqid:
     the elided display form `sos/lss/2022` is rejected — the period-slug ban
     makes `2022` invalid in the variant slot.
     """
+    if not isinstance(value, str):
+        raise FqidError(f"FQID must be a string, got {type(value).__name__}")
     if not value:
         raise FqidError("empty FQID")
     if value.startswith("/") or value.endswith("/") or "//" in value:

@@ -500,6 +500,46 @@ class TestBuildDb:
         assert emit_default_variants(conn) == 0
         conn.close()
 
+    def test_seed_providers_idempotent(self, tmp_path: Path):
+        # `seed_providers` is a public helper used by both `build_db` and
+        # mock_data_wizard's regmeta fixture; a plain INSERT would raise
+        # IntegrityError on the fixed PKs the second time.
+        import sqlite3 as _sqlite3
+
+        from regmeta.db import DDL, seed_providers
+
+        conn = _sqlite3.connect(str(tmp_path / "idem.db"))
+        conn.row_factory = _sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        seed_providers(conn)  # must not raise
+        rows = conn.execute(
+            "SELECT provider_id, slug FROM provider ORDER BY provider_id"
+        ).fetchall()
+        assert [(r["provider_id"], r["slug"]) for r in rows] == [
+            (1, "scb"),
+            (2, "sos"),
+        ]
+        conn.close()
+
+    def test_seed_providers_rejects_mismatch(self, tmp_path: Path):
+        # A pre-existing row with the wrong slug means the DB came from
+        # somewhere else (corruption, partial migration). Failing fast is
+        # safer than silently overwriting via UPSERT.
+        import sqlite3 as _sqlite3
+
+        from regmeta.db import DDL, seed_providers
+
+        conn = _sqlite3.connect(str(tmp_path / "mismatch.db"))
+        conn.row_factory = _sqlite3.Row
+        conn.executescript(DDL)
+        conn.execute(
+            "INSERT INTO provider (provider_id, slug, name) VALUES (1, 'wrong', 'X')"
+        )
+        with pytest.raises(RuntimeError, match="already present"):
+            seed_providers(conn)
+        conn.close()
+
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""
         input_dir = fixture_db.parent.parent / "input_rebuild"

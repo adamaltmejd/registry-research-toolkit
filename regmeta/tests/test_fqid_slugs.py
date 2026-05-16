@@ -152,15 +152,15 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
 
     def test_replaced_by_chain_acyclic(self, tmp_path: Path):
-        # b -> a (legal): editing a typo on `40` produces `40b`; both rows
-        # remain in the TOML and a one-hop chain is followed at resolve time.
+        # Slug typo gets a `replaced_by` link to the new row; both rows stay
+        # in the TOML and a one-hop chain resolves cleanly.
         path = _write(
             tmp_path / "scb.toml",
-            '[register."40"]\nslug = "rams-typo"\nreplaced_by = "40b"\n'
-            '[register."40b"]\nslug = "rams"\n',
+            '[register."40"]\nslug = "rams-typo"\nreplaced_by = "41"\n'
+            '[register."41"]\nslug = "rams"\n',
         )
         entries = load_provider_toml(path)
-        assert {e.source_id for e in entries} == {"40", "40b"}
+        assert {e.source_id for e in entries} == {"40", "41"}
 
     def test_replaced_by_dangling_rejected(self, tmp_path: Path):
         path = _write(
@@ -216,6 +216,26 @@ class TestClassificationsToml:
         )
         entries = load_classifications_toml(path)
         assert entries[0].version == "2020"
+
+    @pytest.mark.parametrize(
+        "bad_version",
+        ["With Space", "slash/here", "UPPER", "_default", "class"],
+    )
+    def test_version_must_round_trip_through_fqid_grammar(
+        self, tmp_path: Path, bad_version: str
+    ):
+        # `version` becomes the third segment of `class/<slug>/<version>`.
+        # Anything that fails `validate_slug(..., allow_period=True)` must
+        # fail at TOML load so a malformed value can't be frozen into the
+        # snapshot and only blow up later at FQID emission.
+        path = _write(
+            tmp_path / "classifications.toml",
+            f'[classification."SUN2020"]\nslug = "sun"\nversion = "{bad_version}"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_classifications_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "version" in exc.value.message
 
     def test_duplicate_slug_version_pair_rejected(self, tmp_path: Path):
         path = _write(
@@ -433,6 +453,71 @@ class TestPrecheckSlugs:
         conn = build_slugged_db()
         result = precheck_slugs(conn, d)
         assert result.parse_errors
+
+    def test_stale_register_id_reported(self, tmp_path: Path):
+        # TOML entry for register 999 has no live row; `populate_slugs` would
+        # raise `slug_unknown_source_id` at build time. Precheck surfaces it
+        # earlier so maintainers don't ship a TOML that breaks the next build.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register."999"]\nslug = "ghost"\n',
+        )
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        result = precheck_slugs(conn, d)
+        assert not result.ok
+        assert ("scb", "999") in result.stale_registers
+        assert ("scb", "1") not in result.stale_registers
+
+    def test_stale_variant_id_reported(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."1.999"]\nslug = "ghost"\n',
+        )
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        result = precheck_slugs(conn, d)
+        assert ("scb", "1.999") in result.stale_variants
+        assert ("scb", "1.10") not in result.stale_variants
+
+    def test_stale_classification_reported(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(
+            d / "classifications.toml",
+            '[classification."GHOST"]\nslug = "ghost"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db()
+        result = precheck_slugs(conn, d)
+        assert "GHOST" in result.stale_classifications
+
+    def test_deprecated_entries_excluded_from_stale(self, tmp_path: Path):
+        # Deprecated rows are allowed to outlive their DB row — that's the
+        # whole point of `deprecated=true`. Stale-check must not flag them.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register."999"]\nslug = "old-lisa"\ndeprecated = true\n',
+        )
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        result = precheck_slugs(conn, d)
+        assert ("scb", "999") not in result.stale_registers
 
 
 # ---------------------------------------------------------------------------
@@ -988,6 +1073,17 @@ class TestCanonicalIntegerKeys:
         with pytest.raises(RegmetaError) as exc:
             populate_slugs(self._db_with_register_1_10(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
+
+    def test_malformed_id_rejected_at_load_not_populate(self, tmp_path: Path):
+        # Source-ID shape is enforced at TOML load, so `precheck_slugs` and
+        # other read-only commands surface the same error without needing a
+        # `populate_slugs` call. Without this the precheck path would silently
+        # skip the row.
+        path = _write(tmp_path / "scb.toml", '[register."abc"]\nslug = "lisa"\n')
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "RegisterId" in exc.value.message
 
 
 class TestSeedEmptyDb:

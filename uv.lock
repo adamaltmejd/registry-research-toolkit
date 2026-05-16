@@ -367,7 +367,7 @@ dev = [
 
 [[package]]
 name = "regmeta"
-version = "0.11.0"
+version = "0.11.1"
 source = { editable = "regmeta" }
 dependencies = [
     { name = "zstandard" },
