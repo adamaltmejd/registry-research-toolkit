@@ -309,6 +309,13 @@ class TestDerivePeriod:
         assert derive_period("LISA HT2020") == "HT2020"
         assert derive_period("LISA 2020-Q1") == "2020-Q1"
 
+    def test_range_form_is_not_misread_as_month(self) -> None:
+        from regmeta.fqid import derive_period
+
+        # `2018-2020` (a range) must not greedy-match the YYYY-MM pattern
+        # as `2018-20` — falls through to the year pattern instead.
+        assert derive_period("LISA 2018-2020") == "2018"
+
 
 # ---------------------------------------------------------------------------
 # Stored FQIDs never elide (§5.2 paragraph "Stored FQIDs never elide")

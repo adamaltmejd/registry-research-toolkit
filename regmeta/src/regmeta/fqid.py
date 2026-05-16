@@ -48,13 +48,14 @@ _PERIOD_PATTERNS = (
 )
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
-# Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". The year
-# pattern anchors against longer digit runs the same way `queries.extract_year`
-# does (rejects "v19999").
+# Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Trailing
+# `(?!\d)` on the month pattern stops range forms like "2018-2020" matching
+# as `2018-20`. Year pattern anchors against longer digit runs the same way
+# `queries.extract_year` does (rejects "v19999").
 _PERIOD_EXTRACT_PATTERNS = (
     re.compile(r"[HV]T\d{4}"),
     re.compile(r"\d{4}-Q[1-4]"),
-    re.compile(r"\d{4}-\d{2}"),
+    re.compile(r"\d{4}-\d{2}(?!\d)"),
     re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)"),
 )
 
