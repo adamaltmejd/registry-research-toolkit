@@ -21,8 +21,22 @@ from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 from .queries import extract_year
 
-SCHEMA_VERSION = "3.0.0"
+SCHEMA_VERSION = "3.1.0"
 DB_FILENAME = "regmeta.db"
+
+# FQID slug slots that may never be used as curated slugs (REFACTOR_SPEC.md §5.2).
+# Enforcement against slug TOMLs lands in step 1c; the constants live here so
+# every code path that emits or accepts a slug shares one source of truth.
+RESERVED_SLUGS: frozenset[str] = frozenset({"_default", "class"})
+
+# Built-in data providers. `provider_id` values are stable: rows reference them
+# from `register.provider_id`. Add new providers by appending — never renumber.
+PROVIDER_ID_SCB = 1
+PROVIDER_ID_SOS = 2
+_PROVIDER_SEED: tuple[tuple[int, str, str], ...] = (
+    (PROVIDER_ID_SCB, "scb", "Statistics Sweden"),
+    (PROVIDER_ID_SOS, "sos", "Socialstyrelsen"),
+)
 
 # SCB ships rows in Vardemangder.csv where Värdekod == Värdemängdsversion. Two
 # disjoint cases observed; build-db classifies each row using these allowlists:
@@ -151,11 +165,26 @@ ENRICHMENT_FILES = [
 
 DDL = """\
 -- Core tables (all IDs stored as INTEGER for compact storage)
+
+-- Data providers (publishers): scb, sos, ... See _PROVIDER_SEED for the seed.
+-- Promoted to first-class in schema v3.1 for FQID grammar (REFACTOR_SPEC.md §5.1).
+CREATE TABLE provider (
+    provider_id INTEGER PRIMARY KEY,
+    slug        TEXT NOT NULL UNIQUE,
+    name        TEXT NOT NULL
+);
+
+-- FQID slug columns (`slug` on register / register_variant / classification,
+-- and synthetic `_default` rows on register_variant) are nullable in 3.1.
+-- Curated values land in step 1c; the build refuses to compile with NULL
+-- slugs from then on. See REFACTOR_SPEC.md §5.1 (synthesis) and §5.3 (TOMLs).
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
+    provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
     registernamn TEXT NOT NULL,
     registerrubrik TEXT,
-    registersyfte TEXT
+    registersyfte TEXT,
+    slug         TEXT
 );
 
 CREATE TABLE register_variant (
@@ -164,7 +193,10 @@ CREATE TABLE register_variant (
     registervariantnamn TEXT,
     registervariantrubrik TEXT,
     registervariantbeskrivning TEXT,
-    registervariantsekretess TEXT
+    registervariantsekretess TEXT,
+    slug          TEXT,
+    -- Presentation-only grouping label (§5.3 field reference). Drift-tolerant.
+    display_group TEXT
 );
 
 CREATE TABLE register_version (
@@ -266,7 +298,10 @@ CREATE TABLE classification (
     -- otherwise. valid_code_count <= code_count is *not* invariant: canonical
     -- codes that never appeared in any observed instance still count, but
     -- observed-only noise codes inflate code_count.
-    valid_code_count INTEGER
+    valid_code_count INTEGER,
+    -- classification FQID is `class/<slug>/<version>`; `version` is already
+    -- populated from the existing seed.
+    slug             TEXT
 );
 
 -- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),
@@ -858,12 +893,20 @@ def _import_registerinformation(
     # Bulk insert all normalized tables
     _progress("Writing core tables...")
     conn.executemany(
-        "INSERT INTO register VALUES (:register_id, :registernamn, :registerrubrik, :registersyfte)",
+        "INSERT INTO register (register_id, provider_id, registernamn, "
+        "registerrubrik, registersyfte) "
+        f"VALUES (:register_id, {PROVIDER_ID_SCB}, :registernamn, "
+        ":registerrubrik, :registersyfte)",
         list(registers.values()),
     )
     conn.executemany(
-        "INSERT INTO register_variant VALUES (:regvar_id, :register_id, :registervariantnamn, "
-        ":registervariantrubrik, :registervariantbeskrivning, :registervariantsekretess)",
+        "INSERT INTO register_variant ("
+        "regvar_id, register_id, registervariantnamn, registervariantrubrik, "
+        "registervariantbeskrivning, registervariantsekretess"
+        ") VALUES ("
+        ":regvar_id, :register_id, :registervariantnamn, :registervariantrubrik, "
+        ":registervariantbeskrivning, :registervariantsekretess"
+        ")",
         list(variants.values()),
     )
     conn.executemany(
@@ -1462,6 +1505,38 @@ def _import_id_kolumner(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
+def seed_providers(conn: sqlite3.Connection) -> None:
+    """Insert the built-in `provider` rows.
+
+    Must run before any `register` insert because `register.provider_id`
+    REFERENCES `provider`.
+    """
+    conn.executemany(
+        "INSERT INTO provider (provider_id, slug, name) VALUES (?, ?, ?)",
+        _PROVIDER_SEED,
+    )
+
+
+def emit_default_variants(conn: sqlite3.Connection) -> int:
+    """Synthesize a `_default` register_variant for every variant-less register.
+
+    Implements REFACTOR_SPEC.md §5.1: registers without a sub-decomposition
+    get one synthetic variant with `slug = '_default'` so the FQID schema stays
+    regular. Today's SCB data populates a regvar_id for every register row, so
+    this runs over zero rows in practice; the rule is in place for future SOS
+    ingestion (LSS, BU, SOL have no Deldatamängd).
+    """
+    cur = conn.execute(
+        "INSERT INTO register_variant (register_id, slug) "
+        "SELECT r.register_id, '_default' "
+        "FROM register r "
+        "WHERE NOT EXISTS ("
+        "  SELECT 1 FROM register_variant rv WHERE rv.register_id = r.register_id"
+        ")"
+    )
+    return cur.rowcount
+
+
 def utc_now() -> str:
     return (
         datetime.now(timezone.utc)
@@ -1557,6 +1632,7 @@ def build_db(
     build_failed = True
     try:
         conn.executescript(DDL)
+        seed_providers(conn)
 
         # ATTACH staging DB and create the per-build pair table. The PK groups
         # rows for the per-cvid projection pass and dedups identical triples.
@@ -1580,6 +1656,11 @@ def build_db(
         source_checksums["Registerinformation.csv"] = _file_sha256(ri_path)
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
+
+        # Runs after every register-loading source has written its rows.
+        synth = emit_default_variants(conn)
+        if synth:
+            _progress(f"  {synth:,} synthetic `_default` variant(s) emitted")
 
         # Pre-load validity windows (consumed by Vardemangder year-projection).
         # Loaded ahead of the enrichment loop so projection has it ready when

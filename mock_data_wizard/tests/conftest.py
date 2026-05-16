@@ -357,9 +357,12 @@ def regmeta_db(tmp_path: Path) -> Path:
         "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
         ("schema_version", SCHEMA_VERSION),
     )
+    from regmeta.db import seed_providers
+
+    seed_providers(conn)
     conn.execute(
-        "INSERT INTO register (register_id, registernamn, registerrubrik, registersyfte) "
-        "VALUES (1, 'TESTREG', 'Testregistret', 'Testing')"
+        "INSERT INTO register (register_id, provider_id, registernamn, registerrubrik, registersyfte) "
+        "VALUES (1, 1, 'TESTREG', 'Testregistret', 'Testing')"
     )
     conn.execute(
         "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn, registervariantsekretess) "

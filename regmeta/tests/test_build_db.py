@@ -289,6 +289,91 @@ class TestBuildDb:
         assert len(rows) == 1
         assert rows[0]["var_id"] == 100
 
+    def test_provider_seed(self, db_conn: sqlite3.Connection):
+        # provider_id values are stable across releases — downstream pins
+        # against them (PROVIDER_ID_SCB = 1, PROVIDER_ID_SOS = 2).
+        rows = db_conn.execute(
+            "SELECT provider_id, slug, name FROM provider ORDER BY provider_id"
+        ).fetchall()
+        assert [(r["provider_id"], r["slug"]) for r in rows] == [
+            (1, "scb"),
+            (2, "sos"),
+        ]
+
+    def test_scb_registers_tagged_scb(self, db_conn: sqlite3.Connection):
+        rows = db_conn.execute(
+            "SELECT p.slug FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id"
+        ).fetchall()
+        assert rows  # fixture has registers
+        assert {r["slug"] for r in rows} == {"scb"}
+
+    def test_slug_columns_nullable_in_v3_1(self, db_conn: sqlite3.Connection):
+        # 1a adds slug columns; 1c populates them. Nullable until then.
+        assert (
+            db_conn.execute(
+                "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
+            ).fetchone()[0]
+            == 0
+        )
+        non_default_variants = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant "
+            "WHERE slug IS NOT NULL AND slug != '_default'"
+        ).fetchone()[0]
+        assert non_default_variants == 0
+
+    def test_default_variant_not_synthesized_when_unneeded(
+        self, db_conn: sqlite3.Connection
+    ):
+        # SCB fixtures: every register already has a real variant, so the
+        # synth pass adds nothing.
+        count = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant WHERE slug = '_default'"
+        ).fetchone()[0]
+        assert count == 0
+
+    def test_default_variant_synthesized_for_variant_less_register(
+        self, tmp_path: Path
+    ):
+        # REFACTOR_SPEC.md §5.1: a register with zero register_variant rows
+        # gets exactly one synthetic variant with slug='_default'.
+        import sqlite3 as _sqlite3
+
+        from regmeta.db import DDL, emit_default_variants, seed_providers
+
+        db = tmp_path / "synth.db"
+        conn = _sqlite3.connect(str(db))
+        conn.row_factory = _sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # First register has a real variant; second is variant-less. Verifies
+        # the emitter touches only the variant-less one.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 2, 'WithVariant')"
+        )
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 2, 'NoVariant')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "VALUES (10, 1, 'Real')"
+        )
+
+        assert emit_default_variants(conn) == 1
+
+        rows = conn.execute(
+            "SELECT register_id, slug FROM register_variant ORDER BY register_id, regvar_id"
+        ).fetchall()
+        assert [(r["register_id"], r["slug"]) for r in rows] == [
+            (1, None),
+            (2, "_default"),
+        ]
+        # Idempotent on re-run.
+        assert emit_default_variants(conn) == 0
+        conn.close()
+
     def test_atomic_replace(self, fixture_db: Path):
         """Rebuilding should replace the DB atomically."""
         input_dir = fixture_db.parent.parent / "input_rebuild"

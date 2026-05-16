@@ -158,7 +158,7 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
     # Add a second register, same var_id=44, different CVID with conflicting codes.
     conn.executescript(
         """
-        INSERT INTO register (register_id, registernamn) VALUES (2, 'OTHER');
+        INSERT INTO register (register_id, provider_id, registernamn) VALUES (2, 1, 'OTHER');
         INSERT INTO register_variant (regvar_id, register_id, registervariantnamn,
             registervariantsekretess) VALUES (20, 2, 'Other variant', 'Nej');
         INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)

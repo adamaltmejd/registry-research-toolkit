@@ -862,8 +862,8 @@ the reg_meta FQID grammar (§5). Single file, owns:
 | `steward`         | string enum    | yes | `"global"` / `"ifau"` / `"swecov"`. Identifies which deployment authored the file. |
 | `reg_meta_version` | string         | yes | Release tag of the reg_meta DB asset used during authoring (e.g. `reg_meta/v0.8.0`). Best-effort drift detection on later resolves. |
 | `name`            | string         | yes | Project identifier (human-readable). |
-| `sources`         | array<Source>  | yes | List of data sources (tables) in the project. |
-| `panels`          | array<Panel>   | no  | Panel definitions over sources. Default `[]`. |
+| `sources`         | `array<Source>`  | yes | List of data sources (tables) in the project. |
+| `panels`          | `array<Panel>`   | no  | Panel definitions over sources. Default `[]`. |
 | `reg_monabundle`  | object         | no  | Namespaced block for `reg_monabundle` settings (per-column extract tunables; see §6.5). |
 
 No other top-level fields are allowed; future additions must be
@@ -886,7 +886,7 @@ classifications are referenced inline on each Column.
 |--------------------|------------------|:--------:|-------------|
 | `name`             | string           | yes | Internal source handle (e.g. `lisa_2018`); unique within the spec. Referenced by panel members. |
 | `register_version` | string (FQID)    | yes | reg_meta register_version FQID: `<provider>/<register>/<variant>/<period>` (§5.2). |
-| `columns`          | array<Column>    | yes | Columns to include. At least one. |
+| `columns`          | `array<Column>`    | yes | Columns to include. At least one. |
 
 The Source replaces the v2 `(register, year)` pair with a single
 FQID. Provider, register, variant, and period are all encoded —
@@ -998,7 +998,7 @@ join is over actual SQL column headers in the delivered tables.
 | `panel_id`    | string                        | yes | Unique panel identifier within the spec. |
 | `entity_key`  | EntityKey                     | no  | Panel-level default entity-key column(s). At least one member must end up with an effective `entity_key` (default or override) for the panel to validate. |
 | `time_key`    | TimeKey                       | no  | Panel-level default time-key. Same rule: each member must end up with an effective `time_key`. |
-| `members`     | array<string \| PanelMember>  | yes | Member sources, optionally with per-member overrides. |
+| `members`     | `array<string \| PanelMember>` | yes | Member sources, optionally with per-member overrides. |
 | `comment`     | string                        | no  | Free-text description. |
 
 Type aliases:
