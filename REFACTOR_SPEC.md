@@ -447,8 +447,10 @@ class/lkf/2012                                       classification
 ```
 
 Period segments accept integer year (`2018`) or string period
-(`2018-01`, `HT2020`) — the same forms `time_key` accepts in
-`project_data.json`.
+(`2018-01`, `HT2020`, `2018-Q3`) — the same forms `time_key` accepts in
+`project_data.json`. Year is constrained to `(?:19|20)\d{2}`
+(1900-2099, SCB-realistic) and month to `(?:0[1-9]|1[0-2])`; the
+reserved-slug regexes below share these bounds.
 
 **Variables have no concept FQID.** Variables are addressable only
 via 5-segment binding FQIDs. A 3-segment "variable concept" form
