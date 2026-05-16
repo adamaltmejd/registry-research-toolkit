@@ -19,6 +19,8 @@ from regmeta.fqid_slugs import (
     precheck_slugs,
     read_snapshot,
     seed_all,
+    seed_classifications_toml,
+    seed_provider_toml,
     snapshot_payload,
     write_snapshot,
 )
@@ -530,3 +532,337 @@ class TestSnapshot:
         ]
         payload = snapshot_payload(entries)
         assert payload["variable"] == {"scb/34.4": "kon"}
+
+
+# ---------------------------------------------------------------------------
+# Gap coverage from PR review
+# ---------------------------------------------------------------------------
+
+
+class TestVariableOverridesNotYetSupported:
+    """`[variable]` slug overrides are forward-compat metadata. `populate_slugs`
+    must raise rather than silently drop them so a maintainer's commit takes
+    effect — or fails loudly until step 1e wires up consumer-side bindings."""
+
+    def _make_db(self):
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.execute("UPDATE classification SET slug = NULL")
+        conn.commit()
+        return conn
+
+    def test_variable_slug_override_raises(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "v"\n'
+            '[variable."1.44"]\nslug = "kon"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = self._make_db()
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(conn, d, strict=True)
+        assert exc.value.code == "slug_variable_override_unsupported"
+
+    def test_variable_metadata_only_is_accepted(self, tmp_path: Path):
+        # No slug — just deprecation / replaced_by / same_as metadata. Parsed
+        # and round-tripped but never applied; should not raise.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "v"\n'
+            '[variable."1.44"]\ndeprecated = true\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = self._make_db()
+        counts = populate_slugs(conn, d, strict=True)
+        assert counts == {"register": 1, "register_variant": 1, "classification": 1}
+
+
+class TestSeedEmitsValidToml:
+    """seed_*_toml must produce TOML that round-trips through tomllib even
+    when DB strings contain quote, backslash, or Unicode oddities."""
+
+    def test_round_trip_with_quote_and_backslash(self, tmp_path: Path):
+        conn = build_slugged_db(
+            register=('Foo "Bar" \\Baz', "foo-bar", 1, 1),
+            variant=('name with "quotes"', "v", 10),
+        )
+        body = seed_provider_toml(conn, "scb")
+        # tomllib.loads will raise on malformed escapes.
+        import tomllib
+
+        parsed = tomllib.loads(body)
+        assert "register" in parsed
+        assert "1" in parsed["register"]
+
+    def test_classifications_round_trip_with_unicode(self, tmp_path: Path):
+        conn = build_slugged_db(
+            classification=(
+                'KÅL "2020"',
+                "Svensk utbildning",
+                "2020",
+                "sun",
+            ),
+        )
+        body = seed_classifications_toml(conn)
+        import tomllib
+
+        parsed = tomllib.loads(body)
+        assert 'KÅL "2020"' in parsed["classification"]
+
+
+class TestEntryParseIds:
+    """`_parse_register_id` / `_parse_variant_id` are hit by populate when the
+    TOML key isn't the expected integer / integer-pair shape."""
+
+    def _db(self):
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        return conn
+
+    def test_register_key_not_integer(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", '[register."abc"]\nslug = "lisa"\n')
+        _write(d / "classifications.toml", "")
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(self._db(), d, strict=False)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "RegisterId" in exc.value.message
+
+    def test_variant_key_wrong_shape(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1"]\nslug = "v"\n',
+        )
+        _write(d / "classifications.toml", "")
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(self._db(), d, strict=False)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "RegisterId" in exc.value.message
+
+    def test_variant_key_non_integer_halves(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1.x"]\nslug = "v"\n',
+        )
+        _write(d / "classifications.toml", "")
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(self._db(), d, strict=False)
+        assert exc.value.code == "slug_toml_invalid"
+
+
+class TestDisplayGroupTyped:
+    """`display_group` must be a string when set."""
+
+    def test_non_string_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."1.10"]\nslug = "v"\ndisplay_group = 42\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "display_group" in exc.value.message
+
+
+class TestSeedPopulateRoundTrip:
+    """Seed a TOML from a fully-slugged DB, replay it via populate_slugs into
+    a freshly-cleared DB, and assert the slug columns match. Locks in the
+    promise that seed output is directly consumable by populate_slugs."""
+
+    def test_round_trip(self, tmp_path: Path):
+        # 1) Seed from a fully slugged DB.
+        seeded = build_slugged_db()
+        out_dir = tmp_path / "slugs"
+        seed_all(seeded, out_dir)
+        seeded.close()
+
+        # 2) Drop NULL placeholder for classification version since the seed
+        # writes "TODO" when version is missing — our fixture sets version.
+        # Replay into a cleared DB.
+        target = build_slugged_db()
+        target.execute("UPDATE register SET slug = NULL")
+        target.execute("UPDATE register_variant SET slug = NULL")
+        target.execute("UPDATE classification SET slug = NULL")
+        target.commit()
+
+        counts = populate_slugs(target, out_dir, strict=True)
+        assert counts == {"register": 1, "register_variant": 1, "classification": 1}
+        assert (
+            target.execute(
+                "SELECT slug FROM register WHERE register_id = 1"
+            ).fetchone()[0]
+            == "lisa"
+        )
+        # Auto-derived slugs differ from the curated "sun" — the seed is a
+        # starter, not a faithful round-trip of existing slugs. Just assert
+        # populate_slugs filled the column with whatever the seed proposed.
+        cls_slug = target.execute(
+            "SELECT slug FROM classification WHERE short_name = 'SUN2020'"
+        ).fetchone()[0]
+        assert cls_slug and cls_slug != "TODO"
+
+
+class TestRepoSlugDir:
+    """`repo_slug_dir()` returns the live directory in a repo checkout."""
+
+    def test_repo_layout_resolves(self):
+        from regmeta.fqid_slugs import repo_slug_dir
+
+        result = repo_slug_dir()
+        assert result is not None
+        assert result.is_dir()
+        assert (result / "scb.toml").is_file()
+
+
+class TestPrecheckCli:
+    """CLI exit codes mirror the per-test contract: added rows are not fatal
+    in the maintainer's interactive view, but they must fail CI so the
+    snapshot stays current."""
+
+    def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
+        """Build a DB with one provider + register + variant, slug TOMLs that
+        cover both, and a `db` arg compatible with `regmeta --db`."""
+        from regmeta.db import DDL, seed_providers
+
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        db_path = db_dir / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn, slug) "
+            "VALUES (1, 1, 'LISA', 'lisa')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, slug, "
+            "registervariantnamn) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('SUN2020', 'Svensk utbildning', '2020', 'sun')"
+        )
+        conn.execute("INSERT INTO import_manifest VALUES ('schema_version', '3.1.0')")
+        conn.commit()
+        conn.close()
+
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        return db_dir, slug_dir
+
+    def test_added_entries_exit_non_zero(self, tmp_path: Path):
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        # Snapshot is empty — the three entries above show as `added`.
+        write_snapshot(
+            slug_dir / SNAPSHOT_FILENAME,
+            {
+                kind: {}
+                for kind in (
+                    "register",
+                    "register_variant",
+                    "variable",
+                    "classification",
+                )
+            },
+        )
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+            ]
+        )
+        assert exit_code != 0
+
+    def test_update_snapshot_clears_added(self, tmp_path: Path):
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        write_snapshot(
+            slug_dir / SNAPSHOT_FILENAME,
+            {
+                kind: {}
+                for kind in (
+                    "register",
+                    "register_variant",
+                    "variable",
+                    "classification",
+                )
+            },
+        )
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        # All TOMLs valid, all live rows covered — `--update-snapshot` skips
+        # the diff so the run exits clean.
+        assert exit_code == 0
+        # Snapshot file was rewritten.
+        contents = (slug_dir / SNAPSHOT_FILENAME).read_text()
+        assert "lisa" in contents
+
+    def test_update_snapshot_still_exits_on_missing(self, tmp_path: Path):
+        """`--update-snapshot` is review-only for snapshot drift but still
+        exits non-zero on real problems (parse errors / missing slugs) so a
+        broken state can't be snapshot-frozen."""
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        # Drop the register entry — DB still has register_id=1, so precheck
+        # surfaces a missing slug.
+        _write(
+            slug_dir / "scb.toml",
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code != 0

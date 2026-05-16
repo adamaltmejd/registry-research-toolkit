@@ -882,7 +882,11 @@ def _build_parser() -> argparse.ArgumentParser:
     precheck_p.add_argument(
         "--update-snapshot",
         action="store_true",
-        help="Rewrite the snapshot file to match the current TOMLs (review-only).",
+        help=(
+            "Rewrite the snapshot file to match the current TOMLs. Skips the "
+            "snapshot diff but still exits non-zero on parse errors / missing "
+            "slugs so a broken state isn't snapshot-frozen."
+        ),
     )
 
     parse_sos_p = maintain_sub.add_parser(
@@ -1191,7 +1195,10 @@ def _cmd_maintain_precheck_slugs(
         snapshot_status["added"] = diff["added"]
         snapshot_status["removed"] = diff["removed"]
         snapshot_status["renamed"] = diff["renamed"]
-        if diff["removed"] or diff["renamed"]:
+        # `added` is non-fatal in spirit but must fail CI so a maintainer
+        # doesn't merge new slugs without refreshing .snapshot.json; mirrors
+        # test_slug_snapshot.test_snapshot_covers_committed_additions.
+        if diff["removed"] or diff["renamed"] or diff["added"]:
             exit_code = EXIT_CONFIG
 
     duration_ms = int((time.perf_counter() - start) * 1000)

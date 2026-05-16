@@ -1,39 +1,11 @@
-# Slug TOML for SCB-published registers.
+# Curated FQID slugs for SCB-published registers.
 #
-# REFACTOR_SPEC.md §5.3: slugs are curated tokens that form a segment of an
-# FQID. They are anchored to SCB's RegisterId / RegVarID / VarID, never to
-# human-readable Swedish names (those drift). One row per source ID; TOML keys
-# are always quoted strings.
+# Grow-only: entries are added, never deleted or renamed — committed
+# project_data.json files reference these slugs forever (REFACTOR_SPEC §5.4).
+# Typo corrections add a new row and link the old one via `replaced_by`. The
+# snapshot test (regmeta/tests/test_slug_snapshot.py) fails CI on any
+# violation; regenerate with `regmeta maintain precheck-slugs --update-snapshot`
+# after adding rows.
 #
-# Entity tables:
-#
-#   [register."<RegisterId>"]
-#   slug = "lisa"
-#
-#   [register_variant."<RegisterId>.<RegVarID>"]
-#   slug = "individer-15plus"
-#   display_group = "Individer"        # optional, presentation-only
-#
-#   [variable."<RegisterId>.<VarId>"]
-#   slug = "kon"                       # only when auto-derived slug is wrong
-#                                      # or a cross-edition same_as is curated
-#
-# Fields (see §5.3 field reference for the canonical definition):
-#
-#   slug           — required for register / register_variant / classification.
-#                    Variables auto-slug from kolumnnamn; TOML entry only for
-#                    overrides, same_as, or deprecation. Immutable once
-#                    published (§5.4).
-#   display_group  — register_variant only; drift-tolerant presentation label.
-#   deprecated     — true marks a retired source ID. Slug retained forever.
-#   replaced_by    — typo-correction link; TOML key of the replacement row.
-#   same_as        — slug-anchored cross-rename equivalence (variable /
-#                    classification). Inline-table form.
-#
-# Grow-only: once committed, entries are added but never deleted or renamed
-# (§5.4). Typos are corrected via `replaced_by`. The snapshot test enforces
-# this (regmeta/tests/test_slug_snapshot.py); regenerate the snapshot with
-# `regmeta maintain precheck-slugs --update-snapshot` after adding rows.
-#
-# Bootstrap procedure: `regmeta maintain seed-slugs` reads the input data and
-# emits a starter TOML for hand-review; merge the reviewed result back here.
+# Bootstrap from live data with `regmeta maintain seed-slugs`. Schema and
+# field semantics live in REFACTOR_SPEC.md §5.3.

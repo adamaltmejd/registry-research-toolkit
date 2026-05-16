@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import tomllib
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
@@ -38,9 +39,6 @@ PROVIDER_FILE_SUFFIX = ".toml"
 CLASSIFICATIONS_FILE = "classifications.toml"
 SNAPSHOT_FILENAME = ".snapshot.json"
 
-_PROVIDER_KINDS: frozenset[EntityKind] = frozenset(
-    {"register", "register_variant", "variable"}
-)
 _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classification"})
 
 
@@ -61,6 +59,8 @@ class SlugEntry:
     display_group: str | None = None
     deprecated: bool = False
     replaced_by: str | None = None
+    # Parsed and round-tripped but not yet applied — consumer-side binding
+    # materialization (§5.6) and the §5.5 cross-rename resolver land in 1e.
     same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
 
 
@@ -88,6 +88,24 @@ def _err(code: str, message: str, remediation: str) -> RegmetaError:
         message=message,
         remediation=remediation,
     )
+
+
+def _toml_str(value: str) -> str:
+    """Quote ``value`` as a TOML basic string with the required escapes.
+
+    Used by the seed-emit path. Hand-rolled because the dependency footprint
+    doesn't yet pull in ``tomli_w`` and the escape set is small.
+    """
+    escaped = (
+        value.replace("\\", "\\\\")
+        .replace('"', '\\"')
+        .replace("\b", "\\b")
+        .replace("\t", "\\t")
+        .replace("\n", "\\n")
+        .replace("\f", "\\f")
+        .replace("\r", "\\r")
+    )
+    return f'"{escaped}"'
 
 
 def _parse_toml(path: Path) -> dict[str, Any]:
@@ -441,10 +459,34 @@ def populate_slugs(
 
     Returns ``{"register": n, "register_variant": n, "classification": n}``.
     """
-    from .db import _progress  # shared progress sink for build_db
+    # Function-level import — `fqid_slugs` is imported lazily from `db.build_db`,
+    # so importing `db` at module load would close a cycle.
+    from .db import _progress
 
     entries = load_slug_dir(slug_dir)
     counts = {"register": 0, "register_variant": 0, "classification": 0}
+
+    # `[variable]` slug overrides are forward-compat metadata only — the
+    # binding-resolver derives slugs from kolumnnamn at query time (catalog.py
+    # _resolve_binding) until the §5.6 binding rows land in step 1e. Raise
+    # loudly so a maintainer doesn't commit an override that does nothing.
+    inert_variable_overrides = [
+        e for e in entries if e.kind == "variable" and e.slug is not None
+    ]
+    if inert_variable_overrides:
+        sample = ", ".join(
+            f"{e.provider}/{e.source_id} -> {e.slug!r}"
+            for e in inert_variable_overrides[:5]
+        )
+        raise _err(
+            "slug_variable_override_unsupported",
+            f"{len(inert_variable_overrides)} [variable] entries declare a "
+            f"`slug` field, but variable slug overrides are not yet wired in "
+            f"(§5.6 binding materialization lands in step 1e). First: {sample}.",
+            'Drop the `slug = "..."` field; auto-slug from kolumnnamn applies. '
+            "Other metadata (deprecated, replaced_by, same_as) is parsed and "
+            "preserved for the upcoming step.",
+        )
 
     by_provider: dict[str, list[SlugEntry]] = {}
     classification_entries: list[SlugEntry] = []
@@ -508,7 +550,7 @@ def populate_slugs(
                 ),
                 params=(provider_slug,),
                 label="register",
-                sample_fmt=lambda r: f"{r[0]} ({r[1]!r})",
+                sample_fmt=_format_register_sample,
                 provider_slug=provider_slug,
                 add_hint='[register."<id>"] slug = "..."',
             )
@@ -524,7 +566,7 @@ def populate_slugs(
                 ),
                 params=(provider_slug,),
                 label="register_variant",
-                sample_fmt=lambda r: f"{r[0]}.{r[1]} ({r[2]!r})",
+                sample_fmt=_format_variant_sample,
                 provider_slug=provider_slug,
                 add_hint='[register_variant."<RegisterId>.<RegVarID>"]',
             )
@@ -570,13 +612,21 @@ def populate_slugs(
     return counts
 
 
+def _format_register_sample(row: Any) -> str:
+    return f"{row[0]} ({row[1]!r})"
+
+
+def _format_variant_sample(row: Any) -> str:
+    return f"{row[0]}.{row[1]} ({row[2]!r})"
+
+
 def _assert_no_unslugged(
     conn: sqlite3.Connection,
     *,
     sql: str,
     params: tuple[Any, ...],
     label: str,
-    sample_fmt,
+    sample_fmt: Callable[[Any], str],
     provider_slug: str,
     add_hint: str,
 ) -> None:
@@ -623,8 +673,8 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         return "\n".join(lines)
     for register_id, name in regs:
         candidate = derive_variable_slug(name) or "TODO"
-        lines.append(f'[register."{register_id}"]')
-        lines.append(f'slug = "{candidate}"')
+        lines.append(f"[register.{_toml_str(str(register_id))}]")
+        lines.append(f"slug = {_toml_str(candidate)}")
         lines.append("")
 
     variants = conn.execute(
@@ -642,10 +692,10 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             continue
         candidate = existing_slug or (derive_variable_slug(name) if name else None)
         candidate = candidate or "TODO"
-        lines.append(f'[register_variant."{register_id}.{regvar_id}"]')
-        lines.append(f'slug = "{candidate}"')
+        lines.append(f"[register_variant.{_toml_str(f'{register_id}.{regvar_id}')}]")
+        lines.append(f"slug = {_toml_str(candidate)}")
         if name:
-            lines.append(f'display_group = "{name}"')
+            lines.append(f"display_group = {_toml_str(name)}")
         lines.append("")
     return "\n".join(lines)
 
@@ -668,9 +718,9 @@ def seed_classifications_toml(conn: sqlite3.Connection) -> str:
         return "\n".join(lines)
     for short, version in rows:
         candidate = derive_variable_slug(short) or "TODO"
-        lines.append(f'[classification."{short}"]')
-        lines.append(f'slug = "{candidate}"')
-        lines.append(f'version = "{version or "TODO"}"')
+        lines.append(f"[classification.{_toml_str(short)}]")
+        lines.append(f"slug = {_toml_str(candidate)}")
+        lines.append(f"version = {_toml_str(version or 'TODO')}")
         lines.append("")
     return "\n".join(lines)
 
