@@ -48,6 +48,16 @@ _PERIOD_PATTERNS = (
 )
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
+# Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". The year
+# pattern anchors against longer digit runs the same way `queries.extract_year`
+# does (rejects "v19999").
+_PERIOD_EXTRACT_PATTERNS = (
+    re.compile(r"[HV]T\d{4}"),
+    re.compile(r"\d{4}-Q[1-4]"),
+    re.compile(r"\d{4}-\d{2}"),
+    re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)"),
+)
+
 
 class FqidError(ValueError):
     """Raised when an FQID string fails grammar validation."""
@@ -251,6 +261,21 @@ def try_emit(factory: Callable[..., Fqid], *parts: str | None) -> str | None:
         return str(factory(*parts))
     except FqidError:
         return None
+
+
+def derive_period(version_name: str | None) -> str | None:
+    """Extract the most-specific period token from a register-version name.
+
+    Returns the matched period substring (`HT2020`, `2020-Q1`, `2020-01`,
+    `2020`) so distinct sub-year versions don't collapse to the same FQID.
+    """
+    if not version_name:
+        return None
+    for pat in _PERIOD_EXTRACT_PATTERNS:
+        m = pat.search(version_name)
+        if m:
+            return m.group(0)
+    return None
 
 
 def derive_variable_slug(kolumnnamn: str | None) -> str | None:

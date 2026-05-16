@@ -89,14 +89,22 @@ class TestResolveVersion:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2099")
         assert exc.value.code == "fqid_not_found"
 
-    def test_resolves_non_year_period_by_substring(self) -> None:
-        # Half-year and quarter periods match by literal substring against
-        # the version name until a dedicated `period` column lands.
+    def test_resolves_non_year_period(self) -> None:
+        # Half-year, quarterly, and monthly periods use the most-specific
+        # token derived from the version name.
         conn = build_slugged_db(version=("Test HT2020", 200))
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020")
         assert isinstance(r, ResolvedRegisterVersion)
         assert r.regver_id == 200
         assert r.fqid.period == "HT2020"
+
+    def test_year_only_target_does_not_match_sub_year_version(self) -> None:
+        # `.../2020` must not silently resolve to an `HT2020` row — that
+        # would collide distinct versions under one FQID.
+        conn = build_slugged_db(version=("Test HT2020", 200))
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2020")
+        assert exc.value.code == "fqid_not_found"
 
 
 class TestResolveBinding:
@@ -140,6 +148,24 @@ class TestResolveFqidObject:
     def test_accepts_parsed_fqid_object(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve(Fqid.register_fqid("scb", "lisa"))
         assert isinstance(r, ResolvedRegister)
+
+    def test_rejects_incomplete_fqid_object(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # A hand-constructed Fqid with the wrong fields for its kind round-
+        # trips to a different kind on emit-then-parse; the resolver must
+        # fail fast with FqidError instead of TypeError inside a resolver.
+        from regmeta.fqid import FqidError, FqidKind
+
+        bad = Fqid(
+            kind=FqidKind.REGISTER_VERSION,
+            provider="scb",
+            register="lisa",
+            variant="individer-15plus",
+            period=None,
+        )
+        with pytest.raises(FqidError, match="incomplete"):
+            Catalog(slugged_conn).resolve(bad)
 
 
 class TestNullSlugMisses:

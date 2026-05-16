@@ -12,8 +12,7 @@ from pathlib import Path
 
 from .db import db_path_from_args, open_db
 from .errors import EXIT_NOT_FOUND, RegmetaError
-from .fqid import Fqid, FqidKind, derive_variable_slug, parse
-from .queries import extract_year
+from .fqid import Fqid, FqidError, FqidKind, derive_period, derive_variable_slug, parse
 
 
 @dataclass(frozen=True)
@@ -107,7 +106,18 @@ class Catalog:
         self._conn.close()
 
     def resolve(self, fqid: str | Fqid) -> ResolvedEntity:
-        parsed = parse(fqid) if isinstance(fqid, str) else fqid
+        if isinstance(fqid, str):
+            parsed = parse(fqid)
+        else:
+            # Round-trip-validate so a hand-constructed Fqid with missing
+            # required fields fails fast with FqidError instead of TypeError
+            # inside a resolver.
+            parsed = parse(str(fqid))
+            if parsed.kind is not fqid.kind:
+                raise FqidError(
+                    f"Fqid(kind={fqid.kind.value}) is incomplete; "
+                    f"emit-then-parse yields kind={parsed.kind.value}"
+                )
         return _DISPATCH[parsed.kind](self, parsed)
 
     def _resolve_provider(self, fqid: Fqid) -> ResolvedProvider:
@@ -162,10 +172,9 @@ class Catalog:
         )
 
     def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:
-        # No dedicated `period` column on register_version yet: year periods
-        # are matched via the regex-anchored `extract_year` (rejects "v19999"
-        # cleanly); non-year periods (`HT2020`, `2020-Q1`) match by literal
-        # substring against the version name.
+        # No dedicated `period` column yet: derive the most-specific period
+        # token from the version name and require exact equality with the
+        # FQID's period, so `.../2020` never matches `HT2020`/`2020-Q1` rows.
         rows = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "
@@ -176,30 +185,23 @@ class Catalog:
             "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
             (fqid.provider, fqid.register, fqid.variant),
         ).fetchall()
-        target = fqid.period
-        target_year = int(target) if target and target.isdigit() else None
         for row in rows:
-            name = row["registerversionnamn"] or ""
-            if target_year is not None and extract_year(name) == target_year:
-                break
-            if target_year is None and target in name:
-                break
-        else:
-            raise _not_found(fqid)
-        return ResolvedRegisterVersion(
-            fqid=fqid,
-            regver_id=row["regver_id"],
-            regvar_id=row["regvar_id"],
-            register_id=row["register_id"],
-            registerversionnamn=row["registerversionnamn"],
-        )
+            if derive_period(row["registerversionnamn"]) == fqid.period:
+                return ResolvedRegisterVersion(
+                    fqid=fqid,
+                    regver_id=row["regver_id"],
+                    regvar_id=row["regvar_id"],
+                    register_id=row["register_id"],
+                    registerversionnamn=row["registerversionnamn"],
+                )
+        raise _not_found(fqid)
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
         # No materialized binding rows yet: scan instances under the variant
-        # and derive each variable slug from kolumnnamn (§5.3). The
-        # `ORDER BY vi.cvid, va.kolumnnamn` makes the first-match return
-        # deterministic — uniqueness of (variant, period, variable_slug) is
-        # an invariant under the §5.3 curation rules, not enforced here.
+        # and derive variable slug from kolumnnamn (§5.3). Period equality
+        # rejects sub-year aliasing the same way `_resolve_version` does.
+        # `ORDER BY vi.cvid, va.kolumnnamn` makes first-match deterministic;
+        # uniqueness of (variant, period, variable_slug) is a §5.3 invariant.
         rows = self._conn.execute(
             "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
             "vi.var_id, v.variabelnamn, va.kolumnnamn, rver.registerversionnamn "
@@ -214,13 +216,8 @@ class Catalog:
             "ORDER BY vi.cvid, va.kolumnnamn",
             (fqid.provider, fqid.register, fqid.variant),
         ).fetchall()
-        target = fqid.period
-        target_year = int(target) if target and target.isdigit() else None
         for row in rows:
-            name = row["registerversionnamn"] or ""
-            if target_year is not None and extract_year(name) != target_year:
-                continue
-            if target_year is None and target not in name:
+            if derive_period(row["registerversionnamn"]) != fqid.period:
                 continue
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
                 return ResolvedVariableBinding(

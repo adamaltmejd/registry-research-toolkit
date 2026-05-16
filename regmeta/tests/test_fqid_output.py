@@ -59,6 +59,17 @@ class TestGetSchemaFqid:
         column = version["columns"][0]
         assert column["fqid"] == "scb/lisa/individer-15plus/2018/kon"
 
+    def test_sub_year_period_preserved_in_fqid(self) -> None:
+        # An `HT2020` version must not collapse to `.../2020/...`; the FQID
+        # carries the most-specific period token so sub-year versions stay
+        # distinguishable.
+        conn = build_slugged_db(version=("LISA HT2020", 100))
+        result = get_schema(conn, regvar_id="10")
+        version = result["variants"][0]["versions"][0]
+        assert version["fqid"] == "scb/lisa/individer-15plus/HT2020"
+        column = version["columns"][0]
+        assert column["fqid"] == "scb/lisa/individer-15plus/HT2020/kon"
+
 
 class TestGetVarinfoFqid:
     def test_instance_binding_fqid(self, slugged_conn: sqlite3.Connection) -> None:

@@ -279,6 +279,37 @@ class TestVariableSlugDerivation:
         assert derive_variable_slug("2018") is None
 
 
+class TestDerivePeriod:
+    @pytest.mark.parametrize(
+        "version_name,expected",
+        [
+            ("LISA 2018", "2018"),
+            ("LISA HT2020", "HT2020"),
+            ("VT2019 cohort", "VT2019"),
+            ("Survey 2020-Q1", "2020-Q1"),
+            ("Census 2018-01", "2018-01"),
+            ("Person-År", None),
+            ("v19999", None),
+            ("", None),
+            (None, None),
+        ],
+    )
+    def test_derives_most_specific(
+        self, version_name: str | None, expected: str | None
+    ) -> None:
+        from regmeta.fqid import derive_period
+
+        assert derive_period(version_name) == expected
+
+    def test_prefers_specific_over_year(self) -> None:
+        from regmeta.fqid import derive_period
+
+        # "LISA HT2020" must not collapse to "2020" — keeps sub-year versions
+        # from sharing an FQID with the year-only version of the same variant.
+        assert derive_period("LISA HT2020") == "HT2020"
+        assert derive_period("LISA 2020-Q1") == "2020-Q1"
+
+
 # ---------------------------------------------------------------------------
 # Stored FQIDs never elide (§5.2 paragraph "Stored FQIDs never elide")
 # ---------------------------------------------------------------------------

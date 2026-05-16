@@ -12,7 +12,7 @@ import sqlite3
 from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from .fqid import Fqid, derive_variable_slug, try_emit
+from .fqid import Fqid, derive_period, derive_variable_slug, try_emit
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -564,6 +564,7 @@ def get_schema(
                 "SELECT vi.cvid, vi.var_id, vi.datatyp, vi.datalangd, "
                 "v.variabelnamn, "
                 "COALESCE(v.source_label, '') as source, "
+                "MIN(va.kolumnnamn) as first_alias, "
                 "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
@@ -573,15 +574,16 @@ def get_schema(
                 (ver["regver_id"],),
             ).fetchall()
 
-            period = str(year) if year is not None else None
+            # `derive_period` returns the most-specific period token from the
+            # version name, so quarterly/half-year versions keep their precise
+            # identity in the emitted FQID (year alone would alias them).
+            period = derive_period(ver["registerversionnamn"])
             col_dicts: list[dict[str, Any]] = []
             for c in columns:
                 cd = dict(c)
-                aliases_str = cd.get("aliases") or ""
-                first_alias = next(
-                    (a.strip() for a in aliases_str.split(",") if a.strip()), None
-                )
-                variable_slug = derive_variable_slug(first_alias)
+                # `first_alias` from a SQL MIN — deterministic across runs;
+                # the comma-joined `aliases` is still emitted for display.
+                variable_slug = derive_variable_slug(cd.pop("first_alias", None))
                 cd["fqid"] = try_emit(
                     Fqid.binding_fqid,
                     provider_slug,
@@ -761,8 +763,9 @@ def get_varinfo(
         instances_out: list[dict[str, Any]] = []
         for inst in instances:
             cvid = inst["cvid"]
-            year = extract_year(inst["registerversionnamn"] or "")
             inst_aliases = aliases_map[cvid]
+            # First alias is the lexically-smallest kolumnnamn — `aliases_map`
+            # is sorted by ``ORDER BY cvid, kolumnnamn`` in the fetch above.
             first_alias = inst_aliases[0] if inst_aliases else None
             variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
@@ -771,7 +774,7 @@ def get_varinfo(
                 "variant_name": inst["registervariantnamn"],
                 "regver_id": inst["regver_id"],
                 "version_name": inst["registerversionnamn"],
-                "year": year,
+                "year": extract_year(inst["registerversionnamn"] or ""),
                 "datatyp": inst["datatyp"],
                 "datalangd": inst["datalangd"],
                 "aliases": inst_aliases,
@@ -781,7 +784,7 @@ def get_varinfo(
                     inst["provider_slug"],
                     inst["register_slug"],
                     inst["variant_slug"],
-                    str(year) if year is not None else None,
+                    derive_period(inst["registerversionnamn"]),
                     variable_slug,
                 ),
             }
