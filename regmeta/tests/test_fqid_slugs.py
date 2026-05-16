@@ -1030,3 +1030,276 @@ class TestSnapshotCorrupt:
         with pytest.raises(RegmetaError) as exc:
             read_snapshot(path)
         assert exc.value.code == "slug_snapshot_unreadable"
+
+
+class TestDeprecatedStrictType:
+    """`deprecated` must be a TOML boolean. Truthy strings like
+    `"false"` previously coerced to True via `bool(value)`, masking real
+    source-ID drift because deprecated rows skip the missing-row check."""
+
+    def test_string_false_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "lisa"\ndeprecated = "false"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "deprecated" in exc.value.message
+
+    def test_integer_zero_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "lisa"\ndeprecated = 0\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+
+    def test_bare_true_accepted(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register."34"]\nslug = "lisa"\ndeprecated = true\n',
+        )
+        entries = load_provider_toml(path)
+        assert entries[0].deprecated is True
+
+
+class TestUnknownTopLevelTables:
+    """Reject typo'd top-level tables (e.g. `[registers."34"]`) so a slug
+    entry doesn't silently no-op."""
+
+    def test_provider_unknown_top_level(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[registers."34"]\nslug = "lisa"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "registers" in exc.value.message
+
+    def test_classifications_unknown_top_level(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "classifications.toml",
+            '[classifications."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_classifications_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "classifications" in exc.value.message
+
+
+class TestSameAsKeyValidation:
+    """`same_as` inline-table keys must come from a known set. A typo like
+    `classifcation_slug` shouldn't silently round-trip as forward-compat
+    metadata."""
+
+    def test_variable_unknown_key_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "kon"\n'
+            'same_as = [{ provider = "scb", typo_key = "x" }]\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert "typo_key" in exc.value.message
+
+    def test_classification_unknown_key_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n'
+            'same_as = [{ provider = "scb", classifcation_slug = "sun-v1" }]\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_classifications_toml(path)
+        assert "classifcation_slug" in exc.value.message
+
+
+class TestClassificationVersionMismatch:
+    """A TOML version that disagrees with the DB row's version would
+    snapshot a different FQID than the catalog emits at query time."""
+
+    def test_mismatch_raises(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "v"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "1996"\n',
+        )
+        # build_slugged_db's classification carries version = "2020".
+        conn = build_slugged_db()
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.execute("UPDATE classification SET slug = NULL")
+        conn.commit()
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(conn, d, strict=True)
+        assert exc.value.code == "slug_classification_version_mismatch"
+
+
+class TestPrecheckCliGrowOnly:
+    """--update-snapshot must refuse to bless a removal or rename — otherwise
+    the §5.4 grow-only contract is bypassable in one command."""
+
+    def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
+        """Reuse the layout from TestPrecheckCli but local to keep dependencies
+        explicit."""
+        from regmeta.db import DDL, seed_providers
+
+        db_dir = tmp_path / "db"
+        db_dir.mkdir()
+        db_path = db_dir / "regmeta.db"
+        conn = sqlite3.connect(db_path)
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn, slug) "
+            "VALUES (1, 1, 'LISA', 'lisa')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id, slug, "
+            "registervariantnamn) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('SUN2020', 'Svensk utbildning', '2020', 'sun')"
+        )
+        conn.execute("INSERT INTO import_manifest VALUES ('schema_version', '3.1.0')")
+        conn.commit()
+        conn.close()
+
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        return db_dir, slug_dir
+
+    def test_rename_refused_even_with_update(self, tmp_path: Path):
+        """A maintainer renames a previously-published slug, then tries to
+        bless it via --update-snapshot. The CLI must refuse and leave the
+        snapshot unchanged."""
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
+        snapshot_before = (
+            '{"classification":{"SUN2020|2020":"sun"},'
+            '"register":{"scb/1":"lisa"},'
+            '"register_variant":{"scb/1.10":"individer-15plus"},'
+            '"variable":{}}'
+        )
+        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
+        # But the register row in the DB also needs the matching slug, since
+        # populate runs first. Rewrite the DB row to match the TOML so the
+        # only divergence is between TOML and snapshot.
+        import sqlite3 as _sql
+
+        conn = _sql.connect(db_dir / "regmeta.db")
+        conn.execute(
+            "UPDATE register SET slug = 'lisa-individuals' WHERE register_id = 1"
+        )
+        conn.commit()
+        conn.close()
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa-individuals"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code != 0
+        assert (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8") == (
+            snapshot_before
+        )
+
+    def test_removal_refused_even_with_update(self, tmp_path: Path):
+        """Maintainer drops a previously-published row from the TOML."""
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        snapshot_before = (
+            '{"classification":{"SUN2020|2020":"sun"},'
+            '"register":{"scb/1":"lisa"},'
+            '"register_variant":{"scb/1.10":"individer-15plus"},'
+            '"variable":{}}'
+        )
+        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code != 0
+        assert (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8") == (
+            snapshot_before
+        )
+
+    def test_pure_addition_accepted_under_update(self, tmp_path: Path):
+        """The legitimate use case still works — adding a new slug refreshes
+        the snapshot."""
+        from regmeta.cli import run
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        # Empty baseline; the three live entries are pure additions.
+        (slug_dir / SNAPSHOT_FILENAME).write_text(
+            '{"classification":{},"register":{},"register_variant":{},"variable":{}}\n',
+            encoding="utf-8",
+        )
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code == 0
+        # Snapshot now contains the live entries.
+        contents = (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8")
+        assert "lisa" in contents
+        assert "individer-15plus" in contents

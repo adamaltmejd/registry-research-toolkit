@@ -41,6 +41,22 @@ SNAPSHOT_FILENAME = ".snapshot.json"
 
 _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classification"})
 
+# Top-level keys accepted in a provider TOML; anything else is a typo
+# (e.g. `[registers."34"]` vs the singular form) that today would otherwise
+# silently no-op.
+_PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
+    {"register", "register_variant", "variable"}
+)
+_CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
+
+# Allowed keys for inline `same_as` tables (§5.3 worked examples).
+_SAME_AS_KEYS_VARIABLE: frozenset[str] = frozenset(
+    {"provider", "register", "register_variant", "period", "variable_slug"}
+)
+_SAME_AS_KEYS_CLASSIFICATION: frozenset[str] = frozenset(
+    {"provider", "classification_slug"}
+)
+
 
 @dataclass(frozen=True)
 class SlugEntry:
@@ -169,7 +185,18 @@ def _validate_same_as(
             f"{kind}.{source_id!r}: `same_as` must be an array of inline tables.",
             'Use TOML syntax: same_as = [{ provider = "scb", ... }].',
         )
+    allowed_keys = (
+        _SAME_AS_KEYS_VARIABLE if kind == "variable" else _SAME_AS_KEYS_CLASSIFICATION
+    )
     for ref in raw:
+        unknown_keys = set(ref) - allowed_keys
+        if unknown_keys:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `same_as` has unknown key(s): "
+                f"{sorted(unknown_keys)}.",
+                f"Allowed keys for {kind}: {sorted(allowed_keys)}.",
+            )
         if not all(isinstance(v, str) and v for v in ref.values()):
             raise _err(
                 "slug_toml_invalid",
@@ -224,6 +251,18 @@ def _validate_entry(
         )
     slug = entry.get("slug")
     _validate_entry_slug(kind, source_id, slug, required=kind != "variable")
+    # `bool(value)` would silently flip `deprecated = "false"` to True and
+    # `deprecated = "no"` to True — both common maintainer typos that would
+    # mask real source-ID drift downstream (deprecated rows skip the
+    # missing-row check in populate_slugs).
+    deprecated_raw = entry.get("deprecated", False)
+    if not isinstance(deprecated_raw, bool):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `deprecated` must be a TOML boolean "
+            f"(true/false), got {type(deprecated_raw).__name__}.",
+            "Use bare `deprecated = true` or `deprecated = false`.",
+        )
     replaced_by = entry.get("replaced_by")
     if replaced_by is not None and (
         not isinstance(replaced_by, str) or not replaced_by
@@ -261,7 +300,7 @@ def _validate_entry(
         provider=provider,
         version=version,
         display_group=display_group,
-        deprecated=bool(entry.get("deprecated", False)),
+        deprecated=deprecated_raw,
         replaced_by=replaced_by,
         same_as=_validate_same_as(kind, source_id, entry.get("same_as")),
     )
@@ -307,10 +346,20 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             "Rename the file to a lowercase-kebab provider slug (e.g. `scb.toml`).",
         ) from exc
     data = _parse_toml(path)
+    unknown_top = set(data) - _PROVIDER_TOPLEVEL_KEYS
+    if unknown_top:
+        raise _err(
+            "slug_toml_invalid",
+            f"{path.name}: unknown top-level table(s): {sorted(unknown_top)}.",
+            f"Allowed: {sorted(_PROVIDER_TOPLEVEL_KEYS)}. Check for typos "
+            '(e.g. `[registers."..."]` -> `[register."..."]`).',
+        )
     entries: list[SlugEntry] = []
     seen_slugs: dict[tuple[str, str], str] = {}
     for kind in ("register", "register_variant", "variable"):
-        table = data.get(kind) or {}
+        if kind not in data:
+            continue
+        table = data[kind]
         if not isinstance(table, dict):
             raise _err(
                 "slug_toml_invalid",
@@ -344,6 +393,14 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
 def load_classifications_toml(path: Path) -> list[SlugEntry]:
     """Parse the provider-independent classification slug TOML."""
     data = _parse_toml(path)
+    unknown_top = set(data) - _CLASSIFICATIONS_TOPLEVEL_KEYS
+    if unknown_top:
+        raise _err(
+            "slug_toml_invalid",
+            f"{path.name}: unknown top-level table(s): {sorted(unknown_top)}.",
+            f"Allowed: {sorted(_CLASSIFICATIONS_TOPLEVEL_KEYS)}. Check for "
+            'typos like `[classifications."..."]`.',
+        )
     table = data.get("classification") or {}
     if not isinstance(table, dict):
         raise _err(
@@ -593,11 +650,14 @@ def populate_slugs(
     for entry in classification_entries:
         if entry.slug is None:
             continue
-        cur = conn.execute(
-            "UPDATE classification SET slug = ? WHERE short_name = ?",
-            (entry.slug, entry.source_id),
-        )
-        if cur.rowcount == 0:
+        # Cross-check: a slug TOML version mismatch against the DB row would
+        # snapshot a different FQID (`class/<slug>/<toml_version>`) than the
+        # one the catalog actually emits at query time.
+        row = conn.execute(
+            "SELECT version FROM classification WHERE short_name = ?",
+            (entry.source_id,),
+        ).fetchone()
+        if row is None:
             if entry.deprecated:
                 continue
             raise _err(
@@ -607,6 +667,20 @@ def populate_slugs(
                 "Add the short_name to classifications.toml (the seed) or drop "
                 "the slug entry.",
             )
+        db_version = row[0] if isinstance(row, tuple) else row["version"]
+        if entry.version != db_version:
+            raise _err(
+                "slug_classification_version_mismatch",
+                f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "
+                f"version {entry.version!r} does not match the DB row "
+                f"({db_version!r}).",
+                "Reconcile the TOML version with classifications.toml (the seed) "
+                "so the snapshotted FQID matches what the catalog emits.",
+            )
+        conn.execute(
+            "UPDATE classification SET slug = ? WHERE short_name = ?",
+            (entry.slug, entry.source_id),
+        )
         counts["classification"] += 1
 
     if strict:

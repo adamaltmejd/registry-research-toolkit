@@ -1195,8 +1195,24 @@ def _cmd_maintain_precheck_slugs(
             snapshot_status["updated"] = False
             snapshot_status["update_skipped_reason"] = "parse_errors"
         else:
-            write_snapshot(snapshot_path, current)
-            snapshot_status["updated"] = True
+            # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
+            # a removal or a slug rename — that's how committed FQIDs rot in
+            # researcher project_data.json files. Refusing here is the only
+            # gate; test_slug_snapshot catches the same thing in CI but the
+            # CLI must match so a maintainer's local pre-commit run agrees
+            # with what main will accept.
+            previous = read_snapshot(snapshot_path)
+            diff = diff_snapshot(previous, current)
+            if diff["removed"] or diff["renamed"]:
+                snapshot_status["updated"] = False
+                snapshot_status["update_skipped_reason"] = "non_additive_change"
+                snapshot_status["removed"] = diff["removed"]
+                snapshot_status["renamed"] = diff["renamed"]
+                exit_code = EXIT_CONFIG
+            else:
+                write_snapshot(snapshot_path, current)
+                snapshot_status["updated"] = True
+                snapshot_status["added"] = diff["added"]
     else:
         previous = read_snapshot(snapshot_path)
         diff = diff_snapshot(previous, current)
@@ -2710,6 +2726,17 @@ def _write_payload(
                 f"Snapshot NOT rewritten ({snap.get('path')}): fix the TOML "
                 "parse errors above first."
             )
+        elif snap.get("update_skipped_reason") == "non_additive_change":
+            lines.append(
+                f"Snapshot NOT rewritten ({snap.get('path')}): §5.4 grow-only "
+                "violations present (slugs can only be added, never removed "
+                "or renamed). Restore the entry, or mark the old row "
+                "deprecated=true and add a replaced_by link."
+            )
+            for r in snap.get("removed") or []:
+                lines.append(f"  removed: {r}")
+            for r in snap.get("renamed") or []:
+                lines.append(f"  renamed: {r}")
         else:
             removed = snap.get("removed") or []
             renamed = snap.get("renamed") or []
