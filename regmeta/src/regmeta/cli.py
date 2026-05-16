@@ -2726,22 +2726,31 @@ def _write_payload(
                 lines.append(f"  ... and {len(missing_cls) - 20} more")
             lines.append("")
         stale_regs = data.get("stale_registers", [])
+        if stale_regs:
+            lines.append(f"Stale register slugs ({len(stale_regs)}):")
+            for m in stale_regs[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}")
+            if len(stale_regs) > 20:
+                lines.append(f"  ... and {len(stale_regs) - 20} more")
+            lines.append("")
         stale_vars = data.get("stale_variants", [])
+        if stale_vars:
+            lines.append(f"Stale variant slugs ({len(stale_vars)}):")
+            for m in stale_vars[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}")
+            if len(stale_vars) > 20:
+                lines.append(f"  ... and {len(stale_vars) - 20} more")
+            lines.append("")
         stale_cls = data.get("stale_classifications", [])
+        if stale_cls:
+            lines.append(f"Stale classification slugs ({len(stale_cls)}):")
+            for short in stale_cls[:20]:
+                lines.append(f"  {short}")
+            if len(stale_cls) > 20:
+                lines.append(f"  ... and {len(stale_cls) - 20} more")
+            lines.append("")
         if stale_regs or stale_vars or stale_cls:
-            total = len(stale_regs) + len(stale_vars) + len(stale_cls)
-            lines.append(
-                f"Stale TOML entries with no matching DB row ({total}) — "
-                "drop them or mark deprecated=true:"
-            )
-            for m in stale_regs[:10]:
-                lines.append(f"  register   {m['provider']}/{m['source_id']}")
-            for m in stale_vars[:10]:
-                lines.append(f"  variant    {m['provider']}/{m['source_id']}")
-            for short in stale_cls[:10]:
-                lines.append(f"  class      {short}")
-            if total > 30:
-                lines.append(f"  ... and {total - 30} more")
+            lines.append("Drop these entries or mark them `deprecated = true`.")
             lines.append("")
         snap = data.get("snapshot") or {}
         if snap.get("updated"):

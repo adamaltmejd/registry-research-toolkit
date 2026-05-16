@@ -152,15 +152,15 @@ class TestProviderToml:
         assert exc.value.code == "slug_toml_invalid"
 
     def test_replaced_by_chain_acyclic(self, tmp_path: Path):
-        # b -> a (legal): editing a typo on `40` produces `40b`; both rows
-        # remain in the TOML and a one-hop chain is followed at resolve time.
+        # Slug typo gets a `replaced_by` link to the new row; both rows stay
+        # in the TOML and a one-hop chain resolves cleanly.
         path = _write(
             tmp_path / "scb.toml",
-            '[register."40"]\nslug = "rams-typo"\nreplaced_by = "40b"\n'
-            '[register."40b"]\nslug = "rams"\n',
+            '[register."40"]\nslug = "rams-typo"\nreplaced_by = "41"\n'
+            '[register."41"]\nslug = "rams"\n',
         )
         entries = load_provider_toml(path)
-        assert {e.source_id for e in entries} == {"40", "40b"}
+        assert {e.source_id for e in entries} == {"40", "41"}
 
     def test_replaced_by_dangling_rejected(self, tmp_path: Path):
         path = _write(
@@ -1073,6 +1073,17 @@ class TestCanonicalIntegerKeys:
         with pytest.raises(RegmetaError) as exc:
             populate_slugs(self._db_with_register_1_10(), d, strict=False)
         assert exc.value.code == "slug_toml_invalid"
+
+    def test_malformed_id_rejected_at_load_not_populate(self, tmp_path: Path):
+        # Source-ID shape is enforced at TOML load, so `precheck_slugs` and
+        # other read-only commands surface the same error without needing a
+        # `populate_slugs` call. Without this the precheck path would silently
+        # skip the row.
+        path = _write(tmp_path / "scb.toml", '[register."abc"]\nslug = "lisa"\n')
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "RegisterId" in exc.value.message
 
 
 class TestSeedEmptyDb:

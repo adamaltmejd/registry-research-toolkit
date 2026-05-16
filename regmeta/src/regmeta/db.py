@@ -1509,14 +1509,32 @@ def seed_providers(conn: sqlite3.Connection) -> None:
     """Insert the built-in `provider` rows.
 
     Must run before any `register` insert because `register.provider_id`
-    REFERENCES `provider`. Idempotent: row identity is the seed tuple itself,
-    so calling twice on the same connection (e.g. from a test fixture that
-    also calls `build_db`) is a no-op rather than an `IntegrityError`.
+    REFERENCES `provider`. Idempotent across repeat calls (e.g. when a test
+    fixture seeds before `build_db`): existing rows are verified to match
+    `_PROVIDER_SEED`; a mismatched slug/name raises rather than silently
+    leaving foreign data in place.
     """
-    conn.executemany(
-        "INSERT OR IGNORE INTO provider (provider_id, slug, name) VALUES (?, ?, ?)",
-        _PROVIDER_SEED,
-    )
+    existing = {
+        row[0]: (row[1], row[2])
+        for row in conn.execute(
+            "SELECT provider_id, slug, name FROM provider"
+        ).fetchall()
+    }
+    to_insert: list[tuple[int, str, str]] = []
+    for provider_id, slug, name in _PROVIDER_SEED:
+        prev = existing.get(provider_id)
+        if prev is None:
+            to_insert.append((provider_id, slug, name))
+        elif prev != (slug, name):
+            raise RuntimeError(
+                f"provider.{provider_id} already present with "
+                f"slug/name {prev!r}, expected {(slug, name)!r}"
+            )
+    if to_insert:
+        conn.executemany(
+            "INSERT INTO provider (provider_id, slug, name) VALUES (?, ?, ?)",
+            to_insert,
+        )
 
 
 def emit_default_variants(conn: sqlite3.Connection) -> int:
