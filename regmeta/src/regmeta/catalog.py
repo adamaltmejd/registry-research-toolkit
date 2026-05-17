@@ -217,6 +217,12 @@ class Catalog:
         # No dedicated `period` column yet: derive the most-specific period
         # token from the version name and require exact equality with the
         # FQID's period, so `.../2020` never matches `HT2020`/`2020-Q1` rows.
+        # §5.1 follow-up: `_default` versions against a variant-less register
+        # aren't reachable today — `register_version.regvar_id` is NOT NULL,
+        # so no version row can exist without a real variant row. When SOS
+        # ingestion lands, either make the column nullable or extend this
+        # resolver to synthesize the variant slot the way `_resolve_variant`
+        # does.
         rows = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "

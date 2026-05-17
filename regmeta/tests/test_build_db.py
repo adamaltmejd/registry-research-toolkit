@@ -460,9 +460,9 @@ class TestBuildDb:
         assert synthetic == 0
 
     def test_default_variant_slug_only_when_curated(self, db_conn: sqlite3.Connection):
-        # With synthesis moved to resolve-time, the only way `_default` can
-        # appear in this column is curator action — and the SCB curation
-        # doesn't (yet) use it.
+        # With synthesis moved to resolve-time, `_default` in this column can
+        # only mean curator action. The current curation snapshot has none;
+        # update this expected count when the name-mirror sweep lands.
         count = db_conn.execute(
             "SELECT COUNT(*) FROM register_variant WHERE slug = '_default'"
         ).fetchone()[0]
