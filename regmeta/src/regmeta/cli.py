@@ -813,7 +813,8 @@ def _build_parser() -> argparse.ArgumentParser:
             "  <input-dir>/SCB/*.csv             — SCB metadata exports\n"
             "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
             "Examples:\n"
-            "  regmeta maintain build-db --input-dir regmeta/input_data/"
+            "  regmeta maintain build-db --input-dir regmeta/input_data/\n"
+            "  regmeta maintain build-db --input-dir regmeta/input_data/ --skip-slugs"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -828,6 +829,18 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Directory of curated slug TOMLs (default: regmeta/fqid_slugs/ "
             "when run from a repo checkout)."
+        ),
+    )
+    build_p.add_argument(
+        "--skip-slugs",
+        action="store_true",
+        help=(
+            "Skip slug TOML loading and the strict-coverage check. Used to "
+            "bootstrap the DB so `maintain seed-slugs` has something to read "
+            "from before the slug TOMLs exist (REFACTOR_SPEC §5.4 Activation). "
+            "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
+            "columns and is intended only as input to `seed-slugs`, not for "
+            "downstream queries that depend on FQIDs."
         ),
     )
 
@@ -1037,11 +1050,15 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
         input_dir=Path(args.input_dir),
         db_dir=db_dir,
         slug_dir=slug_dir,
+        skip_slugs=args.skip_slugs,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",
-        args_payload={"input_dir": args.input_dir},
+        args_payload={
+            "input_dir": args.input_dir,
+            "skip_slugs": args.skip_slugs,
+        },
         db_info={
             "schema_version": SCHEMA_VERSION,
             "import_date": result["import_date"],
@@ -3413,6 +3430,9 @@ maintain build-db — Build database from raw CSVs
 
   "Build the database from SCB CSV exports"
     regmeta maintain build-db --input-dir regmeta/input_data/
+
+  "Bootstrap the DB without populated slug TOMLs (pre-v1 only)"
+    regmeta maintain build-db --input-dir regmeta/input_data/ --skip-slugs
 
   Most users should use `maintain update` to download a pre-built
   database instead.
