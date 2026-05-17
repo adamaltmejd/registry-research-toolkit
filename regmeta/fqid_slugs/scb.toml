@@ -806,7 +806,7 @@ slug = "hushall"
 display_group = "Hushåll"
 
 [register_variant."2.1495"]
-slug = "in"
+slug = "flyttningar-1968-1997"
 display_group = "In- och utvandringar 1968-1997"
 
 [register_variant."2.1524"]
@@ -930,7 +930,7 @@ slug = "personens-hogsta-utbildning"
 display_group = "Personens högsta utbildning"
 
 [register_variant."24.1225"]
-slug = "ut"
+slug = "invandrares-utbildning"
 display_group = "Ut-och invandrares utbildning"
 
 [register_variant."24.1383"]
@@ -1706,7 +1706,7 @@ slug = "lastbilstrafik-inrikes"
 display_group = "Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar"
 
 [register_variant."164.235"]
-slug = "partisympatiundersokninge"
+slug = "partisympatiundersokningen"
 display_group = "Partisympatiundersökningen"
 
 [register_variant."165.238"]
@@ -2038,7 +2038,7 @@ slug = "hushall"
 display_group = "Hushåll"
 
 [register_variant."229.396"]
-slug = "personalutbildningsstatis"
+slug = "personalutbildning-put"
 display_group = "Personalutbildningsstatistik (PUT)"
 
 [register_variant."231.1529"]
@@ -2066,7 +2066,7 @@ slug = "labour-cost-survey"
 display_group = "Labour Cost Survey"
 
 [register_variant."235.431"]
-slug = "vaxtskyddsmedelsundersokn"
+slug = "vaxtskyddsmedelsundersokningen"
 display_group = "Växtskyddsmedelsundersökningen"
 
 [register_variant."237.448"]
@@ -2610,7 +2610,7 @@ slug = "indata"
 display_group = "Indata"
 
 [register_variant."335.1100"]
-slug = "transportinfrastrukturens"
+slug = "transport-markanvandning"
 display_group = "Transportinfrastrukturens markanvändning"
 
 [register_variant."336.1108"]
@@ -2778,7 +2778,7 @@ slug = "distansundervisning-under-pandemin-gymnasieskolan"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
 [register_variant."367.1321"]
-slug = "tidsanvandningsundersokni"
+slug = "tidsanvandningsundersokningen"
 display_group = "Tidsanvändningsundersökningen"
 
 [register_variant."367.1666"]
@@ -3110,7 +3110,7 @@ slug = "rekryteringserfarenheter"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov (LOR)"
 
 [register_variant."411.1755"]
-slug = "rekryteringserfarenheter-och-rekryteringsbehov-per-yrke-lor"
+slug = "rekryteringserfar-per-yrke"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
 
 [register_variant."414.1757"]
