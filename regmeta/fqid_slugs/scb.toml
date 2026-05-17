@@ -403,7 +403,7 @@ slug = "folkomrostningar-valresultat"
 slug = "ep-val-deltagande"
 
 [register."246"]
-slug = "ses"
+slug = "structure-of-earnings-survey"
 
 [register."247"]
 slug = "hogskolestuderandes-levnadsvillkor"
@@ -1034,7 +1034,7 @@ slug = "lagenhet-och-hushall"
 display_group = "Lägenhet och hushåll"
 
 [register_variant."32.83"]
-slug = "_default"
+slug = "vy-fob"
 display_group = "Vy"
 
 [register_variant."34.151"]
@@ -1059,7 +1059,7 @@ display_group = "Individer födelseland"
 
 [register_variant."34.1583"]
 slug = "individer-in-utvandring"
-display_group = "Indvider in- och utvandring"
+display_group = "Individer in- och utvandring"
 
 [register_variant."34.1584"]
 slug = "individer-avlidna"
