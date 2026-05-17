@@ -410,15 +410,25 @@ Population and `object_type` remain orthogonal context layers on
 Registers without a sub-decomposition (Socialstyrelsen's LSS, BU,
 SOL) get a synthetic `_default` variant so the schema stays regular.
 The rule is mechanical and synthesized at FQID-resolve time, not
-persisted: if the requested FQID is `<provider>/<register>/_default`
-(or deeper) and the register has zero `register_variant` source
-rows, the resolver returns a virtual variant placeholder with
+persisted: when the requested FQID is `<provider>/<register>/_default`
+and the register has zero `register_variant` source rows, the
+register_variant resolver returns a virtual placeholder with
 `regvar_id = None` (`catalog.py:_synthesize_default_variant`).
 Persistence stays clean — every `register_variant` row in the DB is
 a real source row, so a curated `slug = "_default"` on a real
 single-variant register (the "name-mirror" case) round-trips
 unambiguously through `seed-slugs`. The FQID emitter may elide
 `/_default/` for display. `_default` is a reserved slug (§5.3).
+
+Deeper FQIDs against variant-less registers (`.../_default/<period>`
+and `.../_default/<period>/<variable>`) are accepted by the grammar
+(§5.2 shows `sos/lss/_default/2022` as an example) but don't resolve
+today: `register_version.regvar_id` is `NOT NULL` with an FK to
+`register_variant`, so no version row can attach to a non-existent
+variant. Reachability for those kinds lands together with the SOS
+ingestion path that needs them — either by making the FK nullable
+or by extending `_resolve_version` / `_resolve_binding` to
+synthesize the variant slot the way `_resolve_variant` does.
 
 ### 5.2 FQID grammar
 
