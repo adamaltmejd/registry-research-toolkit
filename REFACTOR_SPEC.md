@@ -686,6 +686,25 @@ every project that references it. Concrete rules:
 - CI enforces these via a snapshot test comparing the current TOML
   to the last committed state; non-additive changes fail the build.
 
+**Activation.** The rules above bind only after the first tagged
+release of the refactored system (the first `regmeta` version that
+emits FQIDs into a `project_data.json` consumers can commit).
+Until that release no external artifact references these slugs, so
+the *rule* does not yet protect anything; maintainers may rename,
+remove, or restructure entries as the hand-review progresses. The
+*tooling*, however, ships fully wired: `reg-meta-build
+precheck-slugs --update-snapshot` and the CI snapshot test reject
+non-additive changes today, by design — the goal during 1c/1d is
+to exercise the mechanism under realistic load. During the pre-v1
+curation window a maintainer making a non-additive change works
+around the gate by regenerating `.snapshot.json` from the curated
+TOMLs (either by hand or via a future `--allow-rename` flag, to be
+added only if iteration friction warrants it). When v1 is cut, the
+snapshot at that commit becomes the immutable baseline and the
+gate transitions from "exercise mechanism" to "protect external
+artifacts" — at that point the workaround above is no longer
+available.
+
 The same rule applies to every slug-bearing entity: register,
 register_variant, variable, classification. Implication: every
 FQID is safe to embed in `project_data.json` and in webapp-emitted
@@ -2586,8 +2605,15 @@ document. Step 1 can start.
      `reg-meta-build precheck-slugs` lists any source IDs missing a
      slug entry (cleaner failure mode than a full build attempt).
    - **1d — CI immutability snapshot.** Slug-grow-only snapshot test
-     (§5.4) enabled **after 1c merges**: turning it on earlier would
-     fail the build during the bootstrap churn.
+     (§5.4) enabled **after 1c merges** so the mechanism is wired in
+     and exercised. The CLI and CI gate reject non-additive snapshot
+     changes from day one — see §5.4 *Activation* for why this is
+     "exercise the mechanism" rather than "protect external
+     artifacts" before v1, and for the manual snapshot-regeneration
+     workaround available pre-v1. The gate's protective semantics
+     start binding at the first v1 release, when the in-tree
+     snapshot becomes the permanent baseline external consumers
+     depend on.
    - **1e — Consumer-side binding materialization (§5.6).** LISA-via-RTB
      and other composite-source bindings get materialized at build
      time with `via_source_id` edges. Closes the data-layer side of
