@@ -837,7 +837,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help=(
             "Skip slug TOML loading and the strict-coverage check. Used to "
             "bootstrap the DB so `maintain seed-slugs` has something to read "
-            "from before the slug TOMLs exist (REFACTOR_SPEC §5.4 Activation)."
+            "from before the slug TOMLs exist (REFACTOR_SPEC §5.4 Activation). "
+            "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
+            "columns and is intended only as input to `seed-slugs`, not for "
+            "downstream queries that depend on FQIDs."
         ),
     )
 
