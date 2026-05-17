@@ -601,6 +601,14 @@ Every entity (register, register_variant, variable, classification) uses
 the same TOML row shape: a table keyed by the provider's source ID
 (e.g. `"34"`, `"34.153"`, `"34.4"`, `"SUN2020"`), with the fields below.
 
+**Slug uniqueness scope.** Slugs must be unique within the smallest scope
+that the FQID grammar (§5.2) uses to address the entity — never broader.
+Concretely: `register` slugs are unique within a provider; `register_variant`
+and `variable` slugs are unique within their parent register (the
+`<register>` slot in the FQID already disambiguates them); `classification`
+slugs are unique within `classifications.toml`. Two registers may therefore
+both have an `individer` variant or a `kon` variable without colliding.
+
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
 | `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by`. |
