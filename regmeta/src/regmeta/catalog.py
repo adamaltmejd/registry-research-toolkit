@@ -12,7 +12,15 @@ from pathlib import Path
 
 from .db import db_path_from_args, open_db
 from .errors import EXIT_NOT_FOUND, RegmetaError
-from .fqid import Fqid, FqidError, FqidKind, derive_period, derive_variable_slug, parse
+from .fqid import (
+    DEFAULT_VARIANT_SLUG,
+    Fqid,
+    FqidError,
+    FqidKind,
+    derive_period,
+    derive_variable_slug,
+    parse,
+)
 
 
 @dataclass(frozen=True)
@@ -35,7 +43,10 @@ class ResolvedRegister:
 @dataclass(frozen=True)
 class ResolvedRegisterVariant:
     fqid: Fqid
-    regvar_id: int
+    # `regvar_id is None` marks the §5.1 synthesized `_default` placeholder
+    # for variant-less registers — the slot is transparent at resolve time,
+    # not backed by a register_variant row.
+    regvar_id: int | None
     register_id: int
     registervariantnamn: str | None
     registervariantrubrik: str | None
@@ -163,15 +174,47 @@ class Catalog:
             "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
             (fqid.provider, fqid.register, fqid.variant),
         ).fetchone()
+        if row:
+            return ResolvedRegisterVariant(
+                fqid=fqid,
+                regvar_id=row["regvar_id"],
+                register_id=row["register_id"],
+                registervariantnamn=row["registervariantnamn"],
+                registervariantrubrik=row["registervariantrubrik"],
+                display_group=row["display_group"],
+            )
+        if fqid.variant == DEFAULT_VARIANT_SLUG:
+            synth = self._synthesize_default_variant(fqid)
+            if synth is not None:
+                return synth
+        raise _not_found(fqid)
+
+    def _synthesize_default_variant(self, fqid: Fqid) -> ResolvedRegisterVariant | None:
+        """§5.1: variant-less registers expose a transparent `_default` slot.
+
+        The placeholder isn't persisted; resolve it on the fly by looking up
+        the register and confirming it has zero `register_variant` rows.
+        Returns None if the register doesn't exist or has real variants
+        (caller falls through to not-found).
+        """
+        row = self._conn.execute(
+            "SELECT r.register_id FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? "
+            "AND NOT EXISTS ("
+            "  SELECT 1 FROM register_variant rv WHERE rv.register_id = r.register_id"
+            ")",
+            (fqid.provider, fqid.register),
+        ).fetchone()
         if not row:
-            raise _not_found(fqid)
+            return None
         return ResolvedRegisterVariant(
             fqid=fqid,
-            regvar_id=row["regvar_id"],
+            regvar_id=None,
             register_id=row["register_id"],
-            registervariantnamn=row["registervariantnamn"],
-            registervariantrubrik=row["registervariantrubrik"],
-            display_group=row["display_group"],
+            registervariantnamn=None,
+            registervariantrubrik=None,
+            display_group=None,
         )
 
     def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:

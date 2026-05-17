@@ -408,13 +408,17 @@ Population and `object_type` remain orthogonal context layers on
 `register_version`; they do not participate in the FQID.
 
 Registers without a sub-decomposition (Socialstyrelsen's LSS, BU,
-SOL) get a synthetic `_default` variant during build so the schema
-stays regular. The rule is mechanical: at `reg_meta_build` time, if
-a register has zero `register_variant` source rows, one is
-synthesized with `slug = "_default"` (no marker, no flag — its
-presence is inferred from the absence of real variants). The FQID
-emitter may elide `/_default/` for display. `_default` is a
-reserved slug (§5.3).
+SOL) get a synthetic `_default` variant so the schema stays regular.
+The rule is mechanical and synthesized at FQID-resolve time, not
+persisted: if the requested FQID is `<provider>/<register>/_default`
+(or deeper) and the register has zero `register_variant` source
+rows, the resolver returns a virtual variant placeholder with
+`regvar_id = None` (`catalog.py:_synthesize_default_variant`).
+Persistence stays clean — every `register_variant` row in the DB is
+a real source row, so a curated `slug = "_default"` on a real
+single-variant register (the "name-mirror" case) round-trips
+unambiguously through `seed-slugs`. The FQID emitter may elide
+`/_default/` for display. `_default` is a reserved slug (§5.3).
 
 ### 5.2 FQID grammar
 
@@ -484,10 +488,12 @@ hitting one of these:
 - `class` — reserved in any slot (keeps the leading-`class/`
   discriminator unambiguous; collision in the provider slot is the
   load-bearing case but the literal token is reserved everywhere).
-- `_default` (register_variant slot only) — emitted by the build
-  for registers without a sub-decomposition (§5.1); curated
-  variants may not collide. The underscore prefix is otherwise
-  outside the slug grammar, so no other slug can collide with it.
+- `_default` (register_variant slot only) — synthesized at
+  FQID-resolve time for registers without a sub-decomposition
+  (§5.1); curators may also pin this slug onto a real single-variant
+  register where the lone variant just restates the register name.
+  The underscore prefix is outside the slug grammar, so no other
+  slug can collide with it.
 - Period-shaped slugs in non-period slots (provider / register /
   variant / variable): a slug that matches the period grammar
   (`^\d{4}$`, `^\d{4}-\d{2}$`, `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`)

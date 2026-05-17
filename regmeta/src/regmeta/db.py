@@ -170,10 +170,11 @@ CREATE TABLE provider (
     name        TEXT NOT NULL
 );
 
--- FQID slug columns (`slug` on register / register_variant / classification,
--- and synthetic `_default` rows on register_variant) are nullable in 3.1.
--- Curated values land in step 1c; the build refuses to compile with NULL
--- slugs from then on. See REFACTOR_SPEC.md §5.1 (synthesis) and §5.3 (TOMLs).
+-- FQID slug columns (`slug` on register / register_variant / classification)
+-- are nullable in 3.1. Curated values land in step 1c; the build refuses to
+-- compile with NULL slugs from then on. The §5.1 `_default` placeholder for
+-- variant-less registers is synthesized at FQID-resolve time (catalog.py),
+-- never persisted. See REFACTOR_SPEC.md §5.1 and §5.3.
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
@@ -1537,26 +1538,6 @@ def seed_providers(conn: sqlite3.Connection) -> None:
         )
 
 
-def emit_default_variants(conn: sqlite3.Connection) -> int:
-    """Synthesize a `_default` register_variant for every variant-less register.
-
-    Implements REFACTOR_SPEC.md §5.1: registers without a sub-decomposition
-    get one synthetic variant with `slug = '_default'` so the FQID schema stays
-    regular. Today's SCB data populates a regvar_id for every register row, so
-    this runs over zero rows in practice; the rule is in place for future SOS
-    ingestion (LSS, BU, SOL have no Deldatamängd).
-    """
-    cur = conn.execute(
-        "INSERT INTO register_variant (register_id, slug) "
-        "SELECT r.register_id, '_default' "
-        "FROM register r "
-        "WHERE NOT EXISTS ("
-        "  SELECT 1 FROM register_variant rv WHERE rv.register_id = r.register_id"
-        ")"
-    )
-    return cur.rowcount
-
-
 def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     """Materialize §5.6 consumer-side binding lineage edges.
 
@@ -1730,11 +1711,6 @@ def build_db(
         source_checksums["Registerinformation.csv"] = _file_sha256(ri_path)
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
-
-        # Runs after every register-loading source has written its rows.
-        synth = emit_default_variants(conn)
-        if synth:
-            _progress(f"  {synth:,} synthetic `_default` variant(s) emitted")
 
         # §5.6 lineage edges. Depends on source_register_id populated above.
         n_links = link_consumer_side_bindings(conn)

@@ -848,6 +848,61 @@ class TestSeedPopulateRoundTrip:
         assert cls_slug and cls_slug != "TODO"
 
 
+class TestCuratedDefaultVariantRoundTrip:
+    """A curated `slug = "_default"` on a real register_variant row must
+    survive TOML → populate_slugs → seed_provider_toml → TOML cycles.
+
+    Before §5.1 synthesis moved to FQID-resolve time, the seed emitter
+    treated every `_default` row as build-synthesized and silently dropped
+    it from the regenerated TOML, so a curator who committed the new TOML
+    would discard their own entry."""
+
+    def test_seed_emits_curated_default_variant(self, tmp_path: Path):
+        # `_default` lives on a real source row (registervariantnamn populated)
+        # — that's the "single-variant name-mirror" curation case for
+        # registers where the lone variant just restates the register name.
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=("LSS", "_default", 50),
+            version=None,
+            variable=None,
+        )
+        body = seed_provider_toml(conn, "sos")
+        assert '[register_variant."5.50"]' in body
+        assert 'slug = "_default"' in body
+
+    def test_populate_then_seed_preserves_default(self, tmp_path: Path):
+        # 1) Curate `_default` in TOML, populate into a fresh DB.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "sos.toml",
+            '[register."5"]\nslug = "lss"\n'
+            '[register_variant."5.50"]\nslug = "_default"\n',
+        )
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db(
+            register=("LSS", None, 5, 2),
+            variant=("LSS", None, 50),
+            version=None,
+            variable=None,
+            classification=None,
+        )
+        counts = populate_slugs(conn, d, strict=True)
+        assert counts["register_variant"] == 1
+        slug = conn.execute(
+            "SELECT slug FROM register_variant WHERE regvar_id = 50"
+        ).fetchone()[0]
+        assert slug == "_default"
+
+        # 2) Re-seed from the now-populated DB. The curated `_default` must
+        # appear in the regenerated TOML (regression guard for the trapdoor
+        # that silently dropped it before).
+        body = seed_provider_toml(conn, "sos")
+        assert 'slug = "_default"' in body
+        assert '[register_variant."5.50"]' in body
+
+
 class TestRepoSlugDir:
     """`repo_slug_dir()` returns the live directory in a repo checkout."""
 
