@@ -253,7 +253,7 @@ slug = "bast"
 slug = "hku"
 
 [register."167"]
-slug = "konkurser-och-offentliga"
+slug = "konkurser"
 
 [register."168"]
 slug = "fek"
@@ -295,7 +295,7 @@ slug = "svenska-utlandsskolor"
 slug = "grundskola-elever"
 
 [register."194"]
-slug = "kostnader"
+slug = "skolverksamhet-kostnader"
 
 [register."195"]
 slug = "ksju"
@@ -382,7 +382,7 @@ slug = "vaxtskyddsmedel"
 slug = "ulf"
 
 [register."239"]
-slug = "allmanna-val-nominerade-och"
+slug = "allmanna-val-nominerade"
 
 [register."240"]
 slug = "ep-val-resultat"
@@ -448,7 +448,7 @@ slug = "bki"
 slug = "sru"
 
 [register."269"]
-slug = "bonus-och-andra-oregelbundna"
+slug = "bonus-oregelbundna"
 
 [register."270"]
 slug = "fortroendevalda"
@@ -457,7 +457,7 @@ slug = "fortroendevalda"
 slug = "namnstatistik"
 
 [register."272"]
-slug = "omforhandling-och-byten"
+slug = "elavtal-byten"
 
 [register."273"]
 slug = "stativ"
@@ -469,10 +469,10 @@ slug = "fastighetsreg"
 slug = "bostadsbestand"
 
 [register."283"]
-slug = "elpriser-och-elavtal"
+slug = "elpriser-elavtal"
 
 [register."284"]
-slug = "natpriser-pa-naturgas-och"
+slug = "natpriser-naturgas"
 
 [register."285"]
 slug = "nationalrakenskaper"
@@ -490,10 +490,10 @@ slug = "kvartalsutfall"
 slug = "finansiella-foretag"
 
 [register."293"]
-slug = "statliga-anslag-till"
+slug = "statliga-anslag-fou"
 
 [register."294"]
-slug = "statistik"
+slug = "avrinningsomraden"
 
 [register."295"]
 slug = "miljorakenskaper"
@@ -505,7 +505,7 @@ slug = "prisindex"
 slug = "finansrakenskaper"
 
 [register."300"]
-slug = "leveranser"
+slug = "fordonsgas"
 
 [register."301"]
 slug = "aes"
@@ -532,7 +532,7 @@ slug = "halsorakenskaper"
 slug = "tjansteforetagen"
 
 [register."315"]
-slug = "deltagare"
+slug = "sfi-deltagare"
 
 [register."317"]
 slug = "tiden-mellan-gymnasieskolan"
@@ -619,7 +619,7 @@ slug = "grundskola-prov-ak5"
 slug = "but"
 
 [register."358"]
-slug = "produktion"
+slug = "tradbransle-produktion"
 
 [register."359"]
 slug = "natanslutna"
@@ -631,7 +631,7 @@ slug = "korstrackor"
 slug = "nystartade-foretag-kvartal"
 
 [register."366"]
-slug = "analyser-och-statistik-om"
+slug = "utbildningsanalyser"
 
 [register."367"]
 slug = "tidsanvandning"
@@ -691,7 +691,7 @@ slug = "agi"
 slug = "transportsektorns"
 
 [register."395"]
-slug = "kapitalvinster-och"
+slug = "kapitalvinster"
 
 [register."396"]
 slug = "registerdata"
@@ -703,7 +703,7 @@ slug = "studieforbundsstatistik"
 slug = "statund"
 
 [register."404"]
-slug = "befolkningens"
+slug = "arbetsmarknadsstatus"
 
 [register."405"]
 slug = "barn-ulf"
@@ -978,15 +978,15 @@ slug = "foretagens"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Arbetsställen"
 
 [register_variant."26.618"]
-slug = "foretagens-och-arbetsstallenas-dynamik-fad-foretag"
+slug = "fad-foretag"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Företag"
 
 [register_variant."26.657"]
-slug = "foretagens-och-arbetsstallenas-dynamik-fad-nedlagda-arbetsstallen"
+slug = "fad-nedlagda-arbetsstallen"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda arbetsställen"
 
 [register_variant."26.658"]
-slug = "foretagens-och-arbetsstallenas-dynamik-fad-nedlagda-foretag"
+slug = "fad-nedlagda-foretag"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda företag"
 
 [register_variant."26.1615"]
@@ -1014,11 +1014,11 @@ slug = "lindaurval-inkl"
 display_group = "Lindaurval inkl. familjemedlemmar - lön"
 
 [register_variant."29.1613"]
-slug = "panelurval-av-befolkningen-inklusive-taxeringshushall"
+slug = "panelurval-taxering"
 display_group = "Panelurval av befolkningen inklusive taxeringshushåll"
 
 [register_variant."29.1618"]
-slug = "tillaggsurval-av-utrikesfodda-inkl-taxeringshushall"
+slug = "tillaggsurval-utrikes"
 display_group = "Tilläggsurval av utrikesfödda inkl. taxeringshushåll"
 
 [register_variant."32.80"]
@@ -1094,15 +1094,15 @@ slug = "doktorander-inom"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, aktivitet"
 
 [register_variant."47.11"]
-slug = "doktorander-inom-hogskoleutbildning-pa-forskarniva-forsorjning"
+slug = "doktorander-forsorjning"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, försörjning"
 
 [register_variant."47.15"]
-slug = "doktorander-inom-hogskoleutbildning-pa-forskarniva-examina"
+slug = "doktorander-examina"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, examina"
 
 [register_variant."47.17"]
-slug = "studerande-vid-universitet-och-hogskolor-grundlaggande-utbildning-avklarade-poang"
+slug = "grundutbildning-poang"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng"
 
 [register_variant."47.104"]
@@ -1110,23 +1110,23 @@ slug = "personal-vid-universitet"
 display_group = "Personal vid universitet och högskolor 2001–"
 
 [register_variant."47.264"]
-slug = "studerande-vid-universitet-och-hogskolor-grundlaggande-utbildning-registrerade-enligt-1993-ars-studieordning"
+slug = "grundutbildning-1993"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning"
 
 [register_variant."47.960"]
-slug = "personal-vid-universitet-och-hogskola-september-1995-2000"
+slug = "personal-1995-2000"
 display_group = "Personal vid universitet och högskola, september 1995-2000"
 
 [register_variant."47.1389"]
-slug = "doktorander-inom-hogskoleutbildning-pa-forskarniva-mobilitet"
+slug = "doktorander-mobilitet"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, mobilitet"
 
 [register_variant."47.1390"]
-slug = "doktorander-inom-hogskoleutbildning-pa-forskarniva-forskarskolor-larare"
+slug = "doktorander-forskarskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, forskarskolor lärare"
 
 [register_variant."47.1391"]
-slug = "doktorander-inom-hogskoleutbildning-pa-forskarniva-anknytande-hogskolor"
+slug = "doktorander-anknytande"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, anknytande högskolor"
 
 [register_variant."47.1466"]
@@ -1138,15 +1138,15 @@ slug = "forskarutbildning-beslut"
 display_group = "Forskarutbildning, beslut om tillgodoräknande"
 
 [register_variant."47.1623"]
-slug = "sokande-och-antagna-till-hogskoleutbildning-pa-grundniva-och-avancerad-niva-sommarkurser"
+slug = "sokande-sommarkurser"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
 
 [register_variant."47.1624"]
-slug = "sokande-och-antagna-till-hogskoleutbildning-pa-grundniva-och-avancerad-niva-sokande-snabbstatistik"
+slug = "sokande-snabbstatistik"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik"
 
 [register_variant."47.1625"]
-slug = "sokande-och-antagna-till-hogskoleutbildning-pa-grundniva-och-avancerad-niva-sokande-internationella-omgangar"
+slug = "sokande-internationella"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
 
 [register_variant."50.171"]
@@ -1370,7 +1370,7 @@ slug = "intradet"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
 [register_variant."111.400"]
-slug = "intradet-pa-arbetsmarknaden-bland-hogskoleexaminerade"
+slug = "intrade-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland högskoleexaminerade"
 
 [register_variant."111.1091"]
@@ -1378,7 +1378,7 @@ slug = "hogskolestuderande"
 display_group = "Högskolestuderande"
 
 [register_variant."111.1301"]
-slug = "intradet-pa-arbetsmarknaden-bland-gymnasieavgangna-och-hogskoleexaminerade"
+slug = "intrade-gymnas-hogskola"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
 
 [register_variant."111.1677"]
@@ -1398,7 +1398,7 @@ slug = "kommunalskatter-landsting"
 display_group = "Kommunalskatter-Landsting"
 
 [register_variant."115.1227"]
-slug = "kommunalskatter-primarkommun-och-region-landsting"
+slug = "primarkommun-region"
 display_group = "Kommunalskatter - primärkommun och region/landsting"
 
 [register_variant."116.131"]
@@ -1642,7 +1642,7 @@ slug = "outhyrda"
 display_group = "Outhyrda bostadslägenheter i allmännyttiga bostadsföretag"
 
 [register_variant."143.210"]
-slug = "outhyrda-bostadslagenheter-i-privatagda-bostadsforetag"
+slug = "outhyrda-bostader"
 display_group = "Outhyrda bostadslägenheter i privatägda bostadsföretag"
 
 [register_variant."145.212"]
@@ -1654,7 +1654,7 @@ slug = "godselmedelsanvandning"
 display_group = "Gödselmedelsanvändning i jordbruket 2007-2013"
 
 [register_variant."147.1339"]
-slug = "godselmedelsanvandning-i-jordbruket-fr-o-m-2016"
+slug = "godselmedel-2016"
 display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016 "
 
 [register_variant."149.216"]
@@ -1846,7 +1846,7 @@ slug = "volymutveckling"
 display_group = "Volymutveckling i fasta priser"
 
 [register_variant."188.393"]
-slug = "varu-och-landfordelad-i-lopande-priser-extrastat"
+slug = "landfordelad-extrastat"
 display_group = "Varu- och landfördelad i löpande priser, Extrastat"
 
 [register_variant."189.265"]
@@ -2178,11 +2178,11 @@ slug = "elever"
 display_group = "Elever i kommunal vuxenutbildning"
 
 [register_variant."249.1215"]
-slug = "kursdeltagare-med-slutbetyg-eller-gymnasieexamen"
+slug = "kursdeltagare-slutbetyg"
 display_group = "Kursdeltagare med slutbetyg eller gymnasieexamen"
 
 [register_variant."249.1222"]
-slug = "elever-med-slutbetyg-eller-gymnasieexamen"
+slug = "elever-slutbetyg"
 display_group = "Elever med slutbetyg eller gymnasieexamen"
 
 [register_variant."249.1405"]
@@ -2522,7 +2522,7 @@ slug = "framskrivning-av-antal-doda-och-dodstal"
 display_group = "Framskrivning av antal döda och dödstal"
 
 [register_variant."310.889"]
-slug = "framskrivning-av-antal-invandrare-immigranter"
+slug = "framskrivning-invandrare"
 display_group = "Framskrivning av antal invandrare/immigranter"
 
 [register_variant."310.891"]
@@ -2650,7 +2650,7 @@ slug = "folkbokforda-personer"
 display_group = "Folkbokförda personer med kopplingar till biologiska föräldrar"
 
 [register_variant."349.1178"]
-slug = "folkbokforda-personer-med-kopplingar-till-adoptivforaldrar"
+slug = "folkbokforda-adoptiv"
 display_group = "Folkbokförda personer med kopplingar till adoptivföräldrar"
 
 [register_variant."349.1179"]
@@ -2774,7 +2774,7 @@ slug = "distansundervisning"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
 [register_variant."366.1649"]
-slug = "distansundervisning-under-pandemin-gymnasieskolan"
+slug = "distansutbildning-gymnas"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
 [register_variant."367.1321"]
@@ -2882,7 +2882,7 @@ slug = "fs-slutdata-foretagsenhet-ovr"
 display_group = "FS Slutdata (företagsenhet_Ovr)"
 
 [register_variant."375.1373"]
-slug = "fs-slutdata-foretagsenhet-resultatrakning"
+slug = "fs-slutdata-resultatrakning"
 display_group = "FS Slutdata (företagsenhet resultaträkning)"
 
 [register_variant."375.1374"]
@@ -2954,7 +2954,7 @@ slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning fr.o.m 2015"
 
 [register_variant."382.1564"]
-slug = "omsattning-inom-tjanstesektorn-fr-o-m-2015"
+slug = "omsattning-tjanste-2015"
 display_group = "Omsättning inom tjänstesektorn fr.o.m. 2015"
 
 [register_variant."383.1442"]
@@ -3070,7 +3070,7 @@ slug = "innovation"
 display_group = "Innovation i offentlig sektor - Arbetsställeenheter"
 
 [register_variant."407.1706"]
-slug = "innovation-i-offentlig-sektor-jurdiska-enheter"
+slug = "innovation-juridiska"
 display_group = "Innovation i offentlig sektor - Jurdiska enheter"
 
 [register_variant."408.1714"]
