@@ -606,8 +606,10 @@ that the FQID grammar (§5.2) uses to address the entity — never broader.
 Concretely: `register` slugs are unique within a provider; `register_variant`
 and `variable` slugs are unique within their parent register (the
 `<register>` slot in the FQID already disambiguates them); `classification`
-slugs are unique within `classifications.toml`. Two registers may therefore
-both have an `individer` variant or a `kon` variable without colliding.
+entries are unique by `(slug, version)` pair within `classifications.toml`,
+so the same slug stem may appear across versions (e.g. `sun` with
+`version = "2000"` and `version = "2020"`). Two registers may both have an
+`individer` variant or a `kon` variable without colliding.
 
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
