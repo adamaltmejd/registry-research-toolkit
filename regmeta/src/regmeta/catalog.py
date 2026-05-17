@@ -190,13 +190,9 @@ class Catalog:
         raise _not_found(fqid)
 
     def _synthesize_default_variant(self, fqid: Fqid) -> ResolvedRegisterVariant | None:
-        """§5.1: variant-less registers expose a transparent `_default` slot.
-
-        The placeholder isn't persisted; resolve it on the fly by looking up
-        the register and confirming it has zero `register_variant` rows.
-        Returns None if the register doesn't exist or has real variants
-        (caller falls through to not-found).
-        """
+        """§5.1: variant-less registers expose a transparent `_default` slot
+        resolved on the fly. Returns None when the register has real variants
+        or doesn't exist — caller falls through to not-found."""
         row = self._conn.execute(
             "SELECT r.register_id FROM register r "
             "JOIN provider p ON r.provider_id = p.provider_id "

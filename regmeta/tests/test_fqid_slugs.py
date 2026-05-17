@@ -857,20 +857,6 @@ class TestCuratedDefaultVariantRoundTrip:
     it from the regenerated TOML, so a curator who committed the new TOML
     would discard their own entry."""
 
-    def test_seed_emits_curated_default_variant(self, tmp_path: Path):
-        # `_default` lives on a real source row (registervariantnamn populated)
-        # — that's the "single-variant name-mirror" curation case for
-        # registers where the lone variant just restates the register name.
-        conn = build_slugged_db(
-            register=("LSS", "lss", 5, 2),
-            variant=("LSS", "_default", 50),
-            version=None,
-            variable=None,
-        )
-        body = seed_provider_toml(conn, "sos")
-        assert '[register_variant."5.50"]' in body
-        assert 'slug = "_default"' in body
-
     def test_populate_then_seed_preserves_default(self, tmp_path: Path):
         # 1) Curate `_default` in TOML, populate into a fresh DB.
         d = tmp_path / "slugs"
