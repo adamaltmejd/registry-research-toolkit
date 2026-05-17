@@ -151,6 +151,48 @@ class TestProviderToml:
             load_provider_toml(path)
         assert exc.value.code == "slug_toml_invalid"
 
+    def test_variant_slug_repeats_across_registers(self, tmp_path: Path):
+        # Variant slugs are scoped per parent register (FQID grammar
+        # `<provider>/<register>/<variant>` already disambiguates them).
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.151"]\nslug = "individer"\n'
+            '[register_variant."26.157"]\nslug = "individer"\n',
+        )
+        entries = load_provider_toml(path)
+        assert {e.source_id for e in entries} == {"34.151", "26.157"}
+
+    def test_variant_slug_collision_within_register_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[register_variant."34.151"]\nslug = "individer"\n'
+            '[register_variant."34.152"]\nslug = "individer"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "within register '34'" in exc.value.message
+
+    def test_variable_slug_repeats_across_registers(self, tmp_path: Path):
+        # Variable slugs are scoped per parent register for the same reason
+        # variant slugs are.
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "kon"\n[variable."26.4"]\nslug = "kon"\n',
+        )
+        entries = load_provider_toml(path)
+        assert {e.source_id for e in entries} == {"34.4", "26.4"}
+
+    def test_variable_slug_collision_within_register_rejected(self, tmp_path: Path):
+        path = _write(
+            tmp_path / "scb.toml",
+            '[variable."34.4"]\nslug = "kon"\n[variable."34.5"]\nslug = "kon"\n',
+        )
+        with pytest.raises(RegmetaError) as exc:
+            load_provider_toml(path)
+        assert exc.value.code == "slug_toml_invalid"
+        assert "within register '34'" in exc.value.message
+
     def test_replaced_by_chain_acyclic(self, tmp_path: Path):
         # Slug typo gets a `replaced_by` link to the new row; both rows stay
         # in the TOML and a one-hop chain resolves cleanly.

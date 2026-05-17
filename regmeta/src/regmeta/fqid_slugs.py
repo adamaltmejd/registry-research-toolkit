@@ -376,7 +376,12 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
             '(e.g. `[registers."..."]` -> `[register."..."]`).',
         )
     entries: list[SlugEntry] = []
-    seen_slugs: dict[tuple[str, str], str] = {}
+    # Slug uniqueness scope follows the FQID grammar (§5.2):
+    # - register: provider-wide (`<provider>/<register>`)
+    # - register_variant, variable: per parent register (the register slot in
+    #   `<provider>/<register>/<variant>...` already disambiguates them).
+    # Source IDs for variant/variable are dotted: "<reg_id>.<sub_id>".
+    seen_slugs: dict[tuple[str, ...], str] = {}
     for kind in ("register", "register_variant", "variable"):
         if kind not in data:
             continue
@@ -396,14 +401,21 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                 )
             entry = _validate_entry(kind, source_id, raw, provider=provider)
             if entry.slug is not None:
-                slug_key = (kind, entry.slug)
+                if kind in ("register_variant", "variable"):
+                    reg_id, _, _ = source_id.partition(".")
+                    slug_key: tuple[str, ...] = (kind, reg_id, entry.slug)
+                    scope_desc = f"within register {reg_id!r}"
+                else:
+                    slug_key = (kind, entry.slug)
+                    scope_desc = f"within provider {provider!r}"
                 prev = seen_slugs.get(slug_key)
                 if prev is not None:
                     raise _err(
                         "slug_toml_invalid",
                         f"{path.name}: slug {entry.slug!r} reused by "
-                        f"{kind}.{prev!r} and {kind}.{source_id!r}.",
-                        "Slugs must be unique per kind within a provider.",
+                        f"{kind}.{prev!r} and {kind}.{source_id!r} "
+                        f"({scope_desc}).",
+                        f"Slugs must be unique per kind {scope_desc}.",
                     )
                 seen_slugs[slug_key] = source_id
             entries.append(entry)
