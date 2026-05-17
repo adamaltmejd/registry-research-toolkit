@@ -2774,7 +2774,7 @@ slug = "distansundervisning"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
 [register_variant."366.1649"]
-slug = "distansutbildning-gymnas"
+slug = "distansundervisning-gymnas"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
 [register_variant."367.1321"]
