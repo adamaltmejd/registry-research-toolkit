@@ -138,6 +138,7 @@ vardemangdsversion = [
 
 [[classification]]
 short_name = "NIVA-OLD"
+version = "v1"
 name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
 name_en = "Education level — legacy 7-level aggregation"
 publisher = "SCB"
@@ -150,6 +151,7 @@ vardemangdsversion = [
 
 [[classification]]
 short_name = "NIVA-GROV"
+version = "v1"
 name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
 name_en = "Education level — coarse 5-level aggregation"
 publisher = "SCB"

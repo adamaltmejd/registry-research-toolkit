@@ -1,6 +1,281 @@
-# Curated FQID slugs for classifications (provider-independent — see
-# REFACTOR_SPEC §5.2 on the `class/<slug>/<version>` namespace).
+# Curated FQID slugs for classifications (provider-independent —
+# see REFACTOR_SPEC §5.2 on the `class/<slug>/<version>` namespace).
 #
-# Grow-only and immutable once published; see scb.toml for the bootstrap and
-# snapshot procedure. The short_name keys mirror regmeta/classifications.toml
-# (the legacy seed) so `populate_slugs` can join them.
+# Uniqueness is by (slug, version) pair (§5.3), so the same stem may
+# appear across years — e.g. `sun` with version 1996, 2000, 2020.
+
+[classification."AGARKAT2000"]
+slug = "agarkat"
+version = "2000"
+
+[classification."AGARKAT2020"]
+slug = "agarkat"
+version = "2020"
+
+[classification."ISCED-F2013"]
+slug = "isced-f"
+version = "2013"
+
+[classification."ISCED2011"]
+slug = "isced"
+version = "2011"
+
+[classification."JURFORM2000"]
+slug = "jurform"
+version = "2000"
+
+[classification."JURFORM2020"]
+slug = "jurform"
+version = "2020"
+
+[classification."LKF1980"]
+slug = "lkf"
+version = "1980"
+
+[classification."LKF1981"]
+slug = "lkf"
+version = "1981"
+
+[classification."LKF1982"]
+slug = "lkf"
+version = "1982"
+
+[classification."LKF1983"]
+slug = "lkf"
+version = "1983"
+
+[classification."LKF1984"]
+slug = "lkf"
+version = "1984"
+
+[classification."LKF1985"]
+slug = "lkf"
+version = "1985"
+
+[classification."LKF1986"]
+slug = "lkf"
+version = "1986"
+
+[classification."LKF1987"]
+slug = "lkf"
+version = "1987"
+
+[classification."LKF1988"]
+slug = "lkf"
+version = "1988"
+
+[classification."LKF1989"]
+slug = "lkf"
+version = "1989"
+
+[classification."LKF1990"]
+slug = "lkf"
+version = "1990"
+
+[classification."LKF1991"]
+slug = "lkf"
+version = "1991"
+
+[classification."LKF1992"]
+slug = "lkf"
+version = "1992"
+
+[classification."LKF1993"]
+slug = "lkf"
+version = "1993"
+
+[classification."LKF1994"]
+slug = "lkf"
+version = "1994"
+
+[classification."LKF1995"]
+slug = "lkf"
+version = "1995"
+
+[classification."LKF1996"]
+slug = "lkf"
+version = "1996"
+
+[classification."LKF1997"]
+slug = "lkf"
+version = "1997"
+
+[classification."LKF1998"]
+slug = "lkf"
+version = "1998"
+
+[classification."LKF1999"]
+slug = "lkf"
+version = "1999"
+
+[classification."LKF2000"]
+slug = "lkf"
+version = "2000"
+
+[classification."LKF2001"]
+slug = "lkf"
+version = "2001"
+
+[classification."LKF2002"]
+slug = "lkf"
+version = "2002"
+
+[classification."LKF2003"]
+slug = "lkf"
+version = "2003"
+
+[classification."LKF2004"]
+slug = "lkf"
+version = "2004"
+
+[classification."LKF2005"]
+slug = "lkf"
+version = "2005"
+
+[classification."LKF2006"]
+slug = "lkf"
+version = "2006"
+
+[classification."LKF2007"]
+slug = "lkf"
+version = "2007"
+
+[classification."LKF2008"]
+slug = "lkf"
+version = "2008"
+
+[classification."LKF2009"]
+slug = "lkf"
+version = "2009"
+
+[classification."LKF2010"]
+slug = "lkf"
+version = "2010"
+
+[classification."LKF2011"]
+slug = "lkf"
+version = "2011"
+
+[classification."LKF2012"]
+slug = "lkf"
+version = "2012"
+
+[classification."LKF2013"]
+slug = "lkf"
+version = "2013"
+
+[classification."LKF2014"]
+slug = "lkf"
+version = "2014"
+
+[classification."LKF2015"]
+slug = "lkf"
+version = "2015"
+
+[classification."LKF2016"]
+slug = "lkf"
+version = "2016"
+
+[classification."LKF2017"]
+slug = "lkf"
+version = "2017"
+
+[classification."LKF2018"]
+slug = "lkf"
+version = "2018"
+
+[classification."LKF2019"]
+slug = "lkf"
+version = "2019"
+
+[classification."LKF2020"]
+slug = "lkf"
+version = "2020"
+
+[classification."LKF2021"]
+slug = "lkf"
+version = "2021"
+
+[classification."LKF2022"]
+slug = "lkf"
+version = "2022"
+
+[classification."LKF2023"]
+slug = "lkf"
+version = "2023"
+
+[classification."LKF2024"]
+slug = "lkf"
+version = "2024"
+
+[classification."LKF2025"]
+slug = "lkf"
+version = "2025"
+
+[classification."LKF2026"]
+slug = "lkf"
+version = "2026"
+
+[classification."NIVA-GROV"]
+slug = "niva-grov"
+version = "v1"
+
+[classification."NIVA-OLD"]
+slug = "niva-old"
+version = "v1"
+
+[classification."SEKTOR2000"]
+slug = "sektor"
+version = "2000"
+
+[classification."SNI2002"]
+slug = "sni"
+version = "2002"
+
+[classification."SNI2007"]
+slug = "sni"
+version = "2007"
+
+[classification."SNI69"]
+slug = "sni"
+version = "1969"
+
+[classification."SNI92"]
+slug = "sni"
+version = "1992"
+
+[classification."SSYK2012"]
+slug = "ssyk"
+version = "2012"
+
+[classification."SSYK96"]
+slug = "ssyk"
+version = "1996"
+
+[classification."SUN1996"]
+slug = "sun"
+version = "1996"
+
+[classification."SUN2000-GRUPP"]
+slug = "sun-grupp"
+version = "2000"
+
+[classification."SUN2000-INRIKTNING"]
+slug = "sun-inriktning"
+version = "2000"
+
+[classification."SUN2000-NIVA"]
+slug = "sun-niva"
+version = "2000"
+
+[classification."SUN2020-GRUPP"]
+slug = "sun-grupp"
+version = "2020"
+
+[classification."SUN2020-INRIKTNING"]
+slug = "sun-inriktning"
+version = "2020"
+
+[classification."SUN2020-NIVA"]
+slug = "sun-niva"
+version = "2020"
