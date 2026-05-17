@@ -442,63 +442,31 @@ class TestBuildDb:
             ).fetchone()[0]
             == 0
         )
-        non_default_variants = db_conn.execute(
-            "SELECT COUNT(*) FROM register_variant "
-            "WHERE slug IS NOT NULL AND slug != '_default'"
+        slugged_variants = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant WHERE slug IS NOT NULL"
         ).fetchone()[0]
-        assert non_default_variants == 0
+        assert slugged_variants == 0
 
-    def test_default_variant_not_synthesized_when_unneeded(
+    def test_no_synthetic_default_variant_rows_persisted(
         self, db_conn: sqlite3.Connection
     ):
-        # SCB fixtures: every register already has a real variant, so the
-        # synth pass adds nothing.
+        # §5.1: the `_default` placeholder for variant-less registers is
+        # synthesized at FQID-resolve time (catalog.py), never persisted.
+        # Every register_variant row in the DB must be a real source row
+        # — i.e. registervariantnamn populated.
+        synthetic = db_conn.execute(
+            "SELECT COUNT(*) FROM register_variant WHERE registervariantnamn IS NULL"
+        ).fetchone()[0]
+        assert synthetic == 0
+
+    def test_default_variant_slug_only_when_curated(self, db_conn: sqlite3.Connection):
+        # With synthesis moved to resolve-time, `_default` in this column can
+        # only mean curator action. The current curation snapshot has none;
+        # update this expected count when the name-mirror sweep lands.
         count = db_conn.execute(
             "SELECT COUNT(*) FROM register_variant WHERE slug = '_default'"
         ).fetchone()[0]
         assert count == 0
-
-    def test_default_variant_synthesized_for_variant_less_register(
-        self, tmp_path: Path
-    ):
-        # REFACTOR_SPEC.md §5.1: a register with zero register_variant rows
-        # gets exactly one synthetic variant with slug='_default'.
-        import sqlite3 as _sqlite3
-
-        from regmeta.db import DDL, emit_default_variants, seed_providers
-
-        db = tmp_path / "synth.db"
-        conn = _sqlite3.connect(str(db))
-        conn.row_factory = _sqlite3.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # First register has a real variant; second is variant-less. Verifies
-        # the emitter touches only the variant-less one.
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 2, 'WithVariant')"
-        )
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (2, 2, 'NoVariant')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
-            "VALUES (10, 1, 'Real')"
-        )
-
-        assert emit_default_variants(conn) == 1
-
-        rows = conn.execute(
-            "SELECT register_id, slug FROM register_variant ORDER BY register_id, regvar_id"
-        ).fetchall()
-        assert [(r["register_id"], r["slug"]) for r in rows] == [
-            (1, None),
-            (2, "_default"),
-        ]
-        # Idempotent on re-run.
-        assert emit_default_variants(conn) == 0
-        conn.close()
 
     def test_seed_providers_idempotent(self, tmp_path: Path):
         # `seed_providers` is a public helper used by both `build_db` and

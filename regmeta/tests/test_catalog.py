@@ -63,8 +63,10 @@ class TestResolveVariant:
         assert r.regvar_id == 10
         assert r.fqid.variant == "individer-15plus"
 
-    def test_default_variant_resolves(self) -> None:
-        # `_default` is the synthesized slug for variant-less registers (§5.1).
+    def test_default_variant_resolves_when_curated(self) -> None:
+        # A curated `_default` (real row, slug pinned to `_default` by the
+        # maintainer) resolves like any other variant: regvar_id is the
+        # source row's PK.
         conn = build_slugged_db(
             register=("LSS", "lss", 5, 2),
             variant=("LSS default", "_default", 50),
@@ -74,6 +76,42 @@ class TestResolveVariant:
         r = Catalog(conn).resolve("sos/lss/_default")
         assert isinstance(r, ResolvedRegisterVariant)
         assert r.fqid.variant == "_default"
+        assert r.regvar_id == 50
+        assert r.registervariantnamn == "LSS default"
+
+    def test_default_variant_synthesized_for_variant_less_register(self) -> None:
+        # §5.1: a register with zero register_variant rows still resolves
+        # `<provider>/<register>/_default`. The placeholder is virtual —
+        # regvar_id is None and the variantnamn columns are NULL.
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=None,
+            version=None,
+            variable=None,
+        )
+        r = Catalog(conn).resolve("sos/lss/_default")
+        assert isinstance(r, ResolvedRegisterVariant)
+        assert r.fqid.variant == "_default"
+        assert r.regvar_id is None
+        assert r.register_id == 5
+        assert r.registervariantnamn is None
+
+    def test_default_variant_not_synthesized_when_real_variants_exist(self) -> None:
+        # LISA has a real variant (`individer-15plus`), so `_default` against
+        # it must NOT silently resolve — the variant slot is only transparent
+        # when the register is genuinely variant-less.
+        conn = build_slugged_db()  # default LISA + individer-15plus
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/_default")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_default_variant_synthesis_requires_known_register(self) -> None:
+        # Synthesis must not fabricate a variant for a register that doesn't
+        # exist — `_default` is only transparent inside a real register.
+        conn = build_slugged_db()
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("scb/nope/_default")
+        assert exc.value.code == "fqid_not_found"
 
 
 class TestResolveVersion:

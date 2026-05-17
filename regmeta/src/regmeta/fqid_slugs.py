@@ -22,7 +22,6 @@ from typing import Any, Literal
 
 from .errors import EXIT_CONFIG, RegmetaError
 from .fqid import (
-    DEFAULT_VARIANT_SLUG,
     FqidError,
     FqidKind,
     derive_variable_slug,
@@ -813,9 +812,6 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         (provider_slug,),
     ).fetchall()
     for register_id, regvar_id, name, existing_slug in variants:
-        # Synthetic `_default` variants are emitted by the build, not curated.
-        if existing_slug == DEFAULT_VARIANT_SLUG:
-            continue
         candidate = existing_slug or (derive_variable_slug(name) if name else None)
         candidate = candidate or "TODO"
         lines.append(f"[register_variant.{_toml_str(f'{register_id}.{regvar_id}')}]")
@@ -957,11 +953,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         live_vars_by_provider[provider_slug] = {
             (rid, vid) for (rid, vid, _, _) in var_rows
         }
-        for register_id, regvar_id, name, slug in var_rows:
-            # Synthetic `_default` variants never appear in TOML, so they're
-            # not "missing" — skip them from the missing-slug list.
-            if slug == DEFAULT_VARIANT_SLUG:
-                continue
+        for register_id, regvar_id, name, _slug in var_rows:
             key = f"{register_id}.{regvar_id}"
             if key not in slugged_variants:
                 missing_variants.append((provider_slug, key, name or ""))
