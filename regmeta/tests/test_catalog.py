@@ -238,6 +238,80 @@ class TestResolveBindingLineage:
         assert str(r.lineage) == "scb/rtb/personer/HT2020/kon"
 
 
+class TestResolveElidedFqid:
+    """§5.2: elided variant slot expands to `_default`. Today only the curated
+    `_default` row (PR α single-variant sweep) reaches a version/binding —
+    `_synthesize_default_variant` (§5.1, PR #89) fires inside `_resolve_variant`
+    only, and `register_version.regvar_id` is NOT NULL so variant-less
+    registers can't carry versions yet. When SOS-style version ingestion
+    extends `_resolve_version` to synthesize too, add a passing test alongside
+    `test_elided_version_misses_against_variant_less_register`."""
+
+    def test_elided_version_resolves_curated_default_variant(self) -> None:
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=("LSS default", "_default", 50),
+            version=("LSS 2022", 200),
+            variable=None,
+        )
+        r = Catalog(conn).resolve("sos/lss/2022")
+        assert isinstance(r, ResolvedRegisterVersion)
+        assert r.regver_id == 200
+        assert r.fqid.variant == "_default"
+        assert r.fqid.period == "2022"
+        assert str(r.fqid) == "sos/lss/_default/2022"
+
+    def test_elided_binding_resolves_curated_default_variant(self) -> None:
+        # The PR α sweep target: single-variant register where the maintainer
+        # pinned `slug = "_default"`. Researchers can write
+        # `scb/<register>/<period>/<variable>` without the variant slot.
+        conn = build_slugged_db(
+            variant=("Individer", "_default", 10),  # rest of fixture defaults
+        )
+        r = Catalog(conn).resolve("scb/lisa/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.fqid.variant == "_default"
+        assert r.fqid.period == "2018"
+        assert r.fqid.variable == "kon"
+        assert str(r.fqid) == "scb/lisa/_default/2018/kon"
+
+    def test_elided_version_misses_when_register_has_no_default(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # LISA has a real variant slugged `individer-15plus`, not `_default`.
+        # The elided form `scb/lisa/2018` expands to `_default/2018` and
+        # must miss — synthesis is only for variant-less registers.
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(slugged_conn).resolve("scb/lisa/2018")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_elided_binding_misses_when_register_has_no_default(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Symmetric to the version miss: the elided binding form
+        # `scb/lisa/2018/kon` expands to `_default/2018/kon`, but LISA has
+        # only `individer-15plus`, so the binding resolver finds no rows.
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(slugged_conn).resolve("scb/lisa/2018/kon")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_elided_version_misses_against_variant_less_register(self) -> None:
+        # Variant-less LSS (no register_variant row) — synthesis covers the
+        # bare `sos/lss/_default` variant FQID, but versions can't exist
+        # without a variant row (regvar_id is NOT NULL), so the elided form
+        # `sos/lss/2022` must miss today. When version-level synthesis lands
+        # (`_resolve_version` TODO), replace this with a passing assertion.
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=None,
+            version=None,
+            variable=None,
+        )
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("sos/lss/2022")
+        assert exc.value.code == "fqid_not_found"
+
+
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve("class/sun/2020")
