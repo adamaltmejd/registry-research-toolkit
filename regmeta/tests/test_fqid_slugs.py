@@ -1727,6 +1727,58 @@ class TestPrecheckCliGrowOnly:
             snapshot_before
         )
 
+    def test_rename_accepted_under_update_when_unfrozen(self, tmp_path: Path):
+        """§5.4 pre-v1 escape hatch: an ``UNFROZEN`` sentinel in the slug dir
+        flips `--update-snapshot` from refuse-and-fail to write-through. The
+        rename is still reported in the envelope so drift stays visible.
+        """
+        from regmeta.cli import run
+        from regmeta.fqid_slugs import UNFROZEN_MARKER
+
+        db_dir, slug_dir = self._seed_layout(tmp_path)
+        snapshot_before = (
+            '{"classification":{"SUN2020|2020":"sun"},'
+            '"register":{"scb/1":"lisa"},'
+            '"register_variant":{"scb/1.10":"individer-15plus"},'
+            '"variable":{}}'
+        )
+        (slug_dir / SNAPSHOT_FILENAME).write_text(snapshot_before, encoding="utf-8")
+        (slug_dir / UNFROZEN_MARKER).write_text("pre-v1\n", encoding="utf-8")
+
+        import sqlite3 as _sql
+
+        conn = _sql.connect(db_dir / "regmeta.db")
+        conn.execute(
+            "UPDATE register SET slug = 'lisa-individuals' WHERE register_id = 1"
+        )
+        conn.commit()
+        conn.close()
+        _write(
+            slug_dir / "scb.toml",
+            '[register."1"]\nslug = "lisa-individuals"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            slug_dir / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+
+        exit_code = run(
+            [
+                "--db",
+                str(db_dir),
+                "maintain",
+                "precheck-slugs",
+                "--slug-dir",
+                str(slug_dir),
+                "--update-snapshot",
+            ]
+        )
+        assert exit_code == 0
+        contents = (slug_dir / SNAPSHOT_FILENAME).read_text(encoding="utf-8")
+        assert "lisa-individuals" in contents
+        assert '"lisa"' not in contents
+
     def test_pure_addition_accepted_under_update(self, tmp_path: Path):
         """The legitimate use case still works — adding a new slug refreshes
         the snapshot."""

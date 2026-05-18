@@ -18,6 +18,7 @@ import pytest
 from regmeta.fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
+    is_unfrozen,
     load_slug_dir,
     read_snapshot,
     repo_slug_dir,
@@ -40,7 +41,16 @@ def test_committed_slugs_parse(slug_dir):
 
 def test_no_removed_or_renamed_slugs(slug_dir):
     """§5.4: committed slugs are grow-only. Removals or slug renames here
-    rot every project_data.json that pinned the old FQID."""
+    rot every project_data.json that pinned the old FQID.
+
+    Skipped while the pre-v1 ``UNFROZEN`` sentinel exists in ``slug_dir``.
+    Delete the sentinel at v1 release to re-arm this guard.
+    """
+    if is_unfrozen(slug_dir):
+        pytest.skip(
+            f"{slug_dir}/UNFROZEN present — pre-v1 curation iteration; "
+            "rename guard re-arms when the sentinel is removed at v1."
+        )
     previous = read_snapshot(slug_dir / SNAPSHOT_FILENAME)
     current = snapshot_payload(load_slug_dir(slug_dir))
     diff = diff_snapshot(previous, current)

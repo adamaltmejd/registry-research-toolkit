@@ -1184,6 +1184,7 @@ def _cmd_maintain_precheck_slugs(
     from .fqid_slugs import (
         SNAPSHOT_FILENAME,
         diff_snapshot,
+        is_unfrozen,
         precheck_slugs,
         read_snapshot,
         snapshot_payload,
@@ -1193,6 +1194,7 @@ def _cmd_maintain_precheck_slugs(
     start = time.perf_counter()
     slug_dir = _resolve_slug_dir(args.slug_dir)
     snapshot_path = slug_dir / SNAPSHOT_FILENAME
+    unfrozen = is_unfrozen(slug_dir)
     db = db_path_from_args(args.db)
     conn = open_db(db, check_schema=False)
     try:
@@ -1200,7 +1202,7 @@ def _cmd_maintain_precheck_slugs(
     finally:
         conn.close()
 
-    snapshot_status: dict[str, Any] = {"path": str(snapshot_path)}
+    snapshot_status: dict[str, Any] = {"path": str(snapshot_path), "unfrozen": unfrozen}
     exit_code = EXIT_CONFIG if not result.ok else 0
     current = snapshot_payload(list(result.entries))
     if args.update_snapshot:
@@ -1214,13 +1216,14 @@ def _cmd_maintain_precheck_slugs(
         else:
             # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
             # a removal or a slug rename — that's how committed FQIDs rot in
-            # researcher project_data.json files. Refusing here is the only
-            # gate; test_slug_snapshot catches the same thing in CI but the
-            # CLI must match so a maintainer's local pre-commit run agrees
-            # with what main will accept.
+            # researcher project_data.json files. The `UNFROZEN` sentinel in
+            # the slug dir lifts the refusal pre-v1 so curators can iterate
+            # freely; diffs are still reported so drift stays visible. At v1
+            # release the sentinel is deleted and refusal becomes active.
             previous = read_snapshot(snapshot_path)
             diff = diff_snapshot(previous, current)
-            if diff["removed"] or diff["renamed"]:
+            non_additive = bool(diff["removed"] or diff["renamed"])
+            if non_additive and not unfrozen:
                 snapshot_status["updated"] = False
                 snapshot_status["update_skipped_reason"] = "non_additive_change"
                 snapshot_status["removed"] = diff["removed"]
@@ -1230,6 +1233,11 @@ def _cmd_maintain_precheck_slugs(
                 write_snapshot(snapshot_path, current)
                 snapshot_status["updated"] = True
                 snapshot_status["added"] = diff["added"]
+                if non_additive:
+                    # Pre-v1 write-through: surface what drifted so reviewers
+                    # see the rename/removal explicitly in the envelope.
+                    snapshot_status["removed"] = diff["removed"]
+                    snapshot_status["renamed"] = diff["renamed"]
     else:
         previous = read_snapshot(snapshot_path)
         diff = diff_snapshot(previous, current)
@@ -1238,7 +1246,9 @@ def _cmd_maintain_precheck_slugs(
         snapshot_status["renamed"] = diff["renamed"]
         # `added` is non-fatal in spirit but must fail CI so a maintainer
         # doesn't merge new slugs without refreshing .snapshot.json; mirrors
-        # test_slug_snapshot.test_snapshot_covers_committed_additions.
+        # test_slug_snapshot.test_snapshot_covers_committed_additions. The
+        # pre-v1 `UNFROZEN` sentinel doesn't relax this — drift must still
+        # round-trip through `--update-snapshot` to commit cleanly.
         if diff["removed"] or diff["renamed"] or diff["added"]:
             exit_code = EXIT_CONFIG
 

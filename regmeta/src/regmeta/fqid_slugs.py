@@ -495,6 +495,25 @@ def load_classifications_toml(path: Path) -> list[SlugEntry]:
     return entries
 
 
+UNFROZEN_MARKER = "UNFROZEN"
+
+
+def is_unfrozen(slug_dir: Path) -> bool:
+    """§5.4 pre-v1 escape hatch: returns True iff ``UNFROZEN`` sentinel file
+    exists in ``slug_dir``.
+
+    While the file is present, ``precheck-slugs --update-snapshot`` writes
+    rename/removal diffs through to ``.snapshot.json`` instead of refusing,
+    and the snapshot-immutability CI test skips its rename guard. Removing
+    the file at v1 release restores the grow-only guarantee.
+
+    Renames are still *reported* in CLI output and JSON envelopes so a
+    pre-v1 maintainer sees what's drifting; the sentinel only lifts the
+    refusal, not the visibility.
+    """
+    return (slug_dir / UNFROZEN_MARKER).is_file()
+
+
 def load_slug_dir(slug_dir: Path) -> list[SlugEntry]:
     """Load every TOML under ``slug_dir`` into a flat ``SlugEntry`` list."""
     if not slug_dir.is_dir():
@@ -1387,7 +1406,9 @@ __all__ = (
     "PrecheckResult",
     "SNAPSHOT_FILENAME",
     "SlugEntry",
+    "UNFROZEN_MARKER",
     "diff_snapshot",
+    "is_unfrozen",
     "load_classifications_toml",
     "load_provider_toml",
     "load_slug_dir",

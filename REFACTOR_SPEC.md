@@ -785,19 +785,27 @@ release of the refactored system (the first `regmeta` version that
 emits FQIDs into a `project_data.json` consumers can commit).
 Until that release no external artifact references these slugs, so
 the *rule* does not yet protect anything; maintainers may rename,
-remove, or restructure entries as the hand-review progresses. The
-*tooling*, however, ships fully wired: `reg-meta-build
-precheck-slugs --update-snapshot` and the CI snapshot test reject
-non-additive changes today, by design — the goal during 1c/1d is
-to exercise the mechanism under realistic load. During the pre-v1
-curation window a maintainer making a non-additive change works
-around the gate by regenerating `.snapshot.json` from the curated
-TOMLs (either by hand or via a future `--allow-rename` flag, to be
-added only if iteration friction warrants it). When v1 is cut, the
-snapshot at that commit becomes the immutable baseline and the
-gate transitions from "exercise mechanism" to "protect external
-artifacts" — at that point the workaround above is no longer
-available.
+remove, or restructure entries as the hand-review progresses.
+
+**Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While the file
+`regmeta/fqid_slugs/UNFROZEN` exists in the slug directory, the
+grow-only refusal is lifted in both directions:
+
+- `regmeta maintain precheck-slugs --update-snapshot` writes
+  rename and removal diffs through to `.snapshot.json` instead of
+  refusing. Diffs are still reported in the JSON envelope so a
+  reviewer sees what drifted.
+- The `test_no_removed_or_renamed_slugs` CI test skips its rename
+  guard (the parse and addition-coverage tests stay active).
+
+The sentinel is intentional friction-removal: pre-v1 the right
+move is to encourage curators to fix typos, normalize conventions,
+and reshape sibling groups before any external artifact pins these
+FQIDs. Per-rename ceremony in that window discourages exactly the
+hygiene we want. At v1 release the sentinel is **deleted in the
+same commit that cuts the release tag** — the snapshot at that
+commit becomes the immutable baseline and the grow-only gate
+re-arms across CLI, tests, and CI.
 
 The same rule applies to every slug-bearing entity: register,
 register_variant, variable, classification. Implication: every
