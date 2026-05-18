@@ -459,6 +459,83 @@ class TestBuildDb:
         ).fetchone()
         assert row["via_source_id"] == 1001  # tilläggsfil, NOT 1000 (huvudfil)
 
+    def test_linker_no_match_when_consumer_slug_differs_from_source_siblings(
+        self, tmp_path: Path
+    ):
+        """Strict-slug rule: if a consumer's slug doesn't exactly match any
+        source sibling's slug, no edge forms. Caller must curate matching
+        slugs on both sides — the linker does not fall back to a fuzzier
+        key. Real example: IoT 2020+ has `preliminar-version-2020` +
+        `slutlig-version-2020` curated siblings; a consumer with bare slug
+        "2020" doesn't disambiguate which it pulls from, so the lineage
+        stays NULL until curation chooses a canonical sibling.
+        """
+        import sqlite3 as _sql
+
+        from regmeta.db import DDL, link_consumer_side_bindings, seed_providers
+
+        conn = _sql.connect(":memory:")
+        conn.row_factory = _sql.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 1, 'iot')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (100, 10, 'preliminar-version-2020', 'IoT preliminär version 2020'),"
+            "       (101, 10, 'slutlig-version-2020', 'IoT slutlig version 2020')"
+        )
+        conn.execute("INSERT INTO variable (register_id, var_id) VALUES (1, 44)")
+        conn.executemany(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
+            [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
+            [(1000, "SocBidrHB"), (1001, "SocBidrHB")],
+        )
+        # Consumer LISA 2020 has bare slug "2020" — no IoT sibling has that
+        # exact slug, so the linker correctly produces no edge.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 1, 'lisa')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id) VALUES (20, 2)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (200, 20, '2020', 'LISA 2020')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, source_register_id) "
+            "VALUES (2, 44, 1)"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "VALUES (2000, 2, 20, 200, 44)"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (2000, 'SocBidrHB')"
+        )
+        conn.commit()
+
+        n = link_consumer_side_bindings(conn)
+        assert n == 0
+        row = conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
+        ).fetchone()
+        assert row["via_source_id"] is None
+
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
         count = db_conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
@@ -514,18 +591,29 @@ class TestBuildDb:
         assert rows  # fixture has registers
         assert {r["slug"] for r in rows} == {"scb"}
 
-    def test_slug_columns_nullable_in_v3_1(self, db_conn: sqlite3.Connection):
-        # 1a adds slug columns; 1c populates them. Nullable until then.
+    def test_slugs_populated_post_build(self, db_conn: sqlite3.Connection):
+        # The fixture builds with a curated slug TOML covering both
+        # registers + variants; version slugs auto-derive from YYYY names.
+        # Strict-built DBs must have every slug populated — `populate_slugs`
+        # raises otherwise — so this also guards the strict invariant.
         assert (
             db_conn.execute(
-                "SELECT COUNT(*) FROM register WHERE slug IS NOT NULL"
+                "SELECT COUNT(*) FROM register WHERE slug IS NULL"
             ).fetchone()[0]
             == 0
         )
-        slugged_variants = db_conn.execute(
-            "SELECT COUNT(*) FROM register_variant WHERE slug IS NOT NULL"
-        ).fetchone()[0]
-        assert slugged_variants == 0
+        assert (
+            db_conn.execute(
+                "SELECT COUNT(*) FROM register_variant WHERE slug IS NULL"
+            ).fetchone()[0]
+            == 0
+        )
+        assert (
+            db_conn.execute(
+                "SELECT COUNT(*) FROM register_version WHERE slug IS NULL"
+            ).fetchone()[0]
+            == 0
+        )
 
     def test_no_synthetic_default_variant_rows_persisted(
         self, db_conn: sqlite3.Connection

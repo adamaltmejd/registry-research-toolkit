@@ -19,7 +19,7 @@ from typing import Any, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
-from .fqid import derive_period, derive_variable_slug
+from .fqid import derive_variable_slug
 from .queries import extract_year
 
 SCHEMA_VERSION = "3.3.0"
@@ -1562,25 +1562,27 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Sets `variable_instance.via_source_id` to the canonical source cvid for
     every instance whose underlying variable was sourced from a different
-    register, matching by (`register_version.slug`, variable slug). Returns
+    register, keyed on (`register_version.slug`, variable slug). Returns
     the edge count.
 
-    Runs after `populate_slugs` in the build pipeline so it keys on the
-    canonical §5.2 version token. When the slug column is NULL — the
-    `skip_slugs=True` bootstrap path — falls back to `derive_period(name)`
-    so the bootstrap DB still gets best-effort lineage (collisions can
-    mis-link in that mode, but bootstrap is explicitly not for queries).
-    Pre-γ this keyed on `derive_period(name)` unconditionally, which
-    collapsed sibling rows that γ's curated overrides exist to separate.
+    Slug-only. When a consumer's slug doesn't exactly match a source
+    sibling's slug, no edge forms — that's the correct outcome: the
+    consumer data hasn't disambiguated which source sibling it came from,
+    so the linker shouldn't guess. Maintainers can curate matching slugs
+    on both sides to force a precise edge.
+
+    Runs after `populate_slugs` so `rver.slug` is non-NULL.
     """
-    # One row per (cvid, alias) so cvids with multiple aliases that derive to
-    # different slugs are visible under each. ORDER BY pins tie-breaks: when
-    # two source-side instances key the same (rid, version_slug, var_slug),
-    # the lowest cvid wins; same for which alias claims a consumer cvid first.
+    # One row per (cvid, alias) so cvids with multiple aliases that derive
+    # to different variable slugs are visible under each. ORDER BY pins
+    # tie-breaks: when two source-side instances key the same (rid,
+    # version_slug, var_slug), the lowest cvid wins — but that case only
+    # arises if two source siblings share a slug, which UNIQUE(regvar_id,
+    # slug) on register_version forbids; effectively the setdefault is
+    # never contested in a strict-built DB.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.slug AS version_slug, rver.registerversionnamn, "
-        "va.kolumnnamn "
+        "rver.slug AS version_slug, va.kolumnnamn "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
@@ -1591,16 +1593,13 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_slug, version_name, kolumnnamn in rows:
-        effective_version_slug = version_slug or derive_period(version_name)
+    for cvid, rid, src_rid, version_slug, kolumnnamn in rows:
         variable_slug = derive_variable_slug(kolumnnamn)
-        if effective_version_slug is None or variable_slug is None:
+        if version_slug is None or variable_slug is None:
             continue
-        by_key.setdefault((rid, effective_version_slug, variable_slug), cvid)
+        by_key.setdefault((rid, version_slug, variable_slug), cvid)
         if src_rid is not None and src_rid != rid:
-            consumer_attempts.append(
-                (cvid, src_rid, effective_version_slug, variable_slug)
-            )
+            consumer_attempts.append((cvid, src_rid, version_slug, variable_slug))
 
     # First match per consumer cvid wins (stable: input is sorted).
     resolved: dict[int, int] = {}

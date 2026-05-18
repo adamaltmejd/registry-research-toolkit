@@ -25,18 +25,49 @@ def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     Also builds a minimal doc DB in the same directory because query
     commands (search/get/resolve) now require both artifacts — the CLI
     refuses to run queries without docs installed.
+
+    Builds *with* slugs — passes a minimal slug TOML covering the two
+    synthetic registers + variants. Version slugs auto-derive from the
+    `YYYY` version names. Required because `link_consumer_side_bindings`
+    is strict slug-only post-γ; running with `skip_slugs=True` would
+    leave `register_version.slug` NULL and produce zero lineage edges.
     """
     input_dir = tmp_path_factory.mktemp("input")
     db_dir = tmp_path_factory.mktemp("db")
+    slug_dir = tmp_path_factory.mktemp("slugs")
 
     write_scb_input(input_dir)
+    _write_fixture_slug_dir(slug_dir)
 
     build_db(
-        input_dir=input_dir, db_dir=db_dir, skip_classifications=True, skip_slugs=True
+        input_dir=input_dir,
+        db_dir=db_dir,
+        skip_classifications=True,
+        slug_dir=slug_dir,
     )
     _build_stub_doc_db(db_dir, tmp_path_factory)
 
     return db_dir / "regmeta.db"
+
+
+def _write_fixture_slug_dir(slug_dir: Path) -> None:
+    """Minimal slug TOML for the synthetic fixture: register + variant
+    slugs for the two test registers. Version slugs auto-derive at build
+    time from the `YYYY` registerversionnamn values, so no
+    `[register_version]` entries are needed.
+
+    `skip_classifications=True` in the fixture means the classification
+    table stays empty, so the empty `classifications.toml` clears
+    `populate_slugs`'s strict coverage check (no rows = no NULL slugs).
+    """
+    (slug_dir / "scb.toml").write_text(
+        '[register."1"]\nslug = "testreg"\n'
+        '[register."2"]\nslug = "otherreg"\n'
+        '[register_variant."1.10"]\nslug = "individer"\n'
+        '[register_variant."2.20"]\nslug = "foretag"\n',
+        encoding="utf-8",
+    )
+    (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
 
 
 def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -> None:
