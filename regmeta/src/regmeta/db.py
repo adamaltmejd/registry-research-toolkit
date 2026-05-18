@@ -1876,7 +1876,16 @@ def build_db(
         # same variant) and silently link consumers to the wrong source cvid.
         # `source_register_id` was populated by the Registerinformation.csv
         # import far above; no intermediate step depends on `via_source_id`.
-        link_consumer_side_bindings(conn)
+        #
+        # Skip under `--skip-slugs`: the linker is slug-only and every
+        # `rver.slug` is NULL in that mode, so running would silently
+        # produce zero edges instead of an honest "this build is
+        # incomplete" signal. Run `build-db` without `--skip-slugs` (the
+        # default) to materialize lineage.
+        if skip_slugs:
+            _progress("Skipping consumer-side binding edges (skip_slugs=True)")
+        else:
+            link_consumer_side_bindings(conn)
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears
