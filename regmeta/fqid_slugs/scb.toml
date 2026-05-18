@@ -118,7 +118,7 @@ slug = "arbetskraftsbarometern"
 slug = "gymnasieskola-betyg"
 
 [register."103"]
-slug = "studiedeltagande"
+slug = "rpu"
 
 [register."104"]
 slug = "elevpaneler"
@@ -130,7 +130,7 @@ slug = "folkhogskolan"
 slug = "forskarexaminerades-arbetsmarknad"
 
 [register."108"]
-slug = "gymnasieungdomars"
+slug = "gyst"
 
 [register."110"]
 slug = "hogutbildade-utrikes-fodda"
@@ -268,7 +268,7 @@ slug = "laps"
 slug = "fmr"
 
 [register."182"]
-slug = "forskning-och-utveckling"
+slug = "fou"
 
 [register."183"]
 slug = "investeringsenkaten"
@@ -355,7 +355,7 @@ slug = "land-och-vattenarealer"
 slug = "detaljhandelns-geografi"
 
 [register."227"]
-slug = "industrins-forbrukning"
+slug = "infi"
 
 [register."228"]
 slug = "formogenhetsreg"
@@ -403,16 +403,16 @@ slug = "folkomrostningar-valresultat"
 slug = "ep-val-deltagande"
 
 [register."246"]
-slug = "structure-of-earnings-survey"
+slug = "ses"
 
 [register."247"]
 slug = "hogskolestuderandes-levnadsvillkor"
 
 [register."248"]
-slug = "komvux-svenska"
+slug = "komvux-sfi"
 
 [register."249"]
-slug = "kommunal-vuxenutbildning"
+slug = "komvux"
 
 [register."250"]
 slug = "komvux-anpassad"
@@ -622,7 +622,7 @@ slug = "but"
 slug = "tradbransle-produktion"
 
 [register."359"]
-slug = "natanslutna"
+slug = "solel"
 
 [register."360"]
 slug = "korstrackor"
@@ -649,7 +649,7 @@ slug = "fasit"
 slug = "foretagsreg"
 
 [register."374"]
-slug = "continuing-vocational"
+slug = "cvts"
 
 [register."375"]
 slug = "foretagsstatistik"
@@ -676,7 +676,7 @@ slug = "utforarreg"
 slug = "krita"
 
 [register."389"]
-slug = "konst"
+slug = "kkv"
 
 [register."390"]
 slug = "fritidsfiske"
@@ -697,13 +697,13 @@ slug = "kapitalvinster"
 slug = "registerdata-integration"
 
 [register."397"]
-slug = "studieforbundsstatistik"
+slug = "stuv"
 
 [register."400"]
 slug = "statund"
 
 [register."404"]
-slug = "arbetsmarknadsstatus"
+slug = "bas"
 
 [register."405"]
 slug = "barn-ulf"
@@ -1074,7 +1074,7 @@ slug = "antagna-forskarniva"
 display_group = "Antagna till högskoleutbildning på forskarnivå"
 
 [register_variant."47.2"]
-slug = "sokande"
+slug = "sokande-grund-avancerad"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
 
 [register_variant."47.3"]
@@ -1130,11 +1130,11 @@ slug = "doktorander-anknytande-hogskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, anknytande högskolor"
 
 [register_variant."47.1466"]
-slug = "studiemedel"
+slug = "studiemedel-utlandsstudier"
 display_group = "Studiemedel för utlandsstudier på grundnivå och avancerad nivå"
 
 [register_variant."47.1506"]
-slug = "forskarutbildning-beslut"
+slug = "forskarutbildning-tillgodoraknande"
 display_group = "Forskarutbildning, beslut om tillgodoräknande"
 
 [register_variant."47.1623"]
@@ -1554,7 +1554,7 @@ slug = "anstallningar-natt"
 display_group = "Anställningar - nattbefolkning"
 
 [register_variant."128.155"]
-slug = "foretag-uppgifter"
+slug = "foretag-kuagg"
 display_group = "Företag - Uppgifter aggregerade till företagsnivå (KUAGG)"
 
 [register_variant."128.156"]
@@ -1790,7 +1790,7 @@ slug = "lokala-regionala-fou"
 display_group = "Lokala och regionala FoU-enheter"
 
 [register_variant."182.446"]
-slug = "privata-icke"
+slug = "pnp"
 display_group = "Privata icke vinstdrivande organisationer (PNP)"
 
 [register_variant."182.1448"]
@@ -2402,7 +2402,7 @@ slug = "regionalrakenskaper"
 display_group = "Regionalräkenskaper"
 
 [register_variant."285.914"]
-slug = "det-europeiska-systemet"
+slug = "esspros"
 display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
 
 [register_variant."285.1221"]
@@ -2466,7 +2466,7 @@ slug = "tjansteprisindex-tpi"
 display_group = "Tjänsteprisindex (TPI)"
 
 [register_variant."296.1085"]
-slug = "prisindex-i-producent"
+slug = "ppi"
 display_group = "Prisindex i producent- och importled (PPI)"
 
 [register_variant."299.838"]
@@ -3074,7 +3074,7 @@ slug = "innovation-juridiska"
 display_group = "Innovation i offentlig sektor - Jurdiska enheter"
 
 [register_variant."408.1714"]
-slug = "sjukfranvaro-under"
+slug = "sus"
 display_group = "Sjukfrånvaro under sjuklöneperioden (SuS)"
 
 [register_variant."408.1733"]
