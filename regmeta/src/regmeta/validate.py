@@ -128,6 +128,18 @@ def _codes_for_cvid(conn: sqlite3.Connection, cvid: int) -> set[str]:
     }
 
 
+def _cvid_exists(conn: sqlite3.Connection, cvid: int) -> bool:
+    """True when ``cvid`` is present in variable_instance. Used to tell
+    "anchor truly absent" (skip) from "anchor present but projection
+    yields no codes" (FAIL) — see PR #99 Codex review."""
+    return (
+        conn.execute(
+            "SELECT 1 FROM variable_instance WHERE cvid = ? LIMIT 1", (cvid,)
+        ).fetchone()
+        is not None
+    )
+
+
 def _check_schema_shape(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -208,6 +220,15 @@ def _check_arbsoknov_projection(
         return
     for cvid in early:
         kods = _codes_for_cvid(conn, cvid)
+        # An empty kod set on a cvid that *is* in variable_instance
+        # signals a broken projection (NULL value_set_id, or no joined
+        # members) — not the absence we'd want to silently pass.
+        if not kods:
+            result.fail(
+                f"ArbSokNov 1998 cvid {cvid} has no projected codes "
+                f"(broken value_set_id?)"
+            )
+            continue
         if "4" in kods or "5" in kods:
             result.fail(
                 f"ArbSokNov 1998 cvid {cvid} contains 4 or 5 "
@@ -224,9 +245,16 @@ def _check_cvid_421764_projection(
     if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
+    if not _cvid_exists(conn, 421764):
+        result.ok("cvid 421764 not present — anchor skipped")
+        return
     kods = _codes_for_cvid(conn, 421764)
     if not kods:
-        result.ok("cvid 421764 not present — anchor skipped")
+        # cvid 421764 is in variable_instance but the join yields zero
+        # codes — broken projection, not a legitimate skip.
+        result.fail(
+            "cvid 421764 present but yields no projected codes (broken value_set_id?)"
+        )
         return
     expected = {"01", "02", "03", "04"}
     forbidden = {"00", "05"}

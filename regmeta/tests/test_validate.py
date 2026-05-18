@@ -63,6 +63,38 @@ class TestValidateModule:
             "cvid_value_code should have been dropped" in f for f in result.failures
         )
 
+    def test_anchor_present_but_empty_projection_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """Regression for PR #99 Codex review: when cvid 421764 *is* in
+        variable_instance but its projection yields zero codes (NULL
+        value_set_id, or no joined value_set_member rows), the validator
+        must surface a FAIL — not silently skip the anchor.
+
+        The synthetic fixture doesn't include cvid 421764, so we insert
+        one with no value_set link and confirm the anchor fails."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        # Repoint an existing row to cvid 421764 with value_set_id=NULL
+        # so the projection joins yield zero rows. Simpler than crafting
+        # an INSERT that satisfies all the NOT NULL columns.
+        existing = conn.execute(
+            "SELECT cvid FROM variable_instance LIMIT 1"
+        ).fetchone()[0]
+        conn.execute(
+            "UPDATE variable_instance SET cvid = ?, value_set_id = NULL WHERE cvid = ?",
+            (421764, existing),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "cvid 421764 present but yields no projected codes" in f
+            for f in result.failures
+        ), result.failures
+
 
 class TestBuildDbValidateFlag:
     def test_argparse_exposes_validate(self):
