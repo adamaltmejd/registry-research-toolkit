@@ -144,11 +144,16 @@ Upload if **either** condition is true:
 Otherwise skip.
 
 ```bash
-uv run regmeta maintain build-db --input-dir regmeta/input_data/
+uv run regmeta maintain build-db --input-dir regmeta/input_data/ --validate
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
 gh release upload regmeta/vX.Y.Z regmeta.db.zst
 rm regmeta.db.zst
 ```
+
+`--validate` runs the value-set dedup + year-projection invariants
+inline and exits 10 on failure (same checks as
+`scripts/validate_valueset_dedup.py`). Skip the flag only for the rare
+`--skip-slugs` bootstrap build, which intentionally produces a partial DB.
 
 If the build fails with `vardemangder_drift` (exit 10), SCB has shipped a
 new `kod==version` row whose kod is in neither `_VARDEMANGDER_SENTINELS`

@@ -1,0 +1,258 @@
+"""Post-build invariant checks for `regmeta maintain build-db`.
+
+Run against a freshly built `regmeta.db` to catch value-set dedup or
+year-projection drift before the build is shipped. Logic mirrors what
+`scripts/validate_valueset_dedup.py` used to do as a sibling process;
+both that script and the `--validate` flag on `build-db` call into this
+module so the checks stay in one place (issue #92).
+
+Schema shape:
+  - value_set / value_set_member / variable_instance.value_set_id present
+  - cvid_value_code / value_item / value_item_validity absent
+  - member_hash uniqueness invariant
+
+Year projection correctness:
+  - ArbSokNov LISA spot-check (cvid-1998 must NOT contain code 4 or 5)
+  - Andel/grad av aktivitetsersättning, vilande (cvid 421764, year 2010):
+    must contain codes 01-04, must NOT contain 00 or 05
+  - PRAGMA foreign_key_check returns no rows
+  - PRAGMA freelist_count is < 1% of page_count (no staging-page bloat)
+"""
+
+from __future__ import annotations
+
+import sqlite3
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Literal
+
+from .db import open_db
+
+LineKind = Literal["section", "ok", "fail", "info"]
+
+
+@dataclass(frozen=True)
+class ValidationLine:
+    kind: LineKind
+    text: str
+
+    def format(self) -> str:
+        if self.kind == "section":
+            return self.text
+        if self.kind == "ok":
+            return f"  [OK] {self.text}"
+        if self.kind == "fail":
+            return f"  [FAIL] {self.text}"
+        return f"  · {self.text}"
+
+
+@dataclass
+class ValidationResult:
+    lines: list[ValidationLine] = field(default_factory=list)
+
+    @property
+    def failures(self) -> list[str]:
+        return [ln.text for ln in self.lines if ln.kind == "fail"]
+
+    @property
+    def passed(self) -> bool:
+        return not self.failures
+
+    def section(self, name: str) -> None:
+        self.lines.append(ValidationLine("section", name))
+
+    def ok(self, msg: str) -> None:
+        self.lines.append(ValidationLine("ok", msg))
+
+    def fail(self, msg: str) -> None:
+        self.lines.append(ValidationLine("fail", msg))
+
+    def info(self, msg: str) -> None:
+        self.lines.append(ValidationLine("info", msg))
+
+    def format_report(self) -> str:
+        return "\n".join(ln.format() for ln in self.lines)
+
+
+def validate_built_db(db_path: Path) -> ValidationResult:
+    """Run all value-set dedup invariants against ``db_path``.
+
+    The result records ``[OK]`` / ``[FAIL]`` lines per check; callers
+    decide how to surface them. Raises FileNotFoundError if ``db_path``
+    does not exist.
+    """
+    db_path = Path(db_path)
+    if not db_path.exists():
+        raise FileNotFoundError(f"DB not found: {db_path}")
+    result = ValidationResult()
+    result.section(f"Validating {db_path}")
+    conn = open_db(db_path)
+    try:
+        _check_schema_shape(conn, result)
+        _check_arbsoknov_projection(conn, result)
+        _check_cvid_421764_projection(conn, result)
+        _check_operational(conn, result)
+    finally:
+        conn.close()
+    return result
+
+
+def _has_projection_tables(conn: sqlite3.Connection) -> bool:
+    """The projection checks JOIN value_set_member; return False if either
+    `value_set` or `value_set_member` is missing so callers can skip
+    rather than raise sqlite3.OperationalError."""
+    tables = {
+        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    return {"value_set", "value_set_member"}.issubset(tables)
+
+
+def _check_schema_shape(conn: sqlite3.Connection, result: ValidationResult) -> None:
+    result.section("[schema]")
+    tables = {
+        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    for required in ("value_set", "value_set_member"):
+        if required in tables:
+            result.ok(f"{required} present")
+        else:
+            result.fail(f"{required} missing")
+    for absent in ("cvid_value_code", "value_item", "value_item_validity"):
+        if absent in tables:
+            result.fail(f"{absent} should have been dropped")
+        else:
+            result.ok(f"{absent} absent")
+
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(variable_instance)")}
+    if "value_set_id" in cols:
+        result.ok("variable_instance.value_set_id present")
+    else:
+        result.fail("variable_instance.value_set_id missing")
+
+    # The remaining checks depend on value_set / value_set_member existing;
+    # skip them if a required table is missing rather than crashing.
+    if {"value_set", "value_set_member"} - tables:
+        return
+
+    # member_hash uniqueness — UNIQUE enforces it; query asserts intent.
+    dup_hashes = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT 1 FROM value_set "
+        "GROUP BY member_hash HAVING COUNT(*) > 1)"
+    ).fetchone()[0]
+    if dup_hashes == 0:
+        result.ok("member_hash unique across value_set")
+    else:
+        result.fail(f"member_hash has {dup_hashes} duplicate group(s)")
+
+    # Counts — record only; no thresholds without a baseline.
+    n_sets = conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0]
+    n_members = conn.execute("SELECT COUNT(*) FROM value_set_member").fetchone()[0]
+    n_cvids_with_set = conn.execute(
+        "SELECT COUNT(*) FROM variable_instance WHERE value_set_id IS NOT NULL"
+    ).fetchone()[0]
+    n_cvids_total = conn.execute("SELECT COUNT(*) FROM variable_instance").fetchone()[0]
+    result.info(
+        f"{n_sets:,} value_sets / {n_members:,} members / "
+        f"{n_cvids_with_set:,} cvids linked / {n_cvids_total:,} total"
+    )
+
+
+def _check_arbsoknov_projection(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    result.section("\n[projection: ArbSokNov LISA]")
+    if not _has_projection_tables(conn):
+        result.ok("value_set tables absent — anchor skipped")
+        return
+    # ArbSokNov is variable_id=31554 in LISA. Codes 4 and 5 should not
+    # appear in cvids before their introduction (~2006-2007).
+    arbs = conn.execute(
+        "SELECT vi.cvid, rv.registerversionnamn, vc.vardekod, vc.vardebenamning "
+        "FROM variable_instance vi "
+        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+        "LEFT JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
+        "WHERE vi.var_id = 31554 "
+        "ORDER BY vi.cvid, vc.vardekod"
+    ).fetchall()
+    if not arbs:
+        result.ok("ArbSokNov (var_id=31554) not present — skipping")
+        return
+    by_cvid: dict[int, dict] = {}
+    for r in arbs:
+        d = by_cvid.setdefault(
+            r["cvid"], {"version": r["registerversionnamn"], "kods": set()}
+        )
+        if r["vardekod"] is not None:
+            d["kods"].add(r["vardekod"])
+    early = [
+        cvid for cvid, d in by_cvid.items() if d["version"] and "1998" in d["version"]
+    ]
+    if not early:
+        result.ok("ArbSokNov 1998 cvid not present in DB — anchor skipped")
+        return
+    for cvid in early:
+        kods = by_cvid[cvid]["kods"]
+        if "4" in kods or "5" in kods:
+            result.fail(
+                f"ArbSokNov 1998 cvid {cvid} contains 4 or 5 "
+                f"(should be excluded by validity): {sorted(kods)}"
+            )
+        else:
+            result.ok(f"ArbSokNov 1998 cvid {cvid} excludes 4/5")
+
+
+def _check_cvid_421764_projection(
+    conn: sqlite3.Connection, result: ValidationResult
+) -> None:
+    result.section("\n[projection: cvid 421764 anchor]")
+    if not _has_projection_tables(conn):
+        result.ok("value_set tables absent — anchor skipped")
+        return
+    row = conn.execute(
+        "SELECT vi.value_set_id FROM variable_instance vi WHERE vi.cvid = 421764"
+    ).fetchone()
+    if row is None:
+        result.ok("cvid 421764 not present — anchor skipped")
+        return
+    kods = {
+        r["vardekod"]
+        for r in conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = 421764"
+        )
+    }
+    expected = {"01", "02", "03", "04"}
+    forbidden = {"00", "05"}
+    if expected.issubset(kods):
+        result.ok(f"cvid 421764 contains {sorted(expected)}")
+    else:
+        result.fail(
+            f"cvid 421764 missing codes {sorted(expected - kods)} "
+            f"(present: {sorted(kods)})"
+        )
+    if kods & forbidden:
+        result.fail(f"cvid 421764 contains forbidden codes {sorted(kods & forbidden)}")
+    else:
+        result.ok("cvid 421764 excludes 00/05")
+
+
+def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:
+    result.section("\n[operational]")
+    fk_violations = list(conn.execute("PRAGMA foreign_key_check"))
+    if not fk_violations:
+        result.ok("PRAGMA foreign_key_check returns 0 rows")
+    else:
+        result.fail(
+            f"PRAGMA foreign_key_check returned {len(fk_violations)} violation(s)"
+        )
+
+    freelist = conn.execute("PRAGMA freelist_count").fetchone()[0]
+    pages = conn.execute("PRAGMA page_count").fetchone()[0]
+    pct = (freelist / pages * 100) if pages else 0
+    if pct < 1.0:
+        result.ok(f"freelist {freelist:,} / {pages:,} pages ({pct:.2f}%)")
+    else:
+        result.fail(f"freelist {pct:.2f}% of pages — staging bloat? (>= 1%)")

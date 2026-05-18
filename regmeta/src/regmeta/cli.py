@@ -843,6 +843,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "downstream queries that depend on FQIDs."
         ),
     )
+    build_p.add_argument(
+        "--validate",
+        action="store_true",
+        help=(
+            "Run post-build invariant checks (value-set dedup, year-projection "
+            "anchors, FK integrity, freelist ceiling) against the freshly-built "
+            "DB. Fails with EXIT_CONFIG on any violation. Equivalent to running "
+            "`scripts/validate_valueset_dedup.py` after the build."
+        ),
+    )
 
     seed_slugs_p = maintain_sub.add_parser(
         "seed-slugs",
@@ -1061,12 +1071,36 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
     )
+    if args.validate:
+        from .validate import validate_built_db
+
+        validation = validate_built_db(Path(result["db_path"]))
+        sys.stderr.write(validation.format_report() + "\n")
+        sys.stderr.flush()
+        if validation.failures:
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="validation_failed",
+                error_class="configuration",
+                message=(
+                    f"Post-build validation failed: {len(validation.failures)} "
+                    f"check(s) — {'; '.join(validation.failures)}"
+                ),
+                remediation=(
+                    "Inspect the [FAIL] lines above. Fix the underlying build "
+                    "issue and rerun `regmeta maintain build-db --validate`. "
+                    "Re-run the validator standalone with "
+                    "`uv run python scripts/validate_valueset_dedup.py <db>` "
+                    "to iterate without rebuilding."
+                ),
+            )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",
         args_payload={
             "input_dir": args.input_dir,
             "skip_slugs": args.skip_slugs,
+            "validate": args.validate,
         },
         db_info={
             "schema_version": SCHEMA_VERSION,
