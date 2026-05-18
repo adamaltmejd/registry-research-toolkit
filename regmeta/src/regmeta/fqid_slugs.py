@@ -24,6 +24,7 @@ from .errors import EXIT_CONFIG, RegmetaError
 from .fqid import (
     FqidError,
     FqidKind,
+    derive_period,
     derive_variable_slug,
     validate_slug,
 )
@@ -627,9 +628,6 @@ def _autoderive_version_slugs(conn: sqlite3.Connection, provider_slug: str) -> i
     curated via `[register_version."<reg>.<var>.<ver>"]` TOML entries. The
     strict-mode unslugged check fires for any leftover NULL.
     """
-    # Local import to avoid the build → fqid_slugs → fqid → … cycle.
-    from .fqid import derive_period
-
     rows = conn.execute(
         "SELECT rver.regver_id, rver.registerversionnamn "
         "FROM register_version rver "
@@ -995,7 +993,6 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "ORDER BY rver.regver_id",
         (provider_slug,),
     ).fetchall()
-    from .fqid import derive_period
 
     for register_id, regvar_id, regver_id, name, existing_slug in versions:
         if derive_period(name) is not None:
@@ -1109,8 +1106,6 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     # One pass per kind. The same row sets feed both the missing-slug check
     # (live row, no TOML entry) and the stale-entry check (TOML entry, no live
     # row), so we materialize each once.
-    from .fqid import derive_period
-
     live_regs_by_provider: dict[str, set[int]] = {}
     live_vars_by_provider: dict[str, set[tuple[int, int]]] = {}
     live_versions_by_provider: dict[str, set[tuple[int, int, int]]] = {}

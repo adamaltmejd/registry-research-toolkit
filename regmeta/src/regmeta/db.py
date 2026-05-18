@@ -22,7 +22,7 @@ from .errors import EXIT_CONFIG, RegmetaError
 from .fqid import derive_period, derive_variable_slug
 from .queries import extract_year
 
-SCHEMA_VERSION = "3.2.0"
+SCHEMA_VERSION = "3.3.0"
 DB_FILENAME = "regmeta.db"
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -203,6 +203,15 @@ CREATE TABLE register_version (
     -- or a curated slug for unperiodized versions (the 9 SCB aux tables in
     -- LISA / Utbildningsregistret / Ekonomiskt bistånd). NULL only between
     -- INSERT and populate_slugs's auto-derive + curated-override pass.
+    --
+    -- §5.3 says slug is unique within parent variant, but the SQL-level
+    -- UNIQUE(regvar_id, slug) is not yet enforced: real SCB data has 405
+    -- collision groups (e.g. `Kursdeltagare i kommunal vuxenutbildning`
+    -- has both `1980 höstterminen` and `1980 vårterminen`, both derived
+    -- to `1980` by the period regex; civil-status rows share `1968` across
+    -- three event types). `Catalog._resolve_version` rejects ambiguous
+    -- matches at query time instead. Cleaning the data (curated slugs +
+    -- Swedish termin grammar in `derive_period`) is a follow-up.
     slug TEXT,
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,

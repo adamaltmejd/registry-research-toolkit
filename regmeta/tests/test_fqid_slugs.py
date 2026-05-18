@@ -432,6 +432,111 @@ class TestPopulateSlugs:
             populate_slugs(conn, d, strict=True)
         assert exc.value.code == "slug_unknown_source_id"
 
+    def _make_unperiodized_db(self) -> sqlite3.Connection:
+        # Variant + unperiodized version (`Gymnasieintyg, ackumulerat` has no
+        # parseable period). All slug columns cleared so populate_slugs can
+        # run a clean auto-derive + curated pass.
+        conn = build_slugged_db(
+            version=("Gymnasieintyg, ackumulerat", None, 200),
+        )
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.execute("UPDATE classification SET slug = NULL")
+        conn.commit()
+        return conn
+
+    def test_populates_register_version_from_toml(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
+            '[register_version."1.10.200"]\nslug = "ackumulerat-register"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = self._make_unperiodized_db()
+        counts = populate_slugs(conn, d, strict=True)
+        assert counts["register_version"] == 1
+        assert counts["register_version_auto"] == 0
+        assert (
+            conn.execute(
+                "SELECT slug FROM register_version WHERE regver_id = 200"
+            ).fetchone()[0]
+            == "ackumulerat-register"
+        )
+
+    def test_strict_fails_when_unperiodized_version_missing_slug(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = self._make_unperiodized_db()
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(conn, d, strict=True)
+        assert exc.value.code == "slug_missing_for_source_id"
+
+    def test_unknown_register_version_source_id_fails(self, tmp_path: Path):
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
+            # Version 999 does not exist; sibling 200 has its own TOML so
+            # the strict-mode coverage check doesn't fire first.
+            '[register_version."1.10.200"]\nslug = "ackumulerat-register"\n'
+            '[register_version."1.10.999"]\nslug = "ghost"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = self._make_unperiodized_db()
+        with pytest.raises(RegmetaError) as exc:
+            populate_slugs(conn, d, strict=True)
+        assert exc.value.code == "slug_unknown_source_id"
+
+    def test_curated_slug_overrides_auto_derived(self, tmp_path: Path):
+        # Escape hatch documented at populate_slugs:722 — TOML override beats
+        # the period regex when a maintainer needs to correct a wrong-year
+        # extraction.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
+            '[register_version."1.10.100"]\nslug = "2017"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db()  # default version is ("LISA 2018", "2018", 100)
+        conn.execute("UPDATE register SET slug = NULL")
+        conn.execute("UPDATE register_variant SET slug = NULL")
+        conn.execute("UPDATE register_version SET slug = NULL")
+        conn.execute("UPDATE classification SET slug = NULL")
+        conn.commit()
+        populate_slugs(conn, d, strict=True)
+        assert (
+            conn.execute(
+                "SELECT slug FROM register_version WHERE regver_id = 100"
+            ).fetchone()[0]
+            == "2017"
+        )
+
 
 # ---------------------------------------------------------------------------
 # seed-slugs

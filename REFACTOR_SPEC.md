@@ -443,8 +443,8 @@ identify which kind of entity a string addresses.
 | 1 | `<provider>` | provider |
 | 2 | `<provider>/<register>` | register |
 | 3 | `<provider>/<register>/<variant>` | register_variant |
-| 4 | `<provider>/<register>/<variant>/<period>` | register_version |
-| 5 | `<provider>/<register>/<variant>/<period>/<variable>` | variable binding |
+| 4 | `<provider>/<register>/<variant>/<period\|version-slug>` | register_version |
+| 5 | `<provider>/<register>/<variant>/<period\|version-slug>/<variable>` | variable binding |
 | 3, leading `class/` | `class/<classification>/<version>` | classification |
 
 Examples:

@@ -104,6 +104,24 @@ def _not_found(fqid: Fqid) -> RegmetaError:
     )
 
 
+def _ambiguous(fqid: Fqid, source_ids: list[str]) -> RegmetaError:
+    return RegmetaError(
+        exit_code=EXIT_NOT_FOUND,
+        code="fqid_ambiguous",
+        error_class="query",
+        message=(
+            f"FQID resolves to multiple rows: {fqid!s} → "
+            f"register_version IDs {', '.join(source_ids)}"
+        ),
+        remediation=(
+            "Two or more register_version rows share this slug under the "
+            "same variant — §5.3 requires the slug to be unique. Pin distinct "
+            "curated slugs in `regmeta/fqid_slugs/<provider>.toml` "
+            'under `[register_version."<reg>.<var>.<ver>"]`.'
+        ),
+    )
+
+
 class Catalog:
     """FQID resolution against an open regmeta SQLite connection."""
 
@@ -219,13 +237,19 @@ class Catalog:
         # populate_slugs writes both kinds; the resolver just matches the slug
         # column.
         #
+        # §5.3 says the slug is unique within parent variant, but the SQL
+        # constraint isn't enforced today (see db.py register_version DDL),
+        # so we defensively check for >1 match and raise `fqid_ambiguous`
+        # rather than silently returning whichever row sqlite happened to
+        # surface first.
+        #
         # §5.1 follow-up: `_default` versions against a variant-less register
         # aren't reachable today — `register_version.regvar_id` is NOT NULL,
         # so no version row can exist without a real variant row. When SOS
         # ingestion lands, either make the column nullable or extend this
         # resolver to synthesize the variant slot the way `_resolve_variant`
         # does.
-        row = self._conn.execute(
+        rows = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "
             "FROM register_version rver "
@@ -234,9 +258,12 @@ class Catalog:
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
-        ).fetchone()
-        if row is None:
+        ).fetchall()
+        if not rows:
             raise _not_found(fqid)
+        if len(rows) > 1:
+            raise _ambiguous(fqid, [str(r["regver_id"]) for r in rows])
+        row = rows[0]
         return ResolvedRegisterVersion(
             fqid=fqid,
             regver_id=row["regver_id"],

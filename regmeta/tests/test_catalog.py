@@ -350,6 +350,27 @@ class TestResolveVersionWithCuratedSlug:
             Catalog(conn).resolve("scb/lisa/individer-15plus/summerade-poang")
         assert exc.value.code == "fqid_not_found"
 
+    def test_ambiguous_slug_raises(self) -> None:
+        # §5.3 invariant: slug unique within parent variant. Real SCB data
+        # has 405 collision groups (e.g. `Kursdeltagare i kommunal
+        # vuxenutbildning` has both `1980 höstterminen` and `1980
+        # vårterminen`, both deriving to `1980`). The SQL UNIQUE constraint
+        # isn't enforced yet, so the resolver defensively rejects ambiguous
+        # matches instead of returning whichever row sqlite happens to
+        # surface first.
+        conn = build_slugged_db()
+        # Inject a sibling row that collides with regver 100's slug "2018".
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (101, 10, "2018", "LISA 2018 (dup)"),
+        )
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018")
+        assert exc.value.code == "fqid_ambiguous"
+        assert "100" in exc.value.message and "101" in exc.value.message
+
 
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
