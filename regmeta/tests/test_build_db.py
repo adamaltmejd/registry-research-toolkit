@@ -379,6 +379,86 @@ class TestBuildDb:
         # but the period grammar treats them as distinct.
         assert row["via_source_id"] is None
 
+    def test_linker_uses_slug_to_disambiguate_collision_siblings(self, tmp_path: Path):
+        """Regression for Codex P1 on PR #94: two source siblings whose names
+        both `derive_period` to `2018` (e.g. `LISA 2018 huvudfil` +
+        `LISA 2018 tilläggsfil`) must be disambiguated by their curated
+        `register_version.slug`, not collapsed to whichever appears first.
+
+        Builds a slugged DB by hand, populates the slug column on both
+        siblings, calls `link_consumer_side_bindings`, and verifies the
+        consumer's `via_source_id` points at the *correct* sibling.
+        """
+        import sqlite3 as _sql
+
+        from regmeta.db import DDL, link_consumer_side_bindings, seed_providers
+
+        conn = _sql.connect(":memory:")
+        conn.row_factory = _sql.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        # Source register `src` (id=1) with one variant, two sibling versions
+        # whose registerversionnamn both derive_period to "2018", but whose
+        # `register_version.slug` is curator-disambiguated.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (1, 1, 'src')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (100, 10, '2018', 'LISA 2018 huvudfil'),"
+            "       (101, 10, 'tillagg-2018', 'LISA 2018 tilläggsfil')"
+        )
+        conn.execute("INSERT INTO variable (register_id, var_id) VALUES (1, 44)")
+        conn.executemany(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
+            [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
+            [(1000, "Kon"), (1001, "Kon")],
+        )
+        # Consumer register `cons` (id=2) with one variant + one version whose
+        # slug matches the tilläggsfil sibling. variable.source_register_id = 1
+        # marks this as consumer-side; the linker must pick cvid 1001, not 1000.
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "VALUES (2, 1, 'cons')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (regvar_id, register_id) VALUES (20, 2)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (200, 20, 'tillagg-2018', 'Cons 2018 tilläggsfil')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, source_register_id) "
+            "VALUES (2, 44, 1)"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "VALUES (2000, 2, 20, 200, 44)"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (2000, 'Kon')"
+        )
+        conn.commit()
+
+        n = link_consumer_side_bindings(conn)
+        assert n == 1
+        row = conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
+        ).fetchone()
+        assert row["via_source_id"] == 1001  # tilläggsfil, NOT 1000 (huvudfil)
+
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
         count = db_conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]

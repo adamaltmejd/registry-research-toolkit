@@ -1562,17 +1562,25 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Sets `variable_instance.via_source_id` to the canonical source cvid for
     every instance whose underlying variable was sourced from a different
-    register, matching by (period, variable slug). Returns the edge count.
+    register, matching by (`register_version.slug`, variable slug). Returns
+    the edge count.
+
+    Runs after `populate_slugs` in the build pipeline so it keys on the
+    canonical §5.2 version token. When the slug column is NULL — the
+    `skip_slugs=True` bootstrap path — falls back to `derive_period(name)`
+    so the bootstrap DB still gets best-effort lineage (collisions can
+    mis-link in that mode, but bootstrap is explicitly not for queries).
+    Pre-γ this keyed on `derive_period(name)` unconditionally, which
+    collapsed sibling rows that γ's curated overrides exist to separate.
     """
     # One row per (cvid, alias) so cvids with multiple aliases that derive to
     # different slugs are visible under each. ORDER BY pins tie-breaks: when
-    # two source-side instances key the same (rid, period, slug), the lowest
-    # cvid wins; same for which alias claims a consumer cvid first. Period is
-    # the full §5.2 token (HT/VTYYYY, YYYY-Qn, ...) — keying on bare year
-    # would mis-link sub-year siblings (HT2020 paired with VT2020).
+    # two source-side instances key the same (rid, version_slug, var_slug),
+    # the lowest cvid wins; same for which alias claims a consumer cvid first.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.registerversionnamn, va.kolumnnamn "
+        "rver.slug AS version_slug, rver.registerversionnamn, "
+        "va.kolumnnamn "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
@@ -1583,21 +1591,23 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_name, kolumnnamn in rows:
-        period = derive_period(version_name)
-        slug = derive_variable_slug(kolumnnamn)
-        if period is None or slug is None:
+    for cvid, rid, src_rid, version_slug, version_name, kolumnnamn in rows:
+        effective_version_slug = version_slug or derive_period(version_name)
+        variable_slug = derive_variable_slug(kolumnnamn)
+        if effective_version_slug is None or variable_slug is None:
             continue
-        by_key.setdefault((rid, period, slug), cvid)
+        by_key.setdefault((rid, effective_version_slug, variable_slug), cvid)
         if src_rid is not None and src_rid != rid:
-            consumer_attempts.append((cvid, src_rid, period, slug))
+            consumer_attempts.append(
+                (cvid, src_rid, effective_version_slug, variable_slug)
+            )
 
     # First match per consumer cvid wins (stable: input is sorted).
     resolved: dict[int, int] = {}
-    for cvid, src_rid, period, slug in consumer_attempts:
+    for cvid, src_rid, version_slug, variable_slug in consumer_attempts:
         if cvid in resolved:
             continue
-        src_cvid = by_key.get((src_rid, period, slug))
+        src_cvid = by_key.get((src_rid, version_slug, variable_slug))
         if src_cvid is not None and src_cvid != cvid:
             resolved[cvid] = src_cvid
 
@@ -1731,11 +1741,6 @@ def build_db(
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
 
-        # §5.6 lineage edges. Depends on source_register_id populated above.
-        n_links = link_consumer_side_bindings(conn)
-        if n_links:
-            _progress(f"  {n_links:,} consumer-side binding edges linked")
-
         # Pre-load validity windows (consumed by Vardemangder year-projection).
         # Loaded ahead of the enrichment loop so projection has it ready when
         # Vardemangder.csv finishes streaming. Required whenever Vardemangder.csv
@@ -1851,6 +1856,17 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+        # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
+        # on `register_version.slug` — the canonical disambiguator. Keying on
+        # `derive_period(name)` would collapse siblings that γ's curated
+        # overrides exist to separate (e.g. two `LISA 2018 …` rows in the
+        # same variant) and silently link consumers to the wrong source cvid.
+        # `source_register_id` was populated by the Registerinformation.csv
+        # import far above; no intermediate step depends on `via_source_id`.
+        n_links = link_consumer_side_bindings(conn)
+        if n_links:
+            _progress(f"  {n_links:,} consumer-side binding edges linked")
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears
