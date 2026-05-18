@@ -3707,7 +3707,7 @@ slug = "preliminar-version-2010"
 
 # '2010, slutlig version'
 [register_version."25.763.4067"]
-slug = "slutlig-version-2010"
+slug = "2010"
 
 # '2011, preliminär version'
 [register_version."25.763.4306"]
@@ -3715,7 +3715,7 @@ slug = "preliminar-version-2011"
 
 # '2011, slutlig version'
 [register_version."25.763.4346"]
-slug = "slutlig-version-2011"
+slug = "2011"
 
 # '2012, preliminär version'
 [register_version."25.763.4978"]
@@ -3723,7 +3723,7 @@ slug = "preliminar-version-2012"
 
 # '2012, slutlig version'
 [register_version."25.763.5226"]
-slug = "slutlig-version-2012"
+slug = "2012"
 
 # '2013, preliminär version'
 [register_version."25.763.5521"]
@@ -3731,7 +3731,7 @@ slug = "preliminar-version-2013"
 
 # '2013, slutlig version'
 [register_version."25.763.5626"]
-slug = "slutlig-version-2013"
+slug = "2013"
 
 # '2014, preliminär version'
 [register_version."25.763.6156"]
@@ -3739,7 +3739,7 @@ slug = "preliminar-version-2014"
 
 # '2014, slutlig version'
 [register_version."25.763.7298"]
-slug = "slutlig-version-2014"
+slug = "2014"
 
 # '2015, preliminär version'
 [register_version."25.763.9811"]
@@ -3747,7 +3747,7 @@ slug = "preliminar-version-2015"
 
 # '2015, slutlig version'
 [register_version."25.763.9969"]
-slug = "slutlig-version-2015"
+slug = "2015"
 
 # '2016, preliminär version'
 [register_version."25.763.11480"]
@@ -3755,7 +3755,7 @@ slug = "preliminar-version-2016"
 
 # '2016, slutlig version'
 [register_version."25.763.11663"]
-slug = "slutlig-version-2016"
+slug = "2016"
 
 # '2017, preliminär version'
 [register_version."25.763.12573"]
@@ -3763,7 +3763,7 @@ slug = "preliminar-version-2017"
 
 # '2017, slutlig version'
 [register_version."25.763.13443"]
-slug = "slutlig-version-2017"
+slug = "2017"
 
 # '2018, preliminär version'
 [register_version."25.763.13544"]
@@ -3771,11 +3771,11 @@ slug = "preliminar-version-2018"
 
 # '2018, slutlig version'
 [register_version."25.763.13744"]
-slug = "slutlig-version-2018"
+slug = "2018"
 
 # '2019, slutlig version'
 [register_version."25.763.15780"]
-slug = "slutlig-version-2019"
+slug = "2019"
 
 # '2019, preliminär version'
 [register_version."25.763.15811"]
@@ -3787,7 +3787,7 @@ slug = "preliminar-version-2020"
 
 # '2020, slutlig version'
 [register_version."25.763.17939"]
-slug = "slutlig-version-2020"
+slug = "2020"
 
 # '2021, preliminär version'
 [register_version."25.763.18513"]
@@ -3795,7 +3795,7 @@ slug = "preliminar-version-2021"
 
 # '2021, slutlig version'
 [register_version."25.763.18529"]
-slug = "slutlig-version-2021"
+slug = "2021"
 
 # '2022, preliminär version'
 [register_version."25.763.18903"]
@@ -3803,7 +3803,7 @@ slug = "preliminar-version-2022"
 
 # '2022, slutlig version'
 [register_version."25.763.18994"]
-slug = "slutlig-version-2022"
+slug = "2022"
 
 # '2023, preliminär version'
 [register_version."25.763.19421"]
@@ -3811,7 +3811,7 @@ slug = "preliminar-version-2023"
 
 # '2023, slutlig version'
 [register_version."25.763.19675"]
-slug = "slutlig-version-2023"
+slug = "2023"
 
 # '2024, preliminär version'
 [register_version."25.763.20144"]
@@ -3819,7 +3819,7 @@ slug = "preliminar-version-2024"
 
 # '2024, slutlig version'
 [register_version."25.763.20241"]
-slug = "slutlig-version-2024"
+slug = "2024"
 
 # 'Vårterminen 2013'
 [register_version."104.840.5177"]
@@ -4471,7 +4471,7 @@ slug = "v1999-2000"
 
 # '2021, slutlig version'
 [register_version."25.1153.18530"]
-slug = "slutlig-version-2021"
+slug = "2021"
 
 # '2021VX, slutlig version'
 [register_version."25.1153.18563"]
@@ -4479,7 +4479,7 @@ slug = "v2021vx-slutlig-version"
 
 # '2022, slutlig version'
 [register_version."25.1153.18996"]
-slug = "slutlig-version-2022"
+slug = "2022"
 
 # '2022VX, slutlig version'
 [register_version."25.1153.18997"]
@@ -4487,7 +4487,7 @@ slug = "v2022vx-slutlig-version"
 
 # '2023, slutlig version'
 [register_version."25.1153.19677"]
-slug = "slutlig-version-2023"
+slug = "2023"
 
 # '2023VX, slutlig version'
 [register_version."25.1153.19678"]
@@ -4495,7 +4495,7 @@ slug = "v2023vx-slutlig-version"
 
 # '2024, slutlig version'
 [register_version."25.1153.20242"]
-slug = "slutlig-version-2024"
+slug = "2024"
 
 # '2024VX, slutlig version'
 [register_version."25.1153.20243"]
