@@ -22,7 +22,7 @@ slug = "rtb"
 slug = "ftr"
 
 [register."8"]
-slug = "statistikregistret"
+slug = "fordonsreg"
 
 [register."10"]
 slug = "lbr"
@@ -52,7 +52,7 @@ slug = "fob"
 slug = "lisa"
 
 [register."42"]
-slug = "nyborjare"
+slug = "nyborjare-komvux"
 
 [register."47"]
 slug = "hreg"
@@ -82,7 +82,7 @@ slug = "fastighetspriser"
 slug = "ombyggnad-och-rivning"
 
 [register."73"]
-slug = "priser"
+slug = "priser-nyproducerade-bostader"
 
 [register."74"]
 slug = "energi-smahus"
@@ -127,7 +127,7 @@ slug = "elevpaneler"
 slug = "folkhogskolan"
 
 [register."106"]
-slug = "forskarexaminerades"
+slug = "forskarexaminerades-arbetsmarknad"
 
 [register."108"]
 slug = "gymnasieungdomars"
@@ -166,7 +166,7 @@ slug = "arbetsmiljoundersokningen"
 slug = "arbetsorsakade-besvar"
 
 [register."125"]
-slug = "funktionsnedsattning-am"
+slug = "funktionsnedsattning-arbetsmarknad"
 
 [register."127"]
 slug = "kv"
@@ -214,7 +214,7 @@ slug = "hostsadda-arealer"
 slug = "godselmedelsanvandning"
 
 [register."149"]
-slug = "forsaljning-godsel"
+slug = "forsaljning-mineralgodsel"
 
 [register."151"]
 slug = "inkvarteringsstatistik"
@@ -226,7 +226,7 @@ slug = "forsaljning-kalk"
 slug = "trafo"
 
 [register."156"]
-slug = "industrins"
+slug = "industrins-miljoskyddskostnader"
 
 [register."157"]
 slug = "smaorter"
@@ -271,13 +271,13 @@ slug = "fmr"
 slug = "forskning-och-utveckling"
 
 [register."183"]
-slug = "nv0801"
+slug = "investeringsenkaten"
 
 [register."186"]
 slug = "slh"
 
 [register."187"]
-slug = "konjunkturstatistik"
+slug = "konjunkturstatistik-industri"
 
 [register."188"]
 slug = "utrikeshandel"
@@ -295,13 +295,13 @@ slug = "svenska-utlandsskolor"
 slug = "grundskola-elever"
 
 [register."194"]
-slug = "skolverksamhet-kostnader"
+slug = "skolvasendet-kostnader"
 
 [register."195"]
 slug = "ksju"
 
 [register."196"]
-slug = "energianvandningen"
+slug = "energianvandning-fiske"
 
 [register."197"]
 slug = "iku"
@@ -319,7 +319,7 @@ slug = "arlig-energistatistik"
 slug = "oljeleveranser-kommunvis"
 
 [register."203"]
-slug = "energianvandning"
+slug = "energianvandning-bygg"
 
 [register."208"]
 slug = "skord-spannmal"
@@ -337,19 +337,19 @@ slug = "vattenbruk"
 slug = "fritidshusomraden"
 
 [register."217"]
-slug = "bebyggd-mark"
+slug = "bebyggd-mark-strandskydd"
 
 [register."219"]
-slug = "kust-strander-och-oar"
+slug = "kust-strander-oar"
 
 [register."221"]
-slug = "arbetsplatsomraden-utanfor"
+slug = "arbetsplatsomraden-utanfor-tatort"
 
 [register."223"]
 slug = "industrins-vattenanvandning"
 
 [register."225"]
-slug = "land"
+slug = "land-och-vattenarealer"
 
 [register."226"]
 slug = "detaljhandelns-geografi"
@@ -388,10 +388,10 @@ slug = "allmanna-val-nominerade"
 slug = "ep-val-resultat"
 
 [register."241"]
-slug = "folkomrostningar"
+slug = "folkomrostningar-valdeltagande"
 
 [register."242"]
-slug = "allmanna-val"
+slug = "allmanna-val-valdeltagande"
 
 [register."243"]
 slug = "allmanna-val-valresultat"
@@ -406,7 +406,7 @@ slug = "ep-val-deltagande"
 slug = "structure-of-earnings-survey"
 
 [register."247"]
-slug = "hogskolestuderandes"
+slug = "hogskolestuderandes-levnadsvillkor"
 
 [register."248"]
 slug = "komvux-svenska"
@@ -436,7 +436,7 @@ slug = "innovation-foretag"
 slug = "it-anvandning"
 
 [register."259"]
-slug = "foretagens-utgifter"
+slug = "foretagens-utgifter-it"
 
 [register."260"]
 slug = "gymnasieskola-sokande"
@@ -529,16 +529,16 @@ slug = "befolkningsframskrivningar"
 slug = "halsorakenskaper"
 
 [register."312"]
-slug = "tjansteforetagen"
+slug = "tjansteforetagens-forbrukning"
 
 [register."315"]
 slug = "sfi-deltagare"
 
 [register."317"]
-slug = "tiden-mellan-gymnasieskolan"
+slug = "studieuppehall"
 
 [register."318"]
-slug = "produktionsindex-over"
+slug = "produktionsindex-naringsliv"
 
 [register."319"]
 slug = "byggproduktionsindex"
@@ -568,10 +568,10 @@ slug = "aktieagarstatistik"
 slug = "breg"
 
 [register."334"]
-slug = "forsakring-arsredog"
+slug = "forsakring-arsredogorelse"
 
 [register."335"]
-slug = "transportinfrastrukturens"
+slug = "transportinfrastruktur-markanvandning"
 
 [register."336"]
 slug = "utlandska-doktorander"
@@ -598,7 +598,7 @@ slug = "hbr"
 slug = "flergenreg"
 
 [register."350"]
-slug = "gronytor"
+slug = "gronytor-tatorter"
 
 [register."351"]
 slug = "piaac"
@@ -646,7 +646,7 @@ slug = "internationella-foretag"
 slug = "fasit"
 
 [register."372"]
-slug = "sreg"
+slug = "foretagsreg"
 
 [register."374"]
 slug = "continuing-vocational"
@@ -688,13 +688,13 @@ slug = "ssv"
 slug = "agi"
 
 [register."393"]
-slug = "transportsektorns"
+slug = "transport-energianvandning"
 
 [register."395"]
 slug = "kapitalvinster"
 
 [register."396"]
-slug = "registerdata"
+slug = "registerdata-integration"
 
 [register."397"]
 slug = "studieforbundsstatistik"
@@ -794,7 +794,7 @@ slug = "medborgarskapsandringar"
 display_group = "Medborgarskapsändringar"
 
 [register_variant."2.66"]
-slug = "grund"
+slug = "grund-bosattning"
 display_group = "Grund för bosättning för immigranter"
 
 [register_variant."2.1028"]
@@ -922,7 +922,7 @@ slug = "ekonomiskt-bistand"
 display_group = "Ekonomiskt bistånd, kvartalsstatistik"
 
 [register_variant."24.78"]
-slug = "personens-hogsta"
+slug = "personens-hogsta-utbildning-16-74"
 display_group = "Personens högsta utbildning,16-74 år"
 
 [register_variant."24.709"]
@@ -930,11 +930,11 @@ slug = "personens-hogsta-utbildning"
 display_group = "Personens högsta utbildning"
 
 [register_variant."24.1225"]
-slug = "invandrares-utbildning"
+slug = "ut-invandrares-utbildning"
 display_group = "Ut-och invandrares utbildning"
 
 [register_variant."24.1383"]
-slug = "personens-samtliga"
+slug = "personens-samtliga-utbildningar"
 display_group = "Personens samtliga utbildningar"
 
 [register_variant."24.1630"]
@@ -974,7 +974,7 @@ slug = "arbetsstallen"
 display_group = "Arbetsställen"
 
 [register_variant."26.617"]
-slug = "foretagens"
+slug = "fad-arbetsstallen"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Arbetsställen"
 
 [register_variant."26.618"]
@@ -990,15 +990,15 @@ slug = "fad-nedlagda-foretag"
 display_group = "Företagens och arbetsställenas dynamik (FAD), Nedlagda företag"
 
 [register_variant."26.1615"]
-slug = "registret-over-jobb"
+slug = "jobbregistret"
 display_group = "Registret över jobb"
 
 [register_variant."29.102"]
-slug = "panelurval-av"
+slug = "panelurval-befolkningen"
 display_group = "Panelurval av befolkningen inkl. familjemedlemmar"
 
 [register_variant."29.103"]
-slug = "tillaggsurval-av"
+slug = "tillaggsurval-utrikesfodda"
 display_group = "Tilläggsurval av utrikesfödda inkl. familjemedlemmar"
 
 [register_variant."29.784"]
@@ -1006,11 +1006,11 @@ slug = "panelurval-yrke-och-lon"
 display_group = "Panelurval – yrke och lön"
 
 [register_variant."29.815"]
-slug = "panelurval-inkl"
+slug = "panelurval-familje-yrke-lon"
 display_group = "Panelurval inkl. familjemedlemmar – yrke och lön"
 
 [register_variant."29.1607"]
-slug = "lindaurval-inkl"
+slug = "lindaurval-familje-lon"
 display_group = "Lindaurval inkl. familjemedlemmar - lön"
 
 [register_variant."29.1613"]
@@ -1034,7 +1034,7 @@ slug = "lagenhet-och-hushall"
 display_group = "Lägenhet och hushåll"
 
 [register_variant."32.83"]
-slug = "vy"
+slug = "vy-fob"
 display_group = "Vy"
 
 [register_variant."34.151"]
@@ -1046,11 +1046,11 @@ slug = "foretag"
 display_group = "Företag"
 
 [register_variant."34.153"]
-slug = "individer-15-ar-och-aldre"
+slug = "individer-15plus"
 display_group = "Individer, 15 år och äldre"
 
 [register_variant."34.1335"]
-slug = "individer-16-ar-och-aldre"
+slug = "individer-16plus"
 display_group = "Individer, 16 år och äldre"
 
 [register_variant."34.1582"]
@@ -1058,8 +1058,8 @@ slug = "individer-fodelseland"
 display_group = "Individer födelseland"
 
 [register_variant."34.1583"]
-slug = "indvider-in"
-display_group = "Indvider in- och utvandring"
+slug = "individer-in-utvandring"
+display_group = "Individer in- och utvandring"
 
 [register_variant."34.1584"]
 slug = "individer-avlidna"
@@ -1070,7 +1070,7 @@ slug = "nyborjare-i-komvux"
 display_group = "Nybörjare i Komvux"
 
 [register_variant."47.1"]
-slug = "antagna-till"
+slug = "antagna-forskarniva"
 display_group = "Antagna till högskoleutbildning på forskarnivå"
 
 [register_variant."47.2"]
@@ -1078,19 +1078,19 @@ slug = "sokande"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
 
 [register_variant."47.3"]
-slug = "studerande-vid"
+slug = "grundutbildning-1977"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1977 års studieordning"
 
 [register_variant."47.4"]
-slug = "examina-inom"
+slug = "grundutbildning-examina"
 display_group = "Examina inom grundläggande högskoleutbildning"
 
 [register_variant."47.5"]
-slug = "aldre-examina-inom"
+slug = "grundutbildning-examina-aldre"
 display_group = "Äldre examina inom grundläggande högskoleutbildning"
 
 [register_variant."47.10"]
-slug = "doktorander-inom"
+slug = "doktorander-aktivitet"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, aktivitet"
 
 [register_variant."47.11"]
@@ -1126,7 +1126,7 @@ slug = "doktorander-forskarskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, forskarskolor lärare"
 
 [register_variant."47.1391"]
-slug = "doktorander-anknytande"
+slug = "doktorander-anknytande-hogskolor"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, anknytande högskolor"
 
 [register_variant."47.1466"]
@@ -1146,7 +1146,7 @@ slug = "sokande-snabbstatistik"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik"
 
 [register_variant."47.1625"]
-slug = "sokande-internationella"
+slug = "sokande-internationella-omgangar"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
 
 [register_variant."50.171"]
@@ -1202,7 +1202,7 @@ slug = "overlatare-av-fastighet"
 display_group = "Överlåtare av fastighet"
 
 [register_variant."72.198"]
-slug = "ombyggnad-av"
+slug = "ombyggnad-flerbostadshus"
 display_group = "Ombyggnad av flerbostadshus"
 
 [register_variant."72.199"]
@@ -1210,7 +1210,7 @@ slug = "rivning-av-flerbostadshus"
 display_group = "Rivning av flerbostadshus"
 
 [register_variant."73.187"]
-slug = "priser"
+slug = "priser-nyproducerade-bostader"
 display_group = "Priser för nyproducerade bostäder"
 
 [register_variant."74.211"]
@@ -1218,7 +1218,7 @@ slug = "energi-i-smahus"
 display_group = "Energi i småhus"
 
 [register_variant."75.201"]
-slug = "energistatistik"
+slug = "energistatistik-flerbostadshus"
 display_group = "Energistatistik för flerbostadshus"
 
 [register_variant."76.190"]
@@ -1286,7 +1286,7 @@ slug = "kursbetyg"
 display_group = "Kursbetyg"
 
 [register_variant."102.1169"]
-slug = "examens"
+slug = "examens-studiebevis-teknik-ak4"
 display_group = "Examens- och studiebevis, teknikprogrammet åk 4"
 
 [register_variant."102.1170"]
@@ -1314,7 +1314,7 @@ slug = "samlat-betygsdokument"
 display_group = "Samlat betygsdokument, 2001-2004"
 
 [register_variant."103.109"]
-slug = "befolkningens"
+slug = "befolkningens-studiedeltagande"
 display_group = "Befolkningens studiedeltagande"
 
 [register_variant."103.1518"]
@@ -1354,7 +1354,7 @@ slug = "deltagare-i-sfi"
 display_group = "Deltagare i sfi"
 
 [register_variant."106.118"]
-slug = "forskarexaminerades"
+slug = "forskarexaminerades-arbetsmarknad"
 display_group = "Forskarexaminerades arbetsmarknad"
 
 [register_variant."108.120"]
@@ -1362,11 +1362,11 @@ slug = "gymnasieungdomars"
 display_group = "Gymnasieungdomars studieintresse"
 
 [register_variant."110.122"]
-slug = "hogutbildade-utrikes"
+slug = "hogutbildade-utrikes-fodda"
 display_group = "Högutbildade utrikes födda"
 
 [register_variant."111.123"]
-slug = "intradet"
+slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
 [register_variant."111.400"]
@@ -1382,7 +1382,7 @@ slug = "intrade-gymnas-hogskola"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
 
 [register_variant."111.1677"]
-slug = "examinerade-fran"
+slug = "yh-examinerade"
 display_group = "Examinerade från yrkeshögskolan"
 
 [register_variant."114.129"]
@@ -1402,19 +1402,19 @@ slug = "primarkommun-region"
 display_group = "Kommunalskatter - primärkommun och region/landsting"
 
 [register_variant."116.131"]
-slug = "kommunernas"
+slug = "kommun-region-tillgangar-skulder"
 display_group = "Kommunernas och regionernas finansiella tillgångar och skulder"
 
 [register_variant."117.132"]
-slug = "kommunalekonomisk"
+slug = "kommunalekonomisk-utjamning-regioner"
 display_group = "Kommunalekonomisk utjämning för regioner"
 
 [register_variant."117.134"]
-slug = "kommunalekonomisk-utjamning-for-kommuner"
+slug = "kommunalekonomisk-utjamning-kommuner"
 display_group = "Kommunalekonomisk utjämning för kommuner"
 
 [register_variant."117.779"]
-slug = "utjamning-av-lss"
+slug = "lss-utjamning"
 display_group = "Utjämning av LSS-kostnader mellan kommuner"
 
 [register_variant."118.135"]
@@ -1522,7 +1522,7 @@ slug = "aku-1987-mars-2005"
 display_group = "AKU 1987 - mars 2005"
 
 [register_variant."122.1628"]
-slug = "aku-fr-o-m-januari-2021"
+slug = "aku-januari-2021"
 display_group = "AKU fr.o.m. januari 2021"
 
 [register_variant."123.413"]
@@ -1538,19 +1538,19 @@ slug = "arbetsorsakade-besvar"
 display_group = "Arbetsorsakade besvär 2001-2016"
 
 [register_variant."124.1418"]
-slug = "arbetsorsakade-besvar-fr"
+slug = "arbetsorsakade-besvar-2018"
 display_group = "Arbetsorsakade besvär fr.om. 2018"
 
 [register_variant."125.146"]
-slug = "situationen"
+slug = "funktionsnedsattning"
 display_group = "Situationen på arbetsmarknaden för personer med funktionsnedsättning"
 
 [register_variant."127.149"]
-slug = "privat"
+slug = "privat-offentlig"
 display_group = "Privat och offentlig sektor"
 
 [register_variant."128.154"]
-slug = "anstallningar"
+slug = "anstallningar-natt"
 display_group = "Anställningar - nattbefolkning"
 
 [register_variant."128.155"]
@@ -1578,7 +1578,7 @@ slug = "lagerstatistik"
 display_group = "Lagerstatistik för varuhandel och tjänstenäringar"
 
 [register_variant."131.177"]
-slug = "kvartalsomsattning"
+slug = "kvartalsomsattning-tjanste"
 display_group = "Kvartalsomsättning tjänstesektorn"
 
 [register_variant."131.533"]
@@ -1586,7 +1586,7 @@ slug = "tjansteproduktionsindex"
 display_group = "Tjänsteproduktionsindex"
 
 [register_variant."132.178"]
-slug = "industrins"
+slug = "industrins-energianvandning"
 display_group = "Industrins energianvändning"
 
 [register_variant."133.182"]
@@ -1606,7 +1606,7 @@ slug = "bransch-kommun-ar"
 display_group = "Bransch, kommun, år"
 
 [register_variant."134.185"]
-slug = "kortperiodisk"
+slug = "kortperiodisk-sysselsattning"
 display_group = "Kortperiodisk sysselsättningsstatistik (KS)"
 
 [register_variant."135.186"]
@@ -1618,15 +1618,15 @@ slug = "returravara"
 display_group = "Returråvara"
 
 [register_variant."139.203"]
-slug = "industrins"
+slug = "industrins-bransleforbrukning"
 display_group = "Industrins bränsleförbrukning och lager"
 
 [register_variant."139.204"]
-slug = "varmeverkens"
+slug = "varmeverkens-energi"
 display_group = "Värmeverkens energiförbrukning, energianvändning och lager"
 
 [register_variant."140.206"]
-slug = "energistatistik"
+slug = "energistatistik-lokaler"
 display_group = "Energistatistik för lokaler"
 
 [register_variant."141.207"]
@@ -1634,15 +1634,15 @@ slug = "manatlig-bransle-gas"
 display_group = "Månatlig bränsle-, gas och lagerstatistik"
 
 [register_variant."142.208"]
-slug = "register-over-manatlig"
+slug = "manatlig-elstatistik"
 display_group = "Register över månatlig elstatistik"
 
 [register_variant."143.209"]
-slug = "outhyrda"
+slug = "outhyrda-allmannyttiga"
 display_group = "Outhyrda bostadslägenheter i allmännyttiga bostadsföretag"
 
 [register_variant."143.210"]
-slug = "outhyrda-bostader"
+slug = "outhyrda-privatagda"
 display_group = "Outhyrda bostadslägenheter i privatägda bostadsföretag"
 
 [register_variant."145.212"]
@@ -1658,7 +1658,7 @@ slug = "godselmedel-2016"
 display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016 "
 
 [register_variant."149.216"]
-slug = "forsaljning-av"
+slug = "forsaljning-mineralgodsel"
 display_group = "Försäljning av mineralgödsel för jord- och trädgårdsbruk"
 
 [register_variant."151.933"]
@@ -1670,7 +1670,7 @@ slug = "camping"
 display_group = "Camping"
 
 [register_variant."151.974"]
-slug = "formedlare-av-privata"
+slug = "privata-stugor-lagenheter"
 display_group = "Förmedlare av privata stugor och lägenheter"
 
 [register_variant."152.219"]
@@ -1682,7 +1682,7 @@ slug = "vagtrafikolyckor"
 display_group = "Vägtrafikolyckor med personskada"
 
 [register_variant."156.223"]
-slug = "industrins"
+slug = "industrins-miljoskyddskostnader"
 display_group = "Industrins miljöskyddskostnader"
 
 [register_variant."157.224"]
@@ -1698,7 +1698,7 @@ slug = "tatorter"
 display_group = "Tätorter"
 
 [register_variant."161.232"]
-slug = "utrikes"
+slug = "utrikes-inrikes-fartyg"
 display_group = "Utrikes och inrikes trafik med fartyg"
 
 [register_variant."162.233"]
@@ -1710,15 +1710,15 @@ slug = "partisympatiundersokningen"
 display_group = "Partisympatiundersökningen"
 
 [register_variant."165.238"]
-slug = "foretagens"
+slug = "foretagens-kortperiodiska"
 display_group = "Företagens kortperiodiska tillgångar och skulder"
 
 [register_variant."166.239"]
-slug = "foretagens-utlandska"
+slug = "foretagens-utlandska-handelskrediter"
 display_group = "Företagens utländska handelskrediter"
 
 [register_variant."167.240"]
-slug = "konkurser-o-offentliga"
+slug = "konkurser-offentliga-ackord"
 display_group = "Konkurser o offentliga ackord "
 
 [register_variant."168.241"]
@@ -1758,7 +1758,7 @@ slug = "lonesummor"
 display_group = "Lönesummor, arbetsgivaravgifter och preliminär A-skatt"
 
 [register_variant."181.285"]
-slug = "indata"
+slug = "fmr-indata"
 display_group = "Indata"
 
 [register_variant."182.357"]
@@ -1786,7 +1786,7 @@ slug = "landsting"
 display_group = "Landsting"
 
 [register_variant."182.444"]
-slug = "lokala"
+slug = "lokala-regionala-fou"
 display_group = "Lokala och regionala FoU-enheter"
 
 [register_variant."182.446"]
@@ -1794,7 +1794,7 @@ slug = "privata-icke"
 display_group = "Privata icke vinstdrivande organisationer (PNP)"
 
 [register_variant."182.1448"]
-slug = "svenska-internationella"
+slug = "svenska-internationella-koncerner"
 display_group = "Svenska internationella koncerner"
 
 [register_variant."182.1544"]
@@ -1802,11 +1802,11 @@ slug = "offentlig-sektor"
 display_group = "Offentlig sektor"
 
 [register_variant."183.253"]
-slug = "fullstandigt-innehall"
+slug = "investeringsenkaten-fullstandigt"
 display_group = "Fullständigt innehåll"
 
 [register_variant."183.254"]
-slug = "resultat"
+slug = "investeringsenkaten-resultat"
 display_group = "Resultat"
 
 [register_variant."183.1700"]
@@ -1822,7 +1822,7 @@ slug = "industriproduktionsindex"
 display_group = "Industriproduktionsindex"
 
 [register_variant."187.370"]
-slug = "industrins-leverans"
+slug = "industrins-leverans-orderlage"
 display_group = "Industrins leverans- och orderläge"
 
 [register_variant."187.371"]
@@ -1838,7 +1838,7 @@ slug = "industrins-lager-2015"
 display_group = "Industrins lager 2015-"
 
 [register_variant."188.258"]
-slug = "varu"
+slug = "varu-landfordelat-intrastat"
 display_group = "Varu- och landfördelad i löpande priser, Intrastat"
 
 [register_variant."188.259"]
@@ -1850,7 +1850,7 @@ slug = "landfordelad-extrastat"
 display_group = "Varu- och landfördelad i löpande priser, Extrastat"
 
 [register_variant."189.265"]
-slug = "grundskolan-betyg-ak-9"
+slug = "grundskolan-betyg-ak9"
 display_group = "Grundskolan: betyg åk 9"
 
 [register_variant."190.266"]
@@ -1874,7 +1874,7 @@ slug = "gymnasieskolan-elever"
 display_group = "Gymnasieskolan, elever"
 
 [register_variant."192.405"]
-slug = "kompletterande"
+slug = "kompletterande-undervisning"
 display_group = "Kompletterande undervisning, elever"
 
 [register_variant."192.406"]
@@ -1898,15 +1898,15 @@ slug = "individregister"
 display_group = "Individregister"
 
 [register_variant."194.512"]
-slug = "kostnader"
+slug = "skolvasendet-kostnader"
 display_group = "Kostnader för skolväsendet"
 
 [register_variant."195.275"]
-slug = "sjukfranvaro-under"
+slug = "sjukfranvaro-sjuklon"
 display_group = "Sjukfrånvaro under sjuklöneperioden"
 
 [register_variant."196.276"]
-slug = "energianvandningen-inom"
+slug = "energianvandning-fiske"
 display_group = "Energianvändningen inom fiskesektorn"
 
 [register_variant."197.299"]
@@ -1918,7 +1918,7 @@ slug = "bostadsrattsforeningar"
 display_group = "Bostadsrättsföreningar"
 
 [register_variant."197.395"]
-slug = "allmannyttiga"
+slug = "allmannyttiga-bostadsforetag"
 display_group = "Allmännyttiga bostadsföretag"
 
 [register_variant."198.300"]
@@ -1934,7 +1934,7 @@ slug = "elproduktion-elhandel"
 display_group = "Elproduktion, elhandel, fjärrvärme (ovr)"
 
 [register_variant."200.801"]
-slug = "elproducerande"
+slug = "elproducerande-industri"
 display_group = "Elproducerande industriföretag (ind)"
 
 [register_variant."200.802"]
@@ -1954,7 +1954,7 @@ slug = "oljeleveranser-kommunvis"
 display_group = "Oljeleveranser, kommunvis redovisning"
 
 [register_variant."203.304"]
-slug = "energianvandning-inom"
+slug = "energianvandning-bygg"
 display_group = "Energianvändning inom byggsektorn"
 
 [register_variant."208.309"]
@@ -1966,7 +1966,7 @@ slug = "normskordar"
 display_group = "Normskördar"
 
 [register_variant."211.312"]
-slug = "skord-av-slattervall-fr"
+slug = "skord-slattervall-2016"
 display_group = "Skörd av slåttervall fr o m 2016"
 
 [register_variant."215.316"]
@@ -1990,11 +1990,11 @@ slug = "bebyggelsepaverkad-kust"
 display_group = "Bebyggelsepåverkad kust och strand"
 
 [register_variant."219.320"]
-slug = "basinformation-om-kust"
+slug = "basinformation-kust-strander-oar"
 display_group = "Basinformation om kust, stränder och öar"
 
 [register_variant."219.1193"]
-slug = "befolkning-pa-oar"
+slug = "befolkning-oar"
 display_group = "Befolkning på öar"
 
 [register_variant."219.1194"]
@@ -2002,7 +2002,7 @@ slug = "strandnara-befolkning"
 display_group = "Strandnära befolkning"
 
 [register_variant."219.1494"]
-slug = "befolkade-oar-utan"
+slug = "befolkade-oar-utan-fastland"
 display_group = "Befolkade öar utan fastlandsförbindelse "
 
 [register_variant."221.322"]
@@ -2010,7 +2010,7 @@ slug = "arbetsplatsomraden"
 display_group = "Arbetsplatsområden utanför tätort"
 
 [register_variant."223.324"]
-slug = "industrins"
+slug = "industrins-vattenanvandning"
 display_group = "Industrins vattenanvändning"
 
 [register_variant."225.326"]
@@ -2054,7 +2054,7 @@ slug = "personregistret"
 display_group = "Personregistret"
 
 [register_variant."232.1497"]
-slug = "lararprognos-inom-skola"
+slug = "lararprognos-skola-forskola"
 display_group = "Lärarprognos inom skola och förskola"
 
 [register_variant."233.403"]
@@ -2078,11 +2078,11 @@ slug = "individer-16-84-ar-ulf"
 display_group = "Individer 16-84 år (ULF)"
 
 [register_variant."237.458"]
-slug = "individer-16-ar"
+slug = "individer-16plus-ulf"
 display_group = "Individer 16 år och uppåt (ULF)"
 
 [register_variant."237.1657"]
-slug = "ulf-fran-och-med-2021"
+slug = "ulf-2021"
 display_group = "ULF från och med 2021"
 
 [register_variant."239.466"]
@@ -2118,7 +2118,7 @@ slug = "kommunfullmaktigeval"
 display_group = "Kommunfullmäktigeval"
 
 [register_variant."243.493"]
-slug = "regionfullmaktige"
+slug = "regionfullmaktigeval"
 display_group = "Regionfullmäktige- /landstingsfullmäktigeval"
 
 [register_variant."243.494"]
@@ -2158,7 +2158,7 @@ slug = "individer"
 display_group = "Individer"
 
 [register_variant."247.492"]
-slug = "hogskolestuderandes"
+slug = "hogskolestuderandes-levnadsvillkor"
 display_group = "Högskolestuderandes levnadsvillkor"
 
 [register_variant."248.496"]
@@ -2218,15 +2218,15 @@ slug = "rakenskapssammandrag"
 display_group = "Räkenskapssammandrag för kommuner och landsting"
 
 [register_variant."253.543"]
-slug = "rakenskapssammandrag-for-landsting"
+slug = "rakenskapssammandrag-landsting"
 display_group = "Räkenskapssammandrag för landsting"
 
 [register_variant."254.549"]
-slug = "utdata"
+slug = "investeringsfonder-utdata"
 display_group = "Utdata"
 
 [register_variant."257.553"]
-slug = "innovation"
+slug = "innovation-foretag"
 display_group = "Innovation i företagssektorn"
 
 [register_variant."258.556"]
@@ -2234,11 +2234,11 @@ slug = "it-anvandning-i-foretag"
 display_group = "IT-användning i företag"
 
 [register_variant."258.557"]
-slug = "befolkningens-it"
+slug = "befolkningens-it-anvandning"
 display_group = "Befolkningens IT-användning"
 
 [register_variant."259.530"]
-slug = "foretagens-utgifter"
+slug = "foretagens-it-utgifter"
 display_group = "Företagens utgifter för IT"
 
 [register_variant."260.598"]
@@ -2254,11 +2254,11 @@ slug = "antagna-1994-2016"
 display_group = "Antagna, 1994 – 2016"
 
 [register_variant."260.1323"]
-slug = "sokande"
+slug = "sokande-antagna-1985-1993"
 display_group = "Sökande och Antagna, 1985 – 1993"
 
 [register_variant."260.1327"]
-slug = "antagna"
+slug = "antagna-bakgrund-2017"
 display_group = "Antagna och Bakgrund - elev, 2017 och senare"
 
 [register_variant."263.606"]
@@ -2318,7 +2318,7 @@ slug = "deklarationsblankett"
 display_group = "Deklarationsblankett INK4 fr 2007"
 
 [register_variant."269.637"]
-slug = "bonus"
+slug = "bonus-oregelbundna"
 display_group = "Bonus och andra oregelbundna ersättningar"
 
 [register_variant."270.638"]
@@ -2342,7 +2342,7 @@ slug = "namngivna-nyfodda"
 display_group = "Namngivna nyfödda"
 
 [register_variant."272.644"]
-slug = "omforhandling"
+slug = "elavtal-omforhandling-byten"
 display_group = "Omförhandling  och byten av elavtal"
 
 [register_variant."273.649"]
@@ -2406,7 +2406,7 @@ slug = "det-europeiska-systemet"
 display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
 
 [register_variant."285.1221"]
-slug = "offentliga"
+slug = "offentlig-forvaltning-budget"
 display_group = "Offentliga förvaltningens budgetuppgifter och tillägg till EU:s konvergenskriterier"
 
 [register_variant."285.1783"]
@@ -2418,7 +2418,7 @@ slug = "europaparlamentsval"
 display_group = "Europaparlamentsval"
 
 [register_variant."289.773"]
-slug = "jordbrukets"
+slug = "jordbrukets-vattenanvandning"
 display_group = "Jordbrukets vattenanvändning"
 
 [register_variant."290.774"]
@@ -2430,15 +2430,15 @@ slug = "kvartalsutfall-regioner"
 display_group = "Kvartalsutfall regioner/landsting"
 
 [register_variant."292.843"]
-slug = "indata"
+slug = "finansiella-foretag-indata"
 display_group = "Indata"
 
 [register_variant."293.807"]
-slug = "statliga-anslag-till"
+slug = "statliga-anslag-fou"
 display_group = "Statliga anslag till forskning och utveckling"
 
 [register_variant."294.810"]
-slug = "statistik"
+slug = "avrinningsomraden"
 display_group = "Statistik för avrinningsområden"
 
 [register_variant."295.857"]
@@ -2450,7 +2450,7 @@ slug = "miljorelaterade-skatter"
 display_group = "Miljörelaterade skatter"
 
 [register_variant."295.859"]
-slug = "miljomotiverade"
+slug = "miljomotiverade-subventioner"
 display_group = "Miljömotiverade subventioner"
 
 [register_variant."295.1547"]
@@ -2482,7 +2482,7 @@ slug = "undersokningen-om-vuxnas"
 display_group = "Undersökningen om vuxnas deltagande i utbildning (AES)"
 
 [register_variant."302.850"]
-slug = "hogutbildades"
+slug = "hogutbildades-arbetsmarknad"
 display_group = "Högutbildades arbetsmarknad"
 
 [register_variant."304.852"]
@@ -2498,7 +2498,7 @@ slug = "specialskola"
 display_group = "Specialskola"
 
 [register_variant."305.853"]
-slug = "grundskola-nationella"
+slug = "grundskola-nationella-prov"
 display_group = "Grundskola: nationella prov åk 3"
 
 [register_variant."307.1195"]
@@ -2510,15 +2510,15 @@ slug = "personal-individ"
 display_group = "Personal - individ"
 
 [register_variant."310.881"]
-slug = "framskrivning-av"
+slug = "framskrivning-befolkning"
 display_group = "Framskrivning av befolkningen"
 
 [register_variant."310.887"]
-slug = "framskrivning-av-antal"
+slug = "framskrivning-fodda-fruktsamhet"
 display_group = "Framskrivning av antal födda och summerad fruktsamhet"
 
 [register_variant."310.888"]
-slug = "framskrivning-av-antal-doda-och-dodstal"
+slug = "framskrivning-doda"
 display_group = "Framskrivning av antal döda och dödstal"
 
 [register_variant."310.889"]
@@ -2526,7 +2526,7 @@ slug = "framskrivning-invandrare"
 display_group = "Framskrivning av antal invandrare/immigranter"
 
 [register_variant."310.891"]
-slug = "antal-utvandrade"
+slug = "framskrivning-utvandrade"
 display_group = "antal utvandrade och utflyttartal"
 
 [register_variant."311.882"]
@@ -2534,7 +2534,7 @@ slug = "halsorakenskaper"
 display_group = "Hälsoräkenskaper"
 
 [register_variant."312.883"]
-slug = "tjansteforetagens"
+slug = "tjansteforetagens-forbrukning"
 display_group = "Tjänsteföretagens förbrukning"
 
 [register_variant."315.905"]
@@ -2542,7 +2542,7 @@ slug = "deltagare"
 display_group = "Deltagare i svenskundervisning för invandrare (sfi)"
 
 [register_variant."317.982"]
-slug = "tiden-mellan"
+slug = "studieuppehall"
 display_group = "Tiden mellan gymnasieskolan och universitetet/högskolan"
 
 [register_variant."318.983"]
@@ -2554,7 +2554,7 @@ slug = "byggproduktionsindex"
 display_group = "Byggproduktionsindex"
 
 [register_variant."320.987"]
-slug = "grundskola-nationella"
+slug = "grundskola-nationella-prov"
 display_group = "Grundskola: nationella prov åk 6"
 
 [register_variant."321.1001"]
@@ -2574,7 +2574,7 @@ slug = "rantebarande"
 display_group = "Räntebärande"
 
 [register_variant."325.1027"]
-slug = "indata"
+slug = "forsakring-kapital-indata"
 display_group = "Indata"
 
 [register_variant."326.1025"]
@@ -2586,7 +2586,7 @@ slug = "deltagare-2001-2011"
 display_group = "Deltagare, 2001-2011"
 
 [register_variant."326.1467"]
-slug = "utbildningsdeltagare-som"
+slug = "utbildningsdeltagare-fullfoljt-2001-2011"
 display_group = "Utbildningsdeltagare som fullföljt utbildningen, 2001-2011"
 
 [register_variant."330.1070"]
@@ -2606,7 +2606,7 @@ slug = "familjer"
 display_group = "Familjer"
 
 [register_variant."334.1089"]
-slug = "indata"
+slug = "forsakring-arsredog-indata"
 display_group = "Indata"
 
 [register_variant."335.1100"]
@@ -2622,15 +2622,15 @@ slug = "lagenhetsregistret"
 display_group = "Lägenhetsregistret"
 
 [register_variant."340.1118"]
-slug = "grundskolan-betyg"
+slug = "grundskolan-betyg-ak6"
 display_group = "Grundskolan: betyg årskurs 6"
 
 [register_variant."342.1133"]
-slug = "gymnasieskola-nationella"
+slug = "gymnasieskola-nationella-prov"
 display_group = "Gymnasieskola: nationella prov"
 
 [register_variant."344.1143"]
-slug = "betyg-ak-10"
+slug = "betyg-ak10"
 display_group = "Betyg åk 10"
 
 [register_variant."344.1145"]
@@ -2642,11 +2642,11 @@ slug = "individer"
 display_group = "Individer"
 
 [register_variant."348.1174"]
-slug = "historiska"
+slug = "hbr"
 display_group = "Historiska befolkningsregistret"
 
 [register_variant."349.1177"]
-slug = "folkbokforda-personer"
+slug = "folkbokforda-biologiska"
 display_group = "Folkbokförda personer med kopplingar till biologiska föräldrar"
 
 [register_variant."349.1178"]
@@ -2662,7 +2662,7 @@ slug = "antal-barn"
 display_group = "Antal barn"
 
 [register_variant."349.1482"]
-slug = "personakter"
+slug = "personakter-avlidna"
 display_group = "Personakter för avlidna personer"
 
 [register_variant."349.1483"]
@@ -2706,7 +2706,7 @@ slug = "tradbransle-torv"
 display_group = "Trädbränsle-, torv- och avfallspriser"
 
 [register_variant."356.1252"]
-slug = "grundskola-nationella"
+slug = "grundskola-nationella-prov"
 display_group = "Grundskola: nationella prov åk 5"
 
 [register_variant."357.1267"]
@@ -2738,19 +2738,19 @@ slug = "internationell-rorlighet"
 display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
 
 [register_variant."366.1350"]
-slug = "ungdomar-utan-fullfoljd"
+slug = "ungdomar-utan-fullfoljd-gymnas"
 display_group = "Ungdomar utan fullföljd gymnasieutbildning"
 
 [register_variant."366.1351"]
-slug = "sjukskoterskor-utanfor"
+slug = "sjukskoterskor-utanfor-yrket"
 display_group = "Sjuksköterskor utanför yrket"
 
 [register_variant."366.1439"]
-slug = "doktorsexaminerades"
+slug = "doktorsexaminerades-villkor"
 display_group = "Doktorsexaminerades villkor"
 
 [register_variant."366.1525"]
-slug = "hogskoleutbildning-utan"
+slug = "hogskoleutbildning-utan-examen"
 display_group = "Högskoleutbildning utan examen"
 
 [register_variant."366.1527"]
@@ -2758,7 +2758,7 @@ slug = "forskollararforsorjningen"
 display_group = "Förskollärarförsörjningen"
 
 [register_variant."366.1528"]
-slug = "lararforsorjningen-icke"
+slug = "lararforsorjningen-icke-aktiva"
 display_group = "Lärarförsörjningen, icke aktiva lärare"
 
 [register_variant."366.1533"]
@@ -2770,11 +2770,11 @@ slug = "folkhogskoleuppfoljningen"
 display_group = "Folkhögskoleuppföljningen"
 
 [register_variant."366.1648"]
-slug = "distansundervisning"
+slug = "distansundervisning-grundskola"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
 [register_variant."366.1649"]
-slug = "distansundervisning-gymnas"
+slug = "distansundervisning-gymnasie"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
 [register_variant."367.1321"]
@@ -2786,7 +2786,7 @@ slug = "tidsstudien"
 display_group = "Tidsstudien"
 
 [register_variant."368.1325"]
-slug = "kommunernas"
+slug = "kommunernas-aktivitetsansvar"
 display_group = "Kommunernas aktivitetsansvar"
 
 [register_variant."369.1330"]
@@ -2810,15 +2810,15 @@ slug = "fastighetsregister"
 display_group = "Fastighetsregister"
 
 [register_variant."371.1359"]
-slug = "register-over-k5-k6"
+slug = "register-k5-k6"
 display_group = "Register över K5/K6"
 
 [register_variant."371.1360"]
-slug = "register-over-k10"
+slug = "register-k10"
 display_group = "Register över K10"
 
 [register_variant."371.1361"]
-slug = "register-over-k10a"
+slug = "register-k10a"
 display_group = "Register över K10A"
 
 [register_variant."371.1362"]
@@ -2930,11 +2930,11 @@ slug = "personal-individ"
 display_group = "Personal - individ"
 
 [register_variant."382.372"]
-slug = "industrins"
+slug = "industrins-kapacitetsutnyttjande"
 display_group = "Industrins kapacitetsutnyttjande"
 
 [register_variant."382.1429"]
-slug = "omsattning-inom"
+slug = "omsattning-tjanste-tom2014"
 display_group = "Omsättning inom tjänstesektorn t.o.m. 2014"
 
 [register_variant."382.1473"]
@@ -2986,7 +2986,7 @@ slug = "individuppgifter-agi"
 display_group = "Individuppgifter (AGI)"
 
 [register_variant."393.1522"]
-slug = "transportsektorns"
+slug = "transportsektorns-energianvandning"
 display_group = "Transportsektorns energianvändning (inrikes sjöfart)"
 
 [register_variant."395.1530"]
@@ -2994,7 +2994,7 @@ slug = "individ"
 display_group = "Individ"
 
 [register_variant."396.1531"]
-slug = "registerdata"
+slug = "registerdata-integration"
 display_group = "Registerdata för integration"
 
 [register_variant."397.1558"]
@@ -3034,7 +3034,7 @@ slug = "inrikes-flyttningar"
 display_group = "Inrikes flyttningar"
 
 [register_variant."404.1663"]
-slug = "preliminara"
+slug = "preliminara-manadsuppgifter"
 display_group = "Preliminära månadsuppgifter"
 
 [register_variant."404.1707"]
@@ -3066,7 +3066,7 @@ slug = "barn-ulf-12-18-ar-2023"
 display_group = "Barn-ULF 12-18 år, 2023–"
 
 [register_variant."407.1702"]
-slug = "innovation"
+slug = "innovation-arbetsstalleenheter"
 display_group = "Innovation i offentlig sektor - Arbetsställeenheter"
 
 [register_variant."407.1706"]
@@ -3110,7 +3110,7 @@ slug = "rekryteringserfarenheter"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov (LOR)"
 
 [register_variant."411.1755"]
-slug = "rekryteringserfar-per-yrke"
+slug = "rekryteringserfarenheter-yrke"
 display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
 
 [register_variant."414.1757"]
