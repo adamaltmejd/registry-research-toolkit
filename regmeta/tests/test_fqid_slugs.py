@@ -627,6 +627,9 @@ class TestSeedSlugs:
         body = seed_provider_toml(conn, "scb")
         assert '[register_version."1.10.200"]' in body
         assert 'slug = "ankor-1968-1997"' in body
+        # Audit comment carries the source registerversionnamn so the next
+        # curator can verify any typo/abbreviation normalization (§5.3).
+        assert '# "Ankor och anklingar 1968-1997"' in body
 
 
 # ---------------------------------------------------------------------------

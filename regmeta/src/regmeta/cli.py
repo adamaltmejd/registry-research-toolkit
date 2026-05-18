@@ -1160,7 +1160,10 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
                 "directory for hand-review."
             ),
         )
-    conn = open_db(db, check_schema=False)
+    # `seed_provider_toml` reads `register_version.slug` (3.3+), so a stale
+    # pre-3.3 DB would otherwise fall out as a raw `OperationalError: no such
+    # column: rver.slug`. Schema-compat gives the user the right remediation.
+    conn = open_db(db)
     try:
         written = seed_all(conn, out_dir)
     finally:

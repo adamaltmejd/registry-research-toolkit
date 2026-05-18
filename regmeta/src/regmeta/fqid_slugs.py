@@ -1037,6 +1037,12 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         if derived is not None and existing_slug in (None, derived):
             continue
         key = f"{register_id}.{regvar_id}.{regver_id}"
+        # Audit comment: preserves the source `registerversionnamn` verbatim
+        # next to the curated slug. Matters when the slug normalizes away a
+        # typo or abbreviation (§5.3) — the next curator needs the original
+        # to verify the normalization was correct.
+        if name:
+            lines.append(f"# {_toml_str(name)}")
         lines.append(f"[register_version.{_toml_str(key)}]")
         lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
         lines.append("")

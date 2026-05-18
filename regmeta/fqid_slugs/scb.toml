@@ -3681,7 +3681,8 @@ slug = "v2000-2001"
 [register_version."249.498.14029"]
 slug = "v1999-2000"
 
-# 'Ekonomiskt bistånd, kvartal'
+# 'Ekonomiskt bistånd, kvartal' (singleton: rolling-quarterly aggregate,
+# no period token in the source name despite the 'kvartal' label)
 [register_version."22.508.1025"]
 slug = "_default"
 
