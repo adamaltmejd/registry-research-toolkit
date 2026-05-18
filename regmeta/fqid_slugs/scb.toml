@@ -4065,25 +4065,25 @@ slug = "lagalternativ-2012-2060"
 [register_version."310.888.5987"]
 slug = "huvudalternativ-2015-2060"
 
-# '2015-2060 högalternariv'
+# '2015-2060 högalternariv' (SCB source typo; slug normalized to 'alternativ')
 [register_version."310.888.5988"]
-slug = "hogalternariv-2015-2060"
+slug = "hogalternativ-2015-2060"
 
-# '2015-2060 lågalternariv'
+# '2015-2060 lågalternariv' (SCB source typo; slug normalized to 'alternativ')
 [register_version."310.888.5989"]
-slug = "lagalternariv-2015-2060"
+slug = "lagalternativ-2015-2060"
 
 # '2018-2070  huvudalternativ'
 [register_version."310.888.11862"]
 slug = "huvudalternativ-2018-2070"
 
-# '2018-2070  högre alternariv'
+# '2018-2070  högre alternariv' (SCB source typo; slug normalized to 'alternativ')
 [register_version."310.888.11863"]
-slug = "hogre-alternariv-2018-2070"
+slug = "hogre-alternativ-2018-2070"
 
-# '2018-2070  lägre alternariv'
+# '2018-2070  lägre alternariv' (SCB source typo; slug normalized to 'alternativ')
 [register_version."310.888.11864"]
-slug = "lagre-alternariv-2018-2070"
+slug = "lagre-alternativ-2018-2070"
 
 # '2021-2070  huvudalternativ'
 [register_version."310.888.16272"]
@@ -4093,9 +4093,9 @@ slug = "huvudalternativ-2021-2070"
 [register_version."310.888.16273"]
 slug = "hogre-alternativ-2021-2070"
 
-# '2021-2070  lägre alternaiv'
+# '2021-2070  lägre alternaiv' (SCB source typo; slug normalized to 'alternativ')
 [register_version."310.888.16274"]
-slug = "lagre-alternaiv-2021-2070"
+slug = "lagre-alternativ-2021-2070"
 
 # '2024-2070  huvudalternativ'
 [register_version."310.888.19187"]
@@ -4281,9 +4281,9 @@ slug = "strandlinje-med-ny-bebyggelse-2020"
 [register_version."217.934.18569"]
 slug = "strandlinje-med-bebyggelse-2021"
 
-# 'Strandlinje med ny bebygge 2021'
+# 'Strandlinje med ny bebygge 2021' (SCB source truncation; slug normalized to 'bebyggelse')
 [register_version."217.934.18570"]
-slug = "strandlinje-med-ny-bebygge-2021"
+slug = "strandlinje-med-ny-bebyggelse-2021"
 
 # 'Strandlinje med bebyggelse 2022'
 [register_version."217.934.19013"]
@@ -4781,9 +4781,9 @@ slug = "lone-och-formansutbetalningar-2019"
 [register_version."392.1519.15110"]
 slug = "sociala-ersattningar-2019"
 
-# '2020, löne- och förmånsutb'
+# '2020, löne- och förmånsutb' (SCB source abbreviation; slug expanded to match 2019 sibling)
 [register_version."392.1519.17967"]
-slug = "lone-och-formansutb-2020"
+slug = "lone-och-formansutbetalningar-2020"
 
 # '2020, sociala ersättningar'
 [register_version."392.1519.17968"]
