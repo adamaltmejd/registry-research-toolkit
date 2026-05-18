@@ -80,38 +80,51 @@ def validate_built_db(db_path: Path) -> ValidationResult:
     The result records ``[OK]`` / ``[FAIL]`` lines per check; callers
     decide how to surface them. Raises FileNotFoundError if ``db_path``
     does not exist.
+
+    Opens with ``check_schema=False``: this validator exists to catch
+    schema drift, so it must not depend on the schema-version sanity
+    check passing first.
     """
     db_path = Path(db_path)
     if not db_path.exists():
         raise FileNotFoundError(f"DB not found: {db_path}")
     result = ValidationResult()
     result.section(f"Validating {db_path}")
-    conn = open_db(db_path)
+    conn = open_db(db_path, check_schema=False)
     try:
-        _check_schema_shape(conn, result)
-        _check_arbsoknov_projection(conn, result)
-        _check_cvid_421764_projection(conn, result)
+        tables = {
+            r[0]
+            for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+        }
+        has_projection = {"value_set", "value_set_member"}.issubset(tables)
+        _check_schema_shape(conn, result, tables)
+        _check_arbsoknov_projection(conn, result, has_projection)
+        _check_cvid_421764_projection(conn, result, has_projection)
         _check_operational(conn, result)
     finally:
         conn.close()
     return result
 
 
-def _has_projection_tables(conn: sqlite3.Connection) -> bool:
-    """The projection checks JOIN value_set_member; return False if either
-    `value_set` or `value_set_member` is missing so callers can skip
-    rather than raise sqlite3.OperationalError."""
-    tables = {
-        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+def _codes_for_cvid(conn: sqlite3.Connection, cvid: int) -> set[str]:
+    """Return the set of ``vardekod`` values projected onto ``cvid`` via
+    its value_set. Shared by both anchor checks."""
+    return {
+        r[0]
+        for r in conn.execute(
+            "SELECT vc.vardekod FROM variable_instance vi "
+            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "JOIN value_code vc ON vsm.code_id = vc.code_id "
+            "WHERE vi.cvid = ?",
+            (cvid,),
+        )
     }
-    return {"value_set", "value_set_member"}.issubset(tables)
 
 
-def _check_schema_shape(conn: sqlite3.Connection, result: ValidationResult) -> None:
+def _check_schema_shape(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
     result.section("[schema]")
-    tables = {
-        r[0] for r in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
-    }
     for required in ("value_set", "value_set_member"):
         if required in tables:
             result.ok(f"{required} present")
@@ -158,41 +171,36 @@ def _check_schema_shape(conn: sqlite3.Connection, result: ValidationResult) -> N
 
 
 def _check_arbsoknov_projection(
-    conn: sqlite3.Connection, result: ValidationResult
+    conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
 ) -> None:
     result.section("\n[projection: ArbSokNov LISA]")
-    if not _has_projection_tables(conn):
+    if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
     # ArbSokNov is variable_id=31554 in LISA. Codes 4 and 5 should not
-    # appear in cvids before their introduction (~2006-2007).
-    arbs = conn.execute(
-        "SELECT vi.cvid, rv.registerversionnamn, vc.vardekod, vc.vardebenamning "
-        "FROM variable_instance vi "
-        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
-        "LEFT JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-        "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
-        "WHERE vi.var_id = 31554 "
-        "ORDER BY vi.cvid, vc.vardekod"
-    ).fetchall()
-    if not arbs:
+    # appear in cvids before their introduction (~2006-2007). Fetched
+    # in one pass so the ArbSokNov-specific version-name filter can run
+    # over the (small) result set in Python.
+    cvid_versions = {
+        r["cvid"]: r["registerversionnamn"]
+        for r in conn.execute(
+            "SELECT vi.cvid, rv.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+            "WHERE vi.var_id = 31554"
+        )
+    }
+    if not cvid_versions:
         result.ok("ArbSokNov (var_id=31554) not present — skipping")
         return
-    by_cvid: dict[int, dict] = {}
-    for r in arbs:
-        d = by_cvid.setdefault(
-            r["cvid"], {"version": r["registerversionnamn"], "kods": set()}
-        )
-        if r["vardekod"] is not None:
-            d["kods"].add(r["vardekod"])
     early = [
-        cvid for cvid, d in by_cvid.items() if d["version"] and "1998" in d["version"]
+        cvid for cvid, version in cvid_versions.items() if version and "1998" in version
     ]
     if not early:
         result.ok("ArbSokNov 1998 cvid not present in DB — anchor skipped")
         return
     for cvid in early:
-        kods = by_cvid[cvid]["kods"]
+        kods = _codes_for_cvid(conn, cvid)
         if "4" in kods or "5" in kods:
             result.fail(
                 f"ArbSokNov 1998 cvid {cvid} contains 4 or 5 "
@@ -203,27 +211,16 @@ def _check_arbsoknov_projection(
 
 
 def _check_cvid_421764_projection(
-    conn: sqlite3.Connection, result: ValidationResult
+    conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
 ) -> None:
     result.section("\n[projection: cvid 421764 anchor]")
-    if not _has_projection_tables(conn):
+    if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
-    row = conn.execute(
-        "SELECT vi.value_set_id FROM variable_instance vi WHERE vi.cvid = 421764"
-    ).fetchone()
-    if row is None:
+    kods = _codes_for_cvid(conn, 421764)
+    if not kods:
         result.ok("cvid 421764 not present — anchor skipped")
         return
-    kods = {
-        r["vardekod"]
-        for r in conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 421764"
-        )
-    }
     expected = {"01", "02", "03", "04"}
     forbidden = {"00", "05"}
     if expected.issubset(kods):

@@ -22,6 +22,7 @@ from .db import (
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from .validate import validate_built_db
 from .queries import (
     get_availability,
     get_classification,
@@ -1072,8 +1073,6 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
         skip_slugs=args.skip_slugs,
     )
     if args.validate:
-        from .validate import validate_built_db
-
         validation = validate_built_db(Path(result["db_path"]))
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
