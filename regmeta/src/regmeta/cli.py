@@ -10,7 +10,7 @@ import sqlite3
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from .db import (
     SCHEMA_VERSION,
@@ -1062,18 +1062,13 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
-def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else default_db_dir()
-    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
-    result = build_db(
-        input_dir=Path(args.input_dir),
-        db_dir=db_dir,
-        slug_dir=slug_dir,
-        skip_slugs=args.skip_slugs,
-    )
-    if args.validate:
-        validation = validate_built_db(Path(result["db_path"]))
+def _build_validate_hook() -> Callable[[Path], None]:
+    """Return a build_db pre_rename_hook that runs the value-set dedup
+    validator against the staging DB and raises on failure. Defined as a
+    helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
+
+    def hook(staging_db: Path) -> None:
+        validation = validate_built_db(staging_db)
         sys.stderr.write(validation.format_report() + "\n")
         sys.stderr.flush()
         if validation.failures:
@@ -1086,13 +1081,29 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     f"check(s) — {'; '.join(validation.failures)}"
                 ),
                 remediation=(
-                    "Inspect the [FAIL] lines above. Fix the underlying build "
-                    "issue and rerun `regmeta maintain build-db --validate`. "
-                    "Re-run the validator standalone with "
-                    "`uv run python scripts/validate_valueset_dedup.py <db>` "
-                    "to iterate without rebuilding."
+                    "Inspect the [FAIL] lines above. The staging DB has been "
+                    "discarded and the previously-installed DB is unchanged. "
+                    "Fix the underlying build issue and rerun "
+                    "`regmeta maintain build-db --validate`."
                 ),
             )
+
+    return hook
+
+
+def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
+    db_dir = Path(args.db) if args.db else default_db_dir()
+    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
+
+    pre_rename_hook = _build_validate_hook() if args.validate else None
+    result = build_db(
+        input_dir=Path(args.input_dir),
+        db_dir=db_dir,
+        slug_dir=slug_dir,
+        skip_slugs=args.skip_slugs,
+        pre_rename_hook=pre_rename_hook,
+    )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain build-db",

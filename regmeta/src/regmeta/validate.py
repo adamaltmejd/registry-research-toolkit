@@ -71,7 +71,14 @@ class ValidationResult:
         self.lines.append(ValidationLine("info", msg))
 
     def format_report(self) -> str:
-        return "\n".join(ln.format() for ln in self.lines)
+        # Blank line before each section (except the first) so sections
+        # are visually separated in the rendered report.
+        parts: list[str] = []
+        for ln in self.lines:
+            if ln.kind == "section" and parts:
+                parts.append("")
+            parts.append(ln.format())
+        return "\n".join(parts)
 
 
 def validate_built_db(db_path: Path) -> ValidationResult:
@@ -173,7 +180,7 @@ def _check_schema_shape(
 def _check_arbsoknov_projection(
     conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
 ) -> None:
-    result.section("\n[projection: ArbSokNov LISA]")
+    result.section("[projection: ArbSokNov LISA]")
     if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
@@ -213,7 +220,7 @@ def _check_arbsoknov_projection(
 def _check_cvid_421764_projection(
     conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
 ) -> None:
-    result.section("\n[projection: cvid 421764 anchor]")
+    result.section("[projection: cvid 421764 anchor]")
     if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
@@ -237,7 +244,7 @@ def _check_cvid_421764_projection(
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:
-    result.section("\n[operational]")
+    result.section("[operational]")
     fk_violations = list(conn.execute("PRAGMA foreign_key_check"))
     if not fk_violations:
         result.ok("PRAGMA foreign_key_check returns 0 rows")

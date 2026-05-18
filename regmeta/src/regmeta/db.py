@@ -15,7 +15,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterator
+from typing import Any, Callable, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
@@ -1653,6 +1653,7 @@ def build_db(
     skip_classifications: bool = False,
     slug_dir: Path | None = None,
     skip_slugs: bool = False,
+    pre_rename_hook: Callable[[Path], None] | None = None,
 ) -> dict[str, Any]:
     """Build the regmeta database from SCB CSV exports.
 
@@ -1970,6 +1971,16 @@ def build_db(
         staging_path.unlink(missing_ok=True)
         if build_failed:
             tmp_path.unlink(missing_ok=True)
+
+    # Pre-rename hook runs against the staging DB so a failing check
+    # can abort *before* the atomic rename replaces the installed DB.
+    # If the hook raises, drop the tmp file and let the prior DB stand.
+    if pre_rename_hook is not None:
+        try:
+            pre_rename_hook(tmp_path)
+        except BaseException:
+            tmp_path.unlink(missing_ok=True)
+            raise
 
     # Atomic replace
     if final_path.exists():

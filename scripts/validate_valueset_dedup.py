@@ -14,6 +14,7 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+from regmeta.errors import RegmetaError
 from regmeta.validate import validate_built_db
 
 DEFAULT_DB = Path("/tmp/regmeta-rebuild-test/regmeta.db")
@@ -25,6 +26,10 @@ def main() -> None:
         result = validate_built_db(db_path)
     except FileNotFoundError as exc:
         sys.exit(str(exc))
+    except RegmetaError as exc:
+        # `open_db` raises RegmetaError on a missing or unreadable DB;
+        # surface its message rather than letting a traceback escape.
+        sys.exit(f"{exc.code}: {exc.message}")
     print(result.format_report())
     print()
     if result.failures:

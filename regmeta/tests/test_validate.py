@@ -78,3 +78,54 @@ class TestBuildDbValidateFlag:
         assert ns.validate is True
         ns = parser.parse_args(["maintain", "build-db", "--input-dir", "x"])
         assert ns.validate is False
+
+    def test_failed_validation_does_not_replace_installed_db(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ):
+        """Regression for Copilot review on PR #99: a failing `--validate`
+        run must not leave the staging DB installed at `<db_dir>/regmeta.db`.
+        Pre-populates the install path with a sentinel, builds with a hook
+        that always fails, and asserts the sentinel is preserved."""
+        import sys as _sys
+
+        _sys.path.insert(0, str(Path(__file__).parent))
+        from _csv_fixtures import write_scb_input
+
+        from regmeta import validate as validate_mod
+        from regmeta.db import DB_FILENAME, build_db
+        from regmeta.errors import RegmetaError
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        input_dir.mkdir()
+        db_dir.mkdir()
+        write_scb_input(input_dir)
+
+        sentinel = db_dir / DB_FILENAME
+        sentinel_bytes = b"SENTINEL-PREVIOUS-DB-MUST-SURVIVE"
+        sentinel.write_bytes(sentinel_bytes)
+
+        def always_fail(_db_path: Path) -> validate_mod.ValidationResult:
+            r = validate_mod.ValidationResult()
+            r.fail("synthetic invariant breach")
+            return r
+
+        monkeypatch.setattr(validate_mod, "validate_built_db", always_fail)
+        # Also patch the re-export in cli so the handler sees the fake.
+        from regmeta import cli as cli_mod
+
+        monkeypatch.setattr(cli_mod, "validate_built_db", always_fail)
+
+        with pytest.raises(RegmetaError) as exc_info:
+            build_db(
+                input_dir=input_dir,
+                db_dir=db_dir,
+                skip_classifications=True,
+                skip_slugs=True,
+                pre_rename_hook=cli_mod._build_validate_hook(),
+            )
+        assert exc_info.value.code == "validation_failed"
+        # The prior DB is untouched and the failed staging file is gone.
+        assert sentinel.read_bytes() == sentinel_bytes
+        tmp_file = sentinel.with_suffix(".db.tmp")
+        assert not tmp_file.exists()
