@@ -10,7 +10,7 @@ import sqlite3
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from .db import (
     SCHEMA_VERSION,
@@ -22,6 +22,7 @@ from .db import (
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from .validate import validate_built_db
 from .queries import (
     get_availability,
     get_classification,
@@ -843,6 +844,16 @@ def _build_parser() -> argparse.ArgumentParser:
             "downstream queries that depend on FQIDs."
         ),
     )
+    build_p.add_argument(
+        "--validate",
+        action="store_true",
+        help=(
+            "Run post-build invariant checks (value-set dedup, year-projection "
+            "anchors, FK integrity, freelist ceiling) against the freshly-built "
+            "DB. Fails with EXIT_CONFIG on any violation. Equivalent to running "
+            "`scripts/validate_valueset_dedup.py` after the build."
+        ),
+    )
 
     seed_slugs_p = maintain_sub.add_parser(
         "seed-slugs",
@@ -1051,15 +1062,47 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
+def _build_validate_hook() -> Callable[[Path], None]:
+    """Return a build_db pre_rename_hook that runs the value-set dedup
+    validator against the staging DB and raises on failure. Defined as a
+    helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
+
+    def hook(staging_db: Path) -> None:
+        validation = validate_built_db(staging_db)
+        sys.stderr.write(validation.format_report() + "\n")
+        sys.stderr.flush()
+        if validation.failures:
+            raise RegmetaError(
+                exit_code=EXIT_CONFIG,
+                code="validation_failed",
+                error_class="configuration",
+                message=(
+                    f"Post-build validation failed: {len(validation.failures)} "
+                    f"check(s) — {'; '.join(validation.failures)}"
+                ),
+                remediation=(
+                    "Inspect the [FAIL] lines above. The staging DB has been "
+                    "discarded and the previously-installed DB is unchanged. "
+                    "Fix the underlying build issue and rerun "
+                    "`regmeta maintain build-db --validate`."
+                ),
+            )
+
+    return hook
+
+
 def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db_dir = Path(args.db) if args.db else default_db_dir()
     slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
+
+    pre_rename_hook = _build_validate_hook() if args.validate else None
     result = build_db(
         input_dir=Path(args.input_dir),
         db_dir=db_dir,
         slug_dir=slug_dir,
         skip_slugs=args.skip_slugs,
+        pre_rename_hook=pre_rename_hook,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
@@ -1067,6 +1110,7 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
         args_payload={
             "input_dir": args.input_dir,
             "skip_slugs": args.skip_slugs,
+            "validate": args.validate,
         },
         db_info={
             "schema_version": SCHEMA_VERSION,
