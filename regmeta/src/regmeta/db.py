@@ -199,6 +199,11 @@ CREATE TABLE register_variant (
 CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
     regvar_id INTEGER NOT NULL REFERENCES register_variant(regvar_id),
+    -- §5.2 version slot: either a derived period token (`2018`, `HT2020`, …)
+    -- or a curated slug for unperiodized versions (the 9 SCB aux tables in
+    -- LISA / Utbildningsregistret / Ekonomiskt bistånd). NULL only between
+    -- INSERT and populate_slugs's auto-derive + curated-override pass.
+    slug TEXT,
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,
     registerversionmatinformation TEXT,
@@ -911,9 +916,15 @@ def _import_registerinformation(
         list(variants.values()),
     )
     conn.executemany(
-        "INSERT INTO register_version VALUES (:regver_id, :regvar_id, :registerversionnamn, "
-        ":registerversionbeskrivning, :registerversionmatinformation, :registerversion_docstaus, "
-        ":registerversion_forstagodkannandedatum, :registerversion_senastgodkanddatum)",
+        "INSERT INTO register_version "
+        "(regver_id, regvar_id, registerversionnamn, "
+        "registerversionbeskrivning, registerversionmatinformation, "
+        "registerversion_docstaus, registerversion_forstagodkannandedatum, "
+        "registerversion_senastgodkanddatum) VALUES ("
+        ":regver_id, :regvar_id, :registerversionnamn, "
+        ":registerversionbeskrivning, :registerversionmatinformation, "
+        ":registerversion_docstaus, :registerversion_forstagodkannandedatum, "
+        ":registerversion_senastgodkanddatum)",
         list(versions.values()),
     )
     conn.executemany(

@@ -453,8 +453,10 @@ Examples:
 scb                                                  provider
 scb/lisa                                             register
 scb/lisa/individer-15plus                            register_variant
-scb/lisa/individer-15plus/2018                       register_version
+scb/lisa/individer-15plus/2018                       register_version (derived period in slot 4)
 scb/lisa/individer-15plus/2018/kon                   variable binding
+scb/ureg/gymnasieintyg/ackumulerat-register          register_version (curated slug — unperiodized aux table)
+scb/lisa/individer-avlidna/_default                  register_version (curated `_default` — singleton aux)
 sos/lss/_default/2022                                version of a variant-less register
 scb/arbetskraftsbarometern/2020                      elided register_version (variant slot defaults)
 scb/arbetskraftsbarometern/2020/kon                  elided variable binding
@@ -462,11 +464,23 @@ class/sun/2020                                       classification (provider-in
 class/lkf/2012                                       classification
 ```
 
-Period segments accept integer year (`2018`) or string period
+The version slot accepts either a **derived period** or a
+**curated slug**. Periods are integer year (`2018`) or string period
 (`2018-01`, `HT2020`, `2018-Q3`) — the same forms `time_key` accepts in
 `project_data.json`. Year is constrained to `(?:19|20)\d{2}`
 (1900-2099, SCB-realistic) and month to `(?:0[1-9]|1[0-2])`; the
 reserved-slug regexes below share these bounds.
+
+Curated version slugs are kebab-case (same grammar as the variant
+slot) and live in the slug TOML. They cover register_versions whose
+`registerversionnamn` has no parseable period — SCB's aux tables like
+`scb/ureg/gymnasieintyg/ackumulerat-register` or
+`scb/lisa/individer-avlidna/_default`. Build-time `populate_slugs`
+auto-derives a period for every register_version row first, then
+applies TOML overrides for the unperiodized ones; the resolver just
+matches the `register_version.slug` column. Period and slug grammars
+are disjoint, so position alone disambiguates a token like `2018`
+(period) from `ackumulerat-register` (slug).
 
 **Variables have no concept FQID.** Variables are addressable only
 via 5-segment binding FQIDs. A 3-segment "variable concept" form
@@ -507,12 +521,13 @@ hitting one of these:
 - `class` — reserved in any slot (keeps the leading-`class/`
   discriminator unambiguous; collision in the provider slot is the
   load-bearing case but the literal token is reserved everywhere).
-- `_default` (register_variant slot only) — synthesized at
-  FQID-resolve time for registers without a sub-decomposition
+- `_default` (register_variant + register_version slots) —
+  synthesized at FQID-resolve time for variant-less registers
   (§5.1); curators may also pin this slug onto a real single-variant
-  register where the lone variant just restates the register name.
-  The underscore prefix is outside the slug grammar, so no other
-  slug can collide with it.
+  register where the lone variant just restates the register name,
+  or onto a real single-version variant where the lone version is
+  time-invariant (an aux table). The underscore prefix is outside
+  the slug grammar, so no other slug can collide with it.
 - Period-shaped slugs in non-period slots (provider / register /
   variant / variable): a slug that matches the period grammar
   (`^\d{4}$`, `^\d{4}-\d{2}$`, `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`)
@@ -630,15 +645,26 @@ the same TOML row shape: a table keyed by the provider's source ID
 that the FQID grammar (§5.2) uses to address the entity — never broader.
 Concretely: `register` slugs are unique within a provider; `register_variant`
 and `variable` slugs are unique within their parent register (the
-`<register>` slot in the FQID already disambiguates them); `classification`
-entries are unique by `(slug, version)` pair within `classifications.toml`,
-so the same slug stem may appear across versions (e.g. `sun` with
-`version = "2000"` and `version = "2020"`). Two registers may both have an
-`individer` variant or a `kon` variable without colliding.
+`<register>` slot in the FQID already disambiguates them);
+`register_version` slugs are unique within their parent variant (the
+`<variant>` slot already disambiguates them, so periodized and curated
+slugs share the same scope); `classification` entries are unique by
+`(slug, version)` pair within `classifications.toml`, so the same slug
+stem may appear across versions (e.g. `sun` with `version = "2000"` and
+`version = "2020"`). Two registers may both have an `individer` variant
+or a `kon` variable without colliding.
+
+**register_version is mostly automatic.** The build derives a period
+from `registerversionnamn` for every version row and writes it into
+`register_version.slug`. TOML `[register_version."<RegisterId>.<RegvarId>.<RegverId>"]`
+entries are only required for the rows whose name doesn't yield a
+period — SCB's aux tables like cumulative lookups. Periodized rows
+need no TOML entry; the snapshot lock (§5.4) tracks only the curated
+ones.
 
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
-| `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by`. |
+| `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables and periodized register_versions are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by` (or, for register_version, the unperiodized aux tables). |
 | `version`       | string              | classification    | yes      | Version stem of the classification FQID (`SUN/2020` → `version = "2020"`). |
 | `display_group` | string              | register_variant  | no       | Presentation-only grouping label. Drift-tolerant; can change. |
 | `deprecated`    | bool (default false)| all               | no       | Source ID dropped from current deliveries (a register retired, a variable removed). The entry is retained forever — resolution succeeds but emits a warning (§6.8.3). |
@@ -660,6 +686,14 @@ deprecated = true                       # retired delivery; slug retained foreve
 [register_variant."34.153"]
 slug = "individer-15plus"
 display_group = "Individer"
+
+# register_version: curated slug for an unperiodized aux table (the only
+# kind that needs a TOML entry — periodized rows auto-derive at build).
+[register_version."34.1582.15549"]
+slug = "_default"                       # variant has one no-period version
+
+[register_version."24.1631.17536"]
+slug = "ackumulerat-register"           # coexists with periodized siblings
 
 # Typo correction (§5.4): never edit in place. Add a new row and link the
 # old one via replaced_by. The old row stays in the TOML; resolution

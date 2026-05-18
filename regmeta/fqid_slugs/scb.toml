@@ -3116,3 +3116,41 @@ display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
 [register_variant."414.1757"]
 slug = "sjalvforsorjning-20-65-ar"
 display_group = "Självförsörjning 20-65 år"
+
+# -- register_version overrides -------------------------------------------
+#
+# §5.2: the version slot accepts either an auto-derived period (`2018`,
+# `HT2020`, …) or a curated slug. Only unperiodized aux versions need a
+# TOML entry; periodized rows auto-derive at build time.
+#
+# The 9 entries below cover every SCB register_version whose
+# registerversionnamn doesn't yield a period via the §5.2 regex — five
+# variant-singleton aux tables (`_default`) plus four that coexist with
+# periodized siblings and need a distinct descriptive slug.
+
+[register_version."22.508.1025"]
+slug = "_default"
+
+[register_version."24.1225.7368"]
+slug = "_default"
+
+[register_version."34.1582.15549"]
+slug = "_default"
+
+[register_version."34.1583.15550"]
+slug = "_default"
+
+[register_version."34.1584.15551"]
+slug = "_default"
+
+[register_version."24.1631.17536"]
+slug = "ackumulerat-register"
+
+[register_version."24.1631.17537"]
+slug = "summerade-poang"
+
+[register_version."24.1630.17540"]
+slug = "samlat-betygsdokument-studiebevis"
+
+[register_version."24.1634.17563"]
+slug = "ackumulerat"

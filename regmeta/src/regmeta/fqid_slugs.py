@@ -28,10 +28,17 @@ from .fqid import (
     validate_slug,
 )
 
-EntityKind = Literal["register", "register_variant", "variable", "classification"]
+EntityKind = Literal[
+    "register",
+    "register_variant",
+    "register_version",
+    "variable",
+    "classification",
+]
 ENTITY_KINDS: tuple[EntityKind, ...] = (
     "register",
     "register_variant",
+    "register_version",
     "variable",
     "classification",
 )
@@ -45,7 +52,7 @@ _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classificat
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
 # silently no-op.
 _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
-    {"register", "register_variant", "variable"}
+    {"register", "register_variant", "register_version", "variable"}
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
 
@@ -165,6 +172,8 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
         return frozenset(base | {"version", "same_as"})
     if kind == "variable":
         return frozenset(base | {"same_as"})
+    # register_version: just base. registerversionnamn already serves as the
+    # human-readable label; no display_group needed.
     return frozenset(base)
 
 
@@ -223,9 +232,19 @@ def _validate_entry_slug(
             f"{kind}.{source_id!r}: `slug` must be a string, got {type(slug).__name__}.",
             "Quote the value as a TOML string.",
         )
-    slot = FqidKind.REGISTER_VARIANT if kind == "register_variant" else kind
+    if kind == "register_variant":
+        slot: FqidKind | str = FqidKind.REGISTER_VARIANT
+    elif kind == "register_version":
+        slot = FqidKind.REGISTER_VERSION
+    else:
+        slot = kind
     try:
-        validate_slug(slug, slot, allow_default=(kind == "register_variant"))
+        validate_slug(
+            slug,
+            slot,
+            allow_default=(kind in ("register_variant", "register_version")),
+            allow_period=(kind == "register_version"),
+        )
     except ValueError as exc:
         raise _err(
             "slug_toml_invalid",
@@ -257,6 +276,8 @@ def _validate_entry(
         _parse_register_id(source_id)
     elif kind in ("register_variant", "variable"):
         _parse_variant_id(source_id)
+    elif kind == "register_version":
+        _parse_version_id(source_id)
     slug = entry.get("slug")
     _validate_entry_slug(kind, source_id, slug, required=kind != "variable")
     # `bool(value)` would silently flip `deprecated = "false"` to True and
@@ -379,9 +400,12 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
     # - register: provider-wide (`<provider>/<register>`)
     # - register_variant, variable: per parent register (the register slot in
     #   `<provider>/<register>/<variant>...` already disambiguates them).
-    # Source IDs for variant/variable are dotted: "<reg_id>.<sub_id>".
+    # - register_version: per parent variant (the variant slot disambiguates
+    #   `scb/r/v1/2020` from `scb/r/v2/2020`).
+    # Source IDs are dotted: variant/variable `<reg>.<sub>`, version
+    # `<reg>.<var>.<ver>`.
     seen_slugs: dict[tuple[str, ...], str] = {}
-    for kind in ("register", "register_variant", "variable"):
+    for kind in ("register", "register_variant", "register_version", "variable"):
         if kind not in data:
             continue
         table = data[kind]
@@ -404,6 +428,11 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                     reg_id, _, _ = source_id.partition(".")
                     slug_key: tuple[str, ...] = (kind, reg_id, entry.slug)
                     scope_desc = f"within register {reg_id!r}"
+                elif kind == "register_version":
+                    reg_id, _, rest = source_id.partition(".")
+                    regvar_id, _, _ = rest.partition(".")
+                    slug_key = (kind, reg_id, regvar_id, entry.slug)
+                    scope_desc = f"within variant {reg_id!r}.{regvar_id!r}"
                 else:
                     slug_key = (kind, entry.slug)
                     scope_desc = f"within provider {provider!r}"
@@ -529,6 +558,28 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
     return reg, var
 
 
+def _parse_version_id(source_id: str) -> tuple[int, int, int]:
+    parts = source_id.split(".")
+    if len(parts) != 3:
+        raise _err(
+            "slug_toml_invalid",
+            f"register_version.{source_id!r}: expected "
+            f"`<RegisterId>.<RegVarID>.<RegVerID>`.",
+            "Compose the key from SCB's three integer IDs.",
+        )
+    reg = _parse_canonical_int(parts[0])
+    var = _parse_canonical_int(parts[1])
+    ver = _parse_canonical_int(parts[2])
+    if reg is None or var is None or ver is None:
+        raise _err(
+            "slug_toml_invalid",
+            f"register_version.{source_id!r}: all three halves must be integers "
+            f"in canonical form (no leading zeros).",
+            "Use the literal SCB IDs.",
+        )
+    return reg, var, ver
+
+
 def _live_register_ids(conn: sqlite3.Connection, provider_slug: str) -> set[int]:
     rows = conn.execute(
         "SELECT r.register_id FROM register r "
@@ -552,6 +603,54 @@ def _live_variant_keys(
     return {(r[0], r[1]) for r in rows}
 
 
+def _live_version_keys(
+    conn: sqlite3.Connection, provider_slug: str
+) -> set[tuple[int, int, int]]:
+    rows = conn.execute(
+        "SELECT rv.register_id, rver.regvar_id, rver.regver_id "
+        "FROM register_version rver "
+        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ?",
+        (provider_slug,),
+    ).fetchall()
+    return {(r[0], r[1], r[2]) for r in rows}
+
+
+def _autoderive_version_slugs(conn: sqlite3.Connection, provider_slug: str) -> int:
+    """Populate `register_version.slug` from `derive_period(registerversionnamn)`
+    for every version row under this provider whose slug column is still NULL.
+
+    Periodized versions (8,599 / 8,608 in current SCB) land their derived period
+    as the slug here; the 9 unperiodized aux tables stay NULL and must be
+    curated via `[register_version."<reg>.<var>.<ver>"]` TOML entries. The
+    strict-mode unslugged check fires for any leftover NULL.
+    """
+    # Local import to avoid the build → fqid_slugs → fqid → … cycle.
+    from .fqid import derive_period
+
+    rows = conn.execute(
+        "SELECT rver.regver_id, rver.registerversionnamn "
+        "FROM register_version rver "
+        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND rver.slug IS NULL",
+        (provider_slug,),
+    ).fetchall()
+    updates = [
+        (period, regver_id)
+        for regver_id, name in rows
+        if (period := derive_period(name)) is not None
+    ]
+    if updates:
+        conn.executemany(
+            "UPDATE register_version SET slug = ? WHERE regver_id = ?", updates
+        )
+    return len(updates)
+
+
 def populate_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
@@ -559,20 +658,31 @@ def populate_slugs(
     strict: bool = True,
 ) -> dict[str, int]:
     """Read ``slug_dir`` and write slug columns on register / register_variant /
-    classification.
+    register_version / classification.
+
+    Register_version is mixed-source: most rows auto-derive their slug from
+    ``registerversionnamn`` (period regex), and TOML entries override or
+    fill in unperiodized rows.
 
     ``strict=True`` (the default for real builds) refuses if any live source
     ID has no slug entry. Tests pass ``strict=False`` to populate whatever's
     available without enforcing coverage.
 
-    Returns ``{"register": n, "register_variant": n, "classification": n}``.
+    Returns ``{"register": n, "register_variant": n, "register_version": n,
+    "register_version_auto": n, "classification": n}``.
     """
     # Function-level import — `fqid_slugs` is imported lazily from `db.build_db`,
     # so importing `db` at module load would close a cycle.
     from .db import _progress
 
     entries = load_slug_dir(slug_dir)
-    counts = {"register": 0, "register_variant": 0, "classification": 0}
+    counts = {
+        "register": 0,
+        "register_variant": 0,
+        "register_version": 0,
+        "register_version_auto": 0,
+        "classification": 0,
+    }
 
     # `[variable]` slug overrides are forward-compat metadata only — the
     # binding-resolver derives slugs from kolumnnamn at query time (catalog.py
@@ -609,6 +719,15 @@ def populate_slugs(
         prov_entries = by_provider.get(provider_slug, [])
         live_regs = _live_register_ids(conn, provider_slug)
         live_variants = _live_variant_keys(conn, provider_slug)
+        # Auto-derive register_version slugs from registerversionnamn before
+        # processing TOML entries so curated entries can override the derived
+        # value if a maintainer wants (e.g. a typo correction in the version
+        # name that the period regex still happens to extract a wrong year
+        # from). Unperiodized rows stay NULL and force a TOML entry.
+        counts["register_version_auto"] += _autoderive_version_slugs(
+            conn, provider_slug
+        )
+        live_versions = _live_version_keys(conn, provider_slug)
 
         for entry in prov_entries:
             if entry.slug is None:
@@ -646,6 +765,22 @@ def populate_slugs(
                     (entry.slug, entry.display_group, key[0], key[1]),
                 )
                 counts["register_variant"] += 1
+            elif entry.kind == "register_version":
+                vkey = _parse_version_id(entry.source_id)
+                if vkey not in live_versions:
+                    if entry.deprecated:
+                        continue
+                    raise _err(
+                        "slug_unknown_source_id",
+                        f"{provider_slug}.toml: register_version.{entry.source_id!r} "
+                        f"has no live row in this build.",
+                        "Mark the entry deprecated=true or drop it.",
+                    )
+                conn.execute(
+                    "UPDATE register_version SET slug = ? WHERE regver_id = ?",
+                    (entry.slug, vkey[2]),
+                )
+                counts["register_version"] += 1
 
         if strict:
             _assert_no_unslugged(
@@ -677,6 +812,24 @@ def populate_slugs(
                 sample_fmt=_format_variant_sample,
                 provider_slug=provider_slug,
                 add_hint='[register_variant."<RegisterId>.<RegVarID>"]',
+            )
+            _assert_no_unslugged(
+                conn,
+                sql=(
+                    "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+                    "rver.registerversionnamn "
+                    "FROM register_version rver "
+                    "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+                    "JOIN register r ON rv.register_id = r.register_id "
+                    "JOIN provider p ON r.provider_id = p.provider_id "
+                    "WHERE p.slug = ? AND rver.slug IS NULL "
+                    "ORDER BY rver.regver_id"
+                ),
+                params=(provider_slug,),
+                label="register_version",
+                sample_fmt=_format_version_sample,
+                provider_slug=provider_slug,
+                add_hint='[register_version."<RegisterId>.<RegVarID>.<RegVerID>"]',
             )
 
     for entry in classification_entries:
@@ -732,6 +885,8 @@ def populate_slugs(
     _progress(
         f"  Slugged {counts['register']:,} registers, "
         f"{counts['register_variant']:,} variants, "
+        f"{counts['register_version_auto']:,}+{counts['register_version']:,} "
+        f"versions (derived+curated), "
         f"{counts['classification']:,} classifications"
     )
     return counts
@@ -743,6 +898,10 @@ def _format_register_sample(row: Any) -> str:
 
 def _format_variant_sample(row: Any) -> str:
     return f"{row[0]}.{row[1]} ({row[2]!r})"
+
+
+def _format_version_sample(row: Any) -> str:
+    return f"{row[0]}.{row[1]}.{row[2]} ({row[3]!r})"
 
 
 def _assert_no_unslugged(
@@ -819,6 +978,32 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         if name:
             lines.append(f"display_group = {_toml_str(name)}")
         lines.append("")
+
+    # Only versions with a curator-pinned slug (i.e. the unperiodized aux
+    # rows) need a seed entry. Periodized versions get their slug auto-derived
+    # at build time from the period regex, so they're omitted.
+    versions = conn.execute(
+        "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+        "rver.registerversionnamn, rver.slug "
+        "FROM register_version rver "
+        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND rver.slug IS NOT NULL "
+        "ORDER BY rver.regver_id",
+        (provider_slug,),
+    ).fetchall()
+    from .fqid import is_period
+
+    for register_id, regvar_id, regver_id, name, existing_slug in versions:
+        # Skip seeded entries for auto-derivable periods — those round-trip
+        # through populate_slugs without any TOML curation.
+        if existing_slug and is_period(existing_slug):
+            continue
+        key = f"{register_id}.{regvar_id}.{regver_id}"
+        lines.append(f"[register_version.{_toml_str(key)}]")
+        lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
+        lines.append("")
     return "\n".join(lines)
 
 
@@ -870,6 +1055,7 @@ def seed_all(conn: sqlite3.Connection, out_dir: Path) -> dict[str, Path]:
 class PrecheckResult:
     missing_registers: tuple[tuple[str, str, str], ...]  # (provider, id, name)
     missing_variants: tuple[tuple[str, str, str], ...]
+    missing_versions: tuple[tuple[str, str, str], ...]  # unperiodized + un-curated
     missing_classifications: tuple[str, ...]
     parse_errors: tuple[str, ...]
     # Reverse direction: TOML source IDs that don't (or no longer) exist in
@@ -879,6 +1065,7 @@ class PrecheckResult:
     # them before a build attempt.
     stale_registers: tuple[tuple[str, str], ...] = ()  # (provider, source_id)
     stale_variants: tuple[tuple[str, str], ...] = ()
+    stale_versions: tuple[tuple[str, str], ...] = ()
     stale_classifications: tuple[str, ...] = ()
     entries: tuple[SlugEntry, ...] = ()
 
@@ -887,10 +1074,12 @@ class PrecheckResult:
         return not (
             self.missing_registers
             or self.missing_variants
+            or self.missing_versions
             or self.missing_classifications
             or self.parse_errors
             or self.stale_registers
             or self.stale_variants
+            or self.stale_versions
             or self.stale_classifications
         )
 
@@ -920,10 +1109,14 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     # One pass per kind. The same row sets feed both the missing-slug check
     # (live row, no TOML entry) and the stale-entry check (TOML entry, no live
     # row), so we materialize each once.
+    from .fqid import derive_period
+
     live_regs_by_provider: dict[str, set[int]] = {}
     live_vars_by_provider: dict[str, set[tuple[int, int]]] = {}
+    live_versions_by_provider: dict[str, set[tuple[int, int, int]]] = {}
     missing_regs: list[tuple[str, str, str]] = []
     missing_variants: list[tuple[str, str, str]] = []
+    missing_versions: list[tuple[str, str, str]] = []
     for provider_slug in _live_providers(conn):
         slugged_regs = by_provider_kind.get((provider_slug, "register"), set())
         reg_rows = conn.execute(
@@ -958,6 +1151,33 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             if key not in slugged_variants:
                 missing_variants.append((provider_slug, key, name or ""))
 
+        # register_version: only the rows whose registerversionnamn doesn't
+        # auto-derive a period need a TOML entry. Periodized versions get
+        # their slug filled by populate_slugs without any curation.
+        slugged_versions = by_provider_kind.get(
+            (provider_slug, "register_version"), set()
+        )
+        ver_rows = conn.execute(
+            "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+            "rver.registerversionnamn "
+            "FROM register_version rver "
+            "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? "
+            "ORDER BY rver.regver_id",
+            (provider_slug,),
+        ).fetchall()
+        live_versions_by_provider[provider_slug] = {
+            (rid, vid, verid) for (rid, vid, verid, _) in ver_rows
+        }
+        for register_id, regvar_id, regver_id, name in ver_rows:
+            if derive_period(name) is not None:
+                continue
+            key = f"{register_id}.{regvar_id}.{regver_id}"
+            if key not in slugged_versions:
+                missing_versions.append((provider_slug, key, name or ""))
+
     db_classifications: set[str] = set()
     missing_classifications: list[str] = []
     for (short,) in conn.execute(
@@ -967,20 +1187,23 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         if short not in classification_ids:
             missing_classifications.append(short)
 
-    stale_regs, stale_vars, stale_cls = _stale_toml_entries(
+    stale_regs, stale_vars, stale_vers, stale_cls = _stale_toml_entries(
         entries,
         live_regs_by_provider=live_regs_by_provider,
         live_vars_by_provider=live_vars_by_provider,
+        live_versions_by_provider=live_versions_by_provider,
         db_classifications=db_classifications,
     )
 
     return PrecheckResult(
         missing_registers=tuple(missing_regs),
         missing_variants=tuple(missing_variants),
+        missing_versions=tuple(missing_versions),
         missing_classifications=tuple(missing_classifications),
         parse_errors=tuple(parse_errors),
         stale_registers=tuple(stale_regs),
         stale_variants=tuple(stale_vars),
+        stale_versions=tuple(stale_vers),
         stale_classifications=tuple(stale_cls),
         entries=tuple(entries),
     )
@@ -991,8 +1214,14 @@ def _stale_toml_entries(
     *,
     live_regs_by_provider: dict[str, set[int]],
     live_vars_by_provider: dict[str, set[tuple[int, int]]],
+    live_versions_by_provider: dict[str, set[tuple[int, int, int]]],
     db_classifications: set[str],
-) -> tuple[list[tuple[str, str]], list[tuple[str, str]], list[str]]:
+) -> tuple[
+    list[tuple[str, str]],
+    list[tuple[str, str]],
+    list[tuple[str, str]],
+    list[str],
+]:
     """Find TOML entries whose source IDs don't exist in the DB.
 
     Mirrors the `slug_unknown_source_id` check inside `populate_slugs`, but
@@ -1002,10 +1231,12 @@ def _stale_toml_entries(
     `populate_slugs` rejects them with a clearer error.
 
     Source IDs are guaranteed parseable here: `_validate_entry` calls
-    `_parse_register_id` / `_parse_variant_id` at TOML load.
+    `_parse_register_id` / `_parse_variant_id` / `_parse_version_id` at TOML
+    load.
     """
     stale_regs: list[tuple[str, str]] = []
     stale_vars: list[tuple[str, str]] = []
+    stale_vers: list[tuple[str, str]] = []
     stale_cls: list[str] = []
 
     for entry in entries:
@@ -1019,11 +1250,15 @@ def _stale_toml_entries(
             live = live_vars_by_provider.get(entry.provider, set())
             if _parse_variant_id(entry.source_id) not in live:
                 stale_vars.append((entry.provider, entry.source_id))
+        elif entry.kind == "register_version" and entry.provider is not None:
+            live_v = live_versions_by_provider.get(entry.provider, set())
+            if _parse_version_id(entry.source_id) not in live_v:
+                stale_vers.append((entry.provider, entry.source_id))
         elif entry.kind == "classification":
             if entry.source_id not in db_classifications:
                 stale_cls.append(entry.source_id)
 
-    return stale_regs, stale_vars, stale_cls
+    return stale_regs, stale_vars, stale_vers, stale_cls
 
 
 # ---------------------------------------------------------------------------

@@ -640,10 +640,10 @@ class TestGetValues:
             "VALUES (11, 2, 'V2')"
         )
         conn.execute(
-            "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version VALUES (101, 11, '2020', NULL, NULL, NULL, NULL, NULL)"
+            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 50, 'AppleVar')"
@@ -718,10 +718,10 @@ class TestGetValues:
             "VALUES (11, 2, 'Children')"
         )
         conn.execute(
-            "INSERT INTO register_version VALUES (100, 10, '2020', NULL, NULL, NULL, NULL, NULL)"
+            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version VALUES (101, 11, '2020', NULL, NULL, NULL, NULL, NULL)"
+            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 44, 'Kön')"

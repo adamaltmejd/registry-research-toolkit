@@ -345,7 +345,13 @@ class TestPopulateSlugs:
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
-        assert counts == {"register": 1, "register_variant": 1, "classification": 1}
+        assert counts == {
+            "register": 1,
+            "register_variant": 1,
+            "register_version": 0,
+            "register_version_auto": 0,
+            "classification": 1,
+        }
         assert (
             conn.execute("SELECT slug FROM register WHERE register_id = 1").fetchone()[
                 0
@@ -626,6 +632,7 @@ class TestSnapshot:
             "classification": {"SUN2020|2020": "sun"},
             "register": {"scb/1": "lisa"},
             "register_variant": {"scb/1.10": "individer-15plus"},
+            "register_version": {"scb/1.10.100": "ackumulerat-register"},
             "variable": {},
         }
         write_snapshot(path, payload)
@@ -638,6 +645,7 @@ class TestSnapshot:
             "classification": {},
             "register": {},
             "register_variant": {},
+            "register_version": {},
             "variable": {},
         }
 
@@ -714,7 +722,13 @@ class TestVariableOverridesNotYetSupported:
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
-        assert counts == {"register": 1, "register_variant": 1, "classification": 1}
+        assert counts == {
+            "register": 1,
+            "register_variant": 1,
+            "register_version": 0,
+            "register_version_auto": 0,
+            "classification": 1,
+        }
 
 
 class TestSeedEmitsValidToml:
@@ -832,7 +846,13 @@ class TestSeedPopulateRoundTrip:
         target.commit()
 
         counts = populate_slugs(target, out_dir, strict=True)
-        assert counts == {"register": 1, "register_variant": 1, "classification": 1}
+        assert counts == {
+            "register": 1,
+            "register_variant": 1,
+            "register_version": 0,
+            "register_version_auto": 0,
+            "classification": 1,
+        }
         assert (
             target.execute(
                 "SELECT slug FROM register WHERE register_id = 1"

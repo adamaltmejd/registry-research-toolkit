@@ -92,7 +92,8 @@ def validate_slug(
         if allow_default:
             return
         raise FqidError(
-            f"`_default` is reserved for the register_variant slot; got it in {slot_name}"
+            f"`_default` is reserved for the register_variant and "
+            f"register_version slots; got it in {slot_name}"
         )
     if value == CLASSIFICATION_PREFIX:
         raise FqidError(
@@ -111,6 +112,13 @@ def validate_slug(
             f"invalid slug in {slot_name}: {value!r} "
             f"(grammar: ^[a-z][a-z0-9-]*[a-z0-9]$ or single ^[a-z]$, single hyphens only)"
         )
+
+
+def _validate_version_slot(value: str) -> None:
+    """§5.2: the version slot accepts either a period token (`2018`, `HT2020`,
+    `2018-Q3`, `2018-01`) or a curated slug (`ackumulerat-register`, `_default`).
+    """
+    validate_slug(value, "register_version", allow_default=True, allow_period=True)
 
 
 def _validate_period(value: str) -> None:
@@ -175,7 +183,7 @@ class Fqid:
         validate_slug(provider, FqidKind.PROVIDER)
         validate_slug(register, FqidKind.REGISTER)
         validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
-        _validate_period(period)
+        _validate_version_slot(period)
         return cls(
             kind=FqidKind.REGISTER_VERSION,
             provider=provider,
@@ -196,7 +204,7 @@ class Fqid:
         validate_slug(provider, FqidKind.PROVIDER)
         validate_slug(register, FqidKind.REGISTER)
         validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
-        _validate_period(period)
+        _validate_version_slot(period)
         validate_slug(variable, "variable")
         return cls(
             kind=FqidKind.VARIABLE_BINDING,

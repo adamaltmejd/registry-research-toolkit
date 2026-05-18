@@ -17,8 +17,8 @@ from regmeta.db import DDL, seed_providers
 _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)
 # (registervariantnamn, slug, regvar_id)
 _DEFAULT_VARIANT = ("Individer 15+", "individer-15plus", 10)
-# (registerversionnamn, regver_id)
-_DEFAULT_VERSION = ("LISA 2018", 100)
+# (registerversionnamn, slug, regver_id)
+_DEFAULT_VERSION = ("LISA 2018", "2018", 100)
 # (variabelnamn, var_id, cvid, kolumnnamn)
 _DEFAULT_VARIABLE = ("Kön", 44, 1001, "Kon")
 
@@ -27,7 +27,7 @@ def build_slugged_db(
     *,
     register: tuple[str, str | None, int, int] | None = _DEFAULT_REGISTER,
     variant: tuple[str | None, str | None, int] | None = _DEFAULT_VARIANT,
-    version: tuple[str, int] | None = _DEFAULT_VERSION,
+    version: tuple[str, str | None, int] | None = _DEFAULT_VERSION,
     variable: tuple[str, int, int, str] | None = _DEFAULT_VARIABLE,
     kolumnnamn: str | None = None,
     classification: tuple[str, str, str, str] | None = (
@@ -65,12 +65,12 @@ def build_slugged_db(
         )
 
     if version is not None and variant is not None:
-        ver_name, regver_id = version
+        ver_name, ver_slug, regver_id = version
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, registerversionnamn) "
-            "VALUES (?, ?, ?)",
-            (regver_id, variant[2], ver_name),
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (regver_id, variant[2], ver_slug, ver_name),
         )
 
     if variable is not None and version is not None and register is not None:
@@ -83,7 +83,7 @@ def build_slugged_db(
             "INSERT INTO variable_instance "
             "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
             "VALUES (?, ?, ?, ?, ?, 'int')",
-            (cvid, register[2], variant[2], version[1], var_id),
+            (cvid, register[2], variant[2], version[2], var_id),
         )
         conn.execute(
             "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",

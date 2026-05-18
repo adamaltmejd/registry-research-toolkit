@@ -909,5 +909,16 @@
     "scb/97.99": "individregister",
     "scb/99.105": "_default"
   },
+  "register_version": {
+    "scb/22.508.1025": "_default",
+    "scb/24.1225.7368": "_default",
+    "scb/24.1630.17540": "samlat-betygsdokument-studiebevis",
+    "scb/24.1631.17536": "ackumulerat-register",
+    "scb/24.1631.17537": "summerade-poang",
+    "scb/24.1634.17563": "ackumulerat",
+    "scb/34.1582.15549": "_default",
+    "scb/34.1583.15550": "_default",
+    "scb/34.1584.15551": "_default"
+  },
   "variable": {}
 }

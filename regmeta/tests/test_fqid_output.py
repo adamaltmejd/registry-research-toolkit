@@ -63,7 +63,7 @@ class TestGetSchemaFqid:
         # An `HT2020` version must not collapse to `.../2020/...`; the FQID
         # carries the most-specific period token so sub-year versions stay
         # distinguishable.
-        conn = build_slugged_db(version=("LISA HT2020", 100))
+        conn = build_slugged_db(version=("LISA HT2020", "HT2020", 100))
         result = get_schema(conn, regvar_id="10")
         version = result["variants"][0]["versions"][0]
         assert version["fqid"] == "scb/lisa/individer-15plus/HT2020"

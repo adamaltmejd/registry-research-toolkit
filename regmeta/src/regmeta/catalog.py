@@ -17,7 +17,6 @@ from .fqid import (
     Fqid,
     FqidError,
     FqidKind,
-    derive_period,
     derive_variable_slug,
     parse,
 )
@@ -214,42 +213,46 @@ class Catalog:
         )
 
     def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:
-        # No dedicated `period` column yet: derive the most-specific period
-        # token from the version name and require exact equality with the
-        # FQID's period, so `.../2020` never matches `HT2020`/`2020-Q1` rows.
+        # §5.2: `register_version.slug` is the canonical version-slot token —
+        # either a derived period (`2018`, `HT2020`) or a curated slug for
+        # unperiodized aux versions (`ackumulerat-register`, `_default`).
+        # populate_slugs writes both kinds; the resolver just matches the slug
+        # column.
+        #
         # §5.1 follow-up: `_default` versions against a variant-less register
         # aren't reachable today — `register_version.regvar_id` is NOT NULL,
         # so no version row can exist without a real variant row. When SOS
         # ingestion lands, either make the column nullable or extend this
         # resolver to synthesize the variant slot the way `_resolve_variant`
         # does.
-        rows = self._conn.execute(
+        row = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "
             "FROM register_version rver "
             "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
-            (fqid.provider, fqid.register, fqid.variant),
-        ).fetchall()
-        for row in rows:
-            if derive_period(row["registerversionnamn"]) == fqid.period:
-                return ResolvedRegisterVersion(
-                    fqid=fqid,
-                    regver_id=row["regver_id"],
-                    regvar_id=row["regvar_id"],
-                    register_id=row["register_id"],
-                    registerversionnamn=row["registerversionnamn"],
-                )
-        raise _not_found(fqid)
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
+            (fqid.provider, fqid.register, fqid.variant, fqid.period),
+        ).fetchone()
+        if row is None:
+            raise _not_found(fqid)
+        return ResolvedRegisterVersion(
+            fqid=fqid,
+            regver_id=row["regver_id"],
+            regvar_id=row["regvar_id"],
+            register_id=row["register_id"],
+            registerversionnamn=row["registerversionnamn"],
+        )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
-        # No materialized binding rows yet: scan instances under the variant
-        # and derive variable slug from kolumnnamn (§5.3). Period equality
-        # rejects sub-year aliasing the same way `_resolve_version` does.
+        # No materialized binding rows yet: scan instances under the
+        # (variant, version) pair and derive variable slug from kolumnnamn
+        # (§5.3). The version match is now an exact slug comparison
+        # (`register_version.slug` carries the period or curated token);
+        # `_resolve_version`'s same column query mirrors this.
         # `ORDER BY vi.cvid, va.kolumnnamn` makes first-match deterministic;
-        # uniqueness of (variant, period, variable_slug) is a §5.3 invariant.
+        # uniqueness of (variant, version, variable_slug) is a §5.3 invariant.
         rows = self._conn.execute(
             "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
             "vi.var_id, vi.via_source_id, "
@@ -261,13 +264,11 @@ class Catalog:
             "JOIN provider p ON r.provider_id = p.provider_id "
             "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
             "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? "
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ? "
             "ORDER BY vi.cvid, va.kolumnnamn",
-            (fqid.provider, fqid.register, fqid.variant),
+            (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
-            if derive_period(row["registerversionnamn"]) != fqid.period:
-                continue
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
                 via = row["via_source_id"]
                 return ResolvedVariableBinding(
@@ -290,10 +291,10 @@ class Catalog:
 
     def _lineage_fqid(self, via_cvid: int, variable_slug: str) -> Fqid | None:
         """Source-side binding FQID for a consumer instance, or None if any
-        required slug or the period token is missing."""
+        slug component is missing."""
         row = self._conn.execute(
             "SELECT p.slug AS provider_slug, r.slug AS register_slug, "
-            "rv.slug AS variant_slug, rver.registerversionnamn "
+            "rv.slug AS variant_slug, rver.slug AS version_slug "
             "FROM variable_instance vi "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
@@ -308,7 +309,7 @@ class Catalog:
             row["provider_slug"],
             row["register_slug"],
             row["variant_slug"],
-            derive_period(row["registerversionnamn"]),
+            row["version_slug"],
             variable_slug,
         )
         if any(p is None or p == "" for p in parts):

@@ -1260,6 +1260,10 @@ def _cmd_maintain_precheck_slugs(
                 {"provider": p, "source_id": sid, "name": name}
                 for (p, sid, name) in result.missing_variants
             ],
+            "missing_versions": [
+                {"provider": p, "source_id": sid, "name": name}
+                for (p, sid, name) in result.missing_versions
+            ],
             "missing_classifications": list(result.missing_classifications),
             "parse_errors": list(result.parse_errors),
             "stale_registers": [
@@ -1267,6 +1271,9 @@ def _cmd_maintain_precheck_slugs(
             ],
             "stale_variants": [
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
+            ],
+            "stale_versions": [
+                {"provider": p, "source_id": sid} for (p, sid) in result.stale_versions
             ],
             "stale_classifications": list(result.stale_classifications),
             "snapshot": snapshot_status,
@@ -2734,6 +2741,14 @@ def _write_payload(
             if len(missing_vars) > 20:
                 lines.append(f"  ... and {len(missing_vars) - 20} more")
             lines.append("")
+        missing_vers = data.get("missing_versions", [])
+        if missing_vers:
+            lines.append(f"Missing unperiodized version slugs ({len(missing_vers)}):")
+            for m in missing_vers[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}  {m['name']}")
+            if len(missing_vers) > 20:
+                lines.append(f"  ... and {len(missing_vers) - 20} more")
+            lines.append("")
         missing_cls = data.get("missing_classifications", [])
         if missing_cls:
             lines.append(f"Missing classification slugs ({len(missing_cls)}):")
@@ -2758,6 +2773,14 @@ def _write_payload(
             if len(stale_vars) > 20:
                 lines.append(f"  ... and {len(stale_vars) - 20} more")
             lines.append("")
+        stale_vers = data.get("stale_versions", [])
+        if stale_vers:
+            lines.append(f"Stale version slugs ({len(stale_vers)}):")
+            for m in stale_vers[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}")
+            if len(stale_vers) > 20:
+                lines.append(f"  ... and {len(stale_vers) - 20} more")
+            lines.append("")
         stale_cls = data.get("stale_classifications", [])
         if stale_cls:
             lines.append(f"Stale classification slugs ({len(stale_cls)}):")
@@ -2766,7 +2789,7 @@ def _write_payload(
             if len(stale_cls) > 20:
                 lines.append(f"  ... and {len(stale_cls) - 20} more")
             lines.append("")
-        if stale_regs or stale_vars or stale_cls:
+        if stale_regs or stale_vars or stale_vers or stale_cls:
             lines.append("Drop these entries or mark them `deprecated = true`.")
             lines.append("")
         snap = data.get("snapshot") or {}
