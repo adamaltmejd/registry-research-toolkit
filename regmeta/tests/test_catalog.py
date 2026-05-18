@@ -130,7 +130,7 @@ class TestResolveVersion:
     def test_resolves_non_year_period(self) -> None:
         # Half-year, quarterly, and monthly periods use the most-specific
         # token derived from the version name.
-        conn = build_slugged_db(version=("Test HT2020", 200))
+        conn = build_slugged_db(version=("Test HT2020", "HT2020", 200))
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020")
         assert isinstance(r, ResolvedRegisterVersion)
         assert r.regver_id == 200
@@ -139,7 +139,7 @@ class TestResolveVersion:
     def test_year_only_target_does_not_match_sub_year_version(self) -> None:
         # `.../2020` must not silently resolve to an `HT2020` row — that
         # would collide distinct versions under one FQID.
-        conn = build_slugged_db(version=("Test HT2020", 200))
+        conn = build_slugged_db(version=("Test HT2020", "HT2020", 200))
         with pytest.raises(RegmetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2020")
         assert exc.value.code == "fqid_not_found"
@@ -184,10 +184,11 @@ class TestResolveBindingLineage:
     def _build_consumer_db(version_name: str = "RTB 2018") -> sqlite3.Connection:
         # RTB owns Kön (cvid 5000); LISA delivers it as a consumer-side
         # binding (cvid 5001) with via_source_id pointing at RTB's instance.
+        period = version_name.split(" ", 1)[1]
         conn = build_slugged_db(
             register=("RTB", "rtb", 1, 1),
             variant=("Personer", "personer", 10),
-            version=(version_name, 100),
+            version=(version_name, period, 100),
             variable=("Kön", 44, 5000, "Kon"),
         )
         # Consumer register (LISA) shares slug "kon" so lineage matches.
@@ -198,8 +199,8 @@ class TestResolveBindingLineage:
             f"(regvar_id, register_id, slug, registervariantnamn) "
             f"VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
             f"INSERT INTO register_version "
-            f"(regver_id, regvar_id, registerversionnamn) "
-            f"VALUES (200, 20, 'LISA {version_name.split(' ', 1)[1]}');"
+            f"(regver_id, regvar_id, slug, registerversionnamn) "
+            f"VALUES (200, 20, '{period}', 'LISA {period}');"
             f"INSERT INTO variable (register_id, var_id, variabelnamn, source_register_id) "
             f"VALUES (2, 99, 'Kön', 1);"
             f"INSERT INTO variable_instance "
@@ -251,7 +252,7 @@ class TestResolveElidedFqid:
         conn = build_slugged_db(
             register=("LSS", "lss", 5, 2),
             variant=("LSS default", "_default", 50),
-            version=("LSS 2022", 200),
+            version=("LSS 2022", "2022", 200),
             variable=None,
         )
         r = Catalog(conn).resolve("sos/lss/2022")
@@ -309,6 +310,44 @@ class TestResolveElidedFqid:
         )
         with pytest.raises(RegmetaError) as exc:
             Catalog(conn).resolve("sos/lss/2022")
+        assert exc.value.code == "fqid_not_found"
+
+
+class TestResolveVersionWithCuratedSlug:
+    """§5.2: register_version.slug accepts either a derived period or a
+    curated slug for unperiodized aux versions."""
+
+    def test_curated_slug_resolves(self) -> None:
+        # An aux table with a curator-pinned slug resolves like a periodized
+        # version — same column, no separate code path.
+        conn = build_slugged_db(
+            version=("Gymnasieintyg, ackumulerat", "ackumulerat-register", 200),
+        )
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/ackumulerat-register")
+        assert isinstance(r, ResolvedRegisterVersion)
+        assert r.regver_id == 200
+        assert r.fqid.period == "ackumulerat-register"
+        assert str(r.fqid) == "scb/lisa/individer-15plus/ackumulerat-register"
+
+    def test_default_slug_resolves_for_singleton_unperiodized_version(self) -> None:
+        # The Pattern A case from PR γ: variant has one no-period version,
+        # curator pins `_default` as the slug.
+        conn = build_slugged_db(
+            version=("Födelseland", "_default", 200),
+        )
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/_default")
+        assert isinstance(r, ResolvedRegisterVersion)
+        assert r.regver_id == 200
+        assert r.fqid.period == "_default"
+
+    def test_curated_slug_does_not_collide_with_period_lookup(self) -> None:
+        # A slot-4 token that isn't a known slug (and doesn't match any
+        # period either) misses cleanly, same as an unknown period.
+        conn = build_slugged_db(
+            version=("Gymnasieintyg, ackumulerat", "ackumulerat-register", 200),
+        )
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/summerade-poang")
         assert exc.value.code == "fqid_not_found"
 
 

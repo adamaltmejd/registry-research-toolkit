@@ -443,8 +443,8 @@ identify which kind of entity a string addresses.
 | 1 | `<provider>` | provider |
 | 2 | `<provider>/<register>` | register |
 | 3 | `<provider>/<register>/<variant>` | register_variant |
-| 4 | `<provider>/<register>/<variant>/<period>` | register_version |
-| 5 | `<provider>/<register>/<variant>/<period>/<variable>` | variable binding |
+| 4 | `<provider>/<register>/<variant>/<period\|version-slug>` | register_version |
+| 5 | `<provider>/<register>/<variant>/<period\|version-slug>/<variable>` | variable binding |
 | 3, leading `class/` | `class/<classification>/<version>` | classification |
 
 Examples:
@@ -453,8 +453,10 @@ Examples:
 scb                                                  provider
 scb/lisa                                             register
 scb/lisa/individer-15plus                            register_variant
-scb/lisa/individer-15plus/2018                       register_version
+scb/lisa/individer-15plus/2018                       register_version (derived period in slot 4)
 scb/lisa/individer-15plus/2018/kon                   variable binding
+scb/ureg/gymnasieintyg/ackumulerat-register          register_version (curated slug — unperiodized aux table)
+scb/lisa/individer-avlidna/_default                  register_version (curated `_default` — singleton aux)
 sos/lss/_default/2022                                version of a variant-less register
 scb/arbetskraftsbarometern/2020                      elided register_version (variant slot defaults)
 scb/arbetskraftsbarometern/2020/kon                  elided variable binding
@@ -462,11 +464,42 @@ class/sun/2020                                       classification (provider-in
 class/lkf/2012                                       classification
 ```
 
-Period segments accept integer year (`2018`) or string period
+The version slot accepts either a **derived period** or a
+**curated slug**. Periods are integer year (`2018`) or string period
 (`2018-01`, `HT2020`, `2018-Q3`) — the same forms `time_key` accepts in
 `project_data.json`. Year is constrained to `(?:19|20)\d{2}`
 (1900-2099, SCB-realistic) and month to `(?:0[1-9]|1[0-2])`; the
 reserved-slug regexes below share these bounds.
+
+Curated version slugs are kebab-case (same grammar as the variant
+slot) and live in the slug TOML. Three use cases:
+
+1. **Unperiodized aux tables** — `registerversionnamn` has no parseable
+   period (e.g. `scb/ureg/gymnasieintyg/ackumulerat-register` or
+   `scb/lisa/individer-avlidna/_default`).
+2. **Collision resolution** — multiple siblings under one variant
+   derive to the same period and need disambiguation (e.g.
+   `ankor-anklingar-1968-1997` on a row whose name covers a range,
+   coexisting with a sibling slugged as a single year).
+3. **Canonical-sibling promotion** — pick one of several siblings to
+   claim a bare-year slug so consumer lineage edges can find it (e.g.
+   IoT's `slutlig-version-2020` is renamed to `2020` so a consumer
+   keyed by `2020` resolves to the final, not the preliminary, release).
+
+Build-time `populate_slugs` applies TOML overrides **first**, then
+auto-derives a period via `derive_period(registerversionnamn)` for any
+row still NULL — this ordering lets curated overrides claim their slug
+slot before the period regex fires (otherwise two periodized siblings
+both auto-deriving to `"2018"` would trip `UNIQUE(regvar_id, slug)`
+even when a curated override on one was meant to break the tie).
+`derive_period` extracts the most-specific period token from the name
+and includes Swedish termin patterns (`höstterminen 1980` → `HT1980`,
+`vårterminen 1980` → `VT1980`) so terms under the same year stay
+distinct. The resolver matches the `register_version.slug` column
+**strictly** — exact string equality, no period normalization, no
+fallback. Period and slug grammars are disjoint, so position alone
+disambiguates a token like `2018` (period) from `ackumulerat-register`
+(slug).
 
 **Variables have no concept FQID.** Variables are addressable only
 via 5-segment binding FQIDs. A 3-segment "variable concept" form
@@ -507,12 +540,13 @@ hitting one of these:
 - `class` — reserved in any slot (keeps the leading-`class/`
   discriminator unambiguous; collision in the provider slot is the
   load-bearing case but the literal token is reserved everywhere).
-- `_default` (register_variant slot only) — synthesized at
-  FQID-resolve time for registers without a sub-decomposition
+- `_default` (register_variant + register_version slots) —
+  synthesized at FQID-resolve time for variant-less registers
   (§5.1); curators may also pin this slug onto a real single-variant
-  register where the lone variant just restates the register name.
-  The underscore prefix is outside the slug grammar, so no other
-  slug can collide with it.
+  register where the lone variant just restates the register name,
+  or onto a real single-version variant where the lone version is
+  time-invariant (an aux table). The underscore prefix is outside
+  the slug grammar, so no other slug can collide with it.
 - Period-shaped slugs in non-period slots (provider / register /
   variant / variable): a slug that matches the period grammar
   (`^\d{4}$`, `^\d{4}-\d{2}$`, `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`)
@@ -630,15 +664,74 @@ the same TOML row shape: a table keyed by the provider's source ID
 that the FQID grammar (§5.2) uses to address the entity — never broader.
 Concretely: `register` slugs are unique within a provider; `register_variant`
 and `variable` slugs are unique within their parent register (the
-`<register>` slot in the FQID already disambiguates them); `classification`
-entries are unique by `(slug, version)` pair within `classifications.toml`,
-so the same slug stem may appear across versions (e.g. `sun` with
-`version = "2000"` and `version = "2020"`). Two registers may both have an
-`individer` variant or a `kon` variable without colliding.
+`<register>` slot in the FQID already disambiguates them);
+`register_version` slugs are unique within their parent variant (the
+`<variant>` slot already disambiguates them, so periodized and curated
+slugs share the same scope); `classification` entries are unique by
+`(slug, version)` pair within `classifications.toml`, so the same slug
+stem may appear across versions (e.g. `sun` with `version = "2000"` and
+`version = "2020"`). Two registers may both have an `individer` variant
+or a `kon` variable without colliding.
+
+**register_version is mostly automatic.** The build derives a period
+from `registerversionnamn` for every version row whose slug column is
+NULL and writes it into `register_version.slug`. TOML
+`[register_version."<RegisterId>.<RegvarId>.<RegverId>"]` entries are
+needed for the three cases listed in §5.2: unperiodized aux tables,
+collision resolution (siblings deriving to the same period), and
+canonical-sibling promotion. The `UNIQUE(regvar_id, slug)` constraint
+on `register_version` enforces uniqueness at the SQL layer; the
+`precheck-slugs` command flags would-be collisions ahead of build so
+maintainers see a clean diagnostic instead of a raw `IntegrityError`.
+`seed-slugs` emits the curated overrides (any row whose slug differs
+from `derive_period(name)`) plus the unperiodized rows; auto-derived
+rows that round-trip cleanly are omitted from the seed.
+
+**Curated slug conventions.** The curated slug is a normalized
+identifier, **not** a faithful transcription of `registerversionnamn`.
+Two consequences:
+
+1. **Prefer canonical period grammar over Swedish source-name forms.**
+   When the underlying source name unambiguously denotes a single
+   period token, the curated slug should match the §5.2 period
+   grammar — even though `derive_period` doesn't extract it. The
+   resolver matches the slug column strictly, so canonical form is
+   what consumers will type:
+
+   | Source name pattern             | Curated slug   | Not              |
+   |---------------------------------|----------------|------------------|
+   | `2011 maj` / `2011 november`    | `2011-05` / `2011-11` | `maj-2011`         |
+   | `2011 kv1` / `2007 kv 1`        | `2011-Q1` / `2007-Q1` | `kv1-2011` / `kv-1-2007` |
+   | `2018H` / `2018V` (hreg suffix) | `HT2018` / `VT2018`   | `v2018h` / `v2018v` |
+   | `Vårterminen 2013` (collision-blocked from auto-derive) | `VT2013` | `varterminen-2013` |
+
+   Note: the academic-semester *autoderive* still requires the
+   `höstterminen` / `vårterminen` form (with the `t`) — bare H/V
+   suffixes don't match because they're too ambiguous in free
+   text. The convention above is for *curated* slugs only.
+
+2. **Normalize away source-data typos and abbreviations.** If
+   `registerversionnamn` ships with a misspelling (`högalternariv`
+   instead of `högalternativ`) or a truncation (`bebygge` instead of
+   `bebyggelse`), the curated slug uses the corrected form. The
+   original is preserved verbatim in the TOML comment above the
+   entry for audit:
+
+   ```toml
+   # '2015-2060 högalternariv' (SCB source typo; slug normalized to 'alternativ')
+   [register_version."310.888.5988"]
+   slug = "hogalternativ-2015-2060"
+   ```
+
+Ranges and multi-period spans stay descriptive — the period grammar
+has no canonical form for them: `kv2-kv4-2010` (quarter range),
+`forsta-halvaret-1995` (Swedish fiscal half-year, distinct from
+HT/VT academic semesters), `huvudalternativ-2018-2070` (multi-year
+projection scenario), `ackumulerat-register` (unperiodized aux).
 
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
-| `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by`. |
+| `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables and periodized register_versions are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by` (or, for register_version, the unperiodized aux tables). |
 | `version`       | string              | classification    | yes      | Version stem of the classification FQID (`SUN/2020` → `version = "2020"`). |
 | `display_group` | string              | register_variant  | no       | Presentation-only grouping label. Drift-tolerant; can change. |
 | `deprecated`    | bool (default false)| all               | no       | Source ID dropped from current deliveries (a register retired, a variable removed). The entry is retained forever — resolution succeeds but emits a warning (§6.8.3). |
@@ -660,6 +753,14 @@ deprecated = true                       # retired delivery; slug retained foreve
 [register_variant."34.153"]
 slug = "individer-15plus"
 display_group = "Individer"
+
+# register_version: curated slug for an unperiodized aux table (the only
+# kind that needs a TOML entry — periodized rows auto-derive at build).
+[register_version."34.1582.15549"]
+slug = "_default"                       # variant has one no-period version
+
+[register_version."24.1631.17536"]
+slug = "ackumulerat-register"           # coexists with periodized siblings
 
 # Typo correction (§5.4): never edit in place. Add a new row and link the
 # old one via replaced_by. The old row stays in the TOML; resolution
@@ -726,19 +827,27 @@ release of the refactored system (the first `regmeta` version that
 emits FQIDs into a `project_data.json` consumers can commit).
 Until that release no external artifact references these slugs, so
 the *rule* does not yet protect anything; maintainers may rename,
-remove, or restructure entries as the hand-review progresses. The
-*tooling*, however, ships fully wired: `reg-meta-build
-precheck-slugs --update-snapshot` and the CI snapshot test reject
-non-additive changes today, by design — the goal during 1c/1d is
-to exercise the mechanism under realistic load. During the pre-v1
-curation window a maintainer making a non-additive change works
-around the gate by regenerating `.snapshot.json` from the curated
-TOMLs (either by hand or via a future `--allow-rename` flag, to be
-added only if iteration friction warrants it). When v1 is cut, the
-snapshot at that commit becomes the immutable baseline and the
-gate transitions from "exercise mechanism" to "protect external
-artifacts" — at that point the workaround above is no longer
-available.
+remove, or restructure entries as the hand-review progresses.
+
+**Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While the file
+`regmeta/fqid_slugs/UNFROZEN` exists in the slug directory, the
+grow-only refusal is lifted in both directions:
+
+- `regmeta maintain precheck-slugs --update-snapshot` writes
+  rename and removal diffs through to `.snapshot.json` instead of
+  refusing. Diffs are still reported in the JSON envelope so a
+  reviewer sees what drifted.
+- The `test_no_removed_or_renamed_slugs` CI test skips its rename
+  guard (the parse and addition-coverage tests stay active).
+
+The sentinel is intentional friction-removal: pre-v1 the right
+move is to encourage curators to fix typos, normalize conventions,
+and reshape sibling groups before any external artifact pins these
+FQIDs. Per-rename ceremony in that window discourages exactly the
+hygiene we want. At v1 release the sentinel is **deleted in the
+same commit that cuts the release tag** — the snapshot at that
+commit becomes the immutable baseline and the grow-only gate
+re-arms across CLI, tests, and CI.
 
 The same rule applies to every slug-bearing entity: register,
 register_variant, variable, classification. Implication: every
@@ -812,6 +921,18 @@ Implications:
 - Validator (§6.8.3) treats consumer-side bindings as first-class —
   no warning, no info — because from the user's perspective they
   are the bindings.
+
+**Matching rule.** `link_consumer_side_bindings` keys on
+`(source_register_id, register_version.slug, variable_slug)` —
+strict equality, no period normalization, no fallback. A consumer
+row only acquires `via_source_id` if its version slug exactly
+matches a sibling slug under the source register. When a source
+register splits a year into siblings (e.g. IoT's
+`preliminar-version-2020` + `slutlig-version-2020`), curation must
+promote one sibling to the bare-year slug (§5.3, case 3) so
+consumers keyed by `2020` find it; otherwise lineage stays NULL for
+that consumer. The linker runs after `populate_slugs` in the build
+pipeline so slug columns are populated when it reads them.
 
 The `via_source_id` edge is the LISA composite-source problem
 fully resolved at the data layer. §14's open issue on this topic

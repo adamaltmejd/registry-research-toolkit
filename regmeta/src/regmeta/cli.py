@@ -1160,7 +1160,10 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
                 "directory for hand-review."
             ),
         )
-    conn = open_db(db, check_schema=False)
+    # `seed_provider_toml` reads `register_version.slug` (3.3+), so a stale
+    # pre-3.3 DB would otherwise fall out as a raw `OperationalError: no such
+    # column: rver.slug`. Schema-compat gives the user the right remediation.
+    conn = open_db(db)
     try:
         written = seed_all(conn, out_dir)
     finally:
@@ -1184,6 +1187,7 @@ def _cmd_maintain_precheck_slugs(
     from .fqid_slugs import (
         SNAPSHOT_FILENAME,
         diff_snapshot,
+        is_unfrozen,
         precheck_slugs,
         read_snapshot,
         snapshot_payload,
@@ -1193,6 +1197,7 @@ def _cmd_maintain_precheck_slugs(
     start = time.perf_counter()
     slug_dir = _resolve_slug_dir(args.slug_dir)
     snapshot_path = slug_dir / SNAPSHOT_FILENAME
+    unfrozen = is_unfrozen(slug_dir)
     db = db_path_from_args(args.db)
     conn = open_db(db, check_schema=False)
     try:
@@ -1200,7 +1205,7 @@ def _cmd_maintain_precheck_slugs(
     finally:
         conn.close()
 
-    snapshot_status: dict[str, Any] = {"path": str(snapshot_path)}
+    snapshot_status: dict[str, Any] = {"path": str(snapshot_path), "unfrozen": unfrozen}
     exit_code = EXIT_CONFIG if not result.ok else 0
     current = snapshot_payload(list(result.entries))
     if args.update_snapshot:
@@ -1214,13 +1219,14 @@ def _cmd_maintain_precheck_slugs(
         else:
             # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
             # a removal or a slug rename — that's how committed FQIDs rot in
-            # researcher project_data.json files. Refusing here is the only
-            # gate; test_slug_snapshot catches the same thing in CI but the
-            # CLI must match so a maintainer's local pre-commit run agrees
-            # with what main will accept.
+            # researcher project_data.json files. The `UNFROZEN` sentinel in
+            # the slug dir lifts the refusal pre-v1 so curators can iterate
+            # freely; diffs are still reported so drift stays visible. At v1
+            # release the sentinel is deleted and refusal becomes active.
             previous = read_snapshot(snapshot_path)
             diff = diff_snapshot(previous, current)
-            if diff["removed"] or diff["renamed"]:
+            non_additive = bool(diff["removed"] or diff["renamed"])
+            if non_additive and not unfrozen:
                 snapshot_status["updated"] = False
                 snapshot_status["update_skipped_reason"] = "non_additive_change"
                 snapshot_status["removed"] = diff["removed"]
@@ -1230,6 +1236,11 @@ def _cmd_maintain_precheck_slugs(
                 write_snapshot(snapshot_path, current)
                 snapshot_status["updated"] = True
                 snapshot_status["added"] = diff["added"]
+                if non_additive:
+                    # Pre-v1 write-through: surface what drifted so reviewers
+                    # see the rename/removal explicitly in the envelope.
+                    snapshot_status["removed"] = diff["removed"]
+                    snapshot_status["renamed"] = diff["renamed"]
     else:
         previous = read_snapshot(snapshot_path)
         diff = diff_snapshot(previous, current)
@@ -1238,7 +1249,9 @@ def _cmd_maintain_precheck_slugs(
         snapshot_status["renamed"] = diff["renamed"]
         # `added` is non-fatal in spirit but must fail CI so a maintainer
         # doesn't merge new slugs without refreshing .snapshot.json; mirrors
-        # test_slug_snapshot.test_snapshot_covers_committed_additions.
+        # test_slug_snapshot.test_snapshot_covers_committed_additions. The
+        # pre-v1 `UNFROZEN` sentinel doesn't relax this — drift must still
+        # round-trip through `--update-snapshot` to commit cleanly.
         if diff["removed"] or diff["renamed"] or diff["added"]:
             exit_code = EXIT_CONFIG
 
@@ -1260,6 +1273,10 @@ def _cmd_maintain_precheck_slugs(
                 {"provider": p, "source_id": sid, "name": name}
                 for (p, sid, name) in result.missing_variants
             ],
+            "missing_versions": [
+                {"provider": p, "source_id": sid, "name": name}
+                for (p, sid, name) in result.missing_versions
+            ],
             "missing_classifications": list(result.missing_classifications),
             "parse_errors": list(result.parse_errors),
             "stale_registers": [
@@ -1268,7 +1285,14 @@ def _cmd_maintain_precheck_slugs(
             "stale_variants": [
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
             ],
+            "stale_versions": [
+                {"provider": p, "source_id": sid} for (p, sid) in result.stale_versions
+            ],
             "stale_classifications": list(result.stale_classifications),
+            "colliding_versions": [
+                {"provider": p, "source_id": sid, "name": name, "would_be_slug": slug}
+                for (p, sid, name, slug) in result.colliding_versions
+            ],
             "snapshot": snapshot_status,
         },
         duration_ms=duration_ms,
@@ -2734,6 +2758,14 @@ def _write_payload(
             if len(missing_vars) > 20:
                 lines.append(f"  ... and {len(missing_vars) - 20} more")
             lines.append("")
+        missing_vers = data.get("missing_versions", [])
+        if missing_vers:
+            lines.append(f"Missing unperiodized version slugs ({len(missing_vers)}):")
+            for m in missing_vers[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}  {m['name']}")
+            if len(missing_vers) > 20:
+                lines.append(f"  ... and {len(missing_vers) - 20} more")
+            lines.append("")
         missing_cls = data.get("missing_classifications", [])
         if missing_cls:
             lines.append(f"Missing classification slugs ({len(missing_cls)}):")
@@ -2758,6 +2790,14 @@ def _write_payload(
             if len(stale_vars) > 20:
                 lines.append(f"  ... and {len(stale_vars) - 20} more")
             lines.append("")
+        stale_vers = data.get("stale_versions", [])
+        if stale_vers:
+            lines.append(f"Stale version slugs ({len(stale_vers)}):")
+            for m in stale_vers[:20]:
+                lines.append(f"  {m['provider']}/{m['source_id']}")
+            if len(stale_vers) > 20:
+                lines.append(f"  ... and {len(stale_vers) - 20} more")
+            lines.append("")
         stale_cls = data.get("stale_classifications", [])
         if stale_cls:
             lines.append(f"Stale classification slugs ({len(stale_cls)}):")
@@ -2766,8 +2806,37 @@ def _write_payload(
             if len(stale_cls) > 20:
                 lines.append(f"  ... and {len(stale_cls) - 20} more")
             lines.append("")
-        if stale_regs or stale_vars or stale_cls:
+        if stale_regs or stale_vars or stale_vers or stale_cls:
             lines.append("Drop these entries or mark them `deprecated = true`.")
+            lines.append("")
+        colliding_vers = data.get("colliding_versions", [])
+        if colliding_vers:
+            # Group by (provider, parent variant, would_be_slug). The
+            # UNIQUE constraint scopes per (regvar_id, slug), so two rows
+            # collide only if they share a parent variant — parent variant
+            # is the leading "<reg>.<var>" of the dotted source_id. Grouping
+            # by provider+slug alone would merge unrelated collisions under
+            # different variants into one misleading bullet.
+            groups: dict[tuple[str, str, str], list[dict[str, str]]] = {}
+            for m in colliding_vers:
+                parent_variant = m["source_id"].rsplit(".", 1)[0]
+                groups.setdefault(
+                    (m["provider"], parent_variant, m["would_be_slug"]), []
+                ).append(m)
+            lines.append(
+                f"Periodized version slug collisions "
+                f"({len(colliding_vers)} rows in {len(groups)} groups):"
+            )
+            for (provider, parent, slug), rows in list(groups.items())[:20]:
+                lines.append(f"  {provider}/{parent} → slug {slug!r}:")
+                for m in rows:
+                    lines.append(f"    {m['source_id']}  {m['name']}")
+            if len(groups) > 20:
+                lines.append(f"  ... and {len(groups) - 20} more groups")
+            lines.append(
+                'Add a curated `[register_version."<RegisterId>.<RegVarID>.<RegVerID>"]` '
+                "entry on one or more siblings to disambiguate."
+            )
             lines.append("")
         snap = data.get("snapshot") or {}
         if snap.get("updated"):

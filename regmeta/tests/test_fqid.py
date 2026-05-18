@@ -83,10 +83,16 @@ class TestSlugGrammar:
             with pytest.raises(FqidError, match="class"):
                 parse(s)
 
-    def test_default_slug_only_in_variant_slot(self) -> None:
+    def test_default_slug_only_in_variant_or_version_slot(self) -> None:
         # Allowed in the variant slot (synthesized for variant-less registers).
         assert parse("sos/lss/_default").kind is FqidKind.REGISTER_VARIANT
         assert parse("sos/lss/_default/2022").kind is FqidKind.REGISTER_VERSION
+        # Allowed in the version slot too (PR γ: curated `_default` slug on
+        # an unperiodized aux version).
+        assert (
+            parse("scb/lisa/individer-15plus/_default").kind
+            is FqidKind.REGISTER_VERSION
+        )
         # Rejected elsewhere.
         with pytest.raises(FqidError, match="_default"):
             parse("_default")
@@ -94,6 +100,18 @@ class TestSlugGrammar:
             parse("scb/_default")
         with pytest.raises(FqidError, match="_default"):
             parse("scb/lisa/individer-15plus/2018/_default")
+
+    def test_version_slot_accepts_curated_slug(self) -> None:
+        # §5.2: slot 4 accepts kebab-case slug for unperiodized aux versions
+        # alongside the period grammar.
+        f = parse("scb/ureg/gymnasieintyg/ackumulerat-register")
+        assert f.kind is FqidKind.REGISTER_VERSION
+        assert f.period == "ackumulerat-register"
+        # And in 5-segment binding form too.
+        f = parse("scb/ureg/gymnasieintyg/ackumulerat-register/kon")
+        assert f.kind is FqidKind.VARIABLE_BINDING
+        assert f.period == "ackumulerat-register"
+        assert f.variable == "kon"
 
     def test_period_shaped_slugs_rejected_outside_period_slot(self) -> None:
         # Period grammar is rejected in slots that must be slugs (provider,
@@ -156,9 +174,12 @@ class TestPeriodGrammar:
     def test_invalid_periods(self, bad: str) -> None:
         assert not is_period(bad)
 
-    def test_register_version_requires_valid_period(self) -> None:
-        with pytest.raises(FqidError, match="invalid period"):
-            parse("scb/lisa/v1/q1-2020")
+    def test_register_version_requires_valid_period_or_slug(self) -> None:
+        # §5.2: slot 4 accepts either period grammar or kebab-case slug.
+        # `Q1-2020` fails both (uppercase Q breaks slug grammar, prefix
+        # breaks period grammar).
+        with pytest.raises(FqidError, match="invalid slug"):
+            parse("scb/lisa/v1/Q1-2020")
 
 
 # ---------------------------------------------------------------------------
@@ -367,6 +388,41 @@ class TestDerivePeriod:
         # `2018-2020` (a range) must not greedy-match the YYYY-MM pattern
         # as `2018-20` — falls through to the year pattern instead.
         assert derive_period("LISA 2018-2020") == "2018"
+
+    @pytest.mark.parametrize(
+        "version_name,expected",
+        [
+            # Trailing year (the kommunal vuxenutbildning shape).
+            ("Höstterminen 1980", "HT1980"),
+            ("Vårterminen 1980", "VT1980"),
+            ("Hösttermin 1980", "HT1980"),
+            ("Vårtermin 1980", "VT1980"),
+            # Leading year (some SCB rows put it first).
+            ("1980 höstterminen", "HT1980"),
+            ("1980 vårterminen", "VT1980"),
+            # Trailing whitespace (real data has stray spaces).
+            ("1980 höstterminen ", "HT1980"),
+            # Trailing modifier.
+            ("Vårterminen 2010 - betyg", "VT2010"),
+            # Cross-term academic-year span resolves to the leading (HT) form
+            # so it doesn't collide with the bare termin row.
+            ("Höstterminen 1980 - Vårterminen 1981", "HT1980"),
+        ],
+    )
+    def test_swedish_termin_tokens(self, version_name: str, expected: str) -> None:
+        from regmeta.fqid import derive_period
+
+        # 220 real SCB collision groups (607 rows) come from "1980 höstterminen"
+        # + "1980 vårterminen" both falling back to bare "1980". The termin
+        # patterns run before the year extractor to keep terms distinct.
+        assert derive_period(version_name) == expected
+
+    def test_termin_without_year_falls_through(self) -> None:
+        from regmeta.fqid import derive_period
+
+        # Termin tokens without a usable year don't transform; the bare
+        # extractor returns None.
+        assert derive_period("Höstterminen") is None
 
 
 # ---------------------------------------------------------------------------

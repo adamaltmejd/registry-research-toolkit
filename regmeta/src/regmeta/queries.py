@@ -12,7 +12,7 @@ import sqlite3
 from typing import Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from .fqid import Fqid, derive_period, derive_variable_slug, try_emit
+from .fqid import Fqid, derive_variable_slug, try_emit
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -574,10 +574,11 @@ def get_schema(
                 (ver["regver_id"],),
             ).fetchall()
 
-            # `derive_period` returns the most-specific period token from the
-            # version name, so quarterly/half-year versions keep their precise
-            # identity in the emitted FQID (year alone would alias them).
-            period = derive_period(ver["registerversionnamn"])
+            # `register_version.slug` (§5.2) is the canonical version-slot
+            # token — auto-derived period for periodized rows, curated slug
+            # for unperiodized aux rows. Both reach Catalog via the same
+            # column, so emitting from it keeps the round-trip honest.
+            period = ver["slug"]
             col_dicts: list[dict[str, Any]] = []
             for c in columns:
                 cd = dict(c)
@@ -725,7 +726,8 @@ def get_varinfo(
             "vi.vardemangdsversion, vi.classification_id, "
             "c.short_name AS classification, "
             "rv.registervariantnamn, rver.registerversionnamn, "
-            "p.slug AS provider_slug, r.slug AS register_slug, rv.slug AS variant_slug "
+            "p.slug AS provider_slug, r.slug AS register_slug, "
+            "rv.slug AS variant_slug, rver.slug AS version_slug "
             "FROM variable_instance vi "
             "LEFT JOIN classification c ON vi.classification_id = c.id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
@@ -784,7 +786,7 @@ def get_varinfo(
                     inst["provider_slug"],
                     inst["register_slug"],
                     inst["variant_slug"],
-                    derive_period(inst["registerversionnamn"]),
+                    inst["version_slug"],
                     variable_slug,
                 ),
             }

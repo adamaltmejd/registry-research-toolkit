@@ -19,10 +19,10 @@ from typing import Any, Iterator
 
 from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
-from .fqid import derive_period, derive_variable_slug
+from .fqid import derive_variable_slug
 from .queries import extract_year
 
-SCHEMA_VERSION = "3.2.0"
+SCHEMA_VERSION = "3.3.0"
 DB_FILENAME = "regmeta.db"
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -199,12 +199,25 @@ CREATE TABLE register_variant (
 CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
     regvar_id INTEGER NOT NULL REFERENCES register_variant(regvar_id),
+    -- §5.2 version slot: either a derived period token (`2018`, `HT2020`, …)
+    -- or a curated slug for rows the period regex can't disambiguate
+    -- (unperiodized aux tables, year-range projections, sub-topic siblings
+    -- sharing a year). NULL only between INSERT and populate_slugs's
+    -- auto-derive + curated-override pass.
+    slug TEXT,
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,
     registerversionmatinformation TEXT,
     registerversion_docstaus TEXT,
     registerversion_forstagodkannandedatum TEXT,
-    registerversion_senastgodkanddatum TEXT
+    registerversion_senastgodkanddatum TEXT,
+    -- §5.3: slug is unique within parent variant. Most slugs come from
+    -- auto-derive (period regex extended with Swedish termin grammar),
+    -- not TOML; the TOML-load `seen_slugs` check doesn't catch sibling
+    -- collisions between two auto-derived rows or between a curated
+    -- override and an auto-derived sibling. SQLite treats NULLs as
+    -- distinct, so this is safe during the INSERT → populate_slugs window.
+    UNIQUE (regvar_id, slug)
 );
 
 CREATE TABLE population (
@@ -911,9 +924,15 @@ def _import_registerinformation(
         list(variants.values()),
     )
     conn.executemany(
-        "INSERT INTO register_version VALUES (:regver_id, :regvar_id, :registerversionnamn, "
-        ":registerversionbeskrivning, :registerversionmatinformation, :registerversion_docstaus, "
-        ":registerversion_forstagodkannandedatum, :registerversion_senastgodkanddatum)",
+        "INSERT INTO register_version "
+        "(regver_id, regvar_id, registerversionnamn, "
+        "registerversionbeskrivning, registerversionmatinformation, "
+        "registerversion_docstaus, registerversion_forstagodkannandedatum, "
+        "registerversion_senastgodkanddatum) VALUES ("
+        ":regver_id, :regvar_id, :registerversionnamn, "
+        ":registerversionbeskrivning, :registerversionmatinformation, "
+        ":registerversion_docstaus, :registerversion_forstagodkannandedatum, "
+        ":registerversion_senastgodkanddatum)",
         list(versions.values()),
     )
     conn.executemany(
@@ -1543,17 +1562,27 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Sets `variable_instance.via_source_id` to the canonical source cvid for
     every instance whose underlying variable was sourced from a different
-    register, matching by (period, variable slug). Returns the edge count.
+    register, keyed on (`register_version.slug`, variable slug). Returns
+    the edge count.
+
+    Slug-only. When a consumer's slug doesn't exactly match a source
+    sibling's slug, no edge forms — that's the correct outcome: the
+    consumer data hasn't disambiguated which source sibling it came from,
+    so the linker shouldn't guess. Maintainers can curate matching slugs
+    on both sides to force a precise edge.
+
+    Runs after `populate_slugs` so `rver.slug` is non-NULL.
     """
-    # One row per (cvid, alias) so cvids with multiple aliases that derive to
-    # different slugs are visible under each. ORDER BY pins tie-breaks: when
-    # two source-side instances key the same (rid, period, slug), the lowest
-    # cvid wins; same for which alias claims a consumer cvid first. Period is
-    # the full §5.2 token (HT/VTYYYY, YYYY-Qn, ...) — keying on bare year
-    # would mis-link sub-year siblings (HT2020 paired with VT2020).
+    # One row per (cvid, alias) so cvids with multiple aliases that derive
+    # to different variable slugs are visible under each. ORDER BY pins
+    # tie-breaks: when two source-side instances key the same (rid,
+    # version_slug, var_slug), the lowest cvid wins — but that case only
+    # arises if two source siblings share a slug, which UNIQUE(regvar_id,
+    # slug) on register_version forbids; effectively the setdefault is
+    # never contested in a strict-built DB.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.registerversionnamn, va.kolumnnamn "
+        "rver.slug AS version_slug, va.kolumnnamn "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
@@ -1564,21 +1593,20 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_name, kolumnnamn in rows:
-        period = derive_period(version_name)
-        slug = derive_variable_slug(kolumnnamn)
-        if period is None or slug is None:
+    for cvid, rid, src_rid, version_slug, kolumnnamn in rows:
+        variable_slug = derive_variable_slug(kolumnnamn)
+        if version_slug is None or variable_slug is None:
             continue
-        by_key.setdefault((rid, period, slug), cvid)
+        by_key.setdefault((rid, version_slug, variable_slug), cvid)
         if src_rid is not None and src_rid != rid:
-            consumer_attempts.append((cvid, src_rid, period, slug))
+            consumer_attempts.append((cvid, src_rid, version_slug, variable_slug))
 
     # First match per consumer cvid wins (stable: input is sorted).
     resolved: dict[int, int] = {}
-    for cvid, src_rid, period, slug in consumer_attempts:
+    for cvid, src_rid, version_slug, variable_slug in consumer_attempts:
         if cvid in resolved:
             continue
-        src_cvid = by_key.get((src_rid, period, slug))
+        src_cvid = by_key.get((src_rid, version_slug, variable_slug))
         if src_cvid is not None and src_cvid != cvid:
             resolved[cvid] = src_cvid
 
@@ -1586,6 +1614,19 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
         conn.executemany(
             "UPDATE variable_instance SET via_source_id = ? WHERE cvid = ?",
             [(src_cvid, cvid) for cvid, src_cvid in resolved.items()],
+        )
+
+    # Surface the skipped count so a regression — e.g. a future delivery
+    # introducing a curated source-side slug with no matching consumer-side
+    # entry — is visible at build time. Without this, edges silently
+    # disappear from `via_source_id` and only show up via downstream
+    # lineage-query gaps.
+    candidate_cvids = {cvid for cvid, *_ in consumer_attempts}
+    skipped = len(candidate_cvids - resolved.keys())
+    if candidate_cvids:
+        _progress(
+            f"  Consumer-side binding edges: {len(resolved):,} linked, "
+            f"{skipped:,} skipped (no source-side slug match)"
         )
     return len(resolved)
 
@@ -1712,11 +1753,6 @@ def build_db(
         ri_count, unika_join, known_cvids = _import_registerinformation(conn, ri_path)
         row_counts["Registerinformation.csv"] = ri_count
 
-        # §5.6 lineage edges. Depends on source_register_id populated above.
-        n_links = link_consumer_side_bindings(conn)
-        if n_links:
-            _progress(f"  {n_links:,} consumer-side binding edges linked")
-
         # Pre-load validity windows (consumed by Vardemangder year-projection).
         # Loaded ahead of the enrichment loop so projection has it ready when
         # Vardemangder.csv finishes streaming. Required whenever Vardemangder.csv
@@ -1832,6 +1868,24 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+        # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
+        # on `register_version.slug` — the canonical disambiguator. Keying on
+        # `derive_period(name)` would collapse siblings that γ's curated
+        # overrides exist to separate (e.g. two `LISA 2018 …` rows in the
+        # same variant) and silently link consumers to the wrong source cvid.
+        # `source_register_id` was populated by the Registerinformation.csv
+        # import far above; no intermediate step depends on `via_source_id`.
+        #
+        # Skip under `--skip-slugs`: the linker is slug-only and every
+        # `rver.slug` is NULL in that mode, so running would silently
+        # produce zero edges instead of an honest "this build is
+        # incomplete" signal. Run `build-db` without `--skip-slugs` (the
+        # default) to materialize lineage.
+        if skip_slugs:
+            _progress("Skipping consumer-side binding edges (skip_slugs=True)")
+        else:
+            link_consumer_side_bindings(conn)
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears

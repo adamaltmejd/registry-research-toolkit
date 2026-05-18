@@ -3116,3 +3116,1713 @@ display_group = "Rekryteringserfarenheter och rekryteringsbehov per yrke (LOR)"
 [register_variant."414.1757"]
 slug = "sjalvforsorjning-20-65-ar"
 display_group = "Självförsörjning 20-65 år"
+# -- register_version curated slugs --------------------------------------
+#
+# §5.3 invariant: register_version slug is unique within parent variant.
+# Generated for 425 rows where `derive_period` returned None
+# (unperiodized aux table) or collided with a sibling under the same
+# variant. Slugs are slugified `registerversionnamn`; in each collision
+# group, the row whose trimmed name equals the period keeps the
+# auto-derived slug and is omitted from this section.
+
+# 'Kvartal 1-3 fr.o.m. 2010'
+[register_version."2.56.13802"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Änkor/ änklingar 1968-1997'
+[register_version."2.56.15013"]
+slug = "ankor-anklingar-1968-1997"
+
+# 'Gifta 1968-1995'
+[register_version."2.56.15014"]
+slug = "gifta-1968-1995"
+
+# 'Skilda 1968-1997'
+[register_version."2.56.15017"]
+slug = "skilda-1968-1997"
+
+# 'Kvartal 1-3 fr.o.m. 2010'
+[register_version."2.57.13811"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Kvartal 1-3 fr.o.m. 2010'
+[register_version."2.60.13818"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Kvartal 1-3 fr.o.m. 2010'
+[register_version."2.61.13813"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Kvartal 1-3 fr.o.m 2010'
+[register_version."2.62.13815"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Kvartal 1-3 fr.o.m 2010'
+[register_version."2.63.13814"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# 'Kvartal 1-3 fr.o.m. 2010'
+[register_version."2.64.13824"]
+slug = "kvartal-1-3-fr-o-m-2010"
+
+# '2010 preliminär'
+[register_version."97.93.3860"]
+slug = "preliminar-2010"
+
+# '2012 - Boendestatistik'
+[register_version."97.93.4934"]
+slug = "boendestatistik-2012"
+
+# '2013 - Boendestatistik'
+[register_version."97.93.5757"]
+slug = "boendestatistik-2013"
+
+# '2010 preliminär'
+[register_version."97.99.3818"]
+slug = "preliminar-2010"
+
+# '2024 Ekologiska arealer'
+[register_version."145.212.19665"]
+slug = "ekologiska-arealer-2024"
+
+# '2023 Ekologiska arealer'
+[register_version."145.212.19688"]
+slug = "ekologiska-arealer-2023"
+
+# '2022 Ekologiska arealer'
+[register_version."145.212.19706"]
+slug = "ekologiska-arealer-2022"
+
+# '2021 Ekologiska arealer'
+[register_version."145.212.19707"]
+slug = "ekologiska-arealer-2021"
+
+# '2020 Ekologiska arealer'
+[register_version."145.212.19709"]
+slug = "ekologiska-arealer-2020"
+
+# '2019 Ekologiska arealer'
+[register_version."145.212.19711"]
+slug = "ekologiska-arealer-2019"
+
+# '2018 Ekologiska arealer'
+[register_version."145.212.19713"]
+slug = "ekologiska-arealer-2018"
+
+# '2017 Ekologiska arealer'
+[register_version."145.212.19715"]
+slug = "ekologiska-arealer-2017"
+
+# '2016 Ekologiska arealer'
+[register_version."145.212.19717"]
+slug = "ekologiska-arealer-2016"
+
+# '2011 maj'
+[register_version."164.235.3718"]
+slug = "2011-05"
+
+# '2010 november'
+[register_version."164.235.3746"]
+slug = "2010-11"
+
+# '2010 maj'
+[register_version."164.235.3768"]
+slug = "2010-05"
+
+# '2009 november'
+[register_version."164.235.3769"]
+slug = "2009-11"
+
+# '2009 maj'
+[register_version."164.235.3773"]
+slug = "2009-05"
+
+# '2011 november '
+[register_version."164.235.3924"]
+slug = "2011-11"
+
+# '2012 maj'
+[register_version."164.235.4352"]
+slug = "2012-05"
+
+# '2008 maj'
+[register_version."164.235.4391"]
+slug = "2008-05"
+
+# '2008 november'
+[register_version."164.235.4392"]
+slug = "2008-11"
+
+# '2012 november'
+[register_version."164.235.4791"]
+slug = "2012-11"
+
+# '2013 maj'
+[register_version."164.235.4951"]
+slug = "2013-05"
+
+# '2007 maj'
+[register_version."164.235.4996"]
+slug = "2007-05"
+
+# '2007 november'
+[register_version."164.235.4997"]
+slug = "2007-11"
+
+# '2013 november'
+[register_version."164.235.5590"]
+slug = "2013-11"
+
+# '2014 maj'
+[register_version."164.235.5591"]
+slug = "2014-05"
+
+# '2014 november'
+[register_version."164.235.5753"]
+slug = "2014-11"
+
+# '2015 maj'
+[register_version."164.235.6126"]
+slug = "2015-05"
+
+# '2015 november'
+[register_version."164.235.8581"]
+slug = "2015-11"
+
+# '2016 maj'
+[register_version."164.235.8586"]
+slug = "2016-05"
+
+# '2016 november'
+[register_version."164.235.11486"]
+slug = "2016-11"
+
+# '2017 maj'
+[register_version."164.235.11487"]
+slug = "2017-05"
+
+# '2017 november'
+[register_version."164.235.12030"]
+slug = "2017-11"
+
+# '2018 maj'
+[register_version."164.235.12031"]
+slug = "2018-05"
+
+# '2018 november'
+[register_version."164.235.12801"]
+slug = "2018-11"
+
+# '2019 maj'
+[register_version."164.235.13627"]
+slug = "2019-05"
+
+# '2019 november'
+[register_version."164.235.13727"]
+slug = "2019-11"
+
+# '2020 maj'
+[register_version."164.235.14713"]
+slug = "2020-05"
+
+# '2006 november'
+[register_version."164.235.15074"]
+slug = "2006-11"
+
+# '2006 maj'
+[register_version."164.235.15081"]
+slug = "2006-05"
+
+# '2005 november'
+[register_version."164.235.15091"]
+slug = "2005-11"
+
+# '2005 maj'
+[register_version."164.235.15139"]
+slug = "2005-05"
+
+# '2004 november'
+[register_version."164.235.15144"]
+slug = "2004-11"
+
+# '2004 maj'
+[register_version."164.235.15178"]
+slug = "2004-05"
+
+# '2003 november'
+[register_version."164.235.15196"]
+slug = "2003-11"
+
+# '2002 november'
+[register_version."164.235.15234"]
+slug = "2002-11"
+
+# '2003 maj'
+[register_version."164.235.15241"]
+slug = "2003-05"
+
+# '2002 maj'
+[register_version."164.235.15242"]
+slug = "2002-05"
+
+# '2001 maj'
+[register_version."164.235.15243"]
+slug = "2001-05"
+
+# '2000 maj'
+[register_version."164.235.15247"]
+slug = "2000-05"
+
+# '2001 november'
+[register_version."164.235.15255"]
+slug = "2001-11"
+
+# '2000 november'
+[register_version."164.235.15257"]
+slug = "2000-11"
+
+# '2020 november'
+[register_version."164.235.15776"]
+slug = "2020-11"
+
+# '2021 maj'
+[register_version."164.235.16475"]
+slug = "2021-05"
+
+# '2021 november'
+[register_version."164.235.17907"]
+slug = "2021-11"
+
+# '2022 maj'
+[register_version."164.235.18212"]
+slug = "2022-05"
+
+# '2022 november'
+[register_version."164.235.18496"]
+slug = "2022-11"
+
+# '2011 kv1'
+[register_version."195.275.3777"]
+slug = "2011-Q1"
+
+# '2011 kv2- kv4'
+[register_version."195.275.11393"]
+slug = "kv2-kv4-2011"
+
+# 'Öar 2013, totalregister'
+[register_version."219.320.13702"]
+slug = "oar-2013-totalregister"
+
+# 'Intäkter för forskning och forskarutbildning 2005'
+[register_version."182.358.881"]
+slug = "intakter-for-forskning-och-forskarutbildning-2005"
+
+# 'Avskrivningar, investeringar och hyreskostn 2005'
+[register_version."182.358.910"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2005"
+
+# 'Avskrivningar, investeringar och hyreskostn 2007'
+[register_version."182.358.1706"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2007"
+
+# 'Intäkter för forskning och forskarutbildning 2007'
+[register_version."182.358.1713"]
+slug = "intakter-for-forskning-och-forskarutbildning-2007"
+
+# 'Avskrivningar, investeringar och hyreskostn 2009 '
+[register_version."182.358.3550"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2009"
+
+# 'Intäkter för forskning och forskarutbildning 2009 '
+[register_version."182.358.3551"]
+slug = "intakter-for-forskning-och-forskarutbildning-2009"
+
+# 'Avskrivningar, investeringar och hyreskostn 2011'
+[register_version."182.358.4471"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2011"
+
+# 'Intäkter för forskning och forskarutbildning 2011'
+[register_version."182.358.4473"]
+slug = "intakter-for-forskning-och-forskarutbildning-2011"
+
+# 'Avskrivningar, investeringar och hyreskostn 2013'
+[register_version."182.358.5764"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2013"
+
+# 'Intäkter för forskning och forskarutbildning 2013'
+[register_version."182.358.5765"]
+slug = "intakter-for-forskning-och-forskarutbildning-2013"
+
+# 'Avskrivningar, investeringar och hyreskostn 2015'
+[register_version."182.358.9841"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2015"
+
+# 'Intäkter för forskning och forskarutbildning 2015'
+[register_version."182.358.10094"]
+slug = "intakter-for-forskning-och-forskarutbildning-2015"
+
+# 'Intäkter för forskning och forskarutbildning 2017'
+[register_version."182.358.12594"]
+slug = "intakter-for-forskning-och-forskarutbildning-2017"
+
+# 'Avskrivningar, investeringar och hyreskostn 2017'
+[register_version."182.358.12595"]
+slug = "avskrivningar-investeringar-och-hyreskostn-2017"
+
+# '2023: Mikroföretag'
+[register_version."182.373.19498"]
+slug = "mikroforetag-2023"
+
+# 'Första halvåret 1995'
+[register_version."229.396.14762"]
+slug = "forsta-halvaret-1995"
+
+# 'Andra halvåret 1995'
+[register_version."229.396.14864"]
+slug = "andra-halvaret-1995"
+
+# 'Första halvåret 1996'
+[register_version."229.396.14891"]
+slug = "forsta-halvaret-1996"
+
+# 'Andra halvåret 1996'
+[register_version."229.396.14892"]
+slug = "andra-halvaret-1996"
+
+# 'Första halvåret 1997'
+[register_version."229.396.14907"]
+slug = "forsta-halvaret-1997"
+
+# 'Andra halvåret 1997'
+[register_version."229.396.14909"]
+slug = "andra-halvaret-1997"
+
+# 'Första halvåret 1998'
+[register_version."229.396.14911"]
+slug = "forsta-halvaret-1998"
+
+# 'Andra halvåret 1998'
+[register_version."229.396.14914"]
+slug = "andra-halvaret-1998"
+
+# 'Första halvåret 1999'
+[register_version."229.396.14917"]
+slug = "forsta-halvaret-1999"
+
+# 'Andra halvåret 1999'
+[register_version."229.396.14918"]
+slug = "andra-halvaret-1999"
+
+# 'Andra halvåret 2000'
+[register_version."229.396.14967"]
+slug = "andra-halvaret-2000"
+
+# 'Första halvåret 2000'
+[register_version."229.396.14969"]
+slug = "forsta-halvaret-2000"
+
+# 'Första halvåret 2001'
+[register_version."229.396.14971"]
+slug = "forsta-halvaret-2001"
+
+# 'Andra halvåret 2001'
+[register_version."229.396.14972"]
+slug = "andra-halvaret-2001"
+
+# 'Första halvåret 2002'
+[register_version."229.396.14973"]
+slug = "forsta-halvaret-2002"
+
+# 'Andra halvåret 2002'
+[register_version."229.396.14979"]
+slug = "andra-halvaret-2002"
+
+# 'Första halvåret 2003'
+[register_version."229.396.14982"]
+slug = "forsta-halvaret-2003"
+
+# 'Andra halvåret 2003'
+[register_version."229.396.14983"]
+slug = "andra-halvaret-2003"
+
+# 'Hela året 1999'
+[register_version."229.396.15072"]
+slug = "hela-aret-1999"
+
+# 'Hela året 2000'
+[register_version."229.396.15200"]
+slug = "hela-aret-2000"
+
+# 'Hela året 2001'
+[register_version."229.396.15202"]
+slug = "hela-aret-2001"
+
+# 'Hela året 2002'
+[register_version."229.396.15203"]
+slug = "hela-aret-2002"
+
+# 'Hela året 2003'
+[register_version."229.396.15211"]
+slug = "hela-aret-2003"
+
+# '15 oktober 2002'
+[register_version."192.408.5550"]
+slug = "oktober-2002-15"
+
+# '15 oktober 2002 Förskoleklass'
+[register_version."192.408.13520"]
+slug = "oktober-2002-forskoleklass-15"
+
+# '2015 Tilläggsfrågor om mobilitet (UKÄ)'
+[register_version."182.441.9978"]
+slug = "tillaggsfragor-om-mobilitet-uka-2015"
+
+# '2017 Tilläggsfrågor om mobilitet UKÄ'
+[register_version."182.441.12469"]
+slug = "tillaggsfragor-om-mobilitet-uka-2017"
+
+# '2021 Tilläggsfrågor om mobilitet UKÄ'
+[register_version."182.441.18431"]
+slug = "tillaggsfragor-om-mobilitet-uka-2021"
+
+# '2023 Tilläggsfrågor om mobilitet UKÄ'
+[register_version."182.441.19506"]
+slug = "tillaggsfragor-om-mobilitet-uka-2023"
+
+# '1989_old'
+[register_version."237.458.737"]
+slug = "old-1989"
+
+# '2008/2009'
+[register_version."248.496.14069"]
+slug = "v2008-2009"
+
+# '2007/2008'
+[register_version."248.496.14070"]
+slug = "v2007-2008"
+
+# '2006/2007'
+[register_version."248.496.14071"]
+slug = "v2006-2007"
+
+# '2005/2006'
+[register_version."248.496.14072"]
+slug = "v2005-2006"
+
+# '2004/2005'
+[register_version."248.496.14073"]
+slug = "v2004-2005"
+
+# '2003/2004'
+[register_version."248.496.14074"]
+slug = "v2003-2004"
+
+# '2002/2003'
+[register_version."248.496.14075"]
+slug = "v2002-2003"
+
+# '2001/2002'
+[register_version."248.496.14076"]
+slug = "v2001-2002"
+
+# '2000/2001'
+[register_version."248.496.14077"]
+slug = "v2000-2001"
+
+# '1999/2000'
+[register_version."248.496.14078"]
+slug = "v1999-2000"
+
+# '1998/1999'
+[register_version."248.496.14079"]
+slug = "v1998-1999"
+
+# '1997/1998'
+[register_version."248.496.14080"]
+slug = "v1997-1998"
+
+# '2008/2009'
+[register_version."249.498.12497"]
+slug = "v2008-2009"
+
+# '2007/2008'
+[register_version."249.498.12498"]
+slug = "v2007-2008"
+
+# '2006/2007'
+[register_version."249.498.14022"]
+slug = "v2006-2007"
+
+# '2005/2006'
+[register_version."249.498.14023"]
+slug = "v2005-2006"
+
+# '2004/2005'
+[register_version."249.498.14024"]
+slug = "v2004-2005"
+
+# '2003/2004'
+[register_version."249.498.14025"]
+slug = "v2003-2004"
+
+# '2002/2003'
+[register_version."249.498.14026"]
+slug = "v2002-2003"
+
+# '2001/2002'
+[register_version."249.498.14027"]
+slug = "v2001-2002"
+
+# '2000/2001'
+[register_version."249.498.14028"]
+slug = "v2000-2001"
+
+# '1999/2000'
+[register_version."249.498.14029"]
+slug = "v1999-2000"
+
+# 'Ekonomiskt bistånd, kvartal' (singleton: rolling-quarterly aggregate,
+# no period token in the source name despite the 'kvartal' label)
+[register_version."22.508.1025"]
+slug = "_default"
+
+# '2007 kv 2-kv 4'
+[register_version."254.549.2661"]
+slug = "kv2-kv4-2007"
+
+# '2007 kv 1'
+[register_version."254.549.2774"]
+slug = "2007-Q1"
+
+# '2000 kv 1'
+[register_version."254.549.2775"]
+slug = "2000-Q1"
+
+# '2000 kv 2- kv 4'
+[register_version."254.549.2786"]
+slug = "kv2-kv4-2000"
+
+# '2010, preliminär version'
+[register_version."25.763.3720"]
+slug = "preliminar-version-2010"
+
+# '2010, slutlig version'
+[register_version."25.763.4067"]
+slug = "2010"
+
+# '2011, preliminär version'
+[register_version."25.763.4306"]
+slug = "preliminar-version-2011"
+
+# '2011, slutlig version'
+[register_version."25.763.4346"]
+slug = "2011"
+
+# '2012, preliminär version'
+[register_version."25.763.4978"]
+slug = "preliminar-version-2012"
+
+# '2012, slutlig version'
+[register_version."25.763.5226"]
+slug = "2012"
+
+# '2013, preliminär version'
+[register_version."25.763.5521"]
+slug = "preliminar-version-2013"
+
+# '2013, slutlig version'
+[register_version."25.763.5626"]
+slug = "2013"
+
+# '2014, preliminär version'
+[register_version."25.763.6156"]
+slug = "preliminar-version-2014"
+
+# '2014, slutlig version'
+[register_version."25.763.7298"]
+slug = "2014"
+
+# '2015, preliminär version'
+[register_version."25.763.9811"]
+slug = "preliminar-version-2015"
+
+# '2015, slutlig version'
+[register_version."25.763.9969"]
+slug = "2015"
+
+# '2016, preliminär version'
+[register_version."25.763.11480"]
+slug = "preliminar-version-2016"
+
+# '2016, slutlig version'
+[register_version."25.763.11663"]
+slug = "2016"
+
+# '2017, preliminär version'
+[register_version."25.763.12573"]
+slug = "preliminar-version-2017"
+
+# '2017, slutlig version'
+[register_version."25.763.13443"]
+slug = "2017"
+
+# '2018, preliminär version'
+[register_version."25.763.13544"]
+slug = "preliminar-version-2018"
+
+# '2018, slutlig version'
+[register_version."25.763.13744"]
+slug = "2018"
+
+# '2019, slutlig version'
+[register_version."25.763.15780"]
+slug = "2019"
+
+# '2019, preliminär version'
+[register_version."25.763.15811"]
+slug = "preliminar-version-2019"
+
+# '2020, preliminär version'
+[register_version."25.763.17695"]
+slug = "preliminar-version-2020"
+
+# '2020, slutlig version'
+[register_version."25.763.17939"]
+slug = "2020"
+
+# '2021, preliminär version'
+[register_version."25.763.18513"]
+slug = "preliminar-version-2021"
+
+# '2021, slutlig version'
+[register_version."25.763.18529"]
+slug = "2021"
+
+# '2022, preliminär version'
+[register_version."25.763.18903"]
+slug = "preliminar-version-2022"
+
+# '2022, slutlig version'
+[register_version."25.763.18994"]
+slug = "2022"
+
+# '2023, preliminär version'
+[register_version."25.763.19421"]
+slug = "preliminar-version-2023"
+
+# '2023, slutlig version'
+[register_version."25.763.19675"]
+slug = "2023"
+
+# '2024, preliminär version'
+[register_version."25.763.20144"]
+slug = "preliminar-version-2024"
+
+# '2024, slutlig version'
+[register_version."25.763.20241"]
+slug = "2024"
+
+# 'Vårterminen 2013'
+[register_version."104.840.5177"]
+slug = "VT2013"
+
+# 'Vårterminen 2013 - betyg'
+[register_version."104.840.5510"]
+slug = "varterminen-2013-betyg"
+
+# '2009-2060 huvudalternativ'
+[register_version."310.881.3836"]
+slug = "huvudalternativ-2009-2060"
+
+# '2009-2060 högalternativ'
+[register_version."310.881.3871"]
+slug = "hogalternativ-2009-2060"
+
+# '2009-2060 lågalternativ'
+[register_version."310.881.3872"]
+slug = "lagalternativ-2009-2060"
+
+# '2012-2060 huvudalternativ'
+[register_version."310.881.4164"]
+slug = "huvudalternativ-2012-2060"
+
+# '2012-2060 högalternativ'
+[register_version."310.881.4165"]
+slug = "hogalternativ-2012-2060"
+
+# '2012-2060 lågalternativ'
+[register_version."310.881.4166"]
+slug = "lagalternativ-2012-2060"
+
+# '2015-2060 huvudalternativ'
+[register_version."310.881.5991"]
+slug = "huvudalternativ-2015-2060"
+
+# '2015-2060 alternativ hög fruktsamhet'
+[register_version."310.881.6003"]
+slug = "alternativ-hog-fruktsamhet-2015-2060"
+
+# '2015-2060 alternativ hög dödlighet'
+[register_version."310.881.6004"]
+slug = "alternativ-hog-dodlighet-2015-2060"
+
+# '2015-2060 alternativ hög migration'
+[register_version."310.881.6005"]
+slug = "alternativ-hog-migration-2015-2060"
+
+# '2015-2060 alternativ låg fruktsamhet'
+[register_version."310.881.6006"]
+slug = "alternativ-lag-fruktsamhet-2015-2060"
+
+# '2015-2060 alternativ låg dödlighet'
+[register_version."310.881.6007"]
+slug = "alternativ-lag-dodlighet-2015-2060"
+
+# '2015-2060 alternativ låg migration'
+[register_version."310.881.6008"]
+slug = "alternativ-lag-migration-2015-2060"
+
+# '2018-2070 huvudalternativ'
+[register_version."310.881.11865"]
+slug = "huvudalternativ-2018-2070"
+
+# '2018-2070 alternativ högre fruktsamhet'
+[register_version."310.881.11866"]
+slug = "alternativ-hogre-fruktsamhet-2018-2070"
+
+# '2018-2070 alternativ lägre fruktsamhet'
+[register_version."310.881.11867"]
+slug = "alternativ-lagre-fruktsamhet-2018-2070"
+
+# '2018-2070 alternativ högre migration'
+[register_version."310.881.11868"]
+slug = "alternativ-hogre-migration-2018-2070"
+
+# '2018-2070 alternativ lägre migration'
+[register_version."310.881.11869"]
+slug = "alternativ-lagre-migration-2018-2070"
+
+# '2018-2070 alternativ högre dödlighet'
+[register_version."310.881.11870"]
+slug = "alternativ-hogre-dodlighet-2018-2070"
+
+# '2018-2070 alternativ lägre dödlighet'
+[register_version."310.881.11871"]
+slug = "alternativ-lagre-dodlighet-2018-2070"
+
+# '2021-2070 huvudalternativ'
+[register_version."310.881.16290"]
+slug = "huvudalternativ-2021-2070"
+
+# '2021-2070 alternativ högre dödlighet'
+[register_version."310.881.16291"]
+slug = "alternativ-hogre-dodlighet-2021-2070"
+
+# '2021-2070 alternativ lägre dödlighet'
+[register_version."310.881.16292"]
+slug = "alternativ-lagre-dodlighet-2021-2070"
+
+# '2021-2070 alternativ högre migration'
+[register_version."310.881.16293"]
+slug = "alternativ-hogre-migration-2021-2070"
+
+# '2021-2070 alternativ lägre migration'
+[register_version."310.881.16294"]
+slug = "alternativ-lagre-migration-2021-2070"
+
+# '2021-2070 alternativ högre fruktsamhet'
+[register_version."310.881.16295"]
+slug = "alternativ-hogre-fruktsamhet-2021-2070"
+
+# '2021-2070 alternativ lägre fruktsamhet'
+[register_version."310.881.16296"]
+slug = "alternativ-lagre-fruktsamhet-2021-2070"
+
+# '2024-2070 huvudalternativ'
+[register_version."310.881.19190"]
+slug = "huvudalternativ-2024-2070"
+
+# '2024-2070 alternativ lägre migration'
+[register_version."310.881.19191"]
+slug = "alternativ-lagre-migration-2024-2070"
+
+# '2024-2070 alternativ lägre fruktsamhet'
+[register_version."310.881.19192"]
+slug = "alternativ-lagre-fruktsamhet-2024-2070"
+
+# '2024-2070 alternativ lägre dödlighet'
+[register_version."310.881.19193"]
+slug = "alternativ-lagre-dodlighet-2024-2070"
+
+# '2024-2070 alternativ högre migration'
+[register_version."310.881.19194"]
+slug = "alternativ-hogre-migration-2024-2070"
+
+# '2024-2070 alternativ högre fruktsamhet'
+[register_version."310.881.19195"]
+slug = "alternativ-hogre-fruktsamhet-2024-2070"
+
+# '2024-2070 alternativ högre dödlighet'
+[register_version."310.881.19196"]
+slug = "alternativ-hogre-dodlighet-2024-2070"
+
+# '2009-2060 huvudalternativ'
+[register_version."310.887.3838"]
+slug = "huvudalternativ-2009-2060"
+
+# '2009-2060 lågalternativ'
+[register_version."310.887.3865"]
+slug = "lagalternativ-2009-2060"
+
+# '2009-2060 högalternativ'
+[register_version."310.887.3866"]
+slug = "hogalternativ-2009-2060"
+
+# '2012-2060 huvudalternativ'
+[register_version."310.887.4167"]
+slug = "huvudalternativ-2012-2060"
+
+# '2012-2060 lågalternativ'
+[register_version."310.887.4168"]
+slug = "lagalternativ-2012-2060"
+
+# '2012-2060 högalternativ'
+[register_version."310.887.4169"]
+slug = "hogalternativ-2012-2060"
+
+# '2015-2060 huvudalternativ'
+[register_version."310.887.5994"]
+slug = "huvudalternativ-2015-2060"
+
+# '2015-2060 lågalternativ'
+[register_version."310.887.5995"]
+slug = "lagalternativ-2015-2060"
+
+# '2015-2060 Högalternativ'
+[register_version."310.887.5996"]
+slug = "hogalternativ-2015-2060"
+
+# '2018-2070 huvudalternativ'
+[register_version."310.887.11872"]
+slug = "huvudalternativ-2018-2070"
+
+# '2018-2070 lägre alternativ'
+[register_version."310.887.11873"]
+slug = "lagre-alternativ-2018-2070"
+
+# '2018-2070 högre alternativ'
+[register_version."310.887.11874"]
+slug = "hogre-alternativ-2018-2070"
+
+# '2021-2070 huvudalternativ'
+[register_version."310.887.16276"]
+slug = "huvudalternativ-2021-2070"
+
+# '2021-2070 högre alternativ'
+[register_version."310.887.16277"]
+slug = "hogre-alternativ-2021-2070"
+
+# '2021-2070 lägre alternativ'
+[register_version."310.887.16278"]
+slug = "lagre-alternativ-2021-2070"
+
+# '2024-2070 huvudalternativ'
+[register_version."310.887.19197"]
+slug = "huvudalternativ-2024-2070"
+
+# '2024-2070 lägre alternativ'
+[register_version."310.887.19198"]
+slug = "lagre-alternativ-2024-2070"
+
+# '2024-2070 högre alternativ'
+[register_version."310.887.19199"]
+slug = "hogre-alternativ-2024-2070"
+
+# '2009-2060 huvudalternativ'
+[register_version."310.888.3835"]
+slug = "huvudalternativ-2009-2060"
+
+# '2009-2060 högalternativ'
+[register_version."310.888.3862"]
+slug = "hogalternativ-2009-2060"
+
+# '2009-2060 lågalternativ'
+[register_version."310.888.3864"]
+slug = "lagalternativ-2009-2060"
+
+# '2012-2060 huvudalternativ'
+[register_version."310.888.4161"]
+slug = "huvudalternativ-2012-2060"
+
+# '2012-2060 högalternativ'
+[register_version."310.888.4162"]
+slug = "hogalternativ-2012-2060"
+
+# '2012-2060 lågalternativ'
+[register_version."310.888.4163"]
+slug = "lagalternativ-2012-2060"
+
+# '2015-2060 huvudalternativ'
+[register_version."310.888.5987"]
+slug = "huvudalternativ-2015-2060"
+
+# '2015-2060 högalternariv' (SCB source typo; slug normalized to 'alternativ')
+[register_version."310.888.5988"]
+slug = "hogalternativ-2015-2060"
+
+# '2015-2060 lågalternariv' (SCB source typo; slug normalized to 'alternativ')
+[register_version."310.888.5989"]
+slug = "lagalternativ-2015-2060"
+
+# '2018-2070  huvudalternativ'
+[register_version."310.888.11862"]
+slug = "huvudalternativ-2018-2070"
+
+# '2018-2070  högre alternariv' (SCB source typo; slug normalized to 'alternativ')
+[register_version."310.888.11863"]
+slug = "hogre-alternativ-2018-2070"
+
+# '2018-2070  lägre alternariv' (SCB source typo; slug normalized to 'alternativ')
+[register_version."310.888.11864"]
+slug = "lagre-alternativ-2018-2070"
+
+# '2021-2070  huvudalternativ'
+[register_version."310.888.16272"]
+slug = "huvudalternativ-2021-2070"
+
+# '2021-2070  högre alternativ'
+[register_version."310.888.16273"]
+slug = "hogre-alternativ-2021-2070"
+
+# '2021-2070  lägre alternaiv' (SCB source typo; slug normalized to 'alternativ')
+[register_version."310.888.16274"]
+slug = "lagre-alternativ-2021-2070"
+
+# '2024-2070  huvudalternativ'
+[register_version."310.888.19187"]
+slug = "huvudalternativ-2024-2070"
+
+# '2024-2070  lägre alternativ'
+[register_version."310.888.19188"]
+slug = "lagre-alternativ-2024-2070"
+
+# '2024-2070  högre alternativ'
+[register_version."310.888.19189"]
+slug = "hogre-alternativ-2024-2070"
+
+# '2009-2060 huvudalternativ'
+[register_version."310.889.3840"]
+slug = "huvudalternativ-2009-2060"
+
+# '2009-2060 högalternativ'
+[register_version."310.889.3867"]
+slug = "hogalternativ-2009-2060"
+
+# '2009-2060 lågalternativ'
+[register_version."310.889.3868"]
+slug = "lagalternativ-2009-2060"
+
+# '2012-2060 huvudalternativ'
+[register_version."310.889.4170"]
+slug = "huvudalternativ-2012-2060"
+
+# '2012-2060 högalternativ'
+[register_version."310.889.4171"]
+slug = "hogalternativ-2012-2060"
+
+# '2012-2060 lågalternativ'
+[register_version."310.889.4172"]
+slug = "lagalternativ-2012-2060"
+
+# '2015-2060 huvudalternativ'
+[register_version."310.889.5997"]
+slug = "huvudalternativ-2015-2060"
+
+# '2015-2060 högalternativ'
+[register_version."310.889.5998"]
+slug = "hogalternativ-2015-2060"
+
+# '2015-2060 lågalternativ'
+[register_version."310.889.5999"]
+slug = "lagalternativ-2015-2060"
+
+# '2018-2070 huvudalternativ'
+[register_version."310.889.11875"]
+slug = "huvudalternativ-2018-2070"
+
+# '2018-2070 lägre alternativ'
+[register_version."310.889.11876"]
+slug = "lagre-alternativ-2018-2070"
+
+# '2018-2070 högre alternativ'
+[register_version."310.889.11877"]
+slug = "hogre-alternativ-2018-2070"
+
+# '2021-2070 huvudalternativ'
+[register_version."310.889.16280"]
+slug = "huvudalternativ-2021-2070"
+
+# '2021-2070 högre alternativ'
+[register_version."310.889.16285"]
+slug = "hogre-alternativ-2021-2070"
+
+# '2021-2070 lägre alternativ'
+[register_version."310.889.16286"]
+slug = "lagre-alternativ-2021-2070"
+
+# '2024-2070 huvudalternativ'
+[register_version."310.889.19200"]
+slug = "huvudalternativ-2024-2070"
+
+# '2024-2070 högre alternativ'
+[register_version."310.889.19201"]
+slug = "hogre-alternativ-2024-2070"
+
+# '2024-2070 lägre alternativ'
+[register_version."310.889.19202"]
+slug = "lagre-alternativ-2024-2070"
+
+# '2009-2060 huvudalternativ'
+[register_version."310.891.3841"]
+slug = "huvudalternativ-2009-2060"
+
+# '2009-2060 högalternativ'
+[register_version."310.891.3869"]
+slug = "hogalternativ-2009-2060"
+
+# '2009-2060 lågalternativ'
+[register_version."310.891.3870"]
+slug = "lagalternativ-2009-2060"
+
+# '2012-2060 huvudalternativ'
+[register_version."310.891.4173"]
+slug = "huvudalternativ-2012-2060"
+
+# '2012-2060 högalternativ'
+[register_version."310.891.4174"]
+slug = "hogalternativ-2012-2060"
+
+# '2012-2060 lågalternativ'
+[register_version."310.891.4175"]
+slug = "lagalternativ-2012-2060"
+
+# '2015-2060 huvudalternativ'
+[register_version."310.891.6000"]
+slug = "huvudalternativ-2015-2060"
+
+# '2015-2060 lågalternativ'
+[register_version."310.891.6001"]
+slug = "lagalternativ-2015-2060"
+
+# '2015-2060 högalternativ'
+[register_version."310.891.6002"]
+slug = "hogalternativ-2015-2060"
+
+# '2018-2070 huvudalternativ'
+[register_version."310.891.11878"]
+slug = "huvudalternativ-2018-2070"
+
+# '2018-2070 lägre alternativ'
+[register_version."310.891.11879"]
+slug = "lagre-alternativ-2018-2070"
+
+# '2018-2070 högre alternativ'
+[register_version."310.891.11880"]
+slug = "hogre-alternativ-2018-2070"
+
+# '2021-2070 huvudalternativ'
+[register_version."310.891.16287"]
+slug = "huvudalternativ-2021-2070"
+
+# '2021-2070 högre alternativ'
+[register_version."310.891.16288"]
+slug = "hogre-alternativ-2021-2070"
+
+# '2021-2070 lägre alternativ'
+[register_version."310.891.16289"]
+slug = "lagre-alternativ-2021-2070"
+
+# '2024-2070 huvudalternativ'
+[register_version."310.891.19203"]
+slug = "huvudalternativ-2024-2070"
+
+# '2024-2070 högre alternativ'
+[register_version."310.891.19204"]
+slug = "hogre-alternativ-2024-2070"
+
+# '2024-2070 lägre alternativ'
+[register_version."310.891.19205"]
+slug = "lagre-alternativ-2024-2070"
+
+# 'Strandlinje med ny bebyggelse 2018'
+[register_version."217.934.16158"]
+slug = "strandlinje-med-ny-bebyggelse-2018"
+
+# 'Strandlinje med bebyggelse 2018'
+[register_version."217.934.16159"]
+slug = "strandlinje-med-bebyggelse-2018"
+
+# 'Strandlinje med bebyggelse 2019'
+[register_version."217.934.17902"]
+slug = "strandlinje-med-bebyggelse-2019"
+
+# 'Strandlinje med ny bebyggelse 2019'
+[register_version."217.934.17903"]
+slug = "strandlinje-med-ny-bebyggelse-2019"
+
+# 'Strandlinje med bebyggelse 2020'
+[register_version."217.934.18371"]
+slug = "strandlinje-med-bebyggelse-2020"
+
+# 'Strandlinje med ny bebyggelse 2020'
+[register_version."217.934.18372"]
+slug = "strandlinje-med-ny-bebyggelse-2020"
+
+# 'Strandlinje med bebyggelse 2021'
+[register_version."217.934.18569"]
+slug = "strandlinje-med-bebyggelse-2021"
+
+# 'Strandlinje med ny bebygge 2021' (SCB source truncation; slug normalized to 'bebyggelse')
+[register_version."217.934.18570"]
+slug = "strandlinje-med-ny-bebyggelse-2021"
+
+# 'Strandlinje med bebyggelse 2022'
+[register_version."217.934.19013"]
+slug = "strandlinje-med-bebyggelse-2022"
+
+# 'Strandlinje med ny bebyggelse 2022'
+[register_version."217.934.19014"]
+slug = "strandlinje-med-ny-bebyggelse-2022"
+
+# 'Strandlinje med ny bebyggelse 2023'
+[register_version."217.934.19745"]
+slug = "strandlinje-med-ny-bebyggelse-2023"
+
+# 'Strandlinje med bebyggelse 2023'
+[register_version."217.934.19749"]
+slug = "strandlinje-med-bebyggelse-2023"
+
+# 'Indata 2014'
+[register_version."296.980.5776"]
+slug = "indata-2014"
+
+# 'Utdata 2014'
+[register_version."296.980.5792"]
+slug = "utdata-2014"
+
+# '2014-12-31'
+[register_version."333.1077.6042"]
+slug = "v2014-12-31"
+
+# '2014-12-31 enligt ny definition'
+[register_version."333.1077.7490"]
+slug = "enligt-ny-definition-2014-12-31"
+
+# '2014-12-31'
+[register_version."333.1079.6057"]
+slug = "v2014-12-31"
+
+# '2014-12-31 enligt ny definition'
+[register_version."333.1079.7492"]
+slug = "enligt-ny-definition-2014-12-31"
+
+# 'Indata 2013'
+[register_version."296.1085.4618"]
+slug = "indata-2013"
+
+# 'Utdata 2013'
+[register_version."296.1085.4620"]
+slug = "utdata-2013"
+
+# 'Utdata 2014'
+[register_version."296.1085.5205"]
+slug = "utdata-2014"
+
+# 'Indata 2014'
+[register_version."296.1085.5206"]
+slug = "indata-2014"
+
+# 'Indata 2015'
+[register_version."296.1085.5790"]
+slug = "indata-2015"
+
+# 'Utdata 2015'
+[register_version."296.1085.5791"]
+slug = "utdata-2015"
+
+# 'Utdata 2016'
+[register_version."296.1085.6243"]
+slug = "utdata-2016"
+
+# 'Indata 2016'
+[register_version."296.1085.6244"]
+slug = "indata-2016"
+
+# 'Indata 2017'
+[register_version."296.1085.11106"]
+slug = "indata-2017"
+
+# 'Utdata 2017'
+[register_version."296.1085.11108"]
+slug = "utdata-2017"
+
+# 'Utdata 2018'
+[register_version."296.1085.11705"]
+slug = "utdata-2018"
+
+# 'Indata 2018'
+[register_version."296.1085.11707"]
+slug = "indata-2018"
+
+# 'Utdata 2019'
+[register_version."296.1085.12977"]
+slug = "utdata-2019"
+
+# 'Indata 2019'
+[register_version."296.1085.12978"]
+slug = "indata-2019"
+
+# 'Utdata 2020'
+[register_version."296.1085.13761"]
+slug = "utdata-2020"
+
+# 'Indata 2020'
+[register_version."296.1085.13763"]
+slug = "indata-2020"
+
+# 'Utdata 2021'
+[register_version."296.1085.16114"]
+slug = "utdata-2021"
+
+# 'Indata 2021'
+[register_version."296.1085.16115"]
+slug = "indata-2021"
+
+# 'Indata 2022'
+[register_version."296.1085.18078"]
+slug = "indata-2022"
+
+# 'Utdata 2022'
+[register_version."296.1085.18103"]
+slug = "utdata-2022"
+
+# 'Indata 2023'
+[register_version."296.1085.18104"]
+slug = "indata-2023"
+
+# 'Utdata 2023'
+[register_version."296.1085.19325"]
+slug = "utdata-2023"
+
+# 'Utdata 2024'
+[register_version."296.1085.19326"]
+slug = "utdata-2024"
+
+# 'Utdata 2025'
+[register_version."296.1085.19704"]
+slug = "utdata-2025"
+
+# 'Indata 2024'
+[register_version."296.1085.19910"]
+slug = "indata-2024"
+
+# 'Indata 2025'
+[register_version."296.1085.19952"]
+slug = "indata-2025"
+
+# '2007/2008'
+[register_version."249.1107.12495"]
+slug = "v2007-2008"
+
+# '2008/2009'
+[register_version."249.1107.12496"]
+slug = "v2008-2009"
+
+# '2006/2007'
+[register_version."249.1107.13988"]
+slug = "v2006-2007"
+
+# '2005/2006'
+[register_version."249.1107.13989"]
+slug = "v2005-2006"
+
+# '2004/2005'
+[register_version."249.1107.13990"]
+slug = "v2004-2005"
+
+# '2003/2004'
+[register_version."249.1107.13991"]
+slug = "v2003-2004"
+
+# '2002/2003'
+[register_version."249.1107.13992"]
+slug = "v2002-2003"
+
+# '2001/2002'
+[register_version."249.1107.13993"]
+slug = "v2001-2002"
+
+# '2000/2001'
+[register_version."249.1107.13994"]
+slug = "v2000-2001"
+
+# '1999/2000'
+[register_version."249.1107.13995"]
+slug = "v1999-2000"
+
+# '2021, slutlig version'
+[register_version."25.1153.18530"]
+slug = "2021"
+
+# '2021VX, slutlig version'
+[register_version."25.1153.18563"]
+slug = "v2021vx-slutlig-version"
+
+# '2022, slutlig version'
+[register_version."25.1153.18996"]
+slug = "2022"
+
+# '2022VX, slutlig version'
+[register_version."25.1153.18997"]
+slug = "v2022vx-slutlig-version"
+
+# '2023, slutlig version'
+[register_version."25.1153.19677"]
+slug = "2023"
+
+# '2023VX, slutlig version'
+[register_version."25.1153.19678"]
+slug = "v2023vx-slutlig-version"
+
+# '2024, slutlig version'
+[register_version."25.1153.20242"]
+slug = "2024"
+
+# '2024VX, slutlig version'
+[register_version."25.1153.20243"]
+slug = "v2024vx-slutlig-version"
+
+# 'Person-År'
+[register_version."24.1225.7368"]
+slug = "_default"
+
+# '2015 januari - juni'
+[register_version."368.1325.11502"]
+slug = "januari-juni-2015"
+
+# '2015 juli - december'
+[register_version."368.1325.11504"]
+slug = "juli-december-2015"
+
+# '2016 januari - juni'
+[register_version."368.1325.11505"]
+slug = "januari-juni-2016"
+
+# '2016 juli - december'
+[register_version."368.1325.11511"]
+slug = "juli-december-2016"
+
+# '2017 januari - juni'
+[register_version."368.1325.11638"]
+slug = "januari-juni-2017"
+
+# '2017 juli - december'
+[register_version."368.1325.11925"]
+slug = "juli-december-2017"
+
+# '2018 januari - juni'
+[register_version."368.1325.12618"]
+slug = "januari-juni-2018"
+
+# '2018 juli - december'
+[register_version."368.1325.13242"]
+slug = "juli-december-2018"
+
+# '2019 januari - juni'
+[register_version."368.1325.13643"]
+slug = "januari-juni-2019"
+
+# '2019 juli - december'
+[register_version."368.1325.14471"]
+slug = "juli-december-2019"
+
+# '2020 januari - juni'
+[register_version."368.1325.15540"]
+slug = "januari-juni-2020"
+
+# '2020 juli - december'
+[register_version."368.1325.16446"]
+slug = "juli-december-2020"
+
+# '2021 januari - juni'
+[register_version."368.1325.19004"]
+slug = "januari-juni-2021"
+
+# '2021 juli - december'
+[register_version."368.1325.19006"]
+slug = "juli-december-2021"
+
+# '2022 januari - juni'
+[register_version."368.1325.19007"]
+slug = "januari-juni-2022"
+
+# '2022 juli - december'
+[register_version."368.1325.19008"]
+slug = "juli-december-2022"
+
+# '2023 januari - juni'
+[register_version."368.1325.19009"]
+slug = "januari-juni-2023"
+
+# '2023 juli - december'
+[register_version."368.1325.19010"]
+slug = "juli-december-2023"
+
+# '2024 januari - juni'
+[register_version."368.1325.19671"]
+slug = "januari-juni-2024"
+
+# '2024 juli - december'
+[register_version."368.1325.20245"]
+slug = "juli-december-2024"
+
+# '2005-2024'
+[register_version."377.1397.20121"]
+slug = "v2005-2024"
+
+# '2018H'
+[register_version."47.1466.13411"]
+slug = "HT2018"
+
+# '2017H'
+[register_version."47.1466.14924"]
+slug = "HT2017"
+
+# '2019H'
+[register_version."47.1466.14925"]
+slug = "HT2019"
+
+# '2016H'
+[register_version."47.1466.14926"]
+slug = "HT2016"
+
+# '2015H'
+[register_version."47.1466.14927"]
+slug = "HT2015"
+
+# '2014H'
+[register_version."47.1466.14928"]
+slug = "HT2014"
+
+# '2013H'
+[register_version."47.1466.14929"]
+slug = "HT2013"
+
+# '2012H'
+[register_version."47.1466.14930"]
+slug = "HT2012"
+
+# '2011H'
+[register_version."47.1466.14931"]
+slug = "HT2011"
+
+# '2010H'
+[register_version."47.1466.14932"]
+slug = "HT2010"
+
+# '2009H'
+[register_version."47.1466.14933"]
+slug = "HT2009"
+
+# '2008H'
+[register_version."47.1466.14934"]
+slug = "HT2008"
+
+# '2018V'
+[register_version."47.1466.14935"]
+slug = "VT2018"
+
+# '2017V'
+[register_version."47.1466.14936"]
+slug = "VT2017"
+
+# '2007H'
+[register_version."47.1466.14937"]
+slug = "HT2007"
+
+# '2006H'
+[register_version."47.1466.14938"]
+slug = "HT2006"
+
+# '2005H'
+[register_version."47.1466.14939"]
+slug = "HT2005"
+
+# '2016V'
+[register_version."47.1466.14940"]
+slug = "VT2016"
+
+# '2004H'
+[register_version."47.1466.14941"]
+slug = "HT2004"
+
+# '2015V'
+[register_version."47.1466.14942"]
+slug = "VT2015"
+
+# '2003H'
+[register_version."47.1466.14943"]
+slug = "HT2003"
+
+# '2002H'
+[register_version."47.1466.14944"]
+slug = "HT2002"
+
+# '2014V'
+[register_version."47.1466.14945"]
+slug = "VT2014"
+
+# '2013V'
+[register_version."47.1466.14947"]
+slug = "VT2013"
+
+# '2012V'
+[register_version."47.1466.14948"]
+slug = "VT2012"
+
+# '2011V'
+[register_version."47.1466.14949"]
+slug = "VT2011"
+
+# '2010V'
+[register_version."47.1466.14950"]
+slug = "VT2010"
+
+# '2009V'
+[register_version."47.1466.14951"]
+slug = "VT2009"
+
+# '2008V'
+[register_version."47.1466.14952"]
+slug = "VT2008"
+
+# '2007V'
+[register_version."47.1466.14953"]
+slug = "VT2007"
+
+# '2006V'
+[register_version."47.1466.14954"]
+slug = "VT2006"
+
+# '2005V'
+[register_version."47.1466.14955"]
+slug = "VT2005"
+
+# '2004V'
+[register_version."47.1466.14956"]
+slug = "VT2004"
+
+# '2003V'
+[register_version."47.1466.14957"]
+slug = "VT2003"
+
+# '2002V'
+[register_version."47.1466.14958"]
+slug = "VT2002"
+
+# '2019V'
+[register_version."47.1466.14960"]
+slug = "VT2019"
+
+# '2020V'
+[register_version."47.1466.15553"]
+slug = "VT2020"
+
+# '2020H'
+[register_version."47.1466.17852"]
+slug = "HT2020"
+
+# '2021V'
+[register_version."47.1466.17854"]
+slug = "VT2021"
+
+# '2021H'
+[register_version."47.1466.18198"]
+slug = "HT2021"
+
+# '2022V'
+[register_version."47.1466.18427"]
+slug = "VT2022"
+
+# '2022H'
+[register_version."47.1466.18698"]
+slug = "HT2022"
+
+# '2023V'
+[register_version."47.1466.18917"]
+slug = "VT2023"
+
+# '2023H'
+[register_version."47.1466.19457"]
+slug = "HT2023"
+
+# '2024V'
+[register_version."47.1466.19458"]
+slug = "VT2024"
+
+# '2024H'
+[register_version."47.1466.20040"]
+slug = "HT2024"
+
+# '2019, löne- och förmånsutbetalningar'
+[register_version."392.1519.14575"]
+slug = "lone-och-formansutbetalningar-2019"
+
+# '2019, sociala ersättningar'
+[register_version."392.1519.15110"]
+slug = "sociala-ersattningar-2019"
+
+# '2020, löne- och förmånsutb' (SCB source abbreviation; slug expanded to match 2019 sibling)
+[register_version."392.1519.17967"]
+slug = "lone-och-formansutbetalningar-2020"
+
+# '2020, sociala ersättningar'
+[register_version."392.1519.17968"]
+slug = "sociala-ersattningar-2020"
+
+# '2003-2018'
+[register_version."295.1547.14965"]
+slug = "v2003-2018"
+
+# '2003-2019'
+[register_version."295.1547.17598"]
+slug = "v2003-2019"
+
+# 'Födelseland'
+[register_version."34.1582.15549"]
+slug = "_default"
+
+# 'In- och utvandrade'
+[register_version."34.1583.15550"]
+slug = "_default"
+
+# 'Avlidna'
+[register_version."34.1584.15551"]
+slug = "_default"
+
+# 'Komvux och samlat betygsdokument/studiebevis'
+[register_version."24.1630.17540"]
+slug = "samlat-betygsdokument-studiebevis"
+
+# 'Gymnasieintyg, ackumulerat register'
+[register_version."24.1631.17536"]
+slug = "ackumulerat-register"
+
+# 'Gymnasieintyg, summerade poäng'
+[register_version."24.1631.17537"]
+slug = "summerade-poang"
+
+# 'Samlat betygsdokument/studiebevis, ackumulerat'
+[register_version."24.1634.17563"]
+slug = "ackumulerat"
+
