@@ -140,6 +140,16 @@ def _toml_str(value: str) -> str:
     return f'"{escaped}"'
 
 
+def _toml_comment(value: str) -> str:
+    """Collapse newlines so ``value`` is safe as a single-line TOML comment.
+
+    A literal ``\\n`` would terminate the comment and let the rest of the
+    string parse as TOML — defensive normalization, even though current SCB
+    data is single-line.
+    """
+    return value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+
+
 def _parse_toml(path: Path) -> dict[str, Any]:
     try:
         return tomllib.loads(path.read_text(encoding="utf-8"))
@@ -1138,7 +1148,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "",
     ]
     regs = conn.execute(
-        "SELECT r.register_id, r.registernamn FROM register r "
+        "SELECT r.register_id, r.registernamn, r.slug FROM register r "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? ORDER BY r.register_id",
         (provider_slug,),
@@ -1180,13 +1190,13 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             (regvar_id, regver_id, name, existing_slug)
         )
 
-    for register_id, name in regs:
-        candidate = derive_variable_slug(name) or "TODO"
+    for register_id, name, existing_slug in regs:
+        candidate = existing_slug or derive_variable_slug(name) or "TODO"
         # Register-level audit comment: the `registernamn` is the
         # authoritative source of what this register is. Makes the file
         # scannable when the slug is an opaque acronym (e.g. `fou`, `kkv`).
         if name:
-            lines.append(f"# {name}")
+            lines.append(f"# {_toml_comment(name)}")
         lines.append(f"[register.{_toml_str(str(register_id))}]")
         lines.append(f"slug = {_toml_str(candidate)}")
         lines.append("")
@@ -1222,7 +1232,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             # so the next curator can verify any typo/abbreviation normalization
             # (§5.3).
             if vername:
-                lines.append(f"# {_toml_str(vername)}")
+                lines.append(f"# {_toml_comment(vername)}")
             lines.append(f"[register_version.{_toml_str(key)}]")
             lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
             lines.append("")
