@@ -168,6 +168,12 @@ Upload if **any** of these is true:
 Otherwise skip — users keep getting the prior release's doc asset via the
 walker.
 
+If `regmeta/docs/` changed because a newly-published SCB PDF was ingested,
+the PDF→markdown recipe (marker flags, `GEMINI_API_KEY`, ~$1-2 cost,
+multiprocessing-crash workaround, `--MarkdownRenderer_keep_pageheader_in_output`
+footgun) lives in the docstring at the top of `scripts/parse_lisa_docs.py`.
+Run that step first, then continue here.
+
 ```bash
 uv run regmeta maintain build-docs
 zstd -3 -T0 ~/.local/share/regmeta/regmeta_docs.db -o regmeta_docs.db.zst
