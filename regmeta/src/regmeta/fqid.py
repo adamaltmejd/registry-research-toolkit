@@ -221,9 +221,12 @@ class Fqid:
 def parse(value: str) -> Fqid:
     """Parse and validate an FQID string. Raises ``FqidError`` on any violation.
 
-    Stored FQIDs never elide (§5.2): `sos/lss/_default/2022` is accepted, but
-    the elided display form `sos/lss/2022` is rejected — the period-slug ban
-    makes `2022` invalid in the variant slot.
+    §5.2 accepts elided variant slot when the position is unambiguous: a period
+    in slot 3 (after provider/register) signals an omitted `_default` variant,
+    so `scb/r/2022` parses as `scb/r/_default/2022` and `scb/r/2022/kon` as
+    `scb/r/_default/2022/kon`. The period-slug ban guarantees this never
+    collides with a real variant slug. Canonical (non-elided) form is what
+    ``__str__`` and stored FQIDs use.
     """
     if not isinstance(value, str):
         raise FqidError(f"FQID must be a string, got {type(value).__name__}")
@@ -248,8 +251,16 @@ def parse(value: str) -> Fqid:
     if n == 2:
         return Fqid.register_fqid(segs[0], segs[1])
     if n == 3:
+        if is_period(segs[2]):
+            return Fqid.register_version_fqid(
+                segs[0], segs[1], DEFAULT_VARIANT_SLUG, segs[2]
+            )
         return Fqid.register_variant_fqid(segs[0], segs[1], segs[2])
     if n == 4:
+        if is_period(segs[2]):
+            return Fqid.binding_fqid(
+                segs[0], segs[1], DEFAULT_VARIANT_SLUG, segs[2], segs[3]
+            )
         return Fqid.register_version_fqid(segs[0], segs[1], segs[2], segs[3])
     if n == 5:
         return Fqid.binding_fqid(segs[0], segs[1], segs[2], segs[3], segs[4])

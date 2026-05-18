@@ -456,6 +456,8 @@ scb/lisa/individer-15plus                            register_variant
 scb/lisa/individer-15plus/2018                       register_version
 scb/lisa/individer-15plus/2018/kon                   variable binding
 sos/lss/_default/2022                                version of a variant-less register
+scb/arbetskraftsbarometern/2020                      elided register_version (variant slot defaults)
+scb/arbetskraftsbarometern/2020/kon                  elided variable binding
 class/sun/2020                                       classification (provider-independent namespace)
 class/lkf/2012                                       classification
 ```
@@ -476,14 +478,21 @@ bindings of `kon` under LISA") are catalog traversals via
 Catalog UI variable pages have URL shapes that embed the same
 query parameters but are not FQIDs (§9.5).
 
-**Stored FQIDs never elide.** The `_default` placeholder for
-variant-less registers (§5.1) is always written explicitly in
-`project_data.json`, slug TOMLs, and any FQID accepted by API
-input. Display surfaces (catalog UI, CLI output) may elide
-`_default/` for readability; resolvers reject elided input. This
-preserves the segment-count discriminator: `sos/lss/2022` is
-always a register_variant slugged `2022`, never an elided
-register_version.
+**Variant-slot elision on input.** Resolvers accept elided input
+when the variant slot is unambiguous: a period token in slot 3
+(after provider/register) signals an omitted `_default` variant.
+So `scb/lisa/2018` parses as `scb/lisa/_default/2018` and
+`scb/lisa/2018/kon` as `scb/lisa/_default/2018/kon`. This is
+unambiguous because period-shaped slugs are banned in the variant
+slot (see the reserved-slug list below) — `2018` can never be a
+real variant slug, so position fully determines the kind.
+
+**Canonical form is non-elided.** `project_data.json`, slug TOMLs,
+`Fqid.__str__`, and the catalog's own emit path always write the
+explicit 5-segment form. Elision is a parser-input convenience for
+single-variant registers where the curator pinned `slug = "_default"`
+and for variant-less registers (§5.1). Display surfaces (catalog UI,
+CLI output) may elide `_default/` for readability.
 
 **Slug grammar.** Every slug must match
 `^[a-z][a-z0-9-]*[a-z0-9]$` (lowercase ASCII, kebab-case, must

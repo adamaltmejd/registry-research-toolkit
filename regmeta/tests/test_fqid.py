@@ -96,13 +96,13 @@ class TestSlugGrammar:
             parse("scb/lisa/individer-15plus/2018/_default")
 
     def test_period_shaped_slugs_rejected_outside_period_slot(self) -> None:
-        # Period grammar in non-period slot is rejected for legibility (§5.2).
+        # Period grammar is rejected in slots that must be slugs (provider,
+        # register, variable). The variant slot is special: a period there
+        # is parsed as an elided `_default` (§5.2).
         with pytest.raises(FqidError, match="period grammar"):
             parse("2020")  # provider slot
         with pytest.raises(FqidError, match="period grammar"):
             parse("scb/2020")  # register slot
-        with pytest.raises(FqidError, match="period grammar"):
-            parse("scb/lisa/2020")  # variant slot
         with pytest.raises(FqidError, match="period grammar"):
             parse("scb/lisa/v1/2020/2020")  # variable slot
         # Period slot accepts them.
@@ -213,12 +213,37 @@ class TestMalformed:
         with pytest.raises(FqidError, match="empty segment"):
             parse("scb//lisa")
 
-    def test_elided_default_variant_rejected(self) -> None:
-        # Stored FQIDs never elide (§5.2). Resolvers must reject the elided
-        # display form `sos/lss/2022` — the period-slug ban makes 2022 invalid
-        # in the variant slot, which is exactly the discrimination protection.
-        with pytest.raises(FqidError, match="period grammar"):
-            parse("sos/lss/2022")
+    def test_elided_default_variant_parsed(self) -> None:
+        # §5.2: a period in slot 3 signals an omitted `_default` variant.
+        # Parser normalizes to the explicit 5-segment form; stringification
+        # emits the canonical (non-elided) shape.
+        f = parse("sos/lss/2022")
+        assert f.kind is FqidKind.REGISTER_VERSION
+        assert f.variant == DEFAULT_VARIANT_SLUG
+        assert f.period == "2022"
+        assert str(f) == "sos/lss/_default/2022"
+
+        f = parse("scb/arbetskraftsbarometern/2020/kon")
+        assert f.kind is FqidKind.VARIABLE_BINDING
+        assert f.variant == DEFAULT_VARIANT_SLUG
+        assert f.period == "2020"
+        assert f.variable == "kon"
+        assert str(f) == "scb/arbetskraftsbarometern/_default/2020/kon"
+
+    @pytest.mark.parametrize(
+        "elided,canonical",
+        [
+            ("sos/lss/2022", "sos/lss/_default/2022"),
+            ("sos/lss/2022-01", "sos/lss/_default/2022-01"),
+            ("sos/lss/HT2022", "sos/lss/_default/HT2022"),
+            ("sos/lss/2022-Q3", "sos/lss/_default/2022-Q3"),
+            ("scb/r/2022/kon", "scb/r/_default/2022/kon"),
+        ],
+    )
+    def test_elided_forms_expand_for_each_period_shape(
+        self, elided: str, canonical: str
+    ) -> None:
+        assert str(parse(elided)) == canonical
 
     @pytest.mark.parametrize("bad", [None, 123, b"scb/lisa", ["scb", "lisa"]])
     def test_non_string_input_typed_error(self, bad: object) -> None:

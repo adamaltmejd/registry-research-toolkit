@@ -238,6 +238,50 @@ class TestResolveBindingLineage:
         assert str(r.lineage) == "scb/rtb/personer/HT2020/kon"
 
 
+class TestResolveElidedFqid:
+    """§5.2: elided variant slot expands to `_default`. Two valid backings —
+    a curated `_default` row (PR α single-variant sweep) or a variant-less
+    register synthesizing at resolve time (PR #89, §5.1)."""
+
+    def test_elided_version_resolves_curated_default_variant(self) -> None:
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=("LSS default", "_default", 50),
+            version=("LSS 2022", 200),
+            variable=None,
+        )
+        r = Catalog(conn).resolve("sos/lss/2022")
+        assert isinstance(r, ResolvedRegisterVersion)
+        assert r.regver_id == 200
+        assert r.fqid.variant == "_default"
+        assert r.fqid.period == "2022"
+        assert str(r.fqid) == "sos/lss/_default/2022"
+
+    def test_elided_binding_resolves_curated_default_variant(self) -> None:
+        # The PR α sweep target: single-variant register where the maintainer
+        # pinned `slug = "_default"`. Researchers can write
+        # `scb/<register>/<period>/<variable>` without the variant slot.
+        conn = build_slugged_db(
+            variant=("Individer", "_default", 10),  # rest of fixture defaults
+        )
+        r = Catalog(conn).resolve("scb/lisa/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.fqid.variant == "_default"
+        assert r.fqid.period == "2018"
+        assert r.fqid.variable == "kon"
+        assert str(r.fqid) == "scb/lisa/_default/2018/kon"
+
+    def test_elided_version_misses_when_register_has_no_default(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # LISA has a real variant slugged `individer-15plus`, not `_default`.
+        # The elided form `scb/lisa/2018` expands to `_default/2018` and
+        # must miss — synthesis is only for variant-less registers.
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(slugged_conn).resolve("scb/lisa/2018")
+        assert exc.value.code == "fqid_not_found"
+
+
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve("class/sun/2020")
