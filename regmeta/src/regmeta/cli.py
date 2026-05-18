@@ -871,6 +871,15 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Overwrite existing TOMLs in --out-dir.",
     )
+    seed_slugs_p.add_argument(
+        "--all-hints",
+        action="store_true",
+        help=(
+            "Show every `_default` candidate in the stderr hint block instead "
+            "of the default ~5-row preview. Pass the global -q/--quiet to "
+            "suppress the hint block entirely."
+        ),
+    )
 
     precheck_p = maintain_sub.add_parser(
         "precheck-slugs",
@@ -1141,7 +1150,12 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
 
 
 def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .fqid_slugs import repo_slug_dir, seed_all
+    from .fqid_slugs import (
+        format_default_slug_hints,
+        iter_default_slug_candidates,
+        repo_slug_dir,
+        seed_all,
+    )
 
     start = time.perf_counter()
     db = db_path_from_args(args.db)
@@ -1166,12 +1180,24 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
     conn = open_db(db)
     try:
         written = seed_all(conn, out_dir)
+        if not args.quiet:
+            hint = format_default_slug_hints(
+                list(iter_default_slug_candidates(conn)),
+                all_hints=args.all_hints,
+            )
+            if hint is not None:
+                sys.stderr.write(hint)
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
     return _success_envelope(
         command="maintain seed-slugs",
-        args_payload={"out_dir": str(out_dir), "force": args.force},
+        args_payload={
+            "out_dir": str(out_dir),
+            "force": args.force,
+            "all_hints": args.all_hints,
+            "quiet": args.quiet,
+        },
         db_info=None,
         data={
             "out_dir": str(out_dir),
@@ -3113,7 +3139,7 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
         "Parse Socialstyrelsen metadata Excel files; emit JSON (maintainer-only).",
     ),
     (
-        "maintain seed-slugs [--out-dir DIR] [--force]",
+        "maintain seed-slugs [--out-dir DIR] [--force] [--all-hints]",
         "Emit starter slug TOMLs from the current DB (maintainer-only).",
     ),
     (

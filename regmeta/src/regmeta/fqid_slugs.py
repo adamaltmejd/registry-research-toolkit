@@ -13,9 +13,11 @@ Variables auto-slug from the latest kolumnnamn at build time. Explicit
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import tomllib
-from collections.abc import Callable
+import unicodedata
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
@@ -966,6 +968,162 @@ def _assert_no_unslugged(
 # ---------------------------------------------------------------------------
 
 
+# Heuristic for `slug = "_default"` candidates on single-variant registers
+# (issue #95). Codifies the rules behind PR #90's 107-row sweep so future
+# bootstrap reviewers don't have to redo the classification by hand.
+_PAREN_RE = re.compile(r"\s*\(([^)]*)\)")
+# Survey/Statistics interchange is common on SCB English deliveries
+# (e.g. "Continuing Vocational Training Statistics" vs "... Survey").
+_SURVEY_STATS_RE = re.compile(r"\b(survey|statistics)\b", re.IGNORECASE)
+DefaultCandidateClass = Literal["exact", "near", "kept"]
+
+
+def _fold(s: str) -> str:
+    """Case/diacritic/whitespace-insensitive fold used by the _default heuristic."""
+    if not s:
+        return ""
+    folded = unicodedata.normalize("NFKD", s.strip().lower())
+    folded = "".join(c for c in folded if not unicodedata.combining(c))
+    return re.sub(r"\s+", " ", folded)
+
+
+def _strip_parens(s: str) -> str:
+    return _PAREN_RE.sub("", s).strip()
+
+
+def _parenthetical_contents(s: str) -> list[str]:
+    return [m.group(1) for m in _PAREN_RE.finditer(s)]
+
+
+def _canonical(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", _fold(s))
+
+
+def classify_default_candidate(
+    register_name: str, variant_name: str
+) -> tuple[DefaultCandidateClass, str]:
+    """Classify a single-variant register as an ``_default`` candidate.
+
+    Returns ``(class, reason)`` where class is one of:
+
+    - ``exact``: variant name mirrors register name (PR #90's 73 exact rows).
+    - ``near``: mirror after parenthetical-abbrev strip, parenthetical-only
+      variant name, Survey/Statistics sibling swap, or one canonical form is
+      a substring of the other (PR #90's 34 near rows).
+    - ``kept``: variant name carries unique disambiguating info.
+
+    The function only judges name-mirror similarity. Callers decide whether
+    `_default` is appropriate (e.g. by also checking single-variant cardinality).
+    """
+    fr, fv = _fold(register_name), _fold(variant_name)
+    if not fr or not fv:
+        return "kept", "missing name"
+    if fr == fv:
+        return "exact", "Registernamn == Registervariantnamn"
+    spr, spv = _strip_parens(register_name), _strip_parens(variant_name)
+    if _fold(spr) == _fold(spv):
+        return "near", "match after stripping parenthetical abbrev"
+    for abbr in _parenthetical_contents(register_name):
+        if _fold(abbr) == fv:
+            return "near", f"variant name matches register parenthetical ({abbr!r})"
+    for abbr in _parenthetical_contents(variant_name):
+        if _fold(abbr) == fr:
+            return "near", f"register name matches variant parenthetical ({abbr!r})"
+    swapped = _SURVEY_STATS_RE.sub(
+        lambda m: "statistics" if m.group(1).lower() == "survey" else "survey",
+        spr,
+    )
+    if _fold(swapped) == _fold(spv):
+        return "near", "Survey/Statistics sibling"
+    cr, cv = _canonical(spr), _canonical(spv)
+    if cr and cv and min(len(cr), len(cv)) >= 5:
+        shorter, longer = (cr, cv) if len(cr) <= len(cv) else (cv, cr)
+        if shorter in longer:
+            return "near", "shorter canonical form is a substring of the longer"
+    return "kept", "descriptive variant name carries unique information"
+
+
+@dataclass(frozen=True)
+class DefaultSlugCandidate:
+    """One single-variant register that's a candidate for ``slug = "_default"``."""
+
+    provider: str
+    source_id: str  # `<RegisterId>.<RegVarID>`
+    register_name: str
+    variant_name: str
+    classification: DefaultCandidateClass
+    reason: str
+    current_slug: str | None  # None if the variant has no slug curated yet
+
+
+def iter_default_slug_candidates(
+    conn: sqlite3.Connection,
+) -> Iterator[DefaultSlugCandidate]:
+    """Walk every single-variant register across all providers.
+
+    Yields one ``DefaultSlugCandidate`` per row (including ``kept`` ones) so
+    callers can present the full picture. The seed-slug hint filters to
+    exact + near; the bootstrap script shows all three classes.
+    """
+    rows = conn.execute(
+        "SELECT p.slug, r.register_id, r.registernamn, "
+        "rv.regvar_id, rv.registervariantnamn, rv.slug "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE (SELECT COUNT(*) FROM register_variant rv2 "
+        "       WHERE rv2.register_id = r.register_id) = 1 "
+        "ORDER BY p.slug, r.register_id, rv.regvar_id"
+    ).fetchall()
+    for provider, rid, rname, vid, vname, current_slug in rows:
+        cls, reason = classify_default_candidate(rname or "", vname or "")
+        yield DefaultSlugCandidate(
+            provider=provider,
+            source_id=f"{rid}.{vid}",
+            register_name=rname or "",
+            variant_name=vname or "",
+            classification=cls,
+            reason=reason,
+            current_slug=current_slug,
+        )
+
+
+_DEFAULT_SLUG = "_default"
+_HINT_PREVIEW_LIMIT = 5
+
+
+def format_default_slug_hints(
+    candidates: list[DefaultSlugCandidate], *, all_hints: bool
+) -> str | None:
+    """Format the stderr hint block for ``seed-slugs``.
+
+    Only flags candidates whose current slug differs from ``_default`` — once
+    a maintainer has applied the suggestion the hint goes silent on the next
+    run. Returns ``None`` when there's nothing to suggest.
+    """
+    actionable = [
+        c
+        for c in candidates
+        if c.classification in ("exact", "near") and c.current_slug != _DEFAULT_SLUG
+    ]
+    if not actionable:
+        return None
+    total = len(actionable)
+    shown = actionable if all_hints else actionable[:_HINT_PREVIEW_LIMIT]
+    lines = [
+        f"Hint: {total} single-variant register(s) have name-mirror variants — "
+        f'consider `slug = "_default"`.',
+    ]
+    for cand in shown:
+        lines.append(f"  {cand.provider}/{cand.source_id}   {cand.register_name!r}")
+    if not all_hints and total > len(shown):
+        remaining = total - len(shown)
+        lines.append(
+            f"  ... ({remaining} more — pass --all-hints to see the full list)"
+        )
+    return "\n".join(lines) + "\n"
+
+
 def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     """Emit a starter TOML for ``provider_slug`` from the live build.
 
@@ -1408,13 +1566,18 @@ def diff_snapshot(
 __all__ = (
     "CLASSIFICATIONS_FILE",
     "ENTITY_KINDS",
+    "DefaultCandidateClass",
+    "DefaultSlugCandidate",
     "EntityKind",
     "PrecheckResult",
     "SNAPSHOT_FILENAME",
     "SlugEntry",
     "UNFROZEN_MARKER",
+    "classify_default_candidate",
     "diff_snapshot",
+    "format_default_slug_hints",
     "is_unfrozen",
+    "iter_default_slug_candidates",
     "load_classifications_toml",
     "load_provider_toml",
     "load_slug_dir",
