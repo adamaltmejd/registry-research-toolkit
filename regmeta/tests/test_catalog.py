@@ -239,9 +239,13 @@ class TestResolveBindingLineage:
 
 
 class TestResolveElidedFqid:
-    """§5.2: elided variant slot expands to `_default`. Two valid backings —
-    a curated `_default` row (PR α single-variant sweep) or a variant-less
-    register synthesizing at resolve time (PR #89, §5.1)."""
+    """§5.2: elided variant slot expands to `_default`. Today only the curated
+    `_default` row (PR α single-variant sweep) reaches a version/binding —
+    `_synthesize_default_variant` (§5.1, PR #89) fires inside `_resolve_variant`
+    only, and `register_version.regvar_id` is NOT NULL so variant-less
+    registers can't carry versions yet. When SOS-style version ingestion
+    extends `_resolve_version` to synthesize too, add a passing test alongside
+    `test_elided_version_misses_against_variant_less_register`."""
 
     def test_elided_version_resolves_curated_default_variant(self) -> None:
         conn = build_slugged_db(
@@ -279,6 +283,32 @@ class TestResolveElidedFqid:
         # must miss — synthesis is only for variant-less registers.
         with pytest.raises(RegmetaError) as exc:
             Catalog(slugged_conn).resolve("scb/lisa/2018")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_elided_binding_misses_when_register_has_no_default(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Symmetric to the version miss: the elided binding form
+        # `scb/lisa/2018/kon` expands to `_default/2018/kon`, but LISA has
+        # only `individer-15plus`, so the binding resolver finds no rows.
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(slugged_conn).resolve("scb/lisa/2018/kon")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_elided_version_misses_against_variant_less_register(self) -> None:
+        # Variant-less LSS (no register_variant row) — synthesis covers the
+        # bare `sos/lss/_default` variant FQID, but versions can't exist
+        # without a variant row (regvar_id is NOT NULL), so the elided form
+        # `sos/lss/2022` must miss today. When version-level synthesis lands
+        # (`_resolve_version` TODO), replace this with a passing assertion.
+        conn = build_slugged_db(
+            register=("LSS", "lss", 5, 2),
+            variant=None,
+            version=None,
+            variable=None,
+        )
+        with pytest.raises(RegmetaError) as exc:
+            Catalog(conn).resolve("sos/lss/2022")
         assert exc.value.code == "fqid_not_found"
 
 
