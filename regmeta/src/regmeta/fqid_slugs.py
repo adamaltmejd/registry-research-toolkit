@@ -717,14 +717,6 @@ def populate_slugs(
         prov_entries = by_provider.get(provider_slug, [])
         live_regs = _live_register_ids(conn, provider_slug)
         live_variants = _live_variant_keys(conn, provider_slug)
-        # Auto-derive register_version slugs from registerversionnamn before
-        # processing TOML entries so curated entries can override the derived
-        # value if a maintainer wants (e.g. a typo correction in the version
-        # name that the period regex still happens to extract a wrong year
-        # from). Unperiodized rows stay NULL and force a TOML entry.
-        counts["register_version_auto"] += _autoderive_version_slugs(
-            conn, provider_slug
-        )
         live_versions = _live_version_keys(conn, provider_slug)
 
         for entry in prov_entries:
@@ -779,6 +771,15 @@ def populate_slugs(
                     (entry.slug, vkey[2]),
                 )
                 counts["register_version"] += 1
+
+        # Auto-derive runs *after* TOML overrides so that curated rows occupy
+        # their slug slot before the period regex fires. Without that order,
+        # two periodized siblings would race for the same auto-derived slug
+        # and trip UNIQUE(regvar_id, slug) on the second INSERT — even if the
+        # collision is fully resolved once TOML overrides land.
+        counts["register_version_auto"] += _autoderive_version_slugs(
+            conn, provider_slug
+        )
 
         if strict:
             _assert_no_unslugged(

@@ -67,6 +67,22 @@ _PERIOD_EXTRACT_PATTERNS = (
     re.compile(rf"(?<!\d){_YEAR}(?!\d)"),
 )
 
+# Swedish termin tokens map to HT/VT prefix forms. SCB version names like
+# `1980 höstterminen` and `1980 vårterminen` would otherwise both derive
+# to bare `1980` and collide under the same variant (220 such groups in
+# the current SCB DB). Patterns intentionally match before the bare-year
+# extractor in `derive_period`. The optional `en` suffix is the Swedish
+# definite article (termin vs terminen). The cross-term form
+# `Höstterminen YYYY - Vårterminen YYYY` resolves to HT<first-year>
+# because the höst pattern is checked first — same as how
+# `_PERIOD_EXTRACT_PATTERNS` favors most-specific tokens.
+_TERMIN_EXTRACT_PATTERNS = (
+    (re.compile(rf"\bhöst(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "HT"),
+    (re.compile(rf"\bvår(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "VT"),
+    (re.compile(rf"\b({_YEAR})\s+höst(?:termin|terminen)\b", re.IGNORECASE), "HT"),
+    (re.compile(rf"\b({_YEAR})\s+vår(?:termin|terminen)\b", re.IGNORECASE), "VT"),
+)
+
 
 class FqidError(ValueError):
     """Raised when an FQID string fails grammar validation."""
@@ -298,9 +314,15 @@ def derive_period(version_name: str | None) -> str | None:
 
     Returns the matched period substring (`HT2020`, `2020-Q1`, `2020-01`,
     `2020`) so distinct sub-year versions don't collapse to the same FQID.
+    Swedish termin tokens (`höstterminen 1980`, `1980 vårterminen`) map to
+    `HT1980` / `VT1980` so terms under the same year stay distinguishable.
     """
     if not version_name:
         return None
+    for pat, prefix in _TERMIN_EXTRACT_PATTERNS:
+        m = pat.search(version_name)
+        if m:
+            return f"{prefix}{m.group(1)}"
     for pat in _PERIOD_EXTRACT_PATTERNS:
         m = pat.search(version_name)
         if m:

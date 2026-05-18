@@ -537,6 +537,20 @@ class TestPopulateSlugs:
             == "2017"
         )
 
+    def test_unique_constraint_blocks_sibling_slug_collision(self):
+        # SQL-level UNIQUE(regvar_id, slug) catches collisions that the
+        # TOML-load `seen_slugs` check can't see — two auto-derived siblings
+        # mapping to the same period, or a curated override clashing with
+        # an auto-derived sibling.
+        conn = build_slugged_db()  # regver 100 already carries slug "2018"
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(
+                "INSERT INTO register_version "
+                "(regver_id, regvar_id, slug, registerversionnamn) "
+                "VALUES (?, ?, ?, ?)",
+                (101, 10, "2018", "LISA 2018 (dup)"),
+            )
+
 
 # ---------------------------------------------------------------------------
 # seed-slugs

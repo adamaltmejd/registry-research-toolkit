@@ -200,25 +200,24 @@ CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
     regvar_id INTEGER NOT NULL REFERENCES register_variant(regvar_id),
     -- §5.2 version slot: either a derived period token (`2018`, `HT2020`, …)
-    -- or a curated slug for unperiodized versions (the 9 SCB aux tables in
-    -- LISA / Utbildningsregistret / Ekonomiskt bistånd). NULL only between
-    -- INSERT and populate_slugs's auto-derive + curated-override pass.
-    --
-    -- §5.3 says slug is unique within parent variant, but the SQL-level
-    -- UNIQUE(regvar_id, slug) is not yet enforced: real SCB data has 405
-    -- collision groups (e.g. `Kursdeltagare i kommunal vuxenutbildning`
-    -- has both `1980 höstterminen` and `1980 vårterminen`, both derived
-    -- to `1980` by the period regex; civil-status rows share `1968` across
-    -- three event types). `Catalog._resolve_version` rejects ambiguous
-    -- matches at query time instead. Cleaning the data (curated slugs +
-    -- Swedish termin grammar in `derive_period`) is a follow-up.
+    -- or a curated slug for rows the period regex can't disambiguate
+    -- (unperiodized aux tables, year-range projections, sub-topic siblings
+    -- sharing a year). NULL only between INSERT and populate_slugs's
+    -- auto-derive + curated-override pass.
     slug TEXT,
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,
     registerversionmatinformation TEXT,
     registerversion_docstaus TEXT,
     registerversion_forstagodkannandedatum TEXT,
-    registerversion_senastgodkanddatum TEXT
+    registerversion_senastgodkanddatum TEXT,
+    -- §5.3: slug is unique within parent variant. Most slugs come from
+    -- auto-derive (period regex extended with Swedish termin grammar),
+    -- not TOML; the TOML-load `seen_slugs` check doesn't catch sibling
+    -- collisions between two auto-derived rows or between a curated
+    -- override and an auto-derived sibling. SQLite treats NULLs as
+    -- distinct, so this is safe during the INSERT → populate_slugs window.
+    UNIQUE (regvar_id, slug)
 );
 
 CREATE TABLE population (

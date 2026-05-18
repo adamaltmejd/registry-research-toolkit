@@ -389,6 +389,41 @@ class TestDerivePeriod:
         # as `2018-20` — falls through to the year pattern instead.
         assert derive_period("LISA 2018-2020") == "2018"
 
+    @pytest.mark.parametrize(
+        "version_name,expected",
+        [
+            # Trailing year (the kommunal vuxenutbildning shape).
+            ("Höstterminen 1980", "HT1980"),
+            ("Vårterminen 1980", "VT1980"),
+            ("Hösttermin 1980", "HT1980"),
+            ("Vårtermin 1980", "VT1980"),
+            # Leading year (some SCB rows put it first).
+            ("1980 höstterminen", "HT1980"),
+            ("1980 vårterminen", "VT1980"),
+            # Trailing whitespace (real data has stray spaces).
+            ("1980 höstterminen ", "HT1980"),
+            # Trailing modifier.
+            ("Vårterminen 2010 - betyg", "VT2010"),
+            # Cross-term academic-year span resolves to the leading (HT) form
+            # so it doesn't collide with the bare termin row.
+            ("Höstterminen 1980 - Vårterminen 1981", "HT1980"),
+        ],
+    )
+    def test_swedish_termin_tokens(self, version_name: str, expected: str) -> None:
+        from regmeta.fqid import derive_period
+
+        # 220 real SCB collision groups (607 rows) come from "1980 höstterminen"
+        # + "1980 vårterminen" both falling back to bare "1980". The termin
+        # patterns run before the year extractor to keep terms distinct.
+        assert derive_period(version_name) == expected
+
+    def test_termin_without_year_falls_through(self) -> None:
+        from regmeta.fqid import derive_period
+
+        # Termin tokens without a usable year don't transform; the bare
+        # extractor returns None.
+        assert derive_period("Höstterminen") is None
+
 
 # ---------------------------------------------------------------------------
 # Stored FQIDs never elide (§5.2 paragraph "Stored FQIDs never elide")

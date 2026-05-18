@@ -104,24 +104,6 @@ def _not_found(fqid: Fqid) -> RegmetaError:
     )
 
 
-def _ambiguous(fqid: Fqid, source_ids: list[str]) -> RegmetaError:
-    return RegmetaError(
-        exit_code=EXIT_NOT_FOUND,
-        code="fqid_ambiguous",
-        error_class="query",
-        message=(
-            f"FQID resolves to multiple rows: {fqid!s} → "
-            f"register_version IDs {', '.join(source_ids)}"
-        ),
-        remediation=(
-            "Two or more register_version rows share this slug under the "
-            "same variant — §5.3 requires the slug to be unique. Pin distinct "
-            "curated slugs in `regmeta/fqid_slugs/<provider>.toml` "
-            'under `[register_version."<reg>.<var>.<ver>"]`.'
-        ),
-    )
-
-
 class Catalog:
     """FQID resolution against an open regmeta SQLite connection."""
 
@@ -233,15 +215,9 @@ class Catalog:
     def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:
         # §5.2: `register_version.slug` is the canonical version-slot token —
         # either a derived period (`2018`, `HT2020`) or a curated slug for
-        # unperiodized aux versions (`ackumulerat-register`, `_default`).
-        # populate_slugs writes both kinds; the resolver just matches the slug
-        # column.
-        #
-        # §5.3 says the slug is unique within parent variant, but the SQL
-        # constraint isn't enforced today (see db.py register_version DDL),
-        # so we defensively check for >1 match and raise `fqid_ambiguous`
-        # rather than silently returning whichever row sqlite happened to
-        # surface first.
+        # rows the period regex can't disambiguate. populate_slugs writes both
+        # kinds; the resolver just matches the slug column. §5.3 uniqueness
+        # is enforced by `UNIQUE(regvar_id, slug)` (db.py), so fetchone is safe.
         #
         # §5.1 follow-up: `_default` versions against a variant-less register
         # aren't reachable today — `register_version.regvar_id` is NOT NULL,
@@ -249,7 +225,7 @@ class Catalog:
         # ingestion lands, either make the column nullable or extend this
         # resolver to synthesize the variant slot the way `_resolve_variant`
         # does.
-        rows = self._conn.execute(
+        row = self._conn.execute(
             "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
             "rver.registerversionnamn "
             "FROM register_version rver "
@@ -258,12 +234,9 @@ class Catalog:
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
-        ).fetchall()
-        if not rows:
+        ).fetchone()
+        if row is None:
             raise _not_found(fqid)
-        if len(rows) > 1:
-            raise _ambiguous(fqid, [str(r["regver_id"]) for r in rows])
-        row = rows[0]
         return ResolvedRegisterVersion(
             fqid=fqid,
             regver_id=row["regver_id"],
