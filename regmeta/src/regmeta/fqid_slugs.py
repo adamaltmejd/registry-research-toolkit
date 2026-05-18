@@ -979,9 +979,11 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             lines.append(f"display_group = {_toml_str(name)}")
         lines.append("")
 
-    # Only versions with a curator-pinned slug (i.e. the unperiodized aux
-    # rows) need a seed entry. Periodized versions get their slug auto-derived
-    # at build time from the period regex, so they're omitted.
+    # Only unperiodized versions need a seed entry — periodized rows get
+    # their slug auto-derived from registerversionnamn at build time, so
+    # they round-trip without any TOML curation. The filter runs on the
+    # name (not the slug column) so this works against a `--skip-slugs`
+    # build where every `register_version.slug` is still NULL.
     versions = conn.execute(
         "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
         "rver.registerversionnamn, rver.slug "
@@ -989,16 +991,14 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE p.slug = ? AND rver.slug IS NOT NULL "
+        "WHERE p.slug = ? "
         "ORDER BY rver.regver_id",
         (provider_slug,),
     ).fetchall()
-    from .fqid import is_period
+    from .fqid import derive_period
 
     for register_id, regvar_id, regver_id, name, existing_slug in versions:
-        # Skip seeded entries for auto-derivable periods — those round-trip
-        # through populate_slugs without any TOML curation.
-        if existing_slug and is_period(existing_slug):
+        if derive_period(name) is not None:
             continue
         key = f"{register_id}.{regvar_id}.{regver_id}"
         lines.append(f"[register_version.{_toml_str(key)}]")

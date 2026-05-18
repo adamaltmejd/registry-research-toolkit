@@ -453,6 +453,27 @@ class TestSeedSlugs:
         assert '[classification."SUN2020"]' in cls_body
         assert 'version = "2020"' in cls_body
 
+    def test_seeds_unperiodized_version_against_skip_slugs_build(self):
+        # Regression for PR #94 Codex P2: seed_provider_toml used to filter
+        # `WHERE rver.slug IS NOT NULL`, which omitted every unperiodized
+        # version when bootstrapping from a `build-db --skip-slugs` DB
+        # (slug column is still NULL across the board). The filter now runs
+        # on the version name via derive_period, so the stub appears
+        # regardless of slug-column state.
+        conn = build_slugged_db(
+            version=("Födelseland", None, 200),  # name has no period, slug NULL
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert '[register_version."1.10.200"]' in body
+        assert 'slug = "TODO"' in body
+
+    def test_omits_periodized_version_from_seed(self):
+        # Periodized versions round-trip without any TOML curation — they
+        # must not appear as stubs in the seed output.
+        conn = build_slugged_db(version=("LISA 2018", "2018", 200))
+        body = seed_provider_toml(conn, "scb")
+        assert "[register_version." not in body
+
 
 # ---------------------------------------------------------------------------
 # precheck-slugs
