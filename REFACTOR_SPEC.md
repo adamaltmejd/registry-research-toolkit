@@ -687,6 +687,48 @@ maintainers see a clean diagnostic instead of a raw `IntegrityError`.
 from `derive_period(name)`) plus the unperiodized rows; auto-derived
 rows that round-trip cleanly are omitted from the seed.
 
+**Curated slug conventions.** The curated slug is a normalized
+identifier, **not** a faithful transcription of `registerversionnamn`.
+Two consequences:
+
+1. **Prefer canonical period grammar over Swedish source-name forms.**
+   When the underlying source name unambiguously denotes a single
+   period token, the curated slug should match the §5.2 period
+   grammar — even though `derive_period` doesn't extract it. The
+   resolver matches the slug column strictly, so canonical form is
+   what consumers will type:
+
+   | Source name pattern             | Curated slug   | Not              |
+   |---------------------------------|----------------|------------------|
+   | `2011 maj` / `2011 november`    | `2011-05` / `2011-11` | `maj-2011`         |
+   | `2011 kv1` / `2007 kv 1`        | `2011-Q1` / `2007-Q1` | `kv1-2011` / `kv-1-2007` |
+   | `2018H` / `2018V` (hreg suffix) | `HT2018` / `VT2018`   | `v2018h` / `v2018v` |
+   | `Vårterminen 2013` (collision-blocked from auto-derive) | `VT2013` | `varterminen-2013` |
+
+   Note: the academic-semester *autoderive* still requires the
+   `höstterminen` / `vårterminen` form (with the `t`) — bare H/V
+   suffixes don't match because they're too ambiguous in free
+   text. The convention above is for *curated* slugs only.
+
+2. **Normalize away source-data typos and abbreviations.** If
+   `registerversionnamn` ships with a misspelling (`högalternariv`
+   instead of `högalternativ`) or a truncation (`bebygge` instead of
+   `bebyggelse`), the curated slug uses the corrected form. The
+   original is preserved verbatim in the TOML comment above the
+   entry for audit:
+
+   ```toml
+   # '2015-2060 högalternariv' (SCB source typo; slug normalized to 'alternativ')
+   [register_version."310.888.5988"]
+   slug = "hogalternativ-2015-2060"
+   ```
+
+Ranges and multi-period spans stay descriptive — the period grammar
+has no canonical form for them: `kv2-kv4-2010` (quarter range),
+`forsta-halvaret-1995` (Swedish fiscal half-year, distinct from
+HT/VT academic semesters), `huvudalternativ-2018-2070` (multi-year
+projection scenario), `ackumulerat-register` (unperiodized aux).
+
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
 | `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables and periodized register_versions are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by` (or, for register_version, the unperiodized aux tables). |
