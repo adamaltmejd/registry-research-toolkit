@@ -76,6 +76,13 @@ _PERIOD_EXTRACT_PATTERNS = (
 # `Höstterminen YYYY - Vårterminen YYYY` resolves to HT<first-year>
 # because the höst pattern is checked first — same as how
 # `_PERIOD_EXTRACT_PATTERNS` favors most-specific tokens.
+#
+# Collision assumption: this resolves cleanly only when a cross-term row
+# like `Höstterminen 2018 - Vårterminen 2019` does NOT coexist with a
+# `Höstterminen 2018` sibling in the same variant (both would derive to
+# `HT2018`). Verified clean against current SCB data; future deliveries
+# should re-run `regmeta maintain precheck-slugs` to catch a new collision
+# before it trips `UNIQUE(regvar_id, slug)` at build time.
 _TERMIN_EXTRACT_PATTERNS = (
     (re.compile(rf"\bhöst(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "HT"),
     (re.compile(rf"\bvår(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "VT"),
@@ -316,6 +323,11 @@ def derive_period(version_name: str | None) -> str | None:
     `2020`) so distinct sub-year versions don't collapse to the same FQID.
     Swedish termin tokens (`höstterminen 1980`, `1980 vårterminen`) map to
     `HT1980` / `VT1980` so terms under the same year stay distinguishable.
+
+    Match order is termin patterns first, then the period patterns in
+    most-specific-first order. Reordering would let `1980 höstterminen`
+    collapse to bare `1980` and re-trip the §5.3 uniqueness rule it exists
+    to prevent.
     """
     if not version_name:
         return None

@@ -593,6 +593,17 @@ class TestSeedSlugs:
         body = seed_provider_toml(conn, "scb")
         assert "[register_version." not in body
 
+    def test_emits_curated_override_on_periodized_version(self):
+        # A maintainer-pinned slug that doesn't match derive_period (e.g.
+        # collision-resolution within a variant) must round-trip through
+        # seed → TOML → populate, not get silently dropped on regen.
+        conn = build_slugged_db(
+            version=("Ankor och anklingar 1968-1997", "ankor-1968-1997", 200),
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert '[register_version."1.10.200"]' in body
+        assert 'slug = "ankor-1968-1997"' in body
+
 
 # ---------------------------------------------------------------------------
 # precheck-slugs

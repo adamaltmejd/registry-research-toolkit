@@ -978,11 +978,13 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             lines.append(f"display_group = {_toml_str(name)}")
         lines.append("")
 
-    # Only unperiodized versions need a seed entry — periodized rows get
-    # their slug auto-derived from registerversionnamn at build time, so
-    # they round-trip without any TOML curation. The filter runs on the
-    # name (not the slug column) so this works against a `--skip-slugs`
-    # build where every `register_version.slug` is still NULL.
+    # Emit versions that need TOML curation. Skip rows where the next build's
+    # auto-derive will reproduce the current state on its own — periodized
+    # name AND slug column either already matches the derived period or is
+    # still NULL (the `--skip-slugs` bootstrap case; auto-derive fills it).
+    # Curated overrides whose slug differs from `derive_period(name)` (e.g.
+    # collision-resolution slugs like `ankor-anklingar-1968-1997`) must
+    # round-trip through a reseed, so they're emitted with their existing slug.
     versions = conn.execute(
         "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
         "rver.registerversionnamn, rver.slug "
@@ -996,7 +998,8 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     ).fetchall()
 
     for register_id, regvar_id, regver_id, name, existing_slug in versions:
-        if derive_period(name) is not None:
+        derived = derive_period(name)
+        if derived is not None and existing_slug in (None, derived):
             continue
         key = f"{register_id}.{regvar_id}.{regver_id}"
         lines.append(f"[register_version.{_toml_str(key)}]")
