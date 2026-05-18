@@ -632,7 +632,7 @@ class TestSeedSlugs:
         assert 'slug = "ankor-1968-1997"' in body
         # Audit comment carries the source registerversionnamn so the next
         # curator can verify any typo/abbreviation normalization (§5.3).
-        assert '# "Ankor och anklingar 1968-1997"' in body
+        assert "# Ankor och anklingar 1968-1997" in body
 
 
 # ---------------------------------------------------------------------------

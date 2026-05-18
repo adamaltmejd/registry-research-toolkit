@@ -140,6 +140,16 @@ def _toml_str(value: str) -> str:
     return f'"{escaped}"'
 
 
+def _toml_comment(value: str) -> str:
+    """Collapse newlines so ``value`` is safe as a single-line TOML comment.
+
+    A literal ``\\n`` would terminate the comment and let the rest of the
+    string parse as TOML — defensive normalization, even though current SCB
+    data is single-line.
+    """
+    return value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+
+
 def _parse_toml(path: Path) -> dict[str, Any]:
     try:
         return tomllib.loads(path.read_text(encoding="utf-8"))
@@ -1138,7 +1148,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "",
     ]
     regs = conn.execute(
-        "SELECT r.register_id, r.registernamn FROM register r "
+        "SELECT r.register_id, r.registernamn, r.slug FROM register r "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? ORDER BY r.register_id",
         (provider_slug,),
@@ -1146,13 +1156,10 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     if not regs:
         lines.append(f"# (no registers found for provider {provider_slug!r})\n")
         return "\n".join(lines)
-    for register_id, name in regs:
-        candidate = derive_variable_slug(name) or "TODO"
-        lines.append(f"[register.{_toml_str(str(register_id))}]")
-        lines.append(f"slug = {_toml_str(candidate)}")
-        lines.append("")
-
-    variants = conn.execute(
+    # Pre-fetch variants and versions, grouped by register_id for hierarchical
+    # emission (register → its variants → its version overrides).
+    variants_by_reg: dict[int, list[tuple[int, str | None, str | None]]] = {}
+    for row in conn.execute(
         "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
@@ -1160,24 +1167,14 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "WHERE p.slug = ? "
         "ORDER BY rv.register_id, rv.regvar_id",
         (provider_slug,),
-    ).fetchall()
-    for register_id, regvar_id, name, existing_slug in variants:
-        candidate = existing_slug or (derive_variable_slug(name) if name else None)
-        candidate = candidate or "TODO"
-        lines.append(f"[register_variant.{_toml_str(f'{register_id}.{regvar_id}')}]")
-        lines.append(f"slug = {_toml_str(candidate)}")
-        if name:
-            lines.append(f"display_group = {_toml_str(name)}")
-        lines.append("")
+    ).fetchall():
+        register_id, regvar_id, name, existing_slug = row
+        variants_by_reg.setdefault(register_id, []).append(
+            (regvar_id, name, existing_slug)
+        )
 
-    # Emit versions that need TOML curation. Skip rows where the next build's
-    # auto-derive will reproduce the current state on its own — periodized
-    # name AND slug column either already matches the derived period or is
-    # still NULL (the `--skip-slugs` bootstrap case; auto-derive fills it).
-    # Curated overrides whose slug differs from `derive_period(name)` (e.g.
-    # collision-resolution slugs like `ankor-anklingar-1968-1997`) must
-    # round-trip through a reseed, so they're emitted with their existing slug.
-    versions = conn.execute(
+    versions_by_reg: dict[int, list[tuple[int, int, str | None, str | None]]] = {}
+    for row in conn.execute(
         "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
         "rver.registerversionnamn, rver.slug "
         "FROM register_version rver "
@@ -1185,24 +1182,60 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? "
-        "ORDER BY rver.regver_id",
+        "ORDER BY rv.register_id, rver.regvar_id, rver.regver_id",
         (provider_slug,),
-    ).fetchall()
+    ).fetchall():
+        register_id, regvar_id, regver_id, name, existing_slug = row
+        versions_by_reg.setdefault(register_id, []).append(
+            (regvar_id, regver_id, name, existing_slug)
+        )
 
-    for register_id, regvar_id, regver_id, name, existing_slug in versions:
-        derived = derive_period(name)
-        if derived is not None and existing_slug in (None, derived):
-            continue
-        key = f"{register_id}.{regvar_id}.{regver_id}"
-        # Audit comment: preserves the source `registerversionnamn` verbatim
-        # next to the curated slug. Matters when the slug normalizes away a
-        # typo or abbreviation (§5.3) — the next curator needs the original
-        # to verify the normalization was correct.
+    for register_id, name, existing_slug in regs:
+        candidate = existing_slug or derive_variable_slug(name) or "TODO"
+        # Register-level audit comment: the `registernamn` is the
+        # authoritative source of what this register is. Makes the file
+        # scannable when the slug is an opaque acronym (e.g. `fou`, `kkv`).
         if name:
-            lines.append(f"# {_toml_str(name)}")
-        lines.append(f"[register_version.{_toml_str(key)}]")
-        lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
+            lines.append(f"# {_toml_comment(name)}")
+        lines.append(f"[register.{_toml_str(str(register_id))}]")
+        lines.append(f"slug = {_toml_str(candidate)}")
         lines.append("")
+
+        for regvar_id, vname, existing_slug in variants_by_reg.get(register_id, []):
+            v_candidate = existing_slug or (
+                derive_variable_slug(vname) if vname else None
+            )
+            v_candidate = v_candidate or "TODO"
+            lines.append(
+                f"[register_variant.{_toml_str(f'{register_id}.{regvar_id}')}]"
+            )
+            lines.append(f"slug = {_toml_str(v_candidate)}")
+            if vname:
+                lines.append(f"display_group = {_toml_str(vname)}")
+            lines.append("")
+
+        # Emit only version overrides that need TOML curation. Skip rows where
+        # the next build's auto-derive will reproduce the current state —
+        # periodized name AND slug either already matches the derived period or
+        # is still NULL (the `--skip-slugs` bootstrap case; auto-derive fills
+        # it). Curated overrides whose slug differs from `derive_period(name)`
+        # (e.g. collision-resolution slugs like `ankor-anklingar-1968-1997`)
+        # must round-trip through a reseed, so they're emitted as-is.
+        for regvar_id, regver_id, vername, existing_slug in versions_by_reg.get(
+            register_id, []
+        ):
+            derived = derive_period(vername)
+            if derived is not None and existing_slug in (None, derived):
+                continue
+            key = f"{register_id}.{regvar_id}.{regver_id}"
+            # Audit comment: preserves the source `registerversionnamn` verbatim
+            # so the next curator can verify any typo/abbreviation normalization
+            # (§5.3).
+            if vername:
+                lines.append(f"# {_toml_comment(vername)}")
+            lines.append(f"[register_version.{_toml_str(key)}]")
+            lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
+            lines.append("")
     return "\n".join(lines)
 
 
