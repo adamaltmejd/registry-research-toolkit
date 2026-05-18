@@ -968,11 +968,8 @@ def _assert_no_unslugged(
 # ---------------------------------------------------------------------------
 
 
-# Heuristic for `slug = "_default"` candidates on single-variant registers
-# (issue #95). Codifies the rules behind PR #90's 107-row sweep so future
-# bootstrap reviewers don't have to redo the classification by hand.
 _PAREN_RE = re.compile(r"\s*\(([^)]*)\)")
-# Survey/Statistics interchange is common on SCB English deliveries
+# SCB ships some registers under English Survey/Statistics sibling names
 # (e.g. "Continuing Vocational Training Statistics" vs "... Survey").
 _SURVEY_STATS_RE = re.compile(r"\b(survey|statistics)\b", re.IGNORECASE)
 DefaultCandidateClass = Literal["exact", "near", "kept"]
@@ -1071,8 +1068,10 @@ def iter_default_slug_candidates(
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
-        "WHERE (SELECT COUNT(*) FROM register_variant rv2 "
-        "       WHERE rv2.register_id = r.register_id) = 1 "
+        "WHERE rv.register_id IN ("
+        "  SELECT register_id FROM register_variant "
+        "  GROUP BY register_id HAVING COUNT(*) = 1"
+        ") "
         "ORDER BY p.slug, r.register_id, rv.regvar_id"
     ).fetchall()
     for provider, rid, rname, vid, vname, current_slug in rows:

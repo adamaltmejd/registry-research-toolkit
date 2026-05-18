@@ -2039,12 +2039,9 @@ class TestFormatDefaultSlugHints:
 
 
 class TestSeedSlugsCli:
-    """End-to-end tests of the seed-slugs CLI hint plumbing.
-
-    The CLI's open_db path enforces a schema-version manifest the in-memory
-    fixture doesn't seed, so we stub both the path resolver and the connection
-    open. Coverage on the manifest check stays with the integration tests.
-    """
+    # The CLI's open_db enforces a schema-version manifest the in-memory
+    # fixture doesn't seed, so these tests stub both the path resolver and
+    # the connection open. Manifest-check coverage stays in integration tests.
 
     def _patch_cli(
         self,
@@ -2101,6 +2098,52 @@ class TestSeedSlugsCli:
         scb_body = (out_dir / "scb.toml").read_text(encoding="utf-8")
         assert "Hint:" not in scb_body
         assert "_default" not in scb_body  # heuristic isn't auto-applied
+
+    def test_json_format_suppresses_hints(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture,
+    ):
+        # Hints are contextual stderr noise that must not leak into machine
+        # output. `--format json` is the standard signal for that.
+        from regmeta import cli
+
+        conn = _make_seedable_db()
+        self._patch_cli(monkeypatch, conn, tmp_path)
+        args = _ns(
+            out_dir=str(tmp_path / "out"),
+            force=True,
+            all_hints=False,
+            quiet=False,
+            db=None,
+            format="json",
+        )
+        _env, rc = cli._cmd_maintain_seed_slugs(args)
+        assert rc == 0
+        assert capsys.readouterr().err == ""
+
+    def test_regmeta_quiet_env_suppresses_hints(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+        tmp_path: Path,
+        capsys: pytest.CaptureFixture,
+    ):
+        from regmeta import cli
+
+        conn = _make_seedable_db()
+        self._patch_cli(monkeypatch, conn, tmp_path)
+        monkeypatch.setenv("REGMETA_QUIET", "1")
+        args = _ns(
+            out_dir=str(tmp_path / "out"),
+            force=True,
+            all_hints=False,
+            quiet=False,
+            db=None,
+        )
+        _env, rc = cli._cmd_maintain_seed_slugs(args)
+        assert rc == 0
+        assert capsys.readouterr().err == ""
 
     def test_toml_output_byte_identical_with_or_without_hint(
         self, monkeypatch: pytest.MonkeyPatch, tmp_path: Path

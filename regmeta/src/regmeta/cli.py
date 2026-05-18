@@ -1180,7 +1180,12 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
     conn = open_db(db)
     try:
         written = seed_all(conn, out_dir)
-        if not args.quiet:
+        suppress_hints = (
+            args.quiet
+            or os.environ.get("REGMETA_QUIET") == "1"
+            or getattr(args, "format", "table") == "json"
+        )
+        if not suppress_hints:
             hint = format_default_slug_hints(
                 list(iter_default_slug_candidates(conn)),
                 all_hints=args.all_hints,

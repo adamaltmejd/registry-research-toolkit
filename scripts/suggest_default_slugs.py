@@ -32,7 +32,12 @@ from regmeta.fqid_slugs import iter_default_slug_candidates
 def main(argv: list[str]) -> int:
     if len(argv) > 1:
         arg = Path(argv[1]).expanduser()
-        db_path = arg if arg.is_file() else db_path_from_args(str(arg))
+        # `.db` suffix → treat as file path even if missing, so a mistyped
+        # filename reports `no regmeta DB at <typo>` instead of resolving
+        # to a nonsense `<typo>/regmeta.db`.
+        db_path = (
+            arg if arg.suffix == ".db" or arg.is_file() else db_path_from_args(str(arg))
+        )
     else:
         db_path = db_path_from_args(None)
     if not db_path.is_file():
