@@ -1276,6 +1276,10 @@ def _cmd_maintain_precheck_slugs(
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_versions
             ],
             "stale_classifications": list(result.stale_classifications),
+            "colliding_versions": [
+                {"provider": p, "source_id": sid, "name": name, "would_be_slug": slug}
+                for (p, sid, name, slug) in result.colliding_versions
+            ],
             "snapshot": snapshot_status,
         },
         duration_ms=duration_ms,
@@ -2791,6 +2795,35 @@ def _write_payload(
             lines.append("")
         if stale_regs or stale_vars or stale_vers or stale_cls:
             lines.append("Drop these entries or mark them `deprecated = true`.")
+            lines.append("")
+        colliding_vers = data.get("colliding_versions", [])
+        if colliding_vers:
+            # Group by (provider, parent variant, would_be_slug). The
+            # UNIQUE constraint scopes per (regvar_id, slug), so two rows
+            # collide only if they share a parent variant — parent variant
+            # is the leading "<reg>.<var>" of the dotted source_id. Grouping
+            # by provider+slug alone would merge unrelated collisions under
+            # different variants into one misleading bullet.
+            groups: dict[tuple[str, str, str], list[dict[str, str]]] = {}
+            for m in colliding_vers:
+                parent_variant = m["source_id"].rsplit(".", 1)[0]
+                groups.setdefault(
+                    (m["provider"], parent_variant, m["would_be_slug"]), []
+                ).append(m)
+            lines.append(
+                f"Periodized version slug collisions "
+                f"({len(colliding_vers)} rows in {len(groups)} groups):"
+            )
+            for (provider, parent, slug), rows in list(groups.items())[:20]:
+                lines.append(f"  {provider}/{parent} → slug {slug!r}:")
+                for m in rows:
+                    lines.append(f"    {m['source_id']}  {m['name']}")
+            if len(groups) > 20:
+                lines.append(f"  ... and {len(groups) - 20} more groups")
+            lines.append(
+                'Add a curated `[register_version."<RegisterId>.<RegVarID>.<RegVerID>"]` '
+                "entry on one or more siblings to disambiguate."
+            )
             lines.append("")
         snap = data.get("snapshot") or {}
         if snap.get("updated"):

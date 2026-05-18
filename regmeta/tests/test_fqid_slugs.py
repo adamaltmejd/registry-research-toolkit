@@ -718,6 +718,93 @@ class TestPrecheckSlugs:
         result = precheck_slugs(conn, d)
         assert ("scb", "999") not in result.stale_registers
 
+    def test_periodized_sibling_collision_flagged(self, tmp_path: Path):
+        # Regression for Codex P1 on PR #94 (commit ffd07fe): two sibling
+        # periodized rows both deriving to `2018` with no override would
+        # pass precheck but fail mid-build on UNIQUE(regvar_id, slug).
+        # Precheck must catch this so the maintainer sees a clean diagnostic
+        # instead of a raw SQLite IntegrityError.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (101, 10, None, "LISA 2018 tilläggsfil"),
+        )
+        result = precheck_slugs(conn, d)
+        assert not result.ok
+        slugs = {(p, sid, slug) for (p, sid, _name, slug) in result.colliding_versions}
+        assert ("scb", "1.10.100", "2018") in slugs
+        assert ("scb", "1.10.101", "2018") in slugs
+
+    def test_collision_resolved_by_curated_override(self, tmp_path: Path):
+        # Disambiguating override on one sibling clears the collision —
+        # precheck must mirror populate_slugs's override-then-derive order,
+        # not naive auto-derive-only.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
+            '[register_version."1.10.101"]\nslug = "tillagg-2018"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (101, 10, None, "LISA 2018 tilläggsfil"),
+        )
+        result = precheck_slugs(conn, d)
+        assert not result.colliding_versions
+
+    def test_collision_when_override_clashes_with_auto_derived_sibling(
+        self, tmp_path: Path
+    ):
+        # Override on regver 101 explicitly pins slug "2018", which then
+        # collides with regver 100's auto-derived "2018". A naive precheck
+        # that only checks for "both rows would auto-derive the same period"
+        # would miss this; the would-be-slug grouping catches it.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(
+            d / "scb.toml",
+            '[register."1"]\nslug = "lisa"\n'
+            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
+            '[register_version."1.10.101"]\nslug = "2018"\n',
+        )
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db(version=("LISA 2018", None, 100))
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (101, 10, None, "Other 2019 file"),  # would auto-derive "2019"
+        )
+        result = precheck_slugs(conn, d)
+        slugs = {(p, sid, slug) for (p, sid, _name, slug) in result.colliding_versions}
+        assert ("scb", "1.10.100", "2018") in slugs
+        assert ("scb", "1.10.101", "2018") in slugs
+
 
 # ---------------------------------------------------------------------------
 # Snapshot / immutability

@@ -1068,6 +1068,12 @@ class PrecheckResult:
     stale_variants: tuple[tuple[str, str], ...] = ()
     stale_versions: tuple[tuple[str, str], ...] = ()
     stale_classifications: tuple[str, ...] = ()
+    # Sibling register_version rows that would share a slug under the
+    # populate_slugs (TOML-override-else-derived) algorithm, violating
+    # `UNIQUE(regvar_id, slug)` mid-build. One entry per colliding row,
+    # carrying the slug they'd all land on. Surfaces the failure at
+    # precheck time instead of as a raw sqlite IntegrityError later.
+    colliding_versions: tuple[tuple[str, str, str, str], ...] = ()
     entries: tuple[SlugEntry, ...] = ()
 
     @property
@@ -1082,6 +1088,7 @@ class PrecheckResult:
             or self.stale_variants
             or self.stale_versions
             or self.stale_classifications
+            or self.colliding_versions
         )
 
 
@@ -1099,6 +1106,11 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
 
     by_provider_kind: dict[tuple[str, str], set[str]] = {}
     classification_ids: set[str] = set()
+    # Curated version-slot overrides keyed (provider, source_id) -> slug.
+    # The collision pass needs the actual slug value, not just whether an
+    # entry exists; otherwise it can't tell a sibling-disambiguating override
+    # apart from one that re-collides with an auto-derived sibling.
+    toml_version_slugs: dict[tuple[str, str], str] = {}
     for entry in entries:
         if entry.kind == "classification":
             classification_ids.add(entry.source_id)
@@ -1106,6 +1118,8 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             by_provider_kind.setdefault((entry.provider, entry.kind), set()).add(
                 entry.source_id
             )
+            if entry.kind == "register_version":
+                toml_version_slugs[(entry.provider, entry.source_id)] = entry.slug
 
     # One pass per kind. The same row sets feed both the missing-slug check
     # (live row, no TOML entry) and the stale-entry check (TOML entry, no live
@@ -1116,6 +1130,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     missing_regs: list[tuple[str, str, str]] = []
     missing_variants: list[tuple[str, str, str]] = []
     missing_versions: list[tuple[str, str, str]] = []
+    colliding_versions: list[tuple[str, str, str, str]] = []
     for provider_slug in _live_providers(conn):
         slugged_regs = by_provider_kind.get((provider_slug, "register"), set())
         reg_rows = conn.execute(
@@ -1170,12 +1185,28 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         live_versions_by_provider[provider_slug] = {
             (rid, vid, verid) for (rid, vid, verid, _) in ver_rows
         }
+        # Walk version rows once: (1) flag unperiodized rows with no TOML
+        # entry, (2) group by (regvar_id, would-be-slug) for the collision
+        # pass. The would-be slug mirrors populate_slugs's resolution order:
+        # TOML override first, else derive_period(name). Rows where both are
+        # None fall out of the collision pass — they're already caught by (1).
+        siblings_by_slug: dict[tuple[int, str], list[tuple[str, str]]] = {}
         for register_id, regvar_id, regver_id, name in ver_rows:
-            if derive_period(name) is not None:
-                continue
             key = f"{register_id}.{regvar_id}.{regver_id}"
-            if key not in slugged_versions:
-                missing_versions.append((provider_slug, key, name or ""))
+            override = toml_version_slugs.get((provider_slug, key))
+            would_be_slug = override or derive_period(name)
+            if would_be_slug is None:
+                if key not in slugged_versions:
+                    missing_versions.append((provider_slug, key, name or ""))
+                continue
+            siblings_by_slug.setdefault((regvar_id, would_be_slug), []).append(
+                (key, name or "")
+            )
+
+        for (_regvar_id, slug), rows in siblings_by_slug.items():
+            if len(rows) > 1:
+                for key, name in rows:
+                    colliding_versions.append((provider_slug, key, name, slug))
 
     db_classifications: set[str] = set()
     missing_classifications: list[str] = []
@@ -1204,6 +1235,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         stale_variants=tuple(stale_vars),
         stale_versions=tuple(stale_vers),
         stale_classifications=tuple(stale_cls),
+        colliding_versions=tuple(colliding_versions),
         entries=tuple(entries),
     )
 
