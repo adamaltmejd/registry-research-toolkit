@@ -643,9 +643,25 @@ def _autoderive_version_slugs(conn: sqlite3.Connection, provider_slug: str) -> i
         if (period := derive_period(name)) is not None
     ]
     if updates:
-        conn.executemany(
-            "UPDATE register_version SET slug = ? WHERE regver_id = ?", updates
-        )
+        try:
+            conn.executemany(
+                "UPDATE register_version SET slug = ? WHERE regver_id = ?", updates
+            )
+        except sqlite3.IntegrityError as exc:
+            # UNIQUE(regvar_id, slug) trips when two siblings derive to the
+            # same period, or when a TOML override already wrote the slug
+            # this row would auto-derive to. `precheck_slugs` is the
+            # canonical guard for this case; surface a pointer there
+            # instead of the raw sqlite message.
+            raise _err(
+                "slug_periodized_collision",
+                f"Auto-derived register_version slug collides with a sibling "
+                f"under provider {provider_slug!r}: {exc}.",
+                "Run `regmeta maintain precheck-slugs` to list the colliding "
+                "rows, then add a curated "
+                '`[register_version."<RegisterId>.<RegVarID>.<RegVerID>"]` '
+                "entry on one sibling to disambiguate.",
+            ) from exc
     return len(updates)
 
 

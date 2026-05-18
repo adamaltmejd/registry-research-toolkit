@@ -551,6 +551,30 @@ class TestPopulateSlugs:
                 (101, 10, "2018", "LISA 2018 (dup)"),
             )
 
+    def test_autoderive_collision_raises_regmeta_error(self, tmp_path: Path):
+        # If precheck is bypassed and two siblings auto-derive to the same
+        # period, the raw sqlite IntegrityError from the second UPDATE is
+        # wrapped as a RegmetaError pointing at `precheck-slugs`. Keeps
+        # diagnostics consistent with the rest of the slug pipeline.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(
+            d / "classifications.toml",
+            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+        )
+        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (?, ?, ?, ?)",
+            (101, 10, None, "LISA 2018 tilläggsfil"),
+        )
+        with pytest.raises(RegmetaError) as excinfo:
+            populate_slugs(conn, d, strict=False)
+        assert excinfo.value.code == "slug_periodized_collision"
+        assert "precheck-slugs" in excinfo.value.remediation
+
 
 # ---------------------------------------------------------------------------
 # seed-slugs

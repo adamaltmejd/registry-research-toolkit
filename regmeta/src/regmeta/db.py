@@ -1615,6 +1615,19 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
             "UPDATE variable_instance SET via_source_id = ? WHERE cvid = ?",
             [(src_cvid, cvid) for cvid, src_cvid in resolved.items()],
         )
+
+    # Surface the skipped count so a regression — e.g. a future delivery
+    # introducing a curated source-side slug with no matching consumer-side
+    # entry — is visible at build time. Without this, edges silently
+    # disappear from `via_source_id` and only show up via downstream
+    # lineage-query gaps.
+    candidate_cvids = {cvid for cvid, *_ in consumer_attempts}
+    skipped = len(candidate_cvids - resolved.keys())
+    if candidate_cvids:
+        _progress(
+            f"  Consumer-side binding edges: {len(resolved):,} linked, "
+            f"{skipped:,} skipped (no source-side slug match)"
+        )
     return len(resolved)
 
 
@@ -1863,9 +1876,7 @@ def build_db(
         # same variant) and silently link consumers to the wrong source cvid.
         # `source_register_id` was populated by the Registerinformation.csv
         # import far above; no intermediate step depends on `via_source_id`.
-        n_links = link_consumer_side_bindings(conn)
-        if n_links:
-            _progress(f"  {n_links:,} consumer-side binding edges linked")
+        link_consumer_side_bindings(conn)
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears
