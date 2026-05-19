@@ -28,6 +28,8 @@ globs:
   - "!**/node_modules"
   - "!archive"
   - "!.tmp"
+  # Transient worktree shims (per-PR scratch dirs)
+  - "!.claude/worktrees"
   # Raw marker output (build artifacts)
   - "!regmeta_build/docs/_raw"
   # Agent config files, not rendered docs
