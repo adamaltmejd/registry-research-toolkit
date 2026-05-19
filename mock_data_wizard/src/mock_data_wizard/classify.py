@@ -1,6 +1,6 @@
 """Column classification primitives shared across the package.
 
-Pure functions (and one regmeta DB query). The data-driven
+Pure functions (and one reg_meta DB query). The data-driven
 ``classify_column`` path was removed when extract switched to a
 config-driven workflow. What remains:
 
@@ -9,11 +9,11 @@ config-driven workflow. What remains:
 * Date-format helpers consumed by ``summarize.py`` when a date override
   has no inline ``date_format`` hint.
 * The 5-type classifier (``_classify``) that combines name patterns,
-  regmeta evidence, and SQL declared types into one of
+  reg_meta evidence, and SQL declared types into one of
   ``COLUMN_TYPES``.
-* Regmeta evidence: ``RegmetaSignal`` dataclass, ``_regmeta_lookup``
+* RegMeta evidence: ``RegMetaSignal`` dataclass, ``_reg_meta_lookup``
   (joins ``variable_alias`` → ``variable_instance``), and
-  ``regmeta_implied_type`` (mirror of the regmeta branch for conflict
+  ``reg_meta_implied_type`` (mirror of the reg_meta branch for conflict
   warnings).
 * Discover-payload validator (``_validate_discover_payload``) so the
   editor can fail-fast on malformed or wrong-file inputs.
@@ -63,7 +63,7 @@ ID_PATTERNS: tuple[IdPattern, ...] = (
 )
 
 
-# Register-scoped exact-name categoricals. Names regmeta is known to be
+# Register-scoped exact-name categoricals. Names reg_meta is known to be
 # missing under specific registers but where SCB convention pins the
 # semantics unambiguously. Exact name match only (case-insensitive) and
 # only when the configured register matches — outside that context the
@@ -112,7 +112,7 @@ DATE_FORMATS: tuple[str, ...] = (
 DATE_CLASSIFY_THRESHOLD = 0.8  # ratio of sample that must parse to be a date
 
 
-# -- SQL / regmeta storage-type tokens -------------------------------------
+# -- SQL / reg_meta storage-type tokens -------------------------------------
 # Match the leading bare keyword: "BIGINT", "INTEGER", "DECIMAL(18,2)",
 # "TIMESTAMP WITH TIME ZONE" all reduce to their first token. Covers
 # DuckDB's CSV-inferred types and T-SQL declared types both.
@@ -145,12 +145,12 @@ _DATE_SQL = frozenset(
     }
 )
 
-# Regmeta `variable_instance.datatyp` tokens, normalised to lowercase.
+# RegMeta `variable_instance.datatyp` tokens, normalised to lowercase.
 # Storage type only — used to pick numeric vs. date when nothing else
 # has classified the column. The categorical signal comes from
 # `value_set_id` / `classification_id`, not from a "char/varchar"
 # datatyp (a char column with no code list is usually free text).
-_REGMETA_NUMERIC = frozenset(
+_REG_META_NUMERIC = frozenset(
     {
         "tinyint",
         "smallint",
@@ -166,7 +166,7 @@ _REGMETA_NUMERIC = frozenset(
         "smallmoney",
     }
 )
-_REGMETA_DATE = frozenset(
+_REG_META_DATE = frozenset(
     {"date", "datetime", "datetime2", "smalldatetime", "timestamp"}
 )
 
@@ -242,12 +242,12 @@ def _python_kind(values: Sequence[object]) -> str:
     return "string"
 
 
-# -- Regmeta evidence ------------------------------------------------------
+# -- RegMeta evidence ------------------------------------------------------
 
 
 @dataclass(frozen=True)
-class RegmetaSignal:
-    """Per-column evidence pulled from regmeta for one register."""
+class RegMetaSignal:
+    """Per-column evidence pulled from reg_meta for one register."""
 
     # "numeric" / "date" / None. Text storage (char/varchar) maps to
     # None — it isn't a categorical signal on its own.
@@ -282,30 +282,30 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
     return None
 
 
-def _regmeta_datatyp_kind(datatyp: str | None) -> str | None:
-    """Map a regmeta ``variable_instance.datatyp`` to a kind bucket.
+def _reg_meta_datatyp_kind(datatyp: str | None) -> str | None:
+    """Map a reg_meta ``variable_instance.datatyp`` to a kind bucket.
 
     Returns ``"numeric"`` / ``"date"`` / ``None``. Text storage tokens
     (char/varchar/...) intentionally return ``None``: text is not a
-    semantic categorical signal on its own — see ``RegmetaSignal``.
+    semantic categorical signal on its own — see ``RegMetaSignal``.
     """
     if not datatyp:
         return None
     head = datatyp.strip().split("(", 1)[0].split()[0].lower()
-    if head in _REGMETA_NUMERIC:
+    if head in _REG_META_NUMERIC:
         return "numeric"
-    if head in _REGMETA_DATE:
+    if head in _REG_META_DATE:
         return "date"
     return None
 
 
-def regmeta_implied_type(signal: RegmetaSignal | None) -> str | None:
-    """The semantic type regmeta implies for a column, if any.
+def reg_meta_implied_type(signal: RegMetaSignal | None) -> str | None:
+    """The semantic type reg_meta implies for a column, if any.
 
-    Mirrors the regmeta branch of ``_classify`` so the editor can detect
-    when a manual override conflicts with what regmeta says. Returns
-    ``None`` when regmeta has no opinion (storage type alone is not
-    enough — see ``RegmetaSignal``).
+    Mirrors the reg_meta branch of ``_classify`` so the editor can detect
+    when a manual override conflicts with what reg_meta says. Returns
+    ``None`` when reg_meta has no opinion (storage type alone is not
+    enough — see ``RegMetaSignal``).
     """
     if signal is None:
         return None
@@ -319,21 +319,21 @@ def regmeta_implied_type(signal: RegmetaSignal | None) -> str | None:
 def _classify(
     col_name: str,
     sql_type: str | None,
-    signal: RegmetaSignal | None,
+    signal: RegMetaSignal | None,
     register: str | None = None,
 ) -> str:
     """Return one of the five mock_data_wizard column types.
 
-    ``signal`` is the regmeta evidence for this column under the chosen
-    register. ``None`` means regmeta wasn't consulted (no register set)
-    or the column doesn't appear in regmeta — in which case the name
+    ``signal`` is the reg_meta evidence for this column under the chosen
+    register. ``None`` means reg_meta wasn't consulted (no register set)
+    or the column doesn't appear in reg_meta — in which case the name
     pattern + sql_type fallback drives the type. ``register`` is the
     user-supplied register string (``"RTB"``, ``"LISA"``, …); only
     consulted by register-scoped overrides like the RTB flag set.
     """
     if is_known_id(col_name):
         return "id"
-    implied = regmeta_implied_type(signal)
+    implied = reg_meta_implied_type(signal)
     if implied is not None:
         return implied
     if is_rtb_named_categorical(col_name, register):
@@ -344,14 +344,14 @@ def _classify(
     return "opaque"
 
 
-def _regmeta_lookup(
+def _reg_meta_lookup(
     conn: Any,
     col_names: set[str],
     register_ids: list[int],
     *,
     relevant_years: set[int] | None = None,
-) -> dict[str, RegmetaSignal]:
-    """Look up regmeta evidence for ``col_names`` under ``register_ids``.
+) -> dict[str, RegMetaSignal]:
+    """Look up reg_meta evidence for ``col_names`` under ``register_ids``.
 
     Returns a dict keyed by lowercased column name; callers must
     lowercase their lookup keys. Mirrors the ``variable_alias`` join
@@ -363,7 +363,7 @@ def _regmeta_lookup(
     non-null ``datatyp`` wins (SCB rarely changes storage type across
     versions), the most-common ``classification.short_name`` wins, and
     ``has_value_codes`` is True if *any* cvid has a non-null
-    ``value_set_id``. Columns absent from regmeta are absent from the
+    ``value_set_id``. Columns absent from reg_meta are absent from the
     result.
 
     ``relevant_years`` scopes the variance counts (``n_value_sets``,
@@ -372,7 +372,7 @@ def _regmeta_lookup(
     year-filtered popup. Yearless instances (no parseable year)
     contribute to the counts since we can't disprove their relevance.
     ``datatyp_kind`` / ``classification_short_name`` / ``has_value_codes``
-    stay unfiltered: they answer "does regmeta know this column" which
+    stay unfiltered: they answer "does reg_meta know this column" which
     isn't a per-year question.
 
     ``conn`` is owned by the caller (kept open across
@@ -407,7 +407,7 @@ def _regmeta_lookup(
     params = [c.lower() for c in col_list] + list(register_ids)
     rows = conn.execute(sql, params).fetchall()
 
-    from regmeta.queries import extract_year
+    from reg_meta.queries import extract_year
 
     datatyp_kinds: dict[str, str] = {}
     short_name_counts_all: dict[str, Counter] = {}
@@ -419,7 +419,7 @@ def _regmeta_lookup(
         name = r["lower_name"]
         seen.add(name)
         if name not in datatyp_kinds:
-            kind = _regmeta_datatyp_kind(r["datatyp"])
+            kind = _reg_meta_datatyp_kind(r["datatyp"])
             if kind is not None:
                 datatyp_kinds[name] = kind
         sn = r["short_name"]
@@ -438,11 +438,11 @@ def _regmeta_lookup(
                 short_name_counts_scoped.setdefault(name, set()).add(sn)
             if vsid is not None:
                 value_set_ids_scoped.setdefault(name, set()).add(int(vsid))
-    out: dict[str, RegmetaSignal] = {}
+    out: dict[str, RegMetaSignal] = {}
     for name in seen:
         sn_counter = short_name_counts_all.get(name)
         sn = sn_counter.most_common(1)[0][0] if sn_counter else None
-        out[name] = RegmetaSignal(
+        out[name] = RegMetaSignal(
             datatyp_kind=datatyp_kinds.get(name),
             classification_short_name=sn,
             has_value_codes=bool(value_set_ids_all.get(name)),
@@ -453,9 +453,9 @@ def _regmeta_lookup(
 
 
 def lookup_signal(
-    signals: dict[str, RegmetaSignal], col_name: str
-) -> RegmetaSignal | None:
-    """Find the regmeta signal for ``col_name`` (case-insensitive,
+    signals: dict[str, RegMetaSignal], col_name: str
+) -> RegMetaSignal | None:
+    """Find the reg_meta signal for ``col_name`` (case-insensitive,
     project-prefix-tolerant). Mirrors ``_util.lookup_with_prefix_fallback``."""
     return lookup_with_prefix_fallback(signals, col_name)
 

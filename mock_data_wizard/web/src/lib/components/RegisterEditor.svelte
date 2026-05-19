@@ -115,7 +115,7 @@
   });
 
   let registers = $derived(store.registers ?? []);
-  // When the register list couldn't load (regmeta unavailable), the
+  // When the register list couldn't load (reg_meta unavailable), the
   // client-side gate has nothing to validate against. Skip it so manual
   // entry still works; the server-side validator stays the source of
   // truth. The user gets a warning toast on the failed fetch, so the
@@ -124,7 +124,7 @@
     !store.registersUnavailable && registers.length > 0,
   );
 
-  // Mirror the server's resolve order (regmeta.queries.resolve_register_ids):
+  // Mirror the server's resolve order (reg_meta.queries.resolve_register_ids):
   //   1. exact numeric register_id
   //   2. case-insensitive exact name
   //   3. case-insensitive substring (only if uniquely resolves)

@@ -3,7 +3,7 @@
 Covers name-pattern helpers (``is_known_id``, ``is_rtb_named_categorical``),
 date helpers (``DATE_FORMATS``, ``detect_date_format``), and the
 classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
-``_regmeta_datatyp_kind``, ``regmeta_implied_type``, ``_regmeta_lookup``,
+``_reg_meta_datatyp_kind``, ``reg_meta_implied_type``, ``_reg_meta_lookup``,
 ``_validate_discover_payload``).
 """
 
@@ -14,16 +14,16 @@ import pytest
 from mock_data_wizard.classify import (
     DATE_FORMATS,
     RTB_NAMED_CATEGORICAL,
-    RegmetaSignal,
+    RegMetaSignal,
     _classify,
-    _regmeta_datatyp_kind,
-    _regmeta_lookup,
+    _reg_meta_datatyp_kind,
+    _reg_meta_lookup,
     _sql_type_kind,
     _validate_discover_payload,
     detect_date_format,
     is_known_id,
     is_rtb_named_categorical,
-    regmeta_implied_type,
+    reg_meta_implied_type,
 )
 
 
@@ -144,7 +144,7 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
     assert _sql_type_kind(sql_type) == expected
 
 
-# -- _regmeta_datatyp_kind ------------------------------------------------
+# -- _reg_meta_datatyp_kind ------------------------------------------------
 
 
 @pytest.mark.parametrize(
@@ -162,50 +162,50 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
         (None, None),
     ],
 )
-def test_regmeta_datatyp_kind(datatyp: str | None, expected: str | None):
-    assert _regmeta_datatyp_kind(datatyp) == expected
+def test_reg_meta_datatyp_kind(datatyp: str | None, expected: str | None):
+    assert _reg_meta_datatyp_kind(datatyp) == expected
 
 
-# -- regmeta_implied_type -------------------------------------------------
+# -- reg_meta_implied_type -------------------------------------------------
 
 
-def test_regmeta_implied_type_value_codes_or_classification_means_categorical():
+def test_reg_meta_implied_type_value_codes_or_classification_means_categorical():
     assert (
-        regmeta_implied_type(
-            RegmetaSignal(
+        reg_meta_implied_type(
+            RegMetaSignal(
                 datatyp_kind=None, classification_short_name=None, has_value_codes=True
             )
         )
         == "categorical"
     )
     assert (
-        regmeta_implied_type(
-            RegmetaSignal(datatyp_kind=None, classification_short_name="SUN2000")
+        reg_meta_implied_type(
+            RegMetaSignal(datatyp_kind=None, classification_short_name="SUN2000")
         )
         == "categorical"
     )
 
 
-def test_regmeta_implied_type_storage_only_returns_storage():
+def test_reg_meta_implied_type_storage_only_returns_storage():
     assert (
-        regmeta_implied_type(
-            RegmetaSignal(datatyp_kind="numeric", classification_short_name=None)
+        reg_meta_implied_type(
+            RegMetaSignal(datatyp_kind="numeric", classification_short_name=None)
         )
         == "numeric"
     )
     assert (
-        regmeta_implied_type(
-            RegmetaSignal(datatyp_kind="date", classification_short_name=None)
+        reg_meta_implied_type(
+            RegMetaSignal(datatyp_kind="date", classification_short_name=None)
         )
         == "date"
     )
 
 
-def test_regmeta_implied_type_no_evidence_returns_none():
-    assert regmeta_implied_type(None) is None
+def test_reg_meta_implied_type_no_evidence_returns_none():
+    assert reg_meta_implied_type(None) is None
     assert (
-        regmeta_implied_type(
-            RegmetaSignal(datatyp_kind=None, classification_short_name=None)
+        reg_meta_implied_type(
+            RegMetaSignal(datatyp_kind=None, classification_short_name=None)
         )
         is None
     )
@@ -214,19 +214,19 @@ def test_regmeta_implied_type_no_evidence_returns_none():
 # -- _classify priority chain ---------------------------------------------
 
 
-_REGMETA_CLASSIFIED = RegmetaSignal(
+_REG_META_CLASSIFIED = RegMetaSignal(
     datatyp_kind=None, classification_short_name="SUN2000"
 )
-_REGMETA_VALUE_CODES = RegmetaSignal(
+_REG_META_VALUE_CODES = RegMetaSignal(
     datatyp_kind="numeric", classification_short_name=None, has_value_codes=True
 )
-_REGMETA_TEXT_NO_EVIDENCE = RegmetaSignal(
+_REG_META_TEXT_NO_EVIDENCE = RegMetaSignal(
     datatyp_kind=None, classification_short_name=None
 )
-_REGMETA_NUMERIC_SIG = RegmetaSignal(
+_REG_META_NUMERIC_SIG = RegMetaSignal(
     datatyp_kind="numeric", classification_short_name=None
 )
-_REGMETA_DATE_SIG = RegmetaSignal(datatyp_kind="date", classification_short_name=None)
+_REG_META_DATE_SIG = RegMetaSignal(datatyp_kind="date", classification_short_name=None)
 
 
 @pytest.mark.parametrize(
@@ -234,18 +234,18 @@ _REGMETA_DATE_SIG = RegmetaSignal(datatyp_kind="date", classification_short_name
     [
         # Layer 1: known id name beats everything
         ("LopNr", "BIGINT", None, "id"),
-        ("LopNr", "VARCHAR", _REGMETA_CLASSIFIED, "id"),
-        # Layer 2: regmeta evidence wins over CSV sql_type
-        ("ALKod", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
-        ("Kon", "BIGINT", _REGMETA_VALUE_CODES, "categorical"),
-        ("RandomName", "INTEGER", _REGMETA_CLASSIFIED, "categorical"),
-        ("Sun2000Inr", "VARCHAR", _REGMETA_CLASSIFIED, "categorical"),
-        # Regmeta says numeric → numeric
-        ("ForvErs", "BIGINT", _REGMETA_NUMERIC_SIG, "numeric"),
-        ("BirthMoment", "VARCHAR", _REGMETA_DATE_SIG, "date"),
+        ("LopNr", "VARCHAR", _REG_META_CLASSIFIED, "id"),
+        # Layer 2: reg_meta evidence wins over CSV sql_type
+        ("ALKod", "BIGINT", _REG_META_VALUE_CODES, "categorical"),
+        ("Kon", "BIGINT", _REG_META_VALUE_CODES, "categorical"),
+        ("RandomName", "INTEGER", _REG_META_CLASSIFIED, "categorical"),
+        ("Sun2000Inr", "VARCHAR", _REG_META_CLASSIFIED, "categorical"),
+        # RegMeta says numeric → numeric
+        ("ForvErs", "BIGINT", _REG_META_NUMERIC_SIG, "numeric"),
+        ("BirthMoment", "VARCHAR", _REG_META_DATE_SIG, "date"),
         # A char/varchar column without value codes and without a
         # classification falls through — opaque.
-        ("MysteryString", "VARCHAR", _REGMETA_TEXT_NO_EVIDENCE, "opaque"),
+        ("MysteryString", "VARCHAR", _REG_META_TEXT_NO_EVIDENCE, "opaque"),
         # Layer 4: sql_type drives numeric / date for unrecognised names
         ("SammanInk", "BIGINT", None, "numeric"),
         ("SomeAmount", "DECIMAL(18,2)", None, "numeric"),
@@ -260,16 +260,16 @@ _REGMETA_DATE_SIG = RegmetaSignal(datatyp_kind="date", classification_short_name
 def test_classify_priority_chain(
     name: str,
     sql_type: str | None,
-    signal: RegmetaSignal | None,
+    signal: RegMetaSignal | None,
     expected: str,
 ):
     assert _classify(name, sql_type, signal) == expected
 
 
-def test_classify_id_pattern_beats_regmeta_classification():
-    """`is_known_id` runs before the regmeta branch — even if regmeta
+def test_classify_id_pattern_beats_reg_meta_classification():
+    """`is_known_id` runs before the reg_meta branch — even if reg_meta
     flags a column as classified, an `lopnr` name should stay `id`."""
-    assert _classify("lopnr", "BIGINT", _REGMETA_CLASSIFIED) == "id"
+    assert _classify("lopnr", "BIGINT", _REG_META_CLASSIFIED) == "id"
 
 
 @pytest.mark.parametrize(
@@ -299,7 +299,7 @@ def test_classify_lopnr_id_excludes_lopnrbyte():
     assert _classify("LopNrByte", "BIGINT", None, None) == "numeric"
 
 
-# -- _regmeta_lookup -------------------------------------------------------
+# -- _reg_meta_lookup -------------------------------------------------------
 
 
 class _FakeRows:
@@ -334,18 +334,18 @@ def _row(
     }
 
 
-def test_regmeta_lookup_strips_project_prefix():
+def test_reg_meta_lookup_strips_project_prefix():
     """Both raw and prefix-stripped names go into the IN clause so
-    P1105_LopNr resolves to LopNr in regmeta."""
+    P1105_LopNr resolves to LopNr in reg_meta."""
     conn = _FakeConn([_row("lopnr", datatyp="bigint")])
-    result = _regmeta_lookup(conn, {"P1105_LopNr"}, [34])
+    result = _reg_meta_lookup(conn, {"P1105_LopNr"}, [34])
     # SQL contains both forms in the IN list
     assert "lopnr" in conn.last_params
     assert "p1105_lopnr" in conn.last_params
     assert result["lopnr"].datatyp_kind == "numeric"
 
 
-def test_regmeta_lookup_aggregates_classification_majority():
+def test_reg_meta_lookup_aggregates_classification_majority():
     """Multiple cvids per alias: the most-common classification short_name wins."""
     conn = _FakeConn(
         [
@@ -354,23 +354,23 @@ def test_regmeta_lookup_aggregates_classification_majority():
             _row("kon", short_name="GenderB"),
         ]
     )
-    result = _regmeta_lookup(conn, {"Kon"}, [34])
+    result = _reg_meta_lookup(conn, {"Kon"}, [34])
     assert result["kon"].classification_short_name == "GenderA"
 
 
-def test_regmeta_lookup_has_value_codes_any_wins():
+def test_reg_meta_lookup_has_value_codes_any_wins():
     conn = _FakeConn(
         [
             _row("alkod", value_set_id=None),
             _row("alkod", value_set_id=7),
         ]
     )
-    result = _regmeta_lookup(conn, {"ALKod"}, [34])
+    result = _reg_meta_lookup(conn, {"ALKod"}, [34])
     assert result["alkod"].has_value_codes is True
     assert result["alkod"].n_value_sets == 1
 
 
-def test_regmeta_lookup_first_non_null_datatyp_wins():
+def test_reg_meta_lookup_first_non_null_datatyp_wins():
     conn = _FakeConn(
         [
             _row("foo", datatyp=None),
@@ -378,18 +378,18 @@ def test_regmeta_lookup_first_non_null_datatyp_wins():
             _row("foo", datatyp="varchar"),
         ]
     )
-    result = _regmeta_lookup(conn, {"foo"}, [34])
+    result = _reg_meta_lookup(conn, {"foo"}, [34])
     assert result["foo"].datatyp_kind == "numeric"
 
 
-def test_regmeta_lookup_empty_inputs_short_circuit():
+def test_reg_meta_lookup_empty_inputs_short_circuit():
     conn = _FakeConn([])
-    assert _regmeta_lookup(conn, set(), [34]) == {}
-    assert _regmeta_lookup(conn, {"x"}, []) == {}
+    assert _reg_meta_lookup(conn, set(), [34]) == {}
+    assert _reg_meta_lookup(conn, {"x"}, []) == {}
     assert conn.last_sql is None
 
 
-def test_regmeta_lookup_relevant_years_scopes_variance_counts():
+def test_reg_meta_lookup_relevant_years_scopes_variance_counts():
     """``relevant_years`` filters n_value_sets / n_classifications to
     in-scope instances; yearless rows still count; classification_short_name
     and has_value_codes stay unfiltered (whole-history facts)."""
@@ -427,7 +427,7 @@ def test_regmeta_lookup_relevant_years_scopes_variance_counts():
             ),
         ]
     )
-    sig = _regmeta_lookup(conn, {"lkf"}, [34], relevant_years={2018, 2019})["lkf"]
+    sig = _reg_meta_lookup(conn, {"lkf"}, [34], relevant_years={2018, 2019})["lkf"]
     # In-scope years: 2018, 2019, plus yearless → LKF2012 (×2), LKFX (×1).
     assert sig.n_classifications == 2
     assert sig.n_value_sets == 2
@@ -437,7 +437,7 @@ def test_regmeta_lookup_relevant_years_scopes_variance_counts():
     assert sig.classification_short_name == "LKF2012"
 
 
-def test_regmeta_lookup_relevant_years_none_keeps_full_counts():
+def test_reg_meta_lookup_relevant_years_none_keeps_full_counts():
     """``relevant_years=None`` is the default and preserves pre-filter
     counts — the snapshot/popup year-scope must opt in explicitly."""
     conn = _FakeConn(
@@ -456,7 +456,7 @@ def test_regmeta_lookup_relevant_years_none_keeps_full_counts():
             ),
         ]
     )
-    sig = _regmeta_lookup(conn, {"lkf"}, [34])["lkf"]
+    sig = _reg_meta_lookup(conn, {"lkf"}, [34])["lkf"]
     assert sig.n_classifications == 2
     assert sig.n_value_sets == 2
 

@@ -8,7 +8,7 @@ from pathlib import Path
 from mock_data_wizard.cli import main
 
 
-def test_compare_columns(regmeta_db: Path, capsys):
+def test_compare_columns(reg_meta_db: Path, capsys):
     rc = main(
         [
             "compare",
@@ -17,7 +17,7 @@ def test_compare_columns(regmeta_db: Path, capsys):
             "--register",
             "TESTREG",
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
             "--format",
             "json",
         ]
@@ -34,20 +34,20 @@ def test_compare_columns(regmeta_db: Path, capsys):
     assert "FakeColumn" in f["extra_local"]
 
 
-def test_compare_columns_requires_register(regmeta_db: Path):
+def test_compare_columns_requires_register(reg_meta_db: Path):
     rc = main(
         [
             "compare",
             "--columns",
             "Kon",
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
         ]
     )
     assert rc == 1
 
 
-def test_compare_manifest(regmeta_db: Path, tmp_path: Path, capsys):
+def test_compare_manifest(reg_meta_db: Path, tmp_path: Path, capsys):
     manifest = {
         "schema_version": "3",
         "generated_at": "2026-03-23T00:00:00Z",
@@ -80,7 +80,7 @@ def test_compare_manifest(regmeta_db: Path, tmp_path: Path, capsys):
             "compare",
             str(manifest_path),
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
             "--format",
             "json",
         ]
@@ -95,7 +95,7 @@ def test_compare_manifest(regmeta_db: Path, tmp_path: Path, capsys):
     assert "UnknownCol" in f["extra_local"]
 
 
-def test_compare_files(regmeta_db: Path, tmp_path: Path, capsys):
+def test_compare_files(reg_meta_db: Path, tmp_path: Path, capsys):
     csv_path = tmp_path / "data.csv"
     csv_path.write_text("Kon,Extra\n1,y\n")
 
@@ -107,7 +107,7 @@ def test_compare_files(regmeta_db: Path, tmp_path: Path, capsys):
             "--register",
             "TESTREG",
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
             "--format",
             "json",
         ]
@@ -118,7 +118,7 @@ def test_compare_files(regmeta_db: Path, tmp_path: Path, capsys):
     assert "Extra" in f["extra_local"]
 
 
-def test_compare_bad_manifest_version(regmeta_db: Path, tmp_path: Path):
+def test_compare_bad_manifest_version(reg_meta_db: Path, tmp_path: Path):
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(json.dumps({"schema_version": "2", "files": []}))
 
@@ -127,13 +127,13 @@ def test_compare_bad_manifest_version(regmeta_db: Path, tmp_path: Path):
             "compare",
             str(manifest_path),
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
         ]
     )
     assert rc == 1
 
 
-def test_compare_strips_project_prefix(regmeta_db: Path, capsys):
+def test_compare_strips_project_prefix(reg_meta_db: Path, capsys):
     """P1105_Kon should match Kon after prefix stripping."""
     rc = main(
         [
@@ -143,7 +143,7 @@ def test_compare_strips_project_prefix(regmeta_db: Path, capsys):
             "--register",
             "TESTREG",
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
             "--format",
             "json",
         ]
@@ -157,7 +157,7 @@ def test_compare_strips_project_prefix(regmeta_db: Path, capsys):
     assert "FakeCol" in f["extra_local"]
 
 
-def test_compare_table_output(regmeta_db: Path, capsys):
+def test_compare_table_output(reg_meta_db: Path, capsys):
     rc = main(
         [
             "compare",
@@ -166,7 +166,7 @@ def test_compare_table_output(regmeta_db: Path, capsys):
             "--register",
             "TESTREG",
             "--db",
-            str(regmeta_db.parent),
+            str(reg_meta_db.parent),
         ]
     )
     assert rc == 0

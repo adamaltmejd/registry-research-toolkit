@@ -68,9 +68,9 @@ commands work, not just `--version`:
 
 ```bash
 command -v mock-data-wizard
-command -v regmeta
+command -v reg-meta
 mock-data-wizard --help
-regmeta --help
+reg-meta --help
 ```
 
 If `--version` happens to work, that is fine. If it does not but `--help` and
@@ -80,8 +80,8 @@ without bothering the user about it.
 If either command fails, stop and install it before proceeding:
 
 ```bash
-uv tool install regmeta
-regmeta update
+uv tool install reg-meta
+reg-meta update
 
 uv tool install mock-data-wizard
 ```
@@ -89,7 +89,7 @@ uv tool install mock-data-wizard
 If a prior install is broken, reinstall with `--force`:
 
 ```bash
-uv tool install --force regmeta
+uv tool install --force reg-meta
 uv tool install --force mock-data-wizard
 ```
 
@@ -178,13 +178,13 @@ For each register group:
 1. Resolve representative columns:
 
 ```bash
-regmeta --format json resolve --columns "{comma-separated columns}" --register {register_hint}
+reg-meta --format json resolve --columns "{comma-separated columns}" --register {register_hint}
 ```
 
 2. Fetch the human-readable register name:
 
 ```bash
-regmeta get register {register_hint}
+reg-meta get register {register_hint}
 ```
 
 3. If the register hint is the generic catch-all 366, mark the result as
@@ -205,7 +205,7 @@ Use this structure:
 
 | Variable | Column | Explanation |
 | --- | --- | --- |
-| {var_name} | `{column_name}` | {definition from regmeta} |
+| {var_name} | `{column_name}` | {definition from reg_meta} |
 
 ## How it is used
 
@@ -215,12 +215,12 @@ Use this structure:
 
 <!-- TODO: missing years, encoding quirks, low-confidence matches -->
 
-## Useful regmeta commands
+## Useful reg-meta commands
 
 ```bash
-regmeta get register {register_id}
-regmeta get schema --register {register_id} --years {year_hint}
-regmeta resolve --columns "{key_columns}" --register {register_id}
+reg-meta get register {register_id}
+reg-meta get schema --register {register_id} --years {year_hint}
+reg-meta resolve --columns "{key_columns}" --register {register_id}
 ```
 ````
 
@@ -233,8 +233,8 @@ inventing a smaller panel for convenience. If only one year appears in the
 mock-data scaffold, say that only one year was present in the extracted stats
 unless the user tells you the MONA export was intentionally incomplete.
 
-If regmeta fails to resolve a column, say that the metadata resolution failed
-in this probe. Do not jump from "unresolved in regmeta" to "invalid linkage" or
+If reg_meta fails to resolve a column, say that the metadata resolution failed
+in this probe. Do not jump from "unresolved in reg_meta" to "invalid linkage" or
 "not available" unless the data itself shows a real problem.
 
 Generate `notes/README.md` as an index:
@@ -263,7 +263,7 @@ Build it from three layers:
 2. **Additional runtime probing**: one-off R checks for project-specific
    questions the standardized checks did not cover.
 3. **Interpretation and synthesis**: careful reading of script output,
-   `manifest.json`, regmeta results, and relevant docs.
+   `manifest.json`, reg_meta results, and relevant docs.
 
 Hard rules:
 
@@ -283,7 +283,7 @@ For each mock CSV, check:
 - plausible row counts
 - identifier cardinality
 - variables with more than 30% nulls
-- categorical codes present in mock data but absent from regmeta, and the
+- categorical codes present in mock data but absent from reg_meta, and the
   reverse
 - whether shared identifier columns overlap across linked files
 - schema or code-set mismatches, but only when backed by a direct comparison
@@ -301,7 +301,7 @@ runtime checks. These findings should be verified against the real data on MONA.
 
 - Standardized checks: {script path, command, or inline R block}
 - Additional probes: {project-specific checks, or `None`}
-- Metadata/docs consulted: {regmeta commands, docs, or `None`}
+- Metadata/docs consulted: {reg_meta commands, docs, or `None`}
 
 ## Summary
 

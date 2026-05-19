@@ -21,7 +21,7 @@ design choices for the user.
 - Keep scaffolding minimal. Do not pre-populate speculative functions,
   packages, estimators, or compatibility shims.
 - Run the local CLIs directly once installed. Do not use `uv run
-  mock-data-wizard` or `uv run regmeta`.
+  mock-data-wizard` or `uv run reg-meta`.
 
 ## Your role
 
@@ -84,7 +84,7 @@ High-level sequence:
 1. Phase 1:
    - collect slug, target directory, SCB project number, and research plan
    - create the minimal scaffold
-   - verify `mock-data-wizard` and `regmeta`
+   - verify `mock-data-wizard` and `reg-meta`
    - build the MONA extract bundle (`mdw_runner.py`)
    - stop after MONA handoff instructions
 2. Mock data generation:
@@ -137,7 +137,7 @@ files. It contains:
 
 ## Troubleshooting
 
-- If `mock-data-wizard` or `regmeta` commands fail unexpectedly, inspect
+- If `mock-data-wizard` or `reg-meta` commands fail unexpectedly, inspect
   their `--help` output and follow the install steps in
   [workflow.md](references/workflow.md).
 - If generated R files fail the ASCII guard, replace non-ASCII characters with

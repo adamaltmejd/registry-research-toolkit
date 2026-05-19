@@ -6,20 +6,20 @@ Socialstyrelsen, and other holders). Bundles two skills:
 | Skill | Purpose |
 |---|---|
 | `init-mona-project` | Scaffold a local R environment for an existing SCB MONA research project (mock data, templates, guardrails). |
-| `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `regmeta` CLI. |
+| `register-metadata-search` | Query register metadata (variables, value codes, schemas) via the `reg-meta` CLI. |
 
 ## Prerequisites
 
 The skills wrap two Python CLIs. Install them before enabling the plugin:
 
 ```bash
-uv tool install regmeta
+uv tool install reg-meta
 uv tool install mock-data-wizard
-regmeta update --yes   # pull the latest metadata DB
+reg-meta update --yes   # pull the latest metadata DB
 ```
 
 Both CLIs check for updates on startup. Upgrade explicitly with
-`regmeta update` (package + DB) or `mock-data-wizard update`.
+`reg-meta update` (package + DB) or `mock-data-wizard update`.
 
 ## Install
 
@@ -49,7 +49,7 @@ Then open the Codex plugin marketplace, find `microdata-tools-se` under
 The toolkit targets Swedish register-based work generally — research, report
 writing, statistics production — not only MONA. `init-mona-project` is the
 MONA-specific piece; `register-metadata-search` works with any register whose
-schema is in the `regmeta` DB.
+schema is in the `reg_meta` DB.
 
 ## Personal data
 

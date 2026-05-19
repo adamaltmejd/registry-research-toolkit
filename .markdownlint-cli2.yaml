@@ -31,7 +31,7 @@ globs:
   # Transient worktree shims (per-PR scratch dirs)
   - "!.claude/worktrees"
   # Raw marker output (build artifacts)
-  - "!regmeta_build/docs/_raw"
+  - "!reg_meta_build/docs/_raw"
   # Agent config files, not rendered docs
   - "!CLAUDE.md"
   - "!AGENTS.md"

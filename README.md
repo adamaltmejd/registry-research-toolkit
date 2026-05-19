@@ -5,7 +5,7 @@ Tools for working with Swedish registry microdata on
 
 | Package | Description |
 |---|---|
-| [`regmeta`](regmeta/) | Search and query SCB registry metadata |
+| [`reg_meta`](reg_meta/) | Search and query SCB registry metadata |
 | [`mock_data_wizard`](mock_data_wizard/) | Generate mock CSV data from MONA projects without exporting personal data |
 
 ## Prerequisites
@@ -48,25 +48,25 @@ machine.
 ### CLIs
 
 ```bash
-uv tool install regmeta
-regmeta update            # download metadata DB (~400 MB compressed)
+uv tool install reg-meta
+reg-meta update            # download metadata DB (~400 MB compressed)
 
-uv tool install mock-data-wizard   # depends on regmeta
+uv tool install mock-data-wizard   # depends on reg_meta
 ```
 
 Both CLIs check for updates on startup and ship explicit upgrade paths
-(`regmeta update`, `mock-data-wizard update`).
+(`reg-meta update`, `mock-data-wizard update`).
 
 ## Quick start
 
-### regmeta
+### reg_meta
 
 ```bash
-regmeta update                              # download metadata DB
-regmeta search --query "kommun"                      # search variables
-regmeta get register LISA                            # register overview
-regmeta get schema --register LISA --years 2020      # columns for a year
-regmeta docs search "disponibel inkomst"             # search documentation
+reg-meta update                              # download metadata DB
+reg-meta search --query "kommun"                      # search variables
+reg-meta get register LISA                            # register overview
+reg-meta get schema --register LISA --years 2020      # columns for a year
+reg-meta docs search "disponibel inkomst"             # search documentation
 ```
 
 ### mock-data-wizard
@@ -79,7 +79,7 @@ mock-data-wizard generate --stats mdw_step3_stats.json --seed 42   # mock CSVs
 ```
 
 See per-package READMEs for details:
-[regmeta](regmeta/README.md) |
+[reg_meta](reg_meta/README.md) |
 [mock_data_wizard](mock_data_wizard/README.md)
 
 ## License

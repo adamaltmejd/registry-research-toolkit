@@ -12,7 +12,7 @@
    */
 
   interface Props {
-    /** All registers available to pick from. May be empty when regmeta
+    /** All registers available to pick from. May be empty when reg_meta
      * is unavailable; the component falls back to free-text in that case. */
     registers: RegisterEntry[];
     /** Two-way bound text — accept both `register_id` and full names so

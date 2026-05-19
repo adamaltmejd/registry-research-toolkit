@@ -10,9 +10,9 @@ secondary.
 uv tool install mock-data-wizard
 ```
 
-Requires `regmeta` for metadata enrichment (population spine, value
-code validation, compare). Install regmeta first — see
-[regmeta/README.md](../regmeta/README.md).
+Requires `reg_meta` for metadata enrichment (population spine, value
+code validation, compare). Install reg_meta first — see
+[reg_meta/README.md](../reg_meta/README.md).
 
 Upgrade with `mock-data-wizard update`. The CLI also checks for a newer
 version on startup and points at this command if one is available.

@@ -15,11 +15,11 @@
      * the manual-count badge carries the same info there. True in
      * per-source mode. (Other provenance values have no styling.) */
     showManualOverrideBorder: boolean;
-    regmeta: string;
-    regmetaTitle: string;
-    /** Render the regmeta badge with the "varies" style when the column
+    reg_meta: string;
+    reg_metaTitle: string;
+    /** Render the reg_meta badge with the "varies" style when the column
      * maps to multiple classifications across years. */
-    regmetaVaries?: boolean;
+    reg_metaVaries?: boolean;
     /** 0 hides the badge; only meaningful in grouped mode. */
     manualCount?: number;
     onEditType: () => void;
@@ -31,9 +31,9 @@
     hint,
     pillTitle,
     showManualOverrideBorder,
-    regmeta,
-    regmetaTitle,
-    regmetaVaries = false,
+    reg_meta,
+    reg_metaTitle,
+    reg_metaVaries = false,
     manualCount = 0,
     onEditType,
     onShowValueCodes,
@@ -46,7 +46,7 @@
     e.stopPropagation();
     onEditType();
   }
-  function handleRegmetaClick(e: MouseEvent): void {
+  function handleRegMetaClick(e: MouseEvent): void {
     e.stopPropagation();
     onShowValueCodes();
   }
@@ -65,13 +65,13 @@
         <span class="type-suffix">· {hint}</span>
       {/if}
     </button>
-    {#if regmeta}
+    {#if reg_meta}
       <button
         type="button"
-        class="regmeta-tag"
-        class:varies={regmetaVaries}
-        title={`${regmetaTitle} — click to load value codes`}
-        onclick={handleRegmetaClick}>{regmeta}</button
+        class="reg-meta-tag"
+        class:varies={reg_metaVaries}
+        title={`${reg_metaTitle} — click to load value codes`}
+        onclick={handleRegMetaClick}>{reg_meta}</button
       >
     {/if}
     {#if manualCount > 0}
@@ -82,13 +82,13 @@
     {#if mismatch}
       <span
         class="mismatch-marker"
-        title={`regmeta implies '${column.regmeta_implied_type}' — current is '${column.current_type}'`}
-        aria-label="regmeta type mismatch">⚠</span
+        title={`reg_meta implies '${column.reg_meta_implied_type}' — current is '${column.current_type}'`}
+        aria-label="reg_meta type mismatch">⚠</span
       >
     {:else if unmatched}
       <span
         class="unmatched-marker"
-        title="categorical without regmeta classification or value codes"
+        title="categorical without reg_meta classification or value codes"
         aria-label="unmatched categorical">●</span
       >
     {/if}
@@ -156,11 +156,11 @@
     opacity: 0.65;
     font-size: 0.85em;
   }
-  /* Regmeta evidence as a sibling tag rather than a pill suffix:
+  /* RegMeta evidence as a sibling tag rather than a pill suffix:
      classification short-name ("LKF2012") or "vc" for value codes,
      full text in the tooltip. Keeping it outside the pill lets the
      pill stay readable even when the cell is narrow. */
-  .regmeta-tag {
+  .reg-meta-tag {
     padding: 0.05rem 0.35rem;
     border: 1px solid transparent;
     border-radius: 3px;
@@ -172,20 +172,20 @@
     flex: 0 0 auto;
     line-height: 1.3;
   }
-  .regmeta-tag:hover {
+  .reg-meta-tag:hover {
     background: #e3d4f4;
     border-color: #c8b1e2;
   }
-  .regmeta-tag:focus-visible {
+  .reg-meta-tag:focus-visible {
     outline: 2px solid #5d2b8c;
     outline-offset: 1px;
   }
-  .regmeta-tag.varies {
+  .reg-meta-tag.varies {
     background: #fff0d9;
     color: #7a4a00;
     border-color: #e8c184;
   }
-  .regmeta-tag.varies:hover {
+  .reg-meta-tag.varies:hover {
     background: #fde2b6;
     border-color: #d6a85a;
   }

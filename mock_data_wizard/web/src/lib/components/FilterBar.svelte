@@ -23,7 +23,7 @@
   ];
   const CONCERN_LABEL: Record<ConcernFilter, string> = {
     manual: "manual",
-    mismatch: "regmeta mismatch",
+    mismatch: "reg_meta mismatch",
     unmatched: "unmatched categorical",
     opaque: "opaque",
   };

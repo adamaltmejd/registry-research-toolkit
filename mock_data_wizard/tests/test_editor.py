@@ -3,10 +3,10 @@
 Covers ``get_state``, ``init_if_missing``, the mutating operations,
 the snapshot_version concurrency contract, manual-override
 preservation, discover-drift detection, and graceful
-regmeta-DB-absent behaviour.
+reg-meta-DB-absent behaviour.
 
-The regmeta DB is mocked via monkeypatching ``mock_data_wizard.editor``
-helpers so tests don't depend on a live regmeta install.
+The reg_meta DB is mocked via monkeypatching ``mock_data_wizard.editor``
+helpers so tests don't depend on a live reg_meta install.
 """
 
 from __future__ import annotations
@@ -20,7 +20,7 @@ from typing import Any
 import pytest
 
 from mock_data_wizard import editor
-from mock_data_wizard.classify import RegmetaSignal
+from mock_data_wizard.classify import RegMetaSignal
 from mock_data_wizard.config import Panel, PanelMember
 from mock_data_wizard.editor import (
     NotInitializedError,
@@ -57,8 +57,8 @@ def _write_discover(path: Path, sources) -> Path:
 
 
 @pytest.fixture(autouse=True)
-def _no_regmeta(monkeypatch):
-    """Default: regmeta DB unavailable. Tests that need signals override
+def _no_reg_meta(monkeypatch):
+    """Default: reg_meta DB unavailable. Tests that need signals override
     via local monkeypatching."""
     monkeypatch.setattr(
         editor,
@@ -823,7 +823,7 @@ def test_set_group_register_drops_options_on_type_change(tmp_path: Path, monkeyp
         editor,
         "_resolve_signals_for_register",
         lambda reg, cols, db_path, **_kw: {
-            "mystery": RegmetaSignal(
+            "mystery": RegMetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
             )
@@ -869,7 +869,7 @@ def test_set_group_register_preserves_manual_override(tmp_path: Path, monkeypatc
         editor,
         "_resolve_signals_for_register",
         lambda reg, cols, db_path, **_kw: {
-            "mystery": RegmetaSignal(
+            "mystery": RegMetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
             )
@@ -916,7 +916,7 @@ def test_set_group_register_reclassify_manual_clears_override(
         editor,
         "_resolve_signals_for_register",
         lambda reg, cols, db_path, **_kw: {
-            "mystery": RegmetaSignal(
+            "mystery": RegMetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
             )
@@ -1197,7 +1197,7 @@ def test_set_source_registers_reclassify_manual_force(tmp_path: Path, monkeypatc
         editor,
         "_resolve_signals_for_register",
         lambda reg, cols, db_path, **_kw: {
-            "mystery": RegmetaSignal(
+            "mystery": RegMetaSignal(
                 datatyp_kind=None,
                 classification_short_name="SUN2000",
             )
@@ -1596,11 +1596,11 @@ def test_set_column_options_rejects_unknown_column(tmp_path: Path):
         )
 
 
-# -- Regmeta-absent graceful behaviour ------------------------------------
+# -- RegMeta-absent graceful behaviour ------------------------------------
 
 
-def test_init_succeeds_with_no_regmeta(tmp_path: Path):
-    """Regmeta DB unavailable (default fixture) — every register is None,
+def test_init_succeeds_with_no_reg_meta(tmp_path: Path):
+    """RegMeta DB unavailable (default fixture) — every register is None,
     classifier still runs against sql_type / id-name patterns."""
     discover_path = _write_discover(
         tmp_path,
@@ -1657,19 +1657,19 @@ def test_groups_sorted_by_review_need(tmp_path: Path, monkeypatch):
             "loose": None,
         },
     )
-    # LISA: Kon has a regmeta classification → high confidence.
+    # LISA: Kon has a reg_meta classification → high confidence.
     # PAR : Kon has no signal → partial confidence (Salary matches, Kon does not).
     monkeypatch.setattr(
         editor,
         "_resolve_signals_for_register",
         lambda register, cols, db_path, **_kw: (
             {
-                "salary": RegmetaSignal(
+                "salary": RegMetaSignal(
                     datatyp_kind="numeric",
                     classification_short_name=None,
                     has_value_codes=False,
                 ),
-                "kon": RegmetaSignal(
+                "kon": RegMetaSignal(
                     datatyp_kind=None,
                     classification_short_name="KON",
                     has_value_codes=True,
@@ -1677,7 +1677,7 @@ def test_groups_sorted_by_review_need(tmp_path: Path, monkeypatch):
             }
             if register == "LISA"
             else {
-                "salary": RegmetaSignal(
+                "salary": RegMetaSignal(
                     datatyp_kind="numeric",
                     classification_short_name=None,
                     has_value_codes=False,
@@ -1742,7 +1742,7 @@ def test_review_sort_key_orders_within_tier():
     ):
         # Pad with as many uncategorised-categorical ColumnInfos as we
         # need to inflate the unmatched count; current_type "categorical"
-        # + no regmeta_signal is the predicate's positive case.
+        # + no reg_meta_signal is the predicate's positive case.
         cols = tuple(
             editor.ColumnInfo(
                 name=f"c{i}",
@@ -1750,8 +1750,8 @@ def test_review_sort_key_orders_within_tier():
                 current_type="categorical",
                 hint=None,
                 provenance="auto",
-                regmeta_signal=None,
-                regmeta_implied_type=None,
+                reg_meta_signal=None,
+                reg_meta_implied_type=None,
             )
             for i in range(unmatched_cats)
         )
@@ -2065,17 +2065,17 @@ def test_get_column_values_validation_error_on_empty_column():
         editor.get_column_values("TESTREG", "")
 
 
-def test_get_column_values_returns_none_when_regmeta_missing(monkeypatch):
-    """When ``_open_regmeta_conn`` yields None, the function must return
+def test_get_column_values_returns_none_when_reg_meta_missing(monkeypatch):
+    """When ``_open_reg_meta_conn`` yields None, the function must return
     ``kind="none"`` rather than raise — the popover then shows the empty
-    state. Mirrors the "regmeta degrades gracefully" stance elsewhere."""
+    state. Mirrors the "reg_meta degrades gracefully" stance elsewhere."""
     from contextlib import contextmanager
 
     @contextmanager
     def _no_conn(_):
         yield None
 
-    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    monkeypatch.setattr(editor, "_open_reg_meta_conn", _no_conn)
     result = editor.get_column_values("TESTREG", "Kon")
     assert result.kind == "none"
     assert result.title == "Kon"
@@ -2083,39 +2083,39 @@ def test_get_column_values_returns_none_when_regmeta_missing(monkeypatch):
 
 
 def test_get_column_values_returns_none_when_register_unresolved(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     result = editor.get_column_values(
-        "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
+        "DOES_NOT_EXIST", "Kon", db_path=reg_meta_db.parent
     )
     assert result.kind == "none"
 
 
-def test_get_column_values_returns_none_when_register_is_none(regmeta_db: Path):
+def test_get_column_values_returns_none_when_register_is_none(reg_meta_db: Path):
     """``register=None`` (no register set on the group) returns the empty
     envelope so the UI can render a clean "no codes" state."""
-    result = editor.get_column_values(None, "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values(None, "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "none"
 
 
-def test_get_column_values_returns_none_for_unknown_column(regmeta_db: Path):
+def test_get_column_values_returns_none_for_unknown_column(reg_meta_db: Path):
     result = editor.get_column_values(
-        "TESTREG", "NotAColumn", db_path=regmeta_db.parent
+        "TESTREG", "NotAColumn", db_path=reg_meta_db.parent
     )
     assert result.kind == "none"
 
 
-def test_get_column_values_per_instance_path(regmeta_db: Path):
+def test_get_column_values_per_instance_path(reg_meta_db: Path):
     """The fixture has Kon under TESTREG with codes 1=Man, 2=Kvinna and
     no classification attached → per-instance values path."""
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     assert result.title == "Kon"
     code_map = {c.code: c.label for c in result.codes}
     assert code_map == {"1": "Man", "2": "Kvinna"}
 
 
-def test_get_column_values_dedupes_duplicate_codes(regmeta_db: Path):
+def test_get_column_values_dedupes_duplicate_codes(reg_meta_db: Path):
     """Same vardekod with two distinct labels (year-over-year relabel)
     must collapse to one row in the result — the table renderer keys on
     code and would crash on duplicates."""
@@ -2123,7 +2123,7 @@ def test_get_column_values_dedupes_duplicate_codes(regmeta_db: Path):
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a second cvid for var_id=44 under the same register with a
     # different label for code "1" (e.g. relabel from "Man" to "Male").
@@ -2141,7 +2141,7 @@ def test_get_column_values_dedupes_duplicate_codes(regmeta_db: Path):
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     codes = [c.code for c in result.codes]
     # Each code appears exactly once even though SQL DISTINCT yields four
@@ -2150,23 +2150,25 @@ def test_get_column_values_dedupes_duplicate_codes(regmeta_db: Path):
     assert set(codes) == {"1", "2"}
 
 
-def test_get_column_values_handles_prefix_fallback_alias(regmeta_db: Path):
+def test_get_column_values_handles_prefix_fallback_alias(reg_meta_db: Path):
     """A MONA-prefixed column name (e.g. ``P1105_Kon``) must resolve to
     the alias ``Kon`` via prefix-strip — both the signal lookup AND the
     per-instance SQL must use the same resolved alias."""
-    result = editor.get_column_values("TESTREG", "P1105_Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values(
+        "TESTREG", "P1105_Kon", db_path=reg_meta_db.parent
+    )
     assert result.kind == "values"
     code_map = {c.code: c.label for c in result.codes}
     assert code_map == {"1": "Man", "2": "Kvinna"}
 
 
-def test_get_column_values_classification_path(regmeta_db: Path):
+def test_get_column_values_classification_path(reg_meta_db: Path):
     """When a classification short_name is attached to the variable
     instance, the canonical classification code list wins over per-
     instance value codes."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     conn.executescript(
         """
@@ -2182,7 +2184,7 @@ def test_get_column_values_classification_path(regmeta_db: Path):
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "classification"
     assert result.title == "KON_CLS"
     assert result.description == "Standard sex classification"
@@ -2220,18 +2222,18 @@ def _add_extra_cvid(
     )
 
 
-def test_regmeta_signal_counts_distinct_value_sets_and_classifications(
-    regmeta_db: Path,
+def test_reg_meta_signal_counts_distinct_value_sets_and_classifications(
+    reg_meta_db: Path,
 ):
     """The fixture has one cvid with one value_set; n_value_sets=1,
     n_classifications=0 (no classification attached)."""
     import sqlite3
 
-    from mock_data_wizard.classify import _regmeta_lookup
+    from mock_data_wizard.classify import _reg_meta_lookup
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    signals = _regmeta_lookup(conn, {"Kon"}, [1])
+    signals = _reg_meta_lookup(conn, {"Kon"}, [1])
     conn.close()
     sig = signals["kon"]
     assert sig.n_value_sets == 1
@@ -2239,17 +2241,17 @@ def test_regmeta_signal_counts_distinct_value_sets_and_classifications(
     assert sig.has_value_codes is True
 
 
-def test_regmeta_signal_counts_multiple_value_sets_and_classifications(
-    regmeta_db: Path,
+def test_reg_meta_signal_counts_multiple_value_sets_and_classifications(
+    reg_meta_db: Path,
 ):
     """Two cvids with two distinct value_sets and two distinct
     classifications → n_value_sets=2, n_classifications=2."""
     import sqlite3
 
-    from mock_data_wizard.classify import _regmeta_lookup
+    from mock_data_wizard.classify import _reg_meta_lookup
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     conn.executescript(
         """
@@ -2267,7 +2269,7 @@ def test_regmeta_signal_counts_multiple_value_sets_and_classifications(
     # diverges.
     assign_value_set(conn, 1002, [("1", "Male"), ("2", "Female")])
     conn.commit()
-    signals = _regmeta_lookup(conn, {"Kon"}, [1])
+    signals = _reg_meta_lookup(conn, {"Kon"}, [1])
     conn.close()
     sig = signals["kon"]
     assert sig.n_value_sets == 2
@@ -2276,9 +2278,9 @@ def test_regmeta_signal_counts_multiple_value_sets_and_classifications(
     assert sig.classification_short_name in {"CLS_A", "CLS_B"}
 
 
-def test_get_column_values_tier_1_no_variance(regmeta_db: Path):
+def test_get_column_values_tier_1_no_variance(reg_meta_db: Path):
     """Single value_set, no classification → tier 1, no note."""
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     assert result.tier == "1"
     assert result.note is None
@@ -2287,7 +2289,7 @@ def test_get_column_values_tier_1_no_variance(regmeta_db: Path):
 
 
 def test_get_column_values_tier_2_multiple_value_sets_no_collision(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Two value_sets that share labels (no collision) → tier 2.
 
@@ -2298,7 +2300,7 @@ def test_get_column_values_tier_2_multiple_value_sets_no_collision(
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
     # Widen the code set: add code "3" with a fresh label.
@@ -2306,7 +2308,7 @@ def test_get_column_values_tier_2_multiple_value_sets_no_collision(
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     assert result.tier == "2"
     assert result.note is not None
@@ -2321,7 +2323,7 @@ def test_get_column_values_tier_2_multiple_value_sets_no_collision(
     assert result.value_sets[1].cvid_count == 1
 
 
-def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
+def test_get_column_values_tier_3a_label_collision(reg_meta_db: Path):
     """Same vardekod with two distinct vardebenamning → tier 3a.
 
     Default rendering is the most-common value-set (most cvids) so the
@@ -2332,7 +2334,7 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
     # Same codes, different labels (year-over-year relabel).
@@ -2340,7 +2342,7 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     assert result.tier == "3a"
     assert result.note is not None
@@ -2357,7 +2359,7 @@ def test_get_column_values_tier_3a_label_collision(regmeta_db: Path):
 
 
 def test_get_column_values_tier_3a_requires_multiple_value_sets(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Tier 3a's note tells the user to pick another value-set below —
     only actionable when there's more than one set. Within one set,
@@ -2368,7 +2370,7 @@ def test_get_column_values_tier_3a_requires_multiple_value_sets(
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Within the existing single value_set (cvid=1001), attach a second
     # value_code row for vardekod "1" with a different label. This
@@ -2390,7 +2392,7 @@ def test_get_column_values_tier_3a_requires_multiple_value_sets(
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "values"
     # With only one value_set, picking can't help — must NOT advertise
     # 3a's picker note.
@@ -2399,11 +2401,11 @@ def test_get_column_values_tier_3a_requires_multiple_value_sets(
     assert len(result.value_sets) == 1
 
 
-def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
+def test_get_column_values_tier_3b_classification_picker(reg_meta_db: Path):
     """Two distinct classifications across years → tier 3b with picker."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     conn.executescript(
         """
@@ -2424,7 +2426,7 @@ def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "classification"
     assert result.tier == "3b"
     assert result.note is not None
@@ -2440,12 +2442,12 @@ def test_get_column_values_tier_3b_classification_picker(regmeta_db: Path):
     assert result.picked_classification in {"CLS_A", "CLS_B"}
 
 
-def test_get_column_values_picked_classification_honored(regmeta_db: Path):
+def test_get_column_values_picked_classification_honored(reg_meta_db: Path):
     """User picks the non-default classification; the popup re-fetches
     that classification's codes."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a third code that only lives in CLS_B so we can prove we
     # rendered the right classification.
@@ -2473,7 +2475,7 @@ def test_get_column_values_picked_classification_honored(regmeta_db: Path):
         "TESTREG",
         "Kon",
         picked_classification="CLS_B",
-        db_path=regmeta_db.parent,
+        db_path=reg_meta_db.parent,
     )
     assert picked.tier == "3b"
     assert picked.picked_classification == "CLS_B"
@@ -2481,13 +2483,13 @@ def test_get_column_values_picked_classification_honored(regmeta_db: Path):
 
 
 def test_get_column_values_picked_classification_invalid_falls_back(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Bad picks degrade silently to the default winner rather than
     erroring — picker state shouldn't break the popup."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     conn.executescript(
         """
@@ -2512,7 +2514,7 @@ def test_get_column_values_picked_classification_invalid_falls_back(
         "TESTREG",
         "Kon",
         picked_classification="NOT_A_REAL_CLS",
-        db_path=regmeta_db.parent,
+        db_path=reg_meta_db.parent,
     )
     assert result.kind == "classification"
     # Falls back to a candidate from the list (most-common winner).
@@ -2522,14 +2524,14 @@ def test_get_column_values_picked_classification_invalid_falls_back(
 # -- value-set picker (issue #64, follow-up) -----------------------------
 
 
-def test_get_column_values_picked_value_set_honored(regmeta_db: Path):
+def test_get_column_values_picked_value_set_honored(reg_meta_db: Path):
     """Tier 2 default is the union; passing ``picked_value_set`` filters
     to that group's codes only."""
     import sqlite3
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
     # Widen the code set for the new year so we can prove which group
@@ -2538,7 +2540,7 @@ def test_get_column_values_picked_value_set_honored(regmeta_db: Path):
     conn.commit()
     conn.close()
 
-    default = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    default = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert default.tier == "2"
     assert {c.code for c in default.codes} == {"1", "2", "3"}
 
@@ -2548,21 +2550,21 @@ def test_get_column_values_picked_value_set_honored(regmeta_db: Path):
         "TESTREG",
         "Kon",
         picked_value_set=early.value_set_id,
-        db_path=regmeta_db.parent,
+        db_path=reg_meta_db.parent,
     )
     assert picked.tier == "2"
     assert picked.picked_value_set == early.value_set_id
     assert {c.code for c in picked.codes} == {"1", "2"}
 
 
-def test_get_column_values_picked_value_set_invalid_falls_back(regmeta_db: Path):
+def test_get_column_values_picked_value_set_invalid_falls_back(reg_meta_db: Path):
     """Bad ``picked_value_set`` degrades to the tier default rather than
     blanking the popup."""
     import sqlite3
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
     assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
@@ -2573,7 +2575,7 @@ def test_get_column_values_picked_value_set_invalid_falls_back(regmeta_db: Path)
         "TESTREG",
         "Kon",
         picked_value_set=99999,
-        db_path=regmeta_db.parent,
+        db_path=reg_meta_db.parent,
     )
     assert result.tier == "2"
     # Tier 2 default = union (not the bad pick).
@@ -2582,7 +2584,7 @@ def test_get_column_values_picked_value_set_invalid_falls_back(regmeta_db: Path)
 
 
 def test_get_column_values_relevant_years_filters_value_sets(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Project that only loaded 2024 files should not see 2020 value-sets
     in the picker. The 2020-only group drops out; the 2024 group becomes
@@ -2591,7 +2593,7 @@ def test_get_column_values_relevant_years_filters_value_sets(
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2024")
     # 2024 introduces a new code "3" that didn't exist in 2020.
@@ -2600,7 +2602,7 @@ def test_get_column_values_relevant_years_filters_value_sets(
     conn.close()
 
     result = editor.get_column_values(
-        "TESTREG", "Kon", relevant_years=[2024], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2024], db_path=reg_meta_db.parent
     )
     assert result.kind == "values"
     # Filtered to one group → tier 1 (no variance once we scope to 2024).
@@ -2613,7 +2615,7 @@ def test_get_column_values_relevant_years_filters_value_sets(
 
 
 def test_get_column_values_relevant_years_falls_back_when_no_overlap(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """When no value-set covers the project's year, fall back to the
     full set and surface a note explaining why."""
@@ -2621,19 +2623,19 @@ def test_get_column_values_relevant_years_falls_back_when_no_overlap(
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="2021")
     assign_value_set(conn, 1002, [("1", "Man"), ("2", "Kvinna"), ("3", "Annat")])
     conn.commit()
     conn.close()
 
-    # Project years (2030, 2031) don't overlap any regmeta value-set.
+    # Project years (2030, 2031) don't overlap any reg_meta value-set.
     result = editor.get_column_values(
         "TESTREG",
         "Kon",
         relevant_years=[2030, 2031],
-        db_path=regmeta_db.parent,
+        db_path=reg_meta_db.parent,
     )
     assert result.kind == "values"
     # Full set retained as fallback.
@@ -2644,16 +2646,16 @@ def test_get_column_values_relevant_years_falls_back_when_no_overlap(
 
 
 def test_get_column_values_relevant_years_keeps_yearless_groups(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Groups with no parseable year survive the filter — we can't
     disprove their relevance and excluding them would hide otherwise
-    useful codes for projects against yearless regmeta versions."""
+    useful codes for projects against yearless reg_meta versions."""
     import sqlite3
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a yearless cvid (regver name "provisorisk" → extract_year → None).
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="provisorisk")
@@ -2662,7 +2664,7 @@ def test_get_column_values_relevant_years_keeps_yearless_groups(
     conn.close()
 
     result = editor.get_column_values(
-        "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2020], db_path=reg_meta_db.parent
     )
     # 2020 group + yearless group both kept.
     assert len(result.value_sets) == 2
@@ -2671,7 +2673,7 @@ def test_get_column_values_relevant_years_keeps_yearless_groups(
 
 
 def test_value_set_groups_chronological_with_unparsable_year_last(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """``_fetch_value_set_groups`` orders by year_min asc, with yearless
     groups (regver name without a parseable year) sinking to the end."""
@@ -2679,7 +2681,7 @@ def test_value_set_groups_chronological_with_unparsable_year_last(
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # cvid 1002: yearless registerversionnamn → year_min is None.
     _add_extra_cvid(conn, cvid=1002, regver_id=101, regversion_name="provisorisk")
@@ -2690,7 +2692,7 @@ def test_value_set_groups_chronological_with_unparsable_year_last(
     conn.commit()
     conn.close()
 
-    result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_values("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.tier == "2"
     years = [g.year_min for g in result.value_sets]
     assert years == [2019, 2020, None]
@@ -2710,100 +2712,100 @@ def test_dedupe_codes_preserves_first_seen_order():
 # -- get_column_varinfo --------------------------------------------------
 
 
-def test_get_column_varinfo_returns_none_when_regmeta_missing(monkeypatch):
-    """Same graceful-degradation stance as get_column_values: when regmeta
+def test_get_column_varinfo_returns_none_when_reg_meta_missing(monkeypatch):
+    """Same graceful-degradation stance as get_column_values: when reg_meta
     is unavailable the editor returns the empty envelope rather than
     raising — and tags it ``none_reason="unavailable"`` so the UI can
-    distinguish "regmeta missing" from "column not in regmeta"."""
+    distinguish "reg_meta missing" from "column not in reg_meta"."""
     from contextlib import contextmanager
 
     @contextmanager
     def _no_conn(_):
         yield None
 
-    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    monkeypatch.setattr(editor, "_open_reg_meta_conn", _no_conn)
     result = editor.get_column_varinfo("TESTREG", "Kon")
     assert result.kind == "none"
     assert result.none_reason == "unavailable"
     assert result.primary is None
 
 
-def test_get_column_varinfo_returns_none_when_register_is_none(regmeta_db: Path):
+def test_get_column_varinfo_returns_none_when_register_is_none(reg_meta_db: Path):
     """Cross-register lookup is intentionally out of scope (issue #71):
     a column without a register pinned can mean too many different
     things. Return ``kind="none"`` with ``no_register`` so the editor
     can prompt the user to assign one."""
-    result = editor.get_column_varinfo(None, "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_varinfo(None, "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "none"
     assert result.none_reason == "no_register"
 
 
-def test_get_column_varinfo_returns_none_for_unknown_column(regmeta_db: Path):
+def test_get_column_varinfo_returns_none_for_unknown_column(reg_meta_db: Path):
     result = editor.get_column_varinfo(
-        "TESTREG", "NotAColumn", db_path=regmeta_db.parent
+        "TESTREG", "NotAColumn", db_path=reg_meta_db.parent
     )
     assert result.kind == "none"
     assert result.none_reason == "not_found"
 
 
 def test_get_column_varinfo_returns_none_when_register_unresolved(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     result = editor.get_column_varinfo(
-        "DOES_NOT_EXIST", "Kon", db_path=regmeta_db.parent
+        "DOES_NOT_EXIST", "Kon", db_path=reg_meta_db.parent
     )
     assert result.kind == "none"
     assert result.none_reason == "not_found"
 
 
-def test_get_column_varinfo_strips_mona_prefix(regmeta_db: Path):
-    """MONA-prefixed columns (e.g. ``P1105_Kon``) aren't stored in regmeta
+def test_get_column_varinfo_strips_mona_prefix(reg_meta_db: Path):
+    """MONA-prefixed columns (e.g. ``P1105_Kon``) aren't stored in reg_meta
     under that name — they're aliased to ``Kon``. Mirror
     ``get_column_values`` and retry with the stripped form so the
     editor surfaces varinfo for prefixed datasets too."""
     result = editor.get_column_varinfo(
-        "TESTREG", "P1105_Kon", db_path=regmeta_db.parent
+        "TESTREG", "P1105_Kon", db_path=reg_meta_db.parent
     )
     assert result.kind == "single"
     assert result.primary is not None
     assert result.primary.variabelnamn == "Kön"
 
 
-def test_get_column_varinfo_propagates_non_not_found_regmeta_errors(
-    monkeypatch, regmeta_db: Path
+def test_get_column_varinfo_propagates_non_not_found_reg_meta_errors(
+    monkeypatch, reg_meta_db: Path
 ):
     """Only ``code="not_found"`` is the documented "normal outcome" for
-    a popover. Other RegmetaErrors (usage_error, ambiguous_alias, …)
+    a popover. Other RegMetaErrors (usage_error, ambiguous_alias, …)
     must propagate so they surface in the UI rather than being silently
     converted to an empty envelope."""
-    from regmeta import errors as regmeta_errors
+    from reg_meta import errors as reg_meta_errors
 
     def _raise_usage(*_a, **_kw):
-        raise regmeta_errors.RegmetaError(
-            exit_code=regmeta_errors.EXIT_USAGE,
+        raise reg_meta_errors.RegMetaError(
+            exit_code=reg_meta_errors.EXIT_USAGE,
             code="usage_error",
             error_class="query",
             message="bad call",
             remediation="fix it",
         )
 
-    import regmeta.queries
+    import reg_meta.queries
 
-    monkeypatch.setattr(regmeta.queries, "get_varinfo", _raise_usage)
-    with pytest.raises(regmeta_errors.RegmetaError):
-        editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    monkeypatch.setattr(reg_meta.queries, "get_varinfo", _raise_usage)
+    with pytest.raises(reg_meta_errors.RegMetaError):
+        editor.get_column_varinfo("TESTREG", "Kon", db_path=reg_meta_db.parent)
 
 
-def test_get_column_varinfo_rejects_blank_column(regmeta_db: Path):
+def test_get_column_varinfo_rejects_blank_column(reg_meta_db: Path):
     with pytest.raises(editor.ValidationError):
-        editor.get_column_varinfo("TESTREG", "   ", db_path=regmeta_db.parent)
+        editor.get_column_varinfo("TESTREG", "   ", db_path=reg_meta_db.parent)
 
 
-def test_get_column_varinfo_single_variant(regmeta_db: Path):
+def test_get_column_varinfo_single_variant(reg_meta_db: Path):
     """The fixture has one ``Kon`` variable under TESTREG with one cvid:
     the result must be ``kind="single"`` and surface the canonical
     description fields."""
-    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "single"
     assert result.primary is not None
     assert result.primary.variabelnamn == "Kön"
@@ -2815,13 +2817,13 @@ def test_get_column_varinfo_single_variant(regmeta_db: Path):
     assert result.alternatives == ()
 
 
-def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path):
+def test_get_column_varinfo_divergent_picks_most_common_primary(reg_meta_db: Path):
     """When SCB has recycled a column name across two var_ids under the
     same register, the response is ``kind="divergent"`` with the
     higher-cvid-count variable as primary and the rest as alternatives."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a SECOND variable (var_id=45) also aliased to "Kon", with
     # fewer cvids than the original (1 vs 2) so the existing var wins.
@@ -2848,7 +2850,7 @@ def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path
     conn.commit()
     conn.close()
 
-    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.kind == "divergent"
     assert result.primary is not None
     assert result.primary.var_id == 44
@@ -2861,7 +2863,7 @@ def test_get_column_varinfo_divergent_picks_most_common_primary(regmeta_db: Path
     assert alt.instances == 1
 
 
-def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Path):
+def test_get_column_varinfo_year_aware_ranking_prefers_year_match(reg_meta_db: Path):
     """When ``relevant_years`` is set, variables that don't overlap the
     requested year are dropped entirely (off-year variants aren't viable
     alternatives — they're wrong). SCB reuses column-name slots across
@@ -2870,7 +2872,7 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
     2021, var_id=45 has one cvid in 2010."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     conn.executescript(
         """
@@ -2898,7 +2900,7 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
     # source's year, the other-era variable is wrong, not a viable
     # alternative.
     result = editor.get_column_varinfo(
-        "TESTREG", "Kon", relevant_years=[2010], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2010], db_path=reg_meta_db.parent
     )
     assert result.kind == "single"
     assert result.primary is not None
@@ -2906,7 +2908,7 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
 
     # Year 2020 falls on var_id=44 only. var_id=45 (2010) is filtered.
     result = editor.get_column_varinfo(
-        "TESTREG", "Kon", relevant_years=[2020], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2020], db_path=reg_meta_db.parent
     )
     assert result.kind == "single"
     assert result.primary is not None
@@ -2914,7 +2916,7 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
 
     # Year range spanning both eras keeps both variables (divergent).
     result = editor.get_column_varinfo(
-        "TESTREG", "Kon", relevant_years=[2010, 2020], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2010, 2020], db_path=reg_meta_db.parent
     )
     assert result.kind == "divergent"
     assert result.primary is not None
@@ -2922,13 +2924,13 @@ def test_get_column_varinfo_year_aware_ranking_prefers_year_match(regmeta_db: Pa
     assert result.alternatives[0].description.var_id == 45
 
     # No year hint → falls back to pure popularity ranking.
-    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=regmeta_db.parent)
+    result = editor.get_column_varinfo("TESTREG", "Kon", db_path=reg_meta_db.parent)
     assert result.primary is not None
     assert result.primary.var_id == 44
 
 
 def test_get_column_varinfo_year_outside_any_instance_returns_not_found(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """When no variable's instances overlap the requested year and every
     matching variable carries parseable years, the strict filter drops
@@ -2937,7 +2939,7 @@ def test_get_column_varinfo_year_outside_any_instance_returns_not_found(
     described the project's data."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.executescript(
         """
         INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition)
@@ -2956,13 +2958,13 @@ def test_get_column_varinfo_year_outside_any_instance_returns_not_found(
     # 2030 misses var_id=44's 2020+2021 window and var_id=45's 2010
     # instance. Both variables carry parseable years → both dropped.
     result = editor.get_column_varinfo(
-        "TESTREG", "Kon", relevant_years=[2030], db_path=regmeta_db.parent
+        "TESTREG", "Kon", relevant_years=[2030], db_path=reg_meta_db.parent
     )
     assert result.kind == "none"
     assert result.none_reason == "not_found"
 
 
-def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
+def test_get_column_values_scopes_value_sets_by_picked_var_id(reg_meta_db: Path):
     """The same column name can carry different value-sets under
     different var_ids. Without ``picked_var_id``, the union of all
     value-sets is returned; with it, only the chosen variable's sets
@@ -2972,7 +2974,7 @@ def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
 
     from .conftest import assign_value_set
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Second variable also aliased to "Kon" with its own value-set
     # (codes "M"/"F" instead of "1"/"2"). The fixture's primary variable
@@ -2995,27 +2997,29 @@ def test_get_column_values_scopes_value_sets_by_picked_var_id(regmeta_db: Path):
 
     # No var_id scoping → all value-sets across both variables surface
     # (4 distinct codes: 1, 2, M, F).
-    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    union_result = editor.get_column_values(
+        "TESTREG", "Kon", db_path=reg_meta_db.parent
+    )
     codes_union = {c.code for c in union_result.codes} if union_result.codes else set()
     assert "1" in codes_union and "M" in codes_union
 
     # Scope to var_id=44 (the original) → only its codes "1"/"2".
     primary_result = editor.get_column_values(
-        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+        "TESTREG", "Kon", picked_var_id=44, db_path=reg_meta_db.parent
     )
     codes_primary = {c.code for c in primary_result.codes}
     assert codes_primary == {"1", "2"}
 
     # Scope to var_id=45 → only its codes "M"/"F".
     alt_result = editor.get_column_values(
-        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+        "TESTREG", "Kon", picked_var_id=45, db_path=reg_meta_db.parent
     )
     codes_alt = {c.code for c in alt_result.codes}
     assert codes_alt == {"M", "F"}
 
 
 def test_get_column_values_scopes_classifications_by_picked_var_id(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """When a column slot aliases to multiple var_ids with divergent
     classifications, ``picked_var_id`` must scope which classification's
@@ -3024,7 +3028,7 @@ def test_get_column_values_scopes_classifications_by_picked_var_id(
     selected — silently mismatched metadata for the alternative."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Two classifications with disjoint code sets so the response codes
     # uniquely identify which one was returned. var_id=44 (fixture) maps
@@ -3058,14 +3062,16 @@ def test_get_column_values_scopes_classifications_by_picked_var_id(
 
     # No var_id scoping → aggregated primary wins (CLS_A is most common
     # because fixture cvid 1001 has it; classifications list shows both).
-    union_result = editor.get_column_values("TESTREG", "Kon", db_path=regmeta_db.parent)
+    union_result = editor.get_column_values(
+        "TESTREG", "Kon", db_path=reg_meta_db.parent
+    )
     assert union_result.kind == "classification"
     assert {g.short_name for g in union_result.classifications} == {"CLS_A", "CLS_B"}
     assert {c.code for c in union_result.codes} == {"1", "2"}
 
     # Scope to var_id=44 → CLS_A only (codes "1"/"2").
     primary = editor.get_column_values(
-        "TESTREG", "Kon", picked_var_id=44, db_path=regmeta_db.parent
+        "TESTREG", "Kon", picked_var_id=44, db_path=reg_meta_db.parent
     )
     assert primary.kind == "classification"
     assert [g.short_name for g in primary.classifications] == ["CLS_A"]
@@ -3077,7 +3083,7 @@ def test_get_column_values_scopes_classifications_by_picked_var_id(
     # fix, this would have returned CLS_A's codes because the aggregated
     # signal.classification_short_name picked CLS_A as primary.
     alt = editor.get_column_values(
-        "TESTREG", "Kon", picked_var_id=45, db_path=regmeta_db.parent
+        "TESTREG", "Kon", picked_var_id=45, db_path=reg_meta_db.parent
     )
     assert alt.kind == "classification"
     assert [g.short_name for g in alt.classifications] == ["CLS_B"]

@@ -4,7 +4,7 @@
   import type { ColumnVarinfoResponse, VarinfoDescription } from "../api";
   import {
     columnIsManual,
-    hasRegmetaValueDisplay,
+    hasRegMetaValueDisplay,
     relevantYearsFromMap,
     sourceYearInfoFor,
     store,
@@ -135,7 +135,7 @@
   // True when *every* source in the partition is in the "missing" state
   // — i.e. auto-detection failed and the user hasn't intervened. Drives
   // the "set a year" warning that replaces the description / value-code
-  // body when regmeta would otherwise mix wrong-era variables.
+  // body when reg_meta would otherwise mix wrong-era variables.
   let allYearsUnknown = $derived(
     sources.every((sn) => sourceYearInfo[sn].provenance === "missing"),
   );
@@ -234,7 +234,7 @@
     return alt ? alt.instances : null;
   });
 
-  let canShowValueCodes = $derived(hasRegmetaValueDisplay(column.regmeta_signal));
+  let canShowValueCodes = $derived(hasRegMetaValueDisplay(column.reg_meta_signal));
   // Mount ValueCodesPanel on first expand and keep it mounted; <details>
   // hides it via CSS when closed. Re-mounting would re-fire the
   // /api/column-values request on every toggle.
@@ -250,8 +250,8 @@
     return varinfoState.data.kind === "divergent";
   });
   let valueCodesAcrossYears = $derived(
-    (column.regmeta_signal?.n_value_sets ?? 0) > 1 ||
-      (column.regmeta_signal?.n_classifications ?? 0) > 1,
+    (column.reg_meta_signal?.n_value_sets ?? 0) > 1 ||
+      (column.reg_meta_signal?.n_classifications ?? 0) > 1,
   );
   let yearConflictGated = $derived(
     allYearsUnknown && (varinfoDivergent || valueCodesAcrossYears),
@@ -386,7 +386,7 @@
       <section
         class="varinfo"
         class:varinfo-gated={yearConflictGated}
-        aria-label="regmeta variable description"
+        aria-label="reg_meta variable description"
         aria-hidden={yearConflictGated}
         hidden={yearConflictGated}
       >
@@ -409,9 +409,9 @@
             {#if varinfoState.data.reason === "no_register"}
               No register pinned — assign one to see variable info
             {:else if varinfoState.data.reason === "unavailable"}
-              Variable info unavailable (regmeta not installed)
+              Variable info unavailable (reg_meta not installed)
             {:else}
-              Variable: not described in regmeta
+              Variable: not described in reg_meta
             {/if}
           </p>
         {:else}
@@ -570,10 +570,10 @@
         {/if}
       </section>
 
-      {#if !yearConflictGated && column.regmeta_signal}
-        {@const sig = column.regmeta_signal}
+      {#if !yearConflictGated && column.reg_meta_signal}
+        {@const sig = column.reg_meta_signal}
         <!-- Surface datatype only when it's the active type signal.
-             ``regmeta_implied_type`` gives value-codes / classification
+             ``reg_meta_implied_type`` gives value-codes / classification
              precedence: when either is present, the column is
              categorical and the underlying ``datatyp`` is a storage
              detail (e.g. Kommun: numeric-coded categorical → datatyp
@@ -588,12 +588,12 @@
           !sig.has_value_codes &&
           !sig.datatyp_kind}
         {#if showDatatype || showEmpty}
-          <p class="regmeta-context" aria-label="regmeta context">
-            regmeta:
+          <p class="reg-meta-context" aria-label="reg_meta context">
+            reg_meta:
             {#if showDatatype}
               datatype <code>{sig.datatyp_kind}</code>
             {:else if showEmpty}
-              column known to regmeta but with no classification, value codes,
+              column known to reg_meta but with no classification, value codes,
               or datatype hint.
             {/if}
           </p>
@@ -673,9 +673,9 @@
           <label class="radio">
             <input type="radio" name="type" value={t} bind:group={selectedType} />
             {t}
-            {#if t === column.regmeta_implied_type}
-              <span class="hint" title="regmeta-implied type for this column"
-                >· regmeta</span
+            {#if t === column.reg_meta_implied_type}
+              <span class="hint" title="reg-meta-implied type for this column"
+                >· reg_meta</span
               >
             {/if}
           </label>
@@ -982,7 +982,7 @@
   .value-codes-inline[open] > summary {
     margin-bottom: 0.4rem;
   }
-  .regmeta-context {
+  .reg-meta-context {
     margin: 0;
     padding: 0.4rem 0.6rem;
     background: #f4f6fb;
@@ -991,7 +991,7 @@
     color: #444;
     border-radius: 3px;
   }
-  .regmeta-context code {
+  .reg-meta-context code {
     background: #fff;
     padding: 0.05rem 0.3rem;
     border-radius: 3px;

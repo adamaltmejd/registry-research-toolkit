@@ -83,8 +83,8 @@
             "current_type": "opaque",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": null,
-            "regmeta_implied_type": null
+            "reg_meta_signal": null,
+            "reg_meta_implied_type": null
           }
         ]
       },
@@ -118,8 +118,8 @@
             "current_type": "id",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": null,
-            "regmeta_implied_type": null
+            "reg_meta_signal": null,
+            "reg_meta_implied_type": null
           },
           {
             "name": "Salary",
@@ -129,14 +129,14 @@
               "numeric_subtype": "integer"
             },
             "provenance": "manual",
-            "regmeta_signal": {
+            "reg_meta_signal": {
               "datatyp_kind": "numeric",
               "classification_short_name": null,
               "has_value_codes": false,
               "n_value_sets": 0,
               "n_classifications": 0
             },
-            "regmeta_implied_type": "numeric"
+            "reg_meta_implied_type": "numeric"
           },
           {
             "name": "Kon",
@@ -144,14 +144,14 @@
             "current_type": "categorical",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": {
+            "reg_meta_signal": {
               "datatyp_kind": null,
               "classification_short_name": "KON",
               "has_value_codes": true,
               "n_value_sets": 0,
               "n_classifications": 0
             },
-            "regmeta_implied_type": "categorical"
+            "reg_meta_implied_type": "categorical"
           }
         ],
         "lisa_2019": [
@@ -161,8 +161,8 @@
             "current_type": "id",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": null,
-            "regmeta_implied_type": null
+            "reg_meta_signal": null,
+            "reg_meta_implied_type": null
           },
           {
             "name": "Salary",
@@ -170,14 +170,14 @@
             "current_type": "numeric",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": {
+            "reg_meta_signal": {
               "datatyp_kind": "numeric",
               "classification_short_name": null,
               "has_value_codes": false,
               "n_value_sets": 0,
               "n_classifications": 0
             },
-            "regmeta_implied_type": "numeric"
+            "reg_meta_implied_type": "numeric"
           },
           {
             "name": "Kon",
@@ -185,14 +185,14 @@
             "current_type": "categorical",
             "hint": null,
             "provenance": "auto",
-            "regmeta_signal": {
+            "reg_meta_signal": {
               "datatyp_kind": null,
               "classification_short_name": "KON",
               "has_value_codes": true,
               "n_value_sets": 0,
               "n_classifications": 0
             },
-            "regmeta_implied_type": "categorical"
+            "reg_meta_implied_type": "categorical"
           }
         ]
       },

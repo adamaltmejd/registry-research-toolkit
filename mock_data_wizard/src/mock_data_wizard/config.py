@@ -19,7 +19,7 @@ version 3.0.0. Five concerns:
   ``0`` would otherwise turn the override into a fail-open path).
 - ``sources``: per-source metadata, keyed by exact source name. Carries
   ``year`` (year-aware CVID selection in ``enrich.py``) and
-  ``register`` (which register's regmeta evidence drove this source's
+  ``register`` (which register's reg_meta evidence drove this source's
   classification — persisted so reopening the editor restores
   context).
 - ``manual_columns``: top-level array of ``[source, column]`` pairs the
@@ -400,7 +400,7 @@ def _parse_source_entry(source_name: str, raw: Any) -> dict[str, Any]:
       to mean "no year configured" (``bool`` is an ``int`` subclass in
       Python, hence the explicit guard).
     - ``register``: str (or null) — name or numeric id of the register
-      whose regmeta evidence drove classification for this source.
+      whose reg_meta evidence drove classification for this source.
     """
     if not isinstance(raw, dict):
         raise ValueError(

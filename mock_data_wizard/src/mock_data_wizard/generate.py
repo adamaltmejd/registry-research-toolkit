@@ -96,7 +96,7 @@ def _generate_categorical(
         weights = np.array(list(freq.values()), dtype=float)
 
         if other_weight > 0:
-            # Distribute censored count across unseen regmeta codes if available,
+            # Distribute censored count across unseen reg_meta codes if available,
             # otherwise fold back proportionally into observed values
             unseen = [c for c in value_codes if c not in freq] if value_codes else []
             if unseen:

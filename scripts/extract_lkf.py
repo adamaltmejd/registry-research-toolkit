@@ -29,14 +29,14 @@ Coverage (as of probing in 2026-04):
 
 Run:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
-        --out regmeta_build/input_data/classifications/
+        --out reg_meta_build/input_data/classifications/
 
 Add --download-pdfs to also fetch the PDF editions for 2015–2021.
 Add --emit-toml to print starter [[classification]] entries on stdout.
 
 Usage:
     uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \\
-        --out regmeta_build/input_data/classifications/
+        --out reg_meta_build/input_data/classifications/
 
 Add --emit-toml to print seed entries for classifications.toml on stderr.
 """
@@ -341,7 +341,7 @@ def main() -> int:
     p.add_argument(
         "--out",
         type=Path,
-        default=Path("regmeta_build/input_data/classifications"),
+        default=Path("reg_meta_build/input_data/classifications"),
         help="Where to write per-year CSVs.",
     )
     p.add_argument(
