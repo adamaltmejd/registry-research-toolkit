@@ -45,7 +45,7 @@
   - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
   - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions
   - `timeseries_event` (from `Timeseries.csv`) — structural/semantic change annotations
-- Classification entities (from `classifications.toml` seed at build time — see DESIGN.md § Classifications):
+- Classification entities (from `regmeta_build/classifications.toml` seed at build time — see DESIGN.md § Classifications):
   - `classification` — normalized code systems (SUN2000, SSYK2012, SNI2007, LKF, …) with publisher, version, supersedes link
   - `classification_code` — junction from classification to its value codes, with optional hierarchical `level`
   - `variable_instance.classification_id` — FK populated when an instance's `vardemangdsversion` matches the seed

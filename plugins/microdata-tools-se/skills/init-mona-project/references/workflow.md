@@ -81,7 +81,7 @@ If either command fails, stop and install it before proceeding:
 
 ```bash
 uv tool install regmeta
-regmeta maintain update
+regmeta update
 
 uv tool install mock-data-wizard
 ```

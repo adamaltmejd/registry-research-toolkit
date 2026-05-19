@@ -96,6 +96,6 @@ Override with `--db` or `$REGMETA_DB`.
 |---|---|
 | [DESIGN.md](DESIGN.md) | Design rationale and constraints |
 | [STRUCTURE.md](STRUCTURE.md) | Domain model (SCB metadata hierarchy) |
-| [docs/SCHEMA.md](docs/SCHEMA.md) | Documentation file format |
+| [../regmeta_build/docs/SCHEMA.md](../regmeta_build/docs/SCHEMA.md) | Documentation markdown file format |
 | `src/regmeta/` | Package source |
 | `tests/` | Test suite |

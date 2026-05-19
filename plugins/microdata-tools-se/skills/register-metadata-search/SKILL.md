@@ -15,7 +15,7 @@ If `regmeta` is not yet installed:
 
 ```bash
 uv tool install regmeta
-regmeta maintain update --yes
+regmeta update --yes
 ```
 
 ## Learning the tool
