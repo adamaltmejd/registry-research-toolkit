@@ -31,7 +31,7 @@ from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import populate_slugs, repo_slug_dir
+from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
 
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
@@ -447,6 +447,46 @@ CREATE TABLE code_variable_map (
     register_id INTEGER NOT NULL,
     var_id INTEGER NOT NULL,
     PRIMARY KEY (code_id, register_id, var_id)
+) WITHOUT ROWID;
+
+-- Curated cross-rename equivalence edges (§5.5). Edges are slug-anchored,
+-- not cvid-anchored, so the link survives across rebuilds even if the
+-- underlying provider IDs shift. Each TOML same_as entry becomes two
+-- rows (A→B and B→A) so the resolver does a single forward lookup.
+-- a_variant / a_period and b_variant / b_period default to '' (empty
+-- string) rather than NULL because SQLite's UNIQUE/PRIMARY KEY treats
+-- NULLs as distinct, which would let duplicate edges sneak in; '' as
+-- the sentinel keeps the (PROVIDER, REGISTER, VARIANT, PERIOD, VARIABLE)
+-- tuple a strict equality key.
+CREATE TABLE variable_same_as (
+    a_provider     TEXT NOT NULL,
+    a_register     TEXT NOT NULL,
+    a_variant      TEXT NOT NULL DEFAULT '',
+    a_period       TEXT NOT NULL DEFAULT '',
+    a_variable     TEXT NOT NULL,
+    b_provider     TEXT NOT NULL,
+    b_register     TEXT NOT NULL,
+    b_variant      TEXT NOT NULL DEFAULT '',
+    b_period       TEXT NOT NULL DEFAULT '',
+    b_variable     TEXT NOT NULL,
+    PRIMARY KEY (
+        a_provider, a_register, a_variant, a_period, a_variable,
+        b_provider, b_register, b_variant, b_period, b_variable
+    )
+) WITHOUT ROWID;
+CREATE INDEX idx_variable_same_as_a ON variable_same_as(
+    a_provider, a_register, a_variable
+);
+
+CREATE TABLE classification_same_as (
+    a_provider              TEXT NOT NULL,
+    a_classification_slug   TEXT NOT NULL,
+    b_provider              TEXT NOT NULL,
+    b_classification_slug   TEXT NOT NULL,
+    PRIMARY KEY (
+        a_provider, a_classification_slug,
+        b_provider, b_classification_slug
+    )
 ) WITHOUT ROWID;
 
 -- Reference tables
@@ -1746,6 +1786,19 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+        # §5.5 same_as edges. Runs *after* populate_slugs so register /
+        # variant / version slug columns are populated — the materializer
+        # validates target slugs against them. Skip-slugs takes the same
+        # honest-failure stance as link_consumer_side_bindings below.
+        if skip_slugs:
+            _progress("Skipping same_as edges (skip_slugs=True)")
+        else:
+            sa_counts = materialize_same_as_edges(conn, slug_root)
+            _progress(
+                f"  {sa_counts['variable']:,} variable same_as edges, "
+                f"{sa_counts['classification']:,} classification same_as edges"
+            )
 
         # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
         # on `register_version.slug` — the canonical disambiguator. Keying on

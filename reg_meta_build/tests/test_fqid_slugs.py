@@ -1355,8 +1355,8 @@ class TestPrecheckCli:
 
 
 class TestSameAs:
-    """`same_as` is parsed and round-tripped but deferred to step 1e. The
-    parser still enforces shape and kind constraints."""
+    """`same_as` parser shape and kind constraints. Edge materialization
+    is covered separately under `TestMaterializeSameAsEdges`."""
 
     def test_accepts_valid_inline_tables(self, tmp_path: Path):
         path = _write(
@@ -2159,3 +2159,224 @@ def _ns(**kw):
     import argparse
 
     return argparse.Namespace(**kw)
+
+
+# ---------------------------------------------------------------------------
+# §5.5 same_as edge materialization
+# ---------------------------------------------------------------------------
+
+
+class TestMaterializeSameAsEdges:
+    """Build-time `same_as` edge materialization (§5.5)."""
+
+    @staticmethod
+    def _slug_dir_with_same_as(tmp_path: Path, body: str) -> Path:
+        """Write a scb.toml under tmp_path; classifications.toml gets an empty
+        stub since load_slug_dir scans the whole directory."""
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges  # noqa
+
+        (tmp_path / "scb.toml").write_text(body, encoding="utf-8")
+        (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
+        return tmp_path
+
+    @staticmethod
+    def _db_with_two_variables() -> sqlite3.Connection:
+        # Build a DB with two register/variable pairs under LISA so we can
+        # exercise variable_same_as without involving cross-register links.
+        conn = build_slugged_db()
+        # Add second variable + binding under the same register/variant/version.
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "VALUES (1, 88, 'Civilstånd')"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "VALUES (1002, 1, 10, 100, 88, 'int')"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Civilstand')"
+        )
+        conn.commit()
+        return conn
+
+    def test_inserts_both_directions(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = self._db_with_two_variables()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand" }]\n',
+        )
+        counts = materialize_same_as_edges(conn, slug_dir)
+        assert counts == {"variable": 1, "classification": 0}
+        rows = conn.execute(
+            "SELECT a_variable, b_variable FROM variable_same_as ORDER BY a_variable"
+        ).fetchall()
+        # One TOML edge → two DB rows (A→B + B→A).
+        assert [(r[0], r[1]) for r in rows] == [
+            ("civilstand", "kon"),
+            ("kon", "civilstand"),
+        ]
+
+    def test_self_loop_rejected(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = self._db_with_two_variables()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "kon" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_self_loop"
+
+    def test_reciprocal_pair_is_a_cycle(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = self._db_with_two_variables()
+        # Both sides declare same_as → directed 2-cycle (kon → civilstand
+        # → kon). The build stores both directions automatically; the
+        # maintainer should only declare from one side.
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand" }]\n'
+            '[variable."1.88"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "kon" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_cycle"
+
+    def test_unknown_target_register_rejected(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = build_slugged_db()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "nonexistent", '
+            'variable_slug = "kon" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_unknown_register"
+
+    def test_unknown_target_variant_rejected(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = build_slugged_db()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'register_variant = "nonexistent", '
+            'variable_slug = "kon" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_unknown_variant"
+
+    def test_ambiguous_variable_aliases_rejected(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        # Source (register_id, var_id) has two aliases that derive to
+        # different slugs — the canonical form is ambiguous, so same_as
+        # materialization must refuse.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'CivStat')"
+        )
+        conn.commit()
+        # Add a second variable so the target slot exists.
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "VALUES (1, 88, 'Civilstånd')"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "VALUES (1002, 1, 10, 100, 88, 'int')"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Civilstand')"
+        )
+        conn.commit()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_ambiguous_source"
+
+    def test_classification_edge_inserted(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = build_slugged_db()
+        # Insert a second classification so the target slot resolves.
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('SUN_OLD', 'Legacy SUN', '1996', 'sun-old', 'SCB')"
+        )
+        # Tag the seed classification's publisher too so the source resolves
+        # to a stable provider key (default in the fixture is NULL).
+        conn.execute("UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun'")
+        conn.commit()
+        slug_dir = tmp_path
+        (slug_dir / "scb.toml").write_text("", encoding="utf-8")
+        (slug_dir / "classifications.toml").write_text(
+            '[classification."SUN2020"]\n'
+            'slug = "sun"\n'
+            'version = "2020"\n'
+            'same_as = [{ provider = "scb", classification_slug = "sun-old" }]\n',
+            encoding="utf-8",
+        )
+        counts = materialize_same_as_edges(conn, slug_dir)
+        assert counts == {"variable": 0, "classification": 1}
+        rows = conn.execute(
+            "SELECT a_classification_slug, b_classification_slug "
+            "FROM classification_same_as ORDER BY a_classification_slug"
+        ).fetchall()
+        assert [(r[0], r[1]) for r in rows] == [
+            ("sun", "sun-old"),
+            ("sun-old", "sun"),
+        ]
+
+    def test_classification_ambiguous_target_rejected(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import materialize_same_as_edges
+
+        conn = build_slugged_db()
+        # Two classifications share the same slug across versions; same_as
+        # on (provider, slug) is ambiguous and must fail.
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('SUN_OLD', 'Old SUN', '1996', 'sun-old', 'SCB')"
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('SUN_REVIVED', 'Revived SUN', '2024', 'sun-old', 'SCB')"
+        )
+        conn.execute("UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun'")
+        conn.commit()
+        slug_dir = tmp_path
+        (slug_dir / "scb.toml").write_text("", encoding="utf-8")
+        (slug_dir / "classifications.toml").write_text(
+            '[classification."SUN2020"]\n'
+            'slug = "sun"\n'
+            'version = "2020"\n'
+            'same_as = [{ provider = "scb", classification_slug = "sun-old" }]\n',
+            encoding="utf-8",
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_ambiguous_classification"

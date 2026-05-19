@@ -91,8 +91,9 @@ class SlugEntry:
     # DB; the resolver-side typo-correction lands with consumer-side binding
     # materialization in step 1e.
     replaced_by: str | None = None
-    # Parsed and round-tripped but not yet applied — consumer-side binding
-    # materialization (§5.6) and the §5.5 cross-rename resolver land in 1e.
+    # §5.5 cross-rename equivalence; materialized into `variable_same_as` /
+    # `classification_same_as` edge tables by `materialize_same_as_edges`.
+    # `Catalog.resolve` follows the edges transitively when direct lookup misses.
     same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
 
 
@@ -972,6 +973,374 @@ def _assert_no_unslugged(
         f"Run `reg-meta-build precheck-slugs` to list every missing ID, "
         f"then add `{add_hint}` entries.",
     )
+
+
+# ---------------------------------------------------------------------------
+# same_as edge materialization (§5.5)
+# ---------------------------------------------------------------------------
+
+
+# Variable endpoint: (provider, register, variant_or_empty, period_or_empty, variable).
+# Empty-string sentinels in the variant/period slots mean "wildcard — applies
+# across all variants/periods"; the resolver matches them by storing '' in the
+# DB column rather than NULL (NULL would defeat the PRIMARY KEY's dedup).
+_VarKey = tuple[str, str, str, str, str]
+_ClassKey = tuple[str, str]
+
+
+def _variable_source_slug(
+    conn: sqlite3.Connection, register_id: int, var_id: int, entry: SlugEntry
+) -> str:
+    """Auto-derive the variable_slug for a `[variable]` TOML entry.
+
+    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair. The
+    catalog derives the variable_slug from the latest kolumnnamn at resolve
+    time; for same_as we must agree on a stable canonical form **at build
+    time** without writing a slug column to `variable_instance` (variable
+    overrides are still blocked in populate_slugs). Strategy: derive a slug
+    from every alias under the pair, require a unique result. Multiple
+    distinct slugs would force the maintainer into a curated override
+    (§5.5 narrow scoping, or an explicit slug field once those land).
+    """
+    rows = conn.execute(
+        "SELECT DISTINCT va.kolumnnamn FROM variable_alias va "
+        "JOIN variable_instance vi ON vi.cvid = va.cvid "
+        "WHERE vi.register_id = ? AND vi.var_id = ? "
+        "AND va.kolumnnamn IS NOT NULL",
+        (register_id, var_id),
+    ).fetchall()
+    if not rows:
+        raise _err(
+            "slug_same_as_unresolved_source",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} has no "
+            f"kolumnnamn alias in the DB, so its variable_slug can't be "
+            f"derived for `same_as` materialization.",
+            "Check that the (register_id, var_id) appears in "
+            "Variabelinformation.csv; mark the entry deprecated=true if the "
+            "variable is retired.",
+        )
+    slugs = {s for r in rows if (s := derive_variable_slug(r[0])) is not None}
+    if len(slugs) != 1:
+        raise _err(
+            "slug_same_as_ambiguous_source",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} aliases "
+            f"derive to multiple slugs ({sorted(slugs)!r}); cannot pick a "
+            f"canonical form for `same_as`.",
+            "Resolve the ambiguity in `variable_alias` upstream, or wait for "
+            "variable slug overrides (§5.6 follow-up) before adding same_as.",
+        )
+    return next(iter(slugs))
+
+
+def _validate_variable_target(
+    conn: sqlite3.Connection, entry: SlugEntry, ref: dict[str, str]
+) -> _VarKey:
+    """Validate a same_as target's provider+register+variant+period exist.
+
+    `variable_slug` itself is **not** validated against the DB — that's the
+    point of slug-anchored linking: the link survives forward-of-data
+    renames. Provider and register slugs are checked because if those are
+    typos the link is permanently dead.
+    """
+    required = {"provider", "register", "variable_slug"}
+    missing = required - ref.keys()
+    if missing:
+        raise _err(
+            "slug_same_as_invalid_target",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
+            f"missing required key(s): {sorted(missing)}.",
+            "Each target needs at least provider, register, variable_slug.",
+        )
+    provider_slug = ref["provider"]
+    register_slug = ref["register"]
+    variant_slug = ref.get("register_variant", "")
+    period_slug = ref.get("period", "")
+    variable_slug = ref["variable_slug"]
+
+    # Provider + register existence: hard error per design call (matches the
+    # rest of slug validation).
+    row = conn.execute(
+        "SELECT r.register_id FROM register r "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE p.slug = ? AND r.slug = ?",
+        (provider_slug, register_slug),
+    ).fetchone()
+    if row is None:
+        raise _err(
+            "slug_same_as_unknown_register",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
+            f"target {provider_slug!r}/{register_slug!r} does not exist in "
+            f"this build.",
+            "Fix the slug typo, or mark the originating entry deprecated=true "
+            "if the target register is retired.",
+        )
+    register_id = row[0]
+
+    # Optional narrowing slots: when present they must resolve too.
+    if variant_slug:
+        row = conn.execute(
+            "SELECT 1 FROM register_variant WHERE register_id = ? AND slug = ?",
+            (register_id, variant_slug),
+        ).fetchone()
+        if row is None:
+            raise _err(
+                "slug_same_as_unknown_variant",
+                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
+                f"target variant {variant_slug!r} not found under "
+                f"{provider_slug}/{register_slug}.",
+                "Drop the `register_variant` narrowing key or fix the slug.",
+            )
+    if period_slug:
+        # Periods are scoped to the variant (UNIQUE(regvar_id, slug)); when
+        # only period is given without variant, accept it if it exists under
+        # any variant of the register. This keeps the worked example "narrow
+        # to a single period across all variants" workable.
+        if variant_slug:
+            row = conn.execute(
+                "SELECT 1 FROM register_version rver "
+                "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+                "WHERE rv.register_id = ? AND rv.slug = ? AND rver.slug = ?",
+                (register_id, variant_slug, period_slug),
+            ).fetchone()
+        else:
+            row = conn.execute(
+                "SELECT 1 FROM register_version rver "
+                "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+                "WHERE rv.register_id = ? AND rver.slug = ?",
+                (register_id, period_slug),
+            ).fetchone()
+        if row is None:
+            raise _err(
+                "slug_same_as_unknown_period",
+                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
+                f"target period {period_slug!r} not found under "
+                f"{provider_slug}/{register_slug}"
+                + (f"/{variant_slug}" if variant_slug else "")
+                + ".",
+                "Drop the `period` narrowing key or fix the slug.",
+            )
+
+    return (provider_slug, register_slug, variant_slug, period_slug, variable_slug)
+
+
+def _validate_classification_target(
+    entry: SlugEntry,
+    ref: dict[str, str],
+    by_slug: dict[tuple[str, str], list[str]],
+) -> _ClassKey:
+    """Validate a classification same_as target — provider + classification_slug.
+
+    The version is intentionally not part of the key (§5.3 field reference);
+    same_as for classifications links *families*, with version drift handled
+    by `replaced_by` or `supersedes`. If the target slug names multiple
+    versions in the DB, the link is ambiguous and we error.
+    """
+    required = {"provider", "classification_slug"}
+    missing = required - ref.keys()
+    if missing:
+        raise _err(
+            "slug_same_as_invalid_target",
+            f"classifications.toml: classification.{entry.source_id!r} "
+            f"same_as missing required key(s): {sorted(missing)}.",
+            "Each target needs provider and classification_slug.",
+        )
+    provider_slug = ref["provider"]
+    classification_slug = ref["classification_slug"]
+    versions = by_slug.get((provider_slug, classification_slug), [])
+    if not versions:
+        raise _err(
+            "slug_same_as_unknown_classification",
+            f"classifications.toml: classification.{entry.source_id!r} "
+            f"same_as target {provider_slug}/{classification_slug!r} does "
+            f"not exist in this build.",
+            "Fix the slug typo, or mark the originating entry "
+            "deprecated=true if the target classification is retired.",
+        )
+    if len(versions) > 1:
+        raise _err(
+            "slug_same_as_ambiguous_classification",
+            f"classifications.toml: classification.{entry.source_id!r} "
+            f"same_as target slug {classification_slug!r} matches multiple "
+            f"versions ({sorted(versions)!r}); the link is ambiguous.",
+            "Use distinct classification slugs per family (cross-version "
+            "drift belongs in `supersedes` / `replaced_by`, not same_as).",
+        )
+    return (provider_slug, classification_slug)
+
+
+def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
+    """Reject directed cycles in the as-declared same_as graph.
+
+    Even though same_as forms an equivalence (we store both directions in
+    the DB at insert time), the **TOML-level** directed graph must be
+    acyclic — that catches self-loops (`A → A`) and reciprocal-declaration
+    typos (`A → B` + `B → A`) which are redundant and let a maintainer
+    miss-edit one side.
+    """
+    if not edges:
+        return
+    adj: dict[Any, list[Any]] = {}
+    for a, b in edges:
+        if a == b:
+            raise _err(
+                "slug_same_as_self_loop",
+                f"{label}: same_as entry references itself ({a!r}).",
+                "Remove the self-reference.",
+            )
+        adj.setdefault(a, []).append(b)
+        adj.setdefault(b, [])
+
+    # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
+    color: dict[Any, int] = {n: 0 for n in adj}
+    parent: dict[Any, Any] = {}
+
+    def visit(node: Any) -> None:
+        color[node] = 1
+        for nxt in adj[node]:
+            if color[nxt] == 1:
+                # Reconstruct the cycle for a useful error.
+                cycle = [nxt, node]
+                cur = node
+                while parent.get(cur) is not None and parent[cur] != nxt:
+                    cur = parent[cur]
+                    cycle.append(cur)
+                cycle.append(nxt)
+                raise _err(
+                    "slug_same_as_cycle",
+                    f"{label}: same_as forms a cycle: "
+                    f"{' -> '.join(repr(n) for n in reversed(cycle))}.",
+                    "Declare each equivalence from one side only; the "
+                    "build stores the reverse edge automatically.",
+                )
+            if color[nxt] == 0:
+                parent[nxt] = node
+                visit(nxt)
+        color[node] = 2
+
+    for start in list(adj):
+        if color[start] == 0:
+            visit(start)
+
+
+def materialize_same_as_edges(
+    conn: sqlite3.Connection, slug_dir: Path
+) -> dict[str, int]:
+    """Translate `SlugEntry.same_as` references into edge rows.
+
+    Variables and classifications each get their own edge table. Each TOML
+    edge becomes two rows (A→B and B→A) so the resolver can BFS in one
+    direction without a UNION lookup. Cycles in the as-declared directed
+    graph are rejected (§5.5).
+
+    Runs after `populate_slugs` — register/variant/version slugs must be
+    written before we can validate same_as targets against them.
+    """
+    entries = load_slug_dir(slug_dir)
+
+    # Pre-index classifications by (provider, slug) so we can detect ambiguous
+    # target lookups without a row-per-target query.
+    class_by_slug: dict[tuple[str, str], list[str]] = {}
+    # Classifications carry no provider in classifications.toml; they belong
+    # to the SCB-wide registry. Treat the publisher field as the provider.
+    cls_rows = conn.execute(
+        "SELECT short_name, slug, version, publisher FROM classification "
+        "WHERE slug IS NOT NULL"
+    ).fetchall()
+    for row in cls_rows:
+        publisher_slug = (row[3] or "scb").lower()
+        class_by_slug.setdefault((publisher_slug, row[1]), []).append(row[2])
+
+    var_edges: list[tuple[_VarKey, _VarKey]] = []
+    class_edges: list[tuple[_ClassKey, _ClassKey]] = []
+
+    for entry in entries:
+        if not entry.same_as:
+            continue
+        if entry.deprecated:
+            # The whole point of deprecated is "slug retained, no new links" —
+            # don't materialize from a retired side. Resolver still walks
+            # through if the *other* side points back via its own same_as.
+            continue
+
+        if entry.kind == "variable":
+            if entry.provider is None:
+                raise _err(
+                    "slug_same_as_internal",
+                    f"variable.{entry.source_id!r}: missing provider context "
+                    f"(SlugEntry.provider is None).",
+                    "Report this as a bug — provider should be set by the TOML loader.",
+                )
+            register_id, var_id = _parse_variant_id(entry.source_id)
+            row = conn.execute(
+                "SELECT r.slug FROM register r "
+                "JOIN provider p ON r.provider_id = p.provider_id "
+                "WHERE p.slug = ? AND r.register_id = ?",
+                (entry.provider, register_id),
+            ).fetchone()
+            if row is None or row[0] is None:
+                raise _err(
+                    "slug_same_as_unresolved_source",
+                    f"{entry.provider}.toml: variable.{entry.source_id!r} "
+                    f"source register has no slug; cannot anchor same_as.",
+                    "Ensure the register has a slug entry (populate_slugs "
+                    "should have written it).",
+                )
+            src_variable_slug = _variable_source_slug(conn, register_id, var_id, entry)
+            src: _VarKey = (
+                entry.provider,
+                row[0],
+                "",
+                "",
+                src_variable_slug,
+            )
+            for ref in entry.same_as:
+                tgt = _validate_variable_target(conn, entry, ref)
+                var_edges.append((src, tgt))
+
+        elif entry.kind == "classification":
+            row = conn.execute(
+                "SELECT slug, version, publisher FROM classification "
+                "WHERE short_name = ?",
+                (entry.source_id,),
+            ).fetchone()
+            if row is None or row[0] is None:
+                raise _err(
+                    "slug_same_as_unresolved_source",
+                    f"classifications.toml: classification.{entry.source_id!r} "
+                    f"has no DB slug; cannot anchor same_as.",
+                    "Ensure populate_slugs wrote the slug column first.",
+                )
+            src_provider = (row[2] or "scb").lower()
+            src_key: _ClassKey = (src_provider, row[0])
+            for ref in entry.same_as:
+                tgt_key = _validate_classification_target(entry, ref, class_by_slug)
+                class_edges.append((src_key, tgt_key))
+
+    _reject_same_as_cycles(list(var_edges), label="variable same_as")
+    _reject_same_as_cycles(list(class_edges), label="classification same_as")
+
+    # Insert both directions. INSERT OR IGNORE so a maintainer who happens
+    # to declare A→B from one side and B→A from the other (which is itself
+    # a cycle and would already have failed above) wouldn't trip the PK.
+    for a, b in var_edges:
+        for src_t, tgt_t in ((a, b), (b, a)):
+            conn.execute(
+                "INSERT OR IGNORE INTO variable_same_as ("
+                "a_provider, a_register, a_variant, a_period, a_variable, "
+                "b_provider, b_register, b_variant, b_period, b_variable) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*src_t, *tgt_t),
+            )
+    for a_k, b_k in class_edges:
+        for src_c, tgt_c in ((a_k, b_k), (b_k, a_k)):
+            conn.execute(
+                "INSERT OR IGNORE INTO classification_same_as ("
+                "a_provider, a_classification_slug, "
+                "b_provider, b_classification_slug) VALUES (?, ?, ?, ?)",
+                (*src_c, *tgt_c),
+            )
+
+    return {"variable": len(var_edges), "classification": len(class_edges)}
 
 
 # ---------------------------------------------------------------------------

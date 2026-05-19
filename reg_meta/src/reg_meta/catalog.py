@@ -8,7 +8,7 @@ enumerates all variable bindings of a given variable slug under a register.
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .db import db_path_from_args, open_db
@@ -76,6 +76,10 @@ class ResolvedVariableBinding:
     # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
     via_source_id: int | None = None
     lineage: Fqid | None = None
+    # §5.5 same_as: path of intermediate FQIDs traversed before the direct
+    # lookup succeeded. None on direct hits; a non-empty tuple is "info, not
+    # warning" per §6.7 — the validator (reg_schema) decides how to surface it.
+    via_same_as: tuple[Fqid, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -84,6 +88,8 @@ class ResolvedClassification:
     classification_id: int
     short_name: str
     name: str
+    # §5.5 same_as: see ResolvedVariableBinding.via_same_as.
+    via_same_as: tuple[Fqid, ...] | None = None
 
 
 ResolvedEntity = (
@@ -274,6 +280,17 @@ class Catalog:
         )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
+        direct = self._resolve_binding_direct(fqid)
+        if direct is not None:
+            return direct
+        # §5.5: direct lookup missed — walk the curated same_as graph. The
+        # traversal is reported as info (via_same_as field), not warning.
+        via = self._resolve_binding_via_same_as(fqid)
+        if via is not None:
+            return via
+        raise _not_found(fqid)
+
+    def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
         # No materialized binding rows yet: scan instances under the
         # (variant, version) pair and derive variable slug from kolumnnamn
         # (§5.3). The version match is an exact slug comparison —
@@ -289,7 +306,72 @@ class Catalog:
         for row in rows:
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
                 return self._row_to_binding(row, fqid, fqid.variable)
-        raise _not_found(fqid)
+        return None
+
+    def _resolve_binding_via_same_as(
+        self, fqid: Fqid
+    ) -> ResolvedVariableBinding | None:
+        """BFS through `variable_same_as` until a candidate resolves directly.
+
+        Empty-string sentinel in `a_variant`/`a_period` means the edge is
+        wildcard over that slot (applies to any incoming variant/period).
+        When `b_variant`/`b_period` are empty, the candidate inherits the
+        slot from the current node; when non-empty they override (the edge
+        narrows the equivalence to that variant/period). Equivalence
+        traversal is the only place where the query's variant/period can
+        change mid-resolve.
+        """
+        visited: set[tuple[str, str, str]] = {
+            (fqid.provider, fqid.register, fqid.variable)  # type: ignore[arg-type]
+        }
+        queue: list[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = [
+            (
+                fqid.provider,  # type: ignore[list-item]
+                fqid.register,  # type: ignore[list-item]
+                fqid.variant,  # type: ignore[list-item]
+                fqid.period,  # type: ignore[list-item]
+                fqid.variable,  # type: ignore[list-item]
+                (),
+            )
+        ]
+        while queue:
+            prov, reg, variant, period, variable, path = queue.pop(0)
+            rows = self._conn.execute(
+                "SELECT b_provider, b_register, b_variant, b_period, b_variable "
+                "FROM variable_same_as "
+                "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
+                "AND (a_variant = '' OR a_variant = ?) "
+                "AND (a_period = '' OR a_period = ?)",
+                (prov, reg, variable, variant, period),
+            ).fetchall()
+            for row in rows:
+                n_prov = row["b_provider"]
+                n_reg = row["b_register"]
+                n_variant = row["b_variant"] or variant
+                n_period = row["b_period"] or period
+                n_variable = row["b_variable"]
+                key = (n_prov, n_reg, n_variable)
+                if key in visited:
+                    continue
+                visited.add(key)
+                try:
+                    n_fqid = Fqid.binding_fqid(
+                        n_prov, n_reg, n_variant, n_period, n_variable
+                    )
+                except FqidError:
+                    # Malformed slug in DB — populate_slugs validates on write,
+                    # so this means a build-time invariant broke. Skip the
+                    # candidate rather than wrap a "not found" error in a
+                    # cryptic FqidError trace.
+                    continue
+                new_path = (*path, n_fqid)
+                hit = self._resolve_binding_direct(n_fqid)
+                if hit is not None:
+                    # Preserve the **caller's** FQID on the result — that's the
+                    # one their code holds. The traversal path goes in via_same_as.
+                    return replace(hit, fqid=fqid, via_same_as=new_path)
+                queue.append((n_prov, n_reg, n_variant, n_period, n_variable, new_path))
+        return None
 
     def _row_to_binding(
         self, row: sqlite3.Row, fqid: Fqid, variable_slug: str
@@ -379,19 +461,93 @@ class Catalog:
         return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
+        direct = self._resolve_classification_direct(fqid)
+        if direct is not None:
+            return direct
+        via = self._resolve_classification_via_same_as(fqid)
+        if via is not None:
+            return via
+        raise _not_found(fqid)
+
+    def _resolve_classification_direct(
+        self, fqid: Fqid
+    ) -> ResolvedClassification | None:
         row = self._conn.execute(
             "SELECT id, short_name, name FROM classification "
             "WHERE slug = ? AND version = ?",
             (fqid.classification, fqid.version),
         ).fetchone()
         if not row:
-            raise _not_found(fqid)
+            return None
         return ResolvedClassification(
             fqid=fqid,
             classification_id=row["id"],
             short_name=row["short_name"],
             name=row["name"],
         )
+
+    def _resolve_classification_via_same_as(
+        self, fqid: Fqid
+    ) -> ResolvedClassification | None:
+        """BFS through `classification_same_as`.
+
+        Edges are keyed on (provider, classification_slug) only — the version
+        is not part of the edge (§5.3 field reference). Same_as targets are
+        required to be version-unambiguous at build time, so the target's
+        version is whatever the DB row carries; we pick it up from
+        `classification.version` after the slug match.
+        """
+        # The classification FQID grammar has no provider slot — the publisher
+        # is implicit. Use the classification row's publisher as the BFS key.
+        start = self._conn.execute(
+            "SELECT publisher FROM classification WHERE slug = ? AND version = ?",
+            (fqid.classification, fqid.version),
+        ).fetchone()
+        # If start doesn't exist, BFS still works — caller already saw a miss,
+        # so seed the visited set with the queried slug under a sentinel
+        # publisher 'scb' (the only one today) to short-circuit re-walks.
+        start_publisher = (start["publisher"] or "scb").lower() if start else "scb"
+        visited: set[tuple[str, str]] = {(start_publisher, fqid.classification)}
+        queue: list[tuple[str, str, tuple[Fqid, ...]]] = [
+            (start_publisher, fqid.classification, ())
+        ]
+        while queue:
+            prov, slug, path = queue.pop(0)
+            rows = self._conn.execute(
+                "SELECT b_provider, b_classification_slug FROM classification_same_as "
+                "WHERE a_provider = ? AND a_classification_slug = ?",
+                (prov, slug),
+            ).fetchall()
+            for row in rows:
+                n_prov = row["b_provider"]
+                n_slug = row["b_classification_slug"]
+                key = (n_prov, n_slug)
+                if key in visited:
+                    continue
+                visited.add(key)
+                # Look up the candidate's version from the DB; same_as is
+                # version-agnostic but the classification FQID needs one.
+                vrow = self._conn.execute(
+                    "SELECT version FROM classification "
+                    "WHERE slug = ? AND (publisher IS NULL OR LOWER(publisher) = ?)",
+                    (n_slug, n_prov),
+                ).fetchone()
+                if vrow is None:
+                    # Target slug missing from DB despite passing build-time
+                    # validation — slugged classifications must have been
+                    # deleted post-build. Skip silently.
+                    continue
+                n_version = vrow["version"]
+                try:
+                    n_fqid = Fqid.classification_fqid(n_slug, n_version)
+                except FqidError:
+                    continue
+                new_path = (*path, n_fqid)
+                hit = self._resolve_classification_direct(n_fqid)
+                if hit is not None:
+                    return replace(hit, fqid=fqid, via_same_as=new_path)
+                queue.append((n_prov, n_slug, new_path))
+        return None
 
 
 _DISPATCH = {
