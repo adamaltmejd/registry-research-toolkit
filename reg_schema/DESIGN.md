@@ -145,6 +145,7 @@ Current codes:
 | `subtype_on_wrong_type` | A `*_subtype` or `*_format` field is set on a column whose `type` doesn't own it (e.g. `id_subtype` on a categorical). |
 | `empty_columns` | A source has zero columns. |
 | `duplicate_source_name` | Two sources share a `name`. |
+| `display_name_collision` | Two columns on the same source share an explicit `display_name` (§6.3). The implicit-resolution half — one explicit + one resolving to the same reg_meta default — needs reg_meta and lives in §6.8.3. |
 | `duplicate_panel_id` | Two panels share a `panel_id`. |
 | `empty_members` | A panel has zero members. |
 | `missing_effective_entity_key` | A panel member has no effective `entity_key` (neither panel default nor member override). |

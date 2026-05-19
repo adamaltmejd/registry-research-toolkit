@@ -329,6 +329,11 @@ def _check_source(
         )
         return
 
+    # Per-source explicit-display_name collisions (§6.3
+    # `display_name_collision`). The other half of the spec — one
+    # explicit + one resolving to the same reg_meta default — needs
+    # reg_meta and lives in §6.8.3.
+    seen_display_names: dict[str, str] = {}
     for j, col in enumerate(columns):
         cbase = f"{base}/columns/{j}"
         if not isinstance(col, Mapping):
@@ -337,6 +342,19 @@ def _check_source(
             )
             continue
         _check_column(col, cbase, rv_segments, issues)
+        dn = col.get("display_name")
+        if isinstance(dn, str):
+            prior = seen_display_names.get(dn)
+            if prior is None:
+                seen_display_names[dn] = f"{cbase}/display_name"
+            else:
+                issues.append(
+                    _error(
+                        "display_name_collision",
+                        f"{cbase}/display_name",
+                        f"display_name {dn!r} duplicates the one at {prior}",
+                    )
+                )
 
 
 def _check_column(

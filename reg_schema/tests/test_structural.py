@@ -190,6 +190,45 @@ def test_duplicate_source_name() -> None:
     assert _at(result, "duplicate_source_name") == ["/sources/1/name"]
 
 
+def test_display_name_collision_within_source() -> None:
+    # §6.3: two columns on the same source sharing an explicit
+    # display_name must produce display_name_collision. The implicit-
+    # resolution case (one explicit + one resolving to the same
+    # reg_meta default) needs reg_meta and is §6.8.3.
+    spec = _spec()
+    # _spec()'s two columns already have distinct display_names; set
+    # the second to match the first.
+    spec["sources"][0]["columns"][1]["display_name"] = spec["sources"][0]["columns"][0][
+        "display_name"
+    ]
+    result = validate_structural(spec)
+    assert _at(result, "display_name_collision") == [
+        "/sources/0/columns/1/display_name"
+    ]
+
+
+def test_display_name_collision_scoped_to_one_source() -> None:
+    # Two sources can each have a column named "LopNr_PersonNr"
+    # without colliding. The check is per-source.
+    spec = _spec()
+    spec["sources"].append(
+        {
+            "name": "lisa_2019",
+            "register_version": "scb/lisa/individer-15plus/2019",
+            "columns": [
+                {
+                    "name": "scb/lisa/individer-15plus/2019/lopnr",
+                    "display_name": "LopNr_PersonNr",  # same as source 0's col 0
+                    "type": "id",
+                    "id_subtype": "integer",
+                },
+            ],
+        }
+    )
+    result = validate_structural(spec)
+    assert "display_name_collision" not in _codes(result)
+
+
 def test_register_version_wrong_segment_count_is_invalid_fqid() -> None:
     spec = _spec()
     spec["sources"][0]["register_version"] = "scb/lisa/individer-15plus"  # 3 segments
