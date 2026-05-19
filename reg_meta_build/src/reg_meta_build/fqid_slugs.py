@@ -1112,32 +1112,35 @@ def _validate_variable_target(
                 "Drop the `register_variant` narrowing key or fix the slug.",
             )
     if period_slug:
-        # Periods are scoped to the variant (UNIQUE(regvar_id, slug)); when
-        # only period is given without variant, accept it if it exists under
-        # any variant of the register. This keeps the worked example "narrow
-        # to a single period across all variants" workable.
-        if variant_slug:
-            row = conn.execute(
-                "SELECT 1 FROM register_version rver "
-                "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
-                "WHERE rv.register_id = ? AND rv.slug = ? AND rver.slug = ?",
-                (register_id, variant_slug, period_slug),
-            ).fetchone()
-        else:
-            row = conn.execute(
-                "SELECT 1 FROM register_version rver "
-                "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
-                "WHERE rv.register_id = ? AND rver.slug = ?",
-                (register_id, period_slug),
-            ).fetchone()
+        # The resolver inherits the query's variant when traversing an edge
+        # (`n_variant = b_variant or current_variant`), so a period-only
+        # target can only resolve when the inherited variant happens to
+        # carry that period. Accepting period without variant at build
+        # time lets edges pass that can never resolve at query time —
+        # require the pair together so the build catches that mismatch.
+        if not variant_slug:
+            raise _err(
+                "slug_same_as_period_without_variant",
+                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
+                f"target carries `period` without `register_variant`. "
+                f"The resolver inherits the query's variant and cannot fan "
+                f"out across variants, so a period-only narrowing is "
+                f"ambiguous and not supported.",
+                'Add `register_variant = "..."` alongside `period`, or '
+                "drop both narrowing keys to apply across all variants.",
+            )
+        row = conn.execute(
+            "SELECT 1 FROM register_version rver "
+            "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+            "WHERE rv.register_id = ? AND rv.slug = ? AND rver.slug = ?",
+            (register_id, variant_slug, period_slug),
+        ).fetchone()
         if row is None:
             raise _err(
                 "slug_same_as_unknown_period",
                 f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
                 f"target period {period_slug!r} not found under "
-                f"{provider_slug}/{register_slug}"
-                + (f"/{variant_slug}" if variant_slug else "")
-                + ".",
+                f"{provider_slug}/{register_slug}/{variant_slug}.",
                 "Drop the `period` narrowing key or fix the slug.",
             )
 

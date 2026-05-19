@@ -564,31 +564,44 @@ class Catalog:
                 if key in visited:
                     continue
                 visited.add(key)
-                # Look up the candidate's version from the DB; same_as is
-                # version-agnostic but the classification FQID needs one.
-                # NULL publisher is normalized to 'scb' (matches build-side
+                # Same_as is version-agnostic; the classification FQID needs
+                # a version. Forward-edge build validation rejects slugs with
+                # multiple versions, but the auto-inserted *reverse* edge can
+                # land us on a multi-version slug stem (e.g. `sun` v2000 +
+                # v2020), so we try every matching version. NULL publisher is
+                # normalized to 'scb' (matches build-side
                 # `COALESCE(publisher,'scb')`) so a SCB-published row can't
                 # accidentally match a query under another publisher.
-                vrow = self._conn.execute(
+                vrows = self._conn.execute(
                     "SELECT version FROM classification "
-                    "WHERE slug = ? AND LOWER(COALESCE(publisher, 'scb')) = ?",
+                    "WHERE slug = ? AND LOWER(COALESCE(publisher, 'scb')) = ? "
+                    "ORDER BY version",
                     (n_slug, n_prov),
-                ).fetchone()
-                if vrow is None:
+                ).fetchall()
+                if not vrows:
                     # Target slug missing from DB despite passing build-time
                     # validation — slugged classifications must have been
                     # deleted post-build. Skip silently.
                     continue
-                n_version = vrow["version"]
-                try:
-                    n_fqid = Fqid.classification_fqid(n_slug, n_version)
-                except FqidError:
-                    continue
-                new_path = (*path, n_fqid)
-                hit = self._resolve_classification_direct(n_fqid)
-                if hit is not None:
-                    return replace(hit, fqid=fqid, via_same_as=new_path)
-                queue.append((n_prov, n_slug, new_path))
+                candidate_fqids: list[Fqid] = []
+                for vrow in vrows:
+                    try:
+                        candidate_fqids.append(
+                            Fqid.classification_fqid(n_slug, vrow["version"])
+                        )
+                    except FqidError:
+                        continue
+                for n_fqid in candidate_fqids:
+                    new_path = (*path, n_fqid)
+                    hit = self._resolve_classification_direct(n_fqid)
+                    if hit is not None:
+                        return replace(hit, fqid=fqid, via_same_as=new_path)
+                # Continue BFS regardless of version count — further hops
+                # don't depend on which version we picked, just on the
+                # same_as edge graph. Use the first valid candidate for
+                # the path-trace breadcrumb.
+                if candidate_fqids:
+                    queue.append((n_prov, n_slug, (*path, candidate_fqids[0])))
         return None
 
 

@@ -2424,3 +2424,19 @@ class TestMaterializeSameAsEdges:
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_self_loop"
+
+    def test_period_without_variant_rejected(self, tmp_path: Path) -> None:
+        # Codex P2: the resolver inherits the query's variant when
+        # traversing an edge, so a period-only narrowing can never resolve
+        # outside the variant that happens to carry the period. Reject at
+        # build time so the curator's intent is unambiguous.
+        conn = self._db_with_two_variables()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'period = "2018", variable_slug = "civilstand" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_period_without_variant"
