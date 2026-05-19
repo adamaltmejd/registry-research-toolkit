@@ -529,6 +529,19 @@ def test_panel_must_have_at_least_one_member() -> None:
     assert _at(result, "empty_members") == ["/panels/0/members"]
 
 
+def test_panel_comment_must_be_string_when_present() -> None:
+    # `comment` is documented as string in §6.4; accepting non-strings
+    # here would let structurally invalid specs through and break
+    # downstream consumers that treat comments as text.
+    spec = _spec_with_panels()
+    spec["panels"][0]["comment"] = 123
+    result = validate_structural(spec)
+    assert _at(result, "invalid_field_type") == ["/panels/0/comment"]
+
+    spec["panels"][0]["comment"] = "valid comment"
+    assert validate_structural(spec).ok
+
+
 # --- Composition / contract -------------------------------------------
 
 

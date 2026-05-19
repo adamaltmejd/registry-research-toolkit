@@ -806,6 +806,16 @@ def _check_panel(
     else:
         seen_panel_ids[panel_id] = panel_index
 
+    comment = panel.get("comment")
+    if comment is not None and not isinstance(comment, str):
+        issues.append(
+            _error(
+                "invalid_field_type",
+                f"{base}/comment",
+                "panel 'comment' must be a string",
+            )
+        )
+
     panel_entity = panel.get("entity_key")
     panel_entity_shape_ok = panel_entity is None or _check_entity_key_shape(
         panel_entity, f"{base}/entity_key", issues
