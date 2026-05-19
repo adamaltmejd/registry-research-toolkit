@@ -144,6 +144,16 @@ class TestPeriodGrammar:
             "VT2019",
             "2020-Q1",
             "2020-Q4",
+            # §5.2 half-year — `H` doesn't collide with `HT` because the
+            # latter is two-character and prefixes the year.
+            "2020-H1",
+            "2020-H2",
+            "1995-H1",
+            # §5.2 ISO date — snapshot-date versions like `'2014-12-31'`.
+            "2014-12-31",
+            "2002-10-15",
+            "2018-01-01",
+            "2018-12-31",
         ],
     )
     def test_valid_periods(self, period: str) -> None:
@@ -169,6 +179,20 @@ class TestPeriodGrammar:
             "1899",
             "HT9999",
             "9999-Q1",
+            # Half-year bounds: H0/H3 reject the same way Q0/Q5 do; prefix
+            # form `H1-2020` and out-of-range year all reject.
+            "2020-H0",
+            "2020-H3",
+            "9999-H1",
+            "H1-2020",
+            # ISO-date bounds: day 00/32, month 13, year outside 19xx/20xx,
+            # truncated forms.
+            "2018-01-00",
+            "2018-01-32",
+            "2018-13-01",
+            "9999-01-01",
+            "2018-1-1",
+            "2018-01-1",
         ],
     )
     def test_invalid_periods(self, bad: str) -> None:
@@ -361,6 +385,10 @@ class TestDerivePeriod:
             ("VT2019 cohort", "VT2019"),
             ("Survey 2020-Q1", "2020-Q1"),
             ("Census 2018-01", "2018-01"),
+            # ISO date is the one auto-extracted §5.2 addition — SCB rows
+            # with literal `YYYY-MM-DD` round-trip through derive_period.
+            ("2014-12-31", "2014-12-31"),
+            ("Snapshot 2014-12-31 enligt ny definition", "2014-12-31"),
             ("Person-År", None),
             ("v19999", None),
             ("", None),
@@ -381,6 +409,8 @@ class TestDerivePeriod:
         # from sharing an FQID with the year-only version of the same variant.
         assert derive_period("LISA HT2020") == "HT2020"
         assert derive_period("LISA 2020-Q1") == "2020-Q1"
+        # ISO date is more specific than YYYY-MM or YYYY; extract picks it.
+        assert derive_period("Snapshot 2014-12-31") == "2014-12-31"
 
     def test_range_form_is_not_misread_as_month(self) -> None:
         from regmeta.fqid import derive_period
@@ -388,6 +418,16 @@ class TestDerivePeriod:
         # `2018-2020` (a range) must not greedy-match the YYYY-MM pattern
         # as `2018-20` — falls through to the year pattern instead.
         assert derive_period("LISA 2018-2020") == "2018"
+
+    def test_half_year_is_curated_only(self) -> None:
+        from regmeta.fqid import derive_period
+
+        # Half-year tokens are accepted by the §5.2 grammar but NOT in
+        # `_PERIOD_EXTRACT_PATTERNS` — same convention as `maj-2011` /
+        # `kv1-2011`. Swedish source forms don't carry the bare `1995-H1`
+        # substring, so curators set `YYYY-H1` / `YYYY-H2` explicitly.
+        assert derive_period("Första halvåret 1995") == "1995"
+        assert derive_period("2015 januari - juni") == "2015"
 
     @pytest.mark.parametrize(
         "version_name,expected",
