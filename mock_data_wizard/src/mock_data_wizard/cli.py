@@ -210,7 +210,7 @@ def _cmd_compare(args: argparse.Namespace) -> int:
 def _print_compare_table(data: dict) -> None:
     import shutil
 
-    from regmeta.cli import format_rows
+    from regmeta.cli_common import format_rows
 
     term_w = shutil.get_terminal_size().columns
 

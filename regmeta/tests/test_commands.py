@@ -1349,7 +1349,7 @@ class TestOutputFormats:
         import unittest.mock
 
         # Patch terminal width to something very small
-        with unittest.mock.patch("regmeta.cli._terminal_width", return_value=30):
+        with unittest.mock.patch("regmeta.cli_common.terminal_width", return_value=30):
             old_stdout = __import__("sys").stdout
             __import__("sys").stdout = buf = io.StringIO()
             try:
@@ -1365,11 +1365,11 @@ class TestOutputFormats:
     def test_row_truncation(self, db_path: str):
         """Results exceeding _MAX_DISPLAY_ROWS should emit truncation hint on stderr."""
         import io
-        import regmeta.cli
+        import regmeta.cli_common
 
-        old_max = regmeta.cli._MAX_DISPLAY_ROWS
+        old_max = regmeta.cli_common._MAX_DISPLAY_ROWS
         try:
-            regmeta.cli._MAX_DISPLAY_ROWS = 1
+            regmeta.cli_common._MAX_DISPLAY_ROWS = 1
             old_stdout, old_stderr = sys.stdout, sys.stderr
             sys.stdout = io.StringIO()
             sys.stderr = err_buf = io.StringIO()
@@ -1380,7 +1380,7 @@ class TestOutputFormats:
             assert code == 0
             assert "truncated" in err_buf.getvalue()
         finally:
-            regmeta.cli._MAX_DISPLAY_ROWS = old_max
+            regmeta.cli_common._MAX_DISPLAY_ROWS = old_max
 
     def test_diff_output_file_has_all_sections(self, db_path: str, tmp_path):
         """--output with get diff must include all sections, not just the last."""
