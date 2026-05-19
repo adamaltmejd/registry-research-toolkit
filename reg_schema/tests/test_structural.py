@@ -162,6 +162,27 @@ def test_sources_must_be_array() -> None:
     assert _at(result, "invalid_field_type") == ["/sources"]
 
 
+def test_panel_unknown_source_skipped_when_sources_shape_invalid() -> None:
+    # When `/sources` itself isn't an array, source-name resolution
+    # is impossible. The primary `/sources` error is already reported;
+    # cascading `panel_member_unknown_source` on every member is just
+    # noise that obscures the real failure.
+    result = validate_structural(
+        _spec(
+            sources={"not": "an array"},
+            panels=[
+                {
+                    "panel_id": "p",
+                    "entity_key": "LopNr_PersonNr",
+                    "members": [{"source": "lisa_2018", "time_key": 2018}],
+                }
+            ],
+        )
+    )
+    assert "panel_member_unknown_source" not in _codes(result)
+    assert "/sources" in _at(result, "invalid_field_type")
+
+
 def test_duplicate_source_name() -> None:
     spec = _spec()
     spec["sources"].append(dict(spec["sources"][0]))
@@ -414,6 +435,18 @@ def test_source_referenced_by_multiple_panels() -> None:
 def test_literal_time_key_duplicate_within_panel() -> None:
     spec = _spec_with_panels()
     spec["panels"][0]["members"][1]["time_key"] = 2018  # same as member 0
+    result = validate_structural(spec)
+    assert "literal_time_key_duplicate" in _codes(result)
+
+
+def test_literal_time_key_duplicate_across_int_and_period_forms() -> None:
+    # `2018` and `{"period": 2018}` encode the same year. The
+    # uniqueness rule must canonicalize them; otherwise a user trips
+    # the rule trivially by writing the same period two different
+    # ways and the validator stays silent.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["time_key"] = 2018
+    spec["panels"][0]["members"][1]["time_key"] = {"period": 2018}
     result = validate_structural(spec)
     assert "literal_time_key_duplicate" in _codes(result)
 

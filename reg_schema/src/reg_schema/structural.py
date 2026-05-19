@@ -517,11 +517,17 @@ def _canonicalize_time_literal(value: object) -> object | None:
 
     Returns ``None`` for column-ref or malformed shapes — callers use
     that to skip the uniqueness check.
+
+    Both ``2018`` and ``{"period": 2018}`` collapse to the same key:
+    the inner integer/string value, tagged ``"scalar"``. The two forms
+    encode the same period — keeping them distinct here would let a
+    user trip the uniqueness rule by writing the same year two
+    different ways.
     """
     if _is_int_literal(value):
-        return ("int", value)
+        return ("scalar", value)
     if _is_literal_period_obj(value):
-        return ("period", value["period"])  # type: ignore[index]
+        return ("scalar", value["period"])  # type: ignore[index]
     if isinstance(value, list):
         canon: list[object] = []
         for item in value:
@@ -730,6 +736,7 @@ class _PanelScope:
     panel_time: object
     panel_time_kind: str | None
     source_index: dict[str, dict[str, Any]]
+    sources_resolvable: bool
     source_to_panel: dict[str, str]
     composite_entities: list[tuple[str, tuple[str, ...]]]
     composite_times: list[tuple[str, tuple[object, ...]]]
@@ -748,6 +755,12 @@ def _check_panels(
         return
 
     source_index = _build_source_index(sources)
+    # When `/sources` itself is malformed (not a list, or absent),
+    # source-name resolution is impossible. Skip per-member
+    # `panel_member_unknown_source` emission in that state — the
+    # primary `/sources` error is already reported, and cascading
+    # secondary errors just obscure it.
+    sources_resolvable = isinstance(sources, list)
     source_to_panel: dict[str, str] = {}  # source name -> first panel path
     seen_panel_ids: dict[str, int] = {}
 
@@ -763,6 +776,7 @@ def _check_panels(
             pbase,
             pi,
             source_index,
+            sources_resolvable,
             source_to_panel,
             seen_panel_ids,
             issues,
@@ -774,6 +788,7 @@ def _check_panel(
     base: str,
     panel_index: int,
     source_index: dict[str, dict[str, Any]],
+    sources_resolvable: bool,
     source_to_panel: dict[str, str],
     seen_panel_ids: dict[str, int],
     issues: list[ValidationIssue],
@@ -864,6 +879,7 @@ def _check_panel(
         panel_time=panel_time,
         panel_time_kind=panel_time_kind,
         source_index=source_index,
+        sources_resolvable=sources_resolvable,
         source_to_panel=source_to_panel,
         composite_entities=[],
         composite_times=[],
@@ -1034,17 +1050,20 @@ def _check_panel_member(
     # *before* the cross-panel bookkeeping so an undefined source
     # reused across panels produces just `panel_member_unknown_source`
     # and not a misleading `source_referenced_by_multiple_panels` on
-    # top.
+    # top. When `/sources` itself is malformed, source-name resolution
+    # is impossible — the primary error is already reported, so skip
+    # this secondary check to keep the output readable.
     entry = scope.source_index.get(source_name)
     if entry is None:
-        issues.append(
-            _error(
-                "panel_member_unknown_source",
-                f"{mbase}/source" if isinstance(member, Mapping) else mbase,
-                f"panel member references source {source_name!r} which is "
-                "not defined in /sources",
+        if scope.sources_resolvable:
+            issues.append(
+                _error(
+                    "panel_member_unknown_source",
+                    f"{mbase}/source" if isinstance(member, Mapping) else mbase,
+                    f"panel member references source {source_name!r} which is "
+                    "not defined in /sources",
+                )
             )
-        )
         return
 
     # Cross-panel source-collision (§6.4 "at most one panel"). Two
