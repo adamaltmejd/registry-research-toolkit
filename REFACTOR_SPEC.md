@@ -2838,6 +2838,41 @@ document. Step 1 can start.
 2. **`reg_meta_build` carved out of `reg_meta`.** Pure mechanical
    split; both packages keep working. Releases independently. Done
    alongside (1) because the rebuild touches build code most.
+
+   **Implementation choices fixed during 2a–2c** (PR #103 phases 1–4):
+
+   - **Package naming follows the existing `regmeta` /
+     `mock_data_wizard` no-underscore convention.** The new package
+     is `regmeta_build` (Python module) / `regmeta-build` (binary) /
+     `regmeta_build/v*` (release tag). Spec text using `reg_meta` and
+     `reg_meta_build` is aspirational; a future clean break renames
+     both packages together.
+   - **`maintain update` and `maintain info` stay in `regmeta`** as
+     **top-level** subcommands (`regmeta update`, `regmeta info`).
+     Rationale: they are query-side concerns — end users need them to
+     fetch and inspect the prebuilt DB without installing
+     `regmeta-build`. The `maintain` subgroup dissolves entirely from
+     `regmeta`'s CLI. All build subcommands (`build-db`, `build-docs`,
+     `seed-slugs`, `precheck-slugs`, `parse-sos`) move to
+     `regmeta-build` as top-level commands.
+   - **Shared CLI scaffolding lives in `regmeta/cli_common.py`** —
+     envelope (`success_envelope`), formatters (`format_rows`,
+     `render_table`, `render_list`, `write_formatted`,
+     `write_to` / `write_json`, `terminal_width`, `db_info`), hint
+     helpers (`hint_add`, `emit_hints`), and the `NoRepeatParser` +
+     `reorder_global_flags` + `clean_leaf_help` argparse plumbing.
+     `regmeta-build/cli.py` imports from there.
+     `mock_data_wizard/cli.py` rebases its `format_rows` import.
+   - **Build-side scripts stay at repo root `scripts/`**; only their
+     imports update to point at `regmeta_build` for the moved bits.
+     No `regmeta_build/scripts/` subtree.
+   - **Test-helper modules `_csv_fixtures.py` and `_slugged_db.py`
+     live in `regmeta_build/tests/`** and are imported by both
+     packages' test trees. `regmeta/tests/conftest.py` adds
+     `regmeta_build/tests/` to `sys.path` so the bare-name imports
+     resolve. `regmeta_build/tests/` does **not** carry an
+     `__init__.py` — multiple `tests` packages with `__init__.py`
+     confuse pytest's rootdir-relative module discovery.
 3. **`reg_schema` package created** with the `project_data.json`
    schema + structural validator, referencing reg_meta FQIDs
    throughout (column `name` = binding FQID, `value_set` =
