@@ -28,7 +28,7 @@ jobs:
       #
       # download_db and download_docs_db each validate the asset's schema
       # before install, so an incompatible asset fails here instead of in
-      # users' terminals. `maintain update` resolves the most recent release
+      # users' terminals. `regmeta update` resolves the most recent release
       # carrying each asset via the walker, so a doc-less package release
       # still serves a prior-release doc DB — if no release in the walker's
       # window has a usable doc asset, the update fails and the workflow
@@ -43,7 +43,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv sync --frozen
-          uv run regmeta maintain update --force -y
+          uv run regmeta update --force -y
           uv run regmeta get schema --register LISA --summary --format json > /dev/null
           # `docs search` must return at least one result — exit 0 with an
           # empty result set would mean the doc DB shipped empty. Use
