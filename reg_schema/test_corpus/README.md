@@ -21,10 +21,12 @@ reg_schema/test_corpus/
 ```
 
 Discovery rule: any directory under `test_corpus/` that contains both
-files is a case. The directory name is the case ID; it must be a
-valid filesystem identifier (`[a-z0-9_]+`) but is otherwise free-form.
-Subdirectories that lack one of the two files are ignored, so README
-assets and helper files coexist without confusing the runners.
+files is a case. The directory name is the case ID; recommended form is
+lowercase snake_case (`[a-z0-9_]+`) to keep IDs portable across the
+three runtimes, but the harness does not enforce this — any directory
+name the filesystem accepts will be picked up. Subdirectories that lack
+one of the two files are ignored, so README assets and helper files
+coexist without confusing the runners.
 
 ## File formats
 
