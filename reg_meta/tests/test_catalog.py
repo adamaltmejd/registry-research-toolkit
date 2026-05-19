@@ -729,6 +729,62 @@ class TestSameAsTraversal:
             Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
         assert exc.value.code == "fqid_not_found"
 
+    def test_visited_key_separates_variant_scopes(self) -> None:
+        # Regression: two narrowing edges from the same source to the same
+        # target variable under *different* variants. If the visited key
+        # ignored variant/period (the original implementation), the BFS
+        # would mark `civilstand-legacy` as visited after the first edge
+        # and skip the second edge — even though only the second variant
+        # has a binding row that resolves.
+        conn = build_slugged_db()
+        # Add a second variant that DOES carry kon (cvid 2001) so the
+        # variant-16plus traversal lands on a real row.
+        add_variant(
+            conn,
+            regvar_id=11,
+            register_id=1,
+            slug="individer-16plus",
+            name="Individer 16+",
+        )
+        add_version(
+            conn,
+            regver_id=101,
+            regvar_id=11,
+            slug="2018",
+            name="LISA 2018",
+        )
+        add_binding(
+            conn,
+            cvid=2001,
+            register_id=1,
+            regvar_id=11,
+            regver_id=101,
+            var_id=44,
+            kolumnnamn="Kon",
+        )
+        # Two edges from civilstand-legacy → kon, narrowed to *different*
+        # variants on the source side. Both edges land on kon, but only
+        # individer-16plus has the binding row.
+        # (We register edges as a → b where a is the FQID we'd query.)
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
+            b=("scb", "lisa", "individer-15plus", "", "kon"),
+        )
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "individer-16plus", "", "civilstand-legacy"),
+            b=("scb", "lisa", "individer-16plus", "", "kon"),
+        )
+        # Drop the original kon under individer-15plus so only individer-16plus
+        # can satisfy the resolution.
+        conn.execute("DELETE FROM variable_alias WHERE cvid = 1001")
+        conn.execute("DELETE FROM variable_instance WHERE cvid = 1001")
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 2001
+
 
 class TestSameAsClassificationTraversal:
     """§5.5 classification same_as traversal."""

@@ -330,11 +330,10 @@ class Catalog:
         wildcard scope; on the `b_` side empty means "inherit from current
         node", non-empty means "narrow to this slot". Equivalence traversal
         is the only place where the query's variant/period can change
-        mid-resolve. The visited set keys on `(provider, register, variable)`
-        — variant/period scope on a given node is whatever the path that
-        reached it inherited, so revisiting the same variable slug under a
-        different inherited scope can't reach a binding the first visit
-        wouldn't have.
+        mid-resolve. The visited set keys on the **full 5-tuple** (incl.
+        inherited variant/period) so two narrowing edges from the same
+        source to the same target under different variants/periods both
+        get explored.
         """
         from collections import deque
 
@@ -346,20 +345,16 @@ class Catalog:
             fqid.variable,
         ) not in self._var_same_as_source_keys():
             return None
-        visited: set[tuple[str, str, str]] = {
-            (fqid.provider, fqid.register, fqid.variable)
-        }
-        queue: deque[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = deque()
-        queue.append(
-            (
-                fqid.provider,
-                fqid.register,
-                fqid.variant,
-                fqid.period,
-                fqid.variable,
-                (),
-            )
+        start_key = (
+            fqid.provider,
+            fqid.register,
+            fqid.variant,
+            fqid.period,
+            fqid.variable,
         )
+        visited: set[tuple[str, str, str, str, str]] = {start_key}
+        queue: deque[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = deque()
+        queue.append((*start_key, ()))
         while queue:
             prov, reg, variant, period, variable, path = queue.popleft()
             rows = self._conn.execute(
@@ -376,7 +371,7 @@ class Catalog:
                 n_variant = row["b_variant"] or variant
                 n_period = row["b_period"] or period
                 n_variable = row["b_variable"]
-                key = (n_prov, n_reg, n_variable)
+                key = (n_prov, n_reg, n_variant, n_period, n_variable)
                 if key in visited:
                     continue
                 visited.add(key)
@@ -536,22 +531,28 @@ class Catalog:
 
         assert fqid.classification and fqid.version
         # The classification FQID grammar has no provider slot — the publisher
-        # is implicit. Use the classification row's publisher as the BFS key;
-        # fall back to 'scb' when the queried slug has no DB row (publisher
-        # unknown, and 'scb' is the only publisher today).
-        start = self._conn.execute(
-            "SELECT publisher FROM classification WHERE slug = ? AND version = ?",
-            (fqid.classification, fqid.version),
-        ).fetchone()
-        start_publisher = (start["publisher"] or "scb").lower() if start else "scb"
-        if (
-            start_publisher,
-            fqid.classification,
-        ) not in self._class_same_as_source_keys():
+        # is implicit. The (slug, version) lookup may have missed precisely
+        # because the version drifted (the primary same_as use case), so we
+        # seed the BFS from every publisher that owns *any* row for this slug.
+        # Defaulting to 'scb' would silently break non-SCB classifications.
+        publishers = {
+            (r[0] or "scb").lower()
+            for r in self._conn.execute(
+                "SELECT DISTINCT publisher FROM classification WHERE slug = ?",
+                (fqid.classification,),
+            ).fetchall()
+        }
+        if not publishers:
+            # No row carries this slug; nothing to traverse from.
             return None
-        visited: set[tuple[str, str]] = {(start_publisher, fqid.classification)}
+        sources = self._class_same_as_source_keys()
+        seeds = [p for p in publishers if (p, fqid.classification) in sources]
+        if not seeds:
+            return None
+        visited: set[tuple[str, str]] = {(p, fqid.classification) for p in seeds}
         queue: deque[tuple[str, str, tuple[Fqid, ...]]] = deque()
-        queue.append((start_publisher, fqid.classification, ()))
+        for p in seeds:
+            queue.append((p, fqid.classification, ()))
         while queue:
             prov, slug, path = queue.popleft()
             rows = self._conn.execute(
@@ -568,9 +569,12 @@ class Catalog:
                 visited.add(key)
                 # Look up the candidate's version from the DB; same_as is
                 # version-agnostic but the classification FQID needs one.
+                # NULL publisher is normalized to 'scb' (matches build-side
+                # `COALESCE(publisher,'scb')`) so a SCB-published row can't
+                # accidentally match a query under another publisher.
                 vrow = self._conn.execute(
                     "SELECT version FROM classification "
-                    "WHERE slug = ? AND (publisher IS NULL OR LOWER(publisher) = ?)",
+                    "WHERE slug = ? AND LOWER(COALESCE(publisher, 'scb')) = ?",
                     (n_slug, n_prov),
                 ).fetchone()
                 if vrow is None:

@@ -1039,7 +1039,17 @@ def _variable_source_slug(
             "variable is retired.",
         )
     slugs = {s for r in rows if (s := derive_variable_slug(r[0])) is not None}
-    if len(slugs) != 1:
+    if not slugs:
+        raise _err(
+            "slug_same_as_unresolved_source",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} has "
+            f"kolumnnamn alias(es) but none derive to a valid slug; cannot "
+            f"anchor `same_as`.",
+            "Inspect the kolumnnamn aliases in `variable_alias`; they may be "
+            "empty after NFKD/grammar folding. Add an explicit slug override "
+            "(when §5.6 follow-up lands) or correct the upstream alias.",
+        )
+    if len(slugs) > 1:
         raise _err(
             "slug_same_as_ambiguous_source",
             f"{entry.provider}.toml: variable.{entry.source_id!r} aliases "
@@ -1322,13 +1332,13 @@ def materialize_same_as_edges(
     _reject_same_as_cycles(list(var_edges), label="variable same_as")
     _reject_same_as_cycles(list(class_edges), label="classification same_as")
 
-    # Insert both directions. INSERT OR IGNORE so a maintainer who happens
-    # to declare A→B from one side and B→A from the other (which is itself
-    # a cycle and would already have failed above) wouldn't trip the PK.
+    # Insert both directions. Plain INSERT — cycle detection above already
+    # rejects reciprocal declarations, so any PK collision here is a build
+    # invariant violation that we want to surface, not silence.
     for a, b in var_edges:
         for src_t, tgt_t in ((a, b), (b, a)):
             conn.execute(
-                "INSERT OR IGNORE INTO variable_same_as ("
+                "INSERT INTO variable_same_as ("
                 "a_provider, a_register, a_variant, a_period, a_variable, "
                 "b_provider, b_register, b_variant, b_period, b_variable) "
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
@@ -1337,7 +1347,7 @@ def materialize_same_as_edges(
     for a_k, b_k in class_edges:
         for src_c, tgt_c in ((a_k, b_k), (b_k, a_k)):
             conn.execute(
-                "INSERT OR IGNORE INTO classification_same_as ("
+                "INSERT INTO classification_same_as ("
                 "a_provider, a_classification_slug, "
                 "b_provider, b_classification_slug) VALUES (?, ?, ?, ?)",
                 (*src_c, *tgt_c),
