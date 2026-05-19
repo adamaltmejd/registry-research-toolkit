@@ -24,6 +24,12 @@ from typing import Literal
 
 IssueLevel = Literal["error", "warning", "info"]
 
+# Mirrored at runtime because `Literal` is a typing hint, not a runtime
+# guard — JSON deserialization (SPA, bundle) and `# type: ignore` paths
+# can otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
+# `ValidationResult.ok` to True for a result that should block.
+_VALID_LEVELS: frozenset[str] = frozenset({"error", "warning", "info"})
+
 
 @dataclass(frozen=True)
 class ValidationIssue:
@@ -35,10 +41,23 @@ class ValidationIssue:
     path: str
     message: str
 
+    def __post_init__(self) -> None:
+        if self.level not in _VALID_LEVELS:
+            raise ValueError(
+                f"invalid level {self.level!r}; expected one of {sorted(_VALID_LEVELS)}"
+            )
+
 
 @dataclass(frozen=True)
 class ValidationResult:
     issues: tuple[ValidationIssue, ...]
+
+    def __post_init__(self) -> None:
+        # Coerce list/generator/etc. to tuple so the frozen+hashable
+        # contract holds regardless of how callers construct the value.
+        # `object.__setattr__` is the standard frozen-dataclass escape.
+        if not isinstance(self.issues, tuple):
+            object.__setattr__(self, "issues", tuple(self.issues))
 
     @property
     def ok(self) -> bool:

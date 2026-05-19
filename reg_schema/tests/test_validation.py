@@ -53,3 +53,23 @@ def test_results_compose_by_tuple_concatenation() -> None:
     combined = ValidationResult(issues=structural.issues + semantic.issues)
     assert combined.ok is False
     assert {i.code for i in combined.issues} == {"a", "b"}
+
+
+def test_invalid_level_rejected_at_construction() -> None:
+    # Literal is a typing hint, not a runtime guard. JSON / cross-runtime
+    # paths could smuggle in mis-cased or unknown levels and silently
+    # weaken `ok`; the post-init check is what stops that.
+    for bad in ("ERROR", "fatal", "", "Warning"):
+        with pytest.raises(ValueError, match="invalid level"):
+            ValidationIssue(level=bad, code="x", path="/", message="m")  # type: ignore[arg-type]
+
+
+def test_result_coerces_non_tuple_issues_to_tuple() -> None:
+    issue_list = [_issue("error", code="a"), _issue("warning", code="b")]
+    result = ValidationResult(issues=issue_list)  # type: ignore[arg-type]
+    assert isinstance(result.issues, tuple)
+    assert result.ok is False
+    # Coercion takes a snapshot — mutating the input list after the fact
+    # must not affect the result.
+    issue_list.clear()
+    assert len(result.issues) == 2

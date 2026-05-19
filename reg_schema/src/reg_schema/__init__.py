@@ -1,12 +1,7 @@
 """reg_schema: project_data.json schema + structural validator.
 
-See ``DESIGN.md`` for scope and dependency direction. Per
-``REFACTOR_SPEC.md`` §6 the package owns the ``project_data.json`` v1
-shape; this scaffold lands the cross-runtime ``ValidationIssue`` /
-``ValidationResult`` contract first so later layers (structural rules,
-top-level / Source / Column / Panel dataclasses) and downstream
-consumers (mdw, reg_webapp, the amalgamated MONA bundle, the SPA's
-TypeScript codegen) can pin against a stable shape.
+See ``DESIGN.md`` for scope and dependency direction; ``REFACTOR_SPEC.md``
+§6 is the authoritative schema spec.
 """
 
 from .validation import IssueLevel, ValidationIssue, ValidationResult
