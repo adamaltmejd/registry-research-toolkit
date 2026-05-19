@@ -1,16 +1,11 @@
 """Corpus harness for §6.8.0 cross-runtime shape coherence.
 
-See ``reg_schema/test_corpus/README.md`` for the corpus contract and
-the three runtimes that consume the same JSON.
-
-Until Phase 3 of §15 step 3 lands ``validate_structural()``, this
-harness rides the corpus by round-tripping each
-``expected_ValidationResult.json`` through the §6.8.0 dataclasses —
-proving the JSON shape parses identically to what the validator must
-emit, which is precisely the cross-runtime guarantee the corpus
-exists to pin. Phase 3 extends the per-case test with a real
-``validate_structural(input)`` call and an equality assertion against
-the expected result (unordered issues).
+See ``reg_schema/test_corpus/README.md`` for the corpus contract.
+Pre-Phase 3, the harness round-trips each
+``expected_ValidationResult.json`` through the §6.8.0 dataclasses;
+Phase 3 of §15 step 3 swaps the body of ``test_input_is_json_object``
+for a real ``validate_structural(input)`` call and an unordered-issue
+equality assertion against the decoded expected result.
 """
 
 from __future__ import annotations
@@ -30,12 +25,7 @@ _RESULT_KEYS = frozenset({"issues"})
 
 
 def _discover_cases() -> list[Path]:
-    """Return every case dir under ``test_corpus/`` with both files.
-
-    Directories missing either ``input.json`` or
-    ``expected_ValidationResult.json`` are skipped, so README assets
-    and helper files coexist without confusing the harness.
-    """
+    """Return every case dir under ``test_corpus/`` with both files."""
 
     return sorted(
         p
@@ -50,10 +40,11 @@ def _decode_expected(payload: dict[str, Any]) -> ValidationResult:
     """Decode the documented JSON shape into a ``ValidationResult``.
 
     Drift-protection: unknown keys at either level raise so a silent
-    schema addition cannot slip past the corpus. This is a stricter
-    contract than ``ValidationIssue(**raw)`` alone (which would accept
-    unexpected keyword-only kwargs as TypeErrors but with less useful
-    location info).
+    schema addition cannot slip past the corpus. The dataclass alone
+    would only catch this on ``ValidationIssue`` (extra kwarg →
+    ``TypeError``); the top-level ``ValidationResult`` we build by
+    hand from ``payload["issues"]``, so its extras need a manual
+    check.
     """
 
     extra_top = set(payload) - _RESULT_KEYS
@@ -85,12 +76,8 @@ def test_corpus_is_not_empty() -> None:
 
 @pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
 def test_expected_result_decodes(case_dir: Path) -> None:
-    """``expected_ValidationResult.json`` decodes into §6.8.0 shape.
-
-    Cross-runtime shape coherence — the bundle amalgamation and the
-    SPA's TS port both read this same JSON, so every case's expected
-    payload must parse cleanly against the contract module.
-    """
+    """Every case's expected payload parses against the §6.8.0 contract —
+    the cross-runtime shape coherence the corpus exists to pin."""
 
     payload = json.loads((case_dir / "expected_ValidationResult.json").read_text())
     result = _decode_expected(payload)
@@ -101,11 +88,8 @@ def test_expected_result_decodes(case_dir: Path) -> None:
 def test_input_is_json_object(case_dir: Path) -> None:
     """``input.json`` is at least a syntactically valid JSON object.
 
-    Phase 3 of §15 step 3 swaps this assertion for the real
-    ``validate_structural(input)`` call and an equality check against
-    ``_decode_expected(...)`` (unordered issues). Until then the
-    corpus inputs ride alongside the harness so Phase 3's diff is
-    purely the validator wiring.
+    Phase 3 swaps the body for ``validate_structural(input)`` and an
+    unordered-issue equality check against ``_decode_expected(...)``.
     """
 
     payload = json.loads((case_dir / "input.json").read_text())
