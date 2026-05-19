@@ -18,7 +18,14 @@ from regmeta.catalog import (
 from regmeta.errors import RegmetaError
 from regmeta.fqid import Fqid
 
-from _slugged_db import build_slugged_db
+from _slugged_db import (
+    add_binding,
+    add_register,
+    add_variable,
+    add_variant,
+    add_version,
+    build_slugged_db,
+)
 
 
 @pytest.fixture
@@ -369,14 +376,15 @@ class TestEditions:
         # Two versions under the same variant carry the same kolumnnamn —
         # editions returns both, ordered by (variant_slug, version_slug).
         conn = build_slugged_db()
-        conn.executescript(
-            "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
-            "VALUES (101, 10, '2019', 'LISA 2019');"
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
-            "VALUES (1002, 1, 10, 101, 44, 'int');"
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Kon');"
+        add_version(conn, regver_id=101, regvar_id=10, slug="2019", name="LISA 2019")
+        add_binding(
+            conn,
+            cvid=1002,
+            register_id=1,
+            regvar_id=10,
+            regver_id=101,
+            var_id=44,
+            kolumnnamn="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -391,17 +399,16 @@ class TestEditions:
         # Same variable slug delivered through two variants of the same
         # register — both editions surface, ordered by variant slug.
         conn = build_slugged_db()
-        conn.executescript(
-            "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, registervariantnamn) "
-            "VALUES (11, 1, 'foretag', 'Företag');"
-            "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
-            "VALUES (110, 11, '2018', 'LISA 2018');"
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
-            "VALUES (1003, 1, 11, 110, 44, 'int');"
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1003, 'Kon');"
+        add_variant(conn, regvar_id=11, register_id=1, slug="foretag", name="Företag")
+        add_version(conn, regver_id=110, regvar_id=11, slug="2018", name="LISA 2018")
+        add_binding(
+            conn,
+            cvid=1003,
+            register_id=1,
+            regvar_id=11,
+            regver_id=110,
+            var_id=44,
+            kolumnnamn="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -447,21 +454,25 @@ class TestEditions:
             version=("RTB 2018", "2018", 100),
             variable=("Kön", 44, 5000, "Kon"),
         )
-        conn.executescript(
-            "INSERT INTO register (register_id, provider_id, slug, registernamn) "
-            "VALUES (2, 1, 'lisa', 'LISA');"
-            "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, registervariantnamn) "
-            "VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
-            "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
-            "VALUES (200, 20, '2018', 'LISA 2018');"
-            "INSERT INTO variable (register_id, var_id, variabelnamn, source_register_id) "
-            "VALUES (2, 99, 'Kön', 1);"
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
-            "VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+        add_register(conn, register_id=2, slug="lisa", name="LISA")
+        add_variant(
+            conn,
+            regvar_id=20,
+            register_id=2,
+            slug="individer-15plus",
+            name="Individer 15+",
+        )
+        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="LISA 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön", source_register_id=1)
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            regvar_id=20,
+            regver_id=200,
+            var_id=99,
+            kolumnnamn="Kon",
+            via_source_id=5000,
         )
         conn.commit()
 
@@ -502,21 +513,18 @@ class TestEditions:
         # A "kon" binding under a different register must not leak into the
         # query — the (provider, register) filter is tight.
         conn = build_slugged_db()
-        conn.executescript(
-            "INSERT INTO register (register_id, provider_id, slug, registernamn) "
-            "VALUES (2, 1, 'rtb', 'RTB');"
-            "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, registervariantnamn) "
-            "VALUES (20, 2, 'personer', 'Personer');"
-            "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
-            "VALUES (200, 20, '2018', 'RTB 2018');"
-            "INSERT INTO variable (register_id, var_id, variabelnamn) "
-            "VALUES (2, 99, 'Kön');"
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
-            "VALUES (5001, 2, 20, 200, 99, 'int');"
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(conn, regvar_id=20, register_id=2, slug="personer", name="Personer")
+        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="RTB 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön")
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            regvar_id=20,
+            regver_id=200,
+            var_id=99,
+            kolumnnamn="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
