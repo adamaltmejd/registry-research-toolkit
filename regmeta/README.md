@@ -8,14 +8,16 @@ is secondary.
 
 ```bash
 uv tool install regmeta
-regmeta maintain update      # downloads package + database (~400 MB compressed)
+regmeta update      # downloads package + database (~400 MB compressed)
 ```
 
 Alternatively, build from raw SCB CSV exports (requires access to
-mikrometadata.scb.se):
+mikrometadata.scb.se and the separately-installed `regmeta_build`
+package):
 
 ```bash
-regmeta maintain build-db --input-dir regmeta/input_data/
+uv tool install regmeta_build
+regmeta-build build-db --input-dir regmeta_build/input_data/
 ```
 
 ## Quick start
@@ -63,10 +65,13 @@ Use `--help` on any command or subcommand for full flag documentation.
 
 | Command | Purpose |
 |---|---|
-| `maintain update` | Update package and database to the latest version |
-| `maintain build-db` | Build database from SCB CSV exports |
-| `maintain build-docs` | Build documentation search index from markdown files |
-| `maintain info` | Database stats and import metadata |
+| `update` | Update package and database to the latest version |
+| `info` | Database stats and import metadata |
+
+Build commands (`build-db`, `build-docs`, `seed-slugs`, `precheck-slugs`,
+`parse-sos`) live in the separate `regmeta_build` package — install it
+with `uv tool install regmeta_build` and invoke as
+`regmeta-build <subcommand>`.
 
 ## Output formats
 
