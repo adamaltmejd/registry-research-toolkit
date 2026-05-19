@@ -16,19 +16,25 @@ Create a release with arguments: `$ARGUMENTS`
 | Package | pyproject.toml | `__init__.py` | Publish workflow |
 |---|---|---|---|
 | regmeta | `regmeta/pyproject.toml` | `regmeta/src/regmeta/__init__.py` | `publish_regmeta.yml` (needs environment approval) |
+| regmeta_build | `regmeta_build/pyproject.toml` | `regmeta_build/src/regmeta_build/__init__.py` | `publish_regmeta_build.yml` (needs environment approval) |
 | mock_data_wizard | `mock_data_wizard/pyproject.toml` | `mock_data_wizard/src/mock_data_wizard/__init__.py` | `publish_mock_data_wizard.yml` (needs environment approval) |
+
+regmeta_build is the build pipeline that produces `regmeta`'s SQLite
+assets; it has its own PyPI release on the `regmeta_build/v*` tag but
+ships no DB release assets (those attach to the parallel `regmeta/v*`
+release).
 
 ## Validation
 
 Before doing anything, validate and resolve the inputs. To avoid unnecessarily asking for user confirmation, avoid `$(...)` or backticks inside Bash commands — prefer running each command separately and using the returned value in the next call.
 
 1. **Resolve the bump level**: one of `$0` or `$1` must be `patch`, `minor`, or `major`. If neither is provided, stop and ask the user.
-2. **Resolve the package(s)**: if a package name (`regmeta` or `mock_data_wizard`) is provided, use it. Otherwise, infer from context:
+2. **Resolve the package(s)**: if a package name (`regmeta`, `regmeta_build`, or `mock_data_wizard`) is provided, use it. Otherwise, infer from context:
    - Find the last release tag for each package (tags follow the pattern `<package>/vX.Y.Z`).
    - Run `git log --oneline <tag>..HEAD -- <package>/` for each to see which packages have unreleased commits.
    - If only one package has changes, use that one.
-   - If both have changes, release both sequentially — run the full pipeline below for each package, one at a time, with separate commits, tags, and releases.
-   - If neither has changes, tell the user there is nothing to release.
+   - If multiple have changes, release them sequentially — run the full pipeline below for each package, one at a time, with separate commits, tags, and releases. When schema-affecting changes touch `regmeta_build/`, the `regmeta` release that publishes the rebuilt asset is the one that must lead.
+   - If none has changes, tell the user there is nothing to release.
 3. If any required input is still ambiguous, stop and ask the user.
 4. **Major version bumps require explicit confirmation.** Show the current and planned version and ask the user to confirm before proceeding.
 
@@ -57,19 +63,30 @@ Update the version string in both files:
 - `<package>/src/<package>/__init__.py`: the `__version__ = "X.Y.Z"` line
 
 **regmeta only — main-DB schema version check:** Run
-`git diff <tag>..HEAD -- regmeta/src/regmeta/db.py` and check for changes to
-`CREATE TABLE`, `CREATE VIRTUAL TABLE`, or column lists. If the schema changed
-but `SCHEMA_VERSION` in that file was not already bumped, bump it now:
+`git diff <tag>..HEAD -- regmeta_build/src/regmeta_build/db.py
+regmeta/src/regmeta/db.py` and check for changes to `CREATE TABLE`,
+`CREATE VIRTUAL TABLE`, or column lists (DDL lives in
+`regmeta_build/src/regmeta_build/db.py` post-split). If the schema
+changed but `SCHEMA_VERSION` in `regmeta/src/regmeta/db.py` was not
+already bumped, bump it now:
 
 - **Major bump** (breaking): renamed/removed tables or columns, changed column semantics
 - **Minor bump** (new columns the code reads): added columns/tables that queries reference. `open_db` rejects DBs whose minor is < the code's minor, so this forces a DB rebuild before the package release is usable.
 
+A `SCHEMA_VERSION` bump may require a coordinated `regmeta_build`
+release if the matching DDL changes also need to ship in the builder
+wheel (so an end-user rebuild from `regmeta-build build-db` produces
+the new schema). Release `regmeta_build` first in that case.
+
 **regmeta only — doc-DB schema version check:** Run
-`git diff <tag>..HEAD -- regmeta/src/regmeta/doc_db.py` and check for changes
-to `DOC_DDL` or reads of new `doc_meta` keys. If the doc schema changed but
-`DOC_SCHEMA_VERSION` in that file was not bumped, bump it now. Same
-major/minor rules as `SCHEMA_VERSION`. A bump forces a fresh doc-DB asset
-upload in step 8.
+`git diff <tag>..HEAD -- regmeta_build/src/regmeta_build/doc_db.py
+regmeta/src/regmeta/doc_db.py` and check for changes to `DOC_DDL` or
+reads of new `doc_meta` keys (DDL lives in
+`regmeta_build/src/regmeta_build/doc_db.py` post-split). If the doc
+schema changed but `DOC_SCHEMA_VERSION` in
+`regmeta/src/regmeta/doc_db.py` was not bumped, bump it now. Same
+major/minor rules as `SCHEMA_VERSION`. A bump forces a fresh doc-DB
+asset upload in step 8.
 
 ### 4. Update lockfile
 
@@ -131,8 +148,9 @@ the release: the CI smoke step runs `maintain update` and fails if the
 walker can't resolve a compatible pair of assets.
 
 The raw SCB CSV exports and curated classification CSVs live under
-`regmeta/input_data/` (gitignored), with `SCB/`, `Socialstyrelsen/`, and
-`classifications/` subdirectories. If missing, ask the user.
+`regmeta_build/input_data/` (gitignored), with `SCB/`,
+`Socialstyrelsen/`, and `classifications/` subdirectories. If missing,
+ask the user.
 
 #### 8a. Main DB asset (`regmeta.db.zst`)
 
@@ -144,7 +162,7 @@ Upload if **either** condition is true:
 Otherwise skip.
 
 ```bash
-uv run regmeta maintain build-db --input-dir regmeta/input_data/ --validate
+uv run regmeta-build build-db --input-dir regmeta_build/input_data/ --validate
 zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
 gh release upload regmeta/vX.Y.Z regmeta.db.zst
 rm regmeta.db.zst
@@ -157,30 +175,32 @@ inline and exits 10 on failure (same checks as
 
 If the build fails with `vardemangder_drift` (exit 10), SCB has shipped a
 new `kod==version` row whose kod is in neither `_VARDEMANGDER_SENTINELS`
-nor `_VARDEMANGDER_REAL_SHAPED` (both in `regmeta/src/regmeta/db.py`).
-Inspect the listed values, add each to the appropriate allowlist (sentinel
-placeholder vs. real single-code value set), then rerun. See
-`regmeta/DESIGN.md` § "Vardemängder sentinel filtering".
+nor `_VARDEMANGDER_REAL_SHAPED` (both in
+`regmeta_build/src/regmeta_build/db.py`). Inspect the listed values, add
+each to the appropriate allowlist (sentinel placeholder vs. real
+single-code value set), then rerun. See `regmeta_build/DESIGN.md` §
+"Vardemängder sentinel filtering".
 
 #### 8b. Doc DB asset (`regmeta_docs.db.zst`)
 
 Upload if **any** of these is true:
 
 - `DOC_SCHEMA_VERSION` was bumped
-- `git diff <tag>..HEAD -- regmeta/docs/` is non-empty (docs content changed)
+- `git diff <tag>..HEAD -- regmeta_build/docs/` is non-empty (docs content changed)
 - The release is a **major** version bump
 
 Otherwise skip — users keep getting the prior release's doc asset via the
 walker.
 
-If `regmeta/docs/` changed because a newly-published SCB PDF was ingested,
-the PDF→markdown recipe (marker flags, `GEMINI_API_KEY`, ~$1-2 cost,
-multiprocessing-crash workaround, `--MarkdownRenderer_keep_pageheader_in_output`
-footgun) lives in the docstring at the top of `scripts/parse_lisa_docs.py`.
-Run that step first, then continue here.
+If `regmeta_build/docs/` changed because a newly-published SCB PDF was
+ingested, the PDF→markdown recipe (marker flags, `GEMINI_API_KEY`, ~$1-2
+cost, multiprocessing-crash workaround,
+`--MarkdownRenderer_keep_pageheader_in_output` footgun) lives in the
+docstring at the top of `scripts/parse_lisa_docs.py`. Run that step
+first, then continue here.
 
 ```bash
-uv run regmeta maintain build-docs
+uv run regmeta-build build-docs
 zstd -3 -T0 ~/.local/share/regmeta/regmeta_docs.db -o regmeta_docs.db.zst
 gh release upload regmeta/vX.Y.Z regmeta_docs.db.zst
 rm regmeta_docs.db.zst
