@@ -24,7 +24,7 @@ isinstance checks are intentionally absent.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Literal
 
 # Top-level enums (§6.1, §6.3). Mirrored at runtime by the structural
@@ -180,6 +180,14 @@ class ProjectData:
     That is by design — namespaced consumers own their payload
     lifecycle.
 
+    Because the block is opaque and typically a plain (unhashable)
+    ``dict``, it is excluded from ``__hash__`` via ``field(hash=False)``
+    so ``hash(ProjectData(..., reg_monabundle={...}))`` works. It still
+    participates in ``__eq__`` — two specs differing only in their
+    namespaced block compare unequal, as expected. The resulting hash
+    collisions on specs that share all non-block fields are fine; the
+    hash invariant only requires equal objects to hash equally.
+
     Steward-specific blocks beyond ``reg_monabundle`` (e.g.
     ``swecov``) are not modeled as fields here in v1; they ride
     through deserialization on the dict side and are handled by the
@@ -193,7 +201,7 @@ class ProjectData:
     name: str
     sources: tuple[Source, ...]
     panels: tuple[Panel, ...] = ()
-    reg_monabundle: Mapping[str, object] | None = None
+    reg_monabundle: Mapping[str, object] | None = field(default=None, hash=False)
 
     def __post_init__(self) -> None:
         if not isinstance(self.sources, tuple):

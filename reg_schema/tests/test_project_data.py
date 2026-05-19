@@ -199,3 +199,36 @@ def test_project_data_accepts_opaque_reg_monabundle_block() -> None:
     )
     # Treated as opaque — pass-through, not deep-copied or frozen.
     assert pd.reg_monabundle is block
+
+
+def test_project_data_hashable_with_dict_namespaced_block() -> None:
+    # Regression: the namespaced block is a plain (unhashable) dict in
+    # practice, so it must be excluded from __hash__ — otherwise
+    # `hash(pd)` raises TypeError as soon as the block is populated.
+    pd_no_block = _project()
+    pd_with_block = ProjectData(
+        schema_version="1.0.0",
+        steward="global",
+        reg_meta_version="reg_meta/v0.11.1",
+        name="demo",
+        sources=(_source(),),
+        reg_monabundle={"column_options": {"a": {"suppress_k": 20}}},
+    )
+    assert hash(pd_with_block) == hash(pd_no_block)
+
+
+def test_project_data_eq_still_compares_namespaced_block() -> None:
+    # `hash=False` excludes the block from __hash__ only; __eq__ still
+    # sees it, so specs differing only in the opaque block are unequal.
+    base_kwargs = dict(
+        schema_version="1.0.0",
+        steward="global",
+        reg_meta_version="reg_meta/v0.11.1",
+        name="demo",
+        sources=(_source(),),
+    )
+    pd_a = ProjectData(**base_kwargs, reg_monabundle={"k": 1})
+    pd_b = ProjectData(**base_kwargs, reg_monabundle={"k": 2})
+    pd_c = ProjectData(**base_kwargs, reg_monabundle={"k": 1})
+    assert pd_a != pd_b
+    assert pd_a == pd_c
