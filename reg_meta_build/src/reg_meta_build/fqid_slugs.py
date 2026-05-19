@@ -66,6 +66,12 @@ _SAME_AS_KEYS_VARIABLE: frozenset[str] = frozenset(
 _SAME_AS_KEYS_CLASSIFICATION: frozenset[str] = frozenset(
     {"provider", "classification_slug"}
 )
+_SAME_AS_REQUIRED_VARIABLE: frozenset[str] = frozenset(
+    {"provider", "register", "variable_slug"}
+)
+_SAME_AS_REQUIRED_CLASSIFICATION: frozenset[str] = frozenset(
+    {"provider", "classification_slug"}
+)
 
 
 @dataclass(frozen=True)
@@ -211,6 +217,11 @@ def _validate_same_as(
     allowed_keys = (
         _SAME_AS_KEYS_VARIABLE if kind == "variable" else _SAME_AS_KEYS_CLASSIFICATION
     )
+    required_keys = (
+        _SAME_AS_REQUIRED_VARIABLE
+        if kind == "variable"
+        else _SAME_AS_REQUIRED_CLASSIFICATION
+    )
     for ref in raw:
         unknown_keys = set(ref) - allowed_keys
         if unknown_keys:
@@ -219,6 +230,14 @@ def _validate_same_as(
                 f"{kind}.{source_id!r}: `same_as` has unknown key(s): "
                 f"{sorted(unknown_keys)}.",
                 f"Allowed keys for {kind}: {sorted(allowed_keys)}.",
+            )
+        missing_keys = required_keys - ref.keys()
+        if missing_keys:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `same_as` missing required key(s): "
+                f"{sorted(missing_keys)}.",
+                f"Required for {kind}: {sorted(required_keys)}.",
             )
         if not all(isinstance(v, str) and v for v in ref.values()):
             raise _err(
@@ -980,10 +999,10 @@ def _assert_no_unslugged(
 # ---------------------------------------------------------------------------
 
 
-# Variable endpoint: (provider, register, variant_or_empty, period_or_empty, variable).
-# Empty-string sentinels in the variant/period slots mean "wildcard — applies
-# across all variants/periods"; the resolver matches them by storing '' in the
-# DB column rather than NULL (NULL would defeat the PRIMARY KEY's dedup).
+# 5-tuple (provider, register, variant, period, variable) / 2-tuple
+# (provider, classification_slug). Variant/period use empty-string sentinels
+# for wildcard scope — see the db.py table comment for the SQLite-NULL
+# rationale.
 _VarKey = tuple[str, str, str, str, str]
 _ClassKey = tuple[str, str]
 
@@ -1040,17 +1059,9 @@ def _validate_variable_target(
     `variable_slug` itself is **not** validated against the DB — that's the
     point of slug-anchored linking: the link survives forward-of-data
     renames. Provider and register slugs are checked because if those are
-    typos the link is permanently dead.
+    typos the link is permanently dead. Key shape (required/allowed) is
+    enforced upstream by `_validate_same_as` at TOML load time.
     """
-    required = {"provider", "register", "variable_slug"}
-    missing = required - ref.keys()
-    if missing:
-        raise _err(
-            "slug_same_as_invalid_target",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
-            f"missing required key(s): {sorted(missing)}.",
-            "Each target needs at least provider, register, variable_slug.",
-        )
     provider_slug = ref["provider"]
     register_slug = ref["register"]
     variant_slug = ref.get("register_variant", "")
@@ -1133,17 +1144,9 @@ def _validate_classification_target(
     The version is intentionally not part of the key (§5.3 field reference);
     same_as for classifications links *families*, with version drift handled
     by `replaced_by` or `supersedes`. If the target slug names multiple
-    versions in the DB, the link is ambiguous and we error.
+    versions in the DB, the link is ambiguous and we error. Key shape
+    (required/allowed) is enforced upstream by `_validate_same_as`.
     """
-    required = {"provider", "classification_slug"}
-    missing = required - ref.keys()
-    if missing:
-        raise _err(
-            "slug_same_as_invalid_target",
-            f"classifications.toml: classification.{entry.source_id!r} "
-            f"same_as missing required key(s): {sorted(missing)}.",
-            "Each target needs provider and classification_slug.",
-        )
     provider_slug = ref["provider"]
     classification_slug = ref["classification_slug"]
     versions = by_slug.get((provider_slug, classification_slug), [])

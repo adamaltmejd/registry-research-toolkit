@@ -18,6 +18,7 @@ from reg_meta_build.fqid_slugs import (
     load_classifications_toml,
     load_provider_toml,
     load_slug_dir,
+    materialize_same_as_edges,
     populate_slugs,
     precheck_slugs,
     read_snapshot,
@@ -2173,7 +2174,6 @@ class TestMaterializeSameAsEdges:
     def _slug_dir_with_same_as(tmp_path: Path, body: str) -> Path:
         """Write a scb.toml under tmp_path; classifications.toml gets an empty
         stub since load_slug_dir scans the whole directory."""
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges  # noqa
 
         (tmp_path / "scb.toml").write_text(body, encoding="utf-8")
         (tmp_path / "classifications.toml").write_text("", encoding="utf-8")
@@ -2201,7 +2201,6 @@ class TestMaterializeSameAsEdges:
         return conn
 
     def test_inserts_both_directions(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = self._db_with_two_variables()
         slug_dir = self._slug_dir_with_same_as(
@@ -2222,7 +2221,6 @@ class TestMaterializeSameAsEdges:
         ]
 
     def test_self_loop_rejected(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = self._db_with_two_variables()
         slug_dir = self._slug_dir_with_same_as(
@@ -2236,7 +2234,6 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_self_loop"
 
     def test_reciprocal_pair_is_a_cycle(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = self._db_with_two_variables()
         # Both sides declare same_as → directed 2-cycle (kon → civilstand
@@ -2256,7 +2253,6 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_cycle"
 
     def test_unknown_target_register_rejected(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = build_slugged_db()
         slug_dir = self._slug_dir_with_same_as(
@@ -2270,7 +2266,6 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_unknown_register"
 
     def test_unknown_target_variant_rejected(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = build_slugged_db()
         slug_dir = self._slug_dir_with_same_as(
@@ -2285,7 +2280,6 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_unknown_variant"
 
     def test_ambiguous_variable_aliases_rejected(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         # Source (register_id, var_id) has two aliases that derive to
         # different slugs — the canonical form is ambiguous, so same_as
@@ -2320,7 +2314,6 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_ambiguous_source"
 
     def test_classification_edge_inserted(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = build_slugged_db()
         # Insert a second classification so the target slot resolves.
@@ -2353,7 +2346,6 @@ class TestMaterializeSameAsEdges:
         ]
 
     def test_classification_ambiguous_target_rejected(self, tmp_path: Path) -> None:
-        from reg_meta_build.fqid_slugs import materialize_same_as_edges
 
         conn = build_slugged_db()
         # Two classifications share the same slug across versions; same_as
