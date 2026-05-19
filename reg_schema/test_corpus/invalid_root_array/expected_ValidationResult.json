@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_root",
+      "path": "",
+      "message": "project_data.json root must be an object"
+    }
+  ]
+}

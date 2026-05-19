@@ -121,8 +121,12 @@ def test_validate_structural_matches_expected(case_dir: Path) -> None:
     own traversals and shouldn't be forced into lock-step.
     """
 
+    # No dict-only guard: malformed root shapes (array, scalar, null)
+    # are in scope for this corpus — `validate_structural` emits
+    # `invalid_root` for them, and the SPA / bundle ports must agree.
+    # Gating those out here would create a silent blind spot in the
+    # cross-runtime contract.
     payload = json.loads((case_dir / "input.json").read_text(encoding="utf-8"))
-    assert isinstance(payload, dict), "project_data.json root must be an object"
     actual = validate_structural(payload)
     expected = _decode_expected(
         json.loads(
