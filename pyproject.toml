@@ -1,11 +1,12 @@
 [project]
 name = "registry-research-toolkit"
 version = "0.4.0"
-description = "Workspace coordinator for mock_data_wizard and regmeta"
+description = "Workspace coordinator for mock_data_wizard, regmeta, and regmeta_build"
 requires-python = ">=3.11"
 dependencies = [
   "mock-data-wizard",
   "regmeta",
+  "regmeta-build",
 ]
 
 [dependency-groups]
@@ -19,7 +20,7 @@ dev = [
 ]
 
 [tool.pytest.ini_options]
-testpaths = ["mock_data_wizard", "regmeta"]
+testpaths = ["mock_data_wizard", "regmeta", "regmeta_build"]
 markers = ["integration: full pipeline tests requiring Docker"]
 
 [tool.uv]
@@ -28,9 +29,11 @@ package = false
 [tool.uv.sources]
 mock-data-wizard = { workspace = true }
 regmeta = { workspace = true }
+regmeta-build = { workspace = true }
 
 [tool.uv.workspace]
 members = [
   "mock_data_wizard",
   "regmeta",
+  "regmeta_build",
 ]

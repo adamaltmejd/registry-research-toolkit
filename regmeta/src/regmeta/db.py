@@ -17,7 +17,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable, Iterator
 
-from .classifications import populate_classifications, repo_seed_path
 from .errors import EXIT_CONFIG, RegmetaError
 from .fqid import derive_variable_slug
 from .queries import extract_year
@@ -1823,6 +1822,14 @@ def build_db(
         if skip_classifications:
             _progress("Skipping classifications (skip_classifications=True)")
         else:
+            # Lazy: classifications module lives in `regmeta_build` after
+            # the §15 step 2 carve-out. Phase 5 moves `build_db` itself
+            # into `regmeta_build/db.py`; until then this stays here.
+            from regmeta_build.classifications import (
+                populate_classifications,
+                repo_seed_path,
+            )
+
             seed = seed_path or repo_seed_path()
             if seed is None:
                 raise RegmetaError(
@@ -1850,7 +1857,7 @@ def build_db(
         if skip_slugs:
             _progress("Skipping slug TOMLs (skip_slugs=True)")
         else:
-            from .fqid_slugs import populate_slugs, repo_slug_dir
+            from regmeta_build.fqid_slugs import populate_slugs, repo_slug_dir
 
             slug_root = slug_dir or repo_slug_dir()
             if slug_root is None:

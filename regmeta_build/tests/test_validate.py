@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.validate import validate_built_db
+from regmeta_build.validate import validate_built_db
 
 
 class TestValidateModule:
@@ -123,7 +123,7 @@ class TestBuildDbValidateFlag:
         _sys.path.insert(0, str(Path(__file__).parent))
         from _csv_fixtures import write_scb_input
 
-        from regmeta import validate as validate_mod
+        from regmeta_build import validate as validate_mod
         from regmeta.db import DB_FILENAME, build_db
         from regmeta.errors import RegmetaError
 
@@ -143,10 +143,9 @@ class TestBuildDbValidateFlag:
             return r
 
         monkeypatch.setattr(validate_mod, "validate_built_db", always_fail)
-        # Also patch the re-export in cli so the handler sees the fake.
+        # _build_validate_hook() does the lazy import at call time, so patching
+        # the source module is sufficient — the hook factory picks up the fake.
         from regmeta import cli as cli_mod
-
-        monkeypatch.setattr(cli_mod, "validate_built_db", always_fail)
 
         with pytest.raises(RegmetaError) as exc_info:
             build_db(

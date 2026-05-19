@@ -11,6 +11,7 @@ members = [
     "mock-data-wizard",
     "registry-research-toolkit",
     "regmeta",
+    "regmeta-build",
 ]
 
 [[package]]
@@ -337,6 +338,7 @@ source = { virtual = "." }
 dependencies = [
     { name = "mock-data-wizard" },
     { name = "regmeta" },
+    { name = "regmeta-build" },
 ]
 
 [package.dev-dependencies]
@@ -353,6 +355,7 @@ dev = [
 requires-dist = [
     { name = "mock-data-wizard", editable = "mock_data_wizard" },
     { name = "regmeta", editable = "regmeta" },
+    { name = "regmeta-build", editable = "regmeta_build" },
 ]
 
 [package.metadata.requires-dev]
@@ -384,6 +387,21 @@ requires-dist = [
     { name = "zstandard", specifier = ">=0.23" },
 ]
 provides-extras = ["xlsx"]
+
+[[package]]
+name = "regmeta-build"
+version = "0.1.0"
+source = { editable = "regmeta_build" }
+dependencies = [
+    { name = "openpyxl" },
+    { name = "regmeta" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "openpyxl", specifier = ">=3.1" },
+    { name = "regmeta", editable = "regmeta" },
+]
 
 [[package]]
 name = "ruff"

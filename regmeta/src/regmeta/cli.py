@@ -5,24 +5,35 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
 import sqlite3
 import sys
 import time
 from pathlib import Path
 from typing import Any, Callable
 
+from .cli_common import (
+    GLOBAL_FLAGS,
+    GLOBAL_FLAGS_WITH_VALUE,
+    NoRepeatParser,
+    clean_leaf_help,
+    emit_hints,
+    get_db_info,
+    hint_add,
+    reorder_global_flags,
+    success_envelope,
+    write_formatted,
+    write_json,
+    write_to,
+)
 from .db import (
     SCHEMA_VERSION,
     default_db_dir,
-    utc_now,
     build_db,
     db_path_from_args,
     get_manifest,
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from .validate import validate_built_db
 from .queries import (
     get_availability,
     get_classification,
@@ -41,70 +52,6 @@ from .queries import (
     search,
     search_variables_by_classification,
 )
-
-CONTRACT_VERSION = "3.0.0"
-
-
-# ---------------------------------------------------------------------------
-# Output helpers
-# ---------------------------------------------------------------------------
-
-
-def _success_envelope(
-    *,
-    command: str,
-    args_payload: dict[str, Any],
-    db_info: dict[str, str] | None,
-    data: Any,
-    duration_ms: int,
-) -> dict[str, Any]:
-    envelope: dict[str, Any] = {
-        "contract_version": CONTRACT_VERSION,
-        "generated_at": utc_now(),
-        "request": {"command": command, "args": args_payload},
-    }
-    if db_info:
-        envelope["database"] = db_info
-    envelope["data"] = data
-    envelope["run"] = {"duration_ms": duration_ms}
-    return envelope
-
-
-_MAX_DISPLAY_ROWS = 100
-_MAX_HINTS = 3
-
-
-def _hint_add(hints: list[str] | None, msg: str) -> None:
-    if hints is not None and len(hints) < _MAX_HINTS:
-        hints.append(msg)
-
-
-def _emit_hints(hints: list[str]) -> None:
-    sys.stderr.write("\n")
-    for h in hints:
-        sys.stderr.write(f"  hint: {h}\n")
-
-
-def _write_to(content: str, output_path: str | None, *, truncate: bool = False) -> None:
-    if output_path:
-        target = Path(output_path).expanduser().resolve()
-        target.parent.mkdir(parents=True, exist_ok=True)
-        with target.open("w" if truncate else "a", encoding="utf-8") as f:
-            f.write(content)
-    else:
-        sys.stdout.write(content)
-
-
-def _write_json(payload: dict[str, Any], output_path: str | None) -> None:
-    content = json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
-    if output_path:
-        tmp = Path(output_path).expanduser().resolve()
-        tmp_file = tmp.with_suffix(tmp.suffix + ".tmp")
-        tmp.parent.mkdir(parents=True, exist_ok=True)
-        tmp_file.write_text(content, encoding="utf-8")
-        tmp_file.replace(tmp)
-    else:
-        sys.stdout.write(content)
 
 
 def _write_groups_payload(data: dict[str, Any], output_path: str | None) -> None:
@@ -139,138 +86,7 @@ def _write_groups_payload(data: dict[str, Any], output_path: str | None) -> None
         lines.append(f"  Registers: {', '.join(shown)}{more}")
         lines.append("")
 
-    _write_to("\n".join(lines), output_path)
-
-
-def _terminal_width(output_path: str | None) -> int:
-    if output_path:
-        return 10_000
-    return shutil.get_terminal_size().columns
-
-
-def _render_table(
-    rows: list[dict[str, Any]],
-    columns: list[str],
-    *,
-    max_width: int | None = None,
-) -> tuple[str, int]:
-    widths = {c: len(c) for c in columns}
-    str_rows = []
-    for row in rows:
-        str_row = {c: str(row.get(c, "")) for c in columns}
-        for c in columns:
-            widths[c] = max(widths[c], len(str_row[c]))
-        str_rows.append(str_row)
-
-    separators = 2 * (len(columns) - 1)
-    table_width = sum(widths.values()) + separators
-
-    # Shrink widest columns to fit terminal when max_width is set
-    if max_width and table_width > max_width:
-        budget = max_width - separators
-        min_col = max(8, max(len(c) for c in columns))
-        while sum(widths.values()) > budget:
-            widest = max(columns, key=lambda c: widths[c])
-            if widths[widest] <= min_col:
-                break
-            widths[widest] = max(
-                min_col, budget - sum(w for c, w in widths.items() if c != widest)
-            )
-        table_width = sum(widths.values()) + separators
-        # Truncate cell values that exceed their column width
-        for sr in str_rows:
-            for c in columns:
-                if len(sr[c]) > widths[c]:
-                    sr[c] = sr[c][: widths[c] - 1] + "…"
-
-    header = "  ".join(c.ljust(widths[c]) for c in columns)
-    sep = "  ".join("-" * widths[c] for c in columns)
-    lines = [header, sep]
-    for sr in str_rows:
-        lines.append("  ".join(sr[c].ljust(widths[c]) for c in columns))
-    return "\n".join(lines) + "\n", table_width
-
-
-def _render_list(rows: list[dict[str, Any]], columns: list[str]) -> str:
-    key_width = max(len(c) for c in columns)
-    lines: list[str] = []
-    for i, row in enumerate(rows):
-        if i > 0:
-            lines.append("")
-        for c in columns:
-            lines.append(f"  {c.ljust(key_width)}  {row.get(c, '')}")
-    return "\n".join(lines) + "\n"
-
-
-def format_rows(
-    rows: list[dict[str, Any]],
-    columns: list[str],
-    *,
-    max_width: int | None = None,
-) -> str:
-    """Render rows as a table or list string.
-
-    Auto-selects list format for ≤5 rows. Truncates wide columns to fit
-    max_width when given. Importable by other packages (e.g. mock-data-wizard).
-    """
-    if not rows:
-        return "(no results)\n"
-    if len(rows) <= 5:
-        return _render_list(rows, columns)
-    content, width = _render_table(rows, columns)
-    if max_width and width > max_width:
-        content, _ = _render_table(rows, columns, max_width=max_width)
-    return content
-
-
-def _write_formatted(
-    rows: list[dict[str, Any]],
-    columns: list[str],
-    output_path: str | None,
-    *,
-    fmt: str = "table",
-    fmt_explicit: bool = False,
-    hints: list[str] | None = None,
-) -> None:
-    if not rows:
-        _write_to("(no results)\n", output_path)
-        return
-
-    truncated = 0
-    if len(rows) > _MAX_DISPLAY_ROWS:
-        truncated = len(rows) - _MAX_DISPLAY_ROWS
-        rows = rows[:_MAX_DISPLAY_ROWS]
-
-    if fmt == "list":
-        content = _render_list(rows, columns)
-    elif not fmt_explicit and len(rows) <= 5:
-        # Few results — list is more readable
-        content = _render_list(rows, columns)
-    else:
-        term_w = _terminal_width(output_path)
-        table_content, table_width = _render_table(rows, columns)
-        if table_width > term_w:
-            table_content, _ = _render_table(rows, columns, max_width=term_w)
-            _hint_add(hints, "Long values truncated (--format list for full text)")
-            content = table_content
-        else:
-            content = table_content
-
-    if truncated:
-        _hint_add(
-            hints,
-            f"Table view truncated {truncated} rows (--format json for full output)",
-        )
-
-    _write_to(content, output_path)
-
-
-def _db_info(conn):
-    manifest = get_manifest(conn)
-    return {
-        "schema_version": manifest.get("schema_version", "unknown"),
-        "import_date": manifest.get("import_date", "unknown"),
-    }
+    write_to("\n".join(lines), output_path)
 
 
 # ---------------------------------------------------------------------------
@@ -278,76 +94,8 @@ def _db_info(conn):
 # ---------------------------------------------------------------------------
 
 
-class _NoRepeatParser(argparse.ArgumentParser):
-    """ArgumentParser that rejects repeated optional flags."""
-
-    def parse_known_args(self, args=None, namespace=None):
-        if args is None:
-            args = sys.argv[1:]
-        seen: dict[str, str] = {}
-        for token in args:
-            if token.startswith("-") and "=" not in token:
-                if token in seen:
-                    self.error(f"{token} may only be specified once")
-                seen[token] = token
-        return super().parse_known_args(args, namespace)
-
-
-_GLOBAL_FLAGS = {
-    "--db",
-    "--format",
-    "--output",
-    "-v",
-    "--verbose",
-    "-q",
-    "--quiet",
-    "--version",
-}
-_GLOBAL_FLAGS_WITH_VALUE = {"--db", "--format", "--output"}
-
-
-def _reorder_global_flags(argv: list[str]) -> list[str]:
-    """Move global flags before the subcommand so argparse handles them.
-
-    Handles both ``--flag value`` and ``--flag=value`` syntax.
-    """
-    front: list[str] = []
-    rest: list[str] = []
-    i = 0
-    while i < len(argv):
-        token = argv[i]
-        # Handle --flag=value for global flags
-        eq_name = token.split("=", 1)[0] if "=" in token else None
-        if token in _GLOBAL_FLAGS:
-            front.append(token)
-            if token in _GLOBAL_FLAGS_WITH_VALUE and i + 1 < len(argv):
-                i += 1
-                front.append(argv[i])
-        elif eq_name in _GLOBAL_FLAGS_WITH_VALUE:
-            front.append(token)
-        else:
-            rest.append(token)
-        i += 1
-    return front + rest
-
-
-def _clean_leaf_help(parser: argparse.ArgumentParser) -> None:
-    """Hide -h/--help from output, rename 'positional arguments', add epilog."""
-    for action in parser._actions:
-        if isinstance(action, argparse._HelpAction):
-            action.help = argparse.SUPPRESS
-            break
-    for group in parser._action_groups:
-        if group.title == "positional arguments":
-            group.title = "Arguments"
-            break
-    if not parser.epilog:
-        cmd = parser.prog.removeprefix("regmeta ")
-        parser.epilog = f"Run `regmeta {cmd} --examples` for usage examples."
-
-
 def _build_parser() -> argparse.ArgumentParser:
-    parser = _NoRepeatParser(
+    parser = NoRepeatParser(
         prog="regmeta",
         description="Search and query SCB registry metadata.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -828,7 +576,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--slug-dir",
         default=None,
         help=(
-            "Directory of curated slug TOMLs (default: regmeta/fqid_slugs/ "
+            "Directory of curated slug TOMLs (default: regmeta_build/fqid_slugs/ "
             "when run from a repo checkout)."
         ),
     )
@@ -873,7 +621,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--out-dir",
         default=None,
         help=(
-            "Where to write the TOMLs (default: regmeta/fqid_slugs/ in a repo "
+            "Where to write the TOMLs (default: regmeta_build/fqid_slugs/ in a repo "
             "checkout, else CWD/fqid_slugs/)."
         ),
     )
@@ -910,7 +658,7 @@ def _build_parser() -> argparse.ArgumentParser:
     precheck_p.add_argument(
         "--slug-dir",
         default=None,
-        help="Directory of slug TOMLs (default: regmeta/fqid_slugs/).",
+        help="Directory of slug TOMLs (default: regmeta_build/fqid_slugs/).",
     )
     precheck_p.add_argument(
         "--update-snapshot",
@@ -1050,9 +798,9 @@ def _build_parser() -> argparse.ArgumentParser:
                 ]
                 if sub_actions:
                     for leaf_p in sub_actions[0].choices.values():
-                        _clean_leaf_help(leaf_p)
+                        clean_leaf_help(leaf_p)
                 else:
-                    _clean_leaf_help(sub_p)
+                    clean_leaf_help(sub_p)
 
     return parser
 
@@ -1066,6 +814,11 @@ def _build_validate_hook() -> Callable[[Path], None]:
     """Return a build_db pre_rename_hook that runs the value-set dedup
     validator against the staging DB and raises on failure. Defined as a
     helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
+    # Lazy import: regmeta_build is workspace-only; importing at module load
+    # breaks plain `pip install regmeta`. Until Phase 7 moves maintain to
+    # regmeta-build, validate is the only cross-package symbol called eagerly
+    # enough that it has to be deferred.
+    from regmeta_build.validate import validate_built_db
 
     def hook(staging_db: Path) -> None:
         validation = validate_built_db(staging_db)
@@ -1105,7 +858,7 @@ def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], in
         pre_rename_hook=pre_rename_hook,
     )
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain build-db",
         args_payload={
             "input_dir": args.input_dir,
@@ -1142,7 +895,7 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain info",
         args_payload={},
         db_info={
@@ -1161,7 +914,7 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     db_dir = Path(args.db) if args.db else None
     result = run_update(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain update",
         args_payload={"tag": args.tag, "force": args.force},
         db_info=None,
@@ -1171,7 +924,7 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 
 def _resolve_slug_dir(slug_arg: str | None) -> Path:
-    from .fqid_slugs import repo_slug_dir
+    from regmeta_build.fqid_slugs import repo_slug_dir
 
     if slug_arg is not None:
         return Path(slug_arg).expanduser().resolve()
@@ -1183,7 +936,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
             error_class="configuration",
             message=(
                 "Slug TOMLs not found. Pass --slug-dir or run from a regmeta "
-                "checkout containing regmeta/fqid_slugs/."
+                "checkout containing regmeta_build/fqid_slugs/."
             ),
             remediation=(
                 "Run from a repo checkout, or `regmeta maintain seed-slugs` "
@@ -1194,7 +947,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
 
 
 def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .fqid_slugs import (
+    from regmeta_build.fqid_slugs import (
         format_default_slug_hints,
         iter_default_slug_candidates,
         repo_slug_dir,
@@ -1239,7 +992,7 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain seed-slugs",
         args_payload={
             "out_dir": str(out_dir),
@@ -1259,7 +1012,7 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
 def _cmd_maintain_precheck_slugs(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
-    from .fqid_slugs import (
+    from regmeta_build.fqid_slugs import (
         SNAPSHOT_FILENAME,
         diff_snapshot,
         is_unfrozen,
@@ -1331,7 +1084,7 @@ def _cmd_maintain_precheck_slugs(
             exit_code = EXIT_CONFIG
 
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain precheck-slugs",
         args_payload={
             "slug_dir": str(slug_dir),
@@ -1378,7 +1131,11 @@ def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], i
     import dataclasses
     from datetime import date
 
-    from .sources.sos import SosParseError, parse_directory, parse_register_file
+    from regmeta_build.sources.sos import (
+        SosParseError,
+        parse_directory,
+        parse_register_file,
+    )
 
     start = time.perf_counter()
     path = Path(args.path).expanduser().resolve()
@@ -1423,7 +1180,7 @@ def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], i
         "register_count": len(results),
     }
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="maintain parse-sos",
         args_payload={"path": str(path)},
         db_info=None,
@@ -1454,7 +1211,7 @@ def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], 
                     "This command is for maintainers rebuilding the doc DB from a repo checkout."
                 ),
                 remediation=(
-                    "Run from a regmeta checkout with `regmeta/docs/` present, "
+                    "Run from a regmeta checkout with `regmeta_build/docs/` present, "
                     "or pass --docs-dir pointing to a directory with register doc subdirectories."
                 ),
             )
@@ -1488,7 +1245,7 @@ def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="doc search",
         args_payload={
             "query": args.query,
@@ -1523,7 +1280,7 @@ def _cmd_doc_get(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             remediation="Use `regmeta docs list` to see available docs, or `regmeta docs search <query>` to search.",
         )
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="doc get",
         args_payload={"identifier": args.identifier},
         db_info=None,
@@ -1548,7 +1305,7 @@ def _cmd_doc_list(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="doc list",
         args_payload={
             "type": args.doc_type,
@@ -1607,7 +1364,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = search(
             conn,
             args.query,
@@ -1640,7 +1397,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
 
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="search",
         args_payload={
             "query": args.query,
@@ -1662,13 +1419,13 @@ def _cmd_get_register(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         registers = get_register(conn, args.register)
         data = registers[0] if len(registers) == 1 else {"registers": registers}
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get register",
         args_payload={"register": args.register},
         db_info=info,
@@ -1682,7 +1439,7 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_schema(
             conn,
             regvar_id=args.regvar_id,
@@ -1702,7 +1459,7 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args_out["years"] = args.years
     if args.columns_like:
         args_out["columns_like"] = args.columns_like
-    return _success_envelope(
+    return success_envelope(
         command="get schema",
         args_payload=args_out,
         db_info=info,
@@ -1716,7 +1473,7 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         variables = get_varinfo(conn, args.variable, register=args.register)
         data = variables[0] if len(variables) == 1 else {"variables": variables}
     finally:
@@ -1742,7 +1499,7 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         pass
 
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get varinfo",
         args_payload={"variable": args.variable, "register": args.register},
         db_info=info,
@@ -1824,7 +1581,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     args._collapsed_registers = 0
 
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         if is_cvid:
             if args.register is not None or args.year is not None:
                 raise RegmetaError(
@@ -1913,7 +1670,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get values",
         args_payload={
             "target": target,
@@ -1931,12 +1688,12 @@ def _cmd_get_datacolumns(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_datacolumns(conn, args.variable, register=args.register)
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get datacolumns",
         args_payload={"variable": args.variable, "register": args.register},
         db_info=info,
@@ -1950,7 +1707,7 @@ def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], 
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_coded_variables(
             conn,
             min_codes=args.min_codes,
@@ -1960,7 +1717,7 @@ def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], 
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get coded-variables",
         args_payload={
             "min_codes": args.min_codes,
@@ -1986,7 +1743,7 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_diff(
             conn,
             register=args.register,
@@ -2007,7 +1764,7 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         args_payload["variant"] = args.variant
     if args.variable:
         args_payload["variable"] = args.variable
-    return _success_envelope(
+    return success_envelope(
         command="get diff",
         args_payload=args_payload,
         db_info=info,
@@ -2021,7 +1778,7 @@ def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_lineage(conn, args.variable, register=args.register)
     finally:
         conn.close()
@@ -2029,7 +1786,7 @@ def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     args_payload: dict[str, Any] = {"variable": args.variable}
     if args.register:
         args_payload["register"] = args.register
-    return _success_envelope(
+    return success_envelope(
         command="get lineage",
         args_payload=args_payload,
         db_info=info,
@@ -2076,7 +1833,7 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         if args.list_all:
             data: Any = {"classifications": list_classifications(conn)}
             args_payload: dict[str, Any] = {"list": True}
@@ -2111,7 +1868,7 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
     finally:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="get classification",
         args_payload=args_payload,
         db_info=info,
@@ -2125,7 +1882,7 @@ def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         data = get_availability(conn, args.target, register=args.register)
     finally:
         conn.close()
@@ -2133,7 +1890,7 @@ def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int
     args_payload: dict[str, Any] = {"target": args.target}
     if args.register:
         args_payload["register"] = args.register
-    return _success_envelope(
+    return success_envelope(
         command="get availability",
         args_payload=args_payload,
         db_info=info,
@@ -2169,7 +1926,7 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = _db_info(conn)
+        info = get_db_info(conn)
         results = resolve(conn, columns, register=args.register)
     finally:
         conn.close()
@@ -2184,7 +1941,7 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         )
 
     duration_ms = int((time.perf_counter() - start) * 1000)
-    return _success_envelope(
+    return success_envelope(
         command="resolve",
         args_payload={"columns": columns, "register": args.register},
         db_info=info,
@@ -2209,7 +1966,7 @@ def _write_payload(
     hints: list[str] | None = None,
 ) -> None:
     # Truncate output file so multi-section commands (diff, lineage) append correctly
-    _write_to("", output_path, truncate=True)
+    write_to("", output_path, truncate=True)
     data = payload.get("data", {})
 
     # Pick columns based on what result types are in the payload
@@ -2238,7 +1995,7 @@ def _write_payload(
             cols = ["variable_name", "display_name"]
         else:
             cols = ["type", "register_id", "register_name", "var_id", "variable_name"]
-        _write_formatted(
+        write_formatted(
             results, cols, output_path, fmt=fmt, fmt_explicit=fmt_explicit, hints=hints
         )
     elif key == ("get", "register"):
@@ -2254,7 +2011,7 @@ def _write_payload(
                         "variant_name": v.get("registervariantnamn", ""),
                     }
                 )
-        _write_formatted(
+        write_formatted(
             rows,
             ["register_id", "register_name", "regvar_id", "variant_name"],
             output_path,
@@ -2288,7 +2045,7 @@ def _write_payload(
                         "columns": total_cols,
                     }
                 )
-            _write_formatted(
+            write_formatted(
                 rows,
                 ["regvar_id", "variant", "years", "versions", "columns"],
                 output_path,
@@ -2315,7 +2072,7 @@ def _write_payload(
                                     "var_id": col.get("var_id", ""),
                                 }
                             )
-            _write_formatted(
+            write_formatted(
                 rows,
                 ["regvar_id", "year", "alias", "variabelnamn", "source", "var_id"],
                 output_path,
@@ -2339,7 +2096,7 @@ def _write_payload(
                                 "cvid": col.get("cvid", ""),
                             }
                         )
-            _write_formatted(
+            write_formatted(
                 rows,
                 [
                     "version",
@@ -2372,7 +2129,7 @@ def _write_payload(
                         "values": inst.get("value_set_count", 0),
                     }
                 )
-        _write_formatted(
+        write_formatted(
             rows,
             [
                 "register_id",
@@ -2397,7 +2154,7 @@ def _write_payload(
         #   {groups: [...]}            — variable+year disagreement, grouped
         #                                by distinct value set
         if isinstance(data, list):
-            _write_formatted(
+            write_formatted(
                 data,
                 ["vardekod", "vardebenamning"],
                 output_path,
@@ -2437,7 +2194,7 @@ def _write_payload(
             if show_variant:
                 cols.append("variant")
             cols += ["cvid", "vardekod", "vardebenamning"]
-            _write_formatted(
+            write_formatted(
                 rows,
                 cols,
                 output_path,
@@ -2446,7 +2203,7 @@ def _write_payload(
                 hints=hints,
             )
     elif key == ("get", "datacolumns"):
-        _write_formatted(
+        write_formatted(
             data if isinstance(data, list) else [],
             ["kolumnnamn", "register_id", "register_name", "version_name"],
             output_path,
@@ -2455,7 +2212,7 @@ def _write_payload(
             hints=hints,
         )
     elif key == ("get", "coded-variables"):
-        _write_formatted(
+        write_formatted(
             data if isinstance(data, list) else [],
             ["variable_name", "n_distinct_codes", "n_registers", "n_instances"],
             output_path,
@@ -2509,8 +2266,8 @@ def _write_payload(
                     )
                 else:
                     lines.append(f"  {rv['variabelnamn']} (var_id {rv['var_id']})")
-            _write_to("\n".join(lines) + "\n\n", output_path)
-        _write_formatted(
+            write_to("\n".join(lines) + "\n\n", output_path)
+        write_formatted(
             rows,
             ["variant", "change", "var_id", "variabelnamn", "detail"],
             output_path,
@@ -2520,7 +2277,7 @@ def _write_payload(
         )
         unchanged = data.get("unchanged", [])
         if unchanged:
-            _write_to(f"\nUnchanged: {', '.join(unchanged)}\n", output_path)
+            write_to(f"\nUnchanged: {', '.join(unchanged)}\n", output_path)
     elif key == ("get", "lineage"):
         rows = []
         for r in data.get("registers", []):
@@ -2539,7 +2296,7 @@ def _write_payload(
                     "source": source_info,
                 }
             )
-        _write_formatted(
+        write_formatted(
             rows,
             ["register", "var_id", "role", "instances", "years", "source"],
             output_path,
@@ -2550,7 +2307,7 @@ def _write_payload(
         cov = data.get("provenance_coverage", {})
         if cov.get("total"):
             pct = round(100 * cov["with_source"] / cov["total"])
-            _write_to(
+            write_to(
                 f"\nProvenance: {cov['with_source']}/{cov['total']} ({pct}%)\n",
                 output_path,
             )
@@ -2570,7 +2327,7 @@ def _write_payload(
                         "gaps": gaps_str or "-",
                     }
                 )
-            _write_formatted(
+            write_formatted(
                 rows,
                 ["register", "var_id", "years", "gaps"],
                 output_path,
@@ -2591,7 +2348,7 @@ def _write_payload(
                         "version_count": len(yr),
                     }
                 )
-            _write_formatted(
+            write_formatted(
                 rows,
                 ["regvar_id", "variant_name", "years", "version_count"],
                 output_path,
@@ -2601,7 +2358,7 @@ def _write_payload(
             )
         all_gaps = data.get("gaps", [])
         if all_gaps:
-            _write_to(f"\nGaps: {', '.join(str(g) for g in all_gaps)}\n", output_path)
+            write_to(f"\nGaps: {', '.join(str(g) for g in all_gaps)}\n", output_path)
     elif key == ("get", "classification"):
         if "classifications" in data:
             rows = [
@@ -2615,7 +2372,7 @@ def _write_payload(
                 }
                 for c in data.get("classifications", [])
             ]
-            _write_formatted(
+            write_formatted(
                 rows,
                 [
                     "short_name",
@@ -2635,8 +2392,8 @@ def _write_payload(
                 f"{data.get('short_name', '')} — {data.get('name', '')}\n"
                 f"{data.get('code_count', len(data.get('codes', [])))} codes\n\n"
             )
-            _write_to(header, output_path)
-            _write_formatted(
+            write_to(header, output_path)
+            write_formatted(
                 data.get("codes", []),
                 ["vardekod", "vardebenamning", "level"],
                 output_path,
@@ -2645,7 +2402,7 @@ def _write_payload(
                 hints=hints,
             )
         elif "variables" in data:
-            _write_formatted(
+            write_formatted(
                 data.get("variables", []),
                 ["register_id", "register_name", "var_id", "variable_name"],
                 output_path,
@@ -2668,7 +2425,7 @@ def _write_payload(
                     "url": data.get("url", ""),
                 }
             ]
-            _write_formatted(
+            write_formatted(
                 rows,
                 [
                     "short_name",
@@ -2711,7 +2468,7 @@ def _write_payload(
                         "variable_name": "",
                     }
                 )
-        _write_formatted(
+        write_formatted(
             rows,
             ["column", "status", "register_id", "var_id", "variable_name"],
             output_path,
@@ -2730,7 +2487,7 @@ def _write_payload(
             }
             for r in results
         ]
-        _write_formatted(
+        write_formatted(
             rows,
             ["variable", "display_name", "filename", "snippet"],
             output_path,
@@ -2747,8 +2504,8 @@ def _write_payload(
             header.append(f"  tags:         {', '.join(data['tags'])}")
         if data.get("source"):
             header.append(f"  source:       {data['source']}")
-        _write_to("\n".join(header) + "\n\n", output_path)
-        _write_to(data.get("body", "") + "\n", output_path)
+        write_to("\n".join(header) + "\n\n", output_path)
+        write_to(data.get("body", "") + "\n", output_path)
     elif key == ("docs", "list"):
         if data.get("results") is not None:
             rows = [
@@ -2759,7 +2516,7 @@ def _write_payload(
                 }
                 for r in data["results"]
             ]
-            _write_formatted(
+            write_formatted(
                 rows,
                 ["filename", "display_name", "variable"],
                 output_path,
@@ -2781,7 +2538,7 @@ def _write_payload(
             lines.append("  topics:")
             for tag, n in data.get("topics", {}).items():
                 lines.append(f"    {tag}: {n}")
-            _write_to("\n".join(lines) + "\n", output_path)
+            write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "update"):
         pass  # status messages already emitted on stderr by run_update()
     elif key == ("maintain", "info"):
@@ -2799,16 +2556,16 @@ def _write_payload(
             lines.append("  tables:")
             for t, n in table_counts.items():
                 lines.append(f"    {t}: {n:,}")
-        _write_to("\n".join(lines) + "\n", output_path)
+        write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "build-db"):
-        _write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
+        write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
     elif key == ("maintain", "seed-slugs"):
         lines = [f"Seeded slug TOMLs into {data.get('out_dir', '?')}:"]
         for name in data.get("files", []):
             lines.append(f"  {name}")
         lines.append("")
         lines.append("Hand-review every slug, then commit.")
-        _write_to("\n".join(lines) + "\n", output_path)
+        write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "precheck-slugs"):
         lines: list[str] = []
         parse_errors = data.get("parse_errors", [])
@@ -2959,17 +2716,17 @@ def _write_payload(
                 )
         if not lines:
             lines.append("OK — all live source IDs have curated slugs.")
-        _write_to("\n".join(lines) + "\n", output_path)
+        write_to("\n".join(lines) + "\n", output_path)
     elif key == ("maintain", "build-docs"):
-        _write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
+        write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
     elif key == ("maintain", "parse-sos"):
         count = data.get("register_count", 0)
-        _write_to(
+        write_to(
             f"Parsed {count} register(s). Use --format json for full detail.\n",
             output_path,
         )
     else:
-        _write_json(payload, output_path)
+        write_json(payload, output_path)
 
 
 # ---------------------------------------------------------------------------
@@ -2986,23 +2743,23 @@ def _collect_hints(
     """Populate command-specific contextual hints."""
     if key == ("search", None):
         if getattr(args, "field", "all") == "all":
-            _hint_add(hints, "Searching all fields (--field to narrow)")
+            hint_add(hints, "Searching all fields (--field to narrow)")
         total = data.get("total_count", 0)
         results = data.get("results", [])
         if total > len(results):
-            _hint_add(
+            hint_add(
                 hints,
                 f"Showing {len(results)} of {total} matches (--limit/--offset to page)",
             )
         doc_hint = data.pop("doc_hint", None)
         if doc_hint:
-            _hint_add(hints, doc_hint)
+            hint_add(hints, doc_hint)
         if total == 0 and not results:
-            _hint_add(hints, "No results (try broader --field or regmeta docs search)")
+            hint_add(hints, "No results (try broader --field or regmeta docs search)")
 
     elif key == ("get", "schema"):
         if not getattr(args, "summary", False) and not getattr(args, "flat", False):
-            _hint_add(
+            hint_add(
                 hints, "Full schema view (--summary for overview, --flat for export)"
             )
 
@@ -3011,21 +2768,21 @@ def _collect_hints(
         n_regs = len({v.get("register_id") for v in variables})
         n_vars = len({v.get("var_id") for v in variables})
         if n_vars > 1:
-            _hint_add(
+            hint_add(
                 hints,
                 f"Alias maps to {n_vars} variable definitions across {n_regs} register(s) (--register to narrow)",
             )
         elif n_regs > 1:
-            _hint_add(hints, f"Found in {n_regs} registers (--register to narrow)")
+            hint_add(hints, f"Found in {n_regs} registers (--register to narrow)")
         if any(v.get("doc_available") for v in variables):
-            _hint_add(
+            hint_add(
                 hints,
                 f"Docs available (run: regmeta docs get {getattr(args, 'variable', '')})",
             )
 
     elif key == ("get", "values"):
         if getattr(args, "_projection_emptied", False):
-            _hint_add(
+            hint_add(
                 hints,
                 "cvid had value codes in Vardemangder.csv but every code was "
                 "excluded by year-projection — likely an SCB validity gap for "
@@ -3040,7 +2797,7 @@ def _collect_hints(
                 if collapsed_regs > 1
                 else "different variants in one register"
             )
-            _hint_add(
+            hint_add(
                 hints,
                 f"Codes are identical across {collapsed} instance(s) "
                 f"spanning {scope} — collapsed to one list.",
@@ -3053,19 +2810,19 @@ def _collect_hints(
             n_without = len(instances) - n_with
             n_regs = len({i.get("register_name") for i in instances})
             if n_without and n_with:
-                _hint_add(
+                hint_add(
                     hints,
                     f"{n_without}/{len(instances)} instance(s) had no value set "
                     "(elided from table; see JSON for full picture).",
                 )
             elif n_without and not n_with:
-                _hint_add(
+                hint_add(
                     hints,
                     "No instance carries a value set — variable may be "
                     "numeric/text, or year-projection emptied every cvid.",
                 )
             if n_regs > 1 and not getattr(args, "register", None):
-                _hint_add(
+                hint_add(
                     hints,
                     f"Variable spans {n_regs} register(s); use --register to narrow.",
                 )
@@ -3321,12 +3078,12 @@ def _strip_global_flags(reordered: list[str]) -> list[str]:
         if skip_next:
             skip_next = False
             continue
-        if arg in _GLOBAL_FLAGS:
-            if arg in _GLOBAL_FLAGS_WITH_VALUE:
+        if arg in GLOBAL_FLAGS:
+            if arg in GLOBAL_FLAGS_WITH_VALUE:
                 skip_next = True
             continue
         eq_name = arg.split("=", 1)[0] if "=" in arg else None
-        if eq_name in _GLOBAL_FLAGS_WITH_VALUE:
+        if eq_name in GLOBAL_FLAGS_WITH_VALUE:
             continue
         result.append(arg)
     return result
@@ -3757,7 +3514,7 @@ def _prompt_first_run_download(
 def run(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     effective = argv if argv is not None else sys.argv[1:]
-    reordered = _reorder_global_flags(effective)
+    reordered = reorder_global_flags(effective)
 
     # Intercept --examples and group --help before argparse processes them
     cmd_args = _strip_global_flags(reordered)
@@ -3852,9 +3609,9 @@ def run(argv: list[str] | None = None) -> int:
             _collect_hints(key, payload.get("data", {}), args, hints)
         if fmt == "json":
             if verbose:
-                _write_json(payload, output_path)
+                write_json(payload, output_path)
             else:
-                _write_json(payload.get("data", payload), output_path)
+                write_json(payload.get("data", payload), output_path)
         else:
             _write_payload(
                 key,
@@ -3867,7 +3624,7 @@ def run(argv: list[str] | None = None) -> int:
             )
         if hints and not quiet:
             sys.stdout.flush()
-            _emit_hints(hints)
+            emit_hints(hints)
         if update_checker is not None and sys.stderr.isatty():
             try:
                 new_ver = update_checker.get_newer_version()
@@ -3892,7 +3649,7 @@ def run(argv: list[str] | None = None) -> int:
                 pass
         return exit_code
     except RegmetaError as exc:
-        _write_json({"error": exc.to_dict()}, getattr(args, "output", None))
+        write_json({"error": exc.to_dict()}, getattr(args, "output", None))
         return exc.exit_code
     except Exception as exc:
         error_payload = {
@@ -3904,7 +3661,7 @@ def run(argv: list[str] | None = None) -> int:
             }
         }
         try:
-            _write_json(error_payload, getattr(args, "output", None))
+            write_json(error_payload, getattr(args, "output", None))
         except Exception:
             sys.stderr.write(json.dumps(error_payload) + "\n")
         return EXIT_INTERNAL
