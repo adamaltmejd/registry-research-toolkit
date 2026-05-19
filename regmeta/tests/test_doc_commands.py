@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from regmeta.cli import run
-from regmeta.doc_db import build_doc_db
+from regmeta_build.doc_db import build_doc_db
 
 
 # ---------------------------------------------------------------------------

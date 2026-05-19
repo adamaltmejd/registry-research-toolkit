@@ -263,7 +263,7 @@ class TestDownloadDbSchemaGuard:
 
 def _write_fake_docs_db_zst(dest_zst: Path, schema_version: str) -> None:
     """Build a minimal doc DB with given schema_version and zstd it to dest."""
-    from regmeta.doc_db import DOC_DDL
+    from regmeta_build.doc_db import DOC_DDL
 
     db_path = dest_zst.with_suffix(".db.source")
     conn = sqlite3.connect(db_path)

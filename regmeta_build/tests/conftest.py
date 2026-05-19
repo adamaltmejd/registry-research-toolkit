@@ -65,7 +65,7 @@ def _write_fixture_slug_dir(slug_dir: Path) -> None:
 
 
 def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -> None:
-    from regmeta.doc_db import build_doc_db
+    from regmeta_build.doc_db import build_doc_db
 
     docs_src = tmp_path_factory.mktemp("stub_docs")
     reg_dir = docs_src / "stub"

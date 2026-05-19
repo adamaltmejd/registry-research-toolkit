@@ -758,7 +758,7 @@ class TestGetValues:
             "VALUES (5002, 2, 11, 101, 44, 2)"
         )
         # docs DB stub — query commands require it present.
-        from regmeta.doc_db import build_doc_db
+        from regmeta_build.doc_db import build_doc_db
 
         docs_src = tmp_path / "docs"
         (docs_src / "stub").mkdir(parents=True)

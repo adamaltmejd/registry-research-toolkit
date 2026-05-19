@@ -84,7 +84,7 @@ def _build_stub_doc_db(db_dir: Path, tmp_path_factory: pytest.TempPathFactory) -
     need *a* schema-compatible doc DB present so the presence guard lets
     them through. Doc-specific behaviour is tested in test_doc_commands.py.
     """
-    from regmeta.doc_db import build_doc_db
+    from regmeta_build.doc_db import build_doc_db
 
     docs_src = tmp_path_factory.mktemp("stub_docs")
     reg_dir = docs_src / "stub"

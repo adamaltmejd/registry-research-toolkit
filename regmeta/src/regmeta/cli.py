@@ -1195,7 +1195,7 @@ def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], i
 
 
 def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .doc_db import build_doc_db, repo_docs_dir
+    from regmeta_build.doc_db import build_doc_db, repo_docs_dir
 
     if args.docs_dir:
         docs_dir = Path(args.docs_dir).resolve()

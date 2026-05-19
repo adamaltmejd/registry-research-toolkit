@@ -606,7 +606,7 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
 
     # Query commands require a doc DB alongside.
-    from regmeta.doc_db import build_doc_db
+    from regmeta_build.doc_db import build_doc_db
 
     docs_src = tmp / "docs" / "stub"
     docs_src.mkdir(parents=True)
