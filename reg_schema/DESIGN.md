@@ -41,6 +41,22 @@ refactor spec into per-package DESIGN files.
   the SPA carries pre-kit ad-hoc codes in IndexedDB. Either may grow a
   schema dataclass here later; phase 1 keeps it out.
 
+## What this layer does NOT validate
+
+`ValidationResult.__post_init__` coerces `issues` to a tuple but does
+**not** verify each element is a `ValidationIssue` instance. JSON
+deserialization belongs at read/write boundaries — the bundle-load
+validator in `reg_monabundle` and the API ingress in `reg_webapp` —
+not in the contract module itself. Python-internal callers are
+type-checked; cross-runtime callers own their decode step. If
+`result.ok` ever crashes with `AttributeError` on `.level`, that is a
+boundary bug to fix upstream, not a defensive check to add here.
+
+The `level` allowlist *is* enforced at construction because the cost
+of a silently-weakened `ok` (returning `True` for a result that should
+block) is higher than the cost of one extra check on a 3-value
+frozenset.
+
 ## Dependency direction
 
 `reg_schema` has **no runtime dependencies**. Pure stdlib.

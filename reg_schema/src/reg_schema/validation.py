@@ -20,7 +20,7 @@ different shape; do not conflate.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Literal
+from typing import Literal, get_args
 
 IssueLevel = Literal["error", "warning", "info"]
 
@@ -28,7 +28,8 @@ IssueLevel = Literal["error", "warning", "info"]
 # guard — JSON deserialization (SPA, bundle) and `# type: ignore` paths
 # can otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
 # `ValidationResult.ok` to True for a result that should block.
-_VALID_LEVELS: frozenset[str] = frozenset({"error", "warning", "info"})
+# Derived from `IssueLevel` so the two cannot drift.
+_VALID_LEVELS: frozenset[str] = frozenset(get_args(IssueLevel))
 
 
 @dataclass(frozen=True)

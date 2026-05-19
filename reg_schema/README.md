@@ -14,10 +14,11 @@ contract (`ValidationIssue`, `ValidationResult`) has landed. Top-level
 `validate_structural()` entrypoint follow in subsequent phases.
 
 ```python
-from reg_schema import ValidationIssue, ValidationResult
+from reg_schema import IssueLevel, ValidationIssue, ValidationResult
 
+level: IssueLevel = "error"
 result = ValidationResult(issues=(
-    ValidationIssue(level="error", code="fqid_unresolved", path="/sources/0/name", message="..."),
+    ValidationIssue(level=level, code="fqid_unresolved", path="/sources/0/name", message="..."),
 ))
 assert result.ok is False
 ```
