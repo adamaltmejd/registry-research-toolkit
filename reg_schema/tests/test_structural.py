@@ -120,6 +120,26 @@ def test_top_level_string_fields_must_be_strings() -> None:
     assert set(_at(result, "invalid_field_type")) >= {"/schema_version", "/name"}
 
 
+def test_required_top_level_field_set_to_null_is_invalid_field_type() -> None:
+    # JSON null deserializes to Python None, which `dict.get` returns
+    # for both absent and explicit-null cases. The validator must
+    # distinguish them so `{"schema_version": null}` doesn't bypass
+    # both the missing-field and the type check.
+    result = validate_structural(_spec(schema_version=None, sources=None))
+    assert "missing_required_field" not in _codes(result)
+    assert set(_at(result, "invalid_field_type")) >= {
+        "/schema_version",
+        "/sources",
+    }
+
+
+def test_optional_baseline_field_null_is_invalid_field_type() -> None:
+    # `panels` defaults to [] when absent, but an explicit null is not
+    # an array and shouldn't be silently coerced.
+    result = validate_structural(_spec(panels=None))
+    assert "/panels" in _at(result, "invalid_field_type")
+
+
 def test_namespaced_block_must_be_object() -> None:
     result = validate_structural(_spec(reg_monabundle="not-an-object"))
     assert _at(result, "invalid_field_type") == ["/reg_monabundle"]
@@ -307,6 +327,46 @@ def test_duplicate_panel_id() -> None:
     spec["panels"].append(dict(spec["panels"][0]))
     result = validate_structural(spec)
     assert _at(result, "duplicate_panel_id") == ["/panels/1/panel_id"]
+
+
+def test_panel_member_unknown_source_is_flagged() -> None:
+    # A panel member must point at a real /sources entry. Silently
+    # skipping unknown sources pushes a schema error into runtime.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["source"] = "not_a_source"
+    result = validate_structural(spec)
+    assert _at(result, "panel_member_unknown_source") == ["/panels/0/members/0/source"]
+
+
+def test_panel_member_unknown_source_string_form() -> None:
+    # String-shaped members get the same check (path differs — no
+    # `/source` suffix because the member itself is the source name).
+    spec = _spec_with_panels(time_key="AR", members=["lisa_2018", "ghost_source"])
+    result = validate_structural(spec)
+    assert "/panels/0/members/1" in _at(result, "panel_member_unknown_source")
+
+
+def test_ref_existence_not_emitted_on_unknown_source() -> None:
+    # When the source itself is unknown, the unknown-column refs check
+    # should NOT also fire — that's noise on top of the real error.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["source"] = "ghost"
+    spec["panels"][0]["members"][0]["entity_key"] = "NOPE"
+    result = validate_structural(spec)
+    assert "panel_member_unknown_source" in _codes(result)
+    # No entity_key_unknown_column path against /panels/0/members/0
+    paths = _at(result, "entity_key_unknown_column")
+    assert not any(p.startswith("/panels/0/members/0") for p in paths)
+
+
+def test_ref_existence_skipped_when_columns_are_malformed() -> None:
+    # If a column entry isn't an object or its display_name isn't a
+    # string, `all_have_display` must flip False so the ref-existence
+    # check doesn't compound the noise on an already-broken source.
+    spec = _spec_with_panels(time_key="AR", members=["lisa_2018", "lisa_2019"])
+    spec["sources"][0]["columns"][0] = "not-a-mapping"  # type: ignore[assignment]
+    result = validate_structural(spec)
+    assert "time_key_unknown_column" not in _codes(result)
 
 
 def test_source_referenced_by_multiple_panels() -> None:

@@ -126,6 +126,7 @@ Current codes:
 | `entity_key_unknown_column` | A bare-string `entity_key` ref doesn't match any `display_name` on the member's source. Skipped on sources with any unset `display_name` (the ref may resolve to a reg_meta-derived default at runtime). |
 | `time_key_unknown_column` | Same rule, for `time_key` column refs. |
 | `source_referenced_by_multiple_panels` | One source appears in two panels (§6.4). |
+| `panel_member_unknown_source` | A panel member's `source` does not match any entry in `/sources`. |
 
 The "ref exists on source" check is intentionally lenient: when any
 column on the source lacks an explicit `display_name`, the structural

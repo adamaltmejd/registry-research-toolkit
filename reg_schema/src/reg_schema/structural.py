@@ -135,6 +135,10 @@ def _is_classification_fqid(value: object) -> bool:
 def _check_top_level_fields(
     data: Mapping[str, object], issues: list[ValidationIssue]
 ) -> None:
+    # Distinguish "absent" from "present-but-null". JSON null deserializes
+    # to Python None, which `dict.get` returns for both cases. Without this
+    # split, ``"schema_version": null`` bypasses both missing-field and
+    # type checks and ``ok`` would return True for a malformed document.
     for field in _TOP_LEVEL_REQUIRED:
         if field not in data:
             issues.append(
@@ -144,28 +148,49 @@ def _check_top_level_fields(
                     f"required top-level field {field!r} is missing",
                 )
             )
+        elif data[field] is None:
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"/{field}",
+                    f"{field} must not be null",
+                )
+            )
+
+    for field in _TOP_LEVEL_OPTIONAL_BASELINE:
+        if field in data and data[field] is None:
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"/{field}",
+                    f"{field} must not be null when present",
+                )
+            )
 
     for field in ("schema_version", "reg_meta_version", "name"):
         value = data.get(field)
-        if value is not None and not isinstance(value, str):
+        if value is None:
+            continue  # absence + nullness already handled above
+        if not isinstance(value, str):
             issues.append(
                 _error("invalid_field_type", f"/{field}", f"{field} must be a string")
             )
 
     steward = data.get("steward")
-    if steward is not None:
-        if not isinstance(steward, str):
-            issues.append(
-                _error("invalid_field_type", "/steward", "steward must be a string")
+    if steward is None:
+        return
+    if not isinstance(steward, str):
+        issues.append(
+            _error("invalid_field_type", "/steward", "steward must be a string")
+        )
+    elif steward not in _STEWARDS:
+        issues.append(
+            _error(
+                "invalid_enum_value",
+                "/steward",
+                f"steward must be one of {sorted(_STEWARDS)}; got {steward!r}",
             )
-        elif steward not in _STEWARDS:
-            issues.append(
-                _error(
-                    "invalid_enum_value",
-                    "/steward",
-                    f"steward must be one of {sorted(_STEWARDS)}; got {steward!r}",
-                )
-            )
+        )
 
 
 def _check_namespaced_blocks(
@@ -528,16 +553,23 @@ def _build_source_index(sources: object) -> dict[str, dict[str, Any]]:
             continue
         columns = source.get("columns")
         display_names: set[str] = set()
-        all_have_display = True
+        # `all_have_display` controls whether the panel-member ref-existence
+        # check actually fires (see `_check_panel_member`). Flip it False on
+        # *any* column-shape uncertainty — non-list `columns`, non-mapping
+        # column entries, missing or non-string `display_name` — so a
+        # malformed source doesn't get its panel refs flagged as unknown
+        # on top of the structural errors already emitted against it.
+        all_have_display = isinstance(columns, list)
         if isinstance(columns, list):
             for col in columns:
                 if not isinstance(col, Mapping):
+                    all_have_display = False
                     continue
                 dn = col.get("display_name")
-                if dn is None:
-                    all_have_display = False
-                elif isinstance(dn, str):
+                if isinstance(dn, str):
                     display_names.add(dn)
+                else:
+                    all_have_display = False
         index[name] = {
             "display_names": display_names,
             "all_have_display": all_have_display,
@@ -1000,11 +1032,25 @@ def _check_panel_member(
     else:
         scope.source_to_panel[source_name] = pbase
 
+    # A member's source must point at a /sources entry. Without this
+    # check, broken panel definitions slip past the structural layer
+    # and surface as runtime failures inside the bundle / kit.
+    entry = scope.source_index.get(source_name)
+    if entry is None:
+        issues.append(
+            _error(
+                "panel_member_unknown_source",
+                f"{mbase}/source" if isinstance(member, Mapping) else mbase,
+                f"panel member references source {source_name!r} which is "
+                "not defined in /sources",
+            )
+        )
+        return
+
     # Column-ref existence against the member's source. Skip when any
     # column on the source has display_name absent — the bare ref may
     # resolve to a reg_meta-derived default later (§6.3).
-    entry = scope.source_index.get(source_name)
-    if entry is None or not entry["all_have_display"]:
+    if not entry["all_have_display"]:
         return
     display_names: set[str] = entry["display_names"]
     for ref in _entity_key_refs(eff_entity):
