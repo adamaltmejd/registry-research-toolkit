@@ -328,7 +328,7 @@ class TestDocDbRequired:
         # Build a main DB in an empty dir — no doc DB present.
         from _csv_fixtures import write_scb_input
 
-        from regmeta.db import build_db
+        from regmeta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
@@ -352,7 +352,7 @@ class TestDocDbRequired:
     def test_get_without_docs_raises(self, tmp_path: Path):
         from _csv_fixtures import write_scb_input
 
-        from regmeta.db import build_db
+        from regmeta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
@@ -407,7 +407,7 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     """Create a DB dir with both regmeta.db and regmeta_docs.db."""
     import shutil
 
-    from regmeta.db import build_db
+    from regmeta_build.db import build_db
 
     combined = tmp_path_factory.mktemp("combined")
 

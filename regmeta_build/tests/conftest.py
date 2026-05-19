@@ -20,7 +20,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from regmeta.db import build_db  # noqa: E402
+from regmeta_build.db import build_db  # noqa: E402
 
 from _csv_fixtures import write_scb_input  # noqa: E402
 

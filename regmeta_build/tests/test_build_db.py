@@ -7,16 +7,10 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import (
-    SCHEMA_VERSION,
-    _decode_cp1252,
-    _value_set_hash,
-    build_db,
-    get_manifest,
-    open_db,
-)
+from regmeta.db import SCHEMA_VERSION, get_manifest, open_db
 from regmeta.errors import RegmetaError
 from regmeta.queries import extract_year
+from regmeta_build.db import _decode_cp1252, _value_set_hash, build_db
 
 from _csv_fixtures import (
     PIPE,
@@ -391,7 +385,7 @@ class TestBuildDb:
         """
         import sqlite3 as _sql
 
-        from regmeta.db import DDL, link_consumer_side_bindings, seed_providers
+        from regmeta_build.db import DDL, link_consumer_side_bindings, seed_providers
 
         conn = _sql.connect(":memory:")
         conn.row_factory = _sql.Row
@@ -472,7 +466,7 @@ class TestBuildDb:
         """
         import sqlite3 as _sql
 
-        from regmeta.db import DDL, link_consumer_side_bindings, seed_providers
+        from regmeta_build.db import DDL, link_consumer_side_bindings, seed_providers
 
         conn = _sql.connect(":memory:")
         conn.row_factory = _sql.Row
@@ -642,7 +636,7 @@ class TestBuildDb:
         # IntegrityError on the fixed PKs the second time.
         import sqlite3 as _sqlite3
 
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = _sqlite3.connect(str(tmp_path / "idem.db"))
         conn.row_factory = _sqlite3.Row
@@ -664,7 +658,7 @@ class TestBuildDb:
         # safer than silently overwriting via UPSERT.
         import sqlite3 as _sqlite3
 
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = _sqlite3.connect(str(tmp_path / "mismatch.db"))
         conn.row_factory = _sqlite3.Row

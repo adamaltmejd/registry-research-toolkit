@@ -28,12 +28,12 @@ from .cli_common import (
 from .db import (
     SCHEMA_VERSION,
     default_db_dir,
-    build_db,
     db_path_from_args,
     get_manifest,
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
+from regmeta_build.db import build_db
 from .queries import (
     get_availability,
     get_classification,

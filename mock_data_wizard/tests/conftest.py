@@ -8,7 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import DDL, SCHEMA_VERSION, _value_set_hash
+from regmeta.db import SCHEMA_VERSION
+from regmeta_build.db import DDL, _value_set_hash
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -357,7 +358,7 @@ def regmeta_db(tmp_path: Path) -> Path:
         "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
         ("schema_version", SCHEMA_VERSION),
     )
-    from regmeta.db import seed_providers
+    from regmeta_build.db import seed_providers
 
     seed_providers(conn)
     conn.execute(

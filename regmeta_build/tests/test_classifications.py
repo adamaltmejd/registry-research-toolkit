@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from regmeta_build.classifications import load_seed, load_valid_codes
-from regmeta.db import build_db
+from regmeta_build.db import build_db
 from regmeta.errors import RegmetaError
 
 from _csv_fixtures import PIPE, write_scb_input
@@ -557,9 +557,9 @@ class TestPopulateClassifications:
         NULL FKs without warning. Wheel installs run `maintain update`, not
         `build-db`, so this path is unreachable in production.
         """
-        from regmeta_build import classifications as cls_mod
+        from regmeta_build import db as build_db_mod
 
-        monkeypatch.setattr(cls_mod, "repo_seed_path", lambda: None)
+        monkeypatch.setattr(build_db_mod, "repo_seed_path", lambda: None)
         input_dir = _make_input_dir(tmp_path)
         db_dir = tmp_path / "db"
         db_dir.mkdir()

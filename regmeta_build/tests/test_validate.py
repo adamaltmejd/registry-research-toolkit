@@ -124,7 +124,8 @@ class TestBuildDbValidateFlag:
         from _csv_fixtures import write_scb_input
 
         from regmeta_build import validate as validate_mod
-        from regmeta.db import DB_FILENAME, build_db
+        from regmeta.db import DB_FILENAME
+        from regmeta_build.db import build_db
         from regmeta.errors import RegmetaError
 
         input_dir = tmp_path / "input"

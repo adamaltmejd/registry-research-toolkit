@@ -7,7 +7,7 @@ from .catalog import (
     ResolvedRegisterVersion,
     ResolvedVariableBinding,
 )
-from .db import build_db, db_path_from_args, default_db_dir, open_db
+from .db import db_path_from_args, default_db_dir, open_db
 from .download import download_db
 from .fqid import (
     Fqid,
@@ -36,7 +36,6 @@ from .queries import (
 )
 
 __all__ = [
-    "build_db",
     "Catalog",
     "compare",
     "db_path_from_args",

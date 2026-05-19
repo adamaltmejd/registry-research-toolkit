@@ -6,7 +6,7 @@ import sqlite3
 
 import pytest
 
-from regmeta.db import DDL, seed_providers
+from regmeta_build.db import DDL, seed_providers
 from regmeta.queries import (
     get_classification,
     get_register,

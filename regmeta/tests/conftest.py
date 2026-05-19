@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import build_db
+from regmeta_build.db import build_db
 
 # `_csv_fixtures` is a sibling test helper that lives in regmeta_build/tests/
 # after the §15 step 2 carve-out. Add that directory to sys.path so the bare

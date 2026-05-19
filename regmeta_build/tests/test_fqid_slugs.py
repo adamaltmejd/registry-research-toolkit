@@ -1197,7 +1197,7 @@ class TestPrecheckCli:
     def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
         """Build a DB with one provider + register + variant, slug TOMLs that
         cover both, and a `db` arg compatible with `regmeta --db`."""
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -1462,7 +1462,7 @@ class TestSeedEmptyDb:
 
     def test_provider_with_no_registers(self, tmp_path: Path):
         # Build a DB whose `scb` provider has no register rows.
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
@@ -1477,7 +1477,7 @@ class TestSeedEmptyDb:
         assert "no registers found" in body
 
     def test_classifications_table_empty(self, tmp_path: Path):
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
@@ -1616,7 +1616,7 @@ class TestPrecheckCliGrowOnly:
     def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
         """Reuse the layout from TestPrecheckCli but local to keep dependencies
         explicit."""
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()

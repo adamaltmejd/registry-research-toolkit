@@ -716,10 +716,10 @@ def populate_slugs(
     Returns ``{"register": n, "register_variant": n, "register_version": n,
     "register_version_auto": n, "classification": n}``.
     """
-    # Function-level import — `fqid_slugs` is imported lazily from `db.build_db`,
-    # so importing `db` at module load would close a cycle. Reads from `regmeta.db`
-    # until Phase 5 of the §15 step 2 carve-out moves `_progress` here too.
-    from regmeta.db import _progress
+    # Function-level import — `db` imports `populate_slugs` at module top, so
+    # importing `db` at our module top would close a cycle. Lazy resolution
+    # is safe because by call time both modules are fully loaded.
+    from .db import _progress
 
     entries = load_slug_dir(slug_dir)
     counts = {
