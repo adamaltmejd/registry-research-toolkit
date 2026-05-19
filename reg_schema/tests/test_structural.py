@@ -329,6 +329,16 @@ def test_duplicate_panel_id() -> None:
     assert _at(result, "duplicate_panel_id") == ["/panels/1/panel_id"]
 
 
+def test_same_panel_duplicate_source_does_not_fire_cross_panel_collision() -> None:
+    # The §6.4 "at most one panel" rule is cross-panel. Two members of
+    # one panel sharing a source is a degenerate panel, not a
+    # cross-panel collision — firing the code here would lie.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"].append({"source": "lisa_2018", "time_key": 2020})
+    result = validate_structural(spec)
+    assert "source_referenced_by_multiple_panels" not in _codes(result)
+
+
 def test_panel_member_unknown_source_is_flagged() -> None:
     # A panel member must point at a real /sources entry. Silently
     # skipping unknown sources pushes a schema error into runtime.

@@ -1017,20 +1017,24 @@ def _check_panel_member(
             else:
                 scope.literal_time_seen[canon] = eff_time_path
 
-    # Cross-panel source-collision (§6.4 "at most one panel").
+    # Cross-panel source-collision (§6.4 "at most one panel"). Two
+    # members of the *same* panel sharing a source is a different
+    # condition (probably a degenerate panel) — don't fire this code
+    # for that, otherwise the path-shaped error message lies about
+    # what's wrong.
     if source_name is None:
         return
-    if source_name in scope.source_to_panel:
+    prior_panel = scope.source_to_panel.get(source_name)
+    if prior_panel is None:
+        scope.source_to_panel[source_name] = pbase
+    elif prior_panel != pbase:
         issues.append(
             _error(
                 "source_referenced_by_multiple_panels",
                 mbase,
-                f"source {source_name!r} already referenced by panel at "
-                f"{scope.source_to_panel[source_name]}",
+                f"source {source_name!r} already referenced by panel at {prior_panel}",
             )
         )
-    else:
-        scope.source_to_panel[source_name] = pbase
 
     # A member's source must point at a /sources entry. Without this
     # check, broken panel definitions slip past the structural layer
