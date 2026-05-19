@@ -358,8 +358,16 @@ class Catalog:
         ).fetchall()
 
         out: list[ResolvedVariableBinding] = []
+        # variable_alias is keyed by (cvid, kolumnnamn) — a single instance can
+        # have multiple aliases that fold to the same slug (e.g. `Kon` + `Kön`
+        # both → `kon`), so the LEFT JOIN can yield one row per matching alias.
+        # Dedupe by cvid: one binding per instance.
+        seen: set[int] = set()
         for row in rows:
             if derive_variable_slug(row["kolumnnamn"]) != variable:
+                continue
+            cvid = row["cvid"]
+            if cvid in seen:
                 continue
             variant_slug = row["variant_slug"]
             version_slug = row["version_slug"]
@@ -367,17 +375,14 @@ class Catalog:
             # DBs or partial fixtures) — they can't be addressed by FQID.
             if not variant_slug or not version_slug:
                 continue
-            try:
-                fqid = Fqid.binding_fqid(
-                    provider, register, variant_slug, version_slug, variable
-                )
-            except FqidError:
-                continue
+            fqid = Fqid.binding_fqid(
+                provider, register, variant_slug, version_slug, variable
+            )
             via = row["via_source_id"]
             out.append(
                 ResolvedVariableBinding(
                     fqid=fqid,
-                    cvid=row["cvid"],
+                    cvid=cvid,
                     register_id=row["register_id"],
                     regvar_id=row["regvar_id"],
                     regver_id=row["regver_id"],
@@ -390,6 +395,7 @@ class Catalog:
                     ),
                 )
             )
+            seen.add(cvid)
         return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:

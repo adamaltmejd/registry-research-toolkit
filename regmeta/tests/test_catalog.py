@@ -413,6 +413,22 @@ class TestEditions:
             "scb/lisa/individer-15plus/2018/kon",
         ]
 
+    def test_multiple_aliases_folding_to_same_slug_dedupe(self) -> None:
+        # variable_alias is keyed by (cvid, kolumnnamn); a single instance can
+        # carry both `Kon` and `Kön`, which both fold to `kon`. The LEFT JOIN
+        # yields one row per alias — editions must dedupe by cvid so a single
+        # binding doesn't surface twice.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kön')"
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        assert editions[0].cvid == 1001
+
     def test_kolumnnamn_diacritic_fold(self) -> None:
         # "Kön" folds to "kon"; the query argument is the slug, not the raw.
         conn = build_slugged_db(kolumnnamn="Kön")
