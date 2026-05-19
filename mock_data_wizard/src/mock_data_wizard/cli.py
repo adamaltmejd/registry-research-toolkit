@@ -72,14 +72,14 @@ GENERATE_HELP = """\
 Generate mock CSV files from a mock_data_stats.json produced by the
 MONA extract bundle.
 
-By default, uses the regmeta database to enrich categorical columns with
-registry metadata (value codes, variable names). If the regmeta database
-is not available, use --no-regmeta to skip enrichment.
+By default, uses the reg_meta database to enrich categorical columns with
+registry metadata (value codes, variable names). If the reg_meta database
+is not available, use --no-reg-meta to skip enrichment.
 
 Examples:
   mock-data-wizard generate
   mock-data-wizard generate --sample-pct 0.1 --seed 42
-  mock-data-wizard generate --stats path/to/mock_data_stats.json --no-regmeta
+  mock-data-wizard generate --stats path/to/mock_data_stats.json --no-reg-meta
 """
 
 
@@ -112,8 +112,8 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     import csv as csv_mod
     import json
 
-    from regmeta import compare, open_db, resolve_register_ids
-    from regmeta.db import db_path_from_args
+    from reg_meta import compare, open_db, resolve_register_ids
+    from reg_meta.db import db_path_from_args
 
     from ._util import strip_project_prefix
 
@@ -210,7 +210,7 @@ def _cmd_compare(args: argparse.Namespace) -> int:
 def _print_compare_table(data: dict) -> None:
     import shutil
 
-    from regmeta.cli_common import format_rows
+    from reg_meta.cli_common import format_rows
 
     term_w = shutil.get_terminal_size().columns
 
@@ -328,12 +328,12 @@ def _cmd_generate(args: argparse.Namespace) -> int:
             print("Aborted.", file=sys.stderr)
             return 1
 
-    if args.no_regmeta:
+    if args.no_reg_meta:
         db_path = None
     elif args.db:
         db_path = Path(args.db)
     else:
-        from regmeta.db import db_path_from_args
+        from reg_meta.db import db_path_from_args
 
         db_path = db_path_from_args(None)
 
@@ -344,9 +344,9 @@ def _cmd_generate(args: argparse.Namespace) -> int:
         return 1
     except Exception as exc:
         print(f"Error: {exc}", file=sys.stderr)
-        if not args.no_regmeta:
+        if not args.no_reg_meta:
             print(
-                "Hint: use --no-regmeta to generate without registry metadata.",
+                "Hint: use --no-reg-meta to generate without registry metadata.",
                 file=sys.stderr,
             )
         return 1
@@ -576,7 +576,7 @@ def build_parser() -> argparse.ArgumentParser:
     cmp.add_argument(
         "--db",
         default=None,
-        help="Path to regmeta database directory.",
+        help="Path to reg_meta database directory.",
     )
     cmp.add_argument(
         "--format",
@@ -615,16 +615,16 @@ def build_parser() -> argparse.ArgumentParser:
     )
     gen.add_argument(
         "--db",
-        help="Path to regmeta database directory (override $REGMETA_DB or $XDG_DATA_HOME).",
+        help="Path to reg_meta database directory (override $REG_META_DB or $XDG_DATA_HOME).",
     )
     gen.add_argument(
-        "--no-regmeta",
+        "--no-reg-meta",
         action="store_true",
-        help="Skip regmeta enrichment (by default, the regmeta DB is required)",
+        help="Skip reg_meta enrichment (by default, the reg_meta DB is required)",
     )
     gen.add_argument(
         "--register",
-        help="Filter regmeta matches to a specific register",
+        help="Filter reg_meta matches to a specific register",
     )
     gen.add_argument(
         "-y",
@@ -726,7 +726,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     ui.add_argument(
         "--db-path",
-        help="Override the regmeta DB path (default: regmeta's lookup chain).",
+        help="Override the reg_meta DB path (default: reg_meta's lookup chain).",
     )
 
     return parser

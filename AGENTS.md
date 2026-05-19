@@ -9,8 +9,8 @@
 
 # Products
 - Python package `mock_data_wizard` (CLI `mock-data-wizard`) for SCB MONA mock-data generation workflows.
-- Python package `regmeta` (CLI `regmeta`) for searching and querying registry metadata.
-- Python package `regmeta_build` (CLI `regmeta-build`) for building the regmeta SQLite databases from SCB CSV exports (maintainer-only).
+- Python package `reg_meta` (CLI `reg-meta`) for searching and querying registry metadata.
+- Python package `reg_meta_build` (CLI `reg-meta-build`) for building the reg_meta SQLite databases from SCB CSV exports (maintainer-only).
 - Tools are proper python project packages called with `uv`.
 
 # Governance
@@ -33,19 +33,19 @@
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
 - `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
-- `uv run python -m pytest regmeta/` — regmeta tests
-- `uv run python -m pytest regmeta_build/` — regmeta_build tests
+- `uv run python -m pytest reg_meta/` — reg_meta tests
+- `uv run python -m pytest reg_meta_build/` — reg_meta_build tests
 - `uv run python -m pytest mock_data_wizard/` — mock_data_wizard tests
-- `regmeta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
+- `reg_meta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
 
 # Target structure
-- `regmeta/DESIGN.md` — design rationale (query layer)
-- `regmeta/STRUCTURE.md` — domain model
-- `regmeta/src/regmeta/` — package source
-- `regmeta_build/DESIGN.md` — design rationale (build pipeline)
-- `regmeta_build/src/regmeta_build/` — package source
-- `regmeta_build/docs/` — curated register documentation (build inputs for the doc DB)
-- `regmeta_build/fqid_slugs/` — maintainer-curated slug TOMLs
-- `regmeta_build/input_data/` — SCB CSV exports + canonical classification CSVs
+- `reg_meta/DESIGN.md` — design rationale (query layer)
+- `reg_meta/STRUCTURE.md` — domain model
+- `reg_meta/src/reg_meta/` — package source
+- `reg_meta_build/DESIGN.md` — design rationale (build pipeline)
+- `reg_meta_build/src/reg_meta_build/` — package source
+- `reg_meta_build/docs/` — curated register documentation (build inputs for the doc DB)
+- `reg_meta_build/fqid_slugs/` — maintainer-curated slug TOMLs
+- `reg_meta_build/input_data/` — SCB CSV exports + canonical classification CSVs
 - `mock_data_wizard/DESIGN.md` — design rationale, PII safety rules
 - `mock_data_wizard/src/mock_data_wizard/` — package source

@@ -30,11 +30,11 @@ from mock_data_wizard._serialize import (
     _editor_warning_to_dict,
     _mdw_config_to_dict,
     _panel_candidate_to_dict,
-    _regmeta_signal_to_dict,
+    _reg_meta_signal_to_dict,
     _register_group_view_to_dict,
     state_snapshot_to_dict,
 )
-from mock_data_wizard.classify import RegmetaSignal
+from mock_data_wizard.classify import RegMetaSignal
 from mock_data_wizard.config import (
     ColumnTypeOverride,
     MDWConfig,
@@ -110,15 +110,15 @@ def test_panel_to_dict():
     }
 
 
-def test_regmeta_signal_to_dict():
-    sig = RegmetaSignal(
+def test_reg_meta_signal_to_dict():
+    sig = RegMetaSignal(
         datatyp_kind="numeric",
         classification_short_name="SUN2020-GRUPP",
         has_value_codes=True,
         n_value_sets=2,
         n_classifications=3,
     )
-    assert _regmeta_signal_to_dict(sig) == {
+    assert _reg_meta_signal_to_dict(sig) == {
         "datatyp_kind": "numeric",
         "classification_short_name": "SUN2020-GRUPP",
         "has_value_codes": True,
@@ -127,11 +127,11 @@ def test_regmeta_signal_to_dict():
     }
 
 
-def test_regmeta_signal_nullable_fields():
-    sig = RegmetaSignal(
+def test_reg_meta_signal_nullable_fields():
+    sig = RegMetaSignal(
         datatyp_kind=None, classification_short_name=None, has_value_codes=False
     )
-    assert _regmeta_signal_to_dict(sig) == {
+    assert _reg_meta_signal_to_dict(sig) == {
         "datatyp_kind": None,
         "classification_short_name": None,
         "has_value_codes": False,
@@ -176,12 +176,12 @@ def test_column_info_to_dict_full():
         current_type="numeric",
         hint={"numeric_subtype": "integer"},
         provenance="manual",
-        regmeta_signal=RegmetaSignal(
+        reg_meta_signal=RegMetaSignal(
             datatyp_kind="numeric",
             classification_short_name=None,
             has_value_codes=False,
         ),
-        regmeta_implied_type="numeric",
+        reg_meta_implied_type="numeric",
     )
     out = _column_info_to_dict(info)
     assert out == {
@@ -190,14 +190,14 @@ def test_column_info_to_dict_full():
         "current_type": "numeric",
         "hint": {"numeric_subtype": "integer"},
         "provenance": "manual",
-        "regmeta_signal": {
+        "reg_meta_signal": {
             "datatyp_kind": "numeric",
             "classification_short_name": None,
             "has_value_codes": False,
             "n_value_sets": 0,
             "n_classifications": 0,
         },
-        "regmeta_implied_type": "numeric",
+        "reg_meta_implied_type": "numeric",
     }
 
 
@@ -208,11 +208,11 @@ def test_column_info_to_dict_nullable_signal():
         current_type="opaque",
         hint=None,
         provenance="auto",
-        regmeta_signal=None,
-        regmeta_implied_type=None,
+        reg_meta_signal=None,
+        reg_meta_implied_type=None,
     )
     out = _column_info_to_dict(info)
-    assert out["regmeta_signal"] is None
+    assert out["reg_meta_signal"] is None
     assert out["hint"] is None
     assert out["sql_type"] is None
 
@@ -241,8 +241,8 @@ def test_register_group_view_to_dict_with_panel_candidate():
         current_type="id",
         hint={"id_subtype": "integer"},
         provenance="auto",
-        regmeta_signal=None,
-        regmeta_implied_type=None,
+        reg_meta_signal=None,
+        reg_meta_implied_type=None,
     )
     g = RegisterGroupView(
         group_id="reg-1",
@@ -372,8 +372,8 @@ def _build_golden_snapshot(
 ) -> StateSnapshot:
     """Produce a deterministic StateSnapshot covering every nested type:
     register-assigned + unassigned groups, manual + auto provenance, an
-    inline hint, a regmeta signal, a panel candidate, and a drift
-    warning. Regmeta lookups are stubbed so the result is reproducible
+    inline hint, a reg_meta signal, a panel candidate, and a drift
+    warning. RegMeta lookups are stubbed so the result is reproducible
     without a live DB."""
     # Register stub: lisa_2018 + lisa_2019 share register "LISA" (id=1);
     # extras gets nothing.
@@ -393,12 +393,12 @@ def _build_golden_snapshot(
         "_resolve_signals_for_register",
         lambda register, cols, db_path, **_kw: (
             {
-                "salary": RegmetaSignal(
+                "salary": RegMetaSignal(
                     datatyp_kind="numeric",
                     classification_short_name=None,
                     has_value_codes=False,
                 ),
-                "kon": RegmetaSignal(
+                "kon": RegMetaSignal(
                     datatyp_kind=None,
                     classification_short_name="KON",
                     has_value_codes=True,

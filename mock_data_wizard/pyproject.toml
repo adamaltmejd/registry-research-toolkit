@@ -11,7 +11,7 @@ authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
 license = { text = "MIT" }
 dependencies = [
   "numpy>=1.26",
-  "regmeta",
+  "reg-meta",
 ]
 
 [project.urls]

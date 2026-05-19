@@ -9,5 +9,5 @@
   "homepage": "https://github.com/adamaltmejd/registry-research-toolkit/tree/main/plugins/microdata-tools-se",
   "repository": "https://github.com/adamaltmejd/registry-research-toolkit",
   "license": "MIT",
-  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "regmeta", "statistics", "research"]
+  "keywords": ["sweden", "microdata", "registry", "scb", "mona", "reg-meta", "statistics", "research"]
 }

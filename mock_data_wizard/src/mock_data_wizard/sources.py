@@ -524,7 +524,7 @@ def iter_file_source(
     ``ALTER COLUMN TYPE`` on the TABLE path so the file is read exactly
     once. Without ``config`` (discover mode, or a file not present in
     the config) every column reports ``VARCHAR``; the classifier
-    downstream relies on name patterns and regmeta evidence rather than
+    downstream relies on name patterns and reg_meta evidence rather than
     a SQL-type signal.
     """
     import duckdb

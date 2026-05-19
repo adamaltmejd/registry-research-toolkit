@@ -1,0 +1,33 @@
+name: Publish reg_meta_build to PyPI
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  ci:
+    if: startsWith(github.event.release.tag_name, 'reg_meta_build/v')
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v8.1.0
+
+      # reg_meta_build ships no release assets (the prebuilt reg_meta.db /
+      # reg_meta_docs.db assets attach to the `reg_meta` release, not this
+      # one). This step just confirms the CLI entry point is wired before
+      # publishing.
+      - name: Smoke test CLI
+        run: |
+          uv sync --frozen
+          uv run reg-meta-build --help > /dev/null
+
+      - run: uv build reg_meta_build/ --out-dir dist/
+      - uses: pypa/gh-action-pypi-publish@release/v1

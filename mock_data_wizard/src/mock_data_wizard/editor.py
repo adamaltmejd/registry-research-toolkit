@@ -1,6 +1,6 @@
 """Stateless editor API for ``mock_data_config.json``.
 
-Pure functions over the on-disk config file plus the regmeta DB. No
+Pure functions over the on-disk config file plus the reg_meta DB. No
 in-memory session state; every mutation autosaves atomically and
 returns a fresh snapshot. Concurrency is handled via SHA-256
 ``snapshot_version`` tokens — a stale ``expected_version`` raises
@@ -37,11 +37,11 @@ from typing import Any, Iterator, Literal
 
 from .classify import (
     COLUMN_TYPES,
-    RegmetaSignal,
+    RegMetaSignal,
     _classify,
-    _regmeta_lookup,
+    _reg_meta_lookup,
     _validate_discover_payload,
-    regmeta_implied_type,
+    reg_meta_implied_type,
 )
 from .config import (
     CONFIG_FILENAME,
@@ -196,8 +196,8 @@ class ColumnInfo:
     current_type: str
     hint: dict[str, Any] | None
     provenance: Literal["manual", "auto"]
-    regmeta_signal: RegmetaSignal | None
-    regmeta_implied_type: str | None
+    reg_meta_signal: RegMetaSignal | None
+    reg_meta_implied_type: str | None
 
 
 @dataclass(frozen=True)
@@ -366,7 +366,7 @@ def _read_discover(discover_path: Path) -> dict[str, Any]:
 def _classify_columns(
     columns: list[dict[str, Any]],
     register: str | None,
-    signals: dict[str, RegmetaSignal],
+    signals: dict[str, RegMetaSignal],
 ) -> dict[str, dict[str, Any]]:
     """Classify every column on a single source. Always returns one entry
     per column (dense classification, principle 8); columns that the
@@ -381,23 +381,23 @@ def _classify_columns(
 
 
 @contextmanager
-def _open_regmeta_conn(db_path: Path | None) -> Iterator[Any]:
-    """Open a regmeta DB connection. Yields ``None`` when regmeta is
+def _open_reg_meta_conn(db_path: Path | None) -> Iterator[Any]:
+    """Open a reg_meta DB connection. Yields ``None`` when reg_meta is
     unavailable or the DB can't be opened — callers handle that branch
     before using the connection. Closes on exit when one was opened."""
     import sqlite3
 
     try:
-        from regmeta import open_db
-        from regmeta.db import db_path_from_args
-        from regmeta.errors import RegmetaError
+        from reg_meta import open_db
+        from reg_meta.db import db_path_from_args
+        from reg_meta.errors import RegMetaError
     except ImportError:
         yield None
         return
     try:
         resolved = db_path_from_args(str(db_path) if db_path else None)
         conn = open_db(resolved)
-    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
+    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegMetaError):
         yield None
         return
     try:
@@ -412,28 +412,28 @@ def _resolve_signals_for_register(
     db_path: Path | None,
     *,
     relevant_years: set[int] | None = None,
-) -> dict[str, RegmetaSignal]:
-    """Open regmeta, resolve the register, query column signals.
+) -> dict[str, RegMetaSignal]:
+    """Open reg_meta, resolve the register, query column signals.
 
-    Returns ``{}`` when regmeta is unavailable, the register doesn't
+    Returns ``{}`` when reg_meta is unavailable, the register doesn't
     resolve, or no columns match. Editor calls this once per register
     (sources sharing a register batch into one DB call).
 
     ``relevant_years`` scopes the year-variance counts surfaced on the
-    signal — see ``classify._regmeta_lookup``. ``None`` = no filter."""
-    with _open_regmeta_conn(db_path) as conn:
+    signal — see ``classify._reg_meta_lookup``. ``None`` = no filter."""
+    with _open_reg_meta_conn(db_path) as conn:
         if conn is None:
             return {}
-        from regmeta import resolve_register_ids
-        from regmeta.errors import RegmetaError
+        from reg_meta import resolve_register_ids
+        from reg_meta.errors import RegMetaError
 
         try:
             register_ids = resolve_register_ids(conn, register_str)
-        except RegmetaError:
+        except RegMetaError:
             return {}
         if not register_ids:
             return {}
-        return _regmeta_lookup(
+        return _reg_meta_lookup(
             conn, col_names, register_ids, relevant_years=relevant_years
         )
 
@@ -443,14 +443,14 @@ def _resolve_signals_for_groups(
     db_path: Path | None,
     *,
     register_to_relevant_years: dict[str, set[int]] | None = None,
-) -> dict[str, dict[str, RegmetaSignal]]:
+) -> dict[str, dict[str, RegMetaSignal]]:
     """Resolve signals for every register in one pass. Returns
-    ``{register: {col_lower: RegmetaSignal}}``.
+    ``{register: {col_lower: RegMetaSignal}}``.
 
     ``register_to_relevant_years`` maps a register to the project's
     source years for that register's group. ``None`` (or a missing
     register entry) means "no year filter for this register"."""
-    out: dict[str, dict[str, RegmetaSignal]] = {}
+    out: dict[str, dict[str, RegMetaSignal]] = {}
     for register_str, cols in register_to_columns.items():
         years = (
             register_to_relevant_years.get(register_str)
@@ -466,7 +466,7 @@ def _resolve_signals_for_groups(
 def _confidence_for_source(
     register: str | None,
     source_columns: list[dict[str, Any]],
-    signals: dict[str, RegmetaSignal],
+    signals: dict[str, RegMetaSignal],
 ) -> Confidence:
     """How well does ``register`` cover this source's non-id columns?"""
     if register is None:
@@ -499,13 +499,13 @@ _REVIEW_RANK: dict[Confidence, int] = {"none": 0, "partial": 1, "high": 2}
 
 
 def _is_unmatched_categorical(col: ColumnInfo) -> bool:
-    """Categorical with no regmeta evidence to back the classification.
+    """Categorical with no reg_meta evidence to back the classification.
     Mirrors ``columnIsUnmatchedCategorical`` in the frontend store; keep
     the two in lockstep — drift here changes both card ordering and the
     "unmatched" filter chip's counts."""
     if col.current_type != "categorical":
         return False
-    sig = col.regmeta_signal
+    sig = col.reg_meta_signal
     if sig is None:
         return True
     return not sig.classification_short_name and not sig.has_value_codes
@@ -534,7 +534,7 @@ def _review_sort_key(group: RegisterGroupView) -> tuple[int, int, str]:
 def _autodetect_register_per_source(
     discover: dict[str, Any], db_path: Path | None
 ) -> dict[str, str | None]:
-    """Pick a register for each source via regmeta voting + filename rules.
+    """Pick a register for each source via reg_meta voting + filename rules.
 
     Returns ``{source_name: register_str | None}``. ``register_str`` is
     the registernamn (string) when resolved, ``None`` otherwise. The
@@ -542,7 +542,7 @@ def _autodetect_register_per_source(
     ``set_group_register`` is the only way to change it after init.
     """
     sources = discover.get("sources", [])
-    with _open_regmeta_conn(db_path) as conn:
+    with _open_reg_meta_conn(db_path) as conn:
         if conn is None:
             return {src["source_name"]: None for src in sources}
 
@@ -607,7 +607,7 @@ def _resolve_register_id_name(
 def _build_groups(
     config: MDWConfig,
     discover: dict[str, Any] | None,
-    signals_per_register: dict[str, dict[str, RegmetaSignal]],
+    signals_per_register: dict[str, dict[str, RegMetaSignal]],
     db_path: Path | None,
 ) -> tuple[RegisterGroupView, ...]:
     """Assemble ``RegisterGroupView`` tuple per principle 7.
@@ -648,7 +648,7 @@ def _build_groups(
     groups: list[RegisterGroupView] = []
 
     def _build_columns(
-        source_name: str, signals: dict[str, RegmetaSignal]
+        source_name: str, signals: dict[str, RegMetaSignal]
     ) -> tuple[ColumnInfo, ...]:
         src = discover_sources_by_name.get(source_name)
         types_for_source = config.column_types.get(source_name, {})
@@ -668,8 +668,8 @@ def _build_groups(
                         provenance=(
                             "manual" if (source_name, name) in manual_pairs else "auto"
                         ),
-                        regmeta_signal=signal,
-                        regmeta_implied_type=regmeta_implied_type(signal),
+                        reg_meta_signal=signal,
+                        reg_meta_implied_type=reg_meta_implied_type(signal),
                     )
                 )
         else:
@@ -684,8 +684,8 @@ def _build_groups(
                         provenance=(
                             "manual" if (source_name, name) in manual_pairs else "auto"
                         ),
-                        regmeta_signal=None,
-                        regmeta_implied_type=None,
+                        reg_meta_signal=None,
+                        reg_meta_implied_type=None,
                     )
                 )
         return tuple(cols)
@@ -1372,7 +1372,7 @@ def set_source_registers(
 
     ``assignments`` maps source_name → register name (or ``None`` to
     clear). Every source must already exist in the config. Each non-null
-    register is resolved against regmeta — an unknown name aborts the
+    register is resolved against reg_meta — an unknown name aborts the
     whole call before any write. Sources whose register actually changes
     are re-classified (auto-only by default; manuals included when
     ``reclassify_manual=True``). Type changes drop the affected cell's
@@ -1423,7 +1423,7 @@ def set_source_registers(
                     f"source_name={sn!r} not found in current snapshot."
                 )
 
-        # Resolve each non-null register against regmeta. Cache by input
+        # Resolve each non-null register against reg_meta. Cache by input
         # value so a panel-wide batch (many sources sharing one register
         # name) is one DB hit per distinct name, not one per source.
         resolve_cache: dict[str, str] = {}
@@ -1437,7 +1437,7 @@ def set_source_registers(
                 continue
             reg = resolve_register(val, db_path=db_path)
             if reg is None:
-                raise ValidationError(f"register={val!r} did not resolve in regmeta.")
+                raise ValidationError(f"register={val!r} did not resolve in reg_meta.")
             resolve_cache[val] = reg.name
             resolved[sn] = reg.name
 
@@ -1836,7 +1836,7 @@ def remove_panel(
     return get_state(project_dir, db_path=db_path)
 
 
-# -- Public API: read-only regmeta lookups -------------------------------
+# -- Public API: read-only reg_meta lookups -------------------------------
 
 
 @dataclass(frozen=True)
@@ -1911,7 +1911,7 @@ def _fetch_distinct_classifications(
     bindings would surface the wrong primary in the popup."""
     if not register_ids:
         return ()
-    from regmeta.queries import extract_year
+    from reg_meta.queries import extract_year
 
     ph = ",".join("?" for _ in register_ids)
     sql = (
@@ -1978,7 +1978,7 @@ def _fetch_value_set_groups(
     from variables other than the one the popup is describing."""
     if not register_ids:
         return ()
-    from regmeta.queries import extract_year
+    from reg_meta.queries import extract_year
 
     ph = ",".join("?" for _ in register_ids)
     sql = (
@@ -2066,7 +2066,7 @@ def _filter_groups_by_relevant_years(
     return (
         groups,
         (
-            f"regmeta has no value-set covering your project's year"
+            f"reg_meta has no value-set covering your project's year"
             f"{'s' if len(rel) > 1 else ''} ({sample}). Showing all "
             "available value-sets instead."
         ),
@@ -2091,7 +2091,7 @@ def get_column_values(
     popup keeps the year tabs honest — without it, the panel mixes code
     lists from every variable that ever used the column name.
 
-    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    Returns ``kind="none"`` rather than raising when reg_meta is missing,
     the register doesn't resolve, or the column is unknown — degrades
     gracefully into an empty popover.
     """
@@ -2099,13 +2099,13 @@ def get_column_values(
         raise ValidationError("column must be a non-empty string")
 
     empty = ColumnValuesResult(kind="none", title=column, description=None, codes=())
-    with _open_regmeta_conn(db_path) as conn:
+    with _open_reg_meta_conn(db_path) as conn:
         if conn is None:
             return empty
         try:
-            from regmeta import resolve_register_ids
-            from regmeta.errors import RegmetaError
-            from regmeta.queries import get_classification_codes
+            from reg_meta import resolve_register_ids
+            from reg_meta.errors import RegMetaError
+            from reg_meta.queries import get_classification_codes
         except ImportError:
             return empty
 
@@ -2113,21 +2113,21 @@ def get_column_values(
         if register is not None and register.strip():
             try:
                 register_ids = resolve_register_ids(conn, register)
-            except RegmetaError:
+            except RegMetaError:
                 register_ids = []
         # Same year scope is applied to the signal's variance counts and
         # the picker's classification list — the popup must agree with
         # the inline badge in GroupCard.
         years_set: set[int] | None = set(relevant_years) if relevant_years else None
         signals = (
-            _regmeta_lookup(conn, {column}, register_ids, relevant_years=years_set)
+            _reg_meta_lookup(conn, {column}, register_ids, relevant_years=years_set)
             if register_ids
             else {}
         )
         signal = lookup_with_prefix_fallback(signals, column)
-        # Matched alias can differ from the column literal when regmeta
+        # Matched alias can differ from the column literal when reg_meta
         # resolved via project-prefix stripping (e.g. "P1105_AStud" →
-        # "AStud"); per-instance SQL must use the alias regmeta knows.
+        # "AStud"); per-instance SQL must use the alias reg_meta knows.
         matched_alias = _matched_alias_key(signals, column) or column
 
         # When ``picked_var_id`` is set, always fetch the scoped list — the
@@ -2166,7 +2166,7 @@ def get_column_values(
                 chosen_sn = picked_classification
             try:
                 meta = get_classification_codes(conn, chosen_sn)
-            except RegmetaError:
+            except RegMetaError:
                 meta = None
             if meta is not None:
                 codes = _dedupe_codes(
@@ -2300,7 +2300,7 @@ def _resolve_picked_value_set(
     return None
 
 
-def _matched_alias_key(signals: dict[str, RegmetaSignal], column: str) -> str | None:
+def _matched_alias_key(signals: dict[str, RegMetaSignal], column: str) -> str | None:
     lower = column.lower()
     if lower in signals:
         return lower
@@ -2326,7 +2326,7 @@ def _dedupe_codes(
 
 @dataclass(frozen=True)
 class VarinfoDescription:
-    """One regmeta `variable` row, flattened to the fields the editor
+    """One reg_meta `variable` row, flattened to the fields the editor
     surfaces. The full audit-trail fields live behind the modal's
     expander; the primary fields are shown above the fold."""
 
@@ -2364,8 +2364,8 @@ class ColumnVarinfoResult:
       - ``none``: nothing to render. ``none_reason`` distinguishes the
         three cases the UI wants to surface differently:
           * ``"no_register"`` — column has no register pinned;
-          * ``"unavailable"`` — regmeta DB / package not present;
-          * ``"not_found"`` — column is unknown to regmeta (or the
+          * ``"unavailable"`` — reg_meta DB / package not present;
+          * ``"not_found"`` — column is unknown to reg_meta (or the
             register itself doesn't resolve).
     """
 
@@ -2464,7 +2464,7 @@ def get_column_varinfo(
     relevant_years: list[int] | None = None,
     db_path: Path | None = None,
 ) -> ColumnVarinfoResult:
-    """Resolve the regmeta variable description(s) for one column under
+    """Resolve the reg_meta variable description(s) for one column under
     one register.
 
     ``relevant_years`` (typically the source's configured year) is a
@@ -2479,7 +2479,7 @@ def get_column_varinfo(
     their relevance). Without ``relevant_years``, falls back to pure
     popularity ranking and every variable is surfaced.
 
-    Returns ``kind="none"`` rather than raising when regmeta is missing,
+    Returns ``kind="none"`` rather than raising when reg_meta is missing,
     the register doesn't resolve, or the column is unknown — degrades
     gracefully into an empty popover (same stance as
     ``get_column_values``).
@@ -2494,16 +2494,16 @@ def get_column_varinfo(
 
     year_set: set[int] | None = set(relevant_years) if relevant_years else None
 
-    with _open_regmeta_conn(db_path) as conn:
+    with _open_reg_meta_conn(db_path) as conn:
         if conn is None:
             return unavailable
         try:
-            from regmeta.errors import RegmetaError
-            from regmeta.queries import get_varinfo
+            from reg_meta.errors import RegMetaError
+            from reg_meta.queries import get_varinfo
         except ImportError:
             return unavailable
 
-        # MONA-prefixed columns (e.g. "P1105_Kon") aren't stored in regmeta
+        # MONA-prefixed columns (e.g. "P1105_Kon") aren't stored in reg_meta
         # — mirror `get_column_values` and retry with the stripped form.
         candidates = [column]
         stripped = strip_project_prefix(column)
@@ -2515,7 +2515,7 @@ def get_column_varinfo(
             try:
                 variables = get_varinfo(conn, candidate, register=register)
                 break
-            except RegmetaError as exc:
+            except RegMetaError as exc:
                 if exc.code != "not_found":
                     raise
                 variables = None
@@ -2525,10 +2525,10 @@ def get_column_varinfo(
 
         ranked = _rank_variables(variables, year_set)
         if not ranked:
-            # Filter dropped every match: regmeta knows the column under
+            # Filter dropped every match: reg_meta knows the column under
             # this register, but only in years that don't overlap the
             # project's. Treat as not_found — the popup renders "not in
-            # regmeta for these years" rather than a misleading
+            # reg_meta for these years" rather than a misleading
             # other-year description.
             return not_found
         primary_row = ranked[0]

@@ -1,7 +1,7 @@
 """Print every single-variant register, classified as an `_default` candidate.
 
 Disposable bootstrap helper for the pre-v1 slug-curation push (issue #95,
-following PR #90's sweep). Reads the live regmeta DB, walks every register
+following PR #90's sweep). Reads the live reg_meta DB, walks every register
 that has exactly one variant, and groups them into three classes:
 
   * exact       — variant name mirrors register name verbatim.
@@ -17,7 +17,7 @@ will be picked up by the one-line stderr hint folded into `precheck-slugs`.
 Usage:
     uv run python scripts/suggest_default_slugs.py [DB_PATH]
 
-DB_PATH defaults to the resolved regmeta default (REGMETA_DB env or XDG).
+DB_PATH defaults to the resolved reg_meta default (REG_META_DB env or XDG).
 """
 
 from __future__ import annotations
@@ -25,23 +25,23 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from regmeta.db import db_path_from_args, open_db
-from regmeta_build.fqid_slugs import iter_default_slug_candidates
+from reg_meta.db import db_path_from_args, open_db
+from reg_meta_build.fqid_slugs import iter_default_slug_candidates
 
 
 def main(argv: list[str]) -> int:
     if len(argv) > 1:
         arg = Path(argv[1]).expanduser()
         # `.db` suffix → treat as file path even if missing, so a mistyped
-        # filename reports `no regmeta DB at <typo>` instead of resolving
-        # to a nonsense `<typo>/regmeta.db`.
+        # filename reports `no reg_meta DB at <typo>` instead of resolving
+        # to a nonsense `<typo>/reg_meta.db`.
         db_path = (
             arg if arg.suffix == ".db" or arg.is_file() else db_path_from_args(str(arg))
         )
     else:
         db_path = db_path_from_args(None)
     if not db_path.is_file():
-        print(f"error: no regmeta DB at {db_path}", file=sys.stderr)
+        print(f"error: no reg_meta DB at {db_path}", file=sys.stderr)
         return 2
 
     conn = open_db(db_path)

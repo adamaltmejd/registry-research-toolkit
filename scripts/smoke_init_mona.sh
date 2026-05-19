@@ -35,9 +35,9 @@ if ! command -v codex >/dev/null 2>&1; then
 	exit 1
 fi
 
-if ! command -v regmeta >/dev/null 2>&1; then
-	echo "ERROR: regmeta is not on PATH." >&2
-	echo "Install it with: uv tool install regmeta" >&2
+if ! command -v reg-meta >/dev/null 2>&1; then
+	echo "ERROR: reg-meta is not on PATH." >&2
+	echo "Install it with: uv tool install reg-meta" >&2
 	exit 1
 fi
 
@@ -92,8 +92,8 @@ config. The install step is part of the smoke test.
 
 $PREEXISTING_MARKETPLACE_NOTE## Preflight
 
-- \`regmeta\` and \`mock-data-wizard\` must already be on PATH.
-- If metadata look stale, run \`regmeta update --yes\` before testing.
+- \`reg-meta\` and \`mock-data-wizard\` must already be on PATH.
+- If metadata look stale, run \`reg-meta update --yes\` before testing.
 
 ## Install and run
 

@@ -207,7 +207,7 @@
   </p>
 {:else if loadState.data.kind === "none"}
   <p class="status muted">
-    regmeta has no value codes for <code>{column}</code>{register
+    reg_meta has no value codes for <code>{column}</code>{register
       ? ` under ${register}`
       : ""}.
   </p>

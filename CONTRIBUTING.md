@@ -20,8 +20,8 @@ Expensive test suites are gated behind `--run-<name>` flags. To add a new catego
 ## Linting
 
 ```bash
-uv run ruff check regmeta/ regmeta_build/ mock_data_wizard/
-uv run ruff format regmeta/ regmeta_build/ mock_data_wizard/
+uv run ruff check reg_meta/ reg_meta_build/ mock_data_wizard/
+uv run ruff format reg_meta/ reg_meta_build/ mock_data_wizard/
 ```
 
 ## Releasing
@@ -31,9 +31,9 @@ and publishing. For manual database releases:
 
 ```bash
 # Build DB from SCB CSV exports
-regmeta-build build-db --input-dir regmeta_build/input_data/
+reg-meta-build build-db --input-dir reg_meta_build/input_data/
 
 # Compress and attach to an existing release
-zstd -3 -T0 ~/.local/share/regmeta/regmeta.db -o regmeta.db.zst
-gh release upload regmeta/vX.Y.Z regmeta.db.zst
+zstd -3 -T0 ~/.local/share/reg_meta/reg_meta.db -o reg_meta.db.zst
+gh release upload reg_meta/vX.Y.Z reg_meta.db.zst
 ```

@@ -1,9 +1,9 @@
 """Self-update logic for the mock-data-wizard package.
 
 mock-data-wizard is distributed as a pure Python package with no database
-assets, so the update flow is much simpler than regmeta's: check PyPI for
+assets, so the update flow is much simpler than reg_meta's: check PyPI for
 the latest version and shell out to `uv tool upgrade`. The background
-UpdateChecker mirrors regmeta's so CLI invocations never block on a network
+UpdateChecker mirrors reg_meta's so CLI invocations never block on a network
 round-trip.
 """
 

@@ -1,4 +1,4 @@
-"""Enrich stats with regmeta registry metadata."""
+"""Enrich stats with reg_meta registry metadata."""
 
 from __future__ import annotations
 
@@ -13,13 +13,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-import regmeta
-from regmeta.queries import extract_year as _regver_year
+import reg_meta
+from reg_meta.queries import extract_year as _regver_year
 
 from ._util import lookup_with_prefix_fallback, progress, strip_project_prefix
 from .stats import ColumnStats, ProjectStats
 
-# Birth-invariant regmeta var_ids eligible for population spine.
+# Birth-invariant reg_meta var_ids eligible for population spine.
 # These attributes are fixed at birth and must be consistent per individual.
 SPINE_VAR_IDS = frozenset({44, 1378, 256, 257})
 # 44 = Kön, 1378 = Födelseår, 256 = Födelselän, 257 = Födelseland
@@ -33,7 +33,7 @@ class EnrichedColumn:
     null_rate: float
     n_distinct: int
     stats: dict[str, Any]
-    # Enrichment from regmeta
+    # Enrichment from reg_meta
     register_id: int | None = None
     var_id: int | None = None
     variable_name: str | None = None
@@ -77,9 +77,9 @@ def enrich(
     register: str | None = None,
     db_path: Path | None = None,
 ) -> list[EnrichedSource]:
-    """Combine stats with regmeta metadata.
+    """Combine stats with reg_meta metadata.
 
-    If db_path is provided, opens the regmeta database and uses it to resolve
+    If db_path is provided, opens the reg_meta database and uses it to resolve
     column names and fetch value codes. Raises if the db cannot be opened.
     If db_path is None, returns unenriched results.
     """
@@ -87,7 +87,7 @@ def enrich(
     _cancelled = False
     prev_handler = None
     if db_path is not None:
-        conn = regmeta.open_db(db_path)
+        conn = reg_meta.open_db(db_path)
 
         # Allow Ctrl+C to interrupt long-running SQLite queries.
         # Python signal handlers can't run while blocked in C extensions,
@@ -108,7 +108,7 @@ def enrich(
 
     total = len(stats.sources)
     if conn is not None:
-        progress(f"Enriching {total} sources with regmeta...")
+        progress(f"Enriching {total} sources with reg_meta...")
 
     t0 = time.monotonic()
 
@@ -127,7 +127,7 @@ def enrich(
         if conn is not None:
             if register:
                 # Explicit register: single pass, all sources use it
-                reg_ids = regmeta.resolve_register_ids(conn, register)
+                reg_ids = reg_meta.resolve_register_ids(conn, register)
                 global_resolved = _bulk_resolve(conn, all_col_names, reg_ids or None)
                 for source in stats.sources:
                     source_resolved[source.source_name] = global_resolved
@@ -253,7 +253,7 @@ def enrich(
 
 
 def _check_value_code_drift(enriched_sources: list[EnrichedSource]) -> list[str]:
-    """Warn when stats contain frequency codes absent from regmeta value codes.
+    """Warn when stats contain frequency codes absent from reg_meta value codes.
 
     Compares on stripped codes and drops whitespace-only/empty observed values:
     SCB tables often pad fixed-width columns (e.g. SsykStatus stores '1 ', '2 ')
@@ -273,13 +273,13 @@ def _check_value_code_drift(enriched_sources: list[EnrichedSource]) -> list[str]
                 codes = ", ".join(unknown)
                 warnings.append(
                     f"{ef.source_name}/{ec.column_name}: "
-                    f"codes [{codes}] not in regmeta value set"
+                    f"codes [{codes}] not in reg_meta value set"
                 )
     return warnings
 
 
 # ---------------------------------------------------------------------------
-# Bulk DB queries — bypass general-purpose regmeta API for performance
+# Bulk DB queries — bypass general-purpose reg_meta API for performance
 # ---------------------------------------------------------------------------
 
 
@@ -487,7 +487,7 @@ _TOKEN_RE = re.compile(r"[A-Z]+(?=[A-Z][a-z])|[A-Z]+(?![a-z])|[A-Z]?[a-z]+|\d+")
 
 def _tokenize(s: str) -> list[str]:
     # SCB column names typically strip diacritics (`Kon`, `Fodelseland`)
-    # while regmeta labels keep them (`Kön`, `Födelseland`). Fold to
+    # while reg_meta labels keep them (`Kön`, `Födelseland`). Fold to
     # NFKD + drop combining marks before matching so the two forms align.
     folded = "".join(
         ch for ch in unicodedata.normalize("NFKD", s) if not unicodedata.combining(ch)

@@ -39,13 +39,13 @@ def test_ui_subcommand_overrides():
             "::1",
             "--no-browser",
             "--db-path",
-            "/tmp/regmeta.db",
+            "/tmp/reg_meta.db",
         ]
     )
     assert args.port == 9000
     assert args.host == "::1"
     assert args.no_browser is True
-    assert args.db_path == "/tmp/regmeta.db"
+    assert args.db_path == "/tmp/reg_meta.db"
 
 
 def test_ui_requires_project_dir():
@@ -113,7 +113,7 @@ def test_yes_keeps_stale_by_default(tmp_path: Path, capsys):
             str(stats_path),
             "--output-dir",
             str(out_dir),
-            "--no-regmeta",
+            "--no-reg-meta",
             "-y",
         ]
     )
@@ -136,7 +136,7 @@ def test_force_overwrites_and_removes_stale(tmp_path: Path):
             str(stats_path),
             "--output-dir",
             str(out_dir),
-            "--no-regmeta",
+            "--no-reg-meta",
             "--force",
         ]
     )
@@ -155,7 +155,7 @@ def test_yes_and_force_overwrites(tmp_path: Path):
             str(stats_path),
             "--output-dir",
             str(out_dir),
-            "--no-regmeta",
+            "--no-reg-meta",
             "-y",
             "--force",
         ]
@@ -176,7 +176,7 @@ def test_force_on_empty_dir_works(tmp_path: Path):
             str(stats_path),
             "--output-dir",
             str(out_dir),
-            "--no-regmeta",
+            "--no-reg-meta",
             "--force",
             "-y",
         ]

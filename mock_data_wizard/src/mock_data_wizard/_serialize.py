@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .classify import RegmetaSignal
+from .classify import RegMetaSignal
 from .config import ColumnTypeOverride, MDWConfig, panel_to_dict
 from .editor import (
     ColumnInfo,
@@ -114,16 +114,16 @@ def _column_info_to_dict(info: ColumnInfo) -> dict[str, Any]:
         "current_type": info.current_type,
         "hint": dict(info.hint) if info.hint is not None else None,
         "provenance": info.provenance,
-        "regmeta_signal": (
-            _regmeta_signal_to_dict(info.regmeta_signal)
-            if info.regmeta_signal is not None
+        "reg_meta_signal": (
+            _reg_meta_signal_to_dict(info.reg_meta_signal)
+            if info.reg_meta_signal is not None
             else None
         ),
-        "regmeta_implied_type": info.regmeta_implied_type,
+        "reg_meta_implied_type": info.reg_meta_implied_type,
     }
 
 
-def _regmeta_signal_to_dict(signal: RegmetaSignal) -> dict[str, Any]:
+def _reg_meta_signal_to_dict(signal: RegMetaSignal) -> dict[str, Any]:
     return {
         "datatyp_kind": signal.datatyp_kind,
         "classification_short_name": signal.classification_short_name,

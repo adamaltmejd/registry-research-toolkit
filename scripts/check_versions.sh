@@ -11,8 +11,8 @@ err() { echo "ERROR: $*" >&2; errors=$((errors + 1)); }
 
 # --- Package definitions: dir  pyproject_path  init_path ---
 packages=(
-    "regmeta regmeta/pyproject.toml regmeta/src/regmeta/__init__.py"
-    "regmeta_build regmeta_build/pyproject.toml regmeta_build/src/regmeta_build/__init__.py"
+    "reg_meta reg_meta/pyproject.toml reg_meta/src/reg_meta/__init__.py"
+    "reg_meta_build reg_meta_build/pyproject.toml reg_meta_build/src/reg_meta_build/__init__.py"
     "mock_data_wizard mock_data_wizard/pyproject.toml mock_data_wizard/src/mock_data_wizard/__init__.py"
 )
 

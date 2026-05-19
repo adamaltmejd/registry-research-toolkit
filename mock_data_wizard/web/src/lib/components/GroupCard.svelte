@@ -4,7 +4,7 @@
     columnIsManual,
     columnIsMismatch,
     columnIsUnmatchedCategorical,
-    hasRegmetaValueDisplay,
+    hasRegMetaValueDisplay,
     sourceYearInfoFor,
     store,
   } from "../store.svelte";
@@ -45,10 +45,10 @@
     none: "no confidence",
   };
   const CONFIDENCE_TOOLTIP: Record<string, string> = {
-    high: "High confidence: ≥75% of each source's non-id columns are known to regmeta for the assigned register.",
+    high: "High confidence: ≥75% of each source's non-id columns are known to reg_meta for the assigned register.",
     partial:
-      "Partial confidence: some non-id columns match the assigned register's regmeta, but coverage is below 75% on at least one source.",
-    none: "No confidence: no register assigned, or none of the non-id columns match the assigned register's regmeta.",
+      "Partial confidence: some non-id columns match the assigned register's reg_meta, but coverage is below 75% on at least one source.",
+    none: "No confidence: no register assigned, or none of the non-id columns match the assigned register's reg_meta.",
   };
 
   // Schema variants are partitioned server-side (editor._schema_variant_groups);
@@ -154,9 +154,9 @@
 
   // "varies · N" when the column maps to multiple classifications: a
   // most-common winner would silently mislabel the other years.
-  function regmetaBadge(col: ColumnInfo): string {
-    const sig = col.regmeta_signal;
-    if (!hasRegmetaValueDisplay(sig)) return "";
+  function reg_metaBadge(col: ColumnInfo): string {
+    const sig = col.reg_meta_signal;
+    if (!hasRegMetaValueDisplay(sig)) return "";
     if (sig!.n_classifications > 1) return `varies · ${sig!.n_classifications}`;
     if (sig!.classification_short_name) return sig!.classification_short_name;
     return "vc";
@@ -164,16 +164,16 @@
 
   // Tooltip text; TypeCell appends the click CTA so this stays purely
   // descriptive (no "click to …" duplication).
-  function regmetaBadgeTitle(col: ColumnInfo): string {
-    const sig = col.regmeta_signal;
+  function reg_metaBadgeTitle(col: ColumnInfo): string {
+    const sig = col.reg_meta_signal;
     if (!sig) return "";
     if (sig.n_classifications > 1) {
-      return `regmeta: ${sig.n_classifications} classifications across years (e.g. ${sig.classification_short_name})`;
+      return `reg_meta: ${sig.n_classifications} classifications across years (e.g. ${sig.classification_short_name})`;
     }
     if (sig.classification_short_name) {
-      return `regmeta classification: ${sig.classification_short_name}`;
+      return `reg_meta classification: ${sig.classification_short_name}`;
     }
-    if (sig.has_value_codes) return "regmeta: value codes available";
+    if (sig.has_value_codes) return "reg_meta: value codes available";
     return "";
   }
 
@@ -204,7 +204,7 @@
   // and the row-level markers below stay in lockstep with each other.
   // Local aliases keep the template readable.
   const isUnmatchedCategorical = columnIsUnmatchedCategorical;
-  const isRegmetaMismatch = columnIsMismatch;
+  const isRegMetaMismatch = columnIsMismatch;
 
   interface SourceStats {
     total: number;
@@ -219,7 +219,7 @@
     for (const c of cols) {
       if (isUnmatchedCategorical(c)) unmatched++;
       if (columnIsManual(c)) manual++;
-      if (isRegmetaMismatch(c)) mismatch++;
+      if (isRegMetaMismatch(c)) mismatch++;
     }
     return { total: cols.length, unmatched, manual, mismatch };
   }
@@ -247,7 +247,7 @@
     sample: ColumnInfo;
     /** Every ColumnInfo aggregated into this partition, in source
      * order. Filter checks scan this rather than `sample` because
-     * provenance / regmeta context can differ across cells with the
+     * provenance / reg_meta context can differ across cells with the
      * same type+hints (e.g. one source manually edited, siblings auto). */
     cells: ColumnInfo[];
     manual_count: number;
@@ -615,10 +615,10 @@
       <tbody>
         {#each visiblePartitions as p (p.name + "/" + p.variant_index)}
           {@const hint = hintSuffix(p.sample)}
-          {@const regmeta = regmetaBadge(p.sample)}
-          {@const regmetaTitle = regmetaBadgeTitle(p.sample)}
-          {@const regmetaVaries =
-            (p.sample.regmeta_signal?.n_classifications ?? 0) > 1}
+          {@const reg_meta = reg_metaBadge(p.sample)}
+          {@const reg_metaTitle = reg_metaBadgeTitle(p.sample)}
+          {@const reg_metaVaries =
+            (p.sample.reg_meta_signal?.n_classifications ?? 0) > 1}
           {@const split = p.variant_count > 1}
           {@const coverage = visCols.coverage ? coverageForPartition(p) : []}
           <tr
@@ -657,9 +657,9 @@
                 {hint}
                 {pillTitle}
                 showManualOverrideBorder={false}
-                {regmeta}
-                {regmetaTitle}
-                {regmetaVaries}
+                {reg_meta}
+                {reg_metaTitle}
+                {reg_metaVaries}
                 manualCount={p.manual_count}
                 onEditType={() => openEditorForPartition(p)}
                 onShowValueCodes={() => (viewingValuesFor = p.name)}
@@ -734,15 +734,15 @@
             {#if stats.unmatched > 0}
               <span
                 class="stat-unmatched"
-                title="categoricals without regmeta classification or value codes"
+                title="categoricals without reg_meta classification or value codes"
                 >● {stats.unmatched} unmatched</span
               >
             {/if}
             {#if stats.mismatch > 0}
               <span
                 class="stat-mismatch"
-                title="auto-classified type disagrees with regmeta-implied type"
-                >⚠ {stats.mismatch} regmeta mismatch</span
+                title="auto-classified type disagrees with reg-meta-implied type"
+                >⚠ {stats.mismatch} reg_meta mismatch</span
               >
             {/if}
             {#if stats.manual > 0}
@@ -768,10 +768,10 @@
           <tbody>
             {#each cols as col (col.name)}
               {@const hint = hintSuffix(col)}
-              {@const regmeta = regmetaBadge(col)}
-              {@const regmetaTitle = regmetaBadgeTitle(col)}
-              {@const regmetaVaries =
-                (col.regmeta_signal?.n_classifications ?? 0) > 1}
+              {@const reg_meta = reg_metaBadge(col)}
+              {@const reg_metaTitle = reg_metaBadgeTitle(col)}
+              {@const reg_metaVaries =
+                (col.reg_meta_signal?.n_classifications ?? 0) > 1}
               {@const provLabel =
                 col.provenance === "manual"
                   ? "manual override"
@@ -793,9 +793,9 @@
                     {hint}
                     {pillTitle}
                     showManualOverrideBorder={true}
-                    {regmeta}
-                    {regmetaTitle}
-                    {regmetaVaries}
+                    {reg_meta}
+                    {reg_metaTitle}
+                    {reg_metaVaries}
                     onEditType={() => openEditorForCell(sourceName, col)}
                     onShowValueCodes={() => (viewingValuesFor = col.name)}
                   />
@@ -1171,7 +1171,7 @@
   }
   /* Whole-row click is a mouse-only enhancement; keyboard users tab
      straight to the inner type-pill button. Inner buttons stop
-     propagation so clicks on the type pill / regmeta tag stay scoped
+     propagation so clicks on the type pill / reg_meta tag stay scoped
      to those controls. */
   tr.clickable-row {
     cursor: pointer;

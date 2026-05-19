@@ -126,7 +126,7 @@
     <h2>This project hasn't been configured yet</h2>
     <p>
       Initialise from <code>mock_data_discovery.json</code> to apply the
-      auto-classifier (id-name → regmeta classification → categorical
+      auto-classifier (id-name → reg_meta classification → categorical
       heuristics → SQL type). You'll be able to review and override every
       column before extract.
     </p>

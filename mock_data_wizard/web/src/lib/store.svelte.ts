@@ -32,15 +32,15 @@ import type {
   ColumnInfo,
   ColumnType,
   RegisterEntry,
-  RegmetaSignal,
+  RegMetaSignal,
   StateSnapshot,
 } from "./types";
 
 /** Concern flags surfaced by the filter chips. Each picks a different
  * subset of cells the user is likely to want to review:
  *  - manual:    user-edited types (the audit trail)
- *  - mismatch:  auto-classified types that disagree with regmeta
- *  - unmatched: categoricals with no regmeta evidence (best-effort)
+ *  - mismatch:  auto-classified types that disagree with reg_meta
+ *  - unmatched: categoricals with no reg_meta evidence (best-effort)
  *  - opaque:    free-text classifier fallback (commonly worth reviewing)
  */
 export type ConcernFilter = "manual" | "mismatch" | "unmatched" | "opaque";
@@ -54,22 +54,22 @@ export function columnIsManual(c: ColumnInfo): boolean {
 
 export function columnIsMismatch(c: ColumnInfo): boolean {
   if (c.provenance === "manual") return false;
-  if (c.regmeta_implied_type === null) return false;
-  return c.regmeta_implied_type !== c.current_type;
+  if (c.reg_meta_implied_type === null) return false;
+  return c.reg_meta_implied_type !== c.current_type;
 }
 
 export function columnIsUnmatchedCategorical(c: ColumnInfo): boolean {
   if (c.current_type !== "categorical") return false;
-  const sig = c.regmeta_signal;
+  const sig = c.reg_meta_signal;
   if (!sig) return true;
   return !sig.classification_short_name && !sig.has_value_codes;
 }
 
-/** True when the column has anything for ValueCodesPanel / regmeta-badge
+/** True when the column has anything for ValueCodesPanel / reg-meta-badge
  *  to render. Must stay in lockstep with GroupCard's badge logic — when
  *  this is false, neither the table badge nor the editor's inline panel
  *  show up. */
-export function hasRegmetaValueDisplay(sig: RegmetaSignal | null): boolean {
+export function hasRegMetaValueDisplay(sig: RegMetaSignal | null): boolean {
   if (!sig) return false;
   return (
     sig.n_classifications > 1 ||
@@ -295,7 +295,7 @@ function sourceKey(groupId: string, sourceName: string): string {
 class Store {
   snapshot: StateSnapshot | null = $state(null);
   registers: RegisterEntry[] | null = $state(null);
-  /** True when ``listRegisters`` failed (regmeta unavailable etc.).
+  /** True when ``listRegisters`` failed (reg_meta unavailable etc.).
    * RegisterEditor uses this to soften client-side validation: when we
    * can't enumerate valid names, manual entry must still be permitted
    * and the server stays the source of truth. */
@@ -436,8 +436,8 @@ class Store {
       this.registers = response.registers;
       this.registersUnavailable = false;
     } catch (exc) {
-      // Regmeta unavailable; surface an empty list rather than
-      // blocking the modal, but warn once so a broken regmeta install
+      // RegMeta unavailable; surface an empty list rather than
+      // blocking the modal, but warn once so a broken reg_meta install
       // is visible (the autocomplete would otherwise look intentional).
       // The flag is what RegisterEditor reads to skip client-side
       // name-resolution; without it, the empty list would block every
@@ -642,7 +642,7 @@ class Store {
 
   /** Filter check for a grouped-by-name partition (multiple cells that
    * share name + type + hints). Name and type are uniform across the
-   * partition, but provenance and regmeta context can differ — so the
+   * partition, but provenance and reg_meta context can differ — so the
    * concern check must scan every cell. Filtering on `sample` alone
    * would hide a partition whose only manually-edited source happens
    * not to be the sample, defeating the "find what I edited" workflow. */

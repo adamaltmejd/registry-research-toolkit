@@ -1,8 +1,8 @@
 """Validate the value-set dedup + year-projection rebuild.
 
-Thin wrapper around ``regmeta_build.validate.validate_built_db`` — kept
+Thin wrapper around ``reg_meta_build.validate.validate_built_db`` — kept
 so maintainers can re-validate an existing DB without rebuilding it.
-The build-time path lives in `regmeta-build build-db --validate` (issue
+The build-time path lives in `reg-meta-build build-db --validate` (issue
 #92); both call the same module so checks stay in one place.
 
 Usage:
@@ -14,10 +14,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-from regmeta.errors import RegmetaError
-from regmeta_build.validate import validate_built_db
+from reg_meta.errors import RegMetaError
+from reg_meta_build.validate import validate_built_db
 
-DEFAULT_DB = Path("/tmp/regmeta-rebuild-test/regmeta.db")
+DEFAULT_DB = Path("/tmp/reg-meta-rebuild-test/reg_meta.db")
 
 
 def main() -> None:
@@ -26,8 +26,8 @@ def main() -> None:
         result = validate_built_db(db_path)
     except FileNotFoundError as exc:
         sys.exit(str(exc))
-    except RegmetaError as exc:
-        # `open_db` raises RegmetaError on a missing or unreadable DB;
+    except RegMetaError as exc:
+        # `open_db` raises RegMetaError on a missing or unreadable DB;
         # surface its message rather than letting a traceback escape.
         sys.exit(f"{exc.code}: {exc.message}")
     print(result.format_report())

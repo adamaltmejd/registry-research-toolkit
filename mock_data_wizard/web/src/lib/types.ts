@@ -52,8 +52,8 @@ export interface Panel {
   members: PanelMember[];
 }
 
-export interface RegmetaSignal {
-  /** "numeric" | "date" | null — see classify.RegmetaSignal. */
+export interface RegMetaSignal {
+  /** "numeric" | "date" | null — see classify.RegMetaSignal. */
   datatyp_kind: string | null;
   /** Most-common classification short_name. When `n_classifications > 1`
    * this is one of several; the inline badge surfaces the variance and
@@ -75,8 +75,8 @@ export interface ColumnInfo {
   /** Inline subtype/format hint projected from the active override. */
   hint: Record<string, unknown> | null;
   provenance: Provenance;
-  regmeta_signal: RegmetaSignal | null;
-  regmeta_implied_type: ColumnType | null;
+  reg_meta_signal: RegMetaSignal | null;
+  reg_meta_implied_type: ColumnType | null;
 }
 
 export interface PanelCandidateMember {
@@ -264,7 +264,7 @@ function isSourceEntry(
   return true;
 }
 
-function isRegmetaSignal(x: unknown): x is RegmetaSignal {
+function isRegMetaSignal(x: unknown): x is RegMetaSignal {
   if (!isObject(x)) return false;
   return (
     isStringOrNull(x.datatyp_kind) &&
@@ -283,8 +283,8 @@ function isColumnInfo(x: unknown): x is ColumnInfo {
     isColumnType(x.current_type) &&
     (x.hint === null || isObject(x.hint)) &&
     (x.provenance === "manual" || x.provenance === "auto") &&
-    (x.regmeta_signal === null || isRegmetaSignal(x.regmeta_signal)) &&
-    (x.regmeta_implied_type === null || isColumnType(x.regmeta_implied_type))
+    (x.reg_meta_signal === null || isRegMetaSignal(x.reg_meta_signal)) &&
+    (x.reg_meta_implied_type === null || isColumnType(x.reg_meta_implied_type))
   );
 }
 

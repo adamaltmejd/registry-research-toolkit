@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from regmeta.errors import RegmetaError
+from reg_meta.errors import RegMetaError
 
 from mock_data_wizard.enrich import (
     EnrichedColumn,
@@ -38,7 +38,7 @@ def test_enrich_without_db(stats_path: Path):
 def test_enrich_nonexistent_db_raises(stats_path: Path):
     """Enrichment raises when db_path is given but doesn't exist."""
     stats = parse_stats(stats_path)
-    with pytest.raises(RegmetaError):
+    with pytest.raises(RegMetaError):
         enrich(stats, db_path=Path("/nonexistent/db"))
 
 
@@ -122,7 +122,7 @@ def test_drift_ignores_whitespace_only_observed_codes():
 
 
 def test_drift_strips_trailing_whitespace_for_comparison():
-    # Fixed-width columns store padded codes ('1 ', '2 '); regmeta has the
+    # Fixed-width columns store padded codes ('1 ', '2 '); reg_meta has the
     # clean code ('1', '2'). Compare on stripped form.
     ef = _make_enriched(
         "f.csv", "SsykStatus", {"1 ": 50, "2 ": 40}, {"1": "Foo", "2": "Bar"}
@@ -130,10 +130,10 @@ def test_drift_strips_trailing_whitespace_for_comparison():
     assert _check_value_code_drift([ef]) == []
 
 
-def test_enrich_resolves_from_db(stats_path: Path, regmeta_db: Path):
-    """Enrichment against a real regmeta DB resolves columns and fetches value codes."""
+def test_enrich_resolves_from_db(stats_path: Path, reg_meta_db: Path):
+    """Enrichment against a real reg_meta DB resolves columns and fetches value codes."""
     stats = parse_stats(stats_path)
-    result = enrich(stats, register="TESTREG", db_path=regmeta_db)
+    result = enrich(stats, register="TESTREG", db_path=reg_meta_db)
     cols = {c.column_name: c for c in result[0].columns}
 
     kon = cols["Kon"]
@@ -143,7 +143,7 @@ def test_enrich_resolves_from_db(stats_path: Path, regmeta_db: Path):
     assert kon.value_codes == {"1": "Man", "2": "Kvinna"}
 
 
-def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path):
+def test_bulk_fetch_value_codes_filters_by_register_and_overlap(reg_meta_db: Path):
     """Same var_id in two registers with conflicting code schemes: pick the
     CVID under the resolved register that matches the observed codes.
 
@@ -153,7 +153,7 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a second register, same var_id=44, different CVID with conflicting codes.
     conn.executescript(
@@ -182,7 +182,7 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(regmeta_db: Path
     assert out[("b.csv", "Kon")] == {"A": "Alpha", "B": "Beta", "C": "Gamma"}
 
 
-def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
+def test_bulk_fetch_value_codes_skips_when_no_overlap(reg_meta_db: Path):
     """No name signal and no overlap → omit the entry. Better to leave
     value_codes unset than to enrich with an unrelated code universe.
 
@@ -192,14 +192,14 @@ def test_bulk_fetch_value_codes_skips_when_no_overlap(regmeta_db: Path):
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     requests = {("f.csv", "FooBar"): (44, 1, None, {"X", "Y", "Z"}, "FooBar")}
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("f.csv", "FooBar") not in out
 
 
-def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
+def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
     """Two CVIDs under the same (var_id, register_id) with overlapping code
     sets — name/classification metadata picks the right one even when raw
     overlap ties. Issue #26: SUN2000Inr-style columns whose observed codes
@@ -207,7 +207,7 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Two CVIDs under the same (var=44, reg=1). CVID 1101 is SUN2000 (5 codes
     # 1..5); CVID 1102 is SUN2020 (7 codes 1..7). Observed {1,2,3,4,5} is a
@@ -264,7 +264,7 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(regmeta_db: Path):
     }
 
 
-def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
+def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path):
     """Issue #25: when no CVID has a name signal AND none meets
     MIN_OVERLAP_RATIO, omit the entry rather than mis-enriching with an
     unrelated code universe.
@@ -275,7 +275,7 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a CVID for var_id=44 in register 1 with codes {A,E,I,S} and no
     # classification metadata (so name-match has nothing to latch onto).
@@ -309,7 +309,7 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(regmeta_db: Path):
     assert ("f.csv", "BTyp") not in out
 
 
-def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path):
+def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(reg_meta_db: Path):
     """Two columns resolving to the same (var_id, register_id) but with
     different observed codes must each get their own CVID pick.
 
@@ -321,7 +321,7 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(regmeta_db: Path)
     """
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a second CVID under the same register/variable with different codes.
     conn.executescript(
@@ -362,7 +362,7 @@ def test_tokenize_handles_uppercase_runs():
 
 def test_tokenize_strips_swedish_diacritics():
     # SCB column names typically strip diacritics (`Kon`, `Fodelseland`)
-    # while regmeta labels keep them (`Kön`, `Födelseland`). Both forms
+    # while reg_meta labels keep them (`Kön`, `Födelseland`). Both forms
     # must produce the same token set so the picker can match across them.
     assert _tokenize("Kön") == ["kon"]
     assert _tokenize("Födelseland") == _tokenize("Fodelseland") == ["fodelseland"]
@@ -477,11 +477,13 @@ def test_vote_filename_fallback_when_low_confidence():
     assert result.register_id == 349  # Flergenerationsregistret
 
 
-def test_enrich_exposes_candidates_on_enriched_file(stats_path: Path, regmeta_db: Path):
+def test_enrich_exposes_candidates_on_enriched_file(
+    stats_path: Path, reg_meta_db: Path
+):
     """Voted enrichment populates register_hint_candidates."""
     stats = parse_stats(stats_path)
     # Don't pass `register=` so enrich takes the voting path.
-    result = enrich(stats, db_path=regmeta_db)
+    result = enrich(stats, db_path=reg_meta_db)
     assert result[0].register_hint_candidates  # at least one candidate
 
 
@@ -520,12 +522,12 @@ def _seed_year_cvids(conn) -> None:
     conn.commit()
 
 
-def test_bulk_fetch_value_codes_exact_year_match_wins(regmeta_db: Path):
+def test_bulk_fetch_value_codes_exact_year_match_wins(reg_meta_db: Path):
     """source_year=2019 with three candidate CVIDs (2018, 2019, 2025) and
     identical codes/labels picks 2019 — year is the only discriminator."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _seed_year_cvids(conn)
 
@@ -542,13 +544,13 @@ def test_bulk_fetch_value_codes_exact_year_match_wins(regmeta_db: Path):
     assert cur.fetchone()[0] == 102
 
 
-def test_bulk_fetch_value_codes_closest_year_fallback(regmeta_db: Path):
+def test_bulk_fetch_value_codes_closest_year_fallback(reg_meta_db: Path):
     """Source year 2017 with no exact match -> picks closest available
     version (2018, distance 1) over 2019 (distance 2), 2020 (distance 3),
     and 2025 (distance 8)."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _seed_year_cvids(conn)
 
@@ -568,13 +570,13 @@ def test_bulk_fetch_value_codes_closest_year_fallback(regmeta_db: Path):
     assert out[("data_2017", "Kon")]["1"] == "Man-2018"
 
 
-def test_bulk_fetch_value_codes_no_source_year_falls_through(regmeta_db: Path):
+def test_bulk_fetch_value_codes_no_source_year_falls_through(reg_meta_db: Path):
     """No source year => year tier is neutral; name match still picks
     a CVID. The fixture's only CVID 1001 (var=44, reg=1) has Kön
     classification matching the column 'Kon', so it accepts via name."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     _seed_year_cvids(conn)
 
@@ -589,14 +591,14 @@ def test_bulk_fetch_value_codes_no_source_year_falls_through(regmeta_db: Path):
 
 
 def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverge(
-    regmeta_db: Path,
+    reg_meta_db: Path,
 ):
     """Codes from the year-correct CVID won't actually be wrong -- year
     match is purely a tier above name. Verify the picked CVID still gets
     its own labels (no cross-CVID code mixing)."""
     import sqlite3
 
-    conn = sqlite3.connect(str(regmeta_db))
+    conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Two CVIDs at different years with disjoint code universes. Source
     # year 2018 must lock onto CVID 1801 even when overlap with 1802 is

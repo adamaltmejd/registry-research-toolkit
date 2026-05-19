@@ -17,7 +17,7 @@ end-to-end loop crosses the MONA boundary three times:
 3. **Author config** (local) — author `mock_data_config.json` from
    `mock_data_discovery.json` via `mock_data_wizard.editor.init_if_missing`
    (or an external UI calling the same API; see *Editor API* below).
-   The editor applies the layered classifier (id-name → regmeta
+   The editor applies the layered classifier (id-name → reg_meta
    classification → categorical-name → sql_type → `opaque` default;
    see *Configure classifier priority* below) and persists year +
    register per source. Subsequent edits go through the editor
@@ -31,7 +31,7 @@ end-to-end loop crosses the MONA boundary three times:
 
 Why three trips. Discover is metadata-only and PII-safe by
 construction; running it first means the per-column type assignment
-happens locally where regmeta and human review are available. Extract
+happens locally where reg_meta and human review are available. Extract
 is the slow part (full-population aggregation) — splitting it out
 means each iteration of the type config doesn't pay 20-hour-class
 re-runs to fix a misclassified column. The earlier R-script-generation
@@ -51,8 +51,8 @@ The CLI keeps the bundle / aggregate / generate surface only:
 `mock-data-wizard compare`, `mock-data-wizard scan`,
 `mock-data-wizard update`. Bare `mock-data-wizard` prints help.
 
-The generate command exposes `seed`, `sample-pct`, regmeta-enrichment
-toggle, register filter (only when regmeta is on), output dir, and
+The generate command exposes `seed`, `sample-pct`, reg-meta-enrichment
+toggle, register filter (only when reg_meta is on), output dir, and
 stale-file handling. Pass `--yes` to skip prompts and `--force` to
 delete stale files instead of warning-and-keeping them.
 
@@ -263,7 +263,7 @@ the five types via this chain (first match wins):
 1. **`is_known_id(name)`** — `lopnr` / `persnr` patterns. SQL type
    can't tell a BIGINT identifier from a BIGINT measure; the name
    has to.
-2. **Regmeta evidence** (only when the source's group has a register
+2. **RegMeta evidence** (only when the source's group has a register
    assigned — auto-detected at init or chosen via the editor) — joining
    `variable_alias` → `variable_instance` for that register:
    - non-null `value_set_id` *or* non-null `classification_id`
@@ -277,7 +277,7 @@ the five types via this chain (first match wins):
    → `LopNr`) mirrors the same logic used by enrich.
 3. **`is_rtb_named_categorical(name, register)`** — narrow exact-name
    (case-insensitive) allowlist scoped to RTB. Covers SCB names
-   regmeta is known to be missing under RTB: the record-quality flags
+   reg_meta is known to be missing under RTB: the record-quality flags
    `AterAnv` / `FelPersonNr` / `LopNrByte` plus the birth-time grouping
    variables `FodelseAr` / `FodelseArMan`. No fuzzy patterns —
    variants fall through.
@@ -292,12 +292,12 @@ the five types via this chain (first match wins):
    the user overrides via `set_column_type` or by hand-editing
    `mock_data_config.json`.
 
-The chain deliberately gives regmeta authority over names for
-categorical detection but not over `is_known_id`: regmeta has no
+The chain deliberately gives reg_meta authority over names for
+categorical detection but not over `is_known_id`: reg_meta has no
 "this is an identifier" type, and id-naming conventions are stable
 across registers. The earlier loose "known categorical name" fallback
 (`Kon` / `Kommun` / `Sun2000Inr` / `FodelseLand` / ...) was removed
-once regmeta's `value_set` schema made these signals authoritative —
+once reg_meta's `value_set` schema made these signals authoritative —
 common Swedish stems (`land`, `civil`, `medb`, ...) carry too much
 false-positive risk for a name-pattern guesser to be a net win.
 
@@ -361,7 +361,7 @@ getting silently dropped.
   (the regex didn't fire and the user hasn't intervened) the editor
   surfaces a warning until a year is provided. Read by `enrich.py`
   to bias CVID picking toward the right register version (see CVID
-  picker tier 1). `register` records which register's regmeta
+  picker tier 1). `register` records which register's reg_meta
   evidence drove auto-classification for the source; persisted so
   reopening the editor restores the context, and so the file
   documents itself.
@@ -398,7 +398,7 @@ authority that gets to second-guess the user on every reload.
 
 The `mock_data_wizard.editor` module exposes a stateless, autosaving
 local API for authoring and mutating `mock_data_config.json`. Pure
-functions over `project_dir` plus the regmeta DB; no module-level
+functions over `project_dir` plus the reg_meta DB; no module-level
 session state. UI tooling (browser, TUI, etc.) lives outside this
 package and calls this API directly.
 
@@ -475,13 +475,13 @@ date-token / time-key-column detection).
 `ColumnInfo` exposes `name`, `sql_type`, `current_type`, `hint`
 (inline `id_subtype` / `numeric_subtype` / `date_format` projected
 into a dict, or `None`), `provenance` (`"manual"` / `"auto"`, derived
-from `manual_columns`), `regmeta_signal`, and `regmeta_implied_type`.
+from `manual_columns`), `reg_meta_signal`, and `reg_meta_implied_type`.
 
 ### API functions
 
 All functions live in `mock_data_wizard.editor` and take a
 `project_dir: Path` plus an optional `db_path: Path | None` to
-override the regmeta DB location.
+override the reg_meta DB location.
 
 **Reading and initialization.**
 
@@ -533,7 +533,7 @@ override the regmeta DB location.
   expected_version, db_path=None, reclassify_manual=False)` —
   per-source primitive. `assignments` maps `source_name` →
   register name (or `None` to clear). Every source is validated
-  and every non-null register is resolved against regmeta before
+  and every non-null register is resolved against reg_meta before
   any write; an unknown source or unresolvable register aborts the
   whole call. Reclassification runs only on sources whose register
   actually changed (or on all listed sources when
@@ -566,12 +566,12 @@ override the regmeta DB location.
 - `remove_panel(project_dir, panel_id, *, expected_version,
   db_path=None)` — removes a panel by id. No-op when absent.
 
-**Helpers** (no `expected_version`; pure relative to regmeta).
+**Helpers** (no `expected_version`; pure relative to reg_meta).
 
 - `list_registers(*, db_path=None) -> list[Register]` — returns `[]`
-  when regmeta is unavailable.
+  when reg_meta is unavailable.
 - `resolve_register(name_or_id, *, db_path=None) -> Register | None`
-  — returns `None` when regmeta is unavailable, the input doesn't
+  — returns `None` when reg_meta is unavailable, the input doesn't
   match, or the match is ambiguous.
 - `detect_year_from_source_name(source_name) -> int | None` — finds
   the first 4-digit year or HT/VT term code in a source name (e.g.
@@ -599,13 +599,13 @@ The API is designed for local operation on projects with up to
 hundreds of sources and thousands of columns. Estimated worst-case
 timings on typical hardware:
 
-| Operation | Disk I/O | Regmeta DB | Target total |
+| Operation | Disk I/O | RegMeta DB | Target total |
 | --- | --- | --- | --- |
 | `get_state` | 1 read | 0 queries (lookups via cached signals) | <50 ms |
 | `set_column_type` | 1 read + 1 write | 0 queries | <100 ms |
 | `set_group_register` | 1 read + 1 write | batched per-register query | <300 ms |
 
-If classification on large projects proves too slow, a regmeta cache
+If classification on large projects proves too slow, a reg_meta cache
 keyed by `(register_id, db_mtime)` may be introduced.
 
 ### CSV typing: all-varchar reads, casts at extract, opaque auto-promotion
@@ -617,7 +617,7 @@ wire as `VARCHAR`, regardless of mode. From there:
 - **Discover** (`run_discover`, no config yet): the all-varchar view
   is what the handle exposes. Every column in
   `mock_data_discovery.json` reports `sql_type = "VARCHAR"`. The
-  classifier downstream leans on name patterns and regmeta evidence;
+  classifier downstream leans on name patterns and reg_meta evidence;
   the SQL-type fallback in `classify._classify` simply doesn't fire
   for CSV columns (it still fires for SQL sources, where the server
   is authoritative on type).
@@ -802,7 +802,7 @@ are omitted from the per-column dict (the `nullable: true` flag stays).
 An exact small null-count would expose a handful of outliers.
 
 **Categorical-vs-opaque routing** is decided by the classifier, not by
-cardinality at summarize time: regmeta value codes / classifications
+cardinality at summarize time: reg_meta value codes / classifications
 or the RTB exact-name backstop yield `categorical`; everything else
 falls through to `opaque`. The categorical frequency query is capped
 at 200 groups (`categorical_freqs_sql`); higher-cardinality columns
@@ -874,7 +874,7 @@ suppression. The warning doesn't block; it surfaces the risk.
 |---|---|
 | Numeric | `normal(mean, sd)` clamped to `[min, max]` |
 | Categorical (with frequencies) | Sample from frequency weights |
-| Categorical (with regmeta codes) | Sample from regmeta value set |
+| Categorical (with reg_meta codes) | Sample from reg_meta value set |
 | Opaque (high-cardinality string we don't model) | `val_000001` placeholders |
 | Date | Uniform between min and max |
 | Shared ID | Shared pool of synthetic IDs across files |
@@ -905,11 +905,11 @@ Birth-invariant attributes (Kön, Födelseår, Födelselän, Födelseland) are
 generated once per individual and reused across files. Without this, the
 same person could have different sex or birth year in different files.
 
-Spine-eligible variables are a hardcoded set of regmeta `var_id`s. The
+Spine-eligible variables are a hardcoded set of reg_meta `var_id`s. The
 authority file (which stats drive generation) is selected by highest
 `n_distinct` for the shared ID column — proxy for largest population.
 
-Without regmeta enrichment, the spine is empty and behavior is identical
+Without reg_meta enrichment, the spine is empty and behavior is identical
 to pre-spine generation.
 
 ## CVID picker
@@ -939,7 +939,7 @@ dominate; later fields break ties within a tier.
    `[A-Z]?[a-z]+` (a normal word), and `\d+` (digits). Inputs are first
    NFKD-folded and stripped of combining marks so `Kön` and `Kon`
    produce the same tokens — SCB column names typically drop diacritics
-   while regmeta labels keep them. Shared-token count is the primary
+   while reg_meta labels keep them. Shared-token count is the primary
    signal; **prefix containment** in either direction is the secondary
    fallback (catches Swedish compound splits like `FamSt` ↔
    `FamiljeStallningKod`). Free infix matching is deliberately avoided
@@ -1098,10 +1098,10 @@ build a full demographic model.
 ## Value code drift warnings
 
 After enrichment, frequency codes from stats are cross-checked against
-regmeta value sets. Codes absent from the value set trigger stderr
+reg_meta value sets. Codes absent from the value set trigger stderr
 warnings. This catches column name typos and wrong-year stats exports.
 
-Warnings don't block generation. Unseen regmeta codes (codes in metadata
+Warnings don't block generation. Unseen reg_meta codes (codes in metadata
 but absent from stats) are deliberately not warned on — registers
 legitimately contain rare codes.
 
@@ -1201,7 +1201,7 @@ build`) is live immediately. CI rebuilds the bundle and fails the PR if
 the editor's frozen dataclasses to JSON-safe dicts; the frontend's
 `web/src/lib/types.ts` mirrors that shape by hand. Drift is caught by a
 golden-fixture test (`tests/data/state_snapshot.golden.json`): the
-Python side serializes a deterministic synthetic project (regmeta
+Python side serializes a deterministic synthetic project (reg_meta
 stubbed) and diffs against the committed JSON; the Bun side parses the
 same file via `isStateSnapshot`. Update with
 `uv run pytest tests/test_serialize.py::test_golden_fixture_matches --update-golden`,

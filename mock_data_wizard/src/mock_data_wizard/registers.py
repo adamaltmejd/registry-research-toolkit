@@ -1,14 +1,14 @@
-"""Register helpers backed by the regmeta SQLite database.
+"""Register helpers backed by the reg_meta SQLite database.
 
 Two functions exposed: ``list_registers`` (enumerate all registers) and
 ``resolve_register`` (name-or-id → ``Register`` lookup). Both degrade
-gracefully when the regmeta DB is absent or unreadable — they return
+gracefully when the reg_meta DB is absent or unreadable — they return
 empty/None rather than raising — so the editor can operate on a project
-without regmeta installed (every group becomes ``register=None`` and
+without reg_meta installed (every group becomes ``register=None`` and
 the user assigns types by hand).
 
 The graceful-degradation pattern is in one place here so editor code
-doesn't need to wrap every regmeta call in try/except.
+doesn't need to wrap every reg_meta call in try/except.
 """
 
 from __future__ import annotations
@@ -27,23 +27,23 @@ class Register:
 
 
 def _open_or_none(db_path: Path | None):
-    """Open the regmeta DB returning the connection, or None on any failure
-    that means "regmeta isn't available." Callers must close the connection
+    """Open the reg_meta DB returning the connection, or None on any failure
+    that means "reg_meta isn't available." Callers must close the connection
     when done with it."""
-    from regmeta import open_db
-    from regmeta.db import db_path_from_args
-    from regmeta.errors import RegmetaError
+    from reg_meta import open_db
+    from reg_meta.db import db_path_from_args
+    from reg_meta.errors import RegMetaError
 
     try:
         resolved = db_path_from_args(str(db_path) if db_path else None)
         return open_db(resolved)
-    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegmetaError):
+    except (FileNotFoundError, OSError, sqlite3.OperationalError, RegMetaError):
         return None
 
 
 def list_registers(*, db_path: Path | None = None) -> list[Register]:
-    """All registers in the regmeta DB, ordered by name. ``[]`` if the DB
-    is missing or unreadable — the editor can still operate without regmeta."""
+    """All registers in the reg_meta DB, ordered by name. ``[]`` if the DB
+    is missing or unreadable — the editor can still operate without reg_meta."""
     conn = _open_or_none(db_path)
     if conn is None:
         return []
@@ -65,8 +65,8 @@ def resolve_register(
     match anything, or it matches multiple registers ambiguously (the
     caller can recover by re-prompting with a more specific name).
     """
-    from regmeta import resolve_register_ids
-    from regmeta.errors import RegmetaError
+    from reg_meta import resolve_register_ids
+    from reg_meta.errors import RegMetaError
 
     conn = _open_or_none(db_path)
     if conn is None:
@@ -74,7 +74,7 @@ def resolve_register(
     try:
         try:
             ids = resolve_register_ids(conn, name_or_id)
-        except RegmetaError:
+        except RegMetaError:
             return None
         if not ids or len(ids) > 1:
             return None

@@ -1,7 +1,7 @@
 # Registry Research Toolkit — Refactor Spec
 
 Working document for the cross-package refactor that turns today's
-tooling (`regmeta` + `mock_data_wizard`) into a multi-deployment system
+tooling (`reg_meta` + `mock_data_wizard`) into a multi-deployment system
 spanning most of the register-research pipeline. Temporary — once
 stable, sections of this doc migrate into per-package `DESIGN.md` files
 (existing and new), and this file is deleted. Not frozen; edit freely
@@ -84,21 +84,21 @@ directly from SCB, the constraint is whatever SCB publishes.
 
 This is the central multi-tenancy axis: same toolkit, three
 **data steward** views — global (the full multi-agency catalog
-regmeta indexes), IFAU's subset, SWECOV's subset.
+reg_meta indexes), IFAU's subset, SWECOV's subset.
 
 ## 2. Current state of the toolkit
 
 Two Python packages today, both in this repo:
 
-### `regmeta`
+### `reg_meta`
 
 Searchable database of Swedish registry metadata, indexing ~100M
 value-code rows across hundreds of registers. Built by parsing SCB
 CSV exports and Socialstyrelsen Excel deliveries (`maintain
-build-db`); queried via CLI (`regmeta search`, `regmeta get`,
-`regmeta resolve`, `regmeta docs ...`) and as a Python library.
-Two SQLite databases: the main metadata DB (`regmeta.db`,
-~520 MB) and a separate documentation DB (`regmeta_docs.db`,
+build-db`); queried via CLI (`reg-meta search`, `reg-meta get`,
+`reg-meta resolve`, `reg-meta docs ...`) and as a Python library.
+Two SQLite databases: the main metadata DB (`reg_meta.db`,
+~520 MB) and a separate documentation DB (`reg_meta_docs.db`,
 ~3 MB) built from parsed SCB PDFs. FTS5 indexes on both. Stable JSON output, structured errors,
 meaningful exit codes — designed primarily for agent consumption.
 
@@ -291,13 +291,13 @@ on `reg_webapp/v*` tags.
 
 - **reg_meta vs reg_meta_build**: different deps (query needs the
   sqlite3 stdlib; build needs CSV/Excel parsers), different release
-  cadence, different operators. The built SQLite DBs (`regmeta.db`,
-  `regmeta_docs.db`) are too large to ship inside the wheel (~520 MB
+  cadence, different operators. The built SQLite DBs (`reg_meta.db`,
+  `reg_meta_docs.db`) are too large to ship inside the wheel (~520 MB
   uncompressed for the main DB; ~120 MB compressed) and are
   distributed as `.zst`-compressed **GitHub release artifacts** on
   `reg_meta/v*` tags. `reg_meta`
   ships a `reg-meta update` command that fetches the
-  matching version into `$XDG_DATA_HOME/regmeta/`; the webapp
+  matching version into `$XDG_DATA_HOME/reg_meta/`; the webapp
   Dockerfile runs this at image-build time so the DB ends up in
   an image layer. Mirrors the build/runtime separation needed for a future
   Go/Rust port of the query layer; also enables a future
@@ -883,17 +883,17 @@ every project that references it. Concrete rules:
   to the last committed state; non-additive changes fail the build.
 
 **Activation.** The rules above bind only after the first tagged
-release of the refactored system (the first `regmeta` version that
+release of the refactored system (the first `reg_meta` version that
 emits FQIDs into a `project_data.json` consumers can commit).
 Until that release no external artifact references these slugs, so
 the *rule* does not yet protect anything; maintainers may rename,
 remove, or restructure entries as the hand-review progresses.
 
 **Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While the file
-`regmeta_build/fqid_slugs/UNFROZEN` exists in the slug directory, the
+`reg_meta_build/fqid_slugs/UNFROZEN` exists in the slug directory, the
 grow-only refusal is lifted in both directions:
 
-- `regmeta-build precheck-slugs --update-snapshot` writes
+- `reg-meta-build precheck-slugs --update-snapshot` writes
   rename and removal diffs through to `.snapshot.json` instead of
   refusing. Diffs are still reported in the JSON envelope so a
   reviewer sees what drifted.
@@ -1044,7 +1044,7 @@ editions = catalog.editions(
 ```
 
 Exact API design is reg_meta's concern and lives in
-[regmeta/DESIGN.md](regmeta/DESIGN.md) (step 1 shipped 2026-05).
+[reg_meta/DESIGN.md](reg_meta/DESIGN.md) (step 1 shipped 2026-05).
 The contract from this spec's perspective: every FQID resolves
 through one entry point; cross-edition browsing has one entry
 point; the webapp imports nothing else from reg_meta's internals.
@@ -2154,7 +2154,7 @@ kit reproducible years later.
 ### Reproducibility
 
 Same spec + same codes + same stats → same generation kit → same
-mock data. Regmeta version drift is inert because every code list
+mock data. RegMeta version drift is inert because every code list
 has been dereferenced into `project_data.codes.json` at kit-build
 time.
 
@@ -2381,7 +2381,7 @@ no `children`. Search stays separate (it's a distinct operation).
 | GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?}`. The `kind` discriminates: `provider` (1 seg), `register` (2 seg), `register_variant` (3 seg), `register_version` (4 seg), `binding` (5 seg, leaf), `classification-root` (`class`, 1 seg), `classification-name` (`class/<name>`, 2 seg), `classification` (`class/<name>/<version>`, 3 seg, leaf). `children` is omitted on leaves. Subsumes the previous per-kind detail endpoints and `/api/catalog/resolve`. |
 | GET | `/api/catalog-search?q={query}&kind={register\|variable}` | FTS across registers and variables (delegates to reg_meta's FTS5 indexes). Separate path so the catalog endpoint stays single-purpose. |
 
-**Documentation** (reg_meta docs DB; read; cacheable)
+**Documentation** (reg-meta docs DB; read; cacheable)
 
 | Method | Path | Purpose |
 |---|---|---|
@@ -2618,7 +2618,7 @@ assets) is a `reg_meta` concern. After the refactor neither
 `mdw update` is deleted; users run `reg-meta update` to
 keep their local reg_meta current. (Post-step-2 the `maintain`
 subgroup has dissolved — `update` and `info` are top-level on
-`regmeta`.)
+`reg_meta`.)
 
 ### Removed wholesale
 
@@ -2656,9 +2656,9 @@ subgroup has dissolved — `update` and `info` are top-level on
 | `mdw` namespaced block in spec | Renamed to `reg_monabundle`; owner is `reg_monabundle.validate_block` (§6.5) |
 | `value_set_version` strings (`Kon@2023`, `SUN@2020`) | Replaced by classification FQIDs (`class/sun/2020`) on the column; ad-hoc codes inlined in `project_data.codes.json` by binding FQID (§6.6) |
 | Categorical codes at generate time | After kit-build all codes live inline in `project_data.codes.json` regardless of source — classification FQIDs are dereferenced at kit-build, ad-hoc inline sets pass through; one lookup path post-kit (§8) |
-| `regmeta maintain build-db` subcommand | ✅ Moved to `regmeta-build build-db` (binary `regmeta-build`; package `regmeta_build`). Done in §15 step 2. |
-| `regmeta maintain update` / `info` | ✅ Promoted to top-level `regmeta update` / `regmeta info`; `maintain` subgroup dissolved. Done in §15 step 2. |
-| `mdw update` | Deleted; users run `regmeta update` |
+| `reg-meta maintain build-db` subcommand | ✅ Moved to `reg-meta-build build-db` (binary `reg-meta-build`; package `reg_meta_build`). Done in §15 step 2. |
+| `reg-meta maintain update` / `info` | ✅ Promoted to top-level `reg-meta update` / `reg-meta info`; `maintain` subgroup dissolved. Done in §15 step 2. |
+| `mdw update` | Deleted; users run `reg-meta update` |
 | Population spine | Lives in `reg_mockdata`; matches binding FQIDs by variable-slug stem (§10) |
 | CVID picker | **Deleted.** FQID resolution replaces tiered scoring (§10) |
 | PII scanner | Lives in `reg_monabundle.scan`; runs inside the bundle on MONA |
@@ -2855,43 +2855,43 @@ document. Step 1 can start.
    (phases 5–9: user-facing docs, README/DESIGN updates, downstream skill
    wiring), and
    [#108](https://github.com/adamaltmejd/registry-research-toolkit/pull/108)
-   (phases 10–11: CI workflow for `regmeta_build`, doc trim). Pure mechanical
+   (phases 10–11: CI workflow for `reg_meta_build`, doc trim). Pure mechanical
    split; both packages keep working. Releases independently. Done
    alongside (1) because the rebuild touches build code most.
 
    **Implementation choices fixed during 2a–2c** (PR #103 phases 1–4):
 
-   - **Package naming follows the existing `regmeta` /
+   - **Package naming follows the existing `reg_meta` /
      `mock_data_wizard` no-underscore convention.** The new package
-     is `regmeta_build` (Python module) / `regmeta-build` (binary) /
-     `regmeta_build/v*` (release tag). Spec text using `reg_meta` and
+     is `reg_meta_build` (Python module) / `reg-meta-build` (binary) /
+     `reg_meta_build/v*` (release tag). Spec text using `reg_meta` and
      `reg_meta_build` is aspirational; a future clean break renames
      both packages together.
-   - **`maintain update` and `maintain info` stay in `regmeta`** as
-     **top-level** subcommands (`regmeta update`, `regmeta info`).
+   - **`maintain update` and `maintain info` stay in `reg_meta`** as
+     **top-level** subcommands (`reg-meta update`, `reg-meta info`).
      Rationale: they are query-side concerns — end users need them to
      fetch and inspect the prebuilt DB without installing
-     `regmeta-build`. The `maintain` subgroup dissolves entirely from
-     `regmeta`'s CLI. All build subcommands (`build-db`, `build-docs`,
+     `reg-meta-build`. The `maintain` subgroup dissolves entirely from
+     `reg_meta`'s CLI. All build subcommands (`build-db`, `build-docs`,
      `seed-slugs`, `precheck-slugs`, `parse-sos`) move to
-     `regmeta-build` as top-level commands.
-   - **Shared CLI scaffolding lives in `regmeta/cli_common.py`** —
+     `reg-meta-build` as top-level commands.
+   - **Shared CLI scaffolding lives in `reg_meta/cli_common.py`** —
      envelope (`success_envelope`), formatters (`format_rows`,
      `render_table`, `render_list`, `write_formatted`,
      `write_to` / `write_json`, `terminal_width`, `db_info`), hint
      helpers (`hint_add`, `emit_hints`), and the `NoRepeatParser` +
      `reorder_global_flags` + `clean_leaf_help` argparse plumbing.
-     `regmeta_build/src/regmeta_build/cli.py` imports from there.
+     `reg_meta_build/src/reg_meta_build/cli.py` imports from there.
      `mock_data_wizard/cli.py` rebases its `format_rows` import.
    - **Build-side scripts stay at repo root `scripts/`**; only their
-     imports update to point at `regmeta_build` for the moved bits.
-     No `regmeta_build/scripts/` subtree.
+     imports update to point at `reg_meta_build` for the moved bits.
+     No `reg_meta_build/scripts/` subtree.
    - **Test-helper modules `_csv_fixtures.py`, `_slugged_db.py`, and
      `_shared_fixtures.py`
-     live in `regmeta_build/tests/`** and are imported by both
-     packages' test trees. `regmeta/tests/conftest.py` adds
-     `regmeta_build/tests/` to `sys.path` so the bare-name imports
-     resolve. `regmeta_build/tests/` does **not** carry an
+     live in `reg_meta_build/tests/`** and are imported by both
+     packages' test trees. `reg_meta/tests/conftest.py` adds
+     `reg_meta_build/tests/` to `sys.path` so the bare-name imports
+     resolve. `reg_meta_build/tests/` does **not** carry an
      `__init__.py` — multiple `tests` packages with `__init__.py`
      confuse pytest's rootdir-relative module discovery.
 3. **`reg_schema` package created** with the `project_data.json`

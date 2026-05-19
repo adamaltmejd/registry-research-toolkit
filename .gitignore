@@ -32,8 +32,8 @@ Thumbs.db
 # Listed per-subdirectory so the maintainer-curated classifications/ folder
 # can stay tracked without an exclude/re-include dance (git doesn't traverse
 # into a parent dir that's been ignored at the directory level).
-regmeta_build/input_data/*
-!regmeta_build/input_data/classifications/
+reg_meta_build/input_data/*
+!reg_meta_build/input_data/classifications/
 
 # mock-data-wizard generated output
 mock_data/
@@ -62,14 +62,14 @@ mdw_python_probe_*.log
 mdw_py_probe_*.csv
 mdw_upload_probe_*.txt
 
-# regmeta database (built from SCB exports, not committed)
+# reg_meta database (built from SCB exports, not committed)
 *.db
 
 # SCB source PDFs (binary, copyrighted, not committed)
 *.pdf
 
 # Marker raw output (regenerable from PDFs + parser)
-regmeta_build/docs/_raw/
+reg_meta_build/docs/_raw/
 
 # Archive (concluded investigations, ad-hoc scripts, internal notes)
 archive/

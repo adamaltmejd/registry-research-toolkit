@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parse LISA bakgrundsfakta PDF into per-variable and topic markdown files.
 
-Outputs to regmeta_build/docs/lisa/ with Obsidian-style YAML frontmatter,
+Outputs to reg_meta_build/docs/lisa/ with Obsidian-style YAML frontmatter,
 wiki-style links, and hierarchical tags.
 
 Two-step workflow:
@@ -12,7 +12,7 @@ Two-step workflow:
     caffeinate -i uv run marker_single lisa-bakgrundsfakta-1990-2017.pdf \
       --use_llm --gemini_model_name gemini-3-flash-preview \
       --gemini_api_key "$GEMINI_API_KEY" \
-      --output_dir regmeta_build/docs/_raw \
+      --output_dir reg_meta_build/docs/_raw \
       --disable_image_extraction \
       --MarkdownRenderer_keep_pageheader_in_output \
       --disable_multiprocessing
@@ -24,17 +24,17 @@ Two-step workflow:
       uv run marker_single "$pdf" --use_llm \
         --gemini_model_name gemini-3-flash-preview \
         --gemini_api_key "$GEMINI_API_KEY" \
-        --output_dir regmeta_build/docs/_raw \
+        --output_dir reg_meta_build/docs/_raw \
         --disable_image_extraction
     done
 
 2. Split markdown into per-variable files with this script:
 
     uv run python scripts/parse_lisa_docs.py \
-      --cached-md regmeta_build/docs/_raw/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
-      --forandringar regmeta_build/docs/_raw/*-forandringar*/*.md \
-                     regmeta_build/docs/_raw/hushallsinformation*/*.md \
-      --out regmeta_build/docs/lisa
+      --cached-md reg_meta_build/docs/_raw/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
+      --forandringar reg_meta_build/docs/_raw/*-forandringar*/*.md \
+                     reg_meta_build/docs/_raw/hushallsinformation*/*.md \
+      --out reg_meta_build/docs/lisa
 
 Notes:
 - marker + Gemini 3 Flash costs ~$1-2 for the full bakgrundsfakta.
@@ -42,7 +42,7 @@ Notes:
 - --MarkdownRenderer_keep_pageheader_in_output is critical: without it,
   marker drops ~30 variable headers it misclassifies as page headers.
 - The Variabelförteckning table (pp 12-24) is used as the ground truth
-  for variable names, not the regmeta database (LISA is a composite DB
+  for variable names, not the reg_meta database (LISA is a composite DB
   whose variables are registered under source registers like RTB, RAMS).
 """
 
@@ -58,7 +58,7 @@ from pathlib import Path
 # ---------------------------------------------------------------------------
 
 REPO = Path(__file__).resolve().parent.parent
-OUT_DIR = REPO / "regmeta" / "docs" / "lisa"
+OUT_DIR = REPO / "reg_meta" / "docs" / "lisa"
 
 # Footer pattern from pymupdf4llm output
 FOOTER_RE = re.compile(
@@ -1199,7 +1199,7 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
     """Get LISA column names.
 
     Primary source: Variabelförteckning table extracted from the document.
-    Fallback: regmeta database.
+    Fallback: reg_meta database.
     """
     if md_text:
         cleaned = re.sub(
@@ -1212,11 +1212,11 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
             print(f"Extracted {len(vf)} columns from Variabelförteckning")
             return set(vf.keys())
 
-    # Fallback to regmeta
+    # Fallback to reg_meta
     try:
-        from regmeta.db import open_db
+        from reg_meta.db import open_db
 
-        db_path = Path.home() / ".local/share/regmeta/regmeta.db"
+        db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
         conn = open_db(db_path)
         cur = conn.execute("""
             SELECT DISTINCT va.kolumnnamn
@@ -1229,7 +1229,7 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
         """)
         cols = {row[0] for row in cur.fetchall()}
         conn.close()
-        print(f"Loaded {len(cols)} columns from regmeta database")
+        print(f"Loaded {len(cols)} columns from reg_meta database")
         return cols
     except Exception as e:
         print(f"Warning: could not load columns: {e}", file=sys.stderr)
@@ -1285,7 +1285,7 @@ def main() -> None:
     known_cols = get_lisa_columns(md_text)
 
     if not known_cols:
-        print("ERROR: No column names found in document or regmeta database.")
+        print("ERROR: No column names found in document or reg_meta database.")
         sys.exit(1)
 
     entries = parse_bakgrundsfakta(md_text, known_cols)
@@ -1311,7 +1311,7 @@ def main() -> None:
                 f"  Missing from doc ({len(missing)}): {', '.join(sorted(missing)[:20])}..."
             )
         if extra:
-            print(f"  Extra (not in regmeta): {', '.join(sorted(extra)[:20])}")
+            print(f"  Extra (not in reg_meta): {', '.join(sorted(extra)[:20])}")
     else:
         var_count, topic_count = write_entries(entries, known_cols, args.out)
         print(

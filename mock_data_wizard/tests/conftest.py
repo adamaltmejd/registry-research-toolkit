@@ -8,8 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.db import SCHEMA_VERSION
-from regmeta_build.db import DDL, _value_set_hash
+from reg_meta.db import SCHEMA_VERSION
+from reg_meta_build.db import DDL, _value_set_hash
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -349,16 +349,16 @@ def multi_file_stats_path(tmp_path: Path) -> Path:
 
 
 @pytest.fixture
-def regmeta_db(tmp_path: Path) -> Path:
-    """Build a minimal regmeta DB with one register, one variable, and value codes."""
-    db_path = tmp_path / "regmeta.db"
+def reg_meta_db(tmp_path: Path) -> Path:
+    """Build a minimal reg_meta DB with one register, one variable, and value codes."""
+    db_path = tmp_path / "reg_meta.db"
     conn = sqlite3.connect(str(db_path))
     conn.executescript(DDL)
     conn.execute(
         "INSERT INTO import_manifest (key, value) VALUES (?, ?)",
         ("schema_version", SCHEMA_VERSION),
     )
-    from regmeta_build.db import seed_providers
+    from reg_meta_build.db import seed_providers
 
     seed_providers(conn)
     conn.execute(

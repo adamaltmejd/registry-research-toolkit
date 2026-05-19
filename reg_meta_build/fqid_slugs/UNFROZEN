@@ -1,0 +1,12 @@
+# Pre-v1 escape hatch (§5.4)
+
+While this file exists in `reg_meta_build/fqid_slugs/`, slug renames and removals
+flow through `precheck-slugs --update-snapshot` instead of being refused,
+and the `test_no_removed_or_renamed_slugs` snapshot test skips its rename
+guard. Diffs are still reported so drift stays visible.
+
+The point is to encourage curation iteration before v1 — fixing typos,
+normalizing conventions, splitting siblings — without per-rename ceremony.
+
+At v1 release: **delete this file**. The grow-only guarantee then re-arms
+across CLI, tests, and CI.

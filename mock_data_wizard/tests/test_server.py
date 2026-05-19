@@ -6,7 +6,7 @@ already has dedicated tests in ``test_editor.py``, so these tests focus
 on the HTTP boundary.
 
 Strategy. Spin up a real ``ThreadingHTTPServer`` on port 0 in a daemon
-thread, hit it with ``urllib.request``. Regmeta lookups are stubbed via
+thread, hit it with ``urllib.request``. RegMeta lookups are stubbed via
 the same monkeypatching pattern used by ``test_editor.py``: signals are
 empty by default, individual tests override.
 """
@@ -51,8 +51,8 @@ def _running_server(config: ServerConfig) -> Iterator[str]:
 
 
 @pytest.fixture(autouse=True)
-def _no_regmeta(monkeypatch):
-    """Regmeta DB unavailable by default; matches test_editor.py."""
+def _no_reg_meta(monkeypatch):
+    """RegMeta DB unavailable by default; matches test_editor.py."""
     monkeypatch.setattr(
         editor,
         "_autodetect_register_per_source",
@@ -449,7 +449,7 @@ def test_list_registers_returns_payload(
     running_server: str, monkeypatch: pytest.MonkeyPatch
 ):
     """The endpoint mirrors ``editor.list_registers`` shape regardless
-    of whether a regmeta DB is present locally; mock it to a known list
+    of whether a reg_meta DB is present locally; mock it to a known list
     so the test passes deterministically across machines."""
     from mock_data_wizard.registers import Register
 
@@ -801,10 +801,10 @@ def test_panel_put_rejects_unknown_member_keys(panel_server: str):
 # -- /api/column-values ---------------------------------------------------
 
 
-def test_column_values_returns_none_when_regmeta_missing(running_server: str):
+def test_column_values_returns_none_when_reg_meta_missing(running_server: str):
     """Server must return ``kind="none"`` (200) rather than an error
-    envelope when regmeta is unavailable — matches the editor's
-    "regmeta degrades gracefully" stance."""
+    envelope when reg_meta is unavailable — matches the editor's
+    "reg_meta degrades gracefully" stance."""
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-values",
@@ -862,7 +862,7 @@ def test_column_values_requires_column_field(running_server: str):
 
 def test_column_values_response_surfaces_variance_fields(running_server: str):
     """Variance fields are part of the wire contract (issue #64) — clients
-    rely on them even when regmeta is missing and the tier is null."""
+    rely on them even when reg_meta is missing and the tier is null."""
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-values",
@@ -969,20 +969,20 @@ def test_column_values_accepts_empty_relevant_years(running_server: str):
 # -- /api/column-varinfo --------------------------------------------------
 
 
-def test_column_varinfo_returns_none_when_regmeta_missing(
+def test_column_varinfo_returns_none_when_reg_meta_missing(
     running_server: str, monkeypatch
 ):
-    """With regmeta unavailable the server must return the empty envelope
+    """With reg_meta unavailable the server must return the empty envelope
     (kind="none") rather than an error — matches /api/column-values. The
-    ``reason`` field lets the client tell "no regmeta installed" apart
-    from "column unknown to regmeta"."""
+    ``reason`` field lets the client tell "no reg_meta installed" apart
+    from "column unknown to reg_meta"."""
     from contextlib import contextmanager
 
     @contextmanager
     def _no_conn(_):
         yield None
 
-    monkeypatch.setattr(editor, "_open_regmeta_conn", _no_conn)
+    monkeypatch.setattr(editor, "_open_reg_meta_conn", _no_conn)
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-varinfo",
@@ -996,7 +996,7 @@ def test_column_varinfo_accepts_null_register(running_server: str):
     """``register: null`` is the "no register pinned" case (issue #71's
     out-of-scope branch). Server still returns kind="none" rather than
     rejecting the call, and tags it ``reason="no_register"`` so the UI
-    can show a register-prompting message instead of "not in regmeta"."""
+    can show a register-prompting message instead of "not in reg_meta"."""
     status, body = _fetch(
         "POST",
         f"{running_server}/api/column-varinfo",
