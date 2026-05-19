@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v0.11.1",
+  "name": "lisa_with_extract_options",
+  "sources": [
+    {
+      "name": "lisa_2018",
+      "register_version": "scb/lisa/individer-15plus/2018",
+      "columns": [
+        {
+          "name": "scb/lisa/individer-15plus/2018/dispink04",
+          "type": "numeric",
+          "numeric_subtype": "double",
+          "display_name": "Salary"
+        }
+      ]
+    }
+  ],
+  "reg_monabundle": {
+    "column_options": {
+      "scb/lisa/individer-15plus/2018/dispink04": {"suppress_k": 20}
+    }
+  }
+}

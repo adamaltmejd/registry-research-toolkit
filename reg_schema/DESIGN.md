@@ -97,6 +97,38 @@ shape the dependency direction):
 See `REFACTOR_SPEC.md` §15 step 3 for the load-bearing-dependency
 story across phases.
 
+## Shared validator corpus (`test_corpus/`)
+
+`reg_schema/test_corpus/` is the single artifact that keeps the
+§6.8.0 `ValidationResult` shape coherent across the three runtimes
+that validate `project_data.json` (`REFACTOR_SPEC.md` §15 step 5.5).
+Each case is a directory containing an `input.json` (a
+`project_data.json` payload) and an `expected_ValidationResult.json`
+(the validator output the structural rules must produce). See
+`test_corpus/README.md` for the directory layout, file formats, and
+the rule for adding cases.
+
+Three consumers read the same JSON:
+
+- `reg_schema/tests/test_corpus.py` rides the corpus today by
+  decoding `expected_ValidationResult.json` through the §6.8.0
+  dataclasses; Phase 3 of §15 step 3 swaps the decode for a real
+  `validate_structural(input)` call and an unordered-issue equality
+  check against the expected result.
+- `reg_monabundle`'s bundle build amalgamates the corpus into a
+  self-test that runs on MONA load (§15 step 5), catching drift
+  between the amalgamated validator and the reg_schema source.
+- The SPA's TypeScript test suite imports the JSON as fixtures and
+  runs its TS port of the validator against them (§15 step 6).
+
+The corpus starts with well-formed inputs and empty-issues
+expectations — these prove the format, harness, and round-trip work
+end-to-end before §6.8.1 rule-emission cases pile on. Phase 3 grows
+the corpus alongside the validator, one (or more) cases per rule.
+Negative cases for §6.8.2 (namespaced blocks) and §6.8.3 (reg_meta-
+backed semantic) layers live in their owning packages, not here —
+`reg_schema` only owns the structural layer's corpus.
+
 ## Why no FQID parser dependency
 
 §6.8.1 phrases FQID structural checks as syntactic ("4 segments / 5
