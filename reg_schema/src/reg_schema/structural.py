@@ -1017,28 +1017,14 @@ def _check_panel_member(
             else:
                 scope.literal_time_seen[canon] = eff_time_path
 
-    # Cross-panel source-collision (§6.4 "at most one panel"). Two
-    # members of the *same* panel sharing a source is a different
-    # condition (probably a degenerate panel) — don't fire this code
-    # for that, otherwise the path-shaped error message lies about
-    # what's wrong.
     if source_name is None:
         return
-    prior_panel = scope.source_to_panel.get(source_name)
-    if prior_panel is None:
-        scope.source_to_panel[source_name] = pbase
-    elif prior_panel != pbase:
-        issues.append(
-            _error(
-                "source_referenced_by_multiple_panels",
-                mbase,
-                f"source {source_name!r} already referenced by panel at {prior_panel}",
-            )
-        )
 
-    # A member's source must point at a /sources entry. Without this
-    # check, broken panel definitions slip past the structural layer
-    # and surface as runtime failures inside the bundle / kit.
+    # A member's source must point at a /sources entry. Resolve this
+    # *before* the cross-panel bookkeeping so an undefined source
+    # reused across panels produces just `panel_member_unknown_source`
+    # and not a misleading `source_referenced_by_multiple_panels` on
+    # top.
     entry = scope.source_index.get(source_name)
     if entry is None:
         issues.append(
@@ -1050,6 +1036,23 @@ def _check_panel_member(
             )
         )
         return
+
+    # Cross-panel source-collision (§6.4 "at most one panel"). Two
+    # members of the *same* panel sharing a source is a different
+    # condition (probably a degenerate panel) — don't fire this code
+    # for that, otherwise the path-shaped error message lies about
+    # what's wrong.
+    prior_panel = scope.source_to_panel.get(source_name)
+    if prior_panel is None:
+        scope.source_to_panel[source_name] = pbase
+    elif prior_panel != pbase:
+        issues.append(
+            _error(
+                "source_referenced_by_multiple_panels",
+                mbase,
+                f"source {source_name!r} already referenced by panel at {prior_panel}",
+            )
+        )
 
     # Column-ref existence against the member's source. Skip when any
     # column on the source has display_name absent — the bare ref may

@@ -339,6 +339,25 @@ def test_same_panel_duplicate_source_does_not_fire_cross_panel_collision() -> No
     assert "source_referenced_by_multiple_panels" not in _codes(result)
 
 
+def test_undefined_source_reused_across_panels_only_fires_unknown_source() -> None:
+    # An undefined source name reused in two panels should fire only
+    # `panel_member_unknown_source` per panel — not a misleading
+    # cross-panel collision on top, since the source isn't defined in
+    # /sources to begin with.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["source"] = "ghost"
+    spec["panels"].append(
+        {
+            "panel_id": "second",
+            "entity_key": "LopNr_PersonNr",
+            "members": [{"source": "ghost", "time_key": 2020}],
+        }
+    )
+    result = validate_structural(spec)
+    assert "source_referenced_by_multiple_panels" not in _codes(result)
+    assert _codes(result).count("panel_member_unknown_source") == 2
+
+
 def test_panel_member_unknown_source_is_flagged() -> None:
     # A panel member must point at a real /sources entry. Silently
     # skipping unknown sources pushes a schema error into runtime.
