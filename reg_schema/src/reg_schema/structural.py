@@ -101,6 +101,67 @@ def _error(code: str, path: str, message: str) -> ValidationIssue:
     return ValidationIssue(level="error", code=code, path=path, message=message)
 
 
+def _present_and_not_null(
+    container: Mapping[str, object],
+    field: str,
+    base: str,
+    label: str,
+    issues: list[ValidationIssue],
+) -> bool:
+    """True iff ``field`` is present in ``container`` with a non-null value.
+
+    Emits ``missing_required_field`` when absent and ``invalid_field_type``
+    when present-but-null, mirroring the distinction `_check_top_level_fields`
+    makes. Without this split, ``"name": null`` reports as "missing" — a
+    lie about the actual JSON shape that confuses anyone looking at the
+    input alongside the error.
+    """
+    if field not in container:
+        issues.append(
+            _error(
+                "missing_required_field",
+                f"{base}/{field}",
+                f"{label} is required",
+            )
+        )
+        return False
+    if container[field] is None:
+        issues.append(
+            _error(
+                "invalid_field_type",
+                f"{base}/{field}",
+                f"{label} must not be null",
+            )
+        )
+        return False
+    return True
+
+
+def _reject_null_override(
+    container: Mapping[str, object],
+    field: str,
+    base: str,
+    issues: list[ValidationIssue],
+) -> None:
+    """Emit ``invalid_field_type`` if ``field`` is explicitly null.
+
+    For optional override fields (panel-member ``entity_key`` /
+    ``time_key``): absence means "inherit panel default" and is fine;
+    explicit null is not a valid shape and would otherwise be silently
+    swallowed by the same ``.get(field)`` pattern used for the absent
+    case. Caller still falls through to the inherit-default path so
+    downstream effective-key checks have something to compare against.
+    """
+    if field in container and container[field] is None:
+        issues.append(
+            _error(
+                "invalid_field_type",
+                f"{base}/{field}",
+                f"panel member {field!r} must not be null when present",
+            )
+        )
+
+
 # --- FQID well-formedness (duplicated from reg_meta per DESIGN.md) ------
 
 
@@ -242,74 +303,55 @@ def _check_source(
     seen_names: dict[str, int],
     issues: list[ValidationIssue],
 ) -> None:
-    name = source.get("name")
-    if name is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/name",
-                "source 'name' is required",
+    if _present_and_not_null(source, "name", base, "source 'name'", issues):
+        name = source["name"]
+        if not isinstance(name, str):
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"{base}/name",
+                    "source 'name' must be a string",
+                )
             )
-        )
-    elif not isinstance(name, str):
-        issues.append(
-            _error(
-                "invalid_field_type",
-                f"{base}/name",
-                "source 'name' must be a string",
+        elif name in seen_names:
+            issues.append(
+                _error(
+                    "duplicate_source_name",
+                    f"{base}/name",
+                    f"source name {name!r} duplicates /sources/{seen_names[name]}",
+                )
             )
-        )
-    elif name in seen_names:
-        issues.append(
-            _error(
-                "duplicate_source_name",
-                f"{base}/name",
-                f"source name {name!r} duplicates /sources/{seen_names[name]}",
-            )
-        )
-    else:
-        seen_names[name] = index
+        else:
+            seen_names[name] = index
 
-    register_version = source.get("register_version")
     rv_segments: list[str] | None = None
-    if register_version is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/register_version",
-                "source 'register_version' is required",
+    if _present_and_not_null(
+        source, "register_version", base, "source 'register_version'", issues
+    ):
+        register_version = source["register_version"]
+        if not isinstance(register_version, str):
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"{base}/register_version",
+                    "source 'register_version' must be a string",
+                )
             )
-        )
-    elif not isinstance(register_version, str):
-        issues.append(
-            _error(
-                "invalid_field_type",
-                f"{base}/register_version",
-                "source 'register_version' must be a string",
+        elif not _is_register_version_fqid(register_version):
+            issues.append(
+                _error(
+                    "invalid_fqid",
+                    f"{base}/register_version",
+                    "register_version must be a 4-segment FQID with kebab-case "
+                    f"segments; got {register_version!r}",
+                )
             )
-        )
-    elif not _is_register_version_fqid(register_version):
-        issues.append(
-            _error(
-                "invalid_fqid",
-                f"{base}/register_version",
-                "register_version must be a 4-segment FQID with kebab-case "
-                f"segments; got {register_version!r}",
-            )
-        )
-    else:
-        rv_segments = register_version.split("/")
+        else:
+            rv_segments = register_version.split("/")
 
-    columns = source.get("columns")
-    if columns is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/columns",
-                "source 'columns' is required",
-            )
-        )
+    if not _present_and_not_null(source, "columns", base, "source 'columns'", issues):
         return
+    columns = source["columns"]
     if not isinstance(columns, list):
         issues.append(
             _error(
@@ -363,71 +405,57 @@ def _check_column(
     rv_segments: list[str] | None,
     issues: list[ValidationIssue],
 ) -> None:
-    name = column.get("name")
-    if name is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/name",
-                "column 'name' is required",
-            )
-        )
-    elif not isinstance(name, str):
-        issues.append(
-            _error(
-                "invalid_field_type",
-                f"{base}/name",
-                "column 'name' must be a string",
-            )
-        )
-    elif not _is_binding_fqid(name):
-        issues.append(
-            _error(
-                "invalid_fqid",
-                f"{base}/name",
-                f"column 'name' must be a 5-segment binding FQID; got {name!r}",
-            )
-        )
-    elif rv_segments is not None:
-        col_segs = name.split("/")
-        if col_segs[:4] != rv_segments:
+    if _present_and_not_null(column, "name", base, "column 'name'", issues):
+        name = column["name"]
+        if not isinstance(name, str):
             issues.append(
                 _error(
-                    "fqid_register_version_mismatch",
+                    "invalid_field_type",
                     f"{base}/name",
-                    f"column FQID's first 4 segments {col_segs[:4]} must equal "
-                    f"source register_version {rv_segments}",
+                    "column 'name' must be a string",
                 )
             )
+        elif not _is_binding_fqid(name):
+            issues.append(
+                _error(
+                    "invalid_fqid",
+                    f"{base}/name",
+                    f"column 'name' must be a 5-segment binding FQID; got {name!r}",
+                )
+            )
+        elif rv_segments is not None:
+            col_segs = name.split("/")
+            if col_segs[:4] != rv_segments:
+                issues.append(
+                    _error(
+                        "fqid_register_version_mismatch",
+                        f"{base}/name",
+                        f"column FQID's first 4 segments {col_segs[:4]} must equal "
+                        f"source register_version {rv_segments}",
+                    )
+                )
 
-    typ = column.get("type")
     typ_valid: str | None = None
-    if typ is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/type",
-                "column 'type' is required",
+    if _present_and_not_null(column, "type", base, "column 'type'", issues):
+        typ = column["type"]
+        if not isinstance(typ, str):
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"{base}/type",
+                    "column 'type' must be a string",
+                )
             )
-        )
-    elif not isinstance(typ, str):
-        issues.append(
-            _error(
-                "invalid_field_type",
-                f"{base}/type",
-                "column 'type' must be a string",
+        elif typ not in _COLUMN_TYPES:
+            issues.append(
+                _error(
+                    "invalid_enum_value",
+                    f"{base}/type",
+                    f"column type must be one of {sorted(_COLUMN_TYPES)}; got {typ!r}",
+                )
             )
-        )
-    elif typ not in _COLUMN_TYPES:
-        issues.append(
-            _error(
-                "invalid_enum_value",
-                f"{base}/type",
-                f"column type must be one of {sorted(_COLUMN_TYPES)}; got {typ!r}",
-            )
-        )
-    else:
-        typ_valid = typ
+        else:
+            typ_valid = typ
 
     display_name = column.get("display_name")
     if display_name is not None and not isinstance(display_name, str):
@@ -811,33 +839,27 @@ def _check_panel(
     seen_panel_ids: dict[str, int],
     issues: list[ValidationIssue],
 ) -> None:
-    panel_id = panel.get("panel_id")
-    if panel_id is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/panel_id",
-                "panel 'panel_id' is required",
+    if _present_and_not_null(panel, "panel_id", base, "panel 'panel_id'", issues):
+        panel_id = panel["panel_id"]
+        if not isinstance(panel_id, str):
+            issues.append(
+                _error(
+                    "invalid_field_type",
+                    f"{base}/panel_id",
+                    "panel 'panel_id' must be a string",
+                )
             )
-        )
-    elif not isinstance(panel_id, str):
-        issues.append(
-            _error(
-                "invalid_field_type",
-                f"{base}/panel_id",
-                "panel 'panel_id' must be a string",
+        elif panel_id in seen_panel_ids:
+            issues.append(
+                _error(
+                    "duplicate_panel_id",
+                    f"{base}/panel_id",
+                    f"panel_id {panel_id!r} duplicates "
+                    f"/panels/{seen_panel_ids[panel_id]}",
+                )
             )
-        )
-    elif panel_id in seen_panel_ids:
-        issues.append(
-            _error(
-                "duplicate_panel_id",
-                f"{base}/panel_id",
-                f"panel_id {panel_id!r} duplicates /panels/{seen_panel_ids[panel_id]}",
-            )
-        )
-    else:
-        seen_panel_ids[panel_id] = panel_index
+        else:
+            seen_panel_ids[panel_id] = panel_index
 
     comment = panel.get("comment")
     if comment is not None and not isinstance(comment, str):
@@ -861,16 +883,9 @@ def _check_panel(
     else:
         panel_time_kind = _check_time_key_shape(panel_time, f"{base}/time_key", issues)
 
-    members = panel.get("members")
-    if members is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{base}/members",
-                "panel 'members' is required",
-            )
-        )
+    if not _present_and_not_null(panel, "members", base, "panel 'members'", issues):
         return
+    members = panel["members"]
     if not isinstance(members, list):
         issues.append(
             _error(
@@ -954,6 +969,13 @@ def _check_panel_member(
     elif isinstance(member, Mapping):
         source_name = _resolve_member_source(member, mbase, issues)
 
+        # Override fields (entity_key, time_key): distinguish absent
+        # from present-but-null. Absent → inherit panel default.
+        # Present-but-null → not a valid EntityKey/TimeKey shape; emit
+        # invalid_field_type and fall back to the panel default so the
+        # rest of the member checks (effective-key presence, ref
+        # existence) still have something to compare against.
+        _reject_null_override(member, "entity_key", mbase, issues)
         m_entity = member.get("entity_key")
         if m_entity is not None:
             eff_entity = m_entity
@@ -966,6 +988,7 @@ def _check_panel_member(
             eff_entity_path = f"{pbase}/entity_key"
             eff_entity_shape_ok = scope.panel_entity_shape_ok
 
+        _reject_null_override(member, "time_key", mbase, issues)
         m_time = member.get("time_key")
         if m_time is not None:
             member_time_key_overridden = True
@@ -1134,16 +1157,11 @@ def _resolve_member_source(
     member: Mapping[str, object], mbase: str, issues: list[ValidationIssue]
 ) -> str | None:
     """Extract and validate ``member['source']``, returning the string or None."""
-    source_raw = member.get("source")
-    if source_raw is None:
-        issues.append(
-            _error(
-                "missing_required_field",
-                f"{mbase}/source",
-                "panel member 'source' is required",
-            )
-        )
+    if not _present_and_not_null(
+        member, "source", mbase, "panel member 'source'", issues
+    ):
         return None
+    source_raw = member["source"]
     if not isinstance(source_raw, str):
         issues.append(
             _error(

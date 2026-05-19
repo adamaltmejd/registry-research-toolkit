@@ -315,6 +315,55 @@ def test_empty_columns_emits_explicit_code() -> None:
     assert _at(result, "empty_columns") == ["/sources/0/columns"]
 
 
+# --- Nested required-field null handling -------------------------------
+#
+# `{"name": null}` is a different JSON shape than `{}`. The validator
+# emits `invalid_field_type` for the former and `missing_required_field`
+# for the latter so error messages don't lie about the input — same
+# distinction `_check_top_level_fields` already makes for top-level
+# required fields.
+
+
+def test_source_name_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["name"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/name" in _at(result, "invalid_field_type")
+    assert "/sources/0/name" not in _at(result, "missing_required_field")
+
+
+def test_source_register_version_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["register_version"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/register_version" in _at(result, "invalid_field_type")
+    assert "/sources/0/register_version" not in _at(result, "missing_required_field")
+
+
+def test_source_columns_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["columns"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/columns" in _at(result, "invalid_field_type")
+    assert "/sources/0/columns" not in _at(result, "missing_required_field")
+
+
+def test_column_name_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["columns"][0]["name"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/columns/0/name" in _at(result, "invalid_field_type")
+    assert "/sources/0/columns/0/name" not in _at(result, "missing_required_field")
+
+
+def test_column_type_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["columns"][0]["type"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/columns/0/type" in _at(result, "invalid_field_type")
+    assert "/sources/0/columns/0/type" not in _at(result, "missing_required_field")
+
+
 # --- Panels -------------------------------------------------------------
 
 
@@ -612,6 +661,58 @@ def test_panel_comment_must_be_string_when_present() -> None:
 
     spec["panels"][0]["comment"] = "valid comment"
     assert validate_structural(spec).ok
+
+
+def test_panel_panel_id_null_is_invalid_field_type() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["panel_id"] = None
+    result = validate_structural(spec)
+    assert "/panels/0/panel_id" in _at(result, "invalid_field_type")
+    assert "/panels/0/panel_id" not in _at(result, "missing_required_field")
+
+
+def test_panel_members_null_is_invalid_field_type() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"] = None
+    result = validate_structural(spec)
+    assert "/panels/0/members" in _at(result, "invalid_field_type")
+    assert "/panels/0/members" not in _at(result, "missing_required_field")
+
+
+def test_panel_member_source_null_is_invalid_field_type() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["source"] = None
+    result = validate_structural(spec)
+    assert "/panels/0/members/0/source" in _at(result, "invalid_field_type")
+    assert "/panels/0/members/0/source" not in _at(result, "missing_required_field")
+
+
+def test_panel_member_entity_key_override_null_is_invalid_field_type() -> None:
+    # An explicit ``"entity_key": null`` on a panel member is not a
+    # valid EntityKey shape. Without the explicit-null check, the
+    # member would silently inherit the panel default and the
+    # malformed override would slip through with ok=True.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["entity_key"] = None
+    result = validate_structural(spec)
+    assert "/panels/0/members/0/entity_key" in _at(result, "invalid_field_type")
+    # Falls back to panel default — no missing_effective_entity_key.
+    assert "missing_effective_entity_key" not in _codes(result)
+
+
+def test_panel_member_time_key_override_null_is_invalid_field_type() -> None:
+    # Same semantics as entity_key: explicit null is not a valid
+    # TimeKey shape, so emit invalid_field_type and fall back to the
+    # panel default for downstream effective-key checks.
+    spec = _spec_with_panels(time_key=2018)
+    # _spec_with_panels gives members their own time_keys; drop one so
+    # the panel default is the only candidate, then set the member's
+    # override explicitly to null to exercise the new check.
+    spec["panels"][0]["members"][0].pop("time_key", None)
+    spec["panels"][0]["members"][0]["time_key"] = None
+    result = validate_structural(spec)
+    assert "/panels/0/members/0/time_key" in _at(result, "invalid_field_type")
+    assert "missing_effective_time_key" not in _codes(result)
 
 
 # --- Composition / contract -------------------------------------------
