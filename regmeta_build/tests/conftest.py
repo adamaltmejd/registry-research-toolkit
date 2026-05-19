@@ -3,6 +3,10 @@
 Adds this directory to ``sys.path`` so the bare-name helper modules
 (``_csv_fixtures``, ``_slugged_db``) can be imported by individual tests.
 Also defines the same fixture DB used by regmeta's query-side tests.
+
+This directory deliberately has no ``__init__.py``: pytest's rootdir-relative
+module discovery breaks when ``regmeta/tests/`` and ``regmeta_build/tests/``
+both register as proper packages. Keep it that way.
 """
 
 from __future__ import annotations

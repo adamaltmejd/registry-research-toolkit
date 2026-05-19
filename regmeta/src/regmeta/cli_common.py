@@ -19,7 +19,7 @@ from .db import get_manifest, utc_now
 
 CONTRACT_VERSION = "3.0.0"
 
-_MAX_DISPLAY_ROWS = 100
+MAX_DISPLAY_ROWS = 100
 _MAX_HINTS = 3
 
 
@@ -171,9 +171,9 @@ def write_formatted(
         return
 
     truncated = 0
-    if len(rows) > _MAX_DISPLAY_ROWS:
-        truncated = len(rows) - _MAX_DISPLAY_ROWS
-        rows = rows[:_MAX_DISPLAY_ROWS]
+    if len(rows) > MAX_DISPLAY_ROWS:
+        truncated = len(rows) - MAX_DISPLAY_ROWS
+        rows = rows[:MAX_DISPLAY_ROWS]
 
     if fmt == "list":
         content = render_list(rows, columns)

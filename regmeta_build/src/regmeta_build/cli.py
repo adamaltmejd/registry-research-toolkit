@@ -12,9 +12,14 @@ import sys
 def main(argv: list[str] | None = None) -> int:
     # Subcommands are wired in subsequent commits as we carve out
     # `regmeta maintain build-db|seed-slugs|precheck-slugs|parse-sos|build-docs`
-    # from regmeta/src/regmeta/cli.py.
-    print("regmeta-build: CLI under construction", file=sys.stderr)
-    return 0
+    # from regmeta/src/regmeta/cli.py. Exit non-zero so build scripts that
+    # invoke this prematurely don't silently no-op.
+    print(
+        "regmeta-build: subcommands not yet wired — use "
+        "`regmeta maintain <cmd>` until §15 step 2 phase 7 lands.",
+        file=sys.stderr,
+    )
+    return 2
 
 
 if __name__ == "__main__":

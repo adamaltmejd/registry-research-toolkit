@@ -82,16 +82,16 @@ class TestHintCap:
         """Even when many hints could fire, at most 3 are shown."""
         import regmeta.cli_common
 
-        old_max = regmeta.cli_common._MAX_DISPLAY_ROWS
+        old_max = regmeta.cli_common.MAX_DISPLAY_ROWS
         try:
-            regmeta.cli_common._MAX_DISPLAY_ROWS = 1
+            regmeta.cli_common.MAX_DISPLAY_ROWS = 1
             _, err, _ = _run_capture(
                 ["--db", db_path, "search", "--query", "Kommun"],
             )
             hint_count = err.count("hint:")
             assert 0 < hint_count <= 3
         finally:
-            regmeta.cli_common._MAX_DISPLAY_ROWS = old_max
+            regmeta.cli_common.MAX_DISPLAY_ROWS = old_max
 
 
 class TestJsonClean:
