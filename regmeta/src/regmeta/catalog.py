@@ -296,9 +296,12 @@ class Catalog:
     ) -> ResolvedVariableBinding:
         """Build a ResolvedVariableBinding from a `_BINDING_QUERY` row.
 
-        Lineage is derived from the joined source-side slug columns —
-        `via_source_id IS NOT NULL` means the LEFT JOINs hit, so the
-        source-side slugs are non-NULL under the §5.4 grow-only invariant.
+        Lineage is built from the joined source-side slug columns. Slugs may
+        be transiently NULL between INSERT and `populate_slugs` (db.py); when
+        any source slug is missing we leave `lineage` as None. A populated
+        but malformed slug surfaces as `FqidError` — populate_slugs validates
+        on write, so reaching this path means a build-time invariant broke
+        and we want it loud, not silently dropped.
         """
         via = row["via_source_id"]
         lineage: Fqid | None = None
