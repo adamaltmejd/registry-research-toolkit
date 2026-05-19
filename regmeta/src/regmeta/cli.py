@@ -16,8 +16,8 @@ from .cli_common import (
     GLOBAL_FLAGS_WITH_VALUE,
     NoRepeatParser,
     clean_leaf_help,
-    db_info,
     emit_hints,
+    get_db_info,
     hint_add,
     reorder_global_flags,
     success_envelope,
@@ -34,7 +34,6 @@ from .db import (
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from regmeta_build.validate import validate_built_db
 from .queries import (
     get_availability,
     get_classification,
@@ -815,6 +814,11 @@ def _build_validate_hook() -> Callable[[Path], None]:
     """Return a build_db pre_rename_hook that runs the value-set dedup
     validator against the staging DB and raises on failure. Defined as a
     helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
+    # Lazy import: regmeta_build is workspace-only; importing at module load
+    # breaks plain `pip install regmeta`. Until Phase 7 moves maintain to
+    # regmeta-build, validate is the only cross-package symbol called eagerly
+    # enough that it has to be deferred.
+    from regmeta_build.validate import validate_built_db
 
     def hook(staging_db: Path) -> None:
         validation = validate_built_db(staging_db)
@@ -1207,7 +1211,7 @@ def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], 
                     "This command is for maintainers rebuilding the doc DB from a repo checkout."
                 ),
                 remediation=(
-                    "Run from a regmeta checkout with `regmeta/docs/` present, "
+                    "Run from a regmeta checkout with `regmeta_build/docs/` present, "
                     "or pass --docs-dir pointing to a directory with register doc subdirectories."
                 ),
             )
@@ -1360,7 +1364,7 @@ def _cmd_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = search(
             conn,
             args.query,
@@ -1415,7 +1419,7 @@ def _cmd_get_register(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         registers = get_register(conn, args.register)
         data = registers[0] if len(registers) == 1 else {"registers": registers}
     finally:
@@ -1435,7 +1439,7 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_schema(
             conn,
             regvar_id=args.regvar_id,
@@ -1469,7 +1473,7 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         variables = get_varinfo(conn, args.variable, register=args.register)
         data = variables[0] if len(variables) == 1 else {"variables": variables}
     finally:
@@ -1577,7 +1581,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     args._collapsed_registers = 0
 
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         if is_cvid:
             if args.register is not None or args.year is not None:
                 raise RegmetaError(
@@ -1684,7 +1688,7 @@ def _cmd_get_datacolumns(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_datacolumns(conn, args.variable, register=args.register)
     finally:
         conn.close()
@@ -1703,7 +1707,7 @@ def _cmd_get_coded_variables(args: argparse.Namespace) -> tuple[dict[str, Any], 
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_coded_variables(
             conn,
             min_codes=args.min_codes,
@@ -1739,7 +1743,7 @@ def _cmd_get_diff(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_diff(
             conn,
             register=args.register,
@@ -1774,7 +1778,7 @@ def _cmd_get_lineage(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_lineage(conn, args.variable, register=args.register)
     finally:
         conn.close()
@@ -1829,7 +1833,7 @@ def _cmd_get_classification(args: argparse.Namespace) -> tuple[dict[str, Any], i
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         if args.list_all:
             data: Any = {"classifications": list_classifications(conn)}
             args_payload: dict[str, Any] = {"list": True}
@@ -1878,7 +1882,7 @@ def _cmd_get_availability(args: argparse.Namespace) -> tuple[dict[str, Any], int
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         data = get_availability(conn, args.target, register=args.register)
     finally:
         conn.close()
@@ -1922,7 +1926,7 @@ def _cmd_resolve(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     db = db_path_from_args(args.db)
     conn = open_db(db)
     try:
-        info = db_info(conn)
+        info = get_db_info(conn)
         results = resolve(conn, columns, register=args.register)
     finally:
         conn.close()

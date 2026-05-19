@@ -143,10 +143,9 @@ class TestBuildDbValidateFlag:
             return r
 
         monkeypatch.setattr(validate_mod, "validate_built_db", always_fail)
-        # Also patch the re-export in cli so the handler sees the fake.
+        # _build_validate_hook() does the lazy import at call time, so patching
+        # the source module is sufficient — the hook factory picks up the fake.
         from regmeta import cli as cli_mod
-
-        monkeypatch.setattr(cli_mod, "validate_built_db", always_fail)
 
         with pytest.raises(RegmetaError) as exc_info:
             build_db(

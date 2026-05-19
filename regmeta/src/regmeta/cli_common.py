@@ -199,7 +199,7 @@ def write_formatted(
     write_to(content, output_path)
 
 
-def db_info(conn: sqlite3.Connection) -> dict[str, str]:
+def get_db_info(conn: sqlite3.Connection) -> dict[str, str]:
     manifest = get_manifest(conn)
     return {
         "schema_version": manifest.get("schema_version", "unknown"),

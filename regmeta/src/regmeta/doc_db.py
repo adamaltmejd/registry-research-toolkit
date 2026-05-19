@@ -132,10 +132,15 @@ def repo_docs_dir() -> Path | None:
     Runtime NEVER reads from this — users receive the prebuilt doc DB as a
     release asset via ``maintain update``. Only ``maintain build-docs`` uses
     this, so a maintainer working from a checkout can rebuild the doc DB
-    from ``regmeta/docs/`` without passing ``--docs-dir`` every time.
+    from ``regmeta_build/docs/`` without passing ``--docs-dir`` every time.
+
+    The docs live in the sibling ``regmeta_build`` package (moved in §15 step
+    2c); this resolver therefore only works from a repo checkout where both
+    packages sit side-by-side. The function itself moves to
+    ``regmeta_build/doc_db.py`` in Phase 6.
     """
     pkg_dir = Path(__file__).resolve().parent
-    candidate = pkg_dir.parent.parent / "docs"
+    candidate = pkg_dir.parent.parent.parent / "regmeta_build" / "docs"
     if candidate.is_dir() and any(candidate.iterdir()):
         return candidate
     return None
