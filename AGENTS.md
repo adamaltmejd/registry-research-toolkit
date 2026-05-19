@@ -11,6 +11,7 @@
 - Python package `mock_data_wizard` (CLI `mock-data-wizard`) for SCB MONA mock-data generation workflows.
 - Python package `reg_meta` (CLI `reg-meta`) for searching and querying registry metadata.
 - Python package `reg_meta_build` (CLI `reg-meta-build`) for building the reg_meta SQLite databases from SCB CSV exports (maintainer-only).
+- Python package `reg_schema` (library, no CLI) for the `project_data.json` schema and structural validator.
 - Tools are proper python project packages called with `uv`.
 
 # Governance
@@ -35,6 +36,7 @@
 - `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
 - `uv run python -m pytest reg_meta/` — reg_meta tests
 - `uv run python -m pytest reg_meta_build/` — reg_meta_build tests
+- `uv run python -m pytest reg_schema/` — reg_schema tests
 - `uv run python -m pytest mock_data_wizard/` — mock_data_wizard tests
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
 
@@ -47,5 +49,7 @@
 - `reg_meta_build/docs/` — curated register documentation (build inputs for the doc DB)
 - `reg_meta_build/fqid_slugs/` — maintainer-curated slug TOMLs
 - `reg_meta_build/input_data/` — SCB CSV exports + canonical classification CSVs
+- `reg_schema/DESIGN.md` — design rationale, scope, dependency direction
+- `reg_schema/src/reg_schema/` — package source
 - `mock_data_wizard/DESIGN.md` — design rationale, PII safety rules
 - `mock_data_wizard/src/mock_data_wizard/` — package source

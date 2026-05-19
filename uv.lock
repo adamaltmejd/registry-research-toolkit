@@ -11,6 +11,7 @@ members = [
     "mock-data-wizard",
     "reg-meta",
     "reg-meta-build",
+    "reg-schema",
     "registry-research-toolkit",
 ]
 
@@ -358,6 +359,11 @@ requires-dist = [
 ]
 
 [[package]]
+name = "reg-schema"
+version = "0.1.0"
+source = { editable = "reg_schema" }
+
+[[package]]
 name = "registry-research-toolkit"
 version = "0.4.0"
 source = { virtual = "." }
@@ -365,6 +371,7 @@ dependencies = [
     { name = "mock-data-wizard" },
     { name = "reg-meta" },
     { name = "reg-meta-build" },
+    { name = "reg-schema" },
 ]
 
 [package.dev-dependencies]
@@ -382,6 +389,7 @@ requires-dist = [
     { name = "mock-data-wizard", editable = "mock_data_wizard" },
     { name = "reg-meta", editable = "reg_meta" },
     { name = "reg-meta-build", editable = "reg_meta_build" },
+    { name = "reg-schema", editable = "reg_schema" },
 ]
 
 [package.metadata.requires-dev]
