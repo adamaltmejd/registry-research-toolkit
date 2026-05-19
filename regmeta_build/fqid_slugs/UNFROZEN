@@ -1,6 +1,6 @@
 # Pre-v1 escape hatch (§5.4)
 
-While this file exists in `regmeta/fqid_slugs/`, slug renames and removals
+While this file exists in `regmeta_build/fqid_slugs/`, slug renames and removals
 flow through `precheck-slugs --update-snapshot` instead of being refused,
 and the `test_no_removed_or_renamed_slugs` snapshot test skips its rename
 guard. Diffs are still reported so drift stays visible.

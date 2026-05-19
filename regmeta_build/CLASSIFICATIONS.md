@@ -297,7 +297,7 @@ Re-run extraction:
 
 ```bash
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \
-    --out regmeta/input_data/classifications/
+    --out regmeta_build/input_data/classifications/
 
 # Optional: also download PDFs for OCR / cross-checking:
 uv run --with openpyxl --with xlrd python scripts/extract_lkf.py \

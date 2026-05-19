@@ -15,6 +15,7 @@ import re
 import sqlite3
 import struct
 import sys
+
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -1388,13 +1389,7 @@ def _import_tabelldefinitioner(conn: sqlite3.Connection, path: Path) -> int:
 
 def _import_id_kolumner(conn: sqlite3.Connection, path: Path) -> int:
     """Parse ID-kolumner.xlsx for join-key semantics."""
-    try:
-        import openpyxl
-    except ImportError:
-        _progress(
-            "Skipping ID-kolumner.xlsx (openpyxl not installed; install with: pip install regmeta_build)"
-        )
-        return 0
+    import openpyxl
 
     _progress("Importing ID-kolumner.xlsx...")
     wb = openpyxl.load_workbook(path, read_only=True)

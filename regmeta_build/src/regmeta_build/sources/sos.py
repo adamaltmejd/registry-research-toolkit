@@ -191,13 +191,7 @@ def parse_register_file(path: Path | str) -> SosRegister:
     """Read one Socialstyrelsen register workbook and return structured
     metadata. Raises `SosParseError` on unreadable / unrecognised files."""
 
-    try:
-        import openpyxl
-    except ImportError as exc:  # pragma: no cover - trivial
-        raise SosParseError(
-            "openpyxl is required for Socialstyrelsen parsing; "
-            "install with `pip install regmeta_build`"
-        ) from exc
+    import openpyxl
 
     p = Path(path)
     if p.name.startswith("~$"):
