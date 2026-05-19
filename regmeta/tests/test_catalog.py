@@ -351,6 +351,188 @@ class TestResolveVersionWithCuratedSlug:
         assert exc.value.code == "fqid_not_found"
 
 
+class TestEditions:
+    """§5.8 Catalog.editions — cross-edition traversal of a variable slug."""
+
+    def test_single_edition(self, slugged_conn: sqlite3.Connection) -> None:
+        editions = Catalog(slugged_conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        e = editions[0]
+        assert e.cvid == 1001
+        assert str(e.fqid) == "scb/lisa/individer-15plus/2018/kon"
+        assert e.via_source_id is None
+        assert e.lineage is None
+
+    def test_multiple_editions_ordered(self) -> None:
+        # Two versions under the same variant carry the same kolumnnamn —
+        # editions returns both, ordered by (variant_slug, version_slug).
+        conn = build_slugged_db()
+        conn.executescript(
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (101, 10, '2019', 'LISA 2019');"
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "VALUES (1002, 1, 10, 101, 44, 'int');"
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Kon');"
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert [str(e.fqid) for e in editions] == [
+            "scb/lisa/individer-15plus/2018/kon",
+            "scb/lisa/individer-15plus/2019/kon",
+        ]
+
+    def test_spans_variants(self) -> None:
+        # Same variable slug delivered through two variants of the same
+        # register — both editions surface, ordered by variant slug.
+        conn = build_slugged_db()
+        conn.executescript(
+            "INSERT INTO register_variant "
+            "(regvar_id, register_id, slug, registervariantnamn) "
+            "VALUES (11, 1, 'foretag', 'Företag');"
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (110, 11, '2018', 'LISA 2018');"
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "VALUES (1003, 1, 11, 110, 44, 'int');"
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1003, 'Kon');"
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        # `foretag` < `individer-15plus` lexicographically.
+        assert [str(e.fqid) for e in editions] == [
+            "scb/lisa/foretag/2018/kon",
+            "scb/lisa/individer-15plus/2018/kon",
+        ]
+
+    def test_kolumnnamn_diacritic_fold(self) -> None:
+        # "Kön" folds to "kon"; the query argument is the slug, not the raw.
+        conn = build_slugged_db(kolumnnamn="Kön")
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        assert editions[0].kolumnnamn == "Kön"
+
+    def test_consumer_side_binding_included(self) -> None:
+        # §5.6: LISA's consumer-side binding of RTB's Kön appears in
+        # editions("scb","lisa","kon") with via_source_id and lineage set.
+        conn = build_slugged_db(
+            register=("RTB", "rtb", 1, 1),
+            variant=("Personer", "personer", 10),
+            version=("RTB 2018", "2018", 100),
+            variable=("Kön", 44, 5000, "Kon"),
+        )
+        conn.executescript(
+            "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+            "VALUES (2, 1, 'lisa', 'LISA');"
+            "INSERT INTO register_variant "
+            "(regvar_id, register_id, slug, registervariantnamn) "
+            "VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (200, 20, '2018', 'LISA 2018');"
+            "INSERT INTO variable (register_id, var_id, variabelnamn, source_register_id) "
+            "VALUES (2, 99, 'Kön', 1);"
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
+            "VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+        )
+        conn.commit()
+
+        lisa = Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
+        assert len(lisa) == 1
+        assert lisa[0].cvid == 5001
+        assert lisa[0].via_source_id == 5000
+        assert str(lisa[0].lineage) == "scb/rtb/personer/2018/kon"
+
+        rtb = Catalog(conn).editions(provider="scb", register="rtb", variable="kon")
+        assert len(rtb) == 1
+        assert rtb[0].cvid == 5000
+        assert rtb[0].via_source_id is None
+        assert rtb[0].lineage is None
+
+    def test_unknown_variable_returns_empty(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        assert (
+            Catalog(slugged_conn).editions(
+                provider="scb", register="lisa", variable="nonexistent"
+            )
+            == []
+        )
+
+    def test_unknown_register_returns_empty(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Discovery API: a missing register isn't an error, it's just no rows.
+        assert (
+            Catalog(slugged_conn).editions(
+                provider="scb", register="nope", variable="kon"
+            )
+            == []
+        )
+
+    def test_other_register_excluded(self) -> None:
+        # A "kon" binding under a different register must not leak into the
+        # query — the (provider, register) filter is tight.
+        conn = build_slugged_db()
+        conn.executescript(
+            "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+            "VALUES (2, 1, 'rtb', 'RTB');"
+            "INSERT INTO register_variant "
+            "(regvar_id, register_id, slug, registervariantnamn) "
+            "VALUES (20, 2, 'personer', 'Personer');"
+            "INSERT INTO register_version "
+            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "VALUES (200, 20, '2018', 'RTB 2018');"
+            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "VALUES (2, 99, 'Kön');"
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "VALUES (5001, 2, 20, 200, 99, 'int');"
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert {e.register_id for e in editions} == {1}
+
+    def test_skips_rows_with_null_slug(self) -> None:
+        # A variable_instance whose variant or version slug is NULL can't be
+        # addressed by FQID — editions silently skips it rather than emitting
+        # an unaddressable binding.
+        conn = build_slugged_db(version=("LISA 2018", None, 100))
+        assert (
+            Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
+            == []
+        )
+
+    def test_invalid_slug_argument_raises(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        from regmeta.fqid import FqidError
+
+        with pytest.raises(FqidError):
+            Catalog(slugged_conn).editions(
+                provider="SCB", register="lisa", variable="kon"
+            )
+        with pytest.raises(FqidError):
+            Catalog(slugged_conn).editions(
+                provider="scb", register="lisa", variable="Kön"
+            )
+
+
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve("class/sun/2020")

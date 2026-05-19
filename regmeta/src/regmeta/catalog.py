@@ -1,7 +1,8 @@
 """Catalog: FQID-to-row resolution against the regmeta SQLite DB.
 
-Implements ``Catalog.resolve(fqid)`` per REFACTOR_SPEC.md §5.8 — the single
-entry point that turns any FQID kind into a typed entity row.
+Implements the FQID API in REFACTOR_SPEC.md §5.8: ``Catalog.resolve(fqid)``
+turns any FQID kind into a typed entity row, ``Catalog.editions(...)``
+enumerates all variable bindings of a given variable slug under a register.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from .fqid import (
     FqidKind,
     derive_variable_slug,
     parse,
+    validate_slug,
 )
 
 
@@ -318,6 +320,77 @@ class Catalog:
             return Fqid.binding_fqid(*parts)
         except FqidError:
             return None
+
+    def editions(
+        self, *, provider: str, register: str, variable: str
+    ) -> list[ResolvedVariableBinding]:
+        """All variable bindings of ``variable`` under ``provider/register``.
+
+        Returns every ``(variant, period)`` combination where a
+        variable_instance row exists whose kolumnnamn folds to ``variable``,
+        including consumer-side bindings from §5.6 (their ``lineage`` field
+        carries the source-side FQID). Results are ordered by
+        ``(variant_slug, version_slug, cvid, kolumnnamn)`` for deterministic
+        iteration.
+
+        Slug inputs are validated; non-existent provider/register/variable
+        yields an empty list (discovery, not resolution).
+        """
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(variable, "variable")
+
+        rows = self._conn.execute(
+            "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
+            "vi.var_id, vi.via_source_id, "
+            "v.variabelnamn, va.kolumnnamn, "
+            "rv.slug AS variant_slug, rver.slug AS version_slug "
+            "FROM variable_instance vi "
+            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+            "JOIN register r ON vi.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+            "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
+            "WHERE p.slug = ? AND r.slug = ? "
+            "ORDER BY rv.slug, rver.slug, vi.cvid, va.kolumnnamn",
+            (provider, register),
+        ).fetchall()
+
+        out: list[ResolvedVariableBinding] = []
+        for row in rows:
+            if derive_variable_slug(row["kolumnnamn"]) != variable:
+                continue
+            variant_slug = row["variant_slug"]
+            version_slug = row["version_slug"]
+            # Skip rows whose slug columns aren't populated (NULL on pre-1c
+            # DBs or partial fixtures) — they can't be addressed by FQID.
+            if not variant_slug or not version_slug:
+                continue
+            try:
+                fqid = Fqid.binding_fqid(
+                    provider, register, variant_slug, version_slug, variable
+                )
+            except FqidError:
+                continue
+            via = row["via_source_id"]
+            out.append(
+                ResolvedVariableBinding(
+                    fqid=fqid,
+                    cvid=row["cvid"],
+                    register_id=row["register_id"],
+                    regvar_id=row["regvar_id"],
+                    regver_id=row["regver_id"],
+                    var_id=row["var_id"],
+                    variabelnamn=row["variabelnamn"],
+                    kolumnnamn=row["kolumnnamn"],
+                    via_source_id=via,
+                    lineage=(
+                        self._lineage_fqid(via, variable) if via is not None else None
+                    ),
+                )
+            )
+        return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
         row = self._conn.execute(
