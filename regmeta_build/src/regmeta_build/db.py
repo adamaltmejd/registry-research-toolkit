@@ -1392,7 +1392,7 @@ def _import_id_kolumner(conn: sqlite3.Connection, path: Path) -> int:
         import openpyxl
     except ImportError:
         _progress(
-            "Skipping ID-kolumner.xlsx (openpyxl not installed; install with: pip install regmeta[xlsx])"
+            "Skipping ID-kolumner.xlsx (openpyxl not installed; install with: pip install regmeta_build)"
         )
         return 0
 

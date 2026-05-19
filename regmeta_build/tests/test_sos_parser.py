@@ -245,7 +245,7 @@ requires_sos_data = pytest.mark.skipif(
     SOS_DATA is None or not HAS_OPENPYXL,
     reason=(
         "Socialstyrelsen input data not present (gitignored) or openpyxl "
-        "missing; set REGMETA_SOS_DATA and install regmeta[xlsx] to run"
+        "missing; set REGMETA_SOS_DATA and install regmeta_build to run"
     ),
 )
 

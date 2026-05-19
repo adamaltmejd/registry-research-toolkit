@@ -196,7 +196,7 @@ def parse_register_file(path: Path | str) -> SosRegister:
     except ImportError as exc:  # pragma: no cover - trivial
         raise SosParseError(
             "openpyxl is required for Socialstyrelsen parsing; "
-            "install with `pip install regmeta[xlsx]`"
+            "install with `pip install regmeta_build`"
         ) from exc
 
     p = Path(path)
