@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from regmeta.validate import validate_built_db
+from regmeta_build.validate import validate_built_db
 
 
 class TestValidateModule:
@@ -123,7 +123,7 @@ class TestBuildDbValidateFlag:
         _sys.path.insert(0, str(Path(__file__).parent))
         from _csv_fixtures import write_scb_input
 
-        from regmeta import validate as validate_mod
+        from regmeta_build import validate as validate_mod
         from regmeta.db import DB_FILENAME, build_db
         from regmeta.errors import RegmetaError
 

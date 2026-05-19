@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import pytest
 
-from regmeta.fqid_slugs import (
+from regmeta_build.fqid_slugs import (
     SNAPSHOT_FILENAME,
     diff_snapshot,
     is_unfrozen,

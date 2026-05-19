@@ -8,6 +8,7 @@ cross-register var_id reuse, cp1252 encoding, and value sets.
 from __future__ import annotations
 
 import sqlite3
+import sys
 from collections.abc import Iterator
 from pathlib import Path
 
@@ -15,7 +16,13 @@ import pytest
 
 from regmeta.db import build_db
 
-from _csv_fixtures import write_scb_input
+# `_csv_fixtures` is a sibling test helper that lives in regmeta_build/tests/
+# after the §15 step 2 carve-out. Add that directory to sys.path so the bare
+# `import _csv_fixtures` works from this query-side conftest.
+sys.path.insert(
+    0, str(Path(__file__).resolve().parent.parent.parent / "regmeta_build" / "tests")
+)
+from _csv_fixtures import write_scb_input  # noqa: E402
 
 
 @pytest.fixture(scope="session")

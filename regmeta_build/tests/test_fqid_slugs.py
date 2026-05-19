@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 from regmeta.errors import RegmetaError
-from regmeta.fqid_slugs import (
+from regmeta_build.fqid_slugs import (
     SNAPSHOT_FILENAME,
     SlugEntry,
     classify_default_candidate,
@@ -1181,7 +1181,7 @@ class TestRepoSlugDir:
     """`repo_slug_dir()` returns the live directory in a repo checkout."""
 
     def test_repo_layout_resolves(self):
-        from regmeta.fqid_slugs import repo_slug_dir
+        from regmeta_build.fqid_slugs import repo_slug_dir
 
         result = repo_slug_dir()
         assert result is not None
@@ -1739,7 +1739,7 @@ class TestPrecheckCliGrowOnly:
         rename is still reported in the envelope so drift stays visible.
         """
         from regmeta.cli import run
-        from regmeta.fqid_slugs import UNFROZEN_MARKER
+        from regmeta_build.fqid_slugs import UNFROZEN_MARKER
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
@@ -1977,7 +1977,7 @@ class TestFormatDefaultSlugHints:
         classification: str,
         current_slug: str | None,
     ):
-        from regmeta.fqid_slugs import DefaultSlugCandidate
+        from regmeta_build.fqid_slugs import DefaultSlugCandidate
 
         return DefaultSlugCandidate(
             provider=provider,

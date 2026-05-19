@@ -34,7 +34,7 @@ from .db import (
     open_db,
 )
 from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from .validate import validate_built_db
+from regmeta_build.validate import validate_built_db
 from .queries import (
     get_availability,
     get_classification,
@@ -577,7 +577,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--slug-dir",
         default=None,
         help=(
-            "Directory of curated slug TOMLs (default: regmeta/fqid_slugs/ "
+            "Directory of curated slug TOMLs (default: regmeta_build/fqid_slugs/ "
             "when run from a repo checkout)."
         ),
     )
@@ -622,7 +622,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--out-dir",
         default=None,
         help=(
-            "Where to write the TOMLs (default: regmeta/fqid_slugs/ in a repo "
+            "Where to write the TOMLs (default: regmeta_build/fqid_slugs/ in a repo "
             "checkout, else CWD/fqid_slugs/)."
         ),
     )
@@ -659,7 +659,7 @@ def _build_parser() -> argparse.ArgumentParser:
     precheck_p.add_argument(
         "--slug-dir",
         default=None,
-        help="Directory of slug TOMLs (default: regmeta/fqid_slugs/).",
+        help="Directory of slug TOMLs (default: regmeta_build/fqid_slugs/).",
     )
     precheck_p.add_argument(
         "--update-snapshot",
@@ -920,7 +920,7 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
 
 
 def _resolve_slug_dir(slug_arg: str | None) -> Path:
-    from .fqid_slugs import repo_slug_dir
+    from regmeta_build.fqid_slugs import repo_slug_dir
 
     if slug_arg is not None:
         return Path(slug_arg).expanduser().resolve()
@@ -932,7 +932,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
             error_class="configuration",
             message=(
                 "Slug TOMLs not found. Pass --slug-dir or run from a regmeta "
-                "checkout containing regmeta/fqid_slugs/."
+                "checkout containing regmeta_build/fqid_slugs/."
             ),
             remediation=(
                 "Run from a repo checkout, or `regmeta maintain seed-slugs` "
@@ -943,7 +943,7 @@ def _resolve_slug_dir(slug_arg: str | None) -> Path:
 
 
 def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from .fqid_slugs import (
+    from regmeta_build.fqid_slugs import (
         format_default_slug_hints,
         iter_default_slug_candidates,
         repo_slug_dir,
@@ -1008,7 +1008,7 @@ def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], 
 def _cmd_maintain_precheck_slugs(
     args: argparse.Namespace,
 ) -> tuple[dict[str, Any], int]:
-    from .fqid_slugs import (
+    from regmeta_build.fqid_slugs import (
         SNAPSHOT_FILENAME,
         diff_snapshot,
         is_unfrozen,
@@ -1127,7 +1127,11 @@ def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], i
     import dataclasses
     from datetime import date
 
-    from .sources.sos import SosParseError, parse_directory, parse_register_file
+    from regmeta_build.sources.sos import (
+        SosParseError,
+        parse_directory,
+        parse_register_file,
+    )
 
     start = time.perf_counter()
     path = Path(args.path).expanduser().resolve()

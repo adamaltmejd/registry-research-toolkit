@@ -31,7 +31,7 @@ requires_openpyxl = pytest.mark.skipif(
     not HAS_OPENPYXL, reason="openpyxl is required for this test"
 )
 
-from regmeta.sources.sos import (  # noqa: E402
+from regmeta_build.sources.sos import (  # noqa: E402
     SosDcatAp,
     SosParseError,
     SosRegister,

@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
-from .db import open_db
+from regmeta.db import open_db
 
 LineKind = Literal["section", "ok", "fail", "info"]
 

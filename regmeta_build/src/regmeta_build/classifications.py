@@ -20,7 +20,7 @@ import tomllib
 from pathlib import Path
 from typing import Any
 
-from .errors import EXIT_CONFIG, RegmetaError
+from regmeta.errors import EXIT_CONFIG, RegmetaError
 
 
 _REQUIRED_FIELDS = ("short_name", "name", "vardemangdsversion")
