@@ -1,0 +1,54 @@
+{
+  "schema_version": "1.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v0.11.1",
+  "name": "workplace_panel",
+  "sources": [
+    {
+      "name": "rams_2018",
+      "register_version": "scb/rams/_default/2018",
+      "columns": [
+        {
+          "name": "scb/rams/_default/2018/peorgnr",
+          "type": "id",
+          "id_subtype": "string",
+          "display_name": "LopNr_PeOrgNr"
+        },
+        {
+          "name": "scb/rams/_default/2018/cfar",
+          "type": "id",
+          "id_subtype": "string",
+          "display_name": "LopNr_CFAR"
+        }
+      ]
+    },
+    {
+      "name": "rams_2019",
+      "register_version": "scb/rams/_default/2019",
+      "columns": [
+        {
+          "name": "scb/rams/_default/2019/peorgnr",
+          "type": "id",
+          "id_subtype": "string",
+          "display_name": "LopNr_PeOrgNr"
+        },
+        {
+          "name": "scb/rams/_default/2019/cfar",
+          "type": "id",
+          "id_subtype": "string",
+          "display_name": "LopNr_CFAR"
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "workplace",
+      "entity_key": ["LopNr_PeOrgNr", "LopNr_CFAR"],
+      "members": [
+        {"source": "rams_2018", "time_key": 2018},
+        {"source": "rams_2019", "time_key": 2019}
+      ]
+    }
+  ]
+}
