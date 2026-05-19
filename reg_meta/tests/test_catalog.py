@@ -916,3 +916,44 @@ class TestSameAsClassificationTraversal:
         # are valid landings. The point is `via_same_as` is non-None.
         assert r.via_same_as is not None
         assert r.short_name in {"SUN2020", "SUN2000"}
+
+    def test_publisher_constrained_on_traversal_hit(self) -> None:
+        # Codex P1: BFS narrowed by publisher must keep the constraint when
+        # verifying the candidate. Two publishers share the same (slug,
+        # version) pair; the SOS-anchored edge must resolve to SOS's row,
+        # not SCB's, even though SCB's row would also match (slug, version).
+        conn = build_slugged_db()
+        # Add an SOS-published `kollision` slug at the same version as an
+        # SCB-published one. (Cross-publisher slug/version collision is a
+        # theoretical case today since only SCB ships classifications, but
+        # the traversal contract should be robust against future publishers.)
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_SCB', 'Kollision SCB', '2020', 'kollision', 'SCB')"
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_SOS', 'Kollision SOS', '2020', 'kollision', 'SOS')"
+        )
+        # Add a SOS-side `kollision-legacy` slug + an edge from it to the
+        # SOS-side `kollision` (under publisher 'sos').
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_LEG_SOS', 'Kollision legacy SOS', '1996', "
+            "'kollision-legacy', 'SOS')"
+        )
+        conn.commit()
+        self._add_class_edge(
+            conn,
+            a=("sos", "kollision-legacy"),
+            b=("sos", "kollision"),
+        )
+        # Query SOS legacy at a wrong version → direct misses → BFS narrows
+        # to publisher 'sos' and lands on SOS's kollision/2020. Candidate
+        # lookup MUST stay constrained to 'sos' and return KOL_SOS, not
+        # KOL_SCB (which also matches `kollision`/2020).
+        r = Catalog(conn).resolve("class/kollision-legacy/2020")
+        assert isinstance(r, ResolvedClassification)
+        assert r.short_name == "KOL_SOS"
+        assert r.via_same_as is not None
+        assert str(r.via_same_as[0]) == "class/kollision/2020"

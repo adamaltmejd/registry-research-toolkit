@@ -490,13 +490,27 @@ class Catalog:
         raise _not_found(fqid)
 
     def _resolve_classification_direct(
-        self, fqid: Fqid
+        self, fqid: Fqid, *, publisher: str | None = None
     ) -> ResolvedClassification | None:
-        row = self._conn.execute(
-            "SELECT id, short_name, name FROM classification "
-            "WHERE slug = ? AND version = ?",
-            (fqid.classification, fqid.version),
-        ).fetchone()
+        # `publisher` is set by the same_as BFS when it narrowed the neighbor
+        # by publisher; without it (the initial top-level lookup) the FQID
+        # grammar carries no publisher slot, so cross-publisher (slug, version)
+        # collisions can't be disambiguated here either way. When set, we
+        # constrain the row by publisher to keep BFS from silently crossing
+        # publisher namespaces under a colliding slug/version pair.
+        if publisher is None:
+            row = self._conn.execute(
+                "SELECT id, short_name, name FROM classification "
+                "WHERE slug = ? AND version = ?",
+                (fqid.classification, fqid.version),
+            ).fetchone()
+        else:
+            row = self._conn.execute(
+                "SELECT id, short_name, name FROM classification "
+                "WHERE slug = ? AND version = ? "
+                "AND LOWER(COALESCE(publisher, 'scb')) = ?",
+                (fqid.classification, fqid.version, publisher),
+            ).fetchone()
         if not row:
             return None
         return ResolvedClassification(
@@ -593,7 +607,9 @@ class Catalog:
                         continue
                 for n_fqid in candidate_fqids:
                     new_path = (*path, n_fqid)
-                    hit = self._resolve_classification_direct(n_fqid)
+                    # Pass publisher so cross-publisher (slug, version)
+                    # collisions can't silently land us on the wrong row.
+                    hit = self._resolve_classification_direct(n_fqid, publisher=n_prov)
                     if hit is not None:
                         return replace(hit, fqid=fqid, via_same_as=new_path)
                 # Continue BFS regardless of version count — further hops
