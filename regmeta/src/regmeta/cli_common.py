@@ -16,8 +16,32 @@ from pathlib import Path
 from typing import Any
 
 from .db import get_manifest, utc_now
+from .errors import EXIT_INTERNAL, RegmetaError
 
 CONTRACT_VERSION = "3.0.0"
+
+
+def handle_cli_exception(exc: BaseException, output_path: str | None) -> int:
+    """Render an unhandled exception as a JSON error envelope and return
+    the appropriate exit code. Shared by both CLI `run()` functions so
+    the contract stays identical across `regmeta` and `regmeta-build`."""
+    if isinstance(exc, RegmetaError):
+        write_json({"error": exc.to_dict()}, output_path)
+        return exc.exit_code
+    error_payload = {
+        "error": {
+            "code": "internal_error",
+            "class": "internal",
+            "message": str(exc),
+            "remediation": "Report this error to maintainers.",
+        }
+    }
+    try:
+        write_json(error_payload, output_path)
+    except Exception:
+        sys.stderr.write(json.dumps(error_payload) + "\n")
+    return EXIT_INTERNAL
+
 
 MAX_DISPLAY_ROWS = 100
 _MAX_HINTS = 3
@@ -274,3 +298,21 @@ def clean_leaf_help(parser: argparse.ArgumentParser) -> None:
         # parser.prog already carries the right program prefix ("regmeta …"
         # or "regmeta-build …"), so we don't need to special-case per CLI.
         parser.epilog = f"Run `{parser.prog} --examples` for usage examples."
+
+
+def apply_leaf_help(parser: argparse.ArgumentParser) -> None:
+    """Walk subparsers (one or two levels deep) and call `clean_leaf_help`
+    on every leaf parser. Handles both `regmeta` (subgroups → leaves) and
+    `regmeta-build` (flat subcommands)."""
+    for action in parser._actions:
+        if not isinstance(action, argparse._SubParsersAction):
+            continue
+        for sub_p in action.choices.values():
+            nested = [
+                a for a in sub_p._actions if isinstance(a, argparse._SubParsersAction)
+            ]
+            if nested:
+                for leaf_p in nested[0].choices.values():
+                    clean_leaf_help(leaf_p)
+            else:
+                clean_leaf_help(sub_p)

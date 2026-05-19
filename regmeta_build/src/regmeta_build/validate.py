@@ -4,7 +4,7 @@ Run against a freshly built `regmeta.db` to catch value-set dedup or
 year-projection drift before the build is shipped. Logic mirrors what
 `scripts/validate_valueset_dedup.py` used to do as a sibling process;
 both that script and the `--validate` flag on `build-db` call into this
-module so the checks stay in one place (issue #92).
+module so the checks stay in one place.
 
 Schema shape:
   - value_set / value_set_member / variable_instance.value_set_id present

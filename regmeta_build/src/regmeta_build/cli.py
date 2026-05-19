@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
-import json
 import os
 import sys
 import time
@@ -20,8 +19,8 @@ from typing import Any, Callable
 
 from regmeta.cli_common import (
     NoRepeatParser,
-    clean_leaf_help,
-    emit_hints,
+    apply_leaf_help,
+    handle_cli_exception,
     reorder_global_flags,
     success_envelope,
     write_json,
@@ -34,7 +33,6 @@ from regmeta.db import (
 )
 from regmeta.errors import (
     EXIT_CONFIG,
-    EXIT_INTERNAL,
     EXIT_NOT_FOUND,
     EXIT_USAGE,
     RegmetaError,
@@ -75,12 +73,6 @@ def _build_parser() -> argparse.ArgumentParser:
         "--db",
         default=None,
         help=f"Database directory (default: {default_db_dir()}).",
-    )
-    parser.add_argument(
-        "--format",
-        default="json",
-        choices=["json"],
-        help="Output format (only JSON envelope is supported for build commands).",
     )
     parser.add_argument(
         "--output", default=None, help="Write output to file instead of stdout."
@@ -266,11 +258,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to an .xlsx file or a directory containing them.",
     )
 
-    for action in parser._actions:
-        if isinstance(action, argparse._SubParsersAction):
-            for leaf_p in action.choices.values():
-                clean_leaf_help(leaf_p)
-
+    apply_leaf_help(parser)
     return parser
 
 
@@ -282,7 +270,7 @@ def _build_parser() -> argparse.ArgumentParser:
 def _build_validate_hook() -> Callable[[Path], None]:
     """Return a build_db pre_rename_hook that runs the value-set dedup
     validator against the staging DB and raises on failure. Defined as a
-    helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
+    helper so the closure stays narrowly scoped."""
 
     def hook(staging_db: Path) -> None:
         validation = validate_built_db(staging_db)
@@ -339,6 +327,7 @@ def _cmd_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    start = time.perf_counter()
     if args.docs_dir:
         docs_dir = Path(args.docs_dir).resolve()
     else:
@@ -359,9 +348,14 @@ def _cmd_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             )
     db_dir = Path(args.db).resolve() if args.db else default_db_dir().resolve()
     db_path = build_doc_db(docs_dir, db_dir)
-    return {
-        "data": {"db_path": str(db_path), "docs_dir": str(docs_dir)},
-    }, 0
+    duration_ms = int((time.perf_counter() - start) * 1000)
+    return success_envelope(
+        command="build-docs",
+        args_payload={"docs_dir": str(docs_dir)},
+        db_info=None,
+        data={"db_path": str(db_path), "docs_dir": str(docs_dir)},
+        duration_ms=duration_ms,
+    ), 0
 
 
 def _resolve_slug_dir(slug_arg: str | None) -> Path:
@@ -703,8 +697,6 @@ def run(argv: list[str] | None = None) -> int:
 
     output_path = getattr(args, "output", None)
     verbose = getattr(args, "verbose", False)
-    quiet = getattr(args, "quiet", False) or os.environ.get("REGMETA_QUIET") == "1"
-    hints: list[str] = []
 
     try:
         payload, exit_code = handler(args)
@@ -712,27 +704,9 @@ def run(argv: list[str] | None = None) -> int:
             write_json(payload, output_path)
         else:
             write_json(payload.get("data", payload), output_path)
-        if hints and not quiet:
-            sys.stdout.flush()
-            emit_hints(hints)
         return exit_code
-    except RegmetaError as exc:
-        write_json({"error": exc.to_dict()}, output_path)
-        return exc.exit_code
     except Exception as exc:
-        error_payload = {
-            "error": {
-                "code": "internal_error",
-                "class": "internal",
-                "message": str(exc),
-                "remediation": "Report this error to maintainers.",
-            }
-        }
-        try:
-            write_json(error_payload, output_path)
-        except Exception:
-            sys.stderr.write(json.dumps(error_payload) + "\n")
-        return EXIT_INTERNAL
+        return handle_cli_exception(exc, output_path)
 
 
 def main() -> int:

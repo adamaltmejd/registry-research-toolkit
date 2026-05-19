@@ -15,9 +15,10 @@ from .cli_common import (
     GLOBAL_FLAGS,
     GLOBAL_FLAGS_WITH_VALUE,
     NoRepeatParser,
-    clean_leaf_help,
+    apply_leaf_help,
     emit_hints,
     get_db_info,
+    handle_cli_exception,
     hint_add,
     reorder_global_flags,
     success_envelope,
@@ -32,7 +33,6 @@ from .db import (
     open_db,
 )
 from .errors import (
-    EXIT_INTERNAL,
     EXIT_NOT_FOUND,
     EXIT_USAGE,
     RegmetaError,
@@ -628,21 +628,7 @@ def _build_parser() -> argparse.ArgumentParser:
     doc_list_p.add_argument("--topic", default=None, help="Filter by topic tag.")
     doc_list_p.add_argument("--register", default=None, help="Filter by register.")
 
-    # Clean up help display on all leaf subcommands
-    for action in parser._actions:
-        if isinstance(action, argparse._SubParsersAction):
-            for sub_p in action.choices.values():
-                sub_actions = [
-                    a
-                    for a in sub_p._actions
-                    if isinstance(a, argparse._SubParsersAction)
-                ]
-                if sub_actions:
-                    for leaf_p in sub_actions[0].choices.values():
-                        clean_leaf_help(leaf_p)
-                else:
-                    clean_leaf_help(sub_p)
-
+    apply_leaf_help(parser)
     return parser
 
 
@@ -2901,23 +2887,8 @@ def run(argv: list[str] | None = None) -> int:
             except Exception:
                 pass
         return exit_code
-    except RegmetaError as exc:
-        write_json({"error": exc.to_dict()}, getattr(args, "output", None))
-        return exc.exit_code
     except Exception as exc:
-        error_payload = {
-            "error": {
-                "code": "internal_error",
-                "class": "internal",
-                "message": str(exc),
-                "remediation": "Report this error to maintainers.",
-            }
-        }
-        try:
-            write_json(error_payload, getattr(args, "output", None))
-        except Exception:
-            sys.stderr.write(json.dumps(error_payload) + "\n")
-        return EXIT_INTERNAL
+        return handle_cli_exception(exc, getattr(args, "output", None))
 
 
 def main() -> int:
