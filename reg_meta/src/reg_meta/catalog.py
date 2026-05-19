@@ -8,6 +8,7 @@ enumerates all variable bindings of a given variable slug under a register.
 from __future__ import annotations
 
 import sqlite3
+from collections import deque
 from dataclasses import dataclass, replace
 from pathlib import Path
 
@@ -335,8 +336,6 @@ class Catalog:
         source to the same target under different variants/periods both
         get explored.
         """
-        from collections import deque
-
         assert fqid.provider and fqid.register and fqid.variable
         assert fqid.variant is not None and fqid.period is not None
         if (
@@ -527,8 +526,6 @@ class Catalog:
         the DB row carries; we pick it up from `classification.version` after
         the slug match.
         """
-        from collections import deque
-
         assert fqid.classification and fqid.version
         # The classification FQID grammar has no provider slot — the publisher
         # is implicit. The (slug, version) lookup may have missed precisely
