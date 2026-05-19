@@ -138,11 +138,12 @@ vardemangdsversion = [
 
 [[classification]]
 short_name = "NIVA-OLD"
-version = "v1"
+version = "2000"
 name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
 name_en = "Education level — legacy 7-level aggregation"
 publisher = "SCB"
-description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Stable across SUN 2000 and SUN 2020."
+valid_from = 2000
+description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Version stamp `2000` marks introduction alongside SUN2000 (per LISA methodology: SUN2000Niva_Old aggregates SUN2000Niva to mirror the pre-2000 SUN's 2nd-position level); the 7-code space is stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-old.csv"
 vardemangdsversion = [
   "SUN 2000 NivaOld",
@@ -151,11 +152,12 @@ vardemangdsversion = [
 
 [[classification]]
 short_name = "NIVA-GROV"
-version = "v1"
+version = "2000"
 name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
 name_en = "Education level — coarse 5-level aggregation"
 publisher = "SCB"
-description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
+valid_from = 2000
+description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Version stamp `2000` marks introduction alongside SUN2000; the 5-code space is stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-grov.csv"
 vardemangdsversion = [
   "SUN 2000 NivåGrov",

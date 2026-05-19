@@ -218,11 +218,11 @@ version = "2026"
 
 [classification."NIVA-GROV"]
 slug = "niva-grov"
-version = "v1"
+version = "2000"
 
 [classification."NIVA-OLD"]
 slug = "niva-old"
-version = "v1"
+version = "2000"
 
 [classification."SEKTOR2000"]
 slug = "sektor"
