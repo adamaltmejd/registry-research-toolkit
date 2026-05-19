@@ -1246,3 +1246,119 @@ class TestYearProjection:
         # vardekod is None from the LEFT JOIN. The "Man" code must not appear.
         kods = [r["vardekod"] for r in codes if r["vardekod"] is not None]
         assert "1" not in kods
+
+
+class TestSameAsBuildIntegration:
+    """End-to-end coverage that `build_db` correctly wires up
+    `materialize_same_as_edges` (§5.5): tables created, populated when the
+    slug TOML carries `same_as`, skipped under `--skip-slugs`, and the
+    resolver can traverse against the resulting DB."""
+
+    def test_tables_present_in_fixture_db(self, db_conn: sqlite3.Connection) -> None:
+        # Fixture has no same_as entries; the tables should still exist
+        # (created by the schema DDL) and be empty.
+        tables = {
+            r[0]
+            for r in db_conn.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table' "
+                "AND name IN ('variable_same_as', 'classification_same_as')"
+            ).fetchall()
+        }
+        assert tables == {"variable_same_as", "classification_same_as"}
+        var_count = db_conn.execute("SELECT COUNT(*) FROM variable_same_as").fetchone()[
+            0
+        ]
+        cls_count = db_conn.execute(
+            "SELECT COUNT(*) FROM classification_same_as"
+        ).fetchone()[0]
+        assert (var_count, cls_count) == (0, 0)
+
+    @staticmethod
+    def _write_slug_dir_with_same_as(slug_dir: Path) -> None:
+        """Slug TOML mirroring the shared fixture's two registers, plus a
+        same_as edge from TESTREG's `kon` (var_id 44, real) to a phantom
+        slug `legacy-kon`. Querying the phantom under TESTREG misses
+        directly and forces a BFS hop onto the real `kon` row."""
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n'
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "testreg", '
+            'variable_slug = "legacy-kon" }]\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+
+    def test_end_to_end_resolves_via_same_as(self, tmp_path: Path) -> None:
+        from reg_meta.catalog import Catalog, ResolvedVariableBinding
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(input_dir)
+        self._write_slug_dir_with_same_as(slug_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            slug_dir=slug_dir,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            # 1 TOML edge → 2 DB rows.
+            rows = conn.execute(
+                "SELECT a_variable, b_variable FROM variable_same_as "
+                "ORDER BY a_variable"
+            ).fetchall()
+            assert [(r[0], r[1]) for r in rows] == [
+                ("kon", "legacy-kon"),
+                ("legacy-kon", "kon"),
+            ]
+            # Querying the phantom slug misses directly → BFS traverses to
+            # the real `kon` row. via_same_as carries the traversal path,
+            # confirming the build wired materialize_same_as_edges into
+            # the resolver's data plane end-to-end.
+            r = Catalog(conn).resolve("scb/testreg/individer/2020/legacy-kon")
+            assert isinstance(r, ResolvedVariableBinding)
+            assert r.via_same_as is not None
+            assert len(r.via_same_as) == 1
+            assert str(r.via_same_as[0]) == "scb/testreg/individer/2020/kon"
+            # Caller's FQID preserved on the returned record.
+            assert str(r.fqid) == "scb/testreg/individer/2020/legacy-kon"
+            assert r.kolumnnamn == "Kon"
+        finally:
+            conn.close()
+
+    def test_skip_slugs_skips_same_as_materialization(self, tmp_path: Path) -> None:
+        # Build with skip_slugs=True and a same_as TOML present. The
+        # materializer would hard-error on missing register slugs, so
+        # build_db's `if skip_slugs` branch must skip it entirely. We
+        # verify by building successfully and confirming both edge tables
+        # stayed empty.
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(input_dir)
+        self._write_slug_dir_with_same_as(slug_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+            slug_dir=slug_dir,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            var_count = conn.execute(
+                "SELECT COUNT(*) FROM variable_same_as"
+            ).fetchone()[0]
+            cls_count = conn.execute(
+                "SELECT COUNT(*) FROM classification_same_as"
+            ).fetchone()[0]
+            assert (var_count, cls_count) == (0, 0)
+        finally:
+            conn.close()
