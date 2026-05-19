@@ -305,7 +305,7 @@ def run_update(
             error_class="configuration",
             message=reason,
             remediation=(
-                "Build from CSV with `regmeta maintain build-db`, "
+                "Build from CSV with `regmeta-build build-db`, "
                 "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
             ),
         )
@@ -338,7 +338,7 @@ def run_update(
             error_class="configuration",
             message=reason,
             remediation=(
-                "Build from markdown with `regmeta maintain build-docs`, "
+                "Build from markdown with `regmeta-build build-docs`, "
                 "or check https://github.com/adamaltmejd/registry-research-toolkit/releases"
             ),
         )

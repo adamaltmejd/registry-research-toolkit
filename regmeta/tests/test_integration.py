@@ -95,7 +95,7 @@ def test_install_and_cli_help(docker: str, image: str):
     result = _docker_run(docker, image, "regmeta --help")
     assert result.returncode == 0
     assert "search" in result.stdout
-    assert "maintain" in result.stdout
+    assert "update" in result.stdout
 
 
 def test_version_importable(docker: str, image: str):

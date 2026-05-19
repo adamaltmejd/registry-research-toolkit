@@ -53,7 +53,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
     ``check_schema=False`` escape hatch exists for legitimate bypasses
     (e.g. ``maintain info``, doc DB).
     """
-    fix = "Run `regmeta maintain update` to get a compatible database."
+    fix = "Run `regmeta update` to get a compatible database."
 
     try:
         manifest = get_manifest(conn)
@@ -108,8 +108,8 @@ def open_db(
     check_schema: bool = True,
     error_code: str = "db_not_found",
     remediation: str = (
-        "Run `regmeta maintain update` to fetch the pre-built DB, "
-        "or `regmeta maintain build-db --input-dir <path>` to build from CSV exports."
+        "Run `regmeta update` to fetch the pre-built DB, "
+        "or `regmeta-build build-db --input-dir <path>` to build from CSV exports."
     ),
 ) -> sqlite3.Connection:
     if not db_path.exists():

@@ -1720,7 +1720,7 @@ def build_db(
                     ),
                     remediation=(
                         "Run from a repo checkout, or run "
-                        "`regmeta maintain update` to fetch the prebuilt DB."
+                        "`regmeta update` to fetch the prebuilt DB."
                     ),
                 )
             valid_codes_dir = cls_dir if cls_dir.is_dir() else None
@@ -1747,7 +1747,7 @@ def build_db(
                     ),
                     remediation=(
                         "Run from a repo checkout, pass --slug-dir, or run "
-                        "`regmeta maintain update` to fetch the prebuilt DB."
+                        "`regmeta update` to fetch the prebuilt DB."
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)

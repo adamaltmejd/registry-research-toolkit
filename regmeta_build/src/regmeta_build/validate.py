@@ -1,4 +1,4 @@
-"""Post-build invariant checks for `regmeta maintain build-db`.
+"""Post-build invariant checks for `regmeta-build build-db`.
 
 Run against a freshly built `regmeta.db` to catch value-set dedup or
 year-projection drift before the build is shipped. Logic mirrors what

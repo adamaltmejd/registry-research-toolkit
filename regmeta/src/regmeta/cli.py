@@ -9,7 +9,7 @@ import sqlite3
 import sys
 import time
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from .cli_common import (
     GLOBAL_FLAGS,
@@ -26,14 +26,17 @@ from .cli_common import (
     write_to,
 )
 from .db import (
-    SCHEMA_VERSION,
     default_db_dir,
     db_path_from_args,
     get_manifest,
     open_db,
 )
-from .errors import EXIT_CONFIG, EXIT_INTERNAL, EXIT_NOT_FOUND, EXIT_USAGE, RegmetaError
-from regmeta_build.db import build_db
+from .errors import (
+    EXIT_INTERNAL,
+    EXIT_NOT_FOUND,
+    EXIT_USAGE,
+    RegmetaError,
+)
 from .queries import (
     get_availability,
     get_classification,
@@ -513,19 +516,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Fail (exit 17) if any column has no matches.",
     )
 
-    maintain_p = sub.add_parser("maintain", help="Setup and maintenance commands.")
-    maintain_sub = maintain_p.add_subparsers(dest="maintain_command")
-
-    update_p = maintain_sub.add_parser(
+    update_p = sub.add_parser(
         "update",
         help="Update regmeta package and database to the latest version.",
         description=(
             "Download the latest regmeta package and pre-built database from\n"
             "GitHub Releases. Safe to run repeatedly — skips if already current.\n\n"
             "Examples:\n"
-            "  regmeta maintain update            # interactive confirmation\n"
-            "  regmeta maintain update --yes      # skip confirmation\n"
-            "  regmeta maintain update --force    # re-download even if current"
+            "  regmeta update            # interactive confirmation\n"
+            "  regmeta update --yes      # skip confirmation\n"
+            "  regmeta update --force    # re-download even if current"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -539,175 +539,16 @@ def _build_parser() -> argparse.ArgumentParser:
         "-y", "--yes", action="store_true", help="Skip confirmation prompt."
     )
 
-    maintain_sub.add_parser(
+    sub.add_parser(
         "info",
         help="Database stats and import metadata.",
         description=(
             "Show database path, schema version, import timestamp, and row\n"
             "counts per table.\n\n"
             "Examples:\n"
-            "  regmeta maintain info"
+            "  regmeta info"
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-
-    build_p = maintain_sub.add_parser(
-        "build-db",
-        help="Build database from SCB CSV exports (maintainer-only).",
-        description=(
-            "Build the metadata database from raw SCB CSV exports. This\n"
-            "replaces the database entirely (not incremental). Most users\n"
-            "should use `maintain update` instead.\n\n"
-            "The input directory must contain:\n"
-            "  <input-dir>/SCB/*.csv             — SCB metadata exports\n"
-            "  <input-dir>/classifications/*.csv — canonical classification CSVs (optional)\n\n"
-            "Examples:\n"
-            "  regmeta maintain build-db --input-dir regmeta/input_data/\n"
-            "  regmeta maintain build-db --input-dir regmeta/input_data/ --skip-slugs"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    build_p.add_argument(
-        "--input-dir",
-        required=True,
-        help="Directory containing SCB/ and classifications/ subdirectories.",
-    )
-    build_p.add_argument(
-        "--slug-dir",
-        default=None,
-        help=(
-            "Directory of curated slug TOMLs (default: regmeta_build/fqid_slugs/ "
-            "when run from a repo checkout)."
-        ),
-    )
-    build_p.add_argument(
-        "--skip-slugs",
-        action="store_true",
-        help=(
-            "Skip slug TOML loading and the strict-coverage check. Used to "
-            "bootstrap the DB so `maintain seed-slugs` has something to read "
-            "from before the slug TOMLs exist (REFACTOR_SPEC §5.4 Activation). "
-            "Implies `--slug-dir` is ignored; the resulting DB has empty slug "
-            "columns and is intended only as input to `seed-slugs`, not for "
-            "downstream queries that depend on FQIDs."
-        ),
-    )
-    build_p.add_argument(
-        "--validate",
-        action="store_true",
-        help=(
-            "Run post-build invariant checks (value-set dedup, year-projection "
-            "anchors, FK integrity, freelist ceiling) against the freshly-built "
-            "DB. Fails with EXIT_CONFIG on any violation. Equivalent to running "
-            "`scripts/validate_valueset_dedup.py` after the build."
-        ),
-    )
-
-    seed_slugs_p = maintain_sub.add_parser(
-        "seed-slugs",
-        help="Emit starter slug TOMLs from the current DB (maintainer-only).",
-        description=(
-            "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml\n"
-            "and <out-dir>/classifications.toml, mirroring REFACTOR_SPEC §5.3.\n"
-            "Slugs are auto-derived from registernamn / variantnamn / short_name\n"
-            "and need maintainer review before commit.\n\n"
-            "Examples:\n"
-            "  regmeta maintain seed-slugs\n"
-            "  regmeta maintain seed-slugs --out-dir /tmp/slugs/"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    seed_slugs_p.add_argument(
-        "--out-dir",
-        default=None,
-        help=(
-            "Where to write the TOMLs (default: regmeta_build/fqid_slugs/ in a repo "
-            "checkout, else CWD/fqid_slugs/)."
-        ),
-    )
-    seed_slugs_p.add_argument(
-        "--force",
-        action="store_true",
-        help="Overwrite existing TOMLs in --out-dir.",
-    )
-    seed_slugs_p.add_argument(
-        "--all-hints",
-        action="store_true",
-        help=(
-            "Show every `_default` candidate in the stderr hint block instead "
-            "of the default ~5-row preview. Pass the global -q/--quiet to "
-            "suppress the hint block entirely."
-        ),
-    )
-
-    precheck_p = maintain_sub.add_parser(
-        "precheck-slugs",
-        help="Validate slug TOMLs and list source IDs missing a slug entry.",
-        description=(
-            "Verify the slug TOMLs match the current DB. Reports:\n"
-            "  - TOML parse / validation errors\n"
-            "  - register / register_variant / classification rows with no slug\n"
-            "  - non-additive changes vs. the committed snapshot (§5.4)\n\n"
-            "Exits 10 if any check fails (cleaner failure mode than a build).\n\n"
-            "Examples:\n"
-            "  regmeta maintain precheck-slugs\n"
-            "  regmeta maintain precheck-slugs --update-snapshot"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    precheck_p.add_argument(
-        "--slug-dir",
-        default=None,
-        help="Directory of slug TOMLs (default: regmeta_build/fqid_slugs/).",
-    )
-    precheck_p.add_argument(
-        "--update-snapshot",
-        action="store_true",
-        help=(
-            "Rewrite the snapshot file to match the current TOMLs. Skips the "
-            "snapshot diff but still exits non-zero on parse errors / missing "
-            "slugs so a broken state isn't snapshot-frozen."
-        ),
-    )
-
-    parse_sos_p = maintain_sub.add_parser(
-        "parse-sos",
-        help="Parse Socialstyrelsen metadata Excel deliveries (maintainer-only).",
-        description=(
-            "Parse one Socialstyrelsen register .xlsx (or a directory of them)\n"
-            "into structured JSON. Useful for inspecting upstream deliveries\n"
-            "before build-db. Does not modify the database.\n\n"
-            "Examples:\n"
-            "  regmeta maintain parse-sos input_data/Socialstyrelsen/\n"
-            "  regmeta maintain parse-sos input_data/Socialstyrelsen/PAR.xlsx"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parse_sos_p.add_argument(
-        "path",
-        help="Path to an .xlsx file or a directory containing them.",
-    )
-
-    build_docs_p = maintain_sub.add_parser(
-        "build-docs",
-        help="Rebuild the doc DB from markdown files (maintainer-only).",
-        description=(
-            "Rebuild the documentation FTS index from markdown files.\n"
-            "End users receive the doc DB via `maintain update`; this command\n"
-            "is for maintainers rebuilding from a repo checkout before upload.\n\n"
-            "Examples:\n"
-            "  regmeta maintain build-docs\n"
-            "  regmeta maintain build-docs --docs-dir /path/to/docs/"
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    build_docs_p.add_argument(
-        "--docs-dir",
-        default=None,
-        help=(
-            "Directory containing register doc subdirectories "
-            "(default: regmeta/docs/ if run from a repo checkout)."
-        ),
     )
 
     # --- doc command family ---
@@ -810,71 +651,7 @@ def _build_parser() -> argparse.ArgumentParser:
 # ---------------------------------------------------------------------------
 
 
-def _build_validate_hook() -> Callable[[Path], None]:
-    """Return a build_db pre_rename_hook that runs the value-set dedup
-    validator against the staging DB and raises on failure. Defined as a
-    helper so the closure stays narrowly scoped (issue #92, Copilot review)."""
-    # Lazy import: regmeta_build is workspace-only; importing at module load
-    # breaks plain `pip install regmeta`. Until Phase 7 moves maintain to
-    # regmeta-build, validate is the only cross-package symbol called eagerly
-    # enough that it has to be deferred.
-    from regmeta_build.validate import validate_built_db
-
-    def hook(staging_db: Path) -> None:
-        validation = validate_built_db(staging_db)
-        sys.stderr.write(validation.format_report() + "\n")
-        sys.stderr.flush()
-        if validation.failures:
-            raise RegmetaError(
-                exit_code=EXIT_CONFIG,
-                code="validation_failed",
-                error_class="configuration",
-                message=(
-                    f"Post-build validation failed: {len(validation.failures)} "
-                    f"check(s) — {'; '.join(validation.failures)}"
-                ),
-                remediation=(
-                    "Inspect the [FAIL] lines above. The staging DB has been "
-                    "discarded and the previously-installed DB is unchanged. "
-                    "Fix the underlying build issue and rerun "
-                    "`regmeta maintain build-db --validate`."
-                ),
-            )
-
-    return hook
-
-
-def _cmd_maintain_build_db(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    start = time.perf_counter()
-    db_dir = Path(args.db) if args.db else default_db_dir()
-    slug_dir = Path(args.slug_dir).expanduser().resolve() if args.slug_dir else None
-
-    pre_rename_hook = _build_validate_hook() if args.validate else None
-    result = build_db(
-        input_dir=Path(args.input_dir),
-        db_dir=db_dir,
-        slug_dir=slug_dir,
-        skip_slugs=args.skip_slugs,
-        pre_rename_hook=pre_rename_hook,
-    )
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="maintain build-db",
-        args_payload={
-            "input_dir": args.input_dir,
-            "skip_slugs": args.skip_slugs,
-            "validate": args.validate,
-        },
-        db_info={
-            "schema_version": SCHEMA_VERSION,
-            "import_date": result["import_date"],
-        },
-        data=result,
-        duration_ms=duration_ms,
-    ), 0
-
-
-def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+def _cmd_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     start = time.perf_counter()
     db = db_path_from_args(args.db)
     conn = open_db(db, check_schema=False)
@@ -896,7 +673,7 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
-        command="maintain info",
+        command="info",
         args_payload={},
         db_info={
             "schema_version": manifest.get("schema_version", "unknown"),
@@ -907,7 +684,7 @@ def _cmd_maintain_info(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     ), 0
 
 
-def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+def _cmd_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     from .update import run_update
 
     start = time.perf_counter()
@@ -915,7 +692,7 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     result = run_update(db_dir=db_dir, tag=args.tag, force=args.force, yes=args.yes)
     duration_ms = int((time.perf_counter() - start) * 1000)
     return success_envelope(
-        command="maintain update",
+        command="update",
         args_payload={"tag": args.tag, "force": args.force},
         db_info=None,
         data=result,
@@ -923,307 +700,9 @@ def _cmd_maintain_update(args: argparse.Namespace) -> tuple[dict[str, Any], int]
     ), 0
 
 
-def _resolve_slug_dir(slug_arg: str | None) -> Path:
-    from regmeta_build.fqid_slugs import repo_slug_dir
-
-    if slug_arg is not None:
-        return Path(slug_arg).expanduser().resolve()
-    resolved = repo_slug_dir()
-    if resolved is None:
-        raise RegmetaError(
-            exit_code=EXIT_CONFIG,
-            code="slug_dir_not_found",
-            error_class="configuration",
-            message=(
-                "Slug TOMLs not found. Pass --slug-dir or run from a regmeta "
-                "checkout containing regmeta_build/fqid_slugs/."
-            ),
-            remediation=(
-                "Run from a repo checkout, or `regmeta maintain seed-slugs` "
-                "to bootstrap a new slug directory."
-            ),
-        )
-    return resolved
-
-
-def _cmd_maintain_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from regmeta_build.fqid_slugs import (
-        format_default_slug_hints,
-        iter_default_slug_candidates,
-        repo_slug_dir,
-        seed_all,
-    )
-
-    start = time.perf_counter()
-    db = db_path_from_args(args.db)
-    if args.out_dir:
-        out_dir = Path(args.out_dir).expanduser().resolve()
-    else:
-        out_dir = repo_slug_dir() or (Path.cwd() / "fqid_slugs").resolve()
-    if out_dir.exists() and any(out_dir.glob("*.toml")) and not args.force:
-        raise RegmetaError(
-            exit_code=EXIT_CONFIG,
-            code="slug_seed_would_overwrite",
-            error_class="configuration",
-            message=f"{out_dir} already contains TOMLs; refusing to overwrite.",
-            remediation=(
-                "Pass --force to overwrite, or point --out-dir at an empty "
-                "directory for hand-review."
-            ),
-        )
-    # `seed_provider_toml` reads `register_version.slug` (3.3+), so a stale
-    # pre-3.3 DB would otherwise fall out as a raw `OperationalError: no such
-    # column: rver.slug`. Schema-compat gives the user the right remediation.
-    conn = open_db(db)
-    try:
-        written = seed_all(conn, out_dir)
-        suppress_hints = (
-            args.quiet
-            or os.environ.get("REGMETA_QUIET") == "1"
-            or getattr(args, "format", "table") == "json"
-        )
-        if not suppress_hints:
-            hint = format_default_slug_hints(
-                list(iter_default_slug_candidates(conn)),
-                all_hints=args.all_hints,
-            )
-            if hint is not None:
-                sys.stderr.write(hint)
-    finally:
-        conn.close()
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="maintain seed-slugs",
-        args_payload={
-            "out_dir": str(out_dir),
-            "force": args.force,
-            "all_hints": args.all_hints,
-            "quiet": args.quiet,
-        },
-        db_info=None,
-        data={
-            "out_dir": str(out_dir),
-            "files": sorted(written.keys()),
-        },
-        duration_ms=duration_ms,
-    ), 0
-
-
-def _cmd_maintain_precheck_slugs(
-    args: argparse.Namespace,
-) -> tuple[dict[str, Any], int]:
-    from regmeta_build.fqid_slugs import (
-        SNAPSHOT_FILENAME,
-        diff_snapshot,
-        is_unfrozen,
-        precheck_slugs,
-        read_snapshot,
-        snapshot_payload,
-        write_snapshot,
-    )
-
-    start = time.perf_counter()
-    slug_dir = _resolve_slug_dir(args.slug_dir)
-    snapshot_path = slug_dir / SNAPSHOT_FILENAME
-    unfrozen = is_unfrozen(slug_dir)
-    db = db_path_from_args(args.db)
-    conn = open_db(db, check_schema=False)
-    try:
-        result = precheck_slugs(conn, slug_dir)
-    finally:
-        conn.close()
-
-    snapshot_status: dict[str, Any] = {"path": str(snapshot_path), "unfrozen": unfrozen}
-    exit_code = EXIT_CONFIG if not result.ok else 0
-    current = snapshot_payload(list(result.entries))
-    if args.update_snapshot:
-        # Refuse to overwrite when TOMLs failed to parse — `result.entries`
-        # is the truncated set up to the first error, so writing would wipe
-        # the prior baseline and surface phantom `removed` diffs on the next
-        # run.
-        if result.parse_errors:
-            snapshot_status["updated"] = False
-            snapshot_status["update_skipped_reason"] = "parse_errors"
-        else:
-            # §5.4 grow-only enforcement: `--update-snapshot` must NOT bless
-            # a removal or a slug rename — that's how committed FQIDs rot in
-            # researcher project_data.json files. The `UNFROZEN` sentinel in
-            # the slug dir lifts the refusal pre-v1 so curators can iterate
-            # freely; diffs are still reported so drift stays visible. At v1
-            # release the sentinel is deleted and refusal becomes active.
-            previous = read_snapshot(snapshot_path)
-            diff = diff_snapshot(previous, current)
-            non_additive = bool(diff["removed"] or diff["renamed"])
-            if non_additive and not unfrozen:
-                snapshot_status["updated"] = False
-                snapshot_status["update_skipped_reason"] = "non_additive_change"
-                snapshot_status["removed"] = diff["removed"]
-                snapshot_status["renamed"] = diff["renamed"]
-                exit_code = EXIT_CONFIG
-            else:
-                write_snapshot(snapshot_path, current)
-                snapshot_status["updated"] = True
-                snapshot_status["added"] = diff["added"]
-                if non_additive:
-                    # Pre-v1 write-through: surface what drifted so reviewers
-                    # see the rename/removal explicitly in the envelope.
-                    snapshot_status["removed"] = diff["removed"]
-                    snapshot_status["renamed"] = diff["renamed"]
-    else:
-        previous = read_snapshot(snapshot_path)
-        diff = diff_snapshot(previous, current)
-        snapshot_status["added"] = diff["added"]
-        snapshot_status["removed"] = diff["removed"]
-        snapshot_status["renamed"] = diff["renamed"]
-        # `added` is non-fatal in spirit but must fail CI so a maintainer
-        # doesn't merge new slugs without refreshing .snapshot.json; mirrors
-        # test_slug_snapshot.test_snapshot_covers_committed_additions. The
-        # pre-v1 `UNFROZEN` sentinel doesn't relax this — drift must still
-        # round-trip through `--update-snapshot` to commit cleanly.
-        if diff["removed"] or diff["renamed"] or diff["added"]:
-            exit_code = EXIT_CONFIG
-
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="maintain precheck-slugs",
-        args_payload={
-            "slug_dir": str(slug_dir),
-            "update_snapshot": args.update_snapshot,
-        },
-        db_info=None,
-        data={
-            "slug_dir": str(slug_dir),
-            "missing_registers": [
-                {"provider": p, "source_id": sid, "registernamn": name}
-                for (p, sid, name) in result.missing_registers
-            ],
-            "missing_variants": [
-                {"provider": p, "source_id": sid, "name": name}
-                for (p, sid, name) in result.missing_variants
-            ],
-            "missing_versions": [
-                {"provider": p, "source_id": sid, "name": name}
-                for (p, sid, name) in result.missing_versions
-            ],
-            "missing_classifications": list(result.missing_classifications),
-            "parse_errors": list(result.parse_errors),
-            "stale_registers": [
-                {"provider": p, "source_id": sid} for (p, sid) in result.stale_registers
-            ],
-            "stale_variants": [
-                {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
-            ],
-            "stale_versions": [
-                {"provider": p, "source_id": sid} for (p, sid) in result.stale_versions
-            ],
-            "stale_classifications": list(result.stale_classifications),
-            "colliding_versions": [
-                {"provider": p, "source_id": sid, "name": name, "would_be_slug": slug}
-                for (p, sid, name, slug) in result.colliding_versions
-            ],
-            "snapshot": snapshot_status,
-        },
-        duration_ms=duration_ms,
-    ), exit_code
-
-
-def _cmd_maintain_parse_sos(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    import dataclasses
-    from datetime import date
-
-    from regmeta_build.sources.sos import (
-        SosParseError,
-        parse_directory,
-        parse_register_file,
-    )
-
-    start = time.perf_counter()
-    path = Path(args.path).expanduser().resolve()
-
-    try:
-        if path.is_dir():
-            results = parse_directory(path)
-        elif path.is_file():
-            results = [parse_register_file(path)]
-        else:
-            raise RegmetaError(
-                exit_code=EXIT_NOT_FOUND,
-                code="path_not_found",
-                error_class="input",
-                message=f"{path} is neither a file nor a directory",
-                remediation="Pass a .xlsx file or a directory containing them.",
-            )
-    except SosParseError as exc:
-        raise RegmetaError(
-            exit_code=EXIT_CONFIG,
-            code="sos_parse_error",
-            error_class="input",
-            message=str(exc),
-            remediation="Verify the file is a valid Socialstyrelsen metadata workbook.",
-        ) from exc
-
-    def _to_plain(obj: Any) -> Any:
-        if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
-            return _to_plain(dataclasses.asdict(obj))
-        if isinstance(obj, dict):
-            return {k: _to_plain(v) for k, v in obj.items()}
-        if isinstance(obj, (list, tuple)):
-            return [_to_plain(v) for v in obj]
-        if isinstance(obj, Path):
-            return str(obj)
-        if isinstance(obj, date):
-            return obj.isoformat()
-        return obj
-
-    data = {
-        "registers": [_to_plain(r) for r in results],
-        "register_count": len(results),
-    }
-    duration_ms = int((time.perf_counter() - start) * 1000)
-    return success_envelope(
-        command="maintain parse-sos",
-        args_payload={"path": str(path)},
-        db_info=None,
-        data=data,
-        duration_ms=duration_ms,
-    ), 0
-
-
 # ---------------------------------------------------------------------------
 # Doc command handlers
 # ---------------------------------------------------------------------------
-
-
-def _cmd_maintain_build_docs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    from regmeta_build.doc_db import build_doc_db, repo_docs_dir
-
-    if args.docs_dir:
-        docs_dir = Path(args.docs_dir).resolve()
-    else:
-        docs_dir = repo_docs_dir()
-        if docs_dir is None:
-            raise RegmetaError(
-                exit_code=EXIT_CONFIG,
-                code="no_docs_dir",
-                error_class="configuration",
-                message=(
-                    "No --docs-dir specified and no in-repo docs found. "
-                    "This command is for maintainers rebuilding the doc DB from a repo checkout."
-                ),
-                remediation=(
-                    "Run from a regmeta checkout with `regmeta_build/docs/` present, "
-                    "or pass --docs-dir pointing to a directory with register doc subdirectories."
-                ),
-            )
-    db_dir = Path(args.db).resolve() if args.db else None
-    if db_dir is None:
-        from .db import default_db_dir
-
-        db_dir = default_db_dir().resolve()
-    db_path = build_doc_db(docs_dir, db_dir)
-    return {
-        "data": {"db_path": str(db_path), "docs_dir": str(docs_dir)},
-    }, 0
 
 
 def _cmd_doc_search(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2539,9 +2018,9 @@ def _write_payload(
             for tag, n in data.get("topics", {}).items():
                 lines.append(f"    {tag}: {n}")
             write_to("\n".join(lines) + "\n", output_path)
-    elif key == ("maintain", "update"):
+    elif key == ("update", None):
         pass  # status messages already emitted on stderr by run_update()
-    elif key == ("maintain", "info"):
+    elif key == ("info", None):
         lines = [f"  database: {data.get('db_path', 'unknown')}"]
         manifest = data.get("manifest", {})
         if manifest.get("schema_version"):
@@ -2557,174 +2036,6 @@ def _write_payload(
             for t, n in table_counts.items():
                 lines.append(f"    {t}: {n:,}")
         write_to("\n".join(lines) + "\n", output_path)
-    elif key == ("maintain", "build-db"):
-        write_to(f"Database built: {data.get('db_path', 'unknown')}\n", output_path)
-    elif key == ("maintain", "seed-slugs"):
-        lines = [f"Seeded slug TOMLs into {data.get('out_dir', '?')}:"]
-        for name in data.get("files", []):
-            lines.append(f"  {name}")
-        lines.append("")
-        lines.append("Hand-review every slug, then commit.")
-        write_to("\n".join(lines) + "\n", output_path)
-    elif key == ("maintain", "precheck-slugs"):
-        lines: list[str] = []
-        parse_errors = data.get("parse_errors", [])
-        if parse_errors:
-            lines.append("TOML errors:")
-            for err in parse_errors:
-                lines.append(f"  {err}")
-            lines.append("")
-        missing_regs = data.get("missing_registers", [])
-        if missing_regs:
-            lines.append(f"Missing register slugs ({len(missing_regs)}):")
-            for m in missing_regs[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}  {m['registernamn']}")
-            if len(missing_regs) > 20:
-                lines.append(f"  ... and {len(missing_regs) - 20} more")
-            lines.append("")
-        missing_vars = data.get("missing_variants", [])
-        if missing_vars:
-            lines.append(f"Missing variant slugs ({len(missing_vars)}):")
-            for m in missing_vars[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}  {m['name']}")
-            if len(missing_vars) > 20:
-                lines.append(f"  ... and {len(missing_vars) - 20} more")
-            lines.append("")
-        missing_vers = data.get("missing_versions", [])
-        if missing_vers:
-            lines.append(f"Missing unperiodized version slugs ({len(missing_vers)}):")
-            for m in missing_vers[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}  {m['name']}")
-            if len(missing_vers) > 20:
-                lines.append(f"  ... and {len(missing_vers) - 20} more")
-            lines.append("")
-        missing_cls = data.get("missing_classifications", [])
-        if missing_cls:
-            lines.append(f"Missing classification slugs ({len(missing_cls)}):")
-            for short in missing_cls[:20]:
-                lines.append(f"  {short}")
-            if len(missing_cls) > 20:
-                lines.append(f"  ... and {len(missing_cls) - 20} more")
-            lines.append("")
-        stale_regs = data.get("stale_registers", [])
-        if stale_regs:
-            lines.append(f"Stale register slugs ({len(stale_regs)}):")
-            for m in stale_regs[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}")
-            if len(stale_regs) > 20:
-                lines.append(f"  ... and {len(stale_regs) - 20} more")
-            lines.append("")
-        stale_vars = data.get("stale_variants", [])
-        if stale_vars:
-            lines.append(f"Stale variant slugs ({len(stale_vars)}):")
-            for m in stale_vars[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}")
-            if len(stale_vars) > 20:
-                lines.append(f"  ... and {len(stale_vars) - 20} more")
-            lines.append("")
-        stale_vers = data.get("stale_versions", [])
-        if stale_vers:
-            lines.append(f"Stale version slugs ({len(stale_vers)}):")
-            for m in stale_vers[:20]:
-                lines.append(f"  {m['provider']}/{m['source_id']}")
-            if len(stale_vers) > 20:
-                lines.append(f"  ... and {len(stale_vers) - 20} more")
-            lines.append("")
-        stale_cls = data.get("stale_classifications", [])
-        if stale_cls:
-            lines.append(f"Stale classification slugs ({len(stale_cls)}):")
-            for short in stale_cls[:20]:
-                lines.append(f"  {short}")
-            if len(stale_cls) > 20:
-                lines.append(f"  ... and {len(stale_cls) - 20} more")
-            lines.append("")
-        if stale_regs or stale_vars or stale_vers or stale_cls:
-            lines.append("Drop these entries or mark them `deprecated = true`.")
-            lines.append("")
-        colliding_vers = data.get("colliding_versions", [])
-        if colliding_vers:
-            # Group by (provider, parent variant, would_be_slug). The
-            # UNIQUE constraint scopes per (regvar_id, slug), so two rows
-            # collide only if they share a parent variant — parent variant
-            # is the leading "<reg>.<var>" of the dotted source_id. Grouping
-            # by provider+slug alone would merge unrelated collisions under
-            # different variants into one misleading bullet.
-            groups: dict[tuple[str, str, str], list[dict[str, str]]] = {}
-            for m in colliding_vers:
-                parent_variant = m["source_id"].rsplit(".", 1)[0]
-                groups.setdefault(
-                    (m["provider"], parent_variant, m["would_be_slug"]), []
-                ).append(m)
-            lines.append(
-                f"Periodized version slug collisions "
-                f"({len(colliding_vers)} rows in {len(groups)} groups):"
-            )
-            for (provider, parent, slug), rows in list(groups.items())[:20]:
-                lines.append(f"  {provider}/{parent} → slug {slug!r}:")
-                for m in rows:
-                    lines.append(f"    {m['source_id']}  {m['name']}")
-            if len(groups) > 20:
-                lines.append(f"  ... and {len(groups) - 20} more groups")
-            lines.append(
-                'Add a curated `[register_version."<RegisterId>.<RegVarID>.<RegVerID>"]` '
-                "entry on one or more siblings to disambiguate."
-            )
-            lines.append("")
-        snap = data.get("snapshot") or {}
-        if snap.get("updated"):
-            lines.append(f"Snapshot rewritten: {snap.get('path')}")
-        elif snap.get("update_skipped_reason") == "parse_errors":
-            lines.append(
-                f"Snapshot NOT rewritten ({snap.get('path')}): fix the TOML "
-                "parse errors above first."
-            )
-        elif snap.get("update_skipped_reason") == "non_additive_change":
-            lines.append(
-                f"Snapshot NOT rewritten ({snap.get('path')}): §5.4 grow-only "
-                "violations present (slugs can only be added, never removed "
-                "or renamed). Restore the entry, or mark the old row "
-                "deprecated=true and add a replaced_by link."
-            )
-            for r in snap.get("removed") or []:
-                lines.append(f"  removed: {r}")
-            for r in snap.get("renamed") or []:
-                lines.append(f"  renamed: {r}")
-        else:
-            removed = snap.get("removed") or []
-            renamed = snap.get("renamed") or []
-            added = snap.get("added") or []
-            if removed or renamed:
-                lines.append("Snapshot violations (§5.4 grow-only):")
-                for r in removed:
-                    lines.append(f"  removed: {r}")
-                for r in renamed:
-                    lines.append(f"  renamed: {r}")
-                lines.append(
-                    "  remediation: restore the entry, or mark the old row "
-                    "deprecated and add a replaced_by link."
-                )
-                lines.append("")
-            if added:
-                lines.append(f"New entries since last snapshot ({len(added)}):")
-                for a in added[:10]:
-                    lines.append(f"  {a}")
-                if len(added) > 10:
-                    lines.append(f"  ... and {len(added) - 10} more")
-                lines.append(
-                    "  run `regmeta maintain precheck-slugs --update-snapshot` "
-                    "after review."
-                )
-        if not lines:
-            lines.append("OK — all live source IDs have curated slugs.")
-        write_to("\n".join(lines) + "\n", output_path)
-    elif key == ("maintain", "build-docs"):
-        write_to(f"Built doc index: {data.get('db_path')}\n", output_path)
-    elif key == ("maintain", "parse-sos"):
-        count = data.get("register_count", 0)
-        write_to(
-            f"Parsed {count} register(s). Use --format json for full detail.\n",
-            output_path,
-        )
     else:
         write_json(payload, output_path)
 
@@ -2834,9 +2145,8 @@ def _collect_hints(
 
 
 COMMAND_DISPATCH = {
-    ("maintain", "build-db"): _cmd_maintain_build_db,
-    ("maintain", "info"): _cmd_maintain_info,
-    ("maintain", "update"): _cmd_maintain_update,
+    ("info", None): _cmd_info,
+    ("update", None): _cmd_update,
     ("search", None): _cmd_search,
     ("get", "register"): _cmd_get_register,
     ("get", "schema"): _cmd_get_schema,
@@ -2849,10 +2159,6 @@ COMMAND_DISPATCH = {
     ("get", "availability"): _cmd_get_availability,
     ("get", "classification"): _cmd_get_classification,
     ("resolve", None): _cmd_resolve,
-    ("maintain", "build-docs"): _cmd_maintain_build_docs,
-    ("maintain", "parse-sos"): _cmd_maintain_parse_sos,
-    ("maintain", "seed-slugs"): _cmd_maintain_seed_slugs,
-    ("maintain", "precheck-slugs"): _cmd_maintain_precheck_slugs,
     ("docs", "search"): _cmd_doc_search,
     ("docs", "get"): _cmd_doc_get,
     ("docs", "list"): _cmd_doc_list,
@@ -2930,27 +2236,12 @@ _COMMAND_OVERVIEW: list[tuple[str, str] | None] = [
         "Browse available documentation.",
     ),
     None,
-    ("maintain update [--tag TAG] [--force] [--yes]", "Update package and database."),
-    ("maintain info", "Database stats and import metadata."),
+    ("update [--tag TAG] [--force] [--yes]", "Update package and database."),
+    ("info", "Database stats and import metadata."),
+    None,
     (
-        "maintain build-db --input-dir DIR",
-        "Build database from SCB CSV exports (maintainer-only).",
-    ),
-    (
-        "maintain build-docs [--docs-dir DIR]",
-        "Rebuild the doc DB from markdown (maintainer-only).",
-    ),
-    (
-        "maintain parse-sos PATH",
-        "Parse Socialstyrelsen metadata Excel files; emit JSON (maintainer-only).",
-    ),
-    (
-        "maintain seed-slugs [--out-dir DIR] [--force] [--all-hints]",
-        "Emit starter slug TOMLs from the current DB (maintainer-only).",
-    ),
-    (
-        "maintain precheck-slugs [--slug-dir DIR] [--update-snapshot]",
-        "Validate slug TOMLs and list source IDs missing a slug entry.",
+        "(maintainer build commands moved to `regmeta-build`:",
+        "  build-db, build-docs, seed-slugs, precheck-slugs, parse-sos)",
     ),
 ]
 
@@ -2969,7 +2260,7 @@ def _print_usage(db_arg: str | None = None) -> None:
     w(f"{_version_line(db_arg)}\n")
     db_path = db_path_from_args(db_arg)
     if not db_path.exists():
-        w("\n  No database installed. Run `regmeta maintain update` to get started.\n")
+        w("\n  No database installed. Run `regmeta update` to get started.\n")
     w("\nCommands:\n")
     info = _get_subcommand_info(_build_parser())
     col_w = max(len(name) for name, _, _ in info) + 2
@@ -2986,7 +2277,7 @@ def _print_help(db_arg: str | None = None) -> None:
     w(f"{_version_line(db_arg)}\n")
     db_path = db_path_from_args(db_arg)
     if not db_path.exists():
-        w("\n  No database installed. Run `regmeta maintain update` to get started.\n")
+        w("\n  No database installed. Run `regmeta update` to get started.\n")
 
     w("\nKey concepts:\n")
     name_w = max(len(name) for name, _ in _KEY_CONCEPTS) + 2
@@ -3305,55 +2596,25 @@ docs list — Browse available documentation
   "Show all variable documentation about income"
     regmeta docs list --type variable --topic income
 """,
-    ("maintain", "update"): """\
-maintain update — Install or update the database
-─────────────────────────────────────────────────
+    "update": """\
+update — Install or update the database
+───────────────────────────────────────
 
   "Set up regmeta for the first time"
-    regmeta maintain update --yes
+    regmeta update --yes
 
   "Update to the latest database"
-    regmeta maintain update
+    regmeta update
 
   "Force re-download even if already current"
-    regmeta maintain update --force --yes
+    regmeta update --force --yes
 """,
-    ("maintain", "info"): """\
-maintain info — What database am I using?
-─────────────────────────────────────────
+    "info": """\
+info — What database am I using?
+────────────────────────────────
 
   "Show database version, schema, and import stats"
-    regmeta maintain info
-""",
-    ("maintain", "build-db"): """\
-maintain build-db — Build database from raw CSVs
-─────────────────────────────────────────────────
-
-  "Build the database from SCB CSV exports"
-    regmeta maintain build-db --input-dir regmeta/input_data/
-
-  "Bootstrap the DB without populated slug TOMLs (pre-v1 only)"
-    regmeta maintain build-db --input-dir regmeta/input_data/ --skip-slugs
-
-  Most users should use `maintain update` to download a pre-built
-  database instead.
-""",
-    ("maintain", "parse-sos"): """\
-maintain parse-sos — Parse Socialstyrelsen metadata Excel files (maintainer-only)
-
-Examples:
-    regmeta maintain parse-sos regmeta/input_data/Socialstyrelsen/
-    regmeta maintain parse-sos path/to/PAR.xlsx --format json
-""",
-    ("maintain", "build-docs"): """\
-maintain build-docs — Rebuild documentation index
-──────────────────────────────────────────────────
-
-  "Rebuild the docs search index from markdown files"
-    regmeta maintain build-docs
-
-  "Use custom documentation directory"
-    regmeta maintain build-docs --docs-dir /path/to/docs/
+    regmeta info
 """,
 }
 
@@ -3398,11 +2659,8 @@ _EXAMPLES_ORDER: list[str | tuple[str, str]] = [
     ("docs", "search"),
     ("docs", "get"),
     ("docs", "list"),
-    ("maintain", "update"),
-    ("maintain", "info"),
-    ("maintain", "build-db"),
-    ("maintain", "build-docs"),
-    ("maintain", "parse-sos"),
+    "update",
+    "info",
 ]
 
 
@@ -3450,7 +2708,7 @@ def _print_version(db_arg: str | None = None) -> None:
         if newer:
             sys.stderr.write(
                 f"Update available: v{__version__} → v{newer}"
-                "  —  run `regmeta maintain update`\n"
+                "  —  run `regmeta update`\n"
             )
         elif checker.completed:
             sys.stderr.write("Up to date.\n")
@@ -3526,7 +2784,7 @@ def run(argv: list[str] | None = None) -> int:
     if (
         len(cmd_args) == 2
         and cmd_args[1] in ("-h", "--help")
-        and cmd_args[0] in ("get", "docs", "maintain")
+        and cmd_args[0] in ("get", "docs")
     ):
         _print_group_detailed(parser, cmd_args[0])
         return 0
@@ -3548,12 +2806,7 @@ def run(argv: list[str] | None = None) -> int:
         return EXIT_USAGE
 
     sub_command = None
-    if args.command == "maintain":
-        sub_command = getattr(args, "maintain_command", None)
-        if not sub_command:
-            _print_group_brief(parser, "maintain")
-            return EXIT_USAGE
-    elif args.command == "get":
+    if args.command == "get":
         sub_command = getattr(args, "get_command", None)
         if not sub_command:
             _print_group_brief(parser, "get")
@@ -3581,7 +2834,7 @@ def run(argv: list[str] | None = None) -> int:
     # actual command.  We collect the result (with a short timeout) just before
     # returning so the user never waits for it.
     update_checker = None
-    if not quiet and fmt != "json" and key != ("maintain", "update"):
+    if not quiet and fmt != "json" and key != ("update", None):
         try:
             from .update import UpdateChecker
 
@@ -3643,7 +2896,7 @@ def run(argv: list[str] | None = None) -> int:
 
                     sys.stderr.write(
                         f"\n  Update available: v{__version__} → v{new_ver}"
-                        "  —  run `regmeta maintain update`\n"
+                        "  —  run `regmeta update`\n"
                     )
             except Exception:
                 pass

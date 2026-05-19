@@ -38,7 +38,7 @@ def _check_doc_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
     treated as incompatible so stale pre-versioning DBs get replaced.
     """
     fix = (
-        "Run `regmeta maintain update` to replace it with a compatible asset. "
+        "Run `regmeta update` to replace it with a compatible asset. "
         "(Doc DBs built by pre-0.7 regmeta lack schema_version and are always "
         "reported as incompatible — the update will overwrite them.)"
     )
@@ -100,7 +100,7 @@ def open_doc_db(db_path: Path, *, check_schema: bool = True) -> sqlite3.Connecti
             code="doc_db_not_found",
             error_class="configuration",
             message=f"Doc DB not found: {db_path}",
-            remediation="Run `regmeta maintain update` to fetch the doc DB.",
+            remediation="Run `regmeta update` to fetch the doc DB.",
         )
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row

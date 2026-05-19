@@ -304,7 +304,7 @@ def download_db(
                 error_class="configuration",
                 message="No recent release includes a database asset.",
                 remediation="Specify --tag explicitly, or build from CSV with "
-                "`regmeta maintain build-db`.",
+                "`regmeta-build build-db`.",
             )
         resolved_tag = resolution.db_tag
     else:
@@ -413,7 +413,7 @@ def download_docs_db(
                 message="No recent release includes a doc DB asset.",
                 remediation=(
                     "Specify --tag explicitly, or build from markdown with "
-                    "`regmeta maintain build-docs`."
+                    "`regmeta-build build-docs`."
                 ),
             )
         resolved_tag = resolution.docs_tag

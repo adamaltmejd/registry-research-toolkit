@@ -374,6 +374,12 @@ class TestDocDbRequired:
 
 class TestBuildDocs:
     def test_build_docs(self, tmp_path: Path):
+        """`regmeta-build build-docs` produces a usable doc DB. Lives here
+        for the moment because the CLI smoke tests for build commands grew
+        up alongside the query-side doc tests; could move to
+        regmeta_build/tests/ later."""
+        from regmeta_build.cli import run as build_run
+
         docs_dir = tmp_path / "docs" / "myreg"
         docs_dir.mkdir(parents=True)
         (docs_dir / "Var1.md").write_text(
@@ -383,16 +389,23 @@ class TestBuildDocs:
         db_dir = tmp_path / "db"
         db_dir.mkdir()
 
-        text, code = _run_text(
-            [
-                "--db",
-                str(db_dir),
-                "maintain",
-                "build-docs",
-                "--docs-dir",
-                str(tmp_path / "docs"),
-            ]
-        )
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = io.StringIO()
+        sys.stderr = io.StringIO()
+        try:
+            code = build_run(
+                [
+                    "--db",
+                    str(db_dir),
+                    "build-docs",
+                    "--docs-dir",
+                    str(tmp_path / "docs"),
+                ]
+            )
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
         assert code == 0
         assert (db_dir / "regmeta_docs.db").exists()
 

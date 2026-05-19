@@ -94,7 +94,7 @@ _PERIOD_EXTRACT_PATTERNS = (
 # like `Höstterminen 2018 - Vårterminen 2019` does NOT coexist with a
 # `Höstterminen 2018` sibling in the same variant (both would derive to
 # `HT2018`). Verified clean against current SCB data; future deliveries
-# should re-run `regmeta maintain precheck-slugs` to catch a new collision
+# should re-run `regmeta-build precheck-slugs` to catch a new collision
 # before it trips `UNIQUE(regvar_id, slug)` at build time.
 _TERMIN_EXTRACT_PATTERNS = (
     (re.compile(rf"\bhöst(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "HT"),
