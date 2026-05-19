@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Parse LISA bakgrundsfakta PDF into per-variable and topic markdown files.
 
-Outputs to regmeta/docs/lisa/ with Obsidian-style YAML frontmatter,
+Outputs to regmeta_build/docs/lisa/ with Obsidian-style YAML frontmatter,
 wiki-style links, and hierarchical tags.
 
 Two-step workflow:
@@ -12,7 +12,7 @@ Two-step workflow:
     caffeinate -i uv run marker_single lisa-bakgrundsfakta-1990-2017.pdf \
       --use_llm --gemini_model_name gemini-3-flash-preview \
       --gemini_api_key "$GEMINI_API_KEY" \
-      --output_dir regmeta/docs/_raw \
+      --output_dir regmeta_build/docs/_raw \
       --disable_image_extraction \
       --MarkdownRenderer_keep_pageheader_in_output \
       --disable_multiprocessing
@@ -24,17 +24,17 @@ Two-step workflow:
       uv run marker_single "$pdf" --use_llm \
         --gemini_model_name gemini-3-flash-preview \
         --gemini_api_key "$GEMINI_API_KEY" \
-        --output_dir regmeta/docs/_raw \
+        --output_dir regmeta_build/docs/_raw \
         --disable_image_extraction
     done
 
 2. Split markdown into per-variable files with this script:
 
     uv run python scripts/parse_lisa_docs.py \
-      --cached-md regmeta/docs/_raw/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
-      --forandringar regmeta/docs/_raw/*-forandringar*/*.md \
-                     regmeta/docs/_raw/hushallsinformation*/*.md \
-      --out regmeta/docs/lisa
+      --cached-md regmeta_build/docs/_raw/lisa-bakgrundsfakta-1990-2017/lisa-bakgrundsfakta-1990-2017.md \
+      --forandringar regmeta_build/docs/_raw/*-forandringar*/*.md \
+                     regmeta_build/docs/_raw/hushallsinformation*/*.md \
+      --out regmeta_build/docs/lisa
 
 Notes:
 - marker + Gemini 3 Flash costs ~$1-2 for the full bakgrundsfakta.

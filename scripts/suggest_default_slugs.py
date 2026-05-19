@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 from regmeta.db import db_path_from_args, open_db
-from regmeta.fqid_slugs import iter_default_slug_candidates
+from regmeta_build.fqid_slugs import iter_default_slug_candidates
 
 
 def main(argv: list[str]) -> int:
