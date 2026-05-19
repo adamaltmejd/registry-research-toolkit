@@ -2,13 +2,15 @@
 
 from __future__ import annotations
 
+from dataclasses import FrozenInstanceError
+
 import pytest
 
-from reg_schema import ValidationIssue, ValidationResult
+from reg_schema import IssueLevel, ValidationIssue, ValidationResult
 
 
-def _issue(level: str, code: str = "test_code") -> ValidationIssue:
-    return ValidationIssue(level=level, code=code, path="/foo", message="x")  # type: ignore[arg-type]
+def _issue(level: IssueLevel, code: str = "test_code") -> ValidationIssue:
+    return ValidationIssue(level=level, code=code, path="/foo", message="x")
 
 
 def test_empty_result_is_ok() -> None:
@@ -31,17 +33,18 @@ def test_error_among_warnings_still_blocks() -> None:
 
 def test_issue_and_result_are_frozen() -> None:
     issue = _issue("error")
-    with pytest.raises(Exception):  # FrozenInstanceError
+    with pytest.raises(FrozenInstanceError):
         issue.level = "warning"  # type: ignore[misc]
-    with pytest.raises(Exception):
+    with pytest.raises(FrozenInstanceError):
         ValidationResult(issues=()).issues = (issue,)  # type: ignore[misc]
 
 
-def test_issue_is_hashable() -> None:
+def test_equal_issues_dedupe_in_sets_and_lookup_in_dicts() -> None:
     a = _issue("error", code="x")
     b = _issue("error", code="x")
-    assert hash(a) == hash(b)
-    assert a == b
+    c = _issue("error", code="y")
+    assert {a, b, c} == {a, c}
+    assert {a: 1}[b] == 1
 
 
 def test_results_compose_by_tuple_concatenation() -> None:

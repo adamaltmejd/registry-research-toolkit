@@ -9,6 +9,6 @@ consumers (mdw, reg_webapp, the amalgamated MONA bundle, the SPA's
 TypeScript codegen) can pin against a stable shape.
 """
 
-from .validation import ValidationIssue, ValidationResult
+from .validation import IssueLevel, ValidationIssue, ValidationResult
 
-__all__ = ["ValidationIssue", "ValidationResult"]
+__all__ = ["IssueLevel", "ValidationIssue", "ValidationResult"]

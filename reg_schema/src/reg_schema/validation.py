@@ -11,6 +11,10 @@ Composition of layers concatenates ``issues`` — no merge semantics
 beyond tuple concatenation. Issue ``code`` values are namespaced and
 stable across releases; tests pin codes, the SPA maps them to UI
 affordances.
+
+Unrelated namesake: ``reg_meta_build.validate.ValidationResult`` is a
+mutable CLI report-builder for the build pipeline. Different layer,
+different shape; do not conflate.
 """
 
 from __future__ import annotations
