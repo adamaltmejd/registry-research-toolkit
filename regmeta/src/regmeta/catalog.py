@@ -1,7 +1,8 @@
 """Catalog: FQID-to-row resolution against the regmeta SQLite DB.
 
-Implements ``Catalog.resolve(fqid)`` per REFACTOR_SPEC.md §5.8 — the single
-entry point that turns any FQID kind into a typed entity row.
+Implements the FQID API in REFACTOR_SPEC.md §5.8: ``Catalog.resolve(fqid)``
+turns any FQID kind into a typed entity row, ``Catalog.editions(...)``
+enumerates all variable bindings of a given variable slug under a register.
 """
 
 from __future__ import annotations
@@ -19,6 +20,7 @@ from .fqid import (
     FqidKind,
     derive_variable_slug,
     parse,
+    validate_slug,
 )
 
 
@@ -102,6 +104,32 @@ def _not_found(fqid: Fqid) -> RegmetaError:
         message=f"FQID does not resolve to any row: {fqid!s}",
         remediation="Use `regmeta search` to locate entities by name or ID.",
     )
+
+
+# Shared SELECT + FROM + JOINs for queries that emit ResolvedVariableBinding.
+# Includes the consumer-side join chain (`*_src`) so the lineage FQID for
+# rows with `via_source_id IS NOT NULL` is built directly from the result
+# row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
+_BINDING_QUERY = (
+    "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, vi.var_id, "
+    "vi.via_source_id, "
+    "v.variabelnamn, va.kolumnnamn, "
+    "rv.slug AS variant_slug, rver.slug AS version_slug, "
+    "p_src.slug AS src_provider_slug, r_src.slug AS src_register_slug, "
+    "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
+    "FROM variable_instance vi "
+    "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+    "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+    "JOIN register r ON vi.register_id = r.register_id "
+    "JOIN provider p ON r.provider_id = p.provider_id "
+    "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+    "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
+    "LEFT JOIN variable_instance vi_src ON vi.via_source_id = vi_src.cvid "
+    "LEFT JOIN register_version rver_src ON vi_src.regver_id = rver_src.regver_id "
+    "LEFT JOIN register_variant rv_src ON vi_src.regvar_id = rv_src.regvar_id "
+    "LEFT JOIN register r_src ON vi_src.register_id = r_src.register_id "
+    "LEFT JOIN provider p_src ON r_src.provider_id = p_src.provider_id "
+)
 
 
 class Catalog:
@@ -248,76 +276,107 @@ class Catalog:
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
         # No materialized binding rows yet: scan instances under the
         # (variant, version) pair and derive variable slug from kolumnnamn
-        # (§5.3). The version match is now an exact slug comparison
-        # (`register_version.slug` carries the period or curated token);
-        # `_resolve_version`'s same column query mirrors this.
+        # (§5.3). The version match is an exact slug comparison —
+        # `register_version.slug` carries the period or curated token.
         # `ORDER BY vi.cvid, va.kolumnnamn` makes first-match deterministic;
         # uniqueness of (variant, version, variable_slug) is a §5.3 invariant.
         rows = self._conn.execute(
-            "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, "
-            "vi.var_id, vi.via_source_id, "
-            "v.variabelnamn, va.kolumnnamn, rver.registerversionnamn "
-            "FROM variable_instance vi "
-            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
-            "JOIN register r ON vi.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-            "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ? "
+            _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
+            "AND rv.slug = ? AND rver.slug = ? "
             "ORDER BY vi.cvid, va.kolumnnamn",
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
-                via = row["via_source_id"]
-                return ResolvedVariableBinding(
-                    fqid=fqid,
-                    cvid=row["cvid"],
-                    register_id=row["register_id"],
-                    regvar_id=row["regvar_id"],
-                    regver_id=row["regver_id"],
-                    var_id=row["var_id"],
-                    variabelnamn=row["variabelnamn"],
-                    kolumnnamn=row["kolumnnamn"],
-                    via_source_id=via,
-                    lineage=(
-                        self._lineage_fqid(via, fqid.variable)
-                        if via is not None
-                        else None
-                    ),
-                )
+                return self._row_to_binding(row, fqid, fqid.variable)
         raise _not_found(fqid)
 
-    def _lineage_fqid(self, via_cvid: int, variable_slug: str) -> Fqid | None:
-        """Source-side binding FQID for a consumer instance, or None if any
-        slug component is missing."""
-        row = self._conn.execute(
-            "SELECT p.slug AS provider_slug, r.slug AS register_slug, "
-            "rv.slug AS variant_slug, rver.slug AS version_slug "
-            "FROM variable_instance vi "
-            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
-            "JOIN register r ON vi.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE vi.cvid = ?",
-            (via_cvid,),
-        ).fetchone()
-        if not row:
-            return None
-        parts = (
-            row["provider_slug"],
-            row["register_slug"],
-            row["variant_slug"],
-            row["version_slug"],
-            variable_slug,
+    def _row_to_binding(
+        self, row: sqlite3.Row, fqid: Fqid, variable_slug: str
+    ) -> ResolvedVariableBinding:
+        """Build a ResolvedVariableBinding from a `_BINDING_QUERY` row.
+
+        Lineage is built from the joined source-side slug columns. Slugs may
+        be transiently NULL between INSERT and `populate_slugs` (db.py); when
+        any source slug is missing we leave `lineage` as None. A populated
+        but malformed slug surfaces as `FqidError` — populate_slugs validates
+        on write, so reaching this path means a build-time invariant broke
+        and we want it loud, not silently dropped.
+        """
+        via = row["via_source_id"]
+        lineage: Fqid | None = None
+        if via is not None:
+            src = (
+                row["src_provider_slug"],
+                row["src_register_slug"],
+                row["src_variant_slug"],
+                row["src_version_slug"],
+                variable_slug,
+            )
+            if all(s for s in src):
+                lineage = Fqid.binding_fqid(*src)
+        return ResolvedVariableBinding(
+            fqid=fqid,
+            cvid=row["cvid"],
+            register_id=row["register_id"],
+            regvar_id=row["regvar_id"],
+            regver_id=row["regver_id"],
+            var_id=row["var_id"],
+            variabelnamn=row["variabelnamn"],
+            kolumnnamn=row["kolumnnamn"],
+            via_source_id=via,
+            lineage=lineage,
         )
-        if any(p is None or p == "" for p in parts):
-            return None
-        try:
-            return Fqid.binding_fqid(*parts)
-        except FqidError:
-            return None
+
+    def editions(
+        self, *, provider: str, register: str, variable: str
+    ) -> list[ResolvedVariableBinding]:
+        """All variable bindings of ``variable`` under ``provider/register``.
+
+        Returns every ``(variant, period)`` combination where a
+        variable_instance row exists whose kolumnnamn folds to ``variable``,
+        including consumer-side bindings from §5.6 (their ``lineage`` field
+        carries the source-side FQID). Results are ordered by
+        ``(variant_slug, version_slug, cvid, kolumnnamn)`` for deterministic
+        iteration.
+
+        Slug inputs are validated; non-existent provider/register/variable
+        yields an empty list (discovery, not resolution).
+        """
+        validate_slug(provider, FqidKind.PROVIDER)
+        validate_slug(register, FqidKind.REGISTER)
+        validate_slug(variable, "variable")
+
+        rows = self._conn.execute(
+            _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
+            "ORDER BY rv.slug, rver.slug, vi.cvid, va.kolumnnamn",
+            (provider, register),
+        ).fetchall()
+
+        out: list[ResolvedVariableBinding] = []
+        # variable_alias is keyed by (cvid, kolumnnamn) — a single instance can
+        # have multiple aliases that fold to the same slug (e.g. `Kon` + `Kön`
+        # both → `kon`), so the LEFT JOIN can yield one row per matching alias.
+        # Dedupe by cvid: one binding per instance.
+        seen: set[int] = set()
+        for row in rows:
+            if derive_variable_slug(row["kolumnnamn"]) != variable:
+                continue
+            cvid = row["cvid"]
+            if cvid in seen:
+                continue
+            variant_slug = row["variant_slug"]
+            version_slug = row["version_slug"]
+            # Skip rows whose slug columns aren't populated (NULL on pre-1c
+            # DBs or partial fixtures) — they can't be addressed by FQID.
+            if not variant_slug or not version_slug:
+                continue
+            fqid = Fqid.binding_fqid(
+                provider, register, variant_slug, version_slug, variable
+            )
+            out.append(self._row_to_binding(row, fqid, variable))
+            seen.add(cvid)
+        return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
         row = self._conn.execute(

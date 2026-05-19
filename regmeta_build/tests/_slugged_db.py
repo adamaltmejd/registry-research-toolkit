@@ -100,3 +100,94 @@ def build_slugged_db(
 
     conn.commit()
     return conn
+
+
+def add_register(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    slug: str,
+    name: str,
+    provider_id: int = 1,
+) -> None:
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+        "VALUES (?, ?, ?, ?)",
+        (register_id, provider_id, slug, name),
+    )
+
+
+def add_variant(
+    conn: sqlite3.Connection,
+    *,
+    regvar_id: int,
+    register_id: int,
+    slug: str,
+    name: str,
+) -> None:
+    conn.execute(
+        "INSERT INTO register_variant "
+        "(regvar_id, register_id, slug, registervariantnamn) "
+        "VALUES (?, ?, ?, ?)",
+        (regvar_id, register_id, slug, name),
+    )
+
+
+def add_version(
+    conn: sqlite3.Connection,
+    *,
+    regver_id: int,
+    regvar_id: int,
+    slug: str,
+    name: str,
+) -> None:
+    conn.execute(
+        "INSERT INTO register_version "
+        "(regver_id, regvar_id, slug, registerversionnamn) "
+        "VALUES (?, ?, ?, ?)",
+        (regver_id, regvar_id, slug, name),
+    )
+
+
+def add_variable(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    var_id: int,
+    name: str,
+    source_register_id: int | None = None,
+) -> None:
+    conn.execute(
+        "INSERT INTO variable "
+        "(register_id, var_id, variabelnamn, source_register_id) "
+        "VALUES (?, ?, ?, ?)",
+        (register_id, var_id, name, source_register_id),
+    )
+
+
+def add_binding(
+    conn: sqlite3.Connection,
+    *,
+    cvid: int,
+    register_id: int,
+    regvar_id: int,
+    regver_id: int,
+    var_id: int,
+    kolumnnamn: str,
+    via_source_id: int | None = None,
+) -> None:
+    """Insert a variable_instance + matching variable_alias row.
+
+    Parent rows (register/variant/version/variable) must already exist.
+    ``via_source_id`` carries §5.6 consumer-side lineage when set.
+    """
+    conn.execute(
+        "INSERT INTO variable_instance "
+        "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
+        "VALUES (?, ?, ?, ?, ?, 'int', ?)",
+        (cvid, register_id, regvar_id, regver_id, var_id, via_source_id),
+    )
+    conn.execute(
+        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
+        (cvid, kolumnnamn),
+    )
