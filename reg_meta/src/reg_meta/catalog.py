@@ -8,7 +8,8 @@ enumerates all variable bindings of a given variable slug under a register.
 from __future__ import annotations
 
 import sqlite3
-from dataclasses import dataclass
+from collections import deque
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from .db import db_path_from_args, open_db
@@ -76,6 +77,10 @@ class ResolvedVariableBinding:
     # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
     via_source_id: int | None = None
     lineage: Fqid | None = None
+    # §5.5: path of intermediate FQIDs walked when the direct lookup missed
+    # and a curated same_as edge resolved instead. None on direct hits.
+    # §6.7 calls this "info, not warning"; the validator decides severity.
+    via_same_as: tuple[Fqid, ...] | None = None
 
 
 @dataclass(frozen=True)
@@ -84,6 +89,7 @@ class ResolvedClassification:
     classification_id: int
     short_name: str
     name: str
+    via_same_as: tuple[Fqid, ...] | None = None
 
 
 ResolvedEntity = (
@@ -137,6 +143,13 @@ class Catalog:
 
     def __init__(self, conn: sqlite3.Connection) -> None:
         self._conn = conn
+        # Source-side keys present in `variable_same_as` / `classification_same_as`.
+        # Loaded lazily on first miss; same_as graphs are curator-curated and
+        # tiny (tens of entries), and the common case is "no edge for this
+        # tuple", so a cached frozenset short-circuits BFS without an SQL round
+        # trip every miss. Catalog treats the DB as immutable for its lifetime.
+        self._var_same_as_sources: frozenset[tuple[str, str, str]] | None = None
+        self._class_same_as_sources: frozenset[tuple[str, str]] | None = None
 
     @classmethod
     def open(cls, db_arg: str | Path | None = None) -> Catalog:
@@ -274,6 +287,24 @@ class Catalog:
         )
 
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariableBinding:
+        direct = self._resolve_binding_direct(fqid)
+        if direct is not None:
+            return direct
+        via = self._resolve_binding_via_same_as(fqid)
+        if via is not None:
+            return via
+        raise _not_found(fqid)
+
+    def _var_same_as_source_keys(self) -> frozenset[tuple[str, str, str]]:
+        if self._var_same_as_sources is None:
+            rows = self._conn.execute(
+                "SELECT DISTINCT a_provider, a_register, a_variable "
+                "FROM variable_same_as"
+            ).fetchall()
+            self._var_same_as_sources = frozenset((r[0], r[1], r[2]) for r in rows)
+        return self._var_same_as_sources
+
+    def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
         # No materialized binding rows yet: scan instances under the
         # (variant, version) pair and derive variable slug from kolumnnamn
         # (§5.3). The version match is an exact slug comparison —
@@ -289,7 +320,78 @@ class Catalog:
         for row in rows:
             if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
                 return self._row_to_binding(row, fqid, fqid.variable)
-        raise _not_found(fqid)
+        return None
+
+    def _resolve_binding_via_same_as(
+        self, fqid: Fqid
+    ) -> ResolvedVariableBinding | None:
+        """BFS through `variable_same_as` until a candidate resolves directly.
+
+        Empty-string sentinels in the edge's `a_variant`/`a_period` mark
+        wildcard scope; on the `b_` side empty means "inherit from current
+        node", non-empty means "narrow to this slot". Equivalence traversal
+        is the only place where the query's variant/period can change
+        mid-resolve. The visited set keys on the **full 5-tuple** (incl.
+        inherited variant/period) so two narrowing edges from the same
+        source to the same target under different variants/periods both
+        get explored.
+        """
+        assert fqid.provider and fqid.register and fqid.variable
+        assert fqid.variant is not None and fqid.period is not None
+        if (
+            fqid.provider,
+            fqid.register,
+            fqid.variable,
+        ) not in self._var_same_as_source_keys():
+            return None
+        start_key = (
+            fqid.provider,
+            fqid.register,
+            fqid.variant,
+            fqid.period,
+            fqid.variable,
+        )
+        visited: set[tuple[str, str, str, str, str]] = {start_key}
+        queue: deque[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = deque()
+        queue.append((*start_key, ()))
+        while queue:
+            prov, reg, variant, period, variable, path = queue.popleft()
+            rows = self._conn.execute(
+                "SELECT b_provider, b_register, b_variant, b_period, b_variable "
+                "FROM variable_same_as "
+                "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
+                "AND (a_variant = '' OR a_variant = ?) "
+                "AND (a_period = '' OR a_period = ?)",
+                (prov, reg, variable, variant, period),
+            ).fetchall()
+            for row in rows:
+                n_prov = row["b_provider"]
+                n_reg = row["b_register"]
+                n_variant = row["b_variant"] or variant
+                n_period = row["b_period"] or period
+                n_variable = row["b_variable"]
+                key = (n_prov, n_reg, n_variant, n_period, n_variable)
+                if key in visited:
+                    continue
+                visited.add(key)
+                try:
+                    n_fqid = Fqid.binding_fqid(
+                        n_prov, n_reg, n_variant, n_period, n_variable
+                    )
+                except FqidError:
+                    # Malformed slug in DB — populate_slugs validates on write,
+                    # so this means a build-time invariant broke. Skip the
+                    # candidate rather than wrap a "not found" in a cryptic
+                    # FqidError trace.
+                    continue
+                new_path = (*path, n_fqid)
+                hit = self._resolve_binding_direct(n_fqid)
+                if hit is not None:
+                    # Preserve the caller's FQID on the result; the
+                    # traversal path goes in via_same_as.
+                    return replace(hit, fqid=fqid, via_same_as=new_path)
+                queue.append((n_prov, n_reg, n_variant, n_period, n_variable, new_path))
+        return None
 
     def _row_to_binding(
         self, row: sqlite3.Row, fqid: Fqid, variable_slug: str
@@ -379,19 +481,144 @@ class Catalog:
         return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
-        row = self._conn.execute(
-            "SELECT id, short_name, name FROM classification "
-            "WHERE slug = ? AND version = ?",
-            (fqid.classification, fqid.version),
-        ).fetchone()
+        direct = self._resolve_classification_direct(fqid)
+        if direct is not None:
+            return direct
+        via = self._resolve_classification_via_same_as(fqid)
+        if via is not None:
+            return via
+        raise _not_found(fqid)
+
+    def _resolve_classification_direct(
+        self, fqid: Fqid, *, publisher: str | None = None
+    ) -> ResolvedClassification | None:
+        # `publisher` is set by the same_as BFS when it narrowed the neighbor
+        # by publisher; without it (the initial top-level lookup) the FQID
+        # grammar carries no publisher slot, so cross-publisher (slug, version)
+        # collisions can't be disambiguated here either way. When set, we
+        # constrain the row by publisher to keep BFS from silently crossing
+        # publisher namespaces under a colliding slug/version pair.
+        if publisher is None:
+            row = self._conn.execute(
+                "SELECT id, short_name, name FROM classification "
+                "WHERE slug = ? AND version = ?",
+                (fqid.classification, fqid.version),
+            ).fetchone()
+        else:
+            row = self._conn.execute(
+                "SELECT id, short_name, name FROM classification "
+                "WHERE slug = ? AND version = ? "
+                "AND LOWER(COALESCE(publisher, 'scb')) = ?",
+                (fqid.classification, fqid.version, publisher),
+            ).fetchone()
         if not row:
-            raise _not_found(fqid)
+            return None
         return ResolvedClassification(
             fqid=fqid,
             classification_id=row["id"],
             short_name=row["short_name"],
             name=row["name"],
         )
+
+    def _class_same_as_source_keys(self) -> frozenset[tuple[str, str]]:
+        if self._class_same_as_sources is None:
+            rows = self._conn.execute(
+                "SELECT DISTINCT a_provider, a_classification_slug "
+                "FROM classification_same_as"
+            ).fetchall()
+            self._class_same_as_sources = frozenset((r[0], r[1]) for r in rows)
+        return self._class_same_as_sources
+
+    def _resolve_classification_via_same_as(
+        self, fqid: Fqid
+    ) -> ResolvedClassification | None:
+        """BFS through `classification_same_as`.
+
+        Edges are keyed on (provider, classification_slug) only — the version
+        is not part of the edge (§5.3 field reference). Same_as targets are
+        version-unambiguous at build time, so the target's version is whatever
+        the DB row carries; we pick it up from `classification.version` after
+        the slug match.
+        """
+        assert fqid.classification and fqid.version
+        # The classification FQID grammar has no provider slot — the publisher
+        # is implicit. The (slug, version) lookup may have missed precisely
+        # because the version drifted (the primary same_as use case), so we
+        # seed the BFS from every publisher that owns *any* row for this slug.
+        # Defaulting to 'scb' would silently break non-SCB classifications.
+        publishers = {
+            (r[0] or "scb").lower()
+            for r in self._conn.execute(
+                "SELECT DISTINCT publisher FROM classification WHERE slug = ?",
+                (fqid.classification,),
+            ).fetchall()
+        }
+        if not publishers:
+            # No row carries this slug; nothing to traverse from.
+            return None
+        sources = self._class_same_as_source_keys()
+        seeds = [p for p in publishers if (p, fqid.classification) in sources]
+        if not seeds:
+            return None
+        visited: set[tuple[str, str]] = {(p, fqid.classification) for p in seeds}
+        queue: deque[tuple[str, str, tuple[Fqid, ...]]] = deque()
+        for p in seeds:
+            queue.append((p, fqid.classification, ()))
+        while queue:
+            prov, slug, path = queue.popleft()
+            rows = self._conn.execute(
+                "SELECT b_provider, b_classification_slug FROM classification_same_as "
+                "WHERE a_provider = ? AND a_classification_slug = ?",
+                (prov, slug),
+            ).fetchall()
+            for row in rows:
+                n_prov = row["b_provider"]
+                n_slug = row["b_classification_slug"]
+                key = (n_prov, n_slug)
+                if key in visited:
+                    continue
+                visited.add(key)
+                # Same_as is version-agnostic; the classification FQID needs
+                # a version. Forward-edge build validation rejects slugs with
+                # multiple versions, but the auto-inserted *reverse* edge can
+                # land us on a multi-version slug stem (e.g. `sun` v2000 +
+                # v2020), so we try every matching version. NULL publisher is
+                # normalized to 'scb' (matches build-side
+                # `COALESCE(publisher,'scb')`) so a SCB-published row can't
+                # accidentally match a query under another publisher.
+                vrows = self._conn.execute(
+                    "SELECT version FROM classification "
+                    "WHERE slug = ? AND LOWER(COALESCE(publisher, 'scb')) = ? "
+                    "ORDER BY version",
+                    (n_slug, n_prov),
+                ).fetchall()
+                if not vrows:
+                    # Target slug missing from DB despite passing build-time
+                    # validation — slugged classifications must have been
+                    # deleted post-build. Skip silently.
+                    continue
+                candidate_fqids: list[Fqid] = []
+                for vrow in vrows:
+                    try:
+                        candidate_fqids.append(
+                            Fqid.classification_fqid(n_slug, vrow["version"])
+                        )
+                    except FqidError:
+                        continue
+                for n_fqid in candidate_fqids:
+                    new_path = (*path, n_fqid)
+                    # Pass publisher so cross-publisher (slug, version)
+                    # collisions can't silently land us on the wrong row.
+                    hit = self._resolve_classification_direct(n_fqid, publisher=n_prov)
+                    if hit is not None:
+                        return replace(hit, fqid=fqid, via_same_as=new_path)
+                # Continue BFS regardless of version count — further hops
+                # don't depend on which version we picked, just on the
+                # same_as edge graph. Use the first valid candidate for
+                # the path-trace breadcrumb.
+                if candidate_fqids:
+                    queue.append((n_prov, n_slug, (*path, candidate_fqids[0])))
+        return None
 
 
 _DISPATCH = {

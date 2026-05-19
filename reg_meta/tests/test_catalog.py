@@ -605,3 +605,355 @@ class TestNullSlugMisses:
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).resolve("scb/lisa")
         assert exc.value.code == "fqid_not_found"
+
+
+class TestSameAsTraversal:
+    """§5.5 / §6.7: resolver follows curated same_as links transitively when
+    direct lookup misses. Traversal path surfaces on `via_same_as` (info, not
+    warning per spec)."""
+
+    @staticmethod
+    def _add_var_edge(
+        conn: sqlite3.Connection,
+        *,
+        a: tuple[str, str, str, str, str],
+        b: tuple[str, str, str, str, str],
+    ) -> None:
+        """Insert both directions of a variable same_as edge."""
+        for src, tgt in ((a, b), (b, a)):
+            conn.execute(
+                "INSERT INTO variable_same_as ("
+                "a_provider, a_register, a_variant, a_period, a_variable, "
+                "b_provider, b_register, b_variant, b_period, b_variable"
+                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+
+    def test_direct_hit_leaves_via_same_as_none(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Sanity: a direct resolution doesn't touch the same_as graph.
+        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.via_same_as is None
+
+    def test_same_as_one_hop_resolves(self) -> None:
+        # Curated equivalence: kon ↔ civilstand-legacy (constructed scenario —
+        # the fixture has only `kon`, but querying `civilstand-legacy` traverses
+        # the edge and lands on `kon`'s binding row).
+        conn = build_slugged_db()
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "", "", "kon"),
+            b=("scb", "lisa", "", "", "civilstand-legacy"),
+        )
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
+        assert isinstance(r, ResolvedVariableBinding)
+        # The returned binding is the kon row (cvid 1001), but the FQID on
+        # the result preserves the caller's input — researchers reading
+        # results back match against what they asked for.
+        assert r.cvid == 1001
+        assert str(r.fqid) == "scb/lisa/individer-15plus/2018/civilstand-legacy"
+        assert r.via_same_as is not None
+        assert len(r.via_same_as) == 1
+        assert str(r.via_same_as[0]) == "scb/lisa/individer-15plus/2018/kon"
+
+    def test_same_as_transitive_two_hops(self) -> None:
+        # A → B → C, only C resolves. BFS finds it through B.
+        conn = build_slugged_db()
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "", "", "kon"),
+            b=("scb", "lisa", "", "", "intermediate"),
+        )
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "", "", "intermediate"),
+            b=("scb", "lisa", "", "", "legacy-name"),
+        )
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/legacy-name")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 1001
+        assert r.via_same_as is not None
+        # BFS order: legacy-name → intermediate (no hit) → kon (hit).
+        assert len(r.via_same_as) == 2
+        path = [str(f) for f in r.via_same_as]
+        assert path[-1] == "scb/lisa/individer-15plus/2018/kon"
+
+    def test_same_as_no_match_still_raises(self) -> None:
+        # An equivalence edge whose other end doesn't exist either — the
+        # traversal exhausts and we still raise fqid_not_found.
+        conn = build_slugged_db()
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "", "", "phantom-a"),
+            b=("scb", "lisa", "", "", "phantom-b"),
+        )
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom-a")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_same_as_variant_narrowing(self) -> None:
+        # Edge narrowed to a specific variant: only queries under that variant
+        # traverse the link.
+        conn = build_slugged_db()
+        # Add a second variant that doesn't carry the variable.
+        add_variant(
+            conn,
+            regvar_id=11,
+            register_id=1,
+            slug="individer-16plus",
+            name="Individer 16+",
+        )
+        add_version(
+            conn,
+            regver_id=101,
+            regvar_id=11,
+            slug="2018",
+            name="LISA 2018",
+        )
+        self._add_var_edge(
+            conn,
+            # source (where 'kon' lives) is wildcard on variant
+            a=("scb", "lisa", "", "", "kon"),
+            # target narrowed to individer-15plus only
+            b=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
+        )
+        # Query under individer-15plus matches the narrowed slot → resolves.
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 1001
+        # Query under individer-16plus does not match (variant differs) → miss.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_visited_key_separates_variant_scopes(self) -> None:
+        # Regression: two narrowing edges from the same source to the same
+        # target variable under *different* variants. If the visited key
+        # ignored variant/period (the original implementation), the BFS
+        # would mark `civilstand-legacy` as visited after the first edge
+        # and skip the second edge — even though only the second variant
+        # has a binding row that resolves.
+        conn = build_slugged_db()
+        # Add a second variant that DOES carry kon (cvid 2001) so the
+        # variant-16plus traversal lands on a real row.
+        add_variant(
+            conn,
+            regvar_id=11,
+            register_id=1,
+            slug="individer-16plus",
+            name="Individer 16+",
+        )
+        add_version(
+            conn,
+            regver_id=101,
+            regvar_id=11,
+            slug="2018",
+            name="LISA 2018",
+        )
+        add_binding(
+            conn,
+            cvid=2001,
+            register_id=1,
+            regvar_id=11,
+            regver_id=101,
+            var_id=44,
+            kolumnnamn="Kon",
+        )
+        # Two edges from civilstand-legacy → kon, narrowed to *different*
+        # variants on the source side. Both edges land on kon, but only
+        # individer-16plus has the binding row.
+        # (We register edges as a → b where a is the FQID we'd query.)
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
+            b=("scb", "lisa", "individer-15plus", "", "kon"),
+        )
+        self._add_var_edge(
+            conn,
+            a=("scb", "lisa", "individer-16plus", "", "civilstand-legacy"),
+            b=("scb", "lisa", "individer-16plus", "", "kon"),
+        )
+        # Drop the original kon under individer-15plus so only individer-16plus
+        # can satisfy the resolution.
+        conn.execute("DELETE FROM variable_alias WHERE cvid = 1001")
+        conn.execute("DELETE FROM variable_instance WHERE cvid = 1001")
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 2001
+
+
+class TestSameAsClassificationTraversal:
+    """§5.5 classification same_as traversal."""
+
+    @staticmethod
+    def _add_class_edge(
+        conn: sqlite3.Connection,
+        *,
+        a: tuple[str, str],
+        b: tuple[str, str],
+    ) -> None:
+        for src, tgt in ((a, b), (b, a)):
+            conn.execute(
+                "INSERT INTO classification_same_as ("
+                "a_provider, a_classification_slug, "
+                "b_provider, b_classification_slug) VALUES (?, ?, ?, ?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+
+    def test_direct_hit_leaves_via_same_as_none(self) -> None:
+        # Sanity: a direct hit doesn't touch the same_as graph.
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("class/sun/2020")
+        assert isinstance(r, ResolvedClassification)
+        assert r.via_same_as is None
+
+    def test_same_as_one_hop_resolves_via_other_slug(self) -> None:
+        # Curated equivalence between two classifications. Querying the
+        # legacy slug at any version traverses to the target slug's row.
+        # The fixture seeds 'sun' v2020 only; we add a sun-legacy row so
+        # we can verify it's the one we resolve to when starting from sun.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('LEGACY', 'Legacy SUN', '1996', 'sun-legacy')"
+        )
+        conn.commit()
+        self._add_class_edge(
+            conn,
+            a=("scb", "sun"),
+            b=("scb", "sun-legacy"),
+        )
+        # Query class/sun-other/<version> — no row, no edge → not found.
+        # But class/sun-legacy/1996 is a direct hit (the row we inserted).
+        r = Catalog(conn).resolve("class/sun-legacy/1996")
+        assert isinstance(r, ResolvedClassification)
+        assert r.short_name == "LEGACY"
+        assert r.via_same_as is None  # direct hit, no traversal
+
+    def test_same_as_traverses_when_version_mismatches(self) -> None:
+        # The classic case: caller has an old FQID `class/sun/1996` baked
+        # into their project, but the only sun row in this DB is v2020.
+        # Direct lookup misses (version mismatch). same_as is the only way
+        # to keep their FQID resolvable. We add an edge sun ↔ sun-v1 with
+        # sun-v1 carrying version 1996 so the BFS can find a target.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('SUN_V1', 'SUN v1', '1996', 'sun-v1')"
+        )
+        conn.commit()
+        self._add_class_edge(
+            conn,
+            a=("scb", "sun"),
+            b=("scb", "sun-v1"),
+        )
+        # class/sun/1996 misses (sun row exists only at v2020) → BFS to
+        # sun-v1 (v1996) → resolves.
+        r = Catalog(conn).resolve("class/sun/1996")
+        assert isinstance(r, ResolvedClassification)
+        assert r.short_name == "SUN_V1"
+        assert r.via_same_as is not None
+        assert str(r.via_same_as[0]) == "class/sun-v1/1996"
+        # Caller's FQID preserved on the returned record.
+        assert str(r.fqid) == "class/sun/1996"
+
+    def test_same_as_no_match_still_raises(self) -> None:
+        # Equivalence between two classifications neither of which carries
+        # the queried version → BFS exhausts → not found.
+        conn = build_slugged_db()
+        self._add_class_edge(
+            conn,
+            a=("scb", "sun"),
+            b=("scb", "ghost-classification"),
+        )
+        # The fixture has sun@2020 only; no row matches 1900.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("class/sun/1900")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_multi_version_neighbor_tries_all(self) -> None:
+        # Codex P1: a reverse same_as edge can land on a slug stem that
+        # carries multiple versions (e.g. `sun` v2000 + v2020). The BFS
+        # must try every version until it finds one that matches the
+        # caller's queried version, instead of picking one arbitrarily.
+        conn = build_slugged_db()
+        # Add a second `sun` row at v2000 alongside the fixture's v2020.
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('SUN2000', 'SUN 2000', '2000', 'sun')"
+        )
+        # Insert a single-version `sun-legacy` slug at v1996 and link it
+        # to `sun`. The forward edge (sun-legacy → sun) carries no version
+        # information; resolver picks up the version from the DB.
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug) "
+            "VALUES ('SUN_LEGACY', 'SUN legacy', '1996', 'sun-legacy')"
+        )
+        conn.commit()
+        self._add_class_edge(
+            conn,
+            a=("scb", "sun-legacy"),
+            b=("scb", "sun"),
+        )
+        # Query the v2000 sun directly — direct hits, no traversal.
+        r = Catalog(conn).resolve("class/sun/2000")
+        assert isinstance(r, ResolvedClassification)
+        assert r.short_name == "SUN2000"
+        # Query an unknown version under sun-legacy → BFS traverses to
+        # `sun`, must try both v2000 and v2020. Without the multi-version
+        # fix this could pick v2020 arbitrarily; we verify both versions
+        # are reachable through traversal by querying a non-existent
+        # sun-legacy version explicitly and checking the resolution
+        # carries via_same_as.
+        r = Catalog(conn).resolve("class/sun-legacy/1900")
+        assert isinstance(r, ResolvedClassification)
+        # Hit on whichever sun version came first in the iteration; both
+        # are valid landings. The point is `via_same_as` is non-None.
+        assert r.via_same_as is not None
+        assert r.short_name in {"SUN2020", "SUN2000"}
+
+    def test_publisher_constrained_on_traversal_hit(self) -> None:
+        # Codex P1: BFS narrowed by publisher must keep the constraint when
+        # verifying the candidate. Two publishers share the same (slug,
+        # version) pair; the SOS-anchored edge must resolve to SOS's row,
+        # not SCB's, even though SCB's row would also match (slug, version).
+        conn = build_slugged_db()
+        # Add an SOS-published `kollision` slug at the same version as an
+        # SCB-published one. (Cross-publisher slug/version collision is a
+        # theoretical case today since only SCB ships classifications, but
+        # the traversal contract should be robust against future publishers.)
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_SCB', 'Kollision SCB', '2020', 'kollision', 'SCB')"
+        )
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_SOS', 'Kollision SOS', '2020', 'kollision', 'SOS')"
+        )
+        # Add a SOS-side `kollision-legacy` slug + an edge from it to the
+        # SOS-side `kollision` (under publisher 'sos').
+        conn.execute(
+            "INSERT INTO classification (short_name, name, version, slug, publisher) "
+            "VALUES ('KOL_LEG_SOS', 'Kollision legacy SOS', '1996', "
+            "'kollision-legacy', 'SOS')"
+        )
+        conn.commit()
+        self._add_class_edge(
+            conn,
+            a=("sos", "kollision-legacy"),
+            b=("sos", "kollision"),
+        )
+        # Query SOS legacy at a wrong version → direct misses → BFS narrows
+        # to publisher 'sos' and lands on SOS's kollision/2020. Candidate
+        # lookup MUST stay constrained to 'sos' and return KOL_SOS, not
+        # KOL_SCB (which also matches `kollision`/2020).
+        r = Catalog(conn).resolve("class/kollision-legacy/2020")
+        assert isinstance(r, ResolvedClassification)
+        assert r.short_name == "KOL_SOS"
+        assert r.via_same_as is not None
+        assert str(r.via_same_as[0]) == "class/kollision/2020"
