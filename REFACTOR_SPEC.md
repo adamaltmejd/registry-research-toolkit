@@ -296,7 +296,7 @@ on `reg_webapp/v*` tags.
   uncompressed for the main DB; ~120 MB compressed) and are
   distributed as `.zst`-compressed **GitHub release artifacts** on
   `reg_meta/v*` tags. `reg_meta`
-  ships a `reg-meta maintain update` command that fetches the
+  ships a `reg-meta update` command that fetches the
   matching version into `$XDG_DATA_HOME/regmeta/`; the webapp
   Dockerfile runs this at image-build time so the DB ends up in
   an image layer. Mirrors the build/runtime separation needed for a future
@@ -1043,11 +1043,11 @@ editions = catalog.editions(
 # from §5.6
 ```
 
-Exact API design is reg_meta's concern and belongs in
-`reg_meta/DESIGN.md` once the rebuild starts. The contract from
-this spec's perspective: every FQID resolves through one entry
-point; cross-edition browsing has one entry point; the webapp
-imports nothing else from reg_meta's internals.
+Exact API design is reg_meta's concern and lives in
+[regmeta/DESIGN.md](regmeta/DESIGN.md) (step 1 shipped 2026-05).
+The contract from this spec's perspective: every FQID resolves
+through one entry point; cross-edition browsing has one entry
+point; the webapp imports nothing else from reg_meta's internals.
 
 ### 5.9 Glossary of identity terms
 
@@ -2612,11 +2612,13 @@ the default; the override is the escape hatch.
 
 ### `mdw update`
 
-`maintain update` (downloads the latest reg_meta DB and docs DB
+`reg-meta update` (downloads the latest reg_meta DB and docs DB
 assets) is a `reg_meta` concern. After the refactor neither
 `reg_monabundle` nor `reg_mockdata` has a reg_meta dep, so
-`mdw update` is deleted; users run `reg-meta maintain update` to
-keep their local reg_meta current.
+`mdw update` is deleted; users run `reg-meta update` to
+keep their local reg_meta current. (Post-step-2 the `maintain`
+subgroup has dissolved — `update` and `info` are top-level on
+`regmeta`.)
 
 ### Removed wholesale
 
@@ -2654,9 +2656,9 @@ keep their local reg_meta current.
 | `mdw` namespaced block in spec | Renamed to `reg_monabundle`; owner is `reg_monabundle.validate_block` (§6.5) |
 | `value_set_version` strings (`Kon@2023`, `SUN@2020`) | Replaced by classification FQIDs (`class/sun/2020`) on the column; ad-hoc codes inlined in `project_data.codes.json` by binding FQID (§6.6) |
 | Categorical codes at generate time | After kit-build all codes live inline in `project_data.codes.json` regardless of source — classification FQIDs are dereferenced at kit-build, ad-hoc inline sets pass through; one lookup path post-kit (§8) |
-| `regmeta maintain build-db` subcommand | Moves to new `reg-meta-build` CLI (binary; package `reg_meta_build`) |
-| `reg-meta maintain update` | Stays in `reg_meta`; the canonical "freshen everything" command |
-| `mdw update` | Deleted; users run `reg-meta maintain update` |
+| `regmeta maintain build-db` subcommand | ✅ Moved to `regmeta-build build-db` (binary `regmeta-build`; package `regmeta_build`). Done in §15 step 2. |
+| `regmeta maintain update` / `info` | ✅ Promoted to top-level `regmeta update` / `regmeta info`; `maintain` subgroup dissolved. Done in §15 step 2. |
+| `mdw update` | Deleted; users run `regmeta update` |
 | Population spine | Lives in `reg_mockdata`; matches binding FQIDs by variable-slug stem (§10) |
 | CVID picker | **Deleted.** FQID resolution replaces tiered scoring (§10) |
 | PII scanner | Lives in `reg_monabundle.scan`; runs inside the bundle on MONA |
@@ -2721,7 +2723,7 @@ open:
     integration point.
   - `reg_meta_build` releases independently; no runtime consumer
     pins it (it produces the DB asset that `reg_meta` fetches via
-    `reg-meta maintain update`).
+    `reg-meta update`).
   - `reg_mockdata` floor-pins `reg_schema` (lowest compatible
     minor) so kits authored against newer webapp versions still
     generate on a slightly-older local install.
@@ -2805,8 +2807,18 @@ consumer-side binding materialization for composite registers, and
 the §6.5 `column_options` keying are all design-locked in this
 document. Step 1 can start.
 
-1. **reg_meta identifier rebuild (§5).** Split into five sub-steps
-   that can be reviewed/merged independently:
+1. **reg_meta identifier rebuild (§5).** ✅ **Shipped 2026-05** across
+   PRs [#78](https://github.com/adamaltmejd/registry-research-toolkit/pull/78),
+   [#79](https://github.com/adamaltmejd/registry-research-toolkit/pull/79),
+   [#81](https://github.com/adamaltmejd/registry-research-toolkit/pull/81),
+   [#82](https://github.com/adamaltmejd/registry-research-toolkit/pull/82),
+   [#85](https://github.com/adamaltmejd/registry-research-toolkit/pull/85),
+   [#86](https://github.com/adamaltmejd/registry-research-toolkit/pull/86),
+   [#87](https://github.com/adamaltmejd/registry-research-toolkit/pull/87),
+   [#89](https://github.com/adamaltmejd/registry-research-toolkit/pull/89);
+   §5.8 cross-edition traversal in
+   [#104](https://github.com/adamaltmejd/registry-research-toolkit/pull/104).
+   Split into five sub-steps reviewed/merged independently:
    - **1a — Schema additions.** Provider table promoted to first-class;
      `slug` columns added to `register`, `register_variant`,
      `classification`; synthetic `_default` variant emission for
@@ -2835,7 +2847,15 @@ document. Step 1 can start.
      time with `via_source_id` edges. Closes the data-layer side of
      the §14 LISA presentation issue.
 
-2. **`reg_meta_build` carved out of `reg_meta`.** Pure mechanical
+2. **`reg_meta_build` carved out of `reg_meta`.** ✅ **Shipped 2026-05-19**
+   across [#103](https://github.com/adamaltmejd/registry-research-toolkit/pull/103)
+   (phases 1–4: package scaffold, `cli_common.py` extraction, data/module/test
+   moves, spec capture),
+   [#105](https://github.com/adamaltmejd/registry-research-toolkit/pull/105)
+   (phases 5–9: user-facing docs, README/DESIGN updates, downstream skill
+   wiring), and
+   [#108](https://github.com/adamaltmejd/registry-research-toolkit/pull/108)
+   (phases 10–11: CI workflow for `regmeta_build`, doc trim). Pure mechanical
    split; both packages keep working. Releases independently. Done
    alongside (1) because the rebuild touches build code most.
 
@@ -2861,12 +2881,13 @@ document. Step 1 can start.
      `write_to` / `write_json`, `terminal_width`, `db_info`), hint
      helpers (`hint_add`, `emit_hints`), and the `NoRepeatParser` +
      `reorder_global_flags` + `clean_leaf_help` argparse plumbing.
-     `regmeta-build/cli.py` imports from there.
+     `regmeta_build/src/regmeta_build/cli.py` imports from there.
      `mock_data_wizard/cli.py` rebases its `format_rows` import.
    - **Build-side scripts stay at repo root `scripts/`**; only their
      imports update to point at `regmeta_build` for the moved bits.
      No `regmeta_build/scripts/` subtree.
-   - **Test-helper modules `_csv_fixtures.py` and `_slugged_db.py`
+   - **Test-helper modules `_csv_fixtures.py`, `_slugged_db.py`, and
+     `_shared_fixtures.py`
      live in `regmeta_build/tests/`** and are imported by both
      packages' test trees. `regmeta/tests/conftest.py` adds
      `regmeta_build/tests/` to `sys.path` so the bare-name imports
@@ -2921,7 +2942,7 @@ the same JSON. This is the single artifact that makes §6.8.0's
 
 **Step 6.5 — Containerize, Cloudflare, `global` deployment up.**
 
-- `reg_webapp` Dockerfile runs `reg-meta maintain update` at
+- `reg_webapp` Dockerfile runs `reg-meta update` at
   image build time to bake the matching reg_meta release's DB
   into the image layer (§4).
 - Cloudflare configured in front: edge caching with the §9.4 ETag

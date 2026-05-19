@@ -50,8 +50,8 @@ helpers both packages agree on — lives in `regmeta`.
 | `db.py` (open_db, schema constants) | `regmeta`       |
 | `doc_db.py` (build_doc_db)          | `regmeta_build` |
 | `doc_db.py` (open_doc_db, ensure)   | `regmeta`       |
-| `cli.py` (maintain subtree)         | `regmeta_build` |
-| `cli.py` (query, update, docs)      | `regmeta`       |
+| `cli.py` (build / docs-build / slug commands) | `regmeta_build` |
+| `cli.py` (query, update, info, docs) | `regmeta`       |
 | `fqid_slugs.py`                     | `regmeta_build` |
 | `classifications.py`                | `regmeta_build` |
 | `validate.py`                       | `regmeta_build` |
