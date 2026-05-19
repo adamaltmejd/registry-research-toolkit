@@ -142,6 +142,7 @@ version = "v1"
 name = "Utbildningsnivå – aggregat ”Old” (7 nivåer)"
 name_en = "Education level — legacy 7-level aggregation"
 publisher = "SCB"
+valid_from = 2000
 description = "Single-digit grouping of education level into 7 categories: 1=Förgymnasial <9 år, 2=Förgymnasial 9 år, 3=Gymnasial ≤2 år, 4=Gymnasial 3 år, 5=Eftergymnasial <3 år, 6=Eftergymnasial ≥3 år (exkl. forskarutbildning), 7=Forskarutbildning. Used as a coarse education-level grouping across many SCB registers (LISA, RAMS, STATIV, ...). Stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-old.csv"
 vardemangdsversion = [
@@ -155,6 +156,7 @@ version = "v1"
 name = "Utbildningsnivå – aggregat ”Grov” (5 nivåer)"
 name_en = "Education level — coarse 5-level aggregation"
 publisher = "SCB"
+valid_from = 2000
 description = "Single-letter coarse grouping of education level: F=Förgymnasial, G=Gymnasial, K=Eftergymnasial <3 år, L=Eftergymnasial ≥3 år, U=Okänd. Used across SCB survey/election registers (PSU, ULF, valdeltagande, ...). Stable across SUN 2000 and SUN 2020."
 valid_codes_file = "niva-grov.csv"
 vardemangdsversion = [
