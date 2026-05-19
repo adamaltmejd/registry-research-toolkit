@@ -18,7 +18,14 @@ from regmeta.catalog import (
 from regmeta.errors import RegmetaError
 from regmeta.fqid import Fqid
 
-from _slugged_db import build_slugged_db
+from _slugged_db import (
+    add_binding,
+    add_register,
+    add_variable,
+    add_variant,
+    add_version,
+    build_slugged_db,
+)
 
 
 @pytest.fixture
@@ -349,6 +356,205 @@ class TestResolveVersionWithCuratedSlug:
         with pytest.raises(RegmetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/summerade-poang")
         assert exc.value.code == "fqid_not_found"
+
+
+class TestEditions:
+    """§5.8 Catalog.editions — cross-edition traversal of a variable slug."""
+
+    def test_single_edition(self, slugged_conn: sqlite3.Connection) -> None:
+        editions = Catalog(slugged_conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        e = editions[0]
+        assert e.cvid == 1001
+        assert str(e.fqid) == "scb/lisa/individer-15plus/2018/kon"
+        assert e.via_source_id is None
+        assert e.lineage is None
+
+    def test_multiple_editions_ordered(self) -> None:
+        # Two versions under the same variant carry the same kolumnnamn —
+        # editions returns both, ordered by (variant_slug, version_slug).
+        conn = build_slugged_db()
+        add_version(conn, regver_id=101, regvar_id=10, slug="2019", name="LISA 2019")
+        add_binding(
+            conn,
+            cvid=1002,
+            register_id=1,
+            regvar_id=10,
+            regver_id=101,
+            var_id=44,
+            kolumnnamn="Kon",
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert [str(e.fqid) for e in editions] == [
+            "scb/lisa/individer-15plus/2018/kon",
+            "scb/lisa/individer-15plus/2019/kon",
+        ]
+
+    def test_spans_variants(self) -> None:
+        # Same variable slug delivered through two variants of the same
+        # register — both editions surface, ordered by variant slug.
+        conn = build_slugged_db()
+        add_variant(conn, regvar_id=11, register_id=1, slug="foretag", name="Företag")
+        add_version(conn, regver_id=110, regvar_id=11, slug="2018", name="LISA 2018")
+        add_binding(
+            conn,
+            cvid=1003,
+            register_id=1,
+            regvar_id=11,
+            regver_id=110,
+            var_id=44,
+            kolumnnamn="Kon",
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        # `foretag` < `individer-15plus` lexicographically.
+        assert [str(e.fqid) for e in editions] == [
+            "scb/lisa/foretag/2018/kon",
+            "scb/lisa/individer-15plus/2018/kon",
+        ]
+
+    def test_multiple_aliases_folding_to_same_slug_dedupe(self) -> None:
+        # variable_alias is keyed by (cvid, kolumnnamn); a single instance can
+        # carry both `Kon` and `Kön`, which both fold to `kon`. The LEFT JOIN
+        # yields one row per alias — editions must dedupe by cvid so a single
+        # binding doesn't surface twice.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kön')"
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        assert editions[0].cvid == 1001
+
+    def test_kolumnnamn_diacritic_fold(self) -> None:
+        # "Kön" folds to "kon"; the query argument is the slug, not the raw.
+        conn = build_slugged_db(kolumnnamn="Kön")
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert len(editions) == 1
+        assert editions[0].kolumnnamn == "Kön"
+
+    def test_consumer_side_binding_included(self) -> None:
+        # §5.6: LISA's consumer-side binding of RTB's Kön appears in
+        # editions("scb","lisa","kon") with via_source_id and lineage set.
+        conn = build_slugged_db(
+            register=("RTB", "rtb", 1, 1),
+            variant=("Personer", "personer", 10),
+            version=("RTB 2018", "2018", 100),
+            variable=("Kön", 44, 5000, "Kon"),
+        )
+        add_register(conn, register_id=2, slug="lisa", name="LISA")
+        add_variant(
+            conn,
+            regvar_id=20,
+            register_id=2,
+            slug="individer-15plus",
+            name="Individer 15+",
+        )
+        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="LISA 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön", source_register_id=1)
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            regvar_id=20,
+            regver_id=200,
+            var_id=99,
+            kolumnnamn="Kon",
+            via_source_id=5000,
+        )
+        conn.commit()
+
+        lisa = Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
+        assert len(lisa) == 1
+        assert lisa[0].cvid == 5001
+        assert lisa[0].via_source_id == 5000
+        assert str(lisa[0].lineage) == "scb/rtb/personer/2018/kon"
+
+        rtb = Catalog(conn).editions(provider="scb", register="rtb", variable="kon")
+        assert len(rtb) == 1
+        assert rtb[0].cvid == 5000
+        assert rtb[0].via_source_id is None
+        assert rtb[0].lineage is None
+
+    def test_unknown_variable_returns_empty(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        assert (
+            Catalog(slugged_conn).editions(
+                provider="scb", register="lisa", variable="nonexistent"
+            )
+            == []
+        )
+
+    def test_unknown_register_returns_empty(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # Discovery API: a missing register isn't an error, it's just no rows.
+        assert (
+            Catalog(slugged_conn).editions(
+                provider="scb", register="nope", variable="kon"
+            )
+            == []
+        )
+
+    def test_other_register_excluded(self) -> None:
+        # A "kon" binding under a different register must not leak into the
+        # query — the (provider, register) filter is tight.
+        conn = build_slugged_db()
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(conn, regvar_id=20, register_id=2, slug="personer", name="Personer")
+        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="RTB 2018")
+        add_variable(conn, register_id=2, var_id=99, name="Kön")
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            regvar_id=20,
+            regver_id=200,
+            var_id=99,
+            kolumnnamn="Kon",
+        )
+        conn.commit()
+        editions = Catalog(conn).editions(
+            provider="scb", register="lisa", variable="kon"
+        )
+        assert {e.register_id for e in editions} == {1}
+
+    def test_skips_rows_with_null_slug(self) -> None:
+        # A variable_instance whose variant or version slug is NULL can't be
+        # addressed by FQID — editions silently skips it rather than emitting
+        # an unaddressable binding.
+        conn = build_slugged_db(version=("LISA 2018", None, 100))
+        assert (
+            Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
+            == []
+        )
+
+    def test_invalid_slug_argument_raises(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        from regmeta.fqid import FqidError
+
+        with pytest.raises(FqidError):
+            Catalog(slugged_conn).editions(
+                provider="SCB", register="lisa", variable="kon"
+            )
+        with pytest.raises(FqidError):
+            Catalog(slugged_conn).editions(
+                provider="scb", register="lisa", variable="Kön"
+            )
 
 
 class TestResolveClassification:
