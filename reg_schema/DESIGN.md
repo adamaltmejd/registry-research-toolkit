@@ -83,10 +83,19 @@ shape the dependency direction):
 
 ## Phase status
 
-Phase 1 (this PR): scaffold + §6.8.0 dataclasses only. Subsequent
-phases land top-level `ProjectData`, `Source`/`Column`, `Panel`, then
-the unified `validate_structural()` entrypoint. See
-`REFACTOR_SPEC.md` §15 step 3 for the load-bearing-dependency story.
+- Phase 1 — scaffold + §6.8.0 `ValidationIssue` / `ValidationResult`
+  contract. Shipped.
+- Phase 2 (this PR) — §6.1-§6.4 dataclasses: `ProjectData`, `Source`,
+  `Column`, `Panel`, `PanelMember`, `LiteralPeriod`, and the
+  `EntityKey` / `TimeKey` / `TimePoint` type aliases. Pure shape
+  definitions; no validation rules yet.
+- Phase 3 (next) — unified `validate_structural()` entrypoint
+  implementing §6.8.1 rules (FQID well-formedness, type/subtype
+  consistency, panel composite ordering, source-collision, etc.)
+  against a parsed-dict payload, returning a `ValidationResult`.
+
+See `REFACTOR_SPEC.md` §15 step 3 for the load-bearing-dependency
+story across phases.
 
 ## Why no FQID parser dependency
 
