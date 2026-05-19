@@ -1135,7 +1135,7 @@ def _import_vardemangder(
             remediation=(
                 "Inspect the listed vardekod values in Vardemangder.csv. "
                 "(a) New SCB type-tag placeholder → add to "
-                "_VARDEMANGDER_SENTINELS in regmeta/src/regmeta/db.py. "
+                "_VARDEMANGDER_SENTINELS in regmeta_build/src/regmeta_build/db.py. "
                 "(b) New real single-code value set sharing the shape → "
                 "add to _VARDEMANGDER_REAL_SHAPED. (c) Already in "
                 "_VARDEMANGDER_SENTINELS but appeared with niva!=version "
@@ -1742,7 +1742,7 @@ def build_db(
                     error_class="configuration",
                     message=(
                         "Slug TOMLs not found. build-db requires the in-repo "
-                        "regmeta/fqid_slugs/ directory; it is a maintainer-only "
+                        "regmeta_build/fqid_slugs/ directory; it is a maintainer-only "
                         "command and is not supported from wheel installs."
                     ),
                     remediation=(

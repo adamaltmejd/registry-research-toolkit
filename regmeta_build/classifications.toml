@@ -5,12 +5,12 @@
 # `variable_instance.vardemangdsversion` strings that map to it.
 #
 # Matching is exact string equality against variable_instance rows during
-# `regmeta maintain build-db`. Trailing / leading whitespace is preserved
+# `regmeta-build build-db`. Trailing / leading whitespace is preserved
 # verbatim — SCB's export contains many labels with stray whitespace, and
 # `get values` already exposes the raw string. Keep what you see here.
 #
 # Optional `valid_codes_file` points to a CSV under
-# regmeta/input_data/classifications/ that lists the canonical (officially
+# regmeta_build/input_data/classifications/ that lists the canonical (officially
 # published) codes for the classification. Each `classification_code` row is
 # then marked `is_valid=1` if its vardekod is in the CSV, else `is_valid=0`.
 # Codes that appear in the CSV but never in observed data are still inserted

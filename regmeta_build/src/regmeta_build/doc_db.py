@@ -120,8 +120,8 @@ def repo_docs_dir() -> Path | None:
     """Return the in-repo source-markdown directory, for dev-time builds only.
 
     Runtime NEVER reads from this — users receive the prebuilt doc DB as a
-    release asset via ``maintain update``. Only ``maintain build-docs`` uses
-    this, so a maintainer working from a checkout can rebuild the doc DB
+    release asset via ``regmeta update``. Only ``regmeta-build build-docs``
+    uses this, so a maintainer working from a checkout can rebuild the doc DB
     from ``regmeta_build/docs/`` without passing ``--docs-dir`` every time.
     """
     pkg_dir = Path(__file__).resolve().parent

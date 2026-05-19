@@ -1,7 +1,7 @@
-"""Tests for the value-set dedup validator (issue #92).
+"""Tests for the value-set dedup validator.
 
 Exercises the module-level entry point (`validate_built_db`) and the
-argparse wiring for `regmeta maintain build-db --validate`. The CLI
+argparse wiring for `regmeta-build build-db --validate`. The CLI
 handler itself is two lines of glue around `validate_built_db` and
 `RegmetaError`; the validator module is the part with logic worth
 testing in depth.

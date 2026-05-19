@@ -554,7 +554,7 @@ class TestPopulateClassifications:
     def test_missing_seed_fails_build(self, tmp_path: Path, monkeypatch):
         """build-db must error when no seed is available — silently shipping
         a DB without classifications would let downstream queries return all
-        NULL FKs without warning. Wheel installs run `maintain update`, not
+        NULL FKs without warning. Wheel installs run `regmeta update`, not
         `build-db`, so this path is unreachable in production.
         """
         from regmeta_build import db as build_db_mod

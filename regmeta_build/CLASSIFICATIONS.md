@@ -5,9 +5,9 @@ Background: see `DESIGN.md` § "Classifications" → "Canonical vs observed code
 
 ## How it works
 
-Each `[[classification]]` in `regmeta/classifications.toml` may declare a
+Each `[[classification]]` in `regmeta_build/classifications.toml` may declare a
 `valid_codes_file = "<filename>.csv"`. The CSV lives under
-`regmeta/input_data/classifications/` (gitignored — these are local
+`regmeta_build/input_data/classifications/` (gitignored — these are local
 maintainer artifacts, just like `input_data/SCB/`). At build time:
 
 1. Every code in the CSV is ensured to exist in `value_code` (codes that
@@ -39,11 +39,11 @@ vardekod,vardebenamning
 
 1. Find SCB's authoritative code list (often a downloadable Excel/CSV on
    the classification's documentation page).
-2. Save as `regmeta/input_data/classifications/<short_name>.csv` with the
+2. Save as `regmeta_build/input_data/classifications/<short_name>.csv` with the
    header above.
 3. Add `valid_codes_file = "<short_name>.csv"` to the matching seed entry
-   in `regmeta/classifications.toml`.
-4. Run `regmeta maintain build-db --input-dir regmeta/input_data/`.
+   in `regmeta_build/classifications.toml`.
+4. Run `regmeta-build build-db --input-dir regmeta_build/input_data/`.
    Build output reports per-classification: canonical / observed-only /
    canonical-but-unobserved counts.
 5. Spot-check with

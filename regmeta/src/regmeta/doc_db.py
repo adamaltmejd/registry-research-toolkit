@@ -118,7 +118,7 @@ def ensure_doc_db(db_arg: str | None) -> sqlite3.Connection:
 
     Unlike the pre-0.7 behaviour, this no longer auto-builds from bundled
     markdown — the doc DB is distributed as a release asset and installed
-    via ``maintain update`` alongside the main DB.
+    via ``regmeta update`` alongside the main DB.
     """
     path = doc_db_path(db_arg)
     return open_doc_db(path)

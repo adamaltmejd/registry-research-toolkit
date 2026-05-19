@@ -1,12 +1,12 @@
 """Immutability snapshot for committed slug TOMLs (§5.4 grow-only).
 
-Compares the live TOMLs at ``regmeta/fqid_slugs/`` against the committed
-snapshot at ``regmeta/fqid_slugs/.snapshot.json``. Adds are allowed;
-removals and slug renames fail the build.
+Compares the live TOMLs at ``regmeta_build/fqid_slugs/`` against the
+committed snapshot at ``regmeta_build/fqid_slugs/.snapshot.json``. Adds
+are allowed; removals and slug renames fail the build.
 
 After legitimate additions, regenerate the snapshot with:
 
-    regmeta maintain precheck-slugs --update-snapshot
+    regmeta-build precheck-slugs --update-snapshot
 
 and commit ``.snapshot.json`` alongside the new TOML rows.
 """
@@ -30,7 +30,7 @@ from regmeta_build.fqid_slugs import (
 def slug_dir():
     d = repo_slug_dir()
     if d is None:
-        pytest.skip("regmeta/fqid_slugs/ not present (wheel install)")
+        pytest.skip("regmeta_build/fqid_slugs/ not present (wheel install)")
     return d
 
 
@@ -86,5 +86,5 @@ def test_snapshot_covers_committed_additions(slug_dir):
         pytest.fail(
             "New slug entries present without snapshot refresh:\n"
             f"{listed}{remainder}\n"
-            "Run: regmeta maintain precheck-slugs --update-snapshot"
+            "Run: regmeta-build precheck-slugs --update-snapshot"
         )

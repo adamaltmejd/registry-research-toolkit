@@ -356,9 +356,9 @@ class TestRunUpdateFailFast:
     """run_update must not leave the install in a broken state.
 
     If the walker can't resolve an asset the user doesn't already have,
-    maintain update raises rather than reporting success — otherwise
+    regmeta update raises rather than reporting success — otherwise
     query commands would fail with db_not_found/doc_db_not_found on the
-    very next invocation while `maintain update` claimed to succeed.
+    very next invocation while `regmeta update` claimed to succeed.
     """
 
     def _fake_resolve(

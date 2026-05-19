@@ -110,7 +110,7 @@ def test_version_importable(docker: str, image: str):
 def test_update_and_query(docker: str, image: str):
     """Full pipeline: update (downloads DB) from GitHub Releases and run a query."""
     cmd = (
-        "regmeta maintain update --yes > /dev/null"
+        "regmeta update --yes > /dev/null"
         " && regmeta --format json search --query kommun --datacolumn"
     )
     result = _docker_run(docker, image, cmd, timeout=600)

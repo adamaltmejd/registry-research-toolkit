@@ -51,7 +51,7 @@ def _check_schema_compat(conn: sqlite3.Connection, db_path: Path) -> None:
 
     Missing or unparseable ``schema_version`` is treated as incompatible — the
     ``check_schema=False`` escape hatch exists for legitimate bypasses
-    (e.g. ``maintain info``, doc DB).
+    (e.g. ``regmeta info``, doc DB).
     """
     fix = "Run `regmeta update` to get a compatible database."
 
