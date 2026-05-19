@@ -29,7 +29,7 @@ globs:
   - "!archive"
   - "!.tmp"
   # Raw marker output (build artifacts)
-  - "!regmeta/docs/_raw"
+  - "!regmeta_build/docs/_raw"
   # Agent config files, not rendered docs
   - "!CLAUDE.md"
   - "!AGENTS.md"

@@ -890,10 +890,10 @@ the *rule* does not yet protect anything; maintainers may rename,
 remove, or restructure entries as the hand-review progresses.
 
 **Pre-v1 escape hatch — the `UNFROZEN` sentinel.** While the file
-`regmeta/fqid_slugs/UNFROZEN` exists in the slug directory, the
+`regmeta_build/fqid_slugs/UNFROZEN` exists in the slug directory, the
 grow-only refusal is lifted in both directions:
 
-- `regmeta maintain precheck-slugs --update-snapshot` writes
+- `regmeta-build precheck-slugs --update-snapshot` writes
   rename and removal diffs through to `.snapshot.json` instead of
   refusing. Diffs are still reported in the JSON envelope so a
   reviewer sees what drifted.
