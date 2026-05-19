@@ -21,20 +21,20 @@ from __future__ import annotations
 
 import re
 from collections.abc import Mapping
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, get_args
 
+from .project_data import ColumnType, IdSubtype, NumericSubtype, Steward
 from .validation import ValidationIssue, ValidationResult
 
-# Steward allowlist mirrors ``Steward`` in ``project_data.py``. Adding a
-# fourth steward is a single-point edit here — see DESIGN.md "Phase
-# status" for why a runtime config-driven allowlist is overengineered
-# until that need actually materializes.
-_STEWARDS: frozenset[str] = frozenset(("global", "ifau", "swecov"))
-_COLUMN_TYPES: frozenset[str] = frozenset(
-    ("id", "categorical", "numeric", "date", "datetime", "opaque")
-)
-_ID_SUBTYPES: frozenset[str] = frozenset(("integer", "string"))
-_NUMERIC_SUBTYPES: frozenset[str] = frozenset(("integer", "double"))
+# Mirror the §6.1-§6.4 Literal types at runtime so the structural layer
+# can't drift from the dataclass declarations. Same drift-protection
+# pattern as ``IssueLevel`` in ``validation.py``. Adding a fourth
+# steward is a single-point edit in ``project_data.py``.
+_STEWARDS: frozenset[str] = frozenset(get_args(Steward))
+_COLUMN_TYPES: frozenset[str] = frozenset(get_args(ColumnType))
+_ID_SUBTYPES: frozenset[str] = frozenset(get_args(IdSubtype))
+_NUMERIC_SUBTYPES: frozenset[str] = frozenset(get_args(NumericSubtype))
 
 _TOP_LEVEL_REQUIRED: tuple[str, ...] = (
     "schema_version",
@@ -246,7 +246,7 @@ def _check_source(
         seen_names[name] = index
 
     register_version = source.get("register_version")
-    rv_well_formed = False
+    rv_segments: list[str] | None = None
     if register_version is None:
         issues.append(
             _error(
@@ -273,7 +273,7 @@ def _check_source(
             )
         )
     else:
-        rv_well_formed = True
+        rv_segments = register_version.split("/")
 
     columns = source.get("columns")
     if columns is None:
@@ -304,11 +304,6 @@ def _check_source(
         )
         return
 
-    rv_segments: list[str] | None = (
-        register_version.split("/")  # type: ignore[union-attr]
-        if rv_well_formed
-        else None
-    )
     for j, col in enumerate(columns):
         cbase = f"{base}/columns/{j}"
         if not isinstance(col, Mapping):
@@ -686,6 +681,29 @@ def _time_key_refs(value: object) -> tuple[str, ...]:
 # --- Panels -------------------------------------------------------------
 
 
+@dataclass
+class _PanelScope:
+    """Per-panel scope shared with each ``_check_panel_member`` call.
+
+    Bundles the panel-level defaults a member may inherit and the
+    cross-member accumulators the panel-level rules read after every
+    member has been processed. Mutable on purpose: ``composite_*``,
+    ``literal_time_seen``, and ``source_to_panel`` are appended to /
+    mutated in place during member iteration.
+    """
+
+    panel_base: str
+    panel_entity: object
+    panel_entity_shape_ok: bool
+    panel_time: object
+    panel_time_kind: str | None
+    source_index: dict[str, dict[str, Any]]
+    source_to_panel: dict[str, str]
+    composite_entities: list[tuple[str, tuple[str, ...]]]
+    composite_times: list[tuple[str, tuple[object, ...]]]
+    literal_time_seen: dict[object, str]
+
+
 def _check_panels(
     panels: object, sources: object, issues: list[ValidationIssue]
 ) -> None:
@@ -797,102 +815,68 @@ def _check_panel(
         )
         return
 
-    composite_entities: list[tuple[str, tuple[str, ...]]] = []
-    composite_times: list[tuple[str, tuple[object, ...]]] = []
-    literal_time_seen: dict[object, str] = {}
+    scope = _PanelScope(
+        panel_base=base,
+        panel_entity=panel_entity,
+        panel_entity_shape_ok=panel_entity_shape_ok,
+        panel_time=panel_time,
+        panel_time_kind=panel_time_kind,
+        source_index=source_index,
+        source_to_panel=source_to_panel,
+        composite_entities=[],
+        composite_times=[],
+        literal_time_seen={},
+    )
 
     for mi, member in enumerate(members):
-        mbase = f"{base}/members/{mi}"
-        _check_panel_member(
-            member,
-            mbase,
-            base,
-            panel_entity,
-            panel_entity_shape_ok,
-            panel_time,
-            panel_time_kind,
-            source_index,
-            source_to_panel,
-            composite_entities,
-            composite_times,
-            literal_time_seen,
-            issues,
-        )
+        _check_panel_member(member, f"{base}/members/{mi}", scope, issues)
 
     # Cross-member composite ordering consistency (§6.8.1). Scalar keys
     # may differ across members (the "heterogeneous" example in §6.4),
     # so only composite-vs-composite mismatches fire.
-    if len(composite_entities) >= 2:
-        first_path, first_tuple = composite_entities[0]
-        for path, tup in composite_entities[1:]:
-            if tup != first_tuple:
-                issues.append(
-                    _error(
-                        "composite_key_inconsistent",
-                        path,
-                        f"composite entity_key {list(tup)} differs from "
-                        f"{list(first_tuple)} at {first_path}",
-                    )
+    _check_composite_consistency(scope.composite_entities, "entity_key", issues)
+    _check_composite_consistency(scope.composite_times, "time_key", issues)
+
+
+def _check_composite_consistency(
+    composites: list[tuple[str, tuple[object, ...]]],
+    label: str,
+    issues: list[ValidationIssue],
+) -> None:
+    if len(composites) < 2:
+        return
+    first_path, first_tuple = composites[0]
+    for path, tup in composites[1:]:
+        if tup != first_tuple:
+            issues.append(
+                _error(
+                    "composite_key_inconsistent",
+                    path,
+                    f"composite {label} {list(tup)} differs from "
+                    f"{list(first_tuple)} at {first_path}",
                 )
-    if len(composite_times) >= 2:
-        first_path, first_tuple = composite_times[0]
-        for path, tup in composite_times[1:]:
-            if tup != first_tuple:
-                issues.append(
-                    _error(
-                        "composite_key_inconsistent",
-                        path,
-                        f"composite time_key {list(tup)} differs from "
-                        f"{list(first_tuple)} at {first_path}",
-                    )
-                )
+            )
 
 
 def _check_panel_member(
     member: object,
     mbase: str,
-    pbase: str,
-    panel_entity: object,
-    panel_entity_shape_ok: bool,
-    panel_time: object,
-    panel_time_kind: str | None,
-    source_index: dict[str, dict[str, Any]],
-    source_to_panel: dict[str, str],
-    composite_entities: list[tuple[str, tuple[str, ...]]],
-    composite_times: list[tuple[str, tuple[object, ...]]],
-    literal_time_seen: dict[object, str],
+    scope: _PanelScope,
     issues: list[ValidationIssue],
 ) -> None:
+    pbase = scope.panel_base
+    member_time_key_overridden = False
+
     if isinstance(member, str):
-        source_name = member
-        eff_entity = panel_entity
+        source_name: str | None = member
+        eff_entity = scope.panel_entity
         eff_entity_path = f"{pbase}/entity_key"
-        eff_entity_shape_ok = panel_entity_shape_ok
-        eff_time = panel_time
+        eff_entity_shape_ok = scope.panel_entity_shape_ok
+        eff_time = scope.panel_time
         eff_time_path = f"{pbase}/time_key"
-        eff_time_kind = panel_time_kind
+        eff_time_kind = scope.panel_time_kind
     elif isinstance(member, Mapping):
-        source_name_raw = member.get("source")
-        if source_name_raw is None:
-            issues.append(
-                _error(
-                    "missing_required_field",
-                    f"{mbase}/source",
-                    "panel member 'source' is required",
-                )
-            )
-            source_name = None  # type: ignore[assignment]
-        elif not isinstance(source_name_raw, str):
-            issues.append(
-                _error(
-                    "invalid_field_type",
-                    f"{mbase}/source",
-                    "panel member 'source' must be a string",
-                )
-            )
-            source_name = None  # type: ignore[assignment]
-        else:
-            source_name = source_name_raw
+        source_name = _resolve_member_source(member, mbase, issues)
 
         m_entity = member.get("entity_key")
         if m_entity is not None:
@@ -902,19 +886,20 @@ def _check_panel_member(
                 m_entity, eff_entity_path, issues
             )
         else:
-            eff_entity = panel_entity
+            eff_entity = scope.panel_entity
             eff_entity_path = f"{pbase}/entity_key"
-            eff_entity_shape_ok = panel_entity_shape_ok
+            eff_entity_shape_ok = scope.panel_entity_shape_ok
 
         m_time = member.get("time_key")
         if m_time is not None:
+            member_time_key_overridden = True
             eff_time = m_time
             eff_time_path = f"{mbase}/time_key"
             eff_time_kind = _check_time_key_shape(m_time, eff_time_path, issues)
         else:
-            eff_time = panel_time
+            eff_time = scope.panel_time
             eff_time_path = f"{pbase}/time_key"
-            eff_time_kind = panel_time_kind
+            eff_time_kind = scope.panel_time_kind
     else:
         issues.append(
             _error(
@@ -949,95 +934,123 @@ def _check_panel_member(
     # default and member override are composite time_keys (§6.4 — scalar
     # kind mixing across members is permitted).
     if (
-        isinstance(member, Mapping)
-        and member.get("time_key") is not None
-        and panel_time_kind in ("literal_composite", "ref_composite")
+        member_time_key_overridden
+        and scope.panel_time_kind in ("literal_composite", "ref_composite")
         and eff_time_kind in ("literal_composite", "ref_composite")
-        and panel_time_kind != eff_time_kind
+        and scope.panel_time_kind != eff_time_kind
     ):
         issues.append(
             _error(
                 "time_key_member_kind_mismatch",
                 f"{mbase}/time_key",
                 f"member composite time_key kind {eff_time_kind!r} must "
-                f"match panel-level kind {panel_time_kind!r}",
+                f"match panel-level kind {scope.panel_time_kind!r}",
             )
         )
 
     # Cross-member composite collection (homogeneity-of-order check
     # happens in the caller after every member has been processed).
     if eff_entity_shape_ok and isinstance(eff_entity, list):
-        composite_entities.append(
+        scope.composite_entities.append(
             (eff_entity_path, tuple(s for s in eff_entity if isinstance(s, str)))
         )
     if eff_time_kind in ("literal_composite", "ref_composite") and isinstance(
         eff_time, list
     ):
-        canonical = _canonicalize_time_literal(eff_time)
-        # `canonical` is only set for literal composites; ref composites
-        # are tracked as the raw tuple of their string refs so ordering
-        # comparisons land on the same value for both kinds.
-        tup: tuple[object, ...]
+        # For ref composites we track the raw tuple of string refs; for
+        # literal composites the canonicalized form. Both kinds compare
+        # cleanly inside `_check_composite_consistency`.
         if eff_time_kind == "ref_composite":
-            tup = tuple(item for item in eff_time if isinstance(item, str))
+            tup: tuple[object, ...] = tuple(
+                item for item in eff_time if isinstance(item, str)
+            )
         else:
+            canonical = _canonicalize_time_literal(eff_time)
             tup = canonical[1] if isinstance(canonical, tuple) else ()  # type: ignore[assignment]
-        composite_times.append((eff_time_path, tup))
+        scope.composite_times.append((eff_time_path, tup))
 
     # Literal time_key uniqueness within the panel (§6.8.1).
     if eff_time_kind in ("literal_scalar", "literal_composite"):
         canon = _canonicalize_time_literal(eff_time)
         if canon is not None:
-            if canon in literal_time_seen:
+            if canon in scope.literal_time_seen:
                 issues.append(
                     _error(
                         "literal_time_key_duplicate",
                         eff_time_path,
                         f"literal time_key duplicates the one at "
-                        f"{literal_time_seen[canon]}",
+                        f"{scope.literal_time_seen[canon]}",
                     )
                 )
             else:
-                literal_time_seen[canon] = eff_time_path
+                scope.literal_time_seen[canon] = eff_time_path
 
     # Cross-panel source-collision (§6.4 "at most one panel").
-    if source_name is not None:
-        if source_name in source_to_panel:
+    if source_name is None:
+        return
+    if source_name in scope.source_to_panel:
+        issues.append(
+            _error(
+                "source_referenced_by_multiple_panels",
+                mbase,
+                f"source {source_name!r} already referenced by panel at "
+                f"{scope.source_to_panel[source_name]}",
+            )
+        )
+    else:
+        scope.source_to_panel[source_name] = pbase
+
+    # Column-ref existence against the member's source. Skip when any
+    # column on the source has display_name absent — the bare ref may
+    # resolve to a reg_meta-derived default later (§6.3).
+    entry = scope.source_index.get(source_name)
+    if entry is None or not entry["all_have_display"]:
+        return
+    display_names: set[str] = entry["display_names"]
+    for ref in _entity_key_refs(eff_entity):
+        if ref not in display_names:
             issues.append(
                 _error(
-                    "source_referenced_by_multiple_panels",
-                    mbase,
-                    f"source {source_name!r} already referenced by panel at "
-                    f"{source_to_panel[source_name]}",
+                    "entity_key_unknown_column",
+                    eff_entity_path,
+                    f"entity_key {ref!r} does not match any display_name "
+                    f"on source {source_name!r}",
                 )
             )
-        else:
-            source_to_panel[source_name] = pbase
-
-        # Column-ref existence against the member's source. Skip when
-        # any column on the source has display_name absent — the bare
-        # ref may resolve to a reg_meta-derived default later (§6.3).
-        entry = source_index.get(source_name)
-        if entry is not None and entry["all_have_display"]:
-            display_names: set[str] = entry["display_names"]
-            for ref in _entity_key_refs(eff_entity):
-                if ref not in display_names:
-                    issues.append(
-                        _error(
-                            "entity_key_unknown_column",
-                            eff_entity_path,
-                            f"entity_key {ref!r} does not match any "
-                            f"display_name on source {source_name!r}",
-                        )
+    if eff_time_kind in ("ref_scalar", "ref_composite"):
+        for ref in _time_key_refs(eff_time):
+            if ref not in display_names:
+                issues.append(
+                    _error(
+                        "time_key_unknown_column",
+                        eff_time_path,
+                        f"time_key {ref!r} does not match any display_name "
+                        f"on source {source_name!r}",
                     )
-            if eff_time_kind in ("ref_scalar", "ref_composite"):
-                for ref in _time_key_refs(eff_time):
-                    if ref not in display_names:
-                        issues.append(
-                            _error(
-                                "time_key_unknown_column",
-                                eff_time_path,
-                                f"time_key {ref!r} does not match any "
-                                f"display_name on source {source_name!r}",
-                            )
-                        )
+                )
+
+
+def _resolve_member_source(
+    member: Mapping[str, object], mbase: str, issues: list[ValidationIssue]
+) -> str | None:
+    """Extract and validate ``member['source']``, returning the string or None."""
+    source_raw = member.get("source")
+    if source_raw is None:
+        issues.append(
+            _error(
+                "missing_required_field",
+                f"{mbase}/source",
+                "panel member 'source' is required",
+            )
+        )
+        return None
+    if not isinstance(source_raw, str):
+        issues.append(
+            _error(
+                "invalid_field_type",
+                f"{mbase}/source",
+                "panel member 'source' must be a string",
+            )
+        )
+        return None
+    return source_raw
