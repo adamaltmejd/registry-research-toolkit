@@ -38,10 +38,10 @@ _LEVEL_EXPR = (
 def repo_seed_path() -> Path | None:
     """Return the in-repo classifications seed, for build-time use only.
 
-    Mirrors ``doc_db.repo_docs_dir``: located from ``regmeta/src/regmeta/`` up to
-    the ``regmeta/`` package root and down to ``classifications.toml``. Installed
-    wheels do not ship the seed — it is a maintainer artifact, same as
-    ``regmeta/docs/``.
+    Located from ``regmeta_build/src/regmeta_build/`` up two levels to the
+    ``regmeta_build/`` package root and down to ``classifications.toml``.
+    Installed wheels do not ship the seed — it is a maintainer artifact,
+    same as ``regmeta_build/docs/``.
     """
     pkg_dir = Path(__file__).resolve().parent
     candidate = pkg_dir.parent.parent / "classifications.toml"
