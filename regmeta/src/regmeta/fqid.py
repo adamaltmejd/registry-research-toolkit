@@ -42,17 +42,23 @@ RESERVED_SLUGS: frozenset[str] = frozenset(
 _SLUG_RE = re.compile(r"^[a-z](?:-?[a-z0-9])*$")
 _SLUG_NONALNUM = re.compile(r"[^a-z0-9]+")
 
-# Period grammar building blocks. Year is 1900-2099, month 01-12. Shared by
-# the anchored validators and the substring extractors so `is_period` and
-# `derive_period` agree on what counts as a period.
+# Period grammar building blocks. Year is 1900-2099, month 01-12, day 01-31.
+# Shared by the anchored validators and the substring extractors so `is_period`
+# and `derive_period` agree on what counts as a period. Day bound is purely
+# syntactic — Feb 30 passes the grammar; calendar validity is the curator's
+# responsibility (same as how the year/month bounds don't enforce SCB
+# coverage).
 _YEAR = r"(?:19|20)\d{2}"
 _MONTH = r"(?:0[1-9]|1[0-2])"
+_DAY = r"(?:0[1-9]|[12]\d|3[01])"
 
 _PERIOD_PATTERNS = (
     re.compile(rf"^{_YEAR}$"),
     re.compile(rf"^{_YEAR}-{_MONTH}$"),
+    re.compile(rf"^{_YEAR}-{_MONTH}-{_DAY}$"),
     re.compile(rf"^[HV]T{_YEAR}$"),
     re.compile(rf"^{_YEAR}-Q[1-4]$"),
+    re.compile(rf"^{_YEAR}-H[12]$"),
 )
 
 # Most-specific-first so "LISA HT2020" yields "HT2020", not "2020". Word
@@ -60,9 +66,16 @@ _PERIOD_PATTERNS = (
 # trailing `(?!\d)` on the month pattern stops range forms like "2018-2020"
 # matching as `2018-20`. Year pattern anchors against longer digit runs the
 # same way `queries.extract_year` does (rejects "v19999").
+#
+# ISO date is in the extract list because SCB source names occasionally
+# contain literal `YYYY-MM-DD` (e.g. `'2014-12-31'`); the half-year pattern
+# is curated-only (Swedish source forms like `Första halvåret 1995` don't
+# carry the bare `1995-H1` substring, same as `maj-2011`/`kv1-2011` — see
+# REFACTOR_SPEC.md §5.3 for the canonical-form convention).
 _PERIOD_EXTRACT_PATTERNS = (
     re.compile(rf"(?<![A-Za-z0-9])[HV]T{_YEAR}(?!\d)"),
     re.compile(rf"(?<!\d){_YEAR}-Q[1-4](?![A-Za-z0-9])"),
+    re.compile(rf"(?<!\d){_YEAR}-{_MONTH}-{_DAY}(?!\d)"),
     re.compile(rf"(?<!\d){_YEAR}-{_MONTH}(?!\d)"),
     re.compile(rf"(?<!\d){_YEAR}(?!\d)"),
 )
@@ -139,7 +152,8 @@ def validate_slug(
 
 def _validate_version_slot(value: str) -> None:
     """§5.2: the version slot accepts either a period token (`2018`, `HT2020`,
-    `2018-Q3`, `2018-01`) or a curated slug (`ackumulerat-register`, `_default`).
+    `2018-Q3`, `2018-H1`, `2018-01`, `2018-01-15`) or a curated slug
+    (`ackumulerat-register`, `_default`).
     """
     validate_slug(value, "register_version", allow_default=True, allow_period=True)
 
@@ -148,7 +162,8 @@ def _validate_period(value: str) -> None:
     if not is_period(value):
         raise FqidError(
             f"invalid period: {value!r} "
-            "(grammar: YYYY, YYYY-MM, HTYYYY/VTYYYY, YYYY-Q[1-4])"
+            "(grammar: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, "
+            "YYYY-Q[1-4], YYYY-H[12])"
         )
 
 

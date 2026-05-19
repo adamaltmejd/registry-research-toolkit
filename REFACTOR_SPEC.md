@@ -465,11 +465,15 @@ class/lkf/2012                                       classification
 ```
 
 The version slot accepts either a **derived period** or a
-**curated slug**. Periods are integer year (`2018`) or string period
-(`2018-01`, `HT2020`, `2018-Q3`) — the same forms `time_key` accepts in
-`project_data.json`. Year is constrained to `(?:19|20)\d{2}`
-(1900-2099, SCB-realistic) and month to `(?:0[1-9]|1[0-2])`; the
-reserved-slug regexes below share these bounds.
+**curated slug**. Periods are integer year (`2018`), monthly
+(`2018-01`), ISO date (`2018-01-15`), academic semester (`HT2020`,
+`VT2019`), quarter (`2018-Q3`), or half-year (`2018-H1`,
+`2018-H2`) — the same forms `time_key` accepts in `project_data.json`.
+Year is constrained to `(?:19|20)\d{2}` (1900-2099, SCB-realistic),
+month to `(?:0[1-9]|1[0-2])`, and day to `(?:0[1-9]|[12]\d|3[01])`;
+the reserved-slug regexes below share these bounds. The day bound is
+syntactic only — `2018-02-30` parses, calendar validity is the
+curator's call.
 
 Curated version slugs are kebab-case (same grammar as the variant
 slot) and live in the slug TOML. Three use cases:
@@ -549,11 +553,11 @@ hitting one of these:
   the slug grammar, so no other slug can collide with it.
 - Period-shaped slugs in non-period slots (provider / register /
   variant / variable): a slug that matches the period grammar
-  (`^\d{4}$`, `^\d{4}-\d{2}$`, `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`)
-  is rejected outside the period slot, because it would make the
-  segment-count discriminator ambiguous to humans reading the
-  FQID. The grammar still parses unambiguously by position; the
-  ban is for legibility.
+  (`^\d{4}$`, `^\d{4}-\d{2}$`, `^\d{4}-\d{2}-\d{2}$`,
+  `^[HV]T\d{4}$`, `^\d{4}-Q[1-4]$`, `^\d{4}-H[12]$`) is rejected
+  outside the period slot, because it would make the segment-count
+  discriminator ambiguous to humans reading the FQID. The grammar
+  still parses unambiguously by position; the ban is for legibility.
 
 All four are enforced via the same precheck that runs against the
 slug TOMLs (§5.3) at build time.
@@ -689,14 +693,14 @@ rows that round-trip cleanly are omitted from the seed.
 
 **Curated slug conventions.** The curated slug is a normalized
 identifier, **not** a faithful transcription of `registerversionnamn`.
-Two consequences:
+Four consequences:
 
 1. **Prefer canonical period grammar over Swedish source-name forms.**
    When the underlying source name unambiguously denotes a single
    period token, the curated slug should match the §5.2 period
-   grammar — even though `derive_period` doesn't extract it. The
-   resolver matches the slug column strictly, so canonical form is
-   what consumers will type:
+   grammar — even though `derive_period` doesn't extract most of
+   these. The resolver matches the slug column strictly, so canonical
+   form is what consumers will type:
 
    | Source name pattern             | Curated slug   | Not              |
    |---------------------------------|----------------|------------------|
@@ -704,13 +708,75 @@ Two consequences:
    | `2011 kv1` / `2007 kv 1`        | `2011-Q1` / `2007-Q1` | `kv1-2011` / `kv-1-2007` |
    | `2018H` / `2018V` (hreg suffix) | `HT2018` / `VT2018`   | `v2018h` / `v2018v` |
    | `Vårterminen 2013` (collision-blocked from auto-derive) | `VT2013` | `varterminen-2013` |
+   | `Första halvåret 1995` / `Andra halvåret 1995` | `1995-H1` / `1995-H2` | `forsta-halvaret-1995` |
+   | `2015 januari - juni` / `2015 juli - december` | `2015-H1` / `2015-H2` | `januari-juni-2015` |
+   | `15 oktober 2002` (specific date) | `2002-10-15` | `oktober-2002-15` |
+
+   The `H` in `YYYY-H[12]` doesn't collide with the `H` in `HT` (the
+   semester form is two-character `HT`/`VT`; the half-year form
+   always carries a `YYYY-` prefix).
 
    Note: the academic-semester *autoderive* still requires the
    `höstterminen` / `vårterminen` form (with the `t`) — bare H/V
    suffixes don't match because they're too ambiguous in free
-   text. The convention above is for *curated* slugs only.
+   text. ISO date is the one auto-extracted addition: SCB source
+   names containing literal `YYYY-MM-DD` round-trip through
+   `derive_period` directly. Half-year is curated-only — the
+   Swedish source forms above don't carry the bare `YYYY-H1`
+   substring.
 
-2. **Normalize away source-data typos and abbreviations.** If
+2. **Descriptor conventions for forms with no canonical period.**
+   Ranges and multi-period spans stay descriptive, but follow a
+   consistent shape:
+
+   | Source name pattern                    | Curated slug          | Not             |
+   |----------------------------------------|------------------------|-----------------|
+   | `2008/2009` (academic year, slash form) | `lasar-2008-2009`     | `v2008-2009`    |
+   | `2007 kv 2-kv 4` (quarter range)       | `q2-q4-2007`           | `kv2-kv4-2007`  |
+   | `Kvartal 1-3 fr.o.m. 2010`             | `q1-q3-2010`           | `kvartal-1-3-fr-o-m-2010` |
+   | `2003-2018` (generic year range)        | `v2003-2018`           | (no better form — `v` prefix is the "starts with a letter" workaround) |
+   | `2021VX, slutlig version` (IoT-style internal-marker sibling) | `vx-2021` | `v2021vx-slutlig-version` |
+   | `Huvudalternativ 2018-2070` (multi-year projection scenario) | `huvudalternativ-2018-2070` | `2018-2070-huvudalternativ` |
+
+   When a descriptor slug contains a year or period, the period goes
+   **at the end** (`ekologiska-arealer-2024`, not
+   `2024-ekologiska-arealer`). Unperiodized aux tables
+   (`ackumulerat-register`) carry no period at all. The
+   `q[1-4]-q[1-4]-YYYY` form for quarter ranges is lowercase because
+   descriptor slugs are lowercase by §5.2; the canonical
+   `2010-Q[1-4]` single-quarter form keeps its uppercase `Q` because
+   period tokens are exempt from the slug-grammar case rule.
+
+3. **Sibling-collision: definitive form claims the canonical
+   slug.** When multiple siblings under one variant derive to the
+   same period and one of them is the "definitive" or "final"
+   release, that sibling claims the period slug (`2020`); qualified
+   siblings (preliminär, alternate populations, internal-marker
+   variants) take descriptor slugs:
+
+   ```toml
+   # '2020, slutlig version'  → final release claims the period
+   [register_version."25.763.18994"]
+   slug = "2020"
+
+   # '2020, preliminär version' → qualified sibling
+   [register_version."25.763.18903"]
+   slug = "preliminar-version-2020"
+   ```
+
+   This applies to the §5.2 use case 3 ("canonical-sibling promotion")
+   — the rule "which sibling wins" is **the definitive/final one**,
+   so consumer lineage edges keyed by a bare period resolve to the
+   most stable release.
+
+   Absent an explicit definitive sibling (no `slutlig` / `final` /
+   equivalent marker among the colliding rows), the period slug
+   goes **unclaimed** and every sibling takes a descriptor. Don't
+   promote one arbitrarily — leaving the bare period slug free
+   surfaces the ambiguity to consumers rather than hiding it
+   behind a curator's coin-flip.
+
+4. **Normalize away source-data typos and abbreviations.** If
    `registerversionnamn` ships with a misspelling (`högalternariv`
    instead of `högalternativ`) or a truncation (`bebygge` instead of
    `bebyggelse`), the curated slug uses the corrected form. The
@@ -722,12 +788,6 @@ Two consequences:
    [register_version."310.888.5988"]
    slug = "hogalternativ-2015-2060"
    ```
-
-Ranges and multi-period spans stay descriptive — the period grammar
-has no canonical form for them: `kv2-kv4-2010` (quarter range),
-`forsta-halvaret-1995` (Swedish fiscal half-year, distinct from
-HT/VT academic semesters), `huvudalternativ-2018-2070` (multi-year
-projection scenario), `ackumulerat-register` (unperiodized aux).
 
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
