@@ -106,7 +106,7 @@ display_group = "Familjer 1990-1997"
 
 # 'Kvartal 1-3 fr.o.m. 2010'
 [register_version."2.56.13802"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Änkor/ änklingar 1968-1997'
 [register_version."2.56.15013"]
@@ -122,27 +122,27 @@ slug = "skilda-1968-1997"
 
 # 'Kvartal 1-3 fr.o.m. 2010'
 [register_version."2.57.13811"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Kvartal 1-3 fr.o.m. 2010'
 [register_version."2.60.13818"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Kvartal 1-3 fr.o.m. 2010'
 [register_version."2.61.13813"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Kvartal 1-3 fr.o.m 2010'
 [register_version."2.62.13815"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Kvartal 1-3 fr.o.m 2010'
 [register_version."2.63.13814"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # 'Kvartal 1-3 fr.o.m. 2010'
 [register_version."2.64.13824"]
-slug = "kvartal-1-3-fr-o-m-2010"
+slug = "q1-q3-2010"
 
 # Fastighetstaxering (FTR)
 [register."7"]
@@ -471,7 +471,7 @@ slug = "2021"
 
 # '2021VX, slutlig version'
 [register_version."25.1153.18563"]
-slug = "v2021vx-slutlig-version"
+slug = "vx-2021"
 
 # '2022, slutlig version'
 [register_version."25.1153.18996"]
@@ -479,7 +479,7 @@ slug = "2022"
 
 # '2022VX, slutlig version'
 [register_version."25.1153.18997"]
-slug = "v2022vx-slutlig-version"
+slug = "vx-2022"
 
 # '2023, slutlig version'
 [register_version."25.1153.19677"]
@@ -487,7 +487,7 @@ slug = "2023"
 
 # '2023VX, slutlig version'
 [register_version."25.1153.19678"]
-slug = "v2023vx-slutlig-version"
+slug = "vx-2023"
 
 # '2024, slutlig version'
 [register_version."25.1153.20242"]
@@ -495,7 +495,7 @@ slug = "2024"
 
 # '2024VX, slutlig version'
 [register_version."25.1153.20243"]
-slug = "v2024vx-slutlig-version"
+slug = "vx-2024"
 
 # Registerbaserad arbetsmarknadsstatistik (RAMS)
 [register."26"]
@@ -2283,11 +2283,11 @@ display_group = "Skolor"
 
 # '15 oktober 2002'
 [register_version."192.408.5550"]
-slug = "oktober-2002-15"
+slug = "2002-10-15"
 
 # '15 oktober 2002 Förskoleklass'
 [register_version."192.408.13520"]
-slug = "oktober-2002-forskoleklass-15"
+slug = "forskoleklass-2002-10-15"
 
 # Grundskola: elever per 15 oktober
 [register."193"]
@@ -2319,7 +2319,7 @@ slug = "2011-Q1"
 
 # '2011 kv2- kv4'
 [register_version."195.275.11393"]
-slug = "kv2-kv4-2011"
+slug = "q2-q4-2011"
 
 # Energianvändningen inom fiskesektorn
 [register."196"]
@@ -2595,95 +2595,79 @@ display_group = "Personalutbildningsstatistik (PUT)"
 
 # 'Första halvåret 1995'
 [register_version."229.396.14762"]
-slug = "forsta-halvaret-1995"
+slug = "1995-H1"
 
 # 'Andra halvåret 1995'
 [register_version."229.396.14864"]
-slug = "andra-halvaret-1995"
+slug = "1995-H2"
 
 # 'Första halvåret 1996'
 [register_version."229.396.14891"]
-slug = "forsta-halvaret-1996"
+slug = "1996-H1"
 
 # 'Andra halvåret 1996'
 [register_version."229.396.14892"]
-slug = "andra-halvaret-1996"
+slug = "1996-H2"
 
 # 'Första halvåret 1997'
 [register_version."229.396.14907"]
-slug = "forsta-halvaret-1997"
+slug = "1997-H1"
 
 # 'Andra halvåret 1997'
 [register_version."229.396.14909"]
-slug = "andra-halvaret-1997"
+slug = "1997-H2"
 
 # 'Första halvåret 1998'
 [register_version."229.396.14911"]
-slug = "forsta-halvaret-1998"
+slug = "1998-H1"
 
 # 'Andra halvåret 1998'
 [register_version."229.396.14914"]
-slug = "andra-halvaret-1998"
+slug = "1998-H2"
 
 # 'Första halvåret 1999'
 [register_version."229.396.14917"]
-slug = "forsta-halvaret-1999"
+slug = "1999-H1"
 
 # 'Andra halvåret 1999'
 [register_version."229.396.14918"]
-slug = "andra-halvaret-1999"
+slug = "1999-H2"
 
 # 'Andra halvåret 2000'
 [register_version."229.396.14967"]
-slug = "andra-halvaret-2000"
+slug = "2000-H2"
 
 # 'Första halvåret 2000'
 [register_version."229.396.14969"]
-slug = "forsta-halvaret-2000"
+slug = "2000-H1"
 
 # 'Första halvåret 2001'
 [register_version."229.396.14971"]
-slug = "forsta-halvaret-2001"
+slug = "2001-H1"
 
 # 'Andra halvåret 2001'
 [register_version."229.396.14972"]
-slug = "andra-halvaret-2001"
+slug = "2001-H2"
 
 # 'Första halvåret 2002'
 [register_version."229.396.14973"]
-slug = "forsta-halvaret-2002"
+slug = "2002-H1"
 
 # 'Andra halvåret 2002'
 [register_version."229.396.14979"]
-slug = "andra-halvaret-2002"
+slug = "2002-H2"
 
 # 'Första halvåret 2003'
 [register_version."229.396.14982"]
-slug = "forsta-halvaret-2003"
+slug = "2003-H1"
 
 # 'Andra halvåret 2003'
 [register_version."229.396.14983"]
-slug = "andra-halvaret-2003"
+slug = "2003-H2"
 
-# 'Hela året 1999'
-[register_version."229.396.15072"]
-slug = "hela-aret-1999"
-
-# 'Hela året 2000'
-[register_version."229.396.15200"]
-slug = "hela-aret-2000"
-
-# 'Hela året 2001'
-[register_version."229.396.15202"]
-slug = "hela-aret-2001"
-
-# 'Hela året 2002'
-[register_version."229.396.15203"]
-slug = "hela-aret-2002"
-
-# 'Hela året 2003'
-[register_version."229.396.15211"]
-slug = "hela-aret-2003"
+# 'Hela året YYYY' (1999-2003) entries removed: with halvår siblings moved
+# to YYYY-H1/YYYY-H2, the bare-year slot is uncontested and derive_period
+# auto-fills them at build time.
 
 # Anpassad grundskola
 [register."231"]
@@ -2883,51 +2867,51 @@ display_group = "Nationella prov: resultat"
 
 # '2008/2009'
 [register_version."248.496.14069"]
-slug = "v2008-2009"
+slug = "lasar-2008-2009"
 
 # '2007/2008'
 [register_version."248.496.14070"]
-slug = "v2007-2008"
+slug = "lasar-2007-2008"
 
 # '2006/2007'
 [register_version."248.496.14071"]
-slug = "v2006-2007"
+slug = "lasar-2006-2007"
 
 # '2005/2006'
 [register_version."248.496.14072"]
-slug = "v2005-2006"
+slug = "lasar-2005-2006"
 
 # '2004/2005'
 [register_version."248.496.14073"]
-slug = "v2004-2005"
+slug = "lasar-2004-2005"
 
 # '2003/2004'
 [register_version."248.496.14074"]
-slug = "v2003-2004"
+slug = "lasar-2003-2004"
 
 # '2002/2003'
 [register_version."248.496.14075"]
-slug = "v2002-2003"
+slug = "lasar-2002-2003"
 
 # '2001/2002'
 [register_version."248.496.14076"]
-slug = "v2001-2002"
+slug = "lasar-2001-2002"
 
 # '2000/2001'
 [register_version."248.496.14077"]
-slug = "v2000-2001"
+slug = "lasar-2000-2001"
 
 # '1999/2000'
 [register_version."248.496.14078"]
-slug = "v1999-2000"
+slug = "lasar-1999-2000"
 
 # '1998/1999'
 [register_version."248.496.14079"]
-slug = "v1998-1999"
+slug = "lasar-1998-1999"
 
 # '1997/1998'
 [register_version."248.496.14080"]
-slug = "v1997-1998"
+slug = "lasar-1997-1998"
 
 # Kommunal vuxenutbildning
 [register."249"]
@@ -2955,83 +2939,83 @@ display_group = "Nationella prov"
 
 # '2008/2009'
 [register_version."249.498.12497"]
-slug = "v2008-2009"
+slug = "lasar-2008-2009"
 
 # '2007/2008'
 [register_version."249.498.12498"]
-slug = "v2007-2008"
+slug = "lasar-2007-2008"
 
 # '2006/2007'
 [register_version."249.498.14022"]
-slug = "v2006-2007"
+slug = "lasar-2006-2007"
 
 # '2005/2006'
 [register_version."249.498.14023"]
-slug = "v2005-2006"
+slug = "lasar-2005-2006"
 
 # '2004/2005'
 [register_version."249.498.14024"]
-slug = "v2004-2005"
+slug = "lasar-2004-2005"
 
 # '2003/2004'
 [register_version."249.498.14025"]
-slug = "v2003-2004"
+slug = "lasar-2003-2004"
 
 # '2002/2003'
 [register_version."249.498.14026"]
-slug = "v2002-2003"
+slug = "lasar-2002-2003"
 
 # '2001/2002'
 [register_version."249.498.14027"]
-slug = "v2001-2002"
+slug = "lasar-2001-2002"
 
 # '2000/2001'
 [register_version."249.498.14028"]
-slug = "v2000-2001"
+slug = "lasar-2000-2001"
 
 # '1999/2000'
 [register_version."249.498.14029"]
-slug = "v1999-2000"
+slug = "lasar-1999-2000"
 
 # '2007/2008'
 [register_version."249.1107.12495"]
-slug = "v2007-2008"
+slug = "lasar-2007-2008"
 
 # '2008/2009'
 [register_version."249.1107.12496"]
-slug = "v2008-2009"
+slug = "lasar-2008-2009"
 
 # '2006/2007'
 [register_version."249.1107.13988"]
-slug = "v2006-2007"
+slug = "lasar-2006-2007"
 
 # '2005/2006'
 [register_version."249.1107.13989"]
-slug = "v2005-2006"
+slug = "lasar-2005-2006"
 
 # '2004/2005'
 [register_version."249.1107.13990"]
-slug = "v2004-2005"
+slug = "lasar-2004-2005"
 
 # '2003/2004'
 [register_version."249.1107.13991"]
-slug = "v2003-2004"
+slug = "lasar-2003-2004"
 
 # '2002/2003'
 [register_version."249.1107.13992"]
-slug = "v2002-2003"
+slug = "lasar-2002-2003"
 
 # '2001/2002'
 [register_version."249.1107.13993"]
-slug = "v2001-2002"
+slug = "lasar-2001-2002"
 
 # '2000/2001'
 [register_version."249.1107.13994"]
-slug = "v2000-2001"
+slug = "lasar-2000-2001"
 
 # '1999/2000'
 [register_version."249.1107.13995"]
-slug = "v1999-2000"
+slug = "lasar-1999-2000"
 
 # Komvux som anpassad utbildning
 [register."250"]
@@ -3091,7 +3075,7 @@ display_group = "Utdata"
 
 # '2007 kv 2-kv 4'
 [register_version."254.549.2661"]
-slug = "kv2-kv4-2007"
+slug = "q2-q4-2007"
 
 # '2007 kv 1'
 [register_version."254.549.2774"]
@@ -3103,7 +3087,7 @@ slug = "2000-Q1"
 
 # '2000 kv 2- kv 4'
 [register_version."254.549.2786"]
-slug = "kv2-kv4-2000"
+slug = "q2-q4-2000"
 
 # Innovation i företagssektorn
 [register."257"]
@@ -4215,7 +4199,7 @@ display_group = "Familjer"
 
 # '2014-12-31'
 [register_version."333.1077.6042"]
-slug = "v2014-12-31"
+slug = "2014-12-31"
 
 # '2014-12-31 enligt ny definition'
 [register_version."333.1077.7490"]
@@ -4223,7 +4207,7 @@ slug = "enligt-ny-definition-2014-12-31"
 
 # '2014-12-31'
 [register_version."333.1079.6057"]
-slug = "v2014-12-31"
+slug = "2014-12-31"
 
 # '2014-12-31 enligt ny definition'
 [register_version."333.1079.7492"]
@@ -4511,83 +4495,83 @@ display_group = "Kommunernas aktivitetsansvar"
 
 # '2015 januari - juni'
 [register_version."368.1325.11502"]
-slug = "januari-juni-2015"
+slug = "2015-H1"
 
 # '2015 juli - december'
 [register_version."368.1325.11504"]
-slug = "juli-december-2015"
+slug = "2015-H2"
 
 # '2016 januari - juni'
 [register_version."368.1325.11505"]
-slug = "januari-juni-2016"
+slug = "2016-H1"
 
 # '2016 juli - december'
 [register_version."368.1325.11511"]
-slug = "juli-december-2016"
+slug = "2016-H2"
 
 # '2017 januari - juni'
 [register_version."368.1325.11638"]
-slug = "januari-juni-2017"
+slug = "2017-H1"
 
 # '2017 juli - december'
 [register_version."368.1325.11925"]
-slug = "juli-december-2017"
+slug = "2017-H2"
 
 # '2018 januari - juni'
 [register_version."368.1325.12618"]
-slug = "januari-juni-2018"
+slug = "2018-H1"
 
 # '2018 juli - december'
 [register_version."368.1325.13242"]
-slug = "juli-december-2018"
+slug = "2018-H2"
 
 # '2019 januari - juni'
 [register_version."368.1325.13643"]
-slug = "januari-juni-2019"
+slug = "2019-H1"
 
 # '2019 juli - december'
 [register_version."368.1325.14471"]
-slug = "juli-december-2019"
+slug = "2019-H2"
 
 # '2020 januari - juni'
 [register_version."368.1325.15540"]
-slug = "januari-juni-2020"
+slug = "2020-H1"
 
 # '2020 juli - december'
 [register_version."368.1325.16446"]
-slug = "juli-december-2020"
+slug = "2020-H2"
 
 # '2021 januari - juni'
 [register_version."368.1325.19004"]
-slug = "januari-juni-2021"
+slug = "2021-H1"
 
 # '2021 juli - december'
 [register_version."368.1325.19006"]
-slug = "juli-december-2021"
+slug = "2021-H2"
 
 # '2022 januari - juni'
 [register_version."368.1325.19007"]
-slug = "januari-juni-2022"
+slug = "2022-H1"
 
 # '2022 juli - december'
 [register_version."368.1325.19008"]
-slug = "juli-december-2022"
+slug = "2022-H2"
 
 # '2023 januari - juni'
 [register_version."368.1325.19009"]
-slug = "januari-juni-2023"
+slug = "2023-H1"
 
 # '2023 juli - december'
 [register_version."368.1325.19010"]
-slug = "juli-december-2023"
+slug = "2023-H2"
 
 # '2024 januari - juni'
 [register_version."368.1325.19671"]
-slug = "januari-juni-2024"
+slug = "2024-H1"
 
 # '2024 juli - december'
 [register_version."368.1325.20245"]
-slug = "juli-december-2024"
+slug = "2024-H2"
 
 # Internationella företag
 [register."369"]
