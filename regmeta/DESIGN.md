@@ -1,7 +1,10 @@
 # Design: regmeta
 
-Design rationale and constraints. For usage, see `regmeta --help`.
-For the domain model, see [STRUCTURE.md](STRUCTURE.md).
+Design rationale and constraints for the query layer. For usage, see
+`regmeta --help`. For the domain model, see [STRUCTURE.md](STRUCTURE.md).
+For build-pipeline rationale (CSV import, sentinel filtering, year
+projection, classification seeding, doc-DB build), see
+[../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md).
 
 ## Agent-first design
 
@@ -30,42 +33,9 @@ The database is read-only from the perspective of query commands.
 
 regmeta is provider-agnostic at the query layer: one metadata DB, one
 docs DB, one CLI. Users searching or resolving variables shouldn't need
-to know which agency published a given register.
-
-Provider-specific logic lives under `regmeta/src/regmeta/sources/`:
-
-- `sources/sos.py` — parses Socialstyrelsen register metadata Excel
-  deliveries (`.xlsx` per register). Returns `SosRegister` dataclasses.
-  Isolated here so the quirks of that format (sheet-name variance,
-  "metadatat"-typo section headings, phantom row counts, non-standard
-  kodlistor) don't leak into schema or query code.
-- SCB CSV import currently lives in `db.py::build_db`. Moving it under
-  `sources/scb.py` with the same intermediate-representation pattern is
-  tracked as a follow-up — non-blocking for additional providers.
-
-The build-db step consumes each provider's parser and maps into the
-unified schema. Providers share `register`, `variable`, `value_code`,
-etc.; provider-specific fields live on optional columns or in
-enrichment tables when they have no shared analogue. Adding a new
-provider means writing a parser in `sources/` and a mapping step in
-`build-db`; no query-layer or CLI changes should be needed.
-
-## CSV import and encoding
-
-SCB exports are pipe-delimited, cp1252 encoded. Several bytes in the
-exports are actually DOS cp850 remnants undefined in cp1252:
-
-| Byte | cp850 | Mapped to |
-|------|-------|-----------|
-| 0x81 | ü     | ü         |
-| 0x8D | ì     | ì         |
-| 0x8F | Å     | Å         |
-| 0x90 | É     | É         |
-| 0x9D | Ø     | Ø         |
-
-These are mapped during import. The build reads ~1M backbone rows
-from `Registerinformation.csv` and ~102M value-item rows from
-`Vardemangder.csv`.
+to know which agency published a given register. Provider-specific
+parsers live in `regmeta_build` (see its DESIGN.md § "Source parsers");
+the resulting unified schema is what query commands see.
 
 ## FTS5 configuration
 
@@ -100,120 +70,43 @@ discovery.
 Registers like LISA, FRIDA, LINDA, and STATIV are composites — most of
 their variables originate in source registers (RTB, RAMS, etc.). The
 `variable` table tracks this via `source_register_id` (FK to `register`)
-and `source_label` (display abbreviation or raw text).
+and `source_label` (display abbreviation or raw text). Unresolved sources
+remain as raw text for human review and surface in `get schema` (source
+column) and `get lineage` (consumer/source classification). The
+resolution rules used during build are documented in
+[../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md) §
+"Source-register resolution".
 
-During `build-db`, the `VariabelRegister_Källa` field is resolved using
-deterministic matching only — no fuzzy logic:
+## Value sets are year-projected
 
-1. Extract parenthesized abbreviation (e.g. "Befolkningsregistret (RTB)" → RTB)
-2. Match text before ` : ` separator against register names
-3. Match entire text against register names
-
-Unresolved sources are stored as raw text in `source_label` for human
-review. This is surfaced in `get schema` (source column) and `get lineage`
-(consumer/source classification).
-
-## Vardemängder sentinel filtering
-
-`Vardemangder.csv` ships a row for every variable, including those with no
-enumerated code list. SCB encodes "no codes" by stuffing a placeholder string
-into `Värdekod` so that `Värdekod == Värdemängdsversion` (and typically
-`Värdemängdsnivå`). Two disjoint cases occur with this shape, classified by
-two allowlists in `db.py`:
-
-`_VARDEMANGDER_SENTINELS` — placeholder strings that mean "no enumerated
-code list." Not real value codes; dropped silently.
-
-| Värdekod | Meaning |
-|---|---|
-| `Tal` | Numeric variable |
-| `Beskrivande text` | Free-form text variable |
-
-Importing sentinels would pollute `value_code` with
-rows that are never valid lookups, and write the placeholder into
-`variable_instance.vardemangds{version,niva}` where downstream consumers
-would mistake it for a real classification label. The authoritative type
-signal is `variable_instance.datatyp` — the placeholder adds nothing and is
-sometimes misleading (e.g. cvid 207 `DatInv` is `datatyp='int'` but tagged
-`Beskrivande text`).
-
-`_VARDEMANGDER_REAL_SHAPED` — kods that *happen* to equal their version
-label but are real single-code value sets. Kept silently.
-
-| Värdekod | Label |
-|---|---|
-| `1` | Hade ingen anställning före YH-utbildningen |
-| `2` | Övriga civilstånd |
-
-Both classifications are required because the shape alone is ambiguous. An
-unguarded skip on `kod == version` would silently drop the real codes; an
-unguarded keep would let new SCB placeholders pollute the DB.
-
-The skip rule is tight: `kod == version == niva` AND `kod` ∈ `_VARDEMANGDER_SENTINELS`. Looser variants (e.g. `kod == version` but `niva` diverging)
-fall through to the drift detector below and fail the build for human
-review, even when the kod is already a known sentinel string. This guards
-against a future SCB change to the sentinel shape.
-
-A cvid whose only Vardemängder rows were sentinels gets `NULL` for
-`vardemangdsversion`/`vardemangdsniva` on `variable_instance`. Fully-empty
-rows (kod, label, item all empty) are dropped silently.
-
-### Drift detection
-
-A `kod == version` row where kod is in neither allowlist is treated as drift
-and fails the build with `RegmetaError(code="vardemangder_drift", exit 10)`.
-The importer can't tell whether such a row is a new sentinel or a new real
-single-code value set, so the build refuses to ship and prompts the
-maintainer to add the kod to one of the two allowlists.
-
-The drift trigger only requires `kod == version`, not `kod == version ==
-niva`, so a placeholder where SCB drops the niva equality still surfaces.
-Currently observed sentinels have all three fields equal, but no upstream
-guarantee.
-
-This makes the maintainer's release workflow self-checking: any new SCB
-sentinel string causes the rebuild to fail loudly with an actionable
-remediation, rather than silently shipping pollution. There is no
-interactive escape hatch — drift always fails — because the only correct
-response is to update the allowlists, which is a one-line code change.
-
-## Value sets are year-projected at build time
-
-SCB's `Vardemangder.csv` is the historical union — every code that ever
+`Vardemangder.csv` is the historical union — every code that ever
 applied to a variable in any register year, with no temporal qualification.
-SCB's `VardemangderValidDates.csv` (added after this project flagged the
-issue) is the authoritative temporal filter: per `(ItemId, valid_from,
-valid_to)`, with NULL bounds meaning "no boundary." A code without a
-validity row is always valid throughout the variable's lifetime (per SCB
-correspondence).
+`VardemangderValidDates.csv` is the authoritative temporal filter: per
+`(ItemId, valid_from, valid_to)`, with NULL bounds meaning "no boundary."
+A code without a validity row is always valid throughout the variable's
+lifetime (per SCB correspondence).
 
-`build-db` projects every `(cvid, code_id)` pair through validity at build
-time so each cvid carries the codes that were actually valid in its
-regver year. The projection rule:
-
-- For each pair, collect validity windows of all *tracked* ItemIds (those
-  with at least one row in `VardemangderValidDates.csv`).
-- If no tracked windows → include the code (always-valid fallback).
-- Otherwise → include iff at least one window covers the cvid year.
-- Yearless cvids (regver name has no plausible 4-digit year, e.g.
-  `Person-År`) include all union pairs as a fallback.
-- An untracked ItemId next to a tracked one does NOT relax the constraint:
-  the tracked window is authoritative.
-
+The DB stores year-projected value sets, not the raw union: each cvid
+carries the codes that were actually valid in its regver year.
 Projection is intentionally year-precision, not exact-date. SCB's
-metadata is annual; sub-year boundaries (e.g. `valid_from=1995-09-01`) are
-administrative artifacts that year overlap absorbs losslessly. The
+metadata is annual; sub-year boundaries (e.g. `valid_from=1995-09-01`)
+are administrative artifacts that year overlap absorbs losslessly. The
 trade-off — losing sub-year query precision — is paid for by removing
 the temporal axis from the schema entirely. There is no `get values
 --valid-at` flag and no historical-union opt-in: the union is discarded
-by design. Maintainers auditing the raw union should read
-`Vardemangder.csv` directly.
+by design.
+
+The projection rule and its build-time mechanics are documented in
+[../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md) § "Year
+projection".
 
 The result is content-addressed and deduplicated: identical year-projected
 sets across cvids share one `value_set` row (`member_hash` = sha256 of
 sorted (vardekod, vardebenamning) pairs); each cvid links to its set via
 `variable_instance.value_set_id`. NULL `value_set_id` means the cvid had
-no codes (sentinel-only or every union pair excluded by projection).
+no codes (every union pair excluded by projection, or only sentinel rows
+in the source — see [../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md)
+§ "Vardemängder sentinel filtering").
 
 ## Classifications
 
@@ -235,23 +128,11 @@ level keeps each code system distinct (SUN 2000 codes never bleed into
 SUN 2020) and lets variable-level helpers aggregate when needed.
 
 The `classification_id` column is populated at build time from a
-maintainer-curated TOML seed at `regmeta/classifications.toml`. Each entry
-declares a normalized classification and lists the raw
-`vardemangdsversion` strings that map to it — exact match, no fuzzy
-inference. Match strings are deterministic and auditable: any maintainer
-can enumerate them via
-`SELECT DISTINCT vardemangdsversion FROM variable_instance`.
-
-Build-time invariants (violations fail `regmeta-build build-db` loudly, exit 10):
-
-- Every seed `vardemangdsversion` string must match at least one instance.
-- Every classification must resolve to at least one tagged instance and
-  at least one value code.
-- A given `vardemangdsversion` string may belong to at most one
-  classification.
-- Every `supersedes` reference must resolve to a declared `short_name`.
-- Every `valid_codes_file`, when present, must resolve to a CSV under the
-  classifications directory with header `vardekod,vardebenamning`.
+maintainer-curated TOML seed at `regmeta_build/classifications.toml`
+(exact match against `vardemangdsversion`, no fuzzy inference). The seed
+schema, build-time invariants, and validation rules live in
+[../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md) §
+"Classification seed".
 
 ### Canonical vs observed codes
 
@@ -262,18 +143,14 @@ levels) that has no place in an authoritative code list, but is also
 useful to keep around so a researcher seeing one of those values in a
 register can look it up.
 
-A seed entry's optional `valid_codes_file` points at a CSV under
-`regmeta_build/input_data/classifications/` (header
-`vardekod,vardebenamning`). At build time:
+Canonical codes come from per-classification CSVs ingested by the build
+(see [../regmeta_build/DESIGN.md](../regmeta_build/DESIGN.md) §
+"Canonical code CSVs"). A classification with a CSV gets
+`classification_code.is_valid` populated as 1 (canonical) or 0
+(observed-only) and `classification.valid_code_count` cached for that
+canonical count. Without a CSV, every `classification_code` row carries
+`is_valid=NULL` (validity unknown).
 
-- Every CSV code is ensured to exist in `value_code` (canonical-but-
-  unobserved codes get a fresh row with no `value_set_member` linkage).
-- Every `classification_code` row in that classification is marked
-  `is_valid=1` (canonical) or `is_valid=0` (observed-only).
-- `classification.valid_code_count` caches the canonical count; it is
-  `NULL` for classifications without a CSV.
-
-Without a CSV, every row carries `is_valid=NULL` (validity unknown).
 The CLI exposes this via `get classification --codes --only-valid` and
 includes `is_valid` per code in JSON output (omitted when NULL).
 
@@ -283,10 +160,6 @@ parent/child queries fall back to prefix matching on `vardekod`. Code
 sets without prefix hierarchy (ICD-10, ATC) keep `level = NULL` and use
 their own conventions.
 
-The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled
-in the wheel — same status as `regmeta_build/docs/`. Users receive the
-already-populated classification tables via the prebuilt DB asset.
-
 ## Storage optimization
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs
@@ -295,20 +168,21 @@ use WITHOUT ROWID. Value codes are deduplicated into `value_code` (with
 content-addressed `value_set` / `value_set_member` pair, where each
 distinct year-projected code list is stored once and shared by every
 cvid that observes it. SCB's validity windows are applied at build time
-(see "Value sets are year-projected at build time"), eliminating the
-historical-union junction and the per-item validity tables entirely. A
-pre-aggregated `code_variable_map` replaces large secondary indexes for
-value search queries. The original 13 GB raw DB shrank to ~1.6 GB through
+(see "Value sets are year-projected"), eliminating the historical-union
+junction and the per-item validity tables entirely. A pre-aggregated
+`code_variable_map` replaces large secondary indexes for value search
+queries. The original 13 GB raw DB shrank to ~1.6 GB through
 deduplication and integer keys; year-projection is expected to take it
 further still.
 
 ## Documentation layer
 
-Register documentation (parsed from SCB PDFs) lives as Obsidian-compatible
-markdown files under `regmeta_build/docs/`, source-of-truth for maintainers, and
-is indexed into a separate FTS5 database (`regmeta_docs.db`) with its own
-`DOC_SCHEMA_VERSION`. Docs are keyed to register and variable names, not
-numeric IDs, so doc updates and main-DB updates are independent.
+Register documentation (parsed from SCB PDFs) is curated as
+Obsidian-compatible markdown files under `regmeta_build/docs/`,
+source-of-truth for maintainers, and indexed into a separate FTS5
+database (`regmeta_docs.db`) with its own `DOC_SCHEMA_VERSION`. Docs are
+keyed to register and variable names, not numeric IDs, so doc updates
+and main-DB updates are independent.
 
 End users never see the markdown files. The doc DB is distributed as a
 GitHub Release asset (`regmeta_docs.db.zst`) parallel to the main DB asset,
@@ -317,13 +191,14 @@ by `regmeta update` alongside the main DB. Query commands (`search`,
 `get`, `resolve`, `docs/*`) refuse to run without the doc DB — on first
 use the CLI offers to download both artifacts.
 
-`regmeta-build build-docs` is a maintainer-only command that rebuilds the doc
-DB from a repo checkout of `regmeta_build/docs/` before upload. Runtime never
-reads markdown — `repo_docs_dir()` in `doc_db.py` is only consulted by
-`build-docs` when run from a repo checkout, and is absent in installed
-wheels.
+`regmeta-build build-docs` is a maintainer-only command that rebuilds
+the doc DB from a repo checkout of `regmeta_build/docs/` before upload.
+Runtime never reads markdown — `repo_docs_dir()` in
+`regmeta_build.doc_db` is only consulted by `build-docs` when run from a
+repo checkout, and is absent in installed wheels of `regmeta`.
 
-See [docs/SCHEMA.md](docs/SCHEMA.md) for the markdown file format.
+See [../regmeta_build/docs/SCHEMA.md](../regmeta_build/docs/SCHEMA.md)
+for the markdown file format.
 
 ## Versioning and compatibility
 
@@ -334,7 +209,7 @@ Four independent version numbers:
 | Package version (`__version__`) | `__init__.py`, `pyproject.toml` | Python package / CLI release |
 | Main schema version (`SCHEMA_VERSION`) | `db.py` | Main-DB schema compatibility |
 | Doc schema version (`DOC_SCHEMA_VERSION`) | `doc_db.py` | Doc-DB schema compatibility |
-| Contract version (`CONTRACT_VERSION`) | `cli.py` | CLI output envelope format |
+| Contract version (`CONTRACT_VERSION`) | `cli_common.py` | CLI output envelope format |
 
 **Schema version** uses semver. `open_db` compares the `import_manifest`'s
 `schema_version` to the code's `SCHEMA_VERSION`: the major components must
@@ -354,24 +229,26 @@ Bumping rules:
      prior DBs even though no schema shape changed — e.g. dropping
      polluting rows from `value_code`, populating columns with NULL where
      they used to carry placeholder strings. Old DBs would silently serve
-     pre-cleanup data; the bump forces a rebuild on the next `maintain
+     pre-cleanup data; the bump forces a rebuild on the next `regmeta
      update`.
 
 Either bump requires rebuilding and re-uploading the DB asset before the
 package release goes live — see `.claude/skills/release/SKILL.md`. The
-`TestSchemaCompat` tests in `test_build_db.py` verify the guard.
+`TestSchemaCompat` tests in `regmeta_build/tests/test_build_db.py`
+verify the guard.
 
 ### Release tags and distribution
 
 The monorepo uses **per-package release tags**: `regmeta/v0.5.0`,
-`mock-data-wizard/v0.4.0`, etc.  Each tag corresponds to a GitHub release
-scoped to that package.
+`regmeta_build/v0.1.0`, `mock-data-wizard/v0.4.0`, etc.  Each tag
+corresponds to a GitHub release scoped to that package.
 
 | Channel | Trigger | What it distributes |
 |---------|---------|---------------------|
 | PyPI | `publish_regmeta.yml` on `regmeta/v*` release | Python package (wheel + sdist) |
-| GitHub Release asset | Manual upload to the same release | Pre-built main DB (`regmeta.db.zst`) |
-| GitHub Release asset | Manual upload to the same release | Pre-built doc DB (`regmeta_docs.db.zst`) |
+| PyPI | `publish_regmeta_build.yml` on `regmeta_build/v*` release | Builder package (wheel + sdist) |
+| GitHub Release asset | Manual upload to the `regmeta/v*` release | Pre-built main DB (`regmeta.db.zst`) |
+| GitHub Release asset | Manual upload to the `regmeta/v*` release | Pre-built doc DB (`regmeta_docs.db.zst`) |
 
 Both DB assets are **optional** per release. A package release only needs a
 new main DB when `SCHEMA_VERSION` changes, and only needs a new doc DB when
@@ -383,9 +260,9 @@ orphan older assets. The publish workflow's smoke step exercises
 breaks the walker (e.g. incompatible assets, or no resolvable asset at all)
 fails CI instead of shipping.
 
-The wheel contains Python source only. The markdown under `regmeta_build/docs/`
-is maintainer source-of-truth and is **not** bundled — end users receive
-the built doc DB via `regmeta update`.
+The wheel contains Python source only. The markdown under
+`regmeta_build/docs/` is maintainer source-of-truth and is **not** bundled
+— end users receive the built doc DB via `regmeta update`.
 
 Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition
 but new releases must use the `regmeta/v*` prefix.

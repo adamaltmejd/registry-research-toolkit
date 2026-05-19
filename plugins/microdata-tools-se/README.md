@@ -15,11 +15,11 @@ The skills wrap two Python CLIs. Install them before enabling the plugin:
 ```bash
 uv tool install regmeta
 uv tool install mock-data-wizard
-regmeta maintain update --yes   # pull the latest metadata DB
+regmeta update --yes   # pull the latest metadata DB
 ```
 
 Both CLIs check for updates on startup. Upgrade explicitly with
-`regmeta maintain update` (package + DB) or `mock-data-wizard update`.
+`regmeta update` (package + DB) or `mock-data-wizard update`.
 
 ## Install
 
