@@ -154,6 +154,11 @@ class TestPeriodGrammar:
             "2002-10-15",
             "2018-01-01",
             "2018-12-31",
+            # Day bound is syntactic only — Feb 30 / Apr 31 parse; calendar
+            # validity is the curator's responsibility (same as how year and
+            # month bounds don't enforce SCB coverage).
+            "2018-02-30",
+            "2019-04-31",
         ],
     )
     def test_valid_periods(self, period: str) -> None:

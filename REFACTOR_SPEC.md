@@ -736,16 +736,16 @@ Four consequences:
    | `Kvartal 1-3 fr.o.m. 2010`             | `q1-q3-2010`           | `kvartal-1-3-fr-o-m-2010` |
    | `2003-2018` (generic year range)        | `v2003-2018`           | (no better form — `v` prefix is the "starts with a letter" workaround) |
    | `2021VX, slutlig version` (IoT-style internal-marker sibling) | `vx-2021` | `v2021vx-slutlig-version` |
-   | `huvudalternativ-2018-2070` (multi-year projection scenario) | (descriptor, year span at end) | |
-   | `ackumulerat-register` (unperiodized aux) | (descriptor) | |
+   | `Huvudalternativ 2018-2070` (multi-year projection scenario) | `huvudalternativ-2018-2070` | `2018-2070-huvudalternativ` |
 
    When a descriptor slug contains a year or period, the period goes
    **at the end** (`ekologiska-arealer-2024`, not
-   `2024-ekologiska-arealer`). The `q[1-4]-q[1-4]-YYYY` form for
-   quarter ranges is lowercase because descriptor slugs are
-   lowercase by §5.2; the canonical `2010-Q[1-4]` single-quarter
-   form keeps its uppercase `Q` because period tokens are exempt
-   from the slug-grammar case rule.
+   `2024-ekologiska-arealer`). Unperiodized aux tables
+   (`ackumulerat-register`) carry no period at all. The
+   `q[1-4]-q[1-4]-YYYY` form for quarter ranges is lowercase because
+   descriptor slugs are lowercase by §5.2; the canonical
+   `2010-Q[1-4]` single-quarter form keeps its uppercase `Q` because
+   period tokens are exempt from the slug-grammar case rule.
 
 3. **Sibling-collision: definitive form claims the canonical
    slug.** When multiple siblings under one variant derive to the
@@ -768,6 +768,13 @@ Four consequences:
    — the rule "which sibling wins" is **the definitive/final one**,
    so consumer lineage edges keyed by a bare period resolve to the
    most stable release.
+
+   Absent an explicit definitive sibling (no `slutlig` / `final` /
+   equivalent marker among the colliding rows), the period slug
+   goes **unclaimed** and every sibling takes a descriptor. Don't
+   promote one arbitrarily — leaving the bare period slug free
+   surfaces the ambiguity to consumers rather than hiding it
+   behind a curator's coin-flip.
 
 4. **Normalize away source-data typos and abbreviations.** If
    `registerversionnamn` ships with a misspelling (`högalternariv`

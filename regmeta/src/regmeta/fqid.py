@@ -70,7 +70,8 @@ _PERIOD_PATTERNS = (
 # ISO date is in the extract list because SCB source names occasionally
 # contain literal `YYYY-MM-DD` (e.g. `'2014-12-31'`); the half-year pattern
 # is curated-only (Swedish source forms like `Första halvåret 1995` don't
-# carry the bare `1995-H1` substring, same as `maj-2011`/`kv1-2011`).
+# carry the bare `1995-H1` substring, same as `maj-2011`/`kv1-2011` — see
+# REFACTOR_SPEC.md §5.3 for the canonical-form convention).
 _PERIOD_EXTRACT_PATTERNS = (
     re.compile(rf"(?<![A-Za-z0-9])[HV]T{_YEAR}(?!\d)"),
     re.compile(rf"(?<!\d){_YEAR}-Q[1-4](?![A-Za-z0-9])"),
