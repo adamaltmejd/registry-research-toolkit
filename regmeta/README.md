@@ -11,13 +11,16 @@ uv tool install regmeta
 regmeta update      # downloads package + database (~400 MB compressed)
 ```
 
-Alternatively, build from raw SCB CSV exports (requires access to
-mikrometadata.scb.se and the separately-installed `regmeta_build`
-package):
+Alternatively, build from raw SCB CSV exports (maintainer flow — requires
+access to mikrometadata.scb.se and a repo checkout, since `build-db`
+reads `classifications.toml`, `fqid_slugs/`, and `input_data/SCB/` from
+the working tree; none of those ship in the wheel):
 
 ```bash
-uv tool install regmeta_build
-regmeta-build build-db --input-dir regmeta_build/input_data/
+git clone https://github.com/adamaltmejd/registry-research-toolkit
+cd registry-research-toolkit
+uv sync
+uv run regmeta-build build-db --input-dir regmeta_build/input_data/
 ```
 
 ## Quick start
@@ -69,9 +72,10 @@ Use `--help` on any command or subcommand for full flag documentation.
 | `info` | Database stats and import metadata |
 
 Build commands (`build-db`, `build-docs`, `seed-slugs`, `precheck-slugs`,
-`parse-sos`) live in the separate `regmeta_build` package — install it
-with `uv tool install regmeta_build` and invoke as
-`regmeta-build <subcommand>`.
+`parse-sos`) live in the separate `regmeta_build` package. They are
+maintainer-only and require a repo checkout (the wheel does not ship
+`classifications.toml`, `fqid_slugs/`, or `docs/`); see the
+`regmeta_build` README for the build flow.
 
 ## Output formats
 

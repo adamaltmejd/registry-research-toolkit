@@ -284,8 +284,16 @@ def reorder_global_flags(argv: list[str]) -> list[str]:
     return front + rest
 
 
-def clean_leaf_help(parser: argparse.ArgumentParser) -> None:
-    """Hide -h/--help from output, rename 'positional arguments', add epilog."""
+def clean_leaf_help(
+    parser: argparse.ArgumentParser, *, examples_epilog: bool = True
+) -> None:
+    """Hide -h/--help from output, rename 'positional arguments', add epilog.
+
+    ``examples_epilog`` gates the trailing ``Run … --examples`` hint. Only
+    the query CLI (`regmeta`) implements `--examples`; the build CLI
+    (`regmeta-build`) does not, so it passes ``False`` to avoid pointing
+    maintainers at an unrecognized flag.
+    """
     for action in parser._actions:
         if isinstance(action, argparse._HelpAction):
             action.help = argparse.SUPPRESS
@@ -294,13 +302,13 @@ def clean_leaf_help(parser: argparse.ArgumentParser) -> None:
         if group.title == "positional arguments":
             group.title = "Arguments"
             break
-    if not parser.epilog:
-        # parser.prog already carries the right program prefix ("regmeta …"
-        # or "regmeta-build …"), so we don't need to special-case per CLI.
+    if examples_epilog and not parser.epilog:
         parser.epilog = f"Run `{parser.prog} --examples` for usage examples."
 
 
-def apply_leaf_help(parser: argparse.ArgumentParser) -> None:
+def apply_leaf_help(
+    parser: argparse.ArgumentParser, *, examples_epilog: bool = True
+) -> None:
     """Walk subparsers (one or two levels deep) and call `clean_leaf_help`
     on every leaf parser. Handles both `regmeta` (subgroups → leaves) and
     `regmeta-build` (flat subcommands)."""
@@ -313,6 +321,6 @@ def apply_leaf_help(parser: argparse.ArgumentParser) -> None:
             ]
             if nested:
                 for leaf_p in nested[0].choices.values():
-                    clean_leaf_help(leaf_p)
+                    clean_leaf_help(leaf_p, examples_epilog=examples_epilog)
             else:
-                clean_leaf_help(sub_p)
+                clean_leaf_help(sub_p, examples_epilog=examples_epilog)

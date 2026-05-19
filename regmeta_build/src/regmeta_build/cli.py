@@ -258,7 +258,10 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Path to an .xlsx file or a directory containing them.",
     )
 
-    apply_leaf_help(parser)
+    # `regmeta-build` has no `--examples` handler (the query CLI's `--examples`
+    # interceptor lives in `regmeta.cli.run`); suppress the epilog so each
+    # subcommand's --help doesn't point at an unrecognized flag.
+    apply_leaf_help(parser, examples_epilog=False)
     return parser
 
 
