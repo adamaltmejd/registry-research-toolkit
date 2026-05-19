@@ -147,7 +147,7 @@ def resolve_latest_release(*, timeout: float = 15) -> ReleaseResolution:
 def fetch_pypi_latest_version(*, timeout: float = 15) -> str:
     """Return the latest installable regmeta version from PyPI.
 
-    The package-version check for update prompts and `maintain update` must
+    The package-version check for update prompts and `regmeta update` must
     use PyPI, not GitHub Releases: the publish workflow gates PyPI behind a
     manual environment approval, so a fresh git tag and its release assets
     can exist on GitHub for hours before PyPI has the matching wheel. Using
@@ -304,7 +304,7 @@ def download_db(
                 error_class="configuration",
                 message="No recent release includes a database asset.",
                 remediation="Specify --tag explicitly, or build from CSV with "
-                "`regmeta maintain build-db`.",
+                "`regmeta-build build-db`.",
             )
         resolved_tag = resolution.db_tag
     else:
@@ -413,7 +413,7 @@ def download_docs_db(
                 message="No recent release includes a doc DB asset.",
                 remediation=(
                     "Specify --tag explicitly, or build from markdown with "
-                    "`regmeta maintain build-docs`."
+                    "`regmeta-build build-docs`."
                 ),
             )
         resolved_tag = resolution.docs_tag

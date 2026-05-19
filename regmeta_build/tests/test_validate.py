@@ -1,7 +1,7 @@
-"""Tests for the value-set dedup validator (issue #92).
+"""Tests for the value-set dedup validator.
 
 Exercises the module-level entry point (`validate_built_db`) and the
-argparse wiring for `regmeta maintain build-db --validate`. The CLI
+argparse wiring for `regmeta-build build-db --validate`. The CLI
 handler itself is two lines of glue around `validate_built_db` and
 `RegmetaError`; the validator module is the part with logic worth
 testing in depth.
@@ -98,17 +98,15 @@ class TestValidateModule:
 
 class TestBuildDbValidateFlag:
     def test_argparse_exposes_validate(self):
-        """The `--validate` flag is wired into `maintain build-db`'s
+        """The `--validate` flag is wired into `regmeta-build build-db`'s
         argparse subparser; default is False so existing callers that
         omit it are unaffected."""
-        from regmeta.cli import _build_parser
+        from regmeta_build.cli import _build_parser
 
         parser = _build_parser()
-        ns = parser.parse_args(
-            ["maintain", "build-db", "--input-dir", "x", "--validate"]
-        )
+        ns = parser.parse_args(["build-db", "--input-dir", "x", "--validate"])
         assert ns.validate is True
-        ns = parser.parse_args(["maintain", "build-db", "--input-dir", "x"])
+        ns = parser.parse_args(["build-db", "--input-dir", "x"])
         assert ns.validate is False
 
     def test_failed_validation_does_not_replace_installed_db(
@@ -124,7 +122,8 @@ class TestBuildDbValidateFlag:
         from _csv_fixtures import write_scb_input
 
         from regmeta_build import validate as validate_mod
-        from regmeta.db import DB_FILENAME, build_db
+        from regmeta.db import DB_FILENAME
+        from regmeta_build.db import build_db
         from regmeta.errors import RegmetaError
 
         input_dir = tmp_path / "input"
@@ -143,9 +142,11 @@ class TestBuildDbValidateFlag:
             return r
 
         monkeypatch.setattr(validate_mod, "validate_built_db", always_fail)
-        # _build_validate_hook() does the lazy import at call time, so patching
-        # the source module is sufficient — the hook factory picks up the fake.
-        from regmeta import cli as cli_mod
+        # Also patch the re-export in the build CLI module so the handler
+        # closure sees the fake.
+        from regmeta_build import cli as cli_mod
+
+        monkeypatch.setattr(cli_mod, "validate_built_db", always_fail)
 
         with pytest.raises(RegmetaError) as exc_info:
             build_db(

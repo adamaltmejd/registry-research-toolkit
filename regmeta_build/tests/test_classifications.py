@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 from regmeta_build.classifications import load_seed, load_valid_codes
-from regmeta.db import build_db
+from regmeta_build.db import build_db
 from regmeta.errors import RegmetaError
 
 from _csv_fixtures import PIPE, write_scb_input
@@ -554,12 +554,12 @@ class TestPopulateClassifications:
     def test_missing_seed_fails_build(self, tmp_path: Path, monkeypatch):
         """build-db must error when no seed is available — silently shipping
         a DB without classifications would let downstream queries return all
-        NULL FKs without warning. Wheel installs run `maintain update`, not
+        NULL FKs without warning. Wheel installs run `regmeta update`, not
         `build-db`, so this path is unreachable in production.
         """
-        from regmeta_build import classifications as cls_mod
+        from regmeta_build import db as build_db_mod
 
-        monkeypatch.setattr(cls_mod, "repo_seed_path", lambda: None)
+        monkeypatch.setattr(build_db_mod, "repo_seed_path", lambda: None)
         input_dir = _make_input_dir(tmp_path)
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -606,7 +606,7 @@ def classification_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     build_db(input_dir=input_dir, db_dir=db_dir, seed_path=seed, skip_slugs=True)
 
     # Query commands require a doc DB alongside.
-    from regmeta.doc_db import build_doc_db
+    from regmeta_build.doc_db import build_doc_db
 
     docs_src = tmp / "docs" / "stub"
     docs_src.mkdir(parents=True)

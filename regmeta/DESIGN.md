@@ -24,7 +24,7 @@ All metadata lives in a single SQLite file (~1.6 GB). Chosen because:
 - Read performance is excellent for this workload
 
 The database is read-only from the perspective of query commands.
-`maintain build-db` replaces it entirely (not incremental).
+`regmeta-build build-db` replaces it entirely (not incremental).
 
 ## Data providers
 
@@ -242,7 +242,7 @@ inference. Match strings are deterministic and auditable: any maintainer
 can enumerate them via
 `SELECT DISTINCT vardemangdsversion FROM variable_instance`.
 
-Build-time invariants (violations fail `maintain build-db` loudly, exit 10):
+Build-time invariants (violations fail `regmeta-build build-db` loudly, exit 10):
 
 - Every seed `vardemangdsversion` string must match at least one instance.
 - Every classification must resolve to at least one tagged instance and
@@ -263,7 +263,7 @@ useful to keep around so a researcher seeing one of those values in a
 register can look it up.
 
 A seed entry's optional `valid_codes_file` points at a CSV under
-`regmeta/input_data/classifications/` (header
+`regmeta_build/input_data/classifications/` (header
 `vardekod,vardebenamning`). At build time:
 
 - Every CSV code is ensured to exist in `value_code` (canonical-but-
@@ -284,7 +284,7 @@ sets without prefix hierarchy (ICD-10, ATC) keep `level = NULL` and use
 their own conventions.
 
 The seed lives in the repo (alongside `DESIGN.md`) and is **not** bundled
-in the wheel — same status as `regmeta/docs/`. Users receive the
+in the wheel — same status as `regmeta_build/docs/`. Users receive the
 already-populated classification tables via the prebuilt DB asset.
 
 ## Storage optimization
@@ -305,7 +305,7 @@ further still.
 ## Documentation layer
 
 Register documentation (parsed from SCB PDFs) lives as Obsidian-compatible
-markdown files under `regmeta/docs/`, source-of-truth for maintainers, and
+markdown files under `regmeta_build/docs/`, source-of-truth for maintainers, and
 is indexed into a separate FTS5 database (`regmeta_docs.db`) with its own
 `DOC_SCHEMA_VERSION`. Docs are keyed to register and variable names, not
 numeric IDs, so doc updates and main-DB updates are independent.
@@ -313,12 +313,12 @@ numeric IDs, so doc updates and main-DB updates are independent.
 End users never see the markdown files. The doc DB is distributed as a
 GitHub Release asset (`regmeta_docs.db.zst`) parallel to the main DB asset,
 installed into the same cache dir (`$XDG_DATA_HOME/regmeta/`), and fetched
-by `maintain update` alongside the main DB. Query commands (`search`,
+by `regmeta update` alongside the main DB. Query commands (`search`,
 `get`, `resolve`, `docs/*`) refuse to run without the doc DB — on first
 use the CLI offers to download both artifacts.
 
-`maintain build-docs` is a maintainer-only command that rebuilds the doc
-DB from a repo checkout of `regmeta/docs/` before upload. Runtime never
+`regmeta-build build-docs` is a maintainer-only command that rebuilds the doc
+DB from a repo checkout of `regmeta_build/docs/` before upload. Runtime never
 reads markdown — `repo_docs_dir()` in `doc_db.py` is only consulted by
 `build-docs` when run from a repo checkout, and is absent in installed
 wheels.
@@ -358,7 +358,7 @@ Bumping rules:
      update`.
 
 Either bump requires rebuilding and re-uploading the DB asset before the
-package release goes live — see `.agents/skills/release/SKILL.md`. The
+package release goes live — see `.claude/skills/release/SKILL.md`. The
 `TestSchemaCompat` tests in `test_build_db.py` verify the guard.
 
 ### Release tags and distribution
@@ -375,22 +375,22 @@ scoped to that package.
 
 Both DB assets are **optional** per release. A package release only needs a
 new main DB when `SCHEMA_VERSION` changes, and only needs a new doc DB when
-`DOC_SCHEMA_VERSION` changes or `regmeta/docs/` content changes.
+`DOC_SCHEMA_VERSION` changes or `regmeta_build/docs/` content changes.
 `resolve_latest_release()` walks recent releases backwards looking for each
 asset independently, so a doc-less or DB-less package release does not
 orphan older assets. The publish workflow's smoke step exercises
-`maintain update --force` before allowing PyPI publish, so a release that
+`regmeta update --force` before allowing PyPI publish, so a release that
 breaks the walker (e.g. incompatible assets, or no resolvable asset at all)
 fails CI instead of shipping.
 
-The wheel contains Python source only. The markdown under `regmeta/docs/`
+The wheel contains Python source only. The markdown under `regmeta_build/docs/`
 is maintainer source-of-truth and is **not** bundled — end users receive
-the built doc DB via `maintain update`.
+the built doc DB via `regmeta update`.
 
 Legacy bare `v*` tags (pre-0.6.0) are still recognized during the transition
 but new releases must use the `regmeta/v*` prefix.
 
-**Update command**: `maintain update` is the single command that brings
+**Update command**: `regmeta update` is the single command that brings
 everything current — it runs `uv tool upgrade regmeta` for the package and
 walks releases to find the latest main-DB and doc-DB assets. Already-current
 assets are skipped (tracked via `.db_source` and `.docs_source` in the cache
@@ -400,7 +400,7 @@ runs when a newer release exists.
 
 **Auto-download on first use**: query commands (`search`, `get`, `resolve`,
 `docs/*`) prompt to download whichever artifacts are missing when invoked
-interactively, so users don't need to know about `maintain update` on first
+interactively, so users don't need to know about `regmeta update` on first
 install. Non-interactive invocations fail with structured errors
 (`db_not_found`, `doc_db_not_found`) rather than silently skipping.
 
@@ -424,7 +424,7 @@ relies on this format for version comparison.
 | 10   | Configuration error (missing DB, bad encoding) |
 | 16   | Not found |
 | 17   | No match with `--require-match` |
-| 25   | Network error (`maintain update`) |
+| 25   | Network error (`regmeta update`) |
 | 30   | Unexpected internal error |
 
 ## Determinism
@@ -437,7 +437,7 @@ relies on this format for version comparison.
 
 - Metadata only — no microdata
 - No credentials read or stored
-- No outbound network requests (except `maintain update` and the weekly version check)
+- No outbound network requests (except `regmeta update` and the weekly version check)
 
 ## Explored and ruled out
 

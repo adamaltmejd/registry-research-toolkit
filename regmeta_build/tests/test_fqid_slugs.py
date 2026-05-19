@@ -1197,7 +1197,7 @@ class TestPrecheckCli:
     def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
         """Build a DB with one provider + register + variant, slug TOMLs that
         cover both, and a `db` arg compatible with `regmeta --db`."""
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -1235,7 +1235,7 @@ class TestPrecheckCli:
         return db_dir, slug_dir
 
     def test_added_entries_exit_non_zero(self, tmp_path: Path):
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Snapshot is empty — the three entries above show as `added`.
@@ -1255,7 +1255,6 @@ class TestPrecheckCli:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1264,7 +1263,7 @@ class TestPrecheckCli:
         assert exit_code != 0
 
     def test_update_snapshot_clears_added(self, tmp_path: Path):
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         write_snapshot(
@@ -1283,7 +1282,6 @@ class TestPrecheckCli:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1301,7 +1299,7 @@ class TestPrecheckCli:
         """`--update-snapshot` is review-only for snapshot drift but still
         exits non-zero on real problems (parse errors / missing slugs) so a
         broken state can't be snapshot-frozen."""
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Drop the register entry — DB still has register_id=1, so precheck
@@ -1314,7 +1312,6 @@ class TestPrecheckCli:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1327,7 +1324,7 @@ class TestPrecheckCli:
         """A corrupted TOML must not silently blow away the baseline snapshot
         — `precheck_slugs` truncates `entries` at the first parse error and
         the partial set would otherwise wipe genuine prior entries."""
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
@@ -1344,7 +1341,6 @@ class TestPrecheckCli:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1462,7 +1458,7 @@ class TestSeedEmptyDb:
 
     def test_provider_with_no_registers(self, tmp_path: Path):
         # Build a DB whose `scb` provider has no register rows.
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
@@ -1477,7 +1473,7 @@ class TestSeedEmptyDb:
         assert "no registers found" in body
 
     def test_classifications_table_empty(self, tmp_path: Path):
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         conn = sqlite3.connect(":memory:")
         conn.row_factory = sqlite3.Row
@@ -1616,7 +1612,7 @@ class TestPrecheckCliGrowOnly:
     def _seed_layout(self, tmp_path: Path) -> tuple[Path, Path]:
         """Reuse the layout from TestPrecheckCli but local to keep dependencies
         explicit."""
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -1648,7 +1644,7 @@ class TestPrecheckCliGrowOnly:
         """A maintainer renames a previously-published slug, then tries to
         bless it via --update-snapshot. The CLI must refuse and leave the
         snapshot unchanged."""
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
@@ -1684,7 +1680,6 @@ class TestPrecheckCliGrowOnly:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1698,7 +1693,7 @@ class TestPrecheckCliGrowOnly:
 
     def test_removal_refused_even_with_update(self, tmp_path: Path):
         """Maintainer drops a previously-published row from the TOML."""
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
@@ -1721,7 +1716,6 @@ class TestPrecheckCliGrowOnly:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1738,7 +1732,7 @@ class TestPrecheckCliGrowOnly:
         flips `--update-snapshot` from refuse-and-fail to write-through. The
         rename is still reported in the envelope so drift stays visible.
         """
-        from regmeta.cli import run
+        from regmeta_build.cli import run
         from regmeta_build.fqid_slugs import UNFROZEN_MARKER
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
@@ -1773,7 +1767,6 @@ class TestPrecheckCliGrowOnly:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -1788,7 +1781,7 @@ class TestPrecheckCliGrowOnly:
     def test_pure_addition_accepted_under_update(self, tmp_path: Path):
         """The legitimate use case still works — adding a new slug refreshes
         the snapshot."""
-        from regmeta.cli import run
+        from regmeta_build.cli import run
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Empty baseline; the three live entries are pure additions.
@@ -1810,7 +1803,6 @@ class TestPrecheckCliGrowOnly:
             [
                 "--db",
                 str(db_dir),
-                "maintain",
                 "precheck-slugs",
                 "--slug-dir",
                 str(slug_dir),
@@ -2049,7 +2041,7 @@ class TestSeedSlugsCli:
         conn: sqlite3.Connection,
         tmp_path: Path,
     ) -> None:
-        from regmeta import cli
+        from regmeta_build import cli
 
         monkeypatch.setattr(
             cli, "db_path_from_args", lambda _x: tmp_path / "regmeta.db"
@@ -2062,7 +2054,7 @@ class TestSeedSlugsCli:
         tmp_path: Path,
         capsys: pytest.CaptureFixture,
     ):
-        from regmeta import cli
+        from regmeta_build import cli
 
         conn = _make_seedable_db()
         self._patch_cli(monkeypatch, conn, tmp_path)
@@ -2070,7 +2062,7 @@ class TestSeedSlugsCli:
         args = _ns(
             out_dir=str(out_dir), force=True, all_hints=False, quiet=True, db=None
         )
-        _env, rc = cli._cmd_maintain_seed_slugs(args)
+        _env, rc = cli._cmd_seed_slugs(args)
         assert rc == 0
         assert capsys.readouterr().err == ""
 
@@ -2080,7 +2072,7 @@ class TestSeedSlugsCli:
         tmp_path: Path,
         capsys: pytest.CaptureFixture,
     ):
-        from regmeta import cli
+        from regmeta_build import cli
 
         conn = _make_seedable_db()
         self._patch_cli(monkeypatch, conn, tmp_path)
@@ -2088,7 +2080,7 @@ class TestSeedSlugsCli:
         args = _ns(
             out_dir=str(out_dir), force=True, all_hints=False, quiet=False, db=None
         )
-        _env, rc = cli._cmd_maintain_seed_slugs(args)
+        _env, rc = cli._cmd_seed_slugs(args)
         assert rc == 0
         captured = capsys.readouterr()
         assert "single-variant register(s)" in captured.err
@@ -2099,37 +2091,13 @@ class TestSeedSlugsCli:
         assert "Hint:" not in scb_body
         assert "_default" not in scb_body  # heuristic isn't auto-applied
 
-    def test_json_format_suppresses_hints(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-        tmp_path: Path,
-        capsys: pytest.CaptureFixture,
-    ):
-        # Hints are contextual stderr noise that must not leak into machine
-        # output. `--format json` is the standard signal for that.
-        from regmeta import cli
-
-        conn = _make_seedable_db()
-        self._patch_cli(monkeypatch, conn, tmp_path)
-        args = _ns(
-            out_dir=str(tmp_path / "out"),
-            force=True,
-            all_hints=False,
-            quiet=False,
-            db=None,
-            format="json",
-        )
-        _env, rc = cli._cmd_maintain_seed_slugs(args)
-        assert rc == 0
-        assert capsys.readouterr().err == ""
-
     def test_regmeta_quiet_env_suppresses_hints(
         self,
         monkeypatch: pytest.MonkeyPatch,
         tmp_path: Path,
         capsys: pytest.CaptureFixture,
     ):
-        from regmeta import cli
+        from regmeta_build import cli
 
         conn = _make_seedable_db()
         self._patch_cli(monkeypatch, conn, tmp_path)
@@ -2141,7 +2109,7 @@ class TestSeedSlugsCli:
             quiet=False,
             db=None,
         )
-        _env, rc = cli._cmd_maintain_seed_slugs(args)
+        _env, rc = cli._cmd_seed_slugs(args)
         assert rc == 0
         assert capsys.readouterr().err == ""
 
@@ -2151,7 +2119,7 @@ class TestSeedSlugsCli:
         # Acceptance criterion: TOML output unchanged byte-for-byte vs. before
         # this issue. Running with --quiet vs. without must produce the same
         # files on disk — the only difference is stderr.
-        from regmeta import cli
+        from regmeta_build import cli
 
         # CLI closes the connection on exit; rebuild for each invocation.
         monkeypatch.setattr(
@@ -2160,12 +2128,12 @@ class TestSeedSlugsCli:
         monkeypatch.setattr(cli, "open_db", lambda _path: _make_seedable_db())
         out_quiet = tmp_path / "quiet"
         out_loud = tmp_path / "loud"
-        cli._cmd_maintain_seed_slugs(
+        cli._cmd_seed_slugs(
             _ns(
                 out_dir=str(out_quiet), force=True, all_hints=False, quiet=True, db=None
             )
         )
-        cli._cmd_maintain_seed_slugs(
+        cli._cmd_seed_slugs(
             _ns(out_dir=str(out_loud), force=True, all_hints=True, quiet=False, db=None)
         )
         for name in ("scb.toml", "classifications.toml"):

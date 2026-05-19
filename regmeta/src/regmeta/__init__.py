@@ -7,8 +7,7 @@ from .catalog import (
     ResolvedRegisterVersion,
     ResolvedVariableBinding,
 )
-from .db import build_db, db_path_from_args, default_db_dir, open_db
-from .download import download_db
+from .db import db_path_from_args, default_db_dir, open_db
 from .fqid import (
     Fqid,
     FqidError,
@@ -36,7 +35,6 @@ from .queries import (
 )
 
 __all__ = [
-    "build_db",
     "Catalog",
     "compare",
     "db_path_from_args",
@@ -71,4 +69,17 @@ __all__ = [
     "search",
 ]
 
-__version__ = "0.11.1"
+__version__ = "0.12.0"
+
+
+def __getattr__(name: str):
+    """Lazy-load `download_db` so the eager `import regmeta` doesn't pay
+    for `zstandard` + `urllib.request` (~13ms of cold startup) on every
+    query-side CLI invocation. The CLI's `_prompt_first_run_download` and
+    `update.py` import from `.download` directly; only library consumers
+    using `from regmeta import download_db` trigger the lazy path."""
+    if name == "download_db":
+        from .download import download_db
+
+        return download_db
+    raise AttributeError(f"module 'regmeta' has no attribute {name!r}")

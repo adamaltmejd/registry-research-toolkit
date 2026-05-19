@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 
 from regmeta.cli import run
-from regmeta.doc_db import build_doc_db
+from regmeta_build.doc_db import build_doc_db
 
 
 # ---------------------------------------------------------------------------
@@ -328,7 +328,7 @@ class TestDocDbRequired:
         # Build a main DB in an empty dir — no doc DB present.
         from _csv_fixtures import write_scb_input
 
-        from regmeta.db import build_db
+        from regmeta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
@@ -352,7 +352,7 @@ class TestDocDbRequired:
     def test_get_without_docs_raises(self, tmp_path: Path):
         from _csv_fixtures import write_scb_input
 
-        from regmeta.db import build_db
+        from regmeta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))
         db_dir = tmp_path / "db"
@@ -374,6 +374,12 @@ class TestDocDbRequired:
 
 class TestBuildDocs:
     def test_build_docs(self, tmp_path: Path):
+        """`regmeta-build build-docs` produces a usable doc DB. Lives here
+        for the moment because the CLI smoke tests for build commands grew
+        up alongside the query-side doc tests; could move to
+        regmeta_build/tests/ later."""
+        from regmeta_build.cli import run as build_run
+
         docs_dir = tmp_path / "docs" / "myreg"
         docs_dir.mkdir(parents=True)
         (docs_dir / "Var1.md").write_text(
@@ -383,16 +389,23 @@ class TestBuildDocs:
         db_dir = tmp_path / "db"
         db_dir.mkdir()
 
-        text, code = _run_text(
-            [
-                "--db",
-                str(db_dir),
-                "maintain",
-                "build-docs",
-                "--docs-dir",
-                str(tmp_path / "docs"),
-            ]
-        )
+        old_stdout = sys.stdout
+        old_stderr = sys.stderr
+        sys.stdout = io.StringIO()
+        sys.stderr = io.StringIO()
+        try:
+            code = build_run(
+                [
+                    "--db",
+                    str(db_dir),
+                    "build-docs",
+                    "--docs-dir",
+                    str(tmp_path / "docs"),
+                ]
+            )
+        finally:
+            sys.stdout = old_stdout
+            sys.stderr = old_stderr
         assert code == 0
         assert (db_dir / "regmeta_docs.db").exists()
 
@@ -407,7 +420,7 @@ def combined_db_dir(tmp_path_factory: pytest.TempPathFactory, doc_db_dir: Path) 
     """Create a DB dir with both regmeta.db and regmeta_docs.db."""
     import shutil
 
-    from regmeta.db import build_db
+    from regmeta_build.db import build_db
 
     combined = tmp_path_factory.mktemp("combined")
 

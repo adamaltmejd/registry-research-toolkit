@@ -93,7 +93,7 @@ config. The install step is part of the smoke test.
 $PREEXISTING_MARKETPLACE_NOTE## Preflight
 
 - \`regmeta\` and \`mock-data-wizard\` must already be on PATH.
-- If metadata look stale, run \`regmeta maintain update --yes\` before testing.
+- If metadata look stale, run \`regmeta update --yes\` before testing.
 
 ## Install and run
 

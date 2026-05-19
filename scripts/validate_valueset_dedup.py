@@ -1,8 +1,8 @@
 """Validate the value-set dedup + year-projection rebuild.
 
-Thin wrapper around ``regmeta.validate.validate_built_db`` — kept so
-maintainers can re-validate an existing DB without rebuilding it. The
-build-time path lives in `regmeta maintain build-db --validate` (issue
+Thin wrapper around ``regmeta_build.validate.validate_built_db`` — kept
+so maintainers can re-validate an existing DB without rebuilding it.
+The build-time path lives in `regmeta-build build-db --validate` (issue
 #92); both call the same module so checks stay in one place.
 
 Usage:
@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 
 from regmeta.errors import RegmetaError
-from regmeta.validate import validate_built_db
+from regmeta_build.validate import validate_built_db
 
 DEFAULT_DB = Path("/tmp/regmeta-rebuild-test/regmeta.db")
 

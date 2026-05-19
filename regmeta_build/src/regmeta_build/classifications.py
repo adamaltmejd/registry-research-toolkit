@@ -2,12 +2,12 @@
 
 A classification is a normalized code system (SUN2000, SSYK2012, SNI2007, ...)
 that groups the value codes produced by many variable instances. The seed at
-``regmeta/classifications.toml`` declares one entry per code system and lists
-the raw ``variable_instance.vardemangdsversion`` strings that map to it.
+``regmeta_build/classifications.toml`` declares one entry per code system and
+lists the raw ``variable_instance.vardemangdsversion`` strings that map to it.
 
 Runtime never loads the seed — query commands read the already-populated
 ``classification`` / ``classification_code`` tables. ``populate_classifications``
-is only called during ``maintain build-db``.
+is only called during ``regmeta-build build-db``.
 """
 
 from __future__ import annotations

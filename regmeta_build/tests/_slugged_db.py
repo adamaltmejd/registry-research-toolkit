@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import sqlite3
 
-from regmeta.db import DDL, seed_providers
+from regmeta_build.db import DDL, seed_providers
 
 # (registernamn, slug, register_id, provider_id)
 _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)

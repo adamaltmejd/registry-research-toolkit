@@ -615,7 +615,7 @@ class TestGetValues:
         """
         import sqlite3
 
-        from regmeta.db import DDL, seed_providers
+        from regmeta_build.db import DDL, seed_providers
         from regmeta.queries import get_values_by_variable
 
         db = tmp_path / "amb.db"
@@ -685,7 +685,8 @@ class TestGetValues:
         """
         import sqlite3
 
-        from regmeta.db import DDL, SCHEMA_VERSION
+        from regmeta.db import SCHEMA_VERSION
+        from regmeta_build.db import DDL
 
         db_dir = tmp_path / "db"
         db_dir.mkdir()
@@ -698,7 +699,7 @@ class TestGetValues:
             (SCHEMA_VERSION,),
         )
         # Two registers, same variable name + var_id, same year, different code labels.
-        from regmeta.db import seed_providers
+        from regmeta_build.db import seed_providers
 
         seed_providers(conn)
         conn.execute(
@@ -757,7 +758,7 @@ class TestGetValues:
             "VALUES (5002, 2, 11, 101, 44, 2)"
         )
         # docs DB stub — query commands require it present.
-        from regmeta.doc_db import build_doc_db
+        from regmeta_build.doc_db import build_doc_db
 
         docs_src = tmp_path / "docs"
         (docs_src / "stub").mkdir(parents=True)

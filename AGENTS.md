@@ -10,6 +10,7 @@
 # Products
 - Python package `mock_data_wizard` (CLI `mock-data-wizard`) for SCB MONA mock-data generation workflows.
 - Python package `regmeta` (CLI `regmeta`) for searching and querying registry metadata.
+- Python package `regmeta_build` (CLI `regmeta-build`) for building the regmeta SQLite databases from SCB CSV exports (maintainer-only).
 - Tools are proper python project packages called with `uv`.
 
 # Governance
@@ -33,13 +34,18 @@
 - `uv run ruff format --check` — python format check
 - `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
 - `uv run python -m pytest regmeta/` — regmeta tests
+- `uv run python -m pytest regmeta_build/` — regmeta_build tests
 - `uv run python -m pytest mock_data_wizard/` — mock_data_wizard tests
-- `regmeta/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
+- `regmeta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
 
 # Target structure
-- `regmeta/DESIGN.md` — design rationale
+- `regmeta/DESIGN.md` — design rationale (query layer)
 - `regmeta/STRUCTURE.md` — domain model
-- `regmeta/docs/` — curated register documentation (build artifacts + schema)
 - `regmeta/src/regmeta/` — package source
+- `regmeta_build/DESIGN.md` — design rationale (build pipeline)
+- `regmeta_build/src/regmeta_build/` — package source
+- `regmeta_build/docs/` — curated register documentation (build inputs for the doc DB)
+- `regmeta_build/fqid_slugs/` — maintainer-curated slug TOMLs
+- `regmeta_build/input_data/` — SCB CSV exports + canonical classification CSVs
 - `mock_data_wizard/DESIGN.md` — design rationale, PII safety rules
 - `mock_data_wizard/src/mock_data_wizard/` — package source

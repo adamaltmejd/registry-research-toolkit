@@ -18,7 +18,7 @@ classifiers = [
     "Topic :: Scientific/Engineering",
 ]
 dependencies = [
-    "regmeta>=0.11.1",
+    "regmeta>=0.12.0",
     "openpyxl>=3.1",
 ]
 

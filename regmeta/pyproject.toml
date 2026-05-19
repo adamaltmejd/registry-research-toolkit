@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "regmeta"
-version = "0.11.1"
+version = "0.12.0"
 description = "Search and query SCB registry metadata"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -27,15 +27,12 @@ Issues = "https://github.com/adamaltmejd/registry-research-toolkit/issues"
 [project.scripts]
 regmeta = "regmeta.cli:main"
 
-[project.optional-dependencies]
-# Required for maintainer-only xlsx parsing (SCB ID-kolumner, Socialstyrelsen
-# register metadata). End users who only query the DB don't need this.
-xlsx = ["openpyxl>=3.1"]
-
 [tool.hatch.build.targets.wheel]
 packages = ["src/regmeta"]
 
 # Docs are shipped separately as the `regmeta_docs.db.zst` release asset
 # (see doc_db.py and .claude/skills/release/SKILL.md); they are NOT bundled
-# in the wheel. The markdown under regmeta/docs/ is for maintainers to edit
-# and contribute; users get the built doc DB via `regmeta maintain update`.
+# in the wheel. The markdown under regmeta_build/docs/ is for maintainers
+# to edit and contribute; users get the built doc DB via `regmeta update`.
+# xlsx parsing (openpyxl) is a build-only concern and now lives in
+# regmeta_build's dependencies.

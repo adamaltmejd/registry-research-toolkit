@@ -49,20 +49,20 @@ machine.
 
 ```bash
 uv tool install regmeta
-regmeta maintain update            # download metadata DB (~400 MB compressed)
+regmeta update            # download metadata DB (~400 MB compressed)
 
 uv tool install mock-data-wizard   # depends on regmeta
 ```
 
 Both CLIs check for updates on startup and ship explicit upgrade paths
-(`regmeta maintain update`, `mock-data-wizard update`).
+(`regmeta update`, `mock-data-wizard update`).
 
 ## Quick start
 
 ### regmeta
 
 ```bash
-regmeta maintain update                              # download metadata DB
+regmeta update                              # download metadata DB
 regmeta search --query "kommun"                      # search variables
 regmeta get register LISA                            # register overview
 regmeta get schema --register LISA --years 2020      # columns for a year

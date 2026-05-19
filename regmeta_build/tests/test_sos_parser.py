@@ -4,8 +4,8 @@ Two tiers:
 
 - Unit tests for helpers. Always run.
 - Integration tests over the real input files under
-  `regmeta/input_data/Socialstyrelsen/`. Skipped when the directory is
-  absent (CI, fresh checkouts) since the input is gitignored. These
+  `regmeta_build/input_data/Socialstyrelsen/`. Skipped when the directory
+  is absent (CI, fresh checkouts) since the input is gitignored. These
   tests exist to catch regressions against real deliveries during local
   development.
 """
@@ -216,8 +216,8 @@ def test_unsupported_xls_format_wrapped_as_sos_parse_error(tmp_path: Path) -> No
 
 
 def _locate_sos_data() -> Path | None:
-    """Find `regmeta/input_data/Socialstyrelsen/` — gitignored, so it may
-    live in the main checkout rather than the current worktree.
+    """Find `regmeta_build/input_data/Socialstyrelsen/` — gitignored, so
+    it may live in the main checkout rather than the current worktree.
 
     Honour `REGMETA_SOS_DATA` first. Otherwise walk upward so worktrees
     can find the sibling main checkout.
@@ -230,7 +230,7 @@ def _locate_sos_data() -> Path | None:
     anchor = Path(__file__).resolve()
     candidates = [anchor.parents[1] / "input_data" / "Socialstyrelsen"]
     for parent in anchor.parents:
-        candidates.append(parent / "regmeta" / "input_data" / "Socialstyrelsen")
+        candidates.append(parent / "regmeta_build" / "input_data" / "Socialstyrelsen")
 
     for c in candidates:
         if c.exists() and list(c.glob("*.xlsx")):
@@ -245,7 +245,7 @@ requires_sos_data = pytest.mark.skipif(
     SOS_DATA is None or not HAS_OPENPYXL,
     reason=(
         "Socialstyrelsen input data not present (gitignored) or openpyxl "
-        "missing; set REGMETA_SOS_DATA and install regmeta[xlsx] to run"
+        "missing; set REGMETA_SOS_DATA and install regmeta_build to run"
     ),
 )
 

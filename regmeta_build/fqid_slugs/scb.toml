@@ -5,11 +5,11 @@
 # The grow-only lock binds at the first v1 release (§5.4 Activation); during
 # the pre-v1 curation window the snapshot is regenerable.
 # Typo corrections add a new row and link the old one via `replaced_by`. The
-# snapshot test (regmeta/tests/test_slug_snapshot.py) fails CI on any
-# violation; regenerate with `regmeta maintain precheck-slugs --update-snapshot`
+# snapshot test (regmeta_build/tests/test_slug_snapshot.py) fails CI on any
+# violation; regenerate with `regmeta-build precheck-slugs --update-snapshot`
 # after adding rows.
 #
-# Bootstrap from live data with `regmeta maintain seed-slugs`. Schema and
+# Bootstrap from live data with `regmeta-build seed-slugs`. Schema and
 # field semantics live in REFACTOR_SPEC.md §5.3.
 
 # Företagsdatabasen (FDB)
