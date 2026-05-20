@@ -59,6 +59,33 @@ def test_build_bundle_project_data_malformed_json_clean_error(tmp_path: Path, ca
     assert "Traceback" not in err
 
 
+def test_build_bundle_project_data_duplicate_keys_clean_error(tmp_path: Path, capsys):
+    """``_reject_duplicate_keys`` raises ValueError (not JSONDecodeError)
+    from inside ``json.load``; the dup-key path must also land in the
+    friendly ``Error: ...`` branch."""
+    bad = tmp_path / "project_data.json"
+    bad.write_text(
+        '{"schema_version": "1.0.0", "schema_version": "2.0.0", '
+        '"steward": "global", "reg_meta_version": "test", '
+        '"name": "x", "sources": [], "panels": []}',
+        encoding="utf-8",
+    )
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "duplicate key" in err
+    assert "Traceback" not in err
+
+
 def test_build_bundle_project_data_invalid_schema_clean_error(tmp_path: Path, capsys):
     """Structural validation failures (missing required field, bad
     types, composite key, etc.) likewise route through the friendly

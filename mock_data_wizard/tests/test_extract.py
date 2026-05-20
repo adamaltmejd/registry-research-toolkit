@@ -8,10 +8,9 @@ Two top-level entry points: ``run_discover`` (metadata-only walk) and
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.extract import (
     _shared_columns,
     main,
@@ -20,7 +19,11 @@ from mock_data_wizard.extract import (
 )
 from mock_data_wizard.sources import file_source
 from mock_data_wizard.spec import parse_project_data
+
 from tests.conftest import make_project_data, write_project_data
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _write_csv(p: Path, content: str) -> None:
@@ -654,6 +657,60 @@ def test_run_extract_typed_emits_panel_with_column_time_key_member(tmp_path: Pat
         assert bp["n_rows"] == 12
         assert bp["n_entity_ids"] == 12
         assert bp["source"] == "swecov.csv"
+
+
+def test_run_extract_typed_panel_with_same_source_two_time_keys(tmp_path: Path):
+    """The schema permits two members of the same panel to share a
+    source with different time_key columns. The pre-index keyed by
+    ``member.source`` alone used to silently overwrite, so only the
+    last time_key got a GROUP BY and the lookup in ``_build_panels_block``
+    duplicated those rows for both members. Pin the per-time_key
+    indexing so each time_key produces its own period rows."""
+    rows = ["lopnr,ar,kvartal"]
+    for ar, kvartal in ((2018, 1), (2018, 2), (2019, 1), (2019, 2)):
+        rows.extend(f"{i},{ar},{kvartal}" for i in range(1, 13))
+    _write_csv(tmp_path / "swecov.csv", "\n".join(rows) + "\n")
+    spec = _spec(
+        sources=[
+            {
+                "name": "swecov.csv",
+                "columns": [
+                    {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
+                    {
+                        "display_name": "ar",
+                        "type": "numeric",
+                        "numeric_subtype": "integer",
+                    },
+                    {
+                        "display_name": "kvartal",
+                        "type": "numeric",
+                        "numeric_subtype": "integer",
+                    },
+                ],
+            }
+        ],
+        panels=[
+            {
+                "panel_id": "swecov",
+                "entity_key": "lopnr",
+                "members": [
+                    {"source": "swecov.csv", "time_key": "ar"},
+                    {"source": "swecov.csv", "time_key": "kvartal"},
+                ],
+            }
+        ],
+    )
+    src = file_source(str(tmp_path), include=["swecov.csv"])
+    result = run_extract_typed([src], tmp_path / "mock_data_stats.json", spec, seed=0)
+    p = result["panels"][0]
+    # Each member contributes its own period buckets — the year
+    # member emits {2018, 2019} and the quarter member emits {1, 2}.
+    # Pre-fix the source-keyed pre-index dropped the "ar" GROUP BY
+    # (last write wins on "kvartal"), then both members looked up
+    # the same key in _build_panels_block, so the buggy output was
+    # [1, 1, 2, 2] (years missing, quarters duplicated).
+    periods = sorted(bp["period"] for bp in p["by_period"])
+    assert periods == [1, 2, 2018, 2019]
 
 
 def test_run_extract_typed_suppresses_panel_periods_below_k(tmp_path: Path):

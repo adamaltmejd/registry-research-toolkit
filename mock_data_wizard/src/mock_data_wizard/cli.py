@@ -401,6 +401,12 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
         except json.JSONDecodeError as exc:
             print(f"Error: {spec_path} is not valid JSON: {exc}", file=sys.stderr)
             return 1
+        except ValueError as exc:
+            # ``_reject_duplicate_keys`` raises ValueError (not
+            # JSONDecodeError) from inside ``json.load``; without this
+            # branch a duplicate-key file would crash with a traceback.
+            print(f"Error: {spec_path}: {exc}", file=sys.stderr)
+            return 1
         # Validate before embedding — shipping a structurally broken
         # bundle is worse than failing at build.
         try:

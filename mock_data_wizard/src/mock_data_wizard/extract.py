@@ -21,22 +21,26 @@ orchestrates and routes the export through :func:`scan.write_export`.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import random
 import re
 import time
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable, Sequence
-
-from reg_schema import Panel
+from typing import TYPE_CHECKING, Any
 
 from .scan import write_export
 from .sources import SourceHandle, iter_source
 from .spec import LoadedSpec, load_project_data
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 from .summarize import SUPPRESS_K, small_pop_threshold, summarize_column
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
+    from reg_schema import Panel
 
 log = logging.getLogger("mdw.extract")
 
@@ -309,16 +313,20 @@ def _coerce_period(value: Any) -> int | str:
 def _build_panels_block(
     spec: LoadedSpec,
     source_results: Sequence[dict[str, Any]],
-    time_key_periods: dict[tuple[str, str], list[dict[str, Any]]],
+    time_key_periods: dict[tuple[str, str, str], list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
     """Assemble the ``panels`` array for mock_data_stats.json.
 
-    ``time_key_periods`` is keyed by ``(panel_id, member.source)`` and
-    carries pre-computed per-period stats for column-members (the
-    ``GROUP BY time_key`` query result). File-members read ``n_rows``
-    from the per-source row count and ``n_entity_ids`` from the
-    entity-key column's ``n_distinct``. Suppression is uniform (drop
-    periods where ``n_entity_ids < SUPPRESS_K``).
+    ``time_key_periods`` is keyed by ``(panel_id, member.source,
+    member.time_key)`` and carries pre-computed per-period stats for
+    column-members (the ``GROUP BY time_key`` query result). The
+    time_key is part of the key because the schema permits two
+    members of the same panel to share a source with different
+    time_key columns (§6.4 only forbids cross-panel source reuse).
+    File-members read ``n_rows`` from the per-source row count and
+    ``n_entity_ids`` from the entity-key column's ``n_distinct``.
+    Suppression is uniform (drop periods where
+    ``n_entity_ids < SUPPRESS_K``).
     """
     out: list[dict[str, Any]] = []
     sources_by_name = {s["source_name"]: s for s in source_results}
@@ -339,7 +347,9 @@ def _build_panels_block(
                 # Column-member: by-period stats produced by the
                 # GROUP BY query at handle-processing time.
                 by_period.extend(
-                    time_key_periods.get((panel.panel_id, member.source), [])
+                    time_key_periods.get(
+                        (panel.panel_id, member.source, member.time_key), []
+                    )
                 )
                 continue
             # File-member (int time_key): one period from the source-level
@@ -517,10 +527,8 @@ def process_handle(
 
 def _flush_log_handlers() -> None:
     for h in logging.getLogger().handlers:
-        try:
+        with contextlib.suppress(Exception):
             h.flush()
-        except Exception:
-            pass
 
 
 def _shared_columns(source_results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -572,12 +580,19 @@ def run_extract_typed(
     _flush_log_handlers()
     # Index column-members up front so each handle can run its
     # GROUP BY time_key query while the connection is still open.
-    time_key_member_by_source: dict[str, tuple[Panel, str]] = {}
+    # The schema permits two members of the *same* panel to share a
+    # source with different time_key columns (reg_schema only forbids
+    # cross-panel source reuse, §6.4) — index per-member so each
+    # GROUP BY runs once and lookup is unambiguous in
+    # ``_build_panels_block``.
+    time_key_members_by_source: dict[str, list[tuple[Panel, str]]] = defaultdict(list)
     for panel in spec.panels:
         for member in panel.members:
             if isinstance(member.time_key, str):
-                time_key_member_by_source[member.source] = (panel, member.time_key)
-    time_key_periods: dict[tuple[str, str], list[dict[str, Any]]] = {}
+                time_key_members_by_source[member.source].append(
+                    (panel, member.time_key)
+                )
+    time_key_periods: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
     source_results: list[dict[str, Any]] = []
     for src_idx, src in enumerate(sources, 1):
         log.info("source %d/%d: %r", src_idx, len(sources), src)
@@ -591,10 +606,10 @@ def run_extract_typed(
                     classifier_seed=classifier_seed,
                 )
             )
-            tk_member = time_key_member_by_source.get(handle.source_name)
-            if tk_member is not None:
-                panel, time_key = tk_member
-                time_key_periods[(panel.panel_id, handle.source_name)] = (
+            for panel, time_key in time_key_members_by_source.get(
+                handle.source_name, []
+            ):
+                time_key_periods[(panel.panel_id, handle.source_name, time_key)] = (
                     _extract_time_key_member_periods(handle, panel, time_key)
                 )
             log.info(
@@ -612,7 +627,7 @@ def run_extract_typed(
 
     result = {
         "contract_version": CONTRACT_VERSION,
-        "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": source_results,
         "shared_columns": _shared_columns(source_results),
         "panels": _build_panels_block(spec, source_results, time_key_periods),
@@ -701,7 +716,7 @@ def run_discover(
 
     result = {
         "contract_version": DISCOVER_CONTRACT_VERSION,
-        "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": source_results,
     }
     write_export(Path(output_path), result)
