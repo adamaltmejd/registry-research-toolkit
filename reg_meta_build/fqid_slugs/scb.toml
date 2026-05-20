@@ -2601,6 +2601,18 @@ slug = "personalutbildningsstatistik"
 slug = "_default"
 display_group = "Personalutbildningsstatistik (PUT)"
 
+# 'Första halvåret 2006'
+[register_version."229.396.480"]
+slug = "2006-H1"
+
+# 'Första halvåret 2008'
+[register_version."229.396.1740"]
+slug = "2008-H1"
+
+# 'Första halvåret 2010'
+[register_version."229.396.3283"]
+slug = "2010-H1"
+
 # 'Första halvåret 1995'
 [register_version."229.396.14762"]
 slug = "1995-H1"
@@ -2745,7 +2757,15 @@ display_group = "Individer 16 år och uppåt (ULF)"
 slug = "ulf-2021"
 display_group = "ULF från och med 2021"
 
-# '1989_old'
+# '1992_old' (residual: "_old")
+[register_version."237.457.734"]
+slug = "old-1992"
+
+# '1990_old' (residual: "_old")
+[register_version."237.457.736"]
+slug = "old-1990"
+
+# '1989_old' (vs 20238:1989) (residual: "_old")
 [register_version."237.458.737"]
 slug = "old-1989"
 
@@ -4580,6 +4600,10 @@ slug = "2024-H1"
 # '2024 juli - december'
 [register_version."368.1325.20245"]
 slug = "2024-H2"
+
+# '2025 januari - juni'
+[register_version."368.1325.20244"]
+slug = "2025-H1"
 
 # Internationella företag
 [register."369"]
