@@ -21,10 +21,23 @@ When not embedded, the runner falls back to reading
 ``project_data.json`` from the same directory as the bundle. The
 embedded spec wins when both are present.
 
-Bundle-load structural validation against ``reg_schema`` lands at §15
-step 5 (``reg_monabundle`` amalgamation). Step 4 validates only at
-build time (CLI ``build-bundle --project-data``) and on the
-``spec.load_project_data`` disk path.
+Bundle-load structural validation: ``reg_schema.{validation,
+project_data,structural}`` are amalgamated ahead of the mdw modules
+(see ``REG_SCHEMA_MODULE_ORDER`` below) so ``spec.parse_project_data``
+runs ``reg_schema.validate_structural`` on every load path:
+
+- Embedded spec — the runner's ``_load_embedded_spec`` parses
+  ``_PROJECT_DATA_JSON`` through ``parse_project_data``.
+- Sidecar spec — ``extract.main`` falls back to
+  ``spec.load_project_data`` which calls the same loader.
+- Pre-embed (CLI) — ``build-bundle --project-data`` runs
+  ``parse_project_data`` before substituting into the placeholder,
+  so a structurally broken spec fails at build, not on MONA.
+
+The ``reg_monabundle`` namespaced-block validator currently lives
+inline in ``spec.py``; per §6.8.2 it moves to
+``reg_monabundle.validate_block`` at §15 step 5 (tracked in
+REFACTOR_SPEC.md §15 step 5 "Owed from step 4").
 """
 
 from __future__ import annotations

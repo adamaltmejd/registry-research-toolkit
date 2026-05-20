@@ -2941,6 +2941,14 @@ document. Step 1 can start.
      size against the 1 MB v1 budget (§12) on a real MONA test;
      fail the step if exceeded so the budget bites before it
      compounds.
+   - **Owed from step 4 (PR [#116](https://github.com/adamaltmejd/registry-research-toolkit/pull/116)):**
+     the `reg_monabundle` namespaced-block validator currently lives
+     inline at `mock_data_wizard/spec.py:_validate_reg_monabundle_block`
+     because `reg_monabundle` didn't exist yet. §6.8.2 says the owning
+     package validates its own block — move the function (and its
+     `VALID_OPTION_KEYS` constant + the `SUPPRESS_K` floor check) into
+     `reg_monabundle.validate_block` at step 5 and have `spec.py`
+     import + call it through there.
 
 **Step 5.5 — Shared validator test corpus.** ✅ **Shipped 2026-05-19**
 in [#113](https://github.com/adamaltmejd/registry-research-toolkit/pull/113)
