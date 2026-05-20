@@ -7,18 +7,27 @@
 #     via prefix match.
 #   - This hook catches the variants the prefix rules miss — `--no-verify`
 #     anywhere in the command line, e.g. `git commit -m "msg" --no-verify`
-#     or `npm test && git push --no-verify`.
+#     or `npm test && git push --no-verify`, plus the `-n` short flag in
+#     combined groups like `git commit -nm "msg"` (git accepts combined
+#     single-char flags).
 #
 # Scope: any git subcommand using `--no-verify` (commit/push/merge/rebase all
-# accept it), plus `-n` specifically on `git commit` (other git subcommands
-# use `-n` for harmless things like `push --dry-run`).
+# accept it), plus `-n` specifically on `git commit` — standalone (`-n`) or
+# combined with other short flags (`-nm`, `-anm`, etc.). Other git subcommands
+# use `-n` for harmless things like `push --dry-run`, so we don't match those.
 #
 # Emits the spec-defined PreToolUse JSON deny payload on stdout, exit 0.
 # False positives are possible (e.g. `git commit -m "use --no-verify here"`)
 # but rare and trivially worked around by rephrasing.
+#
+# Failure mode: if python3 cannot parse stdin (extremely rare), we exit 2 with
+# a clear stderr message so the bypass attempt isn't silently allowed through.
 set -uo pipefail
 
-command=$(python3 -c 'import json, sys; print(json.load(sys.stdin).get("tool_input", {}).get("command", ""))')
+if ! command=$(python3 -c 'import json, sys; print(json.load(sys.stdin).get("tool_input", {}).get("command", ""))' 2>/dev/null); then
+	echo "block_no_verify hook: failed to parse tool input JSON; blocking conservatively." >&2
+	exit 2
+fi
 
 # Only inspect git invocations.
 case "$command" in
@@ -26,30 +35,22 @@ case "$command" in
 *) exit 0 ;;
 esac
 
+# Deny payload is fixed content, so we hardcode it — no python3 dependency on
+# the emit path. (Keep the JSON one-line so harness parsing is robust.)
 deny() {
-	python3 -c '
-import json
-print(json.dumps({
-    "hookSpecificOutput": {
-        "hookEventName": "PreToolUse",
-        "permissionDecision": "deny",
-        "permissionDecisionReason": (
-            "Refusing to skip pre-commit/pre-push hooks via --no-verify/-n. "
-            "If a hook fails, fix the underlying issue rather than bypassing."
-        ),
-    }
-}))
-'
+	printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"PreToolUse","permissionDecision":"deny","permissionDecisionReason":"Refusing to skip pre-commit/pre-push hooks via --no-verify/-n. If a hook fails, fix the underlying issue rather than bypassing."}}'
 	exit 0
 }
 
+# `--no-verify` as a standalone token in any git subcommand.
 if [[ "$command" =~ (^|[[:space:]])--no-verify($|[[:space:]]) ]]; then
 	deny
 fi
 
-# `-n` shorthand on `git commit` specifically. Require a space before -n so
-# we don't false-match on `--name-only` etc.
-if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-n($|[[:space:]]) ]]; then
+# `-n` as a short flag on `git commit`, either standalone or in a combined
+# short-flag group like `-nm` / `-anm`. Single leading dash ensures we don't
+# match `--name-only` etc. (those have two dashes).
+if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*($|[[:space:]]) ]]; then
 	deny
 fi
 

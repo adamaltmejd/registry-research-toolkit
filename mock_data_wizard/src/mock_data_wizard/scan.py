@@ -14,7 +14,7 @@ The flow is in-memory scan + temp-file + atomic rename:
 2. We stamp an in-band ``pii_scan`` attestation into ``payload``.
 3. Scan the in-memory ``payload``. Match -> raise; no file is written.
 4. Serialise to ``<path>.tmp``.
-5. ``Path.replace(tmp, path)`` (atomic on Posix and Windows).
+5. Atomic rename of ``tmp`` -> ``path`` via ``Path.replace`` (atomic on Posix and Windows).
 
 The PII payload never touches disk on a dirty scan, and a partially
 written file can never become the canonical export.

@@ -41,14 +41,20 @@ if check_output=$("${ruff[@]}" check --quiet "${files[@]}" 2>&1); then
 	exit 0
 fi
 
-# Findings present. Emit a JSON Stop-block decision on stdout (must be the
-# only stdout output for the harness to parse it). python3 builds the JSON
-# so arbitrary ruff output (quotes, newlines, ANSI) is escaped safely.
-python3 -c '
+# Findings present. Try emitting a JSON Stop-block decision via python3 so
+# arbitrary ruff output (quotes, newlines, ANSI) is escaped safely. If python3
+# is unavailable or the emit fails for any reason, fall back to exit 2 +
+# stderr — same blocking semantics, just without the JSON envelope.
+if json=$(python3 -c '
 import json, sys
 print(json.dumps({
     "decision": "block",
     "reason": "ruff findings on changed files (fix before stopping):\n" + sys.argv[1],
 }))
-' "$check_output"
-exit 0
+' "$check_output" 2>/dev/null); then
+	printf '%s\n' "$json"
+	exit 0
+fi
+
+printf 'ruff findings on changed files:\n%s\n' "$check_output" >&2
+exit 2
