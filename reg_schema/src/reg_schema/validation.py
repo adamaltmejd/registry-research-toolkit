@@ -25,8 +25,8 @@ from typing import Literal, get_args
 IssueLevel = Literal["error", "warning", "info"]
 
 # Mirrored at runtime because `Literal` is a typing hint, not a runtime
-# guard — JSON deserialization (SPA, bundle) and `# type: ignore` paths
-# can otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
+# guard — JSON deserialization (SPA, bundle) and ignore-pragma paths can
+# otherwise smuggle in `"ERROR"` / `"fatal"` and silently flip
 # `ValidationResult.ok` to True for a result that should block.
 # Derived from `IssueLevel` so the two cannot drift.
 _VALID_LEVELS: frozenset[str] = frozenset(get_args(IssueLevel))

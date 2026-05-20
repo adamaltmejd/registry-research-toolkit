@@ -25,12 +25,12 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from ._util import lookup_with_prefix_fallback, strip_project_prefix
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Mapping, Sequence
 
 # Canonical inferred-type enum. One source of truth -- imported by
 # config (validation), sql_emit (dispatch), and stats (consumer-side).
@@ -234,7 +234,10 @@ def _python_kind(values: Sequence[object]) -> str:
     ) and not any(isinstance(v, str) for v in non_null):
         # All integral?
         try:
-            if all(float(v) == int(float(v)) for v in non_null):
+            # The `all(isinstance(...) or hasattr(...))` predicate above is
+            # too rich for ty to narrow `v` past `object`; cast at the use
+            # site rather than restructuring the (perf-sensitive) predicate.
+            if all(float(v) == int(float(v)) for v in non_null):  # ty: ignore[invalid-argument-type]
                 return "numeric_int"
         except (ValueError, TypeError):
             pass
@@ -490,9 +493,16 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
     for i, src in enumerate(sources):
         if not isinstance(src, dict):
             raise ValueError(f"{source_label}: sources[{i}] must be an object")
-        if "source_name" not in src:
+        # Post-isinstance ty narrows JSON-loaded dicts to dict[Unknown, Unknown];
+        # cast so the rest of the validator can use string-key access.
+        src_obj = cast("Mapping[str, Any]", src)
+        if "source_name" not in src_obj:
             raise ValueError(f"{source_label}: sources[{i}] missing 'source_name'")
-        name = src["source_name"]
+        name = src_obj["source_name"]
+        if not isinstance(name, str):
+            raise ValueError(
+                f"{source_label}: sources[{i}].source_name must be a string"
+            )
         if name in seen_names:
             raise ValueError(
                 f"{source_label}: duplicate source_name {name!r} at sources["
@@ -501,13 +511,13 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
                 f"source's column map."
             )
         seen_names[name] = i
-        if "columns" not in src:
+        if "columns" not in src_obj:
             raise ValueError(
                 f"{source_label}: sources[{i}] ({name!r}) missing 'columns'. "
                 f"A truncated mock_data_discovery.json would silently produce "
                 f"an incomplete project_data.json."
             )
-        cols = src["columns"]
+        cols = src_obj["columns"]
         if not isinstance(cols, list):
             raise ValueError(f"{source_label}: sources[{i}].columns must be a list")
         for j, col in enumerate(cols):

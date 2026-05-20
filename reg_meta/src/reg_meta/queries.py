@@ -15,6 +15,7 @@ from .fqid import Fqid, derive_variable_slug, try_emit
 
 if TYPE_CHECKING:
     import sqlite3
+    from collections.abc import Iterable
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -234,7 +235,7 @@ def search(
             remediation="Use --datacolumn, --varname, --description, --value, or --all-fields.",
         )
 
-    reg_ids: set[str] | None = None
+    reg_ids: set[int] | None = None
     if register:
         ids = resolve_register_ids(conn, register)
         if not ids:
@@ -278,7 +279,7 @@ def search(
 
 
 def _search_datacolumns(
-    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[str] | None
+    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT DISTINCT va.kolumnnamn, vi.register_id, vi.var_id, "
@@ -310,7 +311,7 @@ def _search_datacolumns(
 
 
 def _search_varnames(
-    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[str] | None
+    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT v.register_id, v.var_id, v.variabelnamn, r.registernamn "
@@ -338,7 +339,7 @@ def _search_varnames(
 
 
 def _search_description_registers(
-    conn: sqlite3.Connection, query: str, reg_ids: set[str] | None
+    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT register_id, registernamn, registerrubrik, rank "
@@ -363,7 +364,7 @@ def _search_description_registers(
 
 
 def _search_description_variables(
-    conn: sqlite3.Connection, query: str, reg_ids: set[str] | None
+    conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT vf.register_id, vf.var_id, vf.variabelnamn, vf.variabeldefinition, "
@@ -394,7 +395,7 @@ def _search_description_variables(
 
 
 def _search_values(
-    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[str] | None
+    conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
         "SELECT DISTINCT vc.vardekod, vc.vardebenamning, "
@@ -477,7 +478,7 @@ def get_register(
 # ---------------------------------------------------------------------------
 
 
-def _in_placeholders(ids: list[str]) -> str:
+def _in_placeholders(ids: Iterable[object]) -> str:
     return ",".join("?" for _ in ids)
 
 
@@ -1443,8 +1444,8 @@ def get_diff(
             )
 
     variants_out: list[dict[str, Any]] = []
-    unchanged_by_var: dict[str, list[str]] = {}
-    changed_any_variant: set[str] = set()
+    unchanged_by_var: dict[int, list[str]] = {}
+    changed_any_variant: set[int] = set()
     any_versions_found = False
 
     for rv in variant_rows:

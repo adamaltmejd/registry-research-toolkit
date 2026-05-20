@@ -645,7 +645,7 @@ def _build_pyodbc_connstr(src: SqlSource) -> str:
 
 
 def sql_connect(src: SqlSource) -> Any:
-    import pyodbc
+    import pyodbc  # ty: ignore[unresolved-import] — MONA-only driver, not in workspace deps
 
     return pyodbc.connect(_build_pyodbc_connstr(src))
 
@@ -679,7 +679,10 @@ def _normalize_to_sql_tables(
     if isinstance(tables, Mapping):
         for alias, val in tables.items():
             if isinstance(val, str):
-                out.append(SqlTable(qualified=val, alias=alias))
+                # alias is str via the Mapping[str, ...] declaration; ty's
+                # isinstance-narrowing of the generic union loses the key
+                # type parameter (Mapping vs Sequence branch).
+                out.append(SqlTable(qualified=val, alias=alias))  # ty: ignore[invalid-argument-type]
             elif isinstance(val, SqlTable):
                 # Mapping key wins as the alias if the SqlTable didn't set one.
                 if val.alias is None:

@@ -920,11 +920,11 @@ def _import_registerinformation(
 def _import_unika(
     conn: sqlite3.Connection,
     path: Path,
-    unika_join: dict[tuple[str, str, str, str], tuple[str, str]],
+    unika_join: dict[tuple[str, str, str, str], tuple[int, int]],
 ) -> int:
     _progress("Importing UnikaRegisterOchVariabler.csv...")
     row_count = 0
-    batch: list[tuple[str, ...]] = []
+    batch: list[tuple[int | str, ...]] = []
 
     with _open_scb_csv(path) as (_, rows):
         for _, row in rows:
@@ -1304,7 +1304,7 @@ def _project_and_mint_value_sets(
             member_batch.clear()
 
     def _finish_code() -> None:
-        if state.code_id is None:
+        if state.code_id is None or state.cvid is None:
             return
         if _accept_code(state.items, cvid_to_year.get(state.cvid), validity_map):
             state.accepted.append(state.code_id)
@@ -1320,6 +1320,7 @@ def _project_and_mint_value_sets(
         set_id = set_id_by_hash.get(h)
         if set_id is None:
             cur = conn.execute("INSERT INTO value_set (member_hash) VALUES (?)", (h,))
+            assert cur.lastrowid is not None  # sqlite always populates after INSERT
             set_id = cur.lastrowid
             set_id_by_hash[h] = set_id
             member_batch.extend((set_id, cid) for cid in state.accepted)

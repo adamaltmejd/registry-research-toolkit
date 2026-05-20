@@ -590,6 +590,7 @@ def populate_classifications(
                 entry.get("url"),
             ),
         )
+        assert cur.lastrowid is not None  # sqlite always populates after INSERT
         id_by_short[entry["short_name"]] = cur.lastrowid
 
     for entry in entries:
