@@ -13,15 +13,16 @@ is only called during ``reg-meta-build build-db``.
 from __future__ import annotations
 
 import csv
-import sqlite3
 import sys
 import time
 import tomllib
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 
+if TYPE_CHECKING:
+    import sqlite3
 
 _REQUIRED_FIELDS = ("short_name", "name", "vardemangdsversion")
 _VALID_CODES_HEADER = ("vardekod", "vardebenamning")

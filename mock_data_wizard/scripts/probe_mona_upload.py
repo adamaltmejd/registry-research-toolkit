@@ -25,6 +25,7 @@ script. Export that file back out of MONA to share results.
 
 from __future__ import annotations
 
+import contextlib
 import locale
 import os
 import platform
@@ -37,7 +38,7 @@ from pathlib import Path
 # hang the script when full. Redirect immediately. Per MONA Python docs.
 _HOST = socket.gethostname()
 if _HOST.upper().startswith("MBS"):
-    sys.stdout = open(os.devnull, "w")  # noqa: SIM115
+    sys.stdout = open(os.devnull, "w")  # noqa: SIM115, PTH123  # permanent redirect, not a context-manager case
 
 _HERE = Path(__file__).resolve().parent
 _TS = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -67,7 +68,7 @@ def main() -> None:
         _line(fp, f"platform: {platform.platform()}")
         _line(fp, f"python_version: {sys.version.splitlines()[0]}")
         _line(fp, f"python_executable: {sys.executable}")
-        _line(fp, f"cwd: {os.getcwd()}")
+        _line(fp, f"cwd: {Path.cwd()}")
         _line(fp, f"script_path: {Path(__file__).resolve()}")
         _line(fp, f"default_encoding: {sys.getdefaultencoding()}")
         _line(fp, f"filesystem_encoding: {sys.getfilesystemencoding()}")
@@ -185,12 +186,10 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         fail = _HERE / f"mdw_upload_probe_FAIL_{_TS}.txt"
-        try:
+        with contextlib.suppress(Exception):
             fail.write_text(
                 f"PROBE FAILED before main report finished:\n"
                 f"  {type(e).__name__}: {e}\n",
                 encoding="utf-8",
             )
-        except Exception:
-            pass
         raise

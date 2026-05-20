@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "mock-data-wizard"
 version = "0.7.0"
 description = "SCB MONA mock-data generation workflows"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
 license = { text = "MIT" }
 dependencies = [

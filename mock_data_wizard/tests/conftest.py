@@ -4,14 +4,15 @@ from __future__ import annotations
 
 import json
 import sqlite3
-from pathlib import Path
-from typing import Any, Mapping, Sequence
+from typing import TYPE_CHECKING, Any
 
 import pytest
-
 from reg_meta.db import SCHEMA_VERSION
 from reg_meta_build.db import DDL, _value_set_hash
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping, Sequence
+    from pathlib import Path
 
 # -- project_data.json builder --------------------------------------------
 

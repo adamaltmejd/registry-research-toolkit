@@ -5,16 +5,14 @@ from __future__ import annotations
 import sqlite3
 
 import pytest
-
-from reg_meta_build.db import DDL, seed_providers
+from _slugged_db import build_slugged_db
 from reg_meta.queries import (
     get_classification,
     get_register,
     get_schema,
     get_varinfo,
 )
-
-from _slugged_db import build_slugged_db
+from reg_meta_build.db import DDL, seed_providers
 
 
 @pytest.fixture

@@ -10,14 +10,18 @@ import time
 import unicodedata
 from collections import Counter
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-import reg_meta
 from reg_meta.queries import extract_year as _regver_year
 
+import reg_meta
+
 from ._util import lookup_with_prefix_fallback, progress, strip_project_prefix
-from .stats import ColumnStats, ProjectStats
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    from .stats import ColumnStats, ProjectStats
 
 # Birth-invariant reg_meta var_ids eligible for population spine.
 # These attributes are fixed at birth and must be consistent per individual.

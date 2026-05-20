@@ -15,7 +15,10 @@ from __future__ import annotations
 
 import sqlite3
 from dataclasses import dataclass
-from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,9 +33,10 @@ def _open_or_none(db_path: Path | None):
     """Open the reg_meta DB returning the connection, or None on any failure
     that means "reg_meta isn't available." Callers must close the connection
     when done with it."""
-    from reg_meta import open_db
     from reg_meta.db import db_path_from_args
     from reg_meta.errors import RegMetaError
+
+    from reg_meta import open_db
 
     try:
         resolved = db_path_from_args(str(db_path) if db_path else None)
@@ -65,8 +69,9 @@ def resolve_register(
     match anything, or it matches multiple registers ambiguously (the
     caller can recover by re-prompting with a more specific name).
     """
-    from reg_meta import resolve_register_ids
     from reg_meta.errors import RegMetaError
+
+    from reg_meta import resolve_register_ids
 
     conn = _open_or_none(db_path)
     if conn is None:

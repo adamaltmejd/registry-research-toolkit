@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import sys
 
-
 from reg_meta.cli import run
 
 
@@ -615,8 +614,8 @@ class TestGetValues:
         """
         import sqlite3
 
-        from reg_meta_build.db import DDL, seed_providers
         from reg_meta.queries import get_values_by_variable
+        from reg_meta_build.db import DDL, seed_providers
 
         db = tmp_path / "amb.db"
         conn = sqlite3.connect(str(db))
@@ -667,7 +666,6 @@ class TestGetValues:
         conn.commit()
 
         import pytest
-
         from reg_meta.errors import RegMetaError
 
         with pytest.raises(RegMetaError) as exc:
@@ -1366,6 +1364,7 @@ class TestOutputFormats:
     def test_row_truncation(self, db_path: str):
         """Results exceeding MAX_DISPLAY_ROWS should emit truncation hint on stderr."""
         import io
+
         import reg_meta.cli_common
 
         old_max = reg_meta.cli_common.MAX_DISPLAY_ROWS

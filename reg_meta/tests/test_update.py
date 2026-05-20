@@ -5,8 +5,6 @@ from pathlib import Path
 
 import pytest
 import zstandard
-
-from reg_meta import download
 from reg_meta.db import DB_FILENAME, SCHEMA_VERSION
 from reg_meta.doc_db import (
     DOC_DB_FILENAME,
@@ -20,6 +18,8 @@ from reg_meta.update import (
     _set_pending_update,
     read_pending_update,
 )
+
+from reg_meta import download
 
 
 class TestParseVersion:
@@ -372,8 +372,9 @@ class TestRunUpdateFailFast:
         # entirely — we're testing asset-resolution behaviour, not uv.
         # (CI doesn't have reg_meta installed as a uv tool, so invoking
         # `uv tool upgrade reg-meta` would fail before any assertion.)
-        from reg_meta import __version__, update
         from reg_meta.download import ReleaseResolution
+
+        from reg_meta import __version__, update
 
         def fake_resolve(*, timeout: float = 15) -> ReleaseResolution:
             return ReleaseResolution(
@@ -442,9 +443,10 @@ class TestRunUpdatePypiBehind:
         """PyPI says installed == latest; GitHub advertises a newer tag.
         The package upgrade is skipped and existing local assets matching
         the GitHub tag are treated as up-to-date."""
-        from reg_meta import __version__, update
         from reg_meta.download import ReleaseResolution
         from reg_meta.update import run_update
+
+        from reg_meta import __version__, update
 
         newer_tag = "reg_meta/v99.99.99"
         (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")
@@ -479,9 +481,10 @@ class TestRunUpdatePypiBehind:
         a successful upgrade."""
         import subprocess as _subprocess
 
-        from reg_meta import update
         from reg_meta.download import ReleaseResolution
         from reg_meta.update import run_update
+
+        from reg_meta import update
 
         target_tag = "reg_meta/v99.99.99"
         (tmp_path / DB_FILENAME).write_bytes(b"db-placeholder")

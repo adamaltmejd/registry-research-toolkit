@@ -8,8 +8,7 @@ import sys
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import zstandard
 
@@ -21,6 +20,9 @@ from .doc_db import (
     open_doc_db,
 )
 from .errors import EXIT_CONFIG, EXIT_NETWORK, RegMetaError
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 GITHUB_REPO = "adamaltmejd/registry-research-toolkit"
 TAG_PREFIX = "reg_meta/"

@@ -1,25 +1,21 @@
-# MONA Mock Data Wizard
-- [MONA](https://www.scb.se/mona) is Statistics Sweden's platform for access to microdata
-- Agents are not allowed on MONA.
-- To enable agentic local work with MONA projects, the `MONA Mock Data Wizard` helps the user to generate authentic mock data.
+# Registry Research Toolkit
+Multi-package workspace for Swedish register research: catalog metadata, schema validation, and MONA bundle / mock-data generation. See `REFACTOR_SPEC.md` for the in-flight cross-package design.
 
-# CRITICAL: PERSONAL DATA MAY NOT BE EXPORTED FROM MONA
-- MONA contains personal data. Under no circumstances may any PII ever leave MONA.
-- Only **aggregate statistics** may ever be exported.
+## Packages
+- `reg_meta` (CLI `reg-meta`) — search and query registry metadata.
+- `reg_meta_build` (CLI `reg-meta-build`) — build the reg_meta SQLite DBs from SCB exports (maintainer-only).
+- `reg_schema` (library) — `project_data.json` schema and structural validator.
+- `mock_data_wizard` (CLI `mock-data-wizard`) — MONA mock-data generation. Being split into `reg_monabundle` + `reg_mockdata` per REFACTOR_SPEC.md.
 
-# Products
-- Python package `mock_data_wizard` (CLI `mock-data-wizard`) for SCB MONA mock-data generation workflows.
-- Python package `reg_meta` (CLI `reg-meta`) for searching and querying registry metadata.
-- Python package `reg_meta_build` (CLI `reg-meta-build`) for building the reg_meta SQLite databases from SCB CSV exports (maintainer-only).
-- Python package `reg_schema` (library, no CLI) for the `project_data.json` schema and structural validator.
-- Tools are proper python project packages called with `uv`.
+## MONA constraint
+[MONA](https://www.scb.se/mona) is Statistics Sweden's microdata platform. Agents are not allowed on MONA. **PII must never leave MONA — only aggregate statistics are exported.** `mock_data_wizard` (post-refactor: `reg_monabundle` + `reg_mockdata`) bridges agentic local work to MONA projects.
 
 # Governance
 - `DESIGN.md` per package documents design rationale and constraints.
 - No frozen specs or implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
 
 # Maturity and compatibility
-- All tools in this repo are **early-stage** with a small group of testers. Breaking changes are acceptable but should be deliberate — prefer clean breaks over silent behavior changes.
+- Pre-v1, no external users — break things freely if it benefits the long-term design.
 - Do not write migration code, shims, deprecation wrappers, or backwards-compatibility layers. If something needs to change, change it directly.
 - Do not preserve old code "just in case." Dead code gets deleted.
 
@@ -30,26 +26,39 @@
 - Validate JSON contracts at read/write boundaries.
 - Avoid leaking sensitive row-level content.
 
+# Python conventions
+- Runtime deps live in each package's `pyproject.toml`; dev deps live only in the workspace-root `pyproject.toml`.
+- Add with `uv add` (runtime) / `uv add --dev` (dev) — don't hand-edit `pyproject.toml` for new deps; uv writes to the right PEP 735 group. Hand-editing is fine for bumping an existing constraint (then `uv lock`).
+- One-off tools (not project deps): `uvx <tool>` — e.g. `uvx pre-commit run --all-files`.
+- Refresh lockfile with `uv lock --upgrade`; CI uses `uv sync --frozen`.
+- `requires-python` floor is bound to MONA's bundled Python — see `mock_data_wizard/DESIGN.md` "MONA Python runtime" before raising it.
+
+## Stack
+Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design and §15 for the migration sequence.
+
+- **Library packages** (`reg_meta`, `reg_schema`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
+  - Modeling: `@dataclass`. **No Pydantic on library surfaces** — keeps them importable from any context (Jupyter, scripts, MONA bundle).
+  - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION` constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB is read-mostly, single-backend, mmap'd; an ORM would add overhead with no benefit.
+  - Analytical queries: DuckDB where needed.
+  - CLI: argparse. No click/typer.
+- **Web backend** (`reg_webapp/backend/`, in-flight): FastAPI + Pydantic REST. Pydantic models wrap library dataclasses 1:1 at the response boundary — Pydantic lives nowhere else.
+- **Web frontend** (`reg_webapp/frontend/`, in-flight): Svelte 5 + Vite + TypeScript, bun-managed. TS types codegen'd from FastAPI's `openapi.json`.
+- **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Docker-requiring tests.
+- **Type checking**: `uvx ty check` (Astral, beta). Advisory in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
+- **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates into a single file uploaded to MONA. Each added runtime dep must already be in MONA's WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
+
+Code currently in `mock_data_wizard/{server,editor}.py` (stdlib `http.server`, dataclass-based editor) is being superseded by `reg_webapp` and deleted in §15 step 7. Don't extend it — extend the new packages.
+
 # Lint and test
 - `uv run ruff check` — python lint
 - `uv run ruff format --check` — python format check
 - `bunx markdownlint-cli2` — markdown lint (config in `.markdownlint-cli2.yaml`)
-- `uv run python -m pytest reg_meta/` — reg_meta tests
-- `uv run python -m pytest reg_meta_build/` — reg_meta_build tests
-- `uv run python -m pytest reg_schema/` — reg_schema tests
-- `uv run python -m pytest mock_data_wizard/` — mock_data_wizard tests
+- `uv run python -m pytest` — all tests (pytest discovers per-package via root pyproject `testpaths`)
+- `uv run python -m pytest reg_meta/` — narrow to a single package
 - `reg_meta_build/docs/lisa/*.md` are build artifacts — fix `scripts/parse_lisa_docs.py`, not the output
 
-# Target structure
-- `reg_meta/DESIGN.md` — design rationale (query layer)
-- `reg_meta/STRUCTURE.md` — domain model
-- `reg_meta/src/reg_meta/` — package source
-- `reg_meta_build/DESIGN.md` — design rationale (build pipeline)
-- `reg_meta_build/src/reg_meta_build/` — package source
-- `reg_meta_build/docs/` — curated register documentation (build inputs for the doc DB)
-- `reg_meta_build/fqid_slugs/` — maintainer-curated slug TOMLs
-- `reg_meta_build/input_data/` — SCB CSV exports + canonical classification CSVs
-- `reg_schema/DESIGN.md` — design rationale, scope, dependency direction
-- `reg_schema/src/reg_schema/` — package source
-- `mock_data_wizard/DESIGN.md` — design rationale, PII safety rules
-- `mock_data_wizard/src/mock_data_wizard/` — package source
+# Git
+- Never run `git commit --no-verify`, `git commit -n`, or `git push --no-verify`. If a pre-commit hook fails, fix the underlying issue rather than bypassing.
+
+# Layout
+For per-package design rationale, see `<package>/DESIGN.md` (plus `reg_meta/STRUCTURE.md` for the domain model). For the cross-package refactor design, see `REFACTOR_SPEC.md` §3 (target structure) and §15 (migration sequence).

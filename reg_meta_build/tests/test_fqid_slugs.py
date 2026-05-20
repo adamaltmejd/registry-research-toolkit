@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
+from _slugged_db import build_slugged_db
 from reg_meta.errors import RegMetaError
+
 from reg_meta_build.fqid_slugs import (
     SNAPSHOT_FILENAME,
     SlugEntry,
@@ -29,8 +30,8 @@ from reg_meta_build.fqid_slugs import (
     write_snapshot,
 )
 
-from _slugged_db import build_slugged_db
-
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Loader / validation
@@ -1734,6 +1735,7 @@ class TestPrecheckCliGrowOnly:
         rename is still reported in the envelope so drift stays visible.
         """
         from reg_meta_build.cli import run
+
         from reg_meta_build.fqid_slugs import UNFROZEN_MARKER
 
         db_dir, slug_dir = self._seed_layout(tmp_path)

@@ -2,7 +2,7 @@
 name = "registry-research-toolkit"
 version = "0.4.0"
 description = "Workspace coordinator for mock_data_wizard, reg_meta, reg_meta_build, and reg_schema"
-requires-python = ">=3.11"
+requires-python = ">=3.13"
 dependencies = [
   "mock-data-wizard",
   "reg-meta",
@@ -12,17 +12,42 @@ dependencies = [
 
 [dependency-groups]
 dev = [
-  "duckdb>=1.4.0",
-  "openpyxl>=3.1",
-  "playwright>=1.58.0",
-  "pytest>=8.4.2",
-  "pytest-xdist>=3.6",
-  "ruff>=0.15.7",
+  "duckdb>=1.5.2",
+  "openpyxl>=3.1.5",
+  "pytest>=9.0.3",
+  "pytest-xdist>=3.8.0",
+  "ruff>=0.15.12",
 ]
 
 [tool.pytest.ini_options]
 testpaths = ["mock_data_wizard", "reg_meta", "reg_meta_build", "reg_schema"]
 markers = ["integration: full pipeline tests requiring Docker"]
+
+[tool.ruff]
+target-version = "py313"
+
+[tool.ruff.lint]
+# Trimmed pydevtools recommendation: dropped TD (TODO diligence — conflicts
+# with the keep-comments memory). FA stays because TC moves type-only imports
+# into TYPE_CHECKING blocks and only works without breaking runtime annotations
+# when `from __future__ import annotations` is in effect (already adopted in
+# 89/98 .py files in this workspace).
+extend-select = [
+  "W",    # pycodestyle warnings
+  "I",    # isort
+  "UP",   # pyupgrade
+  "C4",   # comprehensions
+  "FA",   # from __future__ import annotations
+  "ISC",  # implicit string concat
+  "ICN",  # import conventions
+  "RET",  # return values
+  "SIM",  # simplifications
+  "TID",  # tidy imports
+  "TC",   # type-checking imports
+  "PTH",  # pathlib
+  "NPY",  # numpy
+  "FURB", # refurb
+]
 
 [tool.uv]
 package = false

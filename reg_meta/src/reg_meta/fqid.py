@@ -17,12 +17,15 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from collections.abc import Callable
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
-class FqidKind(str, Enum):
+class FqidKind(StrEnum):
     PROVIDER = "provider"
     REGISTER = "register"
     REGISTER_VARIANT = "register_variant"

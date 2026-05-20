@@ -3,21 +3,23 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.scan import (
-    PIIScannerError,
     SCANNER_VERSION,
+    PIIScannerError,
     _luhn_valid,
     scan_file,
     scan_payload,
     scan_string,
     write_export,
 )
+
 from .conftest import MINIMAL_STATS, SPINE_STATS
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # -- helpers / building blocks -------------------------------------------
 

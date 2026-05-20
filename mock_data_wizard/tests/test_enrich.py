@@ -5,8 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from reg_meta.errors import RegMetaError
-
 from mock_data_wizard.enrich import (
     EnrichedColumn,
     EnrichedSource,
@@ -18,6 +16,7 @@ from mock_data_wizard.enrich import (
     enrich,
 )
 from mock_data_wizard.stats import parse_stats
+from reg_meta.errors import RegMetaError
 
 from .conftest import assign_value_set
 

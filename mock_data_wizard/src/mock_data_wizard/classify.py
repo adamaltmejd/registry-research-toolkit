@@ -25,9 +25,12 @@ import re
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from ._util import lookup_with_prefix_fallback, strip_project_prefix
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 # Canonical inferred-type enum. One source of truth -- imported by
 # config (validation), sql_emit (dispatch), and stats (consumer-side).

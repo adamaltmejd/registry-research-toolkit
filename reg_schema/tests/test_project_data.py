@@ -220,13 +220,13 @@ def test_project_data_hashable_with_dict_namespaced_block() -> None:
 def test_project_data_eq_still_compares_namespaced_block() -> None:
     # `hash=False` excludes the block from __hash__ only; __eq__ still
     # sees it, so specs differing only in the opaque block are unequal.
-    base_kwargs = dict(
-        schema_version="1.0.0",
-        steward="global",
-        reg_meta_version="reg_meta/v0.11.1",
-        name="demo",
-        sources=(_source(),),
-    )
+    base_kwargs = {
+        "schema_version": "1.0.0",
+        "steward": "global",
+        "reg_meta_version": "reg_meta/v0.11.1",
+        "name": "demo",
+        "sources": (_source(),),
+    }
     pd_a = ProjectData(**base_kwargs, reg_monabundle={"k": 1})
     pd_b = ProjectData(**base_kwargs, reg_monabundle={"k": 2})
     pd_c = ProjectData(**base_kwargs, reg_monabundle={"k": 1})

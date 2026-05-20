@@ -9,9 +9,12 @@ path resolution, schema-compat check, and ``open_doc_db`` /
 from __future__ import annotations
 
 import sqlite3
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .errors import EXIT_CONFIG, RegMetaError
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 DOC_DB_FILENAME = "reg_meta_docs.db"
 DOC_DB_ASSET_NAME = "reg_meta_docs.db.zst"

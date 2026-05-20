@@ -5,13 +5,14 @@ from __future__ import annotations
 import io
 import json
 import sys
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from reg_meta.cli import run
 from reg_meta_build.doc_db import build_doc_db
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -327,7 +328,6 @@ class TestDocDbRequired:
     def test_search_without_docs_raises(self, tmp_path: Path):
         # Build a main DB in an empty dir — no doc DB present.
         from _csv_fixtures import write_scb_input
-
         from reg_meta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))
@@ -351,7 +351,6 @@ class TestDocDbRequired:
 
     def test_get_without_docs_raises(self, tmp_path: Path):
         from _csv_fixtures import write_scb_input
-
         from reg_meta_build.db import build_db
 
         write_scb_input(tmp_path / "input", include=("registerinformation",))

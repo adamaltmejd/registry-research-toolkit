@@ -15,11 +15,9 @@ import re
 import sqlite3
 import struct
 import sys
-
 from contextlib import contextmanager
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any, Callable, Iterator
+from typing import TYPE_CHECKING, Any
 
 from reg_meta.db import (
     DB_FILENAME,
@@ -33,6 +31,9 @@ from reg_meta.queries import extract_year
 from .classifications import populate_classifications, repo_seed_path
 from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
 
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator
+    from pathlib import Path
 
 # Built-in data providers. `provider_id` values are stable: rows reference them
 # from `register.provider_id`. Add new providers by appending — never renumber.

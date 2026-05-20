@@ -7,10 +7,9 @@ enumerates all variable bindings of a given variable slug under a register.
 
 from __future__ import annotations
 
-import sqlite3
 from collections import deque
 from dataclasses import dataclass, replace
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 from .db import db_path_from_args, open_db
 from .errors import EXIT_NOT_FOUND, RegMetaError
@@ -23,6 +22,10 @@ from .fqid import (
     parse,
     validate_slug,
 )
+
+if TYPE_CHECKING:
+    import sqlite3
+    from pathlib import Path
 
 
 @dataclass(frozen=True)

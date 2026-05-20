@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.stats import (
     StatsValidationError,
     parse_stats,
 )
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_parse_minimal(stats_path: Path):

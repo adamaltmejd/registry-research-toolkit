@@ -17,10 +17,9 @@ import re
 import sqlite3
 import tomllib
 import unicodedata
-from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
@@ -30,6 +29,9 @@ from reg_meta.fqid import (
     derive_variable_slug,
     validate_slug,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterator
 
 EntityKind = Literal[
     "register",
@@ -1207,7 +1209,7 @@ def _reject_same_as_cycles(edges: list[tuple[Any, Any]], *, label: str) -> None:
         adj.setdefault(b, [])
 
     # WHITE = 0 unvisited, GRAY = 1 on current DFS stack, BLACK = 2 done.
-    color: dict[Any, int] = {n: 0 for n in adj}
+    color: dict[Any, int] = dict.fromkeys(adj, 0)
     parent: dict[Any, Any] = {}
 
     def visit(node: Any) -> None:

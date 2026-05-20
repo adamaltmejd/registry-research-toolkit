@@ -4,11 +4,13 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .classify import COLUMN_TYPES
 from .extract import CONTRACT_VERSION  # producer owns the version
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 VALID_SOURCE_TYPES = frozenset({"file", "sql"})
 

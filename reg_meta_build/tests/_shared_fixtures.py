@@ -4,14 +4,16 @@ suites. Both conftests import these via the on-`sys.path` bare-name path
 
 from __future__ import annotations
 
-import sqlite3
-from collections.abc import Iterator
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 from _csv_fixtures import write_scb_input
-
 from reg_meta_build.db import build_db
+
+if TYPE_CHECKING:
+    import sqlite3
+    from collections.abc import Iterator
+    from pathlib import Path
 
 
 @pytest.fixture(scope="session")

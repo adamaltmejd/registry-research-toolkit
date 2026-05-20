@@ -10,7 +10,6 @@ classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
 from __future__ import annotations
 
 import pytest
-
 from mock_data_wizard.classify import (
     DATE_FORMATS,
     RTB_NAMED_CATEGORICAL,
@@ -25,7 +24,6 @@ from mock_data_wizard.classify import (
     is_rtb_named_categorical,
     reg_meta_implied_type,
 )
-
 
 # -- name-based patterns --------------------------------------------------
 
