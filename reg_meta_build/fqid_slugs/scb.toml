@@ -341,10 +341,220 @@ slug = "iot"
 slug = "individer-och-dodsbon"
 display_group = "Individer och dödsbon"
 
+# '2008, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.2771"]
+slug = "2008"
+
+# '2007, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.3442"]
+slug = "2007"
+
+# '2009, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.3446"]
+slug = "2009"
+
+# '2006, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5796"]
+slug = "2006"
+
+# '2005, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5811"]
+slug = "2005"
+
+# '2004, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5815"]
+slug = "2004"
+
+# '2003, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5820"]
+slug = "2003"
+
+# '2002, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5822"]
+slug = "2002"
+
+# '2001, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5847"]
+slug = "2001"
+
+# '2000, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5889"]
+slug = "2000"
+
+# '1999, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.5893"]
+slug = "1999"
+
+# '1998, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.8651"]
+slug = "1998"
+
+# '1997, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.9926"]
+slug = "1997"
+
+# '1996, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13268"]
+slug = "1996"
+
+# '1995, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13388"]
+slug = "1995"
+
+# '1994, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13457"]
+slug = "1994"
+
+# '1993, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13458"]
+slug = "1993"
+
+# '1992, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13459"]
+slug = "1992"
+
+# '1991, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13632"]
+slug = "1991"
+
+# '1960, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13667"]
+slug = "1960"
+
+# '1990, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13817"]
+slug = "1990"
+
+# '1968, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.13834"]
+slug = "1968"
+
+# '1969, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14239"]
+slug = "1969"
+
+# '1970, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14245"]
+slug = "1970"
+
+# '1971, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14261"]
+slug = "1971"
+
+# '1972, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14404"]
+slug = "1972"
+
+# '1973, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14405"]
+slug = "1973"
+
+# '1974, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14452"]
+slug = "1974"
+
+# '1975, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14464"]
+slug = "1975"
+
+# '1976, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14465"]
+slug = "1976"
+
+# '1977, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14466"]
+slug = "1977"
+
+# '1978, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14485"]
+slug = "1978"
+
+# '1979, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14709"]
+slug = "1979"
+
+# '1980, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14747"]
+slug = "1980"
+
+# '1981, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.14751"]
+slug = "1981"
+
+# '1982, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15033"]
+slug = "1982"
+
+# '1983, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15061"]
+slug = "1983"
+
+# '1984, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15104"]
+slug = "1984"
+
+# '1985, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15109"]
+slug = "1985"
+
+# '1986, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15112"]
+slug = "1986"
+
+# '1987, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15119"]
+slug = "1987"
+
+# '1988, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15130"]
+slug = "1988"
+
+# '1989, slutlig version' (residual: ", slutlig version")
+[register_version."25.763.15150"]
+slug = "1989"
 [register_variant."25.1153"]
 slug = "bostadshushall"
 display_group = "Bostadshushåll"
 
+# '2013, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.5662"]
+slug = "2013"
+
+# '2012, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.5812"]
+slug = "2012"
+
+# '2014, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.7310"]
+slug = "2014"
+
+# '2015, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.9968"]
+slug = "2015"
+
+# '2016, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.11664"]
+slug = "2016"
+
+# '2011, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.12305"]
+slug = "2011"
+
+# '2017, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.12940"]
+slug = "2017"
+
+# '2018, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.13804"]
+slug = "2018"
+
+# '2019, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.15781"]
+slug = "2019"
+
+# '2020, slutlig version' (residual: ", slutlig version")
+[register_version."25.1153.17955"]
+slug = "2020"
 [register_variant."25.1642"]
 slug = "kontrolluppgifter-rantor"
 display_group = "Kontrolluppgifter räntor och utdelningar (KURU)"
