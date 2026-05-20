@@ -56,7 +56,17 @@ fi
 # `-n` as a short flag on `git commit`, either standalone or in a combined
 # short-flag group like `-nm` / `-anm`. Single leading dash ensures we don't
 # match `--name-only` etc. (those have two dashes).
-if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*${BOUNDARY} ]]; then
+#
+# Pre-subcommand flag tokens are allowed between `git` and `commit` so that
+# the wrapper form `git -c key=value commit -n` (and `git --git-dir=.git
+# commit -n`) doesn't slip past. A flag token is one of:
+#   - long flag, optionally `=value`:   --foo / --foo=bar
+#   - short flag group:                 -a / -abc
+#   - `-c`/`-C` with separately-quoted arg: `-c key=value` / `-C path`
+# Restricting to these forms keeps arbitrary text between `git` and `commit`
+# from matching (so `git status; git commit -n` only matches the real commit).
+GIT_PRECMD_FLAG='(-[cC][[:space:]]+[^[:space:]]+|--[a-zA-Z][a-zA-Z0-9-]*(=[^[:space:]]+)?|-[a-zA-Z]+)'
+if [[ "$command" =~ git[[:space:]]+(${GIT_PRECMD_FLAG}[[:space:]]+)*commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*${BOUNDARY} ]]; then
 	deny
 fi
 
