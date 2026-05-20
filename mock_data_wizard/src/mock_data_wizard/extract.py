@@ -5,13 +5,14 @@ Two modes, one bundle:
 - ``MODE = "discover"`` -- metadata-only walk over ``SOURCES``. SQL
   sources read ``INFORMATION_SCHEMA.COLUMNS`` and ``COUNT(*)``; file
   sources use DuckDB ``DESCRIBE`` and ``COUNT(*)``. No samples, no
-  distinct counts. Output: ``mock_data_discovery.json``. The user copies it
-  off MONA and authors ``mock_data_config.json`` locally via the
-  ``mock_data_wizard.editor`` API (or an external UI calling that API).
-- ``MODE = "extract"`` -- typed aggregation. Reads ``mock_data_config.json``
+  distinct counts. Output: ``mock_data_discovery.json``. The user copies
+  it off MONA and authors ``project_data.json`` locally (the §15 step 7
+  webapp owns the authoring UI; until then, hand-write against
+  REFACTOR_SPEC.md §6).
+- ``MODE = "extract"`` -- typed aggregation. Reads ``project_data.json``
   uploaded next to the bundle, requires every column to have a type
-  override, and produces ``mock_data_stats.json``. No data-driven classifier
-  pass: the configured type drives the per-column SQL.
+  override, and produces ``mock_data_stats.json``. No data-driven
+  classifier pass: the configured type drives the per-column SQL.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression and noise live in :mod:`summarize`; this module just
@@ -20,20 +21,26 @@ orchestrates and routes the export through :func:`scan.write_export`.
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import random
 import re
 import time
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import TYPE_CHECKING, Any
 
-from .config import MDWConfig, Panel, load_config
 from .scan import write_export
 from .sources import SourceHandle, iter_source
+from .spec import LoadedSpec, load_project_data
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 from .summarize import SUPPRESS_K, small_pop_threshold, summarize_column
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Sequence
+
+    from reg_schema import Panel
 
 log = logging.getLogger("mdw.extract")
 
@@ -65,19 +72,6 @@ def _extract_year(name: str) -> int | None:
     if y4 is None or term.start() < y4.start():
         return _expand_term_year(int(term.group(1)))
     return int(y4.group())
-
-
-def _resolve_year(source_name: str, config: MDWConfig | None) -> int | None:
-    """Year for ``source_name``: config first, name regex as fallback.
-
-    ``config=None`` is the discover-time call (no config exists yet);
-    discover always derives the year from the source name regex.
-    """
-    if config is not None:
-        year = config.source_year(source_name)
-        if year is not None:
-            return year
-    return _extract_year(source_name)
 
 
 # -- Per-table SQL helpers -------------------------------------------------
@@ -317,22 +311,26 @@ def _coerce_period(value: Any) -> int | str:
 
 
 def _build_panels_block(
-    config: MDWConfig,
+    spec: LoadedSpec,
     source_results: Sequence[dict[str, Any]],
-    time_key_periods: dict[tuple[str, str], list[dict[str, Any]]],
+    time_key_periods: dict[tuple[str, str, str], list[dict[str, Any]]],
 ) -> list[dict[str, Any]]:
     """Assemble the ``panels`` array for mock_data_stats.json.
 
-    ``time_key_periods`` is keyed by ``(panel_id, member.source)`` and
-    carries pre-computed per-period stats for column-members (the
-    ``GROUP BY time_key`` query result). File-members read ``n_rows``
-    from the per-source row count and ``n_entity_ids`` from the
-    entity-key column's ``n_distinct``. Suppression is uniform (drop
-    periods where ``n_entity_ids < SUPPRESS_K``).
+    ``time_key_periods`` is keyed by ``(panel_id, member.source,
+    member.time_key)`` and carries pre-computed per-period stats for
+    column-members (the ``GROUP BY time_key`` query result). The
+    time_key is part of the key because the schema permits two
+    members of the same panel to share a source with different
+    time_key columns (§6.4 only forbids cross-panel source reuse).
+    File-members read ``n_rows`` from the per-source row count and
+    ``n_entity_ids`` from the entity-key column's ``n_distinct``.
+    Suppression is uniform (drop periods where
+    ``n_entity_ids < SUPPRESS_K``).
     """
     out: list[dict[str, Any]] = []
     sources_by_name = {s["source_name"]: s for s in source_results}
-    for panel in config.panels:
+    for panel in spec.panels:
         by_period: list[dict[str, Any]] = []
         members_out: list[dict[str, Any]] = []
         for member in panel.members:
@@ -349,7 +347,9 @@ def _build_panels_block(
                 # Column-member: by-period stats produced by the
                 # GROUP BY query at handle-processing time.
                 by_period.extend(
-                    time_key_periods.get((panel.panel_id, member.source), [])
+                    time_key_periods.get(
+                        (panel.panel_id, member.source, member.time_key), []
+                    )
                 )
                 continue
             # File-member (int time_key): one period from the source-level
@@ -413,13 +413,13 @@ def _build_panels_block(
 def process_handle(
     handle: SourceHandle,
     rng: random.Random,
-    config: MDWConfig,
+    spec: LoadedSpec,
     *,
     classifier_seed: int = 0,
 ) -> dict[str, Any]:
     """Process one :class:`SourceHandle` into a source-level stats dict.
 
-    Every column must carry a type override in ``config``; this is the
+    Every column must carry a type override in ``spec``; this is the
     only entry point and it has no classifier fallback. Subtype /
     date-format detection still runs the per-column sample when the
     override has no inline hint -- ``classifier_seed`` controls that.
@@ -450,14 +450,15 @@ def process_handle(
 
     # Validate the full column set up front so the user sees every
     # missing override at once instead of one error per re-run.
-    missing = [c for c in cols if config.lookup_type(handle.source_name, c) is None]
+    missing = [c for c in cols if spec.lookup_type(handle.source_name, c) is None]
     if missing:
         listed = ", ".join(repr(c) for c in missing)
         raise RuntimeError(
             f"extract mode: source {handle.source_name!r} has "
             f"{len(missing)} column(s) with no type override in "
-            f"mock_data_config.json: {listed}. Re-run discover and configure "
-            f"to refresh it, or add the missing entries by hand."
+            f"project_data.json: {listed}. Add the missing entries by "
+            f"hand (or regenerate from a fresh discover payload via the "
+            f"§15 step 7 webapp once it lands)."
         )
 
     columns_out: list[dict[str, Any]] = []
@@ -467,9 +468,9 @@ def process_handle(
             handle.conn, handle.table, col, handle.dialect
         )
 
-        override = config.lookup_type(handle.source_name, col)
+        override = spec.lookup_type(handle.source_name, col)
         assert override is not None  # validated above
-        options = config.lookup_options(handle.source_name, col)
+        options = spec.lookup_options(handle.source_name, col)
         # Skip the per-column sample query when an inline hint pins the
         # subtype/format -- nothing downstream consumes the sample then.
         sample: list[Any] = (
@@ -512,7 +513,7 @@ def process_handle(
         _flush_log_handlers()
 
     detail = dict(handle.source_detail)
-    year = _resolve_year(handle.source_name, config)
+    year = _extract_year(handle.source_name)
     if year is not None:
         detail["year"] = year
     return {
@@ -526,10 +527,8 @@ def process_handle(
 
 def _flush_log_handlers() -> None:
     for h in logging.getLogger().handlers:
-        try:
+        with contextlib.suppress(Exception):
             h.flush()
-        except Exception:
-            pass
 
 
 def _shared_columns(source_results: Sequence[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -561,16 +560,16 @@ def _shared_columns(source_results: Sequence[dict[str, Any]]) -> list[dict[str, 
 def run_extract_typed(
     sources: Iterable[Any],
     output_path: Path,
-    config: MDWConfig,
+    spec: LoadedSpec,
     *,
     seed: int | None = None,
     classifier_seed: int = 0,
 ) -> dict[str, Any]:
     """Run the typed extract pipeline and write ``mock_data_stats.json``.
 
-    Every column must carry a type override in ``config`` -- this mode
-    has no classifier fallback. Run ``discover`` + ``configure`` first
-    to author the file. ``seed`` controls Python-side noise injection;
+    Every column must carry a type override in ``spec`` -- this mode
+    has no classifier fallback. Run ``discover`` + configure first to
+    author the file. ``seed`` controls Python-side noise injection;
     ``classifier_seed`` controls the per-column sample for subtype /
     date-format detection (still used when the override is present
     without an inline hint).
@@ -581,29 +580,36 @@ def run_extract_typed(
     _flush_log_handlers()
     # Index column-members up front so each handle can run its
     # GROUP BY time_key query while the connection is still open.
-    time_key_member_by_source: dict[str, tuple[Panel, str]] = {}
-    for panel in config.panels:
+    # The schema permits two members of the *same* panel to share a
+    # source with different time_key columns (reg_schema only forbids
+    # cross-panel source reuse, §6.4) — index per-member so each
+    # GROUP BY runs once and lookup is unambiguous in
+    # ``_build_panels_block``.
+    time_key_members_by_source: dict[str, list[tuple[Panel, str]]] = defaultdict(list)
+    for panel in spec.panels:
         for member in panel.members:
             if isinstance(member.time_key, str):
-                time_key_member_by_source[member.source] = (panel, member.time_key)
-    time_key_periods: dict[tuple[str, str], list[dict[str, Any]]] = {}
+                time_key_members_by_source[member.source].append(
+                    (panel, member.time_key)
+                )
+    time_key_periods: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
     source_results: list[dict[str, Any]] = []
     for src_idx, src in enumerate(sources, 1):
         log.info("source %d/%d: %r", src_idx, len(sources), src)
         _flush_log_handlers()
-        for handle in iter_source(src, config=config):
+        for handle in iter_source(src, spec=spec):
             source_results.append(
                 process_handle(
                     handle,
                     rng,
-                    config,
+                    spec,
                     classifier_seed=classifier_seed,
                 )
             )
-            tk_member = time_key_member_by_source.get(handle.source_name)
-            if tk_member is not None:
-                panel, time_key = tk_member
-                time_key_periods[(panel.panel_id, handle.source_name)] = (
+            for panel, time_key in time_key_members_by_source.get(
+                handle.source_name, []
+            ):
+                time_key_periods[(panel.panel_id, handle.source_name, time_key)] = (
                     _extract_time_key_member_periods(handle, panel, time_key)
                 )
             log.info(
@@ -621,10 +627,10 @@ def run_extract_typed(
 
     result = {
         "contract_version": CONTRACT_VERSION,
-        "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": source_results,
         "shared_columns": _shared_columns(source_results),
-        "panels": _build_panels_block(config, source_results, time_key_periods),
+        "panels": _build_panels_block(spec, source_results, time_key_periods),
     }
     write_export(Path(output_path), result)
     log.info("mock_data_stats.json written: %s", output_path)
@@ -663,7 +669,7 @@ def _discover_handle(handle: SourceHandle) -> dict[str, Any]:
     log.info("[%s] discover: %d columns", handle.source_name, len(columns))
     _flush_log_handlers()
     detail = dict(handle.source_detail)
-    year = _resolve_year(handle.source_name, None)
+    year = _extract_year(handle.source_name)
     if year is not None:
         detail["year"] = year
     return {
@@ -710,7 +716,7 @@ def run_discover(
 
     result = {
         "contract_version": DISCOVER_CONTRACT_VERSION,
-        "generated_at": datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "generated_at": datetime.now(tz=UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "sources": source_results,
     }
     write_export(Path(output_path), result)
@@ -729,23 +735,26 @@ def main(
     mode: str = "discover",
     seed: int | None = None,
     classifier_seed: int = 0,
+    spec: LoadedSpec | None = None,
 ) -> dict[str, Any]:
     """Top-level orchestration. Dispatches on ``mode``.
 
     Args:
         sources: ``SOURCES`` returned from ``configure()``.
         output_dir: Directory for the output file (and for reading
-            ``mock_data_config.json`` in extract mode).
+            ``project_data.json`` in extract mode when ``spec`` is None).
         output_path: Override the output filename. Defaults to
-            ``mock_data_discovery.json`` (discover mode) or ``mock_data_stats.json``
-            (extract mode).
+            ``mock_data_discovery.json`` (discover mode) or
+            ``mock_data_stats.json`` (extract mode).
         mode: ``"discover"`` for the metadata-only walk that produces
-            ``mock_data_discovery.json``, or ``"extract"`` for the typed pipeline
-            that produces ``mock_data_stats.json``. Extract mode requires a
-            ``mock_data_config.json`` next to ``output_dir``.
+            ``mock_data_discovery.json``, or ``"extract"`` for the typed
+            pipeline that produces ``mock_data_stats.json``.
         seed: RNG seed for reproducible noise (extract only).
         classifier_seed: Seed for the per-column classification sample
             (extract only).
+        spec: Pre-loaded ``LoadedSpec`` (e.g. parsed from a bundle's
+            embedded ``project_data.json``). When ``None`` in extract
+            mode, the spec is loaded from ``output_dir/project_data.json``.
 
     Returns the result dict.
     """
@@ -763,26 +772,26 @@ def main(
         )
         return run_discover(sources, path)
 
-    config = load_config(output_dir)
-    if config is None:
+    if spec is None:
+        spec = load_project_data(output_dir)
+    if spec is None:
         raise RuntimeError(
-            f"extract mode requires mock_data_config.json next to the bundle "
-            f"({output_dir}/mock_data_config.json). Run mode='discover' first, "
-            f"then author mock_data_config.json locally via the "
-            f"mock_data_wizard.editor API (init_if_missing) on the resulting "
-            f"mock_data_discovery.json."
+            f"extract mode requires project_data.json next to the bundle "
+            f"({output_dir}/project_data.json). Run mode='discover' first, "
+            f"then author project_data.json locally against REFACTOR_SPEC.md "
+            f"§6 (the §15 step 7 webapp owns this authoring once it lands)."
         )
     log.info(
-        "loaded mock_data_config.json: %d type override(s), %d option override(s)",
-        sum(len(v) for v in config.column_types.values()),
-        sum(len(v) for v in config.column_options.values()),
+        "loaded project_data.json: %d source(s), %d panel(s)",
+        len(spec.project_data.sources),
+        len(spec.project_data.panels),
     )
 
     path = Path(output_path) if output_path is not None else output_dir / STATS_FILENAME
     return run_extract_typed(
         sources,
         path,
-        config,
+        spec,
         seed=seed,
         classifier_seed=classifier_seed,
     )

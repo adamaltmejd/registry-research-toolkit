@@ -1,8 +1,8 @@
 """Build a single-file .py bundle for upload to MONA.
 
 Concatenates the wizard runtime modules (classify, sql_emit, sources,
-summarize, extract) into one file. The user uploads that file, edits
-the ``configure()`` block near the top, and runs::
+summarize, spec, scan, extract) into one file. The user uploads that
+file, edits the ``configure()`` block near the top, and runs::
 
     python mdw_runner.py
 
@@ -13,23 +13,70 @@ batch client; see ``DESIGN.md`` for the runtime probe results).
 Per-module docstrings and ``#`` comments are dropped during
 amalgamation. The repo source remains the documentation; the bundle is
 the artifact.
+
+The ``project_data.json`` may be embedded at build time via
+``build_bundle(..., project_data=...)``; the runner parses it and
+hands the resulting ``LoadedSpec`` directly to ``extract.main()``.
+When not embedded, the runner falls back to reading
+``project_data.json`` from the same directory as the bundle. The
+embedded spec wins when both are present.
+
+Bundle-load structural validation: ``reg_schema.{validation,
+project_data,structural}`` are amalgamated ahead of the mdw modules
+(see ``REG_SCHEMA_MODULE_ORDER`` below) so ``spec.parse_project_data``
+runs ``reg_schema.validate_structural`` on every load path:
+
+- Embedded spec — the runner's ``_load_embedded_spec`` parses
+  ``_PROJECT_DATA_JSON`` through ``parse_project_data``.
+- Sidecar spec — ``extract.main`` falls back to
+  ``spec.load_project_data`` which calls the same loader.
+- Pre-embed (CLI) — ``build-bundle --project-data`` runs
+  ``parse_project_data`` before substituting into the placeholder,
+  so a structurally broken spec fails at build, not on MONA.
+
+The ``reg_monabundle`` namespaced-block validator currently lives
+inline in ``spec.py``; per §6.8.2 it moves to
+``reg_monabundle.validate_block`` at §15 step 5 (tracked in
+REFACTOR_SPEC.md §15 step 5 "Owed from step 4").
 """
 
 from __future__ import annotations
 
 import ast
+import json
 from pathlib import Path
+
+import reg_schema as _reg_schema
 
 PKG_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
+# reg_schema modules amalgamated ahead of the mdw modules so spec.py's
+# Column/Source/Panel/ProjectData/validate_structural references resolve
+# inside the bundle. They are stdlib-only (reg_schema/pyproject.toml
+# `dependencies = []`) so amalgamation is safe — no transitive pull-in.
+#
+# Resolve via the installed module so this works in both the monorepo
+# workspace and a normal ``pip``/``uv tool install`` (where reg_schema
+# lives under site-packages, not next to mock_data_wizard on disk).
+# reg_schema is a hard dependency of mock_data_wizard's pyproject.toml,
+# so the import always succeeds.
+REG_SCHEMA_DIR = Path(_reg_schema.__file__).resolve().parent
+REG_SCHEMA_MODULE_ORDER = (
+    "validation",
+    "project_data",
+    "structural",
+)
+
 # Dependency-ordered: each module imports only earlier ones.
+# ``spec`` follows ``summarize`` because ``spec.py`` imports
+# ``SUPPRESS_K`` from summarize for the column_options floor check.
 MODULE_ORDER = (
     "classify",
     "sql_emit",
     "sources",
     "summarize",
-    "config",
+    "spec",
     "scan",
     "extract",
 )
@@ -47,15 +94,16 @@ Two modes, one bundle:
   MODE = "discover"  (default)
     Cheap metadata-only walk -- INFORMATION_SCHEMA / DuckDB DESCRIBE
     plus COUNT(*). Output: mock_data_discovery.json next to this script.
-    Copy mock_data_discovery.json off MONA, author mock_data_config.json
-    locally via the mock_data_wizard.editor API
-    (`editor.init_if_missing(project_dir, "mock_data_discovery.json")`)
-    or an external UI, upload it back next to the bundle, then re-run
-    with MODE = "extract".
+    Copy mock_data_discovery.json off MONA, author project_data.json
+    locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp will
+    own this authoring once it lands), then either embed it via
+    `mock-data-wizard build-bundle --project-data path/to/project_data.json`
+    or upload it next to the bundle. Re-run with MODE = "extract".
 
   MODE = "extract"
-    Typed aggregation. Reads mock_data_config.json from this directory
-    (every column must carry a type override) and writes
+    Typed aggregation. Reads project_data.json (embedded in this
+    bundle if non-empty below; otherwise from the same directory as
+    this script). Every column must carry a type override. Writes
     mock_data_stats.json.
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
@@ -107,8 +155,9 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #   "discover" -- emits mock_data_discovery.json (metadata only).
 #                 Default. SQL sources without `tables=` / `pattern=` /
 #                 `all=True` are listed permissively here.
-#   "extract"  -- emits mock_data_stats.json. Requires
-#                 mock_data_config.json sitting next to this script.
+#   "extract"  -- emits mock_data_stats.json. Requires project_data.json,
+#                 either embedded in this bundle (see __MDW_PROJECT_DATA_BLOCK__
+#                 below) or sitting next to this script.
 #                 Authoritative SOURCES filtering is required (no
 #                 permissive listing in this mode).
 #
@@ -120,8 +169,8 @@ _BOOT_HERE = _boot_Path(__file__).resolve().parent
 #     return [sql_source(dsn="P1105")]
 #     return [file_source(path=r"\\\\micro.intra\\projekt\\P1105$\\P1105_Data")]
 #
-# EXTRACT SHAPE: declare exactly what to aggregate. mock_data_config.json
-# next to this script declares per-column types.
+# EXTRACT SHAPE: declare exactly what to aggregate. project_data.json
+# (embedded or sidecar) declares per-column types.
 #
 #     return [
 #         sql_source(
@@ -149,6 +198,21 @@ CLASSIFIER_SEED = 0
 
 
 # __MDW_CONFIGURE_BLOCK__
+
+
+# ===========================================================================
+# EMBEDDED PROJECT CONFIG (extract mode)
+# ===========================================================================
+# When this string is non-empty, the runner parses it as project_data.json
+# and passes the resulting LoadedSpec directly to extract.main(); the
+# sidecar project_data.json (if any) is ignored. When empty, extract mode
+# falls back to reading project_data.json from this directory.
+#
+# Embed at build time:
+#   mock-data-wizard build-bundle --project-data path/to/project_data.json
+#
+# Do NOT hand-edit the literal below; rebuild the bundle.
+_PROJECT_DATA_JSON = r"""__MDW_PROJECT_DATA_JSON__"""
 
 
 # ===========================================================================
@@ -220,6 +284,7 @@ BUNDLE_RUNNER = """\
 # Runner -- everything user-editable is in the configure block above.
 # ===========================================================================
 
+import json as _runner_json
 import logging
 
 _boot_log("bundle modules loaded; configuring runner")
@@ -243,6 +308,28 @@ else:
 
 _log = logging.getLogger("mdw.bundle")
 
+
+def _load_embedded_spec():
+    \"\"\"Parse the embedded project_data.json literal when non-empty.
+
+    Returns None when the literal is empty (the runner falls back to
+    reading project_data.json from this directory). Raises on invalid
+    embedded JSON -- a structurally bad bundle should fail loudly, not
+    silently fall through to the sidecar.
+
+    No duplicate-key guard here: the CLI build path (``_cmd_build_bundle``)
+    parses the source file with ``_reject_duplicate_keys`` and then
+    re-serializes via ``json.dumps``, so the literal embedded in the
+    bundle is by construction a single-valued dict. Re-checking would
+    be guarding generated output against a producer we control.
+    \"\"\"
+    stripped = _PROJECT_DATA_JSON.strip()
+    if not stripped:
+        return None
+    payload = _runner_json.loads(stripped)
+    return parse_project_data(payload)
+
+
 if __name__ == "__main__":
     _log.info("output_dir=%s mode=%s", _BOOT_HERE, MODE)
     if MODE not in ("discover", "extract"):
@@ -256,12 +343,14 @@ if __name__ == "__main__":
             '`return [sql_source(dsn=\"<your_project_dsn>\")]`).'
         )
         _boot_sys.exit(2)
+    embedded_spec = _load_embedded_spec() if MODE == "extract" else None
     try:
         result = main(
             SOURCES,
             output_dir=_BOOT_HERE,
             mode=MODE,
             classifier_seed=CLASSIFIER_SEED,
+            spec=embedded_spec,
         )
     except Exception:
         _log.error("mdw bundle failed:\\n%s", _boot_traceback.format_exc())
@@ -296,14 +385,16 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
     )
 
 
-def _slice_module(name: str) -> str:
+def _slice_module(path: Path) -> str:
     """Read a module, drop docstring + __future__ + intra-pkg imports.
 
-    The remaining body (functions, classes, constants, dataclasses,
+    Also drops imports from ``mock_data_wizard`` and ``reg_schema``
+    (sub-package siblings amalgamated alongside this module). The
+    remaining body (functions, classes, constants, dataclasses,
     stdlib imports) is rendered via ``ast.unparse`` -- ``#`` comments
     are not preserved (they live in the source modules in the repo).
     """
-    src = (PKG_DIR / f"{name}.py").read_text(encoding="utf-8")
+    src = path.read_text(encoding="utf-8")
     tree = ast.parse(src)
 
     body = list(tree.body)
@@ -324,6 +415,8 @@ def _slice_module(name: str) -> str:
                 continue
             if node.module and node.module.startswith("mock_data_wizard"):
                 continue
+            if node.module and node.module.startswith("reg_schema"):
+                continue
         if _is_type_checking_block(node):
             continue
         kept.append(node)
@@ -333,32 +426,61 @@ def _slice_module(name: str) -> str:
 
 CONFIGURE_PLACEHOLDER = "# __MDW_CONFIGURE_BLOCK__"
 DEFAULT_CONFIGURE_BODY = "def configure():\n    return []"
+PROJECT_DATA_PLACEHOLDER = "__MDW_PROJECT_DATA_JSON__"
 
-# Fail at import if the header literal drifts from the placeholder constant:
+# Fail at import if the header literal drifts from a placeholder constant:
 # str.replace() silently no-ops on a missing substring, which would emit a
-# bundle with no configure() function and crash on MONA at runtime instead.
+# bundle missing the configure() function or the spec block and crash on
+# MONA at runtime instead of at build.
 assert CONFIGURE_PLACEHOLDER in BUNDLE_HEADER, (
     f"BUNDLE_HEADER is missing the {CONFIGURE_PLACEHOLDER!r} marker"
 )
+assert PROJECT_DATA_PLACEHOLDER in BUNDLE_HEADER, (
+    f"BUNDLE_HEADER is missing the {PROJECT_DATA_PLACEHOLDER!r} marker"
+)
 
 
-def build_bundle(output: Path, *, configure_body: str | None = None) -> Path:
+def build_bundle(
+    output: Path,
+    *,
+    configure_body: str | None = None,
+    project_data: dict | None = None,
+) -> Path:
     """Amalgamate the wizard runtime modules into a single ``.py``.
 
     When ``configure_body`` is supplied (a complete ``def configure(): ...``
     function source), it fills the configure slot in ``BUNDLE_HEADER``.
     Otherwise, the editable empty stub is used.
+
+    When ``project_data`` is supplied, the dict is JSON-serialized and
+    embedded into ``_PROJECT_DATA_JSON``; the runner parses it on load
+    and hands the resulting ``LoadedSpec`` to ``extract.main()``. When
+    ``None``, the placeholder is replaced with an empty string and the
+    runner falls back to reading ``project_data.json`` from the bundle
+    directory at extract time.
     """
     output.parent.mkdir(parents=True, exist_ok=True)
     body = (configure_body or DEFAULT_CONFIGURE_BODY).rstrip()
     header = BUNDLE_HEADER.replace(CONFIGURE_PLACEHOLDER, body, 1)
+    # json.dumps escapes embedded backslashes and triple-quotes; the
+    # outer r""" raw string preserves the result verbatim so json.loads
+    # at runtime sees the same bytes.
+    project_data_str = "" if project_data is None else json.dumps(project_data)
+    header = header.replace(PROJECT_DATA_PLACEHOLDER, project_data_str, 1)
     parts: list[str] = [header, ""]
+    for name in REG_SCHEMA_MODULE_ORDER:
+        parts.append(f"# {'=' * 75}")
+        parts.append(f"# reg_schema/{name}.py")
+        parts.append(f"# {'=' * 75}")
+        parts.append("")
+        parts.append(_slice_module(REG_SCHEMA_DIR / f"{name}.py"))
+        parts.append("")
     for name in MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# {name}.py")
         parts.append(f"# {'=' * 75}")
         parts.append("")
-        parts.append(_slice_module(name))
+        parts.append(_slice_module(PKG_DIR / f"{name}.py"))
         parts.append("")
     parts.append(BUNDLE_RUNNER)
     output.write_text("\n".join(parts), encoding="utf-8")

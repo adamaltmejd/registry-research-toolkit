@@ -3,7 +3,7 @@
 A "source" is a config object describing where to find tables. The
 script's ``configure()`` returns a ``SOURCES`` list built from
 ``file_source(...)`` and ``sql_source(...)`` calls. At extract time,
-``iter_source(src, config=...)`` yields :class:`SourceHandle` objects
+``iter_source(src, spec=...)`` yields :class:`SourceHandle` objects
 -- one per table -- carrying a live connection and a quoted table
 reference. Classification and summarising run against that handle
 without ever materialising rows in Python.
@@ -21,8 +21,8 @@ passes ``permissive=True`` to enumerate everything reachable.
 
 CSV reads are always ``all_varchar=true``: no type sniffer runs, so a
 rare row past the default sample window can't crash the read. Extract
-mode (``config`` supplied) layers a per-column ``CAST`` on top driven
-by ``mock_data_config.json``, then probes any ``opaque`` columns with
+mode (``spec`` supplied) layers a per-column ``CAST`` on top driven by
+``project_data.json``, then probes any ``opaque`` columns with
 ``TRY_CAST`` to auto-promote columns that are uniformly numeric or
 date into the matching aggregation branch. See
 ``mock_data_wizard/DESIGN.md`` § *CSV typing*.
@@ -40,7 +40,7 @@ from typing import TYPE_CHECKING, Any, Iterator, Mapping, Sequence, Union
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 
 if TYPE_CHECKING:
-    from .config import ColumnTypeOverride, MDWConfig
+    from .spec import ColumnTypeOverride, LoadedSpec
 
 log = logging.getLogger("mdw.sources")
 
@@ -378,7 +378,7 @@ def _build_cast_select(
     DESCRIBE on the inner all-varchar SELECT pulls the column list from
     the header without scanning the file. Columns absent from
     ``overrides`` pass through as VARCHAR; ``extract.process_handle``
-    validates the full column set against the config and raises one
+    validates the full column set against the spec and raises one
     error listing every missing override.
     """
     raw_select = _build_varchar_select(quoted_path, encoding)
@@ -426,10 +426,11 @@ def _probe_and_promote_opaque(
     records the decision and the user can override in the next config
     iteration.
 
-    Returns the list of promoted column names (caller order). ``overrides``
-    is mutated in place; ``MDWConfig.column_types`` is the same dict
-    object the caller looked up, so ``extract.process_handle`` sees the
-    promoted type without an extra plumbing step.
+    Returns the list of promoted column names (caller order).
+    ``overrides`` is mutated in place; ``LoadedSpec.column_types_for_source``
+    returns this same dict object so ``extract.process_handle`` sees the
+    promoted type without an extra plumbing step. ``ProjectData`` itself
+    is frozen — the mutation lives in the spec adapter's per-source cache.
 
     Caveat: DuckDB's ``TRY_CAST(... AS DATE)`` accepts ISO 'YYYY-MM-DD'
     and similar. YYYYMMDD strings (common in SCB) satisfy BIGINT first
@@ -492,7 +493,7 @@ def _probe_and_promote_opaque(
         log.warning(
             "[%s] column %r auto-promoted opaque -> %s%s "
             "(every non-null value TRY_CASTs cleanly). Override in "
-            "mock_data_config.json if wrong.",
+            "project_data.json if wrong.",
             file_name,
             col,
             new_type,
@@ -506,7 +507,7 @@ def iter_file_source(
     src: FileSource,
     conn: Any = None,
     *,
-    config: MDWConfig | None = None,
+    spec: LoadedSpec | None = None,
 ) -> Iterator[SourceHandle]:
     """Yield one :class:`SourceHandle` per matched file.
 
@@ -516,16 +517,16 @@ def iter_file_source(
 
     Reads are always ``all_varchar=true`` — no type sniffer, so a rare
     row past the default sample window can't crash the load. With
-    ``config`` supplied (extract mode), per-column ``CAST``s from
-    ``config.column_types`` are layered on top and any ``opaque``
-    columns are probed via ``TRY_CAST``; columns whose every non-null
-    value is uniformly numeric or date are auto-promoted in place (and
-    a WARNING is logged per promotion). The promotion is applied via
-    ``ALTER COLUMN TYPE`` on the TABLE path so the file is read exactly
-    once. Without ``config`` (discover mode, or a file not present in
-    the config) every column reports ``VARCHAR``; the classifier
-    downstream relies on name patterns and reg_meta evidence rather than
-    a SQL-type signal.
+    ``spec`` supplied (extract mode), per-column ``CAST``s pulled from
+    ``spec.column_types_for_source`` are layered on top and any
+    ``opaque`` columns are probed via ``TRY_CAST``; columns whose every
+    non-null value is uniformly numeric or date are auto-promoted in
+    place (and a WARNING is logged per promotion). The promotion is
+    applied via ``ALTER COLUMN TYPE`` on the TABLE path so the file is
+    read exactly once. Without ``spec`` (discover mode, or a file not
+    present in the spec) every column reports ``VARCHAR``; the
+    classifier downstream relies on name patterns and reg_meta evidence
+    rather than a SQL-type signal.
     """
     import duckdb
 
@@ -548,7 +549,7 @@ def iter_file_source(
             materialise = fp.stat().st_size <= threshold_bytes
             kind = "TABLE" if materialise else "VIEW"
             overrides: dict[str, ColumnTypeOverride] = (
-                config.column_types.get(fp.name, {}) if config is not None else {}
+                spec.column_types_for_source(fp.name) if spec is not None else {}
             )
             log.info(
                 "[%s] read_csv (%s, encoding=%s, %.1f MB, %s)",
@@ -556,7 +557,7 @@ def iter_file_source(
                 kind.lower(),
                 encoding,
                 fp.stat().st_size / (1024 * 1024),
-                "config-cast" if overrides else "all-varchar",
+                "spec-cast" if overrides else "all-varchar",
             )
             try:
                 if overrides:
@@ -818,18 +819,18 @@ def iter_source(
     conn: Any = None,
     *,
     permissive: bool = False,
-    config: MDWConfig | None = None,
+    spec: LoadedSpec | None = None,
 ) -> Iterator[SourceHandle]:
     """Dispatch ``src`` to the file/SQL iterator.
 
-    ``config`` is forwarded to file iteration to drive the
+    ``spec`` is forwarded to file iteration to drive the
     ``all_varchar=true`` + per-column CAST path. SQL sources read
-    properly-typed columns from the server and ignore the config here.
+    properly-typed columns from the server and ignore the spec here.
     ``permissive`` is the discover-mode flag for SQL listing and is
     irrelevant to file sources.
     """
     if isinstance(src, FileSource):
-        return iter_file_source(src, conn=conn, config=config)
+        return iter_file_source(src, conn=conn, spec=spec)
     if isinstance(src, SqlSource):
         return iter_sql_source(src, conn=conn, permissive=permissive)
     raise TypeError(f"Unknown source: {src!r}")

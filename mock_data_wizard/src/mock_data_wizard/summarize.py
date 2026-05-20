@@ -20,7 +20,7 @@ from .classify import DATE_FORMATS, _python_kind, detect_date_format
 from .sql_emit import queries_for_column
 
 if TYPE_CHECKING:
-    from .config import ColumnTypeOverride
+    from .spec import ColumnTypeOverride
 
 # Disclosure-control thresholds.
 SUPPRESS_K = 10  # categorical counts below this fold into _other
@@ -232,8 +232,9 @@ def summarize_column(
         override: When supplied, marks ``source_of_type="override"`` and
             carries any inline subtype/format hints that let the caller
             skip the per-column sample query.
-        options: Per-column option overrides loaded from
-            ``mock_data_config.json``. Reserved for downstream consumers
+        options: Per-column option overrides loaded from the
+            ``reg_monabundle.column_options`` block of
+            ``project_data.json``. Reserved for downstream consumers
             (e.g. ``suppress_k`` in disclosure-control hardening).
     """
     rng = rng or random.Random()

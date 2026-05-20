@@ -6,7 +6,6 @@ import argparse
 import sys
 from pathlib import Path
 
-
 DESCRIPTION = """\
 Generate mock CSV data from MONA project metadata, without exporting any
 personal data. The workflow has three on-MONA-and-back steps:
@@ -22,9 +21,10 @@ personal data. The workflow has three on-MONA-and-back steps:
     # Edit configure() in the bundle, leave MODE = "discover".
     # Upload to MONA. On MONA's batch client, run mdw_runner.py with
     # python -> writes mock_data_discovery.json next to the bundle.
-    # Copy mock_data_discovery.json off MONA. Author mock_data_config.json
-    # via the editor API (mock_data_wizard.editor.init_if_missing) — UI
-    # forthcoming. Upload mock_data_config.json next to the bundle.
+    # Copy mock_data_discovery.json off MONA. Author project_data.json
+    # locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp
+    # will own this authoring once it lands). Upload project_data.json
+    # next to the bundle.
     # On MONA, set MODE = "extract" in the bundle and re-run
     # -> writes mock_data_stats.json.
     # Verify mock_data_stats.json contains no personal data, then copy
@@ -49,9 +49,10 @@ Build the single-file Python bundle that runs on MONA.
   3. Edit the configure() block at the top to declare your data sources.
   4. With MODE = "discover", on MONA's batch client run mdw_runner.py
      with python -> writes mock_data_discovery.json.
-  5. Copy mock_data_discovery.json off MONA, author mock_data_config.json
-     via the editor API (mock_data_wizard.editor.init_if_missing), then
-     upload it next to the bundle.
+  5. Copy mock_data_discovery.json off MONA, author project_data.json
+     locally against REFACTOR_SPEC.md §6 (the §15 step 7 webapp will
+     own this authoring once it lands), then upload it next to the
+     bundle.
   6. Switch the bundle to MODE = "extract" and re-run on MONA
      -> writes mock_data_stats.json (only aggregate statistics; no
      row-level data).
@@ -112,8 +113,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     import csv as csv_mod
     import json
 
-    from reg_meta import compare, open_db, resolve_register_ids
     from reg_meta.db import db_path_from_args
+
+    from reg_meta import compare, open_db, resolve_register_ids
 
     from ._util import strip_project_prefix
 
@@ -373,10 +375,47 @@ def _cmd_generate(args: argparse.Namespace) -> int:
 
 def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
+    import json
+
     from . import _bundle
+    from .spec import _reject_duplicate_keys, parse_project_data
 
     output = Path(args.output) if args.output else Path(_bundle.DEFAULT_OUTPUT_NAME)
-    out = _bundle.build_bundle(output)
+
+    project_data: dict | None = None
+    if args.project_data:
+        spec_path = Path(args.project_data)
+        if not spec_path.exists():
+            print(f"Error: project_data file not found: {spec_path}", file=sys.stderr)
+            return 1
+        # Use the same duplicate-key guard as ``spec.load_project_data``
+        # so a hand-edited project_data.json with duplicate fields
+        # fails at build instead of silently embedding the last-wins
+        # value into the bundle. Catch parse + validation errors and
+        # surface them as a clean CLI message — hand-editing
+        # project_data.json is the common workflow on the local side,
+        # so a traceback here would be the dominant failure mode.
+        try:
+            with spec_path.open("r", encoding="utf-8") as fp:
+                project_data = json.load(fp, object_pairs_hook=_reject_duplicate_keys)
+        except json.JSONDecodeError as exc:
+            print(f"Error: {spec_path} is not valid JSON: {exc}", file=sys.stderr)
+            return 1
+        except ValueError as exc:
+            # ``_reject_duplicate_keys`` raises ValueError (not
+            # JSONDecodeError) from inside ``json.load``; without this
+            # branch a duplicate-key file would crash with a traceback.
+            print(f"Error: {spec_path}: {exc}", file=sys.stderr)
+            return 1
+        # Validate before embedding — shipping a structurally broken
+        # bundle is worse than failing at build.
+        try:
+            parse_project_data(project_data)
+        except ValueError as exc:
+            print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
+            return 1
+
+    out = _bundle.build_bundle(output, project_data=project_data)
     print(f"Built {out} ({out.stat().st_size:,} bytes)")
     return 0
 
@@ -416,79 +455,22 @@ def _cmd_scan(args: argparse.Namespace) -> int:
     return 1
 
 
-def _cmd_ui(args: argparse.Namespace) -> int:
-    """Serve the local web UI bound to ``args.project_dir``."""
-    import logging
+def _cmd_ui(_args: argparse.Namespace) -> int:
+    """Frozen pending §15 step 7 deletion.
 
-    from . import server as server_mod
-
-    project_dir = Path(args.project_dir).resolve()
-    if not project_dir.is_dir():
-        print(
-            f"Error: project_dir does not exist or is not a directory: {project_dir}",
-            file=sys.stderr,
-        )
-        return 1
-
-    if not args.unsafe_host and not server_mod.is_loopback_host(args.host):
-        print(
-            f"Error: refusing to bind {args.host!r} — pass --unsafe-host to "
-            f"override. There is no auth; use only on trusted networks.",
-            file=sys.stderr,
-        )
-        return 2
-
-    # Surface server-side errors (especially 500 tracebacks) on stderr.
-    # Without this, the server logger has no handler attached and a
-    # crashed editor call returns a JSON 500 envelope but the traceback
-    # is silently dropped — leaving the user with no diagnostic.
-    server_logger = logging.getLogger("mock_data_wizard.server")
-    if not server_logger.handlers:
-        handler = logging.StreamHandler(sys.stderr)
-        handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
-        server_logger.addHandler(handler)
-        server_logger.setLevel(
-            logging.DEBUG if getattr(args, "verbose", False) else logging.WARNING
-        )
-
-    db_path = Path(args.db_path).resolve() if args.db_path else None
-    config = server_mod.ServerConfig(
-        project_dir=project_dir,
-        host=args.host,
-        port=args.port,
-        db_path=db_path,
-        unsafe_host=args.unsafe_host,
+    The editor / server / Svelte UI are scheduled for hard deletion at
+    REFACTOR_SPEC.md §15 step 7 (webapp authoring takes over). Step 4
+    drops the supporting Python code (`editor.py`, `server.py`,
+    `_serialize.py`) — Svelte source under `web/` survives the cut
+    for cleaner deletion at step 7.
+    """
+    print(
+        "mock-data-wizard ui: frozen pending §15 step 7 deletion.\n"
+        "Author project_data.json via the reg_webapp (not yet released)\n"
+        "or by hand against the schema in REFACTOR_SPEC.md §6.",
+        file=sys.stderr,
     )
-    try:
-        httpd = server_mod.build_server(config)
-    except (OSError, ValueError) as exc:
-        print(f"Error starting server: {exc}", file=sys.stderr)
-        return 1
-
-    bound_host, bound_port = httpd.server_address[:2]
-    # IPv6 literals must be bracketed in URLs so the port colon doesn't
-    # collide with the address colons (`http://[::1]:8765/`).
-    display_host = f"[{bound_host}]" if ":" in bound_host else bound_host
-    url = f"http://{display_host}:{bound_port}/"
-    print(f"mock-data-wizard ui serving {project_dir} at {url}")
-    print("Press Ctrl-C to stop.")
-
-    if not args.no_browser:
-        import webbrowser
-
-        try:
-            webbrowser.open(url)
-        except Exception:
-            # webbrowser failures shouldn't sink the server.
-            pass
-
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        print("\nShutting down.", file=sys.stderr)
-    finally:
-        httpd.server_close()
-    return 0
+    return 2
 
 
 def _print_version() -> None:
@@ -541,6 +523,14 @@ def build_parser() -> argparse.ArgumentParser:
         "--output",
         "-o",
         help=f"Output path (default: {BUNDLE_FILENAME} in cwd)",
+    )
+    bb.add_argument(
+        "--project-data",
+        help=(
+            "Path to a project_data.json to embed into the bundle. "
+            "When omitted, the bundle expects project_data.json to "
+            "sit next to it on MONA (extract mode reads from disk)."
+        ),
     )
 
     # compare
@@ -673,60 +663,19 @@ def build_parser() -> argparse.ArgumentParser:
         help="Don't delete the file on a match (inspection mode).",
     )
 
-    # ui
-    ui = sub.add_parser(
+    # ui — stub: editor + server + Svelte UI are scheduled for hard
+    # deletion at §15 step 7 (webapp authoring takes over). The
+    # subcommand survives as a discoverable pointer to the webapp.
+    sub.add_parser(
         "ui",
-        help="Launch the local web UI for editing mock_data_config.json",
+        help="(frozen) Launch the local web UI — disabled until §15 step 7",
         description=(
-            "Start a local HTTP server that exposes the editor API and "
-            "serves the bundled web UI. Binds 127.0.0.1 only by default; "
-            "no auth — use --unsafe-host to expose non-loopback only on "
-            "trusted networks."
+            "Frozen pending §15 step 7 deletion. The local editor / "
+            "server have been removed; author project_data.json via "
+            "the reg_webapp (not yet released) or by hand against "
+            "REFACTOR_SPEC.md §6."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    ui.add_argument(
-        "project_dir",
-        help=(
-            "Project directory containing mock_data_config.json (and "
-            "optionally mock_data_discovery.json next to it)."
-        ),
-    )
-    ui.add_argument(
-        "--port",
-        type=int,
-        default=8765,
-        help="Port to bind (default: 8765).",
-    )
-    ui.add_argument(
-        "--host",
-        default="127.0.0.1",
-        help=(
-            "Host to bind (default: 127.0.0.1). Non-loopback hosts are "
-            "rejected unless --unsafe-host is also passed."
-        ),
-    )
-    ui.add_argument(
-        "--unsafe-host",
-        action="store_true",
-        help=(
-            "Allow binding non-loopback hosts. There is no auth; only "
-            "use on trusted networks."
-        ),
-    )
-    ui.add_argument(
-        "--no-browser",
-        action="store_true",
-        help="Don't open the URL in a browser tab.",
-    )
-    ui.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Log every request to stderr (default: warnings + 500s only).",
-    )
-    ui.add_argument(
-        "--db-path",
-        help="Override the reg_meta DB path (default: reg_meta's lookup chain).",
     )
 
     return parser

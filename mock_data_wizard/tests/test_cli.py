@@ -3,95 +3,121 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.cli import build_parser, main
 
 from .conftest import MINIMAL_STATS
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # -- `ui` subcommand parsing ----------------------------------------------
 
 
-def test_ui_subcommand_parses_minimum_args():
-    parser = build_parser()
-    args = parser.parse_args(["ui", "/tmp/proj"])
-    assert args.command == "ui"
-    assert args.project_dir == "/tmp/proj"
-    assert args.host == "127.0.0.1"
-    assert args.port == 8765
-    assert args.unsafe_host is False
-    assert args.no_browser is False
-    assert args.db_path is None
+def test_ui_subcommand_returns_frozen_message(capsys):
+    """The ``ui`` subcommand is a stub pending §15 step 7 deletion of
+    the local editor + server + Svelte UI. It accepts no positional or
+    flag arguments and exits with code 2 + a frozen-message hint."""
+    rc = main(["ui"])
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "frozen" in err.lower()
+    assert "project_data.json" in err
 
 
-def test_ui_subcommand_overrides():
-    parser = build_parser()
-    args = parser.parse_args(
-        [
-            "ui",
-            "/tmp/proj",
-            "--port",
-            "9000",
-            "--host",
-            "::1",
-            "--no-browser",
-            "--db-path",
-            "/tmp/reg_meta.db",
-        ]
-    )
-    assert args.port == 9000
-    assert args.host == "::1"
-    assert args.no_browser is True
-    assert args.db_path == "/tmp/reg_meta.db"
-
-
-def test_ui_requires_project_dir():
+def test_ui_subcommand_takes_no_arguments():
+    """Pre-step-4 the ``ui`` subcommand carried project_dir + a sheet
+    of host/port flags; the stub drops them all."""
     parser = build_parser()
     with pytest.raises(SystemExit):
-        parser.parse_args(["ui"])
+        parser.parse_args(["ui", "/some/path"])
 
 
-def test_ui_rejects_non_loopback_without_unsafe(tmp_path: Path, capsys):
-    """Concrete safety gate: 0.0.0.0 without --unsafe-host fails fast."""
-    rc = main(["ui", str(tmp_path), "--host", "0.0.0.0", "--no-browser"])
-    assert rc == 2
-    captured = capsys.readouterr()
-    assert "refusing to bind" in captured.err
+# -- build-bundle --project-data error handling ---------------------------
 
 
-def test_ui_brackets_ipv6_url(tmp_path: Path, capsys, monkeypatch):
-    """`--host ::1` must print/open `http://[::1]:PORT/`, not the
-    raw `http://::1:PORT/` (which is invalid because of the colon
-    collision)."""
-    from mock_data_wizard import server as server_mod
+def test_build_bundle_project_data_malformed_json_clean_error(tmp_path: Path, capsys):
+    """Hand-editing project_data.json is the common local workflow;
+    a JSON syntax error must surface as ``Error: ...`` not a traceback."""
+    bad = tmp_path / "project_data.json"
+    bad.write_text("{this is not valid json", encoding="utf-8")
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "not valid JSON" in err
+    assert "Traceback" not in err
 
-    # Build the server, capture the URL, then trigger KeyboardInterrupt
-    # in serve_forever so the CLI exits without blocking.
-    captured_url: list[str] = []
 
-    real_open = server_mod.build_server
+def test_build_bundle_project_data_duplicate_keys_clean_error(tmp_path: Path, capsys):
+    """``_reject_duplicate_keys`` raises ValueError (not JSONDecodeError)
+    from inside ``json.load``; the dup-key path must also land in the
+    friendly ``Error: ...`` branch."""
+    bad = tmp_path / "project_data.json"
+    bad.write_text(
+        '{"schema_version": "1.0.0", "schema_version": "2.0.0", '
+        '"steward": "global", "reg_meta_version": "test", '
+        '"name": "x", "sources": [], "panels": []}',
+        encoding="utf-8",
+    )
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "duplicate key" in err
+    assert "Traceback" not in err
 
-    def _wrap(config: server_mod.ServerConfig):
-        httpd = real_open(config)
-        original = httpd.serve_forever
 
-        def _capture_and_stop(*a, **kw):
-            captured_url.append(httpd.server_address[0])
-            raise KeyboardInterrupt
-
-        httpd.serve_forever = _capture_and_stop  # type: ignore[method-assign]
-        # Restore for downstream cleanup; serve_forever raises immediately.
-        del original
-        return httpd
-
-    monkeypatch.setattr(server_mod, "build_server", _wrap)
-    rc = main(["ui", str(tmp_path), "--host", "::1", "--no-browser", "--port", "0"])
-    assert rc == 0
-    out = capsys.readouterr().out
-    assert "http://[::1]:" in out, f"expected bracketed IPv6 URL in: {out!r}"
+def test_build_bundle_project_data_invalid_schema_clean_error(tmp_path: Path, capsys):
+    """Structural validation failures (missing required field, bad
+    types, composite key, etc.) likewise route through the friendly
+    ``Error: ...`` path rather than a ValueError traceback."""
+    bad = tmp_path / "project_data.json"
+    # Drop the required ``steward`` field — structural validator raises.
+    bad.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "reg_meta_version": "test",
+                "name": "x",
+                "sources": [],
+                "panels": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "failed validation" in err
+    assert "Traceback" not in err
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
