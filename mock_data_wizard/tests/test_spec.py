@@ -3,10 +3,9 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.spec import (
     PROJECT_DATA_FILENAME,
     ColumnTypeOverride,
@@ -15,8 +14,11 @@ from mock_data_wizard.spec import (
     load_project_data,
     parse_project_data,
 )
+
 from tests.conftest import make_project_data
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # -- ColumnTypeOverride ---------------------------------------------------
 
@@ -312,6 +314,29 @@ def test_display_name_required_at_load():
         parse_project_data(payload)
 
 
+def test_datetime_column_type_rejected_with_actionable_message():
+    """reg_schema accepts type='datetime' but mdw has no end-to-end
+    datetime path (sql_emit / summarize / generate). Reject at load
+    with a pointer to the workaround instead of surfacing the late
+    ValueError from sql_emit."""
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "a.csv",
+                "columns": [
+                    {
+                        "display_name": "Timestamp",
+                        "type": "datetime",
+                        "datetime_format": "%Y-%m-%dT%H:%M:%S",
+                    },
+                ],
+            }
+        ],
+    )
+    with pytest.raises(ValueError, match="datetime.*not supported"):
+        parse_project_data(payload)
+
+
 # -- reg_monabundle namespaced block --------------------------------------
 
 
@@ -330,6 +355,34 @@ def test_reg_monabundle_block_rejects_non_fqid_key():
     with pytest.raises(ValueError, match="binding FQID"):
         _validate_reg_monabundle_block(
             {"column_options": {"LopNr": {"suppress_k": 25}}}
+        )
+
+
+@pytest.mark.parametrize(
+    "bad_key",
+    [
+        # Whitespace inside a segment — would silently no-op at runtime.
+        "scb/test/_default/2020/lop nr",
+        # Empty segment.
+        "scb/test//2020/lopnr",
+        # Wrong segment count (4).
+        "scb/test/_default/2020",
+        # Wrong segment count (6).
+        "scb/test/_default/2020/lopnr/extra",
+        # Classification FQID, not a binding.
+        "class/sun/v1/lopnr/extra",
+        # Disallowed character (period).
+        "scb/test/_default/2020/lop.nr",
+    ],
+)
+def test_reg_monabundle_block_rejects_malformed_fqid_variants(bad_key):
+    """The column_options key check mirrors reg_schema's binding-FQID
+    rule (5 segments, non-class provider, [A-Za-z0-9_-]+ per segment).
+    A loose count('/') == 4 used to pass whitespace / empty segments /
+    class-prefixed strings; this test pins the tighter check."""
+    with pytest.raises(ValueError, match="binding FQID"):
+        _validate_reg_monabundle_block(
+            {"column_options": {bad_key: {"suppress_k": 25}}}
         )
 
 

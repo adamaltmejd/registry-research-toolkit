@@ -33,10 +33,10 @@ Step 4 boundaries (REFACTOR_SPEC.md §15):
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from reg_schema import (
     Column,
@@ -47,6 +47,9 @@ from reg_schema import (
     validate_structural,
 )
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
 from .classify import COLUMN_TYPES
 from .summarize import SUPPRESS_K
 
@@ -56,17 +59,37 @@ PROJECT_DATA_FILENAME = "project_data.json"
 # Strict: anything not in this set raises at parse time (typo guard).
 VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 
-# Per-type inline hint keys. Mirrors the old MDWConfig table; the
-# datetime branch is new (reg_schema added a `datetime` ColumnType).
+# Per-type inline hint keys. Mirrors mdw's COLUMN_TYPES exactly —
+# reg_schema's ``datetime`` is rejected at load (see ``_build_column``)
+# because the mdw extract/summarize/generate stack has no datetime
+# branch; until end-to-end datetime support lands, accepting it here
+# would surface as a late ``ValueError`` from ``sql_emit``.
 INLINE_HINT_KEYS: dict[str, tuple[str, ...]] = {
     "id": ("id_subtype",),
     "numeric": ("numeric_subtype",),
     "date": ("date_format",),
-    "datetime": ("datetime_format",),
     "categorical": (),
     "opaque": (),
 }
-assert set(INLINE_HINT_KEYS) >= set(COLUMN_TYPES)
+assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
+
+# Binding-FQID well-formedness for ``reg_monabundle.column_options``
+# keys. Mirrors ``reg_schema.structural._is_binding_fqid`` so a typo
+# (display_name, whitespace, empty segment, ``class/...``) raises
+# loudly instead of silently no-opping at lookup time. The duplication
+# is deliberate per reg_schema/DESIGN.md "Why no FQID parser dependency".
+_FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
+
+
+def _is_binding_fqid(value: object) -> bool:
+    if not isinstance(value, str):
+        return False
+    segs = value.split("/")
+    return (
+        len(segs) == 5
+        and segs[0] != "class"
+        and all(bool(_FQID_TOKEN.match(s)) for s in segs)
+    )
 
 
 # -- Runtime convenience dataclass ----------------------------------------
@@ -90,19 +113,20 @@ class ColumnTypeOverride:
     id_subtype: str | None = None
     numeric_subtype: str | None = None
     date_format: str | None = None
-    datetime_format: str | None = None
 
     def has_inline_hint(self) -> bool:
         return any(getattr(self, k) is not None for k in INLINE_HINT_KEYS[self.type])
 
     @classmethod
     def from_column(cls, column: Column) -> ColumnTypeOverride:
+        # ``datetime_format`` is intentionally dropped: ``_build_column``
+        # rejects ``type == "datetime"`` before any Column with that
+        # type or ``datetime_format`` set can reach this constructor.
         return cls(
             type=column.type,
             id_subtype=column.id_subtype,
             numeric_subtype=column.numeric_subtype,
             date_format=column.date_format,
-            datetime_format=column.datetime_format,
         )
 
 
@@ -149,10 +173,11 @@ class LoadedSpec:
     def source_year(self, source_name: str) -> int | None:
         """Per-source year override is dropped in step 4.
 
-        Always returns None. Callers (``extract._resolve_year``) fall
-        back to the source-name regex. Per-source year overrides are
-        not part of ``project_data.json``; if they come back later it
-        would be via a steward-namespaced block.
+        Always returns None. ``extract`` derives the year from the
+        source-name regex directly (``extract._extract_year``);
+        per-source year overrides are not part of
+        ``project_data.json``. If they come back later it would be
+        via a steward-namespaced block.
         """
         return None
 
@@ -244,16 +269,18 @@ def _validate_reg_monabundle_block(block: object) -> None:
             f"got {type(options).__name__}"
         )
     for fqid, opts in options.items():
-        # Binding FQIDs are 5-segment slash-separated identifiers. The
-        # structural validator (§6.8.1) checks well-formedness on
-        # ``column.name``; reg_monabundle.column_options keys are
-        # opaque to reg_schema. Re-check here so a hand-edit keyed by
-        # display_name (the pre-step-4 shape) fails loudly instead of
-        # silently no-opping.
-        if not isinstance(fqid, str) or fqid.count("/") != 4:
+        # Binding FQIDs are 5-segment slash-separated identifiers with
+        # per-segment ``[A-Za-z0-9_-]+`` tokens and a non-``class``
+        # provider. The structural validator (§6.8.1) checks
+        # well-formedness on ``column.name``; reg_monabundle.column_options
+        # keys are opaque to reg_schema. Mirror the same rule here so a
+        # typo (display_name, whitespace, empty segment, ``class/...``)
+        # raises loudly instead of silently no-opping at lookup time.
+        if not _is_binding_fqid(fqid):
             raise ValueError(
                 f"reg_monabundle.column_options key {fqid!r} is not a "
-                f"binding FQID (expected 5 segments separated by '/'); "
+                f"well-formed binding FQID (expected 5 slash-separated "
+                f"segments of [A-Za-z0-9_-]+, non-'class' provider); "
                 f"keys changed from (source, column) pairs to binding "
                 f"FQIDs in step 4. Update your project_data.json."
             )
@@ -295,7 +322,23 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Col
     reg_meta in the extract loop, so every column must already carry a
     ``display_name``. The bundle pre-resolve pipeline lands at §15
     step 6; until then, hand-write ``display_name`` on every column.
+
+    Also rejects ``type == "datetime"``: reg_schema accepts datetime
+    columns but the mdw extract/summarize/generate stack has no
+    datetime branch (``classify.COLUMN_TYPES`` and
+    ``sql_emit.queries_for_column``). Rejecting at load surfaces the
+    error here instead of as a late ``ValueError`` deep in extract.
     """
+    column_type = data.get("type")
+    if column_type == "datetime":
+        raise ValueError(
+            f"sources[{source_name!r}].columns[{idx}].type='datetime' is "
+            f"not supported by mock_data_wizard (extract/summarize/generate "
+            f"only handle {sorted(COLUMN_TYPES)!r}). Use type='date' for "
+            f"date-only columns or split timestamps into separate date + "
+            f"time columns. End-to-end datetime support is a separate "
+            f"workstream from §15 step 4."
+        )
     display_name = data.get("display_name")
     if not display_name:
         raise ValueError(
@@ -310,7 +353,6 @@ def _build_column(data: Mapping[str, Any], *, source_name: str, idx: int) -> Col
         id_subtype=data.get("id_subtype"),
         numeric_subtype=data.get("numeric_subtype"),
         date_format=data.get("date_format"),
-        datetime_format=data.get("datetime_format"),
         value_set=data.get("value_set"),
     )
 

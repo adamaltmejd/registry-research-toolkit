@@ -6,7 +6,6 @@ import argparse
 import sys
 from pathlib import Path
 
-
 DESCRIPTION = """\
 Generate mock CSV data from MONA project metadata, without exporting any
 personal data. The workflow has three on-MONA-and-back steps:
@@ -114,8 +113,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     import csv as csv_mod
     import json
 
-    from reg_meta import compare, open_db, resolve_register_ids
     from reg_meta.db import db_path_from_args
+
+    from reg_meta import compare, open_db, resolve_register_ids
 
     from ._util import strip_project_prefix
 
@@ -378,7 +378,7 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
     import json
 
     from . import _bundle
-    from .spec import parse_project_data
+    from .spec import _reject_duplicate_keys, parse_project_data
 
     output = Path(args.output) if args.output else Path(_bundle.DEFAULT_OUTPUT_NAME)
 
@@ -388,8 +388,12 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
         if not spec_path.exists():
             print(f"Error: project_data file not found: {spec_path}", file=sys.stderr)
             return 1
+        # Use the same duplicate-key guard as ``spec.load_project_data``
+        # so a hand-edited project_data.json with duplicate fields
+        # fails at build instead of silently embedding the last-wins
+        # value into the bundle.
         with spec_path.open("r", encoding="utf-8") as fp:
-            project_data = json.load(fp)
+            project_data = json.load(fp, object_pairs_hook=_reject_duplicate_keys)
         # Validate before embedding — shipping a structurally broken
         # bundle is worse than failing at build.
         parse_project_data(project_data)
