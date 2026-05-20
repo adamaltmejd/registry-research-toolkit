@@ -2132,18 +2132,62 @@ slug = "intradet-pa-arbetsmarknaden"
 slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
+# 'Mars 2006' (residual: "Mars")
+[register_version."111.123.496"]
+slug = "2006-03"
+
+# 'Mars 2008' (residual: "Mars")
+[register_version."111.123.2248"]
+slug = "2008-03"
+
+# 'Mars 2010' (residual: "Mars")
+[register_version."111.123.3700"]
+slug = "2010-03"
+
+# 'April 2012' (residual: "April")
+[register_version."111.123.4417"]
+slug = "2012-04"
+
+# 'April 2014' (residual: "April")
+[register_version."111.123.5632"]
+slug = "2014-04"
 [register_variant."111.400"]
 slug = "intradet-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland högskoleexaminerade"
 
+# 'Mars 2006' (residual: "Mars")
+[register_version."111.400.484"]
+slug = "2006-03"
+
+# 'Mars 2008' (residual: "Mars")
+[register_version."111.400.2246"]
+slug = "2008-03"
+
+# 'Mars 2010' (residual: "Mars")
+[register_version."111.400.3701"]
+slug = "2010-03"
 [register_variant."111.1091"]
 slug = "hogskolestuderande"
 display_group = "Högskolestuderande"
 
+# 'April 2013' (residual: "April")
+[register_version."111.1091.5139"]
+slug = "2013-04"
 [register_variant."111.1301"]
 slug = "intradet-gymnasieavgangna-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
 
+# 'Mars 2004' (residual: "Mars")
+[register_version."111.1301.11182"]
+slug = "2004-03"
+
+# 'Mars 2002' (residual: "Mars")
+[register_version."111.1301.15236"]
+slug = "2002-03"
+
+# 'Mars 2000' (residual: "Mars")
+[register_version."111.1301.15347"]
+slug = "2000-03"
 [register_variant."111.1677"]
 slug = "yh-examinerade"
 display_group = "Examinerade från yrkeshögskolan"
@@ -2660,6 +2704,17 @@ slug = "psu"
 slug = "_default"
 display_group = "Partisympatiundersökningen"
 
+# '2023 maj' (residual: "maj")
+[register_version."164.235.18770"]
+slug = "2023-05"
+
+# '2024 maj' (residual: "maj")
+[register_version."164.235.19306"]
+slug = "2024-05"
+
+# '2025 maj' (residual: "maj")
+[register_version."164.235.20012"]
+slug = "2025-05"
 # '2011 maj'
 [register_version."164.235.3718"]
 slug = "2011-05"
@@ -3351,30 +3406,439 @@ slug = "svenska-utlandsskolor"
 slug = "grundskolan-elever"
 display_group = "Grundskolan, elever"
 
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.268.534"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.268.1031"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.268.1035"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.268.2015"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.268.2638"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.268.5558"]
+slug = "2009-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.268.5696"]
+slug = "1999-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.268.5697"]
+slug = "2000-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.268.5698"]
+slug = "2001-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.268.5699"]
+slug = "2002-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.268.5701"]
+slug = "2003-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.268.5703"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.268.5704"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.268.5705"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.268.5706"]
+slug = "2013-10-15"
 [register_variant."192.404"]
 slug = "gymnasieskolan-elever"
 display_group = "Gymnasieskolan, elever"
 
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.404.543"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.404.931"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.404.1038"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.404.2019"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.404.2637"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.404.5557"]
+slug = "2009-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.404.5707"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.404.5708"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.404.5709"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.404.5710"]
+slug = "2013-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.404.5711"]
+slug = "1999-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.404.5712"]
+slug = "2000-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.404.5713"]
+slug = "2001-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.404.5714"]
+slug = "2002-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.404.5715"]
+slug = "2003-10-15"
 [register_variant."192.405"]
 slug = "kompletterande-undervisning"
 display_group = "Kompletterande undervisning, elever"
 
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.405.546"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.405.1032"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.405.1037"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.405.2018"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.405.2635"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.405.5555"]
+slug = "2009-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.405.5562"]
+slug = "2003-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.405.5563"]
+slug = "2002-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.405.5564"]
+slug = "2001-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.405.5565"]
+slug = "2000-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.405.5566"]
+slug = "1999-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.405.5567"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.405.5568"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.405.5569"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.405.5570"]
+slug = "2013-10-15"
 [register_variant."192.406"]
 slug = "distansundervisning"
 display_group = "Distansundervisning, elever"
 
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.406.547"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.406.1030"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.406.1036"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.406.2020"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.406.2636"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.406.5556"]
+slug = "2009-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.406.5686"]
+slug = "1999-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.406.5687"]
+slug = "2000-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.406.5688"]
+slug = "2001-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.406.5689"]
+slug = "2002-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.406.5690"]
+slug = "2003-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.406.5691"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.406.5692"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.406.5693"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.406.5694"]
+slug = "2013-10-15"
 [register_variant."192.407"]
 slug = "skolledning"
 display_group = "Skolledning och undervisningsvolym"
 
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.407.545"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.407.1034"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.407.1043"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.407.2017"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.407.2633"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.407.5554"]
+slug = "2009-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.407.5580"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.407.5581"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.407.5582"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.407.5583"]
+slug = "2013-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.407.5584"]
+slug = "2003-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.407.5585"]
+slug = "2002-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.407.5586"]
+slug = "2001-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.407.5587"]
+slug = "2000-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.407.5588"]
+slug = "1999-10-15"
 [register_variant."192.408"]
 slug = "larare"
 display_group = "Lärare"
 
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.408.544"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.408.1033"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.408.1039"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.408.2016"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.408.2634"]
+slug = "2009-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.408.5538"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.408.5539"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.408.5540"]
+slug = "2012-10-15"
+
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.408.5549"]
+slug = "2004-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.408.5551"]
+slug = "2001-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.408.5552"]
+slug = "2000-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.408.5553"]
+slug = "1999-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.408.5560"]
+slug = "2013-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.408.5561"]
+slug = "2003-10-15"
 [register_variant."192.1134"]
 slug = "skolor"
 display_group = "Skolor"
 
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."192.1134.5571"]
+slug = "2009-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."192.1134.5672"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."192.1134.5673"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."192.1134.5674"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."192.1134.5675"]
+slug = "2013-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."192.1134.5676"]
+slug = "1999-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."192.1134.5677"]
+slug = "2000-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."192.1134.5678"]
+slug = "2001-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."192.1134.5679"]
+slug = "2002-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."192.1134.5680"]
+slug = "2003-10-15"
+
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."192.1134.5681"]
+slug = "2004-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."192.1134.5682"]
+slug = "2005-10-15"
+
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."192.1134.5683"]
+slug = "2006-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."192.1134.5684"]
+slug = "2007-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."192.1134.5685"]
+slug = "2008-10-15"
 # '15 oktober 2002'
 [register_version."192.408.5550"]
 slug = "2002-10-15"
@@ -3391,6 +3855,73 @@ slug = "grundskola-elever"
 slug = "individregister"
 display_group = "Individregister"
 
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."193.771.5652"]
+slug = "2013-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."193.771.5660"]
+slug = "2012-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."193.771.6200"]
+slug = "2011-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."193.771.6201"]
+slug = "2010-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."193.771.6202"]
+slug = "2009-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."193.771.6203"]
+slug = "2008-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."193.771.6204"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."193.771.7429"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."193.771.11113"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."193.771.11817"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."193.771.13154"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."193.771.14804"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."193.771.18499"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."193.771.18500"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."193.771.18729"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."193.771.19645"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."193.771.19941"]
+slug = "2024-10-15"
 # Kostnader för förskola, fritidshem, annan pedagogisk verksamhet, skola och vuxenutbildning 
 [register."194"]
 slug = "skolvasendet-kostnader"
@@ -3791,6 +4322,29 @@ slug = "anpassad-grundskola"
 slug = "elever"
 display_group = "Elever"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."231.1529.14807"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."231.1529.18519"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."231.1529.18520"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."231.1529.19646"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."231.1529.19648"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."231.1529.19969"]
+slug = "2024-10-15"
 # Registret över pedagogisk personal (Lärarregistret) 
 [register."232"]
 slug = "lararreg"
@@ -4121,6 +4675,137 @@ slug = "gymnasieskola-elever"
 slug = "_default"
 display_group = "Elever per 15 oktober"
 
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."233.403.1382"]
+slug = "2006-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."233.403.2036"]
+slug = "2008-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."233.403.3323"]
+slug = "2009-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."233.403.3324"]
+slug = "2007-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."233.403.3344"]
+slug = "2010-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."233.403.3996"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."233.403.4943"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."233.403.5356"]
+slug = "2013-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."233.403.5856"]
+slug = "2014-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."233.403.6234"]
+slug = "2005-10-15"
+
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."233.403.6235"]
+slug = "2004-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."233.403.7406"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."233.403.9847"]
+slug = "2016-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."233.403.9874"]
+slug = "2003-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."233.403.9875"]
+slug = "2002-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."233.403.9876"]
+slug = "2001-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."233.403.9948"]
+slug = "2000-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."233.403.9949"]
+slug = "1999-10-15"
+
+# '15 oktober 1998' (residual: "15 oktober")
+[register_version."233.403.9950"]
+slug = "1998-10-15"
+
+# '15 oktober 1997' (residual: "15 oktober")
+[register_version."233.403.9951"]
+slug = "1997-10-15"
+
+# '15 oktober 1996' (residual: "15 oktober")
+[register_version."233.403.9952"]
+slug = "1996-10-15"
+
+# '15 oktober 1995' (residual: "15 oktober")
+[register_version."233.403.9953"]
+slug = "1995-10-15"
+
+# '15 oktober 1994' (residual: "15 oktober")
+[register_version."233.403.11330"]
+slug = "1994-10-15"
+
+# '15 oktober 1993' (residual: "15 oktober")
+[register_version."233.403.11331"]
+slug = "1993-10-15"
+
+# '15 oktober 1992' (residual: "15 oktober")
+[register_version."233.403.11332"]
+slug = "1992-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."233.403.11782"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."233.403.13100"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."233.403.13958"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."233.403.18281"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."233.403.18314"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."233.403.19468"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."233.403.19470"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."233.403.19768"]
+slug = "2024-10-15"
 # Labour Cost Survey (LCS)
 [register."234"]
 slug = "lcs"
@@ -4453,10 +5138,152 @@ slug = "komvux-anpassad"
 slug = "elever"
 display_group = "Elever"
 
+# '15 oktober 2006' (residual: "15 oktober")
+[register_version."250.499.1020"]
+slug = "2006-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."250.499.4498"]
+slug = "2011-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."250.499.4993"]
+slug = "2012-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."250.499.5278"]
+slug = "2013-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."250.499.5937"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."250.499.9905"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."250.499.11117"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."250.499.11822"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."250.499.13254"]
+slug = "2018-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."250.499.13255"]
+slug = "2010-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."250.499.13256"]
+slug = "2009-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."250.499.13257"]
+slug = "2008-10-15"
+
+# '15 oktober 2007' (residual: "15 oktober")
+[register_version."250.499.13259"]
+slug = "2007-10-15"
+
+# '15 oktober 2005' (residual: "15 oktober")
+[register_version."250.499.13261"]
+slug = "2005-10-15"
+
+# '15 oktober 2004' (residual: "15 oktober")
+[register_version."250.499.13262"]
+slug = "2004-10-15"
+
+# '15 oktober 2003' (residual: "15 oktober")
+[register_version."250.499.13263"]
+slug = "2003-10-15"
+
+# '15 oktober 2002' (residual: "15 oktober")
+[register_version."250.499.13264"]
+slug = "2002-10-15"
+
+# '15 oktober 2001' (residual: "15 oktober")
+[register_version."250.499.13265"]
+slug = "2001-10-15"
+
+# '15 oktober 2000' (residual: "15 oktober")
+[register_version."250.499.13266"]
+slug = "2000-10-15"
+
+# '15 oktober 1999' (residual: "15 oktober")
+[register_version."250.499.13267"]
+slug = "1999-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."250.499.14810"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."250.499.19626"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."250.499.19627"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."250.499.19628"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."250.499.19629"]
+slug = "2023-10-15"
 [register_variant."250.1021"]
 slug = "grupper"
 display_group = "Grupper"
 
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."250.1021.4531"]
+slug = "2011-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."250.1021.5277"]
+slug = "2013-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."250.1021.5285"]
+slug = "2012-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."250.1021.5938"]
+slug = "2014-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."250.1021.13337"]
+slug = "2010-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."250.1021.13338"]
+slug = "2009-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."250.1021.13339"]
+slug = "2008-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."250.1021.13340"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."250.1021.13341"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."250.1021.13343"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."250.1021.13344"]
+slug = "2018-10-15"
 [register_variant."250.1758"]
 slug = "kursdeltagare"
 display_group = "Kursdeltagare i anpassad kommunal vuxenutbildning"
@@ -5021,14 +5848,127 @@ slug = "fritidshem"
 slug = "grundskola"
 display_group = "Grundskola"
 
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."304.852.5656"]
+slug = "2013-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."304.852.5657"]
+slug = "2012-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."304.852.12478"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."304.852.12479"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."304.852.12480"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."304.852.12481"]
+slug = "2017-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."304.852.12483"]
+slug = "2011-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."304.852.12484"]
+slug = "2010-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."304.852.12485"]
+slug = "2009-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."304.852.12486"]
+slug = "2008-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."304.852.13157"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."304.852.14451"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."304.852.18523"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."304.852.18524"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."304.852.19959"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."304.852.19965"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."304.852.19966"]
+slug = "2024-10-15"
 [register_variant."304.1536"]
 slug = "anpassad-grundskola"
 display_group = "Anpassad grundskola"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."304.1536.14897"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."304.1536.18525"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."304.1536.18526"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."304.1536.19962"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."304.1536.19963"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."304.1536.19964"]
+slug = "2024-10-15"
 [register_variant."304.1537"]
 slug = "specialskola"
 display_group = "Specialskola"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."304.1537.14898"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."304.1537.18527"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."304.1537.18528"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."304.1537.19961"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."304.1537.19967"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."304.1537.19968"]
+slug = "2024-10-15"
 # Grundskola: nationella prov åk 3
 [register."305"]
 slug = "grundskola-prov-ak3"
@@ -5045,10 +5985,96 @@ slug = "forskola"
 slug = "barn-individ"
 display_group = "Barn - individ"
 
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."307.1195.6136"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."307.1195.12585"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."307.1195.12586"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."307.1195.12587"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."307.1195.13170"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."307.1195.14811"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."307.1195.18531"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."307.1195.18532"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."307.1195.19943"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."307.1195.19944"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."307.1195.19945"]
+slug = "2024-10-15"
 [register_variant."307.1196"]
 slug = "personal-individ"
 display_group = "Personal - individ"
 
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."307.1196.6137"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."307.1196.12596"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."307.1196.12598"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."307.1196.12602"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."307.1196.13171"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."307.1196.14831"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."307.1196.18533"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."307.1196.18534"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."307.1196.19946"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."307.1196.19947"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."307.1196.19950"]
+slug = "2024-10-15"
 # Befolkningsframskrivningar
 [register."310"]
 slug = "befolkningsframskrivningar"
@@ -5787,6 +6813,29 @@ slug = "lasar-2024-2025"
 slug = "elever"
 display_group = "Elever"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."344.1145.14808"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."344.1145.18521"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."344.1145.18522"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."344.1145.19643"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."344.1145.19644"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."344.1145.19984"]
+slug = "2024-10-15"
 # Hushållens boende
 [register."346"]
 slug = "hushallens-boende"
@@ -5879,6 +6928,29 @@ slug = "anpassad-gymnasieskola"
 slug = "elever"
 display_group = "Elever"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."353.1219.14809"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."353.1219.19633"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."353.1219.19638"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."353.1219.19640"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."353.1219.19641"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."353.1219.19970"]
+slug = "2024-10-15"
 # Trädbränsle-, torv- och avfallspriser
 [register."355"]
 slug = "tradbransle-torv"
@@ -6251,14 +7323,127 @@ slug = "forskoleklass"
 slug = "grundskola"
 display_group = "Grundskola"
 
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."378.1399.12503"]
+slug = "2017-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."378.1399.12506"]
+slug = "2016-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."378.1399.12507"]
+slug = "2015-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."378.1399.12508"]
+slug = "2014-10-15"
+
+# '15 oktober 2013' (residual: "15 oktober")
+[register_version."378.1399.12509"]
+slug = "2013-10-15"
+
+# '15 oktober 2012' (residual: "15 oktober")
+[register_version."378.1399.12510"]
+slug = "2012-10-15"
+
+# '15 oktober 2011' (residual: "15 oktober")
+[register_version."378.1399.12512"]
+slug = "2011-10-15"
+
+# '15 oktober 2010' (residual: "15 oktober")
+[register_version."378.1399.12513"]
+slug = "2010-10-15"
+
+# '15 oktober 2009' (residual: "15 oktober")
+[register_version."378.1399.12515"]
+slug = "2009-10-15"
+
+# '15 oktober 2008' (residual: "15 oktober")
+[register_version."378.1399.12516"]
+slug = "2008-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."378.1399.13156"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."378.1399.14806"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."378.1399.18512"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."378.1399.18514"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."378.1399.19651"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."378.1399.19652"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."378.1399.19954"]
+slug = "2024-10-15"
 [register_variant."378.1534"]
 slug = "anpassad-grundskola"
 display_group = "Anpassad grundskola"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."378.1534.14895"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."378.1534.18517"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."378.1534.18518"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."378.1534.19653"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."378.1534.19654"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."378.1534.19951"]
+slug = "2024-10-15"
 [register_variant."378.1535"]
 slug = "specialskola"
 display_group = "Specialskola"
 
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."378.1535.14896"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."378.1535.18515"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."378.1535.18516"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."378.1535.19655"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."378.1535.19656"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."378.1535.19956"]
+slug = "2024-10-15"
 # Annan pedagogisk verksamhet
 [register."379"]
 slug = "annan-pedagogisk-verksamhet"
@@ -6267,10 +7452,96 @@ slug = "annan-pedagogisk-verksamhet"
 slug = "barn-individ"
 display_group = "Barn - individ"
 
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."379.1407.12589"]
+slug = "2014-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."379.1407.12590"]
+slug = "2015-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."379.1407.12592"]
+slug = "2016-10-15"
+
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."379.1407.12593"]
+slug = "2017-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."379.1407.13168"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."379.1407.14821"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."379.1407.18535"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."379.1407.18545"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."379.1407.19936"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."379.1407.19937"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."379.1407.19939"]
+slug = "2024-10-15"
 [register_variant."379.1408"]
 slug = "personal-individ"
 display_group = "Personal - individ"
 
+# '15 oktober 2017' (residual: "15 oktober")
+[register_version."379.1408.12603"]
+slug = "2017-10-15"
+
+# '15 oktober 2016' (residual: "15 oktober")
+[register_version."379.1408.12604"]
+slug = "2016-10-15"
+
+# '15 oktober 2015' (residual: "15 oktober")
+[register_version."379.1408.12605"]
+slug = "2015-10-15"
+
+# '15 oktober 2014' (residual: "15 oktober")
+[register_version."379.1408.12606"]
+slug = "2014-10-15"
+
+# '15 oktober 2018' (residual: "15 oktober")
+[register_version."379.1408.13169"]
+slug = "2018-10-15"
+
+# '15 oktober 2019' (residual: "15 oktober")
+[register_version."379.1408.14829"]
+slug = "2019-10-15"
+
+# '15 oktober 2020' (residual: "15 oktober")
+[register_version."379.1408.18546"]
+slug = "2020-10-15"
+
+# '15 oktober 2021' (residual: "15 oktober")
+[register_version."379.1408.18547"]
+slug = "2021-10-15"
+
+# '15 oktober 2022' (residual: "15 oktober")
+[register_version."379.1408.19921"]
+slug = "2022-10-15"
+
+# '15 oktober 2023' (residual: "15 oktober")
+[register_version."379.1408.19922"]
+slug = "2023-10-15"
+
+# '15 oktober 2024' (residual: "15 oktober")
+[register_version."379.1408.19924"]
+slug = "2024-10-15"
 # Produktion inom näringslivet (PIN)
 [register."382"]
 slug = "pin"
