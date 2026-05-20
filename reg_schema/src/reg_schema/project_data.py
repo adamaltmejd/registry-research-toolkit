@@ -23,9 +23,11 @@ isinstance checks are intentionally absent.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 # Top-level enums (§6.1, §6.3). Mirrored at runtime by the structural
 # validator using ``get_args`` — same drift-protection pattern as

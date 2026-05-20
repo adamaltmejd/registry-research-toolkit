@@ -37,7 +37,7 @@ from pathlib import Path
 # We log to stderr (line-buffered) and to a file regardless, so this
 # doesn't affect the probe's output.
 if socket.gethostname()[:3].upper() == "MBS":
-    sys.stdout = open(os.devnull, "w")
+    sys.stdout = open(os.devnull, "w")  # noqa: SIM115, PTH123  # permanent redirect, not a context-manager case
 
 PROJECT_DSN = "P1105"  # empty -> skip MS SQL probes
 SAMPLE_TABLE = "Individ_2018"  # ~8M rows. Empty -> skip table probe.

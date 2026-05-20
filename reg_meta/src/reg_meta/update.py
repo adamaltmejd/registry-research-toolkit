@@ -8,8 +8,7 @@ import subprocess
 import sys
 import threading
 import time
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from . import __version__
 from .db import DB_FILENAME, default_db_dir
@@ -23,6 +22,9 @@ from .download import (
     version_from_tag,
 )
 from .errors import EXIT_CONFIG, RegMetaError
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 _UPDATE_CHECK_INTERVAL = 7 * 24 * 3600  # 1 week in seconds
 _BG_JOIN_TIMEOUT = 3  # max seconds to wait when collecting background check

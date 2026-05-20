@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import csv
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
-
 from mock_data_wizard.enrich import RegisterCandidate, enrich
 from mock_data_wizard.generate import (
     _generate_categorical,
@@ -16,6 +15,9 @@ from mock_data_wizard.generate import (
     generate,
 )
 from mock_data_wizard.stats import parse_stats
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def test_generate_date_round_trips_pinned_format():

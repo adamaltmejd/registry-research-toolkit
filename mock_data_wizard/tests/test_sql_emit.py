@@ -10,7 +10,6 @@ from __future__ import annotations
 
 import duckdb
 import pytest
-
 from mock_data_wizard.sql_emit import (
     DUCKDB,
     MSSQL,
@@ -30,7 +29,6 @@ from mock_data_wizard.sql_emit import (
     sample_sql,
     stddev_fn,
 )
-
 
 # -- Dialect adapters ------------------------------------------------------
 

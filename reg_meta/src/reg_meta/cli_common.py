@@ -10,13 +10,15 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import sqlite3
 import sys
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .db import get_manifest, utc_now
 from .errors import EXIT_INTERNAL, RegMetaError
+
+if TYPE_CHECKING:
+    import sqlite3
 
 CONTRACT_VERSION = "3.0.0"
 

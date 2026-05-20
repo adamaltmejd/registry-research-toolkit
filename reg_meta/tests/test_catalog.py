@@ -2,10 +2,17 @@
 
 from __future__ import annotations
 
-import sqlite3
+from typing import TYPE_CHECKING
 
 import pytest
-
+from _slugged_db import (
+    add_binding,
+    add_register,
+    add_variable,
+    add_variant,
+    add_version,
+    build_slugged_db,
+)
 from reg_meta.catalog import (
     Catalog,
     ResolvedClassification,
@@ -18,14 +25,8 @@ from reg_meta.catalog import (
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid
 
-from _slugged_db import (
-    add_binding,
-    add_register,
-    add_variable,
-    add_variant,
-    add_version,
-    build_slugged_db,
-)
+if TYPE_CHECKING:
+    import sqlite3
 
 
 @pytest.fixture

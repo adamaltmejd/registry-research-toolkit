@@ -1,6 +1,13 @@
 #!/usr/bin/env bash
-# PostToolUse hook: ruff --fix + format on edited Python files.
-# Exit 2 surfaces any remaining (unfixable) findings to Claude.
+# PostToolUse hook: ruff format + non-blocking lint info on edited Python files.
+#
+# Two steps, both safe on transient states:
+#   1. `ruff format` — cosmetic normalization, never destructive.
+#   2. `ruff check --no-fix` — reports findings via `additionalContext` so Claude
+#      sees them inline with the tool result and can self-correct on its own.
+#      No `--fix` (avoids silent import deletion during multi-file refactors),
+#      no blocking (no forced full-file Writes for partial renames). Stop hook
+#      handles end-of-turn enforcement via `decision: "block"`.
 set -uo pipefail
 
 file_path=$(python3 -c 'import json, sys; print(json.load(sys.stdin).get("tool_input", {}).get("file_path", ""))')
@@ -27,18 +34,24 @@ else
 	exit 0
 fi
 
-# `ruff check --fix` returns nonzero iff findings remain after autofix.
-# Capture once; re-checking is wasted work.
-if fix_output=$("${ruff[@]}" check --fix --quiet "$file_path" 2>&1); then
-	fix_status=0
-else
-	fix_status=$?
-fi
-
+# Format errors are almost exclusively syntax errors; the check step below
+# (and ruff_on_stop.sh) will surface them properly. Swallow format errors here.
 "${ruff[@]}" format --quiet "$file_path" >/dev/null 2>&1 || true
 
-if [ "$fix_status" -ne 0 ]; then
-	printf 'ruff: remaining findings in %s:\n%s\n' "$file_path" "$fix_output" >&2
-	exit 2
+# Lint check without --fix: just report. exit 0 keeps the edit non-blocking;
+# findings ride into Claude's context via `additionalContext` next to the
+# tool result, so Claude can choose whether to address them inline.
+if check_output=$("${ruff[@]}" check --no-fix --quiet "$file_path" 2>&1); then
+	exit 0
 fi
+
+python3 -c '
+import json, sys
+print(json.dumps({
+    "hookSpecificOutput": {
+        "hookEventName": "PostToolUse",
+        "additionalContext": "ruff findings in " + sys.argv[1] + ":\n" + sys.argv[2],
+    }
+}))
+' "$file_path" "$check_output"
 exit 0

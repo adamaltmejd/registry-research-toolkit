@@ -27,8 +27,8 @@ from .cli_common import (
     write_to,
 )
 from .db import (
-    default_db_dir,
     db_path_from_args,
+    default_db_dir,
     get_manifest,
     open_db,
 )
@@ -2683,8 +2683,8 @@ def _print_examples(cmd_args: list[str]) -> None:
 
 
 def _print_version(db_arg: str | None = None) -> None:
-    from .update import UpdateChecker
     from . import __version__
+    from .update import UpdateChecker
 
     sys.stderr.write(f"{_version_line(db_arg)}\n")
     sys.stderr.write("Checking for updates...\n")

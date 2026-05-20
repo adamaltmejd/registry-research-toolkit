@@ -13,7 +13,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
 from reg_meta_build.validate import validate_built_db
 
 
@@ -120,11 +119,11 @@ class TestBuildDbValidateFlag:
 
         _sys.path.insert(0, str(Path(__file__).parent))
         from _csv_fixtures import write_scb_input
+        from reg_meta.db import DB_FILENAME
+        from reg_meta.errors import RegMetaError
+        from reg_meta_build.db import build_db
 
         from reg_meta_build import validate as validate_mod
-        from reg_meta.db import DB_FILENAME
-        from reg_meta_build.db import build_db
-        from reg_meta.errors import RegMetaError
 
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"

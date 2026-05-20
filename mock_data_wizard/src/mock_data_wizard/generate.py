@@ -8,14 +8,17 @@ import io
 import json
 import time
 from dataclasses import dataclass
-from datetime import date, datetime, timedelta, timezone
+from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 import numpy as np
 
 from ._util import progress
 from .enrich import SPINE_VAR_IDS, EnrichedSource, RegisterCandidate
-from .stats import Panel, ProjectStats
+
+if TYPE_CHECKING:
+    from .stats import Panel, ProjectStats
 
 _MANIFEST_FILENAME = "manifest.json"
 _MANIFEST_SCHEMA_VERSION = "3"
@@ -662,7 +665,7 @@ def generate(
     # Write manifest
     manifest = Manifest(
         schema_version=_MANIFEST_SCHEMA_VERSION,
-        generated_at=datetime.now(timezone.utc).isoformat(),
+        generated_at=datetime.now(UTC).isoformat(),
         seed=seed,
         sample_pct=sample_pct,
         output_dir=str(output_dir),

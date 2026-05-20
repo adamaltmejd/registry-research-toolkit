@@ -30,12 +30,14 @@ date into the matching aggregation branch. See
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 import re
+from collections.abc import Iterator, Mapping, Sequence
 from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Iterator, Mapping, Sequence, Union
+from typing import TYPE_CHECKING, Any
 
 from .sql_emit import DUCKDB, MSSQL, quote_ident
 
@@ -121,7 +123,7 @@ class SqlTable:
 
 # What sql_source(tables=) accepts. A bare string is shorthand for
 # SqlTable(qualified=...). Mapping keys override the SqlTable.alias.
-SqlTableSpec = Union[str, SqlTable]
+SqlTableSpec = str | SqlTable
 
 
 @dataclass
@@ -805,10 +807,8 @@ def iter_sql_source(
             )
     finally:
         if own_conn:
-            try:
+            with contextlib.suppress(Exception):
                 conn.close()
-            except Exception:
-                pass
 
 
 # -- Dispatch -------------------------------------------------------------

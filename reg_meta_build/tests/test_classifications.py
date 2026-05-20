@@ -3,19 +3,19 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import sqlite3
+import subprocess
 import sys
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
+from _csv_fixtures import PIPE, write_scb_input
+from reg_meta.errors import RegMetaError
 from reg_meta_build.classifications import load_seed, load_valid_codes
 from reg_meta_build.db import build_db
-from reg_meta.errors import RegMetaError
 
-from _csv_fixtures import PIPE, write_scb_input
-
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # CVID 1004 has vardemangdsversion = "Kon-2" (a fake successor) so we can
 # exercise the supersedes chain end to end. CVID 9999 ("Unknown") still

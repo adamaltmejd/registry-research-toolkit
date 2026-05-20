@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import pytest
-
 from reg_meta.fqid import (
     DEFAULT_VARIANT_SLUG,
     Fqid,
@@ -14,7 +13,6 @@ from reg_meta.fqid import (
     is_slug,
     parse,
 )
-
 
 # ---------------------------------------------------------------------------
 # Round-trip and segment-count discrimination

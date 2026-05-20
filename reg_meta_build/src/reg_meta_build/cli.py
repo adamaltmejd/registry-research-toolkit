@@ -15,7 +15,7 @@ import sys
 import time
 from datetime import date
 from pathlib import Path
-from typing import Any, Callable
+from typing import TYPE_CHECKING, Any
 
 from reg_meta.cli_common import (
     NoRepeatParser,
@@ -56,6 +56,8 @@ from .fqid_slugs import (
 from .sources.sos import SosParseError, parse_directory, parse_register_file
 from .validate import validate_built_db
 
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 # ---------------------------------------------------------------------------
 # Parser

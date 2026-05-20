@@ -6,12 +6,6 @@ import sqlite3
 from pathlib import Path
 
 import pytest
-
-from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
-from reg_meta.errors import RegMetaError
-from reg_meta.queries import extract_year
-from reg_meta_build.db import _decode_cp1252, _value_set_hash, build_db
-
 from _csv_fixtures import (
     PIPE,
     REGISTERINFORMATION_HEADER,
@@ -21,6 +15,10 @@ from _csv_fixtures import (
     write_csv,
     write_scb_input,
 )
+from reg_meta.db import SCHEMA_VERSION, get_manifest, open_db
+from reg_meta.errors import RegMetaError
+from reg_meta.queries import extract_year
+from reg_meta_build.db import _decode_cp1252, _value_set_hash, build_db
 
 
 class TestDecodeCP1252:

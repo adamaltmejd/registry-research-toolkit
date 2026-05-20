@@ -14,7 +14,7 @@ The flow is in-memory scan + temp-file + atomic rename:
 2. We stamp an in-band ``pii_scan`` attestation into ``payload``.
 3. Scan the in-memory ``payload``. Match -> raise; no file is written.
 4. Serialise to ``<path>.tmp``.
-5. ``os.replace(tmp, path)`` (atomic on Posix and Windows).
+5. Atomic rename of ``tmp`` -> ``path`` via ``Path.replace`` (atomic on Posix and Windows).
 
 The PII payload never touches disk on a dirty scan, and a partially
 written file can never become the canonical export.
@@ -30,12 +30,14 @@ from __future__ import annotations
 
 import json
 import logging
-import os
 import re
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
-from typing import Any, Iterator
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 log = logging.getLogger("mdw.scan")
 
@@ -256,7 +258,7 @@ def write_export(path: Path, payload: dict) -> None:
         json.dumps(payload, indent=2, ensure_ascii=False, default=str),
         encoding="utf-8",
     )
-    os.replace(tmp, path)
+    tmp.replace(path)
 
 
 def scan_file(path: Path) -> list[ScanMatch]:

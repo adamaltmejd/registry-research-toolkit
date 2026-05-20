@@ -1,4 +1,11 @@
 {
+  "permissions": {
+    "deny": [
+      "Bash(git commit --no-verify *)",
+      "Bash(git commit -n *)",
+      "Bash(git push --no-verify *)"
+    ]
+  },
   "hooks": {
     "PreToolUse": [
       {
@@ -7,6 +14,16 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block_doc_artifacts.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git *)",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/block_no_verify.sh"
           }
         ]
       }
@@ -18,6 +35,17 @@
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/ruff_on_edit.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/ruff_on_stop.sh",
+            "timeout": 30
           }
         ]
       }

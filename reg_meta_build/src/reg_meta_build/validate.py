@@ -21,12 +21,14 @@ Year projection correctness:
 
 from __future__ import annotations
 
-import sqlite3
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from reg_meta.db import open_db
+
+if TYPE_CHECKING:
+    import sqlite3
 
 LineKind = Literal["section", "ok", "fail", "info"]
 

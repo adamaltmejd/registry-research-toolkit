@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import json
 import subprocess
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import pytest
+from mock_data_wizard.cli import main
 
 from mock_data_wizard import update
-from mock_data_wizard.cli import main
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 class TestParseVersion:

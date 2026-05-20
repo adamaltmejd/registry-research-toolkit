@@ -12,11 +12,14 @@ import json
 import os
 import subprocess
 import sys
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
 
 from mock_data_wizard import _bundle
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 def _build_bundle_to(out_path: Path) -> Path:

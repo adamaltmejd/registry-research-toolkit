@@ -18,6 +18,17 @@ jobs:
       - run: uv run ruff format --check
       - uses: oven-sh/setup-bun@v2
       - run: bunx markdownlint-cli2
+      # Backstop: run the pre-commit suite that an agent could have bypassed
+      # locally with `--no-verify`. SKIP=pytest avoids duplicating the test
+      # job below.
+      - run: uvx pre-commit run --all-files
+        env:
+          SKIP: pytest
+      # Advisory type check via ty (Astral, beta). Pinned via uvx so it tracks
+      # latest without needing lockfile bumps; non-blocking while the baseline
+      # of JSON-boundary noise is being triaged.
+      - run: uvx ty check
+        continue-on-error: true
 
   check-versions:
     runs-on: ubuntu-latest
@@ -41,7 +52,7 @@ jobs:
       frontend: ${{ steps.filter.outputs.frontend }}
     steps:
       - uses: actions/checkout@v6
-      - uses: dorny/paths-filter@v3
+      - uses: dorny/paths-filter@v4
         id: filter
         with:
           filters: |

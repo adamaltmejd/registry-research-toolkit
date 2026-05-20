@@ -8,11 +8,13 @@ the functions that library consumers (e.g. mock_data_wizard) import.
 from __future__ import annotations
 
 import re
-import sqlite3
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
 from .fqid import Fqid, derive_variable_slug, try_emit
+
+if TYPE_CHECKING:
+    import sqlite3
 
 _YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
 
@@ -124,9 +126,7 @@ def _version_years_for_register(
 def _year_in_range(year: int, lo: int | None, hi: int | None) -> bool:
     if lo is not None and year < lo:
         return False
-    if hi is not None and year > hi:
-        return False
-    return True
+    return hi is None or year <= hi
 
 
 def _filter_search_by_years(
@@ -688,7 +688,7 @@ def get_varinfo(
             (variable,),
         ).fetchall()
 
-    matched_vars = vars_by_id if vars_by_id else vars_by_name
+    matched_vars = vars_by_id or vars_by_name
 
     # Fall back to alias (column name) lookup
     if not matched_vars:
@@ -743,7 +743,7 @@ def get_varinfo(
 
         # Batch-fetch aliases and value counts for all instances
         aliases_map: dict[str, list[str]] = {c: [] for c in cvids}
-        value_counts: dict[str, int] = {c: 0 for c in cvids}
+        value_counts: dict[str, int] = dict.fromkeys(cvids, 0)
         if cvids:
             cvid_ph = _in_placeholders(cvids)
             for row in conn.execute(
@@ -1111,7 +1111,7 @@ def get_values_by_variable(
             (variable,),
         ).fetchall()
 
-    matched = rows_by_id if rows_by_id else rows_by_name
+    matched = rows_by_id or rows_by_name
 
     if not matched:
         alias_sql = (

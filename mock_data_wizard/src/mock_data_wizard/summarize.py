@@ -14,12 +14,14 @@ from __future__ import annotations
 
 import random
 from datetime import date, datetime, timedelta
-from typing import TYPE_CHECKING, Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from .classify import DATE_FORMATS, _python_kind, detect_date_format
 from .sql_emit import queries_for_column
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from .spec import ColumnTypeOverride
 
 # Disclosure-control thresholds.
