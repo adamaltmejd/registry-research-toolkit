@@ -896,6 +896,8 @@ slug = "hreg"
 slug = "antagna-forskarniva"
 display_group = "Antagna till högskoleutbildning på forskarnivå"
 
+# (keep) SCB idiom: 'grund' / 'avancerad' are the standard short-forms for
+# 'grundnivå' (undergraduate) / 'avancerad nivå' (graduate); not truncations.
 [register_variant."47.2"]
 slug = "sokande-grund-avancerad"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå"
@@ -1298,6 +1300,8 @@ slug = "fastighetspriser"
 slug = "fastighetspriser"
 display_group = "Fastighetspriser och lagfarter"
 
+# (keep) 'fastighet' is the noun (property); not a truncation of the register
+# slug 'fastighetspriser' (property prices) — different concept. Applies to 71.334 too.
 [register_variant."71.333"]
 slug = "forvarvare-av-fastighet"
 display_group = "Förvärvare av fastighet"
@@ -2112,6 +2116,8 @@ display_group = "Studiemedel, erhållet"
 [register."104"]
 slug = "elevpaneler"
 
+# (keep) Variants use singular 'elevpanel'; parent register slug 'elevpaneler' is
+# the plural — pure Swedish inflection. Applies to 840 / 1090 / 1164.
 [register_variant."104.840"]
 slug = "elevpanel-7"
 display_group = "Elevpanel 7"
@@ -2892,6 +2898,8 @@ slug = "branslestatistik"
 slug = "industrins-bransleforbrukning"
 display_group = "Industrins bränsleförbrukning och lager"
 
+# (keep) 'energi' is an umbrella for energiförbrukning + energianvändning + lager
+# (per display_group); broader than any single sub-topic, deliberate brevity.
 [register_variant."139.204"]
 slug = "varmeverkens-energi"
 display_group = "Värmeverkens energiförbrukning, energianvändning och lager"
@@ -5923,6 +5931,8 @@ slug = "namnstatistik"
 slug = "folkbokforda-personer"
 display_group = "Folkbokförda - personer"
 
+# (keep) 'namn' (names) is the variant's scope; register slug 'namnstatistik'
+# (name statistics) names the broader register — not a truncation.
 [register_variant."271.640"]
 slug = "folkbokforda-namn"
 display_group = "Folkbokförda - namn"
@@ -6061,6 +6071,8 @@ slug = "preliminar-version-2019"
 slug = "esspros"
 display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
 
+# (keep) Swedish inflection: offentlig/forvaltning/budget (slug) vs
+# offentliga/förvaltningens/budgetuppgifter (display) — not truncations.
 [register_variant."285.1221"]
 slug = "offentlig-forvaltning-budget"
 display_group = "Offentliga förvaltningens budgetuppgifter och tillägg till EU:s konvergenskriterier"
@@ -6551,6 +6563,8 @@ slug = "2024-10-15"
 [register."310"]
 slug = "befolkningsframskrivningar"
 
+# (keep) Swedish definite inflection: befolkning vs befolkningen; auto-slug
+# rule strips the definite -en ending, not a truncation.
 [register_variant."310.881"]
 slug = "framskrivning-befolkning"
 display_group = "Framskrivning av befolkningen"
@@ -7539,6 +7553,8 @@ display_group = "Lärarförsörjningen, aktiva lärare"
 slug = "folkhogskoleuppfoljningen"
 display_group = "Folkhögskoleuppföljningen"
 
+# (keep) Swedish definite inflection: grundskola vs grundskolan; auto-slug
+# rule strips the definite -an ending, not a truncation.
 [register_variant."366.1648"]
 slug = "distansundervisning-grundskola"
 display_group = "Distansundervisning under pandemin, grundskolan"
