@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import json
-from pathlib import Path
+from typing import TYPE_CHECKING
 
 import pytest
-
 from mock_data_wizard.cli import build_parser, main
 
 from .conftest import MINIMAL_STATS
 
+if TYPE_CHECKING:
+    from pathlib import Path
 
 # -- `ui` subcommand parsing ----------------------------------------------
 
@@ -32,6 +33,64 @@ def test_ui_subcommand_takes_no_arguments():
     parser = build_parser()
     with pytest.raises(SystemExit):
         parser.parse_args(["ui", "/some/path"])
+
+
+# -- build-bundle --project-data error handling ---------------------------
+
+
+def test_build_bundle_project_data_malformed_json_clean_error(tmp_path: Path, capsys):
+    """Hand-editing project_data.json is the common local workflow;
+    a JSON syntax error must surface as ``Error: ...`` not a traceback."""
+    bad = tmp_path / "project_data.json"
+    bad.write_text("{this is not valid json", encoding="utf-8")
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "not valid JSON" in err
+    assert "Traceback" not in err
+
+
+def test_build_bundle_project_data_invalid_schema_clean_error(tmp_path: Path, capsys):
+    """Structural validation failures (missing required field, bad
+    types, composite key, etc.) likewise route through the friendly
+    ``Error: ...`` path rather than a ValueError traceback."""
+    bad = tmp_path / "project_data.json"
+    # Drop the required ``steward`` field — structural validator raises.
+    bad.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "reg_meta_version": "test",
+                "name": "x",
+                "sources": [],
+                "panels": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    rc = main(
+        [
+            "build-bundle",
+            "--output",
+            str(tmp_path / "bundle.py"),
+            "--project-data",
+            str(bad),
+        ]
+    )
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "Error:" in err
+    assert "failed validation" in err
+    assert "Traceback" not in err
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:

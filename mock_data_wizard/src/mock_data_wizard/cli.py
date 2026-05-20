@@ -391,12 +391,23 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
         # Use the same duplicate-key guard as ``spec.load_project_data``
         # so a hand-edited project_data.json with duplicate fields
         # fails at build instead of silently embedding the last-wins
-        # value into the bundle.
-        with spec_path.open("r", encoding="utf-8") as fp:
-            project_data = json.load(fp, object_pairs_hook=_reject_duplicate_keys)
+        # value into the bundle. Catch parse + validation errors and
+        # surface them as a clean CLI message — hand-editing
+        # project_data.json is the common workflow on the local side,
+        # so a traceback here would be the dominant failure mode.
+        try:
+            with spec_path.open("r", encoding="utf-8") as fp:
+                project_data = json.load(fp, object_pairs_hook=_reject_duplicate_keys)
+        except json.JSONDecodeError as exc:
+            print(f"Error: {spec_path} is not valid JSON: {exc}", file=sys.stderr)
+            return 1
         # Validate before embedding — shipping a structurally broken
         # bundle is worse than failing at build.
-        parse_project_data(project_data)
+        try:
+            parse_project_data(project_data)
+        except ValueError as exc:
+            print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
+            return 1
 
     out = _bundle.build_bundle(output, project_data=project_data)
     print(f"Built {out} ({out.stat().st_size:,} bytes)")
