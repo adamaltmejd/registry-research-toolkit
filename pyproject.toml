@@ -49,6 +49,12 @@ extend-select = [
   "FURB", # refurb
 ]
 
+[tool.ruff.lint.isort]
+# Merge `from X import a` + `from X import b as c` into one block. Default
+# isort treats aliased imports as a separate group, which splits `from .fqid
+# import (...)` blocks awkwardly when one member is aliased.
+combine-as-imports = true
+
 [tool.uv]
 package = false
 

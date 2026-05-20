@@ -14,8 +14,6 @@ from .fqid import (
     FqidKind,
     derive_period,
     derive_variable_slug,
-)
-from .fqid import (
     parse as parse_fqid,
 )
 from .queries import (
