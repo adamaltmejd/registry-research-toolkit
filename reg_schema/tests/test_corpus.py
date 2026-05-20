@@ -1,11 +1,10 @@
 """Corpus harness for §6.8.0 cross-runtime shape coherence.
 
 See ``reg_schema/test_corpus/README.md`` for the corpus contract.
-Pre-Phase 3, the harness round-trips each
-``expected_ValidationResult.json`` through the §6.8.0 dataclasses;
-Phase 3 of §15 step 3 swaps the body of ``test_input_is_json_object``
-for a real ``validate_structural(input)`` call and an unordered-issue
-equality assertion against the decoded expected result.
+The harness runs ``validate_structural(input)`` against every case
+and asserts an unordered-issue equality match with the decoded
+``expected_ValidationResult.json`` — issue order is not part of the
+cross-runtime contract, so the comparison is set-based.
 """
 
 from __future__ import annotations
@@ -15,7 +14,7 @@ from pathlib import Path
 
 import pytest
 
-from reg_schema import ValidationIssue, ValidationResult
+from reg_schema import ValidationIssue, ValidationResult, validate_structural
 
 CORPUS_ROOT = Path(__file__).resolve().parent.parent / "test_corpus"
 
@@ -105,13 +104,37 @@ def test_expected_result_decodes(case_dir: Path) -> None:
     assert isinstance(result.ok, bool)
 
 
-@pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
-def test_input_is_json_object(case_dir: Path) -> None:
-    """``input.json`` is at least a syntactically valid JSON object.
+def _issue_key(i: ValidationIssue) -> tuple[str, str, str, str]:
+    # `ValidationIssue` is frozen but has no natural ordering. Comparing
+    # as sorted 4-tuples gives order-independent equality while still
+    # surfacing duplicate-issue regressions (set comparison would
+    # collapse them).
+    return (i.level, i.code, i.path, i.message)
 
-    Phase 3 swaps the body for ``validate_structural(input)`` and an
-    unordered-issue equality check against ``_decode_expected(...)``.
+
+@pytest.mark.parametrize("case_dir", _CASES, ids=_CASE_IDS)
+def test_validate_structural_matches_expected(case_dir: Path) -> None:
+    """``validate_structural(input)`` produces the expected issue set.
+
+    Compared unordered: rule-emission order is an implementation detail
+    of the Python validator, but the SPA and bundle ports run their
+    own traversals and shouldn't be forced into lock-step.
     """
 
+    # No dict-only guard: malformed root shapes (array, scalar, null)
+    # are in scope for this corpus — `validate_structural` emits
+    # `invalid_root` for them, and the SPA / bundle ports must agree.
+    # Gating those out here would create a silent blind spot in the
+    # cross-runtime contract.
     payload = json.loads((case_dir / "input.json").read_text(encoding="utf-8"))
-    assert isinstance(payload, dict), "project_data.json root must be an object"
+    actual = validate_structural(payload)
+    expected = _decode_expected(
+        json.loads(
+            (case_dir / "expected_ValidationResult.json").read_text(encoding="utf-8")
+        )
+    )
+    actual_keys = sorted(_issue_key(i) for i in actual.issues)
+    expected_keys = sorted(_issue_key(i) for i in expected.issues)
+    assert actual_keys == expected_keys, (
+        f"\nactual:   {actual_keys}\nexpected: {expected_keys}"
+    )

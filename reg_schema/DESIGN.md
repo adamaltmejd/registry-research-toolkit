@@ -85,14 +85,14 @@ shape the dependency direction):
 
 - Phase 1 — scaffold + §6.8.0 `ValidationIssue` / `ValidationResult`
   contract. Shipped.
-- Phase 2 (this PR) — §6.1-§6.4 dataclasses: `ProjectData`, `Source`,
-  `Column`, `Panel`, `PanelMember`, `LiteralPeriod`, and the
-  `EntityKey` / `TimeKey` / `TimePoint` type aliases. Pure shape
-  definitions; no validation rules yet.
-- Phase 3 (next) — unified `validate_structural()` entrypoint
-  implementing §6.8.1 rules (FQID well-formedness, type/subtype
-  consistency, panel composite ordering, source-collision, etc.)
-  against a parsed-dict payload, returning a `ValidationResult`.
+- Phase 2 — §6.1-§6.4 dataclasses: `ProjectData`, `Source`, `Column`,
+  `Panel`, `PanelMember`, `LiteralPeriod`, and the `EntityKey` /
+  `TimeKey` / `TimePoint` type aliases. Shipped. Pure shape
+  definitions; element types are not checked at construction.
+- Phase 3 (this PR) — `validate_structural(data: Mapping[str, object])
+  -> ValidationResult` implementing §6.8.1. Signature operates on a
+  parsed dict, not the dataclasses, because rules like "type ∈ enum"
+  must fire on raw JSON values before any `Literal` cast.
 
 See `REFACTOR_SPEC.md` §15 step 3 for the load-bearing-dependency
 story across phases.
@@ -110,11 +110,10 @@ the rule for adding cases.
 
 Three consumers read the same JSON:
 
-- `reg_schema/tests/test_corpus.py` rides the corpus today by
-  decoding `expected_ValidationResult.json` through the §6.8.0
-  dataclasses; Phase 3 of §15 step 3 swaps the decode for a real
-  `validate_structural(input)` call and an unordered-issue equality
-  check against the expected result.
+- `reg_schema/tests/test_corpus.py` runs `validate_structural(input)`
+  against every case and asserts an unordered-issue equality match
+  with the decoded `expected_ValidationResult.json` — the single
+  Python source of truth that the other two runtimes mirror.
 - `reg_monabundle`'s bundle build amalgamates the corpus into a
   self-test that runs on MONA load (§15 step 5), catching drift
   between the amalgamated validator and the reg_schema source.
@@ -123,11 +122,50 @@ Three consumers read the same JSON:
 
 The corpus starts with well-formed inputs and empty-issues
 expectations — these prove the format, harness, and round-trip work
-end-to-end before §6.8.1 rule-emission cases pile on. Phase 3 grows
-the corpus alongside the validator, one (or more) cases per rule.
-Negative cases for §6.8.2 (namespaced blocks) and §6.8.3 (reg_meta-
-backed semantic) layers live in their owning packages, not here —
-`reg_schema` only owns the structural layer's corpus.
+end-to-end. Phase 3 grows the corpus alongside the validator, one
+(or more) cases per rule. Negative cases for §6.8.2 (namespaced
+blocks) and §6.8.3 (reg_meta-backed semantic) layers live in their
+owning packages, not here — `reg_schema` only owns the structural
+layer's corpus.
+
+## Structural rules and issue codes (Phase 3)
+
+Issue `code` values are stable across releases — tests pin them, the
+SPA maps codes to UI affordances, new codes are additive (§6.8.0).
+Current codes:
+
+| Code | Rule (§6.8.1) |
+|---|---|
+| `invalid_root` | Root must be an object. |
+| `missing_required_field` | A required field (top-level, source, column, panel, member) is absent. |
+| `invalid_field_type` | A field's JSON type is wrong (e.g. `steward` is not a string; `members` is not an array). |
+| `invalid_enum_value` | `steward`, `type`, `id_subtype`, `numeric_subtype` is outside its allowed set. |
+| `invalid_fqid` | FQID segment count or per-segment characters don't match the 4/5/3-segment shape with leading-`class/` discriminator. |
+| `fqid_register_version_mismatch` | A column `name`'s first 4 segments don't equal the owning source's `register_version`. |
+| `subtype_on_wrong_type` | A `*_subtype` or `*_format` field is set on a column whose `type` doesn't own it (e.g. `id_subtype` on a categorical). |
+| `empty_columns` | A source has zero columns. |
+| `duplicate_source_name` | Two sources share a `name`. |
+| `display_name_collision` | Two columns on the same source share an explicit `display_name` (§6.3). The implicit-resolution half — one explicit + one resolving to the same reg_meta default — needs reg_meta and lives in §6.8.3. |
+| `duplicate_panel_id` | Two panels share a `panel_id`. |
+| `empty_members` | A panel has zero members. |
+| `missing_effective_entity_key` | A panel member has no effective `entity_key` (neither panel default nor member override). |
+| `missing_effective_time_key` | A panel member has no effective `time_key`. |
+| `literal_period_invalid` | The `{"period": ...}` object form is malformed (missing key, extra keys, or non-int/string value). |
+| `composite_time_key_mixed_kinds` | A composite `time_key` array mixes column refs and literals on a single member (§6.4). |
+| `composite_key_inconsistent` | Composite `entity_key` / `time_key` tuples across members of a panel are not identically ordered. |
+| `time_key_member_kind_mismatch` | A member-level composite `time_key` override has a different kind (literal vs ref) than the panel-level composite (§6.4). |
+| `literal_time_key_duplicate` | Two members of one panel resolve to the same literal `time_key`. |
+| `entity_key_unknown_column` | A bare-string `entity_key` ref doesn't match any `display_name` on the member's source. Skipped on sources with any unset `display_name` (the ref may resolve to a reg_meta-derived default at runtime). |
+| `time_key_unknown_column` | Same rule, for `time_key` column refs. |
+| `source_referenced_by_multiple_panels` | One source appears in two panels (§6.4). |
+| `panel_member_unknown_source` | A panel member's `source` does not match any entry in `/sources`. |
+
+The "ref exists on source" check is intentionally lenient: when any
+column on the source lacks an explicit `display_name`, the structural
+layer skips matching that source's refs entirely. The bundle / kit /
+webapp paths materialize defaults from reg_meta before they emit
+artifacts (§6.3), and a pre-kit SPA-state spec shouldn't be flagged
+for refs that will resolve later.
 
 ## Why no FQID parser dependency
 

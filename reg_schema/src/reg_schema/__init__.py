@@ -19,6 +19,7 @@ from .project_data import (
     TimeKey,
     TimePoint,
 )
+from .structural import validate_structural
 from .validation import IssueLevel, ValidationIssue, ValidationResult
 
 __all__ = [
@@ -38,4 +39,5 @@ __all__ = [
     "TimePoint",
     "ValidationIssue",
     "ValidationResult",
+    "validate_structural",
 ]
