@@ -636,7 +636,7 @@ class TestSeedSlugs:
         assert 'slug = "ankor-1968-1997"' in body
         # Audit comment carries the source registerversionnamn so the next
         # curator can verify any typo/abbreviation normalization (§5.3).
-        assert "# Ankor och anklingar 1968-1997" in body
+        assert "# 'Ankor och anklingar 1968-1997'" in body
 
     def test_emits_collision_annotation_against_sibling(self):
         # §5.3 rule 5: when the curated row's derive_period(name) matches a
@@ -659,7 +659,7 @@ class TestSeedSlugs:
         body = seed_provider_toml(conn, "scb")
         assert '[register_version."1.10.5510"]' in body
         assert 'slug = "betyg-vt2013"' in body
-        assert "# Vårterminen 2013 - betyg (vs 5177:VT2013)" in body
+        assert "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013)" in body
         # The claimant (5177) auto-derives to its slug — it's NOT a curated
         # override, so it should not itself appear as a seed stub.
         assert '[register_version."1.10.5177"]' not in body
@@ -675,7 +675,7 @@ class TestSeedSlugs:
             version=("1968-1997", "ankor-1968-1997", 200),
         )
         body = seed_provider_toml(conn, "scb")
-        assert "# 1968-1997\n" in body
+        assert "# '1968-1997'\n" in body
         assert "(vs " not in body
         assert "(residual:" not in body
 
@@ -690,8 +690,8 @@ class TestSeedSlugs:
         body = seed_provider_toml(conn, "scb")
         assert '[register_version."1.10.200"]' in body
         assert 'slug = "2019"' in body
-        assert "# Strandlinje, 2019 (residual:" in body
-        assert "'Strandlinje,'" in body or '"Strandlinje,"' in body
+        assert "# 'Strandlinje, 2019' (residual:" in body
+        assert '(residual: "Strandlinje,")' in body
 
 
 # ---------------------------------------------------------------------------

@@ -1670,22 +1670,24 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
                 continue
             key = f"{register_id}.{regvar_id}.{regver_id}"
             # Audit comment: preserves the source `registerversionnamn` verbatim
-            # so the next curator can verify any typo/abbreviation normalization
-            # (§5.3). Two terse parentheticals may attach:
+            # (wrapped in single quotes) so the next curator can verify any
+            # typo/abbreviation normalization (§5.3). Two terse parentheticals
+            # may attach OUTSIDE the quotes:
             #   `(vs <claimant>:<slug>)` — derive_period(name) collides with a
             #       sibling's effective slug (§5.3 rule 5).
-            #   `(residual: '<text>')` — auto-derive would drop scope info from
+            #   `(residual: "<text>")` — auto-derive would drop scope info from
             #       the source name (§5.3 rule 6).
             # Both can co-occur on the same row; order is collision then residual.
             if vername:
-                comment = _toml_comment(vername)
+                quoted_name = f"'{_toml_comment(vername)}'"
+                annotations = ""
                 if derived is not None:
                     claimant = sibling_slug_claimants.get(regvar_id, {}).get(derived)
                     if claimant is not None and claimant != regver_id:
-                        comment = f"{comment} (vs {claimant}:{derived})"
+                        annotations += f" (vs {claimant}:{derived})"
                 if residual is not None:
-                    comment = f"{comment} (residual: {_toml_str(residual)})"
-                lines.append(f"# {comment}")
+                    annotations += f" (residual: {_toml_str(residual)})"
+                lines.append(f"# {quoted_name}{annotations}")
             lines.append(f"[register_version.{_toml_str(key)}]")
             # Residual-bearing rows pre-fill with the auto-derive value so doing
             # nothing accepts auto-derive (curator commits the explicit entry as
