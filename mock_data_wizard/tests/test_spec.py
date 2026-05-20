@@ -85,25 +85,24 @@ def test_loaded_spec_lookup_options_resolves_through_binding_fqid():
                 "register_version": "scb/test/_default/2020",
                 "columns": [
                     {
-                        "name": "scb/test/_default/2020/lopnr",
-                        "display_name": "LopNr",
-                        "type": "id",
-                        "id_subtype": "integer",
+                        "name": "scb/test/_default/2020/kon",
+                        "display_name": "Kon",
+                        "type": "categorical",
                     },
                 ],
             }
         ],
         reg_monabundle={
             "column_options": {
-                "scb/test/_default/2020/lopnr": {"suppress_k": 25},
+                "scb/test/_default/2020/kon": {"suppress_k": 25},
             }
         },
     )
     spec = parse_project_data(payload)
-    assert spec.lookup_options("x.csv", "LopNr") == {"suppress_k": 25}
+    assert spec.lookup_options("x.csv", "Kon") == {"suppress_k": 25}
     # Returns a fresh copy so callers can't mutate the underlying spec.
-    spec.lookup_options("x.csv", "LopNr")["suppress_k"] = 999
-    assert spec.lookup_options("x.csv", "LopNr") == {"suppress_k": 25}
+    spec.lookup_options("x.csv", "Kon")["suppress_k"] = 999
+    assert spec.lookup_options("x.csv", "Kon") == {"suppress_k": 25}
 
 
 def test_loaded_spec_lookup_options_unknown_returns_empty_dict():
@@ -450,22 +449,55 @@ def test_column_options_accepts_matching_fqid():
                 "register_version": "scb/test/_default/2020",
                 "columns": [
                     {
-                        "name": "scb/test/_default/2020/lopnr",
-                        "display_name": "LopNr",
-                        "type": "id",
-                        "id_subtype": "integer",
+                        "name": "scb/test/_default/2020/kon",
+                        "display_name": "Kon",
+                        "type": "categorical",
                     },
                 ],
             }
         ],
         reg_monabundle={
             "column_options": {
-                "scb/test/_default/2020/lopnr": {"suppress_k": 25},
+                "scb/test/_default/2020/kon": {"suppress_k": 25},
             }
         },
     )
     spec = parse_project_data(payload)
-    assert spec.lookup_options("x.csv", "LopNr") == {"suppress_k": 25}
+    assert spec.lookup_options("x.csv", "Kon") == {"suppress_k": 25}
+
+
+# -- column_options type compatibility ------------------------------------
+
+
+@pytest.mark.parametrize(
+    "col, suffix",
+    [
+        ({"type": "id", "id_subtype": "integer"}, "lopnr"),
+        ({"type": "numeric", "numeric_subtype": "integer"}, "ar"),
+        ({"type": "date", "date_format": "%Y-%m-%d"}, "datum"),
+        ({"type": "opaque"}, "namn"),
+    ],
+)
+def test_column_options_rejects_suppress_k_on_non_categorical(col, suffix):
+    """``suppress_k`` only feeds the categorical frequency cutoff in
+    summarize_column; the id/numeric/date/opaque branches ignore it,
+    so accepting it there is a silent no-op. Reject at load and
+    point at the future panels[*].suppress_k for panel-level k."""
+    fqid = f"scb/test/_default/2020/{suffix}"
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_version": "scb/test/_default/2020",
+                "columns": [
+                    {"name": fqid, "display_name": suffix.upper(), **col},
+                ],
+            }
+        ],
+        reg_monabundle={"column_options": {fqid: {"suppress_k": 25}}},
+    )
+    with pytest.raises(ValueError, match="only honored on categorical"):
+        parse_project_data(payload)
 
 
 # -- load_project_data (disk path) ----------------------------------------

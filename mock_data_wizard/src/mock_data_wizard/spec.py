@@ -458,32 +458,55 @@ def _build_project_data(payload: Mapping[str, Any]) -> ProjectData:
     )
 
 
-def _validate_column_options_refs(block: object, project_data: ProjectData) -> None:
-    """Cross-check ``column_options`` keys against actual column FQIDs.
+def _validate_column_options_against_columns(
+    block: object, project_data: ProjectData
+) -> None:
+    """Cross-check ``column_options`` keys against actual columns.
 
-    Well-formedness (5-segment, non-class, ``[A-Za-z0-9_-]+``) is
-    checked in ``_validate_reg_monabundle_block``; that catches typos
-    that mangle the shape but not typos where the shape survives and
-    the key just doesn't match any column. Without this check, a
-    misspelled FQID silently no-ops at lookup time — the user thinks
-    they bumped ``suppress_k`` on a column, runs extract on MONA, and
-    finds out a day later that nothing happened.
+    Two checks, both requiring access to the resolved column dataclasses:
+
+    1. **Orphan keys.** Well-formedness (5-segment, non-class,
+       ``[A-Za-z0-9_-]+``) is checked in
+       ``_validate_reg_monabundle_block``; that catches typos that
+       mangle the shape but not typos where the shape survives and
+       the key just doesn't match any column. Without this check, a
+       misspelled FQID silently no-ops at lookup time.
+
+    2. **Per-option type compatibility.** ``suppress_k`` only feeds
+       ``_suppress_below_k`` (categorical frequency cutoff) in
+       ``summarize_column``; the id / numeric / date / opaque
+       branches ignore it. Accepting it on those types would silently
+       no-op the same way an orphan FQID would. Future panel-level
+       k-anonymity tunability lives at ``panels[*].suppress_k`` (not
+       yet implemented), not here.
     """
     if not isinstance(block, dict):
         return
     options = block.get("column_options")
     if not isinstance(options, dict):
         return
-    known_fqids = {
-        col.name for source in project_data.sources for col in source.columns
+    columns_by_fqid = {
+        col.name: col for source in project_data.sources for col in source.columns
     }
-    orphans = sorted(set(options) - known_fqids)
+    orphans = sorted(set(options) - set(columns_by_fqid))
     if orphans:
         raise ValueError(
             f"reg_monabundle.column_options has key(s) that don't match "
             f"any column FQID in sources: {orphans}. Check for typos "
             f"against the binding FQIDs declared in sources[*].columns[*].name."
         )
+    for fqid, opts in options.items():
+        column = columns_by_fqid[fqid]
+        if "suppress_k" in opts and column.type != "categorical":
+            raise ValueError(
+                f"reg_monabundle.column_options[{fqid!r}].suppress_k is "
+                f"only honored on categorical columns (this column has "
+                f"type={column.type!r}). The runtime applies suppress_k "
+                f"to the categorical frequency cutoff only — setting it "
+                f"on id/numeric/date/opaque is a no-op. For panel-level "
+                f"k-anonymity tunability see panels[*].suppress_k (not "
+                f"yet implemented)."
+            )
 
 
 def parse_project_data(payload: Mapping[str, Any]) -> LoadedSpec:
@@ -501,7 +524,9 @@ def parse_project_data(payload: Mapping[str, Any]) -> LoadedSpec:
         )
     _validate_reg_monabundle_block(payload.get("reg_monabundle"))
     project_data = _build_project_data(payload)
-    _validate_column_options_refs(payload.get("reg_monabundle"), project_data)
+    _validate_column_options_against_columns(
+        payload.get("reg_monabundle"), project_data
+    )
     return LoadedSpec(project_data)
 
 
