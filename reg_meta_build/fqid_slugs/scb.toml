@@ -550,19 +550,19 @@ slug = "panelurval-yrke-och-lon"
 display_group = "Panelurval – yrke och lön"
 
 [register_variant."29.815"]
-slug = "panelurval-familje-yrke-lon"
+slug = "panelurval-familjemedlemmar-yrke-lon"
 display_group = "Panelurval inkl. familjemedlemmar – yrke och lön"
 
 [register_variant."29.1607"]
-slug = "lindaurval-familje-lon"
+slug = "lindaurval-familjemedlemmar-lon"
 display_group = "Lindaurval inkl. familjemedlemmar - lön"
 
 [register_variant."29.1613"]
-slug = "panelurval-taxering"
+slug = "panelurval-taxeringshushall"
 display_group = "Panelurval av befolkningen inklusive taxeringshushåll"
 
 [register_variant."29.1618"]
-slug = "tillaggsurval-utrikes"
+slug = "tillaggsurval-utrikesfodda-taxeringshushall"
 display_group = "Tilläggsurval av utrikesfödda inkl. taxeringshushåll"
 
 # Tidigare folk- och bostadsräkningar 1960–1990 (FoB)
@@ -1138,7 +1138,7 @@ slug = "kursbetyg"
 display_group = "Kursbetyg"
 
 [register_variant."102.1169"]
-slug = "examens-studiebevis-teknik-ak4"
+slug = "examens-studiebevis-teknikprogrammet-ak4"
 display_group = "Examens- och studiebevis, teknikprogrammet åk 4"
 
 [register_variant."102.1170"]
@@ -1258,7 +1258,7 @@ slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
 [register_variant."111.400"]
-slug = "intrade-hogskoleexaminerade"
+slug = "intradet-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland högskoleexaminerade"
 
 [register_variant."111.1091"]
@@ -1266,7 +1266,7 @@ slug = "hogskolestuderande"
 display_group = "Högskolestuderande"
 
 [register_variant."111.1301"]
-slug = "intrade-gymnas-hogskola"
+slug = "intradet-gymnasieavgangna-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
 
 [register_variant."111.1677"]
@@ -1486,7 +1486,7 @@ display_group = "Privat och offentlig sektor"
 slug = "lsum"
 
 [register_variant."128.154"]
-slug = "anstallningar-natt"
+slug = "anstallningar-nattbefolkning"
 display_group = "Anställningar - nattbefolkning"
 
 [register_variant."128.155"]
@@ -1522,7 +1522,7 @@ slug = "lagerstatistik"
 display_group = "Lagerstatistik för varuhandel och tjänstenäringar"
 
 [register_variant."131.177"]
-slug = "kvartalsomsattning-tjanste"
+slug = "kvartalsomsattning-tjanstesektorn"
 display_group = "Kvartalsomsättning tjänstesektorn"
 
 [register_variant."131.533"]
@@ -1678,7 +1678,7 @@ slug = "godselmedelsanvandning"
 display_group = "Gödselmedelsanvändning i jordbruket 2007-2013"
 
 [register_variant."147.1339"]
-slug = "godselmedel-2016"
+slug = "godselmedelsanvandning-2016"
 display_group = "Gödselmedelsanvändning i jordbruket fr o m 2016 "
 
 # Försäljning av mineralgödsel för jord- och trädgårdsbruk
@@ -2310,7 +2310,7 @@ display_group = "Kostnader för skolväsendet"
 slug = "ksju"
 
 [register_variant."195.275"]
-slug = "sjukfranvaro-sjuklon"
+slug = "sjukfranvaro-sjukloneperioden"
 display_group = "Sjukfrånvaro under sjuklöneperioden"
 
 # '2011 kv1'
@@ -2370,7 +2370,7 @@ slug = "elproduktion-elhandel"
 display_group = "Elproduktion, elhandel, fjärrvärme (ovr)"
 
 [register_variant."200.801"]
-slug = "elproducerande-industri"
+slug = "elproducerande-industriforetag"
 display_group = "Elproducerande industriföretag (ind)"
 
 [register_variant."200.802"]
@@ -2522,7 +2522,7 @@ slug = "strandnara-befolkning"
 display_group = "Strandnära befolkning"
 
 [register_variant."219.1494"]
-slug = "befolkade-oar-utan-fastland"
+slug = "befolkade-oar-utan-fastlandsforbindelse"
 display_group = "Befolkade öar utan fastlandsförbindelse "
 
 # 'Öar 2013, totalregister' (vs 5783:2013)
@@ -4226,7 +4226,7 @@ slug = "enligt-ny-definition-2014-12-31"
 slug = "forsakring-arsredogorelse"
 
 [register_variant."334.1089"]
-slug = "forsakring-arsredog-indata"
+slug = "forsakring-arsredogorelse-indata"
 display_group = "Indata"
 
 # Transportinfrastrukturens markanvändning
@@ -4306,7 +4306,7 @@ slug = "folkbokforda-biologiska"
 display_group = "Folkbokförda personer med kopplingar till biologiska föräldrar"
 
 [register_variant."349.1178"]
-slug = "folkbokforda-adoptiv"
+slug = "folkbokforda-adoptivforaldrar"
 display_group = "Folkbokförda personer med kopplingar till adoptivföräldrar"
 
 [register_variant."349.1179"]
@@ -4442,7 +4442,7 @@ slug = "internationell-rorlighet"
 display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
 
 [register_variant."366.1350"]
-slug = "ungdomar-utan-fullfoljd-gymnas"
+slug = "ungdomar-utan-fullfoljd-gymnasieutbildning"
 display_group = "Ungdomar utan fullföljd gymnasieutbildning"
 
 [register_variant."366.1351"]
@@ -4478,7 +4478,7 @@ slug = "distansundervisning-grundskola"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
 [register_variant."366.1649"]
-slug = "distansundervisning-gymnasie"
+slug = "distansundervisning-gymnasieskolan"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
 # Tidsanvändningsundersökningen
@@ -4770,7 +4770,7 @@ slug = "industrins-kapacitetsutnyttjande"
 display_group = "Industrins kapacitetsutnyttjande"
 
 [register_variant."382.1429"]
-slug = "omsattning-tjanste-tom2014"
+slug = "omsattning-tjanstesektorn-tom2014"
 display_group = "Omsättning inom tjänstesektorn t.o.m. 2014"
 
 [register_variant."382.1473"]
@@ -4790,7 +4790,7 @@ slug = "industrins-orderingang"
 display_group = "Industrins orderingång och omsättning fr.o.m 2015"
 
 [register_variant."382.1564"]
-slug = "omsattning-tjanste-2015"
+slug = "omsattning-tjanstesektorn-2015"
 display_group = "Omsättning inom tjänstesektorn fr.o.m. 2015"
 
 # Utförarregistret
