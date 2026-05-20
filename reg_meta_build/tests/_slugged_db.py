@@ -18,7 +18,10 @@ _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)
 # (registervariantnamn, slug, regvar_id)
 _DEFAULT_VARIANT = ("Individer 15+", "individer-15plus", 10)
 # (registerversionnamn, slug, regver_id)
-_DEFAULT_VERSION = ("LISA 2018", "2018", 100)
+# Bare period name — production SCB names like LISA's are usually just `2018`,
+# not `LISA 2018`. A prefix here would trigger seed-slugs' §5.3 residual check
+# and flag the row, polluting tests that assume a clean round-trip.
+_DEFAULT_VERSION = ("2018", "2018", 100)
 # (variabelnamn, var_id, cvid, kolumnnamn)
 _DEFAULT_VARIABLE = ("Kön", 44, 1001, "Kon")
 

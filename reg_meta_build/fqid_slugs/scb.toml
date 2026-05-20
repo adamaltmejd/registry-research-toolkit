@@ -1197,9 +1197,9 @@ display_group = "Elevpanel 8"
 [register_version."104.840.5177"]
 slug = "VT2013"
 
-# 'Vårterminen 2013 - betyg'
+# 'Vårterminen 2013 - betyg' (vs 5177:VT2013)
 [register_version."104.840.5510"]
-slug = "varterminen-2013-betyg"
+slug = "betyg-vt2013"
 
 # Folkhögskolan
 [register."105"]
@@ -2302,7 +2302,7 @@ display_group = "Individregister"
 slug = "skolvasendet-kostnader"
 
 [register_variant."194.512"]
-slug = "skolvasendet-kostnader"
+slug = "_default"
 display_group = "Kostnader för skolväsendet"
 
 # Konjunkturstatistik över sjuklöner (KSju)
@@ -2525,9 +2525,17 @@ display_group = "Strandnära befolkning"
 slug = "befolkade-oar-utan-fastland"
 display_group = "Befolkade öar utan fastlandsförbindelse "
 
-# 'Öar 2013, totalregister'
+# 'Öar 2013, totalregister' (vs 5783:2013)
 [register_version."219.320.13702"]
-slug = "oar-2013-totalregister"
+slug = "oar-totalregister-2013"
+
+# 'Strandlinje, 2019' (scope: bare year would lose 'Strandlinje' subset)
+[register_version."219.320.16022"]
+slug = "strandlinje-2019"
+
+# 'Strandlinje, 2024' (scope: bare year would lose 'Strandlinje' subset)
+[register_version."219.320.19011"]
+slug = "strandlinje-2024"
 
 # Arbetsplatsområden utanför tätort
 [register."221"]

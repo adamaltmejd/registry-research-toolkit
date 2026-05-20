@@ -789,6 +789,52 @@ Four consequences:
    slug = "hogalternativ-2015-2060"
    ```
 
+5. **Annotate collision-driven descriptors.** When a curated slug
+   isn't the bare period because a sibling already claims it,
+   append `(vs <other_regver_id>:<their_slug>)` to the source-name
+   comment. The annotation names *which* sibling forced the
+   descriptor so a future curator (or AI agent) doesn't waste a
+   round of audit asking "why isn't this just `2013`?". `seed-slugs`
+   emits this automatically — same source-name comment shape, with
+   the parenthetical attached when `derive_period(name)` collides
+   with another regver in the same variant.
+
+   ```toml
+   # 'Vårterminen 2013 - betyg' (vs 5177:VT2013)
+   [register_version."104.840.5510"]
+   slug = "betyg-vt2013"
+
+   # 'Öar 2013, totalregister' (vs 5783:2013)
+   [register_version."219.320.13702"]
+   slug = "oar-totalregister-2013"
+   ```
+
+6. **Annotate residual-bearing rows.** When `derive_period(name)`
+   extracts a period but the source name carries additional scope
+   info (`Strandlinje, 2019` → matched `2019`, *residual* `Strandlinje,`),
+   the auto-derived bare-period slug silently drops the
+   `Strandlinje` qualifier — a consumer querying by the bare period
+   sees that subset's data without knowing it. `seed-slugs` refuses
+   the round-trip skip for these rows and emits a stub pre-filled
+   with the auto-derived value, with a `(residual: '<text>')`
+   annotation on the comment so the curator decides: rename the
+   slug to a scope-prefix form, or commit the explicit entry as-is
+   to acknowledge that the bare-period choice was intentional.
+   Both paths produce a TOML entry that future seeds round-trip
+   silently — pre-v1 backlog work and post-v1 new-delivery review
+   share the same workflow.
+
+   ```toml
+   # 'Strandlinje, 2019' (residual: "Strandlinje,")
+   [register_version."219.320.16022"]
+   slug = "strandlinje-2019"
+   ```
+
+   "Residual" here means: the source-name text outside the period
+   match, after stripping whitespace and punctuation. Connector-only
+   residuals (`,`, `-`) don't fire; the heuristic requires at least
+   one 3+ char Unicode-letter run, so `Öar` flags but `och` doesn't.
+
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|
 | `slug`          | string              | all               | yes      | Curated stem. Immutable once published (§5.4). Variables and periodized register_versions are auto-slugged; TOML entry only needed for overrides, `same_as`, or `deprecated` / `replaced_by` (or, for register_version, the unperiodized aux tables). |
