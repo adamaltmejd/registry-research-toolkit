@@ -2817,7 +2817,14 @@ document. Step 1 can start.
    [#87](https://github.com/adamaltmejd/registry-research-toolkit/pull/87),
    [#89](https://github.com/adamaltmejd/registry-research-toolkit/pull/89);
    §5.8 cross-edition traversal in
-   [#104](https://github.com/adamaltmejd/registry-research-toolkit/pull/104).
+   [#104](https://github.com/adamaltmejd/registry-research-toolkit/pull/104);
+   §5.5 `same_as` transitive resolution in
+   [#112](https://github.com/adamaltmejd/registry-research-toolkit/pull/112)
+   (slug-anchored `variable_same_as` / `classification_same_as` edge
+   tables, build-time cycle detection, BFS traversal in
+   `Catalog._resolve_binding` / `_resolve_classification` with
+   `via_same_as` field on the resolved-binding shapes; 0 curated
+   entries today, mechanism ready for adoption).
    Split into five sub-steps reviewed/merged independently:
    - **1a — Schema additions.** Provider table promoted to first-class;
      `slug` columns added to `register`, `register_variant`,
@@ -2895,12 +2902,24 @@ document. Step 1 can start.
      `__init__.py` — multiple `tests` packages with `__init__.py`
      confuse pytest's rootdir-relative module discovery.
 3. **`reg_schema` package created** with the `project_data.json`
-   schema + structural validator, referencing reg_meta FQIDs
+   schema + structural validator. ✅ **Shipped 2026-05-19** across
+   [#110](https://github.com/adamaltmejd/registry-research-toolkit/pull/110)
+   (Phase 1: scaffold + §6.8.0 `ValidationIssue` / `ValidationResult`
+   cross-runtime contract),
+   [#111](https://github.com/adamaltmejd/registry-research-toolkit/pull/111)
+   (Phase 2: §6.1-§6.4 frozen dataclasses — `ProjectData`, `Source`,
+   `Column`, `Panel`, `PanelMember`, `LiteralPeriod`, plus `EntityKey`
+   / `TimeKey` / `TimePoint` aliases), and
+   [#115](https://github.com/adamaltmejd/registry-research-toolkit/pull/115)
+   (Phase 3: §6.8.1 `validate_structural(data) -> ValidationResult`
+   entrypoint operating on parsed-dict payload; FQID well-formedness
+   checked locally, no `reg_meta` dep). References reg_meta FQIDs
    throughout (column `name` = binding FQID, `value_set` =
    `class/...` FQID or absent + codes inlined in
    `project_data.codes.json`). Composite key support in the schema
    from day one; runtime support follows in step 10b. Importable
-   by `mock_data_wizard`. No webapp yet.
+   by `mock_data_wizard`. No webapp yet. Stable structural-rule
+   codes documented in [reg_schema/DESIGN.md](reg_schema/DESIGN.md).
 4. **`mock_data_wizard` adopts the `project_data.json` shape and
    the new bundle layout.**
    - Config file is renamed; consumes `reg_schema`.
@@ -2923,13 +2942,25 @@ document. Step 1 can start.
      fail the step if exceeded so the budget bites before it
      compounds.
 
-**Step 5.5 — Shared validator test corpus.** `reg_schema/test_corpus/`
-created with golden `(input.json, expected_ValidationResult.json)`
-pairs. Three consumers wired up: `reg_schema`'s Python tests read
-the corpus directly; the bundle build amalgamates a corpus-runner
-self-test that runs on MONA load; the SPA's TS test suite reads
-the same JSON. This is the single artifact that makes §6.8.0's
-`ValidationResult` shape coherent across the three runtimes.
+**Step 5.5 — Shared validator test corpus.** ✅ **Shipped 2026-05-19**
+in [#113](https://github.com/adamaltmejd/registry-research-toolkit/pull/113)
+(rode ahead of step 5 because the §6.8.0 JSON contract was locked from
+Phase 1 of step 3). `reg_schema/test_corpus/` created with golden
+`(input.json, expected_ValidationResult.json)` pairs; harness
+[reg_schema/tests/test_corpus.py](reg_schema/tests/test_corpus.py)
+decodes expected results through the §6.8.0 dataclasses with full
+drift protection (string-typed `code` / `path` / `message`,
+unknown-key rejection at both levels). Initial cases are well-formed
+with `{"issues": []}` expectations plus one root-shape negative case;
+per-rule negative coverage lives in
+[reg_schema/tests/test_structural.py](reg_schema/tests/test_structural.py)
+(driven by Phase 3 of step 3, PR #115), with the corpus growing as
+new rules cross runtimes. The two
+remaining consumers wire in later: the bundle build amalgamates a
+corpus-runner self-test that runs on MONA load (step 5); the SPA's
+TS test suite reads the same JSON (step 6). This is the single
+artifact that makes §6.8.0's `ValidationResult` shape coherent across
+the three runtimes.
 
 <!-- markdownlint-disable-next-line MD029 -->
 6. **Webapp scaffolds: backend + frontend skeleton.** Empty UI,

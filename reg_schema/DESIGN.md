@@ -89,10 +89,11 @@ shape the dependency direction):
   `Panel`, `PanelMember`, `LiteralPeriod`, and the `EntityKey` /
   `TimeKey` / `TimePoint` type aliases. Shipped. Pure shape
   definitions; element types are not checked at construction.
-- Phase 3 (this PR) — `validate_structural(data: Mapping[str, object])
-  -> ValidationResult` implementing §6.8.1. Signature operates on a
-  parsed dict, not the dataclasses, because rules like "type ∈ enum"
-  must fire on raw JSON values before any `Literal` cast.
+- Phase 3 — `validate_structural(data: Mapping[str, object])
+  -> ValidationResult` implementing §6.8.1. Shipped. Signature
+  operates on a parsed dict, not the dataclasses, because rules like
+  "type ∈ enum" must fire on raw JSON values before any `Literal`
+  cast.
 
 See `REFACTOR_SPEC.md` §15 step 3 for the load-bearing-dependency
 story across phases.
