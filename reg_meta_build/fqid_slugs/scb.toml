@@ -60,6 +60,13 @@ display_group = "Familjer från 1998-"
 slug = "civilstandsandringar"
 display_group = "Civilståndsändringar"
 
+# 'Gifta 1996-1997' (residual: "Gifta  -1997")
+[register_version."2.56.15015"]
+slug = "gifta-1996-1997"
+
+# 'Registrerade partners 1995-1997' (residual: "Registrerade partners  -1997")
+[register_version."2.56.15016"]
+slug = "registrerade-partners-1995-1997"
 [register_variant."2.57"]
 slug = "doda"
 display_group = "Döda"
@@ -305,6 +312,9 @@ display_group = "Personens samtliga utbildningar"
 slug = "komvux"
 display_group = "Komvux"
 
+# 'Komvux HT 1988 - VT 2024' (residual: "Komvux HT   - VT 2024")
+[register_version."24.1630.17564"]
+slug = "komvux-ht1988-vt2024"
 [register_variant."24.1631"]
 slug = "gymnasieintyg"
 display_group = "Gymnasieintyg"
@@ -799,6 +809,33 @@ display_group = "Lägenhet och hushåll"
 slug = "vy-fob"
 display_group = "Vy"
 
+# 'FoB1985' (residual: "FoB")
+[register_version."32.83.18279"]
+slug = "1985"
+
+# 'FoB1990' (residual: "FoB")
+[register_version."32.83.18614"]
+slug = "1990"
+
+# 'FoB1980' (residual: "FoB")
+[register_version."32.83.19241"]
+slug = "1980"
+
+# 'FoB1975' (residual: "FoB")
+[register_version."32.83.19272"]
+slug = "1975"
+
+# 'FoB1970' (residual: "FoB")
+[register_version."32.83.19351"]
+slug = "1970"
+
+# 'FoB1965' (residual: "FoB")
+[register_version."32.83.19647"]
+slug = "1965"
+
+# 'FoB1960' (residual: "FoB")
+[register_version."32.83.19667"]
+slug = "1960"
 # Longitudinell integrationsdatabas för sjukförsäkrings- och arbetsmarknadsstudier (LISA)
 [register."34"]
 slug = "lisa"
@@ -942,6 +979,61 @@ display_group = "Forskarutbildning, beslut om tillgodoräknande"
 slug = "sokande-sommarkurser"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
 
+# 'Sommarterminen 2020' (residual: "Sommarterminen")
+[register_version."47.1623.16401"]
+slug = "sommarterminen-2020"
+
+# 'Sommarterminen 2019' (residual: "Sommarterminen")
+[register_version."47.1623.16409"]
+slug = "sommarterminen-2019"
+
+# 'Sommarterminen 2018' (residual: "Sommarterminen")
+[register_version."47.1623.16411"]
+slug = "sommarterminen-2018"
+
+# 'Sommarterminen 2017' (residual: "Sommarterminen")
+[register_version."47.1623.16412"]
+slug = "sommarterminen-2017"
+
+# 'Sommarterminen 2016' (residual: "Sommarterminen")
+[register_version."47.1623.16413"]
+slug = "sommarterminen-2016"
+
+# 'Sommarterminen 2015' (residual: "Sommarterminen")
+[register_version."47.1623.16414"]
+slug = "sommarterminen-2015"
+
+# 'Sommarterminen 2014' (residual: "Sommarterminen")
+[register_version."47.1623.16415"]
+slug = "sommarterminen-2014"
+
+# 'Sommarterminen 2013' (residual: "Sommarterminen")
+[register_version."47.1623.16416"]
+slug = "sommarterminen-2013"
+
+# 'Sommarterminen 2012' (residual: "Sommarterminen")
+[register_version."47.1623.16417"]
+slug = "sommarterminen-2012"
+
+# 'Sommarterminen 2011' (residual: "Sommarterminen")
+[register_version."47.1623.16418"]
+slug = "sommarterminen-2011"
+
+# 'Sommarterminen 2021' (residual: "Sommarterminen")
+[register_version."47.1623.17719"]
+slug = "sommarterminen-2021"
+
+# 'Sommarterminen 2022' (residual: "Sommarterminen")
+[register_version."47.1623.18424"]
+slug = "sommarterminen-2022"
+
+# 'Sommarterminen 2023' (residual: "Sommarterminen")
+[register_version."47.1623.18913"]
+slug = "sommarterminen-2023"
+
+# 'Sommarterminen 2024' (residual: "Sommarterminen")
+[register_version."47.1623.19451"]
+slug = "sommarterminen-2024"
 [register_variant."47.1624"]
 slug = "sokande-snabbstatistik"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik"
@@ -1326,6 +1418,9 @@ slug = "hek"
 slug = "kosthushall"
 display_group = "Kosthushåll"
 
+# '2011 - Boendestatistik' (residual: "- Boendestatistik")
+[register_version."97.93.4421"]
+slug = "boendestatistik-2011"
 [register_variant."97.99"]
 slug = "individregister"
 display_group = "Individregister"
@@ -2132,6 +2227,17 @@ slug = "intradet-pa-arbetsmarknaden"
 slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
+# 'Våren 2017' (residual: "Våren")
+[register_version."111.123.11643"]
+slug = "varen-2017"
+
+# 'Våren 2020' (residual: "Våren")
+[register_version."111.123.15321"]
+slug = "varen-2020"
+
+# 'Våren 2023' (residual: "Våren")
+[register_version."111.123.18866"]
+slug = "varen-2023"
 # 'Mars 2006' (residual: "Mars")
 [register_version."111.123.496"]
 slug = "2006-03"
@@ -2192,6 +2298,13 @@ slug = "2000-03"
 slug = "yh-examinerade"
 display_group = "Examinerade från yrkeshögskolan"
 
+# 'Hösten 2022' (residual: "Hösten")
+[register_version."111.1677.18492"]
+slug = "hosten-2022"
+
+# 'Hösten 2019' (residual: "Hösten")
+[register_version."111.1677.18493"]
+slug = "hosten-2019"
 # Offentligt ägda företag
 [register."114"]
 slug = "offentligt-agda-foretag"
@@ -2232,14 +2345,219 @@ slug = "kommunalekonomisk-utjamning"
 slug = "kommunalekonomisk-utjamning-regioner"
 display_group = "Kommunalekonomisk utjämning för regioner"
 
+# 'Utjämningsår 2009' (residual: "Utjämningsår")
+[register_version."117.132.3110"]
+slug = "2009"
+
+# 'Utjämningsår 2010' (residual: "Utjämningsår")
+[register_version."117.132.3125"]
+slug = "2010"
+
+# 'Utjämningsår 2011' (residual: "Utjämningsår")
+[register_version."117.132.3126"]
+slug = "2011"
+
+# 'Utjämningsår 2012' (residual: "Utjämningsår")
+[register_version."117.132.3815"]
+slug = "2012"
+
+# 'Utjämningsår 2008' (residual: "Utjämningsår")
+[register_version."117.132.3951"]
+slug = "2008"
+
+# 'Utjämningsår 2013' (residual: "Utjämningsår")
+[register_version."117.132.4265"]
+slug = "2013"
+
+# 'Utjämningsår 2007' (residual: "Utjämningsår")
+[register_version."117.132.4654"]
+slug = "2007"
+
+# 'Utjämningsår 2014' (residual: "Utjämningsår")
+[register_version."117.132.5047"]
+slug = "2014"
+
+# 'Utjämningsår 2015' (residual: "Utjämningsår")
+[register_version."117.132.5602"]
+slug = "2015"
+
+# 'Utjämningsår 2016' (residual: "Utjämningsår")
+[register_version."117.132.9808"]
+slug = "2016"
+
+# 'Utjämningsår 2017' (residual: "Utjämningsår")
+[register_version."117.132.11115"]
+slug = "2017"
+
+# 'Utjämningsår 2018' (residual: "Utjämningsår")
+[register_version."117.132.11660"]
+slug = "2018"
+
+# 'Utjämningsår 2019' (residual: "Utjämningsår")
+[register_version."117.132.12462"]
+slug = "2019"
+
+# 'Utjämningsår 2020' (residual: "Utjämningsår")
+[register_version."117.132.14501"]
+slug = "2020"
+
+# 'Utjämningsår 2021' (residual: "Utjämningsår")
+[register_version."117.132.15039"]
+slug = "2021"
+
+# 'Utjämningsår 2022' (residual: "Utjämningsår")
+[register_version."117.132.16480"]
+slug = "2022"
 [register_variant."117.134"]
 slug = "kommunalekonomisk-utjamning-kommuner"
 display_group = "Kommunalekonomisk utjämning för kommuner"
 
+# 'Utjämningsår 2010' (residual: "Utjämningsår")
+[register_version."117.134.3001"]
+slug = "2010"
+
+# 'Utjämningsår 2009' (residual: "Utjämningsår")
+[register_version."117.134.3108"]
+slug = "2009"
+
+# 'Utjämningsår 2011' (residual: "Utjämningsår")
+[register_version."117.134.3109"]
+slug = "2011"
+
+# 'Utjämningsår 2012' (residual: "Utjämningsår")
+[register_version."117.134.3814"]
+slug = "2012"
+
+# 'Utjämningsår 2008' (residual: "Utjämningsår")
+[register_version."117.134.3950"]
+slug = "2008"
+
+# 'Utjämningsår 2013' (residual: "Utjämningsår")
+[register_version."117.134.4266"]
+slug = "2013"
+
+# 'Utjämningsår 2007' (residual: "Utjämningsår")
+[register_version."117.134.4656"]
+slug = "2007"
+
+# 'Utjämningsår 2014' (residual: "Utjämningsår")
+[register_version."117.134.5048"]
+slug = "2014"
+
+# 'Utjämningsår 2015' (residual: "Utjämningsår")
+[register_version."117.134.5603"]
+slug = "2015"
+
+# 'Utjämningsår 2016' (residual: "Utjämningsår")
+[register_version."117.134.9809"]
+slug = "2016"
+
+# 'Utjämningsår 2017' (residual: "Utjämningsår")
+[register_version."117.134.11116"]
+slug = "2017"
+
+# 'Utjämningsår 2018' (residual: "Utjämningsår")
+[register_version."117.134.11661"]
+slug = "2018"
+
+# 'Utjämningsår 2019' (residual: "Utjämningsår")
+[register_version."117.134.12461"]
+slug = "2019"
+
+# 'Utjämningsår 2020' (residual: "Utjämningsår")
+[register_version."117.134.13760"]
+slug = "2020"
+
+# 'Utjämningsår 2021' (residual: "Utjämningsår")
+[register_version."117.134.15036"]
+slug = "2021"
+
+# 'Utjämningsår 2022' (residual: "Utjämningsår")
+[register_version."117.134.16479"]
+slug = "2022"
+
+# 'Utjämningsår 2023' (residual: "Utjämningsår")
+[register_version."117.134.18404"]
+slug = "2023"
 [register_variant."117.779"]
 slug = "lss-utjamning"
 display_group = "Utjämning av LSS-kostnader mellan kommuner"
 
+# 'Utjämningsår 2009' (residual: "Utjämningsår")
+[register_version."117.779.3315"]
+slug = "2009"
+
+# 'Utjämningsår 2010' (residual: "Utjämningsår")
+[register_version."117.779.3369"]
+slug = "2010"
+
+# 'Utjämningsår 2011' (residual: "Utjämningsår")
+[register_version."117.779.3373"]
+slug = "2011"
+
+# 'Utjämningsår 2012' (residual: "Utjämningsår")
+[register_version."117.779.3685"]
+slug = "2012"
+
+# 'Utjämningsår 2008' (residual: "Utjämningsår")
+[register_version."117.779.3952"]
+slug = "2008"
+
+# 'Utjämningsår 2013' (residual: "Utjämningsår")
+[register_version."117.779.4264"]
+slug = "2013"
+
+# 'Utjämningsår 2014' (residual: "Utjämningsår")
+[register_version."117.779.5046"]
+slug = "2014"
+
+# 'Utjämningsår 2015' (residual: "Utjämningsår")
+[register_version."117.779.5601"]
+slug = "2015"
+
+# 'Utjämningsår 2016' (residual: "Utjämningsår")
+[register_version."117.779.9807"]
+slug = "2016"
+
+# 'Utjämningsår 2017' (residual: "Utjämningsår")
+[register_version."117.779.11114"]
+slug = "2017"
+
+# 'Utjämningsår 2018' (residual: "Utjämningsår")
+[register_version."117.779.11659"]
+slug = "2018"
+
+# 'Utjämningsår 2019' (residual: "Utjämningsår")
+[register_version."117.779.12460"]
+slug = "2019"
+
+# 'Utjämningsår 2020' (residual: "Utjämningsår")
+[register_version."117.779.14500"]
+slug = "2020"
+
+# 'Utjämningsår 2021' (residual: "Utjämningsår")
+[register_version."117.779.15040"]
+slug = "2021"
+
+# 'Utjämningsår 2022' (residual: "Utjämningsår")
+[register_version."117.779.16481"]
+slug = "2022"
+
+# 'Utjämningsår 2023' (residual: "Utjämningsår")
+[register_version."117.779.18273"]
+slug = "2023"
+
+# 'Utjämningsår 2024' (residual: "Utjämningsår")
+[register_version."117.779.18663"]
+slug = "2024"
+
+# 'Utjämningsår 2025' (residual: "Utjämningsår")
+[register_version."117.779.19288"]
+slug = "2025"
+
+# 'Utjämningsår 2026' (residual: "Utjämningsår")
+[register_version."117.779.19948"]
+slug = "2026"
 # Taxeringsutfallet
 [register."118"]
 slug = "taxeringsutfallet"
@@ -2248,6 +2566,68 @@ slug = "taxeringsutfallet"
 slug = "_default"
 display_group = "Taxeringsutfallet"
 
+# 'Deklarationsår 2014 (beskattningsår 2013)' (residual: "Deklarationsår   (beskattningsår 2013)")
+[register_version."118.135.5766"]
+slug = "2014"
+
+# 'Deklarationsår 2015 (beskattningsår 2014)' (residual: "Deklarationsår   (beskattningsår 2014)")
+[register_version."118.135.7326"]
+slug = "2015"
+
+# 'Deklarationsår 2016 (beskattningsår 2015)' (residual: "Deklarationsår   (beskattningsår 2015)")
+[register_version."118.135.9980"]
+slug = "2016"
+
+# 'Deklarationsår 2017 (beskattningsår 2016)' (residual: "Deklarationsår   (beskattningsår 2016)")
+[register_version."118.135.11606"]
+slug = "2017"
+
+# 'Deklarationsår 2018 (beskattningsår 2017)' (residual: "Deklarationsår   (beskattningsår 2017)")
+[register_version."118.135.12687"]
+slug = "2018"
+
+# 'Deklarationsår 2019 (beskattningsår 2018)' (residual: "Deklarationsår   (beskattningsår 2018)")
+[register_version."118.135.13728"]
+slug = "2019"
+
+# 'Deklarationsår 2020 (beskattningsår 2019)' (residual: "Deklarationsår   (beskattningsår 2019)")
+[register_version."118.135.15710"]
+slug = "2020"
+# 'Taxeringsår 2005' (residual: "Taxeringsår")
+[register_version."118.135.964"]
+slug = "2005"
+
+# 'Taxeringsår 2006' (residual: "Taxeringsår")
+[register_version."118.135.1135"]
+slug = "2006"
+
+# 'Taxeringsår 2007' (residual: "Taxeringsår")
+[register_version."118.135.1144"]
+slug = "2007"
+
+# 'Taxeringsår 2008' (residual: "Taxeringsår")
+[register_version."118.135.1296"]
+slug = "2008"
+
+# 'Taxeringsår 2009' (residual: "Taxeringsår")
+[register_version."118.135.2534"]
+slug = "2009"
+
+# 'Taxeringsår 2010' (residual: "Taxeringsår")
+[register_version."118.135.3141"]
+slug = "2010"
+
+# 'Taxeringsår 2011' (residual: "Taxeringsår")
+[register_version."118.135.3686"]
+slug = "2011"
+
+# 'Taxeringsår 2012' (residual: "Taxeringsår")
+[register_version."118.135.4288"]
+slug = "2012"
+
+# 'Taxeringsår 2013' (residual: "Taxeringsår")
+[register_version."118.135.5207"]
+slug = "2013"
 # Företagsregister och individdatabas (FRIDA)
 [register."121"]
 slug = "frida"
@@ -4010,6 +4390,9 @@ display_group = "Gasföretag"
 slug = "vindkraft"
 display_group = "Vindkraft"
 
+# 'Från år 2003 och framåt' (residual: "Från år   och framåt")
+[register_version."200.1673.18456"]
+slug = "fran-2003-och-framat"
 # Oljeleveranser, kommunvis redovisning
 [register."201"]
 slug = "oljeleveranser-kommunvis"
@@ -4078,6 +4461,29 @@ slug = "bebyggd-mark-strandskydd"
 slug = "bebyggd-mark"
 display_group = "Bebyggd mark i strandskyddsområden"
 
+# 'Byggnader strandnära läge 2018' (residual: "Byggnader strandnära läge")
+[register_version."217.816.16028"]
+slug = "byggnader-strandnara-lage-2018"
+
+# 'Byggnader strandnära läge 2019' (residual: "Byggnader strandnära läge")
+[register_version."217.816.17901"]
+slug = "byggnader-strandnara-lage-2019"
+
+# 'Byggnader strandnära läge 2020' (residual: "Byggnader strandnära läge")
+[register_version."217.816.18373"]
+slug = "byggnader-strandnara-lage-2020"
+
+# 'Byggnader strandnära läge 2021 ' (residual: "Byggnader strandnära läge")
+[register_version."217.816.18571"]
+slug = "byggnader-strandnara-lage-2021"
+
+# 'Byggnader strandnära läge 2022' (residual: "Byggnader strandnära läge")
+[register_version."217.816.19015"]
+slug = "byggnader-strandnara-lage-2022"
+
+# 'Byggnader strandnära läge 2023' (residual: "Byggnader strandnära läge")
+[register_version."217.816.19750"]
+slug = "byggnader-strandnara-lage-2023"
 [register_variant."217.934"]
 slug = "bebyggelsepaverkad-kust"
 display_group = "Bebyggelsepåverkad kust och strand"
@@ -4226,6 +4632,25 @@ slug = "personalutbildningsstatistik"
 slug = "_default"
 display_group = "Personalutbildningsstatistik (PUT)"
 
+# 'Hela året 1999' (residual: "Hela året")
+[register_version."229.396.15072"]
+slug = "1999"
+
+# 'Hela året 2000' (residual: "Hela året")
+[register_version."229.396.15200"]
+slug = "2000"
+
+# 'Hela året 2001' (residual: "Hela året")
+[register_version."229.396.15202"]
+slug = "2001"
+
+# 'Hela året 2002' (residual: "Hela året")
+[register_version."229.396.15203"]
+slug = "2002"
+
+# 'Hela året 2003' (residual: "Hela året")
+[register_version."229.396.15211"]
+slug = "2003"
 # 'Första halvåret 2006'
 [register_version."229.396.480"]
 slug = "2006-H1"
@@ -4926,10 +5351,16 @@ slug = "folkomrostningar-valresultat"
 slug = "valresultat"
 display_group = "Valresultat "
 
+# '2003 Euro' (residual: "Euro")
+[register_version."244.473.5096"]
+slug = "euro-2003"
 [register_variant."244.1084"]
 slug = "rostberattigade"
 display_group = "Röstberättigade"
 
+# '2003 Euro' (residual: "Euro")
+[register_version."244.1084.5116"]
+slug = "euro-2003"
 # Europaparlamentsval, valdeltagandeundersökningen 
 [register."245"]
 slug = "ep-val-deltagande"
@@ -5572,6 +6003,41 @@ slug = "natpriser-naturgas"
 slug = "natpriser"
 display_group = "Nätpriser"
 
+# '1 jan 2008' (residual: "1 jan")
+[register_version."284.720.2463"]
+slug = "2008-01-01"
+
+# '1 jan 2016' (residual: "1 jan")
+[register_version."284.720.10008"]
+slug = "2016-01-01"
+
+# '1 jan 2017' (residual: "1 jan")
+[register_version."284.720.10020"]
+slug = "2017-01-01"
+
+# '1 jan 2015' (residual: "1 jan")
+[register_version."284.720.10021"]
+slug = "2015-01-01"
+
+# '1 jan 2014' (residual: "1 jan")
+[register_version."284.720.10022"]
+slug = "2014-01-01"
+
+# '1 jan 2013' (residual: "1 jan")
+[register_version."284.720.10063"]
+slug = "2013-01-01"
+
+# '1 jan 2012' (residual: "1 jan")
+[register_version."284.720.10064"]
+slug = "2012-01-01"
+
+# '1 jan 2011' (residual: "1 jan")
+[register_version."284.720.10065"]
+slug = "2011-01-01"
+
+# '1 jan 2010' (residual: "1 jan")
+[register_version."284.720.10066"]
+slug = "2010-01-01"
 [register_variant."284.721"]
 slug = "leverantorsbyten"
 display_group = "Leverantörsbyten"
@@ -5588,6 +6054,9 @@ display_group = "Nationalräkenskaper"
 slug = "regionalrakenskaper"
 display_group = "Regionalräkenskaper"
 
+# '2019 preliminära' (residual: "preliminära")
+[register_version."285.845.16382"]
+slug = "preliminar-version-2019"
 [register_variant."285.914"]
 slug = "esspros"
 display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
@@ -5696,6 +6165,9 @@ display_group = "Tjänsteprisindex (TPI)"
 slug = "ppi"
 display_group = "Prisindex i producent- och importled (PPI)"
 
+# 'Utdata 2026' (residual: "Utdata")
+[register_version."296.1085.20327"]
+slug = "utdata-2026"
 # 'Indata 2014'
 [register_version."296.980.5776"]
 slug = "indata-2014"
@@ -6547,6 +7019,9 @@ slug = "sfi-deltagare"
 slug = "_default"
 display_group = "Deltagare i svenskundervisning för invandrare (sfi)"
 
+# 'Hösten 2008' (residual: "Hösten")
+[register_version."315.905.3652"]
+slug = "hosten-2008"
 # Tiden mellan gymnasieskolan och universitetet/högskolan
 [register."317"]
 slug = "studieuppehall"
@@ -6654,6 +7129,9 @@ display_group = "Barn"
 slug = "barn-uppfoljning"
 display_group = "Barn, uppföljning"
 
+# '2014-12-31 enligt ny definition' (residual: "enligt ny definition")
+[register_version."333.1078.7493"]
+slug = "enligt-ny-definition-2014-12-31"
 [register_variant."333.1079"]
 slug = "familjer"
 display_group = "Familjer"
@@ -6904,6 +7382,9 @@ display_group = "Grönområden, hoplagda grönytor"
 slug = "forandringar-gronytor"
 display_group = "Förändringar grönytor"
 
+# '2005 jämfört med 2000' (residual: "jämfört med 2000")
+[register_version."350.1214.7247"]
+slug = "jamfort-med-2000-2005"
 # Den internationella undersökningen av vuxnas färdigheter (PIAAC)
 [register."351"]
 slug = "piaac"
@@ -7023,6 +7504,13 @@ display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
 slug = "ungdomar-utan-fullfoljd-gymnasieutbildning"
 display_group = "Ungdomar utan fullföljd gymnasieutbildning"
 
+# 'Våren 2007' (residual: "Våren")
+[register_version."366.1350.11796"]
+slug = "varen-2007"
+
+# 'Hösten 2015' (residual: "Hösten")
+[register_version."366.1350.11797"]
+slug = "hosten-2015"
 [register_variant."366.1351"]
 slug = "sjukskoterskor-utanfor-yrket"
 display_group = "Sjuksköterskor utanför yrket"
@@ -7055,10 +7543,24 @@ display_group = "Folkhögskoleuppföljningen"
 slug = "distansundervisning-grundskola"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
+# 'Höstterminen 2020 - Vårterminen 2021' (residual: "- Vårterminen 2021")
+[register_version."366.1648.18191"]
+slug = "hostterminen-2020-varterminen-2021"
+
+# 'Höstterminen 2021 - Vårterminen 2022' (residual: "- Vårterminen 2022")
+[register_version."366.1648.18503"]
+slug = "hostterminen-2021-varterminen-2022"
 [register_variant."366.1649"]
 slug = "distansundervisning-gymnasieskolan"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
+# 'Höstterminen 2020 - Vårterminen 2021' (residual: "- Vårterminen 2021")
+[register_version."366.1649.17984"]
+slug = "hostterminen-2020-varterminen-2021"
+
+# 'Höstterminen 2021 - Vårterminen 2022' (residual: "- Vårterminen 2022")
+[register_version."366.1649.18504"]
+slug = "hostterminen-2021-varterminen-2022"
 # Tidsanvändningsundersökningen
 [register."367"]
 slug = "tidsanvandning"
@@ -7291,6 +7793,13 @@ slug = "esf"
 slug = "deltagare-i-esf-projekt"
 display_group = "Deltagare i ESF-projekt"
 
+# 'Programperiod 2014-2020 ' (residual: "Programperiod  -2020")
+[register_version."376.1376.12054"]
+slug = "programperiod-2014-2020"
+
+# 'Programperiod 2021-2027' (residual: "Programperiod  -2027")
+[register_version."376.1376.19390"]
+slug = "programperiod-2021-2027"
 # Yrkeshögskolan
 [register."377"]
 slug = "yrkeshogskolan"
