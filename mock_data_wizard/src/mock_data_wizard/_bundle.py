@@ -316,6 +316,12 @@ def _load_embedded_spec():
     reading project_data.json from this directory). Raises on invalid
     embedded JSON -- a structurally bad bundle should fail loudly, not
     silently fall through to the sidecar.
+
+    No duplicate-key guard here: the CLI build path (``_cmd_build_bundle``)
+    parses the source file with ``_reject_duplicate_keys`` and then
+    re-serializes via ``json.dumps``, so the literal embedded in the
+    bundle is by construction a single-valued dict. Re-checking would
+    be guarding generated output against a producer we control.
     \"\"\"
     stripped = _PROJECT_DATA_JSON.strip()
     if not stripped:

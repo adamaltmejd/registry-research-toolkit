@@ -170,17 +170,6 @@ class LoadedSpec:
     def panels(self) -> tuple[Panel, ...]:
         return self.project_data.panels
 
-    def source_year(self, source_name: str) -> int | None:
-        """Per-source year override is dropped in step 4.
-
-        Always returns None. ``extract`` derives the year from the
-        source-name regex directly (``extract._extract_year``);
-        per-source year overrides are not part of
-        ``project_data.json``. If they come back later it would be
-        via a steward-namespaced block.
-        """
-        return None
-
     def column_types_for_source(
         self, source_name: str
     ) -> dict[str, ColumnTypeOverride]:
@@ -469,6 +458,34 @@ def _build_project_data(payload: Mapping[str, Any]) -> ProjectData:
     )
 
 
+def _validate_column_options_refs(block: object, project_data: ProjectData) -> None:
+    """Cross-check ``column_options`` keys against actual column FQIDs.
+
+    Well-formedness (5-segment, non-class, ``[A-Za-z0-9_-]+``) is
+    checked in ``_validate_reg_monabundle_block``; that catches typos
+    that mangle the shape but not typos where the shape survives and
+    the key just doesn't match any column. Without this check, a
+    misspelled FQID silently no-ops at lookup time — the user thinks
+    they bumped ``suppress_k`` on a column, runs extract on MONA, and
+    finds out a day later that nothing happened.
+    """
+    if not isinstance(block, dict):
+        return
+    options = block.get("column_options")
+    if not isinstance(options, dict):
+        return
+    known_fqids = {
+        col.name for source in project_data.sources for col in source.columns
+    }
+    orphans = sorted(set(options) - known_fqids)
+    if orphans:
+        raise ValueError(
+            f"reg_monabundle.column_options has key(s) that don't match "
+            f"any column FQID in sources: {orphans}. Check for typos "
+            f"against the binding FQIDs declared in sources[*].columns[*].name."
+        )
+
+
 def parse_project_data(payload: Mapping[str, Any]) -> LoadedSpec:
     """Validate + construct a ``LoadedSpec`` from a parsed JSON dict."""
     result = validate_structural(payload)
@@ -484,6 +501,7 @@ def parse_project_data(payload: Mapping[str, Any]) -> LoadedSpec:
         )
     _validate_reg_monabundle_block(payload.get("reg_monabundle"))
     project_data = _build_project_data(payload)
+    _validate_column_options_refs(payload.get("reg_monabundle"), project_data)
     return LoadedSpec(project_data)
 
 

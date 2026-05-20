@@ -111,15 +111,6 @@ def test_loaded_spec_lookup_options_unknown_returns_empty_dict():
     assert spec.lookup_options("lisa_2018.csv", "LopNr") == {}
 
 
-def test_loaded_spec_source_year_always_returns_none():
-    # MDWConfig had per-source year overrides; the project_data.json
-    # schema dropped them in step 4. Callers fall back to the
-    # source-name regex.
-    spec = parse_project_data(_basic_payload())
-    assert spec.source_year("lisa_2018.csv") is None
-    assert spec.source_year("anything.csv") is None
-
-
 def test_loaded_spec_panels_passthrough():
     payload = make_project_data(
         sources=[
@@ -417,6 +408,64 @@ def test_reg_monabundle_block_rejects_bool_suppress_k():
                 }
             }
         )
+
+
+def test_column_options_rejects_orphan_fqid_not_matching_any_column():
+    """A well-formed FQID that doesn't match any column.name in sources
+    silently no-ops at lookup time without this check. Pin the
+    referential-integrity guard so a typo surfaces at load."""
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_version": "scb/test/_default/2020",
+                "columns": [
+                    {
+                        "name": "scb/test/_default/2020/lopnr",
+                        "display_name": "LopNr",
+                        "type": "id",
+                        "id_subtype": "integer",
+                    },
+                ],
+            }
+        ],
+        reg_monabundle={
+            # FQID is well-formed but no column declares this name.
+            "column_options": {
+                "scb/test/_default/2020/typo_here": {"suppress_k": 25},
+            }
+        },
+    )
+    with pytest.raises(ValueError, match="don't match any column FQID"):
+        parse_project_data(payload)
+
+
+def test_column_options_accepts_matching_fqid():
+    """Sanity: the referential check doesn't reject a key that does
+    match a declared column."""
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_version": "scb/test/_default/2020",
+                "columns": [
+                    {
+                        "name": "scb/test/_default/2020/lopnr",
+                        "display_name": "LopNr",
+                        "type": "id",
+                        "id_subtype": "integer",
+                    },
+                ],
+            }
+        ],
+        reg_monabundle={
+            "column_options": {
+                "scb/test/_default/2020/lopnr": {"suppress_k": 25},
+            }
+        },
+    )
+    spec = parse_project_data(payload)
+    assert spec.lookup_options("x.csv", "LopNr") == {"suppress_k": 25}
 
 
 # -- load_project_data (disk path) ----------------------------------------
