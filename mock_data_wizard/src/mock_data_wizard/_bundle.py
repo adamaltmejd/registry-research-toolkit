@@ -46,6 +46,8 @@ import ast
 import json
 from pathlib import Path
 
+import reg_schema as _reg_schema
+
 PKG_DIR = Path(__file__).resolve().parent
 DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
@@ -53,10 +55,13 @@ DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 # Column/Source/Panel/ProjectData/validate_structural references resolve
 # inside the bundle. They are stdlib-only (reg_schema/pyproject.toml
 # `dependencies = []`) so amalgamation is safe — no transitive pull-in.
-# Located relative to this file: ../../../reg_schema/src/reg_schema/.
-REG_SCHEMA_DIR = (
-    PKG_DIR.parent.parent.parent / "reg_schema" / "src" / "reg_schema"
-).resolve()
+#
+# Resolve via the installed module so this works in both the monorepo
+# workspace and a normal ``pip``/``uv tool install`` (where reg_schema
+# lives under site-packages, not next to mock_data_wizard on disk).
+# reg_schema is a hard dependency of mock_data_wizard's pyproject.toml,
+# so the import always succeeds.
+REG_SCHEMA_DIR = Path(_reg_schema.__file__).resolve().parent
 REG_SCHEMA_MODULE_ORDER = (
     "validation",
     "project_data",
