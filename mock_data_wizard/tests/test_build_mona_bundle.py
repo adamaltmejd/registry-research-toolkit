@@ -149,8 +149,11 @@ def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
         assert "sql_type" in col
 
 
-def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
-    """MODE=extract reads mock_data_config.json and emits typed mock_data_stats.json."""
+def test_bundle_extract_mode_writes_stats_from_project_data(tmp_path: Path):
+    """MODE=extract reads project_data.json from the bundle directory
+    (sidecar mode) and emits typed mock_data_stats.json."""
+    from tests.conftest import make_project_data, write_project_data
+
     bundle = _build_bundle_to(tmp_path / "mdw_runner.py")
     _patch_configure(bundle)
 
@@ -160,20 +163,28 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
         "5,29,0115\n6,38,0114\n7,47,0115\n8,33,0114\n",
         encoding="utf-8",
     )
-    (tmp_path / "mock_data_config.json").write_text(
-        json.dumps(
-            {
-                "contract_version": "mdw-config-3.0.0",
-                "column_types": {
-                    "data.csv": {
-                        "lopnr": {"type": "id", "id_subtype": "integer"},
-                        "age": {"type": "numeric", "numeric_subtype": "integer"},
-                        "kommun": {"type": "categorical"},
-                    }
-                },
-            }
+    write_project_data(
+        tmp_path,
+        make_project_data(
+            sources=[
+                {
+                    "name": "data.csv",
+                    "columns": [
+                        {
+                            "display_name": "lopnr",
+                            "type": "id",
+                            "id_subtype": "integer",
+                        },
+                        {
+                            "display_name": "age",
+                            "type": "numeric",
+                            "numeric_subtype": "integer",
+                        },
+                        {"display_name": "kommun", "type": "categorical"},
+                    ],
+                }
+            ]
         ),
-        encoding="utf-8",
     )
 
     _run_bundle(bundle, cwd=tmp_path, mode="extract")
@@ -188,3 +199,42 @@ def test_bundle_extract_mode_writes_stats_from_config(tmp_path: Path):
     assert by_name["age"]["inferred_type"] == "numeric"
     assert by_name["kommun"]["inferred_type"] == "categorical"
     assert all(c["source_of_type"] == "override" for c in by_name.values())
+
+
+def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
+    """MODE=extract with an embedded project_data.json wins over any
+    sidecar — the runner parses _PROJECT_DATA_JSON and hands a
+    LoadedSpec straight to extract.main()."""
+    from mock_data_wizard import _bundle as bundle_mod
+    from tests.conftest import make_project_data
+
+    project_data = make_project_data(
+        sources=[
+            {
+                "name": "data.csv",
+                "columns": [
+                    {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
+                    {
+                        "display_name": "age",
+                        "type": "numeric",
+                        "numeric_subtype": "integer",
+                    },
+                ],
+            }
+        ]
+    )
+    bundle = bundle_mod.build_bundle(
+        tmp_path / "mdw_runner.py", project_data=project_data
+    )
+    _patch_configure(bundle)
+
+    (tmp_path / "data.csv").write_text(
+        "lopnr,age\n1,25\n2,30\n3,42\n4,55\n5,29\n6,38\n7,47\n8,33\n",
+        encoding="utf-8",
+    )
+    # NO sidecar — embedded must be enough.
+    _run_bundle(bundle, cwd=tmp_path, mode="extract")
+    stats = json.loads((tmp_path / "mock_data_stats.json").read_text("utf-8"))
+    by_name = {c["column_name"]: c for c in stats["sources"][0]["columns"]}
+    assert by_name["lopnr"]["inferred_type"] == "id"
+    assert by_name["age"]["inferred_type"] == "numeric"

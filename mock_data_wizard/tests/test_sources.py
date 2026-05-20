@@ -13,7 +13,6 @@ from pathlib import Path
 
 import pytest
 
-from mock_data_wizard.config import ColumnTypeOverride, MDWConfig
 from mock_data_wizard.sources import (
     FileSource,
     SourceHandle,
@@ -34,15 +33,41 @@ from mock_data_wizard.sources import (
     sql_source,
     sql_table,
 )
+from mock_data_wizard.spec import ColumnTypeOverride, LoadedSpec, parse_project_data
+from tests.conftest import make_project_data
 
 
-def _config_with(
+def _spec_with(
     column_types: dict[str, dict[str, ColumnTypeOverride]],
-) -> MDWConfig:
-    return MDWConfig(
-        contract_version="mdw-config-3.0.0",
-        column_types=column_types,
-    )
+) -> LoadedSpec:
+    """Build a LoadedSpec exposing ``column_types`` keyed by SQL header.
+
+    Translates the old MDWConfig-style ``{source: {display_name: override}}``
+    shape into a project_data.json payload — each (source, display_name)
+    becomes a Source/Column pair carrying the override fields as
+    structural column attributes.
+    """
+    sources = [
+        {
+            "name": src,
+            "columns": [
+                {
+                    "display_name": col,
+                    "type": ov.type,
+                    **({"id_subtype": ov.id_subtype} if ov.id_subtype else {}),
+                    **(
+                        {"numeric_subtype": ov.numeric_subtype}
+                        if ov.numeric_subtype
+                        else {}
+                    ),
+                    **({"date_format": ov.date_format} if ov.date_format else {}),
+                }
+                for col, ov in cols.items()
+            ],
+        }
+        for src, cols in column_types.items()
+    ]
+    return parse_project_data(make_project_data(sources=sources))
 
 
 # -- constructors ---------------------------------------------------------
@@ -332,7 +357,7 @@ def test_iter_file_source_with_config_skips_inference_for_rare_letter(
     lines.extend(f"{i},{i % 10}\n" for i in range(25_000))
     lines.append("25000,C\n")
     p.write_text("".join(lines), encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "rare_letter.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -341,7 +366,7 @@ def test_iter_file_source_with_config_skips_inference_for_rare_letter(
         }
     )
     src = file_source(str(tmp_path), include=["rare_letter.csv"])
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"SELECT NO_AMNEN FROM {handle.table} WHERE id = '25000'")
@@ -361,7 +386,7 @@ def test_iter_file_source_with_config_casts_numeric_columns(tmp_path: Path):
         "id,score,price\n1,10, \n2,20,3.5\n3, ,4.5\n4,40,5.5\n",
         encoding="utf-8",
     )
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "nums.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -371,7 +396,7 @@ def test_iter_file_source_with_config_casts_numeric_columns(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["nums.csv"])
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -399,7 +424,7 @@ def test_iter_file_source_with_config_raises_named_error_on_bad_numeric_cast(
     auditable failure mode the cast path is meant to provide."""
     p = tmp_path / "bad_numeric.csv"
     p.write_text("id,n\n1,10\n2,foo\n3,30\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "bad_numeric.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -409,7 +434,7 @@ def test_iter_file_source_with_config_raises_named_error_on_bad_numeric_cast(
     )
     src = file_source(str(tmp_path), include=["bad_numeric.csv"])
     with pytest.raises(RuntimeError, match=r"\bn\b"):
-        list(iter_file_source(src, config=cfg))
+        list(iter_file_source(src, spec=cfg))
 
 
 def test_iter_file_source_with_config_passes_through_unknown_columns(
@@ -421,7 +446,7 @@ def test_iter_file_source_with_config_passes_through_unknown_columns(
     drop the column or fail here."""
     p = tmp_path / "extra.csv"
     p.write_text("id,known,unknown\n1,a,x\n2,b,y\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "extra.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -431,7 +456,7 @@ def test_iter_file_source_with_config_passes_through_unknown_columns(
         }
     )
     src = file_source(str(tmp_path), include=["extra.csv"])
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -443,7 +468,7 @@ def test_iter_file_source_with_config_passes_through_unknown_columns(
             cur.close()
 
 
-def test_iter_file_source_config_without_entry_for_file_uses_all_varchar(
+def test_iter_file_source_spec_without_entry_for_file_uses_all_varchar(
     tmp_path: Path,
 ):
     """A config that has *some* sources but not this one reads the absent
@@ -452,9 +477,9 @@ def test_iter_file_source_config_without_entry_for_file_uses_all_varchar(
     actually exist for the file."""
     p = tmp_path / "untouched.csv"
     p.write_text("id,n\n1,10\n", encoding="utf-8")
-    cfg = _config_with({"other.csv": {"id": ColumnTypeOverride(type="id")}})
+    cfg = _spec_with({"other.csv": {"id": ColumnTypeOverride(type="id")}})
     src = file_source(str(tmp_path), include=["untouched.csv"])
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -476,7 +501,7 @@ def test_opaque_with_all_ints_promotes_to_numeric_integer(
     is logged so the MONA-side run log records the decision."""
     p = tmp_path / "promote_int.csv"
     p.write_text("id,maybe_num\n1,10\n2,20\n3,30\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "promote_int.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -486,7 +511,7 @@ def test_opaque_with_all_ints_promotes_to_numeric_integer(
     )
     src = file_source(str(tmp_path), include=["promote_int.csv"])
     with caplog.at_level(logging.WARNING, logger="mdw.sources"):
-        for handle in iter_file_source(src, config=cfg):
+        for handle in iter_file_source(src, spec=cfg):
             cur = handle.conn.cursor()
             try:
                 cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -494,7 +519,7 @@ def test_opaque_with_all_ints_promotes_to_numeric_integer(
                 assert schema["maybe_num"] == "BIGINT"
             finally:
                 cur.close()
-    promoted = cfg.column_types["promote_int.csv"]["maybe_num"]
+    promoted = cfg.column_types_for_source("promote_int.csv")["maybe_num"]
     assert promoted.type == "numeric"
     assert promoted.numeric_subtype == "integer"
     assert any(
@@ -508,7 +533,7 @@ def test_opaque_with_floats_promotes_to_numeric_double(tmp_path: Path):
     to numeric/double."""
     p = tmp_path / "promote_float.csv"
     p.write_text("id,p\n1,1.5\n2,2.5\n3,3.0\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "promote_float.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -517,7 +542,7 @@ def test_opaque_with_floats_promotes_to_numeric_double(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["promote_float.csv"])
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -525,7 +550,7 @@ def test_opaque_with_floats_promotes_to_numeric_double(tmp_path: Path):
             assert schema["p"] == "DOUBLE"
         finally:
             cur.close()
-    promoted = cfg.column_types["promote_float.csv"]["p"]
+    promoted = cfg.column_types_for_source("promote_float.csv")["p"]
     assert promoted.type == "numeric"
     assert promoted.numeric_subtype == "double"
 
@@ -541,7 +566,7 @@ def test_opaque_with_iso_dates_promotes_to_date(
         "id,d\n1,2023-01-15\n2,2023-06-30\n3,2024-02-01\n",
         encoding="utf-8",
     )
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "promote_date.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -551,9 +576,9 @@ def test_opaque_with_iso_dates_promotes_to_date(
     )
     src = file_source(str(tmp_path), include=["promote_date.csv"])
     with caplog.at_level(logging.WARNING, logger="mdw.sources"):
-        for _ in iter_file_source(src, config=cfg):
+        for _ in iter_file_source(src, spec=cfg):
             pass
-    assert cfg.column_types["promote_date.csv"]["d"].type == "date"
+    assert cfg.column_types_for_source("promote_date.csv")["d"].type == "date"
     assert any("'d'" in r.message and "date" in r.message for r in caplog.records)
 
 
@@ -564,7 +589,7 @@ def test_opaque_with_mixed_values_stays_opaque(
     warning, no schema change."""
     p = tmp_path / "stay_opaque.csv"
     p.write_text("id,mixed\n1,10\n2,foo\n3,30\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "stay_opaque.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -574,7 +599,7 @@ def test_opaque_with_mixed_values_stays_opaque(
     )
     src = file_source(str(tmp_path), include=["stay_opaque.csv"])
     with caplog.at_level(logging.WARNING, logger="mdw.sources"):
-        for handle in iter_file_source(src, config=cfg):
+        for handle in iter_file_source(src, spec=cfg):
             cur = handle.conn.cursor()
             try:
                 cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -582,7 +607,7 @@ def test_opaque_with_mixed_values_stays_opaque(
                 assert schema["mixed"] == "VARCHAR"
             finally:
                 cur.close()
-    assert cfg.column_types["stay_opaque.csv"]["mixed"].type == "opaque"
+    assert cfg.column_types_for_source("stay_opaque.csv")["mixed"].type == "opaque"
     assert not any("promoted" in r.message for r in caplog.records)
 
 
@@ -601,7 +626,7 @@ def test_opaque_yyyymmdd_strings_promote_to_integer_not_date(
         "id,d\n1,20230115\n2,20230630\n3,20240201\n",
         encoding="utf-8",
     )
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "yyyymmdd.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -611,7 +636,7 @@ def test_opaque_yyyymmdd_strings_promote_to_integer_not_date(
     )
     src = file_source(str(tmp_path), include=["yyyymmdd.csv"])
     with caplog.at_level(logging.WARNING, logger="mdw.sources"):
-        for handle in iter_file_source(src, config=cfg):
+        for handle in iter_file_source(src, spec=cfg):
             cur = handle.conn.cursor()
             try:
                 cur.execute(f"DESCRIBE SELECT * FROM {handle.table} LIMIT 0")
@@ -619,7 +644,7 @@ def test_opaque_yyyymmdd_strings_promote_to_integer_not_date(
                 assert schema["d"] == "BIGINT"
             finally:
                 cur.close()
-    promoted = cfg.column_types["yyyymmdd.csv"]["d"]
+    promoted = cfg.column_types_for_source("yyyymmdd.csv")["d"]
     assert promoted.type == "numeric"
     assert promoted.numeric_subtype == "integer"
     assert any(
@@ -632,7 +657,7 @@ def test_opaque_all_null_stays_opaque(tmp_path: Path):
     (nothing to TRY_CAST). Stays opaque."""
     p = tmp_path / "all_null.csv"
     p.write_text("id,e\n1,\n2,\n3,\n", encoding="utf-8")
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "all_null.csv": {
                 "id": ColumnTypeOverride(type="id"),
@@ -641,9 +666,9 @@ def test_opaque_all_null_stays_opaque(tmp_path: Path):
         }
     )
     src = file_source(str(tmp_path), include=["all_null.csv"])
-    for _ in iter_file_source(src, config=cfg):
+    for _ in iter_file_source(src, spec=cfg):
         pass
-    assert cfg.column_types["all_null.csv"]["e"].type == "opaque"
+    assert cfg.column_types_for_source("all_null.csv")["e"].type == "opaque"
 
 
 # -- SQL helpers ---------------------------------------------------------
@@ -976,7 +1001,7 @@ def test_iter_file_source_with_where_numeric_literal_works_in_extract_mode(
         "ar,event\n2014,a\n2015,b\n2016,c\n2017,d\n2018,e\n",
         encoding="utf-8",
     )
-    cfg = _config_with(
+    cfg = _spec_with(
         {
             "events.csv": {
                 "ar": ColumnTypeOverride(type="numeric", numeric_subtype="integer"),
@@ -985,7 +1010,7 @@ def test_iter_file_source_with_where_numeric_literal_works_in_extract_mode(
         }
     )
     src = file_source(str(tmp_path), include=["events.csv"], where="ar > 2015")
-    for handle in iter_file_source(src, config=cfg):
+    for handle in iter_file_source(src, spec=cfg):
         cur = handle.conn.cursor()
         try:
             cur.execute(f"SELECT COUNT(*) FROM {handle.table}")

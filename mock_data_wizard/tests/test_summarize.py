@@ -13,7 +13,7 @@ from datetime import date
 import duckdb
 import pytest
 
-from mock_data_wizard.config import ColumnTypeOverride
+from mock_data_wizard.spec import ColumnTypeOverride
 from mock_data_wizard.summarize import (
     NOISE_PCT,
     OTHER_LABEL,

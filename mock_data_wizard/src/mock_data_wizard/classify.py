@@ -502,7 +502,7 @@ def _validate_discover_payload(payload: Any, source_label: str) -> None:
             raise ValueError(
                 f"{source_label}: sources[{i}] ({name!r}) missing 'columns'. "
                 f"A truncated mock_data_discovery.json would silently produce "
-                f"an incomplete mock_data_config.json."
+                f"an incomplete project_data.json."
             )
         cols = src["columns"]
         if not isinstance(cols, list):
