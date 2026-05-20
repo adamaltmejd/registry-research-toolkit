@@ -42,15 +42,21 @@ deny() {
 	exit 0
 }
 
+# Token boundary: any character that can't continue an option token.
+# Whitespace, EOL, and shell operators (`&&`, `||`, `;`, `|`, `>`, `<`, `)`,
+# backtick, etc.) all match — without this, `git commit --no-verify&&echo ok`
+# would slip past a whitespace-only terminator.
+BOUNDARY='($|[^a-zA-Z0-9_-])'
+
 # `--no-verify` as a standalone token in any git subcommand.
-if [[ "$command" =~ (^|[[:space:]])--no-verify($|[[:space:]]) ]]; then
+if [[ "$command" =~ (^|[^a-zA-Z0-9_-])--no-verify${BOUNDARY} ]]; then
 	deny
 fi
 
 # `-n` as a short flag on `git commit`, either standalone or in a combined
 # short-flag group like `-nm` / `-anm`. Single leading dash ensures we don't
 # match `--name-only` etc. (those have two dashes).
-if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*($|[[:space:]]) ]]; then
+if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*${BOUNDARY} ]]; then
 	deny
 fi
 
