@@ -279,6 +279,8 @@ display_group = "Biståndshushåll"
 slug = "bistandsmottagare"
 display_group = "Biståndsmottagare"
 
+# (keep) Quarterly-statistics umbrella; siblings 22.73 (biståndshushåll)
+# and 22.435 (biståndsmottagare) carve out specific units.
 [register_variant."22.508"]
 slug = "ekonomiskt-bistand"
 display_group = "Ekonomiskt bistånd, kvartalsstatistik"
@@ -1296,6 +1298,8 @@ display_group = "Adresser, fastigheter och koordinater"
 [register."71"]
 slug = "fastighetspriser"
 
+# (keep) Main 'fastighetspriser och lagfarter' scope; siblings 71.333/334
+# (förvärvare/överlåtare) carve out role-specific variants.
 [register_variant."71.193"]
 slug = "fastighetspriser"
 display_group = "Fastighetspriser och lagfarter"
@@ -2323,6 +2327,8 @@ display_group = "Offentligt ägda företag"
 [register."115"]
 slug = "kommunalskatter"
 
+# (keep) Primärkommun-only scope (the original variant); siblings carve out
+# landsting (115.646) and combined primärkommun+region (115.1227).
 [register_variant."115.130"]
 slug = "kommunalskatter"
 display_group = "Kommunalskatter - Primärkommun"
@@ -2758,6 +2764,8 @@ display_group = "AKU fr.o.m. januari 2021"
 [register."123"]
 slug = "arbetsmiljoundersokningen"
 
+# (keep) Pre-2015 methodology variant; paired with 123.1316 for the
+# post-2015 redesign — register-slug echo is historical.
 [register_variant."123.413"]
 slug = "arbetsmiljoundersokningen"
 display_group = "Arbetsmiljöundersökningen  "
@@ -2770,6 +2778,8 @@ display_group = "Arbetsmiljöundersökningen 2015 - "
 [register."124"]
 slug = "arbetsorsakade-besvar"
 
+# (keep) Pre-2018 methodology variant (covers 2001-2016); paired with
+# 124.1418 for the fr.o.m. 2018 redesign — register-slug echo is historical.
 [register_variant."124.145"]
 slug = "arbetsorsakade-besvar"
 display_group = "Arbetsorsakade besvär 2001-2016"
@@ -2988,6 +2998,8 @@ slug = "ekologiska-arealer-2016"
 [register."147"]
 slug = "godselmedelsanvandning"
 
+# (keep) Pre-2016 methodology variant (covers 2007-2013); paired with
+# 147.1339 for the fr.o.m. 2016 redesign — register-slug echo is historical.
 [register_variant."147.214"]
 slug = "godselmedelsanvandning"
 display_group = "Gödselmedelsanvändning i jordbruket 2007-2013"
@@ -4445,6 +4457,8 @@ display_group = "Skörd av slåttervall fr o m 2016"
 [register."215"]
 slug = "vattenbruk"
 
+# (keep) Main 'vattenbruk' data variant; sibling 215.1538 (kostnadsenkaten)
+# is a separate survey supplement, not a sub-scope of this one.
 [register_variant."215.316"]
 slug = "vattenbruk"
 display_group = "Vattenbruk"
@@ -5751,6 +5765,8 @@ display_group = "Skörd av potatis"
 [register."253"]
 slug = "rakenskapssammandrag"
 
+# (keep) Combined kommuner+landsting scope; sibling 253.543 is the
+# landsting-only carve-out.
 [register_variant."253.542"]
 slug = "rakenskapssammandrag"
 display_group = "Räkenskapssammandrag för kommuner och landsting"
@@ -5915,6 +5931,8 @@ display_group = "Bonus och andra oregelbundna ersättningar"
 [register."270"]
 slug = "fortroendevalda"
 
+# (keep) Municipal (kommuner) scope; sibling 270.1094 is the
+# regions/landsting variant.
 [register_variant."270.638"]
 slug = "fortroendevalda"
 display_group = "Förtroendevalda i kommuner"
@@ -5993,6 +6011,8 @@ slug = "bostadsbestand"
 slug = "bostadsbestand-kalkylerat"
 display_group = "Bostadsbestånd (kalkylerat)"
 
+# (keep) Actual bostadsbestånd data; sibling 282.704 is the calculated
+# (kalkylerat) estimate variant.
 [register_variant."282.1159"]
 slug = "bostadsbestand"
 display_group = "Bostadsbestånd"
@@ -6056,6 +6076,8 @@ display_group = "Leverantörsbyten"
 [register."285"]
 slug = "nationalrakenskaper"
 
+# (keep) National accounts core; siblings carve out regional (285.845),
+# ESSPROS (285.914), offentliga finanser (285.1783), etc.
 [register_variant."285.732"]
 slug = "nationalrakenskaper"
 display_group = "Nationalräkenskaper"
