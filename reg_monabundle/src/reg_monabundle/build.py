@@ -505,13 +505,7 @@ def build_bundle(
     # at runtime sees the same bytes.
     project_data_str = "" if project_data is None else json.dumps(project_data)
     header = header.replace(PROJECT_DATA_PLACEHOLDER, project_data_str, 1)
-    # Slicer drops imports of every amalgamated package — the static
-    # reg_schema / reg_monabundle pair plus the caller's runtime
-    # package (derived from ``runtime_pkg_dir.name``). This is what
-    # makes the builder generic over runtime layout: when a non-mdw
-    # caller plugs in their runtime, their intra-runtime ``from <pkg>
-    # import …`` lines get stripped from the bundle and the artifact
-    # stays MONA-loadable.
+    # Static prefixes plus the caller's runtime — see _STATIC_AMALGAMATED_PREFIXES.
     drop_prefixes: tuple[str, ...] = (
         *_STATIC_AMALGAMATED_PREFIXES,
         runtime_pkg_dir.name,
