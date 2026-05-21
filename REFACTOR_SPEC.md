@@ -2989,13 +2989,14 @@ document. Step 1 can start.
    compare + (for now) classifier. `reg_webapp` doesn't exist yet
    so the bundle-builder is invoked from the mock_data_wizard CLI;
    it just lives in a different module. Split into three phases:
-   - **Phase 1 — scaffold + validator relocation.** ✅ Shipped: package
-     created (`reg_monabundle/` with `pyproject.toml`, `DESIGN.md`,
-     `README.md`, `tests/`); workspace + uv-lock + check_versions
-     updated; `reg_monabundle` added as a `mock_data_wizard` dep.
-     Owed-from-step-4 relocation done: `_validate_reg_monabundle_block`
-     → `reg_monabundle.validate_block`, `VALID_OPTION_KEYS` →
-     `reg_monabundle.validate`, `SUPPRESS_K` →
+   - **Phase 1 — scaffold + validator relocation.** ✅ **Shipped 2026-05-21**
+     in [#120](https://github.com/adamaltmejd/registry-research-toolkit/pull/120).
+     Package created (`reg_monabundle/` with `pyproject.toml`,
+     `DESIGN.md`, `README.md`, `tests/`); workspace + uv-lock +
+     check_versions updated; `reg_monabundle` added as a
+     `mock_data_wizard` dep. Owed-from-step-4 relocation done:
+     `_validate_reg_monabundle_block` → `reg_monabundle.validate_block`,
+     `VALID_OPTION_KEYS` → `reg_monabundle.validate`, `SUPPRESS_K` →
      `reg_monabundle.constants` (re-exported from
      `mock_data_wizard.summarize`). Bundle amalgamator
      (`mock_data_wizard._bundle`) walks `reg_monabundle/{constants,

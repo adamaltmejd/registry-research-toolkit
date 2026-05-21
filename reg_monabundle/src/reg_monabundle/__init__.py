@@ -12,10 +12,10 @@ See ``DESIGN.md`` for the two-half split (lightweight pure-python vs.
 from .constants import SUPPRESS_K
 from .validate import VALID_OPTION_KEYS, validate_block
 
-__version__ = "0.1.0"
-
 __all__ = [
     "SUPPRESS_K",
     "VALID_OPTION_KEYS",
     "validate_block",
 ]
+
+__version__ = "0.1.0"
