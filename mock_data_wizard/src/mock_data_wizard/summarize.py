@@ -16,6 +16,8 @@ import random
 from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
+from reg_monabundle import SUPPRESS_K
+
 from .classify import DATE_FORMATS, _python_kind, detect_date_format
 from .sql_emit import queries_for_column
 
@@ -24,8 +26,12 @@ if TYPE_CHECKING:
 
     from .spec import ColumnTypeOverride
 
-# Disclosure-control thresholds.
-SUPPRESS_K = 10  # categorical counts below this fold into _other
+# Disclosure-control thresholds. SUPPRESS_K lives in reg_monabundle because
+# it's the bundle's privacy floor (also enforced by the §6.8.2 namespaced-
+# block validator); re-exported here so the runtime modules (summarize,
+# extract) keep their stable import surface.
+__all__ = ["SUPPRESS_K"]
+
 NOISE_PCT = 0.005  # +/-0.5% relative noise on numeric aggregates
 SMALL_POP_MULT = 20  # warn when n_rows < SMALL_POP_MULT * SUPPRESS_K
 DATE_JITTER_DAYS = 7  # +/- N days uniform jitter on date min/max/quantiles

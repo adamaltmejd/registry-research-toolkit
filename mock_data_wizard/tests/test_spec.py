@@ -10,7 +10,6 @@ from mock_data_wizard.spec import (
     PROJECT_DATA_FILENAME,
     ColumnTypeOverride,
     LoadedSpec,
-    _validate_reg_monabundle_block,
     load_project_data,
     parse_project_data,
 )
@@ -328,85 +327,39 @@ def test_datetime_column_type_rejected_with_actionable_message():
 
 
 # -- reg_monabundle namespaced block --------------------------------------
+#
+# Per-rule validator coverage lives in
+# reg_monabundle/tests/test_validate_block.py alongside the validator
+# (§15 step 5 phase 1 — owner-validates-its-block).
+# The tests that remain here exercise the cross-block referential checks
+# (``_validate_column_options_against_columns``) that still need the
+# resolved column dataclasses and so stay in ``mock_data_wizard.spec``.
 
 
-def test_reg_monabundle_block_accepts_well_formed_options():
-    _validate_reg_monabundle_block(
-        {"column_options": {"scb/test/_default/2020/lopnr": {"suppress_k": 25}}}
+def test_parse_project_data_invokes_namespaced_block_validator():
+    """Smoke test that ``parse_project_data`` still routes the
+    ``reg_monabundle`` block through ``reg_monabundle.validate_block`` after
+    the §15 step 5 phase 1 relocation. One representative failure mode is
+    enough — the validator's own test suite owns the per-rule coverage."""
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "register_version": "scb/test/_default/2020",
+                "columns": [
+                    {
+                        "name": "scb/test/_default/2020/lopnr",
+                        "display_name": "LopNr",
+                        "type": "id",
+                        "id_subtype": "integer",
+                    },
+                ],
+            }
+        ],
+        reg_monabundle={"unknown": {}},
     )
-
-
-def test_reg_monabundle_block_rejects_unknown_keys():
     with pytest.raises(ValueError, match="unknown key"):
-        _validate_reg_monabundle_block({"unknown": {}})
-
-
-def test_reg_monabundle_block_rejects_non_fqid_key():
-    with pytest.raises(ValueError, match="binding FQID"):
-        _validate_reg_monabundle_block(
-            {"column_options": {"LopNr": {"suppress_k": 25}}}
-        )
-
-
-@pytest.mark.parametrize(
-    "bad_key",
-    [
-        # Whitespace inside a segment — would silently no-op at runtime.
-        "scb/test/_default/2020/lop nr",
-        # Empty segment.
-        "scb/test//2020/lopnr",
-        # Wrong segment count (4).
-        "scb/test/_default/2020",
-        # Wrong segment count (6).
-        "scb/test/_default/2020/lopnr/extra",
-        # Classification FQID, not a binding.
-        "class/sun/v1/lopnr/extra",
-        # Disallowed character (period).
-        "scb/test/_default/2020/lop.nr",
-    ],
-)
-def test_reg_monabundle_block_rejects_malformed_fqid_variants(bad_key):
-    """The column_options key check mirrors reg_schema's binding-FQID
-    rule (5 segments, non-class provider, [A-Za-z0-9_-]+ per segment).
-    A loose count('/') == 4 used to pass whitespace / empty segments /
-    class-prefixed strings; this test pins the tighter check."""
-    with pytest.raises(ValueError, match="binding FQID"):
-        _validate_reg_monabundle_block(
-            {"column_options": {bad_key: {"suppress_k": 25}}}
-        )
-
-
-def test_reg_monabundle_block_rejects_unknown_option():
-    with pytest.raises(ValueError, match="unknown option"):
-        _validate_reg_monabundle_block(
-            {
-                "column_options": {
-                    "scb/test/_default/2020/lopnr": {"unknown_opt": 1},
-                }
-            }
-        )
-
-
-def test_reg_monabundle_block_rejects_suppress_k_below_floor():
-    with pytest.raises(ValueError, match="below the global minimum"):
-        _validate_reg_monabundle_block(
-            {
-                "column_options": {
-                    "scb/test/_default/2020/lopnr": {"suppress_k": 1},
-                }
-            }
-        )
-
-
-def test_reg_monabundle_block_rejects_bool_suppress_k():
-    with pytest.raises(ValueError, match="must be an int"):
-        _validate_reg_monabundle_block(
-            {
-                "column_options": {
-                    "scb/test/_default/2020/lopnr": {"suppress_k": True},
-                }
-            }
-        )
+        parse_project_data(payload)
 
 
 def test_column_options_rejects_orphan_fqid_not_matching_any_column():

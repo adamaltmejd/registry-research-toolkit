@@ -25,19 +25,20 @@ Step 4 boundaries (REFACTOR_SPEC.md §15):
 - Every column must carry a ``display_name`` at load. The schema marks
   it optional because the webapp materializes defaults from reg_meta
   at bundle-build time (§6.3 + §7); that pipeline lands in §15 step 6.
-- The ``reg_monabundle`` namespaced block is validated inline here.
-  Per §6.8.2 the owner is ``reg_monabundle`` itself; the validator
-  moves there at §15 step 5 alongside the rest of the bundle code.
+- The ``reg_monabundle`` namespaced block is validated by
+  ``reg_monabundle.validate_block`` (§6.8.2). The cross-block
+  referential checks (orphan FQID, suppress_k-on-non-categorical) stay
+  here because they need the resolved column dataclasses.
 """
 
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, cast
 
+from reg_monabundle import validate_block
 from reg_schema import (
     Column,
     Panel,
@@ -51,13 +52,8 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 from .classify import COLUMN_TYPES
-from .summarize import SUPPRESS_K
 
 PROJECT_DATA_FILENAME = "project_data.json"
-
-# Per-column option keys recognised in ``reg_monabundle.column_options``.
-# Strict: anything not in this set raises at parse time (typo guard).
-VALID_OPTION_KEYS: tuple[str, ...] = ("suppress_k",)
 
 # Per-type inline hint keys. Mirrors mdw's COLUMN_TYPES exactly —
 # reg_schema's ``datetime`` is rejected at load (see ``_build_column``)
@@ -72,24 +68,6 @@ INLINE_HINT_KEYS: dict[str, tuple[str, ...]] = {
     "opaque": (),
 }
 assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)
-
-# Binding-FQID well-formedness for ``reg_monabundle.column_options``
-# keys. Mirrors ``reg_schema.structural._is_binding_fqid`` so a typo
-# (display_name, whitespace, empty segment, ``class/...``) raises
-# loudly instead of silently no-opping at lookup time. The duplication
-# is deliberate per reg_schema/DESIGN.md "Why no FQID parser dependency".
-_FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
-
-
-def _is_binding_fqid(value: object) -> bool:
-    if not isinstance(value, str):
-        return False
-    segs = value.split("/")
-    return (
-        len(segs) == 5
-        and segs[0] != "class"
-        and all(bool(_FQID_TOKEN.match(s)) for s in segs)
-    )
 
 
 # -- Runtime convenience dataclass ----------------------------------------
@@ -228,76 +206,6 @@ def _reject_duplicate_keys(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
             raise ValueError(f"duplicate key {k!r} in {PROJECT_DATA_FILENAME}")
         seen[k] = v
     return seen
-
-
-def _validate_reg_monabundle_block(block: object) -> None:
-    """Validate the ``reg_monabundle`` namespaced block.
-
-    Per §6.8.2 this is the owner's job (``reg_monabundle.validate_block``);
-    inlined here for step 4, moves to ``reg_monabundle`` at §15 step 5.
-    """
-    if block is None:
-        return
-    if not isinstance(block, dict):
-        raise ValueError(
-            f"reg_monabundle block must be an object, got {type(block).__name__}"
-        )
-    block_obj = cast("Mapping[str, Any]", block)
-    allowed = {"column_options"}
-    extra = set(block_obj) - allowed
-    if extra:
-        raise ValueError(
-            f"reg_monabundle has unknown key(s) {sorted(extra)} "
-            f"(allowed: {sorted(allowed)})"
-        )
-    options = block_obj.get("column_options")
-    if options is None:
-        return
-    if not isinstance(options, dict):
-        raise ValueError(
-            f"reg_monabundle.column_options must be an object, "
-            f"got {type(options).__name__}"
-        )
-    for fqid, opts in options.items():
-        # Binding FQIDs are 5-segment slash-separated identifiers with
-        # per-segment ``[A-Za-z0-9_-]+`` tokens and a non-``class``
-        # provider. The structural validator (§6.8.1) checks
-        # well-formedness on ``column.name``; reg_monabundle.column_options
-        # keys are opaque to reg_schema. Mirror the same rule here so a
-        # typo (display_name, whitespace, empty segment, ``class/...``)
-        # raises loudly instead of silently no-opping at lookup time.
-        if not _is_binding_fqid(fqid):
-            raise ValueError(
-                f"reg_monabundle.column_options key {fqid!r} is not a "
-                f"well-formed binding FQID (expected 5 slash-separated "
-                f"segments of [A-Za-z0-9_-]+, non-'class' provider); "
-                f"keys changed from (source, column) pairs to binding "
-                f"FQIDs in step 4. Update your project_data.json."
-            )
-        if not isinstance(opts, dict):
-            raise ValueError(
-                f"reg_monabundle.column_options[{fqid!r}] must be an object, "
-                f"got {type(opts).__name__}"
-            )
-        for key, val in opts.items():
-            if key not in VALID_OPTION_KEYS:
-                raise ValueError(
-                    f"reg_monabundle.column_options[{fqid!r}] has unknown "
-                    f"option {key!r} (allowed: {sorted(VALID_OPTION_KEYS)})"
-                )
-            if key == "suppress_k":
-                if isinstance(val, bool) or not isinstance(val, int):
-                    raise ValueError(
-                        f"reg_monabundle.column_options[{fqid!r}].suppress_k "
-                        f"must be an int, got {type(val).__name__} ({val!r})"
-                    )
-                if val < SUPPRESS_K:
-                    raise ValueError(
-                        f"reg_monabundle.column_options[{fqid!r}].suppress_k="
-                        f"{val} is below the global minimum SUPPRESS_K="
-                        f"{SUPPRESS_K}; overrides may only raise the "
-                        f"threshold, not lower it"
-                    )
 
 
 # -- Dataclass construction (post-validation) -----------------------------
@@ -468,7 +376,7 @@ def _validate_column_options_against_columns(
 
     1. **Orphan keys.** Well-formedness (5-segment, non-class,
        ``[A-Za-z0-9_-]+``) is checked in
-       ``_validate_reg_monabundle_block``; that catches typos that
+       ``reg_monabundle.validate_block``; that catches typos that
        mangle the shape but not typos where the shape survives and
        the key just doesn't match any column. Without this check, a
        misspelled FQID silently no-ops at lookup time.
@@ -524,7 +432,7 @@ def parse_project_data(payload: Mapping[str, Any]) -> LoadedSpec:
             f"{PROJECT_DATA_FILENAME} failed structural validation:\n  - "
             + "\n  - ".join(errors)
         )
-    _validate_reg_monabundle_block(payload.get("reg_monabundle"))
+    validate_block(payload.get("reg_monabundle"))
     project_data = _build_project_data(payload)
     _validate_column_options_against_columns(
         payload.get("reg_monabundle"), project_data

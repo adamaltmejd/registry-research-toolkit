@@ -12,6 +12,7 @@ license = { text = "MIT" }
 dependencies = [
   "numpy>=1.26",
   "reg-meta",
+  "reg-monabundle",
   "reg-schema",
 ]
 

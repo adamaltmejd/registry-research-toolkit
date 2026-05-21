@@ -11,6 +11,7 @@ members = [
     "mock-data-wizard",
     "reg-meta",
     "reg-meta-build",
+    "reg-monabundle",
     "reg-schema",
     "registry-research-toolkit",
 ]
@@ -80,6 +81,7 @@ source = { editable = "mock_data_wizard" }
 dependencies = [
     { name = "numpy" },
     { name = "reg-meta" },
+    { name = "reg-monabundle" },
     { name = "reg-schema" },
 ]
 
@@ -87,6 +89,7 @@ dependencies = [
 requires-dist = [
     { name = "numpy", specifier = ">=1.26" },
     { name = "reg-meta", editable = "reg_meta" },
+    { name = "reg-monabundle", editable = "reg_monabundle" },
     { name = "reg-schema", editable = "reg_schema" },
 ]
 
@@ -235,6 +238,18 @@ requires-dist = [
 ]
 
 [[package]]
+name = "reg-monabundle"
+version = "0.1.0"
+source = { editable = "reg_monabundle" }
+dependencies = [
+    { name = "reg-schema" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "reg-schema", editable = "reg_schema" }]
+provides-extras = ["runtime"]
+
+[[package]]
 name = "reg-schema"
 version = "0.1.0"
 source = { editable = "reg_schema" }
@@ -247,6 +262,7 @@ dependencies = [
     { name = "mock-data-wizard" },
     { name = "reg-meta" },
     { name = "reg-meta-build" },
+    { name = "reg-monabundle" },
     { name = "reg-schema" },
 ]
 
@@ -264,6 +280,7 @@ requires-dist = [
     { name = "mock-data-wizard", editable = "mock_data_wizard" },
     { name = "reg-meta", editable = "reg_meta" },
     { name = "reg-meta-build", editable = "reg_meta_build" },
+    { name = "reg-monabundle", editable = "reg_monabundle" },
     { name = "reg-schema", editable = "reg_schema" },
 ]
 

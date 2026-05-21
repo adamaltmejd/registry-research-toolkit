@@ -34,10 +34,10 @@ runs ``reg_schema.validate_structural`` on every load path:
   ``parse_project_data`` before substituting into the placeholder,
   so a structurally broken spec fails at build, not on MONA.
 
-The ``reg_monabundle`` namespaced-block validator currently lives
-inline in ``spec.py``; per §6.8.2 it moves to
-``reg_monabundle.validate_block`` at §15 step 5 (tracked in
-REFACTOR_SPEC.md §15 step 5 "Owed from step 4").
+The ``reg_monabundle`` namespaced-block validator lives in
+``reg_monabundle.validate_block`` (§6.8.2). Phase 2 of §15 step 5
+moves the bundle builder + scanner itself into ``reg_monabundle``;
+this module then disappears in favour of ``reg_monabundle.build``.
 """
 
 from __future__ import annotations
@@ -46,6 +46,7 @@ import ast
 import json
 from pathlib import Path
 
+import reg_monabundle as _reg_monabundle
 import reg_schema as _reg_schema
 
 PKG_DIR = Path(__file__).resolve().parent
@@ -68,9 +69,21 @@ REG_SCHEMA_MODULE_ORDER = (
     "structural",
 )
 
-# Dependency-ordered: each module imports only earlier ones.
-# ``spec`` follows ``summarize`` because ``spec.py`` imports
-# ``SUPPRESS_K`` from summarize for the column_options floor check.
+# reg_monabundle modules amalgamated ahead of the mdw modules so
+# summarize.py's ``SUPPRESS_K`` reference and spec.py's
+# ``validate_block(...)`` call (both via ``from reg_monabundle import …``
+# in the source) resolve inside the bundle. ``constants`` precedes
+# ``validate`` because the validator's suppress_k floor check reads
+# ``SUPPRESS_K``. Phase 2 grows this tuple as the bundle builder +
+# scanner + type compatibility map move over.
+REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
+REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate")
+
+# Dependency-ordered: each module imports only earlier ones (intra-mdw)
+# or modules already amalgamated from reg_schema / reg_monabundle. Top-
+# level statements run in order, so e.g. ``spec.py``'s
+# ``assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)`` requires
+# ``classify`` to be loaded first.
 MODULE_ORDER = (
     "classify",
     "sql_emit",
@@ -385,11 +398,18 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
     )
 
 
+_AMALGAMATED_PACKAGE_PREFIXES = (
+    "mock_data_wizard",
+    "reg_monabundle",
+    "reg_schema",
+)
+
+
 def _slice_module(path: Path) -> str:
     """Read a module, drop docstring + __future__ + intra-pkg imports.
 
-    Also drops imports from ``mock_data_wizard`` and ``reg_schema``
-    (sub-package siblings amalgamated alongside this module). The
+    Also drops imports from any amalgamated sibling package
+    (``mock_data_wizard``, ``reg_monabundle``, ``reg_schema``). The
     remaining body (functions, classes, constants, dataclasses,
     stdlib imports) is rendered via ``ast.unparse`` -- ``#`` comments
     are not preserved (they live in the source modules in the repo).
@@ -413,9 +433,9 @@ def _slice_module(path: Path) -> str:
                 continue
             if node.level > 0:
                 continue
-            if node.module and node.module.startswith("mock_data_wizard"):
-                continue
-            if node.module and node.module.startswith("reg_schema"):
+            if node.module and any(
+                node.module.startswith(pkg) for pkg in _AMALGAMATED_PACKAGE_PREFIXES
+            ):
                 continue
         if _is_type_checking_block(node):
             continue
@@ -474,6 +494,13 @@ def build_bundle(
         parts.append(f"# {'=' * 75}")
         parts.append("")
         parts.append(_slice_module(REG_SCHEMA_DIR / f"{name}.py"))
+        parts.append("")
+    for name in REG_MONABUNDLE_MODULE_ORDER:
+        parts.append(f"# {'=' * 75}")
+        parts.append(f"# reg_monabundle/{name}.py")
+        parts.append(f"# {'=' * 75}")
+        parts.append("")
+        parts.append(_slice_module(REG_MONABUNDLE_DIR / f"{name}.py"))
         parts.append("")
     for name in MODULE_ORDER:
         parts.append(f"# {'=' * 75}")

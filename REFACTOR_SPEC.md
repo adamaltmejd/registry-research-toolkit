@@ -2988,19 +2988,33 @@ document. Step 1 can start.
    move into the new package. `mock_data_wizard` keeps generate +
    compare + (for now) classifier. `reg_webapp` doesn't exist yet
    so the bundle-builder is invoked from the mock_data_wizard CLI;
-   it just lives in a different module.
-   - **Verification gate:** measure the bundle's output `.py`
-     size against the 1 MB v1 budget (§12) on a real MONA test;
-     fail the step if exceeded so the budget bites before it
-     compounds.
-   - **Owed from step 4 (PR [#116](https://github.com/adamaltmejd/registry-research-toolkit/pull/116)):**
-     the `reg_monabundle` namespaced-block validator currently lives
-     inline at `mock_data_wizard/spec.py:_validate_reg_monabundle_block`
-     because `reg_monabundle` didn't exist yet. §6.8.2 says the owning
-     package validates its own block — move the function (and its
-     `VALID_OPTION_KEYS` constant + the `SUPPRESS_K` floor check) into
-     `reg_monabundle.validate_block` at step 5 and have `spec.py`
-     import + call it through there.
+   it just lives in a different module. Split into three phases:
+   - **Phase 1 — scaffold + validator relocation.** ✅ **Shipped 2026-05-21**
+     in [#120](https://github.com/adamaltmejd/registry-research-toolkit/pull/120).
+     Package created (`reg_monabundle/` with `pyproject.toml`,
+     `DESIGN.md`, `README.md`, `tests/`); workspace + uv-lock +
+     check_versions updated; `reg_monabundle` added as a
+     `mock_data_wizard` dep. Owed-from-step-4 relocation done:
+     `_validate_reg_monabundle_block` → `reg_monabundle.validate_block`,
+     `VALID_OPTION_KEYS` → `reg_monabundle.validate`, `SUPPRESS_K` →
+     `reg_monabundle.constants` (re-exported from
+     `mock_data_wizard.summarize`). Bundle amalgamator
+     (`mock_data_wizard._bundle`) walks `reg_monabundle/{constants,
+     validate}.py` ahead of the mdw modules so the bundle keeps
+     working at runtime.
+   - **Phase 2 — bundle builder + scanner + runtime modules.**
+     `mock_data_wizard/_bundle.py` → `reg_monabundle/build.py`;
+     `mock_data_wizard/scan.py` → `reg_monabundle/scan.py`; the
+     runtime modules (classify, sql_emit, sources, summarize, spec,
+     extract) move under `reg_monabundle/runtime/`. The mdw CLI's
+     `build-bundle` rebases onto `reg_monabundle.build`. CI gate
+     enforces the lightweight/runtime split: importing
+     `reg_monabundle.build` in a duckdb-less env must not
+     transitively pull `reg_monabundle.runtime.*`.
+   - **Phase 3 — 1 MB bundle-size budget gate (§12).** Measure the
+     bundle's output `.py` size against the 1 MB v1 budget on a
+     real MONA-shape fixture; fail CI if exceeded so the budget
+     bites before it compounds.
 
 **Step 5.5 — Shared validator test corpus.** ✅ **Shipped 2026-05-19**
 in [#113](https://github.com/adamaltmejd/registry-research-toolkit/pull/113)
