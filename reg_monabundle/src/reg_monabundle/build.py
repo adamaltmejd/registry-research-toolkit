@@ -389,26 +389,32 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
     )
 
 
-# Imports from these packages are dropped during slicing: the packages
-# are either amalgamated into the bundle directly (reg_monabundle,
-# reg_schema) or supplied by the caller as the runtime root
-# (mock_data_wizard today; phase 2c collapses the mdw entry once the
-# runtime modules move to reg_monabundle.runtime).
-_AMALGAMATED_PACKAGE_PREFIXES = (
-    "mock_data_wizard",
-    "reg_monabundle",
-    "reg_schema",
-)
+# Imports from these packages are always dropped during slicing — they
+# are amalgamated into the bundle directly. The caller's runtime
+# package name is added on top inside ``build_bundle`` so that a
+# non-mdw runtime (``reg_mockdata``, a steward-private package, …)
+# can plug its own intra-runtime imports through the same drop logic.
+_STATIC_AMALGAMATED_PREFIXES: tuple[str, ...] = ("reg_monabundle", "reg_schema")
 
 
-def _slice_module(path: Path) -> str:
+def _is_amalgamated_module(name: str, prefixes: tuple[str, ...]) -> bool:
+    """``True`` if ``name`` is exactly an amalgamated package or a
+    submodule of one. Tighter than a raw ``startswith`` — guards
+    against e.g. ``reg_schema_v2`` matching the ``reg_schema`` prefix.
+    """
+    return any(name == p or name.startswith(p + ".") for p in prefixes)
+
+
+def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
     """Read a module, drop docstring + __future__ + intra-pkg imports.
 
-    Also drops imports from any amalgamated sibling package
-    (``mock_data_wizard``, ``reg_monabundle``, ``reg_schema``). The
-    remaining body (functions, classes, constants, dataclasses,
-    stdlib imports) is rendered via ``ast.unparse`` -- ``#`` comments
-    are not preserved (they live in the source modules in the repo).
+    Also drops top-level imports of any amalgamated package
+    (``reg_monabundle``, ``reg_schema``, and the caller's runtime
+    package name). Both ``from X import Y`` and ``import X`` forms are
+    handled. The remaining body (functions, classes, constants,
+    dataclasses, stdlib imports) is rendered via ``ast.unparse`` --
+    ``#`` comments are not preserved (they live in the source modules
+    in the repo).
     """
     src = path.read_text(encoding="utf-8")
     tree = ast.parse(src)
@@ -429,10 +435,16 @@ def _slice_module(path: Path) -> str:
                 continue
             if node.level > 0:
                 continue
-            if node.module and any(
-                node.module.startswith(pkg) for pkg in _AMALGAMATED_PACKAGE_PREFIXES
-            ):
+            if node.module and _is_amalgamated_module(node.module, drop_prefixes):
                 continue
+        elif isinstance(node, ast.Import) and all(
+            _is_amalgamated_module(alias.name, drop_prefixes) for alias in node.names
+        ):
+            # ``import a, b`` is rare in our runtime modules; treating the
+            # all-amalgamated case as a drop keeps the slicer simple. A
+            # mixed multi-alias import (one amalgamated, one not) is left
+            # intact and would leak — flag that if it ever appears.
+            continue
         if _is_type_checking_block(node):
             continue
         kept.append(node)
@@ -493,27 +505,46 @@ def build_bundle(
     # at runtime sees the same bytes.
     project_data_str = "" if project_data is None else json.dumps(project_data)
     header = header.replace(PROJECT_DATA_PLACEHOLDER, project_data_str, 1)
+    # Slicer drops imports of every amalgamated package — the static
+    # reg_schema / reg_monabundle pair plus the caller's runtime
+    # package (derived from ``runtime_pkg_dir.name``). This is what
+    # makes the builder generic over runtime layout: when a non-mdw
+    # caller plugs in their runtime, their intra-runtime ``from <pkg>
+    # import …`` lines get stripped from the bundle and the artifact
+    # stays MONA-loadable.
+    drop_prefixes: tuple[str, ...] = (
+        *_STATIC_AMALGAMATED_PREFIXES,
+        runtime_pkg_dir.name,
+    )
     parts: list[str] = [header, ""]
     for name in REG_SCHEMA_MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# reg_schema/{name}.py")
         parts.append(f"# {'=' * 75}")
         parts.append("")
-        parts.append(_slice_module(REG_SCHEMA_DIR / f"{name}.py"))
+        parts.append(
+            _slice_module(REG_SCHEMA_DIR / f"{name}.py", drop_prefixes=drop_prefixes)
+        )
         parts.append("")
     for name in REG_MONABUNDLE_MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# reg_monabundle/{name}.py")
         parts.append(f"# {'=' * 75}")
         parts.append("")
-        parts.append(_slice_module(REG_MONABUNDLE_DIR / f"{name}.py"))
+        parts.append(
+            _slice_module(
+                REG_MONABUNDLE_DIR / f"{name}.py", drop_prefixes=drop_prefixes
+            )
+        )
         parts.append("")
     for name in runtime_module_order:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# {name}.py")
         parts.append(f"# {'=' * 75}")
         parts.append("")
-        parts.append(_slice_module(runtime_pkg_dir / f"{name}.py"))
+        parts.append(
+            _slice_module(runtime_pkg_dir / f"{name}.py", drop_prefixes=drop_prefixes)
+        )
         parts.append("")
     parts.append(BUNDLE_RUNNER)
     output.write_text("\n".join(parts), encoding="utf-8")
