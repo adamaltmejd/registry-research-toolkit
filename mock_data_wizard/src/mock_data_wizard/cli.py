@@ -377,10 +377,12 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
     import json
 
-    from . import _bundle
+    from reg_monabundle import DEFAULT_OUTPUT_NAME, build_bundle
+
+    from . import BUNDLE_MODULE_ORDER, BUNDLE_PKG_DIR
     from .spec import _reject_duplicate_keys, parse_project_data
 
-    output = Path(args.output) if args.output else Path(_bundle.DEFAULT_OUTPUT_NAME)
+    output = Path(args.output) if args.output else Path(DEFAULT_OUTPUT_NAME)
 
     project_data: dict | None = None
     if args.project_data:
@@ -415,7 +417,12 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
             print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
             return 1
 
-    out = _bundle.build_bundle(output, project_data=project_data)
+    out = build_bundle(
+        output,
+        runtime_pkg_dir=BUNDLE_PKG_DIR,
+        runtime_module_order=BUNDLE_MODULE_ORDER,
+        project_data=project_data,
+    )
     print(f"Built {out} ({out.stat().st_size:,} bytes)")
     return 0
 
@@ -496,7 +503,8 @@ def _print_version() -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    from ._bundle import DEFAULT_OUTPUT_NAME as BUNDLE_FILENAME
+    from reg_monabundle import DEFAULT_OUTPUT_NAME as BUNDLE_FILENAME
+
     from .extract import STATS_FILENAME
 
     parser = argparse.ArgumentParser(

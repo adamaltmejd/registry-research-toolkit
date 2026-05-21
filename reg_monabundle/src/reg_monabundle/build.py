@@ -1,12 +1,12 @@
-"""Build a single-file .py bundle for upload to MONA.
+"""Build a single-file ``.py`` bundle for upload to MONA.
 
-Concatenates the wizard runtime modules (classify, sql_emit, sources,
-summarize, spec, scan, extract) into one file. The user uploads that
-file, edits the ``configure()`` block near the top, and runs::
+Amalgamates the caller-supplied runtime modules + ``reg_schema`` +
+``reg_monabundle`` into one self-contained Python file. The user uploads
+that file, edits the ``configure()`` block near the top, and runs::
 
     python mdw_runner.py
 
-The bundle is self-contained -- only stdlib + duckdb + pyodbc + numpy
+The bundle is self-contained — only stdlib + duckdb + pyodbc + numpy
 (all pre-installed on the WinPython distribution shipped with MONA's
 batch client; see ``DESIGN.md`` for the runtime probe results).
 
@@ -22,9 +22,10 @@ When not embedded, the runner falls back to reading
 embedded spec wins when both are present.
 
 Bundle-load structural validation: ``reg_schema.{validation,
-project_data,structural}`` are amalgamated ahead of the mdw modules
-(see ``REG_SCHEMA_MODULE_ORDER`` below) so ``spec.parse_project_data``
-runs ``reg_schema.validate_structural`` on every load path:
+project_data, structural}`` are amalgamated ahead of the runtime
+modules (see ``REG_SCHEMA_MODULE_ORDER`` below) so
+``spec.parse_project_data`` runs ``reg_schema.validate_structural`` on
+every load path:
 
 - Embedded spec — the runner's ``_load_embedded_spec`` parses
   ``_PROJECT_DATA_JSON`` through ``parse_project_data``.
@@ -34,10 +35,12 @@ runs ``reg_schema.validate_structural`` on every load path:
   ``parse_project_data`` before substituting into the placeholder,
   so a structurally broken spec fails at build, not on MONA.
 
-The ``reg_monabundle`` namespaced-block validator lives in
-``reg_monabundle.validate_block`` (§6.8.2). Phase 2 of §15 step 5
-moves the bundle builder + scanner itself into ``reg_monabundle``;
-this module then disappears in favour of ``reg_monabundle.build``.
+The runtime modules to amalgamate are caller-supplied via
+``runtime_pkg_dir`` + ``runtime_module_order``. Today the caller is
+``mock_data_wizard.cli`` (pointing at ``mock_data_wizard/{classify,
+sql_emit, sources, summarize, spec, scan, extract}.py``); phase 2c of
+§15 step 5 relocates those modules into ``reg_monabundle.runtime`` and
+the caller becomes ``reg_webapp`` / mdw's successor ``reg_mockdata``.
 """
 
 from __future__ import annotations
@@ -45,22 +48,25 @@ from __future__ import annotations
 import ast
 import json
 from pathlib import Path
+from typing import TYPE_CHECKING
 
-import reg_monabundle as _reg_monabundle
 import reg_schema as _reg_schema
 
-PKG_DIR = Path(__file__).resolve().parent
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
 DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
-# reg_schema modules amalgamated ahead of the mdw modules so spec.py's
-# Column/Source/Panel/ProjectData/validate_structural references resolve
-# inside the bundle. They are stdlib-only (reg_schema/pyproject.toml
-# `dependencies = []`) so amalgamation is safe — no transitive pull-in.
+# reg_schema modules amalgamated ahead of the runtime modules so
+# spec.py's Column/Source/Panel/ProjectData/validate_structural
+# references resolve inside the bundle. They are stdlib-only
+# (reg_schema/pyproject.toml `dependencies = []`) so amalgamation is
+# safe — no transitive pull-in.
 #
 # Resolve via the installed module so this works in both the monorepo
 # workspace and a normal ``pip``/``uv tool install`` (where reg_schema
-# lives under site-packages, not next to mock_data_wizard on disk).
-# reg_schema is a hard dependency of mock_data_wizard's pyproject.toml,
+# lives under site-packages, not next to reg_monabundle on disk).
+# reg_schema is a hard dependency of reg_monabundle's pyproject.toml,
 # so the import always succeeds.
 REG_SCHEMA_DIR = Path(_reg_schema.__file__).resolve().parent
 REG_SCHEMA_MODULE_ORDER = (
@@ -69,30 +75,15 @@ REG_SCHEMA_MODULE_ORDER = (
     "structural",
 )
 
-# reg_monabundle modules amalgamated ahead of the mdw modules so
+# reg_monabundle modules amalgamated ahead of the runtime modules so
 # summarize.py's ``SUPPRESS_K`` reference and spec.py's
 # ``validate_block(...)`` call (both via ``from reg_monabundle import …``
 # in the source) resolve inside the bundle. ``constants`` precedes
 # ``validate`` because the validator's suppress_k floor check reads
-# ``SUPPRESS_K``. Phase 2 grows this tuple as the bundle builder +
-# scanner + type compatibility map move over.
-REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
+# ``SUPPRESS_K``. Phase 2 grows this tuple as the bundle scanner +
+# type compatibility map move over.
+REG_MONABUNDLE_DIR = Path(__file__).resolve().parent
 REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate")
-
-# Dependency-ordered: each module imports only earlier ones (intra-mdw)
-# or modules already amalgamated from reg_schema / reg_monabundle. Top-
-# level statements run in order, so e.g. ``spec.py``'s
-# ``assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)`` requires
-# ``classify`` to be loaded first.
-MODULE_ORDER = (
-    "classify",
-    "sql_emit",
-    "sources",
-    "summarize",
-    "spec",
-    "scan",
-    "extract",
-)
 
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA discover/extract bundle.
@@ -398,6 +389,11 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
     )
 
 
+# Imports from these packages are dropped during slicing: the packages
+# are either amalgamated into the bundle directly (reg_monabundle,
+# reg_schema) or supplied by the caller as the runtime root
+# (mock_data_wizard today; phase 2c collapses the mdw entry once the
+# runtime modules move to reg_monabundle.runtime).
 _AMALGAMATED_PACKAGE_PREFIXES = (
     "mock_data_wizard",
     "reg_monabundle",
@@ -463,10 +459,20 @@ assert PROJECT_DATA_PLACEHOLDER in BUNDLE_HEADER, (
 def build_bundle(
     output: Path,
     *,
+    runtime_pkg_dir: Path,
+    runtime_module_order: Sequence[str],
     configure_body: str | None = None,
     project_data: dict | None = None,
 ) -> Path:
-    """Amalgamate the wizard runtime modules into a single ``.py``.
+    """Amalgamate the runtime modules into a single ``.py``.
+
+    ``runtime_pkg_dir`` is the directory holding the runtime modules
+    (e.g. ``Path(mock_data_wizard.__file__).parent`` today; phase 2c
+    moves these under ``reg_monabundle/runtime/``).
+    ``runtime_module_order`` is the dep-ordered tuple of module
+    stems to amalgamate from that directory — each module imports
+    only earlier ones (intra-runtime) or modules already amalgamated
+    from ``reg_schema`` / ``reg_monabundle``.
 
     When ``configure_body`` is supplied (a complete ``def configure(): ...``
     function source), it fills the configure slot in ``BUNDLE_HEADER``.
@@ -502,12 +508,12 @@ def build_bundle(
         parts.append("")
         parts.append(_slice_module(REG_MONABUNDLE_DIR / f"{name}.py"))
         parts.append("")
-    for name in MODULE_ORDER:
+    for name in runtime_module_order:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# {name}.py")
         parts.append(f"# {'=' * 75}")
         parts.append("")
-        parts.append(_slice_module(PKG_DIR / f"{name}.py"))
+        parts.append(_slice_module(runtime_pkg_dir / f"{name}.py"))
         parts.append("")
     parts.append(BUNDLE_RUNNER)
     output.write_text("\n".join(parts), encoding="utf-8")
