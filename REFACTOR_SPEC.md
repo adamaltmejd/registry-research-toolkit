@@ -799,12 +799,16 @@ Four consequences:
    the parenthetical attached when `derive_period(name)` collides
    with another regver in the same variant.
 
+   Examples below show rule 5 in isolation; in real data the
+   collision and residual rules often co-fire on the same row,
+   with `(vs …)` first and `(residual: …)` second.
+
    ```toml
-   # 'Vårterminen 2013 - betyg' (vs 5177:VT2013)
+   # 'Vårterminen 2013 - betyg' (vs 5177:VT2013) (residual: "- betyg")
    [register_version."104.840.5510"]
    slug = "betyg-vt2013"
 
-   # 'Öar 2013, totalregister' (vs 5783:2013)
+   # 'Öar 2013, totalregister' (vs 5783:2013) (residual: "Öar , totalregister")
    [register_version."219.320.13702"]
    slug = "oar-totalregister-2013"
    ```

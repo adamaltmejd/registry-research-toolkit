@@ -188,7 +188,10 @@ def _period_residual(version_name: str | None) -> str | None:
         return None
     assert version_name is not None  # narrowed by match-not-None
     _, start, end = match
-    residual = (version_name[:start] + " " + version_name[end:]).strip()
+    # Collapse whitespace runs: slicing around the period match can leave a
+    # double space (`Gifta 1996-1997` → `Gifta ` + ` ` + `-1997`), and the
+    # comment is more readable without the artifact.
+    residual = " ".join((version_name[:start] + " " + version_name[end:]).split())
     if not residual:
         return None
     for token in _RESIDUAL_ALPHA_RE.findall(residual):

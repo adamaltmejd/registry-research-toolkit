@@ -704,6 +704,40 @@ class TestSeedSlugs:
         body = seed_provider_toml(conn, "scb")
         assert "[register_version." not in body
 
+    def test_residual_normalizes_whitespace_around_period_match(self):
+        # `Gifta 1996-1997` → derive_period matches `1996`, slicing leaves a
+        # double-space artifact (`"Gifta "` + `" "` + `"-1997"`). Comment
+        # readability matters since ~330 production rows are affected; the
+        # residual collapses whitespace runs to a single space.
+        conn = build_slugged_db(
+            version=("Gifta 1996-1997", "gifta-1996-1997", 200),
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert '(residual: "Gifta -1997")' in body
+        assert '(residual: "Gifta  -1997")' not in body
+
+    def test_collision_and_residual_co_occur_in_fixed_order(self):
+        # §5.3 rules 5 + 6 can both fire on the same row (a curated slug
+        # whose name *also* leaks scope info). The spec promises a fixed
+        # output order: `(vs ...)` first, then `(residual: ...)`. Production
+        # data leans on this ordering, so pin it.
+        conn = build_slugged_db(
+            version=("Vårterminen 2013", None, 5177),
+        )
+        add_version(
+            conn,
+            regver_id=5510,
+            regvar_id=10,
+            slug="betyg-vt2013",
+            name="Vårterminen 2013 - betyg",
+        )
+        conn.commit()
+        body = seed_provider_toml(conn, "scb")
+        assert (
+            "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013) (residual: \"- betyg\")"
+            in body
+        )
+
 
 # ---------------------------------------------------------------------------
 # precheck-slugs
