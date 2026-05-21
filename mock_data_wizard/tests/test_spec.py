@@ -328,8 +328,9 @@ def test_datetime_column_type_rejected_with_actionable_message():
 
 # -- reg_monabundle namespaced block --------------------------------------
 #
-# Per-rule validator coverage lives in reg_monabundle/tests/test_validate.py
-# alongside the validator (§15 step 5 phase 1 — owner-validates-its-block).
+# Per-rule validator coverage lives in
+# reg_monabundle/tests/test_validate_block.py alongside the validator
+# (§15 step 5 phase 1 — owner-validates-its-block).
 # The tests that remain here exercise the cross-block referential checks
 # (``_validate_column_options_against_columns``) that still need the
 # resolved column dataclasses and so stay in ``mock_data_wizard.spec``.

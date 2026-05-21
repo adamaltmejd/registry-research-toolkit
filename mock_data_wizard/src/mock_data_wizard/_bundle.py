@@ -79,9 +79,11 @@ REG_SCHEMA_MODULE_ORDER = (
 REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
 REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate")
 
-# Dependency-ordered: each module imports only earlier ones.
-# ``spec`` follows ``summarize`` because ``spec.py`` imports
-# ``SUPPRESS_K`` from summarize for the column_options floor check.
+# Dependency-ordered: each module imports only earlier ones (intra-mdw)
+# or modules already amalgamated from reg_schema / reg_monabundle. Top-
+# level statements run in order, so e.g. ``spec.py``'s
+# ``assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)`` requires
+# ``classify`` to be loaded first.
 MODULE_ORDER = (
     "classify",
     "sql_emit",
