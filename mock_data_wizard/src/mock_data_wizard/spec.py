@@ -36,7 +36,7 @@ import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from reg_schema import (
     Column,
@@ -164,7 +164,7 @@ class LoadedSpec:
         raw_options = block.get("column_options") or {}
         # Cast through Mapping for callers; the validator pinned the
         # inner shape, so a plain dict access is enough.
-        self._column_options: Mapping[str, Mapping[str, Any]] = raw_options
+        self._column_options: Mapping[str, Mapping[str, Any]] = raw_options  # ty: ignore[invalid-assignment]
 
     @property
     def panels(self) -> tuple[Panel, ...]:
@@ -242,14 +242,15 @@ def _validate_reg_monabundle_block(block: object) -> None:
         raise ValueError(
             f"reg_monabundle block must be an object, got {type(block).__name__}"
         )
+    block_obj = cast("Mapping[str, Any]", block)
     allowed = {"column_options"}
-    extra = set(block) - allowed
+    extra = set(block_obj) - allowed
     if extra:
         raise ValueError(
             f"reg_monabundle has unknown key(s) {sorted(extra)} "
             f"(allowed: {sorted(allowed)})"
         )
-    options = block.get("column_options")
+    options = block_obj.get("column_options")
     if options is None:
         return
     if not isinstance(options, dict):
@@ -482,7 +483,8 @@ def _validate_column_options_against_columns(
     """
     if not isinstance(block, dict):
         return
-    options = block.get("column_options")
+    block_obj = cast("Mapping[str, Any]", block)
+    options = block_obj.get("column_options")
     if not isinstance(options, dict):
         return
     columns_by_fqid = {

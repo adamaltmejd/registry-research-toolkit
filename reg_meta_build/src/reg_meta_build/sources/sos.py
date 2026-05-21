@@ -29,7 +29,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable
+    from collections.abc import Iterable, Iterator
 
 # ---------------------------------------------------------------------------
 # Output types
@@ -195,6 +195,7 @@ def parse_register_file(path: Path | str) -> SosRegister:
     metadata. Raises `SosParseError` on unreadable / unrecognised files."""
 
     import openpyxl
+    import openpyxl.utils.exceptions
 
     p = Path(path)
     if p.name.startswith("~$"):
@@ -325,7 +326,7 @@ def _find_sheet(norm_sheets: dict[str, str], tokens: list[str]) -> str | None:
     return None
 
 
-def _row_iter(ws: Any, start: int = 1) -> Iterable[tuple[Any, ...]]:
+def _row_iter(ws: Any, start: int = 1) -> Iterator[tuple[Any, ...]]:
     """Yield rows starting at `start`, stopping after a long empty tail.
     openpyxl's `max_row` is unreliable (phantom rows in some deliveries)."""
     empty_streak = 0
@@ -541,7 +542,8 @@ def _parse_deldatamangder(ws: Any) -> Iterable[SosDeldatamangd]:
         return
     col_map: dict[str, int] = {}
     for i, h in enumerate(header):
-        stem = _DELDATAMANGD_HEADERS.get(_clean(h or "").lower() if h else "")
+        cleaned = _clean(h) if h else None
+        stem = _DELDATAMANGD_HEADERS.get(cleaned.lower() if cleaned else "")
         if stem:
             col_map[stem] = i
 
@@ -598,7 +600,10 @@ def _parse_variables(ws: Any) -> Iterable[SosVariable]:
     for i, h in enumerate(header):
         if not h:
             continue
-        stem = _VAR_HEADERS.get(_clean(h).lower())
+        cleaned = _clean(h)
+        if cleaned is None:
+            continue
+        stem = _VAR_HEADERS.get(cleaned.lower())
         if stem:
             col_map[stem] = i
 

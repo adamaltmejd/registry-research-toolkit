@@ -24,11 +24,11 @@ jobs:
       - run: uvx pre-commit run --all-files
         env:
           SKIP: pytest
-      # Advisory type check via ty (Astral, beta). Pinned via uvx so it tracks
-      # latest without needing lockfile bumps; non-blocking while the baseline
-      # of JSON-boundary noise is being triaged.
+      # Type check via ty (Astral, beta). Pinned via uvx so it tracks latest
+      # without needing lockfile bumps. Baseline triage landed (scripts/tests
+      # excluded, structural.py validator-narrow noise suppressed via
+      # [tool.ty.overrides] in pyproject.toml); the check is now blocking.
       - run: uvx ty check
-        continue-on-error: true
 
   check-versions:
     runs-on: ubuntu-latest

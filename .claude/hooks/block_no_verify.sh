@@ -56,7 +56,25 @@ fi
 # `-n` as a short flag on `git commit`, either standalone or in a combined
 # short-flag group like `-nm` / `-anm`. Single leading dash ensures we don't
 # match `--name-only` etc. (those have two dashes).
-if [[ "$command" =~ git[[:space:]]+commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*${BOUNDARY} ]]; then
+#
+# Pre-subcommand flag tokens are allowed between `git` and `commit` so that
+# wrapper forms like `git -c key=value commit -n` or
+# `git --git-dir .git commit -n` (separate-arg) don't slip past. A flag
+# token is one of:
+#   - short flag group:                 -a / -abc
+#   - `-c`/`-C` with separately-quoted arg: `-c key=value` / `-C path`
+#   - long flag, optionally `=value`:   --foo / --foo=bar
+#   - long flag with separately-quoted arg: --git-dir .git
+# The separate-arg form is greedy and POSIX leftmost-longest, but the
+# trailing `commit` literal forces backtracking so `git --paginate commit
+# -n` (paginate takes no arg) still matches via the bare-flag alternative.
+#
+# Known limitation: shell-quoted values containing whitespace
+# (e.g. `git -C "/tmp/my repo" commit -n`) defeat the whitespace-bounded
+# `[^[:space:]]+` arg pattern. Rare in practice; would require shlex-style
+# tokenization to handle robustly.
+GIT_PRECMD_FLAG='(-[cC][[:space:]]+[^[:space:]]+|--[a-zA-Z][a-zA-Z0-9-]*=[^[:space:]]+|--[a-zA-Z][a-zA-Z0-9-]*[[:space:]]+[^[:space:]-][^[:space:]]*|--[a-zA-Z][a-zA-Z0-9-]*|-[a-zA-Z]+)'
+if [[ "$command" =~ git[[:space:]]+(${GIT_PRECMD_FLAG}[[:space:]]+)*commit([[:space:]].*)?[[:space:]]-[a-zA-Z]*n[a-zA-Z]*${BOUNDARY} ]]; then
 	deny
 fi
 

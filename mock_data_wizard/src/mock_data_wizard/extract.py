@@ -68,6 +68,7 @@ def _extract_year(name: str) -> int | None:
     if y4 is None and term is None:
         return None
     if term is None:
+        assert y4 is not None
         return int(y4.group())
     if y4 is None or term.start() < y4.start():
         return _expand_term_year(int(term.group(1)))
@@ -252,8 +253,15 @@ def _extract_time_key_member_periods(
     (date/quarter strings) are kept as ``str`` so sub-annual panels
     don't crash the run.
     """
+    # Composite entity_keys (tuple) aren't yet supported in this extraction
+    # path; structural validation should prevent reaching here with one.
+    assert isinstance(panel.entity_key, str), (
+        f"panel {panel.panel_id!r}: composite entity_key not supported in "
+        "time-key panel extraction"
+    )
+    entity_key = panel.entity_key
     qcol_time = quote_ident(time_key_column, handle.dialect)
-    qcol_entity = quote_ident(panel.entity_key, handle.dialect)
+    qcol_entity = quote_ident(entity_key, handle.dialect)
     sql = (
         f"SELECT {qcol_time} AS period, COUNT(*) AS n_rows, "
         f"COUNT(DISTINCT {qcol_entity}) AS n_entity_ids "

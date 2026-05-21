@@ -14,8 +14,16 @@ def strip_project_prefix(col: str) -> str:
 
 
 def lookup_with_prefix_fallback[V](d: dict[str, V], col_name: str) -> V | None:
-    """Lookup ``d[col_name.lower()]`` falling back to the prefix-stripped form."""
-    return d.get(col_name.lower()) or d.get(strip_project_prefix(col_name).lower())
+    """Lookup ``d[col_name.lower()]`` falling back to the prefix-stripped form.
+
+    Uses ``in``/``[]`` rather than ``get(...) or get(...)`` so that falsy
+    values (0, "", False, []) are returned as hits — None is reserved as
+    the "not found" signal.
+    """
+    key = col_name.lower()
+    if key in d:
+        return d[key]
+    return d.get(strip_project_prefix(col_name).lower())
 
 
 def progress(msg: str) -> None:

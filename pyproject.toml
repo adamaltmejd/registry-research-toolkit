@@ -55,6 +55,25 @@ extend-select = [
 # import (...)` blocks awkwardly when one member is aliased.
 combine-as-imports = true
 
+[tool.ty.src]
+# Tests use sibling-module sys.path injection (reg_meta/tests/conftest.py
+# pulls reg_meta_build/tests/_shared_fixtures) and JSON-shaped fixtures
+# that defeat ty's narrowing. Scripts are maintainer-only and import
+# optional deps (xlrd, pyodbc, pymupdf4llm) that aren't in workspace
+# pyproject.toml. Neither category is part of the shipped library
+# surface, so exclude from the type baseline.
+exclude = ["**/tests/**", "**/scripts/**", "scripts/**"]
+
+[[tool.ty.overrides]]
+# The §6.8.1 structural validator narrows JSON-loaded values via
+# isinstance(x, Mapping); ty narrows to Top[Mapping[Unknown, object]]
+# rather than Mapping[str, object], producing per-callsite false
+# positives. The validator does its own isinstance checks at every
+# step, so the narrowing limitation is not a correctness gap.
+include = ["**/structural.py"]
+rules.invalid-argument-type = "ignore"
+rules.not-subscriptable = "ignore"
+
 [tool.uv]
 package = false
 

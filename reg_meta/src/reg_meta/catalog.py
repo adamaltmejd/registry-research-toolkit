@@ -314,6 +314,8 @@ class Catalog:
         # `register_version.slug` carries the period or curated token.
         # `ORDER BY vi.cvid, va.kolumnnamn` makes first-match deterministic;
         # uniqueness of (variant, version, variable_slug) is a §5.3 invariant.
+        assert fqid.variable is not None
+        variable_slug = fqid.variable
         rows = self._conn.execute(
             _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
             "AND rv.slug = ? AND rver.slug = ? "
@@ -321,8 +323,8 @@ class Catalog:
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
-            if derive_variable_slug(row["kolumnnamn"]) == fqid.variable:
-                return self._row_to_binding(row, fqid, fqid.variable)
+            if derive_variable_slug(row["kolumnnamn"]) == variable_slug:
+                return self._row_to_binding(row, fqid, variable_slug)
         return None
 
     def _resolve_binding_via_same_as(

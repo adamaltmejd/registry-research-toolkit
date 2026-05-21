@@ -940,7 +940,9 @@ def _cmd_get_varinfo(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     try:
         info = get_db_info(conn)
         variables = get_varinfo(conn, args.variable, register=args.register)
-        data = variables[0] if len(variables) == 1 else {"variables": variables}
+        data: dict[str, Any] = (
+            variables[0] if len(variables) == 1 else {"variables": variables}
+        )
     finally:
         conn.close()
 
