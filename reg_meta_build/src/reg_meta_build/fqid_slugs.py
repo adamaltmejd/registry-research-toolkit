@@ -26,6 +26,7 @@ from reg_meta.fqid import (
     FqidError,
     FqidKind,
     derive_period,
+    derive_period_with_span,
     derive_variable_slug,
     validate_slug,
 )
@@ -157,6 +158,46 @@ def _toml_comment(value: str) -> str:
     data is single-line.
     """
     return value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
+
+
+# A "residual" carries scope info when it has a 3+ alphabetic run NOT in
+# `_RESIDUAL_CONNECTOR_TOKENS`. Shorter runs (`kv`, `fr`) are abbreviations,
+# and the 3-char Swedish function words below are conjunctions/prepositions
+# without scope content. 3 is the smallest length threshold that admits real
+# content like `Öar` or `maj`.
+_RESIDUAL_ALPHA_RE = re.compile(r"[^\W\d_]+", flags=re.UNICODE)
+_RESIDUAL_CONNECTOR_TOKENS = frozenset({"och", "för", "med", "men"})
+
+
+def _period_residual(version_name: str | None) -> str | None:
+    """Return the source-name text outside the period match, or ``None`` when
+    the row is "clean" (no period match at all, or residual is connectors-only).
+
+    Surfaces the §5.3 audit case: ``derive_period`` extracts a period token but
+    the source name carried extra descriptors (`Strandlinje, 2019` → matched
+    `2019`, residual `Strandlinje,`) that auto-derive would silently drop.
+    Seed-slugs uses this to refuse the round-trip skip for residual-bearing
+    rows so a curator sees a stub and can either rename the slug or accept
+    the auto-derive by committing the explicit entry.
+
+    Connector-only residuals (`,`, ` - `, `och`, `och med`) return ``None`` —
+    they don't encode scope info, so flagging them would be noise.
+    """
+    match = derive_period_with_span(version_name)
+    if match is None:
+        return None
+    assert version_name is not None  # narrowed by match-not-None
+    _, start, end = match
+    # Collapse whitespace runs: slicing around the period match can leave a
+    # double space (`Gifta 1996-1997` → `Gifta ` + ` ` + `-1997`), and the
+    # comment is more readable without the artifact.
+    residual = " ".join((version_name[:start] + " " + version_name[end:]).split())
+    if not residual:
+        return None
+    for token in _RESIDUAL_ALPHA_RE.findall(residual):
+        if len(token) >= 3 and token.lower() not in _RESIDUAL_CONNECTOR_TOKENS:
+            return residual
+    return None
 
 
 def _parse_toml(path: Path) -> dict[str, Any]:
@@ -1562,6 +1603,13 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         )
 
     versions_by_reg: dict[int, list[tuple[int, int, str | None, str | None]]] = {}
+    # First claimant of each effective slug under a given regvar_id. Used to
+    # auto-emit the §5.3 rule 5 collision annotation `(vs <regver>:<slug>)`:
+    # if the row we're about to emit has a `derive_period(name)` that another
+    # regver already holds, that other regver is named in the comment so a
+    # future curator immediately sees *why* the curated slug isn't the bare
+    # period. SQL `ORDER BY ... regver_id` gives deterministic claimants.
+    sibling_slug_claimants: dict[int, dict[str, int]] = {}
     for row in conn.execute(
         "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
         "rver.registerversionnamn, rver.slug "
@@ -1577,6 +1625,11 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         versions_by_reg.setdefault(register_id, []).append(
             (regvar_id, regver_id, name, existing_slug)
         )
+        effective = existing_slug or derive_period(name)
+        if effective is not None:
+            sibling_slug_claimants.setdefault(regvar_id, {}).setdefault(
+                effective, regver_id
+            )
 
     for register_id, name, existing_slug in regs:
         candidate = existing_slug or derive_variable_slug(name) or "TODO"
@@ -1603,26 +1656,51 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
             lines.append("")
 
         # Emit only version overrides that need TOML curation. Skip rows where
-        # the next build's auto-derive will reproduce the current state —
-        # periodized name AND slug either already matches the derived period or
-        # is still NULL (the `--skip-slugs` bootstrap case; auto-derive fills
-        # it). Curated overrides whose slug differs from `derive_period(name)`
-        # (e.g. collision-resolution slugs like `ankor-anklingar-1968-1997`)
-        # must round-trip through a reseed, so they're emitted as-is.
+        # the next build's auto-derive will reproduce the current state AND
+        # the source name has no scope info beyond the period token — i.e.
+        # periodized name, slug matches derived (or is NULL waiting for fill),
+        # and no `_period_residual`. Curated overrides whose slug differs from
+        # `derive_period(name)` (collision-resolution slugs like
+        # `ankor-anklingar-1968-1997`) and residual-bearing rows like
+        # `Strandlinje, 2019` (period match but `Strandlinje,` dropped on
+        # auto-derive) must round-trip through a reseed so the curator sees
+        # the stub and decides: rename, or accept by committing `slug = derived`.
         for regvar_id, regver_id, vername, existing_slug in versions_by_reg.get(
             register_id, []
         ):
             derived = derive_period(vername)
-            if derived is not None and existing_slug in (None, derived):
+            residual = _period_residual(vername)
+            if (
+                derived is not None
+                and existing_slug in (None, derived)
+                and residual is None
+            ):
                 continue
             key = f"{register_id}.{regvar_id}.{regver_id}"
             # Audit comment: preserves the source `registerversionnamn` verbatim
-            # so the next curator can verify any typo/abbreviation normalization
-            # (§5.3).
+            # (wrapped in single quotes) so the next curator can verify any
+            # typo/abbreviation normalization (§5.3). Two terse parentheticals
+            # may attach OUTSIDE the quotes:
+            #   `(vs <claimant>:<slug>)` — derive_period(name) collides with a
+            #       sibling's effective slug (§5.3 rule 5).
+            #   `(residual: "<text>")` — auto-derive would drop scope info from
+            #       the source name (§5.3 rule 6).
+            # Both can co-occur on the same row; order is collision then residual.
             if vername:
-                lines.append(f"# {_toml_comment(vername)}")
+                quoted_name = f"'{_toml_comment(vername)}'"
+                annotations = ""
+                if derived is not None:
+                    claimant = sibling_slug_claimants.get(regvar_id, {}).get(derived)
+                    if claimant is not None and claimant != regver_id:
+                        annotations += f" (vs {claimant}:{derived})"
+                if residual is not None:
+                    annotations += f" (residual: {_toml_str(residual)})"
+                lines.append(f"# {quoted_name}{annotations}")
             lines.append(f"[register_version.{_toml_str(key)}]")
-            lines.append(f"slug = {_toml_str(existing_slug or 'TODO')}")
+            # Residual-bearing rows pre-fill with the auto-derive value so doing
+            # nothing accepts auto-derive (curator commits the explicit entry as
+            # an acknowledgement); renaming the slug is the active curation path.
+            lines.append(f"slug = {_toml_str(existing_slug or derived or 'TODO')}")
             lines.append("")
     return "\n".join(lines)
 

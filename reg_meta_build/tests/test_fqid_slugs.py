@@ -6,7 +6,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import build_slugged_db
+from _slugged_db import add_version, build_slugged_db
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
@@ -617,8 +617,10 @@ class TestSeedSlugs:
 
     def test_omits_periodized_version_from_seed(self):
         # Periodized versions round-trip without any TOML curation — they
-        # must not appear as stubs in the seed output.
-        conn = build_slugged_db(version=("LISA 2018", "2018", 200))
+        # must not appear as stubs in the seed output. Source name is a bare
+        # period token: any prefix would trigger the §5.3 residual flag and
+        # legitimately force an emission.
+        conn = build_slugged_db(version=("2018", "2018", 200))
         body = seed_provider_toml(conn, "scb")
         assert "[register_version." not in body
 
@@ -634,7 +636,107 @@ class TestSeedSlugs:
         assert 'slug = "ankor-1968-1997"' in body
         # Audit comment carries the source registerversionnamn so the next
         # curator can verify any typo/abbreviation normalization (§5.3).
-        assert "# Ankor och anklingar 1968-1997" in body
+        assert "# 'Ankor och anklingar 1968-1997'" in body
+
+    def test_emits_collision_annotation_against_sibling(self):
+        # §5.3 rule 5: when the curated row's derive_period(name) matches a
+        # sibling's effective slug, the comment names the sibling so a future
+        # curator sees *why* the curated slug isn't the bare period. Mirrors
+        # the real `104.840.5510 / 'Vårterminen 2013 - betyg' (vs 5177:VT2013)`
+        # case from scb.toml.
+        conn = build_slugged_db(
+            # 5177 holds the canonical VT2013 (auto-derived from name).
+            version=("Vårterminen 2013", None, 5177),
+        )
+        add_version(
+            conn,
+            regver_id=5510,
+            regvar_id=10,
+            slug="betyg-vt2013",
+            name="Vårterminen 2013 - betyg",
+        )
+        conn.commit()
+        body = seed_provider_toml(conn, "scb")
+        assert '[register_version."1.10.5510"]' in body
+        assert 'slug = "betyg-vt2013"' in body
+        assert "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013)" in body
+        # The claimant (5177) auto-derives to its slug — it's NOT a curated
+        # override, so it should not itself appear as a seed stub.
+        assert '[register_version."1.10.5177"]' not in body
+
+    def test_collision_annotation_omitted_when_no_sibling_claims_period(self):
+        # No sibling under the variant claims derive_period(name), so no
+        # annotation. Guards against false-positive annotations on lone
+        # descriptor rows (e.g. unperiodized aux tables).
+        # Source name `1968-1997` (year range) leaves a non-alpha residual
+        # `-1997` so the §5.3 rule 6 residual flag also stays quiet — keeps
+        # this test focused on the collision-omitted axis.
+        conn = build_slugged_db(
+            version=("1968-1997", "ankor-1968-1997", 200),
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert "# '1968-1997'\n" in body
+        assert "(vs " not in body
+        assert "(residual:" not in body
+
+    def test_residual_emits_stub_with_auto_derived_slug(self):
+        # §5.3 rule 6: source name carries scope info beyond the period
+        # (`Strandlinje, 2019` → derive_period extracts `2019`, drops
+        # `Strandlinje`). seed-slugs refuses the round-trip skip so the
+        # curator sees a stub. Default slug is the auto-derive value —
+        # accepting as-is is the "acknowledge auto-derive" path; renaming
+        # is the curate path.
+        conn = build_slugged_db(version=("Strandlinje, 2019", None, 200))
+        body = seed_provider_toml(conn, "scb")
+        assert '[register_version."1.10.200"]' in body
+        assert 'slug = "2019"' in body
+        assert "# 'Strandlinje, 2019' (residual:" in body
+        assert '(residual: "Strandlinje,")' in body
+
+    def test_residual_skipped_when_only_connector_token_remains(self):
+        # §5.3 rule 6 connector denylist: a residual of ONLY a 3-char Swedish
+        # function word (`och`, `för`, `med`, `men`) is not scope-bearing — it
+        # is a conjunction/preposition stranded by the period match. The row
+        # round-trips through auto-derive without curation, so no stub is
+        # emitted. Guards against false-positive curation work that the bare
+        # `[^\W\d_]{3,}` length test would create.
+        conn = build_slugged_db(version=("2019 och", "2019", 200))
+        body = seed_provider_toml(conn, "scb")
+        assert "[register_version." not in body
+
+    def test_residual_normalizes_whitespace_around_period_match(self):
+        # `Gifta 1996-1997` → derive_period matches `1996`, slicing leaves a
+        # double-space artifact (`"Gifta "` + `" "` + `"-1997"`). Comment
+        # readability matters since ~330 production rows are affected; the
+        # residual collapses whitespace runs to a single space.
+        conn = build_slugged_db(
+            version=("Gifta 1996-1997", "gifta-1996-1997", 200),
+        )
+        body = seed_provider_toml(conn, "scb")
+        assert '(residual: "Gifta -1997")' in body
+        assert '(residual: "Gifta  -1997")' not in body
+
+    def test_collision_and_residual_co_occur_in_fixed_order(self):
+        # §5.3 rules 5 + 6 can both fire on the same row (a curated slug
+        # whose name *also* leaks scope info). The spec promises a fixed
+        # output order: `(vs ...)` first, then `(residual: ...)`. Production
+        # data leans on this ordering, so pin it.
+        conn = build_slugged_db(
+            version=("Vårterminen 2013", None, 5177),
+        )
+        add_version(
+            conn,
+            regver_id=5510,
+            regvar_id=10,
+            slug="betyg-vt2013",
+            name="Vårterminen 2013 - betyg",
+        )
+        conn.commit()
+        body = seed_provider_toml(conn, "scb")
+        assert (
+            "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013) (residual: \"- betyg\")"
+            in body
+        )
 
 
 # ---------------------------------------------------------------------------

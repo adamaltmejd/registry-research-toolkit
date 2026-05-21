@@ -2,7 +2,21 @@
 # see REFACTOR_SPEC §5.2 on the `class/<slug>/<version>` namespace).
 #
 # Uniqueness is by (slug, version) pair (§5.3), so the same stem may
-# appear across years — e.g. `sun` with version 1996, 2000, 2020.
+# appear across years — e.g. `lkf` once per year 1980-2026.
+#
+# Notable family structure: SUN is asymmetric across the 2000 redesign
+# (LISA `_methodology-education.md` §3; aligned SUN 2000 to ISCED 97).
+#   `sun` v=1996      — monolithic, one nested code space (5-digit leaves,
+#                       3- and 2-char aggregations under the same hierarchy).
+#                       Pre-redesign delivery shape.
+#   `sun-niva`        — 3-digit numeric levels (independent code space).
+#   `sun-grupp`       — 3-char alphanumeric groups (independent code space).
+#   `sun-inriktning`  — variable-length specialization codes (independent).
+#     all three at v=2000 and v=2020.
+# The three v=2000+ siblings are **parallel classifications**, not levels of
+# one hierarchy — `03A` (grupp) and `100` (niva) don't relate as parent/child.
+# `niva-old` / `niva-grov` are SCB aggregations introduced alongside SUN2000
+# to bridge old-SUN level comparability; carry placeholder `version = "v1"`.
 
 [classification."AGARKAT2000"]
 slug = "agarkat"

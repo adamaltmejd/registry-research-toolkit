@@ -334,6 +334,27 @@ def try_emit(factory: Callable[..., Fqid], *parts: str | None) -> str | None:
         return None
 
 
+def derive_period_with_span(
+    version_name: str | None,
+) -> tuple[str, int, int] | None:
+    """Like :func:`derive_period` but also returns the `(start, end)` span the
+    match consumed in ``version_name``. Lets audit tooling (seed-slugs §5.3
+    rule callout) recover the residual — the source-name text outside the
+    matched period — so a curator can see what auto-derive would discard.
+    """
+    if not version_name:
+        return None
+    for pat, prefix in _TERMIN_EXTRACT_PATTERNS:
+        m = pat.search(version_name)
+        if m:
+            return (f"{prefix}{m.group(1)}", m.start(), m.end())
+    for pat in _PERIOD_EXTRACT_PATTERNS:
+        m = pat.search(version_name)
+        if m:
+            return (m.group(0), m.start(), m.end())
+    return None
+
+
 def derive_period(version_name: str | None) -> str | None:
     """Extract the most-specific period token from a register-version name.
 
@@ -347,17 +368,8 @@ def derive_period(version_name: str | None) -> str | None:
     collapse to bare `1980` and re-trip the §5.3 uniqueness rule it exists
     to prevent.
     """
-    if not version_name:
-        return None
-    for pat, prefix in _TERMIN_EXTRACT_PATTERNS:
-        m = pat.search(version_name)
-        if m:
-            return f"{prefix}{m.group(1)}"
-    for pat in _PERIOD_EXTRACT_PATTERNS:
-        m = pat.search(version_name)
-        if m:
-            return m.group(0)
-    return None
+    match = derive_period_with_span(version_name)
+    return match[0] if match is not None else None
 
 
 def derive_variable_slug(kolumnnamn: str | None) -> str | None:
