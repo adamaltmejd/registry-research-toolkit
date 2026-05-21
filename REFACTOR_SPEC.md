@@ -816,7 +816,7 @@ Four consequences:
    `Strandlinje` qualifier — a consumer querying by the bare period
    sees that subset's data without knowing it. `seed-slugs` refuses
    the round-trip skip for these rows and emits a stub pre-filled
-   with the auto-derived value, with a `(residual: '<text>')`
+   with the auto-derived value, with a `(residual: "<text>")`
    annotation on the comment so the curator decides: rename the
    slug to a scope-prefix form, or commit the explicit entry as-is
    to acknowledge that the bare-period choice was intentional.
@@ -831,9 +831,11 @@ Four consequences:
    ```
 
    "Residual" here means: the source-name text outside the period
-   match, after stripping whitespace and punctuation. Connector-only
-   residuals (`,`, `-`) don't fire; the heuristic requires at least
-   one 3+ char Unicode-letter run, so `Öar` flags but `och` doesn't.
+   match, with edge whitespace trimmed (internal punctuation like
+   the trailing comma in `Strandlinje,` is preserved). The heuristic
+   requires at least one 3+ char Unicode-letter run that isn't a
+   stranded Swedish connector (`och`, `för`, `med`, `men`), so `Öar`
+   flags but a residual of just `och` doesn't.
 
 | Field           | Type                | Applies to        | Required | Description |
 |-----------------|---------------------|-------------------|:--------:|-------------|

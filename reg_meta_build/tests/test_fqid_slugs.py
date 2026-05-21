@@ -693,6 +693,17 @@ class TestSeedSlugs:
         assert "# 'Strandlinje, 2019' (residual:" in body
         assert '(residual: "Strandlinje,")' in body
 
+    def test_residual_skipped_when_only_connector_token_remains(self):
+        # §5.3 rule 6 connector denylist: a residual of ONLY a 3-char Swedish
+        # function word (`och`, `för`, `med`, `men`) is not scope-bearing — it
+        # is a conjunction/preposition stranded by the period match. The row
+        # round-trips through auto-derive without curation, so no stub is
+        # emitted. Guards against false-positive curation work that the bare
+        # `[^\W\d_]{3,}` length test would create.
+        conn = build_slugged_db(version=("2019 och", "2019", 200))
+        body = seed_provider_toml(conn, "scb")
+        assert "[register_version." not in body
+
 
 # ---------------------------------------------------------------------------
 # precheck-slugs

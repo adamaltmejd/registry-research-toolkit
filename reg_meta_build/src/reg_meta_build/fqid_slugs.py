@@ -160,11 +160,13 @@ def _toml_comment(value: str) -> str:
     return value.replace("\r\n", " ").replace("\n", " ").replace("\r", " ")
 
 
-# A "residual" carries scope info when it has a 3+ alphabetic run. Shorter
-# runs (`och`, `kv`, `fr`) are connectors/abbreviations that don't indicate
-# the row's source name had a real descriptor beyond the period token. 3 is
-# the smallest threshold that admits `Öar` while rejecting most connectors.
-_RESIDUAL_ALPHA_RE = re.compile(r"[^\W\d_]{3,}", flags=re.UNICODE)
+# A "residual" carries scope info when it has a 3+ alphabetic run NOT in
+# `_RESIDUAL_CONNECTOR_TOKENS`. Shorter runs (`kv`, `fr`) are abbreviations,
+# and the 3-char Swedish function words below are conjunctions/prepositions
+# without scope content. 3 is the smallest length threshold that admits real
+# content like `Öar` or `maj`.
+_RESIDUAL_ALPHA_RE = re.compile(r"[^\W\d_]+", flags=re.UNICODE)
+_RESIDUAL_CONNECTOR_TOKENS = frozenset({"och", "för", "med", "men"})
 
 
 def _period_residual(version_name: str | None) -> str | None:
@@ -178,8 +180,8 @@ def _period_residual(version_name: str | None) -> str | None:
     rows so a curator sees a stub and can either rename the slug or accept
     the auto-derive by committing the explicit entry.
 
-    Connector-only residuals (`,`, ` - `, `och`) return ``None`` — they don't
-    encode scope info, so flagging them as audit candidates would be noise.
+    Connector-only residuals (`,`, ` - `, `och`, `och med`) return ``None`` —
+    they don't encode scope info, so flagging them would be noise.
     """
     match = derive_period_with_span(version_name)
     if match is None:
@@ -187,9 +189,12 @@ def _period_residual(version_name: str | None) -> str | None:
     assert version_name is not None  # narrowed by match-not-None
     _, start, end = match
     residual = (version_name[:start] + " " + version_name[end:]).strip()
-    if not residual or not _RESIDUAL_ALPHA_RE.search(residual):
+    if not residual:
         return None
-    return residual
+    for token in _RESIDUAL_ALPHA_RE.findall(residual):
+        if len(token) >= 3 and token.lower() not in _RESIDUAL_CONNECTOR_TOKENS:
+            return residual
+    return None
 
 
 def _parse_toml(path: Path) -> dict[str, Any]:
