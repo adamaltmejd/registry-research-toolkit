@@ -16,7 +16,8 @@ Two modes, one bundle:
 
 PII discipline: only aggregate values cross the JSON boundary. Cell
 suppression and noise live in :mod:`summarize`; this module just
-orchestrates and routes the export through :func:`scan.write_export`.
+orchestrates and routes the export through
+:func:`reg_monabundle.scan.write_export`.
 """
 
 from __future__ import annotations
@@ -31,7 +32,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from .scan import write_export
+from reg_monabundle.scan import write_export
+
 from .sources import SourceHandle, iter_source
 from .spec import LoadedSpec, load_project_data
 from .sql_emit import DUCKDB, MSSQL, quote_ident

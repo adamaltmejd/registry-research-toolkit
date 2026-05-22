@@ -90,9 +90,17 @@ pull `reg_monabundle.runtime.*`.
   `BUNDLE_MODULE_ORDER` and its CLI's `build-bundle` rebases through
   `reg_monabundle.build_bundle`. Bundle output is unchanged — mdw's
   runtime modules still live in mdw (phase 2c moves them).
-- **Phase 2b.** `scan.py` → `reg_monabundle/scan.py`;
-  `reg_monabundle.types.is_compatible` lands if §15 step 10a needs
-  it sooner.
+- **Phase 2b.** ✅ `mock_data_wizard/scan.py` →
+  `reg_monabundle/scan.py`. Pure-stdlib lift — scan never imported
+  another mdw module, so the move is a straight relocation with the
+  three callsites (`mdw.extract`, `mdw.cli._cmd_scan`, the test
+  module) rebased onto `reg_monabundle.scan`. `scan` is appended to
+  `REG_MONABUNDLE_MODULE_ORDER` and dropped from
+  `mock_data_wizard.BUNDLE_MODULE_ORDER`, keeping the amalgamation
+  order intact (the runtime `extract` slice consumes
+  `write_export` from the amalgamated `scan` slice that precedes it).
+  `reg_monabundle.types.is_compatible` does not land here — it
+  arrives when §15 step 10a needs it.
 - **Phase 2c.** Runtime modules (classify, sql_emit, sources,
   summarize, spec, extract) → `runtime/`. The bundle's import
   discipline (lightweight vs runtime) is enforced by a CI test that

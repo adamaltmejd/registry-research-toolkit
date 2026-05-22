@@ -6,7 +6,8 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from mock_data_wizard.scan import (
+from _stats_fixtures import MINIMAL_STATS, SPINE_STATS
+from reg_monabundle.scan import (
     SCANNER_VERSION,
     PIIScannerError,
     _luhn_valid,
@@ -15,8 +16,6 @@ from mock_data_wizard.scan import (
     scan_string,
     write_export,
 )
-
-from .conftest import MINIMAL_STATS, SPINE_STATS
 
 if TYPE_CHECKING:
     from pathlib import Path

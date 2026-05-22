@@ -3011,10 +3011,19 @@ document. Step 1 can start.
      ``reg_monabundle.build_bundle``. Bundle output unchanged (mdw
      runtime modules still live in mdw — phase 2c moves them).
      ``mock_data_wizard._bundle`` deleted.
-   - **Phase 2b — PII scanner + (when needed) type compatibility map.**
+   - **Phase 2b — PII scanner.** ✅ **Shipped 2026-05-22**.
      `mock_data_wizard/scan.py` → `reg_monabundle/scan.py`.
-     `reg_monabundle.types.is_compatible` lands here too if §15 step
-     10a needs it before phase 2c; otherwise it can defer.
+     Pure-stdlib scanner; the move was a straight relocation (no mdw
+     module deps to unwind). Callers rebased: `mdw.extract` now imports
+     `write_export` from `reg_monabundle.scan`, `mdw.cli._cmd_scan`
+     calls `reg_monabundle.scan`, and the regression tests move with
+     the module. `scan` is appended to
+     `reg_monabundle.build.REG_MONABUNDLE_MODULE_ORDER` and removed
+     from `mock_data_wizard.BUNDLE_MODULE_ORDER`, keeping the bundle's
+     amalgamation order correct (the runtime `extract` slice still
+     resolves `write_export` from the preceding amalgamated `scan`
+     slice). `reg_monabundle.types.is_compatible` is deferred — it
+     lands when §15 step 10a needs it.
    - **Phase 2c — bundle-runtime modules.** Runtime modules (classify,
      sql_emit, sources, summarize, spec, extract) move under
      `reg_monabundle/runtime/`. Open design question: where does

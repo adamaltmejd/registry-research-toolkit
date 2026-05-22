@@ -27,7 +27,6 @@ BUNDLE_MODULE_ORDER: tuple[str, ...] = (
     "sources",
     "summarize",
     "spec",
-    "scan",
     "extract",
 )
 

@@ -76,14 +76,16 @@ REG_SCHEMA_MODULE_ORDER = (
 )
 
 # reg_monabundle modules amalgamated ahead of the runtime modules so
-# summarize.py's ``SUPPRESS_K`` reference and spec.py's
-# ``validate_block(...)`` call (both via ``from reg_monabundle import …``
-# in the source) resolve inside the bundle. ``constants`` precedes
-# ``validate`` because the validator's suppress_k floor check reads
-# ``SUPPRESS_K``. Phase 2 grows this tuple as the bundle scanner +
-# type compatibility map move over.
+# summarize.py's ``SUPPRESS_K`` reference, spec.py's
+# ``validate_block(...)`` call, and extract.py's ``write_export(...)``
+# call (all via ``from reg_monabundle… import`` in the source) resolve
+# inside the bundle. ``constants`` precedes ``validate`` because the
+# validator's suppress_k floor check reads ``SUPPRESS_K``; ``scan``
+# trails because the runtime modules amalgamated after this tuple
+# (in particular ``extract``) call ``write_export``. Phase 2 grows
+# this tuple as the type compatibility map moves over.
 REG_MONABUNDLE_DIR = Path(__file__).resolve().parent
-REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate")
+REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
 
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA discover/extract bundle.
