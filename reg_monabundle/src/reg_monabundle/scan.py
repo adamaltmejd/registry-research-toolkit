@@ -209,11 +209,14 @@ def scan_string(s: str) -> list[str]:
     """Return the list of pattern names matched in ``s`` (each at most
     once per call)."""
     hits: list[str] = []
-    if _has_personnummer(s):
+    # Cheap str-membership guards short-circuit ~half of strings before regex.
+    # `any(isdigit)` is a sound lower bound: _has_personnummer requires ≥10 digits.
+    # `"7" in s` is sound: _MOBILE requires `7[02369]` after the `+46`/`0` prefix.
+    if any(c.isdigit() for c in s) and _has_personnummer(s):
         hits.append("personnummer")
-    if _EMAIL.search(s):
+    if "@" in s and _EMAIL.search(s):
         hits.append("email")
-    if _MOBILE.search(s):
+    if "7" in s and _MOBILE.search(s):
         hits.append("mobile")
     return hits
 
