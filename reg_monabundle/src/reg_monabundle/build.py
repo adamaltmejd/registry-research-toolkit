@@ -496,11 +496,13 @@ def build_bundle(
 ) -> Path:
     """Amalgamate the runtime modules into a single ``.py``.
 
-    ``runtime_pkg_dir`` defaults to ``reg_monabundle.runtime`` and
-    ``runtime_module_order`` defaults to ``DEFAULT_RUNTIME_MODULE_ORDER``
-    — the in-package runtime amalgamated by mdw / reg_webapp /
-    reg_mockdata. Override both together to plug in a steward-private
-    runtime that lives outside this package.
+    ``runtime_pkg_dir`` + ``runtime_module_order`` default to
+    ``reg_monabundle.runtime`` (the in-package runtime amalgamated by
+    mdw / reg_webapp / reg_mockdata). To plug in a steward-private
+    runtime that lives outside this package, pass **both** —
+    overriding only one would silently apply the default module list
+    to a different directory and crash later with a missing-file
+    error.
 
     When ``configure_body`` is supplied (a complete ``def configure(): ...``
     function source), it fills the configure slot in ``BUNDLE_HEADER``.
@@ -513,10 +515,17 @@ def build_bundle(
     runner falls back to reading ``project_data.json`` from the bundle
     directory at extract time.
     """
+    if (runtime_pkg_dir is None) != (runtime_module_order is None):
+        raise ValueError(
+            "build_bundle: runtime_pkg_dir and runtime_module_order must "
+            "be supplied together (or both omitted to use the in-package "
+            "reg_monabundle.runtime). Passing only one would silently "
+            "apply the default module list to a different directory."
+        )
     if runtime_pkg_dir is None:
         runtime_pkg_dir = DEFAULT_RUNTIME_DIR
-    if runtime_module_order is None:
         runtime_module_order = DEFAULT_RUNTIME_MODULE_ORDER
+    assert runtime_module_order is not None  # paired check above
     output.parent.mkdir(parents=True, exist_ok=True)
     body = (configure_body or DEFAULT_CONFIGURE_BODY).rstrip()
     header = BUNDLE_HEADER.replace(CONFIGURE_PLACEHOLDER, body, 1)

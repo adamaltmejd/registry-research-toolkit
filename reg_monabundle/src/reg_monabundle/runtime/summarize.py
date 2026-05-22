@@ -16,7 +16,13 @@ import random
 from datetime import date, datetime, timedelta
 from typing import TYPE_CHECKING, Any
 
-from reg_monabundle import SUPPRESS_K
+# Import the floor directly from ``constants`` (rather than through the
+# top-level ``reg_monabundle`` re-export) so a runtime submodule never
+# pulls the lightweight surface (``build``, ``scan``, ``validate``)
+# back through ``reg_monabundle/__init__.py``. The slicer drops both
+# forms; the difference matters only when the runtime is loaded as a
+# regular Python package locally.
+from reg_monabundle.constants import SUPPRESS_K
 
 from .classify import DATE_FORMATS, _python_kind, detect_date_format
 from .sql_emit import queries_for_column
