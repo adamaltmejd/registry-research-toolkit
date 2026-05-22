@@ -12,7 +12,9 @@ license = { text = "MIT" }
 dependencies = [
   "numpy>=1.26",
   "reg-meta",
-  "reg-monabundle",
+  # >=0.3 required for `reg_monabundle.scan`, hard-imported by
+  # `mock_data_wizard.extract` (§15 step 5 phase 2b).
+  "reg-monabundle>=0.3",
   "reg-schema",
 ]
 
