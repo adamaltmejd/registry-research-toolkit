@@ -29,7 +29,6 @@ opt-in flag, never the default.
 from __future__ import annotations
 
 import json
-import logging
 import re
 from dataclasses import dataclass
 from datetime import date
@@ -38,8 +37,6 @@ from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
-
-log = logging.getLogger("mdw.scan")
 
 SCANNER_VERSION = "1"
 

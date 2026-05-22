@@ -435,7 +435,7 @@ def _cmd_update(_args: argparse.Namespace) -> int:
 
 def _cmd_scan(args: argparse.Namespace) -> int:
     """Run the PII scanner against an existing JSON file."""
-    from . import scan as scan_mod
+    from reg_monabundle import scan as scan_mod
 
     target = Path(args.path)
     if not target.exists():
