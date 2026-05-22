@@ -202,9 +202,10 @@ Output is `mock_data_discovery.json`:
 }
 ```
 
-Discover passes through the same `scan.write_export` PII scanner as
-`mock_data_stats.json` — column names and `sql_type` strings are unlikely to
-contain personnummer, but defense-in-depth is cheap.
+Discover passes through the same `reg_monabundle.scan.write_export`
+PII scanner as `mock_data_stats.json` — column names and `sql_type`
+strings are unlikely to contain personnummer, but defense-in-depth is
+cheap.
 
 ### Extract mode (`MODE = "extract"`)
 
@@ -826,9 +827,10 @@ that buys nothing because the sample is already on the wire.
 
 ### Pre-export PII scanner
 
-`scan.write_export(path, payload)` is the *only* code path that writes
-files leaving the bundle's `output_dir`: `mock_data_stats.json` (extract mode)
-and `mock_data_discovery.json` (discover mode) both go through it.
+`reg_monabundle.scan.write_export(path, payload)` is the *only* code
+path that writes files leaving the bundle's `output_dir`:
+`mock_data_stats.json` (extract mode) and `mock_data_discovery.json`
+(discover mode) both go through it.
 `mock_data_config.json` is an *input* and isn't covered by this scanner.
 The scanner is defense-in-depth on top of the per-type branches in
 `summarize.py`, which already only emit aggregates by construction.

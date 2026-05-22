@@ -13,30 +13,16 @@ See ``DESIGN.md`` for the two-half split (lightweight pure-python vs.
 
 from .build import DEFAULT_OUTPUT_NAME, build_bundle
 from .constants import SUPPRESS_K
-from .scan import (
-    PATTERNS_APPLIED,
-    SCANNER_VERSION,
-    PIIScannerError,
-    ScanMatch,
-    scan_file,
-    scan_payload,
-    scan_string,
-    write_export,
-)
+from .scan import PIIScannerError, scan_file, write_export
 from .validate import VALID_OPTION_KEYS, validate_block
 
 __all__ = [
     "DEFAULT_OUTPUT_NAME",
-    "PATTERNS_APPLIED",
     "PIIScannerError",
-    "SCANNER_VERSION",
     "SUPPRESS_K",
     "VALID_OPTION_KEYS",
-    "ScanMatch",
     "build_bundle",
     "scan_file",
-    "scan_payload",
-    "scan_string",
     "validate_block",
     "write_export",
 ]
