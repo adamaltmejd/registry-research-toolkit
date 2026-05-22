@@ -61,9 +61,11 @@ combine-as-imports = true
 # pulls reg_meta_build/tests/_shared_fixtures) and JSON-shaped fixtures
 # that defeat ty's narrowing. Scripts are maintainer-only and import
 # optional deps (xlrd, pyodbc, pymupdf4llm) that aren't in workspace
-# pyproject.toml. Neither category is part of the shipped library
-# surface, so exclude from the type baseline.
-exclude = ["**/tests/**", "**/scripts/**", "scripts/**"]
+# pyproject.toml. test_corpus/ holds fixture-generators that produce
+# JSON-shaped dicts (object-typed values, by design). None of these
+# categories are part of the shipped library surface, so exclude from
+# the type baseline.
+exclude = ["**/tests/**", "**/scripts/**", "scripts/**", "**/test_corpus/**"]
 
 [[tool.ty.overrides]]
 # The §6.8.1 structural validator narrows JSON-loaded values via

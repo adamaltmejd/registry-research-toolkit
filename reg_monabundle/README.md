@@ -28,7 +28,8 @@ matches = scan_file(Path("mock_data_stats.json"))
 
 ## Status
 
-**Phase 2c** of `REFACTOR_SPEC.md` §15 step 5. Lightweight surface:
+**Phase 3** of `REFACTOR_SPEC.md` §15 step 5 — step 5 is now fully
+complete. Lightweight surface:
 
 - `reg_monabundle.validate_block` — §6.8.2 namespaced-block validator.
 - `reg_monabundle.constants.SUPPRESS_K` — global k-anonymity floor.
@@ -56,4 +57,9 @@ typically never import the runtime tier — the CI gate
 ([tests/test_lightweight_surface.py](tests/test_lightweight_surface.py))
 asserts the top-level surface never pulls it transitively.
 
-Phase 3 wires the 1 MB bundle-size budget gate per §12.
+Bundle output is byte-counted in CI against the 1 MB v1 cap (§12) via
+[tests/test_bundle_size_budget.py](tests/test_bundle_size_budget.py),
+which embeds the 200-column load-test fixture from
+[reg_schema/test_corpus/load_test_200col/](../reg_schema/test_corpus/load_test_200col/)
+and asserts `≤ 1_048_576`. Current shape lands at ~17% of cap; the
+ceiling is forward-looking, not a tight bound on today's bundle.

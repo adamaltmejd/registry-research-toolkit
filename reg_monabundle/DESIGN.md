@@ -126,8 +126,16 @@ emission, never importing the runtime tier.
   is enforced by `reg_monabundle/tests/test_lightweight_surface.py`,
   which spawns a fresh subprocess and asserts `import reg_monabundle`
   / `.build` / `.scan` / `.validate` never load a runtime submodule.
-- **Phase 3.** 1 MB bundle-size budget gate (§12). Real-MONA-shape
-  fixture, byte-counted in CI; fails on budget overrun.
+- **Phase 3.** ✅ 1 MB bundle-size budget gate
+  (`REFACTOR_SPEC.md` §12). The 200-column load-test fixture lives
+  under `reg_schema/test_corpus/load_test_200col/` (regenerable via
+  `build.py`; the structural corpus harness picks it up as a regular
+  validation case). `reg_monabundle/tests/test_bundle_size_budget.py`
+  embeds it into `build_bundle`, byte-counts the emitted `.py`, and
+  asserts `≤ 1_048_576`. Current shape lands at ~176 KB (~17% of
+  cap) — the v1 ceiling is forward-looking, not a tight bound. The
+  passing test prints actual size + headroom on every run so
+  creeping growth is visible before it trips the gate.
 
 ## SUPPRESS_K
 

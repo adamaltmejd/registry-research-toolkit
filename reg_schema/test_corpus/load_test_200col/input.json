@@ -1,0 +1,1308 @@
+{
+  "schema_version": "1.0.0",
+  "steward": "global",
+  "reg_meta_version": "reg_meta/v0.12.0",
+  "name": "load_test_200col",
+  "sources": [
+    {
+      "name": "lisa_2015",
+      "register_version": "scb/lisa/individer-15plus/2015",
+      "columns": [
+        {
+          "name": "scb/lisa/individer-15plus/2015/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2015/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "lisa_2016",
+      "register_version": "scb/lisa/individer-15plus/2016",
+      "columns": [
+        {
+          "name": "scb/lisa/individer-15plus/2016/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2016/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "lisa_2017",
+      "register_version": "scb/lisa/individer-15plus/2017",
+      "columns": [
+        {
+          "name": "scb/lisa/individer-15plus/2017/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2017/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "lisa_2018",
+      "register_version": "scb/lisa/individer-15plus/2018",
+      "columns": [
+        {
+          "name": "scb/lisa/individer-15plus/2018/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/lisa/individer-15plus/2018/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "louise_2017",
+      "register_version": "scb/louise/_default/2017",
+      "columns": [
+        {
+          "name": "scb/louise/_default/2017/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2017/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/louise/_default/2017/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/louise/_default/2017/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/louise/_default/2017/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/louise/_default/2017/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/louise/_default/2017/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2017/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2017/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2017/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2017/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2017/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/louise/_default/2017/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/louise/_default/2017/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/louise/_default/2017/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/louise/_default/2017/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/louise/_default/2017/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/louise/_default/2017/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/louise/_default/2017/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/louise/_default/2017/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "louise_2018",
+      "register_version": "scb/louise/_default/2018",
+      "columns": [
+        {
+          "name": "scb/louise/_default/2018/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2018/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/louise/_default/2018/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/louise/_default/2018/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/louise/_default/2018/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/louise/_default/2018/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/louise/_default/2018/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/louise/_default/2018/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2018/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2018/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2018/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/louise/_default/2018/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/louise/_default/2018/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/louise/_default/2018/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/louise/_default/2018/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/louise/_default/2018/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/louise/_default/2018/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/louise/_default/2018/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/louise/_default/2018/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/louise/_default/2018/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "rtb_2018",
+      "register_version": "scb/rtb/_default/2018",
+      "columns": [
+        {
+          "name": "scb/rtb/_default/2018/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2018/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/rtb/_default/2018/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/rtb/_default/2018/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/rtb/_default/2018/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/rtb/_default/2018/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/rtb/_default/2018/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2018/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2018/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2018/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2018/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2018/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/rtb/_default/2018/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/rtb/_default/2018/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/rtb/_default/2018/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/rtb/_default/2018/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/rtb/_default/2018/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/rtb/_default/2018/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/rtb/_default/2018/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/rtb/_default/2018/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    },
+    {
+      "name": "rtb_2019",
+      "register_version": "scb/rtb/_default/2019",
+      "columns": [
+        {
+          "name": "scb/rtb/_default/2019/lopnr",
+          "type": "id",
+          "display_name": "Lopnr",
+          "id_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2019/kon",
+          "type": "categorical",
+          "display_name": "Kon",
+          "value_set": "class/sun/2020"
+        },
+        {
+          "name": "scb/rtb/_default/2019/sun2000inr",
+          "type": "categorical",
+          "display_name": "Sun2000inr",
+          "value_set": "class/sun/2000"
+        },
+        {
+          "name": "scb/rtb/_default/2019/ssyk2012",
+          "type": "categorical",
+          "display_name": "Ssyk2012",
+          "value_set": "class/ssyk/2012"
+        },
+        {
+          "name": "scb/rtb/_default/2019/ast_sni2007",
+          "type": "categorical",
+          "display_name": "AstSni2007",
+          "value_set": "class/sni/2007"
+        },
+        {
+          "name": "scb/rtb/_default/2019/kommun",
+          "type": "categorical",
+          "display_name": "Kommun",
+          "value_set": "class/kommun/2020"
+        },
+        {
+          "name": "scb/rtb/_default/2019/dispink04",
+          "type": "numeric",
+          "display_name": "Dispink04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/dispinkfam04",
+          "type": "numeric",
+          "display_name": "Dispinkfam04",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/kontaktink",
+          "type": "numeric",
+          "display_name": "Kontaktink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/loneink",
+          "type": "numeric",
+          "display_name": "Loneink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/foretagarink",
+          "type": "numeric",
+          "display_name": "Foretagarink",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/transferer",
+          "type": "numeric",
+          "display_name": "Transferer",
+          "numeric_subtype": "double"
+        },
+        {
+          "name": "scb/rtb/_default/2019/studieskuld",
+          "type": "numeric",
+          "display_name": "Studieskuld",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2019/antalbarn",
+          "type": "numeric",
+          "display_name": "Antalbarn",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2019/antalsysselsatta",
+          "type": "numeric",
+          "display_name": "Antalsysselsatta",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2019/alder",
+          "type": "numeric",
+          "display_name": "Alder",
+          "numeric_subtype": "integer"
+        },
+        {
+          "name": "scb/rtb/_default/2019/indatum",
+          "type": "date",
+          "display_name": "Indatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/rtb/_default/2019/utdatum",
+          "type": "date",
+          "display_name": "Utdatum",
+          "date_format": "%Y-%m-%d"
+        },
+        {
+          "name": "scb/rtb/_default/2019/fodelsedatum",
+          "type": "date",
+          "display_name": "Fodelsedatum",
+          "date_format": "%Y%m%d"
+        },
+        {
+          "name": "scb/rtb/_default/2019/civilstand",
+          "type": "categorical",
+          "display_name": "Civilstand"
+        },
+        {
+          "name": "scb/rtb/_default/2019/hush_type",
+          "type": "categorical",
+          "display_name": "HushType"
+        },
+        {
+          "name": "scb/rtb/_default/2019/foddland",
+          "type": "categorical",
+          "display_name": "Foddland"
+        },
+        {
+          "name": "scb/rtb/_default/2019/hoglutb",
+          "type": "categorical",
+          "display_name": "Hoglutb"
+        },
+        {
+          "name": "scb/rtb/_default/2019/anstforh",
+          "type": "opaque",
+          "display_name": "Anstforh"
+        },
+        {
+          "name": "scb/rtb/_default/2019/yrkesstatus",
+          "type": "opaque",
+          "display_name": "Yrkesstatus"
+        }
+      ]
+    }
+  ],
+  "panels": [
+    {
+      "panel_id": "lisa_panel",
+      "entity_key": "Lopnr",
+      "members": [
+        {
+          "source": "lisa_2015",
+          "time_key": 2015
+        },
+        {
+          "source": "lisa_2016",
+          "time_key": 2016
+        },
+        {
+          "source": "lisa_2017",
+          "time_key": 2017
+        },
+        {
+          "source": "lisa_2018",
+          "time_key": 2018
+        }
+      ]
+    }
+  ],
+  "reg_monabundle": {
+    "column_options": {
+      "scb/lisa/individer-15plus/2015/kommun": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2015/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2015/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2016/kommun": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2016/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2016/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2017/kommun": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2017/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2017/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2018/kommun": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2018/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/lisa/individer-15plus/2018/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2017/kommun": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2017/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2017/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2018/kommun": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2018/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/louise/_default/2018/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2018/kommun": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2018/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2018/ast_sni2007": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2019/kommun": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2019/ssyk2012": {
+        "suppress_k": 25
+      },
+      "scb/rtb/_default/2019/ast_sni2007": {
+        "suppress_k": 25
+      }
+    }
+  }
+}
