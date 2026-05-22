@@ -142,7 +142,7 @@ def build() -> dict[str, object]:
 
 def main() -> None:
     payload = build()
-    n_cols = sum(len(s["columns"]) for s in payload["sources"])  # type: ignore[arg-type]
+    n_cols = sum(len(s["columns"]) for s in payload["sources"])
     print(f"sources: {len(payload['sources'])}, columns: {n_cols}")
     (HERE / "input.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
