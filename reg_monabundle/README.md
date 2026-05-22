@@ -40,11 +40,13 @@ matches = scan_file(Path("mock_data_stats.json"))
   ``.py`` for upload to MONA.
 - `reg_monabundle.DEFAULT_OUTPUT_NAME` — default bundle filename
   (`mdw_runner.py`).
-- `reg_monabundle.scan` — pre-export PII scanner. Public surface:
-  `write_export` (the atomic stamp + scan + rename used inside the
-  bundle), `scan_file` / `scan_payload` / `scan_string` (the standalone
-  helpers), and `PIIScannerError` / `ScanMatch` / `SCANNER_VERSION` /
-  `PATTERNS_APPLIED`.
+- `reg_monabundle.{write_export, scan_file, PIIScannerError}` —
+  pre-export PII scanner. `write_export` does atomic stamp + scan +
+  rename and is the only file-emitting path inside the bundle;
+  `scan_file` re-runs the scanner against an on-disk JSON. The
+  remaining scanner internals (`scan_payload`, `scan_string`,
+  `ScanMatch`, `SCANNER_VERSION`, `PATTERNS_APPLIED`) live on the
+  `reg_monabundle.scan` submodule for callers that need them.
 
 Phase 2c will move the bundle-runtime modules (classify, sql_emit,
 sources, summarize, spec, extract) under `reg_monabundle.runtime.*`.
