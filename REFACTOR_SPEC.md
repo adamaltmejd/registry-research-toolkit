@@ -3050,10 +3050,19 @@ document. Step 1 can start.
      `reg_monabundle/tests/_project_data_fixtures.py` (the
      sys.path-injected bare-name module pattern already used for
      `_stats_fixtures`).
-   - **Phase 3 — 1 MB bundle-size budget gate (§12).** Measure the
-     bundle's output `.py` size against the 1 MB v1 budget on a
-     real MONA-shape fixture; fail CI if exceeded so the budget
-     bites before it compounds.
+   - **Phase 3 — 1 MB bundle-size budget gate (§12).** ✅ **Shipped
+     2026-05-22**. 200-column load-test fixture committed under
+     [reg_schema/test_corpus/load_test_200col/](reg_schema/test_corpus/load_test_200col/)
+     (regenerable via `build.py`; the structural corpus harness
+     auto-discovers it as a validation case). Bundle gate lives in
+     [reg_monabundle/tests/test_bundle_size_budget.py](reg_monabundle/tests/test_bundle_size_budget.py) —
+     embeds the fixture into `build_bundle`, byte-counts the emitted
+     `.py`, asserts `≤ 1_048_576`. Current shape lands at ~176 KB
+     (~17% of cap). The cap is the v1 ceiling per §12 (forward-
+     looking, not a tight bound on current shape) — bumping it
+     requires a spec edit, not a test tweak. The same fixture serves
+     the webapp performance-budget load tests (§11.7) once §15 step
+     6 lands. **Step 5 is fully complete.**
 
 **Step 5.5 — Shared validator test corpus.** ✅ **Shipped 2026-05-19**
 in [#113](https://github.com/adamaltmejd/registry-research-toolkit/pull/113)
