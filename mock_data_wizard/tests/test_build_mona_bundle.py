@@ -16,14 +16,19 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from mock_data_wizard import _bundle
+import reg_monabundle
+from mock_data_wizard import BUNDLE_MODULE_ORDER, BUNDLE_PKG_DIR
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 def _build_bundle_to(out_path: Path) -> Path:
-    return _bundle.build_bundle(out_path)
+    return reg_monabundle.build_bundle(
+        out_path,
+        runtime_pkg_dir=BUNDLE_PKG_DIR,
+        runtime_module_order=BUNDLE_MODULE_ORDER,
+    )
 
 
 def test_bundle_parses_as_python(tmp_path: Path):
@@ -208,7 +213,6 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
     """MODE=extract with an embedded project_data.json wins over any
     sidecar — the runner parses _PROJECT_DATA_JSON and hands a
     LoadedSpec straight to extract.main()."""
-    from mock_data_wizard import _bundle as bundle_mod
     from tests.conftest import make_project_data
 
     project_data = make_project_data(
@@ -226,8 +230,11 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
             }
         ]
     )
-    bundle = bundle_mod.build_bundle(
-        tmp_path / "mdw_runner.py", project_data=project_data
+    bundle = reg_monabundle.build_bundle(
+        tmp_path / "mdw_runner.py",
+        runtime_pkg_dir=BUNDLE_PKG_DIR,
+        runtime_module_order=BUNDLE_MODULE_ORDER,
+        project_data=project_data,
     )
     _patch_configure(bundle)
 
