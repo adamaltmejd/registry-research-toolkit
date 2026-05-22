@@ -12,8 +12,8 @@ from datetime import date
 
 import duckdb
 import pytest
-from mock_data_wizard.spec import ColumnTypeOverride
-from mock_data_wizard.summarize import (
+from reg_monabundle.runtime.spec import ColumnTypeOverride
+from reg_monabundle.runtime.summarize import (
     NOISE_PCT,
     OTHER_LABEL,
     SUPPRESS_K,

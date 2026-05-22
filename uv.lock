@@ -76,7 +76,7 @@ wheels = [
 
 [[package]]
 name = "mock-data-wizard"
-version = "0.7.0"
+version = "0.8.0"
 source = { editable = "mock_data_wizard" }
 dependencies = [
     { name = "numpy" },
@@ -89,7 +89,7 @@ dependencies = [
 requires-dist = [
     { name = "numpy", specifier = ">=1.26" },
     { name = "reg-meta", editable = "reg_meta" },
-    { name = "reg-monabundle", editable = "reg_monabundle" },
+    { name = "reg-monabundle", editable = "reg_monabundle", specifier = ">=0.4" },
     { name = "reg-schema", editable = "reg_schema" },
 ]
 
@@ -239,7 +239,7 @@ requires-dist = [
 
 [[package]]
 name = "reg-monabundle"
-version = "0.3.0"
+version = "0.4.0"
 source = { editable = "reg_monabundle" }
 dependencies = [
     { name = "reg-schema" },

@@ -35,12 +35,12 @@ every load path:
   ``parse_project_data`` before substituting into the placeholder,
   so a structurally broken spec fails at build, not on MONA.
 
-The runtime modules to amalgamate are caller-supplied via
-``runtime_pkg_dir`` + ``runtime_module_order``. Today the caller is
-``mock_data_wizard.cli`` (pointing at ``mock_data_wizard/{classify,
-sql_emit, sources, summarize, spec, scan, extract}.py``); phase 2c of
-§15 step 5 relocates those modules into ``reg_monabundle.runtime`` and
-the caller becomes ``reg_webapp`` / mdw's successor ``reg_mockdata``.
+The runtime modules amalgamated by default live in
+``reg_monabundle/runtime/`` (``classify``, ``sql_emit``, ``sources``,
+``summarize``, ``spec``, ``extract``). Callers can still override via
+``runtime_pkg_dir`` + ``runtime_module_order`` to wire in a custom
+runtime (e.g. a steward-private extract pipeline), but the in-package
+default is what mdw / reg_webapp / reg_mockdata all rely on.
 """
 
 from __future__ import annotations
@@ -86,6 +86,31 @@ REG_SCHEMA_MODULE_ORDER = (
 # this tuple as the type compatibility map moves over.
 REG_MONABUNDLE_DIR = Path(__file__).resolve().parent
 REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
+
+# The in-package runtime amalgamated into the bundle by default. Order
+# is dep-locked: each module imports only earlier ones (intra-runtime)
+# or modules already amalgamated from reg_schema / reg_monabundle.
+# spec.py's ``assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)``
+# requires ``classify`` to be loaded first; ``extract`` is last because
+# it depends on everything.
+DEFAULT_RUNTIME_DIR = REG_MONABUNDLE_DIR / "runtime"
+# ``_util`` leads the order because ``classify`` imports
+# ``strip_project_prefix`` / ``lookup_with_prefix_fallback`` from it
+# via ``from ._util import …`` — the slicer drops that relative
+# import, so the helpers must already be defined at top level in the
+# amalgamation by the time ``classify``'s body lands. (The leading
+# underscore is a Python-namespace convention; once sliced into the
+# bundle the modules are flat top-level code, so the underscore is
+# irrelevant.)
+DEFAULT_RUNTIME_MODULE_ORDER = (
+    "_util",
+    "classify",
+    "sql_emit",
+    "sources",
+    "summarize",
+    "spec",
+    "extract",
+)
 
 BUNDLE_HEADER = '''\
 """mock-data-wizard MONA discover/extract bundle.
@@ -473,20 +498,20 @@ assert PROJECT_DATA_PLACEHOLDER in BUNDLE_HEADER, (
 def build_bundle(
     output: Path,
     *,
-    runtime_pkg_dir: Path,
-    runtime_module_order: Sequence[str],
+    runtime_pkg_dir: Path | None = None,
+    runtime_module_order: Sequence[str] | None = None,
     configure_body: str | None = None,
     project_data: dict | None = None,
 ) -> Path:
     """Amalgamate the runtime modules into a single ``.py``.
 
-    ``runtime_pkg_dir`` is the directory holding the runtime modules
-    (e.g. ``Path(mock_data_wizard.__file__).parent`` today; phase 2c
-    moves these under ``reg_monabundle/runtime/``).
-    ``runtime_module_order`` is the dep-ordered tuple of module
-    stems to amalgamate from that directory — each module imports
-    only earlier ones (intra-runtime) or modules already amalgamated
-    from ``reg_schema`` / ``reg_monabundle``.
+    ``runtime_pkg_dir`` + ``runtime_module_order`` default to
+    ``reg_monabundle.runtime`` (the in-package runtime amalgamated by
+    mdw / reg_webapp / reg_mockdata). To plug in a steward-private
+    runtime that lives outside this package, pass **both** —
+    overriding only one would silently apply the default module list
+    to a different directory and crash later with a missing-file
+    error.
 
     When ``configure_body`` is supplied (a complete ``def configure(): ...``
     function source), it fills the configure slot in ``BUNDLE_HEADER``.
@@ -499,6 +524,17 @@ def build_bundle(
     runner falls back to reading ``project_data.json`` from the bundle
     directory at extract time.
     """
+    if (runtime_pkg_dir is None) != (runtime_module_order is None):
+        raise ValueError(
+            "build_bundle: runtime_pkg_dir and runtime_module_order must "
+            "be supplied together (or both omitted to use the in-package "
+            "reg_monabundle.runtime). Passing only one would silently "
+            "apply the default module list to a different directory."
+        )
+    if runtime_pkg_dir is None:
+        runtime_pkg_dir = DEFAULT_RUNTIME_DIR
+        runtime_module_order = DEFAULT_RUNTIME_MODULE_ORDER
+    assert runtime_module_order is not None  # paired check above
     output.parent.mkdir(parents=True, exist_ok=True)
     body = (configure_body or DEFAULT_CONFIGURE_BODY).rstrip()
     header = BUNDLE_HEADER.replace(CONFIGURE_PLACEHOLDER, body, 1)

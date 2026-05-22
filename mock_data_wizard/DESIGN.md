@@ -659,7 +659,7 @@ typed if the user marked it numeric, so the original form works as-is.
 
 #### Semantic → DuckDB cast
 
-`_semantic_to_duckdb_cast` (in `sources.py`) maps each
+`_semantic_to_duckdb_cast` (in `reg_monabundle.runtime.sources`) maps each
 `ColumnTypeOverride` to the DuckDB type to cast into:
 
 | Semantic type      | Cast               | Why |
@@ -676,14 +676,14 @@ are aggregated as strings and reduced in Python (frequency counts, length
 stats, date parsing, id_subtype detection) — there is nothing to gain
 from typing them at the SQL layer.
 
-`id_subtype` auto-detection (`_detect_id_subtype` in `summarize.py`)
+`id_subtype` auto-detection (`_detect_id_subtype` in `reg_monabundle.runtime.summarize`)
 treats an all-non-empty, all-int-parseable string sample as
 `integer`. Necessary because every id column arrives as a string off
 the all-varchar read.
 
 #### Opaque auto-promotion
 
-`_probe_and_promote_opaque` (in `sources.py`) runs once per file at
+`_probe_and_promote_opaque` (in `reg_monabundle.runtime.sources`) runs once per file at
 extract time, batching one query across every column the config
 marked `opaque`:
 
@@ -833,7 +833,7 @@ path that writes files leaving the bundle's `output_dir`:
 (discover mode) both go through it.
 `mock_data_config.json` is an *input* and isn't covered by this scanner.
 The scanner is defense-in-depth on top of the per-type branches in
-`summarize.py`, which already only emit aggregates by construction.
+`reg_monabundle.runtime.summarize`, which already only emit aggregates by construction.
 It exists for the case where a misclassified column (e.g.
 `FelPersonNr` flickering into `categorical` in tests / dev), would
 route raw values into a frequency table.

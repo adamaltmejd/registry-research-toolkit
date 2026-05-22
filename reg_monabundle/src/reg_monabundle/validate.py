@@ -15,8 +15,8 @@ What this validator does NOT do:
 - Cross-check ``suppress_k`` against the column's declared ``type``
   (it only makes sense on categorical columns). Same reason — needs
   the resolved column tree. Lives in
-  ``mock_data_wizard.spec._validate_column_options_against_columns``
-  (and will follow the validator to its owner in a later phase).
+  ``reg_monabundle.runtime.spec._validate_column_options_against_columns``
+  alongside the rest of the runtime spec adapter.
 """
 
 from __future__ import annotations

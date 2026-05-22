@@ -17,18 +17,15 @@ from typing import TYPE_CHECKING
 import pytest
 
 import reg_monabundle
-from mock_data_wizard import BUNDLE_MODULE_ORDER, BUNDLE_PKG_DIR
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 def _build_bundle_to(out_path: Path) -> Path:
-    return reg_monabundle.build_bundle(
-        out_path,
-        runtime_pkg_dir=BUNDLE_PKG_DIR,
-        runtime_module_order=BUNDLE_MODULE_ORDER,
-    )
+    # ``build_bundle`` defaults ``runtime_pkg_dir`` /
+    # ``runtime_module_order`` to ``reg_monabundle.runtime`` post-2c.
+    return reg_monabundle.build_bundle(out_path)
 
 
 def test_bundle_parses_as_python(tmp_path: Path):
@@ -90,7 +87,70 @@ def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
     for line in text.splitlines():
         s = line.lstrip()
         assert not s.startswith("from ."), f"intra-pkg import leaked: {line!r}"
+        assert "from reg_monabundle" not in s, f"package import leaked: {line!r}"
         assert "from mock_data_wizard" not in s, f"package import leaked: {line!r}"
+
+
+def test_bundle_defines_every_dropped_relative_import_target(tmp_path: Path):
+    """Catch the class of bug where the slicer drops a relative import
+    (``from ._util import foo``) but the source module isn't in
+    ``DEFAULT_RUNTIME_MODULE_ORDER`` — the bundle then calls ``foo``
+    without a top-level definition and crashes with ``NameError`` if
+    that branch ever runs.
+
+    Walks each runtime source module, collects every name pulled in
+    via ``from .<x> import …``, then verifies those names all appear
+    as top-level definitions in the bundle AST. The slicer drops the
+    relative import either way, so the failure mode is silent without
+    this check.
+    """
+    from reg_monabundle.build import DEFAULT_RUNTIME_DIR, DEFAULT_RUNTIME_MODULE_ORDER
+
+    expected: set[str] = set()
+    for mod in DEFAULT_RUNTIME_MODULE_ORDER:
+        mod_tree = ast.parse(
+            (DEFAULT_RUNTIME_DIR / f"{mod}.py").read_text(encoding="utf-8")
+        )
+        for node in ast.walk(mod_tree):
+            if (
+                isinstance(node, ast.ImportFrom)
+                and node.level > 0
+                and not (
+                    # TYPE_CHECKING-only imports never execute and don't
+                    # need a bundle definition.
+                    any(
+                        isinstance(p, ast.If)
+                        and isinstance(p.test, ast.Name)
+                        and p.test.id == "TYPE_CHECKING"
+                        for p in ast.walk(mod_tree)
+                        if isinstance(p, ast.If) and node in ast.walk(p)
+                    )
+                )
+            ):
+                for alias in node.names:
+                    expected.add(alias.asname or alias.name)
+
+    out = _build_bundle_to(tmp_path / "bundle.py")
+    tree = ast.parse(out.read_text(encoding="utf-8"))
+
+    top_level: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            top_level.add(node.name)
+        elif isinstance(node, ast.Assign):
+            for tgt in node.targets:
+                if isinstance(tgt, ast.Name):
+                    top_level.add(tgt.id)
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            top_level.add(node.target.id)
+
+    missing = sorted(expected - top_level)
+    assert not missing, (
+        f"bundle references names from dropped relative imports that have "
+        f"no top-level definition: {missing}. The source module is in "
+        f"``DEFAULT_RUNTIME_MODULE_ORDER`` but the module it pulls from "
+        f"(e.g. ``_util``) is not — add it to the order or inline the helpers."
+    )
 
 
 def _patch_configure(bundle: Path) -> None:
@@ -160,7 +220,7 @@ def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
 def test_bundle_extract_mode_writes_stats_from_project_data(tmp_path: Path):
     """MODE=extract reads project_data.json from the bundle directory
     (sidecar mode) and emits typed mock_data_stats.json."""
-    from tests.conftest import make_project_data, write_project_data
+    from _project_data_fixtures import make_project_data, write_project_data
 
     bundle = _build_bundle_to(tmp_path / "mdw_runner.py")
     _patch_configure(bundle)
@@ -213,7 +273,7 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
     """MODE=extract with an embedded project_data.json wins over any
     sidecar — the runner parses _PROJECT_DATA_JSON and hands a
     LoadedSpec straight to extract.main()."""
-    from tests.conftest import make_project_data
+    from _project_data_fixtures import make_project_data
 
     project_data = make_project_data(
         sources=[
@@ -232,8 +292,6 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
     )
     bundle = reg_monabundle.build_bundle(
         tmp_path / "mdw_runner.py",
-        runtime_pkg_dir=BUNDLE_PKG_DIR,
-        runtime_module_order=BUNDLE_MODULE_ORDER,
         project_data=project_data,
     )
     _patch_configure(bundle)

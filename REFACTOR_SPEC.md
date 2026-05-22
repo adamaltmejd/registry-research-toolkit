@@ -3024,14 +3024,32 @@ document. Step 1 can start.
      resolves `write_export` from the preceding amalgamated `scan`
      slice). `reg_monabundle.types.is_compatible` is deferred — it
      lands when §15 step 10a needs it.
-   - **Phase 2c — bundle-runtime modules.** Runtime modules (classify,
-     sql_emit, sources, summarize, spec, extract) move under
-     `reg_monabundle/runtime/`. Open design question: where does
-     `LoadedSpec` live (mdw needs it for the CLI; reg_webapp will want
-     a no-runtime-deps version)? CI gate enforces the
-     lightweight/runtime split: importing `reg_monabundle.build` in a
-     duckdb-less env must not transitively pull
-     `reg_monabundle.runtime.*`.
+   - **Phase 2c — bundle-runtime modules.** ✅ **Shipped 2026-05-22**.
+     Runtime modules (classify, sql_emit, sources, summarize, spec,
+     extract) moved under `reg_monabundle/runtime/`. MONA project-prefix
+     helpers (`strip_project_prefix`, `lookup_with_prefix_fallback`)
+     moved to `reg_monabundle.runtime._util` so the classify pull
+     stayed self-contained; mdw's `_util.py` shrank to just
+     `progress()`. mdw deleted `BUNDLE_PKG_DIR` /
+     `BUNDLE_MODULE_ORDER`; `build_bundle` now defaults
+     `runtime_pkg_dir` / `runtime_module_order` to the in-package
+     runtime (callers can still override to plug a steward-private
+     extract pipeline). `LoadedSpec` stays in
+     `reg_monabundle.runtime.spec` — `reg_webapp` will use
+     `reg_schema.ProjectData` directly for read-only views, so the
+     no-runtime-deps loader is YAGNI until the webapp actually needs
+     it (cleaner re-split then). The lightweight/runtime CI gate is
+     [reg_monabundle/tests/test_lightweight_surface.py](reg_monabundle/tests/test_lightweight_surface.py),
+     which spawns a fresh subprocess and asserts `import
+     reg_monabundle` / `.build` / `.scan` / `.validate` never load a
+     runtime submodule. mdw bumped 0.7.0 → 0.8.0; reg_monabundle
+     bumped 0.3.0 → 0.4.0; mdw pins `reg-monabundle>=0.4`. Tests for
+     the moved modules (`test_{classify,sql_emit,sources,summarize,
+     spec,extract,util,build_mona_bundle}.py`) moved across; the
+     project_data builder helpers live in
+     `reg_monabundle/tests/_project_data_fixtures.py` (the
+     sys.path-injected bare-name module pattern already used for
+     `_stats_fixtures`).
    - **Phase 3 — 1 MB bundle-size budget gate (§12).** Measure the
      bundle's output `.py` size against the 1 MB v1 budget on a
      real MONA-shape fixture; fail CI if exceeded so the budget

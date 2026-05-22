@@ -1,4 +1,4 @@
-"""Tests for mock_data_wizard.spec (project_data.json loader + LoadedSpec)."""
+"""Tests for ``reg_monabundle.runtime.spec`` (project_data.json loader + LoadedSpec)."""
 
 from __future__ import annotations
 
@@ -6,15 +6,14 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from mock_data_wizard.spec import (
+from _project_data_fixtures import make_project_data
+from reg_monabundle.runtime.spec import (
     PROJECT_DATA_FILENAME,
     ColumnTypeOverride,
     LoadedSpec,
     load_project_data,
     parse_project_data,
 )
-
-from tests.conftest import make_project_data
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -333,7 +332,7 @@ def test_datetime_column_type_rejected_with_actionable_message():
 # (§15 step 5 phase 1 — owner-validates-its-block).
 # The tests that remain here exercise the cross-block referential checks
 # (``_validate_column_options_against_columns``) that still need the
-# resolved column dataclasses and so stay in ``mock_data_wizard.spec``.
+# resolved column dataclasses and so stay in ``reg_monabundle.runtime.spec``.
 
 
 def test_parse_project_data_invokes_namespaced_block_validator():

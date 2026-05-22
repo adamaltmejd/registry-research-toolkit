@@ -12,7 +12,8 @@ import logging
 from typing import TYPE_CHECKING
 
 import pytest
-from mock_data_wizard.sources import (
+from _project_data_fixtures import make_project_data
+from reg_monabundle.runtime.sources import (
     FileSource,
     SourceHandle,
     SqlSource,
@@ -32,9 +33,11 @@ from mock_data_wizard.sources import (
     sql_source,
     sql_table,
 )
-from mock_data_wizard.spec import ColumnTypeOverride, LoadedSpec, parse_project_data
-
-from tests.conftest import make_project_data
+from reg_monabundle.runtime.spec import (
+    ColumnTypeOverride,
+    LoadedSpec,
+    parse_project_data,
+)
 
 if TYPE_CHECKING:
     from pathlib import Path

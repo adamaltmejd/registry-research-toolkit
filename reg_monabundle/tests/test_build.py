@@ -1,10 +1,10 @@
 """Tests for ``reg_monabundle.build``.
 
 Coverage focus: the builder's generic-over-runtime guarantees. The
-mdw-runtime-shape integration tests live in
-``mock_data_wizard/tests/test_build_mona_bundle.py`` and exercise the
-real classify/sql_emit/sources/summarize/spec/scan/extract pipeline
-end-to-end including subprocess execution.
+real-runtime integration tests (default runtime path + subprocess
+execution) live in ``reg_monabundle/tests/test_build_mona_bundle.py``
+and exercise the actual ``reg_monabundle.runtime.*`` modules
+end-to-end.
 """
 
 from __future__ import annotations
@@ -135,3 +135,17 @@ def test_build_bundle_writes_to_supplied_path(tmp_path: Path):
     assert result == out
     assert out.exists()
     assert out.stat().st_size > 0
+
+
+def test_build_bundle_rejects_half_specified_runtime_override(tmp_path: Path):
+    """Passing only ``runtime_pkg_dir`` would silently apply the default
+    module list to a different directory; same for the inverse. The
+    paired check catches misconfiguration with an actionable error
+    instead of a downstream missing-file crash."""
+    pkg = tmp_path / "halfpkg"
+    pkg.mkdir()
+    out = tmp_path / "bundle.py"
+    with pytest.raises(ValueError, match="supplied together"):
+        build_bundle(out, runtime_pkg_dir=pkg)
+    with pytest.raises(ValueError, match="supplied together"):
+        build_bundle(out, runtime_module_order=("mod",))

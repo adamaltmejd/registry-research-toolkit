@@ -61,21 +61,31 @@ The lightweight surface (`reg_monabundle.build`, `.scan`, `.types`,
 `.validate_block`) is pure-stdlib and importable from any context
 including `reg_webapp` at container build time. The runtime surface
 (`reg_monabundle.runtime.*`) is what gets amalgamated into the bundle
-and executes on MONA; it pulls duckdb / pyodbc.
+and executes on MONA; it pulls duckdb / pyodbc on use (lazy imports
+inside function bodies — module-level imports stay stdlib so the
+amalgamation step doesn't require duckdb to slice).
+
+The amalgamator (`build.py`) reads runtime modules off disk via
+`ast.parse` rather than through Python's import machinery: an
+amalgamation-only environment never needs duckdb installed. The CI
+gate in `tests/test_lightweight_surface.py` enforces this — importing
+`reg_monabundle` or any of its public submodules from a fresh
+subprocess must leave `sys.modules` runtime-free.
 
 ```toml
-# Phase 2 target shape — placeholder today.
 [project]
 dependencies = ["reg-schema"]
 
 [project.optional-dependencies]
-runtime = ["duckdb", "pyodbc"]
+# Reserved — populated when callers running the runtime locally need
+# the heavy deps installed. The MONA WinPython env already has them.
+runtime = []
 ```
 
-`reg_webapp` will pin `reg-monabundle` with no extras (the container
-never installs duckdb/pyodbc). Import paths used by the webapp must be
-lazy enough that `import reg_monabundle.build` does not transitively
-pull `reg_monabundle.runtime.*`.
+`reg_webapp` pins `reg-monabundle` with no extras (the container never
+installs duckdb / pyodbc). It uses `reg_schema.ProjectData` directly
+for read-only views and only invokes `build_bundle` for bundle
+emission, never importing the runtime tier.
 
 ## Phase plan (§15 step 5)
 
@@ -101,13 +111,21 @@ pull `reg_monabundle.runtime.*`.
   `write_export` from the amalgamated `scan` slice that precedes it).
   `reg_monabundle.types.is_compatible` does not land here — it
   arrives when §15 step 10a needs it.
-- **Phase 2c.** Runtime modules (classify, sql_emit, sources,
-  summarize, spec, extract) → `runtime/`. The bundle's import
-  discipline (lightweight vs runtime) is enforced by a CI test that
-  imports the lightweight surface in a duckdb-less env. **Open
-  design question:** where does `LoadedSpec` live once `spec.py`
-  moves under `runtime/`? mdw's CLI needs it; `reg_webapp` will want
-  a no-runtime-deps version.
+- **Phase 2c.** ✅ Runtime modules (classify, sql_emit, sources,
+  summarize, spec, extract) → `reg_monabundle/runtime/`. The MONA
+  project-prefix helpers (`strip_project_prefix`,
+  `lookup_with_prefix_fallback`) moved to
+  `reg_monabundle.runtime._util` as part of the lift — mdw's CLI and
+  enrich reach in via the public path. mdw deleted
+  `BUNDLE_PKG_DIR`/`BUNDLE_MODULE_ORDER`; `build_bundle` defaults
+  `runtime_pkg_dir` / `runtime_module_order` to the in-package
+  runtime. `LoadedSpec` stays in `reg_monabundle.runtime.spec`:
+  webapp consumers use `reg_schema.ProjectData` directly (no runtime
+  adapter needed for read-only views), so the no-runtime-deps loader
+  is deferred until webapp needs it. The lightweight/runtime split
+  is enforced by `reg_monabundle/tests/test_lightweight_surface.py`,
+  which spawns a fresh subprocess and asserts `import reg_monabundle`
+  / `.build` / `.scan` / `.validate` never load a runtime submodule.
 - **Phase 3.** 1 MB bundle-size budget gate (§12). Real-MONA-shape
   fixture, byte-counted in CI; fails on budget overrun.
 
@@ -117,6 +135,7 @@ Lives in `reg_monabundle.constants` because it is the bundle's
 privacy floor — the validator's "overrides may only raise the
 threshold" rule is part of the namespaced-block contract, and the
 constant is also amalgamated into the bundle alongside the runtime
-modules that suppress cells against it. `mock_data_wizard.summarize`
-re-exports it for callers that still import the legacy path; phase 2
-will retire that re-export.
+modules that suppress cells against it.
+`reg_monabundle.runtime.summarize` imports it directly; mdw consumes
+it from the top-level surface (`from reg_monabundle import
+SUPPRESS_K`).

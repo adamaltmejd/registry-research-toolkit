@@ -1,8 +1,11 @@
-"""Tests for mock_data_wizard._util."""
+"""Tests for ``reg_monabundle.runtime._util`` (MONA project-prefix helpers)."""
 
 from __future__ import annotations
 
-from mock_data_wizard._util import lookup_with_prefix_fallback, strip_project_prefix
+from reg_monabundle.runtime._util import (
+    lookup_with_prefix_fallback,
+    strip_project_prefix,
+)
 
 
 def test_strip_project_prefix_removes_p_number_prefix() -> None:

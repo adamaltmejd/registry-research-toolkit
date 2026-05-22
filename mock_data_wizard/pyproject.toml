@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mock-data-wizard"
-version = "0.7.0"
+version = "0.8.0"
 description = "SCB MONA mock-data generation workflows"
 requires-python = ">=3.13"
 authors = [{ name = "Adam Altmejd", email = "adam@altmejd.se" }]
@@ -12,9 +12,11 @@ license = { text = "MIT" }
 dependencies = [
   "numpy>=1.26",
   "reg-meta",
-  # >=0.3 required for `reg_monabundle.scan`, hard-imported by
-  # `mock_data_wizard.extract` (§15 step 5 phase 2b).
-  "reg-monabundle>=0.3",
+  # >=0.4 required for `reg_monabundle.runtime.*`, hard-imported by
+  # `mock_data_wizard.{cli,stats,enrich}` after §15 step 5 phase 2c
+  # relocated classify/sql_emit/sources/summarize/spec/extract out of
+  # mdw and into the runtime subpackage.
+  "reg-monabundle>=0.4",
   "reg-schema",
 ]
 

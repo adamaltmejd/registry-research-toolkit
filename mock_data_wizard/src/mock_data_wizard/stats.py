@@ -6,8 +6,8 @@ import json
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from .classify import COLUMN_TYPES
-from .extract import CONTRACT_VERSION  # producer owns the version
+from reg_monabundle.runtime.classify import COLUMN_TYPES
+from reg_monabundle.runtime.extract import CONTRACT_VERSION  # producer owns the version
 
 if TYPE_CHECKING:
     from pathlib import Path

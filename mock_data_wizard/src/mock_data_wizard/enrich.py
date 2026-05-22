@@ -13,10 +13,14 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 from reg_meta.queries import extract_year as _regver_year
+from reg_monabundle.runtime._util import (
+    lookup_with_prefix_fallback,
+    strip_project_prefix,
+)
 
 import reg_meta
 
-from ._util import lookup_with_prefix_fallback, progress, strip_project_prefix
+from ._util import progress
 
 if TYPE_CHECKING:
     from pathlib import Path
