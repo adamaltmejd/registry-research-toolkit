@@ -91,6 +91,68 @@ def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
         assert "from mock_data_wizard" not in s, f"package import leaked: {line!r}"
 
 
+def test_bundle_defines_every_dropped_relative_import_target(tmp_path: Path):
+    """Catch the class of bug where the slicer drops a relative import
+    (``from ._util import foo``) but the source module isn't in
+    ``DEFAULT_RUNTIME_MODULE_ORDER`` — the bundle then calls ``foo``
+    without a top-level definition and crashes with ``NameError`` if
+    that branch ever runs.
+
+    Walks each runtime source module, collects every name pulled in
+    via ``from .<x> import …``, then verifies those names all appear
+    as top-level definitions in the bundle AST. The slicer drops the
+    relative import either way, so the failure mode is silent without
+    this check.
+    """
+    from reg_monabundle.build import DEFAULT_RUNTIME_DIR, DEFAULT_RUNTIME_MODULE_ORDER
+
+    expected: set[str] = set()
+    for mod in DEFAULT_RUNTIME_MODULE_ORDER:
+        mod_tree = ast.parse(
+            (DEFAULT_RUNTIME_DIR / f"{mod}.py").read_text(encoding="utf-8")
+        )
+        for node in ast.walk(mod_tree):
+            if (
+                isinstance(node, ast.ImportFrom)
+                and node.level > 0
+                and not (
+                    # TYPE_CHECKING-only imports never execute and don't
+                    # need a bundle definition.
+                    any(
+                        isinstance(p, ast.If)
+                        and isinstance(p.test, ast.Name)
+                        and p.test.id == "TYPE_CHECKING"
+                        for p in ast.walk(mod_tree)
+                        if isinstance(p, ast.If) and node in ast.walk(p)
+                    )
+                )
+            ):
+                for alias in node.names:
+                    expected.add(alias.asname or alias.name)
+
+    out = _build_bundle_to(tmp_path / "bundle.py")
+    tree = ast.parse(out.read_text(encoding="utf-8"))
+
+    top_level: set[str] = set()
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            top_level.add(node.name)
+        elif isinstance(node, ast.Assign):
+            for tgt in node.targets:
+                if isinstance(tgt, ast.Name):
+                    top_level.add(tgt.id)
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            top_level.add(node.target.id)
+
+    missing = sorted(expected - top_level)
+    assert not missing, (
+        f"bundle references names from dropped relative imports that have "
+        f"no top-level definition: {missing}. The source module is in "
+        f"``DEFAULT_RUNTIME_MODULE_ORDER`` but the module it pulls from "
+        f"(e.g. ``_util``) is not — add it to the order or inline the helpers."
+    )
+
+
 def _patch_configure(bundle: Path) -> None:
     text = bundle.read_text(encoding="utf-8")
     patched = text.replace(

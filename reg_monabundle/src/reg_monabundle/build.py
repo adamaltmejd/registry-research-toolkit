@@ -94,7 +94,16 @@ REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
 # requires ``classify`` to be loaded first; ``extract`` is last because
 # it depends on everything.
 DEFAULT_RUNTIME_DIR = REG_MONABUNDLE_DIR / "runtime"
+# ``_util`` leads the order because ``classify`` imports
+# ``strip_project_prefix`` / ``lookup_with_prefix_fallback`` from it
+# via ``from ._util import …`` — the slicer drops that relative
+# import, so the helpers must already be defined at top level in the
+# amalgamation by the time ``classify``'s body lands. (The leading
+# underscore is a Python-namespace convention; once sliced into the
+# bundle the modules are flat top-level code, so the underscore is
+# irrelevant.)
 DEFAULT_RUNTIME_MODULE_ORDER = (
+    "_util",
     "classify",
     "sql_emit",
     "sources",
