@@ -54,8 +54,8 @@ SAMPLE_SIZE = 1000
 
 # Year detection duplicates ``panels.detect_year_from_source_name``
 # deliberately: this module is the on-MONA bundle root (amalgamated by
-# ``reg_monabundle.build``) and ``mock_data_wizard.BUNDLE_MODULE_ORDER``
-# does not include ``panels`` to keep the artifact small. Keep these
+# ``reg_monabundle.build``) and ``DEFAULT_RUNTIME_MODULE_ORDER`` does
+# not include ``panels`` to keep the artifact small. Keep these
 # byte-identical to ``panels``.
 _YEAR_RE = re.compile(r"\d{4}")
 _TERM_YEAR_RE = re.compile(r"(?:HT|VT)(\d{2})(?!\d)")

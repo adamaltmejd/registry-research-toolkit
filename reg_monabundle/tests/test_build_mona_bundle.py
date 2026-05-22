@@ -17,18 +17,15 @@ from typing import TYPE_CHECKING
 import pytest
 
 import reg_monabundle
-from mock_data_wizard import BUNDLE_MODULE_ORDER, BUNDLE_PKG_DIR
 
 if TYPE_CHECKING:
     from pathlib import Path
 
 
 def _build_bundle_to(out_path: Path) -> Path:
-    return reg_monabundle.build_bundle(
-        out_path,
-        runtime_pkg_dir=BUNDLE_PKG_DIR,
-        runtime_module_order=BUNDLE_MODULE_ORDER,
-    )
+    # ``build_bundle`` defaults ``runtime_pkg_dir`` /
+    # ``runtime_module_order`` to ``reg_monabundle.runtime`` post-2c.
+    return reg_monabundle.build_bundle(out_path)
 
 
 def test_bundle_parses_as_python(tmp_path: Path):
@@ -90,6 +87,7 @@ def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
     for line in text.splitlines():
         s = line.lstrip()
         assert not s.startswith("from ."), f"intra-pkg import leaked: {line!r}"
+        assert "from reg_monabundle" not in s, f"package import leaked: {line!r}"
         assert "from mock_data_wizard" not in s, f"package import leaked: {line!r}"
 
 
@@ -160,7 +158,7 @@ def test_bundle_discover_mode_writes_discover_json(tmp_path: Path):
 def test_bundle_extract_mode_writes_stats_from_project_data(tmp_path: Path):
     """MODE=extract reads project_data.json from the bundle directory
     (sidecar mode) and emits typed mock_data_stats.json."""
-    from tests.conftest import make_project_data, write_project_data
+    from _project_data_fixtures import make_project_data, write_project_data
 
     bundle = _build_bundle_to(tmp_path / "mdw_runner.py")
     _patch_configure(bundle)
@@ -213,7 +211,7 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
     """MODE=extract with an embedded project_data.json wins over any
     sidecar — the runner parses _PROJECT_DATA_JSON and hands a
     LoadedSpec straight to extract.main()."""
-    from tests.conftest import make_project_data
+    from _project_data_fixtures import make_project_data
 
     project_data = make_project_data(
         sources=[
@@ -232,8 +230,6 @@ def test_bundle_extract_mode_embedded_project_data(tmp_path: Path):
     )
     bundle = reg_monabundle.build_bundle(
         tmp_path / "mdw_runner.py",
-        runtime_pkg_dir=BUNDLE_PKG_DIR,
-        runtime_module_order=BUNDLE_MODULE_ORDER,
         project_data=project_data,
     )
     _patch_configure(bundle)

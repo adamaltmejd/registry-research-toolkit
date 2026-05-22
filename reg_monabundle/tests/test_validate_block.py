@@ -3,9 +3,9 @@
 Mirrors the validator coverage that lived in
 ``mock_data_wizard.tests.test_spec`` before §15 step 5 phase 1
 relocated the function. The cross-block referential checks
-(orphan FQID, suppress_k-on-non-categorical) still live in
-``mock_data_wizard.spec`` because they need the resolved column
-dataclasses — see ``DESIGN.md`` "Scope".
+(orphan FQID, suppress_k-on-non-categorical) live in
+``reg_monabundle.runtime.spec`` because they need the resolved
+column dataclasses — see ``DESIGN.md`` "Scope".
 """
 
 from __future__ import annotations

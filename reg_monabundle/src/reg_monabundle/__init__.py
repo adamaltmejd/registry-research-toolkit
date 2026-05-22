@@ -1,14 +1,18 @@
 """reg_monabundle: MONA bundle builder + bundle runtime + PII scanner.
 
-Phase 2b surface (§15 step 5): the ``reg_monabundle`` namespaced-block
-validator + the SUPPRESS_K floor constant (phase 1), the bundle builder
-(phase 2a — relocated from ``mock_data_wizard._bundle``), and the
-pre-export PII scanner (phase 2b — relocated from
-``mock_data_wizard.scan``). Type compatibility map and bundle-runtime
-amalgamation modules still pending in the remainder of phase 2 / 2c.
+Two-half surface (§15 step 5, phase 2c shipped):
 
-See ``DESIGN.md`` for the two-half split (lightweight pure-python vs.
-``reg_monabundle.runtime.*`` MONA-side modules) and dependency direction.
+- **Lightweight top-level** (this module): ``build_bundle`` (bundle
+  amalgamator), ``scan_file`` / ``write_export`` (pre-export PII
+  scanner), ``validate_block`` (namespaced-block validator),
+  ``SUPPRESS_K`` (k-anonymity floor constant). Pure-stdlib +
+  reg_schema — importable without pulling duckdb / pyodbc.
+- **Heavy bundle runtime** (``reg_monabundle.runtime.*``): classify,
+  sql_emit, sources, summarize, spec, extract — the on-MONA pipeline
+  amalgamated into a single-file bundle by ``build_bundle`` and run on
+  MONA's WinPython env (which ships duckdb / pyodbc / numpy).
+
+See ``DESIGN.md`` for the dependency direction and amalgamation rules.
 """
 
 from .build import DEFAULT_OUTPUT_NAME, build_bundle
@@ -27,4 +31,4 @@ __all__ = [
     "write_export",
 ]
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"

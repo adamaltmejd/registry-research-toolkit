@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import duckdb
 import pytest
-from mock_data_wizard.sql_emit import (
+from reg_monabundle.runtime.sql_emit import (
     DUCKDB,
     MSSQL,
     NUMERIC_QUANTILES,

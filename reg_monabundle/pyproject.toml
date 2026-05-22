@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "reg-monabundle"
-version = "0.3.0"
+version = "0.4.0"
 description = "MONA bundle builder, bundle runtime, PII scanner, and type compatibility map"
 readme = "README.md"
 requires-python = ">=3.13"

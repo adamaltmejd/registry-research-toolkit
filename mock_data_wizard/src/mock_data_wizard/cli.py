@@ -114,10 +114,9 @@ def _cmd_compare(args: argparse.Namespace) -> int:
     import json
 
     from reg_meta.db import db_path_from_args
+    from reg_monabundle.runtime._util import strip_project_prefix
 
     from reg_meta import compare, open_db, resolve_register_ids
-
-    from ._util import strip_project_prefix
 
     columns_by_file: dict[str, list[str]] = {}
     register_hints: dict[str, int | None] = {}
@@ -377,10 +376,9 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
     import json
 
-    from reg_monabundle import DEFAULT_OUTPUT_NAME, build_bundle
+    from reg_monabundle.runtime.spec import _reject_duplicate_keys, parse_project_data
 
-    from . import BUNDLE_MODULE_ORDER, BUNDLE_PKG_DIR
-    from .spec import _reject_duplicate_keys, parse_project_data
+    from reg_monabundle import DEFAULT_OUTPUT_NAME, build_bundle
 
     output = Path(args.output) if args.output else Path(DEFAULT_OUTPUT_NAME)
 
@@ -417,12 +415,7 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
             print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
             return 1
 
-    out = build_bundle(
-        output,
-        runtime_pkg_dir=BUNDLE_PKG_DIR,
-        runtime_module_order=BUNDLE_MODULE_ORDER,
-        project_data=project_data,
-    )
+    out = build_bundle(output, project_data=project_data)
     print(f"Built {out} ({out.stat().st_size:,} bytes)")
     return 0
 
@@ -503,9 +496,9 @@ def _print_version() -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    from reg_monabundle import DEFAULT_OUTPUT_NAME as BUNDLE_FILENAME
+    from reg_monabundle.runtime.extract import STATS_FILENAME
 
-    from .extract import STATS_FILENAME
+    from reg_monabundle import DEFAULT_OUTPUT_NAME as BUNDLE_FILENAME
 
     parser = argparse.ArgumentParser(
         prog="mock-data-wizard",

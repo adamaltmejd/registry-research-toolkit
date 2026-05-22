@@ -1,4 +1,4 @@
-"""Tests for the classifier surface in ``mock_data_wizard.classify``.
+"""Tests for the classifier surface in ``reg_monabundle.runtime.classify``.
 
 Covers name-pattern helpers (``is_known_id``, ``is_rtb_named_categorical``),
 date helpers (``DATE_FORMATS``, ``detect_date_format``), and the
@@ -10,7 +10,7 @@ classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
 from __future__ import annotations
 
 import pytest
-from mock_data_wizard.classify import (
+from reg_monabundle.runtime.classify import (
     DATE_FORMATS,
     RTB_NAMED_CATEGORICAL,
     RegMetaSignal,

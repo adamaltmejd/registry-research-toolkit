@@ -11,16 +11,15 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
-from mock_data_wizard.extract import (
+from _project_data_fixtures import make_project_data, write_project_data
+from reg_monabundle.runtime.extract import (
     _shared_columns,
     main,
     run_discover,
     run_extract_typed,
 )
-from mock_data_wizard.sources import file_source
-from mock_data_wizard.spec import parse_project_data
-
-from tests.conftest import make_project_data, write_project_data
+from reg_monabundle.runtime.sources import file_source
+from reg_monabundle.runtime.spec import parse_project_data
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -445,7 +444,7 @@ def test_table_and_view_paths_produce_identical_stats(
 
 def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
     """Inline subtype hint -> _sample_values is NOT called for that column."""
-    from mock_data_wizard import extract
+    from reg_monabundle.runtime import extract
 
     _write_csv(
         tmp_path / "data.csv",
@@ -481,7 +480,7 @@ def test_extract_inline_hint_skips_sample(tmp_path: Path, monkeypatch):
 
 
 def test_extract_override_without_inline_hint_runs_sample(tmp_path: Path, monkeypatch):
-    from mock_data_wizard import extract
+    from reg_monabundle.runtime import extract
 
     _write_csv(
         tmp_path / "data.csv",
@@ -884,7 +883,7 @@ def test_run_extract_typed_raises_when_panel_loses_all_members(tmp_path: Path):
 
 
 def test_coerce_period_normalises_value():
-    from mock_data_wizard.extract import _coerce_period
+    from reg_monabundle.runtime.extract import _coerce_period
 
     assert _coerce_period(2018) == 2018
     assert _coerce_period("2018") == 2018  # numeric strings -> int
@@ -915,7 +914,7 @@ def test_extract_year_falls_back_to_name_regex():
     """Year detection lives in ``extract._extract_year`` (the old
     ``_resolve_year`` was dropped with per-source year overrides in
     step 4). Tests pin the regex behaviour directly."""
-    from mock_data_wizard.extract import _extract_year
+    from reg_monabundle.runtime.extract import _extract_year
 
     assert _extract_year("lisa_2018") == 2018
     assert _extract_year("RTB2019") == 2019
