@@ -12,7 +12,7 @@ captures the same plan at design-doc level but doesn't move per PR.
 - **Each PR description references its A* identifier** (e.g. `Stage A2.1: variable_state table + coalescing`).
 - **When a PR merges, flip the checkbox** in the matching row below. Optionally append the PR number and commit hash.
 - **The "Rework map" table at the bottom** lists which v0.x shipped chunks get superseded by which Model A stages — useful when reading old PRs or working out what regressed.
-- **Per-session continuity** lives in a `project-model-a-rewrite` Claude Code memory note (local agent state — not in this repo). This `MIGRATION_PLAN.md` file is the version-controlled source of truth.
+- **Per-session continuity** lives in this file plus PR descriptions for in-flight stages. This `MIGRATION_PLAN.md` is the version-controlled source of truth; cross-PR design state lives here and in REFACTOR_SPEC §15. No external/private notes are load-bearing.
 
 Estimated total effort: ~95–125 person-days across 26 PRs in 5 stages. Realistic calendar time for a single maintainer: 8–12 weeks. Stages can overlap where dependencies allow.
 
@@ -43,7 +43,7 @@ Continues in-flight work from REFACTOR_SPEC v0.x §15 step 5. No Model A changes
 
 ### [x] A0.3 — Step 5 phase 3: 1 MB bundle-size budget gate (PR [#124] + [#125] follow-ups, cbd4d84 + 9afbc6d)
 
-- Real-MONA-shape fixture (LISA + RTB + a few aux tables, ~50 columns)
+- 200-column load-test fixture (per §12 — matches the committed bundle-size gate fixture)
 - CI test byte-counts the bundle output, fails on > 1 MB
 - Surface bundle composition stats in CI logs (per-module byte breakdown) for visibility
 
@@ -95,8 +95,9 @@ Seven PRs. The largest and most intricate stage. Sequencing matters; gates are e
 
 ### [ ] A2.1 — `variable_state` table + coalescing
 
-- Add `variable_state` table to DDL (sibling to `variable_instance`)
-- Build pipeline: after `_import_registerinformation` and `_import_vardemangder`, run a coalescer that groups `variable_instance` rows by `(register_id, regvar_id, var_id, datatyp, datalangd, value_set_id, vardemangdsversion, vardemangdsniva)` — niva included so multi-grain rows stay distinct for A2.2 triage; the final `variable_state` schema doesn't carry grain. Derives `valid_from`/`valid_to` (ISO 8601) from the union of `unika_summary.version_forsta..version_sista` for each cvid in the group, writes one `variable_state` row per coalesced group
+- Add `variable_state` table to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD` dates always; open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL) — see §5.1
+- Build pipeline: after `_import_registerinformation` and `_import_vardemangder`, run a coalescer that groups `variable_instance` rows by `(register_id, regvar_id, var_id, datatyp, datalangd, value_set_id, vardemangdsversion, vardemangdsniva)` — niva included so multi-grain rows stay distinct for A2.2 triage; the final `variable_state` schema doesn't carry grain. Derives `valid_from`/`valid_to` from the union of `unika_summary.version_forsta..version_sista` for each cvid in the group, expanding to full dates (year `2018` → `2018-01-01..2018-12-31`); writes one `variable_state` row per coalesced group
+- **Drop `unika_summary`** after the coalescer has consumed `version_forsta` / `version_sista` (and after A1.2 already lifted the sensitivity flags) — the table is now unused
 - Resolver still uses `variable_instance`; no behavior change yet
 - Tests: verify coalescing rates match the empirical predictions (5× shrink, 65% single-state)
 
@@ -132,24 +133,25 @@ Can run in parallel with A2.2.
 
 ### [ ] A2.4 — `variable_state_lineage` interval-overlap join
 
-- Add `variable_state_lineage`, `variable_state_lineage_warning`, `variable_source_lineage` tables to DDL
+- Add `variable_state_lineage` and `variable_state_lineage_warning` tables to DDL
+- Source-variant pinning is **TOML-only**, not a SQL table:
+  - Heuristic defaults in `lineage_defaults` TOML block (per source register)
+  - Per-variable overrides in `lineage."<consumer_register>.<variable_slug>"` TOML blocks
 - Implement new `link_variable_state_lineage` per §5.6 pseudocode
-- Heuristic defaults in `lineage_defaults` TOML block (per source register)
-- Per-variable overrides in `lineage."<consumer_register>.<variable_slug>"` TOML blocks
 - Drop old `link_consumer_side_bindings` (its inputs go away with `variable_instance`)
 - Tests: 5 worked LISA-RTB examples from the agent report verify the algorithm
 
 **Estimate**: 4-5 days.
 
-**Gate to A2.6**: A2.4 must merge (lineage refactor depends on the new tables existing).
+**Gate to A2.6**: A2.4 *and* A2.5 must merge. A2.6 flips the FQID grammar, which requires both the new lineage tables (A2.4) and the new catalog API (A2.5) in place.
 
 ### [ ] A2.5 — Catalog API shift
 
-- Implement `Catalog.resolve(fqid)` returning longitudinal `ResolvedVariable`
-- Implement `Catalog.resolve_at(fqid, year)` returning single `VariableState`
-- Implement `Catalog.states(fqid)`, `.replaced(fqid)`, `.related(fqid)`, `.lineage(fqid)`
-- Legacy `Catalog.resolve(fqid)` (v0.x per-cvid semantics) marked deprecated; emits a DeprecationWarning
-- Tests: round-trip per binding from old/new API surfaces match for the unambiguous case
+- `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10). The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break.
+- Implement `Catalog.resolve_at(fqid, period, *, value_set_version=None)` returning single `VariableState` (`period` polymorphic per §6.2; not year-only)
+- Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10
+- Post-A2.5 public method roster: `resolve` (new semantics), `resolve_at`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings`
+- Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[resolve_at(fqid, period=y) for y in years]`; they must agree on the unambiguous case
 
 **Estimate**: 5-6 days.
 
@@ -172,9 +174,8 @@ Can run in parallel with A2.3/A2.4 once A2.1 lands.
 
 ### [ ] A2.7 — Cleanup
 
-- Drop `variable_instance` table from DDL
-- Drop `via_source_id` column (last consumer was the legacy Catalog.resolve)
-- Drop legacy Catalog code paths
+- Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write)
+- Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone)
 - Bump `reg_meta` to v1.0.0; tag the release
 - UNFROZEN snapshot is regenerated (still UNFROZEN — curation polish continues; UNFROZEN deletes at v1 publication, not at v1.0.0 internal tag)
 
@@ -302,10 +303,10 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 
 ### [ ] A5.2 — New API endpoints
 
-- Implement `?year=YYYY` query on canonical catalog endpoint
-- Implement `/states`, `/replaced`, `/related` sub-endpoints
-- Lineage embedded in canonical leaf response; standalone `/lineage` endpoint deferred if not needed
-- ETag scheme verified to include the `?year` query in cache key
+- Implement `?period=...` query on canonical catalog endpoint (polymorphic per §9.5 — accepts int year, period-token, range object, or `_default` snapshot sentinel; not year-only)
+- Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage` sub-endpoints (`/lineage` is a first-class v1 endpoint per §9.5, not deferred)
+- Suffixed routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order
+- ETag scheme verified to include the `?period` query in the cache key
 - Cloudflare edge-cache validation gate: small load test through Cloudflare confirms slash-bearing FQID paths still work cleanly with the new shapes
 
 **Estimate**: 4-5 days.
@@ -332,22 +333,23 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 ## Gates summary
 
 ```text
-A0.3 ─────────────┐
-                  ├─→ A1.1, A1.2, A1.3 ─────┐
-                                            ├─→ A2.1 ─→ A2.2 ─┐
-                                            │                 ├─→ A2.4 ─→ A2.6 ─→ A2.7
-                                            │                 │   ▲
-                                            │   A2.3 ─────────┘   │
-                                            │   A2.5 ─────────────┘
-                                                                      │
-                                                                      ├─→ A3.1 ─→ A3.2, A3.3, A3.4
-                                                                      │
-                                                                      └─→ A4.1 ─→ A4.2 ─→ A4.3 ─→ A4.4 ─→ A4.5
-                                                                                                            │
-                                                                                                            └─(optional pre-A5)
-                                                                      └─→ A5.1 ─→ A5.2, A5.3, A5.4
-                                                                          (after A2+A3, A4 optional)
+A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──→ A2.2 ──┬──→ A2.3
+                                                ├──→ A2.4 ──┐
+                                                └──→ A2.5 ──┴──→ A2.6 ──→ A2.7
+                                                                            │
+                                                                            ├──→ A3.1 ──→ {A3.2, A3.3, A3.4}
+                                                                            │
+                                                                            ├──→ A4.1 ──→ A4.2 ──→ A4.3 ──→ A4.4 ──→ A4.5
+                                                                            │
+                                                                            └──→ A5.1 ──→ {A5.2, A5.3, A5.4}
+                                                                                  (after A3.1 lands; A4 not required)
 ```
+
+Reading notes: braces `{...}` group steps that can run in parallel
+once their shared predecessor lands. A2.3 has no downstream dependant
+inside A2 — it produces `variable_replaced_by` for consumer use; A2.4
+does not read from it. A2.6 needs **both** A2.4 (new lineage tables)
+and A2.5 (new catalog API).
 
 ## Effort estimate
 
@@ -367,7 +369,17 @@ With parallelism across stages where dependencies allow, calendar time is closer
 
 1. **A2.2 build-time triage backlog larger than estimated.** If 200-300 manual TOML curations turns out to be 600-900, A2.2 lengthens. Mitigation: empirical sample from current SCB DB shows 99% auto-handle rate; risk is bounded.
 2. **A2.4 source-variant heuristic doesn't fit some real consumer-source pairs.** Mitigation: warning + TOML override mechanism captures the cases the heuristic misses; ~50 manual overrides expected.
-3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and 5-seg FQID patterns across the monorepo before A2.6. Run `rg "/.{1,40}/.{1,40}/.{1,40}/.{1,40}/.{1,40}"` to find lurking 5-seg references.
+3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and 5-seg FQID patterns across the monorepo before A2.6. The grep needs to be slug-grammar-aware to avoid swamping the signal with paths/URLs/JSON pointers:
+
+    ```bash
+    # 5-seg slugs per §5.2 (allow _default and v0.11 _YYYY period slugs)
+    rg "[a-z][a-z0-9-]*(/(_default|_[0-9]+|[a-z][a-z0-9-]*)){4}" --type py --type md --type toml
+
+    # Or scope to known FQID call sites:
+    rg "Catalog\.(resolve|resolve_at|states|predecessors|successors|related|replaced|lineage|lineage_warnings)\("
+    ```
+
+    Combine both passes — the first finds string-literal FQIDs in fixtures/configs; the second finds programmatic callsites that may construct FQIDs at runtime.
 4. **A4.3 SOS adapter discovers workbook-shape variations we haven't covered.** Mitigation: process all 13 workbooks against the adapter before merging; failures surface as `IRWarning` rows. New workbook variations would extend the adapter, not gate it.
 5. **A5 webapp work lags A3 by several weeks.** Mitigation: webapp can adopt incrementally; some endpoints can land before others. The hard reject on v0.x SPA files is the only end-of-stage gate.
 

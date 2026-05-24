@@ -550,23 +550,27 @@ integer IDs verbatim (`RegisterId`, `RegVarID`, `RegVerID`, `VarId`,
 `CVID`). This means SCB rebuilds produce byte-identical universal
 IDs given identical CSV inputs.
 
-SOS IDs are minted deterministically via BLAKE2b with
-personalization, top-bit-namespaced to avoid SCB collisions:
+SOS IDs are minted deterministically via BLAKE2b, namespaced into
+the provider band via bit 62 (top bit 63 reserved for SQLite's
+signed-int compatibility):
 
 ```python
 def mint(*parts: str) -> int:
-    """Deterministic 63-bit ID, namespaced to provider via top bit."""
+    """Deterministic 63-bit ID, namespaced into [2^62, 2^63) via bit 62."""
     h = blake2b(
         "/".join(parts).encode("utf-8"),
         digest_size=8,
         person=b"regmeta-id",
     ).digest()
-    return (int.from_bytes(h, "big") | (1 << 63)) & ((1 << 63) - 1)
+    # Take low 62 bits from hash, set bit 62, leave bit 63 clear.
+    return (int.from_bytes(h, "big") & ((1 << 62) - 1)) | (1 << 62)
 ```
 
 SCB IDs occupy `[0, 2^32)`; SOS IDs occupy `[2^62, 2^63)`. Visual
 diagnostic + clean namespace. Future providers get their own
-namespaces (FK could use `[2^61, 2^62)`, etc.).
+namespace bits (FK could set bit 61 → `[2^61, 2^62)`, etc.).
+Bit 63 is left clear throughout so every ID fits in SQLite's signed
+`INTEGER` without sign-bit weirdness.
 
 **Why this architecture pays off.** Adding a new provider becomes:
 write an adapter at `reg_meta_build/sources/<provider>.py`, declare
@@ -594,10 +598,11 @@ with explicit validity ranges, **slug-anchored edge tables** for
 succession (`replaced_by`), grain-sibling (`related_to`), and
 cross-rename equivalence (`same_as`), and a **build-time triage**
 pass that normalizes provider-specific oddities into the universal
-shape. SCB-specific publication metadata moves to `scb_*` extension
-tables; SOS-specific bilingual DCAT-AP fields move to `sos_*`
-extension tables; each new provider's adapter declares its own
-extensions.
+shape. The universal schema carries **no provider-specific tables**
+(no `scb_*`, no `sos_*`): provider variation is captured via
+fill-rate on the universal columns (§5.8); prose and narrative
+metadata go to reg-meta-docs at variant level; maintainer-only
+debug data goes to the sibling provenance DB.
 
 The grammar is anchored to the underlying providers' source IDs
 (SCB's `RegisterId` / `RegVarID` / `VarID` / `CVID` are reused as
@@ -606,6 +611,29 @@ with curated human-readable slugs for ergonomics. A separate
 **provenance DB** sibling artifact (maintainer-only, not shipped to
 consumers) tracks adapter-specific debug data — build manifests,
 source checksums, raw provider-side IDs.
+
+### 5.0 Empirical basis
+
+The Model A shape is calibrated against the production SCB
+`reg_meta.db` (sampled at the 2026-05-22 design lock, schema v0.11.x)
+and the 13 Socialstyrelsen workbooks current at that time. The numbers below
+are what made each Model A choice load-bearing; they are recorded
+here so future contributors can re-run the analysis if the data
+drifts.
+
+| Question | Finding | Implication |
+|---|---|---|
+| How much per-edition metadata drift do current variables show? | 43% of multi-version `(register, variant, variable)` triples carry drift across editions; 74% for variables with ≥20 editions. | State-on-variable captures real signal — not just bookkeeping. |
+| Does state-on-variable actually shrink the row count? | 515K `variable_instance` rows → ~104K `variable_state` rows (≈ 5× shrink). | Coalescing-by-shape is the right primitive. |
+| What share of variables are actually multi-state? | 65% of triples collapse to a single `variable_state`. | Single-state is the common case; the longitudinal API must not penalize it. |
+| How year-coupled is current lineage? | 100% of v0.11 `via_source_id` edges have `src_year == dst_year`. | The §5.6 interval-overlap join is mechanically simpler than the slug-keyed equality join and 3.5× smaller (53,635 → ~15,187 edges). |
+| Does build-time triage scale? | ~99% of same-year multi-state collisions resolve automatically with the kolumnnamn-primary discriminator (§5.7). | ~200–300 manual TOML overrides expected — a one-time curation backlog, not an ongoing tax. |
+| Are SOS workbooks compatible with the universal shape? | 13 workbooks → ~2,300 IR rows under the §4.4 adapter contract. Variant synthesis (LSS/BU/SOL) and per-row tidsperiod ranges handled by the adapter, not by extension tables. | The "no provider-specific tables" rule holds for SOS. |
+
+These numbers belong here, not just in the PR description that
+introduced Model A — once the PR ships, the body is effectively
+undiscoverable, and a year-from-now contributor questioning the
+shape needs the anchor.
 
 ### 5.1 Object model
 
@@ -620,7 +648,7 @@ reg-meta-docs; build artifacts live in the provenance DB.
 | `register` | `register_id`, `provider_id`, `slug`, `name`, `description`, `purpose` | LISA, RTB, PAR. Slug-identified per-provider. Lean column set; provider-specific metadata that doesn't fit lives in docs (§5.8). |
 | `variant` | `variant_id`, `register_id`, `slug`, `name`, `description`, `panel_entity_key`, `panel_time_key`, `panel_time_grain` | LISA/individer-15plus, RTB/folkbokforda-personer, SOS/par/sluten-vard. SCB `registervariant`, SOS `deldatamängd`. Doesn't nest further. `_default` slug for variant-less registers (SOS LSS, BU, SOL). Panel-template columns declare natural panel structure (§5.3). |
 | `variable` | `(register_id, variant_id, variable_id)` PK, `slug`, `name`, `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`, `source_register_id`, `source_register_text` | Slug-identified, **variant-scoped**. Identity is `(provider, register, variant, variable_slug)`. "Kön in LISA/individer-15plus" and "Kön in LISA/individer-16plus" are different variables; the empirical equivalence (same SCB `var_id`) is captured via auto-emitted `variable_same_as` edges (§5.5). Cross-register concept-merging is curation via the same mechanism. Operational definitions inline into `description` at ingest when distinct. |
-| `variable_state` | `state_id`, FK to variable, `valid_from`, `valid_to` (ISO 8601 TEXT), `data_type`, `data_length`, `value_set_id`, `value_set_version_label` | Per-era shape; a variable has 1..N states. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). `valid_from`/`valid_to` carry ISO 8601 strings (year, year-month, or date precision); period tokens like `HT2020` get mapped to ISO ranges at ingest. |
+| `variable_state` | `state_id`, FK to variable, `valid_from`, `valid_to` (ISO 8601 `YYYY-MM-DD` TEXT, both NOT NULL), `data_type`, `data_length`, `value_set_id`, `value_set_version_label` | Per-era shape; a variable has 1..N states. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). Storage is always full-date `YYYY-MM-DD`. Coarser inputs are expanded at ingest into ranges: SCB year `2018` → `valid_from = '2018-01-01'`, `valid_to = '2018-12-31'`; SCB year-month `2018-03` → `valid_from = '2018-03-01'`, `valid_to = '2018-03-31'`; period tokens like `HT2020` → the corresponding ISO date range. Open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL). Because every stored value is a full date, lexical string comparison is chronologically correct and intersection uses plain `max`/`min`. |
 | `value_set` | `value_set_id`, `member_hash`, `classification_id` (nullable) | Content-addressed dedup of code memberships. When `classification_id` is set, the value_set is a (possibly year-projected) subset of a named classification. When NULL, the value_set is anonymous (ad-hoc codes for this variable). |
 | `classification` | `classification_id`, `slug`, `name`, `publisher`, `version`, etc. | Named versioned vocabulary: SUN2020, ICD10, ICD11, LKF. Provider-independent. Version baked into the slug (`sun2020`, `icd10`, `lkf2007`), not a separate FQID slot. |
 
@@ -630,7 +658,7 @@ Plus three orthogonal relationship tables:
 |---|---|---|
 | `variable_same_as` | Symmetric | Cross-rename equivalence: "this variable in register A is the same concept as that variable in register B". Curated. |
 | `variable_replaced_by` | Directional | Succession: variable X retired, replaced by variable Y. Auto-derived from SCB `timeseries_event` (`handelse IN ('Ersatt av', 'Ersätter')`) plus TOML curation for cross-provider edges. |
-| `variable_related_to` | Symmetric | Grain/position/coding siblings: `utbildningsinriktning_3pos` ↔ `utbildningsinriktning_4pos`. Auto-emitted by build-time triage splits; TOML adds cross-variable edges manually. |
+| `variable_related_to` | Symmetric | Grain/position/coding siblings: `utbildningsinriktning-3pos` ↔ `utbildningsinriktning-4pos`. Auto-emitted by build-time triage splits; TOML adds cross-variable edges manually. |
 
 Plus the lineage edge (§5.6) materializing composite-source bindings:
 
@@ -723,11 +751,11 @@ variable concept") are catalog traversals via `Catalog.states(...)`
 and `Catalog.related(...)` (§5.10), not serializable identifiers.
 
 **Slug grammar.** Every slug must match
-`^[a-z][a-z0-9-]*[a-z0-9]$` (lowercase ASCII, kebab-case, must
-start with a letter, must end with a letter or digit, single
-hyphens only). Single-character slugs match `^[a-z]$`. Disallowed:
-leading/trailing hyphens, double hyphens, underscores, uppercase,
-non-ASCII.
+`^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (lowercase ASCII, kebab-case, must
+start with a letter, must end with a letter or digit, hyphens only
+appear singly between alphanumerics). Single-character slugs match
+`^[a-z]$`. Disallowed: leading/trailing hyphens, consecutive hyphens
+(`--`), underscores, uppercase, non-ASCII.
 
 **Reserved and disallowed slugs.** Build rejects any slug entry
 hitting one of these:
@@ -736,6 +764,12 @@ hitting one of these:
   discriminator unambiguous).
 - `_default` (variant slot only) — persisted variant slug for
   variant-less registers (§5.1). Reserved everywhere else.
+
+`_default` is the **one literal exception** to the slug grammar
+regex above — it starts with `_` and the underscore otherwise
+violates the rule. Slug validators must short-circuit on the literal
+string `_default` (in the variant slot) before applying the regex.
+Every other slug in the system matches the regex without exception.
 
 Note: under Model A there is no period slot, so no period-shaped
 slug ban is needed. The v0.11 rules forbidding year-shaped slugs in
@@ -937,19 +971,26 @@ related_to = [
   manual edges (typically cross-variable rather than within one
   variable's split).
 
-**Lineage curation (variable_source_lineage):**
+**Lineage curation (TOML, not a SQL table).** Source-variant pinning
+for §5.6 lineage materialization lives in the slug TOMLs as
+`[lineage_defaults]` and `[lineage."<consumer_register>.<variable_slug>"]`
+blocks. The build reads these directly when running the
+interval-overlap join — there is **no `variable_source_lineage`
+table** in the universal schema.
 
 ```toml
-# Source-variant pin for §5.6 lineage materialization.
-# Maps (consumer_register, variable_slug) → preferred source variant.
+# Defaults per source register live in one small block.
+[lineage_defaults]
+rtb = "folkbokforda-personer"
+iot = "bostadshushall"
+
+# Per-(consumer_register, variable_slug) overrides override the default.
 [lineage."lisa.kon"]
 source_register = "rtb"
 source_variant = "folkbokforda-personer"
 ```
 
-Defaults per source register (e.g. `folkbokforda-personer` for RTB,
-`bostadshushall` for IoT) live in a small `[lineage_defaults]`
-block; per-variable overrides override the default. See §5.6.
+See §5.6 for the algorithm that consumes these blocks.
 
 ### 5.4 Slug immutability
 
@@ -1025,11 +1066,11 @@ the resolver does a single forward lookup.
 CREATE TABLE variable_same_as (
     a_provider TEXT NOT NULL,
     a_register TEXT NOT NULL,
-    a_variant  TEXT NOT NULL DEFAULT '',
+    a_variant  TEXT NOT NULL,
     a_variable TEXT NOT NULL,
     b_provider TEXT NOT NULL,
     b_register TEXT NOT NULL,
-    b_variant  TEXT NOT NULL DEFAULT '',
+    b_variant  TEXT NOT NULL,
     b_variable TEXT NOT NULL,
     note       TEXT,
     PRIMARY KEY (a_provider, a_register, a_variant, a_variable,
@@ -1071,11 +1112,11 @@ Directional: variable A was retired and replaced by variable B.
 CREATE TABLE variable_replaced_by (
     predecessor_provider TEXT NOT NULL,
     predecessor_register TEXT NOT NULL,
-    predecessor_variant  TEXT NOT NULL DEFAULT '',
+    predecessor_variant  TEXT NOT NULL,
     predecessor_variable TEXT NOT NULL,
     successor_provider   TEXT NOT NULL,
     successor_register   TEXT NOT NULL,
-    successor_variant    TEXT NOT NULL DEFAULT '',
+    successor_variant    TEXT NOT NULL,
     successor_variable   TEXT NOT NULL,
     effective_year       INTEGER,
     note                 TEXT,
@@ -1084,23 +1125,55 @@ CREATE TABLE variable_replaced_by (
 ) WITHOUT ROWID;
 ```
 
+Parallel tables at the register and variant grain — each table's PK
+matches the grain of the entities it relates, no empty-string
+sentinels:
+
+```sql
+CREATE TABLE register_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register,
+                 successor_provider, successor_register)
+) WITHOUT ROWID;
+
+CREATE TABLE variant_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    predecessor_variant  TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    successor_variant    TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variant,
+                 successor_provider, successor_register, successor_variant)
+) WITHOUT ROWID;
+```
+
 **Auto-derived from SCB `timeseries_event`.** SCB records succession
 in `timeseries_event` rows with `handelse IN ('Ersatt av',
 'Ersätter')` on `entitet IN ('AktuellVariabel', 'Variabel',
-'RegisterVariant', 'Register')`. Build pulls these into
-`variable_replaced_by` (and parallel `register_replaced_by` /
-`variant_replaced_by` tables for non-variable rows). The `id1` /
-`id2` fields identify predecessor and successor; `handelse =
-'Ersätter'` is the inverse direction, collapsed during the join.
+'RegisterVariant', 'Register')`. Build pulls these into the matching
+table by entity grain — `Register` rows feed `register_replaced_by`,
+`RegisterVariant` rows feed `variant_replaced_by`, the variable-grain
+rows feed `variable_replaced_by`. The `id1` / `id2` fields identify
+predecessor and successor; `handelse = 'Ersätter'` is the inverse
+direction, collapsed during the join.
 
 **TOML curation for cross-provider edges.** SOS→SCB succession (or
 SCB→SOS) won't appear in SCB's `timeseries_event`. The slug TOML
 form (§5.3) carries these as inline-table rows.
 
-**Resolution-time hint.** `Catalog.resolve("scb/lisa/folkbokforda/SyssStat")`
-returns a `ResolvedBinding` with a structured `replaced_by` hint
-when the variable has a successor edge. Consumers (webapp, mdw)
-surface this as "this variable was replaced by X; did you mean…?"
+**Resolution-time hint.** `Catalog.resolve("scb/lisa/individer-15plus/sysstat")`
+returns a `ResolvedVariable` with a structured `replaced_by` hint
+when the variable has a successor edge (e.g. `sysstat` → `sysstat11`
+effective 2011). Consumers (webapp, mdw) surface this as "this
+variable was replaced by X; did you mean…?"
 
 #### variable_related_to
 
@@ -1113,11 +1186,11 @@ researcher would order as different columns.
 CREATE TABLE variable_related_to (
     a_provider TEXT NOT NULL,
     a_register TEXT NOT NULL,
-    a_variant  TEXT NOT NULL DEFAULT '',
+    a_variant  TEXT NOT NULL,
     a_variable TEXT NOT NULL,
     b_provider TEXT NOT NULL,
     b_register TEXT NOT NULL,
-    b_variant  TEXT NOT NULL DEFAULT '',
+    b_variant  TEXT NOT NULL,
     b_variable TEXT NOT NULL,
     relation_kind TEXT NOT NULL,    -- see below
     note          TEXT,
@@ -1158,13 +1231,25 @@ slug-keyed edges via `via_source_id`. Under Model A this becomes a
 CREATE TABLE variable_state_lineage (
     consumer_state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
     source_state_id   INTEGER NOT NULL REFERENCES variable_state(state_id),
-    valid_from        INTEGER NOT NULL,    -- inclusive year of intersection
-    valid_to          INTEGER NOT NULL,    -- inclusive year of intersection
+    valid_from        TEXT    NOT NULL,    -- ISO 8601 'YYYY-MM-DD', inclusive start of intersection
+    valid_to          TEXT    NOT NULL,    -- ISO 8601 'YYYY-MM-DD', inclusive end of intersection ('9999-12-31' for open-ended)
     PRIMARY KEY (consumer_state_id, source_state_id)
 );
 CREATE INDEX idx_variable_state_lineage_consumer ON variable_state_lineage(consumer_state_id);
 CREATE INDEX idx_variable_state_lineage_source ON variable_state_lineage(source_state_id);
+
+CREATE TABLE variable_state_lineage_warning (
+    consumer_state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
+    warning_kind      TEXT    NOT NULL,    -- 'no_source_state', 'ambiguous_source_variant'
+    message           TEXT    NOT NULL,
+    PRIMARY KEY (consumer_state_id, warning_kind)
+);
+CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_lineage_warning(consumer_state_id);
 ```
+
+The lineage validity range uses the same `YYYY-MM-DD` form and
+sentinel as `variable_state`, so an edge's `(valid_from, valid_to)`
+is directly comparable to the states it joins.
 
 **Algorithm.** For every consumer variable_state with a populated
 `variable.source_register_id`, look up the source variable's states
@@ -1217,8 +1302,13 @@ uses:
 
 3. **Register-level fallback** — when no curated rule applies, the
    linker emits edges to all matching slugs across all source-side
-   variants, with a `lineage_warning` row flagging "ambiguous source
-   variant; consider curating".
+   variants, plus a `variable_state_lineage_warning` row with
+   `warning_kind = 'ambiguous_source_variant'` and a message naming
+   the candidate source variants. When the linker finds no source
+   state at all, it emits `warning_kind = 'no_source_state'`.
+   Warnings are queryable via `Catalog.lineage_warnings(fqid)` (a
+   thin SELECT on this table); the build pipeline also surfaces them
+   in the build log for curator attention.
 
 The default + override pattern handles the 90% case in ~20 lines of
 config plus an estimated ~50 manual overrides. The warning
@@ -1292,25 +1382,29 @@ cannot be the same variable.
      drift in re-deliveries; pick the latest).
 
 **Sibling slug derivation.** When the algorithm splits one variable
-into N siblings, slugs derive deterministically:
+into N siblings, slugs derive deterministically. All suffix
+delimiters use `-` to stay inside the §5.2 slug grammar (no
+underscores in slugs):
 
 1. **kolumnnamn-derived** when kolumnnamn distinguishes columns:
-   `Hemkommun` / `Skolkommun` → `kommun_hem` / `kommun_skol`. Strip
-   common prefixes (`Utbild_St` / `Utbild_Sl` → `_start` / `_slut`).
+   `Hemkommun` / `Skolkommun` → `kommun-hem` / `kommun-skol`. Strip
+   common prefixes (`Utbild_St` / `Utbild_Sl` → suffixes `-start` /
+   `-slut`, appended to the shared stem).
 2. **niva-pattern** when only `vardemangdsniva` (the SCB grain label) distinguishes:
-   - `\b(\d+)\s*position(er)?\b` → `_{N}pos`
-   - `\bnivaold\b` → `_old`
-   - `\bgrov(?:\s+gruppering)?\b` → `_grov`
-   - `\bdetalj(?:grupp(er)?)?\b` → `_detalj`
-   - `\b(alfa|alpha)\b` → `_alfa`
-   - `\bhuvudgrupp\b` → `_huvud`
-   - `\bavdelning\b` → `_avd`
-   - `\bundergrupp\b` → `_under`
+   - `\b(\d+)\s*position(er)?\b` → suffix `-{N}pos`
+   - `\bnivaold\b` → `-old`
+   - `\bgrov(?:\s+gruppering)?\b` → `-grov`
+   - `\bdetalj(?:grupp(er)?)?\b` → `-detalj`
+   - `\b(alfa|alpha)\b` → `-alfa`
+   - `\bhuvudgrupp\b` → `-huvud`
+   - `\bavdelning\b` → `-avd`
+   - `\bundergrupp\b` → `-under`
 3. **datalangd-derived** for code/label pairs: `Lid`/`LNamn` →
-   `_id` / `_namn`.
-4. **BLAKE2b hash fallback** when no pattern matches: `_x<6 hex>`.
+   suffixes `-id` / `-namn`.
+4. **BLAKE2b hash fallback** when no pattern matches: suffix
+   `-x<6 hex>`.
 
-When two siblings derive the same slug, append `_a`/`_b` in cvid
+When two siblings derive the same slug, append `-a` / `-b` in cvid
 order and emit a build warning.
 
 **Auto-emitted `variable_related_to` edges.** Build splits emit
@@ -1328,8 +1422,8 @@ travels uniformly.
 
 **Curation backlog.** The algorithm auto-resolves ~99% of
 collisions. An estimated 200–300 cases need manual TOML curation —
-mostly kolumnnamn-derived suffix ambiguities (`Utbild_St` → `_start`
-vs `_st`) or genuinely-ambiguous splits the algorithm can't resolve
+mostly kolumnnamn-derived suffix ambiguities (`Utbild_St` → `-start`
+vs `-st`) or genuinely-ambiguous splits the algorithm can't resolve
 from data alone. Each manual entry is a 1–2 line TOML override.
 
 ### 5.8 What's not in the catalog (docs and provenance)
@@ -1394,7 +1488,10 @@ support lands as a separate table or sidecar DB.
 **Structural sensitivity flags** stay in the catalog as universal
 `variable` columns (`is_sensitive`, `is_identifier`) — these are
 MONA-critical and apply to every variable regardless of provider.
-The original `unika_summary` table is dropped after lift.
+The original `unika_summary` table is dropped after **A2.1's
+coalescer** consumes `version_forsta` / `version_sista` to derive
+`variable_state.valid_from` / `valid_to`; the sensitivity-flag lift
+in A1.2 alone is not sufficient to retire the table.
 
 **`is_identifier` downstream semantics.** A variable with
 `is_identifier=true` will be pseudonymized at delivery. For SCB
@@ -1457,61 +1554,102 @@ Descriptive; the schema-level changes land in §6. Headline points:
   `variable_state_lineage` (§5.6). UI presentation question (how to
   surface RTB/IoT lineage when browsing under LISA) is §9 webapp work.
 - Replaced-by hints from resolution surface in the SPA: "this
-  variable was replaced by SyssStat11 effective 2011; redirect?"
+  variable was replaced by `sysstat11` effective 2011; redirect?"
 
 ### 5.10 Library API surface
 
 The webapp's `/api/catalog/*` endpoints (§9.5) are thin wrappers
-around a stable in-process reg_meta API:
+around a stable in-process reg_meta API. Method signatures (normative
+— `/api/catalog/*` shape derives from these):
 
 ```python
-from reg_meta import Catalog
+from reg_meta import Catalog, Period  # Period = int | str | dict | None
 
-catalog = Catalog.open()                 # mmap'd SQLite
+class Catalog:
+    @classmethod
+    def open(cls, path: str | None = None) -> "Catalog": ...
 
-# Longitudinal resolution — returns ResolvedVariable with full state history
-variable = catalog.resolve("scb/lisa/individer-15plus/kon")
-# variable.states = [VariableState(...), VariableState(...)]
-# variable.replaced_by = [SuccessorRef(...)] or None
-# variable.related_to  = [SiblingRef(...)]
-# variable.same_as     = [EquivalenceRef(...)]
-# variable.lineage     = [LineageEdge(...)] (consumer-side)
+    # Longitudinal resolution — full state history + edges.
+    def resolve(self, fqid: str) -> ResolvedVariable: ...
 
-# Resolution at a specific period — returns single VariableState
-state = catalog.resolve_at("scb/lisa/individer-15plus/kon", period=2018)
-# state.value_set, state.data_type, state.delivery_column_name (alias), etc.
-# period accepts the same forms as Source.period (int, period-token, range, "_default")
+    # Resolution at a specific period — one VariableState.
+    # `period` accepts the same forms as Source.period (int, period-token, range,
+    # "_default" snapshot sentinel). Required.
+    # `value_set_version` disambiguates the rare LKF-shape multi-vintage case.
+    def resolve_at(
+        self,
+        fqid: str,
+        period: Period,
+        *,
+        value_set_version: str | None = None,
+    ) -> VariableState: ...
 
-# Full state history for one binding
-states = catalog.states("scb/lisa/individer-15plus/kon")
+    # State history (convenience: equivalent to resolve(fqid).states).
+    def states(self, fqid: str) -> list[VariableState]: ...
 
-# Sibling relationships
-siblings = catalog.related("scb/lisa/individer-15plus/utbildningsinriktning_3pos")
-# returns [VariableRef(.../utbildningsinriktning_1pos),
-#          VariableRef(.../utbildningsinriktning_4pos), ...]
+    # Succession edges, list-returning for symmetry with the other accessors.
+    def predecessors(self, fqid: str) -> list[VariableRef]: ...
+    def successors(self, fqid: str) -> list[VariableRef]: ...
 
-# Succession chain
-chain = catalog.replaced("scb/lisa/individer-15plus/SyssStat")
-# returns {predecessors: [...], successors: [VariableRef(.../SyssStat11)]}
+    # Grain/coding siblings.
+    def related(self, fqid: str) -> list[RelatedRef]: ...
 
-# Composite-source lineage
-lineage = catalog.lineage("scb/lisa/individer-15plus/kon")
-# returns [LineageEdge(source_state, valid_from, valid_to), ...]
+    # Composite-source lineage edges (consumer-side variables only).
+    def lineage(self, fqid: str) -> list[LineageEdge]: ...
+
+    # Build-time lineage warnings for a binding (no_source_state, ambiguous_source_variant).
+    def lineage_warnings(self, fqid: str) -> list[LineageWarning]: ...
 ```
 
-Exact dataclass shapes (ResolvedVariable, VariableState, LineageEdge,
-etc.) live in [reg_meta/DESIGN.md](reg_meta/DESIGN.md). The contract
-from this spec's perspective: every FQID resolves through one entry
-point; year-specific resolution has one entry point; cross-variable
-relationship traversal has one entry point per edge type.
+Example usage:
+
+```python
+catalog = Catalog.open()                 # mmap'd SQLite
+
+variable = catalog.resolve("scb/lisa/individer-15plus/kon")
+# variable.states = [VariableState(...), VariableState(...)]
+# variable.replaced_by = [VariableRef(...)] (successors only on this attribute)
+# variable.related_to  = [RelatedRef(...)]
+# variable.same_as     = [VariableRef(...)]
+# variable.lineage     = [LineageEdge(...)] (consumer-side)
+
+state = catalog.resolve_at("scb/lisa/individer-15plus/kon", period=2018)
+# state.value_set, state.data_type, state.delivery_column_name (alias), etc.
+
+# Succession: two separate accessors, each list-returning.
+predecessors = catalog.predecessors("scb/lisa/individer-15plus/sysstat11")
+# → [VariableRef(.../sysstat)]
+successors   = catalog.successors("scb/lisa/individer-15plus/sysstat")
+# → [VariableRef(.../sysstat11)]
+
+# Grain siblings.
+siblings = catalog.related("scb/lisa/individer-15plus/utbildningsinriktning-3pos")
+# → [RelatedRef(.../utbildningsinriktning-1pos, relation_kind="same_concept_different_grain"),
+#    RelatedRef(.../utbildningsinriktning-4pos, relation_kind="same_concept_different_grain"), ...]
+```
+
+Exact dataclass shapes (`ResolvedVariable`, `VariableState`,
+`VariableRef`, `RelatedRef`, `LineageEdge`, `LineageWarning`,
+`Period`) live in [reg_meta/DESIGN.md](reg_meta/DESIGN.md). The
+contract from this spec's perspective: every FQID resolves through
+one entry point; period-specific resolution has one entry point;
+cross-variable relationship traversal has one list-returning entry
+point per edge type.
+
+**Why two methods for succession.** `predecessors` and `successors`
+are split (rather than a single `replaced` returning a dict) so every
+edge-traversal accessor returns `list[...]` uniformly. The
+longitudinal `resolve(fqid).replaced_by` attribute carries the
+**outbound** edges (successors) since "X was replaced by Y" is the
+natural directional read; inbound (predecessor) traversal is the
+explicit two-step `predecessors(fqid)` call.
 
 **Ambiguity handling.** `resolve_at(fqid, period)` returns a single
 state in the unambiguous case (99% of variables, after build-time
 triage). For the rare multi-vintage case (LKF-shape, ~0.05%), it
-returns a `VariableStateAmbiguous` exception carrying candidate
-states keyed by `value_set_version_label`; consumers supply the
-label to disambiguate via `resolve_at(fqid, period,
-value_set_version=...)`.
+raises `VariableStateAmbiguous` carrying candidate states keyed by
+`value_set_version_label`; consumers supply the label to disambiguate
+via the `value_set_version=` keyword argument.
 
 ### 5.11 Glossary
 
@@ -1678,6 +1816,25 @@ referenced from panels where time lives in a row-level column
 (`panel_time_key` is a variable slug), the source's `period` declares
 the source's scope, and the panel's row-level time_key drives the join.
 
+**`Source.period` ↔ `TimePoint` shape mapping.** `Source.period`'s
+range form is the bare object `{"from": ..., "to": ...}`, while
+`TimePoint` ranges use the discriminated wrapper
+`{"range": {"from": ..., "to": ...}}`. When a Panel member inherits
+its `time_key` from a source whose `period` is a range, the value is
+wrapped in `{"range": ...}` before being treated as a `TimePoint`.
+Equivalently:
+
+| `Source.period` value          | Resulting inherited `TimePoint`           |
+|--------------------------------|-------------------------------------------|
+| `2018` (int)                   | `{"period": 2018}`                        |
+| `"2018-Q1"` (string)           | `{"period": "2018-Q1"}`                   |
+| `{"from": "...", "to": "..."}` | `{"range": {"from": "...", "to": "..."}}` |
+| `"_default"` (snapshot)        | `{"period": "_default"}`                  |
+
+The bare `{"from", "to"}` object is **only** legal as a `Source.period`
+value; it is rejected wherever a `TimePoint` is expected. This keeps
+`TimePoint`'s discriminated-union grammar unambiguous.
+
 `where` (per-table SQL predicate) is **not** in the v1 baseline
 schema. Cohort filtering inside the MONA bundle still happens at
 the `sql_table` / `file_source` level in `reg_monabundle`'s
@@ -1813,8 +1970,8 @@ Type aliases:
 
 ```text
 EntityKey = string | string[]                                  // always column refs
-TimePoint = int
-          | string                                             // column ref OR period token
+TimePoint = int                                                // literal year
+          | string                                             // always a column ref (never a literal period — use {"period": ...} for that)
           | {"period": int | string}                           // literal period
           | {"range": {"from": int|string, "to": int|string}}  // range (sub-yearly / event)
 TimeKey   = TimePoint | TimePoint[]
@@ -2976,7 +3133,8 @@ Model A relationship surface.
 | GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `variant` (3 seg), `binding` (4 seg, leaf), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). On `binding` leaves, the response embeds the variable's full longitudinal record (all states with their validity ranges, value sets, aliases, `replaced_by`/`related_to`/`same_as`/`lineage` edges). |
 | GET | `/api/catalog/{fqid:path}?period=...` | Same canonical endpoint, with a `period` query string. Accepts the same forms as `Source.period` (int year, period-token, range, snapshot sentinel). On `binding` leaves, the response narrows to a single `variable_state` matching the period (for range periods, returns the matching state set). Returns 404 if no state covers the period; returns 409 (`binding_state_ambiguous`) with candidate `value_set_version_label`s if multiple states match (rare LKF-shape case). The `period` query is otherwise ignored on non-binding kinds. |
 | GET | `/api/catalog/{fqid:path}/states` | Full state history for a binding. Returns `{binding, states: [{valid_from, valid_to, data_type, value_set?, delivery_column_name?, value_set_version_label?}, ...]}`. SPA's variable detail UI uses this to render an edition picker / period axis. |
-| GET | `/api/catalog/{fqid:path}/replaced` | Returns `{predecessors: [...], successors: [VariableRef]}` via `variable_replaced_by` edges. Used by SPA's "this variable was replaced" remediation flow. |
+| GET | `/api/catalog/{fqid:path}/predecessors` | Returns `{binding, predecessors: [VariableRef, ...]}` via inbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.predecessors(fqid)`. |
+| GET | `/api/catalog/{fqid:path}/successors` | Returns `{binding, successors: [VariableRef, ...]}` via outbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.successors(fqid)`. Used by SPA's "this variable was replaced" remediation flow. |
 | GET | `/api/catalog/{fqid:path}/related` | Returns `{related: [{ref: VariableRef, relation_kind: str}, ...]}` via `variable_related_to` edges. Used by SPA's "did you mean this grain level?" picker. |
 | GET | `/api/catalog/{fqid:path}/lineage` | First-class v1 endpoint. Returns `{binding, lineage_edges: [{source_state: {state_id, binding, valid_from, valid_to, value_set_id?, value_set_version_label?, delivery_column_name?}, valid_from, valid_to}, ...]}` — edges materialized from `variable_state_lineage` (§5.6). For consumer-side variables (LISA's Kön sourcing from RTB's Kön), enumerates every source-side state that contributed during validity intersection. For canonical-source variables (no inbound lineage), returns empty `lineage_edges`. Embedded `lineage` field on canonical leaf response (a thin reference list); standalone endpoint provides full state context per source. |
 | GET | `/api/catalog-search?q={query}&kind={register\|variable}` | FTS across registers and variables (delegates to reg_meta's FTS5 indexes). Separate path so the catalog endpoint stays single-purpose. |
@@ -2984,8 +3142,16 @@ Model A relationship surface.
 **URL routing notes.** `/api/catalog/{fqid:path}/states` parses
 cleanly through FastAPI: the path converter greedy-consumes
 slash-bearing FQID before the literal `/states` suffix. Same for
-`/replaced`, `/related`, `/lineage`. The canonical endpoint takes
-precedence when no suffix is present.
+`/predecessors`, `/successors`, `/related`, `/lineage`.
+
+FastAPI / Starlette route matching is **order-sensitive** when a
+`{fqid:path}` catch-all is in play. The suffixed routes (`/states`,
+`/predecessors`, `/successors`, `/related`, `/lineage`) MUST be
+declared *before* the catch-all `/api/catalog/{fqid:path}` in the
+FastAPI router — otherwise the catch-all greedy-consumes the suffix
+into `fqid` and the suffix handler never fires. CI enforces the
+ordering via a router-introspection test
+(`assert routes_declared_before(...)`).
 
 **Documentation** (unchanged from v0.11 — `reg-meta-docs` backed)
 
@@ -3011,9 +3177,9 @@ Realign-patch application stays client-side only.
 reg_meta version is the v1.x.x Model A release; cache invalidates on
 the boundary naturally. The `?period` query is part of the URL and
 therefore part of the cache key — different periods are different
-cache entries. The `/states`, `/replaced`, `/related` sub-endpoints
-have their own ETags computed from their response bodies; no
-manual invalidation needed.
+cache entries. The `/states`, `/predecessors`, `/successors`,
+`/related`, `/lineage` sub-endpoints have their own ETags computed
+from their response bodies; no manual invalidation needed.
 
 **Cloudflare edge-cache validation gate (still in effect).** Per
 §6.5 of §15, run a small load through Cloudflare to confirm
@@ -3235,8 +3401,8 @@ At generate time, `reg_mockdata` inspects each column's `name`
 (binding FQID) and applies spine semantics when the trailing
 variable slug matches. This works across providers and registers
 automatically: `scb/lisa/individer-15plus/kon`,
-`scb/rtb/folkbokforda/kon`, and `sos/par/sv/kon` are all
-the same concept for spine purposes. Cross-rename equivalence (the
+`scb/rtb/folkbokforda-personer/kon`, and `sos/par/sluten-vard/kon`
+are all the same concept for spine purposes. Cross-rename equivalence (the
 curated `same_as` graph in reg_meta; §5.5) is *not* consulted at
 generate time — the kit is freestanding from reg_meta — but
 `reg_webapp` can use it to verify that all the project's "Kön"
@@ -3494,7 +3660,7 @@ Lay the foundations for Model A without yet flipping the schema.
 Three independent PRs.
 
 - **A1.1 Universal English column rename.** Renames every SCB-Swedish column in the DDL to English (per §5.11 vocabulary glossary). Data values unchanged (provider-native strings preserved). Touches `reg_meta_build/src/reg_meta_build/db.py`, every query in `reg_meta/`, all test fixtures. ~30 query callsites in `reg_meta`; ~50 test fixture files. Heavy but mechanical.
-- **A1.2 Lift sensitivity flags.** `unika_summary.{kanslig_variabel, kanslig_variabel_ibland}` both fold into one `variable.is_sensitive` boolean (the 22 sometimes-sensitive edge cases get treated as sensitive — not worth a separate column). `unika_summary.identitetsvariabel` lifted to `variable.is_identifier`. `unika_summary.{version_forsta, version_sista}` reserved for stage A2 (they feed `variable_state.valid_from`/`valid_to` after ISO 8601 normalization). The `unika_summary` table itself dropped after A1.2 lands.
+- **A1.2 Lift sensitivity flags.** `unika_summary.{kanslig_variabel, kanslig_variabel_ibland}` both fold into one `variable.is_sensitive` boolean (the 22 sometimes-sensitive edge cases get treated as sensitive — not worth a separate column). `unika_summary.identitetsvariabel` lifted to `variable.is_identifier`. `unika_summary.{version_forsta, version_sista}` are **retained** through A1.2 — A2.1's coalescer consumes them to derive `variable_state.valid_from`/`valid_to` (mapped to ISO 8601). The `unika_summary` table is dropped after A2.1 lands, not after A1.2.
 - **A1.3 IR module + adapter scaffolding.** Create `reg_meta_build/ir/` with Pydantic IR dataclasses (`IRRegister`, `IRVariant`, `IRVariable`, `IRVariableState`, `IRValueSet`, `IRValueCode`, `IRClassification`, `IRLineageEdge`, `IRWarning`, `IRDeliveryProvenance`). Create `reg_meta_build/sources/` adapter directory with an unused `IRAdapter` protocol. SCB ingest doesn't move yet — just defines the contract. Provenance DB sibling artifact created as empty placeholder.
 
 **Gate:** A1 can run in parallel; no internal ordering. A1 must complete before A2.
@@ -3506,10 +3672,10 @@ The largest stage. Seven PRs.
 - **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, datatyp, datalangd, value_set_id, value_set_version_label, vardemangdsniva)` — `vardemangdsniva` is included in the group key so multi-grain rows stay distinct for A2.2 triage; the final `variable_state` schema doesn't carry grain. Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
 - **A2.2 Build-time triage.** Per §5.7. Kolumnnamn-primary discriminator. Splits multi-grain variables; auto-derives sibling slugs; emits `variable_related_to` edges. Catches the ~7,500 same-year collisions in current SCB data; ~200-300 cases need manual TOML curation (slug TOML overrides for ambiguous suffixes).
 - **A2.3 Auto-derive `variable_replaced_by`.** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table (per-variable + parallel register- and variant-level tables). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS).
-- **A2.4 `variable_state_lineage` interval-overlap join.** Per §5.6. Replace `link_consumer_side_bindings` with the new linker. Add `variable_source_lineage` table for source-variant pinning (heuristic defaults + per-variable overrides). Emit `variable_state_lineage_warning` rows for `no_source_state` / `ambiguous_source_variant` cases. Old `via_source_id` column populated in parallel for transition.
-- **A2.5 Catalog API shift.** Implement `resolve`, `resolve_at(year)`, `states`, `replaced`, `related`, `lineage` methods. Old `Catalog.resolve(fqid)` returning per-cvid bindings retained but deprecated; new methods consume `variable_state`. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
+- **A2.4 `variable_state_lineage` interval-overlap join.** Per §5.6. Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks in the source register's slug TOML, no `variable_source_lineage` SQL table. Emit `variable_state_lineage_warning` rows for `no_source_state` / `ambiguous_source_variant` cases. Old `via_source_id` column populated in parallel for transition.
+- **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable`). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break, and a grace-period alias would just keep `via_source_id` alive for no real consumer benefit. Add `resolve_at(fqid, period, *, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
 - **A2.6 Drop period from FQID grammar.** The big bang. Update parser, emitter, slug-loading code. Drop ~1,264 `register_version` slug entries from `scb.toml`. **Drop the `register_version` table entirely** — per-edition prose (mätinformation, edition descriptions, time-series break notes) routes to reg-meta-docs at variant level with chronological Markdown sections; per-edition build artifacts (approval dates, doc_status) route to provenance DB. **No `scb_register_edition` extension table.** Webapp catalog endpoints flip to 4-seg binding leaves + new sub-endpoints. v0.x reg_meta clients break; pre-v1 policy says no shim. UNFROZEN sentinel is active so the slug TOML rewrite is a regular commit.
-- **A2.7 Cleanup.** Drop `variable_instance` table, `via_source_id` column, old `Catalog.resolve` legacy path. All consumers now on `variable_state`. Bump `reg_meta` to v1.0.0 (with snapshot reset; UNFROZEN still active for the curation polish that follows).
+- **A2.7 Cleanup.** Drop `variable_instance` table and the `via_source_id` column (both kept alive through A2.5–A2.6 only so the build pipeline can dual-write while the new tables stabilize). All consumers now on `variable_state`. Bump `reg_meta` to v1.0.0 (with snapshot reset; UNFROZEN still active for the curation polish that follows).
 
 **Gates:**
 
@@ -3552,7 +3718,7 @@ Five PRs. Can run in parallel with A3 after A2.6 lands.
 Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship first).
 
 - **A5.1 `reg_webapp` Pydantic models.** Update FastAPI endpoints to use `reg_schema` models directly (no separate wrapper layer). `reg_meta` library types still wrapped 1:1 for catalog responses (Pydantic boundary).
-- **A5.2 New API endpoints.** Implement `?year=YYYY` query and `/states`, `/replaced`, `/related` sub-endpoints per §9.5. Cloudflare edge-cache validation gate.
+- **A5.2 New API endpoints.** Implement `?period=...` query (polymorphic per §6.2, not year-only) and `/states`, `/predecessors`, `/successors`, `/related`, `/lineage` sub-endpoints per §9.5 — `/lineage` is a first-class v1 endpoint, not deferred. Suffixed routes must be declared before the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering test enforces this). Cloudflare edge-cache validation gate.
 - **A5.3 SPA TypeScript regen.** OpenAPI codegen against new Pydantic models. SPA components updated for 4-seg FQIDs, new sub-endpoints, ambiguity (409) handling.
 - **A5.4 SPA IndexedDB hard-reject for v0.x project files.** Per §9.7. Blocking error with clear message on load.
 
@@ -3572,7 +3738,8 @@ in structure, with §10's bundle work now operating against Model A's
    for the catalog; §9.1) is finalised here so step 11's catalog
    authoring is unblocked. **Under Model A**: webapp consumes the
    simplified 4-segment binding FQID + new sub-endpoints
-   (`/states`, `/replaced`, `/related`, `/lineage`; §9.5).
+   (`/states`, `/predecessors`, `/successors`, `/related`,
+   `/lineage`; §9.5).
 
 **Step 6.5 — Containerize, Cloudflare, `global` deployment up.**
 
