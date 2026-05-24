@@ -1,4 +1,9 @@
-"""Generate the 200-column load-test ``project_data.json`` fixture.
+"""Generate the 200-column load-test ``input.json`` fixture.
+
+Writes ``input.json`` + ``expected_ValidationResult.json`` to this
+directory — ``input.json`` carries a ``project_data.json``-shaped
+payload, but the filename follows the corpus harness contract (see
+``reg_schema/test_corpus/README.md``).
 
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
 years, ~25 columns per source, a panel linking the LISA years, and a
