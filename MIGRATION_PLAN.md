@@ -194,7 +194,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - Binding `name` → `variable` (4-seg)
 - Panel `entity_key` / `time_key` inheritance from `variant.panel_template` when omitted
 - TimePoint gains range form `{"range": {"from", "to"}}`
-- New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`
+- New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)
 - Rename: `fqid_register_version_mismatch` → `fqid_register_variant_mismatch`
 - Rewrite test corpus (`minimal`, `with_panel`, `composite_entity_key`, `with_namespaced_block`, `invalid_root_array`)
 - Bump pinned `reg_meta_version` in steward catalogs to `reg_meta/v1.0.0`
@@ -207,6 +207,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - `_build_source` reads new `register_variant` + `period` fields; `columns` → `bindings`; `Column.name` → `Binding.variable`
 - `lookup_options` keys remain FQID-based (4-seg now)
 - Fixture sweep for all `project_data.json` files under `mock_data_wizard/`
+- Companion `project_data.codes.json` fixtures restructured to the new shape (`classifications` + `sources.<name>.<binding_fqid>` blocks; §6.6) — every test that asserts against the old flat FQID-keyed codes file follows
 - Tests follow
 
 **Estimate**: 3-4 days.
@@ -221,9 +222,11 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 
 ### [ ] A3.4 — Bundle amalgamator update
 
-- Bundle-build converts Pydantic `Source` → `LoadedSpec` at amalgamation (the §9.6 boundary)
+- Add `reg_monabundle/build/spec_loader.py` with `source_to_loadedspec(pydantic_source) -> LoadedSpec` — lives in `build/`, not `runtime/`, so the bundle never imports Pydantic (the §9.6 boundary). Called by the bundle builder before embedding JSON.
+- `reg_monabundle/runtime/spec.py` `LoadedSpec` fields updated to Model A shape: `register_variant` (3-seg FQID), `period` (polymorphic), `bindings` with `variable` (4-seg). PR #123 shipped LoadedSpec under v0.x grammar; this is the breaking shape evolution.
 - Amalgamator's `_AMALGAMATED_PACKAGE_PREFIXES` excludes `reg_schema` (Pydantic stays out of bundle)
 - Bundle's `LoadedSpec` parsing reads `register_variant` + `period` from embedded JSON
+- `LoadedSpec` deserialization is plain `@dataclass` machinery — no re-validation on MONA (§6.8.1, §9.6)
 
 **Estimate**: 3-4 days.
 

@@ -2035,18 +2035,23 @@ The variant's natural panel structure (curated in slug TOML)
 provides the default; explicit panel-level or member-level values
 override.
 
-**Inheritance is resolved at kit/bundle-build time, not at runtime.**
-Authoring-time `project_data.json` may omit `entity_key`/`time_key`
-to inherit from the variant. Before the spec is emitted into a kit
-(`POST /api/kit`) or amalgamated into a MONA bundle
-(`POST /api/bundle`), the webapp resolves inheritance against
-reg_meta and writes the effective keys back into the embedded
-`project_data.json`. The kit / bundle therefore always carries a
-fully-resolved spec; the MONA bundle runtime never needs reg_meta
-to interpret panel keys. If a member's variant has no
-`panel_template` and no explicit/panel-level keys are supplied,
-kit/bundle-build fails with `panel_inheritance_unresolvable` (an
-`error`-level `ValidationIssue`).
+**Inheritance is resolved at kit/bundle-build time, not at
+authoring time.** Authoring-time `project_data.json` may omit
+`entity_key`/`time_key` to inherit from the variant. **The SPA
+keeps the inherited form during authoring** — it does not eagerly
+materialize on Save. This way, when a steward updates a variant's
+`panel_template` in reg_meta, every project that inherits picks up
+the new default on its next kit/bundle build without any user
+action. Before the spec is emitted into a kit (`POST /api/kit`) or
+amalgamated into a MONA bundle (`POST /api/bundle`), the webapp
+resolves inheritance against reg_meta and writes the effective
+keys back into the embedded `project_data.json`. The kit / bundle
+therefore always carries a fully-resolved spec; the MONA bundle
+runtime never needs reg_meta to interpret panel keys. If a
+member's variant has no `panel_template` and no explicit/panel-
+level keys are supplied, kit/bundle-build fails with
+`panel_inheritance_unresolvable` (an `error`-level
+`ValidationIssue`).
 
 | Field         | Type                          | Required | Description |
 |---------------|-------------------------------|:--------:|-------------|
@@ -2337,6 +2342,14 @@ entries (no classifications dereferenced yet); this is the form
 committed to git pre-kit, and kit-build expands it later by
 populating the `classifications` block. The SPA's "Open from file"
 flow accepts the pair.
+
+**Realign and stale codes.** When a realign patch (§7) removes a
+binding from a source, any orphaned `sources[name][binding_fqid]`
+entry from a previous kit is silently dropped at the next
+kit-build: kit-build derives the codes file fresh from the current
+`project_data.json` each run, so entries not referenced by any
+current binding never make it into the new kit. No explicit
+garbage-collection step needed; the kit is the canonical artifact.
 
 Kit-build errors loudly when a referenced FQID no longer resolves
 in the current reg_meta — "FQID `class/foo2010` not found; closest
@@ -3275,7 +3288,7 @@ Model A relationship surface.
 |---|---|---|
 | GET | `/api/catalog` | Top-level: every provider exposed by the steward catalog. `{kind: "root", children: [{kind: "provider", slug: "scb"}, {kind: "provider", slug: "sos"}, {kind: "classification-root", slug: "class"}]}`. |
 | GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `variant` (3 seg), `binding` (4 seg, leaf), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). On `binding` leaves, the response embeds the variable's full longitudinal record (all states with their validity ranges, value sets, aliases, `replaced_by`/`related_to`/`same_as`/`lineage` edges). |
-| GET | `/api/catalog/{fqid:path}?period=...` | Same canonical endpoint, with a `period` query string. Accepts the same forms as `Source.period` (int year, period-token, range, snapshot sentinel). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period. Length 1 for the common point-query case; length N for range periods that cross state transitions, and for the rare LKF-shape multi-vintage case where multiple states share validity at the same period (states carry their `value_set_version_label` for SPA disambiguation). Returns 404 if no state covers the period. The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
+| GET | `/api/catalog/{fqid:path}?period=...[&value_set_version=...]` | Same canonical endpoint, with a `period` query string. Accepts the same forms as `Source.period` (int year, period-token, range, snapshot sentinel). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period. Length 1 for the common point-query case; length N for range periods that cross state transitions, and for the rare LKF-shape multi-vintage case where multiple states share validity at the same period (states carry their `value_set_version_label` for SPA disambiguation). The optional `value_set_version` query narrows multi-vintage results to a single state when the caller already knows which vintage to pick (maps to `Catalog.resolve_at`'s `value_set_version` kwarg). Returns 404 if no state covers the period. The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
 | GET | `/api/catalog/{fqid:path}/states` | Full state history for a binding. Returns `{binding, states: [{valid_from, valid_to, data_type, value_set?, delivery_column_name?, value_set_version_label?}, ...]}`. SPA's variable detail UI uses this to render an edition picker / period axis. |
 | GET | `/api/catalog/{fqid:path}/predecessors` | Returns `{binding, predecessors: [VariableRef, ...]}` via inbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.predecessors(fqid)`. |
 | GET | `/api/catalog/{fqid:path}/successors` | Returns `{binding, successors: [VariableRef, ...]}` via outbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.successors(fqid)`. Used by SPA's "this variable was replaced" remediation flow. |
