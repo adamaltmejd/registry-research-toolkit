@@ -771,6 +771,14 @@ hitting one of these:
   discriminator unambiguous).
 - `_default` (variant slot only) — persisted variant slug for
   variant-less registers (§5.1). Reserved everywhere else.
+- **HTTP sub-endpoint suffixes** — `states`, `predecessors`,
+  `successors`, `related`, `lineage`, `lineage_warnings`. Reserved
+  in the variable slot only, because the webapp's catalog routes
+  use them as path suffixes (§9.5) — a binding ending in any of
+  these slugs would be unreachable via the canonical
+  `/api/catalog/.../{variable}` path. Build rejects these slugs
+  in the variable slot at curation time, before they can land in
+  any external artifact. Other slots are unaffected.
 
 `_default` is the **one literal exception** to the slug grammar
 regex above — it starts with `_` and the underscore otherwise
@@ -3309,12 +3317,20 @@ slash-bearing FQID before the literal `/states` suffix. Same for
 
 FastAPI / Starlette route matching is **order-sensitive** when a
 `{fqid:path}` catch-all is in play. The suffixed routes (`/states`,
-`/predecessors`, `/successors`, `/related`, `/lineage`) MUST be
-declared *before* the catch-all `/api/catalog/{fqid:path}` in the
-FastAPI router — otherwise the catch-all greedy-consumes the suffix
-into `fqid` and the suffix handler never fires. CI enforces the
-ordering via a router-introspection test
-(`assert routes_declared_before(...)`).
+`/predecessors`, `/successors`, `/related`, `/lineage`,
+`/lineage_warnings`) MUST be declared *before* the catch-all
+`/api/catalog/{fqid:path}` in the FastAPI router — otherwise the
+catch-all greedy-consumes the suffix into `fqid` and the suffix
+handler never fires. CI enforces the ordering via a router-
+introspection test (`assert routes_declared_before(...)`).
+
+The suffix tokens are **reserved in the variable slot of the slug
+grammar** (§5.2 "Reserved and disallowed slugs"). Without that
+reservation, a binding ending in (say) `states` would be
+unreachable through the canonical catalog path — the suffixed
+handler would catch the request and treat `states` as a sub-
+endpoint of the parent variant. Build-time slug curation rejects
+these tokens; CI re-checks against the current TOMLs.
 
 **Documentation** (unchanged from v0.11 — `reg-meta-docs` backed)
 
