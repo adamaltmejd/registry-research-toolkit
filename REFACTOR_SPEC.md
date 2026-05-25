@@ -447,8 +447,8 @@ class IRVariable(BaseModel):
 class IRVariableState(BaseModel):
     state_id: int
     variable_id: int                    # variant-scope is implied via variable FK
-    valid_from: str | None              # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD')
-    valid_to: str | None                # ISO 8601; None = open-ended
+    valid_from: str | None              # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands coarser forms to full-date ranges
+    valid_to: str | None                # ISO 8601; None = open-ended (materializer writes the '9999-12-31' sentinel per §5.1; the IR contract carries None to keep adapters honest about which dates they actually know)
     data_type: str                      # normalized lowercase canonical set
     data_length: int | None
     value_set_id: int | None
@@ -860,18 +860,46 @@ provenance DB respectively (§5.8). Period tokens that researchers
 need are carried by `Source.period` in project_data.json and by
 `variable_state.valid_from`/`valid_to` in the catalog.
 
-**Variables are auto-slugged from kolumnnamn.** The build derives a
-variable slug from the latest delivery column name (kolumnnamn,
-lowercased + kebab-cased). The TOML is used only for exceptions:
-collisions, build-time-triage splits, or cross-rename continuity
-claims after a provider rename.
+**Variables are auto-slugged from kolumnnamn, then promoted to the
+TOML on first sight.** The build derives a variable slug from the
+latest delivery column name (kolumnnamn, lowercased + kebab-cased),
+and writes the resulting `(source_id, slug)` mapping into a
+generated, committed `reg_meta_build/fqid_slugs/<provider>.auto.toml`
+that lives alongside the hand-curated `<provider>.toml`. Both files
+feed the same in-memory slug index at build time; both are guarded by
+the §5.4 grow-only snapshot test. The hand-curated file is the
+exception store (collisions, build-time-triage splits, cross-rename
+continuity claims); the auto file is the auto-derived store, written
+once per variable on first sight and never recomputed thereafter.
+
+Two consequences:
+
+- A slug, once published, is immutable regardless of which file
+  records it. If SCB renames a kolumnnamn between editions, the
+  generated `.auto.toml` keeps the original slug; the new kolumnnamn
+  becomes a new `variable_alias` row attached to the same variable,
+  and `variable_state.delivery_column_name` carries the latest alias
+  per `period` (§6.3). Researchers' committed `project_data.json`
+  files do not rot.
+- A genuinely new variable in a future delivery gets a new auto-slug
+  on the rebuild that ingests it; the snapshot test treats this as
+  an additive change (allowed under grow-only). If the build cannot
+  reuse an existing slug — i.e. the `(register_id, var_id)` pair is
+  new to `<provider>.auto.toml` — the slug is auto-derived from the
+  current kolumnnamn and persisted.
+
+The hand-curated `<provider>.toml` always wins when both files map
+the same source ID (so a curator override of an auto-derived slug
+just lands in the hand-curated file; the auto file's entry stays
+but is shadowed).
 
 **Build-time triage may auto-split a variable into siblings.** When
 the source data has multiple states for one (variable, year) that
 the heuristic identifies as parallel deliverables (different
 positions of a SUN code, different grain levels, etc.), the build
 splits into N sibling variables with auto-derived slugs (§5.7).
-Sibling slugs are stable across rebuilds.
+Sibling slugs land in the same `<provider>.auto.toml` and are stable
+across rebuilds for the same reason as single-state auto-slugs.
 
 #### Slug TOML field reference
 
@@ -998,15 +1026,18 @@ Once a slug is published, it can never change. Committed
 `project_data.json` files reference slugs; renaming a slug rots
 every project that references it. Concrete rules:
 
-- The slug TOML is **grow-only**: entries are added; entries are
-  never deleted or renamed.
+- **Both** TOML files — the hand-curated `<provider>.toml` and the
+  build-generated `<provider>.auto.toml` (§5.3) — are **grow-only**:
+  entries are added; entries are never deleted or renamed.
 - Removed source IDs (a register dropped from a future delivery)
   are flagged `deprecated = true` but retain their slug forever.
 - A typo in a slug is corrected by adding a new entry and emitting
   a `replaced_by` edge from the typo'd slug to the corrected one —
   never by editing in place.
-- CI enforces these via a snapshot test comparing the current TOML
-  to the last committed state; non-additive changes fail the build.
+- CI enforces these via a snapshot test comparing both current TOML
+  files to the last committed state; non-additive changes (rename,
+  delete) in either file fail the build. Additive changes (a new
+  variable's auto-slug landing in `.auto.toml`) pass.
 
 **Surfaces protected.** Under Model A there are exactly four slug
 surfaces:
@@ -1264,7 +1295,7 @@ for c_state in consumer_states:
     src_states = lookup_source_states(
         c_state.variable.source_register_id,
         preferred_source_variant_id(c_state),  # see below
-        c_state.variable.slug,
+        slug_set_via_same_as(c_state.variable.slug),  # see "same_as on the source side" below
     )
     for s_state in src_states:
         lo = max(c_state.valid_from, s_state.valid_from)
@@ -1273,6 +1304,24 @@ for c_state in consumer_states:
             emit(consumer_state=c_state, source_state=s_state,
                  valid_from=lo, valid_to=hi)
 ```
+
+**`same_as` on the source side.** Source-side variable matching is
+slug-based, so if the source register has been renamed (RTB's `kon`
+→ `kön-v2` post-curation, captured as a `variable_same_as` edge
+inside RTB per §5.5), naive slug equality would miss the renamed
+state and emit a spurious `no_source_state` warning. `slug_set_via_same_as`
+expands the consumer's bound variable slug through the source
+register's `variable_same_as` graph (BFS, cycle-rejected at build
+per §5.5), yielding every slug the source register currently
+addresses for the same concept. Per-state validity intersection
+then narrows the candidate set to whichever states actually overlap
+the consumer state.
+
+This crosses provider boundaries the same way as the variant pin —
+a SOS consumer sourcing from an SCB register follows
+`variable_same_as` edges that live in SCB's `variable_same_as`
+rows. Equivalence is symmetric, so the direction of the curated
+edge doesn't matter.
 
 **Source-variant resolution.** A source register like RTB has many
 variants (folkbokforda-personer, grund-bosattning, inrikes-flyttningar,
@@ -2822,7 +2871,7 @@ patterns; v1 fixes the column-keyspace (binding FQIDs), the period encoding
 
 | Field             | Type            | Required | Description |
 |-------------------|-----------------|:--------:|-------------|
-| `schema_version`  | string (semver) | yes | This document. Bumped on breaking changes. v1 = `1.x.x`. |
+| `schema_version`  | string (semver) | yes | This document. Bumped on breaking changes. Model A's stats files use `"2.0.0"` (bumped in lockstep with `project_data.json`'s `schema_version` so consumers can refuse a v0.x stats file against a Model A spec, and vice versa). |
 | `project`         | string          | yes | Echo of `project_data.json`'s `name`. |
 | `generated_at`    | string (ISO-8601) | yes | UTC timestamp the extract finished. |
 | `reg_meta_version`| string          | yes | Echo of the reg_meta release tag recorded in the spec at extract time. Drift detection only; not enforced (§6.8.3). |
@@ -3669,7 +3718,7 @@ Three independent PRs.
 
 The largest stage. Seven PRs.
 
-- **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, datatyp, datalangd, value_set_id, value_set_version_label, vardemangdsniva)` — `vardemangdsniva` is included in the group key so multi-grain rows stay distinct for A2.2 triage; the final `variable_state` schema doesn't carry grain. Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
+- **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, data_type, data_length, value_set_id, value_set_version_label, grain)` — `data_type` / `data_length` are the A1.1-renamed DDL columns (was `datatyp` / `datalangd`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`, included in the group key so multi-grain rows stay distinct for A2.2 triage and then dropped (the final `variable_state` schema doesn't carry grain). Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
 - **A2.2 Build-time triage.** Per §5.7. Kolumnnamn-primary discriminator. Splits multi-grain variables; auto-derives sibling slugs; emits `variable_related_to` edges. Catches the ~7,500 same-year collisions in current SCB data; ~200-300 cases need manual TOML curation (slug TOML overrides for ambiguous suffixes).
 - **A2.3 Auto-derive `variable_replaced_by`.** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table (per-variable + parallel register- and variant-level tables). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS).
 - **A2.4 `variable_state_lineage` interval-overlap join.** Per §5.6. Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks in the source register's slug TOML, no `variable_source_lineage` SQL table. Emit `variable_state_lineage_warning` rows for `no_source_state` / `ambiguous_source_variant` cases. Old `via_source_id` column populated in parallel for transition.

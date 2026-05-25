@@ -96,7 +96,7 @@ Seven PRs. The largest and most intricate stage. Sequencing matters; gates are e
 ### [ ] A2.1 — `variable_state` table + coalescing
 
 - Add `variable_state` table to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD` dates always; open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL) — see §5.1
-- Build pipeline: after `_import_registerinformation` and `_import_vardemangder`, run a coalescer that groups `variable_instance` rows by `(register_id, regvar_id, var_id, datatyp, datalangd, value_set_id, vardemangdsversion, vardemangdsniva)` — niva included so multi-grain rows stay distinct for A2.2 triage; the final `variable_state` schema doesn't carry grain. Derives `valid_from`/`valid_to` from the union of `unika_summary.version_forsta..version_sista` for each cvid in the group, expanding to full dates (year `2018` → `2018-01-01..2018-12-31`); writes one `variable_state` row per coalesced group
+- Build pipeline: after `_import_registerinformation` and `_import_vardemangder`, run a coalescer that groups `variable_instance` rows by `(register_id, regvar_id, var_id, data_type, data_length, value_set_id, value_set_version_label, grain)` — the first six are A1.1-renamed DDL columns (was `datatyp` / `datalangd` / `vardemangdsversion`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva` (kept in the IR group key so multi-grain rows stay distinct for A2.2 triage, then dropped — the final `variable_state` schema doesn't carry grain). Derives `valid_from`/`valid_to` from the union of `unika_summary.version_forsta..version_sista` for each cvid in the group, expanding to full dates (year `2018` → `2018-01-01..2018-12-31`); writes one `variable_state` row per coalesced group
 - **Drop `unika_summary`** after the coalescer has consumed `version_forsta` / `version_sista` (and after A1.2 already lifted the sensitivity flags) — the table is now unused
 - Resolver still uses `variable_instance`; no behavior change yet
 - Tests: verify coalescing rates match the empirical predictions (5× shrink, 65% single-state)
@@ -333,9 +333,9 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 ## Gates summary
 
 ```text
-A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──→ A2.2 ──┬──→ A2.3
-                                                ├──→ A2.4 ──┐
-                                                └──→ A2.5 ──┴──→ A2.6 ──→ A2.7
+A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──┬──→ A2.2 ──→ A2.4 ──┐
+                                       ├──→ A2.3            │
+                                       └──→ A2.5 ───────────┴──→ A2.6 ──→ A2.7
                                                                             │
                                                                             ├──→ A3.1 ──→ {A3.2, A3.3, A3.4}
                                                                             │
@@ -346,10 +346,14 @@ A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──→ A2.2 ──┬──�
 ```
 
 Reading notes: braces `{...}` group steps that can run in parallel
-once their shared predecessor lands. A2.3 has no downstream dependant
-inside A2 — it produces `variable_replaced_by` for consumer use; A2.4
-does not read from it. A2.6 needs **both** A2.4 (new lineage tables)
-and A2.5 (new catalog API).
+once their shared predecessor lands. After A2.1, three branches open
+in parallel: A2.2→A2.4 (coalesced states → triage → lineage join),
+A2.3 (independent — reads `timeseries_event`, no dependency on
+coalescer/triage), and A2.5 (catalog API on the new tables — needs
+only A2.1's `variable_state` to exist). A2.6 needs **both** A2.4
+(new lineage tables) and A2.5 (new catalog API); A2.3 is not on
+A2.6's critical path — it produces `variable_replaced_by` for
+consumer use, not for A2.4.
 
 ## Effort estimate
 
