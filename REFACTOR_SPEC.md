@@ -397,8 +397,12 @@ stream of IR objects. Handles provider-specific quirks:
 - SOS: variant synthesis for variant-less registers (LSS, BU, SOL);
   kodlista era parsing; entity-registry vs value-set-drift heuristic
   for kodlistor with many tidsperiod ranges.
-- Future provider: implements `IRAdapter` protocol, declares any
-  provider-specific extension tables.
+- Future provider: implements `IRAdapter` protocol. Provider-specific
+  oddities are normalized into the universal shape inside the
+  adapter; the universal schema carries no provider-specific tables
+  or columns (see §5.1). Maintainer-only debug data (e.g. SCB's
+  `kolumnnamn` history, SOS's per-row tidsperiod ranges) is written
+  to the sibling provenance DB (§5.1, §5.8).
 
 **IR** lives at `reg_meta_build/ir/`. Pydantic v2 dataclasses
 defining the contract every adapter speaks. Build-time only — never
@@ -456,7 +460,7 @@ class IRVariableState(BaseModel):
 
 class IRValueSet(BaseModel):
     value_set_id: int
-    content_hash: str                   # hash of normalized code list; dedup key
+    member_hash: str                    # hash of normalized code list; dedup key. Materializer writes this verbatim into universal `value_set.member_hash` (§5.1)
     classification_id: int | None       # set when this value_set is a (possibly year-projected) subset of a named classification
     codes: tuple[IRValueCode, ...]
 
@@ -573,10 +577,13 @@ Bit 63 is left clear throughout so every ID fits in SQLite's signed
 `INTEGER` without sign-bit weirdness.
 
 **Why this architecture pays off.** Adding a new provider becomes:
-write an adapter at `reg_meta_build/sources/<provider>.py`, declare
-any extension tables, add `<provider>.toml` to `fqid_slugs/`. Zero
-changes to the materializer; zero changes to the universal schema;
-zero changes to `reg_meta`'s read side. The IR is the contract.
+write an adapter at
+`reg_meta_build/src/reg_meta_build/sources/<provider>.py` (the
+package uses the src/ layout), add `<provider>.toml` to
+`reg_meta_build/fqid_slugs/`, and route any maintainer-only debug
+data to the sibling provenance DB. Zero changes to the
+materializer; zero changes to the universal schema; zero changes
+to `reg_meta`'s read side. The IR is the contract.
 
 ## 5. reg_meta as the substrate
 
@@ -911,7 +918,12 @@ the same TOML row shape: a table keyed by the provider's source ID
 scope that the FQID grammar (§5.2) uses to address the entity:
 
 - `register` slugs are unique within a provider.
-- `variant` and `variable` slugs are unique within their parent register.
+- `variant` slugs are unique within their parent register.
+- `variable` slugs are unique within their parent **variant** —
+  the same slug (`kon`, `alder`) can legitimately reappear under
+  sibling variants of the same register; cross-variant identity is
+  established via `variable_same_as` edges (§5.5), not by slug
+  collision.
 - `classification` slugs are globally unique (provider-independent namespace).
 
 **Common fields (every entity type):**
@@ -1044,7 +1056,7 @@ surfaces:
 
 - `register.slug` (per-provider unique)
 - `variant.slug` (per-register unique)
-- `variable.slug` (per-register unique)
+- `variable.slug` (per-variant unique — see §5.2)
 - `classification.slug` (globally unique)
 
 This is one fewer surface than v0.11 (the `register_version.slug`
@@ -1597,8 +1609,10 @@ Descriptive; the schema-level changes land in §6. Headline points:
   themselves for the common case.
 - `value_set_version` strings (`Kon@2023`, `SUN@2020`) are replaced by:
   - For classifications: a `class/<...>` FQID (version baked in slug).
-  - For ad-hoc value sets: inline codes in `project_data.codes.json`,
-    keyed by binding FQID — no synthetic value-set ID needed.
+  - For ad-hoc value sets: inline codes in `project_data.codes.json`
+    under `sources[source.name][binding_fqid]` (§6.6) — no synthetic
+    value-set ID needed; period-varying ad-hoc sets stay independent
+    across sources.
 - The LISA composite-source gap is resolved at the data layer via
   `variable_state_lineage` (§5.6). UI presentation question (how to
   surface RTB/IoT lineage when browsing under LISA) is §9 webapp work.
@@ -1612,7 +1626,7 @@ around a stable in-process reg_meta API. Method signatures (normative
 — `/api/catalog/*` shape derives from these):
 
 ```python
-from reg_meta import Catalog, Period  # Period = int | str | dict | None
+from reg_meta import Catalog, Period  # Period = int | str | dict (always required where used)
 
 class Catalog:
     @classmethod
@@ -1621,17 +1635,23 @@ class Catalog:
     # Longitudinal resolution — full state history + edges.
     def resolve(self, fqid: str) -> ResolvedVariable: ...
 
-    # Resolution at a specific period — one VariableState.
-    # `period` accepts the same forms as Source.period (int, period-token, range,
-    # "_default" snapshot sentinel). Required.
-    # `value_set_version` disambiguates the rare LKF-shape multi-vintage case.
+    # Resolution at a specific period — list of VariableStates whose
+    # validity range intersects `period`. Length 1 for point queries
+    # against a single state (the common case); length N for range
+    # periods crossing state transitions and for the rare LKF-shape
+    # multi-vintage case. Empty list (no 404 inside the library)
+    # when no state covers the period — callers decide policy.
+    # `period` accepts the same forms as Source.period (int,
+    # period-token, range, "_default" snapshot sentinel). Required.
+    # `value_set_version` narrows multi-vintage results to a single
+    # state when the caller already knows which vintage to pick.
     def resolve_at(
         self,
         fqid: str,
         period: Period,
         *,
         value_set_version: str | None = None,
-    ) -> VariableState: ...
+    ) -> list[VariableState]: ...
 
     # State history (convenience: equivalent to resolve(fqid).states).
     def states(self, fqid: str) -> list[VariableState]: ...
@@ -1662,8 +1682,16 @@ variable = catalog.resolve("scb/lisa/individer-15plus/kon")
 # variable.same_as     = [VariableRef(...)]
 # variable.lineage     = [LineageEdge(...)] (consumer-side)
 
-state = catalog.resolve_at("scb/lisa/individer-15plus/kon", period=2018)
-# state.value_set, state.data_type, state.delivery_column_name (alias), etc.
+states = catalog.resolve_at("scb/lisa/individer-15plus/kon", period=2018)
+# states is a list (length 1 in the common single-state case).
+# states[0].value_set, states[0].data_type, states[0].delivery_column_name, etc.
+
+# Range periods or multi-vintage cases naturally yield length-N lists.
+states = catalog.resolve_at(
+    "scb/lisa/individer-15plus/utbgrp",
+    period={"from": "2018", "to": "2022"},
+)
+# states is the chronologically-ordered list of states intersecting that range.
 
 # Succession: two separate accessors, each list-returning.
 predecessors = catalog.predecessors("scb/lisa/individer-15plus/sysstat11")
@@ -1715,7 +1743,7 @@ via the `value_set_version=` keyword argument.
 | binding FQID | string | 4-segment: `<provider>/<register>/<variant>/<variable>` (§5.2). |
 | variant FQID | string | 3-segment: binding FQID minus the variable. |
 | classification FQID | string | 2-segment: `class/<slug>` (§5.2). |
-| state validity range | tuple | `(valid_from, valid_to)` on a `variable_state`. ISO 8601 TEXT (year, year-month, or date precision). `valid_to` NULL = open-ended. |
+| state validity range | tuple | `(valid_from, valid_to)` on a `variable_state`. ISO 8601 TEXT (full `YYYY-MM-DD` after ingest expansion); both columns `NOT NULL`. Open-ended ranges use the sentinel `valid_to = '9999-12-31'`. |
 | period | field | `Source.period` in project_data.json. Always required; polymorphic (int / period-token / range / snapshot sentinel). Drives `resolve_at` for the source's bindings. See §6.2. |
 | panel_template | metadata | On `variant`: declares the natural panel structure as `(panel_entity_key, panel_time_key, panel_time_grain)`. Inherited by Panel members in project_data when not overridden. |
 | value_set_version_label | column | On `variable_state`. Carries the SCB `vardemangdsversion` label (e.g. "LKF 2006-01-01") when meaningful as a state discriminator (rare; multi-vintage classification case). NULL otherwise. |
@@ -1921,7 +1949,7 @@ binding declares one variable to include in the source's extract.
 | `numeric_subtype` | enum           | no  | For `numeric` type: `integer` or `double`. |
 | `date_format`     | string         | no  | For `date` type: Python `strptime` pattern. Carries granularity — `"%Y"` is year-only, `"%Y-%m"` is month, `"%Y%m%d"` is day. Default `"%Y-%m-%d"`. |
 | `datetime_format` | string         | no  | For `datetime` type: `strptime` pattern with time. Default `"%Y-%m-%d %H:%M:%S"`. Time zones are out of scope for v1. |
-| `value_set`       | string (FQID)  | no  | For `categorical` type: a classification FQID (`class/<slug>` — 2 segments, version baked into slug; §5.2). When absent, codes live in `project_data.codes.json` keyed by this binding's FQID (§6.6). |
+| `value_set`       | string (FQID)  | no  | For `categorical` type: a classification FQID (`class/<slug>` — 2 segments, version baked into slug; §5.2). When absent, codes live in `project_data.codes.json` under `sources[source.name][binding_fqid]` (§6.6). |
 
 Two identifiers, two purposes: `variable` (the binding FQID) is
 the **reg_meta identity** — used for validation, code-set lookup,
@@ -2007,6 +2035,19 @@ The variant's natural panel structure (curated in slug TOML)
 provides the default; explicit panel-level or member-level values
 override.
 
+**Inheritance is resolved at kit/bundle-build time, not at runtime.**
+Authoring-time `project_data.json` may omit `entity_key`/`time_key`
+to inherit from the variant. Before the spec is emitted into a kit
+(`POST /api/kit`) or amalgamated into a MONA bundle
+(`POST /api/bundle`), the webapp resolves inheritance against
+reg_meta and writes the effective keys back into the embedded
+`project_data.json`. The kit / bundle therefore always carries a
+fully-resolved spec; the MONA bundle runtime never needs reg_meta
+to interpret panel keys. If a member's variant has no
+`panel_template` and no explicit/panel-level keys are supplied,
+kit/bundle-build fails with `panel_inheritance_unresolvable` (an
+`error`-level `ValidationIssue`).
+
 | Field         | Type                          | Required | Description |
 |---------------|-------------------------------|:--------:|-------------|
 | `panel_id`    | string                        | yes | Unique panel identifier within the spec. |
@@ -2020,7 +2061,7 @@ Type aliases:
 ```text
 EntityKey = string | string[]                                  // always column refs
 TimePoint = int                                                // literal year
-          | string                                             // always a column ref (never a literal period — use {"period": ...} for that)
+          | string                                             // column ref (never a literal period — use {"period": ...} for that)
           | {"period": int | string}                           // literal period
           | {"range": {"from": int|string, "to": int|string}}  // range (sub-yearly / event)
 TimeKey   = TimePoint | TimePoint[]
@@ -2213,60 +2254,89 @@ unknown keys raise.
 ### 6.6 Value codes
 
 Codes live in sibling `project_data.codes.json` — never in
-`project_data.json` itself. The file is a flat, FQID-keyed object
-with two keyspaces sharing one dictionary:
+`project_data.json` itself. The file mirrors `project_data.json`'s
+source nesting, splitting two keyspaces by what determines the code
+list:
 
-- **Classification FQIDs** (e.g. `class/sun2020`): the canonical
-  code list for that classification, dereferenced from reg_meta at
-  kit-build time. Shared across every column that references the
-  classification via `value_set`.
-- **Binding FQIDs** (e.g. `scb/lisa/individer-15plus/civilstand`):
-  the codes for a single column whose `value_set` field is absent —
-  i.e. the codes are not part of a named classification.
+- **`classifications`** — keyed by classification FQID (e.g.
+  `class/sun2020`). The canonical code list for that classification,
+  dereferenced from reg_meta at kit-build time. Period-invariant;
+  shared across every binding (across every source) that references
+  the classification via `value_set`.
+- **`sources`** — keyed by `source.name`, then by binding FQID. The
+  codes for a single binding within a single source-instance, where
+  the binding's `value_set` field is absent (ad-hoc codes, not part
+  of a named classification). One entry per `(source, binding)`
+  pair; period-varying codes naturally split across sources because
+  each source carries its own `period`.
 
 ```json
 {
-  "class/sun2020": {
-    "codes": [ /* SUN2020 full code list */ ]
+  "classifications": {
+    "class/sun2020": [ /* SUN2020 full code list */ ]
   },
-  "scb/lisa/individer-15plus/civilstand": {
-    "codes": [
-      {"code": "G", "label": "Gift"},
-      {"code": "OG", "label": "Ogift"}
-    ]
+  "sources": {
+    "lisa_2010": {
+      "scb/lisa/individer-15plus/utbgrp": [
+        {"code": "010", "label": "Förgymnasial utbildning"},
+        {"code": "020", "label": "Gymnasial utbildning"}
+      ]
+    },
+    "lisa_2020": {
+      "scb/lisa/individer-15plus/utbgrp": [
+        {"code": "010", "label": "Förgymnasial utbildning"},
+        {"code": "020", "label": "Gymnasial utbildning"},
+        {"code": "030", "label": "Eftergymnasial utbildning"},
+        {"code": "040", "label": "Forskarutbildning"}
+      ]
+    }
   }
 }
 ```
 
-A categorical column's `value_set` field selects which entry
+A categorical binding's `value_set` field selects which entry
 `reg_mockdata` generation reads:
 
-- `value_set: "class/<…>"` → reads `codes[value_set]`.
-- (`value_set` absent, type=categorical) → reads
-  `codes[<column binding FQID>]`.
+- `value_set: "class/<…>"` → reads
+  `codes.classifications[value_set]`.
+- (`value_set` absent, `type: categorical`) → reads
+  `codes.sources[<source.name>][<binding FQID>]`.
+
+**Why nested by source.** A single binding can carry different
+projected value sets across periods (current SCB data: 7,423 of
+23,864 ad-hoc-coded bindings have >1 distinct projected value_set
+across periods; max 93). A flat binding-FQID key can only store one
+list and would either collide or force a lossy union. Nesting under
+`source.name` makes each source-instance own its codes — kit-build
+resolves `(binding.variable, source.period)` against reg_meta once
+per source, and the generator's lookup is a direct dict access using
+the source name it's already iterating.
 
 The webapp populates `project_data.codes.json` at kit-build time
 by dereferencing every classification referenced anywhere in the
-spec and every ad-hoc binding (via reg_meta). After kit-build the
-project is **freestanding from reg_meta**: a researcher who checks
-`project_data.json` + `project_data.codes.json` +
-`project_data.stats.json` into git can regenerate mock data years
-later regardless of how reg_meta evolves steward-side.
+spec (writing to `classifications`) and every ad-hoc binding under
+each source (writing to `sources[name][binding_fqid]`). After
+kit-build the project is **freestanding from reg_meta**: a
+researcher who checks `project_data.json` +
+`project_data.codes.json` + `project_data.stats.json` into git can
+regenerate mock data years later regardless of how reg_meta evolves
+steward-side.
 
 **Codes during authoring.** Before kit-build, classification
 references are stored only as FQIDs on the binding (no inline
 codes — those get dereferenced from reg_meta at kit-build).
-Ad-hoc inline codes (a categorical column without a classification
+Ad-hoc inline codes (a categorical binding without a classification
 FQID) need an authoring-time home: the SPA stores them in
 IndexedDB alongside the in-browser project state, in the same
 record but logically separate from `project_data.json` proper —
-keyed by binding FQID, same shape as the post-kit
-`project_data.codes.json` entries. On "Download
+nested under `sources[source.name][binding_fqid]`, same shape as
+the post-kit `project_data.codes.json` entries. On "Download
 `project_data.json`" the SPA also offers a companion
 `project_data.codes.json` download containing only the ad-hoc
 entries (no classifications dereferenced yet); this is the form
-committed to git pre-kit, and kit-build expands it later. The
-SPA's "Open from file" flow accepts the pair.
+committed to git pre-kit, and kit-build expands it later by
+populating the `classifications` block. The SPA's "Open from file"
+flow accepts the pair.
 
 Kit-build errors loudly when a referenced FQID no longer resolves
 in the current reg_meta — "FQID `class/foo2010` not found; closest
@@ -2360,10 +2430,14 @@ bundle-load validator (Python, amalgamated), and the SPA
 
 #### 6.8.1 Structural rules — `reg_schema`
 
-Enforced everywhere. Pure-Python; no external state needed. The
-bundle amalgamates this layer to validate the embedded JSON on
-MONA; the SPA mirrors it (TypeScript or compiled-to-JS) for
-in-browser editing feedback.
+Enforced at two checkpoints: the SPA (TypeScript or compiled-to-JS,
+mirroring this layer for in-browser editing feedback) and the webapp
+backend (`reg_schema` running under FastAPI). The webapp backend's
+run is the **validation gate** — bundle-build refuses to amalgamate
+if structural validation fails. The bundle's runtime on MONA does
+**not** re-run this layer: it deserializes a `LoadedSpec` dataclass
+that bundle-build already validated and converted. See §9.6 for the
+Pydantic / `LoadedSpec` boundary.
 
 - Presence and type of all required fields.
 - `type` ∈ the enum defined in §6.3; subtype/format fields are
@@ -2382,9 +2456,16 @@ in-browser editing feedback.
 - `value_set` (when present) is a structurally well-formed
   classification FQID: `class/<slug>` (2 segments, leading `class/`;
   version baked into the slug, §5.2).
-- Every panel member has an effective `entity_key` and effective
-  `time_key` (inherited from variant's `panel_template`, from
-  panel-level defaults, or from member-level overrides; §6.4).
+- Panel `entity_key` / `time_key` shape: when explicitly present
+  (panel-level or member-level), values match the `EntityKey` /
+  `TimeKey` grammar (§6.4). The structural layer does **not** check
+  whether every panel member ends up with an effective key, because
+  resolving `variant.panel_template` inheritance requires reg_meta
+  state — see §6.8.3 for the semantic rule. Kit-build and bundle-build
+  materialize the effective keys into `project_data.json` before
+  emitting the kit/bundle (§6.4); after materialization every member
+  carries explicit keys, so any downstream consumer (including the
+  MONA bundle's runtime) sees a fully-resolved spec.
 - For each member, every column referenced by `entity_key` (or
   its array elements) exists on the member's source — matched
   against columns' `display_name` strings.
@@ -2459,6 +2540,13 @@ inside the MONA bundle** (no reg_meta on MONA, no network).
   `classification`. Code: `value_set_missing`, level `error`.
 - Deprecated entries (slug TOML `deprecated: true`) resolve
   normally but emit `deprecated_traversal` at level `warning`.
+- Every panel member's effective `entity_key` and `time_key` resolve
+  to a value — either explicit (panel-level / member-level) or
+  inherited from the member's variant's `panel_template` (§6.4). If
+  a member's variant has no `panel_template` and no explicit/panel-
+  level keys are supplied, emit `panel_inheritance_unresolvable` at
+  level `error`. Kit/bundle-build runs this check and refuses to
+  materialize a spec that can't be fully resolved.
 - For each FQID in the spec, the steward's catalog admits it.
   When a project's binding or `register_variant` lies outside the
   loaded steward catalog, emit `fqid_outside_steward_catalog` at
@@ -2512,9 +2600,11 @@ kit-build time at the latest.
 ### 6.9 Sibling files
 
 - `project_data.codes.json` — value codes for every categorical
-  column, FQID-keyed (classification FQIDs and binding FQIDs in
-  one keyspace; §6.6). Written by the webapp at kit-build time;
-  committable to keep the project freestanding from reg_meta.
+  binding, in two blocks: `classifications` (keyed by classification
+  FQID, period-invariant) and `sources` (keyed by `source.name` then
+  binding FQID, period-varying via the source's own period). See
+  §6.6. Written by the webapp at kit-build time; committable to keep
+  the project freestanding from reg_meta.
 - `project_data.stats.json` — output of MONA extract; aggregate
   statistics only; PII-scanned.
 - `project_data.realign.json` — small JSON patch produced by the
@@ -2773,7 +2863,10 @@ next webapp round-trip (kit-build re-runs semantic validation per
 See §6.6. `project_data.json` carries `value_set` references
 (classification FQIDs) and binding FQIDs on every categorical
 column; the actual code lists live in sibling
-`project_data.codes.json`, FQID-keyed. After kit-build the trio
+`project_data.codes.json`, split into `classifications`
+(classification-FQID keyed, shared) and `sources`
+(source-name → binding-FQID nested, period-varying). After
+kit-build the trio
 `project_data.json` + `project_data.codes.json` +
 `project_data.stats.json` is **freestanding from reg_meta** — a
 project committed to git regenerates the same mock data years
@@ -2941,7 +3034,9 @@ When the user is ready to generate mocks, the webapp emits a
 **generation kit**: a downloadable bundle containing
 
 - `project_data.json` — the spec with FQID references.
-- `project_data.codes.json` — dereferenced codes, FQID-keyed.
+- `project_data.codes.json` — dereferenced codes, split into
+  `classifications` (period-invariant, shared) and `sources`
+  (source-name → binding-FQID, period-varying); §6.6.
 - `project_data.stats.json` — extract output (uploaded earlier).
 - A README and a ready-to-run command.
 
@@ -3180,7 +3275,7 @@ Model A relationship surface.
 |---|---|---|
 | GET | `/api/catalog` | Top-level: every provider exposed by the steward catalog. `{kind: "root", children: [{kind: "provider", slug: "scb"}, {kind: "provider", slug: "sos"}, {kind: "classification-root", slug: "class"}]}`. |
 | GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `variant` (3 seg), `binding` (4 seg, leaf), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). On `binding` leaves, the response embeds the variable's full longitudinal record (all states with their validity ranges, value sets, aliases, `replaced_by`/`related_to`/`same_as`/`lineage` edges). |
-| GET | `/api/catalog/{fqid:path}?period=...` | Same canonical endpoint, with a `period` query string. Accepts the same forms as `Source.period` (int year, period-token, range, snapshot sentinel). On `binding` leaves, the response narrows to a single `variable_state` matching the period (for range periods, returns the matching state set). Returns 404 if no state covers the period; returns 409 (`binding_state_ambiguous`) with candidate `value_set_version_label`s if multiple states match (rare LKF-shape case). The `period` query is otherwise ignored on non-binding kinds. |
+| GET | `/api/catalog/{fqid:path}?period=...` | Same canonical endpoint, with a `period` query string. Accepts the same forms as `Source.period` (int year, period-token, range, snapshot sentinel). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period. Length 1 for the common point-query case; length N for range periods that cross state transitions, and for the rare LKF-shape multi-vintage case where multiple states share validity at the same period (states carry their `value_set_version_label` for SPA disambiguation). Returns 404 if no state covers the period. The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
 | GET | `/api/catalog/{fqid:path}/states` | Full state history for a binding. Returns `{binding, states: [{valid_from, valid_to, data_type, value_set?, delivery_column_name?, value_set_version_label?}, ...]}`. SPA's variable detail UI uses this to render an edition picker / period axis. |
 | GET | `/api/catalog/{fqid:path}/predecessors` | Returns `{binding, predecessors: [VariableRef, ...]}` via inbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.predecessors(fqid)`. |
 | GET | `/api/catalog/{fqid:path}/successors` | Returns `{binding, successors: [VariableRef, ...]}` via outbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.successors(fqid)`. Used by SPA's "this variable was replaced" remediation flow. |
@@ -3207,8 +3302,9 @@ ordering via a router-introspection test
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/api/docs/search?q={query}` | FTS over parsed register-documentation markdown. |
-| GET | `/api/docs/get/{provider}/{register}` | Register-level documentation. |
-| GET | `/api/docs/get/{provider}/{register}/{variable}` | Variable-concept-level documentation. |
+| GET | `/api/docs/get/{provider}/{register}` | Register-level documentation (any docs filed at the register grain — e.g. a long-form description that spans variants). |
+| GET | `/api/docs/get/{provider}/{register}/{variant}` | Variant-level documentation root: returns the list of topic files available for that variant per §5.8 storage layout (`reg-meta-docs/<provider>/<register>/<variant>/<topic>.md`). |
+| GET | `/api/docs/get/{provider}/{register}/{variant}/{topic}` | A single topic doc for a variant (e.g. `matinformation`, `kvalitet`, `release-notes`). |
 
 **Project** — write endpoints
 
@@ -3248,7 +3344,7 @@ Revised under D5: layered Pydantic boundary.
   endpoints **are** `reg_schema` models directly — no separate 1:1
   Pydantic wrapper layer in `reg_webapp/backend/`. Eliminates the
   drift surface that wrapper layers introduce.
-- **`reg_meta_build/ir/`**: Pydantic models. Build-time only. Used by
+- **`reg_meta_build/src/reg_meta_build/ir/`**: Pydantic models. Build-time only. Used by
   adapters to emit IR and by the materializer to validate before
   writing the DB. Not shipped to any consumer.
 - **`reg_meta`** (library): plain dataclasses on the library surface.
@@ -3271,6 +3367,27 @@ boundary between the Pydantic side (authoring, validation, FastAPI,
 SPA codegen) and the dataclass side (bundle runtime, MONA
 execution). No amalgamator magic; the boundary is in code, in one
 place.
+
+**Runtime validation gate.** Bundle-build is the structural
+validation gate (§6.8.1) — it runs the full Pydantic `reg_schema`
+validator on the input `project_data.json`, then converts the
+validated `Source` to a `LoadedSpec` dataclass and amalgamates it
+into the bundle. The bundle on MONA does **not** re-validate; it
+deserializes `LoadedSpec` via `@dataclass` machinery (field
+unpacking, no Pydantic, no constraint checks) and runs. If a
+researcher hand-edits the embedded JSON on MONA in a way that
+breaks `LoadedSpec` deserialization, the bundle errors at load
+with a stdlib `dataclass`-level exception, not a structural
+ValidationResult. This is by design: the bundle is a build artifact,
+not an authoring surface; structural editing happens in the webapp.
+
+**Implication for the namespaced-block validator (§6.8.2).** The
+`reg_monabundle` block validator is **separate** from the
+`reg_schema` structural layer. It IS amalgamated into the bundle
+(it validates `reg_monabundle`-owned options like `suppress_k` at
+bundle-load), it's pure-Python without Pydantic, and it runs on
+MONA. The structural rules in §6.8.1 are the ones that do not run
+on MONA.
 
 ### 9.7 Project file persistence (SPA)
 
@@ -3511,7 +3628,7 @@ subgroup has dissolved — `update` and `info` are top-level on
 |---|---|
 | reg_meta object model | Provider promoted to first-class; FQID grammar introduced; `slug` columns added to register/register_variant/classification; synthetic `_default` variant for variant-less registers (§5) |
 | reg_meta slug curation | New `reg_meta_build/fqid_slugs/*.toml` files committed to repo; grow-only; CI-enforced immutability (§5.4) |
-| reg_meta library API | New typed `Catalog.resolve(fqid)` returning a longitudinal variable record, plus `resolve_at(fqid, period)`, `states`, `replaced`, `related`, `lineage` for state-level traversal (§5.10); webapp imports through this surface only |
+| reg_meta library API | New typed `Catalog.resolve(fqid)` returning a longitudinal variable record, plus `resolve_at(fqid, period)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` for state-level traversal (§5.10); webapp imports through this surface only |
 | `mock_data_wizard` Python package | Split into `reg_monabundle` (MONA bundle build + runtime + scan + types) and `reg_mockdata` (local mock generation + compare). See §4 and §10. |
 | `mock_data_wizard/server.py` (local HTTP server) | Deleted after migration to `reg_webapp` |
 | `mock_data_wizard/editor.py` (mutator API) | Deleted; `reg_webapp` owns authoring (§15 step 7) |
@@ -3523,7 +3640,7 @@ subgroup has dissolved — `update` and `info` are top-level on
 | `mock_data_config.json` | Renamed to `project_data.json`; schema owned by `reg_schema`; `columns` → `bindings`, with each binding's `variable` field carrying a 4-segment binding FQID; source `register`+`year` becomes `register_variant` (3-seg FQID) + explicit `period` (Model A) |
 | `mock_data_stats.json` | Renamed to `project_data.stats.json` |
 | `mdw` namespaced block in spec | Renamed to `reg_monabundle`; owner is `reg_monabundle.validate_block` (§6.5) |
-| `value_set_version` strings (`Kon@2023`, `SUN@2020`) | Replaced by classification FQIDs (`class/sun2020` — 2-seg, version baked into slug) on the binding; ad-hoc codes inlined in `project_data.codes.json` by binding FQID (§6.6) |
+| `value_set_version` strings (`Kon@2023`, `SUN@2020`) | Replaced by classification FQIDs (`class/sun2020` — 2-seg, version baked into slug) on the binding; ad-hoc codes inlined in `project_data.codes.json` under `sources[source.name][binding_fqid]` (§6.6) |
 | Categorical codes at generate time | After kit-build all codes live inline in `project_data.codes.json` regardless of source — classification FQIDs are dereferenced at kit-build, ad-hoc inline sets pass through; one lookup path post-kit (§8) |
 | `reg-meta maintain build-db` subcommand | ✅ Moved to `reg-meta-build build-db` (binary `reg-meta-build`; package `reg_meta_build`). Done in §15 step 2. |
 | `reg-meta maintain update` / `info` | ✅ Promoted to top-level `reg-meta update` / `reg-meta info`; `maintain` subgroup dissolved. Done in §15 step 2. |
@@ -3621,10 +3738,13 @@ graduates to a wider user base.
   overlap edges back to the canonical source state). What remains
   is a UI question:
   when a user is authoring a LISA variable list and the catalog
-  knows the variable originates in RTB, how is the lineage
-  surfaced — as a hover tooltip, an inline note, a "see also"
-  panel? Deferred to webapp authoring-UI design. See memory
-  `project_reg_meta_lisa_columns_gap`.
+  knows the variable originates in RTB (~64 % of LISA's variable
+  slugs are sourced from RTB / RAMS / FastPak / IoT and thus carry
+  inbound `variable_state_lineage` edges; see §5.6), how is that
+  lineage surfaced — as a hover tooltip, an inline note, a "see
+  also" panel? Deferred to webapp authoring-UI design; the data
+  is already in `variable_state_lineage` after stage A2.4, so the
+  open question is purely UX.
 - **Order export grammar — steward-specific templates.** v1's
   default CSV is decided (§9.5 `/api/project/order`); pluggable
   steward templates (IFAU spreadsheets, SWECOV PDFs) need concrete
@@ -3679,15 +3799,15 @@ design-level narrative.
 
 ### Shipped (v0.x)
 
-1. **reg_meta identifier rebuild (§5 v0.11).** ✅ Shipped 2026-05 across PRs [#78]–[#82], [#85]–[#87], [#89], [#104], [#112]. Tagged `reg_meta v0.11.x`. Implemented period-bearing 5-segment binding FQID + slug-anchored same_as. Now superseded by Model A (§5 v1.0); slugs from this work survive the rewrite (provider/register/variant/variable/classification slugs are forward-compatible; register_version slugs are dropped).
+1. **reg_meta identifier rebuild (§5 v0.11).** ✅ Shipped 2026-05 across PRs #78–#82, #85–#87, #89, #104, #112. Tagged `reg_meta v0.11.x`. Implemented period-bearing 5-segment binding FQID + slug-anchored same_as. Now superseded by Model A (§5 v1.0); slugs from this work survive the rewrite (provider/register/variant/variable/classification slugs are forward-compatible; register_version slugs are dropped).
 
-2. **`reg_meta_build` carve-out.** ✅ Shipped 2026-05-19 across PRs [#103], [#105], [#108]. Pure mechanical split.
+2. **`reg_meta_build` carve-out.** ✅ Shipped 2026-05-19 across PRs #103, #105, #108. Pure mechanical split.
 
-3. **`reg_schema` v0.x package.** ✅ Shipped 2026-05-19 across PRs [#110], [#111], [#115]. Phase 1 ValidationResult contract; Phase 2 dataclasses; Phase 3 `validate_structural`. **Will be rewritten in stage A3 to Model A's Pydantic shape + Source schema break.**
+3. **`reg_schema` v0.x package.** ✅ Shipped 2026-05-19 across PRs #110, #111, #115. Phase 1 ValidationResult contract; Phase 2 dataclasses; Phase 3 `validate_structural`. **Will be rewritten in stage A3 to Model A's Pydantic shape + Source schema break.**
 
-4. **`mock_data_wizard` adopts `project_data.json`.** ✅ Shipped 2026-05-20 in PR [#116]. Config rename, fixture corpus rewrite. **Will need updates in stage A3** when Source schema breaks.
+4. **`mock_data_wizard` adopts `project_data.json`.** ✅ Shipped 2026-05-20 in PR #116. Config rename, fixture corpus rewrite. **Will need updates in stage A3** when Source schema breaks.
 
-5.5. **Shared validator test corpus.** ✅ Shipped 2026-05-19 in PR [#113]. **Will need corpus rewrites in stage A3** when Source schema breaks.
+5.5. **Shared validator test corpus.** ✅ Shipped 2026-05-19 in PR #113. **Will need corpus rewrites in stage A3** when Source schema breaks.
 
 ### Stage A0 — Finish reg_monabundle carve-out (v0.x grammar) — ✅ shipped
 
@@ -3695,9 +3815,9 @@ In-flight reg_monabundle step 5 work landed on the v0.x FQID grammar
 ahead of Model A's grammar change, avoiding interleaving test failures.
 A0 is complete; Model A migration begins on a stable base.
 
-- **A0.1**: Step 5 phase 2b — `mdw/scan.py` → `reg_monabundle/scan.py`. ✅ PR [#122] (commit c0fa0cb).
-- **A0.2**: Step 5 phase 2c — runtime modules (`classify`, `sql_emit`, `sources`, `summarize`, `spec`, `extract`) → `reg_monabundle/runtime/`. `LoadedSpec` lives in `reg_monabundle/runtime/spec.py`. ✅ PR [#123] (commit 21543f1).
-- **A0.3**: Step 5 phase 3 — 1 MB bundle-size budget gate with 200-column load-test fixture, byte-counted in CI. ✅ PR [#124] (commit cbd4d84) + follow-ups in PR [#125] (commit 9afbc6d).
+- **A0.1**: Step 5 phase 2b — `mdw/scan.py` → `reg_monabundle/scan.py`. ✅ PR #122 (commit c0fa0cb).
+- **A0.2**: Step 5 phase 2c — runtime modules (`classify`, `sql_emit`, `sources`, `summarize`, `spec`, `extract`) → `reg_monabundle/runtime/`. `LoadedSpec` lives in `reg_monabundle/runtime/spec.py`. ✅ PR #123 (commit 21543f1).
+- **A0.3**: Step 5 phase 3 — 1 MB bundle-size budget gate with 200-column load-test fixture, byte-counted in CI. ✅ PR #124 (commit cbd4d84) + follow-ups in PR #125 (commit 9afbc6d).
 
 **Gate cleared:** the 1 MB budget gate verified the amalgamation
 strategy works end-to-end before adding Model A's complexity. Stage
@@ -3719,7 +3839,7 @@ Three independent PRs.
 The largest stage. Seven PRs.
 
 - **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, data_type, data_length, value_set_id, value_set_version_label, grain)` — `data_type` / `data_length` are the A1.1-renamed DDL columns (was `datatyp` / `datalangd`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`, included in the group key so multi-grain rows stay distinct for A2.2 triage and then dropped (the final `variable_state` schema doesn't carry grain). Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
-- **A2.2 Build-time triage.** Per §5.7. Kolumnnamn-primary discriminator. Splits multi-grain variables; auto-derives sibling slugs; emits `variable_related_to` edges. Catches the ~7,500 same-year collisions in current SCB data; ~200-300 cases need manual TOML curation (slug TOML overrides for ambiguous suffixes).
+- **A2.2 Build-time triage.** Per §5.7. Kolumnnamn-primary discriminator. Splits multi-grain variables; auto-derives sibling slugs; emits `variable_related_to` edges. Catches the 11,945 same-year collision buckets across 3,281 distinct variable triples (~2.69% of `(variable, year)` buckets in current SCB data; reproduced from §5.7); ~200-300 cases need manual TOML curation (slug TOML overrides for ambiguous suffixes).
 - **A2.3 Auto-derive `variable_replaced_by`.** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table (per-variable + parallel register- and variant-level tables). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS).
 - **A2.4 `variable_state_lineage` interval-overlap join.** Per §5.6. Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks in the source register's slug TOML, no `variable_source_lineage` SQL table. Emit `variable_state_lineage_warning` rows for `no_source_state` / `ambiguous_source_variant` cases. Old `via_source_id` column populated in parallel for transition.
 - **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable`). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break, and a grace-period alias would just keep `via_source_id` alive for no real consumer benefit. Add `resolve_at(fqid, period, *, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
@@ -3768,7 +3888,7 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 
 - **A5.1 `reg_webapp` Pydantic models.** Update FastAPI endpoints to use `reg_schema` models directly (no separate wrapper layer). `reg_meta` library types still wrapped 1:1 for catalog responses (Pydantic boundary).
 - **A5.2 New API endpoints.** Implement `?period=...` query (polymorphic per §6.2, not year-only) and `/states`, `/predecessors`, `/successors`, `/related`, `/lineage` sub-endpoints per §9.5 — `/lineage` is a first-class v1 endpoint, not deferred. Suffixed routes must be declared before the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering test enforces this). Cloudflare edge-cache validation gate.
-- **A5.3 SPA TypeScript regen.** OpenAPI codegen against new Pydantic models. SPA components updated for 4-seg FQIDs, new sub-endpoints, ambiguity (409) handling.
+- **A5.3 SPA TypeScript regen.** OpenAPI codegen against new Pydantic models. SPA components updated for 4-seg FQIDs, new sub-endpoints, and the uniform `{states: [...]}` response shape on `?period=` (length-N rendering for range/multi-vintage cases).
 - **A5.4 SPA IndexedDB hard-reject for v0.x project files.** Per §9.7. Blocking error with clear message on load.
 
 **Gate:** Webapp scaffold (REFACTOR_SPEC v0.x's §15 step 6) already includes this; A5 is the Model A overlay. Can ship `global` deployment immediately after A5.4.

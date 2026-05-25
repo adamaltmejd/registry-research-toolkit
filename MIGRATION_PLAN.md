@@ -22,7 +22,7 @@ Estimated total effort: ~95–125 person-days across 26 PRs in 5 stages. Realist
 
 Continues in-flight work from REFACTOR_SPEC v0.x §15 step 5. No Model A changes. Lands first to avoid interleaving test failures.
 
-### [x] A0.1 — Step 5 phase 2b: `mdw/scan.py` → `reg_monabundle/scan.py` (PR [#122], c0fa0cb)
+### [x] A0.1 — Step 5 phase 2b: `mdw/scan.py` → `reg_monabundle/scan.py` (PR #122, c0fa0cb)
 
 - Move `mdw/scan.py` to `reg_monabundle/scan.py`
 - Update `mock_data_wizard`'s imports
@@ -31,7 +31,7 @@ Continues in-flight work from REFACTOR_SPEC v0.x §15 step 5. No Model A changes
 
 **Estimate**: 1-2 days. Mechanical move.
 
-### [x] A0.2 — Step 5 phase 2c: runtime modules + LoadedSpec (PR [#123], 21543f1)
+### [x] A0.2 — Step 5 phase 2c: runtime modules + LoadedSpec (PR #123, 21543f1)
 
 - Move `mdw/{classify,sql_emit,sources,summarize,spec,extract}.py` to `reg_monabundle/runtime/`
 - `LoadedSpec` dataclass lands in `reg_monabundle/runtime/spec.py`
@@ -41,7 +41,7 @@ Continues in-flight work from REFACTOR_SPEC v0.x §15 step 5. No Model A changes
 
 **Estimate**: 3-5 days. Larger module move with the LoadedSpec design decision to resolve.
 
-### [x] A0.3 — Step 5 phase 3: 1 MB bundle-size budget gate (PR [#124] + [#125] follow-ups, cbd4d84 + 9afbc6d)
+### [x] A0.3 — Step 5 phase 3: 1 MB bundle-size budget gate (PR #124 + #125 follow-ups, cbd4d84 + 9afbc6d)
 
 - 200-column load-test fixture (per §12 — matches the committed bundle-size gate fixture)
 - CI test byte-counts the bundle output, fails on > 1 MB
@@ -162,8 +162,7 @@ Can run in parallel with A2.3/A2.4 once A2.1 lands.
 - Update FQID parser, emitter: 4-seg bindings, 3-seg variants, 2-seg classifications (`class/<slug>` only, version in slug)
 - Drop ~1,264 `register_version` slug entries from `scb.toml`
 - Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3, but the slug exists from now)
-- Drop the `register_version` table entirely. Per-edition prose (mätinformation, descriptions) goes to reg-meta-docs at variant level with chronological Markdown sections (build pipeline writes these). Per-edition build artifacts (approval dates, etc.) go to provenance DB. No `scb_register_edition` extension table.
-- Add nullable `scb_edition_id` FK to `variable_state`
+- Drop the `register_version` table entirely. Per-edition prose (mätinformation, descriptions) goes to reg-meta-docs at variant level with chronological Markdown sections (build pipeline writes these). Per-edition build artifacts (approval dates, etc.) go to provenance DB, joined to `variable_state` by `state_id` in the sibling provenance artifact — no SCB-specific column on `variable_state` (universal-schema rule, §5.1).
 - Update Webapp catalog endpoints: 4-seg binding leaves, new sub-endpoints (§9.5)
 - Old API endpoints (v0.x `register_version` leaves) removed; clients break per pre-v1 policy
 - UNFROZEN sentinel is active; the slug TOML rewrite is a regular commit
@@ -404,11 +403,11 @@ UNFROZEN sentinel deletion happens at v1 *public release* (not at v1.0.0 interna
 
 | v0.x PRs | Shipped under v0.x | What survives Model A | What gets redone | Model A stage |
 |---|---|---|---|---|
-| [#78]–[#82], [#85]–[#87], [#89], [#104], [#112] | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / variant / variable / classification slug curation; same_as table shape; consumer-side binding concept; FTS layer | 5-seg FQID grammar → 4-seg (period slot dropped); ~1,264 `register_version` slug entries deleted; `same_as.*_period` columns dropped; `register_version` table dropped entirely | A2.6, A2.7 |
-| [#103], [#105], [#108] | `reg_meta_build` package carve-out (mechanical split: scaffold, db.py, doc_db.py, CLI split, CI workflow) | Package boundary intact; CLI binaries (`reg-meta`, `reg-meta-build`); test helpers | Column names → English (data values unchanged); SCB-Swedish column renames | A1.1 (rename only) |
-| [#110], [#111], [#115] | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 5 new codes; bump to `schema_version: "2.0.0"` | A3.1 |
-| [#116] | `mock_data_wizard` adopts `project_data.json` (config rename, fixture corpus rewrite for v0.11 5-seg shape) | Config-rename machinery; fixture-rewrite tooling; v0.x test fixtures' overall structure | Source schema break propagated through mdw; fixture corpus rewritten again to Model A shape; `_build_source` reads new fields | A3.2 |
-| [#113] | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-seg FQID + `period`; bindings replace columns; namespaced-block keys 4-seg | A3.1 (paired with reg_schema migration) |
-| [#120], [#121], [#122], [#123], [#124], [#125] | `reg_monabundle` carve-out — phases 1, 2a, 2b, 2c, 3 + follow-ups (scaffold, validator relocation, bundle builder, PII scanner, runtime modules + LoadedSpec, 1 MB bundle-size gate) | Survives entirely; this is the Stage A0 work | (none) — A0 complete | A0 ✅ |
+| #78–#82, #85–#87, #89, #104, #112 | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / variant / variable / classification slug curation; same_as table shape; consumer-side binding concept; FTS layer | 5-seg FQID grammar → 4-seg (period slot dropped); ~1,264 `register_version` slug entries deleted; `same_as.*_period` columns dropped; `register_version` table dropped entirely | A2.6, A2.7 |
+| #103, #105, #108 | `reg_meta_build` package carve-out (mechanical split: scaffold, db.py, doc_db.py, CLI split, CI workflow) | Package boundary intact; CLI binaries (`reg-meta`, `reg-meta-build`); test helpers | Column names → English (data values unchanged); SCB-Swedish column renames | A1.1 (rename only) |
+| #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 5 new codes; bump to `schema_version: "2.0.0"` | A3.1 |
+| #116 | `mock_data_wizard` adopts `project_data.json` (config rename, fixture corpus rewrite for v0.11 5-seg shape) | Config-rename machinery; fixture-rewrite tooling; v0.x test fixtures' overall structure | Source schema break propagated through mdw; fixture corpus rewritten again to Model A shape; `_build_source` reads new fields | A3.2 |
+| #113 | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-seg FQID + `period`; bindings replace columns; namespaced-block keys 4-seg | A3.1 (paired with reg_schema migration) |
+| #120, #121, #122, #123, #124, #125 | `reg_monabundle` carve-out — phases 1, 2a, 2b, 2c, 3 + follow-ups (scaffold, validator relocation, bundle builder, PII scanner, runtime modules + LoadedSpec, 1 MB bundle-size gate) | Survives entirely; this is the Stage A0 work | (none) — A0 complete | A0 ✅ |
 
 Conventions: stage IDs reference the sections above. PR links (`[#NNN]`) resolve against the project's GitHub repo.
