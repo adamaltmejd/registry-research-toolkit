@@ -148,10 +148,10 @@ Can run in parallel with A2.2.
 ### [ ] A2.5 — Catalog API shift
 
 - `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10). The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break.
-- Implement `Catalog.resolve_at(fqid, period, *, value_set_version=None)` returning single `VariableState` (`period` polymorphic per §6.2; not year-only)
+- Implement `Catalog.resolve_at(fqid, period, *, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for unambiguous point queries, length N for range periods crossing state transitions and the rare LKF-shape multi-vintage case. Empty list when no state covers the period (no exception). `value_set_version` narrows multi-vintage results to a single state.
 - Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10
 - Post-A2.5 public method roster: `resolve` (new semantics), `resolve_at`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings`
-- Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[resolve_at(fqid, period=y) for y in years]`; they must agree on the unambiguous case
+- Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[s for y in years for s in resolve_at(fqid, period=y)]`; they must agree on the unambiguous case. Add a multi-vintage fixture asserting `len(resolve_at(...)) == 2` and that `value_set_version="..."` narrows to length 1.
 
 **Estimate**: 5-6 days.
 

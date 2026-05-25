@@ -1721,12 +1721,18 @@ longitudinal `resolve(fqid).replaced_by` attribute carries the
 natural directional read; inbound (predecessor) traversal is the
 explicit two-step `predecessors(fqid)` call.
 
-**Ambiguity handling.** `resolve_at(fqid, period)` returns a single
-state in the unambiguous case (99% of variables, after build-time
-triage). For the rare multi-vintage case (LKF-shape, ~0.05%), it
-raises `VariableStateAmbiguous` carrying candidate states keyed by
-`value_set_version_label`; consumers supply the label to disambiguate
-via the `value_set_version=` keyword argument.
+**Ambiguity handling.** `resolve_at(fqid, period)` returns
+`list[VariableState]` uniformly (§5.10 signature). In the
+unambiguous case (99% of variables, after build-time triage) the
+list is length 1. For range periods crossing state transitions and
+for the rare LKF-shape multi-vintage case (~0.05%), the list is
+length N; the candidate states carry their `value_set_version_label`
+for caller-side disambiguation. Callers who already know which
+vintage to pick pass `value_set_version="..."` as a keyword
+argument to narrow the result to a single state. No exceptions are
+raised on ambiguity — the list shape is the contract; an empty
+list signals "no state covers the period" and callers decide policy
+(404 at the HTTP layer; per-binding error at extract).
 
 ### 5.11 Glossary
 
@@ -1734,7 +1740,7 @@ via the `value_set_version=` keyword argument.
 |---|---|---|
 | variable | entity | A `variable` row: a slug-identified, variant-scoped concept. Has 1..N states across time. |
 | variable state | entity | A `variable_state` row: per-era shape of a variable, with `(valid_from, valid_to)` (ISO 8601) and the data type, length, value set, version label for that era. Canonical unit of resolution at a specific period. |
-| binding | entity | A 4-segment FQID referencing a variable: `<provider>/<register>/<variant>/<variable>`. Resolves to a `ResolvedVariable` (longitudinal) or single `VariableState` (when period context supplied). Also the project_data.json object that declares "include this variable in this source's extract" (§6.3). |
+| binding | entity | A 4-segment FQID referencing a variable: `<provider>/<register>/<variant>/<variable>`. Resolves to a `ResolvedVariable` (longitudinal) or `list[VariableState]` (when period context supplied — length 1 in the common case, length N for range / multi-vintage). Also the project_data.json object that declares "include this variable in this source's extract" (§6.3). |
 | variable_alias | entity | A delivery column name (`PersonNr`, `Kon`, `LopNr_PersonNr`) attached to a `variable_state`. SCB pseudonymizes identifier columns at delivery by prefixing `LopNr_`; the metadata stores the un-prefixed name. Multiple aliases per state possible. |
 | classification | entity | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (version in slug). |
 | value_set | entity | A code list attached to a `variable_state`. Content-addressed via `member_hash` for dedup. Carries an optional FK to `classification` when the value_set is a (possibly year-projected) subset of a named classification. Never exposed via FQID. |
