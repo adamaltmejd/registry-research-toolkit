@@ -17,7 +17,13 @@ from pathlib import Path
 
 from .errors import EXIT_CONFIG, RegMetaError
 
-SCHEMA_VERSION = "3.3.0"
+# A1.1: major-version bump. §5.11 renames + drops ~21 columns across
+# the universal schema; pre-A1.1 DBs (v3.x) reference Swedish column
+# names that no longer exist. `_check_schema_compat` treats major
+# mismatches as hard breaks, so v3.x DBs are rejected up-front with a
+# clear "rebuild the DB" message instead of failing later with cryptic
+# `no such column` SQL errors.
+SCHEMA_VERSION = "4.0.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -788,8 +788,9 @@ def get_varinfo(
         for inst in instances:
             cvid = inst["cvid"]
             inst_aliases = aliases_map[cvid]
-            # First alias is the lexically-smallest kolumnnamn — `aliases_map`
-            # is sorted by ``ORDER BY cvid, kolumnnamn`` in the fetch above.
+            # First alias is the lexically-smallest delivery_column_name —
+            # `aliases_map` is sorted by ``ORDER BY cvid, delivery_column_name``
+            # in the fetch above (§5.11 rename from `kolumnnamn`).
             first_alias = inst_aliases[0] if inst_aliases else None
             variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
@@ -1099,9 +1100,10 @@ def get_values_by_variable(
 
     Each instance is one cvid → year-correct value list. Filter via
     ``register`` and/or ``year``. Returns
-    ``{input, variabelnamn, instances: [{cvid, register_id, register_name,
+    ``{input, variable_name, instances: [{cvid, register_id, register_name,
     regvar_id, variant_name, regver_id, version_name, year, values}]}``.
-    Resolution mirrors ``get_varinfo``: var_id → variabelnamn → alias.
+    Resolution mirrors ``get_varinfo``: var_id → variable name → alias.
+    Keys follow the §5.11 rename (`variabelnamn` → `variable_name`).
     """
     reg_ids: list[int] | None = None
     if register:
@@ -1271,14 +1273,15 @@ def get_datacolumns(
 ) -> list[dict[str, Any]]:
     """Get all column aliases for a variable.
 
-    Returns a list of dicts with "kolumnnamn", "register_id", "register_name",
-    "regvar_id", "regver_id", "version_name".
+    Returns a list of dicts with "delivery_column_name", "register_id",
+    "register_name", "regvar_id", "regver_id", "version_name". Keys follow
+    the §5.11 rename (`kolumnnamn` → `delivery_column_name`).
     """
     reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
-    # Match by var_id or variabelnamn
+    # Match by var_id or variable name (§5.11: was `variabelnamn`)
     int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)

@@ -982,9 +982,10 @@ def _group_instances_by_codes(
     variable_name: str,
     year: int | None,
 ) -> dict[str, Any]:
-    """Bucket instances by their (vardekod, vardebenamning) set so callers
-    don't have to scroll through dozens of rows of identical codes. Used when
-    a (variable, year) lookup hits multiple distinct value sets.
+    """Bucket instances by their (code, label) set so callers don't have to
+    scroll through dozens of rows of identical codes. Used when a (variable,
+    year) lookup hits multiple distinct value sets. Keys follow the §5.11
+    rename from `(vardekod, vardebenamning)`.
     """
     buckets: dict[tuple, list[dict[str, Any]]] = {}
     for inst in instances:
@@ -1061,16 +1062,18 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                     ),
                 )
             data: list[dict[str, Any]] | dict[str, Any] = get_values(conn, target)
-            # Discriminate empty results: a cvid with `vardemangdsversion IS NOT NULL`
-            # had real Vardemangder rows but year-projection excluded every code, so
-            # the empty list signals an SCB validity gap rather than a numeric/text
-            # variable. Read alongside the data so the hint layer can surface it.
+            # Discriminate empty results: a cvid with `value_set_version_label
+            # IS NOT NULL` had real Vardemangder rows but year-projection
+            # excluded every code, so the empty list signals an SCB validity
+            # gap rather than a numeric/text variable. Read alongside the
+            # data so the hint layer can surface it. (Column name follows the
+            # §5.11 rename from `vardemangdsversion`.)
             if not data:
                 args._projection_emptied = bool(
                     conn.execute(
                         "SELECT 1 FROM variable_instance "
                         "WHERE cvid = ? AND value_set_id IS NULL "
-                        "AND vardemangdsversion IS NOT NULL",
+                        "AND value_set_version_label IS NOT NULL",
                         (target,),
                     ).fetchone()
                 )

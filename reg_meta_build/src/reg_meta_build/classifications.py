@@ -600,10 +600,11 @@ def populate_classifications(
                 (id_by_short[sup], id_by_short[entry["short_name"]]),
             )
 
-    # Tag matching variable instances. The seed has ~100+ vardemangdsversion
+    # Tag matching variable instances. The seed has ~100+ version-label
     # strings and the table has ~500k rows — without an index on
-    # vardemangdsversion the UPDATE would full-scan the table. Build the
-    # index once, drop it after population (it's not useful at query time).
+    # value_set_version_label the UPDATE would full-scan the table. Build
+    # the index once, drop it after population (it's not useful at query
+    # time). (Column name follows the §5.11 rename from `vardemangdsversion`.)
     conn.execute(
         "CREATE INDEX IF NOT EXISTS idx_vi_value_set_version_label_tmp "
         "ON variable_instance(value_set_version_label)"
