@@ -1979,15 +1979,22 @@ def build_db(
             tmp_path.unlink(missing_ok=True)
             raise
 
-    # Rotate the prior generation aside before the atomic replace
+    # Rotate the prior universal DB aside before the atomic replace
     # (REFACTOR_SPEC §4.4 / §5.8: single-generation `.prev`, no auto-cleanup).
-    # Both the universal DB and its sibling provenance DB rotate together so
-    # the provenance manifest stays tied to the universal DB it was built
-    # against. The provenance DB sibling may or may not exist yet — A1.3
-    # only scaffolds it; the materializer (A4.x) populates it.
     rotate_db_to_prev(final_path)
-    rotate_db_to_prev(db_dir / PROVENANCE_DB_FILENAME)
     tmp_path.rename(final_path)
+
+    # Rotate the sibling provenance DB to `.prev` AND create a fresh empty
+    # one in the same step, so a new `reg_meta.provenance.db` always exists
+    # alongside the universal DB it was built against. Otherwise a rebuild
+    # in any env that previously had a provenance DB would leave only
+    # `.prev` and break downstream tooling that expects the live file.
+    # A1.3 ships the scaffolding (build_manifest table only); A4.x's
+    # materializer is what actually populates the manifest with the
+    # finalized universal DB's sha256.
+    provenance_path = db_dir / PROVENANCE_DB_FILENAME
+    rotate_db_to_prev(provenance_path)
+    create_empty_provenance_db(provenance_path)
     _progress(f"Database written to {final_path}")
 
     return {

@@ -107,7 +107,11 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
         IRValueSet,
         {
             "value_set_id": 50,
-            "member_hash": "deadbeef",
+            # 32-byte raw SHA-256 digest (matches the universal
+            # `value_set.member_hash` BLOB column's CHECK constraint).
+            "member_hash": bytes.fromhex(
+                "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+            ),
             "classification_id": None,
             "codes": (
                 IRValueCode(
@@ -248,7 +252,12 @@ def test_iradapter_runtime_conformance() -> None:
 
     adapter = _DummyAdapter()
     assert isinstance(adapter, _IRAdapterMirror)
-    objs = list(adapter.emit(...))  # type: ignore[arg-type]
+    # Pass a real Path so the call shape matches the protocol contract;
+    # `_DummyAdapter.emit` ignores `source_dir` but a future tightening
+    # that starts reading from it wouldn't surprise this test.
+    from pathlib import Path as _Path
+
+    objs = list(adapter.emit(_Path()))
     assert len(objs) == 1
     assert isinstance(objs[0], IRRegister)
 

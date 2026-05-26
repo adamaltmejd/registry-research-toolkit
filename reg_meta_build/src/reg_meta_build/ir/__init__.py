@@ -99,9 +99,14 @@ class IRValueCode(BaseModel):
 
 class IRValueSet(BaseModel):
     value_set_id: int
-    # Hash of normalized code list; dedup key. Materializer writes this
-    # verbatim into universal `value_set.member_hash` (§5.1).
-    member_hash: str
+    # Raw 32-byte SHA-256 digest of the normalized code list; dedup key.
+    # Materializer writes this verbatim into universal
+    # `value_set.member_hash` (§5.1), which is a BLOB with
+    # `CHECK (length(member_hash) = 32)`. Adapters compute via
+    # `reg_meta_build.db._value_set_hash` (which returns `bytes`); the
+    # IR contract carries raw bytes to keep wire and storage encodings
+    # identical — no hex encode/decode at the boundary.
+    member_hash: bytes
     # Set when this value_set is a (possibly year-projected) subset of a
     # named classification:
     classification_id: int | None
