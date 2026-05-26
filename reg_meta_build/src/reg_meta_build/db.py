@@ -514,6 +514,71 @@ CREATE TABLE import_manifest (
 """
 
 
+# Sibling provenance DB (REFACTOR_SPEC §4.4 / §5.8). Maintainer-only artifact;
+# not shipped to consumers. Sits next to the universal DB. Per-provider source
+# linkage tables (e.g. scb_register_id_map) and adapter parse warning tables
+# land in later stages (A4.x) once concrete adapters emit IR; for A1.3 the
+# only required table is build_manifest which ties provenance to a specific
+# universal DB by sha256.
+PROVENANCE_DB_FILENAME = "reg_meta.provenance.db"
+
+PROVENANCE_DDL = """\
+CREATE TABLE build_manifest (
+    schema_version TEXT NOT NULL,
+    universal_db_path TEXT NOT NULL,
+    universal_db_sha256 TEXT NOT NULL,
+    build_date TEXT NOT NULL
+);
+"""
+
+
+def create_empty_provenance_db(path: Path) -> None:
+    """Create an empty provenance DB with just the build_manifest schema.
+
+    The materializer (A4.x) will populate build_manifest after the universal
+    DB is finalized and its sha256 is known. For A1.3 this is a pure
+    scaffolding helper — it creates the file and applies the DDL, nothing
+    more. Idempotent only in the sense that callers are expected to call
+    `rotate_db_to_prev` first; this function refuses to overwrite an
+    existing file to keep the rotation contract obvious.
+    """
+    if path.exists():
+        raise RegMetaError(
+            exit_code=EXIT_CONFIG,
+            code="provenance_db_exists",
+            error_class="configuration",
+            message=f"Provenance DB already exists: {path}",
+            remediation="Call rotate_db_to_prev first, or delete the file.",
+        )
+    conn = sqlite3.connect(path)
+    try:
+        conn.executescript(PROVENANCE_DDL)
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def rotate_db_to_prev(db_path: Path) -> None:
+    """Rename `<db_path>` to `<db_path>.prev`, evicting any prior `.prev`.
+
+    Used before the materializer writes the new universal DB / provenance
+    DB so a single previous generation survives a rebuild. No auto-cleanup
+    of older generations — maintainers `mv` the `.prev` aside if they
+    want to keep more than one (REFACTOR_SPEC §4.4 / §5.8).
+
+    No-op if `<db_path>` does not exist (first-ever build).
+    """
+    if not db_path.exists():
+        return
+    prev_path = db_path.with_suffix(db_path.suffix + ".prev")
+    # Drop the previous-generation file if present — single-generation
+    # rotation, per spec. SCB rebuilds are coarse, so an explicit "you
+    # asked for this" rename overwrite is fine.
+    if prev_path.exists():
+        prev_path.unlink()
+    db_path.rename(prev_path)
+
+
 # ---------------------------------------------------------------------------
 # CSV reading
 # ---------------------------------------------------------------------------
@@ -1914,9 +1979,14 @@ def build_db(
             tmp_path.unlink(missing_ok=True)
             raise
 
-    # Atomic replace
-    if final_path.exists():
-        final_path.unlink()
+    # Rotate the prior generation aside before the atomic replace
+    # (REFACTOR_SPEC §4.4 / §5.8: single-generation `.prev`, no auto-cleanup).
+    # Both the universal DB and its sibling provenance DB rotate together so
+    # the provenance manifest stays tied to the universal DB it was built
+    # against. The provenance DB sibling may or may not exist yet — A1.3
+    # only scaffolds it; the materializer (A4.x) populates it.
+    rotate_db_to_prev(final_path)
+    rotate_db_to_prev(db_dir / PROVENANCE_DB_FILENAME)
     tmp_path.rename(final_path)
     _progress(f"Database written to {final_path}")
 
