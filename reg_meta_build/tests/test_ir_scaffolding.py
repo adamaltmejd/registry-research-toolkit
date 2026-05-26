@@ -208,6 +208,28 @@ def test_ir_round_trip(cls_name: str) -> None:
     assert restored == instance
 
 
+@pytest.mark.parametrize("cls_name", sorted(_IR_FACTORIES))
+def test_ir_rejects_unknown_keys(cls_name: str) -> None:
+    """`extra="forbid"` on `_IRBase` must propagate so adapter typos
+    raise instead of silently dropping into defaulted fields.
+
+    Example failure mode this guards: a misspelled `is_sensitiv=True`
+    on `IRVariable` under Pydantic's default `extra="ignore"` would
+    be dropped without warning, and the field would quietly stay
+    `False` — corrupting downstream catalog output with no exception.
+    """
+    from pydantic import ValidationError
+
+    cls, kwargs = _IR_FACTORIES[cls_name]
+    bad_kwargs = {**kwargs, "definitely_not_a_real_field": "oops"}
+    with pytest.raises(ValidationError) as exc_info:
+        cls(**bad_kwargs)
+    # Pydantic 2.x reports unknown fields with the `extra_forbidden` code.
+    assert any(err["type"] == "extra_forbidden" for err in exc_info.value.errors()), (
+        exc_info.value.errors()
+    )
+
+
 def test_iradapter_is_protocol() -> None:
     """IRAdapter must be a typing.Protocol, not a regular class."""
     # PEP 544: Protocol classes have `_is_protocol = True` on the class object.

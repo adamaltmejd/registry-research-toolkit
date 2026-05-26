@@ -30,10 +30,24 @@ from __future__ import annotations
 from datetime import date  # noqa: TC003
 from typing import Literal
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
-class IRRegister(BaseModel):
+class _IRBase(BaseModel):
+    """Shared config for every IR model.
+
+    `extra="forbid"` fails fast on adapter typos. Pydantic's default
+    (`extra="ignore"`) silently drops unknown keys, which is dangerous
+    for IR fields that have defaults — a misspelled `is_sensitive=True`
+    would be discarded and the field would quietly remain `False`,
+    corrupting downstream catalog output with no exception. Adapters
+    speak a strict contract; unknown keys must raise.
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+
+class IRRegister(_IRBase):
     register_id: int  # universal ID (=SCB RegisterId or hash-minted SOS)
     provider: str  # 'scb', 'sos', ...
     slug: str
@@ -42,7 +56,7 @@ class IRRegister(BaseModel):
     purpose: str | None  # short prose for catalog browse cards
 
 
-class IRVariant(BaseModel):
+class IRVariant(_IRBase):
     variant_id: int
     register_id: int
     slug: str  # '_default' for variant-less registers
@@ -56,7 +70,7 @@ class IRVariant(BaseModel):
     panel_time_grain: Literal["delivery", "row"] | None = None
 
 
-class IRVariable(BaseModel):
+class IRVariable(_IRBase):
     variable_id: int
     register_id: int
     variant_id: int  # variant-scoped identity
@@ -73,7 +87,7 @@ class IRVariable(BaseModel):
     source_register_text: str | None
 
 
-class IRVariableState(BaseModel):
+class IRVariableState(_IRBase):
     state_id: int
     variable_id: int  # variant-scope is implied via variable FK
     # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands
@@ -89,7 +103,7 @@ class IRVariableState(BaseModel):
     value_set_version_label: str | None  # overlap discriminator (rare; multi-vintage)
 
 
-class IRValueCode(BaseModel):
+class IRValueCode(_IRBase):
     value_set_id: int
     code: str
     label: str
@@ -97,7 +111,7 @@ class IRValueCode(BaseModel):
     valid_to: str | None
 
 
-class IRValueSet(BaseModel):
+class IRValueSet(_IRBase):
     value_set_id: int
     # Raw 32-byte SHA-256 digest of the normalized code list; dedup key.
     # Materializer writes this verbatim into universal
@@ -113,7 +127,7 @@ class IRValueSet(BaseModel):
     codes: tuple[IRValueCode, ...]
 
 
-class IRClassification(BaseModel):
+class IRClassification(_IRBase):
     classification_id: int
     slug: str  # version baked in: 'sun2020', 'icd10', 'lkf2007'
     name: str
@@ -122,35 +136,35 @@ class IRClassification(BaseModel):
     provider: str | None  # NULL for cross-provider classifications
 
 
-class IRLineageEdge(BaseModel):
+class IRLineageEdge(_IRBase):
     consumer_state_id: int
     source_state_id: int
     valid_from: str  # ISO 8601 (intersection of consumer + source validity)
     valid_to: str
 
 
-class IRReplacedByEdge(BaseModel):
+class IRReplacedByEdge(_IRBase):
     predecessor_variable_id: int
     successor_variable_id: int
     effective_year: int | None
     note: str | None
 
 
-class IRRelatedToEdge(BaseModel):
+class IRRelatedToEdge(_IRBase):
     a_variable_id: int
     b_variable_id: int
     relation_kind: str
     note: str | None
 
 
-class IRWarning(BaseModel):
+class IRWarning(_IRBase):
     entity_kind: str
     entity_id: int
     code: str
     detail: str | None = None
 
 
-class IRDeliveryProvenance(BaseModel):
+class IRDeliveryProvenance(_IRBase):
     """Goes to provenance DB only, not to the published catalog."""
 
     register_id: int
