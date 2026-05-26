@@ -582,6 +582,40 @@ UNIKA_ROWS = [
             "Nej",
         ]
     ),
+    # A1.2 — sensitivity flag fixtures:
+    # ÅÄÖVar (var_id=200) flagged only as kanslig_variabel_ibland → folds
+    # into is_sensitive per the A1.2 mapping rule (the "22 edge cases").
+    PIPE.join(
+        [
+            "TESTREG",
+            "Testregistret",
+            "Individer",
+            "Individer",
+            "ÅÄÖVar",
+            "AaoCol",
+            "2022",
+            "2022",
+            "Nej",
+            "Ja",
+            "Nej",
+        ]
+    ),
+    # UniqueVar (var_id=300) flagged identitetsvariabel → is_identifier=1.
+    PIPE.join(
+        [
+            "OTHERREG",
+            "Annat register",
+            "Företag",
+            "Företag",
+            "UniqueVar",
+            "UniqCol",
+            "2021",
+            "2021",
+            "Nej",
+            "Nej",
+            "Ja",
+        ]
+    ),
 ]
 
 IDENTIFIERARE_HEADER = PIPE.join(["VarID", "Variabelnamn", "Variabeldefinition"])

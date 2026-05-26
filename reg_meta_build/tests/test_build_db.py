@@ -533,7 +533,64 @@ class TestBuildDb:
 
     def test_unika_joined(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM unika_summary").fetchone()[0]
-        assert count == 3
+        # 3 baseline rows (TESTREG Kön, TESTREG TestVar, OTHERREG Kön)
+        # + 2 A1.2 sensitivity-flag fixtures (TESTREG ÅÄÖVar, OTHERREG UniqueVar).
+        assert count == 5
+
+    def test_sensitivity_kanslig_variabel(self, db_conn: sqlite3.Connection):
+        """A1.2: TestVar (register_id=1, var_id=100) has kanslig_variabel='Ja'
+        in unika_summary → is_sensitive=1, is_identifier=0."""
+        row = db_conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND var_id = 100"
+        ).fetchone()
+        assert row["is_sensitive"] == 1
+        assert row["is_identifier"] == 0
+
+    def test_sensitivity_kanslig_variabel_ibland(self, db_conn: sqlite3.Connection):
+        """A1.2: ÅÄÖVar (register_id=1, var_id=200) has only
+        kanslig_variabel_ibland='Ja' in unika_summary — the "22 edge cases"
+        fold into is_sensitive per the mapping rule."""
+        row = db_conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND var_id = 200"
+        ).fetchone()
+        assert row["is_sensitive"] == 1
+        assert row["is_identifier"] == 0
+
+    def test_sensitivity_identitetsvariabel(self, db_conn: sqlite3.Connection):
+        """A1.2: UniqueVar (register_id=2, var_id=300) has identitetsvariabel='Ja'
+        in unika_summary → is_identifier=1. The kanslig columns are 'Nej', so
+        is_sensitive stays 0."""
+        row = db_conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 2 AND var_id = 300"
+        ).fetchone()
+        assert row["is_sensitive"] == 0
+        assert row["is_identifier"] == 1
+
+    def test_sensitivity_all_nej(self, db_conn: sqlite3.Connection):
+        """A1.2 negative case: Kön (register_id=1, var_id=44) has all three
+        unika_summary flags = 'Nej' → both columns stay 0."""
+        row = db_conn.execute(
+            "SELECT is_sensitive, is_identifier FROM variable "
+            "WHERE register_id = 1 AND var_id = 44"
+        ).fetchone()
+        assert row["is_sensitive"] == 0
+        assert row["is_identifier"] == 0
+
+    def test_sensitivity_no_unika_row(self, db_conn: sqlite3.Connection):
+        """A1.2: variables without a matching unika_summary row default to 0
+        (the DDL DEFAULT). Several fixture variables (ParenVar=2/301,
+        ExternVar=2/302) have no unika_summary entry — they must stay 0/0."""
+        rows = db_conn.execute(
+            "SELECT register_id, var_id, is_sensitive, is_identifier "
+            "FROM variable WHERE (register_id, var_id) IN ((2, 301), (2, 302))"
+        ).fetchall()
+        assert len(rows) == 2
+        for row in rows:
+            assert row["is_sensitive"] == 0, row["var_id"]
+            assert row["is_identifier"] == 0, row["var_id"]
 
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(

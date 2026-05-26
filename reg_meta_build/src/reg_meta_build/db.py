@@ -265,6 +265,15 @@ CREATE TABLE variable (
     measurement_unit TEXT,
     source_register_id INTEGER REFERENCES register(register_id),
     source_label TEXT,
+    -- A1.2: sensitivity flags lifted from unika_summary so A2.1 can drop that
+    -- table cleanly. Populated by `_populate_sensitivity_flags` after
+    -- unika_summary import. SCB ships `kanslig_variabel` and
+    -- `kanslig_variabel_ibland` as separate columns; the 22 "sometimes
+    -- sensitive" rows aren't worth a third column, so both fold into
+    -- `is_sensitive`. ANY 'Ja' row across the unika_summary group for a
+    -- (register_id, var_id) sets the flag.
+    is_sensitive INTEGER NOT NULL DEFAULT 0,
+    is_identifier INTEGER NOT NULL DEFAULT 0,
     -- PK doubles as the join index for get_schema's JOIN on (register_id, var_id).
     -- Do not add a redundant explicit index.
     PRIMARY KEY (register_id, var_id)
@@ -950,10 +959,13 @@ def _import_registerinformation(
         ":registerversion_senastgodkanddatum)",
         list(versions.values()),
     )
-    # Named INSERT (explicit columns) — the variable dict carries the
-    # transient `_operational_definition` key which we merge into `description`
-    # below, then drop before binding. Listing columns also future-proofs
-    # against A1.2 adding sensitivity flags downstream.
+    # Named INSERT (explicit columns). Two reasons the list is explicit:
+    # (1) the variable dict carries the transient `_operational_definition`
+    # key which we merge into `description` below then drop before binding;
+    # (2) A1.2's `is_sensitive` / `is_identifier` columns on `variable`
+    # are intentionally omitted here so they keep their DDL DEFAULT 0 —
+    # `_populate_sensitivity_flags` writes them later after unika_summary
+    # is loaded.
     for var in variables.values():
         op = (var.pop("_operational_definition", None) or "").strip()
         desc = (var.get("description") or "").strip()
@@ -1057,6 +1069,78 @@ def _import_unika(
     )
     _progress(f"  {row_count:,} rows read, {len(batch):,} matched")
     return row_count
+
+
+def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
+    """Propagate sensitivity / identifier flags from `unika_summary` to
+    `variable.is_sensitive` / `variable.is_identifier` (A1.2).
+
+    Aggregation rule: a variable inherits a flag if ANY `unika_summary` row
+    for the same `(register_id, var_id)` carries the truthy text. SCB ships
+    these columns as the Swedish text literals `'Ja'` / `'Nej'`; any other
+    value (including empty) is treated as falsy. `kanslig_variabel` and
+    `kanslig_variabel_ibland` both fold into `is_sensitive` — the ~22 rows
+    flagged only-sometimes don't justify a third column (see MIGRATION_PLAN
+    A1.2). Returns the number of variable rows whose flags were refreshed
+    from `unika_summary` — i.e. rows that had at least one matching
+    unika_summary entry. This count includes variables whose flags resolved
+    to 0/0 (all-`Nej` entries); the function is deterministic in the
+    unika_summary state, not a "received at least one true flag" gauge.
+
+    Must run after both `_import_registerinformation` (creates `variable`
+    rows) and `_import_unika` (populates the source). Idempotent: re-running
+    on a populated DB resets every row from `unika_summary` again.
+
+    `unika_summary` stores `(register_id, regvar_id, kolumnnamn, variabelnamn)`
+    but not `var_id`. To resolve `var_id` we route the join through
+    `variable_instance × variable_alias`: the `(register_id, regvar_id,
+    kolumnnamn)` triple narrows to a single cvid in the source CSV, and
+    `variable_instance.var_id` then carries the `var_id` we need. We also
+    join `variable` on `variabelnamn` (now `variable.name` post-A1.1) so
+    that when the same `kolumnnamn` is reused across distinct variables
+    under one variant (rename / id split mid-variant), each `unika_summary`
+    row maps to exactly one `var_id` instead of fanning sensitivity flags
+    sideways onto siblings. Joining `variable_alias` on the full
+    `(cvid, delivery_column_name)` PK rather than `delivery_column_name`
+    alone also lets SQLite use the PK index instead of falling back to a
+    scan / auto-index.
+    """
+    _progress("Populating variable sensitivity flags from unika_summary...")
+    cur = conn.execute(
+        "UPDATE variable SET "
+        "    is_sensitive = COALESCE(flags.is_sensitive, 0), "
+        "    is_identifier = COALESCE(flags.is_identifier, 0) "
+        "FROM ("
+        "    SELECT "
+        "        vi.register_id, vi.var_id, "
+        "        MAX(CASE WHEN us.kanslig_variabel = 'Ja' "
+        "                  OR us.kanslig_variabel_ibland = 'Ja' "
+        "                 THEN 1 ELSE 0 END) AS is_sensitive, "
+        "        MAX(CASE WHEN us.identitetsvariabel = 'Ja' "
+        "                 THEN 1 ELSE 0 END) AS is_identifier "
+        "    FROM unika_summary us "
+        "    JOIN variable_instance vi "
+        "      ON vi.register_id = us.register_id "
+        "     AND vi.regvar_id = us.regvar_id "
+        # `unika_summary` keeps Swedish column names — A1.1 didn't touch
+        # that table because A2.1 drops it. `variable_alias` and
+        # `variable` were renamed: `kolumnnamn` → `delivery_column_name`,
+        # `variabelnamn` → `name`.
+        "    JOIN variable_alias va "
+        "      ON va.cvid = vi.cvid "
+        "     AND va.delivery_column_name = us.kolumnnamn "
+        "    JOIN variable v "
+        "      ON v.register_id = vi.register_id "
+        "     AND v.var_id = vi.var_id "
+        "     AND v.name = us.variabelnamn "
+        "    GROUP BY vi.register_id, vi.var_id"
+        ") AS flags "
+        "WHERE variable.register_id = flags.register_id "
+        "  AND variable.var_id = flags.var_id"
+    )
+    refreshed = cur.rowcount or 0
+    _progress(f"  {refreshed:,} variable rows refreshed from unika_summary")
+    return refreshed
 
 
 def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
@@ -1838,6 +1922,13 @@ def build_db(
                 # Must run after the vardemangds{version,niva} UPDATE because the
                 # projection joins variable_instance × register_version.
                 projection_stats = _project_and_mint_value_sets(conn, validity_map)
+
+        # A1.2: lift sensitivity / identifier flags from unika_summary into the
+        # variable table. Runs after the enrichment loop so both _import_unika
+        # (source) and _import_registerinformation (target) have populated their
+        # tables; harmless no-op when UnikaRegisterOchVariabler.csv is absent
+        # (unika_summary stays empty, every variable keeps its DEFAULT 0).
+        _populate_sensitivity_flags(conn)
 
         # Classifications — maintainer-curated normalized code systems.
         if skip_classifications:
