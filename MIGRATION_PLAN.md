@@ -305,9 +305,9 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 
 ### [ ] A5.2 — New API endpoints
 
-- Implement `?period=...` query on canonical catalog endpoint (polymorphic per §9.5 — accepts int year, period-token, range object, or `_default` snapshot sentinel; not year-only)
-- Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage` sub-endpoints (`/lineage` is a first-class v1 endpoint per §9.5, not deferred)
-- Suffixed routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order
+- Implement `?period=...` query on canonical catalog endpoint. **Wire format is a single query-string value per §9.5**, not `deepObject`: int year (`?period=2020`), period-token (`?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`), range (`?period=<from>..<to>`, e.g. `?period=2018..2020`), snapshot sentinel (`?period=_default`). Server canonicalizes and returns 422 on malformed tokens; OpenAPI parameter is a plain string. Polymorphic across all `Source.period` shapes — not year-only.
+- Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings` sub-endpoints (`/lineage` and `/lineage_warnings` are first-class v1 endpoints per §9.5, not deferred — `/lineage_warnings` surfaces the `variable_state_lineage_warning` rows emitted by A2.4)
+- Suffixed routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order for all six suffixes
 - ETag scheme verified to include the `?period` query in the cache key
 - Cloudflare edge-cache validation gate: small load test through Cloudflare confirms slash-bearing FQID paths still work cleanly with the new shapes
 
