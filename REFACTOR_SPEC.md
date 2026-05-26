@@ -1658,8 +1658,10 @@ class Catalog:
     # validity range intersects `period`. Length 1 for point queries
     # against a single state (the common case); length N for range
     # periods crossing state transitions and for the rare LKF-shape
-    # multi-vintage case. Empty list (no 404 inside the library)
-    # when no state covers the period — callers decide policy.
+    # multi-vintage case. Empty list when no state covers the
+    # period — no exception. HTTP layer (§9.5) surfaces this as
+    # 200 + `{states: []}`, not 404; extract callers treat it as
+    # a per-binding error.
     # `period` accepts the same forms as Source.period (int,
     # period-token, range, "_default" snapshot sentinel). Required.
     # `value_set_version` narrows multi-vintage results to a single
@@ -1750,8 +1752,12 @@ for caller-side disambiguation. Callers who already know which
 vintage to pick pass `value_set_version="..."` as a keyword
 argument to narrow the result to a single state. No exceptions are
 raised on ambiguity — the list shape is the contract; an empty
-list signals "no state covers the period" and callers decide policy
-(404 at the HTTP layer; per-binding error at extract).
+list signals "no state covers the period". HTTP callers see the
+same uniform shape: §9.5's catch-all returns 200 with
+`{states: []}` for "binding exists, no state at this period"; 404
+is reserved for the binding itself not existing in the catalog.
+Extract callers (bundle-build, kit-build) treat the empty case as
+a per-binding error against the source's declared period.
 
 ### 5.11 Glossary
 

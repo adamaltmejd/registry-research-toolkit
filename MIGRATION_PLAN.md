@@ -2,10 +2,19 @@
 
 Status: **A0 complete; A1-ready** (Model A design locked 2026-05-22; reg_monabundle carve-out shipped through PR #125).
 
+**Scoped, self-deleting tracker** — this file exists under the
+governance exception in `AGENTS.md` for multi-PR refactors spanning
+weeks. It is **not a permanent implementation tracker**: it gets
+deleted when stage A5.4 ships (Model A migration complete; v1.0
+tagged). After deletion, history of which step landed when lives in
+git like everything else; the design-level narrative survives in
+`REFACTOR_SPEC.md` §15 as a record of the sequencing.
+
 The PR-sized chunking for the Model A architectural rework. Each
 sub-step has a checkbox; tick when the PR merges. Use this file as
-the canonical live tracker for "where are we" — REFACTOR_SPEC.md §15
-captures the same plan at design-doc level but doesn't move per PR.
+the live cross-PR coordination doc for the duration of the refactor —
+REFACTOR_SPEC.md §15 captures the same plan at design-doc level but
+doesn't move per PR.
 
 ## How to use
 
@@ -343,6 +352,7 @@ ship first. Matches the gates diagram annotation below.
 - On Open-from-file: check `schema_version` and `reg_meta_version`; reject v0.x with blocking error
 - IndexedDB schema version stored alongside each project; reject mismatched on load
 - Clear migration message: "this project predates Model A. Re-author or load a v1.0+ file."
+- **Delete `MIGRATION_PLAN.md`** as part of this PR (or the v1.0.0 release PR that follows it). The tracker exists under the AGENTS.md governance exception for self-deleting refactor coordination docs; A5.4 is its completion gate. Per-step landing history survives in git; the design-level narrative survives in REFACTOR_SPEC.md §15.
 
 **Estimate**: 2 days.
 

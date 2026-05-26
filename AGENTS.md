@@ -12,7 +12,8 @@ Multi-package workspace for Swedish register research: catalog metadata, schema 
 
 # Governance
 - `DESIGN.md` per package documents design rationale and constraints.
-- No frozen specs or implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
+- No frozen specs or **permanent** implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
+- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker (e.g. `MIGRATION_PLAN.md` for the Model A refactor) for cross-PR coordination. The tracker is **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md notes for the same effort are still preferred where the scope is package-local.
 
 # Maturity and compatibility
 - Pre-v1, no external users — break things freely if it benefits the long-term design.
