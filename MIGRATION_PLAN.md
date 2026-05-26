@@ -318,7 +318,7 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 - OpenAPI codegen against new Pydantic models
 - SPA components updated for 4-seg FQIDs
 - New sub-endpoint integrations (states picker, replaced-by remediation, related-to siblings picker)
-- 409 (`variable_state_ambiguous`) handling
+- Multi-vintage `{states: [...]}` rendering on the canonical `?period=` response: when the list has length > 1 (LKF-shape true multi-vintage), SPA shows an edition picker keyed by `value_set_version_label`; on selection, refetches with `&value_set_version=<label>` to narrow to a single state. No 409 path — the uniform list contract makes multi-vintage just length-N rather than an error.
 
 **Estimate**: 5-7 days.
 
