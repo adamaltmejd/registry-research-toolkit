@@ -4050,10 +4050,17 @@ are negotiable for v1.
   The corpus is the single artifact that makes §6.8.0's
   `ValidationResult` shape coherent across runtimes.
 - **FQID property tests.** Round-trip (parse → emit → parse equals
-  identity); segment-count discrimination; reserved-slug rejection
-  (`class`, `_default`); `same_as` traversal terminates (cycle
-  detection); slug-immutability snapshot vs. last committed TOML
-  state.
+  identity); segment-count discrimination; **slot-specific** reserved-
+  slug rejection per §5.2 ("Reserved and disallowed slugs") — `class`
+  rejected in the provider slot, `_default` rejected in every slot
+  *except* the variant slot (where it's the canonical variant-less
+  literal — §5.3), HTTP-suffix tokens (`states`, `predecessors`,
+  `successors`, `related`, `lineage`, `lineage_warnings`) rejected in
+  the variable slot only. A blanket reject of `_default` would fail
+  legitimate Model A FQIDs like `sos/lss/_default/insatstyp` and is
+  explicitly forbidden by these tests; `same_as` traversal terminates
+  (cycle detection); slug-immutability snapshot vs. last committed
+  TOML state.
 - **Bundle determinism.** `reg_monabundle.build(spec)` is a pure
   function of its input: building the same spec twice yields a
   byte-identical `.py`. Test in CI on a fixed-content fixture.
