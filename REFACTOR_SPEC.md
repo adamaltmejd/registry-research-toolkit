@@ -3571,11 +3571,16 @@ The current **CVID picker** (tiered year/name/code-set scoring
 across multiple cvids per variable) becomes unnecessary under
 Model A: a binding FQID resolves to exactly one `variable` row,
 which has 1..N `variable_state` rows attached. Given a `period`,
-`Catalog.resolve_at(fqid, period)` picks a single state
-deterministically (or surfaces a structured ambiguity error in
-the rare LKF-shape case). Heuristic picking is replaced by
-explicit state resolution. The picker module is deleted, not
-moved (§15 step 7).
+`Catalog.resolve_at(fqid, period, *, value_set_version=None)`
+returns `list[VariableState]` (per §5.10): length 1 for the
+common point-query case, length N for range periods that cross
+state transitions and for the rare LKF-shape multi-vintage case
+where multiple states share validity at the same period — no
+ambiguity exception. Callers that already know the vintage pass
+`value_set_version=` to narrow to a single state; the SPA
+renders length-N lists as an edition picker (§9.5). Heuristic
+picking is replaced by explicit, list-based state resolution.
+The picker module is deleted, not moved (§15 step 7).
 
 ### Composite entity_key and time_key support
 
@@ -3943,7 +3948,7 @@ Five PRs. Can run in parallel with A3 after A2.6 lands.
 Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship first).
 
 - **A5.1 `reg_webapp` Pydantic models.** Update FastAPI endpoints to use `reg_schema` models directly (no separate wrapper layer). `reg_meta` library types still wrapped 1:1 for catalog responses (Pydantic boundary).
-- **A5.2 New API endpoints.** Implement `?period=...` query (polymorphic per §6.2, not year-only) and `/states`, `/predecessors`, `/successors`, `/related`, `/lineage` sub-endpoints per §9.5 — `/lineage` is a first-class v1 endpoint, not deferred. Suffixed routes must be declared before the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering test enforces this). Cloudflare edge-cache validation gate.
+- **A5.2 New API endpoints.** Implement `?period=...` query (polymorphic per §6.2, not year-only — wire format is a single query-string value per §9.5, not `deepObject`) and `/states`, `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings` sub-endpoints per §9.5 — `/lineage` and `/lineage_warnings` are first-class v1 endpoints, not deferred. Suffixed routes must be declared before the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering test enforces this for all six suffixes). Server-side input-validation gates per §16 (period allow-list canonicalization; per-segment FQID grammar rejection of `.`, `..`, `%`-encoded variants, NUL bytes). Cloudflare edge-cache validation gate.
 - **A5.3 SPA TypeScript regen.** OpenAPI codegen against new Pydantic models. SPA components updated for 4-seg FQIDs, new sub-endpoints, and the uniform `{states: [...]}` response shape on `?period=` (length-N rendering for range/multi-vintage cases).
 - **A5.4 SPA IndexedDB hard-reject for v0.x project files.** Per §9.7. Blocking error with clear message on load.
 
