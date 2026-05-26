@@ -316,11 +316,11 @@ def _bulk_resolve_all_registers(
     col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
     sql = (
-        "SELECT LOWER(va.kolumnnamn) AS col, vi.register_id "
+        "SELECT LOWER(va.delivery_column_name) AS col, vi.register_id "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        f"WHERE LOWER(va.kolumnnamn) IN ({placeholders}) "
-        "GROUP BY LOWER(va.kolumnnamn), vi.register_id"
+        f"WHERE LOWER(va.delivery_column_name) IN ({placeholders}) "
+        "GROUP BY LOWER(va.delivery_column_name), vi.register_id"
     )
     rows = conn.execute(sql, [c.lower() for c in col_list]).fetchall()
 
@@ -447,26 +447,26 @@ def _bulk_resolve(
     col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
     sql = (
-        "SELECT va.kolumnnamn, vi.register_id, vi.var_id, v.variabelnamn "
+        "SELECT va.delivery_column_name, vi.register_id, vi.var_id, v.name AS variable_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-        f"WHERE LOWER(va.kolumnnamn) IN ({placeholders})"
+        f"WHERE LOWER(va.delivery_column_name) IN ({placeholders})"
         f"{reg_filter} "
-        "GROUP BY LOWER(va.kolumnnamn), vi.register_id, vi.var_id "
-        "ORDER BY va.kolumnnamn, vi.register_id"
+        "GROUP BY LOWER(va.delivery_column_name), vi.register_id, vi.var_id "
+        "ORDER BY va.delivery_column_name, vi.register_id"
     )
     rows = conn.execute(sql, [c.lower() for c in col_list] + params).fetchall()
 
     # Keep first match per column name, keyed by lowercase for lookup
     result: dict[str, _ResolvedVar] = {}
     for r in rows:
-        key = r["kolumnnamn"].lower()
+        key = r["delivery_column_name"].lower()
         if key not in result:
             result[key] = _ResolvedVar(
                 register_id=r["register_id"],
                 var_id=r["var_id"],
-                variable_name=r["variabelnamn"],
+                variable_name=r["variable_name"],
             )
     return result
 
@@ -569,7 +569,7 @@ def _bulk_fetch_value_codes(
        (Kommun in 2019 vs 2020), the wrong year's labels are wrong, not
        merely under-precise.
     2. **Name/classification.** Tokenize ``column_name`` and the CVID's
-       ``(short_name, vardemangdsversion)`` strings; score by shared token
+       ``(short_name, value_set_version_label)`` strings; score by shared token
        count, with prefix containment as fallback. Any non-zero name
        signal accepts the CVID *regardless of code overlap* — name is the
        principled signal for which coding scheme (SUN2000 vs SUN2020).
@@ -600,7 +600,7 @@ def _bulk_fetch_value_codes(
     placeholders = ",".join("?" for _ in var_ids)
     cvid_rows = conn.execute(
         "SELECT vi.var_id, vi.register_id, vi.cvid, "
-        "vi.vardemangdsversion, c.short_name AS classification, "
+        "vi.value_set_version_label, c.short_name AS classification, "
         "rv.registerversionnamn AS regver_name "
         "FROM variable_instance vi "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
@@ -616,7 +616,7 @@ def _bulk_fetch_value_codes(
         cvid_year = _regver_year(regver_name) if regver_name else None
         cvid_meta[r["cvid"]] = (
             r["classification"],
-            r["vardemangdsversion"],
+            r["value_set_version_label"],
             cvid_year,
         )
 
@@ -626,7 +626,7 @@ def _bulk_fetch_value_codes(
         return {}
     placeholders = ",".join("?" for _ in all_cvids)
     value_rows = conn.execute(
-        "SELECT vi.cvid, vc.vardekod, vc.vardebenamning "
+        "SELECT vi.cvid, vc.code, vc.label "
         "FROM variable_instance vi "
         "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
@@ -635,8 +635,8 @@ def _bulk_fetch_value_codes(
     ).fetchall()
     cvid_to_codes: dict[int, dict[str, str]] = {}
     for r in value_rows:
-        if r["vardekod"] not in _SCB_TYPE_HINTS:
-            cvid_to_codes.setdefault(r["cvid"], {})[r["vardekod"]] = r["vardebenamning"]
+        if r["code"] not in _SCB_TYPE_HINTS:
+            cvid_to_codes.setdefault(r["cvid"], {})[r["code"]] = r["label"]
 
     # 3. Per request, score each register-matching CVID and pick the max.
     # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-

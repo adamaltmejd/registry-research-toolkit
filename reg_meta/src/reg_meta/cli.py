@@ -63,7 +63,7 @@ def _write_groups_payload(data: dict[str, Any], output_path: str | None) -> None
     n_inst = data.get("instance_count", 0)
     n_regs = data.get("register_count", 0)
     year = data.get("year")
-    name = data.get("variabelnamn") or data.get("input") or ""
+    name = data.get("variable_name") or data.get("input") or ""
 
     parts = [f"Variable '{name}'"]
     if year is not None:
@@ -80,8 +80,8 @@ def _write_groups_payload(data: dict[str, Any], output_path: str | None) -> None
         rc = group.get("register_count", 0)
         lines.append(f"[Group {i}] {ic} instance(s) across {rc} register(s)")
         for v in group.get("values", []):
-            kod = v.get("vardekod") or "(empty)"
-            label = v.get("vardebenamning", "")
+            kod = v.get("code") or "(empty)"
+            label = v.get("label", "")
             lines.append(f"  {kod:<8}  {label}")
         regs = group.get("registers", [])
         shown = regs[:cap]
@@ -979,7 +979,7 @@ def _group_instances_by_codes(
     instances: list[dict[str, Any]],
     *,
     input_value: str,
-    variabelnamn: str,
+    variable_name: str,
     year: int | None,
 ) -> dict[str, Any]:
     """Bucket instances by their (vardekod, vardebenamning) set so callers
@@ -988,9 +988,7 @@ def _group_instances_by_codes(
     """
     buckets: dict[tuple, list[dict[str, Any]]] = {}
     for inst in instances:
-        key = tuple(
-            sorted((v["vardekod"], v["vardebenamning"]) for v in inst["values"])
-        )
+        key = tuple(sorted((v["code"], v["label"]) for v in inst["values"]))
         buckets.setdefault(key, []).append(inst)
 
     # Largest group first; tie-break by the value-set key for determinism.
@@ -1002,9 +1000,7 @@ def _group_instances_by_codes(
         registers = sorted({m["register_name"] for m in members})
         groups_out.append(
             {
-                "values": [
-                    {"vardekod": code, "vardebenamning": label} for code, label in key
-                ],
+                "values": [{"code": code, "label": label} for code, label in key],
                 "instance_count": len(members),
                 "register_count": len(registers),
                 "registers": registers,
@@ -1026,7 +1022,7 @@ def _group_instances_by_codes(
 
     return {
         "input": input_value,
-        "variabelnamn": variabelnamn,
+        "variable_name": variable_name,
         "year": year,
         "value_set_count": len(groups_out),
         "instance_count": len(instances),
@@ -1113,11 +1109,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 # back to the multi-instance shape when codes truly
                 # disagree.
                 value_keys = {
-                    tuple(
-                        sorted(
-                            (v["vardekod"], v["vardebenamning"]) for v in i["values"]
-                        )
-                    )
+                    tuple(sorted((v["code"], v["label"]) for v in i["values"]))
                     for i in instances
                 }
                 regs = sorted({i["register_name"] for i in instances})
@@ -1129,7 +1121,7 @@ def _cmd_get_values(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                     data = _group_instances_by_codes(
                         instances,
                         input_value=multi["input"],
-                        variabelnamn=multi["variabelnamn"],
+                        variable_name=multi["variable_name"],
                         year=args.year,
                     )
             else:
@@ -1450,8 +1442,8 @@ def _write_payload(
             ]
         elif types == {"value"}:
             cols = [
-                "vardekod",
-                "vardebenamning",
+                "code",
+                "label",
                 "register_id",
                 "var_id",
                 "variable_name",
@@ -1473,9 +1465,13 @@ def _write_payload(
                 rows.append(
                     {
                         "register_id": r["register_id"],
-                        "register_name": r["registernamn"],
+                        # `get_register` returns the raw `register.name` /
+                        # `register_variant.name` columns from `SELECT *`; we
+                        # re-key them under the entity-qualified names the
+                        # CLI table renderer uses.
+                        "register_name": r["name"],
                         "regvar_id": v["regvar_id"],
-                        "variant_name": v.get("registervariantnamn", ""),
+                        "variant_name": v.get("name", ""),
                     }
                 )
         write_formatted(
@@ -1506,7 +1502,7 @@ def _write_payload(
                 rows.append(
                     {
                         "regvar_id": v.get("regvar_id", ""),
-                        "variant": v.get("registervariantnamn", ""),
+                        "variant": v.get("variant_name", ""),
                         "years": year_range,
                         "versions": len(v.get("versions", [])),
                         "columns": total_cols,
@@ -1534,14 +1530,14 @@ def _write_payload(
                                     "regvar_id": v.get("regvar_id", ""),
                                     "year": ver.get("year", ""),
                                     "alias": alias,
-                                    "variabelnamn": col.get("variabelnamn", ""),
+                                    "name": col.get("variable_name", ""),
                                     "source": col.get("source", ""),
                                     "var_id": col.get("var_id", ""),
                                 }
                             )
             write_formatted(
                 rows,
-                ["regvar_id", "year", "alias", "variabelnamn", "source", "var_id"],
+                ["regvar_id", "year", "alias", "name", "source", "var_id"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1556,8 +1552,8 @@ def _write_payload(
                             {
                                 "version": ver.get("version_name", ""),
                                 "var_id": col.get("var_id", ""),
-                                "variabelnamn": col.get("variabelnamn", ""),
-                                "datatyp": col.get("datatyp", ""),
+                                "name": col.get("variable_name", ""),
+                                "data_type": col.get("data_type", ""),
                                 "aliases": col.get("aliases", ""),
                                 "source": col.get("source", ""),
                                 "cvid": col.get("cvid", ""),
@@ -1568,8 +1564,8 @@ def _write_payload(
                 [
                     "version",
                     "var_id",
-                    "variabelnamn",
-                    "datatyp",
+                    "name",
+                    "data_type",
                     "aliases",
                     "source",
                     "cvid",
@@ -1588,10 +1584,10 @@ def _write_payload(
                     {
                         "register_id": v.get("register_id", ""),
                         "var_id": v.get("var_id", ""),
-                        "variabelnamn": v.get("variabelnamn", ""),
+                        "name": v.get("name", ""),
                         "version": inst.get("version_name", ""),
                         "cvid": inst.get("cvid", ""),
-                        "datatyp": inst.get("datatyp", ""),
+                        "data_type": inst.get("data_type", ""),
                         "aliases": ", ".join(inst.get("aliases", [])),
                         "values": inst.get("value_set_count", 0),
                     }
@@ -1601,10 +1597,10 @@ def _write_payload(
             [
                 "register_id",
                 "var_id",
-                "variabelnamn",
+                "name",
                 "version",
                 "cvid",
-                "datatyp",
+                "data_type",
                 "aliases",
                 "values",
             ],
@@ -1623,7 +1619,7 @@ def _write_payload(
         if isinstance(data, list):
             write_formatted(
                 data,
-                ["vardekod", "vardebenamning"],
+                ["code", "label"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1651,8 +1647,8 @@ def _write_payload(
                         "register": inst.get("register_name", ""),
                         "year": inst.get("year", ""),
                         "cvid": inst.get("cvid", ""),
-                        "vardekod": v.get("vardekod", ""),
-                        "vardebenamning": v.get("vardebenamning", ""),
+                        "code": v.get("code", ""),
+                        "label": v.get("label", ""),
                     }
                     if show_variant:
                         row["variant"] = inst.get("variant_name", "") or ""
@@ -1660,7 +1656,7 @@ def _write_payload(
             cols = ["register", "year"]
             if show_variant:
                 cols.append("variant")
-            cols += ["cvid", "vardekod", "vardebenamning"]
+            cols += ["cvid", "code", "label"]
             write_formatted(
                 rows,
                 cols,
@@ -1672,7 +1668,7 @@ def _write_payload(
     elif key == ("get", "datacolumns"):
         write_formatted(
             data if isinstance(data, list) else [],
-            ["kolumnnamn", "register_id", "register_name", "version_name"],
+            ["delivery_column_name", "register_id", "register_name", "version_name"],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,
@@ -1696,8 +1692,8 @@ def _write_payload(
                         "variant": v.get("variant_name", ""),
                         "change": "+",
                         "var_id": item["var_id"],
-                        "variabelnamn": item["variabelnamn"],
-                        "detail": f"{item['datatyp']}  {item.get('aliases', [])}",
+                        "name": item["variable_name"],
+                        "detail": f"{item['data_type']}  {item.get('aliases', [])}",
                     }
                 )
             for item in v.get("removed", []):
@@ -1706,8 +1702,8 @@ def _write_payload(
                         "variant": v.get("variant_name", ""),
                         "change": "-",
                         "var_id": item["var_id"],
-                        "variabelnamn": item["variabelnamn"],
-                        "detail": f"{item['datatyp']}  {item.get('aliases', [])}",
+                        "name": item["variable_name"],
+                        "detail": f"{item['data_type']}  {item.get('aliases', [])}",
                     }
                 )
             for item in v.get("changed", []):
@@ -1719,7 +1715,7 @@ def _write_payload(
                         "variant": v.get("variant_name", ""),
                         "change": "~",
                         "var_id": item["var_id"],
-                        "variabelnamn": item["variabelnamn"],
+                        "name": item["variable_name"],
                         "detail": details,
                     }
                 )
@@ -1727,16 +1723,16 @@ def _write_payload(
         if resolved:
             lines = ["Resolved variables:"]
             for rv in resolved:
-                if rv["input"].lower() != rv["variabelnamn"].lower():
+                if rv["input"].lower() != rv["variable_name"].lower():
                     lines.append(
-                        f"  {rv['input']} → {rv['variabelnamn']} (var_id {rv['var_id']})"
+                        f"  {rv['input']} → {rv['variable_name']} (var_id {rv['var_id']})"
                     )
                 else:
-                    lines.append(f"  {rv['variabelnamn']} (var_id {rv['var_id']})")
+                    lines.append(f"  {rv['variable_name']} (var_id {rv['var_id']})")
             write_to("\n".join(lines) + "\n\n", output_path)
         write_formatted(
             rows,
-            ["variant", "change", "var_id", "variabelnamn", "detail"],
+            ["variant", "change", "var_id", "name", "detail"],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,
@@ -1749,8 +1745,8 @@ def _write_payload(
         rows = []
         for r in data.get("registers", []):
             source_info = ""
-            if r["role"] == "consumer" and r.get("variabelregister_kalla"):
-                source_info = f"← {r['variabelregister_kalla']}"
+            if r["role"] == "consumer" and r.get("source_register_text"):
+                source_info = f"← {r['source_register_text']}"
             yr = r.get("year_range", [])
             year_str = f"{yr[0]}-{yr[1]}" if len(yr) == 2 else ""
             rows.append(
@@ -1862,7 +1858,7 @@ def _write_payload(
             write_to(header, output_path)
             write_formatted(
                 data.get("codes", []),
-                ["vardekod", "vardebenamning", "level"],
+                ["code", "label", "level"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,

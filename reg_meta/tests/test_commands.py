@@ -106,8 +106,8 @@ class TestSearch:
         assert code == 0
         value_results = [r for r in data["data"]["results"] if r["type"] == "value"]
         assert len(value_results) >= 1
-        assert value_results[0]["vardebenamning"] == "Man"
-        assert value_results[0]["vardekod"] == "1"
+        assert value_results[0]["label"] == "Man"
+        assert value_results[0]["code"] == "1"
 
     def test_search_years_filter(self, db_path: str):
         """--years filters to results with versions in the given range."""
@@ -179,7 +179,7 @@ class TestGetRegister:
     def test_by_id(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "register", "1"])
         assert code == 0
-        assert data["data"]["registernamn"] == "TESTREG"
+        assert data["data"]["name"] == "TESTREG"
         assert len(data["data"]["variants"]) == 1
 
     def test_by_name(self, db_path: str):
@@ -279,7 +279,7 @@ class TestGetSchema:
         assert code == 0
         for ver in data["data"]["variants"][0]["versions"]:
             for col in ver["columns"]:
-                name = col.get("variabelnamn", "")
+                name = col.get("variable_name", "")
                 aliases = col.get("aliases", "")
                 assert (
                     "Kön" in name
@@ -355,7 +355,7 @@ class TestGetVarinfo:
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         assert code == 0
-        assert data["data"]["variabelnamn"] == "Kön"
+        assert data["data"]["name"] == "Kön"
         assert data["data"]["register_id"] == 1
         assert len(data["data"]["instances"]) == 3  # CVIDs 1001, 1003, 1004
 
@@ -364,7 +364,7 @@ class TestGetVarinfo:
             ["--db", db_path, "get", "varinfo", "100", "--register", "1"]
         )
         assert code == 0
-        assert data["data"]["variabelnamn"] == "TestVar"
+        assert data["data"]["name"] == "TestVar"
 
     def test_cross_register(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "varinfo", "44"])
@@ -407,7 +407,7 @@ class TestGetValues:
         data, code = _run_json(["--db", db_path, "get", "values", "1001"])
         assert code == 0
         assert len(data["data"]) == 2
-        codes = {v["vardekod"] for v in data["data"]}
+        codes = {v["code"] for v in data["data"]}
         assert codes == {"1", "2"}
 
     def test_not_found(self, db_path: str):
@@ -431,7 +431,7 @@ class TestGetValues:
         )
         assert code == 0
         assert isinstance(data["data"], list)
-        codes = {v["vardekod"] for v in data["data"]}
+        codes = {v["code"] for v in data["data"]}
         assert codes == {"1", "2"}
 
     def test_by_variable_multi_year(self, db_path: str):
@@ -441,7 +441,7 @@ class TestGetValues:
         )
         assert code == 0
         payload = data["data"]
-        assert payload["variabelnamn"] == "Kön"
+        assert payload["variable_name"] == "Kön"
         instances = payload["instances"]
         # CVIDs 1001 (2020), 1003 (2021), 1004 (2022). 1004 has no value set
         # (Beskrivande-text sentinel) so its values list is empty but the
@@ -450,7 +450,7 @@ class TestGetValues:
         assert years == {2020, 2021, 2022}
         coded = {i["cvid"]: i["values"] for i in instances if i["values"]}
         assert 1001 in coded
-        assert {v["vardekod"] for v in coded[1001]} == {"1", "2"}
+        assert {v["code"] for v in coded[1001]} == {"1", "2"}
 
     def test_by_variable_year_collapses_across_registers(self, db_path: str):
         """variable + year across multiple registers collapses if codes match.
@@ -465,7 +465,7 @@ class TestGetValues:
         )
         assert code == 0
         assert isinstance(data["data"], list)
-        codes = {v["vardekod"] for v in data["data"]}
+        codes = {v["code"] for v in data["data"]}
         assert codes == {"1", "2"}
 
     def test_by_variable_unknown(self, db_path: str):
@@ -513,8 +513,8 @@ class TestGetValues:
                 "version_name": "2017",
                 "year": 2017,
                 "values": [
-                    {"vardekod": "1", "vardebenamning": "Man"},
-                    {"vardekod": "2", "vardebenamning": "Kvinna"},
+                    {"code": "1", "label": "Man"},
+                    {"code": "2", "label": "Kvinna"},
                 ],
             },
             {
@@ -527,8 +527,8 @@ class TestGetValues:
                 "version_name": "2017",
                 "year": 2017,
                 "values": [
-                    {"vardekod": "1", "vardebenamning": "Man"},
-                    {"vardekod": "2", "vardebenamning": "Kvinna"},
+                    {"code": "1", "label": "Man"},
+                    {"code": "2", "label": "Kvinna"},
                 ],
             },
             {
@@ -541,13 +541,13 @@ class TestGetValues:
                 "version_name": "2017",
                 "year": 2017,
                 "values": [
-                    {"vardekod": "1", "vardebenamning": "Pojke"},
-                    {"vardekod": "2", "vardebenamning": "Flicka"},
+                    {"code": "1", "label": "Pojke"},
+                    {"code": "2", "label": "Flicka"},
                 ],
             },
         ]
         out = _group_instances_by_codes(
-            instances, input_value="Kön", variabelnamn="Kön", year=2017
+            instances, input_value="Kön", variable_name="Kön", year=2017
         )
         assert out["value_set_count"] == 2
         assert out["instance_count"] == 3
@@ -558,7 +558,7 @@ class TestGetValues:
         assert out["groups"][0]["registers"] == ["RegA", "RegB"]
         assert out["groups"][1]["instance_count"] == 1
         assert out["groups"][1]["registers"] == ["RegC"]
-        labels = {v["vardebenamning"] for v in out["groups"][1]["values"]}
+        labels = {v["label"] for v in out["groups"][1]["values"]}
         assert labels == {"Pojke", "Flicka"}
 
     def test_groups_text_rendering(self, tmp_path):
@@ -569,7 +569,7 @@ class TestGetValues:
 
         payload = {
             "input": "Kön",
-            "variabelnamn": "Kön",
+            "variable_name": "Kön",
             "year": 2017,
             "value_set_count": 2,
             "instance_count": 14,
@@ -577,8 +577,8 @@ class TestGetValues:
             "groups": [
                 {
                     "values": [
-                        {"vardekod": "1", "vardebenamning": "Man"},
-                        {"vardekod": "2", "vardebenamning": "Kvinna"},
+                        {"code": "1", "label": "Man"},
+                        {"code": "2", "label": "Kvinna"},
                     ],
                     "instance_count": 12,
                     "register_count": 12,
@@ -586,8 +586,8 @@ class TestGetValues:
                 },
                 {
                     "values": [
-                        {"vardekod": "1", "vardebenamning": "Pojke"},
-                        {"vardekod": "2", "vardebenamning": "Flicka"},
+                        {"code": "1", "label": "Pojke"},
+                        {"code": "2", "label": "Flicka"},
                     ],
                     "instance_count": 2,
                     "register_count": 1,
@@ -623,19 +623,17 @@ class TestGetValues:
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 1, 'R1')"
+            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'R1')"
         )
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (2, 1, 'R2')"
+            "INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'R2')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "INSERT INTO register_variant (regvar_id, register_id, name) "
             "VALUES (10, 1, 'V1')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "INSERT INTO register_variant (regvar_id, register_id, name) "
             "VALUES (11, 2, 'V2')"
         )
         conn.execute(
@@ -645,10 +643,10 @@ class TestGetValues:
             "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 50, 'AppleVar')"
+            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 50, 'AppleVar')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (2, 51, 'BananaVar')"
+            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 51, 'BananaVar')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -701,19 +699,19 @@ class TestGetValues:
 
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (1, 1, 'RegAdult')"
         )
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (2, 1, 'RegChild')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "INSERT INTO register_variant (regvar_id, register_id, name) "
             "VALUES (10, 1, 'Adults')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn) "
+            "INSERT INTO register_variant (regvar_id, register_id, name) "
             "VALUES (11, 2, 'Children')"
         )
         conn.execute(
@@ -723,10 +721,10 @@ class TestGetValues:
             "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (1, 44, 'Kön')"
+            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 44, 'Kön')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (2, 44, 'Kön')"
+            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 44, 'Kön')"
         )
         # Two cvids, two distinct value sets. member_hash must be 32 bytes.
         conn.execute(
@@ -779,8 +777,7 @@ class TestGetValues:
         assert payload["register_count"] == 2
         # Two groups, each with one instance from one register.
         labels = {
-            tuple(sorted(v["vardebenamning"] for v in g["values"]))
-            for g in payload["groups"]
+            tuple(sorted(v["label"] for v in g["values"])) for g in payload["groups"]
         }
         assert labels == {("Kvinna", "Man"), ("Flicka", "Pojke")}
 
@@ -794,7 +791,7 @@ class TestGetDatacolumns:
     def test_by_name(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "datacolumns", "Kön"])
         assert code == 0
-        col_names = {r["kolumnnamn"] for r in data["data"]}
+        col_names = {r["delivery_column_name"] for r in data["data"]}
         assert "Kon" in col_names or "KON" in col_names
 
     def test_register_filter(self, db_path: str):
@@ -810,7 +807,7 @@ class TestGetDatacolumns:
             ["--db", db_path, "get", "datacolumns", "TestVar", "--register", "TESTREG"]
         )
         assert code == 0
-        col_names = {r["kolumnnamn"] for r in data["data"]}
+        col_names = {r["delivery_column_name"] for r in data["data"]}
         assert "TestCol" in col_names
         assert "TestKolumn" in col_names
 
@@ -987,8 +984,8 @@ class TestGetDiff:
         variants = data["data"]["variants"]
         assert len(variants) >= 1
         v = variants[0]
-        added_names = {a["variabelnamn"] for a in v["added"]}
-        removed_names = {r["variabelnamn"] for r in v["removed"]}
+        added_names = {a["variable_name"] for a in v["added"]}
+        removed_names = {r["variable_name"] for r in v["removed"]}
         assert "ÅÄÖVar" in added_names
         assert "TestVar" in removed_names
 
@@ -1015,7 +1012,9 @@ class TestGetDiff:
         assert "Kön" in data["data"]["unchanged"]
         # resolved_variables shows the mapping
         resolved = data["data"]["resolved_variables"]
-        assert any(r["variabelnamn"] == "Kön" and r["input"] == "Kön" for r in resolved)
+        assert any(
+            r["variable_name"] == "Kön" and r["input"] == "Kön" for r in resolved
+        )
 
     def test_variable_filter_by_alias(self, db_path: str):
         """Kon is a column alias for Kön — resolved_variables shows the mapping."""
@@ -1039,7 +1038,9 @@ class TestGetDiff:
         assert data["data"]["variants"] == []
         assert "Kön" in data["data"]["unchanged"]
         resolved = data["data"]["resolved_variables"]
-        assert any(r["input"] == "Kon" and r["variabelnamn"] == "Kön" for r in resolved)
+        assert any(
+            r["input"] == "Kon" and r["variable_name"] == "Kön" for r in resolved
+        )
 
     def test_multiple_variables(self, db_path: str):
         """Multiple --variable values filter for all specified variables."""
@@ -1063,7 +1064,7 @@ class TestGetDiff:
         assert code == 0
         # TestVar removed in 2022 → should appear in variants
         v = data["data"]["variants"][0]
-        removed_names = {r["variabelnamn"] for r in v["removed"]}
+        removed_names = {r["variable_name"] for r in v["removed"]}
         assert "TestVar" in removed_names
         # Kön unchanged everywhere
         assert "Kön" in data["data"]["unchanged"]
@@ -1181,7 +1182,7 @@ class TestGetLineage:
         assert len(regs) == 2
         roles = {r["register_name"]: r["role"] for r in regs}
         # TESTREG has no provenance → unknown (no source fields set)
-        # OTHERREG has variabelregister_kalla=TESTREG → consumer
+        # OTHERREG has source_register_text=TESTREG → consumer
         assert roles["OTHERREG"] == "consumer"
 
     def test_source_resolution(self, db_path: str):
@@ -1192,7 +1193,7 @@ class TestGetLineage:
         ][0]
         # TESTREG should resolve to register_id "1"
         assert otherreg["source_register_id"] == 1
-        assert otherreg["variabelregister_kalla"] == "TESTREG"
+        assert otherreg["source_register_text"] == "TESTREG"
 
     def test_no_provenance_is_unknown(self, db_path: str):
         """UniqueVar has no provenance fields → role = unknown."""

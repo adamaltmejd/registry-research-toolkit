@@ -372,17 +372,19 @@ def derive_period(version_name: str | None) -> str | None:
     return match[0] if match is not None else None
 
 
-def derive_variable_slug(kolumnnamn: str | None) -> str | None:
-    """Derive a variable slug from a SCB kolumnnamn (§5.3 auto-slug rule).
+def derive_variable_slug(delivery_column_name: str | None) -> str | None:
+    """Derive a variable slug from a SCB delivery column name (§5.3 auto-slug
+    rule). The input is `variable_alias.delivery_column_name` — the §5.11
+    rename of what SCB ships as `kolumnnamn` (e.g. `Kon`, `PersonNr`).
 
     Lowercases, strips diacritics via NFKD ASCII fold, replaces runs of
     non-alphanumerics with single hyphens. Returns ``None`` when the result
     is empty or fails the slug grammar.
     """
-    if not kolumnnamn:
+    if not delivery_column_name:
         return None
     folded = (
-        unicodedata.normalize("NFKD", kolumnnamn)
+        unicodedata.normalize("NFKD", delivery_column_name)
         .encode("ascii", "ignore")
         .decode("ascii")
         .lower()

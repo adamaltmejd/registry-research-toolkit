@@ -1310,12 +1310,12 @@ class TestPrecheckCli:
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn, slug) "
+            "INSERT INTO register (register_id, provider_id, name, slug) "
             "VALUES (1, 1, 'LISA', 'lisa')"
         )
         conn.execute(
             "INSERT INTO register_variant (regvar_id, register_id, slug, "
-            "registervariantnamn) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
+            "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
             "INSERT INTO classification (short_name, name, version, slug) "
@@ -1570,8 +1570,7 @@ class TestSeedEmptyDb:
         seed_providers(conn)
         # Only sos has a register; scb is empty.
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 2, 'PAR')"
+            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 2, 'PAR')"
         )
         body = seed_provider_toml(conn, "scb")
         assert "no registers found" in body
@@ -1725,12 +1724,12 @@ class TestPrecheckCliGrowOnly:
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn, slug) "
+            "INSERT INTO register (register_id, provider_id, name, slug) "
             "VALUES (1, 1, 'LISA', 'lisa')"
         )
         conn.execute(
             "INSERT INTO register_variant (regvar_id, register_id, slug, "
-            "registervariantnamn) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
+            "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
             "INSERT INTO classification (short_name, name, version, slug) "
@@ -1985,22 +1984,22 @@ def _add_single_variant_register(
     *,
     register_id: int,
     regvar_id: int,
-    registernamn: str,
-    registervariantnamn: str,
+    name: str,
+    variant_name: str,
     variant_slug: str | None,
     provider_id: int = 1,
 ) -> None:
     """Insert a register with exactly one variant for iter-candidate tests."""
     conn.execute(
-        "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+        "INSERT INTO register (register_id, provider_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
-        (register_id, provider_id, "todo", registernamn),
+        (register_id, provider_id, "todo", name),
     )
     conn.execute(
         "INSERT INTO register_variant "
-        "(regvar_id, register_id, slug, registervariantnamn) "
+        "(regvar_id, register_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
-        (regvar_id, register_id, variant_slug, registervariantnamn),
+        (regvar_id, register_id, variant_slug, variant_name),
     )
 
 
@@ -2012,7 +2011,7 @@ class TestIterDefaultSlugCandidates:
         # Add a second variant under the same register → no longer single-variant.
         conn.execute(
             "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, registervariantnamn) "
+            "(regvar_id, register_id, slug, name) "
             "VALUES (?, ?, ?, ?)",
             (11, 1, "second", "Företag"),
         )
@@ -2031,24 +2030,24 @@ class TestIterDefaultSlugCandidates:
             conn,
             register_id=42,
             regvar_id=124,
-            registernamn="Nybörjare i Komvux",
-            registervariantnamn="Nybörjare i Komvux",
+            name="Nybörjare i Komvux",
+            variant_name="Nybörjare i Komvux",
             variant_slug="nyborjare-i-komvux",
         )
         _add_single_variant_register(
             conn,
             register_id=60,
             regvar_id=168,
-            registernamn="Konjunkturstatistik, löner för statlig sektor (KLS)",
-            registervariantnamn="Konjunkturstatistik, löner för statlig sektor",
+            name="Konjunkturstatistik, löner för statlig sektor (KLS)",
+            variant_name="Konjunkturstatistik, löner för statlig sektor",
             variant_slug=None,
         )
         _add_single_variant_register(
             conn,
             register_id=346,
             regvar_id=1158,
-            registernamn="Hushållens boende",
-            registervariantnamn="Individer",
+            name="Hushållens boende",
+            variant_name="Individer",
             variant_slug="individer",
         )
         cands = list(iter_default_slug_candidates(conn))
@@ -2252,8 +2251,8 @@ def _make_seedable_db() -> sqlite3.Connection:
         conn,
         register_id=42,
         regvar_id=124,
-        registernamn="Nybörjare i Komvux",
-        registervariantnamn="Nybörjare i Komvux",
+        name="Nybörjare i Komvux",
+        variant_name="Nybörjare i Komvux",
         variant_slug=None,
     )
     conn.commit()
@@ -2290,16 +2289,16 @@ class TestMaterializeSameAsEdges:
         conn = build_slugged_db()
         # Add second variable + binding under the same register/variant/version.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "INSERT INTO variable (register_id, var_id, name) "
             "VALUES (1, 88, 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
             "VALUES (1002, 1, 10, 100, 88, 'int')"
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Civilstand')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1002, 'Civilstand')"
         )
         conn.commit()
         return conn
@@ -2384,21 +2383,21 @@ class TestMaterializeSameAsEdges:
         # materialization must refuse.
         conn = build_slugged_db()
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'CivStat')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'CivStat')"
         )
         conn.commit()
         # Add a second variable so the target slot exists.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "INSERT INTO variable (register_id, var_id, name) "
             "VALUES (1, 88, 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
             "VALUES (1002, 1, 10, 100, 88, 'int')"
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1002, 'Civilstand')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1002, 'Civilstand')"
         )
         conn.commit()
         slug_dir = self._slug_dir_with_same_as(
@@ -2476,16 +2475,16 @@ class TestMaterializeSameAsEdges:
         conn = self._db_with_two_variables()
         # Add a third variable so we have a distinct second target.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) "
+            "INSERT INTO variable (register_id, var_id, name) "
             "VALUES (1, 99, 'Födelseår')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
             "VALUES (1003, 1, 10, 100, 99, 'int')"
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1003, 'FodAr')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1003, 'FodAr')"
         )
         conn.commit()
         slug_dir = self._slug_dir_with_same_as(

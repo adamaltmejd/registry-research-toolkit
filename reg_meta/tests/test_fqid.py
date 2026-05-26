@@ -349,7 +349,7 @@ class TestFactories:
 
 class TestVariableSlugDerivation:
     @pytest.mark.parametrize(
-        "kolumnnamn,expected",
+        "delivery_column_name,expected",
         [
             ("Kon", "kon"),
             ("Kön", "kon"),
@@ -361,8 +361,8 @@ class TestVariableSlugDerivation:
             ("trim--edges--", "trim-edges"),
         ],
     )
-    def test_derives_expected(self, kolumnnamn: str, expected: str) -> None:
-        assert derive_variable_slug(kolumnnamn) == expected
+    def test_derives_expected(self, delivery_column_name: str, expected: str) -> None:
+        assert derive_variable_slug(delivery_column_name) == expected
 
     @pytest.mark.parametrize("empty", [None, "", "   ", "---", "_"])
     def test_empty_or_punctuation_yields_none(self, empty: str | None) -> None:

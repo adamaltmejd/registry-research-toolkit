@@ -3,7 +3,7 @@
 Covers name-pattern helpers (``is_known_id``, ``is_rtb_named_categorical``),
 date helpers (``DATE_FORMATS``, ``detect_date_format``), and the
 classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
-``_reg_meta_datatyp_kind``, ``reg_meta_implied_type``, ``_reg_meta_lookup``,
+``_reg_meta_data_type_kind``, ``reg_meta_implied_type``, ``_reg_meta_lookup``,
 ``_validate_discover_payload``).
 """
 
@@ -15,7 +15,7 @@ from reg_monabundle.runtime.classify import (
     RTB_NAMED_CATEGORICAL,
     RegMetaSignal,
     _classify,
-    _reg_meta_datatyp_kind,
+    _reg_meta_data_type_kind,
     _reg_meta_lookup,
     _sql_type_kind,
     _validate_discover_payload,
@@ -142,11 +142,11 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
     assert _sql_type_kind(sql_type) == expected
 
 
-# -- _reg_meta_datatyp_kind ------------------------------------------------
+# -- _reg_meta_data_type_kind ------------------------------------------------
 
 
 @pytest.mark.parametrize(
-    "datatyp, expected",
+    "data_type, expected",
     [
         ("bigint", "numeric"),
         ("INT", "numeric"),
@@ -160,8 +160,8 @@ def test_sql_type_kind(sql_type: str | None, expected: str | None):
         (None, None),
     ],
 )
-def test_reg_meta_datatyp_kind(datatyp: str | None, expected: str | None):
-    assert _reg_meta_datatyp_kind(datatyp) == expected
+def test_reg_meta_data_type_kind(data_type: str | None, expected: str | None):
+    assert _reg_meta_data_type_kind(data_type) == expected
 
 
 # -- reg_meta_implied_type -------------------------------------------------
@@ -171,14 +171,16 @@ def test_reg_meta_implied_type_value_codes_or_classification_means_categorical()
     assert (
         reg_meta_implied_type(
             RegMetaSignal(
-                datatyp_kind=None, classification_short_name=None, has_value_codes=True
+                data_type_kind=None,
+                classification_short_name=None,
+                has_value_codes=True,
             )
         )
         == "categorical"
     )
     assert (
         reg_meta_implied_type(
-            RegMetaSignal(datatyp_kind=None, classification_short_name="SUN2000")
+            RegMetaSignal(data_type_kind=None, classification_short_name="SUN2000")
         )
         == "categorical"
     )
@@ -187,13 +189,13 @@ def test_reg_meta_implied_type_value_codes_or_classification_means_categorical()
 def test_reg_meta_implied_type_storage_only_returns_storage():
     assert (
         reg_meta_implied_type(
-            RegMetaSignal(datatyp_kind="numeric", classification_short_name=None)
+            RegMetaSignal(data_type_kind="numeric", classification_short_name=None)
         )
         == "numeric"
     )
     assert (
         reg_meta_implied_type(
-            RegMetaSignal(datatyp_kind="date", classification_short_name=None)
+            RegMetaSignal(data_type_kind="date", classification_short_name=None)
         )
         == "date"
     )
@@ -203,7 +205,7 @@ def test_reg_meta_implied_type_no_evidence_returns_none():
     assert reg_meta_implied_type(None) is None
     assert (
         reg_meta_implied_type(
-            RegMetaSignal(datatyp_kind=None, classification_short_name=None)
+            RegMetaSignal(data_type_kind=None, classification_short_name=None)
         )
         is None
     )
@@ -213,18 +215,20 @@ def test_reg_meta_implied_type_no_evidence_returns_none():
 
 
 _REG_META_CLASSIFIED = RegMetaSignal(
-    datatyp_kind=None, classification_short_name="SUN2000"
+    data_type_kind=None, classification_short_name="SUN2000"
 )
 _REG_META_VALUE_CODES = RegMetaSignal(
-    datatyp_kind="numeric", classification_short_name=None, has_value_codes=True
+    data_type_kind="numeric", classification_short_name=None, has_value_codes=True
 )
 _REG_META_TEXT_NO_EVIDENCE = RegMetaSignal(
-    datatyp_kind=None, classification_short_name=None
+    data_type_kind=None, classification_short_name=None
 )
 _REG_META_NUMERIC_SIG = RegMetaSignal(
-    datatyp_kind="numeric", classification_short_name=None
+    data_type_kind="numeric", classification_short_name=None
 )
-_REG_META_DATE_SIG = RegMetaSignal(datatyp_kind="date", classification_short_name=None)
+_REG_META_DATE_SIG = RegMetaSignal(
+    data_type_kind="date", classification_short_name=None
+)
 
 
 @pytest.mark.parametrize(
@@ -321,11 +325,11 @@ class _FakeConn:
 
 
 def _row(
-    lower_name, datatyp=None, short_name=None, value_set_id=None, regver_name=None
+    lower_name, data_type=None, short_name=None, value_set_id=None, regver_name=None
 ):
     return {
         "lower_name": lower_name,
-        "datatyp": datatyp,
+        "data_type": data_type,
         "short_name": short_name,
         "value_set_id": value_set_id,
         "regver_name": regver_name,
@@ -335,12 +339,12 @@ def _row(
 def test_reg_meta_lookup_strips_project_prefix():
     """Both raw and prefix-stripped names go into the IN clause so
     P1105_LopNr resolves to LopNr in reg_meta."""
-    conn = _FakeConn([_row("lopnr", datatyp="bigint")])
+    conn = _FakeConn([_row("lopnr", data_type="bigint")])
     result = _reg_meta_lookup(conn, {"P1105_LopNr"}, [34])
     # SQL contains both forms in the IN list
     assert "lopnr" in conn.last_params
     assert "p1105_lopnr" in conn.last_params
-    assert result["lopnr"].datatyp_kind == "numeric"
+    assert result["lopnr"].data_type_kind == "numeric"
 
 
 def test_reg_meta_lookup_aggregates_classification_majority():
@@ -368,16 +372,16 @@ def test_reg_meta_lookup_has_value_codes_any_wins():
     assert result["alkod"].n_value_sets == 1
 
 
-def test_reg_meta_lookup_first_non_null_datatyp_wins():
+def test_reg_meta_lookup_first_non_null_data_type_wins():
     conn = _FakeConn(
         [
-            _row("foo", datatyp=None),
-            _row("foo", datatyp="bigint"),
-            _row("foo", datatyp="varchar"),
+            _row("foo", data_type=None),
+            _row("foo", data_type="bigint"),
+            _row("foo", data_type="varchar"),
         ]
     )
     result = _reg_meta_lookup(conn, {"foo"}, [34])
-    assert result["foo"].datatyp_kind == "numeric"
+    assert result["foo"].data_type_kind == "numeric"
 
 
 def test_reg_meta_lookup_empty_inputs_short_circuit():

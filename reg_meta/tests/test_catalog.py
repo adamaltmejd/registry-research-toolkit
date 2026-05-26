@@ -56,7 +56,7 @@ class TestResolveRegister:
         assert isinstance(r, ResolvedRegister)
         assert r.register_id == 1
         assert r.fqid.provider == "scb"
-        assert r.registernamn == "LISA"
+        assert r.name == "LISA"
 
     def test_wrong_provider_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -85,7 +85,7 @@ class TestResolveVariant:
         assert isinstance(r, ResolvedRegisterVariant)
         assert r.fqid.variant == "_default"
         assert r.regvar_id == 50
-        assert r.registervariantnamn == "LSS default"
+        assert r.name == "LSS default"
 
     def test_default_variant_synthesized_for_variant_less_register(self) -> None:
         # §5.1: a register with zero register_variant rows still resolves
@@ -102,7 +102,7 @@ class TestResolveVariant:
         assert r.fqid.variant == "_default"
         assert r.regvar_id is None
         assert r.register_id == 5
-        assert r.registervariantnamn is None
+        assert r.name is None
 
     def test_default_variant_not_synthesized_when_real_variants_exist(self) -> None:
         # LISA has a real variant (`individer-15plus`), so `_default` against
@@ -161,14 +161,14 @@ class TestResolveBinding:
         assert r.cvid == 1001
         assert r.var_id == 44
         assert r.fqid.variable == "kon"
-        assert r.kolumnnamn == "Kon"
+        assert r.delivery_column_name == "Kon"
 
     def test_swedish_kolumnnamn_folds_to_ascii_slug(self) -> None:
         # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (§5.2).
-        conn = build_slugged_db(kolumnnamn="Kön")
+        conn = build_slugged_db(delivery_column_name="Kön")
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
         assert isinstance(r, ResolvedVariableBinding)
-        assert r.kolumnnamn == "Kön"
+        assert r.delivery_column_name == "Kön"
 
     def test_unknown_variable_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
@@ -201,20 +201,20 @@ class TestResolveBindingLineage:
         )
         # Consumer register (LISA) shares slug "kon" so lineage matches.
         conn.executescript(
-            f"INSERT INTO register (register_id, provider_id, slug, registernamn) "
+            f"INSERT INTO register (register_id, provider_id, slug, name) "
             f"VALUES (2, 1, 'lisa', 'LISA');"
             f"INSERT INTO register_variant "
-            f"(regvar_id, register_id, slug, registervariantnamn) "
+            f"(regvar_id, register_id, slug, name) "
             f"VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
             f"INSERT INTO register_version "
             f"(regver_id, regvar_id, slug, registerversionnamn) "
             f"VALUES (200, 20, '{period}', 'LISA {period}');"
-            f"INSERT INTO variable (register_id, var_id, variabelnamn, source_register_id) "
+            f"INSERT INTO variable (register_id, var_id, name, source_register_id) "
             f"VALUES (2, 99, 'Kön', 1);"
             f"INSERT INTO variable_instance "
-            f"(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
+            f"(cvid, register_id, regvar_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
-            f"INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (5001, 'Kon');"
+            f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
         )
         conn.commit()
         return conn
@@ -385,7 +385,7 @@ class TestEditions:
             regvar_id=10,
             regver_id=101,
             var_id=44,
-            kolumnnamn="Kon",
+            delivery_column_name="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -409,7 +409,7 @@ class TestEditions:
             regvar_id=11,
             regver_id=110,
             var_id=44,
-            kolumnnamn="Kon",
+            delivery_column_name="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -428,7 +428,7 @@ class TestEditions:
         # binding doesn't surface twice.
         conn = build_slugged_db()
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kön')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'Kön')"
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -439,12 +439,12 @@ class TestEditions:
 
     def test_kolumnnamn_diacritic_fold(self) -> None:
         # "Kön" folds to "kon"; the query argument is the slug, not the raw.
-        conn = build_slugged_db(kolumnnamn="Kön")
+        conn = build_slugged_db(delivery_column_name="Kön")
         editions = Catalog(conn).editions(
             provider="scb", register="lisa", variable="kon"
         )
         assert len(editions) == 1
-        assert editions[0].kolumnnamn == "Kön"
+        assert editions[0].delivery_column_name == "Kön"
 
     def test_consumer_side_binding_included(self) -> None:
         # §5.6: LISA's consumer-side binding of RTB's Kön appears in
@@ -472,7 +472,7 @@ class TestEditions:
             regvar_id=20,
             regver_id=200,
             var_id=99,
-            kolumnnamn="Kon",
+            delivery_column_name="Kon",
             via_source_id=5000,
         )
         conn.commit()
@@ -525,7 +525,7 @@ class TestEditions:
             regvar_id=20,
             regver_id=200,
             var_id=99,
-            kolumnnamn="Kon",
+            delivery_column_name="Kon",
         )
         conn.commit()
         editions = Catalog(conn).editions(
@@ -761,7 +761,7 @@ class TestSameAsTraversal:
             regvar_id=11,
             regver_id=101,
             var_id=44,
-            kolumnnamn="Kon",
+            delivery_column_name="Kon",
         )
         # Two edges from civilstand-legacy → kon, narrowed to *different*
         # variants on the source side. Both edges land on kon, but only

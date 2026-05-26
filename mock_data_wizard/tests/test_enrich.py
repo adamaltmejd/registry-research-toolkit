@@ -157,13 +157,13 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(reg_meta_db: Pat
     # Add a second register, same var_id=44, different CVID with conflicting codes.
     conn.executescript(
         """
-        INSERT INTO register (register_id, provider_id, registernamn) VALUES (2, 1, 'OTHER');
-        INSERT INTO register_variant (regvar_id, register_id, registervariantnamn,
-            registervariantsekretess) VALUES (20, 2, 'Other variant', 'Nej');
+        INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'OTHER');
+        INSERT INTO register_variant (regvar_id, register_id, name)
+            VALUES (20, 2, 'Other variant');
         INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
             VALUES (200, 20, '1991');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (2001, 2, 20, 200, 44, 'int', '1', 'Kön', '1');
         """
     )
@@ -220,11 +220,11 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
         INSERT INTO classification (id, short_name, name)
             VALUES (2, 'SUN2020', 'Svensk utbildningsnomenklatur 2020');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
             classification_id)
             VALUES (1101, 1, 10, 100, 44, 'int', '4', 'SUN2000', '4', 1);
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva,
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
             classification_id)
             VALUES (1102, 1, 10, 100, 44, 'int', '4', 'SUN2020', '4', 2);
         """
@@ -281,7 +281,7 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path)
     conn.executescript(
         """
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1201, 1, 10, 100, 44, 'char', '1', 'FamStF', '1');
         """
     )
@@ -326,7 +326,7 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(reg_meta_db: Path
     conn.executescript(
         """
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1002, 1, 10, 100, 44, 'int', '1', 'Kön', '1');
         """
     )
@@ -376,7 +376,7 @@ def test_name_score_matches_diacritic_stripped_form():
 
 
 def test_name_score_matches_uppercase_abbreviation():
-    # Column SsykYrkeskod against CVID with vardemangdsversion "SSYK2012":
+    # Column SsykYrkeskod against CVID with value_set_version_label "SSYK2012":
     # tokens [ssyk, yrkeskod] vs [ssyk, 2012] share 'ssyk'.
     score = _name_score("SsykYrkeskod", "SSYK2012")
     assert score[0] >= 1
@@ -506,13 +506,13 @@ def _seed_year_cvids(conn) -> None:
         INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
             VALUES (103, 10, '2025');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1801, 1, 10, 101, 44, 'int', '1', 'Kön', '1');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1802, 1, 10, 102, 44, 'int', '1', 'Kön', '1');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1803, 1, 10, 103, 44, 'int', '1', 'Kön', '1');
         """
     )
@@ -609,10 +609,10 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
         INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
             VALUES (202, 10, '2025');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1901, 1, 10, 201, 44, 'int', '1', 'V18', '1');
         INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
-            var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva)
+            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1902, 1, 10, 202, 44, 'int', '1', 'V25', '1');
         """
     )

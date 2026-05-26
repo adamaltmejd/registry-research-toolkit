@@ -1219,13 +1219,13 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
         db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
         conn = open_db(db_path)
         cur = conn.execute("""
-            SELECT DISTINCT va.kolumnnamn
+            SELECT DISTINCT va.delivery_column_name
             FROM variable_alias va
             JOIN variable_instance vi ON vi.cvid = va.cvid
             JOIN register_version rv ON rv.regver_id = vi.regver_id
             JOIN register_variant rvt ON rvt.regvar_id = rv.regvar_id
             JOIN register r ON r.register_id = rvt.register_id
-            WHERE r.registernamn LIKE '%LISA%'
+            WHERE r.name LIKE '%LISA%'
         """)
         cols = {row[0] for row in cur.fetchall()}
         conn.close()
