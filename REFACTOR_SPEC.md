@@ -574,7 +574,11 @@ SCB IDs occupy `[0, 2^32)`; SOS IDs occupy `[2^62, 2^63)`. Visual
 diagnostic + clean namespace. Future providers get their own
 namespace bits (FK could set bit 61 → `[2^61, 2^62)`, etc.).
 Bit 63 is left clear throughout so every ID fits in SQLite's signed
-`INTEGER` without sign-bit weirdness.
+`INTEGER` without sign-bit weirdness. The namespace property
+(bit-62 set, bit-63 clear, disjoint from SCB's `[0, 2^32)` band)
+is pinned by a property test in §16; cross-provider ID collision
+is arithmetically impossible by construction, so query-time
+disambiguation does not need a provider check.
 
 **Why this architecture pays off.** Adding a new provider becomes:
 write an adapter at
@@ -3333,6 +3337,22 @@ handler would catch the request and treat `states` as a sub-
 endpoint of the parent variant. Build-time slug curation rejects
 these tokens; CI re-checks against the current TOMLs.
 
+**Path-traversal rejection.** Every segment of `{fqid:path}` is
+validated against the slug grammar
+`^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (or the `class` / `_default`
+literals per §5.2) **before** the handler resolves the FQID
+against reg_meta. The grammar excludes `.`, `..`, `%`, `\`, and
+any `/` other than the structural separator — so canonical FQIDs
+cannot encode path traversal, and percent-encoded variants
+(`%2e%2e`, `%2f`, `%00`) fail the per-segment check after
+Starlette URL-decodes the path. Bad input returns 422 with no DB
+hit. §16's "Server-side input-validation gates" pins this as a
+concrete parametrized test (path-traversal payloads against
+every `{fqid:path}` route — canonical, `/states`, `/lineage`,
+etc. — asserting 422 and zero SQL executed). The `?period=`
+query parameter is canonicalized through the same allow-list
+discipline (§16).
+
 **Documentation** (unchanged from v0.11 — `reg-meta-docs` backed)
 
 | Method | Path | Purpose |
@@ -4083,6 +4103,44 @@ are negotiable for v1.
   `swecov`, …) has a golden response for `/api/context` and a
   shallow `/api/catalog` walk. Run on every container start; a
   failing smoke test halts the deploy.
+- **Server-side input-validation gates** (security boundary —
+  applies wherever the webapp accepts a string that becomes part
+  of a DB lookup or a filesystem path). All four are concrete
+  tests, not aspirational rules:
+  - **`?period=` canonicalization (A5.2).** The FastAPI handler
+    parses the raw query value into a typed `Period` struct
+    (ISO date / ISO date range / snapshot sentinel) **before any
+    reg_meta lookup**. The parser is an allow-list against the
+    four canonical forms in §9.5; everything else returns 422
+    and never touches SQL. A parametrized test feeds malformed
+    values — `?period=2020'; DROP TABLE--`, `?period=../../etc/passwd`,
+    `?period=` with embedded NULs, `?period=` containing URL-
+    encoded slashes — and asserts (a) HTTP 422, (b) zero SQL
+    executed (verified via a SQLite trace hook on the test DB).
+  - **FQID route-segment validation (A5.2).** Each segment of
+    `{fqid:path}` must match the slug grammar
+    `^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (or the `class` / `_default`
+    literals per §5.2). The grammar excludes `.`, `..`, `%`, `\`,
+    and any `/` other than the structural separator — canonical
+    FQIDs cannot encode path traversal. The handler validates
+    each segment before resolving to a catalog node; bad input
+    → 422 with no DB hit. Parametrized test feeds path-traversal
+    payloads (`scb/../etc/passwd`, `scb/lisa/%2e%2e/kon`,
+    `scb/lisa/individer-15plus/kon%00.json`) and asserts 422.
+  - **Provider-ID namespace property (A4.2).** A property test
+    asserts `mint(...)` lands in `[2^62, 2^63)` for 10k random
+    inputs (full 63-bit signed-int range, never sets bit 63),
+    and that the SCB ID space `[0, 2^32)` is provably disjoint
+    from the SOS space — no cross-provider collision check is
+    needed at query time because the bit-63-clear / bit-62-set
+    namespacing makes overlap arithmetically impossible.
+  - **Provenance DB confinement (A4.2).** Three assertions
+    pinning §4.4's "maintainer-only, not shipped" rule: (1) the
+    bundle amalgamator's import allow-list rejects any module
+    that opens `reg_meta.provenance.db`; (2) the FastAPI route
+    introspection test asserts no handler references the
+    provenance DB path; (3) the deployment image build excludes
+    `reg_meta.provenance.db*` from the catalog volume mount.
 - **PII scanner regression corpus.** Synthetic fixtures with
   embedded PII shapes (personnummer patterns, address-like text,
   free-text comment fields) that `reg_monabundle.scan` **must

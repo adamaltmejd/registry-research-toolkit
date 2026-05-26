@@ -251,6 +251,8 @@ Five PRs. Can run in parallel with A3 after A2.6 lands.
 - SOS ID mint scheme implemented (BLAKE2b, top-bit-namespaced)
 - Provenance DB populated by adapters
 - `.prev` rotation verified in CI
+- **Property test: namespace invariant** (§16) — 10k random `mint(...)` inputs all land in `[2^62, 2^63)` (bit 62 set, bit 63 clear); SCB ID band `[0, 2^32)` is provably disjoint
+- **Provenance DB confinement test** (§16) — bundle amalgamator's import allow-list rejects modules that open `reg_meta.provenance.db`; FastAPI route introspection asserts no handler references the provenance path; deployment image excludes `reg_meta.provenance.db*` from the catalog volume mount
 
 **Estimate**: 2-3 days.
 
@@ -310,6 +312,7 @@ Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship fir
 - Suffixed routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order for all six suffixes
 - ETag scheme verified to include the `?period` query in the cache key
 - Cloudflare edge-cache validation gate: small load test through Cloudflare confirms slash-bearing FQID paths still work cleanly with the new shapes
+- **Server-side input-validation gates** (§16): (a) `?period=` parser is an allow-list — malformed values (SQL-injection probes, path-traversal probes, embedded NULs) return 422 with zero SQL executed (verified via SQLite trace hook); (b) per-segment FQID grammar check rejects `.`, `..`, `%`-encoded variants, and any non-slug-grammar input with 422 and no DB hit. Parametrized tests cover both.
 
 **Estimate**: 4-5 days.
 
