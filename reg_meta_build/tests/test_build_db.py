@@ -1355,3 +1355,133 @@ class TestSameAsBuildIntegration:
             assert (var_count, cls_count) == (0, 0)
         finally:
             conn.close()
+
+
+class TestOperationalDefinitionFold:
+    """A1.1 / §5.11: SCB ships `VariabelOperationell_definition` as a refinement
+    over `Variabelbeskrivning`. The Model A schema drops the dedicated column
+    and folds the operational definition into `description` when it's distinct
+    and non-empty. These tests lock the fold contract — empty op stays empty,
+    duplicate op is skipped, distinct op appends with a blank-line separator,
+    and a re-built DB doesn't double-fold (the `op not in desc` substring guard).
+    """
+
+    @staticmethod
+    def _build_and_fetch(tmp_path: Path, *, vardesc: str, varopdef: str) -> str:
+        """Build a minimal DB with one variable carrying the given description
+        and operational definition; return the persisted `variable.description`.
+        """
+        ri_row = _ri_row(
+            "FOLDREG",
+            "Foldregistret",
+            "Folding test",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "FoldVar",
+            "Definition",
+            vardesc,
+            varopdef,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "FoldCol",
+            "int",
+            "1",
+            "9001",
+            "999",
+            "9001",
+            "9001",
+            "777",
+        )
+        # `REGISTERINFORMATION_ROWS` carries the baseline fixtures the build
+        # pipeline expects to find (registers referenced by `unika_summary`
+        # etc.). Append our row instead of replacing — the build is strict.
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [ri_row]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            row = conn.execute(
+                "SELECT description FROM variable "
+                "WHERE register_id = 999 AND var_id = 777"
+            ).fetchone()
+            return row["description"]
+        finally:
+            conn.close()
+
+    def test_empty_operational_definition_leaves_description_untouched(
+        self, tmp_path: Path
+    ):
+        """Empty `VariabelOperationell_definition` → description unchanged."""
+        result = self._build_and_fetch(
+            tmp_path, vardesc="Plain description", varopdef=""
+        )
+        assert result == "Plain description"
+
+    def test_distinct_operational_definition_appended_with_blank_line(
+        self, tmp_path: Path
+    ):
+        """Non-empty op_def distinct from desc → appended with `\\n\\n` separator."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Plain description",
+            varopdef="Operational refinement",
+        )
+        assert result == "Plain description\n\nOperational refinement"
+
+    def test_duplicate_operational_definition_not_appended(self, tmp_path: Path):
+        """When `op == desc` exactly, the fold is skipped (no `desc\\n\\ndesc`)."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Same content",
+            varopdef="Same content",
+        )
+        assert result == "Same content"
+
+    def test_substring_operational_definition_not_appended(self, tmp_path: Path):
+        """When `op` is already a substring of `desc`, the fold must skip —
+        otherwise rebuilds (which can see a `description` already carrying
+        the merged operational text) would accumulate duplicated tails.
+        This is the `op not in desc` guard. Pipe-delimited CSV doesn't
+        carry literal newlines, so we use a single-line description that
+        embeds the operational text verbatim — the substring relationship
+        is what the guard actually checks."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Operational refinement is part of this longer description",
+            varopdef="Operational refinement",
+        )
+        assert result == "Operational refinement is part of this longer description"
+
+    def test_operational_definition_with_empty_description(self, tmp_path: Path):
+        """When desc is empty but op is set, the merged value is just op
+        (no leading `\\n\\n`)."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="",
+            varopdef="Operational refinement",
+        )
+        assert result == "Operational refinement"

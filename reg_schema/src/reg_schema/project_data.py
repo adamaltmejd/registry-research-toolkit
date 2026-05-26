@@ -49,8 +49,9 @@ class Column:
     validator, not at construction.
 
     ``display_name`` is optional: when absent, reg_meta-backed
-    consumers resolve the default from ``variable_alias.kolumnnamn``
-    for the binding. Reg_meta-free consumers (bundle on MONA, kit
+    consumers resolve the default from
+    ``variable_alias.delivery_column_name`` for the binding. Reg_meta-
+    free consumers (bundle on MONA, kit
     runs) never see unresolved ``display_name`` — bundle build and
     kit build materialize defaults before emitting their artifacts.
     """

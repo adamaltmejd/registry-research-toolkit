@@ -895,8 +895,11 @@ def _import_registerinformation(
         # §5.11: operational definition folds into description when distinct
         # + non-empty (e.g. SCB's "OperationellDef" carries a refinement over
         # the plain definition). Use a newline-separated concat that survives
-        # round-trips through CSV / JSON.
-        if op and op != desc:
+        # round-trips through CSV / JSON. The `op not in desc` guard catches
+        # the partial-substring case as well as exact duplicates — important
+        # when a rebuild re-imports a CSV whose `description` already carries
+        # the previously-merged operational text.
+        if op and op not in desc:
             var["description"] = f"{desc}\n\n{op}".strip() if desc else op
     conn.executemany(
         "INSERT INTO variable (register_id, var_id, name, definition, description, "
