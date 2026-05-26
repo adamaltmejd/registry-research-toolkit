@@ -163,6 +163,7 @@ Can run in parallel with A2.3/A2.4 once A2.1 lands.
 - Drop ~1,264 `register_version` slug entries from `scb.toml`
 - Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3, but the slug exists from now)
 - Drop the `register_version` table entirely. Per-edition prose (mätinformation, descriptions) goes to reg-meta-docs at variant level with chronological Markdown sections (build pipeline writes these). Per-edition build artifacts (approval dates, etc.) go to provenance DB, joined to `variable_state` by `state_id` in the sibling provenance artifact — no SCB-specific column on `variable_state` (universal-schema rule, §5.1).
+- **`variable_same_as` / `classification_same_as` SQL + resolver rewrite** (not just a DDL column drop). Drop `a_period` / `b_period` columns from DDL **and** rewrite `_resolve_binding_via_same_as` + `_resolve_classification_via_same_as` in `reg_meta/catalog.py` to remove the empty-string-sentinel period-fallback path (current query: `AND (a_period = '' OR a_period = ?)` and `n_period = row["b_period"] or period`). Cache key in `_var_same_as_source_keys` shrinks from 3-tuple `(provider, register, variable)` — already period-free — but the loaded-row tuples drop `period`. Dedup step for existing TOML same_as edges whose `_period` columns carry non-empty strings: collapse to a single 4-seg edge keyed only on variant; emit a build-time warning if collapsing produces a contradiction (same (a, b) variant pair with different intended targets across periods — should not occur in curated TOML but verify).
 - Update Webapp catalog endpoints: 4-seg binding leaves, new sub-endpoints (§9.5)
 - Old API endpoints (v0.x `register_version` leaves) removed; clients break per pre-v1 policy
 - UNFROZEN sentinel is active; the slug TOML rewrite is a regular commit
@@ -175,6 +176,7 @@ Can run in parallel with A2.3/A2.4 once A2.1 lands.
 
 - Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write)
 - Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone)
+- **Bump `SCHEMA_VERSION` to `"4.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"3.3.0"`). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` (two callsites) pick up the constant automatically. `require_compatible_db()` rejects v3.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.x) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — A2.1–A2.6 keep v3.x manifests for build-pipeline dual-write.
 - Bump `reg_meta` to v1.0.0; tag the release
 - UNFROZEN snapshot is regenerated (still UNFROZEN — curation polish continues; UNFROZEN deletes at v1 publication, not at v1.0.0 internal tag)
 
@@ -196,7 +198,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - TimePoint gains range form `{"range": {"from", "to"}}`
 - New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)
 - Rename: `fqid_register_version_mismatch` → `fqid_register_variant_mismatch`
-- Rewrite test corpus (`minimal`, `with_panel`, `composite_entity_key`, `with_namespaced_block`, `invalid_root_array`)
+- Rewrite test corpus (`minimal`, `with_panel`, `composite_entity_key`, `with_namespaced_block`, `invalid_root_array`) **and `load_test_200col`** — the 200-column bundle-size-gate fixture (`reg_schema/test_corpus/load_test_200col/{input.json, expected_ValidationResult.json, build.py}`) is on v0.11 5-seg grammar with `register_version` + `columns` and will fail the A0.3 1 MB bundle-size CI gate the moment `reg_schema` flips to Model A. Rewrite it in lockstep; `build.py` regenerates the fixture from a Model A template
 - Bump pinned `reg_meta_version` in steward catalogs to `reg_meta/v1.0.0`
 - JSON schema codegen produces SPA TypeScript types
 
@@ -223,7 +225,11 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 ### [ ] A3.4 — Bundle amalgamator update
 
 - Add `reg_monabundle/build/spec_loader.py` with `source_to_loadedspec(pydantic_source) -> LoadedSpec` — lives in `build/`, not `runtime/`, so the bundle never imports Pydantic (the §9.6 boundary). Called by the bundle builder before embedding JSON.
-- `reg_monabundle/runtime/spec.py` `LoadedSpec` fields updated to Model A shape: `register_variant` (3-seg FQID), `period` (polymorphic), `bindings` with `variable` (4-seg). PR #123 shipped LoadedSpec under v0.x grammar; this is the breaking shape evolution.
+- `reg_monabundle/runtime/spec.py` `LoadedSpec` fields updated to Model A shape. PR #123 shipped LoadedSpec under v0.x grammar (`_build_source` currently reads `data["register_version"]`); this is the breaking shape evolution. **Field map** (drives both the `spec_loader.py` converter and `_build_source` rewrite):
+  - `Source.register_version: str` (4-seg) → `Source.register_variant: str` (3-seg) + `Source.period` (polymorphic per §6.2: int / period-token / range / `_default` snapshot)
+  - `Source.columns: tuple[Column, ...]` → `Source.bindings: tuple[Binding, ...]`
+  - `Column.name: str` (5-seg) → `Binding.variable: str` (4-seg)
+  - `Column.value_set: str` → `Binding.value_set` keyed by 2-seg classification FQID (`class/<slug>`)
 - Amalgamator's `_AMALGAMATED_PACKAGE_PREFIXES` excludes `reg_schema` (Pydantic stays out of bundle)
 - Bundle's `LoadedSpec` parsing reads `register_variant` + `period` from embedded JSON
 - `LoadedSpec` deserialization is plain `@dataclass` machinery — no re-validation on MONA (§6.8.1, §9.6)
@@ -386,9 +392,13 @@ With parallelism across stages where dependencies allow, calendar time is closer
 
     # Or scope to known FQID call sites:
     rg "Catalog\.(resolve|resolve_at|states|predecessors|successors|related|replaced|lineage|lineage_warnings)\("
+
+    # SQL column references for the same_as period drop + register_version table drop +
+    # via_source_id removal — the string-literal FQID grep above misses raw SQL.
+    rg "(a_period|b_period|register_version_id|via_source_id|register_version)" --type py --type sql
     ```
 
-    Combine both passes — the first finds string-literal FQIDs in fixtures/configs; the second finds programmatic callsites that may construct FQIDs at runtime.
+    Combine all three passes — the first finds string-literal FQIDs in fixtures/configs; the second finds programmatic callsites that may construct FQIDs at runtime; the third finds hardcoded column names in SQL queries that the FQID greps would skip.
 4. **A4.3 SOS adapter discovers workbook-shape variations we haven't covered.** Mitigation: process all 13 workbooks against the adapter before merging; failures surface as `IRWarning` rows. New workbook variations would extend the adapter, not gate it.
 5. **A5 webapp work lags A3 by several weeks.** Mitigation: webapp can adopt incrementally; some endpoints can land before others. The hard reject on v0.x SPA files is the only end-of-stage gate.
 
