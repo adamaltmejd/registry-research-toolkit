@@ -240,7 +240,11 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 
 ## Stage A4 — Adapter refactor + SOS
 
-Five PRs. Can run in parallel with A3 after A2.6 lands.
+Five PRs. Can run in parallel with A3 after **A2.7** lands. (A4.1
+moves SCB ingest out of `db.py`'s `_import_*` functions; doing this
+before A2.7 drops `variable_instance` would force the adapter to
+dual-write both schemas. A2.7's cleanup is therefore the start gate,
+matching the gates diagram below.)
 
 ### [ ] A4.1 — SCB adapter refactor
 
@@ -301,7 +305,10 @@ Five PRs. Can run in parallel with A3 after A2.6 lands.
 
 ## Stage A5 — Webapp + SPA
 
-Four PRs. Lands after A2 + A3. A4 not required (SCB-only deployment can ship first).
+Four PRs. **Starts after A3.1 lands** (only the Pydantic models from
+A3.1 are load-bearing for A5.1; A3.2/A3.3/A3.4 are consumer-side and
+don't block webapp work). A4 not required — SCB-only deployment can
+ship first. Matches the gates diagram annotation below.
 
 ### [ ] A5.1 — `reg_webapp` Pydantic models
 
@@ -370,13 +377,15 @@ consumer use, not for A2.4.
 
 | Stage | PRs | Cumulative effort (single maintainer) |
 |---|---|---|
-| A0 | 3 | ~8 days |
+| A0 | 3 | ~5-9 days |
 | A1 | 3 | ~10-14 days (parallelizable) |
 | A2 | 7 | ~32-44 days |
-| A3 | 4 | ~11-15 days (parallelizable after A3.1) |
-| A4 | 5 | ~19-26 days |
+| A3 | 4 | ~12-16 days (parallelizable after A3.1) |
+| A4 | 5 | ~20-28 days |
 | A5 | 4 | ~14-18 days |
-| **Total** | **26 PRs (incl. parallelism)** | **~95-125 days** |
+| **Total** | **26 PRs (incl. parallelism)** | **~93-129 days** |
+
+Numbers are **person-day sums of the sub-step ranges**, not calendar days — A1's three PRs are independent, so calendar time at that stage is `max(5-7, 2-3, 3-4) = 5-7 days`, while the table reports the 10-14 sum. The 8-12-week calendar estimate below is the parallelism-discounted figure for a single maintainer; mixing the two would double-count the savings.
 
 With parallelism across stages where dependencies allow, calendar time is closer to **8-12 weeks** for a single maintainer focused on this work.
 
@@ -421,7 +430,7 @@ UNFROZEN sentinel deletion happens at v1 *public release* (not at v1.0.0 interna
 |---|---|---|---|---|
 | #78–#82, #85–#87, #89, #104, #112 | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / variant / variable / classification slug curation; same_as table shape; consumer-side binding concept; FTS layer | 5-seg FQID grammar → 4-seg (period slot dropped); ~1,264 `register_version` slug entries deleted; `same_as.*_period` columns dropped; `register_version` table dropped entirely | A2.6, A2.7 |
 | #103, #105, #108 | `reg_meta_build` package carve-out (mechanical split: scaffold, db.py, doc_db.py, CLI split, CI workflow) | Package boundary intact; CLI binaries (`reg-meta`, `reg-meta-build`); test helpers | Column names → English (data values unchanged); SCB-Swedish column renames | A1.1 (rename only) |
-| #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 5 new codes; bump to `schema_version: "2.0.0"` | A3.1 |
+| #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 6 new codes (per A3.1: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable`); bump to `schema_version: "2.0.0"` | A3.1 |
 | #116 | `mock_data_wizard` adopts `project_data.json` (config rename, fixture corpus rewrite for v0.11 5-seg shape) | Config-rename machinery; fixture-rewrite tooling; v0.x test fixtures' overall structure | Source schema break propagated through mdw; fixture corpus rewritten again to Model A shape; `_build_source` reads new fields | A3.2 |
 | #113 | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-seg FQID + `period`; bindings replace columns; namespaced-block keys 4-seg | A3.1 (paired with reg_schema migration) |
 | #120, #121, #122, #123, #124, #125 | `reg_monabundle` carve-out — phases 1, 2a, 2b, 2c, 3 + follow-ups (scaffold, validator relocation, bundle builder, PII scanner, runtime modules + LoadedSpec, 1 MB bundle-size gate) | Survives entirely; this is the Stage A0 work | (none) — A0 complete | A0 ✅ |

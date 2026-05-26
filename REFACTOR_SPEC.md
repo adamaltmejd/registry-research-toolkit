@@ -659,8 +659,9 @@ reg-meta-docs; build artifacts live in the provenance DB.
 | `register` | `register_id`, `provider_id`, `slug`, `name`, `description`, `purpose` | LISA, RTB, PAR. Slug-identified per-provider. Lean column set; provider-specific metadata that doesn't fit lives in docs (§5.8). |
 | `variant` | `variant_id`, `register_id`, `slug`, `name`, `description`, `panel_entity_key`, `panel_time_key`, `panel_time_grain` | LISA/individer-15plus, RTB/folkbokforda-personer, SOS/par/sluten-vard. SCB `registervariant`, SOS `deldatamängd`. Doesn't nest further. `_default` slug for variant-less registers (SOS LSS, BU, SOL). Panel-template columns declare natural panel structure (§5.3). |
 | `variable` | `(register_id, variant_id, variable_id)` PK, `slug`, `name`, `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`, `source_register_id`, `source_register_text` | Slug-identified, **variant-scoped**. Identity is `(provider, register, variant, variable_slug)`. "Kön in LISA/individer-15plus" and "Kön in LISA/individer-16plus" are different variables; the empirical equivalence (same SCB `var_id`) is captured via auto-emitted `variable_same_as` edges (§5.5). Cross-register concept-merging is curation via the same mechanism. Operational definitions inline into `description` at ingest when distinct. |
-| `variable_state` | `state_id`, FK to variable, `valid_from`, `valid_to` (ISO 8601 `YYYY-MM-DD` TEXT, both NOT NULL), `data_type`, `data_length`, `value_set_id`, `value_set_version_label` | Per-era shape; a variable has 1..N states. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). Storage is always full-date `YYYY-MM-DD`. Coarser inputs are expanded at ingest into ranges: SCB year `2018` → `valid_from = '2018-01-01'`, `valid_to = '2018-12-31'`; SCB year-month `2018-03` → `valid_from = '2018-03-01'`, `valid_to = '2018-03-31'`; period tokens like `HT2020` → the corresponding ISO date range. Open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL). Because every stored value is a full date, lexical string comparison is chronologically correct and intersection uses plain `max`/`min`. |
-| `value_set` | `value_set_id`, `member_hash`, `classification_id` (nullable) | Content-addressed dedup of code memberships. When `classification_id` is set, the value_set is a (possibly year-projected) subset of a named classification. When NULL, the value_set is anonymous (ad-hoc codes for this variable). |
+| `variable_state` | `state_id`, FK to variable, `valid_from`, `valid_to` (ISO 8601 `YYYY-MM-DD` TEXT, both NOT NULL), `data_type`, `data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label` | Per-era shape; a variable has 1..N states. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). `delivery_column_name` is the **denormalized latest alias for the era** (convenience for `/states` API and ResolvedVariable rendering); the full alias history lives in `variable_alias` (next row). Storage is always full-date `YYYY-MM-DD`. Coarser inputs are expanded at ingest into ranges: SCB year `2018` → `valid_from = '2018-01-01'`, `valid_to = '2018-12-31'`; SCB year-month `2018-03` → `valid_from = '2018-03-01'`, `valid_to = '2018-03-31'`; period tokens like `HT2020` → the corresponding ISO date range. Open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL). Because every stored value is a full date, lexical string comparison is chronologically correct and intersection uses plain `max`/`min`. |
+| `variable_alias` | `(state_id, delivery_column_name)` PK, FK to `variable_state` | History table: every delivery column name attached to a `variable_state`. SCB pseudonymizes identifier columns at delivery by prefixing `LopNr_`; `variable_alias` carries the un-prefixed name and any cross-edition variants. A single state can have multiple aliases (rare; cross-edition spelling drift). `variable_state.delivery_column_name` is the most-recent alias for the era, denormalized for query convenience; `variable_alias` is the authoritative history. |
+| `value_set` | `value_set_id`, `member_hash`, `classification_id` (nullable) | Content-addressed dedup of code memberships. When `classification_id` is set, the value_set is a (possibly year-projected) subset of a named classification. When NULL, the value_set is anonymous (ad-hoc codes for this variable). Code entries themselves live in the `value_code` auxiliary table — `(value_set_id, code, label)`, inherited shape from v0.x (`värdekod` → `code`, `värdebenämning` → `label`); Model A doesn't restructure it. |
 | `classification` | `classification_id`, `slug`, `name`, `publisher`, `version`, etc. | Named versioned vocabulary: SUN2020, ICD10, ICD11, LKF. Provider-independent. Version baked into the slug (`sun2020`, `icd10`, `lkf2007`), not a separate FQID slot. |
 
 Plus three orthogonal relationship tables:
@@ -679,7 +680,13 @@ Plus the lineage edge (§5.6) materializing composite-source bindings:
 
 `population` and `object_type` remain orthogonal context layers,
 attached to variable states (or to variants where appropriate); they
-do not participate in the FQID.
+do not participate in the FQID. Both are auxiliary tables — shape
+inherited from v0.x (`population(population_id, name, definition,
+comment, date_range)`, `object_type(object_type_id, name,
+definition)`, both variant-scoped). Model A renames their columns
+per the §5.11 Swedish→English mapping (`populationnamn` → `name`,
+`populationdefinition` → `definition`, etc.) but does not
+restructure them; they are not core entities and have no FQID slot.
 
 **Universal English column names with native data.** Universal
 column names (`name`, `title`, `description`, `data_type`, ...) carry
@@ -2423,7 +2430,7 @@ typed shape, defined in `reg_schema`:
 class ValidationIssue:
     level: Literal["error", "warning", "info"]
     code: str         # stable identifier, e.g. "fqid_outside_steward_catalog"
-    path: str         # JSON pointer into project_data.json, e.g. "/sources/lisa_2018/columns/3/name"
+    path: str         # JSON pointer into project_data.json, e.g. "/sources/0/bindings/3/variable" (integer index into the sources array, not source.name)
     message: str      # human-readable
 
 @dataclass(frozen=True)
@@ -3078,10 +3085,13 @@ it. `reg_mockdata` consumes JSON only — no reg_meta dep, fully offline.
 `project_data.codes.json` regardless of how they were declared in
 the spec. Classification FQIDs (`class/sun2020`) are
 **dereferenced** at kit-build into inline entries; ad-hoc inline
-sets are passed through unchanged. The same lookup path
-(`codes_by_fqid[<binding-or-classification-fqid>]`) covers both
-post-kit. This is what makes `reg_mockdata` reg_meta-free and the
-kit reproducible years later.
+sets are passed through unchanged. Lookup paths mirror §6.6's
+nested structure: classification-backed bindings read
+`codes.classifications[<class FQID>]`; ad-hoc bindings read
+`codes.sources[<source.name>][<binding FQID>]`. `reg_mockdata`
+picks the path based on whether the binding carries a `value_set`
+FQID. This is what makes `reg_mockdata` reg_meta-free and the kit
+reproducible years later.
 
 ### Reproducibility
 
