@@ -12,7 +12,8 @@ Multi-package workspace for Swedish register research: catalog metadata, schema 
 
 # Governance
 - `DESIGN.md` per package documents design rationale and constraints.
-- No frozen specs or implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
+- No frozen specs or **permanent** implementation trackers — design decisions live in DESIGN.md, implementation history lives in git.
+- **Exception**: a multi-PR refactor spanning weeks may keep a single root-level tracker (e.g. `MIGRATION_PLAN.md` for the Model A refactor) for cross-PR coordination. The tracker is **scoped and self-deleting**: it ships with an explicit completion gate (e.g. "deleted when stage X ships"), gets deleted at that gate, and never outlives the refactor it tracks. Per-package DESIGN.md notes for the same effort are still preferred where the scope is package-local.
 
 # Maturity and compatibility
 - Pre-v1, no external users — break things freely if it benefits the long-term design.
@@ -36,12 +37,13 @@ Multi-package workspace for Swedish register research: catalog metadata, schema 
 ## Stack
 Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design and §15 for the migration sequence.
 
-- **Library packages** (`reg_meta`, `reg_schema`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
-  - Modeling: `@dataclass`. **No Pydantic on library surfaces** — keeps them importable from any context (Jupyter, scripts, MONA bundle).
+- **Library packages** (`reg_meta`, `reg_monabundle`, `reg_mockdata`, `reg_meta_build`):
+  - Modeling: `@dataclass`. **No Pydantic on these library surfaces** — keeps them importable from any context (Jupyter, scripts, MONA bundle).
   - Database: stdlib `sqlite3` with raw SQL; DDL string in `db.py`; `SCHEMA_VERSION` constant gates compatibility; regenerate-not-migrate. **No SQLAlchemy/Alembic** — DB is read-mostly, single-backend, mmap'd; an ORM would add overhead with no benefit.
   - Analytical queries: DuckDB where needed.
   - CLI: argparse. No click/typer.
-- **Web backend** (`reg_webapp/backend/`, in-flight): FastAPI + Pydantic REST. Pydantic models wrap library dataclasses 1:1 at the response boundary — Pydantic lives nowhere else.
+- **`reg_schema`** (authoring/validation surface — exception to the no-Pydantic rule): Pydantic v2. Reasons: (1) it's the canonical structural validator for `project_data.json` — Pydantic's declarative field/model validators are the right tool; (2) FastAPI in `reg_webapp/backend/` consumes `reg_schema` models directly as response models, killing the 1:1 wrapper drift surface; (3) `model_json_schema()` gives the SPA's TypeScript codegen a free, always-correct schema source. Runtime escape valve: the MONA bundle does **not** ship Pydantic; bundle-build runs the Pydantic validator as the gate, then converts validated `Source` → dataclass `LoadedSpec` (`reg_monabundle.runtime.spec`) which the bundle amalgamates instead. See REFACTOR_SPEC §9.6.
+- **Web backend** (`reg_webapp/backend/`, in-flight): FastAPI + Pydantic REST. `reg_schema` Pydantic models are response models directly (no wrapper layer). For `reg_meta` (dataclass-based) responses, the backend defines per-endpoint Pydantic response wrappers — the only place 1:1 wrappers remain.
 - **Web frontend** (`reg_webapp/frontend/`, in-flight): Svelte 5 + Vite + TypeScript, bun-managed. TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Docker-requiring tests.
 - **Type checking**: `uvx ty check` (Astral, beta). Advisory in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
