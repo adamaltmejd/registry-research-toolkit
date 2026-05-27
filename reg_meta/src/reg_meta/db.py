@@ -22,7 +22,10 @@ from .errors import EXIT_CONFIG, RegMetaError
 # names that no longer exist. `_check_schema_compat` treats major
 # mismatches as hard breaks, so v3.x DBs are rejected up-front with a
 # clear "rebuild the DB" message instead of failing later with cryptic
-# `no such column` SQL errors.
+# `no such column` SQL errors. A1.2's additive sensitivity columns
+# ride on the 4.0.0 break — no further bump needed; a DB built by
+# this code reports schema_version=4.0.0 and includes is_sensitive /
+# is_identifier.
 SCHEMA_VERSION = "4.0.0"
 DB_FILENAME = "reg_meta.db"
 
