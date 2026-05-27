@@ -66,35 +66,34 @@ Continues in-flight work from REFACTOR_SPEC v0.x §15 step 5. No Model A changes
 
 Three independent PRs; can land in any order, but all must complete before A2.
 
-### [ ] A1.1 — Universal English column rename
+### [x] A1.1 — Universal English column rename (PR #129, 12955f9)
 
-- Rewrite DDL in `reg_meta_build/src/reg_meta_build/db.py`: every Swedish column name renamed per §5.11 vocabulary glossary. Column **values** unchanged (provider-native strings preserved).
-- Sweep `reg_meta/`: ~30 query callsites (Catalog methods, search, info). Mostly `SELECT registernamn` → `SELECT name`.
-- Sweep test fixtures: ~50 CSV fixtures, ~30 SQLite fixture files
-- Update `reg_meta_build/fqid_slugs/scb.toml` documentation if any field references shifted
-- `populate_slugs` populates `slug` columns under their new names (no schema diff)
-- Tests rewritten in parallel; CI runs `ruff format --check`, `pytest`, type checks
+- DDL in `reg_meta_build/src/reg_meta_build/db.py` rewritten: ~21 column renames + 7 drops per §5.11 vocabulary glossary. Column **values** unchanged (provider-native strings preserved).
+- Swept ~30 query callsites in `reg_meta/src/reg_meta/{queries,catalog,cli,fqid}.py`. `SELECT registernamn` → `SELECT r.name`, etc. Public dict-key contract preserved where intentional (`r.name AS register_name` in JOINs).
+- Cross-package sweep also covered `mock_data_wizard/`, `reg_monabundle/runtime/classify.py` (MONA-bundled runtime — renamed internal Python identifiers `_reg_meta_datatyp_kind` → `_reg_meta_data_type_kind`, `RegMetaSignal.datatyp_kind` → `data_type_kind`), and `scripts/parse_lisa_docs.py`.
+- Operational-definition fold: `VariabelOperationell_definition` is no longer a dedicated column; folded into `variable.description` with `\n\n` separator when distinct + non-empty. Substring guard (`op not in desc`) ensures rebuild idempotency.
+- `SCHEMA_VERSION` bumped 3.3.0 → **4.0.0** (major break; pre-A1.1 DBs rejected up-front).
+- `_cmd_get_values` SQL discriminator updated to query renamed `value_set_version_label` column.
+- New `TestOperationalDefinitionFold` test class — 5 tests locking the fold contract.
+- Test sweep: ~128 assertion updates across 8 test files. SCB CSV headers (wire format) stay Swedish.
 
-**Estimate**: 5-7 days. Mechanical but pervasive.
+### [x] A1.2 — Lift sensitivity flags from unika_summary (PR #128, e2d1abb)
 
-### [ ] A1.2 — Lift sensitivity flags from unika_summary
+- Added `is_sensitive`, `is_identifier` BOOLEAN columns (DEFAULT 0) to `variable` table. `kanslig_variabel` and `kanslig_variabel_ibland` both fold into `is_sensitive` (the 22 sometimes-sensitive rows aren't worth a separate column).
+- `_populate_sensitivity_flags(conn)` runs after `_import_registerinformation` + `_import_unika`. Joins through `variable_instance × variable_alias × variable` and disambiguates by the full `unika_summary` PK `(register_id, regvar_id, kolumnnamn, variabelnamn)` — without the `variabelnamn` join, the same `kolumnnamn` reused across distinct variables under one variant would fan flags onto wrong siblings.
+- `unika_summary.{version_forsta, version_sista}` reserved (will become `variable_state.valid_from/valid_to` in A2, mapped to ISO 8601). `unika_summary` table itself stays in place for A2.1 to consume then drop.
+- `SCHEMA_VERSION` rides on A1.1's 4.0.0 major bump — no further bump (additive columns).
 
-- Add `is_sensitive`, `is_identifier` BOOLEAN columns to `variable` table (`kanslig_variabel` and `kanslig_variabel_ibland` both fold into `is_sensitive` — the 22 sometimes-sensitive rows aren't worth a separate column)
-- Build pipeline populates from `unika_summary.{kanslig_variabel, kanslig_variabel_ibland, identitetsvariabel}`
-- `unika_summary.{version_forsta, version_sista}` reserved (will become `variable_state.valid_from/valid_to` in A2, mapped to ISO 8601)
-- After this lands, the `unika_summary` table itself is unused outside the validity columns; left in place for A2 to consume then drop
+### [x] A1.3 — IR module + adapter scaffolding (PR #127, 8c92942)
 
-**Estimate**: 2-3 days.
+- New `reg_meta_build/ir/__init__.py` with 13 Pydantic v2 `BaseModel` classes per §4.4 (IRRegister, IRVariant, IRVariable, IRVariableState, IRValueCode, IRValueSet, IRClassification, IRLineageEdge, IRReplacedByEdge, IRRelatedToEdge, IRWarning, IRDeliveryProvenance). All inherit from `_IRBase` with `model_config = ConfigDict(extra="forbid")` so adapter typos fail loudly instead of dropping into defaults.
+- `IRAdapter` Protocol + `IRObject` union added to `reg_meta_build/sources/__init__.py` (existing `sos.py` parser untouched).
+- `IRValueSet.member_hash` typed as `bytes` (raw 32-byte SHA-256 digest) to match the universal `value_set.member_hash` BLOB column verbatim — no hex encode/decode at the IR↔materializer boundary.
+- Provenance DB scaffolding: `PROVENANCE_DDL` for `build_manifest` table, `create_empty_provenance_db(path)` helper, `rotate_db_to_prev(db_path)` single-generation `.prev` rotation. `build_db` wires both — universal DB rotates + atomic-replaces; provenance DB scaffolding wrapped in `try/except` so a post-swap IOError logs a warning instead of flipping the build to "failed". `build_manifest` stays empty until A4.x populates it.
+- `pydantic>=2.13.4` added to `reg_meta_build` runtime deps (carve-out matches `reg_schema`'s; the IR is build-time-only, never imported by `reg_meta` runtime / MONA bundle).
+- 46 contract tests in `test_ir_scaffolding.py`: import surface, BaseModel conformance, round-trip per IR class, `extra="forbid"` rejection per IR class, `IRAdapter` Protocol shape, `IRObject` union drift guard, rotation semantics, provenance DB schema.
 
-### [ ] A1.3 — IR module + adapter scaffolding
-
-- Create `reg_meta_build/ir/__init__.py` exporting the Pydantic IR dataclasses (§4.4)
-- Create `reg_meta_build/sources/` directory; add `IRAdapter` Protocol
-- Existing SCB ingest in `db.py` does NOT move yet — just compiles alongside the new module
-- Provenance DB sibling artifact: empty placeholder, `build_manifest` table only
-- `.prev` rotation logic on rebuild (renames before write, no auto-cleanup)
-
-**Estimate**: 3-4 days. Definition-heavy; minimal logic.
+Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter onto the IR contract.
 
 ---
 

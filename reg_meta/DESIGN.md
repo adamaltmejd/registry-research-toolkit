@@ -41,11 +41,12 @@ the resulting unified schema is what query commands see.
 
 Two content-synced FTS5 indexes:
 
-- **`register_fts`** — indexes register name, rubrik, syfte
-- **`variable_fts`** — indexes variable name, definition, beskrivning.
+- **`register_fts`** — indexes register `name`, `purpose`.
+- **`variable_fts`** — indexes variable `name`, `definition`, `description`.
   Uses `unicode61` tokenizer for correct Swedish character handling.
-  Column names (`kolumnnamn`) are deliberately excluded — they contain
-  technical suffixes (e.g. `_LISA`) that pollute search results.
+  Delivery column names (`variable_alias.delivery_column_name`) are
+  deliberately excluded — they contain technical suffixes (e.g. `_LISA`)
+  that pollute search results.
   Column name matching is handled by `resolve` instead.
 
 ## Register lookup strategy
@@ -60,7 +61,7 @@ This allows `34`, `LISA`, and `utbildning` to all work.
 
 ## Resolve: exact match only
 
-`resolve` performs exact alias lookup against `variable_alias.kolumnnamn`.
+`resolve` performs exact alias lookup against `variable_alias.delivery_column_name`.
 No FTS fallback, no confidence scoring. Status is `matched` or `no_match`.
 This is intentional — resolve is for mapping known column headers, not
 discovery.
@@ -102,7 +103,7 @@ projection".
 
 The result is content-addressed and deduplicated: identical year-projected
 sets across cvids share one `value_set` row (`member_hash` = sha256 of
-sorted (vardekod, vardebenamning) pairs); each cvid links to its set via
+sorted `(code, label)` pairs); each cvid links to its set via
 `variable_instance.value_set_id`. NULL `value_set_id` means the cvid had
 no codes (every union pair excluded by projection, or only sentinel rows
 in the source — see [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
@@ -119,7 +120,7 @@ for prefix-hierarchy filtering (length of all-digit codes; NULL for
 non-numeric codes like ICD letters).
 
 The FK lives on `variable_instance`, not on `variable`. SCB's data model
-already places the classification label (`vardemangdsversion`) per
+already places the classification label (`value_set_version_label`) per
 instance, and many headline variables genuinely span multiple
 classifications across their lifetime — e.g. `Utbildningsnivå` (var_id 66)
 uses SUN 2000 codes through 2018 and SUN 2020 codes from 2019 onwards;
@@ -129,7 +130,7 @@ SUN 2020) and lets variable-level helpers aggregate when needed.
 
 The `classification_id` column is populated at build time from a
 maintainer-curated TOML seed at `reg_meta_build/classifications.toml`
-(exact match against `vardemangdsversion`, no fuzzy inference). The seed
+(exact match against `value_set_version_label`, no fuzzy inference). The seed
 schema, build-time invariants, and validation rules live in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) §
 "Classification seed".
@@ -156,7 +157,7 @@ includes `is_valid` per code in JSON output (omitted when NULL).
 
 Hierarchy is intentionally not encoded as `parent_code_id`. The `level`
 column captures the most useful filter ("top-level only"); deeper
-parent/child queries fall back to prefix matching on `vardekod`. Code
+parent/child queries fall back to prefix matching on `value_code.code`. Code
 sets without prefix hierarchy (ICD-10, ATC) keep `level = NULL` and use
 their own conventions.
 
@@ -164,7 +165,7 @@ their own conventions.
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs
 use WITHOUT ROWID. Value codes are deduplicated into `value_code` (with
-`UNIQUE(vardekod, vardebenamning)`); cvid → code membership is a
+`UNIQUE(code, label)`); cvid → code membership is a
 content-addressed `value_set` / `value_set_member` pair, where each
 distinct year-projected code list is stored once and shared by every
 cvid that observes it. SCB's validity windows are applied at build time

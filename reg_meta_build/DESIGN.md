@@ -145,11 +145,11 @@ code list." Not real value codes; dropped silently.
 
 Importing sentinels would pollute `value_code` with
 rows that are never valid lookups, and write the placeholder into
-`variable_instance.vardemangds{version,niva}` where downstream consumers
-would mistake it for a real classification label. The authoritative type
-signal is `variable_instance.datatyp` — the placeholder adds nothing and is
-sometimes misleading (e.g. cvid 207 `DatInv` is `datatyp='int'` but tagged
-`Beskrivande text`).
+`variable_instance.{value_set_version_label,vardemangdsniva}` where
+downstream consumers would mistake it for a real classification label.
+The authoritative type signal is `variable_instance.data_type` — the
+placeholder adds nothing and is sometimes misleading (e.g. cvid 207
+`DatInv` is `data_type='int'` but tagged `Beskrivande text`).
 
 `_VARDEMANGDER_REAL_SHAPED` — kods that *happen* to equal their version
 label but are real single-code value sets. Kept silently.
@@ -169,7 +169,7 @@ review, even when the kod is already a known sentinel string. This guards
 against a future SCB change to the sentinel shape.
 
 A cvid whose only Vardemängder rows were sentinels gets `NULL` for
-`vardemangdsversion`/`vardemangdsniva` on `variable_instance`. Fully-empty
+`value_set_version_label` / `vardemangdsniva` on `variable_instance`. Fully-empty
 rows (kod, label, item all empty) are dropped silently.
 
 ### Drift detection
@@ -216,18 +216,19 @@ year-projected").
 The `classification_id` FK on `variable_instance` is populated at build
 time from a maintainer-curated TOML seed at
 `reg_meta_build/classifications.toml`. Each entry declares a normalized
-classification and lists the raw `vardemangdsversion` strings that map
-to it — exact match, no fuzzy inference. Match strings are deterministic
-and auditable: any maintainer can enumerate them via `SELECT DISTINCT
-vardemangdsversion FROM variable_instance`.
+classification and lists the raw `value_set_version_label` strings (the
+SCB-published "Vardemangdsversion" labels) that map to it — exact match,
+no fuzzy inference. Match strings are deterministic and auditable: any
+maintainer can enumerate them via `SELECT DISTINCT value_set_version_label
+FROM variable_instance`.
 
 Build-time invariants (violations fail `reg-meta-build build-db` loudly,
 exit 10):
 
-- Every seed `vardemangdsversion` string must match at least one instance.
+- Every seed `value_set_version_label` string must match at least one instance.
 - Every classification must resolve to at least one tagged instance and
   at least one value code.
-- A given `vardemangdsversion` string may belong to at most one
+- A given `value_set_version_label` string may belong to at most one
   classification.
 - Every `supersedes` reference must resolve to a declared `short_name`.
 - Every `valid_codes_file`, when present, must resolve to a CSV under the

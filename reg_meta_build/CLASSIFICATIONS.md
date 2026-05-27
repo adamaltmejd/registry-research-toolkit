@@ -151,7 +151,7 @@ Blank row → flush current entry.
    — detailed groups, 133 codes (4-char like `01ZA`). Same multi-line layout
    as SUN 2000 GRUPP, but code in col 0 instead of col 1.
 
-Both code spaces map to `vardemangdsversion` strings already grouped under
+Both code spaces map to `value_set_version_label` strings already grouped under
 `SUN2020-GRUPP` (`SUN 2020 - Gruppering` and `SUN 2020 - Gruppering - Detaljerad`),
 so they're merged into one CSV. The detailed file contains a `23XA` 2025
 addition that hasn't reached our register exports yet — surfaces as
@@ -271,7 +271,7 @@ each with its own canonical CSV. Single-year codes change across the
 sequence (Skåne 1997, Västra Götaland 1998, parish mergers ongoing), so
 each year is its own published snapshot — 665 codes had conflicting
 labels under the previous unified entry. The data already
-disambiguates: `variable_instance.vardemangdsversion` is year-stamped
+disambiguates: `variable_instance.value_set_version_label` is year-stamped
 (`LKF 1990-01-01/...`), so the split is purely seed-side — no schema
 change, no FK rework. `supersedes` chains the years sequentially.
 
@@ -311,7 +311,7 @@ re-run --emit-toml and merge).
 Then add `LKF{year}` seed entries (`--emit-toml` prints starters; the
 year-string variants need to be reconciled against the existing LKF entry
 in `classifications.toml`). The current single `LKF` entry should then be
-removed, with each year's vardemangdsversion strings moved to the
+removed, with each year's `value_set_version_label` strings moved to the
 appropriate `LKF{year}` entry.
 
 ### Education — ISCED 2011

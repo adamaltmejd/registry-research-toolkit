@@ -269,8 +269,8 @@ the five types via this chain (first match wins):
    `variable_alias` → `variable_instance` for that register:
    - non-null `value_set_id` *or* non-null `classification_id`
      → `categorical` (SCB enumerated codes / shared classification)
-   - `datatyp` ∈ {int, decimal, ...} → `numeric`
-   - `datatyp` ∈ {date, datetime, ...} → `date`
+   - `data_type` ∈ {int, decimal, ...} → `numeric`
+   - `data_type` ∈ {date, datetime, ...} → `date`
 
    Storage type alone (`char` / `varchar` with no value codes and no
    classification) is **not** taken as a categorical signal — text
@@ -934,7 +934,7 @@ dominate; later fields break ties within a tier.
    labels are wrong, not merely under-precise. When either side has
    no year, this tier is neutral and the next tiers decide.
 2. **Name / classification.** Tokenize the column name and the CVID's
-   `(classification.short_name, vardemangdsversion)` strings using a
+   `(classification.short_name, value_set_version_label)` strings using a
    camelcase regex with four alternatives: `[A-Z]+(?=[A-Z][a-z])` (run
    before a CamelCase boundary), `[A-Z]+(?![a-z])` (run not followed by
    lowercase, capturing all-caps abbreviations like `SUN`/`SSYK`/`SNI`),

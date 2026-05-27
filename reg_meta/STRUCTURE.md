@@ -38,8 +38,8 @@
   - `variable_alias` — all known column names per instance (one instance can have multiple aliases)
   - `variable_context` — population/object-type scope per instance
 - Enrichment entities (from other CSVs):
-  - `value_code` — deduplicated (vardekod, vardebenamning) pairs (from `Vardemangder.csv`); `UNIQUE(vardekod, vardebenamning)` enforced
-  - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted (vardekod, vardebenamning) pairs; identical sets across cvids share one row.
+  - `value_code` — deduplicated `(code, label)` pairs (from `Vardemangder.csv`'s `vardekod` / `vardebenamning` source columns); `UNIQUE(code, label)` enforced
+  - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted `(code, label)` pairs; identical sets across cvids share one row.
   - `value_set_member` — junction mapping each `value_set` to its codes. SCB validity windows (`VardemangderValidDates.csv`) are applied at build time, not stored — see DESIGN.md § "Value sets are year-projected at build time".
   - `code_variable_map` — pre-aggregated code→(register, variable) mapping for efficient value search
   - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
@@ -48,7 +48,7 @@
 - Classification entities (from `reg_meta_build/classifications.toml` seed at build time — see DESIGN.md § Classifications):
   - `classification` — normalized code systems (SUN2000, SSYK2012, SNI2007, LKF, …) with publisher, version, supersedes link
   - `classification_code` — junction from classification to its value codes, with optional hierarchical `level`
-  - `variable_instance.classification_id` — FK populated when an instance's `vardemangdsversion` matches the seed
+  - `variable_instance.classification_id` — FK populated when an instance's `value_set_version_label` matches the seed
 - `Timeseries.csv` annotates the model, does not define it.
 - `UnikaRegisterOchVariabler.csv` and `Identifierare.csv` enrich the model, do not override `Registerinformation.csv`.
 - Reference data (from non-CSV sources):
