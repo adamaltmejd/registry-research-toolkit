@@ -1984,17 +1984,29 @@ def build_db(
     rotate_db_to_prev(final_path)
     tmp_path.rename(final_path)
 
-    # Rotate the sibling provenance DB to `.prev` AND create a fresh empty
-    # one in the same step, so a new `reg_meta.provenance.db` always exists
-    # alongside the universal DB it was built against. Otherwise a rebuild
-    # in any env that previously had a provenance DB would leave only
-    # `.prev` and break downstream tooling that expects the live file.
-    # A1.3 ships the scaffolding (build_manifest table only); A4.x's
-    # materializer is what actually populates the manifest with the
-    # finalized universal DB's sha256.
+    # Sibling provenance DB scaffolding. `build_manifest` stays empty until
+    # A4.x populates it; this PR just guarantees the file exists alongside
+    # the universal DB it was built against — otherwise a rebuild on an env
+    # with a prior provenance DB would leave only `.prev` and break
+    # downstream tooling that expects the live file.
+    #
+    # Wrapped in try/except: this runs AFTER the universal DB has already
+    # been swapped in, so any IOError here (disk full, perms) must not flip
+    # the build's exit code to "failed" — the primary artifact succeeded.
+    # Surface as a warning instead. A4.x will hook into this same block
+    # for real provenance writes; that path will need its own atomicity
+    # story (rename-into-place from a tmp), but for now an empty schema
+    # file is cheap to recreate manually and unblocks the build contract.
     provenance_path = db_dir / PROVENANCE_DB_FILENAME
-    rotate_db_to_prev(provenance_path)
-    create_empty_provenance_db(provenance_path)
+    try:
+        rotate_db_to_prev(provenance_path)
+        create_empty_provenance_db(provenance_path)
+    except (OSError, RegMetaError) as e:
+        _progress(
+            f"  WARNING: provenance DB scaffolding failed ({type(e).__name__}: {e}); "
+            f"universal DB was written successfully — re-run or manually create "
+            f"{provenance_path.name} to restore provenance."
+        )
     _progress(f"Database written to {final_path}")
 
     return {
