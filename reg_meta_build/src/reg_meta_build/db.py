@@ -1348,6 +1348,17 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     # per row even though min/max is idempotent).
     unika_index: dict[tuple[int, int, str, str], set[tuple]] = {}
 
+    # Max regver year observed per (register_id, regvar_id, var_id). A
+    # single unika row covers a variable's entire lifetime, but when the
+    # coalescer splits a variable into multiple groups by shape (different
+    # data_type / data_length / value_set_id across versions), each split
+    # group should only claim the years it was actually observed. The
+    # group whose `regver_max` matches this variable-wide max is the
+    # "latest era" — only that group can carry unika's open-ended signal,
+    # because only that shape was still active at the variable's last
+    # known year.
+    var_max_regver: dict[tuple[int, int, int], int] = {}
+
     for row in rows:
         grain = row["grain"] or ""
         gkey = (
@@ -1373,7 +1384,9 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
             )
             groups[gkey] = grp
 
-        # Track register_version year per cvid (fallback signal).
+        # Track register_version year per cvid (fallback signal) on the
+        # group, and also on the per-variable max so the materializer can
+        # identify the latest-era group when clamping unika ranges.
         rver_year = extract_year(row["registerversionnamn"] or "")
         if rver_year is not None:
             grp.regver_min = (
@@ -1382,6 +1395,10 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
             grp.regver_max = (
                 rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
             )
+            vkey = (row["register_id"], row["regvar_id"], row["var_id"])
+            cur_max = var_max_regver.get(vkey)
+            if cur_max is None or rver_year > cur_max:
+                var_max_regver[vkey] = rver_year
 
         # Track the latest alias for the era. "Latest" = highest regver_id
         # in the group; ties broken by lexically smallest alias for
@@ -1458,41 +1475,55 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 )
 
     # Materialize the variable_state rows.
+    #
+    # Each group's range = its OWN observed `regver_min`/`regver_max`. A
+    # `unika_summary` row covers a variable's entire lifetime across all
+    # shape groups, so applying its range to every group would (Codex P1
+    # on PR #130) produce overlapping ranges between shape groups for
+    # multi-era variables and assign earlier-era states the full lifetime
+    # they were never present in. Letting each group claim only its own
+    # observed years sidesteps both pathologies and stays robust to
+    # unika/regver disagreement (e.g. an SCB `HT2020` cvid for a
+    # variable whose unika row only mentions 2021 — regver wins, we
+    # observed the cvid).
+    #
+    # Unika still contributes in two narrow ways:
+    #   - **Open-ended sentinel** for the latest-era group only. When the
+    #     group's `regver_max` matches the variable's overall max
+    #     (`var_max_regver`) AND unika matched but left `VersionSista`
+    #     blank, set `valid_to = '9999-12-31'` ("still active"). Earlier-
+    #     era groups must end at their observed `regver_max` — unika's
+    #     open signal applies to the variable's current shape only.
+    #   - **Fallback for yearless cvids**: when no row in the group had a
+    #     parseable `registerversionnamn` year, unika_min/unika_max
+    #     stand in. Rare in the SCB corpus but the build must produce
+    #     writable rows regardless.
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
     open_top_from_unika = 0
     for grp in groups.values():
-        # Prefer unika_summary (covers SCB's authoritative version span).
-        # When unika matched the group but a specific bound was blank, that
-        # is SCB's "still active / unknown" signal — DO NOT fall back to
-        # register_version for that bound. Falling back would silently
-        # clamp a currently-live variable to the latest observed export
-        # year and break A2.5's resolver on any future-period query.
-        # The register_version fallback only fires when unika never matched
-        # the group at all (rare; ~7 % of corpus per the empirical data).
-        #
-        # The from / to bounds are resolved independently on purpose: if
-        # SCB ships a row with one side parseable and the other blank, we
-        # take what we have on each side rather than coupling them. The
-        # resulting range can therefore mix sources (unika-min /
-        # regver-max or vice versa) — intentional robustness, not a
-        # missed cross-check.
-        if grp.unika_max is not None:
-            to_year = grp.unika_max
-        elif grp.unika_matched:
-            # Unika spoke but didn't bound the top — still active.
-            to_year = None
-            open_top_from_unika += 1
-        else:
-            to_year = grp.regver_max
+        vkey = (grp.register_id, grp.regvar_id, grp.var_id)
+        var_max = var_max_regver.get(vkey)
+        # `None == None` is True — a yearless single-group variable counts
+        # as the latest era of itself, so the open-ended sentinel can
+        # still apply there.
+        is_latest_era = grp.regver_max == var_max
 
-        # Symmetric handling for valid_from: if unika spoke but didn't
-        # bound the bottom, prefer the register_version min (the lower
-        # bound is at most the earliest observed instance year) over the
-        # epoch sentinel. Falling all the way back to '0001-01-01' would
-        # be honest but pollute range queries.
-        from_year = grp.unika_min if grp.unika_min is not None else grp.regver_min
+        # Lower bound: regver is authoritative (the years we actually
+        # observed the group). Unika is fallback for yearless cvids.
+        from_year = grp.regver_min if grp.regver_min is not None else grp.unika_min
+
+        # Upper bound: latest-era group with unika-open → sentinel.
+        # Otherwise the group's observed regver_max wins. Unika upper
+        # only stands in when regver is unparseable.
+        if is_latest_era and grp.unika_matched and grp.unika_max is None:
+            to_year = None  # forces sentinel
+            open_top_from_unika += 1
+        elif grp.regver_max is not None:
+            to_year = grp.regver_max
+        else:
+            to_year = grp.unika_max  # yearless fallback; may be None → sentinel
 
         valid_from = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
         valid_to = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL

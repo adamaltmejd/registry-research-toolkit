@@ -649,22 +649,37 @@ class TestBuildDb:
         assert rows[0]["valid_to"] == "2022-12-31"
 
     def test_variable_state_year_range_min_max(self, db_conn: sqlite3.Connection):
-        """A2.1: Kön in TESTREG appears across 2020/2021/2022; the coalescer
-        merges them into one variable_state per coalescing group with
-        valid_from = min year and valid_to = max year. The fixture's
-        unika row carries VersionForsta='2020', VersionSista='2022'."""
+        """A2.1: Kön in TESTREG appears across 2020/2021/2022 split into two
+        shape groups by the value_set: cvids 1001/1003 carry the
+        year-projected `Kön` value_set (regver years 2020+2021); cvid 1004
+        has NULL value_set (sentinel-only Vardemangder rows for 2022).
+
+        Each group claims its OWN observed years — not the full unika
+        lifetime — per the §5.1 non-overlap invariant and the Codex P1
+        fix on PR #130. Without clamping, both groups would inherit
+        unika's 2020-2022 range and overlap on 2020-2021 with no
+        `value_set_version_label` discriminator, which the A2.5 point
+        resolver can't unambiguously narrow."""
         rows = db_conn.execute(
             "SELECT valid_from, valid_to, value_set_id "
             "FROM variable_state WHERE register_id = 1 AND var_id = 44 "
             "ORDER BY value_set_id NULLS LAST"
         ).fetchall()
         assert len(rows) >= 1
-        # The row backed by the year-projected value_set spans the full
-        # 2020..2022 window.
+        # The value-set-bearing group covers cvids 1001 (2020) + 1003 (2021).
+        # var_max_regver for the variable = 2022 (cvid 1004), so this
+        # group is NOT the latest era and ends at its own regver_max.
         with_set = [r for r in rows if r["value_set_id"] is not None]
         assert with_set, "expected a Kön state with a value_set"
         assert with_set[0]["valid_from"] == "2020-01-01"
-        assert with_set[0]["valid_to"] == "2022-12-31"
+        assert with_set[0]["valid_to"] == "2021-12-31"
+        # The NULL-value_set group covers cvid 1004 (2022). It IS the
+        # latest era (regver_max=2022=var_max), and the unika row is
+        # bounded (VersionSista='2022'), so this group spans 2022 only.
+        without_set = [r for r in rows if r["value_set_id"] is None]
+        assert without_set, "expected a Kön state without a value_set"
+        assert without_set[0]["valid_from"] == "2022-01-01"
+        assert without_set[0]["valid_to"] == "2022-12-31"
 
     def test_variable_state_delivery_column_name(self, db_conn: sqlite3.Connection):
         """§5.1: delivery_column_name on variable_state is the denormalized
@@ -1906,5 +1921,200 @@ class TestVariableStateOpenEnded:
             assert manifest is not None
             stats = _json.loads(manifest["value"])
             assert stats["n_open_top_from_unika"] >= 1
+        finally:
+            conn.close()
+
+
+class TestVariableStateMultiShape:
+    """A2.1: Codex P1 on PR #130 — when a variable changes shape across
+    versions (different data_type / data_length / value_set_id), the
+    coalescer splits it into multiple groups. Each group must claim
+    only its OWN observed years, not the full unika lifetime. Without
+    this clamp, every shape group would inherit the variable's whole
+    lifetime range and produce overlapping `variable_state` rows with
+    no `value_set_version_label` discriminator — the A2.5 point
+    resolver would return multiple states for periods where only one
+    shape actually existed.
+
+    The fix: use each group's `regver_min`/`regver_max` as the
+    authoritative range; reserve the open-ended sentinel for the
+    latest-era group (whose `regver_max` matches the variable's
+    overall max regver year).
+    """
+
+    @staticmethod
+    def _build_multi_shape(tmp_path: Path) -> Path:
+        """Build a DB where var_id=910 ('ShiftingVar') changes shape:
+        - regver_id=110 (year 2020): data_type='int', data_length='1'
+        - regver_id=111 (year 2021): data_type='int', data_length='1'
+        - regver_id=112 (year 2022): data_type='varchar', data_length='5'
+        - regver_id=113 (year 2023): data_type='varchar', data_length='5'
+
+        Unika carries one row: VersionForsta='2020', VersionSista='2023'.
+        Buggy behavior would produce 2 states each spanning 2020-2023;
+        correct behavior produces (2020-01-01, 2021-12-31) for the int
+        era and (2022-01-01, 2023-12-31) for the varchar era."""
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        # Four ShiftingVar rows — two int eras, two varchar eras. No
+        # Vardemangder entries so value_set_id stays NULL across all
+        # four cvids; the shape distinction is purely data_type /
+        # data_length.
+        shifting_rows = []
+        for year, regver_id, cvid, dt, dl in [
+            ("2020", 110, 9200, "int", "1"),
+            ("2021", 111, 9201, "int", "1"),
+            ("2022", 112, 9202, "varchar", "5"),
+            ("2023", 113, 9203, "varchar", "5"),
+        ]:
+            shifting_rows.append(
+                _ri_row(
+                    "TESTREG",
+                    "Testregistret",
+                    "Testning",
+                    "Individer",
+                    "Individer",
+                    "Alla individer",
+                    "Nej",
+                    year,
+                    f"Version {year}",
+                    "",
+                    "Godkänd",
+                    f"{year}-01-01",
+                    f"{year}-12-31",
+                    "Hela befolkningen",
+                    "Alla personer",
+                    "",
+                    f"{year}-12-31",
+                    "Person",
+                    "Fysisk person",
+                    "ShiftingVar",
+                    "A variable whose shape changes across eras",
+                    "Mid-life shape drift",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "ShiftCol",
+                    dt,
+                    dl,
+                    str(cvid),
+                    "1",
+                    "10",
+                    str(regver_id),
+                    "910",
+                )
+            )
+
+        ri_rows = list(REGISTERINFORMATION_ROWS) + shifting_rows
+        unika_rows = [
+            # ShiftingVar's single unika row covers the full lifetime.
+            # The coalescer must NOT fan this 2020-2023 range out to
+            # every shape group.
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "ShiftingVar",
+                    "ShiftCol",
+                    "2020",
+                    "2023",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_groups_clamped_to_observed_years(self, tmp_path: Path):
+        """ShiftingVar splits into int (2020-2021) and varchar (2022-2023)
+        groups. Each must report ONLY its observed years, not the full
+        unika lifetime (2020-2023). Pre-fix, both rows would have spanned
+        2020-2023 and overlapped on every year.
+
+        The latest-era group (varchar, regver_max=2023=var_max) has a
+        bounded unika row (`VersionSista='2023'`), so it does NOT carry
+        the open-ended sentinel — its valid_to is 2023-12-31."""
+        db_path = self._build_multi_shape(tmp_path)
+        conn = open_db(db_path)
+        try:
+            rows = conn.execute(
+                "SELECT data_type, data_length, valid_from, valid_to "
+                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "ORDER BY valid_from"
+            ).fetchall()
+            assert len(rows) == 2
+            int_era, varchar_era = rows[0], rows[1]
+            assert int_era["data_type"] == "int"
+            assert int_era["data_length"] == "1"
+            assert int_era["valid_from"] == "2020-01-01"
+            assert int_era["valid_to"] == "2021-12-31"
+            assert varchar_era["data_type"] == "varchar"
+            assert varchar_era["data_length"] == "5"
+            assert varchar_era["valid_from"] == "2022-01-01"
+            assert varchar_era["valid_to"] == "2023-12-31"
+        finally:
+            conn.close()
+
+    def test_groups_non_overlapping(self, tmp_path: Path):
+        """§5.1 invariant: variable_state rows for the same variable are
+        non-overlapping unless explicitly discriminated by
+        value_set_version_label. Multi-shape ShiftingVar has no
+        discriminator, so its two states must NOT overlap. This is the
+        load-bearing property A2.5's point resolver relies on."""
+        db_path = self._build_multi_shape(tmp_path)
+        conn = open_db(db_path)
+        try:
+            rows = conn.execute(
+                "SELECT valid_from, valid_to, value_set_version_label "
+                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "ORDER BY valid_from"
+            ).fetchall()
+            assert len(rows) == 2
+            assert rows[0]["value_set_version_label"] is None
+            assert rows[1]["value_set_version_label"] is None
+            # Strict non-overlap: row 0 ends strictly before row 1 starts.
+            # Lexical comparison is chronological for full-date ISO strings.
+            assert rows[0]["valid_to"] < rows[1]["valid_from"]
         finally:
             conn.close()
