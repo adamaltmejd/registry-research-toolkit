@@ -307,6 +307,53 @@ CREATE TABLE variable_instance (
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
 );
 
+-- A2.1: per-era shape of a variable (§5.1). One row per coalesced
+-- `(register_id, regvar_id, var_id, data_type, data_length, value_set_id,
+-- value_set_version_label, grain)` tuple over `variable_instance`; populated
+-- by `_coalesce_variable_states` after CSV import. Resolver still uses
+-- `variable_instance` at this stage — A2.5 flips it to `variable_state`.
+-- FK shifts to `(register_id, regvar_id, var_id)` once A2.4 lands the
+-- variant-scoped variable PK.
+--
+-- valid_from / valid_to are TEXT NOT NULL `YYYY-MM-DD` always (storage
+-- contract from §5.1); coarser SCB inputs like the year "2020" expand at
+-- ingest into 2020-01-01..2020-12-31. Open-ended states use the sentinel
+-- valid_to = '9999-12-31' (never NULL). Lexical string comparison is
+-- chronologically correct because every stored value is full-date.
+--
+-- A `grain` column is intentionally absent — pre-triage rows that differ
+-- only on SCB's `vardemangdsniva` are kept distinct in the coalescer's
+-- in-memory group key so A2.2 can later promote them into sibling slugs,
+-- but grain itself never lands in the universal schema (it becomes part
+-- of the variable slug when a split fires).
+CREATE TABLE variable_state (
+    state_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    register_id INTEGER NOT NULL,
+    regvar_id INTEGER NOT NULL,
+    var_id INTEGER NOT NULL,
+    valid_from TEXT NOT NULL,
+    valid_to TEXT NOT NULL DEFAULT '9999-12-31',
+    data_type TEXT,
+    data_length TEXT,
+    delivery_column_name TEXT,
+    value_set_id INTEGER REFERENCES value_set(value_set_id),
+    value_set_version_label TEXT,
+    FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id),
+    -- Full-date contract: ten-character ISO 8601 strings only. Length check
+    -- is a cheap structural guard; a stricter regex isn't worth the runtime
+    -- cost because the coalescer is the only writer.
+    CHECK (length(valid_from) = 10),
+    CHECK (length(valid_to) = 10),
+    CHECK (valid_to >= valid_from)
+);
+CREATE INDEX idx_variable_state_variable
+    ON variable_state(register_id, var_id);
+CREATE INDEX idx_variable_state_regvar
+    ON variable_state(register_id, regvar_id, var_id);
+CREATE INDEX idx_variable_state_value_set
+    ON variable_state(value_set_id)
+    WHERE value_set_id IS NOT NULL;
+
 CREATE TABLE variable_alias (
     cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
     -- §5.11: `kolumnnamn` → `delivery_column_name`. The SCB delivery column
@@ -1143,6 +1190,319 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     return refreshed
 
 
+# A2.1: SCB ships VersionForsta/VersionSista as plain year strings ("2020").
+# §5.1 requires `variable_state.valid_from`/`valid_to` as full YYYY-MM-DD.
+# Expansion rules are deterministic — year N → first day Jan / last day Dec.
+# Open-ended (no upper bound observable) → sentinel '9999-12-31'.
+_VALID_TO_OPEN_SENTINEL = "9999-12-31"
+# Lower bound when no year is derivable from any signal (yearless cvids
+# like "Person-År" with no unika_summary backing). Picked to sort before
+# any real date so range queries treat the row as "valid since forever".
+_VALID_FROM_UNKNOWN = "0001-01-01"
+
+
+def _year_to_iso_from(year: int | None) -> str | None:
+    """Year N → 'N-01-01'. Returns None when year is None so callers can
+    distinguish "no signal" from a real year."""
+    if year is None:
+        return None
+    return f"{year:04d}-01-01"
+
+
+def _year_to_iso_to(year: int | None) -> str | None:
+    """Year N → 'N-12-31'. None preserved for the same reason as
+    `_year_to_iso_from`."""
+    if year is None:
+        return None
+    return f"{year:04d}-12-31"
+
+
+def _parse_unika_year(raw: str | None) -> int | None:
+    """Parse a `VersionForsta` / `VersionSista` cell. Empty / unparseable
+    yields None so the coalescer can fall back to the register_version
+    name; we don't second-guess what a stray non-year string means."""
+    if not raw:
+        return None
+    raw = raw.strip()
+    if not raw:
+        return None
+    try:
+        return int(raw)
+    except ValueError:
+        # SCB occasionally writes a date instead of a year; be permissive.
+        match = re.search(r"\b(\d{4})\b", raw)
+        return int(match.group(1)) if match else None
+
+
+def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
+    """Coalesce `variable_instance` rows into `variable_state` per §5.1.
+
+    Group key: `(register_id, regvar_id, var_id, data_type, data_length,
+    value_set_id, value_set_version_label, grain)`.
+
+    `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`
+    (still present on `variable_instance` through A2.2). Keeping it in the
+    group key here means multi-grain variables stay distinct so A2.2's
+    triage can split them into sibling slugs; grain itself does not land in
+    the final schema.
+
+    For each group:
+
+    1. Resolve `(register_id, regvar_id, kolumnnamn, variabelnamn)` from the
+       cvids in the group via `variable_alias × variable`. Note the cross-
+       product: a single cvid can have N aliases (rare; cross-edition
+       drift), so the group's unika lookup keys are the *union* of all
+       (regvar, alias, name) triples for the cvids.
+    2. Look up `unika_summary` rows for each triple; take `min(VersionForsta)`
+       → `valid_from`, `max(VersionSista)` → `valid_to`. Expand year → full
+       ISO 8601 (`'2020-01-01'` / `'2020-12-31'`).
+    3. Fall back to `register_version.registerversionnamn` (via the cvids'
+       `regver_id`) when no unika row matched — year extracted by
+       `extract_year`. Fallback gives both bounds the same min/max behavior.
+    4. Final fallback (yearless cvids with no unika row): valid_from =
+       '0001-01-01', valid_to = '9999-12-31'. Rare; not observed in the
+       SCB corpus but the build must produce a writable row regardless.
+    5. `delivery_column_name` = the alias attached to the cvid with the
+       highest `regver_id` in the group (most-recent era). Resolves ties
+       lexically for determinism.
+
+    Returns a stats dict for the manifest.
+    """
+    _progress("Coalescing variable instances into variable_state...")
+
+    # Pull the candidate set in one query rather than per-group: this is
+    # the same ~515K rows the resolver walks today, and SQLite's nested-
+    # loop join across `variable_instance × variable_alias × variable
+    # × register_version` is faster as a single sweep than re-issued
+    # per-group queries. Memory is bounded — each row is small.
+    #
+    # `variable_alias` is LEFT JOINed: a cvid with no alias row (rare but
+    # observed for cvids that only carry a `variabelnamn` and no
+    # `kolumnnamn` in the raw CSV) still surfaces so the group is captured
+    # with a NULL delivery_column_name instead of being dropped silently.
+    #
+    # `build_db`'s connection writes with the default tuple row_factory;
+    # we use a local cursor with `sqlite3.Row` so the column-name access
+    # below stays readable. Doesn't touch the parent connection's setting.
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+    rows = cur.execute(
+        "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.var_id, vi.regver_id, "
+        "       vi.data_type, vi.data_length, vi.value_set_id, "
+        "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
+        "       va.delivery_column_name, v.name AS variabelnamn, "
+        "       rv.registerversionnamn "
+        "FROM variable_instance vi "
+        "JOIN variable v "
+        "  ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
+        "LEFT JOIN variable_alias va ON va.cvid = vi.cvid "
+        "JOIN register_version rv ON rv.regver_id = vi.regver_id"
+    ).fetchall()
+
+    # Group accumulator: key → mutable state. We iterate `rows` once and
+    # update `min_year`/`max_year`/`latest_alias` in place. Using a dict
+    # rather than itertools.groupby because rows aren't pre-sorted and the
+    # group key has 8 components — pre-sorting + groupby would be slower
+    # than the dict path.
+    @dataclass
+    class _StateGroup:
+        register_id: int
+        regvar_id: int
+        var_id: int
+        data_type: str | None
+        data_length: str | None
+        value_set_id: int | None
+        value_set_version_label: str | None
+        # grain is part of the *group key*, not stored on the output row,
+        # so we don't keep it on the accumulator — the dict key carries it.
+        unika_min: int | None = None
+        unika_max: int | None = None
+        regver_min: int | None = None
+        regver_max: int | None = None
+        # Track the cvid → alias mapping with regver_id so we can pick the
+        # latest alias deterministically (highest regver_id year, then
+        # lexically smallest delivery_column_name on ties).
+        latest_alias: str | None = None
+        latest_alias_year: int | None = None
+        latest_alias_regver: int | None = None
+        # Build the unika lookup triples lazily — we need them only if
+        # the first pass leaves unika_{min,max} unpopulated.
+        unika_keys: set[tuple[int, int, str, str]] | None = None
+
+    groups: dict[
+        tuple[int, int, int, str, str, int | None, str | None, str],
+        _StateGroup,
+    ] = {}
+    # Map (register_id, regvar_id, kolumnnamn, variabelnamn) → list of
+    # group keys so we can fan unika lookups back into the accumulator.
+    unika_index: dict[tuple[int, int, str, str], list[tuple]] = {}
+
+    for row in rows:
+        grain = row["grain"] or ""
+        gkey = (
+            row["register_id"],
+            row["regvar_id"],
+            row["var_id"],
+            row["data_type"] or "",
+            row["data_length"] or "",
+            row["value_set_id"],
+            row["value_set_version_label"] or "",
+            grain,
+        )
+        grp = groups.get(gkey)
+        if grp is None:
+            grp = _StateGroup(
+                register_id=row["register_id"],
+                regvar_id=row["regvar_id"],
+                var_id=row["var_id"],
+                data_type=row["data_type"],
+                data_length=row["data_length"],
+                value_set_id=row["value_set_id"],
+                value_set_version_label=row["value_set_version_label"],
+            )
+            groups[gkey] = grp
+
+        # Track register_version year per cvid (fallback signal).
+        rver_year = extract_year(row["registerversionnamn"] or "")
+        if rver_year is not None:
+            grp.regver_min = (
+                rver_year if grp.regver_min is None else min(grp.regver_min, rver_year)
+            )
+            grp.regver_max = (
+                rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
+            )
+
+        # Track the latest alias for the era. "Latest" = highest regver_id
+        # in the group; ties broken by lexically smallest alias for
+        # reproducibility.
+        alias = row["delivery_column_name"]
+        if alias:
+            regver = row["regver_id"]
+            cur_regver = grp.latest_alias_regver
+            cur_alias = grp.latest_alias
+            # Replace the latest alias when: no alias yet, prior alias had no
+            # regver year (unknown beats nothing), strictly newer regver, or
+            # same regver but lexically smaller alias for determinism.
+            replace = (
+                cur_alias is None
+                or cur_regver is None
+                or regver > cur_regver
+                or (regver == cur_regver and alias < (cur_alias or ""))
+            )
+            if replace:
+                grp.latest_alias = alias
+                grp.latest_alias_year = rver_year
+                grp.latest_alias_regver = regver
+
+        # Stage the unika lookup. unika_summary's PK is
+        # (register_id, regvar_id, kolumnnamn, variabelnamn); we need an
+        # alias to build the triple, so cvids without an alias contribute
+        # only via the fallback path.
+        if alias and row["variabelnamn"]:
+            ukey = (
+                row["register_id"],
+                row["regvar_id"],
+                alias,
+                row["variabelnamn"],
+            )
+            unika_index.setdefault(ukey, []).append(gkey)
+            keys = grp.unika_keys
+            if keys is None:
+                keys = set()
+                grp.unika_keys = keys
+            keys.add(ukey)
+
+    _progress(f"  {len(groups):,} state groups from {len(rows):,} instance rows")
+
+    # Pull all relevant unika_summary rows in one shot. The PK lookup is
+    # fast (~5 unika rows per group on average), but doing it per-group
+    # would issue ~100K SELECTs; one sweep is materially cheaper.
+    unika_cur = conn.cursor()
+    unika_cur.row_factory = sqlite3.Row
+    unika_rows = unika_cur.execute(
+        "SELECT register_id, regvar_id, kolumnnamn, variabelnamn, "
+        "       version_forsta, version_sista FROM unika_summary"
+    ).fetchall()
+    for ur in unika_rows:
+        ukey = (
+            ur["register_id"],
+            ur["regvar_id"],
+            ur["kolumnnamn"],
+            ur["variabelnamn"],
+        )
+        gkeys = unika_index.get(ukey)
+        if not gkeys:
+            continue
+        first = _parse_unika_year(ur["version_forsta"])
+        last = _parse_unika_year(ur["version_sista"])
+        for gkey in gkeys:
+            grp = groups[gkey]
+            if first is not None:
+                grp.unika_min = (
+                    first if grp.unika_min is None else min(grp.unika_min, first)
+                )
+            if last is not None:
+                grp.unika_max = (
+                    last if grp.unika_max is None else max(grp.unika_max, last)
+                )
+
+    # Materialize the variable_state rows.
+    batch: list[tuple] = []
+    sentinel_count = 0
+    fallback_only_count = 0
+    for grp in groups.values():
+        # Prefer unika_summary (covers SCB's authoritative version span);
+        # fall back to register_version year when unika has no row for any
+        # of the group's (regvar, alias, name) triples; final fallback is
+        # the unknown-range sentinels.
+        from_year = grp.unika_min if grp.unika_min is not None else grp.regver_min
+        to_year = grp.unika_max if grp.unika_max is not None else grp.regver_max
+
+        valid_from = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
+        valid_to = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
+
+        if valid_to == _VALID_TO_OPEN_SENTINEL or valid_from == _VALID_FROM_UNKNOWN:
+            sentinel_count += 1
+        if grp.unika_min is None and grp.unika_max is None:
+            fallback_only_count += 1
+
+        batch.append(
+            (
+                grp.register_id,
+                grp.regvar_id,
+                grp.var_id,
+                valid_from,
+                valid_to,
+                grp.data_type,
+                grp.data_length,
+                grp.latest_alias,
+                grp.value_set_id,
+                grp.value_set_version_label,
+            )
+        )
+
+    conn.executemany(
+        "INSERT INTO variable_state (register_id, regvar_id, var_id, "
+        "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
+        "    value_set_id, value_set_version_label) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        batch,
+    )
+    state_count = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]
+    _progress(
+        f"  {state_count:,} variable_state rows "
+        f"({fallback_only_count:,} from register_version fallback, "
+        f"{sentinel_count:,} carry a date sentinel)"
+    )
+    return {
+        "n_state_groups": len(groups),
+        "n_variable_states": state_count,
+        "n_from_unika": state_count - fallback_only_count,
+        "n_from_regver_fallback": fallback_only_count,
+        "n_with_sentinel": sentinel_count,
+    }
+
+
 def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
     _progress("Importing Identifierare.csv...")
     row_count = 0
@@ -1930,6 +2290,25 @@ def build_db(
         # (unika_summary stays empty, every variable keeps its DEFAULT 0).
         _populate_sensitivity_flags(conn)
 
+        # A2.1: coalesce variable_instance rows into variable_state. Reads
+        # `unika_summary` for VersionForsta/VersionSista and `register_version`
+        # for the year fallback — must run after both are populated. Sensitivity
+        # flags must already be lifted (above) because the next step drops
+        # `unika_summary` entirely; flipping the order would leave the table
+        # gone before its second consumer runs.
+        state_stats = _coalesce_variable_states(conn)
+        row_counts["variable_state"] = state_stats["n_variable_states"]
+
+        # A2.1: drop the now-unused unika_summary table. Both consumers
+        # (`_populate_sensitivity_flags` and `_coalesce_variable_states`) have
+        # extracted what they need. Dropping after population keeps the
+        # build-time loading code simple (single CREATE / INSERT path) while
+        # ensuring the shipped DB carries no dead data. The `variable_state`
+        # rows we just wrote are the universal-schema home for version_forsta
+        # / version_sista.
+        conn.execute("DROP TABLE unika_summary")
+        _progress("Dropped unika_summary (consumed by A1.2 + A2.1).")
+
         # Classifications — maintainer-curated normalized code systems.
         if skip_classifications:
             _progress("Skipping classifications (skip_classifications=True)")
@@ -2053,6 +2432,9 @@ def build_db(
                 "cvids_with_set": projection_stats.cvids_with_set,
                 "cvids_empty_after_projection": projection_stats.cvids_empty_after_projection,
             },
+            # A2.1 coalescer stats — let maintainers eyeball the empirical
+            # 5× shrink and unika-vs-fallback split without re-running.
+            "coalesce_stats": state_stats,
         }
         for key, value in manifest_data.items():
             conn.execute(
@@ -2086,6 +2468,16 @@ def build_db(
         conn.execute("PRAGMA foreign_keys=ON")
 
         conn.commit()
+
+        # A2.1: VACUUM reclaims the pages freed by `DROP TABLE unika_summary`
+        # so the shipped DB doesn't carry a fat freelist. `validate.py` flags
+        # >= 1% freelist as staging-bloat; on the synthetic fixture the drop
+        # alone leaves ~2.7%. VACUUM must run outside a transaction — the
+        # preceding commit ensures it does. ATTACH-staging was already
+        # detached implicitly when the staging path was passed (or stays
+        # attached harmlessly; VACUUM only touches `main`).
+        conn.execute("VACUUM")
+
         _progress("Database built successfully.")
         build_failed = False
     finally:

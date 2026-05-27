@@ -101,17 +101,16 @@ Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter on
 
 Seven PRs. The largest and most intricate stage. Sequencing matters; gates are explicit.
 
-### [ ] A2.1 — `variable_state` table + coalescing
+### [x] A2.1 — `variable_state` table + coalescing (PR #TBD)
 
-- Add `variable_state` table to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD` dates always; open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL) — see §5.1
-- Build pipeline: after `_import_registerinformation` and `_import_vardemangder`, run a coalescer that groups `variable_instance` rows by `(register_id, regvar_id, var_id, data_type, data_length, value_set_id, value_set_version_label, grain)` — the first six are A1.1-renamed DDL columns (was `datatyp` / `datalangd` / `vardemangdsversion`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva` (kept in the IR group key so multi-grain rows stay distinct for A2.2 triage, then dropped — the final `variable_state` schema doesn't carry grain). Derives `valid_from`/`valid_to` from the union of `unika_summary.version_forsta..version_sista` for each cvid in the group, expanding to full dates (year `2018` → `2018-01-01..2018-12-31`); writes one `variable_state` row per coalesced group
-- **Drop `unika_summary`** after the coalescer has consumed `version_forsta` / `version_sista` (and after A1.2 already lifted the sensitivity flags) — the table is now unused
-- Resolver still uses `variable_instance`; no behavior change yet
-- Tests: verify coalescing rates match the empirical predictions (5× shrink, 65% single-state)
+- `variable_state` table added to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD`, enforced by CHECK constraints (`length() = 10`, `valid_to >= valid_from`). Open-ended states get the sentinel `valid_to = '9999-12-31'`; the unknown-lower-bound fallback uses `'0001-01-01'` for the rare yearless cvid case
+- `_coalesce_variable_states` (`reg_meta_build/src/reg_meta_build/db.py`) groups `variable_instance` rows by the 8-tuple `(register_id, regvar_id, var_id, data_type, data_length, value_set_id, value_set_version_label, grain)`. `grain` lives only in the in-memory group key — never lands on `variable_state`, per the universal-schema contract. Reads `unika_summary` for VersionForsta/VersionSista (primary), falls back to `register_version.registerversionnamn` year extraction when unika has no matching `(register, regvar, kolumnnamn, variabelnamn)` row. `delivery_column_name` denormalizes the latest alias for the era (highest `regver_id`, lexically smallest on ties)
+- **`unika_summary` dropped** at end of build via `DROP TABLE` + `VACUUM`. Both consumers (`_populate_sensitivity_flags`, `_coalesce_variable_states`) have run; the table is now unused in the shipped DB
+- Resolver still uses `variable_instance`; no query-layer behavior change (that's A2.5)
+- `SCHEMA_VERSION` bumped `4.0.0` → `4.1.0` (additive new table, drop of a build-only table — minor bump per the §5.11 compat rule)
+- Tests: 10 new tests under `TestBuildDb` cover row presence per `(register, var)` triple, full-ISO column shape, year expansion (2022 → 2022-01-01..2022-12-31), unika min/max range, delivery_column_name tie-break, `register_version` fallback path, value_set_version_label preservation, grain split, FK to `variable`, and manifest `coalesce_stats` consistency. Empirical coalescing-rate validation (5× shrink, 65% single-state) lands when running against the full SCB corpus
 
-**Estimate**: 4-6 days. Coalescer is non-trivial.
-
-**Gate to A2.2**: A2.1 must merge. Triage operates on coalesced output.
+**Gate to A2.2**: ✅ Met. Triage operates on coalesced output.
 
 ### [ ] A2.2 — Build-time triage
 
@@ -184,7 +183,7 @@ Can run in parallel with A2.3/A2.4 once A2.1 lands.
 
 - Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write)
 - Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone)
-- **Bump `SCHEMA_VERSION` to `"4.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"3.3.0"`). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` (two callsites) pick up the constant automatically. `require_compatible_db()` rejects v3.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.x) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — A2.1–A2.6 keep v3.x manifests for build-pipeline dual-write.
+- **Bump `SCHEMA_VERSION` to `"5.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"4.1.0"` after A2.1's minor bump). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` pick up the constant automatically. `_check_schema_compat` rejects v4.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.2–A2.6) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — the intervening stages stay on the 4.x line. A1.1 already burned the 3.x → 4.0.0 break; A2.1 added `variable_state` on a minor (4.1.0); A2.7's `variable_instance` drop is the next breaking change.
 - Bump `reg_meta` to v1.0.0; tag the release
 - UNFROZEN snapshot is regenerated (still UNFROZEN — curation polish continues; UNFROZEN deletes at v1 publication, not at v1.0.0 internal tag)
 

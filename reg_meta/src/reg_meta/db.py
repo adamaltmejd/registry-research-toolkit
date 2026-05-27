@@ -17,6 +17,14 @@ from pathlib import Path
 
 from .errors import EXIT_CONFIG, RegMetaError
 
+# A2.1: minor bump. Adds `variable_state` and drops the build-only
+# `unika_summary` table. Drop is benign for the query layer (nothing in
+# `reg_meta` reads `unika_summary`), but DBs at minor < 1 won't have
+# `variable_state` rows for the upcoming resolver flip in A2.5, so the
+# compat check rejects them via the minor-version gate. Major next bumps
+# when A2.7 drops `variable_instance` and the resolver moves off it for
+# good.
+#
 # A1.1: major-version bump. §5.11 renames + drops ~21 columns across
 # the universal schema; pre-A1.1 DBs (v3.x) reference Swedish column
 # names that no longer exist. `_check_schema_compat` treats major
@@ -26,7 +34,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 # ride on the 4.0.0 break — no further bump needed; a DB built by
 # this code reports schema_version=4.0.0 and includes is_sensitive /
 # is_identifier.
-SCHEMA_VERSION = "4.0.0"
+SCHEMA_VERSION = "4.1.0"
 DB_FILENAME = "reg_meta.db"
 
 

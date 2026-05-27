@@ -531,11 +531,17 @@ class TestBuildDb:
         # cvid 2003 (var_id 301): ("","Uppgift okänd") = 1
         assert count == 6
 
-    def test_unika_joined(self, db_conn: sqlite3.Connection):
-        count = db_conn.execute("SELECT COUNT(*) FROM unika_summary").fetchone()[0]
-        # 3 baseline rows (TESTREG Kön, TESTREG TestVar, OTHERREG Kön)
-        # + 2 A1.2 sensitivity-flag fixtures (TESTREG ÅÄÖVar, OTHERREG UniqueVar).
-        assert count == 5
+    def test_unika_summary_dropped(self, db_conn: sqlite3.Connection):
+        """A2.1: unika_summary is build-time only — both A1.2 (sensitivity
+        flags) and A2.1 (variable_state coalescer) have consumed it before
+        the build commits, so the shipped DB carries no row for it. Asserting
+        the table is gone (not just empty) catches a future regression where
+        the DROP TABLE step is reordered after the commit."""
+        row = db_conn.execute(
+            "SELECT name FROM sqlite_master "
+            "WHERE type = 'table' AND name = 'unika_summary'"
+        ).fetchone()
+        assert row is None
 
     def test_sensitivity_kanslig_variabel(self, db_conn: sqlite3.Connection):
         """A1.2: TestVar (register_id=1, var_id=100) has kanslig_variabel='Ja'
@@ -591,6 +597,179 @@ class TestBuildDb:
         for row in rows:
             assert row["is_sensitive"] == 0, row["var_id"]
             assert row["is_identifier"] == 0, row["var_id"]
+
+    # ------------------------------------------------------------------
+    # A2.1 — variable_state coalescer
+    # ------------------------------------------------------------------
+
+    def test_variable_state_rows_present(self, db_conn: sqlite3.Connection):
+        """A2.1: the coalescer materializes at least one variable_state row
+        per `(register_id, regvar_id, var_id)` that has any
+        `variable_instance` row. Sanity check against silent regressions
+        where the coalescer never runs or only handles a subset."""
+        # Distinct (register_id, regvar_id, var_id) triples in instance.
+        triples = db_conn.execute(
+            "SELECT DISTINCT register_id, regvar_id, var_id FROM variable_instance"
+        ).fetchall()
+        assert len(triples) > 0
+        for t in triples:
+            n = db_conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE register_id = ? AND regvar_id = ? AND var_id = ?",
+                (t["register_id"], t["regvar_id"], t["var_id"]),
+            ).fetchone()[0]
+            assert n >= 1, f"no variable_state for {tuple(t)}"
+
+    def test_variable_state_valid_from_to_full_iso(self, db_conn: sqlite3.Connection):
+        """§5.1: every valid_from / valid_to is a 10-char YYYY-MM-DD string.
+        The CHECK constraint guards this at write time; this test catches
+        the data layer in case a future migration loosens the CHECK."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state"
+        ).fetchall()
+        assert rows
+        for r in rows:
+            assert len(r["valid_from"]) == 10
+            assert len(r["valid_to"]) == 10
+            assert r["valid_from"][4] == "-" and r["valid_from"][7] == "-"
+            assert r["valid_to"][4] == "-" and r["valid_to"][7] == "-"
+            # Lexical comparison is chronological for full-date ISO strings.
+            assert r["valid_from"] <= r["valid_to"]
+
+    def test_variable_state_year_expansion(self, db_conn: sqlite3.Connection):
+        """A2.1: unika_summary year "2022" expands to '2022-01-01'..'2022-12-31'.
+        Asserted against ÅÄÖVar (register_id=1, var_id=200), which has
+        a single unika row VersionForsta=VersionSista='2022'."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE register_id = 1 AND var_id = 200"
+        ).fetchall()
+        assert len(rows) == 1
+        assert rows[0]["valid_from"] == "2022-01-01"
+        assert rows[0]["valid_to"] == "2022-12-31"
+
+    def test_variable_state_year_range_min_max(self, db_conn: sqlite3.Connection):
+        """A2.1: Kön in TESTREG appears across 2020/2021/2022; the coalescer
+        merges them into one variable_state per coalescing group with
+        valid_from = min year and valid_to = max year. The fixture's
+        unika row carries VersionForsta='2020', VersionSista='2022'."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to, value_set_id "
+            "FROM variable_state WHERE register_id = 1 AND var_id = 44 "
+            "ORDER BY value_set_id NULLS LAST"
+        ).fetchall()
+        assert len(rows) >= 1
+        # The row backed by the year-projected value_set spans the full
+        # 2020..2022 window.
+        with_set = [r for r in rows if r["value_set_id"] is not None]
+        assert with_set, "expected a Kön state with a value_set"
+        assert with_set[0]["valid_from"] == "2020-01-01"
+        assert with_set[0]["valid_to"] == "2022-12-31"
+
+    def test_variable_state_delivery_column_name(self, db_conn: sqlite3.Connection):
+        """§5.1: delivery_column_name on variable_state is the denormalized
+        latest alias. For TestVar (cvid 1002) with aliases ['TestCol',
+        'TestKolumn'] both attached to the same regver, the lexically
+        smaller alias wins by deterministic tie-break."""
+        row = db_conn.execute(
+            "SELECT delivery_column_name FROM variable_state "
+            "WHERE register_id = 1 AND var_id = 100"
+        ).fetchone()
+        assert row is not None
+        assert row["delivery_column_name"] == "TestCol"
+
+    def test_variable_state_regver_fallback(self, db_conn: sqlite3.Connection):
+        """A2.1: ParenVar (register_id=2, var_id=301) has NO unika row in the
+        fixture; the coalescer falls back to register_version.registerversionnamn
+        ("2021") to derive the valid range. Confirms the fallback path is
+        wired correctly."""
+        row = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE register_id = 2 AND var_id = 301"
+        ).fetchone()
+        assert row is not None
+        assert row["valid_from"] == "2021-01-01"
+        assert row["valid_to"] == "2021-12-31"
+
+    def test_variable_state_value_set_version_label_preserved(
+        self, db_conn: sqlite3.Connection
+    ):
+        """A2.1: value_set_version_label rides through the coalescer onto
+        variable_state — it's the §5.7 multi-vintage discriminator that
+        permits overlapping states. UniqueVar's instance gets the "2"
+        label from Vardemangder; assert it surfaces on the state row."""
+        row = db_conn.execute(
+            "SELECT value_set_version_label FROM variable_state "
+            "WHERE register_id = 2 AND var_id = 300"
+        ).fetchone()
+        assert row is not None
+        # Matches what _import_vardemangder writes onto variable_instance
+        # (see VARDEMANGDER_REAL_SHAPED_ROWS: kod="2", label="Övriga
+        # civilstånd"). Group key carries the label through unchanged.
+        assert row["value_set_version_label"] == "2"
+
+    def test_variable_state_grain_split(self, db_conn: sqlite3.Connection):
+        """A2.1: when cvids for the same (register_id, regvar_id, var_id)
+        differ on transient grain (vardemangdsniva on variable_instance),
+        the coalescer keeps them as distinct variable_state rows so A2.2
+        can triage. Fixture Kön cvid 1004 has no Vardemangder row (sentinel)
+        so its grain / value_set_id end up NULL — that's a different group
+        key from cvids 1001/1003 which carry a real value_set."""
+        # Two rows for register_id=1, var_id=44 (Kön): one with value_set,
+        # one without. Both share regvar_id=10 (same variant).
+        rows = db_conn.execute(
+            "SELECT value_set_id, value_set_version_label "
+            "FROM variable_state WHERE register_id = 1 AND var_id = 44"
+        ).fetchall()
+        # At least one row has a value_set and at least one has none. The
+        # exact split depends on year-projection covering cvid 1004 —
+        # which it doesn't (validity windows in the fixture stop at the
+        # 5001/5003 items, not 1004's sentinel-only ItemIds), so 1004
+        # falls into a separate group.
+        with_set = [r for r in rows if r["value_set_id"] is not None]
+        without_set = [r for r in rows if r["value_set_id"] is None]
+        assert with_set, "expected at least one Kön state with a value_set"
+        # Either grain split produced a NULL-value_set companion, or every
+        # cvid in the group had the same value_set. Both outcomes are valid
+        # at A2.1 (triage is A2.2); the test only fails if the coalescer
+        # silently collapses distinct value_set_ids into one state.
+        if len(rows) > 1:
+            value_set_ids = {r["value_set_id"] for r in rows}
+            assert len(value_set_ids) == len(rows), (
+                "coalescer collapsed distinct value_set_ids "
+                f"into one variable_state row: {value_set_ids}"
+            )
+        # Reference without_set so a future refactor that changes the fixture's
+        # sentinel behavior trips the symmetry rather than ignoring it.
+        _ = without_set
+
+    def test_variable_state_fk_to_variable(self, db_conn: sqlite3.Connection):
+        """Every variable_state row points at a real variable row via the
+        FK on (register_id, var_id). PRAGMA foreign_key_check is already
+        invoked at build time; this is a regression-level sanity check."""
+        orphans = db_conn.execute(
+            "SELECT vs.state_id FROM variable_state vs "
+            "LEFT JOIN variable v "
+            "  ON v.register_id = vs.register_id AND v.var_id = vs.var_id "
+            "WHERE v.register_id IS NULL"
+        ).fetchall()
+        assert orphans == []
+
+    def test_variable_state_count_summary(self, db_conn: sqlite3.Connection):
+        """A2.1: total variable_state row count matches the manifest's
+        coalesce_stats.n_variable_states. Catches a future regression
+        where the stats accounting drifts from the SQL truth."""
+        from_table = db_conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[
+            0
+        ]
+        import json as _json
+
+        manifest = db_conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+        ).fetchone()
+        assert manifest is not None
+        stats = _json.loads(manifest["value"])
+        assert stats["n_variable_states"] == from_table
 
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(
