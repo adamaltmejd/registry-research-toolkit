@@ -2292,3 +2292,425 @@ class TestVariableStateRenameMidLife:
             assert row["valid_to"] == "9999-12-31"
         finally:
             conn.close()
+
+
+class TestReplacedByEdges:
+    """A2.3: succession edges materialized from `timeseries_event`.
+
+    Default fixture geometry (from `_csv_fixtures.REGISTERINFORMATION_ROWS`):
+      - register_id 1 = TESTREG, register_id 2 = OTHERREG
+      - regvar_id 10 (TESTREG/Individer), regvar_id 20 (OTHERREG/Företag)
+      - cvids in TESTREG: 1001..1005; cvids in OTHERREG: 2001..2004
+      - var_ids: 44=Kön (in both registers), 100=TestVar (TESTREG only),
+        200=ÅÄÖVar (TESTREG only), 300=UniqueVar (OTHERREG only),
+        301=ParenVar (OTHERREG only), 302=ExternVar (OTHERREG only)
+
+    Slug TOML written by `_write_slugs` mirrors the shared fixture so
+    register/variant slugs land in the DB. Variable slugs derive from
+    `variable_alias.delivery_column_name` per §5.3.
+    """
+
+    @staticmethod
+    def _write_slugs(slug_dir: Path) -> None:
+        """Minimal slug TOML covering the default fixture's two registers."""
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+
+    @classmethod
+    def _build(
+        cls,
+        tmp_path: Path,
+        timeseries_rows: list[str],
+    ) -> Path:
+        """Build a DB with custom Timeseries.csv rows. Returns the DB path."""
+        from _csv_fixtures import write_scb_input
+
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(input_dir, timeseries_rows=timeseries_rows)
+        cls._write_slugs(slug_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            slug_dir=slug_dir,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_register_ersatt_av_emits_register_replaced_by(
+        self, tmp_path: Path
+    ) -> None:
+        """Register-grain row with Ersatt av → exactly one
+        register_replaced_by row pointing predecessor → successor."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "successor_provider, successor_register, "
+                "effective_year, note "
+                "FROM register_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "scb",
+                "otherreg",
+                None,
+                "auto:timeseries_event",
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+        finally:
+            conn.close()
+
+    def test_variant_ersatt_av_emits_variant_replaced_by(self, tmp_path: Path) -> None:
+        """RegisterVariant row with Ersatt av → exactly one variant edge."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="RegisterVariant", id1="10", id2="20")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, predecessor_variant, "
+                "successor_provider, successor_register, successor_variant, "
+                "effective_year, note "
+                "FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "individer",
+                "scb",
+                "otherreg",
+                "foretag",
+                None,
+                "auto:timeseries_event",
+            )
+        finally:
+            conn.close()
+
+    def test_variable_ersatt_av_emits_variable_replaced_by(
+        self, tmp_path: Path
+    ) -> None:
+        """Variabel (var_id grain) row with Ersatt av → one variable edge.
+
+        Uses var_id 100 (TestVar in TESTREG, unique to register 1) →
+        var_id 300 (UniqueVar in OTHERREG, unique to register 2). Both
+        var_ids are register-unique so the materializer can resolve.
+        """
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variant, predecessor_variable, "
+                "successor_register, successor_variant, successor_variable, "
+                "note FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            # TestVar (cvid 1002) has aliases TestCol and TestKolumn —
+            # 'testcol' wins on ORDER BY delivery_column_name.
+            assert tuple(edges[0]) == (
+                "testreg",
+                "individer",
+                "testcol",
+                "otherreg",
+                "foretag",
+                "uniqcol",
+                "auto:timeseries_event",
+            )
+        finally:
+            conn.close()
+
+    def test_aktuell_variabel_emits_variable_replaced_by(self, tmp_path: Path) -> None:
+        """AktuellVariabel (cvid grain) → variable_replaced_by table.
+
+        cvid 1002 (TestVar in TESTREG/Individer) → cvid 2002
+        (UniqueVar in OTHERREG/Företag).
+        """
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variant, predecessor_variable, "
+                "successor_register, successor_variant, successor_variable "
+                "FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "testreg",
+                "individer",
+                "testcol",
+                "otherreg",
+                "foretag",
+                "uniqcol",
+            )
+        finally:
+            conn.close()
+
+    def test_ersatter_inverse_direction_collapsed(self, tmp_path: Path) -> None:
+        """Paired (Ersatt av, Ersätter) rows over the same edge → exactly
+        ONE materialized edge. SCB ships both directions; the
+        collapse is the load-bearing behavior here.
+        """
+        from _csv_fixtures import timeseries_row
+
+        rows = [
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+            timeseries_row(
+                handelse="Ersätter", entitet="RegisterVariant", id1="20", id2="10"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_variant, successor_variant FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            # Predecessor = the original (regvar 10 → individer), successor = 20 → foretag.
+            assert tuple(edges[0]) == ("individer", "foretag")
+            # Stats counter increments by 1 for the collapsed inverse row.
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_skipped_collapsed_inverse"] == 1
+        finally:
+            conn.close()
+
+    def test_unresolvable_id_skipped_not_failed(self, tmp_path: Path) -> None:
+        """Row with id pointing at a non-existent entity → no edge, stat
+        increments, build does NOT raise."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [
+            timeseries_row(entitet="Register", id1="1", id2="9999"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            count = conn.execute(
+                "SELECT COUNT(*) FROM register_replaced_by"
+            ).fetchone()[0]
+            assert count == 0
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
+    def test_effective_year_extracted_when_present(self, tmp_path: Path) -> None:
+        """Timeseries.csv has no year column, so effective_year lands as
+        NULL on every auto-derived row. This pins the contract: if SCB
+        ever ships an `EffectiveYear` column, the schema/manifest both
+        need to update — this assertion will fire as the canary.
+        """
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            year = conn.execute(
+                "SELECT effective_year FROM register_replaced_by"
+            ).fetchone()[0]
+            assert year is None
+        finally:
+            conn.close()
+
+    def test_note_is_auto_timeseries_event(self, tmp_path: Path) -> None:
+        """Every auto-derived row carries note = 'auto:timeseries_event'.
+        Distinguishes from future A4 TOML-curated rows."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+            timeseries_row(entitet="RegisterVariant", id1="10", id2="20"),
+            timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            for table in (
+                "register_replaced_by",
+                "variant_replaced_by",
+                "variable_replaced_by",
+            ):
+                notes = {
+                    r[0]
+                    for r in conn.execute(f"SELECT note FROM {table}").fetchall()  # noqa: S608 -- table name is a literal
+                }
+                assert notes == {"auto:timeseries_event"}, table
+        finally:
+            conn.close()
+
+    def test_replaced_by_stats_in_manifest(self, tmp_path: Path) -> None:
+        """Manifest carries replaced_by_stats with the full sub-key set
+        so maintainers can eyeball per-grain counts + skip totals."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            assert manifest is not None
+            stats = _json.loads(manifest["value"])
+            assert set(stats.keys()) == {
+                "n_timeseries_event_rows_scanned",
+                "n_register_replaced_by",
+                "n_variant_replaced_by",
+                "n_variable_replaced_by",
+                "n_skipped_unresolved",
+                "n_skipped_collapsed_inverse",
+            }
+            assert stats["n_register_replaced_by"] == 1
+            # Scanned counts only Ersatt av/Ersätter rows on the four
+            # target entitets — the single row in this fixture matches.
+            assert stats["n_timeseries_event_rows_scanned"] == 1
+        finally:
+            conn.close()
+
+    def test_no_self_loops(self, tmp_path: Path) -> None:
+        """Defensive: id1 == id2 → skipped (never inserted). SCB
+        shouldn't ship these but a self-loop edge is meaningless and
+        would corrupt graph traversal."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [timeseries_row(entitet="Register", id1="1", id2="1")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            count = conn.execute(
+                "SELECT COUNT(*) FROM register_replaced_by"
+            ).fetchone()[0]
+            assert count == 0
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
+    def test_irrelevant_handelse_ignored(self, tmp_path: Path) -> None:
+        """Rows with handelse not in (Ersatt av, Ersätter) → ignored.
+        The default `TIMESERIES_ROWS` ships one such row (handelse =
+        Kodändring) which must NOT produce any edge."""
+        from _csv_fixtures import timeseries_row
+
+        # Mix a Kodändring (filter rejects) with a real Ersatt av so we
+        # know the materializer ran and just dropped the irrelevant row.
+        rows = [
+            timeseries_row(
+                handelse="Kodändring",
+                entitet="Variabel",
+                id1="100",
+                id2="",
+            ),
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            # Only the Register row produced an edge; the Kodändring row
+            # was filtered before resolution and doesn't inflate
+            # n_skipped_unresolved.
+            count = conn.execute(
+                "SELECT COUNT(*) FROM register_replaced_by"
+            ).fetchone()[0]
+            assert count == 1
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_timeseries_event_rows_scanned"] == 1
+            assert stats["n_skipped_unresolved"] == 0
+        finally:
+            conn.close()
+
+    def test_irrelevant_entitet_ignored(self, tmp_path: Path) -> None:
+        """Rows with entitet not in the four target shapes → ignored
+        (e.g. `RegisterVersion`, which has its own version-level
+        succession story handled elsewhere)."""
+        from _csv_fixtures import timeseries_row
+
+        rows = [
+            timeseries_row(
+                entitet="RegisterVersion",
+                id1="100",
+                id2="101",
+            ),
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            # No variant/variable edges (the RegisterVersion row should
+            # not bleed into any table) and exactly one register edge
+            # from the second row.
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 1
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            import json as _json
+
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            # Scanned count only includes target-entitet rows.
+            assert stats["n_timeseries_event_rows_scanned"] == 1
+        finally:
+            conn.close()
