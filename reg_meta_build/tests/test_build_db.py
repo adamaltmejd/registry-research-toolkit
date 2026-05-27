@@ -86,7 +86,7 @@ class TestBuildDb:
     def test_alias_anomaly(self, db_conn: sqlite3.Connection):
         """CVID 1002 should have two aliases: TestCol and TestKolumn."""
         aliases = db_conn.execute(
-            "SELECT kolumnnamn FROM variable_alias WHERE cvid = 1002 ORDER BY kolumnnamn"
+            "SELECT delivery_column_name FROM variable_alias WHERE cvid = 1002 ORDER BY delivery_column_name"
         ).fetchall()
         assert [a[0] for a in aliases] == ["TestCol", "TestKolumn"]
 
@@ -120,18 +120,17 @@ class TestBuildDb:
     def test_value_set_info_on_instance(self, db_conn: sqlite3.Connection):
         """Variable instances with values should have vardemangdsversion/niva set."""
         row = db_conn.execute(
-            "SELECT vardemangdsversion, vardemangdsniva FROM variable_instance "
+            "SELECT value_set_version_label, vardemangdsniva FROM variable_instance "
             "WHERE cvid = 1001"
         ).fetchone()
-        assert row["vardemangdsversion"] == "Kön"
+        assert row["value_set_version_label"] == "Kön"
         assert row["vardemangdsniva"] == "1"
 
     def test_sentinel_rows_skipped(self, db_conn: sqlite3.Connection):
         """SCB type-tag rows ("Tal", "Beskrivande text") must not produce
         value_code rows; sentinel-only cvids must end up with NULL value_set_id."""
         rows = db_conn.execute(
-            "SELECT vardekod FROM value_code "
-            "WHERE vardekod IN ('Tal', 'Beskrivande text')"
+            "SELECT code FROM value_code WHERE code IN ('Tal', 'Beskrivande text')"
         ).fetchall()
         assert rows == []
         for cvid in (1004, 1005):
@@ -147,11 +146,11 @@ class TestBuildDb:
         NULL vardemangdsversion/niva — not the sentinel string."""
         for cvid in (1004, 1005):
             row = db_conn.execute(
-                "SELECT vardemangdsversion, vardemangdsniva "
+                "SELECT value_set_version_label, vardemangdsniva "
                 "FROM variable_instance WHERE cvid = ?",
                 (cvid,),
             ).fetchone()
-            assert row["vardemangdsversion"] is None, f"cvid {cvid}"
+            assert row["value_set_version_label"] is None, f"cvid {cvid}"
             assert row["vardemangdsniva"] is None, f"cvid {cvid}"
 
     def test_real_code_with_sentinel_shape_survives(self, db_conn: sqlite3.Connection):
@@ -159,45 +158,43 @@ class TestBuildDb:
         real code (e.g. cvid 2002, kod="2", label="Övriga civilstånd"). It must
         be preserved, including its version metadata."""
         code_rows = db_conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning "
+            "SELECT vc.code, vc.label "
             "FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
             "WHERE vi.cvid = 2002"
         ).fetchall()
-        assert [(r["vardekod"], r["vardebenamning"]) for r in code_rows] == [
+        assert [(r["code"], r["label"]) for r in code_rows] == [
             ("2", "Övriga civilstånd")
         ]
         meta = db_conn.execute(
-            "SELECT vardemangdsversion, vardemangdsniva "
+            "SELECT value_set_version_label, vardemangdsniva "
             "FROM variable_instance WHERE cvid = 2002"
         ).fetchone()
-        assert meta["vardemangdsversion"] == "2"
+        assert meta["value_set_version_label"] == "2"
         assert meta["vardemangdsniva"] == "2"
 
     def test_empty_vardekod_survives(self, db_conn: sqlite3.Connection):
         """Empty vardekod with a label ("Uppgift okänd") is a legitimate code,
         not pollution. Must survive."""
         rows = db_conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning "
+            "SELECT vc.code, vc.label "
             "FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
             "WHERE vi.cvid = 2003"
         ).fetchall()
-        assert [(r["vardekod"], r["vardebenamning"]) for r in rows] == [
-            ("", "Uppgift okänd")
-        ]
+        assert [(r["code"], r["label"]) for r in rows] == [("", "Uppgift okänd")]
 
     def test_fully_empty_row_dropped(self, db_conn: sqlite3.Connection):
         """A row with empty kod, label, and item carries no information; the
         cvid must end up with NULL value_set_id and NULL version metadata."""
         row = db_conn.execute(
-            "SELECT value_set_id, vardemangdsversion, vardemangdsniva "
+            "SELECT value_set_id, value_set_version_label, vardemangdsniva "
             "FROM variable_instance WHERE cvid = 1002"
         ).fetchone()
         assert row["value_set_id"] is None
-        assert row["vardemangdsversion"] is None
+        assert row["value_set_version_label"] is None
         assert row["vardemangdsniva"] is None
 
     def test_source_resolved_exact(self, db_conn: sqlite3.Connection):
@@ -393,8 +390,7 @@ class TestBuildDb:
         # whose registerversionnamn both derive_period to "2018", but whose
         # `register_version.slug` is curator-disambiguated.
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 1, 'src')"
+            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
         )
         conn.execute(
             "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
@@ -412,14 +408,14 @@ class TestBuildDb:
             [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
         )
         conn.executemany(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
             [(1000, "Kon"), (1001, "Kon")],
         )
         # Consumer register `cons` (id=2) with one variant + one version whose
         # slug matches the tilläggsfil sibling. variable.source_register_id = 1
         # marks this as consumer-side; the linker must pick cvid 1001, not 1000.
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (2, 1, 'cons')"
         )
         conn.execute(
@@ -440,7 +436,7 @@ class TestBuildDb:
             "VALUES (2000, 2, 20, 200, 44)"
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (2000, 'Kon')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'Kon')"
         )
         conn.commit()
 
@@ -471,8 +467,7 @@ class TestBuildDb:
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
-            "VALUES (1, 1, 'iot')"
+            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'iot')"
         )
         conn.execute(
             "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
@@ -490,13 +485,13 @@ class TestBuildDb:
             [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
         )
         conn.executemany(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
             [(1000, "SocBidrHB"), (1001, "SocBidrHB")],
         )
         # Consumer LISA 2020 has bare slug "2020" — no IoT sibling has that
         # exact slug, so the linker correctly produces no edge.
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, registernamn) "
+            "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (2, 1, 'lisa')"
         )
         conn.execute(
@@ -517,7 +512,7 @@ class TestBuildDb:
             "VALUES (2000, 2, 20, 200, 44)"
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (2000, 'SocBidrHB')"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'SocBidrHB')"
         )
         conn.commit()
 
@@ -613,9 +608,9 @@ class TestBuildDb:
         # §5.1: the `_default` placeholder for variant-less registers is
         # synthesized at FQID-resolve time (catalog.py), never persisted.
         # Every register_variant row in the DB must be a real source row
-        # — i.e. registervariantnamn populated.
+        # — i.e. `name` (renamed from `registervariantnamn` per §5.11) populated.
         synthetic = db_conn.execute(
-            "SELECT COUNT(*) FROM register_variant WHERE registervariantnamn IS NULL"
+            "SELECT COUNT(*) FROM register_variant WHERE name IS NULL"
         ).fetchone()[0]
         assert synthetic == 0
 
@@ -1082,15 +1077,15 @@ class TestYearProjection:
         )
         conn = open_db(db_dir / "reg_meta.db")
         codes = conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+            "WHERE vi.cvid = 1001 ORDER BY vc.code"
         ).fetchall()
         conn.close()
         # Man is excluded (window 2030+ doesn't cover cvid year 2020).
         # Kvinna is included (untracked → always-valid).
-        assert [r["vardekod"] for r in codes] == ["2"]
+        assert [r["code"] for r in codes] == ["2"]
 
     def test_includes_codes_with_no_validity(self, tmp_path: Path):
         # All Vardemangder ItemIds are untracked (none has a row in
@@ -1110,13 +1105,13 @@ class TestYearProjection:
         )
         conn = open_db(db_dir / "reg_meta.db")
         codes = conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+            "WHERE vi.cvid = 1001 ORDER BY vc.code"
         ).fetchall()
         conn.close()
-        assert [r["vardekod"] for r in codes] == ["1", "2"]
+        assert [r["code"] for r in codes] == ["1", "2"]
 
     def test_includes_subyear_overlap(self, tmp_path: Path):
         # cvid 1001 year=2020. Item with start 2020-09-01 — sub-year cutoff
@@ -1134,13 +1129,13 @@ class TestYearProjection:
         )
         conn = open_db(db_dir / "reg_meta.db")
         codes = conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.vardekod"
+            "WHERE vi.cvid = 1001 ORDER BY vc.code"
         ).fetchall()
         conn.close()
-        assert [r["vardekod"] for r in codes] == ["1"]
+        assert [r["code"] for r in codes] == ["1"]
 
     def test_yearless_cvid_includes_all_union_pairs(self, tmp_path: Path):
         # cvid 9001's regver name "Person-År" has no extractable year. The
@@ -1203,15 +1198,15 @@ class TestYearProjection:
         )
         conn = open_db(db_dir / "reg_meta.db")
         codes = conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 9001 ORDER BY vc.vardekod"
+            "WHERE vi.cvid = 9001 ORDER BY vc.code"
         ).fetchall()
         conn.close()
         # Yearless cvids fall back to the historical union — the tracked
         # window's exclusion does NOT apply because there's no year to test.
-        assert [r["vardekod"] for r in codes] == ["1"]
+        assert [r["code"] for r in codes] == ["1"]
 
     def test_mixed_tracked_untracked_tracked_wins(self, tmp_path: Path):
         # cvid 1001 year=2020. Same (cvid, code) appears with TWO ItemIds:
@@ -1234,7 +1229,7 @@ class TestYearProjection:
         # Man should NOT be in cvid 1001's value_set (tracked window 2030+
         # doesn't cover year 2020; the untracked sibling 8005 doesn't relax it).
         codes = conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "LEFT JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
             "WHERE vi.cvid = 1001"
@@ -1242,7 +1237,7 @@ class TestYearProjection:
         conn.close()
         # Either no codes (value_set_id NULL because all union excluded), or
         # vardekod is None from the LEFT JOIN. The "Man" code must not appear.
-        kods = [r["vardekod"] for r in codes if r["vardekod"] is not None]
+        kods = [r["code"] for r in codes if r["code"] is not None]
         assert "1" not in kods
 
 
@@ -1326,7 +1321,7 @@ class TestSameAsBuildIntegration:
             assert str(r.via_same_as[0]) == "scb/testreg/individer/2020/kon"
             # Caller's FQID preserved on the returned record.
             assert str(r.fqid) == "scb/testreg/individer/2020/legacy-kon"
-            assert r.kolumnnamn == "Kon"
+            assert r.delivery_column_name == "Kon"
         finally:
             conn.close()
 
@@ -1360,3 +1355,133 @@ class TestSameAsBuildIntegration:
             assert (var_count, cls_count) == (0, 0)
         finally:
             conn.close()
+
+
+class TestOperationalDefinitionFold:
+    """A1.1 / §5.11: SCB ships `VariabelOperationell_definition` as a refinement
+    over `Variabelbeskrivning`. The Model A schema drops the dedicated column
+    and folds the operational definition into `description` when it's distinct
+    and non-empty. These tests lock the fold contract — empty op stays empty,
+    duplicate op is skipped, distinct op appends with a blank-line separator,
+    and a re-built DB doesn't double-fold (the `op not in desc` substring guard).
+    """
+
+    @staticmethod
+    def _build_and_fetch(tmp_path: Path, *, vardesc: str, varopdef: str) -> str:
+        """Build a minimal DB with one variable carrying the given description
+        and operational definition; return the persisted `variable.description`.
+        """
+        ri_row = _ri_row(
+            "FOLDREG",
+            "Foldregistret",
+            "Folding test",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "FoldVar",
+            "Definition",
+            vardesc,
+            varopdef,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "FoldCol",
+            "int",
+            "1",
+            "9001",
+            "999",
+            "9001",
+            "9001",
+            "777",
+        )
+        # `REGISTERINFORMATION_ROWS` carries the baseline fixtures the build
+        # pipeline expects to find (registers referenced by `unika_summary`
+        # etc.). Append our row instead of replacing — the build is strict.
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [ri_row]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri_rows)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = open_db(db_dir / "reg_meta.db")
+        try:
+            row = conn.execute(
+                "SELECT description FROM variable "
+                "WHERE register_id = 999 AND var_id = 777"
+            ).fetchone()
+            return row["description"]
+        finally:
+            conn.close()
+
+    def test_empty_operational_definition_leaves_description_untouched(
+        self, tmp_path: Path
+    ):
+        """Empty `VariabelOperationell_definition` → description unchanged."""
+        result = self._build_and_fetch(
+            tmp_path, vardesc="Plain description", varopdef=""
+        )
+        assert result == "Plain description"
+
+    def test_distinct_operational_definition_appended_with_blank_line(
+        self, tmp_path: Path
+    ):
+        """Non-empty op_def distinct from desc → appended with `\\n\\n` separator."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Plain description",
+            varopdef="Operational refinement",
+        )
+        assert result == "Plain description\n\nOperational refinement"
+
+    def test_duplicate_operational_definition_not_appended(self, tmp_path: Path):
+        """When `op == desc` exactly, the fold is skipped (no `desc\\n\\ndesc`)."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Same content",
+            varopdef="Same content",
+        )
+        assert result == "Same content"
+
+    def test_substring_operational_definition_not_appended(self, tmp_path: Path):
+        """When `op` is already a substring of `desc`, the fold must skip —
+        otherwise rebuilds (which can see a `description` already carrying
+        the merged operational text) would accumulate duplicated tails.
+        This is the `op not in desc` guard. Pipe-delimited CSV doesn't
+        carry literal newlines, so we use a single-line description that
+        embeds the operational text verbatim — the substring relationship
+        is what the guard actually checks."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="Operational refinement is part of this longer description",
+            varopdef="Operational refinement",
+        )
+        assert result == "Operational refinement is part of this longer description"
+
+    def test_operational_definition_with_empty_description(self, tmp_path: Path):
+        """When desc is empty but op is set, the merged value is just op
+        (no leading `\\n\\n`)."""
+        result = self._build_and_fetch(
+            tmp_path,
+            vardesc="",
+            varopdef="Operational refinement",
+        )
+        assert result == "Operational refinement"

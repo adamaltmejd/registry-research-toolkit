@@ -13,16 +13,16 @@ import sqlite3
 
 from reg_meta_build.db import DDL, seed_providers
 
-# (registernamn, slug, register_id, provider_id)
+# (name, slug, register_id, provider_id)
 _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)
-# (registervariantnamn, slug, regvar_id)
+# (name, slug, regvar_id)
 _DEFAULT_VARIANT = ("Individer 15+", "individer-15plus", 10)
 # (registerversionnamn, slug, regver_id)
 # Bare period name — production SCB names like LISA's are usually just `2018`,
 # not `LISA 2018`. A prefix here would trigger seed-slugs' §5.3 residual check
 # and flag the row, polluting tests that assume a clean round-trip.
 _DEFAULT_VERSION = ("2018", "2018", 100)
-# (variabelnamn, var_id, cvid, kolumnnamn)
+# (name, var_id, cvid, delivery_column_name)
 _DEFAULT_VARIABLE = ("Kön", 44, 1001, "Kon")
 
 
@@ -32,7 +32,7 @@ def build_slugged_db(
     variant: tuple[str | None, str | None, int] | None = _DEFAULT_VARIANT,
     version: tuple[str, str | None, int] | None = _DEFAULT_VERSION,
     variable: tuple[str, int, int, str] | None = _DEFAULT_VARIABLE,
-    kolumnnamn: str | None = None,
+    delivery_column_name: str | None = None,
     classification: tuple[str, str, str, str] | None = (
         "SUN2020",
         "Svensk utbildningsnomenklatur",
@@ -42,7 +42,7 @@ def build_slugged_db(
 ) -> sqlite3.Connection:
     """Build an in-memory DB. Pass ``None`` for any layer to omit it.
 
-    ``kolumnnamn`` overrides the variable's alias when set (e.g. to test
+    ``delivery_column_name`` overrides the variable's alias when set (e.g. to test
     diacritic folding).
     """
     conn = sqlite3.connect(":memory:")
@@ -53,7 +53,7 @@ def build_slugged_db(
     if register is not None:
         name, slug, register_id, provider_id = register
         conn.execute(
-            "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+            "INSERT INTO register (register_id, provider_id, slug, name) "
             "VALUES (?, ?, ?, ?)",
             (register_id, provider_id, slug, name),
         )
@@ -62,7 +62,7 @@ def build_slugged_db(
         var_name, var_slug, regvar_id = variant
         conn.execute(
             "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, registervariantnamn) "
+            "(regvar_id, register_id, slug, name) "
             "VALUES (?, ?, ?, ?)",
             (regvar_id, register[2], var_slug, var_name),
         )
@@ -79,18 +79,18 @@ def build_slugged_db(
     if variable is not None and version is not None and register is not None:
         v_name, var_id, cvid, default_kol = variable
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, variabelnamn) VALUES (?, ?, ?)",
+            "INSERT INTO variable (register_id, var_id, name) VALUES (?, ?, ?)",
             (register[2], var_id, v_name),
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, datatyp) "
+            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
             "VALUES (?, ?, ?, ?, ?, 'int')",
             (cvid, register[2], variant[2], version[2], var_id),
         )
         conn.execute(
-            "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
-            (cvid, kolumnnamn or default_kol),
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
+            (cvid, delivery_column_name or default_kol),
         )
 
     if classification is not None:
@@ -114,7 +114,7 @@ def add_register(
     provider_id: int = 1,
 ) -> None:
     conn.execute(
-        "INSERT INTO register (register_id, provider_id, slug, registernamn) "
+        "INSERT INTO register (register_id, provider_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
         (register_id, provider_id, slug, name),
     )
@@ -130,7 +130,7 @@ def add_variant(
 ) -> None:
     conn.execute(
         "INSERT INTO register_variant "
-        "(regvar_id, register_id, slug, registervariantnamn) "
+        "(regvar_id, register_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
         (regvar_id, register_id, slug, name),
     )
@@ -162,7 +162,7 @@ def add_variable(
 ) -> None:
     conn.execute(
         "INSERT INTO variable "
-        "(register_id, var_id, variabelnamn, source_register_id) "
+        "(register_id, var_id, name, source_register_id) "
         "VALUES (?, ?, ?, ?)",
         (register_id, var_id, name, source_register_id),
     )
@@ -176,7 +176,7 @@ def add_binding(
     regvar_id: int,
     regver_id: int,
     var_id: int,
-    kolumnnamn: str,
+    delivery_column_name: str,
     via_source_id: int | None = None,
 ) -> None:
     """Insert a variable_instance + matching variable_alias row.
@@ -186,11 +186,11 @@ def add_binding(
     """
     conn.execute(
         "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, via_source_id) "
+        "(cvid, register_id, regvar_id, regver_id, var_id, data_type, via_source_id) "
         "VALUES (?, ?, ?, ?, ?, 'int', ?)",
         (cvid, register_id, regvar_id, regver_id, var_id, via_source_id),
     )
     conn.execute(
-        "INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (?, ?)",
-        (cvid, kolumnnamn),
+        "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
+        (cvid, delivery_column_name),
     )

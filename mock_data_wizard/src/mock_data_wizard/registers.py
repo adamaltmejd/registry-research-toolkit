@@ -53,9 +53,9 @@ def list_registers(*, db_path: Path | None = None) -> list[Register]:
         return []
     try:
         rows = conn.execute(
-            "SELECT register_id, registernamn FROM register ORDER BY registernamn"
+            "SELECT register_id, name FROM register ORDER BY name"
         ).fetchall()
-        return [Register(id=r["register_id"], name=r["registernamn"]) for r in rows]
+        return [Register(id=r["register_id"], name=r["name"]) for r in rows]
     finally:
         conn.close()
 
@@ -84,11 +84,11 @@ def resolve_register(
         if not ids or len(ids) > 1:
             return None
         row = conn.execute(
-            "SELECT register_id, registernamn FROM register WHERE register_id = ?",
+            "SELECT register_id, name FROM register WHERE register_id = ?",
             (ids[0],),
         ).fetchone()
         if row is None:
             return None
-        return Register(id=row["register_id"], name=row["registernamn"])
+        return Register(id=row["register_id"], name=row["name"])
     finally:
         conn.close()

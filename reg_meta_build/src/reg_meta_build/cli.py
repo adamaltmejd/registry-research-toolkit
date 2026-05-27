@@ -181,7 +181,7 @@ def _build_parser() -> argparse.ArgumentParser:
         description=(
             "Generate hand-review starter TOMLs at <out-dir>/<provider>.toml\n"
             "and <out-dir>/classifications.toml, mirroring REFACTOR_SPEC §5.3.\n"
-            "Slugs are auto-derived from registernamn / variantnamn / short_name\n"
+            "Slugs are auto-derived from register.name / register_variant.name / short_name\n"
             "and need maintainer review before commit.\n\n"
             "Examples:\n"
             "  reg-meta-build seed-slugs\n"
@@ -513,7 +513,10 @@ def _cmd_precheck_slugs(
         data={
             "slug_dir": str(slug_dir),
             "missing_registers": [
-                {"provider": p, "source_id": sid, "registernamn": name}
+                # `name` mirrors the renamed `register.name` column (was
+                # SCB `registernamn`); the JSON envelope uses the universal
+                # English key like the other entity arrays.
+                {"provider": p, "source_id": sid, "name": name}
                 for (p, sid, name) in result.missing_registers
             ],
             "missing_variants": [

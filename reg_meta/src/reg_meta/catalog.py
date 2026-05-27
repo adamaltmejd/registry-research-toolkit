@@ -40,9 +40,10 @@ class ResolvedRegister:
     fqid: Fqid
     register_id: int
     provider_id: int
-    registernamn: str
-    registerrubrik: str | None
-    registersyfte: str | None
+    # §5.11: `name` was `registernamn`, `purpose` was `registersyfte`.
+    # `registerrubrik` is dropped (redundant with name).
+    name: str
+    purpose: str | None
 
 
 @dataclass(frozen=True)
@@ -53,8 +54,10 @@ class ResolvedRegisterVariant:
     # not backed by a register_variant row.
     regvar_id: int | None
     register_id: int
-    registervariantnamn: str | None
-    registervariantrubrik: str | None
+    # §5.11 rename. `description` replaces the dropped `registervariantrubrik`
+    # carrier; SCB's `registervariantbeskrivning` is the value.
+    name: str | None
+    description: str | None
     display_group: str | None
 
 
@@ -75,8 +78,11 @@ class ResolvedVariableBinding:
     regvar_id: int
     regver_id: int
     var_id: int
-    variabelnamn: str | None
-    kolumnnamn: str | None
+    # §5.11: SCB `variabelnamn` → `variable_name`; `kolumnnamn` →
+    # `delivery_column_name` (the un-prefixed SCB delivery column
+    # header — `Kon`, `PersonNr`, etc.).
+    variable_name: str | None
+    delivery_column_name: str | None
     # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
     via_source_id: int | None = None
     lineage: Fqid | None = None
@@ -122,7 +128,7 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 _BINDING_QUERY = (
     "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "
-    "v.variabelnamn, va.kolumnnamn, "
+    "v.name AS variable_name, va.delivery_column_name, "
     "rv.slug AS variant_slug, rver.slug AS version_slug, "
     "p_src.slug AS src_provider_slug, r_src.slug AS src_register_slug, "
     "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
@@ -189,9 +195,10 @@ class Catalog:
         )
 
     def _resolve_register(self, fqid: Fqid) -> ResolvedRegister:
+        # §5.11: `name` / `purpose` (was `registernamn` / `registersyfte`).
+        # `registerrubrik` is dropped per §5.11.
         row = self._conn.execute(
-            "SELECT r.register_id, r.provider_id, r.registernamn, "
-            "r.registerrubrik, r.registersyfte "
+            "SELECT r.register_id, r.provider_id, r.name, r.purpose "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? AND r.slug = ?",
             (fqid.provider, fqid.register),
@@ -202,15 +209,17 @@ class Catalog:
             fqid=fqid,
             register_id=row["register_id"],
             provider_id=row["provider_id"],
-            registernamn=row["registernamn"],
-            registerrubrik=row["registerrubrik"],
-            registersyfte=row["registersyfte"],
+            name=row["name"],
+            purpose=row["purpose"],
         )
 
     def _resolve_variant(self, fqid: Fqid) -> ResolvedRegisterVariant:
+        # §5.11: `name` was `registervariantnamn`, `description` was
+        # `registervariantbeskrivning`. `registervariantrubrik` and
+        # `registervariantsekretess` are dropped.
         row = self._conn.execute(
-            "SELECT rv.regvar_id, rv.register_id, rv.registervariantnamn, "
-            "rv.registervariantrubrik, rv.display_group "
+            "SELECT rv.regvar_id, rv.register_id, rv.name, "
+            "rv.description, rv.display_group "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -222,8 +231,8 @@ class Catalog:
                 fqid=fqid,
                 regvar_id=row["regvar_id"],
                 register_id=row["register_id"],
-                registervariantnamn=row["registervariantnamn"],
-                registervariantrubrik=row["registervariantrubrik"],
+                name=row["name"],
+                description=row["description"],
                 display_group=row["display_group"],
             )
         if fqid.variant == DEFAULT_VARIANT_SLUG:
@@ -251,8 +260,8 @@ class Catalog:
             fqid=fqid,
             regvar_id=None,
             register_id=row["register_id"],
-            registervariantnamn=None,
-            registervariantrubrik=None,
+            name=None,
+            description=None,
             display_group=None,
         )
 
@@ -309,21 +318,22 @@ class Catalog:
 
     def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
         # No materialized binding rows yet: scan instances under the
-        # (variant, version) pair and derive variable slug from kolumnnamn
-        # (§5.3). The version match is an exact slug comparison —
-        # `register_version.slug` carries the period or curated token.
-        # `ORDER BY vi.cvid, va.kolumnnamn` makes first-match deterministic;
-        # uniqueness of (variant, version, variable_slug) is a §5.3 invariant.
+        # (variant, version) pair and derive variable slug from the renamed
+        # `variable_alias.delivery_column_name` column (§5.3, §5.11). The
+        # version match is an exact slug comparison — `register_version.slug`
+        # carries the period or curated token. `ORDER BY vi.cvid,
+        # va.delivery_column_name` makes first-match deterministic; uniqueness
+        # of (variant, version, variable_slug) is a §5.3 invariant.
         assert fqid.variable is not None
         variable_slug = fqid.variable
         rows = self._conn.execute(
             _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
             "AND rv.slug = ? AND rver.slug = ? "
-            "ORDER BY vi.cvid, va.kolumnnamn",
+            "ORDER BY vi.cvid, va.delivery_column_name",
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
-            if derive_variable_slug(row["kolumnnamn"]) == variable_slug:
+            if derive_variable_slug(row["delivery_column_name"]) == variable_slug:
                 return self._row_to_binding(row, fqid, variable_slug)
         return None
 
@@ -429,8 +439,10 @@ class Catalog:
             regvar_id=row["regvar_id"],
             regver_id=row["regver_id"],
             var_id=row["var_id"],
-            variabelnamn=row["variabelnamn"],
-            kolumnnamn=row["kolumnnamn"],
+            # `variable_name` aliases `v.name`; `delivery_column_name` is
+            # `va.delivery_column_name` (was `va.kolumnnamn`).
+            variable_name=row["variable_name"],
+            delivery_column_name=row["delivery_column_name"],
             via_source_id=via,
             lineage=lineage,
         )
@@ -441,11 +453,11 @@ class Catalog:
         """All variable bindings of ``variable`` under ``provider/register``.
 
         Returns every ``(variant, period)`` combination where a
-        variable_instance row exists whose kolumnnamn folds to ``variable``,
-        including consumer-side bindings from §5.6 (their ``lineage`` field
-        carries the source-side FQID). Results are ordered by
-        ``(variant_slug, version_slug, cvid, kolumnnamn)`` for deterministic
-        iteration.
+        variable_instance row exists whose `delivery_column_name` folds to
+        ``variable``, including consumer-side bindings from §5.6 (their
+        ``lineage`` field carries the source-side FQID). Results are ordered
+        by ``(variant_slug, version_slug, cvid, delivery_column_name)`` for
+        deterministic iteration.
 
         Slug inputs are validated; non-existent provider/register/variable
         yields an empty list (discovery, not resolution).
@@ -456,18 +468,18 @@ class Catalog:
 
         rows = self._conn.execute(
             _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
-            "ORDER BY rv.slug, rver.slug, vi.cvid, va.kolumnnamn",
+            "ORDER BY rv.slug, rver.slug, vi.cvid, va.delivery_column_name",
             (provider, register),
         ).fetchall()
 
         out: list[ResolvedVariableBinding] = []
-        # variable_alias is keyed by (cvid, kolumnnamn) — a single instance can
-        # have multiple aliases that fold to the same slug (e.g. `Kon` + `Kön`
-        # both → `kon`), so the LEFT JOIN can yield one row per matching alias.
-        # Dedupe by cvid: one binding per instance.
+        # variable_alias is keyed by (cvid, delivery_column_name) — a single
+        # instance can have multiple aliases that fold to the same slug (e.g.
+        # `Kon` + `Kön` both → `kon`), so the LEFT JOIN can yield one row per
+        # matching alias. Dedupe by cvid: one binding per instance.
         seen: set[int] = set()
         for row in rows:
-            if derive_variable_slug(row["kolumnnamn"]) != variable:
+            if derive_variable_slug(row["delivery_column_name"]) != variable:
                 continue
             cvid = row["cvid"]
             if cvid in seen:

@@ -337,8 +337,7 @@ def _apply_valid_codes(
         "CREATE TEMP TABLE _vc_trim (code_id INTEGER PRIMARY KEY, kod TEXT, label TEXT)"
     )
     conn.execute(
-        "INSERT INTO _vc_trim "
-        "SELECT code_id, TRIM(vardekod), TRIM(vardebenamning) FROM value_code"
+        "INSERT INTO _vc_trim SELECT code_id, TRIM(code), TRIM(label) FROM value_code"
     )
     conn.execute("CREATE INDEX _vc_trim_kod ON _vc_trim(kod)")
     conn.execute("CREATE INDEX _vc_trim_kod_label ON _vc_trim(kod, label)")
@@ -379,7 +378,7 @@ def _apply_valid_codes(
     _step("  step 3/7: insert missing value_code rows...")
     cur = conn.execute(
         """
-        INSERT INTO value_code (vardekod, vardebenamning)
+        INSERT INTO value_code (code, label)
         SELECT DISTINCT c.vardekod, c.label
         FROM _canon c
         WHERE NOT EXISTS (
@@ -393,7 +392,7 @@ def _apply_valid_codes(
         # Refresh _vc_trim to include the inserts.
         conn.execute(
             "INSERT INTO _vc_trim "
-            "SELECT vc.code_id, TRIM(vc.vardekod), TRIM(vc.vardebenamning) "
+            "SELECT vc.code_id, TRIM(vc.code), TRIM(vc.label) "
             "FROM value_code vc "
             "WHERE NOT EXISTS (SELECT 1 FROM _vc_trim t WHERE t.code_id = vc.code_id)"
         )
@@ -498,7 +497,7 @@ def _apply_valid_codes(
     conn.execute(
         """
         UPDATE classification SET valid_code_count = (
-            SELECT COUNT(DISTINCT TRIM(vc.vardekod))
+            SELECT COUNT(DISTINCT TRIM(vc.code))
             FROM classification_code cc
             JOIN value_code vc ON cc.code_id = vc.code_id
             WHERE cc.classification_id = classification.id AND cc.is_valid = 1
@@ -601,13 +600,14 @@ def populate_classifications(
                 (id_by_short[sup], id_by_short[entry["short_name"]]),
             )
 
-    # Tag matching variable instances. The seed has ~100+ vardemangdsversion
+    # Tag matching variable instances. The seed has ~100+ version-label
     # strings and the table has ~500k rows — without an index on
-    # vardemangdsversion the UPDATE would full-scan the table. Build the
-    # index once, drop it after population (it's not useful at query time).
+    # value_set_version_label the UPDATE would full-scan the table. Build
+    # the index once, drop it after population (it's not useful at query
+    # time). (Column name follows the §5.11 rename from `vardemangdsversion`.)
     conn.execute(
-        "CREATE INDEX IF NOT EXISTS idx_vi_vardemangdsversion_tmp "
-        "ON variable_instance(vardemangdsversion)"
+        "CREATE INDEX IF NOT EXISTS idx_vi_value_set_version_label_tmp "
+        "ON variable_instance(value_set_version_label)"
     )
     try:
         conn.execute("DROP TABLE IF EXISTS _vmap")
@@ -626,8 +626,8 @@ def populate_classifications(
         conn.execute(
             """
             UPDATE variable_instance
-            SET classification_id = (SELECT cls_id FROM _vmap WHERE vers = vardemangdsversion)
-            WHERE vardemangdsversion IN (SELECT vers FROM _vmap)
+            SET classification_id = (SELECT cls_id FROM _vmap WHERE vers = value_set_version_label)
+            WHERE value_set_version_label IN (SELECT vers FROM _vmap)
             """
         )
         # Drift detection: any seed string that matches no instance.
@@ -640,14 +640,14 @@ def populate_classifications(
             JOIN classification cls ON cls.id = m.cls_id
             WHERE NOT EXISTS (
                 SELECT 1 FROM variable_instance vi
-                WHERE vi.vardemangdsversion = m.vers
+                WHERE vi.value_set_version_label = m.vers
             )
             ORDER BY cls.short_name, m.vers
             """
         ).fetchall()
         conn.execute("DROP TABLE IF EXISTS _vmap")
     finally:
-        conn.execute("DROP INDEX IF EXISTS idx_vi_vardemangdsversion_tmp")
+        conn.execute("DROP INDEX IF EXISTS idx_vi_value_set_version_label_tmp")
 
     if unmatched:
         details = "\n".join(f"  - {short}: {vers!r}" for short, vers in unmatched)
@@ -662,7 +662,7 @@ def populate_classifications(
             remediation=(
                 "Either remove the stale entries from classifications.toml or "
                 "re-export metadata so the strings match. Enumerate live "
-                "values with: SELECT DISTINCT vardemangdsversion FROM "
+                "values with: SELECT DISTINCT value_set_version_label FROM "
                 "variable_instance;"
             ),
         )
@@ -677,7 +677,7 @@ def populate_classifications(
         SELECT DISTINCT
             vi.classification_id,
             vsm.code_id,
-            {_LEVEL_EXPR.format(col="vc.vardekod")},
+            {_LEVEL_EXPR.format(col="vc.code")},
             NULL
         FROM variable_instance vi
         JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id

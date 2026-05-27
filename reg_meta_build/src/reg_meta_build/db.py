@@ -188,19 +188,21 @@ CREATE TABLE provider (
 CREATE TABLE register (
     register_id INTEGER PRIMARY KEY,
     provider_id INTEGER NOT NULL REFERENCES provider(provider_id),
-    registernamn TEXT NOT NULL,
-    registerrubrik TEXT,
-    registersyfte TEXT,
+    -- Universal English columns per REFACTOR_SPEC §5.11 vocabulary glossary.
+    -- Values remain provider-native strings (SCB's literal `Registernamn`
+    -- text such as "LISA"). `registerrubrik` is dropped (redundant with `name`).
+    name TEXT NOT NULL,
+    purpose TEXT,
     slug         TEXT
 );
 
 CREATE TABLE register_variant (
     regvar_id INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
-    registervariantnamn TEXT,
-    registervariantrubrik TEXT,
-    registervariantbeskrivning TEXT,
-    registervariantsekretess TEXT,
+    -- §5.11 rename. `registervariantrubrik` (redundant with name) and
+    -- `registervariantsekretess` (legal text → reg-meta-docs) are dropped.
+    name TEXT,
+    description TEXT,
     slug          TEXT,
     -- Presentation-only grouping label (§5.3 field reference). Drift-tolerant.
     display_group TEXT
@@ -232,32 +234,35 @@ CREATE TABLE register_version (
 
 CREATE TABLE population (
     regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
-    populationnamn TEXT NOT NULL,
-    populationdefinition TEXT,
-    populationkommentar TEXT,
-    populationdatum TEXT,
-    PRIMARY KEY (regver_id, populationnamn)
+    -- §5.11 rename. `populationdatum` is a free-text date range, not a parsed
+    -- date — provider-native string preserved.
+    name TEXT NOT NULL,
+    definition TEXT,
+    comment TEXT,
+    date_range TEXT,
+    PRIMARY KEY (regver_id, name)
 );
 
 CREATE TABLE object_type (
     regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
-    objekttypnamn TEXT NOT NULL,
-    objekttypdefinition TEXT,
-    PRIMARY KEY (regver_id, objekttypnamn)
+    name TEXT NOT NULL,
+    definition TEXT,
+    PRIMARY KEY (regver_id, name)
 );
 
 CREATE TABLE variable (
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     var_id INTEGER NOT NULL,
-    variabelnamn TEXT,
-    variabeldefinition TEXT,
-    variabelbeskrivning TEXT,
-    variabeloperationell_definition TEXT,
-    variabelreferenstid TEXT,
-    variabelhamtadfran TEXT,
-    variabelregister_kalla TEXT,
-    variabelextern_kommentar TEXT,
-    mattenhet TEXT,
+    -- §5.11 rename. Values stay provider-native. `variabeloperationell_definition`
+    -- merges into `description` at ingest when distinct + non-empty;
+    -- `variabelreferenstid`, `variabelhamtadfran`, and `variabelextern_kommentar`
+    -- are dropped per §5.11. `variabelregister_kalla` (raw attribution text)
+    -- becomes `source_register_text`.
+    name TEXT,
+    definition TEXT,
+    description TEXT,
+    source_register_text TEXT,
+    measurement_unit TEXT,
     source_register_id INTEGER REFERENCES register(register_id),
     source_label TEXT,
     -- PK doubles as the join index for get_schema's JOIN on (register_id, var_id).
@@ -271,9 +276,14 @@ CREATE TABLE variable_instance (
     regvar_id INTEGER NOT NULL,
     regver_id INTEGER NOT NULL,
     var_id INTEGER NOT NULL,
-    datatyp TEXT,
-    datalangd TEXT,
-    vardemangdsversion TEXT,
+    -- §5.11 rename of `datatyp` / `datalangd` / `vardemangdsversion`.
+    -- `vardemangdsniva` stays Swedish: it's a transient pre-triage carrier
+    -- through A2.2 (the coalescer's `grain` field) and gets dropped from the
+    -- final `variable_state` schema in A2.1. Keeping the Swedish name signals
+    -- "do not depend on this column" to downstream code.
+    data_type TEXT,
+    data_length TEXT,
+    value_set_version_label TEXT,
     vardemangdsniva TEXT,
     classification_id INTEGER REFERENCES classification(id),
     -- value_set_id links to the cvid's deduplicated, year-projected code list.
@@ -290,15 +300,19 @@ CREATE TABLE variable_instance (
 
 CREATE TABLE variable_alias (
     cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
-    kolumnnamn TEXT NOT NULL,
-    PRIMARY KEY (cvid, kolumnnamn)
+    -- §5.11: `kolumnnamn` → `delivery_column_name`. The SCB delivery column
+    -- header (e.g. `PersonNr`, `Kon`, `LopNr_PersonNr`). SCB pseudonymizes
+    -- identifier columns at delivery with the `LopNr_` prefix; the metadata
+    -- stores the un-prefixed name.
+    delivery_column_name TEXT NOT NULL,
+    PRIMARY KEY (cvid, delivery_column_name)
 );
 
 CREATE TABLE variable_context (
     cvid INTEGER NOT NULL REFERENCES variable_instance(cvid),
-    populationnamn TEXT NOT NULL,
-    objekttypnamn TEXT NOT NULL,
-    PRIMARY KEY (cvid, populationnamn, objekttypnamn)
+    population_name TEXT NOT NULL,
+    object_type_name TEXT NOT NULL,
+    PRIMARY KEY (cvid, population_name, object_type_name)
 );
 
 -- Classifications: normalized code systems (SUN2000, SSYK2012, SNI2007, ...).
@@ -343,16 +357,18 @@ CREATE INDEX idx_classification_code_code ON classification_code(code_id);
 -- Enrichment tables
 CREATE TABLE value_code (
     code_id INTEGER PRIMARY KEY,
-    vardekod TEXT NOT NULL,
-    vardebenamning TEXT NOT NULL,
-    UNIQUE (vardekod, vardebenamning)
+    -- §5.11: SCB's `värdekod` / `värdebenämning` become universal `code` / `label`.
+    -- Values stay provider-native (SCB code strings like "01", "Man", "").
+    code TEXT NOT NULL,
+    label TEXT NOT NULL,
+    UNIQUE (code, label)
 );
 
 -- value_set: one row per distinct year-projected membership.
--- member_hash = sha256 of length-prefixed sorted (vardekod, vardebenamning)
--- pairs (see _value_set_hash in this module). Stable across rebuilds given
--- identical inputs. SCB validity windows (VardemangderValidDates.csv) are
--- applied at build time; the union of all historical codes is *not* preserved.
+-- member_hash = sha256 of length-prefixed sorted (code, label) pairs (see
+-- _value_set_hash in this module). Stable across rebuilds given identical
+-- inputs. SCB validity windows (VardemangderValidDates.csv) are applied at
+-- build time; the union of all historical codes is *not* preserved.
 CREATE TABLE value_set (
     value_set_id INTEGER PRIMARY KEY,
     member_hash  BLOB NOT NULL UNIQUE,
@@ -396,12 +412,13 @@ CREATE TABLE timeseries_event (
     fil_id TEXT
 );
 
--- Search indexes (both content-synced to avoid storing text twice)
+-- Search indexes (both content-synced to avoid storing text twice).
+-- Columns mirror the renamed `register` table. `registerrubrik` was dropped,
+-- so the index no longer references it.
 CREATE VIRTUAL TABLE register_fts USING fts5(
     register_id,
-    registernamn,
-    registerrubrik,
-    registersyfte,
+    name,
+    purpose,
     content='register',
     content_rowid='rowid'
 );
@@ -409,9 +426,9 @@ CREATE VIRTUAL TABLE register_fts USING fts5(
 CREATE VIRTUAL TABLE variable_fts USING fts5(
     register_id,
     var_id,
-    variabelnamn,
-    variabeldefinition,
-    variabelbeskrivning,
+    name,
+    definition,
+    description,
     content='variable',
     content_rowid='rowid',
     tokenize='unicode61'
@@ -436,8 +453,8 @@ CREATE INDEX idx_variable_instance_regvar ON variable_instance(regvar_id);
 CREATE INDEX idx_variable_instance_regver ON variable_instance(regver_id);
 CREATE INDEX idx_variable_instance_classification ON variable_instance(classification_id)
     WHERE classification_id IS NOT NULL;
-CREATE INDEX idx_variable_alias_kolumnnamn ON variable_alias(kolumnnamn);
-CREATE INDEX idx_value_code_vardekod ON value_code(vardekod);
+CREATE INDEX idx_variable_alias_delivery_column_name ON variable_alias(delivery_column_name);
+CREATE INDEX idx_value_code_code ON value_code(code);
 
 -- Pre-aggregated code→variable mapping for search --value. Built from
 -- the year-projected value_set_member rows joined through
@@ -679,9 +696,9 @@ def _first_non_empty(current: str | None, candidate: str) -> str | None:
 _PAREN_ABBREV_RE = re.compile(r"\(([^)]+)\)")
 
 
-def _extract_abbrev(registernamn: str) -> str | None:
+def _extract_abbrev(register_name: str) -> str | None:
     """Extract parenthesized abbreviation from a register name, e.g. '(RTB)' → 'RTB'."""
-    m = _PAREN_ABBREV_RE.search(registernamn)
+    m = _PAREN_ABBREV_RE.search(register_name)
     return m.group(1).strip() if m else None
 
 
@@ -697,7 +714,7 @@ def _build_register_lookup(
     name_lookup: dict[str, tuple[int, str]] = {}
     abbrev_lookup: dict[str, tuple[int, str]] = {}
     for rid, rinfo in registers.items():
-        rname = rinfo["registernamn"] or ""
+        rname = rinfo["name"] or ""
         paren = _extract_abbrev(rname)
         entry = (rid, paren or rname)
         name_lookup[rname.lower()] = entry
@@ -786,9 +803,11 @@ def _import_registerinformation(
                 rid,
                 {
                     "register_id": rid,
-                    "registernamn": row["Registernamn"],
-                    "registerrubrik": row["Registerrubrik"],
-                    "registersyfte": row["Registersyfte"],
+                    # `Registernamn` (CSV header) is the wire format; the
+                    # in-memory dict and DB column are universal English.
+                    # `Registerrubrik` is dropped per §5.11.
+                    "name": row["Registernamn"],
+                    "purpose": row["Registersyfte"],
                 },
             )
 
@@ -797,10 +816,10 @@ def _import_registerinformation(
                 {
                     "regvar_id": rvid,
                     "register_id": rid,
-                    "registervariantnamn": row["Registervariantnamn"],
-                    "registervariantrubrik": row["Registervariantrubrik"],
-                    "registervariantbeskrivning": row["Registervariantbeskrivning"],
-                    "registervariantsekretess": row["RegistervariantSekretess"],
+                    # `Registervariantrubrik` and `RegistervariantSekretess`
+                    # are dropped per §5.11.
+                    "name": row["Registervariantnamn"],
+                    "description": row["Registervariantbeskrivning"],
                 },
             )
 
@@ -829,32 +848,32 @@ def _import_registerinformation(
                 {
                     "register_id": rid,
                     "var_id": vid,
-                    "variabelnamn": row["Variabelnamn"],
-                    "variabeldefinition": row["Variabeldefinition"],
-                    "variabelbeskrivning": row["Variabelbeskrivning"],
-                    "variabeloperationell_definition": row[
-                        "VariabelOperationell_definition"
-                    ],
-                    "variabelreferenstid": row["VariabelReferenstid"],
-                    "variabelhamtadfran": row["VariabelHämtadFrån"],
-                    "variabelregister_kalla": row["VariabelRegister_Källa"],
-                    "variabelextern_kommentar": row["VariabelExtern_kommentar"],
-                    "mattenhet": row["Mattenhet"],
+                    # §5.11: the operational definition merges into
+                    # `description` at ingest when distinct + non-empty (see
+                    # `_merge_operational_definition` after the fill loop).
+                    # `variabelreferenstid`, `variabelhamtadfran`, and
+                    # `variabelextern_kommentar` are dropped entirely.
+                    "name": row["Variabelnamn"],
+                    "definition": row["Variabeldefinition"],
+                    "description": row["Variabelbeskrivning"],
+                    "_operational_definition": row["VariabelOperationell_definition"],
+                    "source_register_text": row["VariabelRegister_Källa"],
+                    "measurement_unit": row["Mattenhet"],
                 },
             )
-            # Fill empty fields from later rows
-            for tgt, src in [
-                ("variabelnamn", "Variabelnamn"),
-                ("variabeldefinition", "Variabeldefinition"),
-                ("variabelbeskrivning", "Variabelbeskrivning"),
-                ("variabeloperationell_definition", "VariabelOperationell_definition"),
-                ("variabelreferenstid", "VariabelReferenstid"),
-                ("variabelhamtadfran", "VariabelHämtadFrån"),
-                ("variabelregister_kalla", "VariabelRegister_Källa"),
-                ("variabelextern_kommentar", "VariabelExtern_kommentar"),
-                ("mattenhet", "Mattenhet"),
+            # Fill empty fields from later rows. The CSV header column on the
+            # right stays Swedish (wire format); the in-memory key on the left
+            # is universal English. `_operational_definition` is a transient
+            # carrier folded into `description` after this loop.
+            for tgt, src_col in [
+                ("name", "Variabelnamn"),
+                ("definition", "Variabeldefinition"),
+                ("description", "Variabelbeskrivning"),
+                ("_operational_definition", "VariabelOperationell_definition"),
+                ("source_register_text", "VariabelRegister_Källa"),
+                ("measurement_unit", "Mattenhet"),
             ]:
-                var[tgt] = _first_non_empty(var[tgt], row[src])
+                var[tgt] = _first_non_empty(var[tgt], row[src_col])
 
             instances.setdefault(
                 cvid,
@@ -864,8 +883,8 @@ def _import_registerinformation(
                     "regvar_id": rvid,
                     "regver_id": rveid,
                     "var_id": vid,
-                    "datatyp": row["Datatyp"],
-                    "datalangd": row["Datalängd"],
+                    "data_type": row["Datatyp"],
+                    "data_length": row["Datalängd"],
                 },
             )
 
@@ -899,7 +918,7 @@ def _import_registerinformation(
     name_lookup, abbrev_lookup = _build_register_lookup(registers)
     for var in variables.values():
         src_id, src_label = _resolve_source_register(
-            var["variabelregister_kalla"], name_lookup, abbrev_lookup
+            var["source_register_text"], name_lookup, abbrev_lookup
         )
         var["source_register_id"] = src_id
         var["source_label"] = src_label
@@ -907,19 +926,15 @@ def _import_registerinformation(
     # Bulk insert all normalized tables
     _progress("Writing core tables...")
     conn.executemany(
-        "INSERT INTO register (register_id, provider_id, registernamn, "
-        "registerrubrik, registersyfte) "
-        f"VALUES (:register_id, {PROVIDER_ID_SCB}, :registernamn, "
-        ":registerrubrik, :registersyfte)",
+        "INSERT INTO register (register_id, provider_id, name, purpose) "
+        f"VALUES (:register_id, {PROVIDER_ID_SCB}, :name, :purpose)",
         list(registers.values()),
     )
     conn.executemany(
         "INSERT INTO register_variant ("
-        "regvar_id, register_id, registervariantnamn, registervariantrubrik, "
-        "registervariantbeskrivning, registervariantsekretess"
+        "regvar_id, register_id, name, description"
         ") VALUES ("
-        ":regvar_id, :register_id, :registervariantnamn, :registervariantrubrik, "
-        ":registervariantbeskrivning, :registervariantsekretess"
+        ":regvar_id, :register_id, :name, :description"
         ")",
         list(variants.values()),
     )
@@ -935,34 +950,52 @@ def _import_registerinformation(
         ":registerversion_senastgodkanddatum)",
         list(versions.values()),
     )
+    # Named INSERT (explicit columns) — the variable dict carries the
+    # transient `_operational_definition` key which we merge into `description`
+    # below, then drop before binding. Listing columns also future-proofs
+    # against A1.2 adding sensitivity flags downstream.
+    for var in variables.values():
+        op = (var.pop("_operational_definition", None) or "").strip()
+        desc = (var.get("description") or "").strip()
+        # §5.11: operational definition folds into description when distinct
+        # + non-empty (e.g. SCB's "OperationellDef" carries a refinement over
+        # the plain definition). Use a newline-separated concat that survives
+        # round-trips through CSV / JSON. The `op not in desc` guard catches
+        # the partial-substring case as well as exact duplicates — important
+        # when a rebuild re-imports a CSV whose `description` already carries
+        # the previously-merged operational text.
+        if op and op not in desc:
+            var["description"] = f"{desc}\n\n{op}".strip() if desc else op
     conn.executemany(
-        "INSERT INTO variable VALUES (:register_id, :var_id, :variabelnamn, :variabeldefinition, "
-        ":variabelbeskrivning, :variabeloperationell_definition, :variabelreferenstid, "
-        ":variabelhamtadfran, :variabelregister_kalla, :variabelextern_kommentar, :mattenhet, "
-        ":source_register_id, :source_label)",
+        "INSERT INTO variable (register_id, var_id, name, definition, description, "
+        "source_register_text, measurement_unit, source_register_id, source_label) "
+        "VALUES (:register_id, :var_id, :name, :definition, :description, "
+        ":source_register_text, :measurement_unit, :source_register_id, :source_label)",
         list(variables.values()),
     )
     conn.executemany(
         "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd) "
+        "(cvid, register_id, regvar_id, regver_id, var_id, data_type, data_length) "
         "VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :datatyp, :datalangd)",
+        ":var_id, :data_type, :data_length)",
         list(instances.values()),
     )
     conn.executemany(
-        "INSERT INTO variable_alias VALUES (?, ?)",
+        "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
         sorted(aliases),
     )
     conn.executemany(
-        "INSERT INTO population VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO population (regver_id, name, definition, comment, date_range) "
+        "VALUES (?, ?, ?, ?, ?)",
         sorted(populations),
     )
     conn.executemany(
-        "INSERT INTO object_type VALUES (?, ?, ?)",
+        "INSERT INTO object_type (regver_id, name, definition) VALUES (?, ?, ?)",
         sorted(object_types),
     )
     conn.executemany(
-        "INSERT INTO variable_context VALUES (?, ?, ?)",
+        "INSERT INTO variable_context (cvid, population_name, object_type_name) "
+        "VALUES (?, ?, ?)",
         sorted(contexts),
     )
 
@@ -1211,7 +1244,7 @@ def _import_vardemangder(
 
     _progress(f"  Writing {len(code_lookup):,} value codes...")
     conn.executemany(
-        "INSERT INTO value_code (code_id, vardekod, vardebenamning) VALUES (?, ?, ?)",
+        "INSERT INTO value_code (code_id, code, label) VALUES (?, ?, ?)",
         [(cid, k[0], k[1]) for k, cid in code_lookup.items()],
     )
 
@@ -1344,7 +1377,7 @@ def _project_and_mint_value_sets(
     code_pair: dict[int, tuple[str, str]] = {
         code_id: (kod, label)
         for code_id, kod, label in conn.execute(
-            "SELECT code_id, vardekod, vardebenamning FROM value_code"
+            "SELECT code_id, code, label FROM value_code"
         )
     }
 
@@ -1436,21 +1469,22 @@ def _populate_fts(conn: sqlite3.Connection) -> None:
     # register_fts: content-synced — rowid must match register.rowid
     # (register_id is INTEGER PRIMARY KEY, so rowid = register_id)
     conn.execute(
-        "INSERT INTO register_fts(rowid, register_id, registernamn, registerrubrik, registersyfte) "
-        "SELECT rowid, register_id, registernamn, registerrubrik, registersyfte FROM register"
+        "INSERT INTO register_fts(rowid, register_id, name, purpose) "
+        "SELECT rowid, register_id, name, purpose FROM register"
     )
 
-    # variable_fts: content-synced with variable table. Column names excluded
-    # (they contain technical suffixes like _LISA that pollute search results).
+    # variable_fts: content-synced with variable table. Delivery column names
+    # are excluded (they contain technical suffixes like _LISA that pollute
+    # search results).
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, var_id, variabelnamn, variabeldefinition, variabelbeskrivning)
+        INSERT INTO variable_fts(rowid, register_id, var_id, name, definition, description)
         SELECT
             v.rowid,
             v.register_id,
             v.var_id,
-            v.variabelnamn,
-            v.variabeldefinition,
-            v.variabelbeskrivning
+            v.name,
+            v.definition,
+            v.description
         FROM variable v
     """)
     _progress("  FTS indexes built")
@@ -1577,19 +1611,19 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     # never contested in a strict-built DB.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.slug AS version_slug, va.kolumnnamn "
+        "rver.slug AS version_slug, va.delivery_column_name "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
         "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-        "ORDER BY vi.cvid, va.kolumnnamn"
+        "ORDER BY vi.cvid, va.delivery_column_name"
     ).fetchall()
 
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_slug, kolumnnamn in rows:
-        variable_slug = derive_variable_slug(kolumnnamn)
+    for cvid, rid, src_rid, version_slug, delivery_column_name in rows:
+        variable_slug = derive_variable_slug(delivery_column_name)
         if version_slug is None or variable_slug is None:
             continue
         by_key.setdefault((rid, version_slug, variable_slug), cvid)
@@ -1793,7 +1827,7 @@ def build_db(
                     )
                     conn.executemany(
                         "UPDATE variable_instance "
-                        "SET vardemangdsversion = ?, vardemangdsniva = ? "
+                        "SET value_set_version_label = ?, vardemangdsniva = ? "
                         "WHERE cvid = ?",
                         [
                             (ver, niva, cvid)

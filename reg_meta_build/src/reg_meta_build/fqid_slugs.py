@@ -896,7 +896,7 @@ def populate_slugs(
             _assert_no_unslugged(
                 conn,
                 sql=(
-                    "SELECT r.register_id, r.registernamn FROM register r "
+                    "SELECT r.register_id, r.name FROM register r "
                     "JOIN provider p ON r.provider_id = p.provider_id "
                     "WHERE p.slug = ? AND r.slug IS NULL "
                     "ORDER BY r.register_id"
@@ -910,7 +910,7 @@ def populate_slugs(
             _assert_no_unslugged(
                 conn,
                 sql=(
-                    "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn "
+                    "SELECT rv.register_id, rv.regvar_id, rv.name "
                     "FROM register_variant rv "
                     "JOIN register r ON rv.register_id = r.register_id "
                     "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1065,10 +1065,10 @@ def _variable_source_slug(
     (§5.5 narrow scoping, or an explicit slug field once those land).
     """
     rows = conn.execute(
-        "SELECT DISTINCT va.kolumnnamn FROM variable_alias va "
+        "SELECT DISTINCT va.delivery_column_name FROM variable_alias va "
         "JOIN variable_instance vi ON vi.cvid = va.cvid "
         "WHERE vi.register_id = ? AND vi.var_id = ? "
-        "AND va.kolumnnamn IS NOT NULL",
+        "AND va.delivery_column_name IS NOT NULL",
         (register_id, var_id),
     ).fetchall()
     if not rows:
@@ -1502,8 +1502,8 @@ def iter_default_slug_candidates(
     exact + near; the bootstrap script shows all three classes.
     """
     rows = conn.execute(
-        "SELECT p.slug, r.register_id, r.registernamn, "
-        "rv.regvar_id, rv.registervariantnamn, rv.slug "
+        "SELECT p.slug, r.register_id, r.name, "
+        "rv.regvar_id, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1577,7 +1577,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         "",
     ]
     regs = conn.execute(
-        "SELECT r.register_id, r.registernamn, r.slug FROM register r "
+        "SELECT r.register_id, r.name, r.slug FROM register r "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? ORDER BY r.register_id",
         (provider_slug,),
@@ -1589,7 +1589,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     # emission (register → its variants → its version overrides).
     variants_by_reg: dict[int, list[tuple[int, str | None, str | None]]] = {}
     for row in conn.execute(
-        "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn, rv.slug "
+        "SELECT rv.register_id, rv.regvar_id, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1831,23 +1831,23 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
     for provider_slug in _live_providers(conn):
         slugged_regs = by_provider_kind.get((provider_slug, "register"), set())
         reg_rows = conn.execute(
-            "SELECT r.register_id, r.registernamn FROM register r "
+            "SELECT r.register_id, r.name FROM register r "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? ORDER BY r.register_id",
             (provider_slug,),
         ).fetchall()
         live_regs_by_provider[provider_slug] = {rid for (rid, _) in reg_rows}
-        for register_id, registernamn in reg_rows:
+        # `name` here is the renamed register.registernamn (universal English
+        # column, provider-native value); the variable name mirrors the SQL.
+        for register_id, name in reg_rows:
             if str(register_id) not in slugged_regs:
-                missing_regs.append(
-                    (provider_slug, str(register_id), registernamn or "")
-                )
+                missing_regs.append((provider_slug, str(register_id), name or ""))
 
         slugged_variants = by_provider_kind.get(
             (provider_slug, "register_variant"), set()
         )
         var_rows = conn.execute(
-            "SELECT rv.register_id, rv.regvar_id, rv.registervariantnamn, rv.slug "
+            "SELECT rv.register_id, rv.regvar_id, rv.name, rv.slug "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "

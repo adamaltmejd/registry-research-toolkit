@@ -116,12 +116,12 @@ def validate_built_db(db_path: Path) -> ValidationResult:
 
 
 def _codes_for_cvid(conn: sqlite3.Connection, cvid: int) -> set[str]:
-    """Return the set of ``vardekod`` values projected onto ``cvid`` via
-    its value_set. Shared by both anchor checks."""
+    """Return the set of ``value_code.code`` values (previously SCB ``vardekod``)
+    projected onto ``cvid`` via its value_set. Shared by both anchor checks."""
     return {
         r[0]
         for r in conn.execute(
-            "SELECT vc.vardekod FROM variable_instance vi "
+            "SELECT vc.code FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
             "WHERE vi.cvid = ?",

@@ -47,14 +47,16 @@ def resolve_register_ids(conn: sqlite3.Connection, value: str) -> list[int]:
         return [row["register_id"]]
 
     rows = conn.execute(
-        "SELECT register_id FROM register WHERE LOWER(registernamn) = LOWER(?)",
+        # `register.name` is the §5.11 rename of `registernamn`; values
+        # are still provider-native (e.g. "LISA").
+        "SELECT register_id FROM register WHERE LOWER(name) = LOWER(?)",
         (value,),
     ).fetchall()
     if rows:
         return [r["register_id"] for r in rows]
 
     rows = conn.execute(
-        "SELECT register_id FROM register WHERE LOWER(registernamn) LIKE '%' || LOWER(?) || '%'",
+        "SELECT register_id FROM register WHERE LOWER(name) LIKE '%' || LOWER(?) || '%'",
         (value,),
     ).fetchall()
     return [r["register_id"] for r in rows]
@@ -110,6 +112,7 @@ def _version_years_for_register(
 ) -> list[int]:
     """Return all version years for a register."""
     rows = conn.execute(
+        # `registerversionnamn` stays Swedish — A2.6 drops the table.
         "SELECT rv.registerversionnamn "
         "FROM register_version rv "
         "JOIN register_variant rvar ON rv.regvar_id = rvar.regvar_id "
@@ -281,15 +284,18 @@ def search(
 def _search_datacolumns(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
+    # Aliased SELECT so both `variable.name` and `register.name` land under
+    # distinct row keys after the §5.11 rename collapsed them to a single
+    # column name.
     rows = conn.execute(
-        "SELECT DISTINCT va.kolumnnamn, vi.register_id, vi.var_id, "
-        "v.variabelnamn, r.registernamn "
+        "SELECT DISTINCT va.delivery_column_name, vi.register_id, vi.var_id, "
+        "v.name AS variable_name, r.name AS register_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "JOIN register r ON vi.register_id = r.register_id "
-        "WHERE va.kolumnnamn LIKE ? "
-        "ORDER BY va.kolumnnamn, vi.register_id",
+        "WHERE va.delivery_column_name LIKE ? "
+        "ORDER BY va.delivery_column_name, vi.register_id",
         (like_pattern,),
     ).fetchall()
     results = []
@@ -299,11 +305,11 @@ def _search_datacolumns(
         results.append(
             {
                 "type": "datacolumn",
-                "datacolumn": r["kolumnnamn"],
+                "datacolumn": r["delivery_column_name"],
                 "register_id": r["register_id"],
-                "register_name": r["registernamn"],
+                "register_name": r["register_name"],
                 "var_id": r["var_id"],
-                "variable_name": r["variabelnamn"],
+                "variable_name": r["variable_name"],
                 "fts_rank": 0,
             }
         )
@@ -314,11 +320,12 @@ def _search_varnames(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT v.register_id, v.var_id, v.variabelnamn, r.registernamn "
+        "SELECT v.register_id, v.var_id, "
+        "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
-        "WHERE v.variabelnamn LIKE ? "
-        "ORDER BY v.variabelnamn, v.register_id",
+        "WHERE v.name LIKE ? "
+        "ORDER BY v.name, v.register_id",
         (like_pattern,),
     ).fetchall()
     results = []
@@ -329,9 +336,9 @@ def _search_varnames(
             {
                 "type": "varname",
                 "register_id": r["register_id"],
-                "register_name": r["registernamn"],
+                "register_name": r["register_name"],
                 "var_id": r["var_id"],
-                "variable_name": r["variabelnamn"],
+                "variable_name": r["variable_name"],
                 "fts_rank": 0,
             }
         )
@@ -341,8 +348,10 @@ def _search_varnames(
 def _search_description_registers(
     conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
+    # register_fts now mirrors the renamed columns: `name` + `purpose`.
+    # `registerrubrik` was dropped per §5.11.
     rows = conn.execute(
-        "SELECT register_id, registernamn, registerrubrik, rank "
+        "SELECT register_id, name, purpose, rank "
         "FROM register_fts WHERE register_fts MATCH ? "
         "ORDER BY rank",
         (query,),
@@ -355,8 +364,8 @@ def _search_description_registers(
             {
                 "type": "register",
                 "register_id": r["register_id"],
-                "register_name": r["registernamn"],
-                "register_rubrik": r["registerrubrik"],
+                "register_name": r["name"],
+                "register_purpose": r["purpose"],
                 "fts_rank": r["rank"],
             }
         )
@@ -367,8 +376,10 @@ def _search_description_variables(
     conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT vf.register_id, vf.var_id, vf.variabelnamn, vf.variabeldefinition, "
-        "vf.variabelbeskrivning, vf.rank, r.registernamn, r.registerrubrik "
+        "SELECT vf.register_id, vf.var_id, "
+        "vf.name AS variable_name, vf.definition AS variable_definition, "
+        "vf.description AS variable_description, vf.rank, "
+        "r.name AS register_name, r.purpose AS register_purpose "
         "FROM variable_fts vf "
         "JOIN register r ON vf.register_id = r.register_id "
         "WHERE variable_fts MATCH ? "
@@ -383,11 +394,11 @@ def _search_description_variables(
             {
                 "type": "variable",
                 "register_id": r["register_id"],
-                "register_name": r["registernamn"],
-                "register_rubrik": r["registerrubrik"],
+                "register_name": r["register_name"],
+                "register_purpose": r["register_purpose"],
                 "var_id": r["var_id"],
-                "variable_name": r["variabelnamn"],
-                "variable_definition": r["variabeldefinition"],
+                "variable_name": r["variable_name"],
+                "variable_definition": r["variable_definition"],
                 "fts_rank": r["rank"],
             }
         )
@@ -398,14 +409,15 @@ def _search_values(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT DISTINCT vc.vardekod, vc.vardebenamning, "
-        "cvm.register_id, cvm.var_id, v.variabelnamn, r.registernamn "
+        "SELECT DISTINCT vc.code, vc.label, "
+        "cvm.register_id, cvm.var_id, "
+        "v.name AS variable_name, r.name AS register_name "
         "FROM value_code vc "
         "JOIN code_variable_map cvm ON vc.code_id = cvm.code_id "
         "JOIN variable v ON cvm.register_id = v.register_id AND cvm.var_id = v.var_id "
         "JOIN register r ON cvm.register_id = r.register_id "
-        "WHERE vc.vardekod LIKE ? OR vc.vardebenamning LIKE ? "
-        "ORDER BY vc.vardekod "
+        "WHERE vc.code LIKE ? OR vc.label LIKE ? "
+        "ORDER BY vc.code "
         "LIMIT 500",
         (like_pattern, like_pattern),
     ).fetchall()
@@ -416,12 +428,14 @@ def _search_values(
         results.append(
             {
                 "type": "value",
-                "vardekod": r["vardekod"],
-                "vardebenamning": r["vardebenamning"],
+                # §5.11: SCB `vardekod`/`vardebenamning` are exposed in the
+                # JSON envelope under the universal English `code`/`label`.
+                "code": r["code"],
+                "label": r["label"],
                 "register_id": r["register_id"],
-                "register_name": r["registernamn"],
+                "register_name": r["register_name"],
                 "var_id": r["var_id"],
-                "variable_name": r["variabelnamn"],
+                "variable_name": r["variable_name"],
                 "fts_rank": 0,
             }
         )
@@ -445,6 +459,8 @@ def get_register(
 
     registers = []
     for rid in reg_ids:
+        # SELECT * picks up the renamed `name` and `purpose` columns; the
+        # row dict surfaces them under those keys (consumers updated).
         reg = conn.execute(
             "SELECT r.*, p.slug AS provider_slug "
             "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
@@ -562,11 +578,11 @@ def get_schema(
                 continue
 
             columns = conn.execute(
-                "SELECT vi.cvid, vi.var_id, vi.datatyp, vi.datalangd, "
-                "v.variabelnamn, "
+                "SELECT vi.cvid, vi.var_id, vi.data_type, vi.data_length, "
+                "v.name AS variable_name, "
                 "COALESCE(v.source_label, '') as source, "
-                "MIN(va.kolumnnamn) as first_alias, "
-                "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
+                "MIN(va.delivery_column_name) as first_alias, "
+                "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
                 "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
@@ -601,7 +617,7 @@ def get_schema(
                     c
                     for c in col_dicts
                     if pattern.search(c.get("aliases") or "")
-                    or pattern.search(c.get("variabelnamn") or "")
+                    or pattern.search(c.get("variable_name") or "")
                 ]
 
             versions_out.append(
@@ -625,8 +641,10 @@ def get_schema(
                 {
                     "regvar_id": rvid,
                     "register_id": rv["register_id"],
-                    "registervariantnamn": rv["registervariantnamn"],
-                    "registervariantrubrik": rv["registervariantrubrik"],
+                    # §5.11: the variant's name + description (was Swedish
+                    # `registervariantnamn` / `registervariantbeskrivning`).
+                    "variant_name": rv["name"],
+                    "variant_description": rv["description"],
                     "fqid": try_emit(
                         Fqid.register_variant_fqid,
                         provider_slug,
@@ -661,31 +679,33 @@ def get_varinfo(
 
     # Match variable by var_id first, fall back to name
     int_variable = _try_int(variable)
+    # SELECT v.* surfaces the renamed `name`/`definition`/`description`
+    # columns directly. `r.name AS register_name` disambiguates the join.
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
-            f"SELECT v.*, r.registernamn FROM variable v "
+            f"SELECT v.*, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE v.var_id = ? AND v.register_id IN ({ph})",
             [int_variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
-            f"SELECT v.*, r.registernamn FROM variable v "
+            f"SELECT v.*, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
-            f"WHERE LOWER(v.variabelnamn) = LOWER(?) AND v.register_id IN ({ph})",
+            f"WHERE LOWER(v.name) = LOWER(?) AND v.register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         vars_by_id = conn.execute(
-            "SELECT v.*, r.registernamn FROM variable v "
+            "SELECT v.*, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE v.var_id = ?",
             (int_variable,),
         ).fetchall()
         vars_by_name = conn.execute(
-            "SELECT v.*, r.registernamn FROM variable v "
+            "SELECT v.*, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE LOWER(v.variabelnamn) = LOWER(?)",
+            "WHERE LOWER(v.name) = LOWER(?)",
             (variable,),
         ).fetchall()
 
@@ -694,11 +714,11 @@ def get_varinfo(
     # Fall back to alias (column name) lookup
     if not matched_vars:
         alias_sql = (
-            "SELECT DISTINCT v.*, r.registernamn FROM variable_alias a "
+            "SELECT DISTINCT v.*, r.name AS register_name FROM variable_alias a "
             "JOIN variable_instance vi ON a.cvid = vi.cvid "
             "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE LOWER(a.kolumnnamn) = LOWER(?)"
+            "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
         if reg_ids:
             ph = _in_placeholders(reg_ids)
@@ -723,10 +743,11 @@ def get_varinfo(
         rid, vid = var["register_id"], var["var_id"]
 
         instances = conn.execute(
-            "SELECT vi.cvid, vi.regvar_id, vi.regver_id, vi.datatyp, vi.datalangd, "
-            "vi.vardemangdsversion, vi.classification_id, "
+            "SELECT vi.cvid, vi.regvar_id, vi.regver_id, "
+            "vi.data_type, vi.data_length, "
+            "vi.value_set_version_label, vi.classification_id, "
             "c.short_name AS classification, "
-            "rv.registervariantnamn, rver.registerversionnamn, "
+            "rv.name AS variant_name, rver.registerversionnamn, "
             "p.slug AS provider_slug, r.slug AS register_slug, "
             "rv.slug AS variant_slug, rver.slug AS version_slug "
             "FROM variable_instance vi "
@@ -748,11 +769,11 @@ def get_varinfo(
         if cvids:
             cvid_ph = _in_placeholders(cvids)
             for row in conn.execute(
-                f"SELECT cvid, kolumnnamn FROM variable_alias "
-                f"WHERE cvid IN ({cvid_ph}) ORDER BY cvid, kolumnnamn",
+                f"SELECT cvid, delivery_column_name FROM variable_alias "
+                f"WHERE cvid IN ({cvid_ph}) ORDER BY cvid, delivery_column_name",
                 cvids,
             ):
-                aliases_map[row["cvid"]].append(row["kolumnnamn"])
+                aliases_map[row["cvid"]].append(row["delivery_column_name"])
             for row in conn.execute(
                 f"SELECT vi.cvid, COUNT(*) as cnt "
                 f"FROM variable_instance vi "
@@ -767,19 +788,21 @@ def get_varinfo(
         for inst in instances:
             cvid = inst["cvid"]
             inst_aliases = aliases_map[cvid]
-            # First alias is the lexically-smallest kolumnnamn — `aliases_map`
-            # is sorted by ``ORDER BY cvid, kolumnnamn`` in the fetch above.
+            # First alias is the lexically-smallest delivery_column_name —
+            # `aliases_map` is sorted by ``ORDER BY cvid, delivery_column_name``
+            # in the fetch above (§5.11 rename from `kolumnnamn`).
             first_alias = inst_aliases[0] if inst_aliases else None
             variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
                 "cvid": cvid,
                 "regvar_id": inst["regvar_id"],
-                "variant_name": inst["registervariantnamn"],
+                # `variant_name` already aliased in the SELECT.
+                "variant_name": inst["variant_name"],
                 "regver_id": inst["regver_id"],
                 "version_name": inst["registerversionnamn"],
                 "year": extract_year(inst["registerversionnamn"] or ""),
-                "datatyp": inst["datatyp"],
-                "datalangd": inst["datalangd"],
+                "data_type": inst["data_type"],
+                "data_length": inst["data_length"],
                 "aliases": inst_aliases,
                 "value_set_count": value_counts[cvid],
                 "fqid": try_emit(
@@ -800,18 +823,19 @@ def get_varinfo(
         variables_out.append(
             {
                 "register_id": rid,
-                "register_name": var["registernamn"],
+                "register_name": var["register_name"],
                 "var_id": vid,
-                "variabelnamn": var["variabelnamn"],
-                "variabeldefinition": var["variabeldefinition"],
-                "variabelbeskrivning": var["variabelbeskrivning"],
-                "variabeloperationell_definition": var[
-                    "variabeloperationell_definition"
-                ],
-                "variabelreferenstid": var["variabelreferenstid"],
-                "variabelhamtadfran": var["variabelhamtadfran"],
-                "variabelregister_kalla": var["variabelregister_kalla"],
-                "mattenhet": var["mattenhet"],
+                # §5.11 keys: SCB Swedish columns surface here as the
+                # universal English names. Dropped columns
+                # (variabelreferenstid, variabelhamtadfran,
+                # variabelextern_kommentar, variabeloperationell_definition)
+                # no longer appear; their values (where meaningful) were
+                # folded into `description` at ingest.
+                "name": var["name"],
+                "definition": var["definition"],
+                "description": var["description"],
+                "source_register_text": var["source_register_text"],
+                "measurement_unit": var["measurement_unit"],
                 "classifications": var_classifications,
                 "instances": instances_out,
             }
@@ -872,10 +896,10 @@ def _get_availability_variable(
         params.extend(ids)
 
     var_rows = conn.execute(
-        "SELECT v.register_id, v.var_id, v.variabelnamn, r.registernamn "
-        "FROM variable v "
+        "SELECT v.register_id, v.var_id, v.name AS variable_name, "
+        "r.name AS register_name FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
-        f"WHERE (v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)){reg_filter}",
+        f"WHERE (v.var_id = ? OR LOWER(v.name) = LOWER(?)){reg_filter}",
         params,
     ).fetchall()
 
@@ -892,7 +916,7 @@ def _get_availability_variable(
 
         rows = conn.execute(
             "SELECT rv.registerversionnamn, "
-            "GROUP_CONCAT(DISTINCT va.kolumnnamn) as aliases "
+            "GROUP_CONCAT(DISTINCT va.delivery_column_name) as aliases "
             "FROM variable_instance vi "
             "JOIN register_version rv ON vi.regver_id = rv.regver_id "
             "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
@@ -925,7 +949,7 @@ def _get_availability_variable(
         registers_out.append(
             {
                 "register_id": rid,
-                "register_name": var["registernamn"],
+                "register_name": var["register_name"],
                 "var_id": vid,
                 "min_year": min_y,
                 "max_year": max_y,
@@ -947,7 +971,7 @@ def _get_availability_variable(
     return {
         "target": variable,
         "target_type": "variable",
-        "variable_name": var_rows[0]["variabelnamn"],
+        "variable_name": var_rows[0]["variable_name"],
         "min_year": min_y,
         "max_year": max_y,
         "years": all_years_sorted,
@@ -969,11 +993,11 @@ def _get_availability_register(
     # Use first match
     reg_id = ids[0]
     reg = conn.execute(
-        "SELECT registernamn FROM register WHERE register_id = ?", (reg_id,)
+        "SELECT name FROM register WHERE register_id = ?", (reg_id,)
     ).fetchone()
 
     rows = conn.execute(
-        "SELECT rvar.regvar_id, rvar.registervariantnamn, "
+        "SELECT rvar.regvar_id, rvar.name AS variant_name, "
         "rv.registerversionnamn "
         "FROM register_variant rvar "
         "JOIN register_version rv ON rvar.regvar_id = rv.regvar_id "
@@ -994,7 +1018,7 @@ def _get_availability_register(
         if rvid not in variants:
             variants[rvid] = {
                 "regvar_id": rvid,
-                "variant_name": row["registervariantnamn"],
+                "variant_name": row["variant_name"],
                 "years": [],
             }
         variants[rvid]["years"].append(year)
@@ -1014,7 +1038,7 @@ def _get_availability_register(
         "target": register,
         "target_type": "register",
         "register_id": reg_id,
-        "register_name": reg["registernamn"],
+        "register_name": reg["name"],
         "min_year": min_y,
         "max_year": max_y,
         "years": all_years_sorted,
@@ -1051,13 +1075,15 @@ def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
         )
 
     values = conn.execute(
-        "SELECT vc.vardekod, vc.vardebenamning, "
-        "vi.vardemangdsversion, vi.vardemangdsniva "
+        # vardemangdsniva stays Swedish (scope guard); the other three
+        # columns ride the §5.11 rename.
+        "SELECT vc.code, vc.label, "
+        "vi.value_set_version_label, vi.vardemangdsniva "
         "FROM variable_instance vi "
         "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "WHERE vi.cvid = ? "
-        "ORDER BY vc.vardekod",
+        "ORDER BY vc.code",
         (int_cvid,),
     ).fetchall()
     return [dict(v) for v in values]
@@ -1074,9 +1100,10 @@ def get_values_by_variable(
 
     Each instance is one cvid → year-correct value list. Filter via
     ``register`` and/or ``year``. Returns
-    ``{input, variabelnamn, instances: [{cvid, register_id, register_name,
+    ``{input, variable_name, instances: [{cvid, register_id, register_name,
     regvar_id, variant_name, regver_id, version_name, year, values}]}``.
-    Resolution mirrors ``get_varinfo``: var_id → variabelnamn → alias.
+    Resolution mirrors ``get_varinfo``: var_id → variable name → alias.
+    Keys follow the §5.11 rename (`variabelnamn` → `variable_name`).
     """
     reg_ids: list[int] | None = None
     if register:
@@ -1091,24 +1118,24 @@ def get_values_by_variable(
         ph = _in_placeholders(reg_ids)
         if int_variable is not None:
             rows_by_id = conn.execute(
-                f"SELECT register_id, var_id, variabelnamn FROM variable "
+                f"SELECT register_id, var_id, name FROM variable "
                 f"WHERE var_id = ? AND register_id IN ({ph})",
                 [int_variable, *reg_ids],
             ).fetchall()
         rows_by_name = conn.execute(
-            f"SELECT register_id, var_id, variabelnamn FROM variable "
-            f"WHERE LOWER(variabelnamn) = LOWER(?) AND register_id IN ({ph})",
+            f"SELECT register_id, var_id, name FROM variable "
+            f"WHERE LOWER(name) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         if int_variable is not None:
             rows_by_id = conn.execute(
-                "SELECT register_id, var_id, variabelnamn FROM variable WHERE var_id = ?",
+                "SELECT register_id, var_id, name FROM variable WHERE var_id = ?",
                 (int_variable,),
             ).fetchall()
         rows_by_name = conn.execute(
-            "SELECT register_id, var_id, variabelnamn FROM variable "
-            "WHERE LOWER(variabelnamn) = LOWER(?)",
+            "SELECT register_id, var_id, name FROM variable "
+            "WHERE LOWER(name) = LOWER(?)",
             (variable,),
         ).fetchall()
 
@@ -1116,11 +1143,11 @@ def get_values_by_variable(
 
     if not matched:
         alias_sql = (
-            "SELECT DISTINCT v.register_id, v.var_id, v.variabelnamn "
+            "SELECT DISTINCT v.register_id, v.var_id, v.name "
             "FROM variable_alias a "
             "JOIN variable_instance vi ON a.cvid = vi.cvid "
             "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-            "WHERE LOWER(a.kolumnnamn) = LOWER(?)"
+            "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
         if reg_ids:
             ph = _in_placeholders(reg_ids)
@@ -1132,7 +1159,7 @@ def get_values_by_variable(
         # Generic column aliases (e.g. "Rad", "Kolumn1", "OBS_VALUE") map to
         # many unrelated variables. Refuse to silently merge their value sets
         # under one name — surface the spread so the caller can pick.
-        distinct_names = {m["variabelnamn"] for m in matched}
+        distinct_names = {m["name"] for m in matched}
         if len(distinct_names) > 1:
             sample = ", ".join(sorted(distinct_names)[:5])
             more = (
@@ -1148,7 +1175,7 @@ def get_values_by_variable(
                 ),
                 remediation=(
                     f"Run `reg-meta get datacolumns {variable}` to see the spread, "
-                    "then call `reg-meta get values <variabelnamn> --register R`."
+                    "then call `reg-meta get values <name> --register R`."
                 ),
             )
 
@@ -1163,7 +1190,7 @@ def get_values_by_variable(
             remediation="Use `reg-meta search --query <term>` to find variables.",
         )
 
-    variabelnamn = matched[0]["variabelnamn"]
+    variable_name = matched[0]["name"]
 
     # Batch-fetch instances for all (register_id, var_id) pairs in one query,
     # then batch-fetch all value codes in a second query keyed on cvid. Avoids
@@ -1177,7 +1204,8 @@ def get_values_by_variable(
 
     inst_rows = conn.execute(
         f"SELECT vi.cvid, vi.register_id, vi.var_id, vi.regvar_id, vi.regver_id, "
-        f"r.registernamn, rv.registervariantnamn, rver.registerversionnamn "
+        f"r.name AS register_name, rv.name AS variant_name, "
+        f"rver.registerversionnamn "
         f"FROM variable_instance vi "
         f"JOIN register r ON vi.register_id = r.register_id "
         f"JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
@@ -1195,9 +1223,9 @@ def get_values_by_variable(
         inst = {
             "cvid": row["cvid"],
             "register_id": row["register_id"],
-            "register_name": row["registernamn"],
+            "register_name": row["register_name"],
             "regvar_id": row["regvar_id"],
-            "variant_name": row["registervariantnamn"],
+            "variant_name": row["variant_name"],
             "regver_id": row["regver_id"],
             "version_name": row["registerversionnamn"],
             "year": inst_year,
@@ -1209,23 +1237,25 @@ def get_values_by_variable(
     if cvid_index:
         cvid_ph = _in_placeholders(list(cvid_index))
         for row in conn.execute(
-            f"SELECT vi.cvid, vc.vardekod, vc.vardebenamning "
+            f"SELECT vi.cvid, vc.code, vc.label "
             f"FROM variable_instance vi "
             f"JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
             f"JOIN value_code vc ON vsm.code_id = vc.code_id "
             f"WHERE vi.cvid IN ({cvid_ph}) "
-            f"ORDER BY vi.cvid, vc.vardekod",
+            f"ORDER BY vi.cvid, vc.code",
             list(cvid_index),
         ):
             cvid_index[row["cvid"]]["values"].append(
-                {"vardekod": row["vardekod"], "vardebenamning": row["vardebenamning"]}
+                {"code": row["code"], "label": row["label"]}
             )
 
     instances.sort(key=lambda i: (i["register_name"] or "", i["year"] or 0, i["cvid"]))
 
     return {
         "input": variable,
-        "variabelnamn": variabelnamn,
+        # §5.11: surface as `variable_name` (variable.name with the entity
+        # qualifier so consumers don't confuse it with register.name).
+        "variable_name": variable_name,
         "instances": instances,
     }
 
@@ -1243,27 +1273,28 @@ def get_datacolumns(
 ) -> list[dict[str, Any]]:
     """Get all column aliases for a variable.
 
-    Returns a list of dicts with "kolumnnamn", "register_id", "register_name",
-    "regvar_id", "regver_id", "version_name".
+    Returns a list of dicts with "delivery_column_name", "register_id",
+    "register_name", "regvar_id", "regver_id", "version_name". Keys follow
+    the §5.11 rename (`kolumnnamn` → `delivery_column_name`).
     """
     reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
-    # Match by var_id or variabelnamn
+    # Match by var_id or variable name (§5.11: was `variabelnamn`)
     int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
             f"SELECT register_id, var_id FROM variable "
-            f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
+            f"WHERE (var_id = ? OR LOWER(name) = LOWER(?)) "
             f"AND register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
             "SELECT register_id, var_id FROM variable "
-            "WHERE var_id = ? OR LOWER(variabelnamn) = LOWER(?)",
+            "WHERE var_id = ? OR LOWER(name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
 
@@ -1282,26 +1313,29 @@ def get_datacolumns(
     seen: set[str] = set()
     for vr in var_rows:
         rows = conn.execute(
-            "SELECT DISTINCT va.kolumnnamn, vi.register_id, vi.regvar_id, vi.regver_id, "
-            "r.registernamn, rver.registerversionnamn "
+            "SELECT DISTINCT va.delivery_column_name, "
+            "vi.register_id, vi.regvar_id, vi.regver_id, "
+            "r.name AS register_name, rver.registerversionnamn "
             "FROM variable_alias va "
             "JOIN variable_instance vi ON va.cvid = vi.cvid "
             "JOIN register r ON vi.register_id = r.register_id "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
             "WHERE vi.register_id = ? AND vi.var_id = ? "
-            "ORDER BY va.kolumnnamn, r.registernamn",
+            "ORDER BY va.delivery_column_name, r.name",
             (vr["register_id"], vr["var_id"]),
         ).fetchall()
         for r in rows:
-            key = f"{r['kolumnnamn']}:{r['register_id']}:{r['regver_id']}"
+            key = f"{r['delivery_column_name']}:{r['register_id']}:{r['regver_id']}"
             if key in seen:
                 continue
             seen.add(key)
             results.append(
                 {
-                    "kolumnnamn": r["kolumnnamn"],
+                    # §5.11: SCB `kolumnnamn` → universal
+                    # `delivery_column_name`.
+                    "delivery_column_name": r["delivery_column_name"],
                     "register_id": r["register_id"],
-                    "register_name": r["registernamn"],
+                    "register_name": r["register_name"],
                     "regvar_id": r["regvar_id"],
                     "regver_id": r["regver_id"],
                     "version_name": r["registerversionnamn"],
@@ -1353,8 +1387,9 @@ def _fetch_columns_for_version(
 ) -> dict[int, dict[str, Any]]:
     """Fetch columns for a version, keyed by var_id."""
     rows = conn.execute(
-        "SELECT vi.var_id, vi.datatyp, vi.datalangd, v.variabelnamn, "
-        "GROUP_CONCAT(va.kolumnnamn, ', ') as aliases "
+        "SELECT vi.var_id, vi.data_type, vi.data_length, "
+        "v.name AS variable_name, "
+        "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
         "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
@@ -1367,9 +1402,9 @@ def _fetch_columns_for_version(
         aliases = sorted(r["aliases"].split(", ")) if r["aliases"] else []
         result[r["var_id"]] = {
             "var_id": r["var_id"],
-            "variabelnamn": r["variabelnamn"],
-            "datatyp": r["datatyp"],
-            "datalangd": r["datalangd"],
+            "variable_name": r["variable_name"],
+            "data_type": r["data_type"],
+            "data_length": r["data_length"],
             "aliases": aliases,
         }
     return result
@@ -1388,7 +1423,7 @@ def get_diff(
     reg_ids = require_register_ids(conn, register)
 
     reg = conn.execute(
-        "SELECT register_id, registernamn FROM register WHERE register_id = ?",
+        "SELECT register_id, name FROM register WHERE register_id = ?",
         (reg_ids[0],),
     ).fetchone()
 
@@ -1414,23 +1449,23 @@ def get_diff(
         ph = _in_placeholders(reg_ids)
         for v in variables:
             rows = conn.execute(
-                f"SELECT var_id, variabelnamn FROM variable "
-                f"WHERE (var_id = ? OR LOWER(variabelnamn) = LOWER(?)) "
+                f"SELECT var_id, name FROM variable "
+                f"WHERE (var_id = ? OR LOWER(name) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
                 [_try_int(v), v, *reg_ids],
             ).fetchall()
             if not rows:
                 rows = conn.execute(
-                    f"SELECT DISTINCT vi.var_id, var.variabelnamn "
+                    f"SELECT DISTINCT vi.var_id, var.name "
                     f"FROM variable_alias va "
                     f"JOIN variable_instance vi ON va.cvid = vi.cvid "
                     f"JOIN variable var ON vi.register_id = var.register_id AND vi.var_id = var.var_id "
-                    f"WHERE LOWER(va.kolumnnamn) = LOWER(?) AND vi.register_id IN ({ph})",
+                    f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND vi.register_id IN ({ph})",
                     [v, *reg_ids],
                 ).fetchall()
             for r in rows:
                 filter_var_ids.add(r["var_id"])
-                var_id_to_name[r["var_id"]] = r["variabelnamn"]
+                var_id_to_name[r["var_id"]] = r["name"]
                 var_id_to_input[r["var_id"]] = v
 
         if not filter_var_ids:
@@ -1474,14 +1509,14 @@ def get_diff(
         for vid in sorted(common_ids):
             fc, tc = from_cols[vid], to_cols[vid]
             changes: list[dict[str, Any]] = []
-            for field in ("datatyp", "datalangd", "aliases"):
+            for field in ("data_type", "data_length", "aliases"):
                 if fc[field] != tc[field]:
                     changes.append({"field": field, "from": fc[field], "to": tc[field]})
             if changes:
                 changed.append(
                     {
                         "var_id": vid,
-                        "variabelnamn": tc["variabelnamn"],
+                        "variable_name": tc["variable_name"],
                         "changes": changes,
                     }
                 )
@@ -1497,9 +1532,9 @@ def get_diff(
             changed_any_variant.update(changed_var_ids)
             for vid in filter_var_ids - changed_var_ids:
                 if vid in from_ids or vid in to_ids:
-                    unchanged_by_var.setdefault(vid, []).append(
-                        rv["registervariantnamn"]
-                    )
+                    # `name` is the §5.11 rename of
+                    # `registervariantnamn` on register_variant.
+                    unchanged_by_var.setdefault(vid, []).append(rv["name"])
 
             added = [a for a in added if a["var_id"] in filter_var_ids]
             removed = [r for r in removed if r["var_id"] in filter_var_ids]
@@ -1511,7 +1546,7 @@ def get_diff(
         variants_out.append(
             {
                 "regvar_id": rvid,
-                "variant_name": rv["registervariantnamn"],
+                "variant_name": rv["name"],
                 "from_version": from_ver,
                 "to_version": to_ver,
                 "summary": {
@@ -1537,7 +1572,7 @@ def get_diff(
 
     result: dict[str, Any] = {
         "register_id": reg["register_id"],
-        "register_name": reg["registernamn"],
+        "register_name": reg["name"],
         "from_year": from_year,
         "to_year": to_year,
         "variants": variants_out,
@@ -1546,7 +1581,7 @@ def get_diff(
         result["resolved_variables"] = [
             {
                 "input": var_id_to_input[vid],
-                "variabelnamn": var_id_to_name[vid],
+                "variable_name": var_id_to_name[vid],
                 "var_id": vid,
             }
             for vid in sorted(var_id_to_name)
@@ -1581,17 +1616,17 @@ def get_lineage(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         matched = conn.execute(
-            f"SELECT v.*, r.registernamn FROM variable v "
+            f"SELECT v.*, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
-            f"WHERE (v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)) "
+            f"WHERE (v.var_id = ? OR LOWER(v.name) = LOWER(?)) "
             f"AND v.register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         matched = conn.execute(
-            "SELECT v.*, r.registernamn FROM variable v "
+            "SELECT v.*, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE v.var_id = ? OR LOWER(v.variabelnamn) = LOWER(?)",
+            "WHERE v.var_id = ? OR LOWER(v.name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
 
@@ -1612,14 +1647,18 @@ def get_lineage(
 
     for var in matched:
         rid, vid = var["register_id"], var["var_id"]
-        hamtad = (var["variabelhamtadfran"] or "").strip()
-        kalla = (var["variabelregister_kalla"] or "").strip()
+        # §5.11 drop: `variabelhamtadfran` is no longer ingested. Lineage
+        # role detection now keys solely on `source_register_text` (the
+        # renamed `variabelregister_kalla`); the auxiliary `hamtad` text
+        # carried no orthogonal signal in practice and its disposition is
+        # "(dropped)" per §5.11.
+        kalla = (var["source_register_text"] or "").strip()
         source_register_id = var["source_register_id"]
 
         # Classify role
-        if not kalla and not hamtad:
+        if not kalla:
             role = "unknown"
-        elif kalla and source_register_id != rid:
+        elif source_register_id != rid:
             role = "consumer"
         else:
             role = "source"
@@ -1639,24 +1678,26 @@ def get_lineage(
         year_range = [min(years), max(years)] if years else []
 
         total_instances += instance_count
-        if kalla or hamtad:
+        if kalla:
             with_source += instance_count
 
         registers_out.append(
             {
                 "register_id": rid,
-                "register_name": var["registernamn"],
+                "register_name": var["register_name"],
                 "var_id": vid,
                 "role": role,
-                "variabelhamtadfran": hamtad,
-                "variabelregister_kalla": kalla,
+                # §5.11 rename: surface SCB's raw attribution under the universal
+                # English key. `variabelhamtadfran` was dropped at §5.11; lineage
+                # signal collapsed onto `source_register_text` alone.
+                "source_register_text": kalla,
                 "source_register_id": source_register_id,
                 "instance_count": instance_count,
                 "year_range": year_range,
             }
         )
 
-    var_name = matched[0]["variabelnamn"]
+    var_name = matched[0]["name"]
 
     return {
         "variable_name": var_name,
@@ -1688,15 +1729,15 @@ def get_coded_variables(
     "n_registers", "n_instances".
     """
     rows = conn.execute(
-        "SELECT v.variabelnamn, "
-        "COUNT(DISTINCT vc.vardekod) as n_distinct_codes, "
+        "SELECT v.name AS variable_name, "
+        "COUNT(DISTINCT vc.code) as n_distinct_codes, "
         "COUNT(DISTINCT v.register_id) as n_registers, "
         "COUNT(DISTINCT vi.cvid) as n_instances "
         "FROM variable v "
         "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
         "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
-        "GROUP BY v.variabelnamn "
+        "GROUP BY v.name "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "
         "ORDER BY n_registers DESC, n_distinct_codes DESC "
         "LIMIT ?",
@@ -1704,7 +1745,7 @@ def get_coded_variables(
     ).fetchall()
     return [
         {
-            "variable_name": r["variabelnamn"],
+            "variable_name": r["variable_name"],
             "n_distinct_codes": r["n_distinct_codes"],
             "n_registers": r["n_registers"],
             "n_instances": r["n_instances"],
@@ -1736,22 +1777,24 @@ def resolve(
         if reg_ids:
             ph = _in_placeholders(reg_ids)
             exact_rows = conn.execute(
-                f"SELECT va.kolumnnamn, vi.register_id, vi.var_id, v.variabelnamn "
+                f"SELECT va.delivery_column_name, vi.register_id, vi.var_id, "
+                f"v.name AS variable_name "
                 f"FROM variable_alias va "
                 f"JOIN variable_instance vi ON va.cvid = vi.cvid "
                 f"JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-                f"WHERE LOWER(va.kolumnnamn) = ? AND vi.register_id IN ({ph}) "
+                f"WHERE LOWER(va.delivery_column_name) = ? AND vi.register_id IN ({ph}) "
                 f"GROUP BY vi.register_id, vi.var_id "
                 f"ORDER BY vi.register_id, vi.var_id",
                 [col_lower, *reg_ids],
             ).fetchall()
         else:
             exact_rows = conn.execute(
-                "SELECT va.kolumnnamn, vi.register_id, vi.var_id, v.variabelnamn "
+                "SELECT va.delivery_column_name, vi.register_id, vi.var_id, "
+                "v.name AS variable_name "
                 "FROM variable_alias va "
                 "JOIN variable_instance vi ON va.cvid = vi.cvid "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
-                "WHERE LOWER(va.kolumnnamn) = ? "
+                "WHERE LOWER(va.delivery_column_name) = ? "
                 "GROUP BY vi.register_id, vi.var_id "
                 "ORDER BY vi.register_id, vi.var_id",
                 (col_lower,),
@@ -1760,8 +1803,8 @@ def resolve(
         matches = [
             {
                 "var_id": r["var_id"],
-                "variable_name": r["variabelnamn"],
-                "matched_column": r["kolumnnamn"],
+                "variable_name": r["variable_name"],
+                "matched_column": r["delivery_column_name"],
                 "register_id": r["register_id"],
             }
             for r in exact_rows
@@ -1827,7 +1870,7 @@ def compare(
 
         # Resolve register_id to register name
         reg_row = conn.execute(
-            "SELECT registernamn FROM register WHERE register_id = ?", (reg_hint,)
+            "SELECT name FROM register WHERE register_id = ?", (reg_hint,)
         ).fetchone()
         if not reg_row:
             files_out.append(
@@ -1849,7 +1892,7 @@ def compare(
             )
             continue
 
-        register_name = reg_row["registernamn"]
+        register_name = reg_row["name"]
 
         # Get schema for this register, optionally filtered by year
         years_arg = str(year_hint) if year_hint else None
@@ -1882,7 +1925,7 @@ def compare(
             for version in variant.get("versions", []):
                 for col in version.get("columns", []):
                     vid = col["var_id"]
-                    vname = col["variabelnamn"]
+                    vname = col["variable_name"]
                     aliases_str = col.get("aliases") or ""
                     aliases = [a.strip() for a in aliases_str.split(",") if a.strip()]
 
@@ -2084,7 +2127,7 @@ def get_classification_codes(
     meta = _classification_by_id(conn, cls_id)
 
     sql = (
-        "SELECT vc.vardekod, vc.vardebenamning, cc.level, cc.is_valid "
+        "SELECT vc.code, vc.label, cc.level, cc.is_valid "
         "FROM classification_code cc "
         "JOIN value_code vc ON cc.code_id = vc.code_id "
         "WHERE cc.classification_id = ?"
@@ -2095,7 +2138,7 @@ def get_classification_codes(
         params.append(level)
     if only_valid:
         sql += " AND cc.is_valid = 1"
-    sql += " ORDER BY vc.vardekod"
+    sql += " ORDER BY vc.code"
 
     # Strip is_valid when NULL so classifications without a canonical CSV
     # don't carry a meaningless field on every code.
@@ -2120,13 +2163,13 @@ def search_variables_by_classification(
     cls_id = _resolve_classification_id(conn, identifier)
     rows = conn.execute(
         """
-        SELECT DISTINCT v.register_id, r.registernamn AS register_name,
-               v.var_id, v.variabelnamn AS variable_name
+        SELECT DISTINCT v.register_id, r.name AS register_name,
+               v.var_id, v.name AS variable_name
         FROM variable_instance vi
         JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id
         JOIN register r ON v.register_id = r.register_id
         WHERE vi.classification_id = ?
-        ORDER BY r.registernamn, v.variabelnamn
+        ORDER BY r.name, v.name
         LIMIT ? OFFSET ?
         """,
         (cls_id, limit, offset),

@@ -148,11 +148,11 @@ _DATE_SQL = frozenset(
     }
 )
 
-# RegMeta `variable_instance.datatyp` tokens, normalised to lowercase.
+# RegMeta `variable_instance.data_type` tokens, normalised to lowercase.
 # Storage type only — used to pick numeric vs. date when nothing else
 # has classified the column. The categorical signal comes from
 # `value_set_id` / `classification_id`, not from a "char/varchar"
-# datatyp (a char column with no code list is usually free text).
+# data_type (a char column with no code list is usually free text).
 _REG_META_NUMERIC = frozenset(
     {
         "tinyint",
@@ -257,7 +257,7 @@ class RegMetaSignal:
 
     # "numeric" / "date" / None. Text storage (char/varchar) maps to
     # None — it isn't a categorical signal on its own.
-    datatyp_kind: str | None
+    data_type_kind: str | None
     # short_name of the classification attached to this variable
     # (SUN2020-GRUPP, SSYK2012, ...). None when no shared classification.
     # When n_classifications > 1 this is the most-common winner.
@@ -288,16 +288,16 @@ def _sql_type_kind(sql_type: str | None) -> str | None:
     return None
 
 
-def _reg_meta_datatyp_kind(datatyp: str | None) -> str | None:
-    """Map a reg_meta ``variable_instance.datatyp`` to a kind bucket.
+def _reg_meta_data_type_kind(data_type: str | None) -> str | None:
+    """Map a reg_meta ``variable_instance.data_type`` to a kind bucket.
 
     Returns ``"numeric"`` / ``"date"`` / ``None``. Text storage tokens
     (char/varchar/...) intentionally return ``None``: text is not a
     semantic categorical signal on its own — see ``RegMetaSignal``.
     """
-    if not datatyp:
+    if not data_type:
         return None
-    head = datatyp.strip().split("(", 1)[0].split()[0].lower()
+    head = data_type.strip().split("(", 1)[0].split()[0].lower()
     if head in _REG_META_NUMERIC:
         return "numeric"
     if head in _REG_META_DATE:
@@ -317,8 +317,8 @@ def reg_meta_implied_type(signal: RegMetaSignal | None) -> str | None:
         return None
     if signal.has_value_codes or signal.classification_short_name:
         return "categorical"
-    if signal.datatyp_kind in {"numeric", "date"}:
-        return signal.datatyp_kind
+    if signal.data_type_kind in {"numeric", "date"}:
+        return signal.data_type_kind
     return None
 
 
@@ -366,7 +366,7 @@ def _reg_meta_lookup(
 
     Aggregation across cvids: when the same alias points at multiple
     ``variable_instance`` rows (one per year/variant), the first
-    non-null ``datatyp`` wins (SCB rarely changes storage type across
+    non-null ``data_type`` wins (SCB rarely changes storage type across
     versions), the most-common ``classification.short_name`` wins, and
     ``has_value_codes`` is True if *any* cvid has a non-null
     ``value_set_id``. Columns absent from reg_meta are absent from the
@@ -377,7 +377,7 @@ def _reg_meta_lookup(
     in the set — keeps the "varies · N" badge consistent with the
     year-filtered popup. Yearless instances (no parseable year)
     contribute to the counts since we can't disprove their relevance.
-    ``datatyp_kind`` / ``classification_short_name`` / ``has_value_codes``
+    ``data_type_kind`` / ``classification_short_name`` / ``has_value_codes``
     stay unfiltered: they answer "does reg_meta know this column" which
     isn't a per-year question.
 
@@ -398,8 +398,8 @@ def _reg_meta_lookup(
     # Pull registerversionnamn so the caller can filter variance counts
     # by year without an extra query.
     sql = (
-        "SELECT LOWER(va.kolumnnamn) AS lower_name, "
-        "       vi.datatyp AS datatyp, "
+        "SELECT LOWER(va.delivery_column_name) AS lower_name, "
+        "       vi.data_type AS data_type, "
         "       c.short_name AS short_name, "
         "       vi.value_set_id AS value_set_id, "
         "       rv.registerversionnamn AS regver_name "
@@ -407,7 +407,7 @@ def _reg_meta_lookup(
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
         "LEFT JOIN classification c ON vi.classification_id = c.id "
         "JOIN register_version rv ON vi.regver_id = rv.regver_id "
-        f"WHERE LOWER(va.kolumnnamn) IN ({col_placeholders}) "
+        f"WHERE LOWER(va.delivery_column_name) IN ({col_placeholders}) "
         f"  AND vi.register_id IN ({reg_placeholders})"
     )
     params = [c.lower() for c in col_list] + list(register_ids)
@@ -415,7 +415,7 @@ def _reg_meta_lookup(
 
     from reg_meta.queries import extract_year
 
-    datatyp_kinds: dict[str, str] = {}
+    data_type_kinds: dict[str, str] = {}
     short_name_counts_all: dict[str, Counter] = {}
     short_name_counts_scoped: dict[str, set[str]] = {}
     value_set_ids_all: dict[str, set[int]] = {}
@@ -424,10 +424,10 @@ def _reg_meta_lookup(
     for r in rows:
         name = r["lower_name"]
         seen.add(name)
-        if name not in datatyp_kinds:
-            kind = _reg_meta_datatyp_kind(r["datatyp"])
+        if name not in data_type_kinds:
+            kind = _reg_meta_data_type_kind(r["data_type"])
             if kind is not None:
-                datatyp_kinds[name] = kind
+                data_type_kinds[name] = kind
         sn = r["short_name"]
         vsid = r["value_set_id"]
         if sn:
@@ -449,7 +449,7 @@ def _reg_meta_lookup(
         sn_counter = short_name_counts_all.get(name)
         sn = sn_counter.most_common(1)[0][0] if sn_counter else None
         out[name] = RegMetaSignal(
-            datatyp_kind=datatyp_kinds.get(name),
+            data_type_kind=data_type_kinds.get(name),
             classification_short_name=sn,
             has_value_codes=bool(value_set_ids_all.get(name)),
             n_value_sets=len(value_set_ids_scoped.get(name, set())),

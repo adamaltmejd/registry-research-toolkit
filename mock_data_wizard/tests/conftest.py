@@ -39,12 +39,12 @@ def assign_value_set(
     code_ids: list[int] = []
     for kod, label in codes:
         row = conn.execute(
-            "SELECT code_id FROM value_code WHERE vardekod = ? AND vardebenamning = ?",
+            "SELECT code_id FROM value_code WHERE code = ? AND label = ?",
             (kod, label),
         ).fetchone()
         if row is None:
             cur = conn.execute(
-                "INSERT INTO value_code (vardekod, vardebenamning) VALUES (?, ?)",
+                "INSERT INTO value_code (code, label) VALUES (?, ?)",
                 (kod, label),
             )
             code_id = int(cur.lastrowid)
@@ -177,26 +177,28 @@ def reg_meta_db(tmp_path: Path) -> Path:
 
     seed_providers(conn)
     conn.execute(
-        "INSERT INTO register (register_id, provider_id, registernamn, registerrubrik, registersyfte) "
-        "VALUES (1, 1, 'TESTREG', 'Testregistret', 'Testing')"
+        "INSERT INTO register (register_id, provider_id, name, purpose) "
+        "VALUES (1, 1, 'TESTREG', 'Testing')"
     )
     conn.execute(
-        "INSERT INTO register_variant (regvar_id, register_id, registervariantnamn, registervariantsekretess) "
-        "VALUES (10, 1, 'Individer', 'Nej')"
+        "INSERT INTO register_variant (regvar_id, register_id, name) "
+        "VALUES (10, 1, 'Individer')"
     )
     conn.execute(
         "INSERT INTO register_version (regver_id, regvar_id, registerversionnamn) "
         "VALUES (100, 10, '2020')"
     )
     conn.execute(
-        "INSERT INTO variable (register_id, var_id, variabelnamn, variabeldefinition) "
+        "INSERT INTO variable (register_id, var_id, name, definition) "
         "VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring')"
     )
     conn.execute(
-        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, datatyp, datalangd, vardemangdsversion, vardemangdsniva) "
+        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "
         "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
     )
-    conn.execute("INSERT INTO variable_alias (cvid, kolumnnamn) VALUES (1001, 'Kon')")
+    conn.execute(
+        "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'Kon')"
+    )
     # Two value codes: 1=Man, 2=Kvinna
     assign_value_set(conn, 1001, [("1", "Man"), ("2", "Kvinna")])
     conn.commit()

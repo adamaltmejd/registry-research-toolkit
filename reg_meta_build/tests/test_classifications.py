@@ -244,15 +244,15 @@ class TestPopulateClassifications:
         conn = sqlite3.connect(db)
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT vc.vardekod, cc.level "
+            "SELECT vc.code, cc.level "
             "FROM classification_code cc "
             "JOIN value_code vc ON cc.code_id = vc.code_id "
             "JOIN classification c ON cc.classification_id = c.id "
             "WHERE c.short_name = 'TESTKON' "
-            "ORDER BY vc.vardekod"
+            "ORDER BY vc.code"
         ).fetchall()
         # Codes are "1" and "2", both numeric, both length 1.
-        assert [(r["vardekod"], r["level"]) for r in rows] == [("1", 1), ("2", 1)]
+        assert [(r["code"], r["level"]) for r in rows] == [("1", 1), ("2", 1)]
 
     def test_supersedes_resolved(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
@@ -317,14 +317,14 @@ class TestPopulateClassifications:
         conn = sqlite3.connect(db_dir / "reg_meta.db")
         conn.row_factory = sqlite3.Row
         rows = conn.execute(
-            "SELECT vc.vardekod, cc.is_valid "
+            "SELECT vc.code, cc.is_valid "
             "FROM classification_code cc "
             "JOIN value_code vc ON cc.code_id = vc.code_id "
             "JOIN classification c ON cc.classification_id = c.id "
             "WHERE c.short_name = 'TESTKON' "
-            "ORDER BY vc.vardekod"
+            "ORDER BY vc.code"
         ).fetchall()
-        by_code = {r["vardekod"]: r["is_valid"] for r in rows}
+        by_code = {r["code"]: r["is_valid"] for r in rows}
         assert by_code == {"1": 1, "2": 0, "Z": 1}
 
         cnt = conn.execute(
@@ -430,14 +430,14 @@ class TestPopulateClassifications:
         # TESTKON2's CC row for vardekod "1" must reference the "Stockholm"
         # value_code, not the "Man" one observed by TESTKON.
         row = conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning, cc.is_valid "
+            "SELECT vc.code, vc.label, cc.is_valid "
             "FROM classification_code cc "
             "JOIN value_code vc ON cc.code_id = vc.code_id "
             "JOIN classification c ON cc.classification_id = c.id "
-            "WHERE c.short_name = 'TESTKON2' AND vc.vardekod = '1'"
+            "WHERE c.short_name = 'TESTKON2' AND vc.code = '1'"
         ).fetchone()
         assert row is not None
-        assert row["vardebenamning"] == "Stockholm"
+        assert row["label"] == "Stockholm"
         assert row["is_valid"] == 1
 
     def test_valid_code_count_counts_distinct_vardekods(self, tmp_path: Path):
@@ -478,16 +478,14 @@ class TestPopulateClassifications:
         # Sanity: three CC rows for TESTKON (one per distinct value_code:
         # "1"/"Man", "1"/"Manlig", "2"/"Kvinna") all with is_valid=1.
         cc_rows = conn.execute(
-            "SELECT vc.vardekod, vc.vardebenamning, cc.is_valid "
+            "SELECT vc.code, vc.label, cc.is_valid "
             "FROM classification_code cc "
             "JOIN value_code vc ON cc.code_id = vc.code_id "
             "JOIN classification c ON cc.classification_id = c.id "
             "WHERE c.short_name = 'TESTKON' "
-            "ORDER BY vc.vardekod, vc.vardebenamning"
+            "ORDER BY vc.code, vc.label"
         ).fetchall()
-        assert [
-            (r["vardekod"], r["vardebenamning"], r["is_valid"]) for r in cc_rows
-        ] == [
+        assert [(r["code"], r["label"], r["is_valid"]) for r in cc_rows] == [
             ("1", "Man", 1),
             ("1", "Manlig", 1),
             ("2", "Kvinna", 1),
@@ -637,7 +635,7 @@ class TestCli:
         )
         assert code == 0
         codes = data["codes"]
-        assert [c["vardekod"] for c in codes] == ["1", "2"]
+        assert [c["code"] for c in codes] == ["1", "2"]
         assert all(c["level"] == 1 for c in codes)
 
     def test_only_valid_requires_codes(self, classification_db: Path):
