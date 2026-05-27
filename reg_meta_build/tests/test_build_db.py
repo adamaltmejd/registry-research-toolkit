@@ -2292,3 +2292,786 @@ class TestVariableStateRenameMidLife:
             assert row["valid_to"] == "9999-12-31"
         finally:
             conn.close()
+
+
+# ---------------------------------------------------------------------------
+# A2.2: build-time triage tests
+# ---------------------------------------------------------------------------
+
+
+_TRIAGE_SLUG_TOML = """\
+# Minimal slug TOML for the triage test fixtures (TESTREG / OTHERREG).
+[register."1"]
+slug = "testreg"
+
+[register."2"]
+slug = "otherreg"
+
+[register_variant."1.10"]
+slug = "individer"
+
+[register_variant."2.20"]
+slug = "foretag"
+"""
+
+
+def _write_triage_slug_dir(tmp_path: Path) -> Path:
+    """Write a minimal slug TOML covering the standard triage fixture's
+    registers (TESTREG → 1, OTHERREG → 2). Triage emits slug-anchored
+    `variable_related_to` edges; without `register.slug` populated, the
+    edge emission silently no-ops."""
+    slug_dir = tmp_path / "slugs"
+    slug_dir.mkdir(parents=True, exist_ok=True)
+    (slug_dir / "scb.toml").write_text(_TRIAGE_SLUG_TOML, encoding="utf-8")
+    return slug_dir
+
+
+def _triage_build(
+    tmp_path: Path,
+    extra_ri_rows: list[str],
+    *,
+    extra_unika_rows: list[str] | None = None,
+    extra_vardemangder_rows: list[str] | None = None,
+) -> Path:
+    """Build a fixture DB with the standard fixture plus the extra triage
+    rows. Returns the path to the freshly-written reg_meta.db.
+
+    Standard fixture provides the baseline registers (TESTREG, OTHERREG)
+    plus a handful of harmless variables; the `extra_*` rows append triage
+    scenarios on top. `extra_vardemangder_rows` and `extra_unika_rows`
+    cover the cases that need cvid → niva / classification associations.
+
+    A minimal slug TOML is written under `<tmp_path>/slugs/` so triage
+    can emit slug-anchored edges.
+    """
+    from _csv_fixtures import (
+        IDENTIFIERARE_HEADER,
+        IDENTIFIERARE_ROWS,
+        REGISTERINFORMATION_HEADER,
+        REGISTERINFORMATION_ROWS,
+        TIMESERIES_HEADER,
+        TIMESERIES_ROWS,
+        UNIKA_HEADER,
+        UNIKA_ROWS,
+        VALID_DATES_HEADER,
+        VALID_DATES_ROWS,
+        VARDEMANGDER_HEADER,
+        VARDEMANGDER_ROWS,
+    )
+
+    ri_rows = list(REGISTERINFORMATION_ROWS) + extra_ri_rows
+    unika_rows = list(UNIKA_ROWS) + (extra_unika_rows or [])
+    vardemangder_rows = list(VARDEMANGDER_ROWS) + (extra_vardemangder_rows or [])
+
+    input_dir = tmp_path / "input"
+    scb = input_dir / "SCB"
+    scb.mkdir(parents=True, exist_ok=True)
+    write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+    write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+    write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+    write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+    write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, vardemangder_rows)
+    write_csv(scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS)
+
+    slug_dir = _write_triage_slug_dir(tmp_path)
+
+    db_dir = tmp_path / "db"
+    build_db(
+        input_dir=input_dir,
+        db_dir=db_dir,
+        skip_classifications=True,
+        slug_dir=slug_dir,
+    )
+    return db_dir / "reg_meta.db"
+
+
+def _ri_triage_row(
+    *,
+    year: str,
+    regver_id: str,
+    cvid: str,
+    var_id: str,
+    varname: str,
+    colname: str,
+    datatype: str = "varchar",
+    datalen: str = "10",
+    register_id: str = "1",
+    regvar_id: str = "10",
+) -> str:
+    """Shorthand to build a Registerinformation row for triage fixtures.
+
+    Uses the TESTREG/Individer variant (register_id=1, regvar_id=10) by
+    default to avoid creating new variant rows.
+    """
+    return _ri_row(
+        "TESTREG",
+        "Testregistret",
+        "Testning",
+        "Individer",
+        "Individer",
+        "Alla individer",
+        "Nej",
+        year,
+        f"Version {year}",
+        "",
+        "Godkänd",
+        f"{year}-01-01",
+        f"{year}-12-31",
+        "Hela befolkningen",
+        "Alla personer",
+        "",
+        f"{year}-12-31",
+        "Person",
+        "Fysisk person",
+        varname,
+        "A triage fixture variable",
+        "Triage fixture row",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        colname,
+        datatype,
+        datalen,
+        cvid,
+        register_id,
+        regvar_id,
+        regver_id,
+        var_id,
+    )
+
+
+class TestVariableTriage:
+    """A2.2: build-time triage resolves same-year multi-state collisions
+    per REFACTOR_SPEC §5.7. The algorithm splits variables into siblings
+    when kolumnnamn / vardemangdsniva / datalangd-pair discriminators
+    differ, and emits `variable_related_to` provenance edges.
+
+    Tests below build fixture CSVs that synthesize each rule in §5.7
+    plus the sibling-slug-derivation cases (kolumnnamn → niva → datalangd
+    → hash fallback) and the slug-deduplication tiebreaker.
+    """
+
+    def test_kolumnnamn_split_emits_related_to(self, tmp_path: Path):
+        """Two cvids with the same `(register, regvar, var)` triple at the
+        same year but distinct kolumnnamn → 2 siblings, 1 symmetric pair
+        of `variable_related_to` edges with `relation_kind =
+        'same_definition_different_column'`."""
+        # var_id=700, regvar_id=10, register_id=1. Two cvids in 2020
+        # with different columns: 'Hemkommun' and 'Skolkommun'.
+        extra = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7000",
+                var_id="700",
+                varname="Kommun",
+                colname="Hemkommun",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7001",
+                var_id="700",
+                varname="Kommun",
+                colname="Skolkommun",
+            ),
+        ]
+        db_path = _triage_build(tmp_path, extra)
+        conn = open_db(db_path)
+        try:
+            # 700 was split: we should have at least 2 distinct var_ids
+            # for what was originally one variable.
+            split_states = conn.execute(
+                "SELECT var_id, delivery_column_name FROM variable_state "
+                "WHERE register_id = 1 AND valid_from LIKE '2020-%' "
+                "AND delivery_column_name IN ('Hemkommun', 'Skolkommun')"
+            ).fetchall()
+            assert len(split_states) == 2
+            var_ids = {r["var_id"] for r in split_states}
+            assert len(var_ids) == 2  # Split into two distinct var_ids.
+
+            # Symmetric edge pair with same_definition_different_column.
+            edges = conn.execute(
+                "SELECT a_variable, b_variable, relation_kind, note "
+                "FROM variable_related_to "
+                "WHERE relation_kind = 'same_definition_different_column'"
+            ).fetchall()
+            assert len(edges) == 2  # A→B + B→A
+            for e in edges:
+                assert e["note"] == "auto:triage"
+            # Symmetric: pair (A, B) appears twice in opposite order.
+            pairs = {(e["a_variable"], e["b_variable"]) for e in edges}
+            assert len(pairs) == 2
+        finally:
+            conn.close()
+
+    def test_kolumnnamn_split_sibling_slugs_derived(self, tmp_path: Path):
+        """Sibling slugs match the prefix-stripped rule: `Hemkommun` and
+        `Skolkommun` share suffix `kommun`, so siblings get slugs
+        `kommun-hem` and `kommun-skol` (suffix-stem prepended to the
+        distinguishing prefix word)."""
+        extra = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7100",
+                var_id="710",
+                varname="Kommun",
+                colname="Hemkommun",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7101",
+                var_id="710",
+                varname="Kommun",
+                colname="Skolkommun",
+            ),
+        ]
+        db_path = _triage_build(tmp_path, extra)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT a_variable, b_variable FROM variable_related_to "
+                "WHERE relation_kind = 'same_definition_different_column'"
+            ).fetchall()
+            slugs = set()
+            for e in edges:
+                slugs.add(e["a_variable"])
+                slugs.add(e["b_variable"])
+            # Expected slugs: kommun-hem / kommun-skol.
+            assert slugs == {"kommun-hem", "kommun-skol"}
+        finally:
+            conn.close()
+
+    def test_niva_pattern_split(self, tmp_path: Path):
+        """vardemangdsniva differs → siblings with niva-pattern suffixes
+        (e.g. `-3pos` / `-5pos`, `-grov` / `-detalj`). Uses the
+        position pattern from §5.7."""
+        # Two cvids with the same kolumnnamn but different niva strings.
+        # Niva is set on variable_instance via Vardemangder import.
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7200",
+                var_id="720",
+                varname="SSYK",
+                colname="Ssyk",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7201",
+                var_id="720",
+                varname="SSYK",
+                colname="Ssyk",
+            ),
+        ]
+        # Different niva strings: '3 positioner' vs '5 positioner'.
+        # vardemangdsversion text becomes value_set_version_label;
+        # vardemangdsniva becomes the grain key. Their combination
+        # forces distinct coalescer groups, which the triage then sees
+        # as a niva-pattern split.
+        extra_vm = [
+            PIPE.join(["SSYK", "SSYK 3 positioner", "001", "Yrke 1", "7200", ""]),
+            PIPE.join(["SSYK", "SSYK 5 positioner", "00100", "Detaljerat", "7201", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT a_variable, b_variable FROM variable_related_to "
+                "WHERE relation_kind = 'same_definition_different_grain'"
+            ).fetchall()
+            slugs = set()
+            for e in edges:
+                slugs.add(e["a_variable"])
+                slugs.add(e["b_variable"])
+            assert "3pos" in slugs
+            assert "5pos" in slugs
+        finally:
+            conn.close()
+
+    def test_datalangd_code_label_pair(self, tmp_path: Path):
+        """Short + long data_length pair sharing one kolumnnamn group →
+        `code_vs_label_pair` siblings with `-id` / `-namn` slugs."""
+        # Two cvids with same kolumnnamn ('Sun') but lengths 3 (code)
+        # and 30 (label). Niva must be identical and non-empty for
+        # the secondary rules to reach the datalangd branch (otherwise
+        # the empty-niva rule fires first).
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7300",
+                var_id="730",
+                varname="Sun",
+                colname="Sun",
+                datatype="varchar",
+                datalen="3",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7301",
+                var_id="730",
+                varname="Sun",
+                colname="Sun",
+                datatype="varchar",
+                datalen="30",
+            ),
+        ]
+        extra_vm = [
+            PIPE.join(["SUN", "SUN 3 positioner", "001", "Utbild 1", "7300", ""]),
+            PIPE.join(["SUN", "SUN 3 positioner", "001", "Utbild 1", "7301", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT a_variable, b_variable FROM variable_related_to "
+                "WHERE relation_kind = 'code_vs_label_pair'"
+            ).fetchall()
+            slugs = {e["a_variable"] for e in edges} | {e["b_variable"] for e in edges}
+            assert slugs == {"id", "namn"}
+        finally:
+            conn.close()
+
+    def test_value_set_version_label_keeps_overlapping(self, tmp_path: Path):
+        """LKF-shape multi-vintage: two states differ only in
+        `value_set_version_label`; the triage keeps both states with
+        the same variable_id and emits NO `variable_related_to` edge —
+        the version label is the resolver-time discriminator."""
+        # Two cvids in 2020 with same kolumnnamn but different
+        # value_set_version_label (here represented as different
+        # Vardemangder versions).
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7400",
+                var_id="740",
+                varname="LKF",
+                colname="Lkf",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7401",
+                var_id="740",
+                varname="LKF",
+                colname="Lkf",
+            ),
+        ]
+        extra_vm = [
+            PIPE.join(["LKF 2006", "1", "01", "Stockholm A", "7400", ""]),
+            PIPE.join(["LKF 2007", "1", "01", "Stockholm B", "7401", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            states = conn.execute(
+                "SELECT var_id, value_set_version_label FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 740 ORDER BY value_set_version_label"
+            ).fetchall()
+            assert len(states) == 2
+            # Both states keep var_id=740 (no sibling allocation).
+            assert all(s["var_id"] == 740 for s in states)
+            import json as _json
+
+            stats = _json.loads(
+                conn.execute(
+                    "SELECT value FROM import_manifest WHERE key='triage_stats'"
+                ).fetchone()["value"]
+            )
+            assert stats["n_kept_overlapping_multi_vintage"] >= 1
+        finally:
+            conn.close()
+
+    def test_classification_id_keeps_overlapping(self, tmp_path: Path):
+        """Only value_set_id differs (with skip_classifications=True the
+        `classification_id` column stays NULL, so this test exercises
+        the `n_collapsed_value_set_drift` path — the same secondary
+        rule branch). The kept-overlapping classification path is
+        verified empirically against the full SCB build (where
+        classifications are loaded)."""
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7500",
+                var_id="750",
+                varname="Cls",
+                colname="ClsCol",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7501",
+                var_id="750",
+                varname="Cls",
+                colname="ClsCol",
+            ),
+        ]
+        extra_vm = [
+            PIPE.join(["NivaA", "NivaA", "01", "Foo", "7500", ""]),
+            PIPE.join(["NivaA", "NivaA", "02", "Bar", "7501", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            # Only-value_set_id-differs path collapses to one state.
+            states = conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 750"
+            ).fetchone()
+            assert states[0] == 1
+            import json as _json
+
+            stats = _json.loads(
+                conn.execute(
+                    "SELECT value FROM import_manifest WHERE key='triage_stats'"
+                ).fetchone()["value"]
+            )
+            assert stats["n_collapsed_value_set_drift"] >= 1
+        finally:
+            conn.close()
+
+    def test_data_type_drift_collapsed(self, tmp_path: Path):
+        """data_type differs only → states collapse to one row; manifest
+        increments `n_collapsed_data_type_drift`."""
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7600",
+                var_id="760",
+                varname="Dtype",
+                colname="DtypeCol",
+                datatype="int",
+                datalen="1",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7601",
+                var_id="760",
+                varname="Dtype",
+                colname="DtypeCol",
+                datatype="varchar",
+                datalen="1",
+            ),
+        ]
+        # Identical niva so the empty-niva rule doesn't fire first.
+        extra_vm = [
+            PIPE.join(["NivaB", "NivaB", "01", "Foo", "7600", ""]),
+            PIPE.join(["NivaB", "NivaB", "01", "Foo", "7601", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            states = conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 760"
+            ).fetchone()
+            assert states[0] == 1
+            import json as _json
+
+            stats = _json.loads(
+                conn.execute(
+                    "SELECT value FROM import_manifest WHERE key='triage_stats'"
+                ).fetchone()["value"]
+            )
+            assert stats["n_collapsed_data_type_drift"] >= 1
+        finally:
+            conn.close()
+
+    def test_empty_vardemangdsniva_dropped(self, tmp_path: Path):
+        """One row's niva is empty, the other's populated → the empty
+        row is treated as a metadata stub and dropped."""
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7700",
+                var_id="770",
+                varname="EmptyN",
+                colname="EmptyN",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7701",
+                var_id="770",
+                varname="EmptyN",
+                colname="EmptyN",
+            ),
+        ]
+        # Only one cvid has Vardemangder entries (so the other gets
+        # NULL niva). Use a niva text that doesn't trigger a niva-pattern
+        # split.
+        extra_vm = [
+            PIPE.join(["NivaPlain", "NivaPlain", "01", "Populated", "7700", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            states = conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 770"
+            ).fetchone()
+            # One state survived (the populated-niva one) — empty was
+            # dropped by Rule 4a.
+            assert states[0] == 1
+        finally:
+            conn.close()
+
+    def test_blake2b_hash_fallback_suffix(self, tmp_path: Path):
+        """When the chosen sibling-derivation kind can't produce a slug,
+        the build falls back to BLAKE2b `x<6 hex>`. To exercise this
+        without triggering the niva-pattern win, we use niva strings
+        that have no recognized pattern token (no positions, no
+        grov/detalj/etc.) — `_niva_suffix` returns None for those, so
+        the `_derive_sibling_slugs` `niva` branch falls through to the
+        hash."""
+        extra_ri = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7800",
+                var_id="780",
+                varname="Hash",
+                colname="HashCol",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7801",
+                var_id="780",
+                varname="Hash",
+                colname="HashCol",
+            ),
+        ]
+        extra_vm = [
+            PIPE.join(["MysteryA", "MysteryA", "01", "Foo", "7800", ""]),
+            PIPE.join(["MysteryB", "MysteryB", "01", "Foo", "7801", ""]),
+        ]
+        db_path = _triage_build(tmp_path, extra_ri, extra_vardemangder_rows=extra_vm)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT a_variable, b_variable FROM variable_related_to "
+                "WHERE relation_kind = 'same_definition_different_grain'"
+            ).fetchall()
+            slugs = {e["a_variable"] for e in edges} | {e["b_variable"] for e in edges}
+            import re as _re
+
+            hash_pat = _re.compile(r"^x[0-9a-f]{6}$")
+            assert any(hash_pat.match(s) for s in slugs), (
+                f"Expected at least one hash-fallback slug, got {slugs}"
+            )
+        finally:
+            conn.close()
+
+    def test_duplicate_derived_slugs_resolved_a_b(self, tmp_path: Path):
+        """`n_duplicate_slugs_resolved` surfaces in the triage stats. On
+        the default fixture (no duplicate-derived slugs) the counter
+        starts at 0; the helper-level test below exercises non-zero."""
+        db_path = _triage_build(tmp_path, [])
+        conn = open_db(db_path)
+        try:
+            import json as _json
+
+            stats = _json.loads(
+                conn.execute(
+                    "SELECT value FROM import_manifest WHERE key='triage_stats'"
+                ).fetchone()["value"]
+            )
+            assert "n_duplicate_slugs_resolved" in stats
+            assert stats["n_duplicate_slugs_resolved"] == 0
+        finally:
+            conn.close()
+
+    def test_dedupe_helper_appends_a_b(self):
+        """Direct unit test of `_dedupe_sibling_slugs`: forcing real
+        sibling-slug duplicates via fixture inputs is impractical (each
+        derivation path diverges by design). The helper appends `-a` /
+        `-b` in input order and increments the stat counter per
+        duplicate resolved."""
+        from reg_meta_build.db import _dedupe_sibling_slugs
+
+        stats: dict[str, int] = {"n_duplicate_slugs_resolved": 0}
+        result = _dedupe_sibling_slugs(["kommun", "kommun", "kommun"], stats)
+        assert result == ["kommun", "kommun-a", "kommun-b"]
+        assert stats["n_duplicate_slugs_resolved"] == 2
+
+    def test_truly_empty_stubs_dropped(self, tmp_path: Path):
+        """`n_stubs_dropped` surfaces in the manifest. The default
+        fixture has no stub candidates; this asserts surface-level
+        presence of the counter."""
+        db_path = _triage_build(tmp_path, [])
+        conn = open_db(db_path)
+        try:
+            import json as _json
+
+            stats = _json.loads(
+                conn.execute(
+                    "SELECT value FROM import_manifest WHERE key='triage_stats'"
+                ).fetchone()["value"]
+            )
+            assert "n_stubs_dropped" in stats
+        finally:
+            conn.close()
+
+    def test_triage_stats_in_manifest(self, tmp_path: Path):
+        """Manifest carries the `triage_stats` key with every expected
+        sub-key from §5.7's algorithm."""
+        db_path = _triage_build(tmp_path, [])
+        conn = open_db(db_path)
+        try:
+            import json as _json
+
+            row = conn.execute(
+                "SELECT value FROM import_manifest WHERE key='triage_stats'"
+            ).fetchone()
+            assert row is not None
+            stats = _json.loads(row["value"])
+            expected_keys = {
+                "n_collision_buckets",
+                "n_buckets_resolved_by_kolumnnamn",
+                "n_buckets_resolved_by_niva",
+                "n_buckets_resolved_by_datalangd",
+                "n_buckets_resolved_by_hash_fallback",
+                "n_siblings_created",
+                "n_related_to_edges",
+                "n_stubs_dropped",
+                "n_collapsed_data_type_drift",
+                "n_kept_overlapping_multi_vintage",
+                "n_kept_overlapping_multi_classification",
+                "n_collapsed_value_set_drift",
+                "n_duplicate_slugs_resolved",
+            }
+            assert expected_keys <= set(stats)
+        finally:
+            conn.close()
+
+    def test_related_to_edges_symmetric(self, tmp_path: Path):
+        """Every A→B `variable_related_to` row has a matching B→A row."""
+        # Force one kolumnnamn split so edges exist.
+        extra = [
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7900",
+                var_id="790",
+                varname="Sym",
+                colname="Hemkommun",
+            ),
+            _ri_triage_row(
+                year="2020",
+                regver_id="100",
+                cvid="7901",
+                var_id="790",
+                varname="Sym",
+                colname="Skolkommun",
+            ),
+        ]
+        db_path = _triage_build(tmp_path, extra)
+        conn = open_db(db_path)
+        try:
+            rows = conn.execute(
+                "SELECT a_variable, b_variable, relation_kind FROM variable_related_to"
+            ).fetchall()
+            assert len(rows) > 0
+            edge_set = {
+                (r["a_variable"], r["b_variable"], r["relation_kind"]) for r in rows
+            }
+            for a, b, rk in list(edge_set):
+                assert (b, a, rk) in edge_set, (
+                    f"Missing reverse edge for ({a}, {b}, {rk})"
+                )
+        finally:
+            conn.close()
+
+    def test_related_to_pk_includes_relation_kind(self, tmp_path: Path):
+        """Compound PK accepts the same (A, B) pair under multiple
+        relation_kind values; duplicate (A, B, kind) is rejected."""
+        db_path = _triage_build(tmp_path, [])
+        # Direct sqlite3.connect for write access — `open_db` opens
+        # read-only by design (built DBs are immutable artifacts). The
+        # test inserts edges to verify PK semantics, which requires
+        # a writable handle.
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        try:
+            conn.execute(
+                "INSERT INTO variable_related_to ("
+                "a_provider, a_register, a_variant, a_variable, "
+                "b_provider, b_register, b_variant, b_variable, "
+                "relation_kind, note) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    "scb",
+                    "testreg",
+                    "",
+                    "foo",
+                    "scb",
+                    "testreg",
+                    "",
+                    "bar",
+                    "same_definition_different_column",
+                    "test",
+                ),
+            )
+            conn.execute(
+                "INSERT INTO variable_related_to ("
+                "a_provider, a_register, a_variant, a_variable, "
+                "b_provider, b_register, b_variant, b_variable, "
+                "relation_kind, note) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    "scb",
+                    "testreg",
+                    "",
+                    "foo",
+                    "scb",
+                    "testreg",
+                    "",
+                    "bar",
+                    "code_vs_label_pair",
+                    "test",
+                ),
+            )
+            conn.commit()
+            count = conn.execute(
+                "SELECT COUNT(*) FROM variable_related_to "
+                "WHERE a_variable='foo' AND b_variable='bar'"
+            ).fetchone()[0]
+            assert count == 2
+            # Inserting a duplicate (same kind) must error.
+            with pytest.raises(sqlite3.IntegrityError):
+                conn.execute(
+                    "INSERT INTO variable_related_to ("
+                    "a_provider, a_register, a_variant, a_variable, "
+                    "b_provider, b_register, b_variant, b_variable, "
+                    "relation_kind, note) "
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                    (
+                        "scb",
+                        "testreg",
+                        "",
+                        "foo",
+                        "scb",
+                        "testreg",
+                        "",
+                        "bar",
+                        "same_definition_different_column",
+                        "duplicate",
+                    ),
+                )
+        finally:
+            conn.close()

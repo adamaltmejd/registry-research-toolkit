@@ -15,6 +15,7 @@ import re
 import sqlite3
 import struct
 import sys
+import unicodedata
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -29,7 +30,12 @@ from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
+from .fqid_slugs import (
+    materialize_related_to_edges,
+    materialize_same_as_edges,
+    populate_slugs,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -557,6 +563,34 @@ CREATE TABLE variable_same_as (
     )
 ) WITHOUT ROWID;
 CREATE INDEX idx_variable_same_as_a ON variable_same_as(
+    a_provider, a_register, a_variable
+);
+
+-- §5.5 / §5.7 variable_related_to: weaker edge than same_as. Used by A2.2's
+-- build-time triage to record the (N choose 2) symmetric relationships
+-- between siblings split from one source variable (e.g. `Hemkommun` vs
+-- `Skolkommun` on a shared variable id). Also a curation slot in slug TOMLs
+-- for cross-register relationships the algorithm can't see — `relation_kind`
+-- is part of the PK so the same (A, B) pair can carry multiple kinds
+-- (e.g. both `same_definition_different_column` and `code_vs_label_pair`).
+-- `note` carries provenance: 'auto:triage' for algorithm-emitted edges,
+-- curator-supplied text for TOML edges. Edges are symmetric: insert A→B
+-- and B→A so the resolver does a single forward lookup.
+CREATE TABLE variable_related_to (
+    a_provider TEXT NOT NULL,
+    a_register TEXT NOT NULL,
+    a_variant  TEXT NOT NULL,
+    a_variable TEXT NOT NULL,
+    b_provider TEXT NOT NULL,
+    b_register TEXT NOT NULL,
+    b_variant  TEXT NOT NULL,
+    b_variable TEXT NOT NULL,
+    relation_kind TEXT NOT NULL,
+    note          TEXT,
+    PRIMARY KEY (a_provider, a_register, a_variant, a_variable,
+                 b_provider, b_register, b_variant, b_variable, relation_kind)
+) WITHOUT ROWID;
+CREATE INDEX idx_variable_related_to_a ON variable_related_to(
     a_provider, a_register, a_variable
 );
 
@@ -1621,6 +1655,1370 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     }
 
 
+# ---------------------------------------------------------------------------
+# A2.2: build-time triage (§5.7)
+# ---------------------------------------------------------------------------
+
+# Regex patterns for `vardemangdsniva`-derived sibling slug suffixes (§5.7).
+# Order matters: the position-pattern is the most specific and the most
+# common in SCB data; the rest are ordered so the more-specific patterns
+# win when a niva string contains overlapping tokens.
+_NIVA_POSITION_RE = re.compile(r"\b(\d+)\s*position(er)?\b", re.IGNORECASE)
+_NIVA_NIVAOLD_RE = re.compile(r"\bnivaold\b", re.IGNORECASE)
+_NIVA_GROV_RE = re.compile(r"\bgrov(?:\s+gruppering)?\b", re.IGNORECASE)
+_NIVA_DETALJ_RE = re.compile(r"\bdetalj(?:grupp(er)?)?\b", re.IGNORECASE)
+_NIVA_ALFA_RE = re.compile(r"\b(alfa|alpha)\b", re.IGNORECASE)
+_NIVA_HUVUDGRUPP_RE = re.compile(r"\bhuvudgrupp\b", re.IGNORECASE)
+_NIVA_AVDELNING_RE = re.compile(r"\bavdelning\b", re.IGNORECASE)
+_NIVA_UNDERGRUPP_RE = re.compile(r"\bundergrupp\b", re.IGNORECASE)
+
+
+def _niva_suffix(niva: str | None) -> str | None:
+    """Map a `vardemangdsniva` text to a sibling slug suffix per §5.7 rule 2.
+
+    Returns the suffix (e.g. `-3pos`, `-grov`) or None if no pattern matches.
+    Suffix delimiter is `-` so slugs stay inside the §5.2 grammar.
+    """
+    if not niva:
+        return None
+    m = _NIVA_POSITION_RE.search(niva)
+    if m is not None:
+        return f"-{m.group(1)}pos"
+    if _NIVA_NIVAOLD_RE.search(niva):
+        return "-old"
+    if _NIVA_GROV_RE.search(niva):
+        return "-grov"
+    if _NIVA_DETALJ_RE.search(niva):
+        return "-detalj"
+    if _NIVA_ALFA_RE.search(niva):
+        return "-alfa"
+    if _NIVA_HUVUDGRUPP_RE.search(niva):
+        return "-huvud"
+    if _NIVA_AVDELNING_RE.search(niva):
+        return "-avd"
+    if _NIVA_UNDERGRUPP_RE.search(niva):
+        return "-under"
+    return None
+
+
+def _kolumnnamn_suffixes(kolumnnamn_set: list[set[str]]) -> list[str] | None:
+    """Derive sibling slug suffixes from N distinct kolumnnamn groups.
+
+    Returns a parallel list of slugs (already including any common-prefix
+    stripping) or None when no usable kolumnnamn-derived split is possible
+    (e.g. one of the groups carries an empty set, or the resulting slugs
+    fail the §5.2 grammar). Caller falls back to niva / datalangd / hash
+    when this returns None.
+
+    Strategy:
+
+    1. Pick one representative kolumnnamn per group (lexically smallest, for
+       determinism). A group with no kolumnnamn carries no information and
+       forces a fallback path — return None.
+    2. Compute a common ASCII-folded prefix across representatives. If the
+       prefix is non-trivial (≥ 2 chars and ends on a word boundary in at
+       least one representative), strip it from each name and use the
+       remainder as the discriminator suffix.
+    3. Strip leading punctuation/underscores from the discriminator before
+       folding to a slug. Heuristic word-end normalization: `St` → `start`,
+       `Sl` → `slut` when the stripped remainder matches the literal token
+       (so `Utbild_St` becomes `utbild-start`, `Utbild_Sl` becomes
+       `utbild-slut`). Otherwise lowercase and replace underscores with `-`.
+    4. The final suffix becomes `<prefix>-<remainder>` when a common prefix
+       was found; otherwise it's the lowercased-and-hyphenated full name
+       (caller still adds the conflict tiebreaker `-a`/`-b` if needed).
+
+    Empty representative sets → None (caller falls back to niva-pattern).
+    """
+    if any(not s for s in kolumnnamn_set):
+        return None
+    reps = [sorted(s)[0] for s in kolumnnamn_set]
+    # Common-prefix heuristic: longest shared character prefix across the
+    # ASCII-folded lowercase reps. Tracked as a length over the folded
+    # representation so the original-case prefix can still be re-extracted
+    # from one of the reps when we need it.
+    folded = [_ascii_fold_lower(r) for r in reps]
+    common_len = 0
+    if folded:
+        shortest = min(len(f) for f in folded)
+        for i in range(shortest):
+            ch = folded[0][i]
+            if all(f[i] == ch for f in folded):
+                common_len += 1
+            else:
+                break
+    # `Hemkommun` / `Skolkommun` share NO prefix (`H`/`S` differ at 0);
+    # we still want to land on `kommun-hem` / `kommun-skol`. When the
+    # forward prefix is short, fall back to a common-SUFFIX search and
+    # use the suffix as the stem.
+    if common_len < 2:
+        common_suffix = _common_suffix_len(folded)
+        if common_suffix >= 3:
+            stem = folded[0][len(folded[0]) - common_suffix :]
+            suffixes = []
+            for rep, fr in zip(reps, folded, strict=True):
+                prefix_part = fr[: len(fr) - common_suffix]
+                prefix_part = prefix_part.strip("_- ")
+                if not prefix_part:
+                    return None
+                suffixes.append(f"-{stem}-{_word_to_slug(prefix_part)}")
+            return suffixes
+        # No usable common pattern. Fall through to per-rep slugging.
+        return _per_rep_slugs(reps)
+    # Forward-prefix path. Strip the common prefix from each rep and use
+    # the remainder. Reject when stripping would leave nothing on any
+    # rep (common prefix == full string → no discriminator).
+    suffixes: list[str] = []
+    for rep, fr in zip(reps, folded, strict=True):
+        remainder = fr[common_len:].strip("_- ")
+        if not remainder:
+            return None
+        suffixes.append(f"-{_word_to_slug(remainder)}")
+    return suffixes
+
+
+def _common_suffix_len(folded: list[str]) -> int:
+    """Longest shared character suffix across the ASCII-folded reps."""
+    if not folded:
+        return 0
+    shortest = min(len(f) for f in folded)
+    suffix = 0
+    for i in range(1, shortest + 1):
+        ch = folded[0][-i]
+        if all(f[-i] == ch for f in folded):
+            suffix += 1
+        else:
+            break
+    return suffix
+
+
+def _word_to_slug(raw: str) -> str:
+    """Lowercase + heuristic abbrev expansion + hyphenated slug body.
+
+    `St` / `Sl` on standalone-token boundaries expand to `start` / `slut`
+    (the §5.7 example from `Utbild_St` / `Utbild_Sl`). Other tokens get
+    lowercased with underscores becoming hyphens. NFKD-ASCII folding so
+    Swedish diacritics survive into the §5.2 slug grammar.
+    """
+    folded = (
+        unicodedata.normalize("NFKD", raw)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+    # Heuristic expansions BEFORE the underscore replacement so the token
+    # boundary is preserved. SCB uses `St` / `Sl` as `start` / `slut`
+    # abbreviations on `Utbild_St` / `Utbild_Sl`.
+    tokens = re.split(r"[_\s\-]+", folded)
+    expanded = []
+    for tok in tokens:
+        if tok == "st":
+            expanded.append("start")
+        elif tok == "sl":
+            expanded.append("slut")
+        elif tok:
+            expanded.append(tok)
+    body = "-".join(expanded)
+    # Replace any leftover non-alphanumerics with `-`, collapse runs,
+    # and trim.
+    return re.sub(r"[^a-z0-9]+", "-", body).strip("-")
+
+
+def _per_rep_slugs(reps: list[str]) -> list[str]:
+    """Fallback when no common prefix/suffix carves the kolumnnamn group:
+    each rep becomes its own slug (lowercased, hyphenated, ASCII-folded).
+    """
+    return [f"-{_word_to_slug(r)}" for r in reps]
+
+
+def _ascii_fold_lower(s: str) -> str:
+    """Lowercase NFKD-ASCII fold; helper for the prefix/suffix overlap math."""
+    return (
+        unicodedata.normalize("NFKD", s)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+
+
+def _triage_year_from_iso(iso_date: str) -> int | None:
+    """Extract a year from a `YYYY-MM-DD` ISO date. Sentinel dates return None."""
+    if not iso_date or iso_date == _VALID_FROM_UNKNOWN:
+        return None
+    try:
+        return int(iso_date[:4])
+    except ValueError:
+        return None
+
+
+def _triage_year_bucket(valid_from: str, valid_to: str) -> tuple[int, ...]:
+    """Years a state row covers (used to group `variable_state` rows into
+    same-year buckets). Returns the lexical year-range covered by
+    `[valid_from, valid_to]`, capped at 200 years to defend against the
+    sentinel `9999-12-31` blowing up memory if a state somehow spans the
+    full range.
+
+    Returns an empty tuple for fully-sentinel rows
+    (`valid_from = '0001-01-01'` AND `valid_to = '9999-12-31'`) — these
+    are unparseable and the triage skips them.
+    """
+    yf = _triage_year_from_iso(valid_from)
+    yt = _triage_year_from_iso(valid_to)
+    if yf is None and yt is None:
+        return ()
+    # After the all-None bail we have at least one bound; backfill the
+    # missing side from the populated one so downstream arithmetic
+    # stays well-typed.
+    if yf is None:
+        assert yt is not None
+        yf = yt
+    if yt is None or yt > 9000:
+        # Sentinel open-end: collapse to lower bound only. Triage's job
+        # is finding same-year multi-state collisions; a state that
+        # extends to the open sentinel only shares its lower bound's
+        # year (and the natural extension years up to the variable's
+        # latest observed year — but we can't know that without the
+        # cross-state context, and the same-year detection only needs
+        # to see the lower bound's year).
+        return (yf,)
+    if yt < yf:
+        return ()
+    if yt - yf > 200:
+        return tuple(range(yf, yf + 200))
+    return tuple(range(yf, yt + 1))
+
+
+def _triage_same_year_collisions(
+    conn: sqlite3.Connection,
+    slug_dir: Path | None = None,
+) -> dict[str, int]:
+    """Resolve same-year multi-state collisions per §5.7.
+
+    Reads `variable_state` (the just-emitted A2.1 rows) plus the
+    `variable_instance × variable_alias` join so each state carries the
+    transient SCB-source fields (`kolumnnamn`, `vardemangdsniva`,
+    `data_type`, `data_length`) the §5.7 algorithm inspects.
+
+    The result is a mix of in-place edits to `variable_state` (sibling
+    re-keying, drops, collapses), inserts to `variable` (new sibling
+    variable rows), and inserts to `variable_related_to` (provenance
+    edges with `note = 'auto:triage'`).
+
+    TOML override is "light" at A2.2: if a `[variable."<id>"]` block in
+    a provider TOML carries an explicit `slug`, that wins over the
+    auto-derived sibling slug for siblings allocated against that
+    variable id. Bulk curation comes in a separate PR.
+    """
+    _progress("Triaging same-year variable_state collisions (§5.7)...")
+
+    # Pre-load TOML variable slugs for the override-light path.
+    # Shape: { (provider_slug, register_source_id, var_source_id): slug }
+    # where source IDs are the raw TOML keys (`"34"`, `"34.137"`).
+    toml_variable_slugs: dict[tuple[str, str], str] = {}
+    if slug_dir is not None:
+        toml_variable_slugs = _load_toml_variable_slugs(slug_dir)
+
+    cur = conn.cursor()
+    cur.row_factory = sqlite3.Row
+
+    # Pull the candidate set. variable_state carries the post-coalesce
+    # shape; variable_instance + variable_alias carry the discriminators
+    # (kolumnnamn, vardemangdsniva, classification_id, value_set_id).
+    # We join through (register_id, regvar_id, var_id, value_set_id,
+    # value_set_version_label, data_type, data_length) which is the
+    # post-coalesce identity of a state — one instance maps to exactly
+    # one state when those fields all match.
+    #
+    # We use LEFT JOIN on variable_alias because cvids may have no alias
+    # (rare; pure-name pre-triage rows). NULL kolumnnamn rows still need
+    # to surface so the "drop truly-empty stubs" rule can fire.
+    state_rows = cur.execute(
+        "SELECT state_id, register_id, regvar_id, var_id, valid_from, valid_to, "
+        "       data_type, data_length, delivery_column_name, "
+        "       value_set_id, value_set_version_label "
+        "FROM variable_state"
+    ).fetchall()
+
+    # Map (register_id, regvar_id, var_id, data_type, data_length,
+    #      value_set_id, value_set_version_label) → list[state_id].
+    # That's the post-coalesce identity. Used to join state → instance.
+    state_by_identity: dict[tuple, list[int]] = {}
+    state_meta: dict[int, dict[str, Any]] = {}
+    for r in state_rows:
+        identity = (
+            r["register_id"],
+            r["regvar_id"],
+            r["var_id"],
+            r["data_type"] or "",
+            r["data_length"] or "",
+            r["value_set_id"],
+            r["value_set_version_label"] or "",
+        )
+        state_by_identity.setdefault(identity, []).append(r["state_id"])
+        state_meta[r["state_id"]] = {
+            "register_id": r["register_id"],
+            "regvar_id": r["regvar_id"],
+            "var_id": r["var_id"],
+            "valid_from": r["valid_from"],
+            "valid_to": r["valid_to"],
+            "data_type": r["data_type"],
+            "data_length": r["data_length"],
+            "delivery_column_name": r["delivery_column_name"],
+            "value_set_id": r["value_set_id"],
+            "value_set_version_label": r["value_set_version_label"],
+            # Filled in below from variable_instance joins.
+            "kolumnnamn_set": set(),
+            "vardemangdsniva_set": set(),
+            "classification_id_set": set(),
+            "cvid_set": set(),
+        }
+
+    # Walk variable_instance × variable_alias to populate the discriminator
+    # sets per state. The join key matches what _coalesce_variable_states
+    # used (minus grain — grain is the discriminator we're now exposing
+    # via vardemangdsniva_set).
+    #
+    # We also accumulate per-cvid alias sets (not just the merged
+    # per-state union) so the kolumnnamn-component graph builds edges
+    # only between aliases that co-occur for the SAME cvid. Aliases
+    # from different cvids that happen to coalesce into one state row
+    # (because the coalescer's grain key doesn't include kolumnnamn)
+    # must NOT be joined — that's the genuine kolumnnamn-split signal.
+    inst_rows = cur.execute(
+        "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.var_id, "
+        "       vi.data_type, vi.data_length, vi.value_set_id, "
+        "       vi.value_set_version_label, vi.vardemangdsniva, "
+        "       vi.classification_id, va.delivery_column_name "
+        "FROM variable_instance vi "
+        "LEFT JOIN variable_alias va ON va.cvid = vi.cvid"
+    ).fetchall()
+    # Per-cvid alias accumulation; later used to seed the kolumnnamn
+    # graph's edges. Multiple aliases from the same cvid form one
+    # connected component; aliases from different cvids stay separate
+    # unless an explicit overlap exists.
+    cvid_aliases: dict[int, set[str]] = {}
+    sid_to_cvids: dict[int, set[int]] = {}
+    for ir in inst_rows:
+        identity = (
+            ir["register_id"],
+            ir["regvar_id"],
+            ir["var_id"],
+            ir["data_type"] or "",
+            ir["data_length"] or "",
+            ir["value_set_id"],
+            ir["value_set_version_label"] or "",
+        )
+        # NOTE: a single instance identity can map to multiple state_ids
+        # only when the coalescer's grain key (vardemangdsniva) differs
+        # across the cvids. In that case, the alias / niva fan-out below
+        # adds the same alias to multiple state rows — which is fine for
+        # the kolumnnamn-intersection grouping. The triage then splits
+        # those states out into siblings using vardemangdsniva.
+        state_ids = state_by_identity.get(identity, [])
+        if ir["delivery_column_name"]:
+            cvid_aliases.setdefault(ir["cvid"], set()).add(ir["delivery_column_name"])
+        for sid in state_ids:
+            meta = state_meta[sid]
+            if ir["delivery_column_name"]:
+                meta["kolumnnamn_set"].add(ir["delivery_column_name"])
+            if ir["vardemangdsniva"]:
+                meta["vardemangdsniva_set"].add(ir["vardemangdsniva"])
+            if ir["classification_id"] is not None:
+                meta["classification_id_set"].add(ir["classification_id"])
+            meta["cvid_set"].add(ir["cvid"])
+            sid_to_cvids.setdefault(sid, set()).add(ir["cvid"])
+    # Attach the per-state cvid → alias mapping so
+    # `_kolumnnamn_components` can build edges per cvid (not per state).
+    for sid, cvids in sid_to_cvids.items():
+        state_meta[sid]["cvid_alias_map"] = {
+            c: cvid_aliases.get(c, set()) for c in cvids
+        }
+
+    # Bucket by (register_id, regvar_id, var_id, year) — §5.7 collision
+    # buckets. A state row contributes to every year it covers; the
+    # bucket cardinality is what triggers the algorithm.
+    #
+    # A bucket is collision-prone when EITHER (a) it carries multiple
+    # state rows, OR (b) a single state row's aliases form disjoint
+    # kolumnnamn groups (the kolumnnamn-multi-alias case, which the
+    # coalescer collapses into one row because its grain key doesn't
+    # include kolumnnamn). The kolumnnamn-disjoint case is detected
+    # post-bucketing by `_kolumnnamn_intersection_groups`.
+    buckets: dict[tuple[int, int, int, int], list[int]] = {}
+    for sid, meta in state_meta.items():
+        for year in _triage_year_bucket(meta["valid_from"], meta["valid_to"]):
+            bkey = (meta["register_id"], meta["regvar_id"], meta["var_id"], year)
+            buckets.setdefault(bkey, []).append(sid)
+
+    # Stats counters wired into the manifest.
+    stats: dict[str, int] = {
+        "n_collision_buckets": 0,
+        "n_buckets_resolved_by_kolumnnamn": 0,
+        "n_buckets_resolved_by_niva": 0,
+        "n_buckets_resolved_by_datalangd": 0,
+        "n_buckets_resolved_by_hash_fallback": 0,
+        "n_siblings_created": 0,
+        "n_related_to_edges": 0,
+        "n_stubs_dropped": 0,
+        "n_collapsed_data_type_drift": 0,
+        "n_kept_overlapping_multi_vintage": 0,
+        "n_kept_overlapping_multi_classification": 0,
+        "n_collapsed_value_set_drift": 0,
+        "n_duplicate_slugs_resolved": 0,
+    }
+
+    # Tracking sets so the per-bucket pass doesn't double-count when a
+    # variable triple's states appear in multiple year buckets (e.g. a
+    # bucket is collision-prone in 2020 AND 2021).
+    dropped_state_ids: set[int] = set()
+    collapsed_state_ids: set[int] = set()
+    # Per-triple (register_id, regvar_id, var_id) → list of sibling
+    # decisions. A decision records which states form a sibling group
+    # and the discriminator type used. Decisions are computed per
+    # bucket but reconciled per triple — the same kolumnnamn split
+    # should fire once per variable across all its year buckets.
+    triple_sibling_decisions: dict[
+        tuple[int, int, int],
+        dict[str, Any],
+    ] = {}
+    # Track per-triple bucket-resolution kind so the stats counter
+    # increments once per triple, not once per (triple, year) bucket.
+    triple_resolution_kind: dict[tuple[int, int, int], str] = {}
+
+    for bkey, sids in sorted(buckets.items()):
+        # Skip dropped states from earlier bucket iterations.
+        live_sids = [
+            s
+            for s in sids
+            if s not in dropped_state_ids and s not in collapsed_state_ids
+        ]
+        if not live_sids:
+            continue
+        triple = bkey[:3]
+
+        # ----- Rule 2 (precondition): kolumnnamn-component split -----
+        # First check whether the bucket has a kolumnnamn split — this
+        # fires even on a single-state bucket if that state's aliases
+        # form disjoint connected components. The coalescer's group key
+        # doesn't include kolumnnamn, so two cvids with the same
+        # (data_type, data_length, value_set_id, value_set_version_label,
+        # grain) but different aliases collapse into ONE state row with
+        # multiple aliases. The triage detects and unwinds that here.
+        kolumnnamn_components = _kolumnnamn_components(live_sids, state_meta)
+        has_kolumnnamn_split = len(kolumnnamn_components) > 1
+
+        # A "collision" exists when (a) the bucket has >1 live state OR
+        # (b) a single state's aliases form a disjoint kolumnnamn graph.
+        if len(live_sids) <= 1 and not has_kolumnnamn_split:
+            continue
+        stats["n_collision_buckets"] += 1
+
+        # ----- Rule 1: drop truly-empty stubs -----
+        stub_sids = []
+        non_stub_sids = []
+        for sid in live_sids:
+            meta = state_meta[sid]
+            is_stub = not meta["data_type"] and not meta["kolumnnamn_set"]
+            if is_stub:
+                stub_sids.append(sid)
+            else:
+                non_stub_sids.append(sid)
+        # Only drop stubs when at least one non-stub survives. An
+        # all-stub bucket can't be resolved further; leave it alone
+        # (rare edge case in practice).
+        if stub_sids and non_stub_sids:
+            for sid in stub_sids:
+                dropped_state_ids.add(sid)
+                stats["n_stubs_dropped"] += 1
+            live_sids = non_stub_sids
+            # Recompute the kolumnnamn split after dropping stubs.
+            kolumnnamn_components = _kolumnnamn_components(live_sids, state_meta)
+            has_kolumnnamn_split = len(kolumnnamn_components) > 1
+
+        if len(live_sids) <= 1 and not has_kolumnnamn_split:
+            continue
+
+        # ----- Rule 2: kolumnnamn-component sibling split -----
+        if has_kolumnnamn_split:
+            # Each connected component becomes a sibling. Build the
+            # state→component assignment: a state's component is the
+            # smallest-state-id component its aliases intersect with.
+            # (When a state's aliases span multiple components, that
+            # state itself must be split into N — handled by carving
+            # an alias-partition view per component.)
+            if triple not in triple_sibling_decisions:
+                groups = _assign_states_to_components(
+                    live_sids, kolumnnamn_components, state_meta
+                )
+                triple_sibling_decisions[triple] = {
+                    "kind": "kolumnnamn",
+                    "groups": groups,
+                    "components": kolumnnamn_components,
+                    "relation_kind": "same_definition_different_column",
+                }
+                triple_resolution_kind[triple] = "kolumnnamn"
+            continue
+
+        # Single kolumnnamn group from here on → secondary rules.
+        # ----- Rule 4: secondary discriminators -----
+
+        # Rule 4a: empty vardemangdsniva alongside populated → drop empty.
+        empty_niva = [
+            sid for sid in live_sids if not state_meta[sid]["vardemangdsniva_set"]
+        ]
+        populated_niva = [
+            sid for sid in live_sids if state_meta[sid]["vardemangdsniva_set"]
+        ]
+        if empty_niva and populated_niva:
+            for sid in empty_niva:
+                dropped_state_ids.add(sid)
+                stats["n_stubs_dropped"] += 1
+            live_sids = populated_niva
+            if len(live_sids) <= 1:
+                continue
+
+        # Rule 4b: vardemangdsniva differs → split via niva-pattern.
+        niva_groups = _vardemangdsniva_groups(live_sids, state_meta)
+        if len(niva_groups) > 1:
+            if triple not in triple_sibling_decisions:
+                triple_sibling_decisions[triple] = {
+                    "kind": "niva",
+                    "groups": niva_groups,
+                    "relation_kind": "same_definition_different_grain",
+                }
+                triple_resolution_kind[triple] = "niva"
+            continue
+
+        # Rule 4c: value_set_version_label differs → keep overlapping
+        # (true multi-vintage; no edge).
+        vsvl_set = {
+            state_meta[sid]["value_set_version_label"] or "" for sid in live_sids
+        }
+        if len(vsvl_set) > 1:
+            # No-op: states stay distinct, no sibling allocation.
+            if triple_resolution_kind.get(triple) != "multi_vintage":
+                stats["n_kept_overlapping_multi_vintage"] += 1
+                triple_resolution_kind[triple] = "multi_vintage"
+            continue
+
+        # Rule 4d: classification_id differs → keep overlapping, emit
+        # `same_concept_different_grain` edges between the surviving
+        # state rows' variable triples (which are the same triple here,
+        # so the edge is a self-relation on the same variable id).
+        cls_sets = [
+            frozenset(state_meta[sid]["classification_id_set"]) for sid in live_sids
+        ]
+        if len({s for s in cls_sets if s}) > 1:
+            # Multiple distinct classification sets among states. Keep
+            # overlapping; no sibling allocation. We don't emit an edge
+            # here because both states belong to the same variable_slug
+            # (no second sibling to point at). The §5.7 spec mentions
+            # the edge for cross-grain classification *splits*, which
+            # the kolumnnamn path already covers above.
+            if triple_resolution_kind.get(triple) != "multi_classification":
+                stats["n_kept_overlapping_multi_classification"] += 1
+                triple_resolution_kind[triple] = "multi_classification"
+            continue
+
+        # Rule 4e: datalangd code/label pair takes precedence over the
+        # generic data_length-collapse rule. The pair pattern (e.g.
+        # `Lid` length 4 + `LNamn` length 20 — short id alongside long
+        # label) is a deliberate co-encoded sibling, not metadata drift.
+        if _looks_like_code_label_pair(live_sids, state_meta):
+            length_groups = _datalangd_pair_groups(live_sids, state_meta)
+            if len(length_groups) > 1 and triple not in triple_sibling_decisions:
+                triple_sibling_decisions[triple] = {
+                    "kind": "datalangd",
+                    "groups": length_groups,
+                    "relation_kind": "code_vs_label_pair",
+                }
+                triple_resolution_kind[triple] = "datalangd"
+            continue
+
+        # Rule 4f: data_type / data_length differs only → collapse.
+        dt_set = {state_meta[sid]["data_type"] or "" for sid in live_sids}
+        dl_set = {state_meta[sid]["data_length"] or "" for sid in live_sids}
+        if len(dt_set) > 1 or len(dl_set) > 1:
+            _collapse_states(conn, live_sids, state_meta, collapsed_state_ids)
+            stats["n_collapsed_data_type_drift"] += 1
+            continue
+
+        # Rule 4g: only value_set_id differs → collapse (code-list drift).
+        vs_set = {state_meta[sid]["value_set_id"] for sid in live_sids}
+        if len(vs_set) > 1:
+            _collapse_states(conn, live_sids, state_meta, collapsed_state_ids)
+            stats["n_collapsed_value_set_drift"] += 1
+            continue
+
+        # No rule fired. The bucket stays multi-state. Counted under
+        # `n_collision_buckets` but not under any resolution counter;
+        # surfaces in the manifest as a curation target.
+
+    # Apply drops first so downstream sibling allocation doesn't see
+    # them. delete_state_ids carries both stub drops and rule-4a drops;
+    # apply both with a single DELETE.
+    if dropped_state_ids:
+        conn.executemany(
+            "DELETE FROM variable_state WHERE state_id = ?",
+            [(sid,) for sid in sorted(dropped_state_ids)],
+        )
+
+    # Allocate siblings per triple decision. Decision records sibling
+    # groups in deterministic order; sibling 1 keeps the original
+    # var_id, siblings 2..N get freshly-minted var_ids.
+    _allocate_sibling_variables(
+        conn,
+        triple_sibling_decisions,
+        triple_resolution_kind,
+        state_meta,
+        toml_variable_slugs,
+        stats,
+    )
+
+    _progress(
+        f"  {stats['n_collision_buckets']:,} collision buckets, "
+        f"{stats['n_siblings_created']:,} siblings created, "
+        f"{stats['n_related_to_edges']:,} variable_related_to edges, "
+        f"{stats['n_stubs_dropped']:,} stubs dropped"
+    )
+    return stats
+
+
+def _kolumnnamn_components(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> list[frozenset[str]]:
+    """Connected components of the bucket's kolumnnamn graph.
+
+    Nodes are kolumnnamn strings across all states in the bucket; an
+    edge connects two columns whenever they co-occur for the **same
+    cvid** (the per-cvid alias map preserved on `state_meta[sid]
+    ['cvid_alias_map']`). Same-cvid co-occurrence is rare cross-edition
+    drift where one CVID carries multiple aliases — those genuinely
+    name the same column. Aliases from DIFFERENT cvids stay in
+    separate components even when those cvids coalesce into one state,
+    because that's precisely the kolumnnamn-split signal §5.7 is built
+    around.
+
+    The §5.7 kolumnnamn-split fires when this graph has >1 component:
+    the bucket carries data for genuinely different physical columns
+    that the coalescer collapsed into one or more state rows.
+
+    States with an empty kolumnnamn_set contribute no nodes. Their
+    sibling assignment is handled by `_assign_states_to_components`.
+
+    Returns components in deterministic order (sorted by the
+    lexically-smallest member of each).
+    """
+    parent: dict[str, str] = {}
+
+    def find(x: str) -> str:
+        while parent[x] != x:
+            parent[x] = parent[parent[x]]
+            x = parent[x]
+        return x
+
+    def union(a: str, b: str) -> None:
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            # Lexically-smaller root wins for determinism across runs.
+            if ra < rb:
+                parent[rb] = ra
+            else:
+                parent[ra] = rb
+
+    # Seed nodes from every state's kolumnnamn (so singleton-cvid
+    # aliases still anchor their component) but seed edges from the
+    # per-cvid alias map only.
+    for sid in sids:
+        for k in state_meta[sid]["kolumnnamn_set"]:
+            parent.setdefault(k, k)
+        cvid_aliases = state_meta[sid].get("cvid_alias_map", {})
+        for aliases in cvid_aliases.values():
+            aliases_sorted = sorted(aliases)
+            for a, b in zip(aliases_sorted, aliases_sorted[1:], strict=False):
+                parent.setdefault(a, a)
+                parent.setdefault(b, b)
+                union(a, b)
+
+    components_map: dict[str, set[str]] = {}
+    for k in parent:
+        root = find(k)
+        components_map.setdefault(root, set()).add(k)
+    return sorted(
+        (frozenset(c) for c in components_map.values()),
+        key=lambda c: min(c),
+    )
+
+
+def _assign_states_to_components(
+    sids: list[int],
+    components: list[frozenset[str]],
+    state_meta: dict[int, dict[str, Any]],
+) -> list[list[int]]:
+    """Group state ids by which kolumnnamn component each belongs to.
+
+    Per-cvid aliasing means a state can carry kolumnnamn from multiple
+    components (the coalesced-from-different-cvids case the triage
+    exists to detect). When that happens we assign the state to the
+    component holding the largest share of its aliases — the
+    `_materialize_empty_component_clones` step then backfills the
+    other components with clone state rows so each component still
+    has at least one row.
+
+    Empty-kolumnnamn states are appended to the first component as a
+    safe default — they have no signal to distinguish them and the
+    caller has already determined a split is warranted.
+
+    Returns one list of state ids per component, in component order.
+    """
+    groups: list[list[int]] = [[] for _ in components]
+    component_idx: dict[str, int] = {}
+    for i, comp in enumerate(components):
+        for k in comp:
+            component_idx[k] = i
+    for sid in sids:
+        kset = state_meta[sid]["kolumnnamn_set"]
+        if not kset:
+            # Empty-alias state — append to the first component.
+            groups[0].append(sid)
+            continue
+        # Count component hits across this state's aliases. Pick the
+        # component with the most hits; ties broken by lowest index
+        # for determinism.
+        hits: dict[int, int] = {}
+        for k in kset:
+            idx = component_idx[k]
+            hits[idx] = hits.get(idx, 0) + 1
+        chosen_idx = min(hits, key=lambda i: (-hits[i], i))
+        groups[chosen_idx].append(sid)
+    # Sort each group for stable downstream iteration; preserve
+    # component-order in the outer list.
+    return [sorted(g) for g in groups]
+
+
+def _vardemangdsniva_groups(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> list[list[int]]:
+    """Group state ids by their `vardemangdsniva` set (frozenset key).
+
+    Two states with identical niva sets go to one group; distinct sets
+    are distinct groups regardless of overlap. We don't apply the same
+    intersection logic as kolumnnamn here because niva is the grain
+    discriminator — by spec each grain is its own sibling, even when
+    two grains happen to share a token (`SSYK 3 positioner` vs
+    `SSYK 5 positioner` share `SSYK` but should split into 3pos / 5pos).
+    """
+    groups_map: dict[frozenset[str], list[int]] = {}
+    for sid in sids:
+        key = frozenset(state_meta[sid]["vardemangdsniva_set"])
+        groups_map.setdefault(key, []).append(sid)
+    return sorted(
+        (sorted(g) for g in groups_map.values()),
+        key=lambda g: g[0],
+    )
+
+
+def _looks_like_code_label_pair(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> bool:
+    """Heuristic: two states with distinct data_length (one short ≤4, one
+    long ≥10) sharing the same kolumnnamn group are a code/label pair.
+
+    Only fires for exactly two states; longer chains don't fit the pattern.
+    """
+    if len(sids) != 2:
+        return False
+    lengths = []
+    for sid in sids:
+        dl = state_meta[sid]["data_length"]
+        try:
+            lengths.append(int(dl)) if dl is not None else lengths.append(None)
+        except (ValueError, TypeError):
+            return False
+    if None in lengths:
+        return False
+    short, long_ = sorted(lengths)
+    return short <= 4 and long_ >= 10
+
+
+def _datalangd_pair_groups(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> list[list[int]]:
+    """Bucket sids into [code_state], [label_state] by data_length.
+
+    Caller has already validated via `_looks_like_code_label_pair` that
+    we have exactly two states with distinct short/long lengths.
+    Determinism: shorter-length state lands in the first group.
+    """
+    sorted_sids = sorted(
+        sids,
+        key=lambda s: (int(state_meta[s]["data_length"]), s),
+    )
+    return [[sorted_sids[0]], [sorted_sids[1]]]
+
+
+def _collapse_states(
+    conn: sqlite3.Connection,
+    sids: list[int],
+    state_meta: dict[int, dict[str, Any]],
+    collapsed_state_ids: set[int],
+) -> None:
+    """Collapse a set of overlapping state rows into one row.
+
+    Keeps the row with the largest `state_id` (most-recent autoinc) and
+    drops the rest. Updates the survivor's `valid_from` / `valid_to` to
+    the union range. Metadata (data_type, data_length, value_set_id,
+    value_set_version_label) is preserved from the survivor — the §5.7
+    rule says "pick the latest values" and largest state_id is our
+    proxy for latest (since autoincrement reflects insertion order
+    after the coalescer's grouped emit).
+
+    Marks the dropped sids in `collapsed_state_ids` so downstream
+    bucket iterations skip them.
+    """
+    if len(sids) <= 1:
+        return
+    survivor = max(sids)
+    losers = [s for s in sids if s != survivor]
+    # Union range across all sids.
+    union_from = min(state_meta[s]["valid_from"] for s in sids)
+    union_to = max(state_meta[s]["valid_to"] for s in sids)
+    conn.execute(
+        "UPDATE variable_state SET valid_from = ?, valid_to = ? WHERE state_id = ?",
+        (union_from, union_to, survivor),
+    )
+    state_meta[survivor]["valid_from"] = union_from
+    state_meta[survivor]["valid_to"] = union_to
+    for loser in losers:
+        conn.execute("DELETE FROM variable_state WHERE state_id = ?", (loser,))
+        collapsed_state_ids.add(loser)
+
+
+def _allocate_sibling_variables(
+    conn: sqlite3.Connection,
+    decisions: dict[tuple[int, int, int], dict[str, Any]],
+    resolution_kinds: dict[tuple[int, int, int], str],
+    state_meta: dict[int, dict[str, Any]],
+    toml_variable_slugs: dict[tuple[str, str], str],
+    stats: dict[str, int],
+) -> None:
+    """Materialize sibling variable rows + relink variable_state rows.
+
+    For each triple decision:
+      1. Allocate fresh var_ids for siblings 2..N. Sibling 1 keeps the
+         original var_id (so deep-linked references survive).
+      2. Insert a new `variable` row per fresh sibling, copying fields
+         from the original variable.
+      3. Update the `variable_state` rows in groups 2..N to reference
+         the new var_id. (Sibling 1's state rows stay put.)
+      4. Emit (N choose 2) symmetric `variable_related_to` edges with
+         `note = 'auto:triage'` and the decision's relation_kind. The
+         emitted edges use the variable slugs (auto-derived per §5.7)
+         so the edges survive across rebuilds even if var_ids shift.
+
+    The `variable.name` text on the new siblings copies from the
+    original. Sibling-specific text (e.g. "<original> (kommun-hem)") is
+    a curator concern — the build doesn't try to invent semantic
+    differences from the column name alone.
+    """
+    if not decisions:
+        return
+
+    # Look up provider slugs + register slug per triple once.
+    # variable.register_id × register.slug × register.provider_id ×
+    # provider.slug — needed to write `variable_related_to` rows.
+    # `build_db`'s connection uses the default tuple row_factory; use a
+    # local Row-cursor so the column-name access stays readable without
+    # touching the caller's row_factory setting.
+    triples = sorted(decisions.keys())
+    register_ids = {t[0] for t in triples}
+    register_meta: dict[int, tuple[str | None, str | None]] = {}
+    if register_ids:
+        reg_cur = conn.cursor()
+        reg_cur.row_factory = sqlite3.Row
+        for r in reg_cur.execute(
+            "SELECT r.register_id, r.slug AS register_slug, p.slug AS provider_slug "
+            "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE r.register_id IN (" + ",".join("?" * len(register_ids)) + ")",
+            tuple(register_ids),
+        ).fetchall():
+            register_meta[r["register_id"]] = (
+                r["provider_slug"],
+                r["register_slug"],
+            )
+
+    # Resolve current max var_id once. New siblings allocate from
+    # `next_var_id`. Per-triple var_id space is shared across the DB
+    # (variable PK is (register_id, var_id)) — but stays unique
+    # globally because we add per row.
+    row = conn.execute("SELECT COALESCE(MAX(var_id), 0) FROM variable").fetchone()
+    next_var_id = (row[0] or 0) + 1
+
+    # Collect rows to insert / update.
+    new_variable_rows: list[tuple] = []
+    state_relink: list[tuple[int, int]] = []  # (new_var_id, state_id)
+    edges_to_emit: list[tuple] = []
+
+    for triple in triples:
+        register_id, regvar_id, original_var_id = triple
+        decision = decisions[triple]
+        groups = decision["groups"]  # list[list[state_id]]
+        relation_kind = decision["relation_kind"]
+        kind = decision["kind"]
+
+        # Resolve the original variable's metadata once so each sibling
+        # copies the same provenance.
+        orig = conn.execute(
+            "SELECT name, definition, description, source_register_text, "
+            "       measurement_unit, source_register_id, source_label, "
+            "       is_sensitive, is_identifier "
+            "FROM variable WHERE register_id = ? AND var_id = ?",
+            (register_id, original_var_id),
+        ).fetchone()
+        if orig is None:
+            # Should not happen — every variable_state row points to a
+            # real variable. Skip silently rather than crashing the build.
+            continue
+        orig_name = orig[0]
+        orig_def = orig[1]
+        orig_desc = orig[2]
+        orig_src_text = orig[3]
+        orig_unit = orig[4]
+        orig_src_reg = orig[5]
+        orig_src_label = orig[6]
+        orig_sensitive = orig[7]
+        orig_identifier = orig[8]
+
+        # Derive sibling slugs per kind. For kolumnnamn splits we use
+        # the precomputed components (the actual disjoint kolumnnamn
+        # graphs) rather than re-walking state aliases — this preserves
+        # the per-component ordering and lets `_kolumnnamn_suffixes`
+        # operate on a clean, deterministic representative set.
+        if kind == "kolumnnamn":
+            components = decision["components"]
+            sibling_slugs = _derive_sibling_slugs_kolumnnamn(
+                components, groups, state_meta, stats
+            )
+            # Kolumnnamn-component split: when a state was assigned to
+            # one component but the bucket has aliases for another
+            # component on that same state (the single-coalesced-state-
+            # with-disjoint-aliases case), we need to materialize a
+            # CLONE of that state row for each empty group so each
+            # sibling carries at least one state. Builds `groups` in
+            # place with cloned state ids appended for empty groups.
+            groups = _materialize_empty_component_clones(
+                conn, groups, components, state_meta
+            )
+            decision["groups"] = groups
+        else:
+            sibling_slugs = _derive_sibling_slugs(
+                kind, groups, state_meta, original_var_id, stats
+            )
+
+        # Dedupe slugs deterministically: if two siblings derive the
+        # same slug, append `-a` / `-b` / ... in group-order (first
+        # group keeps the bare slug). cvid order is implicit: groups
+        # are already sorted by their lowest state_id, which derives
+        # from coalescer's insertion order over cvids.
+        sibling_slugs = _dedupe_sibling_slugs(sibling_slugs, stats)
+
+        # TOML override path: if the original variable id has an
+        # explicit `slug` in the provider TOML, the SIBLING 1 inherits
+        # that — the original variable gets the curated slug, fresh
+        # siblings keep their auto-derived suffixes. Reason: pre-A2.2
+        # the TOML curator could only know about the canonical variable
+        # id; allocating fresh ids for siblings 2..N happens at build
+        # time, so siblings 2..N can't have TOML overrides yet.
+        provider_slug, register_slug = register_meta.get(register_id, (None, None))
+        if provider_slug is not None:
+            # Source ID for variable is `<register_id>.<var_id>`.
+            toml_key = (provider_slug, f"{register_id}.{original_var_id}")
+            toml_slug = toml_variable_slugs.get(toml_key)
+            if toml_slug is not None:
+                sibling_slugs[0] = toml_slug
+
+        # Sibling 0 keeps original var_id. Siblings 1..N-1 get fresh ids.
+        sibling_var_ids: list[int] = [original_var_id]
+        for _ in groups[1:]:
+            sibling_var_ids.append(next_var_id)
+            next_var_id += 1
+
+        # Stage new variable rows and state relinks.
+        # For kolumnnamn splits we also update each state's
+        # `delivery_column_name` to a representative from its
+        # component (the lex-smallest alias). This corrects the
+        # coalescer's arbitrary pick — sibling Kommun-hem's state
+        # row should advertise `Hemkommun`, not whichever alias
+        # the coalescer happened to grab.
+        components = decision.get("components") if kind == "kolumnnamn" else None
+        for i, (group_sids, new_var_id) in enumerate(
+            zip(groups, sibling_var_ids, strict=True)
+        ):
+            component_rep = (
+                sorted(components[i])[0]
+                if components is not None and components[i]
+                else None
+            )
+            if i != 0:
+                new_variable_rows.append(
+                    (
+                        register_id,
+                        new_var_id,
+                        orig_name,
+                        orig_def,
+                        orig_desc,
+                        orig_src_text,
+                        orig_unit,
+                        orig_src_reg,
+                        orig_src_label,
+                        orig_sensitive,
+                        orig_identifier,
+                    )
+                )
+            for sid in group_sids:
+                # Always relink (sibling 0 stays on the original var_id;
+                # cloned states from `_materialize_empty_component_clones`
+                # carry the original var_id at insert time, so relinking
+                # to original_var_id is a no-op there).
+                state_relink.append((new_var_id, sid))
+                state_meta[sid]["var_id"] = new_var_id
+                if component_rep is not None:
+                    conn.execute(
+                        "UPDATE variable_state SET delivery_column_name = ? "
+                        "WHERE state_id = ?",
+                        (component_rep, sid),
+                    )
+                    state_meta[sid]["delivery_column_name"] = component_rep
+
+        stats["n_siblings_created"] += len(sibling_var_ids) - 1
+
+        # Count the bucket-resolution toward the right stat.
+        rk = resolution_kinds.get(triple)
+        if rk == "kolumnnamn":
+            stats["n_buckets_resolved_by_kolumnnamn"] += 1
+        elif rk == "niva":
+            stats["n_buckets_resolved_by_niva"] += 1
+        elif rk == "datalangd":
+            stats["n_buckets_resolved_by_datalangd"] += 1
+
+        # Emit (N choose 2) symmetric edges, slug-anchored. variant slug
+        # is left blank — siblings are anchored at variable-level, and
+        # the §5.5 grammar allows the variant slot to be `''` (empty)
+        # for "applies across all variants of this register".
+        if provider_slug is None or register_slug is None:
+            # Skip edge emission when the register has no slug — this
+            # is an honest signal that populate_slugs hasn't run, and
+            # we don't want to emit untrackable edges. Sibling
+            # allocation still happens.
+            continue
+        for i in range(len(sibling_slugs)):
+            for j in range(i + 1, len(sibling_slugs)):
+                a_slug, b_slug = sibling_slugs[i], sibling_slugs[j]
+                if a_slug == b_slug:
+                    # Defensive: dedupe pass should have prevented this.
+                    continue
+                edges_to_emit.append(
+                    (
+                        provider_slug,
+                        register_slug,
+                        "",
+                        a_slug,
+                        provider_slug,
+                        register_slug,
+                        "",
+                        b_slug,
+                        relation_kind,
+                        "auto:triage",
+                    )
+                )
+                edges_to_emit.append(
+                    (
+                        provider_slug,
+                        register_slug,
+                        "",
+                        b_slug,
+                        provider_slug,
+                        register_slug,
+                        "",
+                        a_slug,
+                        relation_kind,
+                        "auto:triage",
+                    )
+                )
+                stats["n_related_to_edges"] += 2
+
+    if new_variable_rows:
+        conn.executemany(
+            "INSERT INTO variable (register_id, var_id, name, definition, "
+            "description, source_register_text, measurement_unit, "
+            "source_register_id, source_label, is_sensitive, is_identifier) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            new_variable_rows,
+        )
+    if state_relink:
+        conn.executemany(
+            "UPDATE variable_state SET var_id = ? WHERE state_id = ?",
+            state_relink,
+        )
+    if edges_to_emit:
+        # INSERT OR IGNORE: triple decisions are deduped per triple but
+        # a downstream curation pass might already insert the same edge.
+        conn.executemany(
+            "INSERT OR IGNORE INTO variable_related_to ("
+            "a_provider, a_register, a_variant, a_variable, "
+            "b_provider, b_register, b_variant, b_variable, "
+            "relation_kind, note) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            edges_to_emit,
+        )
+
+
+def _materialize_empty_component_clones(
+    conn: sqlite3.Connection,
+    groups: list[list[int]],
+    components: list[frozenset[str]],
+    state_meta: dict[int, dict[str, Any]],
+) -> list[list[int]]:
+    """Backfill empty kolumnnamn-component groups with cloned state rows.
+
+    When the coalescer collapses two cvids with disjoint kolumnnamn into
+    one state row (because the alias isn't part of its grain key), the
+    triage's `_assign_states_to_components` assigns that single state to
+    the first component its alias lands in — leaving the other component
+    with an empty group. The §5.7 split semantics require each component
+    to have at least one state row, so we clone the source state into
+    every empty group.
+
+    The clone copies all metadata from the source state (the largest-
+    state-id row in the first non-empty group); the caller's downstream
+    relink will reassign the clone's `var_id` to the new sibling and
+    update its `delivery_column_name` to a member of its component.
+
+    Returns the groups list with empty entries replaced by `[clone_sid]`.
+    """
+    # Pick a source state — first non-empty group's largest state id.
+    source_sid = None
+    for g in groups:
+        if g:
+            source_sid = max(g)
+            break
+    if source_sid is None:
+        # Should not happen — by the time we get here at least one
+        # group has a state. Return unchanged as defensive fallback.
+        return groups
+
+    src_meta = state_meta[source_sid]
+    new_groups: list[list[int]] = []
+    for g, comp in zip(groups, components, strict=True):
+        if g:
+            new_groups.append(g)
+            continue
+        # Insert a fresh state row that mirrors the source. AUTOINCREMENT
+        # gives us a new state_id we can capture from lastrowid.
+        cur = conn.execute(
+            "INSERT INTO variable_state ("
+            "register_id, regvar_id, var_id, valid_from, valid_to, "
+            "data_type, data_length, delivery_column_name, "
+            "value_set_id, value_set_version_label"
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                src_meta["register_id"],
+                src_meta["regvar_id"],
+                src_meta["var_id"],
+                src_meta["valid_from"],
+                src_meta["valid_to"],
+                src_meta["data_type"],
+                src_meta["data_length"],
+                sorted(comp)[0] if comp else src_meta["delivery_column_name"],
+                src_meta["value_set_id"],
+                src_meta["value_set_version_label"],
+            ),
+        )
+        new_sid = cur.lastrowid
+        assert new_sid is not None
+        # Mirror the source state's meta with a component-correct alias
+        # set so downstream slug derivation finds the right component.
+        state_meta[new_sid] = {
+            **src_meta,
+            "kolumnnamn_set": set(comp),
+            "vardemangdsniva_set": set(src_meta["vardemangdsniva_set"]),
+            "classification_id_set": set(src_meta["classification_id_set"]),
+            "cvid_set": set(src_meta["cvid_set"]),
+            "delivery_column_name": sorted(comp)[0]
+            if comp
+            else src_meta["delivery_column_name"],
+        }
+        new_groups.append([new_sid])
+    return new_groups
+
+
+def _derive_sibling_slugs_kolumnnamn(
+    components: list[frozenset[str]],
+    groups: list[list[int]],
+    state_meta: dict[int, dict[str, Any]],
+    stats: dict[str, int] | None = None,
+) -> list[str]:
+    """Sibling slug derivation when the decision kind is kolumnnamn.
+
+    Operates on the precomputed kolumnnamn components rather than each
+    group's merged alias set — components carry the genuine disjoint
+    column graphs and produce stable representatives, while a group's
+    merged alias set could miss components when an empty-alias state
+    was bucket-assigned to component 0 by `_assign_states_to_components`.
+
+    Falls back to the BLAKE2b hash when the kolumnnamn-derived slugs
+    fail the §5.2 grammar (rare in SCB data; defensive). `stats` is the
+    triage stats dict; when the hash fallback fires the per-bucket
+    counter `n_buckets_resolved_by_hash_fallback` increments by 1.
+    """
+    col_sets = [set(c) for c in components]
+    suffixes = _kolumnnamn_suffixes(col_sets)
+    if suffixes is not None:
+        return [s.lstrip("-") for s in suffixes]
+    if stats is not None:
+        stats["n_buckets_resolved_by_hash_fallback"] += 1
+    return [_hash_fallback_slug(g, state_meta) for g in groups]
+
+
+def _derive_sibling_slugs(
+    kind: str,
+    groups: list[list[int]],
+    state_meta: dict[int, dict[str, Any]],
+    original_var_id: int,
+    stats: dict[str, int] | None = None,
+) -> list[str]:
+    """Apply the §5.7 4-level fallback to produce N parallel sibling slugs.
+
+    `kind` is the decision kind (`kolumnnamn` / `niva` / `datalangd`);
+    fallback to the BLAKE2b hash kicks in when the chosen kind can't
+    produce a usable slug. Returns a list parallel to `groups`. When
+    the hash fallback fires, `stats['n_buckets_resolved_by_hash_fallback']`
+    increments — distinguishes "kolumnnamn-derived slug" from
+    "fell-through to hash" in the manifest.
+    """
+    if kind == "kolumnnamn":
+        # One representative kolumnnamn set per group.
+        col_sets = [_merge_kolumnnamn_sets(g, state_meta) for g in groups]
+        suffixes = _kolumnnamn_suffixes(col_sets)
+        if suffixes is not None:
+            return [s.lstrip("-") for s in suffixes]
+    if kind == "niva":
+        # One representative niva text per group (lexically smallest).
+        niva_texts = [
+            sorted(_merge_niva_sets(g, state_meta))[0]
+            if _merge_niva_sets(g, state_meta)
+            else ""
+            for g in groups
+        ]
+        suffixes = [_niva_suffix(n) for n in niva_texts]
+        if all(s is not None for s in suffixes):
+            return [s.lstrip("-") for s in suffixes]  # type: ignore[union-attr]
+    if kind == "datalangd" and len(groups) == 2:
+        # Two-group code/label pair: short → `id`, long → `namn`.
+        return ["id", "namn"]
+
+    # Hash fallback. Compute a stable 6-hex suffix per group from a
+    # canonical key derived from its smallest cvid (or state_id when
+    # no cvid is available). BLAKE2b with digest_size=3 yields exactly
+    # 6 hex chars per `_x000000`.
+    if stats is not None:
+        stats["n_buckets_resolved_by_hash_fallback"] += 1
+    return [_hash_fallback_slug(g, state_meta) for g in groups]
+
+
+def _merge_kolumnnamn_sets(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> set[str]:
+    merged: set[str] = set()
+    for sid in sids:
+        merged |= state_meta[sid]["kolumnnamn_set"]
+    return merged
+
+
+def _merge_niva_sets(
+    sids: list[int], state_meta: dict[int, dict[str, Any]]
+) -> set[str]:
+    merged: set[str] = set()
+    for sid in sids:
+        merged |= state_meta[sid]["vardemangdsniva_set"]
+    return merged
+
+
+def _hash_fallback_slug(sids: list[int], state_meta: dict[int, dict[str, Any]]) -> str:
+    """6-hex BLAKE2b suffix derived from the group's smallest cvid+state_id."""
+    smallest_sid = min(sids)
+    cvid_set = state_meta[smallest_sid]["cvid_set"]
+    smallest_cvid = min(cvid_set) if cvid_set else smallest_sid
+    canonical_key = f"{smallest_sid}:{smallest_cvid}".encode()
+    h = hashlib.blake2b(canonical_key, digest_size=3).hexdigest()
+    return f"x{h}"
+
+
+def _dedupe_sibling_slugs(slugs: list[str], stats: dict[str, int]) -> list[str]:
+    """Append `-a`/`-b`/... to duplicate slugs in group order.
+
+    The first occurrence of a slug keeps its bare form; later ones get
+    `-a`, `-b`, ... suffixes. Counts each unique duplicate-resolved
+    sibling once via `n_duplicate_slugs_resolved`. Emits a build warning
+    to stderr per the §5.7 contract.
+    """
+    seen_counts: dict[str, int] = {}
+    out: list[str] = []
+    warned = False
+    for slug in slugs:
+        if slug in seen_counts:
+            seen_counts[slug] += 1
+            # 0-th 'a', 1-th 'b', ...
+            tiebreak = chr(ord("a") + seen_counts[slug] - 1)
+            out.append(f"{slug}-{tiebreak}")
+            stats["n_duplicate_slugs_resolved"] += 1
+            if not warned:
+                _progress(
+                    f"  WARN: triage produced duplicate sibling slugs "
+                    f"({slug!r} repeated); appended tiebreaker suffixes."
+                )
+                warned = True
+        else:
+            seen_counts[slug] = 0
+            out.append(slug)
+    return out
+
+
+def _load_toml_variable_slugs(slug_dir: Path) -> dict[tuple[str, str], str]:
+    """Pre-load `[variable."<id>"]` explicit slugs from per-provider TOMLs.
+
+    Returns `{ (provider, source_id): slug }` where source_id is the
+    literal TOML key (e.g. `"34.137"`). Skips entries without an explicit
+    slug — the auto-derived sibling slug from triage wins for those.
+
+    Used by the override-light path: a TOML-curated slug pre-empts the
+    auto-derived sibling slug for that variable id, but only at the
+    canonical sibling slot (sibling 1, which keeps the original var_id).
+    Bulk curation of siblings 2..N is deferred per §15.
+    """
+    from .fqid_slugs import load_provider_toml
+
+    out: dict[tuple[str, str], str] = {}
+    if not slug_dir.is_dir():
+        return out
+    for path in sorted(slug_dir.glob("*.toml")):
+        if path.name == "classifications.toml":
+            continue
+        try:
+            entries = load_provider_toml(path)
+        except Exception:
+            # Loading errors will surface again in populate_slugs / the
+            # main TOML-load path; here we just need the slug overrides
+            # we can read cleanly. Be permissive at the override-light
+            # stage; A2.2 doesn't add new validation.
+            continue
+        provider = path.stem
+        for entry in entries:
+            if entry.kind == "variable" and entry.slug is not None:
+                out[(provider, entry.source_id)] = entry.slug
+    return out
+
+
 def _import_identifierare(conn: sqlite3.Connection, path: Path) -> int:
     _progress("Importing Identifierare.csv...")
     row_count = 0
@@ -2417,6 +3815,12 @@ def build_db(
         state_stats = _coalesce_variable_states(conn)
         row_counts["variable_state"] = state_stats["n_variable_states"]
 
+        # A2.2's triage runs LATER (after populate_slugs) so the edges
+        # it emits can be slug-anchored. We pre-allocate the stats slot
+        # here so the manifest assembly downstream can assume the key
+        # exists even when the triage path was skipped under `--skip-slugs`.
+        triage_stats: dict[str, int] = {}
+
         # A2.1: drop the now-unused unika_summary table. Both consumers
         # (`_populate_sensitivity_flags` and `_coalesce_variable_states`) have
         # extracted what they need. Dropping after population keeps the
@@ -2476,6 +3880,34 @@ def build_db(
                 )
             populate_slugs(conn, slug_root, strict=True)
 
+        # A2.2: build-time triage per §5.7. Runs AFTER populate_slugs so
+        # the edges it emits can be slug-anchored (register.slug /
+        # variant.slug are populated by that point). Resolves same-year
+        # multi-state collisions by splitting variables into siblings
+        # (kolumnnamn / vardemangdsniva / datalangd discriminators),
+        # collapsing metadata drift, and emitting
+        # `variable_related_to` provenance edges. Reads
+        # `variable_instance` × `variable_alias` for the SCB-source
+        # discriminators (kolumnnamn, vardemangdsniva, classification_id)
+        # that don't land on the universal schema.
+        #
+        # `slug_dir` is forwarded so the TOML-override light-path (a
+        # `[variable."<id>"]` block with an explicit `slug` field wins
+        # over the auto-derived sibling slug). Bulk curation backlog is
+        # deferred to a separate PR after an empirical run.
+        #
+        # `--skip-slugs` honest-failure stance: triage still runs to
+        # carry out the in-DB sibling split / collapse work (those
+        # decisions are correctness-relevant regardless of slug
+        # availability), but slug-anchored edge emission requires
+        # register.slug — under skip-slugs the edges are skipped
+        # silently inside `_allocate_sibling_variables`.
+        triage_slug_dir = None if skip_slugs else (slug_dir or repo_slug_dir())
+        triage_stats = _triage_same_year_collisions(
+            conn,
+            slug_dir=triage_slug_dir,
+        )
+
         # §5.5 same_as edges. Runs *after* populate_slugs so register /
         # variant / version slug columns are populated — the materializer
         # validates target slugs against them. Skip-slugs takes the same
@@ -2488,6 +3920,14 @@ def build_db(
                 f"  {sa_counts['variable']:,} variable same_as edges, "
                 f"{sa_counts['classification']:,} classification same_as edges"
             )
+            # §5.5 / §5.7 curator-supplied related_to edges. Triage already
+            # emitted its auto edges with `note='auto:triage'` before unika
+            # dropped; the TOML pass here inserts curator edges with
+            # whatever `note` they wrote (default NULL). Same skip-slugs
+            # stance as same_as: without TOML access we'd silently produce
+            # zero TOML edges, an honest miss is better than a quiet one.
+            rt_count = materialize_related_to_edges(conn, slug_root)
+            _progress(f"  {rt_count:,} variable related_to TOML edges")
 
         # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
         # on `register_version.slug` — the canonical disambiguator. Keying on
@@ -2553,6 +3993,10 @@ def build_db(
             # A2.1 coalescer stats — let maintainers eyeball the empirical
             # 5× shrink and unika-vs-fallback split without re-running.
             "coalesce_stats": state_stats,
+            # A2.2 triage stats — collision-bucket resolution counts +
+            # sibling/edge cardinality, so curators can spot when the
+            # auto-handle rate slips below the ~99% target.
+            "triage_stats": triage_stats,
         }
         for key, value in manifest_data.items():
             conn.execute(

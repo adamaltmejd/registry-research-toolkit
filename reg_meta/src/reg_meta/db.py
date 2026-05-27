@@ -28,16 +28,24 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   that no longer exist — hard break. A1.2's additive sensitivity
 #   columns (`is_sensitive`, `is_identifier`) rode on the same major
 #   bump and didn't require their own version step.
-# - 4.1.0 (A2.1, current): added `variable_state` and dropped the
+# - 4.1.0 (A2.1): added `variable_state` and dropped the
 #   build-only `unika_summary` table. The drop is benign for the query
 #   layer (nothing in `reg_meta` reads `unika_summary`); the addition
 #   matters because the upcoming A2.5 resolver flip needs
 #   `variable_state` to be populated. Old 4.0.0 DBs without that table
 #   are rejected via the minor-version gate.
+# - 4.2.0 (A2.2, current): added `variable_related_to` table — A2.2's
+#   build-time triage emits symmetric edges between sibling variables
+#   split from one source (kolumnnamn / vardemangdsniva / datalangd
+#   discriminators per §5.7) and the same table is the curation slot
+#   for cross-register relationships in slug TOMLs. Additive new table,
+#   so a minor bump. Note: A2.2 ships in parallel with A2.3 (the
+#   `*_replaced_by` family); whichever PR lands second appends its DDL
+#   alongside and bumps to 4.3.0.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking
 #   change.
-SCHEMA_VERSION = "4.1.0"
+SCHEMA_VERSION = "4.2.0"
 DB_FILENAME = "reg_meta.db"
 
 

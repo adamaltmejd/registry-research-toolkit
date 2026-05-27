@@ -53,6 +53,10 @@ CLASSIFICATIONS_FILE = "classifications.toml"
 SNAPSHOT_FILENAME = ".snapshot.json"
 
 _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classification"})
+# `related_to` lives on variables only (§5.5 / §5.7): edges record weaker
+# relationships (sibling splits, code/label pairs, etc.) than the
+# equivalence claim that `same_as` carries.
+_KINDS_WITH_RELATED_TO: frozenset[EntityKind] = frozenset({"variable"})
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
@@ -74,6 +78,24 @@ _SAME_AS_REQUIRED_VARIABLE: frozenset[str] = frozenset(
 )
 _SAME_AS_REQUIRED_CLASSIFICATION: frozenset[str] = frozenset(
     {"provider", "classification_slug"}
+)
+
+# Allowed keys for inline `related_to` tables (§5.5 / §5.7). Same shape as
+# `same_as` minus `period` (period is being dropped in A2.6 anyway, and
+# `related_to` is the newer surface) plus a curator-supplied `relation_kind`
+# and optional `note`.
+_RELATED_TO_KEYS_VARIABLE: frozenset[str] = frozenset(
+    {
+        "provider",
+        "register",
+        "register_variant",
+        "variable_slug",
+        "relation_kind",
+        "note",
+    }
+)
+_RELATED_TO_REQUIRED_VARIABLE: frozenset[str] = frozenset(
+    {"provider", "register", "variable_slug", "relation_kind"}
 )
 
 
@@ -104,6 +126,13 @@ class SlugEntry:
     # `classification_same_as` edge tables by `materialize_same_as_edges`.
     # `Catalog.resolve` follows the edges transitively when direct lookup misses.
     same_as: tuple[dict[str, str], ...] = field(default_factory=tuple)
+    # §5.5 / §5.7 weaker-than-same_as relationships. Variables only. Each ref
+    # carries a curator-supplied `relation_kind` and optional `note`; the
+    # A2.2 triage emits the kinds `same_definition_different_column` /
+    # `same_definition_different_grain` / `code_vs_label_pair` /
+    # `same_concept_different_grain` with `note = 'auto:triage'`. Curators can
+    # add edges for cross-register relationships the algorithm can't see.
+    related_to: tuple[dict[str, str], ...] = field(default_factory=tuple)
 
 
 def repo_slug_dir() -> Path | None:
@@ -234,7 +263,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
     if kind == "classification":
         return frozenset(base | {"version", "same_as"})
     if kind == "variable":
-        return frozenset(base | {"same_as"})
+        return frozenset(base | {"same_as", "related_to"})
     # register_version: just base. registerversionnamn already serves as the
     # human-readable label; no display_group needed.
     return frozenset(base)
@@ -286,6 +315,54 @@ def _validate_same_as(
             raise _err(
                 "slug_toml_invalid",
                 f"{kind}.{source_id!r}: `same_as` entries must be non-empty strings.",
+                "Each link names provider + slugs as quoted strings.",
+            )
+    return tuple(dict(ref) for ref in raw)
+
+
+def _validate_related_to(
+    kind: EntityKind, source_id: str, raw: Any
+) -> tuple[dict[str, str], ...]:
+    """Validate the `related_to = [...]` TOML field.
+
+    Same envelope as `_validate_same_as` (array of inline tables) but with
+    its own required/allowed key set and `relation_kind` validation.
+    """
+    if raw is None:
+        return ()
+    if kind not in _KINDS_WITH_RELATED_TO:
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `related_to` only allowed on variable.",
+            "Remove the field or move the entry to the correct kind.",
+        )
+    if not isinstance(raw, list) or not all(isinstance(r, dict) for r in raw):
+        raise _err(
+            "slug_toml_invalid",
+            f"{kind}.{source_id!r}: `related_to` must be an array of inline tables.",
+            'Use TOML syntax: related_to = [{ provider = "scb", ..., relation_kind = "..." }].',
+        )
+    for ref in raw:
+        unknown_keys = set(ref) - _RELATED_TO_KEYS_VARIABLE
+        if unknown_keys:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `related_to` has unknown key(s): "
+                f"{sorted(unknown_keys)}.",
+                f"Allowed keys for {kind}: {sorted(_RELATED_TO_KEYS_VARIABLE)}.",
+            )
+        missing_keys = _RELATED_TO_REQUIRED_VARIABLE - ref.keys()
+        if missing_keys:
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `related_to` missing required key(s): "
+                f"{sorted(missing_keys)}.",
+                f"Required for {kind}: {sorted(_RELATED_TO_REQUIRED_VARIABLE)}.",
+            )
+        if not all(isinstance(v, str) and v for v in ref.values()):
+            raise _err(
+                "slug_toml_invalid",
+                f"{kind}.{source_id!r}: `related_to` entries must be non-empty strings.",
                 "Each link names provider + slugs as quoted strings.",
             )
     return tuple(dict(ref) for ref in raw)
@@ -420,6 +497,7 @@ def _validate_entry(
         deprecated=deprecated_raw,
         replaced_by=replaced_by,
         same_as=_validate_same_as(kind, source_id, entry.get("same_as")),
+        related_to=_validate_related_to(kind, source_id, entry.get("related_to")),
     )
 
 
@@ -1403,6 +1481,97 @@ def materialize_same_as_edges(
 
 
 # ---------------------------------------------------------------------------
+# related_to edge materialization (§5.5 / §5.7)
+# ---------------------------------------------------------------------------
+
+
+def materialize_related_to_edges(conn: sqlite3.Connection, slug_dir: Path) -> int:
+    """Translate `SlugEntry.related_to` TOML refs into `variable_related_to` rows.
+
+    Curator-supplied edges only. The A2.2 triage emits its own
+    `variable_related_to` rows directly from the build pipeline with
+    `note = 'auto:triage'`; this function inserts the TOML-curated
+    counterpart, where `note` is whatever the curator wrote (default NULL
+    when omitted from the TOML).
+
+    Each edge is symmetric: A → B and B → A both land. The `(A, B,
+    relation_kind)` PK admits multiple kinds for the same pair, so the
+    same A/B can be both `same_definition_different_column` and
+    `code_vs_label_pair` if a curator explicitly says so. Returns the
+    count of TOML-sourced edge rows inserted (counting both directions
+    once each).
+    """
+    entries = load_slug_dir(slug_dir)
+    edges_inserted = 0
+
+    for entry in entries:
+        if not entry.related_to or entry.kind != "variable":
+            continue
+        if entry.deprecated:
+            # Same stance as same_as: don't materialize from a retired side.
+            continue
+        if entry.provider is None:
+            raise _err(
+                "slug_related_to_internal",
+                f"variable.{entry.source_id!r}: missing provider context "
+                f"(SlugEntry.provider is None).",
+                "Report this as a bug — provider should be set by the TOML loader.",
+            )
+
+        register_id, var_id = _parse_variant_id(entry.source_id)
+        row = conn.execute(
+            "SELECT r.slug FROM register r "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.register_id = ?",
+            (entry.provider, register_id),
+        ).fetchone()
+        if row is None or row[0] is None:
+            raise _err(
+                "slug_related_to_unresolved_source",
+                f"{entry.provider}.toml: variable.{entry.source_id!r} "
+                f"source register has no slug; cannot anchor related_to.",
+                "Ensure populate_slugs wrote the slug column first.",
+            )
+        src_register_slug = row[0]
+        src_variable_slug = _variable_source_slug(conn, register_id, var_id, entry)
+
+        for ref in entry.related_to:
+            # Reuse same_as target validation for provider+register+variant
+            # existence checks. `_validate_variable_target` defaults `period`
+            # to '' when absent, which is fine — related_to is period-free.
+            target = _validate_variable_target(conn, entry, ref)
+            relation_kind = ref["relation_kind"]
+            note = ref.get("note")
+            # Drop the period component (related_to is 4-seg from day one;
+            # variant slot still defaulted to empty if curator omitted it).
+            tgt_provider, tgt_register, tgt_variant, _tgt_period, tgt_variable = target
+            src = (entry.provider, src_register_slug, "", src_variable_slug)
+            tgt = (tgt_provider, tgt_register, tgt_variant, tgt_variable)
+            # Symmetric insert. Plain INSERT — duplicate (A, B, kind)
+            # entries from competing TOML rows should surface as build
+            # failures, not silent merges.
+            conn.execute(
+                "INSERT OR IGNORE INTO variable_related_to ("
+                "a_provider, a_register, a_variant, a_variable, "
+                "b_provider, b_register, b_variant, b_variable, "
+                "relation_kind, note) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*src, *tgt, relation_kind, note),
+            )
+            conn.execute(
+                "INSERT OR IGNORE INTO variable_related_to ("
+                "a_provider, a_register, a_variant, a_variable, "
+                "b_provider, b_register, b_variant, b_variable, "
+                "relation_kind, note) "
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*tgt, *src, relation_kind, note),
+            )
+            edges_inserted += 1
+
+    return edges_inserted
+
+
+# ---------------------------------------------------------------------------
 # seed-slugs
 # ---------------------------------------------------------------------------
 
@@ -2079,6 +2248,8 @@ __all__ = (
     "load_classifications_toml",
     "load_provider_toml",
     "load_slug_dir",
+    "materialize_related_to_edges",
+    "materialize_same_as_edges",
     "populate_slugs",
     "precheck_slugs",
     "read_snapshot",
