@@ -1317,25 +1317,36 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         # so we don't keep it on the accumulator — the dict key carries it.
         unika_min: int | None = None
         unika_max: int | None = None
+        # Sticky bit: True iff at least one unika_summary row applied to this
+        # group, regardless of whether either bound was populated. Lets the
+        # materializer distinguish "no unika row matched → fall back to
+        # register_version" from "unika row matched but VersionSista blank →
+        # open-ended (sentinel)". A missing upper bound from SCB means the
+        # variable is still active; defaulting to regver_max would clamp
+        # currently-live variables to the latest observed export year and
+        # make A2.5's resolver miss any future-period query.
+        unika_matched: bool = False
         regver_min: int | None = None
         regver_max: int | None = None
         # Track the cvid → alias mapping with regver_id so we can pick the
-        # latest alias deterministically (highest regver_id year, then
-        # lexically smallest delivery_column_name on ties).
+        # latest alias deterministically (highest regver_id, then lexically
+        # smallest delivery_column_name on ties — both of which are stored
+        # below). regver_id alone is sufficient for the ordering; the row's
+        # year is only used transiently to update regver_min/max, never as
+        # alias-selection input, so it doesn't need to live on the group.
         latest_alias: str | None = None
-        latest_alias_year: int | None = None
         latest_alias_regver: int | None = None
-        # Build the unika lookup triples lazily — we need them only if
-        # the first pass leaves unika_{min,max} unpopulated.
-        unika_keys: set[tuple[int, int, str, str]] | None = None
 
     groups: dict[
         tuple[int, int, int, str, str, int | None, str | None, str],
         _StateGroup,
     ] = {}
-    # Map (register_id, regvar_id, kolumnnamn, variabelnamn) → list of
-    # group keys so we can fan unika lookups back into the accumulator.
-    unika_index: dict[tuple[int, int, str, str], list[tuple]] = {}
+    # Map (register_id, regvar_id, kolumnnamn, variabelnamn) → set of
+    # group keys so the unika fan-out below stays proportional to distinct
+    # groups, not raw instance-row hits (a wide variable with many cvids
+    # / aliases would otherwise have its single unika row replayed once
+    # per row even though min/max is idempotent).
+    unika_index: dict[tuple[int, int, str, str], set[tuple]] = {}
 
     for row in rows:
         grain = row["grain"] or ""
@@ -1391,13 +1402,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
             )
             if replace:
                 grp.latest_alias = alias
-                grp.latest_alias_year = rver_year
                 grp.latest_alias_regver = regver
 
         # Stage the unika lookup. unika_summary's PK is
         # (register_id, regvar_id, kolumnnamn, variabelnamn); we need an
         # alias to build the triple, so cvids without an alias contribute
-        # only via the fallback path.
+        # only via the fallback path. The unika_index is a set so that
+        # repeat (alias, variabelnamn) sightings across cvids in the same
+        # group don't fan a single unika row out into duplicate updates.
         if alias and row["variabelnamn"]:
             ukey = (
                 row["register_id"],
@@ -1405,12 +1417,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 alias,
                 row["variabelnamn"],
             )
-            unika_index.setdefault(ukey, []).append(gkey)
-            keys = grp.unika_keys
-            if keys is None:
-                keys = set()
-                grp.unika_keys = keys
-            keys.add(ukey)
+            unika_index.setdefault(ukey, set()).add(gkey)
 
     _progress(f"  {len(groups):,} state groups from {len(rows):,} instance rows")
 
@@ -1437,6 +1444,10 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         last = _parse_unika_year(ur["version_sista"])
         for gkey in gkeys:
             grp = groups[gkey]
+            # Sticky regardless of which field was populated — even a
+            # row that's blank on both sides counts as "unika spoke",
+            # though that's a rare case (SCB normally fills VersionForsta).
+            grp.unika_matched = True
             if first is not None:
                 grp.unika_min = (
                     first if grp.unika_min is None else min(grp.unika_min, first)
@@ -1450,20 +1461,45 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
+    open_top_from_unika = 0
     for grp in groups.values():
-        # Prefer unika_summary (covers SCB's authoritative version span);
-        # fall back to register_version year when unika has no row for any
-        # of the group's (regvar, alias, name) triples; final fallback is
-        # the unknown-range sentinels.
+        # Prefer unika_summary (covers SCB's authoritative version span).
+        # When unika matched the group but a specific bound was blank, that
+        # is SCB's "still active / unknown" signal — DO NOT fall back to
+        # register_version for that bound. Falling back would silently
+        # clamp a currently-live variable to the latest observed export
+        # year and break A2.5's resolver on any future-period query.
+        # The register_version fallback only fires when unika never matched
+        # the group at all (rare; ~7 % of corpus per the empirical data).
+        #
+        # The from / to bounds are resolved independently on purpose: if
+        # SCB ships a row with one side parseable and the other blank, we
+        # take what we have on each side rather than coupling them. The
+        # resulting range can therefore mix sources (unika-min /
+        # regver-max or vice versa) — intentional robustness, not a
+        # missed cross-check.
+        if grp.unika_max is not None:
+            to_year = grp.unika_max
+        elif grp.unika_matched:
+            # Unika spoke but didn't bound the top — still active.
+            to_year = None
+            open_top_from_unika += 1
+        else:
+            to_year = grp.regver_max
+
+        # Symmetric handling for valid_from: if unika spoke but didn't
+        # bound the bottom, prefer the register_version min (the lower
+        # bound is at most the earliest observed instance year) over the
+        # epoch sentinel. Falling all the way back to '0001-01-01' would
+        # be honest but pollute range queries.
         from_year = grp.unika_min if grp.unika_min is not None else grp.regver_min
-        to_year = grp.unika_max if grp.unika_max is not None else grp.regver_max
 
         valid_from = _year_to_iso_from(from_year) or _VALID_FROM_UNKNOWN
         valid_to = _year_to_iso_to(to_year) or _VALID_TO_OPEN_SENTINEL
 
         if valid_to == _VALID_TO_OPEN_SENTINEL or valid_from == _VALID_FROM_UNKNOWN:
             sentinel_count += 1
-        if grp.unika_min is None and grp.unika_max is None:
+        if not grp.unika_matched:
             fallback_only_count += 1
 
         batch.append(
@@ -1492,6 +1528,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     _progress(
         f"  {state_count:,} variable_state rows "
         f"({fallback_only_count:,} from register_version fallback, "
+        f"{open_top_from_unika:,} open-ended from unika, "
         f"{sentinel_count:,} carry a date sentinel)"
     )
     return {
@@ -1499,6 +1536,10 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         "n_variable_states": state_count,
         "n_from_unika": state_count - fallback_only_count,
         "n_from_regver_fallback": fallback_only_count,
+        # Currently-active variables: SCB matched a unika row but left
+        # VersionSista blank → state.valid_to = '9999-12-31'. A2.5's
+        # resolver needs these to survive future-period queries.
+        "n_open_top_from_unika": open_top_from_unika,
         "n_with_sentinel": sentinel_count,
     }
 

@@ -721,13 +721,11 @@ class TestBuildDb:
             "SELECT value_set_id, value_set_version_label "
             "FROM variable_state WHERE register_id = 1 AND var_id = 44"
         ).fetchall()
-        # At least one row has a value_set and at least one has none. The
-        # exact split depends on year-projection covering cvid 1004 —
-        # which it doesn't (validity windows in the fixture stop at the
-        # 5001/5003 items, not 1004's sentinel-only ItemIds), so 1004
-        # falls into a separate group.
+        # At least one row has a value_set. The exact split depends on
+        # year-projection covering cvid 1004 — which it doesn't (validity
+        # windows in the fixture stop at the 5001/5003 items, not 1004's
+        # sentinel-only ItemIds), so 1004 falls into a separate group.
         with_set = [r for r in rows if r["value_set_id"] is not None]
-        without_set = [r for r in rows if r["value_set_id"] is None]
         assert with_set, "expected at least one Kön state with a value_set"
         # Either grain split produced a NULL-value_set companion, or every
         # cvid in the group had the same value_set. Both outcomes are valid
@@ -739,9 +737,6 @@ class TestBuildDb:
                 "coalescer collapsed distinct value_set_ids "
                 f"into one variable_state row: {value_set_ids}"
             )
-        # Reference without_set so a future refactor that changes the fixture's
-        # sentinel behavior trips the symmetry rather than ignoring it.
-        _ = without_set
 
     def test_variable_state_fk_to_variable(self, db_conn: sqlite3.Connection):
         """Every variable_state row points at a real variable row via the
@@ -776,6 +771,20 @@ class TestBuildDb:
             "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 44"
         ).fetchone()
         assert row["variabelnamn"] == "Kön"
+
+    def test_variable_state_no_open_ended_in_default_fixture(
+        self, db_conn: sqlite3.Connection
+    ):
+        """Sanity gate: the default fixture has every unika row populated
+        on both sides, so no variable_state row should carry the
+        open-ended sentinel. This pins the fixture invariant — if a future
+        contributor adds an open-ended unika row to the standard fixture,
+        the dedicated open-ended test below stops being the only signal
+        and we want loud failure here, not silent drift."""
+        sentinel_rows = db_conn.execute(
+            "SELECT COUNT(*) FROM variable_state WHERE valid_to = '9999-12-31'"
+        ).fetchone()[0]
+        assert sentinel_rows == 0
 
     def test_timeseries_imported(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM timeseries_event").fetchone()[0]
@@ -1721,3 +1730,181 @@ class TestOperationalDefinitionFold:
             varopdef="Operational refinement",
         )
         assert result == "Operational refinement"
+
+
+class TestVariableStateOpenEnded:
+    """A2.1: SCB's `VersionSista` is the upper bound of a variable's
+    validity. When SCB leaves the cell blank, that means "still active"
+    — the coalescer must preserve that signal as the open-ended sentinel
+    `valid_to = '9999-12-31'`, NOT fall back to the latest observed
+    `register_version` year. Falling back would silently clamp a
+    currently-live variable to the latest observed export year and break
+    A2.5's period resolver for any future-period query.
+
+    Codex caught this on PR #130: my initial implementation took
+    `unika_max if not None else regver_max`, which lost the open-ended
+    semantics whenever any unika row matched the group with a blank
+    `VersionSista`. The fix tracks an `unika_matched` sticky bit
+    distinct from `unika_max is None`, so the regver fallback only fires
+    when unika never spoke for the group at all.
+    """
+
+    @staticmethod
+    def _build_with_open_unika(tmp_path: Path) -> Path:
+        """Build a minimal DB whose unika fixture has one row with blank
+        VersionSista, plus a baseline row with both bounds populated for
+        comparison."""
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        # Append one extra variable to Registerinformation: register_id=1,
+        # var_id=900 ("StillActiveVar"). Living in TESTREG/regvar 10 to
+        # avoid creating a new variant.
+        open_ri = _ri_row(
+            "TESTREG",
+            "Testregistret",
+            "Testning",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",  # SCB's earliest version where StillActiveVar appears
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "StillActiveVar",
+            "A variable that is still being collected",
+            "Active variable description",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "ActiveCol",
+            "varchar",
+            "10",
+            "9100",  # cvid
+            "1",  # register_id
+            "10",  # regvar_id (existing Individer variant in TESTREG)
+            "100",  # regver_id (existing 2020 version)
+            "900",  # var_id
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [open_ri]
+
+        # Custom unika fixture: standard rows + one with blank VersionSista
+        # for our StillActiveVar. The blank-VersionSista row is what
+        # exercises the bug-fix path.
+        unika_rows = [
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "Kön",
+                    "Kon",
+                    "2020",
+                    "2022",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "StillActiveVar",
+                    "ActiveCol",
+                    "2020",
+                    "",  # ← open-ended: SCB hasn't sunset this variable
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_open_ended_unika_preserves_sentinel(self, tmp_path: Path):
+        """StillActiveVar's unika row has VersionForsta='2020' and
+        VersionSista=''. Expected: valid_from='2020-01-01',
+        valid_to='9999-12-31'. The sentinel signals "still active" to
+        the A2.5 resolver. If this regressed, future-period queries
+        would silently miss the row."""
+        db_path = self._build_with_open_unika(tmp_path)
+        conn = open_db(db_path)
+        try:
+            row = conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 900"
+            ).fetchone()
+            assert row is not None
+            assert row["valid_from"] == "2020-01-01"
+            assert row["valid_to"] == "9999-12-31"
+        finally:
+            conn.close()
+
+    def test_open_ended_increments_manifest_stat(self, tmp_path: Path):
+        """A2.1: `coalesce_stats.n_open_top_from_unika` counts states whose
+        upper bound came from a unika row that left VersionSista blank.
+        With exactly one such row in this fixture (StillActiveVar), the
+        counter must be at least 1."""
+        import json as _json
+
+        db_path = self._build_with_open_unika(tmp_path)
+        conn = open_db(db_path)
+        try:
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+            ).fetchone()
+            assert manifest is not None
+            stats = _json.loads(manifest["value"])
+            assert stats["n_open_top_from_unika"] >= 1
+        finally:
+            conn.close()

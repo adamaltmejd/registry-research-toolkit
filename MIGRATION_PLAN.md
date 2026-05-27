@@ -101,7 +101,7 @@ Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter on
 
 Seven PRs. The largest and most intricate stage. Sequencing matters; gates are explicit.
 
-### [x] A2.1 — `variable_state` table + coalescing (PR #TBD)
+### [x] A2.1 — `variable_state` table + coalescing (PR #130)
 
 - `variable_state` table added to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD`, enforced by CHECK constraints (`length() = 10`, `valid_to >= valid_from`). Open-ended states get the sentinel `valid_to = '9999-12-31'`; the unknown-lower-bound fallback uses `'0001-01-01'` for the rare yearless cvid case
 - `_coalesce_variable_states` (`reg_meta_build/src/reg_meta_build/db.py`) groups `variable_instance` rows by the 8-tuple `(register_id, regvar_id, var_id, data_type, data_length, value_set_id, value_set_version_label, grain)`. `grain` lives only in the in-memory group key — never lands on `variable_state`, per the universal-schema contract. Reads `unika_summary` for VersionForsta/VersionSista (primary), falls back to `register_version.registerversionnamn` year extraction when unika has no matching `(register, regvar, kolumnnamn, variabelnamn)` row. `delivery_column_name` denormalizes the latest alias for the era (highest `regver_id`, lexically smallest on ties)
