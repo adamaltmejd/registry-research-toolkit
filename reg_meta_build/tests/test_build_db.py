@@ -2118,3 +2118,177 @@ class TestVariableStateMultiShape:
             assert rows[0]["valid_to"] < rows[1]["valid_from"]
         finally:
             conn.close()
+
+
+class TestVariableStateRenameMidLife:
+    """A2.1: Codex P2 on PR #130, commit d8d8125 — when SCB renames a
+    variable mid-life (Variabelnamn changes between editions for the
+    same VarId), `unika_summary` carries one row per
+    (register_id, regvar_id, kolumnnamn, variabelnamn) tuple. The
+    canonical `variable.name` is the first-non-empty Variabelnamn the
+    importer sees, which pins to the OLD name. The coalescer's unika
+    lookup uses the per-cvid raw `variabelnamn` (stored on
+    variable_instance for this purpose) so the post-rename unika row
+    — often the still-active one with blank VersionSista — actually
+    matches and the open-ended sentinel propagates onto the latest-era
+    state row.
+    """
+
+    @staticmethod
+    def _build_with_rename(tmp_path: Path) -> Path:
+        """Build a DB where var_id=920 (RenamedVar) has its Variabelnamn
+        change between editions:
+        - 2020 (regver=120): Variabelnamn='OriginalName', ColX
+        - 2024 (regver=121): Variabelnamn='RenamedName', ColX (open-ended,
+          still active per SCB)
+        Unika carries two rows — one per Variabelnamn:
+        - ('ColX', 'OriginalName'): 2020-2020 (the renamed-away era)
+        - ('ColX', 'RenamedName'): 2024-blank (the currently-active era)
+        """
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        rename_rows = []
+        for year, regver_id, cvid, varname in [
+            ("2020", 120, 9300, "OriginalName"),
+            ("2024", 121, 9301, "RenamedName"),
+        ]:
+            rename_rows.append(
+                _ri_row(
+                    "TESTREG",
+                    "Testregistret",
+                    "Testning",
+                    "Individer",
+                    "Individer",
+                    "Alla individer",
+                    "Nej",
+                    year,
+                    f"Version {year}",
+                    "",
+                    "Godkänd",
+                    f"{year}-01-01",
+                    f"{year}-12-31",
+                    "Hela befolkningen",
+                    "Alla personer",
+                    "",
+                    f"{year}-12-31",
+                    "Person",
+                    "Fysisk person",
+                    varname,  # ← Variabelnamn changes across editions
+                    "A renamed variable",
+                    "Mid-life rename",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "ColX",  # Same delivery column throughout
+                    "int",
+                    "1",
+                    str(cvid),
+                    "1",
+                    "10",
+                    str(regver_id),
+                    "920",
+                )
+            )
+
+        ri_rows = list(REGISTERINFORMATION_ROWS) + rename_rows
+        unika_rows = [
+            # The renamed-away era — bounded
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "OriginalName",
+                    "ColX",
+                    "2020",
+                    "2020",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+            # The still-active renamed era — open-ended (blank VersionSista)
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "RenamedName",
+                    "ColX",
+                    "2024",
+                    "",  # ← blank: still active
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_rename_preserves_open_ended_sentinel(self, tmp_path: Path):
+        """Latest-era state for the renamed variable picks up the
+        `RenamedName` unika row's blank `VersionSista` → sentinel.
+        Pre-fix, the coalescer joined on the canonical `variable.name`
+        (pinned to `OriginalName` by first-non-empty), so the lookup
+        against `unika_summary` keyed on `RenamedName` missed and the
+        state fell back to `regver_max = 2024` instead of the open-ended
+        sentinel."""
+        db_path = self._build_with_rename(tmp_path)
+        conn = open_db(db_path)
+        try:
+            # The variable's canonical name (first-non-empty) is 'OriginalName'
+            # since the 2020 row is processed first. The current shape (still
+            # active in 2024) is the latest era — single group since shape
+            # didn't change, just the name. Latest era → open-ended.
+            row = conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 920"
+            ).fetchone()
+            assert row is not None
+            assert row["valid_from"] == "2020-01-01"
+            # Without the per-cvid variabelnamn fix, this would be
+            # '2024-12-31' (clamped to regver_max because the RenamedName
+            # unika row missed the lookup).
+            assert row["valid_to"] == "9999-12-31"
+        finally:
+            conn.close()

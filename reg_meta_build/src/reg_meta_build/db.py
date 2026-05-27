@@ -285,6 +285,14 @@ CREATE TABLE variable_instance (
     regvar_id INTEGER NOT NULL,
     regver_id INTEGER NOT NULL,
     var_id INTEGER NOT NULL,
+    -- A2.1: per-cvid raw `Variabelnamn` from the source CSV row. `variable.name`
+    -- is the canonical (first-non-empty) name across all rows for a var_id;
+    -- when SCB renames a variable mid-life (e.g. an active variable's name
+    -- changes between editions), the canonical loses the post-rename name and
+    -- the coalescer's unika_summary lookup (keyed by raw variabelnamn) misses
+    -- the renamed-era unika row. This column preserves the per-cvid raw name
+    -- so the lookup matches. Dropped together with variable_instance in A2.7.
+    variabelnamn TEXT,
     -- §5.11 rename of `datatyp` / `datalangd` / `vardemangdsversion`.
     -- `vardemangdsniva` stays Swedish: it's a transient pre-triage carrier
     -- through A2.2 (the coalescer's `grain` field) and gets dropped from the
@@ -939,6 +947,11 @@ def _import_registerinformation(
                     "regvar_id": rvid,
                     "regver_id": rveid,
                     "var_id": vid,
+                    # Per-cvid raw variabelnamn. SCB ships one row per
+                    # (cvid, kolumnnamn) tuple — multiple rows per cvid agree
+                    # on Variabelnamn, so the first wins and `setdefault`
+                    # captures the intended value.
+                    "variabelnamn": row["Variabelnamn"],
                     "data_type": row["Datatyp"],
                     "data_length": row["Datalängd"],
                 },
@@ -1034,9 +1047,10 @@ def _import_registerinformation(
     )
     conn.executemany(
         "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, data_type, data_length) "
+        "(cvid, register_id, regvar_id, regver_id, var_id, variabelnamn, "
+        " data_type, data_length) "
         "VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
-        ":var_id, :data_type, :data_length)",
+        ":var_id, :variabelnamn, :data_type, :data_length)",
         list(instances.values()),
     )
     conn.executemany(
@@ -1284,17 +1298,22 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     # `build_db`'s connection writes with the default tuple row_factory;
     # we use a local cursor with `sqlite3.Row` so the column-name access
     # below stays readable. Doesn't touch the parent connection's setting.
+    # `vi.variabelnamn` (per-cvid raw Variabelnamn) is the right key for the
+    # unika_summary lookup — NOT `variable.name`. `variable.name` is the
+    # first-non-empty canonical chosen at import time, so SCB renaming a
+    # variable mid-life leaves the canonical pinned to the old name and the
+    # post-rename unika row (often the open-ended "still active" one) fails
+    # to match. variable_instance carries the raw per-row name for exactly
+    # this reason.
     cur = conn.cursor()
     cur.row_factory = sqlite3.Row
     rows = cur.execute(
         "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.var_id, vi.regver_id, "
         "       vi.data_type, vi.data_length, vi.value_set_id, "
         "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
-        "       va.delivery_column_name, v.name AS variabelnamn, "
+        "       vi.variabelnamn, va.delivery_column_name, "
         "       rv.registerversionnamn "
         "FROM variable_instance vi "
-        "JOIN variable v "
-        "  ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
         "LEFT JOIN variable_alias va ON va.cvid = vi.cvid "
         "JOIN register_version rv ON rv.regver_id = vi.regver_id"
     ).fetchall()
@@ -1326,6 +1345,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         # currently-live variables to the latest observed export year and
         # make A2.5's resolver miss any future-period query.
         unika_matched: bool = False
+        # Sticky bit: True iff at least one matching unika row left
+        # `VersionSista` blank. The "still active" signal must survive even
+        # when OTHER unika rows for the same group carry a bounded
+        # VersionSista (e.g. a mid-life rename where the OriginalName row
+        # is bounded but the RenamedName row is open) — without this
+        # tracker, `unika_max` populated from the bounded row would mask
+        # the open-ended signal from the renamed row.
+        unika_has_open_top: bool = False
         regver_min: int | None = None
         regver_max: int | None = None
         # Track the cvid → alias mapping with regver_id so we can pick the
@@ -1473,6 +1500,11 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 grp.unika_max = (
                     last if grp.unika_max is None else max(grp.unika_max, last)
                 )
+            else:
+                # SCB left VersionSista blank for this (kolumnnamn, variabelnamn)
+                # tuple → still active. Even if another row in the same group is
+                # bounded, the open-ended signal wins (mid-life rename case).
+                grp.unika_has_open_top = True
 
     # Materialize the variable_state rows.
     #
@@ -1517,7 +1549,21 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         # Upper bound: latest-era group with unika-open → sentinel.
         # Otherwise the group's observed regver_max wins. Unika upper
         # only stands in when regver is unparseable.
-        if is_latest_era and grp.unika_matched and grp.unika_max is None:
+        #
+        # The open-ended trigger covers two shapes: (a) unika matched the
+        # group and `unika_max` was never populated (only blank
+        # VersionSista rows applied); (b) `unika_has_open_top` flagged
+        # that at least one matching unika row left VersionSista blank
+        # even when others did populate `unika_max`. Case (b) is the
+        # mid-life-rename pattern — a bounded OriginalName row and an
+        # open-ended RenamedName row both apply to the same group. The
+        # "still active" signal from the rename must win over the
+        # bounded-out OriginalName row.
+        if (
+            is_latest_era
+            and grp.unika_matched
+            and (grp.unika_max is None or grp.unika_has_open_top)
+        ):
             to_year = None  # forces sentinel
             open_top_from_unika += 1
         elif grp.regver_max is not None:
