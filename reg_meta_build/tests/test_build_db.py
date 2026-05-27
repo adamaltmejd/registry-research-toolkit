@@ -531,11 +531,17 @@ class TestBuildDb:
         # cvid 2003 (var_id 301): ("","Uppgift okänd") = 1
         assert count == 6
 
-    def test_unika_joined(self, db_conn: sqlite3.Connection):
-        count = db_conn.execute("SELECT COUNT(*) FROM unika_summary").fetchone()[0]
-        # 3 baseline rows (TESTREG Kön, TESTREG TestVar, OTHERREG Kön)
-        # + 2 A1.2 sensitivity-flag fixtures (TESTREG ÅÄÖVar, OTHERREG UniqueVar).
-        assert count == 5
+    def test_unika_summary_dropped(self, db_conn: sqlite3.Connection):
+        """A2.1: unika_summary is build-time only — both A1.2 (sensitivity
+        flags) and A2.1 (variable_state coalescer) have consumed it before
+        the build commits, so the shipped DB carries no row for it. Asserting
+        the table is gone (not just empty) catches a future regression where
+        the DROP TABLE step is reordered after the commit."""
+        row = db_conn.execute(
+            "SELECT name FROM sqlite_master "
+            "WHERE type = 'table' AND name = 'unika_summary'"
+        ).fetchone()
+        assert row is None
 
     def test_sensitivity_kanslig_variabel(self, db_conn: sqlite3.Connection):
         """A1.2: TestVar (register_id=1, var_id=100) has kanslig_variabel='Ja'
@@ -592,11 +598,208 @@ class TestBuildDb:
             assert row["is_sensitive"] == 0, row["var_id"]
             assert row["is_identifier"] == 0, row["var_id"]
 
+    # ------------------------------------------------------------------
+    # A2.1 — variable_state coalescer
+    # ------------------------------------------------------------------
+
+    def test_variable_state_rows_present(self, db_conn: sqlite3.Connection):
+        """A2.1: the coalescer materializes at least one variable_state row
+        per `(register_id, regvar_id, var_id)` that has any
+        `variable_instance` row. Sanity check against silent regressions
+        where the coalescer never runs or only handles a subset."""
+        # Distinct (register_id, regvar_id, var_id) triples in instance.
+        triples = db_conn.execute(
+            "SELECT DISTINCT register_id, regvar_id, var_id FROM variable_instance"
+        ).fetchall()
+        assert len(triples) > 0
+        for t in triples:
+            n = db_conn.execute(
+                "SELECT COUNT(*) FROM variable_state "
+                "WHERE register_id = ? AND regvar_id = ? AND var_id = ?",
+                (t["register_id"], t["regvar_id"], t["var_id"]),
+            ).fetchone()[0]
+            assert n >= 1, f"no variable_state for {tuple(t)}"
+
+    def test_variable_state_valid_from_to_full_iso(self, db_conn: sqlite3.Connection):
+        """§5.1: every valid_from / valid_to is a 10-char YYYY-MM-DD string.
+        The CHECK constraint guards this at write time; this test catches
+        the data layer in case a future migration loosens the CHECK."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state"
+        ).fetchall()
+        assert rows
+        for r in rows:
+            assert len(r["valid_from"]) == 10
+            assert len(r["valid_to"]) == 10
+            assert r["valid_from"][4] == "-" and r["valid_from"][7] == "-"
+            assert r["valid_to"][4] == "-" and r["valid_to"][7] == "-"
+            # Lexical comparison is chronological for full-date ISO strings.
+            assert r["valid_from"] <= r["valid_to"]
+
+    def test_variable_state_year_expansion(self, db_conn: sqlite3.Connection):
+        """A2.1: unika_summary year "2022" expands to '2022-01-01'..'2022-12-31'.
+        Asserted against ÅÄÖVar (register_id=1, var_id=200), which has
+        a single unika row VersionForsta=VersionSista='2022'."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE register_id = 1 AND var_id = 200"
+        ).fetchall()
+        assert len(rows) == 1
+        assert rows[0]["valid_from"] == "2022-01-01"
+        assert rows[0]["valid_to"] == "2022-12-31"
+
+    def test_variable_state_year_range_min_max(self, db_conn: sqlite3.Connection):
+        """A2.1: Kön in TESTREG appears across 2020/2021/2022 split into two
+        shape groups by the value_set: cvids 1001/1003 carry the
+        year-projected `Kön` value_set (regver years 2020+2021); cvid 1004
+        has NULL value_set (sentinel-only Vardemangder rows for 2022).
+
+        Each group claims its OWN observed years — not the full unika
+        lifetime — per the §5.1 non-overlap invariant and the Codex P1
+        fix on PR #130. Without clamping, both groups would inherit
+        unika's 2020-2022 range and overlap on 2020-2021 with no
+        `value_set_version_label` discriminator, which the A2.5 point
+        resolver can't unambiguously narrow."""
+        rows = db_conn.execute(
+            "SELECT valid_from, valid_to, value_set_id "
+            "FROM variable_state WHERE register_id = 1 AND var_id = 44 "
+            "ORDER BY value_set_id NULLS LAST"
+        ).fetchall()
+        assert len(rows) >= 1
+        # The value-set-bearing group covers cvids 1001 (2020) + 1003 (2021).
+        # var_max_regver for the variable = 2022 (cvid 1004), so this
+        # group is NOT the latest era and ends at its own regver_max.
+        with_set = [r for r in rows if r["value_set_id"] is not None]
+        assert with_set, "expected a Kön state with a value_set"
+        assert with_set[0]["valid_from"] == "2020-01-01"
+        assert with_set[0]["valid_to"] == "2021-12-31"
+        # The NULL-value_set group covers cvid 1004 (2022). It IS the
+        # latest era (regver_max=2022=var_max), and the unika row is
+        # bounded (VersionSista='2022'), so this group spans 2022 only.
+        without_set = [r for r in rows if r["value_set_id"] is None]
+        assert without_set, "expected a Kön state without a value_set"
+        assert without_set[0]["valid_from"] == "2022-01-01"
+        assert without_set[0]["valid_to"] == "2022-12-31"
+
+    def test_variable_state_delivery_column_name(self, db_conn: sqlite3.Connection):
+        """§5.1: delivery_column_name on variable_state is the denormalized
+        latest alias. For TestVar (cvid 1002) with aliases ['TestCol',
+        'TestKolumn'] both attached to the same regver, the lexically
+        smaller alias wins by deterministic tie-break."""
+        row = db_conn.execute(
+            "SELECT delivery_column_name FROM variable_state "
+            "WHERE register_id = 1 AND var_id = 100"
+        ).fetchone()
+        assert row is not None
+        assert row["delivery_column_name"] == "TestCol"
+
+    def test_variable_state_regver_fallback(self, db_conn: sqlite3.Connection):
+        """A2.1: ParenVar (register_id=2, var_id=301) has NO unika row in the
+        fixture; the coalescer falls back to register_version.registerversionnamn
+        ("2021") to derive the valid range. Confirms the fallback path is
+        wired correctly."""
+        row = db_conn.execute(
+            "SELECT valid_from, valid_to FROM variable_state "
+            "WHERE register_id = 2 AND var_id = 301"
+        ).fetchone()
+        assert row is not None
+        assert row["valid_from"] == "2021-01-01"
+        assert row["valid_to"] == "2021-12-31"
+
+    def test_variable_state_value_set_version_label_preserved(
+        self, db_conn: sqlite3.Connection
+    ):
+        """A2.1: value_set_version_label rides through the coalescer onto
+        variable_state — it's the §5.7 multi-vintage discriminator that
+        permits overlapping states. UniqueVar's instance gets the "2"
+        label from Vardemangder; assert it surfaces on the state row."""
+        row = db_conn.execute(
+            "SELECT value_set_version_label FROM variable_state "
+            "WHERE register_id = 2 AND var_id = 300"
+        ).fetchone()
+        assert row is not None
+        # Matches what _import_vardemangder writes onto variable_instance
+        # (see VARDEMANGDER_REAL_SHAPED_ROWS: kod="2", label="Övriga
+        # civilstånd"). Group key carries the label through unchanged.
+        assert row["value_set_version_label"] == "2"
+
+    def test_variable_state_grain_split(self, db_conn: sqlite3.Connection):
+        """A2.1: when cvids for the same (register_id, regvar_id, var_id)
+        differ on transient grain (vardemangdsniva on variable_instance),
+        the coalescer keeps them as distinct variable_state rows so A2.2
+        can triage. Fixture Kön cvid 1004 has no Vardemangder row (sentinel)
+        so its grain / value_set_id end up NULL — that's a different group
+        key from cvids 1001/1003 which carry a real value_set."""
+        # Two rows for register_id=1, var_id=44 (Kön): one with value_set,
+        # one without. Both share regvar_id=10 (same variant).
+        rows = db_conn.execute(
+            "SELECT value_set_id, value_set_version_label "
+            "FROM variable_state WHERE register_id = 1 AND var_id = 44"
+        ).fetchall()
+        # At least one row has a value_set. The exact split depends on
+        # year-projection covering cvid 1004 — which it doesn't (validity
+        # windows in the fixture stop at the 5001/5003 items, not 1004's
+        # sentinel-only ItemIds), so 1004 falls into a separate group.
+        with_set = [r for r in rows if r["value_set_id"] is not None]
+        assert with_set, "expected at least one Kön state with a value_set"
+        # Either grain split produced a NULL-value_set companion, or every
+        # cvid in the group had the same value_set. Both outcomes are valid
+        # at A2.1 (triage is A2.2); the test only fails if the coalescer
+        # silently collapses distinct value_set_ids into one state.
+        if len(rows) > 1:
+            value_set_ids = {r["value_set_id"] for r in rows}
+            assert len(value_set_ids) == len(rows), (
+                "coalescer collapsed distinct value_set_ids "
+                f"into one variable_state row: {value_set_ids}"
+            )
+
+    def test_variable_state_fk_to_variable(self, db_conn: sqlite3.Connection):
+        """Every variable_state row points at a real variable row via the
+        FK on (register_id, var_id). PRAGMA foreign_key_check is already
+        invoked at build time; this is a regression-level sanity check."""
+        orphans = db_conn.execute(
+            "SELECT vs.state_id FROM variable_state vs "
+            "LEFT JOIN variable v "
+            "  ON v.register_id = vs.register_id AND v.var_id = vs.var_id "
+            "WHERE v.register_id IS NULL"
+        ).fetchall()
+        assert orphans == []
+
+    def test_variable_state_count_summary(self, db_conn: sqlite3.Connection):
+        """A2.1: total variable_state row count matches the manifest's
+        coalesce_stats.n_variable_states. Catches a future regression
+        where the stats accounting drifts from the SQL truth."""
+        from_table = db_conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[
+            0
+        ]
+        import json as _json
+
+        manifest = db_conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+        ).fetchone()
+        assert manifest is not None
+        stats = _json.loads(manifest["value"])
+        assert stats["n_variable_states"] == from_table
+
     def test_identifierare_imported(self, db_conn: sqlite3.Connection):
         row = db_conn.execute(
             "SELECT variabelnamn FROM identifier_semantics WHERE var_id = 44"
         ).fetchone()
         assert row["variabelnamn"] == "Kön"
+
+    def test_variable_state_no_open_ended_in_default_fixture(
+        self, db_conn: sqlite3.Connection
+    ):
+        """Sanity gate: the default fixture has every unika row populated
+        on both sides, so no variable_state row should carry the
+        open-ended sentinel. This pins the fixture invariant — if a future
+        contributor adds an open-ended unika row to the standard fixture,
+        the dedicated open-ended test below stops being the only signal
+        and we want loud failure here, not silent drift."""
+        sentinel_rows = db_conn.execute(
+            "SELECT COUNT(*) FROM variable_state WHERE valid_to = '9999-12-31'"
+        ).fetchone()[0]
+        assert sentinel_rows == 0
 
     def test_timeseries_imported(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM timeseries_event").fetchone()[0]
@@ -1542,3 +1745,550 @@ class TestOperationalDefinitionFold:
             varopdef="Operational refinement",
         )
         assert result == "Operational refinement"
+
+
+class TestVariableStateOpenEnded:
+    """A2.1: SCB's `VersionSista` is the upper bound of a variable's
+    validity. When SCB leaves the cell blank, that means "still active"
+    — the coalescer must preserve that signal as the open-ended sentinel
+    `valid_to = '9999-12-31'`, NOT fall back to the latest observed
+    `register_version` year. Falling back would silently clamp a
+    currently-live variable to the latest observed export year and break
+    A2.5's period resolver for any future-period query.
+
+    Codex caught this on PR #130: my initial implementation took
+    `unika_max if not None else regver_max`, which lost the open-ended
+    semantics whenever any unika row matched the group with a blank
+    `VersionSista`. The fix tracks an `unika_matched` sticky bit
+    distinct from `unika_max is None`, so the regver fallback only fires
+    when unika never spoke for the group at all.
+    """
+
+    @staticmethod
+    def _build_with_open_unika(tmp_path: Path) -> Path:
+        """Build a minimal DB whose unika fixture has one row with blank
+        VersionSista, plus a baseline row with both bounds populated for
+        comparison."""
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        # Append one extra variable to Registerinformation: register_id=1,
+        # var_id=900 ("StillActiveVar"). Living in TESTREG/regvar 10 to
+        # avoid creating a new variant.
+        open_ri = _ri_row(
+            "TESTREG",
+            "Testregistret",
+            "Testning",
+            "Individer",
+            "Individer",
+            "Alla individer",
+            "Nej",
+            "2020",  # SCB's earliest version where StillActiveVar appears
+            "Version 2020",
+            "",
+            "Godkänd",
+            "2020-01-01",
+            "2020-12-31",
+            "Hela befolkningen",
+            "Alla personer",
+            "",
+            "2020-12-31",
+            "Person",
+            "Fysisk person",
+            "StillActiveVar",
+            "A variable that is still being collected",
+            "Active variable description",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "ActiveCol",
+            "varchar",
+            "10",
+            "9100",  # cvid
+            "1",  # register_id
+            "10",  # regvar_id (existing Individer variant in TESTREG)
+            "100",  # regver_id (existing 2020 version)
+            "900",  # var_id
+        )
+        ri_rows = list(REGISTERINFORMATION_ROWS) + [open_ri]
+
+        # Custom unika fixture: standard rows + one with blank VersionSista
+        # for our StillActiveVar. The blank-VersionSista row is what
+        # exercises the bug-fix path.
+        unika_rows = [
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "Kön",
+                    "Kon",
+                    "2020",
+                    "2022",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "StillActiveVar",
+                    "ActiveCol",
+                    "2020",
+                    "",  # ← open-ended: SCB hasn't sunset this variable
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_open_ended_unika_preserves_sentinel(self, tmp_path: Path):
+        """StillActiveVar's unika row has VersionForsta='2020' and
+        VersionSista=''. Expected: valid_from='2020-01-01',
+        valid_to='9999-12-31'. The sentinel signals "still active" to
+        the A2.5 resolver. If this regressed, future-period queries
+        would silently miss the row."""
+        db_path = self._build_with_open_unika(tmp_path)
+        conn = open_db(db_path)
+        try:
+            row = conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 900"
+            ).fetchone()
+            assert row is not None
+            assert row["valid_from"] == "2020-01-01"
+            assert row["valid_to"] == "9999-12-31"
+        finally:
+            conn.close()
+
+    def test_open_ended_increments_manifest_stat(self, tmp_path: Path):
+        """A2.1: `coalesce_stats.n_open_top_from_unika` counts states whose
+        upper bound came from a unika row that left VersionSista blank.
+        With exactly one such row in this fixture (StillActiveVar), the
+        counter must be at least 1."""
+        import json as _json
+
+        db_path = self._build_with_open_unika(tmp_path)
+        conn = open_db(db_path)
+        try:
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'coalesce_stats'"
+            ).fetchone()
+            assert manifest is not None
+            stats = _json.loads(manifest["value"])
+            assert stats["n_open_top_from_unika"] >= 1
+        finally:
+            conn.close()
+
+
+class TestVariableStateMultiShape:
+    """A2.1: Codex P1 on PR #130 — when a variable changes shape across
+    versions (different data_type / data_length / value_set_id), the
+    coalescer splits it into multiple groups. Each group must claim
+    only its OWN observed years, not the full unika lifetime. Without
+    this clamp, every shape group would inherit the variable's whole
+    lifetime range and produce overlapping `variable_state` rows with
+    no `value_set_version_label` discriminator — the A2.5 point
+    resolver would return multiple states for periods where only one
+    shape actually existed.
+
+    The fix: use each group's `regver_min`/`regver_max` as the
+    authoritative range; reserve the open-ended sentinel for the
+    latest-era group (whose `regver_max` matches the variable's
+    overall max regver year).
+    """
+
+    @staticmethod
+    def _build_multi_shape(tmp_path: Path) -> Path:
+        """Build a DB where var_id=910 ('ShiftingVar') changes shape:
+        - regver_id=110 (year 2020): data_type='int', data_length='1'
+        - regver_id=111 (year 2021): data_type='int', data_length='1'
+        - regver_id=112 (year 2022): data_type='varchar', data_length='5'
+        - regver_id=113 (year 2023): data_type='varchar', data_length='5'
+
+        Unika carries one row: VersionForsta='2020', VersionSista='2023'.
+        Buggy behavior would produce 2 states each spanning 2020-2023;
+        correct behavior produces (2020-01-01, 2021-12-31) for the int
+        era and (2022-01-01, 2023-12-31) for the varchar era."""
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        # Four ShiftingVar rows — two int eras, two varchar eras. No
+        # Vardemangder entries so value_set_id stays NULL across all
+        # four cvids; the shape distinction is purely data_type /
+        # data_length.
+        shifting_rows = []
+        for year, regver_id, cvid, dt, dl in [
+            ("2020", 110, 9200, "int", "1"),
+            ("2021", 111, 9201, "int", "1"),
+            ("2022", 112, 9202, "varchar", "5"),
+            ("2023", 113, 9203, "varchar", "5"),
+        ]:
+            shifting_rows.append(
+                _ri_row(
+                    "TESTREG",
+                    "Testregistret",
+                    "Testning",
+                    "Individer",
+                    "Individer",
+                    "Alla individer",
+                    "Nej",
+                    year,
+                    f"Version {year}",
+                    "",
+                    "Godkänd",
+                    f"{year}-01-01",
+                    f"{year}-12-31",
+                    "Hela befolkningen",
+                    "Alla personer",
+                    "",
+                    f"{year}-12-31",
+                    "Person",
+                    "Fysisk person",
+                    "ShiftingVar",
+                    "A variable whose shape changes across eras",
+                    "Mid-life shape drift",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "ShiftCol",
+                    dt,
+                    dl,
+                    str(cvid),
+                    "1",
+                    "10",
+                    str(regver_id),
+                    "910",
+                )
+            )
+
+        ri_rows = list(REGISTERINFORMATION_ROWS) + shifting_rows
+        unika_rows = [
+            # ShiftingVar's single unika row covers the full lifetime.
+            # The coalescer must NOT fan this 2020-2023 range out to
+            # every shape group.
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "ShiftingVar",
+                    "ShiftCol",
+                    "2020",
+                    "2023",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_groups_clamped_to_observed_years(self, tmp_path: Path):
+        """ShiftingVar splits into int (2020-2021) and varchar (2022-2023)
+        groups. Each must report ONLY its observed years, not the full
+        unika lifetime (2020-2023). Pre-fix, both rows would have spanned
+        2020-2023 and overlapped on every year.
+
+        The latest-era group (varchar, regver_max=2023=var_max) has a
+        bounded unika row (`VersionSista='2023'`), so it does NOT carry
+        the open-ended sentinel — its valid_to is 2023-12-31."""
+        db_path = self._build_multi_shape(tmp_path)
+        conn = open_db(db_path)
+        try:
+            rows = conn.execute(
+                "SELECT data_type, data_length, valid_from, valid_to "
+                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "ORDER BY valid_from"
+            ).fetchall()
+            assert len(rows) == 2
+            int_era, varchar_era = rows[0], rows[1]
+            assert int_era["data_type"] == "int"
+            assert int_era["data_length"] == "1"
+            assert int_era["valid_from"] == "2020-01-01"
+            assert int_era["valid_to"] == "2021-12-31"
+            assert varchar_era["data_type"] == "varchar"
+            assert varchar_era["data_length"] == "5"
+            assert varchar_era["valid_from"] == "2022-01-01"
+            assert varchar_era["valid_to"] == "2023-12-31"
+        finally:
+            conn.close()
+
+    def test_groups_non_overlapping(self, tmp_path: Path):
+        """§5.1 invariant: variable_state rows for the same variable are
+        non-overlapping unless explicitly discriminated by
+        value_set_version_label. Multi-shape ShiftingVar has no
+        discriminator, so its two states must NOT overlap. This is the
+        load-bearing property A2.5's point resolver relies on."""
+        db_path = self._build_multi_shape(tmp_path)
+        conn = open_db(db_path)
+        try:
+            rows = conn.execute(
+                "SELECT valid_from, valid_to, value_set_version_label "
+                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "ORDER BY valid_from"
+            ).fetchall()
+            assert len(rows) == 2
+            assert rows[0]["value_set_version_label"] is None
+            assert rows[1]["value_set_version_label"] is None
+            # Strict non-overlap: row 0 ends strictly before row 1 starts.
+            # Lexical comparison is chronological for full-date ISO strings.
+            assert rows[0]["valid_to"] < rows[1]["valid_from"]
+        finally:
+            conn.close()
+
+
+class TestVariableStateRenameMidLife:
+    """A2.1: Codex P2 on PR #130, commit d8d8125 — when SCB renames a
+    variable mid-life (Variabelnamn changes between editions for the
+    same VarId), `unika_summary` carries one row per
+    (register_id, regvar_id, kolumnnamn, variabelnamn) tuple. The
+    canonical `variable.name` is the first-non-empty Variabelnamn the
+    importer sees, which pins to the OLD name. The coalescer's unika
+    lookup uses the per-cvid raw `variabelnamn` (stored on
+    variable_instance for this purpose) so the post-rename unika row
+    — often the still-active one with blank VersionSista — actually
+    matches and the open-ended sentinel propagates onto the latest-era
+    state row.
+    """
+
+    @staticmethod
+    def _build_with_rename(tmp_path: Path) -> Path:
+        """Build a DB where var_id=920 (RenamedVar) has its Variabelnamn
+        change between editions:
+        - 2020 (regver=120): Variabelnamn='OriginalName', ColX
+        - 2024 (regver=121): Variabelnamn='RenamedName', ColX (open-ended,
+          still active per SCB)
+        Unika carries two rows — one per Variabelnamn:
+        - ('ColX', 'OriginalName'): 2020-2020 (the renamed-away era)
+        - ('ColX', 'RenamedName'): 2024-blank (the currently-active era)
+        """
+        from _csv_fixtures import (
+            IDENTIFIERARE_HEADER,
+            IDENTIFIERARE_ROWS,
+            PIPE,
+            REGISTERINFORMATION_HEADER,
+            REGISTERINFORMATION_ROWS,
+            TIMESERIES_HEADER,
+            TIMESERIES_ROWS,
+            UNIKA_HEADER,
+            VALID_DATES_HEADER,
+            VALID_DATES_ROWS,
+            VARDEMANGDER_HEADER,
+            VARDEMANGDER_ROWS,
+            _ri_row,
+            write_csv,
+        )
+
+        rename_rows = []
+        for year, regver_id, cvid, varname in [
+            ("2020", 120, 9300, "OriginalName"),
+            ("2024", 121, 9301, "RenamedName"),
+        ]:
+            rename_rows.append(
+                _ri_row(
+                    "TESTREG",
+                    "Testregistret",
+                    "Testning",
+                    "Individer",
+                    "Individer",
+                    "Alla individer",
+                    "Nej",
+                    year,
+                    f"Version {year}",
+                    "",
+                    "Godkänd",
+                    f"{year}-01-01",
+                    f"{year}-12-31",
+                    "Hela befolkningen",
+                    "Alla personer",
+                    "",
+                    f"{year}-12-31",
+                    "Person",
+                    "Fysisk person",
+                    varname,  # ← Variabelnamn changes across editions
+                    "A renamed variable",
+                    "Mid-life rename",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "ColX",  # Same delivery column throughout
+                    "int",
+                    "1",
+                    str(cvid),
+                    "1",
+                    "10",
+                    str(regver_id),
+                    "920",
+                )
+            )
+
+        ri_rows = list(REGISTERINFORMATION_ROWS) + rename_rows
+        unika_rows = [
+            # The renamed-away era — bounded
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "OriginalName",
+                    "ColX",
+                    "2020",
+                    "2020",
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+            # The still-active renamed era — open-ended (blank VersionSista)
+            PIPE.join(
+                [
+                    "TESTREG",
+                    "Testregistret",
+                    "Individer",
+                    "Individer",
+                    "RenamedName",
+                    "ColX",
+                    "2024",
+                    "",  # ← blank: still active
+                    "Nej",
+                    "Nej",
+                    "Nej",
+                ]
+            ),
+        ]
+
+        input_dir = tmp_path / "input"
+        scb = input_dir / "SCB"
+        scb.mkdir(parents=True, exist_ok=True)
+        write_csv(scb / "Registerinformation.csv", REGISTERINFORMATION_HEADER, ri_rows)
+        write_csv(scb / "UnikaRegisterOchVariabler.csv", UNIKA_HEADER, unika_rows)
+        write_csv(scb / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS)
+        write_csv(scb / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        write_csv(scb / "Vardemangder.csv", VARDEMANGDER_HEADER, VARDEMANGDER_ROWS)
+        write_csv(
+            scb / "VardemangderValidDates.csv", VALID_DATES_HEADER, VALID_DATES_ROWS
+        )
+
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        return db_dir / "reg_meta.db"
+
+    def test_rename_preserves_open_ended_sentinel(self, tmp_path: Path):
+        """Latest-era state for the renamed variable picks up the
+        `RenamedName` unika row's blank `VersionSista` → sentinel.
+        Pre-fix, the coalescer joined on the canonical `variable.name`
+        (pinned to `OriginalName` by first-non-empty), so the lookup
+        against `unika_summary` keyed on `RenamedName` missed and the
+        state fell back to `regver_max = 2024` instead of the open-ended
+        sentinel."""
+        db_path = self._build_with_rename(tmp_path)
+        conn = open_db(db_path)
+        try:
+            # The variable's canonical name (first-non-empty) is 'OriginalName'
+            # since the 2020 row is processed first. The current shape (still
+            # active in 2024) is the latest era — single group since shape
+            # didn't change, just the name. Latest era → open-ended.
+            row = conn.execute(
+                "SELECT valid_from, valid_to FROM variable_state "
+                "WHERE register_id = 1 AND var_id = 920"
+            ).fetchone()
+            assert row is not None
+            assert row["valid_from"] == "2020-01-01"
+            # Without the per-cvid variabelnamn fix, this would be
+            # '2024-12-31' (clamped to regver_max because the RenamedName
+            # unika row missed the lookup).
+            assert row["valid_to"] == "9999-12-31"
+        finally:
+            conn.close()
