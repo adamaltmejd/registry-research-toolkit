@@ -835,17 +835,17 @@ CREATE TABLE variable (
 );
 -- The natural key is `(register_id, slug)` — register-unique and
 -- the FQID leaf. It stays unique *after* a §5.7 triage split, because
--- split siblings get distinct slugs (`ssyk-3pos` / `ssyk-5pos`). This is
--- the one UNIQUE constraint on the table (DECISION POINT 1).
+-- split siblings get distinct slugs (`kommun-hem` / `kommun-skol`). This
+-- is the one UNIQUE constraint on the table (DECISION POINT 1).
 CREATE UNIQUE INDEX idx_variable_slug
     ON variable(register_id, slug);
 -- `provider_key` is a NON-unique join hint, not a key: a triage
 -- split (§5.7) creates several variables sharing one source key
--- (`var_id=137` → `ssyk-3pos` + `ssyk-5pos`; SOS `FOD_DATUMN` →
--- date-variable + personnummer-variable). The build join "source row →
--- variable" therefore refines this key by the triage discriminator
--- (kolumnnamn/grain) when a split exists; it is 1:1 for the unsplit
--- case (§5.7). A plain index, not UNIQUE.
+-- (a generic `Imputerat` var_id → `bantalrum-imp` + `boarea-imp`; SOS
+-- `FOD_DATUMN` → date-variable + personnummer-variable). The build join
+-- "source row → variable" therefore refines this key by the triage
+-- discriminator (the disjoint kolumnnamn) when a split exists; it is 1:1
+-- for the unsplit case (§5.7). A plain index, not UNIQUE.
 CREATE INDEX idx_variable_natkey
     ON variable(register_id, provider_key);
 
@@ -1203,17 +1203,18 @@ but is shadowed).
 
 **Build-time triage may auto-split into sibling variables.** When the
 source data has multiple states for one (variable, year) that the
-heuristic identifies as parallel deliverables (different positions of a
-SUN code, different physical columns, etc.) or genuinely different
-meanings (SOS name-reuse), the build splits into N **distinct
-`variable` rows** with auto-derived variable slugs (§5.7). Each
-sibling variable gets its own register-unique slug — a niva-split
-appends a grain suffix (`ssyk` → `ssyk-3pos` / `ssyk-5pos`); a
-kolumnnamn-split derives from each distinct column (`kommun-hem` /
-`kommun-skol`). Sibling variable slugs land in the same
-`<provider>.auto.toml` and are stable across rebuilds for the same
-reason as single-variable auto-slugs. The siblings are linked by
-`variable_related_to` edges (variable grain, §5.5).
+heuristic must classify as either *fold* or *split* (§5.7): same-concept
+representations (a SUN/SSYK grain, a classification vintage, a coding
+variant) **fold** into one variable with `value_set_version_label`-
+discriminated states, while genuinely different concepts (disjoint
+physical columns, or SOS name-reuse) **split** into N **distinct
+`variable` rows** with auto-derived variable slugs. A split sibling
+derives its slug from its own column (`kommun-hem` / `kommun-skol`); a
+fold keeps one stem-derived slug and writes the representation token to
+`value_set_version_label`. Slugs land in the same `<provider>.auto.toml`,
+stable across rebuilds. Split siblings are linked by
+`variable_related_to` edges (variable grain, §5.5); folds are not
+(they're one variable).
 
 #### Slug TOML field reference
 
@@ -1230,9 +1231,10 @@ scope that the FQID grammar (§5.2) uses to address the entity:
 - `variable` **variable slugs are unique within their parent
   register** — this is the FQID-leaf scope (the 3-segment binding
   `provider/register/slug`, §5.2). Two distinct variables in one
-  register can never share a slug; triage grain-siblings are distinct
-  variables and therefore carry distinct slugs (`ssyk-3pos` /
-  `ssyk-5pos`). Cross-register variable equivalence is curated via
+  register can never share a slug; triage *splits* are distinct
+  variables and carry distinct slugs (`kommun-hem` / `kommun-skol`),
+  while a *fold* keeps one slug (grain/vintage siblings stay one
+  variable, §5.7). Cross-register variable equivalence is curated via
   `variable_same_as` (§5.5), never by slug collision.
 - `classification` slugs are globally unique (provider-independent namespace).
 
@@ -1563,8 +1565,8 @@ predecessor and successor; `handelse = 'Ersätter'` is the inverse
 direction, collapsed during the join.
 
 **Resolving an edge endpoint that names a split `var_id`.** Because a
-§5.7 triage split puts several variables under one `var_id` (`ssyk-3pos`
-/ `ssyk-5pos`), a `timeseries_event` (or TOML) endpoint that names that
+§5.7 triage split puts several variables under one `var_id` (`kommun-hem`
+/ `kommun-skol`), a `timeseries_event` (or TOML) endpoint that names that
 `var_id` is ambiguous — "its variable" is no longer singular. Rule (the
 same shape as the §5.7 build join, applied consistently to all edges):
 
@@ -1856,17 +1858,18 @@ on:
 - **Unsplit (~96% of `var_id`s, §5.0.1):** `provider_key` alone
   is 1:1 with the variable — the discriminator is unused.
 - **Split:** the join key is `(register_id, provider_key,
-  discriminator)` where `discriminator` is the split axis the triage
-  recorded for the group — the kolumnnamn set (kolumnnamn-split) or the
-  `vardemangdsniva` grain token (niva-split), the same value that
-  produced the sibling slug suffix. A new delivery row for `var_id=137`
-  resolves to `ssyk-3pos` vs `ssyk-5pos` by *its own* grain/column, not
-  by `var_id`. The triage persists this discriminator → `variable_id`
-  map (in the build's in-memory state, not a shipped table) so
-  subsequent rebuilds are deterministic and the resolver never sees it
+  discriminator)` where `discriminator` is the disjoint kolumnnamn the
+  triage recorded for the split group. A new delivery row under a split
+  `var_id` resolves to `kommun-hem` vs `kommun-skol` by *its own column*,
+  not by `var_id`. (Grain/vintage/coding never reach this path — they
+  *fold* into one variable, rule 3, so `provider_key` is 1:1 there too;
+  the fold's representation token routes the row to the right *state*,
+  not a different variable.) The triage persists this discriminator →
+  `variable_id` map (in the build's in-memory state, not a shipped table)
+  so rebuilds are deterministic and the resolver never sees it
   (resolution is by `slug`, §5.10).
 - **Genuinely ambiguous** (a delivery row whose discriminator matches
-  no recorded sibling — e.g. a brand-new grain on a previously-split
+  no recorded sibling — e.g. a brand-new column on a previously-split
   `var_id`): the build emits a `triage_unresolved_split` warning naming
   the `var_id` and the unmatched discriminator, and routes the row to a
   new auto-slugged sibling variable (additive under grow-only, §5.4) so
@@ -2265,10 +2268,10 @@ predecessors = catalog.predecessors("scb/lisa/sysstat11")
 successors   = catalog.successors("scb/lisa/sysstat")
 # → [VariableRef(scb/lisa/sysstat11)]
 
-# Grain siblings (distinct variables; variable grain).
-siblings = catalog.related("scb/lisa/utbildningsinriktning-3pos")
-# → [RelatedRef(scb/lisa/utbildningsinriktning-1pos, relation_kind="same_concept_different_grain"),
-#    RelatedRef(scb/lisa/utbildningsinriktning-4pos, relation_kind="same_concept_different_grain"), ...]
+# Split siblings (distinct variables a triage split produced; variable grain).
+# (Grain/vintage *fold* into one variable, so they do NOT appear here, §5.7.)
+siblings = catalog.related("scb/lisa/kommun-hem")
+# → [RelatedRef(scb/lisa/kommun-skol, relation_kind="same_definition_different_column")]
 ```
 
 Exact dataclass shapes (`ResolvedVariable`, `VariableState`,
@@ -2319,7 +2322,7 @@ source's declared `(register_variant, period)`.
 | variant (coordinate) | entity / coordinate | A `variant` row (SCB `registervariant`, SOS `deldatamängd`): a **delivery coordinate**, not an identity level. Carried on each `variable_state` (`variant_id`) and on `project_data` Sources (`register_variant`). Browsed under its register (§9.5); **not an FQID kind** (§5.2). Carries panel-template + browsing metadata. |
 | variable state | entity | A `variable_state` row: per-delivery shape of a variable, carrying a **variant coordinate**, `(valid_from, valid_to)` (ISO 8601), and the data type, length, value set, version label for that delivery. Canonical unit of resolution at a specific `(variant, period)`. |
 | binding | entity | A 3-segment FQID referencing a variable: `<provider>/<register>/<slug>`. Resolves to a `ResolvedVariable` (longitudinal — all states, each tagged with its variant) or `list[VariableState]` (when period context supplied — length 1 in the common single-variant case, length N across variants / range / multi-vintage). Also the project_data.json object that declares "include this variable in this source's extract" (§6.3). |
-| variable slug | string | `variable.slug`: the register-unique, immutable FQID leaf — the addressable identity of a variable. Derived from the latest kolumnnamn / variable name (§5.3); triage grain-siblings are distinct variables with distinct slugs (`ssyk-3pos` / `ssyk-5pos`). |
+| variable slug | string | `variable.slug`: the register-unique, immutable FQID leaf — the addressable identity of a variable. Derived from the latest kolumnnamn / variable name (§5.3); triage *splits* are distinct variables with distinct slugs (`kommun-hem` / `kommun-skol`), while grain/vintage *folds* keep one slug (§5.7). |
 | variable_alias | entity | A delivery column name (`PersonNr`, `Kon`, `LopNr_PersonNr`) attached to a `variable_state`. SCB pseudonymizes identifier columns at delivery by prefixing `LopNr_`; the metadata stores the un-prefixed name. Multiple aliases per state possible. |
 | same_as | edge | A `variable_same_as` row: symmetric cross-register / cross-provider equivalence between two `variable`s. **Variable grain** — endpoints are 3-part `(provider, register, slug)`. Curated only; no auto-derive (the `(N choose 2)` var_id mechanism is deleted; §5.5). |
 | classification | entity | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (version in slug). |
