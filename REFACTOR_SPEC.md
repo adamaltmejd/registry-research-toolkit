@@ -434,19 +434,32 @@ class IRVariant(BaseModel):
     panel_time_key: str | None = None                         # "period" sentinel OR variable slug
     panel_time_grain: Literal["delivery", "row"] | None = None
 
-class IRVariable(BaseModel):
-    variable_id: int
+# Three-level split (§5.1 respec): the IR separates the register-scoped
+# concept (shared metadata, "define once") from the variant-scoped
+# deliverable (slug + concept ref). The adapter emits one IRVariableConcept
+# per (register_id, var_id) and one IRVariable per variant deliverable. The
+# A1.3-shipped single `IRVariable` (carrying both grains) is superseded by
+# this pair when the SCB adapter lands on the IR contract (A4.x) — see the
+# MIGRATION_PLAN A2.6 rework note. Full IR DDL in reg_meta_build/DESIGN.md.
+class IRVariableConcept(BaseModel):
     register_id: int
-    variant_id: int                     # variant-scoped identity
-    slug: str
+    var_id: int                         # (register_id, var_id) is the concept key
+    concept_slug: str                   # register-unique (§5.3); never an FQID
     name: str
     definition: str | None
     description: str | None             # includes inlined operational_definition when present
     measurement_unit: str | None        # NULL when source was "Okänd"
     is_sensitive: bool = False
     is_identifier: bool = False
-    source_register_id: int | None
+    source_register_id: int | None      # shared: the concept's source register (§5.6)
     source_register_text: str | None    # human-readable attribution (when source not resolved or for display)
+
+class IRVariable(BaseModel):
+    variable_id: int                    # synthetic; siblings differ here, not by var_id
+    register_id: int
+    var_id: int                         # concept FK (register_id, var_id); shared by grain-siblings
+    variant_id: int                     # variant-scoped identity
+    slug: str                           # variable slug (FQID leaf); == concept_slug unless a sibling
 
 class IRVariableState(BaseModel):
     state_id: int
@@ -527,8 +540,10 @@ takes IR, writes the universal SQLite catalog. Owns:
 
 The materializer enforces invariants at build time. Notable:
 
-- `(variable_id, valid_from)` is unique across `variable_state` unless explicitly marked multi-vintage via `value_set_version_label`.
-- Every `IRVariable.source_register_id`, when set, resolves to an `IRRegister`.
+- `(variable_id, valid_from)` is unique across `variable_state` unless explicitly marked multi-vintage via `value_set_version_label` (`variable_id` is the synthetic `variable` PK; §5.1).
+- Every `IRVariable.var_id` resolves to an `IRVariableConcept` (the concept FK); every `IRVariableConcept.source_register_id`, when set, resolves to an `IRRegister`.
+- `IRVariableConcept.concept_slug` is **register-unique** (§5.3); collision fails the build with `slug_concept_collision` (DECISION POINT 4).
+- `IRVariable.slug` is **variant-unique**; in the common case it equals the parent concept's `concept_slug`.
 - `IRClassification.slug` is globally unique.
 - `IRValueSet.classification_id`, when set, resolves to an `IRClassification`.
 - `IRVariableState.valid_from` / `valid_to` are valid ISO 8601 strings; period tokens (`HT2020`, `2020-Q3`) get mapped to ISO ranges at adapter time, not in the IR layer.
@@ -603,13 +618,18 @@ post-v1) made the cracks visible.
 
 This section defines the post-v0.12 substrate: a **provider-neutral
 object model** with English-named columns carrying native data, a
-**4-segment FQID grammar** without a period slot, **state-on-variable
-modeling** that captures definition changes as `variable_state` rows
-with explicit validity ranges, **slug-anchored edge tables** for
-succession (`replaced_by`), grain-sibling (`related_to`), and
-cross-rename equivalence (`same_as`), and a **build-time triage**
-pass that normalizes provider-specific oddities into the universal
-shape. The universal schema carries **no provider-specific tables**
+**three-level variable model** (`variable_concept` →
+`variable` → `variable_state`; §5.1) that separates SCB's shared
+"define once" concept from the per-variant addressable deliverable
+from the per-era shape, a **4-segment FQID grammar** without a period
+slot (and with **no concept FQID** — the concept is reached through a
+binding; §5.2), **state-on-variable modeling** that captures
+definition changes as `variable_state` rows with explicit validity
+ranges, **slug-anchored edge tables** for succession (`replaced_by`,
+variable grain), grain-sibling (`related_to`, variable grain), and
+cross-register equivalence (`same_as`, **concept grain**), and a
+**build-time triage** pass that normalizes provider-specific oddities
+into the universal shape. The universal schema carries **no provider-specific tables**
 (no `scb_*`, no `sos_*`): provider variation is captured via
 fill-rate on the universal columns (§5.8); prose and narrative
 metadata go to reg-meta-docs at variant level; maintainer-only
@@ -648,29 +668,119 @@ shape needs the anchor.
 
 ### 5.1 Object model
 
-The universal model has six core entities. **No provider-specific
+The universal model has seven core entities. **No provider-specific
 tables.** Provider variation is captured via fill-rate on the
 universal columns (§5.8); prose/narrative metadata lives in
 reg-meta-docs; build artifacts live in the provenance DB.
+
+**Three-level variable model.** What SCB conflates into a single
+"variable" is split into three levels, because three distinct facts
+are entangled there: (1) SCB's *define-once* concept (one `var_id`,
+one shared definition, regardless of how many variants deliver it),
+(2) the *addressable deliverable* — that concept as delivered in one
+specific variant, which is what an FQID binding names — and (3) the
+*per-era shape* of that deliverable. The levels are:
+
+- **`variable_concept`** — register-scoped, the "define once" truth.
+- **`variable`** — variant-scoped, **1:1 with a binding FQID**.
+- **`variable_state`** — the eras, child of `variable`.
+
+The rationale, stated once so it doesn't drift: a *variant* is a
+delivery cut, not a redefinition. SCB defines `Kön` once for LISA
+and then delivers it under `individer-15plus`, `individer-16plus`,
+and other variants — same definition, same value codes, possibly
+different validity windows. The shared metadata is the concept; the
+per-variant deliverable is the `variable`; the per-edition shape is
+the state. Modelling all three at one grain (the v0.11 / pre-respec
+choice) forced two bad workarounds: a `(N choose 2)` explosion of
+`variable_same_as` edges to recover the fact that variants share a
+var_id (§5.5), and a `slug` column denormalized across every
+`variable_state` era-row with an "all eras agree" build assertion
+(the slug actually belongs to the single deliverable, not to each
+era). The split removes both.
 
 | Entity | Universal columns | Notes |
 |---|---|---|
 | `provider` | `provider_id`, `slug`, `name` | `scb`, `sos`, `fk` (Försäkringskassan), `skv` (Skatteverket), ... |
 | `register` | `register_id`, `provider_id`, `slug`, `name`, `description`, `purpose` | LISA, RTB, PAR. Slug-identified per-provider. Lean column set; provider-specific metadata that doesn't fit lives in docs (§5.8). |
 | `variant` | `variant_id`, `register_id`, `slug`, `name`, `description`, `panel_entity_key`, `panel_time_key`, `panel_time_grain` | LISA/individer-15plus, RTB/folkbokforda-personer, SOS/par/sluten-vard. SCB `registervariant`, SOS `deldatamängd`. Doesn't nest further. `_default` slug for variant-less registers (SOS LSS, BU, SOL). Panel-template columns declare natural panel structure (§5.3). |
-| `variable` | `(register_id, variant_id, variable_id)` PK, `slug`, `name`, `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`, `source_register_id`, `source_register_text` | Slug-identified, **variant-scoped**. Identity is `(provider, register, variant, variable_slug)`. "Kön in LISA/individer-15plus" and "Kön in LISA/individer-16plus" are different variables; the empirical equivalence (same SCB `var_id`) is captured via auto-emitted `variable_same_as` edges (§5.5). Cross-register concept-merging is curation via the same mechanism. Operational definitions inline into `description` at ingest when distinct. |
-| `variable_state` | `state_id`, FK to variable, `valid_from`, `valid_to` (ISO 8601 `YYYY-MM-DD` TEXT, both NOT NULL), `data_type`, `data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label` | Per-era shape; a variable has 1..N states. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). `delivery_column_name` is the **denormalized latest alias for the era** (convenience for `/states` API and ResolvedVariable rendering); the full alias history lives in `variable_alias` (next row). Storage is always full-date `YYYY-MM-DD`. Coarser inputs are expanded at ingest into ranges: SCB year `2018` → `valid_from = '2018-01-01'`, `valid_to = '2018-12-31'`; SCB year-month `2018-03` → `valid_from = '2018-03-01'`, `valid_to = '2018-03-31'`; period tokens like `HT2020` → the corresponding ISO date range. Open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL). Because every stored value is a full date, lexical string comparison is chronologically correct and intersection uses plain `max`/`min`. |
+| `variable_concept` | `(register_id, var_id)` PK, `concept_slug`, `name`, `definition`, `description`, `measurement_unit`, `is_sensitive`, `is_identifier`, `source_register_id`, `source_register_text` | Register-scoped. **SCB's "define once" truth**: one `var_id` = one concept, regardless of how many variants deliver it. Holds the *shared* metadata. The `concept_slug` is **register-unique** (§5.3) and is the base from which variant-level variable slugs derive; it is an **internal column, never an FQID address** (§5.2). Operational definitions inline into `description` at ingest when distinct. Cross-register / cross-provider concept equivalence is curated via `variable_concept_same_as` (§5.5). |
+| `variable` | `variable_id` synthetic PK, `variant_id`, `slug`, FK `(register_id, var_id)` → `variable_concept` | The **addressable deliverable**: a concept as delivered under one specific variant. **1:1 with the binding FQID** `(provider, register, variant, variable_slug)` — `Catalog.resolve(binding)` returns exactly this row plus its states and its concept's shared metadata (§5.10). The `slug` is the **variable slug** — the FQID leaf, variant-scoped-unique (§5.3). In the common case `slug == variable_concept.concept_slug`; they diverge only for triage grain-siblings that share a concept but need distinct addresses (e.g. `ssyk-3pos` / `ssyk-5pos` under one concept `ssyk`; §5.7). The FK `(register_id, var_id)` is the *concept's* key, **shared by all grain-siblings** — siblings are distinct `variable` rows under one concept, distinguished only by `variable_id` + `slug`, so no new var_id is minted (this replaces the pre-respec "mint a new var_id per sibling" approach). The synthetic `variable_id` (rather than a composite key) keeps `variable_state`'s FK single-column and lets triage add sibling rows freely — see DECISION POINT 2 in the respec. |
+| `variable_state` | `state_id`, FK `variable_id` → `variable`, `valid_from`, `valid_to` (ISO 8601 `YYYY-MM-DD` TEXT, both NOT NULL), `data_type`, `data_length`, `delivery_column_name`, `value_set_id`, `value_set_version_label` | Per-era shape; a `variable` has 1..N states. **No `slug` column** — the slug lives on the parent `variable` row (one deliverable, one slug), so the pre-respec "all eras agree" denormalization assertion (PR #133) disappears. Non-overlapping by default; overlap permitted only with explicit `value_set_version_label` discrimination (LKF-shape multi-vintage). `delivery_column_name` is the **denormalized latest alias for the era** (convenience for `/states` API and ResolvedVariable rendering); the full alias history lives in `variable_alias` (next row). Storage is always full-date `YYYY-MM-DD`. Coarser inputs are expanded at ingest into ranges: SCB year `2018` → `valid_from = '2018-01-01'`, `valid_to = '2018-12-31'`; SCB year-month `2018-03` → `valid_from = '2018-03-01'`, `valid_to = '2018-03-31'`; period tokens like `HT2020` → the corresponding ISO date range. Open-ended states use the sentinel `valid_to = '9999-12-31'` (never NULL). Because every stored value is a full date, lexical string comparison is chronologically correct and intersection uses plain `max`/`min`. |
 | `variable_alias` | `(state_id, delivery_column_name)` PK, FK to `variable_state` | History table: every delivery column name attached to a `variable_state`. SCB pseudonymizes identifier columns at delivery by prefixing `LopNr_`; `variable_alias` carries the un-prefixed name and any cross-edition variants. A single state can have multiple aliases (rare; cross-edition spelling drift). `variable_state.delivery_column_name` is the most-recent alias for the era, denormalized for query convenience; `variable_alias` is the authoritative history. |
 | `value_set` | `value_set_id`, `member_hash`, `classification_id` (nullable) | Content-addressed dedup of code memberships. When `classification_id` is set, the value_set is a (possibly year-projected) subset of a named classification. When NULL, the value_set is anonymous (ad-hoc codes for this variable). Code entries themselves live in the `value_code` auxiliary table — `(value_set_id, code, label)`, inherited shape from v0.x (`värdekod` → `code`, `värdebenämning` → `label`); Model A doesn't restructure it. |
 | `classification` | `classification_id`, `slug`, `name`, `publisher`, `version`, etc. | Named versioned vocabulary: SUN2020, ICD10, ICD11, LKF. Provider-independent. Version baked into the slug (`sun2020`, `icd10`, `lkf2007`), not a separate FQID slot. |
 
-Plus three orthogonal relationship tables:
+**Core three-level DDL.** The DDL string lives in
+`reg_meta_build/db.py` (the materializer owns schema creation; §4.4);
+the shapes below are normative. `variable_concept` is today's
+register-scoped `variable` renamed (the A1.2 flags + shared-metadata
+columns ride along unchanged), `variable` is promoted to variant grain,
+and `variable_state` re-parents onto the synthetic `variable_id`:
 
-| Edge | Direction | Semantics |
-|---|---|---|
-| `variable_same_as` | Symmetric | Cross-rename equivalence: "this variable in register A is the same concept as that variable in register B". Curated. |
-| `variable_replaced_by` | Directional | Succession: variable X retired, replaced by variable Y. Auto-derived from SCB `timeseries_event` (`handelse IN ('Ersatt av', 'Ersätter')`) plus TOML curation for cross-provider edges. |
-| `variable_related_to` | Symmetric | Grain/position/coding siblings: `utbildningsinriktning-3pos` ↔ `utbildningsinriktning-4pos`. Auto-emitted by build-time triage splits; TOML adds cross-variable edges manually. |
+```sql
+-- Register-scoped "define once" concept (was: `variable`).
+CREATE TABLE variable_concept (
+    register_id          INTEGER NOT NULL REFERENCES register(register_id),
+    var_id               INTEGER NOT NULL,
+    concept_slug         TEXT,                 -- register-unique (§5.3); transiently NULL pre-populate_slugs
+    name                 TEXT,
+    definition           TEXT,
+    description          TEXT,                 -- operational_definition inlined at ingest when distinct
+    measurement_unit     TEXT,                 -- NULL when source was "Okänd"
+    source_register_id   INTEGER REFERENCES register(register_id),
+    source_register_text TEXT,
+    is_sensitive         INTEGER NOT NULL DEFAULT 0,  -- A1.2 flags ride the rename unchanged
+    is_identifier        INTEGER NOT NULL DEFAULT 0,
+    PRIMARY KEY (register_id, var_id)
+);
+-- Register-unique concept slug (the internal uniqueness invariant, §5.3).
+CREATE UNIQUE INDEX idx_variable_concept_slug
+    ON variable_concept(register_id, concept_slug);
+
+-- Variant-scoped addressable deliverable. 1:1 with the binding FQID.
+CREATE TABLE variable (
+    variable_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- synthetic (DECISION POINT 2)
+    register_id INTEGER NOT NULL,
+    var_id      INTEGER NOT NULL,                   -- concept FK; shared by grain-siblings
+    variant_id  INTEGER NOT NULL REFERENCES variant(variant_id),
+    slug        TEXT,                               -- variable slug = FQID leaf; == concept_slug unless a sibling
+    FOREIGN KEY (register_id, var_id) REFERENCES variable_concept(register_id, var_id)
+);
+-- Variant-unique variable slug (the FQID-leaf uniqueness scope, §5.3).
+CREATE UNIQUE INDEX idx_variable_slug ON variable(variant_id, slug);
+CREATE INDEX idx_variable_concept ON variable(register_id, var_id);
+
+-- Per-era shape; child of `variable` (no slug column — that's on the parent).
+CREATE TABLE variable_state (
+    state_id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    variable_id             INTEGER NOT NULL REFERENCES variable(variable_id),
+    valid_from              TEXT NOT NULL,                 -- ISO 8601 'YYYY-MM-DD'
+    valid_to                TEXT NOT NULL DEFAULT '9999-12-31',
+    data_type               TEXT,
+    data_length             TEXT,
+    delivery_column_name    TEXT,                          -- denormalized latest alias for the era
+    value_set_id            INTEGER REFERENCES value_set(value_set_id),
+    value_set_version_label TEXT,                          -- overlap discriminator (rare)
+    CHECK (length(valid_from) = 10),
+    CHECK (length(valid_to) = 10),
+    CHECK (valid_to >= valid_from)
+);
+CREATE INDEX idx_variable_state_variable ON variable_state(variable_id);
+```
+
+(The A2.1-shipped `variable_state` FKs `(register_id, var_id)` and the
+A1.2-shipped `variable` carries the shared metadata; A2.1.5 performs
+the rename + re-parent above. See MIGRATION_PLAN A2.1.5.)
+
+Plus three orthogonal relationship tables, each anchored at the grain
+it actually relates:
+
+| Edge | Grain | Direction | Semantics |
+|---|---|---|---|
+| `variable_concept_same_as` | **concept** | Symmetric | Cross-register / cross-provider equivalence: "concept C in register A is the same concept as concept D in register B". Curated only — within-register var_id reuse is now expressed by the concept→variable hierarchy (§5.5), not by edges. One concept-grain edge automatically covers all of a concept's variant deliverables *and* all its grain-siblings. |
+| `variable_replaced_by` | **variable** | Directional | Succession: deliverable X retired, replaced by deliverable Y. Auto-derived from SCB `timeseries_event` (`handelse IN ('Ersatt av', 'Ersätter')`) plus TOML curation for cross-provider edges. Endpoints resolve via the stored variable slug. |
+| `variable_related_to` | **variable** | Symmetric | Grain/position/coding siblings: `utbildningsinriktning-3pos` ↔ `utbildningsinriktning-4pos`. These are distinct variant-scoped `variable` rows (sharing a delivery column under one variant). Auto-emitted by build-time triage splits; TOML adds cross-variable edges manually. |
 
 Plus the lineage edge (§5.6) materializing composite-source bindings:
 
@@ -694,7 +804,8 @@ provider-native string values exactly as published. The SCB
 `registernamn` "Longitudinell integrationsdatabas för sjukförsäkrings-
 och arbetsmarknadsstudier (LISA)" stays verbatim under
 `register.name`; the SCB `Variabelnamn` "Kön" stays verbatim under
-`variable.name`. Order generation reads these strings verbatim —
+`variable_concept.name` (shared across every variant that delivers
+the concept). Order generation reads these strings verbatim —
 they're what the provider's intake system expects on the order form.
 
 **Variant-less registers (`_default`).** Socialstyrelsen LSS, BU,
@@ -761,12 +872,26 @@ SUN2020 is `class/sun2020`, not `class/sun?version=2020`. SUN1996 is
 with distinct slugs. This matches how researchers actually think
 about classifications: each vintage is its own normative document.
 
-**Variables have no concept FQID.** A 3-segment "variable concept"
-form (e.g. `scb/lisa/kon`) would collide with the variant form; the
-grammar would lose its segment-count discriminator. Cross-variant
-operations ("Kön across LISA variants", "all bindings of this
-variable concept") are catalog traversals via `Catalog.states(...)`
-and `Catalog.related(...)` (§5.10), not serializable identifiers.
+**A `variable_concept` is not independently addressable (Option A).**
+The three-level object model (§5.1) introduces a register-scoped
+`variable_concept`, but it gets **no FQID and no URL**. A 3-segment
+"variable concept" form (e.g. `scb/lisa/kon`) would collide with the
+3-segment variant form; the grammar would lose its segment-count
+discriminator. So the grammar above is **unchanged** — there is no
+concept FQID kind. A concept is always reached *through* a binding:
+`Catalog.resolve(binding_fqid)` returns the variable's states **plus**
+its concept's shared metadata, sibling variants, and
+`same_as`/`related_to`/`replaced_by`/lineage links (§5.10).
+
+The `concept_slug` (§5.1) is a real, register-unique column — it is
+load-bearing for `variable_concept_same_as` resolution and is the
+base from which variant-level variable slugs derive — but it is
+**internal: never a slash-path address**. Nothing needs a concept
+address: `same_as` targets are typed TOML tuples (§5.3, §5.5), not
+URLs. Cross-variant operations ("Kön across LISA variants", "all
+bindings of this concept") are catalog traversals via
+`Catalog.related(...)` and the concept→variable hierarchy (§5.10),
+not serializable identifiers.
 
 **Slug grammar.** Every slug must match
 `^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (lowercase ASCII, kebab-case, must
@@ -844,9 +969,32 @@ display_group = "Individer"
 slug = "individer-16plus"
 display_group = "Individer"
 
-[variable."34.4"]                       # register_id.var_id
-slug = "kon"
+[variable_concept."34.4"]               # register_id.var_id (concept-grained)
+slug = "kon"                            # the concept slug (register-unique)
 ```
+
+The `[variable_concept."<register_id>.<var_id>"]` key was *already*
+concept-grained in pre-respec drafts — keyed by `register_id.var_id`
+with **no variant slot** — but mislabelled `[variable]`. The three-level
+model (§5.1) makes the truth explicit: this section keys a
+`variable_concept`, and its `slug` field is the **concept slug**.
+The rarer **variable-slug override** for a triage grain-sibling
+(§5.7), when a sibling deliverable needs an address distinct from its
+concept slug, lives in a separate variant-grained key:
+
+```toml
+[variable."34.4017.4022"]               # register_id.regvar_id.var_id
+slug = "ssyk-5pos"                      # the variable slug (FQID leaf)
+```
+
+This `[variable."<register_id>.<regvar_id>.<var_id>"]` key carries
+only a `slug` field (the variable slug). It is needed only when the
+auto-derived sibling slug (§5.7) is wrong or ambiguous; the common
+case derives the variable slug from the concept slug + grain suffix
+and needs no entry. The pre-respec build raised
+`slug_variable_override_unsupported` for `[variable]` slug fields —
+the respec **lifts that** for both the concept-slug path
+(`[variable_concept]`) and the sibling-slug path (`[variable]`).
 
 ```toml
 # reg_meta_build/fqid_slugs/sos.toml
@@ -856,9 +1004,16 @@ slug = "par"
 [register_variant."patientregistret.sluten_vard"]
 slug = "sluten-vard"
 
-[variable."patientregistret.sluten_vard.DIAGNOS"]
-slug = "diagnos"
+[variable_concept."patientregistret.DIAGNOS"]   # register-scoped concept
+slug = "diagnos"                                # concept slug (register-unique)
 ```
+
+Note the concept key is `register.<var_id>` (`patientregistret.DIAGNOS`),
+**not** `register.variant.<var_id>` — the variant slot is absent
+because a concept is register-scoped. SOS minted-var_id concepts are
+keyed by their native variable token (`DIAGNOS`) under the dataset;
+SCB concepts by `register_id.var_id`. Both resolve to the same
+register-scoped grain.
 
 ```toml
 # reg_meta_build/fqid_slugs/classifications.toml
@@ -870,12 +1025,13 @@ slug = "icd10"
 ```
 
 The build pipeline reads slug TOMLs alongside source CSVs/workbooks,
-populates `slug` columns on `register`, `variant`, `variable`, and
-`classification`, and refuses to compile the DB if any source ID is
-missing a slug entry ("RegisterId 99 in Registerinformation.csv but
-no slug in reg_meta_build/fqid_slugs/scb.toml"). A precheck step
-lists missing slugs without trying the full build, for cleaner
-failure mode.
+populates `slug` columns on `register`, `variant`, `classification`,
+the `concept_slug` on `variable_concept`, and the `slug` on
+`variable` (the variable slug), and refuses to compile the DB if any
+source ID is missing a slug entry ("RegisterId 99 in
+Registerinformation.csv but no slug in
+reg_meta_build/fqid_slugs/scb.toml"). A precheck step lists missing
+slugs without trying the full build, for cleaner failure mode.
 
 **No `register_version` slug rules.** Model A drops the
 `register_version` FQID kind; the ~1,264 v0.11 `register_version`
@@ -886,64 +1042,112 @@ provenance DB respectively (§5.8). Period tokens that researchers
 need are carried by `Source.period` in project_data.json and by
 `variable_state.valid_from`/`valid_to` in the catalog.
 
-**Variables are auto-slugged from kolumnnamn, then promoted to the
-TOML on first sight.** The build derives a variable slug from the
+**Two slug levels.** Under the three-level model (§5.1) there are
+two slug surfaces below the variant:
+
+- **Concept slug** (`variable_concept.concept_slug`) — register-unique.
+  This is SCB's "define once" identity made addressable-as-a-base.
+- **Variable slug** (`variable.slug`) — variant-unique, the FQID leaf.
+  In the common case it **equals the concept slug**; it diverges only
+  for triage grain-siblings (§5.7) that share a concept under one
+  variant but need distinct addresses (`ssyk-3pos` / `ssyk-5pos`).
+
+**Concepts are auto-slugged from kolumnnamn, then promoted to the
+TOML on first sight.** The build derives a **concept slug** from the
 latest delivery column name (kolumnnamn, lowercased + kebab-cased),
-and writes the resulting `(source_id, slug)` mapping into a
+and writes the resulting `(register_id.var_id, slug)` mapping into a
 generated, committed `reg_meta_build/fqid_slugs/<provider>.auto.toml`
 that lives alongside the hand-curated `<provider>.toml`. Both files
 feed the same in-memory slug index at build time; both are guarded by
 the §5.4 grow-only snapshot test. The hand-curated file is the
-exception store (collisions, build-time-triage splits, cross-rename
-continuity claims); the auto file is the auto-derived store, written
-once per variable on first sight and never recomputed thereafter.
+exception store (collisions, build-time-triage sibling slugs,
+cross-rename continuity claims); the auto file is the auto-derived
+store, written once per concept on first sight and never recomputed
+thereafter.
+
+**Variable slugs default to the concept slug.** For the 1:1 common
+case (one concept, one variant deliverable, or several variant
+deliverables that all want the same leaf slug), the variable slug
+*is* the concept slug — no separate auto-entry is written; the
+materializer copies `concept_slug` onto each `variable.slug`. The
+variable slug only becomes an independently-stored value when build-time
+triage splits a concept into siblings (§5.7): each sibling gets an
+auto-derived variable slug (a niva-split appends a grain suffix to the
+concept slug → `ssyk-3pos`; a kolumnnamn-split derives from each
+distinct column → `kommun-hem` / `kommun-skol`) written into
+`.auto.toml`, or a hand-curated `[variable."<reg>.<regvar>.<var>"]`
+override.
 
 Two consequences:
 
 - A slug, once published, is immutable regardless of which file
   records it. If SCB renames a kolumnnamn between editions, the
-  generated `.auto.toml` keeps the original slug; the new kolumnnamn
-  becomes a new `variable_alias` row attached to the same variable,
-  and `variable_state.delivery_column_name` carries the latest alias
-  per `period` (§6.3). Researchers' committed `project_data.json`
-  files do not rot.
-- A genuinely new variable in a future delivery gets a new auto-slug
-  on the rebuild that ingests it; the snapshot test treats this as
-  an additive change (allowed under grow-only). If the build cannot
+  generated `.auto.toml` keeps the original concept slug; the new
+  kolumnnamn becomes a new `variable_alias` row attached to the same
+  `variable_state`, and `variable_state.delivery_column_name` carries
+  the latest alias per era (§6.3). Researchers' committed
+  `project_data.json` files do not rot.
+- A genuinely new concept in a future delivery gets a new auto concept
+  slug on the rebuild that ingests it; the snapshot test treats this
+  as an additive change (allowed under grow-only). If the build cannot
   reuse an existing slug — i.e. the `(register_id, var_id)` pair is
-  new to `<provider>.auto.toml` — the slug is auto-derived from the
-  current kolumnnamn and persisted.
+  new to `<provider>.auto.toml` — the concept slug is auto-derived
+  from the current kolumnnamn and persisted, and each variant's
+  variable slug defaults to it.
 
 The hand-curated `<provider>.toml` always wins when both files map
 the same source ID (so a curator override of an auto-derived slug
 just lands in the hand-curated file; the auto file's entry stays
 but is shadowed).
 
-**Build-time triage may auto-split a variable into siblings.** When
-the source data has multiple states for one (variable, year) that
-the heuristic identifies as parallel deliverables (different
-positions of a SUN code, different grain levels, etc.), the build
-splits into N sibling variables with auto-derived slugs (§5.7).
-Sibling slugs land in the same `<provider>.auto.toml` and are stable
-across rebuilds for the same reason as single-state auto-slugs.
+**Build-time triage may auto-split a concept into sibling variables.**
+When the source data has multiple states for one (concept, year) that
+the heuristic identifies as parallel deliverables (different positions
+of a SUN code, different grain levels, etc.), the build keeps them as
+**one `variable_concept`** but splits the variant deliverable into N
+sibling `variable` rows with auto-derived **variable** slugs (§5.7).
+Sibling variable slugs land in the same `<provider>.auto.toml` and are
+stable across rebuilds for the same reason as concept slugs. See
+DECISION POINT 1 in the respec for why siblings share a concept rather
+than minting one new concept each.
 
 #### Slug TOML field reference
 
-Every entity (register, variant, variable, classification) uses
-the same TOML row shape: a table keyed by the provider's source ID
-(`"34"`, `"34.153"`, `"34.4"`, `"SUN2020"`), with the fields below.
+Every entity (register, variant, variable_concept, variable,
+classification) uses the same TOML row shape: a table keyed by the
+provider's source ID (`"34"`, `"34.153"`, `"34.4"`, `"34.4017.4022"`,
+`"SUN2020"`), with the fields below.
 
 **Slug uniqueness scope.** Slugs must be unique within the smallest
-scope that the FQID grammar (§5.2) uses to address the entity:
+scope that the FQID grammar (§5.2) uses to address the entity, plus
+the internal concept-slug scope:
 
 - `register` slugs are unique within a provider.
 - `variant` slugs are unique within their parent register.
-- `variable` slugs are unique within their parent **variant** —
-  the same slug (`kon`, `alder`) can legitimately reappear under
-  sibling variants of the same register; cross-variant identity is
-  established via `variable_same_as` edges (§5.5), not by slug
-  collision.
+- `variable_concept` **concept slugs are unique within their parent
+  register** — this is an *internal* uniqueness invariant (the concept
+  slug is never an FQID address; §5.2). It is load-bearing because
+  `variable_concept_same_as` targets resolve against the register-unique
+  concept slug (§5.5), and because variable slugs derive from it.
+- `variable` **variable slugs are unique within their parent variant** —
+  the FQID leaf scope. The same slug (`kon`, `alder`) can legitimately
+  reappear under sibling variants of the same register; cross-variant
+  identity is established by the shared `variable_concept` (§5.1), not
+  by slug collision. In the common case the variable slug equals the
+  concept slug; triage grain-siblings under one variant carry distinct
+  variable slugs (`ssyk-3pos` / `ssyk-5pos`) over the shared concept.
 - `classification` slugs are globally unique (provider-independent namespace).
+
+**Concept-slug uniqueness vs SCB reality.** Register-unique concept
+slugs are achievable in the common case (one var_id → one
+kolumnnamn-derived slug), but the auto-deriver can collide when two
+distinct var_ids in one register fold to the same slug (e.g. two
+columns both kebab-casing to `kommun`). The build **fails fast** with
+`slug_concept_collision`, listing both `(register_id, var_id)` pairs,
+and the curator resolves it in `<provider>.toml` by giving at least
+one concept a disambiguated slug (`kommun-hem` / `kommun-skol`). This
+is the same curation hook as the §5.7 sibling-slug derivation — see
+DECISION POINT 4 in the respec.
 
 **Common fields (every entity type):**
 
@@ -999,16 +1203,30 @@ same workflow as for register/variant/variable slugs.
 
 **Edge fields on variables (slug-anchored, inline-table form):**
 
+Edge curation now lives at **two grains**, matching §5.5: `same_as`
+on the concept key, `replaced_by` / `related_to` on the variant-grained
+variable key.
+
 ```toml
-[variable."34.137"]
+# Concept grain: shared metadata + concept-level same_as.
+# Target tuples are 3-part {provider, register, variable} — the
+# variant slot is gone, because same_as relates concepts, not
+# deliverables. `variable` here is the *concept slug* of the target
+# register (register-unique; §5.3).
+[variable_concept."34.137"]
 slug = "civilstand"
-replaced_by = [
-  { provider = "scb", register = "lisa", variant = "individer-15plus",
-    variable = "civilstand-v2", note = "Renamed 2019; same concept" }
-]
 same_as = [
   { provider = "scb", register = "rtb", variable = "civilstand",
     note = "Cross-register concept" }
+]
+
+# Variable grain: succession + grain-sibling edges. Keyed by
+# register_id.regvar_id.var_id (the deliverable). Carries a `slug`
+# only when overriding the auto-derived sibling slug (§5.3, §5.7).
+[variable."34.4017.137"]
+replaced_by = [
+  { provider = "scb", register = "lisa", variant = "individer-15plus",
+    variable = "civilstand-v2", note = "Renamed 2019; same concept" }
 ]
 related_to = [
   { provider = "scb", register = "lisa", variant = "individer-15plus",
@@ -1016,19 +1234,25 @@ related_to = [
 ]
 ```
 
-- `replaced_by` — directional: this variable was retired and replaced
-  by the listed variable(s). At resolve time, an FQID for this
-  variable carries a structured "replaced_by" hint surfacing the
+- `same_as` (on `[variable_concept]`) — symmetric: cross-register /
+  cross-provider concept equivalence. Target tuples drop the variant
+  slot → `{provider, register, variable}` (3-part; `variable` resolves
+  against the target register's **register-unique concept slug**).
+  Resolution follows `same_as` transitively (cycles rejected at
+  build). One concept edge covers all of the concept's variant
+  deliverables and grain-siblings at once (§5.5).
+- `replaced_by` (on `[variable]`) — directional: this deliverable was
+  retired and replaced by the listed deliverable(s). At resolve time,
+  the binding carries a structured "replaced_by" hint surfacing the
   successor. Auto-emitted from SCB `timeseries_event`; TOML curates
-  cross-provider edges.
-- `same_as` — symmetric: cross-rename equivalence. Resolution
-  follows `same_as` transitively (cycles rejected at build).
-- `related_to` — symmetric: grain/position/coding siblings.
-  `relation_kind` ∈ `same_concept_different_grain` /
-  `same_definition_different_column` / `code_vs_label_pair` /
-  `import_bug_suspect`. Auto-emitted by build-time triage; TOML adds
-  manual edges (typically cross-variable rather than within one
-  variable's split).
+  cross-provider edges. Endpoints are 4-part `{provider, register,
+  variant, variable}` (variable = the target's variable slug).
+- `related_to` (on `[variable]`) — symmetric: grain/position/coding
+  siblings, variant-scoped. `relation_kind` ∈
+  `same_concept_different_grain` / `same_definition_different_column` /
+  `code_vs_label_pair` / `import_bug_suspect` / `cross_register_same_concept`.
+  Auto-emitted by build-time triage; TOML adds manual edges (typically
+  cross-variable rather than within one concept's split).
 
 **Lineage curation (TOML, not a SQL table).** Source-variant pinning
 for §5.6 lineage materialization lives in the slug TOMLs as
@@ -1068,18 +1292,27 @@ every project that references it. Concrete rules:
 - CI enforces these via a snapshot test comparing both current TOML
   files to the last committed state; non-additive changes (rename,
   delete) in either file fail the build. Additive changes (a new
-  variable's auto-slug landing in `.auto.toml`) pass.
+  concept's auto-slug landing in `.auto.toml`, a new sibling variable
+  slug from a triage split) pass.
 
-**Surfaces protected.** Under Model A there are exactly four slug
-surfaces:
+**Surfaces protected.** Under Model A there are exactly five slug
+surfaces — four addressable (FQID-bearing) plus one internal:
 
-- `register.slug` (per-provider unique)
-- `variant.slug` (per-register unique)
-- `variable.slug` (per-variant unique — see §5.2)
-- `classification.slug` (globally unique)
+- `register.slug` (per-provider unique) — addressable.
+- `variant.slug` (per-register unique) — addressable.
+- `variable.slug` (per-variant unique — see §5.2) — addressable;
+  the FQID leaf.
+- `classification.slug` (globally unique) — addressable.
+- `variable_concept.concept_slug` (per-register unique) — **internal,
+  not an FQID address** (§5.2), but still immutable: committed
+  `project_data.json` files reference variable slugs that derive from
+  it, and `variable_concept_same_as` TOML tuples reference it by name,
+  so a rename would rot both. Grow-only applies.
 
-This is one fewer surface than v0.11 (the `register_version.slug`
-surface is gone with the period slot).
+This is the same addressable-surface count as the pre-respec Model A
+draft (still one fewer than v0.11, which had a `register_version.slug`
+surface) plus the internal concept-slug surface introduced by the
+three-level split (§5.1).
 
 **Activation.** The rules above bind only after the first tagged
 release of the refactored system (the first reg_meta version that
@@ -1115,60 +1348,81 @@ sibling slugs from build-time triage to land cleanly.
 ### 5.5 Edge tables
 
 Three edge tables capture variable relationships that the FQID
-grammar can't express by position alone.
+grammar can't express by position alone. Under the three-level model
+(§5.1) each edge is anchored at the grain it actually relates:
+`same_as` at **concept** grain, `replaced_by` and `related_to` at
+**variable** (deliverable) grain.
 
-#### variable_same_as
+#### variable_concept_same_as
 
-Symmetric equivalence: "this variable is the same concept as that
-variable, across a rename or a cross-register lookup." Slug-anchored
-on both endpoints. Stored as bidirectional rows (A→B and B→A) so
-the resolver does a single forward lookup.
+Symmetric equivalence between two **`variable_concept`s**, cross-register
+/ cross-provider: "this concept in register A is the same concept as
+that concept in register B." Slug-anchored on both endpoints, but with
+**no variant slot** — a concept is register-scoped, so the endpoints
+are `(provider, register, concept_slug)` triples. The `concept_slug`
+is register-unique (§5.3), so the triple is a stable address even
+though it is never an FQID. Stored as bidirectional rows (A→B and B→A)
+so the resolver does a single forward lookup.
+
+(Renamed from the pre-respec `variable_same_as`. The rename reflects
+the demotion to concept grain — see DECISION POINT 3 in the respec.)
 
 ```sql
-CREATE TABLE variable_same_as (
+CREATE TABLE variable_concept_same_as (
     a_provider TEXT NOT NULL,
     a_register TEXT NOT NULL,
-    a_variant  TEXT NOT NULL,
-    a_variable TEXT NOT NULL,
+    a_concept  TEXT NOT NULL,        -- target register's concept_slug
     b_provider TEXT NOT NULL,
     b_register TEXT NOT NULL,
-    b_variant  TEXT NOT NULL,
-    b_variable TEXT NOT NULL,
+    b_concept  TEXT NOT NULL,
     note       TEXT,
-    PRIMARY KEY (a_provider, a_register, a_variant, a_variable,
-                 b_provider, b_register, b_variant, b_variable)
+    PRIMARY KEY (a_provider, a_register, a_concept,
+                 b_provider, b_register, b_concept)
 ) WITHOUT ROWID;
 ```
 
-Edges are slug-only — no period/state qualifier. Validity range is
-implicit in both endpoints' state histories. Resolution follows
-`same_as` transitively (cycles rejected at build via BFS).
+Edges are concept-slug-only — no variant, no period/state qualifier.
+The variant slot is gone (one concept edge covers every variant that
+delivers either concept) and validity range is implicit in both
+concepts' state histories. Resolution follows `same_as` transitively
+(cycles rejected at build via BFS).
 
-The `*_period` columns from v0.11's schema are dropped — period was
-never load-bearing for same-as semantics and becomes meaningless
-under Model A.
+The `a_variant` / `b_variant` columns (variant slot) and the
+v0.11 `*_period` columns are both dropped: period was never
+load-bearing for same-as semantics, and variant is now redundant
+because the edge relates concepts, not deliverables.
 
-**Auto-derived from SCB `var_id` matching.** Variables are
-variant-scoped (§5.1), so the empirical fact that "kon" under
-LISA/individer-15plus and "kon" under LISA/individer-16plus is the
-same concept is captured by SCB's reuse of `var_id=4` across both
-variants. The build emits `(N choose 2)` `variable_same_as` edges
-between every variant where SCB declares the same `(register_id,
-var_id)` pair. Mechanical; idempotent across rebuilds; populated
-from existing SCB source data. For SCB this materializes on the
-order of tens of thousands of edges — none of which require
-curation. Provenance: `note = "auto:var_id_match"` distinguishes
-from TOML-curated cross-register edges.
+**No more auto-derive from SCB `var_id` matching.** The pre-respec
+model was variable-scoped, so it recovered "same var_id under two
+variants" by auto-emitting `(N choose 2)` `variable_same_as` edges per
+var_id — on the order of tens of thousands of edges for SCB. That
+**entire mechanism is deleted.** Within-register var_id reuse is now
+expressed structurally by the concept→variable hierarchy (§5.1): one
+`variable_concept`, many variant `variable` rows. There is nothing to
+auto-derive — the shared concept *is* the equivalence. `same_as`
+becomes purely the curated cross-register / cross-provider equivalence
+it always semantically was. The win: one concept-level edge
+automatically covers all of a concept's variant deliverables *and*
+all its grain-siblings, so the edge count collapses to the genuinely
+curated cross-register set (low hundreds, not tens of thousands).
 
 **TOML curation for cross-register and cross-provider equivalence.**
-The same_as TOML form (§5.3) carries equivalences the auto-derive
-can't see: cross-register (SCB's `kon` in LISA and RTB), cross-edition
-renames within one register, cross-provider links (SOS DORS variable
-matched to an SCB Dödsorsaksregistret equivalent if one existed).
+The `same_as` TOML form (§5.3, on `[variable_concept]`) carries the
+equivalences that the concept hierarchy can't express: cross-register
+(SCB's `kon` concept in LISA and in RTB), cross-edition concept
+renames within one register (typo-fix succession), cross-provider
+links (an SOS DORS concept matched to an SCB Dödsorsaksregistret
+concept if one existed). All curated; none auto-derived.
 
 #### variable_replaced_by
 
-Directional: variable A was retired and replaced by variable B.
+Directional: deliverable A was retired and replaced by deliverable B.
+**Variable (deliverable) grain** — the endpoints are 4-part
+`(provider, register, variant, variable)` slug tuples, where the
+variable slot is the target's **variable slug** (the stored
+`variable.slug`, §5.1). This is unchanged from how A2.3 / PR #131
+built it; the three-level split only adds the guarantee that the
+variable slot resolves to exactly one stored `variable` row.
 
 ```sql
 CREATE TABLE variable_replaced_by (
@@ -1239,10 +1493,23 @@ variable was replaced by X; did you mean…?"
 
 #### variable_related_to
 
-Symmetric: grain/position/coding siblings. Distinguishes from
-`same_as` in that related variables share semantic meaning but are
-**not substitutable** — they're parallel deliverables that a
-researcher would order as different columns.
+Symmetric: grain/position/coding siblings. **Variable (deliverable)
+grain** — the endpoints are 4-part `(provider, register, variant,
+variable)` slug tuples. This is deliberately *not* concept grain:
+triage grain-siblings are distinct variant-scoped `variable` rows that
+share a delivery column under one variant (§5.7), so the relationship
+is observable and addressable exactly at the deliverable level.
+Distinguishes from `same_as` in that related variables share semantic
+meaning but are **not substitutable** — they're parallel deliverables
+that a researcher would order as different columns.
+
+Note the interaction with DECISION POINT 1 (siblings share a single
+`variable_concept`): two grain-siblings that share a concept will *not*
+appear in `variable_concept_same_as` (they're the same concept, not
+two equivalent concepts), but they *will* appear in `variable_related_to`
+with `relation_kind = same_concept_different_grain`. The two tables are
+complementary: `same_as` for cross-concept equivalence, `related_to`
+for within-concept grain/column siblings.
 
 ```sql
 CREATE TABLE variable_related_to (
@@ -1270,10 +1537,11 @@ CREATE TABLE variable_related_to (
 - `cross_register_same_concept` — manual TOML curation only
 
 **Auto-emitted by build-time triage.** When the build splits one
-variable into N siblings (§5.7), `(N choose 2)` `related_to` edges
-fire with `relation_kind` derived from the split reason. Provenance
-tag (`note = "auto:triage"`) lets curators distinguish derived edges
-from manual ones; full overwrite on rebuild for auto edges.
+concept's variant deliverable into N sibling `variable` rows (§5.7),
+`(N choose 2)` `related_to` edges fire among the siblings with
+`relation_kind` derived from the split reason. Provenance tag
+(`note = "auto:triage"`) lets curators distinguish derived edges from
+manual ones; full overwrite on rebuild for auto edges.
 
 **TOML curation.** Manual `related_to` edges live in slug TOMLs
 (§5.3) and persist across rebuilds. Use for cross-register or
@@ -1285,9 +1553,13 @@ LISA, RAMS, and other composite registers don't define their own
 variables — they aggregate variables sourced from base registers
 (RTB, FTB, ...). Today's reg_meta records the source link via
 `variable.source_register_id`, which under v0.11 produced per-cvid
-slug-keyed edges via `via_source_id`. Under Model A this becomes a
-**state-pair interval-overlap join** materialized as the
-`variable_state_lineage` table.
+slug-keyed edges via `via_source_id`. Under the three-level model the
+source link lives on `variable_concept.source_register_id` (it is
+shared metadata — the same concept sources from the same register
+regardless of variant). Lineage becomes a **state-pair interval-overlap
+join** materialized as the `variable_state_lineage` table, with
+source-side matching traversing **concept-level `same_as`** (§5.5) and
+the concept→variable hierarchy rather than slug-folding.
 
 ```sql
 CREATE TABLE variable_state_lineage (
@@ -1313,9 +1585,10 @@ The lineage validity range uses the same `YYYY-MM-DD` form and
 sentinel as `variable_state`, so an edge's `(valid_from, valid_to)`
 is directly comparable to the states it joins.
 
-**Algorithm.** For every consumer variable_state with a populated
-`variable.source_register_id`, look up the source variable's states
-in the same lineage-candidate group, and emit one lineage edge per
+**Algorithm.** For every consumer variable_state whose concept has a
+populated `variable_concept.source_register_id`, find the matching
+source concept(s) in that register, descend to the source variable's
+states in the pinned source variant, and emit one lineage edge per
 state pair whose validity ranges intersect. Edge's `(valid_from,
 valid_to)` is the intersection of the two states' validity ranges.
 
@@ -1323,10 +1596,15 @@ Pseudocode in adapter terms:
 
 ```python
 for c_state in consumer_states:
+    c_concept = c_state.variable.concept           # variable_concept row
+    src_concepts = concept_set_via_same_as(        # see "same_as on the source side"
+        c_concept,
+        c_concept.source_register_id,
+    )
     src_states = lookup_source_states(
-        c_state.variable.source_register_id,
-        preferred_source_variant_id(c_state),  # see below
-        slug_set_via_same_as(c_state.variable.slug),  # see "same_as on the source side" below
+        c_concept.source_register_id,
+        preferred_source_variant_id(c_state),      # see below
+        src_concepts,                              # concept_slugs in the source register
     )
     for s_state in src_states:
         lo = max(c_state.valid_from, s_state.valid_from)
@@ -1336,23 +1614,26 @@ for c_state in consumer_states:
                  valid_from=lo, valid_to=hi)
 ```
 
-**`same_as` on the source side.** Source-side variable matching is
-slug-based, so if the source register has been renamed (RTB's `kon`
-→ `kön-v2` post-curation, captured as a `variable_same_as` edge
-inside RTB per §5.5), naive slug equality would miss the renamed
-state and emit a spurious `no_source_state` warning. `slug_set_via_same_as`
-expands the consumer's bound variable slug through the source
-register's `variable_same_as` graph (BFS, cycle-rejected at build
-per §5.5), yielding every slug the source register currently
-addresses for the same concept. Per-state validity intersection
-then narrows the candidate set to whichever states actually overlap
-the consumer state.
+**`same_as` on the source side.** Source-side matching is
+**concept-slug-based**, so if the source register's concept has been
+renamed (RTB's `kon` concept → `kon-v2` post-typo-fix, captured as a
+`variable_concept_same_as` edge inside RTB per §5.5), naive concept-slug
+equality would miss the renamed concept and emit a spurious
+`no_source_state` warning. `concept_set_via_same_as` expands the
+consumer concept through the source register's `variable_concept_same_as`
+graph (BFS, cycle-rejected at build per §5.5), yielding every concept
+the source register currently addresses for the same meaning; the
+concept→variable hierarchy then enumerates every variant deliverable
+of those concepts, and per-state validity intersection narrows the
+candidate set to whichever states actually overlap the consumer state.
+Because the edge is now concept-grained, one `same_as` edge covers
+every variant the source delivers — there is no per-variant slug-set
+expansion to maintain.
 
 This crosses provider boundaries the same way as the variant pin —
 a SOS consumer sourcing from an SCB register follows
-`variable_same_as` edges that live in SCB's `variable_same_as`
-rows. Equivalence is symmetric, so the direction of the curated
-edge doesn't matter.
+`variable_concept_same_as` edges that live in SCB's rows. Equivalence
+is symmetric, so the direction of the curated edge doesn't matter.
 
 **Source-variant resolution.** A source register like RTB has many
 variants (folkbokforda-personer, grund-bosattning, inrikes-flyttningar,
@@ -1397,17 +1678,17 @@ mechanism surfaces gaps for curator attention.
 **Why interval-overlap instead of slug-keyed equality.** Empirically,
 100% of v0.11's `via_source_id` edges have `src_year == dst_year`
 because v0.11's slug grammar baked period into the slug. Under Model
-A the linkage is on `(register, variant, variable_slug)` plus
-validity intersection — which produces the same result for the
+A the linkage is on `(source_register, source_variant, source_concept)`
+plus validity intersection — which produces the same result for the
 trivial year-equal case but also surfaces real cross-state lineage
-(e.g. LISA 2010-2014 sourcing from RTB's pre-rename state, then
-2015+ from RTB's renamed state). The interval-overlap shape is
-strictly more expressive at no runtime cost.
+(e.g. LISA 2010-2014 sourcing from RTB's pre-rename concept state,
+then 2015+ from RTB's renamed concept state). The interval-overlap
+shape is strictly more expressive at no runtime cost.
 
 **Cross-provider lineage.** The algorithm is provider-blind; SOS
 registers sourcing from SCB are handled by the same code path. The
-`variable.source_register_id` FK already crosses provider boundaries
-(it's a global integer ID into `register`).
+`variable_concept.source_register_id` FK already crosses provider
+boundaries (it's a global integer ID into `register`).
 
 **Edges removed under Model A.** v0.11's `variable_instance.via_source_id`
 column is dropped when `variable_state_lineage` lands. Edge count
@@ -1419,12 +1700,25 @@ removed — Model A's join doesn't depend on period-slug alignment.
 ### 5.7 Build-time triage
 
 When the source data has multiple `variable_state` candidates for a
-single `(variable, year)` — empirically 2.7% of (triple, year)
+single `(concept, year)` — empirically 2.7% of (triple, year)
 buckets in the SCB DB, ~11,945 buckets across 3,281 distinct
-variable triples — the build applies a triage algorithm. The
-algorithm enforces the universal invariant: **one state per
-variable per year, unless explicitly marked as overlapping
+concepts — the build applies a triage algorithm. The algorithm
+enforces the universal invariant: **one state per `variable`
+(deliverable) per year, unless explicitly marked as overlapping
 multi-vintage**.
+
+Under the three-level model (§5.1) a triage *split* does **not** mint
+a new `variable_concept` per branch — and, unlike the pre-respec
+register-scoped model, it does **not** mint a new `var_id` either. It
+keeps the single concept and adds N sibling **`variable`** rows under
+one variant, each with its own synthetic `variable_id` and its own
+variable slug (concept slug + grain/column suffix), all FK-pointing at
+the same `(register_id, var_id)` concept. This is DECISION POINT 1 in
+the respec: siblings are "same concept, different grain", so they share
+the concept and are linked by `variable_related_to` (variable grain,
+§5.5), not by `variable_concept_same_as`. Consequence: the concept key
+stays a clean `(register_id, var_id)`, and the sibling identities live
+entirely at the `variable` level (the synthetic `variable_id` + slug).
 
 **Discriminator precedence (kolumnnamn-primary).** The single most
 important signal is the delivery column name — if two candidate
@@ -1438,8 +1732,9 @@ cannot be the same variable.
    delivery column names. Use set intersection: states A and B
    share a column iff their kolumnnamn sets intersect.
 3. **Multiple distinct kolumnnamn groups → split.** Each group
-   becomes a separate variable with an auto-derived sibling slug
-   (next subsection). Emit `variable_related_to` edges with
+   becomes a separate `variable` row (under the shared concept) with
+   an auto-derived sibling variable slug (next subsection). Emit
+   `variable_related_to` edges with
    `relation_kind = same_definition_different_column`.
 4. **Within one kolumnnamn group, apply secondary rules.** The
    triage inspects SCB-source fields (`vardemangdsniva` for grain,
@@ -1461,9 +1756,15 @@ cannot be the same variable.
    - Only `value_set_id` differs → collapse to one state (code-list
      drift in re-deliveries; pick the latest).
 
-**Sibling slug derivation.** When the algorithm splits one variable
-into N siblings, slugs derive deterministically. All suffix
-delimiters use `-` to stay inside the §5.2 slug grammar (no
+**Sibling slug derivation.** When the algorithm splits one concept's
+deliverable into N sibling `variable` rows, their **variable** slugs
+derive deterministically. The *base* depends on the split reason: a
+**kolumnnamn-split** (different physical columns under one var_id)
+derives each sibling slug from its own column (the concept slug is
+ambiguous when the concept spans two columns, so it is not the base
+here); a **niva / datalangd-split** (one column, different grain or
+code/label role) appends a suffix to the **shared concept slug**. All
+suffix delimiters use `-` to stay inside the §5.2 slug grammar (no
 underscores in slugs):
 
 1. **kolumnnamn-derived** when kolumnnamn distinguishes columns:
@@ -1484,8 +1785,10 @@ underscores in slugs):
 4. **BLAKE2b hash fallback** when no pattern matches: suffix
    `-x<6 hex>`.
 
-When two siblings derive the same slug, append `-a` / `-b` in cvid
-order and emit a build warning.
+When two siblings derive the same slug, append `-a` / `-b` in a
+deterministic source order (lowest source row / kolumnnamn first) and
+emit a build warning so a curator can supply a better
+`[variable."<reg>.<regvar>.<var>"]` override (§5.3).
 
 **Auto-emitted `variable_related_to` edges.** Build splits emit
 `(N choose 2)` edges with provenance `note = "auto:triage"`. The
@@ -1566,14 +1869,20 @@ to the universal columns and drops `*_en` for now. Future translation
 support lands as a separate table or sidecar DB.
 
 **Structural sensitivity flags** stay in the catalog as universal
-`variable` columns (`is_sensitive`, `is_identifier`) — these are
-MONA-critical and apply to every variable regardless of provider.
-The original `unika_summary` table is dropped after **A2.1's
-coalescer** consumes `version_forsta` / `version_sista` to derive
+`variable_concept` columns (`is_sensitive`, `is_identifier`) — these
+are MONA-critical, apply to every concept regardless of provider, and
+are inherently shared metadata (sensitivity is a property of the
+concept, not of how a given variant delivers it). They are inlined
+onto each resolved `variable` via the concept (§5.10). The original
+`unika_summary` table is dropped after **A2.1's coalescer** consumes
+`version_forsta` / `version_sista` to derive
 `variable_state.valid_from` / `valid_to`; the sensitivity-flag lift
-in A1.2 alone is not sufficient to retire the table.
+in A1.2 alone is not sufficient to retire the table. (A1.2 lifted the
+flags onto the register-scoped `variable` table, which the three-level
+restructure renames to `variable_concept` — same grain, so the lift
+carries over unchanged; see the MIGRATION_PLAN A2.6 rework.)
 
-**`is_identifier` downstream semantics.** A variable with
+**`is_identifier` downstream semantics.** A concept with
 `is_identifier=true` will be pseudonymized at delivery. For SCB
 this means SCB prefixes the column header with `LopNr_` (or a
 project-specific prefix like `P1105_LopNr_PersonNr`). The flag is
@@ -1586,7 +1895,7 @@ the *subject* of this variant?" is answered by
 `variant.panel_entity_key` (§5.3), not by `is_identifier`. The two
 fields serve different purposes:
 
-- `variable.is_identifier`: per-variable; "this column gets
+- `variable_concept.is_identifier`: per-concept; "this column gets
   pseudonymized at delivery." Used by:
   - **SPA authoring**: default `display_name` for the binding becomes
     `LopNr_<delivery_column_name>` (researcher can override to a
@@ -1642,7 +1951,22 @@ Descriptive; the schema-level changes land in §6. Headline points:
 
 The webapp's `/api/catalog/*` endpoints (§9.5) are thin wrappers
 around a stable in-process reg_meta API. Method signatures (normative
-— `/api/catalog/*` shape derives from these):
+— `/api/catalog/*` shape derives from these).
+
+**Resolution path through the three levels (§5.1).** `resolve(binding)`
+parses the 4-segment FQID, walks provider → register → variant, then
+finds the single `variable` row under that variant whose `slug`
+matches the leaf segment. From that one row it gathers: the variable's
+`variable_state` rows (the eras), the parent `variable_concept`'s
+**shared metadata** (`name`, `definition`, `description`,
+`measurement_unit`, `is_sensitive`, `is_identifier`, source
+attribution), the concept's **sibling variants** (other `variable`
+rows under the same concept), and the edges —
+`variable_concept_same_as` (concept grain), `variable_replaced_by` /
+`variable_related_to` (variable grain), and `variable_state_lineage`.
+All of that folds into a single `ResolvedVariable`. Because §5.1 makes
+the `variable` row 1:1 with the binding FQID, the leaf lookup is an
+exact slug match — no derive-at-resolve, no fold-ambiguity.
 
 ```python
 from reg_meta import Catalog, Period  # Period = int | str | dict (always required where used)
@@ -1651,7 +1975,8 @@ class Catalog:
     @classmethod
     def open(cls, path: str | None = None) -> "Catalog": ...
 
-    # Longitudinal resolution — full state history + edges.
+    # Longitudinal resolution — variant → variable (by slug) → states
+    # + concept shared metadata + sibling variants + edges.
     def resolve(self, fqid: str) -> ResolvedVariable: ...
 
     # Resolution at a specific period — list of VariableStates whose
@@ -1697,10 +2022,14 @@ Example usage:
 catalog = Catalog.open()                 # mmap'd SQLite
 
 variable = catalog.resolve("scb/lisa/individer-15plus/kon")
-# variable.states = [VariableState(...), VariableState(...)]
-# variable.replaced_by = [VariableRef(...)] (successors only on this attribute)
-# variable.related_to  = [RelatedRef(...)]
-# variable.same_as     = [VariableRef(...)]
+# variable.states      = [VariableState(...), VariableState(...)]
+# variable.concept     = ConceptMeta(name="Kön", definition=..., is_sensitive=..., ...)
+#                        (shared metadata, lifted from variable_concept)
+# variable.siblings    = [VariableRef(.../kon under other variants of LISA)]
+#                        (same concept, other variants — the hierarchy, not an edge)
+# variable.replaced_by = [VariableRef(...)] (successors only on this attribute; variable grain)
+# variable.related_to  = [RelatedRef(...)] (variable grain)
+# variable.same_as     = [ConceptRef(...)] (concept grain — cross-register equivalence)
 # variable.lineage     = [LineageEdge(...)] (consumer-side)
 
 states = catalog.resolve_at("scb/lisa/individer-15plus/kon", period=2018)
@@ -1726,11 +2055,17 @@ siblings = catalog.related("scb/lisa/individer-15plus/utbildningsinriktning-3pos
 #    RelatedRef(.../utbildningsinriktning-4pos, relation_kind="same_concept_different_grain"), ...]
 ```
 
-Exact dataclass shapes (`ResolvedVariable`, `VariableState`,
-`VariableRef`, `RelatedRef`, `LineageEdge`, `LineageWarning`,
-`Period`) live in [reg_meta/DESIGN.md](reg_meta/DESIGN.md). The
-contract from this spec's perspective: every FQID resolves through
-one entry point; period-specific resolution has one entry point;
+Exact dataclass shapes (`ResolvedVariable`, `ConceptMeta`,
+`VariableState`, `VariableRef`, `ConceptRef`, `RelatedRef`,
+`LineageEdge`, `LineageWarning`, `Period`) live in
+[reg_meta/DESIGN.md](reg_meta/DESIGN.md). `ConceptMeta` holds the
+`variable_concept` shared fields inlined onto the resolved variable;
+`ConceptRef` is the `same_as` endpoint type (a 3-part
+provider/register/concept_slug reference, since `same_as` is concept
+grain — note it has **no** FQID, per §5.2). `VariableRef` /
+`RelatedRef` carry 4-part binding FQIDs (variable grain). The contract
+from this spec's perspective: every binding FQID resolves through one
+entry point; period-specific resolution has one entry point;
 cross-variable relationship traversal has one list-returning entry
 point per edge type.
 
@@ -1763,15 +2098,19 @@ a per-binding error against the source's declared period.
 
 | Term | Kind | Definition |
 |---|---|---|
-| variable | entity | A `variable` row: a slug-identified, variant-scoped concept. Has 1..N states across time. |
-| variable state | entity | A `variable_state` row: per-era shape of a variable, with `(valid_from, valid_to)` (ISO 8601) and the data type, length, value set, version label for that era. Canonical unit of resolution at a specific period. |
-| binding | entity | A 4-segment FQID referencing a variable: `<provider>/<register>/<variant>/<variable>`. Resolves to a `ResolvedVariable` (longitudinal) or `list[VariableState]` (when period context supplied — length 1 in the common case, length N for range / multi-vintage). Also the project_data.json object that declares "include this variable in this source's extract" (§6.3). |
+| variable concept | entity | A `variable_concept` row: register-scoped, PK `(register_id, var_id)`. SCB's "define once" truth — one var_id = one concept, regardless of how many variants deliver it. Holds the shared metadata (name, definition, sensitivity, source attribution) and the register-unique `concept_slug`. **Not independently addressable** — no FQID (§5.2). |
+| variable | entity | A `variable` row: the variant-scoped **addressable deliverable** — a concept as delivered under one specific variant. **1:1 with the binding FQID**. Carries the variable slug (FQID leaf) and FKs to `variable_concept`. Has 1..N states across time. |
+| variable state | entity | A `variable_state` row: per-era shape of a `variable`, with `(valid_from, valid_to)` (ISO 8601) and the data type, length, value set, version label for that era. **No slug column** (the slug lives on the parent `variable`). Canonical unit of resolution at a specific period. |
+| binding | entity | A 4-segment FQID referencing a `variable`: `<provider>/<register>/<variant>/<variable_slug>`, 1:1 with a stored `variable` row. Resolves to a `ResolvedVariable` (longitudinal; includes the variable's concept shared metadata + sibling variants + edges) or `list[VariableState]` (when period context supplied — length 1 in the common case, length N for range / multi-vintage). Also the project_data.json object that declares "include this variable in this source's extract" (§6.3). |
+| concept slug | string | `variable_concept.concept_slug`: the register-unique, immutable identifier for a concept. **Internal — never an FQID address** (§5.2). Used to resolve `variable_concept_same_as` targets and as the base from which variable slugs derive. |
+| variable slug | string | `variable.slug`: the variant-unique, immutable FQID leaf segment of a binding. In the common case it equals the parent concept slug; it diverges only for triage grain-siblings (`ssyk-3pos` / `ssyk-5pos`; §5.7). |
 | variable_alias | entity | A delivery column name (`PersonNr`, `Kon`, `LopNr_PersonNr`) attached to a `variable_state`. SCB pseudonymizes identifier columns at delivery by prefixing `LopNr_`; the metadata stores the un-prefixed name. Multiple aliases per state possible. |
+| same_as | edge | A `variable_concept_same_as` row: symmetric cross-register / cross-provider equivalence between two `variable_concept`s. **Concept grain** — endpoints are 3-part `(provider, register, concept_slug)`, no variant. Curated only (no auto-derive; §5.5). |
 | classification | entity | A named versioned vocabulary (SUN2020, ICD10). Provider-independent; addressed via `class/<slug>` (version in slug). |
 | value_set | entity | A code list attached to a `variable_state`. Content-addressed via `member_hash` for dedup. Carries an optional FK to `classification` when the value_set is a (possibly year-projected) subset of a named classification. Never exposed via FQID. |
-| slug | string | A curated, immutable identifier token (`lisa`, `kon`, `_default`). Lives in `reg_meta_build/fqid_slugs/*.toml` (§5.3). |
-| variable-slug stem | string | The final segment of a binding FQID — the slug naming the variable concept. Used by spine matching (§10) and code lookups (§6.6). |
-| binding FQID | string | 4-segment: `<provider>/<register>/<variant>/<variable>` (§5.2). |
+| slug | string | A curated, immutable identifier token (`lisa`, `kon`, `_default`). Lives in `reg_meta_build/fqid_slugs/*.toml` (§5.3). Spans the five surfaces of §5.4 (four addressable + concept slug). |
+| variable-slug stem | string | The final segment of a binding FQID — the variable slug naming the deliverable. Used by spine matching (§10) and code lookups (§6.6). |
+| binding FQID | string | 4-segment: `<provider>/<register>/<variant>/<variable_slug>` (§5.2). |
 | variant FQID | string | 3-segment: binding FQID minus the variable. |
 | classification FQID | string | 2-segment: `class/<slug>` (§5.2). |
 | state validity range | tuple | `(valid_from, valid_to)` on a `variable_state`. ISO 8601 TEXT (full `YYYY-MM-DD` after ingest expansion); both columns `NOT NULL`. Open-ended ranges use the sentinel `valid_to = '9999-12-31'`. |
@@ -1792,15 +2131,15 @@ pass at stage A1):
 | registervariantbeskrivning | description | variant |
 | registervariantsekretess | (dropped → docs) | — (legal text; reg-meta-docs) |
 | registerversion_* | (dropped → docs/provenance) | — (mätinformation → docs; approval dates → provenance) |
-| variabelnamn | name | variable |
-| variabeldefinition | definition | variable |
-| variabelbeskrivning | description | variable |
+| variabelnamn | name | variable_concept (shared metadata) |
+| variabeldefinition | definition | variable_concept |
+| variabelbeskrivning | description | variable_concept |
 | variabeloperationell_definition | (merged into `description`) | — (inlined at ingest when distinct + non-empty) |
 | variabelreferenstid | (dropped) | — (variant's panel_time_key captures this) |
 | variabelhamtadfran | (dropped) | — |
-| variabelregister_kalla | source_register_text | variable (human attribution) |
+| variabelregister_kalla | source_register_text | variable_concept (human attribution) |
 | variabelextern_kommentar | (dropped → docs) | — (editor notes; covered by states + docs) |
-| mattenhet | measurement_unit | variable (NULL when source was "Okänd") |
+| mattenhet | measurement_unit | variable_concept (NULL when source was "Okänd") |
 | datatyp | data_type | variable_state (normalized lowercase canonical set) |
 | datalangd | data_length | variable_state (INTEGER) |
 | vardemangdsversion | value_set_version_label | variable_state (overlap discriminator) |
@@ -1814,8 +2153,8 @@ pass at stage A1):
 | populationdatum | date_range | population (free-text, often a range) |
 | objekttypnamn | name | object_type (variant-scoped) |
 | objekttypdefinition | definition | object_type |
-| kanslig_variabel / kanslig_variabel_ibland | is_sensitive | variable (boolean; both source values fold into one flag) |
-| identitetsvariabel | is_identifier | variable (boolean; implies LopNr-pseudonymization at delivery) |
+| kanslig_variabel / kanslig_variabel_ibland | is_sensitive | variable_concept (boolean; both source values fold into one flag) |
+| identitetsvariabel | is_identifier | variable_concept (boolean; implies LopNr-pseudonymization at delivery) |
 | version_forsta / version_sista | valid_from / valid_to | variable_state (mapped to ISO 8601 at ingest) |
 | Ersatt av / Ersätter | replaced_by | `variable_replaced_by` edge source |
 | Tidsseriebrott | (dropped → docs) | — (conceptual breaks captured in variant docs; structural breaks captured by state transitions + replaced_by edges) |
@@ -3321,7 +3660,7 @@ Model A relationship surface.
 | Method | Path | Purpose |
 |---|---|---|
 | GET | `/api/catalog` | Top-level: every provider exposed by the steward catalog. `{kind: "root", children: [{kind: "provider", slug: "scb"}, {kind: "provider", slug: "sos"}, {kind: "classification-root", slug: "class"}]}`. |
-| GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `variant` (3 seg), `binding` (4 seg, leaf), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). On `binding` leaves, the response embeds the variable's full longitudinal record (all states with their validity ranges, value sets, aliases, `replaced_by`/`related_to`/`same_as`/`lineage` edges). |
+| GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `variant` (3 seg), `binding` (4 seg, leaf), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). On `binding` leaves, the response embeds the variable's full longitudinal record: all states with their validity ranges, value sets, aliases, the **concept shared metadata** (name, definition, sensitivity, source attribution — lifted from `variable_concept`, §5.1), the concept's **sibling variants** (other variants delivering the same concept), and `replaced_by`/`related_to`/`same_as`/`lineage` edges. A concept is never a node in the hierarchy itself (no concept FQID; §5.2) — it surfaces only as embedded metadata on the binding leaf. |
 | GET | `/api/catalog/{fqid:path}?period=...[&value_set_version=...]` | Same canonical endpoint, with a `period` query string. Wire format (canonical string encoding of the polymorphic `Source.period` forms): int year → `?period=2020`; period-token → `?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`; range → `?period=<from>..<to>` (literal `..` separator, e.g. `?period=2018..2020`, `?period=2020-Q1..2020-Q4`); snapshot sentinel → `?period=_default`. The `..` form matches the order-export CSV serialization in `/api/project/order`. Server canonicalizes (rejects malformed tokens with 422); client-side codegen treats `period` as a plain string parameter (no OpenAPI `deepObject`). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period. Length 1 for the common point-query case; length N for range periods that cross state transitions, and for the rare LKF-shape multi-vintage case where multiple states share validity at the same period (states carry their `value_set_version_label` for SPA disambiguation). The optional `value_set_version` query narrows multi-vintage results to a single state when the caller already knows which vintage to pick (maps to `Catalog.resolve_at`'s `value_set_version` kwarg). Returns 200 with `{states: []}` (empty list) when the binding exists but no state covers the period — uniform shape, matches `Catalog.resolve_at` returning an empty list with no exception (§5.10). 404 is reserved for the binding itself not existing in the catalog (FQID resolves to no `variable` row); that's a separate failure mode from "binding exists, no state at this period". The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
 | GET | `/api/catalog/{fqid:path}/states` | Full state history for a binding. Returns `{binding, states: [{valid_from, valid_to, data_type, value_set?, delivery_column_name?, value_set_version_label?}, ...]}`. SPA's variable detail UI uses this to render an edition picker / period axis. |
 | GET | `/api/catalog/{fqid:path}/predecessors` | Returns `{binding, predecessors: [VariableRef, ...]}` via inbound `variable_replaced_by` edges. Maps 1:1 to `Catalog.predecessors(fqid)`. |
@@ -3913,22 +4252,24 @@ Three independent PRs.
 
 ### Stage A2 — Model A schema (load-bearing gate)
 
-The largest stage. Seven PRs.
+The largest stage. Eight PRs (the three-level respec added A2.1.5).
 
 - **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, data_type, data_length, value_set_id, value_set_version_label, grain)` — `data_type` / `data_length` are the A1.1-renamed DDL columns (was `datatyp` / `datalangd`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`, included in the group key so multi-grain rows stay distinct for A2.2 triage and then dropped (the final `variable_state` schema doesn't carry grain). Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
-- **A2.2 Build-time triage.** Per §5.7. Kolumnnamn-primary discriminator. Splits multi-grain variables; auto-derives sibling slugs; emits `variable_related_to` edges. Catches the 11,945 same-year collision buckets across 3,281 distinct variable triples (~2.69% of `(variable, year)` buckets in current SCB data; reproduced from §5.7); ~200-300 cases need manual TOML curation (slug TOML overrides for ambiguous suffixes).
+- **A2.1.5 Three-level variable tables + stored variable slug + resolver flip** (respec; supersedes in-flight PR #133). Split the conflated `variable` into the §5.1 three levels: rename `variable` → `variable_concept` (register-scoped, the A1.2 flags + shared metadata ride along), add the variant-scoped `variable` table (synthetic `variable_id`, stored variable slug, FK to concept; **1:1 with the binding FQID**), and re-parent `variable_state` onto `variable_id` (removing the `slug` column PR #133 added to `variable_state`, with its "all eras agree" assertion). Auto-derive the register-unique concept slug; default each variant's variable slug to it. Flip `reg_meta/catalog.py` binding resolution to read the stored variable slug (exact match, no derive-at-resolve) and inline concept metadata. Lands **before** triage/lineage/resolver because all three operate on the three-level shape — see MIGRATION_PLAN for the sequencing rationale.
+- **A2.2 Build-time triage** (reworked onto three-level model). Per §5.7. Kolumnnamn-primary discriminator. Splits a concept's deliverable into N sibling **`variable`** rows under a *shared* `variable_concept` (no new `var_id`; DECISION POINT 1 in the respec PR); auto-derives sibling **variable** slugs from the shared concept slug + suffix; emits `variable_related_to` edges (variable grain). Catches the 11,945 same-year collision buckets across 3,281 distinct concepts (~2.69% of `(concept, year)` buckets in current SCB data; reproduced from §5.7); ~200-300 cases need manual TOML curation (sibling-slug overrides via `[variable."<reg>.<regvar>.<var>"]`).
 - **A2.3 Auto-derive `variable_replaced_by`.** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table (per-variable + parallel register- and variant-level tables). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS).
 - **A2.4 `variable_state_lineage` interval-overlap join.** Per §5.6. Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks in the source register's slug TOML, no `variable_source_lineage` SQL table. Emit `variable_state_lineage_warning` rows for `no_source_state` / `ambiguous_source_variant` cases. Old `via_source_id` column populated in parallel for transition.
-- **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable`). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break, and a grace-period alias would just keep `via_source_id` alive for no real consumer benefit. Add `resolve_at(fqid, period, *, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
-- **A2.6 Drop period from FQID grammar.** The big bang. Update parser, emitter, slug-loading code. Drop ~1,264 `register_version` slug entries from `scb.toml`. **Drop the `register_version` table entirely** — per-edition prose (mätinformation, edition descriptions, time-series break notes) routes to reg-meta-docs at variant level with chronological Markdown sections; per-edition build artifacts (approval dates, doc_status) route to provenance DB. **No `scb_register_edition` extension table.** Webapp catalog endpoints flip to 4-seg binding leaves + new sub-endpoints. v0.x reg_meta clients break; pre-v1 policy says no shim. UNFROZEN sentinel is active so the slug TOML rewrite is a regular commit.
-- **A2.7 Cleanup.** Drop `variable_instance` table and the `via_source_id` column (both kept alive through A2.5–A2.6 only so the build pipeline can dual-write while the new tables stabilize). All consumers now on `variable_state`. Bump `reg_meta` to v1.0.0 (with snapshot reset; UNFROZEN still active for the curation polish that follows).
+- **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable`). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break, and a grace-period alias would just keep `via_source_id` alive for no real consumer benefit. A2.1.5 already flipped the *binding-resolution read* (stored variable slug + concept inlining); A2.5 builds the longitudinal aggregate (full state list + sibling variants + edges) on top. Add `resolve_at(fqid, period, *, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
+- **A2.6 Drop period from FQID grammar + demote `same_as` to concept grain.** The big bang. Update parser, emitter, slug-loading code (grammar unchanged by the three-level split — no concept FQID). Drop ~1,264 `register_version` slug entries from `scb.toml`. **Drop the `register_version` table entirely** — per-edition prose (mätinformation, edition descriptions, time-series break notes) routes to reg-meta-docs at variant level with chronological Markdown sections; per-edition build artifacts (approval dates, doc_status) route to provenance DB. **No `scb_register_edition` extension table.** **(respec)** Rename `variable_same_as` → `variable_concept_same_as`, drop the variant slot + `*_period` columns, demote to concept grain, and **delete the var_id `(N choose 2)` auto-derive** (within-register reuse is now the concept→variable hierarchy from A2.1.5); rewrite `_resolve_binding_via_same_as` to traverse concept-slug triples. Webapp catalog endpoints flip to 4-seg binding leaves + new sub-endpoints. v0.x reg_meta clients break; pre-v1 policy says no shim. UNFROZEN sentinel is active so the slug TOML rewrite is a regular commit.
+- **A2.7 Cleanup.** Drop `variable_instance` table and the `via_source_id` column (both kept alive through A2.1.5–A2.6 only so the build pipeline can dual-write while the new `variable`/`variable_state` read path stabilizes). All consumers now on `variable` / `variable_state`. Bump `reg_meta` to v1.0.0 (with snapshot reset; UNFROZEN still active for the curation polish that follows).
 
 **Gates:**
 
-- A2.1 → A2.2 (triage needs `variable_state` to exist).
+- A2.1 → A2.1.5 (the three-level restructure re-parents the coalesced `variable_state` rows).
+- A2.1.5 → A2.2 / A2.4 / A2.5 (triage mints sibling `variable` rows; lineage traverses the concept hierarchy; the resolver reads the stored variable slug — all need the three-level tables).
 - A2.2 → A2.4 (lineage joins on coalesced states, post-triage).
 - A2.5 can run parallel to A2.3/A2.4.
-- A2.6 must follow A2.5 (FQID grammar flip touches the new API).
+- A2.6 must follow A2.5 (FQID grammar flip touches the new API) and carries the `same_as` concept-grain demotion + var_id auto-derive deletion.
 - A2.7 must follow A2.6 (cleanup removes legacy code paths).
 
 ### Stage A3 — Consumer migration
