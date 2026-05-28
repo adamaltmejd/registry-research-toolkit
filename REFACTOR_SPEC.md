@@ -1332,13 +1332,14 @@ related_to = [
 - `same_as` — symmetric: cross-register / cross-provider variable
   equivalence. Resolution follows `same_as` transitively (cycles
   rejected at build).
-- `related_to` — symmetric: grain/position/coding siblings — distinct
-  variables that share semantic meaning but aren't substitutable.
-  `relation_kind` ∈ `same_concept_different_grain` /
-  `same_definition_different_column` / `code_vs_label_pair` /
-  `import_bug_suspect` / `cross_register_same_concept`. Auto-emitted by
-  build-time triage (between the sibling variables a split produces);
-  TOML adds manual cross-variable edges.
+- `related_to` — symmetric: distinct variables that share semantic
+  meaning but aren't substitutable — i.e. *split* siblings, **not**
+  folded grain/vintage/coding (those stay one variable, §5.7).
+  `relation_kind` ∈ `same_definition_different_column` /
+  `code_vs_label_pair` / `import_bug_suspect` (auto-emitted by triage
+  splits) / `same_concept_different_grain` / `cross_register_same_concept`
+  (manual TOML curation only). Auto edges fire between the sibling
+  variables a split produces; TOML adds manual cross-variable edges.
 
 **Lineage curation (TOML, not a SQL table).** Source-variant pinning
 for §5.6 lineage materialization lives in the slug TOMLs as
@@ -1643,25 +1644,32 @@ CREATE TABLE variable_related_to (
 
 `relation_kind` enum:
 
-- `same_concept_different_grain` — SUN at 1-pos / 2-pos / 3-pos / 4-pos
+- `same_concept_different_grain` — **manual curation only.** SUN/SSYK
+  grain siblings auto-*fold* into one variable now (§5.7), so triage no
+  longer emits this; it remains for curators who deliberately keep two
+  distinct variables they judge same-concept-different-grain
 - `same_definition_different_column` — `Hemkommun` / `Skolkommun` (split into distinct variables under the same register)
 - `code_vs_label_pair` — `Lid` (3-char country code) ↔ `LNamn` (40-char country name)
 - `import_bug_suspect` — flagged by triage as a likely upstream issue (e.g. `int` and `smalldatetime` for same column)
 - `cross_register_same_concept` — manual TOML curation only
 
-Note the complementarity with `same_as`: triage grain-siblings are
-distinct variables that are *related but not equivalent*, so they appear
-in `variable_related_to` (with `same_concept_different_grain`), **not**
-in `variable_same_as`. The two tables partition the space:
-`same_as` for cross-register variable equivalence, `related_to` for
-grain/column siblings (within or across registers).
+Note the complementarity with `same_as`: a triage *split* produces
+distinct variables that are *related but not equivalent* (disjoint
+columns under one `var_id`), so they appear in `variable_related_to`,
+**not** in `variable_same_as`. (Same-concept grain/vintage/coding does
+neither — it *folds* into one variable, §5.7.) The two tables partition
+the space: `same_as` for cross-register variable equivalence,
+`related_to` for split siblings (within or across registers).
 
-**Auto-emitted by build-time triage.** When the build splits one
-source variable into N sibling **variables** (§5.7), `(N choose 2)`
+**Auto-emitted by build-time triage.** When the build *splits* one
+source variable into N sibling **variables** (§5.7) — genuinely
+different concepts, not folded representations — `(N choose 2)`
 `related_to` edges fire among the siblings with `relation_kind` derived
-from the split reason. Provenance tag (`note = "auto:triage"`) lets
-curators distinguish derived edges from manual ones; full overwrite on
-rebuild for auto edges.
+from the split reason (`same_definition_different_column`,
+`code_vs_label_pair`, or `import_bug_suspect`; never the now-folded
+`same_concept_different_grain`). Provenance tag (`note = "auto:triage"`)
+lets curators distinguish derived edges from manual ones; full overwrite
+on rebuild for auto edges.
 
 **TOML curation.** Manual `related_to` edges live in slug TOMLs
 (§5.3) and persist across rebuilds. Use for cross-register or
