@@ -1,6 +1,6 @@
 # Model A Migration — Implementation Tracker
 
-Status: **A0 complete; A1-ready** (Model A design locked 2026-05-22; reg_monabundle carve-out shipped through PR #125).
+Status: **A0–A1 complete; A2.1 shipped (PR #130); A2.2–A2.7 open** (Model A design locked 2026-05-22; **two-level variable-model respec in flight** — concept + state, FQID→concept; see REFACTOR_SPEC §5.0.1/§5.1).
 
 **Scoped, self-deleting tracker** — this file exists under the
 governance exception in `AGENTS.md` for multi-PR refactors spanning
@@ -23,7 +23,7 @@ doesn't move per PR.
 - **The "Rework map" table at the bottom** lists which v0.x shipped chunks get superseded by which Model A stages — useful when reading old PRs or working out what regressed.
 - **Per-session continuity** lives in this file plus PR descriptions for in-flight stages. This `MIGRATION_PLAN.md` is the version-controlled source of truth; cross-PR design state lives here and in REFACTOR_SPEC §15. No external/private notes are load-bearing.
 
-Estimated total effort: ~95–125 person-days across 26 PRs in 5 stages. Realistic calendar time for a single maintainer: 8–12 weeks. Stages can overlap where dependencies allow.
+Estimated total effort: ~95–132 person-days across 26 PRs in 5 stages (the two-level respec re-derives A2's contents and grows A2.6, but adds no PR). Realistic calendar time for a single maintainer: 8–12 weeks. Stages can overlap where dependencies allow.
 
 ---
 
@@ -101,6 +101,31 @@ Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter on
 
 Seven PRs. The largest and most intricate stage. Sequencing matters; gates are explicit.
 
+**Two-level restructure (respec).** The object model splits today's
+conflated `variable` into exactly two levels — `variable_concept` (the
+addressable variable, the FQID target, holds the register-unique
+concept slug + shared metadata) and `variable_state` (per-delivery
+shape, child of the concept, each state carrying both a **variant
+coordinate and a period range**). The variant (SCB `registervariant` /
+SOS `deldatamängd`) is a *delivery coordinate*, not an identity level,
+so it leaves the binding FQID (4→3 seg `provider/register/concept_slug`);
+the period was already out. `same_as` / `replaced_by` / `related_to`
+all become **concept grain**, and the within-register var_id
+`(N choose 2)` `variable_same_as` auto-derive is **deleted** (identity
+is the concept itself). See REFACTOR_SPEC §5.0.1, §5.1, §5.2, §5.5.
+
+This re-derives the A2 stages rather than adding one. The restructure
+work — rename `variable` → `variable_concept`, re-parent
+`variable_state` onto `concept_id` with an explicit `variant_id`, the
+stored-concept-slug population, and the resolver flip — **folds into
+A2.6**, alongside the FQID-grammar change it is inseparable from (the
+3-seg binding *is* the concept identity). This **supersedes the
+stored-slug idea in PR #133** (the slug lives on `variable_concept`,
+register-unique, not denormalized onto `variable_state`). A2.2 (triage)
+and A2.4 (lineage) are reworked to the concept grain but stay on the
+A2.1 `variable_state` shape until A2.6 re-parents it; the resolver flip
+(A2.5) and the table re-parent (A2.6) land together as the grammar flip.
+
 ### [x] A2.1 — `variable_state` table + coalescing (PR #130)
 
 - `variable_state` table added to DDL (sibling to `variable_instance`); `valid_from`/`valid_to` are `TEXT NOT NULL` full `YYYY-MM-DD`, enforced by CHECK constraints (`length() = 10`, `valid_to >= valid_from`). Open-ended states get the sentinel `valid_to = '9999-12-31'`; the unknown-lower-bound fallback uses `'0001-01-01'` for the rare yearless cvid case
@@ -112,78 +137,88 @@ Seven PRs. The largest and most intricate stage. Sequencing matters; gates are e
 
 **Gate to A2.2**: ✅ Met. Triage operates on coalesced output.
 
-### [ ] A2.2 — Build-time triage
+### [ ] A2.2 — Build-time triage (reworked onto two-level model)
 
 - Implement `triage_same_year_collisions` pass per §5.7
 - Kolumnnamn-primary discriminator (using `variable_alias.kolumnnamn` set intersection)
-- Auto-derive sibling slugs (kolumnnamn → niva-pattern → datalangd → BLAKE2b fallback)
-- Auto-emit `variable_related_to` edges per `relation_kind`
-- Add `variable_related_to` table to DDL
-- TOML override mechanism in `scb.toml` for ~200-300 manual cases
-- Tests: run against full SCB DB; verify only the curated manual overrides are needed
+- **A split mints distinct `variable_concept` rows** (respec DECISION POINT 4 / §5.7) — a kolumnnamn / niva / type split creates N separate concepts, each with its own register-unique concept slug, **not** sibling variables under one concept. (This same triage outcome handles SOS name-reuse collisions, §5.1.) In-flight PR #132 reworks onto this shape.
+- Auto-derive sibling **concept** slugs (kolumnnamn → niva-pattern → datalangd → BLAKE2b fallback; suffix appended to the base concept slug for niva/datalangd splits, derived per-column for kolumnnamn splits)
+- Auto-emit `variable_related_to` edges (concept grain, 3-part endpoints) between the sibling concepts per `relation_kind`
+- Add `variable_related_to` table to DDL (concept-grain endpoints)
+- TOML override mechanism in `scb.toml` for ~200-300 manual cases — sibling-concept-slug overrides use the `[variable_concept."<reg>.<var>"]` key (§5.3)
+- Tests: run against full SCB DB; verify splits create distinct concepts and only the curated manual overrides are needed
 
 **Estimate**: 7-10 days. Heuristic refinement + curation backlog.
 
-**Gate to A2.4**: A2.2 must merge. Lineage join (A2.4) operates on triaged variables.
+**Gate to A2.4**: A2.2 must merge. Lineage join (A2.4) operates on triaged concepts.
 
 ### [ ] A2.3 — Auto-derive `variable_replaced_by` from `timeseries_event`
 
-- Add `variable_replaced_by` table to DDL (per §5.5)
-- Build pipeline: after `_import_timeseries`, materialize succession edges from `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`
+- Add `variable_replaced_by` table to DDL (per §5.5) at **concept grain** — 3-part `(provider, register, concept)` endpoints
+- Build pipeline: after `_import_timeseries`, materialize succession edges from `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`, mapping each variable to its concept
 - Inverse-direction collapse (`Ersätter` is the inverse of `Ersatt av`)
 - Add `register_replaced_by` and `variant_replaced_by` parallel tables for register/variant-level rows
 - TOML curation slot in `scb.toml` and `sos.toml` for cross-provider edges (empty for now; populated in A4 if needed)
 
 **Estimate**: 3-4 days.
 
-Can run in parallel with A2.2.
+Can run in parallel with A2.2. **Respec note (in-flight PR #131):** #131 built `variable_replaced_by` with variant-bearing 4-part endpoints (matching the then-current 4-seg FQID). The two-level model makes it **concept grain** — drop the `*_variant` columns; the variable slot becomes the target's concept slug. The auto-derive logic is otherwise unchanged (succession is a register-level fact about the concept). PR #131 mostly survives; this is the only schema adjustment.
 
-### [ ] A2.4 — `variable_state_lineage` interval-overlap join
+### [ ] A2.4 — `variable_state_lineage` interval-overlap join (concept-grain matching)
 
 - Add `variable_state_lineage` and `variable_state_lineage_warning` tables to DDL
+- **Source link + matching are concept grain (respec).** The source register comes from `variable_concept.source_register_id` (shared metadata); source-side matching traverses **concept-grain `variable_concept_same_as`** — `concept_set_via_same_as` replaces the per-variant `slug_set_via_same_as` fold (§5.6). One concept edge covers every variant the source delivers.
 - Source-variant pinning is **TOML-only**, not a SQL table:
   - Heuristic defaults in `lineage_defaults` TOML block (per source register)
-  - Per-variable overrides in `lineage."<consumer_register>.<variable_slug>"` TOML blocks
+  - Per-concept overrides in `lineage."<consumer_register>.<concept_slug>"` TOML blocks
 - Implement new `link_variable_state_lineage` per §5.6 pseudocode
 - Drop old `link_consumer_side_bindings` (its inputs go away with `variable_instance`)
 - Tests: 5 worked LISA-RTB examples from the agent report verify the algorithm
 
 **Estimate**: 4-5 days.
 
-**Gate to A2.6**: A2.4 *and* A2.5 must merge. A2.6 flips the FQID grammar, which requires both the new lineage tables (A2.4) and the new catalog API (A2.5) in place.
+**Gate to A2.6**: A2.4 *and* A2.5 must merge. A2.6 flips the FQID grammar (and re-parents the tables), which requires both the new lineage tables (A2.4) and the new catalog API (A2.5) in place. (The `concept_set_via_same_as` traversal in A2.4 reads `variable_concept_same_as`; if A2.4 lands before A2.6's rename it reads the pre-rename `variable_same_as` and rebases the table name in A2.6.)
 
 ### [ ] A2.5 — Catalog API shift
 
-- `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10). The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break.
-- Implement `Catalog.resolve_at(fqid, period, *, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for unambiguous point queries, length N for range periods crossing state transitions and the rare LKF-shape multi-vintage case. Empty list when no state covers the period (no exception). `value_set_version` narrows multi-vintage results to a single state.
-- Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10
+- `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10): the concept's shared metadata + its `variable_state` rows (each tagged with its variant) + concept-grain edges. The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break. (The binding-resolution read path is rewritten in A2.6 alongside the table re-parent; A2.5 builds the longitudinal aggregate on top.)
+- Implement `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for an unambiguous single-state-in-one-variant point query, length N across variants / range periods / the rare LKF-shape multi-vintage case. Empty list when no state covers the period (no exception). `variant` narrows to one variant (the Source's `register_variant`); `value_set_version` narrows multi-vintage results to a single state.
+- Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10. `same_as` / `replaced_by` / `related_to` accessors return concept-grain refs (3-part binding FQIDs).
 - Post-A2.5 public method roster: `resolve` (new semantics), `resolve_at`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings`
-- Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[s for y in years for s in resolve_at(fqid, period=y)]`; they must agree on the unambiguous case. Add a multi-vintage fixture asserting `len(resolve_at(...)) == 2` and that `value_set_version="..."` narrows to length 1.
+- Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[s for y in years for s in resolve_at(fqid, period=y, variant=v)]`; they must agree on the unambiguous case. Assert each state carries its variant coordinate. Add a multi-vintage fixture asserting `len(resolve_at(...)) == 2` and that `value_set_version="..."` narrows to length 1.
 
 **Estimate**: 5-6 days.
 
 Can run in parallel with A2.3/A2.4 once A2.1 lands.
 
-### [ ] A2.6 — Drop period from FQID grammar
+### [ ] A2.6 — Two-level restructure + drop period & variant from FQID grammar
 
-- Update FQID parser, emitter: 4-seg bindings, 3-seg variants, 2-seg classifications (`class/<slug>` only, version in slug)
+The hinge of the respec: the two-level table restructure and the
+FQID-grammar flip land together, because the 3-segment binding FQID
+*is* the concept identity — you can't have one without the other.
+
+- **Rename `variable` → `variable_concept`** (synthetic `concept_id AUTOINCREMENT` PK — DECISION POINT 1; plus `(register_id, provider_concept_key)` UNIQUE and `(register_id, concept_slug)` UNIQUE). The A1.2 sensitivity flags + shared-metadata columns ride along unchanged (same grain — pure rename). Add the `concept_slug` column (register-unique; §5.3).
+- **Re-parent `variable_state`** from FK `(register_id, var_id)` to FK `concept_id` → `variable_concept`, and **add an explicit `variant_id` coordinate** (FK → `variant`). A state's uniqueness scope becomes `(concept_id, variant_id, valid_from, value_set_version_label)`.
+- **Stored-concept-slug population + resolver flip (folds in here; supersedes PR #133).** Concept slug auto-derives from the latest kolumnnamn into `<provider>.auto.toml` (register-unique; collision → `slug_concept_collision`, DECISION POINT 1). The resolver (`_resolve_binding_direct` in `reg_meta/catalog.py`) reads the stored `variable_concept.concept_slug` via an **exact match** (no `derive_variable_slug`-at-resolve, no fold ambiguity) and joins `variable_state` through `concept_id`, filtered by `variant_id` + period. `[variable.<...>]` TOML keys in `scb.toml` rename to `[variable_concept.<...>]`; lift the `slug_variable_override_unsupported` gate for the concept-slug path. **(This is the part of the superseded A2.1.5/#133 stored-slug idea that survives — moved onto `variable_concept`, register-unique, not onto `variable_state`.)**
+- **Update FQID parser, emitter:** 3-seg bindings (`provider/register/concept_slug`), 2-seg classifications (`class/<slug>`). **The variant FQID kind is removed** — variants become a navigational register sub-resource (§5.2, §9.5). Both the period (already out) and the variant leave the binding.
 - Drop ~1,264 `register_version` slug entries from `scb.toml`
-- Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3, but the slug exists from now)
-- Drop the `register_version` table entirely. Per-edition prose (mätinformation, descriptions) goes to reg-meta-docs at variant level with chronological Markdown sections (build pipeline writes these). Per-edition build artifacts (approval dates, etc.) go to provenance DB, joined to `variable_state` by `state_id` in the sibling provenance artifact — no SCB-specific column on `variable_state` (universal-schema rule, §5.1).
-- **`variable_same_as` / `classification_same_as` SQL + resolver rewrite** (not just a DDL column drop). Drop `a_period` / `b_period` columns from DDL **and** rewrite `_resolve_binding_via_same_as` + `_resolve_classification_via_same_as` in `reg_meta/catalog.py` to remove the empty-string-sentinel period-fallback path (current query: `AND (a_period = '' OR a_period = ?)` and `n_period = row["b_period"] or period`). Cache key in `_var_same_as_source_keys` shrinks from 3-tuple `(provider, register, variable)` — already period-free — but the loaded-row tuples drop `period`. Dedup step for existing TOML same_as edges whose `_period` columns carry non-empty strings: collapse to a single 4-seg edge keyed only on variant; emit a build-time warning if collapsing produces a contradiction (same (a, b) variant pair with different intended targets across periods — should not occur in curated TOML but verify).
-- Update Webapp catalog endpoints: 4-seg binding leaves, new sub-endpoints (§9.5)
+- Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3) — as a variant coordinate, not an FQID segment
+- Drop the `register_version` table entirely. Per-edition prose → reg-meta-docs at variant level; per-edition build artifacts → provenance DB, joined to `variable_state` by `state_id` — no SCB-specific column on `variable_state` (universal-schema rule, §5.1).
+- **Demote `same_as` to concept grain + delete the var_id auto-derive (respec).** Rename `variable_same_as` → **`variable_concept_same_as`**; rebuild the DDL with concept endpoints `(a_provider, a_register, a_concept, b_provider, b_register, b_concept)` — **drop the `a_variant` / `b_variant` slots** *and* the `a_period` / `b_period` columns. Rewrite `_resolve_binding_via_same_as` in `reg_meta/catalog.py`: the start node is the binding's concept; the BFS traverses concept-slug triples; no variant/period carried through. Remove the empty-string-sentinel variant/period fallback (current query: `AND (a_variant = '' OR a_variant = ?)` / `AND (a_period = '' OR a_period = ?)`). `_var_same_as_source_keys` shrinks to a 3-tuple `(provider, register, concept_slug)`. **Delete the `auto:var_id_match` `(N choose 2)` edge emission entirely** — within-register var_id reuse is the concept itself now, collapsing the SCB `same_as` row count from tens of thousands to the low-hundreds curated cross-register set. `classification_same_as` keeps its shape minus any `*_period` columns.
+- **TOML same_as target tuples drop to 3-part** `{provider, register, variable}` where `variable` resolves against the target register's register-unique concept slug; the `same_as` field lives on the renamed `[variable_concept."<reg>.<var>"]` key. Dedup step for existing TOML same_as edges carrying variant/period: collapse to a single concept-grain edge; emit a build-time warning on contradiction (should not occur in curated TOML but verify).
+- Update Webapp catalog endpoints: 3-seg binding leaves, variant sub-resource (`/{provider}/{register}/variants`), new sub-endpoints (§9.5). Binding-leaf response embeds concept metadata + states tagged with their variant.
 - Old API endpoints (v0.x `register_version` leaves) removed; clients break per pre-v1 policy
 - UNFROZEN sentinel is active; the slug TOML rewrite is a regular commit
 
-**Estimate**: 7-10 days. Touches grammar, table rename, API, slug TOML.
+**Estimate**: 9-13 days (was 7-10 for the grammar flip alone; the two-level table restructure + stored-slug + resolver flip — absorbing most of the superseded A2.1.5/#133 mechanism — adds the rest).
 
 **Gate to A2.7**: A2.6 must merge.
 
 ### [ ] A2.7 — Cleanup
 
-- Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write)
-- Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone)
-- **Bump `SCHEMA_VERSION` to `"5.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"4.1.0"` after A2.1's minor bump). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` pick up the constant automatically. `_check_schema_compat` rejects v4.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.2–A2.6) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — the intervening stages stay on the 4.x line. A1.1 already burned the 3.x → 4.0.0 break; A2.1 added `variable_state` on a minor (4.1.0); A2.7's `variable_instance` drop is the next breaking change.
+- Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write while the new `variable_concept` / re-parented `variable_state` read path stabilizes)
+- Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone; lineage is `variable_state_lineage` from A2.4)
+- **Bump `SCHEMA_VERSION` to `"5.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"4.1.0"` after A2.1's minor bump). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` pick up the constant automatically. `_check_schema_compat` rejects v4.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.2–A2.6) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — the intervening stages stay on the 4.x line. A1.1 already burned the 3.x → 4.0.0 break; A2.1 added `variable_state` on a minor (4.1.0); A2.6's two-level rename + re-parent + `same_as` rename also ride the 4.x line (additive tables + renames + a column move); A2.7's `variable_instance` drop is the next breaking change.
 - Bump `reg_meta` to v1.0.0; tag the release
 - UNFROZEN snapshot is regenerated (still UNFROZEN — curation polish continues; UNFROZEN deletes at v1 publication, not at v1.0.0 internal tag)
 
@@ -200,7 +235,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - Migrate dataclasses to Pydantic v2 models
 - `Source.register_version` → `Source.register_variant` + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel)
 - `Source.columns` → `Source.bindings`
-- Binding `name` → `variable` (4-seg)
+- Binding `name` → `variable` (**3-seg** concept FQID; `provider/register` prefix must equal the source's `register_variant` prefix — the variant is not repeated on the binding)
 - Panel `entity_key` / `time_key` inheritance from `variant.panel_template` when omitted
 - TimePoint gains range form `{"range": {"from", "to"}}`
 - New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)
@@ -214,16 +249,16 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 ### [ ] A3.2 — `mock_data_wizard/spec.py` adoption
 
 - `_build_source` reads new `register_variant` + `period` fields; `columns` → `bindings`; `Column.name` → `Binding.variable`
-- `lookup_options` keys remain FQID-based (4-seg now)
+- `lookup_options` keys remain FQID-based (3-seg concept FQID now)
 - Fixture sweep for all `project_data.json` files under `mock_data_wizard/`
 - Companion `project_data.codes.json` fixtures restructured to the new shape (`classifications` + `sources.<name>.<binding_fqid>` blocks; §6.6) — every test that asserts against the old flat FQID-keyed codes file follows
 - Tests follow
 
 **Estimate**: 3-4 days.
 
-### [ ] A3.3 — `reg_monabundle/validate.py` 4-seg update
+### [ ] A3.3 — `reg_monabundle/validate.py` 3-seg update
 
-- One-line edit in `_is_binding_fqid` (5 → 4 segments)
+- One-line edit in `_is_binding_fqid` (5 → 3 segments)
 - Error message text update
 - Tests follow
 
@@ -233,9 +268,9 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 
 - Add `reg_monabundle/build/spec_loader.py` with `source_to_loadedspec(pydantic_source) -> LoadedSpec` — lives in `build/`, not `runtime/`, so the bundle never imports Pydantic (the §9.6 boundary). Called by the bundle builder before embedding JSON.
 - `reg_monabundle/runtime/spec.py` `LoadedSpec` fields updated to Model A shape. PR #123 shipped LoadedSpec under v0.x grammar (`_build_source` currently reads `data["register_version"]`); this is the breaking shape evolution. **Field map** (drives both the `spec_loader.py` converter and `_build_source` rewrite):
-  - `Source.register_version: str` (4-seg) → `Source.register_variant: str` (3-seg) + `Source.period` (polymorphic per §6.2: int / period-token / range / `_default` snapshot)
+  - `Source.register_version: str` (4-seg) → `Source.register_variant: str` (3-part coordinate) + `Source.period` (polymorphic per §6.2: int / period-token / range / `_default` snapshot)
   - `Source.columns: tuple[Column, ...]` → `Source.bindings: tuple[Binding, ...]`
-  - `Column.name: str` (5-seg) → `Binding.variable: str` (4-seg)
+  - `Column.name: str` (5-seg) → `Binding.variable: str` (**3-seg** concept FQID)
   - `Column.value_set: str` → `Binding.value_set` keyed by 2-seg classification FQID (`class/<slug>`)
 - Amalgamator's `_AMALGAMATED_PACKAGE_PREFIXES` excludes `reg_schema` (Pydantic stays out of bundle)
 - Bundle's `LoadedSpec` parsing reads `register_variant` + `period` from embedded JSON
@@ -277,8 +312,9 @@ matching the gates diagram below.)
 
 - `reg_meta_build/sources/sos.py` `SOSAdapter` implementing `IRAdapter`
 - Consumes the 13 SOS workbooks via existing parser at `reg_meta_build/src/reg_meta_build/sources/sos.py`
-- Variant synthesis for LSS/BU/SOL (`_default` real variant row)
-- Kodlista state-era parsing per §5.7
+- **Concept merge (respec, DECISION POINT 4):** `SosVariable` identity is `(deldatamangd, name)`, but a SOS concept is `(register, variable_name)` — the adapter **merges same-named variables across deldatamängder into one `IRVariableConcept`** (the register-level kodlistor are shared; §5.0.1), emitting one `IRVariableState` per `(deldatamängd, period)` with the deldatamängd as the `variant_id` coordinate. It **splits** into distinct concepts only on a genuine meaning conflict (incompatible data types, or disjoint code-list shapes for the same name — BU `FOD_DATUMN`, PAR `ATC`), via the §5.7 triage path.
+- Variant synthesis for LSS/BU/SOL (`_default` real variant row, referenced as the state's `variant_id`)
+- Kodlista state-era parsing per §5.7 (period-scoped `tidsperiod` ranges → state validity)
 - MFR IVF_klinik entity-registry heuristic (collapse to 1 state with per-code validity, not 15 states)
 - Outputs ~2,300 IR rows
 
@@ -288,8 +324,8 @@ matching the gates diagram below.)
 
 - Create `reg_meta_build/fqid_slugs/sos.toml`
 - Register slugs: 3-letter SOS abbreviations (`par`, `mfr`, `dors`, etc.)
-- Variant slugs from deldatamangd names (lowercase, kebab-case)
-- Variable slugs auto-derived from SOS variable names; TOML overrides where needed
+- Variant slugs from deldatamangd names (lowercase, kebab-case) — browsing coordinates, not FQID segments (§5.2)
+- Concept slugs auto-derived from the merged SOS variable names (one concept per `(register, variable_name)`, §5.1); TOML overrides where needed
 - **Per-variant `panel_entity_key` / `panel_time_key` / `panel_time_grain` curation** for both SCB (~150 variants × 5 average = ~750 variant rows) and SOS (~50 variants). `seed-slugs --propose-panel` auto-suggests from:
   - SCB: `Tabelldefinitioner.sql` PK declarations + `Identifierare.csv` entity-type signals
   - SOS: workbook `is_join_variable` annotations + variable definitions
@@ -327,21 +363,21 @@ ship first. Matches the gates diagram annotation below.
 
 ### [ ] A5.2 — New API endpoints
 
-- Implement `?period=...` query on canonical catalog endpoint. **Wire format is a single query-string value per §9.5**, not `deepObject`: int year (`?period=2020`), period-token (`?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`), range (`?period=<from>..<to>`, e.g. `?period=2018..2020`), snapshot sentinel (`?period=_default`). Server canonicalizes and returns 422 on malformed tokens; OpenAPI parameter is a plain string. Polymorphic across all `Source.period` shapes — not year-only.
-- Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings` sub-endpoints (`/lineage` and `/lineage_warnings` are first-class v1 endpoints per §9.5, not deferred — `/lineage_warnings` surfaces the `variable_state_lineage_warning` rows emitted by A2.4)
-- Suffixed routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order for all six suffixes
-- ETag scheme verified to include the `?period` query in the cache key
+- Implement `?period=...` query (plus optional `?variant=...`) on canonical catalog endpoint. **Wire format is a single query-string value per §9.5**, not `deepObject`: int year (`?period=2020`), period-token (`?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`), range (`?period=<from>..<to>`, e.g. `?period=2018..2020`), snapshot sentinel (`?period=_default`); `?variant=<slug>` narrows to one variant. Server canonicalizes and returns 422 on malformed tokens; OpenAPI parameters are plain strings. Polymorphic across all `Source.period` shapes — not year-only.
+- Implement `/states`, `/predecessors`, `/successors`, `/related`, `/lineage`, `/lineage_warnings` sub-endpoints + the `/{provider}/{register}/variants` register sub-resource (the variant browser, §9.5 — variants are not FQIDs under the two-level grammar). `/lineage` and `/lineage_warnings` are first-class v1 endpoints, not deferred — `/lineage_warnings` surfaces the `variable_state_lineage_warning` rows emitted by A2.4
+- Suffixed + sub-resource routes registered BEFORE the `/api/catalog/{fqid:path}` catch-all in the FastAPI router (router ordering matters; see §9.5 URL routing notes); CI introspection test enforces the order for all seven
+- ETag scheme verified to include the `?period` (and `?variant`) query in the cache key
 - Cloudflare edge-cache validation gate: small load test through Cloudflare confirms slash-bearing FQID paths still work cleanly with the new shapes
-- **Server-side input-validation gates** (§16): (a) `?period=` parser is an allow-list — malformed values (SQL-injection probes, path-traversal probes, embedded NULs) return 422 with zero SQL executed (verified via SQLite trace hook); (b) per-segment FQID grammar check rejects `.`, `..`, `%`-encoded variants, and any non-slug-grammar input with 422 and no DB hit. Parametrized tests cover both.
+- **Server-side input-validation gates** (§16): (a) `?period=` / `?variant=` parsers are an allow-list — malformed values (SQL-injection probes, path-traversal probes, embedded NULs) return 422 with zero SQL executed (verified via SQLite trace hook); (b) per-segment FQID grammar check rejects `.`, `..`, `%`-encoded variants, and any non-slug-grammar input with 422 and no DB hit. Parametrized tests cover both.
 
 **Estimate**: 4-5 days.
 
 ### [ ] A5.3 — SPA TypeScript regen
 
 - OpenAPI codegen against new Pydantic models
-- SPA components updated for 4-seg FQIDs
-- New sub-endpoint integrations (states picker, replaced-by remediation, related-to siblings picker)
-- Multi-vintage `{states: [...]}` rendering on the canonical `?period=` response: when the list has length > 1 (LKF-shape true multi-vintage), SPA shows an edition picker keyed by `value_set_version_label`; on selection, refetches with `&value_set_version=<label>` to narrow to a single state. No 409 path — the uniform list contract makes multi-vintage just length-N rather than an error.
+- SPA components updated for 3-seg binding FQIDs + the variant browser (variant axis presented as a register sub-resource, not an FQID path)
+- New sub-endpoint integrations (states picker keyed by variant × period, replaced-by remediation, related-to siblings picker)
+- Multi-vintage `{states: [...]}` rendering on the canonical `?period=` response: when the list has length > 1 (cross-variant, or LKF-shape true multi-vintage), SPA shows a variant / edition picker; for the multi-vintage case keyed by `value_set_version_label`, on selection it refetches with `&value_set_version=<label>` (or `&variant=<slug>`) to narrow to a single state. No 409 path — the uniform list contract makes multi-vintage just length-N rather than an error.
 
 **Estimate**: 5-7 days.
 
@@ -372,14 +408,33 @@ A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──┬──→ A2.2 ──�
 ```
 
 Reading notes: braces `{...}` group steps that can run in parallel
-once their shared predecessor lands. After A2.1, three branches open
-in parallel: A2.2→A2.4 (coalesced states → triage → lineage join),
-A2.3 (independent — reads `timeseries_event`, no dependency on
-coalescer/triage), and A2.5 (catalog API on the new tables — needs
-only A2.1's `variable_state` to exist). A2.6 needs **both** A2.4
-(new lineage tables) and A2.5 (new catalog API); A2.3 is not on
-A2.6's critical path — it produces `variable_replaced_by` for
-consumer use, not for A2.4.
+once their shared predecessor lands. The diagram is **unchanged by the
+two-level respec** — 7 PRs in A2, no new stage. The respec re-derives
+the *contents* of A2.2/A2.4/A2.5/A2.6 (concept-grain edges; distinct
+sibling concepts; `resolve_at` `variant` kwarg) and **folds the
+two-level table restructure + stored-concept-slug + resolver flip into
+A2.6** (it is inseparable from the FQID-grammar flip — the 3-seg
+binding *is* the concept). After A2.1, three branches open in parallel:
+A2.2→A2.4 (coalesced states → triage into distinct concepts → lineage
+join over concept-grain `same_as`), A2.3 (independent — reads
+`timeseries_event`, concept-grain edges), and A2.5 (catalog API on the
+new tables — needs only A2.1's `variable_state` to exist). A2.6 needs
+**both** A2.4 (new lineage tables) and A2.5 (new catalog API), and
+itself carries the rename + re-parent + grammar flip + `same_as`
+concept-demotion + var_id-auto-derive deletion. A2.3 is not on A2.6's
+critical path — it produces `variable_replaced_by` for consumer use,
+not for A2.4.
+
+In-flight PRs #131 (A2.3), #132 (A2.2), #133 (early stored-slug), #134
+(three-level respec) all predate the two-level respec. **#134 is
+superseded by this respec** (the variant level it kept does not carry
+identity — §5.0.1; recommend close). **#133 is superseded** (its
+slug-on-`variable_state` + all-eras-agree assertion is the wrong
+placement — the slug lives on `variable_concept`, register-unique,
+folded into A2.6). **#132 reworks** onto A2.2 (siblings become distinct
+concepts). **#131 survives** modulo the concept-grain adjustment (drop
+its `*_variant` columns). See the respec PR body for the
+close-or-rework recommendation.
 
 ## Effort estimate
 
@@ -387,11 +442,11 @@ consumer use, not for A2.4.
 |---|---|---|
 | A0 | 3 | ~5-9 days |
 | A1 | 3 | ~10-14 days (parallelizable) |
-| A2 | 7 | ~32-44 days |
+| A2 | 7 | ~34-47 days (A2.6 grew +2-3 days absorbing the two-level table restructure + stored-slug + resolver flip; the respec adds no new PR) |
 | A3 | 4 | ~12-16 days (parallelizable after A3.1) |
 | A4 | 5 | ~20-28 days |
 | A5 | 4 | ~14-18 days |
-| **Total** | **26 PRs (incl. parallelism)** | **~93-129 days** |
+| **Total** | **26 PRs (incl. parallelism)** | **~95-132 days** |
 
 Numbers are **person-day sums of the sub-step ranges**, not calendar days — A1's three PRs are independent, so calendar time at that stage is `max(5-7, 2-3, 3-4) = 5-7 days`, while the table reports the 10-14 sum. The 8-12-week calendar estimate below is the parallelism-discounted figure for a single maintainer; mixing the two would double-count the savings.
 
@@ -401,18 +456,20 @@ With parallelism across stages where dependencies allow, calendar time is closer
 
 1. **A2.2 build-time triage backlog larger than estimated.** If 200-300 manual TOML curations turns out to be 600-900, A2.2 lengthens. Mitigation: empirical sample from current SCB DB shows 99% auto-handle rate; risk is bounded.
 2. **A2.4 source-variant heuristic doesn't fit some real consumer-source pairs.** Mitigation: warning + TOML override mechanism captures the cases the heuristic misses; ~50 manual overrides expected.
-3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and 5-seg FQID patterns across the monorepo before A2.6. The grep needs to be slug-grammar-aware to avoid swamping the signal with paths/URLs/JSON pointers:
+3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and multi-seg FQID patterns across the monorepo before A2.6. The two-level respec makes the binding **3-seg**, so the grep must catch both the v0.11 5-seg and the interim 4-seg shapes (anything with ≥3 slug segments after the provider). The grep is slug-grammar-aware to avoid swamping the signal with paths/URLs/JSON pointers:
 
     ```bash
-    # 5-seg slugs per §5.2 (allow _default and v0.11 _YYYY period slugs)
-    rg "[a-z][a-z0-9-]*(/(_default|_[0-9]+|[a-z][a-z0-9-]*)){4}" --type py --type md --type toml
+    # ≥3-seg slug paths per §5.2 (allow _default and v0.11 _YYYY period slugs) —
+    # catches both the v0.11 5-seg and interim 4-seg binding FQIDs that flip to 3-seg.
+    rg "[a-z][a-z0-9-]*(/(_default|_[0-9]+|[a-z][a-z0-9-]*)){3,}" --type py --type md --type toml
 
     # Or scope to known FQID call sites:
     rg "Catalog\.(resolve|resolve_at|states|predecessors|successors|related|replaced|lineage|lineage_warnings)\("
 
-    # SQL column references for the same_as period drop + register_version table drop +
-    # via_source_id removal — the string-literal FQID grep above misses raw SQL.
-    rg "(a_period|b_period|register_version_id|via_source_id|register_version)" --type py --type sql
+    # SQL column references for the same_as variant + period drop, the table rename,
+    # register_version table drop, and via_source_id removal — the string-literal FQID
+    # grep above misses raw SQL. Also catch the variant-slot drop and the rename.
+    rg "(a_period|b_period|a_variant|b_variant|variable_same_as|register_version_id|via_source_id|register_version)" --type py --type sql
     ```
 
     Combine all three passes — the first finds string-literal FQIDs in fixtures/configs; the second finds programmatic callsites that may construct FQIDs at runtime; the third finds hardcoded column names in SQL queries that the FQID greps would skip.
@@ -423,7 +480,7 @@ With parallelism across stages where dependencies allow, calendar time is closer
 
 - v1.0 reg_meta with SCB + SOS (if A4 ran in parallel) or SCB-only (if A4 deferred)
 - v1.0 reg_schema (Pydantic, Model A Source shape)
-- v1.0 reg_monabundle (4-seg FQID, LoadedSpec mediation)
+- v1.0 reg_monabundle (3-seg concept FQID, LoadedSpec mediation)
 - v1.0 reg_webapp (Pydantic, new API surface)
 - v1.0 SPA (no v0.x file support; Model A only)
 - v1.0 `global` deployment ready to host
@@ -436,11 +493,11 @@ UNFROZEN sentinel deletion happens at v1 *public release* (not at v1.0.0 interna
 
 | v0.x PRs | Shipped under v0.x | What survives Model A | What gets redone | Model A stage |
 |---|---|---|---|---|
-| #78–#82, #85–#87, #89, #104, #112 | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / variant / variable / classification slug curation; same_as table shape; consumer-side binding concept; FTS layer | 5-seg FQID grammar → 4-seg (period slot dropped); ~1,264 `register_version` slug entries deleted; `same_as.*_period` columns dropped; `register_version` table dropped entirely | A2.6, A2.7 |
+| #78–#82, #85–#87, #89, #104, #112 | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / classification slug curation; variant slugs (now a browsing coordinate, not an FQID segment); concept slug curation (was variable slug); consumer-side binding concept; FTS layer | 5-seg FQID grammar → **3-seg** (period **and** variant slots dropped — variant is a delivery coordinate, §5.0.1); `variable` → `variable_concept` + `variable_state` re-parented with a `variant_id`; ~1,264 `register_version` slug entries deleted; `variable_same_as` → `variable_concept_same_as` (concept grain; `*_variant` + `*_period` columns dropped; the var_id `(N choose 2)` auto-derive deleted); `register_version` table dropped entirely | A2.6, A2.7 |
 | #103, #105, #108 | `reg_meta_build` package carve-out (mechanical split: scaffold, db.py, doc_db.py, CLI split, CI workflow) | Package boundary intact; CLI binaries (`reg-meta`, `reg-meta-build`); test helpers | Column names → English (data values unchanged); SCB-Swedish column renames | A1.1 (rename only) |
 | #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 6 new codes (per A3.1: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable`); bump to `schema_version: "2.0.0"` | A3.1 |
 | #116 | `mock_data_wizard` adopts `project_data.json` (config rename, fixture corpus rewrite for v0.11 5-seg shape) | Config-rename machinery; fixture-rewrite tooling; v0.x test fixtures' overall structure | Source schema break propagated through mdw; fixture corpus rewritten again to Model A shape; `_build_source` reads new fields | A3.2 |
-| #113 | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-seg FQID + `period`; bindings replace columns; namespaced-block keys 4-seg | A3.1 (paired with reg_schema migration) |
+| #113 | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-part `register_variant` coordinate + `period`; bindings replace columns; binding + namespaced-block keys 3-seg | A3.1 (paired with reg_schema migration) |
 | #120, #121, #122, #123, #124, #125 | `reg_monabundle` carve-out — phases 1, 2a, 2b, 2c, 3 + follow-ups (scaffold, validator relocation, bundle builder, PII scanner, runtime modules + LoadedSpec, 1 MB bundle-size gate) | Survives entirely; this is the Stage A0 work | (none) — A0 complete | A0 ✅ |
 
 Conventions: stage IDs reference the sections above. PR links (`[#NNN]`) resolve against the project's GitHub repo.
