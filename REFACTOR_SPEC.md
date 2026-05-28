@@ -1574,7 +1574,7 @@ same shape as the §5.7 build join, applied consistently to all edges):
 1. **Unsplit `var_id` (the overwhelming common case):** resolve to the
    one variable. 1:1, no ambiguity.
 2. **Split `var_id`, event carries a discriminator** (the SCB event
-   row's `AktuellVariabel` `cvid` resolves to a kolumnnamn/grain): map
+   row's `AktuellVariabel` `cvid` resolves to a kolumnnamn): map
    to the matching sibling variable via the §5.7 discriminator. 1:1.
 3. **Split `var_id`, no usable discriminator:** emit a
    `replaced_by_split_ambiguous` build warning (naming the `var_id` and
