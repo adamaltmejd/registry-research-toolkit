@@ -29,7 +29,12 @@ from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
+from .fqid_slugs import (
+    materialize_same_as_edges,
+    populate_slugs,
+    populate_variable_slugs,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -346,6 +351,22 @@ CREATE TABLE variable_state (
     delivery_column_name TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
     value_set_version_label TEXT,
+    -- A2.1.5 (§5.3): stored FQID variable slug. Curated `[variable]` overrides
+    -- in scb.toml win; otherwise auto-derived from the latest kolumnnamn and
+    -- persisted (once, never recomputed) into scb.auto.toml. The resolver reads
+    -- this column instead of deriving from `delivery_column_name` at query time,
+    -- so build-time triage (A2.2) can give two siblings sharing one delivery
+    -- column distinct identities (`ssyk-3pos` / `ssyk-5pos`).
+    --
+    -- Denormalized per `(register_id, regvar_id, var_id)`: a slug is invariant
+    -- across a variable's eras (immutability, §5.4), but variable_state has one
+    -- row per era, so every era row for one triple carries the *same* slug.
+    -- `populate_variable_slugs` enforces this and per-variant uniqueness
+    -- (`(register_id, regvar_id, slug)`). Variant-scoped already, so A2.6's
+    -- variant-scoped variable PK is a no-op here; survives A2.7's
+    -- variable_instance drop. NULL only between INSERT and
+    -- populate_variable_slugs.
+    slug TEXT,
     FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id),
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
@@ -2475,6 +2496,20 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+            # A2.1.5 (§5.3): stored `variable_state.slug`. Runs after
+            # populate_slugs (register/variant slugs feed collision messages)
+            # and after _coalesce_variable_states (reads variable_state's
+            # delivery_column_name), but before materialize_same_as_edges
+            # (which reads the stored slug via _variable_source_slug). Curated
+            # `[variable]` overrides in scb.toml win; the rest auto-derive into
+            # scb.auto.toml. Build-time triage (A2.2) writes split-sibling slugs
+            # to the same column once it lands.
+            var_slug_counts = populate_variable_slugs(conn, slug_root, strict=True)
+            row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
+            row_counts["variable_slugs_auto"] = (
+                var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
+            )
 
         # §5.5 same_as edges. Runs *after* populate_slugs so register /
         # variant / version slug columns are populated — the materializer

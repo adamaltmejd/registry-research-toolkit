@@ -11,7 +11,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
-from .fqid import Fqid, derive_variable_slug, try_emit
+from .fqid import Fqid, try_emit
 
 if TYPE_CHECKING:
     import sqlite3
@@ -581,8 +581,13 @@ def get_schema(
                 "SELECT vi.cvid, vi.var_id, vi.data_type, vi.data_length, "
                 "v.name AS variable_name, "
                 "COALESCE(v.source_label, '') as source, "
-                "MIN(va.delivery_column_name) as first_alias, "
-                "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
+                "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases, "
+                # A2.1.5: stored variable slug (§5.3), correlated per
+                # (register, regvar, var) triple — slug is era-invariant.
+                "(SELECT vs.slug FROM variable_state vs "
+                " WHERE vs.register_id = vi.register_id "
+                " AND vs.regvar_id = vi.regvar_id AND vs.var_id = vi.var_id "
+                " AND vs.slug IS NOT NULL LIMIT 1) AS variable_slug "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
                 "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
@@ -599,9 +604,10 @@ def get_schema(
             col_dicts: list[dict[str, Any]] = []
             for c in columns:
                 cd = dict(c)
-                # `first_alias` from a SQL MIN — deterministic across runs;
-                # the comma-joined `aliases` is still emitted for display.
-                variable_slug = derive_variable_slug(cd.pop("first_alias", None))
+                # A2.1.5: emit from the stored slug instead of deriving from
+                # the delivery column, so the FQID matches what the resolver
+                # reads.
+                variable_slug = cd.pop("variable_slug", None)
                 cd["fqid"] = try_emit(
                     Fqid.binding_fqid,
                     provider_slug,
@@ -749,7 +755,13 @@ def get_varinfo(
             "c.short_name AS classification, "
             "rv.name AS variant_name, rver.registerversionnamn, "
             "p.slug AS provider_slug, r.slug AS register_slug, "
-            "rv.slug AS variant_slug, rver.slug AS version_slug "
+            "rv.slug AS variant_slug, rver.slug AS version_slug, "
+            # A2.1.5: stored variable slug (§5.3), correlated per
+            # (register, regvar, var) triple — slug is era-invariant.
+            "(SELECT vs.slug FROM variable_state vs "
+            " WHERE vs.register_id = vi.register_id "
+            " AND vs.regvar_id = vi.regvar_id AND vs.var_id = vi.var_id "
+            " AND vs.slug IS NOT NULL LIMIT 1) AS variable_slug "
             "FROM variable_instance vi "
             "LEFT JOIN classification c ON vi.classification_id = c.id "
             "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
@@ -788,11 +800,9 @@ def get_varinfo(
         for inst in instances:
             cvid = inst["cvid"]
             inst_aliases = aliases_map[cvid]
-            # First alias is the lexically-smallest delivery_column_name —
-            # `aliases_map` is sorted by ``ORDER BY cvid, delivery_column_name``
-            # in the fetch above (§5.11 rename from `kolumnnamn`).
-            first_alias = inst_aliases[0] if inst_aliases else None
-            variable_slug = derive_variable_slug(first_alias)
+            # A2.1.5: emit from the stored slug instead of deriving from the
+            # first alias, so the FQID matches what the resolver reads.
+            variable_slug = inst["variable_slug"]
             inst_dict: dict[str, Any] = {
                 "cvid": cvid,
                 "regvar_id": inst["regvar_id"],

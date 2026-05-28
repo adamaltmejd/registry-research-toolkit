@@ -185,6 +185,77 @@ class TestResolveBinding:
         assert r.lineage is None
 
 
+class TestStoredVariableSlug:
+    """A2.1.5 (§5.3): the resolver reads the stored `variable_state.slug`, not
+    a slug derived from `delivery_column_name` at query time."""
+
+    def test_resolves_via_stored_slug(self) -> None:
+        # Stored slug == derived slug for the common single-column case.
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+
+    def test_two_aliases_one_slug_still_resolves(self) -> None:
+        # The case that broke same_as: a variable with two aliases (`Kon` +
+        # `Kön`) folding to one slug. The stored slug is single, so resolution
+        # is unambiguous.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, delivery_column_name) "
+            "VALUES (1001, 'Kön')"
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+
+    def test_stored_slug_overrides_derived_unblocks_triage(self) -> None:
+        # The A2.2 unblocking proof: delivery_column_name is `Ssyk` (which
+        # would derive to `ssyk`), but the stored slug is `ssyk-3pos`. The
+        # binding resolves under the stored slug — proving a build-time triage
+        # split can give a sibling sharing a delivery column a distinct,
+        # resolvable identity even though derive-at-resolve never produces it.
+        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+        assert r.delivery_column_name == "Ssyk"
+        # The derive-at-resolve slug `ssyk` no longer resolves — identity is
+        # the stored slug, not the (honest, shared) delivery column.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
+        assert exc.value.code == "fqid_not_found"
+
+    @pytest.mark.xfail(
+        reason="A2.5: full end-to-end resolution of a niva-split's SECOND "
+        "sibling (new var_id, no variable_instance row) needs the "
+        "variable_state-based resolver. A2.1.5 only stores+reads the slug.",
+        strict=True,
+    )
+    def test_second_niva_sibling_resolves_end_to_end(self) -> None:
+        # Mirror A2.2's niva split: one delivery column `Ssyk`, two siblings.
+        # Sibling 0 keeps var_id 44; sibling 1 gets a new var_id 45 with its own
+        # variable_state row but NO variable_instance row (A2.2 relinks state,
+        # not instances). The resolver still reads variable_instance, so
+        # sibling 1 can't resolve until A2.5.
+        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
+        conn.execute(
+            "INSERT INTO variable (register_id, var_id, name) "
+            "VALUES (1, 45, 'SSYK 5-pos')"
+        )
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(register_id, regvar_id, var_id, valid_from, valid_to, "
+            "data_type, delivery_column_name, slug) "
+            "VALUES (1, 10, 45, '2018-01-01', '9999-12-31', 'int', 'Ssyk', "
+            "'ssyk-5pos')"
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
+        assert isinstance(r, ResolvedVariableBinding)
+
+
 class TestResolveBindingLineage:
     """§5.6 consumer-side binding lineage exposure on Catalog.resolve."""
 
@@ -215,6 +286,12 @@ class TestResolveBindingLineage:
             f"(cvid, register_id, regvar_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
             f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
+            # A2.1.5: consumer-side variable needs its stored slug too — the
+            # resolver reads `variable_state.slug`, not the derived alias.
+            f"INSERT INTO variable_state "
+            f"(register_id, regvar_id, var_id, valid_from, valid_to, "
+            f"data_type, delivery_column_name, slug) "
+            f"VALUES (2, 20, 99, '2018-01-01', '9999-12-31', 'int', 'Kon', 'kon');"
         )
         conn.commit()
         return conn

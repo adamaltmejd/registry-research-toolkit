@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from reg_meta.fqid import derive_variable_slug
 from reg_meta_build.db import DDL, seed_providers
 
 # (name, slug, register_id, provider_id)
@@ -33,6 +34,7 @@ def build_slugged_db(
     version: tuple[str, str | None, int] | None = _DEFAULT_VERSION,
     variable: tuple[str, int, int, str] | None = _DEFAULT_VARIABLE,
     delivery_column_name: str | None = None,
+    variable_slug: str | None = None,
     classification: tuple[str, str, str, str] | None = (
         "SUN2020",
         "Svensk utbildningsnomenklatur",
@@ -44,6 +46,12 @@ def build_slugged_db(
 
     ``delivery_column_name`` overrides the variable's alias when set (e.g. to test
     diacritic folding).
+
+    A2.1.5: also seeds a `variable_state` row carrying the stored
+    ``variable_slug`` (the resolver reads it instead of deriving). Defaults to
+    ``derive_variable_slug(delivery_column_name)`` so existing tests round-trip
+    unchanged; pass an explicit ``variable_slug`` (e.g. ``"ssyk-3pos"`` with a
+    ``Ssyk`` delivery column) to prove the stored-slug mechanism.
     """
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
@@ -78,6 +86,8 @@ def build_slugged_db(
 
     if variable is not None and version is not None and register is not None:
         v_name, var_id, cvid, default_kol = variable
+        kol = delivery_column_name or default_kol
+        stored_slug = variable_slug or derive_variable_slug(kol)
         conn.execute(
             "INSERT INTO variable (register_id, var_id, name) VALUES (?, ?, ?)",
             (register[2], var_id, v_name),
@@ -90,7 +100,17 @@ def build_slugged_db(
         )
         conn.execute(
             "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            (cvid, delivery_column_name or default_kol),
+            (cvid, kol),
+        )
+        # A2.1.5: the resolver reads the stored `variable_state.slug`, so a
+        # binding only resolves if a state row carries it. One era covering the
+        # variable; the slug is denormalized per (register, regvar, var).
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(register_id, regvar_id, var_id, valid_from, valid_to, "
+            "data_type, delivery_column_name, slug) "
+            "VALUES (?, ?, ?, '2018-01-01', '9999-12-31', 'int', ?, ?)",
+            (register[2], variant[2], var_id, kol, stored_slug),
         )
 
     if classification is not None:
@@ -178,11 +198,18 @@ def add_binding(
     var_id: int,
     delivery_column_name: str,
     via_source_id: int | None = None,
+    variable_slug: str | None = None,
 ) -> None:
     """Insert a variable_instance + matching variable_alias row.
 
     Parent rows (register/variant/version/variable) must already exist.
     ``via_source_id`` carries §5.6 consumer-side lineage when set.
+
+    A2.1.5: ensures a `variable_state` row carrying the stored slug exists for
+    the ``(register_id, regvar_id, var_id)`` triple (the resolver reads it). The
+    slug defaults to ``derive_variable_slug(delivery_column_name)``; pass
+    ``variable_slug`` to override. Re-adding an instance of an existing triple
+    leaves the existing state row untouched.
     """
     conn.execute(
         "INSERT INTO variable_instance "
@@ -194,3 +221,17 @@ def add_binding(
         "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
         (cvid, delivery_column_name),
     )
+    existing = conn.execute(
+        "SELECT 1 FROM variable_state "
+        "WHERE register_id = ? AND regvar_id = ? AND var_id = ?",
+        (register_id, regvar_id, var_id),
+    ).fetchone()
+    if existing is None:
+        stored_slug = variable_slug or derive_variable_slug(delivery_column_name)
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(register_id, regvar_id, var_id, valid_from, valid_to, "
+            "data_type, delivery_column_name, slug) "
+            "VALUES (?, ?, ?, '2018-01-01', '9999-12-31', 'int', ?, ?)",
+            (register_id, regvar_id, var_id, delivery_column_name, stored_slug),
+        )
