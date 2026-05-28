@@ -1050,6 +1050,40 @@ _VarKey = tuple[str, str, str, str, str]
 _ClassKey = tuple[str, str]
 
 
+def derive_unique_variable_slug(
+    conn: sqlite3.Connection, register_id: int, var_id: int
+) -> str | None:
+    """Auto-derive the canonical variable_slug for a `(register_id, var_id)`.
+
+    The catalog derives the variable_slug from `variable_alias.
+    delivery_column_name` via `derive_variable_slug` at resolve time
+    (`Catalog._resolve_binding`, `reg_meta/fqid.py:derive_variable_slug`),
+    keyed only on the variable — every alias under a `(register_id, var_id)`
+    pair must therefore fold to a single slug for the §5.3 uniqueness
+    invariant to hold. This function reproduces that derivation so build-time
+    edge materializers (`same_as`, `replaced_by`) anchor on slugs the
+    resolver will actually produce, rather than a column we'd have to store.
+
+    Returns the unique slug, or **None** when the pair has no slug-deriving
+    alias or when its aliases fold to more than one distinct slug. Callers
+    decide whether None is a hard error (TOML curation — a maintainer must
+    fix it) or a counted skip (auto-derive — best-effort). This keeps the
+    derivation single-sourced regardless of the caller's failure stance.
+    """
+    rows = conn.execute(
+        "SELECT DISTINCT va.delivery_column_name FROM variable_alias va "
+        "JOIN variable_instance vi ON vi.cvid = va.cvid "
+        "WHERE vi.register_id = ? AND vi.var_id = ? "
+        "AND va.delivery_column_name IS NOT NULL",
+        (register_id, var_id),
+    ).fetchall()
+    slugs = {s for r in rows if (s := derive_variable_slug(r[0])) is not None}
+    if len(slugs) != 1:
+        # 0 = no alias / none folds to a valid slug; >1 = ambiguous.
+        return None
+    return next(iter(slugs))
+
+
 def _variable_source_slug(
     conn: sqlite3.Connection, register_id: int, var_id: int, entry: SlugEntry
 ) -> str:
@@ -1063,7 +1097,16 @@ def _variable_source_slug(
     from every alias under the pair, require a unique result. Multiple
     distinct slugs would force the maintainer into a curated override
     (§5.5 narrow scoping, or an explicit slug field once those land).
+
+    Shares the core derivation with `derive_unique_variable_slug`; here a
+    non-unique result is a hard error (the maintainer must fix the TOML or
+    the upstream alias), so this wrapper re-issues a narrower query to tell
+    the "no alias" case apart from the "ambiguous" case in the error text.
     """
+    slug = derive_unique_variable_slug(conn, register_id, var_id)
+    if slug is not None:
+        return slug
+    # Non-unique: distinguish no-alias from ambiguous for a useful message.
     rows = conn.execute(
         "SELECT DISTINCT va.delivery_column_name FROM variable_alias va "
         "JOIN variable_instance vi ON vi.cvid = va.cvid "
@@ -1081,7 +1124,7 @@ def _variable_source_slug(
             "Variabelinformation.csv; mark the entry deprecated=true if the "
             "variable is retired.",
         )
-    slugs = {s for r in rows if (s := derive_variable_slug(r[0])) is not None}
+    slugs = sorted({s for r in rows if (s := derive_variable_slug(r[0])) is not None})
     if not slugs:
         raise _err(
             "slug_same_as_unresolved_source",
@@ -1092,16 +1135,14 @@ def _variable_source_slug(
             "empty after NFKD/grammar folding. Add an explicit slug override "
             "(when §5.6 follow-up lands) or correct the upstream alias.",
         )
-    if len(slugs) > 1:
-        raise _err(
-            "slug_same_as_ambiguous_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} aliases "
-            f"derive to multiple slugs ({sorted(slugs)!r}); cannot pick a "
-            f"canonical form for `same_as`.",
-            "Resolve the ambiguity in `variable_alias` upstream, or wait for "
-            "variable slug overrides (§5.6 follow-up) before adding same_as.",
-        )
-    return next(iter(slugs))
+    raise _err(
+        "slug_same_as_ambiguous_source",
+        f"{entry.provider}.toml: variable.{entry.source_id!r} aliases "
+        f"derive to multiple slugs ({slugs!r}); cannot pick a "
+        f"canonical form for `same_as`.",
+        "Resolve the ambiguity in `variable_alias` upstream, or wait for "
+        "variable slug overrides (§5.6 follow-up) before adding same_as.",
+    )
 
 
 def _validate_variable_target(

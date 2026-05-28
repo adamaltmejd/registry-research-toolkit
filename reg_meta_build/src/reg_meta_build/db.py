@@ -29,7 +29,12 @@ from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
+from .fqid_slugs import (
+    derive_unique_variable_slug,
+    materialize_same_as_edges,
+    populate_slugs,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -1755,12 +1760,28 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
       - `Ersatt av`: predecessor = id1, successor = id2
       - `Ersätter`:  predecessor = id2, successor = id1 (inverse)
 
-    Both directions collapse to the same slug-PK so SCB's redundant
-    paired rows produce a single edge. Rows whose ids don't resolve to
-    an existing entity (dropped, not yet imported, or — for the Variabel
-    grain — ambiguous because var_id is per-register) are skipped with a
-    build-log warning, never fail the build: `timeseries_event` is
-    best-effort historical data.
+    Register and variant slugs come from the stored `register.slug` /
+    `register_variant.slug` columns. Variable slugs are NOT stored — the
+    catalog derives them at resolve time from
+    `variable_alias.delivery_column_name` (`Catalog._resolve_binding`),
+    so the variable-grain edges anchor on `derive_unique_variable_slug`
+    (shared with the same_as materializer) to reference exactly the slug
+    the resolver will produce.
+
+    Skip taxonomy (all skips are best-effort, never fail the build —
+    `timeseries_event` is historical data):
+      - `n_skipped_unresolved`: an id doesn't resolve to a live entity
+        (dropped, not imported, self-loop, ambiguous Variabel var_id, or
+        a missing variant slug).
+      - `n_skipped_ambiguous_variable_slug`: a variable's aliases fold to
+        ≠1 distinct slug, so the §5.3 uniqueness invariant the resolver
+        relies on doesn't hold and no single slug can be emitted.
+      - `n_skipped_collapsed_inverse`: an `Ersätter` row whose
+        (predecessor, successor) already landed from its `Ersatt av`
+        twin — the expected SCB paired-row collapse.
+      - `n_skipped_duplicate`: an `Ersatt av` row duplicating an
+        already-emitted edge (repeated source row), kept distinct from the
+        inverse-collapse count so the inverse counter means what it says.
 
     `effective_year` is NULL — Timeseries.csv carries no year column for
     succession events (only `Namn, Handelse, Beskrivning, Entitet, ID1,
@@ -1800,75 +1821,67 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     ).fetchall():
         variant_lookup[rvid] = (p_slug, r_slug, rv_slug)
 
-    # AktuellVariabel lookup keys on cvid (globally unique). The variable
-    # slug derives from `variable_alias.delivery_column_name` per §5.3 —
-    # the same auto-slug rule the consumer-side binding linker uses.
-    # Multiple aliases per cvid: ORDER BY pins the lexically smallest
-    # `delivery_column_name` first; setdefault keeps that winner. In
-    # practice cvids rarely carry conflicting aliases.
-    cvid_lookup: dict[int, tuple[str, str, str, str]] = {}
-    cvid_rows = conn.execute(
-        "SELECT vi.cvid, p.slug, r.slug, rv.slug, va.delivery_column_name "
-        "FROM variable_instance vi "
-        "JOIN register r ON vi.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
-        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-        "WHERE r.slug IS NOT NULL AND rv.slug IS NOT NULL "
-        "ORDER BY vi.cvid, va.delivery_column_name"
-    ).fetchall()
-    for cvid, p_slug, r_slug, rv_slug, delivery_column_name in cvid_rows:
-        var_slug = derive_variable_slug(delivery_column_name)
-        if var_slug is None:
-            continue
-        # First (lexically smallest delivery_column_name) wins — pinned
-        # by the ORDER BY above. setdefault preserves the winner across
-        # later rows.
-        cvid_lookup.setdefault(cvid, (p_slug, r_slug, rv_slug, var_slug))
-
-    # Variabel grain: SCB's `var_id` is *per-register*, so an id alone is
-    # ambiguous globally. We resolve only when exactly one (register_id,
-    # var_id) pair exists for the given var_id — otherwise the row is
-    # genuinely unresolvable and gets skipped. For the unique case, fall
-    # through to a cvid under that (register_id, var_id) to pick up the
-    # variant + variable slug.
-    var_id_to_register: dict[int, list[int]] = {}
-    for r_register_id, var_id in conn.execute(
-        "SELECT register_id, var_id FROM variable"
+    # Variable-grain resolution (entitet IN ('AktuellVariabel', 'Variabel'))
+    # must anchor on the SAME slug the resolver derives at query time:
+    # `reg_meta` does NOT store a variable slug — `Catalog._resolve_binding`
+    # folds `variable_alias.delivery_column_name` through `derive_variable_slug`
+    # keyed only on the variable, and the §5.3 uniqueness invariant requires
+    # every alias under a `(register_id, var_id)` to fold to ONE slug. We
+    # reuse `derive_unique_variable_slug` (shared with the same_as
+    # materializer's `_variable_source_slug`) so the edges reference slugs
+    # the resolver will actually produce. A pair whose aliases fold to >1
+    # slug returns None → the row is skipped under
+    # `n_skipped_ambiguous_variable_slug`, never silently disambiguated.
+    #
+    # cvid → (register_id, regvar_id, var_id): AktuellVariabel rows carry a
+    # globally-unique cvid; one cvid maps to exactly one variable + variant.
+    cvid_to_pair: dict[int, tuple[int, int, int]] = {}
+    for cvid, vi_register_id, regvar_id, var_id in conn.execute(
+        "SELECT cvid, register_id, regvar_id, var_id FROM variable_instance"
     ).fetchall():
-        var_id_to_register.setdefault(var_id, []).append(r_register_id)
+        cvid_to_pair[cvid] = (vi_register_id, regvar_id, var_id)
 
-    # Per-(register_id, var_id) → (provider, register, variant, variable)
-    # slug path. Picks the cvid with the highest regver_id (most-recent
-    # era) so a renamed variable's *current* slug wins; ties break on
-    # lexically smallest delivery_column_name. Walking through
-    # variable_instance lets us reuse the cvid_lookup logic without a
-    # second alias join.
-    var_lookup: dict[tuple[int, int], tuple[str, str, str, str]] = {}
-    for (
-        r_register_id,
-        var_id,
-        p_slug,
-        r_slug,
-        rv_slug,
-        delivery_column_name,
-    ) in conn.execute(
-        "SELECT vi.register_id, vi.var_id, p.slug, r.slug, rv.slug, va.delivery_column_name "
-        "FROM variable_instance vi "
-        "JOIN register r ON vi.register_id = r.register_id "
-        "JOIN provider p ON r.provider_id = p.provider_id "
-        "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
-        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-        "WHERE r.slug IS NOT NULL AND rv.slug IS NOT NULL "
-        "ORDER BY vi.register_id, vi.var_id, vi.regver_id DESC, va.delivery_column_name"
+    # var_id → distinct (register_id, regvar_id) pairs. SCB's `var_id` is
+    # per-register *and* a variable may span multiple variants, so a bare
+    # `Variabel` id resolves only when it maps to exactly one
+    # (register_id, regvar_id) — otherwise the variant target is ambiguous
+    # and the row is skipped as unresolved.
+    var_id_to_pairs: dict[int, set[tuple[int, int]]] = {}
+    for var_id, vi_register_id, regvar_id in conn.execute(
+        "SELECT DISTINCT var_id, register_id, regvar_id FROM variable_instance"
     ).fetchall():
-        key = (r_register_id, var_id)
-        if key in var_lookup:
-            continue
-        var_slug = derive_variable_slug(delivery_column_name)
+        var_id_to_pairs.setdefault(var_id, set()).add((vi_register_id, regvar_id))
+
+    # regvar_id → variant slug path, derived from the stored slug columns
+    # (those ARE stored, unlike the variable slug). Mirrors variant_lookup
+    # but indexed for the variable-grain join.
+    regvar_to_variant: dict[int, tuple[str, str, str]] = dict(variant_lookup)
+
+    # Memoize per-(register_id, var_id) variable-slug derivation — both the
+    # AktuellVariabel and Variabel branches hit it, often repeatedly.
+    variable_slug_cache: dict[tuple[int, int], str | None] = {}
+
+    def _resolve_variable_edge_key(
+        register_id: int, regvar_id: int, var_id: int
+    ) -> tuple[str, str, str, str] | None:
+        """(provider, register, variant, variable) slug 4-tuple, or None.
+
+        None when the variant slug is missing (register/variant unslugged)
+        or the variable's aliases fold to ≠1 distinct slug (ambiguous).
+        """
+        variant = regvar_to_variant.get(regvar_id)
+        if variant is None:
+            return None
+        cache_key = (register_id, var_id)
+        if cache_key not in variable_slug_cache:
+            variable_slug_cache[cache_key] = derive_unique_variable_slug(
+                conn, register_id, var_id
+            )
+        var_slug = variable_slug_cache[cache_key]
         if var_slug is None:
-            continue
-        var_lookup[key] = (p_slug, r_slug, rv_slug, var_slug)
+            return None
+        # variant = (provider, register, variant_slug); append the variable.
+        return (*variant, var_slug)
 
     # Pull only relevant rows. The WHERE filter on handelse/entitet pushes
     # the scope reduction down to SQLite so we don't iterate the whole
@@ -1889,14 +1902,27 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     n_variable = 0
     n_skipped_unresolved = 0
     n_skipped_collapsed_inverse = 0
+    n_skipped_duplicate = 0
+    n_skipped_ambiguous_variable_slug = 0
 
-    # Track seen PKs so the inverse-direction `Ersätter` row counts as a
-    # collapsed-inverse instead of an INSERT OR IGNORE no-op (the PK
-    # collision is the *expected* path for SCB's paired rows, not a bug
-    # to silence). Sets are keyed per table grain.
+    # Track seen PKs to classify duplicate-PK skips correctly. A skip splits
+    # two ways by `handelse`: an `Ersätter` row hitting an existing edge is
+    # the *expected* inverse-direction collapse (SCB ships both directions);
+    # an `Ersatt av` row hitting an existing edge is a plain duplicate
+    # (repeated source row). The counter must mean what its name says, so we
+    # only bump `n_skipped_collapsed_inverse` for genuine `Ersätter` rows and
+    # route the rest to `n_skipped_duplicate`. Sets are keyed per table grain.
     seen_register: set[tuple[str, str, str, str]] = set()
     seen_variant: set[tuple[str, str, str, str, str, str]] = set()
     seen_variable: set[tuple[str, str, str, str, str, str, str, str]] = set()
+
+    def _classify_duplicate() -> None:
+        """Bump the right skip counter for a PK that's already been seen."""
+        nonlocal n_skipped_collapsed_inverse, n_skipped_duplicate
+        if handelse == "Ersätter":
+            n_skipped_collapsed_inverse += 1
+        else:  # 'Ersatt av' duplicate of an already-emitted edge
+            n_skipped_duplicate += 1
 
     for ts_event_id, handelse, entitet, id1_raw, id2_raw in candidate_rows:
         # id1/id2 are TEXT in the source CSV. Empty strings are common
@@ -1950,7 +1976,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 continue
             pk = (*pred, *succ)
             if pk in seen_register:
-                n_skipped_collapsed_inverse += 1
+                _classify_duplicate()
                 continue
             seen_register.add(pk)
             conn.execute(
@@ -1974,7 +2000,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 continue
             pk = (*pred, *succ)
             if pk in seen_variant:
-                n_skipped_collapsed_inverse += 1
+                _classify_duplicate()
                 continue
             seen_variant.add(pk)
             conn.execute(
@@ -1986,58 +2012,72 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
             )
             n_variant += 1
 
-        elif entitet == "AktuellVariabel":
-            pred = cvid_lookup.get(pred_id)
-            succ = cvid_lookup.get(succ_id)
-            if pred is None or succ is None:
-                n_skipped_unresolved += 1
-                _progress(
-                    f"  replaced_by: skipping AktuellVariabel row #{ts_event_id} — "
-                    f"unresolved cvid (pred={pred_id}, succ={succ_id})"
-                )
-                continue
-            pk = (*pred, *succ)
-            if pk in seen_variable:
-                n_skipped_collapsed_inverse += 1
-                continue
-            seen_variable.add(pk)
-            conn.execute(
-                "INSERT OR IGNORE INTO variable_replaced_by ("
-                "predecessor_provider, predecessor_register, predecessor_variant, predecessor_variable, "
-                "successor_provider, successor_register, successor_variant, successor_variable, "
-                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
-            )
-            n_variable += 1
+        else:  # entitet IN ('AktuellVariabel', 'Variabel') → variable grain
+            # Map both shapes to a (register_id, regvar_id, var_id) triple,
+            # then resolve to the SAME slug the catalog derives at query time
+            # via `_resolve_variable_edge_key` (shared `derive_variable_slug`
+            # logic). AktuellVariabel carries a globally-unique cvid;
+            # Variabel carries a bare var_id that's only resolvable when it
+            # maps to exactly one (register_id, regvar_id).
+            if entitet == "AktuellVariabel":
+                pred_triple = cvid_to_pair.get(pred_id)
+                succ_triple = cvid_to_pair.get(succ_id)
+                if pred_triple is None or succ_triple is None:
+                    n_skipped_unresolved += 1
+                    _progress(
+                        f"  replaced_by: skipping AktuellVariabel row #{ts_event_id} — "
+                        f"unresolved cvid (pred={pred_id}, succ={succ_id})"
+                    )
+                    continue
+            else:  # 'Variabel'
+                pred_pairs = var_id_to_pairs.get(pred_id, set())
+                succ_pairs = var_id_to_pairs.get(succ_id, set())
+                if len(pred_pairs) != 1 or len(succ_pairs) != 1:
+                    n_skipped_unresolved += 1
+                    _progress(
+                        f"  replaced_by: skipping Variabel row #{ts_event_id} — "
+                        f"var_id ambiguous or missing "
+                        f"(pred={pred_id} in {len(pred_pairs)} variant(s), "
+                        f"succ={succ_id} in {len(succ_pairs)} variant(s))"
+                    )
+                    continue
+                pred_reg, pred_regvar = next(iter(pred_pairs))
+                succ_reg, succ_regvar = next(iter(succ_pairs))
+                pred_triple = (pred_reg, pred_regvar, pred_id)
+                succ_triple = (succ_reg, succ_regvar, succ_id)
 
-        else:  # entitet == 'Variabel'
-            # var_id is per-register: resolvable only when exactly one
-            # (register_id, var_id) pair exists in the DB. Multiple
-            # matches → ambiguous; zero → missing entity. Both
-            # → skip-not-fail per the best-effort contract.
-            pred_registers = var_id_to_register.get(pred_id, [])
-            succ_registers = var_id_to_register.get(succ_id, [])
-            if len(pred_registers) != 1 or len(succ_registers) != 1:
-                n_skipped_unresolved += 1
-                _progress(
-                    f"  replaced_by: skipping Variabel row #{ts_event_id} — "
-                    f"var_id ambiguous or missing "
-                    f"(pred={pred_id} in {len(pred_registers)} registers, "
-                    f"succ={succ_id} in {len(succ_registers)} registers)"
-                )
-                continue
-            pred = var_lookup.get((pred_registers[0], pred_id))
-            succ = var_lookup.get((succ_registers[0], succ_id))
+            pred = _resolve_variable_edge_key(*pred_triple)
+            succ = _resolve_variable_edge_key(*succ_triple)
             if pred is None or succ is None:
-                n_skipped_unresolved += 1
-                _progress(
-                    f"  replaced_by: skipping Variabel row #{ts_event_id} — "
-                    f"no slug path for var_id (pred={pred_id}, succ={succ_id})"
+                # None means the variant slug is missing OR the variable's
+                # aliases fold to ≠1 slug. The latter is the ambiguity the
+                # resolver's uniqueness invariant forbids — count it
+                # distinctly so it's visible in the manifest. We re-check
+                # which side(s) were ambiguous (vs. plain missing) by
+                # consulting the cache the resolver populated.
+                pred_var_slug = variable_slug_cache.get(
+                    (pred_triple[0], pred_triple[2])
                 )
+                succ_var_slug = variable_slug_cache.get(
+                    (succ_triple[0], succ_triple[2])
+                )
+                if pred_var_slug is None or succ_var_slug is None:
+                    n_skipped_ambiguous_variable_slug += 1
+                    _progress(
+                        f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                        f"variable aliases fold to ≠1 slug or no slug "
+                        f"(pred={pred_id}, succ={succ_id})"
+                    )
+                else:
+                    n_skipped_unresolved += 1
+                    _progress(
+                        f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                        f"unresolved variant slug (pred={pred_id}, succ={succ_id})"
+                    )
                 continue
             pk = (*pred, *succ)
             if pk in seen_variable:
-                n_skipped_collapsed_inverse += 1
+                _classify_duplicate()
                 continue
             seen_variable.add(pk)
             conn.execute(
@@ -2053,6 +2093,8 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         f"  {n_register:,} register / {n_variant:,} variant / "
         f"{n_variable:,} variable replaced_by edges "
         f"({n_skipped_collapsed_inverse:,} inverse-direction collapsed, "
+        f"{n_skipped_duplicate:,} duplicate, "
+        f"{n_skipped_ambiguous_variable_slug:,} ambiguous variable slug, "
         f"{n_skipped_unresolved:,} unresolved)"
     )
     return {
@@ -2061,7 +2103,16 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         "n_variant_replaced_by": n_variant,
         "n_variable_replaced_by": n_variable,
         "n_skipped_unresolved": n_skipped_unresolved,
+        # Only genuine `Ersätter` rows that collapsed onto an already-emitted
+        # edge — the expected SCB paired-row case (see `_classify_duplicate`).
         "n_skipped_collapsed_inverse": n_skipped_collapsed_inverse,
+        # `Ersatt av` rows that duplicate an already-emitted edge (repeated
+        # source rows), kept distinct from the inverse-collapse count.
+        "n_skipped_duplicate": n_skipped_duplicate,
+        # Variable-grain rows whose aliases fold to ≠1 slug — the §5.3
+        # uniqueness invariant the resolver relies on doesn't hold, so we
+        # can't emit a slug it would actually produce.
+        "n_skipped_ambiguous_variable_slug": n_skipped_ambiguous_variable_slug,
     }
 
 
@@ -2899,6 +2950,8 @@ def build_db(
                 "n_variable_replaced_by": 0,
                 "n_skipped_unresolved": 0,
                 "n_skipped_collapsed_inverse": 0,
+                "n_skipped_duplicate": 0,
+                "n_skipped_ambiguous_variable_slug": 0,
             }
         else:
             replaced_by_stats = _materialize_replaced_by_edges(conn)

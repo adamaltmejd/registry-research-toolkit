@@ -2415,13 +2415,16 @@ class TestReplacedByEdges:
     ) -> None:
         """Variabel (var_id grain) row with Ersatt av → one variable edge.
 
-        Uses var_id 100 (TestVar in TESTREG, unique to register 1) →
-        var_id 300 (UniqueVar in OTHERREG, unique to register 2). Both
-        var_ids are register-unique so the materializer can resolve.
+        Uses var_id 200 (ÅÄÖVar in TESTREG/Individer, single alias AaoCol →
+        'aaocol', register-unique) → var_id 300 (UniqueVar in
+        OTHERREG/Företag, single alias UniqCol → 'uniqcol'). Both var_ids
+        map to exactly one (register_id, regvar_id) and fold to a single
+        slug, so the materializer resolves them on the same
+        `derive_unique_variable_slug` path the catalog uses at query time.
         """
         from _csv_fixtures import timeseries_row
 
-        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        rows = [timeseries_row(entitet="Variabel", id1="200", id2="300")]
         db_path = self._build(tmp_path, rows)
         conn = open_db(db_path)
         try:
@@ -2431,12 +2434,10 @@ class TestReplacedByEdges:
                 "note FROM variable_replaced_by"
             ).fetchall()
             assert len(edges) == 1
-            # TestVar (cvid 1002) has aliases TestCol and TestKolumn —
-            # 'testcol' wins on ORDER BY delivery_column_name.
             assert tuple(edges[0]) == (
                 "testreg",
                 "individer",
-                "testcol",
+                "aaocol",
                 "otherreg",
                 "foretag",
                 "uniqcol",
@@ -2448,12 +2449,15 @@ class TestReplacedByEdges:
     def test_aktuell_variabel_emits_variable_replaced_by(self, tmp_path: Path) -> None:
         """AktuellVariabel (cvid grain) → variable_replaced_by table.
 
-        cvid 1002 (TestVar in TESTREG/Individer) → cvid 2002
-        (UniqueVar in OTHERREG/Företag).
+        cvid 1005 (ÅÄÖVar in TESTREG/Individer, var_id 200) → cvid 2002
+        (UniqueVar in OTHERREG/Företag, var_id 300). Both fold to a single
+        slug. Lands the same edge a Variabel row over var_id 200 → 300
+        would (verified against the prior test), since AktuellVariabel and
+        Variabel both resolve to the per-(register, var) slug.
         """
         from _csv_fixtures import timeseries_row
 
-        rows = [timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002")]
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1005", id2="2002")]
         db_path = self._build(tmp_path, rows)
         conn = open_db(db_path)
         try:
@@ -2466,11 +2470,72 @@ class TestReplacedByEdges:
             assert tuple(edges[0]) == (
                 "testreg",
                 "individer",
-                "testcol",
+                "aaocol",
                 "otherreg",
                 "foretag",
                 "uniqcol",
             )
+        finally:
+            conn.close()
+
+    def test_ambiguous_variable_slug_skipped(self, tmp_path: Path) -> None:
+        """A variable whose aliases fold to >1 distinct slug is skipped
+        under `n_skipped_ambiguous_variable_slug` — the §5.3 uniqueness
+        invariant the resolver relies on doesn't hold, so no slug can be
+        emitted that the catalog would actually produce.
+
+        TestVar (var_id 100, cvid 1002) carries aliases 'TestCol' and
+        'TestKolumn' which derive to 'testcol' and 'testkolumn'. The
+        same_as materializer raises `slug_same_as_ambiguous_source` on
+        this exact shape; the auto-derive path skips-and-counts instead.
+        """
+        import json as _json
+
+        from _csv_fixtures import timeseries_row
+
+        # var_id 100 (ambiguous) → var_id 300 (clean). The ambiguous side
+        # alone is enough to skip the edge.
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_skipped_ambiguous_variable_slug"] == 1
+            # Not misclassified as a plain unresolved row.
+            assert stats["n_skipped_unresolved"] == 0
+        finally:
+            conn.close()
+
+    def test_variable_slug_matches_resolver(self, tmp_path: Path) -> None:
+        """The emitted predecessor/successor variable slug is exactly the
+        one `Catalog.resolve` produces for that variable — the whole point
+        of anchoring on `derive_unique_variable_slug`. Round-trips the
+        ÅÄÖVar edge's predecessor FQID through the resolver.
+        """
+        from _csv_fixtures import timeseries_row
+        from reg_meta.catalog import Catalog, ResolvedVariableBinding
+
+        rows = [timeseries_row(entitet="Variabel", id1="200", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edge = conn.execute(
+                "SELECT predecessor_register, predecessor_variant, "
+                "predecessor_variable FROM variable_replaced_by"
+            ).fetchone()
+            reg, variant, variable = edge
+            # ÅÄÖVar lives in version 2022 of TESTREG/Individer.
+            fqid = f"scb/{reg}/{variant}/2022/{variable}"
+            resolved = Catalog(conn).resolve(fqid)
+            assert isinstance(resolved, ResolvedVariableBinding)
+            assert str(resolved.fqid) == fqid
         finally:
             conn.close()
 
@@ -2498,7 +2563,8 @@ class TestReplacedByEdges:
             assert len(edges) == 1
             # Predecessor = the original (regvar 10 → individer), successor = 20 → foretag.
             assert tuple(edges[0]) == ("individer", "foretag")
-            # Stats counter increments by 1 for the collapsed inverse row.
+            # The genuine Ersätter row is the one that collapsed — counted
+            # as inverse, NOT as a plain duplicate.
             import json as _json
 
             manifest = conn.execute(
@@ -2506,6 +2572,42 @@ class TestReplacedByEdges:
             ).fetchone()
             stats = _json.loads(manifest["value"])
             assert stats["n_skipped_collapsed_inverse"] == 1
+            assert stats["n_skipped_duplicate"] == 0
+        finally:
+            conn.close()
+
+    def test_duplicate_ersatt_av_not_counted_as_inverse(self, tmp_path: Path) -> None:
+        """Two identical `Ersatt av` rows (same id1/id2, NOT an Ersätter
+        pair) → one edge, and the second is counted as
+        `n_skipped_duplicate`, NOT `n_skipped_collapsed_inverse`. The
+        inverse counter must mean what its name says (Copilot review
+        comment 1): only genuine `Ersätter` collapses bump it.
+        """
+        import json as _json
+
+        from _csv_fixtures import timeseries_row
+
+        rows = [
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 1
+            )
+            manifest = conn.execute(
+                "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+            ).fetchone()
+            stats = _json.loads(manifest["value"])
+            assert stats["n_skipped_duplicate"] == 1
+            assert stats["n_skipped_collapsed_inverse"] == 0
         finally:
             conn.close()
 
@@ -2561,7 +2663,9 @@ class TestReplacedByEdges:
         rows = [
             timeseries_row(entitet="Register", id1="1", id2="2"),
             timeseries_row(entitet="RegisterVariant", id1="10", id2="20"),
-            timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002"),
+            # cvid 1005 (ÅÄÖVar) → 2002 (UniqueVar): both fold to a single
+            # slug, so the variable edge lands (cvid 1002 is ambiguous).
+            timeseries_row(entitet="AktuellVariabel", id1="1005", id2="2002"),
         ]
         db_path = self._build(tmp_path, rows)
         conn = open_db(db_path)
@@ -2602,6 +2706,8 @@ class TestReplacedByEdges:
                 "n_variable_replaced_by",
                 "n_skipped_unresolved",
                 "n_skipped_collapsed_inverse",
+                "n_skipped_duplicate",
+                "n_skipped_ambiguous_variable_slug",
             }
             assert stats["n_register_replaced_by"] == 1
             # Scanned counts only Ersatt av/Ersätter rows on the four
