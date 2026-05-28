@@ -626,7 +626,7 @@ delivery coordinates that select among the variable's states (§5.2),
 **state-on-variable modeling** that captures definition changes as
 `variable_state` rows with explicit variant + validity ranges,
 **slug-anchored edge tables** at **variable grain** for succession
-(`replaced_by`), grain-sibling (`related_to`), and cross-register
+(`replaced_by`), split-sibling (`related_to`), and cross-register
 equivalence (`same_as`), and a **build-time triage** pass that
 normalizes provider-specific oddities into the universal shape. The
 universal schema carries **no provider-specific tables**
@@ -686,7 +686,7 @@ contributor can re-run them if the data drifts:
 | Question | Finding | Implication |
 |---|---|---|
 | How many SCB `(register, var)` pairs even appear in more than one variant? | **78.9%** appear in exactly **one** variant. | Variant identity is degenerate for 4 in 5 variables — there is nothing to distinguish. |
-| When a SCB variable *does* span variants in the same year, what differs? | Of 55,309 `(register, var, year)` **cells** spanning ≥2 variants, divergence is **overwhelmingly column-name or grain** (kolumnnamn 13,478 + grain 2,408 cells); only ~672 type-drift + ~1,084 value-set-only cells. Rolling those divergent cells up to the **variable** grain (`(register, var)` pairs, the 42,768 population), just **4.3% of variables** (≈1,840 pairs) show *any* same-year cross-variant divergence at all. | The divergence that exists is column/grain — exactly what **triage splits on, independent of variant** (§5.7). The variant is never the discriminator; type/value-set drift collapses to one state or a multi-vintage state. |
+| When a SCB variable *does* span variants in the same year, what differs? | Of 55,309 `(register, var, year)` **cells** spanning ≥2 variants, divergence is **overwhelmingly column-name or grain** (kolumnnamn 13,478 + grain 2,408 cells); only ~672 type-drift + ~1,084 value-set-only cells. Rolling those divergent cells up to the **variable** grain (`(register, var)` pairs, the 42,768 population), just **4.3% of variables** (≈1,840 pairs) show *any* same-year cross-variant divergence at all. | The divergence that exists is column/grain — exactly what **triage resolves (fold or split), independent of variant** (§5.7): grain/vintage folds into discriminated states, disjoint columns split into distinct variables. The variant is never the discriminator. |
 | Is the variant or the period the stronger differentiator? | **43%** of multi-period `(variable × variant)` cells drift across periods, vs 4.3% across same-year variants. | **Period** is the real differentiation axis — and it (correctly) lives in `variable_state`, not in identity. |
 | SOS: do code sets differ by deldatamängd? | **Zero** variables have a deldatamängd-specific code list — every `variable_hint` maps to exactly one register-level `kodlista` (the structured `Kodlista_*` sheets are register-scoped and shared across deldatamängder). | The deldatamängd carries **no code/identity differentiation**; same-named variables across deldatamängder are one variable. |
 | SOS: do codes vary by period? | **35%** of code rows carry `tidsperiod` ranges (e.g. `FODLAND` codes scoped `1961-1980` then `1982-1997`). | SOS codes vary by **period**, not variant — again period is the axis, and it belongs in state. |
@@ -788,7 +788,8 @@ depends on the provider's source structure:
   for two unrelated meanings (e.g. BU `FOD_DATUMN` = birth-date in one
   deldatamängd vs personnummer in another; PAR `ATC` = code-string vs
   binary-flag) — are **split into distinct variables** by the same
-  build-time triage (§5.7) that handles SCB column/grain splits. The
+  build-time triage (§5.7) that splits SCB's disjoint-column collisions
+  (the same triage *folds* same-concept grain/vintage instead). The
   SOS merge rule (DECISION POINT 4): two same-named SOS variables in
   one register become **one** variable unless triage flags a
   type/code-shape conflict that marks them as genuinely different
@@ -860,8 +861,9 @@ CREATE TABLE variable_state (
     data_length             TEXT,
     delivery_column_name    TEXT,                          -- denormalized latest alias for the state
     value_set_id            INTEGER REFERENCES value_set(value_set_id),
-    -- Overlap discriminator (rare; multi-vintage). Defaults to '' (not
-    -- NULL) so the uniqueness index below bites in the common case —
+    -- Overlap discriminator: multi-vintage, grain, or coding representation
+    -- of one variable, folded into overlapping states per §5.7. Defaults to
+    -- '' (not NULL) so the uniqueness index below bites in the common case —
     -- SQLite treats NULLs as distinct, which would let duplicate
     -- non-multi-vintage states slip through. The '' sentinel mirrors the
     -- valid_to = '9999-12-31' philosophy.
@@ -894,7 +896,7 @@ edge to anchor):
 |---|---|---|---|
 | `variable_same_as` | variable | Symmetric | Cross-register / cross-provider equivalence: "variable C in register A is the same variable as variable D in register B". **Curated only** — within-register `var_id` reuse is now the variable itself (one variable, many variant states), not an edge, so the `(N choose 2)` auto-derive is deleted (§5.5). |
 | `variable_replaced_by` | variable | Directional | Succession: variable X retired, replaced by variable Y. Auto-derived from SCB `timeseries_event` (`handelse IN ('Ersatt av', 'Ersätter')`) plus TOML curation for cross-provider edges. |
-| `variable_related_to` | variable | Symmetric | Grain/position/coding siblings: `utbildningsinriktning-3pos` ↔ `utbildningsinriktning-4pos` — distinct **variables** (triage splits create distinct variables now, §5.7). Auto-emitted by build-time triage splits; TOML adds cross-variable edges manually. |
+| `variable_related_to` | variable | Symmetric | Distinct variables a triage *split* produced from one generic `var_id`: `kommun-hem` ↔ `kommun-skol`, `land-id` ↔ `land-namn` (§5.7). **Same-concept grain/vintage/coding does NOT appear here** — it *folds* into one variable (§5.7), so there is no edge. Auto-emitted by triage splits; TOML adds cross-variable edges manually. |
 
 Plus the lineage edge (§5.6) materializing composite-source bindings:
 
@@ -1571,21 +1573,23 @@ same shape as the §5.7 build join, applied consistently to all edges):
 2. **Split `var_id`, event carries a discriminator** (the SCB event
    row's `AktuellVariabel` `cvid` resolves to a kolumnnamn/grain): map
    to the matching sibling variable via the §5.7 discriminator. 1:1.
-3. **Split `var_id`, no usable discriminator:** **fan the edge to all
-   siblings** of that `var_id` and tag each with `note =
-   "auto:split_fanout"`, plus emit a `replaced_by_split_ambiguous`
-   build warning naming the `var_id` and its siblings. Fanning (rather
-   than dropping) is the safe default — a succession hint on every
-   sibling is recoverable by a curator; a silently-dropped one is not.
-   Curators collapse the fan to the intended sibling in TOML when they
-   know which one SCB meant.
+3. **Split `var_id`, no usable discriminator:** emit a
+   `replaced_by_split_ambiguous` build warning (naming the `var_id` and
+   its siblings) and **drop the edge** — do not fan. After the §5.7
+   *fold* pass, a residual split is by construction a set of *genuinely
+   different* variables (same-concept representations were folded into
+   one variable), so fanning would attach a succession/equivalence hint
+   to variables it never applied to — and a misleading hint is worse
+   than a missing one (`replaced_by` is a soft "did you mean…?" cue, not
+   load-bearing). Curators add the correct edge in TOML — naming the
+   sibling slug — when they know which one SCB meant.
 
-The same three-way rule governs curated `same_as` / `related_to` TOML
-endpoints that resolve a target register's variable slug: an exact
-variable slug is 1:1; a bare `var_id`-shaped target on a split source is
-fanned-with-warning. (In practice TOML endpoints name the *slug*, which
-is already sibling-specific, so the fan case is almost always
-auto-derived, not curated.)
+The same rule governs curated `same_as` / `related_to` TOML endpoints
+that resolve a target register's variable slug: an exact variable slug
+is 1:1; a bare `var_id`-shaped target on a split source is dropped with a
+warning. (In practice TOML endpoints name the *slug*, which is already
+sibling-specific, so the ambiguous case is almost always auto-derived,
+not curated.)
 
 **PR #131 grain adjustment.** PR #131 (A2.3) built
 `variable_replaced_by` with **variant-bearing** 4-part endpoints
@@ -1818,18 +1822,28 @@ single `(variable, year)` within a variant — empirically 2.7% of
 distinct variable triples — the build applies a triage algorithm. The
 algorithm enforces the universal invariant: **one state per variable
 per variant per year, unless explicitly marked as overlapping
-multi-vintage**.
+multi-vintage / grain / coding representation** (the §5.7 *fold*, below).
 
-A triage *split* creates **distinct variables** — when the candidates
-turn out to be parallel deliverables (different columns, different SUN
-grains, or — for SOS — a name reused for two unrelated meanings), the
-build mints N separate `variable` rows, each with its own
-register-unique variable slug, and links them with `variable_related_to`
-edges (variable grain, §5.5). This is the same mechanism that handles
-SOS name-reuse collisions (§5.1): the triage decides "these aren't one
-variable" and splits them. (Both providers use the same triage outcome —
-distinct variables — even though SCB's split signal is column/grain and
-SOS's is name-reuse meaning conflict.)
+Triage has **two** outcomes, and choosing between them is its core job:
+
+- A *fold* keeps **one variable** — when candidates are the same concept
+  in different *representations* (a classification vintage, a SUN/SSYK
+  grain, a coding variant), even when SCB ships them as parallel columns,
+  the build keeps one `variable` and emits overlapping `variable_state`
+  rows discriminated by `value_set_version_label` (§5.1). No edge — it's
+  one variable.
+- A *split* creates **distinct variables** — when candidates are
+  genuinely different concepts (disjoint columns lumped under a generic
+  `var_id`, or — for SOS — a name reused for two unrelated meanings), the
+  build mints N separate `variable` rows, each with its own
+  register-unique variable slug, and links them with `variable_related_to`
+  edges (variable grain, §5.5). This is the same mechanism that handles
+  SOS name-reuse collisions (§5.1): the triage decides "these aren't one
+  variable" and splits them.
+
+The fold/split boundary is the load-bearing decision (rule 3 below); the
+~200–300-entry curation backlog exists to adjudicate it where the
+heuristic is unsure.
 
 **Variable identity and the source-row → variable join.** Because a split
 puts N variables under one `provider_key` (SCB `var_id`, SOS
@@ -1870,17 +1884,43 @@ cannot be the same variable.
    Variable aliases are many-to-many; a state may map to multiple
    delivery column names. Use set intersection: states A and B
    share a column iff their kolumnnamn sets intersect.
-3. **Multiple distinct kolumnnamn groups → split into distinct
-   variables.** Each group becomes a separate `variable` with an
-   auto-derived variable slug (next subsection). Emit
-   `variable_related_to` edges (variable grain) with `relation_kind =
-   same_definition_different_column`.
+3. **Multiple distinct kolumnnamn groups → decide *fold* vs *split*.**
+   Different physical columns under one `var_id` are either the same
+   concept in different representations (fold) or genuinely different
+   variables (split). The discriminator is the **column stem**, not the
+   variable name:
+   - **Fold** when the groups share a common stem and differ only by a
+     representation axis — a classification vintage (`FtgSni69` /
+     `FtgSni92` → SNI-1969 / SNI-1992), a grain (`Ssyk3` / `Ssyk5`), or a
+     coding variant (`BCIV` / `BCIVRED`). Keep **one variable**;
+     materialize overlapping `variable_state` rows discriminated by
+     `value_set_version_label` (the same mechanism as true multi-vintage —
+     the label carries the vintage/grain/coding token, and each state
+     keeps its own `delivery_column_name` and `value_set_id`). **No**
+     `variable_related_to` edge — it's one variable. The variable slug
+     derives from the shared stem (the representation suffix stripped,
+     §5.3).
+   - **Split** when the groups have disjoint stems / unrelated
+     definitions (`BANTALRUM_imp` rooms vs `BOAREA_imp` area under a
+     generic `Imputerat` `var_id`; `ASNgnr` workplace-industry vs `VeNgnr`
+     activity-industry; pension flags `BFPMARK` / `BPENS`). Each group
+     becomes a separate `variable` with its own register-unique slug;
+     emit `variable_related_to` edges (variable grain) with
+     `relation_kind = same_definition_different_column`.
+
+   `Variabelnamn` is **not** usable as the fold/split signal — SCB ships
+   generic family labels (one `var_id` named `"Imputerat"` covers rooms,
+   area, …; the label is identical across the columns in 100% of these
+   cases), so the column stem carries the concept boundary, not the name.
+   The shared-stem heuristic auto-resolves the clear cases; the genuinely
+   ambiguous boundary (`Ma_F1_Poang` / `Ma_F2_Poang` — parallel subtests,
+   or one parameterized variable?) is the §5.7 curation backlog.
 4. **Within one kolumnnamn group, apply secondary rules.** The
    triage inspects SCB-source fields (`vardemangdsniva` for grain,
    `datatyp` for type, etc.) that exist transiently in the
    pre-triage coalesced IR rows; these source fields don't carry
-   into the final `variable_state` schema (grain becomes part of
-   the variable slug when a split fires):
+   into the final `variable_state` schema except as the
+   `value_set_version_label` token a fold writes (rule 3):
    - `data_type` or `data_length` differs → collapse to one state
      (metadata drift within one column; pick the latest values).
    - One pre-triage row has empty `vardemangdsniva`, others have
@@ -1895,33 +1935,55 @@ cannot be the same variable.
    - Only `value_set_id` differs → collapse to one state (code-list
      drift in re-deliveries; pick the latest).
 
-**Sibling slug derivation.** When the algorithm splits one source
-variable into N sibling **variables**, their variable slugs derive
-deterministically. The *base* depends on the split reason: a
-**kolumnnamn-split** (different physical columns) derives each sibling
-slug from its own column (the source variable slug is ambiguous when the
-column splits, so it is not the base here); a **niva / datalangd-split**
-(one column, different grain or code/label role) appends a suffix to
-the shared base slug. All suffix delimiters use `-` to stay inside the
-§5.2 slug grammar (no underscores in slugs):
+**Empirical basis for fold-vs-split.** Measured on the raw
+`Registerinformation.csv` (470,073 `(register, var, edition)` buckets):
+**23,420 (5%)** ship one `var_id` under ≥2 columns *in a single edition*
+— the split-trigger population. By column stem, **~56% share a stem**
+(representation → fold: SNI vintages, SSYK grains, coding variants) and
+**~44% have disjoint stems** (genuinely different variables under a
+generic `var_id` → split). `Variabelnamn` is identical across the columns
+in **100%** of these buckets — confirming it is a generic family label
+and useless as the concept signal; the stem is the discriminator. This
+~56/44 mix is why triage needs *both* outcomes: a fold-everything rule
+would merge rooms with area, and the pre-fold split-everything rule
+over-split SNI vintages that arrive as columns (the inconsistency this
+redesign fixes — multi-vintage was already folded when it arrived as a
+`value_set_version_label`, but split when it arrived as `FtgSni69` /
+`FtgSni92`).
 
-1. **kolumnnamn-derived** when kolumnnamn distinguishes columns:
-   `Hemkommun` / `Skolkommun` → `kommun-hem` / `kommun-skol`. Strip
-   common prefixes (`Utbild_St` / `Utbild_Sl` → suffixes `-start` /
-   `-slut`, appended to the shared stem).
-2. **niva-pattern** when only `vardemangdsniva` (the SCB grain label) distinguishes:
-   - `\b(\d+)\s*position(er)?\b` → suffix `-{N}pos`
-   - `\bnivaold\b` → `-old`
-   - `\bgrov(?:\s+gruppering)?\b` → `-grov`
-   - `\bdetalj(?:grupp(er)?)?\b` → `-detalj`
-   - `\b(alfa|alpha)\b` → `-alfa`
-   - `\bhuvudgrupp\b` → `-huvud`
-   - `\bavdelning\b` → `-avd`
-   - `\bundergrupp\b` → `-under`
-3. **datalangd-derived** for code/label pairs: `Lid`/`LNamn` →
-   suffixes `-id` / `-namn`.
-4. **BLAKE2b hash fallback** when no pattern matches: suffix
-   `-x<6 hex>`.
+**Slug derivation (splits) and label extraction (folds).** A **split**
+into genuinely different variables (disjoint columns) derives each
+sibling slug from its own column (the source variable slug is ambiguous
+when the column splits, so it is not the base). A **fold** instead keeps
+**one** slug — from the shared stem with the representation token
+stripped — and writes that token to the state's `value_set_version_label`
+(rule 3). The niva/vintage/coding patterns below now **extract the fold
+token** (they no longer suffix a slug); only the kolumnnamn rule derives
+split-sibling slugs. All slug delimiters use `-` to stay inside the §5.2
+slug grammar (no underscores in slugs):
+
+1. **kolumnnamn-derived (split)** when disjoint columns are genuinely
+   different variables: `Hemkommun` / `Skolkommun` → `kommun-hem` /
+   `kommun-skol` (home vs school municipality — different concepts).
+   Code/label pairs are also a split (you order the code *or* the name):
+   `Lid` / `LNamn` → `land-id` / `land-namn`. Strip common affixes for a
+   readable distinguishing suffix (`Utbild_St` / `Utbild_Sl` →
+   `utbild-start` / `utbild-slut`).
+2. **niva-pattern (fold token)** — when the only difference is the SCB
+   grain label, the candidates **fold** into one variable and this token
+   becomes their `value_set_version_label` (not a slug suffix):
+   - `\b(\d+)\s*position(er)?\b` → `{N}pos`
+   - `\bnivaold\b` → `old`
+   - `\bgrov(?:\s+gruppering)?\b` → `grov`
+   - `\bdetalj(?:grupp(er)?)?\b` → `detalj`
+   - `\b(alfa|alpha)\b` → `alfa`
+   - `\bhuvudgrupp\b` → `huvud`
+   - `\bavdelning\b` → `avd`
+   - `\bundergrupp\b` → `under`
+   A classification vintage (`FtgSni69`/`FtgSni92` → `SNI1969`/`SNI1992`)
+   or coding variant likewise folds, its token becoming the label.
+3. **BLAKE2b hash fallback** for a split that no clean column rule
+   distinguishes: suffix `-x<6 hex>`.
 
 When two sibling variables derive the same slug, append `-a` / `-b` in a
 deterministic source order (lowest source row / kolumnnamn first) and
@@ -1945,7 +2007,7 @@ candidates exhibit a genuine meaning conflict — incompatible data
 types, or disjoint code-list shapes for the same name (BU `FOD_DATUMN`
 date vs personnummer; PAR `ATC` code-string vs binary-flag). Those
 splits create distinct variables with disambiguated slugs, exactly like
-SCB's column/grain splits. The common SOS case is a no-op merge (one
+SCB's disjoint-column splits. The common SOS case is a no-op merge (one
 variable per name). Future adapters may need provider-specific triage
 rules; the IR contract (§4.4) — which emits `IRVariable` +
 `IRVariableState` regardless of how the adapter decided variable
@@ -4430,7 +4492,7 @@ MIGRATION_PLAN for the full per-PR breakdown).
 - **A2.1 `variable_state` table + coalescing.** Add `variable_state` alongside `variable_instance`. Build pipeline writes both in parallel; resolver still uses `variable_instance` (no behavior change yet). The coalescer reads SCB CSV → `variable_instance` rows, groups by `(register, variant, variable, data_type, data_length, value_set_id, value_set_version_label, grain)` — `data_type` / `data_length` are the A1.1-renamed DDL columns (was `datatyp` / `datalangd`); `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`, included in the group key so multi-grain rows stay distinct for A2.2 triage and then dropped (the final `variable_state` schema doesn't carry grain). Derives `(valid_from, valid_to)` from `unika_summary.version_forsta/sista` (mapped to ISO 8601), writes one `variable_state` row per coalesced group.
 - **A2.1.5 Two-level table restructure + stored variable slug (respec; supersedes #133).** The structural prerequisite for triage and lineage — pulled earlier per the maintainer red-line, because A2.2/A2.4 cannot run on the A2.1 `(register_id, var_id)` schema (no `variable` table to write sibling variables to; no variable hierarchy to descend). Rename `variable` → `variable` (synthetic `variable_id AUTOINCREMENT` PK; A1.2 flags + shared metadata ride along). **Natural key = `(register_id, slug)` UNIQUE**; **`provider_key` is a NON-unique join hint** (plain index — triage siblings share one source key; maintainer red-line on DP1). Re-parent `variable_state` onto `variable_id` with an explicit `variant_id` coordinate; `value_set_version_label NOT NULL DEFAULT ''` so the state-uniqueness index bites. Stored-variable-slug population (auto-derive from the latest kolumnnamn, cross-variant tiebreak = highest `regver_id` then lexically smallest; §5.3); `[variable.<...>]` → `[variable.<...>]` TOML rename. Resolver still reads `variable_instance` here. On the 4.x line (additive tables + rename + column move).
 - **A2.2 Build-time triage (two-level).** Per §5.7. Requires A2.1.5 (the `variable` table). Kolumnnamn-primary discriminator. A split mints **distinct `variable` rows** (not sibling variables under one variable) — auto-derives sibling **variable** slugs, emits `variable_related_to` edges (variable grain), and persists the source-row → variable discriminator map (§5.7) so later delivery rows resolve to the right sibling. Catches the 11,945 same-year collision buckets across 3,281 distinct variable triples (~2.69% of `(variable, year)` buckets in current SCB data; reproduced from §5.7); ~200-300 cases need manual TOML curation (variable-slug TOML overrides for ambiguous suffixes). In-flight PR #132 reworks onto this shape (siblings become distinct variables).
-- **A2.3 Auto-derive `variable_replaced_by` (variable grain).** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table at **variable grain** (3-part endpoints; per-variable + parallel register- and variant-level tables). An endpoint naming a split `var_id` is resolved by the §5.7 discriminator or fanned-with-warning to all siblings (§5.5). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS). In-flight PR #131 mostly survives — drop its `*_variant` columns (variable-grain adjustment).
+- **A2.3 Auto-derive `variable_replaced_by` (variable grain).** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table at **variable grain** (3-part endpoints; per-variable + parallel register- and variant-level tables). An endpoint naming a split `var_id` is resolved by the §5.7 discriminator, else dropped with a warning (§5.5). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS). In-flight PR #131 mostly survives — drop its `*_variant` columns (variable-grain adjustment).
 - **A2.4 `variable_state_lineage` interval-overlap join (variable-grain matching).** Per §5.6. Requires A2.1.5 (reads `variable.source_register_id`, descends the variable hierarchy). Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-side matching traverses variable-grain `same_as` (`variable_set_via_same_as`). **Note:** the `same_as` table is still variant-grained `variable_same_as` until A2.6 renames/demotes it, so order A2.4 after A2.6's same_as work (cleanest) or project the legacy table to variable grain as a documented fallback (see MIGRATION_PLAN A2.4). Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks, no `variable_source_lineage` SQL table. Old `via_source_id` column populated in parallel for transition.
 - **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable` — variable metadata + states each tagged with their variant + variable-grain edges). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break. Add `resolve_at(fqid, period, *, variant=None, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Reads the A2.1.5 tables; the *binding-FQID* parse stays 4-seg interim until A2.6. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
 - **A2.6 Drop period & variant from FQID grammar (resolver flip + same_as demotion).** The grammar flip — the table restructure already landed in A2.1.5. (1) **Drop BOTH period and variant from the FQID** (4→3 seg `provider/register/slug`; variant becomes a navigational register sub-resource, §5.2). Update parser, emitter, slug-loading. (2) **Resolver flip:** `_resolve_binding_direct` parses 3-seg and reads the stored `slug` by exact match (no derive-at-resolve), joining `variable_state` through `variable_id` + `variant_id` + period. (3) Drop ~1,264 `register_version` slug entries; drop the `register_version` table (prose → reg-meta-docs, artifacts → provenance). (4) **Rename `variable_same_as` → `variable_same_as`**, rebuild with variable endpoints (drop `*_variant` + `*_period` columns), and **delete the `(N choose 2)` var_id auto-derive** entirely (within-register identity is the A2.1.5 variable hierarchy). Rewrite `_resolve_binding_via_same_as` to traverse variable-slug triples. (5) Webapp catalog endpoints flip to 3-seg binding leaves + variant sub-resource + new sub-endpoints. v0.x reg_meta clients break; pre-v1 policy says no shim. UNFROZEN sentinel is active so the slug TOML rewrite is a regular commit.
