@@ -468,7 +468,7 @@ class IRVariableState(BaseModel):
     data_type: str                      # normalized lowercase canonical set
     data_length: int | None
     value_set_id: int | None
-    value_set_version_label: str | None # overlap discriminator (rare; multi-vintage)
+    value_set_version_label: str | None # overlap discriminator (multi-vintage / folded classification version)
 
 class IRValueSet(BaseModel):
     value_set_id: int
@@ -2264,7 +2264,8 @@ class Catalog:
     # against a single state delivered in one variant (the common
     # case); length N when several variants delivered the variable at
     # the period, for range periods crossing state transitions, and for
-    # the rare LKF-shape multi-vintage case. Empty list when no state
+    # a folded classification-version / LKF multi-vintage case (common
+    # for classification-versioned variables). Empty list when no state
     # covers the period — no exception. HTTP layer (§9.5) surfaces this
     # as 200 + `{states: []}`, not 404; extract callers treat it as
     # a per-binding error.
@@ -2404,7 +2405,7 @@ source's declared `(register_variant, period)`.
 | state validity range | tuple | `(valid_from, valid_to)` on a `variable_state`. ISO 8601 TEXT (full `YYYY-MM-DD` after ingest expansion); both columns `NOT NULL`. Open-ended ranges use the sentinel `valid_to = '9999-12-31'`. |
 | period | field | `Source.period` in project_data.json. Always required; polymorphic (int / period-token / range / snapshot sentinel). Drives `resolve_at` for the source's bindings. See §6.2. |
 | panel_template | metadata | On `variant`: declares the natural panel structure as `(panel_entity_key, panel_time_key, panel_time_grain)`. Inherited by Panel members in project_data when not overridden. |
-| value_set_version_label | column | On `variable_state`. Carries the SCB `vardemangdsversion` label (e.g. "LKF 2006-01-01") when meaningful as a state discriminator (rare; multi-vintage classification case). NULL otherwise. |
+| value_set_version_label | column | On `variable_state`. Carries the SCB `vardemangdsversion` label (e.g. "LKF 2006-01-01") when meaningful as a state discriminator (the folded classification-version / multi-vintage case — common for classification-versioned variables). NULL otherwise. |
 
 **Universal English ↔ SCB Swedish vocabulary** (for the column-rename
 pass at stage A1):
@@ -4264,9 +4265,9 @@ its variant). Given a `period` (and the Source's variant),
 `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None)`
 returns `list[VariableState]` (per §5.10): length 1 for the
 common single-variant point-query case, length N across variants /
-range periods that cross state transitions / the rare LKF-shape
-multi-vintage case where multiple states share validity at the same
-period — no
+range periods that cross state transitions / the (common) folded
+classification-version / LKF-shape case where multiple states share
+validity at the same period — no
 ambiguity exception. Callers that already know the vintage pass
 `value_set_version=` to narrow to a single state; the SPA
 renders length-N lists as an edition picker (§9.5). Heuristic
