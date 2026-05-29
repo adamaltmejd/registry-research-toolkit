@@ -29,7 +29,12 @@ from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
+from .fqid_slugs import (
+    materialize_same_as_edges,
+    populate_slugs,
+    populate_variable_slugs,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -2548,6 +2553,18 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+            # A2.1.5 (§5.3): stored `variable.slug`. Runs after populate_slugs
+            # (register/variant slugs feed collision messages) and after
+            # _coalesce_variable_states (reads variable_state.delivery_column_name),
+            # but before materialize_same_as_edges (which reads the stored slug
+            # via _variable_source_slug). Curated `[variable]` overrides in
+            # scb.toml win; the rest auto-derive into scb.auto.toml.
+            var_slug_counts = populate_variable_slugs(conn, slug_root, strict=True)
+            row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
+            row_counts["variable_slugs_auto"] = (
+                var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
+            )
 
         # §5.5 same_as edges. Runs *after* populate_slugs so register /
         # variant / version slug columns are populated — the materializer

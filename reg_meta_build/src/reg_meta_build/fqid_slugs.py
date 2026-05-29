@@ -49,6 +49,11 @@ ENTITY_KINDS: tuple[EntityKind, ...] = (
     "classification",
 )
 PROVIDER_FILE_SUFFIX = ".toml"
+# Auto-derived variable slugs live alongside the hand-curated `<provider>.toml`
+# in `<provider>.auto.toml` (§5.3). Both files feed one in-memory index; the
+# hand-curated file wins on key clash. The auto file is build-generated
+# (`write_auto_toml`) and committed; it must never be hand-edited.
+AUTO_FILE_SUFFIX = ".auto.toml"
 CLASSIFICATIONS_FILE = "classifications.toml"
 SNAPSHOT_FILENAME = ".snapshot.json"
 
@@ -451,9 +456,27 @@ def _resolve_replaced_by(entries: list[SlugEntry], *, scope: str) -> None:
             cur = by_key[nxt_key]
 
 
+def _provider_from_path(path: Path) -> str:
+    """Provider slug from a provider TOML filename.
+
+    Both ``scb.toml`` and the build-generated ``scb.auto.toml`` belong to
+    provider ``scb``. ``path.stem`` would yield ``scb.auto`` for the latter
+    (the dot fails the provider slug grammar), so strip the ``.auto`` suffix
+    explicitly.
+    """
+    if path.name.endswith(AUTO_FILE_SUFFIX):
+        return path.name[: -len(AUTO_FILE_SUFFIX)]
+    return path.stem
+
+
 def load_provider_toml(path: Path) -> list[SlugEntry]:
-    """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …)."""
-    provider = path.stem
+    """Parse a per-provider slug TOML (``scb.toml``, ``sos.toml``, …).
+
+    Also handles the build-generated ``<provider>.auto.toml`` (§5.3): same
+    grammar and shape, only auto-derived variable rows in practice. The
+    ``.auto`` companion maps to the same provider as ``<provider>.toml``.
+    """
+    provider = _provider_from_path(path)
     try:
         validate_slug(provider, FqidKind.PROVIDER)
     except ValueError as exc:
@@ -793,27 +816,12 @@ def populate_slugs(
         "classification": 0,
     }
 
-    # `[variable]` slug overrides are forward-compat metadata only — the
-    # binding-resolver derives slugs from kolumnnamn at query time (catalog.py
-    # _resolve_binding) until the §5.6 binding rows land in step 1e. Raise
-    # loudly so a maintainer doesn't commit an override that does nothing.
-    inert_variable_overrides = [
-        e for e in entries if e.kind == "variable" and e.slug is not None
-    ]
-    if inert_variable_overrides:
-        sample = ", ".join(
-            f"{e.provider}/{e.source_id} -> {e.slug!r}"
-            for e in inert_variable_overrides[:5]
-        )
-        raise _err(
-            "slug_variable_override_unsupported",
-            f"{len(inert_variable_overrides)} [variable] entries declare a "
-            f"`slug` field, but variable slug overrides are not yet wired in "
-            f"(§5.6 binding materialization lands in step 1e). First: {sample}.",
-            'Drop the `slug = "..."` field; auto-slug from kolumnnamn applies. '
-            "Other metadata (deprecated, replaced_by, same_as) is parsed and "
-            "preserved for the upcoming step.",
-        )
+    # A2.1.5: `[variable]` slug overrides are now wired — they write the stored
+    # `variable.slug` column via `populate_variable_slugs` (called separately
+    # from `build_db`, after this function). `populate_slugs` itself only
+    # handles register / variant / version / classification and intentionally
+    # skips variable rows here; the override gate that previously rejected
+    # `[variable] slug = ...` is lifted.
 
     by_provider: dict[str, list[SlugEntry]] = {}
     classification_entries: list[SlugEntry] = []
@@ -1002,6 +1010,221 @@ def populate_slugs(
     return counts
 
 
+# ---------------------------------------------------------------------------
+# Variable slugs (§5.3 stored `variable.slug`)
+# ---------------------------------------------------------------------------
+
+
+def _curated_variable_slugs(
+    entries: list[SlugEntry],
+) -> dict[tuple[str, str], str]:
+    """Hand-curated `[variable]` slug overrides, keyed (provider, source_id).
+
+    Only entries from the hand-curated ``<provider>.toml`` carry an explicit
+    slug; auto entries from ``<provider>.auto.toml`` are returned by
+    :func:`_auto_variable_slugs`. The caller passes only the curated file's
+    entries here, so a curated slug always wins on a key clash regardless of
+    file-load order.
+    """
+    out: dict[tuple[str, str], str] = {}
+    for e in entries:
+        if e.kind == "variable" and e.slug is not None and e.provider is not None:
+            out[(e.provider, e.source_id)] = e.slug
+    return out
+
+
+def _auto_variable_slugs(auto_entries: list[SlugEntry]) -> dict[str, str]:
+    """Auto-derived slugs from one ``<provider>.auto.toml``, keyed by source_id.
+
+    The auto file is provider-specific (one per provider), so a bare source_id
+    key is unambiguous — this is the in-memory `{source_id: slug}` index the
+    population loop reads and `write_auto_toml` writes back.
+    """
+    out: dict[str, str] = {}
+    for e in auto_entries:
+        if e.kind == "variable" and e.slug is not None:
+            out[e.source_id] = e.slug
+    return out
+
+
+def write_auto_toml(path: Path, provider: str, slugs: dict[str, str]) -> None:
+    """Emit ``<provider>.auto.toml`` with one `[variable."<id>"]` row per slug.
+
+    Deterministic (sorted by source ID, numeric-aware) so rebuilds produce
+    byte-identical output given identical inputs. Generated artifact — the
+    header warns against hand-editing; curator overrides go in the
+    hand-curated ``<provider>.toml`` instead (§5.3).
+    """
+    lines = [
+        f"# AUTO-GENERATED by reg-meta-build — do not hand-edit ({provider}).",
+        "# Auto-derived variable slugs (§5.3): one entry per (register, var)",
+        "# pair, slug folded from the latest kolumnnamn on first sight and",
+        "# never recomputed. Curator overrides belong in the hand-curated",
+        f"# {provider}.toml; an override there shadows the entry here.",
+        "",
+    ]
+
+    def _sort_key(source_id: str) -> tuple[int, int, int, str]:
+        # SCB variable IDs are `<int>.<int>`; sort numerically for a stable,
+        # human-scannable file. A non-integer key (a future non-SCB provider)
+        # falls back to a string sort so the writer never crashes — the leading
+        # flag keeps the two regimes from interleaving.
+        reg, _, var = source_id.partition(".")
+        if reg.isdigit() and var.isdigit():
+            return (0, int(reg), int(var), "")
+        return (1, 0, 0, source_id)
+
+    for source_id in sorted(slugs, key=_sort_key):
+        lines.append(f"[variable.{_toml_str(source_id)}]")
+        lines.append(f"slug = {_toml_str(slugs[source_id])}")
+        lines.append("")
+    path.write_text("\n".join(lines), encoding="utf-8")
+
+
+def _latest_delivery_column(conn: sqlite3.Connection, variable_id: int) -> str | None:
+    """The latest `delivery_column_name` across a variable's `variable_state` eras.
+
+    Latest = highest `valid_to`, lexically smallest `delivery_column_name` on
+    ties — matching the coalescer's "latest alias" tie-break (db.py). Reads the
+    coalesced per-era column (not raw `variable_alias`) so it stays correct
+    after A2.7 drops `variable_instance`. Returns ``None`` when the variable has
+    no non-NULL delivery column in any era.
+    """
+    row = conn.execute(
+        "SELECT delivery_column_name FROM variable_state "
+        "WHERE variable_id = ? AND delivery_column_name IS NOT NULL "
+        "ORDER BY valid_to DESC, delivery_column_name ASC LIMIT 1",
+        (variable_id,),
+    ).fetchone()
+    return row[0] if row is not None else None
+
+
+def populate_variable_slugs(
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+    *,
+    strict: bool = True,
+) -> dict[str, int]:
+    """Populate `variable.slug` from curated + auto-derived slugs (§5.3).
+
+    `variable` is register-scoped (the "define once" addressable identity), so
+    each row gets exactly one slug; the natural key `(register_id, slug)` is
+    register-unique (`idx_variable_slug`). Three sources merge with curated >
+    auto precedence:
+
+    - **Curated** `[variable."<reg>.<var>"]` `slug = "..."` in
+      ``<provider>.toml`` — wins.
+    - **Auto** entries already recorded in ``<provider>.auto.toml`` — kept
+      verbatim (never recomputed, so a kolumnnamn rename can't rot a published
+      slug).
+    - **First-sight auto-derive** for variables present in neither file: fold
+      the latest kolumnnamn via :func:`derive_variable_slug`, persist the new
+      `(source_id, slug)` into ``<provider>.auto.toml``.
+
+    ``strict=True`` (real builds) refuses if any variable ends with no slug
+    (`slug_variable_underivable`) and on register-scoped slug collisions
+    (`slug_variable_collision`).
+
+    Returns ``{"curated": n, "auto_existing": n, "auto_new": n}``.
+    """
+    from .db import _progress
+
+    counts = {"curated": 0, "auto_existing": 0, "auto_new": 0}
+
+    # Curated overrides come from the hand-curated <provider>.toml only.
+    curated_entries = [
+        e
+        for path in sorted(slug_dir.glob(f"*{PROVIDER_FILE_SUFFIX}"))
+        if path.name != CLASSIFICATIONS_FILE
+        and not path.name.endswith(AUTO_FILE_SUFFIX)
+        for e in load_provider_toml(path)
+    ]
+    curated = _curated_variable_slugs(curated_entries)
+
+    for provider_slug in _live_providers(conn):
+        auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
+        auto: dict[str, str] = {}
+        if auto_path.is_file():
+            auto = _auto_variable_slugs(load_provider_toml(auto_path))
+
+        variables = conn.execute(
+            "SELECT v.variable_id, v.register_id, v.provider_key "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? "
+            "ORDER BY v.register_id, v.variable_id",
+            (provider_slug,),
+        ).fetchall()
+
+        # Register-scoped uniqueness guard: (register_id, slug) -> source_id of
+        # the first claimant (reported on collision; source_id is the
+        # maintainer-actionable identifier, not the synthetic variable_id).
+        seen: dict[tuple[int, str], str] = {}
+        # Variables whose kolumnnamn fold to None — collected for one actionable
+        # strict-mode error listing ALL offenders (not just the first 5).
+        unslugged: list[tuple[str, str | None]] = []
+        auto_dirty = False
+
+        for variable_id, register_id, provider_key in variables:
+            source_id = f"{register_id}.{provider_key}"
+            curated_slug = curated.get((provider_slug, source_id))
+            if curated_slug is not None:
+                slug = curated_slug
+                counts["curated"] += 1
+            elif source_id in auto:
+                # Never recompute an existing auto slug (§5.3 immutability).
+                slug = auto[source_id]
+                counts["auto_existing"] += 1
+            else:
+                kol = _latest_delivery_column(conn, variable_id)
+                slug = derive_variable_slug(kol)
+                if slug is None:
+                    unslugged.append((source_id, kol))
+                    continue
+                auto[source_id] = slug
+                auto_dirty = True
+                counts["auto_new"] += 1
+
+            collision = seen.get((register_id, slug))
+            if collision is not None:
+                raise _err(
+                    "slug_variable_collision",
+                    f"{provider_slug}: variable slug {slug!r} is claimed by both "
+                    f"{collision} and {source_id} under register {register_id} — "
+                    f"variable slugs must be unique per register (§5.3).",
+                    f'Add a curated `[variable."{source_id}"]` override in '
+                    f"{provider_slug}.toml to disambiguate one of them.",
+                )
+            seen[(register_id, slug)] = source_id
+
+            conn.execute(
+                "UPDATE variable SET slug = ? WHERE variable_id = ?",
+                (slug, variable_id),
+            )
+
+        if strict and unslugged:
+            sample = "; ".join(f"{sid} (kolumnnamn {kol!r})" for sid, kol in unslugged)
+            raise _err(
+                "slug_variable_underivable",
+                f"{len(unslugged)} variable(s) under provider {provider_slug!r} "
+                f"have no derivable slug: their latest kolumnnamn folds to empty "
+                f"/ reserved / period. {sample}.",
+                f'Add curated `[variable."<RegisterId>.<VarID>"]` slug entries '
+                f"in {provider_slug}.toml for each.",
+            )
+
+        if auto_dirty:
+            write_auto_toml(auto_path, provider_slug, auto)
+
+    _progress(
+        f"  Variable slugs: {counts['curated']:,} curated, "
+        f"{counts['auto_existing']:,} auto (existing), "
+        f"{counts['auto_new']:,} auto (new)"
+    )
+    return counts
+
+
 def _format_register_sample(row: Any) -> str:
     return f"{row[0]} ({row[1]!r})"
 
@@ -1053,55 +1276,35 @@ _ClassKey = tuple[str, str]
 def _variable_source_slug(
     conn: sqlite3.Connection, register_id: int, var_id: int, entry: SlugEntry
 ) -> str:
-    """Auto-derive the variable_slug for a `[variable]` TOML entry.
+    """Read the stored variable slug for a `[variable]` TOML entry's source.
 
-    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair. The
-    catalog derives the variable_slug from the latest kolumnnamn at resolve
-    time; for same_as we must agree on a stable canonical form **at build
-    time** without writing a slug column to `variable_instance` (variable
-    overrides are still blocked in populate_slugs). Strategy: derive a slug
-    from every alias under the pair, require a unique result. Multiple
-    distinct slugs would force the maintainer into a curated override
-    (§5.5 narrow scoping, or an explicit slug field once those land).
+    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair. A2.1.5
+    stores the canonical slug on `variable.slug` (register-scoped, one row per
+    variable) — `populate_variable_slugs` runs before `materialize_same_as_edges`,
+    so the column is populated here. This replaces the prior
+    derive-from-aliases-and-require-unique workaround; the folding-ambiguity
+    error it raised is now unreachable because a variable has exactly one stored
+    slug. The "no slug for this source" error is preserved for the genuine
+    curation case (variable absent / underivable at build).
     """
-    rows = conn.execute(
-        "SELECT DISTINCT va.delivery_column_name FROM variable_alias va "
-        "JOIN variable_instance vi ON vi.cvid = va.cvid "
-        "WHERE vi.register_id = ? AND vi.var_id = ? "
-        "AND va.delivery_column_name IS NOT NULL",
+    row = conn.execute(
+        "SELECT slug FROM variable "
+        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
+        "AND slug IS NOT NULL LIMIT 1",
         (register_id, var_id),
-    ).fetchall()
-    if not rows:
+    ).fetchone()
+    if row is None:
         raise _err(
             "slug_same_as_unresolved_source",
             f"{entry.provider}.toml: variable.{entry.source_id!r} has no "
-            f"kolumnnamn alias in the DB, so its variable_slug can't be "
-            f"derived for `same_as` materialization.",
-            "Check that the (register_id, var_id) appears in "
-            "Variabelinformation.csv; mark the entry deprecated=true if the "
-            "variable is retired.",
+            f"stored slug on `variable`, so its variable_slug can't be "
+            f"anchored for `same_as` materialization.",
+            "Check that the (register_id, var_id) appears in the build (it may "
+            "fold to an underivable slug — curate "
+            f'`[variable."{entry.source_id}"]` in {entry.provider}.toml); mark '
+            "the entry deprecated=true if the variable is retired.",
         )
-    slugs = {s for r in rows if (s := derive_variable_slug(r[0])) is not None}
-    if not slugs:
-        raise _err(
-            "slug_same_as_unresolved_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} has "
-            f"kolumnnamn alias(es) but none derive to a valid slug; cannot "
-            f"anchor `same_as`.",
-            "Inspect the kolumnnamn aliases in `variable_alias`; they may be "
-            "empty after NFKD/grammar folding. Add an explicit slug override "
-            "(when §5.6 follow-up lands) or correct the upstream alias.",
-        )
-    if len(slugs) > 1:
-        raise _err(
-            "slug_same_as_ambiguous_source",
-            f"{entry.provider}.toml: variable.{entry.source_id!r} aliases "
-            f"derive to multiple slugs ({sorted(slugs)!r}); cannot pick a "
-            f"canonical form for `same_as`.",
-            "Resolve the ambiguity in `variable_alias` upstream, or wait for "
-            "variable slug overrides (§5.6 follow-up) before adding same_as.",
-        )
-    return next(iter(slugs))
+    return row[0]
 
 
 def _validate_variable_target(
@@ -1962,8 +2165,10 @@ def _stale_toml_entries(
     Mirrors the `slug_unknown_source_id` check inside `populate_slugs`, but
     surfaces every stale entry at once instead of failing on the first.
     Deprecated entries are excluded — they're allowed to outlive their DB row.
-    Variable entries are excluded — slug overrides are not yet supported and
-    `populate_slugs` rejects them with a clearer error.
+    Variable entries are excluded from the staleness precheck: the bulk are
+    build-generated `<provider>.auto.toml` rows (A2.1.5, §5.3), which the
+    grow-only snapshot (`snapshot_payload`) already covers, and an auto entry
+    may legitimately outlive a variable pruned from a later delivery.
 
     Source IDs are guaranteed parseable here: `_validate_entry` calls
     `_parse_register_id` / `_parse_variant_id` / `_parse_version_id` at TOML
@@ -2069,6 +2274,7 @@ def diff_snapshot(
 
 
 __all__ = (
+    "AUTO_FILE_SUFFIX",
     "CLASSIFICATIONS_FILE",
     "ENTITY_KINDS",
     "DefaultCandidateClass",
@@ -2087,6 +2293,7 @@ __all__ = (
     "load_provider_toml",
     "load_slug_dir",
     "populate_slugs",
+    "populate_variable_slugs",
     "precheck_slugs",
     "read_snapshot",
     "repo_slug_dir",
@@ -2094,5 +2301,6 @@ __all__ = (
     "seed_classifications_toml",
     "seed_provider_toml",
     "snapshot_payload",
+    "write_auto_toml",
     "write_snapshot",
 )
