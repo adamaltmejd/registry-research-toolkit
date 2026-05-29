@@ -1148,8 +1148,15 @@ def _fallback_slug(provider_key: str) -> str:
 def populate_variable_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
+    fold_slugs: dict[int, str] | None = None,
 ) -> dict[str, int]:
     """Populate register-unique `variable.slug` (§5.3) — always succeeds.
+
+    `fold_slugs` (§5.7) maps a *folded* variable's `variable_id` to its
+    shared-column-stem slug base. A fold keeps one variable whose states span
+    several representation columns (`Ssyk3` / `Ssyk5`), so the latest-column
+    auto-derive would pick one representation (`ssyk5`) instead of the stem
+    (`ssyk`); the triage-supplied stem overrides that for first-sight slugs.
 
     `variable` is register-scoped, so each row gets exactly one slug and the
     natural key `(register_id, slug)` is register-unique (`idx_variable_slug`).
@@ -1298,7 +1305,12 @@ def populate_variable_slugs(
             # Pass 3: assign first-sight slugs via the fallback chain.
             for variable_id, provider_key, name, _kol in pending:
                 ks = kol_slug[variable_id]
-                if ks is not None and kol_freq[ks] == 1 and ks not in used:
+                fold = fold_slugs.get(variable_id) if fold_slugs else None
+                if fold:
+                    # §5.7 fold: slug from the shared column stem (triage-
+                    # supplied), not a single representation column.
+                    base = fold
+                elif ks is not None and kol_freq[ks] == 1 and ks not in used:
                     base = ks
                 else:
                     base = _name_slug(name) or ks or _fallback_slug(provider_key)
