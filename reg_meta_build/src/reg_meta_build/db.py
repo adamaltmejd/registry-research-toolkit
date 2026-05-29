@@ -251,8 +251,19 @@ CREATE TABLE object_type (
 );
 
 CREATE TABLE variable (
+    -- A2.1.5 (DECISION POINT 1, §5.1): synthetic PK so variable_state's FK is
+    -- single-column and the edge tables stay stable as the natural key varies
+    -- per provider. The natural key is (register_id, slug); `var_id` (renamed
+    -- to `provider_key` in the next A2.1.5 commit) is demoted from the PK to a
+    -- NON-unique join hint — a §5.7 triage split (A2.2) puts several variables
+    -- under one source key.
+    variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     var_id INTEGER NOT NULL,
+    -- §5.3 register-unique FQID leaf. NULL until populate_variable_slugs runs
+    -- (wired in a later A2.1.5 commit); SQLite treats NULLs as distinct, so the
+    -- transient all-NULL window doesn't trip the unique index below.
+    slug TEXT,
     -- §5.11 rename. Values stay provider-native. `variabeloperationell_definition`
     -- merges into `description` at ingest when distinct + non-empty;
     -- `variabelreferenstid`, `variabelhamtadfran`, and `variabelextern_kommentar`
@@ -273,11 +284,16 @@ CREATE TABLE variable (
     -- `is_sensitive`. ANY 'Ja' row across the unika_summary group for a
     -- (register_id, var_id) sets the flag.
     is_sensitive INTEGER NOT NULL DEFAULT 0,
-    is_identifier INTEGER NOT NULL DEFAULT 0,
-    -- PK doubles as the join index for get_schema's JOIN on (register_id, var_id).
-    -- Do not add a redundant explicit index.
-    PRIMARY KEY (register_id, var_id)
+    is_identifier INTEGER NOT NULL DEFAULT 0
 );
+-- Natural key: register-unique slug (the FQID leaf, §5.3). Stays unique after
+-- an A2.2 triage split because siblings get distinct slugs. The one UNIQUE
+-- constraint on the table (DECISION POINT 1).
+CREATE UNIQUE INDEX idx_variable_slug ON variable(register_id, slug);
+-- `var_id` (→ `provider_key`) is a NON-unique join hint, not a key: A2.2
+-- triage siblings share one source key. Plain index, not UNIQUE. Also serves
+-- get_schema's JOIN on (register_id, var_id).
+CREATE INDEX idx_variable_natkey ON variable(register_id, var_id);
 
 CREATE TABLE variable_instance (
     cvid INTEGER PRIMARY KEY,
@@ -311,8 +327,11 @@ CREATE TABLE variable_instance (
     -- §5.6 lineage edge: source cvid for consumer-side bindings (e.g. LISA
     -- pulling Kön from RTB). NULL on canonical/source instances. Populated
     -- by `link_consumer_side_bindings` after CSV import.
-    via_source_id INTEGER REFERENCES variable_instance(cvid),
-    FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
+    via_source_id INTEGER REFERENCES variable_instance(cvid)
+    -- A2.1.5: no FK to `variable` — its natural key moved to the synthetic
+    -- `variable_id` PK + register-unique `slug`, so `(register_id, var_id)` is
+    -- no longer a UNIQUE/PK target. The join is by convention (and the
+    -- `idx_variable_natkey` index) until `variable_instance` is dropped in A2.7.
 );
 
 -- A2.1: per-era shape of a variable (§5.1). One row per coalesced
@@ -320,8 +339,10 @@ CREATE TABLE variable_instance (
 -- value_set_version_label, grain)` tuple over `variable_instance`; populated
 -- by `_coalesce_variable_states` after CSV import. Resolver still uses
 -- `variable_instance` at this stage — A2.5 flips it to `variable_state`.
--- FK shifts to `(register_id, register_variant_id, var_id)` once A2.4 lands the
--- variant-scoped variable PK.
+-- A2.1.5 re-parented this onto the synthetic `variable_id` FK (was FK
+-- `(register_id, var_id)` in A2.1) and made `register_variant_id` an explicit
+-- delivery coordinate; the coalescer resolves each group's `variable_id` from
+-- `(register_id, var_id)` via the promoted `variable` table.
 --
 -- valid_from / valid_to are TEXT NOT NULL `YYYY-MM-DD` always (storage
 -- contract from §5.1); coarser SCB inputs like the year "2020" expand at
@@ -336,17 +357,19 @@ CREATE TABLE variable_instance (
 -- of the variable slug when a split fires).
 CREATE TABLE variable_state (
     state_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    register_id INTEGER NOT NULL,
-    register_variant_id INTEGER NOT NULL,
-    var_id INTEGER NOT NULL,
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     valid_from TEXT NOT NULL,
     valid_to TEXT NOT NULL DEFAULT '9999-12-31',
     data_type TEXT,
     data_length TEXT,
     delivery_column_name TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
-    value_set_version_label TEXT,
-    FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id),
+    -- §5.7 overlap discriminator (multi-vintage / grain / coding). NOT NULL
+    -- DEFAULT '' so the uniqueness index below bites in the common
+    -- single-version case — SQLite treats NULLs as distinct, which would let
+    -- duplicate non-multi-vintage states slip through. Mirrors '9999-12-31'.
+    value_set_version_label TEXT NOT NULL DEFAULT '',
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
     -- cost because the coalescer is the only writer.
@@ -355,9 +378,15 @@ CREATE TABLE variable_state (
     CHECK (valid_to >= valid_from)
 );
 CREATE INDEX idx_variable_state_variable
-    ON variable_state(register_id, var_id);
+    ON variable_state(variable_id);
 CREATE INDEX idx_variable_state_register_variant
-    ON variable_state(register_id, register_variant_id, var_id);
+    ON variable_state(register_variant_id);
+-- Non-overlapping within a variant by default: one state per
+-- (variable, variant, valid_from) unless multi-vintage. The '' default on
+-- value_set_version_label (above) makes this bite in the common case (a NULL
+-- would escape SQLite's unique index).
+CREATE UNIQUE INDEX idx_variable_state_uniq
+    ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label);
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;
@@ -1530,6 +1559,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     #     parseable `registerversionnamn` year, unika_min/unika_max
     #     stand in. Rare in the SCB corpus but the build must produce
     #     writable rows regardless.
+    # A2.1.5: resolve each group's `variable_id` from its (register_id, var_id)
+    # via the promoted `variable` table. var_id is 1:1 with a variable until
+    # A2.2 triage splits land, so the lookup is unambiguous here.
+    vid_map: dict[tuple[int, int], int] = {
+        (r[0], r[1]): r[2]
+        for r in conn.execute("SELECT register_id, var_id, variable_id FROM variable")
+    }
+
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
@@ -1581,24 +1618,25 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
 
         batch.append(
             (
-                grp.register_id,
+                vid_map[(grp.register_id, grp.var_id)],
                 grp.register_variant_id,
-                grp.var_id,
                 valid_from,
                 valid_to,
                 grp.data_type,
                 grp.data_length,
                 grp.latest_alias,
                 grp.value_set_id,
-                grp.value_set_version_label,
+                # NOT NULL DEFAULT '' on the column; coalesce here so the
+                # uniqueness index bites for the common single-version case.
+                grp.value_set_version_label or "",
             )
         )
 
     conn.executemany(
-        "INSERT INTO variable_state (register_id, register_variant_id, var_id, "
+        "INSERT INTO variable_state (variable_id, register_variant_id, "
         "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
         "    value_set_id, value_set_version_label) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         batch,
     )
     state_count = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]

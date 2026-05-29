@@ -614,8 +614,9 @@ class TestBuildDb:
         assert len(triples) > 0
         for t in triples:
             n = db_conn.execute(
-                "SELECT COUNT(*) FROM variable_state "
-                "WHERE register_id = ? AND register_variant_id = ? AND var_id = ?",
+                "SELECT COUNT(*) FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = ? AND vs.register_variant_id = ? AND v.var_id = ?",
                 (t["register_id"], t["register_variant_id"], t["var_id"]),
             ).fetchone()[0]
             assert n >= 1, f"no variable_state for {tuple(t)}"
@@ -641,8 +642,9 @@ class TestBuildDb:
         Asserted against ÅÄÖVar (register_id=1, var_id=200), which has
         a single unika row VersionForsta=VersionSista='2022'."""
         rows = db_conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state "
-            "WHERE register_id = 1 AND var_id = 200"
+            "SELECT valid_from, valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.var_id = 200"
         ).fetchall()
         assert len(rows) == 1
         assert rows[0]["valid_from"] == "2022-01-01"
@@ -662,7 +664,8 @@ class TestBuildDb:
         resolver can't unambiguously narrow."""
         rows = db_conn.execute(
             "SELECT valid_from, valid_to, value_set_id "
-            "FROM variable_state WHERE register_id = 1 AND var_id = 44 "
+            "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.var_id = 44 "
             "ORDER BY value_set_id NULLS LAST"
         ).fetchall()
         assert len(rows) >= 1
@@ -687,8 +690,9 @@ class TestBuildDb:
         'TestKolumn'] both attached to the same regver, the lexically
         smaller alias wins by deterministic tie-break."""
         row = db_conn.execute(
-            "SELECT delivery_column_name FROM variable_state "
-            "WHERE register_id = 1 AND var_id = 100"
+            "SELECT delivery_column_name FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.var_id = 100"
         ).fetchone()
         assert row is not None
         assert row["delivery_column_name"] == "TestCol"
@@ -699,8 +703,9 @@ class TestBuildDb:
         ("2021") to derive the valid range. Confirms the fallback path is
         wired correctly."""
         row = db_conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state "
-            "WHERE register_id = 2 AND var_id = 301"
+            "SELECT valid_from, valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 2 AND v.var_id = 301"
         ).fetchone()
         assert row is not None
         assert row["valid_from"] == "2021-01-01"
@@ -714,8 +719,9 @@ class TestBuildDb:
         permits overlapping states. UniqueVar's instance gets the "2"
         label from Vardemangder; assert it surfaces on the state row."""
         row = db_conn.execute(
-            "SELECT value_set_version_label FROM variable_state "
-            "WHERE register_id = 2 AND var_id = 300"
+            "SELECT value_set_version_label FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 2 AND v.var_id = 300"
         ).fetchone()
         assert row is not None
         # Matches what _import_vardemangder writes onto variable_instance
@@ -734,7 +740,8 @@ class TestBuildDb:
         # one without. Both share register_variant_id=10 (same variant).
         rows = db_conn.execute(
             "SELECT value_set_id, value_set_version_label "
-            "FROM variable_state WHERE register_id = 1 AND var_id = 44"
+            "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.var_id = 44"
         ).fetchall()
         # At least one row has a value_set. The exact split depends on
         # year-projection covering cvid 1004 — which it doesn't (validity
@@ -755,13 +762,12 @@ class TestBuildDb:
 
     def test_variable_state_fk_to_variable(self, db_conn: sqlite3.Connection):
         """Every variable_state row points at a real variable row via the
-        FK on (register_id, var_id). PRAGMA foreign_key_check is already
+        A2.1.5 synthetic `variable_id` FK. PRAGMA foreign_key_check is already
         invoked at build time; this is a regression-level sanity check."""
         orphans = db_conn.execute(
             "SELECT vs.state_id FROM variable_state vs "
-            "LEFT JOIN variable v "
-            "  ON v.register_id = vs.register_id AND v.var_id = vs.var_id "
-            "WHERE v.register_id IS NULL"
+            "LEFT JOIN variable v ON v.variable_id = vs.variable_id "
+            "WHERE v.variable_id IS NULL"
         ).fetchall()
         assert orphans == []
 
@@ -1896,8 +1902,9 @@ class TestVariableStateOpenEnded:
         conn = open_db(db_path)
         try:
             row = conn.execute(
-                "SELECT valid_from, valid_to FROM variable_state "
-                "WHERE register_id = 1 AND var_id = 900"
+                "SELECT valid_from, valid_to FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.var_id = 900"
             ).fetchone()
             assert row is not None
             assert row["valid_from"] == "2020-01-01"
@@ -2080,7 +2087,8 @@ class TestVariableStateMultiShape:
         try:
             rows = conn.execute(
                 "SELECT data_type, data_length, valid_from, valid_to "
-                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.var_id = 910 "
                 "ORDER BY valid_from"
             ).fetchall()
             assert len(rows) == 2
@@ -2107,12 +2115,15 @@ class TestVariableStateMultiShape:
         try:
             rows = conn.execute(
                 "SELECT valid_from, valid_to, value_set_version_label "
-                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.var_id = 910 "
                 "ORDER BY valid_from"
             ).fetchall()
             assert len(rows) == 2
-            assert rows[0]["value_set_version_label"] is None
-            assert rows[1]["value_set_version_label"] is None
+            # A2.1.5: value_set_version_label is NOT NULL DEFAULT '' (the
+            # coalescer coalesces NULL → ''), so undiscriminated states carry ''.
+            assert rows[0]["value_set_version_label"] == ""
+            assert rows[1]["value_set_version_label"] == ""
             # Strict non-overlap: row 0 ends strictly before row 1 starts.
             # Lexical comparison is chronological for full-date ISO strings.
             assert rows[0]["valid_to"] < rows[1]["valid_from"]
@@ -2281,8 +2292,9 @@ class TestVariableStateRenameMidLife:
             # active in 2024) is the latest era — single group since shape
             # didn't change, just the name. Latest era → open-ended.
             row = conn.execute(
-                "SELECT valid_from, valid_to FROM variable_state "
-                "WHERE register_id = 1 AND var_id = 920"
+                "SELECT valid_from, valid_to FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.var_id = 920"
             ).fetchone()
             assert row is not None
             assert row["valid_from"] == "2020-01-01"
