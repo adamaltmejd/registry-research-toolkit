@@ -18,7 +18,6 @@ from .fqid import (
     Fqid,
     FqidError,
     FqidKind,
-    derive_variable_slug,
     parse,
     validate_slug,
 )
@@ -125,10 +124,18 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # Includes the consumer-side join chain (`*_src`) so the lineage FQID for
 # rows with `via_source_id IS NOT NULL` is built directly from the result
 # row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
+# A2.1.5: the variable slug is read from the stored `variable.slug` column
+# (joined via `vi.var_id` → `v.provider_key`), not derived from
+# `delivery_column_name` at query time — so a build-time triage split (A2.2)
+# can give two siblings sharing one delivery column distinct, resolvable
+# identities (`ssyk-3pos` / `ssyk-5pos`). Bridge note: this still resolves the
+# *binding* off `variable_instance`; A2.5 moves binding resolution to
+# `variable_state` wholesale, at which point a split sibling that mints no
+# instance row becomes resolvable too.
 _BINDING_QUERY = (
     "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "
-    "v.name AS variable_name, va.delivery_column_name, "
+    "v.name AS variable_name, v.slug AS variable_slug, va.delivery_column_name, "
     "rv.slug AS variant_slug, rver.slug AS version_slug, "
     "p_src.slug AS src_provider_slug, r_src.slug AS src_register_slug, "
     "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
@@ -318,13 +325,14 @@ class Catalog:
         return self._var_same_as_sources
 
     def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
-        # No materialized binding rows yet: scan instances under the
-        # (variant, version) pair and derive variable slug from the renamed
-        # `variable_alias.delivery_column_name` column (§5.3, §5.11). The
-        # version match is an exact slug comparison — `register_version.slug`
-        # carries the period or curated token. `ORDER BY vi.cvid,
-        # va.delivery_column_name` makes first-match deterministic; uniqueness
-        # of (variant, version, variable_slug) is a §5.3 invariant.
+        # A2.1.5: scan instances under the (variant, version) pair and match the
+        # **stored** `variable.slug` (carried as `variable_slug` in
+        # `_BINDING_QUERY`) instead of deriving from
+        # `variable_alias.delivery_column_name` at query time (§5.3). The version
+        # match is an exact slug comparison — `register_version.slug` carries the
+        # period or curated token. `ORDER BY vi.cvid, va.delivery_column_name`
+        # makes first-match deterministic; uniqueness of (variant, version,
+        # variable_slug) is a §5.3 invariant.
         assert fqid.variable is not None
         variable_slug = fqid.variable
         rows = self._conn.execute(
@@ -334,7 +342,7 @@ class Catalog:
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
-            if derive_variable_slug(row["delivery_column_name"]) == variable_slug:
+            if row["variable_slug"] == variable_slug:
                 return self._row_to_binding(row, fqid, variable_slug)
         return None
 
@@ -475,12 +483,13 @@ class Catalog:
 
         out: list[ResolvedVariableBinding] = []
         # variable_alias is keyed by (cvid, delivery_column_name) — a single
-        # instance can have multiple aliases that fold to the same slug (e.g.
-        # `Kon` + `Kön` both → `kon`), so the LEFT JOIN can yield one row per
-        # matching alias. Dedupe by cvid: one binding per instance.
+        # instance can have multiple aliases (e.g. `Kon` + `Kön`), so the LEFT
+        # JOIN can yield one row per alias. A2.1.5: match the stored
+        # `variable_slug` (not the derived delivery column); dedupe by cvid for
+        # one binding per instance.
         seen: set[int] = set()
         for row in rows:
-            if derive_variable_slug(row["delivery_column_name"]) != variable:
+            if row["variable_slug"] != variable:
                 continue
             cvid = row["cvid"]
             if cvid in seen:

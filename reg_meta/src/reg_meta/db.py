@@ -38,7 +38,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   matters because the upcoming A2.5 resolver flip needs
 #   `variable_state` to be populated. Old 4.0.0 DBs without that table
 #   are rejected via the minor-version gate.
-# - 4.2.0 (A2.1.5, current): two-level restructure (rides 4.x per the
+# - 4.2.0 (A2.1.5 restructure): two-level restructure (rides 4.x per the
 #   pre-v1 exception above; lands across several commits on the a2.1.5
 #   branch). `register_variant.regvar_id` renamed to `register_variant_id`
 #   schema-wide; `variable` promoted (synthetic `variable_id` PK +
@@ -47,10 +47,16 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `register_variant_id` coordinate; `variable_same_as` demoted to
 #   variable grain. The first commit (the `regvar_id` rename) sets 4.2.0;
 #   the structural commits stay on it.
+# - 4.3.0 (A2.1.5 stored variable slug, current): `populate_variable_slugs`
+#   fills `variable.slug` and the resolver now READS it instead of deriving the
+#   variable slug from `delivery_column_name` at query time. A 4.2.0 DB (slug
+#   column present but NULL — never populated) resolves nothing under the flip,
+#   so it's rejected via the minor-version gate. Additive within the 4.x line;
+#   no DDL change (the column shipped in 4.2.0).
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking
 #   change.
-SCHEMA_VERSION = "4.2.0"
+SCHEMA_VERSION = "4.3.0"
 DB_FILENAME = "reg_meta.db"
 
 
