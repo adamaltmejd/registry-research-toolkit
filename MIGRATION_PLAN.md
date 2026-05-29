@@ -131,9 +131,11 @@ A2.1 shape until then." That hid a hard dependency:
   isn't a rename, it needs the demoted table.
 
 So the restructure is pulled **earlier into its own stage, A2.1.5**
-(rename `variable` → `variable`, add the variable table,
-re-parent `variable_state` with `variant_id`, populate the stored
-variable slug, demote `provider_key` to a non-unique join hint).
+(promote the register-scoped `variable` to the addressable variable — add
+a synthetic `variable_id` PK + register-unique `slug`; re-parent
+`variable_state` onto `variable_id` with a `variant_id` coordinate;
+populate the stored variable slug; demote `provider_key` to a non-unique
+join hint).
 A2.1.5 **gates A2.2 and A2.4**. It **supersedes the stored-slug idea in
 PR #133** (the slug lives on `variable`, register-unique, not
 denormalized onto `variable_state`). A2.6 is then left with only what
@@ -226,7 +228,7 @@ descends the variable hierarchy).
 
 ### [ ] A2.5 — Catalog API shift
 
-- `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10): the variable's shared metadata + its `variable_state` rows (each tagged with its variant) + variable-grain edges. The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break. (A2.5 reads the A2.1.5 tables — `variable` + re-parented `variable_state`; the *binding-FQID* resolution still parses the 4-seg interim grammar until A2.6 drops the variant segment. So A2.5 builds the longitudinal aggregate on the new tables, A2.6 flips the FQID parser + the binding read path to 3-seg + exact variable-slug match.)
+- `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10): the variable's shared metadata + its `variable_state` rows (each tagged with its variant) + variable-grain edges. The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break. (A2.5 reads the A2.1.5 tables — `variable` + re-parented `variable_state`; the *binding-FQID* resolution still parses the **v0.11 5-seg** grammar until A2.6 (the Model-A 4-seg form was specced in #126 but never implemented, so the interim is the shipped 5-seg). So A2.5 builds the longitudinal aggregate on the new tables, A2.6 flips the FQID parser + the binding read path to 3-seg + exact variable-slug match, dropping the period **and** variant segments.)
 - Implement `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for an unambiguous single-state-in-one-variant point query, length N across variants / range periods / the rare LKF-shape multi-vintage case. Empty list when no state covers the period (no exception). `variant` narrows to one variant (the Source's `register_variant`); `value_set_version` narrows multi-vintage results to a single state.
 - Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10. `same_as` / `replaced_by` / `related_to` accessors return variable-grain refs (3-part binding FQIDs).
 - Post-A2.5 public method roster: `resolve` (new semantics), `resolve_at`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings`
@@ -245,7 +247,7 @@ the stored variable slug); A2.6 flips the FQID grammar to match — the
 and the `same_as` demotion. No table rename or re-parent here.
 
 - **Update FQID parser, emitter:** 3-seg bindings (`provider/register/slug`), 2-seg classifications (`class/<slug>`). **The variant FQID kind is removed** — variants become a navigational register sub-resource (§5.2, §9.5). Both the period (already out) and the variant leave the binding.
-- **Resolver flip.** `_resolve_binding_direct` in `reg_meta/catalog.py` now parses the 3-seg binding and reads the A2.1.5 stored `variable.slug` via an **exact match** (no `derive_variable_slug`-at-resolve, no fold ambiguity), joining `variable_state` through `variable_id`, filtered by `variant_id` (from the Source's `register_variant`) + period. The 4-seg interim parse path used by A2.5 is deleted.
+- **Resolver flip.** `_resolve_binding_direct` in `reg_meta/catalog.py` now parses the 3-seg binding and reads the A2.1.5 stored `variable.slug` via an **exact match** (no `derive_variable_slug`-at-resolve, no fold ambiguity), joining `variable_state` through `variable_id`, filtered by `variant_id` (from the Source's `register_variant`) + period. The v0.11 5-seg parse path used by A2.5 is deleted.
 - Drop ~1,264 `register_version` slug entries from `scb.toml`
 - Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3) — as a variant coordinate, not an FQID segment
 - Drop the `register_version` table entirely. Per-edition prose → reg-meta-docs at variant level; per-edition build artifacts → provenance DB, joined to `variable_state` by `state_id` — no SCB-specific column on `variable_state` (universal-schema rule, §5.1).
@@ -284,7 +286,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - Binding `name` → `variable` (**3-seg** variable FQID; `provider/register` prefix must equal the source's `register_variant` prefix — the variant is not repeated on the binding)
 - Panel `entity_key` / `time_key` inheritance from `variant.panel_template` when omitted
 - TimePoint gains range form `{"range": {"from", "to"}}`
-- New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)
+- New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)
 - Rename: `fqid_register_version_mismatch` → `fqid_register_variant_mismatch`
 - Rewrite test corpus (`minimal`, `with_panel`, `composite_entity_key`, `with_namespaced_block`, `invalid_root_array`) **and `load_test_200col`** — the 200-column bundle-size-gate fixture (`reg_schema/test_corpus/load_test_200col/{input.json, expected_ValidationResult.json, build.py}`) is on v0.11 5-seg grammar with `register_version` + `columns` and will fail the A0.3 1 MB bundle-size CI gate the moment `reg_schema` flips to Model A. Rewrite it in lockstep; `build.py` regenerates the fixture from a Model A template
 - Bump pinned `reg_meta_version` in steward catalogs to `reg_meta/v1.0.0`
@@ -509,11 +511,11 @@ With parallelism across stages where dependencies allow, calendar time is closer
 
 1. **A2.2 build-time triage backlog larger than estimated.** If 200-300 manual TOML curations turns out to be 600-900, A2.2 lengthens. Mitigation: empirical sample from current SCB DB shows 99% auto-handle rate; risk is bounded.
 2. **A2.4 source-variant heuristic doesn't fit some real consumer-source pairs.** Mitigation: warning + TOML override mechanism captures the cases the heuristic misses; ~50 manual overrides expected.
-3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and multi-seg FQID patterns across the monorepo before A2.6. The two-level respec makes the binding **3-seg**, so the grep must catch both the v0.11 5-seg and the interim 4-seg shapes (anything with ≥3 slug segments after the provider). The grep is slug-grammar-aware to avoid swamping the signal with paths/URLs/JSON pointers:
+3. **A2.6 FQID grammar change breaks downstream tools we haven't catalogued.** Mitigation: search for `register_version` and multi-seg FQID patterns across the monorepo before A2.6. The two-level respec makes the binding **3-seg**, so the grep must catch the shipped v0.11 5-seg shape (anything with ≥3 slug segments after the provider; the Model-A 4-seg form was specced but never implemented). The grep is slug-grammar-aware to avoid swamping the signal with paths/URLs/JSON pointers:
 
     ```bash
     # ≥3-seg slug paths per §5.2 (allow _default and v0.11 _YYYY period slugs) —
-    # catches both the v0.11 5-seg and interim 4-seg binding FQIDs that flip to 3-seg.
+    # catches the shipped v0.11 5-seg binding FQIDs that flip to 3-seg.
     rg "[a-z][a-z0-9-]*(/(_default|_[0-9]+|[a-z][a-z0-9-]*)){3,}" --type py --type md --type toml
 
     # Or scope to known FQID call sites:
@@ -548,7 +550,7 @@ UNFROZEN sentinel deletion happens at v1 *public release* (not at v1.0.0 interna
 |---|---|---|---|---|
 | #78–#82, #85–#87, #89, #104, #112 | reg_meta v0.11 FQID rebuild — 5-seg binding FQID, same_as edges, slug TOMLs (~1,264 entries), §5.8 cross-edition traversal | Provider / register / classification slug curation; variant slugs (now a browsing coordinate, not an FQID segment); variable slug curation (was variable slug); consumer-side binding variable; FTS layer | 5-seg FQID grammar → **3-seg** (period **and** variant slots dropped — variant is a delivery coordinate, §5.0.1); `variable` → `variable` + `variable_state` re-parented with a `variant_id`; ~1,264 `register_version` slug entries deleted; `variable_same_as` → `variable_same_as` (variable grain; `*_variant` + `*_period` columns dropped; the var_id `(N choose 2)` auto-derive deleted); `register_version` table dropped entirely | A2.6, A2.7 |
 | #103, #105, #108 | `reg_meta_build` package carve-out (mechanical split: scaffold, db.py, doc_db.py, CLI split, CI workflow) | Package boundary intact; CLI binaries (`reg-meta`, `reg-meta-build`); test helpers | Column names → English (data values unchanged); SCB-Swedish column renames | A1.1 (rename only) |
-| #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract variable; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 6 new codes (per A3.1: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable`); bump to `schema_version: "2.0.0"` | A3.1 |
+| #110, #111, #115 | `reg_schema` v0.x — `ValidationIssue` / `ValidationResult` contract; frozen dataclasses (ProjectData, Source, Column, …); `validate_structural` entrypoint | `ValidationResult` JSON contract concept; 22+ stable issue codes (most unaffected); validate_structural API surface | Dataclasses → Pydantic v2; `Source.register_version` → `register_variant + period`; `columns` → `bindings`; `Column.name` → `variable`; 1 issue code renamed + 6 new codes (per A3.1: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`, `variable_replaced`, `panel_inheritance_unresolvable`); bump to `schema_version: "2.0.0"` | A3.1 |
 | #116 | `mock_data_wizard` adopts `project_data.json` (config rename, fixture corpus rewrite for v0.11 5-seg shape) | Config-rename machinery; fixture-rewrite tooling; v0.x test fixtures' overall structure | Source schema break propagated through mdw; fixture corpus rewritten again to Model A shape; `_build_source` reads new fields | A3.2 |
 | #113 | Shared validator test corpus — `reg_schema/test_corpus/` with 4 well-formed + 1 negative cases; harness with drift protection | Corpus discovery + harness machinery | All 5 cases rewritten: source becomes 3-part `register_variant` coordinate + `period`; bindings replace columns; binding + namespaced-block keys 3-seg | A3.1 (paired with reg_schema migration) |
 | #120, #121, #122, #123, #124, #125 | `reg_monabundle` carve-out — phases 1, 2a, 2b, 2c, 3 + follow-ups (scaffold, validator relocation, bundle builder, PII scanner, runtime modules + LoadedSpec, 1 MB bundle-size gate) | Survives entirely; this is the Stage A0 work | (none) — A0 complete | A0 ✅ |

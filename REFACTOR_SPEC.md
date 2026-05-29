@@ -2149,7 +2149,7 @@ variable, not of how a given variant delivers it). The original
 A1.2 alone is not sufficient to retire the table. (A1.2 lifted the
 flags onto the register-scoped `variable` table, which the two-level
 restructure (A2.1.5) keeps as `variable` — same grain, gaining a `slug`
-+ synthetic PK — so the lift carries over unchanged; see the
+and a synthetic PK — so the lift carries over unchanged; see the
 MIGRATION_PLAN A2.1.5 rework.)
 
 **`is_identifier` downstream semantics.** A variable with
@@ -4612,7 +4612,7 @@ MIGRATION_PLAN for the full per-PR breakdown).
 
 Four PRs. Lands after A2.
 
-- **A3.1 `reg_schema` v2.0.0** — Pydantic migration + Source schema break. `Source.register_variant` (3-part coordinate) + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel). `Source.columns` → `Source.bindings`. Binding `name` → `variable` (**3-seg** variable FQID; `provider/register` prefix must equal the source's `register_variant` prefix). Panel `entity_key`/`time_key` inherit from `variant.panel_template` when omitted. New issue codes (`invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_state_ambiguous`, `variable_replaced`). Test corpus rewrite for all 5 cases. Bump pinned `reg_meta_version` in steward catalogs to `reg_meta/v1.0.0`.
+- **A3.1 `reg_schema` v2.0.0** — Pydantic migration + Source schema break. `Source.register_variant` (3-part coordinate) + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel). `Source.columns` → `Source.bindings`. Binding `name` → `variable` (**3-seg** variable FQID; `provider/register` prefix must equal the source's `register_variant` prefix). Panel `entity_key`/`time_key` inherit from `variant.panel_template` when omitted. New issue codes (`invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`, `variable_replaced`). Test corpus rewrite for all 5 cases. Bump pinned `reg_meta_version` in steward catalogs to `reg_meta/v1.0.0`.
 - **A3.2 `mock_data_wizard/spec.py`** — adopt new Source shape. `_build_source` rewrite. Fixture sweep for all `mock_data_config.json` → `project_data.json` files that carry the old multi-seg Source FQID; bindings drop to 3-seg.
 - **A3.3 `reg_monabundle/validate.py`** — FQID segment-count update (`_is_binding_fqid`: 5 → 3). Tests follow.
 - **A3.4 Bundle amalgamator update.** Bundle-build converts Pydantic `Source` → `LoadedSpec` (the conversion boundary per §9.6). Amalgamator's `_AMALGAMATED_PACKAGE_PREFIXES` tuple ensures `reg_schema` Pydantic models aren't pulled into the bundle.
