@@ -25,7 +25,6 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -2240,29 +2239,30 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Runs after `populate_slugs` so `rver.slug` is non-NULL.
     """
-    # One row per (cvid, alias) so cvids with multiple aliases that derive
-    # to different variable slugs are visible under each. ORDER BY pins
-    # tie-breaks: when two source-side instances key the same (rid,
-    # version_slug, var_slug), the lowest cvid wins — but that case only
-    # arises if two source siblings share a slug, which UNIQUE(register_variant_id,
-    # slug) on register_version forbids; effectively the setdefault is
-    # never contested in a strict-built DB.
+    # A2.1.5: key on the STORED `variable.slug` (name-derived / curated where
+    # delivery columns collide), NOT `derive_variable_slug(delivery_column_name)`
+    # — the linker must agree with the resolver + same_as materializer, which
+    # all read `v.slug` now. Two source variables under a generic delivery column
+    # (e.g. `Kolumn1`) get distinct stored slugs and must not collapse to one
+    # key (which would attach a consumer binding to the wrong source cvid). One
+    # row per cvid (variable↔provider_key is 1:1 pre-A2.2; the join fans out
+    # post-A2.2 — the documented A2.5 hazard). ORDER BY vi.cvid pins the
+    # setdefault tie-break: lowest cvid wins when one variable has instances
+    # under several variants sharing a version-slot.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.slug AS version_slug, va.delivery_column_name "
+        "rver.slug AS version_slug, v.slug AS variable_slug "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id "
         "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-        "ORDER BY vi.cvid, va.delivery_column_name"
+        "ORDER BY vi.cvid"
     ).fetchall()
 
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_slug, delivery_column_name in rows:
-        variable_slug = derive_variable_slug(delivery_column_name)
+    for cvid, rid, src_rid, version_slug, variable_slug in rows:
         if version_slug is None or variable_slug is None:
             continue
         by_key.setdefault((rid, version_slug, variable_slug), cvid)

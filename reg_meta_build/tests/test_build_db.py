@@ -402,7 +402,8 @@ class TestBuildDb:
             "       (101, 10, 'tillagg-2018', 'LISA 2018 tilläggsfil')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key) VALUES (1, '44')"
+            "INSERT INTO variable (register_id, provider_key, slug) "
+            "VALUES (1, '44', 'kon')"
         )
         conn.executemany(
             "INSERT INTO variable_instance "
@@ -429,8 +430,8 @@ class TestBuildDb:
             "VALUES (200, 20, 'tillagg-2018', 'Cons 2018 tilläggsfil')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key, source_register_id) "
-            "VALUES (2, '44', 1)"
+            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
+            "VALUES (2, '44', 1, 'kon')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -481,7 +482,8 @@ class TestBuildDb:
             "       (101, 10, 'slutlig-version-2020', 'IoT slutlig version 2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key) VALUES (1, '44')"
+            "INSERT INTO variable (register_id, provider_key, slug) "
+            "VALUES (1, '44', 'socbidrhb')"
         )
         conn.executemany(
             "INSERT INTO variable_instance "
@@ -507,8 +509,8 @@ class TestBuildDb:
             "VALUES (200, 20, '2020', 'LISA 2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key, source_register_id) "
-            "VALUES (2, '44', 1)"
+            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
+            "VALUES (2, '44', 1, 'socbidrhb')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -526,6 +528,81 @@ class TestBuildDb:
             "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
         ).fetchone()
         assert row["via_source_id"] is None
+
+    def test_linker_keys_on_stored_slug_not_delivery_column(self, tmp_path: Path):
+        """A2.1.5 (Codex P1): two source variables sharing a generic delivery
+        column (`Kolumn1`) get DISTINCT stored slugs (name-fallback). The linker
+        must key on `variable.slug`, not `derive_variable_slug(kolumnnamn)` —
+        otherwise both collapse to `kolumn1` and the consumer attaches to the
+        wrong source cvid.
+        """
+        import sqlite3 as _sql
+
+        from reg_meta_build.db import DDL, link_consumer_side_bindings, seed_providers
+
+        conn = _sql.connect(":memory:")
+        conn.row_factory = _sql.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
+            "VALUES (100, 10, '2018', 'Src 2018')"
+        )
+        # Two source variables, both delivered as `Kolumn1`, distinct stored slugs.
+        conn.executemany(
+            "INSERT INTO variable (register_id, provider_key, slug) VALUES (?, ?, ?)",
+            [(1, "44", "kolumn1-a"), (1, "55", "kolumn1-b")],
+        )
+        conn.executemany(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
+            [(1000, 1, 10, 100, 44), (1001, 1, 10, 100, 55)],
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
+            [(1000, "Kolumn1"), (1001, "Kolumn1")],
+        )
+        # Consumer of the SECOND source variable (stored slug kolumn1-b).
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'cons')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
+        )
+        conn.execute(
+            "INSERT INTO register_version "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
+            "VALUES (200, 20, '2018', 'Cons 2018')"
+        )
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
+            "VALUES (2, '55', 1, 'kolumn1-b')"
+        )
+        conn.execute(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) "
+            "VALUES (2000, 2, 20, 200, 55)"
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'Kolumn1')"
+        )
+        conn.commit()
+
+        n = link_consumer_side_bindings(conn)
+        assert n == 1
+        # Links to cvid 1001 (kolumn1-b), NOT 1000 (kolumn1-a). The old
+        # derive-from-kolumnnamn keying collapsed both to `kolumn1` → cvid 1000.
+        row = conn.execute(
+            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
+        ).fetchone()
+        assert row["via_source_id"] == 1001
 
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
