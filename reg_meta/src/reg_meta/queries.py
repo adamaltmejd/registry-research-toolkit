@@ -788,9 +788,19 @@ def get_varinfo(
         # scoped to one (register, var), so fetch that single slug once and emit
         # every instance's FQID from it (one variable → one slug) instead of
         # deriving per-instance from the first alias.
+        #
+        # Pre-A2.2 `(register_id, provider_key)` is 1:1 with a variable. Post-A2.2
+        # a triage split makes it 1:N; here we deterministically pick the lowest
+        # `variable_id` (ORDER BY) rather than hard-erroring like the build-side
+        # `_variable_source_slug` does. The asymmetry is intentional: this is a
+        # read-only *display* path (varinfo's emitted FQID), where an arbitrary
+        # pick is a cosmetic glitch, whereas `_variable_source_slug` anchors a
+        # persisted `same_as` edge, where a wrong pick corrupts lineage. Both are
+        # superseded by A2.5's `variable_state` resolver (see catalog.py).
         var_slug_row = conn.execute(
             "SELECT slug FROM variable "
-            "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+            "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
+            "ORDER BY variable_id LIMIT 1",
             (rid, vid),
         ).fetchone()
         variable_slug = var_slug_row["slug"] if var_slug_row else None
