@@ -263,9 +263,9 @@ CREATE TABLE variable (
     -- NON-unique join hint, not a key; variable_instance.var_id (INTEGER) joins
     -- via CAST-to-TEXT until variable_instance is dropped in A2.7.
     provider_key TEXT NOT NULL,
-    -- §5.3 register-unique FQID leaf. NULL until populate_variable_slugs runs
-    -- (wired in a later A2.1.5 commit); SQLite treats NULLs as distinct, so the
-    -- transient all-NULL window doesn't trip the unique index below.
+    -- §5.3 register-unique FQID leaf. NULL until the A2.1.5 slug follow-up PR
+    -- populates it; SQLite treats NULLs as distinct, so the transient all-NULL
+    -- window doesn't trip the unique index below.
     slug TEXT,
     -- §5.11 rename. Values stay provider-native. `variabeloperationell_definition`
     -- merges into `description` at ingest when distinct + non-empty;
