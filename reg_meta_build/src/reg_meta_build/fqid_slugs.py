@@ -1202,17 +1202,6 @@ def populate_variable_slugs(
         auto: dict[str, str] = {}
         if auto_path.is_file():
             auto = _auto_variable_slugs(load_provider_toml(auto_path))
-        # §5.4 immutability: reserve every slug already published in auto.toml,
-        # grouped by register — INCLUDING entries whose source_id was pruned
-        # from the current delivery (a retired slug stays frozen, §5.4). Without
-        # this a new variable could be assigned a retired variable's slug, and
-        # `write_auto_toml` would then persist two source IDs with the same slug
-        # (a duplicate-FQID failure on the next load). source_id is
-        # "<register_id>.<provider_key>"; register_id is the leading int segment.
-        published_by_register: dict[int, set[str]] = defaultdict(set)
-        for sid, prev_slug in auto.items():
-            published_by_register[int(sid.partition(".")[0])].add(prev_slug)
-
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
@@ -1232,11 +1221,30 @@ def populate_variable_slugs(
             (provider_slug,),
         ).fetchall()
 
+        # §5.4 immutability: reserve every PUBLISHED slug per register so a new
+        # variable can't reuse one (which would recreate a published FQID). Two
+        # sources, both of which flow into the grow-only snapshot:
+        #   - frozen auto.toml slugs (incl. entries pruned from this delivery);
+        #   - hand-curated slugs for variables NOT live in this delivery — a
+        #     deprecated/§5.4-retired entry kept in scb.toml (a non-deprecated
+        #     stale one is also flagged by the override-staleness check below).
+        # Curated slugs for LIVE variables are intentionally NOT pre-reserved:
+        # they're reserved when applied in Pass 1, and pre-reserving would trip
+        # the own-slug branch of the curated-conflict check. source_id is
+        # "<register_id>.<provider_key>"; register_id is the leading int segment.
+        live_sids = {f"{rid}.{pk}" for _vid, rid, pk, _n, _k in variables}
+        reserved_by_register: dict[int, set[str]] = defaultdict(set)
+        for sid, prev_slug in auto.items():
+            reserved_by_register[int(sid.partition(".")[0])].add(prev_slug)
+        for (cprov, csid), cslug in curated.items():
+            if cprov == provider_slug and csid not in live_sids:
+                reserved_by_register[int(csid.partition(".")[0])].add(cslug)
+
         auto_dirty = False
         # The build connection yields plain tuples (not sqlite3.Row), so unpack
         # positionally: (variable_id, register_id, provider_key, name, kol).
         for register_id, group in groupby(variables, key=lambda row: row[1]):
-            used: set[str] = set(published_by_register.get(register_id, ()))
+            used: set[str] = set(reserved_by_register.get(register_id, ()))
             pending: list[tuple[int, str, str | None, str | None]] = []
 
             # Pass 1: curated + existing-auto slugs are fixed — assign and

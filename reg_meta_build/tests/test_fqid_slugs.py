@@ -1202,6 +1202,17 @@ class TestPopulateVariableSlugs:
         populate_variable_slugs(conn, d)  # must not raise
         assert self._stored_slug(conn, 44) == "kon"
 
+    def test_deprecated_curated_slug_reserved(self, tmp_path: Path) -> None:
+        # §5.4: a deprecated curated [variable] slug (retired variable kept in
+        # the snapshot) is reserved — a new live variable can't auto-derive it
+        # and recreate the published FQID.
+        conn = self._db(kol="Kon")  # live var 44 → would derive "kon"
+        d = self._slug_dir(
+            tmp_path, '[variable."1.999"]\nslug = "kon"\ndeprecated = true\n'
+        )
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon-2"  # not the retired "kon"
+
     def test_curated_override_reusing_auto_slug_rejected(self, tmp_path: Path) -> None:
         # A curated override must not reuse a slug frozen for a DIFFERENT source
         # in auto.toml — it would duplicate a published FQID (or hit UNIQUE).
