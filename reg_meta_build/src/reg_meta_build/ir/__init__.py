@@ -77,6 +77,16 @@ class IRVariable(_IRBase):
     # is gone. `provider_key` (SCB str(var_id); SOS the merged name) is a
     # NON-unique join hint, not the key — a §5.7 triage split shares it. The
     # (register_id, slug) natural key is the unique one (DECISION POINT 1).
+    #
+    # `provider_key` is REQUIRED (not `str | None`): every variable originates
+    # from a provider source row, so a source-natural key always exists (SCB's
+    # var_id, SOS's merged variable name). Triage folds/splits derive from source
+    # rows and preserve (share) that key — they never mint a provider-source-less
+    # variable. The `synthesized` flag is VARIANT-only (a register may invent a
+    # `_default` variant); there is no variable-level analogue, so no variable is
+    # forced to an empty-key sentinel. Matches `variable.provider_key TEXT NOT
+    # NULL` (§5.1). Toolkit-computed variables would be a deliberate spec change
+    # (field + column → nullable).
     variable_id: int
     register_id: int
     provider_key: str

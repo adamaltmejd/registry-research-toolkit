@@ -99,7 +99,7 @@ Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter on
 
 - `IRVariable` is now register-scoped: drops `variant_id`, gains `provider_key` (the NON-unique join hint). The variant coordinate moves to `IRVariableState.register_variant_id`.
 - `IRVariant.variant_id` → `register_variant_id` (matches the `register_variant` table PK, per the A2.1.5 naming decision).
-- `IRVariableState.data_length` typed `str` (TEXT — SCB `datalangd` may carry precision/scale "8,2"), per the #135 review.
+- `IRVariableState.data_length` typed `str | None` (TEXT — SCB `datalangd` may carry precision/scale "8,2"; nullable since an adapter may omit it), per the #135 review.
 - Spec §4.4 + the `test_ir_scaffolding.py` contract fixtures updated to match.
 
 ---
