@@ -227,34 +227,39 @@ class TestStoredVariableSlug:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
         assert exc.value.code == "fqid_not_found"
 
-    @pytest.mark.xfail(
-        reason="A2.5: an A2.2 triage split mints sibling variable rows sharing "
-        "one (register_id, provider_key) but relinks variable_state, not "
-        "variable_instance — so both siblings fan out through _BINDING_QUERY to "
-        "the SAME shared instance/cvid. Distinguishing them needs the "
-        "variable_state-based resolver (A2.5); A2.1.5 only stores+reads the slug.",
-        strict=True,
-    )
     def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
-        # Mirror A2.2's niva split: one delivery column `Ssyk`, two sibling
-        # variables sharing provider_key '44' (§5.7 puts several variables under
-        # one source key) but ONE variable_instance (cvid 1001, var_id 44). The
-        # interim resolver joins both siblings to that shared instance via
-        # provider_key, so each slug resolves to the SAME cvid instead of each
-        # sibling's own state — the documented A2.2→A2.5 bridge hazard.
-        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
-        conn.execute(
+        # A2.2 resolver flip: two sibling variables share provider_key '44' (a
+        # §5.7 split puts several variables under one source key) and the single
+        # interim variable_instance (cvid 1001, var_id 44) — but each owns its
+        # variable_state. The state-anchored resolver selects the variable by
+        # slug → variable_id, so each sibling resolves to its OWN state. (The
+        # pre-flip provider_key join fanned both onto the shared instance; this
+        # test was a strict xfail until the flip.)
+        conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
+        cur = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
+        )
+        sib_vid = cur.lastrowid
+        # The sibling's own state under the same variant (register_variant_id 10).
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk5')",
+            (sib_vid,),
         )
         conn.commit()
         r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
         r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
         assert isinstance(r3, ResolvedVariableBinding)
         assert isinstance(r5, ResolvedVariableBinding)
-        # Desired (A2.5): each sibling resolves to its own binding. Today both
-        # fan out to the shared cvid 1001, so this fails (strict xfail).
-        assert r3.cvid != r5.cvid
+        # Each sibling resolves to its OWN state — distinct state_id and column —
+        # even though they share the interim variable_instance (same cvid/var_id;
+        # lineage stays instance-sourced until A2.4).
+        assert r3.state_id != r5.state_id
+        assert r3.delivery_column_name == "Ssyk3"
+        assert r5.delivery_column_name == "Ssyk5"
+        assert r3.cvid == r5.cvid  # shared interim instance (documented)
 
 
 class TestResolveBindingLineage:
@@ -291,6 +296,15 @@ class TestResolveBindingLineage:
             f"(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
             f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
+            # A2.2 flip: the consumer binding resolves through variable_state
+            # (keyed by variable_id), so seed an open-range state for the LISA
+            # consumer variable under its variant (register_variant_id 20).
+            f"INSERT INTO variable_state "
+            f"(variable_id, register_variant_id, valid_from, valid_to, "
+            f" data_type, delivery_column_name) "
+            f"VALUES ((SELECT variable_id FROM variable "
+            f"         WHERE register_id = 2 AND provider_key = '99'), "
+            f"        20, '0001-01-01', '9999-12-31', 'int', 'Kon');"
         )
         conn.commit()
         return conn
@@ -795,19 +809,13 @@ class TestSameAsTraversal:
     # variant-scoped edges + a variant-keyed visited set) no longer have a
     # behaviour to test and were removed with the demotion.
 
-    @pytest.mark.xfail(
-        reason="A2.5: a variable-grain same_as edge to a register with different "
-        "variant slugs can't resolve in the interim 5-seg resolver — it inherits "
-        "the query's variant, which the target register lacks. The longitudinal "
-        "variable_state resolver (A2.5) drops the variant/period dependency.",
-        strict=True,
-    )
     def test_cross_register_same_as_variant_mismatch(self) -> None:
         # lisa/phantom ≡ rtb/kon, but RTB's variant is 'personer', not lisa's
-        # 'individer-15plus'. Querying lisa/phantom inherits 'individer-15plus'
-        # into the RTB lookup, which RTB has no edition for → fails to resolve
-        # even though rtb/personer/2018/kon exists. (No same_as edges exist
-        # today; this pins the interim cross-register gap until A2.5.)
+        # 'individer-15plus'. A2.2 flip: the same_as target resolves
+        # variant-independently (by variable_id + period over variable_state),
+        # so rtb/personer/2018/kon resolves even though the query inherited
+        # lisa's variant, which RTB lacks. (Pre-flip this was a strict xfail —
+        # the interim direct path filtered on the inherited variant slug.)
         conn = build_slugged_db()  # lisa / individer-15plus / 2018 / kon
         add_register(conn, register_id=2, slug="rtb", name="RTB")
         add_variant(
