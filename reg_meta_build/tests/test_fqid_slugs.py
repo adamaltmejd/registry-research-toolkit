@@ -1333,6 +1333,21 @@ class TestPopulateVariableSlugs:
         assert slug is not None and len(slug) <= 60
         assert slug.startswith("utgifter-for-egen-fou")
 
+    def test_name_slug_truncation_revalidates_reserved_word(self) -> None:
+        # `Class <very-long-single-token>` derives to a valid `class-<token>`,
+        # but truncating at the only hyphen ≤ cap yields the reserved word
+        # `class`. _name_slug must not return that (unaddressable) — it keeps the
+        # full, valid slug instead.
+        from reg_meta.fqid import derive_variable_slug
+
+        from reg_meta_build.fqid_slugs import _name_slug
+
+        result = _name_slug("Class " + "x" * 70, cap=60)
+        assert result is not None
+        assert result != "class"
+        # Round-trips through the validator (not reserved / period / malformed).
+        assert derive_variable_slug(result) == result
+
     def test_auto_toml_parses_as_provider_scb(self, tmp_path: Path) -> None:
         # The generated scb.auto.toml must load via load_slug_dir as provider
         # `scb` (the `.auto` suffix must not break provider-slug grammar).

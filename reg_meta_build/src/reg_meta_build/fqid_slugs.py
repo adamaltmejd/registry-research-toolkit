@@ -1111,7 +1111,13 @@ def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None
     cut = head.rfind("-")
     if cut > 0:
         head = head[:cut]
-    return head.strip("-") or None
+    head = head.strip("-")
+    # Truncation can land on a token the full slug escaped but the validator
+    # rejects on its own — a RESERVED word (`class`) or a period (`2018`). Don't
+    # store an unaddressable slug: re-validate the truncated head (derive is
+    # idempotent on a valid slug, returns None on reserved/period/invalid) and
+    # keep the full, known-valid base when truncation isn't usable.
+    return derive_variable_slug(head) or base
 
 
 def _uniquify(base: str, used: set[str]) -> str:
