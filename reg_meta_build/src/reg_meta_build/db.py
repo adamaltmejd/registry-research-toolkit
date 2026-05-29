@@ -27,6 +27,7 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -1580,7 +1581,9 @@ def _triage_groups(
         named_cols = sorted(c for c in by_col if c)
 
         if len(named_cols) <= 1:
-            _collapse_same_column(groups, gkeys, res)
+            # Single column (or only stubs): no fold/split decision. Any
+            # residual same-year drift is resolved by the universal collapse
+            # pass below.
             continue
 
         folded = [_ascii_fold_lower(c) for c in named_cols]
@@ -1599,50 +1602,74 @@ def _triage_groups(
             )
             res.stats["splits"] += 1
 
+    # Universal residual collapse: after fold/split assigned variable_ids and
+    # fold labels, guarantee the §5.1 state-uniqueness invariant holds by making
+    # every (variable_id, register_variant_id, valid_from-year) scope carry
+    # distinct labels. Catches single-column shape drift AND split-sibling
+    # within-column drift (a split sibling can still carry same-year drift that
+    # _apply_split alone wouldn't resolve).
+    _collapse_residual(groups, res)
     return res
 
 
-def _collapse_same_column(
-    groups: dict[tuple, _StateGroup], gkeys: list[tuple], res: _TriageResult
-) -> None:
-    """§5.7 rule 4 (residual): groups on ONE column for one var_id. Only groups
-    that share the uniqueness key (variant, valid_from-year, label) actually
-    collide — different years / labels are legitimately distinct states and are
-    left alone. Within a colliding bucket: multiple *distinct grains* fold (each
-    keeps a distinct grain token); pure shape / value_set drift collapses to the
-    latest-era state (the named column preferred over an empty stub)."""
-    buckets: dict[tuple, list[tuple]] = defaultdict(list)
-    for gk in gkeys:
-        grp = groups[gk]
-        buckets[
-            (
-                grp.register_variant_id,
-                _group_from_year(grp),
-                grp.value_set_version_label or "",
-            )
-        ].append(gk)
-    for bucket in buckets.values():
-        if len(bucket) <= 1:
+def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> None:
+    """§5.7 rule 4 — final collision resolution. Every materializing group is
+    scoped by its FINAL uniqueness coordinate (assigned variable_id,
+    register_variant_id, valid_from-year); within a scope, each surviving group
+    must carry a distinct `value_set_version_label` or the unique index fails.
+
+    Per group, the preferred label is its fold label (if triage set one), else a
+    grain token, else its own value_set_version_label. Processing latest-era
+    first, a label that's free is kept; a *meaningful* label already taken is
+    disambiguated (`-N`); an empty/uninformative collision is pure shape/value
+    drift and the group is dropped. This preserves multi-vintage (distinct
+    labels) and multi-grain (distinct grain tokens) while collapsing drift —
+    and, running after fold/split, also resolves split-sibling within-column
+    drift."""
+    scopes: dict[tuple, list[tuple]] = defaultdict(list)
+    for gkey, grp in groups.items():
+        if gkey in res.dropped:
             continue
-        grain_tokens = {gk: _fold_token_from_grain(gk[7]) for gk in bucket}
-        present = [t for t in grain_tokens.values() if t]
-        # Multi-grain on one column → fold: distinct grain tokens keep them
-        # apart so they no longer collide on the label.
-        if len(present) == len(bucket) and len(set(present)) == len(bucket):
-            res.labels.update(grain_tokens)
+        vid = res.assignments.get(gkey)
+        if vid is None:
             continue
-        # Else pure drift → keep the latest-era state (prefer a named column
-        # over an empty stub, then highest regver_max, then deterministic gkey).
-        keep = max(
-            bucket,
+        scopes[(vid, grp.register_variant_id, _group_from_year(grp))].append(gkey)
+
+    for scope_gkeys in scopes.values():
+        if len(scope_gkeys) <= 1:
+            continue
+        # Latest era first so it keeps the cleanest label; deterministic ties.
+        # The gkey tiebreaker is stringified per element — a raw gkey carries
+        # `value_set_id` (int | None), and a None-vs-int compare across two
+        # groups in the scope would raise TypeError.
+        ordered = sorted(
+            scope_gkeys,
             key=lambda gk: (
-                bool(groups[gk].latest_alias),
-                groups[gk].regver_max or -1,
-                gk,
+                -(groups[gk].regver_max or -1),
+                tuple("" if x is None else str(x) for x in gk),
             ),
         )
-        for gk in bucket:
-            if gk != keep:
+        used: set[str] = set()
+        for gk in ordered:
+            grp = groups[gk]
+            preferred = (
+                res.labels.get(gk)
+                or _fold_token_from_grain(gk[7])
+                or (grp.value_set_version_label or "")
+            )
+            if preferred and preferred not in used:
+                used.add(preferred)
+                res.labels[gk] = preferred
+            elif preferred:  # meaningful token already taken → disambiguate
+                n = 1
+                while f"{preferred}-{n}" in used:
+                    n += 1
+                used.add(f"{preferred}-{n}")
+                res.labels[gk] = f"{preferred}-{n}"
+            elif "" not in used:  # first uninformative state keeps ''
+                used.add("")
+                res.labels[gk] = ""
+            else:  # uninformative drift that can't be distinguished → drop
                 res.dropped.add(gk)
 
 
@@ -1677,13 +1704,16 @@ def _apply_fold(
                 token = f"{base}-{j}"
             used_tokens.add(token)
             res.labels[gk] = token
-    # Fold slug hint: shared stem, trailing rep chars trimmed.
-    stem = _ascii_fold_lower(named_cols[0])[:stem_len].strip("-_") or _ascii_fold_lower(
-        named_cols[0]
-    )
-    stem = re.sub(r"[^a-z0-9]+", "-", stem).strip("-")
-    if stem:
-        res.fold_slug_hints[orig_vid] = stem
+    # Fold slug hint: the shared stem. Validate through derive_variable_slug so
+    # a digit-leading / all-digit / reserved stem (`2501`/`2502` → `250`) is
+    # rejected (returns None) and populate_variable_slugs falls back to its
+    # name/provider_key chain instead of emitting a slug that fails the §5.2
+    # grammar. (Split siblings already route through derive_variable_slug; only
+    # this fold-stem path bypassed it.)
+    stem_raw = _ascii_fold_lower(named_cols[0])[:stem_len].strip("-_")
+    hint = derive_variable_slug(stem_raw) or derive_variable_slug(named_cols[0])
+    if hint:
+        res.fold_slug_hints[orig_vid] = hint
 
 
 def _apply_split(

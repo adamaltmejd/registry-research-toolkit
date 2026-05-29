@@ -13,6 +13,7 @@ edge materialization need the slug pipeline and are covered by the real
 from __future__ import annotations
 
 import sqlite3
+from collections import Counter
 from pathlib import Path
 
 import pytest
@@ -23,9 +24,13 @@ from _csv_fixtures import (
 )
 from reg_meta.db import open_db
 from reg_meta_build.db import (
+    _apply_fold,
+    _collapse_residual,
     _common_prefix_len,
     _decide_fold_or_split,
     _fold_token_from_grain,
+    _StateGroup,
+    _TriageResult,
     build_db,
 )
 
@@ -254,3 +259,127 @@ class TestUniquenessIndex:
                 existing,
             )
         rw.close()
+
+
+class TestCollapseResidual:
+    """Unit regression: the residual-collapse tiebreaker must tolerate a mixed
+    None/int `value_set_id` across groups in one scope. A raw-gkey tiebreaker
+    raised `'<' not supported between int and NoneType` on the real corpus
+    (value_set_id is gkey position 5, int | None); fixtures never mixed them."""
+
+    @staticmethod
+    def _grp(value_set_id: int | None, regver_max: int) -> _StateGroup:
+        return _StateGroup(
+            register_id=1,
+            register_variant_id=10,
+            var_id=44,
+            data_type="int",
+            data_length="",
+            value_set_id=value_set_id,
+            value_set_version_label="",
+            regver_min=2018,
+            regver_max=regver_max,
+            latest_alias="Kon",
+        )
+
+    def test_mixed_value_set_id_collapses_without_raising(self) -> None:
+        # One column, one (variable_id, variant, year) scope, two groups whose
+        # only difference is value_set_id (None vs 5) — pure code-list drift.
+        gk_none = (1, 10, 44, "int", "", None, "", "", "kon")
+        gk_int = (1, 10, 44, "int", "", 5, "", "", "kon")
+        groups = {gk_none: self._grp(None, 2018), gk_int: self._grp(5, 2019)}
+        res = _TriageResult(
+            assignments={gk_none: 1, gk_int: 1},
+            labels={},
+            dropped=set(),
+            fold_slug_hints={},
+            related_edges=[],
+            stats=Counter(),
+        )
+        _collapse_residual(groups, res)  # must not raise on None vs int
+        # Drift collapses to one; the latest-era group (regver_max 2019) wins.
+        assert len(res.dropped) == 1
+        assert gk_int not in res.dropped
+
+
+class TestFoldSlugHint:
+    """A fold whose shared stem isn't a valid slug must NOT emit a hint — real
+    build hit `slug_toml_invalid` for an all-digit stem (`2501`/`2502` → `250`),
+    which violates the §5.2 grammar (slugs start with a letter)."""
+
+    def test_digit_stem_emits_no_hint(self) -> None:
+        gk1 = (1, 10, 99, "int", "", None, "", "", "2501")
+        gk2 = (1, 10, 99, "int", "", None, "", "", "2502")
+
+        def grp() -> _StateGroup:
+            return _StateGroup(
+                register_id=1,
+                register_variant_id=10,
+                var_id=99,
+                data_type="int",
+                data_length="",
+                value_set_id=None,
+                value_set_version_label="",
+                regver_min=2020,
+                regver_max=2020,
+            )
+
+        groups = {gk1: grp(), gk2: grp()}
+        res = _TriageResult(
+            assignments={gk1: 5, gk2: 5},
+            labels={},
+            dropped=set(),
+            fold_slug_hints={},
+            related_edges=[],
+            stats=Counter(),
+        )
+        _apply_fold(
+            groups,
+            {"2501": [gk1], "2502": [gk2]},
+            ["2501", "2502"],
+            ["2501", "2502"],
+            5,
+            res,
+        )
+        # No valid slug derivable from the digit stem → no hint (falls back to
+        # the name/provider_key chain in populate_variable_slugs).
+        assert 5 not in res.fold_slug_hints
+        # Folded states still get distinct labels (digit tokens are fine on the
+        # label — only slugs carry the letter-start grammar).
+        assert res.labels[gk1] != res.labels[gk2]
+
+    def test_alpha_stem_emits_valid_hint(self) -> None:
+        gk1 = (1, 10, 99, "int", "", None, "", "", "Ssyk3")
+        gk2 = (1, 10, 99, "int", "", None, "", "", "Ssyk5")
+
+        def grp() -> _StateGroup:
+            return _StateGroup(
+                register_id=1,
+                register_variant_id=10,
+                var_id=99,
+                data_type="int",
+                data_length="",
+                value_set_id=None,
+                value_set_version_label="",
+                regver_min=2020,
+                regver_max=2020,
+            )
+
+        groups = {gk1: grp(), gk2: grp()}
+        res = _TriageResult(
+            assignments={gk1: 5, gk2: 5},
+            labels={},
+            dropped=set(),
+            fold_slug_hints={},
+            related_edges=[],
+            stats=Counter(),
+        )
+        _apply_fold(
+            groups,
+            {"Ssyk3": [gk1], "Ssyk5": [gk2]},
+            ["Ssyk3", "Ssyk5"],
+            ["ssyk3", "ssyk5"],
+            5,
+            res,
+        )
+        assert res.fold_slug_hints[5] == "ssyk"
