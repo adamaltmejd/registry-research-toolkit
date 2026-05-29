@@ -4645,8 +4645,8 @@ MIGRATION_PLAN for the full per-PR breakdown).
 - A2.1 → A2.1.5 (the restructure re-parents the coalesced states).
 - A2.1.5 → A2.2, A2.4, A2.5 (the two-level tables are a hard prerequisite — triage mints variable rows, lineage descends the variable hierarchy, the catalog API reads the new tables).
 - A2.2 → A2.4 (lineage joins on triaged variables).
-- A2.5 can run parallel to A2.3/A2.4.
-- A2.6 must follow A2.4 + A2.5 (the FQID-grammar flip + resolver flip touch the new lineage tables and the new API).
+- A2.5 gates on A2.2 + A2.3 + A2.4 — its accessors read `variable_related_to` (A2.2), `variable_replaced_by` (A2.3), and `variable_state_lineage` (A2.4); it is the join point after them, not a parallel branch.
+- A2.6 must follow A2.5 (hence A2.2/A2.3/A2.4 transitively) — the FQID-grammar flip + resolver flip ship the catalog API live, so every edge table it reads, incl. A2.3's `variable_replaced_by`, must exist first.
 - A2.7 must follow A2.6 (cleanup removes legacy code paths).
 
 ### Stage A3 — Consumer migration

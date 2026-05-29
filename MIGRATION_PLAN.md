@@ -237,7 +237,7 @@ descends the variable hierarchy).
 
 **Estimate**: 5-6 days.
 
-Can run in parallel with A2.3/A2.4 once A2.1.5 lands (it reads the two-level tables, not just A2.1's `variable_state`).
+**Gate: A2.5 requires A2.2 + A2.3 + A2.4** (not just A2.1.5). Its edge accessors read tables those stages create — `related` ← `variable_related_to` (A2.2), `predecessors`/`successors` ← `variable_replaced_by` (A2.3), `lineage`/`lineage_warnings` ← `variable_state_lineage` (A2.4) — so A2.5 is the join point after the A2.2→A2.4 chain and A2.3, not a parallel branch (a query against a not-yet-created edge table raises `no such table`). `resolve`/`resolve_at`/`states` need only the A2.1.5 tables, but the accessor roster ships as one PR.
 
 ### [ ] A2.6 — Drop period & variant from FQID grammar (resolver flip)
 
@@ -448,15 +448,14 @@ ship first. Matches the gates diagram annotation below.
 
 ```text
 A0.3 ──→ {A1.1, A1.2, A1.3} ──→ A2.1 ──→ A2.1.5 ──┬──→ A2.2 ──→ A2.4 ──┐
-                                                  ├──→ A2.3            │
-                                                  └──→ A2.5 ───────────┴──→ A2.6 ──→ A2.7
-                                                                                       │
-                                                                                       ├──→ A3.1 ──→ {A3.2, A3.3, A3.4}
-                                                                                       │
-                                                                                       ├──→ A4.1 ──→ A4.2 ──→ A4.3 ──→ A4.4 ──→ A4.5
-                                                                                       │
-                                                                                       └──→ A5.1 ──→ {A5.2, A5.3, A5.4}
-                                                                                             (after A3.1 lands; A4 not required)
+                                                  └──→ A2.3 ───────────┴──→ A2.5 ──→ A2.6 ──→ A2.7
+                                                                                               │
+                                                                                               ├──→ A3.1 ──→ {A3.2, A3.3, A3.4}
+                                                                                               │
+                                                                                               ├──→ A4.1 ──→ A4.2 ──→ A4.3 ──→ A4.4 ──→ A4.5
+                                                                                               │
+                                                                                               └──→ A5.1 ──→ {A5.2, A5.3, A5.4}
+                                                                                                     (after A3.1 lands; A4 not required)
 ```
 
 Reading notes: braces `{...}` group steps that can run in parallel
@@ -468,19 +467,21 @@ established that A2.2 and A2.4 have a **hard structural dependency** on
 these tables (you can't mint a sibling variable or descend the variable
 hierarchy on the A2.1 `(register_id, var_id)` schema), so the
 restructure can no longer be deferred into A2.6 — it is its own gating
-stage. This grows A2 to **8 PRs** (no longer 7). After A2.1.5, three
-branches open in parallel: A2.2→A2.4 (triage into distinct variables →
-lineage join over variable-grain `same_as`), A2.3 (independent — reads
-`timeseries_event`, variable-grain edges), and A2.5 (longitudinal
-catalog API on the two-level tables). A2.6 needs **both** A2.4 (new
-lineage tables) and A2.5 (new catalog API), and itself carries only the
-FQID-grammar flip + resolver flip + `same_as` variable-demotion +
-var_id-auto-derive deletion — the table work is already done in A2.1.5.
-A2.3 is not on A2.6's critical path — it produces `variable_replaced_by`
-for consumer use, not for A2.4.
-
-(The "three branches in parallel" claim still holds — A2.1.5 just moved
-to be their shared predecessor instead of A2.1.)
+stage. This grows A2 to **8 PRs** (no longer 7). After A2.1.5, two branches
+open in parallel: A2.2→A2.4 (triage into distinct variables → lineage
+join over variable-grain `same_as`) and A2.3 (reads `timeseries_event`,
+emits the variable-grain `variable_replaced_by` edges). **A2.5 — the
+longitudinal catalog API — is the join point after them, not a parallel
+branch:** its accessors read every edge table (`related` ←
+`variable_related_to` from A2.2; `predecessors`/`successors` ←
+`variable_replaced_by` from A2.3; `lineage`/`lineage_warnings` ←
+`variable_state_lineage` from A2.4), so shipping it before any of those
+would hit `no such table`. A2.5 therefore gates on A2.2 + A2.3 + A2.4.
+A2.6 follows A2.5 (and thus all three transitively) and carries only the
+FQID-grammar flip + resolver flip + the resolver-side `same_as`
+start-node update — the table work is already done in A2.1.5. So A2.3
+**is** on the path to A2.6 (A2.5's `predecessors`/`successors` read its
+table); an earlier draft wrongly called it independent.
 
 In-flight PRs #131 (A2.3), #132 (A2.2), #133 (early stored-slug), #134
 (three-level respec) all predate the two-level respec. **#134 is
