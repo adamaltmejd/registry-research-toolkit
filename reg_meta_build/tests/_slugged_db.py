@@ -15,7 +15,7 @@ from reg_meta_build.db import DDL, seed_providers
 
 # (name, slug, register_id, provider_id)
 _DEFAULT_REGISTER = ("LISA", "lisa", 1, 1)
-# (name, slug, regvar_id)
+# (name, slug, register_variant_id)
 _DEFAULT_VARIANT = ("Individer 15+", "individer-15plus", 10)
 # (registerversionnamn, slug, regver_id)
 # Bare period name — production SCB names like LISA's are usually just `2018`,
@@ -59,19 +59,19 @@ def build_slugged_db(
         )
 
     if variant is not None and register is not None:
-        var_name, var_slug, regvar_id = variant
+        var_name, var_slug, register_variant_id = variant
         conn.execute(
             "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, name) "
+            "(register_variant_id, register_id, slug, name) "
             "VALUES (?, ?, ?, ?)",
-            (regvar_id, register[2], var_slug, var_name),
+            (register_variant_id, register[2], var_slug, var_name),
         )
 
     if version is not None and variant is not None:
         ver_name, ver_slug, regver_id = version
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (?, ?, ?, ?)",
             (regver_id, variant[2], ver_slug, ver_name),
         )
@@ -84,7 +84,7 @@ def build_slugged_db(
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
             "VALUES (?, ?, ?, ?, ?, 'int')",
             (cvid, register[2], variant[2], version[2], var_id),
         )
@@ -123,16 +123,16 @@ def add_register(
 def add_variant(
     conn: sqlite3.Connection,
     *,
-    regvar_id: int,
+    register_variant_id: int,
     register_id: int,
     slug: str,
     name: str,
 ) -> None:
     conn.execute(
         "INSERT INTO register_variant "
-        "(regvar_id, register_id, slug, name) "
+        "(register_variant_id, register_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
-        (regvar_id, register_id, slug, name),
+        (register_variant_id, register_id, slug, name),
     )
 
 
@@ -140,15 +140,15 @@ def add_version(
     conn: sqlite3.Connection,
     *,
     regver_id: int,
-    regvar_id: int,
+    register_variant_id: int,
     slug: str,
     name: str,
 ) -> None:
     conn.execute(
         "INSERT INTO register_version "
-        "(regver_id, regvar_id, slug, registerversionnamn) "
+        "(regver_id, register_variant_id, slug, registerversionnamn) "
         "VALUES (?, ?, ?, ?)",
-        (regver_id, regvar_id, slug, name),
+        (regver_id, register_variant_id, slug, name),
     )
 
 
@@ -173,7 +173,7 @@ def add_binding(
     *,
     cvid: int,
     register_id: int,
-    regvar_id: int,
+    register_variant_id: int,
     regver_id: int,
     var_id: int,
     delivery_column_name: str,
@@ -186,9 +186,9 @@ def add_binding(
     """
     conn.execute(
         "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, data_type, via_source_id) "
+        "(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
         "VALUES (?, ?, ?, ?, ?, 'int', ?)",
-        (cvid, register_id, regvar_id, regver_id, var_id, via_source_id),
+        (cvid, register_id, register_variant_id, regver_id, var_id, via_source_id),
     )
     conn.execute(
         "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",

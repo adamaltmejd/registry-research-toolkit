@@ -49,10 +49,10 @@ class ResolvedRegister:
 @dataclass(frozen=True)
 class ResolvedRegisterVariant:
     fqid: Fqid
-    # `regvar_id is None` marks the §5.1 synthesized `_default` placeholder
+    # `register_variant_id is None` marks the §5.1 synthesized `_default` placeholder
     # for variant-less registers — the slot is transparent at resolve time,
     # not backed by a register_variant row.
-    regvar_id: int | None
+    register_variant_id: int | None
     register_id: int
     # §5.11 rename. `description` replaces the dropped `registervariantrubrik`
     # carrier; SCB's `registervariantbeskrivning` is the value.
@@ -65,7 +65,7 @@ class ResolvedRegisterVariant:
 class ResolvedRegisterVersion:
     fqid: Fqid
     regver_id: int
-    regvar_id: int
+    register_variant_id: int
     register_id: int
     registerversionnamn: str | None
 
@@ -75,7 +75,7 @@ class ResolvedVariableBinding:
     fqid: Fqid
     cvid: int
     register_id: int
-    regvar_id: int
+    register_variant_id: int
     regver_id: int
     var_id: int
     # §5.11: SCB `variabelnamn` → `variable_name`; `kolumnnamn` →
@@ -126,7 +126,7 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # rows with `via_source_id IS NOT NULL` is built directly from the result
 # row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
 _BINDING_QUERY = (
-    "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.regver_id, vi.var_id, "
+    "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "
     "v.name AS variable_name, va.delivery_column_name, "
     "rv.slug AS variant_slug, rver.slug AS version_slug, "
@@ -134,14 +134,14 @@ _BINDING_QUERY = (
     "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
     "FROM variable_instance vi "
     "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-    "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+    "JOIN register_variant rv ON vi.register_variant_id = rv.register_variant_id "
     "JOIN register r ON vi.register_id = r.register_id "
     "JOIN provider p ON r.provider_id = p.provider_id "
     "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
     "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
     "LEFT JOIN variable_instance vi_src ON vi.via_source_id = vi_src.cvid "
     "LEFT JOIN register_version rver_src ON vi_src.regver_id = rver_src.regver_id "
-    "LEFT JOIN register_variant rv_src ON vi_src.regvar_id = rv_src.regvar_id "
+    "LEFT JOIN register_variant rv_src ON vi_src.register_variant_id = rv_src.register_variant_id "
     "LEFT JOIN register r_src ON vi_src.register_id = r_src.register_id "
     "LEFT JOIN provider p_src ON r_src.provider_id = p_src.provider_id "
 )
@@ -218,7 +218,7 @@ class Catalog:
         # `registervariantbeskrivning`. `registervariantrubrik` and
         # `registervariantsekretess` are dropped.
         row = self._conn.execute(
-            "SELECT rv.regvar_id, rv.register_id, rv.name, "
+            "SELECT rv.register_variant_id, rv.register_id, rv.name, "
             "rv.description, rv.display_group "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
@@ -229,7 +229,7 @@ class Catalog:
         if row:
             return ResolvedRegisterVariant(
                 fqid=fqid,
-                regvar_id=row["regvar_id"],
+                register_variant_id=row["register_variant_id"],
                 register_id=row["register_id"],
                 name=row["name"],
                 description=row["description"],
@@ -258,7 +258,7 @@ class Catalog:
             return None
         return ResolvedRegisterVariant(
             fqid=fqid,
-            regvar_id=None,
+            register_variant_id=None,
             register_id=row["register_id"],
             name=None,
             description=None,
@@ -270,19 +270,19 @@ class Catalog:
         # either a derived period (`2018`, `HT2020`) or a curated slug for
         # rows the period regex can't disambiguate. populate_slugs writes both
         # kinds; the resolver just matches the slug column. §5.3 uniqueness
-        # is enforced by `UNIQUE(regvar_id, slug)` (db.py), so fetchone is safe.
+        # is enforced by `UNIQUE(register_variant_id, slug)` (db.py), so fetchone is safe.
         #
         # §5.1 follow-up: `_default` versions against a variant-less register
-        # aren't reachable today — `register_version.regvar_id` is NOT NULL,
+        # aren't reachable today — `register_version.register_variant_id` is NOT NULL,
         # so no version row can exist without a real variant row. When SOS
         # ingestion lands, either make the column nullable or extend this
         # resolver to synthesize the variant slot the way `_resolve_variant`
         # does.
         row = self._conn.execute(
-            "SELECT rver.regver_id, rver.regvar_id, rv.register_id, "
+            "SELECT rver.regver_id, rver.register_variant_id, rv.register_id, "
             "rver.registerversionnamn "
             "FROM register_version rver "
-            "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+            "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
@@ -293,7 +293,7 @@ class Catalog:
         return ResolvedRegisterVersion(
             fqid=fqid,
             regver_id=row["regver_id"],
-            regvar_id=row["regvar_id"],
+            register_variant_id=row["register_variant_id"],
             register_id=row["register_id"],
             registerversionnamn=row["registerversionnamn"],
         )
@@ -436,7 +436,7 @@ class Catalog:
             fqid=fqid,
             cvid=row["cvid"],
             register_id=row["register_id"],
-            regvar_id=row["regvar_id"],
+            register_variant_id=row["register_variant_id"],
             regver_id=row["regver_id"],
             var_id=row["var_id"],
             # `variable_name` aliases `v.name`; `delivery_column_name` is

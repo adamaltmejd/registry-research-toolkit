@@ -49,7 +49,7 @@ class TestGetSchemaFqid:
     def test_variant_version_binding_fqids(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
-        result = get_schema(slugged_conn, regvar_id="10")
+        result = get_schema(slugged_conn, register_variant_id="10")
         variant = result["variants"][0]
         assert variant["fqid"] == "scb/lisa/individer-15plus"
         version = variant["versions"][0]
@@ -62,7 +62,7 @@ class TestGetSchemaFqid:
         # carries the most-specific period token so sub-year versions stay
         # distinguishable.
         conn = build_slugged_db(version=("LISA HT2020", "HT2020", 100))
-        result = get_schema(conn, regvar_id="10")
+        result = get_schema(conn, register_variant_id="10")
         version = result["variants"][0]["versions"][0]
         assert version["fqid"] == "scb/lisa/individer-15plus/HT2020"
         column = version["columns"][0]

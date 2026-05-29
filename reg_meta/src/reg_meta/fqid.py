@@ -98,7 +98,7 @@ _PERIOD_EXTRACT_PATTERNS = (
 # `Höstterminen 2018` sibling in the same variant (both would derive to
 # `HT2018`). Verified clean against current SCB data; future deliveries
 # should re-run `reg-meta-build precheck-slugs` to catch a new collision
-# before it trips `UNIQUE(regvar_id, slug)` at build time.
+# before it trips `UNIQUE(register_variant_id, slug)` at build time.
 _TERMIN_EXTRACT_PATTERNS = (
     (re.compile(rf"\bhöst(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "HT"),
     (re.compile(rf"\bvår(?:termin|terminen)\s+({_YEAR})\b", re.IGNORECASE), "VT"),

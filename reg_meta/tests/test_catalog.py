@@ -68,12 +68,12 @@ class TestResolveVariant:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus")
         assert isinstance(r, ResolvedRegisterVariant)
-        assert r.regvar_id == 10
+        assert r.register_variant_id == 10
         assert r.fqid.variant == "individer-15plus"
 
     def test_default_variant_resolves_when_curated(self) -> None:
         # A curated `_default` (real row, slug pinned to `_default` by the
-        # maintainer) resolves like any other variant: regvar_id is the
+        # maintainer) resolves like any other variant: register_variant_id is the
         # source row's PK.
         conn = build_slugged_db(
             register=("LSS", "lss", 5, 2),
@@ -84,13 +84,13 @@ class TestResolveVariant:
         r = Catalog(conn).resolve("sos/lss/_default")
         assert isinstance(r, ResolvedRegisterVariant)
         assert r.fqid.variant == "_default"
-        assert r.regvar_id == 50
+        assert r.register_variant_id == 50
         assert r.name == "LSS default"
 
     def test_default_variant_synthesized_for_variant_less_register(self) -> None:
         # §5.1: a register with zero register_variant rows still resolves
         # `<provider>/<register>/_default`. The placeholder is virtual —
-        # regvar_id is None and the variantnamn columns are NULL.
+        # register_variant_id is None and the variantnamn columns are NULL.
         conn = build_slugged_db(
             register=("LSS", "lss", 5, 2),
             variant=None,
@@ -100,7 +100,7 @@ class TestResolveVariant:
         r = Catalog(conn).resolve("sos/lss/_default")
         assert isinstance(r, ResolvedRegisterVariant)
         assert r.fqid.variant == "_default"
-        assert r.regvar_id is None
+        assert r.register_variant_id is None
         assert r.register_id == 5
         assert r.name is None
 
@@ -204,15 +204,15 @@ class TestResolveBindingLineage:
             f"INSERT INTO register (register_id, provider_id, slug, name) "
             f"VALUES (2, 1, 'lisa', 'LISA');"
             f"INSERT INTO register_variant "
-            f"(regvar_id, register_id, slug, name) "
+            f"(register_variant_id, register_id, slug, name) "
             f"VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
             f"INSERT INTO register_version "
-            f"(regver_id, regvar_id, slug, registerversionnamn) "
+            f"(regver_id, register_variant_id, slug, registerversionnamn) "
             f"VALUES (200, 20, '{period}', 'LISA {period}');"
             f"INSERT INTO variable (register_id, var_id, name, source_register_id) "
             f"VALUES (2, 99, 'Kön', 1);"
             f"INSERT INTO variable_instance "
-            f"(cvid, register_id, regvar_id, regver_id, var_id, data_type, via_source_id) "
+            f"(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
             f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
         )
@@ -251,7 +251,7 @@ class TestResolveElidedFqid:
     """§5.2: elided variant slot expands to `_default`. Today only the curated
     `_default` row (PR α single-variant sweep) reaches a version/binding —
     `_synthesize_default_variant` (§5.1, PR #89) fires inside `_resolve_variant`
-    only, and `register_version.regvar_id` is NOT NULL so variant-less
+    only, and `register_version.register_variant_id` is NOT NULL so variant-less
     registers can't carry versions yet. When SOS-style version ingestion
     extends `_resolve_version` to synthesize too, add a passing test alongside
     `test_elided_version_misses_against_variant_less_register`."""
@@ -307,7 +307,7 @@ class TestResolveElidedFqid:
     def test_elided_version_misses_against_variant_less_register(self) -> None:
         # Variant-less LSS (no register_variant row) — synthesis covers the
         # bare `sos/lss/_default` variant FQID, but versions can't exist
-        # without a variant row (regvar_id is NOT NULL), so the elided form
+        # without a variant row (register_variant_id is NOT NULL), so the elided form
         # `sos/lss/2022` must miss today. When version-level synthesis lands
         # (`_resolve_version` TODO), replace this with a passing assertion.
         conn = build_slugged_db(
@@ -377,12 +377,14 @@ class TestEditions:
         # Two versions under the same variant carry the same kolumnnamn —
         # editions returns both, ordered by (variant_slug, version_slug).
         conn = build_slugged_db()
-        add_version(conn, regver_id=101, regvar_id=10, slug="2019", name="LISA 2019")
+        add_version(
+            conn, regver_id=101, register_variant_id=10, slug="2019", name="LISA 2019"
+        )
         add_binding(
             conn,
             cvid=1002,
             register_id=1,
-            regvar_id=10,
+            register_variant_id=10,
             regver_id=101,
             var_id=44,
             delivery_column_name="Kon",
@@ -400,13 +402,17 @@ class TestEditions:
         # Same variable slug delivered through two variants of the same
         # register — both editions surface, ordered by variant slug.
         conn = build_slugged_db()
-        add_variant(conn, regvar_id=11, register_id=1, slug="foretag", name="Företag")
-        add_version(conn, regver_id=110, regvar_id=11, slug="2018", name="LISA 2018")
+        add_variant(
+            conn, register_variant_id=11, register_id=1, slug="foretag", name="Företag"
+        )
+        add_version(
+            conn, regver_id=110, register_variant_id=11, slug="2018", name="LISA 2018"
+        )
         add_binding(
             conn,
             cvid=1003,
             register_id=1,
-            regvar_id=11,
+            register_variant_id=11,
             regver_id=110,
             var_id=44,
             delivery_column_name="Kon",
@@ -458,18 +464,20 @@ class TestEditions:
         add_register(conn, register_id=2, slug="lisa", name="LISA")
         add_variant(
             conn,
-            regvar_id=20,
+            register_variant_id=20,
             register_id=2,
             slug="individer-15plus",
             name="Individer 15+",
         )
-        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="LISA 2018")
+        add_version(
+            conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
+        )
         add_variable(conn, register_id=2, var_id=99, name="Kön", source_register_id=1)
         add_binding(
             conn,
             cvid=5001,
             register_id=2,
-            regvar_id=20,
+            register_variant_id=20,
             regver_id=200,
             var_id=99,
             delivery_column_name="Kon",
@@ -515,14 +523,22 @@ class TestEditions:
         # query — the (provider, register) filter is tight.
         conn = build_slugged_db()
         add_register(conn, register_id=2, slug="rtb", name="RTB")
-        add_variant(conn, regvar_id=20, register_id=2, slug="personer", name="Personer")
-        add_version(conn, regver_id=200, regvar_id=20, slug="2018", name="RTB 2018")
+        add_variant(
+            conn,
+            register_variant_id=20,
+            register_id=2,
+            slug="personer",
+            name="Personer",
+        )
+        add_version(
+            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
+        )
         add_variable(conn, register_id=2, var_id=99, name="Kön")
         add_binding(
             conn,
             cvid=5001,
             register_id=2,
-            regvar_id=20,
+            register_variant_id=20,
             regver_id=200,
             var_id=99,
             delivery_column_name="Kon",
@@ -702,7 +718,7 @@ class TestSameAsTraversal:
         # Add a second variant that doesn't carry the variable.
         add_variant(
             conn,
-            regvar_id=11,
+            register_variant_id=11,
             register_id=1,
             slug="individer-16plus",
             name="Individer 16+",
@@ -710,7 +726,7 @@ class TestSameAsTraversal:
         add_version(
             conn,
             regver_id=101,
-            regvar_id=11,
+            register_variant_id=11,
             slug="2018",
             name="LISA 2018",
         )
@@ -742,7 +758,7 @@ class TestSameAsTraversal:
         # variant-16plus traversal lands on a real row.
         add_variant(
             conn,
-            regvar_id=11,
+            register_variant_id=11,
             register_id=1,
             slug="individer-16plus",
             name="Individer 16+",
@@ -750,7 +766,7 @@ class TestSameAsTraversal:
         add_version(
             conn,
             regver_id=101,
-            regvar_id=11,
+            register_variant_id=11,
             slug="2018",
             name="LISA 2018",
         )
@@ -758,7 +774,7 @@ class TestSameAsTraversal:
             conn,
             cvid=2001,
             register_id=1,
-            regvar_id=11,
+            register_variant_id=11,
             regver_id=101,
             var_id=44,
             delivery_column_name="Kon",
