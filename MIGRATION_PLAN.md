@@ -217,10 +217,23 @@ name vs last-resort); adding that marker is part of this follow-up.
 
 **Gate to A2.2 and A2.4**: A2.1.5 must merge. A2.2 mints sibling `variable` rows (needs the table); A2.4 traverses the variable hierarchy. Both are structurally impossible on the A2.1 `(register_id, var_id)` schema.
 
-### [ ] A2.2 — Build-time triage (reworked onto two-level model)
+### [ ] A2.2 — Build-time triage + interim binding-resolver flip (reworked onto two-level model)
 
 Requires **A2.1.5** (the `variable` table siblings are written
 to). In-flight PR #132 reworks onto this shape.
+
+**Scope note (merged 2026-05-29).** This stage now also pulls in the
+**narrow interim binding-resolver flip** that was bullet-listed under A2.5
+("Clears the two A2.1.5 interim-resolver gaps"). It has to: minting split
+siblings (this stage) on the `provider_key`-join resolver silently
+corrupts FQID resolution (the ⚠️ below), so the siblings and the resolver
+fix must land together. **Only the narrow flip moves here** — binding
+resolution shifts from `variable_instance` (`provider_key` join) onto
+`variable_state` (keyed by `variable_id`), still returning the interim
+5-seg `ResolvedVariableBinding`. The **full** A2.5 longitudinal API
+(`resolve` → `ResolvedVariable`, `resolve_at`, `states`, and the edge
+accessors) stays in A2.5 — it gates on A2.3 + A2.4 (edge tables) and
+cannot land in #132.
 
 - Implement `triage_same_year_collisions` pass per §5.7
 - Kolumnnamn-primary discriminator (using `variable_alias.kolumnnamn` set intersection)
@@ -232,9 +245,11 @@ to). In-flight PR #132 reworks onto this shape.
 - **Add the `variable_state` state-uniqueness index** `UNIQUE(variable_id, register_variant_id, valid_from, value_set_version_label)` (deferred from A2.1.5, §5.1). Now valid: triage has folded same-year multi-shape groups into `value_set_version_label`-discriminated states or split them into distinct `variable_id`s, so the 4-tuple is unique. Add the rejection test here.
 - TOML override mechanism in `scb.toml` for ~200-300 manual cases — sibling-variable-slug overrides use the `[variable."<reg>.<var>"]` key (§5.3)
 - Tests: run against full SCB DB; verify *folds* keep one variable with discriminated overlapping states (one `variable_id`, distinct `value_set_version_label` per state) and *splits* create distinct variables (distinct `variable_id`/slug, shared `provider_key`); confirm the heuristic auto-resolves the clear cases and only the fuzzy-boundary cases need TOML overrides
-- **⚠️ Resolver fan-out — A2.5 ordering constraint (Codex P1 on PR #138).** Split siblings share one `(register_id, provider_key)` but relink `variable_state`, not `variable_instance`. The *interim* binding resolver (`catalog._BINDING_QUERY`, in place A2.1.5→A2.5) joins instances to variables by `provider_key`, so a split fans one instance across all siblings — each sibling's slug then resolves to that **shared instance's cvid/metadata** (wrong for any sibling whose state differs). So **A2.2 must not ship split siblings before A2.5's `variable_state`-based resolver lands** (or must land them together): minting siblings on the interim resolver silently corrupts FQID resolution for split variables. A strict xfail in `reg_meta/tests/test_catalog.py` (`test_split_siblings_resolve_to_distinct_bindings`) pins the hazard until A2.5 clears it.
+- **Interim binding-resolver flip (pulled from A2.5; clears the ⚠️ below).** Move `_resolve_binding_direct` / `_resolve_binding_via_same_as` / `_BINDING_QUERY` in `reg_meta/catalog.py` off the `variable_instance`→`variable` `provider_key` join and onto `variable_state` keyed by `variable_id`: the FQID's variable slug selects **the** `variable` row (register-unique slug → `variable_id`), then the discriminating metadata (`delivery_column_name`, `data_type`, `value_set_id`, `value_set_version_label`) comes from that variable's `variable_state` for the queried `(register_variant_id, period)`. So each split sibling resolves through its **own** state, not a shared instance's. Still returns the interim 5-seg `ResolvedVariableBinding`; `cvid` + `via_source_id` stay sourced from `variable_instance` (a secondary lookup) for §5.6 lineage — shared across siblings in the interim, which A2.4's `variable_state_lineage` fixes for good. Add `state_id` to `ResolvedVariableBinding` as the sibling-distinct identity. **Also clears the cross-register `same_as` gap**: the traversal resolves the target by `variable_id` + period without requiring the inherited variant slug to exist in the target register.
+- **Flip the two strict xfails to passing**: `test_split_siblings_resolve_to_distinct_bindings` and `test_cross_register_same_as_variant_mismatch` (both `reg_meta/tests/test_catalog.py`) — remove the `xfail` markers and seed per-sibling `variable_state` rows so they assert distinct resolution (`state_id` / `delivery_column_name`). Update the binding fixture builders (`_slugged_db.add_binding`, the consumer-lineage fixtures) to seed `variable_state` so existing binding tests resolve under the flip.
+- **⚠️ → RESOLVED. Resolver fan-out ordering constraint (Codex P1 on PR #138).** Split siblings share one `(register_id, provider_key)` but relink `variable_state`, not `variable_instance`. The pre-flip binding resolver joined instances to variables by `provider_key`, so a split fanned one instance across all siblings — each sibling's slug resolving to that **shared instance's cvid/metadata** (wrong for any sibling whose state differs). The earlier plan deferred siblings until A2.5's resolver landed; this stage instead **lands the siblings and the resolver flip together** (the two bullets above), which is the "or must land them together" branch of the original constraint. No split sibling is ever queryable through the `provider_key` join.
 
-**Estimate**: 7-10 days. Heuristic refinement + curation backlog.
+**Estimate**: 7-10 days. Heuristic refinement + curation backlog + the interim resolver flip (pulled from A2.5).
 
 **Gate to A2.4**: A2.2 must merge. Lineage join (A2.4) operates on triaged variables.
 
@@ -275,7 +290,7 @@ descends the variable hierarchy).
 - Implement `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for an unambiguous single-state-in-one-variant-and-one-version point query, length N across variants / range periods / folded classification-version (multi-vintage) states (common, not rare). Empty list when no state covers the period (no exception). `variant` narrows to one variant (the Source's `register_variant`); `value_set_version` narrows multi-vintage results to a single state.
 - Implement `Catalog.states(fqid)`, `.predecessors(fqid)`, `.successors(fqid)`, `.related(fqid)`, `.lineage(fqid)`, `.lineage_warnings(fqid)` — all list-returning per §5.10. `same_as` / `replaced_by` / `related_to` accessors return variable-grain refs (3-part binding FQIDs).
 - Post-A2.5 public method roster: `resolve` (new semantics), `resolve_at`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings`
-- **Clears the two A2.1.5 interim-resolver gaps (Codex P1/P2 on PR #138).** Moving binding resolution onto `variable_state` (keyed by `variable_id`, not the `provider_key` join) removes both hazards the interim 5-seg resolver carries: (a) A2.2 split siblings sharing one `(register_id, provider_key)` fanning out across one shared `variable_instance`; (b) a variable-grain `same_as` edge to a register with different variant slugs failing because the traversal inherits the query's variant slug into a register that lacks it. Two strict xfails pin these until this stage lands: `test_split_siblings_resolve_to_distinct_bindings` and `test_cross_register_same_as_variant_mismatch` (both in `reg_meta/tests/test_catalog.py`).
+- **The two A2.1.5 interim-resolver gaps are cleared in A2.2, not here (Codex P1/P2 on PR #138).** Moving binding resolution onto `variable_state` (keyed by `variable_id`, not the `provider_key` join) removes both hazards the interim 5-seg resolver carried — (a) A2.2 split siblings fanning out across one shared `variable_instance`; (b) a variable-grain `same_as` edge to a register with different variant slugs failing because the traversal inherits the query's variant slug. The narrow flip that fixes both **moved into A2.2** (it must ship with the siblings; see A2.2's "interim binding-resolver flip" bullet), flipping the two strict xfails (`test_split_siblings_resolve_to_distinct_bindings`, `test_cross_register_same_as_variant_mismatch`). A2.5 builds on the flipped read path: it replaces the interim `ResolvedVariableBinding` return with the longitudinal `ResolvedVariable` aggregate.
 - Tests: round-trip a binding's full state history via `resolve(fqid).states` and via `[s for y in years for s in resolve_at(fqid, period=y, variant=v)]`; they must agree on the unambiguous case. Assert each state carries its variant coordinate. Add a multi-vintage fixture asserting `len(resolve_at(...)) == 2` and that `value_set_version="..."` narrows to length 1.
 
 **Estimate**: 5-6 days.
