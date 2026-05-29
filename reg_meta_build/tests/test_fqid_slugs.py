@@ -2619,6 +2619,27 @@ class TestMaterializeSameAsEdges:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_unresolved_source"
 
+    def test_ambiguous_split_source_rejected(self, tmp_path: Path) -> None:
+        # A2.2 forward guard: when a triage split leaves two variables sharing
+        # (register_id, provider_key), a same_as anchored on the bare source key
+        # is ambiguous — it would attach to an arbitrary sibling — so reject it
+        # rather than pick one with LIMIT 1.
+        conn = build_slugged_db()  # var 44, provider_key '44', slug 'kon'
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'Kön 5-pos', 'kon-5pos')"
+        )
+        conn.commit()
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand" }]\n',
+        )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_ambiguous_source"
+
     def test_classification_edge_inserted(self, tmp_path: Path) -> None:
         conn = build_slugged_db()
         # Insert a second classification so the target slot resolves.

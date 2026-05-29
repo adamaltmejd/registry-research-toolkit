@@ -1329,22 +1329,25 @@ def _variable_source_slug(
 ) -> str:
     """Read the stored variable slug for a `[variable]` TOML entry's source.
 
-    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair. A2.1.5
-    stores the canonical slug on `variable.slug` (register-scoped, one row per
-    variable) — `populate_variable_slugs` runs before `materialize_same_as_edges`,
-    so the column is populated here. This replaces the prior
-    derive-from-aliases-and-require-unique workaround; the folding-ambiguity
-    error it raised is now unreachable because a variable has exactly one stored
-    slug. The "no slug for this source" error is preserved for the genuine
-    curation case (variable absent / underivable at build).
+    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair → its
+    stored `variable.slug` anchors the `a_variable` side of the same_as edge.
+    A2.1.5 stores the canonical slug on `variable.slug`; `populate_variable_slugs`
+    runs before `materialize_same_as_edges`, so the column is populated here.
+
+    Pre-A2.2, `(register_id, provider_key)` is 1:1 with a variable. Once A2.2
+    triage splits mint several variables under one source key, the bare key is
+    **ambiguous** — picking an arbitrary sibling would attach the edge to the
+    wrong variable — so we reject it rather than guess (a §5.7 sibling
+    discriminator resolves it when A2.2 lands). The "no slug" error covers the
+    genuine curation case (variable absent / underivable at build).
     """
-    row = conn.execute(
+    rows = conn.execute(
         "SELECT slug FROM variable "
         "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
-        "AND slug IS NOT NULL LIMIT 1",
+        "AND slug IS NOT NULL",
         (register_id, var_id),
-    ).fetchone()
-    if row is None:
+    ).fetchall()
+    if not rows:
         raise _err(
             "slug_same_as_unresolved_source",
             f"{entry.provider}.toml: variable.{entry.source_id!r} has no "
@@ -1355,7 +1358,18 @@ def _variable_source_slug(
             f'`[variable."{entry.source_id}"]` in {entry.provider}.toml); mark '
             "the entry deprecated=true if the variable is retired.",
         )
-    return row[0]
+    if len(rows) > 1:
+        raise _err(
+            "slug_same_as_ambiguous_source",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} maps to "
+            f"{len(rows)} variables sharing (register_id, provider_key) "
+            f"(slugs {sorted(r[0] for r in rows)!r}) — an A2.2 triage split. A "
+            f"same_as anchored on the bare source key is ambiguous; the edge "
+            f"would attach to an arbitrary sibling.",
+            "Anchor the same_as on the specific sibling via the §5.7 sibling "
+            "discriminator (lands with A2.2). Pre-A2.2 this cannot occur.",
+        )
+    return rows[0][0]
 
 
 def _validate_variable_target(
