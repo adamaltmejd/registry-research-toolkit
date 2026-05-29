@@ -57,7 +57,7 @@ class IRRegister(_IRBase):
 
 
 class IRVariant(_IRBase):
-    variant_id: int
+    register_variant_id: int
     register_id: int
     slug: str  # '_default' for variant-less registers
     name: str
@@ -71,9 +71,25 @@ class IRVariant(_IRBase):
 
 
 class IRVariable(_IRBase):
+    # A2.1.5 redefinition (§4.4 / §5.1): IRVariable is register-scoped — the
+    # "define once" addressable variable. The variant coordinate moved DOWN to
+    # IRVariableState.register_variant_id; the A1.3-shipped `variant_id` field
+    # is gone. `provider_key` (SCB str(var_id); SOS the merged name) is a
+    # NON-unique join hint, not the key — a §5.7 triage split shares it. The
+    # (register_id, slug) natural key is the unique one (DECISION POINT 1).
+    #
+    # `provider_key` is REQUIRED (not `str | None`): every variable originates
+    # from a provider source row, so a source-natural key always exists (SCB's
+    # var_id, SOS's merged variable name). Triage folds/splits derive from source
+    # rows and preserve (share) that key — they never mint a provider-source-less
+    # variable. The `synthesized` flag is VARIANT-only (a register may invent a
+    # `_default` variant); there is no variable-level analogue, so no variable is
+    # forced to an empty-key sentinel. Matches `variable.provider_key TEXT NOT
+    # NULL` (§5.1). Toolkit-computed variables would be a deliberate spec change
+    # (field + column → nullable).
     variable_id: int
     register_id: int
-    variant_id: int  # variant-scoped identity
+    provider_key: str
     slug: str
     name: str
     definition: str | None
@@ -89,7 +105,10 @@ class IRVariable(_IRBase):
 
 class IRVariableState(_IRBase):
     state_id: int
-    variable_id: int  # variant-scope is implied via variable FK
+    variable_id: int  # FK → IRVariable (the addressable identity)
+    # A2.1.5: the variant is an explicit per-state delivery coordinate (the
+    # variant moved off IRVariable). FK → IRVariant.register_variant_id (§5.1).
+    register_variant_id: int
     # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands
     # coarser forms to full-date ranges.
     valid_from: str | None
@@ -98,9 +117,10 @@ class IRVariableState(_IRBase):
     # honest about which dates they actually know.
     valid_to: str | None
     data_type: str  # normalized lowercase canonical set
-    data_length: int | None
+    # TEXT — SCB `datalangd` may carry precision/scale ("8,2"), not just an int.
+    data_length: str | None
     value_set_id: int | None
-    value_set_version_label: str | None  # overlap discriminator (rare; multi-vintage)
+    value_set_version_label: str | None  # overlap discriminator (multi-vintage)
 
 
 class IRValueCode(_IRBase):

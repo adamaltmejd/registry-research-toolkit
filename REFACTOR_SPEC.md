@@ -425,7 +425,7 @@ class IRRegister(BaseModel):
     purpose: str | None                 # short prose for catalog browse cards
 
 class IRVariant(BaseModel):
-    variant_id: int
+    register_variant_id: int
     register_id: int
     slug: str                           # '_default' for variant-less registers
     name: str
@@ -441,10 +441,12 @@ class IRVariant(BaseModel):
 # its per-delivery states. There is **no** intermediate variant-scoped
 # level: the variant is a coordinate carried on each state, not a level
 # of identity. The A1.3-shipped `IRVariable` carried a `variant_id` as
-# variant-scoped identity; this respec **redefines** `IRVariable` as
-# register-scoped (the variant_id moves to `IRVariableState`) when the
-# SCB adapter lands on the IR contract (A4.x) — see the MIGRATION_PLAN
-# A2.1.5/A2.6 rework notes. Full IR DDL in reg_meta_build/DESIGN.md.
+# variant-scoped identity; this respec **redefined** `IRVariable` as
+# register-scoped (gaining `provider_key`; the variant coordinate moved to
+# `IRVariableState.register_variant_id`). The IR code was brought in line in
+# the A1.3 two-level-redefinition PR; the SCB adapter consumes the contract at
+# A4.x — see the MIGRATION_PLAN A1.3 / A2.1.5 notes. Full IR DDL in
+# reg_meta_build/DESIGN.md.
 class IRVariable(BaseModel):
     variable_id: int                     # synthetic PK; the (register_id, slug) natural key is the unique one
     register_id: int
@@ -462,7 +464,7 @@ class IRVariable(BaseModel):
 class IRVariableState(BaseModel):
     state_id: int
     variable_id: int                     # FK → IRVariable (the addressable identity)
-    variant_id: int                     # delivery coordinate — which variant delivered this state (§5.1)
+    register_variant_id: int                     # delivery coordinate — which variant delivered this state (§5.1)
     valid_from: str | None              # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands coarser forms to full-date ranges
     valid_to: str | None                # ISO 8601; None = open-ended (materializer writes the '9999-12-31' sentinel per §5.1; the IR contract carries None to keep adapters honest about which dates they actually know)
     data_type: str                      # normalized lowercase canonical set
@@ -539,8 +541,8 @@ takes IR, writes the universal SQLite catalog. Owns:
 
 The materializer enforces invariants at build time. Notable:
 
-- `(variable_id, variant_id, valid_from)` is unique across `variable_state` unless explicitly marked multi-vintage via `value_set_version_label` (a variable's states are non-overlapping *within a variant*; the variant coordinate is part of the uniqueness scope — §5.1).
-- Every `IRVariableState.variable_id` resolves to an `IRVariable`; every `IRVariableState.variant_id` resolves to an `IRVariant`.
+- `(variable_id, register_variant_id, valid_from)` is unique across `variable_state` unless explicitly marked multi-vintage via `value_set_version_label` (a variable's states are non-overlapping *within a variant*; the variant coordinate is part of the uniqueness scope — §5.1).
+- Every `IRVariableState.variable_id` resolves to an `IRVariable`; every `IRVariableState.register_variant_id` resolves to an `IRVariant`.
 - Every `IRVariable.source_register_id`, when set, resolves to an `IRRegister`.
 - `IRVariable.slug` is **register-unique** (§5.3); collision fails the build with `slug_collision`. This is the table's natural key (DECISION POINT 1 — the synthetic `variable_id` PK is paired with a `(register_id, slug)` UNIQUE constraint). `provider_key` is **NOT** unique within a register — a §5.7 triage split puts several variables under one source key — so it is a plain index, and the source-row → variable join refines it by the triage discriminator (§5.7).
 - `IRClassification.slug` is globally unique.

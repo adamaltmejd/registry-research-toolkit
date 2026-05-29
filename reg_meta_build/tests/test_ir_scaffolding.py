@@ -58,7 +58,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
     "IRVariant": (
         IRVariant,
         {
-            "variant_id": 10,
+            "register_variant_id": 10,
             "register_id": 1,
             "slug": "_default",
             "name": "LISA default",
@@ -70,7 +70,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
         {
             "variable_id": 100,
             "register_id": 1,
-            "variant_id": 10,
+            "provider_key": "44",
             "slug": "kon",
             "name": "Kön",
             "definition": None,
@@ -85,6 +85,7 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
         {
             "state_id": 1000,
             "variable_id": 100,
+            "register_variant_id": 10,
             "valid_from": "2018",
             "valid_to": None,
             "data_type": "text",
