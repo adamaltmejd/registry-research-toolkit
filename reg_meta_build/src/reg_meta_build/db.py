@@ -25,11 +25,15 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
-from .fqid_slugs import materialize_same_as_edges, populate_slugs, repo_slug_dir
+from .fqid_slugs import (
+    materialize_same_as_edges,
+    populate_slugs,
+    populate_variable_slugs,
+    repo_slug_dir,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Iterator
@@ -568,34 +572,33 @@ CREATE TABLE code_variable_map (
     PRIMARY KEY (code_id, register_id, var_id)
 ) WITHOUT ROWID;
 
--- Curated cross-rename equivalence edges (§5.5). Edges are slug-anchored,
--- not cvid-anchored, so the link survives across rebuilds even if the
--- underlying provider IDs shift. Each TOML same_as entry becomes two
--- rows (A→B and B→A) so the resolver does a single forward lookup.
--- a_variant / a_period and b_variant / b_period default to '' (empty
--- string) rather than NULL because SQLite's UNIQUE/PRIMARY KEY treats
--- NULLs as distinct, which would let duplicate edges sneak in; '' as
--- the sentinel keeps the (PROVIDER, REGISTER, VARIANT, PERIOD, VARIABLE)
--- tuple a strict equality key.
+-- Curated cross-register / cross-provider equivalence edges (§5.5).
+-- **Variable grain**: endpoints are `(provider, register, variable)` slug
+-- triples. Slug-anchored (not cvid-anchored), so the link survives rebuilds
+-- even if provider IDs shift. Each TOML same_as entry becomes two rows
+-- (A→B and B→A) so the resolver does a single forward lookup.
+--
+-- A2.1.5 dropped the v0.11 `a_variant`/`b_variant` and `a_period`/`b_period`
+-- slots: a variable is register-scoped, so one edge covers every variant that
+-- delivers either variable, and period was never load-bearing for same_as
+-- semantics — validity is implicit in both variables' state histories (§5.5).
+-- (§5.5 also reserves a `note` column for curator annotations; not added here
+-- because the TOML same_as form carries no note field to populate it yet.)
 CREATE TABLE variable_same_as (
     a_provider     TEXT NOT NULL,
     a_register     TEXT NOT NULL,
-    a_variant      TEXT NOT NULL DEFAULT '',
-    a_period       TEXT NOT NULL DEFAULT '',
     a_variable     TEXT NOT NULL,
     b_provider     TEXT NOT NULL,
     b_register     TEXT NOT NULL,
-    b_variant      TEXT NOT NULL DEFAULT '',
-    b_period       TEXT NOT NULL DEFAULT '',
     b_variable     TEXT NOT NULL,
     PRIMARY KEY (
-        a_provider, a_register, a_variant, a_period, a_variable,
-        b_provider, b_register, b_variant, b_period, b_variable
+        a_provider, a_register, a_variable,
+        b_provider, b_register, b_variable
     )
 ) WITHOUT ROWID;
-CREATE INDEX idx_variable_same_as_a ON variable_same_as(
-    a_provider, a_register, a_variable
-);
+-- No separate a-side index: this is a WITHOUT ROWID table, so the PRIMARY KEY
+-- is the clustered index, and its leading (a_provider, a_register, a_variable)
+-- prefix already serves the resolver's source-side lookup.
 
 CREATE TABLE classification_same_as (
     a_provider              TEXT NOT NULL,
@@ -2236,29 +2239,30 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Runs after `populate_slugs` so `rver.slug` is non-NULL.
     """
-    # One row per (cvid, alias) so cvids with multiple aliases that derive
-    # to different variable slugs are visible under each. ORDER BY pins
-    # tie-breaks: when two source-side instances key the same (rid,
-    # version_slug, var_slug), the lowest cvid wins — but that case only
-    # arises if two source siblings share a slug, which UNIQUE(register_variant_id,
-    # slug) on register_version forbids; effectively the setdefault is
-    # never contested in a strict-built DB.
+    # A2.1.5: key on the STORED `variable.slug` (name-derived / curated where
+    # delivery columns collide), NOT `derive_variable_slug(delivery_column_name)`
+    # — the linker must agree with the resolver + same_as materializer, which
+    # all read `v.slug` now. Two source variables under a generic delivery column
+    # (e.g. `Kolumn1`) get distinct stored slugs and must not collapse to one
+    # key (which would attach a consumer binding to the wrong source cvid). One
+    # row per cvid (variable↔provider_key is 1:1 pre-A2.2; the join fans out
+    # post-A2.2 — the documented A2.5 hazard). ORDER BY vi.cvid pins the
+    # setdefault tie-break: lowest cvid wins when one variable has instances
+    # under several variants sharing a version-slot.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.slug AS version_slug, va.delivery_column_name "
+        "rver.slug AS version_slug, v.slug AS variable_slug "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id "
         "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-        "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-        "ORDER BY vi.cvid, va.delivery_column_name"
+        "ORDER BY vi.cvid"
     ).fetchall()
 
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_slug, delivery_column_name in rows:
-        variable_slug = derive_variable_slug(delivery_column_name)
+    for cvid, rid, src_rid, version_slug, variable_slug in rows:
         if version_slug is None or variable_slug is None:
             continue
         by_key.setdefault((rid, version_slug, variable_slug), cvid)
@@ -2548,6 +2552,18 @@ def build_db(
                     ),
                 )
             populate_slugs(conn, slug_root, strict=True)
+
+            # A2.1.5 (§5.3): stored `variable.slug`. Runs after populate_slugs
+            # (register/variant slugs feed collision messages) and after
+            # _coalesce_variable_states (reads variable_state.delivery_column_name),
+            # but before materialize_same_as_edges (which reads the stored slug
+            # via _variable_source_slug). Curated `[variable]` overrides in
+            # scb.toml win; the rest auto-derive into scb.auto.toml.
+            var_slug_counts = populate_variable_slugs(conn, slug_root)
+            row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
+            row_counts["variable_slugs_auto"] = (
+                var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
+            )
 
         # §5.5 same_as edges. Runs *after* populate_slugs so register /
         # variant / version slug columns are populated — the materializer

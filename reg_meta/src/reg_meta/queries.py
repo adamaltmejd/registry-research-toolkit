@@ -11,7 +11,7 @@ import re
 from typing import TYPE_CHECKING, Any
 
 from .errors import EXIT_NOT_FOUND, EXIT_USAGE, RegMetaError
-from .fqid import Fqid, derive_variable_slug, try_emit
+from .fqid import Fqid, try_emit
 
 if TYPE_CHECKING:
     import sqlite3
@@ -579,9 +579,8 @@ def get_schema(
 
             columns = conn.execute(
                 "SELECT vi.cvid, vi.var_id, vi.data_type, vi.data_length, "
-                "v.name AS variable_name, "
+                "v.name AS variable_name, v.slug AS variable_slug, "
                 "COALESCE(v.source_label, '') as source, "
-                "MIN(va.delivery_column_name) as first_alias, "
                 "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
                 "FROM variable_instance vi "
                 "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
@@ -599,9 +598,10 @@ def get_schema(
             col_dicts: list[dict[str, Any]] = []
             for c in columns:
                 cd = dict(c)
-                # `first_alias` from a SQL MIN — deterministic across runs;
-                # the comma-joined `aliases` is still emitted for display.
-                variable_slug = derive_variable_slug(cd.pop("first_alias", None))
+                # A2.1.5: emit from the stored slug instead of deriving from the
+                # delivery column, so the FQID matches what the resolver reads.
+                # The comma-joined `aliases` is still emitted for display.
+                variable_slug = cd.pop("variable_slug", None)
                 cd["fqid"] = try_emit(
                     Fqid.binding_fqid,
                     provider_slug,
@@ -784,15 +784,31 @@ def get_varinfo(
             ):
                 value_counts[row["cvid"]] = row["cnt"]
 
+        # A2.1.5: the resolver reads the stored `variable.slug`; get_varinfo is
+        # scoped to one (register, var), so fetch that single slug once and emit
+        # every instance's FQID from it (one variable → one slug) instead of
+        # deriving per-instance from the first alias.
+        #
+        # Pre-A2.2 `(register_id, provider_key)` is 1:1 with a variable. Post-A2.2
+        # a triage split makes it 1:N; here we deterministically pick the lowest
+        # `variable_id` (ORDER BY) rather than hard-erroring like the build-side
+        # `_variable_source_slug` does. The asymmetry is intentional: this is a
+        # read-only *display* path (varinfo's emitted FQID), where an arbitrary
+        # pick is a cosmetic glitch, whereas `_variable_source_slug` anchors a
+        # persisted `same_as` edge, where a wrong pick corrupts lineage. Both are
+        # superseded by A2.5's `variable_state` resolver (see catalog.py).
+        var_slug_row = conn.execute(
+            "SELECT slug FROM variable "
+            "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
+            "ORDER BY variable_id LIMIT 1",
+            (rid, vid),
+        ).fetchone()
+        variable_slug = var_slug_row["slug"] if var_slug_row else None
+
         instances_out: list[dict[str, Any]] = []
         for inst in instances:
             cvid = inst["cvid"]
             inst_aliases = aliases_map[cvid]
-            # First alias is the lexically-smallest delivery_column_name —
-            # `aliases_map` is sorted by ``ORDER BY cvid, delivery_column_name``
-            # in the fetch above (§5.11 rename from `kolumnnamn`).
-            first_alias = inst_aliases[0] if inst_aliases else None
-            variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
                 "cvid": cvid,
                 "register_variant_id": inst["register_variant_id"],

@@ -10,6 +10,7 @@ from _slugged_db import add_version, build_slugged_db
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
+    AUTO_FILE_SUFFIX,
     SNAPSHOT_FILENAME,
     SlugEntry,
     classify_default_candidate,
@@ -21,6 +22,7 @@ from reg_meta_build.fqid_slugs import (
     load_slug_dir,
     materialize_same_as_edges,
     populate_slugs,
+    populate_variable_slugs,
     precheck_slugs,
     read_snapshot,
     seed_all,
@@ -1046,10 +1048,12 @@ class TestSnapshot:
 # ---------------------------------------------------------------------------
 
 
-class TestVariableOverridesNotYetSupported:
-    """`[variable]` slug overrides are forward-compat metadata. `populate_slugs`
-    must raise rather than silently drop them so a maintainer's commit takes
-    effect — or fails loudly until step 1e wires up consumer-side bindings."""
+class TestVariableOverridesAcceptedByPopulateSlugs:
+    """A2.1.5: `[variable]` slug overrides are now wired (they write
+    `variable.slug` via `populate_variable_slugs`). `populate_slugs` itself only
+    handles register/variant/version/classification and must *accept* (ignore)
+    variable rows rather than raising the old `slug_variable_override_unsupported`
+    gate."""
 
     def _make_db(self):
         conn = build_slugged_db()
@@ -1059,7 +1063,9 @@ class TestVariableOverridesNotYetSupported:
         conn.commit()
         return conn
 
-    def test_variable_slug_override_raises(self, tmp_path: Path):
+    def test_variable_slug_override_is_accepted(self, tmp_path: Path):
+        # The lifted gate: a `[variable]` slug no longer raises in
+        # populate_slugs. It's applied later by populate_variable_slugs.
         d = tmp_path / "slugs"
         d.mkdir()
         _write(
@@ -1073,9 +1079,14 @@ class TestVariableOverridesNotYetSupported:
             '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
         )
         conn = self._make_db()
-        with pytest.raises(RegMetaError) as exc:
-            populate_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_variable_override_unsupported"
+        counts = populate_slugs(conn, d, strict=True)
+        assert counts == {
+            "register": 1,
+            "register_variant": 1,
+            "register_version": 0,
+            "register_version_auto": 0,
+            "classification": 1,
+        }
 
     def test_variable_metadata_only_is_accepted(self, tmp_path: Path):
         # No slug — just deprecation / replaced_by / same_as metadata. Parsed
@@ -1101,6 +1112,270 @@ class TestVariableOverridesNotYetSupported:
             "register_version_auto": 0,
             "classification": 1,
         }
+
+
+class TestPopulateVariableSlugs:
+    """A2.1.5 (§5.3): stored `variable.slug` population — kolumnnamn-derived
+    where register-unique, name-fallback otherwise, never-failing fallback
+    chain, curated overrides, .auto.toml generation."""
+
+    @staticmethod
+    def _db(
+        *, slug: str | None = None, kol: str = "Kon", name: str = "Kön"
+    ) -> sqlite3.Connection:
+        # build_slugged_db seeds variable.slug + a variable_state era carrying
+        # `kol`; NULL the stored slug so the population function does the work.
+        conn = build_slugged_db(variable=(name, 44, 1001, kol), variable_slug=slug)
+        if slug is None:
+            conn.execute("UPDATE variable SET slug = NULL")
+            conn.commit()
+        return conn
+
+    @staticmethod
+    def _slug_dir(tmp_path: Path, scb_body: str = "") -> Path:
+        (tmp_path / "scb.toml").write_text(scb_body, encoding="utf-8")
+        return tmp_path
+
+    def _stored_slug(self, conn: sqlite3.Connection, var_id: int) -> str | None:
+        row = conn.execute(
+            "SELECT slug FROM variable WHERE provider_key = CAST(? AS TEXT)",
+            (var_id,),
+        ).fetchone()
+        return row[0] if row else None
+
+    @staticmethod
+    def _add_variable(conn: sqlite3.Connection, *, var_id: int, name: str, kol: str):
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, ?, ?)",
+            (str(var_id), name),
+        ).lastrowid
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
+            (vid, kol),
+        )
+        conn.commit()
+
+    def test_auto_derives_and_persists(self, tmp_path: Path) -> None:
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        counts = populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon"
+        assert counts["auto_new"] == 1
+        # .auto.toml written, keyed register.var.
+        auto = d / f"scb{AUTO_FILE_SUFFIX}"
+        assert auto.is_file()
+        entries = load_provider_toml(auto)
+        assert any(
+            e.kind == "variable" and e.source_id == "1.44" and e.slug == "kon"
+            for e in entries
+        )
+
+    def test_curated_override_wins(self, tmp_path: Path) -> None:
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(
+            tmp_path,
+            '[register."1"]\nslug = "lisa"\n[variable."1.44"]\nslug = "kon-curated"\n',
+        )
+        counts = populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon-curated"
+        assert counts["curated"] == 1
+        assert counts["auto_new"] == 0
+
+    def test_stale_curated_override_rejected(self, tmp_path: Path) -> None:
+        # A non-deprecated [variable] override for a (register, var) with no live
+        # variable is a typo — fail rather than silently auto-slug the variable.
+        conn = self._db(kol="Kon")  # only live variable is 1.44
+        d = self._slug_dir(tmp_path, '[variable."1.999"]\nslug = "ghost"\n')
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_variable_override_stale"
+        assert "1.999" in exc.value.message
+
+    def test_deprecated_curated_override_may_be_stale(self, tmp_path: Path) -> None:
+        # A deprecated override may outlive its (retired) variable — no error.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(
+            tmp_path, '[variable."1.999"]\nslug = "ghost"\ndeprecated = true\n'
+        )
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 44) == "kon"
+
+    def test_deprecated_curated_slug_reserved(self, tmp_path: Path) -> None:
+        # §5.4: a deprecated curated [variable] slug (retired variable kept in
+        # the snapshot) is reserved — a new live variable can't auto-derive it
+        # and recreate the published FQID.
+        conn = self._db(kol="Kon")  # live var 44 → would derive "kon"
+        d = self._slug_dir(
+            tmp_path, '[variable."1.999"]\nslug = "kon"\ndeprecated = true\n'
+        )
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon-2"  # not the retired "kon"
+
+    def test_curated_override_reusing_auto_slug_rejected(self, tmp_path: Path) -> None:
+        # A curated override must not reuse a slug frozen for a DIFFERENT source
+        # in auto.toml — it would duplicate a published FQID (or hit UNIQUE).
+        conn = self._db(kol="Kon")  # live var 44
+        d = self._slug_dir(tmp_path, '[variable."1.44"]\nslug = "ghost"\n')
+        # "ghost" is already frozen for a different (pruned) source 1.999.
+        (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.999"]\nslug = "ghost"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_variable_override_conflict"
+
+    def test_existing_auto_not_recomputed_on_rename(self, tmp_path: Path) -> None:
+        # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        # SCB renames the delivery column; rebuild reads the existing
+        # .auto.toml and keeps the original slug (§5.3 immutability).
+        conn2 = self._db(kol="Konkod")  # would derive `konkod`
+        counts = populate_variable_slugs(conn2, d)
+        assert self._stored_slug(conn2, 44) == "kon"
+        assert counts["auto_existing"] == 1
+        assert counts["auto_new"] == 0
+
+    def test_retired_auto_slug_not_reused(self, tmp_path: Path) -> None:
+        # §5.4 immutability: a frozen auto slug whose variable was pruned from
+        # the delivery stays reserved — a live/new variable can't be assigned it,
+        # which would duplicate the slug in the rewritten auto.toml.
+        conn = self._db(kol="Kon")  # live var 44, kolumnnamn → "kon"
+        d = self._slug_dir(tmp_path)
+        # Retired var 1.999 (absent from the DB) froze "kon" in auto.toml.
+        (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.999"]\nslug = "kon"\n', encoding="utf-8"
+        )
+        populate_variable_slugs(conn, d)
+        # var 44 wanted "kon" but it's frozen to the retired entry → uniquified.
+        assert self._stored_slug(conn, 44) == "kon-2"
+        # The rewritten auto.toml keeps the retired entry and adds no duplicate.
+        slugs = [
+            e.slug
+            for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
+            if e.kind == "variable"
+        ]
+        assert sorted(slugs) == ["kon", "kon-2"]
+
+    def test_collision_falls_back_to_name(self, tmp_path: Path) -> None:
+        # Two distinct variables under one register whose kolumnnamn fold to the
+        # SAME slug ('kon') no longer fail the build — both fall back to their
+        # (distinct) names, yielding distinct register-unique slugs (§5.3).
+        conn = self._db(kol="Kon", name="Kön")  # var 44
+        self._add_variable(conn, var_id=88, name="Civilstånd", kol="Kon")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        s44, s88 = self._stored_slug(conn, 44), self._stored_slug(conn, 88)
+        assert s44 and s88 and s44 != s88
+        assert s88 == "civilstand"  # name-derived, since 'kon' collided
+
+    def test_unique_kolumnnamn_keeps_short_slug(self, tmp_path: Path) -> None:
+        # When the kolumnnamn slug is register-unique it wins over the (longer)
+        # name even if the name differs — keeps the short common-case leaf.
+        conn = self._db(kol="Sysselsattning", name="Sysselsättningsstatus i november")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "sysselsattning"
+
+    def test_multiple_eras_single_slug(self, tmp_path: Path) -> None:
+        # variable.slug is register-scoped (one row per variable), so multiple
+        # variable_state eras for one variable can't multiply or fork the slug.
+        conn = self._db(kol="Kon")
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE provider_key = '44'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "data_type, delivery_column_name) "
+            "VALUES (?, 10, '2019-01-01', '9999-12-31', 'int', 'Kon')",
+            (vid,),
+        )
+        conn.commit()
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        slugs = conn.execute(
+            "SELECT slug FROM variable WHERE provider_key = '44'"
+        ).fetchall()
+        assert [r[0] for r in slugs] == ["kon"]
+
+    def test_underivable_kol_falls_back_to_name(self, tmp_path: Path) -> None:
+        # A delivery column that folds to empty ('...') no longer fails — the
+        # slug derives from the variable name instead.
+        conn = self._db(kol="...", name="Kön")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon"
+
+    def test_ultimate_fallback_when_name_underivable(self, tmp_path: Path) -> None:
+        # Neither kolumnnamn nor name yields a slug (both lead with a digit) →
+        # last-resort v<provider_key>.
+        conn = self._db(kol="3DOMR", name="3D-område")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "v44"
+
+    def test_long_name_fallback_is_length_capped(self, tmp_path: Path) -> None:
+        # A generic kolumnnamn forces the name fallback; a very long name is
+        # truncated on a hyphen boundary to a readable leaf.
+        long_name = (
+            "Utgifter för egen FoU efter finansieringskälla EU ramprogram forskning"
+        )
+        conn = self._db(kol="OBS_VALUE", name=long_name)
+        # Second variable sharing OBS_VALUE so the kolumnnamn slug collides.
+        self._add_variable(conn, var_id=88, name="Annat värde", kol="OBS_VALUE")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        slug = self._stored_slug(conn, 44)
+        assert slug is not None and len(slug) <= 60
+        assert slug.startswith("utgifter-for-egen-fou")
+
+    def test_name_slug_truncation_revalidates_reserved_word(self) -> None:
+        # `Class <very-long-single-token>` derives to a valid `class-<token>`,
+        # but truncating at the only hyphen ≤ cap yields the reserved word
+        # `class`. _name_slug must not return that (unaddressable) — it keeps the
+        # full, valid slug instead.
+        from reg_meta.fqid import derive_variable_slug
+
+        from reg_meta_build.fqid_slugs import _name_slug
+
+        result = _name_slug("Class " + "x" * 70, cap=60)
+        assert result is not None
+        assert result != "class"
+        # Round-trips through the validator (not reserved / period / malformed).
+        assert derive_variable_slug(result) == result
+
+    def test_auto_toml_parses_as_provider_scb(self, tmp_path: Path) -> None:
+        # The generated scb.auto.toml must load via load_slug_dir as provider
+        # `scb` (the `.auto` suffix must not break provider-slug grammar).
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        # classifications.toml stub so load_slug_dir is happy.
+        (d / "classifications.toml").write_text("", encoding="utf-8")
+        populate_variable_slugs(conn, d)
+        entries = load_slug_dir(d)
+        var_entries = [
+            e for e in entries if e.kind == "variable" and e.provider == "scb"
+        ]
+        assert any(e.source_id == "1.44" and e.slug == "kon" for e in var_entries)
+
+    def test_auto_slugs_flow_into_snapshot(self, tmp_path: Path) -> None:
+        # Auto-derived variable slugs (in .auto.toml) must land in the snapshot
+        # payload's "variable" kind so the §5.4 grow-only guard covers them.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(tmp_path)
+        (d / "classifications.toml").write_text("", encoding="utf-8")
+        populate_variable_slugs(conn, d)
+        payload = snapshot_payload(load_slug_dir(d))
+        assert payload["variable"].get("scb/1.44") == "kon"
+        # A rename of the auto slug is flagged by diff_snapshot.
+        previous = {k: dict(v) for k, v in payload.items()}
+        previous["variable"]["scb/1.44"] = "kon-old"
+        diff = diff_snapshot(previous, payload)
+        assert any("1.44" in r for r in diff["renamed"])
 
 
 class TestSeedEmitsValidToml:
@@ -2288,9 +2563,11 @@ class TestMaterializeSameAsEdges:
         # exercise variable_same_as without involving cross-register links.
         conn = build_slugged_db()
         # Add second variable + binding under the same register/variant/version.
+        # A2.1.5: same_as anchors on the stored slug, so var 88 (a source in the
+        # reciprocal-cycle test) needs its `variable.slug` set.
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, '88', 'Civilstånd')"
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '88', 'Civilstånd', 'civilstand')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -2364,40 +2641,51 @@ class TestMaterializeSameAsEdges:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_unknown_register"
 
-    def test_unknown_target_variant_rejected(self, tmp_path: Path) -> None:
+    def test_register_variant_key_rejected(self, tmp_path: Path) -> None:
+        # A2.1.5: variable same_as is variable-grain — the `register_variant`
+        # narrowing key was dropped (§5.5), so it's now an unknown key rejected
+        # at TOML load.
         conn = build_slugged_db()
         slug_dir = self._slug_dir_with_same_as(
             tmp_path,
             '[variable."1.44"]\n'
             'same_as = [{ provider = "scb", register = "lisa", '
-            'register_variant = "nonexistent", '
+            'register_variant = "individer-15plus", '
             'variable_slug = "kon" }]\n',
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_unknown_variant"
+        assert exc.value.code == "slug_toml_invalid"
 
-    def test_ambiguous_variable_aliases_rejected(self, tmp_path: Path) -> None:
-        # Source (register_id, var_id) has two aliases that derive to
-        # different slugs — the canonical form is ambiguous, so same_as
-        # materialization must refuse.
-        conn = build_slugged_db()
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'CivStat')"
-        )
+    def test_source_without_stored_slug_rejected(self, tmp_path: Path) -> None:
+        # A2.1.5: same_as anchors on the stored `variable.slug`. If the source
+        # variable has no stored slug (underivable / absent at build),
+        # materialization must refuse with an actionable error rather than
+        # silently emitting an unanchorable edge. (The old derive-from-aliases
+        # ambiguity path is gone — the stored slug is single by construction.)
+        conn = self._db_with_two_variables()
+        # Drop the source variable's stored slug to simulate the no-slug case.
+        conn.execute("UPDATE variable SET slug = NULL WHERE provider_key = '44'")
         conn.commit()
-        # Add a second variable so the target slot exists.
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, '88', 'Civilstånd')"
+        slug_dir = self._slug_dir_with_same_as(
+            tmp_path,
+            '[variable."1.44"]\n'
+            'same_as = [{ provider = "scb", register = "lisa", '
+            'variable_slug = "civilstand" }]\n',
         )
+        with pytest.raises(RegMetaError) as exc:
+            materialize_same_as_edges(conn, slug_dir)
+        assert exc.value.code == "slug_same_as_unresolved_source"
+
+    def test_ambiguous_split_source_rejected(self, tmp_path: Path) -> None:
+        # A2.2 forward guard: when a triage split leaves two variables sharing
+        # (register_id, provider_key), a same_as anchored on the bare source key
+        # is ambiguous — it would attach to an arbitrary sibling — so reject it
+        # rather than pick one with LIMIT 1.
+        conn = build_slugged_db()  # var 44, provider_key '44', slug 'kon'
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
-            "VALUES (1002, 1, 10, 100, 88, 'int')"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1002, 'Civilstand')"
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'Kön 5-pos', 'kon-5pos')"
         )
         conn.commit()
         slug_dir = self._slug_dir_with_same_as(
@@ -2528,11 +2816,11 @@ class TestMaterializeSameAsEdges:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_self_loop"
 
-    def test_period_without_variant_rejected(self, tmp_path: Path) -> None:
-        # Codex P2: the resolver inherits the query's variant when
-        # traversing an edge, so a period-only narrowing can never resolve
-        # outside the variant that happens to carry the period. Reject at
-        # build time so the curator's intent is unambiguous.
+    def test_period_key_rejected(self, tmp_path: Path) -> None:
+        # A2.1.5: the `period` same_as narrowing key was dropped (§5.5) — it's
+        # now an unknown key rejected at TOML load. (Previously a period-only
+        # narrowing raised slug_same_as_period_without_variant; that whole
+        # narrowing concept is gone at variable grain.)
         conn = self._db_with_two_variables()
         slug_dir = self._slug_dir_with_same_as(
             tmp_path,
@@ -2542,4 +2830,4 @@ class TestMaterializeSameAsEdges:
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_period_without_variant"
+        assert exc.value.code == "slug_toml_invalid"

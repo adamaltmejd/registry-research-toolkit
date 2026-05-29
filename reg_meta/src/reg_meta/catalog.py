@@ -18,7 +18,6 @@ from .fqid import (
     Fqid,
     FqidError,
     FqidKind,
-    derive_variable_slug,
     parse,
     validate_slug,
 )
@@ -125,10 +124,25 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # Includes the consumer-side join chain (`*_src`) so the lineage FQID for
 # rows with `via_source_id IS NOT NULL` is built directly from the result
 # row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
+# A2.1.5: the variable slug is read from the stored `variable.slug` column
+# (joined via `vi.var_id` → `v.provider_key`), not derived from
+# `delivery_column_name` at query time.
+#
+# ⚠️ Bridge hazard (A2.2 → A2.5): `provider_key` is a NON-unique join hint. An
+# A2.2 triage split mints several `variable` rows under one
+# `(register_id, provider_key)` but relinks `variable_state`, NOT
+# `variable_instance`. So a single instance row fans out across all sibling
+# `variable` rows in this JOIN, and each sibling's slug then resolves to that
+# *shared* instance's cvid + metadata (value_set, data_type, …) — wrong for any
+# sibling whose state differs. Harmless today (pre-A2.2 every provider_key maps
+# 1:1 to one variable, so the join can't fan out). The fix is A2.5, which moves
+# binding resolution onto `variable_state` (keyed by `variable_id`) so each
+# sibling resolves to its own state; A2.2 must not ship split siblings before
+# that resolver lands (see MIGRATION_PLAN A2.2/A2.5).
 _BINDING_QUERY = (
     "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "
-    "v.name AS variable_name, va.delivery_column_name, "
+    "v.name AS variable_name, v.slug AS variable_slug, va.delivery_column_name, "
     "rv.slug AS variant_slug, rver.slug AS version_slug, "
     "p_src.slug AS src_provider_slug, r_src.slug AS src_register_slug, "
     "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
@@ -318,13 +332,14 @@ class Catalog:
         return self._var_same_as_sources
 
     def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
-        # No materialized binding rows yet: scan instances under the
-        # (variant, version) pair and derive variable slug from the renamed
-        # `variable_alias.delivery_column_name` column (§5.3, §5.11). The
-        # version match is an exact slug comparison — `register_version.slug`
-        # carries the period or curated token. `ORDER BY vi.cvid,
-        # va.delivery_column_name` makes first-match deterministic; uniqueness
-        # of (variant, version, variable_slug) is a §5.3 invariant.
+        # A2.1.5: scan instances under the (variant, version) pair and match the
+        # **stored** `variable.slug` (carried as `variable_slug` in
+        # `_BINDING_QUERY`) instead of deriving from
+        # `variable_alias.delivery_column_name` at query time (§5.3). The version
+        # match is an exact slug comparison — `register_version.slug` carries the
+        # period or curated token. `ORDER BY vi.cvid, va.delivery_column_name`
+        # makes first-match deterministic; uniqueness of (variant, version,
+        # variable_slug) is a §5.3 invariant.
         assert fqid.variable is not None
         variable_slug = fqid.variable
         rows = self._conn.execute(
@@ -334,7 +349,7 @@ class Catalog:
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchall()
         for row in rows:
-            if derive_variable_slug(row["delivery_column_name"]) == variable_slug:
+            if row["variable_slug"] == variable_slug:
                 return self._row_to_binding(row, fqid, variable_slug)
         return None
 
@@ -343,14 +358,26 @@ class Catalog:
     ) -> ResolvedVariableBinding | None:
         """BFS through `variable_same_as` until a candidate resolves directly.
 
-        Empty-string sentinels in the edge's `a_variant`/`a_period` mark
-        wildcard scope; on the `b_` side empty means "inherit from current
-        node", non-empty means "narrow to this slot". Equivalence traversal
-        is the only place where the query's variant/period can change
-        mid-resolve. The visited set keys on the **full 5-tuple** (incl.
-        inherited variant/period) so two narrowing edges from the same
-        source to the same target under different variants/periods both
-        get explored.
+        A2.1.5: edges are **variable-grain** — `(provider, register, variable)`
+        triples, no variant/period qualifier (§5.5). A traversal step swaps the
+        (provider, register, variable) coordinate and **inherits the query's
+        variant + period** (the edge carries no narrowing), then tries a direct
+        resolve under that inherited slot. The visited set keys on the
+        variable-grain triple. (Binding resolution is still interim 5-seg until
+        A2.6; the start-node triple is taken from the query's binding, ignoring
+        its variant/period segments.)
+
+        ⚠️ Interim limitation (A2.5): inheriting the query's variant/period only
+        resolves a target in the SAME register, or a cross-register target that
+        happens to share both slugs. A genuine cross-register / cross-provider
+        edge whose target register uses different variant slugs won't resolve
+        here — `_resolve_binding_direct` filters `rv.slug = ?` / `rver.slug = ?`
+        on the inherited (source-register) slugs, which the target lacks. The
+        edge's validity is implicit in the target variable's state history
+        (§5.5), which A2.5's longitudinal `variable_state` resolver reads,
+        dropping the variant/period dependency. No `same_as` edges are curated
+        today, so this gap is latent until then (see MIGRATION_PLAN A2.5);
+        `test_cross_register_same_as_variant_mismatch` (xfail) pins it.
         """
         assert fqid.provider and fqid.register and fqid.variable
         assert fqid.variant is not None and fqid.period is not None
@@ -360,39 +387,34 @@ class Catalog:
             fqid.variable,
         ) not in self._var_same_as_source_keys():
             return None
-        start_key = (
-            fqid.provider,
-            fqid.register,
-            fqid.variant,
-            fqid.period,
-            fqid.variable,
-        )
-        visited: set[tuple[str, str, str, str, str]] = {start_key}
-        queue: deque[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = deque()
+        # Variant/period are constant across the traversal — the variable-grain
+        # edge can't change them; only the (provider, register, variable)
+        # coordinate moves.
+        variant = fqid.variant
+        period = fqid.period
+        start_key = (fqid.provider, fqid.register, fqid.variable)
+        visited: set[tuple[str, str, str]] = {start_key}
+        queue: deque[tuple[str, str, str, tuple[Fqid, ...]]] = deque()
         queue.append((*start_key, ()))
         while queue:
-            prov, reg, variant, period, variable, path = queue.popleft()
+            prov, reg, variable, path = queue.popleft()
             rows = self._conn.execute(
-                "SELECT b_provider, b_register, b_variant, b_period, b_variable "
+                "SELECT b_provider, b_register, b_variable "
                 "FROM variable_same_as "
-                "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
-                "AND (a_variant = '' OR a_variant = ?) "
-                "AND (a_period = '' OR a_period = ?)",
-                (prov, reg, variable, variant, period),
+                "WHERE a_provider = ? AND a_register = ? AND a_variable = ?",
+                (prov, reg, variable),
             ).fetchall()
             for row in rows:
                 n_prov = row["b_provider"]
                 n_reg = row["b_register"]
-                n_variant = row["b_variant"] or variant
-                n_period = row["b_period"] or period
                 n_variable = row["b_variable"]
-                key = (n_prov, n_reg, n_variant, n_period, n_variable)
+                key = (n_prov, n_reg, n_variable)
                 if key in visited:
                     continue
                 visited.add(key)
                 try:
                     n_fqid = Fqid.binding_fqid(
-                        n_prov, n_reg, n_variant, n_period, n_variable
+                        n_prov, n_reg, variant, period, n_variable
                     )
                 except FqidError:
                     # Malformed slug in DB — populate_slugs validates on write,
@@ -406,7 +428,7 @@ class Catalog:
                     # Preserve the caller's FQID on the result; the
                     # traversal path goes in via_same_as.
                     return replace(hit, fqid=fqid, via_same_as=new_path)
-                queue.append((n_prov, n_reg, n_variant, n_period, n_variable, new_path))
+                queue.append((n_prov, n_reg, n_variable, new_path))
         return None
 
     def _row_to_binding(
@@ -475,12 +497,13 @@ class Catalog:
 
         out: list[ResolvedVariableBinding] = []
         # variable_alias is keyed by (cvid, delivery_column_name) — a single
-        # instance can have multiple aliases that fold to the same slug (e.g.
-        # `Kon` + `Kön` both → `kon`), so the LEFT JOIN can yield one row per
-        # matching alias. Dedupe by cvid: one binding per instance.
+        # instance can have multiple aliases (e.g. `Kon` + `Kön`), so the LEFT
+        # JOIN can yield one row per alias. A2.1.5: match the stored
+        # `variable_slug` (not the derived delivery column); dedupe by cvid for
+        # one binding per instance.
         seen: set[int] = set()
         for row in rows:
-            if derive_variable_slug(row["delivery_column_name"]) != variable:
+            if row["variable_slug"] != variable:
                 continue
             cvid = row["cvid"]
             if cvid in seen:

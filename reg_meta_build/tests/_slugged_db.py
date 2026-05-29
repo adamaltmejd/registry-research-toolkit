@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import sqlite3
 
+from reg_meta.fqid import derive_variable_slug
 from reg_meta_build.db import DDL, seed_providers
 
 # (name, slug, register_id, provider_id)
@@ -33,6 +34,7 @@ def build_slugged_db(
     version: tuple[str, str | None, int] | None = _DEFAULT_VERSION,
     variable: tuple[str, int, int, str] | None = _DEFAULT_VARIABLE,
     delivery_column_name: str | None = None,
+    variable_slug: str | None = None,
     classification: tuple[str, str, str, str] | None = (
         "SUN2020",
         "Svensk utbildningsnomenklatur",
@@ -44,6 +46,13 @@ def build_slugged_db(
 
     ``delivery_column_name`` overrides the variable's alias when set (e.g. to test
     diacritic folding).
+
+    A2.1.5: sets the stored ``variable.slug`` (the resolver reads it) and seeds
+    one ``variable_state`` era carrying the delivery column (the auto-derive
+    source for ``populate_variable_slugs``). ``variable_slug`` defaults to
+    ``derive_variable_slug(delivery_column_name)`` so existing tests round-trip
+    unchanged; pass an explicit value (e.g. ``"ssyk-3pos"`` with a ``Ssyk``
+    delivery column) to prove the stored-slug mechanism.
     """
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
@@ -78,11 +87,14 @@ def build_slugged_db(
 
     if variable is not None and version is not None and register is not None:
         v_name, var_id, cvid, default_kol = variable
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (?, CAST(? AS TEXT), ?)",
-            (register[2], var_id, v_name),
+        kol = delivery_column_name or default_kol
+        stored_slug = variable_slug or derive_variable_slug(kol)
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (?, CAST(? AS TEXT), ?, ?)",
+            (register[2], var_id, v_name, stored_slug),
         )
+        variable_id = cur.lastrowid
         conn.execute(
             "INSERT INTO variable_instance "
             "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
@@ -91,7 +103,17 @@ def build_slugged_db(
         )
         conn.execute(
             "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            (cvid, delivery_column_name or default_kol),
+            (cvid, kol),
+        )
+        # A2.1.5: populate_variable_slugs auto-derives from
+        # variable_state.delivery_column_name; seed one era so the engine has a
+        # kolumnnamn to fold. The resolver itself reads variable.slug (above).
+        conn.execute(
+            "INSERT INTO variable_state "
+            "(variable_id, register_variant_id, valid_from, valid_to, "
+            "data_type, delivery_column_name) "
+            "VALUES (?, ?, '2018-01-01', '9999-12-31', 'int', ?)",
+            (variable_id, variant[2], kol),
         )
 
     if classification is not None:
@@ -160,12 +182,16 @@ def add_variable(
     var_id: int,
     name: str,
     source_register_id: int | None = None,
+    slug: str | None = None,
 ) -> None:
+    # A2.1.5: `slug` sets the stored `variable.slug` the resolver reads. Pass it
+    # for variables that must resolve by FQID; leave None for fixture rows that
+    # only need to exist (e.g. a source register target).
     conn.execute(
         "INSERT INTO variable "
-        "(register_id, provider_key, name, source_register_id) "
-        "VALUES (?, CAST(? AS TEXT), ?, ?)",
-        (register_id, var_id, name, source_register_id),
+        "(register_id, provider_key, name, source_register_id, slug) "
+        "VALUES (?, CAST(? AS TEXT), ?, ?, ?)",
+        (register_id, var_id, name, source_register_id, slug),
     )
 
 

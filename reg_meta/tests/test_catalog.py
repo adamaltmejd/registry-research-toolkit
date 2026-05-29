@@ -185,6 +185,78 @@ class TestResolveBinding:
         assert r.lineage is None
 
 
+class TestStoredVariableSlug:
+    """A2.1.5 (§5.3): the resolver reads the stored `variable.slug`, not a slug
+    derived from `delivery_column_name` at query time."""
+
+    def test_resolves_via_stored_slug(self) -> None:
+        # Stored slug == derived slug for the common single-column case.
+        conn = build_slugged_db()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+
+    def test_two_aliases_one_slug_still_resolves(self) -> None:
+        # A variable with two aliases (`Kon` + `Kön`) both folding to one slug:
+        # the stored slug is single, so the LEFT-JOIN fan-out across aliases
+        # still resolves unambiguously.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, delivery_column_name) "
+            "VALUES (1001, 'Kön')"
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+
+    def test_stored_slug_overrides_derived_unblocks_triage(self) -> None:
+        # The A2.2 unblocking proof: delivery_column_name is `Ssyk` (which would
+        # derive to `ssyk`), but the stored slug is `ssyk-3pos`. The binding
+        # resolves under the stored slug — proving a build-time triage split can
+        # give a sibling sharing a delivery column a distinct, resolvable
+        # identity even though derive-at-resolve never produces it.
+        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.var_id == 44
+        assert r.delivery_column_name == "Ssyk"
+        # The derive-at-resolve slug `ssyk` no longer resolves — identity is the
+        # stored slug, not the (honest, shared) delivery column.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
+        assert exc.value.code == "fqid_not_found"
+
+    @pytest.mark.xfail(
+        reason="A2.5: an A2.2 triage split mints sibling variable rows sharing "
+        "one (register_id, provider_key) but relinks variable_state, not "
+        "variable_instance — so both siblings fan out through _BINDING_QUERY to "
+        "the SAME shared instance/cvid. Distinguishing them needs the "
+        "variable_state-based resolver (A2.5); A2.1.5 only stores+reads the slug.",
+        strict=True,
+    )
+    def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
+        # Mirror A2.2's niva split: one delivery column `Ssyk`, two sibling
+        # variables sharing provider_key '44' (§5.7 puts several variables under
+        # one source key) but ONE variable_instance (cvid 1001, var_id 44). The
+        # interim resolver joins both siblings to that shared instance via
+        # provider_key, so each slug resolves to the SAME cvid instead of each
+        # sibling's own state — the documented A2.2→A2.5 bridge hazard.
+        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
+        )
+        conn.commit()
+        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
+        assert isinstance(r3, ResolvedVariableBinding)
+        assert isinstance(r5, ResolvedVariableBinding)
+        # Desired (A2.5): each sibling resolves to its own binding. Today both
+        # fan out to the shared cvid 1001, so this fails (strict xfail).
+        assert r3.cvid != r5.cvid
+
+
 class TestResolveBindingLineage:
     """§5.6 consumer-side binding lineage exposure on Catalog.resolve."""
 
@@ -209,8 +281,12 @@ class TestResolveBindingLineage:
             f"INSERT INTO register_version "
             f"(regver_id, register_variant_id, slug, registerversionnamn) "
             f"VALUES (200, 20, '{period}', 'LISA {period}');"
-            f"INSERT INTO variable (register_id, provider_key, name, source_register_id) "
-            f"VALUES (2, '99', 'Kön', 1);"
+            # A2.1.5: the resolver reads the stored `variable.slug`, so the
+            # consumer variable must carry slug "kon" to resolve (and to match
+            # the source slug for lineage).
+            f"INSERT INTO variable "
+            f"(register_id, provider_key, name, source_register_id, slug) "
+            f"VALUES (2, '99', 'Kön', 1, 'kon');"
             f"INSERT INTO variable_instance "
             f"(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
@@ -472,7 +548,9 @@ class TestEditions:
         add_version(
             conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
         )
-        add_variable(conn, register_id=2, var_id=99, name="Kön", source_register_id=1)
+        add_variable(
+            conn, register_id=2, var_id=99, name="Kön", source_register_id=1, slug="kon"
+        )
         add_binding(
             conn,
             cvid=5001,
@@ -633,16 +711,16 @@ class TestSameAsTraversal:
     def _add_var_edge(
         conn: sqlite3.Connection,
         *,
-        a: tuple[str, str, str, str, str],
-        b: tuple[str, str, str, str, str],
+        a: tuple[str, str, str],
+        b: tuple[str, str, str],
     ) -> None:
-        """Insert both directions of a variable same_as edge."""
+        """Insert both directions of a variable-grain same_as edge (§5.5)."""
         for src, tgt in ((a, b), (b, a)):
             conn.execute(
                 "INSERT INTO variable_same_as ("
-                "a_provider, a_register, a_variant, a_period, a_variable, "
-                "b_provider, b_register, b_variant, b_period, b_variable"
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "a_provider, a_register, a_variable, "
+                "b_provider, b_register, b_variable"
+                ") VALUES (?, ?, ?, ?, ?, ?)",
                 (*src, *tgt),
             )
         conn.commit()
@@ -662,8 +740,8 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "kon"),
-            b=("scb", "lisa", "", "", "civilstand-legacy"),
+            a=("scb", "lisa", "kon"),
+            b=("scb", "lisa", "civilstand-legacy"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
         assert isinstance(r, ResolvedVariableBinding)
@@ -681,13 +759,13 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "kon"),
-            b=("scb", "lisa", "", "", "intermediate"),
+            a=("scb", "lisa", "kon"),
+            b=("scb", "lisa", "intermediate"),
         )
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "intermediate"),
-            b=("scb", "lisa", "", "", "legacy-name"),
+            a=("scb", "lisa", "intermediate"),
+            b=("scb", "lisa", "legacy-name"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/legacy-name")
         assert isinstance(r, ResolvedVariableBinding)
@@ -704,103 +782,53 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "phantom-a"),
-            b=("scb", "lisa", "", "", "phantom-b"),
+            a=("scb", "lisa", "phantom-a"),
+            b=("scb", "lisa", "phantom-b"),
         )
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom-a")
         assert exc.value.code == "fqid_not_found"
 
-    def test_same_as_variant_narrowing(self) -> None:
-        # Edge narrowed to a specific variant: only queries under that variant
-        # traverse the link.
-        conn = build_slugged_db()
-        # Add a second variant that doesn't carry the variable.
-        add_variant(
-            conn,
-            register_variant_id=11,
-            register_id=1,
-            slug="individer-16plus",
-            name="Individer 16+",
-        )
-        add_version(
-            conn,
-            regver_id=101,
-            register_variant_id=11,
-            slug="2018",
-            name="LISA 2018",
-        )
-        self._add_var_edge(
-            conn,
-            # source (where 'kon' lives) is wildcard on variant
-            a=("scb", "lisa", "", "", "kon"),
-            # target narrowed to individer-15plus only
-            b=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
-        )
-        # Query under individer-15plus matches the narrowed slot → resolves.
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 1001
-        # Query under individer-16plus does not match (variant differs) → miss.
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
-        assert exc.value.code == "fqid_not_found"
+    # A2.1.5 (§5.5): variable same_as is variable-grain — edges carry no
+    # variant/period narrowing, so the former `test_same_as_variant_narrowing`
+    # and `test_visited_key_separates_variant_scopes` (which exercised
+    # variant-scoped edges + a variant-keyed visited set) no longer have a
+    # behaviour to test and were removed with the demotion.
 
-    def test_visited_key_separates_variant_scopes(self) -> None:
-        # Regression: two narrowing edges from the same source to the same
-        # target variable under *different* variants. If the visited key
-        # ignored variant/period (the original implementation), the BFS
-        # would mark `civilstand-legacy` as visited after the first edge
-        # and skip the second edge — even though only the second variant
-        # has a binding row that resolves.
-        conn = build_slugged_db()
-        # Add a second variant that DOES carry kon (cvid 2001) so the
-        # variant-16plus traversal lands on a real row.
+    @pytest.mark.xfail(
+        reason="A2.5: a variable-grain same_as edge to a register with different "
+        "variant slugs can't resolve in the interim 5-seg resolver — it inherits "
+        "the query's variant, which the target register lacks. The longitudinal "
+        "variable_state resolver (A2.5) drops the variant/period dependency.",
+        strict=True,
+    )
+    def test_cross_register_same_as_variant_mismatch(self) -> None:
+        # lisa/phantom ≡ rtb/kon, but RTB's variant is 'personer', not lisa's
+        # 'individer-15plus'. Querying lisa/phantom inherits 'individer-15plus'
+        # into the RTB lookup, which RTB has no edition for → fails to resolve
+        # even though rtb/personer/2018/kon exists. (No same_as edges exist
+        # today; this pins the interim cross-register gap until A2.5.)
+        conn = build_slugged_db()  # lisa / individer-15plus / 2018 / kon
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
         add_variant(
-            conn,
-            register_variant_id=11,
-            register_id=1,
-            slug="individer-16plus",
-            name="Individer 16+",
+            conn, register_variant_id=20, register_id=2, slug="personer", name="P"
         )
         add_version(
-            conn,
-            regver_id=101,
-            register_variant_id=11,
-            slug="2018",
-            name="LISA 2018",
+            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
         )
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
         add_binding(
             conn,
-            cvid=2001,
-            register_id=1,
-            register_variant_id=11,
-            regver_id=101,
-            var_id=44,
+            cvid=5001,
+            register_id=2,
+            register_variant_id=20,
+            regver_id=200,
+            var_id=99,
             delivery_column_name="Kon",
         )
-        # Two edges from civilstand-legacy → kon, narrowed to *different*
-        # variants on the source side. Both edges land on kon, but only
-        # individer-16plus has the binding row.
-        # (We register edges as a → b where a is the FQID we'd query.)
-        self._add_var_edge(
-            conn,
-            a=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
-            b=("scb", "lisa", "individer-15plus", "", "kon"),
-        )
-        self._add_var_edge(
-            conn,
-            a=("scb", "lisa", "individer-16plus", "", "civilstand-legacy"),
-            b=("scb", "lisa", "individer-16plus", "", "kon"),
-        )
-        # Drop the original kon under individer-15plus so only individer-16plus
-        # can satisfy the resolution.
-        conn.execute("DELETE FROM variable_alias WHERE cvid = 1001")
-        conn.execute("DELETE FROM variable_instance WHERE cvid = 1001")
-        conn.commit()
-        r = Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
+        self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
         assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 2001
 
 
 class TestSameAsClassificationTraversal:
