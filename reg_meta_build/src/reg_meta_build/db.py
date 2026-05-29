@@ -1570,6 +1570,11 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     # A2.1.5: resolve each group's `variable_id` from its (register_id, var_id)
     # via the promoted `variable` table. var_id is 1:1 with a variable until
     # A2.2 triage splits land, so the lookup is unambiguous here.
+    # The CAST is SCB-only-safe: SCB provider_keys are str(var_id) and round-trip
+    # to the integer var_id this coalescer groups by. SOS provider_keys are
+    # merged variable *names* — `CAST('name' AS INTEGER)` → 0 in SQLite — but
+    # this SCB-specific coalescer is replaced by the per-provider IR adapters in
+    # A4, so the numeric-key assumption never reaches SOS.
     vid_map: dict[tuple[int, int], int] = {
         (r[0], r[1]): r[2]
         for r in conn.execute(
@@ -1626,9 +1631,28 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         if not grp.unika_matched:
             fallback_only_count += 1
 
+        variable_id = vid_map.get((grp.register_id, grp.var_id))
+        if variable_id is None:
+            # Defensive: `variable` and `variable_instance` derive from the same
+            # source rows, so every coalesced state has a parent variable. The
+            # FK used to catch an orphan at insert; surface an actionable error
+            # instead of a bare KeyError if that invariant ever breaks.
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="coalesce_missing_variable",
+                error_class="configuration",
+                message=(
+                    f"variable_state group (register_id={grp.register_id}, "
+                    f"var_id={grp.var_id}) has no matching `variable` row."
+                ),
+                remediation=(
+                    "`variable` and `variable_instance` disagree — rebuild from "
+                    "source with `reg-meta-build build-db`."
+                ),
+            )
         batch.append(
             (
-                vid_map[(grp.register_id, grp.var_id)],
+                variable_id,
                 grp.register_variant_id,
                 valid_from,
                 valid_to,

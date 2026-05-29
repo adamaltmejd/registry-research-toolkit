@@ -1907,7 +1907,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
                 (register_variant_id, would_be_slug), []
             ).append((key, name or ""))
 
-        for (_regvar_id, slug), rows in siblings_by_slug.items():
+        for (_register_variant_id, slug), rows in siblings_by_slug.items():
             if len(rows) > 1:
                 for key, name in rows:
                     colliding_versions.append((provider_slug, key, name, slug))
