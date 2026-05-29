@@ -957,6 +957,7 @@ identify which kind of entity a string addresses.
 | 1 | `<provider>` | provider |
 | 2 | `<provider>/<register>` | register |
 | 3 | `<provider>/<register>/<slug>` | variable binding (variable) |
+| 3 + `@<version>` | `<provider>/<register>/<slug>@<version>` | variable binding, value-set-version-pinned (optional; see below) |
 | 2, leading `class/` | `class/<classification>` | classification |
 
 Examples:
@@ -967,6 +968,7 @@ scb/lisa                                             register
 scb/lisa/kon                                         variable binding (the FQID names the variable)
 sos/lss/insatstyp                                    variable binding (variant-less register)
 scb/arbetskraftsbarometern/kon                       variable binding
+scb/lisa/naringsgren@sni2007                         variable binding, pinned to the SNI2007 value-set version
 class/sun2020                                         classification (version in slug)
 class/icd10                                           classification
 class/icd11                                           classification (successor)
@@ -1010,6 +1012,45 @@ SUN2020 is `class/sun2020`, not `class/sun?version=2020`. SUN1996 is
 `class/sun1996`. ICD-10 and ICD-11 are distinct classifications
 with distinct slugs. This matches how researchers actually think
 about classifications: each vintage is its own normative document.
+
+**Optional `@<value-set-version>` suffix on a binding.** A variable can
+be delivered in more than one value-set version *in the same period* —
+most often a classification vintage during a crosswalk era (näringsgren
+coded in both SNI92 and SNI2007 in a transition year; §5.7 *folds* these
+into one variable with overlapping `value_set_version_label`-discriminated
+states). To address one such version, a binding FQID may carry an optional
+suffix `@<version>`, e.g. `scb/lisa/naringsgren@sni2007`. The `@` token is
+the value-set-version label — the classification-version slug for
+classification-based value sets (`sni2007`), or the `value_set_version_label`
+otherwise — and it selects the matching state(s).
+
+The suffix is **optional and needed only to disambiguate**:
+
+- **Bare** (`…/naringsgren`) when the bound `(variant, period)` has exactly
+  one value-set version — the overwhelming common case.
+- **`@version`** only when multiple versions co-exist in that period (the
+  crosswalk era), or to deliberately lock a coding.
+
+A bare binding that resolves to **more than one** value-set version for its
+bound `(variant, period)` is a **validation error**
+(`binding_value_set_version_ambiguous`, §6.8) — never a silent tiebreak
+pick — directing the author to pin `@<version>`. So ambiguity can never
+resolve to the wrong coding silently (this is the safety property the
+fold relies on; §5.7).
+
+The suffix is **ring-fenced to value-set version**: there is no `@period`
+or `@variant`. Period and variant remain delivery coordinates resolved
+*into* a single state (§5.1); only the value-set version is independently
+*bindable* — a researcher genuinely orders both SNI vintages side by side
+for a crosswalk, whereas they order one variant / resolve across periods.
+That bind-multiply property is what earns the version a place in the
+identifier and keeps the other two out. Syntax is `@`, **not `#`**: a
+`#fragment` is stripped by the client and never reaches the server, so it
+cannot carry version on the `/api/catalog/{fqid:path}` route (§9.5); `@` is
+a legal path character (RFC 3986 `pchar`) and lies outside the slug grammar,
+so it is an unambiguous delimiter. The bare and `@`-pinned forms are
+distinct FQIDs, so a variable bound in N versions yields N distinct keys in
+`project_data.codes.json` / `binding_options` — no collision (§6.3, §6.6).
 
 **Cross-variant operations are state queries, not separate FQIDs.**
 "Kön across LISA variants" is not a set of distinct identifiers — it
@@ -1898,12 +1939,17 @@ cannot be the same variable.
 3. **Multiple distinct kolumnnamn groups → decide *fold* vs *split*.**
    Different physical columns under one `var_id` are either the same
    concept in different representations (fold) or genuinely different
-   variables (split). The discriminator is the **column stem**, not the
-   variable name:
-   - **Fold** when the groups share a common stem and differ only by a
-     representation axis — a classification vintage (`FtgSni69` /
-     `FtgSni92` → SNI-1969 / SNI-1992), a grain (`Ssyk3` / `Ssyk5`), or a
-     coding variant (`BCIV` / `BCIVRED`). Keep **one variable**;
+   variables (split). The **primary discriminator is the classification
+   family**: do the groups' value sets resolve to versions of the *same*
+   classification (via the `value_set → classification` linkage, §5.1)? If
+   so, they are one concept in different vintages → fold. The **column
+   stem** is the fallback signal for non-classification value sets; the
+   variable name is **never** the signal:
+   - **Fold** when the groups are versions of the same classification
+     family (`FtgSni69` / `FtgSni92` → both SNI; `Ssyk3` / `Ssyk5` → both
+     SSYK) — or, for non-classification value sets, share a common stem and
+     differ only by a representation axis (a coding variant like `BCIV` /
+     `BCIVRED`). Keep **one variable**;
      materialize overlapping `variable_state` rows discriminated by
      `value_set_version_label` (the same mechanism as true multi-vintage —
      the label carries the vintage/grain/coding token, and each state
@@ -1922,10 +1968,11 @@ cannot be the same variable.
    `Variabelnamn` is **not** usable as the fold/split signal — SCB ships
    generic family labels (one `var_id` named `"Imputerat"` covers rooms,
    area, …; the label is identical across the columns in 100% of these
-   cases), so the column stem carries the concept boundary, not the name.
-   The shared-stem heuristic auto-resolves the clear cases; the genuinely
-   ambiguous boundary (`Ma_F1_Poang` / `Ma_F2_Poang` — parallel subtests,
-   or one parameterized variable?) is the §5.7 curation backlog.
+   cases), so the classification family (then the column stem) carries the
+   concept boundary, not the name. Same-classification-family and
+   shared-stem auto-resolve the clear cases; the genuinely ambiguous
+   boundary (`Ma_F1_Poang` / `Ma_F2_Poang` — parallel subtests, or one
+   parameterized variable?) is the §5.7 curation backlog.
 4. **Within one kolumnnamn group, apply secondary rules.** The
    triage inspects SCB-source fields (`vardemangdsniva` for grain,
    `datatyp` for type, etc.) that exist transiently in the
