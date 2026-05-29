@@ -1181,6 +1181,21 @@ def populate_variable_slugs(
         for e in load_provider_toml(path)
     ]
     curated = _curated_variable_slugs(curated_entries)
+    # A hand-curated [variable] slug override must match a live variable — a
+    # non-deprecated override for a missing (register, var) is a typo that would
+    # otherwise be silently ignored (the variable auto-slugs under a different
+    # FQID). §5.4 retired variables use deprecated=true; auto-file entries are
+    # exempt (they legitimately outlive deliveries, so they never reach here —
+    # `curated_entries` excludes `.auto.toml`). Verified after the provider loop.
+    curated_required = {
+        (e.provider, e.source_id)
+        for e in curated_entries
+        if e.kind == "variable"
+        and e.slug is not None
+        and not e.deprecated
+        and e.provider is not None
+    }
+    applied_curated: set[tuple[str, str]] = set()
 
     for provider_slug in _live_providers(conn):
         auto_path = slug_dir / f"{provider_slug}{AUTO_FILE_SUFFIX}"
@@ -1231,6 +1246,7 @@ def populate_variable_slugs(
                 curated_slug = curated.get((provider_slug, source_id))
                 if curated_slug is not None:
                     fixed, kind = curated_slug, "curated"
+                    applied_curated.add((provider_slug, source_id))
                 else:
                     fixed, kind = auto.get(source_id), "auto_existing"
                 if fixed is not None:
@@ -1268,6 +1284,21 @@ def populate_variable_slugs(
 
         if auto_dirty:
             write_auto_toml(auto_path, provider_slug, auto)
+
+    # Typo guard: every non-deprecated hand-curated [variable] override must have
+    # matched a live variable above; an unmatched one is a stale/typo'd source
+    # key that would silently no-op (the variable auto-slugs instead).
+    stale_overrides = sorted(curated_required - applied_curated)
+    if stale_overrides:
+        sample = ", ".join(f"{prov}/{sid}" for prov, sid in stale_overrides[:10])
+        raise _err(
+            "slug_variable_override_stale",
+            f"{len(stale_overrides)} hand-curated [variable] slug override(s) "
+            f"reference a (register, var) with no live variable — likely a typo: "
+            f"{sample}.",
+            "Fix the source key, or mark the entry deprecated=true if the "
+            "variable is retired.",
+        )
 
     _progress(
         f"  Variable slugs: {counts['curated']:,} curated, "
@@ -2178,7 +2209,10 @@ def _stale_toml_entries(
     Variable entries are excluded from the staleness precheck: the bulk are
     build-generated `<provider>.auto.toml` rows (A2.1.5, §5.3), which the
     grow-only snapshot (`snapshot_payload`) already covers, and an auto entry
-    may legitimately outlive a variable pruned from a later delivery.
+    may legitimately outlive a variable pruned from a later delivery. Stale
+    *hand-curated* `[variable]` slug overrides (typo'd keys) are instead caught
+    at build time by `populate_variable_slugs` (`slug_variable_override_stale`),
+    which has the live-variable set in hand.
 
     Source IDs are guaranteed parseable here: `_validate_entry` calls
     `_parse_register_id` / `_parse_variant_id` / `_parse_version_id` at TOML

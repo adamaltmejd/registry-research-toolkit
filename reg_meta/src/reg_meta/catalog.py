@@ -366,6 +366,18 @@ class Catalog:
         variable-grain triple. (Binding resolution is still interim 5-seg until
         A2.6; the start-node triple is taken from the query's binding, ignoring
         its variant/period segments.)
+
+        ⚠️ Interim limitation (A2.5): inheriting the query's variant/period only
+        resolves a target in the SAME register, or a cross-register target that
+        happens to share both slugs. A genuine cross-register / cross-provider
+        edge whose target register uses different variant slugs won't resolve
+        here — `_resolve_binding_direct` filters `rv.slug = ?` / `rver.slug = ?`
+        on the inherited (source-register) slugs, which the target lacks. The
+        edge's validity is implicit in the target variable's state history
+        (§5.5), which A2.5's longitudinal `variable_state` resolver reads,
+        dropping the variant/period dependency. No `same_as` edges are curated
+        today, so this gap is latent until then (see MIGRATION_PLAN A2.5);
+        `test_cross_register_same_as_variant_mismatch` (xfail) pins it.
         """
         assert fqid.provider and fqid.register and fqid.variable
         assert fqid.variant is not None and fqid.period is not None

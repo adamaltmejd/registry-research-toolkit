@@ -1183,6 +1183,25 @@ class TestPopulateVariableSlugs:
         assert counts["curated"] == 1
         assert counts["auto_new"] == 0
 
+    def test_stale_curated_override_rejected(self, tmp_path: Path) -> None:
+        # A non-deprecated [variable] override for a (register, var) with no live
+        # variable is a typo — fail rather than silently auto-slug the variable.
+        conn = self._db(kol="Kon")  # only live variable is 1.44
+        d = self._slug_dir(tmp_path, '[variable."1.999"]\nslug = "ghost"\n')
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_variable_override_stale"
+        assert "1.999" in exc.value.message
+
+    def test_deprecated_curated_override_may_be_stale(self, tmp_path: Path) -> None:
+        # A deprecated override may outlive its (retired) variable — no error.
+        conn = self._db(kol="Kon")
+        d = self._slug_dir(
+            tmp_path, '[variable."1.999"]\nslug = "ghost"\ndeprecated = true\n'
+        )
+        populate_variable_slugs(conn, d)  # must not raise
+        assert self._stored_slug(conn, 44) == "kon"
+
     def test_existing_auto_not_recomputed_on_rename(self, tmp_path: Path) -> None:
         # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
         conn = self._db(kol="Kon")

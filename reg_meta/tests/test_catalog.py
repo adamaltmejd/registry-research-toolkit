@@ -795,6 +795,41 @@ class TestSameAsTraversal:
     # variant-scoped edges + a variant-keyed visited set) no longer have a
     # behaviour to test and were removed with the demotion.
 
+    @pytest.mark.xfail(
+        reason="A2.5: a variable-grain same_as edge to a register with different "
+        "variant slugs can't resolve in the interim 5-seg resolver — it inherits "
+        "the query's variant, which the target register lacks. The longitudinal "
+        "variable_state resolver (A2.5) drops the variant/period dependency.",
+        strict=True,
+    )
+    def test_cross_register_same_as_variant_mismatch(self) -> None:
+        # lisa/phantom ≡ rtb/kon, but RTB's variant is 'personer', not lisa's
+        # 'individer-15plus'. Querying lisa/phantom inherits 'individer-15plus'
+        # into the RTB lookup, which RTB has no edition for → fails to resolve
+        # even though rtb/personer/2018/kon exists. (No same_as edges exist
+        # today; this pins the interim cross-register gap until A2.5.)
+        conn = build_slugged_db()  # lisa / individer-15plus / 2018 / kon
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="personer", name="P"
+        )
+        add_version(
+            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
+        )
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            register_variant_id=20,
+            regver_id=200,
+            var_id=99,
+            delivery_column_name="Kon",
+        )
+        self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
+        assert isinstance(r, ResolvedVariableBinding)
+
 
 class TestSameAsClassificationTraversal:
     """§5.5 classification same_as traversal."""
