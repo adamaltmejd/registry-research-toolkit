@@ -203,7 +203,7 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Get register overview with variants.",
         description=(
             "Show register metadata including all variants (sub-tables),\n"
-            "each with regvar_id, name, description, and secrecy level.\n\n"
+            "each with register_variant_id, name, description, and secrecy level.\n\n"
             "Examples:\n"
             "  reg-meta get register LISA\n"
             "  reg-meta get register 34"
@@ -216,14 +216,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
     get_schema_p = get_sub.add_parser(
         "schema",
-        help="Get column listing per version. Provide regvar_id or --register.",
+        help="Get column listing per version. Provide register_variant_id or --register.",
         description=(
             "List columns (aliases, variable names, data types, CVIDs) per\n"
             "register version. Can be verbose for large registers — use\n"
             "--years, --columns-like, --summary, or --flat to narrow.\n\n"
             "Examples:\n"
             "  reg-meta get schema --register LISA --years 2022\n"
-            "  reg-meta get schema 153 --years 2022            # by regvar_id\n"
+            "  reg-meta get schema 153 --years 2022            # by register_variant_id\n"
             '  reg-meta get schema --register LISA --columns-like "Merit|Betyg"\n'
             "  reg-meta get schema --register LISA --summary    # one row per variant\n"
             "  reg-meta get schema --register LISA --flat       # one row per alias"
@@ -231,12 +231,12 @@ def _build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     get_schema_p.add_argument(
-        "regvar_id", nargs="?", default=None, help="Register variant ID."
+        "register_variant_id", nargs="?", default=None, help="Register variant ID."
     )
     get_schema_p.add_argument(
         "--register",
         default=None,
-        help="Register name or ID (alternative to regvar_id).",
+        help="Register name or ID (alternative to register_variant_id).",
     )
     get_schema_p.add_argument(
         "--years",
@@ -257,7 +257,7 @@ def _build_parser() -> argparse.ArgumentParser:
     schema_mode.add_argument(
         "--flat",
         action="store_true",
-        help="Flat output: one row per (year, alias, variable_name, regvar_id).",
+        help="Flat output: one row per (year, alias, variable_name, register_variant_id).",
     )
 
     get_varinfo_p = get_sub.add_parser(
@@ -378,7 +378,9 @@ def _build_parser() -> argparse.ArgumentParser:
         "--to", dest="to_year", type=int, required=True, help="End year (4-digit)."
     )
     get_diff_p.add_argument(
-        "--variant", default=None, help="Filter by register variant ID (regvar_id)."
+        "--variant",
+        default=None,
+        help="Filter by register variant ID (register_variant_id).",
     )
     get_diff_p.add_argument(
         "--variable",
@@ -907,7 +909,7 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         info = get_db_info(conn)
         data = get_schema(
             conn,
-            regvar_id=args.regvar_id,
+            register_variant_id=args.register_variant_id,
             register=args.register,
             years=args.years,
             columns_like=args.columns_like,
@@ -916,8 +918,8 @@ def _cmd_get_schema(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         conn.close()
     duration_ms = int((time.perf_counter() - start) * 1000)
     args_out: dict[str, Any] = {}
-    if args.regvar_id:
-        args_out["regvar_id"] = args.regvar_id
+    if args.register_variant_id:
+        args_out["register_variant_id"] = args.register_variant_id
     if args.register:
         args_out["register"] = args.register
     if args.years:
@@ -1010,7 +1012,7 @@ def _group_instances_by_codes(
                         "cvid": m["cvid"],
                         "register_id": m["register_id"],
                         "register_name": m["register_name"],
-                        "regvar_id": m["regvar_id"],
+                        "register_variant_id": m["register_variant_id"],
                         "variant_name": m["variant_name"],
                         "regver_id": m["regver_id"],
                         "version_name": m["version_name"],
@@ -1473,13 +1475,13 @@ def _write_payload(
                         # re-key them under the entity-qualified names the
                         # CLI table renderer uses.
                         "register_name": r["name"],
-                        "regvar_id": v["regvar_id"],
+                        "register_variant_id": v["register_variant_id"],
                         "variant_name": v.get("name", ""),
                     }
                 )
         write_formatted(
             rows,
-            ["register_id", "register_name", "regvar_id", "variant_name"],
+            ["register_id", "register_name", "register_variant_id", "variant_name"],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,
@@ -1504,7 +1506,7 @@ def _write_payload(
                 )
                 rows.append(
                     {
-                        "regvar_id": v.get("regvar_id", ""),
+                        "register_variant_id": v.get("register_variant_id", ""),
                         "variant": v.get("variant_name", ""),
                         "years": year_range,
                         "versions": len(v.get("versions", [])),
@@ -1513,7 +1515,7 @@ def _write_payload(
                 )
             write_formatted(
                 rows,
-                ["regvar_id", "variant", "years", "versions", "columns"],
+                ["register_variant_id", "variant", "years", "versions", "columns"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1530,7 +1532,9 @@ def _write_payload(
                                 continue
                             rows.append(
                                 {
-                                    "regvar_id": v.get("regvar_id", ""),
+                                    "register_variant_id": v.get(
+                                        "register_variant_id", ""
+                                    ),
                                     "year": ver.get("year", ""),
                                     "alias": alias,
                                     "name": col.get("variable_name", ""),
@@ -1540,7 +1544,7 @@ def _write_payload(
                             )
             write_formatted(
                 rows,
-                ["regvar_id", "year", "alias", "name", "source", "var_id"],
+                ["register_variant_id", "year", "alias", "name", "source", "var_id"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -1634,11 +1638,11 @@ def _write_payload(
             instances = data.get("instances", [])
             # Show variant column only when it actually disambiguates rows —
             # otherwise it's noise. Detected by any (register, year) carrying
-            # more than one regvar_id.
+            # more than one register_variant_id.
             seen: dict[tuple[Any, Any], set[Any]] = {}
             for inst in instances:
                 key = (inst.get("register_name"), inst.get("year"))
-                seen.setdefault(key, set()).add(inst.get("regvar_id"))
+                seen.setdefault(key, set()).add(inst.get("register_variant_id"))
             show_variant = any(len(v) > 1 for v in seen.values())
             rows: list[dict[str, Any]] = []
             for inst in instances:
@@ -1808,7 +1812,7 @@ def _write_payload(
                 year_str = f"{yr[0]}-{yr[-1]}" if yr else ""
                 rows.append(
                     {
-                        "regvar_id": v["regvar_id"],
+                        "register_variant_id": v["register_variant_id"],
                         "variant_name": v["variant_name"],
                         "years": year_str,
                         "version_count": len(yr),
@@ -1816,7 +1820,7 @@ def _write_payload(
                 )
             write_formatted(
                 rows,
-                ["regvar_id", "variant_name", "years", "version_count"],
+                ["register_variant_id", "variant_name", "years", "version_count"],
                 output_path,
                 fmt=fmt,
                 fmt_explicit=fmt_explicit,
@@ -2160,7 +2164,7 @@ _KEY_CONCEPTS = [
     ("register", "A statistical register (e.g. LISA, RTB). Has a numeric register_id."),
     (
         "variant",
-        "A sub-table within a register (e.g. LISA/Individer). Has a regvar_id.",
+        "A sub-table within a register (e.g. LISA/Individer). Has a register_variant_id.",
     ),
     (
         "variable",
@@ -2416,8 +2420,8 @@ get register — Register overview
   "What register has ID 34?"
     reg-meta get register 34
 
-  The output lists all variants (sub-tables) with their regvar_id.
-  Use the regvar_id with `get schema` for column details.
+  The output lists all variants (sub-tables) with their register_variant_id.
+  Use the register_variant_id with `get schema` for column details.
 """,
     ("get", "schema"): """\
 get schema — What columns does a register have?

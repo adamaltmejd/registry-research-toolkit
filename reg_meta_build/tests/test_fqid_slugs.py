@@ -364,7 +364,7 @@ class TestPopulateSlugs:
             == "lisa"
         )
         row = conn.execute(
-            "SELECT slug, display_group FROM register_variant WHERE regvar_id = 10"
+            "SELECT slug, display_group FROM register_variant WHERE register_variant_id = 10"
         ).fetchone()
         assert (row["slug"], row["display_group"]) == ("individer-15plus", "Individer")
         assert (
@@ -543,7 +543,7 @@ class TestPopulateSlugs:
         )
 
     def test_unique_constraint_blocks_sibling_slug_collision(self):
-        # SQL-level UNIQUE(regvar_id, slug) catches collisions that the
+        # SQL-level UNIQUE(register_variant_id, slug) catches collisions that the
         # TOML-load `seen_slugs` check can't see — two auto-derived siblings
         # mapping to the same period, or a curated override clashing with
         # an auto-derived sibling.
@@ -551,7 +551,7 @@ class TestPopulateSlugs:
         with pytest.raises(sqlite3.IntegrityError):
             conn.execute(
                 "INSERT INTO register_version "
-                "(regver_id, regvar_id, slug, registerversionnamn) "
+                "(regver_id, register_variant_id, slug, registerversionnamn) "
                 "VALUES (?, ?, ?, ?)",
                 (101, 10, "2018", "LISA 2018 (dup)"),
             )
@@ -571,7 +571,7 @@ class TestPopulateSlugs:
         conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (?, ?, ?, ?)",
             (101, 10, None, "LISA 2018 tilläggsfil"),
         )
@@ -651,7 +651,7 @@ class TestSeedSlugs:
         add_version(
             conn,
             regver_id=5510,
-            regvar_id=10,
+            register_variant_id=10,
             slug="betyg-vt2013",
             name="Vårterminen 2013 - betyg",
         )
@@ -727,7 +727,7 @@ class TestSeedSlugs:
         add_version(
             conn,
             regver_id=5510,
-            regvar_id=10,
+            register_variant_id=10,
             slug="betyg-vt2013",
             name="Vårterminen 2013 - betyg",
         )
@@ -855,7 +855,7 @@ class TestPrecheckSlugs:
     def test_periodized_sibling_collision_flagged(self, tmp_path: Path):
         # Regression for Codex P1 on PR #94 (commit ffd07fe): two sibling
         # periodized rows both deriving to `2018` with no override would
-        # pass precheck but fail mid-build on UNIQUE(regvar_id, slug).
+        # pass precheck but fail mid-build on UNIQUE(register_variant_id, slug).
         # Precheck must catch this so the maintainer sees a clean diagnostic
         # instead of a raw SQLite IntegrityError.
         d = tmp_path / "slugs"
@@ -872,7 +872,7 @@ class TestPrecheckSlugs:
         conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (?, ?, ?, ?)",
             (101, 10, None, "LISA 2018 tilläggsfil"),
         )
@@ -901,7 +901,7 @@ class TestPrecheckSlugs:
         conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (?, ?, ?, ?)",
             (101, 10, None, "LISA 2018 tilläggsfil"),
         )
@@ -930,7 +930,7 @@ class TestPrecheckSlugs:
         conn = build_slugged_db(version=("LISA 2018", None, 100))
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (?, ?, ?, ?)",
             (101, 10, None, "Other 2019 file"),  # would auto-derive "2019"
         )
@@ -1269,7 +1269,7 @@ class TestCuratedDefaultVariantRoundTrip:
         counts = populate_slugs(conn, d, strict=True)
         assert counts["register_variant"] == 1
         slug = conn.execute(
-            "SELECT slug FROM register_variant WHERE regvar_id = 50"
+            "SELECT slug FROM register_variant WHERE register_variant_id = 50"
         ).fetchone()[0]
         assert slug == "_default"
 
@@ -1314,7 +1314,7 @@ class TestPrecheckCli:
             "VALUES (1, 1, 'LISA', 'lisa')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, slug, "
+            "INSERT INTO register_variant (register_variant_id, register_id, slug, "
             "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
@@ -1728,7 +1728,7 @@ class TestPrecheckCliGrowOnly:
             "VALUES (1, 1, 'LISA', 'lisa')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, slug, "
+            "INSERT INTO register_variant (register_variant_id, register_id, slug, "
             "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
@@ -1983,7 +1983,7 @@ def _add_single_variant_register(
     conn: sqlite3.Connection,
     *,
     register_id: int,
-    regvar_id: int,
+    register_variant_id: int,
     name: str,
     variant_name: str,
     variant_slug: str | None,
@@ -1997,9 +1997,9 @@ def _add_single_variant_register(
     )
     conn.execute(
         "INSERT INTO register_variant "
-        "(regvar_id, register_id, slug, name) "
+        "(register_variant_id, register_id, slug, name) "
         "VALUES (?, ?, ?, ?)",
-        (regvar_id, register_id, variant_slug, variant_name),
+        (register_variant_id, register_id, variant_slug, variant_name),
     )
 
 
@@ -2011,7 +2011,7 @@ class TestIterDefaultSlugCandidates:
         # Add a second variant under the same register → no longer single-variant.
         conn.execute(
             "INSERT INTO register_variant "
-            "(regvar_id, register_id, slug, name) "
+            "(register_variant_id, register_id, slug, name) "
             "VALUES (?, ?, ?, ?)",
             (11, 1, "second", "Företag"),
         )
@@ -2029,7 +2029,7 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=42,
-            regvar_id=124,
+            register_variant_id=124,
             name="Nybörjare i Komvux",
             variant_name="Nybörjare i Komvux",
             variant_slug="nyborjare-i-komvux",
@@ -2037,7 +2037,7 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=60,
-            regvar_id=168,
+            register_variant_id=168,
             name="Konjunkturstatistik, löner för statlig sektor (KLS)",
             variant_name="Konjunkturstatistik, löner för statlig sektor",
             variant_slug=None,
@@ -2045,7 +2045,7 @@ class TestIterDefaultSlugCandidates:
         _add_single_variant_register(
             conn,
             register_id=346,
-            regvar_id=1158,
+            register_variant_id=1158,
             name="Hushållens boende",
             variant_name="Individer",
             variant_slug="individer",
@@ -2250,7 +2250,7 @@ def _make_seedable_db() -> sqlite3.Connection:
     _add_single_variant_register(
         conn,
         register_id=42,
-        regvar_id=124,
+        register_variant_id=124,
         name="Nybörjare i Komvux",
         variant_name="Nybörjare i Komvux",
         variant_slug=None,
@@ -2289,12 +2289,12 @@ class TestMaterializeSameAsEdges:
         conn = build_slugged_db()
         # Add second variable + binding under the same register/variant/version.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 88, 'Civilstånd')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '88', 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
             "VALUES (1002, 1, 10, 100, 88, 'int')"
         )
         conn.execute(
@@ -2388,12 +2388,12 @@ class TestMaterializeSameAsEdges:
         conn.commit()
         # Add a second variable so the target slot exists.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 88, 'Civilstånd')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '88', 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
             "VALUES (1002, 1, 10, 100, 88, 'int')"
         )
         conn.execute(
@@ -2475,12 +2475,12 @@ class TestMaterializeSameAsEdges:
         conn = self._db_with_two_variables()
         # Add a third variable so we have a distinct second target.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 99, 'Födelseår')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '99', 'Födelseår')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, data_type) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
             "VALUES (1003, 1, 10, 100, 99, 'int')"
         )
         conn.execute(

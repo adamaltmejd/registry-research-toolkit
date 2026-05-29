@@ -450,7 +450,7 @@ def _bulk_resolve(
         "SELECT va.delivery_column_name, vi.register_id, vi.var_id, v.name AS variable_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
         f"WHERE LOWER(va.delivery_column_name) IN ({placeholders})"
         f"{reg_filter} "
         "GROUP BY LOWER(va.delivery_column_name), vi.register_id, vi.var_id "

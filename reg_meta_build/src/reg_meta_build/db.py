@@ -197,7 +197,7 @@ CREATE TABLE register (
 );
 
 CREATE TABLE register_variant (
-    regvar_id INTEGER PRIMARY KEY,
+    register_variant_id INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
     -- §5.11 rename. `registervariantrubrik` (redundant with name) and
     -- `registervariantsekretess` (legal text → reg-meta-docs) are dropped.
@@ -210,7 +210,7 @@ CREATE TABLE register_variant (
 
 CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
-    regvar_id INTEGER NOT NULL REFERENCES register_variant(regvar_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     -- §5.2 version slot: either a derived period token (`2018`, `HT2020`, …)
     -- or a curated slug for rows the period regex can't disambiguate
     -- (unperiodized aux tables, year-range projections, sub-topic siblings
@@ -229,7 +229,7 @@ CREATE TABLE register_version (
     -- collisions between two auto-derived rows or between a curated
     -- override and an auto-derived sibling. SQLite treats NULLs as
     -- distinct, so this is safe during the INSERT → populate_slugs window.
-    UNIQUE (regvar_id, slug)
+    UNIQUE (register_variant_id, slug)
 );
 
 CREATE TABLE population (
@@ -251,8 +251,22 @@ CREATE TABLE object_type (
 );
 
 CREATE TABLE variable (
+    -- A2.1.5 (DECISION POINT 1, §5.1): synthetic PK so variable_state's FK is
+    -- single-column and the edge tables stay stable as the natural key varies
+    -- per provider. The natural key is (register_id, slug); `provider_key`
+    -- (SCB `str(var_id)`; SOS the merged variable name) is demoted from the PK
+    -- to a NON-unique join hint — a §5.7 triage split (A2.2) puts several
+    -- variables under one source key.
+    variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
-    var_id INTEGER NOT NULL,
+    -- SCB str(var_id), TEXT so SOS can key by merged variable name (§5.1).
+    -- NON-unique join hint, not a key; variable_instance.var_id (INTEGER) joins
+    -- via CAST-to-TEXT until variable_instance is dropped in A2.7.
+    provider_key TEXT NOT NULL,
+    -- §5.3 register-unique FQID leaf. NULL until the A2.1.5 slug follow-up PR
+    -- populates it; SQLite treats NULLs as distinct, so the transient all-NULL
+    -- window doesn't trip the unique index below.
+    slug TEXT,
     -- §5.11 rename. Values stay provider-native. `variabeloperationell_definition`
     -- merges into `description` at ingest when distinct + non-empty;
     -- `variabelreferenstid`, `variabelhamtadfran`, and `variabelextern_kommentar`
@@ -273,16 +287,21 @@ CREATE TABLE variable (
     -- `is_sensitive`. ANY 'Ja' row across the unika_summary group for a
     -- (register_id, var_id) sets the flag.
     is_sensitive INTEGER NOT NULL DEFAULT 0,
-    is_identifier INTEGER NOT NULL DEFAULT 0,
-    -- PK doubles as the join index for get_schema's JOIN on (register_id, var_id).
-    -- Do not add a redundant explicit index.
-    PRIMARY KEY (register_id, var_id)
+    is_identifier INTEGER NOT NULL DEFAULT 0
 );
+-- Natural key: register-unique slug (the FQID leaf, §5.3). Stays unique after
+-- an A2.2 triage split because siblings get distinct slugs. The one UNIQUE
+-- constraint on the table (DECISION POINT 1).
+CREATE UNIQUE INDEX idx_variable_slug ON variable(register_id, slug);
+-- `provider_key` is a NON-unique join hint, not a key: A2.2 triage siblings
+-- share one source key. Plain index, not UNIQUE. Serves the resolver's
+-- (register_id, provider_key) join from variable_instance.var_id (CAST to TEXT).
+CREATE INDEX idx_variable_natkey ON variable(register_id, provider_key);
 
 CREATE TABLE variable_instance (
     cvid INTEGER PRIMARY KEY,
     register_id INTEGER NOT NULL,
-    regvar_id INTEGER NOT NULL,
+    register_variant_id INTEGER NOT NULL,
     regver_id INTEGER NOT NULL,
     var_id INTEGER NOT NULL,
     -- A2.1: per-cvid raw `Variabelnamn` from the source CSV row. `variable.name`
@@ -311,17 +330,22 @@ CREATE TABLE variable_instance (
     -- §5.6 lineage edge: source cvid for consumer-side bindings (e.g. LISA
     -- pulling Kön from RTB). NULL on canonical/source instances. Populated
     -- by `link_consumer_side_bindings` after CSV import.
-    via_source_id INTEGER REFERENCES variable_instance(cvid),
-    FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id)
+    via_source_id INTEGER REFERENCES variable_instance(cvid)
+    -- A2.1.5: no FK to `variable` — its natural key moved to the synthetic
+    -- `variable_id` PK + register-unique `slug`, so `(register_id, var_id)` is
+    -- no longer a UNIQUE/PK target. The join is by convention (and the
+    -- `idx_variable_natkey` index) until `variable_instance` is dropped in A2.7.
 );
 
 -- A2.1: per-era shape of a variable (§5.1). One row per coalesced
--- `(register_id, regvar_id, var_id, data_type, data_length, value_set_id,
+-- `(register_id, register_variant_id, var_id, data_type, data_length, value_set_id,
 -- value_set_version_label, grain)` tuple over `variable_instance`; populated
 -- by `_coalesce_variable_states` after CSV import. Resolver still uses
 -- `variable_instance` at this stage — A2.5 flips it to `variable_state`.
--- FK shifts to `(register_id, regvar_id, var_id)` once A2.4 lands the
--- variant-scoped variable PK.
+-- A2.1.5 re-parented this onto the synthetic `variable_id` FK (was FK
+-- `(register_id, var_id)` in A2.1) and made `register_variant_id` an explicit
+-- delivery coordinate; the coalescer resolves each group's `variable_id` from
+-- `(register_id, var_id)` via the promoted `variable` table.
 --
 -- valid_from / valid_to are TEXT NOT NULL `YYYY-MM-DD` always (storage
 -- contract from §5.1); coarser SCB inputs like the year "2020" expand at
@@ -336,17 +360,19 @@ CREATE TABLE variable_instance (
 -- of the variable slug when a split fires).
 CREATE TABLE variable_state (
     state_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    register_id INTEGER NOT NULL,
-    regvar_id INTEGER NOT NULL,
-    var_id INTEGER NOT NULL,
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
     valid_from TEXT NOT NULL,
     valid_to TEXT NOT NULL DEFAULT '9999-12-31',
     data_type TEXT,
     data_length TEXT,
     delivery_column_name TEXT,
     value_set_id INTEGER REFERENCES value_set(value_set_id),
-    value_set_version_label TEXT,
-    FOREIGN KEY (register_id, var_id) REFERENCES variable(register_id, var_id),
+    -- §5.7 overlap discriminator (multi-vintage / grain / coding). NOT NULL
+    -- DEFAULT '' so the uniqueness index below bites in the common
+    -- single-version case — SQLite treats NULLs as distinct, which would let
+    -- duplicate non-multi-vintage states slip through. Mirrors '9999-12-31'.
+    value_set_version_label TEXT NOT NULL DEFAULT '',
     -- Full-date contract: ten-character ISO 8601 strings only. Length check
     -- is a cheap structural guard; a stricter regex isn't worth the runtime
     -- cost because the coalescer is the only writer.
@@ -355,9 +381,20 @@ CREATE TABLE variable_state (
     CHECK (valid_to >= valid_from)
 );
 CREATE INDEX idx_variable_state_variable
-    ON variable_state(register_id, var_id);
-CREATE INDEX idx_variable_state_regvar
-    ON variable_state(register_id, regvar_id, var_id);
+    ON variable_state(variable_id);
+CREATE INDEX idx_variable_state_register_variant
+    ON variable_state(register_variant_id);
+-- NOTE: the §5.1 state-uniqueness index — UNIQUE(variable_id,
+-- register_variant_id, valid_from, value_set_version_label) — is intentionally
+-- NOT created here. `_coalesce_variable_states` emits one PRE-TRIAGE row per
+-- (… data_type, data_length, value_set_id, value_set_version_label, grain)
+-- group, so a same-year variable with multiple grains / codings / shapes
+-- produces several rows that share (variable_id, register_variant_id,
+-- valid_from) and carry value_set_version_label = '' — they'd collide on that
+-- index before A2.2 can fold them (→ value_set_version_label-discriminated
+-- states) or split them (→ sibling variable_ids). The uniqueness invariant
+-- only holds POST-triage, so the unique index is added in A2.2. value_set_
+-- version_label stays NOT NULL DEFAULT '' here so the index bites once added.
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;
@@ -448,7 +485,7 @@ CREATE INDEX idx_value_set_member_code ON value_set_member(code_id);
 
 CREATE TABLE unika_summary (
     register_id INTEGER,
-    regvar_id INTEGER,
+    register_variant_id INTEGER,
     kolumnnamn TEXT,
     variabelnamn TEXT,
     version_forsta TEXT,
@@ -456,7 +493,7 @@ CREATE TABLE unika_summary (
     kanslig_variabel TEXT,
     kanslig_variabel_ibland TEXT,
     identitetsvariabel TEXT,
-    PRIMARY KEY (register_id, regvar_id, kolumnnamn, variabelnamn)
+    PRIMARY KEY (register_id, register_variant_id, kolumnnamn, variabelnamn)
 );
 
 CREATE TABLE identifier_semantics (
@@ -489,7 +526,7 @@ CREATE VIRTUAL TABLE register_fts USING fts5(
 
 CREATE VIRTUAL TABLE variable_fts USING fts5(
     register_id,
-    var_id,
+    provider_key,
     name,
     definition,
     description,
@@ -510,10 +547,10 @@ CREATE VIRTUAL TABLE classification_fts USING fts5(
 
 -- Performance indexes
 CREATE INDEX idx_register_variant_register ON register_variant(register_id);
-CREATE INDEX idx_register_version_regvar ON register_version(regvar_id);
+CREATE INDEX idx_register_version_register_variant ON register_version(register_variant_id);
 CREATE INDEX idx_variable_instance_register ON variable_instance(register_id);
 CREATE INDEX idx_variable_instance_var ON variable_instance(register_id, var_id);
-CREATE INDEX idx_variable_instance_regvar ON variable_instance(regvar_id);
+CREATE INDEX idx_variable_instance_register_variant ON variable_instance(register_variant_id);
 CREATE INDEX idx_variable_instance_regver ON variable_instance(regver_id);
 CREATE INDEX idx_variable_instance_classification ON variable_instance(classification_id)
     WHERE classification_id IS NOT NULL;
@@ -878,7 +915,7 @@ def _import_registerinformation(
             variants.setdefault(
                 rvid,
                 {
-                    "regvar_id": rvid,
+                    "register_variant_id": rvid,
                     "register_id": rid,
                     # `Registervariantrubrik` and `RegistervariantSekretess`
                     # are dropped per §5.11.
@@ -891,7 +928,7 @@ def _import_registerinformation(
                 rveid,
                 {
                     "regver_id": rveid,
-                    "regvar_id": rvid,
+                    "register_variant_id": rvid,
                     "registerversionnamn": row["Registerversionnamn"],
                     "registerversionbeskrivning": row["Registerversionbeskrivning"],
                     "registerversionmatinformation": row[
@@ -944,7 +981,7 @@ def _import_registerinformation(
                 {
                     "cvid": cvid,
                     "register_id": rid,
-                    "regvar_id": rvid,
+                    "register_variant_id": rvid,
                     "regver_id": rveid,
                     "var_id": vid,
                     # Per-cvid raw variabelnamn. SCB ships one row per
@@ -1001,19 +1038,19 @@ def _import_registerinformation(
     )
     conn.executemany(
         "INSERT INTO register_variant ("
-        "regvar_id, register_id, name, description"
+        "register_variant_id, register_id, name, description"
         ") VALUES ("
-        ":regvar_id, :register_id, :name, :description"
+        ":register_variant_id, :register_id, :name, :description"
         ")",
         list(variants.values()),
     )
     conn.executemany(
         "INSERT INTO register_version "
-        "(regver_id, regvar_id, registerversionnamn, "
+        "(regver_id, register_variant_id, registerversionnamn, "
         "registerversionbeskrivning, registerversionmatinformation, "
         "registerversion_docstaus, registerversion_forstagodkannandedatum, "
         "registerversion_senastgodkanddatum) VALUES ("
-        ":regver_id, :regvar_id, :registerversionnamn, "
+        ":regver_id, :register_variant_id, :registerversionnamn, "
         ":registerversionbeskrivning, :registerversionmatinformation, "
         ":registerversion_docstaus, :registerversion_forstagodkannandedatum, "
         ":registerversion_senastgodkanddatum)",
@@ -1039,17 +1076,17 @@ def _import_registerinformation(
         if op and op not in desc:
             var["description"] = f"{desc}\n\n{op}".strip() if desc else op
     conn.executemany(
-        "INSERT INTO variable (register_id, var_id, name, definition, description, "
+        "INSERT INTO variable (register_id, provider_key, name, definition, description, "
         "source_register_text, measurement_unit, source_register_id, source_label) "
-        "VALUES (:register_id, :var_id, :name, :definition, :description, "
+        "VALUES (:register_id, CAST(:var_id AS TEXT), :name, :definition, :description, "
         ":source_register_text, :measurement_unit, :source_register_id, :source_label)",
         list(variables.values()),
     )
     conn.executemany(
         "INSERT INTO variable_instance "
-        "(cvid, register_id, regvar_id, regver_id, var_id, variabelnamn, "
+        "(cvid, register_id, register_variant_id, regver_id, var_id, variabelnamn, "
         " data_type, data_length) "
-        "VALUES (:cvid, :register_id, :regvar_id, :regver_id, "
+        "VALUES (:cvid, :register_id, :register_variant_id, :regver_id, "
         ":var_id, :variabelnamn, :data_type, :data_length)",
         list(instances.values()),
     )
@@ -1109,11 +1146,11 @@ def _import_unika(
             ids = unika_join.get(key)
             if ids is None:
                 continue
-            register_id, regvar_id = ids
+            register_id, register_variant_id = ids
             batch.append(
                 (
                     register_id,
-                    regvar_id,
+                    register_variant_id,
                     row["Kolumnnamn"],
                     row["Variabelnamn"],
                     row["VersionForsta"],
@@ -1152,9 +1189,9 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
     rows) and `_import_unika` (populates the source). Idempotent: re-running
     on a populated DB resets every row from `unika_summary` again.
 
-    `unika_summary` stores `(register_id, regvar_id, kolumnnamn, variabelnamn)`
+    `unika_summary` stores `(register_id, register_variant_id, kolumnnamn, variabelnamn)`
     but not `var_id`. To resolve `var_id` we route the join through
-    `variable_instance × variable_alias`: the `(register_id, regvar_id,
+    `variable_instance × variable_alias`: the `(register_id, register_variant_id,
     kolumnnamn)` triple narrows to a single cvid in the source CSV, and
     `variable_instance.var_id` then carries the `var_id` we need. We also
     join `variable` on `variabelnamn` (now `variable.name` post-A1.1) so
@@ -1182,7 +1219,7 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
         "    FROM unika_summary us "
         "    JOIN variable_instance vi "
         "      ON vi.register_id = us.register_id "
-        "     AND vi.regvar_id = us.regvar_id "
+        "     AND vi.register_variant_id = us.register_variant_id "
         # `unika_summary` keeps Swedish column names — A1.1 didn't touch
         # that table because A2.1 drops it. `variable_alias` and
         # `variable` were renamed: `kolumnnamn` → `delivery_column_name`,
@@ -1192,12 +1229,12 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
         "     AND va.delivery_column_name = us.kolumnnamn "
         "    JOIN variable v "
         "      ON v.register_id = vi.register_id "
-        "     AND v.var_id = vi.var_id "
+        "     AND v.provider_key = CAST(vi.var_id AS TEXT) "
         "     AND v.name = us.variabelnamn "
         "    GROUP BY vi.register_id, vi.var_id"
         ") AS flags "
         "WHERE variable.register_id = flags.register_id "
-        "  AND variable.var_id = flags.var_id"
+        "  AND variable.provider_key = CAST(flags.var_id AS TEXT)"
     )
     refreshed = cur.rowcount or 0
     _progress(f"  {refreshed:,} variable rows refreshed from unika_summary")
@@ -1251,7 +1288,7 @@ def _parse_unika_year(raw: str | None) -> int | None:
 def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
-    Group key: `(register_id, regvar_id, var_id, data_type, data_length,
+    Group key: `(register_id, register_variant_id, var_id, data_type, data_length,
     value_set_id, value_set_version_label, grain)`.
 
     `grain` is the transient pre-triage carrier for SCB's `vardemangdsniva`
@@ -1262,11 +1299,11 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
 
     For each group:
 
-    1. Resolve `(register_id, regvar_id, kolumnnamn, variabelnamn)` from the
+    1. Resolve `(register_id, register_variant_id, kolumnnamn, variabelnamn)` from the
        cvids in the group via `variable_alias × variable`. Note the cross-
        product: a single cvid can have N aliases (rare; cross-edition
        drift), so the group's unika lookup keys are the *union* of all
-       (regvar, alias, name) triples for the cvids.
+       (register_variant, alias, name) triples for the cvids.
     2. Look up `unika_summary` rows for each triple; take `min(VersionForsta)`
        → `valid_from`, `max(VersionSista)` → `valid_to`. Expand year → full
        ISO 8601 (`'2020-01-01'` / `'2020-12-31'`).
@@ -1308,7 +1345,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     cur = conn.cursor()
     cur.row_factory = sqlite3.Row
     rows = cur.execute(
-        "SELECT vi.cvid, vi.register_id, vi.regvar_id, vi.var_id, vi.regver_id, "
+        "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
         "       vi.data_type, vi.data_length, vi.value_set_id, "
         "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
         "       vi.variabelnamn, va.delivery_column_name, "
@@ -1326,7 +1363,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     @dataclass
     class _StateGroup:
         register_id: int
-        regvar_id: int
+        register_variant_id: int
         var_id: int
         data_type: str | None
         data_length: str | None
@@ -1368,14 +1405,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         tuple[int, int, int, str, str, int | None, str | None, str],
         _StateGroup,
     ] = {}
-    # Map (register_id, regvar_id, kolumnnamn, variabelnamn) → set of
+    # Map (register_id, register_variant_id, kolumnnamn, variabelnamn) → set of
     # group keys so the unika fan-out below stays proportional to distinct
     # groups, not raw instance-row hits (a wide variable with many cvids
     # / aliases would otherwise have its single unika row replayed once
     # per row even though min/max is idempotent).
     unika_index: dict[tuple[int, int, str, str], set[tuple]] = {}
 
-    # Max regver year observed per (register_id, regvar_id, var_id). A
+    # Max regver year observed per (register_id, register_variant_id, var_id). A
     # single unika row covers a variable's entire lifetime, but when the
     # coalescer splits a variable into multiple groups by shape (different
     # data_type / data_length / value_set_id across versions), each split
@@ -1390,7 +1427,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         grain = row["grain"] or ""
         gkey = (
             row["register_id"],
-            row["regvar_id"],
+            row["register_variant_id"],
             row["var_id"],
             row["data_type"] or "",
             row["data_length"] or "",
@@ -1402,7 +1439,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         if grp is None:
             grp = _StateGroup(
                 register_id=row["register_id"],
-                regvar_id=row["regvar_id"],
+                register_variant_id=row["register_variant_id"],
                 var_id=row["var_id"],
                 data_type=row["data_type"],
                 data_length=row["data_length"],
@@ -1422,7 +1459,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
             grp.regver_max = (
                 rver_year if grp.regver_max is None else max(grp.regver_max, rver_year)
             )
-            vkey = (row["register_id"], row["regvar_id"], row["var_id"])
+            vkey = (row["register_id"], row["register_variant_id"], row["var_id"])
             cur_max = var_max_regver.get(vkey)
             if cur_max is None or rver_year > cur_max:
                 var_max_regver[vkey] = rver_year
@@ -1449,7 +1486,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 grp.latest_alias_regver = regver
 
         # Stage the unika lookup. unika_summary's PK is
-        # (register_id, regvar_id, kolumnnamn, variabelnamn); we need an
+        # (register_id, register_variant_id, kolumnnamn, variabelnamn); we need an
         # alias to build the triple, so cvids without an alias contribute
         # only via the fallback path. The unika_index is a set so that
         # repeat (alias, variabelnamn) sightings across cvids in the same
@@ -1457,7 +1494,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         if alias and row["variabelnamn"]:
             ukey = (
                 row["register_id"],
-                row["regvar_id"],
+                row["register_variant_id"],
                 alias,
                 row["variabelnamn"],
             )
@@ -1471,13 +1508,13 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     unika_cur = conn.cursor()
     unika_cur.row_factory = sqlite3.Row
     unika_rows = unika_cur.execute(
-        "SELECT register_id, regvar_id, kolumnnamn, variabelnamn, "
+        "SELECT register_id, register_variant_id, kolumnnamn, variabelnamn, "
         "       version_forsta, version_sista FROM unika_summary"
     ).fetchall()
     for ur in unika_rows:
         ukey = (
             ur["register_id"],
-            ur["regvar_id"],
+            ur["register_variant_id"],
             ur["kolumnnamn"],
             ur["variabelnamn"],
         )
@@ -1530,12 +1567,27 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     #     parseable `registerversionnamn` year, unika_min/unika_max
     #     stand in. Rare in the SCB corpus but the build must produce
     #     writable rows regardless.
+    # A2.1.5: resolve each group's `variable_id` from its (register_id, var_id)
+    # via the promoted `variable` table. var_id is 1:1 with a variable until
+    # A2.2 triage splits land, so the lookup is unambiguous here.
+    # The CAST is SCB-only-safe: SCB provider_keys are str(var_id) and round-trip
+    # to the integer var_id this coalescer groups by. SOS provider_keys are
+    # merged variable *names* — `CAST('name' AS INTEGER)` → 0 in SQLite — but
+    # this SCB-specific coalescer is replaced by the per-provider IR adapters in
+    # A4, so the numeric-key assumption never reaches SOS.
+    vid_map: dict[tuple[int, int], int] = {
+        (r[0], r[1]): r[2]
+        for r in conn.execute(
+            "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
+        )
+    }
+
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
     open_top_from_unika = 0
     for grp in groups.values():
-        vkey = (grp.register_id, grp.regvar_id, grp.var_id)
+        vkey = (grp.register_id, grp.register_variant_id, grp.var_id)
         var_max = var_max_regver.get(vkey)
         # `None == None` is True — a yearless single-group variable counts
         # as the latest era of itself, so the open-ended sentinel can
@@ -1579,26 +1631,46 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         if not grp.unika_matched:
             fallback_only_count += 1
 
+        variable_id = vid_map.get((grp.register_id, grp.var_id))
+        if variable_id is None:
+            # Defensive: `variable` and `variable_instance` derive from the same
+            # source rows, so every coalesced state has a parent variable. The
+            # FK used to catch an orphan at insert; surface an actionable error
+            # instead of a bare KeyError if that invariant ever breaks.
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="coalesce_missing_variable",
+                error_class="configuration",
+                message=(
+                    f"variable_state group (register_id={grp.register_id}, "
+                    f"var_id={grp.var_id}) has no matching `variable` row."
+                ),
+                remediation=(
+                    "`variable` and `variable_instance` disagree — rebuild from "
+                    "source with `reg-meta-build build-db`."
+                ),
+            )
         batch.append(
             (
-                grp.register_id,
-                grp.regvar_id,
-                grp.var_id,
+                variable_id,
+                grp.register_variant_id,
                 valid_from,
                 valid_to,
                 grp.data_type,
                 grp.data_length,
                 grp.latest_alias,
                 grp.value_set_id,
-                grp.value_set_version_label,
+                # NOT NULL DEFAULT '' on the column; coalesce here so the
+                # uniqueness index bites for the common single-version case.
+                grp.value_set_version_label or "",
             )
         )
 
     conn.executemany(
-        "INSERT INTO variable_state (register_id, regvar_id, var_id, "
+        "INSERT INTO variable_state (variable_id, register_variant_id, "
         "    valid_from, valid_to, data_type, data_length, delivery_column_name, "
         "    value_set_id, value_set_version_label) "
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         batch,
     )
     state_count = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]
@@ -2039,11 +2111,11 @@ def _populate_fts(conn: sqlite3.Connection) -> None:
     # are excluded (they contain technical suffixes like _LISA that pollute
     # search results).
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, var_id, name, definition, description)
+        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description)
         SELECT
             v.rowid,
             v.register_id,
-            v.var_id,
+            v.provider_key,
             v.name,
             v.definition,
             v.description
@@ -2168,14 +2240,15 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     # to different variable slugs are visible under each. ORDER BY pins
     # tie-breaks: when two source-side instances key the same (rid,
     # version_slug, var_slug), the lowest cvid wins — but that case only
-    # arises if two source siblings share a slug, which UNIQUE(regvar_id,
+    # arises if two source siblings share a slug, which UNIQUE(register_variant_id,
     # slug) on register_version forbids; effectively the setdefault is
     # never contested in a strict-built DB.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
         "rver.slug AS version_slug, va.delivery_column_name "
         "FROM variable_instance vi "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN variable v ON vi.register_id = v.register_id "
+        "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
         "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
         "ORDER BY vi.cvid, va.delivery_column_name"

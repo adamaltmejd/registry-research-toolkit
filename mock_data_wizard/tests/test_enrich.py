@@ -158,11 +158,11 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(reg_meta_db: Pat
     conn.executescript(
         """
         INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'OTHER');
-        INSERT INTO register_variant (regvar_id, register_id, name)
+        INSERT INTO register_variant (register_variant_id, register_id, name)
             VALUES (20, 2, 'Other variant');
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (200, 20, '1991');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (2001, 2, 20, 200, 44, 'int', '1', 'Kön', '1');
         """
@@ -219,11 +219,11 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
             VALUES (1, 'SUN2000', 'Svensk utbildningsnomenklatur 2000');
         INSERT INTO classification (id, short_name, name)
             VALUES (2, 'SUN2020', 'Svensk utbildningsnomenklatur 2020');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
             classification_id)
             VALUES (1101, 1, 10, 100, 44, 'int', '4', 'SUN2000', '4', 1);
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
             classification_id)
             VALUES (1102, 1, 10, 100, 44, 'int', '4', 'SUN2020', '4', 2);
@@ -280,7 +280,7 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path)
     # classification metadata (so name-match has nothing to latch onto).
     conn.executescript(
         """
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1201, 1, 10, 100, 44, 'char', '1', 'FamStF', '1');
         """
@@ -325,7 +325,7 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(reg_meta_db: Path
     # Add a second CVID under the same register/variable with different codes.
     conn.executescript(
         """
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1002, 1, 10, 100, 44, 'int', '1', 'Kön', '1');
         """
@@ -499,19 +499,19 @@ def _seed_year_cvids(conn) -> None:
     single set across all three cvids — same shape as before, fewer rows."""
     conn.executescript(
         """
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (101, 10, '2018');
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (102, 10, '2019');
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (103, 10, '2025');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1801, 1, 10, 101, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1802, 1, 10, 102, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1803, 1, 10, 103, 44, 'int', '1', 'Kön', '1');
         """
@@ -604,14 +604,14 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
     # higher.
     conn.executescript(
         """
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (201, 10, '2018');
-        INSERT INTO register_version (regver_id, regvar_id, registerversionnamn)
+        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
             VALUES (202, 10, '2025');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1901, 1, 10, 201, 44, 'int', '1', 'V18', '1');
-        INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id,
+        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
             var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
             VALUES (1902, 1, 10, 202, 44, 'int', '1', 'V25', '1');
         """

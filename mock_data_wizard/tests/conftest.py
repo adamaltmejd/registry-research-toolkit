@@ -181,19 +181,19 @@ def reg_meta_db(tmp_path: Path) -> Path:
         "VALUES (1, 1, 'TESTREG', 'Testing')"
     )
     conn.execute(
-        "INSERT INTO register_variant (regvar_id, register_id, name) "
+        "INSERT INTO register_variant (register_variant_id, register_id, name) "
         "VALUES (10, 1, 'Individer')"
     )
     conn.execute(
-        "INSERT INTO register_version (regver_id, regvar_id, registerversionnamn) "
+        "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) "
         "VALUES (100, 10, '2020')"
     )
     conn.execute(
-        "INSERT INTO variable (register_id, var_id, name, definition) "
-        "VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring')"
+        "INSERT INTO variable (register_id, provider_key, name, definition) "
+        "VALUES (1, '44', 'Kön', 'Kön enligt folkbokföring')"
     )
     conn.execute(
-        "INSERT INTO variable_instance (cvid, register_id, regvar_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "
+        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "
         "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
     )
     conn.execute(

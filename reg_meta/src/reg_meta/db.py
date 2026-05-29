@@ -21,23 +21,36 @@ from .errors import EXIT_CONFIG, RegMetaError
 # refactor stage that justified the bump and what becomes
 # incompatible. `_check_schema_compat` rejects DBs with a different
 # major OR an older minor — additive table/column changes are minor
-# bumps, drops or renames are major.
+# bumps, drops or renames are major. **Pre-v1 exception:** the A2.1.5
+# two-level restructure (renames, a re-parent, column moves) rides the
+# 4.x line by policy — regenerate-not-migrate means every tester rebuilds
+# from source, so there is no in-place upgrade to break; the one
+# consumer-visible major break is deferred to A2.7 (see below).
 #
 # - 4.0.0 (A1.1): §5.11 renamed ~21 columns across the universal schema
 #   and dropped the SCB-Swedish names. Pre-4.x DBs reference columns
 #   that no longer exist — hard break. A1.2's additive sensitivity
 #   columns (`is_sensitive`, `is_identifier`) rode on the same major
 #   bump and didn't require their own version step.
-# - 4.1.0 (A2.1, current): added `variable_state` and dropped the
+# - 4.1.0 (A2.1): added `variable_state` and dropped the
 #   build-only `unika_summary` table. The drop is benign for the query
 #   layer (nothing in `reg_meta` reads `unika_summary`); the addition
 #   matters because the upcoming A2.5 resolver flip needs
 #   `variable_state` to be populated. Old 4.0.0 DBs without that table
 #   are rejected via the minor-version gate.
+# - 4.2.0 (A2.1.5, current): two-level restructure (rides 4.x per the
+#   pre-v1 exception above; lands across several commits on the a2.1.5
+#   branch). `register_variant.regvar_id` renamed to `register_variant_id`
+#   schema-wide; `variable` promoted (synthetic `variable_id` PK +
+#   register-unique `slug`; `var_id` → `provider_key` join hint);
+#   `variable_state` re-parented onto `variable_id` + a
+#   `register_variant_id` coordinate; `variable_same_as` demoted to
+#   variable grain. The first commit (the `regvar_id` rename) sets 4.2.0;
+#   the structural commits stay on it.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking
 #   change.
-SCHEMA_VERSION = "4.1.0"
+SCHEMA_VERSION = "4.2.0"
 DB_FILENAME = "reg_meta.db"
 
 

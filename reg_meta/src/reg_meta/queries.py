@@ -115,7 +115,7 @@ def _version_years_for_register(
         # `registerversionnamn` stays Swedish — A2.6 drops the table.
         "SELECT rv.registerversionnamn "
         "FROM register_version rv "
-        "JOIN register_variant rvar ON rv.regvar_id = rvar.regvar_id "
+        "JOIN register_variant rvar ON rv.register_variant_id = rvar.register_variant_id "
         "WHERE rvar.register_id = ?",
         (register_id,),
     ).fetchall()
@@ -182,7 +182,7 @@ def _filter_search_by_years(
         rows = conn.execute(
             "SELECT DISTINCT rvar.register_id, rv.registerversionnamn "
             "FROM register_version rv "
-            "JOIN register_variant rvar ON rv.regvar_id = rvar.regvar_id "
+            "JOIN register_variant rvar ON rv.register_variant_id = rvar.register_variant_id "
             f"WHERE rvar.register_id IN ({placeholders})",
             list(reg_only_ids),
         ).fetchall()
@@ -292,7 +292,7 @@ def _search_datacolumns(
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable_alias va "
         "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "JOIN register r ON vi.register_id = r.register_id "
         "WHERE va.delivery_column_name LIKE ? "
         "ORDER BY va.delivery_column_name, vi.register_id",
@@ -320,7 +320,7 @@ def _search_varnames(
     conn: sqlite3.Connection, like_pattern: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT v.register_id, v.var_id, "
+        "SELECT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
@@ -376,7 +376,7 @@ def _search_description_variables(
     conn: sqlite3.Connection, query: str, reg_ids: set[int] | None
 ) -> list[dict[str, Any]]:
     rows = conn.execute(
-        "SELECT vf.register_id, vf.var_id, "
+        "SELECT vf.register_id, CAST(vf.provider_key AS INTEGER) AS var_id, "
         "vf.name AS variable_name, vf.definition AS variable_definition, "
         "vf.description AS variable_description, vf.rank, "
         "r.name AS register_name, r.purpose AS register_purpose "
@@ -414,7 +414,7 @@ def _search_values(
         "v.name AS variable_name, r.name AS register_name "
         "FROM value_code vc "
         "JOIN code_variable_map cvm ON vc.code_id = cvm.code_id "
-        "JOIN variable v ON cvm.register_id = v.register_id AND cvm.var_id = v.var_id "
+        "JOIN variable v ON cvm.register_id = v.register_id AND CAST(cvm.var_id AS TEXT) = v.provider_key "
         "JOIN register r ON cvm.register_id = r.register_id "
         "WHERE vc.code LIKE ? OR vc.label LIKE ? "
         "ORDER BY vc.code "
@@ -471,7 +471,7 @@ def get_register(
         provider_slug = entry.pop("provider_slug")
         entry["fqid"] = try_emit(Fqid.register_fqid, provider_slug, entry["slug"])
         variants = conn.execute(
-            "SELECT * FROM register_variant WHERE register_id = ? ORDER BY regvar_id",
+            "SELECT * FROM register_variant WHERE register_id = ? ORDER BY register_variant_id",
             (rid,),
         ).fetchall()
         variant_dicts: list[dict[str, Any]] = []
@@ -501,14 +501,14 @@ def _in_placeholders(ids: Iterable[object]) -> str:
 def get_schema(
     conn: sqlite3.Connection,
     *,
-    regvar_id: str | None = None,
+    register_variant_id: str | None = None,
     register: str | None = None,
     years: str | None = None,
     columns_like: str | None = None,
 ) -> dict[str, Any]:
     """Get column listing organized by variant → version → columns.
 
-    Requires either regvar_id or register. Returns {"variants": [...]}.
+    Requires either register_variant_id or register. Returns {"variants": [...]}.
     """
     variant_select = (
         "SELECT rv.*, p.slug AS provider_slug, r.slug AS register_slug "
@@ -516,17 +516,17 @@ def get_schema(
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
     )
-    if regvar_id:
+    if register_variant_id:
         rv = conn.execute(
-            variant_select + "WHERE rv.regvar_id = ?",
-            (_try_int(regvar_id),),
+            variant_select + "WHERE rv.register_variant_id = ?",
+            (_try_int(register_variant_id),),
         ).fetchone()
         if not rv:
             raise RegMetaError(
                 exit_code=EXIT_NOT_FOUND,
                 code="not_found",
                 error_class="query",
-                message=f"Register variant {regvar_id} not found.",
+                message=f"Register variant {register_variant_id} not found.",
                 remediation="Use `reg-meta get register <name>` to list variants.",
             )
         variant_rows = [rv]
@@ -534,7 +534,7 @@ def get_schema(
         reg_ids = require_register_ids(conn, register)
         variant_rows = conn.execute(
             variant_select + f"WHERE rv.register_id IN ({_in_placeholders(reg_ids)}) "
-            "ORDER BY rv.register_id, rv.regvar_id",
+            "ORDER BY rv.register_id, rv.register_variant_id",
             reg_ids,
         ).fetchall()
         if not variant_rows:
@@ -550,8 +550,8 @@ def get_schema(
             exit_code=EXIT_USAGE,
             code="usage_error",
             error_class="usage",
-            message="Provide either a regvar_id or register.",
-            remediation="Usage: get_schema(conn, regvar_id=...) or get_schema(conn, register=...)",
+            message="Provide either a register_variant_id or register.",
+            remediation="Usage: get_schema(conn, register_variant_id=...) or get_schema(conn, register=...)",
         )
 
     year_lo, year_hi = None, None
@@ -560,12 +560,12 @@ def get_schema(
 
     variants_out: list[dict[str, Any]] = []
     for rv in variant_rows:
-        rvid = rv["regvar_id"]
+        rvid = rv["register_variant_id"]
         provider_slug = rv["provider_slug"]
         register_slug = rv["register_slug"]
         variant_slug = rv["slug"]
         versions = conn.execute(
-            "SELECT * FROM register_version WHERE regvar_id = ? ORDER BY regver_id",
+            "SELECT * FROM register_version WHERE register_variant_id = ? ORDER BY regver_id",
             (rvid,),
         ).fetchall()
 
@@ -584,7 +584,7 @@ def get_schema(
                 "MIN(va.delivery_column_name) as first_alias, "
                 "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
                 "FROM variable_instance vi "
-                "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+                "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
                 "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
                 "WHERE vi.regver_id = ? "
                 "GROUP BY vi.cvid ORDER BY vi.var_id, vi.cvid",
@@ -639,7 +639,7 @@ def get_schema(
         if versions_out:
             variants_out.append(
                 {
-                    "regvar_id": rvid,
+                    "register_variant_id": rvid,
                     "register_id": rv["register_id"],
                     # §5.11: the variant's name + description (was Swedish
                     # `registervariantnamn` / `registervariantbeskrivning`).
@@ -684,26 +684,26 @@ def get_varinfo(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         vars_by_id = conn.execute(
-            f"SELECT v.*, r.name AS register_name FROM variable v "
+            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
-            f"WHERE v.var_id = ? AND v.register_id IN ({ph})",
+            f"WHERE v.provider_key = CAST(? AS TEXT) AND v.register_id IN ({ph})",
             [int_variable, *reg_ids],
         ).fetchall()
         vars_by_name = conn.execute(
-            f"SELECT v.*, r.name AS register_name FROM variable v "
+            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
             f"WHERE LOWER(v.name) = LOWER(?) AND v.register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         vars_by_id = conn.execute(
-            "SELECT v.*, r.name AS register_name FROM variable v "
+            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE v.var_id = ?",
+            "WHERE v.provider_key = CAST(? AS TEXT)",
             (int_variable,),
         ).fetchall()
         vars_by_name = conn.execute(
-            "SELECT v.*, r.name AS register_name FROM variable v "
+            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE LOWER(v.name) = LOWER(?)",
             (variable,),
@@ -714,9 +714,9 @@ def get_varinfo(
     # Fall back to alias (column name) lookup
     if not matched_vars:
         alias_sql = (
-            "SELECT DISTINCT v.*, r.name AS register_name FROM variable_alias a "
+            "SELECT DISTINCT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable_alias a "
             "JOIN variable_instance vi ON a.cvid = vi.cvid "
-            "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+            "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
@@ -743,7 +743,7 @@ def get_varinfo(
         rid, vid = var["register_id"], var["var_id"]
 
         instances = conn.execute(
-            "SELECT vi.cvid, vi.regvar_id, vi.regver_id, "
+            "SELECT vi.cvid, vi.register_variant_id, vi.regver_id, "
             "vi.data_type, vi.data_length, "
             "vi.value_set_version_label, vi.classification_id, "
             "c.short_name AS classification, "
@@ -752,7 +752,7 @@ def get_varinfo(
             "rv.slug AS variant_slug, rver.slug AS version_slug "
             "FROM variable_instance vi "
             "LEFT JOIN classification c ON vi.classification_id = c.id "
-            "JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+            "JOIN register_variant rv ON vi.register_variant_id = rv.register_variant_id "
             "JOIN register_version rver ON vi.regver_id = rver.regver_id "
             "JOIN register r ON vi.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -795,7 +795,7 @@ def get_varinfo(
             variable_slug = derive_variable_slug(first_alias)
             inst_dict: dict[str, Any] = {
                 "cvid": cvid,
-                "regvar_id": inst["regvar_id"],
+                "register_variant_id": inst["register_variant_id"],
                 # `variant_name` already aliased in the SELECT.
                 "variant_name": inst["variant_name"],
                 "regver_id": inst["regver_id"],
@@ -896,10 +896,10 @@ def _get_availability_variable(
         params.extend(ids)
 
     var_rows = conn.execute(
-        "SELECT v.register_id, v.var_id, v.name AS variable_name, "
+        "SELECT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name, "
         "r.name AS register_name FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
-        f"WHERE (v.var_id = ? OR LOWER(v.name) = LOWER(?)){reg_filter}",
+        f"WHERE (v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)){reg_filter}",
         params,
     ).fetchall()
 
@@ -997,10 +997,10 @@ def _get_availability_register(
     ).fetchone()
 
     rows = conn.execute(
-        "SELECT rvar.regvar_id, rvar.name AS variant_name, "
+        "SELECT rvar.register_variant_id, rvar.name AS variant_name, "
         "rv.registerversionnamn "
         "FROM register_variant rvar "
-        "JOIN register_version rv ON rvar.regvar_id = rv.regvar_id "
+        "JOIN register_version rv ON rvar.register_variant_id = rv.register_variant_id "
         "WHERE rvar.register_id = ? "
         "ORDER BY rv.registerversionnamn",
         (reg_id,),
@@ -1014,10 +1014,10 @@ def _get_availability_register(
         if year is None:
             continue
         all_years.add(year)
-        rvid = row["regvar_id"]
+        rvid = row["register_variant_id"]
         if rvid not in variants:
             variants[rvid] = {
-                "regvar_id": rvid,
+                "register_variant_id": rvid,
                 "variant_name": row["variant_name"],
                 "years": [],
             }
@@ -1101,7 +1101,7 @@ def get_values_by_variable(
     Each instance is one cvid → year-correct value list. Filter via
     ``register`` and/or ``year``. Returns
     ``{input, variable_name, instances: [{cvid, register_id, register_name,
-    regvar_id, variant_name, regver_id, version_name, year, values}]}``.
+    register_variant_id, variant_name, regver_id, version_name, year, values}]}``.
     Resolution mirrors ``get_varinfo``: var_id → variable name → alias.
     Keys follow the §5.11 rename (`variabelnamn` → `variable_name`).
     """
@@ -1118,23 +1118,23 @@ def get_values_by_variable(
         ph = _in_placeholders(reg_ids)
         if int_variable is not None:
             rows_by_id = conn.execute(
-                f"SELECT register_id, var_id, name FROM variable "
-                f"WHERE var_id = ? AND register_id IN ({ph})",
+                f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+                f"WHERE provider_key = CAST(? AS TEXT) AND register_id IN ({ph})",
                 [int_variable, *reg_ids],
             ).fetchall()
         rows_by_name = conn.execute(
-            f"SELECT register_id, var_id, name FROM variable "
+            f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
             f"WHERE LOWER(name) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         if int_variable is not None:
             rows_by_id = conn.execute(
-                "SELECT register_id, var_id, name FROM variable WHERE var_id = ?",
+                "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable WHERE provider_key = CAST(? AS TEXT)",
                 (int_variable,),
             ).fetchall()
         rows_by_name = conn.execute(
-            "SELECT register_id, var_id, name FROM variable "
+            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
             "WHERE LOWER(name) = LOWER(?)",
             (variable,),
         ).fetchall()
@@ -1143,10 +1143,10 @@ def get_values_by_variable(
 
     if not matched:
         alias_sql = (
-            "SELECT DISTINCT v.register_id, v.var_id, v.name "
+            "SELECT DISTINCT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name "
             "FROM variable_alias a "
             "JOIN variable_instance vi ON a.cvid = vi.cvid "
-            "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+            "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
         if reg_ids:
@@ -1203,12 +1203,12 @@ def get_values_by_variable(
         pair_params.extend([var["register_id"], var["var_id"]])
 
     inst_rows = conn.execute(
-        f"SELECT vi.cvid, vi.register_id, vi.var_id, vi.regvar_id, vi.regver_id, "
+        f"SELECT vi.cvid, vi.register_id, vi.var_id, vi.register_variant_id, vi.regver_id, "
         f"r.name AS register_name, rv.name AS variant_name, "
         f"rver.registerversionnamn "
         f"FROM variable_instance vi "
         f"JOIN register r ON vi.register_id = r.register_id "
-        f"JOIN register_variant rv ON vi.regvar_id = rv.regvar_id "
+        f"JOIN register_variant rv ON vi.register_variant_id = rv.register_variant_id "
         f"JOIN register_version rver ON vi.regver_id = rver.regver_id "
         f"WHERE {pair_clauses}",
         pair_params,
@@ -1224,7 +1224,7 @@ def get_values_by_variable(
             "cvid": row["cvid"],
             "register_id": row["register_id"],
             "register_name": row["register_name"],
-            "regvar_id": row["regvar_id"],
+            "register_variant_id": row["register_variant_id"],
             "variant_name": row["variant_name"],
             "regver_id": row["regver_id"],
             "version_name": row["registerversionnamn"],
@@ -1274,7 +1274,7 @@ def get_datacolumns(
     """Get all column aliases for a variable.
 
     Returns a list of dicts with "delivery_column_name", "register_id",
-    "register_name", "regvar_id", "regver_id", "version_name". Keys follow
+    "register_name", "register_variant_id", "regver_id", "version_name". Keys follow
     the §5.11 rename (`kolumnnamn` → `delivery_column_name`).
     """
     reg_ids: list[int] | None = None
@@ -1286,15 +1286,15 @@ def get_datacolumns(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
-            f"SELECT register_id, var_id FROM variable "
-            f"WHERE (var_id = ? OR LOWER(name) = LOWER(?)) "
+            f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
             f"AND register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
-            "SELECT register_id, var_id FROM variable "
-            "WHERE var_id = ? OR LOWER(name) = LOWER(?)",
+            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            "WHERE provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
 
@@ -1314,7 +1314,7 @@ def get_datacolumns(
     for vr in var_rows:
         rows = conn.execute(
             "SELECT DISTINCT va.delivery_column_name, "
-            "vi.register_id, vi.regvar_id, vi.regver_id, "
+            "vi.register_id, vi.register_variant_id, vi.regver_id, "
             "r.name AS register_name, rver.registerversionnamn "
             "FROM variable_alias va "
             "JOIN variable_instance vi ON va.cvid = vi.cvid "
@@ -1336,7 +1336,7 @@ def get_datacolumns(
                     "delivery_column_name": r["delivery_column_name"],
                     "register_id": r["register_id"],
                     "register_name": r["register_name"],
-                    "regvar_id": r["regvar_id"],
+                    "register_variant_id": r["register_variant_id"],
                     "regver_id": r["regver_id"],
                     "version_name": r["registerversionnamn"],
                 }
@@ -1351,13 +1351,13 @@ def get_datacolumns(
 
 
 def _find_version_for_year(
-    conn: sqlite3.Connection, regvar_id: int, year: int
+    conn: sqlite3.Connection, register_variant_id: int, year: int
 ) -> dict[str, Any] | None:
     """Find the version matching a year: exact first, then latest ≤ year."""
     versions = conn.execute(
         "SELECT regver_id, registerversionnamn FROM register_version "
-        "WHERE regvar_id = ? ORDER BY regver_id",
-        (regvar_id,),
+        "WHERE register_variant_id = ? ORDER BY regver_id",
+        (register_variant_id,),
     ).fetchall()
 
     best: dict[str, Any] | None = None
@@ -1391,7 +1391,7 @@ def _fetch_columns_for_version(
         "v.name AS variable_name, "
         "GROUP_CONCAT(va.delivery_column_name, ', ') as aliases "
         "FROM variable_instance vi "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
         "WHERE vi.regver_id = ? "
         "GROUP BY vi.var_id ORDER BY vi.var_id",
@@ -1430,13 +1430,13 @@ def get_diff(
     if variant:
         variant_rows = conn.execute(
             f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
-            "AND regvar_id = ?",
+            "AND register_variant_id = ?",
             [*reg_ids, _try_int(variant)],
         ).fetchall()
     else:
         variant_rows = conn.execute(
             f"SELECT * FROM register_variant WHERE register_id IN ({_in_placeholders(reg_ids)}) "
-            "ORDER BY regvar_id",
+            "ORDER BY register_variant_id",
             reg_ids,
         ).fetchall()
 
@@ -1449,8 +1449,8 @@ def get_diff(
         ph = _in_placeholders(reg_ids)
         for v in variables:
             rows = conn.execute(
-                f"SELECT var_id, name FROM variable "
-                f"WHERE (var_id = ? OR LOWER(name) = LOWER(?)) "
+                f"SELECT CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+                f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
                 f"AND register_id IN ({ph})",
                 [_try_int(v), v, *reg_ids],
             ).fetchall()
@@ -1459,7 +1459,7 @@ def get_diff(
                     f"SELECT DISTINCT vi.var_id, var.name "
                     f"FROM variable_alias va "
                     f"JOIN variable_instance vi ON va.cvid = vi.cvid "
-                    f"JOIN variable var ON vi.register_id = var.register_id AND vi.var_id = var.var_id "
+                    f"JOIN variable var ON vi.register_id = var.register_id AND CAST(vi.var_id AS TEXT) = var.provider_key "
                     f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND vi.register_id IN ({ph})",
                     [v, *reg_ids],
                 ).fetchall()
@@ -1484,7 +1484,7 @@ def get_diff(
     any_versions_found = False
 
     for rv in variant_rows:
-        rvid = rv["regvar_id"]
+        rvid = rv["register_variant_id"]
         from_ver = _find_version_for_year(conn, rvid, from_year)
         to_ver = _find_version_for_year(conn, rvid, to_year)
         if not from_ver or not to_ver:
@@ -1545,7 +1545,7 @@ def get_diff(
 
         variants_out.append(
             {
-                "regvar_id": rvid,
+                "register_variant_id": rvid,
                 "variant_name": rv["name"],
                 "from_version": from_ver,
                 "to_version": to_ver,
@@ -1616,17 +1616,17 @@ def get_lineage(
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         matched = conn.execute(
-            f"SELECT v.*, r.name AS register_name FROM variable v "
+            f"SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             f"JOIN register r ON v.register_id = r.register_id "
-            f"WHERE (v.var_id = ? OR LOWER(v.name) = LOWER(?)) "
+            f"WHERE (v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)) "
             f"AND v.register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         matched = conn.execute(
-            "SELECT v.*, r.name AS register_name FROM variable v "
+            "SELECT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
-            "WHERE v.var_id = ? OR LOWER(v.name) = LOWER(?)",
+            "WHERE v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
 
@@ -1734,7 +1734,7 @@ def get_coded_variables(
         "COUNT(DISTINCT v.register_id) as n_registers, "
         "COUNT(DISTINCT vi.cvid) as n_instances "
         "FROM variable v "
-        "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.var_id = vi.var_id "
+        "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.provider_key = CAST(vi.var_id AS TEXT) "
         "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "GROUP BY v.name "
@@ -1781,7 +1781,7 @@ def resolve(
                 f"v.name AS variable_name "
                 f"FROM variable_alias va "
                 f"JOIN variable_instance vi ON va.cvid = vi.cvid "
-                f"JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+                f"JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
                 f"WHERE LOWER(va.delivery_column_name) = ? AND vi.register_id IN ({ph}) "
                 f"GROUP BY vi.register_id, vi.var_id "
                 f"ORDER BY vi.register_id, vi.var_id",
@@ -1793,7 +1793,7 @@ def resolve(
                 "v.name AS variable_name "
                 "FROM variable_alias va "
                 "JOIN variable_instance vi ON va.cvid = vi.cvid "
-                "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+                "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
                 "WHERE LOWER(va.delivery_column_name) = ? "
                 "GROUP BY vi.register_id, vi.var_id "
                 "ORDER BY vi.register_id, vi.var_id",
@@ -2164,9 +2164,9 @@ def search_variables_by_classification(
     rows = conn.execute(
         """
         SELECT DISTINCT v.register_id, r.name AS register_name,
-               v.var_id, v.name AS variable_name
+               CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name
         FROM variable_instance vi
-        JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id
+        JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key
         JOIN register r ON v.register_id = r.register_id
         WHERE vi.classification_id = ?
         ORDER BY r.name, v.name

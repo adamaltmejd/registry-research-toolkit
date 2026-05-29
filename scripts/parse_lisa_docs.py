@@ -1223,7 +1223,7 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
             FROM variable_alias va
             JOIN variable_instance vi ON vi.cvid = va.cvid
             JOIN register_version rv ON rv.regver_id = vi.regver_id
-            JOIN register_variant rvt ON rvt.regvar_id = rv.regvar_id
+            JOIN register_variant rvt ON rvt.register_variant_id = rv.register_variant_id
             JOIN register r ON r.register_id = rvt.register_id
             WHERE r.name LIKE '%LISA%'
         """)

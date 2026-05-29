@@ -201,7 +201,7 @@ class TestBuildDb:
         """OTHERREG Kön has kalla=TESTREG which matches register name exactly."""
         row = db_conn.execute(
             "SELECT source_register_id, source_label FROM variable "
-            "WHERE register_id = 2 AND var_id = 44"
+            "WHERE register_id = 2 AND provider_key = '44'"
         ).fetchone()
         assert row["source_register_id"] == 1
         assert row["source_label"] == "TESTREG"
@@ -210,7 +210,7 @@ class TestBuildDb:
         """OTHERREG ParenVar has kalla with parenthesized abbreviation."""
         row = db_conn.execute(
             "SELECT source_register_id, source_label FROM variable "
-            "WHERE register_id = 2 AND var_id = 301"
+            "WHERE register_id = 2 AND provider_key = '301'"
         ).fetchone()
         assert row["source_register_id"] == 1
         assert row["source_label"] == "TESTREG"
@@ -219,7 +219,7 @@ class TestBuildDb:
         """TESTREG's own variables have no source."""
         row = db_conn.execute(
             "SELECT source_register_id, source_label FROM variable "
-            "WHERE register_id = 1 AND var_id = 44"
+            "WHERE register_id = 1 AND provider_key = '44'"
         ).fetchone()
         assert row["source_register_id"] is None
         assert row["source_label"] is None
@@ -228,7 +228,7 @@ class TestBuildDb:
         """ExternVar has kalla=Försäkringskassan which doesn't match any register."""
         row = db_conn.execute(
             "SELECT source_register_id, source_label FROM variable "
-            "WHERE register_id = 2 AND var_id = 302"
+            "WHERE register_id = 2 AND provider_key = '302'"
         ).fetchone()
         assert row["source_register_id"] is None
         assert row["source_label"] == "Försäkringskassan"
@@ -237,7 +237,7 @@ class TestBuildDb:
         """UniqueVar has no kalla — both source fields should be NULL."""
         row = db_conn.execute(
             "SELECT source_register_id, source_label FROM variable "
-            "WHERE register_id = 2 AND var_id = 300"
+            "WHERE register_id = 2 AND provider_key = '300'"
         ).fetchone()
         assert row["source_register_id"] is None
         assert row["source_label"] is None
@@ -393,18 +393,20 @@ class TestBuildDb:
             "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (100, 10, '2018', 'LISA 2018 huvudfil'),"
             "       (101, 10, 'tillagg-2018', 'LISA 2018 tilläggsfil')"
         )
-        conn.execute("INSERT INTO variable (register_id, var_id) VALUES (1, 44)")
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key) VALUES (1, '44')"
+        )
         conn.executemany(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
+            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
             [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
         )
         conn.executemany(
@@ -419,20 +421,20 @@ class TestBuildDb:
             "VALUES (2, 1, 'cons')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id) VALUES (20, 2)"
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (200, 20, 'tillagg-2018', 'Cons 2018 tilläggsfil')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, source_register_id) "
-            "VALUES (2, 44, 1)"
+            "INSERT INTO variable (register_id, provider_key, source_register_id) "
+            "VALUES (2, '44', 1)"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) "
             "VALUES (2000, 2, 20, 200, 44)"
         )
         conn.execute(
@@ -470,18 +472,20 @@ class TestBuildDb:
             "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'iot')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id) VALUES (10, 1)"
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (100, 10, 'preliminar-version-2020', 'IoT preliminär version 2020'),"
             "       (101, 10, 'slutlig-version-2020', 'IoT slutlig version 2020')"
         )
-        conn.execute("INSERT INTO variable (register_id, var_id) VALUES (1, 44)")
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key) VALUES (1, '44')"
+        )
         conn.executemany(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
+            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
             [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
         )
         conn.executemany(
@@ -495,20 +499,20 @@ class TestBuildDb:
             "VALUES (2, 1, 'lisa')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id) VALUES (20, 2)"
+            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, regvar_id, slug, registerversionnamn) "
+            "(regver_id, register_variant_id, slug, registerversionnamn) "
             "VALUES (200, 20, '2020', 'LISA 2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, source_register_id) "
-            "VALUES (2, 44, 1)"
+            "INSERT INTO variable (register_id, provider_key, source_register_id) "
+            "VALUES (2, '44', 1)"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) "
             "VALUES (2000, 2, 20, 200, 44)"
         )
         conn.execute(
@@ -548,7 +552,7 @@ class TestBuildDb:
         in unika_summary → is_sensitive=1, is_identifier=0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
-            "WHERE register_id = 1 AND var_id = 100"
+            "WHERE register_id = 1 AND provider_key = '100'"
         ).fetchone()
         assert row["is_sensitive"] == 1
         assert row["is_identifier"] == 0
@@ -559,7 +563,7 @@ class TestBuildDb:
         fold into is_sensitive per the mapping rule."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
-            "WHERE register_id = 1 AND var_id = 200"
+            "WHERE register_id = 1 AND provider_key = '200'"
         ).fetchone()
         assert row["is_sensitive"] == 1
         assert row["is_identifier"] == 0
@@ -570,7 +574,7 @@ class TestBuildDb:
         is_sensitive stays 0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
-            "WHERE register_id = 2 AND var_id = 300"
+            "WHERE register_id = 2 AND provider_key = '300'"
         ).fetchone()
         assert row["is_sensitive"] == 0
         assert row["is_identifier"] == 1
@@ -580,7 +584,7 @@ class TestBuildDb:
         unika_summary flags = 'Nej' → both columns stay 0."""
         row = db_conn.execute(
             "SELECT is_sensitive, is_identifier FROM variable "
-            "WHERE register_id = 1 AND var_id = 44"
+            "WHERE register_id = 1 AND provider_key = '44'"
         ).fetchone()
         assert row["is_sensitive"] == 0
         assert row["is_identifier"] == 0
@@ -590,8 +594,9 @@ class TestBuildDb:
         (the DDL DEFAULT). Several fixture variables (ParenVar=2/301,
         ExternVar=2/302) have no unika_summary entry — they must stay 0/0."""
         rows = db_conn.execute(
-            "SELECT register_id, var_id, is_sensitive, is_identifier "
-            "FROM variable WHERE (register_id, var_id) IN ((2, 301), (2, 302))"
+            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, "
+            "is_sensitive, is_identifier "
+            "FROM variable WHERE (register_id, provider_key) IN ((2, '301'), (2, '302'))"
         ).fetchall()
         assert len(rows) == 2
         for row in rows:
@@ -604,19 +609,20 @@ class TestBuildDb:
 
     def test_variable_state_rows_present(self, db_conn: sqlite3.Connection):
         """A2.1: the coalescer materializes at least one variable_state row
-        per `(register_id, regvar_id, var_id)` that has any
+        per `(register_id, register_variant_id, var_id)` that has any
         `variable_instance` row. Sanity check against silent regressions
         where the coalescer never runs or only handles a subset."""
-        # Distinct (register_id, regvar_id, var_id) triples in instance.
+        # Distinct (register_id, register_variant_id, var_id) triples in instance.
         triples = db_conn.execute(
-            "SELECT DISTINCT register_id, regvar_id, var_id FROM variable_instance"
+            "SELECT DISTINCT register_id, register_variant_id, var_id FROM variable_instance"
         ).fetchall()
         assert len(triples) > 0
         for t in triples:
             n = db_conn.execute(
-                "SELECT COUNT(*) FROM variable_state "
-                "WHERE register_id = ? AND regvar_id = ? AND var_id = ?",
-                (t["register_id"], t["regvar_id"], t["var_id"]),
+                "SELECT COUNT(*) FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = ? AND vs.register_variant_id = ? AND v.provider_key = CAST(? AS TEXT)",
+                (t["register_id"], t["register_variant_id"], t["var_id"]),
             ).fetchone()[0]
             assert n >= 1, f"no variable_state for {tuple(t)}"
 
@@ -641,8 +647,9 @@ class TestBuildDb:
         Asserted against ÅÄÖVar (register_id=1, var_id=200), which has
         a single unika row VersionForsta=VersionSista='2022'."""
         rows = db_conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state "
-            "WHERE register_id = 1 AND var_id = 200"
+            "SELECT valid_from, valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '200'"
         ).fetchall()
         assert len(rows) == 1
         assert rows[0]["valid_from"] == "2022-01-01"
@@ -662,7 +669,8 @@ class TestBuildDb:
         resolver can't unambiguously narrow."""
         rows = db_conn.execute(
             "SELECT valid_from, valid_to, value_set_id "
-            "FROM variable_state WHERE register_id = 1 AND var_id = 44 "
+            "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '44' "
             "ORDER BY value_set_id NULLS LAST"
         ).fetchall()
         assert len(rows) >= 1
@@ -687,8 +695,9 @@ class TestBuildDb:
         'TestKolumn'] both attached to the same regver, the lexically
         smaller alias wins by deterministic tie-break."""
         row = db_conn.execute(
-            "SELECT delivery_column_name FROM variable_state "
-            "WHERE register_id = 1 AND var_id = 100"
+            "SELECT delivery_column_name FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '100'"
         ).fetchone()
         assert row is not None
         assert row["delivery_column_name"] == "TestCol"
@@ -699,8 +708,9 @@ class TestBuildDb:
         ("2021") to derive the valid range. Confirms the fallback path is
         wired correctly."""
         row = db_conn.execute(
-            "SELECT valid_from, valid_to FROM variable_state "
-            "WHERE register_id = 2 AND var_id = 301"
+            "SELECT valid_from, valid_to FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 2 AND v.provider_key = '301'"
         ).fetchone()
         assert row is not None
         assert row["valid_from"] == "2021-01-01"
@@ -714,8 +724,9 @@ class TestBuildDb:
         permits overlapping states. UniqueVar's instance gets the "2"
         label from Vardemangder; assert it surfaces on the state row."""
         row = db_conn.execute(
-            "SELECT value_set_version_label FROM variable_state "
-            "WHERE register_id = 2 AND var_id = 300"
+            "SELECT value_set_version_label FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 2 AND v.provider_key = '300'"
         ).fetchone()
         assert row is not None
         # Matches what _import_vardemangder writes onto variable_instance
@@ -724,17 +735,18 @@ class TestBuildDb:
         assert row["value_set_version_label"] == "2"
 
     def test_variable_state_grain_split(self, db_conn: sqlite3.Connection):
-        """A2.1: when cvids for the same (register_id, regvar_id, var_id)
+        """A2.1: when cvids for the same (register_id, register_variant_id, var_id)
         differ on transient grain (vardemangdsniva on variable_instance),
         the coalescer keeps them as distinct variable_state rows so A2.2
         can triage. Fixture Kön cvid 1004 has no Vardemangder row (sentinel)
         so its grain / value_set_id end up NULL — that's a different group
         key from cvids 1001/1003 which carry a real value_set."""
         # Two rows for register_id=1, var_id=44 (Kön): one with value_set,
-        # one without. Both share regvar_id=10 (same variant).
+        # one without. Both share register_variant_id=10 (same variant).
         rows = db_conn.execute(
             "SELECT value_set_id, value_set_version_label "
-            "FROM variable_state WHERE register_id = 1 AND var_id = 44"
+            "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '44'"
         ).fetchall()
         # At least one row has a value_set. The exact split depends on
         # year-projection covering cvid 1004 — which it doesn't (validity
@@ -755,13 +767,12 @@ class TestBuildDb:
 
     def test_variable_state_fk_to_variable(self, db_conn: sqlite3.Connection):
         """Every variable_state row points at a real variable row via the
-        FK on (register_id, var_id). PRAGMA foreign_key_check is already
+        A2.1.5 synthetic `variable_id` FK. PRAGMA foreign_key_check is already
         invoked at build time; this is a regression-level sanity check."""
         orphans = db_conn.execute(
             "SELECT vs.state_id FROM variable_state vs "
-            "LEFT JOIN variable v "
-            "  ON v.register_id = vs.register_id AND v.var_id = vs.var_id "
-            "WHERE v.register_id IS NULL"
+            "LEFT JOIN variable v ON v.variable_id = vs.variable_id "
+            "WHERE v.variable_id IS NULL"
         ).fetchall()
         assert orphans == []
 
@@ -814,10 +825,10 @@ class TestBuildDb:
 
     def test_fts_variable(self, db_conn: sqlite3.Connection):
         rows = db_conn.execute(
-            "SELECT var_id FROM variable_fts WHERE variable_fts MATCH 'testvariabel'"
+            "SELECT provider_key FROM variable_fts WHERE variable_fts MATCH 'testvariabel'"
         ).fetchall()
         assert len(rows) == 1
-        assert rows[0]["var_id"] == 100
+        assert rows[0]["provider_key"] == "100"
 
     def test_provider_seed(self, db_conn: sqlite3.Connection):
         # provider_id values are stable across releases — downstream pins
@@ -1686,7 +1697,7 @@ class TestOperationalDefinitionFold:
         try:
             row = conn.execute(
                 "SELECT description FROM variable "
-                "WHERE register_id = 999 AND var_id = 777"
+                "WHERE register_id = 999 AND provider_key = '777'"
             ).fetchone()
             return row["description"]
         finally:
@@ -1787,7 +1798,7 @@ class TestVariableStateOpenEnded:
         )
 
         # Append one extra variable to Registerinformation: register_id=1,
-        # var_id=900 ("StillActiveVar"). Living in TESTREG/regvar 10 to
+        # var_id=900 ("StillActiveVar"). Living in TESTREG/register_variant 10 to
         # avoid creating a new variant.
         open_ri = _ri_row(
             "TESTREG",
@@ -1823,7 +1834,7 @@ class TestVariableStateOpenEnded:
             "10",
             "9100",  # cvid
             "1",  # register_id
-            "10",  # regvar_id (existing Individer variant in TESTREG)
+            "10",  # register_variant_id (existing Individer variant in TESTREG)
             "100",  # regver_id (existing 2020 version)
             "900",  # var_id
         )
@@ -1896,8 +1907,9 @@ class TestVariableStateOpenEnded:
         conn = open_db(db_path)
         try:
             row = conn.execute(
-                "SELECT valid_from, valid_to FROM variable_state "
-                "WHERE register_id = 1 AND var_id = 900"
+                "SELECT valid_from, valid_to FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '900'"
             ).fetchone()
             assert row is not None
             assert row["valid_from"] == "2020-01-01"
@@ -2080,7 +2092,8 @@ class TestVariableStateMultiShape:
         try:
             rows = conn.execute(
                 "SELECT data_type, data_length, valid_from, valid_to "
-                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '910' "
                 "ORDER BY valid_from"
             ).fetchall()
             assert len(rows) == 2
@@ -2107,12 +2120,15 @@ class TestVariableStateMultiShape:
         try:
             rows = conn.execute(
                 "SELECT valid_from, valid_to, value_set_version_label "
-                "FROM variable_state WHERE register_id = 1 AND var_id = 910 "
+                "FROM variable_state vs JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '910' "
                 "ORDER BY valid_from"
             ).fetchall()
             assert len(rows) == 2
-            assert rows[0]["value_set_version_label"] is None
-            assert rows[1]["value_set_version_label"] is None
+            # A2.1.5: value_set_version_label is NOT NULL DEFAULT '' (the
+            # coalescer coalesces NULL → ''), so undiscriminated states carry ''.
+            assert rows[0]["value_set_version_label"] == ""
+            assert rows[1]["value_set_version_label"] == ""
             # Strict non-overlap: row 0 ends strictly before row 1 starts.
             # Lexical comparison is chronological for full-date ISO strings.
             assert rows[0]["valid_to"] < rows[1]["valid_from"]
@@ -2124,7 +2140,7 @@ class TestVariableStateRenameMidLife:
     """A2.1: Codex P2 on PR #130, commit d8d8125 — when SCB renames a
     variable mid-life (Variabelnamn changes between editions for the
     same VarId), `unika_summary` carries one row per
-    (register_id, regvar_id, kolumnnamn, variabelnamn) tuple. The
+    (register_id, register_variant_id, kolumnnamn, variabelnamn) tuple. The
     canonical `variable.name` is the first-non-empty Variabelnamn the
     importer sees, which pins to the OLD name. The coalescer's unika
     lookup uses the per-cvid raw `variabelnamn` (stored on
@@ -2281,8 +2297,9 @@ class TestVariableStateRenameMidLife:
             # active in 2024) is the latest era — single group since shape
             # didn't change, just the name. Latest era → open-ended.
             row = conn.execute(
-                "SELECT valid_from, valid_to FROM variable_state "
-                "WHERE register_id = 1 AND var_id = 920"
+                "SELECT valid_from, valid_to FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = '920'"
             ).fetchone()
             assert row is not None
             assert row["valid_from"] == "2020-01-01"

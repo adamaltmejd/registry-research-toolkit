@@ -209,12 +209,12 @@ class TestGetRegister:
 
 
 class TestGetSchema:
-    def test_by_regvar_id(self, db_path: str):
+    def test_by_register_variant_id(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "schema", "10"])
         assert code == 0
         variants = data["data"]["variants"]
         assert len(variants) == 1
-        assert variants[0]["regvar_id"] == 10
+        assert variants[0]["register_variant_id"] == 10
         assert len(variants[0]["versions"]) == 3  # 2020, 2021, 2022
 
     def test_by_register(self, db_path: str):
@@ -507,7 +507,7 @@ class TestGetValues:
                 "cvid": 1,
                 "register_id": 100,
                 "register_name": "RegA",
-                "regvar_id": 10,
+                "register_variant_id": 10,
                 "variant_name": "A1",
                 "regver_id": 200,
                 "version_name": "2017",
@@ -521,7 +521,7 @@ class TestGetValues:
                 "cvid": 2,
                 "register_id": 101,
                 "register_name": "RegB",
-                "regvar_id": 11,
+                "register_variant_id": 11,
                 "variant_name": "B1",
                 "regver_id": 201,
                 "version_name": "2017",
@@ -535,7 +535,7 @@ class TestGetValues:
                 "cvid": 3,
                 "register_id": 102,
                 "register_name": "RegC",
-                "regvar_id": 12,
+                "register_variant_id": 12,
                 "variant_name": "C1",
                 "regver_id": 202,
                 "version_name": "2017",
@@ -629,33 +629,33 @@ class TestGetValues:
             "INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'R2')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, name) "
+            "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (10, 1, 'V1')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, name) "
+            "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'V2')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 50, 'AppleVar')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '50', 'AppleVar')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 51, 'BananaVar')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '51', 'BananaVar')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) "
             "VALUES (5001, 1, 10, 100, 50)"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id) "
             "VALUES (5002, 2, 11, 101, 51)"
         )
         # Same alias 'Rad' used for two unrelated variables.
@@ -707,24 +707,24 @@ class TestGetValues:
             "VALUES (2, 1, 'RegChild')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, name) "
+            "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (10, 1, 'Adults')"
         )
         conn.execute(
-            "INSERT INTO register_variant (regvar_id, register_id, name) "
+            "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'Children')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, regvar_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 44, 'Kön')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '44', 'Kön')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 44, 'Kön')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '44', 'Kön')"
         )
         # Two cvids, two distinct value sets. member_hash must be 32 bytes.
         conn.execute(
@@ -745,12 +745,12 @@ class TestGetValues:
         conn.execute("INSERT INTO value_set_member VALUES (2, 4)")
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, value_set_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
             "VALUES (5001, 1, 10, 100, 44, 1)"
         )
         conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, regvar_id, regver_id, var_id, value_set_id) "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
             "VALUES (5002, 2, 11, 101, 44, 2)"
         )
         # docs DB stub — query commands require it present.
@@ -1091,7 +1091,7 @@ class TestGetDiff:
         )
         assert code == 0
         assert len(data["data"]["variants"]) >= 1
-        assert data["data"]["variants"][0]["regvar_id"] == 10
+        assert data["data"]["variants"][0]["register_variant_id"] == 10
 
     def test_fallback_to_closest_year(self, db_path: str):
         """Year 2019 has no version; should fall back to nothing. Year 2023 falls back to 2022."""

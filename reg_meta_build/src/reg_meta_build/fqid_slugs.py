@@ -506,9 +506,9 @@ def load_provider_toml(path: Path) -> list[SlugEntry]:
                     scope_desc = f"within register {reg_id!r}"
                 elif kind == "register_version":
                     reg_id, _, rest = source_id.partition(".")
-                    regvar_id, _, _ = rest.partition(".")
-                    slug_key = (kind, reg_id, regvar_id, entry.slug)
-                    scope_desc = f"within variant {reg_id!r}.{regvar_id!r}"
+                    register_variant_id, _, _ = rest.partition(".")
+                    slug_key = (kind, reg_id, register_variant_id, entry.slug)
+                    scope_desc = f"within variant {reg_id!r}.{register_variant_id!r}"
                 else:
                     slug_key = (kind, entry.slug)
                     scope_desc = f"within provider {provider!r}"
@@ -689,7 +689,7 @@ def _live_variant_keys(
     conn: sqlite3.Connection, provider_slug: str
 ) -> set[tuple[int, int]]:
     rows = conn.execute(
-        "SELECT rv.register_id, rv.regvar_id FROM register_variant rv "
+        "SELECT rv.register_id, rv.register_variant_id FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? AND rv.slug IS NULL",
@@ -702,9 +702,9 @@ def _live_version_keys(
     conn: sqlite3.Connection, provider_slug: str
 ) -> set[tuple[int, int, int]]:
     rows = conn.execute(
-        "SELECT rv.register_id, rver.regvar_id, rver.regver_id "
+        "SELECT rv.register_id, rver.register_variant_id, rver.regver_id "
         "FROM register_version rver "
-        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ?",
@@ -725,7 +725,7 @@ def _autoderive_version_slugs(conn: sqlite3.Connection, provider_slug: str) -> i
     rows = conn.execute(
         "SELECT rver.regver_id, rver.registerversionnamn "
         "FROM register_version rver "
-        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? AND rver.slug IS NULL",
@@ -742,7 +742,7 @@ def _autoderive_version_slugs(conn: sqlite3.Connection, provider_slug: str) -> i
                 "UPDATE register_version SET slug = ? WHERE regver_id = ?", updates
             )
         except sqlite3.IntegrityError as exc:
-            # UNIQUE(regvar_id, slug) trips when two siblings derive to the
+            # UNIQUE(register_variant_id, slug) trips when two siblings derive to the
             # same period, or when a TOML override already wrote the slug
             # this row would auto-derive to. `precheck_slugs` is the
             # canonical guard for this case; surface a pointer there
@@ -862,7 +862,7 @@ def populate_slugs(
                     )
                 conn.execute(
                     "UPDATE register_variant SET slug = ?, display_group = ? "
-                    "WHERE register_id = ? AND regvar_id = ?",
+                    "WHERE register_id = ? AND register_variant_id = ?",
                     (entry.slug, entry.display_group, key[0], key[1]),
                 )
                 counts["register_variant"] += 1
@@ -886,7 +886,7 @@ def populate_slugs(
         # Auto-derive runs *after* TOML overrides so that curated rows occupy
         # their slug slot before the period regex fires. Without that order,
         # two periodized siblings would race for the same auto-derived slug
-        # and trip UNIQUE(regvar_id, slug) on the second INSERT — even if the
+        # and trip UNIQUE(register_variant_id, slug) on the second INSERT — even if the
         # collision is fully resolved once TOML overrides land.
         counts["register_version_auto"] += _autoderive_version_slugs(
             conn, provider_slug
@@ -910,12 +910,12 @@ def populate_slugs(
             _assert_no_unslugged(
                 conn,
                 sql=(
-                    "SELECT rv.register_id, rv.regvar_id, rv.name "
+                    "SELECT rv.register_id, rv.register_variant_id, rv.name "
                     "FROM register_variant rv "
                     "JOIN register r ON rv.register_id = r.register_id "
                     "JOIN provider p ON r.provider_id = p.provider_id "
                     "WHERE p.slug = ? AND rv.slug IS NULL "
-                    "ORDER BY rv.register_id, rv.regvar_id"
+                    "ORDER BY rv.register_id, rv.register_variant_id"
                 ),
                 params=(provider_slug,),
                 label="register_variant",
@@ -926,10 +926,10 @@ def populate_slugs(
             _assert_no_unslugged(
                 conn,
                 sql=(
-                    "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+                    "SELECT rv.register_id, rver.register_variant_id, rver.regver_id, "
                     "rver.registerversionnamn "
                     "FROM register_version rver "
-                    "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+                    "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
                     "JOIN register r ON rv.register_id = r.register_id "
                     "JOIN provider p ON r.provider_id = p.provider_id "
                     "WHERE p.slug = ? AND rver.slug IS NULL "
@@ -1174,7 +1174,7 @@ def _validate_variable_target(
             )
         row = conn.execute(
             "SELECT 1 FROM register_version rver "
-            "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+            "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
             "WHERE rv.register_id = ? AND rv.slug = ? AND rver.slug = ?",
             (register_id, variant_slug, period_slug),
         ).fetchone()
@@ -1503,7 +1503,7 @@ def iter_default_slug_candidates(
     """
     rows = conn.execute(
         "SELECT p.slug, r.register_id, r.name, "
-        "rv.regvar_id, rv.name, rv.slug "
+        "rv.register_variant_id, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1511,7 +1511,7 @@ def iter_default_slug_candidates(
         "  SELECT register_id FROM register_variant "
         "  GROUP BY register_id HAVING COUNT(*) = 1"
         ") "
-        "ORDER BY p.slug, r.register_id, rv.regvar_id"
+        "ORDER BY p.slug, r.register_id, rv.register_variant_id"
     ).fetchall()
     for provider, rid, rname, vid, vname, current_slug in rows:
         cls, reason = classify_default_candidate(rname or "", vname or "")
@@ -1589,21 +1589,21 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     # emission (register → its variants → its version overrides).
     variants_by_reg: dict[int, list[tuple[int, str | None, str | None]]] = {}
     for row in conn.execute(
-        "SELECT rv.register_id, rv.regvar_id, rv.name, rv.slug "
+        "SELECT rv.register_id, rv.register_variant_id, rv.name, rv.slug "
         "FROM register_variant rv "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? "
-        "ORDER BY rv.register_id, rv.regvar_id",
+        "ORDER BY rv.register_id, rv.register_variant_id",
         (provider_slug,),
     ).fetchall():
-        register_id, regvar_id, name, existing_slug = row
+        register_id, register_variant_id, name, existing_slug = row
         variants_by_reg.setdefault(register_id, []).append(
-            (regvar_id, name, existing_slug)
+            (register_variant_id, name, existing_slug)
         )
 
     versions_by_reg: dict[int, list[tuple[int, int, str | None, str | None]]] = {}
-    # First claimant of each effective slug under a given regvar_id. Used to
+    # First claimant of each effective slug under a given register_variant_id. Used to
     # auto-emit the §5.3 rule 5 collision annotation `(vs <regver>:<slug>)`:
     # if the row we're about to emit has a `derive_period(name)` that another
     # regver already holds, that other regver is named in the comment so a
@@ -1611,23 +1611,23 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
     # period. SQL `ORDER BY ... regver_id` gives deterministic claimants.
     sibling_slug_claimants: dict[int, dict[str, int]] = {}
     for row in conn.execute(
-        "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+        "SELECT rv.register_id, rver.register_variant_id, rver.regver_id, "
         "rver.registerversionnamn, rver.slug "
         "FROM register_version rver "
-        "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+        "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
         "JOIN register r ON rv.register_id = r.register_id "
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE p.slug = ? "
-        "ORDER BY rv.register_id, rver.regvar_id, rver.regver_id",
+        "ORDER BY rv.register_id, rver.register_variant_id, rver.regver_id",
         (provider_slug,),
     ).fetchall():
-        register_id, regvar_id, regver_id, name, existing_slug = row
+        register_id, register_variant_id, regver_id, name, existing_slug = row
         versions_by_reg.setdefault(register_id, []).append(
-            (regvar_id, regver_id, name, existing_slug)
+            (register_variant_id, regver_id, name, existing_slug)
         )
         effective = existing_slug or derive_period(name)
         if effective is not None:
-            sibling_slug_claimants.setdefault(regvar_id, {}).setdefault(
+            sibling_slug_claimants.setdefault(register_variant_id, {}).setdefault(
                 effective, regver_id
             )
 
@@ -1642,13 +1642,15 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         lines.append(f"slug = {_toml_str(candidate)}")
         lines.append("")
 
-        for regvar_id, vname, existing_slug in variants_by_reg.get(register_id, []):
+        for register_variant_id, vname, existing_slug in variants_by_reg.get(
+            register_id, []
+        ):
             v_candidate = existing_slug or (
                 derive_variable_slug(vname) if vname else None
             )
             v_candidate = v_candidate or "TODO"
             lines.append(
-                f"[register_variant.{_toml_str(f'{register_id}.{regvar_id}')}]"
+                f"[register_variant.{_toml_str(f'{register_id}.{register_variant_id}')}]"
             )
             lines.append(f"slug = {_toml_str(v_candidate)}")
             if vname:
@@ -1665,9 +1667,12 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
         # `Strandlinje, 2019` (period match but `Strandlinje,` dropped on
         # auto-derive) must round-trip through a reseed so the curator sees
         # the stub and decides: rename, or accept by committing `slug = derived`.
-        for regvar_id, regver_id, vername, existing_slug in versions_by_reg.get(
-            register_id, []
-        ):
+        for (
+            register_variant_id,
+            regver_id,
+            vername,
+            existing_slug,
+        ) in versions_by_reg.get(register_id, []):
             derived = derive_period(vername)
             residual = _period_residual(vername)
             if (
@@ -1676,7 +1681,7 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
                 and residual is None
             ):
                 continue
-            key = f"{register_id}.{regvar_id}.{regver_id}"
+            key = f"{register_id}.{register_variant_id}.{regver_id}"
             # Audit comment: preserves the source `registerversionnamn` verbatim
             # (wrapped in single quotes) so the next curator can verify any
             # typo/abbreviation normalization (§5.3). Two terse parentheticals
@@ -1690,7 +1695,9 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
                 quoted_name = f"'{_toml_comment(vername)}'"
                 annotations = ""
                 if derived is not None:
-                    claimant = sibling_slug_claimants.get(regvar_id, {}).get(derived)
+                    claimant = sibling_slug_claimants.get(register_variant_id, {}).get(
+                        derived
+                    )
                     if claimant is not None and claimant != regver_id:
                         annotations += f" (vs {claimant}:{derived})"
                 if residual is not None:
@@ -1767,7 +1774,7 @@ class PrecheckResult:
     stale_classifications: tuple[str, ...] = ()
     # Sibling register_version rows that would share a slug under the
     # populate_slugs (TOML-override-else-derived) algorithm, violating
-    # `UNIQUE(regvar_id, slug)` mid-build. One entry per colliding row,
+    # `UNIQUE(register_variant_id, slug)` mid-build. One entry per colliding row,
     # carrying the slug they'd all land on. Surfaces the failure at
     # precheck time instead of as a raw sqlite IntegrityError later.
     colliding_versions: tuple[tuple[str, str, str, str], ...] = ()
@@ -1847,18 +1854,18 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             (provider_slug, "register_variant"), set()
         )
         var_rows = conn.execute(
-            "SELECT rv.register_id, rv.regvar_id, rv.name, rv.slug "
+            "SELECT rv.register_id, rv.register_variant_id, rv.name, rv.slug "
             "FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? ORDER BY rv.register_id, rv.regvar_id",
+            "WHERE p.slug = ? ORDER BY rv.register_id, rv.register_variant_id",
             (provider_slug,),
         ).fetchall()
         live_vars_by_provider[provider_slug] = {
             (rid, vid) for (rid, vid, _, _) in var_rows
         }
-        for register_id, regvar_id, name, _slug in var_rows:
-            key = f"{register_id}.{regvar_id}"
+        for register_id, register_variant_id, name, _slug in var_rows:
+            key = f"{register_id}.{register_variant_id}"
             if key not in slugged_variants:
                 missing_variants.append((provider_slug, key, name or ""))
 
@@ -1869,10 +1876,10 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             (provider_slug, "register_version"), set()
         )
         ver_rows = conn.execute(
-            "SELECT rv.register_id, rver.regvar_id, rver.regver_id, "
+            "SELECT rv.register_id, rver.register_variant_id, rver.regver_id, "
             "rver.registerversionnamn "
             "FROM register_version rver "
-            "JOIN register_variant rv ON rver.regvar_id = rv.regvar_id "
+            "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
             "JOIN register r ON rv.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
             "WHERE p.slug = ? "
@@ -1883,24 +1890,24 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
             (rid, vid, verid) for (rid, vid, verid, _) in ver_rows
         }
         # Walk version rows once: (1) flag unperiodized rows with no TOML
-        # entry, (2) group by (regvar_id, would-be-slug) for the collision
+        # entry, (2) group by (register_variant_id, would-be-slug) for the collision
         # pass. The would-be slug mirrors populate_slugs's resolution order:
         # TOML override first, else derive_period(name). Rows where both are
         # None fall out of the collision pass — they're already caught by (1).
         siblings_by_slug: dict[tuple[int, str], list[tuple[str, str]]] = {}
-        for register_id, regvar_id, regver_id, name in ver_rows:
-            key = f"{register_id}.{regvar_id}.{regver_id}"
+        for register_id, register_variant_id, regver_id, name in ver_rows:
+            key = f"{register_id}.{register_variant_id}.{regver_id}"
             override = toml_version_slugs.get((provider_slug, key))
             would_be_slug = override or derive_period(name)
             if would_be_slug is None:
                 if key not in slugged_versions:
                     missing_versions.append((provider_slug, key, name or ""))
                 continue
-            siblings_by_slug.setdefault((regvar_id, would_be_slug), []).append(
-                (key, name or "")
-            )
+            siblings_by_slug.setdefault(
+                (register_variant_id, would_be_slug), []
+            ).append((key, name or ""))
 
-        for (_regvar_id, slug), rows in siblings_by_slug.items():
+        for (_register_variant_id, slug), rows in siblings_by_slug.items():
             if len(rows) > 1:
                 for key, name in rows:
                     colliding_versions.append((provider_slug, key, name, slug))
