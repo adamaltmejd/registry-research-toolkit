@@ -384,12 +384,17 @@ CREATE INDEX idx_variable_state_variable
     ON variable_state(variable_id);
 CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
--- Non-overlapping within a variant by default: one state per
--- (variable, variant, valid_from) unless multi-vintage. The '' default on
--- value_set_version_label (above) makes this bite in the common case (a NULL
--- would escape SQLite's unique index).
-CREATE UNIQUE INDEX idx_variable_state_uniq
-    ON variable_state(variable_id, register_variant_id, valid_from, value_set_version_label);
+-- NOTE: the §5.1 state-uniqueness index — UNIQUE(variable_id,
+-- register_variant_id, valid_from, value_set_version_label) — is intentionally
+-- NOT created here. `_coalesce_variable_states` emits one PRE-TRIAGE row per
+-- (… data_type, data_length, value_set_id, value_set_version_label, grain)
+-- group, so a same-year variable with multiple grains / codings / shapes
+-- produces several rows that share (variable_id, register_variant_id,
+-- valid_from) and carry value_set_version_label = '' — they'd collide on that
+-- index before A2.2 can fold them (→ value_set_version_label-discriminated
+-- states) or split them (→ sibling variable_ids). The uniqueness invariant
+-- only holds POST-triage, so the unique index is added in A2.2. value_set_
+-- version_label stays NOT NULL DEFAULT '' here so the index bites once added.
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;

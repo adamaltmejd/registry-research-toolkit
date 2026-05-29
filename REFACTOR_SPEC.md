@@ -887,7 +887,13 @@ CREATE UNIQUE INDEX idx_variable_state_uniq
 variant column, and the A1.2-shipped `variable` table carries the
 shared metadata; **A2.1.5** performs the slug + synthetic-PK promotion,
 the `variable_state` re-parent, and the `register_variant_id` column add above —
-see MIGRATION_PLAN A2.1.5.)
+see MIGRATION_PLAN A2.1.5. The `idx_variable_state_uniq` **unique** index above
+is added in **A2.2**, not A2.1.5: the pre-triage coalescer emits multiple
+same-year rows per variable that differ only on shape — `data_type` /
+`value_set_id` / `grain` — all carrying `value_set_version_label = ''`, so they
+share the index's 4-tuple and would collide; the uniqueness invariant only
+holds once A2.2 folds them into `value_set_version_label`-discriminated states
+or splits them into distinct `variable_id`s.)
 
 Plus three orthogonal relationship tables, all at **variable grain**
 (the variant is not an identity level, so there is no variable-grain
