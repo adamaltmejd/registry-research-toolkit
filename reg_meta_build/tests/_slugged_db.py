@@ -79,7 +79,8 @@ def build_slugged_db(
     if variable is not None and version is not None and register is not None:
         v_name, var_id, cvid, default_kol = variable
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (?, ?, ?)",
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (?, CAST(? AS TEXT), ?)",
             (register[2], var_id, v_name),
         )
         conn.execute(
@@ -162,8 +163,8 @@ def add_variable(
 ) -> None:
     conn.execute(
         "INSERT INTO variable "
-        "(register_id, var_id, name, source_register_id) "
-        "VALUES (?, ?, ?, ?)",
+        "(register_id, provider_key, name, source_register_id) "
+        "VALUES (?, CAST(? AS TEXT), ?, ?)",
         (register_id, var_id, name, source_register_id),
     )
 

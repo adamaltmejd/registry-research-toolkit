@@ -189,8 +189,8 @@ def reg_meta_db(tmp_path: Path) -> Path:
         "VALUES (100, 10, '2020')"
     )
     conn.execute(
-        "INSERT INTO variable (register_id, var_id, name, definition) "
-        "VALUES (1, 44, 'Kön', 'Kön enligt folkbokföring')"
+        "INSERT INTO variable (register_id, provider_key, name, definition) "
+        "VALUES (1, '44', 'Kön', 'Kön enligt folkbokföring')"
     )
     conn.execute(
         "INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "

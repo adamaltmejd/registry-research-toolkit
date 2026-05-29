@@ -2289,8 +2289,8 @@ class TestMaterializeSameAsEdges:
         conn = build_slugged_db()
         # Add second variable + binding under the same register/variant/version.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 88, 'Civilstånd')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '88', 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -2388,8 +2388,8 @@ class TestMaterializeSameAsEdges:
         conn.commit()
         # Add a second variable so the target slot exists.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 88, 'Civilstånd')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '88', 'Civilstånd')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -2475,8 +2475,8 @@ class TestMaterializeSameAsEdges:
         conn = self._db_with_two_variables()
         # Add a third variable so we have a distinct second target.
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) "
-            "VALUES (1, 99, 'Födelseår')"
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '99', 'Födelseår')"
         )
         conn.execute(
             "INSERT INTO variable_instance "

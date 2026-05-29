@@ -643,10 +643,10 @@ class TestGetValues:
             "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 50, 'AppleVar')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '50', 'AppleVar')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 51, 'BananaVar')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '51', 'BananaVar')"
         )
         conn.execute(
             "INSERT INTO variable_instance "
@@ -721,10 +721,10 @@ class TestGetValues:
             "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (1, 44, 'Kön')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '44', 'Kön')"
         )
         conn.execute(
-            "INSERT INTO variable (register_id, var_id, name) VALUES (2, 44, 'Kön')"
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '44', 'Kön')"
         )
         # Two cvids, two distinct value sets. member_hash must be 32 bytes.
         conn.execute(

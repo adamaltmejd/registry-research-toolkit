@@ -253,13 +253,16 @@ CREATE TABLE object_type (
 CREATE TABLE variable (
     -- A2.1.5 (DECISION POINT 1, §5.1): synthetic PK so variable_state's FK is
     -- single-column and the edge tables stay stable as the natural key varies
-    -- per provider. The natural key is (register_id, slug); `var_id` (renamed
-    -- to `provider_key` in the next A2.1.5 commit) is demoted from the PK to a
-    -- NON-unique join hint — a §5.7 triage split (A2.2) puts several variables
-    -- under one source key.
+    -- per provider. The natural key is (register_id, slug); `provider_key`
+    -- (SCB `str(var_id)`; SOS the merged variable name) is demoted from the PK
+    -- to a NON-unique join hint — a §5.7 triage split (A2.2) puts several
+    -- variables under one source key.
     variable_id INTEGER PRIMARY KEY AUTOINCREMENT,
     register_id INTEGER NOT NULL REFERENCES register(register_id),
-    var_id INTEGER NOT NULL,
+    -- SCB str(var_id), TEXT so SOS can key by merged variable name (§5.1).
+    -- NON-unique join hint, not a key; variable_instance.var_id (INTEGER) joins
+    -- via CAST-to-TEXT until variable_instance is dropped in A2.7.
+    provider_key TEXT NOT NULL,
     -- §5.3 register-unique FQID leaf. NULL until populate_variable_slugs runs
     -- (wired in a later A2.1.5 commit); SQLite treats NULLs as distinct, so the
     -- transient all-NULL window doesn't trip the unique index below.
@@ -290,10 +293,10 @@ CREATE TABLE variable (
 -- an A2.2 triage split because siblings get distinct slugs. The one UNIQUE
 -- constraint on the table (DECISION POINT 1).
 CREATE UNIQUE INDEX idx_variable_slug ON variable(register_id, slug);
--- `var_id` (→ `provider_key`) is a NON-unique join hint, not a key: A2.2
--- triage siblings share one source key. Plain index, not UNIQUE. Also serves
--- get_schema's JOIN on (register_id, var_id).
-CREATE INDEX idx_variable_natkey ON variable(register_id, var_id);
+-- `provider_key` is a NON-unique join hint, not a key: A2.2 triage siblings
+-- share one source key. Plain index, not UNIQUE. Serves the resolver's
+-- (register_id, provider_key) join from variable_instance.var_id (CAST to TEXT).
+CREATE INDEX idx_variable_natkey ON variable(register_id, provider_key);
 
 CREATE TABLE variable_instance (
     cvid INTEGER PRIMARY KEY,
@@ -518,7 +521,7 @@ CREATE VIRTUAL TABLE register_fts USING fts5(
 
 CREATE VIRTUAL TABLE variable_fts USING fts5(
     register_id,
-    var_id,
+    provider_key,
     name,
     definition,
     description,
@@ -1068,9 +1071,9 @@ def _import_registerinformation(
         if op and op not in desc:
             var["description"] = f"{desc}\n\n{op}".strip() if desc else op
     conn.executemany(
-        "INSERT INTO variable (register_id, var_id, name, definition, description, "
+        "INSERT INTO variable (register_id, provider_key, name, definition, description, "
         "source_register_text, measurement_unit, source_register_id, source_label) "
-        "VALUES (:register_id, :var_id, :name, :definition, :description, "
+        "VALUES (:register_id, CAST(:var_id AS TEXT), :name, :definition, :description, "
         ":source_register_text, :measurement_unit, :source_register_id, :source_label)",
         list(variables.values()),
     )
@@ -1221,12 +1224,12 @@ def _populate_sensitivity_flags(conn: sqlite3.Connection) -> int:
         "     AND va.delivery_column_name = us.kolumnnamn "
         "    JOIN variable v "
         "      ON v.register_id = vi.register_id "
-        "     AND v.var_id = vi.var_id "
+        "     AND v.provider_key = CAST(vi.var_id AS TEXT) "
         "     AND v.name = us.variabelnamn "
         "    GROUP BY vi.register_id, vi.var_id"
         ") AS flags "
         "WHERE variable.register_id = flags.register_id "
-        "  AND variable.var_id = flags.var_id"
+        "  AND variable.provider_key = CAST(flags.var_id AS TEXT)"
     )
     refreshed = cur.rowcount or 0
     _progress(f"  {refreshed:,} variable rows refreshed from unika_summary")
@@ -1564,7 +1567,9 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
     # A2.2 triage splits land, so the lookup is unambiguous here.
     vid_map: dict[tuple[int, int], int] = {
         (r[0], r[1]): r[2]
-        for r in conn.execute("SELECT register_id, var_id, variable_id FROM variable")
+        for r in conn.execute(
+            "SELECT register_id, CAST(provider_key AS INTEGER), variable_id FROM variable"
+        )
     }
 
     batch: list[tuple] = []
@@ -2077,11 +2082,11 @@ def _populate_fts(conn: sqlite3.Connection) -> None:
     # are excluded (they contain technical suffixes like _LISA that pollute
     # search results).
     conn.execute("""
-        INSERT INTO variable_fts(rowid, register_id, var_id, name, definition, description)
+        INSERT INTO variable_fts(rowid, register_id, provider_key, name, definition, description)
         SELECT
             v.rowid,
             v.register_id,
-            v.var_id,
+            v.provider_key,
             v.name,
             v.definition,
             v.description
@@ -2213,7 +2218,8 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
         "rver.slug AS version_slug, va.delivery_column_name "
         "FROM variable_instance vi "
-        "JOIN variable v ON vi.register_id = v.register_id AND vi.var_id = v.var_id "
+        "JOIN variable v ON vi.register_id = v.register_id "
+        "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
         "JOIN register_version rver ON vi.regver_id = rver.regver_id "
         "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
         "ORDER BY vi.cvid, va.delivery_column_name"
