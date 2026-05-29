@@ -885,8 +885,9 @@ CREATE UNIQUE INDEX idx_variable_state_uniq
 
 (The A2.1-shipped `variable_state` FKs `(register_id, var_id)` with no
 variant column, and the A1.2-shipped `variable` table carries the
-shared metadata; A2.6 performs the rename + re-parent + variant-column
-add above — see MIGRATION_PLAN A2.6.)
+shared metadata; **A2.1.5** performs the slug + synthetic-PK promotion,
+the `variable_state` re-parent, and the `variant_id` column add above —
+see MIGRATION_PLAN A2.1.5.)
 
 Plus three orthogonal relationship tables, all at **variable grain**
 (the variant is not an identity level, so there is no variable-grain
@@ -1491,11 +1492,12 @@ address (and is exactly the binding FQID, §5.2). Stored as
 bidirectional rows (A→B and B→A) so the resolver does a single forward
 lookup.
 
-(Renamed from the earlier `variable_same_as` — DECISION POINT 3. The
-rename reflects the move to variable grain; `variable_same_as`
-is recommended over keeping `variable_same_as` because the table no
-longer relates variant-scoped variables and the old name would
-mislead.)
+(DECISION POINT 3: the table keeps its v0.11 name `variable_same_as` —
+**not** renamed — but is *demoted to variable grain*: the `*_variant` /
+`*_period` columns are dropped and the within-register `var_id`
+`(N choose 2)` auto-derive is deleted (§5.5). Within-register identity is
+the variable itself now, so `same_as` carries only cross-register /
+cross-provider equivalence.)
 
 ```sql
 CREATE TABLE variable_same_as (
@@ -2146,8 +2148,9 @@ variable, not of how a given variant delivers it). The original
 `variable_state.valid_from` / `valid_to`; the sensitivity-flag lift in
 A1.2 alone is not sufficient to retire the table. (A1.2 lifted the
 flags onto the register-scoped `variable` table, which the two-level
-restructure renames to `variable` — same grain, so the lift
-carries over unchanged; see the MIGRATION_PLAN A2.6 rework.)
+restructure (A2.1.5) keeps as `variable` — same grain, gaining a `slug`
++ synthetic PK — so the lift carries over unchanged; see the
+MIGRATION_PLAN A2.1.5 rework.)
 
 **`is_identifier` downstream semantics.** A variable with
 `is_identifier=true` will be pseudonymized at delivery. For SCB
@@ -2359,11 +2362,15 @@ explicit two-step `predecessors(fqid)` call.
 **Ambiguity handling.** `resolve_at(fqid, period)` returns
 `list[VariableState]` uniformly (§5.10 signature). With `variant`
 supplied (the common extract path — the Source's `register_variant`,
-§6.7) and a single-state variable (99% of cases, after build-time
-triage), the list is length 1. Omitting `variant` returns one state
-per variant that delivered the variable at the period; range periods
-crossing state transitions and the rare LKF-shape multi-vintage case
-(~0.05%) also yield length N. The candidate states carry their
+§6.7) **and a single value-set version in that period**, the list is
+length 1 — still the common case. The list is length N when: several
+variants delivered the variable at the period (omitting `variant`); a
+range period crosses state transitions; or — **common, not rare** — the
+variable is **classification-versioned and multiple versions co-exist in
+the period** (a §5.7 *fold* of co-delivered vintages: SNI92 + SNI2007 in a
+transition year, the crosswalk era). Multi-state-at-a-period is therefore
+*normal* for classification-versioned variables, not the ~0.05% LKF-only
+edge case the earlier framing assumed. The candidate states carry their
 `variant` coordinate and `value_set_version_label` for caller-side
 disambiguation. Callers who already know the variant pass `variant=…`;
 callers who already know which vintage to pick pass
@@ -3228,12 +3235,18 @@ inside the MONA bundle** (no reg_meta on MONA, no network).
   `effective_year` is at or before the source's `period`, emit
   **new** `variable_replaced`, level `info`, with a structured
   hint pointing at the successor binding.
-- For the rare multi-vintage case (LKF-shape), when multiple
-  `variable_state` rows match `(binding, period)`, emit **new**
-  `binding_state_ambiguous`, level `warning`, listing candidate
-  `value_set_version_label` values. The resolver picks
-  deterministically (most-recently-asserted); the warning surfaces
-  the ambiguity.
+- When multiple `variable_state` rows match a **bare** binding's
+  `(variant, period)` because the variable is classification-versioned
+  with several versions co-delivered in that period (a §5.7 *fold* —
+  common, not the rare LKF-only edge case the earlier framing assumed),
+  emit **new** `binding_value_set_version_ambiguous`, level **`error`**,
+  listing the candidate `value_set_version_label` values. The build does
+  **not** silently pick a coding (no most-recent tiebreak across *codings*
+  — that would corrupt the extract, §6.3); the author must pin the version
+  with the binding FQID's `@<value-set-version>` suffix (§5.2). A binding
+  carrying `@<version>` narrows to one state and passes. (The header-level
+  alias tiebreak of §6.3 still applies *within* the chosen state — it
+  disambiguates column headers, never codings.)
 - Every `value_set` (classification FQID) resolves to a known
   `classification`. Code: `value_set_missing`, level `error`.
 - Deprecated entries (slug TOML `deprecated: true`) resolve
@@ -3977,7 +3990,7 @@ Model A relationship surface.
 |---|---|---|
 | GET | `/api/catalog` | Top-level: every provider exposed by the steward catalog. `{kind: "root", children: [{kind: "provider", slug: "scb"}, {kind: "provider", slug: "sos"}, {kind: "classification-root", slug: "class"}]}`. |
 | GET | `/api/catalog/{fqid:path}` | Single endpoint covering every node in the hierarchy. Response shape: `{kind, entity, children?, ...}`. The `kind` discriminates by segment count + `class/` prefix: `provider` (1 seg), `register` (2 seg), `binding` (**3 seg, leaf** — the variable), `classification-root` (`class`, 1 seg), `classification` (`class/<slug>`, 2 seg, leaf). **There is no `variant` kind** (DECISION POINT 2): variants are browsed as a register sub-resource via `/variants` (next-but-one row), not addressed by path. On `register` (2 seg), `children` lists the register's bindings (variables) **and** a `variants` reference for the variant browser. On `binding` leaves (3 seg), the response embeds the variable's full longitudinal record — all states (each tagged with its `variant`), their validity ranges, value sets, aliases, and the variable-grain `replaced_by`/`related_to`/`same_as`/`lineage` edges. |
-| GET | `/api/catalog/{fqid:path}?period=...[&variant=...][&value_set_version=...]` | Same canonical endpoint, with a `period` query string (and optional `variant`). Wire format (canonical string encoding of the polymorphic `Source.period` forms): int year → `?period=2020`; period-token → `?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`; range → `?period=<from>..<to>` (literal `..` separator, e.g. `?period=2018..2020`, `?period=2020-Q1..2020-Q4`); snapshot sentinel → `?period=_default`. The optional `variant` is the variant slug (the Source's `register_variant` variant segment). The `..` form matches the order-export CSV serialization in `/api/project/order`. Server canonicalizes (rejects malformed tokens with 422); client-side codegen treats `period` and `variant` as plain string parameters (no OpenAPI `deepObject`). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period (narrowed to `variant` when supplied; each state carries its `variant`). Length 1 for the common point-query-in-one-variant case; length N when several variants delivered the variable at the period, for range periods that cross state transitions, and for the rare LKF-shape multi-vintage case (states carry their `value_set_version_label` for SPA disambiguation). The optional `value_set_version` query narrows multi-vintage results to a single state. Returns 200 with `{states: []}` (empty list) when the binding exists but no state covers the period — uniform shape, matches `Catalog.resolve_at` returning an empty list with no exception (§5.10). 404 is reserved for the binding itself not existing in the catalog (FQID resolves to no `variable` row). The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
+| GET | `/api/catalog/{fqid:path}?period=...[&variant=...][&value_set_version=...]` | Same canonical endpoint, with a `period` query string (and optional `variant`). Wire format (canonical string encoding of the polymorphic `Source.period` forms): int year → `?period=2020`; period-token → `?period=HT2020` / `?period=2020-Q3` / `?period=2020-08`; range → `?period=<from>..<to>` (literal `..` separator, e.g. `?period=2018..2020`, `?period=2020-Q1..2020-Q4`); snapshot sentinel → `?period=_default`. The optional `variant` is the variant slug (the Source's `register_variant` variant segment). The `..` form matches the order-export CSV serialization in `/api/project/order`. Server canonicalizes (rejects malformed tokens with 422); client-side codegen treats `period` and `variant` as plain string parameters (no OpenAPI `deepObject`). On `binding` leaves, the response embeds `{states: [...]}` — the list of `variable_state` rows whose validity range intersects the period (narrowed to `variant` when supplied; each state carries its `variant`). Length 1 for the common point-query-in-one-variant-and-one-version case; length N when several variants delivered the variable at the period, for range periods that cross state transitions, and — commonly — when the variable is classification-versioned with multiple versions co-delivered in the period (a §5.7 *fold*; states carry their `value_set_version_label` for SPA disambiguation). The optional `value_set_version` query — or, equivalently, the binding FQID's `@<version>` suffix (§5.2) — narrows to a single state. Returns 200 with `{states: []}` (empty list) when the binding exists but no state covers the period — uniform shape, matches `Catalog.resolve_at` returning an empty list with no exception (§5.10). 404 is reserved for the binding itself not existing in the catalog (FQID resolves to no `variable` row). The `period` query is ignored on non-binding kinds. The shape is uniform with `/states` so codegen sees one response type. |
 | GET | `/api/catalog/{provider}/{register}/variants` | Lists the register's variants (the variant browser; DECISION POINT 2). Returns `{register, variants: [{slug, name, description, display_group?, panel_entity_key?, panel_time_key?, panel_time_grain?}, ...]}`. This is how the SPA presents the variant axis without the variant being an FQID. The `variants` token is reserved in the variable slot (§5.2) so it can't be shadowed by a variable slug. |
 | GET | `/api/catalog/{fqid:path}/states` | Full state history for a binding. Returns `{binding, states: [{variant, valid_from, valid_to, data_type, value_set?, delivery_column_name?, value_set_version_label?}, ...]}` — each state tagged with its variant. SPA's variable detail UI uses this to render a variant × period axis / edition picker. |
 | GET | `/api/catalog/{fqid:path}/predecessors` | Returns `{binding, predecessors: [VariableRef, ...]}` via inbound `variable_replaced_by` edges (variable grain). Maps 1:1 to `Catalog.predecessors(fqid)`. |
@@ -4324,7 +4337,7 @@ concrete project requires it.
 
 **Cross-provider variable linkage** is the same kind of deferred
 problem: v1's slug-stem-only rule (`/kon` matches `/kon` across
-all providers) requires that variable-equivalent variables share a
+all providers) requires that concept-equivalent variables share a
 stem across providers. That's fine for the v1 norm — SCB-only
 projects, or projects against SCB-curated stewards. The day a
 project mixes SCB's `kon` with another provider's `sex` for the
@@ -4582,7 +4595,7 @@ MIGRATION_PLAN for the full per-PR breakdown).
 - **A2.2 Build-time triage (two-level).** Per §5.7. Requires A2.1.5 (the `variable` table). Kolumnnamn-primary discriminator that **folds** same-concept representations (grain/vintage/coding → one variable with `value_set_version_label`-discriminated states) and **splits** genuinely-different concepts into **distinct `variable` rows** — auto-derives sibling slugs for splits, emits `variable_related_to` edges (variable grain), and persists the discriminator maps (§5.7) so later delivery rows resolve to the right sibling (split) or state (fold). Catches the 11,945 same-year collision buckets across 3,281 distinct variable triples (~2.69% of `(variable, year)` buckets in current SCB data; reproduced from §5.7); ~200-300 cases need manual TOML curation (variable-slug TOML overrides for ambiguous suffixes). In-flight PR #132 reworks onto this shape (siblings become distinct variables).
 - **A2.3 Auto-derive `variable_replaced_by` (variable grain).** Read SCB `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')`. Materialize into `variable_replaced_by` table at **variable grain** (3-part endpoints; per-variable + parallel register- and variant-level tables). An endpoint naming a split `var_id` is resolved by the §5.7 discriminator, else dropped with a warning (§5.5). TOML curation for cross-provider edges (empty in A2; populated in A4 for SOS). In-flight PR #131 mostly survives — drop its `*_variant` columns (variable-grain adjustment).
 - **A2.4 `variable_state_lineage` interval-overlap join (variable-grain matching).** Per §5.6. Requires A2.1.5 (reads `variable.source_register_id`, descends the variable hierarchy). Replace `link_consumer_side_bindings` with the new linker. Add `variable_state_lineage` + `variable_state_lineage_warning` tables to DDL. Source-side matching traverses variable-grain `same_as` (`variable_set_via_same_as`). **Note:** the `same_as` table is still variant-grained `variable_same_as` until A2.6 renames/demotes it, so order A2.4 after A2.6's same_as work (cleanest) or project the legacy table to variable grain as a documented fallback (see MIGRATION_PLAN A2.4). Source-variant pinning is **TOML-only** — `[lineage_defaults]` and `[lineage."<consumer>.<variable>"]` blocks, no `variable_source_lineage` SQL table. Old `via_source_id` column populated in parallel for transition.
-- **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable` — variable metadata + states each tagged with their variant + variable-grain edges). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break. Add `resolve_at(fqid, period, *, variant=None, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Reads the A2.1.5 tables; the *binding-FQID* parse stays 4-seg interim until A2.6. Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); flip in A2.6.
+- **A2.5 Catalog API shift.** `Catalog.resolve(fqid)` **flips in place** to the §5.10 longitudinal semantics (returns `ResolvedVariable` — variable metadata + states each tagged with their variant + variable-grain edges). The v0.x per-cvid behavior is **deleted**, not deprecated — pre-v1 policy allows the break. Add `resolve_at(fqid, period, *, variant=None, value_set_version=None)`, `states`, `predecessors`, `successors`, `related`, `lineage`, `lineage_warnings` per §5.10. Reads the A2.1.5 tables; the *binding-FQID* parse stays on the **v0.11 5-seg** grammar until A2.6 (the Model-A 4-seg form was specced in #126 but never implemented, so the interim is the shipped 5-seg, not 4-seg). Webapp endpoints in §9.5 still on v0.x grammar (binding leaves still 5-seg); A2.6 flips both straight to 3-seg.
 - **A2.6 Drop period & variant from FQID grammar (resolver flip + same_as demotion).** The grammar flip — the table restructure already landed in A2.1.5. (1) **Drop BOTH period and variant from the FQID** (4→3 seg `provider/register/slug`; variant becomes a navigational register sub-resource, §5.2). Update parser, emitter, slug-loading. (2) **Resolver flip:** `_resolve_binding_direct` parses 3-seg and reads the stored `slug` by exact match (no derive-at-resolve), joining `variable_state` through `variable_id` + `variant_id` + period. (3) Drop ~1,264 `register_version` slug entries; drop the `register_version` table (prose → reg-meta-docs, artifacts → provenance). (4) **Rename `variable_same_as` → `variable_same_as`**, rebuild with variable endpoints (drop `*_variant` + `*_period` columns), and **delete the `(N choose 2)` var_id auto-derive** entirely (within-register identity is the A2.1.5 variable hierarchy). Rewrite `_resolve_binding_via_same_as` to traverse variable-slug triples. (5) Webapp catalog endpoints flip to 3-seg binding leaves + variant sub-resource + new sub-endpoints. v0.x reg_meta clients break; pre-v1 policy says no shim. UNFROZEN sentinel is active so the slug TOML rewrite is a regular commit.
 - **A2.7 Cleanup.** Drop `variable_instance` table and the `via_source_id` column (both kept alive through A2.1.5–A2.6 only so the build pipeline can dual-write while the new tables stabilize). All consumers now on `variable` / `variable_state`. Bump `reg_meta` to v1.0.0 (with snapshot reset; UNFROZEN still active for the curation polish that follows).
 
