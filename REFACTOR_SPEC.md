@@ -466,7 +466,7 @@ class IRVariableState(BaseModel):
     valid_from: str | None              # ISO 8601 ('YYYY' | 'YYYY-MM' | 'YYYY-MM-DD'); materializer expands coarser forms to full-date ranges
     valid_to: str | None                # ISO 8601; None = open-ended (materializer writes the '9999-12-31' sentinel per §5.1; the IR contract carries None to keep adapters honest about which dates they actually know)
     data_type: str                      # normalized lowercase canonical set
-    data_length: int | None
+    data_length: str | None             # TEXT — SCB `datalangd` may carry precision/scale ("8,2"), not just an int
     value_set_id: int | None
     value_set_version_label: str | None # overlap discriminator (multi-vintage / folded classification version)
 
@@ -1052,6 +1052,27 @@ a legal path character (RFC 3986 `pchar`) and lies outside the slug grammar,
 so it is an unambiguous delimiter. The bare and `@`-pinned forms are
 distinct FQIDs, so a variable bound in N versions yields N distinct keys in
 `project_data.codes.json` / `binding_options` — no collision (§6.3, §6.6).
+
+**Parsing the leaf, and the validator carve-out.** Because `@` sits *inside*
+the leaf segment, every per-segment validator that checks the slug grammar
+must **split the leaf as `slug[@version]` first** and validate the two parts
+separately — `slug` against the slug grammar above, the optional `version`
+against the classification-slug / `value_set_version_label` grammar — rather
+than running the slug regex over the whole `slug@version` segment (which the
+`@` would fail). This carve-out is normative for all three per-segment
+checks: the webapp's `{fqid:path}` route-segment gate (§9.5, §16) and
+`reg_schema`'s structural binding-FQID check (§6.8.1). Without it, the
+canonical pinned-binding URL `scb/lisa/naringsgren@sni2007` would be 422'd /
+flagged malformed by the very grammar this suffix relies on.
+
+**`@version` vs the binding's `value_set`.** A classification-backed fold can
+express the version in two places: the `@<version>` FQID suffix and the
+binding's `value_set` classification FQID (`class/sni2007`, §6.3). They must
+agree: when both are present they must name the *same* classification version
+(`…@sni2007` with `value_set = class/sni2007`), and a mismatch
+(`…@sni2007` with `value_set = class/sni92`) is a `binding_value_set_version_mismatch`
+error (§6.8). The `@version` suffix is the canonical pin; `value_set` may be
+omitted when `@version` is present (the version it implies is unambiguous).
 
 **Cross-variant operations are state queries, not separate FQIDs.**
 "Kön across LISA variants" is not a set of distinct identifiers — it
@@ -2405,7 +2426,7 @@ source's declared `(register_variant, period)`.
 | state validity range | tuple | `(valid_from, valid_to)` on a `variable_state`. ISO 8601 TEXT (full `YYYY-MM-DD` after ingest expansion); both columns `NOT NULL`. Open-ended ranges use the sentinel `valid_to = '9999-12-31'`. |
 | period | field | `Source.period` in project_data.json. Always required; polymorphic (int / period-token / range / snapshot sentinel). Drives `resolve_at` for the source's bindings. See §6.2. |
 | panel_template | metadata | On `variant`: declares the natural panel structure as `(panel_entity_key, panel_time_key, panel_time_grain)`. Inherited by Panel members in project_data when not overridden. |
-| value_set_version_label | column | On `variable_state`. Carries the SCB `vardemangdsversion` label (e.g. "LKF 2006-01-01") when meaningful as a state discriminator (the folded classification-version / multi-vintage case — common for classification-versioned variables). NULL otherwise. |
+| value_set_version_label | column | On `variable_state`. Carries the SCB `vardemangdsversion` label (e.g. "LKF 2006-01-01") when meaningful as a state discriminator (the folded classification-version / multi-vintage case — common for classification-versioned variables). `''` otherwise — the column is `NOT NULL DEFAULT ''` so the state-uniqueness index bites in the non-multi-vintage case (§5.1 DDL). |
 
 **Universal English ↔ SCB Swedish vocabulary** (for the column-rename
 pass at stage A1):
@@ -2430,9 +2451,9 @@ pass at stage A1):
 | variabelextern_kommentar | (dropped → docs) | — (editor notes; covered by states + docs) |
 | mattenhet | measurement_unit | variable (NULL when source was "Okänd") |
 | datatyp | data_type | variable_state (normalized lowercase canonical set) |
-| datalangd | data_length | variable_state (INTEGER) |
+| datalangd | data_length | variable_state (TEXT — may carry precision/scale, e.g. `8,2`) |
 | vardemangdsversion | value_set_version_label | variable_state (overlap discriminator) |
-| vardemangdsniva | (dropped post-triage) | — (becomes part of the variable slug when triage splits into sibling variables; see §5.7) |
+| vardemangdsniva | (dropped post-triage) | — (when triage *folds* grain into one variable, the niva token is written to `value_set_version_label`; when it *splits* genuinely-different concepts, each sibling gets its own slug; see §5.7) |
 | värdekod | code | code (`value_code` table) |
 | värdebenämning | label | code |
 | kolumnnamn | delivery_column_name | variable_alias |
@@ -3158,10 +3179,23 @@ Pydantic / `LoadedSpec` boundary.
   binding FQID. Its `provider/register` prefix (first **2** segments)
   must equal the source's `register_variant` prefix — enforced as a
   structural check, no reg_meta needed. (The variant is not repeated on
-  the binding; it lives on the Source, §6.3.)
+  the binding; it lives on the Source, §6.3.) **The leaf segment parses
+  as `slug[@version]` (§5.2):** split the optional `@<version>` off
+  first, validate the `slug` part against the slug grammar and the
+  `version` part against the classification-slug / `value_set_version_label`
+  grammar — do **not** apply the slug regex to the whole `slug@version`
+  segment (the `@` would fail it). A binding pinned `…/naringsgren@sni2007`
+  is well-formed.
 - `value_set` (when present) is a structurally well-formed
   classification FQID: `class/<slug>` (2 segments, leading `class/`;
   version baked into the slug, §5.2).
+- When a binding carries **both** a `@<version>` FQID suffix and a
+  `value_set` classification FQID, they must name the **same** version
+  (`…@sni2007` ⇒ `value_set = class/sni2007`). A mismatch
+  (`…@sni2007` with `value_set = class/sni92`) is a
+  `binding_value_set_version_mismatch` error (structural — a slug-string
+  comparison, no reg_meta). The `@<version>` is the canonical pin; `value_set`
+  may be omitted when `@<version>` is present (§5.2).
 - Panel `entity_key` / `time_key` shape: when explicitly present
   (panel-level or member-level), values match the `EntityKey` /
   `TimeKey` grammar (§6.4). The structural layer does **not** check
@@ -4029,8 +4063,14 @@ against the current TOMLs.
 validated against the slug grammar
 `^[a-z](?:[a-z0-9]|-[a-z0-9])*$` (or the `class` / `_default`
 literals per §5.2) **before** the handler resolves the FQID
-against reg_meta. The grammar excludes `.`, `..`, `%`, `\`, and
-any `/` other than the structural separator — so canonical FQIDs
+against reg_meta — with **one carve-out for the binding leaf**: a leaf
+of the form `slug@version` (the optional value-set-version pin, §5.2) is
+split on the single `@` and each part validated separately — `slug`
+against the slug grammar, `version` against the classification-slug /
+`value_set_version_label` grammar. A `slug@version` leaf otherwise passes
+the gate (the `@` is the only non-slug character admitted, and only as
+the single leaf-segment delimiter). The grammar excludes `.`, `..`, `%`,
+`\`, and any `/` other than the structural separator — so canonical FQIDs
 cannot encode path traversal, and percent-encoded variants
 (`%2e%2e`, `%2f`, `%00`) fail the per-segment check after
 Starlette URL-decodes the path. Bad input returns 422 with no DB
@@ -4823,10 +4863,15 @@ are negotiable for v1.
     and any `/` other than the structural separator — canonical
     FQIDs cannot encode path traversal. The handler validates
     each segment before resolving to a catalog node; bad input
-    → 422 with no DB hit. Parametrized test feeds path-traversal
+    → 422 with no DB hit. The binding leaf admits the `slug@version`
+    form (§5.2): the segment is split on the single `@` and each part
+    validated separately. Parametrized test feeds path-traversal
     payloads (`scb/../etc/passwd`, `scb/lisa/%2e%2e`,
     `scb/lisa/kon%00.json`) against every `{fqid:path}` route
-    (canonical binding, `/states`, `/variants`, etc.) and asserts 422.
+    (canonical binding, `/states`, `/variants`, etc.) and asserts 422 —
+    **plus a positive case** asserting `scb/lisa/naringsgren@sni2007`
+    passes the gate (the `@version` pin is legal, not traversal), while
+    `scb/lisa/naringsgren@bad/slug` and `scb/lisa/naringsgren@@x` fail.
   - **Provider-ID namespace property (A4.2).** A property test
     asserts `mint(...)` lands in `[2^62, 2^63)` for 10k random
     inputs (full 63-bit signed-int range, never sets bit 63),
