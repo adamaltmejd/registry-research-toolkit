@@ -95,6 +95,13 @@ Three independent PRs; can land in any order, but all must complete before A2.
 
 Existing SCB ingest in `db.py` did NOT move — A4.x rewrites the SCB adapter onto the IR contract.
 
+**Two-level redefinition (post-#135, standalone PR).** A1.3 shipped `IRVariable` with a variant-scoped `variant_id` (the pre-§5.0.1 model). PR #135's two-level respec redefined the §4.4 contract, so the (inert, no consumer until A4.x) IR code is brought in line here — landed **independently** of the A2.1.5 DB restructure (#136), since the IR types don't touch the DB schema:
+
+- `IRVariable` is now register-scoped: drops `variant_id`, gains `provider_key` (the NON-unique join hint). The variant coordinate moves to `IRVariableState.register_variant_id`.
+- `IRVariant.variant_id` → `register_variant_id` (matches the `register_variant` table PK, per the A2.1.5 naming decision).
+- `IRVariableState.data_length` typed `str` (TEXT — SCB `datalangd` may carry precision/scale "8,2"), per the #135 review.
+- Spec §4.4 + the `test_ir_scaffolding.py` contract fixtures updated to match.
+
 ---
 
 ## Stage A2 — Model A schema (load-bearing gate)
