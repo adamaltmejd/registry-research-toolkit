@@ -17,7 +17,7 @@ import re
 import sqlite3
 import tomllib
 import unicodedata
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from itertools import groupby
 from pathlib import Path
@@ -1187,6 +1187,16 @@ def populate_variable_slugs(
         auto: dict[str, str] = {}
         if auto_path.is_file():
             auto = _auto_variable_slugs(load_provider_toml(auto_path))
+        # §5.4 immutability: reserve every slug already published in auto.toml,
+        # grouped by register — INCLUDING entries whose source_id was pruned
+        # from the current delivery (a retired slug stays frozen, §5.4). Without
+        # this a new variable could be assigned a retired variable's slug, and
+        # `write_auto_toml` would then persist two source IDs with the same slug
+        # (a duplicate-FQID failure on the next load). source_id is
+        # "<register_id>.<provider_key>"; register_id is the leading int segment.
+        published_by_register: dict[int, set[str]] = defaultdict(set)
+        for sid, prev_slug in auto.items():
+            published_by_register[int(sid.partition(".")[0])].add(prev_slug)
 
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
@@ -1211,7 +1221,7 @@ def populate_variable_slugs(
         # The build connection yields plain tuples (not sqlite3.Row), so unpack
         # positionally: (variable_id, register_id, provider_key, name, kol).
         for register_id, group in groupby(variables, key=lambda row: row[1]):
-            used: set[str] = set()
+            used: set[str] = set(published_by_register.get(register_id, ()))
             pending: list[tuple[int, str, str | None, str | None]] = []
 
             # Pass 1: curated + existing-auto slugs are fixed — assign and

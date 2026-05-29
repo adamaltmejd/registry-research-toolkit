@@ -228,25 +228,33 @@ class TestStoredVariableSlug:
         assert exc.value.code == "fqid_not_found"
 
     @pytest.mark.xfail(
-        reason="A2.5: full end-to-end resolution of a niva-split's SECOND "
-        "sibling (new variable row, no variable_instance) needs the "
-        "variable_state-based resolver. A2.1.5 only stores+reads the slug.",
+        reason="A2.5: an A2.2 triage split mints sibling variable rows sharing "
+        "one (register_id, provider_key) but relinks variable_state, not "
+        "variable_instance — so both siblings fan out through _BINDING_QUERY to "
+        "the SAME shared instance/cvid. Distinguishing them needs the "
+        "variable_state-based resolver (A2.5); A2.1.5 only stores+reads the slug.",
         strict=True,
     )
-    def test_second_niva_sibling_resolves_end_to_end(self) -> None:
-        # Mirror A2.2's niva split: one delivery column `Ssyk`, two siblings.
-        # Sibling 0 keeps the existing variable + instance; sibling 1 is a new
-        # variable row with its own stored slug but NO variable_instance (A2.2
-        # relinks state, not instances). The resolver still reads
-        # variable_instance, so sibling 1 can't resolve until A2.5.
+    def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
+        # Mirror A2.2's niva split: one delivery column `Ssyk`, two sibling
+        # variables sharing provider_key '44' (§5.7 puts several variables under
+        # one source key) but ONE variable_instance (cvid 1001, var_id 44). The
+        # interim resolver joins both siblings to that shared instance via
+        # provider_key, so each slug resolves to the SAME cvid instead of each
+        # sibling's own state — the documented A2.2→A2.5 bridge hazard.
         conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '45', 'SSYK 5-pos', 'ssyk-5pos')"
+            "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
         )
         conn.commit()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
-        assert isinstance(r, ResolvedVariableBinding)
+        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
+        assert isinstance(r3, ResolvedVariableBinding)
+        assert isinstance(r5, ResolvedVariableBinding)
+        # Desired (A2.5): each sibling resolves to its own binding. Today both
+        # fan out to the shared cvid 1001, so this fails (strict xfail).
+        assert r3.cvid != r5.cvid
 
 
 class TestResolveBindingLineage:

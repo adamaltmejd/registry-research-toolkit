@@ -126,12 +126,19 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
 # A2.1.5: the variable slug is read from the stored `variable.slug` column
 # (joined via `vi.var_id` → `v.provider_key`), not derived from
-# `delivery_column_name` at query time — so a build-time triage split (A2.2)
-# can give two siblings sharing one delivery column distinct, resolvable
-# identities (`ssyk-3pos` / `ssyk-5pos`). Bridge note: this still resolves the
-# *binding* off `variable_instance`; A2.5 moves binding resolution to
-# `variable_state` wholesale, at which point a split sibling that mints no
-# instance row becomes resolvable too.
+# `delivery_column_name` at query time.
+#
+# ⚠️ Bridge hazard (A2.2 → A2.5): `provider_key` is a NON-unique join hint. An
+# A2.2 triage split mints several `variable` rows under one
+# `(register_id, provider_key)` but relinks `variable_state`, NOT
+# `variable_instance`. So a single instance row fans out across all sibling
+# `variable` rows in this JOIN, and each sibling's slug then resolves to that
+# *shared* instance's cvid + metadata (value_set, data_type, …) — wrong for any
+# sibling whose state differs. Harmless today (pre-A2.2 every provider_key maps
+# 1:1 to one variable, so the join can't fan out). The fix is A2.5, which moves
+# binding resolution onto `variable_state` (keyed by `variable_id`) so each
+# sibling resolves to its own state; A2.2 must not ship split siblings before
+# that resolver lands (see MIGRATION_PLAN A2.2/A2.5).
 _BINDING_QUERY = (
     "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "

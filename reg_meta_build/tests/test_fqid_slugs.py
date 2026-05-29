@@ -1196,6 +1196,27 @@ class TestPopulateVariableSlugs:
         assert counts["auto_existing"] == 1
         assert counts["auto_new"] == 0
 
+    def test_retired_auto_slug_not_reused(self, tmp_path: Path) -> None:
+        # §5.4 immutability: a frozen auto slug whose variable was pruned from
+        # the delivery stays reserved — a live/new variable can't be assigned it,
+        # which would duplicate the slug in the rewritten auto.toml.
+        conn = self._db(kol="Kon")  # live var 44, kolumnnamn → "kon"
+        d = self._slug_dir(tmp_path)
+        # Retired var 1.999 (absent from the DB) froze "kon" in auto.toml.
+        (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.999"]\nslug = "kon"\n', encoding="utf-8"
+        )
+        populate_variable_slugs(conn, d)
+        # var 44 wanted "kon" but it's frozen to the retired entry → uniquified.
+        assert self._stored_slug(conn, 44) == "kon-2"
+        # The rewritten auto.toml keeps the retired entry and adds no duplicate.
+        slugs = [
+            e.slug
+            for e in load_provider_toml(d / f"scb{AUTO_FILE_SUFFIX}")
+            if e.kind == "variable"
+        ]
+        assert sorted(slugs) == ["kon", "kon-2"]
+
     def test_collision_falls_back_to_name(self, tmp_path: Path) -> None:
         # Two distinct variables under one register whose kolumnnamn fold to the
         # SAME slug ('kon') no longer fail the build — both fall back to their
