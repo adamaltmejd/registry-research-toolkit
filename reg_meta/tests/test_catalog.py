@@ -703,16 +703,16 @@ class TestSameAsTraversal:
     def _add_var_edge(
         conn: sqlite3.Connection,
         *,
-        a: tuple[str, str, str, str, str],
-        b: tuple[str, str, str, str, str],
+        a: tuple[str, str, str],
+        b: tuple[str, str, str],
     ) -> None:
-        """Insert both directions of a variable same_as edge."""
+        """Insert both directions of a variable-grain same_as edge (§5.5)."""
         for src, tgt in ((a, b), (b, a)):
             conn.execute(
                 "INSERT INTO variable_same_as ("
-                "a_provider, a_register, a_variant, a_period, a_variable, "
-                "b_provider, b_register, b_variant, b_period, b_variable"
-                ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "a_provider, a_register, a_variable, "
+                "b_provider, b_register, b_variable"
+                ") VALUES (?, ?, ?, ?, ?, ?)",
                 (*src, *tgt),
             )
         conn.commit()
@@ -732,8 +732,8 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "kon"),
-            b=("scb", "lisa", "", "", "civilstand-legacy"),
+            a=("scb", "lisa", "kon"),
+            b=("scb", "lisa", "civilstand-legacy"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
         assert isinstance(r, ResolvedVariableBinding)
@@ -751,13 +751,13 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "kon"),
-            b=("scb", "lisa", "", "", "intermediate"),
+            a=("scb", "lisa", "kon"),
+            b=("scb", "lisa", "intermediate"),
         )
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "intermediate"),
-            b=("scb", "lisa", "", "", "legacy-name"),
+            a=("scb", "lisa", "intermediate"),
+            b=("scb", "lisa", "legacy-name"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/legacy-name")
         assert isinstance(r, ResolvedVariableBinding)
@@ -774,103 +774,18 @@ class TestSameAsTraversal:
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
-            a=("scb", "lisa", "", "", "phantom-a"),
-            b=("scb", "lisa", "", "", "phantom-b"),
+            a=("scb", "lisa", "phantom-a"),
+            b=("scb", "lisa", "phantom-b"),
         )
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom-a")
         assert exc.value.code == "fqid_not_found"
 
-    def test_same_as_variant_narrowing(self) -> None:
-        # Edge narrowed to a specific variant: only queries under that variant
-        # traverse the link.
-        conn = build_slugged_db()
-        # Add a second variant that doesn't carry the variable.
-        add_variant(
-            conn,
-            register_variant_id=11,
-            register_id=1,
-            slug="individer-16plus",
-            name="Individer 16+",
-        )
-        add_version(
-            conn,
-            regver_id=101,
-            register_variant_id=11,
-            slug="2018",
-            name="LISA 2018",
-        )
-        self._add_var_edge(
-            conn,
-            # source (where 'kon' lives) is wildcard on variant
-            a=("scb", "lisa", "", "", "kon"),
-            # target narrowed to individer-15plus only
-            b=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
-        )
-        # Query under individer-15plus matches the narrowed slot → resolves.
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 1001
-        # Query under individer-16plus does not match (variant differs) → miss.
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
-        assert exc.value.code == "fqid_not_found"
-
-    def test_visited_key_separates_variant_scopes(self) -> None:
-        # Regression: two narrowing edges from the same source to the same
-        # target variable under *different* variants. If the visited key
-        # ignored variant/period (the original implementation), the BFS
-        # would mark `civilstand-legacy` as visited after the first edge
-        # and skip the second edge — even though only the second variant
-        # has a binding row that resolves.
-        conn = build_slugged_db()
-        # Add a second variant that DOES carry kon (cvid 2001) so the
-        # variant-16plus traversal lands on a real row.
-        add_variant(
-            conn,
-            register_variant_id=11,
-            register_id=1,
-            slug="individer-16plus",
-            name="Individer 16+",
-        )
-        add_version(
-            conn,
-            regver_id=101,
-            register_variant_id=11,
-            slug="2018",
-            name="LISA 2018",
-        )
-        add_binding(
-            conn,
-            cvid=2001,
-            register_id=1,
-            register_variant_id=11,
-            regver_id=101,
-            var_id=44,
-            delivery_column_name="Kon",
-        )
-        # Two edges from civilstand-legacy → kon, narrowed to *different*
-        # variants on the source side. Both edges land on kon, but only
-        # individer-16plus has the binding row.
-        # (We register edges as a → b where a is the FQID we'd query.)
-        self._add_var_edge(
-            conn,
-            a=("scb", "lisa", "individer-15plus", "", "civilstand-legacy"),
-            b=("scb", "lisa", "individer-15plus", "", "kon"),
-        )
-        self._add_var_edge(
-            conn,
-            a=("scb", "lisa", "individer-16plus", "", "civilstand-legacy"),
-            b=("scb", "lisa", "individer-16plus", "", "kon"),
-        )
-        # Drop the original kon under individer-15plus so only individer-16plus
-        # can satisfy the resolution.
-        conn.execute("DELETE FROM variable_alias WHERE cvid = 1001")
-        conn.execute("DELETE FROM variable_instance WHERE cvid = 1001")
-        conn.commit()
-        r = Catalog(conn).resolve("scb/lisa/individer-16plus/2018/civilstand-legacy")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 2001
+    # A2.1.5 (§5.5): variable same_as is variable-grain — edges carry no
+    # variant/period narrowing, so the former `test_same_as_variant_narrowing`
+    # and `test_visited_key_separates_variant_scopes` (which exercised
+    # variant-scoped edges + a variant-keyed visited set) no longer have a
+    # behaviour to test and were removed with the demotion.
 
 
 class TestSameAsClassificationTraversal:

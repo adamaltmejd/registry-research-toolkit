@@ -573,34 +573,33 @@ CREATE TABLE code_variable_map (
     PRIMARY KEY (code_id, register_id, var_id)
 ) WITHOUT ROWID;
 
--- Curated cross-rename equivalence edges (§5.5). Edges are slug-anchored,
--- not cvid-anchored, so the link survives across rebuilds even if the
--- underlying provider IDs shift. Each TOML same_as entry becomes two
--- rows (A→B and B→A) so the resolver does a single forward lookup.
--- a_variant / a_period and b_variant / b_period default to '' (empty
--- string) rather than NULL because SQLite's UNIQUE/PRIMARY KEY treats
--- NULLs as distinct, which would let duplicate edges sneak in; '' as
--- the sentinel keeps the (PROVIDER, REGISTER, VARIANT, PERIOD, VARIABLE)
--- tuple a strict equality key.
+-- Curated cross-register / cross-provider equivalence edges (§5.5).
+-- **Variable grain**: endpoints are `(provider, register, variable)` slug
+-- triples. Slug-anchored (not cvid-anchored), so the link survives rebuilds
+-- even if provider IDs shift. Each TOML same_as entry becomes two rows
+-- (A→B and B→A) so the resolver does a single forward lookup.
+--
+-- A2.1.5 dropped the v0.11 `a_variant`/`b_variant` and `a_period`/`b_period`
+-- slots: a variable is register-scoped, so one edge covers every variant that
+-- delivers either variable, and period was never load-bearing for same_as
+-- semantics — validity is implicit in both variables' state histories (§5.5).
+-- (§5.5 also reserves a `note` column for curator annotations; not added here
+-- because the TOML same_as form carries no note field to populate it yet.)
 CREATE TABLE variable_same_as (
     a_provider     TEXT NOT NULL,
     a_register     TEXT NOT NULL,
-    a_variant      TEXT NOT NULL DEFAULT '',
-    a_period       TEXT NOT NULL DEFAULT '',
     a_variable     TEXT NOT NULL,
     b_provider     TEXT NOT NULL,
     b_register     TEXT NOT NULL,
-    b_variant      TEXT NOT NULL DEFAULT '',
-    b_period       TEXT NOT NULL DEFAULT '',
     b_variable     TEXT NOT NULL,
     PRIMARY KEY (
-        a_provider, a_register, a_variant, a_period, a_variable,
-        b_provider, b_register, b_variant, b_period, b_variable
+        a_provider, a_register, a_variable,
+        b_provider, b_register, b_variable
     )
 ) WITHOUT ROWID;
-CREATE INDEX idx_variable_same_as_a ON variable_same_as(
-    a_provider, a_register, a_variable
-);
+-- No separate a-side index: this is a WITHOUT ROWID table, so the PRIMARY KEY
+-- is the clustered index, and its leading (a_provider, a_register, a_variable)
+-- prefix already serves the resolver's source-side lookup.
 
 CREATE TABLE classification_same_as (
     a_provider              TEXT NOT NULL,

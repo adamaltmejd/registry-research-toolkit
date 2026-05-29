@@ -351,14 +351,14 @@ class Catalog:
     ) -> ResolvedVariableBinding | None:
         """BFS through `variable_same_as` until a candidate resolves directly.
 
-        Empty-string sentinels in the edge's `a_variant`/`a_period` mark
-        wildcard scope; on the `b_` side empty means "inherit from current
-        node", non-empty means "narrow to this slot". Equivalence traversal
-        is the only place where the query's variant/period can change
-        mid-resolve. The visited set keys on the **full 5-tuple** (incl.
-        inherited variant/period) so two narrowing edges from the same
-        source to the same target under different variants/periods both
-        get explored.
+        A2.1.5: edges are **variable-grain** — `(provider, register, variable)`
+        triples, no variant/period qualifier (§5.5). A traversal step swaps the
+        (provider, register, variable) coordinate and **inherits the query's
+        variant + period** (the edge carries no narrowing), then tries a direct
+        resolve under that inherited slot. The visited set keys on the
+        variable-grain triple. (Binding resolution is still interim 5-seg until
+        A2.6; the start-node triple is taken from the query's binding, ignoring
+        its variant/period segments.)
         """
         assert fqid.provider and fqid.register and fqid.variable
         assert fqid.variant is not None and fqid.period is not None
@@ -368,39 +368,34 @@ class Catalog:
             fqid.variable,
         ) not in self._var_same_as_source_keys():
             return None
-        start_key = (
-            fqid.provider,
-            fqid.register,
-            fqid.variant,
-            fqid.period,
-            fqid.variable,
-        )
-        visited: set[tuple[str, str, str, str, str]] = {start_key}
-        queue: deque[tuple[str, str, str, str, str, tuple[Fqid, ...]]] = deque()
+        # Variant/period are constant across the traversal — the variable-grain
+        # edge can't change them; only the (provider, register, variable)
+        # coordinate moves.
+        variant = fqid.variant
+        period = fqid.period
+        start_key = (fqid.provider, fqid.register, fqid.variable)
+        visited: set[tuple[str, str, str]] = {start_key}
+        queue: deque[tuple[str, str, str, tuple[Fqid, ...]]] = deque()
         queue.append((*start_key, ()))
         while queue:
-            prov, reg, variant, period, variable, path = queue.popleft()
+            prov, reg, variable, path = queue.popleft()
             rows = self._conn.execute(
-                "SELECT b_provider, b_register, b_variant, b_period, b_variable "
+                "SELECT b_provider, b_register, b_variable "
                 "FROM variable_same_as "
-                "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
-                "AND (a_variant = '' OR a_variant = ?) "
-                "AND (a_period = '' OR a_period = ?)",
-                (prov, reg, variable, variant, period),
+                "WHERE a_provider = ? AND a_register = ? AND a_variable = ?",
+                (prov, reg, variable),
             ).fetchall()
             for row in rows:
                 n_prov = row["b_provider"]
                 n_reg = row["b_register"]
-                n_variant = row["b_variant"] or variant
-                n_period = row["b_period"] or period
                 n_variable = row["b_variable"]
-                key = (n_prov, n_reg, n_variant, n_period, n_variable)
+                key = (n_prov, n_reg, n_variable)
                 if key in visited:
                     continue
                 visited.add(key)
                 try:
                     n_fqid = Fqid.binding_fqid(
-                        n_prov, n_reg, n_variant, n_period, n_variable
+                        n_prov, n_reg, variant, period, n_variable
                     )
                 except FqidError:
                     # Malformed slug in DB — populate_slugs validates on write,
@@ -414,7 +409,7 @@ class Catalog:
                     # Preserve the caller's FQID on the result; the
                     # traversal path goes in via_same_as.
                     return replace(hit, fqid=fqid, via_same_as=new_path)
-                queue.append((n_prov, n_reg, n_variant, n_period, n_variable, new_path))
+                queue.append((n_prov, n_reg, n_variable, new_path))
         return None
 
     def _row_to_binding(

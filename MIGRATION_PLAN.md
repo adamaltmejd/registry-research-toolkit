@@ -173,12 +173,18 @@ data migration). Per REFACTOR_SPEC §5.1, §5.3.
 
 **Status:** the restructure (promote `variable`, re-parent `variable_state`,
 and the `var_id`→`provider_key` CAST rework) landed in **#136**; the IR
-redefinition in **#137**. Stored-variable-slug population and the
-resolver/emitter flip to read it landed as two commits on the
-`a2.1.5-variable-slug` branch. **Remaining before this checkbox closes:** the
-`variable_same_as` grain demotion plus the `_resolve_binding_via_same_as`
-rewrite (the demotion bullet below) — the `same_as` table still carries
-`*_variant` / `*_period` columns on `main`.
+redefinition in **#137**. The remaining A2.1.5 work landed on the
+`a2.1.5-variable-slug` branch: stored-variable-slug population, the
+resolver/emitter flip, and the `variable_same_as` grain demotion (dropped
+`*_variant`/`*_period` columns + the lockstep `_resolve_binding_via_same_as`
+rewrite — the resolver now inherits the query's variant/period since edges no
+longer narrow). Notes: there was no `(N choose 2)` `var_id` auto-derive to
+delete (it was never implemented), and `classification_same_as` already had no
+`*_period` columns. **Remaining before this checkbox closes:** curate the
+register-unique slug collisions a real `build-db` surfaced (register-scoped
+uniqueness is stricter than the old variant grain — e.g. `tidomspct` on
+1.881/1.887) via `[variable]` overrides in `scb.toml`, and commit the generated
+`scb.auto.toml`.
 
 - **Promote `variable` in place** (it keeps its name — it is already the register-scoped `variable` table on `main`; this is not a rename). Add the synthetic `variable_id AUTOINCREMENT` PK (DECISION POINT 1) and a register-unique `slug`. The A1.2 sensitivity flags (`is_sensitive`, `is_identifier`) and the shared-metadata columns (`name`, `definition`, `description`, `measurement_unit`, `source_register_id`, `source_register_text`) ride along unchanged — same grain, pure column add.
 - **Natural key = `(register_id, slug)`** UNIQUE (the FQID leaf; §5.1 DDL). Add the `slug` column (register-unique). **`provider_key` (the old `var_id` / SOS name) is a NON-unique join hint** — a plain index, *not* UNIQUE — because A2.2's triage splits put several variables under one source key (maintainer red-line on DP1). The build's source-row → variable join refines `provider_key` by the triage discriminator when a split exists (§5.7), 1:1 otherwise.

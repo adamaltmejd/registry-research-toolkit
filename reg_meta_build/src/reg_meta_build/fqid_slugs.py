@@ -68,8 +68,11 @@ _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
 
 # Allowed keys for inline `same_as` tables (§5.3 worked examples).
+# A2.1.5: variable same_as is variable-grain — no `register_variant`/`period`
+# narrowing keys (the variant/period slots were dropped, §5.5). One edge covers
+# every variant/period that delivers either variable.
 _SAME_AS_KEYS_VARIABLE: frozenset[str] = frozenset(
-    {"provider", "register", "register_variant", "period", "variable_slug"}
+    {"provider", "register", "variable_slug"}
 )
 _SAME_AS_KEYS_CLASSIFICATION: frozenset[str] = frozenset(
     {"provider", "classification_slug"}
@@ -1265,11 +1268,10 @@ def _assert_no_unslugged(
 # ---------------------------------------------------------------------------
 
 
-# 5-tuple (provider, register, variant, period, variable) / 2-tuple
-# (provider, classification_slug). Variant/period use empty-string sentinels
-# for wildcard scope — see the db.py table comment for the SQLite-NULL
-# rationale.
-_VarKey = tuple[str, str, str, str, str]
+# A2.1.5: variable same_as keys are variable-grain 3-tuples
+# (provider, register, variable). The variant/period slots were dropped (§5.5).
+# Classification keys are 2-tuples (provider, classification_slug).
+_VarKey = tuple[str, str, str]
 _ClassKey = tuple[str, str]
 
 
@@ -1310,18 +1312,18 @@ def _variable_source_slug(
 def _validate_variable_target(
     conn: sqlite3.Connection, entry: SlugEntry, ref: dict[str, str]
 ) -> _VarKey:
-    """Validate a same_as target's provider+register+variant+period exist.
+    """Validate a same_as target's provider + register exist (variable grain).
 
     `variable_slug` itself is **not** validated against the DB — that's the
-    point of slug-anchored linking: the link survives forward-of-data
-    renames. Provider and register slugs are checked because if those are
-    typos the link is permanently dead. Key shape (required/allowed) is
-    enforced upstream by `_validate_same_as` at TOML load time.
+    point of slug-anchored linking: the link survives forward-of-data renames.
+    Provider and register slugs are checked because if those are typos the link
+    is permanently dead. A2.1.5: the edge is variable-grain — there are no
+    `register_variant`/`period` narrowing slots (§5.5), so the only DB check is
+    provider+register existence. Key shape is enforced upstream by
+    `_validate_same_as` (which now rejects variant/period keys) at TOML load.
     """
     provider_slug = ref["provider"]
     register_slug = ref["register"]
-    variant_slug = ref.get("register_variant", "")
-    period_slug = ref.get("period", "")
     variable_slug = ref["variable_slug"]
 
     # Provider + register existence: hard error per design call (matches the
@@ -1341,56 +1343,7 @@ def _validate_variable_target(
             "Fix the slug typo, or mark the originating entry deprecated=true "
             "if the target register is retired.",
         )
-    register_id = row[0]
-
-    # Optional narrowing slots: when present they must resolve too.
-    if variant_slug:
-        row = conn.execute(
-            "SELECT 1 FROM register_variant WHERE register_id = ? AND slug = ?",
-            (register_id, variant_slug),
-        ).fetchone()
-        if row is None:
-            raise _err(
-                "slug_same_as_unknown_variant",
-                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
-                f"target variant {variant_slug!r} not found under "
-                f"{provider_slug}/{register_slug}.",
-                "Drop the `register_variant` narrowing key or fix the slug.",
-            )
-    if period_slug:
-        # The resolver inherits the query's variant when traversing an edge
-        # (`n_variant = b_variant or current_variant`), so a period-only
-        # target can only resolve when the inherited variant happens to
-        # carry that period. Accepting period without variant at build
-        # time lets edges pass that can never resolve at query time —
-        # require the pair together so the build catches that mismatch.
-        if not variant_slug:
-            raise _err(
-                "slug_same_as_period_without_variant",
-                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
-                f"target carries `period` without `register_variant`. "
-                f"The resolver inherits the query's variant and cannot fan "
-                f"out across variants, so a period-only narrowing is "
-                f"ambiguous and not supported.",
-                'Add `register_variant = "..."` alongside `period`, or '
-                "drop both narrowing keys to apply across all variants.",
-            )
-        row = conn.execute(
-            "SELECT 1 FROM register_version rver "
-            "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
-            "WHERE rv.register_id = ? AND rv.slug = ? AND rver.slug = ?",
-            (register_id, variant_slug, period_slug),
-        ).fetchone()
-        if row is None:
-            raise _err(
-                "slug_same_as_unknown_period",
-                f"{entry.provider}.toml: variable.{entry.source_id!r} same_as "
-                f"target period {period_slug!r} not found under "
-                f"{provider_slug}/{register_slug}/{variant_slug}.",
-                "Drop the `period` narrowing key or fix the slug.",
-            )
-
-    return (provider_slug, register_slug, variant_slug, period_slug, variable_slug)
+    return (provider_slug, register_slug, variable_slug)
 
 
 def _validate_classification_target(
@@ -1548,13 +1501,7 @@ def materialize_same_as_edges(
                     "should have written it).",
                 )
             src_variable_slug = _variable_source_slug(conn, register_id, var_id, entry)
-            src: _VarKey = (
-                entry.provider,
-                row[0],
-                "",
-                "",
-                src_variable_slug,
-            )
+            src: _VarKey = (entry.provider, row[0], src_variable_slug)
             for ref in entry.same_as:
                 tgt = _validate_variable_target(conn, entry, ref)
                 var_edges.append((src, tgt))
@@ -1588,9 +1535,9 @@ def materialize_same_as_edges(
         for src_t, tgt_t in ((a, b), (b, a)):
             conn.execute(
                 "INSERT INTO variable_same_as ("
-                "a_provider, a_register, a_variant, a_period, a_variable, "
-                "b_provider, b_register, b_variant, b_period, b_variable) "
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "a_provider, a_register, a_variable, "
+                "b_provider, b_register, b_variable) "
+                "VALUES (?, ?, ?, ?, ?, ?)",
                 (*src_t, *tgt_t),
             )
     for a_k, b_k in class_edges:

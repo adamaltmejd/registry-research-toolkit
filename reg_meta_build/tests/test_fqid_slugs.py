@@ -2528,18 +2528,21 @@ class TestMaterializeSameAsEdges:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_unknown_register"
 
-    def test_unknown_target_variant_rejected(self, tmp_path: Path) -> None:
+    def test_register_variant_key_rejected(self, tmp_path: Path) -> None:
+        # A2.1.5: variable same_as is variable-grain — the `register_variant`
+        # narrowing key was dropped (§5.5), so it's now an unknown key rejected
+        # at TOML load.
         conn = build_slugged_db()
         slug_dir = self._slug_dir_with_same_as(
             tmp_path,
             '[variable."1.44"]\n'
             'same_as = [{ provider = "scb", register = "lisa", '
-            'register_variant = "nonexistent", '
+            'register_variant = "individer-15plus", '
             'variable_slug = "kon" }]\n',
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_unknown_variant"
+        assert exc.value.code == "slug_toml_invalid"
 
     def test_source_without_stored_slug_rejected(self, tmp_path: Path) -> None:
         # A2.1.5: same_as anchors on the stored `variable.slug`. If the source
@@ -2679,11 +2682,11 @@ class TestMaterializeSameAsEdges:
             materialize_same_as_edges(conn, slug_dir)
         assert exc.value.code == "slug_same_as_self_loop"
 
-    def test_period_without_variant_rejected(self, tmp_path: Path) -> None:
-        # Codex P2: the resolver inherits the query's variant when
-        # traversing an edge, so a period-only narrowing can never resolve
-        # outside the variant that happens to carry the period. Reject at
-        # build time so the curator's intent is unambiguous.
+    def test_period_key_rejected(self, tmp_path: Path) -> None:
+        # A2.1.5: the `period` same_as narrowing key was dropped (§5.5) — it's
+        # now an unknown key rejected at TOML load. (Previously a period-only
+        # narrowing raised slug_same_as_period_without_variant; that whole
+        # narrowing concept is gone at variable grain.)
         conn = self._db_with_two_variables()
         slug_dir = self._slug_dir_with_same_as(
             tmp_path,
@@ -2693,4 +2696,4 @@ class TestMaterializeSameAsEdges:
         )
         with pytest.raises(RegMetaError) as exc:
             materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_period_without_variant"
+        assert exc.value.code == "slug_toml_invalid"
