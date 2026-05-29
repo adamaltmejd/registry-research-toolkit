@@ -1115,15 +1115,17 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
 
 
 class TestPopulateVariableSlugs:
-    """A2.1.5 (§5.3): stored `variable.slug` population — auto-derive + curated
-    overrides, register-scoped uniqueness, .auto.toml generation."""
+    """A2.1.5 (§5.3): stored `variable.slug` population — kolumnnamn-derived
+    where register-unique, name-fallback otherwise, never-failing fallback
+    chain, curated overrides, .auto.toml generation."""
 
     @staticmethod
-    def _db(*, slug: str | None = None, kol: str = "Kon") -> sqlite3.Connection:
-        # build_slugged_db seeds variable.slug + a variable_state era; NULL the
-        # stored slug so the population function does the work under test (the
-        # variable_state delivery column it derives from stays in place).
-        conn = build_slugged_db(delivery_column_name=kol, variable_slug=slug)
+    def _db(
+        *, slug: str | None = None, kol: str = "Kon", name: str = "Kön"
+    ) -> sqlite3.Connection:
+        # build_slugged_db seeds variable.slug + a variable_state era carrying
+        # `kol`; NULL the stored slug so the population function does the work.
+        conn = build_slugged_db(variable=(name, 44, 1001, kol), variable_slug=slug)
         if slug is None:
             conn.execute("UPDATE variable SET slug = NULL")
             conn.commit()
@@ -1141,10 +1143,24 @@ class TestPopulateVariableSlugs:
         ).fetchone()
         return row[0] if row else None
 
+    @staticmethod
+    def _add_variable(conn: sqlite3.Connection, *, var_id: int, name: str, kol: str):
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, ?, ?)",
+            (str(var_id), name),
+        ).lastrowid
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', ?)",
+            (vid, kol),
+        )
+        conn.commit()
+
     def test_auto_derives_and_persists(self, tmp_path: Path) -> None:
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
-        counts = populate_variable_slugs(conn, d, strict=True)
+        counts = populate_variable_slugs(conn, d)
         assert self._stored_slug(conn, 44) == "kon"
         assert counts["auto_new"] == 1
         # .auto.toml written, keyed register.var.
@@ -1162,7 +1178,7 @@ class TestPopulateVariableSlugs:
             tmp_path,
             '[register."1"]\nslug = "lisa"\n[variable."1.44"]\nslug = "kon-curated"\n',
         )
-        counts = populate_variable_slugs(conn, d, strict=True)
+        counts = populate_variable_slugs(conn, d)
         assert self._stored_slug(conn, 44) == "kon-curated"
         assert counts["curated"] == 1
         assert counts["auto_new"] == 0
@@ -1171,41 +1187,38 @@ class TestPopulateVariableSlugs:
         # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d, strict=True)
+        populate_variable_slugs(conn, d)
         # SCB renames the delivery column; rebuild reads the existing
         # .auto.toml and keeps the original slug (§5.3 immutability).
         conn2 = self._db(kol="Konkod")  # would derive `konkod`
-        counts = populate_variable_slugs(conn2, d, strict=True)
+        counts = populate_variable_slugs(conn2, d)
         assert self._stored_slug(conn2, 44) == "kon"
         assert counts["auto_existing"] == 1
         assert counts["auto_new"] == 0
 
-    def test_register_uniqueness_enforced(self, tmp_path: Path) -> None:
+    def test_collision_falls_back_to_name(self, tmp_path: Path) -> None:
         # Two distinct variables under one register whose kolumnnamn fold to the
-        # same slug → build error naming both source IDs (register-scoped, §5.3).
-        conn = self._db(kol="Kon")
-        vid2 = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, '88', 'Kön2')"
-        ).lastrowid
-        conn.execute(
-            "INSERT INTO variable_state "
-            "(variable_id, register_variant_id, valid_from, valid_to, "
-            "data_type, delivery_column_name) "
-            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Kon')",
-            (vid2,),
-        )
-        conn.commit()
+        # SAME slug ('kon') no longer fail the build — both fall back to their
+        # (distinct) names, yielding distinct register-unique slugs (§5.3).
+        conn = self._db(kol="Kon", name="Kön")  # var 44
+        self._add_variable(conn, var_id=88, name="Civilstånd", kol="Kon")
         d = self._slug_dir(tmp_path)
-        with pytest.raises(RegMetaError) as exc:
-            populate_variable_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_variable_collision"
-        assert "1.44" in exc.value.message and "1.88" in exc.value.message
+        populate_variable_slugs(conn, d)
+        s44, s88 = self._stored_slug(conn, 44), self._stored_slug(conn, 88)
+        assert s44 and s88 and s44 != s88
+        assert s88 == "civilstand"  # name-derived, since 'kon' collided
+
+    def test_unique_kolumnnamn_keeps_short_slug(self, tmp_path: Path) -> None:
+        # When the kolumnnamn slug is register-unique it wins over the (longer)
+        # name even if the name differs — keeps the short common-case leaf.
+        conn = self._db(kol="Sysselsattning", name="Sysselsättningsstatus i november")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "sysselsattning"
 
     def test_multiple_eras_single_slug(self, tmp_path: Path) -> None:
         # variable.slug is register-scoped (one row per variable), so multiple
-        # variable_state eras for one variable can't multiply or fork the slug —
-        # the engine writes exactly one value regardless of era count.
+        # variable_state eras for one variable can't multiply or fork the slug.
         conn = self._db(kol="Kon")
         vid = conn.execute(
             "SELECT variable_id FROM variable WHERE provider_key = '44'"
@@ -1219,21 +1232,42 @@ class TestPopulateVariableSlugs:
         )
         conn.commit()
         d = self._slug_dir(tmp_path)
-        populate_variable_slugs(conn, d, strict=True)
+        populate_variable_slugs(conn, d)
         slugs = conn.execute(
             "SELECT slug FROM variable WHERE provider_key = '44'"
         ).fetchall()
         assert [r[0] for r in slugs] == ["kon"]
 
-    def test_underivable_slug_fails_strict_listing_all(self, tmp_path: Path) -> None:
-        # A delivery column that folds to empty → strict build fails and lists
-        # the offending source ID.
-        conn = self._db(kol="...")  # folds to None
+    def test_underivable_kol_falls_back_to_name(self, tmp_path: Path) -> None:
+        # A delivery column that folds to empty ('...') no longer fails — the
+        # slug derives from the variable name instead.
+        conn = self._db(kol="...", name="Kön")
         d = self._slug_dir(tmp_path)
-        with pytest.raises(RegMetaError) as exc:
-            populate_variable_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_variable_underivable"
-        assert "1.44" in exc.value.message
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "kon"
+
+    def test_ultimate_fallback_when_name_underivable(self, tmp_path: Path) -> None:
+        # Neither kolumnnamn nor name yields a slug (both lead with a digit) →
+        # last-resort v<provider_key>.
+        conn = self._db(kol="3DOMR", name="3D-område")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._stored_slug(conn, 44) == "v44"
+
+    def test_long_name_fallback_is_length_capped(self, tmp_path: Path) -> None:
+        # A generic kolumnnamn forces the name fallback; a very long name is
+        # truncated on a hyphen boundary to a readable leaf.
+        long_name = (
+            "Utgifter för egen FoU efter finansieringskälla EU ramprogram forskning"
+        )
+        conn = self._db(kol="OBS_VALUE", name=long_name)
+        # Second variable sharing OBS_VALUE so the kolumnnamn slug collides.
+        self._add_variable(conn, var_id=88, name="Annat värde", kol="OBS_VALUE")
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        slug = self._stored_slug(conn, 44)
+        assert slug is not None and len(slug) <= 60
+        assert slug.startswith("utgifter-for-egen-fou")
 
     def test_auto_toml_parses_as_provider_scb(self, tmp_path: Path) -> None:
         # The generated scb.auto.toml must load via load_slug_dir as provider
@@ -1242,7 +1276,7 @@ class TestPopulateVariableSlugs:
         d = self._slug_dir(tmp_path)
         # classifications.toml stub so load_slug_dir is happy.
         (d / "classifications.toml").write_text("", encoding="utf-8")
-        populate_variable_slugs(conn, d, strict=True)
+        populate_variable_slugs(conn, d)
         entries = load_slug_dir(d)
         var_entries = [
             e for e in entries if e.kind == "variable" and e.provider == "scb"
@@ -1255,7 +1289,7 @@ class TestPopulateVariableSlugs:
         conn = self._db(kol="Kon")
         d = self._slug_dir(tmp_path)
         (d / "classifications.toml").write_text("", encoding="utf-8")
-        populate_variable_slugs(conn, d, strict=True)
+        populate_variable_slugs(conn, d)
         payload = snapshot_payload(load_slug_dir(d))
         assert payload["variable"].get("scb/1.44") == "kon"
         # A rename of the auto slug is flagged by diff_snapshot.

@@ -17,7 +17,9 @@ import re
 import sqlite3
 import tomllib
 import unicodedata
+from collections import Counter
 from dataclasses import dataclass, field
+from itertools import groupby
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Literal
 
@@ -1084,49 +1086,85 @@ def write_auto_toml(path: Path, provider: str, slugs: dict[str, str]) -> None:
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
-def _latest_delivery_column(conn: sqlite3.Connection, variable_id: int) -> str | None:
-    """The latest `delivery_column_name` across a variable's `variable_state` eras.
+# Length cap for name-fallback slugs (§5.3). kolumnnamn-derived slugs are short;
+# name-derived fallbacks are truncated to a readable FQID leaf on a hyphen
+# boundary. Residual truncation collisions get a numeric suffix via _uniquify.
+_NAME_SLUG_MAX_LEN = 60
 
-    Latest = highest `valid_to`, lexically smallest `delivery_column_name` on
-    ties — matching the coalescer's "latest alias" tie-break (db.py). Reads the
-    coalesced per-era column (not raw `variable_alias`) so it stays correct
-    after A2.7 drops `variable_instance`. Returns ``None`` when the variable has
-    no non-NULL delivery column in any era.
+
+def _name_slug(name: str | None, *, cap: int = _NAME_SLUG_MAX_LEN) -> str | None:
+    """Derive a length-capped variable slug from a variable NAME (§5.3 fallback).
+
+    Used when the kolumnnamn-derived slug is unavailable or not register-unique.
+    Real SCB registers reuse generic delivery columns (`Kolumn1`/`RadNr`/
+    `OBS_VALUE`) across many distinct variables, and ~2k variables carry a
+    numeric/absent kolumnnamn; in those cases the identity lives in the name.
+    Reuses the kolumnnamn fold (NFKD→ASCII→lowercase→hyphenate) then truncates
+    to ``cap`` on a hyphen boundary so the leaf stays readable. Returns ``None``
+    when the name yields nothing slug-shaped (empty / leading-digit / all
+    non-ASCII after fold).
     """
-    row = conn.execute(
-        "SELECT delivery_column_name FROM variable_state "
-        "WHERE variable_id = ? AND delivery_column_name IS NOT NULL "
-        "ORDER BY valid_to DESC, delivery_column_name ASC LIMIT 1",
-        (variable_id,),
-    ).fetchone()
-    return row[0] if row is not None else None
+    base = derive_variable_slug(name)
+    if base is None or len(base) <= cap:
+        return base
+    head = base[:cap]
+    cut = head.rfind("-")
+    if cut > 0:
+        head = head[:cut]
+    return head.strip("-") or None
+
+
+def _uniquify(base: str, used: set[str]) -> str:
+    """Return ``base`` if free in ``used``, else ``base-2`` / ``base-3`` / … .
+
+    Deterministic numeric suffix so first-sight derivation is reproducible.
+    Once a slug is frozen into ``<provider>.auto.toml`` (§5.3 immutability) the
+    suffix is stable — a later-added variable just takes the next free index;
+    existing slugs are read back from the auto file and never recomputed.
+    """
+    if base not in used:
+        return base
+    i = 2
+    while f"{base}-{i}" in used:
+        i += 1
+    return f"{base}-{i}"
+
+
+def _fallback_slug(provider_key: str) -> str:
+    """Last-resort register-unique slug seed when neither kolumnnamn nor name
+    yields one. Prefixes the provider key with ``v`` to satisfy the
+    leading-letter grammar (``v881``); stable because ``provider_key`` is. The
+    caller runs it through :func:`_uniquify` for the rare shared-key case.
+    """
+    return derive_variable_slug(f"v{provider_key}") or "v"
 
 
 def populate_variable_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
-    *,
-    strict: bool = True,
 ) -> dict[str, int]:
-    """Populate `variable.slug` from curated + auto-derived slugs (§5.3).
+    """Populate register-unique `variable.slug` (§5.3) — always succeeds.
 
-    `variable` is register-scoped (the "define once" addressable identity), so
-    each row gets exactly one slug; the natural key `(register_id, slug)` is
-    register-unique (`idx_variable_slug`). Three sources merge with curated >
-    auto precedence:
+    `variable` is register-scoped, so each row gets exactly one slug and the
+    natural key `(register_id, slug)` is register-unique (`idx_variable_slug`).
+    Each first-sight variable's slug comes from a fallback chain, every
+    candidate run through a per-register :func:`_uniquify`, so the build always
+    yields a unique slug without a "curate every collision" gate — real SCB data
+    has generic delivery columns (`Kolumn1`×148, `RadNr`×137, `OBS_VALUE`×121)
+    and ~2k variables with a numeric/absent kolumnnamn, so neither the
+    kolumnnamn alone nor strict manual curation scales:
 
-    - **Curated** `[variable."<reg>.<var>"]` `slug = "..."` in
-      ``<provider>.toml`` — wins.
-    - **Auto** entries already recorded in ``<provider>.auto.toml`` — kept
-      verbatim (never recomputed, so a kolumnnamn rename can't rot a published
-      slug).
-    - **First-sight auto-derive** for variables present in neither file: fold
-      the latest kolumnnamn via :func:`derive_variable_slug`, persist the new
-      `(source_id, slug)` into ``<provider>.auto.toml``.
+    1. **Curated** `[variable."<reg>.<var>"]` slug in ``<provider>.toml`` — wins.
+    2. **Existing auto** slug in ``<provider>.auto.toml`` — kept verbatim
+       (§5.3 immutability: a kolumnnamn/name change can't rot a published slug).
+    3. **kolumnnamn-derived**, when register-unique among first-sight variables
+       (the short, common case: ``kon``).
+    4. **name-derived** (length-capped, :func:`_name_slug`) — when the
+       kolumnnamn slug collides, is generic, or is absent.
+    5. **``v<provider_key>``** last resort.
 
-    ``strict=True`` (real builds) refuses if any variable ends with no slug
-    (`slug_variable_underivable`) and on register-scoped slug collisions
-    (`slug_variable_collision`).
+    The hand-curated override (1) stays the curator's hook to prettify any auto
+    slug. New auto slugs are persisted to ``<provider>.auto.toml``.
 
     Returns ``{"curated": n, "auto_existing": n, "auto_new": n}``.
     """
@@ -1150,8 +1188,17 @@ def populate_variable_slugs(
         if auto_path.is_file():
             auto = _auto_variable_slugs(load_provider_toml(auto_path))
 
+        # variable_state.delivery_column_name is the coalesced per-era column
+        # (not raw variable_alias) — stays correct after A2.7 drops
+        # variable_instance. "Latest" = highest valid_to, lexically smallest on
+        # ties (matches the coalescer tie-break, §5.3). Ordered by register so
+        # the per-register uniqueness scope is one groupby pass.
         variables = conn.execute(
-            "SELECT v.variable_id, v.register_id, v.provider_key "
+            "SELECT v.variable_id, v.register_id, v.provider_key, v.name, "
+            "(SELECT vs.delivery_column_name FROM variable_state vs "
+            " WHERE vs.variable_id = v.variable_id "
+            " AND vs.delivery_column_name IS NOT NULL "
+            " ORDER BY vs.valid_to DESC, vs.delivery_column_name ASC LIMIT 1) AS kol "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1160,62 +1207,54 @@ def populate_variable_slugs(
             (provider_slug,),
         ).fetchall()
 
-        # Register-scoped uniqueness guard: (register_id, slug) -> source_id of
-        # the first claimant (reported on collision; source_id is the
-        # maintainer-actionable identifier, not the synthetic variable_id).
-        seen: dict[tuple[int, str], str] = {}
-        # Variables whose kolumnnamn fold to None — collected for one actionable
-        # strict-mode error listing ALL offenders (not just the first 5).
-        unslugged: list[tuple[str, str | None]] = []
         auto_dirty = False
+        # The build connection yields plain tuples (not sqlite3.Row), so unpack
+        # positionally: (variable_id, register_id, provider_key, name, kol).
+        for register_id, group in groupby(variables, key=lambda row: row[1]):
+            used: set[str] = set()
+            pending: list[tuple[int, str, str | None, str | None]] = []
 
-        for variable_id, register_id, provider_key in variables:
-            source_id = f"{register_id}.{provider_key}"
-            curated_slug = curated.get((provider_slug, source_id))
-            if curated_slug is not None:
-                slug = curated_slug
-                counts["curated"] += 1
-            elif source_id in auto:
-                # Never recompute an existing auto slug (§5.3 immutability).
-                slug = auto[source_id]
-                counts["auto_existing"] += 1
-            else:
-                kol = _latest_delivery_column(conn, variable_id)
-                slug = derive_variable_slug(kol)
-                if slug is None:
-                    unslugged.append((source_id, kol))
-                    continue
-                auto[source_id] = slug
+            # Pass 1: curated + existing-auto slugs are fixed — assign and
+            # reserve them so first-sight derivation can't collide with them.
+            for variable_id, _reg, provider_key, name, kol in group:
+                source_id = f"{register_id}.{provider_key}"
+                curated_slug = curated.get((provider_slug, source_id))
+                if curated_slug is not None:
+                    fixed, kind = curated_slug, "curated"
+                else:
+                    fixed, kind = auto.get(source_id), "auto_existing"
+                if fixed is not None:
+                    conn.execute(
+                        "UPDATE variable SET slug = ? WHERE variable_id = ?",
+                        (fixed, variable_id),
+                    )
+                    used.add(fixed)
+                    counts[kind] += 1
+                else:
+                    pending.append((variable_id, provider_key, name, kol))
+
+            # Pass 2: kolumnnamn-slug frequency among first-sight variables only.
+            # A kol slug is usable directly only if exactly one pending variable
+            # derives it and it isn't already taken by a curated/auto slug.
+            kol_slug = {vid: derive_variable_slug(k) for vid, _pk, _nm, k in pending}
+            kol_freq = Counter(s for s in kol_slug.values() if s is not None)
+
+            # Pass 3: assign first-sight slugs via the fallback chain.
+            for variable_id, provider_key, name, _kol in pending:
+                ks = kol_slug[variable_id]
+                if ks is not None and kol_freq[ks] == 1 and ks not in used:
+                    base = ks
+                else:
+                    base = _name_slug(name) or ks or _fallback_slug(provider_key)
+                slug = _uniquify(base, used)
+                conn.execute(
+                    "UPDATE variable SET slug = ? WHERE variable_id = ?",
+                    (slug, variable_id),
+                )
+                used.add(slug)
+                auto[f"{register_id}.{provider_key}"] = slug
                 auto_dirty = True
                 counts["auto_new"] += 1
-
-            collision = seen.get((register_id, slug))
-            if collision is not None:
-                raise _err(
-                    "slug_variable_collision",
-                    f"{provider_slug}: variable slug {slug!r} is claimed by both "
-                    f"{collision} and {source_id} under register {register_id} — "
-                    f"variable slugs must be unique per register (§5.3).",
-                    f'Add a curated `[variable."{source_id}"]` override in '
-                    f"{provider_slug}.toml to disambiguate one of them.",
-                )
-            seen[(register_id, slug)] = source_id
-
-            conn.execute(
-                "UPDATE variable SET slug = ? WHERE variable_id = ?",
-                (slug, variable_id),
-            )
-
-        if strict and unslugged:
-            sample = "; ".join(f"{sid} (kolumnnamn {kol!r})" for sid, kol in unslugged)
-            raise _err(
-                "slug_variable_underivable",
-                f"{len(unslugged)} variable(s) under provider {provider_slug!r} "
-                f"have no derivable slug: their latest kolumnnamn folds to empty "
-                f"/ reserved / period. {sample}.",
-                f'Add curated `[variable."<RegisterId>.<VarID>"]` slug entries '
-                f"in {provider_slug}.toml for each.",
-            )
 
         if auto_dirty:
             write_auto_toml(auto_path, provider_slug, auto)

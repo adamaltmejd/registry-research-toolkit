@@ -2559,7 +2559,7 @@ def build_db(
             # but before materialize_same_as_edges (which reads the stored slug
             # via _variable_source_slug). Curated `[variable]` overrides in
             # scb.toml win; the rest auto-derive into scb.auto.toml.
-            var_slug_counts = populate_variable_slugs(conn, slug_root, strict=True)
+            var_slug_counts = populate_variable_slugs(conn, slug_root)
             row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
             row_counts["variable_slugs_auto"] = (
                 var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
