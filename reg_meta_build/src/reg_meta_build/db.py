@@ -1681,29 +1681,27 @@ def _apply_fold(
     orig_vid: int,
     res: _TriageResult,
 ) -> None:
-    """FOLD: one variable, overlapping states discriminated by a
-    value_set_version_label token. Slug derives from the shared stem."""
+    """FOLD: keep ONE variable; its states stay overlapping, discriminated by
+    `value_set_version_label`. A state with a grain token or a non-empty source
+    label already has the right discriminator and is **preserved verbatim** by
+    `_collapse_residual` (slugifying a meaningful source version like
+    `Fabrikat personbilar 2019` into an opaque token would destroy the
+    version semantics the resolver needs). Only a state with NEITHER gets a
+    column-suffix token here, so genuinely-different columns folded together
+    (`Ssyk3`/`Ssyk5`, empty source label) don't collide. `_collapse_residual`
+    handles any residual same-label collision. The slug derives from the stem."""
     stem_len = _common_prefix_len(folded)
-    used_tokens: set[str] = set()
     for col in named_cols:
         fcol = _ascii_fold_lower(col)
-        suffix = fcol[stem_len:].strip("-_") or fcol
-        for i, gk in enumerate(by_col[col]):
+        suffix = re.sub(r"[^a-z0-9]+", "-", fcol[stem_len:]).strip("-") or re.sub(
+            r"[^a-z0-9]+", "-", fcol
+        ).strip("-")
+        for gk in by_col[col]:
             grp = groups[gk]
-            token = (
-                _fold_token_from_grain(gk[7])  # grain (gkey position 7)
-                or (grp.value_set_version_label or "")
-                or suffix
-            )
-            token = re.sub(r"[^a-z0-9]+", "-", token.lower()).strip("-") or suffix
-            # Disambiguate within the variable so folded states don't recollide.
-            base = token
-            j = 0
-            while token in used_tokens:
-                j += 1
-                token = f"{base}-{j}"
-            used_tokens.add(token)
-            res.labels[gk] = token
+            if not _fold_token_from_grain(gk[7]) and not (
+                grp.value_set_version_label or ""
+            ):
+                res.labels[gk] = suffix
     # Fold slug hint: the shared stem. Validate through derive_variable_slug so
     # a digit-leading / all-digit / reserved stem (`2501`/`2502` → `250`) is
     # rejected (returns None) and populate_variable_slugs falls back to its
