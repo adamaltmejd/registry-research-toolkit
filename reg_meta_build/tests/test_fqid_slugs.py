@@ -1202,6 +1202,19 @@ class TestPopulateVariableSlugs:
         populate_variable_slugs(conn, d)  # must not raise
         assert self._stored_slug(conn, 44) == "kon"
 
+    def test_curated_override_reusing_auto_slug_rejected(self, tmp_path: Path) -> None:
+        # A curated override must not reuse a slug frozen for a DIFFERENT source
+        # in auto.toml — it would duplicate a published FQID (or hit UNIQUE).
+        conn = self._db(kol="Kon")  # live var 44
+        d = self._slug_dir(tmp_path, '[variable."1.44"]\nslug = "ghost"\n')
+        # "ghost" is already frozen for a different (pruned) source 1.999.
+        (d / f"scb{AUTO_FILE_SUFFIX}").write_text(
+            '[variable."1.999"]\nslug = "ghost"\n', encoding="utf-8"
+        )
+        with pytest.raises(RegMetaError) as exc:
+            populate_variable_slugs(conn, d)
+        assert exc.value.code == "slug_variable_override_conflict"
+
     def test_existing_auto_not_recomputed_on_rename(self, tmp_path: Path) -> None:
         # First build: auto-derives `kon` from `Kon`, persists to .auto.toml.
         conn = self._db(kol="Kon")

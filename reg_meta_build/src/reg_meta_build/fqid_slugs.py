@@ -1247,6 +1247,22 @@ def populate_variable_slugs(
                 if curated_slug is not None:
                     fixed, kind = curated_slug, "curated"
                     applied_curated.add((provider_slug, source_id))
+                    # A curated override must not reuse a slug already reserved
+                    # for a DIFFERENT source in this register — a frozen
+                    # auto.toml slug (§5.4 immutability) or another row assigned
+                    # above. Re-taking the variable's own prior auto slug is
+                    # fine. Without this it falls through to a raw
+                    # UNIQUE(register_id, slug) failure (live other source) or
+                    # silently duplicates a retired published FQID (pruned one).
+                    if fixed in used and fixed != auto.get(source_id):
+                        raise _err(
+                            "slug_variable_override_conflict",
+                            f'{provider_slug}.toml: [variable."{source_id}"] slug '
+                            f"{fixed!r} is already reserved by another variable "
+                            f"in register {register_id} (a frozen auto slug or "
+                            f"another curated row).",
+                            "Choose a register-unique slug for the override.",
+                        )
                 else:
                     fixed, kind = auto.get(source_id), "auto_existing"
                 if fixed is not None:
