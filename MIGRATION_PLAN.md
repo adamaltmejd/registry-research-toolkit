@@ -192,6 +192,18 @@ the slug *freeze* — commit the generated `scb.auto.toml` (42,768 entries) and
 refresh `.snapshot.json` — deferred pre-v1 (`UNFROZEN`; slugs are regenerable
 from source, so the freeze only pins them against future input changes).
 
+**Follow-up — hand-curate the name-fallbacks (before the v1 freeze).** ~7,000
+variables fell past the clean unique-kolumnnamn case (4,683 collision-involved +
+2,363 underivable) and carry machine-derived slugs: capped/truncated variable
+names, `-2`/`-3` disambiguators, or `v<provider_key>` last-resorts. They are
+correct and register-unique, but often not canonical — and they are the FQID
+leaves researchers cite, frozen for good at v1. They need a hand-curation pass
+(`[variable."<reg>.<var>"]` overrides in `scb.toml`, which win over auto),
+ideally **before the v1 slug freeze** so the frozen leaves are the curated
+forms. To scope it, the build should emit the name-fallback subset as a worklist
+— `scb.auto.toml` does not yet record derivation source (unique-kolumnnamn vs
+name vs last-resort); adding that marker is part of this follow-up.
+
 - **Promote `variable` in place** (it keeps its name — it is already the register-scoped `variable` table on `main`; this is not a rename). Add the synthetic `variable_id AUTOINCREMENT` PK (DECISION POINT 1) and a register-unique `slug`. The A1.2 sensitivity flags (`is_sensitive`, `is_identifier`) and the shared-metadata columns (`name`, `definition`, `description`, `measurement_unit`, `source_register_id`, `source_register_text`) ride along unchanged — same grain, pure column add.
 - **Natural key = `(register_id, slug)`** UNIQUE (the FQID leaf; §5.1 DDL). Add the `slug` column (register-unique). **`provider_key` (the old `var_id` / SOS name) is a NON-unique join hint** — a plain index, *not* UNIQUE — because A2.2's triage splits put several variables under one source key (maintainer red-line on DP1). The build's source-row → variable join refines `provider_key` by the triage discriminator when a split exists (§5.7), 1:1 otherwise.
 - **Re-parent `variable_state`** from FK `(register_id, var_id)` to FK `variable_id` → `variable`, and **add an explicit `register_variant_id` coordinate** (FK → `register_variant`). `value_set_version_label` becomes `NOT NULL DEFAULT ''` (the coalescer coalesces NULL → ''). **The §5.1 state-uniqueness index `(variable_id, register_variant_id, valid_from, value_set_version_label)` is NOT added here** — `_coalesce_variable_states` emits one *pre-triage* row per shape group, so a same-year variable with multiple grains / codings (groups differing on `data_type` / `value_set_id` / `grain`, all carrying `value_set_version_label = ''`) produces rows that share that 4-tuple and would collide. The invariant only holds *after* A2.2 folds them (→ `value_set_version_label`-discriminated states) or splits them (→ distinct `variable_id`s), so the unique index lands in **A2.2**. The `''` default is set here so the index bites once added.
