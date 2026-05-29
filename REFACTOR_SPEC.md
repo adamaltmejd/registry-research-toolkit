@@ -2207,12 +2207,19 @@ Descriptive; the schema-level changes land in §6. Headline points:
   panel-level or member-level values override. The default is "this
   variant's natural panel structure" — researchers don't repeat
   themselves for the common case.
-- `value_set_version` strings (`Kon@2023`, `SUN@2020`) are replaced by:
-  - For classifications: a `class/<...>` FQID (version baked in slug).
+- `value_set_version` is no longer a **mandatory** per-binding string
+  (the v0.x `Kon@2023`, `SUN@2020` form). Value-set version is carried by:
+  - For classifications: a `class/<...>` FQID (version baked in slug),
+    referenced by the binding's `value_set`.
   - For ad-hoc value sets: inline codes in `project_data.codes.json`
     under `sources[source.name][binding_fqid]` (§6.6) — no synthetic
     value-set ID needed; period-varying ad-hoc sets stay independent
     across sources.
+  - **When multiple versions co-exist in one period** (crosswalk era;
+    §5.7 fold), the binding FQID's *optional* `@<value-set-version>`
+    suffix (§5.2; `scb/lisa/naringsgren@sni2007`) disambiguates — the
+    `@` form returns, but only as a pin used when a bare FQID would be
+    ambiguous, not as a mandatory field on every binding.
 - The LISA composite-source gap is resolved at the data layer via
   `variable_state_lineage` (§5.6). UI presentation question (how to
   surface RTB/IoT lineage when browsing under LISA) is §9 webapp work.
@@ -2592,7 +2599,7 @@ the enclosing Source's `register_variant` (§6.2).
 
 | Field             | Type           | Required | Description |
 |-------------------|----------------|:--------:|-------------|
-| `variable`        | string (FQID)  | yes | Binding FQID: `<provider>/<register>/<slug>` (3 segments, §5.2). The `provider/register` prefix (first 2 segments) must equal the source's `register_variant` prefix. The variant is **not** repeated here — it lives once on the Source (§6.2). |
+| `variable`        | string (FQID)  | yes | Binding FQID: `<provider>/<register>/<slug>` (3 segments, §5.2), optionally suffixed `@<value-set-version>` to pin one of several value-set versions co-delivered in the bound period (§5.2; e.g. `scb/lisa/naringsgren@sni2007`). The `provider/register` prefix (first 2 segments) must equal the source's `register_variant` prefix. The variant is **not** repeated here — it lives once on the Source (§6.2). |
 | `display_name`    | string         | no  | Actual column header in the delivered data. Optional in the schema because at authoring time the value is just an echo of reg_meta's `variable_alias.delivery_column_name` for the binding's state at the source's `(register_variant, period)` — when absent, **reg_meta-backed consumers** (webapp, kit-build, semantic validator) resolve the default from reg_meta. Becomes meaningfully distinct from the default at realign time (§7) when project prefixes are applied (e.g. `PersonNr` → `LopNr_PersonNr` → `P1105_LopNr_PersonNr`) or at order time when a user renames a column. Steward catalogs (§9.1) typically omit it. Reg_meta-free consumers (the bundle on MONA, `reg-mockdata` against a kit) **never** see unresolved `display_name`: bundle build (§7) and kit build (§8) materialize defaults from reg_meta before emitting their artifacts. |
 | `type`            | enum           | yes | One of `id`, `categorical`, `numeric`, `date`, `datetime`, `opaque`. |
 | `id_subtype`      | enum           | no  | For `id` type: `integer` or `string`. Auto-detected from the data when omitted. |
@@ -2623,6 +2630,25 @@ alphabetical on the alias string is the final deterministic tie-break.
 This is a query rule, not a schema rule — it lives in `reg_meta`'s
 `Catalog.resolve_at(fqid, period, variant=…)` and is what every
 reg_meta-backed consumer ends up calling when `display_name` is absent.
+
+**Value-set version selection (folded variables).** The alias tie-break
+above picks the `display_name` *within one state*. A separate question
+arises when §5.7 *folds* multiple value-set versions of a variable into
+overlapping states (a classification vintage co-delivered with its
+successor — SNI92 alongside SNI2007 in a transition year): now several
+states match the binding's `(variant, period)`, and they carry **different
+codings**, not just different headers. The binding selects among them with
+the optional `@<value-set-version>` FQID suffix (§5.2): `…/naringsgren@sni2007`
+resolves to the SNI2007 state. A **bare** binding is valid only when the
+`(variant, period)` has **one** value-set version; if it resolves to more
+than one, that is a `binding_value_set_version_ambiguous` error (§6.8) —
+**not** a tie-break pick, because picking the wrong coding silently would
+corrupt the extract. So the alphabetical/most-recent tie-break never
+chooses between *codings*; it only ever disambiguates *headers* within a
+single chosen state. To order both codings (a crosswalk), the author writes
+two bindings — `…@sni92` and `…@sni2007` — which are distinct FQIDs and
+therefore distinct `codes.json` / `binding_options` keys (§6.6), with
+distinct `display_name`s for the two output columns.
 
 **Identifier columns and the `LopNr_` prefix.** For variables flagged
 `is_identifier=true` in reg_meta (§5.8), SCB pseudonymizes at
@@ -2873,10 +2899,11 @@ respective packages the same way.
 ```
 
 `binding_options[<binding_fqid>]` is a dict of per-binding tunables,
-keyed by the binding's FQID (§5.2). Survives realign renames
-automatically — the binding FQID is immutable; `display_name` is
-not, so keying by display_name would silently drop overrides on
-rename. Known keys:
+keyed by the binding's FQID (§5.2) — including any `@<value-set-version>`
+suffix, so two co-delivered versions of one variable key distinctly.
+Survives realign renames automatically — the binding FQID is immutable;
+`display_name` is not, so keying by display_name would silently drop
+overrides on rename. Known keys:
 
 - `suppress_k` (int) — disclosure-control threshold for this binding's
   frequency table. **Raise-only**: at runtime the effective value
@@ -2923,7 +2950,10 @@ list:
   the binding's `value_set` field is absent (ad-hoc codes, not part
   of a named classification). One entry per `(source, binding)`
   pair; period-varying codes naturally split across sources because
-  each source carries its own `period`.
+  each source carries its own `period`. The binding FQID key includes
+  any `@<value-set-version>` suffix (§5.2), so a variable bound in two
+  co-delivered versions (`…@sni92`, `…@sni2007`) occupies two distinct
+  keys — no collision.
 
 ```json
 {
