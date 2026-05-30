@@ -9,6 +9,8 @@ classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
 
 from __future__ import annotations
 
+import sqlite3
+
 import pytest
 from reg_monabundle.runtime.classify import (
     DATE_FORMATS,
@@ -428,6 +430,68 @@ def test_reg_meta_lookup_relevant_years_none_keeps_full_counts():
     sig = _reg_meta_lookup(conn, {"lkf"}, [34])["lkf"]
     assert sig.n_classifications == 2
     assert sig.n_value_sets == 2
+
+
+def _real_reg_meta_db() -> sqlite3.Connection:
+    """A minimal SHIPPED-shape reg_meta DB for the tables `_reg_meta_lookup`
+    joins. Uses a real `sqlite3` connection (the MONA runtime's stdlib backend)
+    so the SQL JOIN — including the `register_variant_id` scoping — actually
+    runs; the `_FakeConn` fixture returns canned rows and can't exercise it."""
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        "CREATE TABLE variable (variable_id INTEGER PRIMARY KEY, register_id INTEGER);"
+        "CREATE TABLE variable_alias ("
+        "  variable_id INTEGER, register_variant_id INTEGER, delivery_column_name TEXT);"
+        "CREATE TABLE variable_state ("
+        "  variable_id INTEGER, register_variant_id INTEGER, data_type TEXT, "
+        "  value_set_id INTEGER, valid_from TEXT, classification_id INTEGER);"
+        "CREATE TABLE classification (id INTEGER PRIMARY KEY, short_name TEXT);"
+    )
+    return conn
+
+
+def test_reg_meta_lookup_multi_variant_vote_not_inflated():
+    """PR #149: the `variable_alias`→`variable_state` join must be scoped by
+    `register_variant_id`, not `variable_id` alone — else the classification
+    badge for a column counts states from OTHER variants/columns of the same
+    variable, flipping `most_common(1)`.
+
+    Geometry: variable 1 delivers column `kon` under variant 10 ONLY (1 era,
+    GenderA), and a DIFFERENT column `pnr` under variant 11 (2 eras, both
+    GenderB). Querying `kon`:
+
+    - Pre-fix (`variable_id`-only join): the `kon` alias (variant 10) cross-joins
+      ALL 3 states of the variable — the GenderA@10 era AND both GenderB@11 eras
+      — so the badge is GenderB (2 > 1). WRONG: those GenderB eras belong to a
+      different column.
+    - Scoped (`+ register_variant_id`): the `kon`@10 alias matches only the
+      GenderA@10 era → badge GenderA, and `n_classifications` is 1 (the column's
+      own family), not 2."""
+    conn = _real_reg_meta_db()
+    conn.execute("INSERT INTO variable VALUES (1, 34)")
+    conn.execute("INSERT INTO classification VALUES (100, 'GenderA')")
+    conn.execute("INSERT INTO classification VALUES (200, 'GenderB')")
+    # `kon` is delivered under variant 10 only; `pnr` under variant 11.
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'Kon')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 11, 'PNr')")
+    # Variant 10 era → GenderA (the `kon` column's real family).
+    conn.execute(
+        "INSERT INTO variable_state VALUES (1, 10, 'int', NULL, '2020-01-01', 100)"
+    )
+    # Variant 11 eras → GenderB ×2 (the `pnr` column — must NOT vote for `kon`).
+    conn.execute(
+        "INSERT INTO variable_state VALUES (1, 11, 'int', NULL, '2020-01-01', 200)"
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES (1, 11, 'int', NULL, '2021-01-01', 200)"
+    )
+    conn.commit()
+
+    sig = _reg_meta_lookup(conn, {"Kon"}, [34])["kon"]
+    assert sig.classification_short_name == "GenderA"
+    # Only the `kon`@10 family — the GenderB@11 eras are scoped out.
+    assert sig.n_classifications == 1
 
 
 # -- _validate_discover_payload -------------------------------------------

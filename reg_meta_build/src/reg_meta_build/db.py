@@ -448,10 +448,12 @@ CREATE INDEX idx_variable_state_classification
 -- seeds the cvid-grained rows during import, then RE-PARENTS onto
 -- `variable_id` + `register_variant_id` (`_reparent_variable_alias`) right
 -- before `DROP TABLE variable_instance`, so the cvid FK never dangles. A
--- post-A2.2 `var_id` can be non-unique (split siblings share it), so an alias
--- whose cvid can't be attributed to a specific sibling attaches to all siblings
--- sharing the key — acceptable for alias *search/history* recall (the only
--- consumers); it does not feed resolution (the resolver reads `variable_state`).
+-- post-A2.2 `var_id` can be non-unique (split siblings share it), so the
+-- re-parent COLUMN-TIES each cvid's alias to the specific sibling its delivery
+-- column resolves to (via `variable_state`) — each sibling surfaces only its
+-- own columns in `get_datacolumns`. A cvid unattributable to a single sibling
+-- is skipped (skip-not-guess). It does not feed resolution (the resolver reads
+-- `variable_state`).
 CREATE TABLE variable_alias (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     -- The delivering variant. Lets `get_datacolumns` group columns per variant
@@ -1292,7 +1294,10 @@ def _import_registerinformation(
         "register_version": len(versions),
         "variable": len(variables),
         "variable_instance": len(instances),
-        "variable_alias": len(aliases),
+        # A2.7: these rows land in the cvid-grained `variable_alias_build` staging
+        # (re-parented onto `variable_alias` later by `_reparent_variable_alias`),
+        # NOT the shipped `variable_alias` — label by the table actually written.
+        "variable_alias_build": len(aliases),
         "population": len(populations),
         "object_type": len(object_types),
     }
@@ -3403,26 +3408,119 @@ def _reparent_variable_alias(conn: sqlite3.Connection) -> None:
     which the coalesced `variable_state.delivery_column_name` (latest era only)
     can't supply.
 
-    Post-A2.2 a `var_id` can be NON-unique (split siblings share one
-    `provider_key`), so an alias attaches to every sibling sharing the key. That
-    is acceptable for alias *search / history* recall (the only consumers); it
-    does not feed resolution (the resolver reads `variable_state`). `DISTINCT`
-    collapses the fan-out into the `(variable_id, register_variant_id,
-    delivery_column_name)` PK.
+    Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
+    siblings share one `provider_key`), so the bare `(register_id, provider_key)`
+    join fans a cvid's column onto EVERY sibling — wrong per-sibling precision
+    (the 169-sibling `hut/Imputerat` split would make `get_datacolumns(any
+    sibling)` return all 169 columns). Column-tie instead, mirroring the §5.7
+    cvid disambiguation `_materialize_replaced_by_edges` uses: build
+    `(register_id, var_id, delivery_column) -> variable_id` from `variable_state`
+    for ambiguous keys (the coalescer copies each sibling's delivery column into
+    `variable_state.delivery_column_name`), then resolve each cvid's alias columns
+    to a single sibling. A cvid's aliases share one §5.7 column component → one
+    sibling, so resolving ANY alias suffices; require a singleton (skip-not-guess
+    on a heuristic regression). Non-split var_ids are 1:1, so they take the plain
+    provider_key join.
     """
     _progress("Re-parenting variable_alias onto variable_id...")
-    conn.execute(
+
+    # (register_id, var_id) -> variable_id, and the ambiguous (split) subset.
+    vid_by_key: dict[tuple[int, int], int] = {}
+    ambiguous: set[tuple[int, int]] = set()
+    for register_id, provider_key, variable_id in conn.execute(
+        "SELECT register_id, provider_key, variable_id FROM variable"
+    ):
+        try:
+            var_id = int(provider_key)
+        except (TypeError, ValueError):
+            continue  # SOS merged-name keys carry no integer var_id
+        key = (register_id, var_id)
+        if key in vid_by_key:
+            ambiguous.add(key)
+        else:
+            vid_by_key[key] = variable_id
+
+    # Column -> sibling variable_id, ONLY for split keys (kept small). Same
+    # disjoint-column invariant + collision poison as the replaced_by resolver:
+    # a column mapping to two different siblings can no longer disambiguate, so
+    # drop it and let that cvid skip rather than silently take the last sibling.
+    variable_by_column: dict[tuple[int, int, str], int] = {}
+    column_collisions: set[tuple[int, int, str]] = set()
+    if ambiguous:
+        for register_id, provider_key, variable_id, col in conn.execute(
+            "SELECT v.register_id, v.provider_key, v.variable_id, "
+            "       vs.delivery_column_name "
+            "FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE vs.delivery_column_name IS NOT NULL"
+        ):
+            try:
+                var_id = int(provider_key)
+            except (TypeError, ValueError):
+                continue
+            if (register_id, var_id) not in ambiguous:
+                continue
+            ckey = (register_id, var_id, col)
+            if variable_by_column.get(ckey, variable_id) != variable_id:
+                column_collisions.add(ckey)
+            variable_by_column[ckey] = variable_id
+        for ckey in column_collisions:
+            del variable_by_column[ckey]
+
+    # cvid -> (register_id, var_id, register_variant_id) for every cvid that
+    # carries an alias, plus that cvid's alias columns.
+    cvid_key: dict[int, tuple[int, int, int]] = {}
+    cvid_cols: dict[int, set[str]] = {}
+    for cvid, register_id, var_id, rvid in conn.execute(
+        "SELECT cvid, register_id, var_id, register_variant_id FROM variable_instance"
+    ):
+        cvid_key[cvid] = (register_id, var_id, rvid)
+    for cvid, col in conn.execute(
+        "SELECT cvid, delivery_column_name FROM variable_alias_build"
+    ):
+        cvid_cols.setdefault(cvid, set()).add(col)
+
+    rows: list[tuple[int, int, str]] = []
+    n_skipped = 0
+    for cvid, cols in cvid_cols.items():
+        key3 = cvid_key.get(cvid)
+        if key3 is None:
+            continue  # alias-build row whose cvid lost its variable_instance row
+        register_id, var_id, rvid = key3
+        key = (register_id, var_id)
+        if key not in ambiguous:
+            # 1:1 with provider_key — every alias attaches to the lone variable.
+            variable_id = vid_by_key.get(key)
+            if variable_id is None:
+                continue
+            for col in cols:
+                rows.append((variable_id, rvid, col))
+            continue
+        # Split: resolve the cvid's alias columns to its sibling. The cvid's
+        # columns share one §5.7 component → one sibling; a singleton confirms it.
+        siblings = {
+            variable_by_column[(register_id, var_id, col)]
+            for col in cols
+            if (register_id, var_id, col) in variable_by_column
+        }
+        if len(siblings) != 1:
+            n_skipped += 1
+            continue
+        variable_id = next(iter(siblings))
+        for col in cols:
+            rows.append((variable_id, rvid, col))
+
+    conn.executemany(
         "INSERT OR IGNORE INTO variable_alias "
         "    (variable_id, register_variant_id, delivery_column_name) "
-        "SELECT DISTINCT v.variable_id, vi.register_variant_id, "
-        "       vab.delivery_column_name "
-        "FROM variable_alias_build vab "
-        "JOIN variable_instance vi ON vab.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id "
-        "    AND CAST(vi.var_id AS TEXT) = v.provider_key"
+        "VALUES (?, ?, ?)",
+        rows,
     )
     n = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
-    _progress(f"  {n:,} variable_alias rows (variable_id-grained)")
+    msg = f"  {n:,} variable_alias rows (variable_id-grained)"
+    if n_skipped:
+        msg += f"; {n_skipped:,} cvids unattributable to a split sibling (skipped)"
+    _progress(msg)
 
 
 def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
@@ -3440,14 +3538,24 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     over `value_set_version_label` (the design's secondary signal) because the
     fold logic overwrites the label with a synthetic column-suffix token for
     states that never carried a classification; the value-set link is immune to
-    that. Code-less states (NULL `value_set_id`) legitimately have no
-    classification → left NULL.
+    that.
 
-    `ORDER BY vi.classification_id LIMIT 1` makes the pick build-stable. The
-    correlated set *should* be single-valued (same value_set_id ⇒ identical
-    content-hashed codes ⇒ same `populate_classifications` derivation), so the
-    ORDER BY is defensive, not load-bearing; but a bare `LIMIT 1` would be
-    formally non-deterministic if that invariant ever broke (PR-review NIT).
+    The correlated set is NOT necessarily single-valued: `populate_classifications`
+    tags `variable_instance.classification_id` by `value_set_version_label`, so
+    cvids sharing a `(variable_id, value_set_id)` but carrying DIFFERENT version
+    labels can resolve to different classifications. `ORDER BY
+    vi.classification_id LIMIT 1` is therefore LOAD-BEARING for determinism (not
+    merely defensive) — it picks the lowest-id classification stably; a bare
+    `LIMIT 1` would be formally non-deterministic. It's a deterministic
+    tie-break, not a claim of correctness when the labels genuinely disagree
+    (rare in the SCB corpus; a full per-label split would need the state grain
+    to carry the label, which §5.7's residual collapse already discriminates).
+
+    Code-less states (NULL `value_set_id`) are NOT guaranteed to stay NULL: `NULL
+    IS NULL` matches in the correlated subquery, so a code-less state still adopts
+    a classification if its constituent cvids carry one (a version-label-tagged
+    family with no value codes). They're left NULL only when no constituent cvid
+    was classified.
     """
     _progress("Backfilling variable_state.classification_id...")
     conn.execute(

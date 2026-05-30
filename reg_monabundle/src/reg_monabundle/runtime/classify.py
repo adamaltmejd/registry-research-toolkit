@@ -401,6 +401,14 @@ def _reg_meta_lookup(
     # year signal (was register_version.registerversionnamn). `var_id` is the
     # variable's `provider_key`. A column is matched via `variable_alias`, then
     # the variable's states supply data_type / classification / value_set / year.
+    #
+    # The `variable_state` join is scoped by `register_variant_id` too, NOT
+    # `variable_id` alone: a column delivered under K register_variants would
+    # otherwise pull in all K variants' states, multiplying every classification's
+    # vote in `short_name_counts_all` by K and possibly flipping the
+    # `most_common(1)` badge (PR #149). Scoping to the alias's own variant keeps
+    # one vote per (column, variant, era) — the per-cvid-variant scoping the
+    # cvid-keyed `variable_alias` had before A2.7.
     sql = (
         "SELECT LOWER(va.delivery_column_name) AS lower_name, "
         "       vs.data_type AS data_type, "
@@ -410,6 +418,7 @@ def _reg_meta_lookup(
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "    AND vs.register_variant_id = va.register_variant_id "
         "LEFT JOIN classification c ON vs.classification_id = c.id "
         f"WHERE LOWER(va.delivery_column_name) IN ({col_placeholders}) "
         f"  AND v.register_id IN ({reg_placeholders})"

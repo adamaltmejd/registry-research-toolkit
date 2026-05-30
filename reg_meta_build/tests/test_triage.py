@@ -139,6 +139,47 @@ class TestSplit:
         assert cols == ["Hemkommun", "Skolkommun"]
         assert len(vids) == 2, "each disjoint column resolves to its own sibling"
 
+    def test_alias_column_ties_to_owning_sibling(self, tmp_path: Path) -> None:
+        # A2.7 reparent precision (PR #149 P1): each split sibling's
+        # `variable_alias` (the source `get_datacolumns` reads, filtered by
+        # `variable_id`) must carry ONLY that sibling's delivery column — NOT
+        # every column sharing the non-unique `(register_id, provider_key)`.
+        # Pre-fix the bare provider_key join fanned each cvid's column onto all
+        # siblings, so this asserted both columns under each sibling.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(colname="Hemkommun", cvid=9300, var_id=920),
+                _var_row(colname="Skolkommun", cvid=9301, var_id=920),
+            ],
+        )
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = '920' "
+            "ORDER BY variable_id"
+        ).fetchall()
+        assert len(sibs) == 2
+        # Each sibling's alias set == its single owning column (the §5.7 query
+        # `get_datacolumns` runs: SELECT delivery_column_name … WHERE variable_id=?).
+        alias_by_vid = {
+            r["variable_id"]: sorted(
+                a["delivery_column_name"]
+                for a in conn.execute(
+                    "SELECT delivery_column_name FROM variable_alias "
+                    "WHERE variable_id = ?",
+                    (r["variable_id"],),
+                )
+            )
+            for r in sibs
+        }
+        owned_cols = sorted(cols for cols in alias_by_vid.values())
+        assert owned_cols == [["Hemkommun"], ["Skolkommun"]], (
+            f"each sibling must own exactly its column, got {alias_by_vid}"
+        )
+        # Union across siblings preserves full recall (no column lost).
+        all_cols = {c for cols in alias_by_vid.values() for c in cols}
+        assert all_cols == {"Hemkommun", "Skolkommun"}
+
     def test_non_contested_column_gets_own_variable(self, tmp_path: Path) -> None:
         # Hemkommun + Skolkommun collide in 2020 (split). Telefon is delivered
         # ALONE in 2019 (non-contested). Once the var_id is a split container,

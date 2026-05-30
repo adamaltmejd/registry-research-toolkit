@@ -24,6 +24,11 @@ Year projection correctness (two layers):
     guard (the original ArbSokNov 4/5 bug class); the corpus-wide check
     alone would pass a state that wrongly *includes* an out-of-window code.
   - PRAGMA foreign_key_check returns no rows
+  - Freelist fraction < 1% of pages (`_check_operational`): the build drops
+    several large build-only staging tables (`variable_instance`,
+    `variable_alias_build`, `register_version`, …) before ship, so a high
+    freelist count means the post-drop VACUUM didn't reclaim them — staging bloat
+    riding along in the shipped DB.
 
 A2.7: the validator runs on the POST-drop shipped DB (the `pre_rename_hook`),
 so it can no longer read `variable_instance`. Both projection checks resolve a
