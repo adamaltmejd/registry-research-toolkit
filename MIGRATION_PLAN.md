@@ -256,6 +256,7 @@ cannot land in #132.
   - **Classification-family signal inert.** The §5.7 *primary* fold signal needs the `classification` table, which is populated *after* the coalescer runs triage — so triage falls back to the column-stem signal (covers all cited fold examples; misses same-family disjoint-stem folds). Activation = a post-classifications triage/materialize step (`_classification_roots` docstring). The split-skew vs. the spec's ~56/44 is mostly this.
   - **`editions` on the interim instance join** (see the resolver-flip bullet) — discovery only; point resolution is flipped.
   - **Split-sibling slug immutability across column renames** ([#141](https://github.com/adamaltmejd/registry-research-toolkit/issues/141)) — siblings share `provider_key`, so their auto-slug cache key uses a (mutable) column discriminator; #139 keys on the *earliest* column, but a rename of the original column needs rename-tracking (A2.3) or a curator pin. Moot pre-v1 (UNFROZEN); a slug-freeze follow-up.
+  - **`variable_related_to.relation_kind` flattened.** Every split emits the generic `same_definition_different_column`; §5.5/§5.7 also define `code_vs_label_pair` (`Lid`/`LNamn`) and `import_bug_suspect`, which need the code/label-pair + datatype heuristics to detect. Interim flattening (in the allowed set, never the fold-only kind); refined when the split heuristics land (`# TODO(§5.5)` in `_apply_split`).
 
 **Estimate**: 7-10 days. Heuristic refinement + curation backlog + the interim resolver flip (pulled from A2.5).
 

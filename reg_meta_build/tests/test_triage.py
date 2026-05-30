@@ -514,3 +514,93 @@ class TestSplitSiblingSameAsAnchor:
         with pytest.raises(RegMetaError):
             _variable_source_slug(conn, 1, 920, bare)
         conn.close()
+
+
+class TestVariableRelatedToEdges:
+    """Maintainer: the `variable_related_to` materializer (both-direction
+    (N choose 2) edges, FQID endpoints, `note='auto:triage'`, skip-on-missing-slug)
+    is no-op'd under skip_slugs, so cover it directly."""
+
+    @staticmethod
+    def _split_db(tmp_path: Path) -> sqlite3.Connection:
+        ri = list(REGISTERINFORMATION_ROWS) + [
+            _var_row(colname="Hemkommun", cvid=9300, var_id=920),
+            _var_row(colname="Skolkommun", cvid=9301, var_id=920),
+        ]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+        conn.row_factory = sqlite3.Row
+        conn.execute("UPDATE register SET slug = 'testreg' WHERE register_id = 1")
+        return conn
+
+    def test_edges_have_fqid_endpoints_both_directions(self, tmp_path: Path) -> None:
+        from reg_meta_build.db import _materialize_variable_related_to
+
+        conn = self._split_db(tmp_path)
+        prov = conn.execute(
+            "SELECT p.slug FROM provider p JOIN register r ON r.provider_id = "
+            "p.provider_id WHERE r.register_id = 1"
+        ).fetchone()[0]
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 "
+            "AND provider_key = '920' ORDER BY variable_id"
+        ).fetchall()
+        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
+        conn.execute(
+            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
+        )
+        conn.execute(
+            "UPDATE variable SET slug = 'kommun-skol' WHERE variable_id = ?", (b,)
+        )
+        conn.commit()
+
+        n = _materialize_variable_related_to(
+            conn, [(a, b, "same_definition_different_column")]
+        )
+        assert n == 2  # (N choose 2) × both directions
+        rows = conn.execute(
+            "SELECT a_provider, a_register, a_variable, b_provider, b_register, "
+            "b_variable, relation_kind, note FROM variable_related_to"
+        ).fetchall()
+        assert {(r["a_variable"], r["b_variable"]) for r in rows} == {
+            ("kommun-hem", "kommun-skol"),
+            ("kommun-skol", "kommun-hem"),
+        }
+        for r in rows:
+            assert (r["a_provider"], r["a_register"]) == (prov, "testreg")
+            assert (r["b_provider"], r["b_register"]) == (prov, "testreg")
+            assert r["relation_kind"] == "same_definition_different_column"
+            assert r["note"] == "auto:triage"
+        conn.close()
+
+    def test_edge_skipped_when_a_slug_is_missing(self, tmp_path: Path) -> None:
+        from reg_meta_build.db import _materialize_variable_related_to
+
+        conn = self._split_db(tmp_path)
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = 1 "
+            "AND provider_key = '920' ORDER BY variable_id"
+        ).fetchall()
+        a, b = sibs[0]["variable_id"], sibs[1]["variable_id"]
+        # Only one sibling gets a slug; the edge has a NULL endpoint → skipped,
+        # not inserted with a NULL (which would corrupt the FQID).
+        conn.execute(
+            "UPDATE variable SET slug = 'kommun-hem' WHERE variable_id = ?", (a,)
+        )
+        conn.commit()
+        n = _materialize_variable_related_to(
+            conn, [(a, b, "same_definition_different_column")]
+        )
+        assert n == 0
+        assert (
+            conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0
+        )
+        conn.close()

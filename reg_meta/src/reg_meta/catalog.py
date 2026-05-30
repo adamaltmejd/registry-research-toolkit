@@ -482,16 +482,21 @@ class Catalog:
     ) -> sqlite3.Row | None:
         """The variable's `variable_state` covering `period`. `register_variant_id`
         None means any variant (the variable-grain `same_as` path). Year-overlap
-        on the ISO range; deterministic pick when several states co-deliver (a
-        §5.7 multi-vintage fold — interim picks one, A2.5 `resolve_at` lists
-        all). A yearless period (`_default` sentinel) takes the first state."""
+        on the ISO range. When several states co-deliver the period (a §5.7
+        multi-vintage fold — the whole reason states overlap), the interim point
+        resolver returns the **latest-era** state (most recent `valid_from`, then
+        `valid_to`) rather than an arbitrary lexical pick, so the choice is
+        meaningful; A2.5 `resolve_at` lists all and a `@value_set_version` FQID
+        selector (A2.6) narrows to one. A yearless period (`_default`) takes the
+        latest-era state."""
         if register_variant_id is not None:
             rows = self._conn.execute(
                 "SELECT state_id, register_variant_id, data_type, data_length, "
                 "delivery_column_name, value_set_id, value_set_version_label, "
                 "valid_from, valid_to FROM variable_state "
                 "WHERE variable_id = ? AND register_variant_id = ? "
-                "ORDER BY value_set_version_label, state_id",
+                "ORDER BY valid_from DESC, valid_to DESC, value_set_version_label, "
+                "state_id",
                 (variable_id, register_variant_id),
             ).fetchall()
         else:
@@ -499,7 +504,8 @@ class Catalog:
                 "SELECT state_id, register_variant_id, data_type, data_length, "
                 "delivery_column_name, value_set_id, value_set_version_label, "
                 "valid_from, valid_to FROM variable_state WHERE variable_id = ? "
-                "ORDER BY value_set_version_label, register_variant_id, state_id",
+                "ORDER BY valid_from DESC, valid_to DESC, value_set_version_label, "
+                "register_variant_id, state_id",
                 (variable_id,),
             ).fetchall()
         if not rows:

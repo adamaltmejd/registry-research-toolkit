@@ -1770,6 +1770,13 @@ def _apply_split(
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
     # (N choose 2) edges, both directions, between all siblings.
+    # TODO(§5.5): every split currently emits `same_definition_different_column`.
+    # §5.5/§5.7 differentiate the split relation_kind — `code_vs_label_pair`
+    # (`Lid`/`LNamn` — order the code OR the name) and `import_bug_suspect` — but
+    # detecting those needs the code/label-pair + datatype heuristics (see the
+    # old #132 `_looks_like_code_label_pair`). Flattening to the generic kind is
+    # interim (it's in the allowed set and correctly never the fold-only
+    # `same_concept_different_grain`); refine when the split heuristics land.
     for i, a in enumerate(sibling_vids):
         for b in sibling_vids[i + 1 :]:
             res.related_edges.append((a, b, "same_definition_different_column"))
