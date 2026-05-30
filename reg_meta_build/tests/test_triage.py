@@ -19,7 +19,7 @@ from pathlib import Path
 import pytest
 from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
-    _ri_row,
+    _var_row,
     write_scb_input,
 )
 from reg_meta.db import open_db
@@ -33,59 +33,6 @@ from reg_meta_build.db import (
     _TriageResult,
     build_db,
 )
-
-
-def _var_row(
-    *,
-    colname: str,
-    cvid: int,
-    var_id: int,
-    varname: str = "GenericVar",
-    year: str = "2020",
-    regver_id: int = 110,
-    data_type: str = "int",
-    data_length: str = "1",
-) -> str:
-    """A Registerinformation row for register TESTREG (register_id 1, variant
-    register_variant_id 10), varying only the fields triage keys on."""
-    return _ri_row(
-        "TESTREG",
-        "Testregistret",
-        "Testning",
-        "Individer",
-        "Individer",
-        "Alla individer",
-        "Nej",
-        year,
-        f"Version {year}",
-        "",
-        "Godkänd",
-        f"{year}-01-01",
-        f"{year}-12-31",
-        "Hela befolkningen",
-        "Alla personer",
-        "",
-        f"{year}-12-31",
-        "Person",
-        "Fysisk person",
-        varname,
-        "A generic family label",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        colname,
-        data_type,
-        data_length,
-        str(cvid),
-        "1",
-        "10",
-        str(regver_id),
-        str(var_id),
-    )
 
 
 def _build(tmp_path: Path, extra_rows: list[str]) -> sqlite3.Connection:

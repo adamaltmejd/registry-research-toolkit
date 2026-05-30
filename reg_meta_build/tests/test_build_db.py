@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import sqlite3
 from pathlib import Path
 
@@ -12,6 +13,8 @@ from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
     VARDEMANGDER_REAL_ROWS,
     _ri_row,
+    _var_row,
+    timeseries_row,
     write_csv,
     write_scb_input,
 )
@@ -2384,5 +2387,614 @@ class TestVariableStateRenameMidLife:
             # '2024-12-31' (clamped to regver_max because the RenamedName
             # unika row missed the lookup).
             assert row["valid_to"] == "9999-12-31"
+        finally:
+            conn.close()
+
+
+class TestReplacedByEdges:
+    """A2.3: succession edges materialized from `timeseries_event` (§5.5).
+
+    Reworked onto the two-level model: `variable_replaced_by` is **variable
+    grain** — 3-part `(provider, register, variable)` endpoints, no variant —
+    and the variable slot carries the STORED `variable.slug` (A2.1.5 §5.3), not
+    a build-time derivation. `register_replaced_by` / `variant_replaced_by` are
+    unchanged from the original draft.
+
+    Default fixture geometry (`_csv_fixtures.REGISTERINFORMATION_ROWS`), with the
+    stored variable slugs `populate_variable_slugs` assigns:
+      - register 1 = TESTREG ('testreg'), register 2 = OTHERREG ('otherreg')
+      - variant 10 = TESTREG/Individer ('individer'),
+        variant 20 = OTHERREG/Företag ('foretag')
+      - variables: (reg1, var_id 44)→'kon', (reg1, 100)→'testcol',
+        (reg1, 200)→'aaocol', (reg2, 44)→'kon', (reg2, 300)→'uniqcol',
+        (reg2, 301)→'parencol', (reg2, 302)→'extcol'
+      - var_id 44 (Kön) lives in BOTH registers (a cross-register ambiguity
+        case); 100/200 are unique to reg1, 300/301/302 unique to reg2
+      - cvids: 1002 = (reg1, var 100 → 'testcol'); 2002 = (reg2, var 300 →
+        'uniqcol')
+    """
+
+    @staticmethod
+    def _write_slugs(slug_dir: Path) -> None:
+        """Minimal slug TOML for the two fixture registers + variants. Variable
+        slugs auto-derive via `populate_variable_slugs` into scb.auto.toml."""
+        (slug_dir / "scb.toml").write_text(
+            '[register."1"]\nslug = "testreg"\n'
+            '[register."2"]\nslug = "otherreg"\n'
+            '[register_variant."1.10"]\nslug = "individer"\n'
+            '[register_variant."2.20"]\nslug = "foretag"\n',
+            encoding="utf-8",
+        )
+        (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
+
+    @classmethod
+    def _build(
+        cls,
+        tmp_path: Path,
+        timeseries_rows: list[str],
+        registerinformation_rows: list[str] | None = None,
+    ) -> Path:
+        """Build a DB with custom Timeseries.csv rows. Returns the DB path.
+
+        ``registerinformation_rows=None`` uses the standard fixture; pass a
+        custom list (e.g. to inject a §5.7 triage split) to vary the variables.
+        """
+        input_dir = tmp_path / "input"
+        db_dir = tmp_path / "db"
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        write_scb_input(
+            input_dir,
+            registerinformation_rows=registerinformation_rows,
+            timeseries_rows=timeseries_rows,
+        )
+        cls._write_slugs(slug_dir)
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            slug_dir=slug_dir,
+        )
+        return db_dir / "reg_meta.db"
+
+    @staticmethod
+    def _stats(conn: sqlite3.Connection) -> dict[str, int]:
+        """Read the manifest `replaced_by_stats` blob."""
+        row = conn.execute(
+            "SELECT value FROM import_manifest WHERE key = 'replaced_by_stats'"
+        ).fetchone()
+        assert row is not None
+        return json.loads(row["value"])
+
+    def test_register_ersatt_av_emits_register_replaced_by(
+        self, tmp_path: Path
+    ) -> None:
+        """Register-grain Ersatt av → one register_replaced_by row, no
+        variant/variable edges."""
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, "
+                "successor_provider, successor_register, effective_year, note "
+                "FROM register_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "scb",
+                "otherreg",
+                None,
+                "auto:timeseries_event",
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+        finally:
+            conn.close()
+
+    def test_variant_ersatt_av_emits_variant_replaced_by(self, tmp_path: Path) -> None:
+        """RegisterVariant Ersatt av → one variant edge (variant grain keeps
+        its variant endpoints — only the variable grain lost them)."""
+        rows = [timeseries_row(entitet="RegisterVariant", id1="10", id2="20")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, predecessor_variant, "
+                "successor_provider, successor_register, successor_variant, "
+                "effective_year, note FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "individer",
+                "scb",
+                "otherreg",
+                "foretag",
+                None,
+                "auto:timeseries_event",
+            )
+        finally:
+            conn.close()
+
+    def test_variabel_grain_emits_variable_replaced_by(self, tmp_path: Path) -> None:
+        """Variabel (var_id grain) Ersatt av → one 3-part variable edge.
+
+        var_id 100 (TestVar, unique to reg1) → var_id 300 (UniqueVar, unique to
+        reg2). Each resolves to its register-unique variable; the endpoint
+        carries the STORED `variable.slug` ('testcol' / 'uniqcol') and NO
+        variant. (The original draft couldn't use var_id 100 — its two aliases
+        derived to two slugs at build time; A2.1.5 stores one canonical slug, so
+        it now just works.)
+        """
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_provider, predecessor_register, predecessor_variable, "
+                "successor_provider, successor_register, successor_variable, note "
+                "FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "scb",
+                "testreg",
+                "testcol",
+                "scb",
+                "otherreg",
+                "uniqcol",
+                "auto:timeseries_event",
+            )
+        finally:
+            conn.close()
+
+    def test_aktuell_variabel_emits_variable_replaced_by(self, tmp_path: Path) -> None:
+        """AktuellVariabel (cvid grain) → variable_replaced_by, 3-part.
+
+        cvid 1002 (reg1 var 100 → 'testcol') → cvid 2002 (reg2 var 300 →
+        'uniqcol'). Lands the same edge a Variabel 100→300 row would, since both
+        grains resolve to the same register-scoped variable.
+        """
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variable, "
+                "successor_register, successor_variable FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == ("testreg", "testcol", "otherreg", "uniqcol")
+        finally:
+            conn.close()
+
+    def test_variabel_ambiguous_across_registers_skipped(self, tmp_path: Path) -> None:
+        """A bare Variabel var_id appearing in >1 register can't pick a register
+        target, so it's skipped as unresolved (never fails the build). var_id 44
+        (Kön) lives in both TESTREG and OTHERREG.
+
+        Distinct from `n_skipped_ambiguous_variable` (an A2.2 split: one
+        (register, var_id) → several sibling variables), exercised next.
+        """
+        rows = [timeseries_row(entitet="Variabel", id1="44", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_unresolved"] == 1
+            assert stats["n_skipped_ambiguous_variable"] == 0
+        finally:
+            conn.close()
+
+    def test_split_var_id_skipped_as_ambiguous(self, tmp_path: Path) -> None:
+        """A §5.7 triage SPLIT (A2.2, #139) makes one (register, var_id) map to
+        several sibling variables sharing `provider_key`. A bare `Variabel`
+        succession id carries no discriminator, so it can't pick a sibling and
+        is skipped under `n_skipped_ambiguous_variable`, distinct from a plain
+        unresolved id. (The `AktuellVariabel` cvid grain *can* disambiguate via
+        its delivery column — see `test_split_cvid_resolved_via_delivery_column`.)
+
+        Reuses #139's canonical split fixture: Hemkommun + Skolkommun (disjoint
+        column stems) under one var_id → two sibling variables.
+        """
+        # year 2019 is free under variant 10 (the default fixture uses 2020-2022),
+        # so populate_slugs hits no register_version slug collision; both rows
+        # share 2019 → a same-year collision under var_id 920 → split.
+        split_rows = [
+            _var_row(colname="Hemkommun", cvid=9300, var_id=920, year="2019"),
+            _var_row(colname="Skolkommun", cvid=9301, var_id=920, year="2019"),
+        ]
+        # id1=920 is the split var_id (ambiguous); id2=300 resolves cleanly, so
+        # only the predecessor side trips the ambiguity.
+        rows = [timeseries_row(entitet="Variabel", id1="920", id2="300")]
+        db_path = self._build(
+            tmp_path,
+            rows,
+            registerinformation_rows=REGISTERINFORMATION_ROWS + split_rows,
+        )
+        conn = open_db(db_path)
+        try:
+            # Precondition: the split actually fired (2 siblings share '920').
+            sibs = conn.execute(
+                "SELECT COUNT(*) FROM variable "
+                "WHERE register_id = 1 AND provider_key = '920'"
+            ).fetchone()[0]
+            assert sibs == 2, "fixture should produce a §5.7 triage split"
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_ambiguous_variable"] == 1
+            assert stats["n_skipped_unresolved"] == 0
+        finally:
+            conn.close()
+
+    def test_split_cvid_resolved_via_delivery_column(self, tmp_path: Path) -> None:
+        """An `AktuellVariabel` (cvid) succession event over an A2.2-split var_id
+        DOES resolve — unlike the bare `Variabel` id above. The cvid names one
+        instance, and split siblings own disjoint delivery columns, so the cvid's
+        column (`variable_alias`) selects the sibling. No skip; the edge carries
+        that sibling's stored slug.
+
+        Same Hemkommun/Skolkommun split fixture; the succession event uses cvid
+        9300 (the Hemkommun sibling) as predecessor.
+        """
+        split_rows = [
+            _var_row(colname="Hemkommun", cvid=9300, var_id=920, year="2019"),
+            _var_row(colname="Skolkommun", cvid=9301, var_id=920, year="2019"),
+        ]
+        # id1=9300 = the Hemkommun split sibling (cvid); id2=2002 = reg2 var 300
+        # ('uniqcol'), unambiguous.
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="9300", id2="2002")]
+        db_path = self._build(
+            tmp_path,
+            rows,
+            registerinformation_rows=REGISTERINFORMATION_ROWS + split_rows,
+        )
+        conn = open_db(db_path)
+        try:
+            # The split fired, and the Hemkommun sibling has its own stored slug.
+            hemkommun_slug = conn.execute(
+                "SELECT DISTINCT v.slug FROM variable v "
+                "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND vs.delivery_column_name = 'Hemkommun'"
+            ).fetchone()
+            assert hemkommun_slug is not None, "fixture should produce a split sibling"
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variable, "
+                "successor_register, successor_variable FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "testreg",
+                hemkommun_slug[0],
+                "otherreg",
+                "uniqcol",
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_ambiguous_variable"] == 0
+            assert stats["n_variable_replaced_by"] == 1
+        finally:
+            conn.close()
+
+    def test_emitted_variable_slug_is_a_live_variable(self, tmp_path: Path) -> None:
+        """Each variable endpoint names a slug that exists as a stored
+        `variable.slug` in its register — exactly what the resolver matches on
+        (`_resolve_binding_direct` reads the same column). Asserted at the DB
+        level rather than via a `Catalog.resolve` round-trip: the binding grammar
+        is mid-flip (3-seg lands in A2.6), and stored-slug presence is precisely
+        the resolver's match condition.
+        """
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edge = conn.execute(
+                "SELECT predecessor_register, predecessor_variable, "
+                "successor_register, successor_variable FROM variable_replaced_by"
+            ).fetchone()
+            for reg_slug, var_slug in ((edge[0], edge[1]), (edge[2], edge[3])):
+                hit = conn.execute(
+                    "SELECT 1 FROM variable v "
+                    "JOIN register r ON v.register_id = r.register_id "
+                    "WHERE r.slug = ? AND v.slug = ?",
+                    (reg_slug, var_slug),
+                ).fetchone()
+                assert hit is not None, (reg_slug, var_slug)
+        finally:
+            conn.close()
+
+    def test_ersatter_inverse_direction_collapsed(self, tmp_path: Path) -> None:
+        """Paired (Ersatt av, Ersätter) rows over the same transition → exactly
+        ONE edge. SCB ships both directions; the collapse is load-bearing."""
+        rows = [
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+            timeseries_row(
+                handelse="Ersätter", entitet="RegisterVariant", id1="20", id2="10"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_variant, successor_variant FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            # Predecessor = the original (variant 10 → individer), successor 20 → foretag.
+            assert tuple(edges[0]) == ("individer", "foretag")
+            stats = self._stats(conn)
+            # The genuine Ersätter row is the one that collapsed — counted as
+            # inverse, NOT as a plain duplicate.
+            assert stats["n_skipped_collapsed_inverse"] == 1
+            assert stats["n_skipped_duplicate"] == 0
+        finally:
+            conn.close()
+
+    def test_duplicate_ersatt_av_not_counted_as_inverse(self, tmp_path: Path) -> None:
+        """Two identical `Ersatt av` rows (NOT an Ersätter pair) → one edge, the
+        second counted as `n_skipped_duplicate`, not `n_skipped_collapsed_inverse`.
+        The inverse counter must mean what its name says."""
+        rows = [
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_duplicate"] == 1
+            assert stats["n_skipped_collapsed_inverse"] == 0
+        finally:
+            conn.close()
+
+    def test_inverse_collapse_robust_to_row_order(self, tmp_path: Path) -> None:
+        """The inverse/duplicate split is independent of SCB's row order: even
+        when the `Ersätter` row precedes its canonical `Ersatt av` twin, the
+        collapse is still counted as `n_skipped_collapsed_inverse`, never as a
+        plain duplicate. The materializer processes `Ersatt av` first (ORDER BY),
+        so the edge always lands from the canonical direction. Without that
+        ordering this fixture would mislabel the collapse as a duplicate.
+        """
+        rows = [
+            timeseries_row(
+                handelse="Ersätter", entitet="RegisterVariant", id1="20", id2="10"
+            ),
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_variant, successor_variant FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == ("individer", "foretag")
+            stats = self._stats(conn)
+            assert stats["n_skipped_collapsed_inverse"] == 1
+            assert stats["n_skipped_duplicate"] == 0
+        finally:
+            conn.close()
+
+    def test_unresolvable_id_skipped_not_failed(self, tmp_path: Path) -> None:
+        """An id pointing at a non-existent entity → no edge, stat increments,
+        build does NOT raise."""
+        rows = [timeseries_row(entitet="Register", id1="1", id2="9999")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert self._stats(conn)["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
+    def test_malformed_ids_skipped_not_failed(self, tmp_path: Path) -> None:
+        """Empty and non-integer ids on otherwise-relevant rows are skipped as
+        unresolved (the `not id1_raw` and `except ValueError` branches), never
+        failing the build — SCB ships empty ids routinely (one direction of a
+        pair). A valid control row still produces its edge.
+        """
+        rows = [
+            timeseries_row(entitet="Register", id1="1", id2=""),  # empty id2
+            timeseries_row(entitet="Register", id1="1", id2="not-int"),  # non-integer
+            timeseries_row(entitet="Register", id1="1", id2="2"),  # valid control
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_unresolved"] == 2  # empty + non-integer
+            assert stats["n_timeseries_event_rows_scanned"] == 3
+        finally:
+            conn.close()
+
+    def test_effective_year_is_null(self, tmp_path: Path) -> None:
+        """Timeseries.csv has no year column, so effective_year lands NULL on
+        every auto-derived row. Pins the contract: if SCB ever ships a year,
+        the schema/manifest both need updating — this assertion is the canary.
+        """
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            year = conn.execute(
+                "SELECT effective_year FROM register_replaced_by"
+            ).fetchone()[0]
+            assert year is None
+        finally:
+            conn.close()
+
+    def test_note_is_auto_timeseries_event(self, tmp_path: Path) -> None:
+        """Every auto-derived row across all three tables carries
+        note = 'auto:timeseries_event' (distinguishes from future A4 TOML rows)."""
+        rows = [
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+            timeseries_row(entitet="RegisterVariant", id1="10", id2="20"),
+            timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            for table in (
+                "register_replaced_by",
+                "variant_replaced_by",
+                "variable_replaced_by",
+            ):
+                notes = {
+                    r[0]
+                    for r in conn.execute(f"SELECT note FROM {table}").fetchall()  # noqa: S608 -- table name is a literal
+                }
+                assert notes == {"auto:timeseries_event"}, table
+        finally:
+            conn.close()
+
+    def test_replaced_by_stats_in_manifest(self, tmp_path: Path) -> None:
+        """Manifest carries replaced_by_stats with the full reworked key set."""
+        rows = [timeseries_row(entitet="Register", id1="1", id2="2")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            stats = self._stats(conn)
+            assert set(stats.keys()) == {
+                "n_timeseries_event_rows_scanned",
+                "n_register_replaced_by",
+                "n_variant_replaced_by",
+                "n_variable_replaced_by",
+                "n_skipped_unresolved",
+                "n_skipped_ambiguous_variable",
+                "n_skipped_collapsed_inverse",
+                "n_skipped_duplicate",
+            }
+            assert stats["n_register_replaced_by"] == 1
+            # Scanned counts only Ersatt av/Ersätter rows on the four target
+            # entitets — the single Register row in this fixture matches.
+            assert stats["n_timeseries_event_rows_scanned"] == 1
+        finally:
+            conn.close()
+
+    def test_no_self_loops(self, tmp_path: Path) -> None:
+        """Defensive: id1 == id2 → skipped (never inserted). A self-loop edge is
+        meaningless and would corrupt graph traversal."""
+        rows = [timeseries_row(entitet="Register", id1="1", id2="1")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert self._stats(conn)["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
+    def test_variable_grain_self_loop_skipped(self, tmp_path: Path) -> None:
+        """Slug-grain self-loop: two DISTINCT ids that resolve to the SAME
+        variable must not produce a `predecessor == successor` edge. The raw-id
+        guard (`id1 == id2`) can't catch this because the variable grain
+        collapses ids to slugs. The default fixture's var_id 44 (Kön) spans three
+        cvids (1001, 1003, 1004) under one variable → slug 'kon'; a succession
+        between two of them is a self-loop only visible after resolution.
+        """
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1001", id2="1003")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            # Precondition: 1001 and 1003 are distinct cvids of one variable.
+            slugs = conn.execute(
+                "SELECT DISTINCT v.slug FROM variable_instance vi "
+                "JOIN variable v ON v.register_id = vi.register_id "
+                "AND v.provider_key = CAST(vi.var_id AS TEXT) "
+                "WHERE vi.cvid IN (1001, 1003)"
+            ).fetchall()
+            assert [r[0] for r in slugs] == ["kon"], "both cvids must map to one slug"
+            # No self-edge emitted; counted as a skipped self-loop.
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert self._stats(conn)["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
+    def test_irrelevant_handelse_ignored(self, tmp_path: Path) -> None:
+        """Rows with handelse not in (Ersatt av, Ersätter) → ignored before
+        resolution (so they don't inflate n_skipped_unresolved). The default
+        `TIMESERIES_ROWS` ships one such row (Kodändring)."""
+        rows = [
+            timeseries_row(
+                handelse="Kodändring", entitet="Variabel", id1="100", id2=""
+            ),
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_timeseries_event_rows_scanned"] == 1
+            assert stats["n_skipped_unresolved"] == 0
+        finally:
+            conn.close()
+
+    def test_irrelevant_entitet_ignored(self, tmp_path: Path) -> None:
+        """Rows with entitet outside the four target shapes → ignored (e.g.
+        RegisterVersion, whose succession is handled elsewhere)."""
+        rows = [
+            timeseries_row(entitet="RegisterVersion", id1="100", id2="101"),
+            timeseries_row(entitet="Register", id1="1", id2="2"),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 1
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variant_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            # Scanned count includes only target-entitet rows.
+            assert self._stats(conn)["n_timeseries_event_rows_scanned"] == 1
         finally:
             conn.close()

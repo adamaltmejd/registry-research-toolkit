@@ -641,6 +641,64 @@ CREATE TABLE variable_related_to (
     )
 ) WITHOUT ROWID;
 
+-- A2.3: directional succession edges (§5.5). Auto-derived from SCB
+-- `timeseries_event` rows with `handelse IN ('Ersatt av', 'Ersätter')` by
+-- `_materialize_replaced_by_edges`. Three sibling tables, one per entity grain
+-- (register / variant / variable). Slug-anchored so an edge survives rebuilds
+-- even if the underlying provider IDs shift. `note = 'auto:timeseries_event'`
+-- distinguishes the auto-derive path from future TOML-curated cross-provider
+-- rows (A4).
+--
+-- Unlike `same_as` (an equivalence, stored both ways), `replaced_by` is
+-- DIRECTIONAL: SCB's paired `Ersatt av` / `Ersätter` rows collapse to one
+-- predecessor → successor edge. Each table is WITHOUT ROWID with a
+-- predecessor-first PK, so the clustered PK prefix already serves the forward
+-- "what replaced X?" lookup — no separate predecessor index (mirrors
+-- `variable_same_as`). The reverse "what did X replace?" (successor-keyed)
+-- lookup lands with A2.5's `.predecessors()` accessor, which adds the
+-- successor-side index when it needs it.
+CREATE TABLE register_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register,
+                 successor_provider, successor_register)
+) WITHOUT ROWID;
+
+CREATE TABLE variant_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    predecessor_variant  TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    successor_variant    TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variant,
+                 successor_provider, successor_register, successor_variant)
+) WITHOUT ROWID;
+
+-- Variable grain: 3-part (provider, register, variable) endpoints — NO variant.
+-- A2.1.5's two-level model made the variable register-scoped (the variant left
+-- the binding FQID), so succession is a register-level fact about the variable:
+-- one edge covers every variant that delivered either side. Mirrors the 3-part
+-- `variable_same_as` shape.
+CREATE TABLE variable_replaced_by (
+    predecessor_provider TEXT NOT NULL,
+    predecessor_register TEXT NOT NULL,
+    predecessor_variable TEXT NOT NULL,
+    successor_provider   TEXT NOT NULL,
+    successor_register   TEXT NOT NULL,
+    successor_variable   TEXT NOT NULL,
+    effective_year       INTEGER,
+    note                 TEXT,
+    PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variable,
+                 successor_provider, successor_register, successor_variable)
+) WITHOUT ROWID;
+
 -- Reference tables
 CREATE TABLE source_column_type (
     table_name TEXT NOT NULL,
@@ -2409,6 +2467,455 @@ def _import_timeseries(conn: sqlite3.Connection, path: Path) -> int:
     return row_count
 
 
+# A2.3: SCB ships succession in `timeseries_event` under two handelse values.
+# `Ersatt av` is the canonical direction (id1 was replaced by id2); `Ersätter`
+# is the inverse (id1 replaces id2). SCB usually emits both rows for a single
+# transition, so the materializer collapses them onto one predecessor →
+# successor edge.
+_REPLACED_BY_HANDELSE = frozenset({"Ersatt av", "Ersätter"})
+# Four entity grains. `Register` / `RegisterVariant` land in their own tables;
+# `AktuellVariabel` (cvid) and `Variabel` (var_id) both resolve to the variable
+# grain and land in `variable_replaced_by`.
+_REPLACED_BY_ENTITET = frozenset(
+    {"Register", "RegisterVariant", "AktuellVariabel", "Variabel"}
+)
+# Source-of-truth marker for the auto-derive path. Distinguishes from future
+# TOML-curated rows (A4 — cross-provider succession not visible in SCB's
+# `timeseries_event`).
+_REPLACED_BY_NOTE_AUTO = "auto:timeseries_event"
+
+# Manifest stat keys for replaced_by materialization. Single source so the
+# `skip_slugs` zero-fill (in `build_db`) and the materializer's real return
+# can't drift apart — `test_replaced_by_stats_in_manifest` pins the exact set.
+_REPLACED_BY_STAT_KEYS = (
+    "n_timeseries_event_rows_scanned",
+    "n_register_replaced_by",
+    "n_variant_replaced_by",
+    "n_variable_replaced_by",
+    "n_skipped_unresolved",
+    # A2.2 triage split where the source key can't pick a sibling: a bare
+    # `Variabel` var_id always, or an `AktuellVariabel` cvid whose delivery
+    # column doesn't uniquely match one sibling. Always 0 pre-A2.2.
+    "n_skipped_ambiguous_variable",
+    # Genuine `Ersätter` rows collapsing onto an already-emitted edge — the
+    # expected SCB paired-row case (see `_classify_duplicate`).
+    "n_skipped_collapsed_inverse",
+    # `Ersatt av` rows duplicating an already-emitted edge (repeated source
+    # rows), kept distinct from the inverse-collapse count.
+    "n_skipped_duplicate",
+)
+
+
+def _empty_replaced_by_stats() -> dict[str, int]:
+    """Zeroed replaced_by stats. The `skip_slugs` build path returns this as-is;
+    the materializer fills it in, so both share one key set."""
+    return dict.fromkeys(_REPLACED_BY_STAT_KEYS, 0)
+
+
+def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
+    """Materialize §5.5 succession edges from `timeseries_event` (A2.3).
+
+    Scans `timeseries_event` for `handelse IN ('Ersatt av', 'Ersätter')` on
+    `entitet IN ('Register', 'RegisterVariant', 'AktuellVariabel', 'Variabel')`,
+    resolves each row to slug-anchored (predecessor, successor) endpoints, and
+    inserts into the matching `*_replaced_by` table.
+
+    Direction rule:
+      - `Ersatt av`: predecessor = id1, successor = id2
+      - `Ersätter`:  predecessor = id2, successor = id1 (inverse)
+
+    Both directions collapse to the same slug-PK so SCB's redundant paired rows
+    produce a single edge.
+
+    All three grains read STORED slug columns — `register.slug`,
+    `register_variant.slug`, and (A2.1.5 §5.3) `variable.slug`. The variable
+    grain is 3-part `(provider, register, variable)`: the two-level model put
+    the variant out of the binding, so a cvid / var_id resolves to its
+    register-scoped variable, not a variant-qualified one. (This is the core of
+    the A2.3 respec — the old draft derived the variable slug from
+    `delivery_column_name` at build time because none was stored; A2.1.5 stores
+    it, so we just read the column the resolver itself reads.)
+
+    Skip taxonomy — every skip is best-effort (never fails the build;
+    `timeseries_event` is historical data):
+      - `n_skipped_unresolved`: an id doesn't resolve to a live, slugged entity
+        (dropped, not imported, self-loop — raw-id OR two distinct ids resolving
+        to the same variable at slug grain, empty/non-integer id, or a bare
+        `Variabel` var_id that isn't register-unique so its register is
+        ambiguous).
+      - `n_skipped_ambiguous_variable`: a `(register_id, var_id)` source key
+        maps to >1 variable — an A2.2 triage split. A bare `Variabel` id can't
+        pick a sibling, so the edge is dropped (mirrors `_variable_source_slug`).
+        An `AktuellVariabel` cvid *can* — split siblings own disjoint delivery
+        columns, so the cvid's column (`variable_alias`) selects its sibling;
+        it only lands here if that column is missing or doesn't match exactly
+        one sibling. Always 0 pre-A2.2.
+      - `n_skipped_collapsed_inverse`: an `Ersätter` row whose (predecessor,
+        successor) already landed from its `Ersatt av` twin — the expected SCB
+        paired-row collapse.
+      - `n_skipped_duplicate`: an `Ersatt av` row duplicating an already-emitted
+        edge (repeated source row), kept distinct from the inverse-collapse
+        count so the inverse counter means what it says.
+
+    `effective_year` is NULL — Timeseries.csv carries no year column for
+    succession events (only `Namn, Handelse, Beskrivning, Entitet, ID1, ID2,
+    FilID`). Reserved for the A4 TOML curation path.
+
+    Returns a stats dict for the manifest.
+
+    TODO(A4): cross-provider edges (e.g. SOS→SCB) won't appear in SCB's
+    timeseries_event. The slug TOML form (§5.5) carries these as inline rows;
+    wire that loader in alongside the SOS adapter work.
+    """
+    _progress("Materializing replaced_by edges from timeseries_event...")
+
+    # register_id -> (provider, register) slug pair.
+    register_lookup: dict[int, tuple[str, str]] = {}
+    for register_id, r_slug, p_slug in conn.execute(
+        "SELECT r.register_id, r.slug, p.slug "
+        "FROM register r JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE r.slug IS NOT NULL"
+    ).fetchall():
+        register_lookup[register_id] = (p_slug, r_slug)
+
+    # register_variant_id -> (provider, register, variant) slug triple. SCB's
+    # RegVarID is a globally-unique surrogate, so the id alone keys it.
+    variant_lookup: dict[int, tuple[str, str, str]] = {}
+    for rvid, rv_slug, r_slug, p_slug in conn.execute(
+        "SELECT rv.register_variant_id, rv.slug, r.slug, p.slug "
+        "FROM register_variant rv "
+        "JOIN register r ON rv.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE rv.slug IS NOT NULL AND r.slug IS NOT NULL"
+    ).fetchall():
+        variant_lookup[rvid] = (p_slug, r_slug, rv_slug)
+
+    # Variable grain reads the STORED `variable.slug` (A2.1.5 §5.3) — no
+    # resolve-time derivation. `provider_key` is `str(var_id)`; cast it back to
+    # the integer ids `timeseries_event` carries. Keyed by (register_id, var_id)
+    # -> (provider, register, variable) slug triple.
+    variable_lookup: dict[tuple[int, int], tuple[str, str, str]] = {}
+    # var_id -> set of register_ids carrying it: a bare `Variabel` id (a
+    # per-register var_id with no register context) resolves only when this is
+    # a singleton.
+    var_id_registers: dict[int, set[int]] = {}
+    # (register_id, var_id) keys mapping to >1 variable — an A2.2 triage split
+    # makes the bare key ambiguous. Skip-not-guess.
+    ambiguous_variable: set[tuple[int, int]] = set()
+    for register_id, provider_key, var_slug, r_slug, p_slug in conn.execute(
+        "SELECT v.register_id, v.provider_key, v.slug, r.slug, p.slug "
+        "FROM variable v "
+        "JOIN register r ON v.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL"
+    ).fetchall():
+        try:
+            var_id = int(provider_key)
+        except (TypeError, ValueError):
+            # Non-integer provider_key (e.g. a SOS merged variable name): no
+            # integer `timeseries_event` id maps to it.
+            continue
+        key = (register_id, var_id)
+        var_id_registers.setdefault(var_id, set()).add(register_id)
+        if key in variable_lookup:
+            ambiguous_variable.add(key)
+            continue
+        variable_lookup[key] = (p_slug, r_slug, var_slug)
+
+    # cvid -> (register_id, var_id): an AktuellVariabel row carries a globally
+    # unique cvid; map it to its variable's source key.
+    cvid_to_var: dict[int, tuple[int, int]] = {}
+    for cvid, register_id, var_id in conn.execute(
+        "SELECT cvid, register_id, var_id FROM variable_instance"
+    ).fetchall():
+        cvid_to_var[cvid] = (register_id, var_id)
+
+    # Split-sibling disambiguation for the cvid grain. An A2.2 split maps one
+    # (register_id, var_id) to several siblings owning DISJOINT delivery columns;
+    # the bare key can't pick one, but an AktuellVariabel cvid names one instance
+    # whose column (`variable_alias`, copied verbatim into
+    # `variable_state.delivery_column_name` by the coalescer) selects its
+    # sibling. Keyed (register_id, var_id, delivery_column_name) -> slug triple,
+    # built ONLY for split groups so it stays small; the cvid's own column is
+    # looked up on demand in the rare ambiguous branch rather than materializing
+    # a column map over every cvid in the corpus.
+    variable_by_column: dict[tuple[int, int, str], tuple[str, str, str]] = {}
+    # The map rests on the §5.7 split invariant that siblings own DISJOINT
+    # columns, so a column picks exactly one sibling. Guard it: should a column
+    # ever map to two *different* siblings (a future split-heuristic regression),
+    # it can no longer disambiguate — poison the key so the cvid path
+    # skips-not-guesses rather than silently taking the last-scanned sibling.
+    # (Same-variable repeats across editions yield the same triple, not a clash.)
+    column_collisions: set[tuple[int, int, str]] = set()
+    if ambiguous_variable:
+        for register_id, provider_key, var_slug, r_slug, p_slug, col in conn.execute(
+            "SELECT v.register_id, v.provider_key, v.slug, r.slug, p.slug, "
+            "vs.delivery_column_name "
+            "FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL "
+            "AND vs.delivery_column_name IS NOT NULL"
+        ).fetchall():
+            try:
+                var_id = int(provider_key)
+            except (TypeError, ValueError):
+                continue
+            if (register_id, var_id) not in ambiguous_variable:
+                continue
+            ckey = (register_id, var_id, col)
+            triple = (p_slug, r_slug, var_slug)
+            if variable_by_column.get(ckey, triple) != triple:
+                column_collisions.add(ckey)
+            variable_by_column[ckey] = triple
+    for ckey in column_collisions:
+        del variable_by_column[ckey]
+
+    def _resolve_variable(
+        entitet: str, raw_id: int
+    ) -> tuple[tuple[str, str, str] | None, str | None]:
+        """Resolve a variable-grain id to its (provider, register, variable)
+        slug triple. Returns (triple, None) on success, else (None, bucket)
+        naming the skip counter ('unresolved' / 'ambiguous')."""
+        if entitet == "AktuellVariabel":
+            key = cvid_to_var.get(raw_id)
+            if key is None:
+                return None, "unresolved"
+            if key in ambiguous_variable:
+                # The bare (register_id, var_id) hit an A2.2 split, but this cvid
+                # names one instance. Siblings own disjoint columns, so the
+                # cvid's column (`variable_alias`) picks the sibling. Skip only
+                # if the column is missing or doesn't match exactly one sibling
+                # (then it degrades to the bare-grain ambiguity).
+                register_id, var_id = key
+                matches = {
+                    variable_by_column[(register_id, var_id, col)]
+                    for (col,) in conn.execute(
+                        "SELECT delivery_column_name FROM variable_alias "
+                        "WHERE cvid = ?",
+                        (raw_id,),
+                    )
+                    if (register_id, var_id, col) in variable_by_column
+                }
+                if len(matches) == 1:
+                    return next(iter(matches)), None
+                return None, "ambiguous"
+        else:  # 'Variabel': a bare per-register var_id — no cvid, no column
+            regs = var_id_registers.get(raw_id)
+            if regs is None or len(regs) != 1:
+                return None, "unresolved"  # missing, or cross-register ambiguous
+            key = (next(iter(regs)), raw_id)
+            if key in ambiguous_variable:
+                return None, "ambiguous"
+        triple = variable_lookup.get(key)
+        if triple is None:
+            return None, "unresolved"
+        return triple, None
+
+    # Push the handelse/entitet scope reduction down to SQLite. The ORDER BY
+    # is load-bearing for the inverse/duplicate split: processing the canonical
+    # `Ersatt av` row before its `Ersätter` twin makes the edge land from the
+    # canonical direction, so the colliding `Ersätter` is always the one
+    # `_classify_duplicate` sees as the inverse collapse — never miscounted as a
+    # plain duplicate just because SCB happened to emit the rows reversed. The
+    # `timeseries_event_id` tiebreak keeps it fully deterministic.
+    placeholders_h = ", ".join("?" * len(_REPLACED_BY_HANDELSE))
+    placeholders_e = ", ".join("?" * len(_REPLACED_BY_ENTITET))
+    candidate_rows = conn.execute(
+        f"SELECT timeseries_event_id, handelse, entitet, id1, id2 "  # noqa: S608 -- placeholders bound below
+        f"FROM timeseries_event "
+        f"WHERE handelse IN ({placeholders_h}) "
+        f"AND entitet IN ({placeholders_e}) "
+        f"ORDER BY CASE handelse WHEN 'Ersatt av' THEN 0 ELSE 1 END, "
+        f"timeseries_event_id",
+        (*_REPLACED_BY_HANDELSE, *_REPLACED_BY_ENTITET),
+    ).fetchall()
+
+    n_scanned = len(candidate_rows)
+    n_register = 0
+    n_variant = 0
+    n_variable = 0
+    n_skipped_unresolved = 0
+    n_skipped_ambiguous_variable = 0
+    n_skipped_collapsed_inverse = 0
+    n_skipped_duplicate = 0
+
+    # Seen-PK sets per grain are the sole dedup authority — every INSERT below
+    # is plain (no OR IGNORE), because a PK only reaches it after a seen-set
+    # miss. They also classify a duplicate-PK skip by `handelse`: an `Ersätter`
+    # row hitting an existing edge is the expected inverse collapse; an
+    # `Ersatt av` row hitting one is a plain duplicate. The canonical-first scan
+    # order (above) guarantees this means what it says regardless of SCB's row
+    # order.
+    seen_register: set[tuple[str, str, str, str]] = set()
+    seen_variant: set[tuple[str, str, str, str, str, str]] = set()
+    seen_variable: set[tuple[str, str, str, str, str, str]] = set()
+
+    def _classify_duplicate(handelse: str) -> None:
+        """Bump the right skip counter for an already-seen PK."""
+        nonlocal n_skipped_collapsed_inverse, n_skipped_duplicate
+        if handelse == "Ersätter":
+            n_skipped_collapsed_inverse += 1
+        else:  # 'Ersatt av' duplicate of an already-emitted edge
+            n_skipped_duplicate += 1
+
+    for ts_event_id, handelse, entitet, id1_raw, id2_raw in candidate_rows:
+        # id1/id2 are TEXT in the source CSV. Empty strings are common (one
+        # direction of a pair, or rows where SCB knew only one endpoint).
+        if not id1_raw or not id2_raw:
+            n_skipped_unresolved += 1
+            _progress(
+                f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                f"empty id1/id2 (id1={id1_raw!r}, id2={id2_raw!r})"
+            )
+            continue
+        try:
+            id1 = int(id1_raw)
+            id2 = int(id2_raw)
+        except ValueError:
+            n_skipped_unresolved += 1
+            _progress(
+                f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                f"non-integer id (id1={id1_raw!r}, id2={id2_raw!r})"
+            )
+            continue
+
+        # Direction collapse: Ersatt av is canonical, Ersätter is its inverse.
+        if handelse == "Ersatt av":
+            pred_id, succ_id = id1, id2
+        else:  # 'Ersätter'
+            pred_id, succ_id = id2, id1
+
+        # A self-replacement is meaningless and would self-loop the graph. SCB
+        # doesn't ship these, but guard anyway (counted as unresolved — it can't
+        # produce a valid edge).
+        if pred_id == succ_id:
+            n_skipped_unresolved += 1
+            _progress(
+                f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                f"self-loop (id1 == id2 == {pred_id})"
+            )
+            continue
+
+        if entitet == "Register":
+            pred = register_lookup.get(pred_id)
+            succ = register_lookup.get(succ_id)
+            if pred is None or succ is None:
+                n_skipped_unresolved += 1
+                _progress(
+                    f"  replaced_by: skipping Register row #{ts_event_id} — "
+                    f"unresolved register_id (pred={pred_id}, succ={succ_id})"
+                )
+                continue
+            pk = (*pred, *succ)
+            if pk in seen_register:
+                _classify_duplicate(handelse)
+                continue
+            seen_register.add(pk)
+            conn.execute(
+                "INSERT INTO register_replaced_by ("
+                "predecessor_provider, predecessor_register, "
+                "successor_provider, successor_register, "
+                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+            )
+            n_register += 1
+
+        elif entitet == "RegisterVariant":
+            pred = variant_lookup.get(pred_id)
+            succ = variant_lookup.get(succ_id)
+            if pred is None or succ is None:
+                n_skipped_unresolved += 1
+                _progress(
+                    f"  replaced_by: skipping RegisterVariant row #{ts_event_id} — "
+                    f"unresolved register_variant_id (pred={pred_id}, succ={succ_id})"
+                )
+                continue
+            pk = (*pred, *succ)
+            if pk in seen_variant:
+                _classify_duplicate(handelse)
+                continue
+            seen_variant.add(pk)
+            conn.execute(
+                "INSERT INTO variant_replaced_by ("
+                "predecessor_provider, predecessor_register, predecessor_variant, "
+                "successor_provider, successor_register, successor_variant, "
+                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+            )
+            n_variant += 1
+
+        else:  # entitet IN ('AktuellVariabel', 'Variabel') -> variable grain
+            pred, pred_skip = _resolve_variable(entitet, pred_id)
+            succ, succ_skip = _resolve_variable(entitet, succ_id)
+            if pred is None or succ is None:
+                # 'ambiguous' (an A2.2 split) is more specific than the generic
+                # 'unresolved'; surface it whenever either side hit it.
+                if "ambiguous" in (pred_skip, succ_skip):
+                    n_skipped_ambiguous_variable += 1
+                    _progress(
+                        f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                        f"var_id maps to >1 variable / A2.2 split "
+                        f"(pred={pred_id}, succ={succ_id})"
+                    )
+                else:
+                    n_skipped_unresolved += 1
+                    _progress(
+                        f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                        f"unresolved variable (pred={pred_id}, succ={succ_id})"
+                    )
+                continue
+            if pred == succ:
+                # Slug-grain self-loop the raw-id guard above can't catch: two
+                # DISTINCT ids resolved to the same variable (most plausibly two
+                # AktuellVariabel cvids of one unsplit var_id re-coded across
+                # editions). A self-edge is meaningless and would corrupt
+                # traversal; skip it (counted with the id-level self-loop).
+                n_skipped_unresolved += 1
+                _progress(
+                    f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                    f"slug-grain self-loop (pred==succ=={pred})"
+                )
+                continue
+            pk = (*pred, *succ)
+            if pk in seen_variable:
+                _classify_duplicate(handelse)
+                continue
+            seen_variable.add(pk)
+            conn.execute(
+                "INSERT INTO variable_replaced_by ("
+                "predecessor_provider, predecessor_register, predecessor_variable, "
+                "successor_provider, successor_register, successor_variable, "
+                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+            )
+            n_variable += 1
+
+    _progress(
+        f"  {n_register:,} register / {n_variant:,} variant / "
+        f"{n_variable:,} variable replaced_by edges "
+        f"({n_skipped_collapsed_inverse:,} inverse-direction collapsed, "
+        f"{n_skipped_duplicate:,} duplicate, "
+        f"{n_skipped_ambiguous_variable:,} ambiguous variable, "
+        f"{n_skipped_unresolved:,} unresolved)"
+    )
+    # Keys (and their meaning) live on `_REPLACED_BY_STAT_KEYS`; fill the zeroed
+    # base so this return and the `skip_slugs` zero-fill share one shape.
+    stats = _empty_replaced_by_stats()
+    stats.update(
+        n_timeseries_event_rows_scanned=n_scanned,
+        n_register_replaced_by=n_register,
+        n_variant_replaced_by=n_variant,
+        n_variable_replaced_by=n_variable,
+        n_skipped_unresolved=n_skipped_unresolved,
+        n_skipped_ambiguous_variable=n_skipped_ambiguous_variable,
+        n_skipped_collapsed_inverse=n_skipped_collapsed_inverse,
+        n_skipped_duplicate=n_skipped_duplicate,
+    )
+    return stats
+
+
 def _load_validity_map(path: Path) -> tuple[dict[int, list[tuple[int, int]]], int]:
     """Load VardemangderValidDates.csv into an in-memory ItemId → year-windows map.
 
@@ -3253,6 +3760,18 @@ def build_db(
                 f"{sa_counts['classification']:,} classification same_as edges"
             )
 
+        # A2.3: §5.5 replaced_by edges. Runs *after* populate_variable_slugs
+        # (above) — every grain resolves off a stored slug column, and the
+        # variable grain reads `variable.slug`. Under `--skip-slugs` those
+        # columns are NULL, so the materializer would emit zero edges silently;
+        # mirror the same_as honest-failure stance and skip cleanly with zeroed
+        # stats instead.
+        if skip_slugs:
+            _progress("Skipping replaced_by edges (skip_slugs=True)")
+            replaced_by_stats: dict[str, int] = _empty_replaced_by_stats()
+        else:
+            replaced_by_stats = _materialize_replaced_by_edges(conn)
+
         # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
         # on `register_version.slug` — the canonical disambiguator. Keying on
         # `derive_period(name)` would collapse siblings that γ's curated
@@ -3317,6 +3836,11 @@ def build_db(
             # A2.1 coalescer stats — let maintainers eyeball the empirical
             # 5× shrink and unika-vs-fallback split without re-running.
             "coalesce_stats": state_stats,
+            # A2.3 replaced_by stats — fan-out per entity grain plus the
+            # skipped-row counters. Lets maintainers verify the inverse-
+            # direction collapse worked and spot regressions in the
+            # unresolved/ambiguous-id rate without re-running the build.
+            "replaced_by_stats": replaced_by_stats,
         }
         for key, value in manifest_data.items():
             conn.execute(

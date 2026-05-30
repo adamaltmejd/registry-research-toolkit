@@ -135,6 +135,62 @@ def _ri_row(
     )
 
 
+def _var_row(
+    *,
+    colname: str,
+    cvid: int,
+    var_id: int,
+    varname: str = "GenericVar",
+    year: str = "2020",
+    regver_id: int = 110,
+    data_type: str = "int",
+    data_length: str = "1",
+) -> str:
+    """A Registerinformation row for register TESTREG (register_id 1, variant
+    register_variant_id 10), varying only the fields triage keys on. Shared by
+    the §5.7 triage tests and the A2.3 replaced_by tests (both reuse the
+    canonical disjoint-column split geometry), so it lives here rather than in
+    either test module."""
+    return _ri_row(
+        "TESTREG",
+        "Testregistret",
+        "Testning",
+        "Individer",
+        "Individer",
+        "Alla individer",
+        "Nej",
+        year,
+        f"Version {year}",
+        "",
+        "Godkänd",
+        f"{year}-01-01",
+        f"{year}-12-31",
+        "Hela befolkningen",
+        "Alla personer",
+        "",
+        f"{year}-12-31",
+        "Person",
+        "Fysisk person",
+        varname,
+        "A generic family label",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        colname,
+        data_type,
+        data_length,
+        str(cvid),
+        "1",
+        "10",
+        str(regver_id),
+        str(var_id),
+    )
+
+
 REGISTERINFORMATION_ROWS = [
     _ri_row(
         "TESTREG",
@@ -640,6 +696,24 @@ TIMESERIES_ROWS = [
     PIPE.join(["TESTREG", "Kodändring", "Kod 3 ändrad", "Variabel", "100", "", "1"]),
 ]
 
+
+def timeseries_row(
+    namn: str = "TESTREG",
+    handelse: str = "Ersatt av",
+    beskrivning: str = "",
+    entitet: str = "Register",
+    id1: str = "",
+    id2: str = "",
+    fil_id: str = "1",
+) -> str:
+    """Build one Timeseries.csv row. Test-only convenience for A2.3 fixtures.
+
+    Defaults to the most common shape (`Ersatt av` on a Register row) so
+    callers only override what varies per scenario.
+    """
+    return PIPE.join([namn, handelse, beskrivning, entitet, id1, id2, fil_id])
+
+
 VARDEMANGDER_HEADER = PIPE.join(
     [
         "Värdemängdsversion",
@@ -725,6 +799,7 @@ def write_scb_input(
     registerinformation_rows: list[str] | None = None,
     vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
     valid_dates_rows: list[str] | None = None,
+    timeseries_rows: list[str] | None = None,
     include: tuple[str, ...] = (
         "registerinformation",
         "unika",
@@ -738,9 +813,10 @@ def write_scb_input(
 
     Returns the SCB subdirectory path. ``include`` lets a test build a partial
     set (e.g. just Registerinformation.csv); ``registerinformation_rows`` /
-    ``vardemangder_rows`` / ``valid_dates_rows`` let a test swap in alternate
-    rows for projection scenarios without re-implementing the rest. The
-    ``*_rows=None`` defaults fall back to the standard fixture lists.
+    ``vardemangder_rows`` / ``valid_dates_rows`` / ``timeseries_rows`` let a
+    test swap in alternate rows for projection / succession scenarios without
+    re-implementing the rest. The ``*_rows=None`` defaults fall back to the
+    standard fixture lists.
     """
     scb_dir = input_dir / "SCB"
     scb_dir.mkdir(parents=True, exist_ok=True)
@@ -762,7 +838,8 @@ def write_scb_input(
             scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS
         )
     if "timeseries" in include:
-        write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        rows = timeseries_rows if timeseries_rows is not None else TIMESERIES_ROWS
+        write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, rows)
     if "vardemangder" in include:
         write_csv(scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, vardemangder_rows)
     if "valid_dates" in include:
