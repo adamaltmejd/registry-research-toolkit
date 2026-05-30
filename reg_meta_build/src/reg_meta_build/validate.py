@@ -317,7 +317,21 @@ def _check_var_year_codes_anchor(
         (_ANCHOR_REGISTER_ID, _ANCHOR_VAR_ID, year_hi, year_lo),
     ).fetchall()
     if not state_rows:
-        result.ok(f"var_id {_ANCHOR_VAR_ID} not present — anchor skipped")
+        # Distinguish "var absent" (legit skip — the synthetic fixture has no
+        # such var) from "var PRESENT but no state overlaps the anchor year": the
+        # latter is a year-window/coalescing regression — exactly what this anchor
+        # guards — so FAIL rather than let it masquerade as a skip (Codex P2 #149).
+        present = conn.execute(
+            "SELECT 1 FROM variable WHERE register_id = ? AND provider_key = ? LIMIT 1",
+            (_ANCHOR_REGISTER_ID, _ANCHOR_VAR_ID),
+        ).fetchone()
+        if present:
+            result.fail(
+                f"var_id {_ANCHOR_VAR_ID} present but no state overlaps "
+                f"{_ANCHOR_YEAR} (year-window/coalescing regression?)"
+            )
+        else:
+            result.ok(f"var_id {_ANCHOR_VAR_ID} not present — anchor skipped")
         return
     value_set_ids = {r[0] for r in state_rows if r[0] is not None}
     if not value_set_ids:

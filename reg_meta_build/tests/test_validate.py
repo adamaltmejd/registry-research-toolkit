@@ -211,6 +211,32 @@ class TestValidateModule:
             result.failures
         )
 
+    def test_var_year_codes_anchor_fails_when_present_but_no_year_overlap(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A2.7 (Codex P2 #149): when var_id 24193 is PRESENT (register 34) but no
+        `variable_state` overlaps the anchor year, that is a year-window/coalescing
+        regression — a FAIL — not the 'variable absent' skip. Distinguishing the
+        two is the whole point: a broken validity window must not masquerade as a
+        legitimate skip on a corpus that does carry the anchor variable."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._plant_anchor(conn, ["01", "02", "03", "04"])
+        # Shove the planted state's window off 2010 entirely: the variable
+        # (register 34, provider_key 24193) still exists, but nothing overlaps.
+        conn.execute(
+            "UPDATE variable_state SET valid_from = '2015-01-01', "
+            "valid_to = '2015-12-31' WHERE variable_id = 1"
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any(
+            "present but no state overlaps 2010" in f for f in result.failures
+        ), result.failures
+
 
 class TestBuildDbValidateFlag:
     def test_argparse_exposes_validate(self):

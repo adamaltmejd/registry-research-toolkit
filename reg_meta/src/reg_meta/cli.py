@@ -1001,12 +1001,20 @@ def _group_instances_by_codes(
     for key in sorted_keys:
         members = buckets[key]
         registers = sorted({m["register_name"] for m in members})
+        # Distinct owning variables in this code-group. When a numeric var_id
+        # hit several A2.2 split siblings whose code sets differ, each lands in
+        # its own group — surface the slugs so the caller sees which variable a
+        # group belongs to (the var_id alone no longer identifies one).
+        variable_slugs = sorted(
+            {m["variable_slug"] for m in members if m.get("variable_slug")}
+        )
         groups_out.append(
             {
                 "values": [{"code": code, "label": label} for code, label in key],
                 "instance_count": len(members),
                 "register_count": len(registers),
                 "registers": registers,
+                "variable_slugs": variable_slugs,
                 "instances": [
                     {
                         # A2.6: instances are variable_state rows now.

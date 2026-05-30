@@ -1215,6 +1215,7 @@ def get_values_by_variable(
 
     state_rows = conn.execute(
         f"SELECT vs.state_id, vs.value_set_id, vs.valid_from, vs.valid_to, "
+        f"vs.variable_id, v.slug AS variable_slug, "
         f"v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
         f"vs.register_variant_id, r.name AS register_name, rv.name AS variant_name "
         f"FROM variable_state vs "
@@ -1240,6 +1241,13 @@ def get_values_by_variable(
         inst_year = int(row["valid_from"][:4])
         inst = {
             "state_id": row["state_id"],
+            # A2.7: attribute each instance to its owning variable. A numeric
+            # var_id can map to >1 A2.2 split sibling (same provider_key, distinct
+            # variable_id/slug) with differing value sets — carrying the slug lets
+            # the caller tell them apart instead of seeing them merged under one
+            # name (Codex P2 #149).
+            "variable_id": row["variable_id"],
+            "variable_slug": row["variable_slug"],
             "register_id": row["register_id"],
             "register_name": row["register_name"],
             "register_variant_id": row["register_variant_id"],

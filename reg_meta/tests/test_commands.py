@@ -554,6 +554,21 @@ class TestSplitSiblingIsolation:
         b_cls = classifications_for_variable(conn, b_vid)
         assert [c["short_name"] for c in b_cls] == ["SSYK96"]
 
+    def test_values_by_numeric_var_id_attributes_split_siblings(self):
+        """A2.7 (Codex P2 #149): a numeric var_id that maps to >1 split sibling
+        (same provider_key 44, distinct variable_id/slug) no longer merges them
+        anonymously — every instance carries its owning variable's slug, and the
+        codes stay sibling-exact (no cross-contamination)."""
+        from reg_meta.queries import get_values_by_variable
+
+        conn = self._split_db()
+        result = get_values_by_variable(conn, "44", register="lisa")
+        by_slug = {
+            inst["variable_slug"]: {v["code"] for v in inst["values"]}
+            for inst in result["instances"]
+        }
+        assert by_slug == {"ssyk-3pos": {"A1", "A2"}, "ssyk-5pos": {"B1", "B2"}}
+
 
 # ---------------------------------------------------------------------------
 # Get values
@@ -684,6 +699,7 @@ class TestGetValues:
         instances = [
             {
                 "state_id": 1,
+                "variable_slug": "kon",
                 "register_id": 100,
                 "register_name": "RegA",
                 "register_variant_id": 10,
@@ -698,6 +714,7 @@ class TestGetValues:
             },
             {
                 "state_id": 2,
+                "variable_slug": "kon",
                 "register_id": 101,
                 "register_name": "RegB",
                 "register_variant_id": 11,
@@ -712,6 +729,7 @@ class TestGetValues:
             },
             {
                 "state_id": 3,
+                "variable_slug": "kon-barn",
                 "register_id": 102,
                 "register_name": "RegC",
                 "register_variant_id": 12,
@@ -735,8 +753,13 @@ class TestGetValues:
         assert out["groups"][0]["instance_count"] == 2
         assert out["groups"][0]["register_count"] == 2
         assert out["groups"][0]["registers"] == ["RegA", "RegB"]
+        # Per-group variable attribution (A2.7, Codex P2 #149): the two
+        # Man/Kvinna instances share one owning variable; RegC's differing codes
+        # belong to another — each group names its own slug(s).
+        assert out["groups"][0]["variable_slugs"] == ["kon"]
         assert out["groups"][1]["instance_count"] == 1
         assert out["groups"][1]["registers"] == ["RegC"]
+        assert out["groups"][1]["variable_slugs"] == ["kon-barn"]
         labels = {v["label"] for v in out["groups"][1]["values"]}
         assert labels == {"Pojke", "Flicka"}
 
