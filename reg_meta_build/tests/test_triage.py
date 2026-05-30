@@ -192,6 +192,45 @@ class TestSplit:
         assert cols == ["Hemkommun", "Skolkommun"]
         assert len(vids) == 2, "each disjoint column resolves to its own sibling"
 
+    def test_non_contested_column_gets_own_variable(self, tmp_path: Path) -> None:
+        # Hemkommun + Skolkommun collide in 2020 (split). Telefon is delivered
+        # ALONE in 2019 (non-contested). Once the var_id is a split container,
+        # Telefon must get its OWN variable, NOT default onto the lex-first
+        # sibling (Hemkommun) — else its history is mis-attributed (Codex P2).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Hemkommun",
+                    cvid=9600,
+                    var_id=950,
+                    year="2020",
+                    regver_id=120,
+                ),
+                _var_row(
+                    colname="Skolkommun",
+                    cvid=9601,
+                    var_id=950,
+                    year="2020",
+                    regver_id=120,
+                ),
+                _var_row(
+                    colname="Telefon", cvid=9602, var_id=950, year="2019", regver_id=119
+                ),
+            ],
+        )
+        rows = conn.execute(
+            "SELECT v.variable_id, vs.delivery_column_name FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '950'"
+        ).fetchall()
+        by_col = {r["delivery_column_name"]: r["variable_id"] for r in rows}
+        assert set(by_col) == {"Hemkommun", "Skolkommun", "Telefon"}
+        assert len(set(by_col.values())) == 3, (
+            "non-contested column needs its own variable"
+        )
+        assert by_col["Telefon"] not in (by_col["Hemkommun"], by_col["Skolkommun"])
+
 
 class TestNoSplitOnColumnRename:
     """Codex P1 #139: columns that never co-occur in the same (variant, year) —

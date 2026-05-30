@@ -1581,11 +1581,14 @@ def _triage_groups(
         # between distinct columns. A `var_id` whose columns never co-occur in
         # one (register_variant_id, valid_from-year) bucket is a single
         # longitudinal variable — e.g. SCB renamed the delivery column between
-        # editions — and splitting it would shard the variable's history across
-        # siblings (Codex P1 #139). So restrict fold/split to the *contested*
-        # column components (those sharing a bucket with another component); the
-        # rest stay on the original variable and `_collapse_residual` (below)
-        # still guarantees per-scope label uniqueness.
+        # editions — and triaging it would shard the variable's history across
+        # siblings (Codex P1 #139). The *gate* is the same-year collision: a
+        # var_id with <2 contested columns isn't a split container and is skipped.
+        # But once it IS a container, EVERY distinct column-component becomes its
+        # own variable (split) or folds with the contested set — a non-contested
+        # column must NOT keep the seeded original assignment, or a later/renamed
+        # split column's history is mis-attributed to the lex-first sibling
+        # (Codex P2 #139).
         col_of = {gk: gk[8] for gk in gkeys}  # column component (gkey index 8)
         bucket_cols: dict[tuple[int, int | None], set[str]] = defaultdict(set)
         for gk in gkeys:
@@ -1599,29 +1602,45 @@ def _triage_groups(
                 contested |= cols
         contested.discard("")  # empty-column stubs aren't fold/split contestants
         if len(contested) < 2:
-            continue  # no real multi-column same-year collision to resolve
+            continue  # no real multi-column same-year collision → not a container
 
         by_col: dict[str, list[tuple]] = defaultdict(list)
         for gk in gkeys:
-            c = col_of[gk]
-            if c in contested:
-                by_col[c].append(gk)
-        named_cols = sorted(by_col)
+            if col_of[gk]:
+                by_col[col_of[gk]].append(gk)
+        all_cols = sorted(by_col)
+        contested_cols = sorted(contested)
+        non_contested_cols = [c for c in all_cols if c not in contested]
 
-        folded = [_ascii_fold_lower(c) for c in named_cols]
+        # The fold/split DECISION is made on the *contested* columns only (the
+        # real collision); the assignment then covers all columns.
+        folded = [_ascii_fold_lower(c) for c in contested_cols]
         roots = {
             class_roots[grp.classification_id]
-            for c in named_cols
+            for c in contested_cols
             for gk in by_col[c]
             if (grp := groups[gk]).classification_id is not None
             and grp.classification_id in class_roots
         }
         if _decide_fold_or_split(folded, roots) == "fold":
-            _apply_fold(groups, by_col, named_cols, folded, orig_vid, res)
+            # Contested columns fold into the original variable; each
+            # non-contested column splits off into its own.
+            _apply_fold(groups, by_col, contested_cols, folded, orig_vid, res)
+            _split_off_non_contested(
+                conn,
+                groups,
+                by_col,
+                non_contested_cols,
+                register_id,
+                var_id,
+                orig_vid,
+                res,
+            )
             res.stats["folds"] += 1
         else:
+            # Split: every distinct column-component becomes its own variable.
             _apply_split(
-                conn, groups, by_col, named_cols, register_id, var_id, orig_vid, res
+                conn, groups, by_col, all_cols, register_id, var_id, orig_vid, res
             )
             res.stats["splits"] += 1
 
@@ -1779,6 +1798,47 @@ def _apply_split(
     # `same_concept_different_grain`); refine when the split heuristics land.
     for i, a in enumerate(sibling_vids):
         for b in sibling_vids[i + 1 :]:
+            res.related_edges.append((a, b, "same_definition_different_column"))
+
+
+def _split_off_non_contested(
+    conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    non_contested_cols: list[str],
+    register_id: int,
+    var_id: int,
+    orig_vid: int,
+    res: _TriageResult,
+) -> None:
+    """Once a var_id is a split container, a column-component that doesn't itself
+    collide same-year (a later or renamed column) must NOT keep the seeded
+    original assignment — that lumps its history onto the lex-first sibling and
+    a consumer querying that sibling's slug gets the wrong data (Codex P2 #139).
+    Give each such column its own variable, linked to `orig_vid` by a
+    variable_related_to edge. Perfect rename *continuity* (re-joining a renamed
+    column to its sibling) needs A2.3 tracking; own-variable avoids the
+    mis-attribution."""
+    if not non_contested_cols:
+        return
+    name_row = conn.execute(
+        "SELECT name FROM variable WHERE variable_id = ?", (orig_vid,)
+    ).fetchone()
+    shared_name = name_row[0] if name_row else None
+    vids = [orig_vid]
+    for col in non_contested_cols:
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (?, CAST(? AS TEXT), ?)",
+            (register_id, var_id, shared_name),
+        )
+        nvid = cur.lastrowid
+        assert nvid is not None
+        vids.append(nvid)
+        for gk in by_col[col]:
+            res.assignments[gk] = nvid
+    for i, a in enumerate(vids):
+        for b in vids[i + 1 :]:
             res.related_edges.append((a, b, "same_definition_different_column"))
 
 
