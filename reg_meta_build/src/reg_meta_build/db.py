@@ -2539,7 +2539,8 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     Skip taxonomy — every skip is best-effort (never fails the build;
     `timeseries_event` is historical data):
       - `n_skipped_unresolved`: an id doesn't resolve to a live, slugged entity
-        (dropped, not imported, self-loop, empty/non-integer id, or a bare
+        (dropped, not imported, self-loop — raw-id OR two distinct ids resolving
+        to the same variable at slug grain, empty/non-integer id, or a bare
         `Variabel` var_id that isn't register-unique so its register is
         ambiguous).
       - `n_skipped_ambiguous_variable`: a `(register_id, var_id)` source key
@@ -2864,6 +2865,18 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                         f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
                         f"unresolved variable (pred={pred_id}, succ={succ_id})"
                     )
+                continue
+            if pred == succ:
+                # Slug-grain self-loop the raw-id guard above can't catch: two
+                # DISTINCT ids resolved to the same variable (most plausibly two
+                # AktuellVariabel cvids of one unsplit var_id re-coded across
+                # editions). A self-edge is meaningless and would corrupt
+                # traversal; skip it (counted with the id-level self-loop).
+                n_skipped_unresolved += 1
+                _progress(
+                    f"  replaced_by: skipping {entitet} row #{ts_event_id} — "
+                    f"slug-grain self-loop (pred==succ=={pred})"
+                )
                 continue
             pk = (*pred, *succ)
             if pk in seen_variable:

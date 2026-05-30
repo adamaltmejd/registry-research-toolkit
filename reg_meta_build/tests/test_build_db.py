@@ -2920,6 +2920,35 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
+    def test_variable_grain_self_loop_skipped(self, tmp_path: Path) -> None:
+        """Slug-grain self-loop: two DISTINCT ids that resolve to the SAME
+        variable must not produce a `predecessor == successor` edge. The raw-id
+        guard (`id1 == id2`) can't catch this because the variable grain
+        collapses ids to slugs. The default fixture's var_id 44 (Kön) spans three
+        cvids (1001, 1003, 1004) under one variable → slug 'kon'; a succession
+        between two of them is a self-loop only visible after resolution.
+        """
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1001", id2="1003")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            # Precondition: 1001 and 1003 are distinct cvids of one variable.
+            slugs = conn.execute(
+                "SELECT DISTINCT v.slug FROM variable_instance vi "
+                "JOIN variable v ON v.register_id = vi.register_id "
+                "AND v.provider_key = CAST(vi.var_id AS TEXT) "
+                "WHERE vi.cvid IN (1001, 1003)"
+            ).fetchall()
+            assert [r[0] for r in slugs] == ["kon"], "both cvids must map to one slug"
+            # No self-edge emitted; counted as a skipped self-loop.
+            assert (
+                conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]
+                == 0
+            )
+            assert self._stats(conn)["n_skipped_unresolved"] == 1
+        finally:
+            conn.close()
+
     def test_irrelevant_handelse_ignored(self, tmp_path: Path) -> None:
         """Rows with handelse not in (Ersatt av, Ersätter) → ignored before
         resolution (so they don't inflate n_skipped_unresolved). The default
