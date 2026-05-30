@@ -193,6 +193,37 @@ class TestSplit:
         assert len(vids) == 2, "each disjoint column resolves to its own sibling"
 
 
+class TestNoSplitOnColumnRename:
+    """Codex P1 #139: columns that never co-occur in the same (variant, year) —
+    e.g. SCB renaming a delivery column between editions — are ONE longitudinal
+    variable, NOT a split (triage acts only on real same-year collisions)."""
+
+    def test_renamed_column_stays_one_variable(self, tmp_path: Path) -> None:
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="OldKol", cvid=9500, var_id=940, year="2018", regver_id=118
+                ),
+                _var_row(
+                    colname="NewKol", cvid=9501, var_id=940, year="2019", regver_id=119
+                ),
+            ],
+        )
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = '940'"
+        ).fetchall()
+        assert len(sibs) == 1, "a cross-year column rename must NOT split"
+        # Both editions' states survive on the single variable.
+        n_states = conn.execute(
+            "SELECT COUNT(*) FROM variable_state vs JOIN variable v "
+            "ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '940'"
+        ).fetchone()[0]
+        assert n_states == 2, "both renamed-column editions should remain as states"
+
+
 class TestFold:
     """Stem-sharing columns under one var_id → one variable, labeled states."""
 

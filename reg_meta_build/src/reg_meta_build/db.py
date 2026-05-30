@@ -1577,21 +1577,42 @@ def _triage_groups(
         if orig_vid is None:
             continue
 
+        # §5.7 triage acts ONLY on a genuine same-(variant, year) collision
+        # between distinct columns. A `var_id` whose columns never co-occur in
+        # one (register_variant_id, valid_from-year) bucket is a single
+        # longitudinal variable — e.g. SCB renamed the delivery column between
+        # editions — and splitting it would shard the variable's history across
+        # siblings (Codex P1 #139). So restrict fold/split to the *contested*
+        # column components (those sharing a bucket with another component); the
+        # rest stay on the original variable and `_collapse_residual` (below)
+        # still guarantees per-scope label uniqueness.
+        col_of = {gk: gk[8] for gk in gkeys}  # column component (gkey index 8)
+        bucket_cols: dict[tuple[int, int | None], set[str]] = defaultdict(set)
+        for gk in gkeys:
+            grp = groups[gk]
+            bucket_cols[(grp.register_variant_id, _group_from_year(grp))].add(
+                col_of[gk]
+            )
+        contested: set[str] = set()
+        for cols in bucket_cols.values():
+            if len(cols) > 1:
+                contested |= cols
+        contested.discard("")  # empty-column stubs aren't fold/split contestants
+        if len(contested) < 2:
+            continue  # no real multi-column same-year collision to resolve
+
         by_col: dict[str, list[tuple]] = defaultdict(list)
         for gk in gkeys:
-            by_col[groups[gk].latest_alias or ""].append(gk)
-        named_cols = sorted(c for c in by_col if c)
-
-        if len(named_cols) <= 1:
-            # Single column (or only stubs): no fold/split decision. Any
-            # residual same-year drift is resolved by the universal collapse
-            # pass below.
-            continue
+            c = col_of[gk]
+            if c in contested:
+                by_col[c].append(gk)
+        named_cols = sorted(by_col)
 
         folded = [_ascii_fold_lower(c) for c in named_cols]
         roots = {
             class_roots[grp.classification_id]
-            for gk in gkeys
+            for c in named_cols
+            for gk in by_col[c]
             if (grp := groups[gk]).classification_id is not None
             and grp.classification_id in class_roots
         }
