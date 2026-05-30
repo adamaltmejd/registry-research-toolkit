@@ -2756,7 +2756,7 @@ class TestReplacedByEdges:
     def test_emitted_variable_slug_is_a_live_variable(self, tmp_path: Path) -> None:
         """Each variable endpoint names a slug that exists as a stored
         `variable.slug` in its register — exactly what the resolver matches on
-        (`_resolve_binding_direct` reads the same column). Asserted at the DB
+        (`_resolve_variable_identity` reads the same column). Asserted at the DB
         level rather than via a `Catalog.resolve` round-trip: the binding grammar
         is mid-flip (3-seg lands in A2.6), and stored-slug presence is precisely
         the resolver's match condition.

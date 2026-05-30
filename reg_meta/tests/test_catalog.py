@@ -1119,6 +1119,16 @@ class TestResolveVariableLongitudinal:
         cat = Catalog(slugged_conn)
         assert cat.states(_KON) == list(cat.resolve(_KON).states)
 
+    def test_states_rejects_non_binding_fqid(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # states() must fail like its sibling accessors on a non-binding FQID
+        # (a register here) — a structured not_a_binding_fqid usage error, not a
+        # raw AttributeError off the polymorphic resolve() (the A2.5 review fix).
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).states("scb/lisa")
+        assert exc.value.code == "not_a_binding_fqid"
+
     def test_resolve_states_round_trip_with_resolve_at(self) -> None:
         # §5.10 / MIGRATION_PLAN A2.5: the full history via resolve(fqid).states
         # equals the union of per-year resolve_at() results on the unambiguous

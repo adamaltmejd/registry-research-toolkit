@@ -993,7 +993,11 @@ class Catalog:
 
     def states(self, fqid: str | Fqid) -> list[VariableState]:
         """§5.10: the variable's full state history (≡ `resolve(fqid).states`)."""
-        return list(self.resolve(fqid).states)
+        # Route through _parse_binding (like the edge accessors) so a non-binding
+        # FQID fails with the structured `not_a_binding_fqid` error instead of a
+        # raw AttributeError off a ResolvedRegister/etc. (§9.5 wants a 4xx, not 500).
+        parsed = self._parse_binding(fqid)
+        return list(self.resolve(parsed).states)
 
     def predecessors(self, fqid: str | Fqid) -> list[VariableRef]:
         """§5.10: variables this binding's variable replaced (inbound succession)."""
