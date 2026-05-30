@@ -79,11 +79,23 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   is KEPT in parallel through A2.6 (catalog.py's interim resolver still reads
 #   it); both drop with `variable_instance` in A2.7. Additive tables only →
 #   minor bump; 4.5.0 DBs without them are rejected via the minor-version gate.
+# - 4.7.0 (A2.5 + #142, current): adds a `beskrivning` column to the three
+#   `*_replaced_by` tables (the human transition reason from
+#   `timeseries_event.beskrivning`, carried alongside the `auto:timeseries_event`
+#   provenance marker in `note`), populates `effective_year` for the
+#   AktuellVariabel variable grain (the successor edition's year; bare
+#   Variabel/Register/RegisterVariant grains stay NULL — no edition), and adds
+#   `idx_variable_replaced_by_successor` for the new `.predecessors()` accessor.
+#   `Catalog.resolve()` flips its binding arm to the longitudinal
+#   `ResolvedVariable` and grows resolve_at/states/predecessors/successors/
+#   related/lineage/lineage_warnings (query-side only — no DDL impact beyond the
+#   above). A 4.6.0 DB lacks the `beskrivning` column + successor index, so it's
+#   rejected via the minor-version gate. Additive within the 4.x line.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking change. Also
 #   drops `variable_instance.via_source_id` and `link_consumer_side_bindings`
 #   (superseded by `variable_state_lineage`, 4.6.0).
-SCHEMA_VERSION = "4.6.0"
+SCHEMA_VERSION = "4.7.0"
 DB_FILENAME = "reg_meta.db"
 
 

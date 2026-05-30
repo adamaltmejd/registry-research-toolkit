@@ -119,6 +119,69 @@ def is_period(value: str) -> bool:
     return any(p.match(value) for p in _PERIOD_PATTERNS)
 
 
+# Quarter / half-year → (start_month, end_month). Used by `period_token_to_bounds`
+# to expand a token into an ISO date interval the same way the ingest coalescer
+# does (§5.1: period tokens expand to ISO ranges).
+_QUARTER_MONTHS = {
+    "1": ("01", "03"),
+    "2": ("04", "06"),
+    "3": ("07", "09"),
+    "4": ("10", "12"),
+}
+_HALF_MONTHS = {"1": ("01", "06"), "2": ("07", "12")}
+# Last day per month (non-leap). February uses 29 so a leap-day `YYYY-02-29`
+# token still bounds correctly; the day bound is syntactic (§5.1 / fqid grammar),
+# so over-counting Feb to 29 is harmless for interval overlap.
+_MONTH_LAST_DAY = {
+    "01": "31", "02": "29", "03": "31", "04": "30", "05": "31", "06": "30",
+    "07": "31", "08": "31", "09": "30", "10": "31", "11": "30", "12": "31",
+}  # fmt: skip
+
+
+def period_token_to_bounds(token: str) -> tuple[str, str]:
+    """Expand a period token to an inclusive ISO date interval ``(lo, hi)``.
+
+    The full date-range expansion the resolver's `resolve_at` needs to intersect
+    against `variable_state` validity ranges (which are stored as full ISO dates,
+    §5.1). Mirrors the ingest-side expansion so a `HT2020` query and a `HT2020`
+    state agree on bounds. Accepts the six period forms `is_period` accepts:
+
+        2018          → 2018-01-01 .. 2018-12-31
+        2018-03       → 2018-03-01 .. 2018-03-31
+        2018-12-31    → 2018-12-31 .. 2018-12-31  (single day)
+        HT2020 / VT2020 → autumn (Jul-Dec) / spring (Jan-Jun) term
+        2018-Q3       → 2018-07-01 .. 2018-09-30
+        2018-H1       → 2018-01-01 .. 2018-06-30
+
+    Raises ``FqidError`` for anything that isn't a period token (fail-fast — the
+    caller validates user input here).
+    """
+    if not is_period(token):
+        raise FqidError(
+            f"not a period token: {token!r} "
+            "(grammar: YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY/VTYYYY, "
+            "YYYY-Q[1-4], YYYY-H[12])"
+        )
+    if token[:2] in ("HT", "VT"):
+        year = token[2:]
+        lo_m, hi_m = ("07", "12") if token[0] == "H" else ("01", "06")
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    if "-Q" in token:
+        year, q = token.split("-Q")
+        lo_m, hi_m = _QUARTER_MONTHS[q]
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    if "-H" in token:
+        year, h = token.split("-H")
+        lo_m, hi_m = _HALF_MONTHS[h]
+        return f"{year}-{lo_m}-01", f"{year}-{hi_m}-{_MONTH_LAST_DAY[hi_m]}"
+    parts = token.split("-")
+    if len(parts) == 1:  # YYYY
+        return f"{parts[0]}-01-01", f"{parts[0]}-12-31"
+    if len(parts) == 2:  # YYYY-MM
+        return f"{token}-01", f"{token}-{_MONTH_LAST_DAY[parts[1]]}"
+    return token, token  # YYYY-MM-DD single day
+
+
 def validate_slug(
     value: str,
     slot: FqidKind | str,
