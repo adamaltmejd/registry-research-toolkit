@@ -63,9 +63,18 @@ _KINDS_WITH_SAME_AS: frozenset[EntityKind] = frozenset({"variable", "classificat
 
 # Top-level keys accepted in a provider TOML; anything else is a typo
 # (e.g. `[registers."34"]` vs the singular form) that today would otherwise
-# silently no-op.
+# silently no-op. `lineage_defaults` / `lineage` (§5.6) are NOT SlugEntry rows
+# — `load_lineage_config` parses them separately — but they're legal top-level
+# tables, so the strict typo check must accept them.
 _PROVIDER_TOPLEVEL_KEYS: frozenset[str] = frozenset(
-    {"register", "register_variant", "register_version", "variable"}
+    {
+        "register",
+        "register_variant",
+        "register_version",
+        "variable",
+        "lineage_defaults",
+        "lineage",
+    }
 )
 _CLASSIFICATIONS_TOPLEVEL_KEYS: frozenset[str] = frozenset({"classification"})
 
@@ -1811,6 +1820,128 @@ def materialize_same_as_edges(
             )
 
     return {"variable": len(var_edges), "classification": len(class_edges)}
+
+
+# ---------------------------------------------------------------------------
+# §5.6 consumer-side binding lineage config (TOML-only, no SQL table)
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class LineageConfig:
+    """Source-variant pinning for §5.6 lineage, parsed from slug TOMLs.
+
+    `defaults` maps a source register slug → its heuristic default source
+    variant slug (the `[lineage_defaults]` block). `overrides` maps a
+    `(consumer_register_slug, variable_slug)` pair → `(source_register_slug,
+    source_variant_slug)` (the `[lineage."<consumer>.<slug>"]` blocks), used
+    when the per-register default is wrong for a specific consumer variable.
+
+    Both are pure shape (string-typed); existence of the named registers /
+    variants is validated by `link_variable_state_lineage` against the DB —
+    this loader stays DB-free so it's testable in isolation.
+    """
+
+    defaults: dict[str, str]
+    overrides: dict[tuple[str, str], tuple[str, str]]
+
+
+def load_lineage_config(slug_dir: Path) -> LineageConfig:
+    """Parse `[lineage_defaults]` and `[lineage."<consumer>.<slug>"]` from every
+    provider TOML under ``slug_dir`` (excluding ``classifications.toml``).
+
+    Duplicate keys across files are a fail-fast error — last-writer-wins would
+    hide a curator merging the same pin into two providers. The TOML dotted-key
+    form `[lineage."lisa.kon"]` parses as a single quoted key under `lineage`;
+    register/variable slugs are `[a-z0-9-]` (no `.`), so splitting the key on
+    the first `.` cleanly recovers `(consumer_register, variable_slug)`.
+    """
+    defaults: dict[str, str] = {}
+    overrides: dict[tuple[str, str], tuple[str, str]] = {}
+
+    for path in sorted(slug_dir.glob("*.toml")):
+        if path.name == "classifications.toml":
+            continue
+        data = _parse_toml(path)
+
+        raw_defaults = data.get("lineage_defaults", {})
+        if not isinstance(raw_defaults, dict):
+            raise _err(
+                "lineage_defaults_malformed",
+                f"{path.name}: [lineage_defaults] must be a table of "
+                f'source_register = "variant_slug" entries.',
+                "Use a [lineage_defaults] table with string values.",
+            )
+        for src_register, variant in raw_defaults.items():
+            if not isinstance(variant, str):
+                raise _err(
+                    "lineage_default_not_string",
+                    f"{path.name}: [lineage_defaults] {src_register!r} must be a "
+                    f"string variant slug, got {type(variant).__name__}.",
+                    "Set the value to the source variant slug, e.g. "
+                    'rtb = "folkbokforda-personer".',
+                )
+            if src_register in defaults:
+                raise _err(
+                    "lineage_default_duplicate",
+                    f"{path.name}: duplicate [lineage_defaults] entry for "
+                    f"source register {src_register!r} (already set to "
+                    f"{defaults[src_register]!r} in another TOML).",
+                    "Declare each source-register default in exactly one TOML.",
+                )
+            defaults[src_register] = variant
+
+        raw_overrides = data.get("lineage", {})
+        if not isinstance(raw_overrides, dict):
+            raise _err(
+                "lineage_override_malformed",
+                f"{path.name}: [lineage] must contain "
+                '[lineage."<consumer_register>.<variable_slug>"] tables.',
+                "Use quoted dotted-key tables under [lineage].",
+            )
+        for key, block in raw_overrides.items():
+            if not isinstance(block, dict):
+                raise _err(
+                    "lineage_override_malformed",
+                    f"{path.name}: [lineage.{key!r}] must be a table with "
+                    "source_register and source_variant keys.",
+                    "Use a table, e.g. "
+                    '[lineage."lisa.inkomst_pension"] '
+                    'source_register = "rams" source_variant = "individregister".',
+                )
+            # Split on the FIRST '.' — register slugs are dot-free, so the
+            # remainder is the (also dot-free) variable slug.
+            consumer_register, sep, variable_slug = key.partition(".")
+            if not sep or not consumer_register or not variable_slug:
+                raise _err(
+                    "lineage_override_key_malformed",
+                    f"{path.name}: [lineage.{key!r}] key must be "
+                    '"<consumer_register>.<variable_slug>".',
+                    'Use the dotted form, e.g. [lineage."lisa.kon"].',
+                )
+            source_register = block.get("source_register")
+            source_variant = block.get("source_variant")
+            if not isinstance(source_register, str) or not isinstance(
+                source_variant, str
+            ):
+                raise _err(
+                    "lineage_override_incomplete",
+                    f"{path.name}: [lineage.{key!r}] requires string "
+                    "source_register and source_variant keys.",
+                    "Set both keys, e.g. "
+                    'source_register = "rams" source_variant = "individregister".',
+                )
+            override_key = (consumer_register, variable_slug)
+            if override_key in overrides:
+                raise _err(
+                    "lineage_override_duplicate",
+                    f"{path.name}: duplicate [lineage] override for "
+                    f"{key!r} (already set in another TOML).",
+                    "Declare each consumer-variable override in exactly one TOML.",
+                )
+            overrides[override_key] = (source_register, source_variant)
+
+    return LineageConfig(defaults=defaults, overrides=overrides)
 
 
 # ---------------------------------------------------------------------------

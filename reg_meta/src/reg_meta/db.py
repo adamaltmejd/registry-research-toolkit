@@ -71,10 +71,19 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   put the variant out of the binding). Additive tables only → minor bump;
 #   old 4.4.0 DBs without them are rejected via the minor-version gate. A2.5's
 #   resolver consumes these for `predecessors()` / `successors()`.
+# - 4.6.0 (A2.4, current): added `variable_state_lineage` +
+#   `variable_state_lineage_warning` — state-pair interval-overlap consumer→source
+#   lineage (§5.6), materialized by `link_variable_state_lineage` from
+#   `variable.source_register_id` + variable-grain `variable_same_as`. Replaces
+#   v0.11's per-cvid `variable_instance.via_source_id` edges, but via_source_id
+#   is KEPT in parallel through A2.6 (catalog.py's interim resolver still reads
+#   it); both drop with `variable_instance` in A2.7. Additive tables only →
+#   minor bump; 4.5.0 DBs without them are rejected via the minor-version gate.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
-#   moves to `variable_state` for good — that's the next breaking
-#   change.
-SCHEMA_VERSION = "4.5.0"
+#   moves to `variable_state` for good — that's the next breaking change. Also
+#   drops `variable_instance.via_source_id` and `link_consumer_side_bindings`
+#   (superseded by `variable_state_lineage`, 4.6.0).
+SCHEMA_VERSION = "4.6.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -12,6 +12,18 @@
 # Bootstrap from live data with `reg-meta-build seed-slugs`. Schema and
 # field semantics live in REFACTOR_SPEC.md §5.3.
 
+# §5.6 consumer-side lineage: source-variant pinning (TOML-only, no SQL table).
+# `[lineage_defaults]` picks the heuristic default source variant per source
+# register; `link_variable_state_lineage` joins LISA/RAMS/... consumer states
+# to these source-register states by validity intersection. Composite registers
+# (LISA, RAMS) source Kön etc. from RTB's folkbokforda-personer variant, not
+# from any of RTB's other variants. Per-variable overrides go in
+# [lineage."<consumer_register>.<variable_slug>"] blocks when a default is wrong
+# (none curated yet — uncurated consumers hit the all-variants fallback + an
+# ambiguous_source_variant warning, surfaced in the build log for curation).
+[lineage_defaults]
+rtb = "folkbokforda-personer"
+
 # Företagsdatabasen (FDB)
 [register."1"]
 slug = "fdb"

@@ -32,6 +32,7 @@ from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
 from .fqid_slugs import (
+    load_lineage_config,
     materialize_same_as_edges,
     populate_slugs,
     populate_variable_slugs,
@@ -698,6 +699,36 @@ CREATE TABLE variable_replaced_by (
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variable,
                  successor_provider, successor_register, successor_variable)
 ) WITHOUT ROWID;
+
+-- §5.6 consumer-side binding lineage (STATE grain). Materialized by
+-- `link_variable_state_lineage`. One edge per (consumer_state, source_state)
+-- pair whose validity ranges intersect; (valid_from, valid_to) is the
+-- intersection. Source register comes from `variable.source_register_id`
+-- (shared metadata, A2.1.5); source-side variable matching traverses
+-- variable-grain `variable_same_as` via the build-side `_variable_set_via_same_as`
+-- BFS. Replaces v0.11's per-cvid `via_source_id` edges (kept in parallel
+-- through A2.6 — catalog.py's interim resolver still reads via_source_id;
+-- both dropped with `variable_instance` in A2.7). NOT WITHOUT ROWID:
+-- both directions get explicit indexes (consumer- AND source-keyed lookups),
+-- and idx_..._source is a true secondary lookup the clustered PK prefix can't
+-- serve (the consumer-keyed PK prefix can't answer "what feeds source state X").
+CREATE TABLE variable_state_lineage (
+    consumer_state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
+    source_state_id   INTEGER NOT NULL REFERENCES variable_state(state_id),
+    valid_from        TEXT    NOT NULL,    -- ISO 8601 'YYYY-MM-DD', inclusive start of intersection
+    valid_to          TEXT    NOT NULL,    -- ISO 8601 'YYYY-MM-DD', inclusive end of intersection ('9999-12-31' for open-ended)
+    PRIMARY KEY (consumer_state_id, source_state_id)
+);
+CREATE INDEX idx_variable_state_lineage_consumer ON variable_state_lineage(consumer_state_id);
+CREATE INDEX idx_variable_state_lineage_source ON variable_state_lineage(source_state_id);
+
+CREATE TABLE variable_state_lineage_warning (
+    consumer_state_id INTEGER NOT NULL REFERENCES variable_state(state_id),
+    warning_kind      TEXT    NOT NULL,    -- 'no_source_state', 'ambiguous_source_variant'
+    message           TEXT    NOT NULL,
+    PRIMARY KEY (consumer_state_id, warning_kind)
+);
+CREATE INDEX idx_variable_state_lineage_warning_consumer ON variable_state_lineage_warning(consumer_state_id);
 
 -- Reference tables
 CREATE TABLE source_column_type (
@@ -3470,6 +3501,344 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     return len(resolved)
 
 
+def _variable_set_via_same_as(
+    conn: sqlite3.Connection,
+    start_provider: str,
+    start_register_slug: str,
+    start_variable_slug: str,
+    target_register_slug: str,
+) -> set[str]:
+    """BFS over variable-grain `variable_same_as` from the start node,
+    returning the set of variable slugs *in target_register_slug* reachable
+    from it (§5.6 "same_as on the source side").
+
+    The linker starts this at the SOURCE-side identity node — the source
+    register + the consumer's own slug — so the start node lives in the target
+    register and IS included in the result (the identity match LISA `kon` →
+    RTB `kon`). The source register's `variable_same_as` graph (e.g. RTB `kon`
+    ↔ `kon-v2` after a rename) then adds the renamed siblings. The COMMON case
+    is no same_as edge at all → the result is just {start_variable_slug}, so a
+    rename is additive, never replacing the identity match.
+
+    Edges are stored both directions (per `materialize_same_as_edges`), so a
+    single forward adjacency query per node suffices. A `visited` set makes the
+    walk cycle-safe — required, not merely defensive: both-directions storage
+    makes every A↔B equivalence a 2-cycle in the materialized table by design.
+
+    `start_provider` is needed because `variable_same_as` is provider-keyed and
+    `same_as` crosses provider boundaries (a SOS consumer sourcing from SCB
+    follows edges that live in SCB's rows).
+    """
+    start = (start_provider, start_register_slug, start_variable_slug)
+    visited: set[tuple[str, str, str]] = {start}
+    frontier: list[tuple[str, str, str]] = [start]
+    result: set[str] = set()
+    # The start node itself is the identity match when it lives in the target
+    # register (always, as the linker calls it). Include it before expanding.
+    if start_register_slug == target_register_slug:
+        result.add(start_variable_slug)
+
+    while frontier:
+        provider, register, variable = frontier.pop()
+        for row in conn.execute(
+            "SELECT b_provider, b_register, b_variable FROM variable_same_as "
+            "WHERE a_provider = ? AND a_register = ? AND a_variable = ? "
+            "ORDER BY b_provider, b_register, b_variable",
+            (provider, register, variable),
+        ).fetchall():
+            node = (row[0], row[1], row[2])
+            if node in visited:
+                continue
+            visited.add(node)
+            frontier.append(node)
+            # Collect only nodes in the target (source) register; provider is
+            # part of the match because same_as crosses provider boundaries.
+            if row[1] == target_register_slug:
+                result.add(row[2])
+    return result
+
+
+def link_variable_state_lineage(
+    conn: sqlite3.Connection,
+    slug_dir: Path,
+) -> dict[str, int]:
+    """Materialize §5.6 state-pair interval-overlap lineage edges.
+
+    For every consumer `variable_state` whose variable has a populated
+    `variable.source_register_id` (pointing at a *different* register), find
+    the matching source variable(s) in that register — the consumer's own slug
+    plus any variable-grain `same_as` expansion (`_variable_set_via_same_as`) —
+    gather their states in the pinned source variant, and emit one
+    `variable_state_lineage` edge per state pair whose validity ranges
+    intersect. The edge's `(valid_from, valid_to)` is the intersection.
+
+    Source-variant pinning (`LineageConfig`, TOML-only — no SQL table):
+      1. Per-`(consumer_register, variable_slug)` override → exactly one variant.
+      2. `[lineage_defaults]` per source register → one variant.
+      3. No curated rule → all source-side variants carrying a matching state,
+         plus an `ambiguous_source_variant` warning naming the candidates.
+
+    When no source state is found at all, emits a `no_source_state` warning. A
+    source state that is found but does NOT overlap the consumer state is a
+    legitimate empty result — zero edges, zero warnings (distinct from
+    `no_source_state`).
+
+    Additive: runs alongside `link_consumer_side_bindings` (`via_source_id` is
+    kept in parallel through A2.6 — catalog.py's interim resolver still reads
+    it; both drop with `variable_instance` in A2.7). Returns
+    {'edges', 'warnings_ambiguous', 'warnings_no_source'} counts.
+
+    Raises `RegMetaError` on contradictory curation: an override whose
+    `source_register` disagrees with the variable's resolved
+    `source_register_id`, or a pin naming a variant that doesn't exist in the
+    source register.
+    """
+    config = load_lineage_config(slug_dir)
+
+    # Resolve every override's source register/variant to a register_variant_id
+    # up front; this also validates the named variants exist (fail-fast). Cache
+    # variant-slug→id per register so we touch the DB once per source register.
+    variant_ids_by_register: dict[str, dict[str, int]] = {}
+
+    def _variants_for(register_slug: str) -> dict[str, int]:
+        cached = variant_ids_by_register.get(register_slug)
+        if cached is not None:
+            return cached
+        rows = conn.execute(
+            "SELECT rv.register_variant_id, rv.slug FROM register_variant rv "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "WHERE r.slug = ? AND rv.slug IS NOT NULL "
+            "ORDER BY rv.slug",
+            (register_slug,),
+        ).fetchall()
+        mapping = {row[1]: row[0] for row in rows}
+        variant_ids_by_register[register_slug] = mapping
+        return mapping
+
+    def _pin_variant_id(register_slug: str, variant_slug: str, *, source: str) -> int:
+        variant_id = _variants_for(register_slug).get(variant_slug)
+        if variant_id is None:
+            raise RegMetaError(
+                exit_code=EXIT_CONFIG,
+                code="lineage_pin_unknown_variant",
+                error_class="configuration",
+                message=(
+                    f"{source}: source variant {variant_slug!r} not found in "
+                    f"register {register_slug!r}."
+                ),
+                remediation=(
+                    "Fix the lineage pin to name a real variant slug in the "
+                    "source register (check the register's [register_variant] "
+                    "entries)."
+                ),
+            )
+        return variant_id
+
+    # Consumer states whose variable is sourced from a *different* register.
+    # ORDER BY state_id pins deterministic warning-emission order.
+    consumer_rows = conn.execute(
+        "SELECT vs.state_id, vs.valid_from, vs.valid_to, "
+        "       v.variable_id, v.slug AS consumer_slug, "
+        "       cr.slug AS consumer_register, "
+        "       v.source_register_id, sp.slug AS source_provider, "
+        "       sr.slug AS source_register "
+        "FROM variable_state vs "
+        "JOIN variable v   ON vs.variable_id = v.variable_id "
+        "JOIN register cr  ON v.register_id = cr.register_id "
+        "JOIN register sr  ON v.source_register_id = sr.register_id "
+        "JOIN provider sp  ON sr.provider_id = sp.provider_id "
+        "WHERE v.source_register_id IS NOT NULL "
+        "  AND v.source_register_id != v.register_id "
+        "  AND v.slug IS NOT NULL "
+        "ORDER BY vs.state_id"
+    ).fetchall()
+
+    # Per-variable memo: the candidate source-variable slug set (consumer slug
+    # ∪ same_as expansion). Keyed on variable_id (many states share a variable).
+    src_slugs_by_variable: dict[int, set[str]] = {}
+
+    # PK-keyed dedup: a (consumer_state_id, source_state_id) pair can only arise
+    # once per consumer-state loop (a state belongs to exactly one variant, so
+    # the unpinned all-variants path can't surface it twice), but we key a dict
+    # on the PK so an unexpected duplicate is a no-op INSERT rather than a PK
+    # violation — defense, not an expected case.
+    edges: dict[tuple[int, int], tuple[int, int, str, str]] = {}
+    warnings_ambiguous: list[tuple[int, str, str]] = []
+    warnings_no_source: list[tuple[int, str, str]] = []
+
+    for row in consumer_rows:
+        (
+            c_state_id,
+            c_valid_from,
+            c_valid_to,
+            variable_id,
+            consumer_slug,
+            consumer_register,
+            source_register_id,
+            source_provider,
+            source_register,
+        ) = row
+
+        # Candidate source-variable slug set. The consumer's slug identifies the
+        # source variable by IDENTITY (LISA `kon` → RTB `kon`); the source
+        # register's own `variable_same_as` graph (e.g. RTB `kon` ↔ `kon-v2`
+        # after a rename) then expands that identity node to every equivalent
+        # source slug. So the BFS starts at the SOURCE-side node
+        # (source_provider, source_register, consumer_slug) — NOT the consumer's
+        # own register node, which has no edges into the source graph — and the
+        # start node's own slug is included (the no-rename common case yields
+        # just {consumer_slug}).
+        src_slugs = src_slugs_by_variable.get(variable_id)
+        if src_slugs is None:
+            src_slugs = _variable_set_via_same_as(
+                conn,
+                source_provider,
+                source_register,
+                consumer_slug,
+                source_register,
+            )
+            src_slugs_by_variable[variable_id] = src_slugs
+
+        # Resolve the pinned source variant(s). None = register-level fallback
+        # (all variants that carry a matching state) + ambiguous warning.
+        override = config.overrides.get((consumer_register, consumer_slug))
+        pinned_variant_ids: list[int] | None
+        if override is not None:
+            override_register, override_variant = override
+            if override_register != source_register:
+                raise RegMetaError(
+                    exit_code=EXIT_CONFIG,
+                    code="lineage_override_register_mismatch",
+                    error_class="configuration",
+                    message=(
+                        f'[lineage."{consumer_register}.{consumer_slug}"]: '
+                        f"source_register {override_register!r} contradicts the "
+                        f"variable's resolved source register {source_register!r}."
+                    ),
+                    remediation=(
+                        "Fix the override's source_register to match the "
+                        "variable's variable_register_kalla attribution, or "
+                        "remove the override."
+                    ),
+                )
+            pinned_variant_ids = [
+                _pin_variant_id(
+                    source_register,
+                    override_variant,
+                    source=f'[lineage."{consumer_register}.{consumer_slug}"]',
+                )
+            ]
+        elif source_register in config.defaults:
+            pinned_variant_ids = [
+                _pin_variant_id(
+                    source_register,
+                    config.defaults[source_register],
+                    source=f"[lineage_defaults] {source_register}",
+                )
+            ]
+        else:
+            pinned_variant_ids = None  # register-level fallback
+
+        # Fetch source states: variable in the source register, slug in the
+        # candidate set, optionally narrowed to the pinned variant(s). Carry
+        # the variant slug so the fallback warning can name candidates.
+        slug_placeholders = ",".join("?" for _ in src_slugs)
+        params: list[Any] = [source_register_id, *sorted(src_slugs)]
+        variant_clause = ""
+        if pinned_variant_ids is not None:
+            variant_placeholders = ",".join("?" for _ in pinned_variant_ids)
+            variant_clause = f" AND vs.register_variant_id IN ({variant_placeholders})"
+            params.extend(pinned_variant_ids)
+        source_states = conn.execute(
+            "SELECT vs.state_id, vs.valid_from, vs.valid_to, rv.slug AS variant_slug "
+            "FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "JOIN register_variant rv ON vs.register_variant_id = rv.register_variant_id "
+            f"WHERE v.register_id = ? AND v.slug IN ({slug_placeholders}){variant_clause} "
+            "ORDER BY vs.state_id",
+            params,
+        ).fetchall()
+
+        if not source_states:
+            # The variable was sought but no source state exists in the pinned
+            # variant(s) / register — distinct from a found-but-non-overlapping
+            # state (which yields zero edges below, no warning).
+            if pinned_variant_ids is None:
+                pin_desc = "any variant"
+            else:
+                slug_by_id = {v: k for k, v in _variants_for(source_register).items()}
+                pinned_slugs = sorted(
+                    slug_by_id.get(v, str(v)) for v in pinned_variant_ids
+                )
+                pin_desc = f"pinned variant(s) {pinned_slugs!r}"
+            warnings_no_source.append(
+                (
+                    c_state_id,
+                    "no_source_state",
+                    f"No source state in register {source_register!r} for "
+                    f"variable slug(s) {sorted(src_slugs)!r} ({pin_desc}).",
+                )
+            )
+            continue
+
+        # Fallback (no pin): the source states may span several variants. Warn
+        # if they do, naming the candidates (sorted for determinism). The
+        # warning is about the UNPINNED ambiguity (which source variant feeds
+        # this consumer), independent of whether this particular consumer state
+        # overlaps any of them — so it fires on multi-variant candidates even
+        # if the interval check below emits no edge for this state.
+        if pinned_variant_ids is None:
+            candidate_variants = sorted({s[3] for s in source_states})
+            if len(candidate_variants) > 1:
+                warnings_ambiguous.append(
+                    (
+                        c_state_id,
+                        "ambiguous_source_variant",
+                        f"No source-variant pin for "
+                        f"{consumer_register}.{consumer_slug}; matched source "
+                        f"states across all variants: {candidate_variants!r}. Add "
+                        f'a [lineage_defaults] or [lineage."{consumer_register}.'
+                        f'{consumer_slug}"] pin to disambiguate.',
+                    )
+                )
+
+        # Interval-overlap emit. ISO full-date strings compare chronologically
+        # by lexical order (full-date contract + '9999-12-31' sentinel).
+        for s_state_id, s_valid_from, s_valid_to, _variant_slug in source_states:
+            lo = max(c_valid_from, s_valid_from)
+            hi = min(c_valid_to, s_valid_to)
+            if lo <= hi:
+                edges[(c_state_id, s_state_id)] = (c_state_id, s_state_id, lo, hi)
+
+    if edges:
+        conn.executemany(
+            "INSERT INTO variable_state_lineage "
+            "(consumer_state_id, source_state_id, valid_from, valid_to) "
+            "VALUES (?, ?, ?, ?)",
+            list(edges.values()),
+        )
+    warnings = warnings_ambiguous + warnings_no_source
+    if warnings:
+        conn.executemany(
+            "INSERT INTO variable_state_lineage_warning "
+            "(consumer_state_id, warning_kind, message) VALUES (?, ?, ?)",
+            warnings,
+        )
+
+    counts = {
+        "edges": len(edges),
+        "warnings_ambiguous": len(warnings_ambiguous),
+        "warnings_no_source": len(warnings_no_source),
+    }
+    if consumer_rows:
+        _progress(
+            f"  Variable state lineage edges: {counts['edges']:,} emitted, "
+            f"{counts['warnings_ambiguous']:,} ambiguous-variant, "
+            f"{counts['warnings_no_source']:,} no-source warnings"
+        )
+    return counts
+
+
 # ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
@@ -3789,6 +4158,24 @@ def build_db(
             _progress("Skipping consumer-side binding edges (skip_slugs=True)")
         else:
             link_consumer_side_bindings(conn)
+            # A2.4 (§5.6): additive state-pair interval-overlap lineage. Runs
+            # alongside the old via_source_id linker (KEPT through A2.6 —
+            # catalog.py's interim resolver still reads via_source_id; both
+            # drop with variable_instance in A2.7). Ordering: after
+            # populate_variable_slugs (reads variable.slug on both sides),
+            # materialize_same_as_edges (the BFS reads variable_same_as), and
+            # _coalesce_variable_states (reads the finished variable_state rows
+            # it joins) — so it must be among the last passes. Shares the
+            # skip_slugs guard: every slug is NULL under --skip-slugs, so the
+            # linker would silently emit zero edges instead of an honest
+            # incompleteness signal. `slug_root` is in scope from the slug
+            # branch above.
+            lineage_counts = link_variable_state_lineage(conn, slug_root)
+            row_counts["variable_state_lineage"] = lineage_counts["edges"]
+            row_counts["variable_state_lineage_warnings"] = (
+                lineage_counts["warnings_ambiguous"]
+                + lineage_counts["warnings_no_source"]
+            )
 
         # Populate code_variable_map from year-projected value_set_member rows
         # joined through variable_instance.value_set_id. A code only appears

@@ -127,6 +127,47 @@ review. The resulting `source_register_id` / `source_label` pair on
 [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Composite registers and
 source tracking").
 
+## Consumer-side lineage (`variable_state_lineage`, §5.6)
+
+Composite registers (LISA, RAMS, …) re-deliver variables sourced from base
+registers (RTB, FTB, …). `link_variable_state_lineage` materializes that
+consumer→source link as **state-pair interval-overlap edges**: for each
+consumer `variable_state` whose `variable.source_register_id` points at a
+different register, it finds the matching source state(s) and emits one edge
+per pair whose validity ranges intersect, with `(valid_from, valid_to)` set to
+the intersection. A few non-obvious choices:
+
+- **Interval-overlap, not slug equality.** v0.11 keyed lineage on slug-folded
+  period and picked the source variant non-deterministically (`MIN(cvid)`).
+  The interval join produces the same answer for the trivial year-equal case
+  but also expresses real cross-state lineage (a consumer era sourcing from a
+  pre-rename source state, then a post-rename one) at no runtime cost.
+- **Source-side matching starts at the SOURCE identity node.** The consumer's
+  slug identifies the source variable by identity (LISA `kon` → RTB `kon`);
+  `_variable_set_via_same_as` then BFS-expands *from the source-register node*
+  through the source register's variable-grain `variable_same_as` graph (RTB
+  `kon` ↔ `kon-v2` after a rename). Starting at the consumer's own register
+  node would find nothing — it has no edges into the source graph. The common
+  no-rename case yields just the identity slug, so a rename is additive.
+- **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]`
+  block picks one source variant per source register; a
+  `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per
+  consumer variable. Uncurated consumers fall back to *all* source variants
+  carrying a matching state plus an `ambiguous_source_variant` warning; a
+  consumer with no source state at all gets `no_source_state`. A found-but-
+  non-overlapping source state is neither — it is a legitimate empty result
+  (zero edges, zero warnings). Warnings land in `variable_state_lineage_warning`
+  and the build log for curator attention. `load_lineage_config` does shape
+  validation only; existence of the named registers/variants is validated by
+  the linker against the DB (fail-fast on a pin to a non-existent variant or a
+  `source_register` that contradicts the variable's resolved source register).
+
+`link_variable_state_lineage` runs **alongside** the old slug-only
+`link_consumer_side_bindings` (which sets `variable_instance.via_source_id`):
+the new linker is additive through A2.6 because `reg_meta`'s interim resolver
+still reads `via_source_id`. Both the old linker and the column drop with
+`variable_instance` in A2.7.
+
 ## Vardemängder sentinel filtering
 
 `Vardemangder.csv` ships a row for every variable, including those with no
