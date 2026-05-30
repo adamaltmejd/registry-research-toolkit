@@ -780,6 +780,7 @@ def get_varinfo(
     variables_out: list[dict[str, Any]] = []
     for var in matched_vars:
         rid, vid = var["register_id"], var["var_id"]
+        variable_id = var["variable_id"]
 
         # A2.6: "instances" are `variable_state` rows now (per-delivery shape),
         # not per-cvid `variable_instance` × `register_version` rows. Each state
@@ -787,6 +788,11 @@ def get_varinfo(
         # comes from `valid_from`. The 3-seg binding FQID is built from the
         # state's own variable slug — split siblings each surface their own slug,
         # not a shared `(register_id, var_id)` pick.
+        #
+        # Select states by the matched row's `variable_id`, NOT by
+        # `(register_id, provider_key)`: `provider_key` is NON-unique after an
+        # A2.2 split (siblings share one source key), so a provider_key filter
+        # would fan in every sibling's states under this one matched variable.
         states = conn.execute(
             "SELECT vs.state_id, vs.register_variant_id, vs.valid_from, vs.valid_to, "
             "vs.value_set_version_label, vs.data_type, vs.data_length, "
@@ -798,10 +804,10 @@ def get_varinfo(
             "JOIN register_variant rv ON vs.register_variant_id = rv.register_variant_id "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE v.register_id = ? AND v.provider_key = CAST(? AS TEXT) "
+            "WHERE vs.variable_id = ? "
             "ORDER BY vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.register_variant_id, vs.state_id",
-            (rid, vid),
+            (variable_id,),
         ).fetchall()
 
         # Value-set member counts per value_set_id (None when the state has no
@@ -925,7 +931,7 @@ def _get_availability_variable(
         params.extend(ids)
 
     var_rows = conn.execute(
-        "SELECT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name, "
+        "SELECT v.variable_id, v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name, "
         "r.name AS register_name FROM variable v "
         "JOIN register r ON v.register_id = r.register_id "
         f"WHERE (v.provider_key = CAST(? AS TEXT) OR LOWER(v.name) = LOWER(?)){reg_filter}",
@@ -942,18 +948,22 @@ def _get_availability_variable(
     for var in var_rows:
         rid = var["register_id"]
         vid = var["var_id"]
+        variable_id = var["variable_id"]
 
         # A2.6: year coverage comes from `variable_state` validity windows
         # (register_version is dropped before ship). Each state contributes the
         # calendar years its window spans; its delivery column is the per-year
         # alias.
+        #
+        # Select by the matched `variable_id`, NOT `(register_id, provider_key)`:
+        # `provider_key` is NON-unique after an A2.2 split, so a provider_key
+        # filter would credit one sibling with every sibling's year coverage.
         rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.delivery_column_name "
             "FROM variable_state vs "
-            "JOIN variable v ON vs.variable_id = v.variable_id "
-            "WHERE v.register_id = ? AND v.provider_key = CAST(? AS TEXT) "
+            "WHERE vs.variable_id = ? "
             "ORDER BY vs.valid_from, vs.valid_to",
-            (rid, vid),
+            (variable_id,),
         ).fetchall()
 
         reg_years: list[int] = []
@@ -1142,28 +1152,31 @@ def get_values_by_variable(
     raw_int = _try_int(variable)
     int_variable = raw_int if isinstance(raw_int, int) else None
 
+    # Carry `variable_id` from the match: it's the unique per-variable key the
+    # state query filters by. `provider_key` (= var_id) is NON-unique after an
+    # A2.2 split, so selecting states by it would merge sibling value sets.
     rows_by_id: list[Any] = []
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         if int_variable is not None:
             rows_by_id = conn.execute(
-                f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+                f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
                 f"WHERE provider_key = CAST(? AS TEXT) AND register_id IN ({ph})",
                 [int_variable, *reg_ids],
             ).fetchall()
         rows_by_name = conn.execute(
-            f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+            f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
             f"WHERE LOWER(name) = LOWER(?) AND register_id IN ({ph})",
             [variable, *reg_ids],
         ).fetchall()
     else:
         if int_variable is not None:
             rows_by_id = conn.execute(
-                "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable WHERE provider_key = CAST(? AS TEXT)",
+                "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable WHERE provider_key = CAST(? AS TEXT)",
                 (int_variable,),
             ).fetchall()
         rows_by_name = conn.execute(
-            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
+            "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id, name FROM variable "
             "WHERE LOWER(name) = LOWER(?)",
             (variable,),
         ).fetchall()
@@ -1172,7 +1185,7 @@ def get_values_by_variable(
 
     if not matched:
         alias_sql = (
-            "SELECT DISTINCT v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name "
+            "SELECT DISTINCT v.variable_id, v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name "
             "FROM variable_alias a "
             "JOIN variable_instance vi ON a.cvid = vi.cvid "
             "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
@@ -1224,14 +1237,14 @@ def get_values_by_variable(
     # A2.6: "instances" are `variable_state` rows now (year from validity
     # window), not per-cvid `variable_instance` × `register_version` rows. Codes
     # come from the state's `value_set_id` (the same year-projected set the
-    # coalescer assigned). Batched across all matched (register_id, var_id) pairs
-    # to avoid the N+1 pattern when a variable spans dozens of registers.
-    pair_clauses = " OR ".join(
-        ["(v.register_id = ? AND v.provider_key = CAST(? AS TEXT))"] * len(matched)
-    )
-    pair_params: list[Any] = []
-    for var in matched:
-        pair_params.extend([var["register_id"], var["var_id"]])
+    # coalescer assigned). Batched across all matched `variable_id`s to avoid the
+    # N+1 pattern when a variable spans dozens of registers.
+    #
+    # Filter by `variable_id`, NOT `(register_id, provider_key)`: `provider_key`
+    # is NON-unique after an A2.2 split (siblings share one source key), so a
+    # provider_key filter would merge every sibling's value sets under one name.
+    variable_ids = [var["variable_id"] for var in matched]
+    vid_ph = _in_placeholders(variable_ids)
 
     state_rows = conn.execute(
         f"SELECT vs.state_id, vs.value_set_id, vs.valid_from, vs.valid_to, "
@@ -1241,8 +1254,8 @@ def get_values_by_variable(
         f"JOIN variable v ON vs.variable_id = v.variable_id "
         f"JOIN register r ON v.register_id = r.register_id "
         f"JOIN register_variant rv ON vs.register_variant_id = rv.register_variant_id "
-        f"WHERE {pair_clauses}",
-        pair_params,
+        f"WHERE vs.variable_id IN ({vid_ph})",
+        variable_ids,
     ).fetchall()
 
     instances: list[dict[str, Any]] = []
@@ -1407,8 +1420,16 @@ def _columns_at_year(
     before ship): a state is active at `year` when `valid_from`..`valid_to`
     overlaps that calendar year. Returns an empty dict when the variant has no
     state covering the year (the caller treats that like "version absent").
-    Per (variant, year) a var_id has at most one shape modulo multi-vintage; on
-    overlap we take the lexically-smallest delivery column for determinism.
+
+    Keyed by `var_id` (NOT `variable_id`) on purpose: `get_diff` is a
+    GROUP-level schema diff whose public contract diffs a register's columns by
+    `var_id` (from/to var_id set intersection), so this collapses to one row per
+    var_id. After an A2.2 split several siblings share a var_id; if more than one
+    is active in the same (variant, year) we take the lexically-smallest delivery
+    column for determinism — the diff under-reports the extra siblings as one
+    column rather than leaking them onto an unrelated single variable. That is an
+    accepted imprecision of var_id-grained diffing, distinct from the
+    matched-variable sibling leak the get_varinfo / get_values fixes address.
     """
     iso_lo = f"{year:04d}-12-31"  # any state starting on/before year-end ...
     iso_hi = f"{year:04d}-01-01"  # ... and ending on/after year-start overlaps
@@ -1676,6 +1697,7 @@ def get_lineage(
 
     for var in matched:
         rid, vid = var["register_id"], var["var_id"]
+        variable_id = var["variable_id"]
         # §5.11 drop: `variabelhamtadfran` is no longer ingested. Lineage
         # role detection now keys solely on `source_register_text` (the
         # renamed `variabelregister_kalla`); the auxiliary `hamtad` text
@@ -1695,11 +1717,15 @@ def get_lineage(
         # A2.6: state count + year range from `variable_state` (register_version
         # is dropped before ship). `instance_count` counts states now (the
         # per-delivery shape), not per-cvid `variable_instance` rows.
+        #
+        # Select by the matched `variable_id`, NOT `(register_id, provider_key)`:
+        # `matched` already yields one row per split sibling (each with its own
+        # `variable_id` / role), so the state count must be per-sibling — a
+        # provider_key filter is NON-unique post-split and would sum siblings.
         states = conn.execute(
             "SELECT vs.valid_from, vs.valid_to FROM variable_state vs "
-            "JOIN variable v ON vs.variable_id = v.variable_id "
-            "WHERE v.register_id = ? AND v.provider_key = CAST(? AS TEXT)",
-            (rid, vid),
+            "WHERE vs.variable_id = ?",
+            (variable_id,),
         ).fetchall()
 
         instance_count = len(states)
@@ -2215,6 +2241,15 @@ def classifications_for_variable(
 
     A single variable can span multiple classifications across its lifetime
     (e.g. SUN2000 → SUN2020), so this returns a list, not a scalar.
+
+    A2.6 known limitation (resolves in A2.7): this reads `variable_instance`,
+    keyed by `(register_id, var_id)`. `var_id` (= `provider_key`) is non-unique
+    after A2.2 split triage and `variable_instance` carries no `variable_id`
+    column, so an A2.2 split sibling's classifications aggregate across all
+    siblings sharing the var_id — NOT sibling-isolated like its states/values
+    (which now filter by the matched `variable_id`). Can't be fixed at the query
+    layer until A2.7 drops `variable_instance` and classifications re-source off
+    `variable_state`. Deliberate deferral, not a silent bug.
     """
     rows = conn.execute(
         """

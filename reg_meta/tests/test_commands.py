@@ -421,6 +421,98 @@ class TestGetVarinfo:
 
 
 # ---------------------------------------------------------------------------
+# Split-sibling isolation (A2.2 split → A2.6 query)
+# ---------------------------------------------------------------------------
+
+
+class TestSplitSiblingIsolation:
+    """A2.2 puts several variables under one `(register_id, provider_key)` —
+    split siblings share a `var_id` but have distinct `variable_id`s, slugs,
+    names, and their OWN `variable_state` + value sets. Once a `get_*` command
+    has matched ONE sibling (by its unique name/alias), it must select states by
+    that row's `variable_id`, not by the shared `provider_key`. Filtering on
+    `provider_key` leaks the OTHER sibling's states/codes — these tests fail on
+    that bug (they see 2 states / both value sets where 1 sibling has 1 each).
+    """
+
+    @staticmethod
+    def _split_db():
+        from _slugged_db import (
+            add_state,
+            add_value_set,
+            add_variable,
+            build_slugged_db,
+        )
+
+        # Default fixture: register 1 (lisa), variant 10, variable var_id 44
+        # name "Kön" slug "kon". Replace it with two explicit siblings so the
+        # scenario is unambiguous: drop the default variable layer, add A + B.
+        conn = build_slugged_db(variable=None)
+        # Sibling A — provider_key 44, distinct slug + name + own column/codes.
+        add_variable(
+            conn, register_id=1, var_id=44, name="SSYK 3-pos", slug="ssyk-3pos"
+        )
+        add_value_set(conn, value_set_id=1, codes=[("A1", "A-one"), ("A2", "A-two")])
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="ssyk-3pos",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Ssyk3",
+            value_set_id=1,
+        )
+        # Sibling B — same provider_key 44, its own slug/name/column/codes.
+        add_variable(
+            conn, register_id=1, var_id=44, name="SSYK 5-pos", slug="ssyk-5pos"
+        )
+        add_value_set(conn, value_set_id=2, codes=[("B1", "B-one"), ("B2", "B-two")])
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="ssyk-5pos",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Ssyk5",
+            value_set_id=2,
+        )
+        conn.commit()
+        return conn
+
+    def test_varinfo_returns_only_matched_sibling_states(self):
+        from reg_meta.queries import get_varinfo
+
+        conn = self._split_db()
+        # Match sibling A by its unique name → exactly one variable, and its
+        # instances must be ONLY A's single state (column Ssyk3), not B's.
+        result = get_varinfo(conn, "SSYK 3-pos", register="lisa")
+        assert len(result) == 1
+        a = result[0]
+        assert a["name"] == "SSYK 3-pos"
+        cols = sorted(c for inst in a["instances"] for c in inst["aliases"])
+        assert cols == ["Ssyk3"]
+        assert len(a["instances"]) == 1
+
+        # And sibling B in isolation sees only Ssyk5.
+        b = get_varinfo(conn, "SSYK 5-pos", register="lisa")[0]
+        b_cols = sorted(c for inst in b["instances"] for c in inst["aliases"])
+        assert b_cols == ["Ssyk5"]
+
+    def test_values_returns_only_matched_sibling_codes(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = self._split_db()
+        # Match sibling A by name → only A's value set (A1/A2), never B's.
+        result = get_values_by_variable(conn, "SSYK 3-pos", register="lisa")
+        codes = {v["code"] for inst in result["instances"] for v in inst["values"]}
+        assert codes == {"A1", "A2"}
+
+        b = get_values_by_variable(conn, "SSYK 5-pos", register="lisa")
+        b_codes = {v["code"] for inst in b["instances"] for v in inst["values"]}
+        assert b_codes == {"B1", "B2"}
+
+
+# ---------------------------------------------------------------------------
 # Get values
 # ---------------------------------------------------------------------------
 
