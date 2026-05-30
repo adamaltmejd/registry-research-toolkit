@@ -35,11 +35,12 @@ def build_slugged_db(
     variable: tuple[str, int, int, str] | None = _DEFAULT_VARIABLE,
     delivery_column_name: str | None = None,
     variable_slug: str | None = None,
-    classification: tuple[str, str, str, str] | None = (
+    # A2.6.1: classification is (short_name, name, slug); the slug bakes in the
+    # vintage (`class/<slug>`), so there's no separate version element.
+    classification: tuple[str, str, str] | None = (
         "SUN2020",
         "Svensk utbildningsnomenklatur",
-        "2020",
-        "sun",
+        "sun2020",
     ),
 ) -> sqlite3.Connection:
     """Build an in-memory DB. Pass ``None`` for any layer to omit it.
@@ -121,11 +122,10 @@ def build_slugged_db(
         )
 
     if classification is not None:
-        short, name, version_str, slug = classification
+        short, name, slug = classification
         conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES (?, ?, ?, ?)",
-            (short, name, version_str, slug),
+            "INSERT INTO classification (short_name, name, slug) VALUES (?, ?, ?)",
+            (short, name, slug),
         )
 
     conn.commit()

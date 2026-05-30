@@ -24,7 +24,6 @@ from typing import TYPE_CHECKING, Any, Literal
 
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
 from reg_meta.fqid import (
-    FqidError,
     FqidKind,
     derive_variable_slug,
     validate_slug,
@@ -107,7 +106,6 @@ class SlugEntry:
     source_id: str
     slug: str | None
     provider: str | None = None
-    version: str | None = None
     display_group: str | None = None
     # Whether the source ID is retired from current deliveries. populate_slugs
     # only short-circuits the missing-row branch on this — a still-live row
@@ -209,7 +207,7 @@ def _allowed_fields(kind: EntityKind) -> frozenset[str]:
     if kind == "register_variant":
         return frozenset(base | {"display_group"})
     if kind == "classification":
-        return frozenset(base | {"version", "same_as"})
+        return frozenset(base | {"same_as"})
     if kind == "variable":
         return frozenset(base | {"same_as"})
     return frozenset(base)
@@ -347,32 +345,11 @@ def _validate_entry(
             f"{kind}.{source_id!r}: `replaced_by` must be a non-empty string.",
             "Point it at the TOML key of the replacement row.",
         )
-    version = entry.get("version")
-    if kind == "classification":
-        if not version or not isinstance(version, str):
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: classifications require a string `version`.",
-                'Add `version = "<stem>"` (e.g. "2020").',
-            )
-        # `version` becomes the third segment of `class/<slug>/<version>`, so
-        # it must round-trip through the FQID grammar. Catching this here
-        # surfaces the error at TOML load rather than at FQID emission.
-        try:
-            validate_slug(version, "classification version", allow_period=True)
-        except FqidError as exc:
-            raise _err(
-                "slug_toml_invalid",
-                f"{kind}.{source_id!r}: `version` {version!r} fails the FQID "
-                f"grammar ({exc}).",
-                "Use a kebab-case slug or a period token (e.g. `2020`, `2020-Q1`).",
-            ) from exc
-    elif version is not None:
-        raise _err(
-            "slug_toml_invalid",
-            f"{kind}.{source_id!r}: `version` is only valid on classifications.",
-            "Remove the field or move the entry to [[classification]].",
-        )
+    # A2.6.1: classifications no longer carry a `version` field — the vintage
+    # is baked into the slug (`class/<slug>`, e.g. `sun2020`). A stray `version`
+    # on any entry is rejected by the unknown-field guard above (it's no longer
+    # in `_allowed_fields`); the baked slug is validated by `_validate_entry`'s
+    # normal slug-grammar check, same as every other slug.
     display_group = entry.get("display_group")
     if display_group is not None and not isinstance(display_group, str):
         raise _err(
@@ -385,7 +362,6 @@ def _validate_entry(
         source_id=source_id,
         slug=slug,
         provider=provider,
-        version=version,
         display_group=display_group,
         deprecated=deprecated_raw,
         replaced_by=replaced_by,
@@ -526,25 +502,27 @@ def load_classifications_toml(path: Path) -> list[SlugEntry]:
             'Use [classification."<short_name>"] entries.',
         )
     entries: list[SlugEntry] = []
-    seen_pairs: dict[tuple[str, str], str] = {}
+    seen_slugs: dict[str, str] = {}
     for source_id, raw in table.items():
         if not isinstance(raw, dict):
             raise _err(
                 "slug_toml_invalid",
                 f"{path.name}: classification.{source_id!r} must be a TOML table.",
-                'Use [classification."<short_name>"] = { slug = ..., version = ... }.',
+                'Use [classification."<short_name>"] = { slug = ... }.',
             )
         entry = _validate_entry("classification", source_id, raw, provider=None)
-        pair_key = (entry.slug or "", entry.version or "")
-        prev = seen_pairs.get(pair_key)
+        # A2.6.1: the classification FQID is the 2-segment `class/<slug>`, so
+        # the slug alone must be unique (the vintage is baked in, §5.2).
+        slug_key = entry.slug or ""
+        prev = seen_slugs.get(slug_key)
         if prev is not None:
             raise _err(
                 "slug_toml_invalid",
-                f"{path.name}: (slug={entry.slug!r}, version={entry.version!r}) "
-                f"reused by {prev!r} and {source_id!r}.",
-                "Classification FQIDs are (slug, version) pairs — keep them unique.",
+                f"{path.name}: slug {entry.slug!r} reused by {prev!r} and "
+                f"{source_id!r}.",
+                "Classification FQIDs are slugs — keep them unique.",
             )
-        seen_pairs[pair_key] = source_id
+        seen_slugs[slug_key] = source_id
         entries.append(entry)
     _resolve_replaced_by(entries, scope=path.name)
     return entries
@@ -809,11 +787,11 @@ def populate_slugs(
     for entry in classification_entries:
         if entry.slug is None:
             continue
-        # Cross-check: a slug TOML version mismatch against the DB row would
-        # snapshot a different FQID (`class/<slug>/<toml_version>`) than the
-        # one the catalog actually emits at query time.
+        # A2.6.1: the slug is matched to its DB row by short_name (the TOML
+        # key). There's no `version` column left to cross-check — the vintage
+        # lives in the slug, which `class.slug UNIQUE` keeps globally distinct.
         row = conn.execute(
-            "SELECT version FROM classification WHERE short_name = ?",
+            "SELECT 1 FROM classification WHERE short_name = ?",
             (entry.source_id,),
         ).fetchone()
         if row is None:
@@ -825,16 +803,6 @@ def populate_slugs(
                 f"has no row in this build.",
                 "Add the short_name to classifications.toml (the seed) or drop "
                 "the slug entry.",
-            )
-        db_version = row[0] if isinstance(row, tuple) else row["version"]
-        if entry.version != db_version:
-            raise _err(
-                "slug_classification_version_mismatch",
-                f"{CLASSIFICATIONS_FILE}: classification.{entry.source_id!r} "
-                f"version {entry.version!r} does not match the DB row "
-                f"({db_version!r}).",
-                "Reconcile the TOML version with classifications.toml (the seed) "
-                "so the snapshotted FQID matches what the catalog emits.",
             )
         conn.execute(
             "UPDATE classification SET slug = ? WHERE short_name = ?",
@@ -853,7 +821,7 @@ def populate_slugs(
                 "slug_missing_for_source_id",
                 f"{len(missing)} classification(s) have no slug in "
                 f"{CLASSIFICATIONS_FILE}. First: {sample}.",
-                'Add a `[classification."<short_name>"]` entry with slug and version.',
+                'Add a `[classification."<short_name>"]` entry with a slug.',
             )
 
     _progress(
@@ -1419,20 +1387,20 @@ def _validate_variable_target(
 def _validate_classification_target(
     entry: SlugEntry,
     ref: dict[str, str],
-    by_slug: dict[tuple[str, str], list[str]],
+    by_slug: dict[tuple[str, str], str],
 ) -> _ClassKey:
     """Validate a classification same_as target — provider + classification_slug.
 
-    The version is intentionally not part of the key (§5.3 field reference);
-    same_as for classifications links *families*, with version drift handled
-    by `replaced_by` or `supersedes`. If the target slug names multiple
-    versions in the DB, the link is ambiguous and we error. Key shape
-    (required/allowed) is enforced upstream by `_validate_same_as`.
+    A2.6.1: the slug bakes in the vintage and is globally UNIQUE, so a
+    `(provider, slug)` key maps to exactly one row — the former multi-version
+    ambiguity check is structurally impossible and gone. This is now a pure
+    presence check. Cross-version drift still belongs in `supersedes` /
+    `replaced_by`, not same_as. Key shape is enforced upstream by
+    `_validate_same_as`.
     """
     provider_slug = ref["provider"]
     classification_slug = ref["classification_slug"]
-    versions = by_slug.get((provider_slug, classification_slug), [])
-    if not versions:
+    if (provider_slug, classification_slug) not in by_slug:
         raise _err(
             "slug_same_as_unknown_classification",
             f"classifications.toml: classification.{entry.source_id!r} "
@@ -1440,15 +1408,6 @@ def _validate_classification_target(
             f"not exist in this build.",
             "Fix the slug typo, or mark the originating entry "
             "deprecated=true if the target classification is retired.",
-        )
-    if len(versions) > 1:
-        raise _err(
-            "slug_same_as_ambiguous_classification",
-            f"classifications.toml: classification.{entry.source_id!r} "
-            f"same_as target slug {classification_slug!r} matches multiple "
-            f"versions ({sorted(versions)!r}); the link is ambiguous.",
-            "Use distinct classification slugs per family (cross-version "
-            "drift belongs in `supersedes` / `replaced_by`, not same_as).",
         )
     return (provider_slug, classification_slug)
 
@@ -1522,18 +1481,19 @@ def materialize_same_as_edges(
     """
     entries = load_slug_dir(slug_dir)
 
-    # Pre-index classifications by (provider, slug) so we can detect ambiguous
-    # target lookups without a row-per-target query.
-    class_by_slug: dict[tuple[str, str], list[str]] = {}
+    # Pre-index classification (provider, slug) presence so we can validate
+    # same_as targets without a row-per-target query. A2.6.1: the slug is
+    # globally UNIQUE (vintage baked in), so each key maps to exactly one row —
+    # the value is just the short_name for diagnostics.
+    class_by_slug: dict[tuple[str, str], str] = {}
     # Classifications carry no provider in classifications.toml; they belong
     # to the SCB-wide registry. Treat the publisher field as the provider.
     cls_rows = conn.execute(
-        "SELECT short_name, slug, version, publisher FROM classification "
-        "WHERE slug IS NOT NULL"
+        "SELECT short_name, slug, publisher FROM classification WHERE slug IS NOT NULL"
     ).fetchall()
     for row in cls_rows:
-        publisher_slug = (row[3] or "scb").lower()
-        class_by_slug.setdefault((publisher_slug, row[1]), []).append(row[2])
+        publisher_slug = (row[2] or "scb").lower()
+        class_by_slug[(publisher_slug, row[1])] = row[0]
 
     var_edges: list[tuple[_VarKey, _VarKey]] = []
     class_edges: list[tuple[_ClassKey, _ClassKey]] = []
@@ -1580,8 +1540,7 @@ def materialize_same_as_edges(
 
         elif entry.kind == "classification":
             row = conn.execute(
-                "SELECT slug, version, publisher FROM classification "
-                "WHERE short_name = ?",
+                "SELECT slug, publisher FROM classification WHERE short_name = ?",
                 (entry.source_id,),
             ).fetchone()
             if row is None or row[0] is None:
@@ -1591,7 +1550,7 @@ def materialize_same_as_edges(
                     f"has no DB slug; cannot anchor same_as.",
                     "Ensure populate_slugs wrote the slug column first.",
                 )
-            src_provider = (row[2] or "scb").lower()
+            src_provider = (row[1] or "scb").lower()
             src_key: _ClassKey = (src_provider, row[0])
             for ref in entry.same_as:
                 tgt_key = _validate_classification_target(entry, ref, class_by_slug)
@@ -1989,24 +1948,30 @@ def seed_provider_toml(conn: sqlite3.Connection, provider_slug: str) -> str:
 def seed_classifications_toml(conn: sqlite3.Connection) -> str:
     """Emit a starter TOML for classifications. The maintainer edits the
     auto-derived slug — classification short_names like ``SUN2020-NIVA``
-    don't fold to a great default."""
+    don't fold to a great default.
+
+    A2.6.1: the FQID is the 2-segment ``class/<slug>`` with the vintage baked
+    into the slug, so there's no separate ``version`` field. The candidate is
+    folded from the short_name (which usually carries the year); the maintainer
+    refines it to the canonical baked form (e.g. ``SUN2020-NIVA`` →
+    ``sun-niva2020``)."""
     lines: list[str] = [
         "# Starter classification slug TOML.",
         "# Generated by `reg-meta-build seed-slugs`. Hand-review the slug",
-        "# (auto-derived from short_name, often needs shortening) and version.",
+        "# (auto-derived from short_name, often needs shortening; the vintage",
+        "# bakes into the slug, §5.2 — `class/<slug>`, e.g. `sun2020`).",
         "",
     ]
     rows = conn.execute(
-        "SELECT short_name, version FROM classification ORDER BY short_name"
+        "SELECT short_name FROM classification ORDER BY short_name"
     ).fetchall()
     if not rows:
         lines.append("# (no classifications populated yet)\n")
         return "\n".join(lines)
-    for short, version in rows:
+    for (short,) in rows:
         candidate = derive_variable_slug(short) or "TODO"
         lines.append(f"[classification.{_toml_str(short)}]")
         lines.append(f"slug = {_toml_str(candidate)}")
-        lines.append(f"version = {_toml_str(version or 'TODO')}")
         lines.append("")
     return "\n".join(lines)
 
@@ -2217,9 +2182,9 @@ def snapshot_payload(entries: list[SlugEntry]) -> dict[str, dict[str, str]]:
     for entry in entries:
         if entry.slug is None:
             continue
-        if entry.kind == "classification":
-            key = f"{entry.source_id}|{entry.version}"
-        elif entry.provider is not None:
+        # A2.6.1: classifications key on source_id alone (short_name, globally
+        # UNIQUE) — the former `|version` suffix is gone with the version field.
+        if entry.provider is not None:
             key = f"{entry.provider}/{entry.source_id}"
         else:
             key = entry.source_id

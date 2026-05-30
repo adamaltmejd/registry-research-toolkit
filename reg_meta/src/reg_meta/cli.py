@@ -1854,7 +1854,10 @@ def _write_payload(
                 {
                     "short_name": c.get("short_name", ""),
                     "name": c.get("name", ""),
-                    "version": c.get("version", ""),
+                    # A2.6.1: the vintage now lives in slug/short_name; surface
+                    # the 2-seg `class/<slug>` FQID instead of the dropped
+                    # `version` column.
+                    "fqid": c.get("fqid", ""),
                     "publisher": c.get("publisher", ""),
                     "code_count": c.get("code_count", 0),
                     "supersedes": c.get("supersedes", ""),
@@ -1866,7 +1869,7 @@ def _write_payload(
                 [
                     "short_name",
                     "name",
-                    "version",
+                    "fqid",
                     "publisher",
                     "code_count",
                     "supersedes",
@@ -1905,7 +1908,9 @@ def _write_payload(
                     "short_name": data.get("short_name", ""),
                     "name": data.get("name", ""),
                     "publisher": data.get("publisher", ""),
-                    "version": data.get("version", ""),
+                    # A2.6.1: vintage is in slug/short_name + valid_from/valid_to;
+                    # show the 2-seg `class/<slug>` FQID, not a `version` column.
+                    "fqid": data.get("fqid", ""),
                     "valid_from": data.get("valid_from", ""),
                     "valid_to": data.get("valid_to", ""),
                     "code_count": data.get("code_count", 0),
@@ -1920,7 +1925,7 @@ def _write_payload(
                     "short_name",
                     "name",
                     "publisher",
-                    "version",
+                    "fqid",
                     "valid_from",
                     "valid_to",
                     "code_count",

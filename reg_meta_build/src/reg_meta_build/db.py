@@ -434,7 +434,6 @@ CREATE TABLE classification (
     name             TEXT NOT NULL,
     name_en          TEXT,
     publisher        TEXT,
-    version          TEXT,
     valid_from       INTEGER,
     valid_to         INTEGER,
     description      TEXT,
@@ -446,9 +445,14 @@ CREATE TABLE classification (
     -- codes that never appeared in any observed instance still count, but
     -- observed-only noise codes inflate code_count.
     valid_code_count INTEGER,
-    -- classification FQID is `class/<slug>/<version>`; `version` is already
-    -- populated from the existing seed.
-    slug             TEXT
+    -- A2.6.1: slug carries the vintage (version baked in, §5.2): 'sun2020',
+    -- 'lkf2007'. The classification FQID is the 2-segment `class/<slug>` —
+    -- the standalone `version` column is gone (vintage lives in slug + name +
+    -- valid_from/valid_to). UNIQUE, not NOT NULL: `populate_slugs` UPDATEs
+    -- this after `populate_classifications` INSERTs the row (NULL at insert),
+    -- and SQLite allows multiple NULLs under UNIQUE; the strict NULL-slug guard
+    -- in `populate_slugs` enforces presence at build end.
+    slug             TEXT UNIQUE
 );
 
 -- is_valid: 1 = canonical (listed in the classification's valid_codes CSV),

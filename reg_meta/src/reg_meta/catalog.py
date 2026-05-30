@@ -923,27 +923,16 @@ class Catalog:
         raise _not_found(fqid)
 
     def _resolve_classification_direct(
-        self, fqid: Fqid, *, publisher: str | None = None
+        self, fqid: Fqid
     ) -> ResolvedClassification | None:
-        # `publisher` is set by the same_as BFS when it narrowed the neighbor
-        # by publisher; without it (the initial top-level lookup) the FQID
-        # grammar carries no publisher slot, so cross-publisher (slug, version)
-        # collisions can't be disambiguated here either way. When set, we
-        # constrain the row by publisher to keep BFS from silently crossing
-        # publisher namespaces under a colliding slug/version pair.
-        if publisher is None:
-            row = self._conn.execute(
-                "SELECT id, short_name, name FROM classification "
-                "WHERE slug = ? AND version = ?",
-                (fqid.classification, fqid.version),
-            ).fetchone()
-        else:
-            row = self._conn.execute(
-                "SELECT id, short_name, name FROM classification "
-                "WHERE slug = ? AND version = ? "
-                "AND LOWER(COALESCE(publisher, 'scb')) = ?",
-                (fqid.classification, fqid.version, publisher),
-            ).fetchone()
+        # A2.6.1: the slug bakes in the vintage and is globally UNIQUE, so a
+        # single-bind slug lookup hits at most one row. The old (slug, version)
+        # two-bind and the publisher-disambiguation branch are gone — there is
+        # no cross-publisher (slug, version) collision to narrow.
+        row = self._conn.execute(
+            "SELECT id, short_name, name FROM classification WHERE slug = ?",
+            (fqid.classification,),
+        ).fetchone()
         if not row:
             return None
         return ResolvedClassification(
@@ -967,30 +956,22 @@ class Catalog:
     ) -> ResolvedClassification | None:
         """BFS through `classification_same_as`.
 
-        Edges are keyed on (provider, classification_slug) only — the version
-        is not part of the edge (§5.3 field reference). Same_as targets are
-        version-unambiguous at build time, so the target's version is whatever
-        the DB row carries; we pick it up from `classification.version` after
-        the slug match.
+        A2.6.1: the slug bakes in the vintage and is globally UNIQUE, so each
+        slug maps to exactly one row and the FQID needs no version. This path is
+        only reached when the direct (single-bind) lookup missed — i.e. the
+        queried slug has no row — which is exactly the same_as use case: a
+        caller's old/equivalent slug that's been retired in favor of a present
+        one. The BFS seeds from the edge sources naming the queried slug
+        (edges carry a provider; the FQID grammar has none), walks edges keyed
+        (provider, classification_slug), and resolves each neighbor with a
+        single-bind slug lookup.
         """
-        assert fqid.classification and fqid.version
-        # The classification FQID grammar has no provider slot — the publisher
-        # is implicit. The (slug, version) lookup may have missed precisely
-        # because the version drifted (the primary same_as use case), so we
-        # seed the BFS from every publisher that owns *any* row for this slug.
-        # Defaulting to 'scb' would silently break non-SCB classifications.
-        publishers = {
-            (r[0] or "scb").lower()
-            for r in self._conn.execute(
-                "SELECT DISTINCT publisher FROM classification WHERE slug = ?",
-                (fqid.classification,),
-            ).fetchall()
-        }
-        if not publishers:
-            # No row carries this slug; nothing to traverse from.
-            return None
+        assert fqid.classification
+        # Seed the provider from the edge table, NOT a classification-row lookup:
+        # we're here precisely because the queried slug has no row, so the seed
+        # provider can only come from the edges that name this slug as a source.
         sources = self._class_same_as_source_keys()
-        seeds = [p for p in publishers if (p, fqid.classification) in sources]
+        seeds = [p for (p, slug) in sources if slug == fqid.classification]
         if not seeds:
             return None
         visited: set[tuple[str, str]] = {(p, fqid.classification) for p in seeds}
@@ -1011,46 +992,18 @@ class Catalog:
                 if key in visited:
                     continue
                 visited.add(key)
-                # Same_as is version-agnostic; the classification FQID needs
-                # a version. Forward-edge build validation rejects slugs with
-                # multiple versions, but the auto-inserted *reverse* edge can
-                # land us on a multi-version slug stem (e.g. `sun` v2000 +
-                # v2020), so we try every matching version. NULL publisher is
-                # normalized to 'scb' (matches build-side
-                # `COALESCE(publisher,'scb')`) so a SCB-published row can't
-                # accidentally match a query under another publisher.
-                vrows = self._conn.execute(
-                    "SELECT version FROM classification "
-                    "WHERE slug = ? AND LOWER(COALESCE(publisher, 'scb')) = ? "
-                    "ORDER BY version",
-                    (n_slug, n_prov),
-                ).fetchall()
-                if not vrows:
-                    # Target slug missing from DB despite passing build-time
-                    # validation — slugged classifications must have been
-                    # deleted post-build. Skip silently.
+                try:
+                    n_fqid = Fqid.classification_fqid(n_slug)
+                except FqidError:
                     continue
-                candidate_fqids: list[Fqid] = []
-                for vrow in vrows:
-                    try:
-                        candidate_fqids.append(
-                            Fqid.classification_fqid(n_slug, vrow["version"])
-                        )
-                    except FqidError:
-                        continue
-                for n_fqid in candidate_fqids:
-                    new_path = (*path, n_fqid)
-                    # Pass publisher so cross-publisher (slug, version)
-                    # collisions can't silently land us on the wrong row.
-                    hit = self._resolve_classification_direct(n_fqid, publisher=n_prov)
-                    if hit is not None:
-                        return replace(hit, fqid=fqid, via_same_as=new_path)
-                # Continue BFS regardless of version count — further hops
-                # don't depend on which version we picked, just on the
-                # same_as edge graph. Use the first valid candidate for
-                # the path-trace breadcrumb.
-                if candidate_fqids:
-                    queue.append((n_prov, n_slug, (*path, candidate_fqids[0])))
+                # Slug is globally UNIQUE: at most one row, no version loop,
+                # no publisher disambiguation. A direct miss means the slug
+                # isn't in the DB (deleted post-build) — keep walking the edge
+                # graph in case a further hop lands on a present row.
+                hit = self._resolve_classification_direct(n_fqid)
+                if hit is not None:
+                    return replace(hit, fqid=fqid, via_same_as=(*path, n_fqid))
+                queue.append((n_prov, n_slug, (*path, n_fqid)))
         return None
 
 

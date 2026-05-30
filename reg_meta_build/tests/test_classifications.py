@@ -512,8 +512,9 @@ class TestPopulateClassifications:
             CREATE TABLE classification (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 short_name TEXT NOT NULL UNIQUE,
+                slug TEXT UNIQUE,
                 name TEXT NOT NULL,
-                name_en TEXT, publisher TEXT, version TEXT,
+                name_en TEXT, publisher TEXT,
                 valid_from INTEGER, valid_to INTEGER,
                 description TEXT, url TEXT,
                 supersedes_id INTEGER REFERENCES classification(id),
@@ -523,19 +524,20 @@ class TestPopulateClassifications:
             """
         )
         conn.execute(
-            "INSERT INTO classification (short_name, name) VALUES ('OLD', 'Old')"
+            "INSERT INTO classification (short_name, slug, name) "
+            "VALUES ('OLD', 'old1996', 'Old')"
         )
         old_id = conn.execute(
             "SELECT id FROM classification WHERE short_name='OLD'"
         ).fetchone()["id"]
         conn.execute(
-            "INSERT INTO classification (short_name, name, supersedes_id) "
-            "VALUES ('NEW_A', 'New A', ?)",
+            "INSERT INTO classification (short_name, slug, name, supersedes_id) "
+            "VALUES ('NEW_A', 'newa2000', 'New A', ?)",
             (old_id,),
         )
         conn.execute(
-            "INSERT INTO classification (short_name, name, supersedes_id) "
-            "VALUES ('NEW_B', 'New B', ?)",
+            "INSERT INTO classification (short_name, slug, name, supersedes_id) "
+            "VALUES ('NEW_B', 'newb2000', 'New B', ?)",
             (old_id,),
         )
         conn.commit()
@@ -545,6 +547,10 @@ class TestPopulateClassifications:
         old_rows = [c for c in listed if c["short_name"] == "OLD"]
         assert len(old_rows) == 1
         assert old_rows[0]["superseded_by"] == "NEW_A,NEW_B"
+        # A2.6.1: --list rows carry the canonical 2-seg FQID built from the
+        # selected slug — the list SELECT must include c.slug or every row
+        # loses its address (Codex P2 on #148).
+        assert old_rows[0]["fqid"] == "class/old1996"
         # And _classification_by_id (fetchone path) is also stable.
         single = _classification_by_id(conn, old_id)
         assert single["superseded_by"] == "NEW_A,NEW_B"

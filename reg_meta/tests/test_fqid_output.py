@@ -78,8 +78,9 @@ class TestGetVarinfoFqid:
 
 class TestGetClassificationFqid:
     def test_classification_fqid(self, slugged_conn: sqlite3.Connection) -> None:
+        # A2.6.1: 2-seg FQID with the vintage baked into the slug.
         result = get_classification(slugged_conn, "SUN2020")
-        assert result["fqid"] == "class/sun/2020"
+        assert result["fqid"] == "class/sun2020"
 
     def test_null_slug_omits_fqid(self) -> None:
         # _classification_row drops NULL fields entirely; with slug NULL,
@@ -89,8 +90,7 @@ class TestGetClassificationFqid:
         conn.executescript(DDL)
         seed_providers(conn)
         conn.execute(
-            "INSERT INTO classification (short_name, name, version) "
-            "VALUES ('SUN2020', 'SUN', '2020')"
+            "INSERT INTO classification (short_name, name) VALUES ('SUN2020', 'SUN')"
         )
         result = get_classification(conn, "SUN2020")
         assert "fqid" not in result

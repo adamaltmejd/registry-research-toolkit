@@ -573,16 +573,15 @@ def populate_classifications(
         cur = conn.execute(
             """
             INSERT INTO classification (
-                short_name, name, name_en, publisher, version,
+                short_name, name, name_en, publisher,
                 valid_from, valid_to, description, url, supersedes_id, code_count
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NULL, 0)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NULL, 0)
             """,
             (
                 entry["short_name"],
                 entry["name"],
                 entry.get("name_en"),
                 entry.get("publisher"),
-                entry.get("version"),
                 entry.get("valid_from"),
                 entry.get("valid_to"),
                 entry.get("description"),

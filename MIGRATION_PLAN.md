@@ -298,7 +298,7 @@ descends the variable hierarchy).
 
 **Gate to A2.6**: A2.4 *and* A2.5 must merge. A2.6 flips the FQID grammar (drop the variant from the binding) + resolver flip + the `same_as` start-node parse update (the `same_as` **table** demotion **and** its `_resolve_binding_via_same_as` reader rewrite already landed in A2.1.5), which requires both the new lineage tables (A2.4) and the new catalog API (A2.5) in place. No reverse dependency — A2.4 reads the already-demoted table, so the gate is acyclic.
 
-### [ ] A2.5 — Catalog API shift
+### [x] A2.5 — Catalog API shift (PR #146)
 
 - `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10): the variable's shared metadata + its `variable_state` rows (each tagged with its variant) + variable-grain edges. The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break. (A2.5 reads the A2.1.5 tables — `variable` + re-parented `variable_state`; the *binding-FQID* resolution still parses the **v0.11 5-seg** grammar until A2.6 (the Model-A 4-seg form was specced in #126 but never implemented, so the interim is the shipped 5-seg). So A2.5 builds the longitudinal aggregate on the new tables, A2.6 flips the FQID parser + the binding read path to 3-seg + exact variable-slug match, dropping the period **and** variant segments.)
 - Implement `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for an unambiguous single-state-in-one-variant-and-one-version point query, length N across variants / range periods / folded classification-version (multi-vintage) states (common, not rare). Empty list when no state covers the period (no exception). `variant` narrows to one variant (the Source's `register_variant`); `value_set_version` narrows multi-vintage results to a single state.
@@ -311,7 +311,7 @@ descends the variable hierarchy).
 
 **Gate: A2.5 requires A2.2 + A2.3 + A2.4** (not just A2.1.5). Its edge accessors read tables those stages create — `related` ← `variable_related_to` (A2.2), `predecessors`/`successors` ← `variable_replaced_by` (A2.3), `lineage`/`lineage_warnings` ← `variable_state_lineage` (A2.4) — so A2.5 is the join point after the A2.2→A2.4 chain and A2.3, not a parallel branch (a query against a not-yet-created edge table raises `no such table`). `resolve`/`resolve_at`/`states` need only the A2.1.5 tables, but the accessor roster ships as one PR.
 
-### [ ] A2.6 — Drop period & variant from FQID grammar (resolver flip)
+### [x] A2.6 — Drop period & variant from FQID grammar (resolver flip) (PR #147)
 
 The grammar flip. The two-level **table** restructure already landed in
 A2.1.5 (the `variable` table, the re-parented `variable_state`,
@@ -403,6 +403,7 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 - `Source.register_version` → `Source.register_variant` + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel)
 - `Source.columns` → `Source.bindings`
 - Binding `name` → `variable` (**3-seg** variable FQID; `provider/register` prefix must equal the source's `register_variant` prefix — the variant is not repeated on the binding)
+- **Flip the duplicated FQID-arity validators in `reg_schema/src/reg_schema/structural.py`** to the new grammar: `_is_binding_fqid` 5-seg → **3-seg**, `_is_classification_fqid` 3-seg → **2-seg** (`class/<slug>`), plus their error messages + the `test_corpus`/`test_structural.py` cases. **Deliberately deferred here from A2.6 (binding) and A2.6.1 (classification)** — both kept `reg_schema` on the old arity because flipping it requires the coupled Pydantic + Source-shape + test-corpus rewrite that *is* A3.1. Latent until then (no consumer emits new-grammar FQIDs into `project_data.json` before A3.2+), but flagged P1 by Codex on #148 — fix it as part of this stage so the canonical validator stops rejecting `scb/lisa/kon` / `class/sun2020`.
 - Panel `entity_key` / `time_key` inheritance from `variant.panel_template` when omitted
 - TimePoint gains range form `{"range": {"from", "to"}}`
 - New issue codes: `invalid_period`, `period_outside_state_validity`, `binding_state_drifts_within_period`, `binding_value_set_version_ambiguous`, `binding_value_set_version_mismatch`, `variable_replaced`, `panel_inheritance_unresolvable` (the last is semantic-layer; raised by kit/bundle-build when a member's variant has no `panel_template` and no explicit keys — §6.4 + §6.8.3)

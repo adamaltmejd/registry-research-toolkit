@@ -1,9 +1,9 @@
 """Tests for the FQID parser/emitter (REFACTOR_SPEC.md §5.2).
 
 A2.6 grammar: 1-seg provider, 2-seg register, 3-seg variable binding (the FQID
-names the variable). `class/<slug>/<version>` is a classification. The variant
-and period are delivery coordinates, NOT FQID segments — the variant and
-register_version FQID kinds are gone.
+names the variable). A2.6.1: `class/<slug>` is a classification (2-seg, vintage
+baked into the slug). The variant and period are delivery coordinates, NOT FQID
+segments — the variant and register_version FQID kinds are gone.
 """
 
 from __future__ import annotations
@@ -36,8 +36,10 @@ class TestRoundTrip:
             ("scb/lisa/kon", FqidKind.VARIABLE_BINDING),
             ("scb/lisa/individer-15plus", FqidKind.VARIABLE_BINDING),
             ("sos/lss/insatstyp", FqidKind.VARIABLE_BINDING),
-            ("class/sun/2020", FqidKind.CLASSIFICATION),
-            ("class/lkf/2012", FqidKind.CLASSIFICATION),
+            # A2.6.1: classification is 2-seg with the vintage baked into the
+            # slug (`class/<slug>`), not 3-seg `class/<slug>/<version>`.
+            ("class/sun2020", FqidKind.CLASSIFICATION),
+            ("class/lkf2012", FqidKind.CLASSIFICATION),
         ],
     )
     def test_parse_emit_identity(self, value: str, kind: FqidKind) -> None:
@@ -186,8 +188,8 @@ class TestSegmentCount:
         assert parse("scb/lisa/kon").kind is FqidKind.VARIABLE_BINDING
 
     def test_class_prefix_forces_classification(self) -> None:
-        # 3 segments with `class/` first → classification, not a binding.
-        assert parse("class/sun/2020").kind is FqidKind.CLASSIFICATION
+        # 2 segments with `class/` first → classification, not a register.
+        assert parse("class/sun2020").kind is FqidKind.CLASSIFICATION
 
     def test_four_plus_segments_rejected(self) -> None:
         # The old 4-seg version and 5-seg binding forms no longer parse.
@@ -197,9 +199,11 @@ class TestSegmentCount:
             parse("scb/lisa/individer-15plus/2018/kon")
 
     def test_classification_wrong_arity_rejected(self) -> None:
-        with pytest.raises(FqidError, match="3 segments"):
-            parse("class/sun")
-        with pytest.raises(FqidError, match="3 segments"):
+        # A2.6.1: the canonical form is 2-seg `class/<slug>`. The old 3-seg
+        # `class/<slug>/<version>` now raises (vintage baked into the slug).
+        with pytest.raises(FqidError, match="2 segments"):
+            parse("class/sun/2020")
+        with pytest.raises(FqidError, match="2 segments"):
             parse("class/sun/2020/extra")
 
 
@@ -249,20 +253,21 @@ class TestFactories:
             Fqid.register_fqid("SCB", "lisa")  # uppercase
 
     def test_classification_factory(self) -> None:
-        f = Fqid.classification_fqid("sun", "2020")
-        assert str(f) == "class/sun/2020"
+        # A2.6.1: single-arg factory; the slug bakes in the vintage.
+        f = Fqid.classification_fqid("sun2020")
+        assert str(f) == "class/sun2020"
 
-    def test_classification_accepts_slug_version(self) -> None:
-        # §5.3 examples use year versions; the slug-grammar branch covers
-        # non-year tags like `v1` or `1-0`.
-        assert str(Fqid.classification_fqid("sun", "v1")) == "class/sun/v1"
-        assert str(parse("class/sun/v1")).endswith("/v1")
+    def test_classification_round_trips_baked_slug(self) -> None:
+        # The version-baked slug round-trips: factory → str → parse → slug.
+        assert str(Fqid.classification_fqid("lkf2007")) == "class/lkf2007"
+        assert parse("class/sun2020").classification == "sun2020"
 
-    def test_classification_rejects_reserved_version(self) -> None:
+    def test_classification_rejects_reserved_slug(self) -> None:
+        # `class` and `_default` are reserved and can't be a classification slug.
         with pytest.raises(FqidError, match="class"):
-            Fqid.classification_fqid("sun", "class")
+            Fqid.classification_fqid("class")
         with pytest.raises(FqidError, match="_default"):
-            Fqid.classification_fqid("sun", "_default")
+            Fqid.classification_fqid("_default")
 
     def test_binding_factory(self) -> None:
         # A2.6: 3-arg binding factory (provider, register, variable).
