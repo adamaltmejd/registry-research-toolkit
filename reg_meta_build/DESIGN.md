@@ -142,13 +142,17 @@ the intersection. A few non-obvious choices:
   The interval join produces the same answer for the trivial year-equal case
   but also expresses real cross-state lineage (a consumer era sourcing from a
   pre-rename source state, then a post-rename one) at no runtime cost.
-- **Source-side matching starts at the SOURCE identity node.** The consumer's
-  slug identifies the source variable by identity (LISA `kon` → RTB `kon`);
-  `_variable_set_via_same_as` then BFS-expands *from the source-register node*
-  through the source register's variable-grain `variable_same_as` graph (RTB
-  `kon` ↔ `kon-v2` after a rename). Starting at the consumer's own register
-  node would find nothing — it has no edges into the source graph. The common
-  no-rename case yields just the identity slug, so a rename is additive.
+- **Source-side matching is a multi-seed `same_as` BFS.** The consumer's slug
+  identifies the source variable by identity (LISA `kon` → RTB `kon`, no curated
+  edge needed). `_variable_set_via_same_as` then BFS-expands from *two* seeds:
+  the source-register identity node (picking up within-source renames like RTB
+  `kon` ↔ `kon-v2`) and the consumer node (picking up any curated cross-register
+  / cross-provider `variable_same_as` edge whose endpoints have *different*
+  slugs, LISA `foo` ↔ RTB `bar`, §5.5). The common no-rename case yields just
+  the identity slug, so an edge is always additive. (An earlier single-seed form
+  expanded only the source node and silently missed mismatched-slug
+  cross-register edges — latent while `variable_same_as` is empty, fixed in the
+  A2.4 review.)
 - **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]`
   block picks one source variant per source register; a
   `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per

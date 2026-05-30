@@ -23,6 +23,7 @@ from _slugged_db import add_register, add_variable, add_variant
 from reg_meta.errors import RegMetaError
 from reg_meta_build.db import (
     DDL,
+    PROVIDER_ID_SOS,
     _variable_set_via_same_as,
     link_variable_state_lineage,
     seed_providers,
@@ -348,6 +349,72 @@ class TestVariableStateLineage:
             (s_cons_old, s_src_old, "2010-01-01", "2014-12-31"),
             (s_cons_new, s_src_new, "2015-01-01", "2099-12-31"),
         ]
+        assert _warnings(conn) == []
+
+    def test_lineage_cross_provider_via_mismatched_slug_same_as(self, tmp_path: Path):
+        """Cross-provider lineage (SOS consumer <- SCB source) through a curated
+        `same_as` edge whose endpoints have DIFFERENT slugs (sos/par `kon-par`
+        <-> scb/rtb `kon`). Identity slug-match alone fails (no `kon-par` in
+        RTB); the multi-seed BFS finds it via the consumer-node seed. The old
+        single-seed (source-node only) form would emit `no_source_state`."""
+        rtb_id, par_id = 1, 3
+        conn = _new_conn()
+        add_register(conn, register_id=rtb_id, slug="rtb", name="RTB")
+        add_variant(
+            conn,
+            register_variant_id=10,
+            register_id=rtb_id,
+            slug="folkbokforda-personer",
+            name="Folkbokförda personer",
+        )
+        add_variable(conn, register_id=rtb_id, var_id=44, name="Kön", slug="kon")
+        add_register(
+            conn,
+            register_id=par_id,
+            slug="par",
+            name="PAR",
+            provider_id=PROVIDER_ID_SOS,
+        )
+        add_variant(
+            conn,
+            register_variant_id=30,
+            register_id=par_id,
+            slug="individregister",
+            name="Individregister",
+        )
+        add_variable(
+            conn,
+            register_id=par_id,
+            var_id=44,
+            name="Kön",
+            source_register_id=rtb_id,
+            slug="kon-par",
+        )
+        _add_same_as(conn, ("sos", "par", "kon-par"), ("scb", "rtb", "kon"))
+        src_vid = _variable_id(conn, rtb_id, 44)
+        cons_vid = _variable_id(conn, par_id, 44)
+        s_src = _add_state(
+            conn,
+            variable_id=src_vid,
+            register_variant_id=10,
+            valid_from="2015-01-01",
+            valid_to="2099-12-31",
+        )
+        s_cons = _add_state(
+            conn,
+            variable_id=cons_vid,
+            register_variant_id=30,
+            valid_from="2015-01-01",
+            valid_to="2099-12-31",
+        )
+        conn.commit()
+        slug_dir = _write_lineage_toml(
+            tmp_path, defaults={"rtb": "folkbokforda-personer"}
+        )
+
+        counts = link_variable_state_lineage(conn, slug_dir)
+        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        assert _edges(conn) == [(s_cons, s_src, "2015-01-01", "2099-12-31")]
         assert _warnings(conn) == []
 
     def test_lineage_same_as_renamed_source_variable(self, tmp_path: Path):
@@ -707,9 +774,9 @@ class TestLoadLineageConfig:
 
 
 class TestVariableSetViaSameAs:
-    # The linker starts the BFS at the SOURCE-side identity node
-    # (source_provider, source_register, consumer_slug), so these mirror that
-    # call shape: start == ("scb", "rtb", "kon"), target == "rtb".
+    # The linker seeds the BFS from BOTH the source-side identity node and the
+    # consumer node. These mirror the realistic LISA<-RTB call shape: consumer ==
+    # ("scb", "lisa"), source == ("scb", "rtb"), variable_slug == "kon".
 
     def test_identity_only_when_no_same_as_edge(self, tmp_path: Path):
         """No same_as edge (the common no-rename case) → just the identity slug
@@ -719,7 +786,14 @@ class TestVariableSetViaSameAs:
         conn = _new_conn()
         _seed_kon_registers(conn)
         conn.commit()
-        result = _variable_set_via_same_as(conn, "scb", "rtb", "kon", "rtb")
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="scb",
+            consumer_register="lisa",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon",
+        )
         assert result == {"kon"}
 
     def test_finds_renamed_source_slug(self, tmp_path: Path):
@@ -732,7 +806,14 @@ class TestVariableSetViaSameAs:
         )
         _add_same_as(conn, ("scb", "rtb", "kon"), ("scb", "rtb", "kon-v2"))
         conn.commit()
-        result = _variable_set_via_same_as(conn, "scb", "rtb", "kon", "rtb")
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="scb",
+            consumer_register="lisa",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon",
+        )
         assert result == {"kon", "kon-v2"}
 
     def test_excludes_other_register_nodes(self, tmp_path: Path):
@@ -744,7 +825,14 @@ class TestVariableSetViaSameAs:
         # A same_as edge from the source identity to a LISA-side variable.
         _add_same_as(conn, ("scb", "rtb", "kon"), ("scb", "lisa", "kon"))
         conn.commit()
-        result = _variable_set_via_same_as(conn, "scb", "rtb", "kon", "rtb")
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="scb",
+            consumer_register="lisa",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon",
+        )
         # lisa.kon is reachable but not in the target register → excluded.
         assert result == {"kon"}
 
@@ -765,5 +853,44 @@ class TestVariableSetViaSameAs:
         _add_same_as(conn, ("scb", "rtb", "kon-b"), ("scb", "rtb", "kon-c"))
         _add_same_as(conn, ("scb", "rtb", "kon-c"), ("scb", "rtb", "kon"))
         conn.commit()
-        result = _variable_set_via_same_as(conn, "scb", "rtb", "kon", "rtb")
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="scb",
+            consumer_register="lisa",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon",
+        )
         assert result == {"kon", "kon-b", "kon-c"}
+
+    def test_finds_cross_register_mismatched_slug_edge(self, tmp_path: Path):
+        """A curated cross-register `same_as` whose slugs DIFFER (sos/par
+        `kon-par` <-> scb/rtb `kon`) is reached via the CONSUMER-node seed — the
+        old single-seed (source-node only) form missed it. `kon` (the real
+        source slug) lands in the result; the source-states lookup then matches
+        it."""
+        conn = _new_conn()
+        add_register(conn, register_id=1, slug="rtb", name="RTB")
+        add_variable(conn, register_id=1, var_id=44, name="Kön", slug="kon")
+        add_register(
+            conn, register_id=3, slug="par", name="PAR", provider_id=PROVIDER_ID_SOS
+        )
+        add_variable(
+            conn,
+            register_id=3,
+            var_id=44,
+            name="Kön",
+            source_register_id=1,
+            slug="kon-par",
+        )
+        _add_same_as(conn, ("sos", "par", "kon-par"), ("scb", "rtb", "kon"))
+        conn.commit()
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="sos",
+            consumer_register="par",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon-par",
+        )
+        assert "kon" in result

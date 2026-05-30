@@ -3503,40 +3503,52 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
 def _variable_set_via_same_as(
     conn: sqlite3.Connection,
-    start_provider: str,
-    start_register_slug: str,
-    start_variable_slug: str,
-    target_register_slug: str,
+    *,
+    consumer_provider: str,
+    consumer_register: str,
+    source_provider: str,
+    source_register: str,
+    variable_slug: str,
 ) -> set[str]:
-    """BFS over variable-grain `variable_same_as` from the start node,
-    returning the set of variable slugs *in target_register_slug* reachable
-    from it (§5.6 "same_as on the source side").
+    """Multi-seed BFS over variable-grain `variable_same_as`, returning the set
+    of variable slugs *in `source_register`* equivalent to the consumer variable
+    (§5.6 "same_as on the source side").
 
-    The linker starts this at the SOURCE-side identity node — the source
-    register + the consumer's own slug — so the start node lives in the target
-    register and IS included in the result (the identity match LISA `kon` →
-    RTB `kon`). The source register's `variable_same_as` graph (e.g. RTB `kon`
-    ↔ `kon-v2` after a rename) then adds the renamed siblings. The COMMON case
-    is no same_as edge at all → the result is just {start_variable_slug}, so a
-    rename is additive, never replacing the identity match.
+    Two seed nodes, so all three equivalence kinds are covered:
+      - the SOURCE-side identity node `(source_provider, source_register,
+        variable_slug)` — the slug-equality identity match (LISA `kon` → RTB
+        `kon`, which needs no curated edge) plus any within-source rename
+        reachable from it (RTB `kon` ↔ `kon-v2`);
+      - the CONSUMER node `(consumer_provider, consumer_register,
+        variable_slug)` — any curated cross-register / cross-provider `same_as`
+        edge whose endpoints have *different* slugs (LISA `foo` ↔ RTB `bar`,
+        §5.5), plus renames transitively reachable from the matched source node.
+
+    The earlier single-seed form (source node only) silently missed the
+    mismatched-slug cross-register edge — a latent gap while `variable_same_as`
+    is empty, fixed here per the A2.4 review. The COMMON case is no `same_as`
+    edge at all → the result is just `{variable_slug}` (the identity match).
 
     Edges are stored both directions (per `materialize_same_as_edges`), so a
     single forward adjacency query per node suffices. A `visited` set makes the
     walk cycle-safe — required, not merely defensive: both-directions storage
     makes every A↔B equivalence a 2-cycle in the materialized table by design.
-
-    `start_provider` is needed because `variable_same_as` is provider-keyed and
-    `same_as` crosses provider boundaries (a SOS consumer sourcing from SCB
-    follows edges that live in SCB's rows).
+    Provider is part of every node because `same_as` crosses provider
+    boundaries (a SOS consumer sourcing from SCB follows edges in SCB's rows).
     """
-    start = (start_provider, start_register_slug, start_variable_slug)
-    visited: set[tuple[str, str, str]] = {start}
-    frontier: list[tuple[str, str, str]] = [start]
+    seeds = [
+        (source_provider, source_register, variable_slug),
+        (consumer_provider, consumer_register, variable_slug),
+    ]
+    visited: set[tuple[str, str, str]] = set(seeds)
+    frontier: list[tuple[str, str, str]] = list(seeds)
     result: set[str] = set()
-    # The start node itself is the identity match when it lives in the target
-    # register (always, as the linker calls it). Include it before expanding.
-    if start_register_slug == target_register_slug:
-        result.add(start_variable_slug)
+    # A seed already in the source register is the identity match (the source
+    # node always is; the consumer node is, only in the degenerate self-source
+    # case the linker filters out). Seed the result before expanding.
+    for _provider, register, variable in seeds:
+        if register == source_register:
+            result.add(variable)
 
     while frontier:
         provider, register, variable = frontier.pop()
@@ -3551,9 +3563,9 @@ def _variable_set_via_same_as(
                 continue
             visited.add(node)
             frontier.append(node)
-            # Collect only nodes in the target (source) register; provider is
-            # part of the match because same_as crosses provider boundaries.
-            if row[1] == target_register_slug:
+            # Collect only nodes in the source register; provider is part of
+            # the match because same_as crosses provider boundaries.
+            if row[1] == source_register:
                 result.add(row[2])
     return result
 
@@ -3639,12 +3651,13 @@ def link_variable_state_lineage(
     consumer_rows = conn.execute(
         "SELECT vs.state_id, vs.valid_from, vs.valid_to, "
         "       v.variable_id, v.slug AS consumer_slug, "
-        "       cr.slug AS consumer_register, "
+        "       cp.slug AS consumer_provider, cr.slug AS consumer_register, "
         "       v.source_register_id, sp.slug AS source_provider, "
         "       sr.slug AS source_register "
         "FROM variable_state vs "
         "JOIN variable v   ON vs.variable_id = v.variable_id "
         "JOIN register cr  ON v.register_id = cr.register_id "
+        "JOIN provider cp  ON cr.provider_id = cp.provider_id "
         "JOIN register sr  ON v.source_register_id = sr.register_id "
         "JOIN provider sp  ON sr.provider_id = sp.provider_id "
         "WHERE v.source_register_id IS NOT NULL "
@@ -3673,29 +3686,28 @@ def link_variable_state_lineage(
             c_valid_to,
             variable_id,
             consumer_slug,
+            consumer_provider,
             consumer_register,
             source_register_id,
             source_provider,
             source_register,
         ) = row
 
-        # Candidate source-variable slug set. The consumer's slug identifies the
-        # source variable by IDENTITY (LISA `kon` → RTB `kon`); the source
-        # register's own `variable_same_as` graph (e.g. RTB `kon` ↔ `kon-v2`
-        # after a rename) then expands that identity node to every equivalent
-        # source slug. So the BFS starts at the SOURCE-side node
-        # (source_provider, source_register, consumer_slug) — NOT the consumer's
-        # own register node, which has no edges into the source graph — and the
-        # start node's own slug is included (the no-rename common case yields
-        # just {consumer_slug}).
+        # Candidate source-variable slug set (memoized per variable). The slug
+        # identifies the source variable by IDENTITY (LISA `kon` → RTB `kon`, no
+        # curated edge needed); the multi-seed BFS additionally follows the
+        # source register's own renames (RTB `kon` ↔ `kon-v2`) AND any curated
+        # cross-register `same_as` edge whose slugs differ (LISA `foo` ↔ RTB
+        # `bar`, §5.5). The no-rename common case yields just {consumer_slug}.
         src_slugs = src_slugs_by_variable.get(variable_id)
         if src_slugs is None:
             src_slugs = _variable_set_via_same_as(
                 conn,
-                source_provider,
-                source_register,
-                consumer_slug,
-                source_register,
+                consumer_provider=consumer_provider,
+                consumer_register=consumer_register,
+                source_provider=source_provider,
+                source_register=source_register,
+                variable_slug=consumer_slug,
             )
             src_slugs_by_variable[variable_id] = src_slugs
 
