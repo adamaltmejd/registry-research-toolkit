@@ -2493,8 +2493,9 @@ _REPLACED_BY_STAT_KEYS = (
     "n_variant_replaced_by",
     "n_variable_replaced_by",
     "n_skipped_unresolved",
-    # A2.2 triage split: a (register_id, var_id) source key maps to >1 variable,
-    # so the bare key can't pick a sibling. Always 0 pre-A2.2.
+    # A2.2 triage split where the source key can't pick a sibling: a bare
+    # `Variabel` var_id always, or an `AktuellVariabel` cvid whose delivery
+    # column doesn't uniquely match one sibling. Always 0 pre-A2.2.
     "n_skipped_ambiguous_variable",
     # Genuine `Ersätter` rows collapsing onto an already-emitted edge — the
     # expected SCB paired-row case (see `_classify_duplicate`).
@@ -2542,9 +2543,12 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         `Variabel` var_id that isn't register-unique so its register is
         ambiguous).
       - `n_skipped_ambiguous_variable`: a `(register_id, var_id)` source key
-        maps to >1 variable — an A2.2 triage split. The bare key can't pick a
-        sibling, so the edge is dropped rather than attached to an arbitrary
-        one (mirrors `_variable_source_slug`). Always 0 pre-A2.2.
+        maps to >1 variable — an A2.2 triage split. A bare `Variabel` id can't
+        pick a sibling, so the edge is dropped (mirrors `_variable_source_slug`).
+        An `AktuellVariabel` cvid *can* — split siblings own disjoint delivery
+        columns, so the cvid's column (`variable_alias`) selects its sibling;
+        it only lands here if that column is missing or doesn't match exactly
+        one sibling. Always 0 pre-A2.2.
       - `n_skipped_collapsed_inverse`: an `Ersätter` row whose (predecessor,
         successor) already landed from its `Ersatt av` twin — the expected SCB
         paired-row collapse.
@@ -2625,6 +2629,38 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     ).fetchall():
         cvid_to_var[cvid] = (register_id, var_id)
 
+    # Split-sibling disambiguation for the cvid grain. An A2.2 split maps one
+    # (register_id, var_id) to several siblings owning DISJOINT delivery columns;
+    # the bare key can't pick one, but an AktuellVariabel cvid names one instance
+    # whose column (`variable_alias`, copied verbatim into
+    # `variable_state.delivery_column_name` by the coalescer) selects its
+    # sibling. Keyed (register_id, var_id, delivery_column_name) -> slug triple,
+    # built ONLY for split groups so it stays small; the cvid's own column is
+    # looked up on demand in the rare ambiguous branch rather than materializing
+    # a column map over every cvid in the corpus.
+    variable_by_column: dict[tuple[int, int, str], tuple[str, str, str]] = {}
+    if ambiguous_variable:
+        for register_id, provider_key, var_slug, r_slug, p_slug, col in conn.execute(
+            "SELECT v.register_id, v.provider_key, v.slug, r.slug, p.slug, "
+            "vs.delivery_column_name "
+            "FROM variable v "
+            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE v.slug IS NOT NULL AND r.slug IS NOT NULL "
+            "AND vs.delivery_column_name IS NOT NULL"
+        ).fetchall():
+            try:
+                var_id = int(provider_key)
+            except (TypeError, ValueError):
+                continue
+            if (register_id, var_id) in ambiguous_variable:
+                variable_by_column[(register_id, var_id, col)] = (
+                    p_slug,
+                    r_slug,
+                    var_slug,
+                )
+
     def _resolve_variable(
         entitet: str, raw_id: int
     ) -> tuple[tuple[str, str, str] | None, str | None]:
@@ -2635,13 +2671,32 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
             key = cvid_to_var.get(raw_id)
             if key is None:
                 return None, "unresolved"
-        else:  # 'Variabel': a bare per-register var_id
+            if key in ambiguous_variable:
+                # The bare (register_id, var_id) hit an A2.2 split, but this cvid
+                # names one instance. Siblings own disjoint columns, so the
+                # cvid's column (`variable_alias`) picks the sibling. Skip only
+                # if the column is missing or doesn't match exactly one sibling
+                # (then it degrades to the bare-grain ambiguity).
+                register_id, var_id = key
+                matches = {
+                    variable_by_column[(register_id, var_id, col)]
+                    for (col,) in conn.execute(
+                        "SELECT delivery_column_name FROM variable_alias "
+                        "WHERE cvid = ?",
+                        (raw_id,),
+                    )
+                    if (register_id, var_id, col) in variable_by_column
+                }
+                if len(matches) == 1:
+                    return next(iter(matches)), None
+                return None, "ambiguous"
+        else:  # 'Variabel': a bare per-register var_id — no cvid, no column
             regs = var_id_registers.get(raw_id)
             if regs is None or len(regs) != 1:
                 return None, "unresolved"  # missing, or cross-register ambiguous
             key = (next(iter(regs)), raw_id)
-        if key in ambiguous_variable:
-            return None, "ambiguous"
+            if key in ambiguous_variable:
+                return None, "ambiguous"
         triple = variable_lookup.get(key)
         if triple is None:
             return None, "unresolved"

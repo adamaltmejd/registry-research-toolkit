@@ -2602,10 +2602,11 @@ class TestReplacedByEdges:
 
     def test_split_var_id_skipped_as_ambiguous(self, tmp_path: Path) -> None:
         """A §5.7 triage SPLIT (A2.2, #139) makes one (register, var_id) map to
-        several sibling variables sharing `provider_key`. `timeseries_event`
-        carries only the bare var_id — no discriminator — so a succession row
-        over a split var_id can't pick a sibling and is skipped under
-        `n_skipped_ambiguous_variable`, distinct from a plain unresolved id.
+        several sibling variables sharing `provider_key`. A bare `Variabel`
+        succession id carries no discriminator, so it can't pick a sibling and
+        is skipped under `n_skipped_ambiguous_variable`, distinct from a plain
+        unresolved id. (The `AktuellVariabel` cvid grain *can* disambiguate via
+        its delivery column — see `test_split_cvid_resolved_via_delivery_column`.)
 
         Reuses #139's canonical split fixture: Hemkommun + Skolkommun (disjoint
         column stems) under one var_id → two sibling variables.
@@ -2640,6 +2641,54 @@ class TestReplacedByEdges:
             stats = self._stats(conn)
             assert stats["n_skipped_ambiguous_variable"] == 1
             assert stats["n_skipped_unresolved"] == 0
+        finally:
+            conn.close()
+
+    def test_split_cvid_resolved_via_delivery_column(self, tmp_path: Path) -> None:
+        """An `AktuellVariabel` (cvid) succession event over an A2.2-split var_id
+        DOES resolve — unlike the bare `Variabel` id above. The cvid names one
+        instance, and split siblings own disjoint delivery columns, so the cvid's
+        column (`variable_alias`) selects the sibling. No skip; the edge carries
+        that sibling's stored slug.
+
+        Same Hemkommun/Skolkommun split fixture; the succession event uses cvid
+        9300 (the Hemkommun sibling) as predecessor.
+        """
+        split_rows = [
+            _var_row(colname="Hemkommun", cvid=9300, var_id=920, year="2019"),
+            _var_row(colname="Skolkommun", cvid=9301, var_id=920, year="2019"),
+        ]
+        # id1=9300 = the Hemkommun split sibling (cvid); id2=2002 = reg2 var 300
+        # ('uniqcol'), unambiguous.
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="9300", id2="2002")]
+        db_path = self._build(
+            tmp_path,
+            rows,
+            registerinformation_rows=REGISTERINFORMATION_ROWS + split_rows,
+        )
+        conn = open_db(db_path)
+        try:
+            # The split fired, and the Hemkommun sibling has its own stored slug.
+            hemkommun_slug = conn.execute(
+                "SELECT DISTINCT v.slug FROM variable v "
+                "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND vs.delivery_column_name = 'Hemkommun'"
+            ).fetchone()
+            assert hemkommun_slug is not None, "fixture should produce a split sibling"
+            edges = conn.execute(
+                "SELECT predecessor_register, predecessor_variable, "
+                "successor_register, successor_variable FROM variable_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == (
+                "testreg",
+                hemkommun_slug[0],
+                "otherreg",
+                "uniqcol",
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_ambiguous_variable"] == 0
+            assert stats["n_variable_replaced_by"] == 1
         finally:
             conn.close()
 
