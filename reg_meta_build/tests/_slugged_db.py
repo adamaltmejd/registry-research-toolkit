@@ -195,6 +195,86 @@ def add_variable(
     )
 
 
+def add_state(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    var_id: int | None = None,
+    variable_slug: str | None = None,
+    register_variant_id: int,
+    valid_from: str = "0001-01-01",
+    valid_to: str = "9999-12-31",
+    data_type: str = "int",
+    delivery_column_name: str | None = None,
+    value_set_id: int | None = None,
+    value_set_version_label: str = "",
+) -> int:
+    """Insert one `variable_state` for a variable under an explicit variant +
+    validity window. Returns the state_id.
+
+    Target the parent variable by `variable_slug` (register-unique, the
+    disambiguating key for split siblings sharing a `provider_key`) or by
+    `var_id` (the `provider_key` join hint — fine when no split). Exactly one
+    must be given. The parent `variable` must already exist.
+
+    A2.5: lets multi-vintage / sub-annual / multi-variant fixtures seed precise
+    `variable_state` rows (distinct windows, value_set_version_labels, variants)
+    without raw INSERTs."""
+    if (var_id is None) == (variable_slug is None):
+        raise ValueError("pass exactly one of var_id / variable_slug")
+    if variable_slug is not None:
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id = ? AND slug = ?",
+            (register_id, variable_slug),
+        ).fetchone()[0]
+    else:
+        vid = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+            (register_id, var_id),
+        ).fetchone()[0]
+    cur = conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, delivery_column_name, value_set_id, "
+        "value_set_version_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            vid,
+            register_variant_id,
+            valid_from,
+            valid_to,
+            data_type,
+            delivery_column_name,
+            value_set_id,
+            value_set_version_label,
+        ),
+    )
+    return cur.lastrowid
+
+
+def add_value_set(
+    conn: sqlite3.Connection,
+    *,
+    value_set_id: int,
+    codes: list[tuple[str, str]],
+) -> None:
+    """Mint a `value_set` + its `value_code` / `value_set_member` rows so a state
+    can carry hydratable codes. `codes` is a list of (code, label). The
+    member_hash is a throwaway 32-byte blob (content-addressing isn't exercised
+    by Catalog reads — it joins by value_set_id)."""
+    conn.execute(
+        "INSERT INTO value_set (value_set_id, member_hash) VALUES (?, ?)",
+        (value_set_id, bytes(32)[:31] + bytes([value_set_id % 256])),
+    )
+    for code, label in codes:
+        cur = conn.execute(
+            "INSERT INTO value_code (code, label) VALUES (?, ?)", (code, label)
+        )
+        conn.execute(
+            "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+            (value_set_id, cur.lastrowid),
+        )
+
+
 def add_binding(
     conn: sqlite3.Connection,
     *,

@@ -8,6 +8,8 @@ import pytest
 from _slugged_db import (
     add_binding,
     add_register,
+    add_state,
+    add_value_set,
     add_variable,
     add_variant,
     add_version,
@@ -15,12 +17,13 @@ from _slugged_db import (
 )
 from reg_meta.catalog import (
     Catalog,
+    RelatedRef,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedRegisterVariant,
     ResolvedRegisterVersion,
-    ResolvedVariableBinding,
+    ResolvedVariable,
 )
 from reg_meta.errors import RegMetaError
 from reg_meta.fqid import Fqid
@@ -154,52 +157,66 @@ class TestResolveVersion:
 
 
 class TestResolveBinding:
+    """A2.5 (§5.10): `resolve()` returns the longitudinal `ResolvedVariable` —
+    the variable's shared metadata + its `variable_state` history, no per-edition
+    cvid. The interim `ResolvedVariableBinding` is gone from this path (it lives
+    on `editions` only)."""
+
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         # Kolumnnamn "Kon" derives to variable slug "kon".
         r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 1001
-        assert r.var_id == 44
+        assert isinstance(r, ResolvedVariable)
+        assert r.provider_key == "44"
+        assert r.name == "Kön"
         assert r.fqid.variable == "kon"
-        assert r.delivery_column_name == "Kon"
+        # The shared shape exposes state-grain delivery column through states.
+        assert len(r.states) == 1
+        assert r.states[0].delivery_column_name == "Kon"
+        assert r.states[0].variant == "individer-15plus"
 
     def test_swedish_kolumnnamn_folds_to_ascii_slug(self) -> None:
         # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (§5.2).
+        # The raw delivery column is preserved on the state.
         conn = build_slugged_db(delivery_column_name="Kön")
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.delivery_column_name == "Kön"
+        assert isinstance(r, ResolvedVariable)
+        assert r.states[0].delivery_column_name == "Kön"
 
     def test_unknown_variable_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
             Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/nonexistent")
         assert exc.value.code == "fqid_not_found"
 
-    def test_default_fixture_has_no_lineage(
+    def test_default_fixture_has_no_edges(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
-        # Canonical bindings (no via_source_id set) expose lineage as None.
+        # A bare variable with no curated/auto edges exposes empty edge tuples.
         r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.via_source_id is None
-        assert r.lineage is None
+        assert isinstance(r, ResolvedVariable)
+        assert r.same_as == ()
+        assert r.replaced_by == ()
+        assert r.related_to == ()
+        assert r.lineage == ()
+        assert r.via_same_as is None
 
 
 class TestStoredVariableSlug:
     """A2.1.5 (§5.3): the resolver reads the stored `variable.slug`, not a slug
-    derived from `delivery_column_name` at query time."""
+    derived from `delivery_column_name` at query time. A2.5: resolution is now
+    longitudinal (`ResolvedVariable`, period-independent) — split siblings
+    resolve to distinct `variable_id`s, and point selection moved to
+    `resolve_at`."""
 
     def test_resolves_via_stored_slug(self) -> None:
         # Stored slug == derived slug for the common single-column case.
         conn = build_slugged_db()
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.var_id == 44
+        assert isinstance(r, ResolvedVariable)
+        assert r.provider_key == "44"
 
     def test_two_aliases_one_slug_still_resolves(self) -> None:
         # A variable with two aliases (`Kon` + `Kön`) both folding to one slug:
-        # the stored slug is single, so the LEFT-JOIN fan-out across aliases
-        # still resolves unambiguously.
+        # the stored slug is single, so the variable resolves unambiguously.
         conn = build_slugged_db()
         conn.execute(
             "INSERT INTO variable_alias (cvid, delivery_column_name) "
@@ -207,196 +224,147 @@ class TestStoredVariableSlug:
         )
         conn.commit()
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.var_id == 44
+        assert isinstance(r, ResolvedVariable)
+        assert r.provider_key == "44"
 
     def test_stored_slug_overrides_derived_unblocks_triage(self) -> None:
         # The A2.2 unblocking proof: delivery_column_name is `Ssyk` (which would
-        # derive to `ssyk`), but the stored slug is `ssyk-3pos`. The binding
+        # derive to `ssyk`), but the stored slug is `ssyk-3pos`. The variable
         # resolves under the stored slug — proving a build-time triage split can
         # give a sibling sharing a delivery column a distinct, resolvable
         # identity even though derive-at-resolve never produces it.
         conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.var_id == 44
-        assert r.delivery_column_name == "Ssyk"
+        assert isinstance(r, ResolvedVariable)
+        assert r.provider_key == "44"
+        assert r.states[0].delivery_column_name == "Ssyk"
         # The derive-at-resolve slug `ssyk` no longer resolves — identity is the
         # stored slug, not the (honest, shared) delivery column.
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
         assert exc.value.code == "fqid_not_found"
 
-    def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
-        # A2.2 resolver flip: two sibling variables share provider_key '44' (a
-        # §5.7 split puts several variables under one source key) — but each owns
-        # its variable_state AND its delivery column's own variable_instance row.
-        # A split fires precisely because ≥2 columns co-deliver in an edition, so
-        # SCB ships one cvid per column (cvid 1001/'Ssyk3', cvid 1002/'Ssyk5').
-        # The state-anchored resolver selects the variable by slug → variable_id,
-        # and `_lookup_instance` ties the cvid to the state's
-        # `delivery_column_name`, so each sibling binds its OWN column's instance
-        # — not the lowest shared cvid (Codex P1 #139).
+    def test_split_siblings_resolve_to_distinct_variables(self) -> None:
+        # A2.2 split → A2.5 longitudinal: two sibling variables share provider_key
+        # '44' (a §5.7 split puts several variables under one source key) but have
+        # distinct slugs + distinct `variable_id`s and own DISJOINT delivery
+        # columns. Each resolves to its OWN `ResolvedVariable` with its own state
+        # — no shared cvid fan-out (the interim hazard the A2.2 flip removed).
         conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
-        cur = conn.execute(
+        conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
         )
-        sib_vid = cur.lastrowid
-        # The Ssyk5 sibling's own instance (cvid 1002, same var_id/edition) plus
-        # its state under the same variant (register_variant_id 10).
-        conn.executescript(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
-            "VALUES (1002, 1, 10, 100, 44, 'int');"
-            "INSERT INTO variable_alias (cvid, delivery_column_name) "
-            "VALUES (1002, 'Ssyk5');"
-        )
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk5')",
-            (sib_vid,),
+        # The Ssyk5 sibling's own state under the same variant. Target by slug:
+        # provider_key '44' is shared across the split siblings, so var_id can't
+        # disambiguate — the register-unique slug can.
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="ssyk-5pos",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Ssyk5",
         )
         conn.commit()
         r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
         r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
-        assert isinstance(r3, ResolvedVariableBinding)
-        assert isinstance(r5, ResolvedVariableBinding)
-        # Each sibling resolves to its OWN state AND its OWN column-matched cvid.
-        assert r3.state_id != r5.state_id
-        assert r3.delivery_column_name == "Ssyk3"
-        assert r5.delivery_column_name == "Ssyk5"
-        assert r3.cvid == 1001
-        assert r5.cvid == 1002  # column-tied, not the lowest shared cvid
+        assert isinstance(r3, ResolvedVariable)
+        assert isinstance(r5, ResolvedVariable)
+        # Distinct variables (distinct variable_id), each with its own column.
+        assert r3.variable_id != r5.variable_id
+        assert [s.delivery_column_name for s in r3.states] == ["Ssyk3"]
+        assert [s.delivery_column_name for s in r5.states] == ["Ssyk5"]
 
-    def test_absent_sibling_does_not_phantom_resolve(self) -> None:
-        # Codex P1 #139: a sibling whose delivery column has NO instance in the
-        # queried edition must NOT borrow another sibling's instance. Ssyk3
-        # delivers (cvid 1001 / 'Ssyk3'); a 'Ssyk7' sibling carries a state but
-        # no matching variable_alias, so the column-tied instance lookup finds
-        # nothing and the FQID is unresolved (pre-fix it borrowed cvid 1001).
+    def test_absent_sibling_still_misses(self) -> None:
+        # A slug that names no variable misses, even when a same-provider_key
+        # sibling exists. (Longitudinal resolution keys on the stored slug, so a
+        # nonexistent slug can't borrow a sibling's identity.)
         conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
-        cur = conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name, slug) "
-            "VALUES (1, '44', 'SSYK 7-pos', 'ssyk-7pos')"
-        )
-        absent_vid = cur.lastrowid
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk7')",
-            (absent_vid,),
-        )
-        conn.commit()
-        # Ssyk3 still resolves to its own instance.
         r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
-        assert isinstance(r3, ResolvedVariableBinding)
-        assert r3.cvid == 1001
-        # The absent sibling does not phantom-resolve onto it.
+        assert isinstance(r3, ResolvedVariable)
         with pytest.raises(RegMetaError) as exc:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-7pos")
         assert exc.value.code == "fqid_not_found"
 
-    def test_direct_resolve_skips_state_without_edition_instance(self) -> None:
-        # Codex P2 #139: the column-constrained instance lookup must not make the
-        # direct path false-miss when several states overlap the queried year and
-        # the latest-era state's column isn't delivered in THIS edition. A decoy
-        # state (later valid_from, column 'KonDecoy' with no instance) sorts ahead
-        # of the real 'Kon' state (cvid 1001); the resolver iterates past the
-        # decoy and binds the state whose column actually has an instance, rather
-        # than reporting fqid_not_found on the first miss (pre-fix it took only
-        # the first overlapping state).
-        conn = build_slugged_db()  # cvid 1001 / 'Kon', state 'Kon' @ 2018-01-01
-        vid = conn.execute(
-            "SELECT variable_id FROM variable WHERE register_id=1 AND provider_key='44'"
-        ).fetchone()[0]
-        conn.execute(
-            "INSERT INTO variable_state (variable_id, register_variant_id, "
-            "valid_from, valid_to, data_type, delivery_column_name) "
-            "VALUES (?, 10, '2018-06-01', '9999-12-31', 'int', 'KonDecoy')",
-            (vid,),
-        )
-        conn.commit()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 1001
-        assert r.delivery_column_name == "Kon"
-
 
 class TestResolveBindingLineage:
-    """§5.6 consumer-side binding lineage exposure on Catalog.resolve."""
+    """§5.6 consumer-side lineage exposure on the longitudinal resolution
+    (A2.5). Lineage is the `variable_state_lineage` table (A2.4, state grain),
+    surfaced via `resolve(fqid).lineage` and `lineage(fqid)` — NOT the deleted
+    interim per-cvid `via_source_id` FQID."""
 
     @staticmethod
-    def _build_consumer_db(version_name: str = "RTB 2018") -> sqlite3.Connection:
-        # RTB owns Kön (cvid 5000); LISA delivers it as a consumer-side
-        # binding (cvid 5001) with via_source_id pointing at RTB's instance.
-        period = version_name.split(" ", 1)[1]
+    def _build_consumer_db() -> sqlite3.Connection:
+        # RTB owns Kön (the source variable); LISA delivers it as a consumer-side
+        # variable. A `variable_state_lineage` edge ties LISA's state to RTB's.
         conn = build_slugged_db(
             register=("RTB", "rtb", 1, 1),
             variant=("Personer", "personer", 10),
-            version=(version_name, period, 100),
+            version=("RTB 2018", "2018", 100),
             variable=("Kön", 44, 5000, "Kon"),
         )
-        # Consumer register (LISA) shares slug "kon" so lineage matches.
-        conn.executescript(
-            f"INSERT INTO register (register_id, provider_id, slug, name) "
-            f"VALUES (2, 1, 'lisa', 'LISA');"
-            f"INSERT INTO register_variant "
-            f"(register_variant_id, register_id, slug, name) "
-            f"VALUES (20, 2, 'individer-15plus', 'Individer 15+');"
-            f"INSERT INTO register_version "
-            f"(regver_id, register_variant_id, slug, registerversionnamn) "
-            f"VALUES (200, 20, '{period}', 'LISA {period}');"
-            # A2.1.5: the resolver reads the stored `variable.slug`, so the
-            # consumer variable must carry slug "kon" to resolve (and to match
-            # the source slug for lineage).
-            f"INSERT INTO variable "
-            f"(register_id, provider_key, name, source_register_id, slug) "
-            f"VALUES (2, '99', 'Kön', 1, 'kon');"
-            f"INSERT INTO variable_instance "
-            f"(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
-            f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
-            f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
-            # A2.2 flip: the consumer binding resolves through variable_state
-            # (keyed by variable_id), so seed an open-range state for the LISA
-            # consumer variable under its variant (register_variant_id 20).
-            f"INSERT INTO variable_state "
-            f"(variable_id, register_variant_id, valid_from, valid_to, "
-            f" data_type, delivery_column_name) "
-            f"VALUES ((SELECT variable_id FROM variable "
-            f"         WHERE register_id = 2 AND provider_key = '99'), "
-            f"        20, '0001-01-01', '9999-12-31', 'int', 'Kon');"
+        # Consumer register (LISA) with its own variable + state.
+        add_register(conn, register_id=2, slug="lisa", name="LISA")
+        add_variant(
+            conn,
+            register_variant_id=20,
+            register_id=2,
+            slug="individer-15plus",
+            name="Individer 15+",
+        )
+        add_version(
+            conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
+        )
+        add_variable(
+            conn, register_id=2, var_id=99, name="Kön", source_register_id=1, slug="kon"
+        )
+        consumer_state = add_state(
+            conn,
+            register_id=2,
+            var_id=99,
+            register_variant_id=20,
+            valid_from="2018-01-01",
+            delivery_column_name="Kon",
+        )
+        # RTB's source state (the fixture's variable() seeded one at 2018-01-01).
+        source_state = conn.execute(
+            "SELECT vs.state_id FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '44'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state_lineage "
+            "(consumer_state_id, source_state_id, valid_from, valid_to) "
+            "VALUES (?, ?, '2018-01-01', '9999-12-31')",
+            (consumer_state, source_state),
         )
         conn.commit()
         return conn
 
-    def test_consumer_binding_exposes_via_source_id(self) -> None:
+    def test_consumer_resolve_exposes_lineage_edge(self) -> None:
         conn = self._build_consumer_db()
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 5001
-        assert r.via_source_id == 5000
+        assert isinstance(r, ResolvedVariable)
+        assert len(r.lineage) == 1
+        edge = r.lineage[0]
+        assert edge.valid_from == "2018-01-01"
+        assert edge.valid_to == "9999-12-31"
+        assert edge.consumer_state_id == r.states[0].state_id
 
-    def test_consumer_binding_lineage_fqid(self) -> None:
+    def test_lineage_accessor_matches_resolve(self) -> None:
         conn = self._build_consumer_db()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert str(r.lineage) == "scb/rtb/personer/2018/kon"
+        cat = Catalog(conn)
+        fqid = "scb/lisa/individer-15plus/2018/kon"
+        assert cat.lineage(fqid) == list(cat.resolve(fqid).lineage)
 
-    def test_canonical_source_binding_has_no_lineage(self) -> None:
+    def test_canonical_source_has_no_lineage(self) -> None:
+        # RTB's source variable is the lineage SOURCE, not a consumer — its own
+        # `lineage` (consumer-side) is empty.
         conn = self._build_consumer_db()
         r = Catalog(conn).resolve("scb/rtb/personer/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.via_source_id is None
-        assert r.lineage is None
-
-    def test_lineage_preserves_sub_year_period(self) -> None:
-        # HT2020 source must not collapse to .../2020/... in the lineage FQID.
-        conn = self._build_consumer_db(version_name="RTB HT2020")
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020/kon")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert str(r.lineage) == "scb/rtb/personer/HT2020/kon"
+        assert isinstance(r, ResolvedVariable)
+        assert r.lineage == ()
 
 
 class TestResolveElidedFqid:
@@ -430,7 +398,7 @@ class TestResolveElidedFqid:
             variant=("Individer", "_default", 10),  # rest of fixture defaults
         )
         r = Catalog(conn).resolve("scb/lisa/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
+        assert isinstance(r, ResolvedVariable)
         assert r.fqid.variant == "_default"
         assert r.fqid.period == "2018"
         assert r.fqid.variable == "kon"
@@ -446,15 +414,27 @@ class TestResolveElidedFqid:
             Catalog(slugged_conn).resolve("scb/lisa/2018")
         assert exc.value.code == "fqid_not_found"
 
-    def test_elided_binding_misses_when_register_has_no_default(
+    def test_elided_binding_resolves_regardless_of_variant_a25(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
-        # Symmetric to the version miss: the elided binding form
-        # `scb/lisa/2018/kon` expands to `_default/2018/kon`, but LISA has
-        # only `individer-15plus`, so the binding resolver finds no rows.
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve("scb/lisa/2018/kon")
-        assert exc.value.code == "fqid_not_found"
+        # A2.5 shift: `resolve()` is longitudinal — variable identity is
+        # (provider, register, slug); the binding FQID's variant/period are NOT
+        # load-bearing for identity (only for `resolve_at`). So the elided form
+        # `scb/lisa/2018/kon` (→ `_default/2018/kon`) resolves to the `kon`
+        # variable even though LISA's only variant is `individer-15plus`. (Under
+        # the interim per-edition resolver this MISSED on the absent variant;
+        # the variant slot is vestigial for resolve() until A2.6 drops it.)
+        r = Catalog(slugged_conn).resolve("scb/lisa/2018/kon")
+        assert isinstance(r, ResolvedVariable)
+        assert r.name == "Kön"
+        # The variant *does* gate resolve_at: `_default` matches no real state.
+        assert Catalog(slugged_conn).resolve_at("scb/lisa/2018/kon", 2018) != []
+        assert (
+            Catalog(slugged_conn).resolve_at(
+                "scb/lisa/2018/kon", 2018, variant="_default"
+            )
+            == []
+        )
 
     def test_elided_version_misses_against_variant_less_register(self) -> None:
         # Variant-less LSS (no register_variant row) — synthesis covers the
@@ -806,13 +786,13 @@ class TestSameAsTraversal:
     ) -> None:
         # Sanity: a direct resolution doesn't touch the same_as graph.
         r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
-        assert isinstance(r, ResolvedVariableBinding)
+        assert isinstance(r, ResolvedVariable)
         assert r.via_same_as is None
 
     def test_same_as_one_hop_resolves(self) -> None:
         # Curated equivalence: kon ↔ civilstand-legacy (constructed scenario —
         # the fixture has only `kon`, but querying `civilstand-legacy` traverses
-        # the edge and lands on `kon`'s binding row).
+        # the edge and lands on `kon`'s variable).
         conn = build_slugged_db()
         self._add_var_edge(
             conn,
@@ -820,11 +800,12 @@ class TestSameAsTraversal:
             b=("scb", "lisa", "civilstand-legacy"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
-        assert isinstance(r, ResolvedVariableBinding)
-        # The returned binding is the kon row (cvid 1001), but the FQID on
-        # the result preserves the caller's input — researchers reading
+        assert isinstance(r, ResolvedVariable)
+        # Resolved to the kon variable (provider_key 44, name Kön), but the FQID
+        # on the result preserves the caller's input — researchers reading
         # results back match against what they asked for.
-        assert r.cvid == 1001
+        assert r.provider_key == "44"
+        assert r.name == "Kön"
         assert str(r.fqid) == "scb/lisa/individer-15plus/2018/civilstand-legacy"
         assert r.via_same_as is not None
         assert len(r.via_same_as) == 1
@@ -844,8 +825,8 @@ class TestSameAsTraversal:
             b=("scb", "lisa", "legacy-name"),
         )
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/legacy-name")
-        assert isinstance(r, ResolvedVariableBinding)
-        assert r.cvid == 1001
+        assert isinstance(r, ResolvedVariable)
+        assert r.provider_key == "44"
         assert r.via_same_as is not None
         # BFS order: legacy-name → intermediate (no hit) → kon (hit).
         assert len(r.via_same_as) == 2
@@ -871,13 +852,12 @@ class TestSameAsTraversal:
     # variant-scoped edges + a variant-keyed visited set) no longer have a
     # behaviour to test and were removed with the demotion.
 
-    def test_cross_register_same_as_variant_mismatch(self) -> None:
-        # lisa/phantom ≡ rtb/kon, but RTB's variant is 'personer', not lisa's
-        # 'individer-15plus'. A2.2 flip: the same_as target resolves
-        # variant-independently (by variable_id + period over variable_state),
-        # so rtb/personer/2018/kon resolves even though the query inherited
-        # lisa's variant, which RTB lacks. (Pre-flip this was a strict xfail —
-        # the interim direct path filtered on the inherited variant slug.)
+    def test_cross_register_same_as_resolves_target_variable(self) -> None:
+        # lisa/phantom ≡ rtb/kon, RTB's variant is 'personer' (not lisa's
+        # 'individer-15plus'). A2.5: variable identity is variant-independent
+        # (the slug is the natural key), so the cross-register target resolves
+        # regardless of which variant the query inherited. The resolved variable
+        # is RTB's kon — `via_same_as` carries the traversal breadcrumb.
         conn = build_slugged_db()  # lisa / individer-15plus / 2018 / kon
         add_register(conn, register_id=2, slug="rtb", name="RTB")
         add_variant(
@@ -898,55 +878,11 @@ class TestSameAsTraversal:
         )
         self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
-        assert isinstance(r, ResolvedVariableBinding)
-
-    def test_same_as_target_tries_multiple_variants(self) -> None:
-        # rtb/kon is delivered in two variants: a sub-annual one (only HT2018,
-        # lower register_variant_id) and an annual one (2018). The source period
-        # is annual 2018. The any-variant path must fall THROUGH the sub-annual
-        # variant — which overlaps the year but has no `2018` register-version —
-        # to the annual variant that resolves, instead of missing (Codex P2 #139).
-        conn = build_slugged_db()  # lisa / individer-15plus / 2018
-        add_register(conn, register_id=2, slug="rtb", name="RTB")
-        add_variant(
-            conn, register_variant_id=20, register_id=2, slug="halvar", name="H"
-        )
-        add_variant(conn, register_variant_id=21, register_id=2, slug="helar", name="Å")
-        add_version(
-            conn,
-            regver_id=200,
-            register_variant_id=20,
-            slug="HT2018",
-            name="RTB HT2018",
-        )
-        add_version(
-            conn, regver_id=201, register_variant_id=21, slug="2018", name="RTB 2018"
-        )
-        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
-        add_binding(
-            conn,
-            cvid=5001,
-            register_id=2,
-            register_variant_id=20,
-            regver_id=200,
-            var_id=99,
-            delivery_column_name="Kon",
-        )
-        add_binding(
-            conn,
-            cvid=5002,
-            register_id=2,
-            register_variant_id=21,
-            regver_id=201,
-            var_id=99,
-            delivery_column_name="Kon",
-        )
-        self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
-        assert isinstance(r, ResolvedVariableBinding)
-        # Resolved via the annual variant (cvid 5002), not the sub-annual one
-        # (5001) that overlaps the year but lacks the 2018 version slot.
-        assert r.cvid == 5002
+        assert isinstance(r, ResolvedVariable)
+        # Resolved to RTB's kon variable (register_id 2), under its own variant.
+        assert r.register_id == 2
+        assert r.states[0].variant == "personer"
+        assert r.via_same_as is not None
 
 
 class TestSameAsClassificationTraversal:
@@ -1120,3 +1056,460 @@ class TestSameAsClassificationTraversal:
         assert r.short_name == "KOL_SOS"
         assert r.via_same_as is not None
         assert str(r.via_same_as[0]) == "class/kollision/2020"
+
+
+# ── A2.5 longitudinal resolution + resolve_at + edge accessors (§5.10) ──────
+
+_KON = "scb/lisa/individer-15plus/2018/kon"
+
+
+class TestResolveVariableLongitudinal:
+    """§5.10: `resolve()` returns the variable's shared metadata + full state
+    history, each state tagged with its variant."""
+
+    def test_resolve_returns_resolved_variable(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        r = Catalog(slugged_conn).resolve(_KON)
+        assert isinstance(r, ResolvedVariable)
+        assert r.name == "Kön"
+        assert r.provider_key == "44"
+        assert r.is_sensitive is False
+        assert r.is_identifier is False
+        assert len(r.states) >= 1
+        assert r.states[0].variant == "individer-15plus"
+
+    def test_states_tagged_with_variant(self) -> None:
+        # The same variable delivered in two variants → two states, each carrying
+        # its own variant coordinate.
+        conn = build_slugged_db()
+        add_variant(
+            conn, register_variant_id=11, register_id=1, slug="foretag", name="Företag"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=11,
+            valid_from="2019-01-01",
+            delivery_column_name="Kon",
+        )
+        r = Catalog(conn).resolve(_KON)
+        assert {s.variant for s in r.states} == {"individer-15plus", "foretag"}
+
+    def test_states_chronological_ascending(self) -> None:
+        # History reads oldest → newest.
+        conn = build_slugged_db()
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=10,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            delivery_column_name="Kon",
+        )
+        r = Catalog(conn).resolve(_KON)
+        froms = [s.valid_from for s in r.states]
+        assert froms == sorted(froms)
+
+    def test_states_accessor_equiv_resolve(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        cat = Catalog(slugged_conn)
+        assert cat.states(_KON) == list(cat.resolve(_KON).states)
+
+    def test_resolve_states_round_trip_with_resolve_at(self) -> None:
+        # §5.10 / MIGRATION_PLAN A2.5: the full history via resolve(fqid).states
+        # equals the union of per-year resolve_at() results on the unambiguous
+        # single-variant case.
+        conn = build_slugged_db()
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=10,
+            valid_from="2019-01-01",
+            valid_to="2019-12-31",
+            delivery_column_name="Kon",
+        )
+        cat = Catalog(conn)
+        all_states = set(cat.resolve(_KON).states)
+        via_at = {
+            s
+            for year in (2018, 2019)
+            for s in cat.resolve_at(_KON, year, variant="individer-15plus")
+        }
+        assert via_at == all_states
+
+    def test_value_set_hydrated_on_state(self) -> None:
+        # A state carrying a value_set exposes its (code, label) pairs. The 2020
+        # state is distinct from the fixture's open-ended 2018 base state, but
+        # the base state's open `valid_to` also covers 2020, so query its own
+        # year and assert on the value-set-bearing state directly.
+        conn = build_slugged_db()
+        add_value_set(conn, value_set_id=7, codes=[("1", "Man"), ("2", "Kvinna")])
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2020-01-01",
+            valid_to="2020-12-31",
+            delivery_column_name="Kon",
+            value_set_id=7,
+        )
+        states = Catalog(conn).resolve_at(_KON, 2020, variant="individer-15plus")
+        coded = [s for s in states if s.value_set_id == 7]
+        assert len(coded) == 1
+        assert coded[0].value_set == (("1", "Man"), ("2", "Kvinna"))
+
+    def test_state_without_value_set_is_none(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        r = Catalog(slugged_conn).resolve(_KON)
+        assert r.states[0].value_set is None
+
+
+class TestResolveAt:
+    """§5.10: `resolve_at` — period/variant/version-narrowed list of states."""
+
+    @staticmethod
+    def _two_state_year_db() -> sqlite3.Connection:
+        # One variable, two sub-annual states inside calendar 2020 under one
+        # variant: spring (Jan-Jun) and autumn (Jul-Dec). Lets sub-annual period
+        # tokens prove the year-only limit is lifted. We drop the fixture's
+        # auto-seeded open-ended 2018 base state so only these two remain.
+        conn = build_slugged_db()
+        conn.execute(
+            "DELETE FROM variable_state WHERE variable_id = "
+            "(SELECT variable_id FROM variable WHERE register_id=1 AND slug='kon')"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2020-01-01",
+            valid_to="2020-06-30",
+            delivery_column_name="KonVT",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="kon",
+            register_variant_id=10,
+            valid_from="2020-07-01",
+            valid_to="2020-12-31",
+            delivery_column_name="KonHT",
+        )
+        conn.commit()
+        return conn
+
+    def test_int_year(self, slugged_conn: sqlite3.Connection) -> None:
+        states = Catalog(slugged_conn).resolve_at(
+            _KON, 2018, variant="individer-15plus"
+        )
+        assert len(states) == 1
+        assert states[0].variant == "individer-15plus"
+
+    def test_period_token_month(self) -> None:
+        conn = self._two_state_year_db()
+        states = Catalog(conn).resolve_at(_KON, "2020-08", variant="individer-15plus")
+        # Only the autumn state covers August (precise — not year-granular).
+        assert [s.delivery_column_name for s in states] == ["KonHT"]
+
+    def test_period_token_quarter(self) -> None:
+        conn = self._two_state_year_db()
+        # Q1 (Jan-Mar) → spring state only.
+        states = Catalog(conn).resolve_at(_KON, "2020-Q1", variant="individer-15plus")
+        assert [s.delivery_column_name for s in states] == ["KonVT"]
+
+    def test_period_token_htvt(self) -> None:
+        conn = self._two_state_year_db()
+        ht = Catalog(conn).resolve_at(_KON, "HT2020", variant="individer-15plus")
+        vt = Catalog(conn).resolve_at(_KON, "VT2020", variant="individer-15plus")
+        assert [s.delivery_column_name for s in ht] == ["KonHT"]
+        assert [s.delivery_column_name for s in vt] == ["KonVT"]
+
+    def test_period_token_iso_date(self) -> None:
+        conn = self._two_state_year_db()
+        states = Catalog(conn).resolve_at(
+            _KON, "2020-03-15", variant="individer-15plus"
+        )
+        assert [s.delivery_column_name for s in states] == ["KonVT"]
+
+    def test_range_period_crosses_states(self) -> None:
+        conn = self._two_state_year_db()
+        states = Catalog(conn).resolve_at(
+            _KON, {"from": "2020-01-01", "to": "2020-12-31"}, variant="individer-15plus"
+        )
+        # The range spans both states; chronological ascending.
+        assert [s.delivery_column_name for s in states] == ["KonVT", "KonHT"]
+
+    def test_default_sentinel_returns_all(self) -> None:
+        conn = self._two_state_year_db()
+        states = Catalog(conn).resolve_at(_KON, "_default")
+        # No period filter → every state (both sub-annual ones).
+        assert len(states) == 2
+        assert [s.delivery_column_name for s in states] == ["KonVT", "KonHT"]
+
+    def test_variant_narrows(self) -> None:
+        # Two variants deliver the variable at the same year; omitting `variant`
+        # returns both, supplying it returns one.
+        conn = build_slugged_db()
+        add_variant(
+            conn, register_variant_id=11, register_id=1, slug="foretag", name="Företag"
+        )
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=11,
+            valid_from="2018-01-01",
+            delivery_column_name="Kon",
+        )
+        cat = Catalog(conn)
+        assert len(cat.resolve_at(_KON, 2018)) == 2
+        assert len(cat.resolve_at(_KON, 2018, variant="foretag")) == 1
+
+    def test_value_set_version_narrows_multivintage(self) -> None:
+        # §5.7 multi-vintage fold: two overlapping states, same variant + year,
+        # distinct value_set_version_label (SNI92 + SNI2007 in a crosswalk year).
+        # resolve_at returns both; value_set_version narrows to one.
+        conn = build_slugged_db()
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=10,
+            valid_from="2007-01-01",
+            valid_to="2007-12-31",
+            delivery_column_name="Sni",
+            value_set_version_label="sni92",
+        )
+        add_state(
+            conn,
+            register_id=1,
+            var_id=44,
+            register_variant_id=10,
+            valid_from="2007-01-01",
+            valid_to="2007-12-31",
+            delivery_column_name="Sni",
+            value_set_version_label="sni2007",
+        )
+        cat = Catalog(conn)
+        both = cat.resolve_at(_KON, 2007, variant="individer-15plus")
+        assert len(both) == 2
+        narrowed = cat.resolve_at(
+            _KON, 2007, variant="individer-15plus", value_set_version="sni2007"
+        )
+        assert len(narrowed) == 1
+        assert narrowed[0].value_set_version_label == "sni2007"
+
+    def test_empty_when_no_state_covers_period(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # No exception — an empty list signals "binding exists, no state here".
+        assert Catalog(slugged_conn).resolve_at(_KON, 1850) == []
+
+    def test_empty_when_variant_unknown(self, slugged_conn: sqlite3.Connection) -> None:
+        assert Catalog(slugged_conn).resolve_at(_KON, 2018, variant="nope") == []
+
+    def test_unknown_binding_fqid_raises(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # The binding itself not resolving is the 404 case (distinct from empty).
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).resolve_at(
+                "scb/lisa/individer-15plus/2018/nonexistent", 2018
+            )
+        assert exc.value.code == "fqid_not_found"
+
+    def test_invalid_period_raises_usage(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(slugged_conn).resolve_at(_KON, "not-a-period")
+        assert exc.value.code == "invalid_period"
+
+
+class TestEdgeAccessors:
+    """§5.10: predecessors/successors/related/lineage/lineage_warnings + the
+    edges surfaced on ResolvedVariable (variable grain)."""
+
+    @staticmethod
+    def _seed_replaced_by(
+        conn: sqlite3.Connection,
+        *,
+        reason: str | None = None,
+        effective_year: int | None = None,
+    ) -> None:
+        # kon (predecessor) → civilstand (successor), variable grain.
+        conn.execute(
+            "INSERT INTO variable_replaced_by ("
+            "predecessor_provider, predecessor_register, predecessor_variable, "
+            "successor_provider, successor_register, successor_variable, "
+            "effective_year, note, beskrivning) "
+            "VALUES ('scb','lisa','kon','scb','lisa','civilstand',?,?,?)",
+            (effective_year, "auto:timeseries_event", reason),
+        )
+        conn.commit()
+
+    def test_successors(self) -> None:
+        conn = build_slugged_db()
+        self._seed_replaced_by(conn)
+        succ = Catalog(conn).successors(_KON)
+        assert [(s.provider, s.register, s.variable) for s in succ] == [
+            ("scb", "lisa", "civilstand")
+        ]
+        # Outbound edges also ride on ResolvedVariable.replaced_by.
+        assert Catalog(conn).resolve(_KON).replaced_by == tuple(succ)
+
+    def test_predecessors_uses_successor_index(self) -> None:
+        # Query the SUCCESSOR side: civilstand was preceded by kon. Proves the
+        # A2.5 successor-keyed reverse lookup works.
+        conn = build_slugged_db(variable_slug="civilstand", delivery_column_name="Civ")
+        # Add a kon variable too (the predecessor endpoint must exist to resolve,
+        # but predecessors() reads the edge table, not the predecessor variable).
+        self._seed_replaced_by(conn)
+        pred = Catalog(conn).predecessors("scb/lisa/individer-15plus/2018/civilstand")
+        assert [(p.provider, p.register, p.variable) for p in pred] == [
+            ("scb", "lisa", "kon")
+        ]
+
+    def test_succession_carries_reason_and_effective_year(self) -> None:
+        # #142: predecessors/successors carry beskrivning (reason) + effective_year.
+        conn = build_slugged_db()
+        self._seed_replaced_by(
+            conn, reason="2001 byttes SUN96 till SUN2000", effective_year=2001
+        )
+        succ = Catalog(conn).successors(_KON)[0]
+        assert succ.reason == "2001 byttes SUN96 till SUN2000"
+        assert succ.effective_year == 2001
+
+    def test_same_as_on_resolved_variable(self) -> None:
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "lisa", "kon"), ("scb", "rtb", "kon")),
+            (("scb", "rtb", "kon"), ("scb", "lisa", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        conn.commit()
+        r = Catalog(conn).resolve(_KON)
+        assert [(x.provider, x.register, x.variable) for x in r.same_as] == [
+            ("scb", "rtb", "kon")
+        ]
+        # same_as refs carry no reason/effective_year (succession-only).
+        assert r.same_as[0].reason is None
+        assert r.same_as[0].effective_year is None
+        assert r.same_as[0].fqid is None
+
+    def test_related(self) -> None:
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "lisa", "kon"), ("scb", "lisa", "kon-alt")),
+            (("scb", "lisa", "kon-alt"), ("scb", "lisa", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_related_to (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable,relation_kind,note) "
+                "VALUES (?,?,?,?,?,?,?,?)",
+                (*src, *tgt, "same_definition_different_column", "auto:triage"),
+            )
+        conn.commit()
+        rel = Catalog(conn).related(_KON)
+        assert len(rel) == 1
+        assert isinstance(rel[0], RelatedRef)
+        assert rel[0].variable == "kon-alt"
+        assert rel[0].relation_kind == "same_definition_different_column"
+        assert Catalog(conn).resolve(_KON).related_to == tuple(rel)
+
+    def test_lineage_and_warnings(self) -> None:
+        # Seed a consumer→source lineage edge + a warning on the consumer state.
+        conn = build_slugged_db()  # kon state_id is the consumer state
+        consumer_state = conn.execute(
+            "SELECT vs.state_id FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '44'"
+        ).fetchone()[0]
+        # A source state under a separate source variable.
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="personer", name="P"
+        )
+        add_variable(conn, register_id=2, var_id=70, name="Kön", slug="kon")
+        source_state = add_state(
+            conn,
+            register_id=2,
+            var_id=70,
+            register_variant_id=20,
+            valid_from="2018-01-01",
+            delivery_column_name="Kon",
+        )
+        conn.execute(
+            "INSERT INTO variable_state_lineage "
+            "(consumer_state_id, source_state_id, valid_from, valid_to) "
+            "VALUES (?, ?, '2018-01-01', '9999-12-31')",
+            (consumer_state, source_state),
+        )
+        conn.execute(
+            "INSERT INTO variable_state_lineage_warning "
+            "(consumer_state_id, warning_kind, message) "
+            "VALUES (?, 'ambiguous_source_variant', 'two source variants match')",
+            (consumer_state,),
+        )
+        conn.commit()
+        cat = Catalog(conn)
+        edges = cat.lineage(_KON)
+        assert len(edges) == 1
+        assert edges[0].consumer_state_id == consumer_state
+        assert edges[0].source_state_id == source_state
+        assert edges[0].valid_from == "2018-01-01"
+        warns = cat.lineage_warnings(_KON)
+        assert len(warns) == 1
+        assert warns[0].warning_kind == "ambiguous_source_variant"
+        # Surfaced on the ResolvedVariable too.
+        assert cat.resolve(_KON).lineage == tuple(edges)
+
+    def test_accessors_raise_on_unknown_binding(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        cat = Catalog(slugged_conn)
+        bad = "scb/lisa/individer-15plus/2018/nonexistent"
+        for fn in (
+            cat.predecessors,
+            cat.successors,
+            cat.related,
+            cat.lineage,
+            cat.lineage_warnings,
+        ):
+            with pytest.raises(RegMetaError) as exc:
+                fn(bad)
+            assert exc.value.code == "fqid_not_found"
+
+    def test_accessors_resolve_through_same_as(self) -> None:
+        # Edge accessors report the TARGET variable's edges when the binding
+        # resolves via same_as (consistent with resolve()).
+        conn = build_slugged_db()
+        for src, tgt in (
+            (("scb", "lisa", "kon"), ("scb", "lisa", "phantom")),
+            (("scb", "lisa", "phantom"), ("scb", "lisa", "kon")),
+        ):
+            conn.execute(
+                "INSERT INTO variable_same_as (a_provider,a_register,a_variable,"
+                "b_provider,b_register,b_variable) VALUES (?,?,?,?,?,?)",
+                (*src, *tgt),
+            )
+        self._seed_replaced_by(conn)  # kon → civilstand
+        conn.commit()
+        # Querying the phantom slug resolves to kon, so successors() reports
+        # kon's outbound edge.
+        succ = Catalog(conn).successors("scb/lisa/individer-15plus/2018/phantom")
+        assert [(s.provider, s.register, s.variable) for s in succ] == [
+            ("scb", "lisa", "civilstand")
+        ]

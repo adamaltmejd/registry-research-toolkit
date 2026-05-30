@@ -656,8 +656,18 @@ CREATE TABLE variable_related_to (
 -- predecessor-first PK, so the clustered PK prefix already serves the forward
 -- "what replaced X?" lookup — no separate predecessor index (mirrors
 -- `variable_same_as`). The reverse "what did X replace?" (successor-keyed)
--- lookup lands with A2.5's `.predecessors()` accessor, which adds the
--- successor-side index when it needs it.
+-- lookup is served by `idx_variable_replaced_by_successor` (added below for the
+-- A2.5 `.predecessors()` accessor; only the variable grain has an accessor that
+-- needs it, so register/variant stay index-free on the successor side).
+--
+-- #142: `beskrivning` carries the human transition reason from
+-- `timeseries_event.beskrivning` (e.g. "2001 byttes SUN96 till SUN2000"),
+-- alongside the `auto:timeseries_event` provenance in `note` (kept distinct so
+-- the A4 TOML-curation path can still tell auto from curated). All three sibling
+-- tables carry it so they stay structurally identical and the materializer can
+-- resolve it uniformly. `effective_year` is populated for the AktuellVariabel
+-- variable grain (the successor edition's year); other grains leave it NULL
+-- (no edition to derive a year from — see `_materialize_replaced_by_edges`).
 CREATE TABLE register_replaced_by (
     predecessor_provider TEXT NOT NULL,
     predecessor_register TEXT NOT NULL,
@@ -665,6 +675,7 @@ CREATE TABLE register_replaced_by (
     successor_register   TEXT NOT NULL,
     effective_year       INTEGER,
     note                 TEXT,
+    beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register,
                  successor_provider, successor_register)
 ) WITHOUT ROWID;
@@ -678,6 +689,7 @@ CREATE TABLE variant_replaced_by (
     successor_variant    TEXT NOT NULL,
     effective_year       INTEGER,
     note                 TEXT,
+    beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variant,
                  successor_provider, successor_register, successor_variant)
 ) WITHOUT ROWID;
@@ -696,9 +708,14 @@ CREATE TABLE variable_replaced_by (
     successor_variable   TEXT NOT NULL,
     effective_year       INTEGER,
     note                 TEXT,
+    beskrivning          TEXT,
     PRIMARY KEY (predecessor_provider, predecessor_register, predecessor_variable,
                  successor_provider, successor_register, successor_variable)
 ) WITHOUT ROWID;
+-- A2.5 `.predecessors()`: the successor-keyed reverse lookup the clustered
+-- predecessor-first PK can't serve.
+CREATE INDEX idx_variable_replaced_by_successor
+    ON variable_replaced_by(successor_provider, successor_register, successor_variable);
 
 -- §5.6 consumer-side binding lineage (STATE grain). Materialized by
 -- `link_variable_state_lineage`. One edge per (consumer_state, source_state)
@@ -2588,9 +2605,19 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         edge (repeated source row), kept distinct from the inverse-collapse
         count so the inverse counter means what it says.
 
-    `effective_year` is NULL — Timeseries.csv carries no year column for
-    succession events (only `Namn, Handelse, Beskrivning, Entitet, ID1, ID2,
-    FilID`). Reserved for the A4 TOML curation path.
+    #142: `beskrivning` (the human transition reason, e.g. "2001 byttes SUN96
+    till SUN2000") is carried verbatim from `timeseries_event.Beskrivning` into
+    every edge, alongside the `auto:timeseries_event` provenance in `note`.
+
+    `effective_year` (#142): derived for the **AktuellVariabel** variable grain
+    only — the cvid endpoints resolve to a `register_version` edition, and the
+    edge takes the **successor**'s edition year (the year the succession took
+    effect for the consumer, matching the `slk` SUN acceptance "2001 byttes"
+    where 2001 is SUN2000's first edition). The bare `Variabel` + `Register` +
+    `RegisterVariant` grains have no edition (a var_id / register / variant id
+    carries no year), so they leave `effective_year` NULL — a deliberate
+    asymmetry: only the cvid grain names an edition. Timeseries.csv itself
+    carries no year column.
 
     Returns a stats dict for the manifest.
 
@@ -2660,6 +2687,20 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         "SELECT cvid, register_id, var_id FROM variable_instance"
     ).fetchall():
         cvid_to_var[cvid] = (register_id, var_id)
+
+    # #142: cvid -> edition year, for `effective_year` on AktuellVariabel-grain
+    # edges. The canonical period token is `register_version.slug` (`2018`,
+    # `HT2020`, …); fall back to the version name when the slug is a curated
+    # non-period slug (`ackumulerat-register`) or transiently NULL. Yearless
+    # editions map to None → effective_year stays NULL.
+    cvid_to_year: dict[int, int | None] = {
+        cvid: (extract_year(slug or "") or extract_year(name or ""))
+        for cvid, slug, name in conn.execute(
+            "SELECT vi.cvid, rv.slug, rv.registerversionnamn "
+            "FROM variable_instance vi "
+            "JOIN register_version rv ON vi.regver_id = rv.regver_id"
+        )
+    }
 
     # Split-sibling disambiguation for the cvid grain. An A2.2 split maps one
     # (register_id, var_id) to several siblings owning DISJOINT delivery columns;
@@ -2754,7 +2795,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     placeholders_h = ", ".join("?" * len(_REPLACED_BY_HANDELSE))
     placeholders_e = ", ".join("?" * len(_REPLACED_BY_ENTITET))
     candidate_rows = conn.execute(
-        f"SELECT timeseries_event_id, handelse, entitet, id1, id2 "  # noqa: S608 -- placeholders bound below
+        f"SELECT timeseries_event_id, handelse, entitet, id1, id2, beskrivning "  # noqa: S608 -- placeholders bound below
         f"FROM timeseries_event "
         f"WHERE handelse IN ({placeholders_h}) "
         f"AND entitet IN ({placeholders_e}) "
@@ -2791,7 +2832,10 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         else:  # 'Ersatt av' duplicate of an already-emitted edge
             n_skipped_duplicate += 1
 
-    for ts_event_id, handelse, entitet, id1_raw, id2_raw in candidate_rows:
+    for ts_event_id, handelse, entitet, id1_raw, id2_raw, besk_raw in candidate_rows:
+        # #142: the human transition reason. Empty string → None (SCB ships many
+        # rows with no Beskrivning); stored verbatim otherwise.
+        beskrivning = besk_raw or None
         # id1/id2 are TEXT in the source CSV. Empty strings are common (one
         # direction of a pair, or rows where SCB knew only one endpoint).
         if not id1_raw or not id2_raw:
@@ -2844,12 +2888,13 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 _classify_duplicate(handelse)
                 continue
             seen_register.add(pk)
+            # Register grain has no edition → effective_year NULL (#142 asymmetry).
             conn.execute(
                 "INSERT INTO register_replaced_by ("
                 "predecessor_provider, predecessor_register, "
                 "successor_provider, successor_register, "
-                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?)",
-                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+                "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO, beskrivning),
             )
             n_register += 1
 
@@ -2868,12 +2913,13 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 _classify_duplicate(handelse)
                 continue
             seen_variant.add(pk)
+            # Variant grain has no edition → effective_year NULL (#142 asymmetry).
             conn.execute(
                 "INSERT INTO variant_replaced_by ("
                 "predecessor_provider, predecessor_register, predecessor_variant, "
                 "successor_provider, successor_register, successor_variant, "
-                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+                "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO, beskrivning),
             )
             n_variant += 1
 
@@ -2914,12 +2960,19 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 _classify_duplicate(handelse)
                 continue
             seen_variable.add(pk)
+            # #142: effective_year for the AktuellVariabel grain only — the
+            # successor cvid resolves to an edition, and we take ITS year (the
+            # year the new variable first appeared = when the succession took
+            # effect). The bare `Variabel` grain has no cvid/edition → NULL.
+            effective_year = (
+                cvid_to_year.get(succ_id) if entitet == "AktuellVariabel" else None
+            )
             conn.execute(
                 "INSERT INTO variable_replaced_by ("
                 "predecessor_provider, predecessor_register, predecessor_variable, "
                 "successor_provider, successor_register, successor_variable, "
-                "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                (*pred, *succ, None, _REPLACED_BY_NOTE_AUTO),
+                "effective_year, note, beskrivning) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                (*pred, *succ, effective_year, _REPLACED_BY_NOTE_AUTO, beskrivning),
             )
             n_variable += 1
 

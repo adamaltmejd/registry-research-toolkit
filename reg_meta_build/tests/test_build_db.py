@@ -1695,7 +1695,7 @@ class TestSameAsBuildIntegration:
         (slug_dir / "classifications.toml").write_text("", encoding="utf-8")
 
     def test_end_to_end_resolves_via_same_as(self, tmp_path: Path) -> None:
-        from reg_meta.catalog import Catalog, ResolvedVariableBinding
+        from reg_meta.catalog import Catalog, ResolvedVariable
 
         input_dir = tmp_path / "input"
         db_dir = tmp_path / "db"
@@ -1725,13 +1725,15 @@ class TestSameAsBuildIntegration:
             # confirming the build wired materialize_same_as_edges into
             # the resolver's data plane end-to-end.
             r = Catalog(conn).resolve("scb/testreg/individer/2020/legacy-kon")
-            assert isinstance(r, ResolvedVariableBinding)
+            assert isinstance(r, ResolvedVariable)
             assert r.via_same_as is not None
             assert len(r.via_same_as) == 1
             assert str(r.via_same_as[0]) == "scb/testreg/individer/2020/kon"
             # Caller's FQID preserved on the returned record.
             assert str(r.fqid) == "scb/testreg/individer/2020/legacy-kon"
-            assert r.delivery_column_name == "Kon"
+            # A2.5 longitudinal: the delivery column lives on the state, not the
+            # (now-removed) per-edition binding.
+            assert any(s.delivery_column_name == "Kon" for s in r.states)
         finally:
             conn.close()
 
@@ -2937,6 +2939,120 @@ class TestReplacedByEdges:
                     for r in conn.execute(f"SELECT note FROM {table}").fetchall()  # noqa: S608 -- table name is a literal
                 }
                 assert notes == {"auto:timeseries_event"}, table
+        finally:
+            conn.close()
+
+    def test_replaced_by_carries_beskrivning(self, tmp_path: Path) -> None:
+        """#142: `timeseries_event.Beskrivning` (the human transition reason) is
+        carried verbatim into the edge, ALONGSIDE the `auto:timeseries_event`
+        provenance marker in `note`. Mirrors the real `slk` SUN edge
+        ("2001 byttes SUN96 till SUN2000") with a crafted row on the
+        AktuellVariabel grain (cvid 1002 → 2002)."""
+        rows = [
+            timeseries_row(
+                entitet="AktuellVariabel",
+                id1="1002",
+                id2="2002",
+                beskrivning="2001 byttes SUN96 till SUN2000",
+            )
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            row = conn.execute(
+                "SELECT beskrivning, note FROM variable_replaced_by"
+            ).fetchone()
+            # Both retained: the description AND the provenance marker.
+            assert row["beskrivning"] == "2001 byttes SUN96 till SUN2000"
+            assert row["note"] == "auto:timeseries_event"
+        finally:
+            conn.close()
+
+    def test_replaced_by_beskrivning_null_when_empty(self, tmp_path: Path) -> None:
+        """An empty Beskrivning (the SCB common case) lands NULL, not ''."""
+        rows = [timeseries_row(entitet="AktuellVariabel", id1="1002", id2="2002")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            besk = conn.execute(
+                "SELECT beskrivning FROM variable_replaced_by"
+            ).fetchone()[0]
+            assert besk is None
+        finally:
+            conn.close()
+
+    def test_replaced_by_effective_year_for_aktuell_variabel(
+        self, tmp_path: Path
+    ) -> None:
+        """#142: effective_year on the AktuellVariabel grain = the SUCCESSOR
+        cvid's edition year. cvid 2002 (OTHERREG, 'uniqcol') is delivered in the
+        2021 edition (`_csv_fixtures` OTHERREG version slug = '2021'), so the
+        1002 → 2002 edge carries effective_year = 2021. (Mirrors the slk
+        acceptance shape; the fixture pins the year via the regver slug.)"""
+        rows = [
+            timeseries_row(
+                entitet="AktuellVariabel",
+                id1="1002",
+                id2="2002",
+                beskrivning="2001 byttes SUN96 till SUN2000",
+            )
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            year = conn.execute(
+                "SELECT effective_year FROM variable_replaced_by"
+            ).fetchone()[0]
+            assert year == 2021  # successor cvid 2002's edition year
+        finally:
+            conn.close()
+
+    def test_replaced_by_bare_variabel_effective_year_null(
+        self, tmp_path: Path
+    ) -> None:
+        """#142 asymmetry: the bare `Variabel` grain has no cvid → no edition →
+        effective_year NULL (only the AktuellVariabel grain names an edition).
+        Variabel 100 → 300 lands the same edge as the cvid grain, but without a
+        year."""
+        rows = [timeseries_row(entitet="Variabel", id1="100", id2="300")]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            year = conn.execute(
+                "SELECT effective_year FROM variable_replaced_by"
+            ).fetchone()[0]
+            assert year is None
+        finally:
+            conn.close()
+
+    def test_replaced_by_surfaces_through_successors(self, tmp_path: Path) -> None:
+        """#142 end-to-end: the beskrivning + effective_year land on
+        `Catalog.successors()` (VariableRef.reason / .effective_year)."""
+        from reg_meta.catalog import Catalog
+
+        rows = [
+            timeseries_row(
+                entitet="AktuellVariabel",
+                id1="1002",
+                id2="2002",
+                beskrivning="2001 byttes SUN96 till SUN2000",
+            )
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            # testcol (reg1 var 100) → uniqcol (reg2 var 300). Resolve the
+            # predecessor binding and read its outbound successor.
+            succ = Catalog(conn).successors("scb/testreg/individer/2020/testcol")
+            assert len(succ) == 1
+            assert succ[0].variable == "uniqcol"
+            assert succ[0].reason == "2001 byttes SUN96 till SUN2000"
+            assert succ[0].effective_year == 2021
+            # And the inverse direction: predecessors() of the successor.
+            pred = Catalog(conn).predecessors("scb/otherreg/foretag/2021/uniqcol")
+            assert len(pred) == 1
+            assert pred[0].variable == "testcol"
+            assert pred[0].reason == "2001 byttes SUN96 till SUN2000"
         finally:
             conn.close()
 

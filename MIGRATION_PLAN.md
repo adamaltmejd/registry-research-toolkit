@@ -279,7 +279,7 @@ Can run in parallel with A2.2. **Respec note (in-flight PR #131):** #131 built `
 
 **Follow-ups deferred from PR #140 ([#142](https://github.com/adamaltmejd/registry-research-toolkit/issues/142)).** The A2.3 materializer drops two pieces of source-row context that would make edges self-explanatory: (1) carry `timeseries_event.beskrivning` into the edge `note` (today the constant `auto:timeseries_event`); (2) derive `effective_year` for the `AktuellVariabel` grain from the cvid's edition (currently NULL — `Timeseries.csv` has no year column — but a cvid's `register_version` year is available at build time; asymmetric, since the bare `Variabel`/register/variant grains have no edition). Surfaced by the real-build `slk` edge `sun2020inr1 → sun2000inr1`, which looks backwards but is the 2000→2001 SUN96→SUN2000 switch per `beskrivning="2001 byttes SUN96 till SUN2000"`. Edge correctness is unaffected; this is diagnostic enrichment for A2.5's `.predecessors()`/`.successors()` consumers.
 
-### [ ] A2.4 — `variable_state_lineage` interval-overlap join (variable-grain matching)
+### [x] A2.4 — `variable_state_lineage` interval-overlap join (variable-grain matching) (PR #144; provider-scoping follow-up #145)
 
 Requires **A2.1.5** (it reads `variable.source_register_id` and
 descends the variable hierarchy).

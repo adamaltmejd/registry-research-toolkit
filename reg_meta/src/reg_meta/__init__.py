@@ -1,11 +1,18 @@
 from .catalog import (
     Catalog,
+    LineageEdge,
+    LineageWarning,
+    Period,
+    RelatedRef,
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
     ResolvedRegisterVariant,
     ResolvedRegisterVersion,
+    ResolvedVariable,
     ResolvedVariableBinding,
+    VariableRef,
+    VariableState,
 )
 from .db import db_path_from_args, default_db_dir, open_db
 from .fqid import (
@@ -56,8 +63,12 @@ __all__ = [
     "get_values",
     "get_values_by_variable",
     "get_varinfo",
+    "LineageEdge",
+    "LineageWarning",
     "open_db",
     "parse_fqid",
+    "Period",
+    "RelatedRef",
     "resolve",
     "resolve_register_ids",
     "ResolvedClassification",
@@ -65,8 +76,11 @@ __all__ = [
     "ResolvedRegister",
     "ResolvedRegisterVariant",
     "ResolvedRegisterVersion",
+    "ResolvedVariable",
     "ResolvedVariableBinding",
     "search",
+    "VariableRef",
+    "VariableState",
 ]
 
 __version__ = "0.12.0"

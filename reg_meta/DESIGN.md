@@ -78,6 +78,87 @@ resolution rules used during build are documented in
 [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md) §
 "Source-register resolution".
 
+## Catalog API surface (§5.10)
+
+`Catalog` (`catalog.py`) is the in-process FQID→entity API the webapp's
+`/api/catalog/*` endpoints wrap. `resolve(fqid)` is polymorphic over FQID
+kind; the provider/register/variant/version/classification arms each
+return their dedicated `Resolved*` row. The **binding** arm is
+longitudinal (A2.5): a binding FQID resolves to a `ResolvedVariable` —
+the addressable variable's shared metadata + its full `variable_state`
+history (each state tagged with its variant coordinate) + the
+variable-grain edges. Period-specific resolution lives in `resolve_at`;
+cross-variable traversal in the per-edge accessors. All accessors are
+list-returning; `resolve_at` returns `[]` (never raises) when no state
+covers the period — only the binding FQID not resolving raises
+`fqid_not_found`. See REFACTOR_SPEC.md §5.10 for the normative
+signatures.
+
+The §5.10 spec says the exact dataclass shapes live here. They are
+frozen `@dataclass` (no Pydantic — reg_meta is the no-Pydantic library
+surface, see root CLAUDE.md "Stack"); collection fields are tuples for
+frozen-dataclass immutability/hashability.
+
+**`Period`** — `int | str | dict`, the polymorphic period `resolve_at`
+accepts (mirrors `Source.period`, §6.2): a bare year (`2018`), a period
+token (`"HT2020"`/`"2020-Q3"`/`"2020-08"`/`"2018-12-31"`), an explicit
+range `{"from", "to"}` (endpoints are int or token), or the `"_default"`
+snapshot sentinel (no period filter). Expanded to an inclusive ISO
+`(lo, hi)` interval by `_period_bounds` + `fqid.period_token_to_bounds`,
+intersected against the full-date `variable_state` validity ranges — so
+sub-annual and range queries are precise, not year-granular.
+
+**`ResolvedVariable`** — the longitudinal binding resolution. Fields:
+`fqid` (the caller's binding FQID, preserved through a `same_as`
+traversal — still the interim 5-seg form until A2.6), `variable_id`,
+`register_id`, `provider_key`, the shared metadata (`name`,
+`definition`, `description`, `measurement_unit`, `is_sensitive`,
+`is_identifier`, `source_register_id`, `source_register_text`), `states`
+(tuple of `VariableState`, chronological ascending), the variable-grain
+edges `same_as` / `replaced_by` (OUTBOUND successors) / `related_to` /
+`lineage`, and `via_same_as` (the traversal path when resolved via a
+`same_as` edge, else None).
+
+**`VariableState`** — one `variable_state` row tagged with its variant.
+Fields: `state_id`, `variant` (the `register_variant.slug`),
+`register_variant_id`, `valid_from` / `valid_to` (inclusive ISO dates),
+`data_type`, `data_length`, `delivery_column_name` (denormalized latest
+alias), `value_set_version_label` (NOT NULL, `''` = no discriminator),
+`value_set_id`, and `value_set` (hydrated `(code, label)` tuple, None
+when the state has no value set).
+
+**`VariableRef`** — a variable-grain edge endpoint
+(`same_as` / `predecessors` / `successors`). Fields: `fqid` (None — the
+edge tables store only the 3-part identity, and the binding FQID grammar
+is 5-seg until A2.6, so no addressable FQID can be built yet), the
+load-bearing `provider` / `register` / `variable` triple, and (#142, on
+succession refs only) `reason` (the `timeseries_event.beskrivning`
+transition reason) + `effective_year` (the AktuellVariabel-grain
+successor edition year; None on `same_as` refs and on bare-grain
+succession with no edition).
+
+**`RelatedRef`** — a `variable_related_to` sibling (§5.7 split). Same
+`fqid` (None) + `provider`/`register`/`variable` triple as `VariableRef`,
+plus `relation_kind` (the split reason,
+e.g. `same_definition_different_column`).
+
+**`LineageEdge`** — one `variable_state_lineage` row (§5.6
+consumer-side, state grain): `consumer_state_id`, `source_state_id`,
+`valid_from` / `valid_to` (the validity intersection), and `source_fqid`
+(the source-side 3-part binding FQID — None for the same reason as the
+refs' `fqid`).
+
+**`LineageWarning`** — one `variable_state_lineage_warning` row:
+`consumer_state_id`, `warning_kind` (`no_source_state` /
+`ambiguous_source_variant`), `message`.
+
+`ResolvedVariableBinding` (the interim per-edition binding row) is
+**retained** but scoped to the discovery path `editions()`, which still
+reads the `variable_instance` join and is not part of the §5.10 flip set
+(it moves onto `variable_state` in A2.7 when `variable_instance` is
+dropped). The v0.x per-edition `resolve()` behavior was deleted, not
+aliased — pre-v1 policy (no shims).
+
 ## Value sets are year-projected
 
 `Vardemangder.csv` is the historical union — every code that ever
