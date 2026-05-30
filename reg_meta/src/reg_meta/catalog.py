@@ -87,9 +87,11 @@ class ResolvedVariableBinding:
     # through (keyed by `variable_id`), so split siblings sharing one
     # `provider_key` resolve to their OWN state, not a shared instance's. The
     # discriminating metadata (delivery_column_name, value_set_version_label)
-    # comes from this state; `cvid`/`via_source_id` stay sourced from the shared
-    # `variable_instance` for §5.6 lineage until A2.4/A2.7. None on the discovery
-    # path (`editions`), which still reads the interim instance join.
+    # comes from this state; `cvid`/`via_source_id` come from the
+    # `variable_instance` whose delivery column matches this state — column-tied,
+    # so split siblings with distinct columns get distinct cvids (Codex P1 #139)
+    # — until A2.4 moves lineage onto `variable_state_lineage`. None on the
+    # discovery path (`editions`), which still reads the interim instance join.
     state_id: int | None = None
     value_set_version_label: str | None = None
     # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
@@ -350,9 +352,11 @@ class Catalog:
         slug selects THE variable row (register-unique slug); its
         `variable_state` for the queried (variant, period) supplies the
         discriminating metadata, so each sibling resolves to its own state.
-        `cvid`/`via_source_id` stay sourced from the (shared, interim)
-        `variable_instance` for §5.6 lineage until A2.4/A2.7. Still parses the
-        interim 5-seg grammar — the 3-seg flip is A2.6.
+        `cvid`/`via_source_id` come from the interim `variable_instance` whose
+        delivery column matches that state (`_lookup_instance`), so a split
+        sibling binds its OWN column's instance, not the lowest shared cvid
+        (Codex P1 #139); A2.4 moves lineage onto `variable_state_lineage`. Still
+        parses the interim 5-seg grammar — the 3-seg flip is A2.6.
         """
         # A binding FQID has all five segments populated (parse-validated); the
         # asserts narrow `str | None` → `str` for the typed helpers below.
@@ -374,6 +378,7 @@ class Catalog:
             slot["register_variant_id"],
             slot["regver_id"],
             var["provider_key"],
+            state["delivery_column_name"],
         )
         if inst is None:
             return None
@@ -537,27 +542,41 @@ class Catalog:
         register_variant_id: int,
         regver_id: int | None,
         provider_key: str,
+        delivery_column_name: str | None,
     ) -> sqlite3.Row | None:
-        """cvid + via_source_id for §5.6 lineage. Shared across split siblings
-        in the interim (they share `provider_key`/`var_id`); A2.4 moves lineage
-        onto `variable_state_lineage`. `regver_id` None matches any era (the
-        variant-independent `same_as` path)."""
+        """cvid + via_source_id for §5.6 lineage, constrained to the selected
+        state's `delivery_column_name` (via `variable_alias`). A2.2 splits one
+        `var_id` into sibling variables that share `provider_key`/`var_id` but
+        differ by delivery column, so a single edition holds several instance
+        rows for the same `var_id`. Without the column tie, two siblings would
+        both pick the lowest `cvid` (wrong source column) and an *absent* sibling
+        would resolve via another sibling's instance (phantom) — Codex P1 #139.
+        A NULL column (~3% of states, cvids with no alias) falls back to the
+        var_id match. `regver_id` None matches any era (the variant-independent
+        `same_as` path). A2.4 moves lineage onto `variable_state_lineage`."""
         try:
             var_id = int(provider_key)
         except (TypeError, ValueError):
             return None  # SOS non-numeric provider_key — no interim instance join
+        conds = ["vi.register_id = ?", "vi.register_variant_id = ?"]
+        params: list[object] = [register_id, register_variant_id]
         if regver_id is not None:
-            return self._conn.execute(
-                "SELECT cvid, regver_id, via_source_id FROM variable_instance "
-                "WHERE register_id = ? AND register_variant_id = ? "
-                "AND regver_id = ? AND var_id = ? ORDER BY cvid LIMIT 1",
-                (register_id, register_variant_id, regver_id, var_id),
-            ).fetchone()
+            conds.append("vi.regver_id = ?")
+            params.append(regver_id)
+        conds.append("vi.var_id = ?")
+        params.append(var_id)
+        join = ""
+        if delivery_column_name is not None:
+            join = "JOIN variable_alias va ON va.cvid = vi.cvid "
+            conds.append("va.delivery_column_name = ?")
+            params.append(delivery_column_name)
         return self._conn.execute(
-            "SELECT cvid, regver_id, via_source_id FROM variable_instance "
-            "WHERE register_id = ? AND register_variant_id = ? AND var_id = ? "
-            "ORDER BY cvid LIMIT 1",
-            (register_id, register_variant_id, var_id),
+            "SELECT vi.cvid, vi.regver_id, vi.via_source_id FROM variable_instance vi "
+            + join
+            + "WHERE "
+            + " AND ".join(conds)
+            + " ORDER BY vi.cvid LIMIT 1",
+            params,
         ).fetchone()
 
     def _variant_slug(self, register_variant_id: int) -> str | None:
@@ -599,7 +618,11 @@ class Catalog:
             if slot is None:
                 continue  # this variant doesn't deliver the period — try the next
             inst = self._lookup_instance(
-                var["register_id"], rvid, slot["regver_id"], var["provider_key"]
+                var["register_id"],
+                rvid,
+                slot["regver_id"],
+                var["provider_key"],
+                state["delivery_column_name"],
             )
             if inst is None:
                 continue

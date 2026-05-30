@@ -229,19 +229,29 @@ class TestStoredVariableSlug:
 
     def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
         # A2.2 resolver flip: two sibling variables share provider_key '44' (a
-        # §5.7 split puts several variables under one source key) and the single
-        # interim variable_instance (cvid 1001, var_id 44) — but each owns its
-        # variable_state. The state-anchored resolver selects the variable by
-        # slug → variable_id, so each sibling resolves to its OWN state. (The
-        # pre-flip provider_key join fanned both onto the shared instance; this
-        # test was a strict xfail until the flip.)
+        # §5.7 split puts several variables under one source key) — but each owns
+        # its variable_state AND its delivery column's own variable_instance row.
+        # A split fires precisely because ≥2 columns co-deliver in an edition, so
+        # SCB ships one cvid per column (cvid 1001/'Ssyk3', cvid 1002/'Ssyk5').
+        # The state-anchored resolver selects the variable by slug → variable_id,
+        # and `_lookup_instance` ties the cvid to the state's
+        # `delivery_column_name`, so each sibling binds its OWN column's instance
+        # — not the lowest shared cvid (Codex P1 #139).
         conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
         cur = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
         )
         sib_vid = cur.lastrowid
-        # The sibling's own state under the same variant (register_variant_id 10).
+        # The Ssyk5 sibling's own instance (cvid 1002, same var_id/edition) plus
+        # its state under the same variant (register_variant_id 10).
+        conn.executescript(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
+            "VALUES (1002, 1, 10, 100, 44, 'int');"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) "
+            "VALUES (1002, 'Ssyk5');"
+        )
         conn.execute(
             "INSERT INTO variable_state (variable_id, register_variant_id, "
             "valid_from, valid_to, data_type, delivery_column_name) "
@@ -253,13 +263,40 @@ class TestStoredVariableSlug:
         r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
         assert isinstance(r3, ResolvedVariableBinding)
         assert isinstance(r5, ResolvedVariableBinding)
-        # Each sibling resolves to its OWN state — distinct state_id and column —
-        # even though they share the interim variable_instance (same cvid/var_id;
-        # lineage stays instance-sourced until A2.4).
+        # Each sibling resolves to its OWN state AND its OWN column-matched cvid.
         assert r3.state_id != r5.state_id
         assert r3.delivery_column_name == "Ssyk3"
         assert r5.delivery_column_name == "Ssyk5"
-        assert r3.cvid == r5.cvid  # shared interim instance (documented)
+        assert r3.cvid == 1001
+        assert r5.cvid == 1002  # column-tied, not the lowest shared cvid
+
+    def test_absent_sibling_does_not_phantom_resolve(self) -> None:
+        # Codex P1 #139: a sibling whose delivery column has NO instance in the
+        # queried edition must NOT borrow another sibling's instance. Ssyk3
+        # delivers (cvid 1001 / 'Ssyk3'); a 'Ssyk7' sibling carries a state but
+        # no matching variable_alias, so the column-tied instance lookup finds
+        # nothing and the FQID is unresolved (pre-fix it borrowed cvid 1001).
+        conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'SSYK 7-pos', 'ssyk-7pos')"
+        )
+        absent_vid = cur.lastrowid
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk7')",
+            (absent_vid,),
+        )
+        conn.commit()
+        # Ssyk3 still resolves to its own instance.
+        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        assert isinstance(r3, ResolvedVariableBinding)
+        assert r3.cvid == 1001
+        # The absent sibling does not phantom-resolve onto it.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-7pos")
+        assert exc.value.code == "fqid_not_found"
 
 
 class TestResolveBindingLineage:
