@@ -2064,7 +2064,7 @@ def compare(
 
 def _classification_row(row: sqlite3.Row) -> dict[str, Any]:
     d = dict(row)
-    fqid = try_emit(Fqid.classification_fqid, d.get("slug"), d.get("version"))
+    fqid = try_emit(Fqid.classification_fqid, d.get("slug"))
     # Drop NULL fields to keep JSON output lean.
     out = {k: v for k, v in d.items() if v is not None}
     if fqid:
@@ -2082,7 +2082,7 @@ def list_classifications(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     """
     rows = conn.execute(
         """
-        SELECT c.id, c.short_name, c.name, c.name_en, c.publisher, c.version,
+        SELECT c.id, c.short_name, c.name, c.name_en, c.publisher,
                c.valid_from, c.valid_to, c.description, c.url, c.code_count,
                c.valid_code_count,
                s.short_name AS supersedes,
@@ -2253,7 +2253,7 @@ def classifications_for_variable(
     """
     rows = conn.execute(
         """
-        SELECT c.id, c.short_name, c.name, c.publisher, c.version,
+        SELECT c.id, c.short_name, c.name, c.publisher,
                COUNT(DISTINCT vi.cvid) AS instance_count
         FROM variable_instance vi
         JOIN classification c ON vi.classification_id = c.id

@@ -233,64 +233,49 @@ class TestProviderToml:
 
 class TestClassificationsToml:
     def test_minimal(self, tmp_path: Path):
+        # A2.6.1: the vintage is baked into the slug (`class/<slug>`), so the
+        # entry is just a slug — no `version` field.
         path = _write(
             tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         entries = load_classifications_toml(path)
         assert entries == [
             SlugEntry(
                 kind="classification",
                 source_id="SUN2020",
-                slug="sun",
-                version="2020",
+                slug="sun2020",
             )
         ]
 
-    def test_version_required(self, tmp_path: Path):
+    def test_version_field_rejected(self, tmp_path: Path):
+        # A2.6.1: `version` is no longer an allowed classification field —
+        # it's caught by the unknown-field guard.
         path = _write(
             tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\nversion = "2020"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_classifications_toml(path)
         assert exc.value.code == "slug_toml_invalid"
 
-    def test_classification_version_allows_period_shaped(self, tmp_path: Path):
-        # `2020` is period-shaped; slug grammar would reject it elsewhere, but
-        # the classification *version* explicitly allows it.
+    def test_period_shaped_slug_rejected(self, tmp_path: Path):
+        # The baked slug is a normal slug — period-shaped values (bare years)
+        # are rejected, same as every other slug slot.
         path = _write(
             tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        entries = load_classifications_toml(path)
-        assert entries[0].version == "2020"
-
-    @pytest.mark.parametrize(
-        "bad_version",
-        ["With Space", "slash/here", "UPPER", "_default", "class"],
-    )
-    def test_version_must_round_trip_through_fqid_grammar(
-        self, tmp_path: Path, bad_version: str
-    ):
-        # `version` becomes the third segment of `class/<slug>/<version>`.
-        # Anything that fails `validate_slug(..., allow_period=True)` must
-        # fail at TOML load so a malformed value can't be frozen into the
-        # snapshot and only blow up later at FQID emission.
-        path = _write(
-            tmp_path / "classifications.toml",
-            f'[classification."SUN2020"]\nslug = "sun"\nversion = "{bad_version}"\n',
+            '[classification."SUN2020"]\nslug = "2020"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_classifications_toml(path)
         assert exc.value.code == "slug_toml_invalid"
-        assert "version" in exc.value.message
 
-    def test_duplicate_slug_version_pair_rejected(self, tmp_path: Path):
+    def test_duplicate_slug_rejected(self, tmp_path: Path):
+        # Slug alone is the uniqueness key now (vintage baked in).
         path = _write(
             tmp_path / "classifications.toml",
-            '[classification."SUN2020A"]\nslug = "sun"\nversion = "2020"\n'
-            '[classification."SUN2020B"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020A"]\nslug = "sun2020"\n'
+            '[classification."SUN2020B"]\nslug = "sun2020"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_classifications_toml(path)
@@ -314,7 +299,7 @@ class TestLoadSlugDir:
         _write(d / "scb.toml", '[register."34"]\nslug = "lisa"\n')
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         entries = load_slug_dir(d)
         kinds = sorted({e.kind for e in entries})
@@ -348,7 +333,7 @@ class TestPopulateSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
@@ -371,7 +356,7 @@ class TestPopulateSlugs:
             conn.execute(
                 "SELECT slug FROM classification WHERE short_name = 'SUN2020'"
             ).fetchone()[0]
-            == "sun"
+            == "sun2020"
         )
 
     def test_strict_fails_when_register_missing_slug(self, tmp_path: Path):
@@ -380,7 +365,7 @@ class TestPopulateSlugs:
         _write(d / "scb.toml", "")
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         with pytest.raises(RegMetaError) as exc:
@@ -393,7 +378,7 @@ class TestPopulateSlugs:
         _write(d / "scb.toml", '[register."1"]\nslug = "lisa"\n')
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         # Variant `1.10` has no slug entry; strict would fail, non-strict
@@ -413,7 +398,7 @@ class TestPopulateSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
@@ -430,7 +415,7 @@ class TestPopulateSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         with pytest.raises(RegMetaError) as exc:
@@ -467,7 +452,9 @@ class TestSeedSlugs:
         assert '[register_variant."1.10"]' in scb_body
         cls_body = (out / "classifications.toml").read_text()
         assert '[classification."SUN2020"]' in cls_body
-        assert 'version = "2020"' in cls_body
+        # A2.6.1: the seed emits a slug (folded from short_name), no `version`.
+        assert "version = " not in cls_body
+        assert "slug = " in cls_body
 
     def test_omits_register_version_from_seed(self):
         # A2.6: register_version is not seeded at all (version left the FQID
@@ -495,7 +482,7 @@ class TestPrecheckSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = build_slugged_db()
         conn.execute("UPDATE register SET slug = NULL")
@@ -569,7 +556,7 @@ class TestPrecheckSlugs:
         _write(d / "scb.toml", "")
         _write(
             d / "classifications.toml",
-            '[classification."GHOST"]\nslug = "ghost"\nversion = "2020"\n',
+            '[classification."GHOST"]\nslug = "ghost"\n',
         )
         conn = build_slugged_db()
         result = precheck_slugs(conn, d)
@@ -662,7 +649,7 @@ class TestSnapshot:
         path = tmp_path / SNAPSHOT_FILENAME
         # A2.6: no register_version in the snapshot (version left the grammar).
         payload = {
-            "classification": {"SUN2020|2020": "sun"},
+            "classification": {"SUN2020": "sun2020"},
             "register": {"scb/1": "lisa"},
             "register_variant": {"scb/1.10": "individer-15plus"},
             "variable": {},
@@ -733,7 +720,7 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
@@ -756,7 +743,7 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         )
         _write(
             d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         conn = self._make_db()
         counts = populate_slugs(conn, d, strict=True)
@@ -1049,12 +1036,12 @@ class TestSeedEmitsValidToml:
         assert "1" in parsed["register"]
 
     def test_classifications_round_trip_with_unicode(self, tmp_path: Path):
+        # A2.6.1: classification is (short_name, name, slug) — no version.
         conn = build_slugged_db(
             classification=(
                 'KÅL "2020"',
                 "Svensk utbildning",
-                "2020",
-                "sun",
+                "sun2020",
             ),
         )
         body = seed_classifications_toml(conn)
@@ -1244,8 +1231,8 @@ class TestPrecheckCli:
             "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('SUN2020', 'Svensk utbildning', '2020', 'sun')"
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SUN2020', 'Svensk utbildning', 'sun2020')"
         )
         conn.execute("INSERT INTO import_manifest VALUES ('schema_version', '3.1.0')")
         conn.commit()
@@ -1260,7 +1247,7 @@ class TestPrecheckCli:
         )
         _write(
             slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
         return db_dir, slug_dir
 
@@ -1358,7 +1345,7 @@ class TestPrecheckCli:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{"SUN2020|2020":"sun"},'
+            '{"classification":{"SUN2020":"sun2020"},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -1574,7 +1561,7 @@ class TestUnknownTopLevelTables:
     def test_classifications_unknown_top_level(self, tmp_path: Path):
         path = _write(
             tmp_path / "classifications.toml",
-            '[classifications."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classifications."SUN2020"]\nslug = "sun2020"\n',
         )
         with pytest.raises(RegMetaError) as exc:
             load_classifications_toml(path)
@@ -1600,7 +1587,7 @@ class TestSameAsKeyValidation:
     def test_classification_unknown_key_rejected(self, tmp_path: Path):
         path = _write(
             tmp_path / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n'
+            '[classification."SUN2020"]\nslug = "sun2020"\n'
             'same_as = [{ provider = "scb", classifcation_slug = "sun-v1" }]\n',
         )
         with pytest.raises(RegMetaError) as exc:
@@ -1608,30 +1595,9 @@ class TestSameAsKeyValidation:
         assert "classifcation_slug" in exc.value.message
 
 
-class TestClassificationVersionMismatch:
-    """A TOML version that disagrees with the DB row's version would
-    snapshot a different FQID than the catalog emits at query time."""
-
-    def test_mismatch_raises(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n[register_variant."1.10"]\nslug = "v"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "1996"\n',
-        )
-        # build_slugged_db's classification carries version = "2020".
-        conn = build_slugged_db()
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
-        conn.commit()
-        with pytest.raises(RegMetaError) as exc:
-            populate_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_classification_version_mismatch"
+# A2.6.1: TestClassificationVersionMismatch (the slug-TOML-vs-DB version
+# cross-check) is gone — there's no `version` column left to disagree with.
+# The slug alone is the FQID and `class.slug UNIQUE` keeps it globally distinct.
 
 
 class TestPrecheckCliGrowOnly:
@@ -1658,8 +1624,8 @@ class TestPrecheckCliGrowOnly:
             "name) VALUES (10, 1, 'individer-15plus', 'Individer 15+')"
         )
         conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('SUN2020', 'Svensk utbildning', '2020', 'sun')"
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SUN2020', 'Svensk utbildning', 'sun2020')"
         )
         conn.execute("INSERT INTO import_manifest VALUES ('schema_version', '3.1.0')")
         conn.commit()
@@ -1678,7 +1644,7 @@ class TestPrecheckCliGrowOnly:
         db_dir, slug_dir = self._seed_layout(tmp_path)
         # Baseline has `lisa`; the new TOML renames it to `lisa-individuals`.
         snapshot_before = (
-            '{"classification":{"SUN2020|2020":"sun"},'
+            '{"classification":{"SUN2020":"sun2020"},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -1702,7 +1668,7 @@ class TestPrecheckCliGrowOnly:
         )
         _write(
             slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -1726,7 +1692,7 @@ class TestPrecheckCliGrowOnly:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{"SUN2020|2020":"sun"},'
+            '{"classification":{"SUN2020":"sun2020"},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -1738,7 +1704,7 @@ class TestPrecheckCliGrowOnly:
         )
         _write(
             slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -1767,7 +1733,7 @@ class TestPrecheckCliGrowOnly:
 
         db_dir, slug_dir = self._seed_layout(tmp_path)
         snapshot_before = (
-            '{"classification":{"SUN2020|2020":"sun"},'
+            '{"classification":{"SUN2020":"sun2020"},'
             '"register":{"scb/1":"lisa"},'
             '"register_variant":{"scb/1.10":"individer-15plus"},'
             '"variable":{}}'
@@ -1790,7 +1756,7 @@ class TestPrecheckCliGrowOnly:
         )
         _write(
             slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -1826,7 +1792,7 @@ class TestPrecheckCliGrowOnly:
         )
         _write(
             slug_dir / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
+            '[classification."SUN2020"]\nslug = "sun2020"\n',
         )
 
         exit_code = run(
@@ -2350,23 +2316,25 @@ class TestMaterializeSameAsEdges:
         assert exc.value.code == "slug_same_as_ambiguous_source"
 
     def test_classification_edge_inserted(self, tmp_path: Path) -> None:
-        conn = build_slugged_db()
-        # Insert a second classification so the target slot resolves.
+        conn = build_slugged_db()  # fixture seeds SUN2020 with slug 'sun2020'
+        # Insert a second classification so the target slot resolves. A2.6.1:
+        # the slug bakes in the vintage and is globally UNIQUE.
         conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('SUN_OLD', 'Legacy SUN', '1996', 'sun-old', 'SCB')"
+            "INSERT INTO classification (short_name, name, slug, publisher) "
+            "VALUES ('SUN_OLD', 'Legacy SUN', 'sun1996', 'SCB')"
         )
         # Tag the seed classification's publisher too so the source resolves
         # to a stable provider key (default in the fixture is NULL).
-        conn.execute("UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun'")
+        conn.execute(
+            "UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun2020'"
+        )
         conn.commit()
         slug_dir = tmp_path
         (slug_dir / "scb.toml").write_text("", encoding="utf-8")
         (slug_dir / "classifications.toml").write_text(
             '[classification."SUN2020"]\n'
-            'slug = "sun"\n'
-            'version = "2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun-old" }]\n',
+            'slug = "sun2020"\n'
+            'same_as = [{ provider = "scb", classification_slug = "sun1996" }]\n',
             encoding="utf-8",
         )
         counts = materialize_same_as_edges(conn, slug_dir)
@@ -2376,36 +2344,14 @@ class TestMaterializeSameAsEdges:
             "FROM classification_same_as ORDER BY a_classification_slug"
         ).fetchall()
         assert [(r[0], r[1]) for r in rows] == [
-            ("sun", "sun-old"),
-            ("sun-old", "sun"),
+            ("sun1996", "sun2020"),
+            ("sun2020", "sun1996"),
         ]
 
-    def test_classification_ambiguous_target_rejected(self, tmp_path: Path) -> None:
-        conn = build_slugged_db()
-        # Two classifications share the same slug across versions; same_as
-        # on (provider, slug) is ambiguous and must fail.
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('SUN_OLD', 'Old SUN', '1996', 'sun-old', 'SCB')"
-        )
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('SUN_REVIVED', 'Revived SUN', '2024', 'sun-old', 'SCB')"
-        )
-        conn.execute("UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun'")
-        conn.commit()
-        slug_dir = tmp_path
-        (slug_dir / "scb.toml").write_text("", encoding="utf-8")
-        (slug_dir / "classifications.toml").write_text(
-            '[classification."SUN2020"]\n'
-            'slug = "sun"\n'
-            'version = "2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun-old" }]\n',
-            encoding="utf-8",
-        )
-        with pytest.raises(RegMetaError) as exc:
-            materialize_same_as_edges(conn, slug_dir)
-        assert exc.value.code == "slug_same_as_ambiguous_classification"
+    # A2.6.1: test_classification_ambiguous_target_rejected is gone — a slug
+    # naming "multiple versions" is structurally impossible now (slug UNIQUE),
+    # and the `slug_same_as_ambiguous_classification` check was removed. Two
+    # rows sharing a slug would fail the UNIQUE constraint at insert anyway.
 
     def test_multiple_targets_share_source(self, tmp_path: Path) -> None:
         # A single [variable] entry with two same_as targets produces two
@@ -2451,16 +2397,17 @@ class TestMaterializeSameAsEdges:
     def test_classification_self_loop_rejected(self, tmp_path: Path) -> None:
         # Classification entry refers to itself — the shared cycle detector
         # must catch it under the classification label.
-        conn = build_slugged_db()
-        conn.execute("UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun'")
+        conn = build_slugged_db()  # slug 'sun2020'
+        conn.execute(
+            "UPDATE classification SET publisher = 'SCB' WHERE slug = 'sun2020'"
+        )
         conn.commit()
         slug_dir = tmp_path
         (slug_dir / "scb.toml").write_text("", encoding="utf-8")
         (slug_dir / "classifications.toml").write_text(
             '[classification."SUN2020"]\n'
-            'slug = "sun"\n'
-            'version = "2020"\n'
-            'same_as = [{ provider = "scb", classification_slug = "sun" }]\n',
+            'slug = "sun2020"\n'
+            'same_as = [{ provider = "scb", classification_slug = "sun2020" }]\n',
             encoding="utf-8",
         )
         with pytest.raises(RegMetaError) as exc:

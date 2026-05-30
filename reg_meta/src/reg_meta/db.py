@@ -91,7 +91,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   related/lineage/lineage_warnings (query-side only — no DDL impact beyond the
 #   above). A 4.6.0 DB lacks the `beskrivning` column + successor index, so it's
 #   rejected via the minor-version gate. Additive within the 4.x line.
-# - 4.8.0 (A2.6, current): the FQID grammar flip (§5.2). The binding FQID drops
+# - 4.8.0 (A2.6): the FQID grammar flip (§5.2). The binding FQID drops
 #   to 3 segments (`provider/register/slug`) and the variant / register_version
 #   FQID kinds are gone — variant + period are delivery coordinates, not
 #   identity. Shipped-DB shape change: the build-only `register_version`,
@@ -105,11 +105,19 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   under the 3-seg grammar, so it's rejected via the minor-version gate.
 #   Query-side only beyond the drops; no break to the 4.x line (5.0.0 stays
 #   reserved for A2.7's `variable_instance` drop).
+# - 4.9.0 (A2.6.1, current): 2-seg classification grammar (§5.2). The
+#   classification FQID folds the vintage into the slug (`class/<slug>/<version>`
+#   → `class/<slug>`; 'sun2020', 'lkf2007'). `classification.slug` becomes UNIQUE
+#   and the redundant `classification.version` column is DROPped (the vintage
+#   lives in slug + name + valid_from/to). A 4.8.0 DB carries the version column
+#   + non-baked slugs ('sun' not 'sun2020'), so it resolves nothing under the
+#   2-seg grammar and is rejected via the minor-version gate. Additive/drop
+#   within the 4.x line (5.0.0 stays reserved for A2.7's `variable_instance` drop).
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking change. Also
 #   drops `variable_instance.via_source_id` and `link_consumer_side_bindings`
 #   (superseded by `variable_state_lineage`, 4.6.0).
-SCHEMA_VERSION = "4.8.0"
+SCHEMA_VERSION = "4.9.0"
 DB_FILENAME = "reg_meta.db"
 
 

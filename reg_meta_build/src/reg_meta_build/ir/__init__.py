@@ -152,7 +152,6 @@ class IRClassification(_IRBase):
     slug: str  # version baked in: 'sun2020', 'icd10', 'lkf2007'
     name: str
     publisher: str | None
-    version: str | None
     provider: str | None  # NULL for cross-provider classifications
 
 

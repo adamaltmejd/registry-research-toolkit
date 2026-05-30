@@ -312,15 +312,15 @@ class TestResolveBindingLineage:
 
 class TestResolveClassification:
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
-        r = Catalog(slugged_conn).resolve("class/sun/2020")
+        # A2.6.1: 2-seg FQID; the slug bakes in the vintage.
+        r = Catalog(slugged_conn).resolve("class/sun2020")
         assert isinstance(r, ResolvedClassification)
         assert r.classification_id is not None
-        assert r.fqid.classification == "sun"
-        assert r.fqid.version == "2020"
+        assert r.fqid.classification == "sun2020"
 
-    def test_unknown_version_misses(self, slugged_conn: sqlite3.Connection) -> None:
+    def test_unknown_slug_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve("class/sun/2099")
+            Catalog(slugged_conn).resolve("class/sun2099")
         assert exc.value.code == "fqid_not_found"
 
 
@@ -508,155 +508,62 @@ class TestSameAsClassificationTraversal:
     def test_direct_hit_leaves_via_same_as_none(self) -> None:
         # Sanity: a direct hit doesn't touch the same_as graph.
         conn = build_slugged_db()
-        r = Catalog(conn).resolve("class/sun/2020")
+        r = Catalog(conn).resolve("class/sun2020")
         assert isinstance(r, ResolvedClassification)
         assert r.via_same_as is None
 
-    def test_same_as_one_hop_resolves_via_other_slug(self) -> None:
-        # Curated equivalence between two classifications. Querying the
-        # legacy slug at any version traverses to the target slug's row.
-        # The fixture seeds 'sun' v2020 only; we add a sun-legacy row so
-        # we can verify it's the one we resolve to when starting from sun.
+    def test_same_as_present_slug_is_direct_hit(self) -> None:
+        # A2.6.1: each version-baked slug is its own row, globally UNIQUE.
+        # Querying a slug that HAS a row is always a direct hit — the same_as
+        # graph is only consulted on a direct miss, so it's never touched here.
         conn = build_slugged_db()
         conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('LEGACY', 'Legacy SUN', '1996', 'sun-legacy')"
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('LEGACY', 'Legacy SUN', 'sun1996')"
         )
         conn.commit()
         self._add_class_edge(
             conn,
-            a=("scb", "sun"),
-            b=("scb", "sun-legacy"),
+            a=("scb", "sun2020"),
+            b=("scb", "sun1996"),
         )
-        # Query class/sun-other/<version> — no row, no edge → not found.
-        # But class/sun-legacy/1996 is a direct hit (the row we inserted).
-        r = Catalog(conn).resolve("class/sun-legacy/1996")
+        r = Catalog(conn).resolve("class/sun1996")
         assert isinstance(r, ResolvedClassification)
         assert r.short_name == "LEGACY"
         assert r.via_same_as is None  # direct hit, no traversal
 
-    def test_same_as_traverses_when_version_mismatches(self) -> None:
-        # The classic case: caller has an old FQID `class/sun/1996` baked
-        # into their project, but the only sun row in this DB is v2020.
-        # Direct lookup misses (version mismatch). same_as is the only way
-        # to keep their FQID resolvable. We add an edge sun ↔ sun-v1 with
-        # sun-v1 carrying version 1996 so the BFS can find a target.
-        conn = build_slugged_db()
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('SUN_V1', 'SUN v1', '1996', 'sun-v1')"
-        )
-        conn.commit()
+    def test_same_as_traverses_from_retired_slug(self) -> None:
+        # The curated-equivalence case: a caller's FQID names a RETIRED slug
+        # (`sun1996-legacy`) with no row in this DB. A same_as edge links it to
+        # a present slug (`sun2020`), keeping the old FQID resolvable. The BFS
+        # seeds the provider from the edge source (the retired slug has no row
+        # to read a publisher from) and hops to the present row.
+        conn = build_slugged_db()  # fixture seeds 'sun2020'
         self._add_class_edge(
             conn,
-            a=("scb", "sun"),
-            b=("scb", "sun-v1"),
+            a=("scb", "sun1996-legacy"),
+            b=("scb", "sun2020"),
         )
-        # class/sun/1996 misses (sun row exists only at v2020) → BFS to
-        # sun-v1 (v1996) → resolves.
-        r = Catalog(conn).resolve("class/sun/1996")
+        r = Catalog(conn).resolve("class/sun1996-legacy")
         assert isinstance(r, ResolvedClassification)
-        assert r.short_name == "SUN_V1"
+        assert r.short_name == "SUN2020"
         assert r.via_same_as is not None
-        assert str(r.via_same_as[0]) == "class/sun-v1/1996"
-        # Caller's FQID preserved on the returned record.
-        assert str(r.fqid) == "class/sun/1996"
+        assert str(r.via_same_as[0]) == "class/sun2020"
+        # Caller's (retired) FQID is preserved on the returned record.
+        assert str(r.fqid) == "class/sun1996-legacy"
 
     def test_same_as_no_match_still_raises(self) -> None:
-        # Equivalence between two classifications neither of which carries
-        # the queried version → BFS exhausts → not found.
+        # Edge from a retired slug to a target slug that ALSO has no row →
+        # BFS exhausts → not found.
         conn = build_slugged_db()
         self._add_class_edge(
             conn,
-            a=("scb", "sun"),
+            a=("scb", "sun1996-legacy"),
             b=("scb", "ghost-classification"),
         )
-        # The fixture has sun@2020 only; no row matches 1900.
         with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("class/sun/1900")
+            Catalog(conn).resolve("class/sun1996-legacy")
         assert exc.value.code == "fqid_not_found"
-
-    def test_multi_version_neighbor_tries_all(self) -> None:
-        # Codex P1: a reverse same_as edge can land on a slug stem that
-        # carries multiple versions (e.g. `sun` v2000 + v2020). The BFS
-        # must try every version until it finds one that matches the
-        # caller's queried version, instead of picking one arbitrarily.
-        conn = build_slugged_db()
-        # Add a second `sun` row at v2000 alongside the fixture's v2020.
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('SUN2000', 'SUN 2000', '2000', 'sun')"
-        )
-        # Insert a single-version `sun-legacy` slug at v1996 and link it
-        # to `sun`. The forward edge (sun-legacy → sun) carries no version
-        # information; resolver picks up the version from the DB.
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug) "
-            "VALUES ('SUN_LEGACY', 'SUN legacy', '1996', 'sun-legacy')"
-        )
-        conn.commit()
-        self._add_class_edge(
-            conn,
-            a=("scb", "sun-legacy"),
-            b=("scb", "sun"),
-        )
-        # Query the v2000 sun directly — direct hits, no traversal.
-        r = Catalog(conn).resolve("class/sun/2000")
-        assert isinstance(r, ResolvedClassification)
-        assert r.short_name == "SUN2000"
-        # Query an unknown version under sun-legacy → BFS traverses to
-        # `sun`, must try both v2000 and v2020. Without the multi-version
-        # fix this could pick v2020 arbitrarily; we verify both versions
-        # are reachable through traversal by querying a non-existent
-        # sun-legacy version explicitly and checking the resolution
-        # carries via_same_as.
-        r = Catalog(conn).resolve("class/sun-legacy/1900")
-        assert isinstance(r, ResolvedClassification)
-        # Hit on whichever sun version came first in the iteration; both
-        # are valid landings. The point is `via_same_as` is non-None.
-        assert r.via_same_as is not None
-        assert r.short_name in {"SUN2020", "SUN2000"}
-
-    def test_publisher_constrained_on_traversal_hit(self) -> None:
-        # Codex P1: BFS narrowed by publisher must keep the constraint when
-        # verifying the candidate. Two publishers share the same (slug,
-        # version) pair; the SOS-anchored edge must resolve to SOS's row,
-        # not SCB's, even though SCB's row would also match (slug, version).
-        conn = build_slugged_db()
-        # Add an SOS-published `kollision` slug at the same version as an
-        # SCB-published one. (Cross-publisher slug/version collision is a
-        # theoretical case today since only SCB ships classifications, but
-        # the traversal contract should be robust against future publishers.)
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('KOL_SCB', 'Kollision SCB', '2020', 'kollision', 'SCB')"
-        )
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('KOL_SOS', 'Kollision SOS', '2020', 'kollision', 'SOS')"
-        )
-        # Add a SOS-side `kollision-legacy` slug + an edge from it to the
-        # SOS-side `kollision` (under publisher 'sos').
-        conn.execute(
-            "INSERT INTO classification (short_name, name, version, slug, publisher) "
-            "VALUES ('KOL_LEG_SOS', 'Kollision legacy SOS', '1996', "
-            "'kollision-legacy', 'SOS')"
-        )
-        conn.commit()
-        self._add_class_edge(
-            conn,
-            a=("sos", "kollision-legacy"),
-            b=("sos", "kollision"),
-        )
-        # Query SOS legacy at a wrong version → direct misses → BFS narrows
-        # to publisher 'sos' and lands on SOS's kollision/2020. Candidate
-        # lookup MUST stay constrained to 'sos' and return KOL_SOS, not
-        # KOL_SCB (which also matches `kollision`/2020).
-        r = Catalog(conn).resolve("class/kollision-legacy/2020")
-        assert isinstance(r, ResolvedClassification)
-        assert r.short_name == "KOL_SOS"
-        assert r.via_same_as is not None
-        assert str(r.via_same_as[0]) == "class/kollision/2020"
 
 
 # ── A2.5 longitudinal resolution + resolve_at + edge accessors (§5.10) ──────

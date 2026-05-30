@@ -5,7 +5,7 @@ Forms:
     scb                                    1 seg   provider
     scb/lisa                               2 segs  register
     scb/lisa/kon                           3 segs  variable binding (the variable)
-    class/sun/2020                         3 segs w/ `class/`  classification
+    class/sun2020                          2 segs w/ `class/`  classification
 
 A2.6 grammar flip: the binding FQID names the **variable** directly and is
 3-segment (`provider/register/slug`). The variant and the period are
@@ -17,12 +17,10 @@ unambiguously a binding (variable slug `individer-15plus`); there is no
 3-segment variant address to collide with.
 
 The leading ``class/`` discriminates classification FQIDs from the binding
-form; ``class`` is reserved everywhere else. (Classification stays 3-segment
-`class/<slug>/<version>` here — the §5.2 2-segment `class/<slug>` flip needs a
-coordinated re-bake of the curated `(slug, version)` classification slugs into
-globally-unique version-baked slugs and a uniqueness-constraint change, which
-is out of A2.6's binding/variant/version scope; it is its own stage,
-MIGRATION_PLAN A2.6.1, gating A3.4.)
+form; ``class`` is reserved everywhere else. A2.6.1 folded the classification
+vintage into the slug, so the classification FQID is the 2-segment
+`class/<slug>` (`class/sun2020`, `class/lkf2007`, §5.2) — there is no separate
+version segment, and the slug alone is the global uniqueness key.
 
 The period grammar (``is_period`` / ``period_token_to_bounds`` /
 ``derive_period``) survives: ``resolve_at`` expands a polymorphic period to ISO
@@ -202,7 +200,6 @@ def validate_slug(
     slot: FqidKind | str,
     *,
     allow_default: bool = False,
-    allow_period: bool = False,
 ) -> None:
     slot_name = slot.value if isinstance(slot, FqidKind) else slot
     if value == DEFAULT_VARIANT_SLUG:
@@ -217,9 +214,11 @@ def validate_slug(
             f"`{CLASSIFICATION_PREFIX}` is reserved and may not appear as a slug "
             f"in {slot_name}"
         )
+    # A2.6.1: period-shaped slugs are rejected everywhere. The classification
+    # version was the only `allow_period` caller; folding the vintage into the
+    # slug (`sun2020`, leading alpha stem) removed it — baked slugs pass the
+    # normal grammar, so no period exemption remains.
     if is_period(value):
-        if allow_period:
-            return
         raise FqidError(
             f"slug in {slot_name} matches the period grammar: {value!r} "
             f"(period-shaped slugs are rejected outside the period slot for legibility)"
@@ -254,12 +253,11 @@ class Fqid:
     register: str | None = None
     variable: str | None = None
     classification: str | None = None
-    version: str | None = None
 
     def __str__(self) -> str:
         """Canonical FQID string."""
         if self.kind is FqidKind.CLASSIFICATION:
-            return f"{CLASSIFICATION_PREFIX}/{self.classification}/{self.version}"
+            return f"{CLASSIFICATION_PREFIX}/{self.classification}"
         parts = [self.provider]
         for v in (self.register, self.variable):
             if v is None:
@@ -294,14 +292,12 @@ class Fqid:
         )
 
     @classmethod
-    def classification_fqid(cls, classification: str, version: str) -> Fqid:
+    def classification_fqid(cls, classification: str) -> Fqid:
+        """A2.6.1: the 2-segment classification FQID names the version-baked
+        slug directly (`class/<slug>`, e.g. `class/sun2020`). The vintage lives
+        in the slug, not a separate segment (§5.2)."""
         validate_slug(classification, FqidKind.CLASSIFICATION)
-        validate_slug(version, "classification version", allow_period=True)
-        return cls(
-            kind=FqidKind.CLASSIFICATION,
-            classification=classification,
-            version=version,
-        )
+        return cls(kind=FqidKind.CLASSIFICATION, classification=classification)
 
 
 def parse(value: str) -> Fqid:
@@ -309,9 +305,10 @@ def parse(value: str) -> Fqid:
 
     A2.6 grammar (§5.2): kind is determined purely by segment count + the
     `class/` discriminator. 1 = provider, 2 = register, 3 = variable binding
-    (the FQID names the variable). The `class/` prefix marks a classification
-    (`class/<slug>/<version>`). There is no variant or period segment — both
-    are delivery coordinates resolved via `resolve_at`, not part of identity.
+    (the FQID names the variable). The `class/` prefix marks a classification;
+    A2.6.1 made it 2-segment (`class/<slug>`, vintage baked into the slug). There
+    is no variant or period segment — both are delivery coordinates resolved via
+    `resolve_at`, not part of identity.
     """
     if not isinstance(value, str):
         raise FqidError(f"FQID must be a string, got {type(value).__name__}")
@@ -323,12 +320,11 @@ def parse(value: str) -> Fqid:
     segs = value.split("/")
 
     if segs[0] == CLASSIFICATION_PREFIX:
-        if len(segs) != 3:
+        if len(segs) != 2:
             raise FqidError(
-                f"classification FQID needs 3 segments "
-                f"(class/<slug>/<version>): {value!r}"
+                f"classification FQID needs 2 segments (class/<slug>): {value!r}"
             )
-        return Fqid.classification_fqid(segs[1], segs[2])
+        return Fqid.classification_fqid(segs[1])
 
     n = len(segs)
     if n == 1:
@@ -338,7 +334,7 @@ def parse(value: str) -> Fqid:
     if n == 3:
         return Fqid.binding_fqid(segs[0], segs[1], segs[2])
     raise FqidError(
-        f"FQID has {n} segments; grammar accepts 1-3 (or 3 with `class/` "
+        f"FQID has {n} segments; grammar accepts 1-3 (or 2 with `class/` "
         f"prefix for a classification): {value!r}"
     )
 

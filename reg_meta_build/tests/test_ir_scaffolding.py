@@ -132,7 +132,6 @@ _IR_FACTORIES: dict[str, tuple[type[BaseModel], dict[str, object]]] = {
             "slug": "sun2020",
             "name": "SUN 2020",
             "publisher": "SCB",
-            "version": "2020",
             "provider": None,
         },
     ),

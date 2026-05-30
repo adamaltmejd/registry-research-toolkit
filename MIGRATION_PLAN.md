@@ -298,7 +298,7 @@ descends the variable hierarchy).
 
 **Gate to A2.6**: A2.4 *and* A2.5 must merge. A2.6 flips the FQID grammar (drop the variant from the binding) + resolver flip + the `same_as` start-node parse update (the `same_as` **table** demotion **and** its `_resolve_binding_via_same_as` reader rewrite already landed in A2.1.5), which requires both the new lineage tables (A2.4) and the new catalog API (A2.5) in place. No reverse dependency — A2.4 reads the already-demoted table, so the gate is acyclic.
 
-### [ ] A2.5 — Catalog API shift
+### [x] A2.5 — Catalog API shift (PR #146)
 
 - `Catalog.resolve(fqid)` **flips semantics in place** — now returns longitudinal `ResolvedVariable` (per §5.10): the variable's shared metadata + its `variable_state` rows (each tagged with its variant) + variable-grain edges. The v0.x per-cvid behavior is **deleted**, not aliased — pre-v1 policy allows the break. (A2.5 reads the A2.1.5 tables — `variable` + re-parented `variable_state`; the *binding-FQID* resolution still parses the **v0.11 5-seg** grammar until A2.6 (the Model-A 4-seg form was specced in #126 but never implemented, so the interim is the shipped 5-seg). So A2.5 builds the longitudinal aggregate on the new tables, A2.6 flips the FQID parser + the binding read path to 3-seg + exact variable-slug match, dropping the period **and** variant segments.)
 - Implement `Catalog.resolve_at(fqid, period, *, variant=None, value_set_version=None) -> list[VariableState]` (`period` polymorphic per §6.2; not year-only). Always returns a list: length 1 for an unambiguous single-state-in-one-variant-and-one-version point query, length N across variants / range periods / folded classification-version (multi-vintage) states (common, not rare). Empty list when no state covers the period (no exception). `variant` narrows to one variant (the Source's `register_variant`); `value_set_version` narrows multi-vintage results to a single state.
@@ -311,7 +311,7 @@ descends the variable hierarchy).
 
 **Gate: A2.5 requires A2.2 + A2.3 + A2.4** (not just A2.1.5). Its edge accessors read tables those stages create — `related` ← `variable_related_to` (A2.2), `predecessors`/`successors` ← `variable_replaced_by` (A2.3), `lineage`/`lineage_warnings` ← `variable_state_lineage` (A2.4) — so A2.5 is the join point after the A2.2→A2.4 chain and A2.3, not a parallel branch (a query against a not-yet-created edge table raises `no such table`). `resolve`/`resolve_at`/`states` need only the A2.1.5 tables, but the accessor roster ships as one PR.
 
-### [ ] A2.6 — Drop period & variant from FQID grammar (resolver flip)
+### [x] A2.6 — Drop period & variant from FQID grammar (resolver flip) (PR #147)
 
 The grammar flip. The two-level **table** restructure already landed in
 A2.1.5 (the `variable` table, the re-parented `variable_state`,

@@ -1,295 +1,230 @@
 # Curated FQID slugs for classifications (provider-independent —
-# see REFACTOR_SPEC §5.2 on the `class/<slug>/<version>` namespace).
+# see REFACTOR_SPEC §5.2 on the `class/<slug>` namespace).
 #
-# Uniqueness is by (slug, version) pair (§5.3), so the same stem may
-# appear across years — e.g. `lkf` once per year 1980-2026.
+# Uniqueness is by slug alone (§5.2): the vintage is baked into the
+# slug, so the FQID is the 2-segment `class/<slug>` (e.g. `class/sun2020`,
+# `class/lkf2007`) — there is no separate version segment. Each year of a
+# yearly family is its own slug, e.g. `lkf1980` … `lkf2026`.
+#
+# A same_as edge (none today) must name the version-baked slug in its
+# `classification_slug` target (e.g. `sun2020`, not `sun`).
 #
 # Notable family structure: SUN is asymmetric across the 2000 redesign
 # (LISA `_methodology-education.md` §3; aligned SUN 2000 to ISCED 97).
-#   `sun` v=1996      — monolithic, one nested code space (5-digit leaves,
-#                       3- and 2-char aggregations under the same hierarchy).
-#                       Pre-redesign delivery shape.
-#   `sun-niva`        — 3-digit numeric levels (independent code space).
-#   `sun-grupp`       — 3-char alphanumeric groups (independent code space).
-#   `sun-inriktning`  — variable-length specialization codes (independent).
-#     all three at v=2000 and v=2020.
-# The three v=2000+ siblings are **parallel classifications**, not levels of
+#   `sun1996`        — monolithic, one nested code space (5-digit leaves,
+#                      3- and 2-char aggregations under the same hierarchy).
+#                      Pre-redesign delivery shape.
+#   `sun-niva{2000,2020}`        — 3-digit numeric levels (independent code space).
+#   `sun-grupp{2000,2020}`       — 3-char alphanumeric groups (independent code space).
+#   `sun-inriktning{2000,2020}`  — variable-length specialization codes (independent).
+# The three 2000+ siblings are **parallel classifications**, not levels of
 # one hierarchy — `03A` (grupp) and `100` (niva) don't relate as parent/child.
-# `niva-old` / `niva-grov` are SCB aggregations introduced alongside SUN2000
-# to bridge old-SUN level comparability; carry placeholder `version = "v1"`.
+# `niva-oldv1` / `niva-grovv1` are SCB aggregations introduced alongside
+# SUN2000 to bridge old-SUN level comparability (placeholder `v1` vintage).
 
 [classification."AGARKAT2000"]
-slug = "agarkat"
-version = "2000"
+slug = "agarkat2000"
 
 [classification."AGARKAT2020"]
-slug = "agarkat"
-version = "2020"
+slug = "agarkat2020"
 
 [classification."ISCED-F2013"]
-slug = "isced-f"
-version = "2013"
+slug = "isced-f2013"
 
 [classification."ISCED2011"]
-slug = "isced"
-version = "2011"
+slug = "isced2011"
 
 [classification."JURFORM2000"]
-slug = "jurform"
-version = "2000"
+slug = "jurform2000"
 
 [classification."JURFORM2020"]
-slug = "jurform"
-version = "2020"
+slug = "jurform2020"
 
 [classification."LKF1980"]
-slug = "lkf"
-version = "1980"
+slug = "lkf1980"
 
 [classification."LKF1981"]
-slug = "lkf"
-version = "1981"
+slug = "lkf1981"
 
 [classification."LKF1982"]
-slug = "lkf"
-version = "1982"
+slug = "lkf1982"
 
 [classification."LKF1983"]
-slug = "lkf"
-version = "1983"
+slug = "lkf1983"
 
 [classification."LKF1984"]
-slug = "lkf"
-version = "1984"
+slug = "lkf1984"
 
 [classification."LKF1985"]
-slug = "lkf"
-version = "1985"
+slug = "lkf1985"
 
 [classification."LKF1986"]
-slug = "lkf"
-version = "1986"
+slug = "lkf1986"
 
 [classification."LKF1987"]
-slug = "lkf"
-version = "1987"
+slug = "lkf1987"
 
 [classification."LKF1988"]
-slug = "lkf"
-version = "1988"
+slug = "lkf1988"
 
 [classification."LKF1989"]
-slug = "lkf"
-version = "1989"
+slug = "lkf1989"
 
 [classification."LKF1990"]
-slug = "lkf"
-version = "1990"
+slug = "lkf1990"
 
 [classification."LKF1991"]
-slug = "lkf"
-version = "1991"
+slug = "lkf1991"
 
 [classification."LKF1992"]
-slug = "lkf"
-version = "1992"
+slug = "lkf1992"
 
 [classification."LKF1993"]
-slug = "lkf"
-version = "1993"
+slug = "lkf1993"
 
 [classification."LKF1994"]
-slug = "lkf"
-version = "1994"
+slug = "lkf1994"
 
 [classification."LKF1995"]
-slug = "lkf"
-version = "1995"
+slug = "lkf1995"
 
 [classification."LKF1996"]
-slug = "lkf"
-version = "1996"
+slug = "lkf1996"
 
 [classification."LKF1997"]
-slug = "lkf"
-version = "1997"
+slug = "lkf1997"
 
 [classification."LKF1998"]
-slug = "lkf"
-version = "1998"
+slug = "lkf1998"
 
 [classification."LKF1999"]
-slug = "lkf"
-version = "1999"
+slug = "lkf1999"
 
 [classification."LKF2000"]
-slug = "lkf"
-version = "2000"
+slug = "lkf2000"
 
 [classification."LKF2001"]
-slug = "lkf"
-version = "2001"
+slug = "lkf2001"
 
 [classification."LKF2002"]
-slug = "lkf"
-version = "2002"
+slug = "lkf2002"
 
 [classification."LKF2003"]
-slug = "lkf"
-version = "2003"
+slug = "lkf2003"
 
 [classification."LKF2004"]
-slug = "lkf"
-version = "2004"
+slug = "lkf2004"
 
 [classification."LKF2005"]
-slug = "lkf"
-version = "2005"
+slug = "lkf2005"
 
 [classification."LKF2006"]
-slug = "lkf"
-version = "2006"
+slug = "lkf2006"
 
 [classification."LKF2007"]
-slug = "lkf"
-version = "2007"
+slug = "lkf2007"
 
 [classification."LKF2008"]
-slug = "lkf"
-version = "2008"
+slug = "lkf2008"
 
 [classification."LKF2009"]
-slug = "lkf"
-version = "2009"
+slug = "lkf2009"
 
 [classification."LKF2010"]
-slug = "lkf"
-version = "2010"
+slug = "lkf2010"
 
 [classification."LKF2011"]
-slug = "lkf"
-version = "2011"
+slug = "lkf2011"
 
 [classification."LKF2012"]
-slug = "lkf"
-version = "2012"
+slug = "lkf2012"
 
 [classification."LKF2013"]
-slug = "lkf"
-version = "2013"
+slug = "lkf2013"
 
 [classification."LKF2014"]
-slug = "lkf"
-version = "2014"
+slug = "lkf2014"
 
 [classification."LKF2015"]
-slug = "lkf"
-version = "2015"
+slug = "lkf2015"
 
 [classification."LKF2016"]
-slug = "lkf"
-version = "2016"
+slug = "lkf2016"
 
 [classification."LKF2017"]
-slug = "lkf"
-version = "2017"
+slug = "lkf2017"
 
 [classification."LKF2018"]
-slug = "lkf"
-version = "2018"
+slug = "lkf2018"
 
 [classification."LKF2019"]
-slug = "lkf"
-version = "2019"
+slug = "lkf2019"
 
 [classification."LKF2020"]
-slug = "lkf"
-version = "2020"
+slug = "lkf2020"
 
 [classification."LKF2021"]
-slug = "lkf"
-version = "2021"
+slug = "lkf2021"
 
 [classification."LKF2022"]
-slug = "lkf"
-version = "2022"
+slug = "lkf2022"
 
 [classification."LKF2023"]
-slug = "lkf"
-version = "2023"
+slug = "lkf2023"
 
 [classification."LKF2024"]
-slug = "lkf"
-version = "2024"
+slug = "lkf2024"
 
 [classification."LKF2025"]
-slug = "lkf"
-version = "2025"
+slug = "lkf2025"
 
 [classification."LKF2026"]
-slug = "lkf"
-version = "2026"
+slug = "lkf2026"
 
 [classification."NIVA-GROV"]
-slug = "niva-grov"
-version = "v1"
+slug = "niva-grovv1"
 
 [classification."NIVA-OLD"]
-slug = "niva-old"
-version = "v1"
+slug = "niva-oldv1"
 
 [classification."SEKTOR2000"]
-slug = "sektor"
-version = "2000"
+slug = "sektor2000"
 
 [classification."SNI2002"]
-slug = "sni"
-version = "2002"
+slug = "sni2002"
 
 [classification."SNI2007"]
-slug = "sni"
-version = "2007"
+slug = "sni2007"
 
 [classification."SNI69"]
-slug = "sni"
-version = "1969"
+slug = "sni1969"
 
 [classification."SNI92"]
-slug = "sni"
-version = "1992"
+slug = "sni1992"
 
 [classification."SSYK2012"]
-slug = "ssyk"
-version = "2012"
+slug = "ssyk2012"
 
 [classification."SSYK96"]
-slug = "ssyk"
-version = "1996"
+slug = "ssyk1996"
 
 [classification."SUN1996"]
-slug = "sun"
-version = "1996"
+slug = "sun1996"
 
 [classification."SUN2000-GRUPP"]
-slug = "sun-grupp"
-version = "2000"
+slug = "sun-grupp2000"
 
 [classification."SUN2000-INRIKTNING"]
-slug = "sun-inriktning"
-version = "2000"
+slug = "sun-inriktning2000"
 
 [classification."SUN2000-NIVA"]
-slug = "sun-niva"
-version = "2000"
+slug = "sun-niva2000"
 
 [classification."SUN2020-GRUPP"]
-slug = "sun-grupp"
-version = "2020"
+slug = "sun-grupp2020"
 
 [classification."SUN2020-INRIKTNING"]
-slug = "sun-inriktning"
-version = "2020"
+slug = "sun-inriktning2020"
 
 [classification."SUN2020-NIVA"]
-slug = "sun-niva"
-version = "2020"
+slug = "sun-niva2020"
