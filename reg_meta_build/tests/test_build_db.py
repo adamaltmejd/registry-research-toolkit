@@ -13,6 +13,7 @@ from _csv_fixtures import (
     REGISTERINFORMATION_ROWS,
     VARDEMANGDER_REAL_ROWS,
     _ri_row,
+    _var_row,
     timeseries_row,
     write_csv,
     write_scb_input,
@@ -2609,8 +2610,6 @@ class TestReplacedByEdges:
         Reuses #139's canonical split fixture: Hemkommun + Skolkommun (disjoint
         column stems) under one var_id → two sibling variables.
         """
-        from test_triage import _var_row
-
         # year 2019 is free under variant 10 (the default fixture uses 2020-2022),
         # so populate_slugs hits no register_version slug collision; both rows
         # share 2019 → a same-year collision under var_id 920 → split.
@@ -2721,6 +2720,36 @@ class TestReplacedByEdges:
             stats = self._stats(conn)
             assert stats["n_skipped_duplicate"] == 1
             assert stats["n_skipped_collapsed_inverse"] == 0
+        finally:
+            conn.close()
+
+    def test_inverse_collapse_robust_to_row_order(self, tmp_path: Path) -> None:
+        """The inverse/duplicate split is independent of SCB's row order: even
+        when the `Ersätter` row precedes its canonical `Ersatt av` twin, the
+        collapse is still counted as `n_skipped_collapsed_inverse`, never as a
+        plain duplicate. The materializer processes `Ersatt av` first (ORDER BY),
+        so the edge always lands from the canonical direction. Without that
+        ordering this fixture would mislabel the collapse as a duplicate.
+        """
+        rows = [
+            timeseries_row(
+                handelse="Ersätter", entitet="RegisterVariant", id1="20", id2="10"
+            ),
+            timeseries_row(
+                handelse="Ersatt av", entitet="RegisterVariant", id1="10", id2="20"
+            ),
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            edges = conn.execute(
+                "SELECT predecessor_variant, successor_variant FROM variant_replaced_by"
+            ).fetchall()
+            assert len(edges) == 1
+            assert tuple(edges[0]) == ("individer", "foretag")
+            stats = self._stats(conn)
+            assert stats["n_skipped_collapsed_inverse"] == 1
+            assert stats["n_skipped_duplicate"] == 0
         finally:
             conn.close()
 

@@ -135,6 +135,62 @@ def _ri_row(
     )
 
 
+def _var_row(
+    *,
+    colname: str,
+    cvid: int,
+    var_id: int,
+    varname: str = "GenericVar",
+    year: str = "2020",
+    regver_id: int = 110,
+    data_type: str = "int",
+    data_length: str = "1",
+) -> str:
+    """A Registerinformation row for register TESTREG (register_id 1, variant
+    register_variant_id 10), varying only the fields triage keys on. Shared by
+    the §5.7 triage tests and the A2.3 replaced_by tests (both reuse the
+    canonical disjoint-column split geometry), so it lives here rather than in
+    either test module."""
+    return _ri_row(
+        "TESTREG",
+        "Testregistret",
+        "Testning",
+        "Individer",
+        "Individer",
+        "Alla individer",
+        "Nej",
+        year,
+        f"Version {year}",
+        "",
+        "Godkänd",
+        f"{year}-01-01",
+        f"{year}-12-31",
+        "Hela befolkningen",
+        "Alla personer",
+        "",
+        f"{year}-12-31",
+        "Person",
+        "Fysisk person",
+        varname,
+        "A generic family label",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        colname,
+        data_type,
+        data_length,
+        str(cvid),
+        "1",
+        "10",
+        str(regver_id),
+        str(var_id),
+    )
+
+
 REGISTERINFORMATION_ROWS = [
     _ri_row(
         "TESTREG",

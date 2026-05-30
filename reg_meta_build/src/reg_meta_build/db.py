@@ -2484,6 +2484,32 @@ _REPLACED_BY_ENTITET = frozenset(
 # `timeseries_event`).
 _REPLACED_BY_NOTE_AUTO = "auto:timeseries_event"
 
+# Manifest stat keys for replaced_by materialization. Single source so the
+# `skip_slugs` zero-fill (in `build_db`) and the materializer's real return
+# can't drift apart — `test_replaced_by_stats_in_manifest` pins the exact set.
+_REPLACED_BY_STAT_KEYS = (
+    "n_timeseries_event_rows_scanned",
+    "n_register_replaced_by",
+    "n_variant_replaced_by",
+    "n_variable_replaced_by",
+    "n_skipped_unresolved",
+    # A2.2 triage split: a (register_id, var_id) source key maps to >1 variable,
+    # so the bare key can't pick a sibling. Always 0 pre-A2.2.
+    "n_skipped_ambiguous_variable",
+    # Genuine `Ersätter` rows collapsing onto an already-emitted edge — the
+    # expected SCB paired-row case (see `_classify_duplicate`).
+    "n_skipped_collapsed_inverse",
+    # `Ersatt av` rows duplicating an already-emitted edge (repeated source
+    # rows), kept distinct from the inverse-collapse count.
+    "n_skipped_duplicate",
+)
+
+
+def _empty_replaced_by_stats() -> dict[str, int]:
+    """Zeroed replaced_by stats. The `skip_slugs` build path returns this as-is;
+    the materializer fills it in, so both share one key set."""
+    return dict.fromkeys(_REPLACED_BY_STAT_KEYS, 0)
+
 
 def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     """Materialize §5.5 succession edges from `timeseries_event` (A2.3).
@@ -2621,14 +2647,22 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
             return None, "unresolved"
         return triple, None
 
-    # Push the handelse/entitet scope reduction down to SQLite.
+    # Push the handelse/entitet scope reduction down to SQLite. The ORDER BY
+    # is load-bearing for the inverse/duplicate split: processing the canonical
+    # `Ersatt av` row before its `Ersätter` twin makes the edge land from the
+    # canonical direction, so the colliding `Ersätter` is always the one
+    # `_classify_duplicate` sees as the inverse collapse — never miscounted as a
+    # plain duplicate just because SCB happened to emit the rows reversed. The
+    # `timeseries_event_id` tiebreak keeps it fully deterministic.
     placeholders_h = ", ".join("?" * len(_REPLACED_BY_HANDELSE))
     placeholders_e = ", ".join("?" * len(_REPLACED_BY_ENTITET))
     candidate_rows = conn.execute(
         f"SELECT timeseries_event_id, handelse, entitet, id1, id2 "  # noqa: S608 -- placeholders bound below
         f"FROM timeseries_event "
         f"WHERE handelse IN ({placeholders_h}) "
-        f"AND entitet IN ({placeholders_e})",
+        f"AND entitet IN ({placeholders_e}) "
+        f"ORDER BY CASE handelse WHEN 'Ersatt av' THEN 0 ELSE 1 END, "
+        f"timeseries_event_id",
         (*_REPLACED_BY_HANDELSE, *_REPLACED_BY_ENTITET),
     ).fetchall()
 
@@ -2641,11 +2675,13 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     n_skipped_collapsed_inverse = 0
     n_skipped_duplicate = 0
 
-    # Seen-PK sets per grain classify a duplicate-PK skip by `handelse`: an
-    # `Ersätter` row hitting an existing edge is the expected inverse collapse;
-    # an `Ersatt av` row hitting one is a plain duplicate. The seen-set (not
-    # INSERT OR IGNORE alone) drives the split so each counter means what it
-    # says.
+    # Seen-PK sets per grain are the sole dedup authority — every INSERT below
+    # is plain (no OR IGNORE), because a PK only reaches it after a seen-set
+    # miss. They also classify a duplicate-PK skip by `handelse`: an `Ersätter`
+    # row hitting an existing edge is the expected inverse collapse; an
+    # `Ersatt av` row hitting one is a plain duplicate. The canonical-first scan
+    # order (above) guarantees this means what it says regardless of SCB's row
+    # order.
     seen_register: set[tuple[str, str, str, str]] = set()
     seen_variant: set[tuple[str, str, str, str, str, str]] = set()
     seen_variable: set[tuple[str, str, str, str, str, str]] = set()
@@ -2712,7 +2748,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 continue
             seen_register.add(pk)
             conn.execute(
-                "INSERT OR IGNORE INTO register_replaced_by ("
+                "INSERT INTO register_replaced_by ("
                 "predecessor_provider, predecessor_register, "
                 "successor_provider, successor_register, "
                 "effective_year, note) VALUES (?, ?, ?, ?, ?, ?)",
@@ -2736,7 +2772,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 continue
             seen_variant.add(pk)
             conn.execute(
-                "INSERT OR IGNORE INTO variant_replaced_by ("
+                "INSERT INTO variant_replaced_by ("
                 "predecessor_provider, predecessor_register, predecessor_variant, "
                 "successor_provider, successor_register, successor_variant, "
                 "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -2770,7 +2806,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 continue
             seen_variable.add(pk)
             conn.execute(
-                "INSERT OR IGNORE INTO variable_replaced_by ("
+                "INSERT INTO variable_replaced_by ("
                 "predecessor_provider, predecessor_register, predecessor_variable, "
                 "successor_provider, successor_register, successor_variable, "
                 "effective_year, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
@@ -2786,22 +2822,20 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         f"{n_skipped_ambiguous_variable:,} ambiguous variable, "
         f"{n_skipped_unresolved:,} unresolved)"
     )
-    return {
-        "n_timeseries_event_rows_scanned": n_scanned,
-        "n_register_replaced_by": n_register,
-        "n_variant_replaced_by": n_variant,
-        "n_variable_replaced_by": n_variable,
-        "n_skipped_unresolved": n_skipped_unresolved,
-        # A2.2 triage split: a (register_id, var_id) source key maps to >1
-        # variable, so the bare key can't pick a sibling. Always 0 pre-A2.2.
-        "n_skipped_ambiguous_variable": n_skipped_ambiguous_variable,
-        # Only genuine `Ersätter` rows collapsing onto an already-emitted edge —
-        # the expected SCB paired-row case (see `_classify_duplicate`).
-        "n_skipped_collapsed_inverse": n_skipped_collapsed_inverse,
-        # `Ersatt av` rows duplicating an already-emitted edge (repeated source
-        # rows), kept distinct from the inverse-collapse count.
-        "n_skipped_duplicate": n_skipped_duplicate,
-    }
+    # Keys (and their meaning) live on `_REPLACED_BY_STAT_KEYS`; fill the zeroed
+    # base so this return and the `skip_slugs` zero-fill share one shape.
+    stats = _empty_replaced_by_stats()
+    stats.update(
+        n_timeseries_event_rows_scanned=n_scanned,
+        n_register_replaced_by=n_register,
+        n_variant_replaced_by=n_variant,
+        n_variable_replaced_by=n_variable,
+        n_skipped_unresolved=n_skipped_unresolved,
+        n_skipped_ambiguous_variable=n_skipped_ambiguous_variable,
+        n_skipped_collapsed_inverse=n_skipped_collapsed_inverse,
+        n_skipped_duplicate=n_skipped_duplicate,
+    )
+    return stats
 
 
 def _load_validity_map(path: Path) -> tuple[dict[int, list[tuple[int, int]]], int]:
@@ -3656,16 +3690,7 @@ def build_db(
         # stats instead.
         if skip_slugs:
             _progress("Skipping replaced_by edges (skip_slugs=True)")
-            replaced_by_stats: dict[str, int] = {
-                "n_timeseries_event_rows_scanned": 0,
-                "n_register_replaced_by": 0,
-                "n_variant_replaced_by": 0,
-                "n_variable_replaced_by": 0,
-                "n_skipped_unresolved": 0,
-                "n_skipped_ambiguous_variable": 0,
-                "n_skipped_collapsed_inverse": 0,
-                "n_skipped_duplicate": 0,
-            }
+            replaced_by_stats: dict[str, int] = _empty_replaced_by_stats()
         else:
             replaced_by_stats = _materialize_replaced_by_edges(conn)
 
