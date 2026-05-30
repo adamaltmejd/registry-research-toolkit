@@ -1567,6 +1567,10 @@ def _write_payload(
                                 "data_type": col.get("data_type", ""),
                                 "aliases": col.get("aliases", ""),
                                 "source": col.get("source", ""),
+                                # A2.6: per-column §5.7 vintage label ('' for
+                                # ordinary columns; e.g. sni92/sni2007 for a
+                                # folded variable's two states in one window).
+                                "vintage": col.get("value_set_version_label", ""),
                             }
                         )
             write_formatted(
@@ -1578,6 +1582,7 @@ def _write_payload(
                     "data_type",
                     "aliases",
                     "source",
+                    "vintage",
                 ],
                 output_path,
                 fmt=fmt,

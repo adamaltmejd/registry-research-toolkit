@@ -593,9 +593,13 @@ def get_schema(
         register_slug = rv["register_slug"]
         # A2.6: schema is organized by `variable_state` editions now (validity
         # windows), not the dropped `register_version`. One "version" per
-        # distinct (valid_from, valid_to, value_set_version_label) window the
-        # variant delivered; its columns are the states in that window. The
-        # binding FQID is 3-seg (provider/register/variable_slug).
+        # distinct (valid_from, valid_to) DELIVERY WINDOW the variant delivered;
+        # its columns are every state in that window. `value_set_version_label`
+        # is a PER-COLUMN attribute (a §5.7 folded multi-vintage variable carries
+        # two states in the SAME window with labels like `sni92`/`sni2007` while
+        # ordinary columns carry ''), so it must NOT be part of the edition key —
+        # keying by it would shard one delivered schema into partial pseudo-
+        # versions. The binding FQID is 3-seg (provider/register/variable_slug).
         state_rows = conn.execute(
             "SELECT vs.valid_from, vs.valid_to, vs.value_set_version_label, "
             "vs.data_type, vs.data_length, vs.delivery_column_name, "
@@ -608,16 +612,16 @@ def get_schema(
             (rvid,),
         ).fetchall()
 
-        # Group states into editions keyed by the validity window + value-set
-        # version, preserving first-seen order for determinism.
-        editions: dict[tuple[str, str, str], list[sqlite3.Row]] = {}
+        # Group states into editions keyed by the DELIVERY WINDOW only,
+        # preserving first-seen order for determinism. One edition per window
+        # holds ALL columns delivered then — including every vintage-state of a
+        # folded variable; the label rides on each column below.
+        editions: dict[tuple[str, str], list[sqlite3.Row]] = {}
         for s in state_rows:
-            editions.setdefault(
-                (s["valid_from"], s["valid_to"], s["value_set_version_label"]), []
-            ).append(s)
+            editions.setdefault((s["valid_from"], s["valid_to"]), []).append(s)
 
         versions_out: list[dict[str, Any]] = []
-        for (valid_from, valid_to, vsv_label), states in editions.items():
+        for (valid_from, valid_to), states in editions.items():
             # A2.6: filter by validity-window OVERLAP against the requested
             # years, not the opening year alone — a multi-year or open-ended
             # edition must survive a filter for any year it spans. `year` below
@@ -637,6 +641,10 @@ def get_schema(
                         "data_length": s["data_length"],
                         "variable_name": s["variable_name"],
                         "source": s["source"],
+                        # Per-column §5.7 vintage discriminator: '' for ordinary
+                        # columns, e.g. `sni92`/`sni2007` for the two states of a
+                        # folded multi-vintage variable sharing this window.
+                        "value_set_version_label": s["value_set_version_label"],
                         # The state's denormalized latest alias (§5.1) is the
                         # display column; emit it under `aliases` for the
                         # table/flat renderers and `compare()` flattening.
@@ -662,7 +670,6 @@ def get_schema(
                 {
                     "valid_from": valid_from,
                     "valid_to": valid_to,
-                    "value_set_version_label": vsv_label,
                     "year": year,
                     "columns": col_dicts,
                 }

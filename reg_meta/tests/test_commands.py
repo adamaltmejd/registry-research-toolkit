@@ -1483,8 +1483,9 @@ def _overlap_db():
       - multi-year     2010-01-01 .. 2012-12-31  (value_set 1)
       - open-ended     2015-01-01 .. 9999-12-31  (value_set 1)
       - yearless       0001-01-01 .. 9999-12-31  (value_set 1)
-    Distinct value_set_version_labels keep them as separate editions in
-    get_schema (which groups by window + label)."""
+    The three distinct (valid_from, valid_to) windows are separate editions in
+    get_schema (which groups by delivery window). The labels below are just
+    per-window markers for the assertions."""
     import sqlite3
 
     from reg_meta_build.db import DDL, seed_providers
@@ -1634,27 +1635,26 @@ class TestGetSchemaYearOverlap:
         # dropped it for 2011/2012.
         for y in ("2011", "2012"):
             out = get_schema(conn, register_variant_id="10", years=y)
-            labels = {
-                ver["value_set_version_label"]
-                for var in out["variants"]
-                for ver in var["versions"]
+            # Window identity is (valid_from, valid_to) now; the multi-year
+            # edition opens 2010-01-01.
+            windows = {
+                ver["valid_from"] for var in out["variants"] for ver in var["versions"]
             }
-            assert "multi" in labels, f"multi-year edition missing for years={y}"
+            assert "2010-01-01" in windows, f"multi-year edition missing for years={y}"
 
     def test_open_and_yearless_editions_match_far_future(self):
         from reg_meta.queries import get_schema
 
         conn = _overlap_db()
         out = get_schema(conn, register_variant_id="10", years="2099")
-        labels = {
-            ver["value_set_version_label"]
-            for var in out["variants"]
-            for ver in var["versions"]
+        windows = {
+            ver["valid_from"] for var in out["variants"] for ver in var["versions"]
         }
-        # Open-ended + yearless cover 2099; the multi-year (..2012) does not.
-        assert "open" in labels
-        assert "yearless" in labels
-        assert "multi" not in labels
+        # Open-ended (2015..) + yearless (0001..) cover 2099; the multi-year
+        # (2010..2012) does not.
+        assert "2015-01-01" in windows
+        assert "0001-01-01" in windows
+        assert "2010-01-01" not in windows
 
     def test_nonoverlapping_year_drops_bounded_editions(self):
         from reg_meta.queries import get_schema
@@ -1662,12 +1662,121 @@ class TestGetSchemaYearOverlap:
         conn = _overlap_db()
         # 2013: only the yearless window covers it (gap year for multi/open).
         out = get_schema(conn, register_variant_id="10", years="2013")
-        labels = {
-            ver["value_set_version_label"]
-            for var in out["variants"]
-            for ver in var["versions"]
+        windows = {
+            ver["valid_from"] for var in out["variants"] for ver in var["versions"]
         }
-        assert labels == {"yearless"}
+        assert windows == {"0001-01-01"}
+
+
+def _folded_window_db():
+    """In-memory DB with ONE delivery window (2007) holding four columns:
+    two ordinary variables (`value_set_version_label=''`) plus a §5.7 folded
+    multi-vintage variable delivering two states (`sni92` + `sni2007`) in the
+    SAME window. Exercises that get_schema groups by delivery window, not by
+    the per-column vintage label.
+
+    Variable layout under variant 10, all valid 2007-01-01..2007-12-31:
+      - kon  (var 44, label '')        ordinary
+      - alder(var 45, label '')        ordinary
+      - sni  (var 46, label 'sni92')   folded vintage A
+      - sni  (var 46, label 'sni2007') folded vintage B
+    """
+    import sqlite3
+
+    from reg_meta_build.db import DDL, seed_providers
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(DDL)
+    seed_providers(conn)
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, name) "
+        "VALUES (1, 1, 'r1', 'R1')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (10, 1, 'v1', 'V1')"
+    )
+    for var_id, name, slug in (
+        ("44", "Kön", "kon"),
+        ("45", "Ålder", "alder"),
+        ("46", "Näringsgren SNI", "sni"),
+    ):
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, ?, ?, ?)",
+            (var_id, name, slug),
+        )
+    # window: two ordinary columns + folded variable's two vintage states
+    states = (
+        ("44", "Kon", ""),
+        ("45", "Alder", ""),
+        ("46", "Sni", "sni92"),
+        ("46", "Sni", "sni2007"),
+    )
+    for var_id, col, label in states:
+        vid = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = ?",
+            (var_id,),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name, value_set_version_label) "
+            "VALUES (?, 10, '2007-01-01', '2007-12-31', 'int', ?, ?)",
+            (vid, col, label),
+        )
+    conn.commit()
+    return conn
+
+
+class TestGetSchemaFoldedWindowNotSharded:
+    """A2.6 P2 regression: get_schema groups editions by DELIVERY WINDOW only.
+
+    A §5.7 folded multi-vintage variable carries two states in one window with
+    distinct `value_set_version_label`s while ordinary columns carry ''. Keying
+    the edition by the label sharded one delivered schema into partial pseudo-
+    versions (the '' group missing the folded var, each vintage group missing
+    the ordinary columns). The fix keys by (valid_from, valid_to) so one edition
+    holds every column delivered in the window; the label is per-column.
+    """
+
+    def test_single_version_holds_all_columns_with_per_column_labels(self):
+        from reg_meta.queries import get_schema
+
+        conn = _folded_window_db()
+        out = get_schema(conn, register_variant_id="10")
+        versions = [ver for var in out["variants"] for ver in var["versions"]]
+        # Pre-fix this window sharded into 3 pseudo-versions ('', sni92, sni2007).
+        assert len(versions) == 1, (
+            f"window must NOT be sharded; got {len(versions)} versions"
+        )
+
+        ver = versions[0]
+        assert (ver["valid_from"], ver["valid_to"]) == ("2007-01-01", "2007-12-31")
+        # The single window's columns include BOTH ordinary columns AND both
+        # folded-variable vintage states.
+        assert "value_set_version_label" not in ver, (
+            "version-level label removed; it is per-column now"
+        )
+        labels_by_alias: dict[str, str] = {
+            col["aliases"]: col["value_set_version_label"] for col in ver["columns"]
+        }
+        # Four columns; the two SNI states share the alias but differ by label.
+        assert len(ver["columns"]) == 4
+        ordinary = {
+            col["aliases"]
+            for col in ver["columns"]
+            if col["value_set_version_label"] == ""
+        }
+        assert ordinary == {"Kon", "Alder"}
+        sni_labels = {
+            col["value_set_version_label"]
+            for col in ver["columns"]
+            if col["aliases"] == "Sni"
+        }
+        assert sni_labels == {"sni92", "sni2007"}
+        assert labels_by_alias["Kon"] == ""
 
 
 class TestSearchYearOverlap:
