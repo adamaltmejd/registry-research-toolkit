@@ -47,16 +47,26 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `register_variant_id` coordinate; `variable_same_as` demoted to
 #   variable grain. The first commit (the `regvar_id` rename) sets 4.2.0;
 #   the structural commits stay on it.
-# - 4.3.0 (A2.1.5 stored variable slug, current): `populate_variable_slugs`
+# - 4.3.0 (A2.1.5 stored variable slug): `populate_variable_slugs`
 #   fills `variable.slug` and the resolver now READS it instead of deriving the
 #   variable slug from `delivery_column_name` at query time. A 4.2.0 DB (slug
 #   column present but NULL — never populated) resolves nothing under the flip,
 #   so it's rejected via the minor-version gate. Additive within the 4.x line;
 #   no DDL change (the column shipped in 4.2.0).
+# - 4.4.0 (A2.2 build-time triage + interim resolver flip, current): adds the
+#   `variable_related_to` table, the `variable_state` state-uniqueness index
+#   (UNIQUE(variable_id, register_variant_id, valid_from, value_set_version_label),
+#   created post-triage by the coalescer), and triaged `variable_state` rows
+#   (folds discriminated by `value_set_version_label`; splits under distinct
+#   sibling `variable` rows). The interim binding resolver now reads
+#   `variable_state` (keyed by `variable_id`), not the `variable_instance`
+#   `provider_key` join. A 4.3.0 DB has un-triaged states (same-year multi-shape
+#   rows violating the new index) and no `variable_related_to`, so it's rejected
+#   via the minor-version gate. Additive within the 4.x line.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking
 #   change.
-SCHEMA_VERSION = "4.3.0"
+SCHEMA_VERSION = "4.4.0"
 DB_FILENAME = "reg_meta.db"
 
 

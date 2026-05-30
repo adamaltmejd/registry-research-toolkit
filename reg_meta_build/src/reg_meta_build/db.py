@@ -15,6 +15,8 @@ import re
 import sqlite3
 import struct
 import sys
+import unicodedata
+from collections import Counter, defaultdict
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -25,6 +27,7 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
+from reg_meta.fqid import derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -390,15 +393,16 @@ CREATE INDEX idx_variable_state_register_variant
     ON variable_state(register_variant_id);
 -- NOTE: the §5.1 state-uniqueness index — UNIQUE(variable_id,
 -- register_variant_id, valid_from, value_set_version_label) — is intentionally
--- NOT created here. `_coalesce_variable_states` emits one PRE-TRIAGE row per
--- (… data_type, data_length, value_set_id, value_set_version_label, grain)
+-- NOT in this base DDL. `_coalesce_variable_states` emits one PRE-TRIAGE row
+-- per (… data_type, data_length, value_set_id, value_set_version_label, grain)
 -- group, so a same-year variable with multiple grains / codings / shapes
 -- produces several rows that share (variable_id, register_variant_id,
--- valid_from) and carry value_set_version_label = '' — they'd collide on that
--- index before A2.2 can fold them (→ value_set_version_label-discriminated
--- states) or split them (→ sibling variable_ids). The uniqueness invariant
--- only holds POST-triage, so the unique index is added in A2.2. value_set_
--- version_label stays NOT NULL DEFAULT '' here so the index bites once added.
+-- valid_from) and carry value_set_version_label = '' — they'd collide before
+-- A2.2 triage folds them (→ value_set_version_label-discriminated states),
+-- splits them (→ sibling variable_ids), or collapses drift. The invariant only
+-- holds POST-triage, so `_coalesce_variable_states` CREATEs the unique index
+-- itself, after triage runs (idx_variable_state_unique). value_set_version_label
+-- stays NOT NULL DEFAULT '' so the index bites in the common single-version case.
 CREATE INDEX idx_variable_state_value_set
     ON variable_state(value_set_id)
     WHERE value_set_id IS NOT NULL;
@@ -608,6 +612,32 @@ CREATE TABLE classification_same_as (
     PRIMARY KEY (
         a_provider, a_classification_slug,
         b_provider, b_classification_slug
+    )
+) WITHOUT ROWID;
+
+-- §5.5/§5.7 sibling edges (variable grain). A2.2 triage emits these between
+-- the distinct `variable` rows a *split* produced (disjoint columns lumped
+-- under one source `var_id`): one variable per column, linked here so a
+-- consumer can discover "these are the same definition delivered as different
+-- columns." Folds do NOT appear here — they stay one variable (§5.7). Stored
+-- in BOTH directions (like `variable_same_as`) so the a-side PK prefix serves
+-- `Catalog.related(x)` without a second b-side scan; the (N choose 2) sibling
+-- pairs each yield two rows. `relation_kind` reflects the split reason
+-- (`same_definition_different_column` for SCB disjoint-column splits); `note`
+-- carries provenance (`auto:triage` for build-emitted edges, vs. a curated
+-- TOML override).
+CREATE TABLE variable_related_to (
+    a_provider     TEXT NOT NULL,
+    a_register     TEXT NOT NULL,
+    a_variable     TEXT NOT NULL,
+    b_provider     TEXT NOT NULL,
+    b_register     TEXT NOT NULL,
+    b_variable     TEXT NOT NULL,
+    relation_kind  TEXT NOT NULL,
+    note           TEXT,
+    PRIMARY KEY (
+        a_provider, a_register, a_variable,
+        b_provider, b_register, b_variable
     )
 ) WITHOUT ROWID;
 
@@ -1288,7 +1318,589 @@ def _parse_unika_year(raw: str | None) -> int | None:
         return int(match.group(1)) if match else None
 
 
-def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
+@dataclass
+class _StateGroup:
+    """One pre-triage coalesced state group (lifted to module scope so the
+    §5.7 triage below can read it). The 8-component group key lives in the
+    `groups` dict; the accumulator carries the year-range signals plus the
+    latest-era delivery column and classification for triage."""
+
+    register_id: int
+    register_variant_id: int
+    var_id: int
+    data_type: str | None
+    data_length: str | None
+    value_set_id: int | None
+    value_set_version_label: str | None
+    # grain is part of the *group key* (gkey position 7), not stored here.
+    # classification_id: first non-null seen for the group — the §5.7 fold
+    # primary signal (same classification family → fold). Correlates with
+    # value_set_id (in the key), so it's stable within a group.
+    classification_id: int | None = None
+    unika_min: int | None = None
+    unika_max: int | None = None
+    # Sticky bit: True iff at least one unika_summary row applied to this
+    # group, regardless of whether either bound was populated. Lets the
+    # materializer distinguish "no unika row matched → fall back to
+    # register_version" from "unika row matched but VersionSista blank →
+    # open-ended (sentinel)". A missing upper bound from SCB means the
+    # variable is still active; defaulting to regver_max would clamp
+    # currently-live variables to the latest observed export year and
+    # make A2.5's resolver miss any future-period query.
+    unika_matched: bool = False
+    # Sticky bit: True iff at least one matching unika row left `VersionSista`
+    # blank. The "still active" signal must survive even when OTHER unika rows
+    # for the same group carry a bounded VersionSista (mid-life rename: bounded
+    # OriginalName row + open RenamedName row) — without this, `unika_max` from
+    # the bounded row would mask the open-ended signal.
+    unika_has_open_top: bool = False
+    regver_min: int | None = None
+    regver_max: int | None = None
+    # Latest-era alias: highest regver_id, ties broken by lexically smallest
+    # delivery_column_name. regver_id alone orders alias selection; the row's
+    # year only updates regver_min/max.
+    latest_alias: str | None = None
+    latest_alias_regver: int | None = None
+    # The set of register_version (edition) ids this group was observed in. The
+    # §5.7 contested-column gate buckets by *edition*, not calendar year, so a
+    # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
+    # term-to-term column rename as a same-year co-delivery (Codex #139).
+    regvers: set[int] = field(default_factory=set)
+
+
+# ─────────────────────────────────────────────────────────────────────────
+# §5.7 build-time triage
+# ─────────────────────────────────────────────────────────────────────────
+# The coalescer groups variable_instance rows into pre-triage states (one per
+# shape/grain/column 8-tuple). A single source `var_id` can carry several
+# states that collide on the universal invariant key
+# (variable_id, register_variant_id, valid_from, value_set_version_label).
+# Triage resolves every such collision three ways (§5.7) so the uniqueness
+# index below can be created:
+#   FOLD     — same concept in different *representations* (classification
+#              vintage, SUN/SSYK grain, coding variant): keep ONE variable;
+#              give each colliding state a distinct value_set_version_label
+#              token; the variable slug derives from the shared column stem.
+#   SPLIT    — genuinely different concepts under a generic var_id (disjoint
+#              column stems): mint distinct sibling `variable` rows (sharing the
+#              source provider_key), reassign each column's states to its
+#              sibling, link siblings with variable_related_to edges.
+#   COLLAPSE — residual same-column metadata drift (data_type / value_set_id
+#              re-delivery churn that survived grouping): keep the latest-era
+#              state, drop the rest.
+# `Variabelnamn` is a generic family label and is never the fold/split signal
+# (§5.7): the classification family (then the column stem) carries the concept
+# boundary. The discriminator that routes a column to its sibling is build-time
+# in-memory only (the per-column assignment here) — never a shipped table.
+
+# §5.7 rule 2 grain patterns → fold label token (the token discriminates the
+# folded states of one variable; it does NOT suffix a slug, post-redesign).
+_NIVA_POSITION_RE = re.compile(r"\b(\d+)\s*position(er)?\b", re.IGNORECASE)
+_NIVA_NIVAOLD_RE = re.compile(r"\bnivaold\b", re.IGNORECASE)
+_NIVA_GROV_RE = re.compile(r"\bgrov(?:\s+gruppering)?\b", re.IGNORECASE)
+_NIVA_DETALJ_RE = re.compile(r"\bdetalj(?:grupp(er)?)?\b", re.IGNORECASE)
+_NIVA_ALFA_RE = re.compile(r"\b(alfa|alpha)\b", re.IGNORECASE)
+_NIVA_HUVUDGRUPP_RE = re.compile(r"\bhuvudgrupp\b", re.IGNORECASE)
+_NIVA_AVDELNING_RE = re.compile(r"\bavdelning\b", re.IGNORECASE)
+_NIVA_UNDERGRUPP_RE = re.compile(r"\bundergrupp\b", re.IGNORECASE)
+
+# A fold needs ≥ this many shared leading chars to treat differing columns as
+# one stem + representation axis. Below it the columns are disjoint → split.
+# Tuned against real SCB columns during build-db validation; a TOML override
+# adjudicates the fuzzy boundary (§5.7 curation backlog).
+_FOLD_MIN_STEM = 3
+
+
+def _fold_token_from_grain(grain: str | None) -> str | None:
+    """Map an SCB `vardemangdsniva` grain string to a fold label token
+    (e.g. ``3pos``, ``grov``). None when no grain pattern matches — the caller
+    falls back to the column-suffix token."""
+    if not grain:
+        return None
+    m = _NIVA_POSITION_RE.search(grain)
+    if m is not None:
+        return f"{m.group(1)}pos"
+    for rx, token in (
+        (_NIVA_NIVAOLD_RE, "old"),
+        (_NIVA_GROV_RE, "grov"),
+        (_NIVA_DETALJ_RE, "detalj"),
+        (_NIVA_ALFA_RE, "alfa"),
+        (_NIVA_HUVUDGRUPP_RE, "huvud"),
+        (_NIVA_AVDELNING_RE, "avd"),
+        (_NIVA_UNDERGRUPP_RE, "under"),
+    ):
+        if rx.search(grain):
+            return token
+    return None
+
+
+def _ascii_fold_lower(s: str | None) -> str:
+    if not s:
+        return ""
+    return (
+        unicodedata.normalize("NFKD", s)
+        .encode("ascii", "ignore")
+        .decode("ascii")
+        .lower()
+    )
+
+
+def _common_prefix_len(strings: list[str]) -> int:
+    """Longest shared leading-character run across the (already folded) strings."""
+    if not strings:
+        return 0
+    shortest = min(len(s) for s in strings)
+    n = 0
+    for i in range(shortest):
+        ch = strings[0][i]
+        if all(s[i] == ch for s in strings):
+            n += 1
+        else:
+            break
+    return n
+
+
+def _group_from_year(grp: _StateGroup) -> int | None:
+    """The group's lower-bound year — observed `regver_min`, else `unika_min`.
+    Mirrors the materializer's `from_year`, so `_collapse_residual` buckets on
+    the exact `valid_from` the uniqueness index keys on."""
+    return grp.regver_min if grp.regver_min is not None else grp.unika_min
+
+
+def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
+    """Map each ``classification.id`` to its family-root id, following the
+    ``supersedes_id`` chain. Two columns are the same classification family
+    (the §5.7 fold *primary* signal) iff their classification_ids share a root
+    — e.g. SNI 2002 supersedes SNI 92 supersedes SNI 69, so all three resolve
+    to the SNI-69 root and fold.
+
+    INERT TODAY (documented follow-up, MIGRATION_PLAN A2.2): triage runs inside
+    the coalescer, *before* `populate_classifications`, so the `classification`
+    table is empty here → this returns ``{}`` and `_decide_fold_or_split` falls
+    to the column-stem signal. Stem-folding covers every §5.7 fold example
+    (`FtgSni69`/`FtgSni92`, `Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED` all share a stem),
+    so the primary signal only matters for same-family columns with *disjoint*
+    stems. Activating it = moving triage to a post-classifications materialize
+    step (keeps the coalescer's in-memory grain, which the final schema drops)."""
+    parent = {
+        r[0]: r[1] for r in conn.execute("SELECT id, supersedes_id FROM classification")
+    }
+
+    def root(cid: int) -> int:
+        seen: set[int] = set()
+        while parent.get(cid) is not None and cid not in seen:
+            seen.add(cid)
+            cid = parent[cid]
+        return cid
+
+    return {cid: root(cid) for cid in parent}
+
+
+@dataclass
+class _TriageResult:
+    # gkey → variable_id the state materializes under (siblings for splits).
+    # None when the parent variable is missing (seeded via vid_map.get); the
+    # coalescer's materializer raises a clear error on that invariant break.
+    assignments: dict[tuple, int | None]
+    # gkey → value_set_version_label override (fold tokens).
+    labels: dict[tuple, str]
+    # gkeys collapsed into a sibling and not materialized.
+    dropped: set[tuple]
+    # variable_id → shared-stem slug base for folded variables (consumed by
+    # populate_variable_slugs; a single-column variable is absent → derives
+    # from its column as usual).
+    fold_slug_hints: dict[int, str]
+    # (variable_id_a, variable_id_b, relation_kind) sibling edges (both
+    # directions emitted at materialization, after slugs exist).
+    related_edges: list[tuple[int, int, str]]
+    stats: Counter
+
+
+# Column-suffix tokens that mark a *representation* axis (coding variant /
+# grain), not a different concept — so a shared stem + one of these suffixes
+# folds. Pure-digit suffixes (SSYK grain `3`/`5`, SNI vintage `69`/`92`) and
+# the empty suffix (the base column itself, `BCIV` vs `BCIVRED`) also count.
+# Modest by design; the fuzzy boundary is the §5.7 curation backlog.
+_REP_SUFFIX_TOKENS = frozenset(
+    {"red", "old", "ny", "grov", "detalj", "alfa", "alpha", "huvud", "avd", "under"}
+)
+
+
+def _is_representation_suffix(suffix: str) -> bool:
+    """True when a column's suffix-past-the-shared-stem is a representation
+    axis (empty base, pure digits, or a known coding/grain token) rather than a
+    distinct-concept word (`hem` / `skol`)."""
+    s = suffix.strip("-_").lower()
+    return not s or s.isdigit() or s in _REP_SUFFIX_TOKENS
+
+
+def _decide_fold_or_split(folded_cols: list[str], class_roots_present: set[int]) -> str:
+    """Decide *fold* vs *split* for one source var_id delivered under ≥2
+    distinct columns (§5.7 rule 3). Classification family is the primary
+    signal; column stem + representation suffix is the fallback.
+    `class_roots_present` is the set of classification family-roots across the
+    columns (empty when unclassified)."""
+    # Primary: all classified columns belong to one classification family →
+    # versions of the same classification → fold.
+    if class_roots_present and len(class_roots_present) == 1:
+        return "fold"
+    # Fallback: shared stem AND every column's differing suffix is a
+    # representation token → fold (`Ssyk3`/`Ssyk5`, `BCIV`/`BCIVRED`). A
+    # concept-word suffix (`Hemkommun`/`Skolkommun`) or no shared stem → split.
+    # (Mixed/multiple classification families also fall here → split.)
+    if len(class_roots_present) <= 1:
+        prefix = _common_prefix_len(folded_cols)
+        if prefix >= _FOLD_MIN_STEM and all(
+            _is_representation_suffix(c[prefix:]) for c in folded_cols
+        ):
+            return "fold"
+    return "split"
+
+
+def _triage_groups(
+    conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
+    vid_map: dict[tuple[int, int], int],
+) -> _TriageResult:
+    """Resolve pre-triage state collisions per §5.7. Mutates the DB (mints
+    split-sibling `variable` rows) and returns the per-gkey routing the
+    coalescer applies when it materializes `variable_state`."""
+    class_roots = _classification_roots(conn)
+    res = _TriageResult({}, {}, set(), {}, [], Counter())
+
+    by_var: dict[tuple[int, int], list[tuple]] = defaultdict(list)
+    for gkey, grp in groups.items():
+        # .get → None for a group whose parent variable is missing; the
+        # coalescer's materializer raises a clear error on that invariant break.
+        res.assignments[gkey] = vid_map.get((grp.register_id, grp.var_id))
+        by_var[(grp.register_id, grp.var_id)].append(gkey)
+
+    for (register_id, var_id), gkeys in by_var.items():
+        if len(gkeys) <= 1:
+            continue
+        orig_vid = vid_map.get((register_id, var_id))
+        if orig_vid is None:
+            continue
+
+        # §5.7 triage acts ONLY on a genuine same-(variant, year) collision
+        # between distinct columns. A `var_id` whose columns never co-occur in
+        # one (register_variant_id, valid_from-year) bucket is a single
+        # longitudinal variable — e.g. SCB renamed the delivery column between
+        # editions — and triaging it would shard the variable's history across
+        # siblings (Codex P1 #139). The *gate* is the same-year collision: a
+        # var_id with <2 contested columns isn't a split container and is skipped.
+        # But once it IS a container, EVERY distinct column-component becomes its
+        # own variable (split) or folds with the contested set — a non-contested
+        # column must NOT keep the seeded original assignment, or a later/renamed
+        # split column's history is mis-attributed to the lex-first sibling
+        # (Codex P2 #139).
+        col_of = {gk: gk[8] for gk in gkeys}  # column component (gkey index 8)
+        # Bucket each group by the EDITIONS (register_version ids) it was
+        # delivered in — not the calendar year. Two columns co-deliver iff they
+        # share an edition: this both catches a multi-edition span (`Hemkommun`
+        # 2018-2019 + `Skolkommun` 2019 share the 2019 edition → contested) AND
+        # avoids treating a term-to-term rename in a sub-annual variant
+        # (`HT2018` → `VT2018`, distinct editions, same year) as a co-delivery
+        # (Codex #139).
+        bucket_cols: dict[tuple[int, int], set[str]] = defaultdict(set)
+        for gk in gkeys:
+            grp = groups[gk]
+            for regver in grp.regvers:
+                bucket_cols[(grp.register_variant_id, regver)].add(col_of[gk])
+        contested: set[str] = set()
+        for cols in bucket_cols.values():
+            if len(cols) > 1:
+                contested |= cols
+        contested.discard("")  # empty-column stubs aren't fold/split contestants
+        if len(contested) < 2:
+            continue  # no real multi-column same-year collision → not a container
+
+        by_col: dict[str, list[tuple]] = defaultdict(list)
+        for gk in gkeys:
+            if col_of[gk]:
+                by_col[col_of[gk]].append(gk)
+        all_cols = sorted(by_col)
+        contested_cols = sorted(contested)
+        non_contested_cols = [c for c in all_cols if c not in contested]
+
+        # The fold/split DECISION is made on the *contested* columns only (the
+        # real collision); the assignment then covers all columns.
+        folded = [_ascii_fold_lower(c) for c in contested_cols]
+        roots = {
+            class_roots[grp.classification_id]
+            for c in contested_cols
+            for gk in by_col[c]
+            if (grp := groups[gk]).classification_id is not None
+            and grp.classification_id in class_roots
+        }
+        if _decide_fold_or_split(folded, roots) == "fold":
+            # Contested columns fold into the original variable; each
+            # non-contested column splits off into its own.
+            _apply_fold(groups, by_col, contested_cols, folded, orig_vid, res)
+            _split_off_non_contested(
+                conn,
+                groups,
+                by_col,
+                non_contested_cols,
+                register_id,
+                var_id,
+                orig_vid,
+                res,
+            )
+            res.stats["folds"] += 1
+        else:
+            # Split: every distinct column-component becomes its own variable.
+            _apply_split(
+                conn, groups, by_col, all_cols, register_id, var_id, orig_vid, res
+            )
+            res.stats["splits"] += 1
+
+    # Universal residual collapse: after fold/split assigned variable_ids and
+    # fold labels, guarantee the §5.1 state-uniqueness invariant holds by making
+    # every (variable_id, register_variant_id, valid_from-year) scope carry
+    # distinct labels. Catches single-column shape drift AND split-sibling
+    # within-column drift (a split sibling can still carry same-year drift that
+    # _apply_split alone wouldn't resolve).
+    _collapse_residual(groups, res)
+    return res
+
+
+def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> None:
+    """§5.7 rule 4 — final collision resolution. Every materializing group is
+    scoped by its FINAL uniqueness coordinate (assigned variable_id,
+    register_variant_id, valid_from-year); within a scope, each surviving group
+    must carry a distinct `value_set_version_label` or the unique index fails.
+
+    Per group, the preferred label is its fold label (if triage set one), else a
+    grain token, else its own value_set_version_label. Processing latest-era
+    first, a label that's free is kept; a *meaningful* label already taken is
+    disambiguated (`-N`); an empty/uninformative collision is pure shape/value
+    drift and the group is dropped. This preserves multi-vintage (distinct
+    labels) and multi-grain (distinct grain tokens) while collapsing drift —
+    and, running after fold/split, also resolves split-sibling within-column
+    drift.
+
+    INTERIM scope limit: groups are scoped by `valid_from`-year (the index key).
+    Two same-label groups under one variable with *different* lower bounds but a
+    shared edition — e.g. a 2018-2019 stub and a 2019+ shape — land in separate
+    scopes, so this overlapping-but-not-index-colliding pair isn't reconciled
+    here. The unique index still holds (distinct `valid_from`); the interim point
+    resolver picks the later state at the overlap year (sensible supersession)
+    and A2.5 `resolve_at` surfaces both. A full fix range-clamps the older
+    overlap (not a whole-group drop, which would lose its non-overlap coverage),
+    so it belongs with the A2.5 state-model rework. Triage *detection* already
+    buckets by edition (`regver_id`); only this residual pass stays year-scoped."""
+    scopes: dict[tuple, list[tuple]] = defaultdict(list)
+    for gkey, grp in groups.items():
+        if gkey in res.dropped:
+            continue
+        vid = res.assignments.get(gkey)
+        if vid is None:
+            continue
+        scopes[(vid, grp.register_variant_id, _group_from_year(grp))].append(gkey)
+
+    for scope_gkeys in scopes.values():
+        if len(scope_gkeys) <= 1:
+            continue
+        # Latest era first so it keeps the cleanest label; deterministic ties.
+        # The gkey tiebreaker is stringified per element — a raw gkey carries
+        # `value_set_id` (int | None), and a None-vs-int compare across two
+        # groups in the scope would raise TypeError.
+        ordered = sorted(
+            scope_gkeys,
+            key=lambda gk: (
+                -(groups[gk].regver_max or -1),
+                tuple("" if x is None else str(x) for x in gk),
+            ),
+        )
+        used: set[str] = set()
+        for gk in ordered:
+            grp = groups[gk]
+            preferred = (
+                res.labels.get(gk)
+                or _fold_token_from_grain(gk[7])
+                or (grp.value_set_version_label or "")
+            )
+            if preferred and preferred not in used:
+                used.add(preferred)
+                res.labels[gk] = preferred
+            elif preferred:  # meaningful token already taken → disambiguate
+                n = 1
+                while f"{preferred}-{n}" in used:
+                    n += 1
+                used.add(f"{preferred}-{n}")
+                res.labels[gk] = f"{preferred}-{n}"
+            elif "" not in used:  # first uninformative state keeps ''
+                used.add("")
+                res.labels[gk] = ""
+            else:  # uninformative drift that can't be distinguished → drop
+                res.dropped.add(gk)
+
+
+def _apply_fold(
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    named_cols: list[str],
+    folded: list[str],
+    orig_vid: int,
+    res: _TriageResult,
+) -> None:
+    """FOLD: keep ONE variable; its states stay overlapping, discriminated by
+    `value_set_version_label`. A state with a grain token or a non-empty source
+    label already has the right discriminator and is **preserved verbatim** by
+    `_collapse_residual` (slugifying a meaningful source version like
+    `Fabrikat personbilar 2019` into an opaque token would destroy the
+    version semantics the resolver needs). Only a state with NEITHER gets a
+    column-suffix token here, so genuinely-different columns folded together
+    (`Ssyk3`/`Ssyk5`, empty source label) don't collide. `_collapse_residual`
+    handles any residual same-label collision. The slug derives from the stem."""
+    stem_len = _common_prefix_len(folded)
+    for col in named_cols:
+        fcol = _ascii_fold_lower(col)
+        suffix = re.sub(r"[^a-z0-9]+", "-", fcol[stem_len:]).strip("-") or re.sub(
+            r"[^a-z0-9]+", "-", fcol
+        ).strip("-")
+        for gk in by_col[col]:
+            grp = groups[gk]
+            if not _fold_token_from_grain(gk[7]) and not (
+                grp.value_set_version_label or ""
+            ):
+                res.labels[gk] = suffix
+    # Fold slug hint: the shared stem. Validate through derive_variable_slug so
+    # a digit-leading / all-digit / reserved stem (`2501`/`2502` → `250`) is
+    # rejected (returns None) and populate_variable_slugs falls back to its
+    # name/provider_key chain instead of emitting a slug that fails the §5.2
+    # grammar. (Split siblings already route through derive_variable_slug; only
+    # this fold-stem path bypassed it.)
+    stem_raw = _ascii_fold_lower(named_cols[0])[:stem_len].strip("-_")
+    hint = derive_variable_slug(stem_raw) or derive_variable_slug(named_cols[0])
+    if hint:
+        res.fold_slug_hints[orig_vid] = hint
+
+
+def _apply_split(
+    conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    named_cols: list[str],
+    register_id: int,
+    var_id: int,
+    orig_vid: int,
+    res: _TriageResult,
+) -> None:
+    """SPLIT: each distinct column becomes its own sibling `variable` (sharing
+    the source provider_key); link siblings with variable_related_to edges.
+    Sibling slugs derive later from each sibling's own reassigned column."""
+    # First column (lexically) keeps the original variable; the rest mint new
+    # sibling variables. Name is the shared generic Variabelnamn (variable.name
+    # is already populated; reuse it for the siblings).
+    name_row = conn.execute(
+        "SELECT name FROM variable WHERE variable_id = ?", (orig_vid,)
+    ).fetchone()
+    shared_name = name_row[0] if name_row else None
+    sibling_vids = [orig_vid]
+    for col in named_cols[1:]:
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (?, CAST(? AS TEXT), ?)",
+            (register_id, var_id, shared_name),
+        )
+        new_vid = cur.lastrowid
+        assert new_vid is not None  # lastrowid is set after an INSERT
+        sibling_vids.append(new_vid)
+        for gk in by_col[col]:
+            res.assignments[gk] = new_vid
+    # (N choose 2) edges, both directions, between all siblings.
+    # TODO(§5.5): every split currently emits `same_definition_different_column`.
+    # §5.5/§5.7 differentiate the split relation_kind — `code_vs_label_pair`
+    # (`Lid`/`LNamn` — order the code OR the name) and `import_bug_suspect` — but
+    # detecting those needs the code/label-pair + datatype heuristics (see the
+    # old #132 `_looks_like_code_label_pair`). Flattening to the generic kind is
+    # interim (it's in the allowed set and correctly never the fold-only
+    # `same_concept_different_grain`); refine when the split heuristics land.
+    for i, a in enumerate(sibling_vids):
+        for b in sibling_vids[i + 1 :]:
+            res.related_edges.append((a, b, "same_definition_different_column"))
+
+
+def _split_off_non_contested(
+    conn: sqlite3.Connection,
+    groups: dict[tuple, _StateGroup],
+    by_col: dict[str, list[tuple]],
+    non_contested_cols: list[str],
+    register_id: int,
+    var_id: int,
+    orig_vid: int,
+    res: _TriageResult,
+) -> None:
+    """Once a var_id is a split container, a column-component that doesn't itself
+    collide same-year (a later or renamed column) must NOT keep the seeded
+    original assignment — that lumps its history onto the lex-first sibling and
+    a consumer querying that sibling's slug gets the wrong data (Codex P2 #139).
+    Give each such column its own variable, linked to `orig_vid` by a
+    variable_related_to edge. Perfect rename *continuity* (re-joining a renamed
+    column to its sibling) needs A2.3 tracking; own-variable avoids the
+    mis-attribution."""
+    if not non_contested_cols:
+        return
+    name_row = conn.execute(
+        "SELECT name FROM variable WHERE variable_id = ?", (orig_vid,)
+    ).fetchone()
+    shared_name = name_row[0] if name_row else None
+    vids = [orig_vid]
+    for col in non_contested_cols:
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (?, CAST(? AS TEXT), ?)",
+            (register_id, var_id, shared_name),
+        )
+        nvid = cur.lastrowid
+        assert nvid is not None
+        vids.append(nvid)
+        for gk in by_col[col]:
+            res.assignments[gk] = nvid
+    for i, a in enumerate(vids):
+        for b in vids[i + 1 :]:
+            res.related_edges.append((a, b, "same_definition_different_column"))
+
+
+def _materialize_variable_related_to(
+    conn: sqlite3.Connection, edges: list[tuple[int, int, str]]
+) -> int:
+    """Insert §5.7 split-sibling edges (both directions) into
+    `variable_related_to`. Runs after `populate_variable_slugs` so each
+    `variable_id` resolves to its (provider, register, variable) slug FQID.
+    Returns the row count inserted."""
+    if not edges:
+        return 0
+    fqid_of = {
+        r[0]: (r[1], r[2], r[3])
+        for r in conn.execute(
+            "SELECT v.variable_id, p.slug, r.slug, v.slug "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id"
+        )
+    }
+    rows: list[tuple] = []
+    for a, b, kind in edges:
+        fa, fb = fqid_of.get(a), fqid_of.get(b)
+        # A sibling whose slug never populated (skip_slugs build) can't form an
+        # FQID-keyed edge; skip rather than insert a NULL endpoint.
+        if fa is None or fb is None or None in fa or None in fb:
+            continue
+        rows.append((*fa, *fb, kind, "auto:triage"))
+        rows.append((*fb, *fa, kind, "auto:triage"))
+    conn.executemany(
+        "INSERT OR IGNORE INTO variable_related_to "
+        "(a_provider, a_register, a_variable, b_provider, b_register, b_variable, "
+        " relation_kind, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        rows,
+    )
+    return len(rows)
+
+
+def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
     Group key: `(register_id, register_variant_id, var_id, data_type, data_length,
@@ -1351,6 +1963,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.var_id, vi.regver_id, "
         "       vi.data_type, vi.data_length, vi.value_set_id, "
         "       vi.value_set_version_label, vi.vardemangdsniva AS grain, "
+        "       vi.classification_id, "
         "       vi.variabelnamn, va.delivery_column_name, "
         "       rv.registerversionnamn "
         "FROM variable_instance vi "
@@ -1358,54 +1971,50 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         "JOIN register_version rv ON rv.regver_id = vi.regver_id"
     ).fetchall()
 
-    # Group accumulator: key → mutable state. We iterate `rows` once and
-    # update `min_year`/`max_year`/`latest_alias` in place. Using a dict
-    # rather than itertools.groupby because rows aren't pre-sorted and the
-    # group key has 8 components — pre-sorting + groupby would be slower
-    # than the dict path.
-    @dataclass
-    class _StateGroup:
-        register_id: int
-        register_variant_id: int
-        var_id: int
-        data_type: str | None
-        data_length: str | None
-        value_set_id: int | None
-        value_set_version_label: str | None
-        # grain is part of the *group key*, not stored on the output row,
-        # so we don't keep it on the accumulator — the dict key carries it.
-        unika_min: int | None = None
-        unika_max: int | None = None
-        # Sticky bit: True iff at least one unika_summary row applied to this
-        # group, regardless of whether either bound was populated. Lets the
-        # materializer distinguish "no unika row matched → fall back to
-        # register_version" from "unika row matched but VersionSista blank →
-        # open-ended (sentinel)". A missing upper bound from SCB means the
-        # variable is still active; defaulting to regver_max would clamp
-        # currently-live variables to the latest observed export year and
-        # make A2.5's resolver miss any future-period query.
-        unika_matched: bool = False
-        # Sticky bit: True iff at least one matching unika row left
-        # `VersionSista` blank. The "still active" signal must survive even
-        # when OTHER unika rows for the same group carry a bounded
-        # VersionSista (e.g. a mid-life rename where the OriginalName row
-        # is bounded but the RenamedName row is open) — without this
-        # tracker, `unika_max` populated from the bounded row would mask
-        # the open-ended signal from the renamed row.
-        unika_has_open_top: bool = False
-        regver_min: int | None = None
-        regver_max: int | None = None
-        # Track the cvid → alias mapping with regver_id so we can pick the
-        # latest alias deterministically (highest regver_id, then lexically
-        # smallest delivery_column_name on ties — both of which are stored
-        # below). regver_id alone is sufficient for the ordering; the row's
-        # year is only used transiently to update regver_min/max, never as
-        # alias-selection input, so it doesn't need to live on the group.
-        latest_alias: str | None = None
-        latest_alias_regver: int | None = None
+    # §5.7 rule 2 — kolumnnamn connectivity per (register, variant, var_id).
+    # Two delivery columns are one concept-candidate iff some cvid carries both
+    # as aliases (set *intersection*); union them. The component representative
+    # (lex-smallest column) enters the group key below, so the coalescer keeps
+    # genuinely-disjoint columns (a split candidate) as distinct pre-triage
+    # groups, while a single cvid's diacritic aliases (`Kon`/`Kön`) stay one
+    # group. Columns that never co-occur form separate components.
+    _ColNode = tuple[int, int, int, str]
+    col_parent: dict[_ColNode, _ColNode] = {}
 
+    def _col_find(node: _ColNode) -> _ColNode:
+        root = node
+        while col_parent[root] != root:
+            root = col_parent[root]
+        while col_parent[node] != root:  # path-compress
+            col_parent[node], node = root, col_parent[node]
+        return root
+
+    def _col_union(a: _ColNode, b: _ColNode) -> None:
+        ra, rb = _col_find(a), _col_find(b)
+        if ra != rb:
+            lo, hi = (ra, rb) if ra <= rb else (rb, ra)  # lex-smallest is root
+            col_parent[hi] = lo
+
+    cvid_anchor: dict[int, _ColNode] = {}
+    for row in rows:
+        col = row["delivery_column_name"]
+        if not col:
+            continue
+        node = (row["register_id"], row["register_variant_id"], row["var_id"], col)
+        col_parent.setdefault(node, node)
+        anchor = cvid_anchor.get(row["cvid"])
+        if anchor is None:
+            cvid_anchor[row["cvid"]] = node
+        else:
+            _col_union(anchor, node)
+
+    # Group accumulator: key → mutable `_StateGroup` (module scope; the §5.7
+    # triage reads it). We iterate `rows` once and update the year-range
+    # signals / latest alias in place. A dict rather than itertools.groupby
+    # because rows aren't pre-sorted and the key has 9 components (the trailing
+    # one is the column component above; grain stays at index 7).
     groups: dict[
-        tuple[int, int, int, str, str, int | None, str | None, str],
+        tuple[int, int, int, str, str, int | None, str | None, str, str],
         _StateGroup,
     ] = {}
     # Map (register_id, register_variant_id, kolumnnamn, variabelnamn) → set of
@@ -1428,6 +2037,17 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
 
     for row in rows:
         grain = row["grain"] or ""
+        col = row["delivery_column_name"]
+        # Column component (§5.7 rule 2): disjoint columns get distinct
+        # components → distinct groups → triage can fold/split them. A cvid
+        # with no alias contributes the "" component (a stub group).
+        component = (
+            _col_find(
+                (row["register_id"], row["register_variant_id"], row["var_id"], col)
+            )[3]
+            if col
+            else ""
+        )
         gkey = (
             row["register_id"],
             row["register_variant_id"],
@@ -1437,6 +2057,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
             row["value_set_id"],
             row["value_set_version_label"] or "",
             grain,
+            component,
         )
         grp = groups.get(gkey)
         if grp is None:
@@ -1448,8 +2069,17 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 data_length=row["data_length"],
                 value_set_id=row["value_set_id"],
                 value_set_version_label=row["value_set_version_label"],
+                classification_id=row["classification_id"],
             )
             groups[gkey] = grp
+        elif grp.classification_id is None and row["classification_id"] is not None:
+            # First non-null classification across the group's cvids — the §5.7
+            # fold primary signal.
+            grp.classification_id = row["classification_id"]
+
+        # Editions this group was delivered in — the §5.7 contested gate buckets
+        # by edition, not year (regver_id is NOT NULL on variable_instance).
+        grp.regvers.add(row["regver_id"])
 
         # Track register_version year per cvid (fallback signal) on the
         # group, and also on the per-variable max so the materializer can
@@ -1585,11 +2215,19 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         )
     }
 
+    # §5.7 triage: resolve pre-triage collisions (fold/split/collapse) before
+    # materializing. Mints split-sibling `variable` rows (so vid_map above is
+    # stale for them — triage.assignments carries the per-gkey target) and
+    # routes each group to its variable_id + (folded) value_set_version_label.
+    triage = _triage_groups(conn, groups, vid_map)
+
     batch: list[tuple] = []
     sentinel_count = 0
     fallback_only_count = 0
     open_top_from_unika = 0
-    for grp in groups.values():
+    for gkey, grp in groups.items():
+        if gkey in triage.dropped:
+            continue  # collapsed into a sibling state (§5.7 rule 4 drift)
         vkey = (grp.register_id, grp.register_variant_id, grp.var_id)
         var_max = var_max_regver.get(vkey)
         # `None == None` is True — a yearless single-group variable counts
@@ -1598,8 +2236,9 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         is_latest_era = grp.regver_max == var_max
 
         # Lower bound: regver is authoritative (the years we actually
-        # observed the group). Unika is fallback for yearless cvids.
-        from_year = grp.regver_min if grp.regver_min is not None else grp.unika_min
+        # observed the group). Unika is fallback for yearless cvids. Shared
+        # with triage's collision bucketing via _group_from_year.
+        from_year = _group_from_year(grp)
 
         # Upper bound: latest-era group with unika-open → sentinel.
         # Otherwise the group's observed regver_max wins. Unika upper
@@ -1634,11 +2273,11 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         if not grp.unika_matched:
             fallback_only_count += 1
 
-        variable_id = vid_map.get((grp.register_id, grp.var_id))
+        variable_id = triage.assignments.get(gkey)
         if variable_id is None:
             # Defensive: `variable` and `variable_instance` derive from the same
-            # source rows, so every coalesced state has a parent variable. The
-            # FK used to catch an orphan at insert; surface an actionable error
+            # source rows, so every coalesced state has a parent variable (triage
+            # seeds assignments from vid_map). Surface an actionable error
             # instead of a bare KeyError if that invariant ever breaks.
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
@@ -1663,9 +2302,10 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
                 grp.data_length,
                 grp.latest_alias,
                 grp.value_set_id,
-                # NOT NULL DEFAULT '' on the column; coalesce here so the
-                # uniqueness index bites for the common single-version case.
-                grp.value_set_version_label or "",
+                # Fold token from triage wins; else the group's own label
+                # (NOT NULL DEFAULT '' — coalesce NULL→'' so the uniqueness
+                # index bites for the common single-version case).
+                triage.labels.get(gkey, grp.value_set_version_label or ""),
             )
         )
 
@@ -1676,12 +2316,28 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         batch,
     )
+
+    # §5.1 state-uniqueness index (deferred from A2.1.5 — see the DDL note on
+    # variable_state). Created here, after triage has folded/split/collapsed
+    # every same-year multi-shape collision, so the 4-tuple is now unique. A
+    # CREATE that raises here means triage left a residual collision — a build
+    # bug, surfaced loudly rather than shipped.
+    conn.execute(
+        "CREATE UNIQUE INDEX idx_variable_state_unique ON variable_state("
+        "variable_id, register_variant_id, valid_from, value_set_version_label)"
+    )
+
     state_count = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]
     _progress(
         f"  {state_count:,} variable_state rows "
         f"({fallback_only_count:,} from register_version fallback, "
         f"{open_top_from_unika:,} open-ended from unika, "
         f"{sentinel_count:,} carry a date sentinel)"
+    )
+    _progress(
+        f"  triage: {triage.stats.get('folds', 0):,} folds, "
+        f"{triage.stats.get('splits', 0):,} splits, "
+        f"{len(triage.dropped):,} states collapsed"
     )
     return {
         "n_state_groups": len(groups),
@@ -1693,6 +2349,14 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
         # resolver needs these to survive future-period queries.
         "n_open_top_from_unika": open_top_from_unika,
         "n_with_sentinel": sentinel_count,
+        "n_triage_folds": triage.stats.get("folds", 0),
+        "n_triage_splits": triage.stats.get("splits", 0),
+        "n_triage_collapsed": len(triage.dropped),
+        # Build-only routing consumed downstream by build_db (NOT manifest
+        # values): fold-slug hints → populate_variable_slugs; sibling edges →
+        # _materialize_variable_related_to (after slugs exist).
+        "_fold_slug_hints": triage.fold_slug_hints,
+        "_related_edges": triage.related_edges,
     }
 
 
@@ -2559,11 +3223,22 @@ def build_db(
             # but before materialize_same_as_edges (which reads the stored slug
             # via _variable_source_slug). Curated `[variable]` overrides in
             # scb.toml win; the rest auto-derive into scb.auto.toml.
-            var_slug_counts = populate_variable_slugs(conn, slug_root)
+            var_slug_counts = populate_variable_slugs(
+                conn, slug_root, fold_slugs=state_stats["_fold_slug_hints"]
+            )
             row_counts["variable_slugs_curated"] = var_slug_counts["curated"]
             row_counts["variable_slugs_auto"] = (
                 var_slug_counts["auto_existing"] + var_slug_counts["auto_new"]
             )
+
+            # §5.7 split-sibling edges. Runs after variable slugs so each
+            # sibling variable_id resolves to its FQID slug; the triage emitted
+            # the (variable_id, variable_id, kind) pairs during coalescing.
+            n_related = _materialize_variable_related_to(
+                conn, state_stats["_related_edges"]
+            )
+            row_counts["variable_related_to"] = n_related
+            _progress(f"  {n_related:,} variable_related_to edges (auto:triage)")
 
         # §5.5 same_as edges. Runs *after* populate_slugs so register /
         # variant / version slug columns are populated — the materializer

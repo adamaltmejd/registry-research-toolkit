@@ -21,6 +21,7 @@ from .fqid import (
     parse,
     validate_slug,
 )
+from .queries import extract_year
 
 if TYPE_CHECKING:
     import sqlite3
@@ -82,6 +83,17 @@ class ResolvedVariableBinding:
     # header — `Kon`, `PersonNr`, etc.).
     variable_name: str | None
     delivery_column_name: str | None
+    # A2.2 interim resolver flip: the `variable_state` row this binding resolved
+    # through (keyed by `variable_id`), so split siblings sharing one
+    # `provider_key` resolve to their OWN state, not a shared instance's. The
+    # discriminating metadata (delivery_column_name, value_set_version_label)
+    # comes from this state; `cvid`/`via_source_id` come from the
+    # `variable_instance` whose delivery column matches this state — column-tied,
+    # so split siblings with distinct columns get distinct cvids (Codex P1 #139)
+    # — until A2.4 moves lineage onto `variable_state_lineage`. None on the
+    # discovery path (`editions`), which still reads the interim instance join.
+    state_id: int | None = None
+    value_set_version_label: str | None = None
     # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
     via_source_id: int | None = None
     lineage: Fqid | None = None
@@ -120,7 +132,7 @@ def _not_found(fqid: Fqid) -> RegMetaError:
     )
 
 
-# Shared SELECT + FROM + JOINs for queries that emit ResolvedVariableBinding.
+# Shared SELECT + FROM + JOINs for the binding **discovery** path (`editions`).
 # Includes the consumer-side join chain (`*_src`) so the lineage FQID for
 # rows with `via_source_id IS NOT NULL` is built directly from the result
 # row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
@@ -128,17 +140,18 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # (joined via `vi.var_id` → `v.provider_key`), not derived from
 # `delivery_column_name` at query time.
 #
-# ⚠️ Bridge hazard (A2.2 → A2.5): `provider_key` is a NON-unique join hint. An
-# A2.2 triage split mints several `variable` rows under one
-# `(register_id, provider_key)` but relinks `variable_state`, NOT
-# `variable_instance`. So a single instance row fans out across all sibling
-# `variable` rows in this JOIN, and each sibling's slug then resolves to that
-# *shared* instance's cvid + metadata (value_set, data_type, …) — wrong for any
-# sibling whose state differs. Harmless today (pre-A2.2 every provider_key maps
-# 1:1 to one variable, so the join can't fan out). The fix is A2.5, which moves
-# binding resolution onto `variable_state` (keyed by `variable_id`) so each
-# sibling resolves to its own state; A2.2 must not ship split siblings before
-# that resolver lands (see MIGRATION_PLAN A2.2/A2.5).
+# ⚠️ Interim fan-out (discovery only). `provider_key` is a NON-unique join hint:
+# an A2.2 triage split puts several `variable` rows under one
+# `(register_id, provider_key)` but relinks `variable_state`, not
+# `variable_instance`, so a single instance fans across all sibling `variable`
+# rows here. Point resolution (`_resolve_binding_direct` / `_resolve_binding_via_
+# same_as`) was flipped in A2.2 onto `variable_state` (keyed by `variable_id`),
+# which is fan-out-free; only `editions` (discovery — lists a variable's
+# bindings) still reads this join. The `variable_slug == variable` filter keeps
+# the right slug, but the cvid/metadata are the shared instance's for split
+# siblings — a known discovery quirk that clears when `editions` moves onto
+# `variable_state` (A2.5 `states`/`resolve_at`) and `variable_instance` is
+# dropped (A2.7). See MIGRATION_PLAN A2.2/A2.5.
 _BINDING_QUERY = (
     "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
     "vi.via_source_id, "
@@ -332,52 +345,67 @@ class Catalog:
         return self._var_same_as_sources
 
     def _resolve_binding_direct(self, fqid: Fqid) -> ResolvedVariableBinding | None:
-        # A2.1.5: scan instances under the (variant, version) pair and match the
-        # **stored** `variable.slug` (carried as `variable_slug` in
-        # `_BINDING_QUERY`) instead of deriving from
-        # `variable_alias.delivery_column_name` at query time (§5.3). The version
-        # match is an exact slug comparison — `register_version.slug` carries the
-        # period or curated token. `ORDER BY vi.cvid, va.delivery_column_name`
-        # makes first-match deterministic; uniqueness of (variant, version,
-        # variable_slug) is a §5.3 invariant.
+        """A2.2 interim resolver flip (§5.7/§5.10). Resolve through
+        `variable_state` keyed by `variable_id`, NOT the
+        `variable_instance`→`provider_key` join (which fanned one instance
+        across split siblings sharing a `provider_key`). The FQID's variable
+        slug selects THE variable row (register-unique slug); its
+        `variable_state` for the queried (variant, period) supplies the
+        discriminating metadata, so each sibling resolves to its own state.
+        `cvid`/`via_source_id` come from the interim `variable_instance` whose
+        delivery column matches that state (`_lookup_instance`), so a split
+        sibling binds its OWN column's instance, not the lowest shared cvid
+        (Codex P1 #139); A2.4 moves lineage onto `variable_state_lineage`. Still
+        parses the interim 5-seg grammar — the 3-seg flip is A2.6.
+        """
+        # A binding FQID has all five segments populated (parse-validated); the
+        # asserts narrow `str | None` → `str` for the typed helpers below.
+        assert fqid.provider is not None and fqid.register is not None
         assert fqid.variable is not None
-        variable_slug = fqid.variable
-        rows = self._conn.execute(
-            _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
-            "AND rv.slug = ? AND rver.slug = ? "
-            "ORDER BY vi.cvid, va.delivery_column_name",
-            (fqid.provider, fqid.register, fqid.variant, fqid.period),
-        ).fetchall()
-        for row in rows:
-            if row["variable_slug"] == variable_slug:
-                return self._row_to_binding(row, fqid, variable_slug)
+        var = self._lookup_variable(fqid.provider, fqid.register, fqid.variable)
+        if var is None:
+            return None
+        slot = self._lookup_version_slot(fqid)
+        if slot is None:
+            return None
+        # Iterate the period-overlapping states (latest-era first) and bind the
+        # first whose delivery column actually has an instance in the selected
+        # edition. One year can hold several overlapping states — a subannual
+        # variant renamed between terms (HT/VT), or a multi-vintage fold — and
+        # the latest-era state's column needn't be the one delivered in *this*
+        # regver, so taking only the first would falsely report fqid_not_found
+        # now that `_lookup_instance` is column-constrained (Codex P2 #139).
+        # Mirrors `_resolve_binding_target_any_variant`. (A same-year *rename*
+        # folded to a single collapsed state is the deferred year-granular limit
+        # — `_overlapping_states` docstring — not reachable by iterating here.)
+        for state in self._overlapping_states(
+            var["variable_id"], slot["register_variant_id"], fqid.period
+        ):
+            inst = self._lookup_instance(
+                var["register_id"],
+                slot["register_variant_id"],
+                slot["regver_id"],
+                var["provider_key"],
+                state["delivery_column_name"],
+            )
+            if inst is not None:
+                return self._build_state_binding(
+                    fqid, var, slot["regver_id"], state, inst
+                )
         return None
 
     def _resolve_binding_via_same_as(
         self, fqid: Fqid
     ) -> ResolvedVariableBinding | None:
-        """BFS through `variable_same_as` until a candidate resolves directly.
+        """BFS through `variable_same_as` (variable grain, §5.5) until a target
+        variable resolves.
 
-        A2.1.5: edges are **variable-grain** — `(provider, register, variable)`
-        triples, no variant/period qualifier (§5.5). A traversal step swaps the
-        (provider, register, variable) coordinate and **inherits the query's
-        variant + period** (the edge carries no narrowing), then tries a direct
-        resolve under that inherited slot. The visited set keys on the
-        variable-grain triple. (Binding resolution is still interim 5-seg until
-        A2.6; the start-node triple is taken from the query's binding, ignoring
-        its variant/period segments.)
-
-        ⚠️ Interim limitation (A2.5): inheriting the query's variant/period only
-        resolves a target in the SAME register, or a cross-register target that
-        happens to share both slugs. A genuine cross-register / cross-provider
-        edge whose target register uses different variant slugs won't resolve
-        here — `_resolve_binding_direct` filters `rv.slug = ?` / `rver.slug = ?`
-        on the inherited (source-register) slugs, which the target lacks. The
-        edge's validity is implicit in the target variable's state history
-        (§5.5), which A2.5's longitudinal `variable_state` resolver reads,
-        dropping the variant/period dependency. No `same_as` edges are curated
-        today, so this gap is latent until then (see MIGRATION_PLAN A2.5);
-        `test_cross_register_same_as_variant_mismatch` (xfail) pins it.
+        A2.2 flip: the target resolves **variant-independently** — by
+        `variable_id` + period over `variable_state`, across any variant — so a
+        cross-register edge whose target register uses *different* variant slugs
+        still resolves. The interim direct path inherited the query's variant
+        slug into the target register (which it may lack); dropping that
+        dependency is what `test_cross_register_same_as_variant_mismatch` pins.
         """
         assert fqid.provider and fqid.register and fqid.variable
         assert fqid.variant is not None and fqid.period is not None
@@ -387,9 +415,10 @@ class Catalog:
             fqid.variable,
         ) not in self._var_same_as_source_keys():
             return None
-        # Variant/period are constant across the traversal — the variable-grain
-        # edge can't change them; only the (provider, register, variable)
-        # coordinate moves.
+        # variant/period are constant across the traversal (the variable-grain
+        # edge can't change them). The path FQIDs record the interim 5-seg form
+        # under the query's variant; resolution itself is variant-independent
+        # (the target register may use other variant slugs).
         variant = fqid.variant
         period = fqid.period
         start_key = (fqid.provider, fqid.register, fqid.variable)
@@ -413,23 +442,245 @@ class Catalog:
                     continue
                 visited.add(key)
                 try:
-                    n_fqid = Fqid.binding_fqid(
+                    step_fqid = Fqid.binding_fqid(
                         n_prov, n_reg, variant, period, n_variable
                     )
                 except FqidError:
-                    # Malformed slug in DB — populate_slugs validates on write,
-                    # so this means a build-time invariant broke. Skip the
-                    # candidate rather than wrap a "not found" in a cryptic
-                    # FqidError trace.
+                    # Malformed slug — populate_slugs validates on write, so
+                    # this is a build-invariant break; skip the candidate.
                     continue
-                new_path = (*path, n_fqid)
-                hit = self._resolve_binding_direct(n_fqid)
+                new_path = (*path, step_fqid)
+                hit = self._resolve_binding_target_any_variant(
+                    n_prov, n_reg, n_variable, period
+                )
                 if hit is not None:
-                    # Preserve the caller's FQID on the result; the
-                    # traversal path goes in via_same_as.
+                    # Restore the caller's FQID; the traversal path (every node
+                    # walked, interim 5-seg) goes in via_same_as.
                     return replace(hit, fqid=fqid, via_same_as=new_path)
                 queue.append((n_prov, n_reg, n_variable, new_path))
         return None
+
+    # ── A2.2 state-anchored binding-resolution helpers ────────────────────
+
+    def _lookup_variable(
+        self, provider: str, register: str, variable_slug: str
+    ) -> sqlite3.Row | None:
+        """THE variable row for a register-unique slug (§5.1 natural key)."""
+        return self._conn.execute(
+            "SELECT v.variable_id, v.register_id, v.provider_key, "
+            "v.name AS variable_name "
+            "FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND v.slug = ?",
+            (provider, register, variable_slug),
+        ).fetchone()
+
+    def _lookup_version_slot(self, fqid: Fqid) -> sqlite3.Row | None:
+        """register_variant_id + regver_id for the FQID's (variant, period)."""
+        return self._conn.execute(
+            "SELECT rver.regver_id, rv.register_variant_id "
+            "FROM register_version rver "
+            "JOIN register_variant rv "
+            "    ON rver.register_variant_id = rv.register_variant_id "
+            "JOIN register r ON rv.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
+            (fqid.provider, fqid.register, fqid.variant, fqid.period),
+        ).fetchone()
+
+    def _overlapping_states(
+        self,
+        variable_id: int,
+        register_variant_id: int | None,
+        period: str | None,
+    ) -> list[sqlite3.Row]:
+        """All `variable_state` rows for the variable whose validity range covers
+        `period`, **latest-era first** (most recent `valid_from`/`valid_to`, then
+        deterministic). `register_variant_id` None spans every variant (the
+        variable-grain `same_as` path). A yearless period (`_default`) returns
+        every state in order.
+
+        INTERIM precision limit (Codex #139, deferred): `variable_state` validity
+        is **year-granular** (the coalescer year-expands), so for a sub-annual
+        variant with two editions in one calendar year (`HT2018` / `VT2018`) both
+        states cover all of 2018 and can't be told apart here — resolving one term
+        may return the other term's `delivery_column_name`/`value_set_version_label`
+        (the `cvid` is still edition-exact via `_lookup_instance`). The fix needs
+        sub-annual state bounds or carrying the regver into selection — part of
+        the A2.5/A2.6 resolver+state-model rework, not this interim flip."""
+        if register_variant_id is not None:
+            rows = self._conn.execute(
+                "SELECT state_id, register_variant_id, data_type, data_length, "
+                "delivery_column_name, value_set_id, value_set_version_label, "
+                "valid_from, valid_to FROM variable_state "
+                "WHERE variable_id = ? AND register_variant_id = ? "
+                "ORDER BY valid_from DESC, valid_to DESC, value_set_version_label, "
+                "state_id",
+                (variable_id, register_variant_id),
+            ).fetchall()
+        else:
+            rows = self._conn.execute(
+                "SELECT state_id, register_variant_id, data_type, data_length, "
+                "delivery_column_name, value_set_id, value_set_version_label, "
+                "valid_from, valid_to FROM variable_state WHERE variable_id = ? "
+                "ORDER BY valid_from DESC, valid_to DESC, value_set_version_label, "
+                "register_variant_id, state_id",
+                (variable_id,),
+            ).fetchall()
+        year = extract_year(period or "")
+        if year is None:
+            return rows
+        lo, hi = f"{year:04d}-01-01", f"{year:04d}-12-31"
+        return [r for r in rows if r["valid_from"] <= hi and r["valid_to"] >= lo]
+
+    def _lookup_instance(
+        self,
+        register_id: int,
+        register_variant_id: int,
+        regver_id: int | None,
+        provider_key: str,
+        delivery_column_name: str | None,
+    ) -> sqlite3.Row | None:
+        """cvid + via_source_id for §5.6 lineage, constrained to the selected
+        state's `delivery_column_name` (via `variable_alias`). A2.2 splits one
+        `var_id` into sibling variables that share `provider_key`/`var_id` but
+        differ by delivery column, so a single edition holds several instance
+        rows for the same `var_id`. Without the column tie, two siblings would
+        both pick the lowest `cvid` (wrong source column) and an *absent* sibling
+        would resolve via another sibling's instance (phantom) — Codex P1 #139.
+        A NULL column (~3% of states, cvids with no alias) falls back to the
+        var_id match. `regver_id` None matches any era (the variant-independent
+        `same_as` path). A2.4 moves lineage onto `variable_state_lineage`."""
+        try:
+            var_id = int(provider_key)
+        except (TypeError, ValueError):
+            return None  # SOS non-numeric provider_key — no interim instance join
+        conds = ["vi.register_id = ?", "vi.register_variant_id = ?"]
+        params: list[object] = [register_id, register_variant_id]
+        if regver_id is not None:
+            conds.append("vi.regver_id = ?")
+            params.append(regver_id)
+        conds.append("vi.var_id = ?")
+        params.append(var_id)
+        join = ""
+        if delivery_column_name is not None:
+            join = "JOIN variable_alias va ON va.cvid = vi.cvid "
+            conds.append("va.delivery_column_name = ?")
+            params.append(delivery_column_name)
+        return self._conn.execute(
+            "SELECT vi.cvid, vi.regver_id, vi.via_source_id FROM variable_instance vi "
+            + join
+            + "WHERE "
+            + " AND ".join(conds)
+            + " ORDER BY vi.cvid LIMIT 1",
+            params,
+        ).fetchone()
+
+    def _variant_slug(self, register_variant_id: int) -> str | None:
+        row = self._conn.execute(
+            "SELECT slug FROM register_variant WHERE register_variant_id = ?",
+            (register_variant_id,),
+        ).fetchone()
+        return row["slug"] if row else None
+
+    def _resolve_binding_target_any_variant(
+        self, provider: str, register: str, variable_slug: str, period: str
+    ) -> ResolvedVariableBinding | None:
+        """Resolve a `same_as` target by `variable_id` + period across any
+        variant (the edge is variable-grain). **Iterates** the period-overlapping
+        states (latest-era first) and returns the first whose variant actually
+        delivers `period` — i.e. has a matching `register_version` slot AND an
+        instance — so a low-id sub-annual variant overlapping the year (e.g. a
+        `HT2018`-only variant) can't shadow an annual variant (`2018`) that
+        genuinely resolves (Codex P2 #139). The result `fqid` is the target's own
+        5-seg binding under the resolved variant; missing the edition (no variant
+        delivers `period`) returns None rather than the wrong edition."""
+        var = self._lookup_variable(provider, register, variable_slug)
+        if var is None:
+            return None
+        for state in self._overlapping_states(var["variable_id"], None, period):
+            rvid = state["register_variant_id"]
+            variant_slug = self._variant_slug(rvid)
+            if variant_slug is None:
+                continue
+            try:
+                target_fqid = Fqid.binding_fqid(
+                    provider, register, variant_slug, period, variable_slug
+                )
+            except FqidError:
+                # Malformed slug — populate_slugs validates on write, so this is
+                # a build-invariant break; skip this candidate.
+                continue
+            slot = self._lookup_version_slot(target_fqid)
+            if slot is None:
+                continue  # this variant doesn't deliver the period — try the next
+            inst = self._lookup_instance(
+                var["register_id"],
+                rvid,
+                slot["regver_id"],
+                var["provider_key"],
+                state["delivery_column_name"],
+            )
+            if inst is None:
+                continue
+            return self._build_state_binding(
+                target_fqid, var, slot["regver_id"], state, inst
+            )
+        return None
+
+    def _lineage_fqid(self, source_cvid: int, variable_slug: str) -> Fqid | None:
+        """Source-side binding FQID for a consumer instance's `via_source_id`
+        (§5.6). The source shares the consumer's variable slug (lineage matches
+        on slug). None when any source slug is unpopulated."""
+        row = self._conn.execute(
+            "SELECT p.slug AS prov, r.slug AS reg, rv.slug AS variant, "
+            "rver.slug AS period FROM variable_instance vi "
+            "JOIN register_version rver ON vi.regver_id = rver.regver_id "
+            "JOIN register_variant rv "
+            "    ON vi.register_variant_id = rv.register_variant_id "
+            "JOIN register r ON vi.register_id = r.register_id "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE vi.cvid = ?",
+            (source_cvid,),
+        ).fetchone()
+        if row is None or not all(
+            (row["prov"], row["reg"], row["variant"], row["period"])
+        ):
+            return None
+        try:
+            return Fqid.binding_fqid(
+                row["prov"], row["reg"], row["variant"], row["period"], variable_slug
+            )
+        except FqidError:
+            return None
+
+    def _build_state_binding(
+        self,
+        fqid: Fqid,
+        var: sqlite3.Row,
+        regver_id: int,
+        state: sqlite3.Row,
+        inst: sqlite3.Row,
+    ) -> ResolvedVariableBinding:
+        # fqid is always a binding here (direct or same_as target) → variable set.
+        assert fqid.variable is not None
+        via = inst["via_source_id"]
+        lineage = self._lineage_fqid(via, fqid.variable) if via is not None else None
+        return ResolvedVariableBinding(
+            fqid=fqid,
+            cvid=inst["cvid"],
+            register_id=var["register_id"],
+            register_variant_id=state["register_variant_id"],
+            regver_id=regver_id,
+            var_id=int(var["provider_key"]),
+            variable_name=var["variable_name"],
+            delivery_column_name=state["delivery_column_name"],
+            state_id=state["state_id"],
+            value_set_version_label=state["value_set_version_label"],
+            via_source_id=via,
+            lineage=lineage,
+        )
 
     def _row_to_binding(
         self, row: sqlite3.Row, fqid: Fqid, variable_slug: str

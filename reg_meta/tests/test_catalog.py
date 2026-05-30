@@ -227,34 +227,101 @@ class TestStoredVariableSlug:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
         assert exc.value.code == "fqid_not_found"
 
-    @pytest.mark.xfail(
-        reason="A2.5: an A2.2 triage split mints sibling variable rows sharing "
-        "one (register_id, provider_key) but relinks variable_state, not "
-        "variable_instance — so both siblings fan out through _BINDING_QUERY to "
-        "the SAME shared instance/cvid. Distinguishing them needs the "
-        "variable_state-based resolver (A2.5); A2.1.5 only stores+reads the slug.",
-        strict=True,
-    )
     def test_split_siblings_resolve_to_distinct_bindings(self) -> None:
-        # Mirror A2.2's niva split: one delivery column `Ssyk`, two sibling
-        # variables sharing provider_key '44' (§5.7 puts several variables under
-        # one source key) but ONE variable_instance (cvid 1001, var_id 44). The
-        # interim resolver joins both siblings to that shared instance via
-        # provider_key, so each slug resolves to the SAME cvid instead of each
-        # sibling's own state — the documented A2.2→A2.5 bridge hazard.
-        conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
-        conn.execute(
+        # A2.2 resolver flip: two sibling variables share provider_key '44' (a
+        # §5.7 split puts several variables under one source key) — but each owns
+        # its variable_state AND its delivery column's own variable_instance row.
+        # A split fires precisely because ≥2 columns co-deliver in an edition, so
+        # SCB ships one cvid per column (cvid 1001/'Ssyk3', cvid 1002/'Ssyk5').
+        # The state-anchored resolver selects the variable by slug → variable_id,
+        # and `_lookup_instance` ties the cvid to the state's
+        # `delivery_column_name`, so each sibling binds its OWN column's instance
+        # — not the lowest shared cvid (Codex P1 #139).
+        conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
+        cur = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '44', 'SSYK 5-pos', 'ssyk-5pos')"
+        )
+        sib_vid = cur.lastrowid
+        # The Ssyk5 sibling's own instance (cvid 1002, same var_id/edition) plus
+        # its state under the same variant (register_variant_id 10).
+        conn.executescript(
+            "INSERT INTO variable_instance "
+            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
+            "VALUES (1002, 1, 10, 100, 44, 'int');"
+            "INSERT INTO variable_alias (cvid, delivery_column_name) "
+            "VALUES (1002, 'Ssyk5');"
+        )
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk5')",
+            (sib_vid,),
         )
         conn.commit()
         r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
         r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
         assert isinstance(r3, ResolvedVariableBinding)
         assert isinstance(r5, ResolvedVariableBinding)
-        # Desired (A2.5): each sibling resolves to its own binding. Today both
-        # fan out to the shared cvid 1001, so this fails (strict xfail).
-        assert r3.cvid != r5.cvid
+        # Each sibling resolves to its OWN state AND its OWN column-matched cvid.
+        assert r3.state_id != r5.state_id
+        assert r3.delivery_column_name == "Ssyk3"
+        assert r5.delivery_column_name == "Ssyk5"
+        assert r3.cvid == 1001
+        assert r5.cvid == 1002  # column-tied, not the lowest shared cvid
+
+    def test_absent_sibling_does_not_phantom_resolve(self) -> None:
+        # Codex P1 #139: a sibling whose delivery column has NO instance in the
+        # queried edition must NOT borrow another sibling's instance. Ssyk3
+        # delivers (cvid 1001 / 'Ssyk3'); a 'Ssyk7' sibling carries a state but
+        # no matching variable_alias, so the column-tied instance lookup finds
+        # nothing and the FQID is unresolved (pre-fix it borrowed cvid 1001).
+        conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
+        cur = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'SSYK 7-pos', 'ssyk-7pos')"
+        )
+        absent_vid = cur.lastrowid
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Ssyk7')",
+            (absent_vid,),
+        )
+        conn.commit()
+        # Ssyk3 still resolves to its own instance.
+        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        assert isinstance(r3, ResolvedVariableBinding)
+        assert r3.cvid == 1001
+        # The absent sibling does not phantom-resolve onto it.
+        with pytest.raises(RegMetaError) as exc:
+            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-7pos")
+        assert exc.value.code == "fqid_not_found"
+
+    def test_direct_resolve_skips_state_without_edition_instance(self) -> None:
+        # Codex P2 #139: the column-constrained instance lookup must not make the
+        # direct path false-miss when several states overlap the queried year and
+        # the latest-era state's column isn't delivered in THIS edition. A decoy
+        # state (later valid_from, column 'KonDecoy' with no instance) sorts ahead
+        # of the real 'Kon' state (cvid 1001); the resolver iterates past the
+        # decoy and binds the state whose column actually has an instance, rather
+        # than reporting fqid_not_found on the first miss (pre-fix it took only
+        # the first overlapping state).
+        conn = build_slugged_db()  # cvid 1001 / 'Kon', state 'Kon' @ 2018-01-01
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id=1 AND provider_key='44'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-06-01', '9999-12-31', 'int', 'KonDecoy')",
+            (vid,),
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 1001
+        assert r.delivery_column_name == "Kon"
 
 
 class TestResolveBindingLineage:
@@ -291,6 +358,15 @@ class TestResolveBindingLineage:
             f"(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
             f"VALUES (5001, 2, 20, 200, 99, 'int', 5000);"
             f"INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (5001, 'Kon');"
+            # A2.2 flip: the consumer binding resolves through variable_state
+            # (keyed by variable_id), so seed an open-range state for the LISA
+            # consumer variable under its variant (register_variant_id 20).
+            f"INSERT INTO variable_state "
+            f"(variable_id, register_variant_id, valid_from, valid_to, "
+            f" data_type, delivery_column_name) "
+            f"VALUES ((SELECT variable_id FROM variable "
+            f"         WHERE register_id = 2 AND provider_key = '99'), "
+            f"        20, '0001-01-01', '9999-12-31', 'int', 'Kon');"
         )
         conn.commit()
         return conn
@@ -795,19 +871,13 @@ class TestSameAsTraversal:
     # variant-scoped edges + a variant-keyed visited set) no longer have a
     # behaviour to test and were removed with the demotion.
 
-    @pytest.mark.xfail(
-        reason="A2.5: a variable-grain same_as edge to a register with different "
-        "variant slugs can't resolve in the interim 5-seg resolver — it inherits "
-        "the query's variant, which the target register lacks. The longitudinal "
-        "variable_state resolver (A2.5) drops the variant/period dependency.",
-        strict=True,
-    )
     def test_cross_register_same_as_variant_mismatch(self) -> None:
         # lisa/phantom ≡ rtb/kon, but RTB's variant is 'personer', not lisa's
-        # 'individer-15plus'. Querying lisa/phantom inherits 'individer-15plus'
-        # into the RTB lookup, which RTB has no edition for → fails to resolve
-        # even though rtb/personer/2018/kon exists. (No same_as edges exist
-        # today; this pins the interim cross-register gap until A2.5.)
+        # 'individer-15plus'. A2.2 flip: the same_as target resolves
+        # variant-independently (by variable_id + period over variable_state),
+        # so rtb/personer/2018/kon resolves even though the query inherited
+        # lisa's variant, which RTB lacks. (Pre-flip this was a strict xfail —
+        # the interim direct path filtered on the inherited variant slug.)
         conn = build_slugged_db()  # lisa / individer-15plus / 2018 / kon
         add_register(conn, register_id=2, slug="rtb", name="RTB")
         add_variant(
@@ -829,6 +899,54 @@ class TestSameAsTraversal:
         self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
         assert isinstance(r, ResolvedVariableBinding)
+
+    def test_same_as_target_tries_multiple_variants(self) -> None:
+        # rtb/kon is delivered in two variants: a sub-annual one (only HT2018,
+        # lower register_variant_id) and an annual one (2018). The source period
+        # is annual 2018. The any-variant path must fall THROUGH the sub-annual
+        # variant — which overlaps the year but has no `2018` register-version —
+        # to the annual variant that resolves, instead of missing (Codex P2 #139).
+        conn = build_slugged_db()  # lisa / individer-15plus / 2018
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="halvar", name="H"
+        )
+        add_variant(conn, register_variant_id=21, register_id=2, slug="helar", name="Å")
+        add_version(
+            conn,
+            regver_id=200,
+            register_variant_id=20,
+            slug="HT2018",
+            name="RTB HT2018",
+        )
+        add_version(
+            conn, regver_id=201, register_variant_id=21, slug="2018", name="RTB 2018"
+        )
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            register_variant_id=20,
+            regver_id=200,
+            var_id=99,
+            delivery_column_name="Kon",
+        )
+        add_binding(
+            conn,
+            cvid=5002,
+            register_id=2,
+            register_variant_id=21,
+            regver_id=201,
+            var_id=99,
+            delivery_column_name="Kon",
+        )
+        self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
+        assert isinstance(r, ResolvedVariableBinding)
+        # Resolved via the annual variant (cvid 5002), not the sub-annual one
+        # (5001) that overlaps the year but lacks the 2018 version slot.
+        assert r.cvid == 5002
 
 
 class TestSameAsClassificationTraversal:

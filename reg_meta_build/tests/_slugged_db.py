@@ -206,10 +206,15 @@ def add_binding(
     delivery_column_name: str,
     via_source_id: int | None = None,
 ) -> None:
-    """Insert a variable_instance + matching variable_alias row.
+    """Insert a variable_instance + matching variable_alias + variable_state row.
 
     Parent rows (register/variant/version/variable) must already exist.
     ``via_source_id`` carries §5.6 consumer-side lineage when set.
+
+    A2.2 resolver flip: binding resolution reads `variable_state` (keyed by
+    `variable_id`), so a binding fixture must seed a state too. We resolve the
+    variable_id from (register_id, var_id) and write an open-range state
+    (`0001-01-01`..`9999-12-31`) so any queried period overlaps it.
     """
     conn.execute(
         "INSERT INTO variable_instance "
@@ -221,3 +226,15 @@ def add_binding(
         "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
         (cvid, delivery_column_name),
     )
+    vid_row = conn.execute(
+        "SELECT variable_id FROM variable "
+        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+        (register_id, var_id),
+    ).fetchone()
+    if vid_row is not None:
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, ?, '0001-01-01', '9999-12-31', 'int', ?)",
+            (vid_row[0], register_variant_id, delivery_column_name),
+        )
