@@ -1467,3 +1467,245 @@ class TestOutputFormats:
     def test_no_command(self):
         _, code = _run_json([])
         assert code == 2
+
+
+# ---------------------------------------------------------------------------
+# A2.6 year-filter overlap (regression: was filtering by valid_from year only)
+# ---------------------------------------------------------------------------
+
+
+def _overlap_db():
+    """In-memory DB with three `variable_state` window shapes on one variant, so
+    the requested-year FILTER sites (search / get_schema / get_values) can be
+    exercised against multi-year, open-ended, and yearless-fallback windows.
+
+    Variable `kon` (var_id 44) carries three states under variant 10:
+      - multi-year     2010-01-01 .. 2012-12-31  (value_set 1)
+      - open-ended     2015-01-01 .. 9999-12-31  (value_set 1)
+      - yearless       0001-01-01 .. 9999-12-31  (value_set 1)
+    Distinct value_set_version_labels keep them as separate editions in
+    get_schema (which groups by window + label)."""
+    import sqlite3
+
+    from reg_meta_build.db import DDL, seed_providers
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(DDL)
+    seed_providers(conn)
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, name) "
+        "VALUES (1, 1, 'r1', 'R1')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (10, 1, 'v1', 'V1')"
+    )
+    vid = conn.execute(
+        "INSERT INTO variable (register_id, provider_key, name, slug) "
+        "VALUES (1, '44', 'Kön', 'kon')"
+    ).lastrowid
+    conn.execute(
+        "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
+        (b"\xaa" * 32,),
+    )
+    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
+    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+    conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
+    conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
+    for valid_from, valid_to, label in (
+        ("2010-01-01", "2012-12-31", "multi"),
+        ("2015-01-01", "9999-12-31", "open"),
+        ("0001-01-01", "9999-12-31", "yearless"),
+    ):
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name, value_set_id, "
+            "value_set_version_label) VALUES (?, 10, ?, ?, 'int', 'Kon', 1, ?)",
+            (vid, valid_from, valid_to, label),
+        )
+    conn.commit()
+    return conn
+
+
+class TestStateOverlapHelpers:
+    """Unit tests for the overlap predicates (the bug was START-year-only)."""
+
+    def test_covers_year_spans_full_window(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Multi-year window must match its MID and END years, not only the start.
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2010)
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2011)  # mid
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2012)  # end
+        assert not _state_covers_year("2010-01-01", "2012-12-31", 2013)
+        assert not _state_covers_year("2010-01-01", "2012-12-31", 2009)
+
+    def test_covers_year_open_ended_matches_far_future(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Open-ended (9999) must match years well past the opening year.
+        assert _state_covers_year("2015-01-01", "9999-12-31", 2015)
+        assert _state_covers_year("2015-01-01", "9999-12-31", 2099)
+        assert not _state_covers_year("2015-01-01", "9999-12-31", 2014)
+
+    def test_covers_year_yearless_matches_anything(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Yearless-fallback (0001..9999) matches any reasonable calendar year.
+        assert _state_covers_year("0001-01-01", "9999-12-31", 1850)
+        assert _state_covers_year("0001-01-01", "9999-12-31", 2024)
+
+    def test_overlaps_years_range_and_open_bounds(self):
+        from reg_meta.queries import _state_overlaps_years
+
+        # Multi-year window vs requested ranges.
+        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2011, 2011)  # mid
+        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2012, 2015)  # end edge
+        assert not _state_overlaps_years("2010-01-01", "2012-12-31", 2013, 2014)
+        # Open-ended window vs a far-future single year and open-high request.
+        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, 2099)
+        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, None)
+        # Open-low request (lo=None → 0) matches a yearless window.
+        assert _state_overlaps_years("0001-01-01", "9999-12-31", None, 1990)
+
+
+class TestGetValuesYearOverlap:
+    """get_values_by_variable filters states by cover-the-year overlap."""
+
+    def test_multi_year_state_matches_mid_and_end(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # The multi-year state (2010-2012) must answer a MID-year (2011) and an
+        # END-year (2012) query — not only its opening 2010. Without the fix the
+        # int(valid_from[:4]) == year check drops it for 2011/2012.
+        for y in (2010, 2011, 2012):
+            out = get_values_by_variable(conn, "Kön", register="R1", year=y)
+            labels = {v["label"] for inst in out["instances"] for v in inst["values"]}
+            assert labels == {"Man", "Kvinna"}, f"year {y} should hit a state"
+
+    def test_open_ended_state_matches_far_future(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 2099 is covered by both the open-ended and the yearless windows.
+        out = get_values_by_variable(conn, "Kön", register="R1", year=2099)
+        assert out["instances"], "open-ended state must match a year past its start"
+        labels = {v["label"] for inst in out["instances"] for v in inst["values"]}
+        assert labels == {"Man", "Kvinna"}
+
+    def test_yearless_window_matches_arbitrary_year(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 1850 is covered only by the yearless-fallback window (0001..9999).
+        out = get_values_by_variable(conn, "Kön", register="R1", year=1850)
+        years = {inst["valid_from"] for inst in out["instances"]}
+        assert "0001-01-01" in years
+
+    def test_nonoverlapping_year_excluded(self):
+        from reg_meta.errors import RegMetaError
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 2013 falls in the gap between the multi-year (..2012) and open-ended
+        # (2015..) windows, but the yearless window (0001..9999) still covers it,
+        # so 2013 IS matched. 0 is below the yearless window's 0001 start and the
+        # multi-year/open windows — nothing covers it.
+        out = get_values_by_variable(conn, "Kön", register="R1", year=2013)
+        assert {inst["valid_from"] for inst in out["instances"]} == {"0001-01-01"}
+        try:
+            zero = get_values_by_variable(conn, "Kön", register="R1", year=0)
+        except RegMetaError:
+            zero = {"instances": []}
+        assert zero["instances"] == []
+
+
+class TestGetSchemaYearOverlap:
+    """get_schema filters editions by validity-window overlap."""
+
+    def test_multi_year_edition_survives_mid_and_end_filter(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        # The 'multi' edition opens 2010 but spans through 2012; filtering for a
+        # MID (2011) or END (2012) year must keep it. Pre-fix (year == start)
+        # dropped it for 2011/2012.
+        for y in ("2011", "2012"):
+            out = get_schema(conn, register_variant_id="10", years=y)
+            labels = {
+                ver["value_set_version_label"]
+                for var in out["variants"]
+                for ver in var["versions"]
+            }
+            assert "multi" in labels, f"multi-year edition missing for years={y}"
+
+    def test_open_and_yearless_editions_match_far_future(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        out = get_schema(conn, register_variant_id="10", years="2099")
+        labels = {
+            ver["value_set_version_label"]
+            for var in out["variants"]
+            for ver in var["versions"]
+        }
+        # Open-ended + yearless cover 2099; the multi-year (..2012) does not.
+        assert "open" in labels
+        assert "yearless" in labels
+        assert "multi" not in labels
+
+    def test_nonoverlapping_year_drops_bounded_editions(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        # 2013: only the yearless window covers it (gap year for multi/open).
+        out = get_schema(conn, register_variant_id="10", years="2013")
+        labels = {
+            ver["value_set_version_label"]
+            for var in out["variants"]
+            for ver in var["versions"]
+        }
+        assert labels == {"yearless"}
+
+
+class TestSearchYearOverlap:
+    """_filter_search_by_years uses window overlap, not the opening year."""
+
+    def test_var_pair_kept_for_mid_year_of_multi_year_state(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2011 is the MID year of the multi-year state; the variable must survive.
+        out = search(conn, "Kön", field="varname", years="2011")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_kept_for_far_future_open_ended(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2099 only overlaps the open-ended (2015..9999) and yearless windows.
+        # Pre-fix `_years_in_range` capped both at their opening year, so 2099
+        # matched nothing and the variable was wrongly dropped.
+        out = search(conn, "Kön", field="varname", years="2099")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_kept_for_gap_year_covered_only_by_yearless(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2013 falls in the gap between the multi-year (..2012) and open-ended
+        # (2015..) windows but is covered by the yearless window (0001..9999).
+        # Pre-fix the yearless window enumerated as just [1], so 2013 matched no
+        # state and the variable was dropped.
+        out = search(conn, "Kön", field="varname", years="2013")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_dropped_when_no_window_covers_year(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # Year 0 is below every window (yearless starts at 0001) → no match.
+        out = search(conn, "Kön", field="varname", years="0-0")
+        assert out["total_count"] == 0

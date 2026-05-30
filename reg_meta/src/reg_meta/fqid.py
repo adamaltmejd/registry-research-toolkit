@@ -5,7 +5,7 @@ Forms:
     scb                                    1 seg   provider
     scb/lisa                               2 segs  register
     scb/lisa/kon                           3 segs  variable binding (the variable)
-    class/sun/2020                         2+`class/`  classification
+    class/sun/2020                         3 segs w/ `class/`  classification
 
 A2.6 grammar flip: the binding FQID names the **variable** directly and is
 3-segment (`provider/register/slug`). The variant and the period are

@@ -250,9 +250,7 @@ class TestResolveBindingLineage:
             slug="individer-15plus",
             name="Individer 15+",
         )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
-        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="LISA 2018")
         add_variable(
             conn, register_id=2, var_id=99, name="Kön", source_register_id=1, slug="kon"
         )
@@ -468,9 +466,7 @@ class TestSameAsTraversal:
         add_variant(
             conn, register_variant_id=20, register_id=2, slug="personer", name="P"
         )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
-        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="RTB 2018")
         add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
         add_binding(
             conn,

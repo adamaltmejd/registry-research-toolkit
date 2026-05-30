@@ -168,14 +168,11 @@ def add_version(
     *,
     regver_id: int,
     register_variant_id: int,
-    slug: str,
     name: str,
 ) -> None:
     # A2.6: register_version has no `slug` column (build-time-only table; version
-    # left the FQID grammar). `slug` kwarg is accepted but ignored for caller
-    # compatibility; the row exists only for build-side joins (coalescer year
-    # fallback, lineage linkers).
-    _ = slug
+    # left the FQID grammar). The row exists only for build-side joins (coalescer
+    # year fallback, lineage linkers).
     conn.execute(
         "INSERT INTO register_version "
         "(regver_id, register_variant_id, registerversionnamn) "

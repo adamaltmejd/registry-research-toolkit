@@ -101,16 +101,51 @@ def extract_year(version_name: str) -> int | None:
 
 def _years_in_range(lo_iso: str, hi_iso: str) -> list[int]:
     """A2.6: the calendar years a `variable_state` validity window
-    (`valid_from`..`valid_to`, ISO `YYYY-MM-DD`) spans. The shipped DB has no
+    (`valid_from`..`valid_to`, ISO `YYYY-MM-DD`) spans, for DISPLAY enumeration
+    only (availability year lists, lineage year ranges). The shipped DB has no
     `register_version` to read an edition year from; the per-state validity
     window is the year source now. The open-ended sentinel `9999-12-31` is
     capped at the start year so a still-active state contributes only its own
-    opening year, not a 7000-year run."""
+    opening year, not a 7000-year run.
+
+    NOT for requested-year FILTERING: capping the open end here would wrongly
+    drop a still-active state from any year past its opening. Year filters route
+    through `_state_covers_year` / `_state_overlaps_years` instead, which read
+    the sentinels with `<=`/`>=` and keep open-ended/multi-year windows."""
     lo = int(lo_iso[:4])
     hi = int(hi_iso[:4])
     if hi >= 9999:
         return [lo]
     return list(range(lo, hi + 1))
+
+
+def _state_covers_year(valid_from: str, valid_to: str, year: int) -> bool:
+    """True when a `variable_state` validity window (`valid_from`..`valid_to`,
+    ISO `YYYY-MM-DD`) covers the calendar `year`.
+
+    A2.6 overlap semantics for requested-year FILTERS: a window with year bounds
+    `[from_year, to_year]` covers `year` iff `from_year <= year <= to_year`. The
+    `9999` (open-ended) and `0001` (yearless-fallback) sentinels read naturally
+    under `<=`/`>=`, so a multi-year, still-active, or yearless window matches
+    any year it actually spans — not just its opening year."""
+    return int(valid_from[:4]) <= year <= int(valid_to[:4])
+
+
+def _state_overlaps_years(
+    valid_from: str, valid_to: str, lo: int | None, hi: int | None
+) -> bool:
+    """True when a `variable_state` validity window overlaps the requested year
+    range `[lo, hi]` (either bound may be ``None`` for open-ended).
+
+    A2.6 overlap semantics: window `[from_year, to_year]` overlaps `[lo, hi]` iff
+    `from_year <= hi AND to_year >= lo`. Missing bounds widen to the sentinels
+    (`hi=None` → 9999, `lo=None` → 0) so an open-ended request matches every
+    window, and the `9999`/`0001` window sentinels match correctly too."""
+    from_year = int(valid_from[:4])
+    to_year = int(valid_to[:4])
+    return from_year <= (hi if hi is not None else 9999) and to_year >= (
+        lo if lo is not None else 0
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -119,12 +154,6 @@ def _years_in_range(lo_iso: str, hi_iso: str) -> list[int]:
 
 
 SEARCH_FIELDS = frozenset({"datacolumn", "varname", "description", "value", "all"})
-
-
-def _year_in_range(year: int, lo: int | None, hi: int | None) -> bool:
-    if lo is not None and year < lo:
-        return False
-    return hi is None or year <= hi
 
 
 def _filter_search_by_years(
@@ -168,9 +197,8 @@ def _filter_search_by_years(
             pair = (row["register_id"], row["var_id"])
             if pair not in var_pairs:
                 continue
-            if any(
-                _year_in_range(y, year_lo, year_hi)
-                for y in _years_in_range(row["valid_from"], row["valid_to"])
+            if _state_overlaps_years(
+                row["valid_from"], row["valid_to"], year_lo, year_hi
             ):
                 valid_var_pairs.add(pair)
 
@@ -186,9 +214,8 @@ def _filter_search_by_years(
             list(reg_only_ids),
         ).fetchall()
         for row in rows:
-            if any(
-                _year_in_range(y, year_lo, year_hi)
-                for y in _years_in_range(row["valid_from"], row["valid_to"])
+            if _state_overlaps_years(
+                row["valid_from"], row["valid_to"], year_lo, year_hi
             ):
                 valid_reg_ids.add(row["register_id"])
 
@@ -591,11 +618,15 @@ def get_schema(
 
         versions_out: list[dict[str, Any]] = []
         for (valid_from, valid_to, vsv_label), states in editions.items():
+            # A2.6: filter by validity-window OVERLAP against the requested
+            # years, not the opening year alone — a multi-year or open-ended
+            # edition must survive a filter for any year it spans. `year` below
+            # stays the opening year for display.
+            if years and not _state_overlaps_years(
+                valid_from, valid_to, year_lo, year_hi
+            ):
+                continue
             year = int(valid_from[:4])
-            if year_lo is not None and year < year_lo:
-                continue
-            if year_hi is not None and year > year_hi:
-                continue
 
             col_dicts: list[dict[str, Any]] = []
             for s in states:
@@ -1211,9 +1242,15 @@ def get_values_by_variable(
     # Group code rows by value_set_id; a state's `values` is its set's codes.
     by_value_set: dict[int, list[dict[str, Any]]] = {}
     for row in state_rows:
-        inst_year = int(row["valid_from"][:4])
-        if year is not None and inst_year != year:
+        # A2.6: a state matches the requested `year` when its validity window
+        # COVERS that year (overlap), not only when the window opens in it — a
+        # coalesced multi-year state (e.g. 2020-01-01..2021-12-31) must answer a
+        # `--year 2021` query. `inst_year` (the opening year) stays for display.
+        if year is not None and not _state_covers_year(
+            row["valid_from"], row["valid_to"], year
+        ):
             continue
+        inst_year = int(row["valid_from"][:4])
         inst = {
             "state_id": row["state_id"],
             "register_id": row["register_id"],
