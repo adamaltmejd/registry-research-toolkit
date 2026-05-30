@@ -3726,7 +3726,9 @@ def link_variable_state_lineage(
 
         # Resolve the pinned source variant(s). None = register-level fallback
         # (all variants that carry a matching state) + ambiguous warning.
-        override = config.overrides.get((consumer_register, consumer_slug))
+        override = config.overrides.get(
+            (consumer_provider, consumer_register, consumer_slug)
+        )
         pinned_variant_ids: list[int] | None
         if override is not None:
             override_register, override_variant = override
@@ -3754,13 +3756,13 @@ def link_variable_state_lineage(
                     source=f'[lineage."{consumer_register}.{consumer_slug}"]',
                 )
             ]
-        elif source_register in config.defaults:
+        elif (source_provider, source_register) in config.defaults:
             pinned_variant_ids = [
                 _pin_variant_id(
                     source_provider,
                     source_register,
-                    config.defaults[source_register],
-                    source=f"[lineage_defaults] {source_register}",
+                    config.defaults[(source_provider, source_register)],
+                    source=f"[lineage_defaults] {source_provider}/{source_register}",
                 )
             ]
         else:

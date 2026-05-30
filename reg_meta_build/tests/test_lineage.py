@@ -806,11 +806,11 @@ class TestLoadLineageConfig:
         )
         cfg = load_lineage_config(tmp_path)
         assert cfg.defaults == {
-            "rtb": "folkbokforda-personer",
-            "iot": "bostadshushall",
+            ("scb", "rtb"): "folkbokforda-personer",
+            ("scb", "iot"): "bostadshushall",
         }
         assert cfg.overrides == {
-            ("lisa", "inkomst_pension"): ("rams", "individregister")
+            ("scb", "lisa", "inkomst_pension"): ("rams", "individregister")
         }
 
     def test_classifications_toml_skipped(self, tmp_path: Path):
@@ -823,7 +823,7 @@ class TestLoadLineageConfig:
             '[classification."SUN2020"]\nslug = "sun"\n', encoding="utf-8"
         )
         cfg = load_lineage_config(tmp_path)
-        assert cfg.defaults == {"rtb": "folkbokforda-personer"}
+        assert cfg.defaults == {("scb", "rtb"): "folkbokforda-personer"}
 
     def test_missing_source_variant_in_override_fails(self, tmp_path: Path):
         (tmp_path / "scb.toml").write_text(
@@ -833,11 +833,31 @@ class TestLoadLineageConfig:
             load_lineage_config(tmp_path)
         assert exc.value.code == "lineage_override_incomplete"
 
-    def test_duplicate_default_across_files_fails(self, tmp_path: Path):
+    def test_same_register_slug_across_providers_coexist(self, tmp_path: Path):
+        """register.slug is not globally unique: an `rtb` default under scb and
+        an `rtb` default under sos are DISTINCT (provider-keyed), not a
+        duplicate. The linker resolves each against its own source provider
+        (Codex P2 on #145)."""
         (tmp_path / "scb.toml").write_text(
             '[lineage_defaults]\nrtb = "folkbokforda-personer"\n', encoding="utf-8"
         )
         (tmp_path / "sos.toml").write_text(
+            '[lineage_defaults]\nrtb = "grund-bosattning"\n', encoding="utf-8"
+        )
+        cfg = load_lineage_config(tmp_path)
+        assert cfg.defaults == {
+            ("scb", "rtb"): "folkbokforda-personer",
+            ("sos", "rtb"): "grund-bosattning",
+        }
+
+    def test_duplicate_default_same_provider_fails(self, tmp_path: Path):
+        """The same (provider, source-register) default declared twice — here
+        across `scb.toml` and its `.auto` companion, both provider `scb` — is a
+        fail-fast duplicate."""
+        (tmp_path / "scb.toml").write_text(
+            '[lineage_defaults]\nrtb = "folkbokforda-personer"\n', encoding="utf-8"
+        )
+        (tmp_path / "scb.auto.toml").write_text(
             '[lineage_defaults]\nrtb = "grund-bosattning"\n', encoding="utf-8"
         )
         with pytest.raises(RegMetaError) as exc:
