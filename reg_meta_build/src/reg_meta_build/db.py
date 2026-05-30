@@ -1457,9 +1457,27 @@ def _common_prefix_len(strings: list[str]) -> int:
 
 def _group_from_year(grp: _StateGroup) -> int | None:
     """The group's lower-bound year — observed `regver_min`, else `unika_min`.
-    Mirrors the materializer's `from_year`, so triage buckets collisions on the
-    exact `valid_from` the uniqueness index keys on."""
+    Mirrors the materializer's `from_year`, so `_collapse_residual` buckets on
+    the exact `valid_from` the uniqueness index keys on."""
     return grp.regver_min if grp.regver_min is not None else grp.unika_min
+
+
+def _group_year_span(grp: _StateGroup) -> range:
+    """Every year in the group's materialized validity span (observed
+    `regver_min..regver_max`, else `unika_min..max`). The state covers this whole
+    interval at resolve time, so two columns whose spans overlap a year are a
+    real same-year co-delivery even if their lower bounds differ — contested-
+    column detection buckets by the full span, not just `_group_from_year`
+    (Codex #139). Bounded by observed years (never the open-ended sentinel)."""
+    if grp.regver_min is not None:
+        lo, hi = grp.regver_min, grp.regver_max
+    else:
+        lo, hi = grp.unika_min, grp.unika_max
+    if lo is None:
+        return range(0)
+    if hi is None or hi < lo:
+        hi = lo
+    return range(lo, hi + 1)
 
 
 def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
@@ -1590,12 +1608,15 @@ def _triage_groups(
         # split column's history is mis-attributed to the lex-first sibling
         # (Codex P2 #139).
         col_of = {gk: gk[8] for gk in gkeys}  # column component (gkey index 8)
-        bucket_cols: dict[tuple[int, int | None], set[str]] = defaultdict(set)
+        # Bucket each group by EVERY year in its validity span, not just its
+        # lower bound: `Hemkommun` (2018–2019) and `Skolkommun` (2019) co-deliver
+        # in 2019 and must register as contested even though their `valid_from`s
+        # differ (Codex #139).
+        bucket_cols: dict[tuple[int, int], set[str]] = defaultdict(set)
         for gk in gkeys:
             grp = groups[gk]
-            bucket_cols[(grp.register_variant_id, _group_from_year(grp))].add(
-                col_of[gk]
-            )
+            for yr in _group_year_span(grp):
+                bucket_cols[(grp.register_variant_id, yr)].add(col_of[gk])
         contested: set[str] = set()
         for cols in bucket_cols.values():
             if len(cols) > 1:

@@ -231,6 +231,44 @@ class TestSplit:
         )
         assert by_col["Telefon"] not in (by_col["Hemkommun"], by_col["Skolkommun"])
 
+    def test_overlapping_span_collision_splits(self, tmp_path: Path) -> None:
+        # Hemkommun is delivered in 2018 AND 2019 (one component spanning
+        # 2018-2019); Skolkommun only in 2019. They co-deliver in 2019, so the
+        # var_id must split even though their valid_from differ — contested
+        # detection buckets by the full validity span, not the lower bound
+        # (Codex #139).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="Hemkommun",
+                    cvid=9700,
+                    var_id=960,
+                    year="2018",
+                    regver_id=121,
+                ),
+                _var_row(
+                    colname="Hemkommun",
+                    cvid=9701,
+                    var_id=960,
+                    year="2019",
+                    regver_id=122,
+                ),
+                _var_row(
+                    colname="Skolkommun",
+                    cvid=9702,
+                    var_id=960,
+                    year="2019",
+                    regver_id=122,
+                ),
+            ],
+        )
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = '960'"
+        ).fetchall()
+        assert len(sibs) == 2, "overlapping-span co-delivery in 2019 must split"
+
 
 class TestNoSplitOnColumnRename:
     """Codex P1 #139: columns that never co-occur in the same (variant, year) —
