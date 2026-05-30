@@ -1179,6 +1179,38 @@ def _fallback_slug(provider_key: str) -> str:
     return derive_variable_slug(f"v{provider_key}") or "v"
 
 
+def _split_sibling_disc(
+    conn: sqlite3.Connection, register_id: int, provider_key: str | int
+) -> dict[int, str]:
+    """variable_id → §5.7 split-sibling discriminator for the siblings sharing
+    ``(register_id, provider_key)``: the sibling's EARLIEST delivery-column
+    slug, uniquified in column-sorted order (§5.4 rename stability, #139).
+
+    Single source of truth for BOTH the auto.toml cache key
+    (:func:`populate_variable_slugs`) and the curated ``same_as`` / slug-override
+    anchor (:func:`_variable_source_slug`), so the two never diverge — a curator
+    anchoring on ``<reg>.<var>.<disc>`` selects the same sibling the auto key
+    named. Returns ``{}`` / a single entry for an unsplit key (harmless)."""
+    rows = conn.execute(
+        "SELECT v.variable_id, (SELECT vs.delivery_column_name FROM variable_state vs "
+        " WHERE vs.variable_id = v.variable_id AND vs.delivery_column_name IS NOT NULL "
+        " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) "
+        "FROM variable v WHERE v.register_id = ? AND v.provider_key = CAST(? AS TEXT)",
+        (register_id, provider_key),
+    ).fetchall()
+    disc: dict[int, str] = {}
+    used: set[str] = set()
+    for kol, vid in sorted((r[1] or "", r[0]) for r in rows):
+        base = derive_variable_slug(kol) or "x"
+        cand, i = base, 0
+        while cand in used:
+            i += 1
+            cand = f"{base}-{i}"
+        used.add(cand)
+        disc[vid] = cand
+    return disc
+
+
 def populate_variable_slugs(
     conn: sqlite3.Connection,
     slug_dir: Path,
@@ -1278,47 +1310,21 @@ def populate_variable_slugs(
         # uniquified in **column-sorted** order (NOT variable_id order, which is
         # an AUTOINCREMENT that changes across rebuilds) so two siblings whose
         # columns slug-collide still get distinct, rebuild-stable keys.
+        # §5.7 split siblings share one `provider_key`, so `(register_id,
+        # provider_key)` is NOT a unique auto-slug cache key — without a
+        # discriminator the last sibling overwrites the shared `auto.toml` entry
+        # and the next build replays that one slug onto every sibling →
+        # `UNIQUE(register_id, slug)` fails (Codex #139). Disambiguate a *split*
+        # provider_key's siblings by `_split_sibling_disc` (earliest-column slug,
+        # uniquified) — the same helper `_variable_source_slug` uses, so a
+        # curated `same_as`/override anchored on `<reg>.<var>.<disc>` picks the
+        # same sibling. Unsplit provider_keys (96%) keep the plain 2-part key.
         split_pk = {
             key for key, n in Counter((r[1], r[2]) for r in variables).items() if n > 1
         }
-        # §5.4 stability: base a split sibling's discriminator on its EARLIEST
-        # (original) delivery column, not the latest one used for slug
-        # derivation — so the sibling's published auto-slug key survives a later
-        # SCB column rename (Codex P2 #139). This covers the common
-        # "renamed-in-a-later-edition" case; full cross-rename immutability (a
-        # rename of the *original* column, or true rename tracking) belongs to
-        # the deferred slug-freeze work and is moot pre-v1 (UNFROZEN regenerates
-        # slugs every build).
-        early_kol: dict[int, str] = {}
-        if split_pk:
-            for r in conn.execute(
-                "SELECT v.variable_id, (SELECT vs.delivery_column_name "
-                " FROM variable_state vs WHERE vs.variable_id = v.variable_id "
-                " AND vs.delivery_column_name IS NOT NULL "
-                " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) "
-                "FROM variable v JOIN register r ON v.register_id = r.register_id "
-                "JOIN provider p ON r.provider_id = p.provider_id WHERE p.slug = ?",
-                (provider_slug,),
-            ):
-                if r[1] is not None:
-                    early_kol[r[0]] = r[1]
         disc: dict[int, str] = {}  # variable_id → discriminator (split siblings)
-        _split_members: dict[tuple[int, str], list[tuple[str, int]]] = defaultdict(list)
-        for _vid, _rid, _pk, _n, _kol in variables:
-            if (_rid, _pk) in split_pk:
-                _split_members[(_rid, _pk)].append(
-                    (early_kol.get(_vid) or _kol or "", _vid)
-                )
-        for members in _split_members.values():
-            used_disc: set[str] = set()
-            for _kol, _vid in sorted(members):
-                base = derive_variable_slug(_kol) or "x"
-                cand, i = base, 0
-                while cand in used_disc:
-                    i += 1
-                    cand = f"{base}-{i}"
-                used_disc.add(cand)
-                disc[_vid] = cand
+        for _rid, _pk in split_pk:
+            disc.update(_split_sibling_disc(conn, _rid, _pk))
 
         def _source_id(rid: int, pk: str, vid: int) -> str:
             if (rid, pk) in split_pk:
@@ -1493,20 +1499,20 @@ def _variable_source_slug(
 ) -> str:
     """Read the stored variable slug for a `[variable]` TOML entry's source.
 
-    The TOML key (`34.137`) identifies a `(register_id, var_id)` pair → its
-    stored `variable.slug` anchors the `a_variable` side of the same_as edge.
-    A2.1.5 stores the canonical slug on `variable.slug`; `populate_variable_slugs`
-    runs before `materialize_same_as_edges`, so the column is populated here.
+    The TOML key identifies the variable whose `variable.slug` anchors the
+    `a_variable` side of the same_as edge. `populate_variable_slugs` runs before
+    `materialize_same_as_edges`, so the slug column is populated here.
 
-    Pre-A2.2, `(register_id, provider_key)` is 1:1 with a variable. Once A2.2
-    triage splits mint several variables under one source key, the bare key is
-    **ambiguous** — picking an arbitrary sibling would attach the edge to the
-    wrong variable — so we reject it rather than guess (a §5.7 sibling
-    discriminator resolves it when A2.2 lands). The "no slug" error covers the
-    genuine curation case (variable absent / underivable at build).
+    A bare `<register_id>.<var_id>` key is 1:1 with a variable unless A2.2 triage
+    split that `var_id` into siblings — then it is **ambiguous** and rejected.
+    A curator anchors a specific sibling with the 3-part
+    `<register_id>.<var_id>.<discriminator>` key (the same discriminator the
+    auto-slug cache uses, via `_split_sibling_disc`); we resolve it to the one
+    matching sibling. The "no slug" error covers the genuine curation case
+    (variable absent / underivable at build).
     """
     rows = conn.execute(
-        "SELECT slug FROM variable "
+        "SELECT variable_id, slug FROM variable "
         "WHERE register_id = ? AND provider_key = CAST(? AS TEXT) "
         "AND slug IS NOT NULL",
         (register_id, var_id),
@@ -1522,18 +1528,33 @@ def _variable_source_slug(
             f'`[variable."{entry.source_id}"]` in {entry.provider}.toml); mark '
             "the entry deprecated=true if the variable is retired.",
         )
+    parts = entry.source_id.split(".")
+    disc_key = parts[2] if len(parts) == 3 else None
+    if disc_key is not None:
+        sib_disc = _split_sibling_disc(conn, register_id, var_id)
+        matches = [slug for vid, slug in rows if sib_disc.get(vid) == disc_key]
+        if len(matches) == 1:
+            return matches[0]
+        raise _err(
+            "slug_same_as_unresolved_source",
+            f"{entry.provider}.toml: variable.{entry.source_id!r} split-sibling "
+            f"discriminator {disc_key!r} matches {len(matches)} of {len(rows)} "
+            f"siblings under (register_id, provider_key).",
+            "Use the exact §5.7 sibling discriminator (the earliest "
+            "delivery-column slug); `reg-meta-build precheck-slugs` lists them.",
+        )
     if len(rows) > 1:
         raise _err(
             "slug_same_as_ambiguous_source",
             f"{entry.provider}.toml: variable.{entry.source_id!r} maps to "
             f"{len(rows)} variables sharing (register_id, provider_key) "
-            f"(slugs {sorted(r[0] for r in rows)!r}) — an A2.2 triage split. A "
+            f"(slugs {sorted(r[1] for r in rows)!r}) — an A2.2 triage split. A "
             f"same_as anchored on the bare source key is ambiguous; the edge "
             f"would attach to an arbitrary sibling.",
-            "Anchor the same_as on the specific sibling via the §5.7 sibling "
-            "discriminator (lands with A2.2). Pre-A2.2 this cannot occur.",
+            "Anchor the same_as on the specific sibling via the 3-part "
+            '`[variable."<reg>.<var>.<discriminator>"]` key.',
         )
-    return rows[0][0]
+    return rows[0][1]
 
 
 def _validate_variable_target(
@@ -1712,7 +1733,9 @@ def materialize_same_as_edges(
                     f"(SlugEntry.provider is None).",
                     "Report this as a bug — provider should be set by the TOML loader.",
                 )
-            register_id, var_id = _parse_variant_id(entry.source_id)
+            # `_parse_variable_id` accepts the optional split-sibling 3rd
+            # segment; `_variable_source_slug` resolves it to the sibling.
+            register_id, var_id = _parse_variable_id(entry.source_id)
             row = conn.execute(
                 "SELECT r.slug FROM register r "
                 "JOIN provider p ON r.provider_id = p.provider_id "
