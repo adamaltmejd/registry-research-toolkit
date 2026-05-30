@@ -3546,8 +3546,8 @@ def _variable_set_via_same_as(
     # A seed already in the source register is the identity match (the source
     # node always is; the consumer node is, only in the degenerate self-source
     # case the linker filters out). Seed the result before expanding.
-    for _provider, register, variable in seeds:
-        if register == source_register:
+    for provider, register, variable in seeds:
+        if provider == source_provider and register == source_register:
             result.add(variable)
 
     while frontier:
@@ -3563,9 +3563,15 @@ def _variable_set_via_same_as(
                 continue
             visited.add(node)
             frontier.append(node)
-            # Collect only nodes in the source register; provider is part of
-            # the match because same_as crosses provider boundaries.
-            if row[1] == source_register:
+            # Collect only nodes in the source PROVIDER's source register. The
+            # BFS deliberately traverses cross-provider edges, so a hop into a
+            # different provider that reuses the same register slug must NOT
+            # contribute a slug — it would be applied back to the source
+            # provider's register (the source-states query keys on
+            # source_register_id) and could false-match a same-named variable
+            # there. register.slug is not globally unique, so provider is
+            # load-bearing (Codex/Copilot P2 on #144).
+            if row[0] == source_provider and row[1] == source_register:
                 result.add(row[2])
     return result
 
@@ -3610,25 +3616,32 @@ def link_variable_state_lineage(
     # Resolve every override's source register/variant to a register_variant_id
     # up front; this also validates the named variants exist (fail-fast). Cache
     # variant-slug→id per register so we touch the DB once per source register.
-    variant_ids_by_register: dict[str, dict[str, int]] = {}
+    # Keyed (provider_slug, register_slug): register.slug is NOT globally unique,
+    # so a pin for a source register must not resolve to another provider's
+    # variant that happens to share the register + variant slug (Codex P2 on #144).
+    variant_ids_by_register: dict[tuple[str, str], dict[str, int]] = {}
 
-    def _variants_for(register_slug: str) -> dict[str, int]:
-        cached = variant_ids_by_register.get(register_slug)
+    def _variants_for(provider_slug: str, register_slug: str) -> dict[str, int]:
+        key = (provider_slug, register_slug)
+        cached = variant_ids_by_register.get(key)
         if cached is not None:
             return cached
         rows = conn.execute(
             "SELECT rv.register_variant_id, rv.slug FROM register_variant rv "
             "JOIN register r ON rv.register_id = r.register_id "
-            "WHERE r.slug = ? AND rv.slug IS NOT NULL "
+            "JOIN provider p ON r.provider_id = p.provider_id "
+            "WHERE p.slug = ? AND r.slug = ? AND rv.slug IS NOT NULL "
             "ORDER BY rv.slug",
-            (register_slug,),
+            (provider_slug, register_slug),
         ).fetchall()
         mapping = {row[1]: row[0] for row in rows}
-        variant_ids_by_register[register_slug] = mapping
+        variant_ids_by_register[key] = mapping
         return mapping
 
-    def _pin_variant_id(register_slug: str, variant_slug: str, *, source: str) -> int:
-        variant_id = _variants_for(register_slug).get(variant_slug)
+    def _pin_variant_id(
+        provider_slug: str, register_slug: str, variant_slug: str, *, source: str
+    ) -> int:
+        variant_id = _variants_for(provider_slug, register_slug).get(variant_slug)
         if variant_id is None:
             raise RegMetaError(
                 exit_code=EXIT_CONFIG,
@@ -3713,7 +3726,9 @@ def link_variable_state_lineage(
 
         # Resolve the pinned source variant(s). None = register-level fallback
         # (all variants that carry a matching state) + ambiguous warning.
-        override = config.overrides.get((consumer_register, consumer_slug))
+        override = config.overrides.get(
+            (consumer_provider, consumer_register, consumer_slug)
+        )
         pinned_variant_ids: list[int] | None
         if override is not None:
             override_register, override_variant = override
@@ -3735,17 +3750,19 @@ def link_variable_state_lineage(
                 )
             pinned_variant_ids = [
                 _pin_variant_id(
+                    source_provider,
                     source_register,
                     override_variant,
                     source=f'[lineage."{consumer_register}.{consumer_slug}"]',
                 )
             ]
-        elif source_register in config.defaults:
+        elif (source_provider, source_register) in config.defaults:
             pinned_variant_ids = [
                 _pin_variant_id(
+                    source_provider,
                     source_register,
-                    config.defaults[source_register],
-                    source=f"[lineage_defaults] {source_register}",
+                    config.defaults[(source_provider, source_register)],
+                    source=f"[lineage_defaults] {source_provider}/{source_register}",
                 )
             ]
         else:
@@ -3778,7 +3795,10 @@ def link_variable_state_lineage(
             if pinned_variant_ids is None:
                 pin_desc = "any variant"
             else:
-                slug_by_id = {v: k for k, v in _variants_for(source_register).items()}
+                slug_by_id = {
+                    v: k
+                    for k, v in _variants_for(source_provider, source_register).items()
+                }
                 pinned_slugs = sorted(
                     slug_by_id.get(v, str(v)) for v in pinned_variant_ids
                 )
