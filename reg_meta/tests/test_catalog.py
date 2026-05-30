@@ -298,6 +298,31 @@ class TestStoredVariableSlug:
             Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-7pos")
         assert exc.value.code == "fqid_not_found"
 
+    def test_direct_resolve_skips_state_without_edition_instance(self) -> None:
+        # Codex P2 #139: the column-constrained instance lookup must not make the
+        # direct path false-miss when several states overlap the queried year and
+        # the latest-era state's column isn't delivered in THIS edition. A decoy
+        # state (later valid_from, column 'KonDecoy' with no instance) sorts ahead
+        # of the real 'Kon' state (cvid 1001); the resolver iterates past the
+        # decoy and binds the state whose column actually has an instance, rather
+        # than reporting fqid_not_found on the first miss (pre-fix it took only
+        # the first overlapping state).
+        conn = build_slugged_db()  # cvid 1001 / 'Kon', state 'Kon' @ 2018-01-01
+        vid = conn.execute(
+            "SELECT variable_id FROM variable WHERE register_id=1 AND provider_key='44'"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, data_type, delivery_column_name) "
+            "VALUES (?, 10, '2018-06-01', '9999-12-31', 'int', 'KonDecoy')",
+            (vid,),
+        )
+        conn.commit()
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        assert isinstance(r, ResolvedVariableBinding)
+        assert r.cvid == 1001
+        assert r.delivery_column_name == "Kon"
+
 
 class TestResolveBindingLineage:
     """§5.6 consumer-side binding lineage exposure on Catalog.resolve."""

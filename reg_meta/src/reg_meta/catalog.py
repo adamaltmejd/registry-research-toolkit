@@ -368,21 +368,31 @@ class Catalog:
         slot = self._lookup_version_slot(fqid)
         if slot is None:
             return None
-        state = self._lookup_state(
+        # Iterate the period-overlapping states (latest-era first) and bind the
+        # first whose delivery column actually has an instance in the selected
+        # edition. One year can hold several overlapping states — a subannual
+        # variant renamed between terms (HT/VT), or a multi-vintage fold — and
+        # the latest-era state's column needn't be the one delivered in *this*
+        # regver, so taking only the first would falsely report fqid_not_found
+        # now that `_lookup_instance` is column-constrained (Codex P2 #139).
+        # Mirrors `_resolve_binding_target_any_variant`. (A same-year *rename*
+        # folded to a single collapsed state is the deferred year-granular limit
+        # — `_overlapping_states` docstring — not reachable by iterating here.)
+        for state in self._overlapping_states(
             var["variable_id"], slot["register_variant_id"], fqid.period
-        )
-        if state is None:
-            return None
-        inst = self._lookup_instance(
-            var["register_id"],
-            slot["register_variant_id"],
-            slot["regver_id"],
-            var["provider_key"],
-            state["delivery_column_name"],
-        )
-        if inst is None:
-            return None
-        return self._build_state_binding(fqid, var, slot["regver_id"], state, inst)
+        ):
+            inst = self._lookup_instance(
+                var["register_id"],
+                slot["register_variant_id"],
+                slot["regver_id"],
+                var["provider_key"],
+                state["delivery_column_name"],
+            )
+            if inst is not None:
+                return self._build_state_binding(
+                    fqid, var, slot["regver_id"], state, inst
+                )
+        return None
 
     def _resolve_binding_via_same_as(
         self, fqid: Fqid
@@ -523,18 +533,6 @@ class Catalog:
             return rows
         lo, hi = f"{year:04d}-01-01", f"{year:04d}-12-31"
         return [r for r in rows if r["valid_from"] <= hi and r["valid_to"] >= lo]
-
-    def _lookup_state(
-        self, variable_id: int, register_variant_id: int, period: str | None
-    ) -> sqlite3.Row | None:
-        """The variable's latest-era `variable_state` covering `period` within
-        the pinned `register_variant_id` (the direct path). When several states
-        co-deliver the period (a §5.7 multi-vintage fold), the interim point
-        resolver returns the latest-era one rather than an arbitrary lexical
-        pick; A2.5 `resolve_at` lists all and a `@value_set_version` FQID
-        selector (A2.6) narrows to one."""
-        states = self._overlapping_states(variable_id, register_variant_id, period)
-        return states[0] if states else None
 
     def _lookup_instance(
         self,
