@@ -231,12 +231,11 @@ class TestSplit:
         )
         assert by_col["Telefon"] not in (by_col["Hemkommun"], by_col["Skolkommun"])
 
-    def test_overlapping_span_collision_splits(self, tmp_path: Path) -> None:
-        # Hemkommun is delivered in 2018 AND 2019 (one component spanning
-        # 2018-2019); Skolkommun only in 2019. They co-deliver in 2019, so the
-        # var_id must split even though their valid_from differ — contested
-        # detection buckets by the full validity span, not the lower bound
-        # (Codex #139).
+    def test_shared_edition_across_years_splits(self, tmp_path: Path) -> None:
+        # Hemkommun is delivered in the 2018 AND 2019 editions; Skolkommun only
+        # in 2019. They share the 2019 edition (regver 122) → contested → split,
+        # even though Hemkommun's valid_from is 2018 — contested detection
+        # buckets by edition, not lower-bound year (Codex #139).
         conn = _build(
             tmp_path,
             [
@@ -267,7 +266,31 @@ class TestSplit:
             "SELECT variable_id FROM variable "
             "WHERE register_id = 1 AND provider_key = '960'"
         ).fetchall()
-        assert len(sibs) == 2, "overlapping-span co-delivery in 2019 must split"
+        assert len(sibs) == 2, "shared-edition co-delivery must split"
+
+    def test_subannual_term_rename_does_not_split(self, tmp_path: Path) -> None:
+        # Two distinct editions in the SAME calendar year (a sub-annual variant,
+        # e.g. HT2018 then VT2018). A term-to-term column rename is sequential,
+        # not co-delivered — bucketing by edition (not year) must NOT split it
+        # into siblings (Codex #139).
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(
+                    colname="OldKol", cvid=9800, var_id=970, year="2018", regver_id=130
+                ),
+                _var_row(
+                    colname="NewKol", cvid=9801, var_id=970, year="2018", regver_id=131
+                ),
+            ],
+        )
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = '970'"
+        ).fetchall()
+        assert len(sibs) == 1, (
+            "a term-to-term rename (distinct editions) must NOT split"
+        )
 
 
 class TestNoSplitOnColumnRename:

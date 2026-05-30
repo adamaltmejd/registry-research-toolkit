@@ -1361,6 +1361,11 @@ class _StateGroup:
     # year only updates regver_min/max.
     latest_alias: str | None = None
     latest_alias_regver: int | None = None
+    # The set of register_version (edition) ids this group was observed in. The
+    # §5.7 contested-column gate buckets by *edition*, not calendar year, so a
+    # sub-annual variant (e.g. one with both HT2018 and VT2018) doesn't treat a
+    # term-to-term column rename as a same-year co-delivery (Codex #139).
+    regvers: set[int] = field(default_factory=set)
 
 
 # ─────────────────────────────────────────────────────────────────────────
@@ -1460,24 +1465,6 @@ def _group_from_year(grp: _StateGroup) -> int | None:
     Mirrors the materializer's `from_year`, so `_collapse_residual` buckets on
     the exact `valid_from` the uniqueness index keys on."""
     return grp.regver_min if grp.regver_min is not None else grp.unika_min
-
-
-def _group_year_span(grp: _StateGroup) -> range:
-    """Every year in the group's materialized validity span (observed
-    `regver_min..regver_max`, else `unika_min..max`). The state covers this whole
-    interval at resolve time, so two columns whose spans overlap a year are a
-    real same-year co-delivery even if their lower bounds differ — contested-
-    column detection buckets by the full span, not just `_group_from_year`
-    (Codex #139). Bounded by observed years (never the open-ended sentinel)."""
-    if grp.regver_min is not None:
-        lo, hi = grp.regver_min, grp.regver_max
-    else:
-        lo, hi = grp.unika_min, grp.unika_max
-    if lo is None:
-        return range(0)
-    if hi is None or hi < lo:
-        hi = lo
-    return range(lo, hi + 1)
 
 
 def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
@@ -1608,15 +1595,18 @@ def _triage_groups(
         # split column's history is mis-attributed to the lex-first sibling
         # (Codex P2 #139).
         col_of = {gk: gk[8] for gk in gkeys}  # column component (gkey index 8)
-        # Bucket each group by EVERY year in its validity span, not just its
-        # lower bound: `Hemkommun` (2018–2019) and `Skolkommun` (2019) co-deliver
-        # in 2019 and must register as contested even though their `valid_from`s
-        # differ (Codex #139).
+        # Bucket each group by the EDITIONS (register_version ids) it was
+        # delivered in — not the calendar year. Two columns co-deliver iff they
+        # share an edition: this both catches a multi-edition span (`Hemkommun`
+        # 2018-2019 + `Skolkommun` 2019 share the 2019 edition → contested) AND
+        # avoids treating a term-to-term rename in a sub-annual variant
+        # (`HT2018` → `VT2018`, distinct editions, same year) as a co-delivery
+        # (Codex #139).
         bucket_cols: dict[tuple[int, int], set[str]] = defaultdict(set)
         for gk in gkeys:
             grp = groups[gk]
-            for yr in _group_year_span(grp):
-                bucket_cols[(grp.register_variant_id, yr)].add(col_of[gk])
+            for regver in grp.regvers:
+                bucket_cols[(grp.register_variant_id, regver)].add(col_of[gk])
         contested: set[str] = set()
         for cols in bucket_cols.values():
             if len(cols) > 1:
@@ -2075,6 +2065,10 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
             # First non-null classification across the group's cvids — the §5.7
             # fold primary signal.
             grp.classification_id = row["classification_id"]
+
+        # Editions this group was delivered in — the §5.7 contested gate buckets
+        # by edition, not year (regver_id is NOT NULL on variable_instance).
+        grp.regvers.add(row["regver_id"])
 
         # Track register_version year per cvid (fallback signal) on the
         # group, and also on the per-variable max so the materializer can

@@ -484,7 +484,16 @@ class Catalog:
         `period`, **latest-era first** (most recent `valid_from`/`valid_to`, then
         deterministic). `register_variant_id` None spans every variant (the
         variable-grain `same_as` path). A yearless period (`_default`) returns
-        every state in order."""
+        every state in order.
+
+        INTERIM precision limit (Codex #139, deferred): `variable_state` validity
+        is **year-granular** (the coalescer year-expands), so for a sub-annual
+        variant with two editions in one calendar year (`HT2018` / `VT2018`) both
+        states cover all of 2018 and can't be told apart here — resolving one term
+        may return the other term's `delivery_column_name`/`value_set_version_label`
+        (the `cvid` is still edition-exact via `_lookup_instance`). The fix needs
+        sub-annual state bounds or carrying the regver into selection — part of
+        the A2.5/A2.6 resolver+state-model rework, not this interim flip."""
         if register_variant_id is not None:
             rows = self._conn.execute(
                 "SELECT state_id, register_variant_id, data_type, data_length, "
