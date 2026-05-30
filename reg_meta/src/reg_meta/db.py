@@ -91,11 +91,25 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   related/lineage/lineage_warnings (query-side only — no DDL impact beyond the
 #   above). A 4.6.0 DB lacks the `beskrivning` column + successor index, so it's
 #   rejected via the minor-version gate. Additive within the 4.x line.
+# - 4.8.0 (A2.6, current): the FQID grammar flip (§5.2). The binding FQID drops
+#   to 3 segments (`provider/register/slug`) and the variant / register_version
+#   FQID kinds are gone — variant + period are delivery coordinates, not
+#   identity. Shipped-DB shape change: the build-only `register_version`,
+#   `population`, and `object_type` tables are DROPped before ship (like
+#   `unika_summary` at 4.1.0) — `register_version` is consumed build-time (the
+#   coalescer's valid_from/to year fallback + the lineage linkers) then dropped;
+#   `population`/`object_type` are unread write-only debug tables (their content
+#   moves to the provenance DB, A4.2). The `register_version.slug` column +
+#   ~1,264 curated version-slug TOML entries are removed (version slugs leave the
+#   model entirely). A 4.7.0 DB still carrying those tables resolves nothing
+#   under the 3-seg grammar, so it's rejected via the minor-version gate.
+#   Query-side only beyond the drops; no break to the 4.x line (5.0.0 stays
+#   reserved for A2.7's `variable_instance` drop).
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking change. Also
 #   drops `variable_instance.via_source_id` and `link_consumer_side_bindings`
 #   (superseded by `variable_state_lineage`, 4.6.0).
-SCHEMA_VERSION = "4.7.0"
+SCHEMA_VERSION = "4.8.0"
 DB_FILENAME = "reg_meta.db"
 
 

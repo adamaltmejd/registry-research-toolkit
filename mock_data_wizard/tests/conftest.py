@@ -188,10 +188,10 @@ def reg_meta_db(tmp_path: Path) -> Path:
         "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) "
         "VALUES (100, 10, '2020')"
     )
-    conn.execute(
-        "INSERT INTO variable (register_id, provider_key, name, definition) "
-        "VALUES (1, '44', 'Kön', 'Kön enligt folkbokföring')"
-    )
+    variable_id = conn.execute(
+        "INSERT INTO variable (register_id, provider_key, name, definition, slug) "
+        "VALUES (1, '44', 'Kön', 'Kön enligt folkbokföring', 'kon')"
+    ).lastrowid
     conn.execute(
         "INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "
         "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
@@ -200,7 +200,17 @@ def reg_meta_db(tmp_path: Path) -> Path:
         "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'Kon')"
     )
     # Two value codes: 1=Man, 2=Kvinna
-    assign_value_set(conn, 1001, [("1", "Man"), ("2", "Kvinna")])
+    value_set_id = assign_value_set(conn, 1001, [("1", "Man"), ("2", "Kvinna")])
+    # A2.6: get_schema (and thus reg_meta.compare) reads variable_state now, not
+    # variable_instance × register_version. Seed one 2020 state carrying the
+    # delivery column + value set so the schema/compare paths surface this
+    # variable.
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, data_length, delivery_column_name, value_set_id) "
+        "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', '1', 'Kon', ?)",
+        (variable_id, value_set_id),
+    )
     conn.commit()
     conn.close()
     return db_path

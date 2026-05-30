@@ -21,18 +21,22 @@ def slugged_conn() -> sqlite3.Connection:
 
 
 class TestGetRegisterFqid:
-    def test_register_and_variant_carry_fqids(
+    def test_register_fqid_and_variant_subresource(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
         results = get_register(slugged_conn, "LISA")
         assert len(results) == 1
         reg = results[0]
         assert reg["fqid"] == "scb/lisa"
-        assert reg["variants"][0]["fqid"] == "scb/lisa/individer-15plus"
+        # A2.6: a variant is a register sub-resource, not a slash-path FQID. It
+        # carries the parent register FQID + its browse slug (§5.2).
+        variant = reg["variants"][0]
+        assert variant["register_fqid"] == "scb/lisa"
+        assert variant["slug"] == "individer-15plus"
+        assert "fqid" not in variant
 
     def test_null_slugs_yield_null_fqid(self) -> None:
-        # Pre-1c state: slug columns NULL → fqid key present but None;
-        # legacy fields unchanged.
+        # Pre-1c state: register slug NULL → fqid key present but None.
         conn = build_slugged_db(
             register=("LISA", None, 1, 1),
             variant=("V", None, 10),
@@ -42,38 +46,34 @@ class TestGetRegisterFqid:
         )
         results = get_register(conn, "LISA")
         assert results[0]["fqid"] is None
-        assert results[0]["variants"][0]["fqid"] is None
+        # The variant's parent register FQID is None too (register slug NULL).
+        assert results[0]["variants"][0]["register_fqid"] is None
 
 
 class TestGetSchemaFqid:
-    def test_variant_version_binding_fqids(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
+    def test_edition_and_binding_fqids(self, slugged_conn: sqlite3.Connection) -> None:
         result = get_schema(slugged_conn, register_variant_id="10")
         variant = result["variants"][0]
-        assert variant["fqid"] == "scb/lisa/individer-15plus"
+        # A2.6: variant carries the register FQID + browse slug, not a variant FQID.
+        assert variant["register_fqid"] == "scb/lisa"
+        assert variant["variant"] == "individer-15plus"
+        # Editions are validity windows now (no register_version FQID).
         version = variant["versions"][0]
-        assert version["fqid"] == "scb/lisa/individer-15plus/2018"
+        assert version["valid_from"] == "2018-01-01"
+        assert "fqid" not in version
+        # The column carries the 3-seg binding FQID.
         column = version["columns"][0]
-        assert column["fqid"] == "scb/lisa/individer-15plus/2018/kon"
-
-    def test_sub_year_period_preserved_in_fqid(self) -> None:
-        # An `HT2020` version must not collapse to `.../2020/...`; the FQID
-        # carries the most-specific period token so sub-year versions stay
-        # distinguishable.
-        conn = build_slugged_db(version=("LISA HT2020", "HT2020", 100))
-        result = get_schema(conn, register_variant_id="10")
-        version = result["variants"][0]["versions"][0]
-        assert version["fqid"] == "scb/lisa/individer-15plus/HT2020"
-        column = version["columns"][0]
-        assert column["fqid"] == "scb/lisa/individer-15plus/HT2020/kon"
+        assert column["fqid"] == "scb/lisa/kon"
 
 
 class TestGetVarinfoFqid:
     def test_instance_binding_fqid(self, slugged_conn: sqlite3.Connection) -> None:
         results = get_varinfo(slugged_conn, "Kön")
         instance = results[0]["instances"][0]
-        assert instance["fqid"] == "scb/lisa/individer-15plus/2018/kon"
+        # A2.6: 3-seg binding FQID; the per-state validity window replaces the
+        # register_version coordinate.
+        assert instance["fqid"] == "scb/lisa/kon"
+        assert instance["valid_from"] == "2018-01-01"
 
 
 class TestGetClassificationFqid:

@@ -4,13 +4,30 @@ Forms:
 
     scb                                    1 seg   provider
     scb/lisa                               2 segs  register
-    scb/lisa/individer-15plus              3 segs  register_variant
-    scb/lisa/individer-15plus/2018         4 segs  register_version
-    scb/lisa/individer-15plus/2018/kon     5 segs  variable binding
-    class/sun/2020                         3 segs  classification
+    scb/lisa/kon                           3 segs  variable binding (the variable)
+    class/sun/2020                         3 segs w/ `class/`  classification
 
-The leading ``class/`` discriminates classification FQIDs from the
-3-segment register_variant form; ``class`` is reserved everywhere else.
+A2.6 grammar flip: the binding FQID names the **variable** directly and is
+3-segment (`provider/register/slug`). The variant and the period are
+**delivery coordinates** (carried on `variable_state` / passed to
+`resolve_at`), NOT FQID segments — so the variant FQID kind and the
+register_version FQID kind are gone (§5.2 DECISION POINT 2). With the variant
+slot removed, a 3-segment string like `scb/lisa/individer-15plus` is
+unambiguously a binding (variable slug `individer-15plus`); there is no
+3-segment variant address to collide with.
+
+The leading ``class/`` discriminates classification FQIDs from the binding
+form; ``class`` is reserved everywhere else. (Classification stays 3-segment
+`class/<slug>/<version>` here — the §5.2 2-segment `class/<slug>` flip needs a
+coordinated re-bake of the curated `(slug, version)` classification slugs into
+globally-unique version-baked slugs and a uniqueness-constraint change, which
+is out of A2.6's binding/variant/version scope; it is its own stage,
+MIGRATION_PLAN A2.6.1, gating A3.4.)
+
+The period grammar (``is_period`` / ``period_token_to_bounds`` /
+``derive_period``) survives: ``resolve_at`` expands a polymorphic period to ISO
+bounds, and the build-time coalescer derives per-edition periods from
+``registerversionnamn``. It is no longer an FQID segment.
 """
 
 from __future__ import annotations
@@ -28,8 +45,6 @@ if TYPE_CHECKING:
 class FqidKind(StrEnum):
     PROVIDER = "provider"
     REGISTER = "register"
-    REGISTER_VARIANT = "register_variant"
-    REGISTER_VERSION = "register_version"
     VARIABLE_BINDING = "variable_binding"
     CLASSIFICATION = "classification"
 
@@ -194,8 +209,8 @@ def validate_slug(
         if allow_default:
             return
         raise FqidError(
-            f"`_default` is reserved for the register_variant and "
-            f"register_version slots; got it in {slot_name}"
+            f"`_default` is reserved for the register_variant slug "
+            f"(a delivery coordinate, §5.1); got it in {slot_name}"
         )
     if value == CLASSIFICATION_PREFIX:
         raise FqidError(
@@ -216,14 +231,6 @@ def validate_slug(
         )
 
 
-def _validate_version_slot(value: str) -> None:
-    """§5.2: the version slot accepts either a period token (`2018`, `HT2020`,
-    `2018-Q3`, `2018-H1`, `2018-01`, `2018-01-15`) or a curated slug
-    (`ackumulerat-register`, `_default`).
-    """
-    validate_slug(value, "register_version", allow_default=True, allow_period=True)
-
-
 def _validate_period(value: str) -> None:
     if not is_period(value):
         raise FqidError(
@@ -235,23 +242,26 @@ def _validate_period(value: str) -> None:
 
 @dataclass(frozen=True)
 class Fqid:
-    """Parsed FQID. Exactly one set of fields is populated per kind."""
+    """Parsed FQID. Exactly one set of fields is populated per kind.
+
+    A2.6: the binding FQID names the variable (`provider/register/variable`);
+    `variant` and `period` are no longer FQID fields (they are delivery
+    coordinates carried elsewhere — §5.1/§5.2).
+    """
 
     kind: FqidKind
     provider: str | None = None
     register: str | None = None
-    variant: str | None = None
-    period: str | None = None
     variable: str | None = None
     classification: str | None = None
     version: str | None = None
 
     def __str__(self) -> str:
-        """Canonical FQID string. Stored FQIDs never elide (§5.2)."""
+        """Canonical FQID string."""
         if self.kind is FqidKind.CLASSIFICATION:
             return f"{CLASSIFICATION_PREFIX}/{self.classification}/{self.version}"
         parts = [self.provider]
-        for v in (self.register, self.variant, self.period, self.variable):
+        for v in (self.register, self.variable):
             if v is None:
                 break
             parts.append(v)
@@ -269,53 +279,17 @@ class Fqid:
         return cls(kind=FqidKind.REGISTER, provider=provider, register=register)
 
     @classmethod
-    def register_variant_fqid(cls, provider: str, register: str, variant: str) -> Fqid:
+    def binding_fqid(cls, provider: str, register: str, variable: str) -> Fqid:
+        """A2.6: the 3-segment binding FQID names the variable directly
+        (`provider/register/variable`). The variant and period are delivery
+        coordinates resolved via `resolve_at`, not FQID segments (§5.2)."""
         validate_slug(provider, FqidKind.PROVIDER)
         validate_slug(register, FqidKind.REGISTER)
-        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
-        return cls(
-            kind=FqidKind.REGISTER_VARIANT,
-            provider=provider,
-            register=register,
-            variant=variant,
-        )
-
-    @classmethod
-    def register_version_fqid(
-        cls, provider: str, register: str, variant: str, period: str
-    ) -> Fqid:
-        validate_slug(provider, FqidKind.PROVIDER)
-        validate_slug(register, FqidKind.REGISTER)
-        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
-        _validate_version_slot(period)
-        return cls(
-            kind=FqidKind.REGISTER_VERSION,
-            provider=provider,
-            register=register,
-            variant=variant,
-            period=period,
-        )
-
-    @classmethod
-    def binding_fqid(
-        cls,
-        provider: str,
-        register: str,
-        variant: str,
-        period: str,
-        variable: str,
-    ) -> Fqid:
-        validate_slug(provider, FqidKind.PROVIDER)
-        validate_slug(register, FqidKind.REGISTER)
-        validate_slug(variant, FqidKind.REGISTER_VARIANT, allow_default=True)
-        _validate_version_slot(period)
         validate_slug(variable, "variable")
         return cls(
             kind=FqidKind.VARIABLE_BINDING,
             provider=provider,
             register=register,
-            variant=variant,
-            period=period,
             variable=variable,
         )
 
@@ -333,12 +307,11 @@ class Fqid:
 def parse(value: str) -> Fqid:
     """Parse and validate an FQID string. Raises ``FqidError`` on any violation.
 
-    §5.2 accepts elided variant slot when the position is unambiguous: a period
-    in slot 3 (after provider/register) signals an omitted `_default` variant,
-    so `scb/r/2022` parses as `scb/r/_default/2022` and `scb/r/2022/kon` as
-    `scb/r/_default/2022/kon`. The period-slug ban guarantees this never
-    collides with a real variant slug. Canonical (non-elided) form is what
-    ``__str__`` and stored FQIDs use.
+    A2.6 grammar (§5.2): kind is determined purely by segment count + the
+    `class/` discriminator. 1 = provider, 2 = register, 3 = variable binding
+    (the FQID names the variable). The `class/` prefix marks a classification
+    (`class/<slug>/<version>`). There is no variant or period segment — both
+    are delivery coordinates resolved via `resolve_at`, not part of identity.
     """
     if not isinstance(value, str):
         raise FqidError(f"FQID must be a string, got {type(value).__name__}")
@@ -363,22 +336,10 @@ def parse(value: str) -> Fqid:
     if n == 2:
         return Fqid.register_fqid(segs[0], segs[1])
     if n == 3:
-        if is_period(segs[2]):
-            return Fqid.register_version_fqid(
-                segs[0], segs[1], DEFAULT_VARIANT_SLUG, segs[2]
-            )
-        return Fqid.register_variant_fqid(segs[0], segs[1], segs[2])
-    if n == 4:
-        if is_period(segs[2]):
-            return Fqid.binding_fqid(
-                segs[0], segs[1], DEFAULT_VARIANT_SLUG, segs[2], segs[3]
-            )
-        return Fqid.register_version_fqid(segs[0], segs[1], segs[2], segs[3])
-    if n == 5:
-        return Fqid.binding_fqid(segs[0], segs[1], segs[2], segs[3], segs[4])
+        return Fqid.binding_fqid(segs[0], segs[1], segs[2])
     raise FqidError(
-        f"FQID has {n} segments; grammar accepts 1-5 (or 3 with `class/` prefix): "
-        f"{value!r}"
+        f"FQID has {n} segments; grammar accepts 1-3 (or 3 with `class/` "
+        f"prefix for a classification): {value!r}"
     )
 
 

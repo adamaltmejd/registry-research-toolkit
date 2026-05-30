@@ -60,10 +60,6 @@ slug = "rtb"
 slug = "folkbokforda-personer"
 display_group = "Folkbokförda personer"
 
-# 'Kvartal 1-3 fr.o.m. 2009' (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.53.13829"]
-slug = "q1-q3-2009"
-
 [register_variant."2.54"]
 slug = "familjer-fran-1998"
 display_group = "Familjer från 1998-"
@@ -72,13 +68,6 @@ display_group = "Familjer från 1998-"
 slug = "civilstandsandringar"
 display_group = "Civilståndsändringar"
 
-# 'Gifta 1996-1997' (residual: "Gifta -1997")
-[register_version."2.56.15015"]
-slug = "gifta-1996-1997"
-
-# 'Registrerade partners 1995-1997' (residual: "Registrerade partners -1997")
-[register_version."2.56.15016"]
-slug = "registrerade-partners-1995-1997"
 [register_variant."2.57"]
 slug = "doda"
 display_group = "Döda"
@@ -126,46 +115,6 @@ display_group = "In- och utvandringar 1968-1997"
 [register_variant."2.1524"]
 slug = "familjer-1990-1997"
 display_group = "Familjer 1990-1997"
-
-# 'Kvartal 1-3 fr.o.m. 2010' (vs 3366:2010) (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.56.13802"]
-slug = "q1-q3-2010"
-
-# 'Änkor/ änklingar 1968-1997' (residual: "Änkor/ änklingar -1997")
-[register_version."2.56.15013"]
-slug = "ankor-anklingar-1968-1997"
-
-# 'Gifta 1968-1995' (residual: "Gifta -1995")
-[register_version."2.56.15014"]
-slug = "gifta-1968-1995"
-
-# 'Skilda 1968-1997' (residual: "Skilda -1997")
-[register_version."2.56.15017"]
-slug = "skilda-1968-1997"
-
-# 'Kvartal 1-3 fr.o.m. 2010' (vs 3367:2010) (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.57.13811"]
-slug = "q1-q3-2010"
-
-# 'Kvartal 1-3 fr.o.m. 2010' (vs 3379:2010) (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.60.13818"]
-slug = "q1-q3-2010"
-
-# 'Kvartal 1-3 fr.o.m. 2010' (vs 3370:2010) (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.61.13813"]
-slug = "q1-q3-2010"
-
-# 'Kvartal 1-3 fr.o.m 2010' (vs 3377:2010) (residual: "Kvartal 1-3 fr.o.m")
-[register_version."2.62.13815"]
-slug = "q1-q3-2010"
-
-# 'Kvartal 1-3 fr.o.m 2010' (vs 3376:2010) (residual: "Kvartal 1-3 fr.o.m")
-[register_version."2.63.13814"]
-slug = "q1-q3-2010"
-
-# 'Kvartal 1-3 fr.o.m. 2010' (vs 3378:2010) (residual: "Kvartal 1-3 fr.o.m.")
-[register_version."2.64.13824"]
-slug = "q1-q3-2010"
 
 # Fastighetstaxering (FTR)
 [register."7"]
@@ -297,11 +246,6 @@ display_group = "Biståndsmottagare"
 slug = "ekonomiskt-bistand"
 display_group = "Ekonomiskt bistånd, kvartalsstatistik"
 
-# 'Ekonomiskt bistånd, kvartal' (singleton: rolling-quarterly aggregate,
-# no period token in the source name despite the 'kvartal' label)
-[register_version."22.508.1025"]
-slug = "_default"
-
 # Befolkningens utbildning (Utbildningsregistret)
 [register."24"]
 slug = "ureg"
@@ -326,9 +270,6 @@ display_group = "Personens samtliga utbildningar"
 slug = "komvux"
 display_group = "Komvux"
 
-# 'Komvux HT 1988 - VT 2024' (residual: "Komvux HT - VT 2024")
-[register_version."24.1630.17564"]
-slug = "komvux-ht1988-vt2024"
 [register_variant."24.1631"]
 slug = "gymnasieintyg"
 display_group = "Gymnasieintyg"
@@ -336,26 +277,6 @@ display_group = "Gymnasieintyg"
 [register_variant."24.1634"]
 slug = "samlat-betygsdokument"
 display_group = "Samlat betygsdokument/studiebevis"
-
-# 'Person-År'
-[register_version."24.1225.7368"]
-slug = "_default"
-
-# 'Komvux och samlat betygsdokument/studiebevis'
-[register_version."24.1630.17540"]
-slug = "samlat-betygsdokument-studiebevis"
-
-# 'Gymnasieintyg, ackumulerat register'
-[register_version."24.1631.17536"]
-slug = "ackumulerat-register"
-
-# 'Gymnasieintyg, summerade poäng'
-[register_version."24.1631.17537"]
-slug = "summerade-poang"
-
-# 'Samlat betygsdokument/studiebevis, ackumulerat'
-[register_version."24.1634.17563"]
-slug = "ackumulerat"
 
 # Inkomst- och taxeringsregistret (IoT)
 [register."25"]
@@ -365,375 +286,13 @@ slug = "iot"
 slug = "individer-och-dodsbon"
 display_group = "Individer och dödsbon"
 
-# '2008, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.2771"]
-slug = "2008"
-
-# '2007, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.3442"]
-slug = "2007"
-
-# '2009, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.3446"]
-slug = "2009"
-
-# '2006, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5796"]
-slug = "2006"
-
-# '2005, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5811"]
-slug = "2005"
-
-# '2004, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5815"]
-slug = "2004"
-
-# '2003, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5820"]
-slug = "2003"
-
-# '2002, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5822"]
-slug = "2002"
-
-# '2001, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5847"]
-slug = "2001"
-
-# '2000, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5889"]
-slug = "2000"
-
-# '1999, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5893"]
-slug = "1999"
-
-# '1998, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.8651"]
-slug = "1998"
-
-# '1997, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.9926"]
-slug = "1997"
-
-# '1996, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13268"]
-slug = "1996"
-
-# '1995, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13388"]
-slug = "1995"
-
-# '1994, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13457"]
-slug = "1994"
-
-# '1993, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13458"]
-slug = "1993"
-
-# '1992, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13459"]
-slug = "1992"
-
-# '1991, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13632"]
-slug = "1991"
-
-# '1960, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13667"]
-slug = "1960"
-
-# '1990, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13817"]
-slug = "1990"
-
-# '1968, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13834"]
-slug = "1968"
-
-# '1969, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14239"]
-slug = "1969"
-
-# '1970, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14245"]
-slug = "1970"
-
-# '1971, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14261"]
-slug = "1971"
-
-# '1972, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14404"]
-slug = "1972"
-
-# '1973, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14405"]
-slug = "1973"
-
-# '1974, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14452"]
-slug = "1974"
-
-# '1975, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14464"]
-slug = "1975"
-
-# '1976, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14465"]
-slug = "1976"
-
-# '1977, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14466"]
-slug = "1977"
-
-# '1978, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14485"]
-slug = "1978"
-
-# '1979, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14709"]
-slug = "1979"
-
-# '1980, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14747"]
-slug = "1980"
-
-# '1981, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.14751"]
-slug = "1981"
-
-# '1982, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15033"]
-slug = "1982"
-
-# '1983, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15061"]
-slug = "1983"
-
-# '1984, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15104"]
-slug = "1984"
-
-# '1985, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15109"]
-slug = "1985"
-
-# '1986, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15112"]
-slug = "1986"
-
-# '1987, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15119"]
-slug = "1987"
-
-# '1988, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15130"]
-slug = "1988"
-
-# '1989, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15150"]
-slug = "1989"
 [register_variant."25.1153"]
 slug = "bostadshushall"
 display_group = "Bostadshushåll"
 
-# '2013, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.5662"]
-slug = "2013"
-
-# '2012, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.5812"]
-slug = "2012"
-
-# '2014, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.7310"]
-slug = "2014"
-
-# '2015, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.9968"]
-slug = "2015"
-
-# '2016, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.11664"]
-slug = "2016"
-
-# '2011, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.12305"]
-slug = "2011"
-
-# '2017, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.12940"]
-slug = "2017"
-
-# '2018, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.13804"]
-slug = "2018"
-
-# '2019, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.15781"]
-slug = "2019"
-
-# '2020, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.17955"]
-slug = "2020"
 [register_variant."25.1642"]
 slug = "kontrolluppgifter-rantor"
 display_group = "Kontrolluppgifter räntor och utdelningar (KURU)"
-
-# '2010, preliminär version' (vs 4067:2010) (residual: ", preliminär version")
-[register_version."25.763.3720"]
-slug = "preliminar-version-2010"
-
-# '2010, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.4067"]
-slug = "2010"
-
-# '2011, preliminär version' (vs 4346:2011) (residual: ", preliminär version")
-[register_version."25.763.4306"]
-slug = "preliminar-version-2011"
-
-# '2011, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.4346"]
-slug = "2011"
-
-# '2012, preliminär version' (vs 5226:2012) (residual: ", preliminär version")
-[register_version."25.763.4978"]
-slug = "preliminar-version-2012"
-
-# '2012, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5226"]
-slug = "2012"
-
-# '2013, preliminär version' (vs 5626:2013) (residual: ", preliminär version")
-[register_version."25.763.5521"]
-slug = "preliminar-version-2013"
-
-# '2013, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.5626"]
-slug = "2013"
-
-# '2014, preliminär version' (vs 7298:2014) (residual: ", preliminär version")
-[register_version."25.763.6156"]
-slug = "preliminar-version-2014"
-
-# '2014, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.7298"]
-slug = "2014"
-
-# '2015, preliminär version' (vs 9969:2015) (residual: ", preliminär version")
-[register_version."25.763.9811"]
-slug = "preliminar-version-2015"
-
-# '2015, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.9969"]
-slug = "2015"
-
-# '2016, preliminär version' (vs 11663:2016) (residual: ", preliminär version")
-[register_version."25.763.11480"]
-slug = "preliminar-version-2016"
-
-# '2016, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.11663"]
-slug = "2016"
-
-# '2017, preliminär version' (vs 13443:2017) (residual: ", preliminär version")
-[register_version."25.763.12573"]
-slug = "preliminar-version-2017"
-
-# '2017, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13443"]
-slug = "2017"
-
-# '2018, preliminär version' (vs 13744:2018) (residual: ", preliminär version")
-[register_version."25.763.13544"]
-slug = "preliminar-version-2018"
-
-# '2018, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.13744"]
-slug = "2018"
-
-# '2019, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.15780"]
-slug = "2019"
-
-# '2019, preliminär version' (vs 15780:2019) (residual: ", preliminär version")
-[register_version."25.763.15811"]
-slug = "preliminar-version-2019"
-
-# '2020, preliminär version' (vs 17939:2020) (residual: ", preliminär version")
-[register_version."25.763.17695"]
-slug = "preliminar-version-2020"
-
-# '2020, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.17939"]
-slug = "2020"
-
-# '2021, preliminär version' (vs 18529:2021) (residual: ", preliminär version")
-[register_version."25.763.18513"]
-slug = "preliminar-version-2021"
-
-# '2021, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.18529"]
-slug = "2021"
-
-# '2022, preliminär version' (vs 18994:2022) (residual: ", preliminär version")
-[register_version."25.763.18903"]
-slug = "preliminar-version-2022"
-
-# '2022, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.18994"]
-slug = "2022"
-
-# '2023, preliminär version' (vs 19675:2023) (residual: ", preliminär version")
-[register_version."25.763.19421"]
-slug = "preliminar-version-2023"
-
-# '2023, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.19675"]
-slug = "2023"
-
-# '2024, preliminär version' (vs 20241:2024) (residual: ", preliminär version")
-[register_version."25.763.20144"]
-slug = "preliminar-version-2024"
-
-# '2024, slutlig version' (residual: ", slutlig version")
-[register_version."25.763.20241"]
-slug = "2024"
-
-# '2021, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.18530"]
-slug = "2021"
-
-# '2021VX, slutlig version' (vs 18530:2021) (residual: "VX, slutlig version")
-[register_version."25.1153.18563"]
-slug = "vx-2021"
-
-# '2022, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.18996"]
-slug = "2022"
-
-# '2022VX, slutlig version' (vs 18996:2022) (residual: "VX, slutlig version")
-[register_version."25.1153.18997"]
-slug = "vx-2022"
-
-# '2023, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.19677"]
-slug = "2023"
-
-# '2023VX, slutlig version' (vs 19677:2023) (residual: "VX, slutlig version")
-[register_version."25.1153.19678"]
-slug = "vx-2023"
-
-# '2024, slutlig version' (residual: ", slutlig version")
-[register_version."25.1153.20242"]
-slug = "2024"
-
-# '2024VX, slutlig version' (vs 20242:2024) (residual: "VX, slutlig version")
-[register_version."25.1153.20243"]
-slug = "vx-2024"
 
 # Registerbaserad arbetsmarknadsstatistik (RAMS)
 [register."26"]
@@ -823,33 +382,6 @@ display_group = "Lägenhet och hushåll"
 slug = "vy-fob"
 display_group = "Vy"
 
-# 'FoB1985' (residual: "FoB")
-[register_version."32.83.18279"]
-slug = "1985"
-
-# 'FoB1990' (residual: "FoB")
-[register_version."32.83.18614"]
-slug = "1990"
-
-# 'FoB1980' (residual: "FoB")
-[register_version."32.83.19241"]
-slug = "1980"
-
-# 'FoB1975' (residual: "FoB")
-[register_version."32.83.19272"]
-slug = "1975"
-
-# 'FoB1970' (residual: "FoB")
-[register_version."32.83.19351"]
-slug = "1970"
-
-# 'FoB1965' (residual: "FoB")
-[register_version."32.83.19647"]
-slug = "1965"
-
-# 'FoB1960' (residual: "FoB")
-[register_version."32.83.19667"]
-slug = "1960"
 # Longitudinell integrationsdatabas för sjukförsäkrings- och arbetsmarknadsstudier (LISA)
 [register."34"]
 slug = "lisa"
@@ -882,18 +414,6 @@ display_group = "Individer in- och utvandring"
 slug = "individer-avlidna"
 display_group = "Individer avlidna"
 
-# 'Födelseland'
-[register_version."34.1582.15549"]
-slug = "_default"
-
-# 'In- och utvandrade'
-[register_version."34.1583.15550"]
-slug = "_default"
-
-# 'Avlidna'
-[register_version."34.1584.15551"]
-slug = "_default"
-
 # Nybörjare i Komvux
 [register."42"]
 slug = "nyborjare-komvux"
@@ -920,23 +440,14 @@ display_group = "Sökande och antagna till högskoleutbildning på grundnivå oc
 slug = "grundutbildning-1977"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1977 års studieordning"
 
-# 'Läsåren 1977/1978 - 1992/1993' (residual: "Läsåren /1978 - 1992/1993")
-[register_version."47.3.7"]
-slug = "lasar-1977-1993"
 [register_variant."47.4"]
 slug = "grundutbildning-examina"
 display_group = "Examina inom grundläggande högskoleutbildning"
 
-# 'Läsåren 1977/1978 - 2024/2025' (residual: "Läsåren /1978 - 2024/2025")
-[register_version."47.4.20158"]
-slug = "lasar-1977-2025"
 [register_variant."47.5"]
 slug = "grundutbildning-examina-aldre"
 display_group = "Äldre examina inom grundläggande högskoleutbildning"
 
-# 'Läsåren 1962/1963 - 1976/1977' (residual: "Läsåren /1963 - 1976/1977")
-[register_version."47.5.4"]
-slug = "lasar-1962-1977"
 [register_variant."47.10"]
 slug = "doktorander-aktivitet"
 display_group = "Doktorander inom högskoleutbildning på forskarnivå, aktivitet"
@@ -953,9 +464,6 @@ display_group = "Doktorander inom högskoleutbildning på forskarnivå, examina"
 slug = "grundutbildning-poang"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng"
 
-# 'Läsåren 1993/1994 - 2024/2025' (residual: "Läsåren /1994 - 2024/2025")
-[register_version."47.17.20174"]
-slug = "lasar-1993-2025"
 [register_variant."47.104"]
 slug = "personal-vid-universitet"
 display_group = "Personal vid universitet och högskolor 2001–"
@@ -964,9 +472,6 @@ display_group = "Personal vid universitet och högskolor 2001–"
 slug = "grundutbildning-1993"
 display_group = "Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning"
 
-# 'Läsåren 1993/1994 - 2024/2025' (residual: "Läsåren /1994 - 2024/2025")
-[register_version."47.264.20173"]
-slug = "lasar-1993-2025"
 [register_variant."47.960"]
 slug = "personal-1995-2000"
 display_group = "Personal vid universitet och högskola, september 1995-2000"
@@ -995,61 +500,6 @@ display_group = "Forskarutbildning, beslut om tillgodoräknande"
 slug = "sokande-sommarkurser"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser"
 
-# 'Sommarterminen 2020' (residual: "Sommarterminen")
-[register_version."47.1623.16401"]
-slug = "sommarterminen-2020"
-
-# 'Sommarterminen 2019' (residual: "Sommarterminen")
-[register_version."47.1623.16409"]
-slug = "sommarterminen-2019"
-
-# 'Sommarterminen 2018' (residual: "Sommarterminen")
-[register_version."47.1623.16411"]
-slug = "sommarterminen-2018"
-
-# 'Sommarterminen 2017' (residual: "Sommarterminen")
-[register_version."47.1623.16412"]
-slug = "sommarterminen-2017"
-
-# 'Sommarterminen 2016' (residual: "Sommarterminen")
-[register_version."47.1623.16413"]
-slug = "sommarterminen-2016"
-
-# 'Sommarterminen 2015' (residual: "Sommarterminen")
-[register_version."47.1623.16414"]
-slug = "sommarterminen-2015"
-
-# 'Sommarterminen 2014' (residual: "Sommarterminen")
-[register_version."47.1623.16415"]
-slug = "sommarterminen-2014"
-
-# 'Sommarterminen 2013' (residual: "Sommarterminen")
-[register_version."47.1623.16416"]
-slug = "sommarterminen-2013"
-
-# 'Sommarterminen 2012' (residual: "Sommarterminen")
-[register_version."47.1623.16417"]
-slug = "sommarterminen-2012"
-
-# 'Sommarterminen 2011' (residual: "Sommarterminen")
-[register_version."47.1623.16418"]
-slug = "sommarterminen-2011"
-
-# 'Sommarterminen 2021' (residual: "Sommarterminen")
-[register_version."47.1623.17719"]
-slug = "sommarterminen-2021"
-
-# 'Sommarterminen 2022' (residual: "Sommarterminen")
-[register_version."47.1623.18424"]
-slug = "sommarterminen-2022"
-
-# 'Sommarterminen 2023' (residual: "Sommarterminen")
-[register_version."47.1623.18913"]
-slug = "sommarterminen-2023"
-
-# 'Sommarterminen 2024' (residual: "Sommarterminen")
-[register_version."47.1623.19451"]
-slug = "sommarterminen-2024"
 [register_variant."47.1624"]
 slug = "sokande-snabbstatistik"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik"
@@ -1057,190 +507,6 @@ display_group = "Sökande och antagna till högskoleutbildning på grundnivå oc
 [register_variant."47.1625"]
 slug = "sokande-internationella-omgangar"
 display_group = "Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar"
-
-# '2018H'
-[register_version."47.1466.13411"]
-slug = "HT2018"
-
-# '2017H'
-[register_version."47.1466.14924"]
-slug = "HT2017"
-
-# '2019H'
-[register_version."47.1466.14925"]
-slug = "HT2019"
-
-# '2016H'
-[register_version."47.1466.14926"]
-slug = "HT2016"
-
-# '2015H'
-[register_version."47.1466.14927"]
-slug = "HT2015"
-
-# '2014H'
-[register_version."47.1466.14928"]
-slug = "HT2014"
-
-# '2013H'
-[register_version."47.1466.14929"]
-slug = "HT2013"
-
-# '2012H'
-[register_version."47.1466.14930"]
-slug = "HT2012"
-
-# '2011H'
-[register_version."47.1466.14931"]
-slug = "HT2011"
-
-# '2010H'
-[register_version."47.1466.14932"]
-slug = "HT2010"
-
-# '2009H'
-[register_version."47.1466.14933"]
-slug = "HT2009"
-
-# '2008H'
-[register_version."47.1466.14934"]
-slug = "HT2008"
-
-# '2018V'
-[register_version."47.1466.14935"]
-slug = "VT2018"
-
-# '2017V'
-[register_version."47.1466.14936"]
-slug = "VT2017"
-
-# '2007H'
-[register_version."47.1466.14937"]
-slug = "HT2007"
-
-# '2006H'
-[register_version."47.1466.14938"]
-slug = "HT2006"
-
-# '2005H'
-[register_version."47.1466.14939"]
-slug = "HT2005"
-
-# '2016V'
-[register_version."47.1466.14940"]
-slug = "VT2016"
-
-# '2004H'
-[register_version."47.1466.14941"]
-slug = "HT2004"
-
-# '2015V'
-[register_version."47.1466.14942"]
-slug = "VT2015"
-
-# '2003H'
-[register_version."47.1466.14943"]
-slug = "HT2003"
-
-# '2002H'
-[register_version."47.1466.14944"]
-slug = "HT2002"
-
-# '2014V'
-[register_version."47.1466.14945"]
-slug = "VT2014"
-
-# '2013V'
-[register_version."47.1466.14947"]
-slug = "VT2013"
-
-# '2012V'
-[register_version."47.1466.14948"]
-slug = "VT2012"
-
-# '2011V'
-[register_version."47.1466.14949"]
-slug = "VT2011"
-
-# '2010V'
-[register_version."47.1466.14950"]
-slug = "VT2010"
-
-# '2009V'
-[register_version."47.1466.14951"]
-slug = "VT2009"
-
-# '2008V'
-[register_version."47.1466.14952"]
-slug = "VT2008"
-
-# '2007V'
-[register_version."47.1466.14953"]
-slug = "VT2007"
-
-# '2006V'
-[register_version."47.1466.14954"]
-slug = "VT2006"
-
-# '2005V'
-[register_version."47.1466.14955"]
-slug = "VT2005"
-
-# '2004V'
-[register_version."47.1466.14956"]
-slug = "VT2004"
-
-# '2003V'
-[register_version."47.1466.14957"]
-slug = "VT2003"
-
-# '2002V'
-[register_version."47.1466.14958"]
-slug = "VT2002"
-
-# '2019V'
-[register_version."47.1466.14960"]
-slug = "VT2019"
-
-# '2020V'
-[register_version."47.1466.15553"]
-slug = "VT2020"
-
-# '2020H'
-[register_version."47.1466.17852"]
-slug = "HT2020"
-
-# '2021V'
-[register_version."47.1466.17854"]
-slug = "VT2021"
-
-# '2021H'
-[register_version."47.1466.18198"]
-slug = "HT2021"
-
-# '2022V'
-[register_version."47.1466.18427"]
-slug = "VT2022"
-
-# '2022H'
-[register_version."47.1466.18698"]
-slug = "HT2022"
-
-# '2023V'
-[register_version."47.1466.18917"]
-slug = "VT2023"
-
-# '2023H'
-[register_version."47.1466.19457"]
-slug = "HT2023"
-
-# '2024V'
-[register_version."47.1466.19458"]
-slug = "VT2024"
-
-# '2024H'
-[register_version."47.1466.20040"]
-slug = "HT2024"
 
 # Lönestrukturstatistik, privat sektor (SLP)
 [register."50"]
@@ -1438,28 +704,9 @@ slug = "hek"
 slug = "kosthushall"
 display_group = "Kosthushåll"
 
-# '2011 - Boendestatistik' (residual: "- Boendestatistik")
-[register_version."97.93.4421"]
-slug = "boendestatistik-2011"
 [register_variant."97.99"]
 slug = "individregister"
 display_group = "Individregister"
-
-# '2010 preliminär' (vs 3997:2010) (residual: "preliminär")
-[register_version."97.93.3860"]
-slug = "preliminar-2010"
-
-# '2012 - Boendestatistik' (vs 4935:2012) (residual: "- Boendestatistik")
-[register_version."97.93.4934"]
-slug = "boendestatistik-2012"
-
-# '2013 - Boendestatistik' (vs 5823:2013) (residual: "- Boendestatistik")
-[register_version."97.93.5757"]
-slug = "boendestatistik-2013"
-
-# '2010 preliminär' (vs 3998:2010) (residual: "preliminär")
-[register_version."97.99.3818"]
-slug = "preliminar-2010"
 
 # Arbetskraftsbarometern
 [register."99"]
@@ -1477,645 +724,38 @@ slug = "gymnasieskola-betyg"
 slug = "slutbetyg"
 display_group = "Slutbetyg"
 
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."102.108.1391"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."102.108.2910"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."102.108.2911"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."102.108.3485"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.108.5513"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.108.5821"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.108.5846"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."102.108.5862"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."102.108.6227"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2004/2005' (residual: "Läsåret /2005")
-[register_version."102.108.6231"]
-slug = "lasar-2004-2005"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."102.108.7333"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."102.108.9920"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."102.108.11521"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."102.108.11765"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."102.108.12921"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."102.108.14257"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."102.108.14258"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."102.108.14260"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."102.108.14262"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."102.108.14263"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."102.108.14264"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."102.108.14265"]
-slug = "lasar-1996-1997"
-
-# 'Läsåret 1995/1996' (residual: "Läsåret /1996")
-[register_version."102.108.14274"]
-slug = "lasar-1995-1996"
-
-# 'Läsåret 1994/1995' (residual: "Läsåret /1995")
-[register_version."102.108.14279"]
-slug = "lasar-1994-1995"
-
-# 'Läsåret 1993/1994' (residual: "Läsåret /1994")
-[register_version."102.108.14280"]
-slug = "lasar-1993-1994"
-
-# 'Läsåret 1992/1993' (residual: "Läsåret /1993")
-[register_version."102.108.14281"]
-slug = "lasar-1992-1993"
-
-# 'Läsåret 1991/1992' (residual: "Läsåret /1992")
-[register_version."102.108.14283"]
-slug = "lasar-1991-1992"
-
-# 'Läsåret 1990/1991' (residual: "Läsåret /1991")
-[register_version."102.108.14284"]
-slug = "lasar-1990-1991"
-
-# 'Läsåret 1989/1990' (residual: "Läsåret /1990")
-[register_version."102.108.14285"]
-slug = "lasar-1989-1990"
-
-# 'Läsåret 1988/1989' (residual: "Läsåret /1989")
-[register_version."102.108.14287"]
-slug = "lasar-1988-1989"
-
-# 'Läsåret 1987/1988' (residual: "Läsåret /1988")
-[register_version."102.108.14288"]
-slug = "lasar-1987-1988"
-
-# 'Läsåret 1986/1987' (residual: "Läsåret /1987")
-[register_version."102.108.14289"]
-slug = "lasar-1986-1987"
-
-# 'Läsåret 1985/1986' (residual: "Läsåret /1986")
-[register_version."102.108.14290"]
-slug = "lasar-1985-1986"
-
-# 'Läsåret 1984/1985' (residual: "Läsåret /1985")
-[register_version."102.108.14291"]
-slug = "lasar-1984-1985"
-
-# 'Läsåret 1983/1984' (residual: "Läsåret /1984")
-[register_version."102.108.14292"]
-slug = "lasar-1983-1984"
-
-# 'Läsåret 1982/1983' (residual: "Läsåret /1983")
-[register_version."102.108.14293"]
-slug = "lasar-1982-1983"
-
-# 'Läsåret 1981/1982' (residual: "Läsåret /1982")
-[register_version."102.108.14294"]
-slug = "lasar-1981-1982"
-
-# 'Läsåret 1980/1981' (residual: "Läsåret /1981")
-[register_version."102.108.14295"]
-slug = "lasar-1980-1981"
-
-# 'Läsåret 1979/1980' (residual: "Läsåret /1980")
-[register_version."102.108.14296"]
-slug = "lasar-1979-1980"
-
-# 'Läsåret 1978/1979' (residual: "Läsåret /1979")
-[register_version."102.108.14297"]
-slug = "lasar-1978-1979"
-
-# 'Läsåret 1977/1978' (residual: "Läsåret /1978")
-[register_version."102.108.14298"]
-slug = "lasar-1977-1978"
-
-# 'Läsåret 1976/1977' (residual: "Läsåret /1977")
-[register_version."102.108.14299"]
-slug = "lasar-1976-1977"
-
-# 'Läsåret 1975/1976' (residual: "Läsåret /1976")
-[register_version."102.108.14300"]
-slug = "lasar-1975-1976"
-
-# 'Läsåret 1974/1975' (residual: "Läsåret /1975")
-[register_version."102.108.14302"]
-slug = "lasar-1974-1975"
-
-# 'Läsåret 1973/1974' (residual: "Läsåret /1974")
-[register_version."102.108.14303"]
-slug = "lasar-1973-1974"
-
-# 'Läsåret 1972/1973' (residual: "Läsåret /1973")
-[register_version."102.108.14304"]
-slug = "lasar-1972-1973"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."102.108.15869"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."102.108.16037"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."102.108.18315"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."102.108.19462"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."102.108.19472"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."102.108.19591"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."102.108.20246"]
-slug = "lasar-2024-2025"
 [register_variant."102.686"]
 slug = "kursbetyg"
 display_group = "Kursbetyg"
 
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.686.5716"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.686.5750"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."102.686.5869"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."102.686.5872"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."102.686.5874"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."102.686.5876"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."102.686.5877"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."102.686.5883"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2004/2005' (residual: "Läsåret /2005")
-[register_version."102.686.5884"]
-slug = "lasar-2004-2005"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.686.5905"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."102.686.7334"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."102.686.9977"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."102.686.11519"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."102.686.12935"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."102.686.14305"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."102.686.14307"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."102.686.14308"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."102.686.14309"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."102.686.14312"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."102.686.14313"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."102.686.14314"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."102.686.14315"]
-slug = "lasar-1996-1997"
-
-# 'Läsåret 1995/1996' (residual: "Läsåret /1996")
-[register_version."102.686.14316"]
-slug = "lasar-1995-1996"
-
-# 'Läsåret 1994/1995' (residual: "Läsåret /1995")
-[register_version."102.686.14317"]
-slug = "lasar-1994-1995"
-
-# 'Läsåret 1993/1994' (residual: "Läsåret /1994")
-[register_version."102.686.14318"]
-slug = "lasar-1993-1994"
-
-# 'Läsåret 1991/1992' (residual: "Läsåret /1992")
-[register_version."102.686.14320"]
-slug = "lasar-1991-1992"
-
-# 'Läsåret 1990/1991' (residual: "Läsåret /1991")
-[register_version."102.686.14321"]
-slug = "lasar-1990-1991"
-
-# 'Läsåret 1989/1990' (residual: "Läsåret /1990")
-[register_version."102.686.14322"]
-slug = "lasar-1989-1990"
-
-# 'Läsåret 1988/1989' (residual: "Läsåret /1989")
-[register_version."102.686.14323"]
-slug = "lasar-1988-1989"
-
-# 'Läsåret 1987/1988' (residual: "Läsåret /1988")
-[register_version."102.686.14324"]
-slug = "lasar-1987-1988"
-
-# 'Läsåret 1986/1987' (residual: "Läsåret /1987")
-[register_version."102.686.14325"]
-slug = "lasar-1986-1987"
-
-# 'Läsåret 1985/1986' (residual: "Läsåret /1986")
-[register_version."102.686.14326"]
-slug = "lasar-1985-1986"
-
-# 'Läsåret 1984/1985' (residual: "Läsåret /1985")
-[register_version."102.686.14327"]
-slug = "lasar-1984-1985"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."102.686.15925"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."102.686.16098"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."102.686.18317"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."102.686.19611"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."102.686.19613"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."102.686.19614"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."102.686.20251"]
-slug = "lasar-2024-2025"
 [register_variant."102.1169"]
 slug = "examens-studiebevis-teknikprogrammet-ak4"
 display_group = "Examens- och studiebevis, teknikprogrammet åk 4"
 
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.1169.5910"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.1169.5911"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.1169.5912"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."102.1169.6189"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."102.1169.9815"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."102.1169.11492"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."102.1169.12663"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."102.1169.13565"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."102.1169.15308"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."102.1169.18428"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."102.1169.18429"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."102.1169.18934"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."102.1169.19491"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."102.1169.20208"]
-slug = "lasar-2024-2025"
 [register_variant."102.1170"]
 slug = "nytt-grundskolebetyg"
 display_group = "Nytt grundskolebetyg utfärdat i gymnasieskolan"
 
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.1170.11820"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.1170.11844"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.1170.11845"]
-slug = "lasar-2013-2014"
 [register_variant."102.1171"]
 slug = "gymnasieintyg"
 display_group = "Gymnasieintyg"
 
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.1171.9927"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.1171.11772"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.1171.11773"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."102.1171.11774"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."102.1171.11775"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."102.1171.11776"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."102.1171.13078"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."102.1171.16063"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."102.1171.16092"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."102.1171.18318"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."102.1171.20034"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."102.1171.20035"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."102.1171.20038"]
-slug = "lasar-2023-2024"
 [register_variant."102.1264"]
 slug = "gymnasieintyg-kurser"
 display_group = "Gymnasieintyg - kurser"
 
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."102.1264.9818"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."102.1264.11779"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."102.1264.11811"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."102.1264.11812"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."102.1264.11813"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."102.1264.11814"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."102.1264.13065"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."102.1264.16093"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."102.1264.18319"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."102.1264.20041"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."102.1264.20042"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."102.1264.20043"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."102.1264.20044"]
-slug = "lasar-2023-2024"
 [register_variant."102.1511"]
 slug = "avgangna-sent-inkomna"
 display_group = "Avgångna, sent inkomna uppgifter, 1997-2002"
 
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."102.1511.14232"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."102.1511.14238"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."102.1511.14240"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."102.1511.14241"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."102.1511.14242"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."102.1511.14243"]
-slug = "lasar-1996-1997"
 [register_variant."102.1512"]
 slug = "avgangna-fran-waldorf"
 display_group = "Avgångna från Waldorf och International Baccalaureate (IB)"
 
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."102.1512.14244"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."102.1512.14246"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."102.1512.14248"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."102.1512.14249"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."102.1512.14250"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."102.1512.14251"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."102.1512.14252"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."102.1512.14253"]
-slug = "lasar-1996-1997"
 [register_variant."102.1514"]
 slug = "samlat-betygsdokument"
 display_group = "Samlat betygsdokument, 2001-2004"
 
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."102.1514.14267"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."102.1514.14268"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."102.1514.14269"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."102.1514.14270"]
-slug = "lasar-2000-2001"
 # Befolkningens studiedeltagande
 [register."103"]
 slug = "rpu"
@@ -2145,14 +785,6 @@ display_group = "Elevpanel 6"
 [register_variant."104.1164"]
 slug = "elevpanel-8"
 display_group = "Elevpanel 8"
-
-# 'Vårterminen 2013'
-[register_version."104.840.5177"]
-slug = "VT2013"
-
-# 'Vårterminen 2013 - betyg' (vs 5177:VT2013) (residual: "- betyg")
-[register_version."104.840.5510"]
-slug = "betyg-vt2013"
 
 # Folkhögskolan
 [register."105"]
@@ -2194,45 +826,6 @@ slug = "gyst"
 slug = "_default"
 display_group = "Gymnasieungdomars studieintresse"
 
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."108.120.1003"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."108.120.3514"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."108.120.3653"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."108.120.5023"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."108.120.5276"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."108.120.7415"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."108.120.11161"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."108.120.11837"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."108.120.14259"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."108.120.18139"]
-slug = "lasar-2021-2022"
 # Högutbildade utrikes födda
 [register."110"]
 slug = "hogutbildade-utrikes-fodda"
@@ -2249,84 +842,22 @@ slug = "intradet-pa-arbetsmarknaden"
 slug = "intradet-gymnasieavgangna"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna"
 
-# 'Våren 2017' (residual: "Våren")
-[register_version."111.123.11643"]
-slug = "varen-2017"
-
-# 'Våren 2020' (residual: "Våren")
-[register_version."111.123.15321"]
-slug = "varen-2020"
-
-# 'Våren 2023' (residual: "Våren")
-[register_version."111.123.18866"]
-slug = "varen-2023"
-# 'Mars 2006' (residual: "Mars")
-[register_version."111.123.496"]
-slug = "2006-03"
-
-# 'Mars 2008' (residual: "Mars")
-[register_version."111.123.2248"]
-slug = "2008-03"
-
-# 'Mars 2010' (residual: "Mars")
-[register_version."111.123.3700"]
-slug = "2010-03"
-
-# 'April 2012' (residual: "April")
-[register_version."111.123.4417"]
-slug = "2012-04"
-
-# 'April 2014' (residual: "April")
-[register_version."111.123.5632"]
-slug = "2014-04"
 [register_variant."111.400"]
 slug = "intradet-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland högskoleexaminerade"
 
-# 'Mars 2006' (residual: "Mars")
-[register_version."111.400.484"]
-slug = "2006-03"
-
-# 'Mars 2008' (residual: "Mars")
-[register_version."111.400.2246"]
-slug = "2008-03"
-
-# 'Mars 2010' (residual: "Mars")
-[register_version."111.400.3701"]
-slug = "2010-03"
 [register_variant."111.1091"]
 slug = "hogskolestuderande"
 display_group = "Högskolestuderande"
 
-# 'April 2013' (residual: "April")
-[register_version."111.1091.5139"]
-slug = "2013-04"
 [register_variant."111.1301"]
 slug = "intradet-gymnasieavgangna-hogskoleexaminerade"
 display_group = "Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade"
 
-# 'Mars 2004' (residual: "Mars")
-[register_version."111.1301.11182"]
-slug = "2004-03"
-
-# 'Mars 2002' (residual: "Mars")
-[register_version."111.1301.15236"]
-slug = "2002-03"
-
-# 'Mars 2000' (residual: "Mars")
-[register_version."111.1301.15347"]
-slug = "2000-03"
 [register_variant."111.1677"]
 slug = "yh-examinerade"
 display_group = "Examinerade från yrkeshögskolan"
 
-# 'Hösten 2022' (residual: "Hösten")
-[register_version."111.1677.18492"]
-slug = "hosten-2022"
-
-# 'Hösten 2019' (residual: "Hösten")
-[register_version."111.1677.18493"]
-slug = "hosten-2019"
 # Offentligt ägda företag
 [register."114"]
 slug = "offentligt-agda-foretag"
@@ -2369,219 +900,14 @@ slug = "kommunalekonomisk-utjamning"
 slug = "kommunalekonomisk-utjamning-regioner"
 display_group = "Kommunalekonomisk utjämning för regioner"
 
-# 'Utjämningsår 2009' (residual: "Utjämningsår")
-[register_version."117.132.3110"]
-slug = "2009"
-
-# 'Utjämningsår 2010' (residual: "Utjämningsår")
-[register_version."117.132.3125"]
-slug = "2010"
-
-# 'Utjämningsår 2011' (residual: "Utjämningsår")
-[register_version."117.132.3126"]
-slug = "2011"
-
-# 'Utjämningsår 2012' (residual: "Utjämningsår")
-[register_version."117.132.3815"]
-slug = "2012"
-
-# 'Utjämningsår 2008' (residual: "Utjämningsår")
-[register_version."117.132.3951"]
-slug = "2008"
-
-# 'Utjämningsår 2013' (residual: "Utjämningsår")
-[register_version."117.132.4265"]
-slug = "2013"
-
-# 'Utjämningsår 2007' (residual: "Utjämningsår")
-[register_version."117.132.4654"]
-slug = "2007"
-
-# 'Utjämningsår 2014' (residual: "Utjämningsår")
-[register_version."117.132.5047"]
-slug = "2014"
-
-# 'Utjämningsår 2015' (residual: "Utjämningsår")
-[register_version."117.132.5602"]
-slug = "2015"
-
-# 'Utjämningsår 2016' (residual: "Utjämningsår")
-[register_version."117.132.9808"]
-slug = "2016"
-
-# 'Utjämningsår 2017' (residual: "Utjämningsår")
-[register_version."117.132.11115"]
-slug = "2017"
-
-# 'Utjämningsår 2018' (residual: "Utjämningsår")
-[register_version."117.132.11660"]
-slug = "2018"
-
-# 'Utjämningsår 2019' (residual: "Utjämningsår")
-[register_version."117.132.12462"]
-slug = "2019"
-
-# 'Utjämningsår 2020' (residual: "Utjämningsår")
-[register_version."117.132.14501"]
-slug = "2020"
-
-# 'Utjämningsår 2021' (residual: "Utjämningsår")
-[register_version."117.132.15039"]
-slug = "2021"
-
-# 'Utjämningsår 2022' (residual: "Utjämningsår")
-[register_version."117.132.16480"]
-slug = "2022"
 [register_variant."117.134"]
 slug = "kommunalekonomisk-utjamning-kommuner"
 display_group = "Kommunalekonomisk utjämning för kommuner"
 
-# 'Utjämningsår 2010' (residual: "Utjämningsår")
-[register_version."117.134.3001"]
-slug = "2010"
-
-# 'Utjämningsår 2009' (residual: "Utjämningsår")
-[register_version."117.134.3108"]
-slug = "2009"
-
-# 'Utjämningsår 2011' (residual: "Utjämningsår")
-[register_version."117.134.3109"]
-slug = "2011"
-
-# 'Utjämningsår 2012' (residual: "Utjämningsår")
-[register_version."117.134.3814"]
-slug = "2012"
-
-# 'Utjämningsår 2008' (residual: "Utjämningsår")
-[register_version."117.134.3950"]
-slug = "2008"
-
-# 'Utjämningsår 2013' (residual: "Utjämningsår")
-[register_version."117.134.4266"]
-slug = "2013"
-
-# 'Utjämningsår 2007' (residual: "Utjämningsår")
-[register_version."117.134.4656"]
-slug = "2007"
-
-# 'Utjämningsår 2014' (residual: "Utjämningsår")
-[register_version."117.134.5048"]
-slug = "2014"
-
-# 'Utjämningsår 2015' (residual: "Utjämningsår")
-[register_version."117.134.5603"]
-slug = "2015"
-
-# 'Utjämningsår 2016' (residual: "Utjämningsår")
-[register_version."117.134.9809"]
-slug = "2016"
-
-# 'Utjämningsår 2017' (residual: "Utjämningsår")
-[register_version."117.134.11116"]
-slug = "2017"
-
-# 'Utjämningsår 2018' (residual: "Utjämningsår")
-[register_version."117.134.11661"]
-slug = "2018"
-
-# 'Utjämningsår 2019' (residual: "Utjämningsår")
-[register_version."117.134.12461"]
-slug = "2019"
-
-# 'Utjämningsår 2020' (residual: "Utjämningsår")
-[register_version."117.134.13760"]
-slug = "2020"
-
-# 'Utjämningsår 2021' (residual: "Utjämningsår")
-[register_version."117.134.15036"]
-slug = "2021"
-
-# 'Utjämningsår 2022' (residual: "Utjämningsår")
-[register_version."117.134.16479"]
-slug = "2022"
-
-# 'Utjämningsår 2023' (residual: "Utjämningsår")
-[register_version."117.134.18404"]
-slug = "2023"
 [register_variant."117.779"]
 slug = "lss-utjamning"
 display_group = "Utjämning av LSS-kostnader mellan kommuner"
 
-# 'Utjämningsår 2009' (residual: "Utjämningsår")
-[register_version."117.779.3315"]
-slug = "2009"
-
-# 'Utjämningsår 2010' (residual: "Utjämningsår")
-[register_version."117.779.3369"]
-slug = "2010"
-
-# 'Utjämningsår 2011' (residual: "Utjämningsår")
-[register_version."117.779.3373"]
-slug = "2011"
-
-# 'Utjämningsår 2012' (residual: "Utjämningsår")
-[register_version."117.779.3685"]
-slug = "2012"
-
-# 'Utjämningsår 2008' (residual: "Utjämningsår")
-[register_version."117.779.3952"]
-slug = "2008"
-
-# 'Utjämningsår 2013' (residual: "Utjämningsår")
-[register_version."117.779.4264"]
-slug = "2013"
-
-# 'Utjämningsår 2014' (residual: "Utjämningsår")
-[register_version."117.779.5046"]
-slug = "2014"
-
-# 'Utjämningsår 2015' (residual: "Utjämningsår")
-[register_version."117.779.5601"]
-slug = "2015"
-
-# 'Utjämningsår 2016' (residual: "Utjämningsår")
-[register_version."117.779.9807"]
-slug = "2016"
-
-# 'Utjämningsår 2017' (residual: "Utjämningsår")
-[register_version."117.779.11114"]
-slug = "2017"
-
-# 'Utjämningsår 2018' (residual: "Utjämningsår")
-[register_version."117.779.11659"]
-slug = "2018"
-
-# 'Utjämningsår 2019' (residual: "Utjämningsår")
-[register_version."117.779.12460"]
-slug = "2019"
-
-# 'Utjämningsår 2020' (residual: "Utjämningsår")
-[register_version."117.779.14500"]
-slug = "2020"
-
-# 'Utjämningsår 2021' (residual: "Utjämningsår")
-[register_version."117.779.15040"]
-slug = "2021"
-
-# 'Utjämningsår 2022' (residual: "Utjämningsår")
-[register_version."117.779.16481"]
-slug = "2022"
-
-# 'Utjämningsår 2023' (residual: "Utjämningsår")
-[register_version."117.779.18273"]
-slug = "2023"
-
-# 'Utjämningsår 2024' (residual: "Utjämningsår")
-[register_version."117.779.18663"]
-slug = "2024"
-
-# 'Utjämningsår 2025' (residual: "Utjämningsår")
-[register_version."117.779.19288"]
-slug = "2025"
-
-# 'Utjämningsår 2026' (residual: "Utjämningsår")
-[register_version."117.779.19948"]
-slug = "2026"
 # Taxeringsutfallet
 [register."118"]
 slug = "taxeringsutfallet"
@@ -2590,68 +916,6 @@ slug = "taxeringsutfallet"
 slug = "_default"
 display_group = "Taxeringsutfallet"
 
-# 'Deklarationsår 2014 (beskattningsår 2013)' (residual: "Deklarationsår (beskattningsår 2013)")
-[register_version."118.135.5766"]
-slug = "2014"
-
-# 'Deklarationsår 2015 (beskattningsår 2014)' (residual: "Deklarationsår (beskattningsår 2014)")
-[register_version."118.135.7326"]
-slug = "2015"
-
-# 'Deklarationsår 2016 (beskattningsår 2015)' (residual: "Deklarationsår (beskattningsår 2015)")
-[register_version."118.135.9980"]
-slug = "2016"
-
-# 'Deklarationsår 2017 (beskattningsår 2016)' (residual: "Deklarationsår (beskattningsår 2016)")
-[register_version."118.135.11606"]
-slug = "2017"
-
-# 'Deklarationsår 2018 (beskattningsår 2017)' (residual: "Deklarationsår (beskattningsår 2017)")
-[register_version."118.135.12687"]
-slug = "2018"
-
-# 'Deklarationsår 2019 (beskattningsår 2018)' (residual: "Deklarationsår (beskattningsår 2018)")
-[register_version."118.135.13728"]
-slug = "2019"
-
-# 'Deklarationsår 2020 (beskattningsår 2019)' (residual: "Deklarationsår (beskattningsår 2019)")
-[register_version."118.135.15710"]
-slug = "2020"
-# 'Taxeringsår 2005' (residual: "Taxeringsår")
-[register_version."118.135.964"]
-slug = "2005"
-
-# 'Taxeringsår 2006' (residual: "Taxeringsår")
-[register_version."118.135.1135"]
-slug = "2006"
-
-# 'Taxeringsår 2007' (residual: "Taxeringsår")
-[register_version."118.135.1144"]
-slug = "2007"
-
-# 'Taxeringsår 2008' (residual: "Taxeringsår")
-[register_version."118.135.1296"]
-slug = "2008"
-
-# 'Taxeringsår 2009' (residual: "Taxeringsår")
-[register_version."118.135.2534"]
-slug = "2009"
-
-# 'Taxeringsår 2010' (residual: "Taxeringsår")
-[register_version."118.135.3141"]
-slug = "2010"
-
-# 'Taxeringsår 2011' (residual: "Taxeringsår")
-[register_version."118.135.3686"]
-slug = "2011"
-
-# 'Taxeringsår 2012' (residual: "Taxeringsår")
-[register_version."118.135.4288"]
-slug = "2012"
-
-# 'Taxeringsår 2013' (residual: "Taxeringsår")
-[register_version."118.135.5207"]
-slug = "2013"
 # Företagsregister och individdatabas (FRIDA)
 [register."121"]
 slug = "frida"
@@ -2756,17 +1020,9 @@ slug = "aku"
 slug = "aku-april-2005-dec-2020"
 display_group = "AKU april 2005 - dec 2020"
 
-# '2005 kvartal 2-4' (residual: "kvartal 2-4")
-[register_version."122.142.6127"]
-slug = "q2-q4-2005"
-
 [register_variant."122.278"]
 slug = "aku-1987-mars-2005"
 display_group = "AKU 1987 - mars 2005"
-
-# '2005 kvartal 1' (residual: "kvartal 1")
-[register_version."122.278.15417"]
-slug = "2005-Q1"
 
 [register_variant."122.1628"]
 slug = "aku-januari-2021"
@@ -2970,42 +1226,6 @@ slug = "hostsadda-arealer"
 slug = "_default"
 display_group = "Höstsådda arealer"
 
-# '2024 Ekologiska arealer' (vs 19639:2024) (residual: "Ekologiska arealer")
-[register_version."145.212.19665"]
-slug = "ekologiska-arealer-2024"
-
-# '2023 Ekologiska arealer' (vs 19686:2023) (residual: "Ekologiska arealer")
-[register_version."145.212.19688"]
-slug = "ekologiska-arealer-2023"
-
-# '2022 Ekologiska arealer' (vs 19705:2022) (residual: "Ekologiska arealer")
-[register_version."145.212.19706"]
-slug = "ekologiska-arealer-2022"
-
-# '2021 Ekologiska arealer' (vs 19708:2021) (residual: "Ekologiska arealer")
-[register_version."145.212.19707"]
-slug = "ekologiska-arealer-2021"
-
-# '2020 Ekologiska arealer' (vs 19710:2020) (residual: "Ekologiska arealer")
-[register_version."145.212.19709"]
-slug = "ekologiska-arealer-2020"
-
-# '2019 Ekologiska arealer' (vs 19712:2019) (residual: "Ekologiska arealer")
-[register_version."145.212.19711"]
-slug = "ekologiska-arealer-2019"
-
-# '2018 Ekologiska arealer' (vs 19714:2018) (residual: "Ekologiska arealer")
-[register_version."145.212.19713"]
-slug = "ekologiska-arealer-2018"
-
-# '2017 Ekologiska arealer' (vs 19716:2017) (residual: "Ekologiska arealer")
-[register_version."145.212.19715"]
-slug = "ekologiska-arealer-2017"
-
-# '2016 Ekologiska arealer' (vs 19718:2016) (residual: "Ekologiska arealer")
-[register_version."145.212.19717"]
-slug = "ekologiska-arealer-2016"
-
 # Gödselmedelsanvändning i jordbruket
 [register."147"]
 slug = "godselmedelsanvandning"
@@ -3116,201 +1336,6 @@ slug = "psu"
 slug = "_default"
 display_group = "Partisympatiundersökningen"
 
-# '2023 maj' (residual: "maj")
-[register_version."164.235.18770"]
-slug = "2023-05"
-
-# '2024 maj' (residual: "maj")
-[register_version."164.235.19306"]
-slug = "2024-05"
-
-# '2025 maj' (residual: "maj")
-[register_version."164.235.20012"]
-slug = "2025-05"
-# '2011 maj' (residual: "maj")
-[register_version."164.235.3718"]
-slug = "2011-05"
-
-# '2010 november' (residual: "november")
-[register_version."164.235.3746"]
-slug = "2010-11"
-
-# '2010 maj' (residual: "maj")
-[register_version."164.235.3768"]
-slug = "2010-05"
-
-# '2009 november' (residual: "november")
-[register_version."164.235.3769"]
-slug = "2009-11"
-
-# '2009 maj' (residual: "maj")
-[register_version."164.235.3773"]
-slug = "2009-05"
-
-# '2011 november ' (residual: "november")
-[register_version."164.235.3924"]
-slug = "2011-11"
-
-# '2012 maj' (residual: "maj")
-[register_version."164.235.4352"]
-slug = "2012-05"
-
-# '2008 maj' (residual: "maj")
-[register_version."164.235.4391"]
-slug = "2008-05"
-
-# '2008 november' (residual: "november")
-[register_version."164.235.4392"]
-slug = "2008-11"
-
-# '2012 november' (residual: "november")
-[register_version."164.235.4791"]
-slug = "2012-11"
-
-# '2013 maj' (residual: "maj")
-[register_version."164.235.4951"]
-slug = "2013-05"
-
-# '2007 maj' (residual: "maj")
-[register_version."164.235.4996"]
-slug = "2007-05"
-
-# '2007 november' (residual: "november")
-[register_version."164.235.4997"]
-slug = "2007-11"
-
-# '2013 november' (residual: "november")
-[register_version."164.235.5590"]
-slug = "2013-11"
-
-# '2014 maj' (residual: "maj")
-[register_version."164.235.5591"]
-slug = "2014-05"
-
-# '2014 november' (residual: "november")
-[register_version."164.235.5753"]
-slug = "2014-11"
-
-# '2015 maj' (residual: "maj")
-[register_version."164.235.6126"]
-slug = "2015-05"
-
-# '2015 november' (residual: "november")
-[register_version."164.235.8581"]
-slug = "2015-11"
-
-# '2016 maj' (residual: "maj")
-[register_version."164.235.8586"]
-slug = "2016-05"
-
-# '2016 november' (residual: "november")
-[register_version."164.235.11486"]
-slug = "2016-11"
-
-# '2017 maj' (residual: "maj")
-[register_version."164.235.11487"]
-slug = "2017-05"
-
-# '2017 november' (residual: "november")
-[register_version."164.235.12030"]
-slug = "2017-11"
-
-# '2018 maj' (residual: "maj")
-[register_version."164.235.12031"]
-slug = "2018-05"
-
-# '2018 november' (residual: "november")
-[register_version."164.235.12801"]
-slug = "2018-11"
-
-# '2019 maj' (residual: "maj")
-[register_version."164.235.13627"]
-slug = "2019-05"
-
-# '2019 november' (residual: "november")
-[register_version."164.235.13727"]
-slug = "2019-11"
-
-# '2020 maj' (residual: "maj")
-[register_version."164.235.14713"]
-slug = "2020-05"
-
-# '2006 november' (residual: "november")
-[register_version."164.235.15074"]
-slug = "2006-11"
-
-# '2006 maj' (residual: "maj")
-[register_version."164.235.15081"]
-slug = "2006-05"
-
-# '2005 november' (residual: "november")
-[register_version."164.235.15091"]
-slug = "2005-11"
-
-# '2005 maj' (residual: "maj")
-[register_version."164.235.15139"]
-slug = "2005-05"
-
-# '2004 november' (residual: "november")
-[register_version."164.235.15144"]
-slug = "2004-11"
-
-# '2004 maj' (residual: "maj")
-[register_version."164.235.15178"]
-slug = "2004-05"
-
-# '2003 november' (residual: "november")
-[register_version."164.235.15196"]
-slug = "2003-11"
-
-# '2002 november' (residual: "november")
-[register_version."164.235.15234"]
-slug = "2002-11"
-
-# '2003 maj' (residual: "maj")
-[register_version."164.235.15241"]
-slug = "2003-05"
-
-# '2002 maj' (residual: "maj")
-[register_version."164.235.15242"]
-slug = "2002-05"
-
-# '2001 maj' (residual: "maj")
-[register_version."164.235.15243"]
-slug = "2001-05"
-
-# '2000 maj' (residual: "maj")
-[register_version."164.235.15247"]
-slug = "2000-05"
-
-# '2001 november' (residual: "november")
-[register_version."164.235.15255"]
-slug = "2001-11"
-
-# '2000 november' (residual: "november")
-[register_version."164.235.15257"]
-slug = "2000-11"
-
-# '2020 november' (residual: "november")
-[register_version."164.235.15776"]
-slug = "2020-11"
-
-# '2021 maj' (residual: "maj")
-[register_version."164.235.16475"]
-slug = "2021-05"
-
-# '2021 november' (residual: "november")
-[register_version."164.235.17907"]
-slug = "2021-11"
-
-# '2022 maj' (residual: "maj")
-[register_version."164.235.18212"]
-slug = "2022-05"
-
-# '2022 november' (residual: "november")
-[register_version."164.235.18496"]
-slug = "2022-11"
-
 # Företagens kortperiodiska tillgångar och skulder (BAST)
 [register."165"]
 slug = "bast"
@@ -3383,66 +1408,6 @@ slug = "laps"
 slug = "_default"
 display_group = "Lönesummor, arbetsgivaravgifter och preliminär A-skatt"
 
-# '2017 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12181"]
-slug = "2017"
-
-# '2016 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12188"]
-slug = "2016"
-
-# '2015 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12189"]
-slug = "2015"
-
-# '2014 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12190"]
-slug = "2014"
-
-# '2013 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12191"]
-slug = "2013"
-
-# '2012 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12193"]
-slug = "2012"
-
-# '2011 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12194"]
-slug = "2011"
-
-# '2010 Kvartal' (residual: "Kvartal")
-[register_version."179.247.12196"]
-slug = "2010"
-
-# '2019 Kvartal' (residual: "Kvartal")
-[register_version."179.247.14477"]
-slug = "2019"
-
-# '2018 Kvartal' (residual: "Kvartal")
-[register_version."179.247.14478"]
-slug = "2018"
-
-# '2020 Kvartal' (residual: "Kvartal")
-[register_version."179.247.14486"]
-slug = "2020"
-
-# '2021 Kvartal' (residual: "Kvartal")
-[register_version."179.247.16374"]
-slug = "2021"
-
-# '2022 Kvartal' (residual: "Kvartal")
-[register_version."179.247.18204"]
-slug = "2022"
-
-# '2023 Kvartal' (residual: "Kvartal")
-[register_version."179.247.18754"]
-slug = "2023"
-
-# '2024 Kvartal' (residual: "Kvartal")
-[register_version."179.247.19222"]
-slug = "2024"
-
 # Riksbankens finansmarknadsstatistik (FMR)
 [register."181"]
 slug = "fmr"
@@ -3494,82 +1459,6 @@ display_group = "Svenska internationella koncerner"
 [register_variant."182.1544"]
 slug = "offentlig-sektor"
 display_group = "Offentlig sektor"
-
-# 'Intäkter för forskning och forskarutbildning 2005' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.881"]
-slug = "intakter-for-forskning-och-forskarutbildning-2005"
-
-# 'Avskrivningar, investeringar och hyreskostn 2005' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.910"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2005"
-
-# 'Avskrivningar, investeringar och hyreskostn 2007' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.1706"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2007"
-
-# 'Intäkter för forskning och forskarutbildning 2007' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.1713"]
-slug = "intakter-for-forskning-och-forskarutbildning-2007"
-
-# 'Avskrivningar, investeringar och hyreskostn 2009 ' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.3550"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2009"
-
-# 'Intäkter för forskning och forskarutbildning 2009 ' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.3551"]
-slug = "intakter-for-forskning-och-forskarutbildning-2009"
-
-# 'Avskrivningar, investeringar och hyreskostn 2011' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.4471"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2011"
-
-# 'Intäkter för forskning och forskarutbildning 2011' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.4473"]
-slug = "intakter-for-forskning-och-forskarutbildning-2011"
-
-# 'Avskrivningar, investeringar och hyreskostn 2013' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.5764"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2013"
-
-# 'Intäkter för forskning och forskarutbildning 2013' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.5765"]
-slug = "intakter-for-forskning-och-forskarutbildning-2013"
-
-# 'Avskrivningar, investeringar och hyreskostn 2015' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.9841"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2015"
-
-# 'Intäkter för forskning och forskarutbildning 2015' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.10094"]
-slug = "intakter-for-forskning-och-forskarutbildning-2015"
-
-# 'Intäkter för forskning och forskarutbildning 2017' (residual: "Intäkter för forskning och forskarutbildning")
-[register_version."182.358.12594"]
-slug = "intakter-for-forskning-och-forskarutbildning-2017"
-
-# 'Avskrivningar, investeringar och hyreskostn 2017' (residual: "Avskrivningar, investeringar och hyreskostn")
-[register_version."182.358.12595"]
-slug = "avskrivningar-investeringar-och-hyreskostn-2017"
-
-# '2023: Mikroföretag' (vs 19497:2023) (residual: ": Mikroföretag")
-[register_version."182.373.19498"]
-slug = "mikroforetag-2023"
-
-# '2015 Tilläggsfrågor om mobilitet (UKÄ)' (vs 9956:2015) (residual: "Tilläggsfrågor om mobilitet (UKÄ)")
-[register_version."182.441.9978"]
-slug = "tillaggsfragor-om-mobilitet-uka-2015"
-
-# '2017 Tilläggsfrågor om mobilitet UKÄ' (vs 12470:2017) (residual: "Tilläggsfrågor om mobilitet UKÄ")
-[register_version."182.441.12469"]
-slug = "tillaggsfragor-om-mobilitet-uka-2017"
-
-# '2021 Tilläggsfrågor om mobilitet UKÄ' (vs 18421:2021) (residual: "Tilläggsfrågor om mobilitet UKÄ")
-[register_version."182.441.18431"]
-slug = "tillaggsfragor-om-mobilitet-uka-2021"
-
-# '2023 Tilläggsfrågor om mobilitet UKÄ' (vs 19474:2023) (residual: "Tilläggsfrågor om mobilitet UKÄ")
-[register_version."182.441.19506"]
-slug = "tillaggsfragor-om-mobilitet-uka-2023"
 
 # Investeringsenkäten (NV0801)
 [register."183"]
@@ -3643,157 +1532,6 @@ slug = "grundskola-ak9"
 slug = "grundskolan-betyg-ak9"
 display_group = "Grundskolan: betyg åk 9"
 
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."189.265.5573"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."189.265.5574"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."189.265.5575"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."189.265.5611"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."189.265.5613"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."189.265.5614"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."189.265.5615"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."189.265.5618"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."189.265.5619"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2004/2005' (residual: "Läsåret /2005")
-[register_version."189.265.5620"]
-slug = "lasar-2004-2005"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."189.265.5622"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 1993/1994' (residual: "Läsåret /1994")
-[register_version."189.265.5624"]
-slug = "lasar-1993-1994"
-
-# 'Läsåret 1992/1993' (residual: "Läsåret /1993")
-[register_version."189.265.5627"]
-slug = "lasar-1992-1993"
-
-# 'Läsåret 1991/1992' (residual: "Läsåret /1992")
-[register_version."189.265.6237"]
-slug = "lasar-1991-1992"
-
-# 'Läsåret 1990/1991' (residual: "Läsåret /1991")
-[register_version."189.265.6238"]
-slug = "lasar-1990-1991"
-
-# 'Läsåret 1989/1990' (residual: "Läsåret /1990")
-[register_version."189.265.6239"]
-slug = "lasar-1989-1990"
-
-# 'Läsåret 1988/1989' (residual: "Läsåret /1989")
-[register_version."189.265.6240"]
-slug = "lasar-1988-1989"
-
-# 'Läsåret 1987/1988' (residual: "Läsåret /1988")
-[register_version."189.265.6241"]
-slug = "lasar-1987-1988"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."189.265.7258"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."189.265.7464"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."189.265.7465"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."189.265.7466"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."189.265.7467"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."189.265.7535"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."189.265.7537"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."189.265.7544"]
-slug = "lasar-1996-1997"
-
-# 'Läsåret 1995/1996' (residual: "Läsåret /1996")
-[register_version."189.265.7545"]
-slug = "lasar-1995-1996"
-
-# 'Läsåret 1994/1995' (residual: "Läsåret /1995")
-[register_version."189.265.7546"]
-slug = "lasar-1994-1995"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."189.265.9812"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."189.265.11493"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."189.265.12571"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."189.265.13535"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."189.265.14984"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."189.265.17532"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."189.265.18322"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."189.265.18901"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."189.265.19388"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."189.265.20133"]
-slug = "lasar-2024-2025"
 # Grundskola: nationella prov åk 9
 [register."190"]
 slug = "grundskola-prov-ak9"
@@ -3818,446 +1556,29 @@ slug = "svenska-utlandsskolor"
 slug = "grundskolan-elever"
 display_group = "Grundskolan, elever"
 
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.268.534"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.268.1031"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.268.1035"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.268.2015"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.268.2638"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.268.5558"]
-slug = "2009-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.268.5696"]
-slug = "1999-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.268.5697"]
-slug = "2000-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.268.5698"]
-slug = "2001-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.268.5699"]
-slug = "2002-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.268.5701"]
-slug = "2003-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.268.5703"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.268.5704"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.268.5705"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.268.5706"]
-slug = "2013-10-15"
 [register_variant."192.404"]
 slug = "gymnasieskolan-elever"
 display_group = "Gymnasieskolan, elever"
 
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.404.543"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.404.931"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.404.1038"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.404.2019"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.404.2637"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.404.5557"]
-slug = "2009-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.404.5707"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.404.5708"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.404.5709"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.404.5710"]
-slug = "2013-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.404.5711"]
-slug = "1999-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.404.5712"]
-slug = "2000-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.404.5713"]
-slug = "2001-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.404.5714"]
-slug = "2002-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.404.5715"]
-slug = "2003-10-15"
 [register_variant."192.405"]
 slug = "kompletterande-undervisning"
 display_group = "Kompletterande undervisning, elever"
 
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.405.546"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.405.1032"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.405.1037"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.405.2018"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.405.2635"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.405.5555"]
-slug = "2009-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.405.5562"]
-slug = "2003-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.405.5563"]
-slug = "2002-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.405.5564"]
-slug = "2001-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.405.5565"]
-slug = "2000-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.405.5566"]
-slug = "1999-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.405.5567"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.405.5568"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.405.5569"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.405.5570"]
-slug = "2013-10-15"
 [register_variant."192.406"]
 slug = "distansundervisning"
 display_group = "Distansundervisning, elever"
 
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.406.547"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.406.1030"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.406.1036"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.406.2020"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.406.2636"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.406.5556"]
-slug = "2009-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.406.5686"]
-slug = "1999-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.406.5687"]
-slug = "2000-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.406.5688"]
-slug = "2001-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.406.5689"]
-slug = "2002-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.406.5690"]
-slug = "2003-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.406.5691"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.406.5692"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.406.5693"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.406.5694"]
-slug = "2013-10-15"
 [register_variant."192.407"]
 slug = "skolledning"
 display_group = "Skolledning och undervisningsvolym"
 
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.407.545"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.407.1034"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.407.1043"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.407.2017"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.407.2633"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.407.5554"]
-slug = "2009-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.407.5580"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.407.5581"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.407.5582"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.407.5583"]
-slug = "2013-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.407.5584"]
-slug = "2003-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.407.5585"]
-slug = "2002-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.407.5586"]
-slug = "2001-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.407.5587"]
-slug = "2000-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.407.5588"]
-slug = "1999-10-15"
 [register_variant."192.408"]
 slug = "larare"
 display_group = "Lärare"
 
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.408.544"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.408.1033"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.408.1039"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.408.2016"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.408.2634"]
-slug = "2009-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.408.5538"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.408.5539"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.408.5540"]
-slug = "2012-10-15"
-
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.408.5549"]
-slug = "2004-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.408.5551"]
-slug = "2001-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.408.5552"]
-slug = "2000-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.408.5553"]
-slug = "1999-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.408.5560"]
-slug = "2013-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.408.5561"]
-slug = "2003-10-15"
 [register_variant."192.1134"]
 slug = "skolor"
 display_group = "Skolor"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."192.1134.5571"]
-slug = "2009-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."192.1134.5672"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."192.1134.5673"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."192.1134.5674"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."192.1134.5675"]
-slug = "2013-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."192.1134.5676"]
-slug = "1999-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."192.1134.5677"]
-slug = "2000-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."192.1134.5678"]
-slug = "2001-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.1134.5679"]
-slug = "2002-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."192.1134.5680"]
-slug = "2003-10-15"
-
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."192.1134.5681"]
-slug = "2004-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."192.1134.5682"]
-slug = "2005-10-15"
-
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."192.1134.5683"]
-slug = "2006-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."192.1134.5684"]
-slug = "2007-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."192.1134.5685"]
-slug = "2008-10-15"
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."192.408.5550"]
-slug = "2002-10-15"
-
-# '15 oktober 2002 Förskoleklass' (residual: "15 oktober Förskoleklass")
-[register_version."192.408.13520"]
-slug = "forskoleklass-2002-10-15"
 
 # Grundskola: elever per 15 oktober
 [register."193"]
@@ -4267,73 +1588,6 @@ slug = "grundskola-elever"
 slug = "individregister"
 display_group = "Individregister"
 
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."193.771.5652"]
-slug = "2013-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."193.771.5660"]
-slug = "2012-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."193.771.6200"]
-slug = "2011-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."193.771.6201"]
-slug = "2010-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."193.771.6202"]
-slug = "2009-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."193.771.6203"]
-slug = "2008-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."193.771.6204"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."193.771.7429"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."193.771.11113"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."193.771.11817"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."193.771.13154"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."193.771.14804"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."193.771.18499"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."193.771.18500"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."193.771.18729"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."193.771.19645"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."193.771.19941"]
-slug = "2024-10-15"
 # Kostnader för förskola, fritidshem, annan pedagogisk verksamhet, skola och vuxenutbildning 
 [register."194"]
 slug = "skolvasendet-kostnader"
@@ -4349,14 +1603,6 @@ slug = "ksju"
 [register_variant."195.275"]
 slug = "sjukfranvaro-sjukloneperioden"
 display_group = "Sjukfrånvaro under sjuklöneperioden"
-
-# '2011 kv1'
-[register_version."195.275.3777"]
-slug = "2011-Q1"
-
-# '2011 kv2- kv4'
-[register_version."195.275.11393"]
-slug = "q2-q4-2011"
 
 # Energianvändningen inom fiskesektorn
 [register."196"]
@@ -4422,9 +1668,6 @@ display_group = "Gasföretag"
 slug = "vindkraft"
 display_group = "Vindkraft"
 
-# 'Från år 2003 och framåt' (residual: "Från år och framåt")
-[register_version."200.1673.18456"]
-slug = "fran-2003-och-framat"
 # Oljeleveranser, kommunvis redovisning
 [register."201"]
 slug = "oljeleveranser-kommunvis"
@@ -4495,80 +1738,9 @@ slug = "bebyggd-mark-strandskydd"
 slug = "bebyggd-mark"
 display_group = "Bebyggd mark i strandskyddsområden"
 
-# 'Byggnader strandnära läge 2018' (residual: "Byggnader strandnära läge")
-[register_version."217.816.16028"]
-slug = "byggnader-strandnara-lage-2018"
-
-# 'Byggnader strandnära läge 2019' (residual: "Byggnader strandnära läge")
-[register_version."217.816.17901"]
-slug = "byggnader-strandnara-lage-2019"
-
-# 'Byggnader strandnära läge 2020' (residual: "Byggnader strandnära läge")
-[register_version."217.816.18373"]
-slug = "byggnader-strandnara-lage-2020"
-
-# 'Byggnader strandnära läge 2021 ' (residual: "Byggnader strandnära läge")
-[register_version."217.816.18571"]
-slug = "byggnader-strandnara-lage-2021"
-
-# 'Byggnader strandnära läge 2022' (residual: "Byggnader strandnära läge")
-[register_version."217.816.19015"]
-slug = "byggnader-strandnara-lage-2022"
-
-# 'Byggnader strandnära läge 2023' (residual: "Byggnader strandnära läge")
-[register_version."217.816.19750"]
-slug = "byggnader-strandnara-lage-2023"
 [register_variant."217.934"]
 slug = "bebyggelsepaverkad-kust"
 display_group = "Bebyggelsepåverkad kust och strand"
-
-# 'Strandlinje med ny bebyggelse 2018' (residual: "Strandlinje med ny bebyggelse")
-[register_version."217.934.16158"]
-slug = "strandlinje-med-ny-bebyggelse-2018"
-
-# 'Strandlinje med bebyggelse 2018' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.16159"]
-slug = "strandlinje-med-bebyggelse-2018"
-
-# 'Strandlinje med bebyggelse 2019' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.17902"]
-slug = "strandlinje-med-bebyggelse-2019"
-
-# 'Strandlinje med ny bebyggelse 2019' (residual: "Strandlinje med ny bebyggelse")
-[register_version."217.934.17903"]
-slug = "strandlinje-med-ny-bebyggelse-2019"
-
-# 'Strandlinje med bebyggelse 2020' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.18371"]
-slug = "strandlinje-med-bebyggelse-2020"
-
-# 'Strandlinje med ny bebyggelse 2020' (residual: "Strandlinje med ny bebyggelse")
-[register_version."217.934.18372"]
-slug = "strandlinje-med-ny-bebyggelse-2020"
-
-# 'Strandlinje med bebyggelse 2021' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.18569"]
-slug = "strandlinje-med-bebyggelse-2021"
-
-# 'Strandlinje med ny bebygge 2021' (SCB source truncation; slug normalized to 'bebyggelse') (residual: "Strandlinje med ny bebygge")
-[register_version."217.934.18570"]
-slug = "strandlinje-med-ny-bebyggelse-2021"
-
-# 'Strandlinje med bebyggelse 2022' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.19013"]
-slug = "strandlinje-med-bebyggelse-2022"
-
-# 'Strandlinje med ny bebyggelse 2022' (residual: "Strandlinje med ny bebyggelse")
-[register_version."217.934.19014"]
-slug = "strandlinje-med-ny-bebyggelse-2022"
-
-# 'Strandlinje med ny bebyggelse 2023' (residual: "Strandlinje med ny bebyggelse")
-[register_version."217.934.19745"]
-slug = "strandlinje-med-ny-bebyggelse-2023"
-
-# 'Strandlinje med bebyggelse 2023' (residual: "Strandlinje med bebyggelse")
-[register_version."217.934.19749"]
-slug = "strandlinje-med-bebyggelse-2023"
 
 # Kust, stränder och öar
 [register."219"]
@@ -4589,18 +1761,6 @@ display_group = "Strandnära befolkning"
 [register_variant."219.1494"]
 slug = "befolkade-oar-utan-fastlandsforbindelse"
 display_group = "Befolkade öar utan fastlandsförbindelse "
-
-# 'Öar 2013, totalregister' (vs 5783:2013) (residual: "Öar , totalregister")
-[register_version."219.320.13702"]
-slug = "oar-totalregister-2013"
-
-# 'Strandlinje, 2019' (scope: bare year would lose 'Strandlinje' subset) (residual: "Strandlinje,")
-[register_version."219.320.16022"]
-slug = "strandlinje-2019"
-
-# 'Strandlinje, 2024' (scope: bare year would lose 'Strandlinje' subset) (residual: "Strandlinje,")
-[register_version."219.320.19011"]
-slug = "strandlinje-2024"
 
 # Arbetsplatsområden utanför tätort
 [register."221"]
@@ -4666,109 +1826,6 @@ slug = "personalutbildningsstatistik"
 slug = "_default"
 display_group = "Personalutbildningsstatistik (PUT)"
 
-# 'Hela året 1999' (residual: "Hela året")
-[register_version."229.396.15072"]
-slug = "1999"
-
-# 'Hela året 2000' (residual: "Hela året")
-[register_version."229.396.15200"]
-slug = "2000"
-
-# 'Hela året 2001' (residual: "Hela året")
-[register_version."229.396.15202"]
-slug = "2001"
-
-# 'Hela året 2002' (residual: "Hela året")
-[register_version."229.396.15203"]
-slug = "2002"
-
-# 'Hela året 2003' (residual: "Hela året")
-[register_version."229.396.15211"]
-slug = "2003"
-# 'Första halvåret 2006' (residual: "Första halvåret")
-[register_version."229.396.480"]
-slug = "2006-H1"
-
-# 'Första halvåret 2008' (residual: "Första halvåret")
-[register_version."229.396.1740"]
-slug = "2008-H1"
-
-# 'Första halvåret 2010' (residual: "Första halvåret")
-[register_version."229.396.3283"]
-slug = "2010-H1"
-
-# 'Första halvåret 1995' (residual: "Första halvåret")
-[register_version."229.396.14762"]
-slug = "1995-H1"
-
-# 'Andra halvåret 1995' (residual: "Andra halvåret")
-[register_version."229.396.14864"]
-slug = "1995-H2"
-
-# 'Första halvåret 1996' (residual: "Första halvåret")
-[register_version."229.396.14891"]
-slug = "1996-H1"
-
-# 'Andra halvåret 1996' (residual: "Andra halvåret")
-[register_version."229.396.14892"]
-slug = "1996-H2"
-
-# 'Första halvåret 1997' (residual: "Första halvåret")
-[register_version."229.396.14907"]
-slug = "1997-H1"
-
-# 'Andra halvåret 1997' (residual: "Andra halvåret")
-[register_version."229.396.14909"]
-slug = "1997-H2"
-
-# 'Första halvåret 1998' (residual: "Första halvåret")
-[register_version."229.396.14911"]
-slug = "1998-H1"
-
-# 'Andra halvåret 1998' (residual: "Andra halvåret")
-[register_version."229.396.14914"]
-slug = "1998-H2"
-
-# 'Första halvåret 1999' (residual: "Första halvåret")
-[register_version."229.396.14917"]
-slug = "1999-H1"
-
-# 'Andra halvåret 1999' (residual: "Andra halvåret")
-[register_version."229.396.14918"]
-slug = "1999-H2"
-
-# 'Andra halvåret 2000' (residual: "Andra halvåret")
-[register_version."229.396.14967"]
-slug = "2000-H2"
-
-# 'Första halvåret 2000' (residual: "Första halvåret")
-[register_version."229.396.14969"]
-slug = "2000-H1"
-
-# 'Första halvåret 2001' (residual: "Första halvåret")
-[register_version."229.396.14971"]
-slug = "2001-H1"
-
-# 'Andra halvåret 2001' (residual: "Andra halvåret")
-[register_version."229.396.14972"]
-slug = "2001-H2"
-
-# 'Första halvåret 2002' (residual: "Första halvåret")
-[register_version."229.396.14973"]
-slug = "2002-H1"
-
-# 'Andra halvåret 2002' (residual: "Andra halvåret")
-[register_version."229.396.14979"]
-slug = "2002-H2"
-
-# 'Första halvåret 2003' (residual: "Första halvåret")
-[register_version."229.396.14982"]
-slug = "2003-H1"
-
-# 'Andra halvåret 2003' (residual: "Andra halvåret")
-[register_version."229.396.14983"]
-slug = "2003-H2"
-
 # 'Hela året YYYY' (1999-2003) entries removed: with halvår siblings moved
 # to YYYY-H1/YYYY-H2, the bare-year slot is uncontested and derive_period
 # auto-fills them at build time.
@@ -4781,29 +1838,6 @@ slug = "anpassad-grundskola"
 slug = "elever"
 display_group = "Elever"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."231.1529.14807"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."231.1529.18519"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."231.1529.18520"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."231.1529.19646"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."231.1529.19648"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."231.1529.19969"]
-slug = "2024-10-15"
 # Registret över pedagogisk personal (Lärarregistret) 
 [register."232"]
 slug = "lararreg"
@@ -4812,316 +1846,10 @@ slug = "lararreg"
 slug = "tjansteregistret"
 display_group = "Tjänsteregistret"
 
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."232.411.542"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."232.411.3093"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."232.411.5593"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."232.411.5638"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."232.411.5664"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."232.411.5669"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."232.411.5671"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."232.411.7431"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."232.411.9790"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."232.411.9886"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."232.411.9944"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."232.411.10047"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2004/2005' (residual: "Läsåret /2005")
-[register_version."232.411.11612"]
-slug = "lasar-2004-2005"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."232.411.11752"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."232.411.12626"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."232.411.12627"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."232.411.12628"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."232.411.12629"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."232.411.12630"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."232.411.12631"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."232.411.12632"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."232.411.12637"]
-slug = "lasar-1996-1997"
-
-# 'Läsåret 1995/1996' (residual: "Läsåret /1996")
-[register_version."232.411.12638"]
-slug = "lasar-1995-1996"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."232.411.13088"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 1994/1995' (residual: "Läsåret /1995")
-[register_version."232.411.13269"]
-slug = "lasar-1994-1995"
-
-# 'Läsåret 1993/1994' (residual: "Läsåret /1994")
-[register_version."232.411.13300"]
-slug = "lasar-1993-1994"
-
-# 'Läsåret 1992/1993' (residual: "Läsåret /1993")
-[register_version."232.411.13370"]
-slug = "lasar-1992-1993"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."232.411.13913"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 1991/1992' (residual: "Läsåret /1992")
-[register_version."232.411.14153"]
-slug = "lasar-1991-1992"
-
-# 'Läsåret 1990/1991' (residual: "Läsåret /1991")
-[register_version."232.411.14157"]
-slug = "lasar-1990-1991"
-
-# 'Läsåret 1989/1990' (residual: "Läsåret /1990")
-[register_version."232.411.14162"]
-slug = "lasar-1989-1990"
-
-# 'Läsåret 1988/1989' (residual: "Läsåret /1989")
-[register_version."232.411.14169"]
-slug = "lasar-1988-1989"
-
-# 'Läsåret 1987/1988' (residual: "Läsåret /1988")
-[register_version."232.411.14170"]
-slug = "lasar-1987-1988"
-
-# 'Läsåret 1986/1987' (residual: "Läsåret /1987")
-[register_version."232.411.14171"]
-slug = "lasar-1986-1987"
-
-# 'Läsåret 1985/1986' (residual: "Läsåret /1986")
-[register_version."232.411.14172"]
-slug = "lasar-1985-1986"
-
-# 'Läsåret 1984/1985' (residual: "Läsåret /1985")
-[register_version."232.411.14173"]
-slug = "lasar-1984-1985"
-
-# 'Läsåret 1983/1984' (residual: "Läsåret /1984")
-[register_version."232.411.14174"]
-slug = "lasar-1983-1984"
-
-# 'Läsåret 1982/1983' (residual: "Läsåret /1983")
-[register_version."232.411.14179"]
-slug = "lasar-1982-1983"
-
-# 'Läsåret 1981/1982' (residual: "Läsåret /1982")
-[register_version."232.411.14180"]
-slug = "lasar-1981-1982"
-
-# 'Läsåret 1980/1981' (residual: "Läsåret /1981")
-[register_version."232.411.14181"]
-slug = "lasar-1980-1981"
-
-# 'Läsåret 1979/1980' (residual: "Läsåret /1980")
-[register_version."232.411.14182"]
-slug = "lasar-1979-1980"
-
-# 'Läsåret 1978/1979' (residual: "Läsåret /1979")
-[register_version."232.411.14183"]
-slug = "lasar-1978-1979"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."232.411.16177"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."232.411.18124"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."232.411.18685"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."232.411.19163"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."232.411.19764"]
-slug = "lasar-2024-2025"
 [register_variant."232.412"]
 slug = "personregistret"
 display_group = "Personregistret"
 
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."232.412.985"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."232.412.3325"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."232.412.5604"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."232.412.5637"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."232.412.5663"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."232.412.5667"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."232.412.5670"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."232.412.7432"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."232.412.8608"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."232.412.9878"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."232.412.9916"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."232.412.10046"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2004/2005' (residual: "Läsåret /2005")
-[register_version."232.412.11607"]
-slug = "lasar-2004-2005"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."232.412.11749"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2003/2004' (residual: "Läsåret /2004")
-[register_version."232.412.12616"]
-slug = "lasar-2003-2004"
-
-# 'Läsåret 2002/2003' (residual: "Läsåret /2003")
-[register_version."232.412.12617"]
-slug = "lasar-2002-2003"
-
-# 'Läsåret 2001/2002' (residual: "Läsåret /2002")
-[register_version."232.412.12619"]
-slug = "lasar-2001-2002"
-
-# 'Läsåret 2000/2001' (residual: "Läsåret /2001")
-[register_version."232.412.12620"]
-slug = "lasar-2000-2001"
-
-# 'Läsåret 1999/2000' (residual: "Läsåret /2000")
-[register_version."232.412.12621"]
-slug = "lasar-1999-2000"
-
-# 'Läsåret 1998/1999' (residual: "Läsåret /1999")
-[register_version."232.412.12622"]
-slug = "lasar-1998-1999"
-
-# 'Läsåret 1997/1998' (residual: "Läsåret /1998")
-[register_version."232.412.12623"]
-slug = "lasar-1997-1998"
-
-# 'Läsåret 1996/1997' (residual: "Läsåret /1997")
-[register_version."232.412.12624"]
-slug = "lasar-1996-1997"
-
-# 'Läsåret 1995/1996' (residual: "Läsåret /1996")
-[register_version."232.412.12625"]
-slug = "lasar-1995-1996"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."232.412.13086"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."232.412.13912"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."232.412.16129"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."232.412.18088"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."232.412.18675"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."232.412.19162"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."232.412.19760"]
-slug = "lasar-2024-2025"
 [register_variant."232.1497"]
 slug = "lararprognos-skola-forskola"
 display_group = "Lärarprognos inom skola och förskola"
@@ -5134,137 +1862,6 @@ slug = "gymnasieskola-elever"
 slug = "_default"
 display_group = "Elever per 15 oktober"
 
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."233.403.1382"]
-slug = "2006-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."233.403.2036"]
-slug = "2008-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."233.403.3323"]
-slug = "2009-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."233.403.3324"]
-slug = "2007-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."233.403.3344"]
-slug = "2010-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."233.403.3996"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."233.403.4943"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."233.403.5356"]
-slug = "2013-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."233.403.5856"]
-slug = "2014-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."233.403.6234"]
-slug = "2005-10-15"
-
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."233.403.6235"]
-slug = "2004-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."233.403.7406"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."233.403.9847"]
-slug = "2016-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."233.403.9874"]
-slug = "2003-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."233.403.9875"]
-slug = "2002-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."233.403.9876"]
-slug = "2001-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."233.403.9948"]
-slug = "2000-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."233.403.9949"]
-slug = "1999-10-15"
-
-# '15 oktober 1998' (residual: "15 oktober")
-[register_version."233.403.9950"]
-slug = "1998-10-15"
-
-# '15 oktober 1997' (residual: "15 oktober")
-[register_version."233.403.9951"]
-slug = "1997-10-15"
-
-# '15 oktober 1996' (residual: "15 oktober")
-[register_version."233.403.9952"]
-slug = "1996-10-15"
-
-# '15 oktober 1995' (residual: "15 oktober")
-[register_version."233.403.9953"]
-slug = "1995-10-15"
-
-# '15 oktober 1994' (residual: "15 oktober")
-[register_version."233.403.11330"]
-slug = "1994-10-15"
-
-# '15 oktober 1993' (residual: "15 oktober")
-[register_version."233.403.11331"]
-slug = "1993-10-15"
-
-# '15 oktober 1992' (residual: "15 oktober")
-[register_version."233.403.11332"]
-slug = "1992-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."233.403.11782"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."233.403.13100"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."233.403.13958"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."233.403.18281"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."233.403.18314"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."233.403.19468"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."233.403.19470"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."233.403.19768"]
-slug = "2024-10-15"
 # Labour Cost Survey (LCS)
 [register."234"]
 slug = "lcs"
@@ -5300,18 +1897,6 @@ display_group = "Individer 16 år och uppåt (ULF)"
 [register_variant."237.1657"]
 slug = "ulf-2021"
 display_group = "ULF från och med 2021"
-
-# '1992_old' (residual: "_old")
-[register_version."237.457.734"]
-slug = "old-1992"
-
-# '1990_old' (residual: "_old")
-[register_version."237.457.736"]
-slug = "old-1990"
-
-# '1989_old' (vs 20238:1989) (residual: "_old")
-[register_version."237.458.737"]
-slug = "old-1989"
 
 # Allmänna val, nominerade och valda 
 [register."239"]
@@ -5385,16 +1970,10 @@ slug = "folkomrostningar-valresultat"
 slug = "valresultat"
 display_group = "Valresultat "
 
-# '2003 Euro' (residual: "Euro")
-[register_version."244.473.5096"]
-slug = "euro-2003"
 [register_variant."244.1084"]
 slug = "rostberattigade"
 display_group = "Röstberättigade"
 
-# '2003 Euro' (residual: "Euro")
-[register_version."244.1084.5116"]
-slug = "euro-2003"
 # Europaparlamentsval, valdeltagandeundersökningen 
 [register."245"]
 slug = "ep-val-deltagande"
@@ -5443,54 +2022,6 @@ display_group = "Kursdeltagare och utbildningsresultat"
 slug = "nationella-prov-resultat"
 display_group = "Nationella prov: resultat"
 
-# '2008/2009' (vs 13273:2008)
-[register_version."248.496.14069"]
-slug = "lasar-2008-2009"
-
-# '2007/2008' (vs 13274:2007)
-[register_version."248.496.14070"]
-slug = "lasar-2007-2008"
-
-# '2006/2007' (vs 13276:2006)
-[register_version."248.496.14071"]
-slug = "lasar-2006-2007"
-
-# '2005/2006' (vs 13277:2005)
-[register_version."248.496.14072"]
-slug = "lasar-2005-2006"
-
-# '2004/2005' (vs 13278:2004)
-[register_version."248.496.14073"]
-slug = "lasar-2004-2005"
-
-# '2003/2004' (vs 13279:2003)
-[register_version."248.496.14074"]
-slug = "lasar-2003-2004"
-
-# '2002/2003' (vs 13280:2002)
-[register_version."248.496.14075"]
-slug = "lasar-2002-2003"
-
-# '2001/2002' (vs 13281:2001)
-[register_version."248.496.14076"]
-slug = "lasar-2001-2002"
-
-# '2000/2001' (vs 13282:2000)
-[register_version."248.496.14077"]
-slug = "lasar-2000-2001"
-
-# '1999/2000' (vs 13283:1999)
-[register_version."248.496.14078"]
-slug = "lasar-1999-2000"
-
-# '1998/1999' (vs 13284:1998)
-[register_version."248.496.14079"]
-slug = "lasar-1998-1999"
-
-# '1997/1998' (vs 13285:1997)
-[register_version."248.496.14080"]
-slug = "lasar-1997-1998"
-
 # Kommunal vuxenutbildning
 [register."249"]
 slug = "komvux"
@@ -5515,86 +2046,6 @@ display_group = "Elever med slutbetyg eller gymnasieexamen"
 slug = "nationella-prov"
 display_group = "Nationella prov"
 
-# '2008/2009' (vs 11994:2008)
-[register_version."249.498.12497"]
-slug = "lasar-2008-2009"
-
-# '2007/2008' (vs 14034:2007)
-[register_version."249.498.12498"]
-slug = "lasar-2007-2008"
-
-# '2006/2007' (vs 14035:2006)
-[register_version."249.498.14022"]
-slug = "lasar-2006-2007"
-
-# '2005/2006' (vs 14036:2005)
-[register_version."249.498.14023"]
-slug = "lasar-2005-2006"
-
-# '2004/2005' (vs 14037:2004)
-[register_version."249.498.14024"]
-slug = "lasar-2004-2005"
-
-# '2003/2004' (vs 14038:2003)
-[register_version."249.498.14025"]
-slug = "lasar-2003-2004"
-
-# '2002/2003' (vs 14039:2002)
-[register_version."249.498.14026"]
-slug = "lasar-2002-2003"
-
-# '2001/2002' (vs 14040:2001)
-[register_version."249.498.14027"]
-slug = "lasar-2001-2002"
-
-# '2000/2001' (vs 14041:2000)
-[register_version."249.498.14028"]
-slug = "lasar-2000-2001"
-
-# '1999/2000' (vs 14042:1999)
-[register_version."249.498.14029"]
-slug = "lasar-1999-2000"
-
-# '2007/2008' (vs 13978:2007)
-[register_version."249.1107.12495"]
-slug = "lasar-2007-2008"
-
-# '2008/2009' (vs 11946:2008)
-[register_version."249.1107.12496"]
-slug = "lasar-2008-2009"
-
-# '2006/2007' (vs 13980:2006)
-[register_version."249.1107.13988"]
-slug = "lasar-2006-2007"
-
-# '2005/2006' (vs 13981:2005)
-[register_version."249.1107.13989"]
-slug = "lasar-2005-2006"
-
-# '2004/2005' (vs 13982:2004)
-[register_version."249.1107.13990"]
-slug = "lasar-2004-2005"
-
-# '2003/2004' (vs 13983:2003)
-[register_version."249.1107.13991"]
-slug = "lasar-2003-2004"
-
-# '2002/2003' (vs 13984:2002)
-[register_version."249.1107.13992"]
-slug = "lasar-2002-2003"
-
-# '2001/2002' (vs 13985:2001)
-[register_version."249.1107.13993"]
-slug = "lasar-2001-2002"
-
-# '2000/2001' (vs 13986:2000)
-[register_version."249.1107.13994"]
-slug = "lasar-2000-2001"
-
-# '1999/2000' (vs 13987:1999)
-[register_version."249.1107.13995"]
-slug = "lasar-1999-2000"
-
 # Komvux som anpassad utbildning
 [register."250"]
 slug = "komvux-anpassad"
@@ -5603,152 +2054,10 @@ slug = "komvux-anpassad"
 slug = "elever"
 display_group = "Elever"
 
-# '15 oktober 2006' (residual: "15 oktober")
-[register_version."250.499.1020"]
-slug = "2006-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."250.499.4498"]
-slug = "2011-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."250.499.4993"]
-slug = "2012-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."250.499.5278"]
-slug = "2013-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."250.499.5937"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."250.499.9905"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."250.499.11117"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."250.499.11822"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."250.499.13254"]
-slug = "2018-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."250.499.13255"]
-slug = "2010-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."250.499.13256"]
-slug = "2009-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."250.499.13257"]
-slug = "2008-10-15"
-
-# '15 oktober 2007' (residual: "15 oktober")
-[register_version."250.499.13259"]
-slug = "2007-10-15"
-
-# '15 oktober 2005' (residual: "15 oktober")
-[register_version."250.499.13261"]
-slug = "2005-10-15"
-
-# '15 oktober 2004' (residual: "15 oktober")
-[register_version."250.499.13262"]
-slug = "2004-10-15"
-
-# '15 oktober 2003' (residual: "15 oktober")
-[register_version."250.499.13263"]
-slug = "2003-10-15"
-
-# '15 oktober 2002' (residual: "15 oktober")
-[register_version."250.499.13264"]
-slug = "2002-10-15"
-
-# '15 oktober 2001' (residual: "15 oktober")
-[register_version."250.499.13265"]
-slug = "2001-10-15"
-
-# '15 oktober 2000' (residual: "15 oktober")
-[register_version."250.499.13266"]
-slug = "2000-10-15"
-
-# '15 oktober 1999' (residual: "15 oktober")
-[register_version."250.499.13267"]
-slug = "1999-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."250.499.14810"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."250.499.19626"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."250.499.19627"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."250.499.19628"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."250.499.19629"]
-slug = "2023-10-15"
 [register_variant."250.1021"]
 slug = "grupper"
 display_group = "Grupper"
 
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."250.1021.4531"]
-slug = "2011-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."250.1021.5277"]
-slug = "2013-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."250.1021.5285"]
-slug = "2012-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."250.1021.5938"]
-slug = "2014-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."250.1021.13337"]
-slug = "2010-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."250.1021.13338"]
-slug = "2009-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."250.1021.13339"]
-slug = "2008-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."250.1021.13340"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."250.1021.13341"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."250.1021.13343"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."250.1021.13344"]
-slug = "2018-10-15"
 [register_variant."250.1758"]
 slug = "kursdeltagare"
 display_group = "Kursdeltagare i anpassad kommunal vuxenutbildning"
@@ -5794,26 +2103,6 @@ slug = "investeringsfonder"
 [register_variant."254.549"]
 slug = "investeringsfonder-utdata"
 display_group = "Utdata"
-
-# '2007 kv 2-kv 4'
-[register_version."254.549.2661"]
-slug = "q2-q4-2007"
-
-# '2007 kv 1'
-[register_version."254.549.2774"]
-slug = "2007-Q1"
-
-# '2000 kv 1'
-[register_version."254.549.2775"]
-slug = "2000-Q1"
-
-# '1998 kv 3- kv4'
-[register_version."254.549.2779"]
-slug = "q3-q4-1998"
-
-# '2000 kv 2- kv 4'
-[register_version."254.549.2786"]
-slug = "q2-q4-2000"
 
 # Innovation i företagssektorn
 [register."257"]
@@ -6045,41 +2334,6 @@ slug = "natpriser-naturgas"
 slug = "natpriser"
 display_group = "Nätpriser"
 
-# '1 jan 2008' (residual: "1 jan")
-[register_version."284.720.2463"]
-slug = "2008-01-01"
-
-# '1 jan 2016' (residual: "1 jan")
-[register_version."284.720.10008"]
-slug = "2016-01-01"
-
-# '1 jan 2017' (residual: "1 jan")
-[register_version."284.720.10020"]
-slug = "2017-01-01"
-
-# '1 jan 2015' (residual: "1 jan")
-[register_version."284.720.10021"]
-slug = "2015-01-01"
-
-# '1 jan 2014' (residual: "1 jan")
-[register_version."284.720.10022"]
-slug = "2014-01-01"
-
-# '1 jan 2013' (residual: "1 jan")
-[register_version."284.720.10063"]
-slug = "2013-01-01"
-
-# '1 jan 2012' (residual: "1 jan")
-[register_version."284.720.10064"]
-slug = "2012-01-01"
-
-# '1 jan 2011' (residual: "1 jan")
-[register_version."284.720.10065"]
-slug = "2011-01-01"
-
-# '1 jan 2010' (residual: "1 jan")
-[register_version."284.720.10066"]
-slug = "2010-01-01"
 [register_variant."284.721"]
 slug = "leverantorsbyten"
 display_group = "Leverantörsbyten"
@@ -6098,9 +2352,6 @@ display_group = "Nationalräkenskaper"
 slug = "regionalrakenskaper"
 display_group = "Regionalräkenskaper"
 
-# '2019 preliminära' (residual: "preliminära")
-[register_version."285.845.16382"]
-slug = "preliminar-version-2019"
 [register_variant."285.914"]
 slug = "esspros"
 display_group = "Det europeiska systemet för integrerad statistik över socialt skydd (ESSPROS)"
@@ -6187,14 +2438,6 @@ display_group = "Miljömotiverade subventioner"
 slug = "miljosektorn"
 display_group = "Miljösektorn"
 
-# '2003-2018'
-[register_version."295.1547.14965"]
-slug = "v2003-2018"
-
-# '2003-2019'
-[register_version."295.1547.17598"]
-slug = "v2003-2019"
-
 # Prisindex
 [register."296"]
 slug = "prisindex"
@@ -6210,121 +2453,6 @@ display_group = "Tjänsteprisindex (TPI)"
 [register_variant."296.1085"]
 slug = "ppi"
 display_group = "Prisindex i producent- och importled (PPI)"
-
-# 'Utdata 2026' (residual: "Utdata")
-[register_version."296.1085.20327"]
-slug = "utdata-2026"
-# 'Indata 2014' (residual: "Indata")
-[register_version."296.980.5776"]
-slug = "indata-2014"
-
-# 'Utdata 2014' (residual: "Utdata")
-[register_version."296.980.5792"]
-slug = "utdata-2014"
-
-# 'Indata 2013' (residual: "Indata")
-[register_version."296.1085.4618"]
-slug = "indata-2013"
-
-# 'Utdata 2013' (residual: "Utdata")
-[register_version."296.1085.4620"]
-slug = "utdata-2013"
-
-# 'Utdata 2014' (residual: "Utdata")
-[register_version."296.1085.5205"]
-slug = "utdata-2014"
-
-# 'Indata 2014' (residual: "Indata")
-[register_version."296.1085.5206"]
-slug = "indata-2014"
-
-# 'Indata 2015' (residual: "Indata")
-[register_version."296.1085.5790"]
-slug = "indata-2015"
-
-# 'Utdata 2015' (residual: "Utdata")
-[register_version."296.1085.5791"]
-slug = "utdata-2015"
-
-# 'Utdata 2016' (residual: "Utdata")
-[register_version."296.1085.6243"]
-slug = "utdata-2016"
-
-# 'Indata 2016' (residual: "Indata")
-[register_version."296.1085.6244"]
-slug = "indata-2016"
-
-# 'Indata 2017' (residual: "Indata")
-[register_version."296.1085.11106"]
-slug = "indata-2017"
-
-# 'Utdata 2017' (residual: "Utdata")
-[register_version."296.1085.11108"]
-slug = "utdata-2017"
-
-# 'Utdata 2018' (residual: "Utdata")
-[register_version."296.1085.11705"]
-slug = "utdata-2018"
-
-# 'Indata 2018' (residual: "Indata")
-[register_version."296.1085.11707"]
-slug = "indata-2018"
-
-# 'Utdata 2019' (residual: "Utdata")
-[register_version."296.1085.12977"]
-slug = "utdata-2019"
-
-# 'Indata 2019' (residual: "Indata")
-[register_version."296.1085.12978"]
-slug = "indata-2019"
-
-# 'Utdata 2020' (residual: "Utdata")
-[register_version."296.1085.13761"]
-slug = "utdata-2020"
-
-# 'Indata 2020' (residual: "Indata")
-[register_version."296.1085.13763"]
-slug = "indata-2020"
-
-# 'Utdata 2021' (residual: "Utdata")
-[register_version."296.1085.16114"]
-slug = "utdata-2021"
-
-# 'Indata 2021' (residual: "Indata")
-[register_version."296.1085.16115"]
-slug = "indata-2021"
-
-# 'Indata 2022' (residual: "Indata")
-[register_version."296.1085.18078"]
-slug = "indata-2022"
-
-# 'Utdata 2022' (residual: "Utdata")
-[register_version."296.1085.18103"]
-slug = "utdata-2022"
-
-# 'Indata 2023' (residual: "Indata")
-[register_version."296.1085.18104"]
-slug = "indata-2023"
-
-# 'Utdata 2023' (residual: "Utdata")
-[register_version."296.1085.19325"]
-slug = "utdata-2023"
-
-# 'Utdata 2024' (residual: "Utdata")
-[register_version."296.1085.19326"]
-slug = "utdata-2024"
-
-# 'Utdata 2025' (residual: "Utdata")
-[register_version."296.1085.19704"]
-slug = "utdata-2025"
-
-# 'Indata 2024' (residual: "Indata")
-[register_version."296.1085.19910"]
-slug = "indata-2024"
-
-# 'Indata 2025' (residual: "Indata")
-[register_version."296.1085.19952"]
-slug = "indata-2025"
 
 # Finansräkenskaper
 [register."299"]
@@ -6366,127 +2494,14 @@ slug = "fritidshem"
 slug = "grundskola"
 display_group = "Grundskola"
 
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."304.852.5656"]
-slug = "2013-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."304.852.5657"]
-slug = "2012-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."304.852.12478"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."304.852.12479"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."304.852.12480"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."304.852.12481"]
-slug = "2017-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."304.852.12483"]
-slug = "2011-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."304.852.12484"]
-slug = "2010-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."304.852.12485"]
-slug = "2009-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."304.852.12486"]
-slug = "2008-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."304.852.13157"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."304.852.14451"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."304.852.18523"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."304.852.18524"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."304.852.19959"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."304.852.19965"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."304.852.19966"]
-slug = "2024-10-15"
 [register_variant."304.1536"]
 slug = "anpassad-grundskola"
 display_group = "Anpassad grundskola"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."304.1536.14897"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."304.1536.18525"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."304.1536.18526"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."304.1536.19962"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."304.1536.19963"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."304.1536.19964"]
-slug = "2024-10-15"
 [register_variant."304.1537"]
 slug = "specialskola"
 display_group = "Specialskola"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."304.1537.14898"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."304.1537.18527"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."304.1537.18528"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."304.1537.19961"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."304.1537.19967"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."304.1537.19968"]
-slug = "2024-10-15"
 # Grundskola: nationella prov åk 3
 [register."305"]
 slug = "grundskola-prov-ak3"
@@ -6503,96 +2518,10 @@ slug = "forskola"
 slug = "barn-individ"
 display_group = "Barn - individ"
 
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."307.1195.6136"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."307.1195.12585"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."307.1195.12586"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."307.1195.12587"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."307.1195.13170"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."307.1195.14811"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."307.1195.18531"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."307.1195.18532"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."307.1195.19943"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."307.1195.19944"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."307.1195.19945"]
-slug = "2024-10-15"
 [register_variant."307.1196"]
 slug = "personal-individ"
 display_group = "Personal - individ"
 
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."307.1196.6137"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."307.1196.12596"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."307.1196.12598"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."307.1196.12602"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."307.1196.13171"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."307.1196.14831"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."307.1196.18533"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."307.1196.18534"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."307.1196.19946"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."307.1196.19947"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."307.1196.19950"]
-slug = "2024-10-15"
 # Befolkningsframskrivningar
 [register."310"]
 slug = "befolkningsframskrivningar"
@@ -6619,430 +2548,6 @@ display_group = "Framskrivning av antal invandrare/immigranter"
 slug = "framskrivning-utvandrade"
 display_group = "antal utvandrade och utflyttartal"
 
-# '2009-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.881.3836"]
-slug = "huvudalternativ-2009-2060"
-
-# '2009-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.881.3871"]
-slug = "hogalternativ-2009-2060"
-
-# '2009-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.881.3872"]
-slug = "lagalternativ-2009-2060"
-
-# '2012-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.881.4164"]
-slug = "huvudalternativ-2012-2060"
-
-# '2012-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.881.4165"]
-slug = "hogalternativ-2012-2060"
-
-# '2012-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.881.4166"]
-slug = "lagalternativ-2012-2060"
-
-# '2015-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.881.5991"]
-slug = "huvudalternativ-2015-2060"
-
-# '2015-2060 alternativ hög fruktsamhet' (residual: "-2060 alternativ hög fruktsamhet")
-[register_version."310.881.6003"]
-slug = "alternativ-hog-fruktsamhet-2015-2060"
-
-# '2015-2060 alternativ hög dödlighet' (residual: "-2060 alternativ hög dödlighet")
-[register_version."310.881.6004"]
-slug = "alternativ-hog-dodlighet-2015-2060"
-
-# '2015-2060 alternativ hög migration' (residual: "-2060 alternativ hög migration")
-[register_version."310.881.6005"]
-slug = "alternativ-hog-migration-2015-2060"
-
-# '2015-2060 alternativ låg fruktsamhet' (residual: "-2060 alternativ låg fruktsamhet")
-[register_version."310.881.6006"]
-slug = "alternativ-lag-fruktsamhet-2015-2060"
-
-# '2015-2060 alternativ låg dödlighet' (residual: "-2060 alternativ låg dödlighet")
-[register_version."310.881.6007"]
-slug = "alternativ-lag-dodlighet-2015-2060"
-
-# '2015-2060 alternativ låg migration' (residual: "-2060 alternativ låg migration")
-[register_version."310.881.6008"]
-slug = "alternativ-lag-migration-2015-2060"
-
-# '2018-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.881.11865"]
-slug = "huvudalternativ-2018-2070"
-
-# '2018-2070 alternativ högre fruktsamhet' (residual: "-2070 alternativ högre fruktsamhet")
-[register_version."310.881.11866"]
-slug = "alternativ-hogre-fruktsamhet-2018-2070"
-
-# '2018-2070 alternativ lägre fruktsamhet' (residual: "-2070 alternativ lägre fruktsamhet")
-[register_version."310.881.11867"]
-slug = "alternativ-lagre-fruktsamhet-2018-2070"
-
-# '2018-2070 alternativ högre migration' (residual: "-2070 alternativ högre migration")
-[register_version."310.881.11868"]
-slug = "alternativ-hogre-migration-2018-2070"
-
-# '2018-2070 alternativ lägre migration' (residual: "-2070 alternativ lägre migration")
-[register_version."310.881.11869"]
-slug = "alternativ-lagre-migration-2018-2070"
-
-# '2018-2070 alternativ högre dödlighet' (residual: "-2070 alternativ högre dödlighet")
-[register_version."310.881.11870"]
-slug = "alternativ-hogre-dodlighet-2018-2070"
-
-# '2018-2070 alternativ lägre dödlighet' (residual: "-2070 alternativ lägre dödlighet")
-[register_version."310.881.11871"]
-slug = "alternativ-lagre-dodlighet-2018-2070"
-
-# '2021-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.881.16290"]
-slug = "huvudalternativ-2021-2070"
-
-# '2021-2070 alternativ högre dödlighet' (residual: "-2070 alternativ högre dödlighet")
-[register_version."310.881.16291"]
-slug = "alternativ-hogre-dodlighet-2021-2070"
-
-# '2021-2070 alternativ lägre dödlighet' (residual: "-2070 alternativ lägre dödlighet")
-[register_version."310.881.16292"]
-slug = "alternativ-lagre-dodlighet-2021-2070"
-
-# '2021-2070 alternativ högre migration' (residual: "-2070 alternativ högre migration")
-[register_version."310.881.16293"]
-slug = "alternativ-hogre-migration-2021-2070"
-
-# '2021-2070 alternativ lägre migration' (residual: "-2070 alternativ lägre migration")
-[register_version."310.881.16294"]
-slug = "alternativ-lagre-migration-2021-2070"
-
-# '2021-2070 alternativ högre fruktsamhet' (residual: "-2070 alternativ högre fruktsamhet")
-[register_version."310.881.16295"]
-slug = "alternativ-hogre-fruktsamhet-2021-2070"
-
-# '2021-2070 alternativ lägre fruktsamhet' (residual: "-2070 alternativ lägre fruktsamhet")
-[register_version."310.881.16296"]
-slug = "alternativ-lagre-fruktsamhet-2021-2070"
-
-# '2024-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.881.19190"]
-slug = "huvudalternativ-2024-2070"
-
-# '2024-2070 alternativ lägre migration' (residual: "-2070 alternativ lägre migration")
-[register_version."310.881.19191"]
-slug = "alternativ-lagre-migration-2024-2070"
-
-# '2024-2070 alternativ lägre fruktsamhet' (residual: "-2070 alternativ lägre fruktsamhet")
-[register_version."310.881.19192"]
-slug = "alternativ-lagre-fruktsamhet-2024-2070"
-
-# '2024-2070 alternativ lägre dödlighet' (residual: "-2070 alternativ lägre dödlighet")
-[register_version."310.881.19193"]
-slug = "alternativ-lagre-dodlighet-2024-2070"
-
-# '2024-2070 alternativ högre migration' (residual: "-2070 alternativ högre migration")
-[register_version."310.881.19194"]
-slug = "alternativ-hogre-migration-2024-2070"
-
-# '2024-2070 alternativ högre fruktsamhet' (residual: "-2070 alternativ högre fruktsamhet")
-[register_version."310.881.19195"]
-slug = "alternativ-hogre-fruktsamhet-2024-2070"
-
-# '2024-2070 alternativ högre dödlighet' (residual: "-2070 alternativ högre dödlighet")
-[register_version."310.881.19196"]
-slug = "alternativ-hogre-dodlighet-2024-2070"
-
-# '2009-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.887.3838"]
-slug = "huvudalternativ-2009-2060"
-
-# '2009-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.887.3865"]
-slug = "lagalternativ-2009-2060"
-
-# '2009-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.887.3866"]
-slug = "hogalternativ-2009-2060"
-
-# '2012-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.887.4167"]
-slug = "huvudalternativ-2012-2060"
-
-# '2012-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.887.4168"]
-slug = "lagalternativ-2012-2060"
-
-# '2012-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.887.4169"]
-slug = "hogalternativ-2012-2060"
-
-# '2015-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.887.5994"]
-slug = "huvudalternativ-2015-2060"
-
-# '2015-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.887.5995"]
-slug = "lagalternativ-2015-2060"
-
-# '2015-2060 Högalternativ' (residual: "-2060 Högalternativ")
-[register_version."310.887.5996"]
-slug = "hogalternativ-2015-2060"
-
-# '2018-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.887.11872"]
-slug = "huvudalternativ-2018-2070"
-
-# '2018-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.887.11873"]
-slug = "lagre-alternativ-2018-2070"
-
-# '2018-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.887.11874"]
-slug = "hogre-alternativ-2018-2070"
-
-# '2021-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.887.16276"]
-slug = "huvudalternativ-2021-2070"
-
-# '2021-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.887.16277"]
-slug = "hogre-alternativ-2021-2070"
-
-# '2021-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.887.16278"]
-slug = "lagre-alternativ-2021-2070"
-
-# '2024-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.887.19197"]
-slug = "huvudalternativ-2024-2070"
-
-# '2024-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.887.19198"]
-slug = "lagre-alternativ-2024-2070"
-
-# '2024-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.887.19199"]
-slug = "hogre-alternativ-2024-2070"
-
-# '2009-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.888.3835"]
-slug = "huvudalternativ-2009-2060"
-
-# '2009-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.888.3862"]
-slug = "hogalternativ-2009-2060"
-
-# '2009-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.888.3864"]
-slug = "lagalternativ-2009-2060"
-
-# '2012-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.888.4161"]
-slug = "huvudalternativ-2012-2060"
-
-# '2012-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.888.4162"]
-slug = "hogalternativ-2012-2060"
-
-# '2012-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.888.4163"]
-slug = "lagalternativ-2012-2060"
-
-# '2015-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.888.5987"]
-slug = "huvudalternativ-2015-2060"
-
-# '2015-2060 högalternariv' (SCB source typo; slug normalized to 'alternativ') (residual: "-2060 högalternariv")
-[register_version."310.888.5988"]
-slug = "hogalternativ-2015-2060"
-
-# '2015-2060 lågalternariv' (SCB source typo; slug normalized to 'alternativ') (residual: "-2060 lågalternariv")
-[register_version."310.888.5989"]
-slug = "lagalternativ-2015-2060"
-
-# '2018-2070  huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.888.11862"]
-slug = "huvudalternativ-2018-2070"
-
-# '2018-2070  högre alternariv' (SCB source typo; slug normalized to 'alternativ') (residual: "-2070 högre alternariv")
-[register_version."310.888.11863"]
-slug = "hogre-alternativ-2018-2070"
-
-# '2018-2070  lägre alternariv' (SCB source typo; slug normalized to 'alternativ') (residual: "-2070 lägre alternariv")
-[register_version."310.888.11864"]
-slug = "lagre-alternativ-2018-2070"
-
-# '2021-2070  huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.888.16272"]
-slug = "huvudalternativ-2021-2070"
-
-# '2021-2070  högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.888.16273"]
-slug = "hogre-alternativ-2021-2070"
-
-# '2021-2070  lägre alternaiv' (SCB source typo; slug normalized to 'alternativ') (residual: "-2070 lägre alternaiv")
-[register_version."310.888.16274"]
-slug = "lagre-alternativ-2021-2070"
-
-# '2024-2070  huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.888.19187"]
-slug = "huvudalternativ-2024-2070"
-
-# '2024-2070  lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.888.19188"]
-slug = "lagre-alternativ-2024-2070"
-
-# '2024-2070  högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.888.19189"]
-slug = "hogre-alternativ-2024-2070"
-
-# '2009-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.889.3840"]
-slug = "huvudalternativ-2009-2060"
-
-# '2009-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.889.3867"]
-slug = "hogalternativ-2009-2060"
-
-# '2009-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.889.3868"]
-slug = "lagalternativ-2009-2060"
-
-# '2012-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.889.4170"]
-slug = "huvudalternativ-2012-2060"
-
-# '2012-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.889.4171"]
-slug = "hogalternativ-2012-2060"
-
-# '2012-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.889.4172"]
-slug = "lagalternativ-2012-2060"
-
-# '2015-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.889.5997"]
-slug = "huvudalternativ-2015-2060"
-
-# '2015-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.889.5998"]
-slug = "hogalternativ-2015-2060"
-
-# '2015-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.889.5999"]
-slug = "lagalternativ-2015-2060"
-
-# '2018-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.889.11875"]
-slug = "huvudalternativ-2018-2070"
-
-# '2018-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.889.11876"]
-slug = "lagre-alternativ-2018-2070"
-
-# '2018-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.889.11877"]
-slug = "hogre-alternativ-2018-2070"
-
-# '2021-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.889.16280"]
-slug = "huvudalternativ-2021-2070"
-
-# '2021-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.889.16285"]
-slug = "hogre-alternativ-2021-2070"
-
-# '2021-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.889.16286"]
-slug = "lagre-alternativ-2021-2070"
-
-# '2024-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.889.19200"]
-slug = "huvudalternativ-2024-2070"
-
-# '2024-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.889.19201"]
-slug = "hogre-alternativ-2024-2070"
-
-# '2024-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.889.19202"]
-slug = "lagre-alternativ-2024-2070"
-
-# '2009-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.891.3841"]
-slug = "huvudalternativ-2009-2060"
-
-# '2009-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.891.3869"]
-slug = "hogalternativ-2009-2060"
-
-# '2009-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.891.3870"]
-slug = "lagalternativ-2009-2060"
-
-# '2012-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.891.4173"]
-slug = "huvudalternativ-2012-2060"
-
-# '2012-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.891.4174"]
-slug = "hogalternativ-2012-2060"
-
-# '2012-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.891.4175"]
-slug = "lagalternativ-2012-2060"
-
-# '2015-2060 huvudalternativ' (residual: "-2060 huvudalternativ")
-[register_version."310.891.6000"]
-slug = "huvudalternativ-2015-2060"
-
-# '2015-2060 lågalternativ' (residual: "-2060 lågalternativ")
-[register_version."310.891.6001"]
-slug = "lagalternativ-2015-2060"
-
-# '2015-2060 högalternativ' (residual: "-2060 högalternativ")
-[register_version."310.891.6002"]
-slug = "hogalternativ-2015-2060"
-
-# '2018-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.891.11878"]
-slug = "huvudalternativ-2018-2070"
-
-# '2018-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.891.11879"]
-slug = "lagre-alternativ-2018-2070"
-
-# '2018-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.891.11880"]
-slug = "hogre-alternativ-2018-2070"
-
-# '2021-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.891.16287"]
-slug = "huvudalternativ-2021-2070"
-
-# '2021-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.891.16288"]
-slug = "hogre-alternativ-2021-2070"
-
-# '2021-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.891.16289"]
-slug = "lagre-alternativ-2021-2070"
-
-# '2024-2070 huvudalternativ' (residual: "-2070 huvudalternativ")
-[register_version."310.891.19203"]
-slug = "huvudalternativ-2024-2070"
-
-# '2024-2070 högre alternativ' (residual: "-2070 högre alternativ")
-[register_version."310.891.19204"]
-slug = "hogre-alternativ-2024-2070"
-
-# '2024-2070 lägre alternativ' (residual: "-2070 lägre alternativ")
-[register_version."310.891.19205"]
-slug = "lagre-alternativ-2024-2070"
-
 # Hälsoräkenskaper
 [register."311"]
 slug = "halsorakenskaper"
@@ -7067,9 +2572,6 @@ slug = "sfi-deltagare"
 slug = "_default"
 display_group = "Deltagare i svenskundervisning för invandrare (sfi)"
 
-# 'Hösten 2008' (residual: "Hösten")
-[register_version."315.905.3652"]
-slug = "hosten-2008"
 # Tiden mellan gymnasieskolan och universitetet/högskolan
 [register."317"]
 slug = "studieuppehall"
@@ -7078,9 +2580,6 @@ slug = "studieuppehall"
 slug = "_default"
 display_group = "Tiden mellan gymnasieskolan och universitetet/högskolan"
 
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."317.982.4345"]
-slug = "lasar-2008-2009"
 # Produktionsindex över näringslivet
 [register."318"]
 slug = "produktionsindex-naringsliv"
@@ -7177,28 +2676,9 @@ display_group = "Barn"
 slug = "barn-uppfoljning"
 display_group = "Barn, uppföljning"
 
-# '2014-12-31 enligt ny definition' (residual: "enligt ny definition")
-[register_version."333.1078.7493"]
-slug = "enligt-ny-definition-2014-12-31"
 [register_variant."333.1079"]
 slug = "familjer"
 display_group = "Familjer"
-
-# '2014-12-31'
-[register_version."333.1077.6042"]
-slug = "2014-12-31"
-
-# '2014-12-31 enligt ny definition' (residual: "enligt ny definition")
-[register_version."333.1077.7490"]
-slug = "enligt-ny-definition-2014-12-31"
-
-# '2014-12-31'
-[register_version."333.1079.6057"]
-slug = "2014-12-31"
-
-# '2014-12-31 enligt ny definition' (residual: "enligt ny definition")
-[register_version."333.1079.7492"]
-slug = "enligt-ny-definition-2014-12-31"
 
 # Försäkringsföretagens årsredogörelse
 [register."334"]
@@ -7256,112 +2736,10 @@ slug = "specialskola"
 slug = "betyg-ak10"
 display_group = "Betyg åk 10"
 
-# 'Läsåret 2016/2017' (residual: "Läsåret /2017")
-[register_version."344.1143.12518"]
-slug = "lasar-2016-2017"
-
-# 'Läsåret 2015/2016' (residual: "Läsåret /2016")
-[register_version."344.1143.12519"]
-slug = "lasar-2015-2016"
-
-# 'Läsåret 2014/2015' (residual: "Läsåret /2015")
-[register_version."344.1143.12520"]
-slug = "lasar-2014-2015"
-
-# 'Läsåret 2013/2014' (residual: "Läsåret /2014")
-[register_version."344.1143.12521"]
-slug = "lasar-2013-2014"
-
-# 'Läsåret 2012/2013' (residual: "Läsåret /2013")
-[register_version."344.1143.12522"]
-slug = "lasar-2012-2013"
-
-# 'Läsåret 2011/2012' (residual: "Läsåret /2012")
-[register_version."344.1143.12524"]
-slug = "lasar-2011-2012"
-
-# 'Läsåret 2010/2011' (residual: "Läsåret /2011")
-[register_version."344.1143.12525"]
-slug = "lasar-2010-2011"
-
-# 'Läsåret 2009/2010' (residual: "Läsåret /2010")
-[register_version."344.1143.12526"]
-slug = "lasar-2009-2010"
-
-# 'Läsåret 2008/2009' (residual: "Läsåret /2009")
-[register_version."344.1143.12527"]
-slug = "lasar-2008-2009"
-
-# 'Läsåret 2007/2008' (residual: "Läsåret /2008")
-[register_version."344.1143.12528"]
-slug = "lasar-2007-2008"
-
-# 'Läsåret 2017/2018' (residual: "Läsåret /2018")
-[register_version."344.1143.12577"]
-slug = "lasar-2017-2018"
-
-# 'Läsåret 2006/2007' (residual: "Läsåret /2007")
-[register_version."344.1143.12600"]
-slug = "lasar-2006-2007"
-
-# 'Läsåret 2005/2006' (residual: "Läsåret /2006")
-[register_version."344.1143.12601"]
-slug = "lasar-2005-2006"
-
-# 'Läsåret 2018/2019' (residual: "Läsåret /2019")
-[register_version."344.1143.13549"]
-slug = "lasar-2018-2019"
-
-# 'Läsåret 2019/2020' (residual: "Läsåret /2020")
-[register_version."344.1143.14987"]
-slug = "lasar-2019-2020"
-
-# 'Läsåret 2020/2021' (residual: "Läsåret /2021")
-[register_version."344.1143.17687"]
-slug = "lasar-2020-2021"
-
-# 'Läsåret 2021/2022' (residual: "Läsåret /2022")
-[register_version."344.1143.18324"]
-slug = "lasar-2021-2022"
-
-# 'Läsåret 2022/2023' (residual: "Läsåret /2023")
-[register_version."344.1143.18902"]
-slug = "lasar-2022-2023"
-
-# 'Läsåret 2023/2024' (residual: "Läsåret /2024")
-[register_version."344.1143.19409"]
-slug = "lasar-2023-2024"
-
-# 'Läsåret 2024/2025' (residual: "Läsåret /2025")
-[register_version."344.1143.20134"]
-slug = "lasar-2024-2025"
 [register_variant."344.1145"]
 slug = "elever"
 display_group = "Elever"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."344.1145.14808"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."344.1145.18521"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."344.1145.18522"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."344.1145.19643"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."344.1145.19644"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."344.1145.19984"]
-slug = "2024-10-15"
 # Hushållens boende
 [register."346"]
 slug = "hushallens-boende"
@@ -7430,9 +2808,6 @@ display_group = "Grönområden, hoplagda grönytor"
 slug = "forandringar-gronytor"
 display_group = "Förändringar grönytor"
 
-# '2005 jämfört med 2000' (residual: "jämfört med 2000")
-[register_version."350.1214.7247"]
-slug = "jamfort-med-2000-2005"
 # Den internationella undersökningen av vuxnas färdigheter (PIAAC)
 [register."351"]
 slug = "piaac"
@@ -7457,29 +2832,6 @@ slug = "anpassad-gymnasieskola"
 slug = "elever"
 display_group = "Elever"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."353.1219.14809"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."353.1219.19633"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."353.1219.19638"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."353.1219.19640"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."353.1219.19641"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."353.1219.19970"]
-slug = "2024-10-15"
 # Trädbränsle-, torv- och avfallspriser
 [register."355"]
 slug = "tradbransle-torv"
@@ -7552,13 +2904,6 @@ display_group = "Internationell rörlighet för utbildning bland unga i Sverige"
 slug = "ungdomar-utan-fullfoljd-gymnasieutbildning"
 display_group = "Ungdomar utan fullföljd gymnasieutbildning"
 
-# 'Våren 2007' (residual: "Våren")
-[register_version."366.1350.11796"]
-slug = "varen-2007"
-
-# 'Hösten 2015' (residual: "Hösten")
-[register_version."366.1350.11797"]
-slug = "hosten-2015"
 [register_variant."366.1351"]
 slug = "sjukskoterskor-utanfor-yrket"
 display_group = "Sjuksköterskor utanför yrket"
@@ -7593,24 +2938,10 @@ display_group = "Folkhögskoleuppföljningen"
 slug = "distansundervisning-grundskola"
 display_group = "Distansundervisning under pandemin, grundskolan"
 
-# 'Höstterminen 2020 - Vårterminen 2021' (residual: "- Vårterminen 2021")
-[register_version."366.1648.18191"]
-slug = "hostterminen-2020-varterminen-2021"
-
-# 'Höstterminen 2021 - Vårterminen 2022' (residual: "- Vårterminen 2022")
-[register_version."366.1648.18503"]
-slug = "hostterminen-2021-varterminen-2022"
 [register_variant."366.1649"]
 slug = "distansundervisning-gymnasieskolan"
 display_group = "Distansundervisning under pandemin, gymnasieskolan"
 
-# 'Höstterminen 2020 - Vårterminen 2021' (residual: "- Vårterminen 2021")
-[register_version."366.1649.17984"]
-slug = "hostterminen-2020-varterminen-2021"
-
-# 'Höstterminen 2021 - Vårterminen 2022' (residual: "- Vårterminen 2022")
-[register_version."366.1649.18504"]
-slug = "hostterminen-2021-varterminen-2022"
 # Tidsanvändningsundersökningen
 [register."367"]
 slug = "tidsanvandning"
@@ -7630,90 +2961,6 @@ slug = "kommunernas-aktivitetsansvar"
 [register_variant."368.1325"]
 slug = "_default"
 display_group = "Kommunernas aktivitetsansvar"
-
-# '2015 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.11502"]
-slug = "2015-H1"
-
-# '2015 juli - december' (residual: "juli - december")
-[register_version."368.1325.11504"]
-slug = "2015-H2"
-
-# '2016 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.11505"]
-slug = "2016-H1"
-
-# '2016 juli - december' (residual: "juli - december")
-[register_version."368.1325.11511"]
-slug = "2016-H2"
-
-# '2017 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.11638"]
-slug = "2017-H1"
-
-# '2017 juli - december' (residual: "juli - december")
-[register_version."368.1325.11925"]
-slug = "2017-H2"
-
-# '2018 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.12618"]
-slug = "2018-H1"
-
-# '2018 juli - december' (residual: "juli - december")
-[register_version."368.1325.13242"]
-slug = "2018-H2"
-
-# '2019 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.13643"]
-slug = "2019-H1"
-
-# '2019 juli - december' (residual: "juli - december")
-[register_version."368.1325.14471"]
-slug = "2019-H2"
-
-# '2020 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.15540"]
-slug = "2020-H1"
-
-# '2020 juli - december' (residual: "juli - december")
-[register_version."368.1325.16446"]
-slug = "2020-H2"
-
-# '2021 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.19004"]
-slug = "2021-H1"
-
-# '2021 juli - december' (residual: "juli - december")
-[register_version."368.1325.19006"]
-slug = "2021-H2"
-
-# '2022 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.19007"]
-slug = "2022-H1"
-
-# '2022 juli - december' (residual: "juli - december")
-[register_version."368.1325.19008"]
-slug = "2022-H2"
-
-# '2023 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.19009"]
-slug = "2023-H1"
-
-# '2023 juli - december' (residual: "juli - december")
-[register_version."368.1325.19010"]
-slug = "2023-H2"
-
-# '2024 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.19671"]
-slug = "2024-H1"
-
-# '2024 juli - december' (residual: "juli - december")
-[register_version."368.1325.20245"]
-slug = "2024-H2"
-
-# '2025 januari - juni' (residual: "januari - juni")
-[register_version."368.1325.20244"]
-slug = "2025-H1"
 
 # Internationella företag
 [register."369"]
@@ -7843,13 +3090,6 @@ slug = "esf"
 slug = "deltagare-i-esf-projekt"
 display_group = "Deltagare i ESF-projekt"
 
-# 'Programperiod 2014-2020 ' (residual: "Programperiod -2020")
-[register_version."376.1376.12054"]
-slug = "programperiod-2014-2020"
-
-# 'Programperiod 2021-2027' (residual: "Programperiod -2027")
-[register_version."376.1376.19390"]
-slug = "programperiod-2021-2027"
 # Yrkeshögskolan
 [register."377"]
 slug = "yrkeshogskolan"
@@ -7870,10 +3110,6 @@ display_group = "Studerande kurser"
 slug = "avklarade-poang"
 display_group = "Avklarade poäng"
 
-# '2005-2024' (vs 13794:2005)
-[register_version."377.1397.20121"]
-slug = "v2005-2024"
-
 # Förskoleklass
 [register."378"]
 slug = "forskoleklass"
@@ -7882,127 +3118,14 @@ slug = "forskoleklass"
 slug = "grundskola"
 display_group = "Grundskola"
 
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."378.1399.12503"]
-slug = "2017-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."378.1399.12506"]
-slug = "2016-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."378.1399.12507"]
-slug = "2015-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."378.1399.12508"]
-slug = "2014-10-15"
-
-# '15 oktober 2013' (residual: "15 oktober")
-[register_version."378.1399.12509"]
-slug = "2013-10-15"
-
-# '15 oktober 2012' (residual: "15 oktober")
-[register_version."378.1399.12510"]
-slug = "2012-10-15"
-
-# '15 oktober 2011' (residual: "15 oktober")
-[register_version."378.1399.12512"]
-slug = "2011-10-15"
-
-# '15 oktober 2010' (residual: "15 oktober")
-[register_version."378.1399.12513"]
-slug = "2010-10-15"
-
-# '15 oktober 2009' (residual: "15 oktober")
-[register_version."378.1399.12515"]
-slug = "2009-10-15"
-
-# '15 oktober 2008' (residual: "15 oktober")
-[register_version."378.1399.12516"]
-slug = "2008-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."378.1399.13156"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."378.1399.14806"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."378.1399.18512"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."378.1399.18514"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."378.1399.19651"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."378.1399.19652"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."378.1399.19954"]
-slug = "2024-10-15"
 [register_variant."378.1534"]
 slug = "anpassad-grundskola"
 display_group = "Anpassad grundskola"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."378.1534.14895"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."378.1534.18517"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."378.1534.18518"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."378.1534.19653"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."378.1534.19654"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."378.1534.19951"]
-slug = "2024-10-15"
 [register_variant."378.1535"]
 slug = "specialskola"
 display_group = "Specialskola"
 
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."378.1535.14896"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."378.1535.18515"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."378.1535.18516"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."378.1535.19655"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."378.1535.19656"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."378.1535.19956"]
-slug = "2024-10-15"
 # Annan pedagogisk verksamhet
 [register."379"]
 slug = "annan-pedagogisk-verksamhet"
@@ -8011,96 +3134,10 @@ slug = "annan-pedagogisk-verksamhet"
 slug = "barn-individ"
 display_group = "Barn - individ"
 
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."379.1407.12589"]
-slug = "2014-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."379.1407.12590"]
-slug = "2015-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."379.1407.12592"]
-slug = "2016-10-15"
-
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."379.1407.12593"]
-slug = "2017-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."379.1407.13168"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."379.1407.14821"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."379.1407.18535"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."379.1407.18545"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."379.1407.19936"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."379.1407.19937"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."379.1407.19939"]
-slug = "2024-10-15"
 [register_variant."379.1408"]
 slug = "personal-individ"
 display_group = "Personal - individ"
 
-# '15 oktober 2017' (residual: "15 oktober")
-[register_version."379.1408.12603"]
-slug = "2017-10-15"
-
-# '15 oktober 2016' (residual: "15 oktober")
-[register_version."379.1408.12604"]
-slug = "2016-10-15"
-
-# '15 oktober 2015' (residual: "15 oktober")
-[register_version."379.1408.12605"]
-slug = "2015-10-15"
-
-# '15 oktober 2014' (residual: "15 oktober")
-[register_version."379.1408.12606"]
-slug = "2014-10-15"
-
-# '15 oktober 2018' (residual: "15 oktober")
-[register_version."379.1408.13169"]
-slug = "2018-10-15"
-
-# '15 oktober 2019' (residual: "15 oktober")
-[register_version."379.1408.14829"]
-slug = "2019-10-15"
-
-# '15 oktober 2020' (residual: "15 oktober")
-[register_version."379.1408.18546"]
-slug = "2020-10-15"
-
-# '15 oktober 2021' (residual: "15 oktober")
-[register_version."379.1408.18547"]
-slug = "2021-10-15"
-
-# '15 oktober 2022' (residual: "15 oktober")
-[register_version."379.1408.19921"]
-slug = "2022-10-15"
-
-# '15 oktober 2023' (residual: "15 oktober")
-[register_version."379.1408.19922"]
-slug = "2023-10-15"
-
-# '15 oktober 2024' (residual: "15 oktober")
-[register_version."379.1408.19924"]
-slug = "2024-10-15"
 # Produktion inom näringslivet (PIN)
 [register."382"]
 slug = "pin"
@@ -8184,22 +3221,6 @@ slug = "agi"
 [register_variant."392.1519"]
 slug = "individuppgifter-agi"
 display_group = "Individuppgifter (AGI)"
-
-# '2019, löne- och förmånsutbetalningar' (residual: ", löne- och förmånsutbetalningar")
-[register_version."392.1519.14575"]
-slug = "lone-och-formansutbetalningar-2019"
-
-# '2019, sociala ersättningar' (residual: ", sociala ersättningar")
-[register_version."392.1519.15110"]
-slug = "sociala-ersattningar-2019"
-
-# '2020, löne- och förmånsutb' (SCB source abbreviation; slug expanded to match 2019 sibling) (residual: ", löne- och förmånsutb")
-[register_version."392.1519.17967"]
-slug = "lone-och-formansutbetalningar-2020"
-
-# '2020, sociala ersättningar' (residual: ", sociala ersättningar")
-[register_version."392.1519.17968"]
-slug = "sociala-ersattningar-2020"
 
 # Transportsektorns energianvändning (inrikes sjöfart)
 [register."393"]
@@ -8387,11 +3408,3 @@ slug = "sjalvforsorjning"
 [register_variant."414.1757"]
 slug = "sjalvforsorjning-20-65-ar"
 display_group = "Självförsörjning 20-65 år"
-# -- register_version curated slugs --------------------------------------
-#
-# §5.3 invariant: register_version slug is unique within parent variant.
-# Generated for 425 rows where `derive_period` returned None
-# (unperiodized aux table) or collided with a sibling under the same
-# variant. Slugs are slugified `registerversionnamn`; in each collision
-# group, the row whose trimmed name equals the period keeps the
-# auto-derived slug and is omitted from this section.

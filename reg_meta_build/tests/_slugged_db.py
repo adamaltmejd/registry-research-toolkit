@@ -77,12 +77,16 @@ def build_slugged_db(
         )
 
     if version is not None and variant is not None:
-        ver_name, ver_slug, regver_id = version
+        # A2.6: register_version is build-time-only and has no `slug` column
+        # anymore (version left the FQID grammar). The version tuple keeps its
+        # 3-element shape `(registerversionnamn, _slug, regver_id)` for caller
+        # compatibility, but the slug element is ignored on insert.
+        ver_name, _ver_slug, regver_id = version
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (?, ?, ?, ?)",
-            (regver_id, variant[2], ver_slug, ver_name),
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (?, ?, ?)",
+            (regver_id, variant[2], ver_name),
         )
 
     if variable is not None and version is not None and register is not None:
@@ -164,14 +168,16 @@ def add_version(
     *,
     regver_id: int,
     register_variant_id: int,
-    slug: str,
     name: str,
 ) -> None:
+    # A2.6: register_version has no `slug` column (build-time-only table; version
+    # left the FQID grammar). The row exists only for build-side joins (coalescer
+    # year fallback, lineage linkers).
     conn.execute(
         "INSERT INTO register_version "
-        "(regver_id, register_variant_id, slug, registerversionnamn) "
-        "VALUES (?, ?, ?, ?)",
-        (regver_id, register_variant_id, slug, name),
+        "(regver_id, register_variant_id, registerversionnamn) "
+        "VALUES (?, ?, ?)",
+        (regver_id, register_variant_id, name),
     )
 
 

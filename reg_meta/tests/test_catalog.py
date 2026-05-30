@@ -21,12 +21,10 @@ from reg_meta.catalog import (
     ResolvedClassification,
     ResolvedProvider,
     ResolvedRegister,
-    ResolvedRegisterVariant,
-    ResolvedRegisterVersion,
     ResolvedVariable,
 )
 from reg_meta.errors import RegMetaError
-from reg_meta.fqid import Fqid
+from reg_meta.fqid import Fqid, FqidError
 
 if TYPE_CHECKING:
     import sqlite3
@@ -67,104 +65,43 @@ class TestResolveRegister:
         assert exc.value.code == "fqid_not_found"
 
 
-class TestResolveVariant:
-    def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
-        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus")
-        assert isinstance(r, ResolvedRegisterVariant)
-        assert r.register_variant_id == 10
-        assert r.fqid.variant == "individer-15plus"
+class TestVariantAndVersionKindsGone:
+    """A2.6: the variant and register_version FQID kinds were removed (§5.2). A
+    3-segment string is a binding now; a 4-segment string doesn't parse. (The
+    `_default` variant + its synthesis live on as a `resolve_at` coordinate, not
+    an addressable FQID — see TestResolveAt.)"""
 
-    def test_default_variant_resolves_when_curated(self) -> None:
-        # A curated `_default` (real row, slug pinned to `_default` by the
-        # maintainer) resolves like any other variant: register_variant_id is the
-        # source row's PK.
-        conn = build_slugged_db(
-            register=("LSS", "lss", 5, 2),
-            variant=("LSS default", "_default", 50),
-            version=None,
-            variable=None,
-        )
-        r = Catalog(conn).resolve("sos/lss/_default")
-        assert isinstance(r, ResolvedRegisterVariant)
-        assert r.fqid.variant == "_default"
-        assert r.register_variant_id == 50
-        assert r.name == "LSS default"
-
-    def test_default_variant_synthesized_for_variant_less_register(self) -> None:
-        # §5.1: a register with zero register_variant rows still resolves
-        # `<provider>/<register>/_default`. The placeholder is virtual —
-        # register_variant_id is None and the variantnamn columns are NULL.
-        conn = build_slugged_db(
-            register=("LSS", "lss", 5, 2),
-            variant=None,
-            version=None,
-            variable=None,
-        )
-        r = Catalog(conn).resolve("sos/lss/_default")
-        assert isinstance(r, ResolvedRegisterVariant)
-        assert r.fqid.variant == "_default"
-        assert r.register_variant_id is None
-        assert r.register_id == 5
-        assert r.name is None
-
-    def test_default_variant_not_synthesized_when_real_variants_exist(self) -> None:
-        # LISA has a real variant (`individer-15plus`), so `_default` against
-        # it must NOT silently resolve — the variant slot is only transparent
-        # when the register is genuinely variant-less.
-        conn = build_slugged_db()  # default LISA + individer-15plus
+    def test_three_seg_is_a_binding_not_a_variant(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        # `scb/lisa/individer-15plus` was the variant FQID; it is now a binding
+        # whose variable slug is `individer-15plus` (which doesn't exist here).
         with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/_default")
+            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus")
         assert exc.value.code == "fqid_not_found"
 
-    def test_default_variant_synthesis_requires_known_register(self) -> None:
-        # Synthesis must not fabricate a variant for a register that doesn't
-        # exist — `_default` is only transparent inside a real register.
-        conn = build_slugged_db()
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/nope/_default")
-        assert exc.value.code == "fqid_not_found"
+    def test_old_four_seg_version_fqid_rejected(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(FqidError, match="4 segments"):
+            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018")
 
-
-class TestResolveVersion:
-    def test_resolves_by_year(self, slugged_conn: sqlite3.Connection) -> None:
-        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018")
-        assert isinstance(r, ResolvedRegisterVersion)
-        assert r.regver_id == 100
-        assert r.fqid.period == "2018"
-        assert str(r.fqid) == "scb/lisa/individer-15plus/2018"
-
-    def test_unknown_period_misses(self, slugged_conn: sqlite3.Connection) -> None:
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2099")
-        assert exc.value.code == "fqid_not_found"
-
-    def test_resolves_non_year_period(self) -> None:
-        # Half-year, quarterly, and monthly periods use the most-specific
-        # token derived from the version name.
-        conn = build_slugged_db(version=("Test HT2020", "HT2020", 200))
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/HT2020")
-        assert isinstance(r, ResolvedRegisterVersion)
-        assert r.regver_id == 200
-        assert r.fqid.period == "HT2020"
-
-    def test_year_only_target_does_not_match_sub_year_version(self) -> None:
-        # `.../2020` must not silently resolve to an `HT2020` row — that
-        # would collide distinct versions under one FQID.
-        conn = build_slugged_db(version=("Test HT2020", "HT2020", 200))
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-15plus/2020")
-        assert exc.value.code == "fqid_not_found"
+    def test_old_five_seg_binding_fqid_rejected(
+        self, slugged_conn: sqlite3.Connection
+    ) -> None:
+        with pytest.raises(FqidError, match="5 segments"):
+            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
 
 
 class TestResolveBinding:
     """A2.5 (§5.10): `resolve()` returns the longitudinal `ResolvedVariable` —
     the variable's shared metadata + its `variable_state` history, no per-edition
-    cvid. The interim `ResolvedVariableBinding` is gone from this path (it lives
-    on `editions` only)."""
+    cvid. The interim `ResolvedVariableBinding` and the `editions()` path that
+    returned it were removed in A2.6."""
 
     def test_resolves(self, slugged_conn: sqlite3.Connection) -> None:
         # Kolumnnamn "Kon" derives to variable slug "kon".
-        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(slugged_conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.provider_key == "44"
         assert r.name == "Kön"
@@ -178,20 +115,20 @@ class TestResolveBinding:
         # "Kön" → "kon" via NFKD ASCII fold; binding FQIDs are ASCII (§5.2).
         # The raw delivery column is preserved on the state.
         conn = build_slugged_db(delivery_column_name="Kön")
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.states[0].delivery_column_name == "Kön"
 
     def test_unknown_variable_misses(self, slugged_conn: sqlite3.Connection) -> None:
         with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/nonexistent")
+            Catalog(slugged_conn).resolve("scb/lisa/nonexistent")
         assert exc.value.code == "fqid_not_found"
 
     def test_default_fixture_has_no_edges(
         self, slugged_conn: sqlite3.Connection
     ) -> None:
         # A bare variable with no curated/auto edges exposes empty edge tuples.
-        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(slugged_conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.same_as == ()
         assert r.replaced_by == ()
@@ -210,7 +147,7 @@ class TestStoredVariableSlug:
     def test_resolves_via_stored_slug(self) -> None:
         # Stored slug == derived slug for the common single-column case.
         conn = build_slugged_db()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.provider_key == "44"
 
@@ -223,7 +160,7 @@ class TestStoredVariableSlug:
             "VALUES (1001, 'Kön')"
         )
         conn.commit()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.provider_key == "44"
 
@@ -234,14 +171,14 @@ class TestStoredVariableSlug:
         # give a sibling sharing a delivery column a distinct, resolvable
         # identity even though derive-at-resolve never produces it.
         conn = build_slugged_db(delivery_column_name="Ssyk", variable_slug="ssyk-3pos")
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        r = Catalog(conn).resolve("scb/lisa/ssyk-3pos")
         assert isinstance(r, ResolvedVariable)
         assert r.provider_key == "44"
         assert r.states[0].delivery_column_name == "Ssyk"
         # The derive-at-resolve slug `ssyk` no longer resolves — identity is the
         # stored slug, not the (honest, shared) delivery column.
         with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk")
+            Catalog(conn).resolve("scb/lisa/ssyk")
         assert exc.value.code == "fqid_not_found"
 
     def test_split_siblings_resolve_to_distinct_variables(self) -> None:
@@ -267,8 +204,8 @@ class TestStoredVariableSlug:
             delivery_column_name="Ssyk5",
         )
         conn.commit()
-        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
-        r5 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-5pos")
+        r3 = Catalog(conn).resolve("scb/lisa/ssyk-3pos")
+        r5 = Catalog(conn).resolve("scb/lisa/ssyk-5pos")
         assert isinstance(r3, ResolvedVariable)
         assert isinstance(r5, ResolvedVariable)
         # Distinct variables (distinct variable_id), each with its own column.
@@ -281,10 +218,10 @@ class TestStoredVariableSlug:
         # sibling exists. (Longitudinal resolution keys on the stored slug, so a
         # nonexistent slug can't borrow a sibling's identity.)
         conn = build_slugged_db(delivery_column_name="Ssyk3", variable_slug="ssyk-3pos")
-        r3 = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-3pos")
+        r3 = Catalog(conn).resolve("scb/lisa/ssyk-3pos")
         assert isinstance(r3, ResolvedVariable)
         with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/ssyk-7pos")
+            Catalog(conn).resolve("scb/lisa/ssyk-7pos")
         assert exc.value.code == "fqid_not_found"
 
 
@@ -313,9 +250,7 @@ class TestResolveBindingLineage:
             slug="individer-15plus",
             name="Individer 15+",
         )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
-        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="LISA 2018")
         add_variable(
             conn, register_id=2, var_id=99, name="Kön", source_register_id=1, slug="kon"
         )
@@ -344,7 +279,7 @@ class TestResolveBindingLineage:
 
     def test_consumer_resolve_exposes_lineage_edge(self) -> None:
         conn = self._build_consumer_db()
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert len(r.lineage) == 1
         edge = r.lineage[0]
@@ -355,357 +290,24 @@ class TestResolveBindingLineage:
     def test_lineage_accessor_matches_resolve(self) -> None:
         conn = self._build_consumer_db()
         cat = Catalog(conn)
-        fqid = "scb/lisa/individer-15plus/2018/kon"
+        fqid = "scb/lisa/kon"
         assert cat.lineage(fqid) == list(cat.resolve(fqid).lineage)
 
     def test_canonical_source_has_no_lineage(self) -> None:
         # RTB's source variable is the lineage SOURCE, not a consumer — its own
         # `lineage` (consumer-side) is empty.
         conn = self._build_consumer_db()
-        r = Catalog(conn).resolve("scb/rtb/personer/2018/kon")
+        r = Catalog(conn).resolve("scb/rtb/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.lineage == ()
 
 
-class TestResolveElidedFqid:
-    """§5.2: elided variant slot expands to `_default`. Today only the curated
-    `_default` row (PR α single-variant sweep) reaches a version/binding —
-    `_synthesize_default_variant` (§5.1, PR #89) fires inside `_resolve_variant`
-    only, and `register_version.register_variant_id` is NOT NULL so variant-less
-    registers can't carry versions yet. When SOS-style version ingestion
-    extends `_resolve_version` to synthesize too, add a passing test alongside
-    `test_elided_version_misses_against_variant_less_register`."""
-
-    def test_elided_version_resolves_curated_default_variant(self) -> None:
-        conn = build_slugged_db(
-            register=("LSS", "lss", 5, 2),
-            variant=("LSS default", "_default", 50),
-            version=("LSS 2022", "2022", 200),
-            variable=None,
-        )
-        r = Catalog(conn).resolve("sos/lss/2022")
-        assert isinstance(r, ResolvedRegisterVersion)
-        assert r.regver_id == 200
-        assert r.fqid.variant == "_default"
-        assert r.fqid.period == "2022"
-        assert str(r.fqid) == "sos/lss/_default/2022"
-
-    def test_elided_binding_resolves_curated_default_variant(self) -> None:
-        # The PR α sweep target: single-variant register where the maintainer
-        # pinned `slug = "_default"`. Researchers can write
-        # `scb/<register>/<period>/<variable>` without the variant slot.
-        conn = build_slugged_db(
-            variant=("Individer", "_default", 10),  # rest of fixture defaults
-        )
-        r = Catalog(conn).resolve("scb/lisa/2018/kon")
-        assert isinstance(r, ResolvedVariable)
-        assert r.fqid.variant == "_default"
-        assert r.fqid.period == "2018"
-        assert r.fqid.variable == "kon"
-        assert str(r.fqid) == "scb/lisa/_default/2018/kon"
-
-    def test_elided_version_misses_when_register_has_no_default(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        # LISA has a real variant slugged `individer-15plus`, not `_default`.
-        # The elided form `scb/lisa/2018` expands to `_default/2018` and
-        # must miss — synthesis is only for variant-less registers.
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve("scb/lisa/2018")
-        assert exc.value.code == "fqid_not_found"
-
-    def test_elided_binding_resolves_regardless_of_variant_a25(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        # A2.5 shift: `resolve()` is longitudinal — variable identity is
-        # (provider, register, slug); the binding FQID's variant/period are NOT
-        # load-bearing for identity (only for `resolve_at`). So the elided form
-        # `scb/lisa/2018/kon` (→ `_default/2018/kon`) resolves to the `kon`
-        # variable even though LISA's only variant is `individer-15plus`. (Under
-        # the interim per-edition resolver this MISSED on the absent variant;
-        # the variant slot is vestigial for resolve() until A2.6 drops it.)
-        r = Catalog(slugged_conn).resolve("scb/lisa/2018/kon")
-        assert isinstance(r, ResolvedVariable)
-        assert r.name == "Kön"
-        # The variant *does* gate resolve_at: `_default` matches no real state.
-        assert Catalog(slugged_conn).resolve_at("scb/lisa/2018/kon", 2018) != []
-        assert (
-            Catalog(slugged_conn).resolve_at(
-                "scb/lisa/2018/kon", 2018, variant="_default"
-            )
-            == []
-        )
-
-    def test_elided_version_misses_against_variant_less_register(self) -> None:
-        # Variant-less LSS (no register_variant row) — synthesis covers the
-        # bare `sos/lss/_default` variant FQID, but versions can't exist
-        # without a variant row (register_variant_id is NOT NULL), so the elided form
-        # `sos/lss/2022` must miss today. When version-level synthesis lands
-        # (`_resolve_version` TODO), replace this with a passing assertion.
-        conn = build_slugged_db(
-            register=("LSS", "lss", 5, 2),
-            variant=None,
-            version=None,
-            variable=None,
-        )
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("sos/lss/2022")
-        assert exc.value.code == "fqid_not_found"
-
-
-class TestResolveVersionWithCuratedSlug:
-    """§5.2: register_version.slug accepts either a derived period or a
-    curated slug for unperiodized aux versions."""
-
-    def test_curated_slug_resolves(self) -> None:
-        # An aux table with a curator-pinned slug resolves like a periodized
-        # version — same column, no separate code path.
-        conn = build_slugged_db(
-            version=("Gymnasieintyg, ackumulerat", "ackumulerat-register", 200),
-        )
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/ackumulerat-register")
-        assert isinstance(r, ResolvedRegisterVersion)
-        assert r.regver_id == 200
-        assert r.fqid.period == "ackumulerat-register"
-        assert str(r.fqid) == "scb/lisa/individer-15plus/ackumulerat-register"
-
-    def test_default_slug_resolves_for_singleton_unperiodized_version(self) -> None:
-        # The Pattern A case from PR γ: variant has one no-period version,
-        # curator pins `_default` as the slug.
-        conn = build_slugged_db(
-            version=("Födelseland", "_default", 200),
-        )
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/_default")
-        assert isinstance(r, ResolvedRegisterVersion)
-        assert r.regver_id == 200
-        assert r.fqid.period == "_default"
-
-    def test_curated_slug_does_not_collide_with_period_lookup(self) -> None:
-        # A slot-4 token that isn't a known slug (and doesn't match any
-        # period either) misses cleanly, same as an unknown period.
-        conn = build_slugged_db(
-            version=("Gymnasieintyg, ackumulerat", "ackumulerat-register", 200),
-        )
-        with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-15plus/summerade-poang")
-        assert exc.value.code == "fqid_not_found"
-
-
-class TestEditions:
-    """§5.8 Catalog.editions — cross-edition traversal of a variable slug."""
-
-    def test_single_edition(self, slugged_conn: sqlite3.Connection) -> None:
-        editions = Catalog(slugged_conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        assert len(editions) == 1
-        e = editions[0]
-        assert e.cvid == 1001
-        assert str(e.fqid) == "scb/lisa/individer-15plus/2018/kon"
-        assert e.via_source_id is None
-        assert e.lineage is None
-
-    def test_multiple_editions_ordered(self) -> None:
-        # Two versions under the same variant carry the same kolumnnamn —
-        # editions returns both, ordered by (variant_slug, version_slug).
-        conn = build_slugged_db()
-        add_version(
-            conn, regver_id=101, register_variant_id=10, slug="2019", name="LISA 2019"
-        )
-        add_binding(
-            conn,
-            cvid=1002,
-            register_id=1,
-            register_variant_id=10,
-            regver_id=101,
-            var_id=44,
-            delivery_column_name="Kon",
-        )
-        conn.commit()
-        editions = Catalog(conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        assert [str(e.fqid) for e in editions] == [
-            "scb/lisa/individer-15plus/2018/kon",
-            "scb/lisa/individer-15plus/2019/kon",
-        ]
-
-    def test_spans_variants(self) -> None:
-        # Same variable slug delivered through two variants of the same
-        # register — both editions surface, ordered by variant slug.
-        conn = build_slugged_db()
-        add_variant(
-            conn, register_variant_id=11, register_id=1, slug="foretag", name="Företag"
-        )
-        add_version(
-            conn, regver_id=110, register_variant_id=11, slug="2018", name="LISA 2018"
-        )
-        add_binding(
-            conn,
-            cvid=1003,
-            register_id=1,
-            register_variant_id=11,
-            regver_id=110,
-            var_id=44,
-            delivery_column_name="Kon",
-        )
-        conn.commit()
-        editions = Catalog(conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        # `foretag` < `individer-15plus` lexicographically.
-        assert [str(e.fqid) for e in editions] == [
-            "scb/lisa/foretag/2018/kon",
-            "scb/lisa/individer-15plus/2018/kon",
-        ]
-
-    def test_multiple_aliases_folding_to_same_slug_dedupe(self) -> None:
-        # variable_alias is keyed by (cvid, kolumnnamn); a single instance can
-        # carry both `Kon` and `Kön`, which both fold to `kon`. The LEFT JOIN
-        # yields one row per alias — editions must dedupe by cvid so a single
-        # binding doesn't surface twice.
-        conn = build_slugged_db()
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'Kön')"
-        )
-        conn.commit()
-        editions = Catalog(conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        assert len(editions) == 1
-        assert editions[0].cvid == 1001
-
-    def test_kolumnnamn_diacritic_fold(self) -> None:
-        # "Kön" folds to "kon"; the query argument is the slug, not the raw.
-        conn = build_slugged_db(delivery_column_name="Kön")
-        editions = Catalog(conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        assert len(editions) == 1
-        assert editions[0].delivery_column_name == "Kön"
-
-    def test_consumer_side_binding_included(self) -> None:
-        # §5.6: LISA's consumer-side binding of RTB's Kön appears in
-        # editions("scb","lisa","kon") with via_source_id and lineage set.
-        conn = build_slugged_db(
-            register=("RTB", "rtb", 1, 1),
-            variant=("Personer", "personer", 10),
-            version=("RTB 2018", "2018", 100),
-            variable=("Kön", 44, 5000, "Kon"),
-        )
-        add_register(conn, register_id=2, slug="lisa", name="LISA")
-        add_variant(
-            conn,
-            register_variant_id=20,
-            register_id=2,
-            slug="individer-15plus",
-            name="Individer 15+",
-        )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="LISA 2018"
-        )
-        add_variable(
-            conn, register_id=2, var_id=99, name="Kön", source_register_id=1, slug="kon"
-        )
-        add_binding(
-            conn,
-            cvid=5001,
-            register_id=2,
-            register_variant_id=20,
-            regver_id=200,
-            var_id=99,
-            delivery_column_name="Kon",
-            via_source_id=5000,
-        )
-        conn.commit()
-
-        lisa = Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
-        assert len(lisa) == 1
-        assert lisa[0].cvid == 5001
-        assert lisa[0].via_source_id == 5000
-        assert str(lisa[0].lineage) == "scb/rtb/personer/2018/kon"
-
-        rtb = Catalog(conn).editions(provider="scb", register="rtb", variable="kon")
-        assert len(rtb) == 1
-        assert rtb[0].cvid == 5000
-        assert rtb[0].via_source_id is None
-        assert rtb[0].lineage is None
-
-    def test_unknown_variable_returns_empty(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        assert (
-            Catalog(slugged_conn).editions(
-                provider="scb", register="lisa", variable="nonexistent"
-            )
-            == []
-        )
-
-    def test_unknown_register_returns_empty(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        # Discovery API: a missing register isn't an error, it's just no rows.
-        assert (
-            Catalog(slugged_conn).editions(
-                provider="scb", register="nope", variable="kon"
-            )
-            == []
-        )
-
-    def test_other_register_excluded(self) -> None:
-        # A "kon" binding under a different register must not leak into the
-        # query — the (provider, register) filter is tight.
-        conn = build_slugged_db()
-        add_register(conn, register_id=2, slug="rtb", name="RTB")
-        add_variant(
-            conn,
-            register_variant_id=20,
-            register_id=2,
-            slug="personer",
-            name="Personer",
-        )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
-        )
-        add_variable(conn, register_id=2, var_id=99, name="Kön")
-        add_binding(
-            conn,
-            cvid=5001,
-            register_id=2,
-            register_variant_id=20,
-            regver_id=200,
-            var_id=99,
-            delivery_column_name="Kon",
-        )
-        conn.commit()
-        editions = Catalog(conn).editions(
-            provider="scb", register="lisa", variable="kon"
-        )
-        assert {e.register_id for e in editions} == {1}
-
-    def test_skips_rows_with_null_slug(self) -> None:
-        # A variable_instance whose variant or version slug is NULL can't be
-        # addressed by FQID — editions silently skips it rather than emitting
-        # an unaddressable binding.
-        conn = build_slugged_db(version=("LISA 2018", None, 100))
-        assert (
-            Catalog(conn).editions(provider="scb", register="lisa", variable="kon")
-            == []
-        )
-
-    def test_invalid_slug_argument_raises(
-        self, slugged_conn: sqlite3.Connection
-    ) -> None:
-        from reg_meta.fqid import FqidError
-
-        with pytest.raises(FqidError):
-            Catalog(slugged_conn).editions(
-                provider="SCB", register="lisa", variable="kon"
-            )
-        with pytest.raises(FqidError):
-            Catalog(slugged_conn).editions(
-                provider="scb", register="lisa", variable="Kön"
-            )
+# A2.6: the variant/period left the FQID grammar, so the elided-variant
+# parse (TestResolveElidedFqid), the curated version-slot resolution
+# (TestResolveVersionWithCuratedSlug), and the per-edition discovery path
+# Catalog.editions (TestEditions) are all gone — the resolver reads
+# variable.slug + variable_state, period is a resolve_at coordinate, and a
+# variant is a register sub-resource without a slash-path FQID (§5.2).
 
 
 class TestResolveClassification:
@@ -733,14 +335,15 @@ class TestResolveFqidObject:
         # A hand-constructed Fqid with the wrong fields for its kind round-
         # trips to a different kind on emit-then-parse; the resolver must
         # fail fast with FqidError instead of TypeError inside a resolver.
-        from reg_meta.fqid import FqidError, FqidKind
+        from reg_meta.fqid import FqidKind
 
+        # Claims to be a binding but carries no `variable`, so emit-then-parse
+        # yields a 2-segment REGISTER kind — a mismatch the resolver rejects.
         bad = Fqid(
-            kind=FqidKind.REGISTER_VERSION,
+            kind=FqidKind.VARIABLE_BINDING,
             provider="scb",
             register="lisa",
-            variant="individer-15plus",
-            period=None,
+            variable=None,
         )
         with pytest.raises(FqidError, match="incomplete"):
             Catalog(slugged_conn).resolve(bad)
@@ -785,7 +388,7 @@ class TestSameAsTraversal:
         self, slugged_conn: sqlite3.Connection
     ) -> None:
         # Sanity: a direct resolution doesn't touch the same_as graph.
-        r = Catalog(slugged_conn).resolve("scb/lisa/individer-15plus/2018/kon")
+        r = Catalog(slugged_conn).resolve("scb/lisa/kon")
         assert isinstance(r, ResolvedVariable)
         assert r.via_same_as is None
 
@@ -799,17 +402,17 @@ class TestSameAsTraversal:
             a=("scb", "lisa", "kon"),
             b=("scb", "lisa", "civilstand-legacy"),
         )
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/civilstand-legacy")
+        r = Catalog(conn).resolve("scb/lisa/civilstand-legacy")
         assert isinstance(r, ResolvedVariable)
         # Resolved to the kon variable (provider_key 44, name Kön), but the FQID
         # on the result preserves the caller's input — researchers reading
         # results back match against what they asked for.
         assert r.provider_key == "44"
         assert r.name == "Kön"
-        assert str(r.fqid) == "scb/lisa/individer-15plus/2018/civilstand-legacy"
+        assert str(r.fqid) == "scb/lisa/civilstand-legacy"
         assert r.via_same_as is not None
         assert len(r.via_same_as) == 1
-        assert str(r.via_same_as[0]) == "scb/lisa/individer-15plus/2018/kon"
+        assert str(r.via_same_as[0]) == "scb/lisa/kon"
 
     def test_same_as_transitive_two_hops(self) -> None:
         # A → B → C, only C resolves. BFS finds it through B.
@@ -824,14 +427,14 @@ class TestSameAsTraversal:
             a=("scb", "lisa", "intermediate"),
             b=("scb", "lisa", "legacy-name"),
         )
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/legacy-name")
+        r = Catalog(conn).resolve("scb/lisa/legacy-name")
         assert isinstance(r, ResolvedVariable)
         assert r.provider_key == "44"
         assert r.via_same_as is not None
         # BFS order: legacy-name → intermediate (no hit) → kon (hit).
         assert len(r.via_same_as) == 2
         path = [str(f) for f in r.via_same_as]
-        assert path[-1] == "scb/lisa/individer-15plus/2018/kon"
+        assert path[-1] == "scb/lisa/kon"
 
     def test_same_as_no_match_still_raises(self) -> None:
         # An equivalence edge whose other end doesn't exist either — the
@@ -843,7 +446,7 @@ class TestSameAsTraversal:
             b=("scb", "lisa", "phantom-b"),
         )
         with pytest.raises(RegMetaError) as exc:
-            Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom-a")
+            Catalog(conn).resolve("scb/lisa/phantom-a")
         assert exc.value.code == "fqid_not_found"
 
     # A2.1.5 (§5.5): variable same_as is variable-grain — edges carry no
@@ -863,9 +466,7 @@ class TestSameAsTraversal:
         add_variant(
             conn, register_variant_id=20, register_id=2, slug="personer", name="P"
         )
-        add_version(
-            conn, regver_id=200, register_variant_id=20, slug="2018", name="RTB 2018"
-        )
+        add_version(conn, regver_id=200, register_variant_id=20, name="RTB 2018")
         add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
         add_binding(
             conn,
@@ -877,7 +478,7 @@ class TestSameAsTraversal:
             delivery_column_name="Kon",
         )
         self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
-        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
+        r = Catalog(conn).resolve("scb/lisa/phantom")
         assert isinstance(r, ResolvedVariable)
         # Resolved to RTB's kon variable (register_id 2), under its own variant.
         assert r.register_id == 2
@@ -1060,7 +661,7 @@ class TestSameAsClassificationTraversal:
 
 # ── A2.5 longitudinal resolution + resolve_at + edge accessors (§5.10) ──────
 
-_KON = "scb/lisa/individer-15plus/2018/kon"
+_KON = "scb/lisa/kon"
 
 
 class TestResolveVariableLongitudinal:
@@ -1331,9 +932,7 @@ class TestResolveAt:
     ) -> None:
         # The binding itself not resolving is the 404 case (distinct from empty).
         with pytest.raises(RegMetaError) as exc:
-            Catalog(slugged_conn).resolve_at(
-                "scb/lisa/individer-15plus/2018/nonexistent", 2018
-            )
+            Catalog(slugged_conn).resolve_at("scb/lisa/nonexistent", 2018)
         assert exc.value.code == "fqid_not_found"
 
     def test_invalid_period_raises_usage(
@@ -1383,7 +982,7 @@ class TestEdgeAccessors:
         # Add a kon variable too (the predecessor endpoint must exist to resolve,
         # but predecessors() reads the edge table, not the predecessor variable).
         self._seed_replaced_by(conn)
-        pred = Catalog(conn).predecessors("scb/lisa/individer-15plus/2018/civilstand")
+        pred = Catalog(conn).predecessors("scb/lisa/civilstand")
         assert [(p.provider, p.register, p.variable) for p in pred] == [
             ("scb", "lisa", "kon")
         ]
@@ -1417,7 +1016,9 @@ class TestEdgeAccessors:
         # same_as refs carry no reason/effective_year (succession-only).
         assert r.same_as[0].reason is None
         assert r.same_as[0].effective_year is None
-        assert r.same_as[0].fqid is None
+        # A2.6: the edge endpoint now carries its 3-seg binding FQID (the triple
+        # IS the binding FQID once variant/period left the grammar).
+        assert str(r.same_as[0].fqid) == "scb/rtb/kon"
 
     def test_related(self) -> None:
         conn = build_slugged_db()
@@ -1490,7 +1091,7 @@ class TestEdgeAccessors:
         self, slugged_conn: sqlite3.Connection
     ) -> None:
         cat = Catalog(slugged_conn)
-        bad = "scb/lisa/individer-15plus/2018/nonexistent"
+        bad = "scb/lisa/nonexistent"
         for fn in (
             cat.predecessors,
             cat.successors,
@@ -1519,7 +1120,7 @@ class TestEdgeAccessors:
         conn.commit()
         # Querying the phantom slug resolves to kon, so successors() reports
         # kon's outbound edge.
-        succ = Catalog(conn).successors("scb/lisa/individer-15plus/2018/phantom")
+        succ = Catalog(conn).successors("scb/lisa/phantom")
         assert [(s.provider, s.register, s.variable) for s in succ] == [
             ("scb", "lisa", "civilstand")
         ]

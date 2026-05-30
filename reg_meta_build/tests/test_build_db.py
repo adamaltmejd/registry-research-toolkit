@@ -72,9 +72,19 @@ class TestBuildDb:
         count = db_conn.execute("SELECT COUNT(*) FROM register_variant").fetchone()[0]
         assert count == 2  # variant 10 and variant 20
 
-    def test_version_count(self, db_conn: sqlite3.Connection):
-        count = db_conn.execute("SELECT COUNT(*) FROM register_version").fetchone()[0]
-        assert count == 4  # 2020, 2021, 2022 for reg 1 + 2021 for reg 2
+    def test_register_version_tables_dropped(self, db_conn: sqlite3.Connection):
+        # A2.6: register_version (+ its FK children population/object_type) are
+        # build-time-only and DROPped before ship (like unika_summary). The
+        # coalescer's year fallback + the lineage linkers consume register_version
+        # earlier in the build; nothing in the shipped catalog reads it.
+        present = {
+            r[0]
+            for r in db_conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' "
+                "AND name IN ('register_version', 'population', 'object_type')"
+            ).fetchall()
+        }
+        assert present == set()
 
     def test_variable_count(self, db_conn: sqlite3.Connection):
         count = db_conn.execute("SELECT COUNT(*) FROM variable").fetchone()[0]
@@ -430,15 +440,14 @@ class TestBuildDb:
         # but the period grammar treats them as distinct.
         assert row["via_source_id"] is None
 
-    def test_linker_uses_slug_to_disambiguate_collision_siblings(self, tmp_path: Path):
-        """Regression for Codex P1 on PR #94: two source siblings whose names
-        both `derive_period` to `2018` (e.g. `LISA 2018 huvudfil` +
-        `LISA 2018 tilläggsfil`) must be disambiguated by their curated
-        `register_version.slug`, not collapsed to whichever appears first.
-
-        Builds a slugged DB by hand, populates the slug column on both
-        siblings, calls `link_consumer_side_bindings`, and verifies the
-        consumer's `via_source_id` points at the *correct* sibling.
+    def test_linker_same_period_siblings_collapse_to_lowest_cvid(self, tmp_path: Path):
+        """A2.6: the curated version slugs that disambiguated same-period source
+        siblings (`LISA 2018 huvudfil` vs `… tilläggsfil`, both
+        `derive_period`→`2018`) are gone. The consumer-side linker keys on the
+        inline-derived period now, so such siblings collapse to one period key
+        and the lowest cvid wins (`ORDER BY vi.cvid` + `setdefault`). Documented,
+        accepted degradation — `via_source_id` is superseded by
+        `variable_state_lineage` (A2.4) and dropped in A2.7.
         """
         import sqlite3 as _sql
 
@@ -448,9 +457,8 @@ class TestBuildDb:
         conn.row_factory = _sql.Row
         conn.executescript(DDL)
         seed_providers(conn)
-        # Source register `src` (id=1) with one variant, two sibling versions
-        # whose registerversionnamn both derive_period to "2018", but whose
-        # `register_version.slug` is curator-disambiguated.
+        # Source register `src` (id=1), one variant, two sibling editions whose
+        # names both derive_period to "2018".
         conn.execute(
             "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
         )
@@ -459,9 +467,9 @@ class TestBuildDb:
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (100, 10, '2018', 'LISA 2018 huvudfil'),"
-            "       (101, 10, 'tillagg-2018', 'LISA 2018 tilläggsfil')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (100, 10, 'LISA 2018 huvudfil'),"
+            "       (101, 10, 'LISA 2018 tilläggsfil')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, slug) "
@@ -476,9 +484,7 @@ class TestBuildDb:
             "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
             [(1000, "Kon"), (1001, "Kon")],
         )
-        # Consumer register `cons` (id=2) with one variant + one version whose
-        # slug matches the tilläggsfil sibling. variable.source_register_id = 1
-        # marks this as consumer-side; the linker must pick cvid 1001, not 1000.
+        # Consumer `cons` (id=2), one edition also deriving to "2018".
         conn.execute(
             "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (2, 1, 'cons')"
@@ -488,8 +494,8 @@ class TestBuildDb:
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (200, 20, 'tillagg-2018', 'Cons 2018 tilläggsfil')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (200, 20, 'Cons 2018 tilläggsfil')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
@@ -510,18 +516,15 @@ class TestBuildDb:
         row = conn.execute(
             "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
         ).fetchone()
-        assert row["via_source_id"] == 1001  # tilläggsfil, NOT 1000 (huvudfil)
+        # Both source siblings collapse to period "2018"; lowest cvid wins.
+        assert row["via_source_id"] == 1000
 
-    def test_linker_no_match_when_consumer_slug_differs_from_source_siblings(
+    def test_linker_no_match_when_consumer_period_differs_from_source(
         self, tmp_path: Path
     ):
-        """Strict-slug rule: if a consumer's slug doesn't exactly match any
-        source sibling's slug, no edge forms. Caller must curate matching
-        slugs on both sides — the linker does not fall back to a fuzzier
-        key. Real example: IoT 2020+ has `preliminar-version-2020` +
-        `slutlig-version-2020` curated siblings; a consumer with bare slug
-        "2020" doesn't disambiguate which it pulls from, so the lineage
-        stays NULL until curation chooses a canonical sibling.
+        """The edition period is the cross-register match coordinate (A2.6). A
+        consumer edition whose derived period matches no source edition forms no
+        edge — same fail-closed stance as the year-vs-year guard, now period-grain.
         """
         import sqlite3 as _sql
 
@@ -537,27 +540,24 @@ class TestBuildDb:
         conn.execute(
             "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
         )
+        # Source edition derives to "2019".
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (100, 10, 'preliminar-version-2020', 'IoT preliminär version 2020'),"
-            "       (101, 10, 'slutlig-version-2020', 'IoT slutlig version 2020')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (100, 10, 'IoT 2019')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, slug) "
             "VALUES (1, '44', 'socbidrhb')"
         )
-        conn.executemany(
+        conn.execute(
             "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
-            [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
+            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (1000, 1, 10, 100, 44)"
         )
-        conn.executemany(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            [(1000, "SocBidrHB"), (1001, "SocBidrHB")],
+        conn.execute(
+            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1000, 'SocBidrHB')"
         )
-        # Consumer LISA 2020 has bare slug "2020" — no IoT sibling has that
-        # exact slug, so the linker correctly produces no edge.
+        # Consumer edition derives to "2020" — no source edition at that period.
         conn.execute(
             "INSERT INTO register (register_id, provider_id, name) "
             "VALUES (2, 1, 'lisa')"
@@ -567,8 +567,8 @@ class TestBuildDb:
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (200, 20, '2020', 'LISA 2020')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (200, 20, 'LISA 2020')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
@@ -614,8 +614,8 @@ class TestBuildDb:
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (100, 10, '2018', 'Src 2018')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (100, 10, 'Src 2018')"
         )
         # Two source variables, both delivered as `Kolumn1`, distinct stored slugs.
         conn.executemany(
@@ -640,8 +640,8 @@ class TestBuildDb:
         )
         conn.execute(
             "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (200, 20, '2018', 'Cons 2018')"
+            "(regver_id, register_variant_id, registerversionnamn) "
+            "VALUES (200, 20, 'Cons 2018')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
@@ -990,9 +990,10 @@ class TestBuildDb:
 
     def test_slugs_populated_post_build(self, db_conn: sqlite3.Connection):
         # The fixture builds with a curated slug TOML covering both
-        # registers + variants; version slugs auto-derive from YYYY names.
-        # Strict-built DBs must have every slug populated — `populate_slugs`
-        # raises otherwise — so this also guards the strict invariant.
+        # registers + variants. Strict-built DBs must have every slug populated
+        # — `populate_slugs` raises otherwise — so this also guards the strict
+        # invariant. (A2.6: register_version has no slug column and is dropped
+        # before ship, so there's no version-slug assertion.)
         assert (
             db_conn.execute(
                 "SELECT COUNT(*) FROM register WHERE slug IS NULL"
@@ -1002,12 +1003,6 @@ class TestBuildDb:
         assert (
             db_conn.execute(
                 "SELECT COUNT(*) FROM register_variant WHERE slug IS NULL"
-            ).fetchone()[0]
-            == 0
-        )
-        assert (
-            db_conn.execute(
-                "SELECT COUNT(*) FROM register_version WHERE slug IS NULL"
             ).fetchone()[0]
             == 0
         )
@@ -1724,13 +1719,13 @@ class TestSameAsBuildIntegration:
             # the real `kon` row. via_same_as carries the traversal path,
             # confirming the build wired materialize_same_as_edges into
             # the resolver's data plane end-to-end.
-            r = Catalog(conn).resolve("scb/testreg/individer/2020/legacy-kon")
+            r = Catalog(conn).resolve("scb/testreg/legacy-kon")
             assert isinstance(r, ResolvedVariable)
             assert r.via_same_as is not None
             assert len(r.via_same_as) == 1
-            assert str(r.via_same_as[0]) == "scb/testreg/individer/2020/kon"
+            assert str(r.via_same_as[0]) == "scb/testreg/kon"
             # Caller's FQID preserved on the returned record.
-            assert str(r.fqid) == "scb/testreg/individer/2020/legacy-kon"
+            assert str(r.fqid) == "scb/testreg/legacy-kon"
             # A2.5 longitudinal: the delivery column lives on the state, not the
             # (now-removed) per-edition binding.
             assert any(s.delivery_column_name == "Kon" for s in r.states)
@@ -3043,13 +3038,13 @@ class TestReplacedByEdges:
         try:
             # testcol (reg1 var 100) → uniqcol (reg2 var 300). Resolve the
             # predecessor binding and read its outbound successor.
-            succ = Catalog(conn).successors("scb/testreg/individer/2020/testcol")
+            succ = Catalog(conn).successors("scb/testreg/testcol")
             assert len(succ) == 1
             assert succ[0].variable == "uniqcol"
             assert succ[0].reason == "2001 byttes SUN96 till SUN2000"
             assert succ[0].effective_year == 2021
             # And the inverse direction: predecessors() of the successor.
-            pred = Catalog(conn).predecessors("scb/otherreg/foretag/2021/uniqcol")
+            pred = Catalog(conn).predecessors("scb/otherreg/uniqcol")
             assert len(pred) == 1
             assert pred[0].variable == "testcol"
             assert pred[0].reason == "2001 byttes SUN96 till SUN2000"

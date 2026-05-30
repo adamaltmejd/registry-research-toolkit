@@ -225,22 +225,28 @@ class TestGetSchema:
         assert len(data["data"]["variants"]) == 1
 
     def test_years_single(self, db_path: str):
+        # A2.6: "editions" are `variable_state` validity windows now; their
+        # `year` is the window's opening year (`valid_from`). The 2020 filter
+        # keeps every window opening in 2020 (the fixture has two).
         data, code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020"]
         )
         assert code == 0
         versions = data["data"]["variants"][0]["versions"]
-        assert len(versions) == 1
-        assert versions[0]["year"] == 2020
+        assert versions  # at least one window opens in 2020
+        assert all(v["year"] == 2020 for v in versions)
 
     def test_years_range(self, db_path: str):
+        # The window-opening year is what the range filters on (a window's
+        # opening year falls inside 2020-2021 here).
         data, code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020-2021"]
         )
         assert code == 0
         versions = data["data"]["variants"][0]["versions"]
-        years = [v["year"] for v in versions]
-        assert set(years) == {2020, 2021}
+        years = {v["year"] for v in versions}
+        assert years
+        assert all(2020 <= y <= 2021 for y in years)
 
     def test_years_open_end(self, db_path: str):
         data, code = _run_json(
@@ -318,10 +324,17 @@ class TestGetSchema:
             ["--db", db_path, "get", "schema", "--register", "OTHERREG"]
         )
         assert code == 0
-        columns = data["data"]["variants"][0]["versions"][0]["columns"]
-        kon = [c for c in columns if c["var_id"] == 44]
-        assert len(kon) == 1
-        assert kon[0]["source"] == "TESTREG"
+        # A2.6: a var_id's column can land in any validity-window edition; search
+        # across all of them rather than pinning versions[0].
+        kon = [
+            c
+            for v in data["data"]["variants"]
+            for ver in v["versions"]
+            for c in ver["columns"]
+            if c["var_id"] == 44
+        ]
+        assert kon
+        assert all(c["source"] == "TESTREG" for c in kon)
 
     def test_source_empty_for_own_variable(self, db_path: str):
         """TESTREG's own variables have no source."""
@@ -338,10 +351,15 @@ class TestGetSchema:
             ]
         )
         assert code == 0
-        columns = data["data"]["variants"][0]["versions"][0]["columns"]
-        kon = [c for c in columns if c["var_id"] == 44]
-        assert len(kon) == 1
-        assert kon[0]["source"] == ""
+        kon = [
+            c
+            for v in data["data"]["variants"]
+            for ver in v["versions"]
+            for c in ver["columns"]
+            if c["var_id"] == 44
+        ]
+        assert kon
+        assert all(c["source"] == "" for c in kon)
 
 
 # ---------------------------------------------------------------------------
@@ -357,7 +375,9 @@ class TestGetVarinfo:
         assert code == 0
         assert data["data"]["name"] == "Kön"
         assert data["data"]["register_id"] == 1
-        assert len(data["data"]["instances"]) == 3  # CVIDs 1001, 1003, 1004
+        # A2.6: "instances" are `variable_state` rows now (coalesced per-delivery
+        # shape), not per-cvid rows — TESTREG Kön has two states.
+        assert len(data["data"]["instances"]) == 2
 
     def test_by_var_id(self, db_path: str):
         data, code = _run_json(
@@ -378,7 +398,10 @@ class TestGetVarinfo:
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         inst = data["data"]["instances"][0]
-        assert "cvid" in inst
+        # A2.6: per-state keys (state_id + validity window) replace cvid +
+        # register_version name.
+        assert "state_id" in inst
+        assert "valid_from" in inst
         assert "year" in inst
         assert "aliases" in inst
         assert "value_set_count" in inst
@@ -387,14 +410,106 @@ class TestGetVarinfo:
         data, code = _run_json(
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
-        # CVID 1001 has 2 value items (Man, Kvinna)
-        cvid_1001 = [i for i in data["data"]["instances"] if i["cvid"] == 1001]
-        assert len(cvid_1001) == 1
-        assert cvid_1001[0]["value_set_count"] == 2
+        # The Kön value-set (Man, Kvinna) carries 2 codes; at least one state
+        # surfaces that count.
+        with_codes = [i for i in data["data"]["instances"] if i["value_set_count"] == 2]
+        assert with_codes
 
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "varinfo", "NONEXISTENT"])
         assert code == 16
+
+
+# ---------------------------------------------------------------------------
+# Split-sibling isolation (A2.2 split → A2.6 query)
+# ---------------------------------------------------------------------------
+
+
+class TestSplitSiblingIsolation:
+    """A2.2 puts several variables under one `(register_id, provider_key)` —
+    split siblings share a `var_id` but have distinct `variable_id`s, slugs,
+    names, and their OWN `variable_state` + value sets. Once a `get_*` command
+    has matched ONE sibling (by its unique name/alias), it must select states by
+    that row's `variable_id`, not by the shared `provider_key`. Filtering on
+    `provider_key` leaks the OTHER sibling's states/codes — these tests fail on
+    that bug (they see 2 states / both value sets where 1 sibling has 1 each).
+    """
+
+    @staticmethod
+    def _split_db():
+        from _slugged_db import (
+            add_state,
+            add_value_set,
+            add_variable,
+            build_slugged_db,
+        )
+
+        # Default fixture: register 1 (lisa), variant 10, variable var_id 44
+        # name "Kön" slug "kon". Replace it with two explicit siblings so the
+        # scenario is unambiguous: drop the default variable layer, add A + B.
+        conn = build_slugged_db(variable=None)
+        # Sibling A — provider_key 44, distinct slug + name + own column/codes.
+        add_variable(
+            conn, register_id=1, var_id=44, name="SSYK 3-pos", slug="ssyk-3pos"
+        )
+        add_value_set(conn, value_set_id=1, codes=[("A1", "A-one"), ("A2", "A-two")])
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="ssyk-3pos",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Ssyk3",
+            value_set_id=1,
+        )
+        # Sibling B — same provider_key 44, its own slug/name/column/codes.
+        add_variable(
+            conn, register_id=1, var_id=44, name="SSYK 5-pos", slug="ssyk-5pos"
+        )
+        add_value_set(conn, value_set_id=2, codes=[("B1", "B-one"), ("B2", "B-two")])
+        add_state(
+            conn,
+            register_id=1,
+            variable_slug="ssyk-5pos",
+            register_variant_id=10,
+            valid_from="2018-01-01",
+            delivery_column_name="Ssyk5",
+            value_set_id=2,
+        )
+        conn.commit()
+        return conn
+
+    def test_varinfo_returns_only_matched_sibling_states(self):
+        from reg_meta.queries import get_varinfo
+
+        conn = self._split_db()
+        # Match sibling A by its unique name → exactly one variable, and its
+        # instances must be ONLY A's single state (column Ssyk3), not B's.
+        result = get_varinfo(conn, "SSYK 3-pos", register="lisa")
+        assert len(result) == 1
+        a = result[0]
+        assert a["name"] == "SSYK 3-pos"
+        cols = sorted(c for inst in a["instances"] for c in inst["aliases"])
+        assert cols == ["Ssyk3"]
+        assert len(a["instances"]) == 1
+
+        # And sibling B in isolation sees only Ssyk5.
+        b = get_varinfo(conn, "SSYK 5-pos", register="lisa")[0]
+        b_cols = sorted(c for inst in b["instances"] for c in inst["aliases"])
+        assert b_cols == ["Ssyk5"]
+
+    def test_values_returns_only_matched_sibling_codes(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = self._split_db()
+        # Match sibling A by name → only A's value set (A1/A2), never B's.
+        result = get_values_by_variable(conn, "SSYK 3-pos", register="lisa")
+        codes = {v["code"] for inst in result["instances"] for v in inst["values"]}
+        assert codes == {"A1", "A2"}
+
+        b = get_values_by_variable(conn, "SSYK 5-pos", register="lisa")
+        b_codes = {v["code"] for inst in b["instances"] for v in inst["values"]}
+        assert b_codes == {"B1", "B2"}
 
 
 # ---------------------------------------------------------------------------
@@ -443,14 +558,15 @@ class TestGetValues:
         payload = data["data"]
         assert payload["variable_name"] == "Kön"
         instances = payload["instances"]
-        # CVIDs 1001 (2020), 1003 (2021), 1004 (2022). 1004 has no value set
-        # (Beskrivande-text sentinel) so its values list is empty but the
-        # instance is still present.
+        # A2.6: "instances" are `variable_state` rows. The coalescer merged the
+        # 2020 + 2021 cvids into one 2020-01-01..2021-12-31 state (window-opening
+        # year 2020); the 2022 cvid is its own state. So years are {2020, 2022}.
         years = {i["year"] for i in instances}
-        assert years == {2020, 2021, 2022}
-        coded = {i["cvid"]: i["values"] for i in instances if i["values"]}
-        assert 1001 in coded
-        assert {v["code"] for v in coded[1001]} == {"1", "2"}
+        assert years == {2020, 2022}
+        # The Man/Kvinna value set surfaces on at least one state.
+        coded = [i for i in instances if i["values"]]
+        assert coded
+        assert any({v["code"] for v in i["values"]} == {"1", "2"} for i in coded)
 
     def test_by_variable_year_collapses_across_registers(self, db_path: str):
         """variable + year across multiple registers collapses if codes match.
@@ -502,15 +618,16 @@ class TestGetValues:
         """
         from reg_meta.cli import _group_instances_by_codes
 
+        # A2.6: instances are variable_state-shaped (state_id + validity window).
         instances = [
             {
-                "cvid": 1,
+                "state_id": 1,
                 "register_id": 100,
                 "register_name": "RegA",
                 "register_variant_id": 10,
                 "variant_name": "A1",
-                "regver_id": 200,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Man"},
@@ -518,13 +635,13 @@ class TestGetValues:
                 ],
             },
             {
-                "cvid": 2,
+                "state_id": 2,
                 "register_id": 101,
                 "register_name": "RegB",
                 "register_variant_id": 11,
                 "variant_name": "B1",
-                "regver_id": 201,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Man"},
@@ -532,13 +649,13 @@ class TestGetValues:
                 ],
             },
             {
-                "cvid": 3,
+                "state_id": 3,
                 "register_id": 102,
                 "register_name": "RegC",
                 "register_variant_id": 12,
                 "variant_name": "C1",
-                "regver_id": 202,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Pojke"},
@@ -636,11 +753,14 @@ class TestGetValues:
             "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'V2')"
         )
+        # A2.6: register_version has no slug column; the ambiguous-alias check
+        # fires in the alias→variable fallback (before any state lookup), so no
+        # register_version rows are needed.
         conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (100, 10, '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (101, 11, '2020')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '50', 'AppleVar')"
@@ -714,19 +834,15 @@ class TestGetValues:
             "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'Children')"
         )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
-        )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '44', 'Kön')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '44', 'Kön')"
-        )
-        # Two cvids, two distinct value sets. member_hash must be 32 bytes.
+        v1 = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'Kön', 'kon')"
+        ).lastrowid
+        v2 = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (2, '44', 'Kön', 'kon')"
+        ).lastrowid
+        # Two distinct value sets. member_hash must be 32 bytes.
         conn.execute(
             "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
             (b"\xaa" * 32,),
@@ -743,15 +859,19 @@ class TestGetValues:
         conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 4)")
+        # A2.6: get_values_by_variable reads variable_state; one 2020 state per
+        # variable, each carrying its own value set.
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
-            "VALUES (5001, 1, 10, 100, 44, 1)"
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, value_set_id) "
+            "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', 1)",
+            (v1,),
         )
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
-            "VALUES (5002, 2, 11, 101, 44, 2)"
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, value_set_id) "
+            "VALUES (?, 11, '2020-01-01', '2020-12-31', 'int', 2)",
+            (v2,),
         )
         # docs DB stub — query commands require it present.
         from reg_meta_build.doc_db import build_doc_db
@@ -1093,8 +1213,12 @@ class TestGetDiff:
         assert len(data["data"]["variants"]) >= 1
         assert data["data"]["variants"][0]["register_variant_id"] == 10
 
-    def test_fallback_to_closest_year(self, db_path: str):
-        """Year 2019 has no version; should fall back to nothing. Year 2023 falls back to 2022."""
+    def test_year_with_no_covering_state_is_empty(self, db_path: str):
+        """A2.6: schema-at-year now uses `variable_state` validity overlap (no
+        register_version closest-≤-year fallback). 2023 is covered by no state,
+        so the diff against it finds no columns and 404s like any empty diff —
+        the diff is year-keyed and carries from_year/to_year, not version rows.
+        """
         data, code = _run_json(
             [
                 "--db",
@@ -1109,10 +1233,27 @@ class TestGetDiff:
                 "2023",
             ]
         )
+        # No state covers 2023 → no versions found → not_found (exit 16).
+        assert code == 16
+        # A real in-range diff (2020→2022) succeeds and is year-keyed.
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+            ]
+        )
         assert code == 0
-        # to_version should be the 2022 version (closest ≤ 2023)
         v = data["data"]["variants"][0]
-        assert v["to_version"]["year"] == 2022
+        assert v["from_year"] == 2020
+        assert v["to_year"] == 2022
 
     def test_from_gte_to_error(self, db_path: str):
         data, code = _run_json(
@@ -1229,8 +1370,11 @@ class TestGetLineage:
         testreg = [
             r for r in data["data"]["registers"] if r["register_name"] == "TESTREG"
         ][0]
+        # A2.6: year range spans the variable_state validity windows; the count
+        # is of states now (the 2020+2021 cvids coalesced into one 2020-2021
+        # state, plus the 2022 state → 2 states spanning 2020..2022).
         assert testreg["year_range"] == [2020, 2022]
-        assert testreg["instance_count"] == 3
+        assert testreg["instance_count"] == 2
 
 
 # ---------------------------------------------------------------------------
@@ -1415,3 +1559,354 @@ class TestOutputFormats:
     def test_no_command(self):
         _, code = _run_json([])
         assert code == 2
+
+
+# ---------------------------------------------------------------------------
+# A2.6 year-filter overlap (regression: was filtering by valid_from year only)
+# ---------------------------------------------------------------------------
+
+
+def _overlap_db():
+    """In-memory DB with three `variable_state` window shapes on one variant, so
+    the requested-year FILTER sites (search / get_schema / get_values) can be
+    exercised against multi-year, open-ended, and yearless-fallback windows.
+
+    Variable `kon` (var_id 44) carries three states under variant 10:
+      - multi-year     2010-01-01 .. 2012-12-31  (value_set 1)
+      - open-ended     2015-01-01 .. 9999-12-31  (value_set 1)
+      - yearless       0001-01-01 .. 9999-12-31  (value_set 1)
+    The three distinct (valid_from, valid_to) windows are separate editions in
+    get_schema (which groups by delivery window). The labels below are just
+    per-window markers for the assertions."""
+    import sqlite3
+
+    from reg_meta_build.db import DDL, seed_providers
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(DDL)
+    seed_providers(conn)
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, name) "
+        "VALUES (1, 1, 'r1', 'R1')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (10, 1, 'v1', 'V1')"
+    )
+    vid = conn.execute(
+        "INSERT INTO variable (register_id, provider_key, name, slug) "
+        "VALUES (1, '44', 'Kön', 'kon')"
+    ).lastrowid
+    conn.execute(
+        "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
+        (b"\xaa" * 32,),
+    )
+    conn.execute("INSERT INTO value_code VALUES (1, '1', 'Man')")
+    conn.execute("INSERT INTO value_code VALUES (2, '2', 'Kvinna')")
+    conn.execute("INSERT INTO value_set_member VALUES (1, 1)")
+    conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
+    for valid_from, valid_to, label in (
+        ("2010-01-01", "2012-12-31", "multi"),
+        ("2015-01-01", "9999-12-31", "open"),
+        ("0001-01-01", "9999-12-31", "yearless"),
+    ):
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name, value_set_id, "
+            "value_set_version_label) VALUES (?, 10, ?, ?, 'int', 'Kon', 1, ?)",
+            (vid, valid_from, valid_to, label),
+        )
+    conn.commit()
+    return conn
+
+
+class TestStateOverlapHelpers:
+    """Unit tests for the overlap predicates (the bug was START-year-only)."""
+
+    def test_covers_year_spans_full_window(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Multi-year window must match its MID and END years, not only the start.
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2010)
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2011)  # mid
+        assert _state_covers_year("2010-01-01", "2012-12-31", 2012)  # end
+        assert not _state_covers_year("2010-01-01", "2012-12-31", 2013)
+        assert not _state_covers_year("2010-01-01", "2012-12-31", 2009)
+
+    def test_covers_year_open_ended_matches_far_future(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Open-ended (9999) must match years well past the opening year.
+        assert _state_covers_year("2015-01-01", "9999-12-31", 2015)
+        assert _state_covers_year("2015-01-01", "9999-12-31", 2099)
+        assert not _state_covers_year("2015-01-01", "9999-12-31", 2014)
+
+    def test_covers_year_yearless_matches_anything(self):
+        from reg_meta.queries import _state_covers_year
+
+        # Yearless-fallback (0001..9999) matches any reasonable calendar year.
+        assert _state_covers_year("0001-01-01", "9999-12-31", 1850)
+        assert _state_covers_year("0001-01-01", "9999-12-31", 2024)
+
+    def test_overlaps_years_range_and_open_bounds(self):
+        from reg_meta.queries import _state_overlaps_years
+
+        # Multi-year window vs requested ranges.
+        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2011, 2011)  # mid
+        assert _state_overlaps_years("2010-01-01", "2012-12-31", 2012, 2015)  # end edge
+        assert not _state_overlaps_years("2010-01-01", "2012-12-31", 2013, 2014)
+        # Open-ended window vs a far-future single year and open-high request.
+        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, 2099)
+        assert _state_overlaps_years("2015-01-01", "9999-12-31", 2099, None)
+        # Open-low request (lo=None → 0) matches a yearless window.
+        assert _state_overlaps_years("0001-01-01", "9999-12-31", None, 1990)
+
+
+class TestGetValuesYearOverlap:
+    """get_values_by_variable filters states by cover-the-year overlap."""
+
+    def test_multi_year_state_matches_mid_and_end(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # The multi-year state (2010-2012) must answer a MID-year (2011) and an
+        # END-year (2012) query — not only its opening 2010. Without the fix the
+        # int(valid_from[:4]) == year check drops it for 2011/2012.
+        for y in (2010, 2011, 2012):
+            out = get_values_by_variable(conn, "Kön", register="R1", year=y)
+            labels = {v["label"] for inst in out["instances"] for v in inst["values"]}
+            assert labels == {"Man", "Kvinna"}, f"year {y} should hit a state"
+
+    def test_open_ended_state_matches_far_future(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 2099 is covered by both the open-ended and the yearless windows.
+        out = get_values_by_variable(conn, "Kön", register="R1", year=2099)
+        assert out["instances"], "open-ended state must match a year past its start"
+        labels = {v["label"] for inst in out["instances"] for v in inst["values"]}
+        assert labels == {"Man", "Kvinna"}
+
+    def test_yearless_window_matches_arbitrary_year(self):
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 1850 is covered only by the yearless-fallback window (0001..9999).
+        out = get_values_by_variable(conn, "Kön", register="R1", year=1850)
+        years = {inst["valid_from"] for inst in out["instances"]}
+        assert "0001-01-01" in years
+
+    def test_nonoverlapping_year_excluded(self):
+        from reg_meta.errors import RegMetaError
+        from reg_meta.queries import get_values_by_variable
+
+        conn = _overlap_db()
+        # 2013 falls in the gap between the multi-year (..2012) and open-ended
+        # (2015..) windows, but the yearless window (0001..9999) still covers it,
+        # so 2013 IS matched. 0 is below the yearless window's 0001 start and the
+        # multi-year/open windows — nothing covers it.
+        out = get_values_by_variable(conn, "Kön", register="R1", year=2013)
+        assert {inst["valid_from"] for inst in out["instances"]} == {"0001-01-01"}
+        try:
+            zero = get_values_by_variable(conn, "Kön", register="R1", year=0)
+        except RegMetaError:
+            zero = {"instances": []}
+        assert zero["instances"] == []
+
+
+class TestGetSchemaYearOverlap:
+    """get_schema filters editions by validity-window overlap."""
+
+    def test_multi_year_edition_survives_mid_and_end_filter(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        # The 'multi' edition opens 2010 but spans through 2012; filtering for a
+        # MID (2011) or END (2012) year must keep it. Pre-fix (year == start)
+        # dropped it for 2011/2012.
+        for y in ("2011", "2012"):
+            out = get_schema(conn, register_variant_id="10", years=y)
+            # Window identity is (valid_from, valid_to) now; the multi-year
+            # edition opens 2010-01-01.
+            windows = {
+                ver["valid_from"] for var in out["variants"] for ver in var["versions"]
+            }
+            assert "2010-01-01" in windows, f"multi-year edition missing for years={y}"
+
+    def test_open_and_yearless_editions_match_far_future(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        out = get_schema(conn, register_variant_id="10", years="2099")
+        windows = {
+            ver["valid_from"] for var in out["variants"] for ver in var["versions"]
+        }
+        # Open-ended (2015..) + yearless (0001..) cover 2099; the multi-year
+        # (2010..2012) does not.
+        assert "2015-01-01" in windows
+        assert "0001-01-01" in windows
+        assert "2010-01-01" not in windows
+
+    def test_nonoverlapping_year_drops_bounded_editions(self):
+        from reg_meta.queries import get_schema
+
+        conn = _overlap_db()
+        # 2013: only the yearless window covers it (gap year for multi/open).
+        out = get_schema(conn, register_variant_id="10", years="2013")
+        windows = {
+            ver["valid_from"] for var in out["variants"] for ver in var["versions"]
+        }
+        assert windows == {"0001-01-01"}
+
+
+def _folded_window_db():
+    """In-memory DB with ONE delivery window (2007) holding four columns:
+    two ordinary variables (`value_set_version_label=''`) plus a §5.7 folded
+    multi-vintage variable delivering two states (`sni92` + `sni2007`) in the
+    SAME window. Exercises that get_schema groups by delivery window, not by
+    the per-column vintage label.
+
+    Variable layout under variant 10, all valid 2007-01-01..2007-12-31:
+      - kon  (var 44, label '')        ordinary
+      - alder(var 45, label '')        ordinary
+      - sni  (var 46, label 'sni92')   folded vintage A
+      - sni  (var 46, label 'sni2007') folded vintage B
+    """
+    import sqlite3
+
+    from reg_meta_build.db import DDL, seed_providers
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(DDL)
+    seed_providers(conn)
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, name) "
+        "VALUES (1, 1, 'r1', 'R1')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (10, 1, 'v1', 'V1')"
+    )
+    for var_id, name, slug in (
+        ("44", "Kön", "kon"),
+        ("45", "Ålder", "alder"),
+        ("46", "Näringsgren SNI", "sni"),
+    ):
+        conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, ?, ?, ?)",
+            (var_id, name, slug),
+        )
+    # window: two ordinary columns + folded variable's two vintage states
+    states = (
+        ("44", "Kon", ""),
+        ("45", "Alder", ""),
+        ("46", "Sni", "sni92"),
+        ("46", "Sni", "sni2007"),
+    )
+    for var_id, col, label in states:
+        vid = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = ?",
+            (var_id,),
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, delivery_column_name, value_set_version_label) "
+            "VALUES (?, 10, '2007-01-01', '2007-12-31', 'int', ?, ?)",
+            (vid, col, label),
+        )
+    conn.commit()
+    return conn
+
+
+class TestGetSchemaFoldedWindowNotSharded:
+    """A2.6 P2 regression: get_schema groups editions by DELIVERY WINDOW only.
+
+    A §5.7 folded multi-vintage variable carries two states in one window with
+    distinct `value_set_version_label`s while ordinary columns carry ''. Keying
+    the edition by the label sharded one delivered schema into partial pseudo-
+    versions (the '' group missing the folded var, each vintage group missing
+    the ordinary columns). The fix keys by (valid_from, valid_to) so one edition
+    holds every column delivered in the window; the label is per-column.
+    """
+
+    def test_single_version_holds_all_columns_with_per_column_labels(self):
+        from reg_meta.queries import get_schema
+
+        conn = _folded_window_db()
+        out = get_schema(conn, register_variant_id="10")
+        versions = [ver for var in out["variants"] for ver in var["versions"]]
+        # Pre-fix this window sharded into 3 pseudo-versions ('', sni92, sni2007).
+        assert len(versions) == 1, (
+            f"window must NOT be sharded; got {len(versions)} versions"
+        )
+
+        ver = versions[0]
+        assert (ver["valid_from"], ver["valid_to"]) == ("2007-01-01", "2007-12-31")
+        # The single window's columns include BOTH ordinary columns AND both
+        # folded-variable vintage states.
+        assert "value_set_version_label" not in ver, (
+            "version-level label removed; it is per-column now"
+        )
+        labels_by_alias: dict[str, str] = {
+            col["aliases"]: col["value_set_version_label"] for col in ver["columns"]
+        }
+        # Four columns; the two SNI states share the alias but differ by label.
+        assert len(ver["columns"]) == 4
+        ordinary = {
+            col["aliases"]
+            for col in ver["columns"]
+            if col["value_set_version_label"] == ""
+        }
+        assert ordinary == {"Kon", "Alder"}
+        sni_labels = {
+            col["value_set_version_label"]
+            for col in ver["columns"]
+            if col["aliases"] == "Sni"
+        }
+        assert sni_labels == {"sni92", "sni2007"}
+        assert labels_by_alias["Kon"] == ""
+
+
+class TestSearchYearOverlap:
+    """_filter_search_by_years uses window overlap, not the opening year."""
+
+    def test_var_pair_kept_for_mid_year_of_multi_year_state(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2011 is the MID year of the multi-year state; the variable must survive.
+        out = search(conn, "Kön", field="varname", years="2011")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_kept_for_far_future_open_ended(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2099 only overlaps the open-ended (2015..9999) and yearless windows.
+        # Pre-fix `_years_in_range` capped both at their opening year, so 2099
+        # matched nothing and the variable was wrongly dropped.
+        out = search(conn, "Kön", field="varname", years="2099")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_kept_for_gap_year_covered_only_by_yearless(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # 2013 falls in the gap between the multi-year (..2012) and open-ended
+        # (2015..) windows but is covered by the yearless window (0001..9999).
+        # Pre-fix the yearless window enumerated as just [1], so 2013 matched no
+        # state and the variable was dropped.
+        out = search(conn, "Kön", field="varname", years="2013")
+        assert out["total_count"] >= 1
+
+    def test_var_pair_dropped_when_no_window_covers_year(self):
+        from reg_meta.queries import search
+
+        conn = _overlap_db()
+        # Year 0 is below every window (yearless starts at 0001) → no match.
+        out = search(conn, "Kön", field="varname", years="0-0")
+        assert out["total_count"] == 0

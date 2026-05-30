@@ -142,6 +142,15 @@ def _cvid_exists(conn: sqlite3.Connection, cvid: int) -> bool:
     )
 
 
+def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
+    return (
+        conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name = ?", (name,)
+        ).fetchone()
+        is not None
+    )
+
+
 def _check_schema_shape(
     conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
 ) -> None:
@@ -151,7 +160,16 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
-    for absent in ("cvid_value_code", "value_item", "value_item_validity"):
+    # A2.6 adds register_version / population / object_type to the
+    # dropped-before-ship set (build-time-only, like unika_summary).
+    for absent in (
+        "cvid_value_code",
+        "value_item",
+        "value_item_validity",
+        "register_version",
+        "population",
+        "object_type",
+    ):
         if absent in tables:
             result.fail(f"{absent} should have been dropped")
         else:
@@ -197,6 +215,16 @@ def _check_arbsoknov_projection(
     result.section("[projection: ArbSokNov LISA]")
     if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
+        return
+    # A2.6: this anchor identified the 1998 edition via
+    # `register_version.registerversionnamn`, but register_version is now
+    # build-time-only and dropped before ship (§5.2 — version left the FQID
+    # grammar). With no version-name source in the shipped DB, the year filter
+    # can't run; skip cleanly. The cvid-421764 anchor below stays version-free
+    # and still guards projection correctness. (Re-home the year signal onto
+    # `variable_state.valid_from` or the provenance DB when revisited — A4.2.)
+    if not _table_exists(conn, "register_version"):
+        result.ok("register_version absent (A2.6) — ArbSokNov year anchor skipped")
         return
     # ArbSokNov is variable_id=31554 in LISA. Codes 4 and 5 should not
     # appear in cvids before their introduction (~2006-2007). Fetched

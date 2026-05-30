@@ -1009,13 +1009,14 @@ def _group_instances_by_codes(
                 "registers": registers,
                 "instances": [
                     {
-                        "cvid": m["cvid"],
+                        # A2.6: instances are variable_state rows now.
+                        "state_id": m["state_id"],
                         "register_id": m["register_id"],
                         "register_name": m["register_name"],
                         "register_variant_id": m["register_variant_id"],
                         "variant_name": m["variant_name"],
-                        "regver_id": m["regver_id"],
-                        "version_name": m["version_name"],
+                        "valid_from": m["valid_from"],
+                        "valid_to": m["valid_to"],
                         "year": m["year"],
                     }
                     for m in members
@@ -1554,28 +1555,34 @@ def _write_payload(
             rows = []
             for v in data.get("variants", []):
                 for ver in v.get("versions", []):
+                    # A2.6: editions are validity windows now; show the period
+                    # as `valid_from..valid_to` instead of a register_version name.
+                    period = f"{ver.get('valid_from', '')}..{ver.get('valid_to', '')}"
                     for col in ver.get("columns", []):
                         rows.append(
                             {
-                                "version": ver.get("version_name", ""),
+                                "period": period,
                                 "var_id": col.get("var_id", ""),
                                 "name": col.get("variable_name", ""),
                                 "data_type": col.get("data_type", ""),
                                 "aliases": col.get("aliases", ""),
                                 "source": col.get("source", ""),
-                                "cvid": col.get("cvid", ""),
+                                # A2.6: per-column §5.7 vintage label ('' for
+                                # ordinary columns; e.g. sni92/sni2007 for a
+                                # folded variable's two states in one window).
+                                "vintage": col.get("value_set_version_label", ""),
                             }
                         )
             write_formatted(
                 rows,
                 [
-                    "version",
+                    "period",
                     "var_id",
                     "name",
                     "data_type",
                     "aliases",
                     "source",
-                    "cvid",
+                    "vintage",
                 ],
                 output_path,
                 fmt=fmt,
@@ -1592,8 +1599,12 @@ def _write_payload(
                         "register_id": v.get("register_id", ""),
                         "var_id": v.get("var_id", ""),
                         "name": v.get("name", ""),
-                        "version": inst.get("version_name", ""),
-                        "cvid": inst.get("cvid", ""),
+                        # A2.6: per-state validity window instead of a
+                        # register_version name + cvid.
+                        "variant": inst.get("variant_name", ""),
+                        "period": (
+                            f"{inst.get('valid_from', '')}..{inst.get('valid_to', '')}"
+                        ),
                         "data_type": inst.get("data_type", ""),
                         "aliases": ", ".join(inst.get("aliases", [])),
                         "values": inst.get("value_set_count", 0),
@@ -1605,8 +1616,8 @@ def _write_payload(
                 "register_id",
                 "var_id",
                 "name",
-                "version",
-                "cvid",
+                "variant",
+                "period",
                 "data_type",
                 "aliases",
                 "values",
@@ -1653,7 +1664,8 @@ def _write_payload(
                     row = {
                         "register": inst.get("register_name", ""),
                         "year": inst.get("year", ""),
-                        "cvid": inst.get("cvid", ""),
+                        # A2.6: per-state id (instances are variable_state rows).
+                        "state_id": inst.get("state_id", ""),
                         "code": v.get("code", ""),
                         "label": v.get("label", ""),
                     }
@@ -1663,7 +1675,7 @@ def _write_payload(
             cols = ["register", "year"]
             if show_variant:
                 cols.append("variant")
-            cols += ["cvid", "code", "label"]
+            cols += ["state_id", "code", "label"]
             write_formatted(
                 rows,
                 cols,
@@ -1675,7 +1687,14 @@ def _write_payload(
     elif key == ("get", "datacolumns"):
         write_formatted(
             data if isinstance(data, list) else [],
-            ["delivery_column_name", "register_id", "register_name", "version_name"],
+            # A2.6: full alias list from variable_alias; the register_version
+            # coordinate is gone, so the variant id stands in for grouping.
+            [
+                "delivery_column_name",
+                "register_id",
+                "register_name",
+                "register_variant_id",
+            ],
             output_path,
             fmt=fmt,
             fmt_explicit=fmt_explicit,

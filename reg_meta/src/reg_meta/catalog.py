@@ -1,10 +1,14 @@
 """Catalog: FQID-to-row resolution against the reg_meta SQLite DB.
 
 Implements the FQID API in REFACTOR_SPEC.md §5.10: ``Catalog.resolve(fqid)``
-turns any FQID kind into a typed entity row (the binding arm resolves to the
-longitudinal ``ResolvedVariable``), with ``resolve_at`` + the per-edge
-accessors for period/relationship traversal. ``Catalog.editions(...)`` is the
-separate discovery path enumerating a variable's bindings under a register.
+turns any FQID kind into a typed entity row (the 3-segment binding arm resolves
+to the longitudinal ``ResolvedVariable``), with ``resolve_at`` + the per-edge
+accessors for period/relationship traversal.
+
+A2.6: the binding FQID is 3-segment (`provider/register/slug`). Variant and
+period are delivery coordinates passed to ``resolve_at`` (not FQID segments),
+and the variant / register_version FQID kinds — plus the ``editions`` discovery
+path that enumerated per-edition bindings — are gone (§5.2).
 """
 
 from __future__ import annotations
@@ -22,7 +26,6 @@ from .fqid import (
     FqidKind,
     parse,
     period_token_to_bounds,
-    validate_slug,
 )
 
 if TYPE_CHECKING:
@@ -49,49 +52,6 @@ class ResolvedRegister:
 
 
 @dataclass(frozen=True)
-class ResolvedRegisterVariant:
-    fqid: Fqid
-    # `register_variant_id is None` marks the §5.1 synthesized `_default` placeholder
-    # for variant-less registers — the slot is transparent at resolve time,
-    # not backed by a register_variant row.
-    register_variant_id: int | None
-    register_id: int
-    # §5.11 rename. `description` replaces the dropped `registervariantrubrik`
-    # carrier; SCB's `registervariantbeskrivning` is the value.
-    name: str | None
-    description: str | None
-    display_group: str | None
-
-
-@dataclass(frozen=True)
-class ResolvedRegisterVersion:
-    fqid: Fqid
-    regver_id: int
-    register_variant_id: int
-    register_id: int
-    registerversionnamn: str | None
-
-
-@dataclass(frozen=True)
-class ResolvedVariableBinding:
-    fqid: Fqid
-    cvid: int
-    register_id: int
-    register_variant_id: int
-    regver_id: int
-    var_id: int
-    # §5.11: SCB `variabelnamn` → `variable_name`; `kolumnnamn` →
-    # `delivery_column_name` (the un-prefixed SCB delivery column
-    # header — `Kon`, `PersonNr`, etc.).
-    variable_name: str | None
-    delivery_column_name: str | None
-    # §5.6 lineage: source cvid + source binding FQID. NULL on canonical bindings.
-    # Both populated by the surviving discovery path (`editions` / `_row_to_binding`).
-    via_source_id: int | None = None
-    lineage: Fqid | None = None
-
-
-@dataclass(frozen=True)
 class ResolvedClassification:
     fqid: Fqid
     classification_id: int
@@ -103,9 +63,8 @@ class ResolvedClassification:
 # §5.10 / §6.2: the polymorphic period a caller passes to `resolve_at`. Mirrors
 # `Source.period`: a bare year (int), a period token ("HT2020"/"2020-Q3"/
 # "2020-08"/"2018-12-31"), an explicit range dict {"from", "to"} (endpoints are
-# int or token), or the "_default" snapshot sentinel (no period filter). It is
-# NOT an FQID segment — the binding FQID parser is untouched here (A2.6 owns the
-# 3-seg flip).
+# int or token), or the "_default" snapshot sentinel (no period filter). It is a
+# delivery coordinate, NOT an FQID segment (the binding FQID is 3-seg, §5.2).
 Period = int | str | dict
 
 
@@ -146,11 +105,10 @@ class VariableRef:
     variable)` identity of a `same_as` / `replaced_by` neighbor. Carried by
     `predecessors`/`successors` and `ResolvedVariable.same_as`/`.replaced_by`.
 
-    `fqid` is None: the edge tables store only the 3-part variable identity, and
-    the binding FQID grammar is still 5-seg (variant + period) until A2.6, so no
-    addressable FQID can be built from an edge row. The `provider`/`register`/
-    `variable` triple is the load-bearing identity; `fqid` becomes the 3-seg
-    binding FQID once A2.6 flips the grammar.
+    A2.6: `fqid` is the neighbor's 3-segment binding FQID — the edge triple IS
+    the binding FQID now that the variant/period left the grammar (§5.2/§5.5).
+    Build-time slug validation guarantees the triple round-trips, so this is
+    never None in practice.
     """
 
     fqid: Fqid | None
@@ -170,8 +128,8 @@ class VariableRef:
 class RelatedRef:
     """A variable-grain sibling edge (§5.7 split): `variable_related_to`. Same
     3-part identity as `VariableRef` plus the `relation_kind` (split reason,
-    e.g. `same_definition_different_column`). `fqid` is None for the same reason
-    as `VariableRef`."""
+    e.g. `same_definition_different_column`). `fqid` is the sibling's 3-segment
+    binding FQID (A2.6)."""
 
     fqid: Fqid | None
     provider: str
@@ -209,12 +167,10 @@ class LineageWarning:
 class ResolvedVariable:
     """§5.10 longitudinal resolution of a binding FQID: the addressable
     variable's shared metadata + its full `variable_state` history (each state
-    tagged with its variant) + variable-grain edges. Replaces the interim
-    per-state `ResolvedVariableBinding` on the `resolve()` path (the discovery
-    `editions()` path still returns `ResolvedVariableBinding`)."""
+    tagged with its variant) + variable-grain edges."""
 
-    # The caller's binding FQID, preserved through a `same_as` traversal (like
-    # the old ResolvedVariableBinding.fqid). Still the interim 5-seg form.
+    # The caller's 3-segment binding FQID, preserved through a `same_as`
+    # traversal (so a result reports the FQID the caller asked for).
     fqid: Fqid
     variable_id: int
     register_id: int
@@ -234,18 +190,13 @@ class ResolvedVariable:
     replaced_by: tuple[VariableRef, ...]  # OUTBOUND successors (§5.10)
     related_to: tuple[RelatedRef, ...]  # variable_related_to (split siblings)
     lineage: tuple[LineageEdge, ...]  # variable_state_lineage (consumer-side)
-    # Traversal path (interim 5-seg FQIDs) when resolved via `same_as`; None on
-    # a direct hit. Preserved from the interim resolver's semantics.
+    # Traversal path (3-segment binding FQIDs) when resolved via `same_as`; None
+    # on a direct hit.
     via_same_as: tuple[Fqid, ...] | None = None
 
 
 ResolvedEntity = (
-    ResolvedProvider
-    | ResolvedRegister
-    | ResolvedRegisterVariant
-    | ResolvedRegisterVersion
-    | ResolvedVariable
-    | ResolvedClassification
+    ResolvedProvider | ResolvedRegister | ResolvedVariable | ResolvedClassification
 )
 
 
@@ -324,50 +275,6 @@ def _period_bounds(period: Period) -> tuple[str, str] | None:
     raise _bad_period(period, "expected int year, token, range, or '_default'")
 
 
-# Shared SELECT + FROM + JOINs for the binding **discovery** path (`editions`).
-# Includes the consumer-side join chain (`*_src`) so the lineage FQID for
-# rows with `via_source_id IS NOT NULL` is built directly from the result
-# row — no per-row roundtrip. Callers append their WHERE/ORDER BY.
-# A2.1.5: the variable slug is read from the stored `variable.slug` column
-# (joined via `vi.var_id` → `v.provider_key`), not derived from
-# `delivery_column_name` at query time.
-#
-# ⚠️ Interim fan-out (discovery only). `provider_key` is a NON-unique join hint:
-# an A2.2 triage split puts several `variable` rows under one
-# `(register_id, provider_key)` but relinks `variable_state`, not
-# `variable_instance`, so a single instance fans across all sibling `variable`
-# rows here. Variable resolution (`_resolve_variable_identity` /
-# `_resolve_variable_via_same_as`) was flipped in A2.2 onto `variable_state`
-# (keyed by `variable_id`), which is fan-out-free; only `editions` (discovery —
-# lists a variable's bindings) still reads this join. The
-# `variable_slug == variable` filter keeps
-# the right slug, but the cvid/metadata are the shared instance's for split
-# siblings — a known discovery quirk that clears when `editions` moves onto
-# `variable_state` (A2.5 `states`/`resolve_at`) and `variable_instance` is
-# dropped (A2.7). See MIGRATION_PLAN A2.2/A2.5.
-_BINDING_QUERY = (
-    "SELECT vi.cvid, vi.register_id, vi.register_variant_id, vi.regver_id, vi.var_id, "
-    "vi.via_source_id, "
-    "v.name AS variable_name, v.slug AS variable_slug, va.delivery_column_name, "
-    "rv.slug AS variant_slug, rver.slug AS version_slug, "
-    "p_src.slug AS src_provider_slug, r_src.slug AS src_register_slug, "
-    "rv_src.slug AS src_variant_slug, rver_src.slug AS src_version_slug "
-    "FROM variable_instance vi "
-    "JOIN register_version rver ON vi.regver_id = rver.regver_id "
-    "JOIN register_variant rv ON vi.register_variant_id = rv.register_variant_id "
-    "JOIN register r ON vi.register_id = r.register_id "
-    "JOIN provider p ON r.provider_id = p.provider_id "
-    "JOIN variable v ON vi.register_id = v.register_id "
-    "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
-    "LEFT JOIN variable_alias va ON vi.cvid = va.cvid "
-    "LEFT JOIN variable_instance vi_src ON vi.via_source_id = vi_src.cvid "
-    "LEFT JOIN register_version rver_src ON vi_src.regver_id = rver_src.regver_id "
-    "LEFT JOIN register_variant rv_src ON vi_src.register_variant_id = rv_src.register_variant_id "
-    "LEFT JOIN register r_src ON vi_src.register_id = r_src.register_id "
-    "LEFT JOIN provider p_src ON r_src.provider_id = p_src.provider_id "
-)
-
-
 class Catalog:
     """FQID resolution against an open reg_meta SQLite connection."""
 
@@ -434,99 +341,13 @@ class Catalog:
             purpose=row["purpose"],
         )
 
-    def _resolve_variant(self, fqid: Fqid) -> ResolvedRegisterVariant:
-        # §5.11: `name` was `registervariantnamn`, `description` was
-        # `registervariantbeskrivning`. `registervariantrubrik` and
-        # `registervariantsekretess` are dropped.
-        row = self._conn.execute(
-            "SELECT rv.register_variant_id, rv.register_id, rv.name, "
-            "rv.description, rv.display_group "
-            "FROM register_variant rv "
-            "JOIN register r ON rv.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ?",
-            (fqid.provider, fqid.register, fqid.variant),
-        ).fetchone()
-        if row:
-            return ResolvedRegisterVariant(
-                fqid=fqid,
-                register_variant_id=row["register_variant_id"],
-                register_id=row["register_id"],
-                name=row["name"],
-                description=row["description"],
-                display_group=row["display_group"],
-            )
-        if fqid.variant == DEFAULT_VARIANT_SLUG:
-            synth = self._synthesize_default_variant(fqid)
-            if synth is not None:
-                return synth
-        raise _not_found(fqid)
-
-    def _synthesize_default_variant(self, fqid: Fqid) -> ResolvedRegisterVariant | None:
-        """§5.1: variant-less registers expose a transparent `_default` slot
-        resolved on the fly. Returns None when the register has real variants
-        or doesn't exist — caller falls through to not-found."""
-        row = self._conn.execute(
-            "SELECT r.register_id FROM register r "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? "
-            "AND NOT EXISTS ("
-            "  SELECT 1 FROM register_variant rv WHERE rv.register_id = r.register_id"
-            ")",
-            (fqid.provider, fqid.register),
-        ).fetchone()
-        if not row:
-            return None
-        return ResolvedRegisterVariant(
-            fqid=fqid,
-            register_variant_id=None,
-            register_id=row["register_id"],
-            name=None,
-            description=None,
-            display_group=None,
-        )
-
-    def _resolve_version(self, fqid: Fqid) -> ResolvedRegisterVersion:
-        # §5.2: `register_version.slug` is the canonical version-slot token —
-        # either a derived period (`2018`, `HT2020`) or a curated slug for
-        # rows the period regex can't disambiguate. populate_slugs writes both
-        # kinds; the resolver just matches the slug column. §5.3 uniqueness
-        # is enforced by `UNIQUE(register_variant_id, slug)` (db.py), so fetchone is safe.
-        #
-        # §5.1 follow-up: `_default` versions against a variant-less register
-        # aren't reachable today — `register_version.register_variant_id` is NOT NULL,
-        # so no version row can exist without a real variant row. When SOS
-        # ingestion lands, either make the column nullable or extend this
-        # resolver to synthesize the variant slot the way `_resolve_variant`
-        # does.
-        row = self._conn.execute(
-            "SELECT rver.regver_id, rver.register_variant_id, rv.register_id, "
-            "rver.registerversionnamn "
-            "FROM register_version rver "
-            "JOIN register_variant rv ON rver.register_variant_id = rv.register_variant_id "
-            "JOIN register r ON rv.register_id = r.register_id "
-            "JOIN provider p ON r.provider_id = p.provider_id "
-            "WHERE p.slug = ? AND r.slug = ? AND rv.slug = ? AND rver.slug = ?",
-            (fqid.provider, fqid.register, fqid.variant, fqid.period),
-        ).fetchone()
-        if row is None:
-            raise _not_found(fqid)
-        return ResolvedRegisterVersion(
-            fqid=fqid,
-            regver_id=row["regver_id"],
-            register_variant_id=row["register_variant_id"],
-            register_id=row["register_id"],
-            registerversionnamn=row["registerversionnamn"],
-        )
-
     def _resolve_binding(self, fqid: Fqid) -> ResolvedVariable:
-        """A2.5 longitudinal resolution (§5.10). The binding FQID selects ONE
-        `variable` row (register-unique slug); from it we gather the shared
-        metadata, the full `variable_state` history (each tagged with its
-        variant), and the variable-grain edges. Period-independent — period
-        narrowing lives in `resolve_at`. Still parses the interim 5-seg binding
-        grammar (the 3-seg flip is A2.6); `fqid.variant`/`fqid.period` are
-        validated by the parser but not used for selection here.
+        """Longitudinal resolution (§5.10). The 3-segment binding FQID selects
+        ONE `variable` row by register-unique slug (exact match, no
+        derive-at-resolve); from it we gather the shared metadata, the full
+        `variable_state` history (each tagged with its variant), and the
+        variable-grain edges. Period-independent — period narrowing lives in
+        `resolve_at`.
         """
         resolved = self._resolve_variable_identity(fqid)
         if resolved is None:
@@ -549,12 +370,12 @@ class Catalog:
         """Resolve a binding FQID to its `variable` row, following curated
         `variable_same_as` edges when the direct slug lookup misses. Returns
         `(variable_row, via_same_as_path)` — `via_same_as` is None on a direct
-        hit, else the traversal path (interim 5-seg FQIDs). None when neither the
-        direct lookup nor any same_as edge resolves.
+        hit, else the traversal path (3-segment binding FQIDs). None when neither
+        the direct lookup nor any same_as edge resolves.
 
         Variable identity is period- and variant-independent (the FQID's slug is
-        the register-unique natural key, §5.1), so this is simpler than the
-        interim per-state resolver — there is no edition/instance to thread."""
+        the register-unique natural key, §5.1) — there is no edition/instance to
+        thread."""
         assert fqid.provider is not None and fqid.register is not None
         assert fqid.variable is not None
         direct = self._lookup_variable(fqid.provider, fqid.register, fqid.variable)
@@ -566,20 +387,17 @@ class Catalog:
         self, fqid: Fqid
     ) -> tuple[sqlite3.Row, tuple[Fqid, ...]] | None:
         """BFS through `variable_same_as` (variable grain, §5.5) until a target
-        variable EXISTS (by register-unique slug). Variant-independent: the edge
-        is variable grain, so the target register may use other variant slugs;
-        the path FQIDs record the interim 5-seg form under the query's variant
-        purely as a breadcrumb (resolution doesn't depend on it)."""
+        variable EXISTS (by register-unique slug). The edge is variable grain
+        (cross-register / cross-provider equivalence), so the target register
+        may use other variant slugs; the path records each hop as its 3-segment
+        binding FQID."""
         assert fqid.provider and fqid.register and fqid.variable
-        assert fqid.variant is not None and fqid.period is not None
         if (
             fqid.provider,
             fqid.register,
             fqid.variable,
         ) not in self._var_same_as_source_keys():
             return None
-        variant = fqid.variant
-        period = fqid.period
         start_key = (fqid.provider, fqid.register, fqid.variable)
         visited: set[tuple[str, str, str]] = {start_key}
         queue: deque[tuple[str, str, str, tuple[Fqid, ...]]] = deque()
@@ -601,9 +419,7 @@ class Catalog:
                     continue
                 visited.add(key)
                 try:
-                    step_fqid = Fqid.binding_fqid(
-                        n_prov, n_reg, variant, period, n_variable
-                    )
+                    step_fqid = Fqid.binding_fqid(n_prov, n_reg, n_variable)
                 except FqidError:
                     # Malformed slug — populate_slugs validates on write, so
                     # this is a build-invariant break; skip the candidate.
@@ -802,6 +618,17 @@ class Catalog:
 
     # ── A2.5 variable-grain edge accessors (§5.10) ─────────────────────────
 
+    @staticmethod
+    def _ref_fqid(provider: str, register: str, variable: str) -> Fqid | None:
+        """Best-effort 3-segment binding FQID for an edge endpoint (§5.5/§5.2).
+        The stored triple is exactly the binding FQID now; build-time slug
+        validation guarantees it round-trips, but a malformed/NULL slug surfaces
+        as None rather than raising (the triple stays the load-bearing identity)."""
+        try:
+            return Fqid.binding_fqid(provider, register, variable)
+        except FqidError:
+            return None
+
     def _edges_for_variable(
         self, provider: str, register: str, variable: str, variable_id: int
     ) -> dict[str, tuple]:
@@ -827,7 +654,7 @@ class Catalog:
         ).fetchall()
         return tuple(
             VariableRef(
-                fqid=None,
+                fqid=self._ref_fqid(r["b_provider"], r["b_register"], r["b_variable"]),
                 provider=r["b_provider"],
                 register=r["b_register"],
                 variable=r["b_variable"],
@@ -850,7 +677,11 @@ class Catalog:
         ).fetchall()
         return tuple(
             VariableRef(
-                fqid=None,
+                fqid=self._ref_fqid(
+                    r["successor_provider"],
+                    r["successor_register"],
+                    r["successor_variable"],
+                ),
                 provider=r["successor_provider"],
                 register=r["successor_register"],
                 variable=r["successor_variable"],
@@ -875,7 +706,11 @@ class Catalog:
         ).fetchall()
         return tuple(
             VariableRef(
-                fqid=None,
+                fqid=self._ref_fqid(
+                    r["predecessor_provider"],
+                    r["predecessor_register"],
+                    r["predecessor_variable"],
+                ),
                 provider=r["predecessor_provider"],
                 register=r["predecessor_register"],
                 variable=r["predecessor_variable"],
@@ -899,7 +734,7 @@ class Catalog:
         ).fetchall()
         return tuple(
             RelatedRef(
-                fqid=None,
+                fqid=self._ref_fqid(r["b_provider"], r["b_register"], r["b_variable"]),
                 provider=r["b_provider"],
                 register=r["b_register"],
                 variable=r["b_variable"],
@@ -910,13 +745,18 @@ class Catalog:
 
     def _lineage_edges(self, variable_id: int) -> tuple[LineageEdge, ...]:
         """§5.6 consumer-side lineage for this variable's states (the consumer
-        side). `source_fqid` stays None: the source-side 3-part binding FQID
-        isn't addressable until the A2.6 grammar flip (same reason as the refs'
-        `fqid`), so there's nothing to build from the source slugs yet."""
+        side). A2.6: `source_fqid` is the source state's 3-segment binding FQID,
+        joined from the source state's variable → register → provider. Best-effort
+        — a NULL/malformed source slug surfaces as None (`_ref_fqid`)."""
         rows = self._conn.execute(
-            "SELECT l.consumer_state_id, l.source_state_id, l.valid_from, l.valid_to "
+            "SELECT l.consumer_state_id, l.source_state_id, l.valid_from, l.valid_to, "
+            "sp.slug AS src_provider, sr.slug AS src_register, sv.slug AS src_variable "
             "FROM variable_state_lineage l "
             "JOIN variable_state cs ON l.consumer_state_id = cs.state_id "
+            "JOIN variable_state ss ON l.source_state_id = ss.state_id "
+            "JOIN variable sv ON ss.variable_id = sv.variable_id "
+            "JOIN register sr ON sv.register_id = sr.register_id "
+            "JOIN provider sp ON sr.provider_id = sp.provider_id "
             "WHERE cs.variable_id = ? "
             "ORDER BY l.consumer_state_id, l.source_state_id",
             (variable_id,),
@@ -927,7 +767,13 @@ class Catalog:
                 source_state_id=r["source_state_id"],
                 valid_from=r["valid_from"],
                 valid_to=r["valid_to"],
-                source_fqid=None,
+                source_fqid=(
+                    self._ref_fqid(
+                        r["src_provider"], r["src_register"], r["src_variable"]
+                    )
+                    if r["src_provider"] and r["src_register"] and r["src_variable"]
+                    else None
+                ),
             )
             for r in rows
         )
@@ -1063,99 +909,9 @@ class Catalog:
                     f"expected a variable-binding FQID, got "
                     f"kind={parsed.kind.value}: {parsed!s}"
                 ),
-                remediation="Pass a 5-segment binding FQID (provider/register/variant/period/variable).",
+                remediation="Pass a 3-segment binding FQID (provider/register/slug).",
             )
         return parsed
-
-    def _row_to_binding(
-        self, row: sqlite3.Row, fqid: Fqid, variable_slug: str
-    ) -> ResolvedVariableBinding:
-        """Build a ResolvedVariableBinding from a `_BINDING_QUERY` row.
-
-        Lineage is built from the joined source-side slug columns. Slugs may
-        be transiently NULL between INSERT and `populate_slugs` (db.py); when
-        any source slug is missing we leave `lineage` as None. A populated
-        but malformed slug surfaces as `FqidError` — populate_slugs validates
-        on write, so reaching this path means a build-time invariant broke
-        and we want it loud, not silently dropped.
-        """
-        via = row["via_source_id"]
-        lineage: Fqid | None = None
-        if via is not None:
-            src = (
-                row["src_provider_slug"],
-                row["src_register_slug"],
-                row["src_variant_slug"],
-                row["src_version_slug"],
-                variable_slug,
-            )
-            if all(s for s in src):
-                lineage = Fqid.binding_fqid(*src)
-        return ResolvedVariableBinding(
-            fqid=fqid,
-            cvid=row["cvid"],
-            register_id=row["register_id"],
-            register_variant_id=row["register_variant_id"],
-            regver_id=row["regver_id"],
-            var_id=row["var_id"],
-            # `variable_name` aliases `v.name`; `delivery_column_name` is
-            # `va.delivery_column_name` (was `va.kolumnnamn`).
-            variable_name=row["variable_name"],
-            delivery_column_name=row["delivery_column_name"],
-            via_source_id=via,
-            lineage=lineage,
-        )
-
-    def editions(
-        self, *, provider: str, register: str, variable: str
-    ) -> list[ResolvedVariableBinding]:
-        """All variable bindings of ``variable`` under ``provider/register``.
-
-        Returns every ``(variant, period)`` combination where a
-        variable_instance row exists whose `delivery_column_name` folds to
-        ``variable``, including consumer-side bindings from §5.6 (their
-        ``lineage`` field carries the source-side FQID). Results are ordered
-        by ``(variant_slug, version_slug, cvid, delivery_column_name)`` for
-        deterministic iteration.
-
-        Slug inputs are validated; non-existent provider/register/variable
-        yields an empty list (discovery, not resolution).
-        """
-        validate_slug(provider, FqidKind.PROVIDER)
-        validate_slug(register, FqidKind.REGISTER)
-        validate_slug(variable, "variable")
-
-        rows = self._conn.execute(
-            _BINDING_QUERY + "WHERE p.slug = ? AND r.slug = ? "
-            "ORDER BY rv.slug, rver.slug, vi.cvid, va.delivery_column_name",
-            (provider, register),
-        ).fetchall()
-
-        out: list[ResolvedVariableBinding] = []
-        # variable_alias is keyed by (cvid, delivery_column_name) — a single
-        # instance can have multiple aliases (e.g. `Kon` + `Kön`), so the LEFT
-        # JOIN can yield one row per alias. A2.1.5: match the stored
-        # `variable_slug` (not the derived delivery column); dedupe by cvid for
-        # one binding per instance.
-        seen: set[int] = set()
-        for row in rows:
-            if row["variable_slug"] != variable:
-                continue
-            cvid = row["cvid"]
-            if cvid in seen:
-                continue
-            variant_slug = row["variant_slug"]
-            version_slug = row["version_slug"]
-            # Skip rows whose slug columns aren't populated (NULL on pre-1c
-            # DBs or partial fixtures) — they can't be addressed by FQID.
-            if not variant_slug or not version_slug:
-                continue
-            fqid = Fqid.binding_fqid(
-                provider, register, variant_slug, version_slug, variable
-            )
-            out.append(self._row_to_binding(row, fqid, variable))
-            seen.add(cvid)
-        return out
 
     def _resolve_classification(self, fqid: Fqid) -> ResolvedClassification:
         direct = self._resolve_classification_direct(fqid)
@@ -1301,8 +1057,6 @@ class Catalog:
 _DISPATCH = {
     FqidKind.PROVIDER: Catalog._resolve_provider,
     FqidKind.REGISTER: Catalog._resolve_register,
-    FqidKind.REGISTER_VARIANT: Catalog._resolve_variant,
-    FqidKind.REGISTER_VERSION: Catalog._resolve_version,
     FqidKind.VARIABLE_BINDING: Catalog._resolve_binding,
     FqidKind.CLASSIFICATION: Catalog._resolve_classification,
 }

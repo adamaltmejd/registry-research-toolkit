@@ -322,7 +322,7 @@ the variable directly — plus the resolver flip. No table rename,
 re-parent, or column drop here (all done in A2.1.5); the only `same_as`
 touch left is feeding the query its start node from the new 3-seg parse.
 
-- **Update FQID parser, emitter:** 3-seg bindings (`provider/register/slug`), 2-seg classifications (`class/<slug>`). **The variant FQID kind is removed** — variants become a navigational register sub-resource (§5.2, §9.5). Both the period (already out) and the variant leave the binding.
+- **Update FQID parser, emitter:** 3-seg bindings (`provider/register/slug`). **The variant FQID kind is removed** — variants become a navigational register sub-resource (§5.2, §9.5). Both the period (already out) and the variant leave the binding. **The 2-seg `class/<slug>` classification flip is NOT in A2.6 — it is its own stage (A2.6.1 below).** Classifications stay 3-seg `class/<slug>/<version>` through A2.6 because folding the version into the slug is a coupled slug re-bake + uniqueness-constraint change + resolver rewrite over a parallel data domain (the `(slug, version)` classification model), not a mechanical follow-on of the binding flip. Carrying it here would balloon the binding grammar flip into a classification data migration.
 - **Resolver flip.** `_resolve_binding_direct` in `reg_meta/catalog.py` now parses the 3-seg binding and reads the A2.1.5 stored `variable.slug` via an **exact match** (no `derive_variable_slug`-at-resolve, no fold ambiguity), joining `variable_state` through `variable_id`, filtered by `register_variant_id` (from the Source's `register_variant`) + period. The v0.11 5-seg parse path used by A2.5 is deleted.
 - Drop ~1,264 `register_version` slug entries from `scb.toml`
 - Add `_default` slug to relevant variants (LSS, BU, SOL — synthesized to real rows in A4.3) — as a variant coordinate, not an FQID segment
@@ -336,6 +336,49 @@ touch left is feeding the query its start node from the new 3-seg parse.
 **Estimate**: 7-10 days. Grammar flip + resolver flip + `same_as` grain demotion + slug TOML purge. (The table restructure that an earlier draft bundled here is now A2.1.5.)
 
 **Gate to A2.7**: A2.6 must merge.
+
+### [ ] A2.6.1 — 2-seg classification grammar (`class/<slug>`)
+
+Split out of A2.6 (the binding grammar flip), which intentionally left
+classifications on the 3-seg `class/<slug>/<version>` form. This stage
+folds the value/vintage into the slug so the canonical classification FQID
+is 2-seg `class/<slug>` per §5.2 (the table at REFACTOR_SPEC §5.2 lists
+`class/sun2020`, `class/icd10`, `class/lkf2007` — version baked into the
+slug, no separate segment). It is a self-contained slug + schema migration
+over the classification domain, parallel to (not nested in) the binding flip.
+
+- **Re-bake the curated classification slugs** in
+  `reg_meta_build/fqid_slugs/classifications.toml` from the `(slug, version)`
+  pair to a single version-baked, globally-unique slug — e.g. `sun` + `2000`
+  → `sun2000`, `lkf` + `1980` … `lkf2026` → `lkf1980` … `lkf2026`,
+  `agarkat` + `2020` → `agarkat2020`. Drop the `version` field from the TOML
+  entry shape (the value moves into the slug). ~69 entries; `lkf` is 47 of them.
+- **DDL:** drop the `classification.version` column (or make `slug` carry the
+  vintage and the uniqueness key become `slug` alone) in
+  `reg_meta_build/src/reg_meta_build/db.py`; the FQID becomes `class/<slug>`.
+- **Resolver:** rewrite `_resolve_classification_direct` (drop the
+  `WHERE slug = ? AND version = ?` two-bind lookup → single-bind on the
+  version-baked slug) and `_resolve_classification_via_same_as` (the BFS no
+  longer reconstructs `version` from `classification.version` after a hop) in
+  `reg_meta/src/reg_meta/catalog.py`.
+- **Parser/emitter:** `Fqid.classification_fqid` drops its `version` arg and
+  the `version` dataclass field; `parse()` accepts 2-seg `class/<slug>`;
+  `__str__` emits `class/<slug>`. Update `reg_meta/src/reg_meta/fqid.py` (the
+  A2.6 comment block on lines ~19-24 names this stage), `queries.py`'s
+  `try_emit(Fqid.classification_fqid, …)` call, and the loader/validator in
+  `fqid_slugs.py` (the `version` field handling at ~lines 351-374, 809-833).
+- **`classification_same_as`** edges already key on `(provider,
+  classification_slug)` (version-agnostic) — re-point the slug values to the
+  version-baked form.
+- Tests: `test_fqid.py` (currently asserts `class/sun` **raises** — flip to
+  assert it parses; assert the old 3-seg `class/sun/2020` now raises) and the
+  `_resolve_classification*` cases in `test_catalog.py`.
+
+**Gate**: A2.6.1 must merge before **A3.4** (line: `Binding.value_set` keyed
+by 2-seg `class/<slug>`) and the §5.2 grammar is otherwise inconsistent.
+
+**Estimate**: 2-3 days. Slug re-bake + uniqueness-constraint change +
+classification resolver rewrite.
 
 ### [ ] A2.7 — Cleanup
 

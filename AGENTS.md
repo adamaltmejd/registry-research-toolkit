@@ -46,7 +46,7 @@ Post-refactor target — see `REFACTOR_SPEC.md` §9–§10 for the full design a
 - **Web backend** (`reg_webapp/backend/`, in-flight): FastAPI + Pydantic REST. `reg_schema` Pydantic models are response models directly (no wrapper layer). For `reg_meta` (dataclass-based) responses, the backend defines per-endpoint Pydantic response wrappers — the only place 1:1 wrappers remain.
 - **Web frontend** (`reg_webapp/frontend/`, in-flight): Svelte 5 + Vite + TypeScript, bun-managed. TS types codegen'd from FastAPI's `openapi.json`.
 - **Tests**: pytest + pytest-xdist; `@pytest.mark.integration` opts into Docker-requiring tests.
-- **Type checking**: `uvx ty check` (Astral, beta). Advisory in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
+- **Type checking**: `uvx ty check` (Astral, beta). Blocking in CI; runs latest via `uvx` so we don't chase version bumps. Not a dev dep — keep `pyproject.toml` clean.
 - **MONA bundle runtime deps are expensive**: `reg_monabundle.runtime.*` amalgamates into a single file uploaded to MONA. Each added runtime dep must already be in MONA's WinPython env (see `mock_data_wizard/DESIGN.md`). Prefer stdlib for runner-bound code.
 
 Code currently in `mock_data_wizard/{server,editor}.py` (stdlib `http.server`, dataclass-based editor) is being superseded by `reg_webapp` and deleted in §15 step 7. Don't extend it — extend the new packages.
