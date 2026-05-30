@@ -1494,7 +1494,9 @@ def _classification_roots(conn: sqlite3.Connection) -> dict[int, int]:
 @dataclass
 class _TriageResult:
     # gkey → variable_id the state materializes under (siblings for splits).
-    assignments: dict[tuple, int]
+    # None when the parent variable is missing (seeded via vid_map.get); the
+    # coalescer's materializer raises a clear error on that invariant break.
+    assignments: dict[tuple, int | None]
     # gkey → value_set_version_label override (fold tokens).
     labels: dict[tuple, str]
     # gkeys collapsed into a sibling and not materialized.
@@ -1742,6 +1744,7 @@ def _apply_split(
             (register_id, var_id, shared_name),
         )
         new_vid = cur.lastrowid
+        assert new_vid is not None  # lastrowid is set after an INSERT
         sibling_vids.append(new_vid)
         for gk in by_col[col]:
             res.assignments[gk] = new_vid
@@ -1787,7 +1790,7 @@ def _materialize_variable_related_to(
     return len(rows)
 
 
-def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, int]:
+def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     """Coalesce `variable_instance` rows into `variable_state` per §5.1.
 
     Group key: `(register_id, register_variant_id, var_id, data_type, data_length,

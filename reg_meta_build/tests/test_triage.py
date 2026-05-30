@@ -383,3 +383,53 @@ class TestFoldSlugHint:
             res,
         )
         assert res.fold_slug_hints[5] == "ssyk"
+
+
+class TestSplitSiblingSlugCache:
+    """Split siblings share a `provider_key`, so the auto-slug cache must key on
+    a discriminator — else a persisted `auto.toml` re-applies one slug to every
+    sibling on the next build and trips `UNIQUE(register_id, slug)` (Codex P2)."""
+
+    def test_sibling_slugs_stable_across_rebuild(self, tmp_path: Path) -> None:
+        from reg_meta_build.fqid_slugs import populate_variable_slugs
+
+        ri = list(REGISTERINFORMATION_ROWS) + [
+            _var_row(colname="Hemkommun", cvid=9300, var_id=920),
+            _var_row(colname="Skolkommun", cvid=9301, var_id=920),
+        ]
+        input_dir = tmp_path / "input"
+        write_scb_input(input_dir, registerinformation_rows=ri)
+        db_dir = tmp_path / "db"
+        build_db(
+            input_dir=input_dir,
+            db_dir=db_dir,
+            skip_classifications=True,
+            skip_slugs=True,
+        )
+        slug_dir = tmp_path / "slugs"
+        slug_dir.mkdir()
+        conn = sqlite3.connect(db_dir / "reg_meta.db")
+
+        def sibling_slugs() -> dict[int, str]:
+            return dict(
+                conn.execute(
+                    "SELECT variable_id, slug FROM variable "
+                    "WHERE register_id = 1 AND provider_key = '920'"
+                ).fetchall()
+            )
+
+        # First build derives + persists auto slugs.
+        populate_variable_slugs(conn, slug_dir)
+        conn.commit()
+        first = sibling_slugs()
+        assert len(set(first.values())) == 2, "siblings need distinct slugs"
+
+        # Second build reads the just-written auto.toml and re-applies it — a
+        # shared cache key would collapse both siblings onto one slug here and
+        # raise IntegrityError on the UNIQUE index.
+        populate_variable_slugs(conn, slug_dir)
+        conn.commit()
+        second = sibling_slugs()
+        conn.close()
+        assert first == second, "auto slugs must be immutable across rebuilds"
+        assert len(set(second.values())) == 2

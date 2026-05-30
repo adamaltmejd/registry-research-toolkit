@@ -355,13 +355,16 @@ def _validate_entry(
             f"Allowed fields for {kind}: {sorted(allowed)}.",
         )
     # Source-ID shape: parse here so `populate_slugs` and precheck never see
-    # malformed keys. `[register."01"]` (leading zero) or `[variable."1.2.3"]`
-    # (extra segment) fail at TOML load with a clear field-shape error rather
-    # than blowing up later as an `slug_unknown_source_id` lookup miss.
+    # malformed keys. `[register."01"]` (leading zero) fails at TOML load with a
+    # clear field-shape error rather than blowing up later as a
+    # `slug_unknown_source_id` lookup miss. A `variable` key takes an optional
+    # third segment — the §5.7 split-sibling discriminator (A2.2).
     if kind == "register":
         _parse_register_id(source_id)
-    elif kind in ("register_variant", "variable"):
+    elif kind == "register_variant":
         _parse_variant_id(source_id)
+    elif kind == "variable":
+        _parse_variable_id(source_id)
     elif kind == "register_version":
         _parse_version_id(source_id)
     slug = entry.get("slug")
@@ -677,6 +680,37 @@ def _parse_variant_id(source_id: str) -> tuple[int, int]:
             f"register_variant.{source_id!r}: both halves must be integers "
             f"in canonical form (no leading zeros).",
             "Use the literal SCB IDs.",
+        )
+    return reg, var
+
+
+def _parse_variable_id(source_id: str) -> tuple[int, int]:
+    """Variable source-ID key: `<RegisterId>.<VarId>` for a 1:1 variable, or
+    `<RegisterId>.<VarId>.<discriminator>` for a §5.7 split sibling (A2.2 —
+    siblings share `VarId`; the trailing delivery-column slug disambiguates
+    their auto-slug cache entries). Returns `(register_id, var_id)`."""
+    parts = source_id.split(".")
+    if len(parts) not in (2, 3):
+        raise _err(
+            "slug_toml_invalid",
+            f"variable.{source_id!r}: expected `<RegisterId>.<VarId>` or "
+            f"`<RegisterId>.<VarId>.<discriminator>` (split sibling).",
+            "Compose the key from SCB's IDs (plus a column discriminator for splits).",
+        )
+    reg = _parse_canonical_int(parts[0])
+    var = _parse_canonical_int(parts[1])
+    if reg is None or var is None:
+        raise _err(
+            "slug_toml_invalid",
+            f"variable.{source_id!r}: RegisterId and VarId must be integers in "
+            f"canonical form (no leading zeros).",
+            "Use the literal SCB IDs.",
+        )
+    if len(parts) == 3 and not parts[2]:
+        raise _err(
+            "slug_toml_invalid",
+            f"variable.{source_id!r}: split-sibling discriminator is empty.",
+            "Provide a non-empty delivery-column discriminator.",
         )
     return reg, var
 
@@ -1234,6 +1268,40 @@ def populate_variable_slugs(
             (provider_slug,),
         ).fetchall()
 
+        # §5.7 split siblings share one `provider_key`, so `(register_id,
+        # provider_key)` is NOT a unique auto-slug cache key. Without a
+        # discriminator the last sibling overwrites the shared `auto.toml`
+        # entry, and the next build replays that one slug onto every sibling →
+        # `UNIQUE(register_id, slug)` fails (Codex P2 on #139). Disambiguate a
+        # *split* provider_key's siblings by their delivery-column slug. Unsplit
+        # provider_keys (96%) keep the plain 2-part key. The discriminator is
+        # uniquified in **column-sorted** order (NOT variable_id order, which is
+        # an AUTOINCREMENT that changes across rebuilds) so two siblings whose
+        # columns slug-collide still get distinct, rebuild-stable keys.
+        split_pk = {
+            key for key, n in Counter((r[1], r[2]) for r in variables).items() if n > 1
+        }
+        disc: dict[int, str] = {}  # variable_id → discriminator (split siblings)
+        _split_members: dict[tuple[int, str], list[tuple[str, int]]] = defaultdict(list)
+        for _vid, _rid, _pk, _n, _kol in variables:
+            if (_rid, _pk) in split_pk:
+                _split_members[(_rid, _pk)].append((_kol or "", _vid))
+        for members in _split_members.values():
+            used_disc: set[str] = set()
+            for _kol, _vid in sorted(members):
+                base = derive_variable_slug(_kol) or "x"
+                cand, i = base, 0
+                while cand in used_disc:
+                    i += 1
+                    cand = f"{base}-{i}"
+                used_disc.add(cand)
+                disc[_vid] = cand
+
+        def _source_id(rid: int, pk: str, vid: int) -> str:
+            if (rid, pk) in split_pk:
+                return f"{rid}.{pk}.{disc[vid]}"
+            return f"{rid}.{pk}"
+
         # §5.4 immutability: reserve every PUBLISHED slug per register so a new
         # variable can't reuse one (which would recreate a published FQID). Two
         # sources, both of which flow into the grow-only snapshot:
@@ -1245,7 +1313,7 @@ def populate_variable_slugs(
         # they're reserved when applied in Pass 1, and pre-reserving would trip
         # the own-slug branch of the curated-conflict check. source_id is
         # "<register_id>.<provider_key>"; register_id is the leading int segment.
-        live_sids = {f"{rid}.{pk}" for _vid, rid, pk, _n, _k in variables}
+        live_sids = {_source_id(rid, pk, _vid) for _vid, rid, pk, _n, _k in variables}
         reserved_by_register: dict[int, set[str]] = defaultdict(set)
         for sid, prev_slug in auto.items():
             reserved_by_register[int(sid.partition(".")[0])].add(prev_slug)
@@ -1263,7 +1331,7 @@ def populate_variable_slugs(
             # Pass 1: curated + existing-auto slugs are fixed — assign and
             # reserve them so first-sight derivation can't collide with them.
             for variable_id, _reg, provider_key, name, kol in group:
-                source_id = f"{register_id}.{provider_key}"
+                source_id = _source_id(register_id, provider_key, variable_id)
                 curated_slug = curated.get((provider_slug, source_id))
                 if curated_slug is not None:
                     fixed, kind = curated_slug, "curated"
@@ -1320,7 +1388,7 @@ def populate_variable_slugs(
                     (slug, variable_id),
                 )
                 used.add(slug)
-                auto[f"{register_id}.{provider_key}"] = slug
+                auto[_source_id(register_id, provider_key, variable_id)] = slug
                 auto_dirty = True
                 counts["auto_new"] += 1
 

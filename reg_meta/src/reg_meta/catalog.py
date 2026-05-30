@@ -354,6 +354,9 @@ class Catalog:
         `variable_instance` for §5.6 lineage until A2.4/A2.7. Still parses the
         interim 5-seg grammar — the 3-seg flip is A2.6.
         """
+        # A binding FQID has all five segments populated (parse-validated); the
+        # asserts narrow `str | None` → `str` for the typed helpers below.
+        assert fqid.provider is not None and fqid.register is not None
         assert fqid.variable is not None
         var = self._lookup_variable(fqid.provider, fqid.register, fqid.variable)
         if var is None:
@@ -562,11 +565,6 @@ class Catalog:
         variant_slug = self._variant_slug(rvid)
         if variant_slug is None:
             return None
-        inst = self._lookup_instance(
-            var["register_id"], rvid, None, var["provider_key"]
-        )
-        if inst is None:
-            return None
         try:
             target_fqid = Fqid.binding_fqid(
                 provider, register, variant_slug, period, variable_slug
@@ -575,8 +573,21 @@ class Catalog:
             # populate_slugs validates on write; a malformed slug here is a
             # build-invariant break — skip rather than raise mid-traversal.
             return None
+        # Resolve the target's OWN register_version for the queried period, so
+        # cvid/regver match the edition the result FQID names — not merely the
+        # first instance for the variant. If the target has no edition at this
+        # period, the same_as resolution misses rather than pointing a consumer
+        # at the wrong edition (Codex P2 on #139).
+        slot = self._lookup_version_slot(target_fqid)
+        if slot is None:
+            return None
+        inst = self._lookup_instance(
+            var["register_id"], rvid, slot["regver_id"], var["provider_key"]
+        )
+        if inst is None:
+            return None
         return self._build_state_binding(
-            target_fqid, var, inst["regver_id"], state, inst
+            target_fqid, var, slot["regver_id"], state, inst
         )
 
     def _lineage_fqid(self, source_cvid: int, variable_slug: str) -> Fqid | None:
@@ -613,6 +624,8 @@ class Catalog:
         state: sqlite3.Row,
         inst: sqlite3.Row,
     ) -> ResolvedVariableBinding:
+        # fqid is always a binding here (direct or same_as target) → variable set.
+        assert fqid.variable is not None
         via = inst["via_source_id"]
         lineage = self._lineage_fqid(via, fqid.variable) if via is not None else None
         return ResolvedVariableBinding(
