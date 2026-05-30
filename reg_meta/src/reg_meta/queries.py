@@ -2082,7 +2082,7 @@ def list_classifications(conn: sqlite3.Connection) -> list[dict[str, Any]]:
     """
     rows = conn.execute(
         """
-        SELECT c.id, c.short_name, c.name, c.name_en, c.publisher,
+        SELECT c.id, c.short_name, c.slug, c.name, c.name_en, c.publisher,
                c.valid_from, c.valid_to, c.description, c.url, c.code_count,
                c.valid_code_count,
                s.short_name AS supersedes,
