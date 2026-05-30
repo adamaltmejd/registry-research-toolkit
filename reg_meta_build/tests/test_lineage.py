@@ -417,6 +417,83 @@ class TestVariableStateLineage:
         assert _edges(conn) == [(s_cons, s_src, "2015-01-01", "2099-12-31")]
         assert _warnings(conn) == []
 
+    def test_lineage_pin_scoped_to_source_provider(self, tmp_path: Path):
+        """A `[lineage_defaults]` pin resolves within the SOURCE provider. Two
+        providers reuse register slug `rtb`, both with a variant slugged
+        `folkbokforda-personer`; the consumer sources from scb/rtb. The pin must
+        select scb/rtb's variant (which carries the source state), not sos/rtb's
+        same-slugged variant — else the source-state lookup finds nothing and
+        emits a spurious `no_source_state` (Codex P2 on #144). register.slug is
+        not globally unique, so the variant cache must key on provider."""
+        conn = _new_conn()
+        # Source: scb/rtb with its folkbokforda-personer variant + a kon state.
+        add_register(conn, register_id=1, slug="rtb", name="RTB (SCB)")
+        add_variant(
+            conn,
+            register_variant_id=10,
+            register_id=1,
+            slug="folkbokforda-personer",
+            name="Folkbokförda (SCB)",
+        )
+        add_variable(conn, register_id=1, var_id=44, name="Kön", slug="kon")
+        # A DIFFERENT provider reusing register slug `rtb` AND the variant slug,
+        # with no state — the decoy the unscoped cache would mis-resolve to.
+        add_register(
+            conn,
+            register_id=3,
+            slug="rtb",
+            name="RTB (SOS)",
+            provider_id=PROVIDER_ID_SOS,
+        )
+        add_variant(
+            conn,
+            register_variant_id=30,
+            register_id=3,
+            slug="folkbokforda-personer",
+            name="Folkbokförda (SOS)",
+        )
+        # Consumer: scb/lisa/kon sourcing from scb/rtb (register_id=1).
+        add_register(conn, register_id=2, slug="lisa", name="LISA")
+        add_variant(
+            conn,
+            register_variant_id=20,
+            register_id=2,
+            slug="individer",
+            name="Individer",
+        )
+        add_variable(
+            conn,
+            register_id=2,
+            var_id=44,
+            name="Kön",
+            source_register_id=1,
+            slug="kon",
+        )
+        src_vid = _variable_id(conn, 1, 44)
+        cons_vid = _variable_id(conn, 2, 44)
+        s_src = _add_state(
+            conn,
+            variable_id=src_vid,
+            register_variant_id=10,
+            valid_from="2021-01-01",
+            valid_to="2021-12-31",
+        )
+        s_cons = _add_state(
+            conn,
+            variable_id=cons_vid,
+            register_variant_id=20,
+            valid_from="2021-01-01",
+            valid_to="2021-12-31",
+        )
+        conn.commit()
+        slug_dir = _write_lineage_toml(
+            tmp_path, defaults={"rtb": "folkbokforda-personer"}
+        )
+
+        counts = link_variable_state_lineage(conn, slug_dir)
+        assert counts == {"edges": 1, "warnings_ambiguous": 0, "warnings_no_source": 0}
+        assert _edges(conn) == [(s_cons, s_src, "2021-01-01", "2021-12-31")]
+
     def test_lineage_same_as_renamed_source_variable(self, tmp_path: Path):
         """The §5.6 motivating case: the source retired `kon` and now only
         ships `kon-v2`. Naive slug equality (consumer `kon` → source `kon`)
@@ -894,3 +971,34 @@ class TestVariableSetViaSameAs:
             variable_slug="kon-par",
         )
         assert "kon" in result
+
+    def test_excludes_same_register_slug_under_different_provider(self, tmp_path: Path):
+        """A cross-provider `same_as` hop into a DIFFERENT provider that reuses
+        the source register's slug must NOT contribute its slug. Source =
+        scb/rtb; an edge crosses to sos/rtb (same register slug `rtb`, different
+        provider). `decoy` lives in sos/rtb, not scb/rtb, so it must be excluded
+        — otherwise it would be looked up back in scb/rtb and could false-match
+        a same-named variable (Codex/Copilot P2 on #144). Fails without the
+        provider check in the BFS collect condition."""
+        conn = _new_conn()
+        add_register(conn, register_id=1, slug="rtb", name="RTB (SCB)")
+        add_variable(conn, register_id=1, var_id=44, name="Kön", slug="kon")
+        add_register(
+            conn,
+            register_id=3,
+            slug="rtb",
+            name="RTB (SOS)",
+            provider_id=PROVIDER_ID_SOS,
+        )
+        add_variable(conn, register_id=3, var_id=99, name="Decoy", slug="decoy")
+        _add_same_as(conn, ("scb", "rtb", "kon"), ("sos", "rtb", "decoy"))
+        conn.commit()
+        result = _variable_set_via_same_as(
+            conn,
+            consumer_provider="scb",
+            consumer_register="lisa",
+            source_provider="scb",
+            source_register="rtb",
+            variable_slug="kon",
+        )
+        assert result == {"kon"}
