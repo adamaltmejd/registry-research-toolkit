@@ -272,6 +272,65 @@ class TestBuildDb:
         ).fetchone()
         assert row["via_source_id"] is None
 
+    def test_e2e_variable_state_lineage_edge(self, db_conn: sqlite3.Connection):
+        """A2.4 (§5.6) end-to-end: the full build_db pipeline materializes a
+        `variable_state_lineage` edge. OTHERREG's Kön (consumer, sourced from
+        TESTREG, year 2021) joins TESTREG's value-set-bearing Kön state
+        (2020-2021, `individer` variant pinned via `[lineage_defaults]`); the
+        interval intersection clips to the consumer's 2021. Proves pipeline
+        ordering + `slug_root` plumbing, not just the unit-level linker."""
+        rows = db_conn.execute(
+            "SELECT l.valid_from, l.valid_to, "
+            "       cr.slug AS consumer_register, cv.slug AS consumer_slug, "
+            "       sr.slug AS source_register, sv.slug AS source_slug "
+            "FROM variable_state_lineage l "
+            "JOIN variable_state cs ON l.consumer_state_id = cs.state_id "
+            "JOIN variable cv ON cs.variable_id = cv.variable_id "
+            "JOIN register cr ON cv.register_id = cr.register_id "
+            "JOIN variable_state ss ON l.source_state_id = ss.state_id "
+            "JOIN variable sv ON ss.variable_id = sv.variable_id "
+            "JOIN register sr ON sv.register_id = sr.register_id"
+        ).fetchall()
+        assert len(rows) == 1
+        edge = rows[0]
+        assert edge["consumer_register"] == "otherreg"
+        assert edge["consumer_slug"] == "kon"
+        assert edge["source_register"] == "testreg"
+        assert edge["source_slug"] == "kon"
+        assert edge["valid_from"] == "2021-01-01"
+        assert edge["valid_to"] == "2021-12-31"
+
+    def test_e2e_lineage_runs_in_parallel_with_via_source_id(
+        self, db_conn: sqlite3.Connection
+    ):
+        """KEEP regression guard (the A2.4 locked decision): the new lineage
+        linker is ADDITIVE. The same build that materializes
+        `variable_state_lineage` must still populate the old
+        `variable_instance.via_source_id` edges — catalog.py's A2.2 interim
+        resolver reads them until A2.7. If a future change drops the old linker
+        in A2.4 (the MIGRATION_PLAN wording this stage corrects), this fails."""
+        assert (
+            db_conn.execute("SELECT COUNT(*) FROM variable_state_lineage").fetchone()[0]
+            > 0
+        )
+        assert (
+            db_conn.execute(
+                "SELECT COUNT(*) FROM variable_instance WHERE via_source_id IS NOT NULL"
+            ).fetchone()[0]
+            > 0
+        )
+
+    def test_e2e_lineage_no_source_state_warning(self, db_conn: sqlite3.Connection):
+        """ParenVar (OTHERREG, sourced from TESTREG) has no matching TESTREG
+        variable slug, so the lineage pass emits a `no_source_state` warning —
+        the same gap the old linker leaves as a NULL via_source_id
+        (test_no_link_when_source_period_missing), now surfaced explicitly."""
+        rows = db_conn.execute(
+            "SELECT warning_kind FROM variable_state_lineage_warning "
+            "ORDER BY consumer_state_id, warning_kind"
+        ).fetchall()
+        assert any(r["warning_kind"] == "no_source_state" for r in rows)
+
     def test_linker_keys_by_full_period_not_year(self, tmp_path: Path):
         """Source `HT2020` must not link to consumer `VT2020` despite sharing
         the embedded year. Keying on bare year would have produced the wrong

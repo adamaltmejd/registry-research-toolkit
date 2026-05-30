@@ -291,8 +291,8 @@ descends the variable hierarchy).
   - Heuristic defaults in `lineage_defaults` TOML block (per source register)
   - Per-variable overrides in `lineage."<consumer_register>.<slug>"` TOML blocks
 - Implement new `link_variable_state_lineage` per §5.6 pseudocode
-- Drop old `link_consumer_side_bindings` (its inputs go away with `variable_instance`)
-- Tests: 5 worked LISA-RTB examples from the agent report verify the algorithm
+- **KEEP `link_consumer_side_bindings` + `variable_instance.via_source_id` (additive linker).** The new `link_variable_state_lineage` runs *in parallel* — it does NOT replace the old linker in A2.4. `reg_meta/catalog.py`'s A2.2 interim resolver still reads `via_source_id`; dropping it now would break the shipped intermediate state. The old linker and `via_source_id` are dropped in **A2.7** (with `variable_instance`). Per REFACTOR_SPEC §5.6 / ~line 4646 "Old `via_source_id` column populated in parallel for transition."
+- Tests: worked LISA-RTB examples (year-aligned, open-ended, partial-overlap, disjoint, multi-state rename) verify the interval-overlap algorithm; ambiguous-variant fallback + override-pin + no-source-state warnings; the build-side `variable_set_via_same_as` BFS (empty result + cycle termination); `load_lineage_config` shape validation; one e2e build asserting lineage materializes *and* `via_source_id` still populates (KEEP regression guard)
 
 **Estimate**: 4-5 days.
 

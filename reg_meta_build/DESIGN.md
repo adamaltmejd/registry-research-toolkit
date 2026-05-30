@@ -127,6 +127,51 @@ review. The resulting `source_register_id` / `source_label` pair on
 [../reg_meta/DESIGN.md](../reg_meta/DESIGN.md) § "Composite registers and
 source tracking").
 
+## Consumer-side lineage (`variable_state_lineage`, §5.6)
+
+Composite registers (LISA, RAMS, …) re-deliver variables sourced from base
+registers (RTB, FTB, …). `link_variable_state_lineage` materializes that
+consumer→source link as **state-pair interval-overlap edges**: for each
+consumer `variable_state` whose `variable.source_register_id` points at a
+different register, it finds the matching source state(s) and emits one edge
+per pair whose validity ranges intersect, with `(valid_from, valid_to)` set to
+the intersection. A few non-obvious choices:
+
+- **Interval-overlap, not slug equality.** v0.11 keyed lineage on slug-folded
+  period and picked the source variant non-deterministically (`MIN(cvid)`).
+  The interval join produces the same answer for the trivial year-equal case
+  but also expresses real cross-state lineage (a consumer era sourcing from a
+  pre-rename source state, then a post-rename one) at no runtime cost.
+- **Source-side matching is a multi-seed `same_as` BFS.** The consumer's slug
+  identifies the source variable by identity (LISA `kon` → RTB `kon`, no curated
+  edge needed). `_variable_set_via_same_as` then BFS-expands from *two* seeds:
+  the source-register identity node (picking up within-source renames like RTB
+  `kon` ↔ `kon-v2`) and the consumer node (picking up any curated cross-register
+  / cross-provider `variable_same_as` edge whose endpoints have *different*
+  slugs, LISA `foo` ↔ RTB `bar`, §5.5). The common no-rename case yields just
+  the identity slug, so an edge is always additive. (An earlier single-seed form
+  expanded only the source node and silently missed mismatched-slug
+  cross-register edges — latent while `variable_same_as` is empty, fixed in the
+  A2.4 review.)
+- **Variant pinning is TOML-only — no SQL table.** A `[lineage_defaults]`
+  block picks one source variant per source register; a
+  `[lineage."<consumer_register>.<variable_slug>"]` block overrides it per
+  consumer variable. Uncurated consumers fall back to *all* source variants
+  carrying a matching state plus an `ambiguous_source_variant` warning; a
+  consumer with no source state at all gets `no_source_state`. A found-but-
+  non-overlapping source state is neither — it is a legitimate empty result
+  (zero edges, zero warnings). Warnings land in `variable_state_lineage_warning`
+  and the build log for curator attention. `load_lineage_config` does shape
+  validation only; existence of the named registers/variants is validated by
+  the linker against the DB (fail-fast on a pin to a non-existent variant or a
+  `source_register` that contradicts the variable's resolved source register).
+
+`link_variable_state_lineage` runs **alongside** the old slug-only
+`link_consumer_side_bindings` (which sets `variable_instance.via_source_id`):
+the new linker is additive through A2.6 because `reg_meta`'s interim resolver
+still reads `via_source_id`. Both the old linker and the column drop with
+`variable_instance` in A2.7.
+
 ## Vardemängder sentinel filtering
 
 `Vardemangder.csv` ships a row for every variable, including those with no
