@@ -1,6 +1,6 @@
 # Model A Migration — Implementation Tracker
 
-Status: **A0–A1 complete; A2.1 shipped (PR #130); A2.2–A2.7 open** (Model A design locked 2026-05-22; **two-level variable-model respec in flight** — variable + state, FQID→variable; see REFACTOR_SPEC §5.0.1/§5.1).
+Status: **A0–A1 complete; A2.1 + A2.1.5 shipped (#130/#136/#138); A2.2 shipped (#139); A2.3–A2.7 open** (Model A design locked 2026-05-22; **two-level variable-model respec in flight** — variable + state, FQID→variable; see REFACTOR_SPEC §5.0.1/§5.1).
 
 **Scoped, self-deleting tracker** — this file exists under the
 governance exception in `AGENTS.md` for multi-PR refactors spanning
@@ -217,7 +217,7 @@ name vs last-resort); adding that marker is part of this follow-up.
 
 **Gate to A2.2 and A2.4**: A2.1.5 must merge. A2.2 mints sibling `variable` rows (needs the table); A2.4 traverses the variable hierarchy. Both are structurally impossible on the A2.1 `(register_id, var_id)` schema.
 
-### [ ] A2.2 — Build-time triage + interim binding-resolver flip (reworked onto two-level model)
+### [x] A2.2 — Build-time triage + interim binding-resolver flip (PR #139)
 
 Requires **A2.1.5** (the `variable` table siblings are written
 to). In-flight PR #132 reworks onto this shape.
@@ -262,7 +262,7 @@ cannot land in #132.
 
 **Estimate**: 7-10 days. Heuristic refinement + curation backlog + the interim resolver flip (pulled from A2.5).
 
-**Gate to A2.4**: A2.2 must merge. Lineage join (A2.4) operates on triaged variables.
+**Gate to A2.4**: ✅ Met (PR #139). Lineage join (A2.4) operates on triaged variables.
 
 ### [ ] A2.3 — Auto-derive `variable_replaced_by` from `timeseries_event`
 
