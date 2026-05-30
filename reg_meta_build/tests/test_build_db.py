@@ -2817,6 +2817,30 @@ class TestReplacedByEdges:
         finally:
             conn.close()
 
+    def test_malformed_ids_skipped_not_failed(self, tmp_path: Path) -> None:
+        """Empty and non-integer ids on otherwise-relevant rows are skipped as
+        unresolved (the `not id1_raw` and `except ValueError` branches), never
+        failing the build — SCB ships empty ids routinely (one direction of a
+        pair). A valid control row still produces its edge.
+        """
+        rows = [
+            timeseries_row(entitet="Register", id1="1", id2=""),  # empty id2
+            timeseries_row(entitet="Register", id1="1", id2="not-int"),  # non-integer
+            timeseries_row(entitet="Register", id1="1", id2="2"),  # valid control
+        ]
+        db_path = self._build(tmp_path, rows)
+        conn = open_db(db_path)
+        try:
+            assert (
+                conn.execute("SELECT COUNT(*) FROM register_replaced_by").fetchone()[0]
+                == 1
+            )
+            stats = self._stats(conn)
+            assert stats["n_skipped_unresolved"] == 2  # empty + non-integer
+            assert stats["n_timeseries_event_rows_scanned"] == 3
+        finally:
+            conn.close()
+
     def test_effective_year_is_null(self, tmp_path: Path) -> None:
         """Timeseries.csv has no year column, so effective_year lands NULL on
         every auto-derived row. Pins the contract: if SCB ever ships a year,

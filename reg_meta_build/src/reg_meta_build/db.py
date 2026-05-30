@@ -2639,6 +2639,13 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     # looked up on demand in the rare ambiguous branch rather than materializing
     # a column map over every cvid in the corpus.
     variable_by_column: dict[tuple[int, int, str], tuple[str, str, str]] = {}
+    # The map rests on the §5.7 split invariant that siblings own DISJOINT
+    # columns, so a column picks exactly one sibling. Guard it: should a column
+    # ever map to two *different* siblings (a future split-heuristic regression),
+    # it can no longer disambiguate — poison the key so the cvid path
+    # skips-not-guesses rather than silently taking the last-scanned sibling.
+    # (Same-variable repeats across editions yield the same triple, not a clash.)
+    column_collisions: set[tuple[int, int, str]] = set()
     if ambiguous_variable:
         for register_id, provider_key, var_slug, r_slug, p_slug, col in conn.execute(
             "SELECT v.register_id, v.provider_key, v.slug, r.slug, p.slug, "
@@ -2654,12 +2661,15 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
                 var_id = int(provider_key)
             except (TypeError, ValueError):
                 continue
-            if (register_id, var_id) in ambiguous_variable:
-                variable_by_column[(register_id, var_id, col)] = (
-                    p_slug,
-                    r_slug,
-                    var_slug,
-                )
+            if (register_id, var_id) not in ambiguous_variable:
+                continue
+            ckey = (register_id, var_id, col)
+            triple = (p_slug, r_slug, var_slug)
+            if variable_by_column.get(ckey, triple) != triple:
+                column_collisions.add(ckey)
+            variable_by_column[ckey] = triple
+    for ckey in column_collisions:
+        del variable_by_column[ckey]
 
     def _resolve_variable(
         entitet: str, raw_id: int
