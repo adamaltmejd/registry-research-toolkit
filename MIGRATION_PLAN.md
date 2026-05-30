@@ -255,6 +255,7 @@ cannot land in #132.
   - **Coarse fold/split decision.** `_decide_fold_or_split` decides fold-ALL-or-split-ALL per `var_id`; it does **not** sub-cluster (fold `Ssyk3`/`Ssyk5` *within* a var_id while splitting `Kommun` off). A var_id mixing fold-able + disjoint columns therefore over-splits (extra sibling variables; each still resolves correctly). §5.7's per-cluster fold/split is the faithful target.
   - **Classification-family signal inert.** The §5.7 *primary* fold signal needs the `classification` table, which is populated *after* the coalescer runs triage — so triage falls back to the column-stem signal (covers all cited fold examples; misses same-family disjoint-stem folds). Activation = a post-classifications triage/materialize step (`_classification_roots` docstring). The split-skew vs. the spec's ~56/44 is mostly this.
   - **`editions` on the interim instance join** (see the resolver-flip bullet) — discovery only; point resolution is flipped.
+  - **Split-sibling slug immutability across column renames** ([#141](https://github.com/adamaltmejd/registry-research-toolkit/issues/141)) — siblings share `provider_key`, so their auto-slug cache key uses a (mutable) column discriminator; #139 keys on the *earliest* column, but a rename of the original column needs rename-tracking (A2.3) or a curator pin. Moot pre-v1 (UNFROZEN); a slug-freeze follow-up.
 
 **Estimate**: 7-10 days. Heuristic refinement + curation backlog + the interim resolver flip (pulled from A2.5).
 
