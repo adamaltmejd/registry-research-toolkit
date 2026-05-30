@@ -640,6 +640,24 @@ TIMESERIES_ROWS = [
     PIPE.join(["TESTREG", "Kodändring", "Kod 3 ändrad", "Variabel", "100", "", "1"]),
 ]
 
+
+def timeseries_row(
+    namn: str = "TESTREG",
+    handelse: str = "Ersatt av",
+    beskrivning: str = "",
+    entitet: str = "Register",
+    id1: str = "",
+    id2: str = "",
+    fil_id: str = "1",
+) -> str:
+    """Build one Timeseries.csv row. Test-only convenience for A2.3 fixtures.
+
+    Defaults to the most common shape (`Ersatt av` on a Register row) so
+    callers only override what varies per scenario.
+    """
+    return PIPE.join([namn, handelse, beskrivning, entitet, id1, id2, fil_id])
+
+
 VARDEMANGDER_HEADER = PIPE.join(
     [
         "Värdemängdsversion",
@@ -725,6 +743,7 @@ def write_scb_input(
     registerinformation_rows: list[str] | None = None,
     vardemangder_rows: list[str] = VARDEMANGDER_ROWS,
     valid_dates_rows: list[str] | None = None,
+    timeseries_rows: list[str] | None = None,
     include: tuple[str, ...] = (
         "registerinformation",
         "unika",
@@ -738,9 +757,10 @@ def write_scb_input(
 
     Returns the SCB subdirectory path. ``include`` lets a test build a partial
     set (e.g. just Registerinformation.csv); ``registerinformation_rows`` /
-    ``vardemangder_rows`` / ``valid_dates_rows`` let a test swap in alternate
-    rows for projection scenarios without re-implementing the rest. The
-    ``*_rows=None`` defaults fall back to the standard fixture lists.
+    ``vardemangder_rows`` / ``valid_dates_rows`` / ``timeseries_rows`` let a
+    test swap in alternate rows for projection / succession scenarios without
+    re-implementing the rest. The ``*_rows=None`` defaults fall back to the
+    standard fixture lists.
     """
     scb_dir = input_dir / "SCB"
     scb_dir.mkdir(parents=True, exist_ok=True)
@@ -762,7 +782,8 @@ def write_scb_input(
             scb_dir / "Identifierare.csv", IDENTIFIERARE_HEADER, IDENTIFIERARE_ROWS
         )
     if "timeseries" in include:
-        write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, TIMESERIES_ROWS)
+        rows = timeseries_rows if timeseries_rows is not None else TIMESERIES_ROWS
+        write_csv(scb_dir / "Timeseries.csv", TIMESERIES_HEADER, rows)
     if "vardemangder" in include:
         write_csv(scb_dir / "Vardemangder.csv", VARDEMANGDER_HEADER, vardemangder_rows)
     if "valid_dates" in include:

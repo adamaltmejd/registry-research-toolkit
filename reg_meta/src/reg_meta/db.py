@@ -53,7 +53,7 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   column present but NULL — never populated) resolves nothing under the flip,
 #   so it's rejected via the minor-version gate. Additive within the 4.x line;
 #   no DDL change (the column shipped in 4.2.0).
-# - 4.4.0 (A2.2 build-time triage + interim resolver flip, current): adds the
+# - 4.4.0 (A2.2 build-time triage + interim resolver flip): adds the
 #   `variable_related_to` table, the `variable_state` state-uniqueness index
 #   (UNIQUE(variable_id, register_variant_id, valid_from, value_set_version_label),
 #   created post-triage by the coalescer), and triaged `variable_state` rows
@@ -63,10 +63,18 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   `provider_key` join. A 4.3.0 DB has un-triaged states (same-year multi-shape
 #   rows violating the new index) and no `variable_related_to`, so it's rejected
 #   via the minor-version gate. Additive within the 4.x line.
+# - 4.5.0 (A2.3, current): added three directional succession edge tables —
+#   `register_replaced_by`, `variant_replaced_by`, `variable_replaced_by` —
+#   auto-derived from `timeseries_event` rows with `handelse IN ('Ersatt av',
+#   'Ersätter')`. `variable_replaced_by` is variable grain (3-part
+#   `provider/register/variable` endpoints; no variant — the two-level model
+#   put the variant out of the binding). Additive tables only → minor bump;
+#   old 4.4.0 DBs without them are rejected via the minor-version gate. A2.5's
+#   resolver consumes these for `predecessors()` / `successors()`.
 # - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
 #   moves to `variable_state` for good — that's the next breaking
 #   change.
-SCHEMA_VERSION = "4.4.0"
+SCHEMA_VERSION = "4.5.0"
 DB_FILENAME = "reg_meta.db"
 
 
