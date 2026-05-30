@@ -168,18 +168,23 @@ def enrich(
                         source_resolved[name] = resolved
 
             # Build per-column requests: (source_name, column_name) ->
-            # (var_id, register_id, year, observed_codes, column_name_for_scoring).
+            # (variable_id, var_id, register_id, year, observed_codes,
+            # column_name_for_scoring).
             # One source can have two columns resolving to the same (var, reg)
             # (e.g. Individ_2019 with both Sun2000Inr and Sun2020Inr → both →
             # var=784/reg=34) so we cannot share CVID picks per pair — each
-            # column needs its own decision. The 5th slot is the
+            # column needs its own decision. `variable_id` (slot 1) is the
+            # sibling-exact filter for the value-code fetch: `var_id`
+            # (= `provider_key`) is NON-unique after an A2.2 split, so scoring by
+            # it would let a sibling accept another sibling's value set. `var_id`
+            # rides along only for the output contract. The last slot is the
             # project-prefix-stripped form so `_name_score` doesn't tokenize
             # the `P1105_` artifact (which would emit a stray digit token).
             # ``year`` is read from the source's ``source_detail`` (set by
             # ``extract``); ``None`` means "no year hint" and falls through
             # to name/overlap ranking.
             requests: dict[
-                tuple[str, str], tuple[int, int, int | None, set[str], str]
+                tuple[str, str], tuple[int, int, int, int | None, set[str], str]
             ] = {}
             for source in stats.sources:
                 resolved = source_resolved.get(source.source_name, {})
@@ -193,6 +198,7 @@ def enrich(
                         continue
                     observed = set(col.stats.get("frequencies", {})) - {"_other"}
                     requests[(source.source_name, col.column_name)] = (
+                        rv.variable_id,
                         rv.var_id,
                         rv.register_id,
                         source_year,
@@ -293,7 +299,13 @@ def _check_value_code_drift(enriched_sources: list[EnrichedSource]) -> list[str]
 @dataclass
 class _ResolvedVar:
     register_id: int
+    # `var_id` (= `variable.provider_key`) is NON-unique within a register after
+    # an A2.2 split (siblings share one source key); it stays for the output
+    # contract (`EnrichedColumn.var_id`). `variable_id` is the unique key and is
+    # what value-code/state evidence must filter by so a split sibling scores
+    # only its OWN value set, not another sibling's.
     var_id: int
+    variable_id: int
     variable_name: str
 
 
@@ -447,16 +459,21 @@ def _bulk_resolve(
 
     col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
-    # A2.7: `variable_alias` is variable_id-keyed (was cvid-keyed); join straight
-    # to `variable`. `var_id` is the variable's `provider_key`.
+    # A2.7: `variable_alias` is variable_id-keyed (was cvid-keyed); the alias row
+    # already resolves the column to the exact `variable_id` (the unique key),
+    # so carry it through. `var_id` is the variable's NON-unique `provider_key`
+    # (kept for the output contract). GROUP BY `variable_id` so split siblings
+    # sharing a `provider_key` but delivering this column under distinct
+    # variable_ids stay distinct rows here.
     sql = (
         "SELECT va.delivery_column_name, v.register_id, "
-        "CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
+        "CAST(v.provider_key AS INTEGER) AS var_id, v.variable_id, "
+        "v.name AS variable_name "
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
         f"WHERE LOWER(va.delivery_column_name) IN ({placeholders})"
         f"{reg_filter} "
-        "GROUP BY LOWER(va.delivery_column_name), v.register_id, v.provider_key "
+        "GROUP BY LOWER(va.delivery_column_name), v.register_id, v.variable_id "
         "ORDER BY va.delivery_column_name, v.register_id"
     )
     rows = conn.execute(sql, [c.lower() for c in col_list] + params).fetchall()
@@ -469,6 +486,7 @@ def _bulk_resolve(
             result[key] = _ResolvedVar(
                 register_id=r["register_id"],
                 var_id=r["var_id"],
+                variable_id=r["variable_id"],
                 variable_name=r["variable_name"],
             )
     return result
@@ -556,16 +574,22 @@ def _year_score(source_year: int | None, candidate_year: int | None) -> tuple[in
 
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
-    requests: dict[Any, tuple[int, int, int | None, set[str], str]],
+    requests: dict[Any, tuple[int, int, int, int | None, set[str], str]],
 ) -> dict[Any, dict[str, str]]:
     """Pick the best `variable_state` for each request, returning
     {key: {code: label}}.
 
     Each request is
-    ``(var_id, register_id, year, observed_codes, column_name)``.
+    ``(variable_id, var_id, register_id, year, observed_codes, column_name)``.
     A2.7: candidates are `variable_state` rows (was per-cvid `variable_instance`,
-    dropped before ship). We filter states to the resolved register and rank
-    with a tiered score:
+    dropped before ship). We filter states by the resolved `variable_id` — NOT
+    by `(var_id, register_id)`: `var_id` (= `provider_key`) is NON-unique after
+    an A2.2 split (siblings share one source key), so a `var_id` filter fans in
+    every sibling's states and a sibling could score/accept another sibling's
+    value set. `_bulk_resolve` already pinned the column to its exact
+    `variable_id` via `variable_alias`; we carry it here so the value-set
+    evidence is sibling-exact. We then rank the variable's states with a tiered
+    score:
 
     1. **Year match.** When both the source and the state's `valid_from` year
        carry a year, prefer the state whose year is closest (exact > closest >
@@ -592,37 +616,37 @@ def _bulk_fetch_value_codes(
 
     The opaque key lets the caller use any identifier — typically
     ``(source_name, column_name)`` — so two columns that resolve to the
-    same (var_id, register_id) but with different observed codes can
-    still pick different CVIDs.
+    same `variable_id` but with different observed codes can still pick
+    different states.
     """
     if not requests:
         return {}
 
-    # 1. Enumerate STATES for every distinct var_id (one query, dedup'd).
+    # 1. Enumerate STATES for every distinct variable_id (one query, dedup'd).
     # A2.7: `variable_instance` is dropped from the shipped DB — the per-era unit
-    # is now `variable_state`. LEFT JOIN classification so a state without
-    # classification metadata still appears (with NULL short_name) — overlap can
-    # still pick it. The year-match tier (#24) reads the state's `valid_from`
-    # year (register_version is gone; the state's validity window is the year
-    # source). `var_id` is the variable's `provider_key`.
-    var_ids = sorted({var_id for var_id, _, _, _, _ in requests.values()})
-    placeholders = ",".join("?" for _ in var_ids)
+    # is now `variable_state`. Filtered by `variable_id` (the unique key), NOT
+    # `provider_key`/`var_id`: a split sibling shares its source key with other
+    # siblings, so a `provider_key` filter would pull in their states too and let
+    # this column accept the wrong sibling's value set. LEFT JOIN classification
+    # so a state without classification metadata still appears (with NULL
+    # short_name) — overlap can still pick it. The year-match tier (#24) reads
+    # the state's `valid_from` year (register_version is gone; the state's
+    # validity window is the year source).
+    variable_ids = sorted({variable_id for variable_id, *_ in requests.values()})
+    placeholders = ",".join("?" for _ in variable_ids)
     state_rows = conn.execute(
-        "SELECT CAST(v.provider_key AS INTEGER) AS var_id, v.register_id, vs.state_id, "
+        "SELECT vs.variable_id, vs.state_id, "
         "vs.value_set_version_label, c.short_name AS classification, "
         "vs.valid_from "
         "FROM variable_state vs "
-        "JOIN variable v ON vs.variable_id = v.variable_id "
         "LEFT JOIN classification c ON vs.classification_id = c.id "
-        f"WHERE CAST(v.provider_key AS INTEGER) IN ({placeholders})",
-        var_ids,
+        f"WHERE vs.variable_id IN ({placeholders})",
+        variable_ids,
     ).fetchall()
-    pair_to_states: dict[tuple[int, int], set[int]] = {}
+    variable_to_states: dict[int, set[int]] = {}
     state_meta: dict[int, tuple[str | None, str | None, int | None]] = {}
     for r in state_rows:
-        pair_to_states.setdefault((r["var_id"], r["register_id"]), set()).add(
-            r["state_id"]
-        )
+        variable_to_states.setdefault(r["variable_id"], set()).add(r["state_id"])
         # The state's opening year (valid_from `YYYY-MM-DD`); the yearless
         # fallback sentinel `0001` reads as "no year" for the year-match tier.
         vf_year = int(r["valid_from"][:4])
@@ -634,7 +658,7 @@ def _bulk_fetch_value_codes(
         )
 
     # 2. Fetch codes for every relevant STATE (one query). Index by state_id.
-    all_states = sorted({s for states in pair_to_states.values() for s in states})
+    all_states = sorted({s for states in variable_to_states.values() for s in states})
     if not all_states:
         return {}
     placeholders = ",".join("?" for _ in all_states)
@@ -651,21 +675,25 @@ def _bulk_fetch_value_codes(
         if r["code"] not in _SCB_TYPE_HINTS:
             state_to_codes.setdefault(r["state_id"], {})[r["code"]] = r["label"]
 
-    # 3. Per request, score each register-matching CVID and pick the max.
-    # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-
+    # 3. Per request, score each of the variable's states and pick the max.
+    # Iterate sorted states so tie-breaks are deterministic (sets are hash-
     # ordered; identical scores would otherwise resolve unpredictably).
     # Score tuple positions are stable: (year_known, -year_distance,
     # shared_tokens, prefix_hits, overlap, len_codes). Earlier tiers
-    # dominate in tuple comparison; later fields break ties.
+    # dominate in tuple comparison; later fields break ties. `_var_id` /
+    # `_register_id` are unused here — filtering is by the sibling-exact
+    # `variable_id` (see step 1); they ride the tuple only for the output
+    # contract.
     result: dict[Any, dict[str, str]] = {}
     for key, (
-        var_id,
-        register_id,
+        variable_id,
+        _var_id,
+        _register_id,
         source_year,
         observed,
         column_name,
     ) in requests.items():
-        states = sorted(pair_to_states.get((var_id, register_id), set()))
+        states = sorted(variable_to_states.get(variable_id, set()))
         best: tuple[tuple[int, int, int, int, int, int], dict[str, str]] | None = None
         for state_id in states:
             codes = state_to_codes.get(state_id, {})

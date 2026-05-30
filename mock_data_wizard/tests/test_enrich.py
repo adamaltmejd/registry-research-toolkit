@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import Any
 
 import pytest
 from mock_data_wizard.enrich import (
@@ -18,7 +19,32 @@ from mock_data_wizard.enrich import (
 from mock_data_wizard.stats import parse_stats
 from reg_meta.errors import RegMetaError
 
-from .conftest import add_state_with_codes
+from .conftest import add_state_with_codes, mint_value_set
+
+
+def _req(
+    conn: Any,
+    *,
+    var_id: int,
+    register_id: int,
+    year: int | None,
+    observed: set[str],
+    column_name: str,
+) -> tuple[int, int, int, int | None, set[str], str]:
+    """Build a `_bulk_fetch_value_codes` request tuple, resolving the unique
+    `variable_id` for ``(register_id, var_id)`` from the DB.
+
+    The request shape carries `variable_id` first (the sibling-exact filter
+    key) followed by the public `var_id`. These tests seed 1:1 `(register_id,
+    provider_key)` → variable, so the lookup is unambiguous; the split-sibling
+    test builds its tuples explicitly per sibling instead of using this helper.
+    """
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable "
+        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+        (register_id, var_id),
+    ).fetchone()[0]
+    return (variable_id, var_id, register_id, year, observed, column_name)
 
 
 def test_enrich_without_db(stats_path: Path):
@@ -178,8 +204,22 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(reg_meta_db: Pat
     # var_id=44 in reg=1: observed {"1","2"} matches reg-1 state's {"1","2"}.
     # var_id=44 in reg=2: observed {"A","B"} matches reg-2 state's {"A","B","C"}.
     requests = {
-        ("a.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
-        ("b.csv", "Kon"): (44, 2, None, {"A", "B"}, "Kon"),
+        ("a.csv", "Kon"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"1", "2"},
+            column_name="Kon",
+        ),
+        ("b.csv", "Kon"): _req(
+            conn,
+            var_id=44,
+            register_id=2,
+            year=None,
+            observed={"A", "B"},
+            column_name="Kon",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("a.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
@@ -198,7 +238,16 @@ def test_bulk_fetch_value_codes_skips_when_no_overlap(reg_meta_db: Path):
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    requests = {("f.csv", "FooBar"): (44, 1, None, {"X", "Y", "Z"}, "FooBar")}
+    requests = {
+        ("f.csv", "FooBar"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"X", "Y", "Z"},
+            column_name="FooBar",
+        )
+    }
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("f.csv", "FooBar") not in out
 
@@ -259,7 +308,14 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
     conn.commit()
 
     requests = {
-        ("f.csv", "Sun2000Inr"): (44, 1, None, {"1", "2", "3", "4", "5"}, "Sun2000Inr"),
+        ("f.csv", "Sun2000Inr"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"1", "2", "3", "4", "5"},
+            column_name="Sun2000Inr",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     # SUN2000 has 5 codes; SUN2020 has 7. Picking by name → SUN2000 (5 codes).
@@ -301,12 +357,29 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path)
     conn.commit()
 
     requests = {
-        ("f.csv", "BTyp"): (
-            44,
-            1,
-            None,
-            {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "B", "F", "H", "L", "P"},
-            "BTyp",
+        ("f.csv", "BTyp"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={
+                "0",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "B",
+                "F",
+                "H",
+                "L",
+                "P",
+            },
+            column_name="BTyp",
         ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
@@ -348,12 +421,179 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(reg_meta_db: Path
 
     # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
     requests = {
-        ("f.csv", "ColA"): (44, 1, None, {"1", "2"}, "ColA"),
-        ("f.csv", "ColB"): (44, 1, None, {"3", "4"}, "ColB"),
+        ("f.csv", "ColA"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"1", "2"},
+            column_name="ColA",
+        ),
+        ("f.csv", "ColB"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"3", "4"},
+            column_name="ColB",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert out[("f.csv", "ColA")] == {"1": "Man", "2": "Kvinna"}
     assert out[("f.csv", "ColB")] == {"3": "X", "4": "Y"}
+
+
+def _seed_split_siblings(conn: Any) -> tuple[int, int]:
+    """Seed two A2.2 split siblings under one register sharing one `provider_key`
+    (var_id) but delivering distinct columns with distinct value sets.
+
+    Mirrors the canonical generic-container split (e.g. `hut`/`Imputerat`):
+    `provider_key` is NON-unique, `variable_id` is the unique key. Sibling A
+    (column `Rooms`) carries codes {1,2,3}; sibling B (column `Area`) carries a
+    SUPERSET-shaped set {1,2,7,8,9}. Returns ``(variable_id_a, variable_id_b)``.
+    """
+    conn.executescript(
+        """
+        INSERT INTO register (register_id, provider_id, name)
+            VALUES (3, 1, 'SPLITREG');
+        INSERT INTO register_variant (register_variant_id, register_id, name)
+            VALUES (30, 3, 'Individer');
+        -- Two siblings: same provider_key '900', distinct slugs.
+        INSERT INTO variable (variable_id, register_id, provider_key, name, slug)
+            VALUES (9001, 3, '900', 'Imputerat', 'rooms_imp');
+        INSERT INTO variable (variable_id, register_id, provider_key, name, slug)
+            VALUES (9002, 3, '900', 'Imputerat', 'area_imp');
+        """
+    )
+    # Sibling A: column Rooms, codes {1,2,3}. The §5.7 column-tie discriminator —
+    # delivery_column_name pins the cvid to its sibling.
+    vs_a = mint_value_set(conn, [("1", "One"), ("2", "Two"), ("3", "Three")])
+    conn.execute(
+        "INSERT INTO variable_alias (variable_id, register_variant_id, "
+        "delivery_column_name) VALUES (9001, 30, 'Rooms')"
+    )
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, delivery_column_name, value_set_id, "
+        "value_set_version_label) "
+        "VALUES (9001, 30, '0001-01-01', '9999-12-31', 'int', 'Rooms', ?, '')",
+        (vs_a,),
+    )
+    # Sibling B: column Area, codes {1,2,7,8,9} — same 2-code overlap with A's
+    # observed {1,2} but MORE codes, so the pre-fix var_id-keyed fetch (which
+    # fans both siblings' states into one candidate pool) picks B on the
+    # len(codes) tie-break. Distinct labels make the mis-pick observable.
+    vs_b = mint_value_set(
+        conn,
+        [("1", "B-one"), ("2", "B-two"), ("7", "B7"), ("8", "B8"), ("9", "B9")],
+    )
+    conn.execute(
+        "INSERT INTO variable_alias (variable_id, register_variant_id, "
+        "delivery_column_name) VALUES (9002, 30, 'Area')"
+    )
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, delivery_column_name, value_set_id, "
+        "value_set_version_label) "
+        "VALUES (9002, 30, '0001-01-01', '9999-12-31', 'int', 'Area', ?, '')",
+        (vs_b,),
+    )
+    conn.commit()
+    return (9001, 9002)
+
+
+def test_bulk_fetch_value_codes_sibling_exact_value_set(reg_meta_db: Path):
+    """A2.7 [P2]: a split sibling's value-code fetch must use ONLY its own
+    variable_id's value set, not a sibling's that shares the `provider_key`.
+
+    Two siblings share var_id=900 in SPLITREG: A (Rooms→{1,2,3}) and B
+    (Area→{1,2,7,8,9}). Enriching A's column with observed {1,2} must return
+    A's {1,2,3}. The pre-fix code keyed states by `(var_id, register_id)`, so
+    B's larger value set was an eligible candidate and won the overlap-tie's
+    len(codes) tiebreak — leaking B's codes onto A. Filtering by `variable_id`
+    isolates A.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect(str(reg_meta_db))
+    conn.row_factory = sqlite3.Row
+    vid_a, vid_b = _seed_split_siblings(conn)
+
+    # Build A's request with A's OWN variable_id (what _bulk_resolve carries).
+    requests = {
+        ("split.csv", "Rooms"): (vid_a, 900, 3, None, {"1", "2"}, "Rooms"),
+    }
+    out = _bulk_fetch_value_codes(conn, requests)
+    # Must be sibling A's set, not B's {1,2,7,8,9}.
+    assert out[("split.csv", "Rooms")] == {"1": "One", "2": "Two", "3": "Three"}
+
+    # And resolving B's column returns B's set — the two never cross.
+    requests_b = {
+        ("split.csv", "Area"): (vid_b, 900, 3, None, {"1", "2"}, "Area"),
+    }
+    out_b = _bulk_fetch_value_codes(conn, requests_b)
+    assert out_b[("split.csv", "Area")] == {
+        "1": "B-one",
+        "2": "B-two",
+        "7": "B7",
+        "8": "B8",
+        "9": "B9",
+    }
+
+
+def test_enrich_end_to_end_sibling_exact_value_set(tmp_path: Path, reg_meta_db: Path):
+    """A2.7 [P2]: full `enrich()` pipeline (resolve → request tuple → fetch) is
+    sibling-exact for split siblings.
+
+    Exercises `_bulk_resolve` threading the resolved `variable_id` into the
+    request so the value-code fetch can't fan across siblings. The `Rooms`
+    column resolves to sibling A and must surface A's {1,2,3}.
+    """
+    import json
+
+    _seed_split_siblings_via_path(reg_meta_db)
+
+    stats = {
+        "contract_version": "2.0.0",
+        "generated_at": "2026-03-15T10:00:00Z",
+        "sources": [
+            {
+                "source_name": "split.csv",
+                "source_type": "file",
+                "source_detail": {"path": "split.csv"},
+                "row_count": 100,
+                "columns": [
+                    {
+                        "column_name": "Rooms",
+                        "inferred_type": "categorical",
+                        "nullable": False,
+                        "null_count": 0,
+                        "null_rate": 0.0,
+                        "n_distinct": 2,
+                        "stats": {"frequencies": {"1": 50, "2": 50}},
+                    }
+                ],
+            }
+        ],
+    }
+    stats_path = tmp_path / "mock_data_stats.json"
+    stats_path.write_text(json.dumps(stats), encoding="utf-8")
+
+    result = enrich(parse_stats(stats_path), register="SPLITREG", db_path=reg_meta_db)
+    rooms = result[0].columns[0]
+    assert rooms.var_id == 900  # the shared provider_key (output contract)
+    assert rooms.value_codes == {"1": "One", "2": "Two", "3": "Three"}
+
+
+def _seed_split_siblings_via_path(db_path: Path) -> None:
+    """Open ``db_path`` and seed the split siblings, then close — for the
+    end-to-end test where `enrich()` opens its own connection."""
+    import sqlite3
+
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    _seed_split_siblings(conn)
+    conn.close()
 
 
 # ---------------------------------------------------------------------------
@@ -542,7 +782,14 @@ def test_bulk_fetch_value_codes_exact_year_match_wins(reg_meta_db: Path):
     )
 
     requests = {
-        ("Individ_2019", "Kon"): (44, 1, 2019, {"1", "2"}, "Kon"),
+        ("Individ_2019", "Kon"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=2019,
+            observed={"1", "2"},
+            column_name="Kon",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("Individ_2019", "Kon") in out
@@ -569,7 +816,14 @@ def test_bulk_fetch_value_codes_closest_year_fallback(reg_meta_db: Path):
         },
     )
     requests = {
-        ("data_2017", "Kon"): (44, 1, 2017, {"1", "2"}, "Kon"),
+        ("data_2017", "Kon"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=2017,
+            observed={"1", "2"},
+            column_name="Kon",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     # 2018 (distance 1) is the closest available era year.
@@ -588,7 +842,14 @@ def test_bulk_fetch_value_codes_no_source_year_falls_through(reg_meta_db: Path):
     _seed_year_states(conn, {2018: shared, 2019: shared, 2025: shared})
 
     requests = {
-        ("nofile.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
+        ("nofile.csv", "Kon"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=None,
+            observed={"1", "2"},
+            column_name="Kon",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     # All four states (base 2020 + 2018/2019/2025) have identical labels so
@@ -631,7 +892,14 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
     conn.commit()
     # Observed codes overlap with the 2025 era but year is 2018.
     requests = {
-        ("data_2018", "Q"): (44, 1, 2018, {"C", "D"}, "Q"),
+        ("data_2018", "Q"): _req(
+            conn,
+            var_id=44,
+            register_id=1,
+            year=2018,
+            observed={"C", "D"},
+            column_name="Q",
+        ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     # Year wins over overlap: we get the 2018 era's codes.
