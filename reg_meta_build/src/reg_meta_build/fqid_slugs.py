@@ -1190,7 +1190,18 @@ def _split_sibling_disc(
     (:func:`populate_variable_slugs`) and the curated ``same_as`` / slug-override
     anchor (:func:`_variable_source_slug`), so the two never diverge — a curator
     anchoring on ``<reg>.<var>.<disc>`` selects the same sibling the auto key
-    named. Returns ``{}`` / a single entry for an unsplit key (harmless)."""
+    named. Returns ``{}`` / a single entry for an unsplit key (harmless).
+
+    **Immutability scope — DEFERRED to #141, NOT solved here.** This gives split
+    siblings *distinct, rebuild-stable* slugs, which is all the pre-v1
+    regenerate-every-build model needs: ``UNFROZEN`` regenerates ``scb.auto.toml``
+    each build, so no published FQID exists to break yet. Full §5.4 immutability
+    across triage transitions — a sibling's delivery column being renamed, or a
+    1:1 variable *becoming* a split (migrating the old 2-part auto slug onto the
+    right sibling) — needs the slug-freeze format / rename-tracking and is tracked
+    in #141. Those facets are intentionally out of this PR's scope; do not
+    "fix" them with a column-based heuristic, which can attach a published slug
+    to the wrong sibling."""
     rows = conn.execute(
         "SELECT v.variable_id, (SELECT vs.delivery_column_name FROM variable_state vs "
         " WHERE vs.variable_id = v.variable_id AND vs.delivery_column_name IS NOT NULL "
