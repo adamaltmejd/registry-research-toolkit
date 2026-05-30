@@ -262,7 +262,13 @@ def _not_found(fqid: Fqid) -> RegMetaError:
 # Distinguishes "variant slug names no variant under this register" (→ empty
 # resolve_at result) from the `_default` slug (→ None register_variant_id, which
 # matches no real state — also correct). `None` alone can't carry both meanings.
-_MISSING = object()
+class _Missing:
+    """Sentinel type for `_resolve_variant_id`. A distinct class rather than a
+    bare `object()` so `ty` narrows `int | _Missing` to `int` past the guard
+    (no `# type: ignore` needed at the call site)."""
+
+
+_MISSING = _Missing()
 
 
 def _bad_period(period: Period, detail: str) -> RegMetaError:
@@ -778,7 +784,9 @@ class Catalog:
         ).fetchone()
         return row["slug"] if row else None
 
-    def _resolve_variant_id(self, register_id: int, variant_slug: str) -> int | object:
+    def _resolve_variant_id(
+        self, register_id: int, variant_slug: str
+    ) -> int | _Missing:
         """register_variant_id for a (register, variant slug) pair, or the
         `_MISSING` sentinel when the slug names no variant under the register (a
         genuine miss → empty `resolve_at` result). `_default` is looked up like
@@ -976,9 +984,9 @@ class Catalog:
         register_variant_id: int | None = None
         if variant is not None:
             rvid = self._resolve_variant_id(meta["register_id"], variant)
-            if rvid is _MISSING:
+            if isinstance(rvid, _Missing):
                 return []  # variant slug names no variant under this register
-            register_variant_id = rvid  # type: ignore[assignment]
+            register_variant_id = rvid
 
         bounds = _period_bounds(period)
         states = [
@@ -997,7 +1005,7 @@ class Catalog:
         # FQID fails with the structured `not_a_binding_fqid` error instead of a
         # raw AttributeError off a ResolvedRegister/etc. (§9.5 wants a 4xx, not 500).
         parsed = self._parse_binding(fqid)
-        return list(self.resolve(parsed).states)
+        return list(self._resolve_binding(parsed).states)
 
     def predecessors(self, fqid: str | Fqid) -> list[VariableRef]:
         """§5.10: variables this binding's variable replaced (inbound succession)."""
