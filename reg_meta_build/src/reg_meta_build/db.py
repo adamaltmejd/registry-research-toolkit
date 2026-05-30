@@ -1678,7 +1678,18 @@ def _collapse_residual(groups: dict[tuple, _StateGroup], res: _TriageResult) -> 
     drift and the group is dropped. This preserves multi-vintage (distinct
     labels) and multi-grain (distinct grain tokens) while collapsing drift —
     and, running after fold/split, also resolves split-sibling within-column
-    drift."""
+    drift.
+
+    INTERIM scope limit: groups are scoped by `valid_from`-year (the index key).
+    Two same-label groups under one variable with *different* lower bounds but a
+    shared edition — e.g. a 2018-2019 stub and a 2019+ shape — land in separate
+    scopes, so this overlapping-but-not-index-colliding pair isn't reconciled
+    here. The unique index still holds (distinct `valid_from`); the interim point
+    resolver picks the later state at the overlap year (sensible supersession)
+    and A2.5 `resolve_at` surfaces both. A full fix range-clamps the older
+    overlap (not a whole-group drop, which would lose its non-overlap coverage),
+    so it belongs with the A2.5 state-model rework. Triage *detection* already
+    buckets by edition (`regver_id`); only this residual pass stays year-scoped."""
     scopes: dict[tuple, list[tuple]] = defaultdict(list)
     for gkey, grp in groups.items():
         if gkey in res.dropped:
