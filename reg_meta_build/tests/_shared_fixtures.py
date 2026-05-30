@@ -20,11 +20,10 @@ if TYPE_CHECKING:
 def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """Build a small SQLite DB from synthetic CSV fixtures.
 
-    Builds *with* slugs — `link_consumer_side_bindings` is strict
-    slug-only post-γ, so `skip_slugs=True` would leave
-    `register_version.slug` NULL and zero out lineage edges. Also seeds
-    a minimal doc DB so query commands (search/get/resolve) pass the
-    "docs not installed" guard.
+    Builds *with* slugs — `link_variable_state_lineage` (A2.4) keys on the
+    curated variant/variable slugs, so `skip_slugs=True` would leave them
+    NULL and zero out lineage edges. Also seeds a minimal doc DB so query
+    commands (search/get/resolve) pass the "docs not installed" guard.
     """
     input_dir = tmp_path_factory.mktemp("input")
     db_dir = tmp_path_factory.mktemp("db")

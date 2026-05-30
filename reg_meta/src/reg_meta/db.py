@@ -113,11 +113,23 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   + non-baked slugs ('sun' not 'sun2020'), so it resolves nothing under the
 #   2-seg grammar and is rejected via the minor-version gate. Additive/drop
 #   within the 4.x line (5.0.0 stays reserved for A2.7's `variable_instance` drop).
-# - 5.0.0 (A2.7, planned): drops `variable_instance` once the resolver
-#   moves to `variable_state` for good — that's the next breaking change. Also
-#   drops `variable_instance.via_source_id` and `link_consumer_side_bindings`
-#   (superseded by `variable_state_lineage`, 4.6.0).
-SCHEMA_VERSION = "4.9.0"
+# - 5.0.0 (A2.7, current): drops `variable_instance` from the shipped DB now
+#   that the resolver + every query reads `variable_state` / `variable` /
+#   re-parented `variable_alias`. `variable_instance` is BUILT (coalescer,
+#   classification tagging, value-set projection, code_variable_map) then
+#   DROPped before ship, mirroring `register_version`/`unika_summary`. Also:
+#   `variable_alias` re-parented onto `variable_id` + `register_variant_id`
+#   (was cvid; full delivery-column history survives for `get_datacolumns`);
+#   `variable_context` dropped from the DDL outright (write-only debug, no
+#   consumer); `variable_instance.via_source_id` + `link_consumer_side_bindings`
+#   removed (superseded by `variable_state_lineage`, 4.6.0); NEW
+#   `variable_state.classification_id` (backfilled from instances) so
+#   classification queries sibling-isolate off `variable_state` (which has
+#   `variable_id`) — resolving the A2.6 `classifications_for_variable`
+#   limitation. A 4.x DB still carries `variable_instance` + a cvid-keyed
+#   `variable_alias` and no `variable_state.classification_id`, so it's rejected
+#   via the MAJOR-version gate (4 != 5) — rebuild with `reg-meta-build build-db`.
+SCHEMA_VERSION = "5.0.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -315,15 +315,18 @@ def _search_datacolumns(
     # Aliased SELECT so both `variable.name` and `register.name` land under
     # distinct row keys after the §5.11 rename collapsed them to a single
     # column name.
+    # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed). Join
+    # straight to `variable` via `variable_id`; `var_id` is the variable's
+    # `provider_key`.
     rows = conn.execute(
-        "SELECT DISTINCT va.delivery_column_name, vi.register_id, vi.var_id, "
+        "SELECT DISTINCT va.delivery_column_name, v.register_id, "
+        "CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.name AS variable_name, r.name AS register_name "
         "FROM variable_alias va "
-        "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
-        "JOIN register r ON vi.register_id = r.register_id "
+        "JOIN variable v ON va.variable_id = v.variable_id "
+        "JOIN register r ON v.register_id = r.register_id "
         "WHERE va.delivery_column_name LIKE ? "
-        "ORDER BY va.delivery_column_name, vi.register_id",
+        "ORDER BY va.delivery_column_name, v.register_id",
         (like_pattern,),
     ).fetchall()
     results = []
@@ -752,10 +755,10 @@ def get_varinfo(
 
     # Fall back to alias (column name) lookup
     if not matched_vars:
+        # A2.7: `variable_alias` is variable_id-keyed; join straight to `variable`.
         alias_sql = (
             "SELECT DISTINCT v.*, CAST(v.provider_key AS INTEGER) AS var_id, r.name AS register_name FROM variable_alias a "
-            "JOIN variable_instance vi ON a.cvid = vi.cvid "
-            "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
+            "JOIN variable v ON a.variable_id = v.variable_id "
             "JOIN register r ON v.register_id = r.register_id "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
@@ -853,7 +856,7 @@ def get_varinfo(
             }
             instances_out.append(inst_dict)
 
-        var_classifications = classifications_for_variable(conn, rid, vid)
+        var_classifications = classifications_for_variable(conn, variable_id)
 
         variables_out.append(
             {
@@ -1092,42 +1095,6 @@ def _get_availability_register(
 # ---------------------------------------------------------------------------
 
 
-def get_values(conn: sqlite3.Connection, cvid: str) -> list[dict[str, Any]]:
-    """Get value-set members for a CVID.
-
-    Returns the year-correct code list — codes valid at the cvid's regver
-    year per SCB validity windows. Year projection happens at build time
-    (see ``reg_meta.db._project_and_mint_value_sets``); this query is a plain
-    3-table read with no temporal logic.
-    """
-    int_cvid = _try_int(cvid)
-    inst = conn.execute(
-        "SELECT 1 FROM variable_instance WHERE cvid = ?", (int_cvid,)
-    ).fetchone()
-    if not inst:
-        raise RegMetaError(
-            exit_code=EXIT_NOT_FOUND,
-            code="not_found",
-            error_class="query",
-            message=f"Variable instance (CVID) {cvid} not found.",
-            remediation="Use `reg-meta get schema` to find valid CVIDs.",
-        )
-
-    values = conn.execute(
-        # vardemangdsniva stays Swedish (scope guard); the other three
-        # columns ride the §5.11 rename.
-        "SELECT vc.code, vc.label, "
-        "vi.value_set_version_label, vi.vardemangdsniva "
-        "FROM variable_instance vi "
-        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-        "JOIN value_code vc ON vsm.code_id = vc.code_id "
-        "WHERE vi.cvid = ? "
-        "ORDER BY vc.code",
-        (int_cvid,),
-    ).fetchall()
-    return [dict(v) for v in values]
-
-
 def get_values_by_variable(
     conn: sqlite3.Connection,
     variable: str,
@@ -1184,11 +1151,11 @@ def get_values_by_variable(
     matched = rows_by_id or rows_by_name
 
     if not matched:
+        # A2.7: `variable_alias` is variable_id-keyed; join straight to `variable`.
         alias_sql = (
             "SELECT DISTINCT v.variable_id, v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, v.name "
             "FROM variable_alias a "
-            "JOIN variable_instance vi ON a.cvid = vi.cvid "
-            "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
+            "JOIN variable v ON a.variable_id = v.variable_id "
             "WHERE LOWER(a.delivery_column_name) = LOWER(?)"
         )
         if reg_ids:
@@ -1330,32 +1297,36 @@ def get_datacolumns(
 ) -> list[dict[str, Any]]:
     """Get all delivery-column aliases for a variable.
 
-    A2.6: sourced from `variable_alias` (the full cvid-grained alias history,
-    which survives) joined directly through `variable_instance` → `variable` —
-    no `register_version` (dropped before ship). The full alias history is the
-    right source here; the coalesced `variable_state.delivery_column_name` keeps
-    only the denormalized latest. Returns a list of dicts with
-    "delivery_column_name", "register_id", "register_name",
-    "register_variant_id". Keys follow the §5.11 rename (`kolumnnamn` →
-    `delivery_column_name`).
+    A2.7: sourced from `variable_alias` — the FULL delivery-column history,
+    re-parented onto `variable_id` (was cvid-keyed through A2.6) and joined
+    straight to `variable`. The full history is the right source here; the
+    coalesced `variable_state.delivery_column_name` keeps only the denormalized
+    latest era. Returns a list of dicts with "delivery_column_name",
+    "register_id", "register_name", "register_variant_id". Keys follow the §5.11
+    rename (`kolumnnamn` → `delivery_column_name`).
+
+    Filters the alias rows by the matched `variable_id` (NOT the non-unique
+    `(register_id, provider_key)`): an A2.2 split sibling has its own
+    `variable_id`, so each sibling surfaces only its own columns.
     """
     reg_ids: list[int] | None = None
     if register:
         reg_ids = require_register_ids(conn, register)
 
-    # Match by var_id or variable name (§5.11: was `variabelnamn`)
+    # Match by var_id or variable name (§5.11: was `variabelnamn`). Carry
+    # `variable_id` — the unique key the re-parented `variable_alias` filters by.
     int_variable = _try_int(variable)
     if reg_ids:
         ph = _in_placeholders(reg_ids)
         var_rows = conn.execute(
-            f"SELECT register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            f"SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
             f"WHERE (provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)) "
             f"AND register_id IN ({ph})",
             [int_variable, variable, *reg_ids],
         ).fetchall()
     else:
         var_rows = conn.execute(
-            "SELECT register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
+            "SELECT variable_id, register_id, CAST(provider_key AS INTEGER) AS var_id FROM variable "
             "WHERE provider_key = CAST(? AS TEXT) OR LOWER(name) = LOWER(?)",
             (int_variable, variable),
         ).fetchall()
@@ -1376,13 +1347,13 @@ def get_datacolumns(
     for vr in var_rows:
         rows = conn.execute(
             "SELECT DISTINCT va.delivery_column_name, "
-            "vi.register_id, vi.register_variant_id, r.name AS register_name "
+            "v.register_id, va.register_variant_id, r.name AS register_name "
             "FROM variable_alias va "
-            "JOIN variable_instance vi ON va.cvid = vi.cvid "
-            "JOIN register r ON vi.register_id = r.register_id "
-            "WHERE vi.register_id = ? AND vi.var_id = ? "
-            "ORDER BY va.delivery_column_name, vi.register_variant_id",
-            (vr["register_id"], vr["var_id"]),
+            "JOIN variable v ON va.variable_id = v.variable_id "
+            "JOIN register r ON v.register_id = r.register_id "
+            "WHERE va.variable_id = ? "
+            "ORDER BY va.delivery_column_name, va.register_variant_id",
+            (vr["variable_id"],),
         ).fetchall()
         for r in rows:
             key = (
@@ -1503,12 +1474,13 @@ def get_diff(
                 [_try_int(v), v, *reg_ids],
             ).fetchall()
             if not rows:
+                # A2.7: `variable_alias` is variable_id-keyed; join straight to
+                # `variable`. `var_id` is the variable's `provider_key`.
                 rows = conn.execute(
-                    f"SELECT DISTINCT vi.var_id, var.name "
+                    f"SELECT DISTINCT CAST(var.provider_key AS INTEGER) AS var_id, var.name "
                     f"FROM variable_alias va "
-                    f"JOIN variable_instance vi ON va.cvid = vi.cvid "
-                    f"JOIN variable var ON vi.register_id = var.register_id AND CAST(vi.var_id AS TEXT) = var.provider_key "
-                    f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND vi.register_id IN ({ph})",
+                    f"JOIN variable var ON va.variable_id = var.variable_id "
+                    f"WHERE LOWER(va.delivery_column_name) = LOWER(?) AND var.register_id IN ({ph})",
                     [v, *reg_ids],
                 ).fetchall()
             for r in rows:
@@ -1784,15 +1756,19 @@ def get_coded_variables(
 
     Returns a list of dicts with "variable_name", "n_distinct_codes",
     "n_registers", "n_instances".
+
+    A2.7: sourced from `variable_state` (was per-cvid `variable_instance`).
+    `n_instances` counts distinct states now — the per-era shape is the unit the
+    shipped DB carries.
     """
     rows = conn.execute(
         "SELECT v.name AS variable_name, "
         "COUNT(DISTINCT vc.code) as n_distinct_codes, "
         "COUNT(DISTINCT v.register_id) as n_registers, "
-        "COUNT(DISTINCT vi.cvid) as n_instances "
+        "COUNT(DISTINCT vs.state_id) as n_instances "
         "FROM variable v "
-        "JOIN variable_instance vi ON v.register_id = vi.register_id AND v.provider_key = CAST(vi.var_id AS TEXT) "
-        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
         "GROUP BY v.name "
         "HAVING n_distinct_codes >= ? AND n_registers >= ? "
@@ -1831,29 +1807,29 @@ def resolve(
     for col in columns:
         col_lower = col.lower()
 
+        # A2.7: `variable_alias` is variable_id-keyed; join straight to
+        # `variable`. `var_id` is the variable's `provider_key`.
         if reg_ids:
             ph = _in_placeholders(reg_ids)
             exact_rows = conn.execute(
-                f"SELECT va.delivery_column_name, vi.register_id, vi.var_id, "
-                f"v.name AS variable_name "
+                f"SELECT va.delivery_column_name, v.register_id, "
+                f"CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
                 f"FROM variable_alias va "
-                f"JOIN variable_instance vi ON va.cvid = vi.cvid "
-                f"JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
-                f"WHERE LOWER(va.delivery_column_name) = ? AND vi.register_id IN ({ph}) "
-                f"GROUP BY vi.register_id, vi.var_id "
-                f"ORDER BY vi.register_id, vi.var_id",
+                f"JOIN variable v ON va.variable_id = v.variable_id "
+                f"WHERE LOWER(va.delivery_column_name) = ? AND v.register_id IN ({ph}) "
+                f"GROUP BY v.register_id, v.provider_key "
+                f"ORDER BY v.register_id, v.provider_key",
                 [col_lower, *reg_ids],
             ).fetchall()
         else:
             exact_rows = conn.execute(
-                "SELECT va.delivery_column_name, vi.register_id, vi.var_id, "
-                "v.name AS variable_name "
+                "SELECT va.delivery_column_name, v.register_id, "
+                "CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
                 "FROM variable_alias va "
-                "JOIN variable_instance vi ON va.cvid = vi.cvid "
-                "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
+                "JOIN variable v ON va.variable_id = v.variable_id "
                 "WHERE LOWER(va.delivery_column_name) = ? "
-                "GROUP BY vi.register_id, vi.var_id "
-                "ORDER BY vi.register_id, vi.var_id",
+                "GROUP BY v.register_id, v.provider_key "
+                "ORDER BY v.register_id, v.provider_key",
                 (col_lower,),
             ).fetchall()
 
@@ -2216,16 +2192,21 @@ def search_variables_by_classification(
     limit: int = 100,
     offset: int = 0,
 ) -> list[dict[str, Any]]:
-    """List variables that have at least one instance tagged with this classification."""
+    """List variables with at least one state tagged with this classification.
+
+    A2.7: re-sourced off `variable_state.classification_id` (was per-instance
+    `variable_instance.classification_id`). `variable_state` carries
+    `variable_id`, so the join is direct and sibling-isolated.
+    """
     cls_id = _resolve_classification_id(conn, identifier)
     rows = conn.execute(
         """
         SELECT DISTINCT v.register_id, r.name AS register_name,
                CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name
-        FROM variable_instance vi
-        JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key
+        FROM variable_state vs
+        JOIN variable v ON vs.variable_id = v.variable_id
         JOIN register r ON v.register_id = r.register_id
-        WHERE vi.classification_id = ?
+        WHERE vs.classification_id = ?
         ORDER BY r.name, v.name
         LIMIT ? OFFSET ?
         """,
@@ -2235,32 +2216,29 @@ def search_variables_by_classification(
 
 
 def classifications_for_variable(
-    conn: sqlite3.Connection, register_id: int, var_id: int
+    conn: sqlite3.Connection, variable_id: int
 ) -> list[dict[str, Any]]:
-    """Return the distinct classifications a variable's instances use.
+    """Return the distinct classifications a variable's states use.
 
     A single variable can span multiple classifications across its lifetime
     (e.g. SUN2000 → SUN2020), so this returns a list, not a scalar.
 
-    A2.6 known limitation (resolves in A2.7): this reads `variable_instance`,
-    keyed by `(register_id, var_id)`. `var_id` (= `provider_key`) is non-unique
-    after A2.2 split triage and `variable_instance` carries no `variable_id`
-    column, so an A2.2 split sibling's classifications aggregate across all
-    siblings sharing the var_id — NOT sibling-isolated like its states/values
-    (which now filter by the matched `variable_id`). Can't be fixed at the query
-    layer until A2.7 drops `variable_instance` and classifications re-source off
-    `variable_state`. Deliberate deferral, not a silent bug.
+    A2.7: re-sourced off `variable_state.classification_id` and keyed by
+    `variable_id` (the unique per-variable key). This SIBLING-ISOLATES — the
+    A2.6 limitation (where `variable_instance` had no `variable_id`, so an A2.2
+    split sibling's classifications aggregated across every sibling sharing the
+    `var_id`) is resolved. `instance_count` counts distinct states now.
     """
     rows = conn.execute(
         """
         SELECT c.id, c.short_name, c.name, c.publisher,
-               COUNT(DISTINCT vi.cvid) AS instance_count
-        FROM variable_instance vi
-        JOIN classification c ON vi.classification_id = c.id
-        WHERE vi.register_id = ? AND vi.var_id = ?
+               COUNT(DISTINCT vs.state_id) AS instance_count
+        FROM variable_state vs
+        JOIN classification c ON vs.classification_id = c.id
+        WHERE vs.variable_id = ?
         GROUP BY c.id
         ORDER BY c.short_name
         """,
-        (register_id, var_id),
+        (variable_id,),
     ).fetchall()
     return [dict(r) for r in rows]

@@ -324,15 +324,17 @@ class _FakeConn:
         return _FakeRows(self._rows)
 
 
-def _row(
-    lower_name, data_type=None, short_name=None, value_set_id=None, regver_name=None
-):
+def _row(lower_name, data_type=None, short_name=None, value_set_id=None, year=None):
+    # A2.7: `_reg_meta_lookup` reads `variable_state.valid_from` (was the
+    # register_version name). A year maps to its Jan-1 ISO date; None →
+    # the `0001` yearless-fallback sentinel.
+    valid_from = f"{year}-01-01" if year is not None else "0001-01-01"
     return {
         "lower_name": lower_name,
         "data_type": data_type,
         "short_name": short_name,
         "value_set_id": value_set_id,
-        "regver_name": regver_name,
+        "valid_from": valid_from,
     }
 
 
@@ -397,36 +399,11 @@ def test_reg_meta_lookup_relevant_years_scopes_variance_counts():
     and has_value_codes stay unfiltered (whole-history facts)."""
     conn = _FakeConn(
         [
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2018",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2019",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2025",
-                value_set_id=20,
-                regver_name="lisa.lisa_2024",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF1990",
-                value_set_id=30,
-                regver_name="lisa.lisa_1990",
-            ),
-            _row(
-                "lkf",
-                short_name="LKFX",
-                value_set_id=40,
-                regver_name=None,
-            ),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2018),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2019),
+            _row("lkf", short_name="LKF2025", value_set_id=20, year=2024),
+            _row("lkf", short_name="LKF1990", value_set_id=30, year=1990),
+            _row("lkf", short_name="LKFX", value_set_id=40, year=None),
         ]
     )
     sig = _reg_meta_lookup(conn, {"lkf"}, [34], relevant_years={2018, 2019})["lkf"]
@@ -444,18 +421,8 @@ def test_reg_meta_lookup_relevant_years_none_keeps_full_counts():
     counts — the snapshot/popup year-scope must opt in explicitly."""
     conn = _FakeConn(
         [
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2018",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2025",
-                value_set_id=20,
-                regver_name="lisa.lisa_2024",
-            ),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2018),
+            _row("lkf", short_name="LKF2025", value_set_id=20, year=2024),
         ]
     )
     sig = _reg_meta_lookup(conn, {"lkf"}, [34])["lkf"]

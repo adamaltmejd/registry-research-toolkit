@@ -18,7 +18,7 @@ from mock_data_wizard.enrich import (
 from mock_data_wizard.stats import parse_stats
 from reg_meta.errors import RegMetaError
 
-from .conftest import assign_value_set
+from .conftest import add_state_with_codes
 
 
 def test_enrich_without_db(stats_path: Path):
@@ -154,24 +154,29 @@ def test_bulk_fetch_value_codes_filters_by_register_and_overlap(reg_meta_db: Pat
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    # Add a second register, same var_id=44, different CVID with conflicting codes.
+    # Add a second register, same var_id=44, different state with conflicting
+    # codes. A2.7: seed a `variable` + `variable_state` (was variable_instance).
     conn.executescript(
         """
         INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'OTHER');
         INSERT INTO register_variant (register_variant_id, register_id, name)
             VALUES (20, 2, 'Other variant');
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (200, 20, '1991');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (2001, 2, 20, 200, 44, 'int', '1', 'Kön', '1');
+        INSERT INTO variable (register_id, provider_key, name, slug)
+            VALUES (2, '44', 'Kön', 'kon');
         """
     )
-    assign_value_set(conn, 2001, [("A", "Alpha"), ("B", "Beta"), ("C", "Gamma")])
+    add_state_with_codes(
+        conn,
+        register_id=2,
+        var_id=44,
+        register_variant_id=20,
+        codes=[("A", "Alpha"), ("B", "Beta"), ("C", "Gamma")],
+        value_set_version_label="Kön",
+    )
     conn.commit()
 
-    # var_id=44 in reg=1: observed {"1","2"} matches CVID 1001's {"1","2"}.
-    # var_id=44 in reg=2: observed {"A","B"} matches CVID 2001's {"A","B","C"}.
+    # var_id=44 in reg=1: observed {"1","2"} matches reg-1 state's {"1","2"}.
+    # var_id=44 in reg=2: observed {"A","B"} matches reg-2 state's {"A","B","C"}.
     requests = {
         ("a.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
         ("b.csv", "Kon"): (44, 2, None, {"A", "B"}, "Kon"),
@@ -213,31 +218,31 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
     # full subset of both — tier-2 overlap ties at 5/5; without name signal
     # the larger code_count (1102) wins. With classification metadata, the
     # name-match picker prefers 1101.
+    # A2.7: two `variable_state` rows under (var 44, reg 1), discriminated by
+    # value_set_version_label + classification (was two variable_instance cvids).
     conn.executescript(
         """
         INSERT INTO classification (id, short_name, name)
             VALUES (1, 'SUN2000', 'Svensk utbildningsnomenklatur 2000');
         INSERT INTO classification (id, short_name, name)
             VALUES (2, 'SUN2020', 'Svensk utbildningsnomenklatur 2020');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
-            classification_id)
-            VALUES (1101, 1, 10, 100, 44, 'int', '4', 'SUN2000', '4', 1);
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva,
-            classification_id)
-            VALUES (1102, 1, 10, 100, 44, 'int', '4', 'SUN2020', '4', 2);
         """
     )
-    assign_value_set(
+    add_state_with_codes(
         conn,
-        1101,
-        [("1", "A"), ("2", "B"), ("3", "C"), ("4", "D"), ("5", "E")],
+        register_id=1,
+        var_id=44,
+        codes=[("1", "A"), ("2", "B"), ("3", "C"), ("4", "D"), ("5", "E")],
+        value_set_version_label="SUN2000",
+        classification_id=1,
+        valid_from="2000-01-01",
+        valid_to="2019-12-31",
     )
-    assign_value_set(
+    add_state_with_codes(
         conn,
-        1102,
-        [
+        register_id=1,
+        var_id=44,
+        codes=[
             ("1", "A"),
             ("2", "B"),
             ("3", "C"),
@@ -246,6 +251,10 @@ def test_bulk_fetch_value_codes_name_match_beats_overlap_tie(reg_meta_db: Path):
             ("6", "F"),
             ("7", "G"),
         ],
+        value_set_version_label="SUN2020",
+        classification_id=2,
+        valid_from="2020-01-01",
+        valid_to="2099-12-31",
     )
     conn.commit()
 
@@ -278,17 +287,16 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path)
     conn.row_factory = sqlite3.Row
     # Add a CVID for var_id=44 in register 1 with codes {A,E,I,S} and no
     # classification metadata (so name-match has nothing to latch onto).
-    conn.executescript(
-        """
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1201, 1, 10, 100, 44, 'char', '1', 'FamStF', '1');
-        """
-    )
-    assign_value_set(
+    # A2.7: a second state for var 44 reg 1, codes {A,E,I,S}, no classification
+    # (so name-match has nothing to latch onto). Distinct label keeps it apart
+    # from the fixture's base 'Kön' state under the state-uniqueness index.
+    add_state_with_codes(
         conn,
-        1201,
-        [("A", "Alpha"), ("E", "Echo"), ("I", "India"), ("S", "Sierra")],
+        register_id=1,
+        var_id=44,
+        codes=[("A", "Alpha"), ("E", "Echo"), ("I", "India"), ("S", "Sierra")],
+        value_set_version_label="FamStF",
+        data_type="char",
     )
     conn.commit()
 
@@ -302,8 +310,8 @@ def test_bulk_fetch_value_codes_overlap_below_threshold_omits(reg_meta_db: Path)
         ),
     }
     out = _bulk_fetch_value_codes(conn, requests)
-    # The fixture's pre-existing CVID 1001 is also in scope: codes {"1","2"}.
-    # 2/15 = 0.13 < 0.5 → also fails. CVID 1201: 0/15 = 0 < 0.5 → fails.
+    # The fixture's pre-existing state is also in scope: codes {"1","2"}.
+    # 2/15 = 0.13 < 0.5 → also fails. The FamStF state: 0/15 = 0 < 0.5 → fails.
     # Both candidates rejected, no entry emitted.
     assert ("f.csv", "BTyp") not in out
 
@@ -323,14 +331,19 @@ def test_bulk_fetch_value_codes_per_column_when_var_reg_shared(reg_meta_db: Path
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
     # Add a second CVID under the same register/variable with different codes.
-    conn.executescript(
-        """
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1002, 1, 10, 100, 44, 'int', '1', 'Kön', '1');
-        """
+    # A2.7: a second state under (var 44, reg 1) with disjoint codes {3,4}. A
+    # distinct (valid_from, label) keeps it apart from the fixture's base 'Kön'
+    # 2020 state under the state-uniqueness index; both are still candidates for
+    # the same (var, reg) request, picked per observed codes.
+    add_state_with_codes(
+        conn,
+        register_id=1,
+        var_id=44,
+        codes=[("3", "X"), ("4", "Y")],
+        value_set_version_label="Kön-alt",
+        valid_from="2021-01-01",
+        valid_to="2021-12-31",
     )
-    assign_value_set(conn, 1002, [("3", "X"), ("4", "Y")])
     conn.commit()
 
     # Both columns resolve to (var=44, reg=1) but observe disjoint codes.
@@ -491,81 +504,75 @@ def test_enrich_exposes_candidates_on_enriched_file(
 # ---------------------------------------------------------------------------
 
 
-def _seed_year_cvids(conn) -> None:
-    """Three CVIDs under (var=44, reg=1) at different versions, identical
-    code labels (so name + overlap are pure ties); year is the only
-    distinguishing signal. All three share one value_set (codes {1=Man,
-    2=Kvinna}); the helper dedupes by member_hash so they collapse to a
-    single set across all three cvids — same shape as before, fewer rows."""
-    conn.executescript(
-        """
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (101, 10, '2018');
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (102, 10, '2019');
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (103, 10, '2025');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1801, 1, 10, 101, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1802, 1, 10, 102, 44, 'int', '1', 'Kön', '1');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1803, 1, 10, 103, 44, 'int', '1', 'Kön', '1');
-        """
-    )
-    for cvid in (1801, 1802, 1803):
-        assign_value_set(conn, cvid, [("1", "Man"), ("2", "Kvinna")])
+def _seed_year_states(conn, codes_by_year: dict[int, list[tuple[str, str]]]) -> None:
+    """A2.7: three `variable_state` eras under (var=44, reg=1) at years
+    2018/2019/2025 (was cvids at distinct register_versions). The state's
+    `valid_from` year is the year signal now (register_version is gone). Each
+    year carries the codes in ``codes_by_year``; identical codes dedupe to one
+    value_set by member_hash. Distinct `valid_from` keeps the same-label states
+    apart under the state-uniqueness index."""
+    for year, codes in codes_by_year.items():
+        add_state_with_codes(
+            conn,
+            register_id=1,
+            var_id=44,
+            codes=codes,
+            value_set_version_label="Kön",
+            valid_from=f"{year}-01-01",
+            valid_to=f"{year}-12-31",
+        )
     conn.commit()
 
 
 def test_bulk_fetch_value_codes_exact_year_match_wins(reg_meta_db: Path):
-    """source_year=2019 with three candidate CVIDs (2018, 2019, 2025) and
+    """source_year=2019 with three candidate eras (2018, 2019, 2025) and
     identical codes/labels picks 2019 — year is the only discriminator."""
     import sqlite3
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    _seed_year_cvids(conn)
+    # Distinct labels per year so we can verify which era was picked.
+    _seed_year_states(
+        conn,
+        {
+            2018: [("1", "Man-2018"), ("2", "Kvinna-2018")],
+            2019: [("1", "Man-2019"), ("2", "Kvinna-2019")],
+            2025: [("1", "Man-2025"), ("2", "Kvinna-2025")],
+        },
+    )
 
     requests = {
         ("Individ_2019", "Kon"): (44, 1, 2019, {"1", "2"}, "Kon"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
     assert ("Individ_2019", "Kon") in out
-    # Pre-existing CVID 1001 also has codes {1,2} but no register_version.
-    # The 2019 CVID must beat it via the year-known tier.
-    cur = conn.execute(
-        "SELECT regver_id FROM variable_instance WHERE cvid = ?", (1802,)
-    )
-    assert cur.fetchone()[0] == 102
+    # Pre-existing 2020 base state also has codes {1,2} but a different year.
+    # The 2019 era must beat it via the year-known tier (exact match).
+    assert out[("Individ_2019", "Kon")]["1"] == "Man-2019"
 
 
 def test_bulk_fetch_value_codes_closest_year_fallback(reg_meta_db: Path):
-    """Source year 2017 with no exact match -> picks closest available
-    version (2018, distance 1) over 2019 (distance 2), 2020 (distance 3),
+    """Source year 2017 with no exact match -> picks closest available era
+    (2018, distance 1) over 2019 (distance 2), 2020 (distance 3),
     and 2025 (distance 8)."""
     import sqlite3
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    _seed_year_cvids(conn)
-
-    # Distinct labels per CVID so we can verify which one was picked. The
-    # helper allocates a *new* value_set for 1801/1802 (because the kod/label
-    # tuples differ from the seed); 1803 keeps the original {1=Man, 2=Kvinna}
-    # set. The fixture's pre-existing CVID 1001 keeps the original
-    # 'Man'/'Kvinna' so its identity is also distinguishable.
-    assign_value_set(conn, 1801, [("1", "Man-2018"), ("2", "Kvinna-2018")])
-    assign_value_set(conn, 1802, [("1", "Man-2019"), ("2", "Kvinna-2019")])
-    conn.commit()
+    # Distinct labels per era so we can verify which one was picked.
+    _seed_year_states(
+        conn,
+        {
+            2018: [("1", "Man-2018"), ("2", "Kvinna-2018")],
+            2019: [("1", "Man-2019"), ("2", "Kvinna-2019")],
+            2025: [("1", "Man"), ("2", "Kvinna")],
+        },
+    )
     requests = {
         ("data_2017", "Kon"): (44, 1, 2017, {"1", "2"}, "Kon"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
-    # 2018 (distance 1) is the closest available version year.
+    # 2018 (distance 1) is the closest available era year.
     assert out[("data_2017", "Kon")]["1"] == "Man-2018"
 
 
@@ -577,13 +584,14 @@ def test_bulk_fetch_value_codes_no_source_year_falls_through(reg_meta_db: Path):
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    _seed_year_cvids(conn)
+    shared = [("1", "Man"), ("2", "Kvinna")]
+    _seed_year_states(conn, {2018: shared, 2019: shared, 2025: shared})
 
     requests = {
         ("nofile.csv", "Kon"): (44, 1, None, {"1", "2"}, "Kon"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
-    # All four CVIDs (1001, 1801, 1802, 1803) have identical labels so
+    # All four states (base 2020 + 2018/2019/2025) have identical labels so
     # any pick is correct -- the contract is "we still emit something".
     assert ("nofile.csv", "Kon") in out
     assert out[("nofile.csv", "Kon")] == {"1": "Man", "2": "Kvinna"}
@@ -599,32 +607,34 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
 
     conn = sqlite3.connect(str(reg_meta_db))
     conn.row_factory = sqlite3.Row
-    # Two CVIDs at different years with disjoint code universes. Source
-    # year 2018 must lock onto CVID 1801 even when overlap with 1802 is
-    # higher.
-    conn.executescript(
-        """
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (201, 10, '2018');
-        INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn)
-            VALUES (202, 10, '2025');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1901, 1, 10, 201, 44, 'int', '1', 'V18', '1');
-        INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id,
-            var_id, data_type, data_length, value_set_version_label, vardemangdsniva)
-            VALUES (1902, 1, 10, 202, 44, 'int', '1', 'V25', '1');
-        """
+    # A2.7: two states at different years with disjoint code universes (was two
+    # variable_instance cvids). Source year 2018 must lock onto the 2018 era
+    # even when overlap with the 2025 era is higher.
+    add_state_with_codes(
+        conn,
+        register_id=1,
+        var_id=44,
+        codes=[("A", "Alpha-18"), ("B", "Beta-18")],
+        value_set_version_label="V18",
+        valid_from="2018-01-01",
+        valid_to="2018-12-31",
     )
-    assign_value_set(conn, 1901, [("A", "Alpha-18"), ("B", "Beta-18")])
-    assign_value_set(conn, 1902, [("C", "Gamma-25"), ("D", "Delta-25")])
+    add_state_with_codes(
+        conn,
+        register_id=1,
+        var_id=44,
+        codes=[("C", "Gamma-25"), ("D", "Delta-25")],
+        value_set_version_label="V25",
+        valid_from="2025-01-01",
+        valid_to="2025-12-31",
+    )
     conn.commit()
-    # Observed codes overlap with the 2025 CVID but year is 2018.
+    # Observed codes overlap with the 2025 era but year is 2018.
     requests = {
         ("data_2018", "Q"): (44, 1, 2018, {"C", "D"}, "Q"),
     }
     out = _bulk_fetch_value_codes(conn, requests)
-    # Year wins over overlap: we get the 2018 CVID's codes.
+    # Year wins over overlap: we get the 2018 era's codes.
     assert out[("data_2018", "Q")] == {"A": "Alpha-18", "B": "Beta-18"}
 
 

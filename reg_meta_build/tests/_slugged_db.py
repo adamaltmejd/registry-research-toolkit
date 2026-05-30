@@ -100,15 +100,14 @@ def build_slugged_db(
             (register[2], var_id, v_name, stored_slug),
         )
         variable_id = cur.lastrowid
+        # A2.7: this fixture mirrors a SHIPPED DB (no `variable_instance`; the
+        # `variable_alias` is variable_id-keyed). The `cvid` element of the
+        # `variable` tuple is kept for caller compatibility but is unused here.
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
-            "VALUES (?, ?, ?, ?, ?, 'int')",
-            (cvid, register[2], variant[2], version[2], var_id),
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            (cvid, kol),
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, ?)",
+            (variable_id, variant[2], kol),
         )
         # A2.1.5: populate_variable_slugs auto-derives from
         # variable_state.delivery_column_name; seed one era so the engine has a
@@ -214,6 +213,7 @@ def add_state(
     delivery_column_name: str | None = None,
     value_set_id: int | None = None,
     value_set_version_label: str = "",
+    classification_id: int | None = None,
 ) -> int:
     """Insert one `variable_state` for a variable under an explicit variant +
     validity window. Returns the state_id.
@@ -225,7 +225,8 @@ def add_state(
 
     A2.5: lets multi-vintage / sub-annual / multi-variant fixtures seed precise
     `variable_state` rows (distinct windows, value_set_version_labels, variants)
-    without raw INSERTs."""
+    without raw INSERTs. A2.7: `classification_id` tags the era's family (the
+    build backfills it from instances; fixtures set it directly)."""
     if (var_id is None) == (variable_slug is None):
         raise ValueError("pass exactly one of var_id / variable_slug")
     if variable_slug is not None:
@@ -242,7 +243,7 @@ def add_state(
     cur = conn.execute(
         "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
         "valid_to, data_type, delivery_column_name, value_set_id, "
-        "value_set_version_label) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "value_set_version_label, classification_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
         (
             vid,
             register_variant_id,
@@ -252,6 +253,7 @@ def add_state(
             delivery_column_name,
             value_set_id,
             value_set_version_label,
+            classification_id,
         ),
     )
     return cur.lastrowid
@@ -290,34 +292,32 @@ def add_binding(
     regver_id: int,
     var_id: int,
     delivery_column_name: str,
-    via_source_id: int | None = None,
 ) -> None:
-    """Insert a variable_instance + matching variable_alias + variable_state row.
+    """Seed a binding's SHIPPED shape: a variable_state + a variable_id-keyed
+    variable_alias row.
 
-    Parent rows (register/variant/version/variable) must already exist.
-    ``via_source_id`` carries §5.6 consumer-side lineage when set.
+    Parent rows (register/variant/variable) must already exist.
 
-    A2.2 resolver flip: binding resolution reads `variable_state` (keyed by
-    `variable_id`), so a binding fixture must seed a state too. We resolve the
-    variable_id from (register_id, var_id) and write an open-range state
-    (`0001-01-01`..`9999-12-31`) so any queried period overlaps it.
+    A2.5/A2.7: binding resolution reads `variable_state` (keyed by
+    `variable_id`); A2.7 dropped `variable_instance` from the shipped DB and
+    re-parented `variable_alias` onto `variable_id`. We resolve the variable_id
+    from (register_id, var_id) and write an open-range state
+    (`0001-01-01`..`9999-12-31`) so any queried period overlaps it. The `cvid` /
+    `regver_id` args are kept for caller compatibility (they named the binding's
+    instance pre-A2.7) but no longer hit a table.
     """
-    conn.execute(
-        "INSERT INTO variable_instance "
-        "(cvid, register_id, register_variant_id, regver_id, var_id, data_type, via_source_id) "
-        "VALUES (?, ?, ?, ?, ?, 'int', ?)",
-        (cvid, register_id, register_variant_id, regver_id, var_id, via_source_id),
-    )
-    conn.execute(
-        "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-        (cvid, delivery_column_name),
-    )
     vid_row = conn.execute(
         "SELECT variable_id FROM variable "
         "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
         (register_id, var_id),
     ).fetchone()
     if vid_row is not None:
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, ?, ?)",
+            (vid_row[0], register_variant_id, delivery_column_name),
+        )
         conn.execute(
             "INSERT INTO variable_state (variable_id, register_variant_id, "
             "valid_from, valid_to, data_type, delivery_column_name) "

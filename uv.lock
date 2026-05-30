@@ -293,7 +293,7 @@ wheels = [
 
 [[package]]
 name = "reg-meta"
-version = "0.12.0"
+version = "1.0.0"
 source = { editable = "reg_meta" }
 dependencies = [
     { name = "zstandard" },

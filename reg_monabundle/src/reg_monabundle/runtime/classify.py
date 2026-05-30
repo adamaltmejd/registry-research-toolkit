@@ -12,7 +12,7 @@ config-driven workflow. What remains:
   reg_meta evidence, and SQL declared types into one of
   ``COLUMN_TYPES``.
 * RegMeta evidence: ``RegMetaSignal`` dataclass, ``_reg_meta_lookup``
-  (joins ``variable_alias`` → ``variable_instance``), and
+  (A2.7: joins ``variable_alias`` → ``variable`` → ``variable_state``), and
   ``reg_meta_implied_type`` (mirror of the reg_meta branch for conflict
   warnings).
 * Discover-payload validator (``_validate_discover_payload``) so the
@@ -361,22 +361,22 @@ def _reg_meta_lookup(
 
     Returns a dict keyed by lowercased column name; callers must
     lowercase their lookup keys. Mirrors the ``variable_alias`` join
-    used by ``enrich._resolve_columns`` so configure agrees with
-    enrichment on which name maps to which variable_instance.
+    used by ``enrich._bulk_resolve`` so configure agrees with
+    enrichment on which name maps to which variable.
 
-    Aggregation across cvids: when the same alias points at multiple
-    ``variable_instance`` rows (one per year/variant), the first
-    non-null ``data_type`` wins (SCB rarely changes storage type across
-    versions), the most-common ``classification.short_name`` wins, and
-    ``has_value_codes`` is True if *any* cvid has a non-null
-    ``value_set_id``. Columns absent from reg_meta are absent from the
-    result.
+    Aggregation across states (A2.7: was per-cvid ``variable_instance``):
+    when the same alias's variable has multiple ``variable_state`` eras
+    (one per year/variant/coding), the first non-null ``data_type`` wins
+    (SCB rarely changes storage type across versions), the most-common
+    ``classification.short_name`` wins, and ``has_value_codes`` is True
+    if *any* era has a non-null ``value_set_id``. Columns absent from
+    reg_meta are absent from the result.
 
     ``relevant_years`` scopes the variance counts (``n_value_sets``,
-    ``n_classifications``) to instances whose register_version year is
-    in the set — keeps the "varies · N" badge consistent with the
-    year-filtered popup. Yearless instances (no parseable year)
-    contribute to the counts since we can't disprove their relevance.
+    ``n_classifications``) to eras whose ``valid_from`` year is in the
+    set — keeps the "varies · N" badge consistent with the year-filtered
+    popup. Yearless eras (the 0001 fallback sentinel) contribute to the
+    counts since we can't disprove their relevance.
     ``data_type_kind`` / ``classification_short_name`` / ``has_value_codes``
     stay unfiltered: they answer "does reg_meta know this column" which
     isn't a per-year question.
@@ -395,25 +395,27 @@ def _reg_meta_lookup(
     col_list = sorted(lookup)
     col_placeholders = ",".join("?" for _ in col_list)
     reg_placeholders = ",".join("?" for _ in register_ids)
-    # Pull registerversionnamn so the caller can filter variance counts
-    # by year without an extra query.
+    # A2.7: the shipped reg_meta DB no longer carries `variable_instance` /
+    # `register_version` — read the per-era unit `variable_state` instead.
+    # `variable_alias` is variable_id-keyed; the state's `valid_from` year is the
+    # year signal (was register_version.registerversionnamn). `var_id` is the
+    # variable's `provider_key`. A column is matched via `variable_alias`, then
+    # the variable's states supply data_type / classification / value_set / year.
     sql = (
         "SELECT LOWER(va.delivery_column_name) AS lower_name, "
-        "       vi.data_type AS data_type, "
+        "       vs.data_type AS data_type, "
         "       c.short_name AS short_name, "
-        "       vi.value_set_id AS value_set_id, "
-        "       rv.registerversionnamn AS regver_name "
+        "       vs.value_set_id AS value_set_id, "
+        "       vs.valid_from AS valid_from "
         "FROM variable_alias va "
-        "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        "LEFT JOIN classification c ON vi.classification_id = c.id "
-        "JOIN register_version rv ON vi.regver_id = rv.regver_id "
+        "JOIN variable v ON va.variable_id = v.variable_id "
+        "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "LEFT JOIN classification c ON vs.classification_id = c.id "
         f"WHERE LOWER(va.delivery_column_name) IN ({col_placeholders}) "
-        f"  AND vi.register_id IN ({reg_placeholders})"
+        f"  AND v.register_id IN ({reg_placeholders})"
     )
     params = [c.lower() for c in col_list] + list(register_ids)
     rows = conn.execute(sql, params).fetchall()
-
-    from reg_meta.queries import extract_year
 
     data_type_kinds: dict[str, str] = {}
     short_name_counts_all: dict[str, Counter] = {}
@@ -437,7 +439,11 @@ def _reg_meta_lookup(
         if relevant_years is None:
             in_scope = True
         else:
-            year = extract_year(r["regver_name"] or "")
+            # A2.7: the era's year is the state's `valid_from` (was the
+            # register_version name). The `0001` yearless-fallback sentinel reads
+            # as "no parseable year" → can't disprove relevance, so kept in scope.
+            vf_year = int(r["valid_from"][:4])
+            year = vf_year if vf_year > 1 else None
             in_scope = year is None or year in relevant_years
         if in_scope:
             if sn:

@@ -7,16 +7,36 @@ both that script and the `--validate` flag on `build-db` call into this
 module so the checks stay in one place.
 
 Schema shape:
-  - value_set / value_set_member / variable_instance.value_set_id present
+  - value_set / value_set_member / variable_state.value_set_id present
   - cvid_value_code / value_item / value_item_validity absent
+  - variable_instance / variable_alias_build / variable_context dropped
+    before ship (A2.7)
   - member_hash uniqueness invariant
 
-Year projection correctness:
-  - ArbSokNov LISA spot-check (cvid-1998 must NOT contain code 4 or 5)
-  - Andel/grad av aktivitetsersättning, vilande (cvid 421764, year 2010):
-    must contain codes 01-04, must NOT contain 00 or 05
+Year projection correctness (two layers):
+  - Corpus-wide: every `variable_state` that names a `value_set_id` must
+    project >= 1 code (`_check_state_projection_integrity`). Catches a
+    year-projection that minted a dangling/empty value_set link.
+  - Code-membership anchor: Andel/grad av aktivitetsersättning, vilande
+    (var_id 24193, year 2010) — its 2010-overlapping state must contain
+    codes 01-04 and must NOT contain 00 or 05
+    (`_check_var_year_codes_anchor`). This is the wrong-code-membership
+    guard (the original ArbSokNov 4/5 bug class); the corpus-wide check
+    alone would pass a state that wrongly *includes* an out-of-window code.
   - PRAGMA foreign_key_check returns no rows
-  - PRAGMA freelist_count is < 1% of page_count (no staging-page bloat)
+
+A2.7: the validator runs on the POST-drop shipped DB (the `pre_rename_hook`),
+so it can no longer read `variable_instance`. Both projection checks resolve a
+`value_set_id` through `variable_state` (which has `variable_id`) instead of a
+cvid. The code-membership anchor re-homes onto `variable_state.valid_from`/
+`valid_to` (now that the validity window survives in the shipped DB) joined to
+`variable.provider_key` for the var_id, so it no longer needs the dropped
+`variable_instance`/`register_version`. The ArbSokNov 1998-edition anchor is
+dropped: it keyed on `register_version.registerversionnamn`, which left the model
+in A2.6 (version is no longer in the FQID grammar) — there is no per-edition
+column on `variable_state` to re-key it against. Both anchors self-skip cleanly
+when the var_id is absent, so the synthetic fixture (which has neither var_id)
+stays green; they bite on the orchestrator's full-corpus build.
 """
 
 from __future__ import annotations
@@ -107,48 +127,28 @@ def validate_built_db(db_path: Path) -> ValidationResult:
         }
         has_projection = {"value_set", "value_set_member"}.issubset(tables)
         _check_schema_shape(conn, result, tables)
-        _check_arbsoknov_projection(conn, result, has_projection)
-        _check_cvid_421764_projection(conn, result, has_projection)
+        _check_state_projection_integrity(conn, result, has_projection)
+        _check_var_year_codes_anchor(conn, result, has_projection)
         _check_operational(conn, result)
     finally:
         conn.close()
     return result
 
 
-def _codes_for_cvid(conn: sqlite3.Connection, cvid: int) -> set[str]:
+def _codes_for_value_set(conn: sqlite3.Connection, value_set_id: int) -> set[str]:
     """Return the set of ``value_code.code`` values (previously SCB ``vardekod``)
-    projected onto ``cvid`` via its value_set. Shared by both anchor checks."""
+    that a ``value_set`` projects to. A2.7: keyed by ``value_set_id`` (resolved
+    from ``variable_state``) instead of a cvid, since ``variable_instance`` is
+    dropped before ship."""
     return {
         r[0]
         for r in conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "SELECT vc.code FROM value_set_member vsm "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = ?",
-            (cvid,),
+            "WHERE vsm.value_set_id = ?",
+            (value_set_id,),
         )
     }
-
-
-def _cvid_exists(conn: sqlite3.Connection, cvid: int) -> bool:
-    """True when ``cvid`` is present in variable_instance. Used to tell
-    "anchor truly absent" (skip) from "anchor present but projection
-    yields no codes" (FAIL) — see PR #99 Codex review."""
-    return (
-        conn.execute(
-            "SELECT 1 FROM variable_instance WHERE cvid = ? LIMIT 1", (cvid,)
-        ).fetchone()
-        is not None
-    )
-
-
-def _table_exists(conn: sqlite3.Connection, name: str) -> bool:
-    return (
-        conn.execute(
-            "SELECT 1 FROM sqlite_master WHERE type='table' AND name = ?", (name,)
-        ).fetchone()
-        is not None
-    )
 
 
 def _check_schema_shape(
@@ -160,7 +160,8 @@ def _check_schema_shape(
             result.ok(f"{required} present")
         else:
             result.fail(f"{required} missing")
-    # A2.6 adds register_version / population / object_type to the
+    # A2.6 added register_version / population / object_type; A2.7 adds
+    # variable_instance / variable_alias_build / variable_context to the
     # dropped-before-ship set (build-time-only, like unika_summary).
     for absent in (
         "cvid_value_code",
@@ -169,17 +170,21 @@ def _check_schema_shape(
         "register_version",
         "population",
         "object_type",
+        "variable_instance",
+        "variable_alias_build",
+        "variable_context",
     ):
         if absent in tables:
             result.fail(f"{absent} should have been dropped")
         else:
             result.ok(f"{absent} absent")
 
-    cols = {r["name"] for r in conn.execute("PRAGMA table_info(variable_instance)")}
+    # A2.7: value_set_id moved to variable_state (variable_instance is gone).
+    cols = {r["name"] for r in conn.execute("PRAGMA table_info(variable_state)")}
     if "value_set_id" in cols:
-        result.ok("variable_instance.value_set_id present")
+        result.ok("variable_state.value_set_id present")
     else:
-        result.fail("variable_instance.value_set_id missing")
+        result.fail("variable_state.value_set_id missing")
 
     # The remaining checks depend on value_set / value_set_member existing;
     # skip them if a required table is missing rather than crashing.
@@ -196,109 +201,157 @@ def _check_schema_shape(
     else:
         result.fail(f"member_hash has {dup_hashes} duplicate group(s)")
 
-    # Counts — record only; no thresholds without a baseline.
+    # Counts — record only; no thresholds without a baseline. A2.7: states
+    # replace cvids (variable_instance is dropped before ship).
     n_sets = conn.execute("SELECT COUNT(*) FROM value_set").fetchone()[0]
     n_members = conn.execute("SELECT COUNT(*) FROM value_set_member").fetchone()[0]
-    n_cvids_with_set = conn.execute(
-        "SELECT COUNT(*) FROM variable_instance WHERE value_set_id IS NOT NULL"
+    n_states_with_set = conn.execute(
+        "SELECT COUNT(*) FROM variable_state WHERE value_set_id IS NOT NULL"
     ).fetchone()[0]
-    n_cvids_total = conn.execute("SELECT COUNT(*) FROM variable_instance").fetchone()[0]
+    n_states_total = conn.execute("SELECT COUNT(*) FROM variable_state").fetchone()[0]
     result.info(
         f"{n_sets:,} value_sets / {n_members:,} members / "
-        f"{n_cvids_with_set:,} cvids linked / {n_cvids_total:,} total"
+        f"{n_states_with_set:,} states linked / {n_states_total:,} total"
     )
 
 
-def _check_arbsoknov_projection(
+def _check_state_projection_integrity(
     conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
 ) -> None:
-    result.section("[projection: ArbSokNov LISA]")
+    """A2.7: corpus-wide year-projection integrity on `variable_state`.
+
+    The v0.x cvid anchors (ArbSokNov-1998, cvid-421764) keyed on
+    `variable_instance` + `register_version.registerversionnamn` — both dropped
+    before ship (A2.6/A2.7). This replacement guards the same failure mode
+    without a magic cvid: every state that claims a `value_set_id` must project
+    to >= 1 code. A `value_set_id` pointing at an empty/missing value_set means
+    the year-projection minted a dangling link — a build regression, not a
+    legitimate code-less state (which carries NULL `value_set_id`).
+    """
+    result.section("[projection: variable_state integrity]")
+    if not has_projection:
+        result.ok("value_set tables absent — projection check skipped")
+        return
+    # States that name a value_set whose member→code projection is empty. A
+    # dangling FK would already be caught by foreign_key_check; this catches a
+    # value_set row that exists but yields zero codes after projection.
+    empty = conn.execute(
+        "SELECT vs.state_id, vs.value_set_id FROM variable_state vs "
+        "WHERE vs.value_set_id IS NOT NULL "
+        "  AND NOT EXISTS ("
+        "    SELECT 1 FROM value_set_member vsm "
+        "    JOIN value_code vc ON vsm.code_id = vc.code_id "
+        "    WHERE vsm.value_set_id = vs.value_set_id"
+        "  ) "
+        "LIMIT 5"
+    ).fetchall()
+    if empty:
+        sample = ", ".join(
+            f"state {r['state_id']}→vs {r['value_set_id']}" for r in empty
+        )
+        result.fail(
+            f"{len(empty)}+ variable_state row(s) link a value_set that yields "
+            f"no projected codes (broken value_set_id?): {sample}"
+        )
+    else:
+        n_linked = conn.execute(
+            "SELECT COUNT(*) FROM variable_state WHERE value_set_id IS NOT NULL"
+        ).fetchone()[0]
+        result.ok(f"all {n_linked:,} code-linked states project >= 1 code")
+
+
+# Code-membership anchor: a single hand-verified (var_id, year) → expected /
+# forbidden codes. The corpus-wide integrity check above only asserts >= 1 code,
+# so a year-projection that wrongly INCLUDES an out-of-window code would pass it;
+# this anchor is the wrong-code-membership guard (the original ArbSokNov 4/5 bug
+# class). A2.7 re-homed it off the dropped `variable_instance`/`register_version`
+# onto `variable_state.valid_from`/`valid_to` + `variable.provider_key`.
+# lisa/aktersviland "Andel/grad av aktivitet" (register 34): its value set is
+# 01-04 in 2009-2010 but gains 00 + 05 from 2011, so year 2010 must contain
+# 01-04 and EXCLUDE 00/05 — the wrong-code-membership / year-projection guard
+# (this is the variable the old cvid-421764 anchor's 2010 edition belonged to).
+# provider_key is non-unique across registers (A2.2 splits), so pin the register.
+_ANCHOR_REGISTER_ID = 34  # lisa
+_ANCHOR_VAR_ID = "24193"
+_ANCHOR_YEAR = 2010
+_ANCHOR_EXPECTED = frozenset({"01", "02", "03", "04"})
+_ANCHOR_FORBIDDEN = frozenset({"00", "05"})
+
+
+def _check_var_year_codes_anchor(
+    conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
+) -> None:
+    """A2.7: year-bounded code-membership anchor on `variable_state`.
+
+    Resolves var_id 24193's state(s) overlapping calendar `_ANCHOR_YEAR` via the
+    canonical overlap predicate (`valid_from <= year-end AND valid_to >=
+    year-start`, NOT start-year-only — mirrors `queries._state_covers_year`),
+    unions their projected codes, and asserts the expected codes are present and
+    the forbidden ones absent. A split sibling (post-A2.2) may give the var_id
+    several states; the union is the right grain here because the anchor checks
+    that the year-projection emits the correct code *window*, not which sibling
+    owns it.
+
+    Self-skips when var_id 24193 (or value_set tables) are absent — the synthetic
+    test fixture has neither, so this only bites on the full-corpus build. The
+    skip is distinguished from a present-but-empty projection (a FAIL) so a broken
+    value_set link can't masquerade as a legitimate skip (cf. PR #99)."""
+    result.section("[projection: var_id 24193 codes anchor]")
     if not has_projection:
         result.ok("value_set tables absent — anchor skipped")
         return
-    # A2.6: this anchor identified the 1998 edition via
-    # `register_version.registerversionnamn`, but register_version is now
-    # build-time-only and dropped before ship (§5.2 — version left the FQID
-    # grammar). With no version-name source in the shipped DB, the year filter
-    # can't run; skip cleanly. The cvid-421764 anchor below stays version-free
-    # and still guards projection correctness. (Re-home the year signal onto
-    # `variable_state.valid_from` or the provenance DB when revisited — A4.2.)
-    if not _table_exists(conn, "register_version"):
-        result.ok("register_version absent (A2.6) — ArbSokNov year anchor skipped")
+    # Year-2010-overlapping states for var_id 24193, joined variable→state. The
+    # full-date contract makes the string bounds lexically == chronological.
+    year_lo = f"{_ANCHOR_YEAR}-01-01"
+    year_hi = f"{_ANCHOR_YEAR}-12-31"
+    state_rows = conn.execute(
+        "SELECT vs.value_set_id FROM variable v "
+        "JOIN variable_state vs ON vs.variable_id = v.variable_id "
+        "WHERE v.register_id = ? AND v.provider_key = ? "
+        "  AND vs.valid_from <= ? AND vs.valid_to >= ?",
+        (_ANCHOR_REGISTER_ID, _ANCHOR_VAR_ID, year_hi, year_lo),
+    ).fetchall()
+    if not state_rows:
+        result.ok(f"var_id {_ANCHOR_VAR_ID} not present — anchor skipped")
         return
-    # ArbSokNov is variable_id=31554 in LISA. Codes 4 and 5 should not
-    # appear in cvids before their introduction (~2006-2007). Fetched
-    # in one pass so the ArbSokNov-specific version-name filter can run
-    # over the (small) result set in Python.
-    cvid_versions = {
-        r["cvid"]: r["registerversionnamn"]
-        for r in conn.execute(
-            "SELECT vi.cvid, rv.registerversionnamn "
-            "FROM variable_instance vi "
-            "JOIN register_version rv ON vi.regver_id = rv.regver_id "
-            "WHERE vi.var_id = 31554"
-        )
-    }
-    if not cvid_versions:
-        result.ok("ArbSokNov (var_id=31554) not present — skipping")
-        return
-    early = [
-        cvid for cvid, version in cvid_versions.items() if version and "1998" in version
-    ]
-    if not early:
-        result.ok("ArbSokNov 1998 cvid not present in DB — anchor skipped")
-        return
-    for cvid in early:
-        kods = _codes_for_cvid(conn, cvid)
-        # An empty kod set on a cvid that *is* in variable_instance
-        # signals a broken projection (NULL value_set_id, or no joined
-        # members) — not the absence we'd want to silently pass.
-        if not kods:
-            result.fail(
-                f"ArbSokNov 1998 cvid {cvid} has no projected codes "
-                f"(broken value_set_id?)"
-            )
-            continue
-        if "4" in kods or "5" in kods:
-            result.fail(
-                f"ArbSokNov 1998 cvid {cvid} contains 4 or 5 "
-                f"(should be excluded by validity): {sorted(kods)}"
-            )
-        else:
-            result.ok(f"ArbSokNov 1998 cvid {cvid} excludes 4/5")
-
-
-def _check_cvid_421764_projection(
-    conn: sqlite3.Connection, result: ValidationResult, has_projection: bool
-) -> None:
-    result.section("[projection: cvid 421764 anchor]")
-    if not has_projection:
-        result.ok("value_set tables absent — anchor skipped")
-        return
-    if not _cvid_exists(conn, 421764):
-        result.ok("cvid 421764 not present — anchor skipped")
-        return
-    kods = _codes_for_cvid(conn, 421764)
-    if not kods:
-        # cvid 421764 is in variable_instance but the join yields zero
-        # codes — broken projection, not a legitimate skip.
+    value_set_ids = {r[0] for r in state_rows if r[0] is not None}
+    if not value_set_ids:
+        # The state(s) exist but carry NULL value_set_id — the year-projection
+        # dropped the code list entirely. For a code-list variable that is a
+        # build regression, not a legitimate skip.
         result.fail(
-            "cvid 421764 present but yields no projected codes (broken value_set_id?)"
+            f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} state(s) carry no "
+            "value_set_id (year-projection dropped the code list?)"
         )
         return
-    expected = {"01", "02", "03", "04"}
-    forbidden = {"00", "05"}
-    if expected.issubset(kods):
-        result.ok(f"cvid 421764 contains {sorted(expected)}")
-    else:
+    codes: set[str] = set()
+    for vs_id in value_set_ids:
+        codes |= _codes_for_value_set(conn, vs_id)
+    if not codes:
         result.fail(
-            f"cvid 421764 missing codes {sorted(expected - kods)} "
-            f"(present: {sorted(kods)})"
+            f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} yields no projected "
+            "codes (broken value_set_id?)"
         )
-    if kods & forbidden:
-        result.fail(f"cvid 421764 contains forbidden codes {sorted(kods & forbidden)}")
+        return
+    missing = _ANCHOR_EXPECTED - codes
+    if missing:
+        result.fail(
+            f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} missing codes "
+            f"{sorted(missing)} (present: {sorted(codes)})"
+        )
     else:
-        result.ok("cvid 421764 excludes 00/05")
+        result.ok(
+            f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} contains "
+            f"{sorted(_ANCHOR_EXPECTED)}"
+        )
+    present_forbidden = codes & _ANCHOR_FORBIDDEN
+    if present_forbidden:
+        result.fail(
+            f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} contains forbidden "
+            f"codes {sorted(present_forbidden)}"
+        )
+    else:
+        result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

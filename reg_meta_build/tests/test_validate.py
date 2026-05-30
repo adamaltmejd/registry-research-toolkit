@@ -62,37 +62,154 @@ class TestValidateModule:
             "cvid_value_code should have been dropped" in f for f in result.failures
         )
 
-    def test_anchor_present_but_empty_projection_fails(
+    def test_state_value_set_with_no_codes_fails(
         self, fixture_db: Path, tmp_path: Path
     ):
-        """Regression for PR #99 Codex review: when cvid 421764 *is* in
-        variable_instance but its projection yields zero codes (NULL
-        value_set_id, or no joined value_set_member rows), the validator
-        must surface a FAIL — not silently skip the anchor.
+        """A2.7: the projection-integrity check FAILs when a `variable_state`
+        names a `value_set` that yields zero codes (a dangling year-projection
+        link), not a legitimately code-less state (NULL value_set_id).
 
-        The synthetic fixture doesn't include cvid 421764, so we insert
-        one with no value_set link and confirm the anchor fails."""
+        Mint an empty value_set and point an existing state at it."""
         broken = tmp_path / "broken.db"
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)
-        # Repoint an existing row to cvid 421764 with value_set_id=NULL
-        # so the projection joins yield zero rows. Simpler than crafting
-        # an INSERT that satisfies all the NOT NULL columns.
-        existing = conn.execute(
-            "SELECT cvid FROM variable_instance LIMIT 1"
-        ).fetchone()[0]
+        # An empty value_set (a row with no value_set_member children).
+        conn.execute("INSERT INTO value_set (member_hash) VALUES (?)", (b"\xee" * 32,))
+        empty_vs = conn.execute("SELECT MAX(value_set_id) FROM value_set").fetchone()[0]
+        # Point one state at it → projection yields zero codes for that state.
+        state_id = conn.execute("SELECT MIN(state_id) FROM variable_state").fetchone()[
+            0
+        ]
         conn.execute(
-            "UPDATE variable_instance SET cvid = ?, value_set_id = NULL WHERE cvid = ?",
-            (421764, existing),
+            "UPDATE variable_state SET value_set_id = ? WHERE state_id = ?",
+            (empty_vs, state_id),
         )
         conn.commit()
         conn.close()
         result = validate_built_db(broken)
         assert not result.passed
         assert any(
-            "cvid 421764 present but yields no projected codes" in f
-            for f in result.failures
+            "yield" in f and "no projected codes" in f for f in result.failures
         ), result.failures
+
+    def test_var_year_codes_anchor_self_skips_on_fixture(self, fixture_db: Path):
+        """A2.7: the var_id-24193 code-membership anchor self-skips cleanly when
+        the var_id is absent (the synthetic fixture has no var_id 24193), so it
+        never falses on a corpus that legitimately lacks the anchor variable.
+
+        It still EMITS its section + an [OK] skip line so a future fixture that
+        happens to grow the var_id can't silently drop the check."""
+        result = validate_built_db(fixture_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "[projection: var_id 24193 codes anchor]" in report
+        assert "var_id 24193 not present" in report
+
+    @staticmethod
+    def _anchor_value_set(conn: sqlite3.Connection, codes: list[str]) -> int:
+        """Mint a fresh value_set stocked with ``codes`` and return its id.
+        ``value_code`` is content-addressed (UNIQUE code), so reuse-or-insert."""
+        conn.execute("INSERT INTO value_set (member_hash) VALUES (?)", (b"\xab" * 32,))
+        vs_id = conn.execute("SELECT MAX(value_set_id) FROM value_set").fetchone()[0]
+        for code in codes:
+            row = conn.execute(
+                "SELECT code_id FROM value_code WHERE code = ?", (code,)
+            ).fetchone()
+            if row is None:
+                conn.execute(
+                    "INSERT INTO value_code (code, label) VALUES (?, ?)", (code, code)
+                )
+                code_id = conn.execute(
+                    "SELECT code_id FROM value_code WHERE code = ?", (code,)
+                ).fetchone()[0]
+            else:
+                code_id = row[0]
+            conn.execute(
+                "INSERT INTO value_set_member (value_set_id, code_id) VALUES (?, ?)",
+                (vs_id, code_id),
+            )
+        return vs_id
+
+    def _plant_anchor(self, conn: sqlite3.Connection, codes: list[str]) -> None:
+        """Repoint variable_id=1 to provider_key 24193 and give its state a
+        2010-overlapping window linked to a value_set carrying ``codes`` — so the
+        anchor resolves the var_id → state → codes path exactly as it does on the
+        real corpus."""
+        # Match the anchor's (register 34, provider_key 24193) pin. validate runs
+        # PRAGMA foreign_key_check (reports dangling FKs regardless of the
+        # pragma), so register 34 must exist — insert it borrowing variable_id=1's
+        # provider.
+        prov = conn.execute(
+            "SELECT r.provider_id FROM variable v "
+            "JOIN register r ON v.register_id = r.register_id WHERE v.variable_id = 1"
+        ).fetchone()[0]
+        conn.execute(
+            "INSERT OR IGNORE INTO register (register_id, provider_id, name, slug) "
+            "VALUES (34, ?, 'Anchor register', 'anchor-reg')",
+            (prov,),
+        )
+        conn.execute(
+            "UPDATE variable SET provider_key = '24193', register_id = 34 "
+            "WHERE variable_id = 1"
+        )
+        vs_id = self._anchor_value_set(conn, codes)
+        conn.execute(
+            "UPDATE variable_state SET valid_from = '2010-01-01', "
+            "valid_to = '2010-12-31', value_set_id = ? WHERE variable_id = 1",
+            (vs_id,),
+        )
+
+    def test_var_year_codes_anchor_passes_on_correct_codes(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A2.7: the anchor PASSES when var_id 24193's 2010 state projects exactly
+        the expected codes (01-04) and none of the forbidden ones (00/05)."""
+        ok_db = tmp_path / "ok.db"
+        ok_db.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(ok_db)
+        self._plant_anchor(conn, ["01", "02", "03", "04"])
+        conn.commit()
+        conn.close()
+        result = validate_built_db(ok_db)
+        assert result.passed, result.failures
+        report = result.format_report()
+        assert "var_id 24193 year 2010 contains ['01', '02', '03', '04']" in report
+        assert "var_id 24193 year 2010 excludes 00/05" in report
+
+    def test_var_year_codes_anchor_fails_on_forbidden_code(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A2.7: the anchor FAILs when the 2010 year-projection wrongly INCLUDES a
+        forbidden code (05) — the wrong-code-membership bug class the corpus-wide
+        >= 1-code check cannot catch (it would pass any non-empty projection)."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._plant_anchor(conn, ["01", "02", "03", "04", "05"])
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("forbidden codes ['05']" in f for f in result.failures), (
+            result.failures
+        )
+
+    def test_var_year_codes_anchor_fails_on_missing_code(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A2.7: the anchor FAILs when an expected code (04) is dropped from the
+        2010 projection — guards a year-projection that under-includes."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        self._plant_anchor(conn, ["01", "02", "03"])
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("missing codes ['04']" in f for f in result.failures), (
+            result.failures
+        )
 
 
 class TestBuildDbValidateFlag:

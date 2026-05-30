@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import sys
 
+import pytest
 from reg_meta.cli import run
 
 
@@ -511,6 +512,48 @@ class TestSplitSiblingIsolation:
         b_codes = {v["code"] for inst in b["instances"] for v in inst["values"]}
         assert b_codes == {"B1", "B2"}
 
+    def test_classifications_isolate_per_sibling(self):
+        """A2.7 resolves the A2.6 limitation: `classifications_for_variable`
+        re-sources off `variable_state.classification_id` keyed by `variable_id`,
+        so each split sibling returns ONLY its own classification. Pre-A2.7 (off
+        `variable_instance`, keyed by the shared `var_id`) both siblings would
+        return BOTH classifications."""
+        from reg_meta.queries import classifications_for_variable
+
+        conn = self._split_db()
+        # Two distinct classifications; tag sibling A's state with one, B's with
+        # the other. (`build_slugged_db` already seeded one classification, so
+        # don't hard-code ids — capture the new rows' lastrowid.)
+        cls_a = conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SSYK2012', 'Std för yrkesklassificering', 'ssyk2012')"
+        ).lastrowid
+        cls_b = conn.execute(
+            "INSERT INTO classification (short_name, name, slug) "
+            "VALUES ('SSYK96', 'Std för yrkesklassificering 96', 'ssyk96')"
+        ).lastrowid
+        a_vid, b_vid = (
+            conn.execute(
+                "SELECT variable_id FROM variable WHERE register_id = 1 AND slug = ?",
+                (slug,),
+            ).fetchone()[0]
+            for slug in ("ssyk-3pos", "ssyk-5pos")
+        )
+        conn.execute(
+            "UPDATE variable_state SET classification_id = ? WHERE variable_id = ?",
+            (cls_a, a_vid),
+        )
+        conn.execute(
+            "UPDATE variable_state SET classification_id = ? WHERE variable_id = ?",
+            (cls_b, b_vid),
+        )
+        conn.commit()
+
+        a_cls = classifications_for_variable(conn, a_vid)
+        assert [c["short_name"] for c in a_cls] == ["SSYK2012"]
+        b_cls = classifications_for_variable(conn, b_vid)
+        assert [c["short_name"] for c in b_cls] == ["SSYK96"]
+
 
 # ---------------------------------------------------------------------------
 # Get values
@@ -518,14 +561,19 @@ class TestSplitSiblingIsolation:
 
 
 class TestGetValues:
-    def test_values(self, db_path: str):
-        data, code = _run_json(["--db", db_path, "get", "values", "1001"])
+    def test_values_by_var_id(self, db_path: str):
+        """A2.7: a numeric target resolves as a var_id (was a CVID). var_id 44
+        is Kön; with no --year it returns the multi-state view, whose states
+        carry the {1=Man, 2=Kvinna} value set."""
+        data, code = _run_json(["--db", db_path, "get", "values", "44"])
         assert code == 0
-        assert len(data["data"]) == 2
-        codes = {v["code"] for v in data["data"]}
+        payload = data["data"]
+        assert payload["variable_name"] == "Kön"
+        codes = {v["code"] for i in payload["instances"] for v in i.get("values", [])}
         assert codes == {"1", "2"}
 
     def test_not_found(self, db_path: str):
+        # 99999 is neither a known var_id nor a variable name → not_found.
         data, code = _run_json(["--db", db_path, "get", "values", "99999"])
         assert code == 16
 
@@ -604,13 +652,27 @@ class TestGetValues:
         )
         assert code == 16
 
-    def test_cvid_with_year_or_register_errors(self, db_path: str):
-        """Numeric target is a CVID; --year/--register are usage errors."""
+    def test_numeric_target_resolves_as_var_id(self, db_path: str):
+        """A2.7: the by-CVID path is gone — a numeric target now resolves as a
+        var_id (the variable's provider_key), so --year/--register apply. var_id
+        44 is Kön; with --year 2020 it yields the year-correct flat code list."""
         data, code = _run_json(
-            ["--db", db_path, "get", "values", "1001", "--year", "2020"]
+            [
+                "--db",
+                db_path,
+                "get",
+                "values",
+                "44",
+                "--register",
+                "TESTREG",
+                "--year",
+                "2020",
+            ]
         )
-        assert code == 2
-        assert data["error"]["code"] == "usage_error"
+        assert code == 0
+        assert isinstance(data["data"], list)
+        codes = {v["code"] for v in data["data"]}
+        assert codes == {"1", "2"}
 
     def test_groups_payload_disagreement(self):
         """When (variable, year) hits multiple distinct value sets, the
@@ -753,34 +815,25 @@ class TestGetValues:
             "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'V2')"
         )
-        # A2.6: register_version has no slug column; the ambiguous-alias check
-        # fires in the alias→variable fallback (before any state lookup), so no
-        # register_version rows are needed.
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (100, 10, '2020')"
-        )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (101, 11, '2020')"
-        )
-        conn.execute(
+        # A2.7: the ambiguous-alias check fires in the alias→variable fallback
+        # (before any state lookup); `variable_alias` is variable_id-keyed.
+        v1 = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '50', 'AppleVar')"
-        )
-        conn.execute(
+        ).lastrowid
+        v2 = conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '51', 'BananaVar')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) "
-            "VALUES (5001, 1, 10, 100, 50)"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) "
-            "VALUES (5002, 2, 11, 101, 51)"
-        )
+        ).lastrowid
         # Same alias 'Rad' used for two unrelated variables.
-        conn.execute("INSERT INTO variable_alias VALUES (5001, 'Rad')")
-        conn.execute("INSERT INTO variable_alias VALUES (5002, 'Rad')")
+        conn.execute(
+            "INSERT INTO variable_alias (variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, 10, 'Rad')",
+            (v1,),
+        )
+        conn.execute(
+            "INSERT INTO variable_alias (variable_id, register_variant_id, delivery_column_name) "
+            "VALUES (?, 11, 'Rad')",
+            (v2,),
+        )
         conn.commit()
 
         import pytest
@@ -934,6 +987,29 @@ class TestGetDatacolumns:
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "datacolumns", "NONEXISTENT"])
         assert code == 16
+
+    def test_full_alias_history_survives_reparent(self):
+        """A2.7: `get_datacolumns` reads the re-parented `variable_alias` (full
+        history), NOT `variable_state.delivery_column_name` (latest era only).
+        Seed two delivery-column eras for one variable (a rename, no shape
+        change → one coalesced state carrying only the latest column) and assert
+        BOTH columns surface. This fails under the rejected
+        `variable_state.delivery_column_name` alternative."""
+        from _slugged_db import build_slugged_db
+        from reg_meta.queries import get_datacolumns
+
+        # Default variable: register 1 (lisa), variant 10, slug 'kon'. Its state
+        # + one alias ('Kon') are seeded by build_slugged_db; add an older
+        # delivery column for the SAME variable to simulate a rename history.
+        conn = build_slugged_db()
+        conn.execute(
+            "INSERT INTO variable_alias "
+            "(variable_id, register_variant_id, delivery_column_name) "
+            "SELECT variable_id, 10, 'Kon_OLD' FROM variable WHERE slug = 'kon'"
+        )
+        conn.commit()
+        cols = {r["delivery_column_name"] for r in get_datacolumns(conn, "Kön")}
+        assert cols == {"Kon", "Kon_OLD"}
 
 
 # ---------------------------------------------------------------------------
@@ -1910,3 +1986,49 @@ class TestSearchYearOverlap:
         # Year 0 is below every window (yearless starts at 0001) → no match.
         out = search(conn, "Kön", field="varname", years="0-0")
         assert out["total_count"] == 0
+
+
+# ---------------------------------------------------------------------------
+# Schema version gate (A2.7: 4.x → 5.0.0 break)
+# ---------------------------------------------------------------------------
+
+
+class TestSchemaCompat:
+    """A2.7 bumped SCHEMA_VERSION to 5.0.0 (major break). A v4.x DB — which
+    still carries `variable_instance` + a cvid-keyed `variable_alias` and no
+    `variable_state.classification_id` — must be rejected with an actionable
+    'rebuild' error via the major-version gate (4 != 5)."""
+
+    @staticmethod
+    def _db_with_manifest_version(tmp_path, version: str):
+        import sqlite3
+
+        from reg_meta_build.db import DDL
+
+        db = tmp_path / "reg_meta.db"
+        conn = sqlite3.connect(str(db))
+        conn.executescript(DDL)
+        conn.execute(
+            "INSERT INTO import_manifest VALUES ('schema_version', ?)", (version,)
+        )
+        conn.commit()
+        conn.close()
+        return db
+
+    def test_v4_db_rejected(self, tmp_path):
+        from reg_meta.db import open_db
+        from reg_meta.errors import EXIT_CONFIG, RegMetaError
+
+        db = self._db_with_manifest_version(tmp_path, "4.9.0")
+        with pytest.raises(RegMetaError) as exc:
+            open_db(db, check_schema=True)
+        assert exc.value.code == "schema_incompatible"
+        assert exc.value.exit_code == EXIT_CONFIG
+        assert "update" in exc.value.remediation.lower()
+
+    def test_current_version_accepted(self, tmp_path):
+        from reg_meta.db import SCHEMA_VERSION, open_db
+
+        db = self._db_with_manifest_version(tmp_path, SCHEMA_VERSION)
+        conn = open_db(db, check_schema=True)  # must not raise
+        conn.close()

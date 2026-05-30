@@ -337,7 +337,7 @@ touch left is feeding the query its start node from the new 3-seg parse.
 
 **Gate to A2.7**: A2.6 must merge.
 
-### [ ] A2.6.1 — 2-seg classification grammar (`class/<slug>`)
+### [x] A2.6.1 — 2-seg classification grammar (`class/<slug>`) (PR #148)
 
 Split out of A2.6 (the binding grammar flip), which intentionally left
 classifications on the 3-seg `class/<slug>/<version>` form. This stage

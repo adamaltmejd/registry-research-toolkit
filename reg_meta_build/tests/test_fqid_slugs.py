@@ -2179,20 +2179,13 @@ class TestMaterializeSameAsEdges:
         # Build a DB with two register/variable pairs under LISA so we can
         # exercise variable_same_as without involving cross-register links.
         conn = build_slugged_db()
-        # Add second variable + binding under the same register/variant/version.
-        # A2.1.5: same_as anchors on the stored slug, so var 88 (a source in the
-        # reciprocal-cycle test) needs its `variable.slug` set.
+        # Add a second variable under the same register. `materialize_same_as_edges`
+        # anchors on the stored `variable.slug`, so var 88 (a source in the
+        # reciprocal-cycle test) only needs its slug set — no instance/alias/state
+        # rows are read by the same_as materializer.
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, name, slug) "
             "VALUES (1, '88', 'Civilstånd', 'civilstand')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
-            "VALUES (1002, 1, 10, 100, 88, 'int')"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1002, 'Civilstand')"
         )
         conn.commit()
         return conn
@@ -2358,18 +2351,11 @@ class TestMaterializeSameAsEdges:
         # edges sharing the same source endpoint. Both directions stored
         # for each → 4 DB rows total.
         conn = self._db_with_two_variables()
-        # Add a third variable so we have a distinct second target.
+        # Add a third variable (slug 'fodar') as a distinct second same_as
+        # target. `materialize_same_as_edges` anchors on `variable.slug` only.
         conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) "
-            "VALUES (1, '99', 'Födelseår')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, data_type) "
-            "VALUES (1003, 1, 10, 100, 99, 'int')"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1003, 'FodAr')"
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '99', 'Födelseår', 'fodar')"
         )
         conn.commit()
         slug_dir = self._slug_dir_with_same_as(

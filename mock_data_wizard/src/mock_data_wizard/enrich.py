@@ -12,7 +12,6 @@ from collections import Counter
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
-from reg_meta.queries import extract_year as _regver_year
 from reg_monabundle.runtime._util import (
     lookup_with_prefix_fallback,
     strip_project_prefix,
@@ -315,12 +314,14 @@ def _bulk_resolve_all_registers(
 
     col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
+    # A2.7: `variable_alias` is variable_id-keyed (was cvid-keyed); join straight
+    # to `variable` for the register.
     sql = (
-        "SELECT LOWER(va.delivery_column_name) AS col, vi.register_id "
+        "SELECT LOWER(va.delivery_column_name) AS col, v.register_id "
         "FROM variable_alias va "
-        "JOIN variable_instance vi ON va.cvid = vi.cvid "
+        "JOIN variable v ON va.variable_id = v.variable_id "
         f"WHERE LOWER(va.delivery_column_name) IN ({placeholders}) "
-        "GROUP BY LOWER(va.delivery_column_name), vi.register_id"
+        "GROUP BY LOWER(va.delivery_column_name), v.register_id"
     )
     rows = conn.execute(sql, [c.lower() for c in col_list]).fetchall()
 
@@ -434,7 +435,7 @@ def _bulk_resolve(
     params: list[Any] = []
     if register_ids:
         placeholders = ",".join("?" for _ in register_ids)
-        reg_filter = f" AND vi.register_id IN ({placeholders})"
+        reg_filter = f" AND v.register_id IN ({placeholders})"
         params.extend(register_ids)
 
     # Include stripped versions so P1105_LopNr → LopNr matches
@@ -446,15 +447,17 @@ def _bulk_resolve(
 
     col_list = sorted(lookup_names)
     placeholders = ",".join("?" for _ in col_list)
+    # A2.7: `variable_alias` is variable_id-keyed (was cvid-keyed); join straight
+    # to `variable`. `var_id` is the variable's `provider_key`.
     sql = (
-        "SELECT va.delivery_column_name, vi.register_id, vi.var_id, v.name AS variable_name "
+        "SELECT va.delivery_column_name, v.register_id, "
+        "CAST(v.provider_key AS INTEGER) AS var_id, v.name AS variable_name "
         "FROM variable_alias va "
-        "JOIN variable_instance vi ON va.cvid = vi.cvid "
-        "JOIN variable v ON vi.register_id = v.register_id AND CAST(vi.var_id AS TEXT) = v.provider_key "
+        "JOIN variable v ON va.variable_id = v.variable_id "
         f"WHERE LOWER(va.delivery_column_name) IN ({placeholders})"
         f"{reg_filter} "
-        "GROUP BY LOWER(va.delivery_column_name), vi.register_id, vi.var_id "
-        "ORDER BY va.delivery_column_name, vi.register_id"
+        "GROUP BY LOWER(va.delivery_column_name), v.register_id, v.provider_key "
+        "ORDER BY va.delivery_column_name, v.register_id"
     )
     rows = conn.execute(sql, [c.lower() for c in col_list] + params).fetchall()
 
@@ -536,34 +539,38 @@ def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
     return (0, prefix_hits)
 
 
-def _year_score(source_year: int | None, cvid_year: int | None) -> tuple[int, int]:
-    """Rank a CVID by year proximity.
+def _year_score(source_year: int | None, candidate_year: int | None) -> tuple[int, int]:
+    """Rank a candidate (A2.7: a `variable_state`) by year proximity.
 
     Returns ``(known, -distance)``. ``known=1`` only when both years are
     available -- otherwise year is uninformative and the score is
     ``(0, 0)``, falling through to name and overlap ranking. Among
     year-known candidates, exact match (``distance=0``) ranks highest;
-    ``distance`` grows linearly with ``|source - cvid|`` so the closer
+    ``distance`` grows linearly with ``|source - candidate|`` so the closer
     year wins among inexact matches.
     """
-    if source_year is None or cvid_year is None:
+    if source_year is None or candidate_year is None:
         return (0, 0)
-    return (1, -abs(source_year - cvid_year))
+    return (1, -abs(source_year - candidate_year))
 
 
 def _bulk_fetch_value_codes(
     conn: sqlite3.Connection,
     requests: dict[Any, tuple[int, int, int | None, set[str], str]],
 ) -> dict[Any, dict[str, str]]:
-    """Pick the best CVID for each request, returning {key: {code: label}}.
+    """Pick the best `variable_state` for each request, returning
+    {key: {code: label}}.
 
     Each request is
     ``(var_id, register_id, year, observed_codes, column_name)``.
-    We filter CVIDs to the resolved register and rank with a tiered score:
+    A2.7: candidates are `variable_state` rows (was per-cvid `variable_instance`,
+    dropped before ship). We filter states to the resolved register and rank
+    with a tiered score:
 
-    1. **Year match.** When both the source and the CVID's
-       ``register_version.registerversionnamn`` carry a year, prefer the
-       CVID whose year is closest (exact > closest > no-info). When
+    1. **Year match.** When both the source and the state's `valid_from` year
+       carry a year, prefer the state whose year is closest (exact > closest >
+       no-info). (Was the CVID's ``register_version.registerversionnamn`` year,
+       which left the model in A2.6.) When
        either side has no year, this tier is neutral and the next tiers
        decide. Year ranks above name because for register-version drift
        (Kommun in 2019 vs 2020), the wrong year's labels are wrong, not
@@ -591,52 +598,58 @@ def _bulk_fetch_value_codes(
     if not requests:
         return {}
 
-    # 1. Enumerate CVIDs for every distinct var_id (one query, dedup'd).
-    # LEFT JOIN classification so a CVID without classification metadata
-    # still appears (with NULL short_name) — overlap can still pick it.
-    # JOIN register_version so we can read the version year per CVID for
-    # the year-match tier (#24).
+    # 1. Enumerate STATES for every distinct var_id (one query, dedup'd).
+    # A2.7: `variable_instance` is dropped from the shipped DB — the per-era unit
+    # is now `variable_state`. LEFT JOIN classification so a state without
+    # classification metadata still appears (with NULL short_name) — overlap can
+    # still pick it. The year-match tier (#24) reads the state's `valid_from`
+    # year (register_version is gone; the state's validity window is the year
+    # source). `var_id` is the variable's `provider_key`.
     var_ids = sorted({var_id for var_id, _, _, _, _ in requests.values()})
     placeholders = ",".join("?" for _ in var_ids)
-    cvid_rows = conn.execute(
-        "SELECT vi.var_id, vi.register_id, vi.cvid, "
-        "vi.value_set_version_label, c.short_name AS classification, "
-        "rv.registerversionnamn AS regver_name "
-        "FROM variable_instance vi "
-        "LEFT JOIN classification c ON vi.classification_id = c.id "
-        "LEFT JOIN register_version rv ON vi.regver_id = rv.regver_id "
-        f"WHERE vi.var_id IN ({placeholders})",
+    state_rows = conn.execute(
+        "SELECT CAST(v.provider_key AS INTEGER) AS var_id, v.register_id, vs.state_id, "
+        "vs.value_set_version_label, c.short_name AS classification, "
+        "vs.valid_from "
+        "FROM variable_state vs "
+        "JOIN variable v ON vs.variable_id = v.variable_id "
+        "LEFT JOIN classification c ON vs.classification_id = c.id "
+        f"WHERE CAST(v.provider_key AS INTEGER) IN ({placeholders})",
         var_ids,
     ).fetchall()
-    pair_to_cvids: dict[tuple[int, int], set[int]] = {}
-    cvid_meta: dict[int, tuple[str | None, str | None, int | None]] = {}
-    for r in cvid_rows:
-        pair_to_cvids.setdefault((r["var_id"], r["register_id"]), set()).add(r["cvid"])
-        regver_name = r["regver_name"]
-        cvid_year = _regver_year(regver_name) if regver_name else None
-        cvid_meta[r["cvid"]] = (
+    pair_to_states: dict[tuple[int, int], set[int]] = {}
+    state_meta: dict[int, tuple[str | None, str | None, int | None]] = {}
+    for r in state_rows:
+        pair_to_states.setdefault((r["var_id"], r["register_id"]), set()).add(
+            r["state_id"]
+        )
+        # The state's opening year (valid_from `YYYY-MM-DD`); the yearless
+        # fallback sentinel `0001` reads as "no year" for the year-match tier.
+        vf_year = int(r["valid_from"][:4])
+        state_year = vf_year if vf_year > 1 else None
+        state_meta[r["state_id"]] = (
             r["classification"],
             r["value_set_version_label"],
-            cvid_year,
+            state_year,
         )
 
-    # 2. Fetch codes for every relevant CVID (one query). Index by cvid.
-    all_cvids = sorted({c for cvids in pair_to_cvids.values() for c in cvids})
-    if not all_cvids:
+    # 2. Fetch codes for every relevant STATE (one query). Index by state_id.
+    all_states = sorted({s for states in pair_to_states.values() for s in states})
+    if not all_states:
         return {}
-    placeholders = ",".join("?" for _ in all_cvids)
+    placeholders = ",".join("?" for _ in all_states)
     value_rows = conn.execute(
-        "SELECT vi.cvid, vc.code, vc.label "
-        "FROM variable_instance vi "
-        "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+        "SELECT vs.state_id, vc.code, vc.label "
+        "FROM variable_state vs "
+        "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
         "JOIN value_code vc ON vsm.code_id = vc.code_id "
-        f"WHERE vi.cvid IN ({placeholders})",
-        all_cvids,
+        f"WHERE vs.state_id IN ({placeholders})",
+        all_states,
     ).fetchall()
-    cvid_to_codes: dict[int, dict[str, str]] = {}
+    state_to_codes: dict[int, dict[str, str]] = {}
     for r in value_rows:
         if r["code"] not in _SCB_TYPE_HINTS:
-            cvid_to_codes.setdefault(r["cvid"], {})[r["code"]] = r["label"]
+            state_to_codes.setdefault(r["state_id"], {})[r["code"]] = r["label"]
 
     # 3. Per request, score each register-matching CVID and pick the max.
     # Iterate sorted CVIDs so tie-breaks are deterministic (sets are hash-
@@ -652,14 +665,14 @@ def _bulk_fetch_value_codes(
         observed,
         column_name,
     ) in requests.items():
-        cvids = sorted(pair_to_cvids.get((var_id, register_id), set()))
+        states = sorted(pair_to_states.get((var_id, register_id), set()))
         best: tuple[tuple[int, int, int, int, int, int], dict[str, str]] | None = None
-        for cvid in cvids:
-            codes = cvid_to_codes.get(cvid, {})
+        for state_id in states:
+            codes = state_to_codes.get(state_id, {})
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
-            cls_short, vmv, cvid_year = cvid_meta[cvid]
-            year_known, year_dist = _year_score(source_year, cvid_year)
+            cls_short, vmv, state_year = state_meta[state_id]
+            year_known, year_dist = _year_score(source_year, state_year)
             shared, prefix = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
             score = (year_known, year_dist, shared, prefix, overlap, len(codes))
