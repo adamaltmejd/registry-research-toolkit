@@ -838,6 +838,54 @@ class TestSameAsTraversal:
         r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
         assert isinstance(r, ResolvedVariableBinding)
 
+    def test_same_as_target_tries_multiple_variants(self) -> None:
+        # rtb/kon is delivered in two variants: a sub-annual one (only HT2018,
+        # lower register_variant_id) and an annual one (2018). The source period
+        # is annual 2018. The any-variant path must fall THROUGH the sub-annual
+        # variant — which overlaps the year but has no `2018` register-version —
+        # to the annual variant that resolves, instead of missing (Codex P2 #139).
+        conn = build_slugged_db()  # lisa / individer-15plus / 2018
+        add_register(conn, register_id=2, slug="rtb", name="RTB")
+        add_variant(
+            conn, register_variant_id=20, register_id=2, slug="halvar", name="H"
+        )
+        add_variant(conn, register_variant_id=21, register_id=2, slug="helar", name="Å")
+        add_version(
+            conn,
+            regver_id=200,
+            register_variant_id=20,
+            slug="HT2018",
+            name="RTB HT2018",
+        )
+        add_version(
+            conn, regver_id=201, register_variant_id=21, slug="2018", name="RTB 2018"
+        )
+        add_variable(conn, register_id=2, var_id=99, name="Kön", slug="kon")
+        add_binding(
+            conn,
+            cvid=5001,
+            register_id=2,
+            register_variant_id=20,
+            regver_id=200,
+            var_id=99,
+            delivery_column_name="Kon",
+        )
+        add_binding(
+            conn,
+            cvid=5002,
+            register_id=2,
+            register_variant_id=21,
+            regver_id=201,
+            var_id=99,
+            delivery_column_name="Kon",
+        )
+        self._add_var_edge(conn, a=("scb", "lisa", "phantom"), b=("scb", "rtb", "kon"))
+        r = Catalog(conn).resolve("scb/lisa/individer-15plus/2018/phantom")
+        assert isinstance(r, ResolvedVariableBinding)
+        # Resolved via the annual variant (cvid 5002), not the sub-annual one
+        # (5001) that overlaps the year but lacks the 2018 version slot.
+        assert r.cvid == 5002
+
 
 class TestSameAsClassificationTraversal:
     """§5.5 classification same_as traversal."""

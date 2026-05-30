@@ -474,21 +474,17 @@ class Catalog:
             (fqid.provider, fqid.register, fqid.variant, fqid.period),
         ).fetchone()
 
-    def _lookup_state(
+    def _overlapping_states(
         self,
         variable_id: int,
         register_variant_id: int | None,
         period: str | None,
-    ) -> sqlite3.Row | None:
-        """The variable's `variable_state` covering `period`. `register_variant_id`
-        None means any variant (the variable-grain `same_as` path). Year-overlap
-        on the ISO range. When several states co-deliver the period (a §5.7
-        multi-vintage fold — the whole reason states overlap), the interim point
-        resolver returns the **latest-era** state (most recent `valid_from`, then
-        `valid_to`) rather than an arbitrary lexical pick, so the choice is
-        meaningful; A2.5 `resolve_at` lists all and a `@value_set_version` FQID
-        selector (A2.6) narrows to one. A yearless period (`_default`) takes the
-        latest-era state."""
+    ) -> list[sqlite3.Row]:
+        """All `variable_state` rows for the variable whose validity range covers
+        `period`, **latest-era first** (most recent `valid_from`/`valid_to`, then
+        deterministic). `register_variant_id` None spans every variant (the
+        variable-grain `same_as` path). A yearless period (`_default`) returns
+        every state in order."""
         if register_variant_id is not None:
             rows = self._conn.execute(
                 "SELECT state_id, register_variant_id, data_type, data_length, "
@@ -508,16 +504,23 @@ class Catalog:
                 "register_variant_id, state_id",
                 (variable_id,),
             ).fetchall()
-        if not rows:
-            return None
         year = extract_year(period or "")
         if year is None:
-            return rows[0]
+            return rows
         lo, hi = f"{year:04d}-01-01", f"{year:04d}-12-31"
-        for row in rows:
-            if row["valid_from"] <= hi and row["valid_to"] >= lo:
-                return row
-        return None
+        return [r for r in rows if r["valid_from"] <= hi and r["valid_to"] >= lo]
+
+    def _lookup_state(
+        self, variable_id: int, register_variant_id: int, period: str | None
+    ) -> sqlite3.Row | None:
+        """The variable's latest-era `variable_state` covering `period` within
+        the pinned `register_variant_id` (the direct path). When several states
+        co-deliver the period (a §5.7 multi-vintage fold), the interim point
+        resolver returns the latest-era one rather than an arbitrary lexical
+        pick; A2.5 `resolve_at` lists all and a `@value_set_version` FQID
+        selector (A2.6) narrows to one."""
+        states = self._overlapping_states(variable_id, register_variant_id, period)
+        return states[0] if states else None
 
     def _lookup_instance(
         self,
@@ -559,42 +562,42 @@ class Catalog:
         self, provider: str, register: str, variable_slug: str, period: str
     ) -> ResolvedVariableBinding | None:
         """Resolve a `same_as` target by `variable_id` + period across any
-        variant (the edge is variable-grain). Returns a binding whose `fqid` is
-        the target's own 5-seg binding (with the resolved variant)."""
+        variant (the edge is variable-grain). **Iterates** the period-overlapping
+        states (latest-era first) and returns the first whose variant actually
+        delivers `period` — i.e. has a matching `register_version` slot AND an
+        instance — so a low-id sub-annual variant overlapping the year (e.g. a
+        `HT2018`-only variant) can't shadow an annual variant (`2018`) that
+        genuinely resolves (Codex P2 #139). The result `fqid` is the target's own
+        5-seg binding under the resolved variant; missing the edition (no variant
+        delivers `period`) returns None rather than the wrong edition."""
         var = self._lookup_variable(provider, register, variable_slug)
         if var is None:
             return None
-        state = self._lookup_state(var["variable_id"], None, period)
-        if state is None:
-            return None
-        rvid = state["register_variant_id"]
-        variant_slug = self._variant_slug(rvid)
-        if variant_slug is None:
-            return None
-        try:
-            target_fqid = Fqid.binding_fqid(
-                provider, register, variant_slug, period, variable_slug
+        for state in self._overlapping_states(var["variable_id"], None, period):
+            rvid = state["register_variant_id"]
+            variant_slug = self._variant_slug(rvid)
+            if variant_slug is None:
+                continue
+            try:
+                target_fqid = Fqid.binding_fqid(
+                    provider, register, variant_slug, period, variable_slug
+                )
+            except FqidError:
+                # Malformed slug — populate_slugs validates on write, so this is
+                # a build-invariant break; skip this candidate.
+                continue
+            slot = self._lookup_version_slot(target_fqid)
+            if slot is None:
+                continue  # this variant doesn't deliver the period — try the next
+            inst = self._lookup_instance(
+                var["register_id"], rvid, slot["regver_id"], var["provider_key"]
             )
-        except FqidError:
-            # populate_slugs validates on write; a malformed slug here is a
-            # build-invariant break — skip rather than raise mid-traversal.
-            return None
-        # Resolve the target's OWN register_version for the queried period, so
-        # cvid/regver match the edition the result FQID names — not merely the
-        # first instance for the variant. If the target has no edition at this
-        # period, the same_as resolution misses rather than pointing a consumer
-        # at the wrong edition (Codex P2 on #139).
-        slot = self._lookup_version_slot(target_fqid)
-        if slot is None:
-            return None
-        inst = self._lookup_instance(
-            var["register_id"], rvid, slot["regver_id"], var["provider_key"]
-        )
-        if inst is None:
-            return None
-        return self._build_state_binding(
-            target_fqid, var, slot["regver_id"], state, inst
-        )
+            if inst is None:
+                continue
+            return self._build_state_binding(
+                target_fqid, var, slot["regver_id"], state, inst
+            )
+        return None
 
     def _lineage_fqid(self, source_cvid: int, variable_slug: str) -> Fqid | None:
         """Source-side binding FQID for a consumer instance's `via_source_id`
