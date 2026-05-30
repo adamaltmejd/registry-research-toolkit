@@ -1281,11 +1281,34 @@ def populate_variable_slugs(
         split_pk = {
             key for key, n in Counter((r[1], r[2]) for r in variables).items() if n > 1
         }
+        # §5.4 stability: base a split sibling's discriminator on its EARLIEST
+        # (original) delivery column, not the latest one used for slug
+        # derivation — so the sibling's published auto-slug key survives a later
+        # SCB column rename (Codex P2 #139). This covers the common
+        # "renamed-in-a-later-edition" case; full cross-rename immutability (a
+        # rename of the *original* column, or true rename tracking) belongs to
+        # the deferred slug-freeze work and is moot pre-v1 (UNFROZEN regenerates
+        # slugs every build).
+        early_kol: dict[int, str] = {}
+        if split_pk:
+            for r in conn.execute(
+                "SELECT v.variable_id, (SELECT vs.delivery_column_name "
+                " FROM variable_state vs WHERE vs.variable_id = v.variable_id "
+                " AND vs.delivery_column_name IS NOT NULL "
+                " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) "
+                "FROM variable v JOIN register r ON v.register_id = r.register_id "
+                "JOIN provider p ON r.provider_id = p.provider_id WHERE p.slug = ?",
+                (provider_slug,),
+            ):
+                if r[1] is not None:
+                    early_kol[r[0]] = r[1]
         disc: dict[int, str] = {}  # variable_id → discriminator (split siblings)
         _split_members: dict[tuple[int, str], list[tuple[str, int]]] = defaultdict(list)
         for _vid, _rid, _pk, _n, _kol in variables:
             if (_rid, _pk) in split_pk:
-                _split_members[(_rid, _pk)].append((_kol or "", _vid))
+                _split_members[(_rid, _pk)].append(
+                    (early_kol.get(_vid) or _kol or "", _vid)
+                )
         for members in _split_members.values():
             used_disc: set[str] = set()
             for _kol, _vid in sorted(members):
