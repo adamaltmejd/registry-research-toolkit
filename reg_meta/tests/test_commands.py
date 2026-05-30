@@ -225,22 +225,28 @@ class TestGetSchema:
         assert len(data["data"]["variants"]) == 1
 
     def test_years_single(self, db_path: str):
+        # A2.6: "editions" are `variable_state` validity windows now; their
+        # `year` is the window's opening year (`valid_from`). The 2020 filter
+        # keeps every window opening in 2020 (the fixture has two).
         data, code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020"]
         )
         assert code == 0
         versions = data["data"]["variants"][0]["versions"]
-        assert len(versions) == 1
-        assert versions[0]["year"] == 2020
+        assert versions  # at least one window opens in 2020
+        assert all(v["year"] == 2020 for v in versions)
 
     def test_years_range(self, db_path: str):
+        # The window-opening year is what the range filters on (a window's
+        # opening year falls inside 2020-2021 here).
         data, code = _run_json(
             ["--db", db_path, "get", "schema", "10", "--years", "2020-2021"]
         )
         assert code == 0
         versions = data["data"]["variants"][0]["versions"]
-        years = [v["year"] for v in versions]
-        assert set(years) == {2020, 2021}
+        years = {v["year"] for v in versions}
+        assert years
+        assert all(2020 <= y <= 2021 for y in years)
 
     def test_years_open_end(self, db_path: str):
         data, code = _run_json(
@@ -318,10 +324,17 @@ class TestGetSchema:
             ["--db", db_path, "get", "schema", "--register", "OTHERREG"]
         )
         assert code == 0
-        columns = data["data"]["variants"][0]["versions"][0]["columns"]
-        kon = [c for c in columns if c["var_id"] == 44]
-        assert len(kon) == 1
-        assert kon[0]["source"] == "TESTREG"
+        # A2.6: a var_id's column can land in any validity-window edition; search
+        # across all of them rather than pinning versions[0].
+        kon = [
+            c
+            for v in data["data"]["variants"]
+            for ver in v["versions"]
+            for c in ver["columns"]
+            if c["var_id"] == 44
+        ]
+        assert kon
+        assert all(c["source"] == "TESTREG" for c in kon)
 
     def test_source_empty_for_own_variable(self, db_path: str):
         """TESTREG's own variables have no source."""
@@ -338,10 +351,15 @@ class TestGetSchema:
             ]
         )
         assert code == 0
-        columns = data["data"]["variants"][0]["versions"][0]["columns"]
-        kon = [c for c in columns if c["var_id"] == 44]
-        assert len(kon) == 1
-        assert kon[0]["source"] == ""
+        kon = [
+            c
+            for v in data["data"]["variants"]
+            for ver in v["versions"]
+            for c in ver["columns"]
+            if c["var_id"] == 44
+        ]
+        assert kon
+        assert all(c["source"] == "" for c in kon)
 
 
 # ---------------------------------------------------------------------------
@@ -357,7 +375,9 @@ class TestGetVarinfo:
         assert code == 0
         assert data["data"]["name"] == "Kön"
         assert data["data"]["register_id"] == 1
-        assert len(data["data"]["instances"]) == 3  # CVIDs 1001, 1003, 1004
+        # A2.6: "instances" are `variable_state` rows now (coalesced per-delivery
+        # shape), not per-cvid rows — TESTREG Kön has two states.
+        assert len(data["data"]["instances"]) == 2
 
     def test_by_var_id(self, db_path: str):
         data, code = _run_json(
@@ -378,7 +398,10 @@ class TestGetVarinfo:
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
         inst = data["data"]["instances"][0]
-        assert "cvid" in inst
+        # A2.6: per-state keys (state_id + validity window) replace cvid +
+        # register_version name.
+        assert "state_id" in inst
+        assert "valid_from" in inst
         assert "year" in inst
         assert "aliases" in inst
         assert "value_set_count" in inst
@@ -387,10 +410,10 @@ class TestGetVarinfo:
         data, code = _run_json(
             ["--db", db_path, "get", "varinfo", "Kön", "--register", "TESTREG"]
         )
-        # CVID 1001 has 2 value items (Man, Kvinna)
-        cvid_1001 = [i for i in data["data"]["instances"] if i["cvid"] == 1001]
-        assert len(cvid_1001) == 1
-        assert cvid_1001[0]["value_set_count"] == 2
+        # The Kön value-set (Man, Kvinna) carries 2 codes; at least one state
+        # surfaces that count.
+        with_codes = [i for i in data["data"]["instances"] if i["value_set_count"] == 2]
+        assert with_codes
 
     def test_not_found(self, db_path: str):
         data, code = _run_json(["--db", db_path, "get", "varinfo", "NONEXISTENT"])
@@ -443,14 +466,15 @@ class TestGetValues:
         payload = data["data"]
         assert payload["variable_name"] == "Kön"
         instances = payload["instances"]
-        # CVIDs 1001 (2020), 1003 (2021), 1004 (2022). 1004 has no value set
-        # (Beskrivande-text sentinel) so its values list is empty but the
-        # instance is still present.
+        # A2.6: "instances" are `variable_state` rows. The coalescer merged the
+        # 2020 + 2021 cvids into one 2020-01-01..2021-12-31 state (window-opening
+        # year 2020); the 2022 cvid is its own state. So years are {2020, 2022}.
         years = {i["year"] for i in instances}
-        assert years == {2020, 2021, 2022}
-        coded = {i["cvid"]: i["values"] for i in instances if i["values"]}
-        assert 1001 in coded
-        assert {v["code"] for v in coded[1001]} == {"1", "2"}
+        assert years == {2020, 2022}
+        # The Man/Kvinna value set surfaces on at least one state.
+        coded = [i for i in instances if i["values"]]
+        assert coded
+        assert any({v["code"] for v in i["values"]} == {"1", "2"} for i in coded)
 
     def test_by_variable_year_collapses_across_registers(self, db_path: str):
         """variable + year across multiple registers collapses if codes match.
@@ -502,15 +526,16 @@ class TestGetValues:
         """
         from reg_meta.cli import _group_instances_by_codes
 
+        # A2.6: instances are variable_state-shaped (state_id + validity window).
         instances = [
             {
-                "cvid": 1,
+                "state_id": 1,
                 "register_id": 100,
                 "register_name": "RegA",
                 "register_variant_id": 10,
                 "variant_name": "A1",
-                "regver_id": 200,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Man"},
@@ -518,13 +543,13 @@ class TestGetValues:
                 ],
             },
             {
-                "cvid": 2,
+                "state_id": 2,
                 "register_id": 101,
                 "register_name": "RegB",
                 "register_variant_id": 11,
                 "variant_name": "B1",
-                "regver_id": 201,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Man"},
@@ -532,13 +557,13 @@ class TestGetValues:
                 ],
             },
             {
-                "cvid": 3,
+                "state_id": 3,
                 "register_id": 102,
                 "register_name": "RegC",
                 "register_variant_id": 12,
                 "variant_name": "C1",
-                "regver_id": 202,
-                "version_name": "2017",
+                "valid_from": "2017-01-01",
+                "valid_to": "2017-12-31",
                 "year": 2017,
                 "values": [
                     {"code": "1", "label": "Pojke"},
@@ -636,11 +661,14 @@ class TestGetValues:
             "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'V2')"
         )
+        # A2.6: register_version has no slug column; the ambiguous-alias check
+        # fires in the alias→variable fallback (before any state lookup), so no
+        # register_version rows are needed.
         conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (100, 10, '2020')"
         )
         conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
+            "INSERT INTO register_version (regver_id, register_variant_id, registerversionnamn) VALUES (101, 11, '2020')"
         )
         conn.execute(
             "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '50', 'AppleVar')"
@@ -714,19 +742,15 @@ class TestGetValues:
             "INSERT INTO register_variant (register_variant_id, register_id, name) "
             "VALUES (11, 2, 'Children')"
         )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (100, 10, '2020', '2020')"
-        )
-        conn.execute(
-            "INSERT INTO register_version (regver_id, register_variant_id, slug, registerversionnamn) VALUES (101, 11, '2020', '2020')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (1, '44', 'Kön')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, name) VALUES (2, '44', 'Kön')"
-        )
-        # Two cvids, two distinct value sets. member_hash must be 32 bytes.
+        v1 = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '44', 'Kön', 'kon')"
+        ).lastrowid
+        v2 = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (2, '44', 'Kön', 'kon')"
+        ).lastrowid
+        # Two distinct value sets. member_hash must be 32 bytes.
         conn.execute(
             "INSERT INTO value_set (value_set_id, member_hash) VALUES (1, ?)",
             (b"\xaa" * 32,),
@@ -743,15 +767,19 @@ class TestGetValues:
         conn.execute("INSERT INTO value_set_member VALUES (1, 2)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 3)")
         conn.execute("INSERT INTO value_set_member VALUES (2, 4)")
+        # A2.6: get_values_by_variable reads variable_state; one 2020 state per
+        # variable, each carrying its own value set.
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
-            "VALUES (5001, 1, 10, 100, 44, 1)"
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, value_set_id) "
+            "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', 1)",
+            (v1,),
         )
         conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id, value_set_id) "
-            "VALUES (5002, 2, 11, 101, 44, 2)"
+            "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+            "valid_to, data_type, value_set_id) "
+            "VALUES (?, 11, '2020-01-01', '2020-12-31', 'int', 2)",
+            (v2,),
         )
         # docs DB stub — query commands require it present.
         from reg_meta_build.doc_db import build_doc_db
@@ -1093,8 +1121,12 @@ class TestGetDiff:
         assert len(data["data"]["variants"]) >= 1
         assert data["data"]["variants"][0]["register_variant_id"] == 10
 
-    def test_fallback_to_closest_year(self, db_path: str):
-        """Year 2019 has no version; should fall back to nothing. Year 2023 falls back to 2022."""
+    def test_year_with_no_covering_state_is_empty(self, db_path: str):
+        """A2.6: schema-at-year now uses `variable_state` validity overlap (no
+        register_version closest-≤-year fallback). 2023 is covered by no state,
+        so the diff against it finds no columns and 404s like any empty diff —
+        the diff is year-keyed and carries from_year/to_year, not version rows.
+        """
         data, code = _run_json(
             [
                 "--db",
@@ -1109,10 +1141,27 @@ class TestGetDiff:
                 "2023",
             ]
         )
+        # No state covers 2023 → no versions found → not_found (exit 16).
+        assert code == 16
+        # A real in-range diff (2020→2022) succeeds and is year-keyed.
+        data, code = _run_json(
+            [
+                "--db",
+                db_path,
+                "get",
+                "diff",
+                "--register",
+                "TESTREG",
+                "--from",
+                "2020",
+                "--to",
+                "2022",
+            ]
+        )
         assert code == 0
-        # to_version should be the 2022 version (closest ≤ 2023)
         v = data["data"]["variants"][0]
-        assert v["to_version"]["year"] == 2022
+        assert v["from_year"] == 2020
+        assert v["to_year"] == 2022
 
     def test_from_gte_to_error(self, db_path: str):
         data, code = _run_json(
@@ -1229,8 +1278,11 @@ class TestGetLineage:
         testreg = [
             r for r in data["data"]["registers"] if r["register_name"] == "TESTREG"
         ][0]
+        # A2.6: year range spans the variable_state validity windows; the count
+        # is of states now (the 2020+2021 cvids coalesced into one 2020-2021
+        # state, plus the 2022 state → 2 states spanning 2020..2022).
         assert testreg["year_range"] == [2020, 2022]
-        assert testreg["instance_count"] == 3
+        assert testreg["instance_count"] == 2
 
 
 # ---------------------------------------------------------------------------

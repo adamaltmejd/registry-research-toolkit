@@ -152,12 +152,15 @@ refs' `fqid`).
 `consumer_state_id`, `warning_kind` (`no_source_state` /
 `ambiguous_source_variant`), `message`.
 
-`ResolvedVariableBinding` (the interim per-edition binding row) is
-**retained** but scoped to the discovery path `editions()`, which still
-reads the `variable_instance` join and is not part of the §5.10 flip set
-(it moves onto `variable_state` in A2.7 when `variable_instance` is
-dropped). The v0.x per-edition `resolve()` behavior was deleted, not
-aliased — pre-v1 policy (no shims).
+`ResolvedVariableBinding` (the interim per-edition binding row) and the
+`editions()` discovery path that returned it were **removed in A2.6** along
+with the v0.11 5-seg binding parse. Resolution is now `ResolvedVariable` +
+`resolve_at` / `states` (§5.10): the variable's shared metadata plus its
+`variable_state` rows, each tagged with its variant. The per-edition cvid is
+no longer a catalog return shape, and the variant is a register sub-resource
+coordinate (passed to `resolve_at`), not a slash-path FQID segment. The v0.x
+per-edition `resolve()` behavior was deleted, not aliased — pre-v1 policy
+(no shims).
 
 ## Value sets are year-projected
 

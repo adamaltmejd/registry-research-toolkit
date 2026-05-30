@@ -6,7 +6,7 @@ import sqlite3
 from typing import TYPE_CHECKING
 
 import pytest
-from _slugged_db import add_version, build_slugged_db
+from _slugged_db import build_slugged_db
 from reg_meta.errors import RegMetaError
 
 from reg_meta_build.fqid_slugs import (
@@ -355,8 +355,6 @@ class TestPopulateSlugs:
         assert counts == {
             "register": 1,
             "register_variant": 1,
-            "register_version": 0,
-            "register_version_auto": 0,
             "classification": 1,
         }
         assert (
@@ -439,148 +437,16 @@ class TestPopulateSlugs:
             populate_slugs(conn, d, strict=True)
         assert exc.value.code == "slug_unknown_source_id"
 
-    def _make_unperiodized_db(self) -> sqlite3.Connection:
-        # Variant + unperiodized version (`Gymnasieintyg, ackumulerat` has no
-        # parseable period). All slug columns cleared so populate_slugs can
-        # run a clean auto-derive + curated pass.
-        conn = build_slugged_db(
-            version=("Gymnasieintyg, ackumulerat", None, 200),
-        )
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
-        conn.commit()
-        return conn
-
-    def test_populates_register_version_from_toml(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
-            '[register_version."1.10.200"]\nslug = "ackumulerat-register"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = self._make_unperiodized_db()
-        counts = populate_slugs(conn, d, strict=True)
-        assert counts["register_version"] == 1
-        assert counts["register_version_auto"] == 0
-        assert (
-            conn.execute(
-                "SELECT slug FROM register_version WHERE regver_id = 200"
-            ).fetchone()[0]
-            == "ackumulerat-register"
-        )
-
-    def test_strict_fails_when_unperiodized_version_missing_slug(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = self._make_unperiodized_db()
-        with pytest.raises(RegMetaError) as exc:
-            populate_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_missing_for_source_id"
-
-    def test_unknown_register_version_source_id_fails(self, tmp_path: Path):
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
-            # Version 999 does not exist; sibling 200 has its own TOML so
-            # the strict-mode coverage check doesn't fire first.
-            '[register_version."1.10.200"]\nslug = "ackumulerat-register"\n'
-            '[register_version."1.10.999"]\nslug = "ghost"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = self._make_unperiodized_db()
-        with pytest.raises(RegMetaError) as exc:
-            populate_slugs(conn, d, strict=True)
-        assert exc.value.code == "slug_unknown_source_id"
-
-    def test_curated_slug_overrides_auto_derived(self, tmp_path: Path):
-        # Escape hatch documented at populate_slugs:722 — TOML override beats
-        # the period regex when a maintainer needs to correct a wrong-year
-        # extraction.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
-            '[register_version."1.10.100"]\nslug = "2017"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = build_slugged_db()  # default version is ("LISA 2018", "2018", 100)
-        conn.execute("UPDATE register SET slug = NULL")
-        conn.execute("UPDATE register_variant SET slug = NULL")
-        conn.execute("UPDATE register_version SET slug = NULL")
-        conn.execute("UPDATE classification SET slug = NULL")
-        conn.commit()
-        populate_slugs(conn, d, strict=True)
-        assert (
-            conn.execute(
-                "SELECT slug FROM register_version WHERE regver_id = 100"
-            ).fetchone()[0]
-            == "2017"
-        )
-
-    def test_unique_constraint_blocks_sibling_slug_collision(self):
-        # SQL-level UNIQUE(register_variant_id, slug) catches collisions that the
-        # TOML-load `seen_slugs` check can't see — two auto-derived siblings
-        # mapping to the same period, or a curated override clashing with
-        # an auto-derived sibling.
-        conn = build_slugged_db()  # regver 100 already carries slug "2018"
-        with pytest.raises(sqlite3.IntegrityError):
-            conn.execute(
-                "INSERT INTO register_version "
-                "(regver_id, register_variant_id, slug, registerversionnamn) "
-                "VALUES (?, ?, ?, ?)",
-                (101, 10, "2018", "LISA 2018 (dup)"),
-            )
-
-    def test_autoderive_collision_raises_reg_meta_error(self, tmp_path: Path):
-        # If precheck is bypassed and two siblings auto-derive to the same
-        # period, the raw sqlite IntegrityError from the second UPDATE is
-        # wrapped as a RegMetaError pointing at `precheck-slugs`. Keeps
-        # diagnostics consistent with the rest of the slug pipeline.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(d / "scb.toml", "")
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (?, ?, ?, ?)",
-            (101, 10, None, "LISA 2018 tilläggsfil"),
-        )
-        with pytest.raises(RegMetaError) as excinfo:
-            populate_slugs(conn, d, strict=False)
-        assert excinfo.value.code == "slug_periodized_collision"
-        assert "precheck-slugs" in excinfo.value.remediation
+    # A2.6: register_version left the FQID grammar — version slugs are neither
+    # curated, auto-derived, nor persisted (no `register_version.slug` column),
+    # so the former version-slot tests
+    # (`test_populates_register_version_from_toml`,
+    # `test_strict_fails_when_unperiodized_version_missing_slug`,
+    # `test_unknown_register_version_source_id_fails`,
+    # `test_curated_slug_overrides_auto_derived`,
+    # `test_unique_constraint_blocks_sibling_slug_collision`,
+    # `test_autoderive_collision_raises_reg_meta_error`) were removed with the
+    # mechanism they tested.
 
 
 # ---------------------------------------------------------------------------
@@ -603,142 +469,14 @@ class TestSeedSlugs:
         assert '[classification."SUN2020"]' in cls_body
         assert 'version = "2020"' in cls_body
 
-    def test_seeds_unperiodized_version_against_skip_slugs_build(self):
-        # Regression for PR #94 Codex P2: seed_provider_toml used to filter
-        # `WHERE rver.slug IS NOT NULL`, which omitted every unperiodized
-        # version when bootstrapping from a `build-db --skip-slugs` DB
-        # (slug column is still NULL across the board). The filter now runs
-        # on the version name via derive_period, so the stub appears
-        # regardless of slug-column state.
-        conn = build_slugged_db(
-            version=("Födelseland", None, 200),  # name has no period, slug NULL
-        )
-        body = seed_provider_toml(conn, "scb")
-        assert '[register_version."1.10.200"]' in body
-        assert 'slug = "TODO"' in body
-
-    def test_omits_periodized_version_from_seed(self):
-        # Periodized versions round-trip without any TOML curation — they
-        # must not appear as stubs in the seed output. Source name is a bare
-        # period token: any prefix would trigger the §5.3 residual flag and
-        # legitimately force an emission.
-        conn = build_slugged_db(version=("2018", "2018", 200))
-        body = seed_provider_toml(conn, "scb")
-        assert "[register_version." not in body
-
-    def test_emits_curated_override_on_periodized_version(self):
-        # A maintainer-pinned slug that doesn't match derive_period (e.g.
-        # collision-resolution within a variant) must round-trip through
-        # seed → TOML → populate, not get silently dropped on regen.
-        conn = build_slugged_db(
-            version=("Ankor och anklingar 1968-1997", "ankor-1968-1997", 200),
-        )
-        body = seed_provider_toml(conn, "scb")
-        assert '[register_version."1.10.200"]' in body
-        assert 'slug = "ankor-1968-1997"' in body
-        # Audit comment carries the source registerversionnamn so the next
-        # curator can verify any typo/abbreviation normalization (§5.3).
-        assert "# 'Ankor och anklingar 1968-1997'" in body
-
-    def test_emits_collision_annotation_against_sibling(self):
-        # §5.3 rule 5: when the curated row's derive_period(name) matches a
-        # sibling's effective slug, the comment names the sibling so a future
-        # curator sees *why* the curated slug isn't the bare period. Mirrors
-        # the real `104.840.5510 / 'Vårterminen 2013 - betyg' (vs 5177:VT2013)`
-        # case from scb.toml.
-        conn = build_slugged_db(
-            # 5177 holds the canonical VT2013 (auto-derived from name).
-            version=("Vårterminen 2013", None, 5177),
-        )
-        add_version(
-            conn,
-            regver_id=5510,
-            register_variant_id=10,
-            slug="betyg-vt2013",
-            name="Vårterminen 2013 - betyg",
-        )
-        conn.commit()
-        body = seed_provider_toml(conn, "scb")
-        assert '[register_version."1.10.5510"]' in body
-        assert 'slug = "betyg-vt2013"' in body
-        assert "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013)" in body
-        # The claimant (5177) auto-derives to its slug — it's NOT a curated
-        # override, so it should not itself appear as a seed stub.
-        assert '[register_version."1.10.5177"]' not in body
-
-    def test_collision_annotation_omitted_when_no_sibling_claims_period(self):
-        # No sibling under the variant claims derive_period(name), so no
-        # annotation. Guards against false-positive annotations on lone
-        # descriptor rows (e.g. unperiodized aux tables).
-        # Source name `1968-1997` (year range) leaves a non-alpha residual
-        # `-1997` so the §5.3 rule 6 residual flag also stays quiet — keeps
-        # this test focused on the collision-omitted axis.
-        conn = build_slugged_db(
-            version=("1968-1997", "ankor-1968-1997", 200),
-        )
-        body = seed_provider_toml(conn, "scb")
-        assert "# '1968-1997'\n" in body
-        assert "(vs " not in body
-        assert "(residual:" not in body
-
-    def test_residual_emits_stub_with_auto_derived_slug(self):
-        # §5.3 rule 6: source name carries scope info beyond the period
-        # (`Strandlinje, 2019` → derive_period extracts `2019`, drops
-        # `Strandlinje`). seed-slugs refuses the round-trip skip so the
-        # curator sees a stub. Default slug is the auto-derive value —
-        # accepting as-is is the "acknowledge auto-derive" path; renaming
-        # is the curate path.
+    def test_omits_register_version_from_seed(self):
+        # A2.6: register_version is not seeded at all (version left the FQID
+        # grammar; no slug column). The former version-seed tests (unperiodized
+        # stub, periodized omission, curated override, §5.3 rule-5 collision
+        # annotation, rule-6 residual stub) were removed with the mechanism.
         conn = build_slugged_db(version=("Strandlinje, 2019", None, 200))
         body = seed_provider_toml(conn, "scb")
-        assert '[register_version."1.10.200"]' in body
-        assert 'slug = "2019"' in body
-        assert "# 'Strandlinje, 2019' (residual:" in body
-        assert '(residual: "Strandlinje,")' in body
-
-    def test_residual_skipped_when_only_connector_token_remains(self):
-        # §5.3 rule 6 connector denylist: a residual of ONLY a 3-char Swedish
-        # function word (`och`, `för`, `med`, `men`) is not scope-bearing — it
-        # is a conjunction/preposition stranded by the period match. The row
-        # round-trips through auto-derive without curation, so no stub is
-        # emitted. Guards against false-positive curation work that the bare
-        # `[^\W\d_]{3,}` length test would create.
-        conn = build_slugged_db(version=("2019 och", "2019", 200))
-        body = seed_provider_toml(conn, "scb")
         assert "[register_version." not in body
-
-    def test_residual_normalizes_whitespace_around_period_match(self):
-        # `Gifta 1996-1997` → derive_period matches `1996`, slicing leaves a
-        # double-space artifact (`"Gifta "` + `" "` + `"-1997"`). Comment
-        # readability matters since ~330 production rows are affected; the
-        # residual collapses whitespace runs to a single space.
-        conn = build_slugged_db(
-            version=("Gifta 1996-1997", "gifta-1996-1997", 200),
-        )
-        body = seed_provider_toml(conn, "scb")
-        assert '(residual: "Gifta -1997")' in body
-        assert '(residual: "Gifta  -1997")' not in body
-
-    def test_collision_and_residual_co_occur_in_fixed_order(self):
-        # §5.3 rules 5 + 6 can both fire on the same row (a curated slug
-        # whose name *also* leaks scope info). The spec promises a fixed
-        # output order: `(vs ...)` first, then `(residual: ...)`. Production
-        # data leans on this ordering, so pin it.
-        conn = build_slugged_db(
-            version=("Vårterminen 2013", None, 5177),
-        )
-        add_version(
-            conn,
-            regver_id=5510,
-            register_variant_id=10,
-            slug="betyg-vt2013",
-            name="Vårterminen 2013 - betyg",
-        )
-        conn.commit()
-        body = seed_provider_toml(conn, "scb")
-        assert (
-            "# 'Vårterminen 2013 - betyg' (vs 5177:VT2013) (residual: \"- betyg\")"
-            in body
-        )
 
 
 # ---------------------------------------------------------------------------
@@ -854,92 +592,12 @@ class TestPrecheckSlugs:
         result = precheck_slugs(conn, d)
         assert ("scb", "999") not in result.stale_registers
 
-    def test_periodized_sibling_collision_flagged(self, tmp_path: Path):
-        # Regression for Codex P1 on PR #94 (commit ffd07fe): two sibling
-        # periodized rows both deriving to `2018` with no override would
-        # pass precheck but fail mid-build on UNIQUE(register_variant_id, slug).
-        # Precheck must catch this so the maintainer sees a clean diagnostic
-        # instead of a raw SQLite IntegrityError.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (?, ?, ?, ?)",
-            (101, 10, None, "LISA 2018 tilläggsfil"),
-        )
-        result = precheck_slugs(conn, d)
-        assert not result.ok
-        slugs = {(p, sid, slug) for (p, sid, _name, slug) in result.colliding_versions}
-        assert ("scb", "1.10.100", "2018") in slugs
-        assert ("scb", "1.10.101", "2018") in slugs
-
-    def test_collision_resolved_by_curated_override(self, tmp_path: Path):
-        # Disambiguating override on one sibling clears the collision —
-        # precheck must mirror populate_slugs's override-then-derive order,
-        # not naive auto-derive-only.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
-            '[register_version."1.10.101"]\nslug = "tillagg-2018"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = build_slugged_db(version=("LISA 2018 huvudfil", None, 100))
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (?, ?, ?, ?)",
-            (101, 10, None, "LISA 2018 tilläggsfil"),
-        )
-        result = precheck_slugs(conn, d)
-        assert not result.colliding_versions
-
-    def test_collision_when_override_clashes_with_auto_derived_sibling(
-        self, tmp_path: Path
-    ):
-        # Override on regver 101 explicitly pins slug "2018", which then
-        # collides with regver 100's auto-derived "2018". A naive precheck
-        # that only checks for "both rows would auto-derive the same period"
-        # would miss this; the would-be-slug grouping catches it.
-        d = tmp_path / "slugs"
-        d.mkdir()
-        _write(
-            d / "scb.toml",
-            '[register."1"]\nslug = "lisa"\n'
-            '[register_variant."1.10"]\nslug = "individer-15plus"\n'
-            '[register_version."1.10.101"]\nslug = "2018"\n',
-        )
-        _write(
-            d / "classifications.toml",
-            '[classification."SUN2020"]\nslug = "sun"\nversion = "2020"\n',
-        )
-        conn = build_slugged_db(version=("LISA 2018", None, 100))
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, slug, registerversionnamn) "
-            "VALUES (?, ?, ?, ?)",
-            (101, 10, None, "Other 2019 file"),  # would auto-derive "2019"
-        )
-        result = precheck_slugs(conn, d)
-        slugs = {(p, sid, slug) for (p, sid, _name, slug) in result.colliding_versions}
-        assert ("scb", "1.10.100", "2018") in slugs
-        assert ("scb", "1.10.101", "2018") in slugs
+    # A2.6: register_version left the FQID grammar — no version-slug collision
+    # detection in precheck (the `colliding_versions` field is gone). The former
+    # collision tests (`test_periodized_sibling_collision_flagged`,
+    # `test_collision_resolved_by_curated_override`,
+    # `test_collision_when_override_clashes_with_auto_derived_sibling`) were
+    # removed with the mechanism.
 
 
 # ---------------------------------------------------------------------------
@@ -1002,11 +660,11 @@ class TestSnapshot:
 
     def test_snapshot_round_trip(self, tmp_path: Path):
         path = tmp_path / SNAPSHOT_FILENAME
+        # A2.6: no register_version in the snapshot (version left the grammar).
         payload = {
             "classification": {"SUN2020|2020": "sun"},
             "register": {"scb/1": "lisa"},
             "register_variant": {"scb/1.10": "individer-15plus"},
-            "register_version": {"scb/1.10.100": "ackumulerat-register"},
             "variable": {},
         }
         write_snapshot(path, payload)
@@ -1019,7 +677,6 @@ class TestSnapshot:
             "classification": {},
             "register": {},
             "register_variant": {},
-            "register_version": {},
             "variable": {},
         }
 
@@ -1083,8 +740,6 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         assert counts == {
             "register": 1,
             "register_variant": 1,
-            "register_version": 0,
-            "register_version_auto": 0,
             "classification": 1,
         }
 
@@ -1108,8 +763,6 @@ class TestVariableOverridesAcceptedByPopulateSlugs:
         assert counts == {
             "register": 1,
             "register_variant": 1,
-            "register_version": 0,
-            "register_version_auto": 0,
             "classification": 1,
         }
 
@@ -1496,8 +1149,6 @@ class TestSeedPopulateRoundTrip:
         assert counts == {
             "register": 1,
             "register_variant": 1,
-            "register_version": 0,
-            "register_version_auto": 0,
             "classification": 1,
         }
         assert (

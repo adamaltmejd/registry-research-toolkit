@@ -27,7 +27,7 @@ from reg_meta.db import (
     utc_now,
 )
 from reg_meta.errors import EXIT_CONFIG, RegMetaError
-from reg_meta.fqid import derive_variable_slug
+from reg_meta.fqid import derive_period, derive_variable_slug
 from reg_meta.queries import extract_year
 
 from .classifications import populate_classifications, repo_seed_path
@@ -216,30 +216,29 @@ CREATE TABLE register_variant (
     display_group TEXT
 );
 
+-- A2.6: BUILD-TIME-ONLY (dropped before ship, like `unika_summary`). The
+-- coalescer reads `registerversionnamn` for the variable_state valid_from/to
+-- year fallback, and the lineage linkers derive a per-edition period from it;
+-- both run before `DROP TABLE register_version`. The FQID grammar no longer
+-- has a version segment (§5.2), so this table carries NO `slug` column — period
+-- is a delivery coordinate, not identity. Per-edition prose/artifacts move to
+-- the provenance DB (A4.2, deferred); nothing in the shipped catalog reads it.
 CREATE TABLE register_version (
     regver_id INTEGER PRIMARY KEY,
     register_variant_id INTEGER NOT NULL REFERENCES register_variant(register_variant_id),
-    -- §5.2 version slot: either a derived period token (`2018`, `HT2020`, …)
-    -- or a curated slug for rows the period regex can't disambiguate
-    -- (unperiodized aux tables, year-range projections, sub-topic siblings
-    -- sharing a year). NULL only between INSERT and populate_slugs's
-    -- auto-derive + curated-override pass.
-    slug TEXT,
     registerversionnamn TEXT,
     registerversionbeskrivning TEXT,
     registerversionmatinformation TEXT,
     registerversion_docstaus TEXT,
     registerversion_forstagodkannandedatum TEXT,
-    registerversion_senastgodkanddatum TEXT,
-    -- §5.3: slug is unique within parent variant. Most slugs come from
-    -- auto-derive (period regex extended with Swedish termin grammar),
-    -- not TOML; the TOML-load `seen_slugs` check doesn't catch sibling
-    -- collisions between two auto-derived rows or between a curated
-    -- override and an auto-derived sibling. SQLite treats NULLs as
-    -- distinct, so this is safe during the INSERT → populate_slugs window.
-    UNIQUE (register_variant_id, slug)
+    registerversion_senastgodkanddatum TEXT
 );
 
+-- A2.6: BUILD-TIME-ONLY, dropped before ship together with `register_version`
+-- (they FK it). Write-only debug tables — nothing in the shipped catalog or the
+-- query layer reads them; their content belongs in the provenance DB (§5.1,
+-- A4.2). Kept build-time only because the importer still populates them from the
+-- same Registerinformation.csv pass.
 CREATE TABLE population (
     regver_id INTEGER NOT NULL REFERENCES register_version(regver_id),
     -- §5.11 rename. `populationdatum` is a free-text date range, not a parsed
@@ -2689,14 +2688,13 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         cvid_to_var[cvid] = (register_id, var_id)
 
     # #142: cvid -> edition year, for `effective_year` on AktuellVariabel-grain
-    # edges. The canonical period token is `register_version.slug` (`2018`,
-    # `HT2020`, …); fall back to the version name when the slug is a curated
-    # non-period slug (`ackumulerat-register`) or transiently NULL. Yearless
-    # editions map to None → effective_year stays NULL.
+    # edges. A2.6 dropped `register_version.slug`, so the year comes straight
+    # from `registerversionnamn` (build-time; the table is dropped before ship).
+    # Yearless editions map to None → effective_year stays NULL.
     cvid_to_year: dict[int, int | None] = {
-        cvid: (extract_year(slug or "") or extract_year(name or ""))
-        for cvid, slug, name in conn.execute(
-            "SELECT vi.cvid, rv.slug, rv.registerversionnamn "
+        cvid: extract_year(name or "")
+        for cvid, name in conn.execute(
+            "SELECT vi.cvid, rv.registerversionnamn "
             "FROM variable_instance vi "
             "JOIN register_version rv ON vi.regver_id = rv.regver_id"
         )
@@ -3483,16 +3481,17 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
 
     Sets `variable_instance.via_source_id` to the canonical source cvid for
     every instance whose underlying variable was sourced from a different
-    register, keyed on (`register_version.slug`, variable slug). Returns
-    the edge count.
+    register, keyed on (edition period, variable slug). Returns the edge count.
 
-    Slug-only. When a consumer's slug doesn't exactly match a source
-    sibling's slug, no edge forms — that's the correct outcome: the
-    consumer data hasn't disambiguated which source sibling it came from,
-    so the linker shouldn't guess. Maintainers can curate matching slugs
-    on both sides to force a precise edge.
+    The edition period is the SHARED coordinate across two different registers'
+    editions — a consumer's `2018` edition links to the source's `2018` edition.
+    A2.6 dropped the persisted `register_version.slug`, so the period is derived
+    inline from `registerversionnamn` via `derive_period` (build-time; the table
+    is dropped before ship). `regver_id` is the wrong grain here — it is globally
+    unique per edition and never shared across registers — so the match keys on
+    the derived period instead.
 
-    Runs after `populate_slugs` so `rver.slug` is non-NULL.
+    Runs after `populate_slugs` so `v.slug` is non-NULL.
     """
     # A2.1.5: key on the STORED `variable.slug` (name-derived / curated where
     # delivery columns collide), NOT `derive_variable_slug(delivery_column_name)`
@@ -3503,10 +3502,18 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     # row per cvid (variable↔provider_key is 1:1 pre-A2.2; the join fans out
     # post-A2.2 — the documented A2.5 hazard). ORDER BY vi.cvid pins the
     # setdefault tie-break: lowest cvid wins when one variable has instances
-    # under several variants sharing a version-slot.
+    # under several editions deriving to the same period.
+    #
+    # A2.6 degradation (documented, accepted): the ~1,264 curated version slugs
+    # that disambiguated same-period sibling editions (`LISA 2018 huvudfil` vs
+    # `… tilläggsfil`, both `derive_period`→`2018`) are gone. Such siblings now
+    # collapse to one period key and the lowest cvid wins. This is build-internal
+    # and `variable_instance.via_source_id` is dropped wholesale in A2.7
+    # (superseded by `variable_state_lineage`, A2.4), so the degradation is
+    # transient.
     rows = conn.execute(
         "SELECT vi.cvid, vi.register_id, v.source_register_id, "
-        "rver.slug AS version_slug, v.slug AS variable_slug "
+        "rver.registerversionnamn, v.slug AS variable_slug "
         "FROM variable_instance vi "
         "JOIN variable v ON vi.register_id = v.register_id "
         "    AND CAST(vi.var_id AS TEXT) = v.provider_key "
@@ -3517,19 +3524,20 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
     by_key: dict[tuple[int, str, str], int] = {}
     consumer_attempts: list[tuple[int, int, str, str]] = []
 
-    for cvid, rid, src_rid, version_slug, variable_slug in rows:
-        if version_slug is None or variable_slug is None:
+    for cvid, rid, src_rid, version_name, variable_slug in rows:
+        period = derive_period(version_name)
+        if period is None or variable_slug is None:
             continue
-        by_key.setdefault((rid, version_slug, variable_slug), cvid)
+        by_key.setdefault((rid, period, variable_slug), cvid)
         if src_rid is not None and src_rid != rid:
-            consumer_attempts.append((cvid, src_rid, version_slug, variable_slug))
+            consumer_attempts.append((cvid, src_rid, period, variable_slug))
 
     # First match per consumer cvid wins (stable: input is sorted).
     resolved: dict[int, int] = {}
-    for cvid, src_rid, version_slug, variable_slug in consumer_attempts:
+    for cvid, src_rid, period, variable_slug in consumer_attempts:
         if cvid in resolved:
             continue
-        src_cvid = by_key.get((src_rid, version_slug, variable_slug))
+        src_cvid = by_key.get((src_rid, period, variable_slug))
         if src_cvid is not None and src_cvid != cvid:
             resolved[cvid] = src_cvid
 
@@ -3539,17 +3547,16 @@ def link_consumer_side_bindings(conn: sqlite3.Connection) -> int:
             [(src_cvid, cvid) for cvid, src_cvid in resolved.items()],
         )
 
-    # Surface the skipped count so a regression — e.g. a future delivery
-    # introducing a curated source-side slug with no matching consumer-side
-    # entry — is visible at build time. Without this, edges silently
-    # disappear from `via_source_id` and only show up via downstream
-    # lineage-query gaps.
+    # Surface the skipped count so a regression — e.g. a consumer edition whose
+    # period+variable-slug matches no source edition — is visible at build time.
+    # Without this, edges silently disappear from `via_source_id` and only show
+    # up via downstream lineage-query gaps.
     candidate_cvids = {cvid for cvid, *_ in consumer_attempts}
     skipped = len(candidate_cvids - resolved.keys())
     if candidate_cvids:
         _progress(
             f"  Consumer-side binding edges: {len(resolved):,} linked, "
-            f"{skipped:,} skipped (no source-side slug match)"
+            f"{skipped:,} skipped (no source-side period match)"
         )
     return len(resolved)
 
@@ -4226,19 +4233,18 @@ def build_db(
         else:
             replaced_by_stats = _materialize_replaced_by_edges(conn)
 
-        # §5.6 lineage edges. Runs *after* populate_slugs so the lookup keys
-        # on `register_version.slug` — the canonical disambiguator. Keying on
-        # `derive_period(name)` would collapse siblings that γ's curated
-        # overrides exist to separate (e.g. two `LISA 2018 …` rows in the
-        # same variant) and silently link consumers to the wrong source cvid.
-        # `source_register_id` was populated by the Registerinformation.csv
-        # import far above; no intermediate step depends on `via_source_id`.
+        # §5.6 lineage edges. Runs *after* populate_variable_slugs so
+        # `variable.slug` is non-NULL on both sides. A2.6: the consumer-side
+        # linker keys on the inline-derived edition period (the shared
+        # cross-register coordinate) + variable slug — the persisted
+        # `register_version.slug` is gone. `source_register_id` was populated by
+        # the Registerinformation.csv import far above; no intermediate step
+        # depends on `via_source_id`.
         #
-        # Skip under `--skip-slugs`: the linker is slug-only and every
-        # `rver.slug` is NULL in that mode, so running would silently
-        # produce zero edges instead of an honest "this build is
-        # incomplete" signal. Run `build-db` without `--skip-slugs` (the
-        # default) to materialize lineage.
+        # Skip under `--skip-slugs`: every `variable.slug` is NULL in that mode,
+        # so running would silently produce zero edges instead of an honest
+        # "this build is incomplete" signal. Run `build-db` without
+        # `--skip-slugs` (the default) to materialize lineage.
         if skip_slugs:
             _progress("Skipping consumer-side binding edges (skip_slugs=True)")
         else:
@@ -4275,6 +4281,24 @@ def build_db(
         )
         cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
         _progress(f"  {cvm_count:,} code×variable mappings")
+
+        # A2.6: drop the build-only register-edition tables before ship (mirrors
+        # the `unika_summary` drop above). `register_version` fed the coalescer's
+        # valid_from/to year fallback and the lineage linkers (`*_replaced_by`,
+        # `link_consumer_side_bindings`), all of which ran above; `population` /
+        # `object_type` are write-only debug tables nothing in the shipped
+        # catalog reads. The FQID grammar no longer has a version segment (§5.2),
+        # so none of these belong in the shipped DB. Drop order is FK-safe:
+        # children (`population`, `object_type` FK `register_version`) first,
+        # then the parent — `PRAGMA foreign_key_check` (below) flags children of
+        # a dropped parent, so leaving them would fail the build.
+        # `variable_instance.regver_id` has NO FK declaration (it's a plain
+        # column dropped wholesale with `variable_instance` in A2.7), so it does
+        # not trip the check.
+        conn.execute("DROP TABLE population")
+        conn.execute("DROP TABLE object_type")
+        conn.execute("DROP TABLE register_version")
+        _progress("Dropped register_version + population + object_type (A2.6).")
 
         # Reference files (optional)
         sql_path = scb_dir / "Tabelldefinitioner.sql"
@@ -4347,8 +4371,10 @@ def build_db(
 
         conn.commit()
 
-        # A2.1: VACUUM reclaims the pages freed by `DROP TABLE unika_summary`
-        # so the shipped DB doesn't carry a fat freelist. `validate.py` flags
+        # A2.1: VACUUM reclaims the pages freed by the build-time-only `DROP
+        # TABLE`s above — `unika_summary` (A2.1) plus `register_version` +
+        # `population` + `object_type` (A2.6) — so the shipped DB doesn't carry
+        # a fat freelist. `validate.py` flags
         # >= 1% freelist as staging-bloat; on the synthetic fixture the drop
         # alone leaves ~2.7%. VACUUM must run outside a transaction — the
         # preceding commit ensures it does. ATTACH-staging was already

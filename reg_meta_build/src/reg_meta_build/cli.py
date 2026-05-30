@@ -402,9 +402,9 @@ def _cmd_seed_slugs(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 "directory for hand-review."
             ),
         )
-    # `seed_provider_toml` reads `register_version.slug` (3.3+), so a stale
-    # pre-3.3 DB would otherwise fall out as a raw `OperationalError: no such
-    # column: rver.slug`. Schema-compat gives the user the right remediation.
+    # Schema-compat (open_db) rejects a stale DB up front, so seed reads run
+    # against the current shape and give the user the right remediation rather
+    # than a raw `OperationalError`.
     conn = open_db(db)
     try:
         written = seed_all(conn, out_dir)
@@ -523,10 +523,8 @@ def _cmd_precheck_slugs(
                 {"provider": p, "source_id": sid, "name": name}
                 for (p, sid, name) in result.missing_variants
             ],
-            "missing_versions": [
-                {"provider": p, "source_id": sid, "name": name}
-                for (p, sid, name) in result.missing_versions
-            ],
+            # A2.6: register_version left the FQID grammar — no version slug
+            # missing/stale/collision arrays in the precheck payload.
             "missing_classifications": list(result.missing_classifications),
             "parse_errors": list(result.parse_errors),
             "stale_registers": [
@@ -535,14 +533,7 @@ def _cmd_precheck_slugs(
             "stale_variants": [
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
             ],
-            "stale_versions": [
-                {"provider": p, "source_id": sid} for (p, sid) in result.stale_versions
-            ],
             "stale_classifications": list(result.stale_classifications),
-            "colliding_versions": [
-                {"provider": p, "source_id": sid, "name": name, "would_be_slug": slug}
-                for (p, sid, name, slug) in result.colliding_versions
-            ],
             "snapshot": snapshot_status,
         },
         duration_ms=duration_ms,
