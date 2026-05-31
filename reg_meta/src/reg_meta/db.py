@@ -129,7 +129,25 @@ from .errors import EXIT_CONFIG, RegMetaError
 #   limitation. A 4.x DB still carries `variable_instance` + a cvid-keyed
 #   `variable_alias` and no `variable_state.classification_id`, so it's rejected
 #   via the MAJOR-version gate (4 != 5) — rebuild with `reg-meta-build build-db`.
-SCHEMA_VERSION = "5.0.0"
+# - 5.1.0 (post-A2.7 value→variable precision fix): re-grains the shipped
+#   `code_variable_map` from `(code_id, register_id, var_id)` to
+#   `(code_id, variable_id)`. An A2.2 triage split makes sibling variables share
+#   one source `var_id`, so the old `(register_id, var_id)` key fanned each code
+#   across EVERY sibling — including ones whose value set excluded it (false
+#   positives in `search --value`; ~2.8M over-attributed `(code, variable)` pairs
+#   on the real corpus). The populating cvid belongs to exactly one sibling,
+#   carried via the coalescer's ground-truth `variable_instance.variable_id`
+#   stamp (#150); `_search_values` now joins `code_variable_map.variable_id` →
+#   `variable` instead of `(register_id, provider_key)`. `register_id`/`var_id`
+#   are DROPped from the table (recoverable through the variable join). The drop
+#   rides the 5.x line by the pre-v1 regenerate-not-migrate policy — the same
+#   exception the A2.1.5 restructure took on 4.x: no in-place upgrade exists to
+#   break, every tester rebuilds from source. A stale pre-5.1.0 DB carries
+#   `cvm.register_id`/`cvm.var_id` but no `variable_id`, so the new
+#   `_search_values` can't query it — the minor gate rejects it (5.0.0 < 5.1.0)
+#   and `reg-meta update` refuses to install a 5.0.0 asset over a working DB
+#   (`incompatible_db_asset`). Rebuild with `reg-meta-build build-db`.
+SCHEMA_VERSION = "5.1.0"
 DB_FILENAME = "reg_meta.db"
 
 

@@ -1426,6 +1426,7 @@ def _write_payload(
                 "label",
                 "register_id",
                 "var_id",
+                "variable_slug",
                 "variable_name",
             ]
         elif types == {"varname"}:

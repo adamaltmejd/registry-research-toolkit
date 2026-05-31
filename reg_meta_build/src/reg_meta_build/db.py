@@ -627,15 +627,23 @@ CREATE INDEX idx_variable_instance_classification ON variable_instance(classific
 CREATE INDEX idx_variable_alias_delivery_column_name ON variable_alias(delivery_column_name);
 CREATE INDEX idx_value_code_code ON value_code(code);
 
--- Pre-aggregated code→variable mapping for search --value. Built from
--- the year-projected value_set_member rows joined through
--- variable_instance.value_set_id, so a code only appears here for
--- (register, var) pairs where it was valid at some cvid year.
+-- Pre-aggregated code→variable mapping for search --value. Built from the
+-- year-projected value_set_member rows joined through
+-- variable_instance.value_set_id, so a code only appears here for the
+-- variables whose value set actually contained it at some cvid year.
+-- VARIABLE-grained (not the source `(register, var_id)`): an A2.2 triage split
+-- makes sibling variables SHARE one `provider_key`, so a `(register, var_id)`
+-- key would fan each code across EVERY sibling — including ones whose own value
+-- set excludes it (over-attribution / false positives in value→variable
+-- search). The populating cvid belongs to exactly ONE sibling, carried via the
+-- coalescer's ground-truth `variable_instance.variable_id` stamp (#150), so the
+-- map attributes each code to its true owning sibling. FK to `variable` (not
+-- dropped before ship); `register_id`/`var_id` are recoverable through that
+-- join, so they're not stored.
 CREATE TABLE code_variable_map (
     code_id INTEGER NOT NULL REFERENCES value_code(code_id),
-    register_id INTEGER NOT NULL,
-    var_id INTEGER NOT NULL,
-    PRIMARY KEY (code_id, register_id, var_id)
+    variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
+    PRIMARY KEY (code_id, variable_id)
 ) WITHOUT ROWID;
 
 -- Curated cross-register / cross-provider equivalence edges (§5.5).
@@ -4355,15 +4363,22 @@ def build_db(
             )
 
         # Populate code_variable_map from year-projected value_set_member rows
-        # joined through variable_instance.value_set_id. A code only appears
-        # for (register, var) pairs where it was valid at some cvid year.
+        # joined through variable_instance.value_set_id. A code only appears for
+        # the variables whose value set contained it at some cvid year.
+        # VARIABLE-grained via the coalescer's `variable_instance.variable_id`
+        # stamp (#150): an A2.2 split makes siblings share `var_id`, so keying on
+        # `(register, var_id)` would over-attribute a code to every sibling; the
+        # cvid's stamped `variable_id` names the one owning sibling. A cvid with
+        # no stamp (raise-on-collision residual) carries NULL — skipped, since it
+        # has no resolved owner to attribute its codes to (and NOT NULL would
+        # reject it anyway).
         _progress("Building code_variable_map...")
         conn.execute(
-            "INSERT INTO code_variable_map (code_id, register_id, var_id) "
-            "SELECT DISTINCT vsm.code_id, vi.register_id, vi.var_id "
+            "INSERT INTO code_variable_map (code_id, variable_id) "
+            "SELECT DISTINCT vsm.code_id, vi.variable_id "
             "FROM variable_instance vi "
             "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "WHERE vi.value_set_id IS NOT NULL"
+            "WHERE vi.value_set_id IS NOT NULL AND vi.variable_id IS NOT NULL"
         )
         cvm_count = conn.execute("SELECT COUNT(*) FROM code_variable_map").fetchone()[0]
         _progress(f"  {cvm_count:,} code×variable mappings")

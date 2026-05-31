@@ -41,7 +41,7 @@
   - `value_code` — deduplicated `(code, label)` pairs (from `Vardemangder.csv`'s `vardekod` / `vardebenamning` source columns); `UNIQUE(code, label)` enforced
   - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted `(code, label)` pairs; identical sets across cvids share one row.
   - `value_set_member` — junction mapping each `value_set` to its codes. SCB validity windows (`VardemangderValidDates.csv`) are applied at build time, not stored — see DESIGN.md § "Value sets are year-projected at build time".
-  - `code_variable_map` — pre-aggregated code→(register, variable) mapping for efficient value search
+  - `code_variable_map` — pre-aggregated code→variable (`variable_id`) mapping for efficient value search; variable_id-grained so a code maps only to the split sibling(s) whose value set contains it (not every variable sharing a `provider_key`)
   - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
   - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions
   - `timeseries_event` (from `Timeseries.csv`) — structural/semantic change annotations
