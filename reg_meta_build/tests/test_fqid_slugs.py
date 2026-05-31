@@ -541,14 +541,43 @@ class TestPrecheckSlugs:
         conn.commit()
         populate_variable_slugs(conn, d)
         result = precheck_slugs(conn, d)
-        by_var = {row[2]: row for row in result.drifting_variables}
-        assert 65 in by_var
-        assert 44 not in by_var  # constant column is not a drifter
-        prov, reg_id, var_id, slug, name, cols = by_var[65]
-        assert (prov, reg_id, var_id) == ("scb", 1, 65)
+        # provider_key stays raw TEXT (never int-coerced — a non-numeric SOS key
+        # must not crash this advisory); for SCB it's the numeric var_id as text.
+        by_pk = {row[2]: row for row in result.drifting_variables}
+        assert "65" in by_pk
+        assert "44" not in by_pk  # constant column is not a drifter
+        prov, reg_id, provider_key, slug, name, cols = by_pk["65"]
+        assert (prov, reg_id, provider_key) == ("scb", 1, "65")
         assert slug == "utbildningsinriktning"
         assert name == "Utbildningsinriktning"
         assert cols == ("SunInr", "sun2000inr1", "sun2020inr1")
+
+    def test_drifting_advisory_tolerates_nonnumeric_provider_key(self, tmp_path: Path):
+        # `variable.provider_key` is TEXT — SOS ships a merged variable name, not
+        # a numeric var_id. The advisory must report it raw, not `int()` it (that
+        # would crash the otherwise non-fatal precheck on a non-SCB provider).
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, 'BefolkningPerKommun', 'Befolkning')"
+        ).lastrowid
+        for yr, col in (("2000", "BefKom"), ("2010", "BefKommun")):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        conn.commit()
+        populate_variable_slugs(conn, d)
+        result = precheck_slugs(conn, d)  # must not raise on the non-numeric key
+        hit = [r for r in result.drifting_variables if r[2] == "BefolkningPerKommun"]
+        assert len(hit) == 1
+        assert hit[0][3] == "befolkning"  # name basis (cols collide-free, drift)
 
     def test_stale_register_id_reported(self, tmp_path: Path):
         # TOML entry for register 999 has no live row; `populate_slugs` would

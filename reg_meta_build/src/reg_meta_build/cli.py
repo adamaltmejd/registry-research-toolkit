@@ -541,12 +541,12 @@ def _cmd_precheck_slugs(
                 {
                     "provider": prov,
                     "register_id": reg_id,
-                    "var_id": var_id,
+                    "provider_key": provider_key,
                     "slug": slug,
                     "name": name,
                     "columns": list(columns),
                 }
-                for (prov, reg_id, var_id, slug, name, columns) in (
+                for (prov, reg_id, provider_key, slug, name, columns) in (
                     result.drifting_variables
                 )
             ],

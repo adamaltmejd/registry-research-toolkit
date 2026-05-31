@@ -2088,8 +2088,10 @@ class PrecheckResult:
     # Advisory (§5.3/#143): variables whose delivery column drifts across
     # editions, auto-slugged from a stable basis (name / earliest column). A
     # pre-v1 curation-review aid, NOT a gate — never feeds `ok`/exit. Each row:
-    # (provider, register_id, var_id, slug, name, columns-in-valid_from-order).
-    drifting_variables: tuple[tuple[str, int, int, str, str, tuple[str, ...]], ...] = ()
+    # (provider, register_id, provider_key, slug, name, cols-in-valid_from-order).
+    # `provider_key` stays TEXT (SCB `str(var_id)`, SOS a merged name) — never
+    # coerced to int, so a non-numeric SOS key can't crash the advisory.
+    drifting_variables: tuple[tuple[str, int, str, str, str, tuple[str, ...]], ...] = ()
 
     @property
     def ok(self) -> bool:
@@ -2198,7 +2200,7 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
 
 def _drifting_variables(
     conn: sqlite3.Connection,
-) -> tuple[tuple[str, int, int, str, str, tuple[str, ...]], ...]:
+) -> tuple[tuple[str, int, str, str, str, tuple[str, ...]], ...]:
     """Advisory list (§5.3/#143): variables whose ``delivery_column_name`` is
     NOT constant across their ``variable_state`` rows.
 
@@ -2208,9 +2210,12 @@ def _drifting_variables(
     the auto-pick is still off. Drift = the same ``COUNT(DISTINCT) > 1`` signal
     the slug derivation uses, so the two never disagree on what "drifts".
 
-    Each row is ``(provider, register_id, var_id, slug, name, columns)`` — the
-    distinct columns in ``valid_from`` order, so the curator reads the edition
-    drift directly (``('SunInr', 'sun2000inr1', 'sun2020inr1')``).
+    Each row is ``(provider, register_id, provider_key, slug, name, columns)`` —
+    the distinct columns in ``valid_from`` order, so the curator reads the
+    edition drift directly (``('SunInr', 'sun2000inr1', 'sun2020inr1')``).
+    ``provider_key`` stays the raw ``TEXT`` value (SCB ships ``str(var_id)``, SOS
+    a merged variable name) — coercing it to ``int`` would crash this advisory on
+    a non-numeric SOS key, and the list is supposed to never gate the command.
     """
     _DRIFT = (
         "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
@@ -2237,7 +2242,7 @@ def _drifting_variables(
     ).fetchall():
         cols_by_vid[vid].append(col)
     return tuple(
-        (prov, reg_id, int(pk), slug or "", name or "", tuple(cols_by_vid[vid]))
+        (prov, reg_id, pk, slug or "", name or "", tuple(cols_by_vid[vid]))
         for vid, prov, reg_id, pk, slug, name in ident
     )
 
