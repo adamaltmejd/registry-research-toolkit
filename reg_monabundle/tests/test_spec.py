@@ -258,6 +258,27 @@ def test_panel_level_time_key_rejected_with_step_10b_message():
         parse_project_data(payload)
 
 
+def test_bare_string_panel_member_without_time_key_raises_clean_error():
+    # §6.4 bare-string member shorthand now passes reg_schema's structural
+    # validator (effective-key *presence* is reg_meta-backed, §6.8.1), so it
+    # reaches _build_panel_member. The step-4 runtime must reject it with the
+    # actionable "missing time_key" ValueError, not an AttributeError on a str
+    # (Codex P2 on PR #155).
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "a.csv",
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ],
+        panels=[{"panel_id": "P1", "entity_key": "LopNr", "members": ["a.csv"]}],
+    )
+    with pytest.raises(ValueError, match="missing time_key"):
+        parse_project_data(payload)
+
+
 def test_member_level_entity_key_override_rejected():
     payload = make_project_data(
         sources=[

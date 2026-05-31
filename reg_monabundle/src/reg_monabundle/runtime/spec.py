@@ -297,8 +297,15 @@ def _reject_literal_period(
 
 
 def _build_panel_member(
-    data: Mapping[str, Any], *, panel_id: str, idx: int
+    member: Mapping[str, Any] | str, *, panel_id: str, idx: int
 ) -> PanelMember:
+    # §6.4 bare-string shorthand: a string member names the source and relies
+    # on panel-level / variant-inherited key defaults. reg_schema's structural
+    # layer now accepts it (effective-key *presence* is a reg_meta concern,
+    # §6.8.1), so it can reach here; the step-4 runtime doesn't resolve
+    # inheritance, so normalize to the object form and let the time_key check
+    # below raise the actionable ValueError — not an AttributeError on a str.
+    data: Mapping[str, Any] = {"source": member} if isinstance(member, str) else member
     entity_key = data.get("entity_key")
     time_key = data.get("time_key")
     _reject_composite(panel_id, idx, "entity_key", entity_key)
