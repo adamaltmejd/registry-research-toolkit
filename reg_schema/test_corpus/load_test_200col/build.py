@@ -1,4 +1,4 @@
-"""Generate the 200-column load-test ``input.json`` fixture.
+"""Generate the 200-binding load-test ``input.json`` fixture.
 
 Writes ``input.json`` + ``expected_ValidationResult.json`` to this
 directory — ``input.json`` carries a ``project_data.json``-shaped
@@ -6,7 +6,7 @@ payload, but the filename follows the corpus harness contract (see
 ``reg_schema/test_corpus/README.md``).
 
 A realistic-shape SCB project: LISA + LOUISE + RTB across a handful of
-years, ~25 columns per source, a panel linking the LISA years, and a
+years, ~25 bindings per source, a panel linking the LISA years, and a
 populated ``reg_monabundle.column_options`` block with ``suppress_k``
 overrides. Used by two consumers:
 
@@ -15,14 +15,15 @@ overrides. Used by two consumers:
   ``.py`` stays under ``REFACTOR_SPEC.md`` §12's 1 MB v1 cap. The size
   budget gate fires only on real regressions; today's bundle on this
   fixture is well under cap (the v1 ceiling is forward-looking, not a
-  tight bound on current shape).
+  tight bound on current shape). Its ``LOAD_FIXTURE_EXPECTED_COLUMNS``
+  constant pins the total binding count emitted here.
 - The structural corpus harness in
   ``reg_schema/tests/test_corpus.py`` picks it up automatically (the
   case directory carries ``input.json`` + ``expected_ValidationResult.json``)
   and pins that the fixture stays structurally valid.
 
 Re-run with ``uv run python reg_schema/test_corpus/load_test_200col/build.py``
-after editing the column lists; commit the regenerated JSON.
+after editing the binding lists; commit the regenerated JSON.
 """
 
 from __future__ import annotations
@@ -32,31 +33,34 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 
-# 8 source register-versions × 25 columns = 200 columns total. Mirrors
-# the shape of a real-MONA project: a few LISA yearly extracts, a couple
-# of LOUISE years, two RTB siblings — broadly the kit a labour-market
-# researcher would request.
-SOURCES: tuple[tuple[str, str], ...] = (
-    ("lisa_2015", "scb/lisa/individer-15plus/2015"),
-    ("lisa_2016", "scb/lisa/individer-15plus/2016"),
-    ("lisa_2017", "scb/lisa/individer-15plus/2017"),
-    ("lisa_2018", "scb/lisa/individer-15plus/2018"),
-    ("louise_2017", "scb/louise/_default/2017"),
-    ("louise_2018", "scb/louise/_default/2018"),
-    ("rtb_2018", "scb/rtb/_default/2018"),
-    ("rtb_2019", "scb/rtb/_default/2019"),
+# 8 source (register_variant, period) coordinates × 25 bindings = 200
+# bindings total. Mirrors the shape of a real-MONA project: a few LISA
+# yearly extracts, a couple of LOUISE years, two RTB siblings — broadly
+# the kit a labour-market researcher would request. Under Model A the
+# period lives in its own field, not as a 4th FQID segment (§6.2).
+SOURCES: tuple[tuple[str, str, int], ...] = (
+    ("lisa_2015", "scb/lisa/individer-15plus", 2015),
+    ("lisa_2016", "scb/lisa/individer-15plus", 2016),
+    ("lisa_2017", "scb/lisa/individer-15plus", 2017),
+    ("lisa_2018", "scb/lisa/individer-15plus", 2018),
+    ("louise_2017", "scb/louise/_default", 2017),
+    ("louise_2018", "scb/louise/_default", 2018),
+    ("rtb_2018", "scb/rtb/_default", 2018),
+    ("rtb_2019", "scb/rtb/_default", 2019),
 )
 
-# ~25 cols per source: 1 id, ~5 categorical-with-classification, ~10
+# ~25 bindings per source: 1 id, ~5 categorical-with-classification, ~10
 # numeric, ~3 date, ~4 categorical-ad-hoc, ~2 opaque. The mix exercises
-# every column-type code path in the validator and the bundle slicer.
-COL_TEMPLATES: tuple[tuple[str, str, dict[str, str | None]], ...] = (
+# every binding-type code path in the validator and the bundle slicer.
+# ``value_set`` classification FQIDs are 2-segment, version baked into
+# the slug (§5.2): ``class/sun2020``, not the old ``class/sun/2020``.
+BINDING_TEMPLATES: tuple[tuple[str, str, dict[str, str | None]], ...] = (
     ("lopnr", "id", {"id_subtype": "integer"}),
-    ("kon", "categorical", {"value_set": "class/sun/2020"}),
-    ("sun2000inr", "categorical", {"value_set": "class/sun/2000"}),
-    ("ssyk2012", "categorical", {"value_set": "class/ssyk/2012"}),
-    ("ast_sni2007", "categorical", {"value_set": "class/sni/2007"}),
-    ("kommun", "categorical", {"value_set": "class/kommun/2020"}),
+    ("kon", "categorical", {"value_set": "class/sun2020"}),
+    ("sun2000inr", "categorical", {"value_set": "class/sun2000"}),
+    ("ssyk2012", "categorical", {"value_set": "class/ssyk2012"}),
+    ("ast_sni2007", "categorical", {"value_set": "class/sni2007"}),
+    ("kommun", "categorical", {"value_set": "class/kommun2020"}),
     ("dispink04", "numeric", {"numeric_subtype": "double"}),
     ("dispinkfam04", "numeric", {"numeric_subtype": "double"}),
     ("kontaktink", "numeric", {"numeric_subtype": "double"}),
@@ -77,7 +81,18 @@ COL_TEMPLATES: tuple[tuple[str, str, dict[str, str | None]], ...] = (
     ("anstforh", "opaque", {}),
     ("yrkesstatus", "opaque", {}),
 )
-assert len(COL_TEMPLATES) == 25, "expected 25 column templates per source"
+assert len(BINDING_TEMPLATES) == 25, "expected 25 binding templates per source"
+
+
+def _provider_register(register_variant: str) -> str:
+    """The ``<provider>/<register>`` prefix that scopes a source's bindings.
+
+    A binding FQID is ``<provider>/<register>/<slug>`` (3 segments, §6.3);
+    its first 2 segments must equal the source ``register_variant`` prefix.
+    The variant segment is dropped — it lives once on the Source (§6.2).
+    """
+    provider, register, _variant = register_variant.split("/")
+    return f"{provider}/{register}"
 
 
 def _display_name(slug: str) -> str:
@@ -94,20 +109,26 @@ def _display_name(slug: str) -> str:
 
 def build() -> dict[str, object]:
     sources_out: list[dict[str, object]] = []
-    for source_name, rv in SOURCES:
-        cols: list[dict[str, object]] = []
-        for slug, ctype, extras in COL_TEMPLATES:
+    for source_name, register_variant, period in SOURCES:
+        prefix = _provider_register(register_variant)
+        bindings: list[dict[str, object]] = []
+        for slug, btype, extras in BINDING_TEMPLATES:
             entry: dict[str, object] = {
-                "name": f"{rv}/{slug}",
-                "type": ctype,
+                "variable": f"{prefix}/{slug}",
+                "type": btype,
                 "display_name": _display_name(slug),
             }
             for k, v in extras.items():
                 if v is not None:
                     entry[k] = v
-            cols.append(entry)
+            bindings.append(entry)
         sources_out.append(
-            {"name": source_name, "register_version": rv, "columns": cols}
+            {
+                "name": source_name,
+                "register_variant": register_variant,
+                "period": period,
+                "bindings": bindings,
+            }
         )
 
     # One panel linking the LISA years by person-id. ``entity_key``
@@ -125,19 +146,20 @@ def build() -> dict[str, object]:
         ],
     }
 
-    # ~15 ``suppress_k`` overrides — categorical FQIDs where the
+    # ~15 ``suppress_k`` overrides — categorical bindings where the
     # researcher wants a tighter k-anonymity floor than the global
     # default. Spread across registers so the block exercises lookup
-    # paths.
+    # paths. Block keys are 3-segment binding FQIDs (§6.1).
     column_options: dict[str, dict[str, int]] = {}
-    for source_name, rv in SOURCES:
+    for _source_name, register_variant, _period in SOURCES:
+        prefix = _provider_register(register_variant)
         for slug in ("kommun", "ssyk2012", "ast_sni2007"):
-            column_options[f"{rv}/{slug}"] = {"suppress_k": 25}
+            column_options[f"{prefix}/{slug}"] = {"suppress_k": 25}
 
     return {
-        "schema_version": "1.0.0",
+        "schema_version": "2.0.0",
         "steward": "global",
-        "reg_meta_version": "reg_meta/v0.12.0",
+        "reg_meta_version": "reg_meta/v1.0.0",
         "name": "load_test_200col",
         "sources": sources_out,
         "panels": [panel],
@@ -147,8 +169,8 @@ def build() -> dict[str, object]:
 
 def main() -> None:
     payload = build()
-    n_cols = sum(len(s["columns"]) for s in payload["sources"])
-    print(f"sources: {len(payload['sources'])}, columns: {n_cols}")
+    n_bindings = sum(len(s["bindings"]) for s in payload["sources"])
+    print(f"sources: {len(payload['sources'])}, bindings: {n_bindings}")
     (HERE / "input.json").write_text(
         json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
     )

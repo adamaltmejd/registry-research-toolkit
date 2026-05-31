@@ -5,7 +5,7 @@ See ``DESIGN.md`` for scope and dependency direction; ``REFACTOR_SPEC.md``
 """
 
 from .project_data import (
-    Column,
+    Binding,
     ColumnType,
     EntityKey,
     IdSubtype,
@@ -13,17 +13,20 @@ from .project_data import (
     NumericSubtype,
     Panel,
     PanelMember,
+    Period,
+    PeriodRange,
     ProjectData,
     Source,
     Steward,
     TimeKey,
     TimePoint,
+    TimeRange,
 )
 from .structural import validate_structural
 from .validation import IssueLevel, ValidationIssue, ValidationResult
 
 __all__ = [
-    "Column",
+    "Binding",
     "ColumnType",
     "EntityKey",
     "IdSubtype",
@@ -32,11 +35,14 @@ __all__ = [
     "NumericSubtype",
     "Panel",
     "PanelMember",
+    "Period",
+    "PeriodRange",
     "ProjectData",
     "Source",
     "Steward",
     "TimeKey",
     "TimePoint",
+    "TimeRange",
     "ValidationIssue",
     "ValidationResult",
     "validate_structural",

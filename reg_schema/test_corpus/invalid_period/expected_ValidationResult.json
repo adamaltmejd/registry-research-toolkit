@@ -1,0 +1,10 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_period",
+      "path": "/sources/0/period",
+      "message": "period string 'nope' must match a period grammar form (YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, YYYY-Q[1-4], YYYY-H[12]) or the snapshot sentinel '_default'"
+    }
+  ]
+}

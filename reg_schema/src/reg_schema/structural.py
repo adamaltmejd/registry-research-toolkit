@@ -60,10 +60,11 @@ _SUBTYPE_FIELDS: dict[str, str] = {
 
 # Tight per-segment FQID character class: alphanumerics, hyphen,
 # underscore. Wide enough to cover kebab-case slugs (``individer-15plus``),
-# the ``_default`` reserved slug, and derived periods (``2018``,
-# ``2018-01``, ``HT2020``, ``2018-Q1``). Period-vs-slug discrimination
-# is reg_meta's job; this layer only checks the segment is non-empty
-# and free of stray characters.
+# the ``_default`` reserved slug, and the version-baked classification
+# slugs (``sun2020``). Under Model A the period is no longer an FQID
+# segment (§6.2) — it is the ``Source.period`` field, checked separately by
+# ``_check_period``. This layer only checks a segment is non-empty and free
+# of stray characters (the ``@`` in a binding leaf is split off first).
 _FQID_TOKEN: re.Pattern[str] = re.compile(r"^[A-Za-z0-9_-]+$")
 
 
@@ -169,25 +170,149 @@ def _segments_well_formed(segments: list[str]) -> bool:
     return all(bool(_FQID_TOKEN.match(s)) for s in segments)
 
 
-def _is_register_version_fqid(value: object) -> bool:
+def _is_register_variant_coord(value: object) -> bool:
+    """A 3-part variant coordinate ``<provider>/<register>/<variant>`` (§5.2).
+
+    Not an FQID *kind* (the variant is not addressable as an FQID), but the
+    same 3-part grammar. The structural layer only checks shape; resolution
+    to a real ``variant`` row is reg_meta's job (§6.8.3).
+    """
     if not isinstance(value, str):
         return False
     segs = value.split("/")
-    return len(segs) == 4 and segs[0] != "class" and _segments_well_formed(segs)
+    return len(segs) == 3 and segs[0] != "class" and _segments_well_formed(segs)
+
+
+def _binding_leaf_parts(leaf: str) -> list[str] | None:
+    """Split a binding-FQID leaf ``slug[@version]`` into its tokens.
+
+    Returns ``[slug]`` or ``[slug, version]``, or ``None`` when the leaf is
+    malformed (empty slug, empty version, or a stray second ``@``). The
+    ``@`` is split off *before* the per-segment regex so it never reaches
+    the slug grammar (§6.8.1 / §5.2) — ``_FQID_TOKEN`` would reject the ``@``.
+    """
+    if "@" not in leaf:
+        return [leaf] if leaf else None
+    slug, _, version = leaf.partition("@")
+    if not slug or not version or "@" in version:
+        return None
+    return [slug, version]
+
+
+def _parse_binding_fqid(value: object) -> list[str] | None:
+    """Parse a binding FQID into ``[provider, register, slug(, version)]``.
+
+    3-segment ``<provider>/<register>/<slug>`` with an optional ``@<version>``
+    pin on the leaf (§5.2). Returns the parsed parts (length 3, or 4 when a
+    version is pinned), else ``None``. Callers parse once and reuse the parts
+    for the prefix and version checks instead of re-splitting the FQID.
+    """
+    if not isinstance(value, str):
+        return None
+    segs = value.split("/")
+    if len(segs) != 3 or segs[0] == "class":
+        return None
+    leaf_parts = _binding_leaf_parts(segs[2])
+    if leaf_parts is None:
+        return None
+    parts = [segs[0], segs[1], *leaf_parts]
+    return parts if _segments_well_formed(parts) else None
 
 
 def _is_binding_fqid(value: object) -> bool:
-    if not isinstance(value, str):
-        return False
-    segs = value.split("/")
-    return len(segs) == 5 and segs[0] != "class" and _segments_well_formed(segs)
+    return _parse_binding_fqid(value) is not None
 
 
 def _is_classification_fqid(value: object) -> bool:
     if not isinstance(value, str):
         return False
     segs = value.split("/")
-    return len(segs) == 3 and segs[0] == "class" and _segments_well_formed(segs)
+    return len(segs) == 2 and segs[0] == "class" and _segments_well_formed(segs)
+
+
+# --- Period grammar (§6.2) ----------------------------------------------
+
+# Period-token grammar: bare year, year-month, full date, Swedish terms
+# (HT/VT), quarters, half-years. The bounds (year 1900-2099, month 01-12,
+# day 01-31) mirror the canonical grammar in ``reg_meta.fqid._PERIOD_PATTERNS``.
+# reg_schema can't import reg_meta (one-way dep + MONA amalgamation; see
+# DESIGN.md), so the grammar is duplicated here — keep the two in sync: a looser
+# copy would let a spec pass this structural gate yet fail reg_meta's period
+# resolution. The snapshot sentinel ``_default`` is matched separately (it is
+# not a token form).
+_YEAR = r"(?:19|20)\d{2}"
+_MONTH = r"(?:0[1-9]|1[0-2])"
+_DAY = r"(?:0[1-9]|[12]\d|3[01])"
+_PERIOD_TOKEN: re.Pattern[str] = re.compile(
+    rf"^(?:{_YEAR}(?:-{_MONTH}(?:-{_DAY})?|-Q[1-4]|-H[12])?|[HV]T{_YEAR})$"
+)
+
+
+def _is_int_literal(value: object) -> bool:
+    # ``bool`` is a subclass of ``int`` in Python; the period grammar
+    # never accepts True/False as a literal year, so filter it out.
+    return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _is_period_endpoint(value: object) -> bool:
+    """A period int or period-token string (range endpoints; no ``_default``)."""
+    return _is_int_literal(value) or (
+        isinstance(value, str) and bool(_PERIOD_TOKEN.match(value))
+    )
+
+
+def _is_period_range_obj(value: object) -> bool:
+    """A bare ``{"from": ..., "to": ...}`` range with period-token endpoints (§6.2).
+
+    Single definition of the range shape, shared by ``Source.period``
+    (``_check_period``) and the ``TimeKey`` ``{"range": ...}`` wrapper
+    (``_is_time_range_obj``) — mirroring the Pydantic side, where one
+    ``PeriodRange`` model backs both ``Source.period`` and ``TimeRange.range``.
+    """
+    return (
+        isinstance(value, Mapping)
+        and set(value.keys()) == {"from", "to"}
+        and _is_period_endpoint(value["from"])
+        and _is_period_endpoint(value["to"])
+    )
+
+
+def _check_period(period: object, base: str, issues: list[ValidationIssue]) -> None:
+    """Validate ``Source.period`` (§6.2): int / period-token / range / sentinel."""
+    path = f"{base}/period"
+    if _is_period_endpoint(period) or period == "_default":
+        return
+    if isinstance(period, str):
+        issues.append(
+            _error(
+                "invalid_period",
+                path,
+                f"period string {period!r} must match a period grammar form "
+                "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, YYYY-Q[1-4], "
+                "YYYY-H[12]) or the snapshot sentinel '_default'",
+            )
+        )
+        return
+    if isinstance(period, Mapping):
+        if _is_period_range_obj(period):
+            return
+        issues.append(
+            _error(
+                "invalid_period",
+                path,
+                "period object must be {'from': ..., 'to': ...} with int or "
+                "period-token endpoints",
+            )
+        )
+        return
+    issues.append(
+        _error(
+            "invalid_period",
+            path,
+            "period must be an int, a period-token string, or a {'from','to'} "
+            "range object",
+        )
+    )
 
 
 # --- Top-level ----------------------------------------------------------
@@ -324,49 +449,55 @@ def _check_source(
         else:
             seen_names[name] = index
 
-    rv_segments: list[str] | None = None
+    # The variant coordinate's first 2 segments (provider/register) scope
+    # every binding's FQID prefix (§6.3). The variant segment itself is NOT
+    # repeated on bindings, so only the 2-seg prefix is the cross-field key.
+    rv_prefix: list[str] | None = None
     if _present_and_not_null(
-        source, "register_version", base, "source 'register_version'", issues
+        source, "register_variant", base, "source 'register_variant'", issues
     ):
-        register_version = source["register_version"]
-        if not isinstance(register_version, str):
+        register_variant = source["register_variant"]
+        if not isinstance(register_variant, str):
             issues.append(
                 _error(
                     "invalid_field_type",
-                    f"{base}/register_version",
-                    "source 'register_version' must be a string",
+                    f"{base}/register_variant",
+                    "source 'register_variant' must be a string",
                 )
             )
-        elif not _is_register_version_fqid(register_version):
+        elif not _is_register_variant_coord(register_variant):
             issues.append(
                 _error(
                     "invalid_fqid",
-                    f"{base}/register_version",
-                    "register_version must be a 4-segment FQID with kebab-case "
-                    f"segments; got {register_version!r}",
+                    f"{base}/register_variant",
+                    "register_variant must be a 3-part variant coordinate "
+                    f"<provider>/<register>/<variant>; got {register_variant!r}",
                 )
             )
         else:
-            rv_segments = register_version.split("/")
+            rv_prefix = register_variant.split("/")[:2]
 
-    if not _present_and_not_null(source, "columns", base, "source 'columns'", issues):
+    if _present_and_not_null(source, "period", base, "source 'period'", issues):
+        _check_period(source["period"], base, issues)
+
+    if not _present_and_not_null(source, "bindings", base, "source 'bindings'", issues):
         return
-    columns = source["columns"]
-    if not isinstance(columns, list):
+    bindings = source["bindings"]
+    if not isinstance(bindings, list):
         issues.append(
             _error(
                 "invalid_field_type",
-                f"{base}/columns",
-                "source 'columns' must be an array",
+                f"{base}/bindings",
+                "source 'bindings' must be an array",
             )
         )
         return
-    if not columns:
+    if not bindings:
         issues.append(
             _error(
-                "empty_columns",
-                f"{base}/columns",
-                "source must have at least one column",
+                "empty_bindings",
+                f"{base}/bindings",
+                "source must have at least one binding",
             )
         )
         return
@@ -376,74 +507,80 @@ def _check_source(
     # explicit + one resolving to the same reg_meta default — needs
     # reg_meta and lives in §6.8.3.
     seen_display_names: dict[str, str] = {}
-    for j, col in enumerate(columns):
-        cbase = f"{base}/columns/{j}"
-        if not isinstance(col, Mapping):
+    for j, binding in enumerate(bindings):
+        bbase = f"{base}/bindings/{j}"
+        if not isinstance(binding, Mapping):
             issues.append(
-                _error("invalid_field_type", cbase, "column must be an object")
+                _error("invalid_field_type", bbase, "binding must be an object")
             )
             continue
-        _check_column(col, cbase, rv_segments, issues)
-        dn = col.get("display_name")
+        _check_binding(binding, bbase, rv_prefix, issues)
+        dn = binding.get("display_name")
         if isinstance(dn, str):
             prior = seen_display_names.get(dn)
             if prior is None:
-                seen_display_names[dn] = f"{cbase}/display_name"
+                seen_display_names[dn] = f"{bbase}/display_name"
             else:
                 issues.append(
                     _error(
                         "display_name_collision",
-                        f"{cbase}/display_name",
+                        f"{bbase}/display_name",
                         f"display_name {dn!r} duplicates the one at {prior}",
                     )
                 )
 
 
-def _check_column(
-    column: Mapping[str, object],
+def _check_binding(
+    binding: Mapping[str, object],
     base: str,
-    rv_segments: list[str] | None,
+    rv_prefix: list[str] | None,
     issues: list[ValidationIssue],
 ) -> None:
-    if _present_and_not_null(column, "name", base, "column 'name'", issues):
-        name = column["name"]
-        if not isinstance(name, str):
+    # Parsed binding FQID parts ([provider, register, slug(, version)]) once the
+    # FQID is well-formed — reused by the prefix and value-set-version checks.
+    variable_parts: list[str] | None = None
+    if _present_and_not_null(binding, "variable", base, "binding 'variable'", issues):
+        variable = binding["variable"]
+        if not isinstance(variable, str):
             issues.append(
                 _error(
                     "invalid_field_type",
-                    f"{base}/name",
-                    "column 'name' must be a string",
+                    f"{base}/variable",
+                    "binding 'variable' must be a string",
                 )
             )
-        elif not _is_binding_fqid(name):
-            issues.append(
-                _error(
-                    "invalid_fqid",
-                    f"{base}/name",
-                    f"column 'name' must be a 5-segment binding FQID; got {name!r}",
-                )
-            )
-        elif rv_segments is not None:
-            col_segs = name.split("/")
-            if col_segs[:4] != rv_segments:
+        else:
+            parsed = _parse_binding_fqid(variable)
+            if parsed is None:
                 issues.append(
                     _error(
-                        "fqid_register_version_mismatch",
-                        f"{base}/name",
-                        f"column FQID's first 4 segments {col_segs[:4]} must equal "
-                        f"source register_version {rv_segments}",
+                        "invalid_fqid",
+                        f"{base}/variable",
+                        "binding 'variable' must be a 3-segment binding FQID "
+                        f"<provider>/<register>/<slug>[@version]; got {variable!r}",
                     )
                 )
+            else:
+                variable_parts = parsed
+                if rv_prefix is not None and parsed[:2] != rv_prefix:
+                    issues.append(
+                        _error(
+                            "fqid_register_variant_mismatch",
+                            f"{base}/variable",
+                            f"binding FQID prefix {parsed[:2]} must equal the "
+                            f"source register_variant prefix {rv_prefix}",
+                        )
+                    )
 
     typ_valid: str | None = None
-    if _present_and_not_null(column, "type", base, "column 'type'", issues):
-        typ = column["type"]
+    if _present_and_not_null(binding, "type", base, "binding 'type'", issues):
+        typ = binding["type"]
         if not isinstance(typ, str):
             issues.append(
                 _error(
                     "invalid_field_type",
                     f"{base}/type",
-                    "column 'type' must be a string",
+                    "binding 'type' must be a string",
                 )
             )
         elif typ not in _COLUMN_TYPES:
@@ -451,24 +588,24 @@ def _check_column(
                 _error(
                     "invalid_enum_value",
                     f"{base}/type",
-                    f"column type must be one of {sorted(_COLUMN_TYPES)}; got {typ!r}",
+                    f"binding type must be one of {sorted(_COLUMN_TYPES)}; got {typ!r}",
                 )
             )
         else:
             typ_valid = typ
 
-    display_name = column.get("display_name")
+    display_name = binding.get("display_name")
     if display_name is not None and not isinstance(display_name, str):
         issues.append(
             _error(
                 "invalid_field_type",
                 f"{base}/display_name",
-                "column 'display_name' must be a string",
+                "binding 'display_name' must be a string",
             )
         )
 
     for field, required_type in _SUBTYPE_FIELDS.items():
-        value = column.get(field)
+        value = binding.get(field)
         if value is None:
             continue
         if typ_valid is not None and typ_valid != required_type:
@@ -477,7 +614,7 @@ def _check_column(
                     "subtype_on_wrong_type",
                     f"{base}/{field}",
                     f"{field!r} is only valid on type={required_type!r}; "
-                    f"column type is {typ_valid!r}",
+                    f"binding type is {typ_valid!r}",
                 )
             )
             continue
@@ -508,7 +645,7 @@ def _check_column(
                 )
             )
 
-    value_set = column.get("value_set")
+    value_set = binding.get("value_set")
     if value_set is not None:
         if not isinstance(value_set, str):
             issues.append(
@@ -523,19 +660,30 @@ def _check_column(
                 _error(
                     "invalid_fqid",
                     f"{base}/value_set",
-                    "value_set must be a 3-segment classification FQID with "
-                    f"leading 'class/'; got {value_set!r}",
+                    "value_set must be a 2-segment classification FQID "
+                    f"class/<slug>; got {value_set!r}",
                 )
             )
+        elif variable_parts is not None:
+            # §6.8.1: when a binding pins a value-set version via the FQID's
+            # `@<version>` suffix AND names a `value_set`, they must agree —
+            # the classification slug is version-baked (§5.2), so the `@`
+            # version equals the `class/<slug>` leaf. The version is the 4th
+            # parsed part when present.
+            version = variable_parts[3] if len(variable_parts) == 4 else None
+            class_slug = value_set.split("/")[1]
+            if version is not None and version != class_slug:
+                issues.append(
+                    _error(
+                        "binding_value_set_version_mismatch",
+                        f"{base}/value_set",
+                        f"binding pins @{version} but value_set names "
+                        f"class/{class_slug}; they must name the same version",
+                    )
+                )
 
 
 # --- Panel helpers ------------------------------------------------------
-
-
-def _is_int_literal(value: object) -> bool:
-    # ``bool`` is a subclass of ``int`` in Python; the period grammar
-    # never accepts True/False as a literal year, so filter it out.
-    return isinstance(value, int) and not isinstance(value, bool)
 
 
 def _is_literal_period_obj(value: object) -> bool:
@@ -544,7 +692,24 @@ def _is_literal_period_obj(value: object) -> bool:
     if set(value.keys()) != {"period"}:
         return False
     period = value["period"]
+    # The object form's job is to disambiguate a literal period from a bare
+    # column ref; unlike Source.period, the string's period-token validity is
+    # NOT grammar-checked here — that is a reg_meta semantic concern (§6.8.3).
     return _is_int_literal(period) or isinstance(period, str)
+
+
+def _is_time_range_obj(value: object) -> bool:
+    """The ``{"range": {"from", "to"}}`` TimePoint form (§6.4).
+
+    Distinct from a bare ``{"from", "to"}`` (which is legal only as a
+    ``Source.period``): the ``range`` wrapper keeps the ``TimePoint`` union
+    unambiguous. The inner object reuses ``_is_period_range_obj``.
+    """
+    return (
+        isinstance(value, Mapping)
+        and set(value.keys()) == {"range"}
+        and _is_period_range_obj(value["range"])
+    )
 
 
 def _time_point_kind(value: object) -> str | None:
@@ -553,7 +718,7 @@ def _time_point_kind(value: object) -> str | None:
         return "literal"
     if isinstance(value, str):
         return "ref"
-    if _is_literal_period_obj(value):
+    if _is_literal_period_obj(value) or _is_time_range_obj(value):
         return "literal"
     return None
 
@@ -568,12 +733,16 @@ def _canonicalize_time_literal(value: object) -> object | None:
     the inner integer/string value, tagged ``"scalar"``. The two forms
     encode the same period — keeping them distinct here would let a
     user trip the uniqueness rule by writing the same year two
-    different ways.
+    different ways. A ``{"range": ...}`` literal canonicalizes to its
+    endpoints so two identical ranges collide.
     """
     if _is_int_literal(value):
         return ("scalar", value)
     if _is_literal_period_obj(value):
         return ("scalar", value["period"])  # type: ignore[index]
+    if _is_time_range_obj(value):
+        inner = value["range"]  # type: ignore[index]
+        return ("scalar", ("range", inner["from"], inner["to"]))
     if isinstance(value, list):
         canon: list[object] = []
         for item in value:
@@ -588,7 +757,7 @@ def _canonicalize_time_literal(value: object) -> object | None:
 def _build_source_index(sources: object) -> dict[str, dict[str, Any]]:
     """Index sources by name with their explicit display_names.
 
-    ``all_have_display`` is False when any column on the source lacks
+    ``all_have_display`` is False when any binding on the source lacks
     an explicit ``display_name`` — in that case the bare-string key
     refs may resolve to a reg_meta-derived default at runtime, and the
     structural layer skips the "ref exists on source" check rather
@@ -603,21 +772,21 @@ def _build_source_index(sources: object) -> dict[str, dict[str, Any]]:
         name = source.get("name")
         if not isinstance(name, str) or name in index:
             continue
-        columns = source.get("columns")
+        bindings = source.get("bindings")
         display_names: set[str] = set()
         # `all_have_display` controls whether the panel-member ref-existence
         # check actually fires (see `_check_panel_member`). Flip it False on
-        # *any* column-shape uncertainty — non-list `columns`, non-mapping
-        # column entries, missing or non-string `display_name` — so a
+        # *any* binding-shape uncertainty — non-list `bindings`, non-mapping
+        # binding entries, missing or non-string `display_name` — so a
         # malformed source doesn't get its panel refs flagged as unknown
         # on top of the structural errors already emitted against it.
-        all_have_display = isinstance(columns, list)
-        if isinstance(columns, list):
-            for col in columns:
-                if not isinstance(col, Mapping):
+        all_have_display = isinstance(bindings, list)
+        if isinstance(bindings, list):
+            for binding in bindings:
+                if not isinstance(binding, Mapping):
                     all_have_display = False
                     continue
-                dn = col.get("display_name")
+                dn = binding.get("display_name")
                 if isinstance(dn, str):
                     display_names.add(dn)
                 else:
@@ -672,7 +841,7 @@ def _check_time_key_shape(
 ) -> str | None:
     """Validate TimeKey shape. Returns one of:
 
-    - ``'literal_scalar'``  — int or ``{"period": ...}``
+    - ``'literal_scalar'``  — int, ``{"period": ...}``, or ``{"range": ...}``
     - ``'ref_scalar'``      — bare string (column ref)
     - ``'literal_composite'`` — array of literals
     - ``'ref_composite'``     — array of column refs
@@ -686,15 +855,15 @@ def _check_time_key_shape(
         return "literal_scalar"
     if isinstance(value, str):
         return "ref_scalar"
-    if _is_literal_period_obj(value):
+    if _is_literal_period_obj(value) or _is_time_range_obj(value):
         return "literal_scalar"
     if isinstance(value, Mapping):
         issues.append(
             _error(
                 "literal_period_invalid",
                 path,
-                "time_key object form must have exactly one 'period' key "
-                "with an int or string value",
+                "time_key object form must be {'period': int|str} or "
+                "{'range': {'from','to'}} with period-token endpoints",
             )
         )
         return None
@@ -717,7 +886,8 @@ def _check_time_key_shape(
                     _error(
                         "invalid_field_type",
                         f"{path}/{i}",
-                        "time_key element must be int, string, or {'period': int|str}",
+                        "time_key element must be int, string, {'period': int|str}, "
+                        "or {'range': {'from','to'}}",
                     )
                 )
                 shape_ok = False
@@ -1009,25 +1179,12 @@ def _check_panel_member(
         )
         return
 
-    # Effective key presence (§6.8.1).
-    if eff_entity is None:
-        issues.append(
-            _error(
-                "missing_effective_entity_key",
-                mbase,
-                "panel member has no effective entity_key (neither panel "
-                "default nor member override is set)",
-            )
-        )
-    if eff_time is None:
-        issues.append(
-            _error(
-                "missing_effective_time_key",
-                mbase,
-                "panel member has no effective time_key (neither panel "
-                "default nor member override is set)",
-            )
-        )
+    # NOTE: effective-key *presence* is no longer a structural rule (§6.8.1).
+    # Under Model A an omitted entity_key/time_key inherits from the member's
+    # variant `panel_template` (§6.4), which needs reg_meta — so the
+    # "no effective key" case is the semantic `panel_inheritance_unresolvable`
+    # check (§6.8.3), raised by kit/bundle-build, not here. A `None` eff_entity
+    # / eff_time simply has no refs to check below.
 
     # Member-vs-panel composite kind match: only fires when both panel
     # default and member override are composite time_keys (§6.4 — scalar

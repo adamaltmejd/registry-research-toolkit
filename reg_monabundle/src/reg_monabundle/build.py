@@ -58,10 +58,17 @@ if TYPE_CHECKING:
 DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
 # reg_schema modules amalgamated ahead of the runtime modules so
-# spec.py's Column/Source/Panel/ProjectData/validate_structural
-# references resolve inside the bundle. They are stdlib-only
-# (reg_schema/pyproject.toml `dependencies = []`) so amalgamation is
-# safe — no transitive pull-in.
+# spec.py's Binding/Source/Panel/ProjectData/validate_structural
+# references resolve inside the bundle.
+#
+# ⚠️ A3.1 made reg_schema depend on Pydantic (project_data.py defines the
+# Pydantic models), so the amalgamated `project_data` slice now carries an
+# `import pydantic` — which breaks the §9.6 "no Pydantic on MONA" boundary.
+# This is a KNOWN, intentionally-deferred transient: A3.4 decouples the
+# bundle (drops `project_data` from REG_SCHEMA_MODULE_ORDER and converts a
+# validated Source to a stdlib-dataclass LoadedSpec via build/spec_loader.py,
+# REFACTOR_SPEC §9.6). Until A3.4 lands the bundle is built/tested in a
+# Pydantic-having env and must NOT be shipped to MONA.
 #
 # Resolve via the installed module so this works in both the monorepo
 # workspace and a normal ``pip``/``uv tool install`` (where reg_schema

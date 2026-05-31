@@ -33,11 +33,13 @@ coexist without confusing the runners.
 ### `input.json`
 
 A `project_data.json` payload as authored by a researcher or steward.
-Schema is `REFACTOR_SPEC.md` §6.1-§6.4. Both well-formed and
+Schema is `REFACTOR_SPEC.md` §6.1-§6.4 (Model A: `register_variant`
+3-part coordinate + `period`, `bindings` with 3-segment binding FQIDs,
+2-segment `class/<slug>` value sets). Both well-formed and
 deliberately-malformed inputs live here — the case ID indicates which.
 The payload is **not** required to be deserializable into the
-`reg_schema` dataclasses; the structural validator accepts and reports
-on parsed-dict input directly.
+`reg_schema` Pydantic models; the structural validator accepts and
+reports on parsed-dict input directly.
 
 ### `expected_ValidationResult.json`
 

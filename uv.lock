@@ -333,8 +333,14 @@ provides-extras = ["runtime"]
 
 [[package]]
 name = "reg-schema"
-version = "0.1.0"
+version = "2.0.0"
 source = { editable = "reg_schema" }
+dependencies = [
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pydantic", specifier = ">=2.13.4" }]
 
 [[package]]
 name = "registry-research-toolkit"

@@ -1,13 +1,18 @@
-"""Tests for the §6.8.1 structural validator.
+"""Tests for the §6.8.1 structural validator (Model A grammar).
 
 Issue ``code`` values are pinned: they are stable across releases and
 the SPA maps them to UI affordances (§6.8.0). Renames here would break
 downstream consumers.
 
-The validator runs against a parsed dict, not the dataclasses, so
+The validator runs against a parsed dict, not the Pydantic models, so
 fixtures are JSON-shaped (lists not tuples, raw strings). The
 ``_spec()`` helper builds a minimum-viable, all-rules-pass payload
 that tests then mutate to exercise individual rules.
+
+Model A (§6.2-§6.3): a source carries a 3-part ``register_variant``
+coordinate plus a required ``period``; bindings (renamed from the v0.x
+``columns``) name a 3-segment binding FQID via ``variable`` and a
+2-segment ``class/<slug>`` ``value_set``.
 """
 
 from __future__ import annotations
@@ -22,26 +27,27 @@ def _spec(**overrides: Any) -> dict[str, Any]:
     """Minimal valid spec; mutate via overrides to exercise rules."""
 
     base: dict[str, Any] = {
-        "schema_version": "1.0.0",
+        "schema_version": "2.0.0",
         "steward": "global",
-        "reg_meta_version": "reg_meta/v0.11.1",
+        "reg_meta_version": "reg_meta/v1.0.0",
         "name": "demo",
         "sources": [
             {
                 "name": "lisa_2018",
-                "register_version": "scb/lisa/individer-15plus/2018",
-                "columns": [
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2018,
+                "bindings": [
                     {
-                        "name": "scb/lisa/individer-15plus/2018/lopnr",
+                        "variable": "scb/lisa/lopnr",
                         "display_name": "LopNr_PersonNr",
                         "type": "id",
                         "id_subtype": "integer",
                     },
                     {
-                        "name": "scb/lisa/individer-15plus/2018/kon",
+                        "variable": "scb/lisa/kon",
                         "display_name": "Kon",
                         "type": "categorical",
-                        "value_set": "class/sun/2020",
+                        "value_set": "class/sun2020",
                     },
                 ],
             },
@@ -154,7 +160,7 @@ def test_unknown_top_level_field_is_treated_as_namespaced_block() -> None:
     assert _at(bad, "invalid_field_type") == ["/swecov"]
 
 
-# --- Sources / Columns --------------------------------------------------
+# --- Sources ------------------------------------------------------------
 
 
 def test_sources_must_be_array() -> None:
@@ -191,34 +197,35 @@ def test_duplicate_source_name() -> None:
 
 
 def test_display_name_collision_within_source() -> None:
-    # §6.3: two columns on the same source sharing an explicit
+    # §6.3: two bindings on the same source sharing an explicit
     # display_name must produce display_name_collision. The implicit-
     # resolution case (one explicit + one resolving to the same
     # reg_meta default) needs reg_meta and is §6.8.3.
     spec = _spec()
-    # _spec()'s two columns already have distinct display_names; set
+    # _spec()'s two bindings already have distinct display_names; set
     # the second to match the first.
-    spec["sources"][0]["columns"][1]["display_name"] = spec["sources"][0]["columns"][0][
-        "display_name"
-    ]
+    spec["sources"][0]["bindings"][1]["display_name"] = spec["sources"][0]["bindings"][
+        0
+    ]["display_name"]
     result = validate_structural(spec)
     assert _at(result, "display_name_collision") == [
-        "/sources/0/columns/1/display_name"
+        "/sources/0/bindings/1/display_name"
     ]
 
 
 def test_display_name_collision_scoped_to_one_source() -> None:
-    # Two sources can each have a column named "LopNr_PersonNr"
+    # Two sources can each have a binding named "LopNr_PersonNr"
     # without colliding. The check is per-source.
     spec = _spec()
     spec["sources"].append(
         {
             "name": "lisa_2019",
-            "register_version": "scb/lisa/individer-15plus/2019",
-            "columns": [
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2019,
+            "bindings": [
                 {
-                    "name": "scb/lisa/individer-15plus/2019/lopnr",
-                    "display_name": "LopNr_PersonNr",  # same as source 0's col 0
+                    "variable": "scb/lisa/lopnr",
+                    "display_name": "LopNr_PersonNr",  # same as source 0's binding 0
                     "type": "id",
                     "id_subtype": "integer",
                 },
@@ -229,90 +236,289 @@ def test_display_name_collision_scoped_to_one_source() -> None:
     assert "display_name_collision" not in _codes(result)
 
 
-def test_register_version_wrong_segment_count_is_invalid_fqid() -> None:
+# --- register_variant ---------------------------------------------------
+
+
+def test_register_variant_wrong_segment_count_is_invalid_fqid() -> None:
     spec = _spec()
-    spec["sources"][0]["register_version"] = "scb/lisa/individer-15plus"  # 3 segments
+    spec["sources"][0]["register_variant"] = "scb/lisa"  # 2 segments
     result = validate_structural(spec)
-    assert _at(result, "invalid_fqid") == ["/sources/0/register_version"]
+    assert _at(result, "invalid_fqid") == ["/sources/0/register_variant"]
 
 
-def test_register_version_class_prefix_rejected() -> None:
+def test_register_variant_with_period_segment_is_invalid_fqid() -> None:
+    # The v0.x 4-segment register_version (period in slot 4) is no longer
+    # accepted — period lives in its own field now (§6.2).
     spec = _spec()
-    spec["sources"][0]["register_version"] = "class/lisa/individer-15plus/2018"
+    spec["sources"][0]["register_variant"] = "scb/lisa/individer-15plus/2018"
     result = validate_structural(spec)
-    assert _at(result, "invalid_fqid") == ["/sources/0/register_version"]
+    assert _at(result, "invalid_fqid") == ["/sources/0/register_variant"]
 
 
-def test_register_version_bad_chars_rejected() -> None:
+def test_register_variant_class_prefix_rejected() -> None:
     spec = _spec()
-    spec["sources"][0]["register_version"] = "scb/lisa/individer 15plus/2018"
+    spec["sources"][0]["register_variant"] = "class/lisa/individer-15plus"
     result = validate_structural(spec)
-    assert _at(result, "invalid_fqid") == ["/sources/0/register_version"]
+    assert _at(result, "invalid_fqid") == ["/sources/0/register_variant"]
 
 
-def test_column_name_segment_count() -> None:
+def test_register_variant_bad_chars_rejected() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["name"] = (
-        "scb/lisa/individer-15plus/2018"  # 4 segs
-    )
+    spec["sources"][0]["register_variant"] = "scb/lisa/individer 15plus"
     result = validate_structural(spec)
-    assert "/sources/0/columns/0/name" in _at(result, "invalid_fqid")
+    assert _at(result, "invalid_fqid") == ["/sources/0/register_variant"]
 
 
-def test_column_name_must_match_source_register_version() -> None:
+# --- Period (§6.2) ------------------------------------------------------
+
+
+def test_period_int_year_is_ok() -> None:
+    assert validate_structural(_spec()).ok
+
+
+def test_period_token_strings_are_ok() -> None:
+    for period in (
+        "2018",
+        "2018-01",
+        "2018-12-31",
+        "HT2020",
+        "VT2020",
+        "2018-Q1",
+        "2018-H1",
+    ):
+        spec = _spec()
+        spec["sources"][0]["period"] = period
+        result = validate_structural(spec)
+        assert result.ok, (period, result.issues)
+
+
+def test_period_snapshot_sentinel_is_ok() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["name"] = "scb/lisa/individer-15plus/2019/kon"
+    spec["sources"][0]["period"] = "_default"
+    assert validate_structural(spec).ok
+
+
+def test_period_range_object_is_ok() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": "2018-01-01", "to": "2020-06-30"}
     result = validate_structural(spec)
-    assert _at(result, "fqid_register_version_mismatch") == [
-        "/sources/0/columns/0/name"
+    assert result.ok, result.issues
+
+
+def test_period_range_with_int_endpoints_is_ok() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": 2018, "to": 2020}
+    assert validate_structural(spec).ok
+
+
+def test_period_bad_string_is_invalid_period() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = "nope"
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_bool_is_invalid_period() -> None:
+    # bool is an int subclass; the period grammar must not accept it.
+    spec = _spec()
+    spec["sources"][0]["period"] = True
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_range_bad_endpoint_is_invalid_period() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": "2018-01-01", "to": "nope"}
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_range_extra_keys_is_invalid_period() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = {"from": 2018, "to": 2020, "step": 1}
+    result = validate_structural(spec)
+    assert _at(result, "invalid_period") == ["/sources/0/period"]
+
+
+def test_period_out_of_bounds_tokens_are_invalid() -> None:
+    # The grammar is bound-for-bound identical to reg_meta.fqid (year
+    # 1900-2099, month 01-12, day 01-31, quarter 1-4, half 1-2); a looser
+    # copy would pass specs that reg_meta's resolver later rejects.
+    for period in (
+        "2018-13",  # month > 12
+        "2018-00",  # month 0
+        "2018-13-31",  # month > 12 in a full date
+        "2018-Q5",  # quarter > 4
+        "2018-Q0",
+        "2018-H3",  # half > 2
+        "2018-H0",
+        "1899",  # year below 1900
+        "2100",  # year above 2099
+    ):
+        spec = _spec()
+        spec["sources"][0]["period"] = period
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], period
+
+
+def test_period_range_out_of_bounds_endpoint_is_invalid() -> None:
+    # The same bounded grammar gates range endpoints (_is_period_endpoint).
+    for endpoint in ("2018-13", "1899", "2018-Q5"):
+        spec = _spec()
+        spec["sources"][0]["period"] = {"from": endpoint, "to": "2020"}
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], endpoint
+
+
+def test_period_null_is_invalid_field_type() -> None:
+    spec = _spec()
+    spec["sources"][0]["period"] = None
+    result = validate_structural(spec)
+    assert "/sources/0/period" in _at(result, "invalid_field_type")
+    assert "/sources/0/period" not in _at(result, "missing_required_field")
+
+
+def test_period_missing_is_missing_required_field() -> None:
+    spec = _spec()
+    del spec["sources"][0]["period"]
+    result = validate_structural(spec)
+    assert "/sources/0/period" in _at(result, "missing_required_field")
+
+
+# --- Bindings -----------------------------------------------------------
+
+
+def test_binding_variable_segment_count() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa"  # 2 segs
+    result = validate_structural(spec)
+    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
+
+
+def test_binding_variable_class_prefix_rejected() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["variable"] = "class/lisa/kon"
+    result = validate_structural(spec)
+    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
+
+
+def test_binding_variable_with_version_suffix_is_ok() -> None:
+    # The leaf parses as ``slug[@version]`` — the ``@`` is split off
+    # before the slug regex (§5.2).
+    spec = _spec()
+    spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
+    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni2007"
+    result = validate_structural(spec)
+    assert result.ok, result.issues
+
+
+def test_binding_variable_empty_version_suffix_is_invalid_fqid() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/naringsgren@"
+    result = validate_structural(spec)
+    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
+
+
+def test_binding_variable_double_at_is_invalid_fqid() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][0]["variable"] = "scb/lisa/naringsgren@a@b"
+    result = validate_structural(spec)
+    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_fqid")
+
+
+def test_binding_variable_must_match_source_register_variant_prefix() -> None:
+    spec = _spec()
+    # Right register, wrong provider — prefix mismatch.
+    spec["sources"][0]["bindings"][0]["variable"] = "ifau/lisa/lopnr"
+    result = validate_structural(spec)
+    assert _at(result, "fqid_register_variant_mismatch") == [
+        "/sources/0/bindings/0/variable"
     ]
 
 
-def test_column_name_mismatch_skipped_when_register_version_malformed() -> None:
-    # When register_version itself is malformed, the validator must not
+def test_binding_prefix_mismatch_skipped_when_register_variant_malformed() -> None:
+    # When register_variant itself is malformed, the validator must not
     # compound the noise with a mismatch error against undefined truth.
     spec = _spec()
-    spec["sources"][0]["register_version"] = "broken"
+    spec["sources"][0]["register_variant"] = "broken"
     result = validate_structural(spec)
-    assert _at(result, "fqid_register_version_mismatch") == []
+    assert _at(result, "fqid_register_variant_mismatch") == []
 
 
-def test_column_type_must_be_in_enum() -> None:
+def test_binding_type_must_be_in_enum() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["type"] = "boolean"
+    spec["sources"][0]["bindings"][0]["type"] = "boolean"
     result = validate_structural(spec)
-    assert _at(result, "invalid_enum_value") == ["/sources/0/columns/0/type"]
+    assert _at(result, "invalid_enum_value") == ["/sources/0/bindings/0/type"]
 
 
 def test_subtype_on_wrong_type_is_rejected() -> None:
     spec = _spec()
-    # id_subtype on a categorical column.
-    spec["sources"][0]["columns"][1]["id_subtype"] = "integer"
+    # id_subtype on a categorical binding.
+    spec["sources"][0]["bindings"][1]["id_subtype"] = "integer"
     result = validate_structural(spec)
-    assert _at(result, "subtype_on_wrong_type") == ["/sources/0/columns/1/id_subtype"]
+    assert _at(result, "subtype_on_wrong_type") == ["/sources/0/bindings/1/id_subtype"]
 
 
 def test_numeric_subtype_must_be_in_enum() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["type"] = "numeric"
-    spec["sources"][0]["columns"][0].pop("id_subtype", None)
-    spec["sources"][0]["columns"][0]["numeric_subtype"] = "biginteger"
+    spec["sources"][0]["bindings"][0]["type"] = "numeric"
+    spec["sources"][0]["bindings"][0].pop("id_subtype", None)
+    spec["sources"][0]["bindings"][0]["numeric_subtype"] = "biginteger"
     result = validate_structural(spec)
-    assert _at(result, "invalid_enum_value") == ["/sources/0/columns/0/numeric_subtype"]
+    assert _at(result, "invalid_enum_value") == [
+        "/sources/0/bindings/0/numeric_subtype"
+    ]
 
 
 def test_value_set_must_be_classification_fqid() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][1]["value_set"] = "sun/2020"  # missing class/ prefix
+    # 3-segment value_set is the old grammar; 2-segment class/<slug> is
+    # required now.
+    spec["sources"][0]["bindings"][1]["value_set"] = "class/sun/2020"
     result = validate_structural(spec)
-    assert _at(result, "invalid_fqid") == ["/sources/0/columns/1/value_set"]
+    assert _at(result, "invalid_fqid") == ["/sources/0/bindings/1/value_set"]
 
 
-def test_empty_columns_emits_explicit_code() -> None:
+def test_value_set_missing_class_prefix_is_invalid_fqid() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"] = []
+    spec["sources"][0]["bindings"][1]["value_set"] = "sun2020"
     result = validate_structural(spec)
-    assert _at(result, "empty_columns") == ["/sources/0/columns"]
+    assert _at(result, "invalid_fqid") == ["/sources/0/bindings/1/value_set"]
+
+
+def test_binding_value_set_version_mismatch() -> None:
+    # The FQID's @<version> pin and the value_set's class slug must name
+    # the same version (§6.8.1).
+    spec = _spec()
+    spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
+    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni92"
+    result = validate_structural(spec)
+    assert _at(result, "binding_value_set_version_mismatch") == [
+        "/sources/0/bindings/1/value_set"
+    ]
+
+
+def test_binding_value_set_version_match_is_ok() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"][1]["variable"] = "scb/lisa/naringsgren@sni2007"
+    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni2007"
+    assert validate_structural(spec).ok
+
+
+def test_binding_value_set_without_version_pin_is_ok() -> None:
+    # No @version on the FQID → no cross-check; any well-formed value_set
+    # passes the structural layer.
+    spec = _spec()
+    spec["sources"][0]["bindings"][1]["value_set"] = "class/sni92"
+    assert validate_structural(spec).ok
+
+
+def test_empty_bindings_emits_explicit_code() -> None:
+    spec = _spec()
+    spec["sources"][0]["bindings"] = []
+    result = validate_structural(spec)
+    assert _at(result, "empty_bindings") == ["/sources/0/bindings"]
 
 
 # --- Nested required-field null handling -------------------------------
@@ -332,36 +538,36 @@ def test_source_name_null_is_invalid_field_type() -> None:
     assert "/sources/0/name" not in _at(result, "missing_required_field")
 
 
-def test_source_register_version_null_is_invalid_field_type() -> None:
+def test_source_register_variant_null_is_invalid_field_type() -> None:
     spec = _spec()
-    spec["sources"][0]["register_version"] = None
+    spec["sources"][0]["register_variant"] = None
     result = validate_structural(spec)
-    assert "/sources/0/register_version" in _at(result, "invalid_field_type")
-    assert "/sources/0/register_version" not in _at(result, "missing_required_field")
+    assert "/sources/0/register_variant" in _at(result, "invalid_field_type")
+    assert "/sources/0/register_variant" not in _at(result, "missing_required_field")
 
 
-def test_source_columns_null_is_invalid_field_type() -> None:
+def test_source_bindings_null_is_invalid_field_type() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"] = None
+    spec["sources"][0]["bindings"] = None
     result = validate_structural(spec)
-    assert "/sources/0/columns" in _at(result, "invalid_field_type")
-    assert "/sources/0/columns" not in _at(result, "missing_required_field")
+    assert "/sources/0/bindings" in _at(result, "invalid_field_type")
+    assert "/sources/0/bindings" not in _at(result, "missing_required_field")
 
 
-def test_column_name_null_is_invalid_field_type() -> None:
+def test_binding_variable_null_is_invalid_field_type() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["name"] = None
+    spec["sources"][0]["bindings"][0]["variable"] = None
     result = validate_structural(spec)
-    assert "/sources/0/columns/0/name" in _at(result, "invalid_field_type")
-    assert "/sources/0/columns/0/name" not in _at(result, "missing_required_field")
+    assert "/sources/0/bindings/0/variable" in _at(result, "invalid_field_type")
+    assert "/sources/0/bindings/0/variable" not in _at(result, "missing_required_field")
 
 
-def test_column_type_null_is_invalid_field_type() -> None:
+def test_binding_type_null_is_invalid_field_type() -> None:
     spec = _spec()
-    spec["sources"][0]["columns"][0]["type"] = None
+    spec["sources"][0]["bindings"][0]["type"] = None
     result = validate_structural(spec)
-    assert "/sources/0/columns/0/type" in _at(result, "invalid_field_type")
-    assert "/sources/0/columns/0/type" not in _at(result, "missing_required_field")
+    assert "/sources/0/bindings/0/type" in _at(result, "invalid_field_type")
+    assert "/sources/0/bindings/0/type" not in _at(result, "missing_required_field")
 
 
 # --- Panels -------------------------------------------------------------
@@ -372,16 +578,17 @@ def _spec_with_panels(**panel_overrides: Any) -> dict[str, Any]:
     spec["sources"].append(
         {
             "name": "lisa_2019",
-            "register_version": "scb/lisa/individer-15plus/2019",
-            "columns": [
+            "register_variant": "scb/lisa/individer-15plus",
+            "period": 2019,
+            "bindings": [
                 {
-                    "name": "scb/lisa/individer-15plus/2019/lopnr",
+                    "variable": "scb/lisa/lopnr",
                     "display_name": "LopNr_PersonNr",
                     "type": "id",
                     "id_subtype": "integer",
                 },
                 {
-                    "name": "scb/lisa/individer-15plus/2019/ar",
+                    "variable": "scb/lisa/ar",
                     "display_name": "AR",
                     "type": "numeric",
                     "numeric_subtype": "integer",
@@ -389,9 +596,9 @@ def _spec_with_panels(**panel_overrides: Any) -> dict[str, Any]:
             ],
         }
     )
-    spec["sources"][0]["columns"].append(
+    spec["sources"][0]["bindings"].append(
         {
-            "name": "scb/lisa/individer-15plus/2018/ar",
+            "variable": "scb/lisa/ar",
             "display_name": "AR",
             "type": "numeric",
             "numeric_subtype": "integer",
@@ -424,11 +631,20 @@ def test_panel_string_member_inherits_panel_defaults() -> None:
     assert result.ok, result.issues
 
 
-def test_panel_string_member_missing_panel_defaults_emits_missing_effective() -> None:
+def test_panel_string_member_missing_panel_defaults_is_not_structural() -> None:
+    # Effective-key *presence* is no longer a structural rule (§6.8.1):
+    # an omitted entity_key/time_key inherits from the member's variant
+    # panel_template, which needs reg_meta — so the "no effective key"
+    # case is the semantic `panel_inheritance_unresolvable` check
+    # (§6.8.3), not emitted here.
     spec = _spec_with_panels(members=["lisa_2018"])  # no panel time_key
     spec["panels"][0].pop("time_key", None)
+    spec["panels"][0].pop("entity_key", None)
     result = validate_structural(spec)
-    assert "missing_effective_time_key" in _codes(result)
+    assert result.ok, result.issues
+    # Pin the §6.8.1 removal: neither removed code is emitted any more.
+    assert "missing_effective_time_key" not in _codes(result)
+    assert "missing_effective_entity_key" not in _codes(result)
 
 
 def test_duplicate_panel_id() -> None:
@@ -497,12 +713,12 @@ def test_ref_existence_not_emitted_on_unknown_source() -> None:
     assert not any(p.startswith("/panels/0/members/0") for p in paths)
 
 
-def test_ref_existence_skipped_when_columns_are_malformed() -> None:
-    # If a column entry isn't an object or its display_name isn't a
+def test_ref_existence_skipped_when_bindings_are_malformed() -> None:
+    # If a binding entry isn't an object or its display_name isn't a
     # string, `all_have_display` must flip False so the ref-existence
     # check doesn't compound the noise on an already-broken source.
     spec = _spec_with_panels(time_key="AR", members=["lisa_2018", "lisa_2019"])
-    spec["sources"][0]["columns"][0] = "not-a-mapping"  # type: ignore[assignment]
+    spec["sources"][0]["bindings"][0] = "not-a-mapping"  # type: ignore[assignment]
     result = validate_structural(spec)
     assert "time_key_unknown_column" not in _codes(result)
 
@@ -549,9 +765,55 @@ def test_literal_period_object_form_accepted() -> None:
     assert result.ok, result.issues
 
 
+def test_time_range_object_form_accepted() -> None:
+    # The {"range": {"from","to"}} TimePoint wrapper (§6.4) is a valid
+    # literal time_key — distinct from a bare {"from","to"} period.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"] = [
+        {"source": "lisa_2018", "time_key": {"range": {"from": 2018, "to": 2019}}},
+        {"source": "lisa_2019", "time_key": {"range": {"from": 2019, "to": 2020}}},
+    ]
+    result = validate_structural(spec)
+    assert result.ok, result.issues
+
+
+def test_time_range_object_with_token_endpoints_accepted() -> None:
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"] = [
+        {
+            "source": "lisa_2018",
+            "time_key": {"range": {"from": "2018-01", "to": "2018-06"}},
+        },
+        {
+            "source": "lisa_2019",
+            "time_key": {"range": {"from": "2019-01", "to": "2019-06"}},
+        },
+    ]
+    result = validate_structural(spec)
+    assert result.ok, result.issues
+
+
+def test_time_range_duplicate_within_panel() -> None:
+    # Two identical range literals collide on the uniqueness rule.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["time_key"] = {"range": {"from": 2018, "to": 2019}}
+    spec["panels"][0]["members"][1]["time_key"] = {"range": {"from": 2018, "to": 2019}}
+    result = validate_structural(spec)
+    assert "literal_time_key_duplicate" in _codes(result)
+
+
 def test_literal_period_invalid_shape() -> None:
     spec = _spec_with_panels()
     spec["panels"][0]["members"][0]["time_key"] = {"period": "2018", "extra": 1}
+    result = validate_structural(spec)
+    assert "literal_period_invalid" in _codes(result)
+
+
+def test_time_range_bad_endpoint_is_literal_period_invalid() -> None:
+    # A {"range": ...} with a non-period endpoint isn't a valid literal
+    # period object — falls through to literal_period_invalid.
+    spec = _spec_with_panels()
+    spec["panels"][0]["members"][0]["time_key"] = {"range": {"from": 2018, "to": "no"}}
     result = validate_structural(spec)
     assert "literal_period_invalid" in _codes(result)
 
@@ -568,7 +830,7 @@ def test_time_key_column_ref_must_exist_on_source() -> None:
 
 
 def test_time_key_column_ref_skipped_when_display_names_missing() -> None:
-    # When any column on the source lacks display_name, the structural
+    # When any binding on the source lacks display_name, the structural
     # layer can't be sure the ref doesn't resolve later — skip the
     # check rather than emit a spurious error.
     spec = _spec_with_panels(
@@ -576,7 +838,7 @@ def test_time_key_column_ref_skipped_when_display_names_missing() -> None:
         members=["lisa_2018", "lisa_2019"],
     )
     # Drop one display_name on lisa_2018 so all_have_display flips false.
-    del spec["sources"][0]["columns"][0]["display_name"]
+    del spec["sources"][0]["bindings"][0]["display_name"]
     result = validate_structural(spec)
     assert "time_key_unknown_column" not in _codes(result)
 
@@ -608,12 +870,9 @@ def test_composite_entity_key_ordering_inconsistent() -> None:
         ("LopNr_PeOrgNr", 1),
         ("LopNr_CFAR", 1),
     ):
-        spec["sources"][src_idx]["columns"].append(
+        spec["sources"][src_idx]["bindings"].append(
             {
-                "name": (
-                    f"scb/lisa/individer-15plus/{2018 if src_idx == 0 else 2019}/"
-                    f"{col_name.lower()}"
-                ),
+                "variable": f"scb/lisa/{col_name.lower()}",
                 "display_name": col_name,
                 "type": "id",
                 "id_subtype": "string",
@@ -696,8 +955,6 @@ def test_panel_member_entity_key_override_null_is_invalid_field_type() -> None:
     spec["panels"][0]["members"][0]["entity_key"] = None
     result = validate_structural(spec)
     assert "/panels/0/members/0/entity_key" in _at(result, "invalid_field_type")
-    # Falls back to panel default — no missing_effective_entity_key.
-    assert "missing_effective_entity_key" not in _codes(result)
 
 
 def test_panel_member_time_key_override_null_is_invalid_field_type() -> None:
@@ -712,7 +969,6 @@ def test_panel_member_time_key_override_null_is_invalid_field_type() -> None:
     spec["panels"][0]["members"][0]["time_key"] = None
     result = validate_structural(spec)
     assert "/panels/0/members/0/time_key" in _at(result, "invalid_field_type")
-    assert "missing_effective_time_key" not in _codes(result)
 
 
 # --- Composition / contract -------------------------------------------
