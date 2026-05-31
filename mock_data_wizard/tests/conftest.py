@@ -1,11 +1,13 @@
 """Shared fixtures for mock_data_wizard tests.
 
-The bundle-runtime fixtures (``make_project_data``, ``write_project_data``,
-``MINIMAL_STATS``, ``SPINE_STATS``) live in ``reg_monabundle/tests/``
-because the modules under test (``classify``, ``sources``, ``spec``,
-``extract``, …) moved there in §15 step 5 phase 2c. mdw reaches in via
-``sys.path`` rather than duplicating — same trick as
-``reg_meta/tests/conftest.py``.
+The bundle-runtime fixtures live in ``reg_monabundle/tests/`` because the
+modules under test (``classify``, ``sources``, ``spec``, ``extract``, …)
+moved there in §15 step 5 phase 2c. The ``sys.path.insert`` below bridges
+that directory so mdw tests reach them without duplicating — same trick as
+``reg_meta/tests/conftest.py``. This module re-exports the stats fixtures
+(``MINIMAL_STATS`` / ``SPINE_STATS``); the project_data builders
+(``make_project_data`` / ``write_project_data``) are imported directly from
+``_project_data_fixtures`` by the tests that need them.
 """
 
 from __future__ import annotations
