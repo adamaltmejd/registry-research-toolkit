@@ -116,6 +116,30 @@ def test_loaded_spec_lookup_options_unknown_returns_empty_dict():
     assert spec.lookup_options("lisa_2018.csv", "LopNr") == {}
 
 
+def test_loadedspec_from_dict_enforces_suppress_k_floor_at_load():
+    # §6.8.2: the reg_monabundle namespaced-block validator (validate_block —
+    # option keys + suppress_k floor) is pure-stdlib and runs at bundle LOAD
+    # time on MONA too, not only at the build-time gate. loadedspec_from_dict
+    # must reject a below-floor suppress_k (review P2 on #157).
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "x.csv",
+                "bindings": [
+                    {
+                        "variable": "scb/test/kon",
+                        "display_name": "Kon",
+                        "type": "categorical",
+                    }
+                ],
+            }
+        ],
+        reg_monabundle={"column_options": {"scb/test/kon": {"suppress_k": 1}}},
+    )
+    with pytest.raises(ValueError, match="suppress_k"):
+        loadedspec_from_dict(payload)
+
+
 def test_loaded_spec_panels_passthrough():
     payload = make_project_data(
         sources=[

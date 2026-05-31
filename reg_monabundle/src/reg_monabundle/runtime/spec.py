@@ -55,6 +55,8 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+from reg_monabundle import validate_block
+
 from .classify import COLUMN_TYPES
 
 PROJECT_DATA_FILENAME = "project_data.json"
@@ -427,14 +429,19 @@ def _build_project_data(payload: Mapping[str, Any]) -> ProjectData:
 
 
 def loadedspec_from_dict(payload: Mapping[str, Any]) -> LoadedSpec:
-    """Deserialize a ``LoadedSpec`` from a parsed (already-validated) JSON dict.
+    """Deserialize a ``LoadedSpec`` from a parsed JSON dict (bundle-load path).
 
-    No structural validation runs here (§9.6): the bundle trusts its
-    embedded / sidecar JSON because bundle-build already validated it
-    via ``reg_monabundle.build.spec_loader.validate_project_data``. The
-    step-4 runtime capability gates in ``_build_*`` still raise on
-    shapes the on-MONA pipeline can't execute.
+    No **structural** validation runs here (§6.8.1 / §9.6): the bundle
+    trusts its embedded / sidecar JSON because bundle-build already ran the
+    Pydantic structural gate via
+    ``reg_monabundle.build.spec_loader.validate_project_data``. But the
+    **§6.8.2 namespaced-block validator** (``validate_block`` — option keys +
+    the suppress_k floor) IS pure-stdlib and runs at bundle LOAD time on MONA
+    too (same code, amalgamated), so it is re-checked here. The step-4 runtime
+    capability gates in ``_build_*`` likewise still raise on shapes the on-MONA
+    pipeline can't execute.
     """
+    validate_block(payload.get("reg_monabundle"))
     return LoadedSpec(_build_project_data(payload))
 
 

@@ -144,7 +144,10 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
 
         # 2. AST import check — the structural proof. Walks every
         # Import / ImportFrom node (any nesting depth) and asserts no
-        # module is pydantic or reg_schema (exact or dotted submodule).
+        # forbidden module is imported (exact or dotted submodule). For
+        # `from X import Y` it checks BOTH the source module X (node.module)
+        # AND the imported names Y (node.names) so a re-export form like
+        # `from pkg import reg_schema` is caught too.
         tree = ast.parse(src)
         forbidden: list[str] = []
         for node in ast.walk(tree):
@@ -152,7 +155,7 @@ def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
             if isinstance(node, ast.Import):
                 modules = [alias.name for alias in node.names]
             elif isinstance(node, ast.ImportFrom):
-                modules = [node.module or ""]
+                modules = [node.module or "", *(alias.name for alias in node.names)]
             for mod in modules:
                 if mod in ("pydantic", "reg_schema") or mod.startswith(
                     ("pydantic.", "reg_schema.")

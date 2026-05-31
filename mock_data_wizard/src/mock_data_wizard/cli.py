@@ -376,7 +376,10 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
     import json
 
-    from reg_monabundle.build.spec_loader import validate_project_data
+    from reg_monabundle.build.spec_loader import (
+        project_data_to_loadedspec,
+        validate_project_data,
+    )
     from reg_monabundle.runtime.spec import _reject_duplicate_keys
 
     from reg_monabundle import DEFAULT_OUTPUT_NAME, build_bundle
@@ -408,12 +411,17 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
             # branch a duplicate-key file would crash with a traceback.
             print(f"Error: {spec_path}: {exc}", file=sys.stderr)
             return 1
-        # Validate before embedding — shipping a structurally broken
-        # bundle is worse than failing at build. This is the §6.8.1
-        # structural-validation gate (full Pydantic reg_schema validator);
-        # the bundle runtime trusts the embedded JSON and never re-runs it.
+        # Validate before embedding — shipping a broken bundle is worse than
+        # failing at build. Two build-time gates (the bundle runtime trusts the
+        # embedded JSON for structural validation and never re-runs it):
+        #   1. validate_project_data — the §6.8.1 Pydantic structural gate.
+        #   2. project_data_to_loadedspec — exercises the step-4 runtime
+        #      capability gates (datetime / composite key / missing
+        #      display_name) so an unsupported spec fails fast HERE instead of
+        #      deep inside the runner on MONA.
         try:
-            validate_project_data(project_data)
+            validated = validate_project_data(project_data)
+            project_data_to_loadedspec(validated)
         except ValueError as exc:
             print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
             return 1

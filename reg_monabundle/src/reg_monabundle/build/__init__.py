@@ -21,8 +21,10 @@ the embedded / sidecar JSON into a stdlib ``LoadedSpec`` via
 is therefore never amalgamated; the source-scan gate in
 ``test_build_mona_bundle.py`` enforces the no-Pydantic invariant.
 
-Per-module docstrings and ``#`` comments are dropped during
-amalgamation. The repo source remains the documentation; the bundle is
+Each module's top-level docstring and all ``#`` comments are dropped
+during amalgamation (class/method docstrings are kept as inert string
+literals — they carry no import, so they don't affect the §9.6
+boundary). The repo source remains the documentation; the bundle is
 the artifact.
 
 The ``project_data.json`` may be embedded at build time via
@@ -76,10 +78,14 @@ DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 # Derive from the package, not ``__file__``: this module now lives in
 # ``reg_monabundle/build/__init__.py``, so ``Path(__file__).parent`` is
 # the ``build/`` subdir, not the package root. The runtime modules and
-# the ``constants`` / ``scan`` slices live one level up, next to
-# ``reg_monabundle.__init__``.
+# the ``constants`` / ``validate`` / ``scan`` slices live one level up,
+# next to ``reg_monabundle.__init__``.
 REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
-REG_MONABUNDLE_MODULE_ORDER = ("constants", "scan")
+# ``validate`` is amalgamated so the §6.8.2 namespaced-block validator
+# (``validate_block`` — option keys + suppress_k floor, pure-stdlib) runs at
+# bundle LOAD time on MONA too, per §6.8.2 (the §6.8.1 STRUCTURAL validator is
+# build-time only). ``constants`` before ``validate`` (it reads SUPPRESS_K).
+REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
 
 # The in-package runtime amalgamated into the bundle by default. Order
 # is dep-locked: each module imports only earlier ones (intra-runtime)

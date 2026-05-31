@@ -157,6 +157,37 @@ def test_build_bundle_model_a_spec_succeeds(tmp_path: Path, capsys):
     assert "scb/lisa/kon" in out.read_text(encoding="utf-8")
 
 
+def test_build_bundle_step4_unsupported_spec_fails_fast(tmp_path: Path, capsys):
+    """A datetime binding is structurally VALID (reg_schema accepts it) but the
+    mdw runtime can't execute it. The build must fail fast at the step-4
+    capability gate, not embed a bundle that dies deep in the runner on MONA
+    (review P2 on #157 — A3.4 moved that gate off the build path)."""
+    spec = make_project_data(
+        sources=[
+            {
+                "name": "a.csv",
+                "register_variant": "scb/test/_default",
+                "period": 2020,
+                "bindings": [
+                    {
+                        "variable": "scb/test/ts",
+                        "display_name": "Ts",
+                        "type": "datetime",
+                    }
+                ],
+            }
+        ],
+    )
+    spec_path = write_project_data(tmp_path, spec)
+    out = tmp_path / "bundle.py"
+    rc = main(["build-bundle", "--output", str(out), "--project-data", str(spec_path)])
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert "failed validation" in err
+    assert "datetime" in err
+    assert not out.exists()  # nothing embedded
+
+
 def _setup(tmp_path: Path) -> tuple[Path, Path]:
     stats_path = tmp_path / "mock_data_stats.json"
     stats_path.write_text(json.dumps(MINIMAL_STATS), encoding="utf-8")
