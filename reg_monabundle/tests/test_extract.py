@@ -19,7 +19,7 @@ from reg_monabundle.runtime.extract import (
     run_extract_typed,
 )
 from reg_monabundle.runtime.sources import file_source
-from reg_monabundle.runtime.spec import parse_project_data
+from reg_monabundle.runtime.spec import loadedspec_from_dict
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -34,7 +34,7 @@ def _spec(sources, panels=()):
 
     Each source is ``{"name": "<csv>", "bindings": [{"display_name": ..., "type": ...}, ...]}``.
     """
-    return parse_project_data(make_project_data(sources=sources, panels=panels))
+    return loadedspec_from_dict(make_project_data(sources=sources, panels=panels))
 
 
 # -- run_discover end-to-end ---------------------------------------------
@@ -923,13 +923,19 @@ def test_extract_year_falls_back_to_name_regex():
     assert _extract_year("plain") is None
 
 
-def test_main_raises_on_invalid_project_data(tmp_path: Path):
+def test_main_raises_on_structurally_invalid_sidecar_project_data(tmp_path: Path):
+    # §9.6: the sidecar extract path (``main`` -> ``load_project_data``) does
+    # NOT structurally re-validate — that's the bundle-build gate's job
+    # (``spec_loader.validate_project_data``), not an on-MONA step. A
+    # structurally-invalid spec the gate would have rejected (here: an
+    # unknown ``type`` outside the §6.3 enum) therefore flows past the loader
+    # and surfaces as a runtime error deep in extract, not a clean
+    # "structural validation" message. The contract here is just that the
+    # run fails loudly and writes no stats file — authoring-time validation
+    # lives in the webapp / CLI build gate.
     _write_csv(tmp_path / "data.csv", "x\n1\n")
     write_project_data(
         tmp_path,
-        # Inject an invalid type at the dict level so the structural
-        # validator catches it; can't go through make_project_data
-        # because the dataclasses also reject this.
         {
             "schema_version": "2.0.0",
             "steward": "global",
@@ -944,7 +950,7 @@ def test_main_raises_on_invalid_project_data(tmp_path: Path):
                         {
                             "variable": "scb/test/x",
                             "display_name": "x",
-                            "type": "blob",  # invalid
+                            "type": "blob",  # invalid: outside the §6.3 enum
                         }
                     ],
                 }
@@ -953,5 +959,6 @@ def test_main_raises_on_invalid_project_data(tmp_path: Path):
         },
     )
     src = file_source(str(tmp_path), include=["data.csv"])
-    with pytest.raises(ValueError, match="structural validation"):
+    with pytest.raises((ValueError, KeyError)):
         main([src], output_dir=tmp_path, mode="extract", seed=0)
+    assert not (tmp_path / "mock_data_stats.json").exists()

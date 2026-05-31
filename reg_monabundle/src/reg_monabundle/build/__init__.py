@@ -1,8 +1,9 @@
 """Build a single-file ``.py`` bundle for upload to MONA.
 
-Amalgamates the caller-supplied runtime modules + ``reg_schema`` +
-``reg_monabundle`` into one self-contained Python file. The user uploads
-that file, edits the ``configure()`` block near the top, and runs::
+Amalgamates the caller-supplied runtime modules + the lightweight
+``reg_monabundle`` slices (``constants``, ``scan``) into one
+self-contained Python file. The user uploads that file, edits the
+``configure()`` block near the top, and runs::
 
     python mdw_runner.py
 
@@ -10,30 +11,27 @@ The bundle is self-contained — only stdlib + duckdb + pyodbc + numpy
 (all pre-installed on the WinPython distribution shipped with MONA's
 batch client; see ``DESIGN.md`` for the runtime probe results).
 
+§9.6 boundary: the bundle carries **no Pydantic and no ``reg_schema``**.
+Structural validation (§6.8.1) is the **bundle-build gate**, not an
+on-MONA step — it runs once here, ahead of amalgamation, via
+``reg_monabundle.build.spec_loader.validate_project_data`` (full
+Pydantic ``reg_schema`` validator). The bundle's runtime deserializes
+the embedded / sidecar JSON into a stdlib ``LoadedSpec`` via
+``spec.loadedspec_from_dict`` and does **not** re-validate. ``reg_schema``
+is therefore never amalgamated; the source-scan gate in
+``test_build_mona_bundle.py`` enforces the no-Pydantic invariant.
+
 Per-module docstrings and ``#`` comments are dropped during
 amalgamation. The repo source remains the documentation; the bundle is
 the artifact.
 
 The ``project_data.json`` may be embedded at build time via
-``build_bundle(..., project_data=...)``; the runner parses it and
+``build_bundle(..., project_data=...)``; the runner deserializes it and
 hands the resulting ``LoadedSpec`` directly to ``extract.main()``.
 When not embedded, the runner falls back to reading
 ``project_data.json`` from the same directory as the bundle. The
-embedded spec wins when both are present.
-
-Bundle-load structural validation: ``reg_schema.{validation,
-project_data, structural}`` are amalgamated ahead of the runtime
-modules (see ``REG_SCHEMA_MODULE_ORDER`` below) so
-``spec.parse_project_data`` runs ``reg_schema.validate_structural`` on
-every load path:
-
-- Embedded spec — the runner's ``_load_embedded_spec`` parses
-  ``_PROJECT_DATA_JSON`` through ``parse_project_data``.
-- Sidecar spec — ``extract.main`` falls back to
-  ``spec.load_project_data`` which calls the same loader.
-- Pre-embed (CLI) — ``build-bundle --project-data`` runs
-  ``parse_project_data`` before substituting into the placeholder,
-  so a structurally broken spec fails at build, not on MONA.
+embedded spec wins when both are present. Both load paths route through
+``spec.loadedspec_from_dict`` (deserialize-only, no validation).
 
 The runtime modules amalgamated by default live in
 ``reg_monabundle/runtime/`` (``classify``, ``sql_emit``, ``sources``,
@@ -50,53 +48,42 @@ import json
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import reg_schema as _reg_schema
+# Imported for ``__file__`` only — used to derive the package-root dir for
+# the ``constants`` / ``scan`` / runtime slices. ``reg_monabundle.__init__``
+# imports this module (``from .build import build_bundle``), so this is a
+# partial-init back-reference; ``__file__`` is set before the package body
+# runs, so reading it here is safe and never triggers re-entry.
+import reg_monabundle as _reg_monabundle
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
 DEFAULT_OUTPUT_NAME = "mdw_runner.py"
 
-# reg_schema modules amalgamated ahead of the runtime modules so
-# spec.py's Binding/Source/Panel/ProjectData/validate_structural
-# references resolve inside the bundle.
-#
-# ⚠️ A3.1 made reg_schema depend on Pydantic (project_data.py defines the
-# Pydantic models), so the amalgamated `project_data` slice now carries an
-# `import pydantic` — which breaks the §9.6 "no Pydantic on MONA" boundary.
-# This is a KNOWN, intentionally-deferred transient: A3.4 decouples the
-# bundle (drops `project_data` from REG_SCHEMA_MODULE_ORDER and converts a
-# validated Source to a stdlib-dataclass LoadedSpec via build/spec_loader.py,
-# REFACTOR_SPEC §9.6). Until A3.4 lands the bundle is built/tested in a
-# Pydantic-having env and must NOT be shipped to MONA.
-#
-# Resolve via the installed module so this works in both the monorepo
-# workspace and a normal ``pip``/``uv tool install`` (where reg_schema
-# lives under site-packages, not next to reg_monabundle on disk).
-# reg_schema is a hard dependency of reg_monabundle's pyproject.toml,
-# so the import always succeeds.
-REG_SCHEMA_DIR = Path(_reg_schema.__file__).resolve().parent
-REG_SCHEMA_MODULE_ORDER = (
-    "validation",
-    "project_data",
-    "structural",
-)
-
 # reg_monabundle modules amalgamated ahead of the runtime modules so
-# summarize.py's ``SUPPRESS_K`` reference, spec.py's
-# ``validate_block(...)`` call, and extract.py's ``write_export(...)``
-# call (all via ``from reg_monabundle… import`` in the source) resolve
-# inside the bundle. ``constants`` precedes ``validate`` because the
-# validator's suppress_k floor check reads ``SUPPRESS_K``; ``scan``
-# trails because the runtime modules amalgamated after this tuple
-# (in particular ``extract``) call ``write_export``. Phase 2 grows
-# this tuple as the type compatibility map moves over.
-REG_MONABUNDLE_DIR = Path(__file__).resolve().parent
-REG_MONABUNDLE_MODULE_ORDER = ("constants", "validate", "scan")
+# summarize.py's ``SUPPRESS_K`` reference and extract.py's
+# ``write_export(...)`` call (both via ``from reg_monabundle… import`` in
+# the source) resolve inside the bundle. ``constants`` precedes ``scan``
+# because the runtime modules amalgamated after this tuple (in particular
+# ``extract``) call ``write_export``.
+#
+# ``validate`` is intentionally NOT amalgamated: post-A3.4 the runtime
+# ``spec`` no longer calls ``validate_block`` — the namespaced-block
+# validator runs at bundle-build time in ``spec_loader``, not on MONA
+# (§9.6). Keeping it out trims the bundle and removes the last
+# ``reg_monabundle.validate`` reference from the runtime slices.
+#
+# Derive from the package, not ``__file__``: this module now lives in
+# ``reg_monabundle/build/__init__.py``, so ``Path(__file__).parent`` is
+# the ``build/`` subdir, not the package root. The runtime modules and
+# the ``constants`` / ``scan`` slices live one level up, next to
+# ``reg_monabundle.__init__``.
+REG_MONABUNDLE_DIR = Path(_reg_monabundle.__file__).resolve().parent
+REG_MONABUNDLE_MODULE_ORDER = ("constants", "scan")
 
 # The in-package runtime amalgamated into the bundle by default. Order
 # is dep-locked: each module imports only earlier ones (intra-runtime)
-# or modules already amalgamated from reg_schema / reg_monabundle.
+# or the ``reg_monabundle`` slices amalgamated above.
 # spec.py's ``assert set(INLINE_HINT_KEYS) == set(COLUMN_TYPES)``
 # requires ``classify`` to be loaded first; ``extract`` is last because
 # it depends on everything.
@@ -348,12 +335,16 @@ _log = logging.getLogger("mdw.bundle")
 
 
 def _load_embedded_spec():
-    \"\"\"Parse the embedded project_data.json literal when non-empty.
+    \"\"\"Deserialize the embedded project_data.json literal when non-empty.
 
     Returns None when the literal is empty (the runner falls back to
     reading project_data.json from this directory). Raises on invalid
     embedded JSON -- a structurally bad bundle should fail loudly, not
     silently fall through to the sidecar.
+
+    No structural validation here (§9.6): the embedded JSON was
+    validated at bundle-build time (spec_loader.validate_project_data);
+    the runtime trusts it and only deserializes via loadedspec_from_dict.
 
     No duplicate-key guard here: the CLI build path (``_cmd_build_bundle``)
     parses the source file with ``_reject_duplicate_keys`` and then
@@ -365,7 +356,7 @@ def _load_embedded_spec():
     if not stripped:
         return None
     payload = _runner_json.loads(stripped)
-    return parse_project_data(payload)
+    return loadedspec_from_dict(payload)
 
 
 if __name__ == "__main__":
@@ -428,13 +419,21 @@ def _is_type_checking_block(node: ast.stmt) -> bool:
 # package name is added on top inside ``build_bundle`` so that a
 # non-mdw runtime (``reg_mockdata``, a steward-private package, …)
 # can plug its own intra-runtime imports through the same drop logic.
-_STATIC_AMALGAMATED_PREFIXES: tuple[str, ...] = ("reg_monabundle", "reg_schema")
+#
+# ``reg_schema`` is NOT here (§9.6): it is never amalgamated, so a
+# ``from reg_schema import …`` in a runtime module would NOT be dropped
+# and would leak into the bundle as a live import — which is exactly the
+# failure the source-scan gate in ``test_build_mona_bundle.py`` catches.
+# The runtime is reg_schema-free by construction (``spec`` deserializes
+# into stdlib dataclasses), so no such import exists to drop.
+_STATIC_AMALGAMATED_PREFIXES: tuple[str, ...] = ("reg_monabundle",)
 
 
 def _is_amalgamated_module(name: str, prefixes: tuple[str, ...]) -> bool:
     """``True`` if ``name`` is exactly an amalgamated package or a
     submodule of one. Tighter than a raw ``startswith`` — guards
-    against e.g. ``reg_schema_v2`` matching the ``reg_schema`` prefix.
+    against e.g. ``reg_monabundle_v2`` matching the ``reg_monabundle``
+    prefix.
     """
     return any(name == p or name.startswith(p + ".") for p in prefixes)
 
@@ -443,12 +442,11 @@ def _slice_module(path: Path, *, drop_prefixes: tuple[str, ...]) -> str:
     """Read a module, drop docstring + __future__ + intra-pkg imports.
 
     Also drops top-level imports of any amalgamated package
-    (``reg_monabundle``, ``reg_schema``, and the caller's runtime
-    package name). Both ``from X import Y`` and ``import X`` forms are
-    handled. The remaining body (functions, classes, constants,
-    dataclasses, stdlib imports) is rendered via ``ast.unparse`` --
-    ``#`` comments are not preserved (they live in the source modules
-    in the repo).
+    (``reg_monabundle`` and the caller's runtime package name). Both
+    ``from X import Y`` and ``import X`` forms are handled. The remaining
+    body (functions, classes, constants, dataclasses, stdlib imports) is
+    rendered via ``ast.unparse`` -- ``#`` comments are not preserved
+    (they live in the source modules in the repo).
     """
     src = path.read_text(encoding="utf-8")
     tree = ast.parse(src)
@@ -556,15 +554,6 @@ def build_bundle(
         runtime_pkg_dir.name,
     )
     parts: list[str] = [header, ""]
-    for name in REG_SCHEMA_MODULE_ORDER:
-        parts.append(f"# {'=' * 75}")
-        parts.append(f"# reg_schema/{name}.py")
-        parts.append(f"# {'=' * 75}")
-        parts.append("")
-        parts.append(
-            _slice_module(REG_SCHEMA_DIR / f"{name}.py", drop_prefixes=drop_prefixes)
-        )
-        parts.append("")
     for name in REG_MONABUNDLE_MODULE_ORDER:
         parts.append(f"# {'=' * 75}")
         parts.append(f"# reg_monabundle/{name}.py")

@@ -15,8 +15,8 @@ What this validator does NOT do:
 - Cross-check ``suppress_k`` against the column's declared ``type``
   (it only makes sense on categorical columns). Same reason — needs
   the resolved column tree. Lives in
-  ``reg_monabundle.runtime.spec._validate_column_options_against_columns``
-  alongside the rest of the runtime spec adapter.
+  ``reg_monabundle.build.spec_loader._validate_column_options_against_columns``
+  (build-time gate; §9.6 — the bundle runtime trusts the embedded JSON).
 """
 
 from __future__ import annotations

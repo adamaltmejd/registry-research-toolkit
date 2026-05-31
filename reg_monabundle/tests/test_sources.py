@@ -36,7 +36,7 @@ from reg_monabundle.runtime.sources import (
 from reg_monabundle.runtime.spec import (
     ColumnTypeOverride,
     LoadedSpec,
-    parse_project_data,
+    loadedspec_from_dict,
 )
 
 if TYPE_CHECKING:
@@ -73,7 +73,7 @@ def _spec_with(
         }
         for src, cols in column_types.items()
     ]
-    return parse_project_data(make_project_data(sources=sources))
+    return loadedspec_from_dict(make_project_data(sources=sources))
 
 
 # -- constructors ---------------------------------------------------------

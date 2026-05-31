@@ -91,6 +91,82 @@ def test_bundle_does_not_carry_intra_package_imports(tmp_path: Path):
         assert "from mock_data_wizard" not in s, f"package import leaked: {line!r}"
 
 
+def test_bundle_carries_no_pydantic_or_reg_schema(tmp_path: Path):
+    """§9.6 boundary gate: the MONA bundle must carry NO pydantic and NO
+    reg_schema — neither as source text nor as a live AST import.
+
+    This is the real §9.6 CI gate. It would have caught the A3.1
+    transient (reg_schema pulled in Pydantic via the amalgamated
+    ``project_data`` slice). Note the subprocess ``_run_bundle`` tests
+    run in a Pydantic-having env, so they do NOT prove pydantic-free; the
+    source-scan + AST check below is the proof.
+
+    Both an embedded-spec bundle and a sidecar bundle are checked — the
+    embedded path serializes a validated spec into the bundle, the
+    sidecar path doesn't; neither may reintroduce a forbidden import.
+    """
+    from _project_data_fixtures import make_project_data
+
+    project_data = make_project_data(
+        sources=[
+            {
+                "name": "data.csv",
+                "bindings": [
+                    {"display_name": "lopnr", "type": "id", "id_subtype": "integer"},
+                ],
+            }
+        ]
+    )
+    for label, kwargs in (
+        ("sidecar", {}),
+        ("embedded", {"project_data": project_data}),
+    ):
+        out = reg_monabundle.build_bundle(tmp_path / f"{label}.py", **kwargs)
+        src = out.read_text(encoding="utf-8")
+
+        # 1. Line scan — catches the import in any form, incl. inside a
+        # ``try:``/aliased/multi-name statement that the AST walk below
+        # also covers, but the raw text is the most legible failure.
+        for line in src.splitlines():
+            s = line.lstrip()
+            assert not s.startswith("import pydantic"), (
+                f"[{label}] pydantic import leaked: {line!r}"
+            )
+            assert not s.startswith("from pydantic"), (
+                f"[{label}] pydantic import leaked: {line!r}"
+            )
+            assert not s.startswith("import reg_schema"), (
+                f"[{label}] reg_schema import leaked: {line!r}"
+            )
+            assert not s.startswith("from reg_schema"), (
+                f"[{label}] reg_schema import leaked: {line!r}"
+            )
+
+        # 2. AST import check — the structural proof. Walks every
+        # Import / ImportFrom node (any nesting depth) and asserts no
+        # module is pydantic or reg_schema (exact or dotted submodule).
+        tree = ast.parse(src)
+        forbidden: list[str] = []
+        for node in ast.walk(tree):
+            modules: list[str] = []
+            if isinstance(node, ast.Import):
+                modules = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                modules = [node.module or ""]
+            for mod in modules:
+                if mod in ("pydantic", "reg_schema") or mod.startswith(
+                    ("pydantic.", "reg_schema.")
+                ):
+                    forbidden.append(mod)
+        assert not forbidden, (
+            f"[{label}] bundle carries forbidden imports {sorted(set(forbidden))} "
+            f"— the §9.6 boundary requires the bundle to be free of pydantic "
+            f"and reg_schema. Validation is the build-time gate "
+            f"(spec_loader.validate_project_data); the runtime deserializes "
+            f"via loadedspec_from_dict."
+        )
+
+
 def test_bundle_defines_every_dropped_relative_import_target(tmp_path: Path):
     """Catch the class of bug where the slicer drops a relative import
     (``from ._util import foo``) but the source module isn't in

@@ -64,37 +64,40 @@ def test_slicer_drops_caller_runtime_intra_pkg_imports(build):
     assert "def main():" in text
 
 
-def test_slicer_drops_reg_schema_and_reg_monabundle_imports(build):
-    """The static amalgamated prefixes (reg_schema, reg_monabundle) must
-    keep being dropped — this guards against a future refactor that
-    accidentally relaxes the static set when generalising for the
-    dynamic runtime prefix."""
+def test_slicer_drops_reg_monabundle_imports(build):
+    """The static amalgamated prefix (``reg_monabundle``) must keep being
+    dropped — this guards against a future refactor that accidentally
+    relaxes the static set when generalising for the dynamic runtime
+    prefix.
+
+    ``reg_schema`` is intentionally NOT in the static set post-A3.4: it
+    is never amalgamated (§9.6), so a stray ``from reg_schema import …``
+    would NOT be dropped and would leak as a live import — which is the
+    exact failure ``test_build_mona_bundle.test_bundle_carries_no_pydantic_or_reg_schema``
+    gates. The runtime is reg_schema-free by construction, so no such
+    import exists in the real runtime modules to drop."""
     text = build(
         "from __future__ import annotations\n"
-        "from reg_schema import ProjectData\n"
         "from reg_monabundle import SUPPRESS_K\n"
-        "import reg_schema.structural\n\n"
+        "import reg_monabundle.constants\n\n"
         "def x():\n"
         "    return SUPPRESS_K\n",
         pkg_name="tinypkg",
     )
-    # Scope to the sliced mod.py block — ``from reg_schema`` and
-    # ``from reg_monabundle`` appear elsewhere in the bundle (the header
-    # docstring, the amalgamated module comments). What matters is that
-    # they don't appear as live ImportFrom statements inside mod's body.
+    # Scope to the sliced mod.py block — ``from reg_monabundle`` appears
+    # elsewhere in the bundle (the header docstring, the amalgamated
+    # module comments). What matters is that it doesn't appear as a live
+    # ImportFrom statement inside mod's body.
     mod_block = text[
         text.index("# mod.py") : text.index("# Runner", text.index("# mod.py"))
     ]
     for line in mod_block.splitlines():
         s = line.lstrip()
-        assert not s.startswith("from reg_schema"), (
-            f"reg_schema import leaked into sliced runtime: {line!r}"
-        )
         assert not s.startswith("from reg_monabundle"), (
             f"reg_monabundle import leaked into sliced runtime: {line!r}"
         )
-        assert not s.startswith("import reg_schema"), (
-            f"reg_schema absolute-import leaked: {line!r}"
+        assert not s.startswith("import reg_monabundle"), (
+            f"reg_monabundle absolute-import leaked: {line!r}"
         )
 
 
@@ -108,17 +111,19 @@ def test_slicer_emits_valid_python(build):
 
 
 def test_static_prefix_uses_exact_or_dotted_match(build):
-    """A bare ``startswith("reg_schema")`` would match ``reg_schema_v2``
-    — the slicer's exact-or-dotted rule must keep that import."""
+    """A bare ``startswith("reg_monabundle")`` would match
+    ``reg_monabundle_v2`` — the slicer's exact-or-dotted rule must keep
+    that import."""
     text = build(
-        "from __future__ import annotations\nimport reg_schema_v2\n\ndef y(): pass\n",
+        "from __future__ import annotations\n"
+        "import reg_monabundle_v2\n\ndef y(): pass\n",
         pkg_name="exactmatchpkg",
     )
     # The hypothetical sibling import must SURVIVE the slicer — even
     # though running the bundle would ImportError on a real MONA box,
     # that's the runtime author's problem; the slicer's job is to be
     # precise.
-    assert "import reg_schema_v2" in text
+    assert "import reg_monabundle_v2" in text
 
 
 def test_build_bundle_writes_to_supplied_path(tmp_path: Path):

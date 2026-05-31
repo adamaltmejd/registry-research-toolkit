@@ -42,7 +42,7 @@ from .summarize import SUPPRESS_K, small_pop_threshold, summarize_column
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
 
-    from reg_schema import Panel
+    from .spec import Panel
 
 log = logging.getLogger("mdw.extract")
 

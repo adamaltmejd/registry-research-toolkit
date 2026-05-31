@@ -376,7 +376,8 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
     """Amalgamate the runtime modules into a single .py for MONA upload."""
     import json
 
-    from reg_monabundle.runtime.spec import _reject_duplicate_keys, parse_project_data
+    from reg_monabundle.build.spec_loader import validate_project_data
+    from reg_monabundle.runtime.spec import _reject_duplicate_keys
 
     from reg_monabundle import DEFAULT_OUTPUT_NAME, build_bundle
 
@@ -408,9 +409,11 @@ def _cmd_build_bundle(args: argparse.Namespace) -> int:
             print(f"Error: {spec_path}: {exc}", file=sys.stderr)
             return 1
         # Validate before embedding — shipping a structurally broken
-        # bundle is worse than failing at build.
+        # bundle is worse than failing at build. This is the §6.8.1
+        # structural-validation gate (full Pydantic reg_schema validator);
+        # the bundle runtime trusts the embedded JSON and never re-runs it.
         try:
-            parse_project_data(project_data)
+            validate_project_data(project_data)
         except ValueError as exc:
             print(f"Error: {spec_path} failed validation: {exc}", file=sys.stderr)
             return 1
