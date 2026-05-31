@@ -3551,8 +3551,32 @@ def _reparent_variable_alias(conn: sqlite3.Connection) -> None:
         "VALUES (?, ?, ?)",
         rows,
     )
+
+    # State-column backstop (Codex P2 #149): the cvid column-tie above SKIPS
+    # genuinely-ambiguous split cvids (skip-not-guess), which can drop a column a
+    # `variable_state` still carries — `get_datacolumns`/`resolve` would then miss
+    # a column the data actively uses (7 such columns / 6 variables on the real
+    # corpus). `variable_state.variable_id` is the coalescer's GROUND-TRUTH sibling
+    # assignment, so inserting its own (variable_id, variant, delivery_column) is
+    # unambiguous — no heuristic, no guess. This guarantees the invariant
+    # `variable_alias ⊇ variable_state delivery columns` (validate.py enforces it).
+    # NOTE: this recovers state-bearing columns only; a column that lived in the
+    # raw cvid history but never became a coalesced state is still skip-dropped for
+    # ambiguous split cvids — the residual is tracked for the coalescer-side
+    # cvid→variable_id materialization that would retire the heuristic entirely.
+    n_alias_before = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
+    conn.execute(
+        "INSERT OR IGNORE INTO variable_alias "
+        "    (variable_id, register_variant_id, delivery_column_name) "
+        "SELECT DISTINCT variable_id, register_variant_id, delivery_column_name "
+        "FROM variable_state WHERE delivery_column_name IS NOT NULL"
+    )
+
     n = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
     msg = f"  {n:,} variable_alias rows (variable_id-grained)"
+    n_backstopped = n - n_alias_before
+    if n_backstopped:
+        msg += f"; {n_backstopped:,} state-columns recovered via backstop"
     if n_skipped:
         msg += f"; {n_skipped:,} cvids unattributable to a split sibling (skipped)"
     _progress(msg)

@@ -476,7 +476,8 @@ def _real_reg_meta_db() -> sqlite3.Connection:
         "CREATE TABLE variable_alias ("
         "  variable_id INTEGER, register_variant_id INTEGER, delivery_column_name TEXT);"
         "CREATE TABLE variable_state ("
-        "  variable_id INTEGER, register_variant_id INTEGER, data_type TEXT, "
+        "  variable_id INTEGER, register_variant_id INTEGER, "
+        "  delivery_column_name TEXT, data_type TEXT, "
         "  value_set_id INTEGER, valid_from TEXT, valid_to TEXT, "
         "  classification_id INTEGER);"
         "CREATE TABLE classification (id INTEGER PRIMARY KEY, short_name TEXT);"
@@ -511,22 +512,58 @@ def test_reg_meta_lookup_multi_variant_vote_not_inflated():
     # Variant 10 era → GenderA (the `kon` column's real family).
     conn.execute(
         "INSERT INTO variable_state VALUES "
-        "(1, 10, 'int', NULL, '2020-01-01', '2020-12-31', 100)"
+        "(1, 10, 'Kon', 'int', NULL, '2020-01-01', '2020-12-31', 100)"
     )
     # Variant 11 eras → GenderB ×2 (the `pnr` column — must NOT vote for `kon`).
     conn.execute(
         "INSERT INTO variable_state VALUES "
-        "(1, 11, 'int', NULL, '2020-01-01', '2020-12-31', 200)"
+        "(1, 11, 'PNr', 'int', NULL, '2020-01-01', '2020-12-31', 200)"
     )
     conn.execute(
         "INSERT INTO variable_state VALUES "
-        "(1, 11, 'int', NULL, '2021-01-01', '2021-12-31', 200)"
+        "(1, 11, 'PNr', 'int', NULL, '2021-01-01', '2021-12-31', 200)"
     )
     conn.commit()
 
     sig = _reg_meta_lookup(conn, {"Kon"}, [34])["kon"]
     assert sig.classification_short_name == "GenderA"
     # Only the `kon`@10 family — the GenderB@11 eras are scoped out.
+    assert sig.n_classifications == 1
+
+
+def test_reg_meta_lookup_column_pairing_within_variant():
+    """A2.7 (Codex P2 #149): within ONE variant, `variable_state` is per-era and
+    carries its era's `delivery_column_name`. The state join pairs each alias to
+    states delivered under THAT column, so an old column does not count a later
+    era's value_set/classification delivered under a DIFFERENT column.
+
+    Geometry: variable 1, variant 10, two eras — column `inkomst` (IncomeA, vs 10)
+    then renamed to `ink` (IncomeB, vs 20). Querying `inkomst`:
+
+    - Pre-fix (variant-only join): `inkomst` cross-joins BOTH eras → n_value_sets
+      2 and an IncomeA/IncomeB tie. WRONG: vs 20 was delivered as `ink`.
+    - Column-paired: `inkomst` matches only the IncomeA/vs-10 era."""
+    conn = _real_reg_meta_db()
+    conn.execute("INSERT INTO variable VALUES (1, 34)")
+    conn.execute("INSERT INTO classification VALUES (100, 'IncomeA')")
+    conn.execute("INSERT INTO classification VALUES (200, 'IncomeB')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'inkomst')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'ink')")
+    # Same variable+variant, two eras, DIFFERENT delivery columns + families.
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'inkomst', 'int', 10, '2018-01-01', '2018-12-31', 100)"
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'ink', 'int', 20, '2019-01-01', '2019-12-31', 200)"
+    )
+    conn.commit()
+
+    sig = _reg_meta_lookup(conn, {"inkomst"}, [34])["inkomst"]
+    # Only the `inkomst`-era evidence; the later `ink` era is paired out.
+    assert sig.classification_short_name == "IncomeA"
+    assert sig.n_value_sets == 1
     assert sig.n_classifications == 1
 
 

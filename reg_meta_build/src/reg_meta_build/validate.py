@@ -134,6 +134,7 @@ def validate_built_db(db_path: Path) -> ValidationResult:
         _check_schema_shape(conn, result, tables)
         _check_state_projection_integrity(conn, result, has_projection)
         _check_var_year_codes_anchor(conn, result, has_projection)
+        _check_variable_alias_covers_state_columns(conn, result, tables)
         _check_operational(conn, result)
     finally:
         conn.close()
@@ -371,6 +372,39 @@ def _check_var_year_codes_anchor(
         )
     else:
         result.ok(f"var_id {_ANCHOR_VAR_ID} year {_ANCHOR_YEAR} excludes 00/05")
+
+
+def _check_variable_alias_covers_state_columns(
+    conn: sqlite3.Connection, result: ValidationResult, tables: set[str]
+) -> None:
+    """A2.7 invariant: every delivery column a `variable_state` carries must be
+    present in `variable_alias` (the source `get_datacolumns`/`resolve` read).
+
+    `_reparent_variable_alias`'s cvid column-tie SKIPS genuinely-ambiguous split
+    cvids (skip-not-guess), which could otherwise drop a column the state still
+    uses; the build's state-column backstop closes that gap. This guards the
+    backstop against regression — a missing state-column means a column the data
+    actively uses would be invisible to the catalog API."""
+    result.section("[projection: variable_alias covers state columns]")
+    if not {"variable_alias", "variable_state"}.issubset(tables):
+        result.ok("variable_alias / variable_state absent — check skipped")
+        return
+    missing = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT DISTINCT vs.variable_id, "
+        "  vs.register_variant_id, vs.delivery_column_name "
+        "  FROM variable_state vs WHERE vs.delivery_column_name IS NOT NULL "
+        "  AND NOT EXISTS (SELECT 1 FROM variable_alias va "
+        "    WHERE va.variable_id = vs.variable_id "
+        "    AND va.register_variant_id = vs.register_variant_id "
+        "    AND LOWER(va.delivery_column_name) = LOWER(vs.delivery_column_name)))"
+    ).fetchone()[0]
+    if missing:
+        result.fail(
+            f"{missing} variable_state delivery column(s) missing from "
+            "variable_alias (reparent backstop regression?)"
+        )
+    else:
+        result.ok("all variable_state delivery columns present in variable_alias")
 
 
 def _check_operational(conn: sqlite3.Connection, result: ValidationResult) -> None:

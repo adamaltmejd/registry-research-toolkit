@@ -237,6 +237,30 @@ class TestValidateModule:
             "present but no state overlaps 2010" in f for f in result.failures
         ), result.failures
 
+    def test_variable_alias_missing_state_column_fails(
+        self, fixture_db: Path, tmp_path: Path
+    ):
+        """A2.7 (Codex P2 #149): the invariant FAILs when a `variable_state`
+        carries a delivery column absent from `variable_alias` — i.e. the reparent
+        state-column backstop regressed and the catalog API would miss a column
+        the data actively uses."""
+        broken = tmp_path / "broken.db"
+        broken.write_bytes(fixture_db.read_bytes())
+        conn = sqlite3.connect(broken)
+        sid = conn.execute("SELECT MIN(state_id) FROM variable_state").fetchone()[0]
+        conn.execute(
+            "UPDATE variable_state SET delivery_column_name = 'GHOSTCOL_NO_ALIAS' "
+            "WHERE state_id = ?",
+            (sid,),
+        )
+        conn.commit()
+        conn.close()
+        result = validate_built_db(broken)
+        assert not result.passed
+        assert any("missing from variable_alias" in f for f in result.failures), (
+            result.failures
+        )
+
 
 class TestBuildDbValidateFlag:
     def test_argparse_exposes_validate(self):

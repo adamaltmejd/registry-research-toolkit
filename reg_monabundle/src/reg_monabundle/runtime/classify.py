@@ -409,6 +409,14 @@ def _reg_meta_lookup(
     # `most_common(1)` badge (PR #149). Scoping to the alias's own variant keeps
     # one vote per (column, variant, era) — the per-cvid-variant scoping the
     # cvid-keyed `variable_alias` had before A2.7.
+    #
+    # The join also pairs each alias to states delivered under THAT
+    # delivery_column_name (Codex P2 #149), not every state in the variant:
+    # `variable_state` is per-era and carries its era's column, so a variant
+    # whose column changed across eras (8,710 on the real corpus) would otherwise
+    # let an old alias count a later era's value_set/classification. A NULL
+    # state-column can't be disproven, so it stays in scope for every alias of the
+    # variant (598 such states carry a value_set).
     sql = (
         "SELECT LOWER(va.delivery_column_name) AS lower_name, "
         "       vs.data_type AS data_type, "
@@ -420,6 +428,8 @@ def _reg_meta_lookup(
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
         "    AND vs.register_variant_id = va.register_variant_id "
+        "    AND (vs.delivery_column_name IS NULL "
+        "         OR LOWER(vs.delivery_column_name) = LOWER(va.delivery_column_name)) "
         "LEFT JOIN classification c ON vs.classification_id = c.id "
         f"WHERE LOWER(va.delivery_column_name) IN ({col_placeholders}) "
         f"  AND v.register_id IN ({reg_placeholders})"
