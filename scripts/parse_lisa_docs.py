@@ -1212,30 +1212,49 @@ def get_lisa_columns(md_text: str | None = None) -> set[str]:
             print(f"Extracted {len(vf)} columns from Variabelförteckning")
             return set(vf.keys())
 
-    # Fallback to reg_meta
+    # Fallback to reg_meta. Reached only when the doc had no Variabelförteckning.
+    # Handling is split by failure class so real bugs can't hide again (they did
+    # for two schema stages across A2.6/A2.7):
+    #   - reg_meta not installed (ImportError): the one expected "not a bug" state
+    #     (this is primarily a doc parser) → warn and degrade to an empty set.
+    #   - DB missing / schema-incompatible (open_db → RegMetaError): reg_meta's
+    #     errors are user-facing — render its message + remediation and exit with
+    #     its stable code, not a raw traceback and not a silent [].
+    #   - query failure (sqlite3.Error, e.g. a renamed/dropped table): left to
+    #     raise. That's schema-drift — a traceback is the right "tell maintainers".
     try:
         from reg_meta.db import open_db
-
-        db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
-        conn = open_db(db_path)
-        # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed), and
-        # `variable_instance` / `register_version` are dropped before ship. Join
-        # straight to `variable` then `register` — the register-level join is
-        # enough for "all LISA columns". Mirrors reg_meta.queries.get_datacolumns.
-        cur = conn.execute("""
-            SELECT DISTINCT va.delivery_column_name
-            FROM variable_alias va
-            JOIN variable v ON va.variable_id = v.variable_id
-            JOIN register r ON v.register_id = r.register_id
-            WHERE r.name LIKE '%LISA%'
-        """)
-        cols = {row[0] for row in cur.fetchall()}
-        conn.close()
-        print(f"Loaded {len(cols)} columns from reg_meta database")
-        return cols
-    except Exception as e:
-        print(f"Warning: could not load columns: {e}", file=sys.stderr)
+        from reg_meta.errors import RegMetaError
+    except ImportError as e:
+        print(
+            f"Warning: reg_meta not installed; no fallback columns: {e}",
+            file=sys.stderr,
+        )
         return set()
+
+    db_path = Path.home() / ".local/share/reg_meta/reg_meta.db"
+    try:
+        conn = open_db(db_path)
+    except RegMetaError as e:
+        print(f"ERROR: {e.message}", file=sys.stderr)
+        if e.remediation:
+            print(f"  {e.remediation}", file=sys.stderr)
+        sys.exit(e.exit_code)
+    # A2.7: `variable_alias` is variable_id-keyed now (was cvid-keyed), and
+    # `variable_instance` / `register_version` are dropped before ship. Join
+    # straight to `variable` then `register` — the register-level join is
+    # enough for "all LISA columns". Mirrors reg_meta.queries.get_datacolumns.
+    cur = conn.execute("""
+        SELECT DISTINCT va.delivery_column_name
+        FROM variable_alias va
+        JOIN variable v ON va.variable_id = v.variable_id
+        JOIN register r ON v.register_id = r.register_id
+        WHERE r.name LIKE '%LISA%'
+    """)
+    cols = {row[0] for row in cur.fetchall()}
+    conn.close()
+    print(f"Loaded {len(cols)} columns from reg_meta database")
+    return cols
 
 
 def main() -> None:
