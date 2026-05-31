@@ -2784,6 +2784,10 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
     # AktuellVariabel row names one cvid, and its stamped owning variable_id
     # picks the exact §5.7 split sibling directly — no column-tie, no ambiguity
     # skip. Excludes cvids whose variable carries no slug (→ unresolved).
+    # Stream the cursor (no `.fetchall()`): the join spans every cvid (~515K on
+    # the real corpus), so materializing the full row list before building the
+    # dict is a needless allocation — matches `cvid_to_year` below. The cursor is
+    # fully drained here before any INSERT, so no read/write interleaving.
     cvid_to_slug: dict[int, tuple[str, str, str]] = {}
     for cvid, var_slug, r_slug, p_slug in conn.execute(
         "SELECT vi.cvid, v.slug, r.slug, p.slug "
@@ -2793,7 +2797,7 @@ def _materialize_replaced_by_edges(conn: sqlite3.Connection) -> dict[str, int]:
         "JOIN provider p ON r.provider_id = p.provider_id "
         "WHERE vi.variable_id IS NOT NULL AND v.slug IS NOT NULL "
         "AND r.slug IS NOT NULL"
-    ).fetchall():
+    ):
         cvid_to_slug[cvid] = (p_slug, r_slug, var_slug)
 
     # #142: cvid -> edition year, for `effective_year` on AktuellVariabel-grain
