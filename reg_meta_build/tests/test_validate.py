@@ -242,8 +242,8 @@ class TestValidateModule:
     ):
         """A2.7 (Codex P2 #149): the invariant FAILs when a `variable_state`
         carries a delivery column absent from `variable_alias` — i.e. the reparent
-        state-column backstop regressed and the catalog API would miss a column
-        the data actively uses."""
+        regressed and the catalog API would miss a column the data actively
+        uses."""
         broken = tmp_path / "broken.db"
         broken.write_bytes(fixture_db.read_bytes())
         conn = sqlite3.connect(broken)

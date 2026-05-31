@@ -712,9 +712,11 @@ def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, i
     `vi.value_set_id IS variable_state.value_set_id`, and `NULL IS NULL` matches,
     so every cvid's classification fanned onto every sibling's state. (With
     distinct non-NULL value sets the old query would coincidentally separate the
-    siblings, hiding the bug; NULL is the faithful failing case.) The column-tie
-    discriminator (`delivery_column_name` → owning sibling) does NOT depend on
-    value_set_id, so the fix isolates them regardless.
+    siblings, hiding the bug; NULL is the faithful failing case.) Each cvid
+    carries its OWNING `variable_id` (the ground truth the coalescer stamps onto
+    `variable_instance.variable_id` post-triage; set directly here), and the
+    backfill attributes by that — NOT by value_set_id — so the siblings stay
+    isolated regardless.
     """
     from reg_meta_build.db import DDL, seed_providers
 
@@ -759,19 +761,20 @@ def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, i
         "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Skolkommun')",
         (vid_b,),
     )
-    # Pre-ship cvids: each carries its OWN classification, value_set_id NULL,
-    # tied to its column via variable_alias_build. Both share provider_key 920.
+    # Pre-ship cvids: each carries its OWN classification + OWNING variable_id
+    # (the coalescer's post-triage stamp), value_set_id NULL. Both share
+    # provider_key 920; the variable_id stamp is what isolates the siblings.
     conn.execute(
         "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
-        "regver_id, var_id, classification_id) "
-        "VALUES (9300, 1, 10, 100, 920, ?)",
-        (cls_a,),
+        "regver_id, var_id, classification_id, variable_id) "
+        "VALUES (9300, 1, 10, 100, 920, ?, ?)",
+        (cls_a, vid_a),
     )
     conn.execute(
         "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
-        "regver_id, var_id, classification_id) "
-        "VALUES (9301, 1, 10, 100, 920, ?)",
-        (cls_b,),
+        "regver_id, var_id, classification_id, variable_id) "
+        "VALUES (9301, 1, 10, 100, 920, ?, ?)",
+        (cls_b, vid_b),
     )
     conn.executemany(
         "INSERT INTO variable_alias_build (cvid, delivery_column_name) VALUES (?, ?)",
@@ -783,8 +786,9 @@ def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, i
 
 class TestBackfillStateClassifications:
     """A2.7 [P2]: `_backfill_state_classifications` must attribute each cvid's
-    classification to its OWNING split sibling (the §5.7 column-tie), not fan it
-    across every sibling sharing the non-unique `(register_id, provider_key)`."""
+    classification to its OWNING split sibling (by the coalescer-stamped
+    `variable_instance.variable_id`), not fan it across every sibling sharing the
+    non-unique `(register_id, provider_key)`."""
 
     def test_each_sibling_gets_own_classification(self) -> None:
         from reg_meta_build.db import _backfill_state_classifications
@@ -821,4 +825,77 @@ class TestBackfillStateClassifications:
         b_cls = classifications_for_variable(conn, vid_b)
         assert [c["id"] for c in a_cls] == [cls_a]  # only A's, not B's
         assert [c["id"] for c in b_cls] == [cls_b]
+        conn.close()
+
+
+class TestReparentVariableAlias:
+    """Post-#149: `_reparent_variable_alias` attributes each cvid's delivery
+    columns to its OWNING split sibling via the coalescer-stamped
+    `variable_instance.variable_id` — no column-tie heuristic, no skip."""
+
+    def test_split_siblings_get_own_columns_incl_historical(self) -> None:
+        """A cvid whose ONLY column is a historical one that never became a
+        coalesced `variable_state` is still attributed to its owning sibling. The
+        old column-tie SKIPPED such a cvid (its columns resolved to no
+        state-bearing sibling), dropping the column from `variable_alias`; the
+        ground-truth `variable_id` stamp recovers it under the right sibling."""
+        from reg_meta_build.db import DDL, _reparent_variable_alias, seed_providers
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        conn.executescript(DDL)
+        seed_providers(conn)
+        conn.execute(
+            "INSERT INTO register (register_id, provider_id, slug, name) "
+            "VALUES (1, 1, 'testreg', 'TESTREG')"
+        )
+        conn.execute(
+            "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+            "VALUES (10, 1, 'individer', 'Individer')"
+        )
+        # Two split siblings sharing provider_key '920'.
+        vid_a = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '920', 'Kommun', 'kommun-hem')"
+        ).lastrowid
+        vid_b = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name, slug) "
+            "VALUES (1, '920', 'Kommun', 'kommun-skol')"
+        ).lastrowid
+        # Surviving latest-era states, one delivery column each.
+        conn.executemany(
+            "INSERT INTO variable_state (variable_id, register_variant_id, "
+            "valid_from, valid_to, delivery_column_name) "
+            "VALUES (?, 10, '2020-01-01', '9999-12-31', ?)",
+            [(vid_a, "Hemkommun"), (vid_b, "Skolkommun")],
+        )
+        # cvids stamped with their owning variable_id (coalescer ground truth).
+        # cvid 9302 carries ONLY 'Hemkn_old' — a historical column for sibling A
+        # that never became a state (the previously-skipped case).
+        conn.executemany(
+            "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+            "regver_id, var_id, variable_id) VALUES (?, 1, 10, 100, 920, ?)",
+            [(9300, vid_a), (9301, vid_b), (9302, vid_a)],
+        )
+        conn.executemany(
+            "INSERT INTO variable_alias_build (cvid, delivery_column_name) VALUES (?, ?)",
+            [(9300, "Hemkommun"), (9301, "Skolkommun"), (9302, "Hemkn_old")],
+        )
+        conn.commit()
+
+        _reparent_variable_alias(conn)
+
+        cols = {
+            (r["variable_id"], r["delivery_column_name"])
+            for r in conn.execute(
+                "SELECT variable_id, delivery_column_name FROM variable_alias"
+            )
+        }
+        # A keeps its current + historical column; B only its own. Neither
+        # sibling leaks the other's column, and 'Hemkn_old' is recovered.
+        assert cols == {
+            (vid_a, "Hemkommun"),
+            (vid_a, "Hemkn_old"),
+            (vid_b, "Skolkommun"),
+        }
         conn.close()

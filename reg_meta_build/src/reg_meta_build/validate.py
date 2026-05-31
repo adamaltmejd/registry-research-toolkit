@@ -380,11 +380,14 @@ def _check_variable_alias_covers_state_columns(
     """A2.7 invariant: every delivery column a `variable_state` carries must be
     present in `variable_alias` (the source `get_datacolumns`/`resolve` read).
 
-    `_reparent_variable_alias`'s cvid column-tie SKIPS genuinely-ambiguous split
-    cvids (skip-not-guess), which could otherwise drop a column the state still
-    uses; the build's state-column backstop closes that gap. This guards the
-    backstop against regression — a missing state-column means a column the data
-    actively uses would be invisible to the catalog API."""
+    `_reparent_variable_alias` re-parents each cvid's alias columns onto the
+    cvid's OWNING `variable_id` (the ground truth the coalescer stamps onto
+    `variable_instance.variable_id` from §5.7 triage). That makes this invariant
+    STRUCTURAL — a state's `delivery_column_name` is always one of its group's
+    cvids' alias columns, and that cvid shares the state's `variable_id`, so the
+    column lands under the same key. This check guards against a regression in
+    that re-parent: a missing state-column means a column the data actively uses
+    would be invisible to the catalog API."""
     result.section("[projection: variable_alias covers state columns]")
     if not {"variable_alias", "variable_state"}.issubset(tables):
         result.ok("variable_alias / variable_state absent — check skipped")
@@ -401,7 +404,7 @@ def _check_variable_alias_covers_state_columns(
     if missing:
         result.fail(
             f"{missing} variable_state delivery column(s) missing from "
-            "variable_alias (reparent backstop regression?)"
+            "variable_alias (reparent regression?)"
         )
     else:
         result.ok("all variable_state delivery columns present in variable_alias")

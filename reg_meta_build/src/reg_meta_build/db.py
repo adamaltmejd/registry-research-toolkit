@@ -342,12 +342,27 @@ CREATE TABLE variable_instance (
     -- NULL when the cvid has no codes (sentinel-only or every union pair
     -- excluded by year projection). No reverse index — every consumer reaches
     -- here from the cvid PK side, so the forward path is already optimal.
-    value_set_id INTEGER REFERENCES value_set(value_set_id)
-    -- A2.1.5: no FK to `variable` — its natural key moved to the synthetic
-    -- `variable_id` PK + register-unique `slug`, so `(register_id, var_id)` is
-    -- no longer a UNIQUE/PK target. The join is by convention (and the
-    -- `idx_variable_natkey` index). A2.7 dropped the v0.11 `via_source_id`
-    -- self-FK lineage column (superseded by `variable_state_lineage`, A2.4).
+    value_set_id INTEGER REFERENCES value_set(value_set_id),
+    -- The cvid's OWNING `variable_id` — GROUND TRUTH, stamped by
+    -- `_coalesce_variable_states` AFTER §5.7 triage (NULL until then). A2.2
+    -- triage can split one source `var_id` into sibling variables that SHARE
+    -- the `(register_id, var_id)` provider key, so `var_id` alone can't name the
+    -- owning variable; but the coalescer builds each `variable_state` FROM these
+    -- cvids and therefore KNOWS the exact cvid→sibling assignment, which it
+    -- records here. `_reparent_variable_alias` and `_backfill_state_classifications`
+    -- read it to attribute each cvid's delivery columns / classification to the
+    -- right sibling — no post-hoc column-tie heuristic, no skip. No FK and no
+    -- index: build-time-only (dropped with the table, before
+    -- `PRAGMA foreign_key_check`), values valid by construction, and every
+    -- reader joins from the cvid PK side. Distinct from the natural-key note
+    -- below — that's about the absent `(register_id, var_id)` → `variable` FK.
+    variable_id INTEGER
+    -- A2.1.5: no FK on the `(register_id, var_id)` natural key to `variable` —
+    -- it moved to the synthetic `variable_id` PK + register-unique `slug`, so
+    -- `(register_id, var_id)` is no longer a UNIQUE/PK target. That join is by
+    -- convention (and the `idx_variable_natkey` index). A2.7 dropped the v0.11
+    -- `via_source_id` self-FK lineage column (superseded by
+    -- `variable_state_lineage`, A2.4).
 );
 
 -- A2.7: BUILD-TIME-ONLY cvid-grained alias staging. The import pass writes one
@@ -449,11 +464,11 @@ CREATE INDEX idx_variable_state_classification
 -- `variable_id` + `register_variant_id` (`_reparent_variable_alias`) right
 -- before `DROP TABLE variable_instance`, so the cvid FK never dangles. A
 -- post-A2.2 `var_id` can be non-unique (split siblings share it), so the
--- re-parent COLUMN-TIES each cvid's alias to the specific sibling its delivery
--- column resolves to (via `variable_state`) — each sibling surfaces only its
--- own columns in `get_datacolumns`. A cvid unattributable to a single sibling
--- is skipped (skip-not-guess). It does not feed resolution (the resolver reads
--- `variable_state`).
+-- re-parent attributes each cvid's alias to the specific sibling via the
+-- ground-truth `variable_instance.variable_id` the coalescer stamped — each
+-- sibling surfaces only its own columns in `get_datacolumns`, with no
+-- column-tie heuristic and no skip (every cvid resolves). It does not feed
+-- resolution (the resolver reads `variable_state`).
 CREATE TABLE variable_alias (
     variable_id INTEGER NOT NULL REFERENCES variable(variable_id),
     -- The delivering variant. Lets `get_datacolumns` group columns per variant
@@ -2184,6 +2199,15 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     # known year.
     var_max_regver: dict[tuple[int, int, int], int] = {}
 
+    # cvid → its group key. A cvid belongs to exactly ONE group: every gkey
+    # field is a cvid-level constant (register/variant/var_id/shape/value-set/
+    # label/grain) EXCEPT the trailing column component, and §5.7 rule-2
+    # connectivity (the `cvid_anchor` union above) merges ALL of a cvid's
+    # columns into one component — so every row a cvid contributes carries the
+    # same gkey. After triage assigns each gkey a `variable_id`, this lets the
+    # coalescer stamp `variable_instance.variable_id` with no guessing.
+    cvid_gkey: dict[int, tuple] = {}
+
     for row in rows:
         grain = row["grain"] or ""
         col = row["delivery_column_name"]
@@ -2208,6 +2232,7 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
             grain,
             component,
         )
+        cvid_gkey[row["cvid"]] = gkey  # idempotent: one cvid → one gkey
         grp = groups.get(gkey)
         if grp is None:
             grp = _StateGroup(
@@ -2369,6 +2394,33 @@ def _coalesce_variable_states(conn: sqlite3.Connection) -> dict[str, Any]:
     # stale for them — triage.assignments carries the per-gkey target) and
     # routes each group to its variable_id + (folded) value_set_version_label.
     triage = _triage_groups(conn, groups, vid_map)
+
+    # Stamp each cvid's OWNING `variable_id` now that triage has assigned every
+    # group (including the split siblings it just minted). This is the GROUND
+    # TRUTH `_reparent_variable_alias` / `_backfill_state_classifications` read
+    # instead of a post-hoc column-tie: each cvid maps to exactly one gkey (see
+    # `cvid_gkey`), so `assignments[gkey]` is its unambiguous sibling — no
+    # guessing, no skip. A None assignment is a missing-parent invariant break
+    # the materializer below raises on; the walrus filter skips it here so that
+    # raise wins (and `variable_id` stays NULL, which the readers tolerate).
+    # Coverage is the coalescer-visible cvid set (`cvid_gkey`, built from `rows`,
+    # which INNER-JOINs `register_version`): a cvid absent from `rows` produced no
+    # `variable_state` either, so an unstamped cvid is consistent with
+    # materialization — never a dropped state. The real corpus stamps every cvid
+    # (0 unattributed); the importer writes a `register_version` per edition.
+    stamps = [
+        (vid, cvid)
+        for cvid, gkey in cvid_gkey.items()
+        if (vid := triage.assignments.get(gkey)) is not None
+    ]
+    conn.executemany(
+        "UPDATE variable_instance SET variable_id = ? WHERE cvid = ?", stamps
+    )
+    n_unattributed = len(cvid_gkey) - len(stamps)
+    _progress(
+        f"  stamped {len(stamps):,} cvids with their owning variable_id"
+        + (f" ({n_unattributed:,} unattributed)" if n_unattributed else "")
+    )
 
     batch: list[tuple] = []
     sentinel_count = 0
@@ -3396,199 +3448,46 @@ def _project_and_mint_value_sets(
     return stats
 
 
-def _resolve_cvid_to_variable_id(
-    conn: sqlite3.Connection,
-) -> tuple[dict[int, int], int]:
-    """Map each `variable_instance` cvid to its OWNING `variable_id`, splitting
-    A2.2 siblings by the §5.7 column-tie discriminator.
-
-    Post-A2.2 a `(register_id, var_id)` source key can be NON-unique (split
-    siblings share one `provider_key`), so the bare key fans a cvid onto EVERY
-    sibling. This builds the `(register_id, var_id, delivery_column) ->
-    variable_id` column-tie from `variable_state` (the coalescer copied each
-    sibling's delivery column into `variable_state.delivery_column_name`) and
-    resolves each cvid's alias columns to a single sibling. A cvid's columns
-    share one §5.7 component → one sibling, so resolving ANY alias suffices;
-    a non-singleton (column maps to >1 sibling, or none) is SKIPPED — not
-    guessed — mirroring `_materialize_replaced_by_edges`. Non-split var_ids are
-    1:1 and take the plain `provider_key` path.
-
-    Returns ``(cvid_to_variable_id, n_skipped)``. Shared by
-    `_reparent_variable_alias` and `_backfill_state_classifications` so both
-    attribute split siblings identically.
-    """
-    # (register_id, var_id) -> variable_id, and the ambiguous (split) subset.
-    vid_by_key: dict[tuple[int, int], int] = {}
-    ambiguous: set[tuple[int, int]] = set()
-    for register_id, provider_key, variable_id in conn.execute(
-        "SELECT register_id, provider_key, variable_id FROM variable"
-    ):
-        try:
-            var_id = int(provider_key)
-        except (TypeError, ValueError):
-            continue  # SOS merged-name keys carry no integer var_id
-        key = (register_id, var_id)
-        if key in vid_by_key:
-            ambiguous.add(key)
-        else:
-            vid_by_key[key] = variable_id
-
-    # Column -> sibling variable_id, ONLY for split keys (kept small). A column
-    # mapping to two different siblings can no longer disambiguate, so drop it
-    # (collision poison) and let that cvid skip rather than silently take the
-    # last sibling. The key is variant-AGNOSTIC on purpose: it's forgiving when
-    # the coalescer collapsed a cvid's exact (variant, col) out of `variable_state`
-    # — variant-scoping the key would newly skip those cvids (their col only exists
-    # as a state-column under another variant). Residual: two siblings reusing ONE
-    # column under DIFFERENT variants collide (3 keys on the real corpus) — bounded
-    # and CONSERVATIVE (the affected cvid skips → under-attribution, never a wrong
-    # sibling), and the state-column backstop in `_reparent_variable_alias` keeps
-    # `variable_alias` complete regardless. Codex P2 #149 proposed adding the
-    # variant; the clean retirement is the coalescer-side cvid→variable_id map
-    # (spawned follow-up), which drops the heuristic AND the collision both.
-    variable_by_column: dict[tuple[int, int, str], int] = {}
-    column_collisions: set[tuple[int, int, str]] = set()
-    if ambiguous:
-        for register_id, provider_key, variable_id, col in conn.execute(
-            "SELECT v.register_id, v.provider_key, v.variable_id, "
-            "       vs.delivery_column_name "
-            "FROM variable v "
-            "JOIN variable_state vs ON vs.variable_id = v.variable_id "
-            "WHERE vs.delivery_column_name IS NOT NULL"
-        ):
-            try:
-                var_id = int(provider_key)
-            except (TypeError, ValueError):
-                continue
-            if (register_id, var_id) not in ambiguous:
-                continue
-            ckey = (register_id, var_id, col)
-            if variable_by_column.get(ckey, variable_id) != variable_id:
-                column_collisions.add(ckey)
-            variable_by_column[ckey] = variable_id
-        for ckey in column_collisions:
-            del variable_by_column[ckey]
-
-    # cvid -> (register_id, var_id), plus that cvid's alias columns.
-    cvid_key: dict[int, tuple[int, int]] = {}
-    cvid_cols: dict[int, set[str]] = {}
-    for cvid, register_id, var_id in conn.execute(
-        "SELECT cvid, register_id, var_id FROM variable_instance"
-    ):
-        cvid_key[cvid] = (register_id, var_id)
-    for cvid, col in conn.execute(
-        "SELECT cvid, delivery_column_name FROM variable_alias_build"
-    ):
-        cvid_cols.setdefault(cvid, set()).add(col)
-
-    cvid_to_variable_id: dict[int, int] = {}
-    n_skipped = 0
-    for cvid, key in cvid_key.items():
-        if key not in ambiguous:
-            # 1:1 with provider_key — the cvid attaches to the lone variable.
-            variable_id = vid_by_key.get(key)
-            if variable_id is not None:
-                cvid_to_variable_id[cvid] = variable_id
-            continue
-        # Split: resolve the cvid's alias columns to its sibling. The cvid's
-        # columns share one §5.7 component → one sibling; a singleton confirms it.
-        register_id, var_id = key
-        siblings = {
-            variable_by_column[(register_id, var_id, col)]
-            for col in cvid_cols.get(cvid, set())
-            if (register_id, var_id, col) in variable_by_column
-        }
-        if len(siblings) != 1:
-            n_skipped += 1
-            continue
-        cvid_to_variable_id[cvid] = next(iter(siblings))
-    return cvid_to_variable_id, n_skipped
-
-
 def _reparent_variable_alias(conn: sqlite3.Connection) -> None:
     """A2.7: project the cvid-grained `variable_alias_build` staging onto the
     shipped `variable_id`-keyed `variable_alias`, then leave the staging table
     for the caller to DROP.
 
-    Runs as one of the LAST readers of `variable_instance` (it resolves each
-    cvid's `(register_id, var_id)` to a `variable_id` through the promoted
-    `variable` table). `variable_alias` carries the FULL delivery-column history
-    keyed by variable + delivering variant — the source `get_datacolumns` reads,
-    which the coalesced `variable_state.delivery_column_name` (latest era only)
-    can't supply.
+    Runs as one of the LAST readers of `variable_instance`. `variable_alias`
+    carries the FULL delivery-column history keyed by variable + delivering
+    variant — the source `get_datacolumns` reads, which the coalesced
+    `variable_state.delivery_column_name` (latest era only) can't supply.
 
     Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
     siblings share one `provider_key`), so the bare `(register_id, provider_key)`
-    join fans a cvid's column onto EVERY sibling — wrong per-sibling precision
-    (the 169-sibling `hut/Imputerat` split would make `get_datacolumns(any
-    sibling)` return all 169 columns). Column-tie instead, mirroring the §5.7
-    cvid disambiguation `_materialize_replaced_by_edges` uses: build
-    `(register_id, var_id, delivery_column) -> variable_id` from `variable_state`
-    for ambiguous keys (the coalescer copies each sibling's delivery column into
-    `variable_state.delivery_column_name`), then resolve each cvid's alias columns
-    to a single sibling. A cvid's aliases share one §5.7 column component → one
-    sibling, so resolving ANY alias suffices; require a singleton (skip-not-guess
-    on a heuristic regression). Non-split var_ids are 1:1, so they take the plain
-    provider_key join.
+    join would fan a cvid's column onto EVERY sibling — wrong per-sibling
+    precision (the 169-sibling `hut/Imputerat` split would make
+    `get_datacolumns(any sibling)` return all 169 columns). Instead each cvid
+    carries its OWNING `variable_id`, stamped by `_coalesce_variable_states`
+    from the §5.7 triage's ground-truth assignment (the coalescer builds each
+    sibling's `variable_state` FROM these very cvids, so it knows the exact
+    cvid→sibling mapping). A plain join on that column attributes every column —
+    including historical columns that never survived into a coalesced
+    `variable_state` — to the correct sibling, with no column-tie heuristic and
+    no skip. This makes the `variable_alias ⊇ variable_state delivery columns`
+    invariant (validate.py) STRUCTURAL: a state's `delivery_column_name` is
+    always one of its group's cvids' alias columns, and that cvid shares the
+    state's `variable_id`, so the column is inserted under the same key.
     """
     _progress("Re-parenting variable_alias onto variable_id...")
 
-    cvid_to_variable_id, n_skipped = _resolve_cvid_to_variable_id(conn)
-
-    # Per-cvid delivering variant (the shipped alias key) + alias columns.
-    cvid_rvid: dict[int, int] = dict(
-        conn.execute("SELECT cvid, register_variant_id FROM variable_instance")
-    )
-    cvid_cols: dict[int, set[str]] = {}
-    for cvid, col in conn.execute(
-        "SELECT cvid, delivery_column_name FROM variable_alias_build"
-    ):
-        cvid_cols.setdefault(cvid, set()).add(col)
-
-    rows: list[tuple[int, int, str]] = []
-    for cvid, cols in cvid_cols.items():
-        variable_id = cvid_to_variable_id.get(cvid)
-        if variable_id is None:
-            continue  # 1:1 miss, or a split cvid skipped on ambiguity
-        rvid = cvid_rvid[cvid]
-        for col in cols:
-            rows.append((variable_id, rvid, col))
-
-    conn.executemany(
-        "INSERT OR IGNORE INTO variable_alias "
-        "    (variable_id, register_variant_id, delivery_column_name) "
-        "VALUES (?, ?, ?)",
-        rows,
-    )
-
-    # State-column backstop (Codex P2 #149): the cvid column-tie above SKIPS
-    # genuinely-ambiguous split cvids (skip-not-guess), which can drop a column a
-    # `variable_state` still carries — `get_datacolumns`/`resolve` would then miss
-    # a column the data actively uses (7 such columns / 6 variables on the real
-    # corpus). `variable_state.variable_id` is the coalescer's GROUND-TRUTH sibling
-    # assignment, so inserting its own (variable_id, variant, delivery_column) is
-    # unambiguous — no heuristic, no guess. This guarantees the invariant
-    # `variable_alias ⊇ variable_state delivery columns` (validate.py enforces it).
-    # NOTE: this recovers state-bearing columns only; a column that lived in the
-    # raw cvid history but never became a coalesced state is still skip-dropped for
-    # ambiguous split cvids — the residual is tracked for the coalescer-side
-    # cvid→variable_id materialization that would retire the heuristic entirely.
-    n_alias_before = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
     conn.execute(
         "INSERT OR IGNORE INTO variable_alias "
         "    (variable_id, register_variant_id, delivery_column_name) "
-        "SELECT DISTINCT variable_id, register_variant_id, delivery_column_name "
-        "FROM variable_state WHERE delivery_column_name IS NOT NULL"
+        "SELECT DISTINCT vi.variable_id, vi.register_variant_id, "
+        "       vab.delivery_column_name "
+        "FROM variable_alias_build vab "
+        "JOIN variable_instance vi ON vi.cvid = vab.cvid "
+        "WHERE vi.variable_id IS NOT NULL"
     )
 
     n = conn.execute("SELECT COUNT(*) FROM variable_alias").fetchone()[0]
-    msg = f"  {n:,} variable_alias rows (variable_id-grained)"
-    n_backstopped = n - n_alias_before
-    if n_backstopped:
-        msg += f"; {n_backstopped:,} state-columns recovered via backstop"
-    if n_skipped:
-        msg += f"; {n_skipped:,} cvids unattributable to a split sibling (skipped)"
-    _progress(msg)
+    _progress(f"  {n:,} variable_alias rows (variable_id-grained)")
 
 
 def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
@@ -3600,18 +3499,16 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     A2.2-documented "classification-family signal inert at coalesce time"). This
     backfill runs after both, as one of the last readers of `variable_instance`.
 
-    Split-sibling attribution (the §5.7 column-tie, shared with
-    `_reparent_variable_alias` via `_resolve_cvid_to_variable_id`): post-A2.2 a
-    `var_id` can be NON-unique (split siblings share one `provider_key`). The
-    old `(register_id, provider_key)` join fanned every cvid's classification
-    onto EVERY sibling, discriminated only by `value_set_id IS …` — and `IS`
-    matches shared NULLs, so a code-less sibling could adopt a classification a
-    different sibling owned (then surfaced via `classifications_for_variable` /
-    classification search, since `variable_instance` is dropped before ship).
-    Instead, each cvid resolves to ONE sibling by its delivery column, and only
-    that sibling's state gets the classification. Non-split var_ids keep the 1:1
-    path; genuinely ambiguous split cvids are skipped (not guessed), mirroring
-    the reparent.
+    Split-sibling attribution: post-A2.2 a `var_id` can be NON-unique (split
+    siblings share one `provider_key`). The old `(register_id, provider_key)`
+    join fanned every cvid's classification onto EVERY sibling, discriminated
+    only by `value_set_id IS …` — and `IS` matches shared NULLs, so a code-less
+    sibling could adopt a classification a different sibling owned (then surfaced
+    via `classifications_for_variable` / classification search, since
+    `variable_instance` is dropped before ship). Instead each cvid carries its
+    OWNING `variable_id` (stamped by `_coalesce_variable_states` from the §5.7
+    triage's ground-truth assignment), so only that sibling's state gets the
+    classification — no fan-out, no column-tie heuristic, no skip.
 
     Correlation key within a sibling: `(variable_id, value_set_id)`. A state's
     `value_set_id` is part of the coalescer's group key, so every cvid folded
@@ -3637,20 +3534,15 @@ def _backfill_state_classifications(conn: sqlite3.Connection) -> None:
     """
     _progress("Backfilling variable_state.classification_id...")
 
-    cvid_to_variable_id, _ = _resolve_cvid_to_variable_id(conn)
-
-    # (variable_id, value_set_id) -> lowest constituent classification_id.
-    # Built ONLY from cvids attributed to their owning sibling, so a sibling
-    # never inherits another's classification. `value_set_id` may be None (a
-    # code-less state keys on (variable_id, None)).
+    # (variable_id, value_set_id) -> lowest constituent classification_id, keyed
+    # off each cvid's OWNING `variable_id` (stamped by the coalescer), so a
+    # sibling never inherits another's classification. `value_set_id` may be None
+    # (a code-less state keys on (variable_id, None)).
     cls_by_state_key: dict[tuple[int, int | None], int] = {}
-    for cvid, value_set_id, classification_id in conn.execute(
-        "SELECT cvid, value_set_id, classification_id FROM variable_instance "
-        "WHERE classification_id IS NOT NULL"
+    for variable_id, value_set_id, classification_id in conn.execute(
+        "SELECT variable_id, value_set_id, classification_id FROM variable_instance "
+        "WHERE classification_id IS NOT NULL AND variable_id IS NOT NULL"
     ):
-        variable_id = cvid_to_variable_id.get(cvid)
-        if variable_id is None:
-            continue  # split cvid skipped on ambiguity (or 1:1 miss)
         skey = (variable_id, value_set_id)
         prev = cls_by_state_key.get(skey)
         if prev is None or classification_id < prev:
