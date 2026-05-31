@@ -266,7 +266,8 @@ the five types via this chain (first match wins):
    has to.
 2. **RegMeta evidence** (only when the source's group has a register
    assigned — auto-detected at init or chosen via the editor) — joining
-   `variable_alias` → `variable_instance` for that register:
+   `variable_alias` → `variable` → `variable_state` for that register
+   (scoped by `register_variant_id` + the delivery column; A2.7):
    - non-null `value_set_id` *or* non-null `classification_id`
      → `categorical` (SCB enumerated codes / shared classification)
    - `data_type` ∈ {int, decimal, ...} → `numeric`
@@ -361,7 +362,7 @@ getting silently dropped.
   by the configurer from a 4-digit name regex; if no year is set
   (the regex didn't fire and the user hasn't intervened) the editor
   surfaces a warning until a year is provided. Read by `enrich.py`
-  to bias CVID picking toward the right register version (see CVID
+  to bias value-set picking toward the right edition (see Value-set
   picker tier 1). `register` records which register's reg_meta
   evidence drove auto-classification for the source; persisted so
   reopening the editor restores the context, and so the file
@@ -914,26 +915,31 @@ authority file (which stats drive generation) is selected by highest
 Without reg_meta enrichment, the spine is empty and behavior is identical
 to pre-spine generation.
 
-## CVID picker
+## Value-set picker (per `variable_state`)
 
-A `var_id` can resolve to multiple `cvid`s under the same register — the
-SCB metadata carries one CVID per coding-scheme version (e.g. SUN2000 vs
-SUN2020 for variable 784 "Yrkesinriktning") and per register version
-(e.g. Kommun in 2019 vs 2020). The picker chooses one.
+A variable can have several `variable_state` eras under one register — the
+SCB metadata carries a distinct era per coding-scheme version (e.g. SUN2000
+vs SUN2020 for "Yrkesinriktning") and per register edition (e.g. Kommun in
+2019 vs 2020), each a separate state with its own `value_set_id`. The picker
+chooses one. (Pre-A2.7 this picked a `cvid`; the shipped DB now exposes
+states, so it scores `variable_state` rows — joined in via the variable's
+`variable_id`, so split siblings only ever see their own states.)
 
-Tiered scoring per `(cvid)` candidate: `(year_known, -year_distance,
+Tiered scoring per `variable_state` candidate: `(year_known, -year_distance,
 shared_tokens, prefix_hits, overlap, code_count)`. Earlier tiers
 dominate; later fields break ties within a tier.
 
-1. **Year match.** When both the source carries a `year` (set in
+1. **Year match.** When the source carries a `year` (set in
    `source_detail` from a name regex or `mock_data_config.json`'s `sources`
-   block) and the CVID's `register_version.registerversionnamn` parses
-   as a year, prefer the CVID whose year is closest. Exact match
-   beats "close"; "close" beats CVIDs with no year info. Year ranks
-   above name because for register-version drift the wrong year's
-   labels are wrong, not merely under-precise. When either side has
-   no year, this tier is neutral and the next tiers decide.
-2. **Name / classification.** Tokenize the column name and the CVID's
+   block), score each state by how its validity interval
+   (`valid_from`..`valid_to`) relates to that year: a state whose interval
+   **covers** the year is an exact match, otherwise rank by distance to the
+   nearest interval edge (interval-overlap, A2.7 — so a multi-year state wins
+   for any year it spans, not just its opening year). Exact beats "close";
+   "close" beats states with no parseable year. Year ranks above name because
+   for edition drift the wrong year's labels are wrong, not merely
+   under-precise. When either side has no year, this tier is neutral.
+2. **Name / classification.** Tokenize the column name and the state's
    `(classification.short_name, value_set_version_label)` strings using a
    camelcase regex with four alternatives: `[A-Z]+(?=[A-Z][a-z])` (run
    before a CamelCase boundary), `[A-Z]+(?![a-z])` (run not followed by
@@ -947,9 +953,9 @@ dominate; later fields break ties within a tier.
    `FamiljeStallningKod`). Free infix matching is deliberately avoided
    — `btyp` should not match `aktivitetstyp`. Tokens shorter than 2
    chars are dropped.
-3. **Code-set overlap (last resort).** When no CVID has any year or
+3. **Code-set overlap (last resort).** When no state has any year or
    name signal, fall back to overlap between observed codes and the
-   CVID's code set. Requires `overlap / max(|observed|, 1) >=
+   state's code set. Requires `overlap / max(|observed|, 1) >=
    MIN_OVERLAP_RATIO` (default `0.5`); below the floor, no entry is
    emitted. This avoids enriching e.g. a 3-digit BTYP column with a
    4-letter FamStF code universe just because it's the only candidate.
@@ -959,7 +965,7 @@ dominate; later fields break ties within a tier.
    tier 2 fires); the floor is the safety net while metadata coverage
    is incomplete.
 
-When year or name match exists, the picker accepts the CVID even at
+When year or name match exists, the picker accepts the state even at
 zero code overlap — those are the principled signals, and code drift
 is already surfaced separately by the value-code drift warnings.
 Callers must therefore treat enrichment's `value_codes` as a

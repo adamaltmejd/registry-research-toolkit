@@ -82,9 +82,11 @@ resolution rules used during build are documented in
 
 `Catalog` (`catalog.py`) is the in-process FQID→entity API the webapp's
 `/api/catalog/*` endpoints wrap. `resolve(fqid)` is polymorphic over FQID
-kind; the provider/register/variant/version/classification arms each
-return their dedicated `Resolved*` row. The **binding** arm is
-longitudinal (A2.5): a binding FQID resolves to a `ResolvedVariable` —
+kind; the provider / register / classification arms each return their
+dedicated `Resolved*` row (variant and version are **not** FQID kinds —
+variant is a register sub-resource coordinate, period a delivery axis).
+The **binding** arm is longitudinal (A2.5): a binding FQID resolves to a
+`ResolvedVariable` —
 the addressable variable's shared metadata + its full `variable_state`
 history (each state tagged with its variant coordinate) + the
 variable-grain edges. Period-specific resolution lives in `resolve_at`;
@@ -109,8 +111,8 @@ intersected against the full-date `variable_state` validity ranges — so
 sub-annual and range queries are precise, not year-granular.
 
 **`ResolvedVariable`** — the longitudinal binding resolution. Fields:
-`fqid` (the caller's binding FQID, preserved through a `same_as`
-traversal — still the interim 5-seg form until A2.6), `variable_id`,
+`fqid` (the caller's 3-seg binding FQID `provider/register/slug`,
+preserved through a `same_as` traversal), `variable_id`,
 `register_id`, `provider_key`, the shared metadata (`name`,
 `definition`, `description`, `measurement_unit`, `is_sensitive`,
 `is_identifier`, `source_register_id`, `source_register_text`), `states`
@@ -128,25 +130,26 @@ alias), `value_set_version_label` (NOT NULL, `''` = no discriminator),
 when the state has no value set).
 
 **`VariableRef`** — a variable-grain edge endpoint
-(`same_as` / `predecessors` / `successors`). Fields: `fqid` (None — the
-edge tables store only the 3-part identity, and the binding FQID grammar
-is 5-seg until A2.6, so no addressable FQID can be built yet), the
-load-bearing `provider` / `register` / `variable` triple, and (#142, on
+(`same_as` / `predecessors` / `successors`). Fields: `fqid` (the 3-seg
+binding FQID — the edge tables store exactly the `(provider, register,
+variable)` triple, which **is** the binding FQID since A2.6; built via
+`_ref_fqid`, None only if a slug is malformed/NULL), the load-bearing
+`provider` / `register` / `variable` triple, and (#142, on
 succession refs only) `reason` (the `timeseries_event.beskrivning`
 transition reason) + `effective_year` (the AktuellVariabel-grain
 successor edition year; None on `same_as` refs and on bare-grain
 succession with no edition).
 
 **`RelatedRef`** — a `variable_related_to` sibling (§5.7 split). Same
-`fqid` (None) + `provider`/`register`/`variable` triple as `VariableRef`,
+`fqid` (3-seg) + `provider`/`register`/`variable` triple as `VariableRef`,
 plus `relation_kind` (the split reason,
 e.g. `same_definition_different_column`).
 
 **`LineageEdge`** — one `variable_state_lineage` row (§5.6
 consumer-side, state grain): `consumer_state_id`, `source_state_id`,
 `valid_from` / `valid_to` (the validity intersection), and `source_fqid`
-(the source-side 3-part binding FQID — None for the same reason as the
-refs' `fqid`).
+(the source state's 3-seg binding FQID; None only on a malformed/NULL
+slug, as with the refs' `fqid`).
 
 **`LineageWarning`** — one `variable_state_lineage_warning` row:
 `consumer_state_id`, `warning_kind` (`no_source_state` /
@@ -171,9 +174,10 @@ applied to a variable in any register year, with no temporal qualification.
 A code without a validity row is always valid throughout the variable's
 lifetime (per SCB correspondence).
 
-The DB stores year-projected value sets, not the raw union: each cvid
-carries the codes that were actually valid in its regver year.
-Projection is intentionally year-precision, not exact-date. SCB's
+The DB stores year-projected value sets, not the raw union: each
+`variable_state` carries the codes that were actually valid in its era
+(the projection is computed per cvid at build time, then attached to the
+coalesced state). Projection is intentionally year-precision, not exact-date. SCB's
 metadata is annual; sub-year boundaries (e.g. `valid_from=1995-09-01`)
 are administrative artifacts that year overlap absorbs losslessly. The
 trade-off — losing sub-year query precision — is paid for by removing
@@ -186,9 +190,9 @@ The projection rule and its build-time mechanics are documented in
 projection".
 
 The result is content-addressed and deduplicated: identical year-projected
-sets across cvids share one `value_set` row (`member_hash` = sha256 of
-sorted `(code, label)` pairs); each cvid links to its set via
-`variable_instance.value_set_id`. NULL `value_set_id` means the cvid had
+sets share one `value_set` row (`member_hash` = sha256 of sorted
+`(code, label)` pairs); each `variable_state` links to its set via
+`variable_state.value_set_id`. NULL `value_set_id` means the state had
 no codes (every union pair excluded by projection, or only sentinel rows
 in the source — see [../reg_meta_build/DESIGN.md](../reg_meta_build/DESIGN.md)
 § "Vardemängder sentinel filtering").
@@ -203,14 +207,16 @@ codes that belong to the classification, with an optional `level` integer
 for prefix-hierarchy filtering (length of all-digit codes; NULL for
 non-numeric codes like ICD letters).
 
-The FK lives on `variable_instance`, not on `variable`. SCB's data model
-already places the classification label (`value_set_version_label`) per
-instance, and many headline variables genuinely span multiple
+The FK lives on `variable_state` (per-era), not on `variable`. SCB's data
+model already places the classification label (`value_set_version_label`)
+per era, and many headline variables genuinely span multiple
 classifications across their lifetime — e.g. `Utbildningsnivå` (var_id 66)
 uses SUN 2000 codes through 2018 and SUN 2020 codes from 2019 onwards;
-`SSYK` and `SNI` show the same generational drift. Linking at the instance
+`SSYK` and `SNI` show the same generational drift. Linking at the state
 level keeps each code system distinct (SUN 2000 codes never bleed into
-SUN 2020) and lets variable-level helpers aggregate when needed.
+SUN 2020), isolates split siblings (each sibling's states classify
+independently — the A2.7 fix), and lets variable-level helpers aggregate
+when needed.
 
 The `classification_id` column is populated at build time from a
 maintainer-curated TOML seed at `reg_meta_build/classifications.toml`
@@ -249,10 +255,10 @@ their own conventions.
 
 IDs stored as INTEGER (not TEXT). Tables with composite integer-only PKs
 use WITHOUT ROWID. Value codes are deduplicated into `value_code` (with
-`UNIQUE(code, label)`); cvid → code membership is a
+`UNIQUE(code, label)`); `variable_state` → code membership is a
 content-addressed `value_set` / `value_set_member` pair, where each
 distinct year-projected code list is stored once and shared by every
-cvid that observes it. SCB's validity windows are applied at build time
+state that observes it. SCB's validity windows are applied at build time
 (see "Value sets are year-projected"), eliminating the historical-union
 junction and the per-item validity tables entirely. A pre-aggregated
 `code_variable_map` replaces large secondary indexes for value search

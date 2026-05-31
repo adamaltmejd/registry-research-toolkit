@@ -166,11 +166,11 @@ the intersection. A few non-obvious choices:
   the linker against the DB (fail-fast on a pin to a non-existent variant or a
   `source_register` that contradicts the variable's resolved source register).
 
-`link_variable_state_lineage` runs **alongside** the old slug-only
-`link_consumer_side_bindings` (which sets `variable_instance.via_source_id`):
-the new linker is additive through A2.6 because `reg_meta`'s interim resolver
-still reads `via_source_id`. Both the old linker and the column drop with
-`variable_instance` in A2.7.
+`link_variable_state_lineage` is the sole lineage linker. (Through A2.6 it
+ran **alongside** the old slug-only `link_consumer_side_bindings`, which set
+`variable_instance.via_source_id` for `reg_meta`'s interim resolver; A2.7
+dropped that old linker, the `via_source_id` column, and `variable_instance`
+itself, leaving this the only linker.)
 
 ## Vardemängder sentinel filtering
 
@@ -258,14 +258,17 @@ year-projected").
 
 ## Classification seed
 
-The `classification_id` FK on `variable_instance` is populated at build
-time from a maintainer-curated TOML seed at
-`reg_meta_build/classifications.toml`. Each entry declares a normalized
-classification and lists the raw `value_set_version_label` strings (the
-SCB-published "Vardemangdsversion" labels) that map to it — exact match,
-no fuzzy inference. Match strings are deterministic and auditable: any
-maintainer can enumerate them via `SELECT DISTINCT value_set_version_label
-FROM variable_instance`.
+The `classification_id` FK is populated at build time from a
+maintainer-curated TOML seed at `reg_meta_build/classifications.toml`.
+Each entry declares a normalized classification and lists the raw
+`value_set_version_label` strings (the SCB-published "Vardemangdsversion"
+labels) that map to it — exact match, no fuzzy inference. Match strings are
+deterministic and auditable: any maintainer can enumerate them via
+`SELECT DISTINCT value_set_version_label FROM variable_instance`. The build
+tags `variable_instance.classification_id` first; A2.7's
+`_backfill_state_classifications` then projects it onto the **shipped**
+`variable_state.classification_id` (per-era, attributed to the owning split
+sibling) before `variable_instance` is dropped.
 
 Build-time invariants (violations fail `reg-meta-build build-db` loudly,
 exit 10):
