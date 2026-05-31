@@ -3,7 +3,10 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 dist/
-build/
+# Root-anchored: only the repo-root packaging dir, NOT the real
+# `reg_monabundle/src/reg_monabundle/build/` source package (the bundle
+# amalgamator). `__pycache__/` above still ignores byte-code anywhere.
+/build/
 
 # Environments
 .venv/

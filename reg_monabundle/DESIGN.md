@@ -12,9 +12,18 @@ the refactor spec into per-package DESIGN files.
 `reg_monabundle` owns the MONA-bundle half of the toolkit:
 
 - **Bundle builder** (`reg_monabundle.build`, phase 2). Amalgamates
-  the runtime modules + `reg_schema` into a single `.py` for upload
-  to MONA. Pure-stdlib, importable by `reg_webapp` at container build
-  time.
+  the runtime modules + the lightweight `reg_monabundle` slices
+  (`constants`, `scan`) into a single `.py` for upload to MONA.
+  Pure-stdlib, importable by `reg_webapp` at container build time.
+  **Carries no `reg_schema` and no Pydantic** (§9.6) — structural
+  validation is the build-time gate, not an on-MONA step (see below).
+- **Build-time spec gate** (`reg_monabundle.build.spec_loader`,
+  A3.4). The Pydantic side of the §9.6 boundary, run at bundle-build
+  only (never amalgamated): `validate_project_data` runs the full
+  `reg_schema` structural validator + the `reg_monabundle` block
+  validator + the cross-block referential checks, then
+  `project_data_to_loadedspec` converts the validated Pydantic
+  `ProjectData` into the stdlib `LoadedSpec` the runtime consumes.
 - **Bundle runtime** (`reg_monabundle.runtime.*`, phase 2). The
   modules amalgamated into the bundle and executed on MONA:
   `classify`, `sql_emit`, `sources`, `summarize`, `spec`, `extract`.
@@ -32,9 +41,15 @@ the refactor spec into per-package DESIGN files.
 
 ## Not in scope (intentionally)
 
-- **§6.8.1 structural rules.** Owned by `reg_schema`. The bundle
-  amalgamates `reg_schema.validate_structural` and calls it at load
-  time — but the rules themselves live in `reg_schema`.
+- **§6.8.1 structural rules.** Owned by `reg_schema`. Run once at
+  **bundle-build time** as the validation gate
+  (`reg_monabundle.build.spec_loader.validate_project_data`), never on
+  MONA: the bundle is `reg_schema`/Pydantic-free (§9.6) and its
+  runtime trusts the already-validated embedded/sidecar JSON,
+  deserializing it into a stdlib `LoadedSpec` via
+  `runtime.spec.loadedspec_from_dict`. A hand-edit on MONA that breaks
+  deserialization errors with a stdlib exception, by design — the
+  bundle is a build artifact, not an authoring surface.
 - **§6.8.3 semantic rules (reg_meta-backed).** Owned by `reg_webapp`
   (FQID resolution, classification existence, steward-catalog
   membership). `reg_monabundle` is `reg_meta`-free by design — the
@@ -52,8 +67,10 @@ reg_monabundle → reg_schema
 
 No `reg_meta` dep — the bundle has no reg_meta on MONA. No
 `mock_data_wizard` dep — the dep direction is the other way around
-(mdw's CLI invokes `reg_monabundle.build`). `reg_schema` is pure
-stdlib so amalgamation is safe.
+(mdw's CLI invokes `reg_monabundle.build`). `reg_schema` (Pydantic)
+is a build-time-only dep of `reg_monabundle.build.spec_loader`: it
+runs the validation gate but is **never amalgamated** into the bundle
+(§9.6). The amalgamated slices are stdlib-only.
 
 ## The two halves
 
@@ -65,12 +82,18 @@ and executes on MONA; it pulls duckdb / pyodbc on use (lazy imports
 inside function bodies — module-level imports stay stdlib so the
 amalgamation step doesn't require duckdb to slice).
 
-The amalgamator (`build.py`) reads runtime modules off disk via
-`ast.parse` rather than through Python's import machinery: an
+The amalgamator (`build/__init__.py`) reads runtime modules off disk
+via `ast.parse` rather than through Python's import machinery: an
 amalgamation-only environment never needs duckdb installed. The CI
 gate in `tests/test_lightweight_surface.py` enforces this — importing
 `reg_monabundle` or any of its public submodules from a fresh
-subprocess must leave `sys.modules` runtime-free.
+subprocess must leave `sys.modules` runtime-free. `build.spec_loader`
+is deliberately **not** imported by `build/__init__.py` (its lazy
+`runtime.spec` import would otherwise pull the runtime tier); callers
+import it directly. The no-Pydantic/no-`reg_schema` invariant on the
+emitted bundle is gated separately by
+`tests/test_build_mona_bundle.py::test_bundle_carries_no_pydantic_or_reg_schema`
+(source line-scan + AST import check).
 
 ```toml
 [project]

@@ -95,3 +95,33 @@ def test_validate_import_does_not_load_runtime(
 ) -> None:
     loaded = runtime_modules_per_probe["reg_monabundle.validate"]
     assert loaded == [], f"reg_monabundle.validate pulled in runtime: {loaded}"
+
+
+def test_build_import_does_not_load_reg_schema_or_pydantic() -> None:
+    """§9.6 boundary: importing ``reg_monabundle.build`` (the local amalgamator)
+    must not pull ``reg_schema`` / Pydantic / ``build.spec_loader``.
+
+    ``build.spec_loader`` is the only build-side module that imports
+    ``reg_schema`` (the build-time validation gate); callers import it
+    directly and ``build/__init__`` must NOT — otherwise the Pydantic
+    dependency leaks into the lightweight surface (and the amalgamator's
+    import graph), the very break A3.4 closed. See REFACTOR_SPEC §9.6.
+    """
+    script = (
+        "import importlib, json, sys\n"
+        "importlib.import_module('reg_monabundle.build')\n"
+        "print(json.dumps(sorted(\n"
+        "    m for m in sys.modules\n"
+        "    if m.split('.')[0] in ('reg_schema', 'pydantic')\n"
+        "    or m == 'reg_monabundle.build.spec_loader'\n"
+        ")))\n"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", script], capture_output=True, text=True, check=True
+    )
+    leaked = json.loads(result.stdout)
+    assert leaked == [], (
+        f"importing reg_monabundle.build pulled in §9.6-boundary modules: {leaked}. "
+        "build.spec_loader (the only reg_schema/Pydantic importer) must be imported "
+        "directly by callers, never by build/__init__. See REFACTOR_SPEC §9.6."
+    )

@@ -1,6 +1,6 @@
 # Model A Migration — Implementation Tracker
 
-Status: **A0–A1 complete; A2.1 + A2.1.5 shipped (#130/#136/#138); A2.2 shipped (#139); A2.3–A2.7 open** (Model A design locked 2026-05-22; **two-level variable-model respec in flight** — variable + state, FQID→variable; see REFACTOR_SPEC §5.0.1/§5.1).
+Status: **A0–A2 complete; Stage A3 complete** — A3.1 (`reg_schema` v2.0.0, #155), A3.2 (mdw adoption, #156), A3.3 (folded into A3.1), A3.4 (MONA-bundle Pydantic decouple — this PR; restores the §9.6 boundary). **A4 (adapter refactor + SOS) and A5 (webapp + SPA) open.** (Model A design locked 2026-05-22; two-level variable + state model, FQID→variable; see REFACTOR_SPEC §5.0.1/§5.1.)
 
 **Scoped, self-deleting tracker** — this file exists under the
 governance exception in `AGENTS.md` for multi-PR refactors spanning
@@ -415,6 +415,8 @@ in to keep CI green. Review-panel + Codex P2×2 (bare-string member crash;
 suppress_k cross-source duplicate-FQID) fixed. **Known transient
 (maintainer-approved):** the MONA bundle now amalgamates a Pydantic-importing
 reg_schema (§9.6 break) — A3.4 decouples it; no MONA users pre-v1, CI green.
+**[RESOLVED by A3.4]** — bundle is now reg_schema/Pydantic-free; gated by
+`test_bundle_carries_no_pydantic_or_reg_schema`.
 
 - Migrate dataclasses to Pydantic v2 models
 - `Source.register_version` → `Source.register_variant` + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel)
@@ -472,19 +474,21 @@ tests, all in PR #155.
 
 **Estimate**: 1 day. **Actual: folded into A3.1.**
 
-### [ ] A3.4 — Bundle amalgamator update
+### [x] A3.4 — Bundle amalgamator update ✅
 
-- Add `reg_monabundle/build/spec_loader.py` with `source_to_loadedspec(pydantic_source) -> LoadedSpec` — lives in `build/`, not `runtime/`, so the bundle never imports Pydantic (the §9.6 boundary). Called by the bundle builder before embedding JSON.
-- `reg_monabundle/runtime/spec.py` `LoadedSpec` fields updated to Model A shape. PR #123 shipped LoadedSpec under v0.x grammar (`_build_source` currently reads `data["register_version"]`); this is the breaking shape evolution. **Field map** (drives both the `spec_loader.py` converter and `_build_source` rewrite):
-  - `Source.register_version: str` (4-seg) → `Source.register_variant: str` (3-part coordinate) + `Source.period` (polymorphic per §6.2: int / period-token / range / `_default` snapshot)
-  - `Source.columns: tuple[Column, ...]` → `Source.bindings: tuple[Binding, ...]`
-  - `Column.name: str` (5-seg) → `Binding.variable: str` (**3-seg** variable FQID)
-  - `Column.value_set: str` → `Binding.value_set` keyed by 2-seg classification FQID (`class/<slug>`)
-- Amalgamator's `_AMALGAMATED_PACKAGE_PREFIXES` excludes `reg_schema` (Pydantic stays out of bundle)
-- Bundle's `LoadedSpec` parsing reads `register_variant` + `period` from embedded JSON
-- `LoadedSpec` deserialization is plain `@dataclass` machinery — no re-validation on MONA (§6.8.1, §9.6)
+Restored the §9.6 boundary: the MONA bundle now carries **no Pydantic and no `reg_schema`**; structural validation moved to a build-time gate.
 
-**Estimate**: 3-4 days.
+- Added `reg_monabundle/build/spec_loader.py` (Pydantic side, **never amalgamated**, **not** imported by `build/__init__`):
+  - `validate_project_data(payload) -> reg_schema.ProjectData` — the §6.8.1 validation gate. Runs `reg_schema.validate_structural` + the `reg_monabundle` block validator + the moved cross-block referential checks (`_validate_column_options_against_columns`: orphan FQID, suppress_k-on-non-categorical), returns the validated Pydantic model.
+  - `project_data_to_loadedspec(ProjectData) -> LoadedSpec` — the §9.6 conversion boundary. **Spec wording fix**: the plan named it `source_to_loadedspec(pydantic_source)`; implemented as `project_data_to_loadedspec(ProjectData)` because `LoadedSpec` is whole-project, not per-source. Lazily imports `runtime.spec.loadedspec_from_dict` (keeps `runtime/` out of `build/__init__`) and round-trips via `model_dump(by_alias=True)`.
+- `reg_monabundle/build.py` → `reg_monabundle/build/__init__.py` (package). Path math now derives `REG_MONABUNDLE_DIR` / `DEFAULT_RUNTIME_DIR` from `reg_monabundle.__file__` (the package root), not `__file__` (which is now the `build/` subdir).
+- `reg_monabundle/runtime/spec.py` is **reg_schema-free**: dropped the `from reg_schema import …`; defines minimal frozen stdlib dataclasses (`Binding`/`Source`/`PanelMember`/`Panel`/`ProjectData`) carrying only runtime-read fields; `parse_project_data` → `loadedspec_from_dict` (deserialize-only, no `validate_structural`/`validate_block`). The step-4 capability gates (composite/literal-period/datetime/display_name/entity_key + bare-string-member normalization) stay — they are runtime gates, not structural validation.
+- Amalgamator drops the `reg_schema` slice entirely: removed `REG_SCHEMA_DIR`/`REG_SCHEMA_MODULE_ORDER`/the amalgamation loop; `_STATIC_AMALGAMATED_PREFIXES` → `("reg_monabundle",)`. `REG_MONABUNDLE_MODULE_ORDER` drops `validate` (runtime no longer calls `validate_block`). Bundle runner's `_load_embedded_spec` → `loadedspec_from_dict`.
+- mdw `cli._cmd_build_bundle` validation gate → `spec_loader.validate_project_data` (same ValueError/"failed validation" contract).
+- `LoadedSpec` deserialization is plain `@dataclass` machinery — no re-validation on MONA (§6.8.1, §9.6). Sidecar `load_project_data` no longer structurally validates (intentional — trusted input).
+- **New §9.6 CI gate**: `test_build_mona_bundle.py::test_bundle_carries_no_pydantic_or_reg_schema` (line-scan + AST Import/ImportFrom check on embedded + sidecar bundles) — would have caught the A3.1 transient. `test_spec.py` split: validation tests → new `test_spec_loader.py` (`validate_project_data`); LoadedSpec/capability tests stay (`loadedspec_from_dict`). Bundle shrank ~180 KB → ~111 KB (reg_schema/Pydantic gone).
+
+**Estimate**: 3-4 days. **Done.** Field-map shape evolution (register_variant/period/bindings) had already landed in earlier stages.
 
 ---
 
