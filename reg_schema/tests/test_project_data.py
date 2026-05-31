@@ -20,6 +20,7 @@ from reg_schema import (
     PanelMember,
     ProjectData,
     Source,
+    validate_structural,
 )
 
 
@@ -116,6 +117,25 @@ def test_source_accepts_period_forms() -> None:
     )
     assert ranged.period.from_ == "2018-01-01"
     assert ranged.period.to == "2020-06-30"
+
+
+def test_period_range_round_trips_through_validator() -> None:
+    # serialize_by_alias=True: model_dump emits "from"/"to" (not the
+    # Python-safe "from_"), so a dumped spec re-validates clean
+    # (_is_period_range_obj requires exactly {"from","to"}). Guards the
+    # webapp/SPA serialization path (§6.2) against the alias footgun.
+    src = Source(
+        name="par",
+        register_variant="scb/par/_default",
+        period={"from": "2018-01-01", "to": "2020-06-30"},  # type: ignore[arg-type]
+        bindings=(_binding(variable="scb/par/lopnr"),),
+    )
+    assert src.model_dump(mode="json")["period"] == {
+        "from": "2018-01-01",
+        "to": "2020-06-30",
+    }
+    result = validate_structural(_project(sources=(src,)).model_dump(mode="json"))
+    assert "invalid_period" not in {i.code for i in result.issues}
 
 
 def test_source_is_frozen() -> None:

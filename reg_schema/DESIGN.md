@@ -76,12 +76,17 @@ it operates on a parsed dict and never imports Pydantic — so the rule
 engine itself ships anywhere. The Pydantic dependency lives only on the
 model surface (`project_data.py`).
 
-**MONA boundary (§9.6).** Pydantic does **not** ship to MONA. The
-bundle does not amalgamate `project_data.py`: bundle-build runs the
-structural validator as the gate, then converts a validated `Source`
-into a stdlib-dataclass `LoadedSpec` (`reg_monabundle.runtime.spec`,
-A3.4) which the bundle embeds instead. The MONA runtime sees only
-stdlib dataclasses.
+**MONA boundary (§9.6).** Pydantic must **not** ship to MONA. The
+*target* (A3.4): the bundle stops amalgamating `project_data.py` —
+bundle-build runs the structural validator as the gate, then converts a
+validated `Source` into a stdlib-dataclass `LoadedSpec`
+(`reg_monabundle.runtime.spec`) which the bundle embeds instead, so the
+MONA runtime sees only stdlib dataclasses. **Transient (A3.1 → A3.4):**
+until A3.4 lands, the bundle still amalgamates `project_data.py` (which
+now imports Pydantic), so the emitted bundle carries a Pydantic import
+and is built/tested only in a Pydantic-having env — it must not be
+shipped to MONA yet. See `reg_monabundle/build.py`'s
+`REG_SCHEMA_MODULE_ORDER` comment.
 
 Why the dep split matters: the spec is validated in three execution
 contexts with very different dependency availability — only the webapp
@@ -89,8 +94,9 @@ backend has reg_meta, only the bundle runs on MONA. Keeping the
 structural layer dep-free means:
 
 - The bundle amalgamation in `reg_monabundle` can ship the same
-  validator code on MONA, where pip-install is not an option (it
-  amalgamates `structural.py` + `validation.py`, not `project_data.py`).
+  validator code on MONA, where pip-install is not an option (the A3.4
+  target amalgamates `structural.py` + `validation.py`, not
+  `project_data.py`; see the transient note above).
 - `reg_mockdata` (the §15 step-9 rename of `mock_data_wizard`) can
   consume `reg_schema` after its `reg_meta` dependency is deleted,
   without re-introducing it transitively.

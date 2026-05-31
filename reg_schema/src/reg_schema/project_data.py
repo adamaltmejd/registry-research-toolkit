@@ -77,9 +77,19 @@ class PeriodRange(_Model):
     This bare object is **only** legal as a ``Source.period`` value; a
     ``TimePoint`` range uses the discriminated ``TimeRange`` wrapper
     (``{"range": {...}}``) so ``TimeKey``'s union stays unambiguous (§6.2).
+
+    ``serialize_by_alias=True`` so ``model_dump()`` emits ``"from"`` (not the
+    Python-safe ``"from_"``) without every caller having to pass
+    ``by_alias=True`` — the un-aliased key would fail re-validation
+    (``_is_period_range_obj`` requires exactly ``{"from", "to"}``).
     """
 
-    model_config = ConfigDict(frozen=True, extra="forbid", populate_by_name=True)
+    model_config = ConfigDict(
+        frozen=True,
+        extra="forbid",
+        populate_by_name=True,
+        serialize_by_alias=True,
+    )
 
     from_: int | str = Field(alias="from")
     to: int | str

@@ -340,6 +340,36 @@ def test_period_range_extra_keys_is_invalid_period() -> None:
     assert _at(result, "invalid_period") == ["/sources/0/period"]
 
 
+def test_period_out_of_bounds_tokens_are_invalid() -> None:
+    # The grammar is bound-for-bound identical to reg_meta.fqid (year
+    # 1900-2099, month 01-12, day 01-31, quarter 1-4, half 1-2); a looser
+    # copy would pass specs that reg_meta's resolver later rejects.
+    for period in (
+        "2018-13",  # month > 12
+        "2018-00",  # month 0
+        "2018-13-31",  # month > 12 in a full date
+        "2018-Q5",  # quarter > 4
+        "2018-Q0",
+        "2018-H3",  # half > 2
+        "2018-H0",
+        "1899",  # year below 1900
+        "2100",  # year above 2099
+    ):
+        spec = _spec()
+        spec["sources"][0]["period"] = period
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], period
+
+
+def test_period_range_out_of_bounds_endpoint_is_invalid() -> None:
+    # The same bounded grammar gates range endpoints (_is_period_endpoint).
+    for endpoint in ("2018-13", "1899", "2018-Q5"):
+        spec = _spec()
+        spec["sources"][0]["period"] = {"from": endpoint, "to": "2020"}
+        result = validate_structural(spec)
+        assert _at(result, "invalid_period") == ["/sources/0/period"], endpoint
+
+
 def test_period_null_is_invalid_field_type() -> None:
     spec = _spec()
     spec["sources"][0]["period"] = None
@@ -609,8 +639,12 @@ def test_panel_string_member_missing_panel_defaults_is_not_structural() -> None:
     # (§6.8.3), not emitted here.
     spec = _spec_with_panels(members=["lisa_2018"])  # no panel time_key
     spec["panels"][0].pop("time_key", None)
+    spec["panels"][0].pop("entity_key", None)
     result = validate_structural(spec)
     assert result.ok, result.issues
+    # Pin the §6.8.1 removal: neither removed code is emitted any more.
+    assert "missing_effective_time_key" not in _codes(result)
+    assert "missing_effective_entity_key" not in _codes(result)
 
 
 def test_duplicate_panel_id() -> None:
