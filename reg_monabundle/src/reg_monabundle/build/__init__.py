@@ -13,13 +13,16 @@ batch client; see ``DESIGN.md`` for the runtime probe results).
 
 §9.6 boundary: the bundle carries **no Pydantic and no ``reg_schema``**.
 Structural validation (§6.8.1) is the **bundle-build gate**, not an
-on-MONA step — it runs once here, ahead of amalgamation, via
-``reg_monabundle.build.spec_loader.validate_project_data`` (full
-Pydantic ``reg_schema`` validator). The bundle's runtime deserializes
-the embedded / sidecar JSON into a stdlib ``LoadedSpec`` via
-``spec.loadedspec_from_dict`` and does **not** re-validate. ``reg_schema``
-is therefore never amalgamated; the source-scan gate in
-``test_build_mona_bundle.py`` enforces the no-Pydantic invariant.
+on-MONA step — but it does NOT run inside ``build_bundle`` (which only
+embeds the JSON it is given). **Callers** (the mdw CLI, ``reg_webapp``)
+run ``reg_monabundle.build.spec_loader.validate_project_data`` (the full
+Pydantic ``reg_schema`` validator) on the spec *before* calling
+``build_bundle``. The bundle's runtime deserializes the embedded /
+sidecar JSON into a stdlib ``LoadedSpec`` via ``spec.loadedspec_from_dict``
+and does **not** re-run structural validation (it does re-run the
+pure-stdlib §6.8.2 block validator). ``reg_schema`` is therefore never
+amalgamated; the source-scan gate in ``test_build_mona_bundle.py``
+enforces the no-Pydantic invariant.
 
 Each module's top-level docstring and all ``#`` comments are dropped
 during amalgamation (class/method docstrings are kept as inert string
