@@ -326,17 +326,30 @@ class _FakeConn:
         return _FakeRows(self._rows)
 
 
-def _row(lower_name, data_type=None, short_name=None, value_set_id=None, year=None):
-    # A2.7: `_reg_meta_lookup` reads `variable_state.valid_from` (was the
-    # register_version name). A year maps to its Jan-1 ISO date; None →
-    # the `0001` yearless-fallback sentinel.
-    valid_from = f"{year}-01-01" if year is not None else "0001-01-01"
+def _row(
+    lower_name,
+    data_type=None,
+    short_name=None,
+    value_set_id=None,
+    year=None,
+    to_year=None,
+):
+    # A2.7: `_reg_meta_lookup` reads the state's validity INTERVAL
+    # (`valid_from`..`valid_to`). A single `year` maps to a point window
+    # (Jan-1..Dec-31); `to_year` widens it to a multi-year span. None →
+    # the `0001`..`9999` yearless-fallback open window.
+    if year is None:
+        valid_from, valid_to = "0001-01-01", "9999-12-31"
+    else:
+        valid_from = f"{year}-01-01"
+        valid_to = f"{to_year if to_year is not None else year}-12-31"
     return {
         "lower_name": lower_name,
         "data_type": data_type,
         "short_name": short_name,
         "value_set_id": value_set_id,
         "valid_from": valid_from,
+        "valid_to": valid_to,
     }
 
 
@@ -418,6 +431,25 @@ def test_reg_meta_lookup_relevant_years_scopes_variance_counts():
     assert sig.classification_short_name == "LKF2012"
 
 
+def test_reg_meta_lookup_relevant_years_counts_covering_multiyear_state():
+    """A2.7 (Codex P2 #149): a multi-year state whose window COVERS a selected
+    year is in scope even when its OPENING year isn't selected — interval-overlap,
+    not start-year membership (mirrors `get values`). Pre-fix the 2020..2021 era
+    opened in 2020 ∉ {2021} and was wrongly dropped, undercounting the variance."""
+    conn = _FakeConn(
+        [
+            # Opens 2020 but spans through 2021 → covers the {2021} filter.
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2020, to_year=2021),
+            # A disjoint earlier era that does NOT cover 2021.
+            _row("lkf", short_name="LKF2008", value_set_id=20, year=2008, to_year=2009),
+        ]
+    )
+    sig = _reg_meta_lookup(conn, {"lkf"}, [34], relevant_years={2021})["lkf"]
+    # Only the covering 2020..2021 state counts; the 2008..2009 era is excluded.
+    assert sig.n_value_sets == 1
+    assert sig.n_classifications == 1
+
+
 def test_reg_meta_lookup_relevant_years_none_keeps_full_counts():
     """``relevant_years=None`` is the default and preserves pre-filter
     counts — the snapshot/popup year-scope must opt in explicitly."""
@@ -445,7 +477,8 @@ def _real_reg_meta_db() -> sqlite3.Connection:
         "  variable_id INTEGER, register_variant_id INTEGER, delivery_column_name TEXT);"
         "CREATE TABLE variable_state ("
         "  variable_id INTEGER, register_variant_id INTEGER, data_type TEXT, "
-        "  value_set_id INTEGER, valid_from TEXT, classification_id INTEGER);"
+        "  value_set_id INTEGER, valid_from TEXT, valid_to TEXT, "
+        "  classification_id INTEGER);"
         "CREATE TABLE classification (id INTEGER PRIMARY KEY, short_name TEXT);"
     )
     return conn
@@ -477,14 +510,17 @@ def test_reg_meta_lookup_multi_variant_vote_not_inflated():
     conn.execute("INSERT INTO variable_alias VALUES (1, 11, 'PNr')")
     # Variant 10 era → GenderA (the `kon` column's real family).
     conn.execute(
-        "INSERT INTO variable_state VALUES (1, 10, 'int', NULL, '2020-01-01', 100)"
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'int', NULL, '2020-01-01', '2020-12-31', 100)"
     )
     # Variant 11 eras → GenderB ×2 (the `pnr` column — must NOT vote for `kon`).
     conn.execute(
-        "INSERT INTO variable_state VALUES (1, 11, 'int', NULL, '2020-01-01', 200)"
+        "INSERT INTO variable_state VALUES "
+        "(1, 11, 'int', NULL, '2020-01-01', '2020-12-31', 200)"
     )
     conn.execute(
-        "INSERT INTO variable_state VALUES (1, 11, 'int', NULL, '2021-01-01', 200)"
+        "INSERT INTO variable_state VALUES "
+        "(1, 11, 'int', NULL, '2021-01-01', '2021-12-31', 200)"
     )
     conn.commit()
 

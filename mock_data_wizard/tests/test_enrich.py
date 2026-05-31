@@ -909,9 +909,9 @@ def test_bulk_fetch_value_codes_year_does_not_override_overlap_when_codes_diverg
 def test_year_score_helper():
     from mock_data_wizard.enrich import _year_score
 
-    # Both years known, exact match -> top score (1, 0).
+    # Point window (to_year omitted -> defaults to from_year), exact match.
     assert _year_score(2019, 2019) == (1, 0)
-    # Both known, distance 1 -> (1, -1). Closer is "greater" when sorted.
+    # Point window, distance 1 -> (1, -1). Closer is "greater" when sorted.
     assert _year_score(2020, 2019) == (1, -1)
     # Either side missing -> neutral (0, 0): tier doesn't apply.
     assert _year_score(None, 2019) == (0, 0)
@@ -921,3 +921,14 @@ def test_year_score_helper():
     assert (1, -1) > (0, 0)
     # Ordering: (1, 0) > (1, -1): exact beats close.
     assert (1, 0) > (1, -1)
+
+    # A2.7 interval semantics (Codex P2 #149): a multi-year window COVERING the
+    # source year is an exact match, and beats a nearer-OPENING future state.
+    assert _year_score(2021, 2019, 2021) == (1, 0)  # 2019..2021 covers 2021
+    assert _year_score(2021, 2022, 9999) == (1, -1)  # future state, edge dist 1
+    # The covering state must win the pick over the closer-opening one.
+    assert _year_score(2021, 2019, 2021) > _year_score(2021, 2022, 9999)
+    # The 9999 open-ended sentinel covers every year from its open onward.
+    assert _year_score(2025, 2020, 9999) == (1, 0)
+    # Non-covering past window ranks by distance to the nearest edge.
+    assert _year_score(2021, 2015, 2018) == (1, -3)

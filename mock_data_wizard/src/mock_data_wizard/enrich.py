@@ -557,19 +557,30 @@ def _name_score(col_name: str, *labels: str | None) -> tuple[int, int]:
     return (0, prefix_hits)
 
 
-def _year_score(source_year: int | None, candidate_year: int | None) -> tuple[int, int]:
-    """Rank a candidate (A2.7: a `variable_state`) by year proximity.
+def _year_score(
+    source_year: int | None, from_year: int | None, to_year: int | None = None
+) -> tuple[int, int]:
+    """Rank a candidate `variable_state` by how its validity INTERVAL relates to
+    ``source_year``.
 
-    Returns ``(known, -distance)``. ``known=1`` only when both years are
-    available -- otherwise year is uninformative and the score is
-    ``(0, 0)``, falling through to name and overlap ranking. Among
-    year-known candidates, exact match (``distance=0``) ranks highest;
-    ``distance`` grows linearly with ``|source - candidate|`` so the closer
-    year wins among inexact matches.
+    Returns ``(known, -distance)``. ``known=1`` only when ``source_year`` and the
+    state's opening year are both available -- otherwise year is uninformative and
+    the score is ``(0, 0)``, falling through to name and overlap ranking.
+
+    A2.7 interval semantics (matches `reg_meta` `get values`): a state whose window
+    ``[from_year, to_year]`` COVERS ``source_year`` is an exact match
+    (``distance=0``) -- a multi-year state must win for any year it spans, not just
+    its opening year, else a nearer-opening future state steals the pick. Non-
+    covering states rank by distance to the nearest interval edge, so the closest
+    era still wins among inexact matches. ``to_year`` defaults to ``from_year`` (a
+    point window) when omitted.
     """
-    if source_year is None or candidate_year is None:
+    if source_year is None or from_year is None:
         return (0, 0)
-    return (1, -abs(source_year - candidate_year))
+    hi = to_year if to_year is not None else from_year
+    if from_year <= source_year <= hi:
+        return (1, 0)
+    return (1, -min(abs(source_year - from_year), abs(source_year - hi)))
 
 
 def _bulk_fetch_value_codes(
@@ -630,31 +641,37 @@ def _bulk_fetch_value_codes(
     # this column accept the wrong sibling's value set. LEFT JOIN classification
     # so a state without classification metadata still appears (with NULL
     # short_name) — overlap can still pick it. The year-match tier (#24) reads
-    # the state's `valid_from` year (register_version is gone; the state's
-    # validity window is the year source).
+    # the state's full validity INTERVAL (`valid_from`..`valid_to`), not just the
+    # opening year, so a multi-year state scores as an exact match for any source
+    # year it covers (register_version is gone; the window is the year source).
     variable_ids = sorted({variable_id for variable_id, *_ in requests.values()})
     placeholders = ",".join("?" for _ in variable_ids)
     state_rows = conn.execute(
         "SELECT vs.variable_id, vs.state_id, "
         "vs.value_set_version_label, c.short_name AS classification, "
-        "vs.valid_from "
+        "vs.valid_from, vs.valid_to "
         "FROM variable_state vs "
         "LEFT JOIN classification c ON vs.classification_id = c.id "
         f"WHERE vs.variable_id IN ({placeholders})",
         variable_ids,
     ).fetchall()
     variable_to_states: dict[int, set[int]] = {}
-    state_meta: dict[int, tuple[str | None, str | None, int | None]] = {}
+    state_meta: dict[int, tuple[str | None, str | None, int | None, int]] = {}
     for r in state_rows:
         variable_to_states.setdefault(r["variable_id"], set()).add(r["state_id"])
-        # The state's opening year (valid_from `YYYY-MM-DD`); the yearless
-        # fallback sentinel `0001` reads as "no year" for the year-match tier.
+        # The state's validity INTERVAL in years (`valid_from`..`valid_to`,
+        # `YYYY-MM-DD`). `from_year` is None when the `0001` yearless-fallback
+        # sentinel opens the window ("no year" for the year-match tier); `to_year`
+        # carries the `9999` open-ended sentinel through unchanged, so a still-
+        # active window covers every year from its open onward.
         vf_year = int(r["valid_from"][:4])
-        state_year = vf_year if vf_year > 1 else None
+        from_year = vf_year if vf_year > 1 else None
+        to_year = int(r["valid_to"][:4])
         state_meta[r["state_id"]] = (
             r["classification"],
             r["value_set_version_label"],
-            state_year,
+            from_year,
+            to_year,
         )
 
     # 2. Fetch codes for every relevant STATE (one query). Index by state_id.
@@ -699,8 +716,8 @@ def _bulk_fetch_value_codes(
             codes = state_to_codes.get(state_id, {})
             if len(codes) <= 1:
                 continue  # a lone code is never a useful categorical universe
-            cls_short, vmv, state_year = state_meta[state_id]
-            year_known, year_dist = _year_score(source_year, state_year)
+            cls_short, vmv, from_year, to_year = state_meta[state_id]
+            year_known, year_dist = _year_score(source_year, from_year, to_year)
             shared, prefix = _name_score(column_name, cls_short, vmv)
             overlap = len(observed & codes.keys()) if observed else 0
             score = (year_known, year_dist, shared, prefix, overlap, len(codes))

@@ -414,7 +414,8 @@ def _reg_meta_lookup(
         "       vs.data_type AS data_type, "
         "       c.short_name AS short_name, "
         "       vs.value_set_id AS value_set_id, "
-        "       vs.valid_from AS valid_from "
+        "       vs.valid_from AS valid_from, "
+        "       vs.valid_to AS valid_to "
         "FROM variable_alias va "
         "JOIN variable v ON va.variable_id = v.variable_id "
         "JOIN variable_state vs ON vs.variable_id = v.variable_id "
@@ -448,12 +449,19 @@ def _reg_meta_lookup(
         if relevant_years is None:
             in_scope = True
         else:
-            # A2.7: the era's year is the state's `valid_from` (was the
-            # register_version name). The `0001` yearless-fallback sentinel reads
-            # as "no parseable year" → can't disprove relevance, so kept in scope.
+            # A2.7 interval-overlap (matches `get values`): a state is relevant
+            # when its validity window `valid_from`..`valid_to` COVERS any
+            # requested year, not only when it OPENS in one — a multi-year state
+            # (e.g. 2020..2021) is relevant to a {2021} filter. The `0001`
+            # yearless-fallback sentinel (from_year None) can't disprove relevance,
+            # so it's kept in scope; the `9999` open-ended sentinel in valid_to
+            # lets a still-active window cover every year from its open onward.
             vf_year = int(r["valid_from"][:4])
-            year = vf_year if vf_year > 1 else None
-            in_scope = year is None or year in relevant_years
+            from_year = vf_year if vf_year > 1 else None
+            to_year = int(r["valid_to"][:4])
+            in_scope = from_year is None or any(
+                from_year <= y <= to_year for y in relevant_years
+            )
         if in_scope:
             if sn:
                 short_name_counts_scoped.setdefault(name, set()).add(sn)
