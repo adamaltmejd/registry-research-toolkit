@@ -271,7 +271,7 @@ each with its own canonical CSV. Single-year codes change across the
 sequence (Skåne 1997, Västra Götaland 1998, parish mergers ongoing), so
 each year is its own published snapshot — 665 codes had conflicting
 labels under the previous unified entry. The data already
-disambiguates: `variable_instance.value_set_version_label` is year-stamped
+disambiguates: `variable_state.value_set_version_label` is year-stamped
 (`LKF 1990-01-01/...`), so the split is purely seed-side — no schema
 change, no FK rework. `supersedes` chains the years sequentially.
 

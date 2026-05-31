@@ -7,8 +7,8 @@
 - `Registry`: a conceptual collection of data organized for a use case or domain. Examples: `Utbildningsregistret (UREG)` and `LISA`.
 - `Table-like slice`: what users usually think of as a table or snapshot. In the SCB files this is not a first-class object with its own stable ID. It is usually derived from `Registry -> Registervariant -> Registerversion`, and sometimes further split by `Population` and `Objekttyp`.
 - `Variable`: a column concept. A variable can persist over time, be renamed, be redefined without renaming, or split into old/new variants.
-- `Variable instance`: a concrete occurrence of a variable in a specific registry/variant/version/context. `CVID` is the closest thing to an instance identifier, but it is not a perfect canonical column key.
-- `Value set`: coded values attached to a variable instance, such as municipality codes or category labels.
+- `Variable instance` (source concept only): in the SCB delivery a variable occurs once per registry/variant/version/context, identified by `CVID` — not a perfect canonical column key. **reg_meta does not persist this.** At build time the CVID-grained rows are coalesced into the two-level `variable` + `variable_state` model (see "Working Interpretation"); `CVID` does not survive to the shipped DB.
+- `Value set`: coded values attached to a variable's per-era state (`variable_state.value_set_id`), such as municipality codes or category labels.
 - `Change event`: a note about structural or semantic change over time. This is what `Timeseries` contributes.
 
 ## What The Input Files Represent
@@ -28,32 +28,34 @@
 - `Registerinformation.csv` drives the core normalized model.
 - A client-facing "table" is a derived concept, not something copied directly from one SCB ID.
 - The domain is a hierarchy/graph, not a flat relational schema. The storage backend (SQLite) is an implementation detail — the entities and relationships are what matter.
-- Core entities (normalized from `Registerinformation.csv`):
+- Core entities — the **two-level variable model** (normalized from `Registerinformation.csv`, then coalesced at build time):
   - `register` — a conceptual registry
-  - `register_variant` — a dataset family within a registry
-  - `register_version` — a time-slice or release of a variant
-  - `population` and `object_type` — context layers scoped at version level
-  - `variable` — a named measurement concept, scoped to a registry via `(register_id, var_id)`
-  - `variable_instance` — a concrete occurrence of a variable in a specific version (CVID-bound; does NOT carry column names). Carries `value_set_id` linking to the cvid's deduplicated, year-projected code list (NULL when the cvid has no codes).
-  - `variable_alias` — all known column names per instance (one instance can have multiple aliases)
-  - `variable_context` — population/object-type scope per instance
-- Enrichment entities (from other CSVs):
-  - `value_code` — deduplicated `(code, label)` pairs (from `Vardemangder.csv`'s `vardekod` / `vardebenamning` source columns); `UNIQUE(code, label)` enforced
-  - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted `(code, label)` pairs; identical sets across cvids share one row.
+  - `register_variant` — a dataset family within a registry. A **delivery / browse coordinate**, not an FQID segment (the two-level grammar dropped variant from the FQID — §5.0.1).
+  - `variable` — a named measurement concept, scoped to one registry. Identified by a synthetic `variable_id` primary key plus a **register-unique `slug`** (the FQID leaf). Carries `provider_key` (the SCB `VarID`), which is **non-unique within a register** after §5.7 triage splits one source `VarID` into sibling variables. Holds the cross-era constants — `name`, `definition`, `description`, sensitivity/identifier flags.
+  - `variable_state` — the **per-era unit** (replaces the old per-CVID `variable_instance`): one row per `(variable, register_variant, validity window)`. Carries `valid_from`/`valid_to`, `data_type`, `data_length`, the era's `delivery_column_name`, `value_set_id` (→ the year-projected code list; NULL when code-less), `value_set_version_label`, and `classification_id`. All time-varying facts live here.
+  - `variable_alias` — the **full delivery-column history** per variable, keyed `(variable_id, register_variant_id, delivery_column_name)`. `variable_state.delivery_column_name` keeps only the latest era's column; this table is the complete history `get datacolumns` reads.
+  - *Build-time-only* (consumed then **dropped before ship** — see DESIGN.md / MIGRATION_PLAN.md): `register_version`, `population`, `object_type` (folded into `variable_state` validity windows + `variable`); `variable_instance` + `variable_alias_build` (the cvid-grained staging that `variable` / `variable_state` / `variable_alias` are coalesced from); `unika_summary` (lifecycle/sensitivity flags lifted onto `variable`).
+- Lineage & relationship entities (variable-grain — §5.6/§5.7):
+  - `variable_state_lineage` (+ `variable_state_lineage_warning`) — interval-overlap source→consumer edges across registers.
+  - `variable_replaced_by` / `register_replaced_by` / `variant_replaced_by` — succession edges derived from `timeseries_event`.
+  - `variable_related_to` — links the split siblings that share one `provider_key`.
+  - `variable_same_as` / `classification_same_as` — curated slug-anchored identity edges, traversed by `Catalog.resolve()`.
+- Value-set entities (from `Vardemangder.csv`):
+  - `value_code` — deduplicated `(code, label)` pairs (source columns `vardekod` / `vardebenamning`); `UNIQUE(code, label)` enforced
+  - `value_set` — content-addressed dedup of year-projected code lists. `member_hash` = sha256 over sorted `(code, label)` pairs; identical sets are shared across states.
   - `value_set_member` — junction mapping each `value_set` to its codes. SCB validity windows (`VardemangderValidDates.csv`) are applied at build time, not stored — see DESIGN.md § "Value sets are year-projected at build time".
-  - `code_variable_map` — pre-aggregated code→variable (`variable_id`) mapping for efficient value search; variable_id-grained so a code maps only to the split sibling(s) whose value set contains it (not every variable sharing a `provider_key`)
-  - `unika_summary` (from `UnikaRegisterOchVariabler.csv`) — lifecycle and sensitivity flags
-  - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions
-  - `timeseries_event` (from `Timeseries.csv`) — structural/semantic change annotations
+  - `code_variable_map` — pre-aggregated code→variable mapping for value search, **`variable_id`-grained** (#152) so a code maps only to the split sibling(s) whose value set contains it, not every variable sharing a `provider_key`
 - Classification entities (from `reg_meta_build/classifications.toml` seed at build time — see DESIGN.md § Classifications):
-  - `classification` — normalized code systems (SUN2000, SSYK2012, SNI2007, LKF, …) with publisher, version, supersedes link
+  - `classification` — normalized code systems (SUN2000, SSYK2012, SNI2007, LKF, …) with publisher, version, supersedes link. Addressed by the **2-seg FQID `class/<slug>`**.
   - `classification_code` — junction from classification to its value codes, with optional hierarchical `level`
-  - `variable_instance.classification_id` — FK populated when an instance's `value_set_version_label` matches the seed
-- `Timeseries.csv` annotates the model, does not define it.
-- `UnikaRegisterOchVariabler.csv` and `Identifierare.csv` enrich the model, do not override `Registerinformation.csv`.
-- Reference data (from non-CSV sources):
+  - `variable_state.classification_id` — FK populated when a state's `value_set_version_label` matches a seeded classification (per-era, so split siblings classify independently)
+- Reference / enrichment entities:
+  - `identifier_semantics` (from `Identifierare.csv`) — identifier variable definitions
+  - `timeseries_event` (from `Timeseries.csv`) — structural/semantic change annotations; also the source for the `*_replaced_by` edges. Annotates the model, does not define it.
   - `source_column_type` (from `Tabelldefinitioner.sql` — SQL types and constraints per export column)
   - `source_join_key` (from `ID-kolumner.xlsx` — join-key semantics between export files, 12 rows)
+  - `import_manifest` — build provenance (schema version + source checksums)
+- `UnikaRegisterOchVariabler.csv` and `Identifierare.csv` enrich the model, do not override `Registerinformation.csv`.
 
 ## Why `Table` Needs Care
 
@@ -75,6 +77,8 @@
   - `Arbetsställen`
   - `Individer födelseland`
   - `Individer avlidna`
+
+The diagram below is the **SCB source delivery** structure — how the CSVs encode the data, CVID-grained. reg_meta's *storage* collapses `register_version` / `population`+`object_type` context / the CVID-bound `instance` into the two-level `variable` + `variable_state` model described under "Working Interpretation" above; the diagram maps the upstream input, not the shipped schema.
 
 ```mermaid
 flowchart TD
