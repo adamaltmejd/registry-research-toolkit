@@ -3,7 +3,7 @@ split sibling(s) whose value set actually contains it.
 
 A2.2 triage splits one source `var_id` into sibling `variable` rows that SHARE a
 `provider_key` (#139). Before `code_variable_map` was re-grained to
-`(code_id, variable_id)` (SCHEMA 6.0.0), the search joined on
+`(code_id, variable_id)` (SCHEMA 5.1.0), the search joined on
 `(register_id, provider_key)`, so a code fanned across EVERY sibling — including
 ones whose value set excluded it (false positives). The fix carries each cvid's
 owning `variable_id` via the coalescer's ground-truth stamp (#150).

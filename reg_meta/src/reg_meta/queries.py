@@ -445,8 +445,14 @@ def _search_values(
     # `(register_id, provider_key)` join fanned a code across all of them, even
     # siblings whose value set excluded it (false positives). `register_id` /
     # `var_id` come off the joined `variable` row (the map no longer stores them).
+    # No DISTINCT: the grain is one row per (code_id, variable_id) — `value_code`
+    # and `code_variable_map`'s PKs, then PK joins to `variable` / `register` —
+    # and each is already a distinct output tuple (code ≡ code_id via
+    # UNIQUE(code, label); slug ≡ variable_id via UNIQUE(register_id, slug),
+    # non-NULL in any slugged/query-serving build). Unlike `_search_datacolumns`,
+    # there is no variant fan-out to dedup.
     rows = conn.execute(
-        "SELECT DISTINCT vc.code, vc.label, "
+        "SELECT vc.code, vc.label, "
         "v.register_id, CAST(v.provider_key AS INTEGER) AS var_id, "
         "v.slug AS variable_slug, "
         "v.name AS variable_name, r.name AS register_name "
