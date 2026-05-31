@@ -6,6 +6,10 @@ import json
 from typing import TYPE_CHECKING
 
 import pytest
+
+# conftest.py inserts reg_monabundle/tests onto sys.path (it is imported first
+# by pytest), so the shared Model A spec builder resolves here.
+from _project_data_fixtures import make_project_data, write_project_data  # noqa: E402
 from mock_data_wizard.cli import build_parser, main
 
 from .conftest import MINIMAL_STATS
@@ -118,6 +122,39 @@ def test_build_bundle_project_data_invalid_schema_clean_error(tmp_path: Path, ca
     assert "Error:" in err
     assert "failed validation" in err
     assert "Traceback" not in err
+
+
+def test_build_bundle_model_a_spec_succeeds(tmp_path: Path, capsys):
+    """Happy path: a Model A project_data.json (3-seg binding FQIDs,
+    register_variant + period, a reg_monabundle.column_options block keyed by
+    a 3-seg variable FQID) builds a bundle cleanly. Pins the mdw
+    cli → reg_monabundle.runtime.spec contract against an accidental v0.x
+    reintroduction — the error-path tests above only prove rejection (A3.2)."""
+    spec = make_project_data(
+        sources=[
+            {
+                "name": "lisa_2020",
+                "register_variant": "scb/lisa/individer-15plus",
+                "period": 2020,
+                "bindings": [
+                    {"display_name": "LopNr", "type": "id", "id_subtype": "integer"},
+                    {
+                        "variable": "scb/lisa/kon",
+                        "display_name": "Kon",
+                        "type": "categorical",
+                    },
+                ],
+            }
+        ],
+        reg_monabundle={"column_options": {"scb/lisa/kon": {"suppress_k": 25}}},
+    )
+    spec_path = write_project_data(tmp_path, spec)
+    out = tmp_path / "bundle.py"
+    rc = main(["build-bundle", "--output", str(out), "--project-data", str(spec_path)])
+    assert rc == 0, capsys.readouterr().err
+    assert out.is_file() and out.stat().st_size > 0
+    # The Model A spec is embedded (3-seg binding FQID present).
+    assert "scb/lisa/kon" in out.read_text(encoding="utf-8")
 
 
 def _setup(tmp_path: Path) -> tuple[Path, Path]:

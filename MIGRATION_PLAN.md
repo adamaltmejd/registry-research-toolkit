@@ -401,7 +401,20 @@ classification resolver rewrite.
 
 Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3.4 in parallel.
 
-### [ ] A3.1 — `reg_schema` v2.0.0
+### [x] A3.1 — `reg_schema` v2.0.0 (PR #155, squash d4b1140c)
+
+**Shipped 2026-05-31.** reg_schema → Pydantic v2 (v2.0.0) + Model A grammar
+flip (3-seg binding / 2-seg classification / 3-part variant coordinate +
+`Source.period`). Two deviations from the bullets below, both deliberate:
+(1) the structural layer **drops** `missing_effective_{entity,time}_key`
+(effective-key presence is now reg_meta-backed inheritance, §6.8.1 — only the
+new `invalid_period` + `binding_value_set_version_mismatch` are emitted; the
+other "new issue codes" listed are defined-not-emitted semantic codes);
+(2) reg_monabundle green-keeping (incl. A3.3's `validate.py` 5→3 flip) folded
+in to keep CI green. Review-panel + Codex P2×2 (bare-string member crash;
+suppress_k cross-source duplicate-FQID) fixed. **Known transient
+(maintainer-approved):** the MONA bundle now amalgamates a Pydantic-importing
+reg_schema (§9.6 break) — A3.4 decouples it; no MONA users pre-v1, CI green.
 
 - Migrate dataclasses to Pydantic v2 models
 - `Source.register_version` → `Source.register_variant` + `Source.period` (always required; polymorphic int/string/range/snapshot-sentinel)
@@ -418,23 +431,46 @@ Four PRs. Starts after A2 completes. Internal ordering: A3.1 first; A3.2/A3.3/A3
 
 **Estimate**: 5-7 days (slightly larger than initial 4-6 due to broader rename surface).
 
-### [ ] A3.2 — `mock_data_wizard/spec.py` adoption
+### [x] A3.2 — `mock_data_wizard/spec.py` adoption
 
-- `_build_source` reads new `register_variant` + `period` fields; `columns` → `bindings`; `Column.name` → `Binding.variable`
-- `lookup_options` keys remain FQID-based (3-seg variable FQID now)
-- Fixture sweep for all `project_data.json` files under `mock_data_wizard/`
-- Companion `project_data.codes.json` fixtures restructured to the new shape (`classifications` + `sources.<name>.<binding_fqid>` blocks; §6.6) — every test that asserts against the old flat FQID-keyed codes file follows
-- Tests follow
+**Substantively absorbed by A0.2 + A3.1; only a happy-path test added.** This
+checklist predates the A0.2 carve-out that moved `spec.py` out of
+`mock_data_wizard` into `reg_monabundle.runtime.spec` — which A3.1 then
+migrated to Model A. So `_build_source`/`lookup_options` (items 1-2) are done
+in reg_monabundle. mdw's only project_data consumer is `cli.py`
+`_cmd_build_bundle`, which delegates 100% to `reg_monabundle.runtime.spec.
+parse_project_data` + `build_bundle` (no mdw-local spec parsing). There are
+**no** `project_data.json` fixtures under `mock_data_wizard/` (item 3 moot) and
+**no** `project_data.codes.json` artifact/handler anywhere in the repo — §6.6
+codes companions are a future reg_webapp (kit-build) / reg_mockdata concern,
+neither package exists yet (item 4 deferred, not an mdw concern). The lone
+residual was item 5: the mdw CLI suite covered only the build-bundle *error*
+paths, not a successful Model A build — added
+`test_build_bundle_model_a_spec_succeeds`. A 3-angle verification workflow
+confirmed nothing else remains.
 
-**Estimate**: 3-4 days.
+- `_build_source` reads new `register_variant` + `period` fields; `columns` → `bindings`; `Column.name` → `Binding.variable` — done in reg_monabundle (A3.1)
+- `lookup_options` keys remain FQID-based (3-seg variable FQID now) — done in reg_monabundle (A3.1)
+- Fixture sweep for all `project_data.json` files under `mock_data_wizard/` — moot (no such fixtures)
+- Companion `project_data.codes.json` fixtures restructured (§6.6) — deferred (no codes.json exists; reg_webapp/reg_mockdata concern)
+- Tests follow — added the mdw CLI Model A build-bundle happy-path test
 
-### [ ] A3.3 — `reg_monabundle/validate.py` 3-seg update
+**Estimate**: 3-4 days. **Actual: ~0 (absorbed); one test.**
 
-- One-line edit in `_is_binding_fqid` (5 → 3 segments)
-- Error message text update
-- Tests follow
+### [x] A3.3 — `reg_monabundle/validate.py` 3-seg update (folded into A3.1, PR #155)
 
-**Estimate**: 1 day.
+**Folded into A3.1.** Required green-keeping: once reg_schema's binding FQID
+flipped to 3-seg, the 3-seg FQIDs flow into `column_options` keys that
+`reg_monabundle.validate.validate_block` checks — leaving it on 5-seg would
+red the reg_monabundle suite. So `_is_binding_fqid` flipped 5→3 (with
+`@version` leaf parsing mirroring `reg_schema.structural`) + error message +
+tests, all in PR #155.
+
+- One-line edit in `_is_binding_fqid` (5 → 3 segments) — done (#155)
+- Error message text update — done (#155)
+- Tests follow — done (#155, `test_validate_block.py`)
+
+**Estimate**: 1 day. **Actual: folded into A3.1.**
 
 ### [ ] A3.4 — Bundle amalgamator update
 
