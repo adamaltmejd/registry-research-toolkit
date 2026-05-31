@@ -1030,11 +1030,19 @@ def populate_variable_slugs(
     1. **Curated** `[variable."<reg>.<var>"]` slug in ``<provider>.toml`` — wins.
     2. **Existing auto** slug in ``<provider>.auto.toml`` — kept verbatim
        (§5.3 immutability: a kolumnnamn/name change can't rot a published slug).
-    3. **kolumnnamn-derived**, when register-unique among first-sight variables
+    3. **Drift-stable basis** (§5.3/#143) — when the variable's
+       ``delivery_column_name`` is *not* constant across its states (the column
+       was renamed/revised across editions), the latest column is a misleading,
+       version-coupled basis (``sun2020inr1`` for a var that was
+       SUN96→SUN2000→SUN2020). Slug from the **name** when register-unique among
+       drifters (``utbildningsinriktning``), else the **earliest** delivery
+       column (#139's split-sibling discriminator basis — siblings share a name,
+       so name collides and they route here).
+    4. **kolumnnamn-derived**, when register-unique among first-sight variables
        (the short, common case: ``kon``).
-    4. **name-derived** (length-capped, :func:`_name_slug`) — when the
+    5. **name-derived** (length-capped, :func:`_name_slug`) — when the
        kolumnnamn slug collides, is generic, or is absent.
-    5. **``v<provider_key>``** last resort.
+    6. **``v<provider_key>``** last resort.
 
     The hand-curated override (1) stays the curator's hook to prettify any auto
     slug. New auto slugs are persisted to ``<provider>.auto.toml``.
@@ -1044,6 +1052,11 @@ def populate_variable_slugs(
     from .db import _progress
 
     counts = {"curated": 0, "auto_existing": 0, "auto_new": 0}
+    # First-sight variables whose delivery column drifts (§5.3/#143) — slugged
+    # from a stable basis (name / earliest column) rather than the latest
+    # column. Build-signal only; not a slug-source category, so it's reported on
+    # the progress line, not returned in `counts`.
+    drift_new = 0
 
     # Curated overrides come from the hand-curated <provider>.toml only.
     curated_entries = [
@@ -1078,14 +1091,26 @@ def populate_variable_slugs(
         # variable_state.delivery_column_name is the coalesced per-era column
         # (not raw variable_alias) — stays correct after A2.7 drops
         # variable_instance. "Latest" = highest valid_to, lexically smallest on
-        # ties (matches the coalescer tie-break, §5.3). Ordered by register so
-        # the per-register uniqueness scope is one groupby pass.
+        # ties (matches the coalescer tie-break, §5.3). `early_kol` is the
+        # mirror (lowest valid_from) — the #139 split-sibling discriminator
+        # basis — and `n_cols` is the §5.3/#143 drift signal: a variable whose
+        # delivery column is NOT constant across its states (n_cols > 1) must
+        # NOT slug from its latest column (a version-specific name like
+        # `sun2020inr1` for a var that was SUN96→SUN2000→SUN2020). Ordered by
+        # register so the per-register uniqueness scope is one groupby pass.
         variables = conn.execute(
             "SELECT v.variable_id, v.register_id, v.provider_key, v.name, "
             "(SELECT vs.delivery_column_name FROM variable_state vs "
             " WHERE vs.variable_id = v.variable_id "
             " AND vs.delivery_column_name IS NOT NULL "
-            " ORDER BY vs.valid_to DESC, vs.delivery_column_name ASC LIMIT 1) AS kol "
+            " ORDER BY vs.valid_to DESC, vs.delivery_column_name ASC LIMIT 1) AS kol, "
+            "(SELECT vs.delivery_column_name FROM variable_state vs "
+            " WHERE vs.variable_id = v.variable_id "
+            " AND vs.delivery_column_name IS NOT NULL "
+            " ORDER BY vs.valid_from ASC, vs.delivery_column_name ASC LIMIT 1) AS early_kol, "
+            "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+            " WHERE vs.variable_id = v.variable_id "
+            " AND vs.delivery_column_name IS NOT NULL) AS n_cols "
             "FROM variable v "
             "JOIN register r ON v.register_id = r.register_id "
             "JOIN provider p ON r.provider_id = p.provider_id "
@@ -1136,7 +1161,9 @@ def populate_variable_slugs(
         # they're reserved when applied in Pass 1, and pre-reserving would trip
         # the own-slug branch of the curated-conflict check. source_id is
         # "<register_id>.<provider_key>"; register_id is the leading int segment.
-        live_sids = {_source_id(rid, pk, _vid) for _vid, rid, pk, _n, _k in variables}
+        live_sids = {
+            _source_id(rid, pk, _vid) for _vid, rid, pk, _n, _k, _ek, _nc in variables
+        }
         reserved_by_register: dict[int, set[str]] = defaultdict(set)
         for sid, prev_slug in auto.items():
             reserved_by_register[int(sid.partition(".")[0])].add(prev_slug)
@@ -1146,14 +1173,18 @@ def populate_variable_slugs(
 
         auto_dirty = False
         # The build connection yields plain tuples (not sqlite3.Row), so unpack
-        # positionally: (variable_id, register_id, provider_key, name, kol).
+        # positionally: (variable_id, register_id, provider_key, name, kol,
+        # early_kol, n_cols). `pending` carries the early column + a `drift`
+        # flag (n_cols > 1) into the §5.3/#143 stable-basis fallback in Pass 3.
         for register_id, group in groupby(variables, key=lambda row: row[1]):
             used: set[str] = set(reserved_by_register.get(register_id, ()))
-            pending: list[tuple[int, str, str | None, str | None]] = []
+            pending: list[
+                tuple[int, str, str | None, str | None, str | None, bool]
+            ] = []
 
             # Pass 1: curated + existing-auto slugs are fixed — assign and
             # reserve them so first-sight derivation can't collide with them.
-            for variable_id, _reg, provider_key, name, kol in group:
+            for variable_id, _reg, provider_key, name, kol, early_kol, n_cols in group:
                 source_id = _source_id(register_id, provider_key, variable_id)
                 curated_slug = curated.get((provider_slug, source_id))
                 if curated_slug is not None:
@@ -1185,22 +1216,63 @@ def populate_variable_slugs(
                     used.add(fixed)
                     counts[kind] += 1
                 else:
-                    pending.append((variable_id, provider_key, name, kol))
+                    pending.append(
+                        (variable_id, provider_key, name, kol, early_kol, n_cols > 1)
+                    )
 
-            # Pass 2: kolumnnamn-slug frequency among first-sight variables only.
+            # Pass 2: kolumnnamn-slug frequency among first-sight variables.
             # A kol slug is usable directly only if exactly one pending variable
             # derives it and it isn't already taken by a curated/auto slug.
-            kol_slug = {vid: derive_variable_slug(k) for vid, _pk, _nm, k in pending}
-            kol_freq = Counter(s for s in kol_slug.values() if s is not None)
+            # Drifters (§5.3/#143) are excluded from `kol_freq`: they won't claim
+            # a latest-column slug, so they mustn't block a stable-column sibling
+            # that legitimately wants it (a drifter's last column can equal an
+            # unsplit variable's only column — the same-column-different-var_id
+            # reuse #143 calls out). `name_freq` mirrors `kol_freq` for the
+            # drifters that prefer their (stable) name basis.
+            kol_slug = {
+                vid: derive_variable_slug(k) for vid, _pk, _nm, k, _ek, _dr in pending
+            }
+            kol_freq = Counter(
+                kol_slug[vid]
+                for vid, _pk, _nm, _k, _ek, drift in pending
+                if not drift and kol_slug[vid] is not None
+            )
+            name_slug_of = {
+                vid: _name_slug(nm) for vid, _pk, nm, _k, _ek, drift in pending if drift
+            }
+            name_freq = Counter(s for s in name_slug_of.values() if s is not None)
 
             # Pass 3: assign first-sight slugs via the fallback chain.
-            for variable_id, provider_key, name, _kol in pending:
+            for variable_id, provider_key, name, _kol, early_kol, drift in pending:
                 ks = kol_slug[variable_id]
                 fold = fold_slugs.get(variable_id) if fold_slugs else None
                 if fold:
                     # §5.7 fold: slug from the shared column stem (triage-
                     # supplied), not a single representation column.
                     base = fold
+                elif drift:
+                    # §5.3/#143: the delivery column isn't constant across this
+                    # variable's states, so the latest-column slug is misleading
+                    # and version-coupled (`sun2020inr1` for a var that was
+                    # SUN96→SUN2000→SUN2020). Slug from a stable basis: the NAME
+                    # when register-unique among drifters (the unsplit 1:1 case →
+                    # a version-neutral `utbildningsinriktning`), else the
+                    # EARLIEST delivery column (#139's split-sibling
+                    # discriminator basis — split siblings share a name, so name
+                    # collides and routes them here, staying rebuild-stable).
+                    # #141's frozen-build rename-immutability is a separate,
+                    # post-slug-freeze concern.
+                    ns = name_slug_of[variable_id]
+                    if ns is not None and name_freq[ns] == 1 and ns not in used:
+                        base = ns
+                    else:
+                        base = (
+                            derive_variable_slug(early_kol)
+                            or ns
+                            or ks
+                            or _fallback_slug(provider_key)
+                        )
+                    drift_new += 1
                 elif ks is not None and kol_freq[ks] == 1 and ks not in used:
                     base = ks
                 else:
@@ -1236,7 +1308,8 @@ def populate_variable_slugs(
     _progress(
         f"  Variable slugs: {counts['curated']:,} curated, "
         f"{counts['auto_existing']:,} auto (existing), "
-        f"{counts['auto_new']:,} auto (new)"
+        f"{counts['auto_new']:,} auto (new); "
+        f"{drift_new:,} new from a drift-stable basis (§5.3/#143)"
     )
     return counts
 
@@ -2012,6 +2085,13 @@ class PrecheckResult:
     stale_variants: tuple[tuple[str, str], ...] = ()
     stale_classifications: tuple[str, ...] = ()
     entries: tuple[SlugEntry, ...] = ()
+    # Advisory (§5.3/#143): variables whose delivery column drifts across
+    # editions, auto-slugged from a stable basis (name / earliest column). A
+    # pre-v1 curation-review aid, NOT a gate — never feeds `ok`/exit. Each row:
+    # (provider, register_id, provider_key, slug, name, cols-in-valid_from-order).
+    # `provider_key` stays TEXT (SCB `str(var_id)`, SOS a merged name) — never
+    # coerced to int, so a non-numeric SOS key can't crash the advisory.
+    drifting_variables: tuple[tuple[str, int, str, str, str, tuple[str, ...]], ...] = ()
 
     @property
     def ok(self) -> bool:
@@ -2114,6 +2194,56 @@ def precheck_slugs(conn: sqlite3.Connection, slug_dir: Path) -> PrecheckResult:
         stale_variants=tuple(stale_vars),
         stale_classifications=tuple(stale_cls),
         entries=tuple(entries),
+        drifting_variables=_drifting_variables(conn),
+    )
+
+
+def _drifting_variables(
+    conn: sqlite3.Connection,
+) -> tuple[tuple[str, int, str, str, str, tuple[str, ...]], ...]:
+    """Advisory list (§5.3/#143): variables whose ``delivery_column_name`` is
+    NOT constant across their ``variable_state`` rows.
+
+    ``populate_variable_slugs`` already slugs these from a stable basis (name /
+    earliest column — fallback step 3), so this is a pre-v1 curation-review aid,
+    NOT a build gate: a curator scans it to pin a ``[variable]`` override where
+    the auto-pick is still off. Drift = the same ``COUNT(DISTINCT) > 1`` signal
+    the slug derivation uses, so the two never disagree on what "drifts".
+
+    Each row is ``(provider, register_id, provider_key, slug, name, columns)`` —
+    the distinct columns in ``valid_from`` order, so the curator reads the
+    edition drift directly (``('SunInr', 'sun2000inr1', 'sun2020inr1')``).
+    ``provider_key`` stays the raw ``TEXT`` value (SCB ships ``str(var_id)``, SOS
+    a merged variable name) — coercing it to ``int`` would crash this advisory on
+    a non-numeric SOS key, and the list is supposed to never gate the command.
+    """
+    _DRIFT = (
+        "(SELECT COUNT(DISTINCT vs.delivery_column_name) FROM variable_state vs "
+        " WHERE vs.variable_id = {v} AND vs.delivery_column_name IS NOT NULL) > 1"
+    )
+    ident = conn.execute(
+        "SELECT v.variable_id, p.slug, v.register_id, v.provider_key, v.slug, v.name "
+        "FROM variable v "
+        "JOIN register r ON v.register_id = r.register_id "
+        "JOIN provider p ON r.provider_id = p.provider_id "
+        f"WHERE {_DRIFT.format(v='v.variable_id')} "
+        "ORDER BY p.slug, v.register_id, CAST(v.provider_key AS INTEGER), v.variable_id"
+    ).fetchall()
+    # Distinct columns per drifting variable, earliest-edition first. Same drift
+    # predicate, so only drifters are scanned (no N+1, no id `IN (...)` list).
+    cols_by_vid: dict[int, list[str]] = defaultdict(list)
+    for vid, col in conn.execute(
+        "SELECT vs.variable_id, vs.delivery_column_name "
+        "FROM variable_state vs "
+        "WHERE vs.delivery_column_name IS NOT NULL "
+        f"AND {_DRIFT.format(v='vs.variable_id')} "
+        "GROUP BY vs.variable_id, vs.delivery_column_name "
+        "ORDER BY vs.variable_id, MIN(vs.valid_from), vs.delivery_column_name"
+    ).fetchall():
+        cols_by_vid[vid].append(col)
+    return tuple(
+        (prov, reg_id, pk, slug or "", name or "", tuple(cols_by_vid[vid]))
+        for vid, prov, reg_id, pk, slug, name in ident
     )
 
 

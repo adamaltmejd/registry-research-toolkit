@@ -514,6 +514,71 @@ class TestPrecheckSlugs:
         result = precheck_slugs(conn, d)
         assert result.parse_errors
 
+    def test_drifting_variables_advisory(self, tmp_path: Path):
+        # §5.3/#143: precheck lists drifting-column variables (advisory — it must
+        # NOT affect `ok`). The drift var is reported with its stored slug + the
+        # distinct columns in edition order; a constant-column var is omitted.
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()  # var 44, constant column "Kon" → not a drifter
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, '65', 'Utbildningsinriktning')"
+        ).lastrowid
+        for yr, col in (
+            ("2000", "SunInr"),
+            ("2016", "sun2000inr1"),
+            ("2020", "sun2020inr1"),
+        ):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        conn.commit()
+        populate_variable_slugs(conn, d)
+        result = precheck_slugs(conn, d)
+        # provider_key stays raw TEXT (never int-coerced — a non-numeric SOS key
+        # must not crash this advisory); for SCB it's the numeric var_id as text.
+        by_pk = {row[2]: row for row in result.drifting_variables}
+        assert "65" in by_pk
+        assert "44" not in by_pk  # constant column is not a drifter
+        prov, reg_id, provider_key, slug, name, cols = by_pk["65"]
+        assert (prov, reg_id, provider_key) == ("scb", 1, "65")
+        assert slug == "utbildningsinriktning"
+        assert name == "Utbildningsinriktning"
+        assert cols == ("SunInr", "sun2000inr1", "sun2020inr1")
+
+    def test_drifting_advisory_tolerates_nonnumeric_provider_key(self, tmp_path: Path):
+        # `variable.provider_key` is TEXT — SOS ships a merged variable name, not
+        # a numeric var_id. The advisory must report it raw, not `int()` it (that
+        # would crash the otherwise non-fatal precheck on a non-SCB provider).
+        d = tmp_path / "slugs"
+        d.mkdir()
+        _write(d / "scb.toml", "")
+        _write(d / "classifications.toml", "")
+        conn = build_slugged_db()
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) "
+            "VALUES (1, 'BefolkningPerKommun', 'Befolkning')"
+        ).lastrowid
+        for yr, col in (("2000", "BefKom"), ("2010", "BefKommun")):
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        conn.commit()
+        populate_variable_slugs(conn, d)
+        result = precheck_slugs(conn, d)  # must not raise on the non-numeric key
+        hit = [r for r in result.drifting_variables if r[2] == "BefolkningPerKommun"]
+        assert len(hit) == 1
+        assert hit[0][3] == "befolkning"  # name basis (cols collide-free, drift)
+
     def test_stale_register_id_reported(self, tmp_path: Path):
         # TOML entry for register 999 has no live row; `populate_slugs` would
         # raise `slug_unknown_source_id` at build time. Precheck surfaces it
@@ -1016,6 +1081,110 @@ class TestPopulateVariableSlugs:
         previous["variable"]["scb/1.44"] = "kon-old"
         diff = diff_snapshot(previous, payload)
         assert any("1.44" in r for r in diff["renamed"])
+
+    # --- §5.3/#143: drift-stable slug basis (+ doable-now part of #141) --------
+
+    @staticmethod
+    def _add_drift_variable(
+        conn: sqlite3.Connection,
+        *,
+        var_id: int,
+        name: str,
+        cols: list[str],
+        register_id: int = 1,
+    ) -> int:
+        """Insert a variable + one variable_state era per column so its
+        `delivery_column_name` drifts across editions. `cols` is earliest→latest
+        (era N spans year 2000+N), so `cols[0]` is the earliest delivery column.
+        Repeating a column (`["Syss", "Syss"]`) yields a constant, NON-drifting
+        variable (COUNT(DISTINCT)=1)."""
+        vid = conn.execute(
+            "INSERT INTO variable (register_id, provider_key, name) VALUES (?, ?, ?)",
+            (register_id, str(var_id), name),
+        ).lastrowid
+        assert vid is not None
+        for i, col in enumerate(cols):
+            yr = 2000 + i
+            conn.execute(
+                "INSERT INTO variable_state (variable_id, register_variant_id, "
+                "valid_from, valid_to, data_type, delivery_column_name) "
+                "VALUES (?, 10, ?, ?, 'int', ?)",
+                (vid, f"{yr}-01-01", f"{yr}-12-31", col),
+            )
+        conn.commit()
+        return vid
+
+    def _slug_of_vid(self, conn: sqlite3.Connection, vid: int) -> str | None:
+        return conn.execute(
+            "SELECT slug FROM variable WHERE variable_id = ?", (vid,)
+        ).fetchone()[0]
+
+    def test_drifting_column_slugs_from_name(self, tmp_path: Path) -> None:
+        # §5.3/#143: a 1:1 variable whose single delivery column drifts across
+        # editions (SunInr→sun2000inr1→sun2020inr1) must NOT slug from its latest
+        # column (`sun2020inr1` — misleading + version-coupled). The
+        # register-unique NAME wins: a version-neutral `utbildningsinriktning`.
+        conn = self._db(kol="Kon")  # var 44 (kon) stays an unrelated live var
+        vid = self._add_drift_variable(
+            conn,
+            var_id=65,
+            name="Utbildningsinriktning",
+            cols=["SunInr", "sun2000inr1", "sun2020inr1"],
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "utbildningsinriktning"
+
+    def test_drifting_name_collision_falls_back_to_earliest_column(
+        self, tmp_path: Path
+    ) -> None:
+        # The watch-out: two drifting variables in one register sharing a name.
+        # The name slug collides → each routes to its EARLIEST delivery column
+        # (the stable, disambiguating basis), NOT an arbitrary `name`/`name-2`.
+        conn = self._db(kol="Kon")
+        a = self._add_drift_variable(
+            conn, var_id=70, name="Inriktning", cols=["AlfaKod", "alfa_ny"]
+        )
+        b = self._add_drift_variable(
+            conn, var_id=71, name="Inriktning", cols=["BetaKod", "beta_ny"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        sa, sb = self._slug_of_vid(conn, a), self._slug_of_vid(conn, b)
+        assert sa == "alfakod"  # earliest column, not "inriktning"
+        assert sb == "betakod"
+
+    def test_split_siblings_drift_slug_from_earliest_column(
+        self, tmp_path: Path
+    ) -> None:
+        # #141 (doable-now part): split siblings share one provider_key AND the
+        # generic name, so a drifting sibling's name collides → it slugs from its
+        # own EARLIEST column (#139's discriminator basis), staying rebuild-stable
+        # and distinct per sibling. Frozen-build rename-immutability across a
+        # rename of that earliest column is deferred post-slug-freeze.
+        conn = self._db(kol="Kon")
+        a = self._add_drift_variable(
+            conn, var_id=99, name="Imputerat", cols=["BoareaImp", "boarea_imp"]
+        )
+        b = self._add_drift_variable(
+            conn, var_id=99, name="Imputerat", cols=["BantalrumImp", "bantalrum_imp"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        sa, sb = self._slug_of_vid(conn, a), self._slug_of_vid(conn, b)
+        assert sa == "boareaimp"
+        assert sb == "bantalrumimp"
+
+    def test_constant_column_is_not_drift(self, tmp_path: Path) -> None:
+        # Regression: two eras carrying the SAME column is not drift
+        # (COUNT(DISTINCT)=1) — it keeps the register-unique column slug.
+        conn = self._db(kol="Kon")
+        vid = self._add_drift_variable(
+            conn, var_id=80, name="Sysselsattning", cols=["Syss", "Syss"]
+        )
+        d = self._slug_dir(tmp_path)
+        populate_variable_slugs(conn, d)
+        assert self._slug_of_vid(conn, vid) == "syss"
 
 
 class TestSeedEmitsValidToml:

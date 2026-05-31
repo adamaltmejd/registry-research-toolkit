@@ -534,6 +534,22 @@ def _cmd_precheck_slugs(
                 {"provider": p, "source_id": sid} for (p, sid) in result.stale_variants
             ],
             "stale_classifications": list(result.stale_classifications),
+            # Advisory only (§5.3/#143) — never affects `ok`/exit. Variables
+            # whose delivery column drifts across editions, auto-slugged from a
+            # stable basis; a curator scans this for the pre-v1 slug freeze.
+            "drifting_variables": [
+                {
+                    "provider": prov,
+                    "register_id": reg_id,
+                    "provider_key": provider_key,
+                    "slug": slug,
+                    "name": name,
+                    "columns": list(columns),
+                }
+                for (prov, reg_id, provider_key, slug, name, columns) in (
+                    result.drifting_variables
+                )
+            ],
             "snapshot": snapshot_status,
         },
         duration_ms=duration_ms,
