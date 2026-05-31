@@ -26,15 +26,15 @@ sys.path.insert(
 from _stats_fixtures import MINIMAL_STATS, SPINE_STATS  # noqa: E402,F401
 
 
-def assign_value_set(
-    conn: sqlite3.Connection, cvid: int, codes: list[tuple[str, str]]
-) -> int:
+def mint_value_set(conn: sqlite3.Connection, codes: list[tuple[str, str]]) -> int:
     """Test-only helper. Mint or reuse a value_set for ``codes`` (kod/label
-    pairs), insert any missing value_code rows, populate value_set_member,
-    and link ``cvid`` via ``variable_instance.value_set_id``.
+    pairs), inserting any missing value_code rows and populating
+    value_set_member. Returns the value_set_id.
 
-    Returns the value_set_id. Idempotent on the (kod, label) inputs because
-    value_set is content-addressed by member_hash.
+    A2.7: callers link the returned id onto `variable_state.value_set_id` (the
+    shipped per-era unit); `variable_instance` is dropped before ship. Idempotent
+    on the (kod, label) inputs because value_set is content-addressed by
+    member_hash.
     """
     code_ids: list[int] = []
     for kod, label in codes:
@@ -67,10 +67,50 @@ def assign_value_set(
         )
     else:
         value_set_id = int(row[0])
+    return value_set_id
 
+
+def add_state_with_codes(
+    conn: sqlite3.Connection,
+    *,
+    register_id: int,
+    var_id: int,
+    codes: list[tuple[str, str]],
+    register_variant_id: int = 10,
+    value_set_version_label: str = "",
+    classification_id: int | None = None,
+    valid_from: str = "0001-01-01",
+    valid_to: str = "9999-12-31",
+    data_type: str = "int",
+) -> int:
+    """A2.7 test helper: seed a `variable_state` (the shipped per-era unit) for
+    an existing `variable`, minting + linking its value_set.
+
+    Replaces the v0.x ``INSERT variable_instance`` + ``assign_value_set(cvid)``
+    pattern — `enrich.py` reads `variable_state` now (`variable_instance` is
+    dropped before ship). The parent `variable` (register_id, var_id →
+    provider_key) must already exist. Returns the value_set_id.
+    """
+    value_set_id = mint_value_set(conn, codes)
+    variable_id = conn.execute(
+        "SELECT variable_id FROM variable "
+        "WHERE register_id = ? AND provider_key = CAST(? AS TEXT)",
+        (register_id, var_id),
+    ).fetchone()[0]
     conn.execute(
-        "UPDATE variable_instance SET value_set_id = ? WHERE cvid = ?",
-        (value_set_id, cvid),
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, value_set_id, value_set_version_label, classification_id) "
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (
+            variable_id,
+            register_variant_id,
+            valid_from,
+            valid_to,
+            data_type,
+            value_set_id,
+            value_set_version_label,
+            classification_id,
+        ),
     )
     return value_set_id
 
@@ -192,23 +232,20 @@ def reg_meta_db(tmp_path: Path) -> Path:
         "INSERT INTO variable (register_id, provider_key, name, definition, slug) "
         "VALUES (1, '44', 'Kön', 'Kön enligt folkbokföring', 'kon')"
     ).lastrowid
+    # A2.7: the shipped DB has no `variable_instance`; `variable_alias` is
+    # variable_id-keyed and value sets link via `variable_state.value_set_id`.
+    # Two value codes: 1=Man, 2=Kvinna, on a 2020 state carrying the column.
+    value_set_id = mint_value_set(conn, [("1", "Man"), ("2", "Kvinna")])
     conn.execute(
-        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, regver_id, var_id, data_type, data_length, value_set_version_label, vardemangdsniva) "
-        "VALUES (1001, 1, 10, 100, 44, 'int', '1', 'Kön', '1')"
+        "INSERT INTO variable_alias (variable_id, register_variant_id, delivery_column_name) "
+        "VALUES (?, 10, 'Kon')",
+        (variable_id,),
     )
-    conn.execute(
-        "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1001, 'Kon')"
-    )
-    # Two value codes: 1=Man, 2=Kvinna
-    value_set_id = assign_value_set(conn, 1001, [("1", "Man"), ("2", "Kvinna")])
-    # A2.6: get_schema (and thus reg_meta.compare) reads variable_state now, not
-    # variable_instance × register_version. Seed one 2020 state carrying the
-    # delivery column + value set so the schema/compare paths surface this
-    # variable.
     conn.execute(
         "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
-        "valid_to, data_type, data_length, delivery_column_name, value_set_id) "
-        "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', '1', 'Kon', ?)",
+        "valid_to, data_type, data_length, delivery_column_name, value_set_id, "
+        "value_set_version_label) "
+        "VALUES (?, 10, '2020-01-01', '2020-12-31', 'int', '1', 'Kon', ?, 'Kön')",
         (variable_id, value_set_id),
     )
     conn.commit()

@@ -30,7 +30,6 @@ from .queries import (
     get_lineage,
     get_register,
     get_schema,
-    get_values,
     get_values_by_variable,
     get_varinfo,
     resolve,
@@ -57,7 +56,6 @@ __all__ = [
     "get_lineage",
     "get_register",
     "get_schema",
-    "get_values",
     "get_values_by_variable",
     "get_varinfo",
     "LineageEdge",
@@ -77,7 +75,7 @@ __all__ = [
     "VariableState",
 ]
 
-__version__ = "0.12.0"
+__version__ = "1.0.0"
 
 
 def __getattr__(name: str):

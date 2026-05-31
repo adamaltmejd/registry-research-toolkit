@@ -154,10 +154,11 @@ class TestStoredVariableSlug:
     def test_two_aliases_one_slug_still_resolves(self) -> None:
         # A variable with two aliases (`Kon` + `Kön`) both folding to one slug:
         # the stored slug is single, so the variable resolves unambiguously.
+        # A2.7: `variable_alias` is variable_id-keyed.
         conn = build_slugged_db()
         conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) "
-            "VALUES (1001, 'Kön')"
+            "INSERT INTO variable_alias (variable_id, register_variant_id, delivery_column_name) "
+            "SELECT variable_id, 10, 'Kön' FROM variable WHERE slug = 'kon'"
         )
         conn.commit()
         r = Catalog(conn).resolve("scb/lisa/kon")

@@ -139,6 +139,47 @@ class TestSplit:
         assert cols == ["Hemkommun", "Skolkommun"]
         assert len(vids) == 2, "each disjoint column resolves to its own sibling"
 
+    def test_alias_column_ties_to_owning_sibling(self, tmp_path: Path) -> None:
+        # A2.7 reparent precision (PR #149 P1): each split sibling's
+        # `variable_alias` (the source `get_datacolumns` reads, filtered by
+        # `variable_id`) must carry ONLY that sibling's delivery column — NOT
+        # every column sharing the non-unique `(register_id, provider_key)`.
+        # Pre-fix the bare provider_key join fanned each cvid's column onto all
+        # siblings, so this asserted both columns under each sibling.
+        conn = _build(
+            tmp_path,
+            [
+                _var_row(colname="Hemkommun", cvid=9300, var_id=920),
+                _var_row(colname="Skolkommun", cvid=9301, var_id=920),
+            ],
+        )
+        sibs = conn.execute(
+            "SELECT variable_id FROM variable "
+            "WHERE register_id = 1 AND provider_key = '920' "
+            "ORDER BY variable_id"
+        ).fetchall()
+        assert len(sibs) == 2
+        # Each sibling's alias set == its single owning column (the §5.7 query
+        # `get_datacolumns` runs: SELECT delivery_column_name … WHERE variable_id=?).
+        alias_by_vid = {
+            r["variable_id"]: sorted(
+                a["delivery_column_name"]
+                for a in conn.execute(
+                    "SELECT delivery_column_name FROM variable_alias "
+                    "WHERE variable_id = ?",
+                    (r["variable_id"],),
+                )
+            )
+            for r in sibs
+        }
+        owned_cols = sorted(cols for cols in alias_by_vid.values())
+        assert owned_cols == [["Hemkommun"], ["Skolkommun"]], (
+            f"each sibling must own exactly its column, got {alias_by_vid}"
+        )
+        # Union across siblings preserves full recall (no column lost).
+        all_cols = {c for cols in alias_by_vid.values() for c in cols}
+        assert all_cols == {"Hemkommun", "Skolkommun"}
+
     def test_non_contested_column_gets_own_variable(self, tmp_path: Path) -> None:
         # Hemkommun + Skolkommun collide in 2020 (split). Telefon is delivered
         # ALONE in 2019 (non-contested). Once the var_id is a split container,
@@ -650,4 +691,134 @@ class TestVariableRelatedToEdges:
         assert (
             conn.execute("SELECT COUNT(*) FROM variable_related_to").fetchone()[0] == 0
         )
+        conn.close()
+
+
+def _seed_split_for_backfill(conn: sqlite3.Connection) -> tuple[int, int, int, int]:
+    """Seed the PRE-ship state for the classification backfill: two split
+    siblings sharing `provider_key` '920' (distinct columns + distinct
+    classifications), each with its `variable_instance` + `variable_alias_build`
+    rows and a NULL-classification `variable_state`.
+
+    Mirrors what the build pipeline holds right before
+    `_backfill_state_classifications` runs (coalescer done, classifications
+    populated, `variable_instance` not yet dropped). Returns
+    ``(variable_id_a, variable_id_b, cls_a, cls_b)``.
+
+    The two states are CODE-LESS (`value_set_id` NULL on both states and both
+    cvids) — the §5.7 "version-label-tagged family with no value codes" case the
+    backfill docstring calls out. This is what defeats the old
+    `(register_id, provider_key)` join: its only discriminator was
+    `vi.value_set_id IS variable_state.value_set_id`, and `NULL IS NULL` matches,
+    so every cvid's classification fanned onto every sibling's state. (With
+    distinct non-NULL value sets the old query would coincidentally separate the
+    siblings, hiding the bug; NULL is the faithful failing case.) The column-tie
+    discriminator (`delivery_column_name` → owning sibling) does NOT depend on
+    value_set_id, so the fix isolates them regardless.
+    """
+    from reg_meta_build.db import DDL, seed_providers
+
+    conn.executescript(DDL)
+    seed_providers(conn)
+    conn.execute(
+        "INSERT INTO register (register_id, provider_id, slug, name) "
+        "VALUES (1, 1, 'testreg', 'TESTREG')"
+    )
+    conn.execute(
+        "INSERT INTO register_variant (register_variant_id, register_id, slug, name) "
+        "VALUES (10, 1, 'individer', 'Individer')"
+    )
+    # Two classifications, one owned by each sibling. cls_a has the LOWER id, so
+    # the old cross-attribution's min() tie-break pulls cls_a onto sibling B's
+    # state too (B owns cls_b) — the observable leak.
+    cls_a = conn.execute(
+        "INSERT INTO classification (short_name, name) VALUES ('KOMMUN_HEM', 'Hemkommun')"
+    ).lastrowid
+    cls_b = conn.execute(
+        "INSERT INTO classification (short_name, name) VALUES ('KOMMUN_SKOL', 'Skolkommun')"
+    ).lastrowid
+    # Sibling A (Hemkommun) and B (Skolkommun): same provider_key '920'.
+    vid_a = conn.execute(
+        "INSERT INTO variable (register_id, provider_key, name, slug) "
+        "VALUES (1, '920', 'Kommun', 'kommun-hem')"
+    ).lastrowid
+    vid_b = conn.execute(
+        "INSERT INTO variable (register_id, provider_key, name, slug) "
+        "VALUES (1, '920', 'Kommun', 'kommun-skol')"
+    ).lastrowid
+    # Coalesced states — classification_id + value_set_id NULL (code-less).
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, delivery_column_name) "
+        "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Hemkommun')",
+        (vid_a,),
+    )
+    conn.execute(
+        "INSERT INTO variable_state (variable_id, register_variant_id, valid_from, "
+        "valid_to, data_type, delivery_column_name) "
+        "VALUES (?, 10, '2018-01-01', '9999-12-31', 'int', 'Skolkommun')",
+        (vid_b,),
+    )
+    # Pre-ship cvids: each carries its OWN classification, value_set_id NULL,
+    # tied to its column via variable_alias_build. Both share provider_key 920.
+    conn.execute(
+        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+        "regver_id, var_id, classification_id) "
+        "VALUES (9300, 1, 10, 100, 920, ?)",
+        (cls_a,),
+    )
+    conn.execute(
+        "INSERT INTO variable_instance (cvid, register_id, register_variant_id, "
+        "regver_id, var_id, classification_id) "
+        "VALUES (9301, 1, 10, 100, 920, ?)",
+        (cls_b,),
+    )
+    conn.executemany(
+        "INSERT INTO variable_alias_build (cvid, delivery_column_name) VALUES (?, ?)",
+        [(9300, "Hemkommun"), (9301, "Skolkommun")],
+    )
+    conn.commit()
+    return vid_a, vid_b, cls_a, cls_b
+
+
+class TestBackfillStateClassifications:
+    """A2.7 [P2]: `_backfill_state_classifications` must attribute each cvid's
+    classification to its OWNING split sibling (the §5.7 column-tie), not fan it
+    across every sibling sharing the non-unique `(register_id, provider_key)`."""
+
+    def test_each_sibling_gets_own_classification(self) -> None:
+        from reg_meta_build.db import _backfill_state_classifications
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        vid_a, vid_b, cls_a, cls_b = _seed_split_for_backfill(conn)
+
+        _backfill_state_classifications(conn)
+
+        got = {
+            r["variable_id"]: r["classification_id"]
+            for r in conn.execute(
+                "SELECT variable_id, classification_id FROM variable_state"
+            )
+        }
+        # Sibling A's state carries cls_a; B's carries cls_b. Pre-fix the bare
+        # provider_key join fanned both cvids onto both siblings; the min()
+        # tie-break then put cls_a (lower id) on B's state too.
+        assert got[vid_a] == cls_a
+        assert got[vid_b] == cls_b
+        conn.close()
+
+    def test_classifications_for_variable_is_sibling_isolated(self) -> None:
+        from reg_meta.queries import classifications_for_variable
+        from reg_meta_build.db import _backfill_state_classifications
+
+        conn = sqlite3.connect(":memory:")
+        conn.row_factory = sqlite3.Row
+        vid_a, vid_b, cls_a, cls_b = _seed_split_for_backfill(conn)
+        _backfill_state_classifications(conn)
+
+        a_cls = classifications_for_variable(conn, vid_a)
+        b_cls = classifications_for_variable(conn, vid_b)
+        assert [c["id"] for c in a_cls] == [cls_a]  # only A's, not B's
+        assert [c["id"] for c in b_cls] == [cls_b]
         conn.close()

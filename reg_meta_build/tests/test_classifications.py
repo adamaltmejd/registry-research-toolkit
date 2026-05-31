@@ -228,16 +228,33 @@ class TestPopulateClassifications:
         # → 2 deduped codes in classification_code.
         assert by_name["TESTKON"]["code_count"] == 2
 
-    def test_variable_instance_tagged(self, tmp_path: Path):
+    def test_variable_state_tagged(self, tmp_path: Path):
+        """A2.7: `variable_instance` is dropped before ship; classification
+        tagging is backfilled onto `variable_state.classification_id`
+        (correlated by (variable_id, value_set_id)). Assert each tagged family
+        landed on >= 1 state and both classifications are represented."""
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)
         conn = sqlite3.connect(db)
         conn.row_factory = sqlite3.Row
-        tagged = conn.execute(
-            "SELECT COUNT(*) AS n FROM variable_instance WHERE classification_id IS NOT NULL"
-        ).fetchone()["n"]
-        # Three CVIDs map to TESTKON (Kön: 1001, 1003, 2001) plus one to
-        # TESTKON2 (Kon-2: 1004) — four tagged in total.
-        assert tagged == 4
+        # variable_instance is gone from the shipped DB.
+        assert (
+            conn.execute(
+                "SELECT name FROM sqlite_master "
+                "WHERE type='table' AND name='variable_instance'"
+            ).fetchone()
+            is None
+        )
+        rows = conn.execute(
+            "SELECT c.short_name, COUNT(*) AS n_states "
+            "FROM variable_state vs "
+            "JOIN classification c ON vs.classification_id = c.id "
+            "GROUP BY c.short_name ORDER BY c.short_name"
+        ).fetchall()
+        tagged = {r["short_name"]: r["n_states"] for r in rows}
+        # Both seeded classifications tag at least one coalesced state: TESTKON
+        # (Kön, the 1001/1003/2001 instances) and TESTKON2 (Kon-2, 1004).
+        assert set(tagged) == {"TESTKON", "TESTKON2"}
+        assert all(n >= 1 for n in tagged.values())
 
     def test_level_computed_from_code_length(self, tmp_path: Path):
         db, _ = self._build_with_seed(tmp_path, TEST_SEED_TOML)

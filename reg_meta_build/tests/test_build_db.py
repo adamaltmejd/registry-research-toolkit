@@ -91,26 +91,30 @@ class TestBuildDb:
         # Kön, TestVar, ÅÄÖVar in reg 1; Kön, UniqueVar, ParenVar, ExternVar in reg 2
         assert count == 7
 
-    def test_instance_count(self, db_conn: sqlite3.Connection):
-        count = db_conn.execute("SELECT COUNT(*) FROM variable_instance").fetchone()[0]
-        # CVIDs: 1001, 1002, 1003, 1004, 1005, 2001, 2002, 2003, 2004
-        assert count == 9
+    def test_variable_instance_absent(self, db_conn: sqlite3.Connection):
+        """A2.7: `variable_instance` (and its cvid-grained alias staging) is
+        BUILT then DROPped before ship — neither must survive in the shipped DB.
+        Its cvid-grained metadata is coalesced into `variable_state`."""
+        names = {
+            r[0]
+            for r in db_conn.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' "
+                "AND name IN ('variable_instance', 'variable_alias_build')"
+            )
+        }
+        assert names == set()
 
     def test_alias_anomaly(self, db_conn: sqlite3.Connection):
-        """CVID 1002 should have two aliases: TestCol and TestKolumn."""
+        """TestVar (var_id 100, reg 1) should have two aliases: TestCol and
+        TestKolumn. A2.7: `variable_alias` is variable_id-keyed; the full
+        delivery-column history survives the re-parent."""
         aliases = db_conn.execute(
-            "SELECT delivery_column_name FROM variable_alias WHERE cvid = 1002 ORDER BY delivery_column_name"
+            "SELECT va.delivery_column_name FROM variable_alias va "
+            "JOIN variable v ON va.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '100' "
+            "ORDER BY va.delivery_column_name"
         ).fetchall()
         assert [a[0] for a in aliases] == ["TestCol", "TestKolumn"]
-
-    def test_value_items_filtered(self, db_conn: sqlite3.Connection):
-        """Unknown CVID 9999 must not produce a value_set link."""
-        row = db_conn.execute(
-            "SELECT 1 FROM variable_instance WHERE cvid = 9999"
-        ).fetchone()
-        # cvid 9999 is filtered before reaching the importer; it has no
-        # variable_instance row at all (Registerinformation.csv has no entry).
-        assert row is None
 
     def test_value_items_present(self, db_conn: sqlite3.Connection):
         """Deduplicated value_set_member rows should be present for known
@@ -130,85 +134,106 @@ class TestBuildDb:
         # ("1","Man"), ("2","Kvinna"), ("2","Övriga civilstånd"), ("","Uppgift okänd")
         assert count == 4
 
-    def test_value_set_info_on_instance(self, db_conn: sqlite3.Connection):
-        """Variable instances with values should have vardemangdsversion/niva set."""
+    def test_value_set_version_label_on_state(self, db_conn: sqlite3.Connection):
+        """A2.7: the value-set version label survives on `variable_state` (was
+        per-cvid `variable_instance`). Kön var_id 44, reg 1, year 2020. The
+        transient `vardemangdsniva` (build-only Swedish scope-guard column) is
+        gone with `variable_instance`."""
         row = db_conn.execute(
-            "SELECT value_set_version_label, vardemangdsniva FROM variable_instance "
-            "WHERE cvid = 1001"
+            "SELECT vs.value_set_version_label FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '44' "
+            "  AND vs.valid_from <= '2020-12-31' AND vs.valid_to >= '2020-01-01'"
         ).fetchone()
         assert row["value_set_version_label"] == "Kön"
-        assert row["vardemangdsniva"] == "1"
 
     def test_sentinel_rows_skipped(self, db_conn: sqlite3.Connection):
         """SCB type-tag rows ("Tal", "Beskrivande text") must not produce
-        value_code rows; sentinel-only cvids must end up with NULL value_set_id."""
+        value_code rows; sentinel-only eras must end up with NULL value_set_id.
+        A2.7: checked on `variable_state` (was per-cvid). The 2022 era of Kön
+        (var 44, reg 1, was cvid 1004) and ÅÄÖVar (var 200, reg 1, was cvid 1005)
+        are sentinel-only → NULL value_set."""
         rows = db_conn.execute(
             "SELECT code FROM value_code WHERE code IN ('Tal', 'Beskrivande text')"
         ).fetchall()
         assert rows == []
-        for cvid in (1004, 1005):
+        for var_id in (44, 200):
             row = db_conn.execute(
-                "SELECT value_set_id FROM variable_instance WHERE cvid = ?",
-                (cvid,),
+                "SELECT vs.value_set_id FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = CAST(? AS TEXT) "
+                "  AND vs.valid_from <= '2022-12-31' AND vs.valid_to >= '2022-01-01'",
+                (var_id,),
             ).fetchone()
-            assert row is not None, f"cvid {cvid} should exist"
-            assert row["value_set_id"] is None, f"cvid {cvid} value_set_id"
+            assert row is not None, f"var {var_id} 2022 state should exist"
+            assert row["value_set_id"] is None, f"var {var_id} 2022 value_set_id"
 
-    def test_sentinel_only_cvid_has_null_metadata(self, db_conn: sqlite3.Connection):
-        """A cvid whose only Vardemangder rows were sentinels must end up with
-        NULL vardemangdsversion/niva — not the sentinel string."""
-        for cvid in (1004, 1005):
+    def test_sentinel_only_state_has_no_version_label(
+        self, db_conn: sqlite3.Connection
+    ):
+        """A2.7: an era whose only Vardemangder rows were sentinels carries no
+        real version label — on `variable_state` that surfaces as the empty
+        DEFAULT '' (never the sentinel string). Checked for the 2022 eras of
+        Kön (var 44) and ÅÄÖVar (var 200). (The build-only `vardemangdsniva`
+        column is gone with `variable_instance`.)"""
+        for var_id in (44, 200):
             row = db_conn.execute(
-                "SELECT value_set_version_label, vardemangdsniva "
-                "FROM variable_instance WHERE cvid = ?",
-                (cvid,),
+                "SELECT vs.value_set_version_label FROM variable_state vs "
+                "JOIN variable v ON vs.variable_id = v.variable_id "
+                "WHERE v.register_id = 1 AND v.provider_key = CAST(? AS TEXT) "
+                "  AND vs.valid_from <= '2022-12-31' AND vs.valid_to >= '2022-01-01'",
+                (var_id,),
             ).fetchone()
-            assert row["value_set_version_label"] is None, f"cvid {cvid}"
-            assert row["vardemangdsniva"] is None, f"cvid {cvid}"
+            assert row["value_set_version_label"] == "", f"var {var_id}"
 
     def test_real_code_with_sentinel_shape_survives(self, db_conn: sqlite3.Connection):
         """A row where kod==version==niva but kod is not a known sentinel is a
-        real code (e.g. cvid 2002, kod="2", label="Övriga civilstånd"). It must
-        be preserved, including its version metadata."""
+        real code (UniqueVar, var 300 reg 2, kod="2", label="Övriga civilstånd").
+        It must be preserved, with its version label. A2.7: read via
+        `variable_state` (was per-cvid 2002)."""
         code_rows = db_conn.execute(
             "SELECT vc.code, vc.label "
-            "FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 2002"
+            "WHERE v.register_id = 2 AND v.provider_key = '300'"
         ).fetchall()
         assert [(r["code"], r["label"]) for r in code_rows] == [
             ("2", "Övriga civilstånd")
         ]
         meta = db_conn.execute(
-            "SELECT value_set_version_label, vardemangdsniva "
-            "FROM variable_instance WHERE cvid = 2002"
+            "SELECT vs.value_set_version_label FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 2 AND v.provider_key = '300'"
         ).fetchone()
         assert meta["value_set_version_label"] == "2"
-        assert meta["vardemangdsniva"] == "2"
 
     def test_empty_vardekod_survives(self, db_conn: sqlite3.Connection):
         """Empty vardekod with a label ("Uppgift okänd") is a legitimate code,
-        not pollution. Must survive."""
+        not pollution. Must survive. A2.7: read via `variable_state` (ParenVar,
+        var 301 reg 2, was cvid 2003)."""
         rows = db_conn.execute(
             "SELECT vc.code, vc.label "
-            "FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
+            "FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
             "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 2003"
+            "WHERE v.register_id = 2 AND v.provider_key = '301'"
         ).fetchall()
         assert [(r["code"], r["label"]) for r in rows] == [("", "Uppgift okänd")]
 
     def test_fully_empty_row_dropped(self, db_conn: sqlite3.Connection):
         """A row with empty kod, label, and item carries no information; the
-        cvid must end up with NULL value_set_id and NULL version metadata."""
+        era must end up with NULL value_set_id and the empty version label.
+        A2.7: TestVar (var 100 reg 1, was cvid 1002) read via `variable_state`."""
         row = db_conn.execute(
-            "SELECT value_set_id, value_set_version_label, vardemangdsniva "
-            "FROM variable_instance WHERE cvid = 1002"
+            "SELECT vs.value_set_id, vs.value_set_version_label FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = 1 AND v.provider_key = '100'"
         ).fetchone()
         assert row["value_set_id"] is None
-        assert row["value_set_version_label"] is None
-        assert row["vardemangdsniva"] is None
+        assert row["value_set_version_label"] == ""
 
     def test_source_resolved_exact(self, db_conn: sqlite3.Connection):
         """OTHERREG Kön has kalla=TESTREG which matches register name exactly."""
@@ -255,33 +280,6 @@ class TestBuildDb:
         assert row["source_register_id"] is None
         assert row["source_label"] is None
 
-    def test_consumer_side_binding_linked(self, db_conn: sqlite3.Connection):
-        """OTHERREG Kön (cvid 2001, year 2021) is sourced from TESTREG. Its
-        via_source_id should point at TESTREG's Kön cvid for year 2021
-        (cvid 1003) per §5.6."""
-        row = db_conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 2001"
-        ).fetchone()
-        assert row["via_source_id"] == 1003
-
-    def test_canonical_binding_has_null_via_source(self, db_conn: sqlite3.Connection):
-        """TESTREG Kön owns the variable concept — its instances are canonical
-        and must keep via_source_id NULL."""
-        rows = db_conn.execute(
-            "SELECT cvid, via_source_id FROM variable_instance "
-            "WHERE register_id = 1 AND var_id = 44"
-        ).fetchall()
-        assert rows
-        assert all(r["via_source_id"] is None for r in rows)
-
-    def test_no_link_when_source_period_missing(self, db_conn: sqlite3.Connection):
-        """ParenVar (cvid 2003) has variable_register_kalla=TESTREG but TESTREG
-        has no matching variable slug — via_source_id stays NULL."""
-        row = db_conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 2003"
-        ).fetchone()
-        assert row["via_source_id"] is None
-
     def test_e2e_variable_state_lineage_edge(self, db_conn: sqlite3.Connection):
         """A2.4 (§5.6) end-to-end: the full build_db pipeline materializes a
         `variable_state_lineage` edge. OTHERREG's Kön (consumer, sourced from
@@ -310,361 +308,16 @@ class TestBuildDb:
         assert edge["valid_from"] == "2021-01-01"
         assert edge["valid_to"] == "2021-12-31"
 
-    def test_e2e_lineage_runs_in_parallel_with_via_source_id(
-        self, db_conn: sqlite3.Connection
-    ):
-        """KEEP regression guard (the A2.4 locked decision): the new lineage
-        linker is ADDITIVE. The same build that materializes
-        `variable_state_lineage` must still populate the old
-        `variable_instance.via_source_id` edges — catalog.py's A2.2 interim
-        resolver reads them until A2.7. If a future change drops the old linker
-        in A2.4 (the MIGRATION_PLAN wording this stage corrects), this fails."""
-        assert (
-            db_conn.execute("SELECT COUNT(*) FROM variable_state_lineage").fetchone()[0]
-            > 0
-        )
-        assert (
-            db_conn.execute(
-                "SELECT COUNT(*) FROM variable_instance WHERE via_source_id IS NOT NULL"
-            ).fetchone()[0]
-            > 0
-        )
-
     def test_e2e_lineage_no_source_state_warning(self, db_conn: sqlite3.Connection):
         """ParenVar (OTHERREG, sourced from TESTREG) has no matching TESTREG
         variable slug, so the lineage pass emits a `no_source_state` warning —
-        the same gap the old linker leaves as a NULL via_source_id
-        (test_no_link_when_source_period_missing), now surfaced explicitly."""
+        the consumer binding that resolves to no source state, surfaced
+        explicitly (A2.7: `variable_state_lineage` is the sole lineage)."""
         rows = db_conn.execute(
             "SELECT warning_kind FROM variable_state_lineage_warning "
             "ORDER BY consumer_state_id, warning_kind"
         ).fetchall()
         assert any(r["warning_kind"] == "no_source_state" for r in rows)
-
-    def test_linker_keys_by_full_period_not_year(self, tmp_path: Path):
-        """Source `HT2020` must not link to consumer `VT2020` despite sharing
-        the embedded year. Keying on bare year would have produced the wrong
-        via_source_id (PR #80 review P1)."""
-        ht_source = _ri_row(
-            "TESTREG",
-            "Testregistret",
-            "Testning",
-            "Individer",
-            "Individer",
-            "Alla individer",
-            "Nej",
-            "HT2020",
-            "Version HT2020",
-            "",
-            "Godkänd",
-            "2020-07-01",
-            "2020-12-31",
-            "Hela befolkningen",
-            "Alla personer",
-            "",
-            "2020-12-31",
-            "Person",
-            "Fysisk person",
-            "Kön",
-            "Personens kön",
-            "Kön enligt folkbokföring",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "Kon",
-            "int",
-            "1",
-            "7001",
-            "1",
-            "10",
-            "700",
-            "44",
-        )
-        vt_consumer = _ri_row(
-            "OTHERREG",
-            "Annat register",
-            "Annat syfte",
-            "Företag",
-            "Företag",
-            "Alla företag",
-            "Ja",
-            "VT2020",
-            "Version VT2020",
-            "",
-            "Godkänd",
-            "2020-01-01",
-            "2020-06-30",
-            "Alla företag",
-            "Samtliga företag",
-            "",
-            "2020-06-30",
-            "Företag",
-            "Juridisk person",
-            "Kön",
-            "Ägarkön",
-            "Kön på ägare",
-            "",
-            "",
-            "Testregistret",
-            "TESTREG",
-            "",
-            "",
-            "KON",
-            "int",
-            "1",
-            "7002",
-            "2",
-            "20",
-            "701",
-            "44",
-        )
-        ri_rows = list(REGISTERINFORMATION_ROWS) + [ht_source, vt_consumer]
-        input_dir = tmp_path / "input"
-        write_scb_input(input_dir, registerinformation_rows=ri_rows)
-        db_dir = tmp_path / "db"
-        build_db(
-            input_dir=input_dir,
-            db_dir=db_dir,
-            skip_classifications=True,
-            skip_slugs=True,
-        )
-        conn = open_db(db_dir / "reg_meta.db")
-        row = conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 7002"
-        ).fetchone()
-        conn.close()
-        # VT2020 consumer must NOT link to HT2020 source — they share the year
-        # but the period grammar treats them as distinct.
-        assert row["via_source_id"] is None
-
-    def test_linker_same_period_siblings_collapse_to_lowest_cvid(self, tmp_path: Path):
-        """A2.6: the curated version slugs that disambiguated same-period source
-        siblings (`LISA 2018 huvudfil` vs `… tilläggsfil`, both
-        `derive_period`→`2018`) are gone. The consumer-side linker keys on the
-        inline-derived period now, so such siblings collapse to one period key
-        and the lowest cvid wins (`ORDER BY vi.cvid` + `setdefault`). Documented,
-        accepted degradation — `via_source_id` is superseded by
-        `variable_state_lineage` (A2.4) and dropped in A2.7.
-        """
-        import sqlite3 as _sql
-
-        from reg_meta_build.db import DDL, link_consumer_side_bindings, seed_providers
-
-        conn = _sql.connect(":memory:")
-        conn.row_factory = _sql.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        # Source register `src` (id=1), one variant, two sibling editions whose
-        # names both derive_period to "2018".
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
-        )
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (100, 10, 'LISA 2018 huvudfil'),"
-            "       (101, 10, 'LISA 2018 tilläggsfil')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, slug) "
-            "VALUES (1, '44', 'kon')"
-        )
-        conn.executemany(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
-            [(1000, 1, 10, 100, 44), (1001, 1, 10, 101, 44)],
-        )
-        conn.executemany(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            [(1000, "Kon"), (1001, "Kon")],
-        )
-        # Consumer `cons` (id=2), one edition also deriving to "2018".
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) "
-            "VALUES (2, 1, 'cons')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
-        )
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (200, 20, 'Cons 2018 tilläggsfil')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
-            "VALUES (2, '44', 1, 'kon')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) "
-            "VALUES (2000, 2, 20, 200, 44)"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'Kon')"
-        )
-        conn.commit()
-
-        n = link_consumer_side_bindings(conn)
-        assert n == 1
-        row = conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
-        ).fetchone()
-        # Both source siblings collapse to period "2018"; lowest cvid wins.
-        assert row["via_source_id"] == 1000
-
-    def test_linker_no_match_when_consumer_period_differs_from_source(
-        self, tmp_path: Path
-    ):
-        """The edition period is the cross-register match coordinate (A2.6). A
-        consumer edition whose derived period matches no source edition forms no
-        edge — same fail-closed stance as the year-vs-year guard, now period-grain.
-        """
-        import sqlite3 as _sql
-
-        from reg_meta_build.db import DDL, link_consumer_side_bindings, seed_providers
-
-        conn = _sql.connect(":memory:")
-        conn.row_factory = _sql.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'iot')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
-        )
-        # Source edition derives to "2019".
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (100, 10, 'IoT 2019')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, slug) "
-            "VALUES (1, '44', 'socbidrhb')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (1000, 1, 10, 100, 44)"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (1000, 'SocBidrHB')"
-        )
-        # Consumer edition derives to "2020" — no source edition at that period.
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) "
-            "VALUES (2, 1, 'lisa')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
-        )
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (200, 20, 'LISA 2020')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
-            "VALUES (2, '44', 1, 'socbidrhb')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) "
-            "VALUES (2000, 2, 20, 200, 44)"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'SocBidrHB')"
-        )
-        conn.commit()
-
-        n = link_consumer_side_bindings(conn)
-        assert n == 0
-        row = conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
-        ).fetchone()
-        assert row["via_source_id"] is None
-
-    def test_linker_keys_on_stored_slug_not_delivery_column(self, tmp_path: Path):
-        """A2.1.5 (Codex P1): two source variables sharing a generic delivery
-        column (`Kolumn1`) get DISTINCT stored slugs (name-fallback). The linker
-        must key on `variable.slug`, not `derive_variable_slug(kolumnnamn)` —
-        otherwise both collapse to `kolumn1` and the consumer attaches to the
-        wrong source cvid.
-        """
-        import sqlite3 as _sql
-
-        from reg_meta_build.db import DDL, link_consumer_side_bindings, seed_providers
-
-        conn = _sql.connect(":memory:")
-        conn.row_factory = _sql.Row
-        conn.executescript(DDL)
-        seed_providers(conn)
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) VALUES (1, 1, 'src')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (10, 1)"
-        )
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (100, 10, 'Src 2018')"
-        )
-        # Two source variables, both delivered as `Kolumn1`, distinct stored slugs.
-        conn.executemany(
-            "INSERT INTO variable (register_id, provider_key, slug) VALUES (?, ?, ?)",
-            [(1, "44", "kolumn1-a"), (1, "55", "kolumn1-b")],
-        )
-        conn.executemany(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) VALUES (?, ?, ?, ?, ?)",
-            [(1000, 1, 10, 100, 44), (1001, 1, 10, 100, 55)],
-        )
-        conn.executemany(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (?, ?)",
-            [(1000, "Kolumn1"), (1001, "Kolumn1")],
-        )
-        # Consumer of the SECOND source variable (stored slug kolumn1-b).
-        conn.execute(
-            "INSERT INTO register (register_id, provider_id, name) VALUES (2, 1, 'cons')"
-        )
-        conn.execute(
-            "INSERT INTO register_variant (register_variant_id, register_id) VALUES (20, 2)"
-        )
-        conn.execute(
-            "INSERT INTO register_version "
-            "(regver_id, register_variant_id, registerversionnamn) "
-            "VALUES (200, 20, 'Cons 2018')"
-        )
-        conn.execute(
-            "INSERT INTO variable (register_id, provider_key, source_register_id, slug) "
-            "VALUES (2, '55', 1, 'kolumn1-b')"
-        )
-        conn.execute(
-            "INSERT INTO variable_instance "
-            "(cvid, register_id, register_variant_id, regver_id, var_id) "
-            "VALUES (2000, 2, 20, 200, 55)"
-        )
-        conn.execute(
-            "INSERT INTO variable_alias (cvid, delivery_column_name) VALUES (2000, 'Kolumn1')"
-        )
-        conn.commit()
-
-        n = link_consumer_side_bindings(conn)
-        assert n == 1
-        # Links to cvid 1001 (kolumn1-b), NOT 1000 (kolumn1-a). The old
-        # derive-from-kolumnnamn keying collapsed both to `kolumn1` → cvid 1000.
-        row = conn.execute(
-            "SELECT via_source_id FROM variable_instance WHERE cvid = 2000"
-        ).fetchone()
-        assert row["via_source_id"] == 1001
 
     def test_code_variable_map_populated(self, db_conn: sqlite3.Connection):
         """code_variable_map should have distinct (code, register, variable) combos."""
@@ -747,23 +400,18 @@ class TestBuildDb:
     # ------------------------------------------------------------------
 
     def test_variable_state_rows_present(self, db_conn: sqlite3.Connection):
-        """A2.1: the coalescer materializes at least one variable_state row
-        per `(register_id, register_variant_id, var_id)` that has any
-        `variable_instance` row. Sanity check against silent regressions
-        where the coalescer never runs or only handles a subset."""
-        # Distinct (register_id, register_variant_id, var_id) triples in instance.
-        triples = db_conn.execute(
-            "SELECT DISTINCT register_id, register_variant_id, var_id FROM variable_instance"
-        ).fetchall()
-        assert len(triples) > 0
-        for t in triples:
+        """A2.1: the coalescer materializes at least one variable_state row per
+        `variable`. A2.7: cross-checked against `variable` (was the dropped
+        `variable_instance`) — every fixture variable has >= 1 era, so a
+        coalescer that never runs or handles only a subset is caught."""
+        vids = db_conn.execute("SELECT variable_id FROM variable").fetchall()
+        assert len(vids) > 0
+        for (vid,) in vids:
             n = db_conn.execute(
-                "SELECT COUNT(*) FROM variable_state vs "
-                "JOIN variable v ON vs.variable_id = v.variable_id "
-                "WHERE v.register_id = ? AND vs.register_variant_id = ? AND v.provider_key = CAST(? AS TEXT)",
-                (t["register_id"], t["register_variant_id"], t["var_id"]),
+                "SELECT COUNT(*) FROM variable_state WHERE variable_id = ?",
+                (vid,),
             ).fetchone()[0]
-            assert n >= 1, f"no variable_state for {tuple(t)}"
+            assert n >= 1, f"no variable_state for variable_id {vid}"
 
     def test_variable_state_valid_from_to_full_iso(self, db_conn: sqlite3.Connection):
         """§5.1: every valid_from / valid_to is a 10-char YYYY-MM-DD string.
@@ -1419,28 +1067,38 @@ class TestValueSetDedup:
     """Two cvids with the same year-projected code list must share one
     value_set; cvids with different lists must not."""
 
+    @staticmethod
+    def _value_set_id(conn, *, register_id: int, var_id: int, year: int):
+        """A2.7: the value_set_id a variable's covering state carries (was
+        `variable_instance.value_set_id` per cvid — dropped before ship)."""
+        return conn.execute(
+            "SELECT vs.value_set_id FROM variable_state vs "
+            "JOIN variable v ON vs.variable_id = v.variable_id "
+            "WHERE v.register_id = ? AND CAST(v.provider_key AS INTEGER) = ? "
+            "  AND CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ? "
+            "  AND CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ? "
+            "  AND vs.value_set_id IS NOT NULL "
+            "LIMIT 1",
+            (register_id, var_id, year, year),
+        ).fetchone()
+
     def test_identical_sets_share_value_set_id(self, db_conn: sqlite3.Connection):
-        # cvids 1003 and 2001 both end up with {Man, Kvinna} after projection
-        # (default fixture VALID_DATES_ROWS covers their years).
-        rows = db_conn.execute(
-            "SELECT cvid, value_set_id FROM variable_instance "
-            "WHERE cvid IN (1003, 2001)"
-        ).fetchall()
-        ids = {r["cvid"]: r["value_set_id"] for r in rows}
-        assert ids[1003] is not None
-        assert ids[1003] == ids[2001]
+        # Kön var_id 44 in TESTREG (reg 1, was cvid 1003) and OTHERREG (reg 2,
+        # was cvid 2001) both end up with {Man, Kvinna} after projection → one
+        # content-addressed value_set.
+        a = self._value_set_id(db_conn, register_id=1, var_id=44, year=2021)
+        b = self._value_set_id(db_conn, register_id=2, var_id=44, year=2021)
+        assert a is not None
+        assert a[0] == b[0]
 
     def test_different_sets_get_different_ids(self, db_conn: sqlite3.Connection):
-        # cvid 2002 has {Övriga civilstånd}; cvid 2003 has {Uppgift okänd};
-        # different sets → different ids.
-        rows = db_conn.execute(
-            "SELECT cvid, value_set_id FROM variable_instance "
-            "WHERE cvid IN (2002, 2003)"
-        ).fetchall()
-        ids = {r["cvid"]: r["value_set_id"] for r in rows}
-        assert ids[2002] is not None
-        assert ids[2003] is not None
-        assert ids[2002] != ids[2003]
+        # var_id 300 has {Övriga civilstånd} (was cvid 2002); var_id 301 has
+        # {Uppgift okänd} (was cvid 2003); different sets → different ids.
+        a = self._value_set_id(db_conn, register_id=2, var_id=300, year=2021)
+        b = self._value_set_id(db_conn, register_id=2, var_id=301, year=2021)
+        assert a is not None
+        assert b is not None
+        assert a[0] != b[0]
 
     def test_member_hash_unique(self, db_conn: sqlite3.Connection):
         dups = db_conn.execute(
@@ -1459,6 +1117,28 @@ def _projection_input(tmp_path: Path, vardemangder_rows, valid_dates_rows) -> Pa
         valid_dates_rows=valid_dates_rows,
     )
     return input_dir
+
+
+def _projected_codes(
+    conn: sqlite3.Connection, *, register_id: int, var_id: int, year: int
+) -> list[str]:
+    """A2.7: the projected code list for a variable's value-set, read through
+    `variable_state` (was `variable_instance.value_set_id` per cvid — that table
+    is dropped before ship). Picks the state covering `year`. The projection
+    tests build a single coded cvid per variable, so exactly one state carries a
+    value_set; this returns its codes (sorted, NULLs dropped)."""
+    rows = conn.execute(
+        "SELECT vc.code FROM variable_state vs "
+        "JOIN variable v ON vs.variable_id = v.variable_id "
+        "LEFT JOIN value_set_member vsm ON vs.value_set_id = vsm.value_set_id "
+        "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
+        "WHERE v.register_id = ? AND CAST(v.provider_key AS INTEGER) = ? "
+        "  AND CAST(substr(vs.valid_from, 1, 4) AS INTEGER) <= ? "
+        "  AND CAST(substr(vs.valid_to, 1, 4) AS INTEGER) >= ? "
+        "ORDER BY vc.code",
+        (register_id, var_id, year, year),
+    ).fetchall()
+    return [r["code"] for r in rows if r["code"] is not None]
 
 
 class TestYearProjection:
@@ -1481,16 +1161,11 @@ class TestYearProjection:
             skip_slugs=True,
         )
         conn = open_db(db_dir / "reg_meta.db")
-        codes = conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.code"
-        ).fetchall()
+        codes = _projected_codes(conn, register_id=1, var_id=44, year=2020)
         conn.close()
         # Man is excluded (window 2030+ doesn't cover cvid year 2020).
         # Kvinna is included (untracked → always-valid).
-        assert [r["code"] for r in codes] == ["2"]
+        assert codes == ["2"]
 
     def test_includes_codes_with_no_validity(self, tmp_path: Path):
         # All Vardemangder ItemIds are untracked (none has a row in
@@ -1509,14 +1184,9 @@ class TestYearProjection:
             skip_slugs=True,
         )
         conn = open_db(db_dir / "reg_meta.db")
-        codes = conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.code"
-        ).fetchall()
+        codes = _projected_codes(conn, register_id=1, var_id=44, year=2020)
         conn.close()
-        assert [r["code"] for r in codes] == ["1", "2"]
+        assert codes == ["1", "2"]
 
     def test_includes_subyear_overlap(self, tmp_path: Path):
         # cvid 1001 year=2020. Item with start 2020-09-01 — sub-year cutoff
@@ -1533,14 +1203,9 @@ class TestYearProjection:
             skip_slugs=True,
         )
         conn = open_db(db_dir / "reg_meta.db")
-        codes = conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001 ORDER BY vc.code"
-        ).fetchall()
+        codes = _projected_codes(conn, register_id=1, var_id=44, year=2020)
         conn.close()
-        assert [r["code"] for r in codes] == ["1"]
+        assert codes == ["1"]
 
     def test_yearless_cvid_includes_all_union_pairs(self, tmp_path: Path):
         # cvid 9001's regver name "Person-År" has no extractable year. The
@@ -1602,16 +1267,14 @@ class TestYearProjection:
             skip_slugs=True,
         )
         conn = open_db(db_dir / "reg_meta.db")
-        codes = conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 9001 ORDER BY vc.code"
-        ).fetchall()
+        # The yearless cvid 9001 lands in its own synthetic register (id 9,
+        # variant 90, from `yearless_row`) and coalesces to a state with the
+        # 0001..9999 fallback window, so any probe year selects it.
+        codes = _projected_codes(conn, register_id=9, var_id=44, year=2020)
         conn.close()
         # Yearless cvids fall back to the historical union — the tracked
         # window's exclusion does NOT apply because there's no year to test.
-        assert [r["code"] for r in codes] == ["1"]
+        assert codes == ["1"]
 
     def test_mixed_tracked_untracked_tracked_wins(self, tmp_path: Path):
         # cvid 1001 year=2020. Same (cvid, code) appears with TWO ItemIds:
@@ -1631,18 +1294,12 @@ class TestYearProjection:
             skip_slugs=True,
         )
         conn = open_db(db_dir / "reg_meta.db")
-        # Man should NOT be in cvid 1001's value_set (tracked window 2030+
+        # Man should NOT be in the 2020 state's value_set (tracked window 2030+
         # doesn't cover year 2020; the untracked sibling 8005 doesn't relax it).
-        codes = conn.execute(
-            "SELECT vc.code FROM variable_instance vi "
-            "LEFT JOIN value_set_member vsm ON vi.value_set_id = vsm.value_set_id "
-            "LEFT JOIN value_code vc ON vsm.code_id = vc.code_id "
-            "WHERE vi.cvid = 1001"
-        ).fetchall()
+        kods = _projected_codes(conn, register_id=1, var_id=44, year=2020)
         conn.close()
-        # Either no codes (value_set_id NULL because all union excluded), or
-        # vardekod is None from the LEFT JOIN. The "Man" code must not appear.
-        kods = [r["code"] for r in codes if r["code"] is not None]
+        # Either no codes (value_set_id NULL because all union excluded), or the
+        # LEFT JOIN yields NULL. The "Man" code must not appear.
         assert "1" not in kods
 
 
@@ -3102,14 +2759,13 @@ class TestReplacedByEdges:
         db_path = self._build(tmp_path, rows)
         conn = open_db(db_path)
         try:
-            # Precondition: 1001 and 1003 are distinct cvids of one variable.
-            slugs = conn.execute(
-                "SELECT DISTINCT v.slug FROM variable_instance vi "
-                "JOIN variable v ON v.register_id = vi.register_id "
-                "AND v.provider_key = CAST(vi.var_id AS TEXT) "
-                "WHERE vi.cvid IN (1001, 1003)"
-            ).fetchall()
-            assert [r[0] for r in slugs] == ["kon"], "both cvids must map to one slug"
+            # Precondition: cvids 1001 and 1003 are distinct eras of one variable
+            # (var_id 44, reg 1 → slug 'kon'). A2.7: `variable_instance` is
+            # dropped before ship, so check the surviving `variable` row.
+            slug = conn.execute(
+                "SELECT slug FROM variable WHERE register_id = 1 AND provider_key = '44'"
+            ).fetchone()[0]
+            assert slug == "kon", "var_id 44 must map to slug 'kon'"
             # No self-edge emitted; counted as a skipped self-loop.
             assert (
                 conn.execute("SELECT COUNT(*) FROM variable_replaced_by").fetchone()[0]

@@ -337,7 +337,7 @@ touch left is feeding the query its start node from the new 3-seg parse.
 
 **Gate to A2.7**: A2.6 must merge.
 
-### [ ] A2.6.1 — 2-seg classification grammar (`class/<slug>`)
+### [x] A2.6.1 — 2-seg classification grammar (`class/<slug>`) (PR #148)
 
 Split out of A2.6 (the binding grammar flip), which intentionally left
 classifications on the 3-seg `class/<slug>/<version>` form. This stage
@@ -380,13 +380,14 @@ by 2-seg `class/<slug>`) and the §5.2 grammar is otherwise inconsistent.
 **Estimate**: 2-3 days. Slug re-bake + uniqueness-constraint change +
 classification resolver rewrite.
 
-### [ ] A2.7 — Cleanup
+### [x] A2.7 — Cleanup
 
 - Drop `variable_instance` table from DDL (kept alive A2.5–A2.6 only for build-pipeline dual-write while the new `variable` / re-parented `variable_state` read path stabilizes)
 - Drop `via_source_id` column (no remaining consumer once `variable_instance` is gone; lineage is `variable_state_lineage` from A2.4)
+- **`variable_alias` re-parent — state-column backstop + deferred residual (Codex P2 #149).** Dropping `variable_instance` forces `variable_alias` off cvid onto `(variable_id, register_variant_id, delivery_column_name)`. The cvid→sibling column-tie (`_resolve_cvid_to_variable_id`, shared with `_backfill_state_classifications`) **skips** genuinely-ambiguous split cvids (skip-not-guess — the A2.2 design). A build-time **state-column backstop** then inserts every `variable_state` delivery column directly — `variable_state.variable_id` is the coalescer's ground-truth owner, so it's unambiguous — guaranteeing the invariant **`variable_alias ⊇ variable_state` delivery columns** (enforced by a new `validate.py` check; it recovered 7 columns / 6 variables on the real corpus). **Deferred residual:** columns that lived only in the raw cvid history and never became a coalesced `variable_state` are still skip-dropped for ambiguous split cvids (4,417 cvids skipped, but net column-impact bounded — non-state columns only; the state-columns the data actively uses are fully covered). A second, smaller residual of the same heuristic: the variant-agnostic column-tie key collides when two siblings reuse one column under *different* variants (3 keys on the real corpus), conservatively skipping those cvids' classification attribution (under-attribution, never a wrong sibling; `variable_alias` stays complete via the backstop). Variant-scoping the key was considered (Codex P2 #149) but rejected — it would newly skip cvids whose exact `(variant, col)` the coalescer collapsed out of `variable_state`. The clean retirement is **coalescer-side cvid→`variable_id` materialization** at coalesce time, which eliminates the heuristic *and* the skip entirely — tracked as a post-A2.7 follow-up, **not a v1 blocker**.
 - **Bump `SCHEMA_VERSION` to `"5.0.0"`** in `reg_meta/src/reg_meta/db.py` (currently `"4.1.0"` after A2.1's minor bump). Manifest writers in `reg_meta_build/src/reg_meta_build/db.py` pick up the constant automatically. `_check_schema_compat` rejects v4.x DBs with a clear error; testers regenerate via `reg-meta-build build-db`. Major bump lands at A2.7 (not during A2.1.5–A2.6) so a half-migrated dev DB doesn't fall into a mid-stage compatibility cliff — the intervening stages stay on the 4.x line. A1.1 already burned the 3.x → 4.0.0 break; A2.1 added `variable_state` on a minor (4.1.0); A2.1.5's two-level promotion + re-parent and A2.6's `same_as` demotion also ride the 4.x line (additive tables + promotion + a column move + row deletions); A2.7's `variable_instance` drop is the next breaking change.
 - **Stated outright (lower-severity item):** `SCHEMA_VERSION` deliberately **stays `4.x` across A2.1.5 → A2.6**, even though those stages promote a table (add a synthetic PK + slug to `variable`), re-parent an FK (`variable_state` → `variable_id`), drop columns (`same_as.*_variant`/`*_period`), and delete rows (the var_id auto-derive). So `_check_schema_compat` is effectively a **no-op mid-stage** — a dev DB built at A2.3 and queried at A2.5 won't be rejected by the version gate even though its shape differs. This is **acceptable under regenerate-not-migrate + UNFROZEN**: pre-v1 there are no external DB consumers to protect, the build is the only writer, and testers `reg-meta-build build-db` from source whenever they pull a new stage (the README/CI instruct this). The single 4.x→5.0.0 break at A2.7 is the one consumers ever see. If a mid-stage dev hits a stale-DB crash, the fix is "rebuild," not a finer-grained version gate — adding per-stage minors would be churn with no payoff pre-v1.
-- Bump `reg_meta` to v1.0.0; tag the release
+- Bump `reg_meta` version to v1.0.0 in `pyproject.toml`. **Do NOT tag/publish the release here** — the version bump lands in this PR, but cutting the actual git tag + PyPI publish is the maintainer's call via `/release` (it gates on the full curation polish + UNFROZEN; see the next bullet). A future reader of this plan must not tag prematurely.
 - UNFROZEN snapshot is regenerated (still UNFROZEN — curation polish continues; UNFROZEN deletes at v1 publication, not at v1.0.0 internal tag)
 
 **Estimate**: 2-3 days.

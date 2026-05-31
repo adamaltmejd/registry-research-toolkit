@@ -9,6 +9,8 @@ classifier primitives the editor uses (``_classify``, ``_sql_type_kind``,
 
 from __future__ import annotations
 
+import sqlite3
+
 import pytest
 from reg_monabundle.runtime.classify import (
     DATE_FORMATS,
@@ -325,14 +327,29 @@ class _FakeConn:
 
 
 def _row(
-    lower_name, data_type=None, short_name=None, value_set_id=None, regver_name=None
+    lower_name,
+    data_type=None,
+    short_name=None,
+    value_set_id=None,
+    year=None,
+    to_year=None,
 ):
+    # A2.7: `_reg_meta_lookup` reads the state's validity INTERVAL
+    # (`valid_from`..`valid_to`). A single `year` maps to a point window
+    # (Jan-1..Dec-31); `to_year` widens it to a multi-year span. None →
+    # the `0001`..`9999` yearless-fallback open window.
+    if year is None:
+        valid_from, valid_to = "0001-01-01", "9999-12-31"
+    else:
+        valid_from = f"{year}-01-01"
+        valid_to = f"{to_year if to_year is not None else year}-12-31"
     return {
         "lower_name": lower_name,
         "data_type": data_type,
         "short_name": short_name,
         "value_set_id": value_set_id,
-        "regver_name": regver_name,
+        "valid_from": valid_from,
+        "valid_to": valid_to,
     }
 
 
@@ -397,36 +414,11 @@ def test_reg_meta_lookup_relevant_years_scopes_variance_counts():
     and has_value_codes stay unfiltered (whole-history facts)."""
     conn = _FakeConn(
         [
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2018",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2019",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2025",
-                value_set_id=20,
-                regver_name="lisa.lisa_2024",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF1990",
-                value_set_id=30,
-                regver_name="lisa.lisa_1990",
-            ),
-            _row(
-                "lkf",
-                short_name="LKFX",
-                value_set_id=40,
-                regver_name=None,
-            ),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2018),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2019),
+            _row("lkf", short_name="LKF2025", value_set_id=20, year=2024),
+            _row("lkf", short_name="LKF1990", value_set_id=30, year=1990),
+            _row("lkf", short_name="LKFX", value_set_id=40, year=None),
         ]
     )
     sig = _reg_meta_lookup(conn, {"lkf"}, [34], relevant_years={2018, 2019})["lkf"]
@@ -439,28 +431,140 @@ def test_reg_meta_lookup_relevant_years_scopes_variance_counts():
     assert sig.classification_short_name == "LKF2012"
 
 
+def test_reg_meta_lookup_relevant_years_counts_covering_multiyear_state():
+    """A2.7 (Codex P2 #149): a multi-year state whose window COVERS a selected
+    year is in scope even when its OPENING year isn't selected — interval-overlap,
+    not start-year membership (mirrors `get values`). Pre-fix the 2020..2021 era
+    opened in 2020 ∉ {2021} and was wrongly dropped, undercounting the variance."""
+    conn = _FakeConn(
+        [
+            # Opens 2020 but spans through 2021 → covers the {2021} filter.
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2020, to_year=2021),
+            # A disjoint earlier era that does NOT cover 2021.
+            _row("lkf", short_name="LKF2008", value_set_id=20, year=2008, to_year=2009),
+        ]
+    )
+    sig = _reg_meta_lookup(conn, {"lkf"}, [34], relevant_years={2021})["lkf"]
+    # Only the covering 2020..2021 state counts; the 2008..2009 era is excluded.
+    assert sig.n_value_sets == 1
+    assert sig.n_classifications == 1
+
+
 def test_reg_meta_lookup_relevant_years_none_keeps_full_counts():
     """``relevant_years=None`` is the default and preserves pre-filter
     counts — the snapshot/popup year-scope must opt in explicitly."""
     conn = _FakeConn(
         [
-            _row(
-                "lkf",
-                short_name="LKF2012",
-                value_set_id=10,
-                regver_name="lisa.lisa_2018",
-            ),
-            _row(
-                "lkf",
-                short_name="LKF2025",
-                value_set_id=20,
-                regver_name="lisa.lisa_2024",
-            ),
+            _row("lkf", short_name="LKF2012", value_set_id=10, year=2018),
+            _row("lkf", short_name="LKF2025", value_set_id=20, year=2024),
         ]
     )
     sig = _reg_meta_lookup(conn, {"lkf"}, [34])["lkf"]
     assert sig.n_classifications == 2
     assert sig.n_value_sets == 2
+
+
+def _real_reg_meta_db() -> sqlite3.Connection:
+    """A minimal SHIPPED-shape reg_meta DB for the tables `_reg_meta_lookup`
+    joins. Uses a real `sqlite3` connection (the MONA runtime's stdlib backend)
+    so the SQL JOIN — including the `register_variant_id` scoping — actually
+    runs; the `_FakeConn` fixture returns canned rows and can't exercise it."""
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        "CREATE TABLE variable (variable_id INTEGER PRIMARY KEY, register_id INTEGER);"
+        "CREATE TABLE variable_alias ("
+        "  variable_id INTEGER, register_variant_id INTEGER, delivery_column_name TEXT);"
+        "CREATE TABLE variable_state ("
+        "  variable_id INTEGER, register_variant_id INTEGER, "
+        "  delivery_column_name TEXT, data_type TEXT, "
+        "  value_set_id INTEGER, valid_from TEXT, valid_to TEXT, "
+        "  classification_id INTEGER);"
+        "CREATE TABLE classification (id INTEGER PRIMARY KEY, short_name TEXT);"
+    )
+    return conn
+
+
+def test_reg_meta_lookup_multi_variant_vote_not_inflated():
+    """PR #149: the `variable_alias`→`variable_state` join must be scoped by
+    `register_variant_id`, not `variable_id` alone — else the classification
+    badge for a column counts states from OTHER variants/columns of the same
+    variable, flipping `most_common(1)`.
+
+    Geometry: variable 1 delivers column `kon` under variant 10 ONLY (1 era,
+    GenderA), and a DIFFERENT column `pnr` under variant 11 (2 eras, both
+    GenderB). Querying `kon`:
+
+    - Pre-fix (`variable_id`-only join): the `kon` alias (variant 10) cross-joins
+      ALL 3 states of the variable — the GenderA@10 era AND both GenderB@11 eras
+      — so the badge is GenderB (2 > 1). WRONG: those GenderB eras belong to a
+      different column.
+    - Scoped (`+ register_variant_id`): the `kon`@10 alias matches only the
+      GenderA@10 era → badge GenderA, and `n_classifications` is 1 (the column's
+      own family), not 2."""
+    conn = _real_reg_meta_db()
+    conn.execute("INSERT INTO variable VALUES (1, 34)")
+    conn.execute("INSERT INTO classification VALUES (100, 'GenderA')")
+    conn.execute("INSERT INTO classification VALUES (200, 'GenderB')")
+    # `kon` is delivered under variant 10 only; `pnr` under variant 11.
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'Kon')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 11, 'PNr')")
+    # Variant 10 era → GenderA (the `kon` column's real family).
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'Kon', 'int', NULL, '2020-01-01', '2020-12-31', 100)"
+    )
+    # Variant 11 eras → GenderB ×2 (the `pnr` column — must NOT vote for `kon`).
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 11, 'PNr', 'int', NULL, '2020-01-01', '2020-12-31', 200)"
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 11, 'PNr', 'int', NULL, '2021-01-01', '2021-12-31', 200)"
+    )
+    conn.commit()
+
+    sig = _reg_meta_lookup(conn, {"Kon"}, [34])["kon"]
+    assert sig.classification_short_name == "GenderA"
+    # Only the `kon`@10 family — the GenderB@11 eras are scoped out.
+    assert sig.n_classifications == 1
+
+
+def test_reg_meta_lookup_column_pairing_within_variant():
+    """A2.7 (Codex P2 #149): within ONE variant, `variable_state` is per-era and
+    carries its era's `delivery_column_name`. The state join pairs each alias to
+    states delivered under THAT column, so an old column does not count a later
+    era's value_set/classification delivered under a DIFFERENT column.
+
+    Geometry: variable 1, variant 10, two eras — column `inkomst` (IncomeA, vs 10)
+    then renamed to `ink` (IncomeB, vs 20). Querying `inkomst`:
+
+    - Pre-fix (variant-only join): `inkomst` cross-joins BOTH eras → n_value_sets
+      2 and an IncomeA/IncomeB tie. WRONG: vs 20 was delivered as `ink`.
+    - Column-paired: `inkomst` matches only the IncomeA/vs-10 era."""
+    conn = _real_reg_meta_db()
+    conn.execute("INSERT INTO variable VALUES (1, 34)")
+    conn.execute("INSERT INTO classification VALUES (100, 'IncomeA')")
+    conn.execute("INSERT INTO classification VALUES (200, 'IncomeB')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'inkomst')")
+    conn.execute("INSERT INTO variable_alias VALUES (1, 10, 'ink')")
+    # Same variable+variant, two eras, DIFFERENT delivery columns + families.
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'inkomst', 'int', 10, '2018-01-01', '2018-12-31', 100)"
+    )
+    conn.execute(
+        "INSERT INTO variable_state VALUES "
+        "(1, 10, 'ink', 'int', 20, '2019-01-01', '2019-12-31', 200)"
+    )
+    conn.commit()
+
+    sig = _reg_meta_lookup(conn, {"inkomst"}, [34])["inkomst"]
+    # Only the `inkomst`-era evidence; the later `ink` era is paired out.
+    assert sig.classification_short_name == "IncomeA"
+    assert sig.n_value_sets == 1
+    assert sig.n_classifications == 1
 
 
 # -- _validate_discover_payload -------------------------------------------
