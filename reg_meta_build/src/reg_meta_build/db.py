@@ -3436,7 +3436,16 @@ def _resolve_cvid_to_variable_id(
     # Column -> sibling variable_id, ONLY for split keys (kept small). A column
     # mapping to two different siblings can no longer disambiguate, so drop it
     # (collision poison) and let that cvid skip rather than silently take the
-    # last sibling.
+    # last sibling. The key is variant-AGNOSTIC on purpose: it's forgiving when
+    # the coalescer collapsed a cvid's exact (variant, col) out of `variable_state`
+    # — variant-scoping the key would newly skip those cvids (their col only exists
+    # as a state-column under another variant). Residual: two siblings reusing ONE
+    # column under DIFFERENT variants collide (3 keys on the real corpus) — bounded
+    # and CONSERVATIVE (the affected cvid skips → under-attribution, never a wrong
+    # sibling), and the state-column backstop in `_reparent_variable_alias` keeps
+    # `variable_alias` complete regardless. Codex P2 #149 proposed adding the
+    # variant; the clean retirement is the coalescer-side cvid→variable_id map
+    # (spawned follow-up), which drops the heuristic AND the collision both.
     variable_by_column: dict[tuple[int, int, str], int] = {}
     column_collisions: set[tuple[int, int, str]] = set()
     if ambiguous:
