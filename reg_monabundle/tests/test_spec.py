@@ -103,6 +103,46 @@ def test_loaded_spec_lookup_options_resolves_through_binding_fqid():
     assert spec.lookup_options("x.csv", "Kon") == {"suppress_k": 25}
 
 
+def test_suppress_k_rejected_when_fqid_non_categorical_in_any_source():
+    # Model A shares the 3-seg binding FQID across period-sources. If the same
+    # FQID is bound non-categorical in ANY source, suppress_k is a no-op there
+    # and must be rejected even when a sibling source binds it categorical
+    # (Codex P2 #155 — the per-FQID dict used to keep only the last binding,
+    # masking the numeric occurrence and passing validation).
+    payload = make_project_data(
+        sources=[
+            {
+                "name": "y2018.csv",
+                "register_variant": "scb/test/_default",
+                "period": 2018,
+                "bindings": [
+                    {
+                        "variable": "scb/test/foo",
+                        "display_name": "Foo",
+                        "type": "numeric",
+                        "numeric_subtype": "integer",
+                    }
+                ],
+            },
+            {
+                "name": "y2019.csv",
+                "register_variant": "scb/test/_default",
+                "period": 2019,
+                "bindings": [
+                    {
+                        "variable": "scb/test/foo",
+                        "display_name": "Foo",
+                        "type": "categorical",
+                    }
+                ],
+            },
+        ],
+        reg_monabundle={"column_options": {"scb/test/foo": {"suppress_k": 25}}},
+    )
+    with pytest.raises(ValueError, match="only honored on categorical"):
+        parse_project_data(payload)
+
+
 def test_loaded_spec_lookup_options_unknown_returns_empty_dict():
     spec = parse_project_data(_basic_payload())
     assert spec.lookup_options("lisa_2018.csv", "LopNr") == {}

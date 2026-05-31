@@ -386,8 +386,8 @@ def _validate_column_options_against_columns(
 
     Two checks, both requiring access to the resolved column dataclasses:
 
-    1. **Orphan keys.** Well-formedness (5-segment, non-class,
-       ``[A-Za-z0-9_-]+``) is checked in
+    1. **Orphan keys.** Well-formedness (3-segment, non-class,
+       ``[A-Za-z0-9_-]+`` with optional ``@version`` leaf) is checked in
        ``reg_monabundle.validate_block``; that catches typos that
        mangle the shape but not typos where the shape survives and
        the key just doesn't match any column. Without this check, a
@@ -407,12 +407,16 @@ def _validate_column_options_against_columns(
     options = block_obj.get("column_options")
     if not isinstance(options, dict):
         return
-    columns_by_fqid = {
-        binding.variable: binding
-        for source in project_data.sources
-        for binding in source.bindings
-    }
-    orphans = sorted(set(options) - set(columns_by_fqid))
+    # A binding FQID is the 3-seg variable identity (the period left the FQID
+    # in Model A), so the SAME FQID is bound once per period-source. Collect
+    # ALL bindings per FQID — checking only one (whichever source came last)
+    # would let a suppress_k on a mixed-type FQID slip past against a sibling
+    # source where it is a no-op (Codex P2 #155).
+    bindings_by_fqid: dict[str, list[Binding]] = {}
+    for source in project_data.sources:
+        for binding in source.bindings:
+            bindings_by_fqid.setdefault(binding.variable, []).append(binding)
+    orphans = sorted(set(options) - set(bindings_by_fqid))
     if orphans:
         raise ValueError(
             f"reg_monabundle.column_options has key(s) that don't match "
@@ -420,16 +424,19 @@ def _validate_column_options_against_columns(
             f"against the binding FQIDs declared in sources[*].bindings[*].variable."
         )
     for fqid, opts in options.items():
-        binding = columns_by_fqid[fqid]
-        if "suppress_k" in opts and binding.type != "categorical":
+        if "suppress_k" not in opts:
+            continue
+        non_categorical = sorted(
+            {b.type for b in bindings_by_fqid[fqid] if b.type != "categorical"}
+        )
+        if non_categorical:
             raise ValueError(
-                f"reg_monabundle.column_options[{fqid!r}].suppress_k is "
-                f"only honored on categorical columns (this binding has "
-                f"type={binding.type!r}). The runtime applies suppress_k "
-                f"to the categorical frequency cutoff only — setting it "
-                f"on id/numeric/date/opaque is a no-op. For panel-level "
-                f"k-anonymity tunability see panels[*].suppress_k (not "
-                f"yet implemented)."
+                f"reg_monabundle.column_options[{fqid!r}].suppress_k is only "
+                f"honored on categorical bindings, but this FQID is bound as "
+                f"{non_categorical} in at least one source — suppress_k is a "
+                f"no-op there. The runtime applies suppress_k to the categorical "
+                f"frequency cutoff only. For panel-level k-anonymity tunability "
+                f"see panels[*].suppress_k (not yet implemented)."
             )
 
 
